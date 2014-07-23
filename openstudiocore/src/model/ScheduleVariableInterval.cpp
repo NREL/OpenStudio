@@ -17,19 +17,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ScheduleVariableInterval.hpp>
-#include <model/ScheduleVariableInterval_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/ModelExtensibleGroup.hpp>
+#include "ScheduleVariableInterval.hpp"
+#include "ScheduleVariableInterval_Impl.hpp"
+#include "Model.hpp"
+#include "ModelExtensibleGroup.hpp"
 
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeLimits_Impl.hpp>
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeLimits_Impl.hpp"
 
 #include <utilities/idd/OS_Schedule_VariableInterval_FieldEnums.hxx>
 
-#include <utilities/time/DateTime.hpp>
-#include <utilities/data/TimeSeries.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/time/DateTime.hpp"
+#include "../utilities/data/TimeSeries.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -157,7 +157,7 @@ namespace detail {
       }
     }
 
-    BOOST_FOREACH(IdfExtensibleGroup group, this->extensibleGroups()){
+    for (IdfExtensibleGroup group : this->extensibleGroups()){
       month = group.getInt(OS_Schedule_VariableIntervalExtensibleFields::Month);
       if (month && (month.get() == 2)){
         day = group.getInt(OS_Schedule_VariableIntervalExtensibleFields::Day);
@@ -178,7 +178,7 @@ namespace detail {
     DateTimeVector dateTimes;
     Vector values(numExtensibleGroups);
     unsigned i = 0;
-    BOOST_FOREACH(const ModelExtensibleGroup& group, castVector<ModelExtensibleGroup>(extensibleGroups()))
+    for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups()))
     {
       OptionalInt month = group.getInt(0);
       OptionalInt day = group.getInt(1);
@@ -303,7 +303,7 @@ void ScheduleVariableInterval::resetOutOfRangeValue() {
 }
 
 /// @cond
-ScheduleVariableInterval::ScheduleVariableInterval(boost::shared_ptr<detail::ScheduleVariableInterval_Impl> impl)
+ScheduleVariableInterval::ScheduleVariableInterval(std::shared_ptr<detail::ScheduleVariableInterval_Impl> impl)
   : ScheduleInterval(impl)
 {}
 /// @endcond

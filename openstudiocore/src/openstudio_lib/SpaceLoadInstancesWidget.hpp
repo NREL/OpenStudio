@@ -17,19 +17,18 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SPACELOADINSTANCESWIDGET_H
-#define OPENSTUDIO_SPACELOADINSTANCESWIDGET_H
+#ifndef OPENSTUDIO_SPACELOADINSTANCESWIDGET_HPP
+#define OPENSTUDIO_SPACELOADINSTANCESWIDGET_HPP
 
-#include <openstudio_lib/ModelObjectVectorController.hpp>
+#include "ModelObjectVectorController.hpp"
 
-#include <model/Building.hpp>
-#include <model/DefaultScheduleSet.hpp>
-#include <model/Model.hpp>
-#include <model/Space.hpp>
-#include <model/SpaceLoadInstance.hpp>
-#include <model/SpaceType.hpp>
+#include "../model/Building.hpp"
+#include "../model/DefaultScheduleSet.hpp"
+#include "../model/Model.hpp"
+#include "../model/Space.hpp"
+#include "../model/SpaceLoadInstance.hpp"
+#include "../model/SpaceType.hpp"
 
-#include <boost/shared_ptr.hpp>
 
 #include <QWidget>
 
@@ -174,9 +173,9 @@ private slots:
 
   void onSpaceRelationshipChange(int index, Handle, Handle);
 
-  void objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&);
+  void objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&);
 
-  void objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&);
+  void objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&);
   
   void refresh();
 
@@ -202,5 +201,5 @@ private:
 
 } // openstudio
 
-#endif // OPENSTUDIO_SPACELOADINSTANCESWIDGET_H
+#endif // OPENSTUDIO_SPACELOADINSTANCESWIDGET_HPP
 

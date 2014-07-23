@@ -21,9 +21,9 @@
 #define PROJECT_ATTRIBUTERECORD_IMPL_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/ObjectRecord_Impl.hpp>
+#include "ObjectRecord_Impl.hpp"
 
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/data/Attribute.hpp"
 
 #include <QVariant>
 
@@ -62,6 +62,9 @@ namespace detail {
     AttributeRecord_Impl(const Attribute& attribute,
                          const VariableRecord& variableRecord);
 
+    AttributeRecord_Impl(const Attribute& attribute,
+                         const DataPointRecord& dataPointRecord);
+
     /// constructor from sql query, throws if bad query
     AttributeRecord_Impl(const QSqlQuery& query, const ProjectDatabase& database);
 
@@ -90,7 +93,7 @@ namespace detail {
     virtual std::vector<JoinRecord> joinRecords() const;
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(const boost::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
 
     //@}
     /** @name Getters */
@@ -107,6 +110,9 @@ namespace detail {
 
     /** Returns the VariableRecord that parents this AttributeRecord. */
     boost::optional<VariableRecord> variableRecord() const;
+    
+    /** Returns the DataPointRecord that parents this AttributeRecord. */
+    boost::optional<DataPointRecord> dataPointRecord() const;
 
     // for verifying after construction
     boost::optional<int> parentAttributeRecordId() const;
@@ -180,6 +186,8 @@ namespace detail {
     boost::optional<int> m_attributeVectorIndex;
     boost::optional<int> m_algorithmRecordId;
     boost::optional<int> m_variableRecordId;
+    std::string m_source;
+    boost::optional<int> m_dataPointRecordId;
 
     boost::optional<int> m_lastFileReferenceRecordId;
     boost::optional<int> m_lastParentAttributeRecordId;
@@ -190,6 +198,8 @@ namespace detail {
     boost::optional<int> m_lastAttributeVectorIndex;
     boost::optional<int> m_lastAlgorithmRecordId;
     boost::optional<int> m_lastVariableRecordId;
+    std::string m_lastSource;
+    boost::optional<int> m_lastDataPointRecordId;
 
     void storeAttribute(const Attribute& attribute);
   };

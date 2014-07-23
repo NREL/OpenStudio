@@ -20,8 +20,8 @@
 #ifndef MODEL_BOILERSTEAM_HPP
 #define MODEL_BOILERSTEAM_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 
@@ -183,7 +183,7 @@ class MODEL_API BoilerSteam : public StraightComponent {
   /// @cond
   typedef detail::BoilerSteam_Impl ImplType;
 
-  explicit BoilerSteam(boost::shared_ptr<detail::BoilerSteam_Impl> impl);
+  explicit BoilerSteam(std::shared_ptr<detail::BoilerSteam_Impl> impl);
 
   friend class detail::BoilerSteam_Impl;
   friend class Model;

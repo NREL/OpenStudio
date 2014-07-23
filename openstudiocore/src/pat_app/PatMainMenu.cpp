@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <pat_app/PatMainMenu.hpp>
+#include "PatMainMenu.hpp"
 
-#include <pat_app/PatApp.hpp>
-#include <pat_app/CloudMonitor.hpp>
+#include "PatApp.hpp"
+#include "CloudMonitor.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QMenu>
 

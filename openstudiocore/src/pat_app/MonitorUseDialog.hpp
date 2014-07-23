@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_MONITORUSEDIALOG_H
-#define OPENSTUDIO_MONITORUSEDIALOG_H
+#ifndef PATAPP_MONITORUSEDIALOG_HPP
+#define PATAPP_MONITORUSEDIALOG_HPP
 
-#include <shared_gui_components/OSDialog.hpp>
+#include "../shared_gui_components/OSDialog.hpp"
 
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/cloud/AWSProvider_Impl.hpp>
+#include "../utilities/cloud/AWSProvider.hpp"
+#include "../utilities/cloud/AWSProvider_Impl.hpp"
 
 class QLabel;
 class QLineEdit;
@@ -39,7 +39,7 @@ class MonitorUseDialog : public OSDialog
 
 public:
 
-  MonitorUseDialog(QWidget * parent = 0);
+  MonitorUseDialog(QWidget * parent = nullptr);
 
   virtual ~MonitorUseDialog();
 
@@ -79,6 +79,6 @@ private slots:
 
 } // openstudio
 
-#endif // OPENSTUDIO_MONITORUSEDIALOG_H
+#endif // PATAPP_MONITORUSEDIALOG_HPP
 
 

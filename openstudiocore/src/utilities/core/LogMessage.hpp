@@ -20,9 +20,9 @@
 #ifndef UTILITIES_CORE_LOGMESSAGE_HPP
 #define UTILITIES_CORE_LOGMESSAGE_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/String.hpp>
+#include "String.hpp"
 
 #include <boost/log/sinks/sync_frontend.hpp>
 #include <boost/log/sinks/text_ostream_backend.hpp>

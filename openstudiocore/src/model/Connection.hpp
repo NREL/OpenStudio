@@ -20,9 +20,9 @@
 #ifndef MODEL_CONNECTION_HPP
 #define MODEL_CONNECTION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <utilities/core/Logger.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -66,7 +66,7 @@ class MODEL_API Connection : public ModelObject {
   friend class detail::ModelObject_Impl;
 
   // constructor
-  explicit Connection(boost::shared_ptr<detail::Connection_Impl> impl);
+  explicit Connection(std::shared_ptr<detail::Connection_Impl> impl);
 
  private:
 

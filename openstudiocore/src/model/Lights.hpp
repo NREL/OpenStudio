@@ -20,8 +20,8 @@
 #ifndef MODEL_LIGHTS_HPP
 #define MODEL_LIGHTS_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceLoadInstance.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceLoadInstance.hpp"
 
 namespace openstudio {
 namespace model {
@@ -132,7 +132,7 @@ class MODEL_API Lights : public SpaceLoadInstance {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit Lights(boost::shared_ptr<detail::Lights_Impl> impl);
+  explicit Lights(std::shared_ptr<detail::Lights_Impl> impl);
 
   /// @endcond
  private:

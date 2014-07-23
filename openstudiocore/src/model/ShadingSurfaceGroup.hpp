@@ -20,8 +20,8 @@
 #ifndef MODEL_SHADINGSURFACEGROUP_HPP
 #define MODEL_SHADINGSURFACEGROUP_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/PlanarSurfaceGroup.hpp>
+#include "ModelAPI.hpp"
+#include "PlanarSurfaceGroup.hpp"
 
 namespace openstudio {
 
@@ -107,7 +107,7 @@ class MODEL_API ShadingSurfaceGroup : public PlanarSurfaceGroup {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit ShadingSurfaceGroup(boost::shared_ptr<detail::ShadingSurfaceGroup_Impl> impl);
+  explicit ShadingSurfaceGroup(std::shared_ptr<detail::ShadingSurfaceGroup_Impl> impl);
 
   /// @endcond
  private:

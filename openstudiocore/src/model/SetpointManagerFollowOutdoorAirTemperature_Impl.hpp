@@ -20,8 +20,8 @@
 #ifndef MODEL_SETPOINTMANAGERFOLLOWOUTDOORAIRTEMPERATURE_IMPL_HPP
 #define MODEL_SETPOINTMANAGERFOLLOWOUTDOORAIRTEMPERATURE_IMPL_HPP
 
-#include <model/SetpointManagerFollowOutdoorAirTemperature.hpp>
-#include <model/HVACComponent_Impl.hpp>
+#include "SetpointManagerFollowOutdoorAirTemperature.hpp"
+#include "SetpointManager_Impl.hpp"
 
 namespace openstudio {
 
@@ -31,7 +31,7 @@ class Schedule;
 
 namespace detail {
 
-  class MODEL_API SetpointManagerFollowOutdoorAirTemperature_Impl : public HVACComponent_Impl {
+  class MODEL_API SetpointManagerFollowOutdoorAirTemperature_Impl : public SetpointManager_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -52,17 +52,9 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual std::vector<openstudio::IdfObject> remove();
-
-    virtual ModelObject clone(Model model);
-
-    virtual boost::optional<ParentObject> parent() const;
-
     virtual const std::vector<std::string>& outputVariableNames() const;
 
     virtual IddObjectType iddObjectType() const;
-
-    virtual std::vector<ModelObject> children() const;
 
     virtual bool addToNode(Node & node);
 
@@ -86,16 +78,18 @@ namespace detail {
 
     void setMinimumSetpointTemperature(double value);
 
-    boost::optional<Node> setpointNode() const;
+    virtual boost::optional<Node> setpointNode() const;
 
-    std::string controlVariable() const;
+    virtual std::string controlVariable() const;
 
-    void setControlVariable(const std::string & value);
+    virtual bool setControlVariable(const std::string & value);
 
     //@}
    private:
 
-    void setSetpointNode( Node & node );
+    virtual bool setSetpointNode(const Node & node );
+
+    virtual void resetSetpointNode();
   };
 
 } // detail

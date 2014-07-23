@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/DakotaAlgorithmOptions.hpp>
-#include <analysis/DakotaAlgorithmOptions_Impl.hpp>
+#include "DakotaAlgorithmOptions.hpp"
+#include "DakotaAlgorithmOptions_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -36,7 +36,7 @@ namespace detail {
 } // detail
 
 /// @cond
-DakotaAlgorithmOptions::DakotaAlgorithmOptions(boost::shared_ptr<detail::DakotaAlgorithmOptions_Impl> impl)
+DakotaAlgorithmOptions::DakotaAlgorithmOptions(std::shared_ptr<detail::DakotaAlgorithmOptions_Impl> impl)
   : AlgorithmOptions(impl)
 {}
 /// @endcond

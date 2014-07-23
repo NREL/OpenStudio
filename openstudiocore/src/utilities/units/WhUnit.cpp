@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/units/WhUnit.hpp>
-#include <utilities/units/WhUnit_Impl.hpp>
+#include "WhUnit.hpp"
+#include "WhUnit_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 namespace openstudio {
 namespace detail {
@@ -63,13 +63,13 @@ namespace detail {
 
   Unit WhUnit_Impl::clone() const {
     OS_ASSERT(system() == UnitSystem::Wh);
-    boost::shared_ptr<WhUnit_Impl> impl(new WhUnit_Impl(*this));
+    std::shared_ptr<WhUnit_Impl> impl(new WhUnit_Impl(*this));
     return WhUnit(impl).cast<Unit>();
   }
 
   void WhUnit_Impl::setBaseUnitExponent(const std::string& baseUnit,int exponent)
   {
-    std::vector<UnitElement>::iterator loc = findBaseUnit(baseUnit);
+    auto loc = findBaseUnit(baseUnit);
     if (loc != m_units.end()) {
       loc->second = exponent;
     }
@@ -83,20 +83,20 @@ namespace detail {
 WhUnit::WhUnit(const WhExpnt& exponents,
                int scaleExponent,
                const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::WhUnit_Impl>(
+  : Unit(std::shared_ptr<detail::Unit_Impl>(
              new detail::WhUnit_Impl(exponents,scaleExponent,prettyString)))
 {}
 
 WhUnit::WhUnit(const std::string& scaleAbbreviation,
                const WhExpnt& exponents,
                const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::WhUnit_Impl>(
+  : Unit(std::shared_ptr<detail::Unit_Impl>(
              new detail::WhUnit_Impl(scaleAbbreviation,exponents,prettyString)))
 {}
 
 /// @cond
-WhUnit::WhUnit(boost::shared_ptr<detail::WhUnit_Impl> impl)
-  : Unit(impl)
+WhUnit::WhUnit(std::shared_ptr<detail::WhUnit_Impl> impl)
+  : Unit(std::dynamic_pointer_cast<detail::Unit_Impl>(impl))
 {}
 /// @endcond
 

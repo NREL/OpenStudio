@@ -20,10 +20,10 @@
 #ifndef MODEL_ZONEHVACBASEBOARDCONVECTIVEWATER_HPP
 #define MODEL_ZONEHVACBASEBOARDCONVECTIVEWATER_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ZoneHVACComponent.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/Model.hpp>
+#include "ModelAPI.hpp"
+#include "ZoneHVACComponent.hpp"
+#include "ThermalZone.hpp"
+#include "Model.hpp"
 
 namespace openstudio {
 namespace model {
@@ -92,7 +92,7 @@ class MODEL_API ZoneHVACBaseboardConvectiveWater : public ZoneHVACComponent {
   /// @cond
   typedef detail::ZoneHVACBaseboardConvectiveWater_Impl ImplType;
 
-  explicit ZoneHVACBaseboardConvectiveWater(boost::shared_ptr<detail::ZoneHVACBaseboardConvectiveWater_Impl> impl);
+  explicit ZoneHVACBaseboardConvectiveWater(std::shared_ptr<detail::ZoneHVACBaseboardConvectiveWater_Impl> impl);
 
   friend class detail::ZoneHVACBaseboardConvectiveWater_Impl;
   friend class Model;

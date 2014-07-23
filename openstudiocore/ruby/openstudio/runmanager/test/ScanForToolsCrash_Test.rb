@@ -19,9 +19,9 @@
 
 require 'openstudio'
 require 'openstudio/energyplus/find_energyplus'
-require 'test/unit'
+require 'minitest/autorun'
 
-class ScanForToolsCrash_Test < Test::Unit::TestCase
+class ScanForToolsCrash_Test < MiniTest::Unit::TestCase
 
   def test_ScanForToolsCrash
 

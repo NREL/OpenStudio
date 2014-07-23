@@ -20,8 +20,8 @@
 #ifndef PROJECT_INPUTVARIABLERECORD_HPP
 #define PROJECT_INPUTVARIABLERECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/VariableRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "VariableRecord.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -104,14 +104,14 @@ class PROJECT_API InputVariableRecord : public VariableRecord {
   //@}
  protected:
   /// @cond
-  explicit InputVariableRecord(boost::shared_ptr<detail::InputVariableRecord_Impl> impl);
+  explicit InputVariableRecord(std::shared_ptr<detail::InputVariableRecord_Impl> impl);
 
   friend class detail::InputVariableRecord_Impl;
   friend class Record;
   friend class ProjectDatabase;
 
   /** Construct from impl. */
-  InputVariableRecord(boost::shared_ptr<detail::InputVariableRecord_Impl> impl,
+  InputVariableRecord(std::shared_ptr<detail::InputVariableRecord_Impl> impl,
                       ProjectDatabase database,
                       const boost::optional<analysis::InputVariable>& inputVariable);
 

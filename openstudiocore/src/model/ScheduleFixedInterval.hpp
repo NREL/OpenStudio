@@ -20,8 +20,8 @@
 #ifndef MODEL_SCHEDULEFIXEDINTERVAL_HPP
 #define MODEL_SCHEDULEFIXEDINTERVAL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ScheduleInterval.hpp>
+#include "ModelAPI.hpp"
+#include "ScheduleInterval.hpp"
 
 namespace openstudio {
 namespace model {
@@ -91,7 +91,7 @@ class MODEL_API ScheduleFixedInterval : public ScheduleInterval {
   friend class openstudio::IdfObject;
   friend class detail::ScheduleFixedInterval_Impl;
 
-  explicit ScheduleFixedInterval(boost::shared_ptr<detail::ScheduleFixedInterval_Impl> impl);
+  explicit ScheduleFixedInterval(std::shared_ptr<detail::ScheduleFixedInterval_Impl> impl);
 
   /// @endcond
  private:

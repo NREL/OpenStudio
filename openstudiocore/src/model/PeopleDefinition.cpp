@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/PeopleDefinition.hpp>
-#include <model/PeopleDefinition_Impl.hpp>
+#include "PeopleDefinition.hpp"
+#include "PeopleDefinition_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_People_Definition_FieldEnums.hxx>
 
-#include <utilities/math/FloatCompare.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/math/FloatCompare.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -580,7 +580,7 @@ bool PeopleDefinition::setNumberOfPeopleCalculationMethod(const std::string& met
 }
 
 /// @cond
-PeopleDefinition::PeopleDefinition(boost::shared_ptr<detail::PeopleDefinition_Impl> impl)
+PeopleDefinition::PeopleDefinition(std::shared_ptr<detail::PeopleDefinition_Impl> impl)
   : SpaceLoadDefinition(impl)
 {}
 /// @endcond

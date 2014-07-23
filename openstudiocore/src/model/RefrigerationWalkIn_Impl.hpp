@@ -20,10 +20,10 @@
 #ifndef MODEL_REFRIGERATIONWALKIN_IMPL_HPP
 #define MODEL_REFRIGERATIONWALKIN_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/RefrigerationWalkInZoneBoundary.hpp>
-#include <model/ThermalZone.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject_Impl.hpp"
+#include "RefrigerationWalkInZoneBoundary.hpp"
+#include "ThermalZone.hpp"
 
 namespace openstudio {
 

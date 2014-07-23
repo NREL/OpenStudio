@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/PumpConstantSpeed.hpp>
-#include <model/PumpConstantSpeed_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Curve.hpp>
-#include <model/Curve_Impl.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/PumpConstantSpeed.hpp"
+#include "../../model/PumpConstantSpeed_Impl.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/Curve.hpp"
+#include "../../model/Curve_Impl.hpp"
+#include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/Pump_ConstantSpeed_FieldEnums.hxx>
 
 using namespace openstudio::model;

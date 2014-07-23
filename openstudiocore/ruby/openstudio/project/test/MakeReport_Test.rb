@@ -19,10 +19,10 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
 
-class MakeReport_Test < Test::Unit::TestCase
+class MakeReport_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

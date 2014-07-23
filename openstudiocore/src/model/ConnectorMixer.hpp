@@ -20,8 +20,8 @@
 #ifndef MODEL_CONNECTORMIXER_HPP
 #define MODEL_CONNECTORMIXER_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Mixer.hpp>
+#include "ModelAPI.hpp"
+#include "Mixer.hpp"
 
 namespace openstudio {
 
@@ -68,7 +68,7 @@ class MODEL_API ConnectorMixer : public Mixer {
 
   friend class openstudio::IdfObject;
 
-  explicit ConnectorMixer(boost::shared_ptr<detail::ConnectorMixer_Impl> impl);
+  explicit ConnectorMixer(std::shared_ptr<detail::ConnectorMixer_Impl> impl);
 
   private:
 

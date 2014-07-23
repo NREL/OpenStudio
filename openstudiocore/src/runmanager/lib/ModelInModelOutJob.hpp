@@ -17,16 +17,16 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_MODELINMODELOUTJOB_HPP
-#define OPENSTUDIO_MODELINMODELOUTJOB_HPP
+#ifndef RUNMANAGER_LIB_MODELINMODELOUTJOB_HPP
+#define RUNMANAGER_LIB_MODELINMODELOUTJOB_HPP
 
 #include <boost/filesystem.hpp>
 #include <string>
-#include <utilities/core/Logger.hpp>
+#include "../../utilities/core/Logger.hpp"
 #include "Job_Impl.hpp"
 #include "JobParam.hpp"
-#include <utilities/core/Checksum.hpp>
-#include <model/Model.hpp>
+#include "../../utilities/core/Checksum.hpp"
+#include "../../model/Model.hpp"
 
 #include <QFileSystemWatcher>
 #include <QFileInfo>
@@ -62,18 +62,12 @@ namespace detail {
       virtual std::string getOutput() const;
       virtual void cleanup();
 
-      /// By definition these Jobs are in-process and cannot be run remotely
-      virtual bool remoteRunnable() const
-      {
-        return false;
-      }
-
-      virtual void mergeJobImpl(const boost::shared_ptr<Job_Impl> &t_parent, const boost::shared_ptr<Job_Impl> &t_job);
+      virtual void mergeJobImpl(const std::shared_ptr<Job_Impl> &t_parent, const std::shared_ptr<Job_Impl> &t_job);
 
       virtual void requestStop();
 
     protected:
-      virtual void startImpl(const boost::shared_ptr<ProcessCreator> &t_creator);
+      virtual void startImpl(const std::shared_ptr<ProcessCreator> &t_creator);
 
       /// Executes the required manipulation of the model and returns a new copy.
       /// 
@@ -98,11 +92,11 @@ namespace detail {
 
       std::string m_description; //< Description of job
 
-      std::vector<boost::shared_ptr<ModelInModelOutJob> > m_mergedJobs; //< List of jobs merged into this one.
+      std::vector<std::shared_ptr<ModelInModelOutJob> > m_mergedJobs; //< List of jobs merged into this one.
 
   }; 
 
 }
 }
 }
-#endif
+#endif // RUNMANAGER_LIB_MODELINMODELOUTJOB_HPP

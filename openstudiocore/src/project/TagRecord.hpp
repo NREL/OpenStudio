@@ -21,7 +21,7 @@
 #define PROJECT_TAGRECORD_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/ObjectRecord.hpp>
+#include "ObjectRecord.hpp"
 
 namespace openstudio {
 
@@ -115,10 +115,10 @@ class PROJECT_API TagRecord : public ObjectRecord {
   friend class detail::TagRecord_Impl;
 
   /** Construct from impl. */
-  TagRecord(boost::shared_ptr<detail::TagRecord_Impl> impl, ProjectDatabase projectDatabase);
+  TagRecord(std::shared_ptr<detail::TagRecord_Impl> impl, ProjectDatabase projectDatabase);
 
   /// Construct from impl. Does not register in the database, so use with caution.
-  explicit TagRecord(boost::shared_ptr<detail::TagRecord_Impl> impl);
+  explicit TagRecord(std::shared_ptr<detail::TagRecord_Impl> impl);
 
   /// @endcond
  private:

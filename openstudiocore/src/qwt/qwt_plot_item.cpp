@@ -528,10 +528,10 @@ QRect QwtPlotItem::paintRect(const QwtScaleMap &xMap,
 QRect QwtPlotItem::transform(const QwtScaleMap &xMap, 
     const QwtScaleMap &yMap, const QwtDoubleRect& rect) const
 {
-    int x1 = qRound(xMap.transform(rect.left()));
-    int x2 = qRound(xMap.transform(rect.right()));
-    int y1 = qRound(yMap.transform(rect.top()));
-    int y2 = qRound(yMap.transform(rect.bottom()));
+    int x1 = xMap.transform(rect.left());
+    int x2 = xMap.transform(rect.right());
+    int y1 = yMap.transform(rect.top());
+    int y2 = yMap.transform(rect.bottom());
 
     if ( x2 < x1 )
         qSwap(x1, x2);

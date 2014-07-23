@@ -20,8 +20,8 @@
 #ifndef PROJECT_OPTIMIZATIONPROBLEMRECORD_HPP
 #define PROJECT_OPTIMIZATIONPROBLEMRECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/ProblemRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "ProblemRecord.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -81,11 +81,11 @@ class PROJECT_API OptimizationProblemRecord : public ProblemRecord {
   friend class detail::OptimizationProblemRecord_Impl;
 
   /** Construct from impl. */
-  OptimizationProblemRecord(boost::shared_ptr<detail::OptimizationProblemRecord_Impl> impl,
+  OptimizationProblemRecord(std::shared_ptr<detail::OptimizationProblemRecord_Impl> impl,
                             ProjectDatabase database);
 
   /// Construct from impl. Does not register in the database, so use with caution.
-  explicit OptimizationProblemRecord(boost::shared_ptr<detail::OptimizationProblemRecord_Impl> impl);
+  explicit OptimizationProblemRecord(std::shared_ptr<detail::OptimizationProblemRecord_Impl> impl);
 
   /// @endcond
  private:

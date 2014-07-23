@@ -21,9 +21,9 @@
 #define PROJECT_CONCRETEJOINRECORDS_HPP
 
 // analysis
-#include <project/DataPoint_DiscretePerturbation_JoinRecord.hpp>
+#include "DataPoint_DiscretePerturbation_JoinRecord.hpp"
 
 // analysis
-#include <project/DataPoint_DiscretePerturbation_JoinRecord_Impl.hpp>
+#include "DataPoint_DiscretePerturbation_JoinRecord_Impl.hpp"
 
 #endif // PROJECT_CONCRETEJOINRECORDS_HPP

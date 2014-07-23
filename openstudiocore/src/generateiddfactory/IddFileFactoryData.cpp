@@ -17,13 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <generateiddfactory/IddFileFactoryData.hpp>
+#include "IddFileFactoryData.hpp"
 
-#include <utilities/idd/IddRegex.hpp>
+#include "../utilities/idd/IddRegex.hpp"
 
-#include <boost/foreach.hpp>
 #include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/filesystem/operations.hpp>
 
 #include <iostream>
 #include <sstream>
@@ -54,20 +54,20 @@ IddFileFactoryData::IddFileFactoryData(const std::string& fileNameAndPathPair) {
     firstStr.clear();
   }
   m_fileName = firstStr;
-  m_filePath = openstudio::toPath(secondStr);
+  m_filePath = path(secondStr);
 
   // validate filePath
   m_filePath = boost::filesystem::system_complete(m_filePath);
   if (!boost::filesystem::is_regular_file(m_filePath)) {
     ss << "Unable to locate intended idd file from input argument '"
        << fileNameAndPathPair << "'. User-supplied path resolved to '"
-       << toString(m_filePath) << "'.";
+       << m_filePath.string() << "'.";
     throw std::runtime_error(ss.str().c_str());
   }
 
   // validate fileName
   if (m_fileName.empty()) {
-    m_fileName = toString(m_filePath.stem());
+    m_fileName = m_filePath.stem().string();
   }
   re = boost::regex("[a-zA-Z]\\w*");
   ok = boost::regex_match(m_fileName,match,re);
@@ -79,7 +79,7 @@ IddFileFactoryData::IddFileFactoryData(const std::string& fileNameAndPathPair) {
 
   std::cout << "IddFileFactoryData object created: " << std::endl
             << "  fileName = " << m_fileName << std::endl
-            << "  filePath = " << m_filePath << std::endl << std::endl;
+            << "  filePath = " << m_filePath.string() << std::endl << std::endl;
 }
 
 void IddFileFactoryData::parseFile(const path& outPath,
@@ -91,7 +91,7 @@ void IddFileFactoryData::parseFile(const path& outPath,
 
   boost::filesystem::ifstream iddFile(m_filePath);
   if (!iddFile) {
-    ss << "Unable to open Idd file " << m_fileName << " located at " << toString(m_filePath) << ".";
+    ss << "Unable to open Idd file " << m_fileName << " located at " << m_filePath.string() << ".";
     throw std::runtime_error(ss.str().c_str());
   }
 
@@ -99,14 +99,14 @@ void IddFileFactoryData::parseFile(const path& outPath,
   std::string line,trimLine;
   boost::smatch matches;
   int lineNum = 1;
-  boost::shared_ptr<IddFactoryOutFile>& cxxFile = outFiles.iddFactoryIddFileCxxs[iddFileIndex];
+  std::shared_ptr<IddFactoryOutFile>& cxxFile = outFiles.iddFactoryIddFileCxxs[iddFileIndex];
 
   // get version
   std::getline(iddFile,line);
   trimLine = line; boost::trim(trimLine);
   bool ok = boost::regex_search(trimLine,matches,iddRegex::version());
   if (!ok) {
-    ss << "Idd file " << m_fileName << " located at " << toString(m_filePath) 
+    ss << "Idd file " << m_fileName << " located at " << m_filePath.string()
        << " does not list its version on the first line, which is: " << std::endl
        << line;
     throw std::runtime_error(ss.str().c_str());
@@ -240,7 +240,7 @@ void IddFileFactoryData::parseFile(const path& outPath,
 
           if (!fieldNames.empty()) {
             tempSS << "OPENSTUDIO_ENUM( " << objectName.first << "Fields," << std::endl;
-            BOOST_FOREACH(const std::string& name,fieldNames) {
+            for (const std::string& name : fieldNames) {
               tempSS << "  ((" << m_convertName(name) << ")(" << name << "))" << std::endl;
             }
             tempSS << ");";
@@ -265,7 +265,7 @@ void IddFileFactoryData::parseFile(const path& outPath,
         
           if (!extensibleFieldNames.empty()) {
             tempSS << "OPENSTUDIO_ENUM( " << objectName.first << "ExtensibleFields," << std::endl;
-            BOOST_FOREACH(const std::string& name,extensibleFieldNames) {
+            for (const std::string& name : extensibleFieldNames) {
               tempSS << "  ((" << m_convertName(name) << ")(" << name << "))" << std::endl;
             }
             tempSS << ");";
@@ -347,10 +347,10 @@ void IddFileFactoryData::parseFile(const path& outPath,
   } // while -- IddFile
 
   iddFile.close();
-  std::cout << "Parsed Idd file " << m_fileName << " located at " << toString(m_filePath) << "," << std::endl
+  std::cout << "Parsed Idd file " << m_fileName << " located at " << m_filePath.string() << "," << std::endl
             << "which contains " << m_objectNames.size() << " objects." << std::endl << std::endl;
   if (!m_includedFiles.empty()) {
-    BOOST_FOREACH(const FileNameRemovedObjectsPair& p,m_includedFiles) {
+    for (const FileNameRemovedObjectsPair& p : m_includedFiles) {
       std::cout << "Idd file '" << m_fileName << "' includes all but " << p.second.size() 
                 << " objects of Idd file '" << p.first << "'." << std::endl << std::endl;
     }
@@ -359,7 +359,7 @@ void IddFileFactoryData::parseFile(const path& outPath,
   // register objects with CallbackMap
   cxxFile->tempFile
     << "void IddFactorySingleton::register" << fileName() << "ObjectsInCallbackMap() {" << std::endl;
-  BOOST_FOREACH(const StringPair& objectName, objectNames()) {
+  for (const StringPair& objectName : objectNames()) {
     cxxFile->tempFile
       << "  m_callbackMap.insert(IddObjectCallbackMap::value_type(IddObjectType::" 
       << objectName.first << ",create" << objectName.first << "IddObject));" << std::endl;

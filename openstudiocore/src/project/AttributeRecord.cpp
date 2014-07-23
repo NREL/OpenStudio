@@ -17,22 +17,21 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/AttributeRecord.hpp>
-#include <project/AttributeRecord_Impl.hpp>
+#include "AttributeRecord.hpp"
+#include "AttributeRecord_Impl.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/FileReferenceRecord.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/AlgorithmRecord.hpp>
-#include <project/VariableRecord.hpp>
+#include "ProjectDatabase.hpp"
+#include "FileReferenceRecord.hpp"
+#include "JoinRecord.hpp"
+#include "AlgorithmRecord.hpp"
+#include "VariableRecord.hpp"
+#include "DataPointRecord.hpp"
 
-#include <utilities/units/UnitFactory.hpp>
-#include <utilities/units/Unit.hpp>
-#include <utilities/units/Quantity.hpp>
+#include "../utilities/units/UnitFactory.hpp"
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/units/Quantity.hpp"
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <sstream>
 
@@ -59,7 +58,8 @@ namespace detail{
       m_fileReferenceRecordId(fileReferenceRecord.id()),
       m_attributeValueType(attribute.valueType()),
       m_attributeValue(attribute.valueAsQVariant()),
-      m_attributeUnits(attribute.units())
+      m_attributeUnits(attribute.units()),
+      m_source(attribute.source())
   {
     storeAttribute(attribute);
   }
@@ -77,7 +77,8 @@ namespace detail{
       m_attributeValueType(attribute.valueType()),
       m_attributeValue(attribute.valueAsQVariant()),
       m_attributeUnits(attribute.units()),
-      m_attributeVectorIndex(attributeVectorIndex)
+      m_attributeVectorIndex(attributeVectorIndex),
+      m_source(attribute.source())
   {
     storeAttribute(attribute);
   }
@@ -93,7 +94,8 @@ namespace detail{
       m_attributeValueType(attribute.valueType()),
       m_attributeValue(attribute.valueAsQVariant()),
       m_attributeUnits(attribute.units()),
-      m_algorithmRecordId(algorithmRecord.id())
+      m_algorithmRecordId(algorithmRecord.id()),
+      m_source(attribute.source())
   {
     storeAttribute(attribute);
   }
@@ -109,7 +111,25 @@ namespace detail{
       m_attributeValueType(attribute.valueType()),
       m_attributeValue(attribute.valueAsQVariant()),
       m_attributeUnits(attribute.units()),
-      m_variableRecordId(variableRecord.id())
+      m_variableRecordId(variableRecord.id()),
+      m_source(attribute.source())
+  {
+    storeAttribute(attribute);
+  }
+
+  AttributeRecord_Impl::AttributeRecord_Impl(const Attribute& attribute,
+                                             const DataPointRecord& dataPointRecord)
+    : ObjectRecord_Impl(dataPointRecord.projectDatabase(),
+                        attribute.uuid(),
+                        attribute.name(),
+                        attribute.displayName() ? attribute.displayName().get() : std::string(),
+                        "",
+                        attribute.versionUUID()),
+      m_attributeValueType(attribute.valueType()),
+      m_attributeValue(attribute.valueAsQVariant()),
+      m_attributeUnits(attribute.units()),
+      m_dataPointRecordId(dataPointRecord.id()),
+      m_source(attribute.source())
   {
     storeAttribute(attribute);
   }
@@ -226,6 +246,15 @@ namespace detail{
     if (value.isValid() && !value.isNull()) {
       m_variableRecordId = value.toInt();
     }
+
+    value = query.value(AttributeRecordColumns::source);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_source = value.toString().toStdString();
+
+    value = query.value(AttributeRecordColumns::dataPointRecordId);
+    if (value.isValid() && !value.isNull()) {
+      m_dataPointRecordId = value.toInt();
+    }
   }
 
   std::string AttributeRecord_Impl::databaseTableName() const {
@@ -238,19 +267,26 @@ namespace detail{
       OS_ASSERT(!m_parentAttributeRecordId);
       OS_ASSERT(!m_algorithmRecordId);
       OS_ASSERT(!m_variableRecordId);
+      OS_ASSERT(!m_dataPointRecordId);
       result = fileReferenceRecord().get().cast<ObjectRecord>();
     }
     if (m_parentAttributeRecordId) {
       OS_ASSERT(!m_algorithmRecordId);
       OS_ASSERT(!m_variableRecordId);
+      OS_ASSERT(!m_dataPointRecordId);
       result = parentAttributeRecord().get().cast<ObjectRecord>();
     }
     if (m_algorithmRecordId) {
       OS_ASSERT(!m_variableRecordId);
+      OS_ASSERT(!m_dataPointRecordId);
       result = algorithmRecord().get().cast<ObjectRecord>();
     }
     if (m_variableRecordId) {
+      OS_ASSERT(!m_dataPointRecordId);
       result = variableRecord().get().cast<ObjectRecord>();
+    }
+    if (m_dataPointRecordId) {
+      result = dataPointRecord().get().cast<ObjectRecord>();
     }
     // ETH@20110809 Should be able to assert result here, but don't want to add unnecessary
     // asserts at this time.
@@ -283,7 +319,7 @@ namespace detail{
     return result;
   }
 
-  void AttributeRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database) {
+  void AttributeRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database) {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<AttributeRecord>(query);
     this->bindValues(query);
@@ -326,6 +362,15 @@ namespace detail{
     if (m_variableRecordId) {
       ProjectDatabase database = projectDatabase();
       result = VariableRecord::getVariableRecord(*m_variableRecordId,database);
+    }
+    return result;
+  }
+
+  boost::optional<DataPointRecord> AttributeRecord_Impl::dataPointRecord() const {
+    OptionalDataPointRecord result;
+    if (m_dataPointRecordId) {
+      ProjectDatabase database = projectDatabase();
+      result = DataPointRecord::getDataPointRecord(*m_dataPointRecordId,database);
     }
     return result;
   }
@@ -386,7 +431,7 @@ namespace detail{
     OS_ASSERT(m_attributeValueType == AttributeValueType::AttributeVector);
 
     std::vector<Attribute> result;
-    BOOST_FOREACH(const Record& child, this->children()){
+    for (const Record& child : this->children()){
       boost::optional<AttributeRecord> childAttribute = child.optionalCast<AttributeRecord>();
       if (childAttribute){
         result.push_back(childAttribute->attribute());
@@ -403,28 +448,28 @@ namespace detail{
   openstudio::Attribute AttributeRecord_Impl::attribute() const {
     switch(m_attributeValueType.value()){
       case AttributeValueType::Boolean:
-        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsBoolean(), m_attributeUnits);
+        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsBoolean(), m_attributeUnits, m_source);
         break;
       case AttributeValueType::Integer:
-        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsInteger(), m_attributeUnits);
+        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsInteger(), m_attributeUnits, m_source);
         break;
       case AttributeValueType::Unsigned:
-        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsUnsigned(), m_attributeUnits);
+        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsUnsigned(), m_attributeUnits, m_source);
         break;
       case AttributeValueType::Double:
-        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsDouble(), m_attributeUnits);
+        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsDouble(), m_attributeUnits, m_source);
         break;
       case AttributeValueType::Quantity:
-        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsQuantity());
+        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsQuantity(), m_source);
         break;
       case AttributeValueType::Unit:
-        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsUnit());
+        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsUnit(), m_source);
         break;
       case AttributeValueType::String:
-        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsString(), m_attributeUnits);
+        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsString(), m_attributeUnits, m_source);
         break;
       case AttributeValueType::AttributeVector:
-        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsAttributeVector(), m_attributeUnits);
+        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsAttributeVector(), m_attributeUnits, m_source);
         break;
       default:
         OS_ASSERT(false);
@@ -517,6 +562,14 @@ namespace detail{
       query.bindValue(AttributeRecordColumns::variableRecordId, QVariant(QVariant::Int));
     }
 
+    query.bindValue(AttributeRecordColumns::source, toQString(m_source));
+
+    if (m_dataPointRecordId) {
+      query.bindValue(AttributeRecordColumns::dataPointRecordId, *m_dataPointRecordId);
+    }
+    else {
+      query.bindValue(AttributeRecordColumns::dataPointRecordId, QVariant(QVariant::Int));
+    }
   }
 
 
@@ -629,6 +682,17 @@ namespace detail{
       m_lastVariableRecordId.reset();
     }
 
+    value = query.value(AttributeRecordColumns::source);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastSource = value.toString().toStdString();
+
+    value = query.value(AttributeRecordColumns::dataPointRecordId);
+    if (value.isValid() && !value.isNull()) {
+      m_lastDataPointRecordId = value.toInt();
+    }
+    else {
+      m_lastDataPointRecordId.reset();
+    }
   }
 
   bool AttributeRecord_Impl::compareValues(const QSqlQuery& query) const
@@ -733,6 +797,18 @@ namespace detail{
       result = result && !m_variableRecordId;
     }
 
+    value = query.value(AttributeRecordColumns::source);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_source == value.toString().toStdString());
+
+    value = query.value(AttributeRecordColumns::dataPointRecordId);
+    if (value.isValid() && !value.isNull()) {
+      result = result && m_dataPointRecordId && (*m_dataPointRecordId == value.toInt());
+    }
+    else {
+      result = result && !m_dataPointRecordId;
+    }
+
     return result;
   }
 
@@ -749,6 +825,8 @@ namespace detail{
     m_lastAttributeVectorIndex = m_attributeVectorIndex;
     m_lastAlgorithmRecordId = m_algorithmRecordId;
     m_lastVariableRecordId = m_variableRecordId;
+    m_lastSource = m_source;
+    m_lastDataPointRecordId = m_dataPointRecordId;
   }
 
   void AttributeRecord_Impl::revertToLastValues()
@@ -764,13 +842,14 @@ namespace detail{
     m_attributeVectorIndex = m_lastAttributeVectorIndex;
     m_algorithmRecordId = m_lastAlgorithmRecordId;
     m_variableRecordId = m_lastVariableRecordId;
+    m_source = m_lastSource;
   }
 
 } // detail
 
 AttributeRecord::AttributeRecord(const openstudio::Attribute& attribute,
                                  const FileReferenceRecord& fileReferenceRecord)
-  : ObjectRecord(boost::shared_ptr<detail::AttributeRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::AttributeRecord_Impl>(
         new detail::AttributeRecord_Impl(attribute, fileReferenceRecord)),
         fileReferenceRecord.projectDatabase())
 {
@@ -781,7 +860,7 @@ AttributeRecord::AttributeRecord(const openstudio::Attribute& attribute,
 AttributeRecord::AttributeRecord(const Attribute& attribute,
                                  const AttributeRecord& parentAttributeRecord,
                                  int attributeVectorIndex)
-  : ObjectRecord(boost::shared_ptr<detail::AttributeRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::AttributeRecord_Impl>(
         new detail::AttributeRecord_Impl(attribute, parentAttributeRecord, attributeVectorIndex)),
         parentAttributeRecord.projectDatabase())
 {
@@ -791,7 +870,7 @@ AttributeRecord::AttributeRecord(const Attribute& attribute,
 
 AttributeRecord::AttributeRecord(const openstudio::Attribute& attribute,
                                  const AlgorithmRecord& algorithmRecord)
-  : ObjectRecord(boost::shared_ptr<detail::AttributeRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::AttributeRecord_Impl>(
         new detail::AttributeRecord_Impl(attribute, algorithmRecord)),
         algorithmRecord.projectDatabase())
 {
@@ -801,9 +880,19 @@ AttributeRecord::AttributeRecord(const openstudio::Attribute& attribute,
 
 AttributeRecord::AttributeRecord(const Attribute& attribute,
                                  const VariableRecord& variableRecord)
-  : ObjectRecord(boost::shared_ptr<detail::AttributeRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::AttributeRecord_Impl>(
         new detail::AttributeRecord_Impl(attribute,variableRecord)),
         variableRecord.projectDatabase())
+{
+  OS_ASSERT(getImpl<detail::AttributeRecord_Impl>());
+  constructRelatedRecords(attribute);
+}
+
+AttributeRecord::AttributeRecord(const Attribute& attribute,
+                                 const DataPointRecord& dataPointRecord)
+  : ObjectRecord(std::shared_ptr<detail::AttributeRecord_Impl>(
+        new detail::AttributeRecord_Impl(attribute,dataPointRecord)),
+        dataPointRecord.projectDatabase())
 {
   OS_ASSERT(getImpl<detail::AttributeRecord_Impl>());
   constructRelatedRecords(attribute);
@@ -814,7 +903,7 @@ void AttributeRecord::constructRelatedRecords(const Attribute& attribute) {
   if (attribute.valueType() == AttributeValueType::AttributeVector) {
     AttributeRecord copyOfThis(getImpl<detail::AttributeRecord_Impl>());
     int index(0);
-    BOOST_FOREACH(const Attribute& childAttribute, attribute.valueAsAttributeVector()) {
+    for (const Attribute& childAttribute : attribute.valueAsAttributeVector()) {
       AttributeRecord childRecord(childAttribute, copyOfThis,index);
       ++index;
     }
@@ -822,20 +911,20 @@ void AttributeRecord::constructRelatedRecords(const Attribute& attribute) {
 }
 
 AttributeRecord::AttributeRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::AttributeRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::AttributeRecord_Impl>(
         new detail::AttributeRecord_Impl(query, database)),
         database)
 {
   OS_ASSERT(getImpl<detail::AttributeRecord_Impl>());
 }
 
-AttributeRecord::AttributeRecord(boost::shared_ptr<detail::AttributeRecord_Impl> impl, ProjectDatabase database)
+AttributeRecord::AttributeRecord(std::shared_ptr<detail::AttributeRecord_Impl> impl, ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
   OS_ASSERT(this->getImpl<detail::AttributeRecord_Impl>());
 }
 
-AttributeRecord::AttributeRecord(boost::shared_ptr<detail::AttributeRecord_Impl> impl)
+AttributeRecord::AttributeRecord(std::shared_ptr<detail::AttributeRecord_Impl> impl)
   : ObjectRecord(impl)
 {
   OS_ASSERT(this->getImpl<detail::AttributeRecord_Impl>());
@@ -856,7 +945,7 @@ UpdateByIdQueryData AttributeRecord::updateByIdQueryData() {
     std::stringstream ss;
     ss << "UPDATE " << databaseTableName() << " SET ";
     int expectedValue = 0;
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+    for (auto it = result.columnValues.begin(),
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
@@ -864,7 +953,7 @@ UpdateByIdQueryData AttributeRecord::updateByIdQueryData() {
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
-      std::set<int>::const_iterator nextIt = it;
+      auto nextIt = it;
       ++nextIt;
       if (nextIt == itend) {
         ss << " ";
@@ -878,11 +967,10 @@ UpdateByIdQueryData AttributeRecord::updateByIdQueryData() {
     result.queryString = ss.str();
 
     // null values
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
-         itend = result.columnValues.end(); it != itend; ++it)
+    for (const auto & columnValue : result.columnValues)
     {
       // bind all values to avoid parameter mismatch error
-      if (istringEqual(ColumnsType::valueDescription(*it), "INTEGER")) {
+      if (istringEqual(ColumnsType::valueDescription(columnValue), "INTEGER")) {
         result.nulls.push_back(QVariant(QVariant::Int));
       }
       else {
@@ -908,6 +996,9 @@ void AttributeRecord::createIndices(QSqlDatabase& qSqlDatabase, const std::strin
   assertExec(query);
 
   query.prepare(toQString("CREATE INDEX " + databaseTableName + "variableRecordIdIndex ON " + databaseTableName + " (variableRecordId)"));
+  assertExec(query);
+
+  query.prepare(toQString("CREATE INDEX " + databaseTableName + "dataPointRecordIdIndex ON " + databaseTableName + " (dataPointRecordId)"));
   assertExec(query);
 }
 
@@ -975,6 +1066,10 @@ boost::optional<AlgorithmRecord> AttributeRecord::algorithmRecord() const {
 
 boost::optional<VariableRecord> AttributeRecord::variableRecord() const {
   return getImpl<detail::AttributeRecord_Impl>()->variableRecord();
+}
+
+boost::optional<DataPointRecord> AttributeRecord::dataPointRecord() const {
+  return getImpl<detail::AttributeRecord_Impl>()->dataPointRecord();
 }
 
 boost::optional<int> AttributeRecord::parentAttributeRecordId() const {

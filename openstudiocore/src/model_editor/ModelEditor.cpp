@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model_editor/ModelEditor.hpp>
+#include "ModelEditor.hpp"
 
 ModelEditor::ModelEditor(QWidget * parent)
   : EditorFrame(parent)

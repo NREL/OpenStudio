@@ -20,8 +20,8 @@
 #ifndef MODEL_GENERICMODELOBJECT_HPP
 #define MODEL_GENERICMODELOBJECT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -58,7 +58,7 @@ class MODEL_API GenericModelObject : public ModelObject {
   friend class openstudio::IdfObject;
 
   // constructor
-  explicit GenericModelObject(boost::shared_ptr<detail::GenericModelObject_Impl> impl);
+  explicit GenericModelObject(std::shared_ptr<detail::GenericModelObject_Impl> impl);
 
  private:
 

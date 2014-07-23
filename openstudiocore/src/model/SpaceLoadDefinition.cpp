@@ -17,17 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/SpaceLoadDefinition.hpp>
-#include <model/SpaceLoadDefinition_Impl.hpp>
+#include "SpaceLoadDefinition.hpp"
+#include "SpaceLoadDefinition_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/SpaceLoadInstance.hpp>
-#include <model/SpaceLoadInstance_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "SpaceLoadInstance.hpp"
+#include "SpaceLoadInstance_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -54,7 +52,7 @@ namespace detail {
   {
     std::vector<openstudio::IdfObject> temp1;
     std::vector<SpaceLoadInstance> instances = this->instances();
-    BOOST_FOREACH(SpaceLoadInstance instance, instances){
+    for (SpaceLoadInstance instance : instances){
       std::vector<openstudio::IdfObject> temp2 = instance.remove();
       temp1.insert(temp1.end(), temp2.begin(), temp2.end());
     }
@@ -73,7 +71,7 @@ namespace detail {
   double SpaceLoadDefinition_Impl::floorArea() const
   {
     double result = 0;
-    BOOST_FOREACH(const SpaceLoadInstance& instance, this->instances()){
+    for (const SpaceLoadInstance& instance : this->instances()){
       result += instance.floorArea();
     }
     return result;
@@ -82,7 +80,7 @@ namespace detail {
   int SpaceLoadDefinition_Impl::quantity() const
   {
     int result = 0;
-    BOOST_FOREACH(const SpaceLoadInstance& instance, this->instances()){
+    for (const SpaceLoadInstance& instance : this->instances()){
       result += instance.quantity();
     }
     return result;
@@ -96,7 +94,7 @@ SpaceLoadDefinition::SpaceLoadDefinition(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::SpaceLoadDefinition_Impl>());
 }
 
-SpaceLoadDefinition::SpaceLoadDefinition(boost::shared_ptr<detail::SpaceLoadDefinition_Impl> impl)
+SpaceLoadDefinition::SpaceLoadDefinition(std::shared_ptr<detail::SpaceLoadDefinition_Impl> impl)
   : ResourceObject(impl)
 {}
 

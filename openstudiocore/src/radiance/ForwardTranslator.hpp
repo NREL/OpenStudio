@@ -23,21 +23,21 @@
 #include "RadianceAPI.hpp"
 #include <radiance/WindowGroup.hpp>
 
-#include <model/Model.hpp>
-#include <model/Surface.hpp>
-#include <model/SubSurface.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/InteriorPartitionSurface.hpp>
-#include <model/Luminaire.hpp>
-#include <model/DaylightingControl.hpp>
-#include <model/IlluminanceMap.hpp>
-#include <model/GlareSensor.hpp>
+#include "../model/Model.hpp"
+#include "../model/Surface.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/ShadingSurface.hpp"
+#include "../model/InteriorPartitionSurface.hpp"
+#include "../model/Luminaire.hpp"
+#include "../model/DaylightingControl.hpp"
+#include "../model/IlluminanceMap.hpp"
+#include "../model/GlareSensor.hpp"
 
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
+#include "../utilities/geometry/Point3d.hpp"
+#include "../utilities/geometry/Vector3d.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/StringStreamLogSink.hpp>
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/StringStreamLogSink.hpp"
 
 namespace openstudio {
 namespace radiance {

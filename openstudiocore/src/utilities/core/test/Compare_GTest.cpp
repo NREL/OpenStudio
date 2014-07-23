@@ -19,14 +19,12 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../Compare.hpp"
+#include "../Logger.hpp"
 
 #include <set>
 #include <vector>
 #include <utility> // for pair
-
-#include <boost/shared_ptr.hpp>
 
 using std::string;
 using openstudio::istringEqual;
@@ -36,7 +34,7 @@ using openstudio::checkPtrVecEqual;
 using openstudio::firstOfPairEqual;
 using openstudio::secondOfPairEqual;
 using openstudio::VersionString;
-using boost::shared_ptr;
+using std::shared_ptr;
 
 
 TEST(Compare, istringEqual)

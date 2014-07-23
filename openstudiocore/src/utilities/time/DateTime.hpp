@@ -20,16 +20,15 @@
 #ifndef UTILITIES_TIME_DATETIME_HPP
 #define UTILITIES_TIME_DATETIME_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/time/Date.hpp>
-#include <utilities/time/Time.hpp>
-#include <utilities/core/Macro.hpp>
-#include <utilities/core/Logger.hpp>
+#include "Date.hpp"
+#include "Time.hpp"
+#include "../core/Macro.hpp"
+#include "../core/Logger.hpp"
 
 #include <vector>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/date_time/gregorian/greg_date.hpp>
 
 #include <ctime>

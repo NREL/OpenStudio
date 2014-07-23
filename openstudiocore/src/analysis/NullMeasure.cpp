@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/NullMeasure.hpp>
-#include <analysis/NullMeasure_Impl.hpp>
+#include "NullMeasure.hpp"
+#include "NullMeasure_Impl.hpp"
 
-#include <runmanager/lib/WorkItem.hpp>
+#include "../runmanager/lib/WorkItem.hpp"
 
-#include <utilities/core/FileReference.hpp>
+#include "../utilities/core/FileReference.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -47,7 +47,7 @@ namespace detail {
   {}
 
   AnalysisObject NullMeasure_Impl::clone() const {
-    boost::shared_ptr<NullMeasure_Impl> impl(new NullMeasure_Impl(*this));
+    std::shared_ptr<NullMeasure_Impl> impl(new NullMeasure_Impl(*this));
     return NullMeasure(impl);
   }
 
@@ -87,7 +87,7 @@ namespace detail {
 } // detail
 
 NullMeasure::NullMeasure(bool isSelected)
-  : Measure(boost::shared_ptr<detail::NullMeasure_Impl>(
+  : Measure(std::shared_ptr<detail::NullMeasure_Impl>(
         new detail::NullMeasure_Impl(isSelected)))
 {}
 
@@ -97,7 +97,7 @@ NullMeasure::NullMeasure(const UUID& uuid,
                          const std::string& displayName,
                          const std::string& description,
                          bool isSelected)
-  : Measure(boost::shared_ptr<detail::NullMeasure_Impl>(
+  : Measure(std::shared_ptr<detail::NullMeasure_Impl>(
         new detail::NullMeasure_Impl(uuid,
                                      versionUUID,
                                      name,
@@ -107,7 +107,7 @@ NullMeasure::NullMeasure(const UUID& uuid,
 {}
 
 /// @cond
-NullMeasure::NullMeasure(boost::shared_ptr<detail::NullMeasure_Impl> impl)
+NullMeasure::NullMeasure(std::shared_ptr<detail::NullMeasure_Impl> impl)
   : Measure(impl)
 {}
 /// @endcond

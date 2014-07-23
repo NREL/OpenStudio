@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ReverseTranslator.hpp"
 
-#include <model/GroundHeatExchangerVertical.hpp>
-#include <model/GroundHeatExchangerVertical_Impl.hpp>
+#include "../../model/GroundHeatExchangerVertical.hpp"
+#include "../../model/GroundHeatExchangerVertical_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/GroundHeatExchanger_Vertical_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -144,11 +144,9 @@ OptionalModelObject ReverseTranslator::translateGroundHeatExchangerVertical( con
   std::vector<IdfExtensibleGroup> groups = workspaceObject.extensibleGroups();
   ghex.removeAllGFunctions();
 
-  for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
-       it != groups.end();
-       ++it )
+  for( const auto & group : groups )
   {
-    ghex.pushExtensibleGroup(it->fields());
+    ghex.pushExtensibleGroup(group.fields());
   }
 
   return ghex;

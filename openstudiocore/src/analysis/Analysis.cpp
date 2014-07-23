@@ -17,28 +17,24 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Analysis_Impl.hpp>
+#include "Analysis.hpp"
+#include "Analysis_Impl.hpp"
 
-#include <analysis/Algorithm_Impl.hpp>
-#include <analysis/DakotaAlgorithm.hpp>
-#include <analysis/DakotaAlgorithm_Impl.hpp>
-#include <analysis/DataPoint_Impl.hpp>
-#include <analysis/Measure.hpp>
-#include <analysis/InputVariable.hpp>
-#include <analysis/OpenStudioAlgorithm.hpp>
-#include <analysis/OpenStudioAlgorithm_Impl.hpp>
-#include <analysis/Problem_Impl.hpp>
+#include "Algorithm_Impl.hpp"
+#include "DakotaAlgorithm.hpp"
+#include "DakotaAlgorithm_Impl.hpp"
+#include "DataPoint_Impl.hpp"
+#include "Measure.hpp"
+#include "InputVariable.hpp"
+#include "OpenStudioAlgorithm.hpp"
+#include "OpenStudioAlgorithm_Impl.hpp"
+#include "Problem_Impl.hpp"
 
-#include <runmanager/lib/Job.hpp>
+#include "../runmanager/lib/Job.hpp"
 
-#include <utilities/document/Table.hpp>
-
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Json.hpp>
-#include <utilities/core/PathHelpers.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Json.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -189,7 +185,7 @@ namespace detail {
     if (m_algorithm) {
       connectChild(*m_algorithm,false);
     }
-    BOOST_FOREACH(DataPoint& dataPoint,m_dataPoints) {
+    for (DataPoint& dataPoint : m_dataPoints) {
       if (!dataPoint.hasProblem()) {
         if (dataPoint.problemUUID() == m_problem.uuid()) {
           dataPoint.setProblem(m_problem);
@@ -217,7 +213,7 @@ namespace detail {
     if (other.weatherFile()) {
       m_weatherFile = other.weatherFile().get().clone();
     }
-    BOOST_FOREACH(const DataPoint& dataPoint,other.dataPoints()) {
+    for (const DataPoint& dataPoint : other.dataPoints()) {
       m_dataPoints.push_back(dataPoint.clone().cast<DataPoint>());
       m_dataPoints.back().setProblem(m_problem);
       connectChild(m_dataPoints.back(),false);
@@ -225,7 +221,7 @@ namespace detail {
   }
 
   AnalysisObject Analysis_Impl::clone() const {
-    boost::shared_ptr<Analysis_Impl> impl(new Analysis_Impl(*this));
+    std::shared_ptr<Analysis_Impl> impl(new Analysis_Impl(*this));
     Analysis result(impl);
     Problem problem = result.problem();
     problem.setParent(result);
@@ -234,7 +230,7 @@ namespace detail {
       algorithm->setParent(result);
     }
     DataPointVector dataPoints = result.dataPoints();
-    BOOST_FOREACH(DataPoint& dataPoint,dataPoints) {
+    for (DataPoint& dataPoint : dataPoints) {
       dataPoint.setParent(result);
     }
     return result;
@@ -262,7 +258,7 @@ namespace detail {
 
   std::vector<DataPoint> Analysis_Impl::dataPointsToQueue() const {
     DataPointVector result;
-    BOOST_FOREACH(const DataPoint& dataPoint,m_dataPoints) {
+    for (const DataPoint& dataPoint : m_dataPoints) {
       if (dataPoint.selected() && (!dataPoint.complete())) {
         result.push_back(dataPoint);
       }
@@ -272,7 +268,7 @@ namespace detail {
 
   std::vector<DataPoint> Analysis_Impl::completeDataPoints() const {
     DataPointVector result;
-    BOOST_FOREACH(const DataPoint& dataPoint,m_dataPoints) {
+    for (const DataPoint& dataPoint : m_dataPoints) {
       if (dataPoint.isComplete()) {
         result.push_back(dataPoint);
       }
@@ -282,7 +278,7 @@ namespace detail {
 
   std::vector<DataPoint> Analysis_Impl::successfulDataPoints() const {
     DataPointVector result;
-    BOOST_FOREACH(const DataPoint& dataPoint,m_dataPoints) {
+    for (const DataPoint& dataPoint : m_dataPoints) {
       if (dataPoint.isComplete() && !dataPoint.failed()) {
         result.push_back(dataPoint);
       }
@@ -292,7 +288,7 @@ namespace detail {
 
   std::vector<DataPoint> Analysis_Impl::failedDataPoints() const {
     DataPointVector result;
-    BOOST_FOREACH(const DataPoint& dataPoint,m_dataPoints) {
+    for (const DataPoint& dataPoint : m_dataPoints) {
       if (dataPoint.isComplete() && dataPoint.failed()) {
         result.push_back(dataPoint);
       }
@@ -302,7 +298,7 @@ namespace detail {
 
   std::vector<DataPoint> Analysis_Impl::dataPointsNeedingDetails() const {
     DataPointVector result;
-    BOOST_FOREACH(const DataPoint& dataPoint, m_dataPoints) {
+    for (const DataPoint& dataPoint : m_dataPoints) {
       if (dataPoint.isComplete() && 
           (dataPoint.runType() == DataPointRunType::CloudDetailed) &&
           dataPoint.directory().empty())
@@ -317,7 +313,7 @@ namespace detail {
       const std::vector<QVariant>& variableValues) const
   {
     DataPointVector result;
-    BOOST_FOREACH(const DataPoint& dataPoint, m_dataPoints) {
+    for (const DataPoint& dataPoint : m_dataPoints) {
       if (dataPoint.matches(variableValues)) {
         result.push_back(dataPoint);
       }
@@ -339,7 +335,7 @@ namespace detail {
 
   std::vector<DataPoint> Analysis_Impl::getDataPoints(const std::string& tag) const {
     DataPointVector result;
-    BOOST_FOREACH(const DataPoint& dataPoint,m_dataPoints) {
+    for (const DataPoint& dataPoint : m_dataPoints) {
       if (dataPoint.isTag(tag)) {
         result.push_back(dataPoint);
       }
@@ -365,7 +361,7 @@ namespace detail {
 
   boost::optional<DataPoint> Analysis_Impl::getDataPointByUUID(const UUID& uuid) const {
     OptionalDataPoint result;
-    BOOST_FOREACH(const DataPoint& myDataPoint,dataPoints()) {
+    for (const DataPoint& myDataPoint : dataPoints()) {
       if (myDataPoint.uuid() == uuid) {
         result = myDataPoint;
         break;
@@ -376,7 +372,7 @@ namespace detail {
 
   boost::optional<DataPoint> Analysis_Impl::getDataPointByUUID(const DataPoint& dataPoint) const {
     OptionalDataPoint result;
-    BOOST_FOREACH(const DataPoint& myDataPoint,dataPoints()) {
+    for (const DataPoint& myDataPoint : dataPoints()) {
       if (dataPoint.uuidEqual(myDataPoint)) {
         result = myDataPoint;
         break;
@@ -534,7 +530,7 @@ namespace detail {
   bool Analysis_Impl::removeDataPoint(const DataPoint &dataPoint) {
     OptionalDataPoint exactDataPoint = getDataPointByUUID(dataPoint);
     if (exactDataPoint) {
-      DataPointVector::iterator it = std::find(m_dataPoints.begin(),m_dataPoints.end(),*exactDataPoint);
+      auto it = std::find(m_dataPoints.begin(),m_dataPoints.end(),*exactDataPoint);
       OS_ASSERT(it != m_dataPoints.end());
       disconnectChild(*it);
       m_dataPoints.erase(it);
@@ -551,7 +547,7 @@ namespace detail {
   }
 
   void Analysis_Impl::removeAllDataPoints() {
-    BOOST_FOREACH(DataPoint& dataPoint, m_dataPoints) {
+    for (DataPoint& dataPoint : m_dataPoints) {
       disconnectChild(dataPoint);
     }
     m_dataPoints.clear();
@@ -580,7 +576,7 @@ namespace detail {
   }
 
   void Analysis_Impl::clearAllResults() {
-    BOOST_FOREACH(DataPoint& dataPoint, m_dataPoints) {
+    for (DataPoint& dataPoint : m_dataPoints) {
       dataPoint.clearResults();
     }
     if (m_algorithm) {
@@ -672,7 +668,7 @@ namespace detail {
 
       typedef std::pair<runmanager::ErrorType, std::string> Err;
 
-      BOOST_FOREACH(const Err& error, jobErrors.allErrors) {
+      for (const Err& error : jobErrors.allErrors) {
         if (error.first == runmanager::ErrorType::Error)
         {
           LOG(Error, error.first.valueName() << ": " << error.second);
@@ -689,27 +685,6 @@ namespace detail {
       dakAlg.markFailed();
     }
     onChange(AnalysisObject_Impl::Benign);
-  }
-
-  Table Analysis_Impl::summaryTable() const {
-    Table table;
-
-    TableRow row;
-    BOOST_FOREACH(const InputVariable& variable, problem().variables()) {
-      row.push_back(variable.displayName());
-    }
-    table.appendRow(row);
-    row.clear();
-
-    BOOST_FOREACH(const DataPoint& dataPoint,dataPoints()) {
-      BOOST_FOREACH(const QVariant& value,dataPoint.variableValues()) {
-        row.push_back(TableElement(value));
-      }
-      table.appendRow(row);
-      row.clear();
-    }
-
-    return table;
   }
 
   void Analysis_Impl::updateInputPathData(const openstudio::path& originalBase,
@@ -750,13 +725,14 @@ namespace detail {
     // Doing nothing because paths are outputs from running an analysis.
     //
     DataPointVector dataPoints = this->dataPoints();
-    BOOST_FOREACH(DataPoint& dataPoint,dataPoints) {
+    for (DataPoint& dataPoint : dataPoints) {
       dataPoint.getImpl<detail::DataPoint_Impl>()->updateInputPathData(originalBase,newBase);
     }
   }
 
   bool Analysis_Impl::saveJSON(const openstudio::path& p,
-                               const AnalysisSerializationOptions& options,                               bool overwrite) const
+                               const AnalysisSerializationOptions& options,
+                               bool overwrite) const
   {
     QVariant json = toVariant(options);
     return openstudio::saveJSON(json,p,overwrite);
@@ -797,7 +773,7 @@ namespace detail {
     if (options.scope == AnalysisSerializationScope::Full) {
       // add data point information
       QVariantList dataPointList;
-      Q_FOREACH(const DataPoint& dataPoint, dataPoints()) {
+      for (const DataPoint& dataPoint : dataPoints()) {
         dataPointList.push_back(dataPoint.toVariant());
       }
 
@@ -836,7 +812,7 @@ namespace detail {
     if (map.contains("data_points")) {
       dataPoints = deserializeUnorderedVector<DataPoint>(
             map["data_points"].toList(),
-            boost::function<DataPoint (const QVariant&)>(boost::bind(openstudio::analysis::detail::DataPoint_Impl::factoryFromVariant,_1,version,problem)));
+            std::function<DataPoint (const QVariant&)>(std::bind(openstudio::analysis::detail::DataPoint_Impl::factoryFromVariant,std::placeholders::_1,version,problem)));
     }
     return Analysis(toUUID(map["uuid"].toString().toStdString()),
                     toUUID(map["version_uuid"].toString().toStdString()),
@@ -879,7 +855,7 @@ AnalysisSerializationOptions::AnalysisSerializationOptions(
 Analysis::Analysis(const std::string& name,
                    const Problem& problem,
                    const FileReferenceType& seedType)
-  : AnalysisObject(boost::shared_ptr<detail::Analysis_Impl>(
+  : AnalysisObject(std::shared_ptr<detail::Analysis_Impl>(
                      new detail::Analysis_Impl(name,problem,seedType)))
 {
   Analysis copyOfThis(getImpl<detail::Analysis_Impl>());
@@ -889,7 +865,7 @@ Analysis::Analysis(const std::string& name,
 Analysis::Analysis(const std::string& name,
                    const Problem& problem,
                    const FileReference& seed)
-  : AnalysisObject(boost::shared_ptr<detail::Analysis_Impl>(
+  : AnalysisObject(std::shared_ptr<detail::Analysis_Impl>(
         new detail::Analysis_Impl(name,problem,seed)))
 {
   Analysis copyOfThis(getImpl<detail::Analysis_Impl>());
@@ -900,7 +876,7 @@ Analysis::Analysis(const std::string& name,
                    const Problem& problem,
                    const FileReference& seed,
                    const FileReference& weatherFile)
-  : AnalysisObject(boost::shared_ptr<detail::Analysis_Impl>(
+  : AnalysisObject(std::shared_ptr<detail::Analysis_Impl>(
         new detail::Analysis_Impl(name,problem,seed,weatherFile)))
 {
   Analysis copyOfThis(getImpl<detail::Analysis_Impl>());
@@ -911,7 +887,7 @@ Analysis::Analysis(const std::string& name,
                    const Problem& problem,
                    const Algorithm& algorithm,
                    const FileReference& seed)
-  : AnalysisObject(boost::shared_ptr<detail::Analysis_Impl>(
+  : AnalysisObject(std::shared_ptr<detail::Analysis_Impl>(
         new detail::Analysis_Impl(name,problem,algorithm,seed)))
 {
   Analysis copyOfThis(getImpl<detail::Analysis_Impl>());
@@ -924,7 +900,7 @@ Analysis::Analysis(const std::string& name,
                    const Algorithm& algorithm,
                    const FileReference& seed,
                    const FileReference& weatherFile)
-  : AnalysisObject(boost::shared_ptr<detail::Analysis_Impl>(
+  : AnalysisObject(std::shared_ptr<detail::Analysis_Impl>(
         new detail::Analysis_Impl(name,problem,algorithm,seed,weatherFile)))
 {
   Analysis copyOfThis(getImpl<detail::Analysis_Impl>());
@@ -944,7 +920,7 @@ Analysis::Analysis(const UUID& uuid,
                    const std::vector<DataPoint>& dataPoints,
                    bool resultsAreInvalid,
                    bool dataPointsAreInvalid)
-  : AnalysisObject(boost::shared_ptr<detail::Analysis_Impl>(
+  : AnalysisObject(std::shared_ptr<detail::Analysis_Impl>(
         new detail::Analysis_Impl(uuid,versionUUID,name,displayName,description,
                                   problem,algorithm,seed,weatherFile,dataPoints,
                                   resultsAreInvalid,dataPointsAreInvalid)))
@@ -954,7 +930,7 @@ Analysis::Analysis(const UUID& uuid,
   if (algorithm) {
     algorithm->setParent(copyOfThis);
   }
-  BOOST_FOREACH(const DataPoint& dataPoint,dataPoints) {
+  for (const DataPoint& dataPoint : dataPoints) {
     dataPoint.setParent(copyOfThis);
   }
 }
@@ -1109,10 +1085,6 @@ void Analysis::updateDakotaAlgorithm(const runmanager::Job& completedDakotaJob) 
   getImpl<detail::Analysis_Impl>()->updateDakotaAlgorithm(completedDakotaJob);
 }
 
-Table Analysis::summaryTable() const {
-  return getImpl<detail::Analysis_Impl>()->summaryTable();
-}
-
 void Analysis::updateInputPathData(const openstudio::path& originalBase,
                                    const openstudio::path& newBase)
 {
@@ -1179,7 +1151,7 @@ boost::optional<Analysis> Analysis::loadJSON(const std::string& json,
 }
 
 /// @cond
-Analysis::Analysis(boost::shared_ptr<detail::Analysis_Impl> impl)
+Analysis::Analysis(std::shared_ptr<detail::Analysis_Impl> impl)
   : AnalysisObject(impl)
 {}
 /// @endcond

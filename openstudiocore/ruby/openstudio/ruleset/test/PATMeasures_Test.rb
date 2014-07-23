@@ -20,9 +20,9 @@
 require 'openstudio'
 require 'fileutils'
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class PATMeasures_Test < Test::Unit::TestCase
+class PATMeasures_Test < MiniTest::Unit::TestCase
 
   def test_PATMeasures
     patApplicationMeasuresDir = OpenStudio::BCLMeasure::patApplicationMeasuresDir

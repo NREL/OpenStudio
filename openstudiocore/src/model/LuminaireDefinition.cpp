@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/LuminaireDefinition.hpp>
-#include <model/LuminaireDefinition_Impl.hpp>
+#include "LuminaireDefinition.hpp"
+#include "LuminaireDefinition_Impl.hpp"
 
 #include <utilities/idd/OS_Luminaire_Definition_FieldEnums.hxx>
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/math/FloatCompare.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -346,7 +346,7 @@ void LuminaireDefinition::resetReturnAirFractionFunctionofPlenumTemperatureCoeff
 }
 
 /// @cond
-LuminaireDefinition::LuminaireDefinition(boost::shared_ptr<detail::LuminaireDefinition_Impl> impl)
+LuminaireDefinition::LuminaireDefinition(std::shared_ptr<detail::LuminaireDefinition_Impl> impl)
   : SpaceLoadDefinition(impl)
 {}
 /// @endcond

@@ -20,12 +20,9 @@
 #ifndef MODEL_UTILITYCOST_COMPUTATION_IMPL_HPP
 #define MODEL_UTILITYCOST_COMPUTATION_IMPL_HPP
 
-
-#include <model/UtilityCost_Computation.hpp>
-
-#include <model/ParentObject_Impl.hpp>
-#include <model/UtilityCost_Computation.hpp>
-#include <utilities/core/Optional.hpp>
+#include "ParentObject_Impl.hpp"
+#include "UtilityCost_Computation.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio {
 namespace model {

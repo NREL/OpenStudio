@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/plot/ProgressBar.hpp>
+#include "ProgressBar.hpp"
 
-#include <utilities/core/Application.hpp>
+#include "../core/Application.hpp"
 
 #include <cmath>
 
@@ -33,10 +33,10 @@ namespace openstudio{
     openstudio::Application::instance().application();
 
     // create a QProgressBar
-    m_impl = boost::shared_ptr<QProgressBar>(new QProgressBar(parent));
+    m_impl = std::shared_ptr<QProgressBar>(new QProgressBar(parent));
 
     // if no parent assume we want this visible
-    if (parent == 0){
+    if (parent == nullptr){
       m_impl->setVisible(true);
     }
 
@@ -51,7 +51,7 @@ namespace openstudio{
     openstudio::Application::instance().application();
 
     // create a QProgressBar
-    m_impl = boost::shared_ptr<QProgressBar>(new QProgressBar(parent));
+    m_impl = std::shared_ptr<QProgressBar>(new QProgressBar(parent));
     
     // set visibility
     m_impl->setVisible(visible);
@@ -60,7 +60,7 @@ namespace openstudio{
   }
 
   /// constructor from impl
-  //ProgressBar::ProgressBar(const boost::shared_ptr<QProgressBar>& impl)
+  //ProgressBar::ProgressBar(const std::shared_ptr<QProgressBar>& impl)
   //  : m_impl(impl), m_percentage(0.0)
   //{}
 
@@ -158,7 +158,7 @@ namespace openstudio{
     m_impl->setWindowTitle(windowTitle);
   }
 
-  //boost::shared_ptr<QProgressBar> ProgressBar::impl() const
+  //std::shared_ptr<QProgressBar> ProgressBar::impl() const
   //{
   //  return m_impl;
   //}

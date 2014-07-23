@@ -20,9 +20,9 @@
 #ifndef UTILITIES_CORE_PATHHELPERS_HPP
 #define UTILITIES_CORE_PATHHELPERS_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/Path.hpp>
+#include "Path.hpp"
 
 namespace openstudio {
 

@@ -20,8 +20,8 @@
 #ifndef UTILITIES_CORE_PATHWATCHER_HPP
 #define UTILITIES_CORE_PATHWATCHER_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/Path.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "Path.hpp"
 
 #include <QObject>
 #include <QString>
@@ -33,7 +33,7 @@ class QTimer;
 namespace openstudio {
 
   /** Class for watching either a file or directory, QFileSystemWatcher has issues when watching 
-   **  many files so it is not recomended to use too many of these objects.
+   **  many files so it is not recommended to use too many of these objects.
    **/
   class UTILITIES_API PathWatcher : public QObject{
 
@@ -95,8 +95,8 @@ namespace openstudio {
     private:
 
       /// impl
-      boost::shared_ptr<QFileSystemWatcher> m_impl;
-      boost::shared_ptr<QTimer> m_timer;
+      std::shared_ptr<QFileSystemWatcher> m_impl;
+      std::shared_ptr<QTimer> m_timer;
 
       bool m_enabled;
       bool m_isDirectory;

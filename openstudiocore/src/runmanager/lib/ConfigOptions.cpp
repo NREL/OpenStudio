@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <runmanager/lib/ConfigOptions.hpp>
-#include <runmanager/lib/ToolFinder.hpp>
-#include <utilities/core/Application.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
+#include "ConfigOptions.hpp"
+#include "ToolFinder.hpp"
+#include "../../utilities/core/Application.hpp"
+#include "../../utilities/core/ApplicationPathHelpers.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -30,15 +30,12 @@
 #include <QIcon>
 #include <QMessageBox>
 #include <QSettings>
-#include <QtGlobal>
 
 #include <boost/filesystem.hpp>
 #include <boost/thread.hpp>
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 #include <Windows.h>
-// Undefine "max" defined by microsoft which conflicts with std::max
-#undef max
 #endif
 
 
@@ -47,26 +44,25 @@ namespace openstudio {
 namespace runmanager {
 
   ToolLocationInfo::ToolLocationInfo(const ToolType &t_type,
-      const openstudio::path &t_bindir, const openstudio::path &t_linuxbinarchive)
-   : toolType(t_type), binaryDir(t_bindir), linuxBinaryArchive(t_linuxbinarchive)
+      const openstudio::path &t_bindir)
+   : toolType(t_type), binaryDir(t_bindir)
   {
   }
 
   bool ToolLocationInfo::operator<(const ToolLocationInfo &rhs) const
   {
-    return (rhs.toolType <  toolType)
-        || (rhs.toolType == toolType && rhs.binaryDir <  binaryDir)
-        || (rhs.toolType == toolType && rhs.binaryDir == binaryDir && rhs.linuxBinaryArchive < linuxBinaryArchive);
+    return (rhs.toolType < toolType)
+        || (rhs.toolType == toolType && rhs.binaryDir < binaryDir);
   }
 
   bool ToolLocationInfo::operator==(const ToolLocationInfo &rhs) const
   {
-    return rhs.toolType == toolType && rhs.binaryDir == binaryDir && rhs.linuxBinaryArchive == linuxBinaryArchive;
+    return rhs.toolType == toolType && rhs.binaryDir == binaryDir;
   }
 
   std::ostream &operator<<(std::ostream &os, const ToolLocationInfo &epi)
   {
-    os << "(" << epi.toolType.valueDescription() << ", " << toString(epi.binaryDir) << ", " << toString(epi.linuxBinaryArchive) << ")";
+    os << "(" << epi.toolType.valueDescription() << ", " << toString(epi.binaryDir) << ")";
     return os;
   }
 
@@ -74,7 +70,7 @@ namespace runmanager {
 
   ConfigOptions::ConfigOptions(bool t_loadQSettings)
      : m_maxLocalJobs(std::max(1u, boost::thread::hardware_concurrency()-1)),
-       m_slurmMaxTime(240), m_slurmMaxJobs(0), m_simpleName(false)
+       m_simpleName(false)
   {
     if (t_loadQSettings)
     {
@@ -122,69 +118,27 @@ namespace runmanager {
 
     if (!t_energyplus.empty())
     {
-      tools.append(makeTools(ToolType::EnergyPlus, t_energyplus, openstudio::path(), ToolFinder::parseToolVersion(t_energyplus)));
+      tools.append(makeTools(ToolType::EnergyPlus, t_energyplus, ToolFinder::parseToolVersion(t_energyplus)));
     }
 
     if (!t_xmlpreproc.empty())
     {
-      tools.append(makeTools(ToolType::XMLPreprocessor, t_xmlpreproc, openstudio::path(), ToolFinder::parseToolVersion(t_xmlpreproc)));
+      tools.append(makeTools(ToolType::XMLPreprocessor, t_xmlpreproc, ToolFinder::parseToolVersion(t_xmlpreproc)));
     }
 
     if (!t_radiance.empty())
     {
-      tools.append(makeTools(ToolType::Radiance, t_radiance, openstudio::path(), ToolFinder::parseToolVersion(t_radiance)));
+      tools.append(makeTools(ToolType::Radiance, t_radiance, ToolFinder::parseToolVersion(t_radiance)));
     }
 
     if (!t_ruby.empty())
     {
-      tools.append(makeTools(ToolType::Ruby, t_ruby, openstudio::path(), ToolFinder::parseToolVersion(t_ruby)));
+      tools.append(makeTools(ToolType::Ruby, t_ruby, ToolFinder::parseToolVersion(t_ruby)));
     }
 
     if (!t_dakota.empty())
     {
-      tools.append(makeTools(ToolType::Dakota, t_dakota, openstudio::path(), ToolFinder::parseToolVersion(t_dakota)));
-    }
-
-    return tools;
-  }
-
-  openstudio::runmanager::Tools ConfigOptions::makeTools(
-      const openstudio::path &t_energyplus, 
-      const openstudio::path &t_xmlpreproc, 
-      const openstudio::path &t_radiance, 
-      const openstudio::path &t_ruby,
-      const openstudio::path &t_dakota,
-      const openstudio::path &t_remote_energyplus, 
-      const openstudio::path &t_remote_xmlpreproc,
-      const openstudio::path &t_remote_radiance,
-      const openstudio::path &t_remote_ruby,
-      const openstudio::path &t_remote_dakota)
-  {
-    Tools tools;
-
-    if (!t_energyplus.empty())
-    {
-      tools.append(makeTools(ToolType::EnergyPlus, t_energyplus, t_remote_energyplus, ToolVersion()));
-    }
-
-    if (!t_xmlpreproc.empty())
-    {
-      tools.append(makeTools(ToolType::XMLPreprocessor, t_xmlpreproc, t_remote_xmlpreproc, ToolVersion()));
-    }
-
-    if (!t_radiance.empty())
-    {
-      tools.append(makeTools(ToolType::Radiance, t_radiance, t_remote_radiance, ToolVersion()));
-    }
-
-    if (!t_ruby.empty())
-    {
-      tools.append(makeTools(ToolType::Ruby, t_ruby, t_remote_ruby, ToolVersion()));
-    }
-
-    if (!t_dakota.empty())
-    {
-      tools.append(makeTools(ToolType::Dakota, t_dakota, t_remote_dakota, ToolVersion()));
+      tools.append(makeTools(ToolType::Dakota, t_dakota, ToolFinder::parseToolVersion(t_dakota)));
     }
 
     return tools;
@@ -237,15 +191,14 @@ namespace runmanager {
   openstudio::runmanager::Tools ConfigOptions::makeTools(
           const ToolType &t_type,
           const openstudio::path &t_local,
-          const openstudio::path &t_remote,
           const ToolVersion &t_version)
   {
-    return makeTools(t_type, std::make_pair(t_version, ToolLocationInfo(t_type, t_local, t_remote)));
+    return makeTools(t_type, std::make_pair(t_version, ToolLocationInfo(t_type, t_local)));
   }
 
   openstudio::runmanager::ToolInfo ConfigOptions::toRTraceToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus) 
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -255,15 +208,13 @@ namespace runmanager {
         "rtrace",
         eplus.first,
         change_extension(eplus.second.binaryDir / toPath("rtrace"), exeext),
-        eplus.second.linuxBinaryArchive,
-        toPath("rtrace"),
         boost::regex(""));
   } 
 
 
   openstudio::runmanager::ToolInfo ConfigOptions::toExpandObjectsToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus) 
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -280,14 +231,12 @@ namespace runmanager {
         "expandobjects",
         eplus.first,
         change_extension(eplus.second.binaryDir / toPath(exename), exeext),
-        eplus.second.linuxBinaryArchive,
-        toPath(exename),
         boost::regex("expanded\\.idf"));
   } 
 
   openstudio::runmanager::ToolInfo ConfigOptions::toBasementToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus) 
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -318,14 +267,12 @@ namespace runmanager {
         "basement",
         eplus.first,
         basementlocation,
-        eplus.second.linuxBinaryArchive,
-        toPath("basement"),
         boost::regex(".*\\.TXT"));
   } 
 
   openstudio::runmanager::ToolInfo ConfigOptions::toSlabToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus) 
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -354,15 +301,13 @@ namespace runmanager {
         "slab",
         eplus.first,
         slablocation,
-        eplus.second.linuxBinaryArchive,
-        toPath("slab"),
         boost::regex(".*\\.TXT"));
   } 
 
   openstudio::runmanager::ToolInfo 
     ConfigOptions::toXMLPreprocessorToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus) 
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -372,14 +317,12 @@ namespace runmanager {
         "xmlpreprocessor",
         eplus.first,
         change_extension(eplus.second.binaryDir / toPath("EPXMLPreproc2"), exeext),
-        eplus.second.linuxBinaryArchive,
-        toPath("EPXMLPreproc2"),
         boost::regex("out_pp2\\.idf"));
   } 
 
   openstudio::runmanager::ToolInfo ConfigOptions::toEPlusToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus)
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -397,14 +340,12 @@ namespace runmanager {
         "energyplus",
         eplus.first,
         change_extension(eplus.second.binaryDir / toPath(exename), exeext),
-        eplus.second.linuxBinaryArchive,
-        toPath(exename),
         boost::regex("eplus.*"));
   }
 
   openstudio::runmanager::ToolInfo ConfigOptions::toIES2RadToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus)
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -414,14 +355,12 @@ namespace runmanager {
         "ies2rad",
         eplus.first,
         change_extension(eplus.second.binaryDir / toPath("ies2rad"), exeext),
-        eplus.second.linuxBinaryArchive,
-        toPath("ies2rad"),
         boost::regex(".*\\.(rad|dat)"));
   }
 
   openstudio::runmanager::ToolInfo ConfigOptions::toRaImageToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus)
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
     static const char exename[] = "ra_bmp";
 #else
@@ -435,14 +374,12 @@ namespace runmanager {
         "ra_image",
         eplus.first,
         change_extension(eplus.second.binaryDir / toPath(exename), exeext),
-        eplus.second.linuxBinaryArchive,
-        toPath("ra_tiff"),
         boost::regex(".*\\.(tiff|bmp)"));
   }
 
   openstudio::runmanager::ToolInfo ConfigOptions::toRadToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus)
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -452,14 +389,12 @@ namespace runmanager {
         "rad",
         eplus.first,
         change_extension(eplus.second.binaryDir / toPath("rad"), exeext),
-        eplus.second.linuxBinaryArchive,
-        toPath("rad"),
         boost::regex(".*\\.hdr"));
   }
 
   openstudio::runmanager::ToolInfo ConfigOptions::toEpw2Wea(const std::pair<ToolVersion, ToolLocationInfo> &eplus)
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -469,15 +404,13 @@ namespace runmanager {
         "epw2wea",
         eplus.first,
         change_extension(eplus.second.binaryDir / toPath("epw2wea"), exeext),
-        eplus.second.linuxBinaryArchive,
-        toPath("epw2wea"),
         boost::regex(".*\\.wea"));
   }
 
 
   openstudio::runmanager::ToolInfo ConfigOptions::toRubyToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus)
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -487,14 +420,12 @@ namespace runmanager {
         "ruby",
         eplus.first,
         change_extension(eplus.second.binaryDir / toPath("ruby"), exeext),
-        eplus.second.linuxBinaryArchive,
-        toPath("ruby"),
         boost::regex(".*"));
   }
 
   openstudio::runmanager::ToolInfo ConfigOptions::toDakotaToolInfo(const std::pair<ToolVersion, ToolLocationInfo>& dakota) 
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -504,8 +435,6 @@ namespace runmanager {
         "dakota",
         dakota.first,
         change_extension(dakota.second.binaryDir / toPath("dakota"), exeext),
-        dakota.second.linuxBinaryArchive,
-        toPath("dakota"),
         boost::regex(".*"));
   }
 
@@ -556,36 +485,6 @@ namespace runmanager {
     m_maxLocalJobs = t_numjobs;
   }
 
-  std::string ConfigOptions::getSLURMUserName() const
-  {
-    return m_slurmUserName;
-  }
-
-  void ConfigOptions::setSLURMUserName(const std::string &t_username) 
-  {
-    m_slurmUserName = boost::trim_copy(t_username);
-  }
-
-  std::string ConfigOptions::getSLURMHost() const
-  {
-    return m_slurmHost;
-  }
-
-  void ConfigOptions::setSLURMHost(const std::string &t_host) 
-  {
-    m_slurmHost = boost::trim_copy(t_host);
-  }
-
-  int ConfigOptions::getMaxSLURMJobs() const
-  {
-    return m_slurmMaxJobs;
-  }
-
-  void ConfigOptions::setMaxSLURMJobs(int t_numjobs)
-  {
-    m_slurmMaxJobs = t_numjobs;
-  }
-
   bool ConfigOptions::getSimpleName() const
   {
     return m_simpleName;
@@ -594,36 +493,6 @@ namespace runmanager {
   void ConfigOptions::setSimpleName(bool t_simpleName)
   {
     m_simpleName = t_simpleName;
-  }
-
-  int ConfigOptions::getSLURMMaxTime() const
-  {
-    return m_slurmMaxTime;
-  }
-
-  void ConfigOptions::setSLURMMaxTime(int t_maxTime)
-  {
-    m_slurmMaxTime = t_maxTime;
-  }
-
-  std::string ConfigOptions::getSLURMPartition() const
-  {
-    return m_slurmPartition;
-  }
-
-  void ConfigOptions::setSLURMPartition(const std::string &t_partition)
-  {
-    m_slurmPartition = boost::trim_copy(t_partition);
-  }
-
-  std::string ConfigOptions::getSLURMAccount() const
-  {
-    return m_slurmAccount;
-  }
-
-  void ConfigOptions::setSLURMAccount(const std::string &t_account)
-  {
-    m_slurmAccount = boost::trim_copy(t_account);
   }
 
   std::vector<openstudio::path> ConfigOptions::potentialRadianceLocations() const
@@ -790,12 +659,6 @@ namespace runmanager {
     QVariant defaultepwlocation = settings.value("runmanager_defaultepwlocation");
     QVariant outputlocation = settings.value("runmanager_outputlocation");
     QVariant simplename = settings.value("runmanager_simplename");
-    QVariant slurmhost = settings.value("runmanager_slurmhost");
-    QVariant slurmusername = settings.value("runmanager_slurmusername");
-    QVariant maxslurmjobs = settings.value("runmanager_maxslurmjobs");
-    QVariant slurmmaxtime = settings.value("runmanager_slurmmaxtime");
-    QVariant slurmpartition = settings.value("runmanager_slurmpartition");
-    QVariant slurmaccount = settings.value("runmanager_slurmaccount");
 
     if (maxlocaljobs.isValid())
     {
@@ -822,36 +685,6 @@ namespace runmanager {
       setSimpleName(simplename.toBool());
     }
 
-    if (slurmhost.isValid())
-    {
-      setSLURMHost(openstudio::toString(slurmhost.toString()));
-    }
-
-    if (slurmusername.isValid())
-    {
-      setSLURMUserName(openstudio::toString(slurmusername.toString()));
-    }
-
-    if (maxslurmjobs.isValid())
-    {
-      setMaxSLURMJobs(maxslurmjobs.toInt());
-    }
-
-    if (slurmmaxtime.isValid())
-    {
-      setSLURMMaxTime(slurmmaxtime.toInt());
-    }
-
-    if (slurmpartition.isValid())
-    {
-      setSLURMPartition(openstudio::toString(slurmpartition.toString()));
-    }
-
-    if (slurmaccount.isValid())
-    {
-      setSLURMAccount(openstudio::toString(slurmaccount.toString()));
-    }
-
   }
 
 
@@ -869,12 +702,6 @@ namespace runmanager {
     settings.setValue("runmanager_defaultepwlocation", openstudio::toQString(getDefaultEPWLocation()));
     settings.setValue("runmanager_outputlocation", openstudio::toQString(getOutputLocation()));
     settings.setValue("runmanager_simplename", getSimpleName());
-    settings.setValue("runmanager_slurmhost", openstudio::toQString(getSLURMHost()));
-    settings.setValue("runmanager_slurmusername", openstudio::toQString(getSLURMUserName()));
-    settings.setValue("runmanager_maxslurmjobs", getMaxSLURMJobs());
-    settings.setValue("runmanager_slurmmaxtime", getSLURMMaxTime());
-    settings.setValue("runmanager_slurmpartition", openstudio::toQString(getSLURMPartition()));
-    settings.setValue("runmanager_slurmaccount", openstudio::toQString(getSLURMAccount()));
 
   }
 
@@ -913,8 +740,7 @@ namespace runmanager {
 
         openstudio::runmanager::ToolLocationInfo tli(
             ToolType(openstudio::toString(settings.value("toolType").toString())),
-            openstudio::toPath(settings.value("binaryDir").toString()),
-            openstudio::toPath(settings.value("linuxBinaryArchive").toString())
+            openstudio::toPath(settings.value("binaryDir").toString())
             );
 
         tools.push_back(std::make_pair(tv, tli));
@@ -982,7 +808,6 @@ namespace runmanager {
 
       settings.setValue("toolType", openstudio::toQString(t_tools[i].second.toolType.valueName()));
       settings.setValue("binaryDir", openstudio::toQString(t_tools[i].second.binaryDir));
-      settings.setValue("linuxBinaryArchive", openstudio::toQString(t_tools[i].second.linuxBinaryArchive));
     }
 
     settings.endArray();
@@ -1050,7 +875,7 @@ namespace runmanager {
 
     for (char drive = 'D'; drive <= 'Z'; ++drive)
     {
-      // Add all normal fixed harddrives
+      // Add all normal fixed hard drives
       std::string path = drive + std::string(":\\");
       if (GetDriveType(path.c_str()) == DRIVE_FIXED)
       {
@@ -1063,11 +888,7 @@ namespace runmanager {
     search.push_back(openstudio::toPath("/usr/local"));
 
 #ifdef Q_OS_MAC
-#if defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__) && __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ == 1090
     search.push_back(toPath("/System/Library/Frameworks/Ruby.framework/Versions/2.0/usr/bin"));
-#else
-    search.push_back(toPath("/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin"));
-#endif
 #endif
 
 #endif

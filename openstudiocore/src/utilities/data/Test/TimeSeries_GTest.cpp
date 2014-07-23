@@ -18,11 +18,11 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/data/Test/DataFixture.hpp>
+#include "DataFixture.hpp"
 
-#include <utilities/data/TimeSeries.hpp>
-#include <utilities/time/Date.hpp>
-#include <utilities/time/Time.hpp>
+#include "../TimeSeries.hpp"
+#include "../../time/Date.hpp"
+#include "../../time/Time.hpp"
 
 using namespace std;
 using namespace boost;

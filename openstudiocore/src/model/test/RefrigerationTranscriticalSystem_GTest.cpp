@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -19,24 +19,24 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/RefrigerationTranscriticalSystem.hpp>
-#include <model/RefrigerationTranscriticalSystem_Impl.hpp>
-#include <model/RefrigerationCompressor.hpp>
-#include <model/RefrigerationCompressor_Impl.hpp>
-#include <model/RefrigerationCase.hpp>
-#include <model/RefrigerationCase_Impl.hpp>
-#include <model/RefrigerationGasCoolerAirCooled.hpp>
-#include <model/RefrigerationGasCoolerAirCooled_Impl.hpp>
-#include <model/RefrigerationWalkIn.hpp>
-#include <model/RefrigerationWalkIn_Impl.hpp>
-#include <model/ModelObjectList.hpp>
-#include <model/ModelObjectList_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/ScheduleCompact_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+#include "../RefrigerationTranscriticalSystem.hpp"
+#include "../RefrigerationTranscriticalSystem_Impl.hpp"
+#include "../RefrigerationCompressor.hpp"
+#include "../RefrigerationCompressor_Impl.hpp"
+#include "../RefrigerationCase.hpp"
+#include "../RefrigerationCase_Impl.hpp"
+#include "../RefrigerationGasCoolerAirCooled.hpp"
+#include "../RefrigerationGasCoolerAirCooled_Impl.hpp"
+#include "../RefrigerationWalkIn.hpp"
+#include "../RefrigerationWalkIn_Impl.hpp"
+#include "../ModelObjectList.hpp"
+#include "../ModelObjectList_Impl.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../ScheduleCompact_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

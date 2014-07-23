@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2012, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -23,28 +23,28 @@
 #include "BuildingComponentDialog.hpp"
 #include "OSDialog.hpp"
 
-#include <analysisdriver/CurrentAnalysis.hpp>
+#include "../analysisdriver/CurrentAnalysis.hpp"
 
-#include <analysis/Measure.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/InputVariable.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/Analysis.hpp>
-#include <analysis/AnalysisObject.hpp>
-#include <analysis/AnalysisObject_Impl.hpp>
+#include "../analysis/Measure.hpp"
+#include "../analysis/MeasureGroup.hpp"
+#include "../analysis/MeasureGroup_Impl.hpp"
+#include "../analysis/InputVariable.hpp"
+#include "../analysis/Problem.hpp"
+#include "../analysis/Analysis.hpp"
+#include "../analysis/AnalysisObject.hpp"
+#include "../analysis/AnalysisObject_Impl.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
+#include "../runmanager/lib/RunManager.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../ruleset/OSArgument.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/RubyException.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/bcl/RemoteBCL.hpp>
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/RubyException.hpp"
+#include "../utilities/bcl/BCLMeasure.hpp"
+#include "../utilities/bcl/RemoteBCL.hpp"
 
 #include <QAbstractButton>
 #include <QBoxLayout>
@@ -123,7 +123,7 @@ BCLMeasure MeasureManager::insertReplaceMeasure(analysisdriver::SimpleProject &t
   if (existingMeasure && (existingMeasure->versionUUID() != measure->versionUUID()))
   {
     QDialog dialog(m_app->mainWidget(), Qt::WindowFlags(Qt::Dialog | Qt::WindowTitleHint));
-    QVBoxLayout * mainContentVLayout = new QVBoxLayout();
+    auto mainContentVLayout = new QVBoxLayout();
     dialog.setWindowTitle(QCoreApplication::applicationName());
 
     dialog.setLayout(mainContentVLayout);
@@ -135,7 +135,7 @@ BCLMeasure MeasureManager::insertReplaceMeasure(analysisdriver::SimpleProject &t
     mainContentVLayout->addWidget(replace);
     mainContentVLayout->addWidget(copy);
 
-    QHBoxLayout * buttons = new QHBoxLayout();
+    auto buttons = new QHBoxLayout();
 
     QPushButton *cancel = new QPushButton("Cancel");
     QPushButton *apply = new QPushButton("Apply");
@@ -222,7 +222,7 @@ std::string MeasureManager::suggestMeasureGroupName(const BCLMeasure &t_measure)
   if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() ){
     analysis::Analysis analysis = project->analysis();
     analysis::Problem problem = analysis.problem();
-    Q_FOREACH(const analysis::InputVariable& variable, problem.variables()){
+    for (const analysis::InputVariable& variable : problem.variables()) {
       allNames.insert(variable.name());
       allNames.insert(variable.displayName());
     }
@@ -251,10 +251,10 @@ std::string MeasureManager::suggestMeasureName(const BCLMeasure &t_measure, bool
   if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() ){
     analysis::Analysis analysis = project->analysis();
     analysis::Problem problem = analysis.problem();
-    Q_FOREACH(const analysis::InputVariable& variable, problem.variables()){
+    for (const analysis::InputVariable& variable : problem.variables()) {
       boost::optional<analysis::MeasureGroup> discreteVariable = variable.optionalCast<analysis::MeasureGroup>();
       if (discreteVariable){
-        Q_FOREACH(const analysis::Measure& measure, discreteVariable->measures(false)){
+        for (const analysis::Measure& measure : discreteVariable->measures(false)) {
           allNames.insert(measure.name());
           allNames.insert(measure.displayName());
         }
@@ -276,17 +276,15 @@ void MeasureManager::updateMeasures(analysisdriver::SimpleProject &t_project,
                                     const std::vector<BCLMeasure> &t_newMeasures, 
                                     bool t_showMessage)
 {
-  ProcessEventsProgressBar* progress = new ProcessEventsProgressBar();
+  auto progress = new ProcessEventsProgressBar();
   progress->setMaximum(std::numeric_limits<double>::max());
 
   size_t loc = 0;
   std::vector<std::string> failMessages;
-  for (std::vector<BCLMeasure>::const_iterator itr = t_newMeasures.begin();
-       itr != t_newMeasures.end();
-       ++itr)
+  for (const auto & newMeasure : t_newMeasures)
   {
     progress->setValue(loc);
-    std::pair<bool,std::string> updateResult = updateMeasure(t_project, *itr);
+    std::pair<bool,std::string> updateResult = updateMeasure(t_project, newMeasure);
     if (!updateResult.first) {
       failMessages.push_back(updateResult.second);
     }
@@ -316,12 +314,12 @@ void MeasureManager::updateMeasures(analysisdriver::SimpleProject &t_project,
       }
       ss << " failed";
       QString errors;
-      Q_FOREACH(const std::string& failMessage,failMessages) {
+      for (const std::string& failMessage : failMessages) {
         errors.append(QString::fromStdString(failMessage));
         errors.append("\n\n");
       }
 
-      QMessageBox* messageBox = new QMessageBox(m_app->mainWidget());
+      auto messageBox = new QMessageBox(m_app->mainWidget());
       messageBox->setWindowTitle(QString("Measures Updated"));
       messageBox->setText(toQString(ss.str()));
       messageBox->setDetailedText(errors);
@@ -330,11 +328,11 @@ void MeasureManager::updateMeasures(analysisdriver::SimpleProject &t_project,
 
       // DLM: there is a bug in QMessageBox where setMinimumWidth is not used
       // http://www.qtcentre.org/threads/22298-QMessageBox-Controlling-the-width?p=113348#post113348
-      QSpacerItem* horizontalSpacer = new QSpacerItem(330, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+      auto horizontalSpacer = new QSpacerItem(330, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
       QGridLayout* layout = static_cast<QGridLayout*>(messageBox->layout());
       layout->addItem(horizontalSpacer, layout->rowCount(), 0, 1, layout->columnCount());
       
-      messageBox->exec();  
+      messageBox->exec();
       delete messageBox;
     }
     else {
@@ -380,36 +378,34 @@ void MeasureManager::updateBCLMeasures(analysisdriver::SimpleProject &t_project)
 
   std::vector<BCLMeasure> measures = bclMeasures();
 
-  for (std::vector<BCLMeasure>::iterator itr = measures.begin();
-      itr != measures.end();
-      ++itr)
+  for (auto & measure : measures)
   {
     // DLM: this should not happen for BCL measures but ok to check anyway
-    bool isNewVersion = itr->checkForUpdates();
+    bool isNewVersion = measure.checkForUpdates();
     if (isNewVersion) {
-      itr->save();
-      m_bclMeasures.erase(itr->uuid());
-      m_bclMeasures.insert(std::map<UUID,BCLMeasure>::value_type(itr->uuid(),*itr));
+      measure.save();
+      m_bclMeasures.erase(measure.uuid());
+      m_bclMeasures.insert(std::map<UUID,BCLMeasure>::value_type(measure.uuid(),measure));
     }
 
-    if (m_patApplicationMeasures.find(itr->uuid()) != m_patApplicationMeasures.end()){
+    if (m_patApplicationMeasures.find(measure.uuid()) != m_patApplicationMeasures.end()){
       // do not attempt to update built in measures with different version in bcl
       LOG(Warn, "Skipping update of built in measure");
       continue;
     }
 
-    if (m_myMeasures.find(itr->uuid()) != m_myMeasures.end()){
+    if (m_myMeasures.find(measure.uuid()) != m_myMeasures.end()){
       // do not attempt to update user measures with different version in bcl
       LOG(Warn, "Skipping update of user measure");
       continue;
     }
 
-    boost::optional<BCLMeasure> projectmeasure = t_project.getMeasureByUUID(itr->uuid());
+    boost::optional<BCLMeasure> projectmeasure = t_project.getMeasureByUUID(measure.uuid());
     if (projectmeasure)
     {
-      if (projectmeasure->versionUUID() != itr->versionUUID())
+      if (projectmeasure->versionUUID() != measure.versionUUID())
       {
-        toUpdate.push_back(*itr);
+        toUpdate.push_back(measure);
       }
     }
   }
@@ -419,14 +415,14 @@ void MeasureManager::updateBCLMeasures(analysisdriver::SimpleProject &t_project)
 
 void MeasureManager::downloadBCLMeasures()
 {
-  RemoteBCL* remoteBCL = new RemoteBCL();
+  auto remoteBCL = new RemoteBCL();
   int numUpdates = remoteBCL->checkForMeasureUpdates();
   if (numUpdates == 0){
     QMessageBox::information(m_app->mainWidget(), "Measures Updated", "All measures are up-to-date.");
   }else{
     std::vector<BCLSearchResult> updates = remoteBCL->measuresWithUpdates();
     QStringList measureNames;
-    Q_FOREACH(BCLSearchResult update, updates){
+    for (const BCLSearchResult& update : updates) {
       measureNames.push_back(QString(0x2022) + " " + toQString(update.name()));
     }
     remoteBCL->updateMeasures();
@@ -452,30 +448,28 @@ void MeasureManager::updateMyMeasures(analysisdriver::SimpleProject &t_project)
 
   std::vector<BCLMeasure> measures = myMeasures();
 
-  for (std::vector<BCLMeasure>::iterator itr = measures.begin();
-      itr != measures.end();
-      ++itr)
+  for (auto & measure : measures)
   {
     // DLM: this happens if user updates measure but does not update checksums, ok to save it for them
-    bool isNewVersion = itr->checkForUpdates();
+    bool isNewVersion = measure.checkForUpdates();
     if (isNewVersion) {
-      itr->save();
-      m_myMeasures.erase(itr->uuid());
-      m_myMeasures.insert(std::map<UUID,BCLMeasure>::value_type(itr->uuid(),*itr));
+      measure.save();
+      m_myMeasures.erase(measure.uuid());
+      m_myMeasures.insert(std::map<UUID,BCLMeasure>::value_type(measure.uuid(),measure));
     }
 
-    if (m_patApplicationMeasures.find(itr->uuid()) != m_patApplicationMeasures.end()){
+    if (m_patApplicationMeasures.find(measure.uuid()) != m_patApplicationMeasures.end()){
       // do not attempt to update built in measures
       LOG(Warn, "Skipping update of built in measure");
       continue;
     }
 
-    boost::optional<BCLMeasure> projectmeasure = t_project.getMeasureByUUID(itr->uuid());
+    boost::optional<BCLMeasure> projectmeasure = t_project.getMeasureByUUID(measure.uuid());
     if (projectmeasure)
     {
-      if (projectmeasure->versionUUID() != itr->versionUUID())
+      if (projectmeasure->versionUUID() != measure.versionUUID())
       {
-        toUpdate.push_back(*itr);
+        toUpdate.push_back(measure);
       }
     }
   }
@@ -495,11 +489,9 @@ std::vector<BCLMeasure> MeasureManager::patApplicationMeasures() const
 {
   std::vector<BCLMeasure> result;
 
-  for(std::map<UUID,BCLMeasure>::const_iterator it = m_patApplicationMeasures.begin();
-      it != m_patApplicationMeasures.end();
-      ++it )
+  for(const auto & measure : m_patApplicationMeasures)
   {
-    result.push_back(it->second);
+    result.push_back(measure.second);
   }
 
   return result;
@@ -509,11 +501,9 @@ std::vector<BCLMeasure> MeasureManager::bclMeasures() const
 {
   std::vector<BCLMeasure> result;
 
-  for(std::map<UUID,BCLMeasure>::const_iterator it = m_bclMeasures.begin();
-      it != m_bclMeasures.end();
-      ++it )
+  for(const auto & bclMeasure : m_bclMeasures)
   {
-    result.push_back(it->second);
+    result.push_back(bclMeasure.second);
   }
 
   return result;
@@ -523,11 +513,9 @@ std::vector<BCLMeasure> MeasureManager::myMeasures() const
 {
   std::vector<BCLMeasure> result;
 
-  for(std::map<UUID,BCLMeasure>::const_iterator it = m_myMeasures.begin();
-      it != m_myMeasures.end();
-      ++it )
+  for(const auto & measure : m_myMeasures )
   {
-    result.push_back(it->second);
+    result.push_back(measure.second);
   }
 
   return result;
@@ -540,45 +528,39 @@ void MeasureManager::updateMeasuresLists()
   m_bclMeasures.clear();
   
   std::vector<BCLMeasure> patApplicationMeasures = BCLMeasure::patApplicationMeasures();
-  for( std::vector<BCLMeasure>::const_iterator it = patApplicationMeasures.begin();
-       it != patApplicationMeasures.end();
-       ++it )
+  for( const auto & measure : patApplicationMeasures )
   {
-    std::map<UUID,BCLMeasure>::iterator it2 = m_patApplicationMeasures.find(it->uuid());
-    if (it2 != m_patApplicationMeasures.end()){
+    std::map<UUID,BCLMeasure>::iterator it = m_patApplicationMeasures.find(measure.uuid());
+    if (it != m_patApplicationMeasures.end()){
       // duplicate measure detected
-      LOG(Error, "UUID of built in measure at '" << it->directory() << "' conflicts with other built in measure, measure at '" << it2->second.directory() << "' will be used instead");
+      LOG(Error, "UUID of built in measure at '" << measure.directory() << "' conflicts with other built in measure, measure at '" << it->second.directory() << "' will be used instead");
     }else{
-      m_patApplicationMeasures.insert(std::make_pair<UUID,BCLMeasure>(it->uuid(),*it));
+      m_patApplicationMeasures.insert(std::pair<UUID,BCLMeasure>(measure.uuid(),measure));
     }
   }
 
   std::vector<BCLMeasure> userMeasures = BCLMeasure::userMeasures();
-  for( std::vector<BCLMeasure>::const_iterator it = userMeasures.begin();
-       it != userMeasures.end();
-       ++it )
+  for( const auto & measure : userMeasures )
   {
-    std::map<UUID,BCLMeasure>::iterator it2 = m_myMeasures.find(it->uuid());
-    if (it2 != m_myMeasures.end()){
+    std::map<UUID,BCLMeasure>::iterator it = m_myMeasures.find(measure.uuid());
+    if (it != m_myMeasures.end()){
       // duplicate measure detected, manual copy and paste likely cause
       // DLM: could assign measure a new UUID here and save?
-      LOG(Error, "UUID of user measure at '" << it->directory() << "' conflicts with other user measure, measure at '" << it2->second.directory() << "' will be used instead");
+      LOG(Error, "UUID of user measure at '" << measure.directory() << "' conflicts with other user measure, measure at '" << it->second.directory() << "' will be used instead");
     }else{
-      m_myMeasures.insert(std::make_pair<UUID,BCLMeasure>(it->uuid(),*it));
+      m_myMeasures.insert(std::pair<UUID,BCLMeasure>(measure.uuid(),measure));
     }
   }
 
   std::vector<BCLMeasure> localBCLMeasures = BCLMeasure::localBCLMeasures();
-  for( std::vector<BCLMeasure>::const_iterator it = localBCLMeasures.begin();
-       it != localBCLMeasures.end();
-       ++it )
+  for( const auto & measure : localBCLMeasures )
   {
-    std::map<UUID,BCLMeasure>::iterator it2 = m_bclMeasures.find(it->uuid());
-    if (it2 != m_bclMeasures.end()){
+    std::map<UUID,BCLMeasure>::iterator it = m_bclMeasures.find(measure.uuid());
+    if (it != m_bclMeasures.end()){
       // duplicate measure detected
-      LOG(Error, "UUID of bcl measure at '" << it->directory() << "' conflicts with other bcl measure, measure at '" << it2->second.directory() << "' will be used instead");
+      LOG(Error, "UUID of bcl measure at '" << measure.directory() << "' conflicts with other bcl measure, measure at '" << it->second.directory() << "' will be used instead");
     }else{
-      m_bclMeasures.insert(std::make_pair<UUID,BCLMeasure>(it->uuid(),*it));
+      m_bclMeasures.insert(std::pair<UUID,BCLMeasure>(measure.uuid(),measure));
     }
   }
 

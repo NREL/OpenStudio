@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_OPTIMIZATIONDATAPOINT_HPP
 #define ANALYSIS_OPTIMIZATIONDATAPOINT_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/DataPoint.hpp>
+#include "AnalysisAPI.hpp"
+#include "DataPoint.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -65,7 +65,6 @@ class ANALYSIS_API OptimizationDataPoint : public DataPoint {
                         const boost::optional<FileReference>& osmInputData,
                         const boost::optional<FileReference>& idfInputData,
                         const boost::optional<FileReference>& sqlOutputData,
-                        const std::vector<FileReference>& xmlOutputData,
                         const boost::optional<runmanager::Job>& topLevelJob,
                         const std::vector<openstudio::path>& dakotaParametersFiles,
                         const std::vector<Tag>& tags,
@@ -90,7 +89,6 @@ class ANALYSIS_API OptimizationDataPoint : public DataPoint {
                         const boost::optional<FileReference>& osmInputData,
                         const boost::optional<FileReference>& idfInputData,
                         const boost::optional<FileReference>& sqlOutputData,
-                        const std::vector<FileReference>& xmlOutputData,
                         const boost::optional<runmanager::Job>& topLevelJob,
                         const std::vector<openstudio::path>& dakotaParametersFiles,
                         const std::vector<Tag>& tags,
@@ -116,7 +114,7 @@ class ANALYSIS_API OptimizationDataPoint : public DataPoint {
   friend class detail::AnalysisObject_Impl;
   friend class detail::OptimizationDataPoint_Impl;
 
-  explicit OptimizationDataPoint(boost::shared_ptr<detail::OptimizationDataPoint_Impl> impl);
+  explicit OptimizationDataPoint(std::shared_ptr<detail::OptimizationDataPoint_Impl> impl);
   /// @endcond
 
   friend class detail::OptimizationProblem_Impl;

@@ -18,13 +18,13 @@
 **********************************************************************/
 
 #include "OSComboBox.hpp"
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/idf/WorkspaceObject_Impl.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../utilities/idf/WorkspaceObject.hpp"
+#include "../utilities/idf/WorkspaceObject_Impl.hpp"
+#include "../utilities/core/Assert.hpp"
 #include <QEvent>
 #include <QCompleter>
 
@@ -52,15 +52,13 @@ void OSObjectListCBDS::initialize()
 {
   std::vector<model::ModelObject> modelObjects = m_model.getModelObjects<model::ModelObject>();
 
-  for( std::vector<model::ModelObject>::iterator it = modelObjects.begin();
-       it < modelObjects.end();
-       ++it )
+  for( const auto & modelObject : modelObjects )
   {
-    if( std::find(m_types.begin(),m_types.end(),it->iddObjectType()) != m_types.end() )
+    if( std::find(m_types.begin(),m_types.end(),modelObject.iddObjectType()) != m_types.end() )
     {
-      m_workspaceObjects << *it;
+      m_workspaceObjects << modelObject;
 
-      connect( it->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),
+      connect( modelObject.getImpl<openstudio::model::detail::ModelObject_Impl>().get(),
                SIGNAL(onChange()),
                this,
                SLOT(onObjectChanged()) );
@@ -174,7 +172,7 @@ OSComboBox2::OSComboBox2( QWidget * parent )
   : QComboBox(parent)
 {
   this->setAcceptDrops(false);
-  QCompleter* completer = new QCompleter();
+  auto completer = new QCompleter();
   this->setCompleter(completer);
   setEnabled(false);
 }
@@ -191,7 +189,7 @@ bool OSComboBox2::event( QEvent * e )
   }
 }
 
-void OSComboBox2::bind(boost::shared_ptr<OSComboBoxDataSource> dataSource)
+void OSComboBox2::bind(std::shared_ptr<OSComboBoxDataSource> dataSource)
 {
   m_dataSource = dataSource;
 
@@ -267,11 +265,9 @@ void OSComboBox2::onChoicesRefreshTrigger() {
     this->blockSignals(true);
     
     clear();
-    for( std::vector<std::string>::iterator it = m_values.begin();
-         it < m_values.end();
-         ++it )
+    for( const auto & value : m_values )
     {
-      addItem(QString::fromStdString(*it));
+      addItem(QString::fromStdString(value));
     }
 
     // re-initialize
@@ -351,11 +347,9 @@ void OSComboBox2::completeBind() {
     m_values = m_choiceConcept->choices();
     this->blockSignals(true);
 
-    for( std::vector<std::string>::iterator it = m_values.begin();
-         it < m_values.end();
-         ++it )
+    for( const auto & value : m_values )
     {
-      addItem(QString::fromStdString(*it));
+      addItem(QString::fromStdString(value));
     }
 
     // initialize
@@ -425,7 +419,7 @@ void OSComboBox::bind(model::ModelObject & modelObject, const char * property)
 
   bool isConnected = false;
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
-                              this,SLOT(onModelObjectChanged()) );
+                         this,SLOT(onModelObjectChanged()) );
   OS_ASSERT(isConnected);
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
@@ -448,11 +442,9 @@ void OSComboBox::bind(model::ModelObject & modelObject, const char * property)
 
   this->blockSignals(true);
 
-  for( std::vector<std::string>::iterator it = m_values.begin();
-       it < m_values.end();
-       ++it )
+  for( const auto & value : m_values )
   {
-    addItem(QString::fromStdString(*it));
+    addItem(QString::fromStdString(value));
   }
 
   // Initialize
@@ -475,11 +467,9 @@ void OSComboBox::onModelObjectChanged()
   std::string value = variant.value<std::string>();
 
   int i = 0;
-  for( std::vector<std::string>::iterator it = m_values.begin();
-       it < m_values.end();
-       ++it )
+  for( const auto & v : m_values )
   {
-    if( istringEqual(*it,value) )
+    if( istringEqual(v,value) )
     {
       this->blockSignals(true);
       setCurrentIndex(i);
@@ -500,19 +490,23 @@ void OSComboBox::onCurrentIndexChanged(const QString & text)
 {
   OS_ASSERT(m_modelObject);
 
-  // does this version ever work?
-  bool test = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->setProperty(m_property.c_str(),text);
-
-  if (!test){
-    // try a std::string
-    QVariant textString = QVariant::fromValue(toString(text));
-    test = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->setProperty(m_property.c_str(),textString);
+  QVariant variant = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str());
+  QVariant textString;
+  if (variant.canConvert<QString>()) {
+    textString = QVariant::fromValue(text); 
+  } else if (variant.canConvert<std::string>()) {
+    textString = QVariant::fromValue(toString(text));
   }
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->setProperty(m_property.c_str(), textString);
 
   // test if property changed
-  QVariant variant = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str());
-  OS_ASSERT( variant.canConvert<std::string>() );
-  std::string value = variant.value<std::string>();
+  variant = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str());
+  std::string value;
+  if (variant.canConvert<QString>()) {
+    value = variant.toString().toStdString();
+  } else if (variant.canConvert<std::string>()) {
+    value = variant.value<std::string>();
+  }
 
   if (!istringEqual(value, toString(text))){
     // failed, reset combo box
@@ -567,7 +561,7 @@ void OSComboBox::onDataSourceRemove(int i)
   this->removeItem(i);
 }
 
-void OSComboBox::setDataSource(boost::shared_ptr<OSComboBoxDataSource> dataSource)
+void OSComboBox::setDataSource(std::shared_ptr<OSComboBoxDataSource> dataSource)
 {
   unbind();
 

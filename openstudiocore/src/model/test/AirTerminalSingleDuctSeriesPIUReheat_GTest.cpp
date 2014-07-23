@@ -18,23 +18,21 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-
-#include <model/test/ModelFixture.hpp>
-
-#include <model/AirTerminalSingleDuctSeriesPIUReheat.hpp>
-#include <model/AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/FanConstantVolume.hpp>
-#include <model/FanConstantVolume_Impl.hpp>
-#include <model/CoilHeatingElectric.hpp>
-#include <model/CoilHeatingElectric_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../AirTerminalSingleDuctSeriesPIUReheat.hpp"
+#include "../AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../AirLoopHVAC_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
+#include "../FanConstantVolume.hpp"
+#include "../FanConstantVolume_Impl.hpp"
+#include "../CoilHeatingElectric.hpp"
+#include "../CoilHeatingElectric_Impl.hpp"
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

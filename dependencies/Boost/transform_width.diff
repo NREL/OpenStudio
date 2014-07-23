@@ -1,0 +1,11 @@
+--- C:/working/openstudio-boost/dependencies/Boost/transform_width.hpp	Sun Apr 28 10:07:27 2013
++++ C:/working/openstudio-boost/dependencies/Boost/transform_width_new.hpp	Fri Apr 25 12:15:18 2014
+@@ -30,6 +30,8 @@
+ #include <boost/iterator/iterator_adaptor.hpp>
+ #include <boost/iterator/iterator_traits.hpp>
+ 
++#include <algorithm>
++
+ namespace boost { 
+ namespace archive {
+ namespace iterators {

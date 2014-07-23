@@ -19,15 +19,13 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/HotWaterEquipment.hpp>
-#include <model/HotWaterEquipment_Impl.hpp>
-#include <model/HotWaterEquipmentDefinition.hpp>
-#include <model/HotWaterEquipmentDefinition_Impl.hpp>
-
-#include <boost/foreach.hpp>
+#include "ModelFixture.hpp"
+#include "../Model_Impl.hpp"
+#include "../Space.hpp"
+#include "../HotWaterEquipment.hpp"
+#include "../HotWaterEquipment_Impl.hpp"
+#include "../HotWaterEquipmentDefinition.hpp"
+#include "../HotWaterEquipmentDefinition_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

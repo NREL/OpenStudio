@@ -17,22 +17,20 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysisdriver/test/AnalysisDriverTestLibrary.hpp>
+#include "AnalysisDriverTestLibrary.hpp"
 
-#include <analysisdriver/SimpleProject.hpp>
+#include "../SimpleProject.hpp"
 
-#include <model/Model.hpp>
-#include <model/WeatherFile.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/WeatherFile.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/FileReference.hpp>
-#include <utilities/filetypes/EpwFile.hpp>
+#include "../../utilities/bcl/BCLMeasure.hpp"
+#include "../../utilities/core/Assert.hpp"
+#include "../../utilities/core/Containers.hpp"
+#include "../../utilities/core/FileReference.hpp"
+#include "../../utilities/filetypes/EpwFile.hpp"
 
-#include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
 
 #include <QDir>
 #include <QFile>
@@ -75,7 +73,7 @@ void AnalysisDriverTestLibrarySingleton::initialize(const openstudio::path& outp
   // loop through files in baselineModelDirectory (non-recursive) and save .osm paths
   QDir srcDir(toQString(baselineModelDirectory));
 
-  Q_FOREACH(const QFileInfo& info, srcDir.entryInfoList(QDir::Files)) {
+  for (const QFileInfo& info : srcDir.entryInfoList(QDir::Files)) {
     if ((info.suffix() == "osm") || (info.suffix() == "idf")) {
       m_baselineModels.push_back(baselineModelDirectory / toPath(info.fileName()));
     }
@@ -89,7 +87,7 @@ openstudio::path AnalysisDriverTestLibrarySingleton::outputDataDirectory() const
                 
 std::vector<std::string> AnalysisDriverTestLibrarySingleton::baselineModelNames() const {
   StringVector modelNames;
-  BOOST_FOREACH(const openstudio::path& modelPath,m_baselineModels) {
+  for (const openstudio::path& modelPath : m_baselineModels) {
     modelNames.push_back(toString(modelPath.stem()));
   }
   return modelNames;
@@ -122,7 +120,7 @@ SimpleProject AnalysisDriverTestLibrarySingleton::createProject(
   std::vector<openstudio::path>::const_iterator it;
   it = std::find_if(m_baselineModels.begin(),
                     m_baselineModels.end(),
-                    boost::bind(AnalysisDriverTestLibrarySingleton::pathStemEquals,_1,baselineModelName));
+                    std::bind(AnalysisDriverTestLibrarySingleton::pathStemEquals,std::placeholders::_1,baselineModelName));
   OS_ASSERT(it != m_baselineModels.end());
   bool test = result->setSeed(FileReference(*it)).first;
   OS_ASSERT(test);

@@ -1,0 +1,341 @@
+<?xml version='1.0' encoding='utf-8'?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+<!-- based on https://svn.boost.org/trac/boost/wiki/DebuggerVisualizers -->
+<!--boost::adjacency_list<OutEdgeList, VertexList, Directed, VertexProperties, EdgeProperties, GraphProperties, EdgeList>-->
+<Type Name="boost::adjacency_list&lt;*,*,*,*,*&gt;">
+    <DisplayString>{{edges={m_edges} vertices={m_vertices}}}</DisplayString>
+    <Expand>
+        <Item Name="[edges]">m_edges</Item>
+        <Item Name="[vertices]">m_vertices</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::filesystem::path">
+    <DisplayString>path={m_pathname}</DisplayString>
+    <Expand>
+        <ExpandedItem>m_pathname</ExpandedItem>
+    </Expand>
+</Type>
+
+<Type Name="boost::filesystem::file_status">
+    <DisplayString>type="{m_value}" permissions="{m_perms}"</DisplayString>
+    <Expand>
+        <Item Name="type">m_value</Item>
+        <Item Name="permissions">m_perms</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::filesystem::directory_entry">
+    <DisplayString Condition="m_status.m_value == m_symlink_status.m_value &amp;&amp; m_status.m_perms == m_symlink_status.m_perms">{m_path} status=({m_status})</DisplayString>
+    <DisplayString>{m_path} status=({m_status}) symlink_status=({m_symlink_status})</DisplayString>
+</Type>
+
+<Type Name="boost::filesystem::directory_iterator">
+    <DisplayString Condition="m_imp.px == 0">empty</DisplayString>
+    <DisplayString>{m_imp.px-&gt;dir_entry}</DisplayString>
+    <Expand>
+        <ExpandedItem Condition="m_imp.px != 0">m_imp.px-&gt;dir_entry</ExpandedItem>
+    </Expand>
+</Type>
+
+<Type Name="boost::logic::tribool">
+    <DisplayString Condition="value == 1">true</DisplayString>
+    <DisplayString Condition="value == 2">indeterminate</DisplayString>
+    <DisplayString>false</DisplayString>
+    <Expand/>
+</Type>
+
+<Type Name="boost::any::holder&lt;*&gt;">
+    <DisplayString>{held}</DisplayString>
+    <Expand>
+        <ExpandedItem>held</ExpandedItem>
+    </Expand>
+</Type>
+
+<Type Name="boost::any">
+    <DisplayString Condition="content == 0">empty</DisplayString>
+    <DisplayString Condition="content != 0">any {*content}</DisplayString>
+    <Expand>
+        <Item Name="[holder]" Condition="content != 0">*content</Item>
+    </Expand>
+</Type>
+
+<!--Copyright Daniel Kruegler 2008. Use, modification and distribution are subject to-->
+<!--the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt-->
+<!--or copy at http://www.boost.org/LICENSE_1_0.txt)-->
+<!--@guid     D02681E0-021B-11DD-95FF-0800200C9A66-->
+<!--@platform msvc-8, msvc-9-->
+<!--@version  1.0-->
+<!--@author   Daniel Kruegler-->
+<!--@email    daniel dot kruegler at bdal dot de-->
+<!--Usage-->
+<!--All of the following text must be placed in the autoexp.dat file.-->
+<!--Usage is automatic. No extra code is required.-->
+<Type Name="boost::optional&lt;*&gt;">
+    <AlternativeType Name="boost::optional_detail::optional_base&lt;*&gt;" />
+    <DisplayString Condition="!m_initialized">empty</DisplayString>
+    <DisplayString Condition="m_initialized">{*(($T1 *)m_storage.dummy_.data)}</DisplayString>
+    <Expand>
+        <Item Name="value" Condition="m_initialized">*(($T1 *)m_storage.dummy_.data)</Item>
+    </Expand>
+</Type>
+
+<!--Copyright Filip Konvieka 2008. Use, modification and distribution are subject to-->
+<!--the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt-->
+<!--or copy at http://www.boost.org/LICENSE_1_0.txt)-->
+<!--@version  1.0-->
+<!--@author   Filip Konvieka-->
+<!--@email    filip dot konvicka at logis dot cz-->
+<!--Usage-->
+<Type Name="boost::interprocess::offset_ptr&lt;*&gt;">
+    <DisplayString Condition="m_offset == 1">null</DisplayString>
+    <DisplayString Condition="m_offset != 1">non-null</DisplayString>
+    <DisplayString>#if(m_offset==1) (#("null")) #else (#("non-null"))</DisplayString>
+    <Expand>
+        <Item Name="[ptr]" Condition="m_offset != 1">($T1*)(((char*)(void*)this)+m_offset)</Item>
+    </Expand>
+</Type>
+
+<!--boost::basic_regex from <regex>-->
+<Type Name="boost::basic_regex&lt;char,*&gt;">
+    <DisplayString Condition="m_pimpl.px == 0">empty</DisplayString>
+    <DisplayString Condition="m_pimpl.px != 0">regex {m_pimpl.px-&lt;m_expression,s}</DisplayString>
+    <StringView Condition="m_pimpl.px != 0">m_pimpl.px-&lt;m_expression,s</StringView>
+    <Expand>
+        <Item Name="[ptr]" Condition="m_pimpl.px != 0">*(m_pimpl.px)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::basic_regex&lt;wchar_t,*&gt;">
+    <DisplayString Condition="m_pimpl.px == 0">empty</DisplayString>
+    <DisplayString Condition="m_pimpl.px != 0">regex {m_pimpl.px-&lt;m_expression,su}</DisplayString>
+    <StringView Condition="m_pimpl.px != 0">m_pimpl.px-&lt;m_expression,su</StringView>
+    <Expand>
+        <Item Name="[ptr]" Condition="m_pimpl.px != 0">*(m_pimpl.px)</Item>
+    </Expand>
+</Type>
+
+<!--boost::mutex::scoped_lock and boost::mutex::scoped_try_lock-->
+<Type Name="boost::unique_lock&lt;*&gt;">
+    <DisplayString Condition="is_locked">locked</DisplayString>
+    <DisplayString Condition="!is_locked">not locked</DisplayString>
+    <Expand>
+        <Item Name="mutex">m</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::ratio&lt;1,1&gt;">
+    <DisplayString></DisplayString>
+    <Expand/>
+</Type>
+
+<Type Name="boost::ratio&lt;1,1000000000000000000&gt;">
+    <DisplayString>atto</DisplayString>
+    <Expand/>
+</Type>
+
+<Type Name="boost::ratio&lt;1,1000000000000000&gt;">
+    <DisplayString>femto</DisplayString>
+    <Expand/>
+</Type>
+
+<Type Name="boost::ratio&lt;1,1000000000000&gt;">
+    <DisplayString>pico</DisplayString>
+    <Expand/>
+</Type>
+
+<Type Name="boost::ratio&lt;1,1000000000&gt;">
+    <DisplayString>nano</DisplayString>
+    <Expand/>
+</Type>
+
+<Type Name="boost::ratio&lt;1,1000000&gt;">
+    <DisplayString>micro</DisplayString>
+    <Expand/>
+</Type>
+
+<Type Name="boost::ratio&lt;1,1000&gt;">
+    <DisplayString>milli</DisplayString>
+    <Expand/>
+</Type>
+
+<Type Name="boost::ratio&lt;1,100&gt;">
+    <DisplayString>centi</DisplayString>
+    <Expand/>
+</Type>
+
+<Type Name="boost::ratio&lt;1,10&gt;">
+    <DisplayString>deci</DisplayString>
+    <Expand/>
+</Type>
+
+<Type Name="boost::ratio&lt;10,1&gt;">
+    <DisplayString>deca</DisplayString>
+    <Expand/>
+</Type>
+
+<Type Name="boost::ratio&lt;100,1&gt;">
+    <DisplayString>hecto</DisplayString>
+    <Expand/>
+</Type>
+
+<Type Name="boost::ratio&lt;1000,1&gt;">
+    <DisplayString>kilo</DisplayString>
+    <Expand/>
+</Type>
+
+<Type Name="boost::ratio&lt;1000000,1&gt;">
+    <DisplayString>mega</DisplayString>
+    <Expand/>
+</Type>
+
+<Type Name="boost::ratio&lt;1000000000,1&gt;">
+    <DisplayString>giga</DisplayString>
+    <Expand/>
+</Type>
+
+<Type Name="boost::ratio&lt;1000000000000,1&gt;">
+    <DisplayString>tera</DisplayString>
+    <Expand/>
+</Type>
+
+<Type Name="boost::ratio&lt;1000000000000000,1&gt;">
+    <DisplayString>peta</DisplayString>
+    <Expand/>
+</Type>
+
+<Type Name="boost::ratio&lt;1000000000000000000,1&gt;">
+    <DisplayString>exa</DisplayString>
+    <Expand/>
+</Type>
+
+<Type Name="boost::ratio&lt;*,*&gt;">
+    <DisplayString Condition="$T2 == 1">ratio {"$T1"}</DisplayString>
+    <DisplayString>ratio {$T1}/{$T2}</DisplayString>
+    <Expand/>
+</Type>
+
+<Type Name="boost::tuples::tuple&lt;boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type&gt;">
+    <DisplayString>()</DisplayString>
+    <Expand/>
+</Type>
+
+<Type Name="boost::tuples::tuple&lt;*,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type&gt;">
+    <DisplayString>({head})</DisplayString>
+    <Expand>
+        <Item Name="[0]">head</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::tuples::tuple&lt;*,*,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type&gt;">
+    <DisplayString>({head}, {tail.head})</DisplayString>
+    <Expand>
+        <Item Name="[0]">head</Item>
+        <Item Name="[1]">tail.head</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::tuples::tuple&lt;*,*,*,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type&gt;">
+    <DisplayString>({head}, {tail.head}, {tail.tail.head})</DisplayString>
+    <Expand>
+        <Item Name="[0]">head</Item>
+        <Item Name="[1]">tail.head</Item>
+        <Item Name="[2]">tail.tail.head</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::tuples::tuple&lt;*,*,*,*,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type&gt;">
+    <DisplayString>({head}, {tail.head}, {tail.tail.head}, {tail.tail.tail.head})</DisplayString>
+    <Expand>
+        <Item Name="[0]">head</Item>
+        <Item Name="[1]">tail.head</Item>
+        <Item Name="[2]">tail.tail.head</Item>
+        <Item Name="[3]">tail.tail.tail.head</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::tuples::tuple&lt;*,*,*,*,*,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type&gt;">
+    <DisplayString>({head}, {tail.head}, {tail.tail.head}, {tail.tail.tail.head}, {tail.tail.tail.tail.head})</DisplayString>
+    <Expand>
+        <Item Name="[0]">head</Item>
+        <Item Name="[1]">tail.head</Item>
+        <Item Name="[2]">tail.tail.head</Item>
+        <Item Name="[3]">tail.tail.tail.head</Item>
+        <Item Name="[4]">tail.tail.tail.tail.head</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::tuples::tuple&lt;*,*,*,*,*,*,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type&gt;">
+    <DisplayString>({head}, {tail.head}, {tail.tail.head}, {tail.tail.tail.head}, {tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.head})</DisplayString>
+    <Expand>
+        <Item Name="[0]">head</Item>
+        <Item Name="[1]">tail.head</Item>
+        <Item Name="[2]">tail.tail.head</Item>
+        <Item Name="[3]">tail.tail.tail.head</Item>
+        <Item Name="[4]">tail.tail.tail.tail.tail.head</Item>
+        <Item Name="[5]">tail.tail.tail.tail.tail.tail.head</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::tuples::tuple&lt;*,*,*,*,*,*,*,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type&gt;">
+    <DisplayString>({head}, {tail.head}, {tail.tail.head}, {tail.tail.tail.head}, {tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.tail.head})</DisplayString>
+    <Expand>
+        <Item Name="[0]">head</Item>
+        <Item Name="[1]">tail.head</Item>
+        <Item Name="[2]">tail.tail.head</Item>
+        <Item Name="[3]">tail.tail.tail.head</Item>
+        <Item Name="[4]">tail.tail.tail.tail.tail.head</Item>
+        <Item Name="[5]">tail.tail.tail.tail.tail.tail.head</Item>
+        <Item Name="[6]">tail.tail.tail.tail.tail.tail.tail.head</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::tuples::tuple&lt;*,*,*,*,*,*,*,*,boost::tuples::null_type,boost::tuples::null_type&gt;">
+    <DisplayString>({head}, {tail.head}, {tail.tail.head}, {tail.tail.tail.head}, {tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.tail.tail.head})</DisplayString>
+    <Expand>
+        <Item Name="[0]">head</Item>
+        <Item Name="[1]">tail.head</Item>
+        <Item Name="[2]">tail.tail.head</Item>
+        <Item Name="[3]">tail.tail.tail.head</Item>
+        <Item Name="[4]">tail.tail.tail.tail.tail.head</Item>
+        <Item Name="[5]">tail.tail.tail.tail.tail.tail.head</Item>
+        <Item Name="[6]">tail.tail.tail.tail.tail.tail.tail.head</Item>
+        <Item Name="[7]">tail.tail.tail.tail.tail.tail.tail.tail.head</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::tuples::tuple&lt;*,*,*,*,*,*,*,*,*,boost::tuples::null_type&gt;">
+    <DisplayString>({head}, {tail.head}, {tail.tail.head}, {tail.tail.tail.head}, {tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.tail.tail.tail.head})</DisplayString>
+    <Expand>
+        <Item Name="[0]">head</Item>
+        <Item Name="[1]">tail.head</Item>
+        <Item Name="[2]">tail.tail.head</Item>
+        <Item Name="[3]">tail.tail.tail.head</Item>
+        <Item Name="[4]">tail.tail.tail.tail.tail.head</Item>
+        <Item Name="[5]">tail.tail.tail.tail.tail.tail.head</Item>
+        <Item Name="[6]">tail.tail.tail.tail.tail.tail.tail.head</Item>
+        <Item Name="[7]">tail.tail.tail.tail.tail.tail.tail.tail.head</Item>
+        <Item Name="[8]">tail.tail.tail.tail.tail.tail.tail.tail.tail.head</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::tuples::tuple&lt;*,*,*,*,*,*,*,*,*,*&gt;">
+    <DisplayString>({head}, {tail.head}, {tail.tail.head}, {tail.tail.tail.head}, {tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.tail.tail.tail.tail.head})</DisplayString>
+    <Expand>
+        <Item Name="[0]">head</Item>
+        <Item Name="[1]">tail.head</Item>
+        <Item Name="[2]">tail.tail.head</Item>
+        <Item Name="[3]">tail.tail.tail.head</Item>
+        <Item Name="[4]">tail.tail.tail.tail.tail.head</Item>
+        <Item Name="[5]">tail.tail.tail.tail.tail.tail.head</Item>
+        <Item Name="[6]">tail.tail.tail.tail.tail.tail.tail.head</Item>
+        <Item Name="[7]">tail.tail.tail.tail.tail.tail.tail.tail.head</Item>
+        <Item Name="[8]">tail.tail.tail.tail.tail.tail.tail.tail.tail.head</Item>
+        <Item Name="[9]">tail.tail.tail.tail.tail.tail.tail.tail.tail.tail.head</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::uuids::uuid">
+    <DisplayString>{*(_GUID*)this}</DisplayString>
+</Type>
+</AutoVisualizer>

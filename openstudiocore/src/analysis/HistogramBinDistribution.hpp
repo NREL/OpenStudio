@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef ANALYSIS_HistogramBinDISTRIBUTION_HPP
-#define ANALYSIS_HistogramBinDISTRIBUTION_HPP
+#ifndef ANALYSIS_HISTOGRAMBINDISTRIBUTION_HPP
+#define ANALYSIS_HISTOGRAMBINDISTRIBUTION_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/UncertaintyDescription.hpp>
+#include "AnalysisAPI.hpp"
+#include "UncertaintyDescription.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -75,7 +75,7 @@ class ANALYSIS_API HistogramBinDistribution : public UncertaintyDescription {
 
   //@}
  protected:
-  explicit HistogramBinDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl);
+  explicit HistogramBinDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl);
 
   friend class AnalysisObject;
   friend class UncertaintyDescription;
@@ -86,4 +86,4 @@ class ANALYSIS_API HistogramBinDistribution : public UncertaintyDescription {
 } // analysis
 } // openstudio
 
-#endif // ANALYSIS_HistogramBinDISTRIBUTION_HPP
+#endif // ANALYSIS_HISTOGRAMBINDISTRIBUTION_HPP

@@ -20,10 +20,10 @@
 #ifndef UTILITIES_TIME_TIME_HPP
 #define UTILITIES_TIME_TIME_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/Macro.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../core/Macro.hpp"
+#include "../core/Logger.hpp"
 
 #include <vector>
 
@@ -59,7 +59,7 @@ namespace openstudio{
 
       /// impl type is boost::posix_time::time_duration
       typedef boost::posix_time::time_duration ImplType;
-      typedef boost::shared_ptr<ImplType> ImplPtr;
+      typedef std::shared_ptr<ImplType> ImplPtr;
 
 
       /// get current time of day

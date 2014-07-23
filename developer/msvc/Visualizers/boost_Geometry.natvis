@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+<!--
+  Copyright (c) 2011 Mateusz Loskot <mateusz@loskot.net>
+  Use, modification and distribution is subject to the Boost Software License,
+  Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt)
+-->
+
+  <!-- boost::geometry::model::d2::point_xy from <boost/geometry/geometries/point_xy.hpp> -->
+  <Type Name="boost::geometry::model::d2::point_xy&lt;*,*&gt;">
+    <DisplayString>{{x={m_values[0]} y={m_values[1]}}}</DisplayString>
+    <Expand>
+      <Item Name="[x]">m_values[0]</Item>
+      <Item Name="[y]">m_values[1]</Item>
+    </Expand>
+  </Type>
+
+  <!-- boost::geometry::model::point from <boost/geometry/geometries/point.hpp> -->
+  <Type Name="boost::geometry::model::point&lt;*,*,*&gt;">
+    <DisplayString Condition="1 == sizeof(m_values)/sizeof(m_values[0])">[{m_values[0]}]</DisplayString>
+    <DisplayString Condition="2 == sizeof(m_values)/sizeof(m_values[0])">[{m_values[0]}, {m_values[1]}]</DisplayString>
+    <DisplayString Condition="3 == sizeof(m_values)/sizeof(m_values[0])">[{m_values[0]}, {m_values[1]}, {m_values[2]}]</DisplayString>
+    <DisplayString>{{size = {sizeof(m_values)/sizeof(m_values[0])}}}</DisplayString>
+    <Expand>
+      <Item Name="[size]" ExcludeView="simple">sizeof(m_values)/sizeof(m_values[0])</Item>
+      <ArrayItems>
+        <Size>sizeof(m_values)/sizeof(m_values[0])</Size>
+        <ValuePointer>m_values</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+
+</AutoVisualizer>

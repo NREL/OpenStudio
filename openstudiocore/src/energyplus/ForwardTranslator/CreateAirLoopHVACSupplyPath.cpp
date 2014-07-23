@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
-#include <model/AirLoopHVACSupplyPlenum.hpp>
-#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/WorkspaceObjectOrder.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/AirLoopHVAC_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/AirLoopHVACZoneSplitter.hpp"
+#include "../../model/AirLoopHVACZoneSplitter_Impl.hpp"
+#include "../../model/AirLoopHVACSupplyPlenum.hpp"
+#include "../../model/AirLoopHVACSupplyPlenum_Impl.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/idf/WorkspaceObjectOrder.hpp"
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/AirLoopHVAC_SupplyPath_FieldEnums.hxx>
 
 using namespace openstudio::model;
@@ -44,8 +44,6 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::createAirLoopHVACSupplyPath( AirLoopHVAC & airLoopHVAC )
 {
-  std::string s;
-
   IdfObject supplyPathIdf(openstudio::IddObjectType::AirLoopHVAC_SupplyPath);
   m_idfObjects.push_back(supplyPathIdf);
 
@@ -63,12 +61,10 @@ boost::optional<IdfObject> ForwardTranslator::createAirLoopHVACSupplyPath( AirLo
   eg.setString(AirLoopHVAC_SupplyPathExtensibleFields::ComponentName,_zoneSplitter->name().get());
 
   std::vector<ModelObject> supplyPlenums = airLoopHVAC.demandComponents(AirLoopHVACSupplyPlenum::iddObjectType());
-  for( std::vector<ModelObject>::iterator it = supplyPlenums.begin();
-       it != supplyPlenums.end();
-       it++ )
+  for( auto & supplyPlenum : supplyPlenums )
   {
     eg = supplyPathIdf.pushExtensibleGroup();
-    boost::optional<IdfObject> _supplyPlenum = translateAndMapModelObject(*it);
+    boost::optional<IdfObject> _supplyPlenum = translateAndMapModelObject(supplyPlenum);
     OS_ASSERT(_supplyPlenum);
     eg.setString(AirLoopHVAC_SupplyPathExtensibleFields::ComponentObjectType,_supplyPlenum->iddObject().name());
     eg.setString(AirLoopHVAC_SupplyPathExtensibleFields::ComponentName,_supplyPlenum->name().get());

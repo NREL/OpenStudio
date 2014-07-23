@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef ANALYSIS_UniformDISTRIBUTION_HPP
-#define ANALYSIS_UniformDISTRIBUTION_HPP
+#ifndef ANALYSIS_UNIFORMDISTRIBUTION_HPP
+#define ANALYSIS_UNIFORMDISTRIBUTION_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/UncertaintyDescription.hpp>
+#include "AnalysisAPI.hpp"
+#include "UncertaintyDescription.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -61,7 +61,7 @@ class ANALYSIS_API UniformDistribution : public UncertaintyDescription {
 
   //@}
  protected:
-  explicit UniformDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl);
+  explicit UniformDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl);
 
   friend class AnalysisObject;
   friend class UncertaintyDescription;
@@ -72,4 +72,4 @@ class ANALYSIS_API UniformDistribution : public UncertaintyDescription {
 } // analysis
 } // openstudio
 
-#endif // ANALYSIS_UniformDISTRIBUTION_HPP
+#endif // ANALYSIS_UNIFORMDISTRIBUTION_HPP

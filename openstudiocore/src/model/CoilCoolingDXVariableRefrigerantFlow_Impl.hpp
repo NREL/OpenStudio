@@ -20,8 +20,8 @@
 #ifndef MODEL_COILCOOLINGDXVARIABLEREFRIGERANTFLOW_IMPL_HPP
 #define MODEL_COILCOOLINGDXVARIABLEREFRIGERANTFLOW_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/HVACComponent_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "HVACComponent_Impl.hpp"
 
 namespace openstudio {
 

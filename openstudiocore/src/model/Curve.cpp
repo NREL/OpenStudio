@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Curve.hpp>
-#include <model/Curve_Impl.hpp>
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
 
-#include <model/ParentObject.hpp>
-#include <model/ParentObject_Impl.hpp>
+#include "ParentObject.hpp"
+#include "ParentObject_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -103,7 +103,7 @@ Curve::Curve(IddObjectType type, const Model& model)
   OS_ASSERT(getImpl<detail::Curve_Impl>());
 }
 
-Curve::Curve(boost::shared_ptr<detail::Curve_Impl> impl)
+Curve::Curve(std::shared_ptr<detail::Curve_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

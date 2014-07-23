@@ -20,16 +20,16 @@
 #ifndef UTILITIES_PLOT_FLOODPLOT_HPP
 #define UTILITIES_PLOT_FLOODPLOT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/plot/Plot2D.hpp>
-#include <utilities/data/TimeSeries.hpp>
-#include <utilities/data/Vector.hpp>
-#include <utilities/data/Matrix.hpp>
+#include "Plot2D.hpp"
+#include "../data/TimeSeries.hpp"
+#include "../data/Vector.hpp"
+#include "../data/Matrix.hpp"
 
-#include <QtGui/QWidget>
-#include <QtGui/QPushButton>
-#include <QtGui/QAction>
+#include <QWidget>
+#include <QPushButton>
+#include <QAction>
 
 #include <qwt/qwt_plot.h>
 #include <qwt/qwt_text.h>
@@ -38,8 +38,6 @@
 #include <qwt/qwt_scale_draw.h>
 #include <qwt/qwt_plot_zoomer.h>
 #include <qwt/qwt_plot_layout.h>
-
-#include <boost/shared_ptr.hpp>
 
 namespace openstudio{
 
@@ -391,13 +389,13 @@ namespace openstudio{
       COMMON_PTR_TYPEDEFS(FloodPlot);
 
       /// default constructor
-      FloodPlot(QWidget* parent = 0, Qt::WFlags flags = 0);
+      FloodPlot(QWidget* parent = nullptr, Qt::WindowFlags flags = nullptr);
 
       /// matrix constructor
       FloodPlot(const Matrix& m);
 
       /// create
-      static FloodPlot::Ptr create(QWidget* parent = 0, Qt::WFlags flags = 0);
+      static FloodPlot::Ptr create(QWidget* parent = nullptr, Qt::WindowFlags flags = nullptr);
 
       static FloodPlot::Ptr create(const Matrix& m);
 
@@ -426,7 +424,7 @@ namespace openstudio{
       /// convenience wrapper for timeseries data
       void timeseriesData(TimeSeries tsData);
 
-      /// coutour level limits
+      /// contour level limits
       void contourLevels(Vector& contourValues);
 
       /// color map range min and max values

@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/MainTabController.hpp>
-#include <openstudio_lib/MainTabView.hpp>
+#include "MainTabController.hpp"
+#include "MainTabView.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
 namespace openstudio {
 

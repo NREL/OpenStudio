@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef  RESULTSVIEWER_BROWSERVIEW_H
-#define  RESULTSVIEWER_BROWSERVIEW_H
+#ifndef RESULTSVIEWER_BROWSERVIEW_HPP
+#define RESULTSVIEWER_BROWSERVIEW_HPP
 
-#include <QtGui/QTextBrowser>
+#include <QTextBrowser>
 
 namespace resultsviewer{
 
@@ -33,7 +33,7 @@ class BrowserView : public QTextBrowser
 
 public:
 
-  BrowserView( QWidget* parent=0);
+  BrowserView( QWidget* parent=nullptr);
 
   const QString& filename() {return m_filename;}
   void setFilename(const QString& filename);
@@ -59,4 +59,4 @@ signals:
 
 }; // resultsviewer namespace
 
-#endif // RESULTSVIEWER_BROWSERVIEW_H
+#endif // RESULTSVIEWER_BROWSERVIEW_HPP

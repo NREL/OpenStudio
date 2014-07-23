@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ReverseTranslator.hpp>
-#include <model/DesignDay.hpp>
-#include <model/DesignDay_Impl.hpp>
-#include <model/ScheduleDay.hpp>
-#include <model/ScheduleDay_Impl.hpp>
+#include "../ReverseTranslator.hpp"
+#include "../../model/DesignDay.hpp"
+#include "../../model/DesignDay_Impl.hpp"
+#include "../../model/ScheduleDay.hpp"
+#include "../../model/ScheduleDay_Impl.hpp"
 #include <utilities/idd/SizingPeriod_DesignDay_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/core/Compare.hpp>
+#include "../../utilities/core/Compare.hpp"
 
 using namespace openstudio::model;
 

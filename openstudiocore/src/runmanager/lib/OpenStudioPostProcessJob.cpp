@@ -28,29 +28,27 @@
 #include "JobOutputCleanup.hpp"
 #include "RunManager_Util.hpp"
 
-#include <utilities/time/DateTime.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/TimeDependentValuation.hpp>
-#include <model/TimeDependentValuation_Impl.hpp>
+#include "../../utilities/time/DateTime.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Model_Impl.hpp"
+#include "../../model/Building.hpp"
+#include "../../model/Building_Impl.hpp"
+#include "../../model/Facility.hpp"
+#include "../../model/Facility_Impl.hpp"
+#include "../../model/TimeDependentValuation.hpp"
+#include "../../model/TimeDependentValuation_Impl.hpp"
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../../energyplus/ReverseTranslator.hpp"
 
-#include <utilities/data/CalibrationResult.hpp>
-#include <utilities/data/EndUses.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/sql/SqlFile.hpp>
+#include "../../utilities/data/CalibrationResult.hpp"
+#include "../../utilities/data/EndUses.hpp"
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/sql/SqlFile.hpp"
 
 #include <QDir>
 #include <QDateTime>
-
-#include <boost/bind.hpp>
 
 namespace openstudio {
 namespace runmanager {
@@ -112,7 +110,7 @@ namespace detail {
     return m_description;
   }
 
-  void OpenStudioPostProcessJob::startImpl(const boost::shared_ptr<ProcessCreator> &)
+  void OpenStudioPostProcessJob::startImpl(const std::shared_ptr<ProcessCreator> &)
   {
     QWriteLocker l(&m_mutex);
 
@@ -165,7 +163,7 @@ namespace detail {
 
       boost::filesystem::create_directories(outdir(true));
 
-      std::vector<Attribute> attributes = PostProcessReporting::go(sqlFile);
+      std::vector<Attribute> attributes = PostProcessReporting::go(sqlFile,"OpenStudioPostProcess");
 
       // ETH@20140219 - Not great to add an object here either, but needed for
       // Facility, and Building is really the same case. (If get this far with 
@@ -180,6 +178,7 @@ namespace detail {
         attribute = Attribute("floorArea", *value, "m^2");
         attribute->setDisplayName("Floor Area");
         attributes.push_back(*attribute);
+        attributes.back().setSource("OpenStudioPostProcess");
       }
 
       value = building.conditionedFloorArea();
@@ -187,6 +186,7 @@ namespace detail {
         attribute = Attribute("conditionedFloorArea", *value, "m^2");
         attribute->setDisplayName("Conditioned Floor Area");
         attributes.push_back(*attribute);
+        attributes.back().setSource("OpenStudioPostProcess");
       }
 
       // ETH@20140218 - Not great to add an object here, but otherwise, do not get 
@@ -199,6 +199,7 @@ namespace detail {
         attribute = Attribute("economicsCapitalCost", *value, "$");
         attribute->setDisplayName("Capital Cost");
         attributes.push_back(*attribute);
+        attributes.back().setSource("OpenStudioPostProcess");
       }
 
       value = facility.economicsTLCC();
@@ -206,6 +207,7 @@ namespace detail {
         attribute = Attribute("economicsTLCC", *value, "$");
         attribute->setDisplayName("Total Life Cycle Cost");
         attributes.push_back(*attribute);
+        attributes.back().setSource("OpenStudioPostProcess");
       }
 
       value = facility.annualWaterTotalCost();
@@ -213,16 +215,19 @@ namespace detail {
         attribute = Attribute("annualWaterTotalCost", *value, "$");
         attribute->setDisplayName("Annual Water Total Cost");
         attributes.push_back(*attribute);
+        attributes.back().setSource("OpenStudioPostProcess");
       }
 
       attribute = facility.endUsesAttribute();
       if (attribute){
         attributes.push_back(*attribute);
+        attributes.back().setSource("OpenStudioPostProcess");
       }
 
       attribute = facility.calibrationResultAttribute();
       if (attribute){
         attributes.push_back(*attribute);
+        attributes.back().setSource("OpenStudioPostProcess");
       }
 
       boost::optional<model::TimeDependentValuation> timeDependentValuation = model->getOptionalUniqueModelObject<model::TimeDependentValuation>();
@@ -235,6 +240,7 @@ namespace detail {
           attribute = Attribute("energyTimeDependentValuation", *value, "J");
           attribute->setDisplayName("Energy Time Dependent Valuation");
           attributes.push_back(*attribute);
+          attributes.back().setSource("OpenStudioPostProcess");
         }
 
         value = timeDependentValuation->costTimeDependentValuation();
@@ -242,6 +248,7 @@ namespace detail {
           attribute = Attribute("costTimeDependentValuation", *value, "$");
           attribute->setDisplayName("Cost Time Dependent Valuation");
           attributes.push_back(*attribute);
+          attributes.back().setSource("OpenStudioPostProcess");
         }
       }
 

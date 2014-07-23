@@ -17,37 +17,37 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/SubSurfaceInspectorView.hpp>
-#include <openstudio_lib/PlanarSurfaceWidget.hpp>
+#include "SubSurfaceInspectorView.hpp"
+#include "PlanarSurfaceWidget.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSComboBox.hpp"
 #include "../shared_gui_components/OSDoubleEdit.hpp"
-#include <openstudio_lib/OSVectorController.hpp>
-#include <openstudio_lib/OSDropZone.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
+#include "OSVectorController.hpp"
+#include "OSDropZone.hpp"
+#include "ModelObjectItem.hpp"
 
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/DefaultConstructionSet.hpp>
-#include <model/DefaultConstructionSet_Impl.hpp>
-#include <model/DefaultSubSurfaceConstructions.hpp>
-#include <model/DefaultSubSurfaceConstructions_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/BuildingStory.hpp>
-#include <model/BuildingStory_Impl.hpp>
-#include <model/Component.hpp>
-#include <model/Component_Impl.hpp>
-#include <model/ComponentData.hpp>
-#include <model/ComponentData_Impl.hpp>
+#include "../model/SubSurface.hpp"
+#include "../model/SubSurface_Impl.hpp"
+#include "../model/Surface.hpp"
+#include "../model/Surface_Impl.hpp"
+#include "../model/ConstructionBase.hpp"
+#include "../model/ConstructionBase_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
+#include "../model/DefaultConstructionSet.hpp"
+#include "../model/DefaultConstructionSet_Impl.hpp"
+#include "../model/DefaultSubSurfaceConstructions.hpp"
+#include "../model/DefaultSubSurfaceConstructions_Impl.hpp"
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
+#include "../model/BuildingStory.hpp"
+#include "../model/BuildingStory_Impl.hpp"
+#include "../model/Component.hpp"
+#include "../model/Component_Impl.hpp"
+#include "../model/ComponentData.hpp"
+#include "../model/ComponentData_Impl.hpp"
 
 #include <utilities/idd/OS_SubSurface_FieldEnums.hxx>
 #include <utilities/idd/OS_Surface_FieldEnums.hxx>
@@ -57,7 +57,7 @@
 #include <utilities/idd/OS_DefaultSubSurfaceConstructions_FieldEnums.hxx>
 #include <utilities/idd/OS_Building_FieldEnums.hxx>
 #include <utilities/idd/OS_BuildingStory_FieldEnums.hxx>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>

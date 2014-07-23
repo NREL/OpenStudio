@@ -17,22 +17,22 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/ZoneHVACBaseboardConvectiveWater.hpp>
-#include <model/ZoneHVACBaseboardConvectiveWater_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/StraightComponent_Impl.hpp>
-#include <model/CoilHeatingWaterBaseboard.hpp>
-#include <model/CoilHeatingWaterBaseboard_Impl.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
+#include "../../model/ModelObject.hpp"
+#include "../../model/ModelObject_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/ZoneHVACBaseboardConvectiveWater.hpp"
+#include "../../model/ZoneHVACBaseboardConvectiveWater_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/StraightComponent.hpp"
+#include "../../model/StraightComponent_Impl.hpp"
+#include "../../model/CoilHeatingWaterBaseboard.hpp"
+#include "../../model/CoilHeatingWaterBaseboard_Impl.hpp"
 
 #include <utilities/idd/ZoneHVAC_Baseboard_Convective_Water_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>

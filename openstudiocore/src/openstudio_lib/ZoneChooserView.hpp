@@ -21,11 +21,11 @@
 #define OPENSTUDIO_ZONECHOOSERVIEW_HPP
 
 #include <QWidget>
-#include <model/ModelObject.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACZoneMixer.hpp>
-#include <model/ThermalZone.hpp>
-#include <utilities/core/String.hpp>
+#include "../model/ModelObject.hpp"
+#include "../model/AirLoopHVACZoneSplitter.hpp"
+#include "../model/AirLoopHVACZoneMixer.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../utilities/core/String.hpp"
 
 class QCheckBox;
 

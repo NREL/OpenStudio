@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef TABLEVIEW_H
-#define TABLEVIEW_H
+#ifndef MODELEDITOR_TABLEVIEW_HPP
+#define MODELEDITOR_TABLEVIEW_HPP
 
 #include <QTableView>
 
@@ -30,7 +30,7 @@ class TableView : public QTableView
   Q_OBJECT
 
 public:
-  TableView(QWidget *parent = 0);
+  TableView(QWidget *parent = nullptr);
   virtual ~TableView();
   bool getSelectedRows(QModelIndexList& rowList);
   bool hasSelectedRows();
@@ -53,4 +53,4 @@ private:
 
 } // namespace modeleditor
 
-#endif // TABLEVIEW_H
+#endif // MODELEDITOR_TABLEVIEW_HPP

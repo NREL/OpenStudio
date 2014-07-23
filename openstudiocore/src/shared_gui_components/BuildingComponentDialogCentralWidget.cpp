@@ -17,19 +17,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <shared_gui_components/BuildingComponentDialogCentralWidget.hpp>
-#include <shared_gui_components/BuildingComponentDialog.hpp>
-#include <shared_gui_components/CollapsibleComponent.hpp>
-#include <shared_gui_components/CollapsibleComponentHeader.hpp>
-#include <shared_gui_components/CollapsibleComponentList.hpp>
-#include <shared_gui_components/Component.hpp>
-#include <shared_gui_components/ComponentList.hpp>
+#include "BuildingComponentDialogCentralWidget.hpp"
+#include "BuildingComponentDialog.hpp"
+#include "CollapsibleComponent.hpp"
+#include "CollapsibleComponentHeader.hpp"
+#include "CollapsibleComponentList.hpp"
+#include "Component.hpp"
+#include "ComponentList.hpp"
 
-#include <utilities/bcl/BCL.hpp>
-#include <utilities/bcl/LocalBCL.hpp>
-#include <utilities/bcl/RemoteBCL.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/bcl/BCL.hpp"
+#include "../utilities/bcl/LocalBCL.hpp"
+#include "../utilities/bcl/RemoteBCL.hpp"
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <QApplication>
 #include <QBoxLayout>
@@ -46,9 +46,9 @@ namespace openstudio {
 BuildingComponentDialogCentralWidget::BuildingComponentDialogCentralWidget(QWidget * parent)
   : QWidget(parent),
   m_tid(0),
-  m_collapsibleComponentList(NULL),
-  m_componentList(NULL), // TODO cruft to be removed
-  m_progressBar(NULL),
+  m_collapsibleComponentList(nullptr),
+  m_componentList(nullptr), // TODO cruft to be removed
+  m_progressBar(nullptr),
   m_pendingDownloads(std::set<std::string>()),
   m_pageIdx(0),
   m_searchString(QString()),
@@ -60,9 +60,9 @@ BuildingComponentDialogCentralWidget::BuildingComponentDialogCentralWidget(QWidg
 BuildingComponentDialogCentralWidget::BuildingComponentDialogCentralWidget(int tid, QWidget * parent)
   : QWidget(parent),
   m_tid(0),
-  m_collapsibleComponentList(NULL),
-  m_componentList(NULL), // TODO cruft to be removed
-  m_progressBar(NULL),
+  m_collapsibleComponentList(nullptr),
+  m_componentList(nullptr), // TODO cruft to be removed
+  m_progressBar(nullptr),
   m_pendingDownloads(std::set<std::string>()),
   m_pageIdx(0),
   m_searchString(QString())
@@ -82,7 +82,7 @@ void BuildingComponentDialogCentralWidget::createLayout()
   QLabel * label = new QLabel("Sort by:");
   label->hide(); // TODO remove this hack when we have sorts to do
 
-  QComboBox * comboBox = new QComboBox(this);
+  auto comboBox = new QComboBox(this);
   comboBox->hide(); // TODO remove this hack when we have sorts to do
 
   isConnected = connect(comboBox, SIGNAL(currentIndexChanged(const QString &)),
@@ -94,7 +94,7 @@ void BuildingComponentDialogCentralWidget::createLayout()
                         this, SLOT(upperPushButtonClicked()));
   OS_ASSERT(isConnected);
 
-  QHBoxLayout * upperLayout = new QHBoxLayout();
+  auto upperLayout = new QHBoxLayout();
   upperLayout->addWidget(label);
   upperLayout->addWidget(comboBox);
   upperLayout->addStretch();
@@ -138,10 +138,10 @@ void BuildingComponentDialogCentralWidget::createLayout()
   // Hack code to be removed (TODO)
   m_componentList = new ComponentList();  // TODO refactor and remove
 
-  CollapsibleComponentHeader * collapsibleComponentHeader = NULL;
+  CollapsibleComponentHeader * collapsibleComponentHeader = nullptr;
   collapsibleComponentHeader = new CollapsibleComponentHeader("Constructions",100,5);
 
-  CollapsibleComponent * collapsibleComponent = NULL;
+  CollapsibleComponent * collapsibleComponent = nullptr;
   collapsibleComponent = new CollapsibleComponent(collapsibleComponentHeader,m_componentList);
 
   m_collapsibleComponentList->addCollapsibleComponent(collapsibleComponent);
@@ -155,12 +155,12 @@ void BuildingComponentDialogCentralWidget::createLayout()
                         this, SLOT(lowerPushButtonClicked()));
   OS_ASSERT(isConnected);
 
-  QHBoxLayout * lowerLayout = new QHBoxLayout();
+  auto lowerLayout = new QHBoxLayout();
   lowerLayout->addStretch();
   lowerLayout->addWidget(m_progressBar);
   lowerLayout->addWidget(lowerPushButton);
 
-  QVBoxLayout * mainLayout = new QVBoxLayout();
+  auto mainLayout = new QVBoxLayout();
   mainLayout->addLayout(upperLayout);
 
   mainLayout->addWidget(m_collapsibleComponentList,0,Qt::AlignTop);
@@ -204,11 +204,9 @@ void BuildingComponentDialogCentralWidget::setTid(const std::string& filterType,
   //std::vector<Component *> components = m_collapsibleComponentList->components();
   std::vector<Component *> components = m_componentList->components();  // TODO replace with code above
 
-  for( std::vector<Component *>::iterator it = components.begin();
-       it != components.end();
-       ++it )
+  for( auto & comp : components)
   {
-    delete *it;
+    delete comp;
   }
 
   RemoteBCL remoteBCL;
@@ -222,11 +220,9 @@ void BuildingComponentDialogCentralWidget::setTid(const std::string& filterType,
     responses = remoteBCL.searchMeasureLibrary(searchString.toStdString(),tid,pageIdx);
   }
 
-  for( std::vector<BCLSearchResult>::iterator it = responses.begin();
-       it != responses.end();
-       ++it )
+  for( const auto & response : responses)
   {
-    Component * component = new Component(*it);
+    auto component = new Component(response);
     
     // TODO replace with a componentList owned by m_collapsibleComponentList
     m_componentList->addComponent(component);
@@ -264,7 +260,7 @@ void BuildingComponentDialogCentralWidget::setTid(const std::string& filterType,
 
 void BuildingComponentDialogCentralWidget::upperPushButtonClicked()
 {
-  Q_FOREACH(Component* component, m_collapsibleComponentList->components()){
+  for (Component* component : m_collapsibleComponentList->components()) {
     if (component->checkBox()->isEnabled()){
       component->checkBox()->setChecked(true);
     }
@@ -273,10 +269,10 @@ void BuildingComponentDialogCentralWidget::upperPushButtonClicked()
 
 void BuildingComponentDialogCentralWidget::lowerPushButtonClicked()
 {
-  Q_FOREACH(Component* component, m_collapsibleComponentList->components()){
+  for (Component* component : m_collapsibleComponentList->components()) {
     if (component->checkBox()->isChecked() && component->checkBox()->isEnabled()){
       
-      RemoteBCL* remoteBCL = new RemoteBCL();
+      auto remoteBCL = new RemoteBCL();
 
       if (m_filterType == "components")
       {
@@ -357,7 +353,7 @@ void BuildingComponentDialogCentralWidget::componentDownloadComplete(const std::
   }else{
     // error downloading component
     // find component in list by uid and re-enable
-    Q_FOREACH(Component* component, m_collapsibleComponentList->components()){
+    for (Component* component : m_collapsibleComponentList->components()) {
       if (component->uid() == uid){
         component->checkBox()->setEnabled(true);
         break;
@@ -393,7 +389,7 @@ void BuildingComponentDialogCentralWidget::measureDownloadComplete(const std::st
   }else{
     // error downloading measure
     // find measure in list by uid and re-enable
-    Q_FOREACH(Component* component, m_collapsibleComponentList->components()){
+    for (Component* component : m_collapsibleComponentList->components()) {
       if (component->uid() == uid){
         component->checkBox()->setEnabled(true);
         break;

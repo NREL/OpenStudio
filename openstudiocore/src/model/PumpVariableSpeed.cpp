@@ -17,27 +17,27 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/PumpVariableSpeed.hpp>
-#include <model/PumpVariableSpeed_Impl.hpp>
+#include "PumpVariableSpeed.hpp"
+#include "PumpVariableSpeed_Impl.hpp"
 
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Curve.hpp>
-#include <model/Curve_Impl.hpp>
-#include <model/CurveLinear.hpp>
-#include <model/CurveLinear_Impl.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/CurveQuadratic_Impl.hpp>
-#include <model/CurveCubic.hpp>
-#include <model/CurveCubic_Impl.hpp>
-#include <model/CurveQuartic.hpp>
-#include <model/CurveQuartic_Impl.hpp>
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
+#include "CurveLinear.hpp"
+#include "CurveLinear_Impl.hpp"
+#include "CurveQuadratic.hpp"
+#include "CurveQuadratic_Impl.hpp"
+#include "CurveCubic.hpp"
+#include "CurveCubic_Impl.hpp"
+#include "CurveQuartic.hpp"
+#include "CurveQuartic_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Pump_VariableSpeed_FieldEnums.hxx>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -1452,7 +1452,7 @@ void PumpVariableSpeed::resetMaximumRPMSchedule() {
 }
 
 /// @cond
-PumpVariableSpeed::PumpVariableSpeed(boost::shared_ptr<detail::PumpVariableSpeed_Impl> impl)
+PumpVariableSpeed::PumpVariableSpeed(std::shared_ptr<detail::PumpVariableSpeed_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

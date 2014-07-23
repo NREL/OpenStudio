@@ -20,18 +20,18 @@
 #ifndef UTILITIES_PLOT_PIECHART_HPP
 #define UTILITIES_PLOT_PIECHART_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/plot/Chart.hpp>
-#include <utilities/data/Vector.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Macro.hpp>
+#include "Chart.hpp"
+#include "../data/Vector.hpp"
+#include "../core/String.hpp"
+#include "../core/Path.hpp"
+#include "../core/Macro.hpp"
 
 namespace openstudio{
 
   /** Class which represents a pie chart.  Data for the chart are stored in a Vector, 
-  *   with each element corresponding to a slice in the chart and each slice is labelled.
+  *   with each element corresponding to a slice in the chart and each slice is labeled.
   *   The size of the pie is normalized to the sum of the data, slices may be hidden to
   *   represent "missing" sections.
   *  

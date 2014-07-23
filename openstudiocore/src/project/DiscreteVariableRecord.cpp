@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/DiscreteVariableRecord.hpp>
-#include <project/DiscreteVariableRecord_Impl.hpp>
+#include "DiscreteVariableRecord.hpp"
+#include "DiscreteVariableRecord_Impl.hpp"
 
-#include <project/JoinRecord.hpp>
-#include <project/MeasureGroupRecord.hpp>
-#include <project/MeasureGroupRecord_Impl.hpp>
+#include "JoinRecord.hpp"
+#include "MeasureGroupRecord.hpp"
+#include "MeasureGroupRecord_Impl.hpp"
 
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
+#include "../analysis/MeasureGroup.hpp"
+#include "../analysis/MeasureGroup_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace project {
@@ -163,7 +163,7 @@ DiscreteVariableRecord DiscreteVariableRecord::factoryFromDiscreteVariable(
   }
 
   OS_ASSERT(false);
-  return DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl>());
+  return DiscreteVariableRecord(std::shared_ptr<detail::DiscreteVariableRecord_Impl>());
 }
 
 DiscreteVariableRecord DiscreteVariableRecord::factoryFromDiscreteVariable(
@@ -180,7 +180,7 @@ DiscreteVariableRecord DiscreteVariableRecord::factoryFromDiscreteVariable(
   }
 
   OS_ASSERT(false);
-  return DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl>());
+  return DiscreteVariableRecord(std::shared_ptr<detail::DiscreteVariableRecord_Impl>());
 }
 
 std::vector<DiscreteVariableRecord> DiscreteVariableRecord::getDiscreteVariableRecords(
@@ -229,11 +229,11 @@ analysis::DiscreteVariable DiscreteVariableRecord::discreteVariable() const {
 }
 
 /// @cond
-DiscreteVariableRecord::DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl> impl)
+DiscreteVariableRecord::DiscreteVariableRecord(std::shared_ptr<detail::DiscreteVariableRecord_Impl> impl)
   : InputVariableRecord(impl)
 {}
 
-DiscreteVariableRecord::DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl> impl,
+DiscreteVariableRecord::DiscreteVariableRecord(std::shared_ptr<detail::DiscreteVariableRecord_Impl> impl,
                                                ProjectDatabase database,
                                                const boost::optional<analysis::DiscreteVariable>& discreteVariable)
   : InputVariableRecord(impl, database, discreteVariable ? discreteVariable->cast<analysis::InputVariable>() : analysis::OptionalInputVariable())

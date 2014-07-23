@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef IG_LINEEDIT_HPP
-#define IG_LINEEDIT_HPP
+#ifndef MODELEDITOR_IGLINEEDIT_HPP
+#define MODELEDITOR_IGLINEEDIT_HPP
 
-#include <model_editor/ModelEditorAPI.hpp>
-#include <model_editor/InspectorGadget.hpp>
+#include "ModelEditorAPI.hpp"
+#include "InspectorGadget.hpp"
 
 #include <QLineEdit>
 
@@ -74,4 +74,4 @@ class  MODELEDITOR_API IGLineEdit : public QLineEdit
 };
   
 
-#endif
+#endif // MODELEDITOR_IGLINEEDIT_HPP

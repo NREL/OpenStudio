@@ -18,19 +18,19 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idf/Test/IdfFixture.hpp>
-#include <utilities/idf/IdfObject.hpp>
-#include <utilities/idf/IdfObject_Impl.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/idf/IdfRegex.hpp>
+#include "IdfFixture.hpp"
+#include "../IdfObject.hpp"
+#include "../IdfObject_Impl.hpp"
+#include "../IdfExtensibleGroup.hpp"
+#include "../IdfRegex.hpp"
 #include <utilities/idd/IddFactory.hxx>
-#include <utilities/idd/IddRegex.hpp>
-#include <utilities/idd/Comments.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../../idd/IddRegex.hpp"
+#include "../../idd/Comments.hpp"
+#include "../../core/Optional.hpp"
 
-#include <utilities/units/QuantityFactory.hpp>
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
+#include "../../units/QuantityFactory.hpp"
+#include "../../units/QuantityConverter.hpp"
+#include "../../units/OSOptionalQuantity.hpp"
 
 #include <utilities/idd/OS_Building_FieldEnums.hxx>
 
@@ -39,7 +39,6 @@
 #include <QVariant>
 
 #include <boost/filesystem/fstream.hpp>
-#include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include <sstream>
@@ -70,10 +69,10 @@ TEST_F(IdfFixture, IdfObject_ConstructDefaultsFromIddObjectType) {
   // loop through each IddObject, create a default object, and print to a file.
   // examine, then partition into "good" and candidate for refactor (us or E+)
   boost::filesystem::ofstream outFile("defaultObjects.idf");
-  ASSERT_TRUE(outFile);
+  ASSERT_TRUE(outFile?true:false);
 
   IddObjectVector iddObjects = IddFactory::instance().objects();
-  BOOST_FOREACH(const IddObject& iddObject,iddObjects) {
+  for (const IddObject& iddObject : iddObjects) {
     IdfObject defaultObject(iddObject.type());
     defaultObject.print(outFile);
   }

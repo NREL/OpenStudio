@@ -20,13 +20,13 @@
 #ifndef UTILITIES_CORE_FILEREFERENCE_HPP
 #define UTILITIES_CORE_FILEREFERENCE_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/Enum.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/UUID.hpp>
+#include "Enum.hpp"
+#include "Path.hpp"
+#include "UUID.hpp"
 
-#include <utilities/time/DateTime.hpp>
+#include "../time/DateTime.hpp"
 
 #include <boost/optional.hpp>
 
@@ -59,7 +59,8 @@ OPENSTUDIO_ENUM( FileReferenceType,
     ((OSM)(osm))
     ((RB)(rb))
     ((SQL)(sql))
-    ((XML)(xml)) );
+    ((XML)(xml))
+    ((OSSR)(ossr)) );
 
 class UTILITIES_API FileReference {
  public:

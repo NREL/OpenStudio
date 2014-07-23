@@ -19,10 +19,10 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/plot/LinePlot.hpp>
+#include "../LinePlot.hpp"
 
-#include <utilities/data/Matrix.hpp>
-#include <utilities/core/Application.hpp>
+#include "../../data/Matrix.hpp"
+#include "../../core/Application.hpp"
 
 using namespace std;
 using namespace boost;

@@ -17,45 +17,45 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/LifeCycleCost.hpp>
-#include <model/LifeCycleCost_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/LightsDefinition_Impl.hpp>
-#include <model/LuminaireDefinition.hpp>
-#include <model/LuminaireDefinition_Impl.hpp>
-#include <model/ElectricEquipmentDefinition.hpp>
-#include <model/ElectricEquipmentDefinition_Impl.hpp>
-#include <model/GasEquipmentDefinition.hpp>
-#include <model/GasEquipmentDefinition_Impl.hpp>
-#include <model/HotWaterEquipmentDefinition.hpp>
-#include <model/HotWaterEquipmentDefinition_Impl.hpp>
-#include <model/SteamEquipmentDefinition.hpp>
-#include <model/SteamEquipmentDefinition_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
-#include <model/ZoneHVACComponent.hpp>
-#include <model/ZoneHVACComponent_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "LifeCycleCost.hpp"
+#include "LifeCycleCost_Impl.hpp"
+#include "ConstructionBase.hpp"
+#include "ConstructionBase_Impl.hpp"
+#include "LightsDefinition.hpp"
+#include "LightsDefinition_Impl.hpp"
+#include "LuminaireDefinition.hpp"
+#include "LuminaireDefinition_Impl.hpp"
+#include "ElectricEquipmentDefinition.hpp"
+#include "ElectricEquipmentDefinition_Impl.hpp"
+#include "GasEquipmentDefinition.hpp"
+#include "GasEquipmentDefinition_Impl.hpp"
+#include "HotWaterEquipmentDefinition.hpp"
+#include "HotWaterEquipmentDefinition_Impl.hpp"
+#include "SteamEquipmentDefinition.hpp"
+#include "SteamEquipmentDefinition_Impl.hpp"
+#include "Building.hpp"
+#include "Building_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "PlantLoop.hpp"
+#include "PlantLoop_Impl.hpp"
+#include "HVACComponent.hpp"
+#include "HVACComponent_Impl.hpp"
+#include "ZoneHVACComponent.hpp"
+#include "ZoneHVACComponent_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_LifeCycleCost_FieldEnums.hxx>
 
 #include <boost/algorithm/string.hpp>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <typeinfo>
 #include <iostream>
@@ -434,7 +434,7 @@ boost::optional<int>  LifeCycleCost_Impl::costedThermalZones() const
 
   }else if (modelObject.optionalCast<Building>()){
     result = 0;
-    BOOST_FOREACH(const ThermalZone& thermalZone, this->model().getConcreteModelObjects<ThermalZone>()){
+    for (const ThermalZone& thermalZone : this->model().getConcreteModelObjects<ThermalZone>()){
       result = result.get() + thermalZone.multiplier();
     }
 
@@ -446,7 +446,7 @@ boost::optional<int>  LifeCycleCost_Impl::costedThermalZones() const
 
   }else if (modelObject.optionalCast<AirLoopHVAC>()){
     result = 0;
-    BOOST_FOREACH(const ThermalZone& thermalZone, modelObject.cast<AirLoopHVAC>().thermalZones()){
+    for (const ThermalZone& thermalZone : modelObject.cast<AirLoopHVAC>().thermalZones()){
       result = result.get() + thermalZone.multiplier();
     }
 
@@ -542,7 +542,7 @@ LifeCycleCost::LifeCycleCost(const ModelObject& modelObject)
 }
 
 // constructor
-LifeCycleCost::LifeCycleCost(boost::shared_ptr<detail::LifeCycleCost_Impl> impl)
+LifeCycleCost::LifeCycleCost(std::shared_ptr<detail::LifeCycleCost_Impl> impl)
   : ModelObject(impl)
 {}
 

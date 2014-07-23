@@ -21,9 +21,9 @@
 #define MODEL_COMPONENTDATA_IMPL_HPP
 
 
-#include <model/ComponentData.hpp>
+#include "ComponentData.hpp"
 
-#include <model/ModelObject_Impl.hpp>
+#include "ModelObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {

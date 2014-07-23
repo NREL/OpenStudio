@@ -17,12 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/data/CalibrationResult.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/time/Date.hpp>
-#include <utilities/data/DataEnums.hpp>
-
-#include <boost/foreach.hpp>
+#include "CalibrationResult.hpp"
+#include "../core/Assert.hpp"
+#include "../time/Date.hpp"
+#include "DataEnums.hpp"
 
 namespace openstudio {
 
@@ -58,6 +56,7 @@ namespace openstudio {
       return boost::none;
     }
     try{
+      // cppcheck-suppress unusedScopedObject
       Date(test->valueAsString());
     }catch(const std::exception&){
       LOG(Warn,"Cannot create CalibrationBillingPeriod from Attribute with improper 'startDate'.");
@@ -271,6 +270,7 @@ namespace openstudio {
       return boost::none;
     }
     try{
+      // cppcheck-suppress unusedScopedObject
       FuelType(test->valueAsString());
     }catch(const std::exception&){
       LOG(Warn,"Cannot create CalibrationUtilityBill from Attribute with improper 'fuelType'.");
@@ -283,6 +283,7 @@ namespace openstudio {
       return boost::none;
     }
     try{
+      // cppcheck-suppress unusedScopedObject
       InstallLocationType(test->valueAsString());
     }catch(const std::exception&){
       LOG(Warn,"Cannot create CalibrationUtilityBill from Attribute with improper 'meterInstallLocation'.");
@@ -513,7 +514,7 @@ namespace openstudio {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("billingPeriods");
     OS_ASSERT(attribute);
     OS_ASSERT(attribute->valueType() == AttributeValueType::AttributeVector);
-    BOOST_FOREACH(const Attribute& value, attribute->valueAsAttributeVector()){
+    for (const Attribute& value : attribute->valueAsAttributeVector()){
       boost::optional<CalibrationBillingPeriod> tmp = CalibrationBillingPeriod::fromAttribute(value);
       if (tmp){
         result.push_back(*tmp);
@@ -604,7 +605,7 @@ namespace openstudio {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("utilityBills");
     OS_ASSERT(attribute);
     OS_ASSERT(attribute->valueType() == AttributeValueType::AttributeVector);
-    BOOST_FOREACH(const Attribute& value, attribute->valueAsAttributeVector()){
+    for (const Attribute& value : attribute->valueAsAttributeVector()){
       boost::optional<CalibrationUtilityBill> tmp = CalibrationUtilityBill::fromAttribute(value);
       if (tmp){
         result.push_back(*tmp);

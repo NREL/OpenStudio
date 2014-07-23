@@ -17,31 +17,30 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/PlanarSurface.hpp>
-#include <model/PlanarSurface_Impl.hpp>
-#include <model/Model.hpp>
+#include "PlanarSurface.hpp"
+#include "PlanarSurface_Impl.hpp"
+#include "Model.hpp"
 
-#include <model/PlanarSurfaceGroup.hpp>
-#include <model/Space.hpp>
-#include <model/ModelExtensibleGroup.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/LayeredConstruction.hpp>
-#include <model/LayeredConstruction_Impl.hpp>
-#include <model/Material.hpp>
-#include <model/AirWallMaterial.hpp>
-#include <model/AirWallMaterial_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
+#include "PlanarSurfaceGroup.hpp"
+#include "Space.hpp"
+#include "ModelExtensibleGroup.hpp"
+#include "ConstructionBase.hpp"
+#include "ConstructionBase_Impl.hpp"
+#include "LayeredConstruction.hpp"
+#include "LayeredConstruction_Impl.hpp"
+#include "Material.hpp"
+#include "AirWallMaterial.hpp"
+#include "AirWallMaterial_Impl.hpp"
+#include "SubSurface.hpp"
+#include "SubSurface_Impl.hpp"
 
-#include <utilities/sql/SqlFile.hpp>
+#include "../utilities/sql/SqlFile.hpp"
 
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Transformation.hpp>
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/geometry/Transformation.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
-#include <boost/foreach.hpp>
 #include <boost/math/constants/constants.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -117,7 +116,7 @@ namespace model {
       if (!m_cachedVertices){
         Point3dVector result;
 
-        BOOST_FOREACH(const ModelExtensibleGroup& group,castVector<ModelExtensibleGroup>(extensibleGroups()))
+        for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups()))
         {
           OptionalDouble x = group.getDouble(0);
           OptionalDouble y = group.getDouble(1);
@@ -255,7 +254,7 @@ namespace model {
       double result = this->grossArea();
 
       // subtract net area of child planar surfaces
-      BOOST_FOREACH(const ModelObject& child, this->children()){
+      for (const ModelObject& child : this->children()){
         OptionalPlanarSurface surface = child.optionalCast<PlanarSurface>();
         if (surface){
           if (surface->subtractFromGrossArea()){
@@ -337,7 +336,7 @@ namespace model {
       return result;
     }
 
-    boost::optional<double> PlanarSurface_Impl::interiorVisibleAbsorbtance() const
+    boost::optional<double> PlanarSurface_Impl::interiorVisibleAbsorptance() const
     {
       OptionalDouble result;
       OptionalSqlFile sqlFile = model().sqlFile();
@@ -345,7 +344,7 @@ namespace model {
 
       if (oConstruction) {
         // from input
-        OptionalDouble inputResult = oConstruction->interiorVisibleAbsorbtance();
+        OptionalDouble inputResult = oConstruction->interiorVisibleAbsorptance();
 
         // from output
         OptionalDouble outputResult;
@@ -370,8 +369,8 @@ namespace model {
       return result;
     }
 
-    /// get exterior visible absorbtance (unitless)
-    boost::optional<double> PlanarSurface_Impl::exteriorVisibleAbsorbtance() const
+    /// get exterior visible absorptance (unitless)
+    boost::optional<double> PlanarSurface_Impl::exteriorVisibleAbsorptance() const
     {
       OptionalDouble result;
       OptionalSqlFile sqlFile = model().sqlFile();
@@ -379,7 +378,7 @@ namespace model {
 
       if (oConstruction) {
         // from input
-        OptionalDouble inputResult = oConstruction->exteriorVisibleAbsorbtance();
+        OptionalDouble inputResult = oConstruction->exteriorVisibleAbsorptance();
 
         // from output
         OptionalDouble outputResult;
@@ -518,7 +517,7 @@ namespace model {
         std::vector<Point3d> faceVertices = faceTransformationInverse*this->vertices();
 
         std::vector<std::vector<Point3d> > faceHoles;
-        BOOST_FOREACH(const ModelObject& child, this->children()){
+        for (const ModelObject& child : this->children()){
           OptionalPlanarSurface surface = child.optionalCast<PlanarSurface>();
           if (surface){
             if (surface->subtractFromGrossArea()){
@@ -529,7 +528,7 @@ namespace model {
 
         std::vector<std::vector<Point3d> > faceTriangulation = computeTriangulation(faceVertices, faceHoles);
 
-        BOOST_FOREACH(const std::vector<Point3d>& faceTriangle, faceTriangulation){
+        for (const std::vector<Point3d>& faceTriangle : faceTriangulation){
           m_cachedTriangulation.push_back(faceTransformation*faceTriangle);
         }
       }
@@ -603,7 +602,7 @@ PlanarSurface::PlanarSurface(IddObjectType type, const std::vector<Point3d>& ver
   }
 }
 
-PlanarSurface::PlanarSurface(boost::shared_ptr<detail::PlanarSurface_Impl> p)
+PlanarSurface::PlanarSurface(std::shared_ptr<detail::PlanarSurface_Impl> p)
   : ParentObject(p)
 {}
 
@@ -703,16 +702,28 @@ boost::optional<double> PlanarSurface::heatCapacity() const {
   return getImpl<detail::PlanarSurface_Impl>()->heatCapacity();
 }
 
-/// get interior visible absorbtance (unitless)
-OptionalDouble PlanarSurface::interiorVisibleAbsorbtance() const
+/// get interior visible absorptance (unitless)
+OptionalDouble PlanarSurface::interiorVisibleAbsorptance() const
 {
-  return getImpl<detail::PlanarSurface_Impl>()->interiorVisibleAbsorbtance();
+  return getImpl<detail::PlanarSurface_Impl>()->interiorVisibleAbsorptance();
 }
 
-/// get exterior visible absorbtance (unitless)
+OptionalDouble PlanarSurface::interiorVisibleAbsorbtance() const
+{
+  LOG(Warn,"interiorVisibleAbsorbtance() is deprecated and will be removed after 1.4.0");
+  return interiorVisibleAbsorptance();
+}
+
+/// get exterior visible absorptance (unitless)
+OptionalDouble PlanarSurface::exteriorVisibleAbsorptance() const
+{
+  return getImpl<detail::PlanarSurface_Impl>()->exteriorVisibleAbsorptance();
+}
+
 OptionalDouble PlanarSurface::exteriorVisibleAbsorbtance() const
 {
-  return getImpl<detail::PlanarSurface_Impl>()->exteriorVisibleAbsorbtance();
+  LOG(Warn,"exteriorVisibleAbsorbtance() is deprecated and will be removed after 1.4.0");
+  return exteriorVisibleAbsorptance();
 }
 
 boost::optional<PlanarSurfaceGroup> PlanarSurface::planarSurfaceGroup() const
@@ -803,7 +814,7 @@ std::vector<PlanarSurface> PlanarSurface::findPlanarSurfaces(const std::vector<P
   Vector3d north(0.0,1.0,0.0);
 
   // inputs ok, loop over surfaces
-  BOOST_FOREACH(const PlanarSurface& planarSurface, planarSurfaces){
+  for (const PlanarSurface& planarSurface : planarSurfaces){
 
     // find the transformation to site coordinates
     Transformation siteTransformation;
@@ -816,7 +827,7 @@ std::vector<PlanarSurface> PlanarSurface::findPlanarSurfaces(const std::vector<P
         siteTransformation = it->second;
       }else{
         siteTransformation = group->buildingTransformation();
-        siteTransformationMap.insert(std::make_pair<PlanarSurfaceGroup, Transformation>(*group, siteTransformation));
+        siteTransformationMap.insert(std::make_pair(*group, siteTransformation));
       }
     }
 

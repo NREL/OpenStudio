@@ -19,7 +19,7 @@
 
 #include "ExportXMLDialog.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QLabel>
 #include <QLineEdit>
@@ -48,17 +48,17 @@ ExportXMLDialog::ExportXMLDialog(const std::vector<std::string>& alternatives, Q
   okButton->setText("Ok");
   okButton->setMinimumHeight(34);
 
-  QVBoxLayout* vLayout = new QVBoxLayout;
+  auto vLayout = new QVBoxLayout;
   vLayout->setContentsMargins(QMargins(0,0,0,0));
 
-  QLabel* label = new QLabel;
+  auto label = new QLabel;
   label->setText("EDA Baseline:");
   label->setObjectName("H2");
   vLayout->addWidget(label);
   m_edaBaselineComboBox = new QComboBox(this);
   //make all alternatives available in the dropdown box
   m_edaBaselineComboBox->addItem(QString("No EDA Baseline"));
-  Q_FOREACH( const std::string & alternativeName, alternatives) {
+  for ( const std::string & alternativeName : alternatives) {
     m_edaBaselineComboBox->addItem(toQString(alternativeName));
   }
   m_edaBaselineComboBox->setCurrentIndex(0);
@@ -72,7 +72,7 @@ ExportXMLDialog::ExportXMLDialog(const std::vector<std::string>& alternatives, Q
   m_proposedBaselineComboBox = new QComboBox(this);
   m_proposedBaselineComboBox->addItem(QString("No Proposed Baseline"));
   //make all alternatives available in the dropdown box
-  Q_FOREACH( const std::string & alternativeName, alternatives) {
+  for ( const std::string & alternativeName : alternatives) {
     m_proposedBaselineComboBox->addItem(toQString(alternativeName));
   }
   m_proposedBaselineComboBox->setCurrentIndex(0);
@@ -86,14 +86,14 @@ ExportXMLDialog::ExportXMLDialog(const std::vector<std::string>& alternatives, Q
   m_certificationBaselineComboBox = new QComboBox(this);
   //make all alternatives available in the dropdown box
   m_certificationBaselineComboBox->addItem(QString("No Certification Baseline"));
-  Q_FOREACH( const std::string & alternativeName, alternatives) {
+  for ( const std::string & alternativeName : alternatives) {
     m_certificationBaselineComboBox->addItem(toQString(alternativeName));
   }
   m_certificationBaselineComboBox->setCurrentIndex(0);
   vLayout->addWidget(m_certificationBaselineComboBox);
   vLayout->addSpacing(10);
 
-  QHBoxLayout* hLayout = new QHBoxLayout;
+  auto hLayout = new QHBoxLayout;
   hLayout->addStretch();
   vLayout->addLayout(hLayout);
 
@@ -104,7 +104,7 @@ ExportXMLDialog::ExportXMLDialog(const std::vector<std::string>& alternatives, Q
   this->setWindowModality(Qt::ApplicationModal);
   //this->setSizeGripEnabled(true);
 
-  #ifdef Q_WS_MAC
+  #ifdef Q_OS_MAC
     setWindowFlags(Qt::FramelessWindowHint);
   #else
     setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);

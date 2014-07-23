@@ -1,5 +1,5 @@
-#ifndef __PAT_API_HPP__
-#define __PAT_API_HPP__
+#ifndef PATAPP_PATAPI_HPP
+#define PATAPP_PATAPI_HPP
 
 #if _WIN32 || _MSC_VER
 

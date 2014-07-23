@@ -17,19 +17,19 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef ENERGYPLUS_IDF_TEST_IDFFIXTURE_HPP
-#define ENERGYPLUS_IDF_TEST_IDFFIXTURE_HPP
+#ifndef UTILITIES_IDF_TEST_IDFFIXTURE_HPP
+#define UTILITIES_IDF_TEST_IDFFIXTURE_HPP
 
 #include <gtest/gtest.h>
 
 #include <resources.hxx>
 
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/ImfFile.hpp>
+#include "../IdfFile.hpp"
+#include "../Workspace.hpp"
+#include "../ImfFile.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/FileLogSink.hpp>
+#include "../../core/Logger.hpp"
+#include "../../core/FileLogSink.hpp"
 
 class IdfFixture : public ::testing::Test {
  protected:
@@ -39,7 +39,7 @@ class IdfFixture : public ::testing::Test {
   // tear down after each test
   virtual void TearDown();
 
-  // initiallize static members
+  // initialize static members
   static void SetUpTestCase();
 
   // tear down static members
@@ -58,4 +58,4 @@ class IdfFixture : public ::testing::Test {
   virtual ~IdfFixture() {}
 };
 
-#endif // ENERGYPLUS_IDF_TEST_IDFFIXTURE_HPP
+#endif // UTILITIES_IDF_TEST_IDFFIXTURE_HPP

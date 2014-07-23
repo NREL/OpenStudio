@@ -18,36 +18,35 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <osversion/test/OSVersionFixture.hpp>
-#include <osversion/VersionTranslator.hpp>
+#include "OSVersionFixture.hpp"
+#include "../VersionTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/Component.hpp>
-#include <model/Component_Impl.hpp>
-#include <model/ComponentData.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/Material.hpp>
-#include <model/Material_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Version.hpp>
-#include <model/Version_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/Component.hpp"
+#include "../../model/Component_Impl.hpp"
+#include "../../model/ComponentData.hpp"
+#include "../../model/Construction.hpp"
+#include "../../model/Construction_Impl.hpp"
+#include "../../model/Material.hpp"
+#include "../../model/Material_Impl.hpp"
+#include "../../model/ConstructionBase.hpp"
+#include "../../model/ConstructionBase_Impl.hpp"
+#include "../../model/Building.hpp"
+#include "../../model/Building_Impl.hpp"
+#include "../../model/Version.hpp"
+#include "../../model/Version_Impl.hpp"
 
-#include <utilities/bcl/RemoteBCL.hpp>
-#include <utilities/bcl/LocalBCL.hpp>
-#include <utilities/bcl/OnDemandGenerator.hpp>
-#include <utilities/bcl/BCLComponent.hpp>
+#include "../../utilities/bcl/RemoteBCL.hpp"
+#include "../../utilities/bcl/LocalBCL.hpp"
+#include "../../utilities/bcl/OnDemandGenerator.hpp"
+#include "../../utilities/bcl/BCLComponent.hpp"
 
-#include <utilities/idf/IdfObject.hpp>
+#include "../../utilities/idf/IdfObject.hpp"
 #include <utilities/idd/OS_Version_FieldEnums.hxx>
 
-#include <utilities/core/Compare.hpp>
+#include "../../utilities/core/Compare.hpp"
 
 #include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
 
 #include <resources.hxx>
 #include <OpenStudio.hxx>
@@ -61,7 +60,7 @@ TEST_F(OSVersionFixture,VersionTranslator_ExampleModel) {
 
   // iterate through osversion subfolders
   openstudio::path resources = resourcesPath() / toPath("osversion");
-  for (openstudio::directory_iterator it(resources); it != openstudio::directory_iterator(); ++it) {
+  for (boost::filesystem::directory_iterator it(resources); it != boost::filesystem::directory_iterator(); ++it) {
     if (boost::filesystem::is_directory(it->status())) {
       // run version translator on each example.osm
       openstudio::path modelPath = it->path() / toPath("example.osm");
@@ -75,19 +74,19 @@ TEST_F(OSVersionFixture,VersionTranslator_ExampleModel) {
       LOG(Debug,"Updated '" << toString(modelPath) << "' to OpenStudio Version "
           << result->version().str() << ".");
       LOG(Debug,"Deprecated objects: ");
-      BOOST_FOREACH(const IdfObject& object,translator.deprecatedObjects()) {
+      for (const IdfObject& object : translator.deprecatedObjects()) {
         LOG(Debug,object);
       }
       LOG(Debug,"Untranslated objects: ");
-      BOOST_FOREACH(const IdfObject& object,translator.untranslatedObjects()) {
+      for (const IdfObject& object : translator.untranslatedObjects()) {
         LOG(Debug,object);
       }
       LOG(Debug,"New objects: ");
-      BOOST_FOREACH(const IdfObject& object,translator.newObjects()) {
+      for (const IdfObject& object : translator.newObjects()) {
         LOG(Debug,object);
       }
       LOG(Debug,"Refactored objects: ");
-      BOOST_FOREACH(const IdfObjectPair& p,translator.refactoredObjects()) {
+      for (const IdfObjectPair& p : translator.refactoredObjects()) {
         LOG(Debug,p.first << "replaced with" << std::endl << std::endl << p.second);
       }
       // make sure save and load is ok
@@ -104,7 +103,7 @@ TEST_F(OSVersionFixture,VersionTranslator_ExampleComponent) {
 
   // iterate through osversion subfolders
   openstudio::path resources = resourcesPath() / toPath("osversion");
-  for (openstudio::directory_iterator it(resources); it != openstudio::directory_iterator(); ++it) {
+  for (boost::filesystem::directory_iterator it(resources); it != boost::filesystem::directory_iterator(); ++it) {
     if (boost::filesystem::is_directory(it->status())) {
       // run version translator on each example.osm
       openstudio::path componentPath = it->path() / toPath("example.osc");
@@ -119,19 +118,19 @@ TEST_F(OSVersionFixture,VersionTranslator_ExampleComponent) {
       LOG(Debug,"Updated '" << toString(componentPath) << "' to OpenStudio Version "
           << result->version().str() << ".");
       LOG(Debug,"Deprecated objects: ");
-      BOOST_FOREACH(const IdfObject& object,translator.deprecatedObjects()) {
+      for (const IdfObject& object : translator.deprecatedObjects()) {
         LOG(Debug,object);
       }
       LOG(Debug,"Untranslated objects: ");
-      BOOST_FOREACH(const IdfObject& object,translator.untranslatedObjects()) {
+      for (const IdfObject& object : translator.untranslatedObjects()) {
         LOG(Debug,object);
       }
       LOG(Debug,"New objects: ");
-      BOOST_FOREACH(const IdfObject& object,translator.newObjects()) {
+      for (const IdfObject& object : translator.newObjects()) {
         LOG(Debug,object);
       }
       LOG(Debug,"Refactored objects: ");
-      BOOST_FOREACH(const IdfObjectPair& p,translator.refactoredObjects()) {
+      for (const IdfObjectPair& p : translator.refactoredObjects()) {
         LOG(Debug,p.first << "replaced with" << std::endl  << std::endl << p.second);
       }
       // make sure component came out ok
@@ -307,13 +306,13 @@ TEST_F(OSVersionFixture,VersionTranslator_AllDefaultObjects) {
 
   // iterate through osversion subfolders
   openstudio::path resources = resourcesPath() / toPath("osversion");
-  for (openstudio::directory_iterator it(resources); it != openstudio::directory_iterator(); ++it) {
+  for (boost::filesystem::directory_iterator it(resources); it != boost::filesystem::directory_iterator(); ++it) {
     if (boost::filesystem::is_directory(it->status())) {
       // load each IddFile and create an IdfFile containing one of each of its objects
       openstudio::path iddPath = it->path() / toPath("OpenStudio.idd");
       IddFile iddFile = IddFile::load(iddPath).get();
       IdfFile idfFile(iddFile);
-      BOOST_FOREACH(const IddObject& iddObj,iddFile.objects()) {
+      for (const IddObject& iddObj : iddFile.objects()) {
         if (iddObj.name() != "OS:ComponentData"){
           idfFile.addObject(IdfObject(iddObj));
         }
@@ -336,19 +335,19 @@ TEST_F(OSVersionFixture,VersionTranslator_AllDefaultObjects) {
       LOG(Debug,"Updated '" << toString(modelPath) << "' to OpenStudio Version "
           << result->version().str() << ".");
       LOG(Debug,"Deprecated objects: ");
-      BOOST_FOREACH(const IdfObject& object,translator.deprecatedObjects()) {
+      for (const IdfObject& object : translator.deprecatedObjects()) {
         LOG(Debug,object);
       }
       LOG(Debug,"Untranslated objects: ");
-      BOOST_FOREACH(const IdfObject& object,translator.untranslatedObjects()) {
+      for (const IdfObject& object : translator.untranslatedObjects()) {
         LOG(Debug,object);
       }
       LOG(Debug,"New objects: ");
-      BOOST_FOREACH(const IdfObject& object,translator.newObjects()) {
+      for (const IdfObject& object : translator.newObjects()) {
         LOG(Debug,object);
       }
       LOG(Debug,"Refactored objects: ");
-      BOOST_FOREACH(const IdfObjectPair& p,translator.refactoredObjects()) {
+      for (const IdfObjectPair& p : translator.refactoredObjects()) {
         LOG(Debug,p.first << "replaced with" << std::endl << std::endl << p.second);
       }
     }
@@ -377,7 +376,7 @@ TEST_F(OSVersionFixture,VersionTranslator_0_7_4_NameRefsTranslated) {
   // Confirm that expected pointers are still there
   model::ConstructionVector constructions = model.getModelObjects<model::Construction>();
   EXPECT_FALSE(constructions.empty());
-  BOOST_FOREACH(const model::Construction construction,constructions) {
+  for (const model::Construction construction : constructions) {
     ASSERT_FALSE(construction.layers().empty());
     model::Material material = construction.layers()[0];
     ASSERT_FALSE(material.attributeNames().empty());

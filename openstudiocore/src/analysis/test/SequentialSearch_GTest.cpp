@@ -18,27 +18,26 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysis/test/AnalysisFixture.hpp>
+#include "AnalysisFixture.hpp"
 
-#include <analysis/OptimizationProblem.hpp>
-#include <analysis/Variable.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/Measure.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/LinearFunction.hpp>
-#include <analysis/OutputAttributeVariable.hpp>
-#include <analysis/SequentialSearch.hpp>
-#include <analysis/SequentialSearchOptions.hpp>
-#include <analysis/Analysis.hpp>
-#include <analysis/OptimizationDataPoint.hpp>
-#include <analysis/OptimizationDataPoint_Impl.hpp>
+#include "../OptimizationProblem.hpp"
+#include "../Variable.hpp"
+#include "../MeasureGroup.hpp"
+#include "../Measure.hpp"
+#include "../NullMeasure.hpp"
+#include "../RubyMeasure.hpp"
+#include "../LinearFunction.hpp"
+#include "../OutputAttributeVariable.hpp"
+#include "../SequentialSearch.hpp"
+#include "../SequentialSearchOptions.hpp"
+#include "../Analysis.hpp"
+#include "../OptimizationDataPoint.hpp"
+#include "../OptimizationDataPoint_Impl.hpp"
 
-#include <runmanager/lib/Workflow.hpp>
+#include "../../runmanager/lib/Workflow.hpp"
 
-#include <utilities/document/Table.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../../utilities/core/Containers.hpp"
+#include "../../utilities/core/Assert.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -190,7 +189,7 @@ TEST_F(AnalysisFixture, SequentialSearch) {
       EXPECT_EQ(3u,nextIteration.size());
     }
     EXPECT_EQ(static_cast<size_t>(n),completeDataPoints.size() + nextIteration.size());
-    BOOST_FOREACH(const OptimizationDataPoint& point,nextIteration) {
+    for (const OptimizationDataPoint& point : nextIteration) {
       std::vector<QVariant> values = point.variableValues();
       DoubleVector objectiveValues = getObjectiveValues(values);
       for (int i = 0; i < 5; ++i) {
@@ -221,7 +220,6 @@ TEST_F(AnalysisFixture, SequentialSearch) {
                                                          boost::none,
                                                          boost::none,
                                                          boost::none,
-                                                         FileReferenceVector(),
                                                          boost::none,
                                                          std::vector<openstudio::path>(),
                                                          point.tags(),
@@ -244,10 +242,6 @@ TEST_F(AnalysisFixture, SequentialSearch) {
     nextIteration = castVector<OptimizationDataPoint>(analysis.dataPointsToQueue());
   }
 
-  Table summaryTable = algorithm.getSummaryTable(analysis);
-  bool ok = summaryTable.save(toPath("./By-Hand Problem Summary.csv"),true);
-  EXPECT_TRUE(ok);
-
   EXPECT_EQ(23u,analysis.successfulDataPoints().size());
   OptimizationDataPointVector minimumCurve = algorithm.getMinimumCurve(0,analysis);
   ASSERT_EQ(6u,minimumCurve.size());
@@ -264,7 +258,7 @@ TEST_F(AnalysisFixture, SequentialSearch) {
   values = minimumCurve[5].objectiveValues();
   EXPECT_DOUBLE_EQ(20.0,values[0]); EXPECT_DOUBLE_EQ(12.0,values[1]);
   OptimizationDataPointVector paretoFront = algorithm.getParetoFront(analysis);
-  BOOST_FOREACH(const OptimizationDataPoint& paretoPoint,paretoFront) {
+  for (const OptimizationDataPoint& paretoPoint : paretoFront) {
     EXPECT_FALSE(std::find(minimumCurve.begin(),minimumCurve.end(),paretoPoint) == minimumCurve.end());
   }
   ASSERT_EQ(4u,paretoFront.size());

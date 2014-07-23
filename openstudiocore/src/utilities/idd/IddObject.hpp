@@ -20,17 +20,16 @@
 #ifndef UTILITIES_IDD_IDDOBJECT_HPP
 #define UTILITIES_IDD_IDDOBJECT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/idd/IddObjectProperties.hpp>
-#include <utilities/idd/IddField.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "IddObjectProperties.hpp"
+#include "IddField.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../core/Logger.hpp"
 
 #include <ostream>
 #include <vector>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 namespace openstudio {
 
@@ -148,7 +147,7 @@ class UTILITIES_API IddObject {
   /** Returns the indices of all fields of url type. */
   std::vector<unsigned> urlFields() const;
 
-  /** Returns the ExtensibleIndex(groupIndex,fieldIndex) that corresponds to field index. Thows if
+  /** Returns the ExtensibleIndex(groupIndex,fieldIndex) that corresponds to field index. Throws if
    *  !isExtensibleField(index). */
   ExtensibleIndex extensibleIndex(unsigned index) const;
 
@@ -203,10 +202,10 @@ class UTILITIES_API IddObject {
  private:
   ///@cond
   // pointer to impl
-  boost::shared_ptr<detail::IddObject_Impl> m_impl;
+  std::shared_ptr<detail::IddObject_Impl> m_impl;
 
   // construct from impl
-  IddObject(const boost::shared_ptr<detail::IddObject_Impl>& impl);
+  IddObject(const std::shared_ptr<detail::IddObject_Impl>& impl);
   ///@endcond
 
   // configure logging

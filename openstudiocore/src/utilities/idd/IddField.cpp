@@ -17,27 +17,26 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/idd/IddField.hpp>
-#include <utilities/idd/IddField_Impl.hpp>
+#include "IddField.hpp"
+#include "IddField_Impl.hpp"
 
-#include <utilities/idd/IddRegex.hpp>
-#include <utilities/idd/CommentRegex.hpp>
+#include "IddRegex.hpp"
+#include "CommentRegex.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
-#include <utilities/units/Unit.hpp>
-#include <utilities/units/UnitFactory.hpp>
-#include <utilities/units/IddUnitString.hpp>
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/SIUnit.hpp>
-#include <utilities/units/IPUnit.hpp>
-#include <utilities/units/Quantity.hpp>
+#include "../units/Unit.hpp"
+#include "../units/UnitFactory.hpp"
+#include "../units/IddUnitString.hpp"
+#include "../units/QuantityConverter.hpp"
+#include "../units/SIUnit.hpp"
+#include "../units/IPUnit.hpp"
+#include "../units/Quantity.hpp"
 
-#include <utilities/core/Finder.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../core/Finder.hpp"
+#include "../core/Assert.hpp"
+#include "../core/Containers.hpp"
 
 #include <boost/filesystem/fstream.hpp>
-#include <boost/foreach.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -157,7 +156,7 @@ namespace detail {
   OptionalIddKey IddField_Impl::getKey(const std::string& keyName) const
   {
     OptionalIddKey result;
-    BOOST_FOREACH(const IddKey& key, m_keys){
+    for (const IddKey& key : m_keys){
       if (boost::iequals(key.name(),keyName)){
         result = key;
         break;
@@ -238,17 +237,17 @@ namespace detail {
 
   // SERIALIZATION
 
-  boost::shared_ptr<IddField_Impl> IddField_Impl::load(const std::string& name,
+  std::shared_ptr<IddField_Impl> IddField_Impl::load(const std::string& name,
                                                        const std::string& text,
                                                        const std::string& objectName) {
 
-    boost::shared_ptr<IddField_Impl> result;
+    std::shared_ptr<IddField_Impl> result;
     IddField_Impl iddFieldImpl(name,objectName);
 
     try { iddFieldImpl.parse(text); }
     catch (...) { return result; }
 
-    result = boost::shared_ptr<IddField_Impl>(new IddField_Impl(iddFieldImpl));
+    result = std::shared_ptr<IddField_Impl>(new IddField_Impl(iddFieldImpl));
     return result;
   }
 
@@ -266,8 +265,8 @@ namespace detail {
 
     m_properties.print(os);
 
-    for (IddKeyVector::const_iterator it = m_keys.begin(), itend = m_keys.end(); it != itend; ++it){
-      it->print(os);
+    for (const auto & key : m_keys){
+      key.print(os);
     }
 
     return os;
@@ -635,7 +634,7 @@ namespace detail {
 
 IddField::IddField()
 {
-  m_impl = boost::shared_ptr<detail::IddField_Impl>(new detail::IddField_Impl());
+  m_impl = std::shared_ptr<detail::IddField_Impl>(new detail::IddField_Impl());
 }
 
 // GETTERS
@@ -712,7 +711,7 @@ bool IddField::operator!=(const IddField& other) const
 OptionalIddField IddField::load(const std::string& name, 
                                 const std::string& text, 
                                 const std::string& objectName) {
-  boost::shared_ptr<detail::IddField_Impl> p = detail::IddField_Impl::load(name,text,objectName);
+  std::shared_ptr<detail::IddField_Impl> p = detail::IddField_Impl::load(name,text,objectName);
   if (p) { return IddField(p); }
   else { return boost::none; }
 }
@@ -722,7 +721,7 @@ std::ostream& IddField::print(std::ostream& os, bool lastField) const
   return m_impl->print(os, lastField);
 }
 
-IddField::IddField(const boost::shared_ptr<detail::IddField_Impl>& impl) : m_impl(impl) {}
+IddField::IddField(const std::shared_ptr<detail::IddField_Impl>& impl) : m_impl(impl) {}
 
 bool referencesEqual(const IddField& field1, const IddField& field2) {
   bool result = false;
@@ -738,7 +737,7 @@ bool referencesEqual(const IddField& field1, const IddField& field2) {
     unsigned start = 0;        // start index for refs2
     
     // look for refs1 in turn
-    BOOST_FOREACH(const std::string& ref1,refs1) {
+    for (const std::string& ref1 : refs1) {
       for (unsigned i = start; i < n; ++i) {
         if (!found[i]) {
           // refs2[i] not found yet--see if there is a match

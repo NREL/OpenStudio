@@ -1,5 +1,5 @@
-#ifndef __CONTAM_API_HPP__
-#define __CONTAM_API_HPP__
+#ifndef CONTAM_CONTAMAPI_HPP
+#define CONTAM_CONTAMAPI_HPP
 
 #if _WIN32 || _MSC_VER
 

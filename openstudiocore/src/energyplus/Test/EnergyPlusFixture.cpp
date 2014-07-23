@@ -17,9 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <energyplus/Test/EnergyPlusFixture.hpp>
+#include "EnergyPlusFixture.hpp"
 
-#include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
 
 #include <resources.hxx>
@@ -52,13 +51,13 @@ void EnergyPlusFixture::SetUpTestCase() {
   idfComponents.push_back(std::pair<openstudio::path,std::string>(basePath/openstudio::toPath("idf_designday_5"),"designday"));
 
   // delete translated components
-  BOOST_FOREACH(const ComponentDirectoryAndType& idfComponent,idfComponents) {
+  for (const ComponentDirectoryAndType& idfComponent : idfComponents) {
     // delete any *.osc and oscomponent.xml files in the directory
-    for (openstudio::directory_iterator it(idfComponent.first), itEnd; it != itEnd; ++it) {
+    for (boost::filesystem::directory_iterator it(idfComponent.first), itEnd; it != itEnd; ++it) {
       if (boost::filesystem::is_regular_file(it->status())) {
         std::string ext = openstudio::toString(boost::filesystem::extension(*it));
         if (ext == ".osc") { boost::filesystem::remove(it->path()); }
-        if ((ext == ".xml") && (openstudio::toString(it->filename()) == "oscomponent")) { 
+        if ((ext == ".xml") && (openstudio::toString(it->path().filename()) == "oscomponent")) { 
           boost::filesystem::remove(it->path()); 
         }
       }

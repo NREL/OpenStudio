@@ -18,10 +18,8 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idd/Test/IddFixture.hpp>
-#include <utilities/idd/IddFileAndFactoryWrapper.hpp>
-
-#include <boost/foreach.hpp>
+#include "IddFixture.hpp"
+#include "../IddFileAndFactoryWrapper.hpp"
 
 using namespace openstudio;
 
@@ -79,7 +77,7 @@ TEST_F(IddFixture,IddFileAndFactoryWrapper_DirectlySetUserCustom) {
   IddFileAndFactoryWrapper wrapper(IddFileType::UserCustom);
   IddFile file = wrapper.iddFile();
   EXPECT_TRUE(file.objects().empty());
-  BOOST_FOREACH(int typeIndex,IddObjectType::getValues()) {
+  for (int typeIndex : IddObjectType::getValues()) {
     EXPECT_FALSE(wrapper.getObject(IddObjectType(typeIndex)));
   }
 }

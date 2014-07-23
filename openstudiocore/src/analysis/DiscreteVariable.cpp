@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
+#include "DiscreteVariable.hpp"
+#include "DiscreteVariable_Impl.hpp"
 
-#include <analysis/DataPoint.hpp>
-#include <analysis/Problem.hpp>
+#include "DataPoint.hpp"
+#include "Problem.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -83,7 +83,7 @@ namespace detail {
     IntVector selectedValues = validValues(true);
     if (selectedValues.size() < allValues.size()) {
       QVariantList selectedList;
-      Q_FOREACH(int val,selectedValues) {
+      for (int val : selectedValues) {
         selectedList.push_back(QVariant(val));
       }
       map["selected_values"] = selectedList;
@@ -103,7 +103,7 @@ int DiscreteVariable::numValidValues(bool selectedOnly) const {
 }
 
 /// @cond
-DiscreteVariable::DiscreteVariable(boost::shared_ptr<detail::DiscreteVariable_Impl> impl)
+DiscreteVariable::DiscreteVariable(std::shared_ptr<detail::DiscreteVariable_Impl> impl)
   : InputVariable(impl)
 {}
 /// @endcond

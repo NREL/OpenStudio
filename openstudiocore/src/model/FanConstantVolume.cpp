@@ -17,40 +17,39 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/FanConstantVolume.hpp>
-#include <model/FanConstantVolume_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/ZoneHVACComponent.hpp>
-#include <model/ZoneHVACComponent_Impl.hpp>
-#include <model/ZoneHVACFourPipeFanCoil.hpp>
-#include <model/ZoneHVACFourPipeFanCoil_Impl.hpp>
-#include <model/ZoneHVACPackagedTerminalHeatPump.hpp>
-#include <model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp>
-#include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
-#include <model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp>
-#include <model/ZoneHVACUnitHeater.hpp>
-#include <model/ZoneHVACUnitHeater_Impl.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
-#include <model/AirTerminalSingleDuctParallelPIUReheat.hpp>
-#include <model/AirTerminalSingleDuctParallelPIUReheat_Impl.hpp>
-#include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
-#include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
-#include <model/AirLoopHVACUnitarySystem.hpp>
-#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
-#include <model/SetpointManagerMixedAir.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Model.hpp>
+#include "FanConstantVolume.hpp"
+#include "FanConstantVolume_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "ZoneHVACComponent.hpp"
+#include "ZoneHVACComponent_Impl.hpp"
+#include "ZoneHVACFourPipeFanCoil.hpp"
+#include "ZoneHVACFourPipeFanCoil_Impl.hpp"
+#include "ZoneHVACPackagedTerminalHeatPump.hpp"
+#include "ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
+#include "ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
+#include "ZoneHVACUnitHeater.hpp"
+#include "ZoneHVACUnitHeater_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "AirTerminalSingleDuctParallelPIUReheat.hpp"
+#include "AirTerminalSingleDuctParallelPIUReheat_Impl.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
+#include "AirLoopHVACUnitarySystem.hpp"
+#include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "SetpointManagerMixedAir.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "Model.hpp"
 #include <utilities/idd/OS_Fan_ConstantVolume_FieldEnums.hxx>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
-#include <boost/foreach.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 
@@ -253,15 +252,13 @@ namespace detail {
     // AirLoopHVACUnitarySystem
     std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
 
-    for( std::vector<AirLoopHVACUnitarySystem>::iterator it = airLoopHVACUnitarySystems.begin();
-    it < airLoopHVACUnitarySystems.end();
-    ++it )
+    for( const auto & airLoopHVACUnitarySystem : airLoopHVACUnitarySystems )
     {
-      if( boost::optional<HVACComponent> fan = it->supplyFan() )
+      if( boost::optional<HVACComponent> fan = airLoopHVACUnitarySystem.supplyFan() )
       {
         if( fan->handle() == this->handle() )
         {
-          return *it;
+          return airLoopHVACUnitarySystem;
         }
       }
     }
@@ -272,15 +269,13 @@ namespace detail {
 
     airTerminalSingleDuctParallelPIUReheatObjects = this->model().getConcreteModelObjects<AirTerminalSingleDuctParallelPIUReheat>();
 
-    for( std::vector<AirTerminalSingleDuctParallelPIUReheat>::iterator it = airTerminalSingleDuctParallelPIUReheatObjects.begin();
-    it < airTerminalSingleDuctParallelPIUReheatObjects.end();
-    ++it )
+    for( const auto & airTerminalSingleDuctParallelPIUReheatObject : airTerminalSingleDuctParallelPIUReheatObjects )
     {
-      if( boost::optional<HVACComponent> fan = it->fan() )
+      if( boost::optional<HVACComponent> fan = airTerminalSingleDuctParallelPIUReheatObject.fan() )
       {
         if( fan->handle() == this->handle() )
         {
-          return *it;
+          return airTerminalSingleDuctParallelPIUReheatObject;
         }
       }
     }
@@ -291,15 +286,13 @@ namespace detail {
 
     airLoopHVACUnitaryHeatPumpAirToAirs = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
 
-    for( std::vector<AirLoopHVACUnitaryHeatPumpAirToAir>::iterator it = airLoopHVACUnitaryHeatPumpAirToAirs.begin();
-    it < airLoopHVACUnitaryHeatPumpAirToAirs.end();
-    ++it )
+    for( const auto & airLoopHVACUnitaryHeatPumpAirToAir : airLoopHVACUnitaryHeatPumpAirToAirs )
     {
-      if( boost::optional<HVACComponent> fan = it->supplyAirFan() )
+      if( boost::optional<HVACComponent> fan = airLoopHVACUnitaryHeatPumpAirToAir.supplyAirFan() )
       {
         if( fan->handle() == this->handle() )
         {
-          return *it;
+          return airLoopHVACUnitaryHeatPumpAirToAir;
         }
       }
     }
@@ -315,15 +308,13 @@ namespace detail {
 
     zoneHVACFourPipeFanCoils = this->model().getConcreteModelObjects<ZoneHVACFourPipeFanCoil>();
 
-    for( std::vector<ZoneHVACFourPipeFanCoil>::iterator it = zoneHVACFourPipeFanCoils.begin();
-    it < zoneHVACFourPipeFanCoils.end();
-    ++it )
+    for( const auto & zoneHVACFourPipeFanCoil : zoneHVACFourPipeFanCoils )
     {
-      if( boost::optional<HVACComponent> coil = it->supplyAirFan() )
+      if( boost::optional<HVACComponent> coil = zoneHVACFourPipeFanCoil.supplyAirFan() )
       {
         if( coil->handle() == this->handle() )
         {
-          return *it;
+          return zoneHVACFourPipeFanCoil;
         }
       }
     }
@@ -334,15 +325,13 @@ namespace detail {
 
     zoneHVACPackagedTerminalAirConditioners = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalAirConditioner>();
 
-    for( std::vector<ZoneHVACPackagedTerminalAirConditioner>::iterator it = zoneHVACPackagedTerminalAirConditioners.begin();
-    it < zoneHVACPackagedTerminalAirConditioners.end();
-    ++it )
+    for( const auto & zoneHVACPackagedTerminalAirConditioner : zoneHVACPackagedTerminalAirConditioners )
     {
-      if( boost::optional<HVACComponent> coil = it->supplyAirFan() )
+      if( boost::optional<HVACComponent> coil = zoneHVACPackagedTerminalAirConditioner.supplyAirFan() )
       {
         if( coil->handle() == this->handle() )
         {
-          return *it;
+          return zoneHVACPackagedTerminalAirConditioner;
         }
       }
     }
@@ -353,15 +342,13 @@ namespace detail {
 
     zoneHVACPackagedTerminalHeatPumps = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalHeatPump>();
 
-    for( std::vector<ZoneHVACPackagedTerminalHeatPump>::iterator it = zoneHVACPackagedTerminalHeatPumps.begin();
-    it < zoneHVACPackagedTerminalHeatPumps.end();
-    ++it )
+    for( const auto & zoneHVACPackagedTerminalHeatPump : zoneHVACPackagedTerminalHeatPumps )
     {
-      if( boost::optional<HVACComponent> coil = it->supplyAirFan() )
+      if( boost::optional<HVACComponent> coil = zoneHVACPackagedTerminalHeatPump.supplyAirFan() )
       {
         if( coil->handle() == this->handle() )
         {
-          return *it;
+          return zoneHVACPackagedTerminalHeatPump;
         }
       }
     }
@@ -372,15 +359,13 @@ namespace detail {
 
     zoneHVACUnitHeater = this->model().getConcreteModelObjects<ZoneHVACUnitHeater>();
 
-    for( std::vector<ZoneHVACUnitHeater>::iterator it = zoneHVACUnitHeater.begin();
-    it < zoneHVACUnitHeater.end();
-    ++it )
+    for( const auto & elem : zoneHVACUnitHeater )
     {
-      if( boost::optional<HVACComponent> coil = it->supplyAirFan() )
+      if( boost::optional<HVACComponent> coil = elem.supplyAirFan() )
       {
         if( coil->handle() == this->handle() )
         {
-          return *it;
+          return elem;
         }
       }
     }
@@ -456,7 +441,7 @@ FanConstantVolume::FanConstantVolume(const Model& model,
   setEndUseSubcategory("");
 }
 
-FanConstantVolume::FanConstantVolume(boost::shared_ptr<detail::FanConstantVolume_Impl> p)
+FanConstantVolume::FanConstantVolume(std::shared_ptr<detail::FanConstantVolume_Impl> p)
   : StraightComponent(p)
 {}
 

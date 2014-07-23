@@ -20,8 +20,8 @@
 #ifndef MODEL_COOLINGTOWERPERFORMANCECOOLTOOLS_HPP
 #define MODEL_COOLINGTOWERPERFORMANCECOOLTOOLS_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 
@@ -231,7 +231,7 @@ class MODEL_API CoolingTowerPerformanceCoolTools : public ModelObject {
   /// @cond
   typedef detail::CoolingTowerPerformanceCoolTools_Impl ImplType;
 
-  explicit CoolingTowerPerformanceCoolTools(boost::shared_ptr<detail::CoolingTowerPerformanceCoolTools_Impl> impl);
+  explicit CoolingTowerPerformanceCoolTools(std::shared_ptr<detail::CoolingTowerPerformanceCoolTools_Impl> impl);
 
   friend class detail::CoolingTowerPerformanceCoolTools_Impl;
   friend class Model;

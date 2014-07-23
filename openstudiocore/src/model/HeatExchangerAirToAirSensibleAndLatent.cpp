@@ -17,18 +17,18 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/HeatExchangerAirToAirSensibleAndLatent.hpp>
-#include <model/HeatExchangerAirToAirSensibleAndLatent_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
+#include "HeatExchangerAirToAirSensibleAndLatent.hpp"
+#include "HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -1018,7 +1018,7 @@ void HeatExchangerAirToAirSensibleAndLatent::setEconomizerLockout(bool economize
 }
 
 /// @cond
-HeatExchangerAirToAirSensibleAndLatent::HeatExchangerAirToAirSensibleAndLatent(boost::shared_ptr<detail::HeatExchangerAirToAirSensibleAndLatent_Impl> impl)
+HeatExchangerAirToAirSensibleAndLatent::HeatExchangerAirToAirSensibleAndLatent(std::shared_ptr<detail::HeatExchangerAirToAirSensibleAndLatent_Impl> impl)
   : AirToAirComponent(impl)
 {}
 /// @endcond

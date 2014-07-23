@@ -20,8 +20,8 @@
 #ifndef MODEL_INTERIORPARTITIONSURFACE_HPP
 #define MODEL_INTERIORPARTITIONSURFACE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/PlanarSurface.hpp>
+#include "ModelAPI.hpp"
+#include "PlanarSurface.hpp"
 
 namespace openstudio {
 namespace model {
@@ -113,7 +113,7 @@ class MODEL_API InteriorPartitionSurface : public PlanarSurface {
   friend class openstudio::IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
 
-  explicit InteriorPartitionSurface(boost::shared_ptr<detail::InteriorPartitionSurface_Impl> impl);
+  explicit InteriorPartitionSurface(std::shared_ptr<detail::InteriorPartitionSurface_Impl> impl);
 
   /// @endcond
  private:

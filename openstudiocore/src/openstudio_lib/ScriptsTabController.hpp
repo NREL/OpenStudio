@@ -17,15 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SCRIPTSTABCONTROLLER_H
-#define OPENSTUDIO_SCRIPTSTABCONTROLLER_H
+#ifndef OPENSTUDIO_SCRIPTSTABCONTROLLER_HPP
+#define OPENSTUDIO_SCRIPTSTABCONTROLLER_HPP
 
-#include <openstudio_lib/MainTabController.hpp>
-#include <utilities/core/Path.hpp>
+#include "../utilities/core/Path.hpp"
 
-#include <boost/shared_ptr.hpp>
-
-#include <openstudio_lib/MainTabController.hpp>
+#include "MainTabController.hpp"
 #include "ScriptsTabView.hpp"
 #include <QPointer>
 
@@ -67,4 +64,4 @@ class ScriptsTabController : public MainTabController
 
 } // openstudio
 
-#endif // OPENSTUDIO_SCRIPTSTABCONTROLLER_H
+#endif // OPENSTUDIO_SCRIPTSTABCONTROLLER_HPP

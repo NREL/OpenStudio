@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_JOB_HPP__
-#define OPENSTUDIO_JOB_HPP__
+#ifndef RUNMANAGER_LIB_JOB_HPP
+#define RUNMANAGER_LIB_JOB_HPP
 
 #include "RunManagerAPI.hpp"
 #include "ProcessCreator.hpp"
 #include "AdvancedStatus.hpp"
 #include "TreeStatus.hpp"
 
-#include <utilities/core/UUID.hpp>
+#include "../../utilities/core/UUID.hpp"
 #include "FileInfo.hpp"
 #include "JobParam.hpp"
 #include "ToolInfo.hpp"
@@ -88,20 +88,13 @@ namespace detail {
       /// \param[in] method receiving slot to disconnect
       ///
       /// \sa Job::connect
-      bool disconnect(const char *signal=0, const QObject *receiver=0, const char *method=0);
+      bool disconnect(const char *signal=nullptr, const QObject *receiver=nullptr, const char *method=nullptr);
 
       /// Begin execution of the job. Note that execution does not necessarily begin immediately.
       /// Check isRunning or handle the started() signal to know when the job state has changed
       ///
       /// \param[in] t_pc ProcessCreator to use if any process needs to be executed by the job
-      void start(const boost::shared_ptr<ProcessCreator> &t_pc);
-
-      /** Begin execution of the job, used for restarting a job that was left running on a remote 
-       *  server.
-       *  \param[in] t_pc process creator
-       *  \param[in] t_remoteid the id of the process which should already be running on a remote 
-       *  server */
-      void start(const boost::shared_ptr<ProcessCreator> &t_pc, int t_remoteid, int t_remoteTaskNumber);
+      void start(const std::shared_ptr<ProcessCreator> &t_pc);
 
       /// Synchronously block until the Job has been finished. 
       /// \param[in] t_msecs Number of milliseconds to wait for
@@ -110,9 +103,6 @@ namespace detail {
 
       /// Return true if the job is currently running.
       bool running() const;
-
-      /// Return true if the job is running remotely. running() will also return true in this state
-      bool runningRemotely() const;
 
       /// Return true if the job is out of date
       bool outOfDate() const;
@@ -185,9 +175,6 @@ namespace detail {
 
       /// \returns true if the job is runnable. 
       bool runnable() const;
-
-      /// \returns true if the job can be run remotely
-      bool remoteRunnable() const;
 
       /// \returns details status information about the Job
       AdvancedStatus status() const;
@@ -280,7 +267,7 @@ namespace detail {
       /// \returns the overall status of the job tree
       openstudio::runmanager::TreeStatusEnum treeStatus() const;
 
-      /// \returns the contactenation of the job tree's detailed description fields
+      /// \returns the concatenation of the job tree's detailed description fields
       std::vector<std::string> treeDetailedDescription() const; 
 
       /** \returns all input and output files for all jobs in this job tree. */
@@ -324,7 +311,7 @@ namespace detail {
   
       /// \returns a re-created Job tree from the given JSON string.
       ///
-      /// \throws std::exception if any part of the parsing fails, with desription
+      /// \throws std::exception if any part of the parsing fails, with description
       ///         of where and why.
       ///
       /// \sa Job::toJSON for more information
@@ -384,10 +371,10 @@ namespace detail {
       std::vector<MergedJobResults> mergedJobResults() const;
 
     protected:
-      Job(const boost::shared_ptr<detail::Job_Impl> &t_impl);
+      Job(const std::shared_ptr<detail::Job_Impl> &t_impl);
 
     private:
-      boost::shared_ptr<detail::Job_Impl> m_impl;
+      std::shared_ptr<detail::Job_Impl> m_impl;
   };
 
   /** \relates Job */
@@ -404,5 +391,5 @@ namespace std {
   }
 }
 
-#endif
+#endif // RUNMANAGER_LIB_JOB_HPP
 

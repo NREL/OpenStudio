@@ -20,7 +20,7 @@
 #ifndef MODEL_CONSTRUCTION_IMPL_HPP
 #define MODEL_CONSTRUCTION_IMPL_HPP 
 
-#include <model/LayeredConstruction_Impl.hpp>
+#include "LayeredConstruction_Impl.hpp"
 
 namespace openstudio {
 namespace model {

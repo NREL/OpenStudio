@@ -17,45 +17,44 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/Test/ProjectVersioningFixture.hpp>
+#include "ProjectVersioningFixture.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/AnalysisRecord.hpp>
+#include "../ProjectDatabase.hpp"
+#include "../AnalysisRecord.hpp"
 
-#include <analysis/Problem.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/LinearFunction.hpp>
-#include <analysis/OutputAttributeVariable.hpp>
-#include <analysis/FSUDaceAlgorithm.hpp>
-#include <analysis/FSUDaceAlgorithmOptions.hpp>
-#include <analysis/Analysis.hpp>
-#include <analysis/DataPoint.hpp>
+#include "../../analysis/Problem.hpp"
+#include "../../analysis/MeasureGroup.hpp"
+#include "../../analysis/MeasureGroup_Impl.hpp"
+#include "../../analysis/NullMeasure.hpp"
+#include "../../analysis/RubyMeasure.hpp"
+#include "../../analysis/RubyContinuousVariable.hpp"
+#include "../../analysis/LinearFunction.hpp"
+#include "../../analysis/OutputAttributeVariable.hpp"
+#include "../../analysis/FSUDaceAlgorithm.hpp"
+#include "../../analysis/FSUDaceAlgorithmOptions.hpp"
+#include "../../analysis/Analysis.hpp"
+#include "../../analysis/DataPoint.hpp"
 
-#include <runmanager/lib/Workflow.hpp>
+#include "../../runmanager/lib/Workflow.hpp"
 #include <runmanager/Test/ToolBin.hxx>
 
-#include <ruleset/OSArgument.hpp>
+#include "../../ruleset/OSArgument.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/data/Tag.hpp>
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/data/Tag.hpp"
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/SIUnit.hpp>
+#include "../../utilities/units/Quantity.hpp"
+#include "../../utilities/units/SIUnit.hpp"
 
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../../utilities/core/Assert.hpp"
+#include "../../utilities/core/Containers.hpp"
+#include "../../utilities/core/Path.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
 
 #include <resources.hxx>
 #include <OpenStudio.hxx>
-
-#include <boost/foreach.hpp>
 
 #include <stdlib.h>
 
@@ -98,8 +97,7 @@ std::vector<openstudio::path> ProjectVersioningFixture::projectDatabasePaths(
     basePath = toPath("ProjectVersioningFixtureData") / toPath(toString(uuid));
   }
 
-  for (openstudio::directory_iterator it(basePath);
-       it != openstudio::directory_iterator(); ++it)
+  for (boost::filesystem::directory_iterator it(basePath), itend; it != itend; ++it)
   {
     if (getFileExtension(it->path()) == "osp") {
       result.push_back(it->path());
@@ -115,7 +113,7 @@ std::vector<openstudio::path> ProjectVersioningFixture::copyProjectDatabases(
   openstudio::path testFolder = paths[0].parent_path().parent_path() / toPath(folderName);
   boost::filesystem::create_directory(testFolder);
   std::vector<openstudio::path> testPaths;
-  BOOST_FOREACH(const openstudio::path& p, paths) {
+  for (const openstudio::path& p : paths) {
     testPaths.push_back(testFolder/p.filename());
     boost::filesystem::copy_file(p,testPaths.back(),
                                  boost::filesystem::copy_option::overwrite_if_exists);
@@ -131,7 +129,7 @@ void ProjectVersioningFixture::createTestCaseDatabases() {
   std::vector<openstudio::path> paths = projectDatabasePaths(resourcesPath()/toPath("project/version"));
   openstudio::path folder = toPath("ProjectVersioningFixtureData") / toPath(toString(uuid));
   boost::filesystem::create_directory(folder);
-  BOOST_FOREACH(const openstudio::path& p, paths) {
+  for (const openstudio::path& p : paths) {
     boost::filesystem::copy_file(p,folder/p.filename());
     boost::filesystem::copy_file(setFileExtension(p,"db",true,false),
                                  setFileExtension(folder/p.filename(),"db",true,false));
@@ -256,7 +254,6 @@ void ProjectVersioningFixture::addAnalysis(ProjectDatabase& database) {
                                   OptionalFileReference(),
                                   OptionalFileReference(),
                                   OptionalFileReference(),
-                                  FileReferenceVector(),
                                   boost::none,
                                   std::vector<openstudio::path>(),
                                   TagVector(1u,Tag("alg1")),

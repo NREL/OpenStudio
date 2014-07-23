@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <shared_gui_components/OSLineEdit.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <utilities/core/Assert.hpp>
+#include "OSLineEdit.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../utilities/core/Assert.hpp"
 #include <boost/optional.hpp>
 #include <QString>
 
@@ -197,11 +197,14 @@ void OSLineEdit::onEditingFinished()
   {
     std::string stdstring = this->text().toStdString();
 
-    QVariant var;
-    var.setValue<std::string>(stdstring);
+    QVariant variant = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str());
 
-    if( ! m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->setProperty(m_property.c_str(),var) )
-    {
+    if( variant.canConvert<std::string>() ) {
+      QVariant var;
+      var.setValue<std::string>(stdstring);
+
+      m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->setProperty(m_property.c_str(), var);
+    } else if( variant.canConvert<boost::optional<std::string> >() ) {
       boost::optional<std::string> ostring(stdstring);
 
       QVariant ovar;

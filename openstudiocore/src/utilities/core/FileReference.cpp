@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/FileReference.hpp>
+#include "FileReference.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Checksum.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/time/DateTime.hpp>
+#include "Assert.hpp"
+#include "Checksum.hpp"
+#include "PathHelpers.hpp"
+#include "../time/DateTime.hpp"
 
 #include <QDateTime>
 #include <QFileInfo>
@@ -156,7 +156,7 @@ bool FileReference::makePathAbsolute(const openstudio::path& searchDirectory) {
   openstudio::path workingPath(currentPath);
   // if currentPath is complete but does not exist, go to extreme measures
   if (currentPath.is_complete()) {
-    workingPath = toPath(currentPath.filename());
+    workingPath = currentPath.filename();
   }
   if (searchDirectory.empty()) {
     return false;
@@ -173,7 +173,7 @@ bool FileReference::makePathAbsolute(const openstudio::path& searchDirectory) {
 bool FileReference::makePathRelative(const openstudio::path& basePath) {
   openstudio::path newPath;
   if (basePath.empty()) { 
-    newPath = toPath(path().filename());
+    newPath = path().filename();
   }
   else {
     newPath = relativePath(path(),basePath);

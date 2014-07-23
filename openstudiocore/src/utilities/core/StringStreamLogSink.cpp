@@ -17,12 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/StringStreamLogSink.hpp>
-#include <utilities/core/StringStreamLogSink_Impl.hpp>
+#include "StringStreamLogSink.hpp"
+#include "StringStreamLogSink_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "Assert.hpp"
 
-#include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include <sstream>

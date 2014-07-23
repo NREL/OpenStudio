@@ -20,11 +20,13 @@
 #ifndef UTILITIES_CORE_GENERATORAPPLICATIONPATHHELPERS_HPP
 #define UTILITIES_CORE_GENERATORAPPLICATIONPATHHELPERS_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/Path.hpp>
+#include "../UtilitiesAPI.hpp"
+#include <boost/filesystem/path.hpp>
 #include <vector>
 
 namespace openstudio {
+
+typedef boost::filesystem::path path;
 
 /** If possible, creates an openstudio::path to a system directory from outdir, otherwise throws 
  *  a std::runtime_error. For use by auto-generation applications that are writing files for 

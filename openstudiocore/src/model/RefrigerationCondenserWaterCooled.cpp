@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/RefrigerationCondenserWaterCooled.hpp>
-#include <model/RefrigerationCondenserWaterCooled_Impl.hpp>
+#include "RefrigerationCondenserWaterCooled.hpp"
+#include "RefrigerationCondenserWaterCooled_Impl.hpp"
 
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
-#include <model/Node.hpp>
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
+#include "Node.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_Condenser_WaterCooled_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -597,7 +597,7 @@ void RefrigerationCondenserWaterCooled::resetCondensatePipingRefrigerantInventor
 }
 
 /// @cond
-RefrigerationCondenserWaterCooled::RefrigerationCondenserWaterCooled(boost::shared_ptr<detail::RefrigerationCondenserWaterCooled_Impl> impl)
+RefrigerationCondenserWaterCooled::RefrigerationCondenserWaterCooled(std::shared_ptr<detail::RefrigerationCondenserWaterCooled_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

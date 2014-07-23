@@ -17,29 +17,28 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/AirTerminalSingleDuctVAVReheat.hpp>
-#include <model/AirTerminalSingleDuctVAVReheat_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/PortList.hpp>
-#include <model/PortList_Impl.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
-#include <model/AirLoopHVACZoneMixer.hpp>
-#include <model/AirLoopHVACZoneMixer_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
+#include "AirTerminalSingleDuctVAVReheat.hpp"
+#include "AirTerminalSingleDuctVAVReheat_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "PortList.hpp"
+#include "PortList_Impl.hpp"
+#include "HVACComponent.hpp"
+#include "HVACComponent_Impl.hpp"
+#include "AirLoopHVACZoneSplitter.hpp"
+#include "AirLoopHVACZoneSplitter_Impl.hpp"
+#include "AirLoopHVACZoneMixer.hpp"
+#include "AirLoopHVACZoneMixer_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "Model.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
 #include <utilities/idd/OS_AirTerminal_SingleDuct_VAV_Reheat_FieldEnums.hxx>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
-#include <boost/foreach.hpp>
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -202,15 +201,13 @@ namespace detail{
     boost::optional<unsigned> targetPort = this->connectedObjectPort(this->outletPort());
 
     std::vector<ThermalZone> thermalZones = _model.getConcreteModelObjects<ThermalZone>();
-    for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
-         it != thermalZones.end();
-         ++it )
+    for( auto & thermalZone : thermalZones )
     {
-      std::vector<ModelObject> equipment = it->equipment();
+      std::vector<ModelObject> equipment = thermalZone.equipment();
 
       if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
       {
-        it->removeEquipment(thisObject);
+        thermalZone.removeEquipment(thisObject);
 
         break;
       }
@@ -684,7 +681,7 @@ bool AirTerminalSingleDuctVAVReheat::setAvailabilitySchedule(Schedule& schedule)
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setAvailabilitySchedule(schedule);
 }
 
-AirTerminalSingleDuctVAVReheat::AirTerminalSingleDuctVAVReheat(boost::shared_ptr<detail::AirTerminalSingleDuctVAVReheat_Impl> p)
+AirTerminalSingleDuctVAVReheat::AirTerminalSingleDuctVAVReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVReheat_Impl> p)
   : StraightComponent(p)
 {}
 

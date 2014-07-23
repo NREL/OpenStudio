@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2012, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_MEASUREMANAGER_HPP
-#define OPENSTUDIO_MEASUREMANAGER_HPP
+#ifndef SHAREDGUICOMPONENTS_MEASUREMANAGER_HPP
+#define SHAREDGUICOMPONENTS_MEASUREMANAGER_HPP
 
 #include "LocalLibraryController.hpp"
-#include <analysisdriver/SimpleProject.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/UUID.hpp>
-#include <ruleset/RubyUserScriptArgumentGetter.hpp>
+#include "../analysisdriver/SimpleProject.hpp"
+#include "../utilities/bcl/BCLMeasure.hpp"
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/UUID.hpp"
+#include "../ruleset/RubyUserScriptArgumentGetter.hpp"
 #include <vector>
 #include <map>
 #include <QSharedPointer>
@@ -80,7 +80,7 @@ class LocalLibraryController;
 *
 **/
 #if defined(openstudio_lib_EXPORTS) || defined(COMPILING_FROM_OSAPP)
-#include <openstudio_lib/OpenStudioAPI.hpp>
+#include "../openstudio_lib/OpenStudioAPI.hpp"
 class OPENSTUDIO_API MeasureManager : public QObject
 #else
 class MeasureManager : public QObject
@@ -189,4 +189,4 @@ class MeasureManager : public QObject
 
 } // openstudio
 
-#endif // OPENSTUDIO_MEASUREMANAGER_HPP
+#endif // SHAREDGUICOMPONENTS_MEASUREMANAGER_HPP

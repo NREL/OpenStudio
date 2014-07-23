@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/units/MPHUnit.hpp>
-#include <utilities/units/MPHUnit_Impl.hpp>
+#include "MPHUnit.hpp"
+#include "MPHUnit_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 namespace openstudio {
 namespace detail {
@@ -63,13 +63,13 @@ namespace detail {
 
   Unit MPHUnit_Impl::clone() const {
     OS_ASSERT(system() == UnitSystem::MPH);
-    boost::shared_ptr<MPHUnit_Impl> impl(new MPHUnit_Impl(*this));
+    std::shared_ptr<MPHUnit_Impl> impl(new MPHUnit_Impl(*this));
     return MPHUnit(impl).cast<Unit>();
   }
 
   void MPHUnit_Impl::setBaseUnitExponent(const std::string& baseUnit,int exponent)
   {
-    std::vector<UnitElement>::iterator loc = findBaseUnit(baseUnit);
+    auto loc = findBaseUnit(baseUnit);
     if (loc != m_units.end()) {
       loc->second = exponent;
     }
@@ -83,20 +83,20 @@ namespace detail {
 MPHUnit::MPHUnit(const MPHExpnt& exponents,
                  int scaleExponent,
                  const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::MPHUnit_Impl>(
+  : Unit(std::shared_ptr<detail::Unit_Impl>(
              new detail::MPHUnit_Impl(exponents,scaleExponent,prettyString)))
 {}
 
 MPHUnit::MPHUnit(const std::string& scaleAbbreviation,
                  const MPHExpnt& exponents,
                  const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::MPHUnit_Impl>(
+  : Unit(std::shared_ptr<detail::Unit_Impl>(
              new detail::MPHUnit_Impl(scaleAbbreviation,exponents,prettyString)))
 {}
 
 /// @cond
-MPHUnit::MPHUnit(boost::shared_ptr<detail::MPHUnit_Impl> impl)
-  : Unit(impl)
+MPHUnit::MPHUnit(std::shared_ptr<detail::MPHUnit_Impl> impl)
+  : Unit(std::dynamic_pointer_cast<detail::Unit_Impl>(impl))
 {}
 /// @endcond
 

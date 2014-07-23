@@ -17,13 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <generateiddfactory/GenerateIddFactory.hpp>
+#include "GenerateIddFactory.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/GeneratorApplicationPathHelpers.hpp>
+#include <boost/filesystem/path.hpp>
+#include "../utilities/core/GeneratorApplicationPathHelpers.hpp"
 
 #include <boost/program_options.hpp>
-#include <boost/foreach.hpp>
 #include <boost/filesystem/fstream.hpp>
 
 #include <iostream>
@@ -61,7 +60,7 @@ int main(int argc, char *argv[])
     }
 
     // get valid output directory, if possible (otherwise throws)
-    openstudio::path outPath = openstudio::getApplicationOutputDirectory(outdir);
+    boost::filesystem::path outPath = openstudio::getApplicationOutputDirectory(outdir);
 
     // get the idd file information, if possible (otherwise throws)
     openstudio::IddFileFactoryDataVector iddFiles = 
@@ -95,7 +94,7 @@ int main(int argc, char *argv[])
 
     // parse input files and write pieces of output files that require object text
     int i(0);
-    BOOST_FOREACH(openstudio::IddFileFactoryData& idd,iddFiles) {
+    for (openstudio::IddFileFactoryData& idd : iddFiles) {
       idd.parseFile(outPath,fileHeader.str(),outFiles,i);
       ++i;
     }

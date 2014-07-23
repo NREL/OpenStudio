@@ -20,8 +20,8 @@
 #ifndef MODEL_DISTRICTHEATING_HPP
 #define MODEL_DISTRICTHEATING_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 class Quantity;
@@ -83,7 +83,7 @@ class MODEL_API DistrictHeating : public StraightComponent {
   /// @cond
   typedef detail::DistrictHeating_Impl ImplType;
 
-  explicit DistrictHeating(boost::shared_ptr<detail::DistrictHeating_Impl> impl);
+  explicit DistrictHeating(std::shared_ptr<detail::DistrictHeating_Impl> impl);
 
   friend class detail::DistrictHeating_Impl;
   friend class Model;

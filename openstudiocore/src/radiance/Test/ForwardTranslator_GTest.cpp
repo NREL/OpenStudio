@@ -19,33 +19,31 @@
 
 #include <gtest/gtest.h>
 
-#include <radiance/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Surface.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/ShadingControl.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/DaylightingControl.hpp>
-#include <model/DaylightingControl_Impl.hpp>
-#include <model/IlluminanceMap.hpp>
-#include <model/IlluminanceMap_Impl.hpp>
-#include <model/GlareSensor.hpp>
-#include <model/GlareSensor_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Model_Impl.hpp"
+#include "../../model/Building.hpp"
+#include "../../model/Building_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/SubSurface.hpp"
+#include "../../model/SubSurface_Impl.hpp"
+#include "../../model/ShadingControl.hpp"
+#include "../../model/Construction.hpp"
+#include "../../model/Construction_Impl.hpp"
+#include "../../model/DaylightingControl.hpp"
+#include "../../model/DaylightingControl_Impl.hpp"
+#include "../../model/IlluminanceMap.hpp"
+#include "../../model/IlluminanceMap_Impl.hpp"
+#include "../../model/GlareSensor.hpp"
+#include "../../model/GlareSensor_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
 
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../../utilities/geometry/Point3d.hpp"
+#include "../../utilities/core/Logger.hpp"
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/FenestrationSurface_Detailed_FieldEnums.hxx>
-
-#include <boost/foreach.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -70,7 +68,7 @@ TEST(Radiance, ForwardTranslator_SurfaceOnlyOnGround)
   Point3dVector polygon = ForwardTranslator::getPolygon(surface);
   EXPECT_EQ(vertices.size(), polygon.size());
 
-  BOOST_FOREACH(const Point3d& vertex, polygon){
+  for (const Point3d& vertex : polygon){
     LOG_FREE(::Info, "Radiance", vertex);
   }
 }
@@ -93,7 +91,7 @@ TEST(Radiance, ForwardTranslator_SurfaceOnlyOnXZ)
   Point3dVector polygon = ForwardTranslator::getPolygon(surface);
   EXPECT_EQ(vertices.size(), polygon.size());
 
-  BOOST_FOREACH(const Point3d& vertex, polygon){
+  for (const Point3d& vertex : polygon){
     LOG_FREE(::Info, "Radiance", vertex);
   }
 }
@@ -124,7 +122,7 @@ TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnGround)
   Point3dVector polygon = ForwardTranslator::getPolygon(surface);
   EXPECT_TRUE(vertices.size() < polygon.size());
 
-  BOOST_FOREACH(const Point3d& vertex, polygon){
+  for (const Point3d& vertex : polygon){
     LOG_FREE(::Info, "Radiance", vertex);
   }
 }
@@ -155,7 +153,7 @@ TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnXZ)
   Point3dVector polygon = ForwardTranslator::getPolygon(surface);
   EXPECT_TRUE(vertices.size() < polygon.size());
 
-  BOOST_FOREACH(const Point3d& vertex, polygon){
+  for (const Point3d& vertex : polygon){
     LOG_FREE(::Info, "Radiance", vertex);
   }
 }
@@ -184,7 +182,7 @@ TEST(Radiance, ForwardTranslator_ExampleModelWithShadingControl)
   Construction shadedConstruction(model);
 
   model::ShadingControl shadingControl(shadedConstruction); 
-  BOOST_FOREACH(model::SubSurface subSurface, model.getConcreteModelObjects<model::SubSurface>()){
+  for (auto & subSurface : model.getConcreteModelObjects<model::SubSurface>()){
     if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") ||
         istringEqual(subSurface.subSurfaceType(), "OperableWindow")){
       subSurface.setShadingControl(shadingControl);
@@ -208,7 +206,7 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoIllumMaps)
 {
   Model model = exampleModel();
 
-  BOOST_FOREACH(IlluminanceMap illuminanceMap, model.getModelObjects<IlluminanceMap>()){
+  for (IlluminanceMap illuminanceMap : model.getModelObjects<IlluminanceMap>()){
     illuminanceMap.remove();
   } 
   
@@ -228,7 +226,7 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoDaylightingControls)
 {
   Model model = exampleModel();
 
-  BOOST_FOREACH(DaylightingControl daylightingControl, model.getModelObjects<DaylightingControl>()){
+  for (DaylightingControl daylightingControl : model.getModelObjects<DaylightingControl>()){
     daylightingControl.remove();
   } 
   
@@ -248,7 +246,7 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoGlareSensors)
 {
   Model model = exampleModel();
 
-  BOOST_FOREACH(GlareSensor glareSensor, model.getModelObjects<GlareSensor>()){
+  for (GlareSensor glareSensor : model.getModelObjects<GlareSensor>()){
     glareSensor.remove();
   } 
   
@@ -268,7 +266,7 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoThermalZoneLinks)
 {
   Model model = exampleModel();
 
-  BOOST_FOREACH(ThermalZone thermalZone, model.getModelObjects<ThermalZone>()){
+  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()){
     thermalZone.resetSecondaryDaylightingControl();
     thermalZone.resetPrimaryDaylightingControl();
     thermalZone.resetIlluminanceMap();
@@ -284,4 +282,5 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoThermalZoneLinks)
   EXPECT_TRUE(outpaths.empty());
   EXPECT_FALSE(ft.errors().empty());
   EXPECT_FALSE(ft.warnings().empty());
+
 }

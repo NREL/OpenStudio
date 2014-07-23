@@ -1,4 +1,4 @@
-SET( src
+set(src
   sqlite3.c
   #sqlite3.def
   #shell.c
@@ -6,4 +6,4 @@ SET( src
   #sqlite3ext.h
 )
 
-add_library( sqlite ${src} )
+add_library(sqlite ${src})

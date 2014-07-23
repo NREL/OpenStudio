@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_NULL_HPP__
-#define OPENSTUDIO_NULL_HPP__
+#ifndef RUNMANAGER_LIB_NULLJOB_HPP
+#define RUNMANAGER_LIB_NULLJOB_HPP
 
 #include <boost/filesystem.hpp>
 #include <string>
-#include <utilities/core/Logger.hpp>
+#include "../../utilities/core/Logger.hpp"
 #include "Job_Impl.hpp"
 #include "JobParam.hpp"
 
@@ -59,15 +59,10 @@ namespace detail {
       virtual std::string getOutput() const;
       virtual void cleanup();
 
-      virtual bool remoteRunnable() const
-      {
-        return false;
-      }
-
       virtual void requestStop();
 
     protected:
-      virtual void startImpl(const boost::shared_ptr<ProcessCreator> &t_creator);
+      virtual void startImpl(const std::shared_ptr<ProcessCreator> &t_creator);
       virtual void basePathChanged() {}
       virtual void standardCleanImpl() { /* nothing to do here */ }
 
@@ -80,4 +75,4 @@ namespace detail {
 }
 }
 }
-#endif
+#endif // RUNMANAGER_LIB_NULLJOB_HPP

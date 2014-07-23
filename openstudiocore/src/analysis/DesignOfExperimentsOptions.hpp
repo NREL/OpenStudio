@@ -20,10 +20,10 @@
 #ifndef ANALYSIS_DESIGNOFEXPERIMENTSOPTIONS_HPP
 #define ANALYSIS_DESIGNOFEXPERIMENTSOPTIONS_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/AlgorithmOptions.hpp>
+#include "AnalysisAPI.hpp"
+#include "AlgorithmOptions.hpp"
 
-#include <utilities/core/Enum.hpp>
+#include "../utilities/core/Enum.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -73,7 +73,7 @@ class ANALYSIS_API DesignOfExperimentsOptions : public AlgorithmOptions {
   /// @cond
   typedef detail::DesignOfExperimentsOptions_Impl ImplType;
 
-  explicit DesignOfExperimentsOptions(boost::shared_ptr<detail::DesignOfExperimentsOptions_Impl> impl);
+  explicit DesignOfExperimentsOptions(std::shared_ptr<detail::DesignOfExperimentsOptions_Impl> impl);
 
   friend class detail::DesignOfExperimentsOptions_Impl;
   friend class AlgorithmOptions;

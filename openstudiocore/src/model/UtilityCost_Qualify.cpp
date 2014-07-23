@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/UtilityCost_Qualify.hpp>
-#include <model/UtilityCost_Qualify_Impl.hpp>
+#include "UtilityCost_Qualify.hpp"
+#include "UtilityCost_Qualify_Impl.hpp"
 
-#include <model/Model_Impl.hpp>
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_UtilityCost_Qualify_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/algorithm/string.hpp>
 
@@ -167,7 +167,7 @@ UtilityCost_Qualify::UtilityCost_Qualify(const Model& model)
 }
 
 // constructor
-UtilityCost_Qualify::UtilityCost_Qualify(boost::shared_ptr<detail::UtilityCost_Qualify_Impl> impl)
+UtilityCost_Qualify::UtilityCost_Qualify(std::shared_ptr<detail::UtilityCost_Qualify_Impl> impl)
   : ParentObject(impl)
 {}
 

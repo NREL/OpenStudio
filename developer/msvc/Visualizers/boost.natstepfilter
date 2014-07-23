@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<StepFilter xmlns="http://schemas.microsoft.com/vstudio/debugger/natstepfilter/2010">
+  <Function><Name>boost::forward&lt;.*</Name><Action>NoStepInto</Action></Function>
+  <Function><Name>boost::move&lt;.*</Name><Action>NoStepInto</Action></Function>
+  <Function><Name>boost::addressof&lt;.*</Name><Action>NoStepInto</Action></Function>
+  <Function><Name>boost::foreach_detail_::.*</Name><Action>NoStepInto</Action></Function>
+  <Function><Name>boost::scoped_ptr&lt;.*::operator-&gt;</Name><Action>NoStepInto</Action></Function>
+  <Function><Name>boost::shared_ptr&lt;.*::operator-&gt;</Name><Action>NoStepInto</Action></Function>
+  <Function><Name>boost::scoped_array&lt;.*::operator\[\]</Name><Action>NoStepInto</Action></Function>
+  <Function><Name>boost::shared_array&lt;.*::operator\[\]</Name><Action>NoStepInto</Action></Function>
+</StepFilter>

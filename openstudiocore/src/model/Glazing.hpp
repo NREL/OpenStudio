@@ -20,8 +20,8 @@
 #ifndef MODEL_GLAZING_HPP
 #define MODEL_GLAZING_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/FenestrationMaterial.hpp>
+#include "ModelAPI.hpp"
+#include "FenestrationMaterial.hpp"
 
 namespace openstudio {
 namespace model {
@@ -50,7 +50,7 @@ class MODEL_API Glazing : public FenestrationMaterial {
 
   Glazing(IddObjectType type,const Model& model);
 
-  explicit Glazing(boost::shared_ptr<detail::Glazing_Impl> impl);  
+  explicit Glazing(std::shared_ptr<detail::Glazing_Impl> impl);  
 
   /// @endcond
  private:

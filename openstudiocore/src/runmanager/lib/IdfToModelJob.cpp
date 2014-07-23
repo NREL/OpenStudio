@@ -27,25 +27,23 @@
 #include "JobOutputCleanup.hpp"
 #include "RunManager_Util.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/Model_Impl.hpp"
+#include "../../model/WeatherFile.hpp"
+#include "../../model/WeatherFile_Impl.hpp"
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../../energyplus/ReverseTranslator.hpp"
 
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/Workspace.hpp>
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/Workspace.hpp"
 #include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/time/DateTime.hpp>
+#include "../../utilities/core/Assert.hpp"
+#include "../../utilities/time/DateTime.hpp"
 
 
 #include <QDir>
 #include <QDateTime>
-
-#include <boost/bind.hpp>
 
 namespace openstudio {
 namespace runmanager {
@@ -108,7 +106,7 @@ namespace detail {
     return m_description;
   }
 
-  void IdfToModelJob::startImpl(const boost::shared_ptr<ProcessCreator> &)
+  void IdfToModelJob::startImpl(const std::shared_ptr<ProcessCreator> &)
   {
     openstudio::path outpath = outdir(true);
 

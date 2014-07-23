@@ -17,23 +17,23 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../ForwardTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/DaylightingDeviceShelf.hpp>
-#include <model/DaylightingDeviceShelf_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Surface.hpp>
-#include <model/SubSurface.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/InteriorPartitionSurface.hpp>
-#include <model/InteriorPartitionSurfaceGroup.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/DaylightingDeviceShelf.hpp"
+#include "../../model/DaylightingDeviceShelf_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/SubSurface.hpp"
+#include "../../model/ShadingSurface.hpp"
+#include "../../model/InteriorPartitionSurface.hpp"
+#include "../../model/InteriorPartitionSurfaceGroup.hpp"
 #include <utilities/idd/OS_DaylightingDevice_Shelf_FieldEnums.hxx>
 
 #include <utilities/idd/DaylightingDevice_Shelf_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Transformation.hpp>
+#include "../../utilities/geometry/Point3d.hpp"
+#include "../../utilities/geometry/Transformation.hpp"
 
 using namespace openstudio::model;
 

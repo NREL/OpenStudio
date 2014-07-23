@@ -20,16 +20,16 @@
 #ifndef UTILITIES_UNITS_SCALE_HPP
 #define UTILITIES_UNITS_SCALE_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <boost/function.hpp>
+#include "../UtilitiesAPI.hpp"
 
+#include <functional>
 #include <ostream>
 #include <string>
 
 namespace openstudio{
 
   /** Structure for holding scale prefixes such as kilo and centi. Logical operators and 
-   *  some other related typedefs and functions are declared in Scale.hpp. Scale artihmetic is 
+   *  some other related typedefs and functions are declared in Scale.hpp. Scale arithmetic is 
    *  declared in ScaleFactory.hpp, since openstudio::ScaleFactory is the object that makes such 
    *  operations possible by keeping track of what scales are available. */
   struct UTILITIES_API Scale {
@@ -41,7 +41,7 @@ namespace openstudio{
 
   /** Function pointer to a constant scale object. Implemented as function 
    *  pointer to ensure timely instantiation. */
-  typedef boost::function<const Scale& ()> ScaleConstant;
+  typedef std::function<const Scale& ()> ScaleConstant;
 
   /** Outputs all information about Scale s. Examples: \verbatim 
       Scale s = {"T", "tera",12,1.0E12};

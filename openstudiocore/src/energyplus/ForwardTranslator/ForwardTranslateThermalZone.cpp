@@ -17,105 +17,101 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../ForwardTranslator.hpp"
 
-#include <model/Model.hpp>
+#include "../../model/Model.hpp"
 
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/PortList.hpp>
-#include <model/PortList_Impl.hpp>
-#include <model/ZoneHVACEquipmentList.hpp>
-#include <model/ZoneHVACEquipmentList_Impl.hpp>
-#include <model/SizingZone.hpp>
-#include <model/SizingZone_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/ScheduleCompact_Impl.hpp>
-#include <model/SetpointManagerMixedAir.hpp>
-#include <model/SetpointManagerSingleZoneReheat.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/ThermostatSetpointDualSetpoint.hpp>
-#include <model/ThermostatSetpointDualSetpoint_Impl.hpp>
-#include <model/ZoneControlHumidistat.hpp>
-#include <model/SizingZone.hpp>
-#include <model/SizingZone_Impl.hpp>
-#include <model/DesignSpecificationOutdoorAir.hpp>
-#include <model/DesignSpecificationOutdoorAir_Impl.hpp>
-#include <model/SizingPeriod.hpp>
-#include <model/SizingPeriod_Impl.hpp>
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/PortList.hpp"
+#include "../../model/PortList_Impl.hpp"
+#include "../../model/ZoneHVACEquipmentList.hpp"
+#include "../../model/ZoneHVACEquipmentList_Impl.hpp"
+#include "../../model/SizingZone.hpp"
+#include "../../model/SizingZone_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
+#include "../../model/ScheduleCompact.hpp"
+#include "../../model/ScheduleCompact_Impl.hpp"
+#include "../../model/SetpointManagerMixedAir.hpp"
+#include "../../model/SetpointManagerSingleZoneReheat.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/AirLoopHVAC_Impl.hpp"
+#include "../../model/ThermostatSetpointDualSetpoint.hpp"
+#include "../../model/ThermostatSetpointDualSetpoint_Impl.hpp"
+#include "../../model/ZoneControlHumidistat.hpp"
+#include "../../model/DesignSpecificationOutdoorAir.hpp"
+#include "../../model/DesignSpecificationOutdoorAir_Impl.hpp"
+#include "../../model/SizingPeriod.hpp"
+#include "../../model/SizingPeriod_Impl.hpp"
 
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurfaceGroup_Impl.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurface_Impl.hpp>
-#include <model/InteriorPartitionSurfaceGroup.hpp>
-#include <model/InteriorPartitionSurfaceGroup_Impl.hpp>
-#include <model/InteriorPartitionSurface.hpp>
-#include <model/InteriorPartitionSurface_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/InternalMass.hpp>
-#include <model/InternalMass_Impl.hpp>
-#include <model/InternalMassDefinition.hpp>
-#include <model/InternalMassDefinition_Impl.hpp>
-#include <model/People.hpp>
-#include <model/People_Impl.hpp>
-#include <model/PeopleDefinition.hpp>
-#include <model/PeopleDefinition_Impl.hpp>
-#include <model/Lights.hpp>
-#include <model/Lights_Impl.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/LightsDefinition_Impl.hpp>
-#include <model/Luminaire.hpp>
-#include <model/Luminaire_Impl.hpp>
-#include <model/LuminaireDefinition.hpp>
-#include <model/LuminaireDefinition_Impl.hpp>
-#include <model/ElectricEquipment.hpp>
-#include <model/ElectricEquipment_Impl.hpp>
-#include <model/ElectricEquipmentDefinition.hpp>
-#include <model/ElectricEquipmentDefinition_Impl.hpp>
-#include <model/GasEquipment.hpp>
-#include <model/GasEquipment_Impl.hpp>
-#include <model/GasEquipmentDefinition.hpp>
-#include <model/GasEquipmentDefinition_Impl.hpp>
-#include <model/HotWaterEquipment.hpp>
-#include <model/HotWaterEquipment_Impl.hpp>
-#include <model/SteamEquipment.hpp>
-#include <model/SteamEquipment_Impl.hpp>
-#include <model/OtherEquipment.hpp>
-#include <model/OtherEquipment_Impl.hpp>
-#include <model/DaylightingControl.hpp>
-#include <model/DaylightingControl_Impl.hpp>
-#include <model/IlluminanceMap.hpp>
-#include <model/IlluminanceMap_Impl.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate_Impl.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp>
-#include <model/DesignSpecificationOutdoorAir.hpp>
-#include <model/DesignSpecificationOutdoorAir_Impl.hpp>
-#include <model/GlareSensor.hpp>
-#include <model/GlareSensor_Impl.hpp>
-#include <model/LifeCycleCost.hpp>
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/SpaceType.hpp"
+#include "../../model/SpaceType_Impl.hpp"
+#include "../../model/ShadingSurfaceGroup.hpp"
+#include "../../model/ShadingSurfaceGroup_Impl.hpp"
+#include "../../model/ShadingSurface.hpp"
+#include "../../model/ShadingSurface_Impl.hpp"
+#include "../../model/InteriorPartitionSurfaceGroup.hpp"
+#include "../../model/InteriorPartitionSurfaceGroup_Impl.hpp"
+#include "../../model/InteriorPartitionSurface.hpp"
+#include "../../model/InteriorPartitionSurface_Impl.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/Surface_Impl.hpp"
+#include "../../model/SubSurface.hpp"
+#include "../../model/SubSurface_Impl.hpp"
+#include "../../model/ConstructionBase.hpp"
+#include "../../model/ConstructionBase_Impl.hpp"
+#include "../../model/InternalMass.hpp"
+#include "../../model/InternalMass_Impl.hpp"
+#include "../../model/InternalMassDefinition.hpp"
+#include "../../model/InternalMassDefinition_Impl.hpp"
+#include "../../model/People.hpp"
+#include "../../model/People_Impl.hpp"
+#include "../../model/PeopleDefinition.hpp"
+#include "../../model/PeopleDefinition_Impl.hpp"
+#include "../../model/Lights.hpp"
+#include "../../model/Lights_Impl.hpp"
+#include "../../model/LightsDefinition.hpp"
+#include "../../model/LightsDefinition_Impl.hpp"
+#include "../../model/Luminaire.hpp"
+#include "../../model/Luminaire_Impl.hpp"
+#include "../../model/LuminaireDefinition.hpp"
+#include "../../model/LuminaireDefinition_Impl.hpp"
+#include "../../model/ElectricEquipment.hpp"
+#include "../../model/ElectricEquipment_Impl.hpp"
+#include "../../model/ElectricEquipmentDefinition.hpp"
+#include "../../model/ElectricEquipmentDefinition_Impl.hpp"
+#include "../../model/GasEquipment.hpp"
+#include "../../model/GasEquipment_Impl.hpp"
+#include "../../model/GasEquipmentDefinition.hpp"
+#include "../../model/GasEquipmentDefinition_Impl.hpp"
+#include "../../model/HotWaterEquipment.hpp"
+#include "../../model/HotWaterEquipment_Impl.hpp"
+#include "../../model/SteamEquipment.hpp"
+#include "../../model/SteamEquipment_Impl.hpp"
+#include "../../model/OtherEquipment.hpp"
+#include "../../model/OtherEquipment_Impl.hpp"
+#include "../../model/DaylightingControl.hpp"
+#include "../../model/DaylightingControl_Impl.hpp"
+#include "../../model/IlluminanceMap.hpp"
+#include "../../model/IlluminanceMap_Impl.hpp"
+#include "../../model/SpaceInfiltrationDesignFlowRate.hpp"
+#include "../../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
+#include "../../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "../../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
+#include "../../model/GlareSensor.hpp"
+#include "../../model/GlareSensor_Impl.hpp"
+#include "../../model/LifeCycleCost.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/WorkspaceObjectOrder.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/idf/WorkspaceObjectOrder.hpp"
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/Zone_FieldEnums.hxx>
 #include <utilities/idd/HVACTemplate_Zone_IdealLoadsAirSystem_FieldEnums.hxx>
 #include <utilities/idd/Daylighting_Controls_FieldEnums.hxx>
@@ -130,7 +126,7 @@
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
-#include <utilities/geometry/Geometry.hpp>
+#include "../../utilities/geometry/Geometry.hpp"
 
 using namespace openstudio::model;
 
@@ -148,7 +144,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Zone,
                                                        modelObject);
 
-  BOOST_FOREACH(LifeCycleCost lifeCycleCost, modelObject.lifeCycleCosts()){
+  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
     translateAndMapModelObject(lifeCycleCost);
   }
 
@@ -212,84 +208,84 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     // translate shading groups
     ShadingSurfaceGroupVector shadingSurfaceGroups = spaces[0].shadingSurfaceGroups();
     std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(ShadingSurfaceGroup& shadingSurfaceGroup, shadingSurfaceGroups){
+    for (ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups){
       translateAndMapModelObject(shadingSurfaceGroup);
     }
 
     // translate interior surface partition groups
     InteriorPartitionSurfaceGroupVector interiorPartitionSurfaceGroups = spaces[0].interiorPartitionSurfaceGroups();
     std::sort(interiorPartitionSurfaceGroups.begin(), interiorPartitionSurfaceGroups.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup, interiorPartitionSurfaceGroups){
+    for (InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup : interiorPartitionSurfaceGroups){
       translateAndMapModelObject(interiorPartitionSurfaceGroup);
     }
 
     // translate surfaces
     SurfaceVector surfaces = spaces[0].surfaces();
     std::sort(surfaces.begin(), surfaces.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(Surface& surface, surfaces){
+    for (Surface& surface : surfaces){
       translateAndMapModelObject(surface);
     }
     
     // translate internal mass
     InternalMassVector internalMasses = spaces[0].internalMass();
     std::sort(internalMasses.begin(), internalMasses.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(InternalMass& internalMass, internalMasses){
+    for (InternalMass& internalMass : internalMasses){
       translateAndMapModelObject(internalMass);
     }
 
     // translate lights
     LightsVector lights = spaces[0].lights();
     std::sort(lights.begin(), lights.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(Lights& light, lights){
+    for (Lights& light : lights){
       translateAndMapModelObject(light);
     }
 
     // translate luminaires
     LuminaireVector luminaires = spaces[0].luminaires();
     std::sort(luminaires.begin(), luminaires.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(Luminaire& luminaire, luminaires){
+    for (Luminaire& luminaire : luminaires){
       translateAndMapModelObject(luminaire);
     }
 
     // translate people
     PeopleVector people = spaces[0].people();
     std::sort(people.begin(), people.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(People& person, people){
+    for (People& person : people){
       translateAndMapModelObject(person);
     }
 
     // translate electric equipment
     ElectricEquipmentVector electricEquipment = spaces[0].electricEquipment();
     std::sort(electricEquipment.begin(), electricEquipment.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(ElectricEquipment& equipment, electricEquipment){
+    for (ElectricEquipment& equipment : electricEquipment){
       translateAndMapModelObject(equipment);
     }
 
     // translate gas equipment
     GasEquipmentVector gasEquipment = spaces[0].gasEquipment();
     std::sort(gasEquipment.begin(), gasEquipment.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(GasEquipment& equipment, gasEquipment){
+    for (GasEquipment& equipment : gasEquipment){
       translateAndMapModelObject(equipment);
     }
 
     // translate hot water equipment
     HotWaterEquipmentVector hotWaterEquipment = spaces[0].hotWaterEquipment();
     std::sort(hotWaterEquipment.begin(), hotWaterEquipment.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(HotWaterEquipment& equipment, hotWaterEquipment){
+    for (HotWaterEquipment& equipment : hotWaterEquipment){
       translateAndMapModelObject(equipment);
     }
 
     // translate steam equipment
     SteamEquipmentVector steamEquipment = spaces[0].steamEquipment();
     std::sort(steamEquipment.begin(), steamEquipment.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(SteamEquipment& equipment, steamEquipment){
+    for (SteamEquipment& equipment : steamEquipment){
       translateAndMapModelObject(equipment);
     }
 
     // translate other equipment
     OtherEquipmentVector otherEquipment = spaces[0].otherEquipment();
     std::sort(otherEquipment.begin(), otherEquipment.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(OtherEquipment& equipment, otherEquipment){
+    for (OtherEquipment& equipment : otherEquipment){
       translateAndMapModelObject(equipment);
     }
 
@@ -487,14 +483,14 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     // translate SpaceInfiltration_DesignFlowRate
     SpaceInfiltrationDesignFlowRateVector spaceInfiltrationDesignFlowRates = spaces[0].spaceInfiltrationDesignFlowRates();
     std::sort(spaceInfiltrationDesignFlowRates.begin(), spaceInfiltrationDesignFlowRates.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate, spaceInfiltrationDesignFlowRates){
+    for (SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate : spaceInfiltrationDesignFlowRates){
       translateAndMapModelObject(spaceInfiltrationDesignFlowRate);
     }
 
     // translate SpaceInfiltration_EffectiveLeakageArea
     SpaceInfiltrationEffectiveLeakageAreaVector spaceInfiltrationEffectiveLeakageAreas = spaces[0].spaceInfiltrationEffectiveLeakageAreas();
     std::sort(spaceInfiltrationEffectiveLeakageAreas.begin(), spaceInfiltrationEffectiveLeakageAreas.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea, spaceInfiltrationEffectiveLeakageAreas){
+    for (SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea : spaceInfiltrationEffectiveLeakageAreas){
       translateAndMapModelObject(spaceInfiltrationEffectiveLeakageArea);
     }
   }
@@ -705,17 +701,17 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
             // todo: improve this?
             // find first people schedule
             std::vector<People> allPeople;
-            BOOST_FOREACH(People people, spaces[0].people()){
+            for (People people : spaces[0].people()){
               allPeople.push_back(people);
             }
             if (spaces[0].spaceType()){
-              BOOST_FOREACH(People people, spaces[0].spaceType()->people()){
+              for (People people : spaces[0].spaceType()->people()){
                 allPeople.push_back(people);
               }
             }
 
             boost::optional<Schedule> peopleSchedule;
-            BOOST_FOREACH(People people, allPeople){
+            for (People people : allPeople){
               peopleSchedule = people.numberofPeopleSchedule();
               if (peopleSchedule){
                 break;

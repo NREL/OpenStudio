@@ -17,19 +17,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ControllerMechanicalVentilation.hpp>
-#include <model/ControllerMechanicalVentilation_Impl.hpp>
-#include <model/ControllerOutdoorAir.hpp>
-#include <model/ControllerOutdoorAir_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
+#include "ControllerMechanicalVentilation.hpp"
+#include "ControllerMechanicalVentilation_Impl.hpp"
+#include "ControllerOutdoorAir.hpp"
+#include "ControllerOutdoorAir_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Controller_MechanicalVentilation_FieldEnums.hxx>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -258,7 +258,7 @@ ControllerOutdoorAir ControllerMechanicalVentilation::controllerOutdoorAir() con
 }
 
 /// @cond
-ControllerMechanicalVentilation::ControllerMechanicalVentilation(boost::shared_ptr<detail::ControllerMechanicalVentilation_Impl> impl)
+ControllerMechanicalVentilation::ControllerMechanicalVentilation(std::shared_ptr<detail::ControllerMechanicalVentilation_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

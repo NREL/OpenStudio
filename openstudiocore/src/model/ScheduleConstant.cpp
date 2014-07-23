@@ -17,20 +17,18 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/ScheduleConstant.hpp>
-#include <model/ScheduleConstant_Impl.hpp>
-#include <model/Model.hpp>
+#include "ScheduleConstant.hpp"
+#include "ScheduleConstant_Impl.hpp"
+#include "Model.hpp"
 
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeLimits_Impl.hpp>
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeLimits_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/OS_Schedule_Constant_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
 
 using openstudio::Handle;
 using openstudio::OptionalHandle;
@@ -159,7 +157,7 @@ ScheduleConstant::ScheduleConstant(const Model& model)
 }
 
 // constructor
-ScheduleConstant::ScheduleConstant(boost::shared_ptr<detail::ScheduleConstant_Impl> impl)
+ScheduleConstant::ScheduleConstant(std::shared_ptr<detail::ScheduleConstant_Impl> impl)
   : Schedule(impl)
 {}
 

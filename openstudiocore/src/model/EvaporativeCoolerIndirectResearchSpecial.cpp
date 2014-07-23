@@ -17,21 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/EvaporativeCoolerIndirectResearchSpecial.hpp>
-#include <model/EvaporativeCoolerIndirectResearchSpecial_Impl.hpp>
-
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
-
+#include "EvaporativeCoolerIndirectResearchSpecial.hpp"
+#include "EvaporativeCoolerIndirectResearchSpecial_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 #include <utilities/idd/OS_EvaporativeCooler_Indirect_ResearchSpecial_FieldEnums.hxx>
-
-#include <utilities/units/Unit.hpp>
-
-#include <utilities/core/Assert.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -377,7 +373,7 @@ void EvaporativeCoolerIndirectResearchSpecial::resetBlowdownConcentrationRatio()
 }
 
 /// @cond
-EvaporativeCoolerIndirectResearchSpecial::EvaporativeCoolerIndirectResearchSpecial(boost::shared_ptr<detail::EvaporativeCoolerIndirectResearchSpecial_Impl> impl)
+EvaporativeCoolerIndirectResearchSpecial::EvaporativeCoolerIndirectResearchSpecial(std::shared_ptr<detail::EvaporativeCoolerIndirectResearchSpecial_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

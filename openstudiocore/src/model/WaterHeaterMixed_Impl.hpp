@@ -20,10 +20,10 @@
 #ifndef MODEL_WATERHEATERMIXED_IMPL_HPP
 #define MODEL_WATERHEATERMIXED_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/WaterToWaterComponent_Impl.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
+#include "ModelAPI.hpp"
+#include "WaterToWaterComponent_Impl.hpp"
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 

@@ -17,76 +17,74 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/ProjectDatabase.hpp>
-#include <project/ProjectDatabase_Impl.hpp>
-#include <project/ProjectDatabaseRecord.hpp>
-#include <project/ProjectDatabaseRecord_Impl.hpp>
+#include "ProjectDatabase.hpp"
+#include "ProjectDatabase_Impl.hpp"
+#include "ProjectDatabaseRecord.hpp"
+#include "ProjectDatabaseRecord_Impl.hpp"
 
-#include <project/ObjectRecord.hpp>
-#include <project/ObjectRecord_Impl.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/JoinRecord_Impl.hpp>
+#include "ObjectRecord.hpp"
+#include "ObjectRecord_Impl.hpp"
+#include "JoinRecord.hpp"
+#include "JoinRecord_Impl.hpp"
 
-#include <project/AnalysisRecord.hpp>
-#include <project/AnalysisRecord_Impl.hpp>
-#include <project/AlgorithmRecord.hpp>
-#include <project/AlgorithmRecord_Impl.hpp>
-#include <project/AttributeRecord.hpp>
-#include <project/AttributeRecord_Impl.hpp>
-#include <project/CloudSessionRecord.hpp>
-#include <project/CloudSessionRecord_Impl.hpp>
-#include <project/CloudSettingsRecord.hpp>
-#include <project/CloudSettingsRecord_Impl.hpp>
-#include <project/ContinuousVariableRecord.hpp>
-#include <project/DataPointRecord.hpp>
-#include <project/DataPointRecord_Impl.hpp>
-#include <project/DataPointValueRecord.hpp>
-#include <project/DataPointValueRecord_Impl.hpp>
-#include <project/DiscreteVariableRecord.hpp>
-#include <project/FileReferenceRecord.hpp>
-#include <project/FileReferenceRecord_Impl.hpp>
-#include <project/FunctionRecord.hpp>
-#include <project/FunctionRecord_Impl.hpp>
-#include <project/OSArgumentRecord.hpp>
-#include <project/OSArgumentRecord_Impl.hpp>
-#include <project/OutputVariableRecord.hpp>
-#include <project/MeasureRecord.hpp>
-#include <project/MeasureRecord_Impl.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/ProblemRecord_Impl.hpp>
-#include <project/TagRecord.hpp>
-#include <project/TagRecord_Impl.hpp>
-#include <project/UrlRecord.hpp>
-#include <project/UrlRecord_Impl.hpp>
-#include <project/URLSearchPathRecord.hpp>
-#include <project/URLSearchPathRecord_Impl.hpp>
-#include <project/VariableRecord.hpp>
-#include <project/VariableRecord_Impl.hpp>
-#include <project/WorkflowRecord.hpp>
-#include <project/WorkflowRecord_Impl.hpp>
+#include "AnalysisRecord.hpp"
+#include "AnalysisRecord_Impl.hpp"
+#include "AlgorithmRecord.hpp"
+#include "AlgorithmRecord_Impl.hpp"
+#include "AttributeRecord.hpp"
+#include "AttributeRecord_Impl.hpp"
+#include "CloudSessionRecord.hpp"
+#include "CloudSessionRecord_Impl.hpp"
+#include "CloudSettingsRecord.hpp"
+#include "CloudSettingsRecord_Impl.hpp"
+#include "ContinuousVariableRecord.hpp"
+#include "DataPointRecord.hpp"
+#include "DataPointRecord_Impl.hpp"
+#include "DataPointValueRecord.hpp"
+#include "DataPointValueRecord_Impl.hpp"
+#include "DiscreteVariableRecord.hpp"
+#include "FileReferenceRecord.hpp"
+#include "FileReferenceRecord_Impl.hpp"
+#include "FunctionRecord.hpp"
+#include "FunctionRecord_Impl.hpp"
+#include "OSArgumentRecord.hpp"
+#include "OSArgumentRecord_Impl.hpp"
+#include "OutputVariableRecord.hpp"
+#include "MeasureRecord.hpp"
+#include "MeasureRecord_Impl.hpp"
+#include "ProblemRecord.hpp"
+#include "ProblemRecord_Impl.hpp"
+#include "TagRecord.hpp"
+#include "TagRecord_Impl.hpp"
+#include "UrlRecord.hpp"
+#include "UrlRecord_Impl.hpp"
+#include "URLSearchPathRecord.hpp"
+#include "URLSearchPathRecord_Impl.hpp"
+#include "VariableRecord.hpp"
+#include "VariableRecord_Impl.hpp"
+#include "WorkflowRecord.hpp"
+#include "WorkflowRecord_Impl.hpp"
 
-#include <project/DataPoint_Measure_JoinRecord.hpp>
-#include <project/DataPoint_Measure_JoinRecord_Impl.hpp>
+#include "DataPoint_Measure_JoinRecord.hpp"
+#include "DataPoint_Measure_JoinRecord_Impl.hpp"
 
-#include <analysis/DataPoint.hpp>
+#include "../analysis/DataPoint.hpp"
 
-#include <runmanager/lib/Job.hpp>
-#include <runmanager/lib/Workflow.hpp>
+#include "../runmanager/lib/Job.hpp"
+#include "../runmanager/lib/Workflow.hpp"
 
-#include <utilities/core/String.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/time/DateTime.hpp>
+#include "../utilities/core/String.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/time/DateTime.hpp"
 
 #include <OpenStudio.hxx>
 
 #include <sstream>
 
 #include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
 #include <boost/regex.hpp>
-#include <boost/bind.hpp>
 
 #include <QSqlDatabase>
 #include <QSqlDriver>
@@ -122,7 +120,7 @@ namespace detail {
     OS_ASSERT(database.isValid());
     database.setDatabaseName(toQString(path));
     OS_ASSERT(database.open());
-    m_qSqlDatabase = boost::shared_ptr<QSqlDatabase>(new QSqlDatabase(database));
+    m_qSqlDatabase = std::shared_ptr<QSqlDatabase>(new QSqlDatabase(database));
 
     { 
       // do it in a new scope to make sure the query is finalized before we start anything else
@@ -163,19 +161,15 @@ namespace detail {
     m_ignoreSignals = true;
 
     // delete new objects
-    std::map<UUID, Record>::iterator it = m_handleNewRecordMap.begin();
-    std::map<UUID, Record>::iterator itend = m_handleNewRecordMap.end();
-    for( ; it != itend; ++it){
-      it->second.removeRow(m_qSqlDatabase);
+    for(auto handleNewRecord : m_handleNewRecordMap){
+      handleNewRecord.second.removeRow(m_qSqlDatabase);
     }
     m_handleNewRecordMap.clear();
 
     // re-add deleted objects
-    it = m_handleRemovedRecordMap.begin();
-    itend = m_handleRemovedRecordMap.end();
-    for( ; it != itend; ++it){
-      it->second.insertRow(m_qSqlDatabase);
-      it->second.saveRow(m_qSqlDatabase);
+    for(auto handleRemovedRecord : m_handleRemovedRecordMap){
+      handleRemovedRecord.second.insertRow(m_qSqlDatabase);
+      handleRemovedRecord.second.saveRow(m_qSqlDatabase);
     }
     m_handleRemovedRecordMap.clear();
 
@@ -358,21 +352,17 @@ namespace detail {
     ProjectDatabase other(this->shared_from_this());
 
     // save new objects and move to clean
-    std::map<UUID, Record>::iterator it = m_handleNewRecordMap.begin();
-    std::map<UUID, Record>::iterator itend = m_handleNewRecordMap.end();
-    for( ; it != itend; ++it){
-      m_handleCleanRecordMap.insert(*it);
-      it->second.saveRow(other);
+    for(auto & handleNewRecord : m_handleNewRecordMap){
+      m_handleCleanRecordMap.insert(handleNewRecord);
+      handleNewRecord.second.saveRow(other);
       didChange = true;
     }
     m_handleNewRecordMap.clear();
 
     // save dirty objects and move to clean
-    it = m_handleDirtyRecordMap.begin();
-    itend = m_handleDirtyRecordMap.end();
-    for( ; it != itend; ++it){
-      m_handleCleanRecordMap.insert(*it);
-      it->second.saveRow(other);
+    for(auto & handleDirtyRecord : m_handleDirtyRecordMap){
+      m_handleCleanRecordMap.insert(handleDirtyRecord);
+      handleDirtyRecord.second.saveRow(other);
       didChange = true;
     }
     m_handleDirtyRecordMap.clear();
@@ -431,12 +421,12 @@ namespace detail {
     ProjectDatabase other(this->shared_from_this());
 
     // save children
-    BOOST_FOREACH(ObjectRecord childRecord, record.children()){
+    for (ObjectRecord childRecord : record.children()){
       this->saveRecord(childRecord, false);
     }
 
     // save new object and move to clean
-    std::map<UUID, Record>::iterator it = m_handleNewRecordMap.find(record.handle());
+    auto it = m_handleNewRecordMap.find(record.handle());
     if(it != m_handleNewRecordMap.end()){
       m_handleCleanRecordMap.insert(*it);
       it->second.saveRow(other);
@@ -453,7 +443,7 @@ namespace detail {
 
     // remove undo struct for this record
     HandleFinder finder(record.handle());
-    std::vector<RemoveUndo>::iterator ruit = std::remove_if(m_removeUndos.begin(), m_removeUndos.end(), finder);
+    auto ruit = std::remove_if(m_removeUndos.begin(), m_removeUndos.end(), finder);
     m_removeUndos.erase(ruit,m_removeUndos.end());
 
     // delete removed object
@@ -533,7 +523,7 @@ namespace detail {
       result = RemoveUndo(it->first, removeSource);
 
       // remove children
-      BOOST_FOREACH(ObjectRecord objectRecord, it->second.children()){
+      for (ObjectRecord objectRecord : it->second.children()){
         boost::optional<RemoveUndo> childRemoveUndo = removeRecord(objectRecord, false);
         if (childRemoveUndo){
           result->concat(*childRemoveUndo);
@@ -541,7 +531,7 @@ namespace detail {
       }
 
       // remove joins
-      BOOST_FOREACH(JoinRecord joinRecord, it->second.joinRecords()){
+      for (JoinRecord joinRecord : it->second.joinRecords()){
         boost::optional<RemoveUndo> joinRemoveUndo = removeRecord(joinRecord, false);
         if (joinRemoveUndo){
           result->concat(*joinRemoveUndo);
@@ -642,7 +632,7 @@ namespace detail {
     connectSignals(record);
 
     // insert into map
-    m_handleNewRecordMap.insert(std::make_pair<UUID, Record>(handle, record));
+    m_handleNewRecordMap.insert(std::make_pair(handle, record));
 
   }
 
@@ -661,7 +651,7 @@ namespace detail {
     connectSignals(record);
 
     // insert into map
-    m_handleDirtyRecordMap.insert(std::make_pair<UUID, Record>(handle, record));
+    m_handleDirtyRecordMap.insert(std::make_pair(handle, record));
 
   }
 
@@ -680,7 +670,7 @@ namespace detail {
     connectSignals(record);
 
     // insert into map
-    m_handleCleanRecordMap.insert(std::make_pair<UUID, Record>(handle, record));
+    m_handleCleanRecordMap.insert(std::make_pair(handle, record));
   }
 
   void ProjectDatabase_Impl::updateDatabase(const std::string& dbVersion) {
@@ -754,6 +744,10 @@ namespace detail {
       update_1_0_6_to_1_0_7(dbv);
     }
 
+    if (dbv < VersionString("1.4.1")) {
+      update_1_4_0_to_1_4_1(dbv);
+    }
+    
     if (dbv < osv) {
       LOG(Info,"Updating database version to " << osv << ".");
       bool didStartTransaction = startTransaction();
@@ -793,7 +787,7 @@ namespace detail {
       return false;
     }
 
-    std::map<UUID, Record>::const_iterator it = m_handleNewRecordMap.find(record.handle());
+    auto it = m_handleNewRecordMap.find(record.handle());
     if (it != m_handleNewRecordMap.end()){
       return true;
     }
@@ -807,7 +801,7 @@ namespace detail {
       return false;
     }
 
-    std::map<UUID, Record>::const_iterator it = m_handleCleanRecordMap.find(record.handle());
+    auto it = m_handleCleanRecordMap.find(record.handle());
     if (it != m_handleCleanRecordMap.end()){
       return true;
     }
@@ -826,7 +820,7 @@ namespace detail {
       return false;
     }
 
-    std::map<UUID, Record>::const_iterator it = m_handleDirtyRecordMap.find(record.handle());
+    auto it = m_handleDirtyRecordMap.find(record.handle());
     if (it != m_handleDirtyRecordMap.end()){
       return true;
     }
@@ -840,7 +834,7 @@ namespace detail {
       return false;
     }
 
-    std::map<UUID, Record>::const_iterator it = m_handleRemovedRecordMap.find(record.handle());
+    auto it = m_handleRemovedRecordMap.find(record.handle());
     if (it != m_handleRemovedRecordMap.end()){
       return true;
     }
@@ -854,7 +848,7 @@ namespace detail {
       // new and removed objects stay where they are
 
       // move clean objects to dirty
-      std::map<UUID, Record>::iterator it = m_handleCleanRecordMap.find(handle);
+      auto it = m_handleCleanRecordMap.find(handle);
       if (it != m_handleCleanRecordMap.end()){
         m_handleDirtyRecordMap.insert(*it);
         m_handleCleanRecordMap.erase(it);
@@ -862,7 +856,7 @@ namespace detail {
     }
   }
 
-  boost::shared_ptr<QSqlDatabase> ProjectDatabase_Impl::qSqlDatabase() const
+  std::shared_ptr<QSqlDatabase> ProjectDatabase_Impl::qSqlDatabase() const
   {
     return m_qSqlDatabase;
   }
@@ -871,7 +865,7 @@ namespace detail {
   {
     boost::optional<Record> result;
 
-    std::map<UUID, Record>::const_iterator it = m_handleNewRecordMap.find(handle);
+    auto it = m_handleNewRecordMap.find(handle);
     if (it != m_handleNewRecordMap.end()){
       OS_ASSERT(!result);
       result = it->second;
@@ -908,8 +902,8 @@ namespace detail {
   void ProjectDatabase_Impl::unloadUnusedCleanRecords()
   {
 
-    std::map<UUID, Record>::iterator it = m_handleCleanRecordMap.begin();
-    std::map<UUID, Record>::iterator itend = m_handleCleanRecordMap.end();
+    auto it = m_handleCleanRecordMap.begin();
+    auto itend = m_handleCleanRecordMap.end();
 
     // there is no remove_if equivalent for maps, this is example provided for equivalent functionality
     for(; it != itend; ) {
@@ -925,9 +919,9 @@ namespace detail {
   void ProjectDatabase_Impl::commitRemove(const RemoveUndo& removeUndo)
   {
     typedef std::pair<UUID, RemoveUndo::RemoveSource> RemovedObjectType;
-    BOOST_FOREACH(RemovedObjectType removedObject, removeUndo.removedObjects()){
+    for (RemovedObjectType removedObject : removeUndo.removedObjects()){
       // delete removed object
-      std::map<UUID, Record>::iterator it = m_handleRemovedRecordMap.find(removedObject.first);
+      auto it = m_handleRemovedRecordMap.find(removedObject.first);
       if(it != m_handleRemovedRecordMap.end()){
         // erase removed object
         m_handleRemovedRecordMap.erase(it);
@@ -1028,8 +1022,8 @@ namespace detail {
     QSqlQuery attUpdateQuery(*(database.qSqlDatabase()));
     while (query.next()) {
       int parentId = query.value(AttributeRecordColumns::parentAttributeRecordId).toInt();
-      std::vector< std::pair<int,int> >::reverse_iterator rit = std::find_if(
-          currentIndices.rbegin(),currentIndices.rend(),boost::bind(firstOfPairEqual<int,int>,_1,parentId));
+      auto rit = std::find_if(
+          currentIndices.rbegin(),currentIndices.rend(),std::bind(firstOfPairEqual<int,int>,std::placeholders::_1,parentId));
       if (rit == currentIndices.rend()) {
         currentIndices.push_back(std::pair<int,int>(parentId,-1));
         rit = currentIndices.rbegin();
@@ -1211,11 +1205,28 @@ namespace detail {
     assertExec(query);
     query.clear();
 
+    // Code from update_1_3_5_to_1_3_6 needed to make AttributeRecord constructor work.
+    LOG(Info,"Adding columns to " << AttributeRecord::databaseTableName()
+        << " to record (data) source and have DataPoint parent directly (instead of via a FileReferenceRecord).");
+
+    AttributeRecordColumns sourceColumn("source");
+    query.prepare(QString::fromStdString("ALTER TABLE " + AttributeRecord::databaseTableName() + 
+                      " ADD COLUMN " + sourceColumn.valueName() + " " + sourceColumn.valueDescription()));
+    assertExec(query);
+    query.clear();
+
+    AttributeRecordColumns dataPointRecordIdColumn("dataPointRecordId");
+    query.prepare(QString::fromStdString("ALTER TABLE " + AttributeRecord::databaseTableName() + 
+                      " ADD COLUMN " + dataPointRecordIdColumn.valueName() + " " + 
+                      dataPointRecordIdColumn.valueDescription()));
+    assertExec(query);
+    query.clear();
+
     for (std::vector< std::pair<int,std::vector<Attribute> > >::const_iterator it = algorithmOptions.begin(),
          itEnd = algorithmOptions.end(); it != itEnd; ++it)
     {
       AlgorithmRecord algRec = AlgorithmRecord::getAlgorithmRecord(it->first,database).get();
-      BOOST_FOREACH(const Attribute& att, it->second) {
+      for (const Attribute& att : it->second) {
         AttributeRecord algOpt(att,algRec);
       }
     }
@@ -2368,7 +2379,7 @@ namespace detail {
 
       // Set all VagrantSettings to have terminationDelayEnabled==false and terminationDelay==0.
       query.prepare(QString::fromStdString("UPDATE " + CloudSettingsRecord::databaseTableName() +
-                                           " SET terminationDelayEnabled=:terminationDelayEnabled AND " +
+                                           " SET terminationDelayEnabled=:terminationDelayEnabled, " +
                                            "terminationDelay=:terminationDelay"));
       query.bindValue(":terminationDelayEnabled",false);
       query.bindValue(":terminationDelay",0);
@@ -2443,6 +2454,124 @@ namespace detail {
     // been created correctly by the 1.0.4 to 1.0.5 update method.
   }
 
+  void ProjectDatabase_Impl::update_1_4_0_to_1_4_1(const VersionString& startVersion) {
+
+    bool didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    ProjectDatabase database(this->shared_from_this());
+    QSqlQuery query(*(database.qSqlDatabase()));
+    bool test(false);
+
+    if (startVersion > VersionString("0.8.0")) {
+      // this change has not been made yet
+
+      // add source and dataPointRecordId columns to AttributeRecords
+      LOG(Info,"Adding columns to " << AttributeRecord::databaseTableName()
+          << " to record (data) source and have DataPoint parent directly (instead of via a FileReferenceRecord).");
+
+      AttributeRecordColumns sourceColumn("source");
+      query.prepare(QString::fromStdString("ALTER TABLE " + AttributeRecord::databaseTableName() + 
+                        " ADD COLUMN " + sourceColumn.valueName() + " " + sourceColumn.valueDescription()));
+      assertExec(query);
+      query.clear();
+
+      AttributeRecordColumns dataPointRecordIdColumn("dataPointRecordId");
+      query.prepare(QString::fromStdString("ALTER TABLE " + AttributeRecord::databaseTableName() + 
+                        " ADD COLUMN " + dataPointRecordIdColumn.valueName() + " " + 
+                        dataPointRecordIdColumn.valueDescription()));
+      assertExec(query);
+      query.clear();
+    
+      save();
+      test = this->commitTransaction();
+      OS_ASSERT(test);
+
+      didStartTransaction = startTransaction();
+      OS_ASSERT(didStartTransaction);
+    }
+
+    // set default value of source to ""
+    query.prepare(QString::fromStdString("UPDATE AttributeRecords SET source=:source"));
+    query.bindValue(":source",QString(""));
+    assertExec(query);
+    query.clear();
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test);
+
+    didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+    
+    // add index by dataPointRecordId
+    query.prepare(toQString("CREATE INDEX " + AttributeRecord::databaseTableName() + 
+                      "dataPointRecordIdIndex ON " + AttributeRecord::databaseTableName() + 
+                      " (dataPointRecordId)"));
+    assertExec(query);
+    query.clear();
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test);
+
+    didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    // for each FileReference that is of type XML and has a DataPoint as a parent
+    query.prepare(toQString("SELECT * FROM " + FileReferenceRecord::databaseTableName() +
+                            " WHERE parentDatabaseTableName=:parentDatabaseTableName AND " +
+                            "fileReferenceType=:fileReferenceType"));
+    query.bindValue(":parentDatabaseTableName",toQString(DataPointRecord::databaseTableName()));
+    query.bindValue(":fileReferenceType",int(FileReferenceType::XML));
+    assertExec(query);
+    std::vector<std::pair<int,int> > fileReferenceDataPointIdPairs;
+    while (query.next()) {
+      // save (fileReferenceRecordId, dataPointRecordId) pairs so can 
+      // 1. repoint child Attributes to the parent DataPoint
+      // 2. delete the fileReferenceRecord
+      int frrId = query.value(0).toInt();
+      int dprId = query.value(9).toInt();
+      fileReferenceDataPointIdPairs.push_back(std::pair<int,int>(frrId,dprId));
+    }
+    query.clear();
+
+    // repoint child Attributes to parent DataPoint
+    for (std::vector<std::pair<int,int> >::const_iterator it = fileReferenceDataPointIdPairs.begin(),
+         itEnd = fileReferenceDataPointIdPairs.end(); it != itEnd; ++it) 
+    {
+      query.prepare(toQString(
+          std::string("UPDATE AttributeRecords SET fileReferenceRecordId=NULL, ") + 
+          std::string("dataPointRecordId=:dataPointRecordId WHERE ") + 
+          std::string("fileReferenceRecordId=:fileReferenceRecordId")));
+      query.bindValue(":dataPointRecordId",it->second);
+      query.bindValue(":fileReferenceRecordId",it->first);
+      assertExec(query);
+      query.clear();
+    }
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test);
+
+    didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+    
+    // delete the fileReferenceRecords
+    for (std::vector<std::pair<int,int> >::const_iterator it = fileReferenceDataPointIdPairs.begin(),
+         itEnd = fileReferenceDataPointIdPairs.end(); it != itEnd; ++it) 
+    {
+      query.prepare(QString("DELETE FROM FileReferenceRecords WHERE id=:fileReferenceRecordId"));
+      query.bindValue(":fileReferenceRecordId",it->first);
+      assertExec(query);
+      query.clear();
+    }
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test);
+  }
+
   void ProjectDatabase_Impl::setProjectDatabaseRecord(const ProjectDatabaseRecord& projectDatabaseRecord)
   {
     m_projectDatabaseRecord = projectDatabaseRecord;
@@ -2452,7 +2581,7 @@ namespace detail {
 
 RemoveUndo::RemoveUndo(UUID handle, RemoveSource removeSource)
 {
-  m_removedObjects.push_back(std::make_pair<UUID, RemoveSource>(handle, removeSource));
+  m_removedObjects.push_back(std::make_pair(handle, removeSource));
 }
 
 void RemoveUndo::concat(const RemoveUndo& other)
@@ -2474,7 +2603,7 @@ std::vector<std::pair<UUID, RemoveUndo::RemoveSource> > RemoveUndo::removedObjec
 ProjectDatabase::ProjectDatabase(const openstudio::path& path,
                                  const openstudio::runmanager::RunManager& runManager,
                                  bool forceNew)
-  : m_impl(boost::shared_ptr<detail::ProjectDatabase_Impl>(
+  : m_impl(std::shared_ptr<detail::ProjectDatabase_Impl>(
                new detail::ProjectDatabase_Impl(completeAndNormalize(path),
                                                 runManager,
                                                 forceNew)))
@@ -2486,7 +2615,7 @@ ProjectDatabase::ProjectDatabase(const openstudio::path& path,
                                  bool forceNew,
                                  bool pauseRunManager,
                                  bool initializeRunManagerUI)
-  : m_impl(boost::shared_ptr<detail::ProjectDatabase_Impl>(
+  : m_impl(std::shared_ptr<detail::ProjectDatabase_Impl>(
                new detail::ProjectDatabase_Impl(
                    completeAndNormalize(path),
                    runmanager::RunManager(setFileExtension(path,"db",true,false),
@@ -2510,7 +2639,7 @@ void ProjectDatabase::initialize(const openstudio::path& path) {
   boost::optional<ProjectDatabaseRecord> projectDatabaseRecord;
   assertExec(query);
   if (query.first()) {
-    boost::shared_ptr<detail::ProjectDatabaseRecord_Impl> impl(new detail::ProjectDatabaseRecord_Impl(query, other));
+    std::shared_ptr<detail::ProjectDatabaseRecord_Impl> impl(new detail::ProjectDatabaseRecord_Impl(query, other));
     projectDatabaseRecord = ProjectDatabaseRecord(impl);
   }
   query.clear();
@@ -2539,7 +2668,7 @@ void ProjectDatabase::initialize(const openstudio::path& path) {
     }
   }
   else {
-    boost::shared_ptr<detail::ProjectDatabaseRecord_Impl> impl(new detail::ProjectDatabaseRecord_Impl(openStudioVersion(), runManager.dbPath(), other));
+    std::shared_ptr<detail::ProjectDatabaseRecord_Impl> impl(new detail::ProjectDatabaseRecord_Impl(openStudioVersion(), runManager.dbPath(), other));
     projectDatabaseRecord = ProjectDatabaseRecord(impl);
     m_impl->setProjectDatabaseRecord(*projectDatabaseRecord);
     m_impl->addCleanRecord(*projectDatabaseRecord);
@@ -2559,7 +2688,7 @@ ProjectDatabase::ProjectDatabase(const ProjectDatabase& other)
   OS_ASSERT(m_impl->qSqlDatabase()->isOpen());
 }
 
-ProjectDatabase::ProjectDatabase(boost::shared_ptr<detail::ProjectDatabase_Impl> impl)
+ProjectDatabase::ProjectDatabase(std::shared_ptr<detail::ProjectDatabase_Impl> impl)
   : m_impl(impl)
 {
   OS_ASSERT(m_impl);
@@ -2790,7 +2919,7 @@ bool ProjectDatabase::isRemovedRecord(const Record& record) const
   return m_impl->isRemovedRecord(record);
 }
 
-boost::shared_ptr<QSqlDatabase> ProjectDatabase::qSqlDatabase() const
+std::shared_ptr<QSqlDatabase> ProjectDatabase::qSqlDatabase() const
 {
   return m_impl->qSqlDatabase();
 }

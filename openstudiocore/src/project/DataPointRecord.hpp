@@ -20,8 +20,8 @@
 #ifndef PROJECT_DATAPOINTRECORD_HPP
 #define PROJECT_DATAPOINTRECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/ObjectRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "ObjectRecord.hpp"
 
 namespace openstudio {
 
@@ -172,14 +172,14 @@ class PROJECT_API DataPointRecord : public ObjectRecord {
 
   boost::optional<FileReferenceRecord> sqlOutputDataRecord() const;
 
-  /** Returns the FileReferenceRecords that point to this DataPointRecord's XML output data. */
+  /** \deprecated Will always return empty vector; call attributeRecords() instead. */
   std::vector<FileReferenceRecord> xmlOutputDataRecords() const;
 
   boost::optional<openstudio::UUID> topLevelJobUUID() const;
 
   std::vector<TagRecord> tagRecords() const;
 
-  /** Assembles all the AttributeRecords associated with xmlOutputDataRecords(). */
+  /** Returns this DataPointRecord's attributeRecords. */
   std::vector<AttributeRecord> attributeRecords() const;
 
   analysis::DataPoint dataPoint() const;
@@ -203,12 +203,12 @@ class PROJECT_API DataPointRecord : public ObjectRecord {
   friend class detail::DataPointRecord_Impl;
 
   /** Construct from impl. */
-  DataPointRecord(boost::shared_ptr<detail::DataPointRecord_Impl> impl,
+  DataPointRecord(std::shared_ptr<detail::DataPointRecord_Impl> impl,
                   ProjectDatabase database);
 
 
   /// Construct from impl. Does not register in the database, so use with caution.
-  explicit DataPointRecord(boost::shared_ptr<detail::DataPointRecord_Impl> impl);
+  explicit DataPointRecord(std::shared_ptr<detail::DataPointRecord_Impl> impl);
 
   /// @endcond
 
@@ -228,14 +228,6 @@ class PROJECT_API DataPointRecord : public ObjectRecord {
   boost::optional<FileReferenceRecord> saveChildFileReference(
       const boost::optional<FileReference>& childFileReference,
       boost::optional<FileReferenceRecord> oldFileReferenceRecord,
-      DataPointRecord& copyOfThis,
-      ProjectDatabase& database,
-      bool isNew);
-
-  std::vector<FileReferenceRecord> saveChildXmlFileReferences(
-      std::vector<FileReference> childFileReferences,
-      std::vector<FileReferenceRecord> oldFileReferenceRecords,
-      std::vector<Attribute> outputAttributes,
       DataPointRecord& copyOfThis,
       ProjectDatabase& database,
       bool isNew);

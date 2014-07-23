@@ -17,22 +17,20 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../ForwardTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeLimits_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/ScheduleCompact_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/ScheduleTypeLimits.hpp"
+#include "../../model/ScheduleTypeLimits_Impl.hpp"
+#include "../../model/ScheduleCompact.hpp"
+#include "../../model/ScheduleCompact_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/Schedule_Compact_FieldEnums.hxx>
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
-
-#include <boost/foreach.hpp>
 
 using namespace openstudio::model;
 
@@ -60,7 +58,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleCompact( Schedule
     }
   }
 
-  BOOST_FOREACH(const IdfExtensibleGroup& eg,modelObject.extensibleGroups()) {
+  for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
     scheduleCompact.pushExtensibleGroup(eg.fields());
   }
 

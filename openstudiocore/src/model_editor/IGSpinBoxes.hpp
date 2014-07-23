@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef IG_SPIN_BOXES_HPP
-#define IG_SPIN_BOXES_HPP
+#ifndef MODELEDITOR_IGSPINBOXES_HPP
+#define MODELEDITOR_IGSPINBOXES_HPP
 
-#include <model_editor/ModelEditorAPI.hpp>
-#include <model_editor/InspectorGadget.hpp>
+#include "ModelEditorAPI.hpp"
+#include "InspectorGadget.hpp"
 
 #include <QSpinBox>
 #include <QDoubleSpinBox>
@@ -71,4 +71,4 @@ class MODELEDITOR_API IGDSpinBox : public QDoubleSpinBox
 };
 
 
-#endif
+#endif // MODELEDITOR_IGSPINBOXES_HPP

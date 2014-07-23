@@ -20,8 +20,8 @@
 #ifndef MODEL_PUMPCONSTANTSPEED_HPP
 #define MODEL_PUMPCONSTANTSPEED_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 
@@ -177,7 +177,7 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
   /// @cond
   typedef detail::PumpConstantSpeed_Impl ImplType;
 
-  explicit PumpConstantSpeed(boost::shared_ptr<detail::PumpConstantSpeed_Impl> impl);
+  explicit PumpConstantSpeed(std::shared_ptr<detail::PumpConstantSpeed_Impl> impl);
 
   friend class detail::PumpConstantSpeed_Impl;
   friend class Model;

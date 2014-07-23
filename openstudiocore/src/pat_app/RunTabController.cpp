@@ -17,31 +17,31 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <pat_app/CloudMonitor.hpp>
-#include <pat_app/PatApp.hpp>
-#include <pat_app/RunTabController.hpp>
-#include <pat_app/RunView.hpp>
-#include <pat_app/PatMainWindow.hpp>
-#include <pat_app/PatVerticalTabWidget.hpp>
+#include "CloudMonitor.hpp"
+#include "PatApp.hpp"
+#include "RunTabController.hpp"
+#include "RunView.hpp"
+#include "PatMainWindow.hpp"
+#include "PatVerticalTabWidget.hpp"
 
-#include <analysis/DataPoint_Impl.hpp>
-#include <analysis/Measure.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/NullMeasure_Impl.hpp>
+#include "../analysis/DataPoint_Impl.hpp"
+#include "../analysis/Measure.hpp"
+#include "../analysis/NullMeasure.hpp"
+#include "../analysis/NullMeasure_Impl.hpp"
 
-#include <analysisdriver/AnalysisDriver.hpp>
-#include <analysisdriver/AnalysisRunOptions.hpp>
-#include <analysisdriver/CurrentAnalysis.hpp>
-#include <analysisdriver/CloudAnalysisDriver.hpp>
-#include <analysisdriver/SimpleProject_Impl.hpp>
-#include <analysisdriver/SimpleProject.hpp>
+#include "../analysisdriver/AnalysisDriver.hpp"
+#include "../analysisdriver/AnalysisRunOptions.hpp"
+#include "../analysisdriver/CurrentAnalysis.hpp"
+#include "../analysisdriver/CloudAnalysisDriver.hpp"
+#include "../analysisdriver/SimpleProject_Impl.hpp"
+#include "../analysisdriver/SimpleProject.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Job.hpp>
+#include "../runmanager/lib/RunManager.hpp"
+#include "../runmanager/lib/Job.hpp"
 
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Path.hpp>
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Path.hpp"
 
 #include "../shared_gui_components/Buttons.hpp"
 #include "../shared_gui_components/WorkflowTools.hpp"
@@ -213,7 +213,7 @@ void RunTabController::showRadianceWarningsAndErrors(const std::vector<std::stri
   
   if(warnings.size()){
     errorsAndWarnings += "WARNINGS:\n";
-    BOOST_FOREACH(std::string warning, warnings){
+    for (std::string warning : warnings){
       text = warning.c_str();
       errorsAndWarnings += text;
       errorsAndWarnings += '\n';
@@ -223,7 +223,7 @@ void RunTabController::showRadianceWarningsAndErrors(const std::vector<std::stri
 
   if(errors.size()){
     errorsAndWarnings += "ERRORS:\n";
-    BOOST_FOREACH(std::string error, errors){
+    for (std::string error : errors){
       text = error.c_str();
       errorsAndWarnings += text;
       errorsAndWarnings += '\n';
@@ -382,7 +382,7 @@ void RunTabController::onPlayButtonClicked()
           // does the user want to select all?
           QMessageBox::StandardButton test = QMessageBox::question(runView, "Select All", "No simulations are selected to run, do you want to select all?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
           if (test == QMessageBox::Yes){
-            BOOST_FOREACH(analysis::DataPoint dataPoint, analysis.dataPoints()){
+            for (analysis::DataPoint dataPoint : analysis.dataPoints()){
               dataPoint.setSelected(true);
             }
             project->save();
@@ -615,7 +615,7 @@ QWidget * DataPointRunItemDelegate::view(QSharedPointer<OSListItem> dataSource)
   openstudio::analysis::DataPoint dataPoint = dataPointRunListItem->dataPoint();
 
   // connect signals to DataPointRunItemView 
-  DataPointRunItemView* result = new DataPointRunItemView(dataPoint);
+  auto result = new DataPointRunItemView(dataPoint);
   bool test = connect(dataPoint.getImpl<openstudio::analysis::detail::DataPoint_Impl>().get(), SIGNAL(changed(ChangeType)),
                       result, SLOT(checkForUpdate()));
   OS_ASSERT(test);
@@ -693,7 +693,7 @@ QWidget * DataPointJobItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
   analysis::WorkflowStepJob workflowStepJob = dataPointJobItem->workflowStepJob();
 
-  DataPointJobItemView* result = new DataPointJobItemView(workflowStepJob);
+  auto result = new DataPointJobItemView(workflowStepJob);
 
   OS_ASSERT(workflowStepJob.job);
   bool test = workflowStepJob.job->connect(SIGNAL(statusChanged(const openstudio::runmanager::AdvancedStatus&)), result, SLOT(requestUpdate()));

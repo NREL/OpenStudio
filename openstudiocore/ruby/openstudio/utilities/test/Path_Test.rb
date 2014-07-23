@@ -21,14 +21,14 @@ require 'openstudio'
 
 require 'pathname'
 
-require 'test/unit'
+require 'minitest/autorun'
 
 def changeTestPath(p)
   p  = OpenStudio::Path.new("./there")
   return p
 end
 
-class Path_Test < Test::Unit::TestCase
+class Path_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end
@@ -65,17 +65,17 @@ class Path_Test < Test::Unit::TestCase
       assert_equal(pn.class, Pathname)
       #q = function.call(pn)
       #assert_equal(p.to_s, q.to_s)
-      assert_raise TypeError do
+      assert_raises TypeError do
         function.call(pn)
       end
       
       # expected failure, pass double
-      assert_raise TypeError do
+      assert_raises TypeError do
         function.call(7)
       end
       
       # expected failure, pass nil
-      assert_raise ArgumentError do
+      assert_raises ArgumentError do
         function.call(nil)
       end
       
@@ -116,35 +116,35 @@ class Path_Test < Test::Unit::TestCase
       assert_equal(pn.class, Pathname)
       #q = function.call(pn)
       #assert_equal(p.to_s, q.to_s)
-      assert_raise ArgumentError do
+      assert_raises ArgumentError do
         function.call(pn)
       end
-      assert_raise ArgumentError do
+      assert_raises ArgumentError do
         function.call(pn, true)
       end
-      assert_raise ArgumentError do
+      assert_raises ArgumentError do
         function.call(pn, false)
       end
       
       # expected failure, pass double
-      assert_raise ArgumentError do
+      assert_raises ArgumentError do
         function.call(7)
       end
-      assert_raise ArgumentError do
+      assert_raises ArgumentError do
         function.call(7, true)
       end
-      assert_raise ArgumentError do
+      assert_raises ArgumentError do
         function.call(7, false)
       end
       
       # expected failure, pass nil
-      assert_raise ArgumentError do
+      assert_raises ArgumentError do
         function.call(nil)
       end
-      assert_raise ArgumentError do
+      assert_raises ArgumentError do
         function.call(nil, true)
       end
-      assert_raise ArgumentError do
+      assert_raises ArgumentError do
         function.call(nil, false)
       end
     end

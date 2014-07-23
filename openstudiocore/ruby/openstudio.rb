@@ -23,6 +23,15 @@ else
   require 'pathname'
 end
 
+if RUBY_PLATFORM =~ /darwin/
+  mac_version = `/usr/bin/sw_vers -productVersion | tr -d "\n"`.split('.')
+  if mac_version[0].to_i <= 10
+    if mac_version[1].to_i < 8
+      raise LoadError, "OpenStudio is only compatible with OS 10.8 and later"
+    end
+  end
+end
+
 # follow symlinks so that we find the original path to the so's 
 $OpenStudio_Dir = "#{File.expand_path(File.dirname(Pathname.new(__FILE__).realpath()))}/"
 if not $:.include?($OpenStudio_Dir)
@@ -40,12 +49,17 @@ if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
   # Pre-load our specific Qt Dll's on Windows to make sure we control which get loaded
   require 'Win32API'
   library = Win32API.new('kernel32','LoadLibrary', 'P', 'L')  
-  library.call("#{$OpenStudio_Dir}openstudio/QtCore4.dll")
-  library.call("#{$OpenStudio_Dir}openstudio/QtGui4.dll")
-  library.call("#{$OpenStudio_Dir}openstudio/QtNetwork4.dll")
-  library.call("#{$OpenStudio_Dir}openstudio/QtSql4.dll")
-  library.call("#{$OpenStudio_Dir}openstudio/QtXml4.dll")
-  library.call("#{$OpenStudio_Dir}openstudio/QtXmlPatterns4.dll")
+  library.call("#{$OpenStudio_Dir}openstudio/icudt51.dll")
+  library.call("#{$OpenStudio_Dir}openstudio/icuin51.dll")
+  library.call("#{$OpenStudio_Dir}openstudio/icuuc51.dll")
+  library.call("#{$OpenStudio_Dir}openstudio/libEGL.dll")
+  library.call("#{$OpenStudio_Dir}openstudio/libGLESv2.dll")
+  library.call("#{$OpenStudio_Dir}openstudio/Qt5Core.dll")
+  library.call("#{$OpenStudio_Dir}openstudio/Qt5Gui.dll")
+  library.call("#{$OpenStudio_Dir}openstudio/Qt5Network.dll")
+  library.call("#{$OpenStudio_Dir}openstudio/Qt5Sql.dll")
+  library.call("#{$OpenStudio_Dir}openstudio/Qt5Widgets.dll")
+  library.call("#{$OpenStudio_Dir}openstudio/Qt5Xml.dll")
   library.call("#{$OpenStudio_Dir}openstudio/qtwinmigrate.dll")
 else
   # Do something here for Mac OSX environments
@@ -63,7 +77,6 @@ require 'openstudioutilitiessql'
 require 'openstudioutilitiesbcl'
 require 'openstudioutilitiescloud'
 require 'openstudioutilitiesunits'
-require 'openstudioutilitiesdocument'
 require 'openstudioutilitiesidd'
 require 'openstudioutilitiesidf'
 require 'openstudioutilitiesfiletypes'

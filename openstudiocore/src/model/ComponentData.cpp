@@ -17,18 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ComponentData.hpp>
-#include <model/ComponentData_Impl.hpp>
+#include "ComponentData.hpp"
+#include "ComponentData_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/ModelExtensibleGroup.hpp>
+#include "Model.hpp"
+#include "ModelExtensibleGroup.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/OS_ComponentData_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <time.h>
 
@@ -128,7 +126,7 @@ namespace detail {
   UUID ComponentData_Impl::createVersionUUID() {
     bool ok = setString(OS_ComponentDataFields::VersionUUID,toString(createUUID()));
     OS_ASSERT(ok);
-    ok = setInt(OS_ComponentDataFields::VersionTimestamp,time(NULL));
+    ok = setInt(OS_ComponentDataFields::VersionTimestamp,time(nullptr));
     OS_ASSERT(ok);
     return versionUUID();
   }
@@ -202,11 +200,11 @@ ComponentData::ComponentData(const Model& model)
 {
   OS_ASSERT(getImpl<detail::ComponentData_Impl>());
   setString(OS_ComponentDataFields::UUID,toString(createUUID()));
-  setInt(OS_ComponentDataFields::CreationTimestamp,time(NULL));
+  setInt(OS_ComponentDataFields::CreationTimestamp,time(nullptr));
   createVersionUUID();
 }
 
-ComponentData::ComponentData(boost::shared_ptr<detail::ComponentData_Impl> impl)
+ComponentData::ComponentData(std::shared_ptr<detail::ComponentData_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

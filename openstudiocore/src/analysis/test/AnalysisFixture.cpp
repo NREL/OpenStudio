@@ -17,33 +17,32 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/test/AnalysisFixture.hpp>
+#include "AnalysisFixture.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/LinearFunction.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/NormalDistribution.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/OutputAttributeVariable.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/RubyContinuousVariable_Impl.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
-#include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/TriangularDistribution.hpp>
+#include "../Analysis.hpp"
+#include "../DataPoint.hpp"
+#include "../LinearFunction.hpp"
+#include "../MeasureGroup.hpp"
+#include "../MeasureGroup_Impl.hpp"
+#include "../NormalDistribution.hpp"
+#include "../NullMeasure.hpp"
+#include "../OutputAttributeVariable.hpp"
+#include "../Problem.hpp"
+#include "../RubyContinuousVariable.hpp"
+#include "../RubyContinuousVariable_Impl.hpp"
+#include "../RubyMeasure.hpp"
+#include "../RubyMeasure_Impl.hpp"
+#include "../TriangularDistribution.hpp"
 
-#include <runmanager/lib/JobFactory.hpp>
-#include <runmanager/lib/WorkItem.hpp>
+#include "../../runmanager/lib/JobFactory.hpp"
+#include "../../runmanager/lib/WorkItem.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../../ruleset/OSArgument.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/data/Tag.hpp>
-#include <utilities/units/QuantityFactory.hpp>
+#include "../../utilities/bcl/BCLMeasure.hpp"
+#include "../../utilities/core/Containers.hpp"
+#include "../../utilities/data/Tag.hpp"
+#include "../../utilities/units/QuantityFactory.hpp"
 
 #include <resources.hxx>
 #include <OpenStudio.hxx>
@@ -424,7 +423,6 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
                         FileReference(toPath("myProject/fakeDataPoint/71-Ruby-0/out.osm")),
                         FileReference(toPath("myProject/fakeDataPoint/72-ModelToIdf-0/out.idf")),
                         FileReference(toPath("myProject/fakeDataPoint/74-EnergyPlus-0/eplusout.sql")),
-                        FileReferenceVector(1u,FileReference(toPath("myProject/fakeDataPoint/75-OpenStudioPostProcess-0/report.xml"))),
                         job,
                         std::vector<openstudio::path>(),
                         tags,

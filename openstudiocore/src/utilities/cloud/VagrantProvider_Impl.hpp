@@ -20,15 +20,14 @@
 #ifndef UTILITIES_CLOUD_VAGRANTPROVIDER_IMPL_HPP
 #define UTILITIES_CLOUD_VAGRANTPROVIDER_IMPL_HPP
 
-#include <utilities/cloud/CloudProvider.hpp>
-#include <utilities/cloud/CloudProvider_Impl.hpp>
-#include <utilities/cloud/VagrantProvider.hpp>
+#include "CloudProvider.hpp"
+#include "CloudProvider_Impl.hpp"
+#include "VagrantProvider.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Url.hpp>
+#include "../core/Path.hpp"
+#include "../core/Url.hpp"
 
 #include <QProcess>
-#include <boost/function.hpp>
 
 class QStringList;
 class QString;
@@ -324,7 +323,7 @@ namespace detail{
 
   private:
 
-    bool waitForFinished(int msec, const boost::function<bool ()>& f);
+    bool waitForFinished(int msec, const std::function<bool ()>& f);
     bool requestInternetAvailableRequestFinished() const;
     bool requestServiceAvailableFinished() const;
     bool requestValidateCredentialsFinished() const;
@@ -357,7 +356,7 @@ namespace detail{
     VagrantSettings m_vagrantSettings;
     VagrantSession m_vagrantSession;
 
-    boost::shared_ptr<QNetworkAccessManager> m_networkAccessManager;
+    std::shared_ptr<QNetworkAccessManager> m_networkAccessManager;
     QNetworkReply* m_networkReply;
 
     QProcess* m_checkServiceProcess;

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2012, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,26 +17,26 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <pat_app/PatApp.hpp>
+#include "PatApp.hpp"
 
 #include <pat_app/AboutBox.hpp>
-#include <pat_app/CloudMonitor.hpp>
-#include <pat_app/DesignAlternativesTabController.hpp>
-#include <pat_app/DesignAlternativesView.hpp>
-#include <pat_app/ExportXML.hpp>
-#include <pat_app/ExportSpreadsheet.hpp>
-#include <pat_app/HorizontalTabWidget.hpp>
-#include <pat_app/MainRightColumnController.hpp>
-#include <pat_app/MeasuresTabController.hpp>
-#include <pat_app/MeasuresView.hpp>
-#include <pat_app/PatMainMenu.hpp>
-#include <pat_app/PatMainWindow.hpp>
-#include <pat_app/PatVerticalTabWidget.hpp>
-#include <pat_app/ResultsTabController.hpp>
-#include <pat_app/ResultsView.hpp>
-#include <pat_app/RunTabController.hpp>
-#include <pat_app/RunView.hpp>
-#include <pat_app/StartupView.hpp>
+#include "CloudMonitor.hpp"
+#include "DesignAlternativesTabController.hpp"
+#include "DesignAlternativesView.hpp"
+#include "ExportXML.hpp"
+#include "ExportSpreadsheet.hpp"
+#include "HorizontalTabWidget.hpp"
+#include "MainRightColumnController.hpp"
+#include "MeasuresTabController.hpp"
+#include "MeasuresView.hpp"
+#include "PatMainMenu.hpp"
+#include "PatMainWindow.hpp"
+#include "PatVerticalTabWidget.hpp"
+#include "ResultsTabController.hpp"
+#include "ResultsView.hpp"
+#include "RunTabController.hpp"
+#include "RunView.hpp"
+#include "StartupView.hpp"
 #include <pat_app/VagrantConfiguration.hxx>
 
 #include "../shared_gui_components/BCLMeasureDialog.hpp"
@@ -48,36 +48,36 @@
 #include "../shared_gui_components/ProcessEventsProgressBar.hpp"
 #include "../shared_gui_components/WorkflowTools.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/AnalysisObject.hpp>
-#include <analysis/AnalysisObject_Impl.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
-#include <analysisdriver/CurrentAnalysis.hpp>
-#include <analysisdriver/SimpleProject_Impl.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/AnalysisObject.hpp"
+#include "../analysis/AnalysisObject_Impl.hpp"
+#include "../analysis/MeasureGroup.hpp"
+#include "../analysis/MeasureGroup_Impl.hpp"
+#include "../analysis/RubyMeasure.hpp"
+#include "../analysis/RubyMeasure_Impl.hpp"
+#include "../analysisdriver/CurrentAnalysis.hpp"
+#include "../analysisdriver/SimpleProject_Impl.hpp"
 
-#include <project/ProjectDatabase.hpp>
+#include "../project/ProjectDatabase.hpp"
 
-#include <runmanager/lib/RubyJobUtils.hpp>
-#include <runmanager/lib/RunManager.hpp>
+#include "../runmanager/lib/RubyJobUtils.hpp"
+#include "../runmanager/lib/RunManager.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/bcl/LocalBCL.hpp>
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/cloud/AWSProvider_Impl.hpp>
-#include <utilities/cloud/CloudProvider.hpp>
-#include <utilities/cloud/CloudProvider_Impl.hpp>
-#include <utilities/cloud/VagrantProvider.hpp>
-#include <utilities/cloud/VagrantProvider_Impl.hpp>
-#include <utilities/core/Application.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/System.hpp>
-#include <utilities/core/ZipFile.hpp>
-#include <utilities/idf/IdfFile.hpp>
+#include "../utilities/bcl/BCLMeasure.hpp"
+#include "../utilities/bcl/LocalBCL.hpp"
+#include "../utilities/cloud/AWSProvider.hpp"
+#include "../utilities/cloud/AWSProvider_Impl.hpp"
+#include "../utilities/cloud/CloudProvider.hpp"
+#include "../utilities/cloud/CloudProvider_Impl.hpp"
+#include "../utilities/cloud/VagrantProvider.hpp"
+#include "../utilities/cloud/VagrantProvider_Impl.hpp"
+#include "../utilities/core/Application.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/core/System.hpp"
+#include "../utilities/core/ZipFile.hpp"
+#include "../utilities/idf/IdfFile.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -108,8 +108,8 @@ namespace pat {
 
 PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUserScriptArgumentGetter> &t_argumentGetter )
   : QApplication(argc, argv),
-    m_onlineBclDialog(0),
-    m_cloudDialog(0),
+    m_onlineBclDialog(nullptr),
+    m_cloudDialog(nullptr),
     m_measureManager(t_argumentGetter, this)
 {
   bool isConnected = connect(this,SIGNAL(userMeasuresDirChanged()),&m_measureManager,SLOT(updateMeasuresLists()));
@@ -465,10 +465,11 @@ void PatApp::open()
 
   QString fileName = QFileDialog::getOpenFileName( mainWindow,
                                                    tr("Open Project"),
-                                                   QDir::homePath(),
+                                                   mainWindow->lastPath(),
                                                    tr("(project.osp)") );
   if (!fileName.length()) return;
 
+  mainWindow->setLastPath(QFileInfo(fileName).path());
   userInteractiveOpenProject(fileName);
 }
 
@@ -522,7 +523,7 @@ void PatApp::create()
     if(result == QMessageBox::Cancel) return;
   }
 
-  NewProjectDialog * dialog = new NewProjectDialog();
+  auto dialog = new NewProjectDialog();
 
   QString projectName;
   if(dialog->exec()){
@@ -729,7 +730,7 @@ bool PatApp::setSeed(const FileReference& currentSeedLocation) {
     // setting the seed model may take a long time due to version and energyplus translation
     // this progress bar will ensure process events is called to avoid locking up the app
     // we will disable the app until the processing is complete
-    ProcessEventsProgressBar* processEventsProgressBar = new ProcessEventsProgressBar();
+    auto processEventsProgressBar = new ProcessEventsProgressBar();
     mainWindow->setEnabled(false);
 
     // get original number of variables
@@ -758,7 +759,7 @@ bool PatApp::setSeed(const FileReference& currentSeedLocation) {
       m_project->seedIdf(processEventsProgressBar);
       
       // update any duplicate measures of different versions
-      Q_FOREACH(const BCLMeasure& measure, result.second) {
+      for (const BCLMeasure& measure : result.second) {
         measureManager().updateMeasure(*m_project,measure);
       }
 
@@ -910,7 +911,7 @@ bool PatApp::userInteractiveSaveAsProject()
     m_project->stop();
   }
 
-  NewProjectDialog * dialog = new NewProjectDialog();
+  auto dialog = new NewProjectDialog();
 
   QString projectName;
   if(dialog->exec()){
@@ -1326,7 +1327,7 @@ bool PatApp::openFile(const QString& fileName)
         QTimer::singleShot(0, this, SLOT(markAsUnmodified()));
       }
 
-      openstudio::path osmForThisOsp = project->projectDir().parent_path() / toPath(project->projectDir().stem());
+      openstudio::path osmForThisOsp = project->projectDir().parent_path() / project->projectDir().stem();
       osmForThisOsp = setFileExtension(osmForThisOsp,"osm");
       if (boost::filesystem::exists(osmForThisOsp)) {
         QMessageBox::warning(mainWindow,
@@ -1338,10 +1339,10 @@ bool PatApp::openFile(const QString& fileName)
 
       // check that all Ruby scripts exist, duplicates code in OSDocument::OSDocument
       std::stringstream ss;
-      BOOST_FOREACH(const analysis::InputVariable& inputVariable, project->analysis().problem().variables()){
+      for (const analysis::InputVariable& inputVariable : project->analysis().problem().variables()){
         boost::optional<analysis::MeasureGroup> measureGroup = inputVariable.optionalCast<analysis::MeasureGroup>();
         if (measureGroup){
-          BOOST_FOREACH(const analysis::Measure& measure, measureGroup->measures(false)){
+          for (const analysis::Measure& measure : measureGroup->measures(false)){
             boost::optional<analysis::RubyMeasure> rubyMeasure = measure.optionalCast<analysis::RubyMeasure>();
             if (rubyMeasure){
               boost::optional<BCLMeasure> bclMeasure = rubyMeasure->bclMeasure();
@@ -1394,7 +1395,7 @@ void PatApp::attachProject(boost::optional<analysisdriver::SimpleProject> projec
     analysis.disconnect();
 
     // detach all signals from project
-    disconnect(m_project->getImpl().get(), 0, this, 0);
+    disconnect(m_project->getImpl().get(), nullptr, this, nullptr);
   }
 
   // set this project as current project
@@ -1795,13 +1796,13 @@ NewProjectDialog::NewProjectDialog(QWidget * parent)
 
   setOkButtonAsDefault(true);
 
-  QLabel * label = NULL;
+  QLabel * label = nullptr;
 
   label = new QLabel("Enter New Project Name",this);
   label->setObjectName("H1");
   upperLayout()->addWidget(label);
 
-  QVBoxLayout * vertLayout = new QVBoxLayout();
+  auto vertLayout = new QVBoxLayout();
   vertLayout->setContentsMargins(20,10,10,10);
   vertLayout->setSpacing(20);
   upperLayout()->addLayout(vertLayout);

@@ -19,26 +19,24 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/SpaceType.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/Lights.hpp>
-#include <model/Lights_Impl.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/LightsDefinition_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/LifeCycleCost.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../Model_Impl.hpp"
+#include "../Space.hpp"
+#include "../SpaceType.hpp"
+#include "../ThermalZone.hpp"
+#include "../Lights.hpp"
+#include "../Lights_Impl.hpp"
+#include "../LightsDefinition.hpp"
+#include "../LightsDefinition_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
+#include "../LifeCycleCost.hpp"
+#include "../Building.hpp"
+#include "../Building_Impl.hpp"
 
-#include <utilities/geometry/Point3d.hpp>
+#include "../../utilities/geometry/Point3d.hpp"
 
 #include <utilities/idd/OS_Lights_Definition_FieldEnums.hxx>
-
-#include <boost/foreach.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -218,7 +216,7 @@ TEST_F(ModelFixture, Lights_ExampleModel)
   std::vector<Lights> lights = model.getModelObjects<Lights>();
   EXPECT_FALSE(lights.empty());
 
-  BOOST_FOREACH(Lights light, lights){
+  for (Lights light : lights){
     EXPECT_TRUE(light.schedule());
   } 
 

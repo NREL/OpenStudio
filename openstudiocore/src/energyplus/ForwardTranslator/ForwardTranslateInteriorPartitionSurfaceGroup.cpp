@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../ForwardTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/InteriorPartitionSurfaceGroup.hpp>
-#include <model/InteriorPartitionSurfaceGroup_Impl.hpp>
-#include <model/InteriorPartitionSurface.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/InteriorPartitionSurfaceGroup.hpp"
+#include "../../model/InteriorPartitionSurfaceGroup_Impl.hpp"
+#include "../../model/InteriorPartitionSurface.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -39,7 +39,7 @@ boost::optional<IdfObject> ForwardTranslator::translateInteriorPartitionSurfaceG
 {
   InteriorPartitionSurfaceVector interiorPartitionSurfaces = modelObject.interiorPartitionSurfaces();
   std::sort(interiorPartitionSurfaces.begin(), interiorPartitionSurfaces.end(), WorkspaceObjectNameLess());
-  BOOST_FOREACH(InteriorPartitionSurface& interiorPartitionSurface, interiorPartitionSurfaces){
+  for (InteriorPartitionSurface& interiorPartitionSurface : interiorPartitionSurfaces){
     translateAndMapModelObject(interiorPartitionSurface);
   }
 

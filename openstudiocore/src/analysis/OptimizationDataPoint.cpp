@@ -17,17 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/OptimizationDataPoint.hpp>
-#include <analysis/OptimizationDataPoint_Impl.hpp>
+#include "OptimizationDataPoint.hpp"
+#include "OptimizationDataPoint_Impl.hpp"
 
-#include <analysis/OptimizationProblem.hpp>
-#include <analysis/OptimizationProblem_Impl.hpp>
+#include "OptimizationProblem.hpp"
+#include "OptimizationProblem_Impl.hpp"
 
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Json.hpp>
-
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/Json.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -58,7 +55,6 @@ namespace detail {
       const boost::optional<FileReference>& osmInputData,
       const boost::optional<FileReference>& idfInputData,
       const boost::optional<FileReference>& sqlOutputData,
-      const std::vector<FileReference>& xmlOutputData,
       const boost::optional<runmanager::Job>& topLevelJob,
       const std::vector<openstudio::path>& dakotaParametersFiles,
       const std::vector<Tag>& tags,
@@ -79,7 +75,6 @@ namespace detail {
                      osmInputData,
                      idfInputData,
                      sqlOutputData,
-                     xmlOutputData,
                      topLevelJob,
                      dakotaParametersFiles,
                      tags,
@@ -106,7 +101,6 @@ namespace detail {
       const boost::optional<FileReference>& osmInputData,
       const boost::optional<FileReference>& idfInputData,
       const boost::optional<FileReference>& sqlOutputData,
-      const std::vector<FileReference>& xmlOutputData,
       const boost::optional<runmanager::Job>& topLevelJob,
       const std::vector<openstudio::path>& dakotaParametersFiles,
       const std::vector<Tag>& tags,
@@ -128,7 +122,6 @@ namespace detail {
                      osmInputData,
                      idfInputData,
                      sqlOutputData,
-                     xmlOutputData,
                      topLevelJob,
                      dakotaParametersFiles,
                      tags,
@@ -142,7 +135,7 @@ namespace detail {
   {}
 
   AnalysisObject OptimizationDataPoint_Impl::clone() const {
-    boost::shared_ptr<OptimizationDataPoint_Impl> impl(new OptimizationDataPoint_Impl(*this));
+    std::shared_ptr<OptimizationDataPoint_Impl> impl(new OptimizationDataPoint_Impl(*this));
     return OptimizationDataPoint(impl);
   }
 
@@ -192,7 +185,7 @@ namespace detail {
     if (!objectiveValues().empty()) {
       QVariantList objectiveValuesList;
       int index(0);
-      Q_FOREACH(double value,objectiveValues()) {
+      for (double value : objectiveValues()) {
         QVariantMap objectiveMap;
         objectiveMap["objective_value_index"] = QVariant(index);
         objectiveMap["value"] = QVariant(value);
@@ -215,7 +208,7 @@ namespace detail {
           map["objective_values"].toList(),
           "value",
           "objective_value_index",
-          boost::function<double (QVariant*)>(boost::bind(&QVariant::toDouble,_1,&ok)));
+          std::function<double (QVariant*)>(std::bind(&QVariant::toDouble,std::placeholders::_1,&ok)));
 
     return OptimizationDataPoint(slice.uuid(),
                                  slice.versionUUID(),
@@ -235,7 +228,6 @@ namespace detail {
                                  slice.osmInputData(),
                                  slice.idfInputData(),
                                  slice.sqlOutputData(),
-                                 slice.xmlOutputData(),
                                  slice.topLevelJob(),
                                  slice.dakotaParametersFiles(),
                                  slice.tags(),
@@ -246,7 +238,7 @@ namespace detail {
 
 OptimizationDataPoint::OptimizationDataPoint(const OptimizationProblem& optimizationProblem,
                                              const std::vector<QVariant>& variableValues)
-  : DataPoint(boost::shared_ptr<detail::OptimizationDataPoint_Impl>(
+  : DataPoint(std::shared_ptr<detail::OptimizationDataPoint_Impl>(
                   new detail::OptimizationDataPoint_Impl(optimizationProblem,variableValues)))
 {}
 
@@ -267,12 +259,11 @@ OptimizationDataPoint::OptimizationDataPoint(const UUID& uuid,
                                              const boost::optional<FileReference>& osmInputData,
                                              const boost::optional<FileReference>& idfInputData,
                                              const boost::optional<FileReference>& sqlOutputData,
-                                             const std::vector<FileReference>& xmlOutputData,
                                              const boost::optional<runmanager::Job>& topLevelJob,
                                              const std::vector<openstudio::path>& dakotaParametersFiles,
                                              const std::vector<Tag>& tags,
                                              const std::vector<Attribute>& outputAttributes)
-  : DataPoint(boost::shared_ptr<detail::OptimizationDataPoint_Impl>(
+  : DataPoint(std::shared_ptr<detail::OptimizationDataPoint_Impl>(
                   new detail::OptimizationDataPoint_Impl(uuid,
                                                          versionUUID,
                                                          name,
@@ -290,7 +281,6 @@ OptimizationDataPoint::OptimizationDataPoint(const UUID& uuid,
                                                          osmInputData,
                                                          idfInputData,
                                                          sqlOutputData,
-                                                         xmlOutputData,
                                                          topLevelJob,
                                                          dakotaParametersFiles,
                                                          tags,
@@ -315,12 +305,11 @@ OptimizationDataPoint::OptimizationDataPoint(const UUID& uuid,
                                              const boost::optional<FileReference>& osmInputData,
                                              const boost::optional<FileReference>& idfInputData,
                                              const boost::optional<FileReference>& sqlOutputData,
-                                             const std::vector<FileReference>& xmlOutputData,
                                              const boost::optional<runmanager::Job>& topLevelJob,
                                              const std::vector<openstudio::path>& dakotaParametersFiles,
                                              const std::vector<Tag>& tags,
                                              const std::vector<Attribute>& outputAttributes)
-  : DataPoint(boost::shared_ptr<detail::OptimizationDataPoint_Impl>(
+  : DataPoint(std::shared_ptr<detail::OptimizationDataPoint_Impl>(
                   new detail::OptimizationDataPoint_Impl(uuid,
                                                          versionUUID,
                                                          name,
@@ -339,7 +328,6 @@ OptimizationDataPoint::OptimizationDataPoint(const UUID& uuid,
                                                          osmInputData,
                                                          idfInputData,
                                                          sqlOutputData,
-                                                         xmlOutputData,
                                                          topLevelJob,
                                                          dakotaParametersFiles,
                                                          tags,
@@ -355,7 +343,7 @@ std::vector<double> OptimizationDataPoint::objectiveValues() const {
 }
 
 /// @cond
-OptimizationDataPoint::OptimizationDataPoint(boost::shared_ptr<detail::OptimizationDataPoint_Impl> impl)
+OptimizationDataPoint::OptimizationDataPoint(std::shared_ptr<detail::OptimizationDataPoint_Impl> impl)
   : DataPoint(impl)
 {}
 /// @endcond

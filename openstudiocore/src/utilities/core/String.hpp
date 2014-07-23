@@ -20,7 +20,7 @@
 #ifndef UTILITIES_CORE_STRING_HPP
 #define UTILITIES_CORE_STRING_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
 #include <string>
 #include <vector>

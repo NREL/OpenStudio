@@ -17,21 +17,20 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/sql/SqlFile_Impl.hpp>
-#include <utilities/sql/SqlFileTimeSeriesQuery.hpp>
+#include "SqlFile_Impl.hpp"
+#include "SqlFileTimeSeriesQuery.hpp"
 
-#include <utilities/core/String.hpp>
-#include <utilities/time/Calendar.hpp>
-#include <utilities/filetypes/EpwFile.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/time/DateTime.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../core/String.hpp"
+#include "../time/Calendar.hpp"
+#include "../filetypes/EpwFile.hpp"
+#include "../core/Containers.hpp"
+#include "../core/Optional.hpp"
+#include "../time/DateTime.hpp"
+#include "../core/Assert.hpp"
 
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>
-#include <boost/foreach.hpp>
 
 using boost::multi_index_container;
 using boost::multi_index::indexed_by;
@@ -70,7 +69,7 @@ namespace openstudio{
         initschema = true;
       }
 
-      sqlite3_open_v2(fileName.c_str(), &m_db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_EXCLUSIVE, NULL);
+      sqlite3_open_v2(fileName.c_str(), &m_db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_EXCLUSIVE, nullptr);
 
       if (initschema)
       {
@@ -211,14 +210,14 @@ namespace openstudio{
       bool m_transaction;
 
       PreparedStatement(const std::string &t_stmt, sqlite3 *t_db, bool t_transaction = false)
-        : m_db(t_db), m_statement(0), m_transaction(t_transaction)
+        : m_db(t_db), m_statement(nullptr), m_transaction(t_transaction)
       {
         if (m_transaction)
         {
-          sqlite3_exec(m_db, "BEGIN", 0, 0, 0);
+          sqlite3_exec(m_db, "BEGIN", nullptr, nullptr, nullptr);
         }
 
-        sqlite3_prepare_v2(m_db, t_stmt.c_str(), t_stmt.size(), &m_statement, 0);
+        sqlite3_prepare_v2(m_db, t_stmt.c_str(), t_stmt.size(), &m_statement, nullptr);
 
         if (!m_statement)
         {
@@ -236,7 +235,7 @@ namespace openstudio{
 
         if (m_transaction)
         {
-          sqlite3_exec(m_db, "COMMIT", 0, 0, 0);
+          sqlite3_exec(m_db, "COMMIT", nullptr, nullptr, nullptr);
         }
       }
 
@@ -340,8 +339,8 @@ namespace openstudio{
 
     void SqlFile_Impl::execAndThrowOnError(const std::string &t_stmt)
     {
-      char *err = 0;
-      if (sqlite3_exec(m_db, t_stmt.c_str(), 0, 0, &err) != SQLITE_OK)
+      char *err = nullptr;
+      if (sqlite3_exec(m_db, t_stmt.c_str(), nullptr, nullptr, &err) != SQLITE_OK)
       {
         std::string errstr;
        
@@ -406,19 +405,19 @@ namespace openstudio{
       m_sqliteFilename = toString(m_path);
       std::string fileName = m_sqliteFilename;
 
-      int code = sqlite3_open_v2(fileName.c_str(), &m_db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_EXCLUSIVE, NULL);
+      int code = sqlite3_open_v2(fileName.c_str(), &m_db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_EXCLUSIVE, nullptr);
 
       m_connectionOpen = (code == 0);
       if (m_connectionOpen) {// create index on dictionaryIndex for large table reportvariabledata
         if (!isValidConnection()) {
           sqlite3_close(m_db);
           m_connectionOpen = false;
-          throw openstudio::Exception("ResultsViewer is not compatable with this file.");
+          throw openstudio::Exception("ResultsViewer is not compatible with this file.");
         }
         // set a 1 second timeout
         code = sqlite3_busy_timeout(m_db, 1000);
 
-        // set locking mode to exlusive
+        // set locking mode to exclusive
         //code = sqlite3_exec(m_db, "PRAGMA locking_mode=EXCLUSIVE", NULL, NULL, NULL);
 
         // retrieve DataDictionaryTable
@@ -438,7 +437,7 @@ namespace openstudio{
       int code = -1;
       if (m_db) {
         sqlite3_stmt* sqlStmtPtr;
-        sqlite3_prepare_v2(m_db,"SELECT * FROM Simulations WHERE EnergyPlusVersion LIKE '%7.0%' OR EnergyPlusVersion LIKE '%7.1%' OR EnergyPlusVersion LIKE '%7.2%' OR EnergyPlusVersion LIKE '%8.0%' OR EnergyPlusVersion LIKE '%8.1%'",-1,&sqlStmtPtr,NULL);
+        sqlite3_prepare_v2(m_db,"SELECT * FROM Simulations WHERE EnergyPlusVersion LIKE '%7.0%' OR EnergyPlusVersion LIKE '%7.1%' OR EnergyPlusVersion LIKE '%7.2%' OR EnergyPlusVersion LIKE '%8.0%' OR EnergyPlusVersion LIKE '%8.1%'",-1,&sqlStmtPtr,nullptr);
         code = sqlite3_step(sqlStmtPtr);
         sqlite3_finalize(sqlStmtPtr);
         m_supportedVersion = true;
@@ -446,7 +445,7 @@ namespace openstudio{
         // use this code block to try to support EnergyPlus versions before they are released
         if (code != SQLITE_ROW){
           LOG(Warn, "Trying unsupported EnergyPlus version 8.2");
-          sqlite3_prepare_v2(m_db,"SELECT * FROM Simulations WHERE EnergyPlusVersion LIKE '%8.2%'",-1,&sqlStmtPtr,NULL);
+          sqlite3_prepare_v2(m_db,"SELECT * FROM Simulations WHERE EnergyPlusVersion LIKE '%8.2%'",-1,&sqlStmtPtr,nullptr);
           code = sqlite3_step(sqlStmtPtr);
           sqlite3_finalize(sqlStmtPtr);
           m_supportedVersion = false;
@@ -455,7 +454,7 @@ namespace openstudio{
         // use this code block to try to support EnergyPlus versions before they are released
         if (code != SQLITE_ROW){
           LOG(Warn, "Trying unsupported EnergyPlus version 6.0");
-          sqlite3_prepare_v2(m_db,"SELECT * FROM Simulations WHERE EnergyPlusVersion LIKE '%6.0%'",-1,&sqlStmtPtr,NULL);
+          sqlite3_prepare_v2(m_db,"SELECT * FROM Simulations WHERE EnergyPlusVersion LIKE '%6.0%'",-1,&sqlStmtPtr,nullptr);
           code = sqlite3_step(sqlStmtPtr);
           sqlite3_finalize(sqlStmtPtr);
           m_supportedVersion = false;
@@ -714,7 +713,7 @@ namespace openstudio{
           "  and VariableType='Sum' "
           "  group by VariableName, ReportingFrequency, VariableUnits";
 
-        sqlite3_prepare_v2(m_db,stmt.c_str(),-1,&sqlStmtPtr,NULL);
+        sqlite3_prepare_v2(m_db,stmt.c_str(),-1,&sqlStmtPtr,nullptr);
         while(sqlite3_step(sqlStmtPtr) == SQLITE_ROW)
         {
           double value = sqlite3_column_double(sqlStmtPtr, 0);
@@ -769,7 +768,7 @@ namespace openstudio{
         std::map<int,std::string>::iterator envPeriodsItr;
 
         s << "SELECT EnvironmentPeriodIndex, EnvironmentName FROM EnvironmentPeriods";
-        sqlite3_prepare_v2(m_db,s.str().c_str(),-1,&sqlStmtPtr,NULL);
+        sqlite3_prepare_v2(m_db,s.str().c_str(),-1,&sqlStmtPtr,nullptr);
         code = sqlite3_step(sqlStmtPtr);
         while(code == SQLITE_ROW)
         {
@@ -782,7 +781,7 @@ namespace openstudio{
         s.str("");
         s << "SELECT ReportMeterDataDictionaryIndex, VariableName, KeyValue, ReportingFrequency, VariableUnits";
         s << " FROM ReportMeterDataDictionary";
-        code = sqlite3_prepare_v2(m_db,s.str().c_str(),-1,&sqlStmtPtr,NULL);
+        code = sqlite3_prepare_v2(m_db,s.str().c_str(),-1,&sqlStmtPtr,nullptr);
 
         table= "ReportMeterData";
 
@@ -813,7 +812,7 @@ namespace openstudio{
         s.str("");
         s << "SELECT ReportVariableDatadictionaryIndex, VariableName, KeyValue, ReportingFrequency, VariableUnits";
         s << " FROM ReportVariableDatadictionary";
-        code = sqlite3_prepare_v2(m_db,s.str().c_str(),-1,&sqlStmtPtr,NULL);
+        code = sqlite3_prepare_v2(m_db,s.str().c_str(),-1,&sqlStmtPtr,nullptr);
 
         table= "ReportVariableData";
 
@@ -1249,9 +1248,9 @@ namespace openstudio{
     {
       EndUses result;
 
-      BOOST_FOREACH(EndUseFuelType fuelType, result.fuelTypes()){
+      for (EndUseFuelType fuelType : result.fuelTypes()){
         std::string units = result.getUnitsForFuelType(fuelType);
-        BOOST_FOREACH(EndUseCategoryType category, result.categories()){
+        for (EndUseCategoryType category : result.categories()){
 
           std::string query = "SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='" + \
                                fuelType.valueDescription() + "') and (RowName ='" + category.valueDescription() + "') and (Units = '" + units + "')";
@@ -1831,7 +1830,7 @@ namespace openstudio{
       {
         sqlite3_stmt* sqlStmtPtr;
 
-        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, NULL);
+        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
 
         code = sqlite3_step(sqlStmtPtr);
         if (code == SQLITE_ROW)
@@ -1852,7 +1851,7 @@ namespace openstudio{
       {
         sqlite3_stmt* sqlStmtPtr;
 
-        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, NULL);
+        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
 
         code = sqlite3_step(sqlStmtPtr);
         if (code == SQLITE_ROW)
@@ -1873,7 +1872,7 @@ namespace openstudio{
       {
         sqlite3_stmt* sqlStmtPtr;
 
-        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, NULL);
+        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
 
         code = sqlite3_step(sqlStmtPtr);
         if (code == SQLITE_ROW)
@@ -1895,7 +1894,7 @@ namespace openstudio{
       {
         sqlite3_stmt* sqlStmtPtr;
 
-        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, NULL);
+        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
         while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY)&& (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
         {
           if (!valueVector){
@@ -1930,7 +1929,7 @@ namespace openstudio{
       {
         sqlite3_stmt* sqlStmtPtr;
 
-        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, NULL);
+        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
         while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY)&& (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
         {
           if (!valueVector){
@@ -1965,7 +1964,7 @@ namespace openstudio{
       {
         sqlite3_stmt* sqlStmtPtr;
 
-        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, NULL);
+        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
         while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY)&& (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
         {
           if (!valueVector){
@@ -1999,7 +1998,7 @@ namespace openstudio{
       {
         sqlite3_stmt* sqlStmtPtr;
 
-        sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, NULL);
+        sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
 
         code = sqlite3_step(sqlStmtPtr);
 
@@ -2039,7 +2038,7 @@ namespace openstudio{
 
         sqlite3_stmt* sqlStmtPtr;
 
-        int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, NULL);
+        int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, nullptr);
 
         code = sqlite3_step(sqlStmtPtr);
         std::stringstream s2;
@@ -2086,7 +2085,7 @@ namespace openstudio{
         s << boost::lexical_cast<std::string>(dataDictionary.envPeriodIndex);
 
         sqlite3_stmt* sqlStmtPtr;
-        int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, NULL);
+        int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, nullptr);
 
         code = sqlite3_step(sqlStmtPtr);
         if (code == SQLITE_ROW)
@@ -2107,7 +2106,7 @@ namespace openstudio{
         s << "SELECT Month, Day, Hour from Time where TimeIndex in (";
         s << "SELECT min(timeIndex) FROM time )";
         sqlite3_stmt* sqlStmtPtr;
-        int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, NULL);
+        int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, nullptr);
 
         code = sqlite3_step(sqlStmtPtr);
         if (code == SQLITE_ROW)
@@ -2170,7 +2169,7 @@ namespace openstudio{
             s << ")";
 
             sqlite3_stmt* sqlStmtPtr;
-            int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, NULL);
+            int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, nullptr);
 
             code = sqlite3_step(sqlStmtPtr);
             if (code == SQLITE_ROW)
@@ -2203,7 +2202,7 @@ namespace openstudio{
         s << "SELECT Month, Day, Hour, Minute from Time where Month is not NULL and Day is not null LIMIT 1";
 
         sqlite3_stmt* sqlStmtPtr;
-        int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, NULL);
+        int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, nullptr);
 
         code = sqlite3_step(sqlStmtPtr);
         if (code == SQLITE_ROW)
@@ -2269,7 +2268,7 @@ namespace openstudio{
 
         sqlite3_stmt* sqlStmtPtr;
 
-        int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, NULL);
+        int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, nullptr);
 
         code = sqlite3_step(sqlStmtPtr);
         std::stringstream s2;
@@ -2358,7 +2357,7 @@ namespace openstudio{
 
         sqlite3_stmt* sqlStmtPtr;
 
-        int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, NULL);
+        int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, nullptr);
 
         code = sqlite3_step(sqlStmtPtr);
         std::stringstream s2;
@@ -2437,26 +2436,26 @@ namespace openstudio{
       temp1 = expandEnvironment(query);
 
       // build up temp2
-      BOOST_FOREACH(const SqlFileTimeSeriesQuery& q,temp1) {
+      for (const SqlFileTimeSeriesQuery& q : temp1) {
         SqlFileTimeSeriesQueryVector temp3 = expandReportingFrequency(q);
         temp2.insert(temp2.end(),temp3.begin(),temp3.end());
       }
 
       // build up temp1
       temp1.clear();
-      BOOST_FOREACH(const SqlFileTimeSeriesQuery& q,temp2) {
+      for (const SqlFileTimeSeriesQuery& q : temp2) {
         SqlFileTimeSeriesQueryVector temp3 = expandTimeSeries(q);
         temp1.insert(temp1.end(),temp3.begin(),temp3.end());
       }
 
       // build up result
-      BOOST_FOREACH(const SqlFileTimeSeriesQuery& q,temp1) {
+      for (const SqlFileTimeSeriesQuery& q : temp1) {
         SqlFileTimeSeriesQueryVector temp3 = expandKeyValues(q);
         result.insert(result.end(),temp3.begin(),temp3.end());
       }
 
       // mark each query as vetted
-      BOOST_FOREACH(SqlFileTimeSeriesQuery& resultQuery,result) {
+      for (SqlFileTimeSeriesQuery& resultQuery : result) {
         resultQuery.m_vetted = true;
       }
 
@@ -2474,7 +2473,7 @@ namespace openstudio{
         if (envId.type()) {
           EnvironmentType envType = envId.type().get();
           // specified by type--get all matching environment names
-          BOOST_FOREACH(const std::string& envName,envNames) {
+          for (const std::string& envName : envNames) {
             OptionalEnvironmentType oEnvType = environmentType(envName);
             if (oEnvType && (*oEnvType == envType)) { keepers.push_back(envName); }
           }
@@ -2483,7 +2482,7 @@ namespace openstudio{
           std::string envName = envId.name().get();
           // check validity of name
           StringVector::const_iterator it = std::find_if(envNames.begin(),envNames.end(),
-              boost::bind(istringEqual,envName,_1));
+            std::bind(istringEqual, envName, std::placeholders::_1));
           if (it != envNames.end()) { keepers.push_back(*it); }
         }
       }
@@ -2494,7 +2493,7 @@ namespace openstudio{
 
       // initialize result queries
       SqlFileTimeSeriesQuery wQuery(query);
-      BOOST_FOREACH(const std::string& envName,keepers) {
+      for (const std::string& envName : keepers) {
         envId = EnvironmentIdentifier(envName);
         wQuery.setEnvironment(envId);
         result.push_back(wQuery);
@@ -2524,7 +2523,7 @@ namespace openstudio{
           else {
             OS_ASSERT(envId.type());
             EnvironmentType envType = envId.type().get();
-            BOOST_FOREACH(const std::string& envName,availableEnvPeriods()) {
+            for (const std::string& envName : availableEnvPeriods()) {
               OptionalEnvironmentType oEnvType = environmentType(envName);
               if (oEnvType && (*oEnvType == envType)) { envNames.push_back(envName); }
             }
@@ -2534,13 +2533,13 @@ namespace openstudio{
           envNames = availableEnvPeriods();
         }
         // get reporting frequencies
-        BOOST_FOREACH(const std::string& envName,envNames) {
+        for (const std::string& envName : envNames) {
           ReportingFrequencySet tempSet = availableReportingFrequencySet(*this,envName);
           rfSet.insert(tempSet.begin(),tempSet.end());
         }
 
         // make one query per rf
-        BOOST_FOREACH(const ReportingFrequency& rf,rfSet) {
+        for (const ReportingFrequency& rf : rfSet) {
           SqlFileTimeSeriesQuery wQuery(query);
           wQuery.setReportingFrequency(rf);
           result.push_back(wQuery);
@@ -2576,7 +2575,7 @@ namespace openstudio{
         if (query.timeSeries()) {
           OS_ASSERT(query.timeSeries().get().regex());
           boost::regex re = query.timeSeries().get().regex().get();
-          for (StringVector::iterator it = tsNames.begin(); it != tsNames.end(); ) {
+          for (auto it = tsNames.begin(); it != tsNames.end(); ) {
             if (!boost::regex_match(*it,re)) {
               it = tsNames.erase(it);
               continue;
@@ -2587,7 +2586,7 @@ namespace openstudio{
       }
 
       // make one query per time series name
-      BOOST_FOREACH(const std::string& tsName,tsNames) {
+      for (const std::string& tsName : tsNames) {
         SqlFileTimeSeriesQuery wQuery(query);
         TimeSeriesIdentifier tsId(tsName);
         wQuery.setTimeSeries(tsId);
@@ -2619,7 +2618,7 @@ namespace openstudio{
         }
         // check against regex
         boost::regex re = *(query.keyValues().get().regex());
-        for (StringVector::iterator it = kvNames.begin(); it != kvNames.end(); ) {
+        for (auto it = kvNames.begin(); it != kvNames.end(); ) {
           if (!boost::regex_match(*it,re)) {
             it = kvNames.erase(it);
             continue;
@@ -2679,7 +2678,7 @@ namespace openstudio{
       ReportingFrequency rf = *(wquery.reportingFrequency());
       std::string tsName = *(wquery.timeSeries().get().name());
       if (wquery.keyValues()) {
-        BOOST_FOREACH(const std::string kvName,wquery.keyValues().get().names()) {
+        for (const std::string kvName : wquery.keyValues().get().names()) {
           OptionalTimeSeries ots = timeSeries(envPeriod,rf.valueDescription(),tsName,kvName);
           if (ots) { result.push_back(*ots); }
         }
@@ -2712,7 +2711,7 @@ namespace openstudio{
         // first date time of dst
         std::string s = "select month, day, hour, minute from Time where dst=1 group by month order by month, day, hour, minute";
 
-        int code = sqlite3_prepare_v2(m_db, s.c_str(),-1,&sqlStmtPtr,NULL);
+        int code = sqlite3_prepare_v2(m_db, s.c_str(),-1,&sqlStmtPtr,nullptr);
 
         code = sqlite3_step(sqlStmtPtr);
         if (code == SQLITE_ROW)
@@ -2729,7 +2728,7 @@ namespace openstudio{
         // last date time of dst
         s = "select month, day, hour, minute from Time where dst=1 group by month order by month desc, day desc, hour desc, minute desc";
 
-        code = sqlite3_prepare_v2(m_db, s.c_str(),-1,&sqlStmtPtr,NULL);
+        code = sqlite3_prepare_v2(m_db, s.c_str(),-1,&sqlStmtPtr,nullptr);
 
         code = sqlite3_step(sqlStmtPtr);
         if (code == SQLITE_ROW)
@@ -2781,7 +2780,7 @@ namespace openstudio{
 
       sqlite3_stmt* sqlStmtPtr;
 
-      int code = sqlite3_prepare_v2(m_db, s.c_str(),-1,&sqlStmtPtr,NULL);
+      int code = sqlite3_prepare_v2(m_db, s.c_str(),-1,&sqlStmtPtr,nullptr);
       code = sqlite3_step(sqlStmtPtr);
 
       while (code == SQLITE_ROW)
@@ -2808,7 +2807,7 @@ namespace openstudio{
 
       sqlite3_stmt* sqlStmtPtr;
 
-      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,NULL);
+      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,nullptr);
       code = sqlite3_step(sqlStmtPtr);
 
       while (code == SQLITE_ROW)
@@ -2847,7 +2846,7 @@ namespace openstudio{
 
       sqlite3_stmt* sqlStmtPtr;
 
-      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,NULL);
+      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,nullptr);
       code = sqlite3_step(sqlStmtPtr);
 
       if (code == SQLITE_ROW)
@@ -2882,7 +2881,7 @@ namespace openstudio{
 
       sqlite3_stmt* sqlStmtPtr;
 
-      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,NULL);
+      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,nullptr);
       code = sqlite3_step(sqlStmtPtr);
 
       if (code == SQLITE_ROW)
@@ -2917,7 +2916,7 @@ namespace openstudio{
 
       sqlite3_stmt* sqlStmtPtr;
 
-      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,NULL);
+      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,nullptr);
       code = sqlite3_step(sqlStmtPtr);
 
       if (code == SQLITE_ROW)
@@ -2939,7 +2938,7 @@ namespace openstudio{
         LOG(Error, "Unknown illuminance map '" << name << "'");
     }
 
-    /// minimum and maximim of map
+    /// minimum and maximum of map
     void SqlFile_Impl::illuminanceMapMaxValue(const int& mapIndex, double& minValue, double& maxValue) const
     {
       std::stringstream s;
@@ -2947,7 +2946,7 @@ namespace openstudio{
 
       sqlite3_stmt* sqlStmtPtr;
 
-      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,NULL);
+      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,nullptr);
       code = sqlite3_step(sqlStmtPtr);
 
       if (code == SQLITE_ROW)
@@ -2984,7 +2983,7 @@ namespace openstudio{
 
       sqlite3_stmt* sqlStmtPtr;
 
-      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,NULL);
+      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,nullptr);
       code = sqlite3_step(sqlStmtPtr);
 
       while (code == SQLITE_ROW)
@@ -3010,7 +3009,7 @@ namespace openstudio{
 
       sqlite3_stmt* sqlStmtPtr;
 
-      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,NULL);
+      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,nullptr);
       code = sqlite3_step(sqlStmtPtr);
 
       while (code == SQLITE_ROW)
@@ -3061,7 +3060,7 @@ namespace openstudio{
 
       sqlite3_stmt* sqlStmtPtr;
 
-      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,NULL);
+      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,nullptr);
       code = sqlite3_step(sqlStmtPtr);
 
       while (code == SQLITE_ROW)
@@ -3125,7 +3124,7 @@ namespace openstudio{
 
       sqlite3_stmt* sqlStmtPtr;
 
-      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,NULL);
+      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,nullptr);
       code = sqlite3_step(sqlStmtPtr);
       while (code == SQLITE_ROW)
       {
@@ -3165,7 +3164,7 @@ namespace openstudio{
 
       sqlite3_stmt* sqlStmtPtr;
 
-      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,NULL);
+      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,nullptr);
       code = sqlite3_step(sqlStmtPtr);
       while (code == SQLITE_ROW)
       {
@@ -3193,7 +3192,7 @@ namespace openstudio{
 
       sqlite3_stmt* sqlStmtPtr;
 
-      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,NULL);
+      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,nullptr);
       code = sqlite3_step(sqlStmtPtr);
       if (code == SQLITE_ROW)
       {
@@ -3241,7 +3240,7 @@ namespace openstudio{
       sqlite3_stmt* sqlStmtPtr;
 
       boost::optional<int> timeIndex;
-      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,NULL);
+      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,nullptr);
       code = sqlite3_step(sqlStmtPtr);
       if (code == SQLITE_ROW)
       {
@@ -3296,7 +3295,7 @@ namespace openstudio{
 
       sqlite3_stmt* sqlStmtPtr;
 
-      int code = sqlite3_prepare_v2(m_db, statement.str().c_str(),-1,&sqlStmtPtr,NULL);
+      int code = sqlite3_prepare_v2(m_db, statement.str().c_str(),-1,&sqlStmtPtr,nullptr);
       code = sqlite3_step(sqlStmtPtr);
       if (code == SQLITE_ROW)
       {
@@ -3377,12 +3376,12 @@ namespace openstudio{
 
       sqlite3_stmt* sqlStmtPtr;
 
-      int code = sqlite3_prepare_v2(m_db, statement.str().c_str(),-1,&sqlStmtPtr,NULL);
+      int code = sqlite3_prepare_v2(m_db, statement.str().c_str(),-1,&sqlStmtPtr,nullptr);
       code = sqlite3_step(sqlStmtPtr);
       while (code == SQLITE_ROW)
       {
         if (i >= M){
-          LOG(Error, "Too much illiminance map data retrieved at time index " << hourlyReportIndex <<
+          LOG(Error, "Too much illuminance map data retrieved at time index " << hourlyReportIndex <<
               " for map name = '" << hourlyReportIndex << "'.  Size is " << M << "x" << N <<
               ", current i is " << i << ", current j is " << j);
           break;
@@ -3416,7 +3415,7 @@ namespace openstudio{
 
       sqlite3_stmt* sqlStmtPtr;
 
-      int code = sqlite3_prepare_v2(m_db, s.c_str(),-1,&sqlStmtPtr,NULL);
+      int code = sqlite3_prepare_v2(m_db, s.c_str(),-1,&sqlStmtPtr,nullptr);
       code = sqlite3_step(sqlStmtPtr);
 
       if(code == SQLITE_ROW)
@@ -3432,7 +3431,7 @@ namespace openstudio{
     {
       // make each query consistent, or delete it if there is no possibility of a matching TimeSeries
       // do not check name validity--only cross-validity
-      for (SqlFileTimeSeriesQueryVector::iterator queryIt = queries.begin(); 
+      for (auto queryIt = queries.begin(); 
           queryIt < queries.end(); ) 
       {
         // environment
@@ -3448,7 +3447,7 @@ namespace openstudio{
         }
         ReportingFrequencySet rfSet;
         if (envName && rf) {
-          // check compatibilty
+          // check compatibility
           rfSet = availableReportingFrequencySet(*this,*envName);
           if (rfSet.find(*rf) == rfSet.end()) {
             queryIt = queries.erase(queryIt);
@@ -3471,7 +3470,7 @@ namespace openstudio{
           }
           else {
             rfSet = availableReportingFrequencySet(*this,*envName);
-            BOOST_FOREACH(const ReportingFrequency& rf,rfSet) {
+            for (const ReportingFrequency& rf : rfSet) {
               temp = availableVariableNames(*envName,rf.valueDescription());
               tsSet.insert(temp.begin(),temp.end());
             }
@@ -3479,7 +3478,7 @@ namespace openstudio{
         }
         else if (rf && tsName) {
           envNames = availableEnvPeriods();
-          BOOST_FOREACH(const std::string& envName,envNames) {
+          for (const std::string& envName : envNames) {
             temp = availableVariableNames(envName,rf->valueDescription());
             tsSet.insert(temp.begin(),temp.end());
           }
@@ -3504,43 +3503,43 @@ namespace openstudio{
           keyValueNames = queryIt->keyValues()->names();
           if (envName && rf) {
             kvAvail = availableKeyValues(*envName,rf->valueDescription(),*tsName);
-            BOOST_FOREACH(const std::string& kv,keyValueNames) {
+            for (const std::string& kv : keyValueNames) {
               StringVector::const_iterator it = std::find_if(kvAvail.begin(),kvAvail.end(),
-                  boost::bind(istringEqual,kv,_1));
+                  std::bind(istringEqual,kv,std::placeholders::_1));
               if (it != kvAvail.end()) { keepers.insert(*it); }
             }
           }
           else if (envName) {
             OS_ASSERT(!rfSet.empty());
-            BOOST_FOREACH(const ReportingFrequency& rf,rfSet) {
+            for (const ReportingFrequency& rf : rfSet) {
               kvAvail = availableKeyValues(*envName,rf.valueDescription(),*tsName);
-              BOOST_FOREACH(const std::string& kv,keyValueNames) {
+              for (const std::string& kv : keyValueNames) {
                 StringVector::const_iterator it = std::find_if(kvAvail.begin(),kvAvail.end(),
-                    boost::bind(istringEqual,kv,_1));
+                    std::bind(istringEqual,kv,std::placeholders::_1));
                 if (it != kvAvail.end()) { keepers.insert(*it); }
               }
             }
           }
           else if (rf) {
             OS_ASSERT(!envNames.empty());
-            BOOST_FOREACH(const std::string& envName,envNames) {
+            for (const std::string& envName : envNames) {
               kvAvail = availableKeyValues(envName,rf->valueDescription(),*tsName);
-              BOOST_FOREACH(const std::string& kv,keyValueNames) {
+              for (const std::string& kv : keyValueNames) {
                 StringVector::const_iterator it = std::find_if(kvAvail.begin(),kvAvail.end(),
-                    boost::bind(istringEqual,kv,_1));
+                    std::bind(istringEqual,kv,std::placeholders::_1));
                 if (it != kvAvail.end()) { keepers.insert(*it); }
               }
             }
           }
           else {
             envNames = availableEnvPeriods();
-            BOOST_FOREACH(const std::string& envName,envNames) {
+            for (const std::string& envName : envNames) {
               rfSet = availableReportingFrequencySet(*this,envName);
-              BOOST_FOREACH(const ReportingFrequency& rf,rfSet) {
+              for (const ReportingFrequency& rf : rfSet) {
                 kvAvail = availableKeyValues(envName,rf.valueDescription(),*tsName);
-                BOOST_FOREACH(const std::string& kv,keyValueNames) {
+                for (const std::string& kv : keyValueNames) {
                   StringVector::const_iterator it = std::find_if(kvAvail.begin(),kvAvail.end(),
-                      boost::bind(istringEqual,kv,_1));
+                      std::bind(istringEqual,kv,std::placeholders::_1));
                   if (it != kvAvail.end()) { 
                     keepers.insert(*it); 
                     if (keepers.size() == keyValueNames.size()) { break; }
@@ -3571,7 +3570,7 @@ namespace openstudio{
     ReportingFrequencySet availableReportingFrequencySet(SqlFile_Impl& sqlFileImpl, const std::string& envPeriod) {
       ReportingFrequencySet rfSet;
       StringVector rfStrs = sqlFileImpl.availableReportingFrequencies(envPeriod);
-      BOOST_FOREACH(const std::string& rfStr,rfStrs) {
+      for (const std::string& rfStr : rfStrs) {
         OptionalReportingFrequency orf = sqlFileImpl.reportingFrequencyFromDB(rfStr);
         if (orf) { rfSet.insert(*orf); }
       }

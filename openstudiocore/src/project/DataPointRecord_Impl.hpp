@@ -20,12 +20,12 @@
 #ifndef PROJECT_DATAPOINTRECORD_IMPL_HPP
 #define PROJECT_DATAPOINTRECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/ObjectRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "ObjectRecord_Impl.hpp"
 
-#include <project/DataPointRecord.hpp>
+#include "DataPointRecord.hpp"
 
-#include <analysis/DataPoint.hpp>
+#include "../analysis/DataPoint.hpp"
 
 namespace openstudio {
 namespace project {
@@ -76,7 +76,7 @@ namespace detail {
     virtual std::vector<JoinRecord> joinRecords() const;
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(const boost::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
 
     virtual void updatePathData(const openstudio::path& originalBase,
                                 const openstudio::path& newBase);
@@ -127,14 +127,14 @@ namespace detail {
 
     boost::optional<FileReferenceRecord> sqlOutputDataRecord() const;
 
-    /** Returns the FileReferenceRecords that point to this DataPointRecord's XML output data. */
+    /** \deprecated Will always return empty vector; call attributeRecords() instead. */
     std::vector<FileReferenceRecord> xmlOutputDataRecords() const;
 
     boost::optional<openstudio::UUID> topLevelJobUUID() const;
 
     std::vector<TagRecord> tagRecords() const;
 
-    /** Assembles all the AttributeRecords associated with xmlOutputDataRecords(). */
+    /** Returns this DataPointRecord's attributeRecords. */
     std::vector<AttributeRecord> attributeRecords() const;
 
     virtual analysis::DataPoint dataPoint() const;

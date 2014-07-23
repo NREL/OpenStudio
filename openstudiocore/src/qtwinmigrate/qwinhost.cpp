@@ -1,12 +1,11 @@
 /****************************************************************************
 **
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
-** All rights reserved.
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
+** Contact: http://www.qt-project.org/legal
 **
-** Contact: Nokia Corporation (qt-info@nokia.com)
+** This file is part of the Qt Solutions component.
 **
-** This file is part of a Qt Solutions component.
-**
+** $QT_BEGIN_LICENSE:BSD$
 ** You may use this file under the terms of the BSD license as follows:
 **
 ** "Redistribution and use in source and binary forms, with or without
@@ -18,10 +17,10 @@
 **     notice, this list of conditions and the following disclaimer in
 **     the documentation and/or other materials provided with the
 **     distribution.
-**   * Neither the name of Nokia Corporation and its Subsidiary(-ies) nor
-**     the names of its contributors may be used to endorse or promote
-**     products derived from this software without specific prior written
-**     permission.
+**   * Neither the name of Digia Plc and its Subsidiary(-ies) nor the names
+**     of its contributors may be used to endorse or promote products derived
+**     from this software without specific prior written permission.
+**
 **
 ** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ** "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -35,6 +34,8 @@
 ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
 **
+** $QT_END_LICENSE$
+**
 ****************************************************************************/
 
 // Implementation of the QWinHost classes
@@ -45,8 +46,12 @@
 
 #include "qwinhost.h"
 
-#include <QtCore/QEvent>
+#include <QEvent>
 #include <qt_windows.h>
+
+#if QT_VERSION >= 0x050000
+#define QT_WA(unicode, ansi) unicode
+#endif
 
 /*!
     \class QWinHost qwinhost.h
@@ -79,7 +84,7 @@
     after the native window has been created, i.e. do not call 
     QWidget::setParent or move the QWinHost into a different layout.
 */
-QWinHost::QWinHost(QWidget *parent, Qt::WFlags f)
+QWinHost::QWinHost(QWidget *parent, Qt::WindowFlags f)
 : QWidget(parent, f), wndproc(0),own_hwnd(false), hwnd(0)
 {
     setAttribute(Qt::WA_NoBackground);
@@ -148,12 +153,12 @@ void QWinHost::fixParent()
         hwnd = 0;
         return;
     }
-    if (::GetParent(hwnd) == winId())
+    if (::GetParent(hwnd) == (HWND)winId())
         return;
     long style = GetWindowLong(hwnd, GWL_STYLE);
     if (style & WS_OVERLAPPED)
         return;
-    ::SetParent(hwnd, winId());
+    ::SetParent(hwnd, (HWND)winId());
 }
 
 /*!
@@ -196,7 +201,7 @@ void *getWindowProc(QWinHost *host)
 
 LRESULT CALLBACK WinHostProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    QWinHost *widget = qobject_cast<QWinHost*>(QWidget::find(::GetParent(hwnd)));
+    QWinHost *widget = qobject_cast<QWinHost*>(QWidget::find((WId)::GetParent(hwnd)));
     WNDPROC oldproc = (WNDPROC)getWindowProc(widget);
     if (widget) {
 	switch(msg) {
@@ -209,18 +214,18 @@ LRESULT CALLBACK WinHostProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_SYSKEYDOWN:
 	case WM_SYSKEYUP:
 	    QT_WA({
-		SendMessage(widget->winId(), msg, wParam, lParam);
+            SendMessage((HWND)widget->winId(), msg, wParam, lParam);
 	    }, {
-		SendMessageA(widget->winId(), msg, wParam, lParam);
+            SendMessageA((HWND)widget->winId(), msg, wParam, lParam);
 	    })
 	    break;
 
 	case WM_KEYDOWN:
 	    if (wParam == VK_TAB) {
 		QT_WA({
-		    SendMessage(widget->winId(), msg, wParam, lParam);
+            SendMessage((HWND)widget->winId(), msg, wParam, lParam);
 		}, {
-		    SendMessageA(widget->winId(), msg, wParam, lParam);
+            SendMessageA((HWND)widget->winId(), msg, wParam, lParam);
 		})
 	    }
 	    break;
@@ -249,11 +254,11 @@ bool QWinHost::event(QEvent *e)
     switch(e->type()) {
     case QEvent::Polish:
         if (!hwnd) {
-            hwnd = createWindow(winId(), qWinAppInst());
+            hwnd = createWindow((HWND)winId(), qWinAppInst());
             fixParent();
             own_hwnd = hwnd != 0;
         }
-        if (hwnd && !wndproc && GetParent(hwnd) == winId()) {
+        if (hwnd && !wndproc && GetParent(hwnd) == (HWND)winId()) {
 #if defined(GWLP_WNDPROC)
             QT_WA({
                 wndproc = (void*)GetWindowLongPtr(hwnd, GWLP_WNDPROC);
@@ -330,8 +335,15 @@ void QWinHost::resizeEvent(QResizeEvent *e)
 /*!
     \reimp
 */
+#if QT_VERSION >= 0x050000
+bool QWinHost::nativeEvent(const QByteArray &eventType, void *message, long *result)
+#else
 bool QWinHost::winEvent(MSG *msg, long *result)
+#endif
 {
+#if QT_VERSION >= 0x050000
+    MSG *msg = (MSG *)message;
+#endif
     switch (msg->message)
     {
     case WM_SETFOCUS:
@@ -342,6 +354,9 @@ bool QWinHost::winEvent(MSG *msg, long *result)
     default:
         break;
     }
-
+#if QT_VERSION >= 0x050000
+    return QWidget::nativeEvent(eventType, message, result);
+#else
     return QWidget::winEvent(msg, result);
+#endif
 }

@@ -17,25 +17,24 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CoilCoolingWaterToAirHeatPumpEquationFit.hpp>
-#include <model/CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp>
-#include <model/ZoneHVACComponent.hpp>
-#include <model/ZoneHVACComponent_Impl.hpp>
+#include "CoilCoolingWaterToAirHeatPumpEquationFit.hpp"
+#include "CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp"
+#include "ZoneHVACComponent.hpp"
+#include "ZoneHVACComponent_Impl.hpp"
 
-#include <model/ZoneHVACWaterToAirHeatPump.hpp>
-#include <model/ZoneHVACWaterToAirHeatPump_Impl.hpp>
-#include <model/AirLoopHVACUnitarySystem.hpp>
-#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include "ZoneHVACWaterToAirHeatPump.hpp"
+#include "ZoneHVACWaterToAirHeatPump_Impl.hpp"
+#include "AirLoopHVACUnitarySystem.hpp"
+#include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "Model.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 
 #include <utilities/idd/OS_Coil_Cooling_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
-#include <boost/foreach.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -602,15 +601,13 @@ namespace detail {
     // AirLoopHVACUnitarySystem
     std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
 
-    for( std::vector<AirLoopHVACUnitarySystem>::iterator it = airLoopHVACUnitarySystems.begin();
-    it < airLoopHVACUnitarySystems.end();
-    ++it )
+    for( const auto & airLoopHVACUnitarySystem : airLoopHVACUnitarySystems )
     {
-      if( boost::optional<HVACComponent> coolingCoil = it->coolingCoil() )
+      if( boost::optional<HVACComponent> coolingCoil = airLoopHVACUnitarySystem.coolingCoil() )
       {
         if( coolingCoil->handle() == this->handle() )
         {
-          return *it;
+          return airLoopHVACUnitarySystem;
         }
       }
     }
@@ -625,15 +622,13 @@ namespace detail {
 
     zoneHVACWaterToAirHeatPumps = this->model().getConcreteModelObjects<ZoneHVACWaterToAirHeatPump>();
 
-    for( std::vector<ZoneHVACWaterToAirHeatPump>::iterator it = zoneHVACWaterToAirHeatPumps.begin();
-    it < zoneHVACWaterToAirHeatPumps.end();
-    ++it )
+    for( const auto & zoneHVACWaterToAirHeatPump : zoneHVACWaterToAirHeatPumps )
     {
-      if( boost::optional<HVACComponent> coil = it->coolingCoil() )
+      if( boost::optional<HVACComponent> coil = zoneHVACWaterToAirHeatPump.coolingCoil() )
       {
         if( coil->handle() == this->handle() )
         {
-          return *it;
+          return zoneHVACWaterToAirHeatPump;
         }
       }
     }
@@ -1006,7 +1001,7 @@ namespace detail {
   }
 
 /// @cond
-CoilCoolingWaterToAirHeatPumpEquationFit::CoilCoolingWaterToAirHeatPumpEquationFit(boost::shared_ptr<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl> impl)
+CoilCoolingWaterToAirHeatPumpEquationFit::CoilCoolingWaterToAirHeatPumpEquationFit(std::shared_ptr<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl> impl)
   : WaterToAirComponent(impl)
 {}
 /// @endcond

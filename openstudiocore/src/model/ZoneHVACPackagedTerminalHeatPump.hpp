@@ -20,8 +20,8 @@
 #ifndef MODEL_ZONEHVACPACKAGEDTERMINALHEATPUMP_HPP
 #define MODEL_ZONEHVACPACKAGEDTERMINALHEATPUMP_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ZoneHVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "ZoneHVACComponent.hpp"
 
 namespace openstudio {
 
@@ -220,7 +220,7 @@ class MODEL_API ZoneHVACPackagedTerminalHeatPump : public ZoneHVACComponent
   /// @cond
   typedef detail::ZoneHVACPackagedTerminalHeatPump_Impl ImplType;
 
-  explicit ZoneHVACPackagedTerminalHeatPump(boost::shared_ptr<detail::ZoneHVACPackagedTerminalHeatPump_Impl> impl);
+  explicit ZoneHVACPackagedTerminalHeatPump(std::shared_ptr<detail::ZoneHVACPackagedTerminalHeatPump_Impl> impl);
 
   friend class detail::ZoneHVACPackagedTerminalHeatPump_Impl;
   friend class Model;

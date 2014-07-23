@@ -1,21 +1,22 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
-*  All rights reserved.
-*  
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*  
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*  
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
 #include "PrjSubobjects.hpp"
 #include "PrjSubobjectsImpl.hpp"
 
@@ -24,19 +25,19 @@ namespace contam {
 
 WeatherData::WeatherData()
 {
-  m_impl = boost::shared_ptr<detail::WeatherDataImpl>(new detail::WeatherDataImpl);
+  m_impl = std::shared_ptr<detail::WeatherDataImpl>(new detail::WeatherDataImpl);
 }
 
 WeatherData::WeatherData(std::string Tambt,std::string barpres,std::string windspd,std::string winddir,std::string relhum,int daytyp,
                          int uTa,int ubP,int uws,int uwd)
 {
-  m_impl = boost::shared_ptr<detail::WeatherDataImpl>(new detail::WeatherDataImpl(Tambt,barpres,windspd,winddir,relhum,daytyp,uTa,ubP,uws,uwd));
+  m_impl = std::shared_ptr<detail::WeatherDataImpl>(new detail::WeatherDataImpl(Tambt,barpres,windspd,winddir,relhum,daytyp,uTa,ubP,uws,uwd));
 }
 
 WeatherData::WeatherData(double Tambt,double barpres,double windspd,double winddir,double relhum,int daytyp,
                          int uTa,int ubP,int uws,int uwd)
 {
-  m_impl = boost::shared_ptr<detail::WeatherDataImpl>(new detail::WeatherDataImpl(Tambt,barpres,windspd,winddir,relhum,daytyp,uTa,ubP,uws,uwd));
+  m_impl = std::shared_ptr<detail::WeatherDataImpl>(new detail::WeatherDataImpl(Tambt,barpres,windspd,winddir,relhum,daytyp,uTa,ubP,uws,uwd));
 }
 
 WeatherData::WeatherData(const WeatherData &other) : m_impl(other.m_impl)
@@ -198,12 +199,12 @@ void WeatherData::setUwd(const int uwd)
 
 Icon::Icon()
 {
-  m_impl = boost::shared_ptr<detail::IconImpl>(new detail::IconImpl());
+  m_impl = std::shared_ptr<detail::IconImpl>(new detail::IconImpl());
 }
 
 Icon::Icon(int icon,int col,int row,int nr)
 {
-  m_impl = boost::shared_ptr<detail::IconImpl>(new detail::IconImpl(icon,col,row,nr));
+  m_impl = std::shared_ptr<detail::IconImpl>(new detail::IconImpl(icon,col,row,nr));
 }
 
 Icon::Icon(const Icon &other) : m_impl(other.m_impl)

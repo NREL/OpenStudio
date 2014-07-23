@@ -18,15 +18,15 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <project/Test/ProjectFixture.hpp>
+#include "ProjectFixture.hpp"
 
-#include <project/VagrantSettingsRecord.hpp>
-#include <project/VagrantSettingsRecord_Impl.hpp>
+#include "../VagrantSettingsRecord.hpp"
+#include "../VagrantSettingsRecord_Impl.hpp"
 
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/cloud/AWSProvider_Impl.hpp>
-#include <utilities/cloud/VagrantProvider.hpp>
-#include <utilities/cloud/VagrantProvider_Impl.hpp>
+#include "../../utilities/cloud/AWSProvider.hpp"
+#include "../../utilities/cloud/AWSProvider_Impl.hpp"
+#include "../../utilities/cloud/VagrantProvider.hpp"
+#include "../../utilities/cloud/VagrantProvider_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::project;

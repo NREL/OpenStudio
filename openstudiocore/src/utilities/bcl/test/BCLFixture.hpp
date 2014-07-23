@@ -17,17 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef BCLFIXTURE_HPP
-#define BCLFIXTURE_HPP
+#ifndef UTILITIES_BCL_TEST_BCLFIXTURE_HPP
+#define UTILITIES_BCL_TEST_BCLFIXTURE_HPP
 
 #include <gtest/gtest.h>
 
 #include <resources.hxx>
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/FileLogSink.hpp>
-
-#include <boost/shared_ptr.hpp>
+#include "../../core/Logger.hpp"
+#include "../../core/FileLogSink.hpp"
 
 class BCLFixture : public ::testing::Test {
  protected:
@@ -37,7 +35,7 @@ class BCLFixture : public ::testing::Test {
   // tear down after each test
   virtual void TearDown();
 
-  // initiallize static members
+  // initialize static members
   static void SetUpTestCase();
 
   // tear down static members
@@ -56,4 +54,4 @@ class BCLFixture : public ::testing::Test {
   virtual ~BCLFixture() {}
 };
 
-#endif // BCLFIXTURE_HPP
+#endif // UTILITIES_BCL_TEST_BCLFIXTURE_HPP

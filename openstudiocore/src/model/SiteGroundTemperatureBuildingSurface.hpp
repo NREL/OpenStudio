@@ -20,8 +20,8 @@
 #ifndef MODEL_SITEGROUNDTEMPERATUREBUILDINGSURFACE_HPP
 #define MODEL_SITEGROUNDTEMPERATUREBUILDINGSURFACE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -160,7 +160,7 @@ class MODEL_API SiteGroundTemperatureBuildingSurface : public ModelObject {
   friend class openstudio::IdfObject;
   friend class detail::SiteGroundTemperatureBuildingSurface_Impl;
 
-  explicit SiteGroundTemperatureBuildingSurface(boost::shared_ptr<detail::SiteGroundTemperatureBuildingSurface_Impl> impl);
+  explicit SiteGroundTemperatureBuildingSurface(std::shared_ptr<detail::SiteGroundTemperatureBuildingSurface_Impl> impl);
 
   explicit SiteGroundTemperatureBuildingSurface(Model& model);
 

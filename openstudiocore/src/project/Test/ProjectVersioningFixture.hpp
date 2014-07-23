@@ -22,10 +22,10 @@
 
 #include <gtest/gtest.h>
 
-#include <project/ProjectDatabase.hpp>
+#include "../ProjectDatabase.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/FileLogSink.hpp>
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/FileLogSink.hpp"
 
 #include <boost/optional.hpp>
 
@@ -46,7 +46,7 @@ class ProjectVersioningFixture : public ::testing::Test {
   // tear down after each test
   virtual void TearDown();
 
-  // initiallize static members
+  // initialize static members
   static void SetUpTestCase();
 
   // tear down static members

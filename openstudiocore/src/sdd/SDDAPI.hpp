@@ -1,5 +1,5 @@
-#ifndef __SDD_API_HPP__
-#define __SDD_API_HPP__
+#ifndef SDD_SDDAPI_HPP
+#define SDD_SDDAPI_HPP
 
 #if _WIN32 || _MSC_VER
 

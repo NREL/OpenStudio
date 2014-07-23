@@ -20,10 +20,10 @@
 #ifndef ANALYSIS_INPUTVARIABLE_IMPL_HPP
 #define ANALYSIS_INPUTVARIABLE_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/Variable_Impl.hpp>
+#include "AnalysisAPI.hpp"
+#include "Variable_Impl.hpp"
 
-#include <analysis/UncertaintyDescription.hpp>
+#include "UncertaintyDescription.hpp"
 
 namespace openstudio {
 

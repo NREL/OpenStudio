@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSITEMSELECTORBUTTONS_H
-#define OPENSTUDIO_OSITEMSELECTORBUTTONS_H
+#ifndef OPENSTUDIO_OSITEMSELECTORBUTTONS_HPP
+#define OPENSTUDIO_OSITEMSELECTORBUTTONS_HPP
 
-#include <openstudio_lib/MainTabView.hpp>
+#include "MainTabView.hpp"
 
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
 
 #include <QWidget>
 
@@ -120,5 +120,5 @@ class OSItemSelectorButtons : public QWidget
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSITEMSELECTORBUTTONS_H
+#endif // OPENSTUDIO_OSITEMSELECTORBUTTONS_HPP
 

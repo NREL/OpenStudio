@@ -19,49 +19,47 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/Model_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/ElectricEquipment.hpp>
-#include <model/ElectricEquipmentDefinition.hpp>
-#include <model/GasEquipment.hpp>
-#include <model/GasEquipmentDefinition.hpp>
-#include <model/Lights.hpp>
-#include <model/Lights_Impl.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/People.hpp>
-#include <model/PeopleDefinition.hpp>
-#include <model/Schedule.hpp>
-#include <model/LifeCycleCost.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate.hpp>
-#include <model/AirLoopHVACSupplyPlenum.hpp>
-#include <model/AirLoopHVACReturnPlenum.hpp>
+#include "../Model_Impl.hpp"
+#include "../Building.hpp"
+#include "../Building_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
+#include "../SpaceType.hpp"
+#include "../SpaceType_Impl.hpp"
+#include "../Space.hpp"
+#include "../Space_Impl.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../Surface.hpp"
+#include "../Surface_Impl.hpp"
+#include "../SubSurface.hpp"
+#include "../SubSurface_Impl.hpp"
+#include "../ElectricEquipment.hpp"
+#include "../ElectricEquipmentDefinition.hpp"
+#include "../GasEquipment.hpp"
+#include "../GasEquipmentDefinition.hpp"
+#include "../Lights.hpp"
+#include "../Lights_Impl.hpp"
+#include "../LightsDefinition.hpp"
+#include "../People.hpp"
+#include "../PeopleDefinition.hpp"
+#include "../Schedule.hpp"
+#include "../LifeCycleCost.hpp"
+#include "../SpaceInfiltrationDesignFlowRate.hpp"
+#include "../AirLoopHVACSupplyPlenum.hpp"
+#include "../AirLoopHVACReturnPlenum.hpp"
 
-#include <utilities/core/UUID.hpp>
+#include "../../utilities/core/UUID.hpp"
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/BoundingBox.hpp>
-#include <utilities/idf/WorkspaceObjectWatcher.hpp>
-#include <utilities/core/Compare.hpp>
-
-#include <boost/foreach.hpp>
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/geometry/Point3d.hpp"
+#include "../../utilities/geometry/Vector3d.hpp"
+#include "../../utilities/geometry/Transformation.hpp"
+#include "../../utilities/geometry/Geometry.hpp"
+#include "../../utilities/geometry/BoundingBox.hpp"
+#include "../../utilities/idf/WorkspaceObjectWatcher.hpp"
+#include "../../utilities/core/Compare.hpp"
 
 #include <iostream>
 
@@ -1394,14 +1392,14 @@ TEST_F(ModelFixture, Space_Intersect_OneToFour){
       space1.matchSurfaces(space2);
 
       EXPECT_EQ(4u, space1.surfaces().size());
-      BOOST_FOREACH(Surface s, space1.surfaces()){
+      for (const Surface& s : space1.surfaces()){
         EXPECT_EQ(4u, s.vertices().size());
         EXPECT_NEAR(50.0, s.grossArea(), areaTol);
         EXPECT_TRUE(s.adjacentSurface());
       }
 
       EXPECT_EQ(4u, space2.surfaces().size());
-      BOOST_FOREACH(Surface s, space2.surfaces()){
+      for (const Surface& s : space2.surfaces()){
         EXPECT_EQ(4u, s.vertices().size());
         EXPECT_NEAR(50.0, s.grossArea(), areaTol);
         EXPECT_TRUE(s.adjacentSurface());
@@ -1451,14 +1449,14 @@ TEST_F(ModelFixture, Space_Intersect_FourToOne){
       space2.matchSurfaces(space1);
 
       EXPECT_EQ(4u, space1.surfaces().size());
-      BOOST_FOREACH(Surface s, space1.surfaces()){
+      for (const Surface& s : space1.surfaces()){
         EXPECT_EQ(4u, s.vertices().size());
         EXPECT_NEAR(50.0, s.grossArea(), areaTol);
         EXPECT_TRUE(s.adjacentSurface());
       }
 
       EXPECT_EQ(4u, space2.surfaces().size());
-      BOOST_FOREACH(Surface s, space2.surfaces()){
+      for (const Surface& s : space2.surfaces()){
         EXPECT_EQ(4u, s.vertices().size());
         EXPECT_NEAR(50.0, s.grossArea(), areaTol);
         EXPECT_TRUE(s.adjacentSurface());

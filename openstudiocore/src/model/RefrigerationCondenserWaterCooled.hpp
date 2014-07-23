@@ -20,8 +20,8 @@
 #ifndef MODEL_REFRIGERATIONCONDENSERWATERCOOLED_HPP
 #define MODEL_REFRIGERATIONCONDENSERWATERCOOLED_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 
@@ -157,7 +157,7 @@ class MODEL_API RefrigerationCondenserWaterCooled : public StraightComponent {
   /// @cond
   typedef detail::RefrigerationCondenserWaterCooled_Impl ImplType;
 
-  explicit RefrigerationCondenserWaterCooled(boost::shared_ptr<detail::RefrigerationCondenserWaterCooled_Impl> impl);
+  explicit RefrigerationCondenserWaterCooled(std::shared_ptr<detail::RefrigerationCondenserWaterCooled_Impl> impl);
 
   friend class detail::RefrigerationCondenserWaterCooled_Impl;
   friend class Model;

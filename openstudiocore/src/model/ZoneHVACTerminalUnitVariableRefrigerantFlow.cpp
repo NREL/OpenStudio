@@ -17,26 +17,26 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/FanOnOff.hpp>
-#include <model/FanOnOff_Impl.hpp>
-#include <model/CurveCubic.hpp>
-#include <model/CurveCubic_Impl.hpp>
-#include <model/ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp>
-#include <model/ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/CoilHeatingDXVariableRefrigerantFlow.hpp>
-#include <model/CoilHeatingDXVariableRefrigerantFlow_Impl.hpp>
-#include <model/CoilCoolingDXVariableRefrigerantFlow.hpp>
-#include <model/CoilCoolingDXVariableRefrigerantFlow_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "FanOnOff.hpp"
+#include "FanOnOff_Impl.hpp"
+#include "CurveCubic.hpp"
+#include "CurveCubic_Impl.hpp"
+#include "ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
+#include "ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "CoilHeatingDXVariableRefrigerantFlow.hpp"
+#include "CoilHeatingDXVariableRefrigerantFlow_Impl.hpp"
+#include "CoilCoolingDXVariableRefrigerantFlow.hpp"
+#include "CoilCoolingDXVariableRefrigerantFlow_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow_FieldEnums.hxx>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -656,7 +656,7 @@ bool ZoneHVACTerminalUnitVariableRefrigerantFlow::setRatedTotalHeatingCapacitySi
 }
 
 /// @cond
-ZoneHVACTerminalUnitVariableRefrigerantFlow::ZoneHVACTerminalUnitVariableRefrigerantFlow(boost::shared_ptr<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl> impl)
+ZoneHVACTerminalUnitVariableRefrigerantFlow::ZoneHVACTerminalUnitVariableRefrigerantFlow(std::shared_ptr<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl> impl)
   : ZoneHVACComponent(impl)
 {}
 /// @endcond

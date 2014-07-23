@@ -18,16 +18,16 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <energyplus/Test/EnergyPlusFixture.hpp>
+#include "EnergyPlusFixture.hpp"
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/ElectricEquipment.hpp>
-#include <model/ElectricEquipment_Impl.hpp>
-#include <model/ElectricEquipmentDefinition.hpp>
-#include <model/ElectricEquipmentDefinition_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/ElectricEquipment.hpp"
+#include "../../model/ElectricEquipment_Impl.hpp"
+#include "../../model/ElectricEquipmentDefinition.hpp"
+#include "../../model/ElectricEquipmentDefinition_Impl.hpp"
 
 #include <utilities/idd/ElectricEquipment_FieldEnums.hxx>
 

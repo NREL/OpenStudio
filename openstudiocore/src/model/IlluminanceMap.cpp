@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/IlluminanceMap.hpp>
-#include <model/IlluminanceMap_Impl.hpp>
+#include "IlluminanceMap.hpp"
+#include "IlluminanceMap_Impl.hpp"
 
 #include <utilities/idd/OS_IlluminanceMap_FieldEnums.hxx>
 
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/geometry/EulerAngles.hpp>
-#include <utilities/geometry/Vector3d.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/EulerAngles.hpp"
+#include "../utilities/geometry/Vector3d.hpp"
+#include "../utilities/geometry/Point3d.hpp"
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -278,8 +278,8 @@ namespace detail {
   {
     std::vector<Point3d> result;
 
-    BOOST_FOREACH(double y, linspace(0, this->yLength(), this->numberofYGridPoints())){
-      BOOST_FOREACH(double x, linspace(0, this->xLength(), this->numberofXGridPoints())){
+    for (double y : linspace(0, this->yLength(), this->numberofYGridPoints())){
+      for (double x : linspace(0, this->xLength(), this->numberofXGridPoints())){
         result.push_back(Point3d(x, y, 0));
       }
     }
@@ -473,7 +473,7 @@ std::vector<Point3d> IlluminanceMap::corners() const
 }
 
 /// @cond
-IlluminanceMap::IlluminanceMap(boost::shared_ptr<detail::IlluminanceMap_Impl> impl)
+IlluminanceMap::IlluminanceMap(std::shared_ptr<detail::IlluminanceMap_Impl> impl)
   : SpaceItem(impl)
 {}
 /// @endcond

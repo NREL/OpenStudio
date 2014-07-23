@@ -19,9 +19,9 @@
 
 require 'openstudio'
 require 'openstudio/energyplus/find_energyplus'
-require 'test/unit'
+require 'minitest/autorun'
 
-class AdvancedRubyWorkflow_Test < Test::Unit::TestCase
+class AdvancedRubyWorkflow_Test < MiniTest::Unit::TestCase
 
   def test_Workflow2
   

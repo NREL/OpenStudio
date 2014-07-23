@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/DistrictCooling.hpp>
-#include <model/DistrictCooling_Impl.hpp>
+#include "DistrictCooling.hpp"
+#include "DistrictCooling_Impl.hpp"
 
 #include <utilities/idd/OS_DistrictCooling_FieldEnums.hxx>
-#include <utilities/units/Unit.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
+#include "../utilities/core/Assert.hpp"
 
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -157,7 +157,7 @@ bool DistrictCooling::setNominalCapacity(const Quantity& nominalCapacity) {
 
 /// @cond
 
-DistrictCooling::DistrictCooling(boost::shared_ptr<detail::DistrictCooling_Impl> impl)
+DistrictCooling::DistrictCooling(std::shared_ptr<detail::DistrictCooling_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

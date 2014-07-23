@@ -17,18 +17,18 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/InternalMass.hpp>
-#include <model/InternalMass_Impl.hpp>
+#include "InternalMass.hpp"
+#include "InternalMass_Impl.hpp"
 
-#include <model/InternalMassDefinition.hpp>
-#include <model/InternalMassDefinition_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/LifeCycleCost.hpp>
+#include "InternalMassDefinition.hpp"
+#include "InternalMassDefinition_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "LifeCycleCost.hpp"
 
 #include <utilities/idd/OS_InternalMass_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -77,7 +77,7 @@ namespace detail {
     this->makeUnique();
 
     InternalMassDefinition internalMassDefinition = this->internalMassDefinition();
-    BOOST_FOREACH(LifeCycleCost cost, internalMassDefinition.lifeCycleCosts()){
+    for (LifeCycleCost cost : internalMassDefinition.lifeCycleCosts()){
       cost.convertToCostPerEach();
     }
 
@@ -259,7 +259,7 @@ double InternalMass::getSurfaceAreaPerPerson(double floorArea, double numPeople)
 }
 
 /// @cond
-InternalMass::InternalMass(boost::shared_ptr<detail::InternalMass_Impl> impl)
+InternalMass::InternalMass(std::shared_ptr<detail::InternalMass_Impl> impl)
   : SpaceLoadInstance(impl)
 {}
 /// @endcond

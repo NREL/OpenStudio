@@ -20,8 +20,8 @@
 #ifndef PROJECT_OPTIMIZATIONDATAPOINTRECORD_HPP
 #define PROJECT_OPTIMIZATIONDATAPOINTRECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/DataPointRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "DataPointRecord.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -88,11 +88,11 @@ class PROJECT_API OptimizationDataPointRecord : public DataPointRecord {
   friend class detail::OptimizationDataPointRecord_Impl;
 
   /** Construct from impl. */
-  OptimizationDataPointRecord(boost::shared_ptr<detail::OptimizationDataPointRecord_Impl> impl,
+  OptimizationDataPointRecord(std::shared_ptr<detail::OptimizationDataPointRecord_Impl> impl,
                               ProjectDatabase database);
 
   /// Construct from impl. Does not register in the database, so use with caution.
-  explicit OptimizationDataPointRecord(boost::shared_ptr<detail::OptimizationDataPointRecord_Impl> impl);
+  explicit OptimizationDataPointRecord(std::shared_ptr<detail::OptimizationDataPointRecord_Impl> impl);
 
   /// @endcond
  private:

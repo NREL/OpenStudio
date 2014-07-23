@@ -20,8 +20,8 @@
 #ifndef MODEL_SETPOINTMANAGEROUTDOORAIRRESET_HPP
 #define MODEL_SETPOINTMANAGEROUTDOORAIRRESET_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/HVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "SetpointManager.hpp"
 
 namespace openstudio {
 
@@ -39,8 +39,8 @@ namespace detail {
 
 } // detail
 
-/** SetpointManagerOutdoorAirReset is a HVACComponent that wraps the OpenStudio IDD object 'OS:SetpointManager:OutdoorAirReset'. */
-class MODEL_API SetpointManagerOutdoorAirReset : public HVACComponent {
+/** SetpointManagerOutdoorAirReset is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:OutdoorAirReset'. */
+class MODEL_API SetpointManagerOutdoorAirReset : public SetpointManager {
   public:
 
   explicit SetpointManagerOutdoorAirReset(const Model& model);
@@ -59,7 +59,7 @@ class MODEL_API SetpointManagerOutdoorAirReset : public HVACComponent {
 
   bool isControlVariableDefaulted() const;
 
-  bool setControlVariable(std::string controlVariable);
+  bool setControlVariable(const std::string& controlVariable);
 
   void resetControlVariable();
 
@@ -155,7 +155,7 @@ class MODEL_API SetpointManagerOutdoorAirReset : public HVACComponent {
   /// @cond
   typedef detail::SetpointManagerOutdoorAirReset_Impl ImplType;
 
-  explicit SetpointManagerOutdoorAirReset(boost::shared_ptr<detail::SetpointManagerOutdoorAirReset_Impl> impl);
+  explicit SetpointManagerOutdoorAirReset(std::shared_ptr<detail::SetpointManagerOutdoorAirReset_Impl> impl);
 
   friend class detail::SetpointManagerOutdoorAirReset_Impl;
   friend class Model;

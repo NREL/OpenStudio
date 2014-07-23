@@ -20,9 +20,9 @@
 #ifndef RULESET_USERSCRIPT_HPP
 #define RULESET_USERSCRIPT_HPP
 
-#include <ruleset/RulesetAPI.hpp>
+#include "RulesetAPI.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
 namespace ruleset {

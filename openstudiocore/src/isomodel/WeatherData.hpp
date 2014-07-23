@@ -16,12 +16,12 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#ifndef ISOMODEL_WEATHER_DATA_HPP
-#define ISOMODEL_WEATHER_DATA_HPP
+#ifndef ISOMODEL_WEATHERDATA_HPP
+#define ISOMODEL_WEATHERDATA_HPP
 
 #include "ISOModelAPI.hpp"
-#include <utilities/data/Vector.hpp>
-#include <utilities/data/Matrix.hpp>
+#include "../utilities/data/Vector.hpp"
+#include "../utilities/data/Matrix.hpp"
 
 namespace openstudio {
 namespace isomodel {
@@ -73,4 +73,4 @@ private:
 }
 }
 
-#endif
+#endif // ISOMODEL_WEATHERDATA_HPP

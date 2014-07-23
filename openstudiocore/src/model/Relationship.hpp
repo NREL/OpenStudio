@@ -20,14 +20,14 @@
 #ifndef MODEL_RELATIONSHIP_HPP
 #define MODEL_RELATIONSHIP_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/Optional.hpp"
 
-#include <QtCore/QVariant>
-#include <QtCore/QMetaProperty>
+#include <QVariant>
+#include <QMetaProperty>
 
 #include <string>
 

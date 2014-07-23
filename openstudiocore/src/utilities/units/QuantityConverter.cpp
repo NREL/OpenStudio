@@ -17,24 +17,23 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSQuantityVector.hpp>
+#include "QuantityConverter.hpp"
+#include "Quantity.hpp"
+#include "OSQuantityVector.hpp"
 
-#include <utilities/units/UnitFactory.hpp>
-#include <utilities/units/ScaleFactory.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/Unit.hpp>
-#include <utilities/units/BTUUnit.hpp>
-#include <utilities/units/CelsiusUnit.hpp>
-#include <utilities/units/CFMUnit.hpp>
-#include <utilities/units/FahrenheitUnit.hpp>
-#include <utilities/units/IPUnit.hpp>
-#include <utilities/units/SIUnit.hpp>
-#include <utilities/units/ThermUnit.hpp>
-#include <utilities/units/WhUnit.hpp>
+#include "UnitFactory.hpp"
+#include "ScaleFactory.hpp"
+#include "Unit.hpp"
+#include "BTUUnit.hpp"
+#include "CelsiusUnit.hpp"
+#include "CFMUnit.hpp"
+#include "FahrenheitUnit.hpp"
+#include "IPUnit.hpp"
+#include "SIUnit.hpp"
+#include "ThermUnit.hpp"
+#include "WhUnit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 namespace openstudio {
 
@@ -291,7 +290,7 @@ boost::optional<Quantity> QuantityConverterSingleton::m_convertToSI(const Quanti
   while( it != end ) {
     int baseExponent = working.baseUnitExponent(*it);
     // apply conversion factor
-    BaseUnitConversionMap::const_iterator mapItr = m_toSImap.find(*it);
+    auto mapItr = m_toSImap.find(*it);
     if (mapItr == m_toSImap.end()) {
       LOG(Error,"Cannot convert base unit '" << *it << "' to SI because it is not "
           << "registered with the QuantityConverter.");
@@ -428,7 +427,7 @@ boost::optional<Quantity> QuantityConverterSingleton::m_convertToTargetFromSI(
     while( it != end ) {
       int baseExponent = targetUnits.baseUnitExponent(*it);
       // apply conversion factor
-      BaseUnitConversionMap::const_iterator mapItr = m_toSImap.find(*it);
+      auto mapItr = m_toSImap.find(*it);
       if (mapItr == m_toSImap.end()) {
         LOG(Error,"Cannot convert to a target Unit containing base unit '" << *it
             << "', because it is not registered with the QuantityConverter.");

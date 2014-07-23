@@ -22,21 +22,21 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/core/Path.hpp>
+#include "../SqlFile.hpp"
+#include "../../core/Path.hpp"
 
 #include <resources.hxx>
 
 class SqlFileLargeFixture : public ::testing::Test {
 protected:
 
-  // initiallize for each test
+  // initialize for each test
   virtual void SetUp();
 
   // tear down after for each test
   virtual void TearDown();
 
-  // initiallize static members
+  // initialize static members
   static void SetUpTestCase();
 
   // tear down static members
@@ -48,7 +48,7 @@ protected:
 public:
   // sql files
   static openstudio::SqlFile sqlFile;
-  static boost::shared_ptr<openstudio::TextLogType> logFile;
+  static std::shared_ptr<openstudio::TextLogType> logFile;
 };
 
 #endif // UTILITIES_SQL_TEST_SQLFILELARGEFIXTURE_HPP

@@ -20,8 +20,8 @@
 #ifndef PROJECT_CONTINUOUSVARIABLERECORD_HPP
 #define PROJECT_CONTINUOUSVARIABLERECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/InputVariableRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "InputVariableRecord.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -110,12 +110,12 @@ class PROJECT_API ContinuousVariableRecord : public InputVariableRecord {
   friend class detail::ContinuousVariableRecord_Impl;
 
   /** Construct from impl. */
-  ContinuousVariableRecord(boost::shared_ptr<detail::ContinuousVariableRecord_Impl> impl,
+  ContinuousVariableRecord(std::shared_ptr<detail::ContinuousVariableRecord_Impl> impl,
                            ProjectDatabase database,
                            const boost::optional<analysis::ContinuousVariable>& variable);
 
   /// Construct from impl. Does not register in the database, so use with caution.
-  explicit ContinuousVariableRecord(boost::shared_ptr<detail::ContinuousVariableRecord_Impl> impl);
+  explicit ContinuousVariableRecord(std::shared_ptr<detail::ContinuousVariableRecord_Impl> impl);
 
   /// @endcond
  private:

@@ -17,31 +17,31 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurface_Impl.hpp>
+#include "ShadingSurface.hpp"
+#include "ShadingSurface_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurfaceGroup_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/DefaultConstructionSet.hpp>
-#include <model/DefaultConstructionSet_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/DaylightingDeviceShelf.hpp>
-#include <model/DaylightingDeviceShelf_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "ShadingSurfaceGroup.hpp"
+#include "ShadingSurfaceGroup_Impl.hpp"
+#include "ConstructionBase.hpp"
+#include "ConstructionBase_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "SpaceType.hpp"
+#include "SpaceType_Impl.hpp"
+#include "Building.hpp"
+#include "Building_Impl.hpp"
+#include "DefaultConstructionSet.hpp"
+#include "DefaultConstructionSet_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "DaylightingDeviceShelf.hpp"
+#include "DaylightingDeviceShelf_Impl.hpp"
 
 #include <utilities/idd/OS_ShadingSurface_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -128,7 +128,7 @@ namespace detail {
 
     boost::optional<ConstructionBase> construction = getObject<ModelObject>().getModelObjectTarget<ConstructionBase>(OS_ShadingSurfaceFields::ConstructionName);
     if (construction){
-      return std::make_pair<ConstructionBase, int>(*construction, 0);
+      return std::make_pair(*construction, 0);
     }
 
     boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup = this->shadingSurfaceGroup();
@@ -151,7 +151,7 @@ namespace detail {
         if (defaultConstructionSet){
           construction = defaultConstructionSet->getDefaultConstruction(this->getObject<ShadingSurface>());
           if (construction){
-            return std::make_pair<ConstructionBase, int>(*construction, 4);
+            return std::make_pair(*construction, 4);
           }
         }
 
@@ -162,7 +162,7 @@ namespace detail {
           if (defaultConstructionSet){
             construction = defaultConstructionSet->getDefaultConstruction(this->getObject<ShadingSurface>());
             if (construction){
-              return std::make_pair<ConstructionBase, int>(*construction, 5);
+              return std::make_pair(*construction, 5);
             }
           }
         }
@@ -428,7 +428,7 @@ boost::optional<DaylightingDeviceShelf> ShadingSurface::daylightingDeviceShelf()
 }
 
 /// @cond
-ShadingSurface::ShadingSurface(boost::shared_ptr<detail::ShadingSurface_Impl> impl)
+ShadingSurface::ShadingSurface(std::shared_ptr<detail::ShadingSurface_Impl> impl)
   : PlanarSurface(impl)
 {}
 /// @endcond

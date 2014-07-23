@@ -18,11 +18,11 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idf/Test/IdfFixture.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
+#include "IdfFixture.hpp"
+#include "../Workspace.hpp"
+#include "../WorkspaceObject.hpp"
 
-#include <utilities/idf/ValidityReport.hpp>
+#include "../ValidityReport.hpp"
 
 #include <iostream>
 #include <sstream>

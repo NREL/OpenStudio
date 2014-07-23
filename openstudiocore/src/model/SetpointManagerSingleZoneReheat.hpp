@@ -20,8 +20,8 @@
 #ifndef MODEL_SETPOINTMANAGERSINGLEZONEREHEAT_HPP
 #define MODEL_SETPOINTMANAGERSINGLEZONEREHEAT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/HVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "SetpointManager.hpp"
 
 namespace openstudio {
 
@@ -41,7 +41,7 @@ namespace detail {
  *  The purpose of this class is to simplify the construction and manipulation
  *  of the EnergyPlus SetpointManager:SingleZone:Reheat object.
  */
-class MODEL_API SetpointManagerSingleZoneReheat : public HVACComponent {
+class MODEL_API SetpointManagerSingleZoneReheat : public SetpointManager {
   
   public:
   virtual ~SetpointManagerSingleZoneReheat() {}
@@ -64,10 +64,11 @@ class MODEL_API SetpointManagerSingleZoneReheat : public HVACComponent {
   void setMaximumSupplyAirTemperature( double value );
 
   /** Returns the Node referred to by the SetpointNodeName field. **/
-  boost::optional<Node> setpointNode();
+  boost::optional<Node> setpointNode() const;
 
-  /** Sets the Node referred to by the SetpointNodeName field. **/
-  void setSetpointNode( Node & node );
+  std::string controlVariable() const;
+
+  bool setControlVariable( const std::string& controlVariable );
 
   boost::optional<ThermalZone> controlZone();
 
@@ -75,13 +76,9 @@ class MODEL_API SetpointManagerSingleZoneReheat : public HVACComponent {
 
   void resetControlZone();
 
-  virtual bool addToNode(Node & node);
-
-  virtual std::vector<openstudio::IdfObject> remove();
-
-  virtual ModelObject clone(Model model) const;
-
   static IddObjectType iddObjectType();
+
+  static std::vector<std::string> controlVariableValues();
 
   protected:
 
@@ -97,7 +94,7 @@ class MODEL_API SetpointManagerSingleZoneReheat : public HVACComponent {
 
   typedef detail::SetpointManagerSingleZoneReheat_Impl ImplType;
 
-  explicit SetpointManagerSingleZoneReheat(boost::shared_ptr<detail::SetpointManagerSingleZoneReheat_Impl> impl);
+  explicit SetpointManagerSingleZoneReheat(std::shared_ptr<detail::SetpointManagerSingleZoneReheat_Impl> impl);
 
   private:
 

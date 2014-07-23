@@ -17,41 +17,41 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/FanOnOff.hpp>
-#include <model/FanOnOff_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Loop.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/StraightComponent_Impl.hpp>
-#include <model/Curve.hpp>
-#include <model/Curve_Impl.hpp>
-#include <model/CurveCubic.hpp>
-#include <model/CurveCubic_Impl.hpp>
-#include <model/CurveExponent.hpp>
-#include <model/CurveExponent_Impl.hpp>
-#include <model/ZoneHVACComponent.hpp>
-#include <model/ZoneHVACComponent_Impl.hpp>
-#include <model/ZoneHVACWaterToAirHeatPump.hpp>
-#include <model/ZoneHVACWaterToAirHeatPump_Impl.hpp>
-#include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
-#include <model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp>
-#include <model/ZoneHVACFourPipeFanCoil.hpp>
-#include <model/ZoneHVACFourPipeFanCoil_Impl.hpp>
-#include <model/ZoneHVACPackagedTerminalHeatPump.hpp>
-#include <model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp>
-#include <model/ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp>
-#include <model/ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp>
-#include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
-#include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
-#include <model/AirLoopHVACUnitarySystem.hpp>
-#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
+#include "FanOnOff.hpp"
+#include "FanOnOff_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "Model.hpp"
+#include "Loop.hpp"
+#include "StraightComponent.hpp"
+#include "StraightComponent_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
+#include "CurveCubic.hpp"
+#include "CurveCubic_Impl.hpp"
+#include "CurveExponent.hpp"
+#include "CurveExponent_Impl.hpp"
+#include "ZoneHVACComponent.hpp"
+#include "ZoneHVACComponent_Impl.hpp"
+#include "ZoneHVACWaterToAirHeatPump.hpp"
+#include "ZoneHVACWaterToAirHeatPump_Impl.hpp"
+#include "ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
+#include "ZoneHVACFourPipeFanCoil.hpp"
+#include "ZoneHVACFourPipeFanCoil_Impl.hpp"
+#include "ZoneHVACPackagedTerminalHeatPump.hpp"
+#include "ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
+#include "ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
+#include "ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
+#include "AirLoopHVACUnitarySystem.hpp"
+#include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include <utilities/idd/OS_Fan_OnOff_FieldEnums.hxx>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -393,15 +393,13 @@ namespace detail {
     // AirLoopHVACUnitarySystem
     std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
 
-    for( std::vector<AirLoopHVACUnitarySystem>::iterator it = airLoopHVACUnitarySystems.begin();
-    it < airLoopHVACUnitarySystems.end();
-    ++it )
+    for( const auto & airLoopHVACUnitarySystem : airLoopHVACUnitarySystems )
     {
-      if( boost::optional<HVACComponent> fan = it->supplyFan() )
+      if( boost::optional<HVACComponent> fan = airLoopHVACUnitarySystem.supplyFan() )
       {
         if( fan->handle() == this->handle() )
         {
-          return *it;
+          return airLoopHVACUnitarySystem;
         }
       }
     }
@@ -409,15 +407,13 @@ namespace detail {
     // AirLoopHVACUnitaryHeatPumpAirToAir
     std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> airLoopHVACUnitaryHeatPumpAirToAirs = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
 
-    for( std::vector<AirLoopHVACUnitaryHeatPumpAirToAir>::iterator it = airLoopHVACUnitaryHeatPumpAirToAirs.begin();
-    it < airLoopHVACUnitaryHeatPumpAirToAirs.end();
-    ++it )
+    for( const auto & airLoopHVACUnitaryHeatPumpAirToAir : airLoopHVACUnitaryHeatPumpAirToAirs )
     {
-      if( boost::optional<HVACComponent> fan = it->supplyAirFan() )
+      if( boost::optional<HVACComponent> fan = airLoopHVACUnitaryHeatPumpAirToAir.supplyAirFan() )
       {
         if( fan->handle() == this->handle() )
         {
-          return *it;
+          return airLoopHVACUnitaryHeatPumpAirToAir;
         }
       }
     }
@@ -428,40 +424,38 @@ namespace detail {
   boost::optional<ZoneHVACComponent> FanOnOff_Impl::containingZoneHVACComponent() const
   {
     std::vector<ZoneHVACComponent> zoneHVACComponent = this->model().getModelObjects<ZoneHVACComponent>();
-    for( std::vector<ZoneHVACComponent>::iterator it = zoneHVACComponent.begin();
-    it < zoneHVACComponent.end();
-    ++it )
+    for( const auto & elem : zoneHVACComponent )
     {
-      switch(it->iddObject().type().value())
+      switch(elem.iddObject().type().value())
       {
       case openstudio::IddObjectType::OS_ZoneHVAC_FourPipeFanCoil :
         {
-          ZoneHVACFourPipeFanCoil component = it->cast<ZoneHVACFourPipeFanCoil>();
-          if (component.supplyAirFan().handle() == this->handle()) return *it;
+          ZoneHVACFourPipeFanCoil component = elem.cast<ZoneHVACFourPipeFanCoil>();
+          if (component.supplyAirFan().handle() == this->handle()) return elem;
           break;
         }
       case openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump :
         {
-          ZoneHVACPackagedTerminalHeatPump component = it->cast<ZoneHVACPackagedTerminalHeatPump>();
-          if (component.supplyAirFan().handle() == this->handle()) return *it;
+          ZoneHVACPackagedTerminalHeatPump component = elem.cast<ZoneHVACPackagedTerminalHeatPump>();
+          if (component.supplyAirFan().handle() == this->handle()) return elem;
           break;
         }
       case openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner :
         {
-          ZoneHVACPackagedTerminalAirConditioner component = it->cast<ZoneHVACPackagedTerminalAirConditioner>();
-          if (component.supplyAirFan().handle() == this->handle()) return *it;
+          ZoneHVACPackagedTerminalAirConditioner component = elem.cast<ZoneHVACPackagedTerminalAirConditioner>();
+          if (component.supplyAirFan().handle() == this->handle()) return elem;
           break;
         }
       case openstudio::IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow :
         {
-          ZoneHVACTerminalUnitVariableRefrigerantFlow component = it->cast<ZoneHVACTerminalUnitVariableRefrigerantFlow>();
-          if (component.supplyAirFan().handle() == this->handle()) return *it;
+          ZoneHVACTerminalUnitVariableRefrigerantFlow component = elem.cast<ZoneHVACTerminalUnitVariableRefrigerantFlow>();
+          if (component.supplyAirFan().handle() == this->handle()) return elem;
           break;
         }
       case openstudio::IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump :
         {
-          ZoneHVACWaterToAirHeatPump component = it->cast<ZoneHVACWaterToAirHeatPump>();
-          if (component.supplyAirFan().handle() == this->handle()) return *it;
+          ZoneHVACWaterToAirHeatPump component = elem.cast<ZoneHVACWaterToAirHeatPump>();
+          if (component.supplyAirFan().handle() == this->handle()) return elem;
           break;
         }
       default:
@@ -701,7 +695,7 @@ void FanOnOff::resetEndUseSubcategory()
 }
 
 /// @cond
-FanOnOff::FanOnOff(boost::shared_ptr<detail::FanOnOff_Impl> impl)
+FanOnOff::FanOnOff(std::shared_ptr<detail::FanOnOff_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

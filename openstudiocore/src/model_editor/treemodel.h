@@ -47,7 +47,7 @@
  
 #include <model/ParentObject.hpp>
 #include <model/Building.hpp>
-#include <model_editor/ModelEditorAPI.hpp>
+#include "ModelEditorAPI.hpp"
 
 class QModelIndex;
 

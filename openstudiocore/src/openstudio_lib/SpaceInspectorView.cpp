@@ -17,39 +17,39 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/SpaceInspectorView.hpp>
+#include "SpaceInspectorView.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSSwitch.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
-#include <openstudio_lib/OSVectorController.hpp>
-#include <openstudio_lib/OSDropZone.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/SpaceLoadInstancesWidget.hpp>
+#include "OSVectorController.hpp"
+#include "OSDropZone.hpp"
+#include "ModelObjectItem.hpp"
+#include "SpaceLoadInstancesWidget.hpp"
 
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/BuildingStory.hpp>
-#include <model/BuildingStory_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/DefaultConstructionSet.hpp>
-#include <model/DefaultConstructionSet_Impl.hpp>
-#include <model/DefaultScheduleSet.hpp>
-#include <model/DefaultScheduleSet_Impl.hpp>
-#include <model/DesignSpecificationOutdoorAir.hpp>
-#include <model/DesignSpecificationOutdoorAir_Impl.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate_Impl.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Component.hpp>
-#include <model/Component_Impl.hpp>
-#include <model/ComponentData.hpp>
-#include <model/ComponentData_Impl.hpp>
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
+#include "../model/BuildingStory.hpp"
+#include "../model/BuildingStory_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/DefaultConstructionSet.hpp"
+#include "../model/DefaultConstructionSet_Impl.hpp"
+#include "../model/DefaultScheduleSet.hpp"
+#include "../model/DefaultScheduleSet_Impl.hpp"
+#include "../model/DesignSpecificationOutdoorAir.hpp"
+#include "../model/DesignSpecificationOutdoorAir_Impl.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
+#include "../model/Component.hpp"
+#include "../model/Component_Impl.hpp"
+#include "../model/ComponentData.hpp"
+#include "../model/ComponentData_Impl.hpp"
 
 #include <utilities/idd/OS_Space_FieldEnums.hxx>
 #include <utilities/idd/OS_SpaceType_FieldEnums.hxx>
@@ -61,7 +61,7 @@
 #include <utilities/idd/OS_SpaceInfiltration_DesignFlowRate_FieldEnums.hxx>
 #include <utilities/idd/OS_SpaceInfiltration_EffectiveLeakageArea_FieldEnums.hxx>
 #include <utilities/idd/OS_Building_FieldEnums.hxx>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -467,7 +467,7 @@ void SpaceDesignSpecificationOutdoorAirVectorController::onMakeNewItem()
 void SpaceSpaceInfiltrationDesignFlowRateVectorController::attach(const model::ModelObject& modelObject)
 {
   ModelObjectVectorController::attach(modelObject);
-  BOOST_FOREACH(const model::SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate, modelObject.model().getConcreteModelObjects<model::SpaceInfiltrationDesignFlowRate>()){
+  for (const model::SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate : modelObject.model().getConcreteModelObjects<model::SpaceInfiltrationDesignFlowRate>()){
     attachOtherModelObject(spaceInfiltrationDesignFlowRate);
   }
 }
@@ -489,14 +489,14 @@ std::vector<OSItemId> SpaceSpaceInfiltrationDesignFlowRateVectorController::make
 
     // inherited
     if (space.spaceType()){
-      BOOST_FOREACH(const model::SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate, space.spaceType()->spaceInfiltrationDesignFlowRates()){
+      for (const model::SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate : space.spaceType()->spaceInfiltrationDesignFlowRates()){
         OSItemId itemId = modelObjectToItemId(spaceInfiltrationDesignFlowRate, true);
         result.push_back(itemId);
       }
     }
 
     // direct
-    BOOST_FOREACH(const model::SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate, space.spaceInfiltrationDesignFlowRates()){
+    for (const model::SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate : space.spaceInfiltrationDesignFlowRates()){
       OSItemId itemId = modelObjectToItemId(spaceInfiltrationDesignFlowRate, false);
       result.push_back(itemId);
     }
@@ -561,7 +561,7 @@ void SpaceSpaceInfiltrationDesignFlowRateVectorController::onMakeNewItem()
 void SpaceSpaceInfiltrationEffectiveLeakageAreaVectorController::attach(const model::ModelObject& modelObject)
 {
   ModelObjectVectorController::attach(modelObject);
-  BOOST_FOREACH(const model::SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea, modelObject.model().getConcreteModelObjects<model::SpaceInfiltrationEffectiveLeakageArea>()){
+  for (const model::SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea : modelObject.model().getConcreteModelObjects<model::SpaceInfiltrationEffectiveLeakageArea>()){
     attachOtherModelObject(spaceInfiltrationEffectiveLeakageArea);
   }
 }
@@ -583,14 +583,14 @@ std::vector<OSItemId> SpaceSpaceInfiltrationEffectiveLeakageAreaVectorController
 
     // inherited
     if (space.spaceType()){
-      BOOST_FOREACH(const model::SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea, space.spaceType()->spaceInfiltrationEffectiveLeakageAreas()){
+      for (const model::SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea : space.spaceType()->spaceInfiltrationEffectiveLeakageAreas()){
         OSItemId itemId = modelObjectToItemId(spaceInfiltrationEffectiveLeakageArea, true);
         result.push_back(itemId);
       }
     }
 
     // direct
-    BOOST_FOREACH(const model::SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea, space.spaceInfiltrationEffectiveLeakageAreas()){
+    for (const model::SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea : space.spaceInfiltrationEffectiveLeakageAreas()){
       OSItemId itemId = modelObjectToItemId(spaceInfiltrationEffectiveLeakageArea, false);
       result.push_back(itemId);
     }

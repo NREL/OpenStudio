@@ -17,13 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <runmanager/app/MainWindow.hpp>
-#include <runmanager/app/FileSystemSearch.hpp>
-#include <runmanager/lib/JobFactory.hpp>
-#include <runmanager/lib/Workflow.hpp>
+#include "MainWindow.hpp"
+#include "FileSystemSearch.hpp"
+#include "../lib/JobFactory.hpp"
+#include "../lib/Workflow.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/plot/ProgressBar.hpp>
+#include "../../utilities/core/Application.hpp"
+#include "../../utilities/plot/ProgressBar.hpp"
 
 #include <QDesktopServices>
 #include <QDirModel>
@@ -49,7 +49,7 @@ namespace runmanager {
   }
 
 
-  MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags, bool newdb)
+  MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags, bool newdb)
     : QMainWindow(parent, flags), m_runmanager(openstudio::runmanager::RunManager::defaultDBLocation(), newdb, true),
       m_fss(openstudio::path(), false, "", QRegExp())
   {
@@ -65,8 +65,8 @@ namespace runmanager {
   setWindowIcon(icon);
 #endif
 
-    m_selectedMessage = boost::shared_ptr<StatusBarMessage>(new StatusBarMessage("0 files selected.", statusBar()));
-    m_regexMessage = boost::shared_ptr<StatusBarMessage>(new StatusBarMessage("", statusBar()));
+    m_selectedMessage = std::shared_ptr<StatusBarMessage>(new StatusBarMessage("0 files selected.", statusBar()));
+    m_regexMessage = std::shared_ptr<StatusBarMessage>(new StatusBarMessage("", statusBar()));
 
     connect(ui.tabWidget, SIGNAL(currentChanged(int)), this, SLOT(updateToolbar(int)));
 
@@ -176,18 +176,16 @@ namespace runmanager {
     {
       if (!boost::filesystem::exists(itr->localBinPath))
       {
-        badtools.insert(toString(itr->localBinPath.external_file_string()));
+        badtools.insert(toString(itr->localBinPath.native()));
       }
     }
 
     if (!badtools.empty())
     {
       std::string paths;
-      for (std::set<std::string>::const_iterator itr = badtools.begin();
-           itr != badtools.end();
-           ++itr)
+      for (const auto & badtool : badtools)
       {
-        paths += "\n\t" + *itr;
+        paths += "\n\t" + badtool;
       }
 
       QMessageBox::warning(this,
@@ -386,7 +384,7 @@ namespace runmanager {
   void MainWindow::settingsFileInfo()
   {
     if (QMessageBox::information(this, "Settings File", QString("The settings and job queue are currently stored in the file: ") 
-          + toQString(m_runmanager.dbPath().external_file_string()),
+          + toQString(m_runmanager.dbPath().native()),
           QMessageBox::Ok | QMessageBox::RestoreDefaults)
           == QMessageBox::RestoreDefaults)
     {
@@ -428,7 +426,7 @@ namespace runmanager {
   {
     if (toPath(ui.txtRootPath->text()) != p)
     {
-      ui.txtRootPath->setText(toQString(p.external_file_string()));
+      ui.txtRootPath->setText(toQString(p.native()));
     }
   }
 
@@ -597,7 +595,7 @@ namespace runmanager {
 
       if (ui.cbRegex->checkState() != Qt::Checked)
       {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
         QString cleanedpattern = pattern;
         cleanedpattern.replace("\\", "[\\\\]");
         QString appendedpattern = "*" + cleanedpattern + "*";
@@ -675,10 +673,10 @@ namespace runmanager {
     if (openstudio::toString(t_file.stem()) == "in")
     {
       // The file is called "in", let's use the parent path's name as our job name
-      jobname = openstudio::toPath(parentdir.filename());
+      jobname = parentdir.filename();
     } else {
       // Let's use the stem of the file name to create a working dir, since it's a meaningful name
-      jobname = openstudio::toPath(t_file.stem());     
+      jobname = t_file.stem();     
     }
 
     //std::string workflowkey = "workflow-" + t_wf.key();
@@ -806,7 +804,7 @@ namespace runmanager {
         {
           text += "None";
         } else {
-          text += toQString(epw.external_file_string());
+          text += toQString(epw.native());
         }
       }
 
@@ -825,11 +823,9 @@ namespace runmanager {
       StatusBarProgress sbp("Adding jobs to queue", statusBar());
       sbp.update(0, t_files.size()-1, 0);
       int place = 0;
-      for (std::vector<openstudio::path>::const_iterator itr = t_files.begin();
-           itr != t_files.end();
-           ++itr)
+      for (const auto & file : t_files)
       {
-        queueSimulation(*itr, epw);
+        queueSimulation(file, epw);
         ++place;
         sbp.update(place);
       }
@@ -866,7 +862,7 @@ namespace runmanager {
   {
     if (!t_file.isEmpty())
     {
-      QString filename = toQString(toPath(t_file).external_file_string());
+      QString filename = toQString(toPath(t_file).native());
       int i = t_qcb.findText(filename);
       if (i == -1)
       {

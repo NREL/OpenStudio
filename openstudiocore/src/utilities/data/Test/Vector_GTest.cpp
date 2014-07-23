@@ -18,9 +18,9 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/data/Test/DataFixture.hpp>
+#include "DataFixture.hpp"
 
-#include <utilities/data/Vector.hpp>
+#include "../Vector.hpp"
 
 using namespace std;
 using namespace boost;

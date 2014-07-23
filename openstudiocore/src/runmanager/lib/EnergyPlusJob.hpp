@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_ENERGYPLUSJOB_HPP__
-#define OPENSTUDIO_ENERGYPLUSJOB_HPP__
+#ifndef RUNMANAGER_LIB_ENERGYPLUSJOB_HPP
+#define RUNMANAGER_LIB_ENERGYPLUSJOB_HPP
 
 #include <boost/filesystem.hpp>
 #include <string>
-#include <utilities/core/Logger.hpp>
+#include "../../utilities/core/Logger.hpp"
 #include "Job_Impl.hpp"
 #include "ToolInfo.hpp"
 #include "ToolBasedJob.hpp"
@@ -83,4 +83,4 @@ namespace detail {
 }
 }
 }
-#endif
+#endif // RUNMANAGER_LIB_ENERGYPLUSJOB_HPP

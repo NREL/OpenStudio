@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/String.hpp>
+#include "Application.hpp"
+#include "ApplicationPathHelpers.hpp"
+#include "String.hpp"
 #include <OpenStudio.hxx>
 
 #include <QWidget>
@@ -37,8 +37,8 @@
 namespace openstudio{
 
 ApplicationSingleton::ApplicationSingleton()
-  : m_qApplication(NULL),
-    m_sketchUpWidget(NULL)
+  : m_qApplication(nullptr),
+    m_sketchUpWidget(nullptr)
 {}
 
 ApplicationSingleton::~ApplicationSingleton()
@@ -68,7 +68,7 @@ QCoreApplication* ApplicationSingleton::application(bool gui)
       QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar, true);
       QCoreApplication::setAttribute(Qt::AA_MacPluginApplication, true);
 
-      static char *argv[] = {NULL};
+      static char *argv[] = {nullptr};
       static int argc = sizeof(argv) / sizeof(char*) - 1;
       m_qApplication = new QApplication(argc, argv, gui);
  

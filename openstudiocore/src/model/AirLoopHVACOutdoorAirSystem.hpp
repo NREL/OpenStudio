@@ -20,11 +20,11 @@
 #ifndef MODEL_AIRLOOPHVACOUTDOORAIRSYSTEM_HPP
 #define MODEL_AIRLOOPHVACOUTDOORAIRSYSTEM_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 
-#include <model/HVACComponent.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/Connection.hpp>
+#include "HVACComponent.hpp"
+#include "StraightComponent.hpp"
+#include "Connection.hpp"
 
 namespace openstudio {
 namespace model {
@@ -146,7 +146,7 @@ class MODEL_API AirLoopHVACOutdoorAirSystem : public HVACComponent {
   typedef detail::AirLoopHVACOutdoorAirSystem_Impl ImplType;
 
   explicit AirLoopHVACOutdoorAirSystem(
-      boost::shared_ptr<detail::AirLoopHVACOutdoorAirSystem_Impl> impl);
+      std::shared_ptr<detail::AirLoopHVACOutdoorAirSystem_Impl> impl);
 
  private:
 

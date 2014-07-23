@@ -17,21 +17,21 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNMANAGER_RUNMANAGER_IMPL_HPP__
-#define OPENSTUDIO_RUNMANAGER_RUNMANAGER_IMPL_HPP__
+#ifndef RUNMANAGER_LIB_RUNMANAGER_IMPL_HPP
+#define RUNMANAGER_LIB_RUNMANAGER_IMPL_HPP
 
 #include <QObject>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/UUID.hpp>
+#include "../../utilities/core/Path.hpp"
+#include "../../utilities/core/UUID.hpp"
 #include <QStandardItemModel>
 #include <QMutex>
 #include <QWaitCondition>
 #include <QTimer>
+#include <QThread>
 #include <QDateTime>
 #include "Job.hpp"
 #include "ConfigOptions.hpp"
 #include "LocalProcessCreator.hpp"
-#include "SLURMManager.hpp"
 #include "Workflow.hpp"
 #include "RunManagerStatus.hpp"
 
@@ -198,15 +198,11 @@ namespace detail {
       /// Returns the path of the loaded db file
       openstudio::path dbPath() const;
 
-      /// Sets the password to use when making a SLURM connection.
-      /// Passwords are not persisted.
-      void setSLURMPassword(const std::string &t_pass);
-
       /// Persist a workflow to the database
       /// \returns the key the workflow is stored under
       std::string persistWorkflow(const Workflow &_wf);
 
-      /// \returns a vector of all worklows in the database
+      /// \returns a vector of all workflows in the database
       std::vector<Workflow> loadWorkflows();
 
       /// \returns a specific workflow
@@ -216,7 +212,7 @@ namespace detail {
       void deleteWorkflows();
 
       /// \returns a pointer to the RunManagerStatus, creates one if it does not exist already
-      boost::shared_ptr<runmanager::RunManagerStatus> getStatusDialog(const RunManager &t_rm);
+      std::shared_ptr<runmanager::RunManagerStatus> getStatusDialog(const RunManager &t_rm);
 
       void hideStatusDialog();
 
@@ -252,8 +248,6 @@ namespace detail {
       // Slots used for monitoring the status of Jobs that this RunManager is tracking
       void treeStateChanged(const openstudio::UUID &t_uuid);
       void processQueue();
-      void remoteProcessStarted(const openstudio::UUID &t_uuid, int t_remoteId, int t_remoteTaskNumber);
-      void remoteProcessFinished(const openstudio::UUID &t_uuid, int t_remoteId, int t_remoteTaskNumber);
       void jobFinished(const openstudio::UUID &t_uuid, const openstudio::runmanager::JobErrors &t_errors, 
           const openstudio::DateTime &t_lastRun, const std::vector<openstudio::runmanager::FileInfo> &t_outputFiles);
 
@@ -287,10 +281,9 @@ namespace detail {
 
       bool m_useStatusGUI;
       mutable QMutex m_mutex;
-      mutable QMutex m_activate_mutex;
       QWaitCondition m_waitCondition;
 
-      boost::shared_ptr<DBHolder> m_dbholder;
+      std::shared_ptr<DBHolder> m_dbholder;
 
       std::deque<openstudio::runmanager::Job> m_queue;
       std::set<std::string> m_workflowkeys;
@@ -304,19 +297,15 @@ namespace detail {
       volatile bool m_paused;
       volatile bool m_continue;
 
-      std::string m_SLURMPassword;
+      std::shared_ptr<LocalProcessCreator> m_localProcessCreator;
 
-      boost::shared_ptr<LocalProcessCreator> m_localProcessCreator;
-      boost::shared_ptr<SLURMManager> m_remoteProcessCreator;
-
-      boost::weak_ptr<runmanager::RunManagerStatus> m_statusUI;
+      std::weak_ptr<runmanager::RunManagerStatus> m_statusUI;
 
       std::map<std::string, double> m_statistics;
 
       bool m_temporaryDB;
 
       int m_lastRunning;
-      int m_lastRunningRemotely;
       int m_lastRunningLocally;
       QDateTime m_lastStatistics;
 
@@ -332,4 +321,4 @@ namespace detail {
 }
 }
 
-#endif
+#endif // RUNMANAGER_LIB_RUNMANAGER_IMPL_HPP

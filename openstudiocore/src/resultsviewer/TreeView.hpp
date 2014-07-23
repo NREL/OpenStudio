@@ -17,18 +17,18 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef RESULTSVIEWER_TREEVIEW_H
-#define RESULTSVIEWER_TREEVIEW_H
+#ifndef RESULTSVIEWER_TREEVIEW_HPP
+#define RESULTSVIEWER_TREEVIEW_HPP
 
-#include <utilities/plot/Plot2D.hpp>
-#include <utilities/plot/LinePlot.hpp>
-#include <utilities/plot/FloodPlot.hpp>
-#include <utilities/sql/SqlFile.hpp>
-#include <resultsviewer/ResultsViewerData.hpp>
+#include "../utilities/plot/Plot2D.hpp"
+#include "../utilities/plot/LinePlot.hpp"
+#include "../utilities/plot/FloodPlot.hpp"
+#include "../utilities/sql/SqlFile.hpp"
+#include "ResultsViewerData.hpp"
 
-#include <QtGui/QMainWindow>
-#include <QtCore/QList>
-#include <QtGui/QMenu>
+#include <QMainWindow>
+#include <QList>
+#include <QMenu>
 #include <QTreeWidget>
 #include <string>
 #include <QApplication>
@@ -50,7 +50,7 @@ public:
   enum treeViewDisplayType { tvdtVariableName, tvdtKeyValue };
 
 
-  TreeView( QWidget* parent=0 );
+  TreeView( QWidget* parent=nullptr );
   openstudio::OptionalTimeSeries timeseriesFromTreeItem(QTreeWidgetItem* treeItem);
   resultsviewer::ResultsViewerPlotData resultsViewerPlotDataFromTreeItem(QTreeWidgetItem* treeItem);
   void displayFile(const QString &alias, openstudio::SqlFile sqlFile, treeViewDisplayType treeViewDisplay);
@@ -106,4 +106,4 @@ signals:
 
 }; // resultsviewer namespace
 
-#endif // RESULTSVIEWER_TREEVIEW_H
+#endif // RESULTSVIEWER_TREEVIEW_HPP

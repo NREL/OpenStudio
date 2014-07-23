@@ -20,8 +20,8 @@
 #ifndef MODEL_EVAPORATIVECOOLERINDIRECTRESEARCHSPECIAL_HPP
 #define MODEL_EVAPORATIVECOOLERINDIRECTRESEARCHSPECIAL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 
@@ -114,7 +114,7 @@ class MODEL_API EvaporativeCoolerIndirectResearchSpecial : public StraightCompon
   /// @cond
   typedef detail::EvaporativeCoolerIndirectResearchSpecial_Impl ImplType;
 
-  explicit EvaporativeCoolerIndirectResearchSpecial(boost::shared_ptr<detail::EvaporativeCoolerIndirectResearchSpecial_Impl> impl);
+  explicit EvaporativeCoolerIndirectResearchSpecial(std::shared_ptr<detail::EvaporativeCoolerIndirectResearchSpecial_Impl> impl);
 
   friend class detail::EvaporativeCoolerIndirectResearchSpecial_Impl;
   friend class Model;

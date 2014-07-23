@@ -20,11 +20,11 @@
 #ifndef MODEL_TIMEDEPENDENTVALUATION_HPP
 #define MODEL_TIMEDEPENDENTVALUATION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
-#include <utilities/filetypes/TimeDependentValuationFile.hpp>
-#include <utilities/data/DataEnums.hpp>
+#include "../utilities/filetypes/TimeDependentValuationFile.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {
@@ -141,7 +141,7 @@ class MODEL_API TimeDependentValuation : public ModelObject {
   explicit TimeDependentValuation(const Model& model);
 
   // constructor
-  explicit TimeDependentValuation(boost::shared_ptr<detail::TimeDependentValuation_Impl> impl);
+  explicit TimeDependentValuation(std::shared_ptr<detail::TimeDependentValuation_Impl> impl);
 
   /// @endcond
  private:

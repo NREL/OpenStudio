@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef BUILDINGCOMPONENTDIALOG_H
-#define BUILDINGCOMPONENTDIALOG_H
+#ifndef SHAREDGUICOMPONENTS_BUILDINGCOMPONENTDIALOG_HPP
+#define SHAREDGUICOMPONENTS_BUILDINGCOMPONENTDIALOG_HPP
 
 #include <QDialog>
 #include <vector>
@@ -45,7 +45,7 @@ class BuildingComponentDialog : public QDialog
   Q_OBJECT
 
 public:
-  BuildingComponentDialog(std::string& filterType, bool isBclDlg = true, QWidget * parent = 0);
+  BuildingComponentDialog(std::string& filterType, bool isBclDlg = true, QWidget * parent = nullptr);
   virtual ~BuildingComponentDialog() {}
 
   int currentTIDSelection();
@@ -92,4 +92,4 @@ private slots:
 
 } // namespace openstudio
 
-#endif // BUILDINGCOMPONENTDIALOG_H
+#endif // SHAREDGUICOMPONENTS_BUILDINGCOMPONENTDIALOG_HPP

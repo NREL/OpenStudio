@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/BoilerSteam.hpp>
-#include <model/BoilerSteam_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include "BoilerSteam.hpp"
+#include "BoilerSteam_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Boiler_Steam_FieldEnums.hxx>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -943,7 +943,7 @@ void BoilerSteam::resetSizingFactor() {
 }
 
 /// @cond
-BoilerSteam::BoilerSteam(boost::shared_ptr<detail::BoilerSteam_Impl> impl)
+BoilerSteam::BoilerSteam(std::shared_ptr<detail::BoilerSteam_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

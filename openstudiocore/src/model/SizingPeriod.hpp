@@ -20,8 +20,8 @@
 #ifndef MODEL_SIZINGPERIOD_HPP
 #define MODEL_SIZINGPERIOD_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -48,7 +48,7 @@ class MODEL_API SizingPeriod : public ParentObject {
   SizingPeriod(IddObjectType type,const Model& model);
 
   // constructor
-  explicit SizingPeriod(boost::shared_ptr<detail::SizingPeriod_Impl> impl);
+  explicit SizingPeriod(std::shared_ptr<detail::SizingPeriod_Impl> impl);
 
  private:
 

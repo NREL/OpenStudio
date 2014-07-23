@@ -20,12 +20,9 @@
 #ifndef MODEL_LIFECYCLECOSTUSEPRICEESCALATION_IMPL_HPP
 #define MODEL_LIFECYCLECOSTUSEPRICEESCALATION_IMPL_HPP
 
-
-#include <model/LifeCycleCostUsePriceEscalation.hpp>
-
-#include <model/ParentObject_Impl.hpp>
-#include <model/LifeCycleCostUsePriceEscalation.hpp>
-#include <utilities/core/Optional.hpp>
+#include "ParentObject_Impl.hpp"
+#include "LifeCycleCostUsePriceEscalation.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio {
 namespace model {

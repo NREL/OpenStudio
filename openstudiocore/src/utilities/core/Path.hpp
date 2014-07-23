@@ -20,7 +20,7 @@
 #ifndef UTILITIES_CORE_PATH_HPP
 #define UTILITIES_CORE_PATH_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
@@ -34,30 +34,11 @@ class QTextStream;
 
 namespace openstudio {
 
-#ifdef _WINDOWS
-  /** Type File path that varies by OS, templated on std::wstring on Windows.*/
-  typedef boost::filesystem::wpath path;
+/** Typedef boost::filesystem::path to openstudio::path. */
+typedef boost::filesystem::path path;
 
-  /** Type directory iterator that varies by OS to match path. */
-  typedef boost::filesystem::wdirectory_iterator directory_iterator;
-
-  /** UTF-16 encoded wchar* to path*/
-  UTILITIES_API path toPath(const wchar_t* s);
-
-  /** UTF-16 encoded std::wstring to path*/
-  UTILITIES_API path toPath(const std::wstring& s);
-
-  // allow wpath to be written to cout on Windows
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const path& p);
-
-#else
-  /** Type File path that varies by OS, templated on std::string on POSIX.*/
-  typedef boost::filesystem::path path;
-
-  /** Type directory iterator that varies by OS to match path. */
-  typedef boost::filesystem::directory_iterator directory_iterator;
-
-#endif
+// allow wpath to be written to cout on Windows
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const path& p);
 
 /** path to a temporary directory. */
 UTILITIES_API path tempDir();

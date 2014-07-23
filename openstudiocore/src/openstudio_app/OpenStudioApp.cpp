@@ -17,84 +17,80 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_app/OpenStudioApp.hpp>
+#include "OpenStudioApp.hpp"
 #include <openstudio_app/AboutBox.hpp>
-#include <openstudio_app/StartupMenu.hpp>
-#include <openstudio_app/StartupView.hpp>
-#include <openstudio_lib/MainWindow.hpp>
-#include <openstudio_lib/OSDocument.hpp>
-#include <openstudio_lib/FileOperations.hpp>
+#include "StartupMenu.hpp"
+#include "StartupView.hpp"
+#include "../openstudio_lib/MainWindow.hpp"
+#include "../openstudio_lib/OSDocument.hpp"
+#include "../openstudio_lib/FileOperations.hpp"
 
 #include "../shared_gui_components/WaitDialog.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
 
-#include <utilities/idf/IdfObject.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/ValidityReport.hpp>
-#include <utilities/idf/IdfFile.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/Compare.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/IdfObject.hpp>
-#include <utilities/idf/ValidityReport.hpp>
-#include <utilities/idf/Workspace.hpp>
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/idf/IdfObject.hpp"
+#include "../utilities/idf/ValidityReport.hpp"
+#include "../utilities/idf/Workspace.hpp"
 
-#include <model/EvaporativeFluidCoolerSingleSpeed.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
-#include <model/AirLoopHVACUnitarySystem.hpp>
-#include <model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp>
-#include <model/AirTerminalSingleDuctConstantVolumeReheat.hpp>
-#include <model/AirTerminalSingleDuctParallelPIUReheat.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled.hpp>
-#include <model/AirTerminalSingleDuctVAVReheat.hpp>
-#include <model/AirTerminalSingleDuctVAVNoReheat.hpp>
-#include <model/AvailabilityManagerScheduled.hpp>
-#include <model/BuildingStory.hpp>
-#include <model/CoilCoolingCooledBeam.hpp>
-#include <model/CoilCoolingDXSingleSpeed.hpp>
-#include <model/CoilCoolingDXTwoSpeed.hpp>
-#include <model/CoilCoolingWaterToAirHeatPumpEquationFit.hpp>
-#include <model/CoilHeatingDXSingleSpeed.hpp>
-#include <model/CoilHeatingElectric.hpp>
-#include <model/CoilHeatingGas.hpp>
-#include <model/CoilHeatingGas_Impl.hpp>
-#include <model/CoilHeatingWaterBaseboard.hpp>
-#include <model/CoilHeatingWaterToAirHeatPumpEquationFit.hpp>
-#include <model/ControllerOutdoorAir.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/DistrictCooling.hpp>
-#include <model/DistrictHeating.hpp>
-#include <model/EvaporativeCoolerDirectResearchSpecial.hpp>
-#include <model/FanConstantVolume.hpp>
-#include <model/FanOnOff.hpp>
-#include <model/FanVariableVolume.hpp>
-#include <model/FanZoneExhaust.hpp>
-#include <model/Model.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/SetpointManagerMixedAir.hpp>
-#include <model/SetpointManagerScheduled.hpp>
-#include <model/SetpointManagerSingleZoneReheat.hpp>
-#include <model/ZoneHVACBaseboardConvectiveWater.hpp>
-#include <model/ZoneHVACFourPipeFanCoil.hpp>
-#include <model/ZoneHVACLowTempRadiantConstFlow.hpp>
-#include <model/ZoneHVACLowTemperatureRadiantElectric.hpp>
-#include <model/ZoneHVACLowTempRadiantVarFlow.hpp>
-#include <model/ZoneHVACPackagedTerminalHeatPump.hpp>
-#include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
-#include <model/ZoneHVACUnitHeater.hpp>
-#include <model/ZoneHVACWaterToAirHeatPump.hpp>
+#include "../model/EvaporativeFluidCoolerSingleSpeed.hpp"
+#include "../model/AirLoopHVACOutdoorAirSystem.hpp"
+#include "../model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
+#include "../model/AirLoopHVACUnitarySystem.hpp"
+#include "../model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp"
+#include "../model/AirTerminalSingleDuctConstantVolumeReheat.hpp"
+#include "../model/AirTerminalSingleDuctParallelPIUReheat.hpp"
+#include "../model/AirTerminalSingleDuctUncontrolled.hpp"
+#include "../model/AirTerminalSingleDuctVAVReheat.hpp"
+#include "../model/AirTerminalSingleDuctVAVNoReheat.hpp"
+#include "../model/AvailabilityManagerScheduled.hpp"
+#include "../model/BuildingStory.hpp"
+#include "../model/CoilCoolingCooledBeam.hpp"
+#include "../model/CoilCoolingDXSingleSpeed.hpp"
+#include "../model/CoilCoolingDXTwoSpeed.hpp"
+#include "../model/CoilCoolingWaterToAirHeatPumpEquationFit.hpp"
+#include "../model/CoilHeatingDXSingleSpeed.hpp"
+#include "../model/CoilHeatingElectric.hpp"
+#include "../model/CoilHeatingGas.hpp"
+#include "../model/CoilHeatingGas_Impl.hpp"
+#include "../model/CoilHeatingWaterBaseboard.hpp"
+#include "../model/CoilHeatingWaterToAirHeatPumpEquationFit.hpp"
+#include "../model/ControllerOutdoorAir.hpp"
+#include "../model/CurveBiquadratic.hpp"
+#include "../model/CurveQuadratic.hpp"
+#include "../model/DistrictCooling.hpp"
+#include "../model/DistrictHeating.hpp"
+#include "../model/EvaporativeCoolerDirectResearchSpecial.hpp"
+#include "../model/FanConstantVolume.hpp"
+#include "../model/FanOnOff.hpp"
+#include "../model/FanVariableVolume.hpp"
+#include "../model/FanZoneExhaust.hpp"
+#include "../model/Model.hpp"
+#include "../model/ScheduleCompact.hpp"
+#include "../model/SetpointManagerMixedAir.hpp"
+#include "../model/SetpointManagerScheduled.hpp"
+#include "../model/SetpointManagerSingleZoneReheat.hpp"
+#include "../model/ZoneHVACBaseboardConvectiveWater.hpp"
+#include "../model/ZoneHVACFourPipeFanCoil.hpp"
+#include "../model/ZoneHVACLowTempRadiantConstFlow.hpp"
+#include "../model/ZoneHVACLowTemperatureRadiantElectric.hpp"
+#include "../model/ZoneHVACLowTempRadiantVarFlow.hpp"
+#include "../model/ZoneHVACPackagedTerminalHeatPump.hpp"
+#include "../model/ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "../model/ZoneHVACUnitHeater.hpp"
+#include "../model/ZoneHVACWaterToAirHeatPump.hpp"
 
-#include <osversion/VersionTranslator.hpp>
+#include "../osversion/VersionTranslator.hpp"
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <energyplus/ReverseTranslator.hpp>
+#include "../energyplus/ForwardTranslator.hpp"
+#include "../energyplus/ReverseTranslator.hpp"
 
-#include <gbxml/ReverseTranslator.hpp>
-#include <sdd/ReverseTranslator.hpp>
+#include "../gbxml/ReverseTranslator.hpp"
+#include "../sdd/ReverseTranslator.hpp"
 
 #include <QAbstractButton>
 #include <QDesktopServices>
@@ -123,6 +119,8 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
   QCoreApplication::setOrganizationDomain("nrel.gov");
   setApplicationName("OpenStudio");
 
+  readSettings();
+
   QFile f(":/library/OpenStudioPolicy.xml");
 
   openstudio::model::AccessPolicyStore::Instance().loadFile(f);
@@ -140,7 +138,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
   #ifdef Q_OS_MAC
     setQuitOnLastWindowClosed( false );
 
-    m_startupMenu = boost::shared_ptr<StartupMenu>(new StartupMenu());
+    m_startupMenu = std::shared_ptr<StartupMenu>(new StartupMenu());
 
     connect( m_startupMenu.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
     connect( m_startupMenu.get(), SIGNAL(importClicked()), this,SLOT(importIdf()) );
@@ -155,7 +153,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
 
   this->buildCompLibraries();
 
-  m_startupView = boost::shared_ptr<openstudio::StartupView>(new openstudio::StartupView());
+  m_startupView = std::shared_ptr<openstudio::StartupView>(new openstudio::StartupView());
 
   connect( m_startupView.get(), SIGNAL( newFromTemplate( NewFromTemplateEnum ) ), this, SLOT( newFromTemplateSlot( NewFromTemplateEnum ) ) ) ;
   connect( m_startupView.get(), SIGNAL( openClicked() ), this, SLOT( open() ) ) ;
@@ -180,7 +178,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
     boost::optional<openstudio::model::Model> model = modelFromOSM(toPath(fileName), versionTranslator);
     if( model ){
 
-      m_osDocument = boost::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
+      m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
                                                                    hvacComponentLibrary(), 
                                                                    resourcesPath(), 
                                                                    model,
@@ -276,7 +274,7 @@ bool OpenStudioApp::openFile(const QString& fileName, bool restoreTabs)
       waitDialog()->setVisible(true);
       processEvents();
 
-      m_osDocument = boost::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
+      m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(),
                                                                    hvacComponentLibrary(), 
                                                                    resourcesPath(), 
                                                                    model, 
@@ -365,7 +363,7 @@ void OpenStudioApp::quit()
 
 void OpenStudioApp::newFromTemplateSlot( NewFromTemplateEnum newFromTemplateEnum )
 {
-  m_osDocument = boost::shared_ptr<OSDocument>( new OSDocument( componentLibrary(), hvacComponentLibrary(), resourcesPath() ) );
+  m_osDocument = std::shared_ptr<OSDocument>( new OSDocument( componentLibrary(), hvacComponentLibrary(), resourcesPath() ) );
 
   connect( m_osDocument.get(), SIGNAL(closeClicked()), this, SLOT(onCloseClicked()) );
   connect( m_osDocument.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
@@ -382,14 +380,14 @@ void OpenStudioApp::newFromTemplateSlot( NewFromTemplateEnum newFromTemplateEnum
   m_startupView->hide();
 }
 
-boost::shared_ptr<OSDocument> OpenStudioApp::currentDocument() const
+std::shared_ptr<OSDocument> OpenStudioApp::currentDocument() const
 {
   return m_osDocument;
 }
 
 void OpenStudioApp::importIdf()
 {
-  QWidget * parent = NULL;
+  QWidget * parent = nullptr;
 
   if( this->currentDocument() )
   {
@@ -398,11 +396,13 @@ void OpenStudioApp::importIdf()
 
   QString fileName = QFileDialog::getOpenFileName( parent,
                                                    tr("Import Idf"),
-                                                   QDir::homePath(),
+                                                   lastPath(),
                                                    tr("(*.idf)") );
 
   if( ! (fileName == "") )
   {
+    setLastPath(QFileInfo(fileName).path());
+
     boost::optional<IdfFile> idfFile;
 
     idfFile = openstudio::IdfFile::load(toPath(fileName),IddFileType::EnergyPlus);
@@ -440,7 +440,7 @@ void OpenStudioApp::importIdf()
           processEvents();
         }
 
-        m_osDocument = boost::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
+        m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
                                                                      hvacComponentLibrary(), 
                                                                      resourcesPath(), 
                                                                      model) );
@@ -469,22 +469,18 @@ void OpenStudioApp::importIdf()
 
         std::vector<LogMessage> messages = trans.errors();
 
-        for( std::vector<LogMessage>::iterator it = messages.begin();
-             it < messages.end();
-             ++it )
+        for( const auto & message : messages )
         {
-          log.append(QString::fromStdString(it->logMessage()));
+          log.append(QString::fromStdString(message.logMessage()));
           log.append("\n");
           log.append("\n");
         }
 
         messages = trans.warnings();
 
-        for( std::vector<LogMessage>::iterator it = messages.begin();
-             it < messages.end();
-             ++it )
+        for( const auto & message : messages )
         {
-          log.append(QString::fromStdString(it->logMessage()));
+          log.append(QString::fromStdString(message.logMessage()));
           log.append("\n");
           log.append("\n");
         }
@@ -511,7 +507,7 @@ void OpenStudioApp::importSDD()
 
 void OpenStudioApp::import(OpenStudioApp::fileType type)
 {
-  QWidget * parent = NULL;
+  QWidget * parent = nullptr;
 
   std::vector<LogMessage> translatorErrors, translatorWarnings;
    
@@ -534,11 +530,13 @@ void OpenStudioApp::import(OpenStudioApp::fileType type)
 
   QString fileName = QFileDialog::getOpenFileName( parent,
                                                    tr(text.toStdString().c_str()),
-                                                   QDir::homePath(),
+                                                   lastPath(),
                                                    tr("(*.xml)") );
 
   if( ! (fileName == "") )
   {
+    setLastPath(QFileInfo(fileName).path());
+
     boost::optional<model::Model> model;
 
     if(type == SDD){
@@ -567,7 +565,7 @@ void OpenStudioApp::import(OpenStudioApp::fileType type)
         processEvents();
       }
 
-      m_osDocument = boost::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
+      m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
                                                                    hvacComponentLibrary(), 
                                                                    resourcesPath(), 
                                                                    *model) );
@@ -593,24 +591,20 @@ void OpenStudioApp::import(OpenStudioApp::fileType type)
 
       QString log;
 
-      for( std::vector<LogMessage>::iterator it = translatorErrors.begin();
-           it < translatorErrors.end();
-           ++it )
+      for( const auto & error : translatorErrors )
       {
         errorsOrWarnings = true;
 
-        log.append(QString::fromStdString(it->logMessage()));
+        log.append(QString::fromStdString(error.logMessage()));
         log.append("\n");
         log.append("\n");
-      }  
+      }
 
-      for( std::vector<LogMessage>::iterator it = translatorWarnings.begin();
-           it < translatorWarnings.end();
-           ++it )
+      for( const auto & warning : translatorWarnings )
       {
         errorsOrWarnings = true;
 
-        log.append(QString::fromStdString(it->logMessage()));
+        log.append(QString::fromStdString(warning.logMessage()));
         log.append("\n");
         log.append("\n");
       }
@@ -645,7 +639,7 @@ bool OpenStudioApp::closeDocument()
   {
     QWidget * parent = m_osDocument->mainWindow();
 
-    QMessageBox * messageBox = new QMessageBox(parent);
+    auto messageBox = new QMessageBox(parent);
 
     messageBox->setText("The document has been modified.");
 
@@ -672,7 +666,7 @@ bool OpenStudioApp::closeDocument()
         m_osDocument->save();
         //m_startupView->show();
         m_osDocument->mainWindow()->hide();
-        m_osDocument = boost::shared_ptr<OSDocument>();
+        m_osDocument = std::shared_ptr<OSDocument>();
         return true;
 
       case QMessageBox::Discard:
@@ -680,7 +674,7 @@ bool OpenStudioApp::closeDocument()
         // Don't Save was clicked
         //m_startupView->show();
         m_osDocument->mainWindow()->hide();
-        m_osDocument = boost::shared_ptr<OSDocument>();
+        m_osDocument = std::shared_ptr<OSDocument>();
         return true;
 
       case QMessageBox::Cancel:
@@ -699,7 +693,7 @@ bool OpenStudioApp::closeDocument()
   else
   {
     m_osDocument->mainWindow()->hide();
-    m_osDocument = boost::shared_ptr<OSDocument>();
+    m_osDocument = std::shared_ptr<OSDocument>();
     //m_startupView->show();
 
     return true;
@@ -720,7 +714,7 @@ void OpenStudioApp::onCloseClicked()
 void OpenStudioApp::open()
 {
 
-  QWidget * parent = NULL;
+  QWidget * parent = nullptr;
 
   if( this->currentDocument() )
   {
@@ -729,11 +723,13 @@ void OpenStudioApp::open()
 
   QString fileName = QFileDialog::getOpenFileName( parent,
                                                    tr("Open"),
-                                                   QDir::homePath(),
+                                                   lastPath(),
                                                    tr("(*.osm)") );
 
   if (!fileName.length()) return;
 
+  setLastPath(QFileInfo(fileName).path());
+  
   openFile(fileName);
 }
 
@@ -866,22 +862,18 @@ void OpenStudioApp::versionUpdateMessageBox(const osversion::VersionTranslator& 
 
   std::vector<LogMessage> messages = translator.errors();
 
-  for( std::vector<LogMessage>::iterator it = messages.begin();
-       it < messages.end();
-       ++it )
+  for( const auto & message : messages )
   {
-    log.append(QString::fromStdString(it->logMessage()));
+    log.append(QString::fromStdString(message.logMessage()));
     log.append("\n");
     log.append("\n");
   }
 
   messages = translator.warnings();
 
-  for( std::vector<LogMessage>::iterator it = messages.begin();
-       it < messages.end();
-       ++it )
+  for( const auto & message : messages )
   {
-    log.append(QString::fromStdString(it->logMessage()));
+    log.append(QString::fromStdString(message.logMessage()));
     log.append("\n");
     log.append("\n");
   }
@@ -951,6 +943,33 @@ void OpenStudioApp::versionUpdateMessageBox(const osversion::VersionTranslator& 
     messageBox.setText(QString("Failed to open file at ") + fileName + QString("."));
     messageBox.exec();
   }
+}
+
+void OpenStudioApp::readSettings()
+{
+  QString organizationName = QCoreApplication::organizationName();
+  QString applicationName = QCoreApplication::applicationName();
+  QSettings settings(organizationName, applicationName);
+  setLastPath(settings.value("lastPath", QDir::homePath()).toString());
+}
+
+void OpenStudioApp::writeSettings()
+{
+  QString organizationName = QCoreApplication::organizationName();
+  QString applicationName = QCoreApplication::applicationName();
+  QSettings settings(organizationName, applicationName);
+  settings.setValue("lastPath", lastPath());
+}
+
+QString OpenStudioApp::lastPath() const
+{
+  return QDir().exists(m_lastPath) ? m_lastPath : QDir::homePath();
+}
+
+void OpenStudioApp::setLastPath(const QString& t_lastPath)
+{
+  m_lastPath = t_lastPath;
+  writeSettings();
 }
 
 void OpenStudioApp::revertToSaved()

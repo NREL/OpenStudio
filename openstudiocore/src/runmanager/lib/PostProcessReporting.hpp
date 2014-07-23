@@ -17,13 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef _OPENSTUDIO_RUNMANAGER_POSTPROCESSREPORTING_HPP_
-#define _OPENSTUDIO_RUNMANAGER_POSTPROCESSREPORTING_HPP_
+#ifndef RUNMANAGER_LIB_POSTPROCESSREPORTING_HPP
+#define RUNMANAGER_LIB_POSTPROCESSREPORTING_HPP
 
 #include <vector>
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/sql/SqlFile.hpp>
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/sql/SqlFile.hpp"
 
 namespace openstudio {
 namespace runmanager {
@@ -33,7 +33,7 @@ namespace detail {
   class PostProcessReporting
   {
     public:
-      static std::vector<Attribute> go(const SqlFile &t_sqlFile);
+      static std::vector<Attribute> go(const SqlFile &t_sqlFile, const std::string& jobType);
 
     private:
       REGISTER_LOGGER("openstudio.runmanager.PostProcessReporting");
@@ -45,5 +45,5 @@ namespace detail {
 } // runmanager
 } // openstudio
 
-#endif
+#endif // RUNMANAGER_LIB_POSTPROCESSREPORTING_HPP
 

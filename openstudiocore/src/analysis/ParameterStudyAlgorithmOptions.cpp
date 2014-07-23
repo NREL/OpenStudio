@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/ParameterStudyAlgorithmOptions.hpp>
-#include <analysis/ParameterStudyAlgorithmOptions_Impl.hpp>
+#include "ParameterStudyAlgorithmOptions.hpp"
+#include "ParameterStudyAlgorithmOptions_Impl.hpp"
 
-#include <analysis/Problem.hpp>
+#include "Problem.hpp"
 
-#include <utilities/core/Json.hpp>
+#include "../utilities/core/Json.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -42,7 +42,7 @@ namespace detail {
   {}
 
   AlgorithmOptions ParameterStudyAlgorithmOptions_Impl::clone() const {
-    boost::shared_ptr<ParameterStudyAlgorithmOptions_Impl> impl(
+    std::shared_ptr<ParameterStudyAlgorithmOptions_Impl> impl(
         new ParameterStudyAlgorithmOptions_Impl(*this));
     return ParameterStudyAlgorithmOptions(impl);
   }
@@ -215,7 +215,7 @@ namespace detail {
     QVariantMap map = variant.toMap();
     AttributeVector attributes = deserializeUnorderedVector(
           map["attributes"].toList(),
-          boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+          std::function<Attribute (const QVariant&)>(std::bind(openstudio::detail::toAttribute,std::placeholders::_1,version)));
     return ParameterStudyAlgorithmOptions(map["parameter_study_algorithm_type"].toString().toStdString(),
                                           attributes);
   }
@@ -225,14 +225,14 @@ namespace detail {
 
 ParameterStudyAlgorithmOptions::ParameterStudyAlgorithmOptions(
     const ParameterStudyAlgorithmType& algorithmType)
-  : DakotaAlgorithmOptions(boost::shared_ptr<detail::ParameterStudyAlgorithmOptions_Impl>(
+  : DakotaAlgorithmOptions(std::shared_ptr<detail::ParameterStudyAlgorithmOptions_Impl>(
         new detail::ParameterStudyAlgorithmOptions_Impl(algorithmType)))
 {}
 
 ParameterStudyAlgorithmOptions::ParameterStudyAlgorithmOptions(
     const ParameterStudyAlgorithmType& algorithmType,
     const std::vector<Attribute>& options)
-  : DakotaAlgorithmOptions(boost::shared_ptr<detail::ParameterStudyAlgorithmOptions_Impl> (
+  : DakotaAlgorithmOptions(std::shared_ptr<detail::ParameterStudyAlgorithmOptions_Impl> (
         new detail::ParameterStudyAlgorithmOptions_Impl(algorithmType,options)))
 {}
 
@@ -313,7 +313,7 @@ void ParameterStudyAlgorithmOptions::clearPartitions() {
 }
 
 /// @cond
-ParameterStudyAlgorithmOptions::ParameterStudyAlgorithmOptions(boost::shared_ptr<detail::ParameterStudyAlgorithmOptions_Impl> impl)
+ParameterStudyAlgorithmOptions::ParameterStudyAlgorithmOptions(std::shared_ptr<detail::ParameterStudyAlgorithmOptions_Impl> impl)
   : DakotaAlgorithmOptions(impl)
 {}
 /// @endcond

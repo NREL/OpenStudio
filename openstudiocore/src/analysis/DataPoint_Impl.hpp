@@ -20,22 +20,22 @@
 #ifndef ANALYSIS_DATAPOINT_IMPL_HPP
 #define ANALYSIS_DATAPOINT_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/AnalysisObject_Impl.hpp>
+#include "AnalysisAPI.hpp"
+#include "AnalysisObject_Impl.hpp"
 
-#include <analysis/DataPoint.hpp>
-#include <analysis/Problem.hpp>
+#include "DataPoint.hpp"
+#include "Problem.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
-#include <runmanager/lib/Job.hpp>
+#include "../runmanager/lib/Job.hpp"
 
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/data/Tag.hpp>
+#include "../utilities/idf/Workspace.hpp"
+#include "../utilities/sql/SqlFile.hpp"
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/data/Tag.hpp"
 
-#include <utilities/core/FileReference.hpp>
+#include "../utilities/core/FileReference.hpp"
 
 #include <QVariant>
 
@@ -77,7 +77,6 @@ namespace detail {
                    const boost::optional<FileReference>& osmInputData,
                    const boost::optional<FileReference>& idfInputData,
                    const boost::optional<FileReference>& sqlOutputData,
-                   const std::vector<FileReference>& xmlOutputData,
                    const boost::optional<runmanager::Job>& topLevelJob,
                    const std::vector<openstudio::path>& dakotaParametersFiles,
                    const std::vector<Tag>& tags,
@@ -101,7 +100,6 @@ namespace detail {
                    const boost::optional<FileReference>& osmInputData,
                    const boost::optional<FileReference>& idfInputData,
                    const boost::optional<FileReference>& sqlOutputData,
-                   const std::vector<FileReference>& xmlOutputData,
                    const boost::optional<runmanager::Job>& topLevelJob,
                    const std::vector<openstudio::path>& dakotaParametersFiles,
                    const std::vector<Tag>& tags,
@@ -154,40 +152,59 @@ namespace detail {
      *  and not failed() (and problem().numResponses() > 0). */
     std::vector<double> responseValues() const;
 
+    /** Run directory for this DataPoint. Set by analysisdriver::AnalysisDriver. */
     openstudio::path directory() const;
 
+    /** Returns the final OSM file in the workflow, if the DataPoint isComplete() but not
+     *  failed(), and said file was located by problem(). */
     boost::optional<FileReference> osmInputData() const;
 
+    /** Returns the final IDF file in the workflow, if the DataPoint isComplete() but not
+     *  failed(), and said file was located by problem(). */
     boost::optional<FileReference> idfInputData() const;
 
+    /** Returns the EnergyPlus SqLite output file, if the DataPoint isComplete() but not failed(),
+     *  and said file was located by problem(). */
     boost::optional<FileReference> sqlOutputData() const;
 
-    /** Returns the openstudio::Attribute XML files created by any reporting measures, if
-     *  complete() and not failed(), and problem() located such files during the update process.
-     *  Otherwise, the return value is .empty(). */
+    /** Returns the openstudio::Attribute and openstudio::result::OSResult XML files created 
+     *  associated with this DataPoint, if complete() and not failed(). Otherwise, the return value 
+     *  is .empty(). */
     std::vector<FileReference> xmlOutputData() const;
 
-    boost::optional<runmanager::Job> topLevelJob() const;
+    /** If osmInputData() exists, returns the corresponding model::Model. Also caches the Model
+     *  for future use. */
+    boost::optional<model::Model> model() const;
 
-    std::vector<openstudio::path> dakotaParametersFiles() const;
+    /** If idfInputData() exists, returns the corresponding Workspace. Also caches the Workspace
+     *  for future use. */
+    boost::optional<Workspace> workspace() const;
 
-    boost::optional<model::Model> model() const; // for analyses on osm
+    /** If sqlOutputData() exists, returns the corresponding SqlFile, which is also available through
+     *  model()->sqlFile(), if model() exists. Also caches the SqlFile for future use. */
+    boost::optional<SqlFile> sqlFile() const;
 
-    boost::optional<Workspace> workspace() const; // for analyses on idf
-
-    boost::optional<SqlFile> sqlFile() const; // also available through model().sqlFile() if model available
-
+    /** If xmlOutputData() exists, returns the corresponding openstudio::Attributes. Caches the
+     *  Attributes for future use. */
     std::vector<Attribute> outputAttributes() const;
 
+    /** Returns the outputAttributes() element with attributeName, if it exists. */
     boost::optional<Attribute> getOutputAttribute(const std::string& attributeName) const;
 
     std::vector<Tag> tags() const;
 
     bool isTag(const std::string& tagName) const;
 
-    /** Returns true if testVariableValues is correct size, and any non-null values match.
-     *  Otherwise, returns false. */
+    /** Returns true if testVariableValues.size() <= variableValues().size(), and any non-null
+     *  values match. Otherwise, returns false. */
     bool matches(const std::vector<QVariant>& testVariableValues) const;
+
+    /** Returns the top level job associated with this data point. 
+     *  \sa Problem::getJobsByWorkflowStep */
+    boost::optional<runmanager::Job> topLevelJob() const;
+
+    /** Returns vector of dakotaParameterFiles associated with this data point. */
+    std::vector<openstudio::path> dakotaParametersFiles() const;
 
     //@}
     /** @name Setters */
@@ -294,12 +311,12 @@ namespace detail {
     boost::optional<FileReference> m_osmInputData;  // an osm file
     boost::optional<FileReference> m_idfInputData;  // an idf file
     boost::optional<FileReference> m_sqlOutputData; // a sql file
-    std::vector<FileReference> m_xmlOutputData; // attribute xml
     boost::optional<runmanager::Job> m_topLevelJob;
     std::vector<openstudio::path> m_dakotaParametersFiles;
     std::vector<Tag> m_tags;                // meta-data for query and display
 
     // cache variables
+    mutable std::vector<FileReference> m_xmlOutputData; // attribute and OSResult xml
     mutable std::vector<Attribute> m_outputAttributes; // serialized and deserialized
     mutable boost::optional<model::Model> m_model;
     mutable boost::optional<Workspace> m_workspace;

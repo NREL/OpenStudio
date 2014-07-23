@@ -20,11 +20,11 @@
 #ifndef MODEL_GASMIXTURE_IMPL_HPP
 #define MODEL_GASMIXTURE_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/GasLayer_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "GasLayer_Impl.hpp"
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {

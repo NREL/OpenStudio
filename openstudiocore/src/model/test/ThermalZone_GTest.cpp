@@ -19,40 +19,42 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/SizingZone.hpp>
-#include <model/SizingZone_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/Space.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/FanConstantVolume.hpp>
-#include <model/CoilHeatingWater.hpp>
-#include <model/CoilCoolingDXSingleSpeed.hpp>
-#include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
-#include <model/LifeCycleCost.hpp>
-#include <model/LifeCycleCost_Impl.hpp>
-#include <model/ElectricEquipmentDefinition.hpp>
-#include <model/ElectricEquipment.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/Lights.hpp>
-#include <model/ZoneControlHumidistat.hpp>
+#include "ModelFixture.hpp"
+#include "../Model_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
+#include "../SizingZone.hpp"
+#include "../SizingZone_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../StraightComponent.hpp"
+#include "../Space.hpp"
+#include "../SpaceInfiltrationDesignFlowRate.hpp"
+#include "../SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../AirTerminalSingleDuctUncontrolled.hpp"
+#include "../CurveBiquadratic.hpp"
+#include "../CurveQuadratic.hpp"
+#include "../FanConstantVolume.hpp"
+#include "../CoilHeatingWater.hpp"
+#include "../CoilCoolingDXSingleSpeed.hpp"
+#include "../ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "../LifeCycleCost.hpp"
+#include "../LifeCycleCost_Impl.hpp"
+#include "../ElectricEquipmentDefinition.hpp"
+#include "../ElectricEquipment.hpp"
+#include "../LightsDefinition.hpp"
+#include "../Lights.hpp"
+#include "../ZoneControlHumidistat.hpp"
+#include "../SetpointManagerSingleZoneReheat.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Containers.hpp>
-
-#include <boost/foreach.hpp>
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/geometry/Point3d.hpp"
+#include "../../utilities/units/Quantity.hpp"
+#include "../../utilities/units/Unit.hpp"
+#include "../../utilities/core/Containers.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -104,6 +106,34 @@ TEST_F(ModelFixture,ThermalZone_Remove)
 
   modelObjects = airLoopHVAC.demandComponents();
   EXPECT_EQ(5u,modelObjects.size());
+}
+
+TEST_F(ModelFixture,ThermalZone_AddToNode_SPM)
+{
+  Model m;
+  AirLoopHVAC airLoopHVAC(m);
+  ThermalZone thermalZone(m);
+  ThermalZone thermalZone2(m);
+  ScheduleCompact s(m);
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal(m,s);
+  SetpointManagerSingleZoneReheat spm(m);
+
+  Node outletNode = airLoopHVAC.supplyOutletNode();
+  spm.addToNode(outletNode);
+  EXPECT_FALSE(spm.controlZone());
+
+  Node inletNode = airLoopHVAC.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_TRUE(thermalZone.addToNode(inletNode));
+
+  EXPECT_TRUE(spm.controlZone());
+  EXPECT_EQ(thermalZone, spm.controlZone());
+
+  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,singleDuctTerminal));
+
+  EXPECT_TRUE(spm.controlZone());
+  EXPECT_EQ(thermalZone, spm.controlZone());
+  EXPECT_NE(thermalZone2, spm.controlZone());
 }
 
 TEST_F(ModelFixture,ThermalZone_sizingZone)

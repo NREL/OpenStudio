@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/units/SIUnit.hpp>
-#include <utilities/units/SIUnit_Impl.hpp>
+#include "SIUnit.hpp"
+#include "SIUnit_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 namespace openstudio {
 namespace detail {
@@ -63,13 +63,13 @@ namespace detail {
 
   Unit SIUnit_Impl::clone() const {
     OS_ASSERT(system() == UnitSystem::SI);
-    boost::shared_ptr<SIUnit_Impl> impl(new SIUnit_Impl(*this));
+    std::shared_ptr<SIUnit_Impl> impl(new SIUnit_Impl(*this));
     return SIUnit(impl).cast<Unit>();
   }
 
   void SIUnit_Impl::setBaseUnitExponent(const std::string& baseUnit,int exponent)
   {
-    std::vector<UnitElement>::iterator loc = findBaseUnit(baseUnit);
+    auto loc = findBaseUnit(baseUnit);
     if (loc != m_units.end()) {
       loc->second = exponent;
     }
@@ -83,20 +83,20 @@ namespace detail {
 SIUnit::SIUnit(const SIExpnt& exponents,
                int scaleExponent,
                const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::SIUnit_Impl>(
+  : Unit(std::shared_ptr<detail::Unit_Impl>(
              new detail::SIUnit_Impl(exponents,scaleExponent,prettyString)))
 {}
 
 SIUnit::SIUnit(const std::string& scaleAbbreviation,
        const SIExpnt& exponents,
        const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::SIUnit_Impl>(
+  : Unit(std::shared_ptr<detail::Unit_Impl>(
              new detail::SIUnit_Impl(scaleAbbreviation,exponents,prettyString)))
 {}
 
 /// @cond
-SIUnit::SIUnit(boost::shared_ptr<detail::SIUnit_Impl> impl)
-  : Unit(impl)
+SIUnit::SIUnit(std::shared_ptr<detail::SIUnit_Impl> impl)
+  : Unit(std::dynamic_pointer_cast<detail::Unit_Impl>(impl))
 {}
 /// @endcond
 

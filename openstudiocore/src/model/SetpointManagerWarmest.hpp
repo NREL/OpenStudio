@@ -20,8 +20,8 @@
 #ifndef MODEL_SETPOINTMANAGERWARMEST_HPP
 #define MODEL_SETPOINTMANAGERWARMEST_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/HVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "SetpointManager.hpp"
 
 namespace openstudio {
 
@@ -35,8 +35,8 @@ namespace detail {
 
 } // detail
 
-/** SetpointManagerWarmest is a HVACComponent that wraps the OpenStudio IDD object 'OS:SetpointManager:Warmest'. */
-class MODEL_API SetpointManagerWarmest : public HVACComponent {
+/** SetpointManagerWarmest is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:Warmest'. */
+class MODEL_API SetpointManagerWarmest : public SetpointManager {
  public:
 
   explicit SetpointManagerWarmest(const Model& model);
@@ -51,7 +51,7 @@ class MODEL_API SetpointManagerWarmest : public HVACComponent {
 
   std::string controlVariable() const;
 
-  bool setControlVariable(std::string controlVariable);
+  bool setControlVariable(const std::string& controlVariable);
 
   double minimumSetpointTemperature() const;
 
@@ -63,7 +63,7 @@ class MODEL_API SetpointManagerWarmest : public HVACComponent {
 
   std::string strategy() const;
 
-  bool setStrategy(std::string strategy);
+  bool setStrategy(const std::string& strategy);
 
   boost::optional<Node> setpointNode() const;
 
@@ -72,7 +72,7 @@ class MODEL_API SetpointManagerWarmest : public HVACComponent {
   /// @cond
   typedef detail::SetpointManagerWarmest_Impl ImplType;
 
-  explicit SetpointManagerWarmest(boost::shared_ptr<detail::SetpointManagerWarmest_Impl> impl);
+  explicit SetpointManagerWarmest(std::shared_ptr<detail::SetpointManagerWarmest_Impl> impl);
 
   friend class detail::SetpointManagerWarmest_Impl;
   friend class Model;

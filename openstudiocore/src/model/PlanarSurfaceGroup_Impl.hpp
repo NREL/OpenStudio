@@ -20,9 +20,9 @@
 #ifndef MODEL_PLANARSURFACEGROUP_IMPL_HPP
 #define MODEL_PLANARSURFACEGROUP_IMPL_HPP
 
-#include <model/ParentObject_Impl.hpp>
+#include "ParentObject_Impl.hpp"
 
-#include <utilities/geometry/Transformation.hpp>
+#include "../utilities/geometry/Transformation.hpp"
 
 namespace openstudio {
 

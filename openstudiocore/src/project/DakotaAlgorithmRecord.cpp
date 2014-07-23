@@ -17,31 +17,31 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/DakotaAlgorithmRecord.hpp>
-#include <project/DakotaAlgorithmRecord_Impl.hpp>
-#include <project/ProjectDatabase.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/FileReferenceRecord.hpp>
-#include <project/DDACEAlgorithmRecord.hpp>
-#include <project/FSUDaceAlgorithmRecord.hpp>
-#include <project/PSUADEDaceAlgorithmRecord.hpp>
-#include <project/ParameterStudyAlgorithmRecord.hpp>
-#include <project/SamplingAlgorithmRecord.hpp>
+#include "DakotaAlgorithmRecord.hpp"
+#include "DakotaAlgorithmRecord_Impl.hpp"
+#include "ProjectDatabase.hpp"
+#include "AnalysisRecord.hpp"
+#include "FileReferenceRecord.hpp"
+#include "DDACEAlgorithmRecord.hpp"
+#include "FSUDaceAlgorithmRecord.hpp"
+#include "PSUADEDaceAlgorithmRecord.hpp"
+#include "ParameterStudyAlgorithmRecord.hpp"
+#include "SamplingAlgorithmRecord.hpp"
 
-#include <analysis/DDACEAlgorithm.hpp>
-#include <analysis/DDACEAlgorithm_Impl.hpp>
-#include <analysis/FSUDaceAlgorithm.hpp>
-#include <analysis/FSUDaceAlgorithm_Impl.hpp>
-#include <analysis/PSUADEDaceAlgorithm.hpp>
-#include <analysis/PSUADEDaceAlgorithm_Impl.hpp>
-#include <analysis/ParameterStudyAlgorithm.hpp>
-#include <analysis/ParameterStudyAlgorithm_Impl.hpp>
-#include <analysis/SamplingAlgorithm.hpp>
-#include <analysis/SamplingAlgorithm_Impl.hpp>
+#include "../analysis/DDACEAlgorithm.hpp"
+#include "../analysis/DDACEAlgorithm_Impl.hpp"
+#include "../analysis/FSUDaceAlgorithm.hpp"
+#include "../analysis/FSUDaceAlgorithm_Impl.hpp"
+#include "../analysis/PSUADEDaceAlgorithm.hpp"
+#include "../analysis/PSUADEDaceAlgorithm_Impl.hpp"
+#include "../analysis/ParameterStudyAlgorithm.hpp"
+#include "../analysis/ParameterStudyAlgorithm_Impl.hpp"
+#include "../analysis/SamplingAlgorithm.hpp"
+#include "../analysis/SamplingAlgorithm_Impl.hpp"
 
-#include <project/JoinRecord.hpp>
+#include "JoinRecord.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace project {
@@ -103,7 +103,7 @@ namespace detail {
     return result;
   }
 
-  void DakotaAlgorithmRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void DakotaAlgorithmRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<DakotaAlgorithmRecord>(query);
@@ -289,7 +289,7 @@ namespace detail {
 
 } // detail
 
-DakotaAlgorithmRecord::DakotaAlgorithmRecord(boost::shared_ptr<detail::DakotaAlgorithmRecord_Impl> impl,
+DakotaAlgorithmRecord::DakotaAlgorithmRecord(std::shared_ptr<detail::DakotaAlgorithmRecord_Impl> impl,
                                              ProjectDatabase database,
                                              const boost::optional<analysis::DakotaAlgorithm>& algorithm)
   : AlgorithmRecord(impl, database, boost::optional<analysis::Algorithm>(algorithm))
@@ -353,7 +353,7 @@ DakotaAlgorithmRecord DakotaAlgorithmRecord::factoryFromDakotaAlgorithm(
   }
 
   OS_ASSERT(false);
-  return DakotaAlgorithmRecord(boost::shared_ptr<detail::DakotaAlgorithmRecord_Impl>());
+  return DakotaAlgorithmRecord(std::shared_ptr<detail::DakotaAlgorithmRecord_Impl>());
 }
 
 std::vector<DakotaAlgorithmRecord> DakotaAlgorithmRecord::getDakotaAlgorithmRecords(ProjectDatabase& database) {
@@ -407,7 +407,7 @@ analysis::DakotaAlgorithm DakotaAlgorithmRecord::dakotaAlgorithm() const {
 }
 
 /// @cond
-DakotaAlgorithmRecord::DakotaAlgorithmRecord(boost::shared_ptr<detail::DakotaAlgorithmRecord_Impl> impl)
+DakotaAlgorithmRecord::DakotaAlgorithmRecord(std::shared_ptr<detail::DakotaAlgorithmRecord_Impl> impl)
   : AlgorithmRecord(impl)
 {}
 /// @endcond

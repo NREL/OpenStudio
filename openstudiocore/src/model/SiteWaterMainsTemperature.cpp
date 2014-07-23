@@ -17,23 +17,23 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SiteWaterMainsTemperature.hpp>
-#include <model/SiteWaterMainsTemperature_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
+#include "SiteWaterMainsTemperature.hpp"
+#include "SiteWaterMainsTemperature_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Site.hpp"
+#include "Site_Impl.hpp"
 
-#include <utilities/idf/ValidityReport.hpp>
+#include "../utilities/idf/ValidityReport.hpp"
 
-#include <utilities/idd/IddKey.hpp>
+#include "../utilities/idd/IddKey.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Site_WaterMainsTemperature_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -375,7 +375,7 @@ void SiteWaterMainsTemperature::resetMaximumDifferenceInMonthlyAverageOutdoorAir
 }
 
 /// @cond
-SiteWaterMainsTemperature::SiteWaterMainsTemperature(boost::shared_ptr<detail::SiteWaterMainsTemperature_Impl> impl)
+SiteWaterMainsTemperature::SiteWaterMainsTemperature(std::shared_ptr<detail::SiteWaterMainsTemperature_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

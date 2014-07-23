@@ -17,17 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/ContinuousVariable.hpp>
-#include <analysis/ContinuousVariable_Impl.hpp>
+#include "ContinuousVariable.hpp"
+#include "ContinuousVariable_Impl.hpp"
 
-#include <analysis/DataPoint.hpp>
+#include "DataPoint.hpp"
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/math/FloatCompare.hpp"
 
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Optional.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -275,7 +273,7 @@ boost::optional<double> ContinuousVariable::truncate(double value) const {
 }
 
 /// @cond
-ContinuousVariable::ContinuousVariable(boost::shared_ptr<detail::ContinuousVariable_Impl> impl)
+ContinuousVariable::ContinuousVariable(std::shared_ptr<detail::ContinuousVariable_Impl> impl)
   : InputVariable(impl)
 {}
 /// @endcond

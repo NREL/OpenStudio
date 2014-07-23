@@ -17,13 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/JoinRecord.hpp>
-#include <project/JoinRecord_Impl.hpp>
-#include <project/ProjectDatabase.hpp>
-#include <project/ProjectDatabase_Impl.hpp>
+#include "JoinRecord.hpp"
+#include "JoinRecord_Impl.hpp"
+#include "ProjectDatabase.hpp"
+#include "ProjectDatabase_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/String.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/String.hpp"
 
 #include <QSqlQuery>
 
@@ -189,13 +189,13 @@ namespace project {
 
   } // detail
 
-  JoinRecord::JoinRecord(boost::shared_ptr<detail::JoinRecord_Impl> impl, ProjectDatabase projectDatabase)
+  JoinRecord::JoinRecord(std::shared_ptr<detail::JoinRecord_Impl> impl, ProjectDatabase projectDatabase)
     : Record(impl, projectDatabase)
   {
     OS_ASSERT(getImpl<detail::JoinRecord_Impl>());
   }
 
-  JoinRecord::JoinRecord(boost::shared_ptr<detail::JoinRecord_Impl> impl)
+  JoinRecord::JoinRecord(std::shared_ptr<detail::JoinRecord_Impl> impl)
     : Record(impl)
   {
     OS_ASSERT(getImpl<detail::JoinRecord_Impl>());

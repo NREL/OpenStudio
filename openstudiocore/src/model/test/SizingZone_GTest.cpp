@@ -19,14 +19,14 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/SizingZone.hpp>
-#include <model/SizingZone_Impl.hpp>
-#include <model/ThermalZone.hpp>
+#include "../SizingZone.hpp"
+#include "../SizingZone_Impl.hpp"
+#include "../ThermalZone.hpp"
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/Unit.hpp>
+#include "../../utilities/units/Quantity.hpp"
+#include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

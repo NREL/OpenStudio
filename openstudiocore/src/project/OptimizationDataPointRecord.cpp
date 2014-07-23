@@ -17,28 +17,26 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/OptimizationDataPointRecord.hpp>
-#include <project/OptimizationDataPointRecord_Impl.hpp>
+#include "OptimizationDataPointRecord.hpp"
+#include "OptimizationDataPointRecord_Impl.hpp"
 
-#include <project/JoinRecord.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/DataPointValueRecord.hpp>
-#include <project/FunctionRecord.hpp>
-#include <project/OptimizationProblemRecord.hpp>
-#include <project/OptimizationProblemRecord_Impl.hpp>
+#include "JoinRecord.hpp"
+#include "AnalysisRecord.hpp"
+#include "ProblemRecord.hpp"
+#include "DataPointValueRecord.hpp"
+#include "FunctionRecord.hpp"
+#include "OptimizationProblemRecord.hpp"
+#include "OptimizationProblemRecord_Impl.hpp"
 
-#include <analysis/Problem.hpp>
-#include <analysis/OptimizationProblem.hpp>
-#include <analysis/OptimizationProblem_Impl.hpp>
-#include <analysis/OptimizationDataPoint.hpp>
-#include <analysis/OptimizationDataPoint_Impl.hpp>
+#include "../analysis/Problem.hpp"
+#include "../analysis/OptimizationProblem.hpp"
+#include "../analysis/OptimizationProblem_Impl.hpp"
+#include "../analysis/OptimizationDataPoint.hpp"
+#include "../analysis/OptimizationDataPoint_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/FileReference.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/FileReference.hpp"
 
 namespace openstudio {
 namespace project {
@@ -73,7 +71,7 @@ namespace detail {
     return result;
   }
 
-  void OptimizationDataPointRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void OptimizationDataPointRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<OptimizationDataPointRecord>(query);
@@ -88,7 +86,7 @@ namespace detail {
   void OptimizationDataPointRecord_Impl::clearResults() {
     ProjectDatabase database = projectDatabase();
     DataPointValueRecordVector ovrs = objectiveValueRecords();
-    BOOST_FOREACH(DataPointValueRecord& ovr,ovrs) {
+    for (DataPointValueRecord& ovr : ovrs) {
       database.removeRecord(ovr);
     }
     DataPointRecord_Impl::clearResults();
@@ -101,7 +99,7 @@ namespace detail {
     ProjectDatabase database = projectDatabase();
     FunctionRecordVector objectives =
         this->problemRecord().cast<OptimizationProblemRecord>().objectiveRecords();
-    BOOST_FOREACH(const FunctionRecord& function,objectives) {
+    for (const FunctionRecord& function : objectives) {
       QSqlQuery query(*(database.qSqlDatabase()));
       query.prepare(toQString("SELECT * FROM " + DataPointValueRecord::databaseTableName() +
           " WHERE dataPointRecordId=:dataPointRecordId AND functionRecordId=:functionRecordId "));
@@ -118,7 +116,7 @@ namespace detail {
   std::vector<double> OptimizationDataPointRecord_Impl::objectiveValues() const {
     DoubleVector result;
     DataPointValueRecordVector valueRecords = objectiveValueRecords();
-    BOOST_FOREACH(const DataPointValueRecord& valueRecord,valueRecords) {
+    for (const DataPointValueRecord& valueRecord : valueRecords) {
       result.push_back(valueRecord.dataPointValue());
     }
     return result;
@@ -144,7 +142,6 @@ namespace detail {
                                            prelim.osmInputData(),
                                            prelim.idfInputData(),
                                            prelim.sqlOutputData(),
-                                           prelim.xmlOutputData(),
                                            prelim.topLevelJob(),
                                            prelim.dakotaParametersFiles(),
                                            prelim.tags(),
@@ -187,7 +184,7 @@ OptimizationDataPointRecord::OptimizationDataPointRecord(
     const analysis::OptimizationDataPoint& optimizationDataPoint,
     AnalysisRecord& analysisRecord,
     const OptimizationProblemRecord& problemRecord)
-  : DataPointRecord(boost::shared_ptr<detail::OptimizationDataPointRecord_Impl>(
+  : DataPointRecord(std::shared_ptr<detail::OptimizationDataPointRecord_Impl>(
         new detail::OptimizationDataPointRecord_Impl(optimizationDataPoint,
                                                      analysisRecord,
                                                      problemRecord)),
@@ -200,9 +197,9 @@ OptimizationDataPointRecord::OptimizationDataPointRecord(
 
   OptimizationDataPointRecord copyOfThis(getImpl<detail::OptimizationDataPointRecord_Impl>());
   ProjectDatabase database = copyOfThis.projectDatabase();
-  // remove old objetive function values
+  // remove old objective function values
   DataPointValueRecordVector valueRecords = copyOfThis.objectiveValueRecords();
-  BOOST_FOREACH(DataPointValueRecord& valueRecord,valueRecords) {
+  for (DataPointValueRecord& valueRecord : valueRecords) {
     database.removeRecord(valueRecord);
   }
   // save current objective function values
@@ -219,7 +216,7 @@ OptimizationDataPointRecord::OptimizationDataPointRecord(
 
 OptimizationDataPointRecord::OptimizationDataPointRecord(const QSqlQuery& query,
                                                          ProjectDatabase& database)
-  : DataPointRecord(boost::shared_ptr<detail::OptimizationDataPointRecord_Impl>(
+  : DataPointRecord(std::shared_ptr<detail::OptimizationDataPointRecord_Impl>(
         new detail::OptimizationDataPointRecord_Impl(query, database)),
         database)
 {
@@ -227,7 +224,7 @@ OptimizationDataPointRecord::OptimizationDataPointRecord(const QSqlQuery& query,
 }
 
 OptimizationDataPointRecord::OptimizationDataPointRecord(
-    boost::shared_ptr<detail::OptimizationDataPointRecord_Impl> impl,
+    std::shared_ptr<detail::OptimizationDataPointRecord_Impl> impl,
     ProjectDatabase database)
   : DataPointRecord(impl, database)
 {
@@ -295,7 +292,7 @@ analysis::OptimizationDataPoint OptimizationDataPointRecord::optimizationDataPoi
 }
 
 /// @cond
-OptimizationDataPointRecord::OptimizationDataPointRecord(boost::shared_ptr<detail::OptimizationDataPointRecord_Impl> impl)
+OptimizationDataPointRecord::OptimizationDataPointRecord(std::shared_ptr<detail::OptimizationDataPointRecord_Impl> impl)
   : DataPointRecord(impl)
 {}
 /// @endcond

@@ -20,10 +20,10 @@
 #ifndef ANALYSIS_FSUDACEALGORITHMOPTIONS_HPP
 #define ANALYSIS_FSUDACEALGORITHMOPTIONS_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/DakotaAlgorithmOptions.hpp>
+#include "AnalysisAPI.hpp"
+#include "DakotaAlgorithmOptions.hpp"
 
-#include <utilities/core/Enum.hpp>
+#include "../utilities/core/Enum.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -214,7 +214,7 @@ class ANALYSIS_API FSUDaceAlgorithmOptions : public DakotaAlgorithmOptions {
   /// @cond
   typedef detail::FSUDaceAlgorithmOptions_Impl ImplType;
 
-  explicit FSUDaceAlgorithmOptions(boost::shared_ptr<detail::FSUDaceAlgorithmOptions_Impl> impl);
+  explicit FSUDaceAlgorithmOptions(std::shared_ptr<detail::FSUDaceAlgorithmOptions_Impl> impl);
 
   friend class detail::FSUDaceAlgorithmOptions_Impl;
   friend class AnalysisObject;

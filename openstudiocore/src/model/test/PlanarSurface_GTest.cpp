@@ -19,12 +19,12 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/PlanarSurface.hpp>
-#include <model/PlanarSurface_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../PlanarSurface.hpp"
+#include "../PlanarSurface_Impl.hpp"
 
-#include <utilities/units/QuantityFactory.hpp>
-#include <utilities/units/QuantityConverter.hpp>
+#include "../../utilities/units/QuantityFactory.hpp"
+#include "../../utilities/units/QuantityConverter.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

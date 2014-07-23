@@ -20,8 +20,8 @@
 #ifndef MODEL_PEOPLE_HPP
 #define MODEL_PEOPLE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceLoadInstance.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceLoadInstance.hpp"
 
 namespace openstudio {
 namespace model {
@@ -164,7 +164,7 @@ class MODEL_API People : public SpaceLoadInstance {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit People(boost::shared_ptr<detail::People_Impl> impl);
+  explicit People(std::shared_ptr<detail::People_Impl> impl);
 
   /// @endcond
  private:

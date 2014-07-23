@@ -17,20 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SetpointManagerWarmest.hpp>
-#include <model/SetpointManagerWarmest_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "SetpointManagerWarmest.hpp"
+#include "SetpointManagerWarmest_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "Model.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SetpointManager_Warmest_FieldEnums.hxx>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -41,7 +37,7 @@ namespace detail {
   SetpointManagerWarmest_Impl::SetpointManagerWarmest_Impl(const IdfObject& idfObject,
                                                            Model_Impl* model,
                                                            bool keepHandle)
-    : HVACComponent_Impl(idfObject,model,keepHandle)
+    : SetpointManager_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == SetpointManagerWarmest::iddObjectType());
   }
@@ -49,7 +45,7 @@ namespace detail {
   SetpointManagerWarmest_Impl::SetpointManagerWarmest_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                            Model_Impl* model,
                                                            bool keepHandle)
-    : HVACComponent_Impl(other,model,keepHandle)
+    : SetpointManager_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == SetpointManagerWarmest::iddObjectType());
   }
@@ -57,7 +53,7 @@ namespace detail {
   SetpointManagerWarmest_Impl::SetpointManagerWarmest_Impl(const SetpointManagerWarmest_Impl& other,
                                                            Model_Impl* model,
                                                            bool keepHandle)
-    : HVACComponent_Impl(other,model,keepHandle)
+    : SetpointManager_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& SetpointManagerWarmest_Impl::outputVariableNames() const
@@ -97,12 +93,10 @@ namespace detail {
   }
 
   boost::optional<Node> SetpointManagerWarmest_Impl::setpointNode() const {
-    SetpointManagerWarmest thisModelObject = this->getObject<SetpointManagerWarmest>();
-
-    return thisModelObject.getModelObjectTarget<Node>(OS_SetpointManager_WarmestFields::SetpointNodeorNodeListName);
+    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_WarmestFields::SetpointNodeorNodeListName);
   }
 
-  bool SetpointManagerWarmest_Impl::setControlVariable(std::string controlVariable) {
+  bool SetpointManagerWarmest_Impl::setControlVariable(const std::string& controlVariable) {
     bool result = setString(OS_SetpointManager_WarmestFields::ControlVariable, controlVariable);
     return result;
   }
@@ -117,7 +111,7 @@ namespace detail {
     return result;
   }
 
-  bool SetpointManagerWarmest_Impl::setStrategy(std::string strategy) {
+  bool SetpointManagerWarmest_Impl::setStrategy(const std::string& strategy) {
     bool result = setString(OS_SetpointManager_WarmestFields::Strategy, strategy);
     return result;
   }
@@ -127,56 +121,16 @@ namespace detail {
     return result;
   }
 
-  bool SetpointManagerWarmest_Impl::addToNode(Node & node)
+  void SetpointManagerWarmest_Impl::resetSetpointNode()
   {
-    if( node.model() != this->model() )
-    {
-      return false;
-    } 
-
-    node.removeSetpointManagerMixedAir();
-
-    node.removeSetpointManagerSingleZoneReheat();
-
-    node.removeSetpointManagerScheduled();
-
-    node.removeSetpointManagerFollowOutdoorAirTemperature();
-
-    node.removeSetpointManagerOutdoorAirReset();
-
-    node.removeSetpointManagerWarmest();
-
-    if( OptionalAirLoopHVAC airLoop = node.airLoopHVAC() )
-    {
-      if( airLoop->supplyComponent(node.handle()) )
-      {
-        this->setSetpointNode(node);
-
-        return true;
-      }
-      if(OptionalAirLoopHVACOutdoorAirSystem oaSystem = airLoop->airLoopHVACOutdoorAirSystem())
-      {
-        if(node == oaSystem->outboardOANode().get())
-        {
-          return false;
-        }
-
-        if(oaSystem->oaComponent(node.handle()))
-        {
-          this->setSetpointNode(node);
-        
-          return true;
-        }
-      }
-    }
-
-    return false;
+    bool result = setString(OS_SetpointManager_WarmestFields::SetpointNodeorNodeListName,"");
+    OS_ASSERT(result);
   }
 
 } // detail
 
 SetpointManagerWarmest::SetpointManagerWarmest(const Model& model)
-  : HVACComponent(SetpointManagerWarmest::iddObjectType(),model)
+  : SetpointManager(SetpointManagerWarmest::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::SetpointManagerWarmest_Impl>());
 
@@ -220,7 +174,7 @@ boost::optional<Node> SetpointManagerWarmest::setpointNode() const {
   return getImpl<detail::SetpointManagerWarmest_Impl>()->setpointNode();
 }
 
-bool SetpointManagerWarmest::setControlVariable(std::string controlVariable) {
+bool SetpointManagerWarmest::setControlVariable(const std::string& controlVariable) {
   return getImpl<detail::SetpointManagerWarmest_Impl>()->setControlVariable(controlVariable);
 }
 
@@ -232,13 +186,13 @@ bool SetpointManagerWarmest::setMaximumSetpointTemperature(double maximumSetpoin
   return getImpl<detail::SetpointManagerWarmest_Impl>()->setMaximumSetpointTemperature(maximumSetpointTemperature);
 }
 
-bool SetpointManagerWarmest::setStrategy(std::string strategy) {
+bool SetpointManagerWarmest::setStrategy(const std::string& strategy) {
   return getImpl<detail::SetpointManagerWarmest_Impl>()->setStrategy(strategy);
 }
 
 /// @cond
-SetpointManagerWarmest::SetpointManagerWarmest(boost::shared_ptr<detail::SetpointManagerWarmest_Impl> impl)
-  : HVACComponent(impl)
+SetpointManagerWarmest::SetpointManagerWarmest(std::shared_ptr<detail::SetpointManagerWarmest_Impl> impl)
+  : SetpointManager(impl)
 {}
 /// @endcond
 

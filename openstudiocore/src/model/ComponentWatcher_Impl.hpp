@@ -20,13 +20,11 @@
 #ifndef MODEL_COMPONENTWATCHER_IMPL_HPP
 #define MODEL_COMPONENTWATCHER_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ComponentData.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
+#include "ComponentData.hpp"
 
-#include <utilities/core/Logger.hpp>
-
-#include <boost/enable_shared_from_this.hpp>
+#include "../utilities/core/Logger.hpp"
 
 #include <QObject>
 
@@ -37,7 +35,7 @@ class ComponentWatcher;
 
 namespace detail {
 
-  class MODEL_API ComponentWatcher_Impl : public QObject, public boost::enable_shared_from_this<ComponentWatcher_Impl> {
+  class MODEL_API ComponentWatcher_Impl : public QObject, public std::enable_shared_from_this<ComponentWatcher_Impl> {
     Q_OBJECT;
    public:
     /** @name Constructors and Destructors */

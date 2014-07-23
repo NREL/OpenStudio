@@ -17,30 +17,30 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef RUNTIMEUNITSFIXTURE_H
-#define RUNTIMEUNITSFIXTURE_H
+#ifndef UTILITIES_UNITS_TEST_UNITSFIXTURE_HPP
+#define UTILITIES_UNITS_TEST_UNITSFIXTURE_HPP
 
 #include <gtest/gtest.h>
 
-#include <utilities/core/String.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/FileLogSink.hpp>
+#include "../../core/String.hpp"
+#include "../../core/Logger.hpp"
+#include "../../core/FileLogSink.hpp"
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSQuantityVector.hpp>
+#include "../Quantity.hpp"
+#include "../OSQuantityVector.hpp"
 
 #include <iomanip>
 
 class UnitsFixture : public ::testing::Test {
 protected:
 
-  // initiallize for each test
+  // initialize for each test
   virtual void SetUp();
 
   // tear down after for each test
   virtual void TearDown();
 
-  // initiallize static members
+  // initialize static members
   static void SetUpTestCase();
 
   // tear down static members
@@ -95,4 +95,4 @@ void testStreamOutput(const std::string& expected,const T& outObject,int precisi
   EXPECT_EQ(expected,testStream.str());
 }
 
-#endif // RUNTIMEUNITSFIXTURE_H
+#endif // UTILITIES_UNITS_TEST_UNITSFIXTURE_HPP

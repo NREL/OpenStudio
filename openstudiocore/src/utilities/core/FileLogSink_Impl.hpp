@@ -20,11 +20,11 @@
 #ifndef UTILITIES_CORE_FILELOGSINK_IMPL_HPP
 #define UTILITIES_CORE_FILELOGSINK_IMPL_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
 #include <boost/filesystem/fstream.hpp>
-#include <utilities/core/LogSink_Impl.hpp>
-#include <utilities/core/FileLogSink.hpp>
+#include "LogSink_Impl.hpp"
+#include "FileLogSink.hpp"
 
 namespace openstudio{
 

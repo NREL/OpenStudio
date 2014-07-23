@@ -20,8 +20,8 @@
 #ifndef MODEL_CURVEFANPRESSURERISE_HPP
 #define MODEL_CURVEFANPRESSURERISE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Curve.hpp>
+#include "ModelAPI.hpp"
+#include "Curve.hpp"
 
 namespace openstudio {
 namespace model {
@@ -112,7 +112,7 @@ class MODEL_API CurveFanPressureRise : public Curve {
   /// @cond
   typedef detail::CurveFanPressureRise_Impl ImplType;
 
-  explicit CurveFanPressureRise(boost::shared_ptr<detail::CurveFanPressureRise_Impl> impl);
+  explicit CurveFanPressureRise(std::shared_ptr<detail::CurveFanPressureRise_Impl> impl);
 
   friend class detail::CurveFanPressureRise_Impl;
   friend class Model;

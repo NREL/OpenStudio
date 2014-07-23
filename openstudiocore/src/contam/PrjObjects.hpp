@@ -1,29 +1,28 @@
 /**********************************************************************
-*  Copyright (c) 2014, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
-#ifndef PRJOBJECTS_H
-#define PRJOBJECTS_H
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#ifndef CONTAM_PRJOBJECTS_HPP
+#define CONTAM_PRJOBJECTS_HPP
 
 #include "PrjDefines.hpp"
 #include "PrjObjectsImpl.hpp"
 #include "ContamAPI.hpp"
-
-#include <boost/shared_ptr.hpp>
 
 namespace openstudio {
 namespace contam {
@@ -254,7 +253,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::ZoneImpl> m_impl;
+  std::shared_ptr<detail::ZoneImpl> m_impl;
 };
 
 /** The Species object contains descriptive information about contaminants in
@@ -386,7 +385,7 @@ public:
   void setDesc(const std::string &desc);
   //@}
 private:
-  boost::shared_ptr<detail::SpeciesImpl> m_impl;
+  std::shared_ptr<detail::SpeciesImpl> m_impl;
 };
 
 /** Ahs is a class that represents CONTAM's simple air handling system. These
@@ -465,7 +464,7 @@ public:
   void setDesc(const std::string &desc);
   //@}
 private:
-  boost::shared_ptr<detail::AhsImpl> m_impl;
+  std::shared_ptr<detail::AhsImpl> m_impl;
 };
 
 /** The AirflowPath object stores one flow linkage in the airflow network. */
@@ -688,7 +687,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::AirflowPathImpl> m_impl;
+  std::shared_ptr<detail::AirflowPathImpl> m_impl;
 };
 
 /** The RunControl object stores most of the information related to how CONTAM solves the airflow network
@@ -1231,7 +1230,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::RunControlImpl> m_impl;
+  std::shared_ptr<detail::RunControlImpl> m_impl;
 };
 
 /** Level objects contain information about the levels that make up a CONTAM
@@ -1311,7 +1310,7 @@ public:
   void setIcons(const std::vector<Icon> &icons);
   //@}
 private:
-  boost::shared_ptr<detail::LevelImpl> m_impl;
+  std::shared_ptr<detail::LevelImpl> m_impl;
 };
 
 /** The DaySchedule object contains schedule data for a single day. */
@@ -1385,7 +1384,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::DayScheduleImpl> m_impl;
+  std::shared_ptr<detail::DayScheduleImpl> m_impl;
 };
 
 /** The WeekSchedule object represents a complete week with 12 possible day
@@ -1457,7 +1456,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::WeekScheduleImpl> m_impl;
+  std::shared_ptr<detail::WeekScheduleImpl> m_impl;
 };
 
 /** WindPressureProfile objects store pressure coefficient as a function of
@@ -1524,7 +1523,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::WindPressureProfileImpl> m_impl;
+  std::shared_ptr<detail::WindPressureProfileImpl> m_impl;
 };
 
 /** The ControlNode object is the base class of all control node elements. */
@@ -1667,7 +1666,7 @@ public:
   void setValuename(const std::string &valuename);
   //@}
 private:
-  boost::shared_ptr<detail::CdvDatImpl> m_impl;
+  std::shared_ptr<detail::CdvDatImpl> m_impl;
 };
 
 /** The CvfDat object represents a continuous value datas file control node. */
@@ -1723,4 +1722,4 @@ public:
 } // contam
 } // openstudio
 
-#endif
+#endif // CONTAM_PRJOBJECTS_HPP

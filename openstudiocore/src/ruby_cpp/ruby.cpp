@@ -19,12 +19,6 @@
 
 #include <ruby.h>
 
-#ifdef HAVE_RUBY_VERSION_H
-#include <ruby/version.h>
-#endif
-
-
-#if RUBY_API_VERSION_MAJOR && RUBY_API_VERSION_MAJOR==2
 int main(int argc, char **argv)
 {
   ruby_sysinit(&argc, &argv);
@@ -34,15 +28,3 @@ int main(int argc, char **argv)
     return ruby_run_node(ruby_options(argc, argv));
   }
 }
-
-#else
-
-int main(int argc, char *argv[])
-{
-  ruby_init();
-  ruby_options(argc, argv);
-  ruby_run();
-
-  return EXIT_SUCCESS;
-}
-#endif

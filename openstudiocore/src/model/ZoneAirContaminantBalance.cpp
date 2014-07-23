@@ -17,23 +17,23 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ZoneAirContaminantBalance.hpp>
-#include <model/ZoneAirContaminantBalance_Impl.hpp>
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
+#include "ZoneAirContaminantBalance.hpp"
+#include "ZoneAirContaminantBalance_Impl.hpp"
+#include "SimulationControl.hpp"
+#include "SimulationControl_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 // TODO: Check the following class names against object getters and setters.
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/OS_ZoneAirContaminantBalance_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -202,7 +202,7 @@ void ZoneAirContaminantBalance::resetOutdoorCarbonDioxideSchedule() {
 }
 
 /// @cond
-ZoneAirContaminantBalance::ZoneAirContaminantBalance(boost::shared_ptr<detail::ZoneAirContaminantBalance_Impl> impl)
+ZoneAirContaminantBalance::ZoneAirContaminantBalance(std::shared_ptr<detail::ZoneAirContaminantBalance_Impl> impl)
   : ModelObject(impl)
 {}
 

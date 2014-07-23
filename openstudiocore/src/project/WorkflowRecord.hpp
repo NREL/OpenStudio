@@ -21,11 +21,11 @@
 #define PROJECT_WORKFLOWRECORD_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/ObjectRecord.hpp>
+#include "ObjectRecord.hpp"
 
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/core/String.hpp"
+#include "../utilities/core/Logger.hpp"
 
 #include <QVariant>
 
@@ -144,7 +144,7 @@ class PROJECT_API WorkflowRecord : public ObjectRecord {
   friend class ProjectDatabase;
 
   // from impl, does not register in database, use with caution
-  WorkflowRecord(boost::shared_ptr<detail::WorkflowRecord_Impl> impl);
+  WorkflowRecord(std::shared_ptr<detail::WorkflowRecord_Impl> impl);
 
   /// @endcond
  private:

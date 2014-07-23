@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_lib/OSAppBase.hpp>
+#include "OSAppBase.hpp"
 
 #include "ApplyMeasureNowDialog.hpp"
 #include "MainRightColumnController.hpp"
@@ -30,9 +30,9 @@
 #include "../shared_gui_components/LocalLibraryController.hpp"
 #include "../shared_gui_components/WaitDialog.hpp"
 
-#include <analysisdriver/SimpleProject.hpp>
+#include "../analysisdriver/SimpleProject.hpp"
 
-#include <utilities/bcl/LocalBCL.hpp>
+#include "../utilities/bcl/LocalBCL.hpp"
 
 #include <QDir>
 #include <QMessageBox>
@@ -64,7 +64,7 @@ OSAppBase * OSAppBase::instance()
 
 boost::optional<openstudio::analysisdriver::SimpleProject> OSAppBase::project()
 {
-  boost::shared_ptr<OSDocument> document = currentDocument();
+  std::shared_ptr<OSDocument> document = currentDocument();
 
   if (document)
   {
@@ -76,7 +76,7 @@ boost::optional<openstudio::analysisdriver::SimpleProject> OSAppBase::project()
 
 QWidget *OSAppBase::mainWidget()
 {
-  boost::shared_ptr<OSDocument> document = currentDocument();
+  std::shared_ptr<OSDocument> document = currentDocument();
 
   if (document)
   {
@@ -88,7 +88,7 @@ QWidget *OSAppBase::mainWidget()
 
 boost::optional<openstudio::model::Model> OSAppBase::currentModel()
 {
-  boost::shared_ptr<OSDocument> document = currentDocument();
+  std::shared_ptr<OSDocument> document = currentDocument();
   if (document)
   {
     return document->model();
@@ -106,11 +106,11 @@ void OSAppBase::updateSelectedMeasureState()
 {
   // DLM: this slot seems out of place here, seems like the connection from the measure list to enabling duplicate buttons, etc 
   // should be tighter
-  boost::shared_ptr<OSDocument> document = currentDocument();
+  std::shared_ptr<OSDocument> document = currentDocument();
 
   if (document)
   {
-    boost::shared_ptr<MainRightColumnController> mainRightColumnController = document->mainRightColumnController();
+    std::shared_ptr<MainRightColumnController> mainRightColumnController = document->mainRightColumnController();
 
     if (mainRightColumnController)
     {
@@ -145,7 +145,7 @@ void OSAppBase::duplicateSelectedMeasure()
 
 void OSAppBase::updateMyMeasures()
 {
-  boost::shared_ptr<OSDocument> document = currentDocument();
+  std::shared_ptr<OSDocument> document = currentDocument();
 
   if (document)
   {
@@ -163,7 +163,7 @@ void OSAppBase::updateMyMeasures()
 
 void OSAppBase::updateBCLMeasures()
 {
-  boost::shared_ptr<OSDocument> document = currentDocument();
+  std::shared_ptr<OSDocument> document = currentDocument();
 
   if (document)
   {
@@ -187,7 +187,7 @@ void OSAppBase::downloadUpdatedBCLMeasures()
 
 void OSAppBase::openBclDlg()
 {
-  boost::shared_ptr<OSDocument> document = currentDocument();
+  std::shared_ptr<OSDocument> document = currentDocument();
 
   if (document)
   {
@@ -197,7 +197,7 @@ void OSAppBase::openBclDlg()
 
 void OSAppBase::chooseHorizontalEditTab()
 {
-  boost::shared_ptr<OSDocument> document = currentDocument();
+  std::shared_ptr<OSDocument> document = currentDocument();
 
   if (document)
   {
@@ -207,7 +207,7 @@ void OSAppBase::chooseHorizontalEditTab()
 
 QSharedPointer<EditController> OSAppBase::editController()
 {
-  boost::shared_ptr<OSDocument> document = currentDocument();
+  std::shared_ptr<OSDocument> document = currentDocument();
 
   if (document)
   {

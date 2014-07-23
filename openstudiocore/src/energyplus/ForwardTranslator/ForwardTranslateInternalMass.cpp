@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../ForwardTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/InternalMass.hpp>
-#include <model/InternalMass_Impl.hpp>
-#include <model/InternalMassDefinition.hpp>
-#include <model/InternalMassDefinition_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/InternalMass.hpp"
+#include "../../model/InternalMass_Impl.hpp"
+#include "../../model/InternalMassDefinition.hpp"
+#include "../../model/InternalMassDefinition_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/SpaceType.hpp"
+#include "../../model/SpaceType_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/ConstructionBase.hpp"
+#include "../../model/ConstructionBase_Impl.hpp"
 
 #include <utilities/idd/InternalMass_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -100,7 +100,7 @@ boost::optional<IdfObject> ForwardTranslator::translateInternalMass( model::Inte
   }else{
 
     // create InternalMass object for each zone
-    BOOST_FOREACH(Space space, spaces){
+    for (Space space : spaces){
 
       IdfObject idfObject(openstudio::IddObjectType::InternalMass);
 

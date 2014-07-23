@@ -20,9 +20,9 @@
 #ifndef ANALYSISDRIVER_TEST_ANALYSISDRIVERTESTLIBRARY_HPP
 #define ANALYSISDRIVER_TEST_ANALYSISDRIVERTESTLIBRARY_HPP
 
-#include <utilities/core/Enum.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Singleton.hpp>
+#include "../../utilities/core/Enum.hpp"
+#include "../../utilities/core/Path.hpp"
+#include "../../utilities/core/Singleton.hpp"
 
 namespace openstudio {
 namespace analysisdriver {

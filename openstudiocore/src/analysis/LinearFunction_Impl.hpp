@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_LINEARFUNCTION_IMPL_HPP
 #define ANALYSIS_LINEARFUNCTION_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/Function_Impl.hpp>
+#include "AnalysisAPI.hpp"
+#include "Function_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {

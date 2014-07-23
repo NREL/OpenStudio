@@ -17,73 +17,73 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/SpaceLoadInstancesWidget.hpp>
+#include "SpaceLoadInstancesWidget.hpp"
 
-#include <openstudio_lib/IconLibrary.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/OSDropZone.hpp>
-#include <openstudio_lib/OSVectorController.hpp>
+#include "IconLibrary.hpp"
+#include "ModelObjectItem.hpp"
+#include "OSDropZone.hpp"
+#include "OSVectorController.hpp"
 
 #include "../shared_gui_components/OSDoubleEdit.hpp"
 #include "../shared_gui_components/OSIntegerEdit.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 
-#include <model/Building.hpp>
-#include <model/BuildingStory.hpp>
-#include <model/BuildingStory_Impl.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/DefaultScheduleSet.hpp>
-#include <model/DefaultScheduleSet_Impl.hpp>
-#include <model/ElectricEquipment.hpp>
-#include <model/ElectricEquipmentDefinition.hpp>
-#include <model/ElectricEquipmentDefinition_Impl.hpp>
-#include <model/ElectricEquipment_Impl.hpp>
-#include <model/GasEquipment.hpp>
-#include <model/GasEquipmentDefinition.hpp>
-#include <model/GasEquipmentDefinition_Impl.hpp>
-#include <model/GasEquipment_Impl.hpp>
-#include <model/HotWaterEquipment.hpp>
-#include <model/HotWaterEquipmentDefinition.hpp>
-#include <model/HotWaterEquipmentDefinition_Impl.hpp>
-#include <model/HotWaterEquipment_Impl.hpp>
-#include <model/InternalMass.hpp>
-#include <model/InternalMassDefinition.hpp>
-#include <model/InternalMassDefinition_Impl.hpp>
-#include <model/InternalMass_Impl.hpp>
-#include <model/Lights.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/LightsDefinition_Impl.hpp>
-#include <model/Lights_Impl.hpp>
-#include <model/Luminaire.hpp>
-#include <model/LuminaireDefinition.hpp>
-#include <model/LuminaireDefinition_Impl.hpp>
-#include <model/Luminaire_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/OtherEquipment.hpp>
-#include <model/OtherEquipmentDefinition.hpp>
-#include <model/OtherEquipmentDefinition_Impl.hpp>
-#include <model/OtherEquipment_Impl.hpp>
-#include <model/People.hpp>
-#include <model/PeopleDefinition.hpp>
-#include <model/PeopleDefinition_Impl.hpp>
-#include <model/People_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/SpaceLoadDefinition.hpp>
-#include <model/SpaceLoadDefinition_Impl.hpp>
-#include <model/SpaceLoadInstance.hpp>
-#include <model/SpaceLoadInstance_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SteamEquipment.hpp>
-#include <model/SteamEquipmentDefinition.hpp>
-#include <model/SteamEquipmentDefinition_Impl.hpp>
-#include <model/SteamEquipment_Impl.hpp>
+#include "../model/Building.hpp"
+#include "../model/BuildingStory.hpp"
+#include "../model/BuildingStory_Impl.hpp"
+#include "../model/Building_Impl.hpp"
+#include "../model/DefaultScheduleSet.hpp"
+#include "../model/DefaultScheduleSet_Impl.hpp"
+#include "../model/ElectricEquipment.hpp"
+#include "../model/ElectricEquipmentDefinition.hpp"
+#include "../model/ElectricEquipmentDefinition_Impl.hpp"
+#include "../model/ElectricEquipment_Impl.hpp"
+#include "../model/GasEquipment.hpp"
+#include "../model/GasEquipmentDefinition.hpp"
+#include "../model/GasEquipmentDefinition_Impl.hpp"
+#include "../model/GasEquipment_Impl.hpp"
+#include "../model/HotWaterEquipment.hpp"
+#include "../model/HotWaterEquipmentDefinition.hpp"
+#include "../model/HotWaterEquipmentDefinition_Impl.hpp"
+#include "../model/HotWaterEquipment_Impl.hpp"
+#include "../model/InternalMass.hpp"
+#include "../model/InternalMassDefinition.hpp"
+#include "../model/InternalMassDefinition_Impl.hpp"
+#include "../model/InternalMass_Impl.hpp"
+#include "../model/Lights.hpp"
+#include "../model/LightsDefinition.hpp"
+#include "../model/LightsDefinition_Impl.hpp"
+#include "../model/Lights_Impl.hpp"
+#include "../model/Luminaire.hpp"
+#include "../model/LuminaireDefinition.hpp"
+#include "../model/LuminaireDefinition_Impl.hpp"
+#include "../model/Luminaire_Impl.hpp"
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/OtherEquipment.hpp"
+#include "../model/OtherEquipmentDefinition.hpp"
+#include "../model/OtherEquipmentDefinition_Impl.hpp"
+#include "../model/OtherEquipment_Impl.hpp"
+#include "../model/People.hpp"
+#include "../model/PeopleDefinition.hpp"
+#include "../model/PeopleDefinition_Impl.hpp"
+#include "../model/People_Impl.hpp"
+#include "../model/Schedule.hpp"
+#include "../model/Schedule_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/SpaceLoadDefinition.hpp"
+#include "../model/SpaceLoadDefinition_Impl.hpp"
+#include "../model/SpaceLoadInstance.hpp"
+#include "../model/SpaceLoadInstance_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/SteamEquipment.hpp"
+#include "../model/SteamEquipmentDefinition.hpp"
+#include "../model/SteamEquipmentDefinition_Impl.hpp"
+#include "../model/SteamEquipment_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <utilities/idd/OS_Building_FieldEnums.hxx>
 #include <utilities/idd/OS_People_FieldEnums.hxx>
@@ -736,7 +736,7 @@ void SpaceLoadInstancesWidget::detach()
     model::Building building = m_model->getUniqueModelObject<model::Building>();
     this->disconnect(building.getImpl<openstudio::model::detail::Model_Impl>().get());
 
-    BOOST_FOREACH(model::SpaceType spaceType, m_model->getConcreteModelObjects<model::SpaceType>()){
+    for (model::SpaceType spaceType : m_model->getConcreteModelObjects<model::SpaceType>()){
       this->disconnect(spaceType.getImpl<openstudio::model::detail::Model_Impl>().get());
     }
 
@@ -757,16 +757,16 @@ void SpaceLoadInstancesWidget::attach(const model::Space& space)
 
   bool isConnected = false;
   isConnected = connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(), 
-                        SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         this,
-                        SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SLOT(objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
   isConnected = connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(), 
-                        SIGNAL(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         this,
-                        SLOT(objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SLOT(objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
@@ -777,7 +777,7 @@ void SpaceLoadInstancesWidget::attach(const model::Space& space)
                         SLOT(onBuildingRelationshipChange(int, Handle, Handle)));
   OS_ASSERT(isConnected);
 
-  BOOST_FOREACH(model::SpaceType spaceType, m_model->getConcreteModelObjects<model::SpaceType>()){
+  for (model::SpaceType spaceType : m_model->getConcreteModelObjects<model::SpaceType>()){
     isConnected = connect(spaceType.getImpl<model::detail::ModelObject_Impl>().get(),
                           SIGNAL(onRelationshipChange(int, Handle, Handle)),
                           this, 
@@ -804,16 +804,16 @@ void SpaceLoadInstancesWidget::attach(const model::SpaceType& spaceType)
 
   bool isConnected = false;
   isConnected = connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(), 
-                        SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         this,
-                        SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SLOT(objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
   isConnected = connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(), 
-                        SIGNAL(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         this,
-                        SLOT(objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SLOT(objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
@@ -824,7 +824,7 @@ void SpaceLoadInstancesWidget::attach(const model::SpaceType& spaceType)
                         SLOT(onBuildingRelationshipChange(int, Handle, Handle)));
   OS_ASSERT(isConnected);
 
-  BOOST_FOREACH(model::SpaceType spaceType, m_model->getConcreteModelObjects<model::SpaceType>()){
+  for (model::SpaceType spaceType : m_model->getConcreteModelObjects<model::SpaceType>()){
     isConnected = connect(spaceType.getImpl<model::detail::ModelObject_Impl>().get(),
                           SIGNAL(onRelationshipChange(int, Handle, Handle)),
                           this, 
@@ -872,7 +872,7 @@ void SpaceLoadInstancesWidget::onSpaceRelationshipChange(int index, Handle newHa
   }
 }
 
-void SpaceLoadInstancesWidget::objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
+void SpaceLoadInstancesWidget::objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
   if (iddObjectType == IddObjectType::OS_SpaceType){
     bool isConnected = connect(impl.get(),
@@ -883,7 +883,7 @@ void SpaceLoadInstancesWidget::objectAdded(boost::shared_ptr<openstudio::detail:
     return;
   }
 
-  boost::shared_ptr<model::detail::SpaceLoadInstance_Impl> spaceLoadInstanceImpl = boost::dynamic_pointer_cast<model::detail::SpaceLoadInstance_Impl>(impl);
+  std::shared_ptr<model::detail::SpaceLoadInstance_Impl> spaceLoadInstanceImpl = std::dynamic_pointer_cast<model::detail::SpaceLoadInstance_Impl>(impl);
   if (spaceLoadInstanceImpl){
 
     boost::optional<model::SpaceType> spaceType = m_spaceType;
@@ -911,9 +911,9 @@ void SpaceLoadInstancesWidget::objectAdded(boost::shared_ptr<openstudio::detail:
   }
 }
 
-void SpaceLoadInstancesWidget::objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
+void SpaceLoadInstancesWidget::objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
-  boost::shared_ptr<model::detail::SpaceLoadInstance_Impl> spaceLoadInstanceImpl = boost::dynamic_pointer_cast<model::detail::SpaceLoadInstance_Impl>(impl);
+  std::shared_ptr<model::detail::SpaceLoadInstance_Impl> spaceLoadInstanceImpl = std::dynamic_pointer_cast<model::detail::SpaceLoadInstance_Impl>(impl);
   if (spaceLoadInstanceImpl){
     m_dirty = true;
     QTimer::singleShot(0, this, SLOT(refresh()));
@@ -1024,7 +1024,7 @@ void SpaceLoadInstancesWidget::addSpaceLoads(const model::Space& space)
   std::sort(internalMass.begin(), internalMass.end(), WorkspaceObjectNameLess());
   spaceLoads.insert(spaceLoads.end(), internalMass.begin(), internalMass.end());
 
-  BOOST_FOREACH(const model::ModelObject& modelObject, spaceLoads){
+  for (const model::ModelObject& modelObject : spaceLoads){
     if (!modelObject.handle().isNull()){
       if (modelObject.optionalCast<model::SpaceLoadInstance>()){
 
@@ -1078,7 +1078,7 @@ void SpaceLoadInstancesWidget::addSpaceTypeLoads(const model::SpaceType& spaceTy
   std::sort(internalMass.begin(), internalMass.end(), WorkspaceObjectNameLess());
   spaceLoads.insert(spaceLoads.end(), internalMass.begin(), internalMass.end());
 
-  BOOST_FOREACH(const model::ModelObject& modelObject, spaceLoads){
+  for (const model::ModelObject& modelObject : spaceLoads){
     if (!modelObject.handle().isNull()){
       if (modelObject.optionalCast<model::SpaceLoadInstance>()){
 

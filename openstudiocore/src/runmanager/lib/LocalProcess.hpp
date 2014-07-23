@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_LOCALPROCESS_HPP__
-#define OPENSTUDIO_LOCALPROCESS_HPP__
+#ifndef RUNMANAGER_LIB_LOCALPROCESS_HPP
+#define RUNMANAGER_LIB_LOCALPROCESS_HPP
 
 #include <boost/filesystem.hpp>
 #include <string>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Path.hpp>
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/Path.hpp"
 #include "Job_Impl.hpp"
-#include <energyplus/ErrorFile.hpp>
+#include "../../energyplus/ErrorFile.hpp"
 
 #include <QProcess>
 #include <QFileSystemWatcher>
@@ -111,7 +111,7 @@ namespace detail {
 
       static void kill(QProcess &t_process, bool t_force); //< Does an appropriate process tree kill on Windows
 
-      std::set<openstudio::path> copyRequiredFiles(const std::vector<std::pair<openstudio::path, openstudio::path> > &t_requiredFiles, 
+      static std::set<openstudio::path> copyRequiredFiles(const ToolInfo &t_tool, const std::vector<std::pair<openstudio::path, openstudio::path> > &t_requiredFiles, 
           const openstudio::path &t_basePath);
 
       /// Immutable members, do not need thread mutex protection
@@ -123,7 +123,7 @@ namespace detail {
       const std::string m_stdin; //< Stdin to send after process has tarted
 
       /// Set of files that have been copied into place because they were required and can be deleted after the process has completed
-      const std::set<openstudio::path> m_copiedRequiredFiles; 
+      const std::set<openstudio::path> m_copiedRequiredFiles;
 
       /// List of files that are known about.
       FileSet m_outfiles;
@@ -172,4 +172,4 @@ namespace detail {
 }
 }
 }
-#endif
+#endif // RUNMANAGER_LIB_LOCALPROCESS_HPP

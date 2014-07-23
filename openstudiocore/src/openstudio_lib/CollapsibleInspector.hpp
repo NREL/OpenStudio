@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_COLLAPSIBLECOMPONENTHEADER_H
-#define OPENSTUDIO_COLLAPSIBLECOMPONENTHEADER_H
+#ifndef OPENSTUDIO_COLLAPSIBLEINSPECTOR_HPP
+#define OPENSTUDIO_COLLAPSIBLEINSPECTOR_HPP
 
 #include <QAbstractButton>
 #include <QWidget>
@@ -91,5 +91,5 @@ private slots:
 
 } // openstudio
 
-#endif // OPENSTUDIO_COLLAPSIBLECOMPONENTHEADER_H
+#endif // OPENSTUDIO_COLLAPSIBLEINSPECTOR_HPP
 

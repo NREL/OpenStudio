@@ -18,26 +18,26 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysis/test/AnalysisFixture.hpp>
+#include "AnalysisFixture.hpp"
 
-#include <analysis/NormalDistribution.hpp>
-#include <analysis/LognormalDistribution.hpp>
-#include <analysis/UniformDistribution.hpp>
-#include <analysis/LoguniformDistribution.hpp>
-#include <analysis/TriangularDistribution.hpp>
-#include <analysis/ExponentialDistribution.hpp>
-#include <analysis/BetaDistribution.hpp>
-#include <analysis/GammaDistribution.hpp>
-#include <analysis/GumbelDistribution.hpp>
-#include <analysis/FrechetDistribution.hpp>
-#include <analysis/WeibullDistribution.hpp>
-#include <analysis/HistogramBinDistribution.hpp>
-#include <analysis/PoissonDistribution.hpp>
-#include <analysis/BinomialDistribution.hpp>
-#include <analysis/NegativeBinomialDistribution.hpp>
-#include <analysis/GeometricDistribution.hpp>
-#include <analysis/HypergeometricDistribution.hpp>
-#include <analysis/HistogramPointDistribution.hpp>
+#include "../NormalDistribution.hpp"
+#include "../LognormalDistribution.hpp"
+#include "../UniformDistribution.hpp"
+#include "../LoguniformDistribution.hpp"
+#include "../TriangularDistribution.hpp"
+#include "../ExponentialDistribution.hpp"
+#include "../BetaDistribution.hpp"
+#include "../GammaDistribution.hpp"
+#include "../GumbelDistribution.hpp"
+#include "../FrechetDistribution.hpp"
+#include "../WeibullDistribution.hpp"
+#include "../HistogramBinDistribution.hpp"
+#include "../PoissonDistribution.hpp"
+#include "../BinomialDistribution.hpp"
+#include "../NegativeBinomialDistribution.hpp"
+#include "../GeometricDistribution.hpp"
+#include "../HypergeometricDistribution.hpp"
+#include "../HistogramPointDistribution.hpp"
 
 using namespace openstudio;
 using namespace openstudio::analysis;

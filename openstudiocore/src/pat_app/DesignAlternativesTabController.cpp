@@ -17,26 +17,26 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <pat_app/DesignAlternativesTabController.hpp>
-#include <pat_app/MeasuresTabController.hpp>
-#include <pat_app/DesignAlternativesView.hpp>
-#include <pat_app/PatApp.hpp>
+#include "DesignAlternativesTabController.hpp"
+#include "MeasuresTabController.hpp"
+#include "DesignAlternativesView.hpp"
+#include "PatApp.hpp"
 
 #include "../shared_gui_components/HeaderViews.hpp"
 #include "../shared_gui_components/OSListView.hpp"
 
-#include <pat_app/PatMainWindow.hpp>
+#include "PatMainWindow.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/NullMeasure_Impl.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/DataPoint.hpp"
+#include "../analysis/Problem.hpp"
+#include "../analysis/NullMeasure.hpp"
+#include "../analysis/NullMeasure_Impl.hpp"
+#include "../analysis/MeasureGroup.hpp"
+#include "../analysis/MeasureGroup_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
 
 #include <QLineEdit>
 #include <QTextEdit>
@@ -168,7 +168,7 @@ void DesignAlternativesTabController::updateButtonStatusBasedOnSelectionNow()
                varPertIt != varperts.end();
                ++varPertIt )
           {
-            std::vector<analysis::Measure>::iterator match = std::find(selectedperts.begin(),selectedperts.end(),*varPertIt);
+            auto match = std::find(selectedperts.begin(),selectedperts.end(),*varPertIt);
 
             if(match != selectedperts.end())
             {
@@ -213,7 +213,7 @@ QWidget * VariableGroupItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     QSharedPointer<measuretab::VariableListController> variableListController = variableGroupItem->variableListController();
     QSharedPointer<VariableItemDelegate> variableItemDelegate = QSharedPointer<VariableItemDelegate>(new VariableItemDelegate());
 
-    VariableGroupItemView * variableGroupItemView = new VariableGroupItemView(); 
+    auto variableGroupItemView = new VariableGroupItemView(); 
 
     variableGroupItemView->variableGroupHeaderView->label->setText(variableGroupItem->label());
     variableGroupItemView->variableGroupContentView->setListController(variableListController);
@@ -237,7 +237,7 @@ QWidget * VariableItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     QSharedPointer<measuretab::MeasureListController> measureListController = variableItem->measureListController();
     QSharedPointer<MeasureItemDelegate> measureItemDelegate = QSharedPointer<MeasureItemDelegate>(new MeasureItemDelegate());
 
-    VariableItemView * variableItemView = new VariableItemView(); 
+    auto variableItemView = new VariableItemView(); 
 
     variableItemView->variableHeaderView->setText(variableItem->name());
     variableItemView->variableContentView->setListController(measureListController);
@@ -253,7 +253,7 @@ QWidget * MeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
   if(QSharedPointer<measuretab::MeasureItem> measureItem = dataSource.objectCast<measuretab::MeasureItem>())
   {
-    MeasureItemView * measureItemView = new MeasureItemView();
+    auto measureItemView = new MeasureItemView();
 
     // Name
 
@@ -330,7 +330,7 @@ std::string DesignAltListController::suggestDesignAltName(const boost::optional<
 
   std::set<std::string> allNames;
   if( boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project() ){
-    Q_FOREACH(const analysis::DataPoint& dataPoint, project->analysis().dataPoints()){
+    for (const analysis::DataPoint& dataPoint : project->analysis().dataPoints()) {
       allNames.insert(dataPoint.name());
       allNames.insert(dataPoint.displayName());
     }
@@ -635,7 +635,7 @@ QWidget * DesignAltItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
   if(QSharedPointer<DesignAltItem> designAltItem = dataSource.objectCast<DesignAltItem>())
   {
-    DesignAltItemView * designAltItemView = new DesignAltItemView(designAltItem->isBaseline());
+    auto designAltItemView = new DesignAltItemView(designAltItem->isBaseline());
 
     // Name
 
@@ -710,13 +710,11 @@ std::vector<analysis::Measure> PerturbationListController::measures() const
 
     std::vector<boost::optional<analysis::Measure> > measures = problem.getMeasures(variableValues);
 
-    for( std::vector<boost::optional<analysis::Measure> >::iterator it = measures.begin();
-         it != measures.end();
-         ++it )
+    for( auto & measure : measures )
     {
-      if( *it && (! (*it)->optionalCast<analysis::NullMeasure>()) )
+      if( measure && (! measure->optionalCast<analysis::NullMeasure>()) )
       {
-        result.push_back(**it);
+        result.push_back(*measure);
       }
     }
   }
@@ -767,7 +765,7 @@ QWidget * PerturbationItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
   if(QSharedPointer<PerturbationItem> perturbationItem = dataSource.objectCast<PerturbationItem>())
   {
-    QLabel * perturbationItemView = new QLabel();
+    auto perturbationItemView = new QLabel();
 
     perturbationItemView->setText(perturbationItem->name());
 

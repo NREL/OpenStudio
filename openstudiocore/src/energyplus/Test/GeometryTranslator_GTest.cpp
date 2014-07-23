@@ -18,31 +18,30 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <energyplus/Test/EnergyPlusFixture.hpp>
+#include "EnergyPlusFixture.hpp"
 
-#include <energyplus/GeometryTranslator.hpp>
-#include <energyplus/ReverseTranslator.hpp>
+#include "../GeometryTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/DaylightingControl.hpp>
-#include <model/IlluminanceMap.hpp>
-#include <model/Surface.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/Model_Impl.hpp"
+#include "../../model/Building.hpp"
+#include "../../model/Building_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/DaylightingControl.hpp"
+#include "../../model/IlluminanceMap.hpp"
+#include "../../model/Surface.hpp"
 
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../../utilities/geometry/Geometry.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/Wall_Exterior_FieldEnums.hxx>
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/FenestrationSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/Shading_Zone_Detailed_FieldEnums.hxx>
 
-#include <boost/foreach.hpp>
 #include <resources.hxx>
 
 #include <sstream>
@@ -495,14 +494,14 @@ TEST_F(EnergyPlusFixture,GeometryTranslator_SimpleRelativeTest)
   iddTypes.push_back(IddObjectType::Shading_Zone_Detailed);
 
   // check all types in both files
-  BOOST_FOREACH(unsigned iddType, iddTypes){
+  for (unsigned iddType : iddTypes){
     // for debugging
     IddObjectType debugIddType(iddType);
     // check sizes
     EXPECT_EQ(refWorkspace.getObjectsByType(iddType).size(),
               relWorkspace.getObjectsByType(iddType).size());
     // loop over each surf in ref
-    BOOST_FOREACH(WorkspaceObject refObject, refWorkspace.getObjectsByType(iddType)){
+    for (WorkspaceObject refObject : refWorkspace.getObjectsByType(iddType)){
       // find in test file
       OptionalWorkspaceObject relObject = relWorkspace.getObjectByTypeAndName(iddType, refObject.name().get());
       ASSERT_TRUE(relObject);

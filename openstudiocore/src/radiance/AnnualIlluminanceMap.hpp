@@ -22,11 +22,11 @@
 
 #include "RadianceAPI.hpp"
 
-#include <utilities/data/Vector.hpp>
-#include <utilities/data/Matrix.hpp>
-#include <utilities/time/DateTime.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Path.hpp>
+#include "../utilities/data/Vector.hpp"
+#include "../utilities/data/Matrix.hpp"
+#include "../utilities/time/DateTime.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/Path.hpp"
 
 namespace openstudio{
 namespace radiance{

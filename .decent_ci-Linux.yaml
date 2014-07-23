@@ -1,0 +1,6 @@
+compilers:
+  #  - name: "gcc"
+  #    version: "4.8"
+  #    cmake_extra_flags: -DBUILD_TESTING:BOOL=ON -DBUILD_SWIG:BOOL=ON
+  - name: cppcheck
+    compiler_extra_flags: --enable=warning  --suppress="*:*zlib*" --suppress="*:*sqlite*" --suppress="cppcheckError:*" --inline-suppr --suppress="syntaxError:*"

@@ -19,7 +19,7 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/core/System.hpp>
+#include "../System.hpp"
 
 using openstudio::System;
 using openstudio::Time;

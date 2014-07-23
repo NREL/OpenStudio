@@ -19,22 +19,22 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../Model.hpp"
+#include "../ModelObject.hpp"
+#include "../ModelObject_Impl.hpp"
 
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/StandardsInformationConstruction.hpp>
-#include <model/StandardsInformationConstruction_Impl.hpp>
-#include <model/StandardOpaqueMaterial.hpp>
-#include <model/StandardOpaqueMaterial_Impl.hpp>
+#include "../Surface.hpp"
+#include "../Surface_Impl.hpp"
+#include "../Construction.hpp"
+#include "../Construction_Impl.hpp"
+#include "../StandardsInformationConstruction.hpp"
+#include "../StandardsInformationConstruction_Impl.hpp"
+#include "../StandardOpaqueMaterial.hpp"
+#include "../StandardOpaqueMaterial_Impl.hpp"
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/core/Containers.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

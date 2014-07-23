@@ -18,13 +18,11 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idd/Test/IddFixture.hpp>
+#include "IddFixture.hpp"
 #include <utilities/idd/IddFactory.hxx>
-#include <utilities/idd/IddField.hpp>
-#include <utilities/idd/IddFieldProperties.hpp>
-#include <utilities/idd/IddKey.hpp>
-
-#include <boost/foreach.hpp>
+#include "../IddField.hpp"
+#include "../IddFieldProperties.hpp"
+#include "../IddKey.hpp"
 
 using namespace std;
 using namespace boost;
@@ -100,5 +98,6 @@ TEST_F(IddFixture, IddField) {
   fields[3].print(ss,false);
   OptionalIddField fieldClone = IddField::load(fields[3].name(),ss.str(),"Lights");
   ASSERT_TRUE(fieldClone);
+  // cppcheck-suppress arrayIndexOutOfBounds
   EXPECT_EQ(fields[3],*fieldClone);
 }

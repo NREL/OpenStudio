@@ -19,14 +19,13 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-
-#include <model/EvaporativeCoolerIndirectResearchSpecial.hpp>
-#include <model/EvaporativeCoolerIndirectResearchSpecial_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../EvaporativeCoolerIndirectResearchSpecial.hpp"
+#include "../EvaporativeCoolerIndirectResearchSpecial_Impl.hpp"
+#include "../PlantLoop.hpp"
+#include "../PlantLoop_Impl.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

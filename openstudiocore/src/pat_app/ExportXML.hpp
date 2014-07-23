@@ -17,18 +17,18 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_EXPORTXML_H
-#define OPENSTUDIO_EXPORTXML_H
+#ifndef PATAPP_EXPORTXML_HPP
+#define PATAPP_EXPORTXML_HPP
 
-#include <utilities/core/Path.hpp>
+#include "../utilities/core/Path.hpp"
 #include <QDomDocument>
 #include <QDomElement>
-#include <analysis/Problem.hpp>
-#include <analysisdriver/SimpleProject.hpp>
-#include <analysis/Measure.hpp>
-#include <analysis/WorkflowStep.hpp>
+#include "../analysis/Problem.hpp"
+#include "../analysisdriver/SimpleProject.hpp"
+#include "../analysis/Measure.hpp"
+#include "../analysis/WorkflowStep.hpp"
 
-#include <model/ModelObject.hpp>
+#include "../model/ModelObject.hpp"
 
 #include <map>
 
@@ -88,4 +88,4 @@ namespace exportxml {
 } // analysis
 } // openstudio
 
-#endif // OPENSTUDIO_EXPORTXML_H
+#endif // PATAPP_EXPORTXML_HPP

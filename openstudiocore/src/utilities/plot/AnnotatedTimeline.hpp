@@ -20,14 +20,12 @@
 #ifndef UTILITIES_PLOT_ANNOTATEDTIMELINE_HPP
 #define UTILITIES_PLOT_ANNOTATEDTIMELINE_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/Logger.hpp> 
-#include <utilities/core/Macro.hpp> 
-#include <utilities/data/TimeSeries.hpp> 
-#include <utilities/core/Path.hpp>
-
-#include <boost/shared_ptr.hpp>
+#include "../core/Logger.hpp"
+#include "../core/Macro.hpp"
+#include "../data/TimeSeries.hpp"
+#include "../core/Path.hpp"
 
 namespace openstudio{
 

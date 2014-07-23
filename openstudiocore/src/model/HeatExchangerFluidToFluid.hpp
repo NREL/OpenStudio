@@ -20,8 +20,8 @@
 #ifndef MODEL_HEATEXCHANGERFLUIDTOFLUID_HPP
 #define MODEL_HEATEXCHANGERFLUIDTOFLUID_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/WaterToWaterComponent.hpp>
+#include "ModelAPI.hpp"
+#include "WaterToWaterComponent.hpp"
 
 namespace openstudio {
 
@@ -176,7 +176,7 @@ class MODEL_API HeatExchangerFluidToFluid : public WaterToWaterComponent {
   /// @cond
   typedef detail::HeatExchangerFluidToFluid_Impl ImplType;
 
-  explicit HeatExchangerFluidToFluid(boost::shared_ptr<detail::HeatExchangerFluidToFluid_Impl> impl);
+  explicit HeatExchangerFluidToFluid(std::shared_ptr<detail::HeatExchangerFluidToFluid_Impl> impl);
 
   friend class detail::HeatExchangerFluidToFluid_Impl;
   friend class Model;

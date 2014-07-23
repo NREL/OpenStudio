@@ -19,8 +19,8 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/time/DateTime.hpp>
-#include <utilities/core/Exception.hpp>
+#include "../DateTime.hpp"
+#include "../../core/Exception.hpp"
 
 #include <string>
 

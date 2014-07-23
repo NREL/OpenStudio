@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/LifeCycleCostParameters.hpp>
-#include <model/LifeCycleCostParameters_Impl.hpp>
+#include "LifeCycleCostParameters.hpp"
+#include "LifeCycleCostParameters_Impl.hpp"
 
-#include <model/Model_Impl.hpp>
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_LifeCycleCost_Parameters_FieldEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
-#include <utilities/time/Date.hpp>
+#include "../utilities/time/Date.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/algorithm/string.hpp>
 
@@ -835,7 +835,7 @@ LifeCycleCostParameters::LifeCycleCostParameters(const Model& model)
 }
 
 // constructor
-LifeCycleCostParameters::LifeCycleCostParameters(boost::shared_ptr<detail::LifeCycleCostParameters_Impl> impl)
+LifeCycleCostParameters::LifeCycleCostParameters(std::shared_ptr<detail::LifeCycleCostParameters_Impl> impl)
   : ParentObject(impl)
 {}
 

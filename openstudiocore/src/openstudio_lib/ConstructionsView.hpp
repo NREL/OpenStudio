@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_CONSTRUCTIONSVIEW_H
-#define OPENSTUDIO_CONSTRUCTIONSVIEW_H
+#ifndef OPENSTUDIO_CONSTRUCTIONSVIEW_HPP
+#define OPENSTUDIO_CONSTRUCTIONSVIEW_HPP
 
-#include <openstudio_lib/ModelObjectInspectorView.hpp>
-#include <openstudio_lib/ModelSubTabView.hpp>
+#include "ModelObjectInspectorView.hpp"
+#include "ModelSubTabView.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
 namespace openstudio {
 
@@ -93,4 +93,4 @@ class ConstructionsInspectorView : public ModelObjectInspectorView
 
 } // openstudio
 
-#endif // OPENSTUDIO_CONSTRUCTIONSVIEW_H
+#endif // OPENSTUDIO_CONSTRUCTIONSVIEW_HPP

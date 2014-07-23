@@ -19,26 +19,24 @@
 
 #include <gtest/gtest.h>
 
-#include <analysis/Analysis.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/DataPoint_Impl.hpp>
-#include <analysis/DesignOfExperiments.hpp>
-#include <analysis/DesignOfExperimentsOptions.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/Variable.hpp>
+#include "../../analysis/Analysis.hpp"
+#include "../../analysis/DataPoint.hpp"
+#include "../../analysis/DataPoint_Impl.hpp"
+#include "../../analysis/DesignOfExperiments.hpp"
+#include "../../analysis/DesignOfExperimentsOptions.hpp"
+#include "../../analysis/Problem.hpp"
+#include "../../analysis/Variable.hpp"
 
-#include <project/AnalysisRecord.hpp>
-#include <project/DataPointRecord.hpp>
-#include <project/ProjectDatabase.hpp>
-#include <project/Test/ProjectFixture.hpp>
+#include "../AnalysisRecord.hpp"
+#include "../DataPointRecord.hpp"
+#include "../ProjectDatabase.hpp"
+#include "ProjectFixture.hpp"
 
-#include <runmanager/lib/Workflow.hpp>
+#include "../../runmanager/lib/Workflow.hpp"
 
-#include <utilities/core/FileReference.hpp>
+#include "../../utilities/core/FileReference.hpp"
 
 #include <QVariant>
-
-#include <boost/foreach.hpp>
 
 using namespace openstudio;
 using namespace openstudio::analysis;

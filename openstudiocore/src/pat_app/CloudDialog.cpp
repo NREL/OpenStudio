@@ -21,15 +21,15 @@
 
 #include <pat_app/VagrantConfiguration.hxx>
 
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/cloud/AWSProvider_Impl.hpp>
-#include <utilities/cloud/CloudProvider.hpp>
-#include <utilities/cloud/CloudProvider_Impl.hpp>
-#include <utilities/cloud/VagrantProvider.hpp>
-#include <utilities/cloud/VagrantProvider_Impl.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Url.hpp>
+#include "../utilities/cloud/AWSProvider.hpp"
+#include "../utilities/cloud/AWSProvider_Impl.hpp"
+#include "../utilities/cloud/CloudProvider.hpp"
+#include "../utilities/cloud/CloudProvider_Impl.hpp"
+#include "../utilities/cloud/VagrantProvider.hpp"
+#include "../utilities/cloud/VagrantProvider_Impl.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/Url.hpp"
 
 #include <QBoxLayout>
 #include <QCheckBox>
@@ -60,19 +60,19 @@ namespace openstudio {
 
 CloudDialog::CloudDialog(QWidget* parent)
   : OSDialog(false, parent),
-  m_iAcceptCheckBox(0),
-  m_cloudResourceComboBox(0),
-  m_pageStackedWidget(0),
-  m_leftLoginLayout(0),
-  m_rightLoginLayout(0),
-  m_mainSettingsLayout(0),
+  m_iAcceptCheckBox(nullptr),
+  m_cloudResourceComboBox(nullptr),
+  m_pageStackedWidget(nullptr),
+  m_leftLoginLayout(nullptr),
+  m_rightLoginLayout(nullptr),
+  m_mainSettingsLayout(nullptr),
   m_blankPageIdx(-1),
   m_loginPageIdx(-1),
   m_settingsPageIdx(-1),
-  m_amazonProviderWidget(0),
-  m_blankProviderWidget(0),
-  m_vagrantProviderWidget(0),
-  m_legalAgreement(0)
+  m_amazonProviderWidget(nullptr),
+  m_blankProviderWidget(nullptr),
+  m_vagrantProviderWidget(nullptr),
+  m_legalAgreement(nullptr)
 {
   setWindowTitle("Cloud Settings");
   setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -85,7 +85,7 @@ CloudDialog::~CloudDialog()
 
 void CloudDialog::createWidgets()
 {
-  QLabel * label = 0;
+  QLabel * label = nullptr;
   bool isConnected = false;
 
   m_amazonProviderWidget = new AmazonProviderWidget(this);
@@ -93,15 +93,15 @@ void CloudDialog::createWidgets()
   m_vagrantProviderWidget = new VagrantProviderWidget(this);
 
   // BLANK PAGE
-  QWidget * blankPageWidget = new QWidget();
+  auto blankPageWidget = new QWidget();
 
   // LOGIN PAGE
 
-  QHBoxLayout * mainLoginLayout = new QHBoxLayout;
+  auto mainLoginLayout = new QHBoxLayout;
   mainLoginLayout->setContentsMargins(QMargins(0,0,0,0));
   mainLoginLayout->setSpacing(5);
 
-  QWidget * loginPageWidget = new QWidget;
+  auto loginPageWidget = new QWidget;
   loginPageWidget->setLayout(mainLoginLayout);
 
   // LEFT LOGIN LAYOUT
@@ -148,7 +148,7 @@ void CloudDialog::createWidgets()
   AWSSettings awsSettings;
   m_legalAgreement->setText(awsSettings.userAgreementText().c_str());
 
-  QScrollArea * scrollArea = new QScrollArea();
+  auto scrollArea = new QScrollArea();
   scrollArea->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
   scrollArea->setFixedWidth(TEXT_WIDTH + 15);
   scrollArea->setMinimumHeight(TEXT_HEIGHT);
@@ -177,7 +177,7 @@ void CloudDialog::createWidgets()
   m_mainSettingsLayout->setContentsMargins(QMargins(0,0,0,0));
   m_mainSettingsLayout->setSpacing(5);
 
-  QWidget * settingsPageWidget = new QWidget;
+  auto settingsPageWidget = new QWidget;
   settingsPageWidget->setLayout(m_mainSettingsLayout);
 
   // SETTINGS STACKED WIDGET
@@ -185,9 +185,9 @@ void CloudDialog::createWidgets()
   m_settingsStackedWidget = new  QStackedWidget();
   m_mainSettingsLayout->addWidget(m_settingsStackedWidget);
 
-  QWidget * widget = new QWidget();
+  auto widget = new QWidget();
 
-  QHBoxLayout * hLayout = new QHBoxLayout;
+  auto hLayout = new QHBoxLayout;
   hLayout->setContentsMargins(QMargins(0,0,0,0));
   hLayout->setSpacing(5);
   widget->setLayout(hLayout);
@@ -430,15 +430,14 @@ void CloudDialog::cloudResourceChanged(const QString & text)
 
 CloudProviderWidget::CloudProviderWidget(CloudDialog * cloudDialog)
   : QWidget(cloudDialog),
-  m_waitCheckBox(0),
-  m_waitLineEdit(0),
-  m_loginWidget(0),
-  m_leftSettingsWidget(0),
-  m_rightSettingsWidget(0),
-  m_leftLoginLayout(0),
-  //m_rightLoginLayout(0),
-  m_leftSettingsLayout(0),
-  m_rightSettingsLayout(0),
+  m_loginWidget(nullptr),
+  m_leftSettingsWidget(nullptr),
+  m_rightSettingsWidget(nullptr),
+  m_leftLoginLayout(nullptr),
+  m_leftSettingsLayout(nullptr),
+  m_rightSettingsLayout(nullptr),
+  m_waitCheckBox(nullptr),
+  m_waitLineEdit(nullptr),
   m_cloudDialog(cloudDialog)
 {
   createWidgets();
@@ -516,14 +515,14 @@ void CloudProviderWidget::createWidgets()
 
   //hLayout->addStretch();
 
-  QLabel* label = new QLabel;
+  auto label = new QLabel;
   label->setFixedWidth(TEXT_WIDTH);
   label->setWordWrap(true);
   label->setObjectName("H1");
   label->setText("<FONT COLOR = RED>Results for simulations run on the cloud are only available while the cloud is running.  Stopping the cloud will terminate all instances, and any results not downloaded will be lost.");
   m_rightSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
-  QSpacerItem * spacerItem = NULL;
+  QSpacerItem * spacerItem = nullptr;
   spacerItem = new QSpacerItem(0,25,QSizePolicy::Fixed,QSizePolicy::Fixed);
   m_rightSettingsLayout->addItem(spacerItem);
 }
@@ -569,15 +568,15 @@ void BlankProviderWidget::createSettingsWidget()
 
 VagrantProviderWidget::VagrantProviderWidget(CloudDialog * cloudDialog)
   : CloudProviderWidget(cloudDialog),
-  m_runOnStartUpCheckBox(0),
-  m_serverUsernameLineEdit(0),
-  m_serverPasswordLineEdit(0),
-  m_serverDirLineEdit(0),
-  m_serverAddressIpLineEdit(0),
-  m_serverPortIpLineEdit(0),
-  m_workerDirLineEdit(0),
-  m_workerAddressIpLineEdit(0),
-  m_workerPortIpLineEdit(0)
+  m_runOnStartUpCheckBox(nullptr),
+  m_serverUsernameLineEdit(nullptr),
+  m_serverPasswordLineEdit(nullptr),
+  m_serverDirLineEdit(nullptr),
+  m_serverAddressIpLineEdit(nullptr),
+  m_serverPortIpLineEdit(nullptr),
+  m_workerDirLineEdit(nullptr),
+  m_workerAddressIpLineEdit(nullptr),
+  m_workerPortIpLineEdit(nullptr)
 {
   createLoginWidget();
   createSettingsWidget();
@@ -589,7 +588,7 @@ VagrantProviderWidget::~VagrantProviderWidget()
 
 void VagrantProviderWidget::createLoginWidget()
 {
-  QLabel * label = 0;
+  QLabel * label = nullptr;
 
   // LEFT LOGIN PAGE
 
@@ -620,9 +619,9 @@ void VagrantProviderWidget::createLoginWidget()
 
 void VagrantProviderWidget::createSettingsWidget()
 {
-  QHBoxLayout * hLayout = 0;
-  QLabel * label = 0;
-  QPushButton * pushButton = 0;
+  QHBoxLayout * hLayout = nullptr;
+  QLabel * label = nullptr;
+  QPushButton * pushButton = nullptr;
   bool isConnected = false;
 
   // LEFT SETTINGS PAGE
@@ -814,12 +813,12 @@ void VagrantProviderWidget::workerDirButtonClicked(bool checked)
 
 AmazonProviderWidget::AmazonProviderWidget(CloudDialog * cloudDialog)
   : CloudProviderWidget(cloudDialog),
-  m_regionComboBox(0),
-  m_serverInstanceTypeComboBox(0),
-  m_workerInstanceTypeComboBox(0),
-  m_accessKeyLineEdit(0),
-  m_secretKeyLineEdit(0),
-  m_numberOfWorkerInstancesLineEdit(0)
+  m_accessKeyLineEdit(nullptr),
+  m_secretKeyLineEdit(nullptr),
+  m_regionComboBox(nullptr),
+  m_serverInstanceTypeComboBox(nullptr),
+  m_workerInstanceTypeComboBox(nullptr),
+  m_numberOfWorkerInstancesLineEdit(nullptr)
 {
   createLoginWidget();
   createSettingsWidget();
@@ -833,7 +832,7 @@ void AmazonProviderWidget::createLoginWidget()
 {
   m_leftLoginLayout->setContentsMargins(QMargins(0,0,0,0));
 
-  QLabel * label = 0;
+  QLabel * label = nullptr;
 
   // LEFT LOGIN PAGE
   
@@ -883,11 +882,11 @@ void AmazonProviderWidget::createLoginWidget()
 
 void AmazonProviderWidget::createSettingsWidget()
 {
-  QHBoxLayout * hLayout = 0;
+  QHBoxLayout * hLayout = nullptr;
 
-  QVBoxLayout * vLayout = 0;
+  QVBoxLayout * vLayout = nullptr;
 
-  QLabel * label = 0;
+  QLabel * label = nullptr;
 
   bool isConnected = false;
 
@@ -960,7 +959,7 @@ void AmazonProviderWidget::createSettingsWidget()
   m_serverNameLabel = new QLabel;
   vLayout->addWidget(m_serverNameLabel,0,Qt::AlignTop | Qt::AlignLeft);
 
-  QSpacerItem * vSpacer = 0;
+  QSpacerItem * vSpacer = nullptr;
   vSpacer = new QSpacerItem(0, 15, QSizePolicy::Fixed, QSizePolicy::Fixed);
   m_leftSettingsLayout->addSpacerItem(vSpacer); 
 
@@ -1055,7 +1054,7 @@ void AmazonProviderWidget::loadData()
   m_cloudDialog->m_iAcceptCheckBox->setChecked(awsSettings.userAgreementSigned()); 
 
   if (!m_regionComboBox->count()) {
-    Q_FOREACH(const std::string & region, AWSProvider::availableRegions()){
+    for (const std::string & region : AWSProvider::availableRegions()) {
       m_regionComboBox->addItem(region.c_str());
     }
   }
@@ -1068,7 +1067,7 @@ void AmazonProviderWidget::loadData()
 
 
   if (!m_serverInstanceTypeComboBox->count()) {
-    Q_FOREACH(const std::string & serverInstanceType, AWSProvider::serverInstanceTypes()){
+    for (const std::string & serverInstanceType : AWSProvider::serverInstanceTypes()) {
       m_serverInstanceTypeComboBox->addItem(serverInstanceType.c_str());
     }
   }
@@ -1080,7 +1079,7 @@ void AmazonProviderWidget::loadData()
   m_serverInstanceTypeComboBox->setCurrentIndex(index);
 
   if (!m_workerInstanceTypeComboBox->count()) {
-    Q_FOREACH(const std::string & workerInstanceType, AWSProvider::workerInstanceTypes()){
+    for (const std::string & workerInstanceType : AWSProvider::workerInstanceTypes()) {
       m_workerInstanceTypeComboBox->addItem(workerInstanceType.c_str());
     }
   }

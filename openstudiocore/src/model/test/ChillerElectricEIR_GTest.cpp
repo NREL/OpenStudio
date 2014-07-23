@@ -18,17 +18,17 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/PlantLoop.hpp>
-#include <model/Model.hpp>
-#include <model/ChillerElectricEIR.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/Mixer.hpp>
-#include <model/Mixer_Impl.hpp>
-#include <model/Splitter.hpp>
-#include <model/Splitter_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include "../PlantLoop.hpp"
+#include "../Model.hpp"
+#include "../ChillerElectricEIR.hpp"
+#include "../CurveBiquadratic.hpp"
+#include "../CurveQuadratic.hpp"
+#include "../Mixer.hpp"
+#include "../Mixer_Impl.hpp"
+#include "../Splitter.hpp"
+#include "../Splitter_Impl.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
 
 using namespace openstudio;
 

@@ -19,7 +19,7 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/core/FileReference.hpp>
+#include "../FileReference.hpp"
 
 #include <resources.hxx>
 

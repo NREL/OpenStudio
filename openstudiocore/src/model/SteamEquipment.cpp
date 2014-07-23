@@ -17,24 +17,24 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SteamEquipment.hpp>
-#include <model/SteamEquipment_Impl.hpp>
+#include "SteamEquipment.hpp"
+#include "SteamEquipment_Impl.hpp"
 
-#include <model/SteamEquipmentDefinition.hpp>
-#include <model/SteamEquipmentDefinition_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/DefaultScheduleSet.hpp>
-#include <model/DefaultScheduleSet_Impl.hpp>
-#include <model/LifeCycleCost.hpp>
+#include "SteamEquipmentDefinition.hpp"
+#include "SteamEquipmentDefinition_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "SpaceType.hpp"
+#include "SpaceType_Impl.hpp"
+#include "DefaultScheduleSet.hpp"
+#include "DefaultScheduleSet_Impl.hpp"
+#include "LifeCycleCost.hpp"
 
 #include <utilities/idd/OS_SteamEquipment_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -94,7 +94,7 @@ namespace detail {
     makeUnique();
 
     SteamEquipmentDefinition definition = steamEquipmentDefinition();
-    BOOST_FOREACH(LifeCycleCost cost, definition.lifeCycleCosts()){
+    for (LifeCycleCost cost : definition.lifeCycleCosts()){
       cost.convertToCostPerEach();
     }
 
@@ -342,7 +342,7 @@ double SteamEquipment::getPowerPerPerson(double floorArea, double numPeople) con
 }
 
 /// @cond
-SteamEquipment::SteamEquipment(boost::shared_ptr<detail::SteamEquipment_Impl> impl)
+SteamEquipment::SteamEquipment(std::shared_ptr<detail::SteamEquipment_Impl> impl)
   : SpaceLoadInstance(impl)
 {}
 /// @endcond

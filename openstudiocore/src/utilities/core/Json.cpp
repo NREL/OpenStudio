@@ -17,33 +17,21 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/Json.hpp>
+#include "Json.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/String.hpp>
+#include "Assert.hpp"
+#include "Compare.hpp"
+#include "Logger.hpp"
+#include "PathHelpers.hpp"
+#include "String.hpp"
 
 #include <OpenStudio.hxx>
 
-#include <qjson/serializer.h>
-#include <qjson/parser.h>
-
 #include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 namespace openstudio {
-
-namespace detail {
-
-  void configureJsonSerializer(QJson::Serializer& serializer) {
-
-    // pretty print json so it is easier to debug
-    serializer.setIndentMode(QJson::IndentFull);
-
-  }
-
-}
 
 QVariant jsonMetadata() {
   QVariantMap metadata;
@@ -58,18 +46,11 @@ bool saveJSON(const QVariant& json, openstudio::path p, bool overwrite) {
   // Use QFile and QIODevice serialize
   QFile file(toQString(p));
   if (file.open(QFile::WriteOnly)) {
-    QJson::Serializer serializer;
-    detail::configureJsonSerializer(serializer);
-
-    bool ok(false);
-    serializer.serialize(json,&file,&ok);
+    QJsonDocument doc = QJsonDocument::fromVariant(json);
+    file.write(doc.toJson());
     file.close();
 
-    if (ok) {
-      return true;
-    }
-    LOG_FREE_AND_THROW("openstudio.Json","Could not serialize to JSON format, because "
-                       << toString(serializer.errorMessage()));
+    return true;
   }
 
   LOG_FREE(Error,"openstudio.Json","Could not open file " << toString(p) << " for writing.");
@@ -77,32 +58,21 @@ bool saveJSON(const QVariant& json, openstudio::path p, bool overwrite) {
 }
 
 std::string toJSON(const QVariant& json) {
-  QJson::Serializer serializer;
-  detail::configureJsonSerializer(serializer);
+  QJsonDocument doc = QJsonDocument::fromVariant(json);
 
-  bool ok(false);
-  QByteArray qba = serializer.serialize(json,&ok);
-
-  if (ok) {
-    return toString(QString(qba));
-  }
-
-  LOG_FREE_AND_THROW("openstudio.Json","Could not serialize to JSON format, because "
-                     << toString(serializer.errorMessage()));
-  return std::string();
+  return toString(QString(doc.toJson()));
 }
 
 QVariant loadJSON(const openstudio::path& p) {
   QFile file(toQString(p));
   if (file.open(QFile::ReadOnly)) {
-    QJson::Parser parser;
-    bool ok(false);
-    QVariant variant = parser.parse(&file,&ok);
+    QJsonParseError err;
+    QJsonDocument doc = QJsonDocument::fromJson(file.readAll(), &err);
     file.close();
-    if (!ok) {
-      LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON: " + toString(parser.errorString()));
+    if (err.error) {
+      LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON: " + toString(err.errorString()));
     }
-    return variant;
+    return doc.toVariant();
   }
 
   LOG_FREE_AND_THROW("openstudio.Json","Could not open file " << toString(p) << " for reading.");
@@ -110,19 +80,17 @@ QVariant loadJSON(const openstudio::path& p) {
 }
 
 QVariant loadJSON(const std::string& json) {
-  QJson::Parser parser;
-  bool ok = false;
-  QVariant variant = parser.parse(toQString(json).toUtf8(), &ok);
-  if (!ok) {
-    LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON: " + toString(parser.errorString()));
+  QJsonDocument doc = QJsonDocument::fromJson(toQString(json).toUtf8());
+  if (!doc.isNull()) {
+    LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON");
   }
-  return variant;
+  return doc.toVariant();
 }
 
 VersionString extractOpenStudioVersion(const QVariant& variant) {
-  QVariantMap topLevel = variant.toMap();
+  QJsonObject topLevel = QJsonDocument::fromVariant(variant).object();
   if (topLevel.contains("metadata")) {
-    topLevel = topLevel["metadata"].toMap();
+    topLevel = topLevel["metadata"].toObject();
   }
   
   OptionalVersionString version;

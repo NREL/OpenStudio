@@ -16,7 +16,7 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
-#include <isomodel/SimModel.hpp>
+#include "SimModel.hpp"
 
 #if _DEBUG || (__GNUC__ && !NDEBUG)
 #define DEBUG_ISO_MODEL_SIMULATION
@@ -33,15 +33,11 @@ namespace isomodel {
   {
     double sum = 0;
     std::vector<EndUseFuelType> fuelTypes = openstudio::EndUses::fuelTypes();
-    for (std::vector<EndUses>::const_iterator itr = this->monthlyResults.begin();
-        itr != this->monthlyResults.end();
-        ++itr)
+    for (const auto & monthlyResult : monthlyResults)
     {
-      for (std::vector<EndUseFuelType>::const_iterator itr2 = fuelTypes.begin();
-          itr2 != fuelTypes.end();
-          ++itr2)
+      for (const auto & fuelType : fuelTypes)
       {
-        sum += itr->getEndUseByFuelType(*itr2);
+        sum += monthlyResult.getEndUseByFuelType(fuelType);
       }
     }
 
@@ -709,7 +705,7 @@ v_wall_R_sc=ones(size(1,9))*n_R_sc_ext; %vertical wall external convective surfa
 v_win_hr=5*v_wall_emiss; %window external radiative heat xfer coeff.
 
 % effective collecting area of opaque building elements, A_sol EN ISO 13790 11.3.4
-% A_sol = ?_S,c × R_se × U_c × A_c
+% A_sol = ?_S,c ï¿½ R_se ï¿½ U_c ï¿½ A_c
 % A_sol = effective solar collecting area
 % ?_S,c = dimensionless solar absorption coefficient
 % R_se = external surface heat rsistance determined via ISO 6946 in m2*K/W
@@ -784,7 +780,7 @@ for I=1:12
 end
 
 % compute opaque area thermal radiation to the sky from EN ISO 13790 11.3.5
-% ?_r,k = Rse×Uc×Ac×hr×??er (46)
+% ?_r,k = Rseï¿½Ucï¿½Acï¿½hrï¿½??er (46)
 % ?_r,k = thermal radiation to sky in W
 % R_se = external heat resistance as defined above m2K/W
 % U_c = U value of element as defined above W/m2K

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -19,12 +19,12 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/RefrigerationGasCoolerAirCooled.hpp>
-#include <model/RefrigerationGasCoolerAirCooled_Impl.hpp>
-#include <model/CurveLinear.hpp>
-#include <model/CurveLinear_Impl.hpp>
+#include "../RefrigerationGasCoolerAirCooled.hpp"
+#include "../RefrigerationGasCoolerAirCooled_Impl.hpp"
+#include "../CurveLinear.hpp"
+#include "../CurveLinear_Impl.hpp"
 // #include <model/ThermalZone.hpp>
 // #include <model/ThermalZone_Impl.hpp>
 
@@ -32,7 +32,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 
 //Test construction of air-cooled gas cooler
-TEST_F(ModelFixture, RefrigerationGasCoolerAirCooled_DefaultContructor)
+TEST_F(ModelFixture, RefrigerationGasCoolerAirCooled_DefaultConstructor)
 {
     ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 

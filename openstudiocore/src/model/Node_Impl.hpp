@@ -20,7 +20,7 @@
 #ifndef MODEL_NODE_IMPL_HPP
 #define MODEL_NODE_IMPL_HPP
 
-#include <model/StraightComponent_Impl.hpp>
+#include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
 
@@ -33,6 +33,7 @@ class SetpointManagerScheduled;
 class SetpointManagerFollowOutdoorAirTemperature;
 class SetpointManagerOutdoorAirReset;
 class SetpointManagerWarmest;
+class SetpointManager;
 
 namespace detail {
 
@@ -68,18 +69,17 @@ namespace detail {
 
     unsigned outletPort();
 
-    // In the future there should be a SetpointManager base class.
-    // When that happens change the signature of this method to return SetpointManager instead of ModelObject
-    // and make this method public.
-    boost::optional<ModelObject> setpointManager() const;
+    std::vector<SetpointManager> setpointManagers() const;
 
-    void addSetpointManager(SetpointManagerSingleZoneReheat singleZoneReheat);
+    void removeSetpointManagers();
+
+    void addSetpointManager(SetpointManagerSingleZoneReheat & singleZoneReheat);
 
     void removeSetpointManagerSingleZoneReheat();
 
     boost::optional<SetpointManagerSingleZoneReheat> getSetpointManagerSingleZoneReheat() const;
 
-    void  addSetpointManager(SetpointManagerMixedAir mixedAir);
+    void  addSetpointManager(SetpointManagerMixedAir & mixedAir);
 
     void removeSetpointManagerMixedAir();
 

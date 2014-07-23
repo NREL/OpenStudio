@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2012, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,17 +20,17 @@
 #ifndef RULESET_OSRUNNER_HPP
 #define RULESET_OSRUNNER_HPP
 
-#include <ruleset/RulesetAPI.hpp>
+#include "RulesetAPI.hpp"
 
-#include <ruleset/OSResult.hpp>
+#include "OSResult.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/filetypes/EpwFile.hpp>
+#include "../utilities/idf/Workspace.hpp"
+#include "../utilities/sql/SqlFile.hpp"
+#include "../utilities/filetypes/EpwFile.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
 
@@ -128,8 +128,9 @@ class RULESET_API OSRunner {
   /** Sets the result final condition to message. */
   virtual void registerFinalCondition(const std::string& message);
 
-  /** Saves attribute as an output result of the measure currently being run. */
-  virtual void registerAttribute(const Attribute& attribute);
+  /** Saves attribute as an output result of the measure currently being 
+   *  run, and sets the attribute's source accordingly. */
+  virtual void registerAttribute(Attribute& attribute);
 
   /** \overload Shortcut method for registering boolean attribute. */
   virtual void registerValue(const std::string& name, bool value);
@@ -294,6 +295,7 @@ class RULESET_API OSRunner {
   REGISTER_LOGGER("openstudio.ruleset.OSRunner");
 
   OSResult m_result;
+  std::string m_measureName;
   std::string m_channel;
 
   mutable boost::optional<openstudio::model::Model> m_lastOpenStudioModel;

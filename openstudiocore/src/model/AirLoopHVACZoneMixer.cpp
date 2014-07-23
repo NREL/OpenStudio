@@ -17,18 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/AirLoopHVACZoneMixer.hpp>
-#include <model/AirLoopHVACZoneMixer_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "AirLoopHVACZoneMixer.hpp"
+#include "AirLoopHVACZoneMixer_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "Node.hpp"
+#include "AirTerminalSingleDuctUncontrolled.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include <utilities/idd/OS_AirLoopHVAC_ZoneMixer_FieldEnums.hxx>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
-#include <boost/foreach.hpp>
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -132,7 +131,7 @@ AirLoopHVACZoneMixer::AirLoopHVACZoneMixer(const Model& model)
 }
 
 AirLoopHVACZoneMixer::AirLoopHVACZoneMixer(
-    boost::shared_ptr<detail::AirLoopHVACZoneMixer_Impl> p)
+    std::shared_ptr<detail::AirLoopHVACZoneMixer_Impl> p)
   : Mixer(p)
 {}
 

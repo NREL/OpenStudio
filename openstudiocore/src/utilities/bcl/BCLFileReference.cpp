@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/bcl/BCLFileReference.hpp>
-#include <utilities/core/Checksum.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/System.hpp>
+#include "BCLFileReference.hpp"
+#include "../core/Checksum.hpp"
+#include "../core/String.hpp"
+#include "../core/System.hpp"
 
 #include <QFile>
 

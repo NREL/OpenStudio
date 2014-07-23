@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_OUTPUTATTRIBUTEVARIABLE_IMPL_HPP
 #define ANALYSIS_OUTPUTATTRIBUTEVARIABLE_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/OutputVariable_Impl.hpp>
+#include "AnalysisAPI.hpp"
+#include "OutputVariable_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {

@@ -19,9 +19,9 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class Surface_Test < Test::Unit::TestCase
+class Surface_Test < MiniTest::Unit::TestCase
   
   def test_Surfaces
     model = OpenStudio::Model::exampleModel

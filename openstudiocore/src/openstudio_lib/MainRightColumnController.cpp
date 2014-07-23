@@ -17,25 +17,25 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/MainRightColumnController.hpp>
+#include "MainRightColumnController.hpp"
 
-#include <openstudio_lib/HorizontalTabWidget.hpp>
-#include <openstudio_lib/ModelObjectTypeListView.hpp>
-#include <openstudio_lib/InspectorController.hpp>
-#include <openstudio_lib/InspectorView.hpp>
-#include <openstudio_lib/OSDocument.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/LocationTabController.hpp>
-#include <openstudio_lib/SchedulesTabController.hpp>
-#include <openstudio_lib/BuildingStoryInspectorView.hpp>
-#include <openstudio_lib/SpaceTypeInspectorView.hpp>
-#include <openstudio_lib/ThermalZonesView.hpp>
-#include <openstudio_lib/OSItem.hpp>
-#include <openstudio_lib/OSItemList.hpp>
-#include <openstudio_lib/OSCollapsibleItem.hpp>
-#include <openstudio_lib/OSCollapsibleItemHeader.hpp>
-#include <openstudio_lib/ScriptFolderListView.hpp>
-#include <openstudio_lib/ConstructionsTabController.hpp>
+#include "HorizontalTabWidget.hpp"
+#include "ModelObjectTypeListView.hpp"
+#include "InspectorController.hpp"
+#include "InspectorView.hpp"
+#include "OSDocument.hpp"
+#include "OSAppBase.hpp"
+#include "LocationTabController.hpp"
+#include "SchedulesTabController.hpp"
+#include "BuildingStoryInspectorView.hpp"
+#include "SpaceTypeInspectorView.hpp"
+#include "ThermalZonesView.hpp"
+#include "OSItem.hpp"
+#include "OSItemList.hpp"
+#include "OSCollapsibleItem.hpp"
+#include "OSCollapsibleItemHeader.hpp"
+#include "ScriptFolderListView.hpp"
+#include "ConstructionsTabController.hpp"
 
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/LocalLibraryController.hpp"
@@ -46,7 +46,7 @@
 
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QStackedWidget>
 #include <QLayout>
@@ -87,7 +87,7 @@ MainRightColumnController::MainRightColumnController(const model::Model & model,
   m_horizontalTabWidget->addTab(m_editView,EDIT,"Edit");
 
   // Inspector, we're keeping it around to be able to follow the units toggled
-  m_inspectorController = boost::shared_ptr<InspectorController>( new InspectorController() );
+  m_inspectorController = std::shared_ptr<InspectorController>( new InspectorController() );
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              m_inspectorController.get(), SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
@@ -202,7 +202,7 @@ void MainRightColumnController::setLibraryView(QWidget * widget)
 
 void MainRightColumnController::configureForSiteSubTab(int subTabID)
 {
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   setLibraryView(NULL);
   setMyModelView(NULL);
@@ -214,7 +214,7 @@ void MainRightColumnController::configureForSiteSubTab(int subTabID)
 
 void MainRightColumnController::configureForSchedulesSubTab(int subTabID)
 {
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   setLibraryView(NULL);
   setMyModelView(NULL);
@@ -305,7 +305,7 @@ void MainRightColumnController::configureForSchedulesSubTab(int subTabID)
 
 void MainRightColumnController::configureForConstructionsSubTab(int subTabID)
 {
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   setLibraryView(NULL);
   setMyModelView(NULL);
@@ -465,7 +465,7 @@ void MainRightColumnController::configureForConstructionsSubTab(int subTabID)
 
 void MainRightColumnController::configureForLoadsSubTab(int subTabID)
 {
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   model::Model lib = doc->componentLibrary();
 
@@ -533,7 +533,7 @@ void MainRightColumnController::configureForSpaceTypesSubTab(int subTabID)
 
   setEditView(NULL);
 
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   // my model
   ModelObjectTypeListView* myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
@@ -615,7 +615,7 @@ void MainRightColumnController::configureForBuildingStoriesSubTab(int subTabID)
 
   setEditView(NULL);
 
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   // my model
   ModelObjectTypeListView* myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
@@ -665,7 +665,7 @@ void MainRightColumnController::configureForFacilitySubTab(int subTabID)
 
   setEditView(NULL);
 
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   // my model
   ModelObjectTypeListView* myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
@@ -758,7 +758,7 @@ void MainRightColumnController::configureForFacilitySubTab(int subTabID)
 void MainRightColumnController::configureForThermalZonesSubTab(int subTabID)
 {
 
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   setLibraryView(NULL);
   setMyModelView(NULL);
@@ -810,7 +810,7 @@ void MainRightColumnController::configureForThermalZonesSubTab(int subTabID)
 void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
 {
 
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   setLibraryView(NULL);
   setMyModelView(NULL);
@@ -851,9 +851,11 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_WaterHeater_Mixed,"Water Heater Mixed");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_SingleZone_Reheat,"Setpoint Manager Single Zone Reheat");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_Scheduled,"Setpoint Manager Scheduled");
+  libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_Scheduled_DualSetpoint,"Setpoint Manager Scheduled Dual Setpoint");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_MixedAir,"Setpoint Manager Mixed Air");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_FollowOutdoorAirTemperature,"Setpoint Manager Follow Outdoor Air Temperature");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_OutdoorAirReset,"Setpoint Manager Outdoor Air Reset");
+  libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_OutdoorAirPretreat,"Setpoint Manager Outdoor Air Pretreat");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_Warmest,"Setpoint Manager Warmest");
   libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_WalkIn,"Refrigeration Walkin");
   libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_System,"Refrigeration System");
@@ -913,7 +915,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
 
 void MainRightColumnController::configureForBuildingSummarySubTab(int subTabID)
 {
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   setLibraryView(NULL);
   setMyModelView(NULL);
@@ -925,7 +927,7 @@ void MainRightColumnController::configureForBuildingSummarySubTab(int subTabID)
 
 void MainRightColumnController::configureForOutputVariablesSubTab(int subTabID)
 {
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   setLibraryView(NULL);
   setMyModelView(NULL);
@@ -937,7 +939,7 @@ void MainRightColumnController::configureForOutputVariablesSubTab(int subTabID)
 
 void MainRightColumnController::configureForSimulationSettingsSubTab(int subTabID)
 {
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   setLibraryView(NULL);
   setMyModelView(NULL);
@@ -949,7 +951,7 @@ void MainRightColumnController::configureForSimulationSettingsSubTab(int subTabI
 
 void MainRightColumnController::configureForScriptsSubTab(int subTabID)
 {
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   setLibraryView(m_measureLibraryController->localLibraryView.data());
   setMyModelView(NULL);
@@ -960,7 +962,7 @@ void MainRightColumnController::configureForScriptsSubTab(int subTabID)
 
 void MainRightColumnController::configureForRunSimulationSubTab(int subTabID)
 {
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   setLibraryView(NULL);
   setMyModelView(NULL);
@@ -972,7 +974,7 @@ void MainRightColumnController::configureForRunSimulationSubTab(int subTabID)
 
 void MainRightColumnController::configureForResultsSummarySubTab(int subTabID)
 {
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   setLibraryView(NULL);
   setMyModelView(NULL);

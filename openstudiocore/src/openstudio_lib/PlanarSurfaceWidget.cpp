@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/PlanarSurfaceWidget.hpp>
+#include "PlanarSurfaceWidget.hpp"
 
-#include <model/PlanarSurface_Impl.hpp>
+#include "../model/PlanarSurface_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>

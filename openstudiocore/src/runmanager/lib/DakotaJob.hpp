@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef RUNMANAGER_DAKOTAJOB_HPP
-#define RUNMANAGER_DAKOTAJOB_HPP
+#ifndef RUNMANAGER_LIB_DAKOTAJOB_HPP
+#define RUNMANAGER_LIB_DAKOTAJOB_HPP
 
 #include <boost/filesystem.hpp>
 #include <string>
-#include <utilities/core/Logger.hpp>
+#include "../../utilities/core/Logger.hpp"
 #include "Job_Impl.hpp"
 #include "ToolInfo.hpp"
 #include "ToolBasedJob.hpp"
@@ -79,4 +79,4 @@ namespace detail {
 } // runmanager
 } // openstudio
 
-#endif // RUNMANAGER_DAKOTAJOB_HPP
+#endif // RUNMANAGER_LIB_DAKOTAJOB_HPP

@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/FenestrationMaterial.hpp>
-#include <model/FenestrationMaterial_Impl.hpp>
+#include "FenestrationMaterial.hpp"
+#include "FenestrationMaterial_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -180,7 +180,7 @@ FenestrationMaterial::FenestrationMaterial(IddObjectType type,const Model& model
 }
 
 FenestrationMaterial::FenestrationMaterial(
-    boost::shared_ptr<detail::FenestrationMaterial_Impl> impl)
+    std::shared_ptr<detail::FenestrationMaterial_Impl> impl)
   : Material(impl)
 {}
 /// @endcond

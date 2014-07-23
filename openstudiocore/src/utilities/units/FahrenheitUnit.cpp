@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/units/FahrenheitUnit.hpp>
-#include <utilities/units/FahrenheitUnit_Impl.hpp>
+#include "FahrenheitUnit.hpp"
+#include "FahrenheitUnit_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 namespace openstudio {
 namespace detail {
@@ -43,12 +43,12 @@ namespace detail {
 
   Unit FahrenheitUnit_Impl::clone() const {
     OS_ASSERT(system() == UnitSystem::Fahrenheit);
-    boost::shared_ptr<FahrenheitUnit_Impl> impl(new FahrenheitUnit_Impl(*this));
+    std::shared_ptr<FahrenheitUnit_Impl> impl(new FahrenheitUnit_Impl(*this));
     return FahrenheitUnit(impl).cast<Unit>();
   }
 
   void FahrenheitUnit_Impl::setBaseUnitExponent(const std::string& baseUnit,int exponent) {
-    std::vector<UnitElement>::iterator loc = findBaseUnit(baseUnit);
+    auto loc = findBaseUnit(baseUnit);
     if (loc != m_units.end()) {
       loc->second = exponent;
     }
@@ -60,14 +60,14 @@ namespace detail {
 } // detail
 
 FahrenheitUnit::FahrenheitUnit(int FExp,int scaleExponent,const std::string& prettyString)
-  : TemperatureUnit(boost::shared_ptr<detail::FahrenheitUnit_Impl>(
+  : TemperatureUnit(std::shared_ptr<detail::FahrenheitUnit_Impl>(
                         new detail::FahrenheitUnit_Impl(FExp,scaleExponent,prettyString)))
 {}
 
 FahrenheitUnit::FahrenheitUnit(const std::string& scaleAbbreviation,
                                int FExp,
                                const std::string& prettyString)
-  : TemperatureUnit(boost::shared_ptr<detail::FahrenheitUnit_Impl>(
+  : TemperatureUnit(std::shared_ptr<detail::FahrenheitUnit_Impl>(
                         new detail::FahrenheitUnit_Impl(scaleAbbreviation,FExp,prettyString)))
 {}
 
@@ -77,7 +77,7 @@ FahrenheitUnit& FahrenheitUnit::operator/=(const FahrenheitUnit& rUnit) {
 }
 
 /// @cond
-FahrenheitUnit::FahrenheitUnit(boost::shared_ptr<detail::FahrenheitUnit_Impl> impl)
+FahrenheitUnit::FahrenheitUnit(std::shared_ptr<detail::FahrenheitUnit_Impl> impl)
   : TemperatureUnit(impl)
 {}
 /// @endcond

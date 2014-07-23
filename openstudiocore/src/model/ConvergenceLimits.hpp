@@ -20,8 +20,8 @@
 #ifndef MODEL_CONVERGENCELIMITS_HPP
 #define MODEL_CONVERGENCELIMITS_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -90,7 +90,7 @@ class MODEL_API ConvergenceLimits : public ModelObject {
   /// @cond
   typedef detail::ConvergenceLimits_Impl ImplType;
 
-  explicit ConvergenceLimits(boost::shared_ptr<detail::ConvergenceLimits_Impl> impl);
+  explicit ConvergenceLimits(std::shared_ptr<detail::ConvergenceLimits_Impl> impl);
 
   friend class detail::ConvergenceLimits_Impl;
   friend class Model;

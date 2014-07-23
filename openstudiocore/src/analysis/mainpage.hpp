@@ -179,7 +179,7 @@ namespace analysis {
  *
  *  \section analysis_algorithms Analysis with Algorithms
  *
- *  Algorithms are autmoated methods for generating \link DataPoint DataPoints\endlink. OpenStudio
+ *  Algorithms are automated methods for generating \link DataPoint DataPoints\endlink. OpenStudio
  *  contains two sorts of algorithms: \link OpenStudioAlgorithm OpenStudioAlgorithms\endlink, 
  *  which are directly specified in the OpenStudio code base through the definition of 
  *  OpenStudioAlgorithm::createNextIteration; and \link DakotaAlgorithm DakotaAlgoritms\endlink, 

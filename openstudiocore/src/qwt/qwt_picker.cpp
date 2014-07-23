@@ -199,7 +199,7 @@ void QwtPicker::PickerWidget::updateMask()
     w->setUpdatesEnabled(doUpdate);
 #endif
 
-    setShown(!mask.isEmpty());
+    setVisible(!mask.isEmpty());
 }
 
 void QwtPicker::PickerWidget::paintEvent(QPaintEvent *e)
@@ -756,7 +756,7 @@ void QwtPicker::drawTracker(QPainter *painter) const
         {
             painter->save();
 
-#if defined(Q_WS_MAC)
+#if defined(Q_OS_MAC)
             // Antialiased fonts are broken on the Mac.
 #if QT_VERSION >= 0x040000
             painter->setRenderHint(QPainter::TextAntialiasing, false);

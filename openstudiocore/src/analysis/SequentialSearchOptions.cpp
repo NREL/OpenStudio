@@ -17,13 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/SequentialSearchOptions.hpp>
-#include <analysis/SequentialSearchOptions_Impl.hpp>
+#include "SequentialSearchOptions.hpp"
+#include "SequentialSearchOptions_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Json.hpp>
-
-#include <boost/bind.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Json.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -41,7 +39,7 @@ namespace detail {
   {}
 
   AlgorithmOptions SequentialSearchOptions_Impl::clone() const {
-    boost::shared_ptr<SequentialSearchOptions_Impl> impl(new SequentialSearchOptions_Impl(*this));
+    std::shared_ptr<SequentialSearchOptions_Impl> impl(new SequentialSearchOptions_Impl(*this));
     return SequentialSearchOptions(impl);
   }
 
@@ -57,19 +55,19 @@ namespace detail {
     QVariantMap map = variant.toMap();
     AttributeVector attributes = deserializeUnorderedVector(
           map["attributes"].toList(),
-          boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+          std::function<Attribute (const QVariant&)>(std::bind(openstudio::detail::toAttribute,std::placeholders::_1,version)));
     return SequentialSearchOptions(attributes);
   }
 
 } // detail
 
 SequentialSearchOptions::SequentialSearchOptions(int objectiveToMinimizeFirst)
-  : AlgorithmOptions(boost::shared_ptr<detail::SequentialSearchOptions_Impl>(
+  : AlgorithmOptions(std::shared_ptr<detail::SequentialSearchOptions_Impl>(
         new detail::SequentialSearchOptions_Impl(objectiveToMinimizeFirst)))
 {}
 
 SequentialSearchOptions::SequentialSearchOptions(const std::vector<Attribute>& options)
-  : AlgorithmOptions(boost::shared_ptr<detail::SequentialSearchOptions_Impl>(
+  : AlgorithmOptions(std::shared_ptr<detail::SequentialSearchOptions_Impl>(
         new detail::SequentialSearchOptions_Impl(options)))
 {}
 
@@ -78,7 +76,7 @@ int SequentialSearchOptions::objectiveToMinimizeFirst() const {
 }
 
 /// @cond
-SequentialSearchOptions::SequentialSearchOptions(boost::shared_ptr<detail::SequentialSearchOptions_Impl> impl)
+SequentialSearchOptions::SequentialSearchOptions(std::shared_ptr<detail::SequentialSearchOptions_Impl> impl)
   : AlgorithmOptions(impl)
 {}
 /// @endcond

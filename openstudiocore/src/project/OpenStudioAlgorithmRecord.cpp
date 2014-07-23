@@ -17,19 +17,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/OpenStudioAlgorithmRecord.hpp>
-#include <project/OpenStudioAlgorithmRecord_Impl.hpp>
-#include <project/ProjectDatabase.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/DesignOfExperimentsRecord.hpp>
-#include <project/SequentialSearchRecord.hpp>
+#include "OpenStudioAlgorithmRecord.hpp"
+#include "OpenStudioAlgorithmRecord_Impl.hpp"
+#include "ProjectDatabase.hpp"
+#include "AnalysisRecord.hpp"
+#include "DesignOfExperimentsRecord.hpp"
+#include "SequentialSearchRecord.hpp"
 
-#include <analysis/DesignOfExperiments.hpp>
-#include <analysis/DesignOfExperiments_Impl.hpp>
-#include <analysis/SequentialSearch.hpp>
-#include <analysis/SequentialSearch_Impl.hpp>
+#include "../analysis/DesignOfExperiments.hpp"
+#include "../analysis/DesignOfExperiments_Impl.hpp"
+#include "../analysis/SequentialSearch.hpp"
+#include "../analysis/SequentialSearch_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace project {
@@ -61,7 +61,7 @@ namespace detail {
     m_openStudioAlgorithmRecordType = OpenStudioAlgorithmRecordType(value.toInt());
   }
 
-  void OpenStudioAlgorithmRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void OpenStudioAlgorithmRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<OpenStudioAlgorithmRecord>(query);
@@ -120,7 +120,7 @@ namespace detail {
 
 } // detail
 
-OpenStudioAlgorithmRecord::OpenStudioAlgorithmRecord(boost::shared_ptr<detail::OpenStudioAlgorithmRecord_Impl> impl,
+OpenStudioAlgorithmRecord::OpenStudioAlgorithmRecord(std::shared_ptr<detail::OpenStudioAlgorithmRecord_Impl> impl,
                                                      ProjectDatabase database,
                                                      const boost::optional<analysis::OpenStudioAlgorithm>& algorithm)
   : AlgorithmRecord(impl, database, analysis::OptionalAlgorithm(algorithm))
@@ -167,7 +167,7 @@ OpenStudioAlgorithmRecord OpenStudioAlgorithmRecord::factoryFromOpenStudioAlgori
   }
 
   OS_ASSERT(false);
-  return OpenStudioAlgorithmRecord(boost::shared_ptr<detail::OpenStudioAlgorithmRecord_Impl>());
+  return OpenStudioAlgorithmRecord(std::shared_ptr<detail::OpenStudioAlgorithmRecord_Impl>());
 }
 
 std::vector<OpenStudioAlgorithmRecord> OpenStudioAlgorithmRecord::getOpenStudioAlgorithmRecords(
@@ -209,7 +209,7 @@ analysis::OpenStudioAlgorithm OpenStudioAlgorithmRecord::openStudioAlgorithm() c
 }
 
 /// @cond
-OpenStudioAlgorithmRecord::OpenStudioAlgorithmRecord(boost::shared_ptr<detail::OpenStudioAlgorithmRecord_Impl> impl)
+OpenStudioAlgorithmRecord::OpenStudioAlgorithmRecord(std::shared_ptr<detail::OpenStudioAlgorithmRecord_Impl> impl)
   : AlgorithmRecord(impl)
 {}
 /// @endcond

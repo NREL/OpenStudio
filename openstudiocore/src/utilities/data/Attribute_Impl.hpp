@@ -21,15 +21,12 @@
 #define UTILITIES_DATA_ATTRIBUTE_IMPL_HPP
 
 #include "../UtilitiesAPI.hpp"
-#include <utilities/data/Attribute.hpp>
+#include "Attribute.hpp"
 
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/UUID.hpp>
-
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
+#include "../core/Optional.hpp"
+#include "../core/String.hpp"
+#include "../core/Logger.hpp"
+#include "../core/UUID.hpp"
 
 #include <QVariant>
 #include <QMetaType>
@@ -40,7 +37,7 @@ class QDomDocument;
 namespace openstudio {
 namespace detail {
 
-  class UTILITIES_API Attribute_Impl : public QObject, public boost::enable_shared_from_this<Attribute_Impl>
+  class UTILITIES_API Attribute_Impl : public QObject, public std::enable_shared_from_this<Attribute_Impl>
   {
 
     Q_OBJECT;
@@ -54,7 +51,8 @@ namespace detail {
                      const std::string& name,
                      const boost::optional<std::string>& displayName,
                      bool value,
-                     const boost::optional<std::string>& units);
+                     const boost::optional<std::string>& units,
+                     const std::string& source = std::string());
 
       Attribute_Impl(const std::string& name, double value, const boost::optional<std::string>& units);
       Attribute_Impl(const openstudio::UUID& uuid,
@@ -62,7 +60,8 @@ namespace detail {
                      const std::string& name,
                      const boost::optional<std::string>& displayName,
                      double value,
-                     const boost::optional<std::string>& units);
+                     const boost::optional<std::string>& units,
+                     const std::string& source = std::string());
 
       Attribute_Impl(const std::string& name, const OSOptionalQuantity& value);
 
@@ -71,14 +70,16 @@ namespace detail {
                      const openstudio::UUID& versionUUID,
                      const std::string& name,
                      const boost::optional<std::string>& displayName,
-                     const Quantity& value);
+                     const Quantity& value,
+                     const std::string& source = std::string());
 
       Attribute_Impl(const std::string& name, const Unit& value);
       Attribute_Impl(const openstudio::UUID& uuid,
                      const openstudio::UUID& versionUUID,
                      const std::string& name,
                      const boost::optional<std::string>& displayName,
-                     const Unit& value);
+                     const Unit& value,
+                     const std::string& source = std::string());
 
       Attribute_Impl(const std::string& name, int value, const boost::optional<std::string>& units);
       Attribute_Impl(const openstudio::UUID& uuid,
@@ -86,7 +87,8 @@ namespace detail {
                      const std::string& name,
                      const boost::optional<std::string>& displayName,
                      int value,
-                     const boost::optional<std::string>& units);
+                     const boost::optional<std::string>& units,
+                     const std::string& source = std::string());
 
       Attribute_Impl(const std::string& name, unsigned value, const boost::optional<std::string>& units);
       Attribute_Impl(const openstudio::UUID& uuid,
@@ -94,7 +96,8 @@ namespace detail {
                      const std::string& name,
                      const boost::optional<std::string>& displayName,
                      unsigned value,
-                     const boost::optional<std::string>& units);
+                     const boost::optional<std::string>& units,
+                     const std::string& source = std::string());
 
       Attribute_Impl(const std::string& name, const char* value, const boost::optional<std::string>& units);
       Attribute_Impl(const openstudio::UUID& uuid,
@@ -102,7 +105,8 @@ namespace detail {
                      const std::string& name,
                      const boost::optional<std::string>& displayName,
                      const char* value,
-                     const boost::optional<std::string>& units);
+                     const boost::optional<std::string>& units,
+                     const std::string& source = std::string());
 
       Attribute_Impl(const std::string& name, const std::string& value, const boost::optional<std::string>& units);
       Attribute_Impl(const openstudio::UUID& uuid,
@@ -110,7 +114,8 @@ namespace detail {
                      const std::string& name,
                      const boost::optional<std::string>& displayName,
                      const std::string& value,
-                     const boost::optional<std::string>& units);
+                     const boost::optional<std::string>& units,
+                     const std::string& source = std::string());
 
       Attribute_Impl(const std::string& name, const std::vector<openstudio::Attribute>& value, const boost::optional<std::string>& units);
       Attribute_Impl(const openstudio::UUID& uuid,
@@ -118,7 +123,8 @@ namespace detail {
                      const std::string& name,
                      const boost::optional<std::string>& displayName,
                      const std::vector<openstudio::Attribute>& value,
-                     const boost::optional<std::string>& units);
+                     const boost::optional<std::string>& units,
+                     const std::string& source = std::string());
 
       Attribute_Impl(const QDomElement& element);
       Attribute_Impl(const Attribute_Impl& other);
@@ -130,11 +136,27 @@ namespace detail {
       /// get the name
       std::string name() const;
 
-      /// get the display name
-      boost::optional<std::string> displayName() const;
+      // ETH@20140414 - displayName should return a std::string (with returnName=true behavior),
+      // and the return type of setDisplayName should be void.
+
+      /// get the display name. if returnName and the display name is empty, will return 
+      /// name() instead.
+      boost::optional<std::string> displayName(bool returnName=false) const;
 
       /// set the display name
       bool setDisplayName(const std::string& displayName);
+
+      /// clear the display name
+      void clearDisplayName();
+
+      /// get the (optional) data source
+      std::string source() const;
+
+      /// set the data source
+      void setSource(const std::string& source);
+
+      /// clear the data source
+      void clearSource();
 
       /// get the attribute value type
       AttributeValueType valueType() const;
@@ -178,7 +200,7 @@ namespace detail {
       /// get value as string
       std::string valueAsString() const;
 
-      /// set value. throws if wront type.
+      /// set value. throws if wrong type.
       void setValue(const char* value);
 
       /// set value. throws if wrong type.
@@ -232,6 +254,7 @@ namespace detail {
       openstudio::UUID m_versionUUID;
       std::string m_name;
       boost::optional<std::string> m_displayName;
+      std::string m_source;
       AttributeValueType m_valueType;
       QVariant m_value;
       boost::optional<std::string> m_units;

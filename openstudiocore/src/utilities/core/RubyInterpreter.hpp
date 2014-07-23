@@ -1,7 +1,26 @@
-#ifndef UTILITIES_CORE_RUBYINTERPRETER
-#define UTILITIES_CORE_RUBYINTERPRETER
+/**********************************************************************
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
 
-#include <utilities/core/RubyException.hpp>
+#ifndef UTILITIES_CORE_RUBYINTERPRETER_HPP
+#define UTILITIES_CORE_RUBYINTERPRETER_HPP
+
+#include "RubyException.hpp"
 
 #include <QDir>
 
@@ -576,96 +595,32 @@ namespace openstudio
             const openstudio::path &t_rubyIncludePath,
             const std::vector<std::string> &t_moduleNames)
         {
-#if RUBY_API_VERSION_MAJOR && RUBY_API_VERSION_MAJOR==2
-#else
-          ruby_init();
-#endif
           openstudio::path rubypath = openstudio::getOpenStudioEmbeddedRubyPath();
 
-          ruby_incpush(openstudio::toString(t_moduleSearchPath.external_file_string()).c_str());
-          ruby_incpush(openstudio::toString(t_rubyIncludePath.external_file_string()).c_str());
+          ruby_incpush(toString(t_moduleSearchPath.native()).c_str());
+          ruby_incpush(toString(t_rubyIncludePath.native()).c_str());
 
           if (!rubypath.empty())
           {
-// Not defined for 1.8.6
-#ifdef RUBY_SEARCH_PATH
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_SEARCH_PATH))).external_file_string()).c_str());
-#endif
-            
-// 1.8.6: /lib/ruby/site_ruby/1.8
-#ifdef RUBY_SITE_LIB2
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_SITE_LIB2))).external_file_string()).c_str());
-#endif
-            
-// Not defined for 1.8.6
-#ifdef RUBY_SITE_THIN_ARCHLIB
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_SITE_THIN_ARCHLIB))).external_file_string()).c_str());
-#endif
-
-// 1.8.6 Win: /lib/ruby/site_ruby/1.8/i386-msvcrt
-#ifdef RUBY_SITE_ARCHLIB
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_SITE_ARCHLIB))).external_file_string()).c_str());
-#endif
-
-// 1.8.6: /lib/ruby/site_ruby
-#ifdef RUBY_SITE_LIB
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_SITE_LIB))).external_file_string()).c_str());
-#endif
-
-// Not defined for 1.8.6
-#ifdef RUBY_VENDOR_LIB2
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_VENDOR_LIB2))).external_file_string()).c_str());
-#endif
-
-// Not defined for 1.8.6
-#ifdef RUBY_VENDOR_THIN_ARCHLIB
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_VENDOR_THIN_ARCHLIB))).external_file_string()).c_str());
-#endif
-
-// Not defined for 1.8.6
-#ifdef RUBY_VENDOR_ARCHLIB
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_VENDOR_ARCHLIB))).external_file_string()).c_str());
-#endif
-
-// Not defined for 1.8.6
-#ifdef RUBY_VENDOR_LIB
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_VENDOR_LIB))).external_file_string()).c_str());
-#endif
-
-// 1.8.6: /lib/ruby/1.8
-#ifdef RUBY_LIB
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_LIB))).external_file_string()).c_str());
-#endif
-
-// Not defined for 1.8.6
-#ifdef RUBY_THIN_ARCHLIB
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_THIN_ARCHLIB))).external_file_string()).c_str());
-#endif
-
-// 1.8.6 Win: /lib/ruby/1.8/i386-mswin32
-#ifdef RUBY_ARCHLIB
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_ARCHLIB))).external_file_string()).c_str());
-#endif
-
 #if defined(WIN32) 
   #if (defined(_M_X64) || defined(__amd64__))
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0"))).external_file_string()).c_str());
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/x64-msvcr100"))).external_file_string()).c_str());
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby"))).external_file_string()).c_str());
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0"))).external_file_string()).c_str());
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/x64-msvcr100"))).external_file_string()).c_str());
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/vendor_ruby"))).external_file_string()).c_str());
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/2.0.0"))).external_file_string()).c_str());
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/2.0.0/x64-mswin64_10"))).external_file_string()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/x64-msvcr100"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/x64-msvcr100"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/vendor_ruby"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/2.0.0"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/2.0.0/x64-mswin64_10"))).native()).c_str());
   #else
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0"))).external_file_string()).c_str());
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/i386-mingw32"))).external_file_string()).c_str());
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby"))).external_file_string()).c_str());
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0"))).external_file_string()).c_str());
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/i386-mingw32"))).external_file_string()).c_str());
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/vendor_ruby"))).external_file_string()).c_str());
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/2.0.0"))).external_file_string()).c_str());
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/2.0.0/i386-mingw32"))).external_file_string()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/i386-mingw32"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/i386-mingw32"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/vendor_ruby"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/2.0.0"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/2.0.0/i386-mingw32"))).native()).c_str());
   #endif
 #endif
           }
@@ -1795,4 +1750,4 @@ namespace openstudio
 #endif
 
 
-#endif // UTILITIES_CORE_RUBYINTERPRETER
+#endif // UTILITIES_CORE_RUBYINTERPRETER_HPP

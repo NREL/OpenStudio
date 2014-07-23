@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/UtilityCost_Variable.hpp>
-#include <model/UtilityCost_Variable_Impl.hpp>
+#include "UtilityCost_Variable.hpp"
+#include "UtilityCost_Variable_Impl.hpp"
 
-#include <model/Model_Impl.hpp>
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_UtilityCost_Variable_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/algorithm/string.hpp>
 
@@ -237,7 +237,7 @@ UtilityCost_Variable::UtilityCost_Variable(const Model& model)
 }
 
 // constructor
-UtilityCost_Variable::UtilityCost_Variable(boost::shared_ptr<detail::UtilityCost_Variable_Impl> impl)
+UtilityCost_Variable::UtilityCost_Variable(std::shared_ptr<detail::UtilityCost_Variable_Impl> impl)
   : ParentObject(impl)
 {}
 

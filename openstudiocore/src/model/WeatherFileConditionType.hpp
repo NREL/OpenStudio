@@ -20,8 +20,8 @@
 #ifndef MODEL_WEATHERFILECONDITIONTYPE_HPP
 #define MODEL_WEATHERFILECONDITIONTYPE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SizingPeriod.hpp>
+#include "ModelAPI.hpp"
+#include "SizingPeriod.hpp"
 
 namespace openstudio {
 namespace model {
@@ -48,7 +48,7 @@ class MODEL_API WeatherFileConditionType : public SizingPeriod {
   friend class openstudio::IdfObject;
 
   // constructor
-  explicit WeatherFileConditionType(boost::shared_ptr<detail::WeatherFileConditionType_Impl> impl);
+  explicit WeatherFileConditionType(std::shared_ptr<detail::WeatherFileConditionType_Impl> impl);
 
  private:
 

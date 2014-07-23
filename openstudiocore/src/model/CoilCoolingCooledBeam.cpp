@@ -17,28 +17,25 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CoilCoolingCooledBeam.hpp>
-#include <model/CoilCoolingCooledBeam_Impl.hpp>
-#include <model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp>
-#include <model/AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/StraightComponent_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
+#include "CoilCoolingCooledBeam.hpp"
+#include "CoilCoolingCooledBeam_Impl.hpp"
+#include "AirTerminalSingleDuctConstantVolumeCooledBeam.hpp"
+#include "AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp"
+#include "StraightComponent.hpp"
+#include "StraightComponent_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "PlantLoop.hpp"
+#include "PlantLoop_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
-#include <boost/foreach.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Coil_Cooling_CooledBeam_FieldEnums.hxx>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Assert.hpp>
 
 namespace openstudio {
 namespace model {
@@ -103,15 +100,13 @@ namespace detail {
 
     airTerminalSingleDuctConstantVolumeCooledBeam = this->model().getConcreteModelObjects<AirTerminalSingleDuctConstantVolumeCooledBeam>();
 
-    for( std::vector<AirTerminalSingleDuctConstantVolumeCooledBeam>::iterator it = airTerminalSingleDuctConstantVolumeCooledBeam.begin();
-    it < airTerminalSingleDuctConstantVolumeCooledBeam.end();
-    ++it )
+    for( const auto & elem : airTerminalSingleDuctConstantVolumeCooledBeam )
     {
-      if( boost::optional<HVACComponent> coil = it-> coilCoolingCooledBeam() )
+      if( boost::optional<HVACComponent> coil = elem.coilCoolingCooledBeam() )
       {
         if( coil->handle() == this->handle() )
         {
-          return *it;
+          return elem;
         }
       }
     }
@@ -539,7 +534,7 @@ void CoilCoolingCooledBeam::resetLeavingPipeInsideDiameter()
 }
 
 /// @cond
-CoilCoolingCooledBeam::CoilCoolingCooledBeam(boost::shared_ptr<detail::CoilCoolingCooledBeam_Impl> impl)
+CoilCoolingCooledBeam::CoilCoolingCooledBeam(std::shared_ptr<detail::CoilCoolingCooledBeam_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

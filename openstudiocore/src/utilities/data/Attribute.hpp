@@ -22,13 +22,12 @@
 
 #include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/Enum.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../core/Enum.hpp"
+#include "../core/Logger.hpp"
+#include "../core/Path.hpp"
+#include "../core/UUID.hpp"
+#include "../core/Optional.hpp"
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
 #include <QVariant>
@@ -140,7 +139,8 @@ class UTILITIES_API Attribute {
             const std::string& name,
             const boost::optional<std::string>& displayName,
             bool value,
-            const boost::optional<std::string>& units);
+            const boost::optional<std::string>& units,
+            const std::string& source = std::string());
 
   Attribute(const std::string& name, double value);
   Attribute(const std::string& name, double value, const std::string& units);
@@ -150,7 +150,8 @@ class UTILITIES_API Attribute {
             const std::string& name,
             const boost::optional<std::string>& displayName,
             double value,
-            const boost::optional<std::string>& units);
+            const boost::optional<std::string>& units,
+            const std::string& source = std::string());
 
   /** Upon construction, will be of type Quantity or Unit, as appropriate. */
   Attribute(const std::string& name, const OSOptionalQuantity& value);
@@ -160,14 +161,16 @@ class UTILITIES_API Attribute {
             const openstudio::UUID& versionUUID,
             const std::string& name,
             const boost::optional<std::string>& displayName,
-            const Quantity& value);
+            const Quantity& value,
+            const std::string& source = std::string());
 
   Attribute(const std::string& name, const Unit& value);
   Attribute(const openstudio::UUID& uuid,
             const openstudio::UUID& versionUUID,
             const std::string& name,
             const boost::optional<std::string>& displayName,
-            const Unit& value);
+            const Unit& value,
+            const std::string& source = std::string());
 
   Attribute(const std::string& name, int value);
   Attribute(const std::string& name, int value, const std::string& units);
@@ -177,7 +180,8 @@ class UTILITIES_API Attribute {
             const std::string& name,
             const boost::optional<std::string>& displayName,
             int value,
-            const boost::optional<std::string>& units);
+            const boost::optional<std::string>& units,
+            const std::string& source = std::string());
 
   Attribute(const std::string& name, unsigned value);
   Attribute(const std::string& name, unsigned value, const std::string& units);
@@ -187,7 +191,8 @@ class UTILITIES_API Attribute {
             const std::string& name,
             const boost::optional<std::string>& displayName,
             unsigned value,
-            const boost::optional<std::string>& units);
+            const boost::optional<std::string>& units,
+            const std::string& source = std::string());
 
   Attribute(const std::string& name, const char* value);
   Attribute(const std::string& name, const char* value, const std::string& units);
@@ -197,7 +202,8 @@ class UTILITIES_API Attribute {
             const std::string& name,
             const boost::optional<std::string>& displayName,
             const char* value,
-            const boost::optional<std::string>& units);
+            const boost::optional<std::string>& units,
+            const std::string& source = std::string());
 
   Attribute(const std::string& name, const std::string& value);
   Attribute(const std::string& name, const std::string& value, const std::string& units);
@@ -207,7 +213,8 @@ class UTILITIES_API Attribute {
             const std::string& name,
             const boost::optional<std::string>& displayName,
             const std::string& value,
-            const boost::optional<std::string>& units);
+            const boost::optional<std::string>& units,
+            const std::string& source = std::string());
 
   Attribute(const std::string& name, const std::vector<openstudio::Attribute>& value);
   Attribute(const std::string& name, const std::vector<openstudio::Attribute>& value, const std::string& units);
@@ -217,7 +224,8 @@ class UTILITIES_API Attribute {
             const std::string& name,
             const boost::optional<std::string>& displayName,
             const std::vector<openstudio::Attribute>& value,
-            const boost::optional<std::string>& units);
+            const boost::optional<std::string>& units,
+            const std::string& source = std::string());
 
   explicit Attribute(const QDomElement& element);
 
@@ -231,6 +239,9 @@ class UTILITIES_API Attribute {
   /// static constructor from xml
   static boost::optional<Attribute> loadFromXml(const openstudio::path& path);
 
+  /// static constructor from loaded xml
+  static boost::optional<Attribute> loadFromXml(const QDomDocument& doc);
+
   openstudio::UUID uuid() const;
 
   openstudio::UUID versionUUID() const;
@@ -238,11 +249,24 @@ class UTILITIES_API Attribute {
   /// get the name
   std::string name() const;
 
-  /// get the display name
-  boost::optional<std::string> displayName() const;
+  /// get the display name. if returnName and the display name is empty, will return 
+  /// name() instead.
+  boost::optional<std::string> displayName(bool returnName=false) const;
 
   /// set the display name
   bool setDisplayName(const std::string& displayName);
+
+  /// clear the display name
+  void clearDisplayName();
+
+  /// get the (optional) data source
+  std::string source() const;
+
+  /// set the data source
+  void setSource(const std::string& source);
+
+  /// clear the data source
+  void clearSource();
 
   /// get the attribute value type
   AttributeValueType valueType() const;
@@ -286,7 +310,7 @@ class UTILITIES_API Attribute {
   /// get value as string
   std::string valueAsString() const;
 
-  /// set value. throws if wront type.
+  /// set value. throws if wrong type.
   void setValue(const char* value);
 
   /// set value. throws if wrong type.
@@ -301,7 +325,7 @@ class UTILITIES_API Attribute {
   /// get value as qvariant
   QVariant valueAsQVariant() const;
 
-  // set value. throws if wront type.
+  // set value. throws if wrong type.
   void setValue(const QVariant& value);
 
   /// find child attribute by name
@@ -330,7 +354,7 @@ class UTILITIES_API Attribute {
   /// cast to type T, can throw std::bad_cast
   template<typename T>
   T cast() const{
-    boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+    std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (!impl){
       throw(std::bad_cast());
     }
@@ -341,7 +365,7 @@ class UTILITIES_API Attribute {
   template<typename T>
   boost::optional<T> optionalCast() const{
     boost::optional<T> result;
-    boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+    std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (impl){
       result = T(impl);
     }
@@ -354,20 +378,20 @@ class UTILITIES_API Attribute {
   friend class EndUses;
 
   // constructor from impl
-  Attribute(const boost::shared_ptr<detail::Attribute_Impl>& impl);
+  Attribute(const std::shared_ptr<detail::Attribute_Impl>& impl);
 
   /// get the impl
   template<typename T>
-  boost::shared_ptr<T> getImpl() const
+  std::shared_ptr<T> getImpl() const
   {
-    return boost::dynamic_pointer_cast<T>(m_impl);
+    return std::dynamic_pointer_cast<T>(m_impl);
   }
 
  private:
 
   REGISTER_LOGGER("openstudio.Attribute");
 
-  boost::shared_ptr<detail::Attribute_Impl> m_impl;
+  std::shared_ptr<detail::Attribute_Impl> m_impl;
 
 };
 
@@ -401,7 +425,7 @@ UTILITIES_API std::vector<double> getDoubleVectorFromAttribute(const Attribute& 
 UTILITIES_API bool isConsistent(const Attribute& candidate,const AttributeDescription& description);
 
 /** Copies description's display name over to attribute. Will return false if
- *  !isConsistent(attribute,descripton). \relates Attribute */
+ *  !isConsistent(attribute,description). \relates Attribute */
 // DLM: can this be a member of Attribute?
 UTILITIES_API bool prepareForDisplay(Attribute& attribute, const AttributeDescription& description);
 

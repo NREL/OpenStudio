@@ -19,7 +19,7 @@
 
 #include <gtest/gtest.h>
 #include "RunManagerTestFixture.hpp"
-#include <runmanager/lib/ConfigOptions.hpp>
+#include "../ConfigOptions.hpp"
 #include <QCoreApplication>
 
 #ifdef _WIN32
@@ -129,13 +129,7 @@ TEST_F(RunManagerTestFixture, ConfigOptionsQSettingsTest)
   co.setDefaultEPWLocation(openstudio::toPath("b"));
   co.setOutputLocation(openstudio::toPath("c"));
   co.setMaxLocalJobs(10);
-  co.setSLURMUserName("d");
-  co.setSLURMHost("e");
-  co.setMaxSLURMJobs(11);
   co.setSimpleName(true);
-  co.setSLURMMaxTime(12);
-  co.setSLURMPartition("f");
-  co.setSLURMAccount("g");
   co.saveQSettings();
 
   ConfigOptions co2(true);
@@ -144,26 +138,14 @@ TEST_F(RunManagerTestFixture, ConfigOptionsQSettingsTest)
   co.setDefaultEPWLocation(openstudio::toPath("b"));
   co.setOutputLocation(openstudio::toPath("c"));
   co.setMaxLocalJobs(10);
-  co.setSLURMUserName("d");
-  co.setSLURMHost("e");
-  co.setMaxSLURMJobs(11);
   co.setSimpleName(true);
-  co.setSLURMMaxTime(12);
-  co.setSLURMPartition("f");
-  co.setSLURMAccount("g");
   co.saveQSettings();
 
   EXPECT_EQ(co.getDefaultIDFLocation(), co2.getDefaultIDFLocation());
   EXPECT_EQ(co.getDefaultEPWLocation(), co2.getDefaultEPWLocation());
   EXPECT_EQ(co.getOutputLocation(), co2.getOutputLocation());
   EXPECT_EQ(co.getMaxLocalJobs(), co2.getMaxLocalJobs());
-  EXPECT_EQ(co.getSLURMUserName(), co2.getSLURMUserName());
-  EXPECT_EQ(co.getSLURMHost(), co2.getSLURMHost());
-  EXPECT_EQ(co.getMaxSLURMJobs(), co2.getMaxSLURMJobs());
   EXPECT_EQ(co.getSimpleName(), co2.getSimpleName());
-  EXPECT_EQ(co.getSLURMMaxTime(), co2.getSLURMMaxTime());
-  EXPECT_EQ(co.getSLURMPartition(), co2.getSLURMPartition());
-  EXPECT_EQ(co.getSLURMAccount(), co2.getSLURMAccount());
 }
 
 

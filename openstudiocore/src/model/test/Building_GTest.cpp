@@ -19,38 +19,36 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
+#include "../Building.hpp"
+#include "../Building_Impl.hpp"
 
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/BuildingStory.hpp>
-#include <model/BuildingStory_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/ElectricEquipment.hpp>
-#include <model/ElectricEquipmentDefinition.hpp>
-#include <model/GasEquipment.hpp>
-#include <model/GasEquipmentDefinition.hpp>
-#include <model/Lights.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/People.hpp>
-#include <model/PeopleDefinition.hpp>
-#include <model/Schedule.hpp>
-#include <model/LifeCycleCost.hpp>
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
+#include "../BuildingStory.hpp"
+#include "../BuildingStory_Impl.hpp"
+#include "../Space.hpp"
+#include "../Space_Impl.hpp"
+#include "../SpaceType.hpp"
+#include "../SpaceType_Impl.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../Surface.hpp"
+#include "../Surface_Impl.hpp"
+#include "../SubSurface.hpp"
+#include "../SubSurface_Impl.hpp"
+#include "../ElectricEquipment.hpp"
+#include "../ElectricEquipmentDefinition.hpp"
+#include "../GasEquipment.hpp"
+#include "../GasEquipmentDefinition.hpp"
+#include "../Lights.hpp"
+#include "../LightsDefinition.hpp"
+#include "../People.hpp"
+#include "../PeopleDefinition.hpp"
+#include "../Schedule.hpp"
+#include "../LifeCycleCost.hpp"
 
-#include <utilities/data/Attribute.hpp>
-
-#include <boost/foreach.hpp>
+#include "../../utilities/data/Attribute.hpp"
 
 using namespace openstudio::model;
 using namespace openstudio;

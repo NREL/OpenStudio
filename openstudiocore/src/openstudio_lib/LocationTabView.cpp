@@ -17,37 +17,37 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/LocationTabView.hpp>
+#include "LocationTabView.hpp"
 
-#include <openstudio_lib/OSDocument.hpp>
+#include "OSDocument.hpp"
 
-#include <openstudio_app/OpenStudioApp.hpp>
+#include "../openstudio_app/OpenStudioApp.hpp"
 
-#include <model/DesignDay.hpp>
-#include <model/DesignDay_Impl.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/RunPeriod.hpp>
-#include <model/RunPeriod_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/SizingPeriod.hpp>
-#include <model/SizingPeriod_Impl.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
-#include <model/ClimateZones.hpp>
-#include <model/ClimateZones_Impl.hpp>
-#include <model/WeatherFileDays.hpp>
-#include <model/WeatherFileConditionType.hpp>
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
+#include "../model/DesignDay.hpp"
+#include "../model/DesignDay_Impl.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/RunPeriod.hpp"
+#include "../model/RunPeriod_Impl.hpp"
+#include "../model/Site.hpp"
+#include "../model/Site_Impl.hpp"
+#include "../model/SizingPeriod.hpp"
+#include "../model/SizingPeriod_Impl.hpp"
+#include "../model/WeatherFile.hpp"
+#include "../model/WeatherFile_Impl.hpp"
+#include "../model/ClimateZones.hpp"
+#include "../model/ClimateZones_Impl.hpp"
+#include "../model/WeatherFileDays.hpp"
+#include "../model/WeatherFileConditionType.hpp"
+#include "../model/YearDescription.hpp"
+#include "../model/YearDescription_Impl.hpp"
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../energyplus/ReverseTranslator.hpp"
 
-#include <runmanager/lib/ConfigOptions.hpp>
+#include "../runmanager/lib/ConfigOptions.hpp"
 
-#include <utilities/filetypes/EpwFile.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/filetypes/EpwFile.hpp"
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/smart_ptr.hpp>
 
@@ -127,7 +127,7 @@ LocationView::LocationView(const model::Model & model,
 
   m_ashraeClimateZone->addItem("");
   std::vector<std::string> ashraeClimateZoneValues = model::ClimateZones::validClimateZoneValues(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDefaultYear());
-  BOOST_FOREACH(const std::string& climateZone, ashraeClimateZoneValues){
+  for (const std::string& climateZone : ashraeClimateZoneValues){
     m_ashraeClimateZone->addItem(toQString(climateZone));
   }
 
@@ -160,7 +160,7 @@ LocationView::LocationView(const model::Model & model,
 
   m_cecClimateZone->addItem("");
   std::vector<std::string> cecClimateZoneValues = model::ClimateZones::validClimateZoneValues(model::ClimateZones::cecInstitutionName(), model::ClimateZones::cecDefaultYear());
-  BOOST_FOREACH(const std::string& climateZone, cecClimateZoneValues){
+  for (const std::string& climateZone : cecClimateZoneValues){
     m_cecClimateZone->addItem(toQString(climateZone));
   }
 
@@ -366,7 +366,7 @@ void LocationView::onWeatherFileBtnClicked()
   QString lastPath = m_lastEpwPathOpened;
   if (lastPath.isEmpty() && m_lastDdyPathOpened.isEmpty()){
     openstudio::runmanager::ConfigOptions co(true);
-    lastPath = toQString(co.getDefaultEPWLocation().external_file_string());
+    lastPath = toQString(co.getDefaultEPWLocation().native());
   } else if (lastPath.isEmpty()) {
     QString path = m_lastDdyPathOpened;
     lastPath = path.replace(".ddy", ".epw");
@@ -376,7 +376,7 @@ void LocationView::onWeatherFileBtnClicked()
   if(!fileName.isEmpty()){
     
     openstudio::path epwPath = toPath(fileName);
-    openstudio::path newPath = toPath(m_modelTempDir) / toPath("resources/files") / toPath(epwPath.filename());
+    openstudio::path newPath = toPath(m_modelTempDir) / toPath("resources/files") / epwPath.filename();
     openstudio::path previousEPWPath;
 
     StringStreamLogSink ss;
@@ -477,7 +477,7 @@ void LocationView::onDesignDayBtnClicked()
   QString lastPath = m_lastDdyPathOpened;
   if (lastPath.isEmpty() && m_lastEpwPathOpened.isEmpty()){
     openstudio::runmanager::ConfigOptions co(true);
-    lastPath = toQString(co.getDefaultEPWLocation().external_file_string());
+    lastPath = toQString(co.getDefaultEPWLocation().native());
   } else if (lastPath.isEmpty()) {
     QString path = m_lastEpwPathOpened;
     lastPath = path.replace(".epw", ".ddy");
@@ -490,7 +490,7 @@ void LocationView::onDesignDayBtnClicked()
     if(ddyIdfFile){
 
       openstudio::Workspace ddyWorkspace(StrictnessLevel::None, IddFileType::EnergyPlus);
-      BOOST_FOREACH(IdfObject idfObject, ddyIdfFile->objects()){
+      for (IdfObject idfObject : ddyIdfFile->objects()){
         IddObjectType iddObjectType = idfObject.iddObject().type();
         if((iddObjectType == IddObjectType::SizingPeriod_DesignDay) ||
            (iddObjectType == IddObjectType::SizingPeriod_WeatherFileDays) ||
@@ -515,7 +515,7 @@ void LocationView::onDesignDayBtnClicked()
 
         bool unknownDay = false;
 
-        BOOST_FOREACH(model::DesignDay designDay, ddyModel.getConcreteModelObjects<model::DesignDay>()) {
+        for (model::DesignDay designDay : ddyModel.getConcreteModelObjects<model::DesignDay>()) {
           boost::optional<std::string> name;
           name = designDay.name();
 
@@ -556,29 +556,29 @@ void LocationView::onDesignDayBtnClicked()
         {
           if( days99_6.size() > 0 )
           {
-            BOOST_FOREACH(model::DesignDay designDay, days99) {
+            for (model::DesignDay designDay : days99) {
               designDay.remove();
             }
           }
 
           if( days0_4.size() > 0 )
           {
-            BOOST_FOREACH(model::DesignDay designDay, days1) {
+            for (model::DesignDay designDay : days1) {
               designDay.remove();
             }
-            BOOST_FOREACH(model::DesignDay designDay, days2) {
+            for (model::DesignDay designDay : days2) {
               designDay.remove();
             }
           }
           else if( days1.size() > 0 )
           {
-            BOOST_FOREACH(model::DesignDay designDay, days2) {
+            for (model::DesignDay designDay : days2) {
               designDay.remove();
             }
           }
         }
 
-        BOOST_FOREACH(model::SizingPeriod sizingPeriod, m_model.getModelObjects<model::SizingPeriod>()){
+        for (model::SizingPeriod sizingPeriod : m_model.getModelObjects<model::SizingPeriod>()){
           sizingPeriod.remove();
         }
 

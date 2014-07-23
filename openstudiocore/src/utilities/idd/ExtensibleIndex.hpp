@@ -20,7 +20,7 @@
 #ifndef UTILITIES_IDD_EXTENSIBLEINDEX_HPP
 #define UTILITIES_IDD_EXTENSIBLEINDEX_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
 namespace openstudio {
 

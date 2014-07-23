@@ -20,8 +20,8 @@
 #ifndef MODEL_SCHEDULEBASE_HPP
 #define MODEL_SCHEDULEBASE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ResourceObject.hpp>
+#include "ModelAPI.hpp"
+#include "ResourceObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -79,7 +79,7 @@ class MODEL_API ScheduleBase : public ResourceObject {
   /// @cond
   typedef detail::ScheduleBase_Impl ImplType;
 
-  explicit ScheduleBase(boost::shared_ptr<detail::ScheduleBase_Impl> impl);
+  explicit ScheduleBase(std::shared_ptr<detail::ScheduleBase_Impl> impl);
 
   ScheduleBase(IddObjectType type,const Model& model);
 

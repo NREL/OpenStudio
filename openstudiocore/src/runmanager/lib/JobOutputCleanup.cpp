@@ -22,7 +22,7 @@
 namespace openstudio {
 namespace runmanager {
 
-  JobOutputCleanup::JobOutputCleanup(QWidget *parent, Qt::WFlags flags, const std::vector<std::string> &files)
+  JobOutputCleanup::JobOutputCleanup(QWidget *parent, Qt::WindowFlags flags, const std::vector<std::string> &files)
     : QDialog(parent, flags)
   {
     ui.setupUi(this);

@@ -20,8 +20,8 @@
 #ifndef PROJECT_DATAPOINT_MEASURE_JOINRECORD_HPP
 #define PROJECT_DATAPOINT_MEASURE_JOINRECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/JoinRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "JoinRecord.hpp"
 
 namespace openstudio {
 namespace project {
@@ -78,12 +78,12 @@ class PROJECT_API DataPoint_Measure_JoinRecord : public JoinRecord {
 
   /** Construct from impl. */
   DataPoint_Measure_JoinRecord(
-      boost::shared_ptr<detail::DataPoint_Measure_JoinRecord_Impl> impl,
+      std::shared_ptr<detail::DataPoint_Measure_JoinRecord_Impl> impl,
       ProjectDatabase database);
 
   /// Construct from impl. Does not register in the database, so use with caution.
   explicit DataPoint_Measure_JoinRecord(
-      boost::shared_ptr<detail::DataPoint_Measure_JoinRecord_Impl> impl);
+      std::shared_ptr<detail::DataPoint_Measure_JoinRecord_Impl> impl);
 
   /// @endcond
  private:

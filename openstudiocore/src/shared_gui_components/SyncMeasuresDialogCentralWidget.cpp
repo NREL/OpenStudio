@@ -189,7 +189,7 @@ Component * SyncMeasuresDialogCentralWidget::checkedComponent() const
 
 void SyncMeasuresDialogCentralWidget::upperPushButtonClicked()
 {
-  Q_FOREACH(Component* component, m_collapsibleComponentList->components()){
+  for (Component* component : m_collapsibleComponentList->components()){
     if (component->checkBox()->isEnabled()){
       component->checkBox()->setChecked(true);
     }
@@ -202,7 +202,7 @@ void SyncMeasuresDialogCentralWidget::lowerPushButtonClicked()
 
   // Must convert from the checked component to the appropriate measure for updating
   unsigned index = 0;
-  Q_FOREACH(Component* component, m_collapsibleComponentList->components()){
+  for (Component* component : m_collapsibleComponentList->components()){
     if (component->checkBox()->isChecked() && component->checkBox()->isEnabled()){
       newMeasures.push_back(m_measures.at(m_pageIdx * NUM_COMPONENTS_DISPLAYED + index));
     }

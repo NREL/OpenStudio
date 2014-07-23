@@ -20,10 +20,10 @@
 #ifndef MODEL_AIRTERMINALSINGLEDUCTUNCONTROLLED_HPP
 #define MODEL_AIRTERMINALSINGLEDUCTUNCONTROLLED_HPP
 
-#include <model/ModelObject.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/Connection.hpp>
-#include <model/ModelAPI.hpp>
+#include "ModelObject.hpp"
+#include "StraightComponent.hpp"
+#include "Connection.hpp"
+#include "ModelAPI.hpp"
 
 namespace openstudio {
 
@@ -87,7 +87,7 @@ class MODEL_API AirTerminalSingleDuctUncontrolled : public StraightComponent {
   /// @cond 
   typedef detail::AirTerminalSingleDuctUncontrolled_Impl ImplType;
 
-  explicit AirTerminalSingleDuctUncontrolled(boost::shared_ptr<detail::AirTerminalSingleDuctUncontrolled_Impl> impl);
+  explicit AirTerminalSingleDuctUncontrolled(std::shared_ptr<detail::AirTerminalSingleDuctUncontrolled_Impl> impl);
 
  private:
   REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctUncontrolled");

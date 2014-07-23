@@ -209,7 +209,7 @@ OS:SetpointManager:Scheduled,
 OS:SetpointManager:MixedAir,
   {b27ac206-d7fc-4ada-aacc-4806c3f43a7b}, ! Handle
   OS:SetpointManager:MixedAir 1,          ! Name
-  ,                                       ! Control Variable
+  Temperature,                            ! Control Variable
   ,                                       ! Reference Setpoint Node Name
   ,                                       ! Fan Inlet Node Name
   ,                                       ! Fan Outlet Node Name
@@ -221,7 +221,8 @@ OS:SetpointManager:SingleZone:Reheat,
   -99,                                    ! Minimum Supply Air Temperature {C}
   99,                                     ! Maximum Supply Air Temperature {C}
   ,                                       ! Control Zone Name
-  ;                                       ! Setpoint Node or NodeList Name
+  ,                                       ! Setpoint Node or NodeList Name
+  Temperature;                            ! Control Variable
 
 OS:SetpointManager:Warmest,
   {4f12e925-01e9-4ce2-9f56-daa5d024ac5d}, !- Handle
@@ -230,6 +231,74 @@ OS:SetpointManager:Warmest,
   12.2,                                   !- Minimum Setpoint Temperature {C}
   15.6,                                   !- Maximum Setpoint Temperature {C}
   MaximumTemperature,                     !- Strategy
+  ;                                       !- Setpoint Node or NodeList Name
+
+OS:SetpointManager:Scheduled:DualSetpoint,
+  {9eae8047-b0c4-46a9-a37a-30889c83b4ae}, !- Handle
+  Dual Setpoint, !- Name
+  Temperature,                                       !- Control Variable
+  {7aec1e64-640d-4bb1-ba20-f89f7e911d11}, !- High Setpoint Schedule Name
+  {3515ff9e-912f-4d2e-bf1f-163a63d2662b}, !- Low Setpoint Schedule Name
+  ;                                       !- Setpoint Node or NodeList Name
+
+OS:Schedule:Ruleset,
+  {7aec1e64-640d-4bb1-ba20-f89f7e911d11}, !- Handle
+  Dual SP High Schedule,                     !- Name
+  {919bbba6-e6ba-472c-968a-3444cb36c6e6}, !- Schedule Type Limits Name
+  {47fec27d-6610-4f32-94f3-860c2949a1d8}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {47fec27d-6610-4f32-94f3-860c2949a1d8}, !- Handle
+  Dual SP High Day,                         !- Name
+  {919bbba6-e6ba-472c-968a-3444cb36c6e6}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  26.7;                                   !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {3515ff9e-912f-4d2e-bf1f-163a63d2662b}, !- Handle
+  Dual SP Low Schedule,                     !- Name
+  {554ee901-8dc9-456e-884a-409b5b97127b}, !- Schedule Type Limits Name
+  {2e127e60-a413-4470-9836-838e2468abe2}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {2e127e60-a413-4470-9836-838e2468abe2}, !- Handle
+  Dual SP Low Day,                         !- Name
+  {554ee901-8dc9-456e-884a-409b5b97127b}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  10;                                     !- Value Until Time 1
+
+OS:ScheduleTypeLimits,
+  {919bbba6-e6ba-472c-968a-3444cb36c6e6}, !- Handle
+  Dual SP High Limits,                            !- Name
+  ,                                       !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
+  Continuous,                             !- Numeric Type
+  Temperature;                            !- Unit Type
+
+OS:ScheduleTypeLimits,
+  {554ee901-8dc9-456e-884a-409b5b97127b}, !- Handle
+  Dual SP Low Limits,                          !- Name
+  ,                                       !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
+  Continuous,                             !- Numeric Type
+  Temperature;                            !- Unit Type
+
+OS:SetpointManager:OutdoorAirPretreat,
+  {e10c0dd1-1387-4356-a5c4-34671a43d30f}, !- Handle
+  OA Pretreat, !- Name
+  Temperature,                                       !- Control Variable
+  ,                                       !- Minimum Setpoint Temperature {C}
+  ,                                       !- Maximum Setpoint Temperature {C}
+  ,                                       !- Minimum Setpoint Humidity Ratio {kgWater/kgDryAir}
+  ,                                       !- Maximum Setpoint Humidity Ratio {kgWater/kgDryAir}
+  ,                                       !- Reference Setpoint Node Name
+  ,                                       !- Mixed Air Stream Node Name
+  ,                                       !- Outdoor Air Stream Node Name
+  ,                                       !- Return Air Stream Node Name
   ;                                       !- Setpoint Node or NodeList Name
 
 OS:Fan:ConstantVolume,
@@ -388,26 +457,26 @@ OS:Curve:Quadratic,
   0,                                      ! Minimum Value of x {BasedOnField A2}
   1;                                      ! Maximum Value of x {BasedOnField A2}
 
-OS:EvaporativeCooler:Indirect:ResearchSpecial,
-  {70e2147c-5b58-49a7-b1a3-1cc1b1bd8854}, !- Handle
-  Indirect Evaporative Cooler, !- Name
-  ,                                       !- Availability Schedule Name
-  0.75,                                   !- Cooler Maximum Effectiveness
-  ,                                       !- Cooler Flow Ratio
-  30,                                     !- Recirculating Water Pump Power Consumption {W}
-  ,                                       !- Secondary Fan Flow Rate {m3/s}
-  0.6,                                    !- Secondary Fan Total Efficiency
-  124.6,                                  !- Secondary Fan Delta Pressure {Pa}
-  ,                                       !- Primary Air Inlet Node
-  ,                                       !- Primary Air Outlet Node
-  ,                                       !- Control Type
-  0.9,                                    !- Dewpoint Effectiveness Factor
-  ,                                       !- Secondary Air Inlet Node
-  ,                                       !- Sensor Node Name
-  ,                                       !- Relief Air Inlet Node
-  ,                                       !- Water Supply Storage Tank Name
-  0,                                      !- Drift Loss Fraction
-  ;                                       !- Blowdown Concentration Ratio
+!OS:EvaporativeCooler:Indirect:ResearchSpecial,
+!  {70e2147c-5b58-49a7-b1a3-1cc1b1bd8854}, !- Handle
+!  Indirect Evaporative Cooler, !- Name
+!  ,                                       !- Availability Schedule Name
+!  0.75,                                   !- Cooler Maximum Effectiveness
+!  ,                                       !- Cooler Flow Ratio
+!  30,                                     !- Recirculating Water Pump Power Consumption {W}
+!  ,                                       !- Secondary Fan Flow Rate {m3/s}
+!  0.6,                                    !- Secondary Fan Total Efficiency
+!  124.6,                                  !- Secondary Fan Delta Pressure {Pa}
+!  ,                                       !- Primary Air Inlet Node
+!  ,                                       !- Primary Air Outlet Node
+!  ,                                       !- Control Type
+!  0.9,                                    !- Dewpoint Effectiveness Factor
+!  ,                                       !- Secondary Air Inlet Node
+!  ,                                       !- Sensor Node Name
+!  ,                                       !- Relief Air Inlet Node
+!  ,                                       !- Water Supply Storage Tank Name
+!  0,                                      !- Drift Loss Fraction
+!  ;                                       !- Blowdown Concentration Ratio
 
 OS:EvaporativeCooler:Direct:ResearchSpecial,
   {8d3b17e0-88c9-4d17-9de4-0b9dd0481b36}, ! Handle
@@ -713,23 +782,23 @@ OS:Coil:Heating:Electric,
   ,                                       !- Air Inlet Node Name
   ;                                       !- Air Outlet Node Name
 
-OS:AirTerminal:SingleDuct:SeriesPIU:Reheat,
-  {1c4961f3-614c-4530-854d-18b47804b9f6}, !- Handle
-  Series Fan Powered Terminal, !- Name
-  ,                                       !- Availability Schedule Name
-  autosize,                               !- Maximum Air Flow Rate {m3/s}
-  autosize,                               !- Maximum Primary Air Flow Rate {m3/s}
-  autosize,                               !- Minimum Primary Air Flow Fraction
-  ,                                       !- Supply Air Inlet Node
-  ,                                       !- Secondary Air Inlet Node
-  ,                                       !- Outlet Node
-  ,                                       !- Reheat Coil Air Inlet Node
-  ,                                       !- Zone Mixer Name
-  {6bab1791-64db-4620-aff4-f0682054ce4f}, !- Fan Name
-  {f5afd62c-fd37-470c-b61a-89f2683ddc8b}, !- Reheat Coil Name
-  autosize,                               !- Maximum Hot Water or Steam Flow Rate {m3/s}
-  0,                                      !- Minimum Hot Water or Steam Flow Rate {m3/s}
-  0.001;                                  !- Convergence Tolerance
+!OS:AirTerminal:SingleDuct:SeriesPIU:Reheat,
+!  {1c4961f3-614c-4530-854d-18b47804b9f6}, !- Handle
+!  Series Fan Powered Terminal, !- Name
+!  ,                                       !- Availability Schedule Name
+!  autosize,                               !- Maximum Air Flow Rate {m3/s}
+!  autosize,                               !- Maximum Primary Air Flow Rate {m3/s}
+!  autosize,                               !- Minimum Primary Air Flow Fraction
+!  ,                                       !- Supply Air Inlet Node
+!  ,                                       !- Secondary Air Inlet Node
+!  ,                                       !- Outlet Node
+!  ,                                       !- Reheat Coil Air Inlet Node
+!  ,                                       !- Zone Mixer Name
+!  {6bab1791-64db-4620-aff4-f0682054ce4f}, !- Fan Name
+!  {f5afd62c-fd37-470c-b61a-89f2683ddc8b}, !- Reheat Coil Name
+!  autosize,                               !- Maximum Hot Water or Steam Flow Rate {m3/s}
+!  0,                                      !- Minimum Hot Water or Steam Flow Rate {m3/s}
+!  0.001;                                  !- Convergence Tolerance
 
 OS:AirLoopHVAC:OutdoorAirSystem,
   {4b8b842c-2628-4074-aaa1-e3636b179cce}, !- Handle

@@ -16,15 +16,15 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#ifndef ISOMODEL_SOLAR_RADIATION_HPP
-#define ISOMODEL_SOLAR_RADIATION_HPP
+#ifndef ISOMODEL_SOLARRADIATION_HPP
+#define ISOMODEL_SOLARRADIATION_HPP
 
 #include <math.h>
 #include <algorithm>
 #include <vector>
-#include <isomodel/TimeFrame.hpp>
-#include <isomodel/EpwData.hpp>
-#include <utilities/core/Logger.hpp>
+#include "TimeFrame.hpp"
+#include "EpwData.hpp"
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
 namespace isomodel {
@@ -90,4 +90,4 @@ class SolarRadiation
 
 }
 }
-#endif
+#endif // ISOMODEL_SOLARRADIATION_HPP

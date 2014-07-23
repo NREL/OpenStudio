@@ -17,19 +17,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/SamplingAlgorithmRecord.hpp>
-#include <project/SamplingAlgorithmRecord_Impl.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/FileReferenceRecord.hpp>
+#include "SamplingAlgorithmRecord.hpp"
+#include "SamplingAlgorithmRecord_Impl.hpp"
+#include "AnalysisRecord.hpp"
+#include "JoinRecord.hpp"
+#include "FileReferenceRecord.hpp"
 
-#include <analysis/SamplingAlgorithm.hpp>
-#include <analysis/SamplingAlgorithm_Impl.hpp>
-#include <analysis/SamplingAlgorithmOptions.hpp>
+#include "../analysis/SamplingAlgorithm.hpp"
+#include "../analysis/SamplingAlgorithm_Impl.hpp"
+#include "../analysis/SamplingAlgorithmOptions.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/data/Attribute.hpp"
 
 namespace openstudio {
 namespace project {
@@ -77,7 +77,7 @@ namespace detail {
     return result;
   }
 
-  void SamplingAlgorithmRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void SamplingAlgorithmRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<SamplingAlgorithmRecord>(query);
@@ -222,7 +222,7 @@ namespace detail {
 
 SamplingAlgorithmRecord::SamplingAlgorithmRecord(const analysis::SamplingAlgorithm& samplingAlgorithm,
                                                AnalysisRecord& analysisRecord)
-  : DakotaAlgorithmRecord(boost::shared_ptr<detail::SamplingAlgorithmRecord_Impl>(
+  : DakotaAlgorithmRecord(std::shared_ptr<detail::SamplingAlgorithmRecord_Impl>(
         new detail::SamplingAlgorithmRecord_Impl(samplingAlgorithm, analysisRecord)),
         analysisRecord.projectDatabase(),
         samplingAlgorithm)
@@ -233,7 +233,7 @@ SamplingAlgorithmRecord::SamplingAlgorithmRecord(const analysis::SamplingAlgorit
 }
 
 SamplingAlgorithmRecord::SamplingAlgorithmRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : DakotaAlgorithmRecord(boost::shared_ptr<detail::SamplingAlgorithmRecord_Impl>(
+  : DakotaAlgorithmRecord(std::shared_ptr<detail::SamplingAlgorithmRecord_Impl>(
         new detail::SamplingAlgorithmRecord_Impl(query, database)),
         database,
         boost::none)
@@ -242,7 +242,7 @@ SamplingAlgorithmRecord::SamplingAlgorithmRecord(const QSqlQuery& query, Project
 }
 
 SamplingAlgorithmRecord::SamplingAlgorithmRecord(
-  boost::shared_ptr<detail::SamplingAlgorithmRecord_Impl> impl,
+  std::shared_ptr<detail::SamplingAlgorithmRecord_Impl> impl,
     ProjectDatabase database)
   : DakotaAlgorithmRecord(impl, database, boost::none)
 {
@@ -306,7 +306,7 @@ analysis::SamplingAlgorithm SamplingAlgorithmRecord::samplingAlgorithm() const {
 }
 
 /// @cond
-SamplingAlgorithmRecord::SamplingAlgorithmRecord(boost::shared_ptr<detail::SamplingAlgorithmRecord_Impl> impl)
+SamplingAlgorithmRecord::SamplingAlgorithmRecord(std::shared_ptr<detail::SamplingAlgorithmRecord_Impl> impl)
   : DakotaAlgorithmRecord(impl)
 {}
 /// @endcond

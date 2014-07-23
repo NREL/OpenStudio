@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,30 +17,30 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/RefrigerationTranscriticalSystem.hpp>
-#include <model/RefrigerationTranscriticalSystem_Impl.hpp>
+#include "RefrigerationTranscriticalSystem.hpp"
+#include "RefrigerationTranscriticalSystem_Impl.hpp"
 
-#include <model/RefrigerationCase.hpp>
-#include <model/RefrigerationCase_Impl.hpp>
-#include <model/RefrigerationCompressor.hpp>
-#include <model/RefrigerationCompressor_Impl.hpp>
-#include <model/RefrigerationWalkIn.hpp>
-#include <model/RefrigerationWalkIn_Impl.hpp>
-#include <model/ModelObjectList.hpp>
-#include <model/ModelObjectList_Impl.hpp>
-#include <model/RefrigerationGasCoolerAirCooled.hpp>
-#include <model/RefrigerationGasCoolerAirCooled_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "RefrigerationCase.hpp"
+#include "RefrigerationCase_Impl.hpp"
+#include "RefrigerationCompressor.hpp"
+#include "RefrigerationCompressor_Impl.hpp"
+#include "RefrigerationWalkIn.hpp"
+#include "RefrigerationWalkIn_Impl.hpp"
+#include "ModelObjectList.hpp"
+#include "ModelObjectList_Impl.hpp"
+#include "RefrigerationGasCoolerAirCooled.hpp"
+#include "RefrigerationGasCoolerAirCooled_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_TranscriticalSystem_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -158,8 +158,8 @@ namespace detail {
     if( modelObjectList ) {
       std::vector<ModelObject> modelObjects = modelObjectList->modelObjects();
 
-      for(std::vector<ModelObject>::iterator it = modelObjects.begin(); it != modelObjects.end(); ++it) {
-          boost::optional<T> modelObject = it->optionalCast<T>();
+      for(const auto & elem : modelObjects) {
+          boost::optional<T> modelObject = elem.optionalCast<T>();
           if (modelObject) {
             result.push_back(modelObject.get());
           }
@@ -174,10 +174,10 @@ namespace detail {
     if( modelObjectList ) {
       std::vector<ModelObject> modelObjects = modelObjectList->modelObjects();
 
-      for(std::vector<ModelObject>::iterator it = modelObjects.begin(); it != modelObjects.end(); ++it) {
-          boost::optional<T> modelObject = it->optionalCast<T>();
+      for(const auto & elem : modelObjects) {
+          boost::optional<T> modelObject = elem.optionalCast<T>();
           if (modelObject) {
-            modelObjectList->removeModelObject(*it);
+            modelObjectList->removeModelObject(elem);
           }
       }
     }  
@@ -541,10 +541,9 @@ RefrigerationTranscriticalSystem::RefrigerationTranscriticalSystem(const Model& 
 {
   OS_ASSERT(getImpl<detail::RefrigerationTranscriticalSystem_Impl>());
 
-  bool ok = true;
   ModelObjectList mediumTemperatureCaseAndWalkinList = ModelObjectList(model);
   mediumTemperatureCaseAndWalkinList.setName(this->name().get() + " Medium Temperature Case and Walkin List");
-  ok = getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setMediumTemperatureRefrigeratedCaseAndWalkInList(mediumTemperatureCaseAndWalkinList);
+  bool ok = getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setMediumTemperatureRefrigeratedCaseAndWalkInList(mediumTemperatureCaseAndWalkinList);
   OS_ASSERT(ok);
   ModelObjectList lowTemperatureCaseAndWalkinList = ModelObjectList(model);
   lowTemperatureCaseAndWalkinList.setName(this->name().get() + " Low Temperature Case and Walkin List");
@@ -801,7 +800,7 @@ void RefrigerationTranscriticalSystem::resetEndUseSubcategory() {
 }
 
 /// @cond
-RefrigerationTranscriticalSystem::RefrigerationTranscriticalSystem(boost::shared_ptr<detail::RefrigerationTranscriticalSystem_Impl> impl)
+RefrigerationTranscriticalSystem::RefrigerationTranscriticalSystem(std::shared_ptr<detail::RefrigerationTranscriticalSystem_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

@@ -18,23 +18,23 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysisdriver/test/AnalysisDriverFixture.hpp>
+#include "AnalysisDriverFixture.hpp"
 
-#include <analysisdriver/SimpleProject.hpp>
-#include <analysisdriver/CurrentAnalysis.hpp>
-#include <analysisdriver/AnalysisRunOptions.hpp>
+#include "../SimpleProject.hpp"
+#include "../CurrentAnalysis.hpp"
+#include "../AnalysisRunOptions.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/DDACEAlgorithm.hpp>
-#include <analysis/DDACEAlgorithm_Impl.hpp>
-#include <analysis/DDACEAlgorithmOptions.hpp>
+#include "../../analysis/Analysis.hpp"
+#include "../../analysis/Problem.hpp"
+#include "../../analysis/DataPoint.hpp"
+#include "../../analysis/DDACEAlgorithm.hpp"
+#include "../../analysis/DDACEAlgorithm_Impl.hpp"
+#include "../../analysis/DDACEAlgorithmOptions.hpp"
 
-#include <model/Model.hpp>
+#include "../../model/Model.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/core/FileReference.hpp>
+#include "../../utilities/bcl/BCLMeasure.hpp"
+#include "../../utilities/core/FileReference.hpp"
 
 using namespace openstudio;
 using namespace openstudio::ruleset;

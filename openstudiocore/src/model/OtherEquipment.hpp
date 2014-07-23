@@ -20,8 +20,8 @@
 #ifndef MODEL_OTHEREQUIPMENT_HPP
 #define MODEL_OTHEREQUIPMENT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceLoadInstance.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceLoadInstance.hpp"
 
 namespace openstudio {
 namespace model {
@@ -105,7 +105,7 @@ class MODEL_API OtherEquipment : public SpaceLoadInstance {
   friend class IdfObject;
   friend class Model;
 
-  explicit OtherEquipment(boost::shared_ptr<detail::OtherEquipment_Impl> impl);
+  explicit OtherEquipment(std::shared_ptr<detail::OtherEquipment_Impl> impl);
 
   /// @endcond
  private:

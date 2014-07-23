@@ -20,10 +20,10 @@
 #ifndef PROJECT_CLOUDSESSIONRECORD_IMPL_HPP
 #define PROJECT_CLOUDSESSIONRECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/ObjectRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "ObjectRecord_Impl.hpp"
 
-#include <project/CloudSessionRecord.hpp>
+#include "CloudSessionRecord.hpp"
 
 namespace openstudio {
 
@@ -74,7 +74,7 @@ namespace detail {
     virtual std::vector<JoinRecord> joinRecords() const;
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(const boost::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
 
     //@}
     /** @name Getters */

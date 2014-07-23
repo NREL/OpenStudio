@@ -20,10 +20,10 @@
 #ifndef ANALYSIS_UNCERTAINTYDESCRIPTION_IMPL_HPP
 #define ANALYSIS_UNCERTAINTYDESCRIPTION_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/AnalysisEnums.hpp>
+#include "AnalysisAPI.hpp"
+#include "AnalysisEnums.hpp"
 
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/data/Attribute.hpp"
 
 namespace openstudio {
 namespace analysis {

@@ -17,6 +17,9 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
+#ifndef SHAREDGUICOMPONENTS_OSVIEWSWITCHER_HPP
+#define SHAREDGUICOMPONENTS_OSVIEWSWITCHER_HPP
+ 
 #include <QWidget>
 #include <QSharedPointer>
 
@@ -30,7 +33,7 @@ class OSViewSwitcher : public QWidget
 
   public:
 
-  OSViewSwitcher(QWidget * parent = 0);
+  OSViewSwitcher(QWidget * parent = nullptr);
 
   virtual ~OSViewSwitcher() {}
 
@@ -52,3 +55,5 @@ class OSViewSwitcher : public QWidget
 };
 
 }
+
+#endif // SHAREDGUICOMPONENTS_OSVIEWSWITCHER_HPP

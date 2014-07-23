@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef TREEVIEW_H
-#define TREEVIEW_H
+#ifndef MODELEDITOR_TREEVIEW_HPP
+#define MODELEDITOR_TREEVIEW_HPP
 
 #include <QTreeView>
 
@@ -32,7 +32,7 @@ class TreeView : public QTreeView
   Q_OBJECT
 
 public:
-  TreeView(QWidget *parent = 0);
+  TreeView(QWidget *parent = nullptr);
   virtual ~TreeView();
   bool getSelectedRows(QModelIndexList& rowList);
   bool hasSelectedRows();
@@ -55,4 +55,4 @@ private:
 
 } // namespace modeleditor
 
-#endif // TREEVIEW_H
+#endif // MODELEDITOR_TREEVIEW_HPP

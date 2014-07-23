@@ -16,14 +16,17 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#include <utilities/cloud/OSServer.hpp>
-#include <utilities/cloud/OSServer_Impl.hpp>
+#include "OSServer.hpp"
+#include "OSServer_Impl.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/System.hpp>
-#include <utilities/core/Json.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../core/Application.hpp"
+#include "../core/System.hpp"
+#include "../core/Json.hpp"
+#include "../core/Assert.hpp"
 
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -31,15 +34,12 @@
 #include <QMutex>
 #include <QFile>
 
-#include <qjson/parser.h>
-#include <qjson/serializer.h>
-
 namespace openstudio{
   namespace detail{
 
     OSServer_Impl::OSServer_Impl(const QUrl& url)
       : QObject(), m_url(url), m_networkAccessManager(new QNetworkAccessManager()),
-        m_networkReply(0), m_mutex(new QMutex()),
+        m_networkReply(nullptr), m_mutex(new QMutex()),
         m_lastAvailable(false),
         m_lastProjectUUIDs(), 
         m_lastCreateProjectSuccess(false),
@@ -431,7 +431,7 @@ namespace openstudio{
         ++current;
       }
 
-      QObject::disconnect(m_networkReply, 0, this, 0);
+      QObject::disconnect(m_networkReply, nullptr, this, nullptr);
       resetNetworkReply();
       m_mutex->unlock();
 
@@ -506,33 +506,23 @@ namespace openstudio{
       QString id = toQString(removeBraces(projectUUID));
       QUrl url(m_url.toString().append("/projects.json"));
   
-      QVariantMap map;
-      map["_id"] = id;
-      map["name"] = id;
-      map["uuid"] = id;
-      map["analyses"] = QVariantList();
+      QJsonObject obj;
+      obj["_id"] = QJsonValue(id);
+      obj["name"] = QJsonValue(id);
+      obj["uuid"] = QJsonValue(id);
+      obj["analyses"] = QJsonValue(QJsonArray());
       
-      bool test;
+      QByteArray json = QJsonDocument(obj).toJson(QJsonDocument::Compact);
 
-      QJson::Serializer serializer;
-      QByteArray json = serializer.serialize(map, &test);
-      if (test){
+      QNetworkRequest request(url);
+      request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
-        QByteArray postData; 
-        postData.append(json); 
+      m_networkReply = m_networkAccessManager->post(request, json);
 
-        QNetworkRequest request(url);
-        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processCreateProject()));
+      OS_ASSERT(test);
 
-        m_networkReply = m_networkAccessManager->post(request, postData);
-
-        bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processCreateProject()));
-        OS_ASSERT(test);
-
-        return true;
-      }
-
-      return false;
+      return true;
     }
 
     bool OSServer_Impl::requestDeleteProject(const UUID& projectUUID)
@@ -662,12 +652,12 @@ namespace openstudio{
 
           QString bound="-------3dpj1k39xoa84u4804ee1156snfxl6"; 
 
-          QByteArray data(QString("--" + bound + "\r\n").toAscii());
+          QByteArray data(QString("--" + bound + "\r\n").toLatin1());
           data += "Content-Disposition: form-data; name=\"file\"; filename=\"project.zip\"\r\n";
           data += "Content-Type: application/zip\r\n\r\n";
           data.append(file.readAll());
           data += "\r\n";
-          data += QString("--" + bound + "--\r\n.").toAscii();
+          data += QString("--" + bound + "--\r\n.").toLatin1();
           data += "\r\n";
           file.close();
 
@@ -675,9 +665,9 @@ namespace openstudio{
           QUrl url(m_url.toString().append("/analyses/").append(id).append("/upload.json")); 
 
           QNetworkRequest request(url);
-          request.setRawHeader(QString("Cache-Control").toAscii(),QString("no-cache").toAscii());
-          request.setRawHeader(QString("Content-Type").toAscii(),QString("multipart/form-data; boundary=" + bound).toAscii());
-          request.setRawHeader(QString("Content-Length").toAscii(), QString::number(data.length()).toAscii());
+          request.setRawHeader(QString("Cache-Control").toLatin1(),QString("no-cache").toLatin1());
+          request.setRawHeader(QString("Content-Type").toLatin1(),QString("multipart/form-data; boundary=" + bound).toLatin1());
+          request.setRawHeader(QString("Content-Length").toLatin1(), QString::number(data.length()).toLatin1());
 
           m_networkReply = m_networkAccessManager->post(request, data);
 
@@ -711,29 +701,20 @@ namespace openstudio{
       QString id = toQString(removeBraces(analysisUUID));
       QUrl url(m_url.toString().append("/analyses/").append(id).append("/action.json"));
 
-      QVariantMap map;
-      map["analysis_action"] = "start";
+      QJsonObject obj;
+      obj["analysis_action"] = QJsonValue(QString("start"));
       
-      bool test;
-      QJson::Serializer serializer;
-      QByteArray json = serializer.serialize(map, &test);
-      if (test){
+      QByteArray json = QJsonDocument(obj).toJson(QJsonDocument::Compact);
 
-        QByteArray postData; 
-        postData.append(json); 
+      QNetworkRequest request(url);
+      request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
-        QNetworkRequest request(url);
-        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+      m_networkReply = m_networkAccessManager->post(request, json);
 
-        m_networkReply = m_networkAccessManager->post(request, postData);
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processStart()));
+      OS_ASSERT(test);
 
-        bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processStart()));
-        OS_ASSERT(test);
-
-        return true;
-      }
-
-      return false;
+      return true;
     }
 
     bool OSServer_Impl::requestIsAnalysisQueued(const UUID& analysisUUID)
@@ -816,29 +797,20 @@ namespace openstudio{
       QString id = toQString(removeBraces(analysisUUID));
       QUrl url(m_url.toString().append("/analyses/").append(id).append("/action.json"));
 
-      QVariantMap map;
-      map["analysis_action"] = "stop";
+      QJsonObject obj;
+      obj["analysis_action"] = QJsonValue(QString("stop"));
       
-      bool test;
-      QJson::Serializer serializer;
-      QByteArray json = serializer.serialize(map, &test);
-      if (test){
+      QByteArray json = QJsonDocument(obj).toJson(QJsonDocument::Compact);
 
-        QByteArray postData; 
-        postData.append(json); 
+      QNetworkRequest request(url);
+      request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
-        QNetworkRequest request(url);
-        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+      m_networkReply = m_networkAccessManager->post(request, json);
 
-        m_networkReply = m_networkAccessManager->post(request, postData);
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processStop()));
+      OS_ASSERT(test);
 
-        bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processStop()));
-        OS_ASSERT(test);
-
-        return true;
-      }
-
-      return false;
+      return true;
     }
 
     bool OSServer_Impl::requestDataPointUUIDs(const UUID& analysisUUID)
@@ -1039,7 +1011,13 @@ namespace openstudio{
       logNetworkReply("processProjectUUIDs");
 
       if (m_networkReply->error() == QNetworkReply::NoError){
-        m_lastProjectUUIDs = processListOfUUID(m_networkReply->readAll(), success);
+        QJsonParseError err;
+        QJsonDocument json = QJsonDocument::fromJson(m_networkReply->readAll(), &err);
+        if (!err.error) {
+          m_lastProjectUUIDs = processListOfUUID(json.array(), success);
+        }else{
+          logError("Incorrect JSON response");
+        }
       }else{
         logNetworkError(m_networkReply->error());
       }
@@ -1096,23 +1074,15 @@ namespace openstudio{
 
       if (m_networkReply->error() == QNetworkReply::NoError){
 
-        bool test;
-        QJson::Parser parser;
-        QVariant variant = parser.parse(m_networkReply, &test);
+        QJsonParseError err;
+        QJsonDocument json = QJsonDocument::fromJson(m_networkReply->readAll(), &err);
+        if (!err.error) {
 
-        if (test){
+          if (json.object().contains("analyses")){
 
-          QVariantMap map = variant.toMap();
+            QJsonArray analyses = json.object()["analyses"].toArray();
 
-          if (map.contains("analyses")){
-
-            QVariantList list = map["analyses"].toList();
-
-            QJson::Serializer serializer;
-            QByteArray json = serializer.serialize(list, &test);
-            if (test){
-              m_lastAnalysisUUIDs = processListOfUUID(json, success);
-            }
+            m_lastAnalysisUUIDs = processListOfUUID(analyses, success);
 
           }else{
             logError("Incorrect JSON response");
@@ -1216,20 +1186,17 @@ namespace openstudio{
 
       if (m_networkReply->error() == QNetworkReply::NoError){
 
-        bool test;
-        QJson::Parser parser;
-        QVariant variant = parser.parse(m_networkReply, &test);
+        QJsonParseError err;
+        QJsonDocument json = QJsonDocument::fromJson(m_networkReply->readAll(), &err);
+        if (!err.error) {
 
-        if (test){
+          if (json.object().contains("analysis")){
 
-          QVariantMap map = variant.toMap();
-          if (map.contains("analysis")){
-
-            QVariantMap analysisMap = map["analysis"].toMap();
-            if (analysisMap.contains("status")){
+            QJsonObject analysis = json.object()["analysis"].toObject();
+            if (analysis.contains("status")){
 
               success = true;
-              QString status = analysisMap["status"].toString();
+              QString status = analysis["status"].toString();
 
               // possible status are 'queued', 'started', 'completed'
               if (status == "queued"){
@@ -1265,20 +1232,18 @@ namespace openstudio{
 
       if (m_networkReply->error() == QNetworkReply::NoError){
 
-        bool test;
-        QJson::Parser parser;
-        QVariant variant = parser.parse(m_networkReply, &test);
+        QJsonParseError err;
+        QJsonDocument json = QJsonDocument::fromJson(m_networkReply->readAll(), &err);
 
-        if (test){
+        if (!err.error) {
 
-          QVariantMap map = variant.toMap();
-          if (map.contains("analysis")){
+          if (json.object().contains("analysis")){
 
-            QVariantMap analysisMap = map["analysis"].toMap();
-            if (analysisMap.contains("status")){
+            QJsonObject analysis = json.object()["analysis"].toObject();
+            if (analysis.contains("status")){
 
               success = true;
-              QString status = analysisMap["status"].toString();
+              QString status = analysis["status"].toString();
 
               // possible status are 'queued', 'started', 'completed'
               if (status == "started"){
@@ -1314,20 +1279,18 @@ namespace openstudio{
 
       if (m_networkReply->error() == QNetworkReply::NoError){
 
-        bool test;
-        QJson::Parser parser;
-        QVariant variant = parser.parse(m_networkReply, &test);
+        QJsonParseError err;
+        QJsonDocument json = QJsonDocument::fromJson(m_networkReply->readAll(), &err);
 
-        if (test){
+        if (!err.error) {
 
-          QVariantMap map = variant.toMap();
-          if (map.contains("analysis")){
+          if (json.object().contains("analysis")){
 
-            QVariantMap analysisMap = map["analysis"].toMap();
-            if (analysisMap.contains("status")){
+            QJsonObject analysis = json.object()["analysis"].toObject();
+            if (analysis.contains("status")){
 
               success = true;
-              QString status = analysisMap["status"].toString();
+              QString status = analysis["status"].toString();
 
               // possible status are 'queued', 'started', 'completed'
               if (status == "completed"){
@@ -1382,23 +1345,16 @@ namespace openstudio{
 
       if (m_networkReply->error() == QNetworkReply::NoError){
 
-        bool test;
-        QJson::Parser parser;
-        QVariant variant = parser.parse(m_networkReply, &test);
+        QJsonParseError err;
+        QJsonDocument json = QJsonDocument::fromJson(m_networkReply->readAll(), &err);
 
-        if (test){
+        if (!err.error) {
 
-          QVariantMap map = variant.toMap();
-
-          if (map.contains("data_points")){
+          if (json.object().contains("data_points")){
             
-            QVariantList list = map["data_points"].toList();
+            QJsonArray dataPoints = json.object()["data_points"].toArray();
 
-            QJson::Serializer serializer;
-            QByteArray json = serializer.serialize(list, &test);
-            if (test){
-              m_lastDataPointUUIDs = processListOfUUID(json, success);
-            }
+            m_lastDataPointUUIDs = processListOfUUID(dataPoints, success);
   
           }else{
             logError("Incorrect JSON response");
@@ -1425,23 +1381,16 @@ namespace openstudio{
 
       if (m_networkReply->error() == QNetworkReply::NoError){
 
-        bool test;
-        QJson::Parser parser;
-        QVariant variant = parser.parse(m_networkReply, &test);
+        QJsonParseError err;
+        QJsonDocument json = QJsonDocument::fromJson(m_networkReply->readAll(), &err);
 
-        if (test){
+        if (!err.error) {
 
-          QVariantMap map = variant.toMap();
-
-          if (map.contains("data_points")){
+          if (json.object().contains("data_points")){
             
-            QVariantList list = map["data_points"].toList();
+            QJsonArray dataPoints = json.object()["data_points"].toArray();
 
-            QJson::Serializer serializer;
-            QByteArray json = serializer.serialize(list, &test);
-            if (test){
-              m_lastQueuedDataPointUUIDs = processListOfUUID(json, success);
-            }
+            m_lastQueuedDataPointUUIDs = processListOfUUID(dataPoints, success);
   
           }else{
             logError("Incorrect JSON response");
@@ -1468,23 +1417,16 @@ namespace openstudio{
 
       if (m_networkReply->error() == QNetworkReply::NoError){
 
-        bool test;
-        QJson::Parser parser;
-        QVariant variant = parser.parse(m_networkReply, &test);
+        QJsonParseError err;
+        QJsonDocument json = QJsonDocument::fromJson(m_networkReply->readAll(), &err);
 
-        if (test){
+        if (!err.error) {
 
-          QVariantMap map = variant.toMap();
-
-          if (map.contains("data_points")){
+          if (json.object().contains("data_points")){
             
-            QVariantList list = map["data_points"].toList();
+            QJsonArray dataPoints = json.object()["data_points"].toArray();
 
-            QJson::Serializer serializer;
-            QByteArray json = serializer.serialize(list, &test);
-            if (test){
-              m_lastRunningDataPointUUIDs = processListOfUUID(json, success);
-            }
+            m_lastRunningDataPointUUIDs = processListOfUUID(dataPoints, success);
   
           }else{
             logError("Incorrect JSON response");
@@ -1511,23 +1453,16 @@ namespace openstudio{
 
       if (m_networkReply->error() == QNetworkReply::NoError){
 
-        bool test;
-        QJson::Parser parser;
-        QVariant variant = parser.parse(m_networkReply, &test);
+        QJsonParseError err;
+        QJsonDocument json = QJsonDocument::fromJson(m_networkReply->readAll(), &err);
 
-        if (test){
+        if (!err.error) {
 
-          QVariantMap map = variant.toMap();
-
-          if (map.contains("data_points")){
+          if (json.object().contains("data_points")){
             
-            QVariantList list = map["data_points"].toList();
+            QJsonArray dataPoints = json.object()["data_points"].toArray();
 
-            QJson::Serializer serializer;
-            QByteArray json = serializer.serialize(list, &test);
-            if (test){
-              m_lastCompleteDataPointUUIDs = processListOfUUID(json, success);
-            }
+            m_lastCompleteDataPointUUIDs = processListOfUUID(dataPoints, success);
   
           }else{
             logError("Incorrect JSON response");
@@ -1554,23 +1489,16 @@ namespace openstudio{
 
       if (m_networkReply->error() == QNetworkReply::NoError){
 
-        bool test;
-        QJson::Parser parser;
-        QVariant variant = parser.parse(m_networkReply, &test);
+        QJsonParseError err;
+        QJsonDocument json = QJsonDocument::fromJson(m_networkReply->readAll(), &err);
 
-        if (test){
+        if (!err.error) {
 
-          QVariantMap map = variant.toMap();
-
-          if (map.contains("data_points")){
+          if (json.object().contains("data_points")){
             
-            QVariantList list = map["data_points"].toList();
+            QJsonArray dataPoints = json.object()["data_points"].toArray();
 
-            QJson::Serializer serializer;
-            QByteArray json = serializer.serialize(list, &test);
-            if (test){
-              m_lastDownloadReadyDataPointUUIDs = processListOfUUID(json, success);
-            }
+            m_lastDownloadReadyDataPointUUIDs = processListOfUUID(dataPoints, success);
   
           }else{
             logError("Incorrect JSON response");
@@ -1596,16 +1524,11 @@ namespace openstudio{
       logNetworkReply("processDataPointJSON");
 
       if (m_networkReply->error() == QNetworkReply::NoError){
-        bool test;
-        QJson::Parser parser;
-        QVariant variant = parser.parse(m_networkReply, &test);
-        if (test){
-          QJson::Serializer serializer;
-          QByteArray json = serializer.serialize(variant, &test);
-          if (test){
-            success = true;
-            m_lastDataPointJSON = QString(json).toStdString();
-          }
+        QJsonParseError err;
+        QJsonDocument json = QJsonDocument::fromJson(m_networkReply->readAll(), &err);
+
+        if (!err.error) {
+          m_lastDataPointJSON = QString(m_networkReply->readAll()).toStdString();
         }
       }else{
         logNetworkError(m_networkReply->error());
@@ -1806,35 +1729,23 @@ namespace openstudio{
       LOG(Warn, warning);
     }
 
-    std::vector<UUID> OSServer_Impl::processListOfUUID(const QByteArray& bytes, bool& success) const
+    std::vector<UUID> OSServer_Impl::processListOfUUID(const QJsonArray& array, bool& success) const
     {
-      success = false;
+      success = true;
 
       std::vector<UUID> result;
 
-      bool test;
-      QJson::Parser parser;
-      QVariant variant = parser.parse(bytes, &test);
-
-      if (test){
-        success = true;
-
-        QVariantList list = variant.toList();
-        Q_FOREACH(QVariant projectVariant, variant.toList()){
-          QVariantMap map = projectVariant.toMap();
-          if (map.contains("_id")){
-            QString id = map["_id"].toString();
-            UUID uuid(id);
-            result.push_back(uuid);
-          }else{
-            success = false;
-            result.clear();
-            logError("Incorrect JSON response");
-            break;
-          }
+      for (const QJsonValue& val : array) {
+        if (val.toObject().contains("_id")){
+          QString id = val.toObject()["_id"].toString();
+          UUID uuid(id);
+          result.push_back(uuid);
+        }else{
+          success = false;
+          result.clear();
+          logError("Incorrect JSON response");
+          break;
         }
-      }else{
-        logError("Could not parse JSON response");
       }
 
       return result;
@@ -1844,14 +1755,14 @@ namespace openstudio{
       if (m_networkReply) {
         m_networkReply->blockSignals(true);
         m_networkReply->deleteLater();
-        m_networkReply = 0;
+        m_networkReply = nullptr;
       };
     }
 
   }
 
   OSServer::OSServer(const QUrl& url)
-    : m_impl(boost::shared_ptr<detail::OSServer_Impl>(new detail::OSServer_Impl(url)))
+    : m_impl(std::shared_ptr<detail::OSServer_Impl>(new detail::OSServer_Impl(url)))
   {
   }
 

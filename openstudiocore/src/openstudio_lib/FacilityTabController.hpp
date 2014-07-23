@@ -17,11 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_FACILITYTABCONTROLLER_H
-#define OPENSTUDIO_FACILITYTABCONTROLLER_H
+#ifndef OPENSTUDIO_FACILITYTABCONTROLLER_HPP
+#define OPENSTUDIO_FACILITYTABCONTROLLER_HPP
 
-#include <openstudio_lib/MainTabController.hpp>
-#include <boost/shared_ptr.hpp>
+#include "MainTabController.hpp"
 
 namespace openstudio {
 
@@ -39,7 +38,7 @@ class FacilityTabController : public MainTabController
 
   private:
 
-    boost::shared_ptr<FacilityController> m_facilityController;
+    std::shared_ptr<FacilityController> m_facilityController;
 
   public slots:
 
@@ -48,4 +47,4 @@ class FacilityTabController : public MainTabController
 
 } // openstudio
 
-#endif // OPENSTUDIO_FACILITYTABCONTROLLER_H
+#endif // OPENSTUDIO_FACILITYTABCONTROLLER_HPP

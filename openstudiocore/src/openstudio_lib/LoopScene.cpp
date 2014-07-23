@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_lib/LoopScene.hpp>
-#include <openstudio_lib/GridItem.hpp>
+#include "LoopScene.hpp"
+#include "GridItem.hpp"
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
 #include <QApplication>
@@ -26,23 +26,22 @@
 #include <QGraphicsItem>
 #include <QMimeData>
 #include <cmath>
-#include <model/Loop.hpp>
-#include <model/Node.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Splitter.hpp>
-#include <model/Mixer.hpp>
-#include <model/ModelObject.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/StraightComponent_Impl.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include "../model/Loop.hpp"
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/Splitter.hpp"
+#include "../model/Mixer.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/HVACComponent.hpp"
+#include "../model/HVACComponent_Impl.hpp"
+#include "../model/StraightComponent.hpp"
+#include "../model/StraightComponent_Impl.hpp"
+#include "../model/AirLoopHVACOutdoorAirSystem.hpp"
+#include "../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/Node.hpp"
+#include "../model/Node_Impl.hpp"
 #include <QTimer>
 
 using namespace openstudio::model;
@@ -56,14 +55,14 @@ LoopScene::LoopScene( model::Loop loop,
     m_dirty(true)
 {
   connect( loop.model().getImpl<openstudio::model::detail::Model_Impl>().get(),
-           SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+           SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
            this,
-           SLOT(addedWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)) );
+           SLOT(addedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)) );
 
   connect( loop.model().getImpl<openstudio::model::detail::Model_Impl>().get(),
-           SIGNAL(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+           SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
            this,
-           SLOT(removedWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)) );
+           SLOT(removedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)) );
 
   layout();
 }
@@ -127,7 +126,7 @@ model::Loop LoopScene::loop()
   return m_loop;
 }
 
-void LoopScene::addedWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr )
+void LoopScene::addedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr )
 {
   model::detail::HVACComponent_Impl* hvac_impl = dynamic_cast<model::detail::HVACComponent_Impl*>(wPtr.get());
   if(hvac_impl)
@@ -138,7 +137,7 @@ void LoopScene::addedWorkspaceObject(boost::shared_ptr<openstudio::detail::Works
   }
 }
 
-void LoopScene::removedWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> )
+void LoopScene::removedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> )
 {
   m_dirty = true;
 

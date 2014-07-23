@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2012, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,12 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <ruleset/OSResult.hpp>
+#include "OSResult.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
 
 #include <QFile>
 #include <QDomDocument>
@@ -293,7 +292,7 @@ QDomDocument OSResult::toXml() const {
 
   if (!m_attributes.empty()) {
     childElement = doc.createElement(QString("Attributes"));
-    BOOST_FOREACH(const Attribute& attribute,m_attributes) {
+    for (const Attribute& attribute : m_attributes) {
       childElement.appendChild(attribute.toXml().documentElement());
     }
     element.appendChild(childElement);
@@ -310,7 +309,7 @@ void OSResult::logMessagesToXml(QDomDocument& doc,
   QDomElement childElement, grandchildElement;
   QDomText text;
 
-  BOOST_FOREACH(const LogMessage& msg,logMessages) {
+  for (const LogMessage& msg : logMessages) {
     childElement = doc.createElement(QString("LogMessage"));
 
     grandchildElement = doc.createElement(QString("Channel"));

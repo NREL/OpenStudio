@@ -19,12 +19,11 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/core/Enum.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../Enum.hpp"
+#include "../String.hpp"
+#include "../Containers.hpp"
 
 #include <iostream>
-#include <boost/foreach.hpp>
 
 OPENSTUDIO_ENUM(TestEnum4, ((first)) ((second)) ((third)) );
 

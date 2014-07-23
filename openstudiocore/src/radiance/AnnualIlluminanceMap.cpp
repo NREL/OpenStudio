@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <radiance/AnnualIlluminanceMap.hpp>
-#include <radiance/HeaderInfo.hpp>
+#include "AnnualIlluminanceMap.hpp"
+#include "HeaderInfo.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -161,7 +161,7 @@ namespace radiance{
   /// get the illuminance map in lux corresponding to date and time
   const openstudio::Matrix& AnnualIlluminanceMap::illuminanceMap(const openstudio::DateTime& dateTime) const
   {
-    DateTimeIlluminanceMap::const_iterator it = m_dateTimeIlluminanceMap.find(dateTime);
+    auto it = m_dateTimeIlluminanceMap.find(dateTime);
     if (it != m_dateTimeIlluminanceMap.end()){
       return it->second;
     }

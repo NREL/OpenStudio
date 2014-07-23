@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/time/Date.hpp>
-#include <utilities/core/Exception.hpp>
+#include "Date.hpp"
+#include "../core/Exception.hpp"
 
 #include <sstream>
 
@@ -252,7 +252,7 @@ namespace openstudio{
     boost::gregorian::date date;
     ss >> date;
 
-    m_impl = boost::shared_ptr<boost::gregorian::date>(new boost::gregorian::date(date));
+    m_impl = std::shared_ptr<boost::gregorian::date>(new boost::gregorian::date(date));
   }
 
   /// from tm
@@ -274,7 +274,7 @@ namespace openstudio{
   {
     m_baseYear = other.m_baseYear;
     m_assumedBaseYear = other.m_assumedBaseYear;
-    m_impl = boost::shared_ptr<ImplType>(new ImplType(*other.m_impl));
+    m_impl = std::shared_ptr<ImplType>(new ImplType(*other.m_impl));
     return *this;
   }
 

@@ -28,28 +28,26 @@
 #include "JobOutputCleanup.hpp"
 #include "RunManager_Util.hpp"
 
-#include <utilities/time/DateTime.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/TimeDependentValuation.hpp>
-#include <model/TimeDependentValuation_Impl.hpp>
+#include "../../utilities/time/DateTime.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Model_Impl.hpp"
+#include "../../model/Building.hpp"
+#include "../../model/Building_Impl.hpp"
+#include "../../model/Facility.hpp"
+#include "../../model/Facility_Impl.hpp"
+#include "../../model/TimeDependentValuation.hpp"
+#include "../../model/TimeDependentValuation_Impl.hpp"
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../../energyplus/ReverseTranslator.hpp"
 
-#include <utilities/data/EndUses.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/sql/SqlFile.hpp>
+#include "../../utilities/data/EndUses.hpp"
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/sql/SqlFile.hpp"
 
 #include <QDir>
 #include <QDateTime>
-
-#include <boost/bind.hpp>
 
 namespace openstudio {
 namespace runmanager {
@@ -111,7 +109,7 @@ namespace detail {
     return m_description;
   }
 
-  void EnergyPlusPostProcessJob::startImpl(const boost::shared_ptr<ProcessCreator> &)
+  void EnergyPlusPostProcessJob::startImpl(const std::shared_ptr<ProcessCreator> &)
   {
     openstudio::path outpath = outdir();
     QWriteLocker l(&m_mutex);
@@ -154,7 +152,7 @@ namespace detail {
     try {
       boost::filesystem::create_directories(outpath);
 
-      std::vector<Attribute> attributes = PostProcessReporting::go(sqlFile);
+      std::vector<Attribute> attributes = PostProcessReporting::go(sqlFile,"EnergyPlusPostProcess");
 
       if (attributes.empty())
       {

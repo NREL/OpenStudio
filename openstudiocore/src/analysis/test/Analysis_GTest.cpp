@@ -18,32 +18,32 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysis/test/AnalysisFixture.hpp>
+#include "AnalysisFixture.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Analysis_Impl.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/Variable.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/Measure.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
-#include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/ParameterStudyAlgorithm.hpp>
-#include <analysis/ParameterStudyAlgorithm_Impl.hpp>
-#include <analysis/ParameterStudyAlgorithmOptions.hpp>
-#include <analysis/WorkflowStep.hpp>
+#include "../Analysis.hpp"
+#include "../Analysis_Impl.hpp"
+#include "../Problem.hpp"
+#include "../Variable.hpp"
+#include "../DataPoint.hpp"
+#include "../Measure.hpp"
+#include "../MeasureGroup.hpp"
+#include "../MeasureGroup_Impl.hpp"
+#include "../NullMeasure.hpp"
+#include "../RubyMeasure.hpp"
+#include "../RubyMeasure_Impl.hpp"
+#include "../RubyContinuousVariable.hpp"
+#include "../ParameterStudyAlgorithm.hpp"
+#include "../ParameterStudyAlgorithm_Impl.hpp"
+#include "../ParameterStudyAlgorithmOptions.hpp"
+#include "../WorkflowStep.hpp"
 
-#include <runmanager/lib/Workflow.hpp>
+#include "../../runmanager/lib/Workflow.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../../ruleset/OSArgument.hpp"
 
-#include <utilities/core/Containers.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/data/Tag.hpp>
+#include "../../utilities/core/Containers.hpp"
+#include "../../utilities/bcl/BCLMeasure.hpp"
+#include "../../utilities/data/Tag.hpp"
 
 #include <resources.hxx>
 #include <OpenStudio.hxx>
@@ -129,7 +129,6 @@ TEST_F(AnalysisFixture, Analysis_SetSeed) {
                         FileReference(toPath("out.osm")),
                         FileReference(toPath("in.idf")),
                         OptionalFileReference(),
-                        FileReferenceVector(),
                         boost::none,
                         std::vector<openstudio::path>(),
                         TagVector(),
@@ -285,7 +284,7 @@ TEST_F(AnalysisFixture, Analysis_ClearAllResults) {
   // add data points
   std::stringstream ss;
   int i = 1;
-  BOOST_FOREACH(double point,points) {
+  for (double point : points) {
     ss << "dataPoint" << i;
     DataPoint dataPoint(createUUID(),
                         createUUID(),
@@ -303,7 +302,6 @@ TEST_F(AnalysisFixture, Analysis_ClearAllResults) {
                         FileReference(toPath(ss.str() + "/out.osm")),
                         FileReference(toPath(ss.str() + "/in.idf")),
                         OptionalFileReference(),
-                        FileReferenceVector(),
                         boost::none,
                         std::vector<openstudio::path>(),
                         TagVector(),
@@ -424,9 +422,9 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_Versioning) {
   EXPECT_TRUE(ok);
 
   // loop through all versions' json files
-  for (openstudio::directory_iterator it(dir); it != openstudio::directory_iterator(); ++it) {
+  for (boost::filesystem::directory_iterator it(dir); it != boost::filesystem::directory_iterator(); ++it) {
     if (boost::regex_match(toString(it->path().stem()),boost::regex("analysis_.*"))) {
-      LOG(Debug,"Loading " << toString(it->filename()) << ".");
+      LOG(Debug,"Loading " << toString(it->path().filename()) << ".");
 
       // open and check results
       AnalysisJSONLoadResult loadResult = loadJSON(it->path());

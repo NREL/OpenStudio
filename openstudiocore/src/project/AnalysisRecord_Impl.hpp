@@ -20,13 +20,13 @@
 #ifndef PROJECT_ANALYSISRECORD_IMPL_HPP
 #define PROJECT_ANALYSISRECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/ObjectRecord_Impl.hpp>
-#include <project/AnalysisRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "ObjectRecord_Impl.hpp"
+#include "AnalysisRecord.hpp"
 
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/core/String.hpp"
+#include "../utilities/core/Logger.hpp"
 
 #include <QVariant>
 
@@ -82,7 +82,7 @@ namespace detail {
     virtual std::vector<JoinRecord> joinRecords() const;
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(const boost::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
 
     //@}
     /** @name Getters */

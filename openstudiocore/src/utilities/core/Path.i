@@ -15,13 +15,13 @@
   #include <utilities/core/String.hpp>
   
   namespace openstudio{
-    #ifdef _WINDOWS
-      typedef wchar_t PathCharType;
-      typedef std::wstring PathStringType;
-    #else
-      typedef char PathCharType;
-      typedef std::string PathStringType;
-    #endif
+//    #ifdef _WINDOWS
+//      typedef wchar_t PathCharType;
+//      typedef std::wstring PathStringType;
+//    #else
+//      typedef char PathCharType;
+//      typedef std::string PathStringType;
+//    #endif
     
     // does the path exist
     bool exists(const path& p){
@@ -64,44 +64,57 @@
 
 namespace openstudio {
 
-  #ifdef _WINDOWS
-    typedef wchar_t PathCharType;
-    typedef std::wstring PathStringType;
-  #else
-    typedef char PathCharType;
-    typedef std::string PathStringType;
-  #endif
+//  #ifdef _WINDOWS
+//    typedef wchar_t PathCharType;
+//    typedef std::wstring PathStringType;
+//  #else
+//    typedef char PathCharType;
+//    typedef std::string PathStringType;
+//  #endif
   
   class path{
   public:
     path();
-    path(const PathStringType& p);
-    path(const PathCharType* p);
+    //path(const PathStringType& p);
+    //path(const PathCharType* p);
+    path(const std::string& p);
+    path(const char* p);
     path(const path& p);
     virtual ~path();
     
-    path& operator=(const PathStringType& s);
+    //path& operator=(const PathStringType& s);
+    path& operator=(const std::string& s);
     path& operator=(const path& p);
     
-    path& operator/=(const PathStringType& s);
+    //path& operator/=(const PathStringType& s);
+    path& operator/=(const std::string& s);
     path& operator/=(const path& p);
     
     void clear();
     void swap(path& rhs);
     path& remove_filename();
-    path& replace_extension(const PathStringType& new_extension = PathStringType());
-    PathStringType string() const;
-    PathStringType file_string() const;
-    PathStringType directory_string() const;
-    PathStringType external_file_string() const;
+    //path& replace_extension(const PathStringType& new_extension = PathStringType());
+    path& replace_extension(const std::string& new_extension = "");
+    
+    //PathStringType string() const;
+    //PathStringType file_string() const;
+    //PathStringType directory_string() const;
+    //PathStringType external_file_string() const;
+    path string() const;
+
     path root_path() const;
-    PathStringType root_name() const;
-    PathStringType root_directory() const;
+    //PathStringType root_name() const;
+    //PathStringType root_directory() const;
+
     path relative_path() const;
     path parent_path() const;
-    PathStringType filename() const;
-    PathStringType stem() const;
-    PathStringType extension() const;
+    //PathStringType filename() const;
+    //PathStringType stem() const;
+    //PathStringType extension() const;
+    path filename() const;
+    path stem() const;
+    path extension() const;
+    
     bool empty() const;
     bool is_complete() const;
     bool has_root_path() const;
@@ -169,19 +182,17 @@ namespace openstudio {
       return toString(*self);
     }
   
-  
-    #ifdef SWIGRUBY
-      #ifdef _WINDOWS
-        // constructor from std::string 
-        path(const std::string& s){
-          path *p;
-          p = new path(toPath(s));
-          return p;
-        }      
-      #endif
-    #endif
-    
- 
+    //#ifdef SWIGRUBY
+    //  #ifdef _WINDOWS
+    //    // constructor from std::string 
+    //    path(const std::string& s){
+    //      path *p;
+    //      p = new path(toPath(s));
+    //      return p;
+    //    }      
+    //  #endif
+    //#endif
+   
     #ifdef SWIGJAVASCRIPT
         path append(const path &other) const {
           return (*self) / other;

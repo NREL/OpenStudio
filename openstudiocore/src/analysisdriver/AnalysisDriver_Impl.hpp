@@ -20,19 +20,17 @@
 #ifndef ANALYSISDRIVER_ANALYSISDRIVER_IMPL_HPP
 #define ANALYSISDRIVER_ANALYSISDRIVER_IMPL_HPP
 
-#include <analysisdriver/AnalysisDriverAPI.hpp>
-#include <analysisdriver/CurrentAnalysis.hpp>
-#include <analysisdriver/AnalysisDriverEnums.hpp>
+#include "AnalysisDriverAPI.hpp"
+#include "CurrentAnalysis.hpp"
+#include "AnalysisDriverEnums.hpp"
 
-#include <project/ProjectDatabase.hpp>
+#include "../project/ProjectDatabase.hpp"
 
-#include <runmanager/lib/FileInfo.hpp>
-#include <runmanager/lib/JobErrors.hpp>
+#include "../runmanager/lib/FileInfo.hpp"
+#include "../runmanager/lib/JobErrors.hpp"
 
 #include <QObject>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
 #include <boost/regex.hpp>
 
 namespace openstudio {
@@ -52,7 +50,7 @@ namespace detail {
   /** AnalysisDriver_Impl is the implementation class for AnalysisDriver.*/
   class ANALYSISDRIVER_API AnalysisDriver_Impl
       : public QObject,
-        public boost::enable_shared_from_this<AnalysisDriver_Impl>
+        public std::enable_shared_from_this<AnalysisDriver_Impl>
   {
     Q_OBJECT;
    public:
@@ -86,12 +84,12 @@ namespace detail {
      *  one of three ways:
      *
      *  <ol>
-     *  <li> analysis may alreay contain dataPointsToBeQueued</li>
+     *  <li> analysis may already contain dataPointsToBeQueued</li>
      *  <li> If analysis.algorithm().optionalCast<OpenStudioAlgorithm>(), then AnalysisDriver will
      *       call analysis.algorithm().cast<OpenStudioAlgorithm>().createNextIteration() as soon as
      *       all the dataPointsToBeQueued are complete.</li>
      *  <li> If analysis.algorithm().optionalCast<DakotaAlgorithm>(), then AnalysisDriver will
-     *       kick off a runmanager::DakotaJob and create a new DataPoint from each paramter file
+     *       kick off a runmanager::DakotaJob and create a new DataPoint from each parameter file
      *       dropped by Dakota. Depending on the circumstances, this may include an explicit restart
      *       of DAKOTA.</li>
      *  </ol>

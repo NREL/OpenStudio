@@ -20,10 +20,9 @@
 #ifndef MODEL_COMPONENTWATCHER_HPP
 #define MODEL_COMPONENTWATCHER_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 
-#include <boost/shared_ptr.hpp>
-
+#include <memory>
 #include <vector>
 
 namespace openstudio {
@@ -74,13 +73,13 @@ class MODEL_API ComponentWatcher {
   friend class detail::Model_Impl;
   friend class detail::ComponentWatcher_Impl;
 
-  boost::shared_ptr<detail::ComponentWatcher_Impl> getImpl() const;
+  std::shared_ptr<detail::ComponentWatcher_Impl> getImpl() const;
 
-  ComponentWatcher(boost::shared_ptr<detail::ComponentWatcher_Impl> impl);
+  ComponentWatcher(std::shared_ptr<detail::ComponentWatcher_Impl> impl);
 
   /// @endcond
  private:
-  boost::shared_ptr<detail::ComponentWatcher_Impl> m_impl;
+  std::shared_ptr<detail::ComponentWatcher_Impl> m_impl;
 };
 
 /** \relates ComponentWatcher */

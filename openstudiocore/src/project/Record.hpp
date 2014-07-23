@@ -22,13 +22,11 @@
 
 #include "ProjectAPI.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/time/DateTime.hpp>
-#include <utilities/core/Path.hpp>
-
-#include <boost/shared_ptr.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/UUID.hpp"
+#include "../utilities/time/DateTime.hpp"
+#include "../utilities/core/Path.hpp"
 
 class QSqlQuery;
 class QSqlDatabase;
@@ -88,7 +86,7 @@ class PROJECT_API Record {
   /// Cast to Record of type T, can throw std::bad_cast
   template<typename T>
   T cast() const{
-    boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+    std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (!impl){
       throw(std::bad_cast());
     }
@@ -99,7 +97,7 @@ class PROJECT_API Record {
   template<typename T>
   boost::optional<T> optionalCast() const{
     boost::optional<T> result;
-    boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+    std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (impl){
       result = T(impl);
     }
@@ -172,13 +170,13 @@ class PROJECT_API Record {
   void removeRow(ProjectDatabase& projectDatabase);
 
   /// Inserts a row in the database for this Record and sets id.
-  void insertRow(const boost::shared_ptr<QSqlDatabase>& db);
+  void insertRow(const std::shared_ptr<QSqlDatabase>& db);
 
   /// Saves just this Record in the database, does not save children.
-  void saveRow(const boost::shared_ptr<QSqlDatabase>& db);
+  void saveRow(const std::shared_ptr<QSqlDatabase>& db);
 
   /// Removes just this Record from the database, does not remove children.
-  void removeRow(const boost::shared_ptr<QSqlDatabase>& db);
+  void removeRow(const std::shared_ptr<QSqlDatabase>& db);
 
   /// Reverts just this Record then saves it in the database, does not revert children.
   bool revertRow(ProjectDatabase& projectDatabase);
@@ -217,10 +215,10 @@ class PROJECT_API Record {
   /// Constructs a new Record. If an implementation object for the same row already exists in the
   /// projectDatabase passed in, then the implementation object passed in will be discarded and
   /// the new Record will refer to the existing implementation object.
-  Record(boost::shared_ptr<detail::Record_Impl> impl, ProjectDatabase projectDatabase);
+  Record(std::shared_ptr<detail::Record_Impl> impl, ProjectDatabase projectDatabase);
 
   /// Constructs a new Record but does not create or save to a row in the database, use with caution.
-  Record(boost::shared_ptr<detail::Record_Impl> impl);
+  Record(std::shared_ptr<detail::Record_Impl> impl);
 
   //@}
   /** @name Template Methods */
@@ -228,9 +226,9 @@ class PROJECT_API Record {
 
   /// Returns the implementation object casted to type T.
   template<typename T>
-  boost::shared_ptr<T> getImpl() const
+  std::shared_ptr<T> getImpl() const
   {
-    return boost::dynamic_pointer_cast<T>(m_impl);
+    return std::dynamic_pointer_cast<T>(m_impl);
   }
 
   //@}
@@ -239,7 +237,7 @@ class PROJECT_API Record {
 
   REGISTER_LOGGER("openstudio.project.Record");
 
-  boost::shared_ptr<detail::Record_Impl> m_impl;
+  std::shared_ptr<detail::Record_Impl> m_impl;
 };
 
 /// Compares handles of two Records for sorting operations.

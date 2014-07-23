@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_OPTIMIZATIONDATAPOINT_IMPL_HPP
 #define ANALYSIS_OPTIMIZATIONDATAPOINT_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/DataPoint_Impl.hpp>
+#include "AnalysisAPI.hpp"
+#include "DataPoint_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -60,7 +60,6 @@ namespace detail {
                                const boost::optional<FileReference>& osmInputData,
                                const boost::optional<FileReference>& idfInputData,
                                const boost::optional<FileReference>& sqlOutputData,
-                               const std::vector<FileReference>& xmlOutputData,
                                const boost::optional<runmanager::Job>& topLevelJob,
                                const std::vector<openstudio::path>& dakotaParametersFiles,
                                const std::vector<Tag>& tags,
@@ -85,7 +84,6 @@ namespace detail {
                                const boost::optional<FileReference>& osmInputData,
                                const boost::optional<FileReference>& idfInputData,
                                const boost::optional<FileReference>& sqlOutputData,
-                               const std::vector<FileReference>& xmlOutputData,
                                const boost::optional<runmanager::Job>& topLevelJob,
                                const std::vector<openstudio::path>& dakotaParametersFiles,
                                const std::vector<Tag>& tags,
