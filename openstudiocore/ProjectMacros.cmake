@@ -955,7 +955,7 @@ function(QT5_WRAP_CPP_MINIMALLY outfiles)
   # Remove Boost and possibly other include directories
   get_directory_property(_inc_DIRS INCLUDE_DIRECTORIES)
   set(_orig_DIRS ${_inc_DIRS})
-  if(UNIX AND NOT APPLE)
+  if(UNIX)
     foreach(_current ${_inc_DIRS})
       if(NOT "${_current}" MATCHES "[Qq][Tt]5")
         list(REMOVE_ITEM _inc_DIRS "${_current}")
