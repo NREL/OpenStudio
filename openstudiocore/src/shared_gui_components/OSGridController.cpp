@@ -72,6 +72,13 @@ OSGridController::OSGridController(bool isIP,
     m_headerText(headerText)
 {
   loadQSettings();
+
+  m_cellBtnGrp = new QButtonGroup();
+  m_cellBtnGrp->setExclusive(false);
+
+  bool isConnected = false;
+  isConnected = connect(m_cellBtnGrp, SIGNAL(buttonClicked(int)), this, SLOT(cellChecked(int)));
+  OS_ASSERT(isConnected);
 }
 
 OSGridController::~OSGridController()
@@ -354,9 +361,7 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
       OptionalModelObjectGetter(std::bind(&DropZoneConcept::get,dropZoneConcept.data(),t_mo)),
       ModelObjectSetter(std::bind(&DropZoneConcept::set, dropZoneConcept.data(), t_mo, std::placeholders::_1)));
 
-    auto gridView = qobject_cast<OSGridView *>(this->parent());
-    OS_ASSERT(gridView);
-    isConnected = connect(dropZone, SIGNAL(itemClicked(OSItem*)), gridView, SIGNAL(dropZoneItemClicked(OSItem*)));
+    isConnected = connect(dropZone, SIGNAL(itemClicked(OSItem*)), gridView(), SIGNAL(dropZoneItemClicked(OSItem*)));
     OS_ASSERT(isConnected);
 
     widget = dropZone;
@@ -366,6 +371,48 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
   }
 
   return widget;
+}
+
+OSGridView * OSGridController::gridView(){
+  auto gridView = qobject_cast<OSGridView *>(this->parent());
+  OS_ASSERT(gridView);
+  return gridView;
+}
+
+QString OSGridController::cellStyle(int rowIndex, int columnIndex)
+{
+  auto button = qobject_cast<QPushButton *>(cell(rowIndex, columnIndex));
+
+  QString cellColor;
+  if (button && button->isChecked()){
+    // blue
+    cellColor = "#94b3de";
+  }
+  else if (rowIndex % 2){
+    // light gray
+    cellColor = "#ededed";
+  }
+  else {
+    // medium gray
+    cellColor = "#cecece";
+  }
+
+  QString style;
+  style.append("QWidget#TableCell {");
+  style.append("  background-color: ");
+  style.append(cellColor);
+  style.append(";");
+  if (rowIndex == 0){
+    style.append("  border-top: 1px solid black;");
+  }
+  if (columnIndex == 0){
+    style.append("  border-left: 1px solid black;");
+  }
+  style.append("  border-right: 1px solid black;");
+  style.append("  border-bottom: 1px solid black;");
+  style.append("}");
+
+  return style;
 }
 
 QWidget * OSGridController::widgetAt(int row, int column)
@@ -381,9 +428,6 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
   QWidget * widget = nullptr;
 
-
-  QString cellColor("#FFFFFF"); // white // TODO add alternate row colors here
-
   if(m_hasHorizontalHeader && row == 0){
     if(column == 0){
       setHorizontalHeader();
@@ -395,7 +439,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
     model::ModelObject mo = m_modelObjects[modelObjectRow];
 
-    cellColor = getColor(mo);
+    //cellColor = getColor(mo);  TODO
 
     QSharedPointer<BaseConcept> baseConcept = m_baseConcepts[column];
 
@@ -448,7 +492,14 @@ QWidget * OSGridController::widgetAt(int row, int column)
     }
   }
 
-  auto wrapper = new QWidget();
+  auto wrapper = new QPushButton();
+  auto size = m_cellBtnGrp->buttons().size();
+  m_cellBtnGrp->addButton(wrapper, size);
+  // Only make first column checkable
+  if (size % m_currentFields.size() == 0){
+    wrapper->setCheckable(true);
+  }
+
   wrapper->setObjectName("TableCell");
   if(row == 0){
     wrapper->setMinimumSize(QSize(140,50));
@@ -456,21 +507,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
     wrapper->setMinimumSize(QSize(140,34));
   }
 
-  QString style;
-  style.append("QWidget#TableCell {");
-  style.append("  background-color: ");
-  style.append(cellColor);
-  style.append(";");
-  if(row == 0){
-    style.append("  border-top: 1px solid black;");
-  }
-  if(column == 0){
-    style.append("  border-left: 1px solid black;");
-  }
-  style.append("  border-right: 1px solid black;");
-  style.append("  border-bottom: 1px solid black;");
-  style.append("}");
-  wrapper->setStyleSheet(style);
+  wrapper->setStyleSheet(this->cellStyle(row,column));
 
   auto layout = new QVBoxLayout();
   layout->setSpacing(0);
@@ -537,9 +574,36 @@ int OSGridController::columnCount() const
   return m_baseConcepts.size();
 }
 
-std::vector<QWidget *> OSGridController::row(int i)
+QWidget * OSGridController::cell(int rowIndex, int columnIndex)
 {
-  return std::vector<QWidget *>();
+  QWidget * widget = nullptr;
+
+  QLayoutItem * child = gridView()->m_gridLayout->itemAtPosition(rowIndex, columnIndex);
+  if (child) {
+    widget = child->widget();
+  }
+
+  return widget;
+}
+
+std::vector<QWidget *> OSGridController::row(int rowIndex)
+{
+  std::vector<QWidget *> row;
+
+  for (unsigned columnIndex = 0; columnIndex < m_currentFields.size(); columnIndex++){
+    row.push_back(cell(rowIndex, columnIndex));
+  }
+
+  return row;
+}
+
+void OSGridController::selectRow(int rowIndex, bool select)
+{
+  std::vector<QWidget *> row = this->row(rowIndex);
+  for (auto widget : row){
+    auto button = qobject_cast<QPushButton *>(widget);
+    button->setChecked(select);
+  }
 }
 
 void OSGridController::horizontalHeaderChecked(int index)
@@ -573,6 +637,46 @@ void OSGridController::onComboBoxIndexChanged(int index)
 void OSGridController::reset()
 {
   emit modelReset();
+}
+
+void OSGridController::cellChecked(int index)
+{
+  auto r = rowIndexFromButtonIndex(index);
+  auto c = columnIndexFromButtonIndex(index);
+
+  if (c == 0){
+    QLayoutItem * child = gridView()->m_gridLayout->itemAtPosition(r, 0);
+    OS_ASSERT(child);
+    QWidget * widget = child->widget();
+    OS_ASSERT(widget);
+    auto button = qobject_cast<QPushButton *>(widget);
+    OS_ASSERT(button);
+    selectRow(r, button->isChecked());
+  }
+}
+
+int OSGridController::rowIndexFromButtonIndex(int index)
+{
+  auto button = qobject_cast<QPushButton *>(m_cellBtnGrp->button(index));
+  OS_ASSERT(button);
+  auto buttonIndex = gridView()->m_gridLayout->indexOf(button);
+  OS_ASSERT(buttonIndex == index);
+
+  int rowIndex = buttonIndex / columnCount();
+
+  return rowIndex;
+}
+
+int OSGridController::columnIndexFromButtonIndex(int index)
+{
+  auto button = qobject_cast<QPushButton *>(m_cellBtnGrp->button(index));
+  OS_ASSERT(button);
+  auto buttonIndex = gridView()->m_gridLayout->indexOf(button);
+  OS_ASSERT(buttonIndex == index);
+
+  int columnIndex = buttonIndex % columnCount();
+
+  return columnIndex;
 }
 
 HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)

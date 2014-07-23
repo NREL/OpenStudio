@@ -44,6 +44,7 @@ class QLabel;
 namespace openstudio {
 
 class OSComboBox;
+class OSGridView;
 
 /// Provides a Concept with an alternative source of data.
 ///
@@ -368,7 +369,11 @@ public:
 
   virtual int columnCount() const;
 
-  virtual std::vector<QWidget *> row(int i);
+  QWidget * OSGridController::cell(int rowIndex, int columnIndex);
+
+  virtual std::vector<QWidget *> row(int rowIndex);
+
+  void selectRow(int rowIndex, bool select);
 
   QWidget * widgetAt(int row, int column);
 
@@ -437,9 +442,19 @@ private:
 
   void setCustomCategoryAndFields();
 
+  int rowIndexFromButtonIndex(int index);
+
+  int columnIndexFromButtonIndex(int index);
+
+  QString cellStyle(int rowIndex, int columnIndex);
+
+  OSGridView * gridView();
+
   QButtonGroup * m_horizontalHeaderBtnGrp;
 
   QString m_headerText;
+
+  QButtonGroup * m_cellBtnGrp;
 
 signals:
 
@@ -475,6 +490,8 @@ protected slots:
 private slots:
 
   void horizontalHeaderChecked(int index);
+
+  void cellChecked(int index);
 
 };
 
