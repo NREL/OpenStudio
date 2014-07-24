@@ -367,9 +367,9 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
       foreach(PREREQ IN LISTS PREREQUISITES)
       
-        #if(APPLE AND PREREQ MATCHES \".*libruby.*\")  
-        #  # skip updating references to libruby, we do not install this with the bindings
-        #else()   
+        if(APPLE AND PREREQ MATCHES \".*libruby.*\")  
+          # skip updating references to libruby, we do not install this with the bindings
+        else()   
           gp_resolve_item(\"\" \${PREREQ} \"\" \"${LIBRARY_SEARCH_DIRECTORY}\" resolved_item_var)
           execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\")
   
@@ -393,7 +393,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
               file(APPEND \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" \"DL::dlopen \\\"\\\#{File.dirname(__FILE__)}/\${PREREQNAME}\\\"\n\")
             endif()
           endif()        
-        #endif()
+        endif()
 
       endforeach()
     ")
