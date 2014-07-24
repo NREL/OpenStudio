@@ -44,6 +44,6 @@ begin
   else
     load("openstudio/sketchup_plugin/lib/PluginManager.rb")
   end
-rescue LoadError
-  UI.messagebox("The OpenStudio SketchUp Plug-In is only compatible with OS 10.8 and later", MB_OK)
+rescue LoadError => e 
+  UI.messagebox("Error loading OpenStudio SketchUp Plug-In:\n  #{e.message}", MB_OK)
 end
