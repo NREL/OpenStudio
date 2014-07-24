@@ -156,7 +156,6 @@ set(project_directories
   osversion
   ruleset
   runmanager/lib
-  runmanager/app
   analysis
   project
   analysisdriver
@@ -874,7 +873,6 @@ set(all_exe_targets
   GenerateIddFactory
   gbXMLToIdf
   OpenStudio
-  RunManager
   ruby_cpp
   litesql-gen
   ResultsViewer
