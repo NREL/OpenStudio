@@ -27,7 +27,6 @@ set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/copyright.txt")
 set(CPACK_PACKAGE_EXECUTABLES "OpenStudio" "OpenStudio"
                                "Pat" "ParametricAnalysisTool"
                                "ResultsViewer" "ResultsViewer"
-                               "RunManager" "RunManager"
 )
 
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "OpenStudio is a cross-platform collection of software tools to support whole building energy modeling using EnergyPlus and advanced daylight analysis using Radiance. OpenStudio is an open source project to facilitate community development, extension, and private sector adoption. It includes graphical interfaces along with a Software Development Kit (SDK).")
