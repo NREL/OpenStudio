@@ -734,7 +734,8 @@ namespace radiance {
     m_radMaps.clear();
     m_radMapHandles.clear();
     m_radViewPoints.clear();
-    m_radWindowGroups.clear(); 
+    m_radWindowGroups.clear();
+
   }
 
 
@@ -1002,6 +1003,15 @@ namespace radiance {
           WindowGroup windowGroup = getWindowGroup(azi, space, *construction, shadingControl, polygon);
           std::string windowGroup_name = windowGroup.name();
 
+          // get the normal
+          WindowGroupControl control = windowGroup.windowGroupControl();
+          if (control.outwardNormal){
+
+            std::cout << "outward normal:" + formatString(control.outwardNormal->x()) + " " + formatString(control.outwardNormal->y()) + " " + formatString(control.outwardNormal->z()) + "\n";
+
+          }
+
+
           std::string subSurface_name = cleanName(subSurface.name().get());
         
           m_radSpaces[space_name] += "#--SubSurface = " + subSurface_name + "\n";
@@ -1114,6 +1124,7 @@ namespace radiance {
             // copy required bsdf files into place
             openstudio::path bsdfoutpath = t_radDir/ openstudio::toPath("bsdf");
 
+ 
             if (rMaterial == "glass"){
 
               openstudio::path sourcePath = openstudio::toPath("C:/Users/rgugliel/test/cl_Tn" + formatString(tVis, 2) + ".xml");
@@ -1128,14 +1139,11 @@ namespace radiance {
                 openstudio::toPath("cl_Tn" + formatString(tVis, 2) + "_blinds.xml"), boost::filesystem::copy_option::overwrite_if_exists);
               
               // add job to vmx problem set
-              m_radDCmats.insert(windowGroup_name + ",cl_Tn" + \
-                formatString(tVis, 2) + ".xml,cl_Tn" + formatString(tVis, 2) + "_blinds.xml\n");
-
-              WindowGroupControl control = windowGroup.windowGroupControl();
-              if (control.outwardNormal){
-                std::cout << "outward normal:" + formatString(control.outwardNormal->x()) + " " + formatString(control.outwardNormal->y()) + " " + formatString(control.outwardNormal->z()) + "\n";
-              }
-              
+              m_radDCmats.insert(windowGroup_name + "," + \
+                formatString((control.outwardNormal->x() * -1), 2) + " " + \
+                formatString((control.outwardNormal->y() * -1), 2) + " " + \
+                formatString((control.outwardNormal->z() * -1), 2) + \
+                + ",cl_Tn" + formatString(tVis, 2) + ".xml,cl_Tn" + formatString(tVis, 2) + "_blinds.xml\n");
 
             } else if (rMaterial == "trans"){
 
@@ -1148,12 +1156,10 @@ namespace radiance {
                 openstudio::toPath("df_Tn" + formatString(tVis, 2) + ".xml"), boost::filesystem::copy_option::overwrite_if_exists);
 
               // add job to vmx problem set
-              m_radDCmats.insert(windowGroup_name + ",df_Tn" + formatString(tVis, 2) + ".xml\n");
-
-              WindowGroupControl control = windowGroup.windowGroupControl();
-              if (control.outwardNormal){
-                std::cout << "outward normal:" + formatString(control.outwardNormal->x()) + " " + formatString(control.outwardNormal->y()) + " " + formatString(control.outwardNormal->z()) + "\n";
-              }
+              m_radDCmats.insert(windowGroup_name + "," + \
+                formatString((control.outwardNormal->x() * -1), 2) + " " + \
+                formatString((control.outwardNormal->y() * -1), 2) + " " + \
+                formatString((control.outwardNormal->z() * -1), 2) + ",df_Tn" + formatString(tVis, 2) + ".xml\n");
 
             }
 
@@ -1437,7 +1443,7 @@ namespace radiance {
 
       // write radiance vmx materials list
       // format of this file is: window group, bsdf, bsdf
-      m_radDCmats.insert("# OpenStudio windowGroup->BSDF \"Mapping\" File\n# maps Window Groups to BSDF files\n# windowGroup,bsdf0.xml,bsdf1.xml(optional),etc...\n");
+      m_radDCmats.insert("# OpenStudio windowGroup->BSDF \"Mapping\" File\n# maps Window Groups to BSDF files\n# windowGroup,inwardNormal,bsdf0.xml,bsdf1.xml(optional),etc...\n");
       openstudio::path materials_dcfilename = t_radDir / openstudio::toPath("bsdf/mapping.rad");
       OFSTREAM materials_dcfile(materials_dcfilename);
       if (materials_dcfile.is_open()){
