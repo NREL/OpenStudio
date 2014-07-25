@@ -515,8 +515,7 @@ namespace sdd {
         }
 
         QDomElement airSystemElement = airSystemElements.at(i).toElement();
-        boost::optional<model::ModelObject> airLoopHVAC = translateAirSystem(airSystemElement,doc,*result);
-        OS_ASSERT(airLoopHVAC);
+        translateAirSystem(airSystemElement,doc,*result);
 
         if (m_progressBar){
           m_progressBar->setValue(m_progressBar->value() + 1);
