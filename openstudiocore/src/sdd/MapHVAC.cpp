@@ -1648,7 +1648,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
   else if( istringEqual(coilHeatingTypeElement.text().toStdString(),"HeatPump") )
   {
     QDomElement cndsrTypeElement = heatingCoilElement.firstChildElement("CndsrType");
-    if(cndsrTypeElement.text().compare("Fluid",Qt::CaseInsensitive) == 0)
+    if(cndsrTypeElement.text().compare("WaterSource",Qt::CaseInsensitive) == 0)
     {
       model::CoilHeatingWaterToAirHeatPumpEquationFit coil(model);
       coil.setName(nameElement.text().toStdString());
@@ -2453,7 +2453,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     // CndsrType
     QDomElement cndsrTypeElement = coolingCoilElement.firstChildElement("CndsrType");
 
-    if( cndsrTypeElement.text().compare("Fluid",Qt::CaseInsensitive) == 0 )
+    if( cndsrTypeElement.text().compare("WaterSource",Qt::CaseInsensitive) == 0 )
     {
       boost::optional<model::AirLoopHVACUnitarySystem> unitary;
       model::CoilCoolingWaterToAirHeatPumpEquationFit coil(model);
