@@ -100,11 +100,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
 
   // Field: Availability Manager List Name //////////////////////////////////
   IdfObject availabilityManagerListIdf(IddObjectType::AvailabilityManagerAssignmentList);
-  availabilityManagerListIdf.setName(name + " Availability Manager");
+  availabilityManagerListIdf.setName(name + " Availability Manager List");
   m_idfObjects.push_back(availabilityManagerListIdf);
 
   IdfObject availabilityManagerScheduledIdf = IdfObject(openstudio::IddObjectType::AvailabilityManager_Scheduled);
-  availabilityManagerScheduledIdf.createName();
+  availabilityManagerScheduledIdf.setName(name + " Availability Manager");
   m_idfObjects.push_back(availabilityManagerScheduledIdf);
 
   Schedule alwaysOn = modelObject.model().alwaysOnDiscreteSchedule();

@@ -328,11 +328,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
 
   // Branch List Name
   IdfObject branchList(openstudio::IddObjectType::BranchList);
-  branchList.createName();
+  branchList.setName(airLoopHVACName + " Supply Branches");
   m_idfObjects.push_back(branchList);
 
   IdfObject branch(openstudio::IddObjectType::Branch);
-  branch.createName();
+  branch.setName( airLoopHVACName + " Supply Branch");
   m_idfObjects.push_back(branch);
 
   branchList.setString(1,branch.name().get());

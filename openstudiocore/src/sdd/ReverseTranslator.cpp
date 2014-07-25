@@ -631,8 +631,8 @@ namespace sdd {
            ++airSystem )
       {
         std::string systemName = airSystem->name().get();
-        airSystem->supplyInletNode().setName(systemName + " Supply Inlet Node");
-        airSystem->demandInletNode().setName(systemName + " Demand Inlet Node");
+        airSystem->supplyInletNode().setName(systemName + " Supply Side (Return Air) Inlet Node");
+        airSystem->demandInletNode().setName(systemName + " Demand Side (Supply Air) Inlet Node");
         airSystem->demandSplitter().setName(systemName + " Zone Splitter"); 
         airSystem->demandMixer().setName(systemName + " Zone Mixer"); 
 
