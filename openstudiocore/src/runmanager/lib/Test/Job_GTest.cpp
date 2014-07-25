@@ -250,7 +250,6 @@ TEST_F(RunManagerTestFixture, JobCreateTest)
 
   EXPECT_FALSE(j.running());
   EXPECT_FALSE(j.treeRunning());
-  EXPECT_FALSE(j.runningRemotely());
 
   EXPECT_TRUE(j.errors().succeeded());
 
@@ -289,7 +288,6 @@ TEST_F(RunManagerTestFixture, GenericJobCreateTest)
 
   EXPECT_FALSE(j.running());
   EXPECT_FALSE(j.treeRunning());
-  EXPECT_FALSE(j.runningRemotely());
 
   EXPECT_TRUE(j.errors().succeeded());
 

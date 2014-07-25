@@ -48,7 +48,6 @@ namespace runmanager {
       /// \param[in] t_stdin Input to send to the process over stdin after it has started
       /// \param[in] t_basePath Base path from which required files should be evaluated if the required file
       ///                       is a relative path and does not reside in the tool path
-      /// \param[in] t_remoteId optional remote id for recreating remote process. Throws exception if set
       /// \returns the created Process
       virtual std::shared_ptr<Process> createProcess(
           const openstudio::runmanager::ToolInfo &t_tool,
@@ -57,14 +56,7 @@ namespace runmanager {
           const openstudio::path &t_outdir,
           const std::vector<openstudio::path> &t_expectedOutputFiles,
           const std::string &t_stdin,
-          const openstudio::path &t_basePath,
-          const boost::optional<std::pair<int,int> > &t_remoteId);
-
-      /// \returns false, LocalProcessCreator does not create remote jobs
-      virtual bool isRemoteManager() const
-      {
-        return false;
-      }
+          const openstudio::path &t_basePath);
 
   };
 

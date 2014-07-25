@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SetpointManagerOutdoorAirPretreat.hpp>
-#include <model/SetpointManagerOutdoorAirPretreat_Impl.hpp>
+#include "SetpointManagerOutdoorAirPretreat.hpp"
+#include "SetpointManagerOutdoorAirPretreat_Impl.hpp"
 
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SetpointManager_OutdoorAirPretreat_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

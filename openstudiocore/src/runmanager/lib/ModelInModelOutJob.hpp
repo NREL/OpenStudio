@@ -62,12 +62,6 @@ namespace detail {
       virtual std::string getOutput() const;
       virtual void cleanup();
 
-      /// By definition these Jobs are in-process and cannot be run remotely
-      virtual bool remoteRunnable() const
-      {
-        return false;
-      }
-
       virtual void mergeJobImpl(const std::shared_ptr<Job_Impl> &t_parent, const std::shared_ptr<Job_Impl> &t_job);
 
       virtual void requestStop();

@@ -20,8 +20,8 @@
 #ifndef MODEL_SETPOINTMANAGERSCHEDULEDDUALSETPOINT_IMPL_HPP
 #define MODEL_SETPOINTMANAGERSCHEDULEDDUALSETPOINT_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SetpointManager_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "SetpointManager_Impl.hpp"
 
 namespace openstudio {
 namespace model {

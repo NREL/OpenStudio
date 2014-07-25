@@ -22,9 +22,9 @@
 
 #include "RadianceAPI.hpp"
 
-#include <model/Space.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ShadingControl.hpp>
+#include "../model/Space.hpp"
+#include "../model/ConstructionBase.hpp"
+#include "../model/ShadingControl.hpp"
 
 #include <utilities/geometry/Point3d.hpp>
 #include <utilities/geometry/Vector3d.hpp>

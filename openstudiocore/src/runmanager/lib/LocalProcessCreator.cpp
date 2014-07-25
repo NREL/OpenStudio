@@ -34,11 +34,8 @@ namespace runmanager {
       const openstudio::path &t_outdir,
       const std::vector<openstudio::path> &t_expectedOutputFiles,
       const std::string &t_stdin,
-      const openstudio::path &t_basePath,
-      const boost::optional<std::pair<int,int> > &t_remoteId)
+      const openstudio::path &t_basePath)
   {
-    if (t_remoteId) { throw std::runtime_error("remote id set when creating local process"); }
-
     return std::shared_ptr<Process>(
         new detail::LocalProcess(
           t_tool,

@@ -115,8 +115,6 @@ elseif(WIN32)
   set(OPENSSL_ROOT_DIR "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
 endif()
 
-
-
 if(MSVC)
   # Visual Studio compiler check
   # http://en.wikipedia.org/wiki/Visual_C%2B%2B#32-bit_and_64-bit_versions
@@ -131,6 +129,26 @@ if(MSVC)
   # Build with Multiple Processes
   set(BUILD_WITH_MULTIPLE_PROCESSES ON CACHE BOOL "/MP compiler flag for full processor utilization")
   mark_as_advanced(BUILD_WITH_MULTIPLE_PROCESSES)
+endif()
+
+# Apple Sanity Check
+if(APPLE)
+  if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
+    message(FATAL_ERROR "OSX Deployment Target Must Be Set")
+  endif()
+
+  if(NOT CMAKE_OSX_SYSROOT)
+    message(FATAL_ERROR "OSX Sysroot must be set")
+  elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.8.*")
+    set(OSX_SDK "10.8")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
+  elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.9.*")
+    set(OSX_SDK "10.9")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
+  else()
+    message(FATAL_ERROR "OSX Sysroot must use the 10.8 or 10.9 SDK")
+  endif()
+
 endif()
 
 # EnergyPlus
@@ -255,46 +273,38 @@ else()
   option(BUILD_QT "Build Qt" ON)
 endif()
 
-# Apple Sanity Check
-if(APPLE)
-  if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
-    message(FATAL_ERROR "OSX Deployment Target Must Be Set")
-  endif()
-
-  if(NOT CMAKE_OSX_SYSROOT)
-    message(FATAL_ERROR "OSX Sysroot must be set")
-  elseif(NOT CMAKE_OSX_SYSROOT MATCHES ".*10\\.9.*")
-    message(FATAL_ERROR "OSX Sysroot must use the 10.9 SDK")
-  endif()
-
-endif()
-
 include(ExternalProject)
 include(ProcessorCount)
 
+# set number of cores to be used when building boost and qt, idea is you will do make -jX so boost and qt will build in parralel
 ProcessorCount(CPUCOUNT)
 if(CPUCOUNT EQUAL 0)
-  set(CPUCOUNT "1")
-  set(BOOST_CPUCOUNT "1")
-  set(QT_CPUCOUNT "1")
-elseif(CPUCOUNT EQUAL 1)
-  set(BOOST_CPUCOUNT "1")
-  set(QT_CPUCOUNT "1")
-elseif(CPUCOUNT EQUAL 2)
-  set(BOOST_CPUCOUNT "1")
-  set(QT_CPUCOUNT "1")  
-elseif(CPUCOUNT EQUAL 4)
-  set(BOOST_CPUCOUNT "2")
-  set(QT_CPUCOUNT "2")  
-elseif(CPUCOUNT EQUAL 8)
-  set(BOOST_CPUCOUNT "4")
-  set(QT_CPUCOUNT "4")    
-elseif(CPUCOUNT EQUAL 16)
-  set(BOOST_CPUCOUNT "4")
-  set(QT_CPUCOUNT "6")    
-else()
-  set(BOOST_CPUCOUNT "1")
-  set(QT_CPUCOUNT "1")    
+  set(CPUCOUNT 1)
+endif()
+  
+if(UNIX)
+  if(CPUCOUNT EQUAL 1)
+    set(BOOST_CPUCOUNT "1")
+    set(QT_CPUCOUNT "1")
+  elseif(CPUCOUNT EQUAL 2)
+    set(BOOST_CPUCOUNT "1")
+    set(QT_CPUCOUNT "1")
+  elseif(CPUCOUNT EQUAL 4)
+    set(BOOST_CPUCOUNT "1")
+    set(QT_CPUCOUNT "3")
+  elseif(CPUCOUNT EQUAL 8)
+    set(BOOST_CPUCOUNT "2")
+    set(QT_CPUCOUNT "6")
+  elseif(CPUCOUNT EQUAL 12)
+    set(BOOST_CPUCOUNT "3")
+    set(QT_CPUCOUNT "9")
+  elseif(CPUCOUNT EQUAL 16)
+    set(BOOST_CPUCOUNT "4")
+    set(QT_CPUCOUNT "12")
+  else()
+    set(BOOST_CPUCOUNT "1")
+    set(QT_CPUCOUNT "1")
+  endif()
 endif()
 
 mark_as_advanced(
@@ -380,7 +390,14 @@ if(WIN32 AND MSVC AND CMAKE_CL_64)
   message(WARNING "Treat Warnings As Errors is disabled for 64-bit Windows builds")
 endif()
 
-if(UNIX)
+if(APPLE)
+  if (OSX_SDK STREQUAL "10.8") 
+    # Ruby 2.0 is not in 10.8 SDK
+    option(BUILD_RUBY "Build Ruby" ON)
+  else()
+    option(BUILD_RUBY "Build Ruby" OFF)
+  endif()
+elseif(UNIX)
   if(RUBY_FOUND)
     option(BUILD_RUBY "Build Ruby" OFF)
   else()
@@ -439,16 +456,45 @@ if(BUILD_V8)
   set(V8_INCLUDE_DIR ${CMAKE_BINARY_DIR}/V8-prefix/src/V8/include)
 endif()
 
-if(BUILD_RUBY AND UNIX AND NOT APPLE)
-  # but linux cannot, it has a double free when unloading a ruby module
-  ExternalProject_Add(Ruby
-    URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p481.tar.gz
-    URL_MD5 3913e0ad6cc572b7358e4c6a8c4b2551
-    CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && sh -c "./configure --enable-shared --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install CFLAGS=\"-fPIC\" "
-    BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE)
-    INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE) install
-  )
-  set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
+if(BUILD_RUBY AND UNIX)
+  if(APPLE)
+    if (OSX_SDK STREQUAL "10.8") 
+      # Unpackage build of Ruby 2.0 made on Mac 10.8
+      ExternalProject_Add(Ruby
+        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p481-shared.zip
+        URL_MD5 af634ed75a961e69c03c6458a2e8c110
+        PATCH_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ && sh -c "chmod +x *" 
+              COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/ && sh -c "install_name_tool -id ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/libruby.2.0.0.dylib	${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/libruby.2.0.0.dylib"
+        CONFIGURE_COMMAND ""
+        BUILD_COMMAND ""
+        INSTALL_COMMAND ""
+      )      
+      set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby)
+      set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/libruby.2.0.0.dylib)
+    else()
+      # build shared libraries for compatibility with SketchUp
+      ExternalProject_Add(Ruby
+        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p481.tar.gz
+        URL_MD5 3913e0ad6cc572b7358e4c6a8c4b2551
+        CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && sh -c "./configure --enable-shared --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install --with-arch=i386,x86_64 CFLAGS=\"-fPIC\" LDFLAGS=\"\""
+        BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE)
+        INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE) install
+        )
+      set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
+      set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby.2.0.0.dylib)
+    endif()
+  else()
+    # have to build shared libraries on linux otherwise has a double free when unloading a ruby module
+    ExternalProject_Add(Ruby
+      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p481.tar.gz
+      URL_MD5 3913e0ad6cc572b7358e4c6a8c4b2551
+      CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && sh -c "./configure --enable-shared --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install CFLAGS=\"-fPIC\" "
+      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE)
+      INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE) install
+    )
+    set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
+    set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby.so)
+  endif()
 endif()
 
 # Always build Ruby on Windows
@@ -500,8 +546,6 @@ if(BUILD_SWIG)
         message("autoconf directory: ${autoconf_path}")
       endif()
 
-
-
       # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
       ExternalProject_Add(SWIG
         GIT_REPOSITORY git://github.com/lefticus/swig.git
@@ -541,17 +585,13 @@ endif()
 
 if(BUILD_BOOST)
   if(APPLE)
-    if(CMAKE_OSX_DEPLOYMENT_TARGET MATCHES ".*10\\.9.*")
-      set(apple-frameworks "-stdlib=libc++ -std=c++11")
-    else()
-      set(apple-frameworks "-stdlib=libstdc++")
-    endif()
+    set(apple-flags "-arch i386 -arch x86_64 -std=c11 -std=c++11 -stdlib=libc++")
     ExternalProject_Add(Boost
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
       URL_MD5 93780777cfbf999a600f62883bd54b17
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./bootstrap.sh
       PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51a.diff < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51b.diff
-      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 toolset=clang cxxflags=${apple-frameworks} linkflags=${apple-frameworks} variant=debug,release address-model=32_64 architecture=combined define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${BOOST_CPUCOUNT} install
+      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 toolset=clang cxxflags=${apple-flags} linkflags=${apple-flags} variant=debug,release  define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${BOOST_CPUCOUNT} install
       INSTALL_COMMAND ""
     )
     set(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
@@ -581,7 +621,7 @@ if(BUILD_BOOST)
         URL_MD5 93780777cfbf999a600f62883bd54b17
         CONFIGURE_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && bootstrap.bat"
         PATCH_COMMAND "${PATCH_EXE}" "${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost/boost/archive/iterators/transform_width.hpp" "${CMAKE_SOURCE_DIR}/dependencies/Boost/transform_width.diff"
-        BUILD_COMMAND cmd /C "set VS_UNICODE_OUTPUT=& cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && b2 ${B2_TOOLSET} link=static address-model=64 define=BOOST_CHRONO_HEADER_ONLY --build-type=minimal --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${BOOST_CPUCOUNT}" install
+        BUILD_COMMAND cmd /C "set VS_UNICODE_OUTPUT=& cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && b2 ${B2_TOOLSET} link=static address-model=64 define=BOOST_CHRONO_HEADER_ONLY --build-type=minimal --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT}" install
         INSTALL_COMMAND ""
       )
     else()
@@ -590,7 +630,7 @@ if(BUILD_BOOST)
         URL_MD5 93780777cfbf999a600f62883bd54b17
         CONFIGURE_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && bootstrap.bat"
         PATCH_COMMAND "${PATCH_EXE}" "${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost/boost/archive/iterators/transform_width.hpp" "${CMAKE_SOURCE_DIR}/dependencies/Boost/transform_width.diff"
-        BUILD_COMMAND cmd /C "set VS_UNICODE_OUTPUT=& cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && b2 ${B2_TOOLSET} link=static address-model=32 define=BOOST_CHRONO_HEADER_ONLY --build-type=minimal --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${BOOST_CPUCOUNT}" install
+        BUILD_COMMAND cmd /C "set VS_UNICODE_OUTPUT=& cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && b2 ${B2_TOOLSET} link=static address-model=32 define=BOOST_CHRONO_HEADER_ONLY --build-type=minimal --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT}" install
         INSTALL_COMMAND ""
       )
     endif()
@@ -621,10 +661,18 @@ set(GTEST_INCLUDE_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest/inclu
 set(GTEST_LIB_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest-build)
 
 if(BUILD_QT)
+  set(Qt5Widgets_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Widgets)
+  set(Qt5Sql_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Sql)
+  set(Qt5Network_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Network)
+  set(Qt5Xml_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Xml)
+  set(Qt5WebKit_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5WebKit)
+  set(Qt5WebKitWidgets_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5WebKitWidgets)
+  set(Qt5Concurrent_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Concurrent)
+
   if(APPLE)
     # We're going to explicitly use the SDK specified in the configuration by the user
     #set(APPLE_SDK_COMMAND "-sdk \"${CMAKE_OSX_SYSROOT}\"" )
-    set(APPLE_SDK_COMMAND "-sdk macosx10.9")
+    set(APPLE_SDK_COMMAND "-sdk macosx${OSX_SDK}")
 
     # At the moment we are building all of debug,release,x86 and x86_64
     # it would appear that calling "make" in some way that CMake can detect that we are calling
@@ -633,7 +681,7 @@ if(BUILD_QT)
     ExternalProject_Add(Qt
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-5.3.1.tar.gz
       URL_MD5 a355749e4f200a6392ecad151d1d0cdc
-      CONFIGURE_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && ./configure -v ${APPLE_SDK_COMMAND} -platform macx-clang-32-64 -release -opensource -openssl -no-pch -no-ssse3 -qt-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install"
+      CONFIGURE_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && ./configure -v ${APPLE_SDK_COMMAND} -platform macx-clang-32-64 -release -opensource -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install"
       PATCH_COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_SOURCE_DIR}/dependencies/qt/macx-clang-32-64/ ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/qtbase/mkspecs/macx-clang-32-64/
       BUILD_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && make -j${QT_CPUCOUNT}"
       INSTALL_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && make -j1 install"

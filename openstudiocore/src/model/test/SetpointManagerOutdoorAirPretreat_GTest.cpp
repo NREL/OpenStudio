@@ -18,15 +18,15 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/SetpointManagerOutdoorAirPretreat.hpp>
-#include <model/SetpointManagerOutdoorAirPretreat_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/ControllerOutdoorAir.hpp>
-#include <model/PlantLoop.hpp>
+#include "ModelFixture.hpp"
+#include "../SetpointManagerOutdoorAirPretreat.hpp"
+#include "../SetpointManagerOutdoorAirPretreat_Impl.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../AirLoopHVACOutdoorAirSystem.hpp"
+#include "../ControllerOutdoorAir.hpp"
+#include "../PlantLoop.hpp"
 
 using namespace openstudio::model;
 

@@ -152,7 +152,7 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
       if (radianceLocation.empty())
       {
         LOG(Info, "Radiance path being set for OS default ");
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
         radianceLocation = openstudio::toPath("C:\\Program Files (x86)\\Radiance\bin");
 #else
         radianceLocation = openstudio::toPath("/usr/local/radiance/bin");

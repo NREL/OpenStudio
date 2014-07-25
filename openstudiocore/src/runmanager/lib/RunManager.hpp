@@ -116,7 +116,7 @@ namespace detail {
       openstudio::runmanager::Job runWorkflow(const openstudio::path &t_jsonPath, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
           const openstudio::runmanager::Tools &t_tools, const openstudio::runmanager::JSONWorkflowOptions &t_options);
 
-      /// Return tue if the given job is out of date
+      /// Return true if the given job is out of date
       /// \todo This should probably be removed in favor of openstudio::runmanager::Job::isOutOfDate
       bool outOfDate(const openstudio::runmanager::Job &job) const;
 
@@ -263,7 +263,7 @@ namespace detail {
       /// Connect a Qt SIGNAL to a slot in the underlying RunManager_Impl object
       /// available slots:
       ///   - setPaused(bool t_state);
-      /// \param sender object that SIGNAL is comming from
+      /// \param sender object that SIGNAL is coming from
       /// \param signal signal on object to connect
       /// \param method slot on RunManager_Impl to connect to
       /// \param type type of Qt connection to make
@@ -276,15 +276,11 @@ namespace detail {
       /// \returns a set of named statistics regarding the job queue
       std::map<std::string, double> statistics() const;
 
-//      /// Sets the password to use when making a SLURM connection.
-//      /// Passwords are not persisted.
-//      void setSLURMPassword(const std::string &t_pass);
-
       /// Persist a workflow to the database
       /// \returns the key the workflow is stored under
       std::string persistWorkflow(const Workflow &_wf);
 
-      /// \returns a vector of all worklows in the database
+      /// \returns a vector of all workflows in the database
       std::vector<Workflow> loadWorkflows() const;
 
       /// \returns a specific workflow 

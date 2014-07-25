@@ -18,17 +18,17 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <energyplus/Test/EnergyPlusFixture.hpp>
+#include "EnergyPlusFixture.hpp"
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../ForwardTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/TableMultiVariableLookup.hpp>
-#include <model/TableMultiVariableLookup_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/TableMultiVariableLookup.hpp"
+#include "../../model/TableMultiVariableLookup_Impl.hpp"
 
 #include <utilities/idd/Table_MultiVariableLookup_FieldEnums.hxx>
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <resources.hxx>
 #include <sstream>

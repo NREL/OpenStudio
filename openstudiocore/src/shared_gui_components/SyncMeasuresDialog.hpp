@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef SYNCMEASURESDIALOG_H
-#define SYNCMEASURESDIALOG_H
+#ifndef SHAREDGUICOMPONENTS_SYNCMEASURESDIALOG_HPP
+#define SHAREDGUICOMPONENTS_SYNCMEASURESDIALOG_HPP
 
 #include <QDialog>
 
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../utilities/bcl/BCLMeasure.hpp"
 
 #include <vector>
 
@@ -73,4 +73,4 @@ private slots:
 
 } // namespace openstudio
 
-#endif // SYNCMEASURESDIALOG_H
+#endif // SHAREDGUICOMPONENTS_SYNCMEASURESDIALOG_HPP

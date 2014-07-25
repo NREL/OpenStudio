@@ -52,7 +52,6 @@ namespace runmanager {
 
   private slots:
     void localBrowse();
-    void remoteBrowse();
   };
 
 

@@ -20,9 +20,9 @@
 #ifndef MODEL_TABLEMULTIVARIABLELOOKUP_IMPL_HPP
 #define MODEL_TABLEMULTIVARIABLELOOKUP_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Curve_Impl.hpp>
-#include <model/TableMultiVariableLookup.hpp>
+#include "ModelAPI.hpp"
+#include "Curve_Impl.hpp"
+#include "TableMultiVariableLookup.hpp"
 
 namespace openstudio {
 namespace model {
