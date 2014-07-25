@@ -82,6 +82,8 @@
 #include <model/WaterToAirComponent_Impl.hpp>
 #include <model/ZoneHVACComponent.hpp>
 #include <model/ZoneHVACComponent_Impl.hpp>
+#include <model/PortList.hpp>
+#include <model/PortList_Impl.hpp>
 
 #include <energyplus/ReverseTranslator.hpp>
 
@@ -926,6 +928,51 @@ namespace sdd {
 
         var = model::OutputVariable("Daylighting Lighting Power Multiplier",*result);
         var.setReportingFrequency(interval);
+
+        std::vector<model::ThermalZone> zones = result->getModelObjects<model::ThermalZone>();
+        for( std::vector<model::ThermalZone>::iterator it = zones.begin();
+             it != zones.end();
+             ++it )
+        {
+          if( boost::optional<model::ModelObject> returnAirNode = it->returnAirModelObject() )
+          {
+            var = model::OutputVariable("System Node Temperature",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(returnAirNode->name().get());
+
+            var = model::OutputVariable("System Node Mass Flow Rate",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(returnAirNode->name().get());
+          }
+
+          std::vector<model::ModelObject> objects = it->inletPortList().modelObjects();
+          for( std::vector<model::ModelObject>::iterator inletIt = objects.begin();
+               inletIt != objects.end();
+               ++inletIt )
+          {
+            var = model::OutputVariable("System Node Temperature",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(inletIt->name().get());
+
+            var = model::OutputVariable("System Node Mass Flow Rate",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(inletIt->name().get());
+          }
+
+          objects = it->exhaustPortList().modelObjects();
+          for( std::vector<model::ModelObject>::iterator exhIt = objects.begin();
+               exhIt != objects.end();
+               ++exhIt )
+          {
+            var = model::OutputVariable("System Node Temperature",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(exhIt->name().get());
+
+            var = model::OutputVariable("System Node Mass Flow Rate",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(exhIt->name().get());
+          }
+        }
       }
 
       // SimVarsHVACZn
@@ -1011,6 +1058,31 @@ namespace sdd {
             var = model::OutputVariable("System Node Mass Flow Rate",*result);
             var.setReportingFrequency(interval);
             var.setKeyValue(node->name().get());
+          }
+
+          if( boost::optional<model::AirLoopHVACOutdoorAirSystem> oaSystem = it->airLoopHVACOutdoorAirSystem() )
+          {
+            if( boost::optional<model::ModelObject> node = oaSystem->reliefAirModelObject() )
+            {
+              var = model::OutputVariable("System Node Temperature",*result);
+              var.setReportingFrequency(interval);
+              var.setKeyValue(node->name().get());
+
+              var = model::OutputVariable("System Node Mass Flow Rate",*result);
+              var.setReportingFrequency(interval);
+              var.setKeyValue(node->name().get());
+            }
+
+            if( boost::optional<model::Node> node = oaSystem->outboardOANode() )
+            {
+              var = model::OutputVariable("System Node Temperature",*result);
+              var.setReportingFrequency(interval);
+              var.setKeyValue(node->name().get());
+
+              var = model::OutputVariable("System Node Mass Flow Rate",*result);
+              var.setReportingFrequency(interval);
+              var.setKeyValue(node->name().get());
+            }
           }
         }
       }
