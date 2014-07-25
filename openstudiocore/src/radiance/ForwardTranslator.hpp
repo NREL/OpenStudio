@@ -21,7 +21,7 @@
 #define RADIANCE_FORWARDTRANSLATOR_HPP
 
 #include "RadianceAPI.hpp"
-#include <radiance/WindowGroup.hpp>
+#include "WindowGroup.hpp"
 
 #include "../model/Model.hpp"
 #include "../model/Surface.hpp"

@@ -17,18 +17,18 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/TableMultiVariableLookup.hpp>
-#include <model/TableMultiVariableLookup_Impl.hpp>
+#include "TableMultiVariableLookup.hpp"
+#include "TableMultiVariableLookup_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Table_MultiVariableLookup_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/math/FloatCompare.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <algorithm>
 

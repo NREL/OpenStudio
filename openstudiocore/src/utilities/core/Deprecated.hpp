@@ -24,7 +24,7 @@
 !!! THIS FILE MUST BE INCLUDED BY ANY SOURCE FILE THAT USES OPENSTUDIO_DEPRECATED!!!
 *****************************************************************************/
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
 #ifdef __GNUC__
   #define OS_DEPRECATED __attribute__((deprecated))

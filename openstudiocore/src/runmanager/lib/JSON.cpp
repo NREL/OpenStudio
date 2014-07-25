@@ -557,8 +557,6 @@ namespace detail {
     qvm["name"] = toQString(t_tool.name);
     qvm["version"] = toQString(t_tool.version.toString());
     qvm["local_bin_path"] = toQString(t_tool.localBinPath);
-    qvm["remote_archive"] = toQString(t_tool.remoteArchive);
-    qvm["remote_exe"] = toQString(t_tool.remoteExe);
     qvm["version"] = toQString(t_tool.version.toString());
     qvm["out_file_filter"] = toQString(boost::lexical_cast<std::string>(t_tool.outFileFilter));
 
@@ -578,8 +576,6 @@ namespace detail {
         toString(qvm["name"].toString()),
         qvm.contains("version") ? ToolVersion::fromString(toString(qvm["version"].toString())) : ToolVersion(),
         toPath(qvm["local_bin_path"].toString()),
-        toPath(qvm["remote_archive"].toString()),
-        toPath(qvm["remote_exe"].toString()),
         boost::regex(toString(qvm["out_file_filter"].toString()))
       );
   }

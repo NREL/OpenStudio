@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MEASUREBADGE_H
-#define MEASUREBADGE_H
+#ifndef SHAREDGUICOMPONENTS_MEASUREBADGE_HPP
+#define SHAREDGUICOMPONENTS_MEASUREBADGE_HPP
 
 #include <QLabel>
 
@@ -38,4 +38,4 @@ class MeasureBadge : public QLabel
 
 } // namespace openstudio
 
-#endif // MEASUREBADGE_H
+#endif // SHAREDGUICOMPONENTS_MEASUREBADGE_HPP

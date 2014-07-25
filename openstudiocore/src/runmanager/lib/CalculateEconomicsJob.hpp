@@ -61,13 +61,6 @@ namespace detail {
       virtual std::string getOutput() const;
       virtual void cleanup();
 
-      /// Cannot yet run remotely
-      /// \returns false
-      virtual bool remoteRunnable() const
-      {
-        return false;
-      }
-
       virtual void requestStop();
 
     protected:

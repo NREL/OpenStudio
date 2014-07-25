@@ -135,7 +135,7 @@ namespace runmanager {
 
   openstudio::path RunManager::generateTempPathName()
   {
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
     const char *tmpdbname = tmpnam(0);
     return openstudio::tempDir()/toPath(std::string(tmpdbname));
 #else
@@ -422,13 +422,7 @@ namespace runmanager {
     static DB_Handler m;
     return m;
   }
-
-//  void RunManager::setSLURMPassword(const std::string &t_password)
-//  {
-//    m_impl->setSLURMPassword(t_password);
-//  }
-
-
+  
   std::map<std::string, double> RunManager::statistics() const
   {
     return m_impl->statistics();

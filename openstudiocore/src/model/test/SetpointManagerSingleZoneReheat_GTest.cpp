@@ -18,14 +18,14 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/SetpointManagerSingleZoneReheat.hpp>
-#include <model/SetpointManagerSingleZoneReheat_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/PlantLoop.hpp>
+#include "ModelFixture.hpp"
+#include "../SetpointManagerSingleZoneReheat.hpp"
+#include "../SetpointManagerSingleZoneReheat_Impl.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../ThermalZone.hpp"
+#include "../PlantLoop.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

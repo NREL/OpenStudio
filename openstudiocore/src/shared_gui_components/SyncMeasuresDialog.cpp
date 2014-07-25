@@ -23,10 +23,10 @@
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/SyncMeasuresDialogCentralWidget.hpp"
 
-#include <analysisdriver/SimpleProject.hpp>
+#include "../analysisdriver/SimpleProject.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/bcl/BCLMeasure.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <vector>
 

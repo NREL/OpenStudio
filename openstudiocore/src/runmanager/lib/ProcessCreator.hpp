@@ -27,8 +27,8 @@
 namespace openstudio {
 namespace runmanager {
 
-  /// Interface for Creating processes. Abstracted such that the Job does not need to
-  /// care if the processes are running locally or remotely
+  /// Interface for Creating processes. Originally abstracted such that the Job did not need to
+  /// care if the processes were running locally or remotely
   class ProcessCreator : public QObject
   {
     Q_OBJECT;
@@ -42,7 +42,6 @@ namespace runmanager {
        *  \param[in] t_stdin Input to send to the process over stdin after it has started
        *  \param[in] t_basePath Base path from which required files should be evaluated if the required file
        *                        is a relative path and does not reside in the tool path
-       *  \param[in] t_remoteId integer identifier
        *  \returns the created Process */
       virtual std::shared_ptr<Process> createProcess(
           const ToolInfo &t_tooltoexecute,
@@ -51,11 +50,7 @@ namespace runmanager {
           const openstudio::path &t_outdir,
           const std::vector<openstudio::path> &t_expectedOutputFiles,
           const std::string &t_stdin,
-          const openstudio::path &t_basePath,
-          const boost::optional<std::pair<int, int> > &t_remoteId) = 0;
-
-      /// \returns true if the ProcessCreator implementation creates remote processes
-      virtual bool isRemoteManager() const = 0;
+          const openstudio::path &t_basePath) = 0;
 
 
 

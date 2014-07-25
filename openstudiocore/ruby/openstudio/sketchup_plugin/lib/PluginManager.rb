@@ -81,7 +81,7 @@ module OpenStudio
     attr_reader :event_queue
     
     attr_accessor :model_manager, :command_manager, :menu_manager, :dialog_manager, :animation_manager, :simulation_manager, :preferences
-    attr_accessor :energyplus_path, :update_manager, :conflict_manager, :load_components, :user_script_runner
+    attr_accessor :update_manager, :conflict_manager, :load_components, :user_script_runner
   
     def initialize
       @name = $OPENSTUDIO_SKETCHUPPLUGIN_NAME   
@@ -389,10 +389,8 @@ module OpenStudio
       
       if (platform == Platform_Windows)
         hash['Text Editor Path'] = "C:/WINDOWS/system32/notepad.exe"
-        hash['EnergyPlus Path'] = "C:/EnergyPlusV7-2-0/EnergyPlus.exe"  # Default installation path
       elsif (platform == Platform_Mac)
         hash['Text Editor Path'] = "/Applications/TextEdit.app"
-        hash['EnergyPlus Path'] = "/Applications/EnergyPlus-7-2-0/bin/energyplus"  # Default installation path
       end
       
       # decided to have user pick this at first launch
@@ -408,7 +406,6 @@ module OpenStudio
       write_pref("Disable OpenStudio User Scripts", nil)
       write_pref("Unit System", nil)   
       write_pref("Default Template Path", nil)
-      write_pref("EnergyPlus Path", nil)
       write_pref("Erase Entities", nil)
       write_pref("Last Construction Sets Import Dir", nil)
       write_pref("Last Constructions Import Dir", nil)
@@ -429,7 +426,7 @@ module OpenStudio
 
     # Create and set default preferences for any that might not be in the Registry already.
     # For example, the first time the plugin is run, or the first time a new version (with new preferences) is run.
-    # Stores values in the Registry at:  HKEY_CURRENT_USER/Software/Google/SketchUp6/OpenStudio   
+    # Stores values in the Registry at:  HKEY_CURRENT_USER\Software\SketchUp\SketchUp 2014\OpenStudio
     def load_default_preferences
       default_hash = default_preferences
       for key in default_hash.keys
@@ -437,15 +434,6 @@ module OpenStudio
           write_pref(key, default_hash[key])
         end
       end
-    end
-
-    def energyplus_path
-      return(read_pref("EnergyPlus Path"))
-    end
-
-    def energyplus_dir
-      # Still not sure if this should be made available
-      return(File.dirname(energyplus_path))
     end
 
     def energyplus_version

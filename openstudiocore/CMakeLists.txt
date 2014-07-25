@@ -156,7 +156,6 @@ set(project_directories
   osversion
   ruleset
   runmanager/lib
-  runmanager/app
   analysis
   project
   analysisdriver
@@ -198,6 +197,9 @@ endif()
 ###############################################################################
 # Compiler and system specific options
 if(UNIX)
+
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC -fno-strict-aliasing" -std=c11)
+
   # all warnings
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -fno-strict-aliasing -Winvalid-pch -Wnon-virtual-dtor")
   if(APPLE)
@@ -205,17 +207,22 @@ if(UNIX)
   else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual")
   endif()
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC -fno-strict-aliasing")
   
   if(APPLE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
   else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11")
   endif()
 
-  # effective c++
+  # extra warnings - DLM: we should shoot for this
+  #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra")  
+  # warn the user if a variable declaration shadows another with the same name in the same scope - DLM: we should shoot for this
+  #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wshadow")    
+  # effective c++ - DLM: we should shoot for this
   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weffc++")
-  # treat warnings as errors
+  # warn about non-portable code - DLM: we should shoot for this
+  #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic")  
+  # treat warnings as errors - DLM: we should shoot for this
   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
 endif()
 if(MINGW)
@@ -233,21 +240,31 @@ endif()
 if(MSVC)
   # warning level 3
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3")
-  # all warnings
+  
+  # warning level 4 - DLM: we should shoot for this
+  #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")  
+  
+  # all warnings - DLM: probably too high to ever use
   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
+  
   # create compiler processes on all effective processors
   if(BUILD_WITH_MULTIPLE_PROCESSES)
     add_definitions(/MP)
   endif()
+  
+  #Enable warning on thread un-safe static member initialization - DLM: we have been bit by this many times
+  add_definitions(/w44640)
+  
   # ignore decorated name length exceeded
   add_definitions(/wd4503)
+  
   # ignore needs to have dll-interface to be used by clients of class
   # we will not rely on exporting templates instead all libraries must
   # be linked against the same runtime
   add_definitions(/wd4251)
-  # treat warnings as errors
-
+  
   if(NOT CMAKE_CL_64)
+    # treat warnings as errors
     add_definitions(/WX)
   else()
     add_definitions(/bigobj)
@@ -266,7 +283,6 @@ if(CMAKE_COMPILER_IS_GNUCC)
   execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
                   OUTPUT_VARIABLE GCC_VERSION)
 endif()
-
 
 
 ###############################################################################
@@ -891,7 +907,6 @@ set(all_exe_targets
   GenerateIddFactory
   gbXMLToIdf
   OpenStudio
-  RunManager
   ruby_cpp
   litesql-gen
   ResultsViewer

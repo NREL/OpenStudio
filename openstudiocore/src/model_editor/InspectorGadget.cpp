@@ -7,7 +7,7 @@
 *  License as published by the Free Software Foundation; either
 *  version 2.1 of the License, or (at your option) any later version.
 *  
-*  Thsis library is distributed in the hope that it will be useful,
+*  This library is distributed in the hope that it will be useful,
 *  but WITHOUT ANY WARRANTY; without even the implied warranty of
 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 *  Lesser General Public License for more details.
@@ -258,7 +258,9 @@ void InspectorGadget::clear(bool recursive)
     m_deleteHandle=nullptr;
   }
 
-  m_workspaceObj.reset();
+  // This line is commented out to prevent a crash when displaying the Inspector Gadget
+  // within SketchUp 2014.  We have no idea why this works or what repercussions it may cause
+  //m_workspaceObj.reset();
 }
 
 void InspectorGadget::setPrecision( unsigned int prec, FLOAT_DISPLAY dispType )
@@ -319,7 +321,7 @@ void InspectorGadget::layoutItems(QVBoxLayout* masterLayout,
     //{
     //  if(comment == m_workspaceObjs[it]->fieldComment(i,true)){
     //    // keep track of a field set to the value FIELDS_MATCH,
-    //    // if it changed, change the repective elements in any
+    //    // if it changed, change the respective elements in any
     //    // other
     //    comment == FIELDS_MATCH;
     //    break;

@@ -61,8 +61,7 @@ TEST_F(RunManagerTestFixture, OSResultLoading)
 
   openstudio::runmanager::Tools tools 
     = openstudio::runmanager::ConfigOptions::makeTools(energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), 
-        rubyExePath().parent_path(), openstudio::path(),
-        openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
+        rubyExePath().parent_path(), openstudio::path());
 
   wf.add(tools);
 
@@ -102,8 +101,7 @@ TEST_F(RunManagerTestFixture, OSResultLoading_Success)
 
   openstudio::runmanager::Tools tools 
     = openstudio::runmanager::ConfigOptions::makeTools(energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), 
-        rubyExePath().parent_path(), openstudio::path(),
-        openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
+        rubyExePath().parent_path(), openstudio::path());
 
   wf.add(tools);
 
