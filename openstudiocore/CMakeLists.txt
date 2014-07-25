@@ -197,6 +197,9 @@ endif()
 ###############################################################################
 # Compiler and system specific options
 if(UNIX)
+
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC -fno-strict-aliasing" -std=c11)
+
   # all warnings
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -fno-strict-aliasing -Winvalid-pch -Wnon-virtual-dtor")
   if(APPLE)
@@ -204,14 +207,18 @@ if(UNIX)
   else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual")
   endif()
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC -fno-strict-aliasing -std=c11")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
   
+  if(APPLE)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
+  else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11")
+  endif()
+
   # extra warnings - DLM: we should shoot for this
   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra")  
   # warn the user if a variable declaration shadows another with the same name in the same scope - DLM: we should shoot for this
   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wshadow")    
-  # effective c++
+  # effective c++ - DLM: we should shoot for this
   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weffc++")
   # warn about non-portable code - DLM: we should shoot for this
   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic")  
@@ -294,8 +301,19 @@ mark_as_advanced(
 
 # Ruby
 find_program(RUBY_EXECUTABLE NAMES ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH)
-find_package(Ruby REQUIRED)
 
+if(APPLE)
+  if(CMAKE_OSX_SYSROOT MATCHES ".*10\\.8.*")
+    # set RUBYLIB environment variable so find_package can find the right Ruby libraries
+    get_filename_component(RUBY_EXECUTABLE_DIR ${RUBY_EXECUTABLE} PATH)
+    set(ENV{RUBYLIB} "${RUBY_EXECUTABLE_DIR}/../lib/ruby/2.0.0/universal-darwin12.5.0/:${RUBY_EXECUTABLE_DIR}/../lib/ruby/2.0.0/" )
+    set(RUBY_INCLUDE_DIR "${RUBY_EXECUTABLE_DIR}/../include/ruby-2.0.0/" CACHE PATH "The Ruby include dir" FORCE)
+    set(RUBY_CONFIG_INCLUDE_DIR "${RUBY_EXECUTABLE_DIR}/../include/ruby-2.0.0/universal-darwin12.5.0/" CACHE PATH "The Ruby config include dir" FORCE)
+    set(RUBY_LIBRARY "${RUBY_EXECUTABLE_DIR}/../lib/libruby.2.0.0.dylib" CACHE PATH "The Ruby library" FORCE)
+  endif()
+endif()
+
+find_package(Ruby REQUIRED)
 
 set(RUBY_MODULE_DIR "Ruby")
 
