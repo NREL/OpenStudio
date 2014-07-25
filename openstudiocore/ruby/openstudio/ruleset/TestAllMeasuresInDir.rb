@@ -37,7 +37,7 @@
 require 'openstudio'
 require 'openstudio/ruleset/ShowRunnerOutput'
 
-require 'test/unit'
+require 'minitest/autorun'
 
 require 'set'
 
@@ -123,7 +123,7 @@ Dir.glob("#{dir}/*/") do |measure_dir|
   end
 end
 
-class TestAllMeasures_Test < Test::Unit::TestCase
+class TestAllMeasures_Test < MiniTest::Unit::TestCase
   # def setup
   # end
 

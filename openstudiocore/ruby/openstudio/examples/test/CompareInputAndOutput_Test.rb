@@ -19,9 +19,9 @@
 
 require 'openstudio'
  
-require 'test/unit'
+require 'minitest/autorun'
 
-class CompareInputAndOutput_Test < Test::Unit::TestCase
+class CompareInputAndOutput_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

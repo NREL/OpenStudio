@@ -20,8 +20,8 @@
 #ifndef MODEL_FFACTORGROUNDFLOORCONSTRUCTION_HPP
 #define MODEL_FFACTORGROUNDFLOORCONSTRUCTION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ConstructionBase.hpp>
+#include "ModelAPI.hpp"
+#include "ConstructionBase.hpp"
 
 namespace openstudio {
 namespace model {
@@ -79,7 +79,7 @@ class MODEL_API FFactorGroundFloorConstruction : public ConstructionBase {
   friend class detail::FFactorGroundFloorConstruction_Impl;
 
   explicit FFactorGroundFloorConstruction(
-      boost::shared_ptr<detail::FFactorGroundFloorConstruction_Impl> impl);  
+      std::shared_ptr<detail::FFactorGroundFloorConstruction_Impl> impl);  
 
   /// @endcond
  private:

@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_IDFTOMODEL_HPP__
-#define OPENSTUDIO_IDFTOMODEL_HPP__
+#ifndef RUNMANAGER_LIB_IDFTOMODELJOB_HPP
+#define RUNMANAGER_LIB_IDFTOMODELJOB_HPP
 
 #include <boost/filesystem.hpp>
 #include <string>
-#include <utilities/core/Logger.hpp>
+#include "../../utilities/core/Logger.hpp"
 #include "Job_Impl.hpp"
 #include "JobParam.hpp"
-#include <utilities/core/Checksum.hpp>
+#include "../../utilities/core/Checksum.hpp"
 
 #include <QFileSystemWatcher>
 #include <QFileInfo>
@@ -59,15 +59,10 @@ namespace detail {
       virtual std::string getOutput() const;
       virtual void cleanup();
 
-      virtual bool remoteRunnable() const
-      {
-        return false;
-      }
-
       virtual void requestStop();
 
     protected:
-      virtual void startImpl(const boost::shared_ptr<ProcessCreator> &t_creator);
+      virtual void startImpl(const std::shared_ptr<ProcessCreator> &t_creator);
       virtual void basePathChanged();
       virtual void standardCleanImpl() { /* nothing to do for this job type */ }
 
@@ -88,4 +83,4 @@ namespace detail {
 }
 }
 }
-#endif
+#endif // RUNMANAGER_LIB_IDFTOMODELJOB_HPP

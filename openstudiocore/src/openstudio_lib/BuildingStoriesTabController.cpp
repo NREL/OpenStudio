@@ -17,20 +17,20 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/BuildingStoriesTabController.hpp>
-#include <openstudio_lib/BuildingStoriesTabView.hpp>
-#include <openstudio_lib/BuildingStoriesController.hpp>
+#include "BuildingStoriesTabController.hpp"
+#include "BuildingStoriesTabView.hpp"
+#include "BuildingStoriesController.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
 BuildingStoriesTabController::BuildingStoriesTabController(const model::Model& model)
   : MainTabController(new BuildingStoriesTabView())
 {
-  m_buildingStoriesController = boost::shared_ptr<BuildingStoriesController>(new BuildingStoriesController(model));
+  m_buildingStoriesController = std::shared_ptr<BuildingStoriesController>(new BuildingStoriesController(model));
   this->mainContentWidget()->addTabWidget(m_buildingStoriesController->subTabView());
 
   bool isConnected = false;

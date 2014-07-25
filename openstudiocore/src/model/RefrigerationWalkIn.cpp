@@ -17,31 +17,31 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/RefrigerationWalkIn.hpp>
-#include <model/RefrigerationWalkIn_Impl.hpp>
-#include <model/RefrigerationWalkInZoneBoundary.hpp>
-#include <model/RefrigerationWalkInZoneBoundary_Impl.hpp>
+#include "RefrigerationWalkIn.hpp"
+#include "RefrigerationWalkIn_Impl.hpp"
+#include "RefrigerationWalkInZoneBoundary.hpp"
+#include "RefrigerationWalkInZoneBoundary_Impl.hpp"
 
-#include <model/RefrigerationSystem_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/RefrigerationDefrostCycleParameters.hpp>
-#include <model/RefrigerationDefrostCycleParameters_Impl.hpp>
+#include "RefrigerationSystem_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "RefrigerationDefrostCycleParameters.hpp"
+#include "RefrigerationDefrostCycleParameters_Impl.hpp"
 
-#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
+#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
+#include "../utilities/idf/WorkspaceObject.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_WalkIn_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
-#include <utilities/time/Time.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/time/Time.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -118,7 +118,7 @@ namespace detail {
   {
     std::vector<IdfObject> result;
 
-    boost::shared_ptr<Model_Impl> t_model = model().getImpl<Model_Impl>();
+    std::shared_ptr<Model_Impl> t_model = model().getImpl<Model_Impl>();
     t_model->blockSignals(true);
 
     if (boost::optional<RefrigerationDefrostCycleParameters> walkinDefrostCycleParameters = this->optionalWalkinDefrostCycleParameters()) {
@@ -127,11 +127,9 @@ namespace detail {
     }
 
     std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries = this->zoneBoundaries();
-    for( std::vector<RefrigerationWalkInZoneBoundary>::iterator it = zoneBoundaries.begin();
-         it != zoneBoundaries.end();
-         ++it )
+    for( auto & zoneBoundary : zoneBoundaries )
     {
-      std::vector<IdfObject> removedZoneBoundaries = it->remove();
+      std::vector<IdfObject> removedZoneBoundaries = zoneBoundary.remove();
       result.insert(result.end(), removedZoneBoundaries.begin(), removedZoneBoundaries.end());
     }      
 
@@ -154,11 +152,9 @@ namespace detail {
     modelObjectClone.removeAllZoneBoundaries();
 
     std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries = this->zoneBoundaries();
-    for( std::vector<RefrigerationWalkInZoneBoundary>::iterator it = zoneBoundaries.begin();
-         it != zoneBoundaries.end();
-         ++it )
+    for( const auto & zoneBoundary : zoneBoundaries )
     {
-      RefrigerationWalkInZoneBoundary zoneBoundaryClone = it->clone(model).cast<RefrigerationWalkInZoneBoundary>();
+      RefrigerationWalkInZoneBoundary zoneBoundaryClone = zoneBoundary.clone(model).cast<RefrigerationWalkInZoneBoundary>();
       modelObjectClone.addZoneBoundary(zoneBoundaryClone);
     }
 
@@ -195,11 +191,9 @@ namespace detail {
 
     std::vector<IdfExtensibleGroup> groups = extensibleGroups();
 
-    for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
-         it != groups.end();
-         ++it )
+    for( const auto & group : groups )
     {
-      if( boost::optional<WorkspaceObject> wo = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_Refrigeration_WalkInExtensibleFields::WalkInZoneBoundary) )
+      if( boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_Refrigeration_WalkInExtensibleFields::WalkInZoneBoundary) )
       {
         if(boost::optional<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundary = 
             wo->optionalCast<RefrigerationWalkInZoneBoundary>())
@@ -464,7 +458,7 @@ namespace detail {
   boost::optional<RefrigerationSystem> RefrigerationWalkIn_Impl::system() const {
     std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
     RefrigerationWalkIn refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
-    BOOST_FOREACH(RefrigerationSystem refrigerationSystem, refrigerationSystems) {
+    for (RefrigerationSystem refrigerationSystem : refrigerationSystems) {
       RefrigerationWalkInVector refrigerationWalkIns = refrigerationSystem.walkins();
       if ( !refrigerationWalkIns.empty() && std::find(refrigerationWalkIns.begin(), refrigerationWalkIns.end(), refrigerationWalkIn) != refrigerationWalkIns.end() ) {
         return refrigerationSystem;
@@ -1459,7 +1453,7 @@ void RefrigerationWalkIn::resetZoneBoundaryStockingDoorOpeningScheduleFacingZone
 }
 
 /// @cond
-RefrigerationWalkIn::RefrigerationWalkIn(boost::shared_ptr<detail::RefrigerationWalkIn_Impl> impl)
+RefrigerationWalkIn::RefrigerationWalkIn(std::shared_ptr<detail::RefrigerationWalkIn_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

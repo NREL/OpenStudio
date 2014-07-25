@@ -21,15 +21,12 @@
 #define PROJECT_JOINRECORD_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/Record.hpp> 
-#include <project/ProjectDatabase.hpp> 
+#include "Record.hpp" 
+#include "ProjectDatabase.hpp" 
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Enum.hpp>
-#include <utilities/core/UUID.hpp>
-
-#include <boost/shared_ptr.hpp>
-#include <boost/foreach.hpp>
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/Enum.hpp"
+#include "../utilities/core/UUID.hpp"
 
 class QSqlQuery;
 
@@ -89,7 +86,7 @@ class PROJECT_API JoinRecord : public Record{
     query.bindValue(":rightId", rightId);
     assertExec(query);
     if(query.first()){
-      result = T(boost::shared_ptr<typename T::ImplType>(new typename T::ImplType(query, projectDatabase)), projectDatabase);
+      result = T(std::shared_ptr<typename T::ImplType>(new typename T::ImplType(query, projectDatabase)), projectDatabase);
     }
 
     return result;
@@ -106,7 +103,7 @@ class PROJECT_API JoinRecord : public Record{
     query.bindValue(":leftId", leftId);
     assertExec(query);
     while(query.next()){
-      T object(boost::shared_ptr<typename T::ImplType>(new typename T::ImplType(query, projectDatabase)), projectDatabase);
+      T object(std::shared_ptr<typename T::ImplType>(new typename T::ImplType(query, projectDatabase)), projectDatabase);
       result.push_back(object);
     }
 
@@ -124,7 +121,7 @@ class PROJECT_API JoinRecord : public Record{
     query.bindValue(":rightId", rightId);
     assertExec(query);
     while(query.next()){
-      T object(boost::shared_ptr<typename T::ImplType>(new typename T::ImplType(query, projectDatabase)), projectDatabase);
+      T object(std::shared_ptr<typename T::ImplType>(new typename T::ImplType(query, projectDatabase)), projectDatabase);
       result.push_back(object);
     }
 
@@ -145,7 +142,7 @@ class PROJECT_API JoinRecord : public Record{
     query.bindValue(":rightId", rightId);
     assertExec(query);
     if (query.first()){
-      T object(boost::shared_ptr<typename T::ImplType>(new typename T::ImplType(query, projectDatabase)), projectDatabase);
+      T object(std::shared_ptr<typename T::ImplType>(new typename T::ImplType(query, projectDatabase)), projectDatabase);
       result = projectDatabase.removeRecord(object);
     }
 
@@ -165,11 +162,11 @@ class PROJECT_API JoinRecord : public Record{
     query.bindValue(":leftId", leftId);
     assertExec(query);
     while(query.next()){
-      T object(boost::shared_ptr<typename T::ImplType>(new typename T::ImplType(query, projectDatabase)), projectDatabase);
+      T object(std::shared_ptr<typename T::ImplType>(new typename T::ImplType(query, projectDatabase)), projectDatabase);
       toRemove.push_back(object);
     }
 
-    BOOST_FOREACH(T object, toRemove){
+    for (T object : toRemove){
       result = projectDatabase.removeRecord(object);
     }
 
@@ -189,11 +186,11 @@ class PROJECT_API JoinRecord : public Record{
     query.bindValue(":rightId", rightId);
     assertExec(query);
     while(query.next()){
-      T object(boost::shared_ptr<typename T::ImplType>(new typename T::ImplType(query, projectDatabase)), projectDatabase);
+      T object(std::shared_ptr<typename T::ImplType>(new typename T::ImplType(query, projectDatabase)), projectDatabase);
       toRemove.push_back(object);
     }
 
-    BOOST_FOREACH(T object, toRemove){
+    for (T object : toRemove){
       result = projectDatabase.removeRecord(object);
     }
 
@@ -223,10 +220,10 @@ class PROJECT_API JoinRecord : public Record{
   typedef detail::JoinRecord_Impl ImplType;
 
   /// constructor
-  JoinRecord(boost::shared_ptr<detail::JoinRecord_Impl> impl, ProjectDatabase projectDatabase);
+  JoinRecord(std::shared_ptr<detail::JoinRecord_Impl> impl, ProjectDatabase projectDatabase);
 
   /// constructor
-  JoinRecord(boost::shared_ptr<detail::JoinRecord_Impl> impl);
+  JoinRecord(std::shared_ptr<detail::JoinRecord_Impl> impl);
 
  private:
   REGISTER_LOGGER("openstudio.project.JoinRecord");

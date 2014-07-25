@@ -20,8 +20,8 @@
 #ifndef MODEL_SIZINGPARAMETERS_HPP
 #define MODEL_SIZINGPARAMETERS_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 
@@ -98,7 +98,7 @@ class MODEL_API SizingParameters : public ModelObject {
   /// @cond
   typedef detail::SizingParameters_Impl ImplType;
 
-  explicit SizingParameters(boost::shared_ptr<detail::SizingParameters_Impl> impl);
+  explicit SizingParameters(std::shared_ptr<detail::SizingParameters_Impl> impl);
 
   friend class detail::SizingParameters_Impl;
   friend class Model;

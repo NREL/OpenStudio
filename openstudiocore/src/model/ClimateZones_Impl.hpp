@@ -20,7 +20,7 @@
 #ifndef MODEL_CLIMATEZONES_IMPL_HPP
 #define MODEL_CLIMATEZONES_IMPL_HPP
 
-#include <model/ModelObject_Impl.hpp>
+#include "ModelObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {

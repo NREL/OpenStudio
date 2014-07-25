@@ -17,28 +17,23 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/Logger.hpp>
+#include "Logger.hpp"
 
 #include <boost/log/common.hpp>
 #include <boost/log/core/record.hpp>
 #include <boost/log/core/core.hpp>
 #include <boost/log/attributes/attribute.hpp>
 #include <boost/log/attributes/current_thread_id.hpp>
-#include <boost/log/attributes/basic_attribute_value.hpp>
+#include <boost/log/attributes/attribute_value.hpp>
 #include <boost/log/sources/channel_feature.hpp>
 #include <boost/log/sources/severity_feature.hpp>
 #include <boost/log/sources/severity_channel_logger.hpp>
 #include <boost/log/sources/global_logger_storage.hpp>
 #include <boost/log/sources/record_ostream.hpp>
-#include <boost/log/formatters.hpp>
-#include <boost/log/filters.hpp>
-#include <boost/log/filters/attr.hpp>
+#include <boost/log/attributes/function.hpp>
 #include <boost/log/support/regex.hpp>
-#include <boost/log/utility/init/to_file.hpp>
-#include <boost/log/utility/init/to_console.hpp>
-#include <boost/log/utility/init/common_attributes.hpp>
 
-#include <boost/foreach.hpp>
+#include <boost/utility/empty_deleter.hpp>
 
 #include <sstream>
 #include <stdio.h>
@@ -51,9 +46,6 @@
 
 namespace sinks = boost::log::sinks;
 namespace keywords = boost::log::keywords;
-namespace fmt = boost::log::formatters;
-namespace flt = boost::log::filters;
-
 
 namespace openstudio{
 
@@ -82,52 +74,38 @@ namespace openstudio{
     std::cout << "[Qt] <" << type << "> " << msg << std::endl;
   }
 
-  /// convienience function for SWIG, prefer macros in C++
+  /// convenience function for SWIG, prefer macros in C++
   void logFree(LogLevel level, const std::string& channel, const std::string& message)
   {
     BOOST_LOG_SEV(openstudio::Logger::instance().loggerFromChannel(channel), level) << message;
   }
 
-  // Custom class to extract QThread::currentThread
-  class QThreadAttribute : public boost::log::attribute
-  {
-  private:
-      //! Attribute value type
-    typedef boost::log::attributes::basic_attribute_value< QThread* > result_value;
-
-  public:
-    boost::shared_ptr< boost::log::attribute_value > get_value()
-      {
-        return boost::make_shared< result_value >(QThread::currentThread());
-      }
-  };
-
   LoggerSingleton::LoggerSingleton()
     : m_mutex(new QReadWriteLock())
   {
     // Make QThread attribute available to logging
-    boost::log::core::get()->add_global_attribute("QThread", boost::make_shared< QThreadAttribute >());
+    boost::log::core::get()->add_global_attribute("QThread", boost::log::attributes::make_function(&QThread::currentThread));
 
     // We have to provide an empty deleter to avoid destroying the global stream
-    boost::shared_ptr<std::ostream> stdOut(&std::cout, boost::log::empty_deleter());
+    boost::shared_ptr<std::ostream> stdOut(&std::cout, boost::empty_deleter());
     m_standardOutLogger.setStream(stdOut);
     m_standardOutLogger.setLogLevel(Warn);
     this->addSink(m_standardOutLogger.sink());
 
     // We have to provide an empty deleter to avoid destroying the global stream
-    boost::shared_ptr<std::ostream> stdErr(&std::cerr, boost::log::empty_deleter());
+    boost::shared_ptr<std::ostream> stdErr(&std::cerr, boost::empty_deleter());
     m_standardErrLogger.setStream(stdErr);
     m_standardErrLogger.setLogLevel(Warn);
     //this->addSink(m_standardErrLogger.sink());
 
     // register Qt message handler
-    qInstallMsgHandler(logQtMessage);
+    //qInstallMsgHandler(logQtMessage);
   }
 
   LoggerSingleton::~LoggerSingleton()
   {
     // unregister Qt message handler
-    qInstallMsgHandler(consoleLogQtMessage);
+    //qInstallMsgHandler(consoleLogQtMessage);
 
     delete m_mutex;
   }
@@ -150,7 +128,7 @@ namespace openstudio{
   {
     QReadLocker l(m_mutex);
 
-    LoggerMapType::iterator it = m_loggerMap.find(logChannel);
+    auto it = m_loggerMap.find(logChannel);
     if (it == m_loggerMap.end()){
       //LoggerType newLogger(keywords::channel = logChannel, keywords::severity = Debug);
       LoggerType newLogger(keywords::channel = logChannel);
@@ -175,7 +153,7 @@ namespace openstudio{
   {
     QWriteLocker l(m_mutex);
 
-    SinkSetType::iterator it = m_sinks.find(sink);
+    auto it = m_sinks.find(sink);
 
     return (it != m_sinks.end());
   }
@@ -184,7 +162,7 @@ namespace openstudio{
   {
     QWriteLocker l(m_mutex);
 
-    SinkSetType::iterator it = m_sinks.find(sink);
+    auto it = m_sinks.find(sink);
     if (it == m_sinks.end()){
 
       // Drop the read lock and grab a write lock - we need to add the new file to the map
@@ -203,7 +181,7 @@ namespace openstudio{
   {
     QWriteLocker l(m_mutex);
 
-    SinkSetType::iterator it = m_sinks.find(sink);
+    auto it = m_sinks.find(sink);
     if (it != m_sinks.end()){
 
       // Drop the read lock and grab a write lock - we need to add the new file to the map

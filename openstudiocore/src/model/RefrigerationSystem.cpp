@@ -17,38 +17,38 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/RefrigerationSystem.hpp>
-#include <model/RefrigerationSystem_Impl.hpp>
+#include "RefrigerationSystem.hpp"
+#include "RefrigerationSystem_Impl.hpp"
 
-#include <model/ModelObjectList.hpp>
-#include <model/ModelObjectList_Impl.hpp>
-#include <model/RefrigerationAirChiller.hpp>
-#include <model/RefrigerationAirChiller_Impl.hpp>
-#include <model/RefrigerationCondenserCascade.hpp>
-#include <model/RefrigerationCondenserCascade_Impl.hpp>
-#include <model/RefrigerationCase.hpp>
-#include <model/RefrigerationCase_Impl.hpp>
-#include <model/RefrigerationCompressor.hpp>
-#include <model/RefrigerationCompressor_Impl.hpp>
-#include <model/RefrigerationSecondarySystem.hpp>
-#include <model/RefrigerationSecondarySystem_Impl.hpp>
-#include <model/RefrigerationWalkIn.hpp>
-#include <model/RefrigerationWalkIn_Impl.hpp>
-#include <model/RefrigerationSubcoolerLiquidSuction.hpp>
-#include <model/RefrigerationSubcoolerLiquidSuction_Impl.hpp>
-#include <model/RefrigerationSubcoolerMechanical.hpp>
-#include <model/RefrigerationSubcoolerMechanical_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "ModelObjectList.hpp"
+#include "ModelObjectList_Impl.hpp"
+#include "RefrigerationAirChiller.hpp"
+#include "RefrigerationAirChiller_Impl.hpp"
+#include "RefrigerationCondenserCascade.hpp"
+#include "RefrigerationCondenserCascade_Impl.hpp"
+#include "RefrigerationCase.hpp"
+#include "RefrigerationCase_Impl.hpp"
+#include "RefrigerationCompressor.hpp"
+#include "RefrigerationCompressor_Impl.hpp"
+#include "RefrigerationSecondarySystem.hpp"
+#include "RefrigerationSecondarySystem_Impl.hpp"
+#include "RefrigerationWalkIn.hpp"
+#include "RefrigerationWalkIn_Impl.hpp"
+#include "RefrigerationSubcoolerLiquidSuction.hpp"
+#include "RefrigerationSubcoolerLiquidSuction_Impl.hpp"
+#include "RefrigerationSubcoolerMechanical.hpp"
+#include "RefrigerationSubcoolerMechanical_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_System_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -185,8 +185,8 @@ namespace detail {
     if( modelObjectList ) {
       std::vector<ModelObject> modelObjects = modelObjectList->modelObjects();
 
-      for(std::vector<ModelObject>::iterator it = modelObjects.begin(); it != modelObjects.end(); ++it) {
-          boost::optional<T> modelObject = it->optionalCast<T>();
+      for(const auto & elem : modelObjects) {
+          boost::optional<T> modelObject = elem.optionalCast<T>();
           if (modelObject) {
             result.push_back(modelObject.get());
           }
@@ -335,10 +335,10 @@ namespace detail {
     if( modelObjectList ) {
       std::vector<ModelObject> modelObjects = modelObjectList->modelObjects();
 
-      for(std::vector<ModelObject>::iterator it = modelObjects.begin(); it != modelObjects.end(); ++it) {
-          boost::optional<T> modelObject = it->optionalCast<T>();
+      for(const auto & elem : modelObjects) {
+          boost::optional<T> modelObject = elem.optionalCast<T>();
           if (modelObject) {
-            modelObjectList->removeModelObject(*it);
+            modelObjectList->removeModelObject(elem);
           }
       }
     }  
@@ -963,7 +963,7 @@ void RefrigerationSystem::resetShellandCoilIntercoolerEffectiveness() {
 }
 
 /// @cond
-RefrigerationSystem::RefrigerationSystem(boost::shared_ptr<detail::RefrigerationSystem_Impl> impl)
+RefrigerationSystem::RefrigerationSystem(std::shared_ptr<detail::RefrigerationSystem_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

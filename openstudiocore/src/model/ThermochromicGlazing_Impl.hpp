@@ -20,9 +20,9 @@
 #ifndef MODEL_THERMOCHROMICGLAZING_IMPL_HPP
 #define MODEL_THERMOCHROMICGLAZING_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Glazing.hpp>
-#include <model/Glazing_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "Glazing.hpp"
+#include "Glazing_Impl.hpp"
 
 namespace openstudio {
 namespace model {

@@ -19,9 +19,9 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/plot/AnnotatedTimeline.hpp>
-#include <utilities/data/Vector.hpp>
-#include <utilities/data/TimeSeries.hpp>
+#include "../AnnotatedTimeline.hpp"
+#include "../../data/Vector.hpp"
+#include "../../data/TimeSeries.hpp"
 
 using openstudio::AnnotatedTimeline;
 using openstudio::Date;

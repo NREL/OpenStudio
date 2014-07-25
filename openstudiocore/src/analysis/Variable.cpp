@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/Variable.hpp>
-#include <analysis/Variable_Impl.hpp>
+#include "Variable.hpp"
+#include "Variable_Impl.hpp"
 
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/OutputAttributeVariable.hpp>
-#include <analysis/OutputAttributeVariable_Impl.hpp>
-#include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/RubyContinuousVariable_Impl.hpp>
+#include "MeasureGroup.hpp"
+#include "MeasureGroup_Impl.hpp"
+#include "OutputAttributeVariable.hpp"
+#include "OutputAttributeVariable_Impl.hpp"
+#include "RubyContinuousVariable.hpp"
+#include "RubyContinuousVariable_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -83,7 +83,7 @@ double Variable::getValue(const DataPoint& dataPoint) const {
 }
 
 /// @cond
-Variable::Variable(boost::shared_ptr<detail::Variable_Impl> impl)
+Variable::Variable(std::shared_ptr<detail::Variable_Impl> impl)
   : AnalysisObject(impl)
 {}
 /// @endcond

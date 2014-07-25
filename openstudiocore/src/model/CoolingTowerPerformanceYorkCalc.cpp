@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CoolingTowerPerformanceYorkCalc.hpp>
-#include <model/CoolingTowerPerformanceYorkCalc_Impl.hpp>
+#include "CoolingTowerPerformanceYorkCalc.hpp"
+#include "CoolingTowerPerformanceYorkCalc_Impl.hpp"
 #include <utilities/idd/OS_CoolingTowerPerformance_YorkCalc_FieldEnums.hxx>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -796,7 +796,7 @@ void CoolingTowerPerformanceYorkCalc::setCoefficient27(double coefficient27) {
 }
 
 /// @cond
-CoolingTowerPerformanceYorkCalc::CoolingTowerPerformanceYorkCalc(boost::shared_ptr<detail::CoolingTowerPerformanceYorkCalc_Impl> impl)
+CoolingTowerPerformanceYorkCalc::CoolingTowerPerformanceYorkCalc(std::shared_ptr<detail::CoolingTowerPerformanceYorkCalc_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

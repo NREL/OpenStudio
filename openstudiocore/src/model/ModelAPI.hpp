@@ -1,5 +1,5 @@
-#ifndef __MODEL_API_HPP__
-#define __MODEL_API_HPP__
+#ifndef MODEL_MODELAPI_HPP
+#define MODEL_MODELAPI_HPP
 
 #if _WIN32 || _MSC_VER
 

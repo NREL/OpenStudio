@@ -20,8 +20,8 @@
 #ifndef MODEL_HEATEXCHANGERAIRTOAIRSENSIBLEANDLATENT_HPP
 #define MODEL_HEATEXCHANGERAIRTOAIRSENSIBLEANDLATENT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/AirToAirComponent.hpp>
+#include "ModelAPI.hpp"
+#include "AirToAirComponent.hpp"
 
 namespace openstudio {
 
@@ -194,7 +194,7 @@ class MODEL_API HeatExchangerAirToAirSensibleAndLatent : public AirToAirComponen
   /// @cond
   typedef detail::HeatExchangerAirToAirSensibleAndLatent_Impl ImplType;
 
-  explicit HeatExchangerAirToAirSensibleAndLatent(boost::shared_ptr<detail::HeatExchangerAirToAirSensibleAndLatent_Impl> impl);
+  explicit HeatExchangerAirToAirSensibleAndLatent(std::shared_ptr<detail::HeatExchangerAirToAirSensibleAndLatent_Impl> impl);
 
   friend class detail::HeatExchangerAirToAirSensibleAndLatent_Impl;
   friend class Model;

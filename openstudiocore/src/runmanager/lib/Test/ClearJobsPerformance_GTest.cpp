@@ -20,18 +20,18 @@
 #include <gtest/gtest.h>
 #include "RunManagerTestFixture.hpp"
 #include <runmanager/Test/ToolBin.hxx>
-#include <runmanager/lib/JobFactory.hpp>
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/LocalProcessCreator.hpp>
-#include <runmanager/lib/Workflow.hpp>
+#include "../JobFactory.hpp"
+#include "../RunManager.hpp"
+#include "../LocalProcessCreator.hpp"
+#include "../Workflow.hpp"
 
-#include <model/Model.hpp>
-#include <model/WeatherFile.hpp>
+#include "../../../model/Model.hpp"
+#include "../../../model/WeatherFile.hpp"
 
-#include <utilities/filetypes/EpwFile.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
+#include "../../../utilities/filetypes/EpwFile.hpp"
+#include "../../../utilities/idf/IdfFile.hpp"
+#include "../../../utilities/idf/Workspace.hpp"
+#include "../../../utilities/idf/WorkspaceObject.hpp"
 
 #include <utilities/idd/OS_TimeDependentValuation_FieldEnums.hxx>
 #include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
@@ -71,7 +71,7 @@ TEST_F(RunManagerTestFixture, ClearJobsPerformanceTest)
 
     boost::timer t;
 
-    BOOST_FOREACH(openstudio::runmanager::Job job, rm.getJobs()) {
+    for (openstudio::runmanager::Job job : rm.getJobs()) {
       rm.remove(job);
     }
 

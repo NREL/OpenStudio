@@ -17,136 +17,136 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <isomodel/ForwardTranslator.hpp>
-#include <isomodel/UserModel.hpp>
+#include "ForwardTranslator.hpp"
+#include "UserModel.hpp"
 
-#include <utilities/time/Date.hpp>
+#include "../utilities/time/Date.hpp"
 
-#include <model/Model.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/ModelObject.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/AirGap.hpp>
-#include <model/AirGap_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
-#include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
-#include <model/BoilerHotWater.hpp>
-#include <model/BoilerHotWater_Impl.hpp>
-#include <model/BoilerSteam.hpp>
-#include <model/BoilerSteam_Impl.hpp>
-#include <model/ChillerElectricEIR.hpp>
-#include <model/ChillerElectricEIR_Impl.hpp>
-#include <model/CoilCoolingDXSingleSpeed.hpp>
-#include <model/CoilCoolingDXSingleSpeed_Impl.hpp>
-#include <model/CoilCoolingDXTwoSpeed.hpp>
-#include <model/CoilCoolingDXTwoSpeed_Impl.hpp>
-#include <model/CoilCoolingWater.hpp>
-#include <model/CoilCoolingWater_Impl.hpp>
-#include <model/CoilHeatingDXSingleSpeed.hpp>
-#include <model/CoilHeatingDXSingleSpeed_Impl.hpp>
-#include <model/CoilHeatingElectric.hpp>
-#include <model/CoilHeatingElectric_Impl.hpp>
-#include <model/CoilHeatingGas.hpp>
-#include <model/CoilHeatingGas_Impl.hpp>
-#include <model/CoilHeatingWater.hpp>
-#include <model/CoilHeatingWater_Impl.hpp>
-#include <model/ConnectorMixer.hpp>
-#include <model/ConnectorMixer_Impl.hpp>
-#include <model/ConnectorSplitter.hpp>
-#include <model/ConnectorSplitter_Impl.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/DaylightingControl.hpp>
-#include <model/DaylightingControl_Impl.hpp>
-#include <model/DesignSpecificationOutdoorAir.hpp>
-#include <model/DesignSpecificationOutdoorAir_Impl.hpp>
-#include <model/ElectricEquipment.hpp>
-#include <model/ElectricEquipment_Impl.hpp>
-#include <model/ExteriorLights.hpp>
-#include <model/ExteriorLights_Impl.hpp>
-#include <model/ExteriorLightsDefinition.hpp>
-#include <model/ExteriorLightsDefinition_Impl.hpp>
-#include <model/Gas.hpp>
-#include <model/Gas_Impl.hpp>
-#include <model/GasEquipment.hpp>
-#include <model/GasEquipment_Impl.hpp>
-#include <model/GasMixture.hpp>
-#include <model/GasMixture_Impl.hpp>
-#include <model/InternalMassDefinition.hpp>
-#include <model/InternalMassDefinition_Impl.hpp>
-#include <model/Lights.hpp>
-#include <model/Lights_Impl.hpp>
-#include <model/Luminaire.hpp>
-#include <model/Luminaire_Impl.hpp>
-#include <model/MasslessOpaqueMaterial.hpp>
-#include <model/MasslessOpaqueMaterial_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/OpaqueMaterial.hpp>
-#include <model/OpaqueMaterial_Impl.hpp>
-#include <model/People.hpp>
-#include <model/People_Impl.hpp>
-#include <model/PipeAdiabatic.hpp>
-#include <model/PipeAdiabatic_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
-#include <model/RefractionExtinctionGlazing.hpp>
-#include <model/RefractionExtinctionGlazing_Impl.hpp>
-#include <model/RoofVegetation.hpp>
-#include <model/RoofVegetation_Impl.hpp>
-#include <model/ScheduleDay.hpp>
-#include <model/ScheduleDay_Impl.hpp>
-#include <model/ScheduleRuleset.hpp>
-#include <model/ScheduleRuleset_Impl.hpp>
-#include <model/SimpleGlazing.hpp>
-#include <model/SimpleGlazing_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate_Impl.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/StandardGlazing.hpp>
-#include <model/StandardGlazing_Impl.hpp>
-#include <model/StandardOpaqueMaterial.hpp>
-#include <model/StandardOpaqueMaterial_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/ThermochromicGlazing.hpp>
-#include <model/ThermochromicGlazing_Impl.hpp>
-#include <model/ThermostatSetpointDualSetpoint.hpp>
-#include <model/ThermostatSetpointDualSetpoint_Impl.hpp>
-#include <model/WaterHeaterMixed.hpp>
-#include <model/WaterHeaterMixed_Impl.hpp>
-#include <model/WaterUseConnections.hpp>
-#include <model/WaterUseConnections_Impl.hpp>
-#include <model/WaterUseEquipment.hpp>
-#include <model/WaterUseEquipment_Impl.hpp>
-#include <model/WaterUseEquipmentDefinition.hpp>
-#include <model/WaterUseEquipmentDefinition_Impl.hpp>
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/Facility.hpp"
+#include "../model/Facility_Impl.hpp"
+#include "../model/AirGap.hpp"
+#include "../model/AirGap_Impl.hpp"
+#include "../model/AirLoopHVAC.hpp"
+#include "../model/AirLoopHVAC_Impl.hpp"
+#include "../model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
+#include "../model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
+#include "../model/BoilerHotWater.hpp"
+#include "../model/BoilerHotWater_Impl.hpp"
+#include "../model/BoilerSteam.hpp"
+#include "../model/BoilerSteam_Impl.hpp"
+#include "../model/ChillerElectricEIR.hpp"
+#include "../model/ChillerElectricEIR_Impl.hpp"
+#include "../model/CoilCoolingDXSingleSpeed.hpp"
+#include "../model/CoilCoolingDXSingleSpeed_Impl.hpp"
+#include "../model/CoilCoolingDXTwoSpeed.hpp"
+#include "../model/CoilCoolingDXTwoSpeed_Impl.hpp"
+#include "../model/CoilCoolingWater.hpp"
+#include "../model/CoilCoolingWater_Impl.hpp"
+#include "../model/CoilHeatingDXSingleSpeed.hpp"
+#include "../model/CoilHeatingDXSingleSpeed_Impl.hpp"
+#include "../model/CoilHeatingElectric.hpp"
+#include "../model/CoilHeatingElectric_Impl.hpp"
+#include "../model/CoilHeatingGas.hpp"
+#include "../model/CoilHeatingGas_Impl.hpp"
+#include "../model/CoilHeatingWater.hpp"
+#include "../model/CoilHeatingWater_Impl.hpp"
+#include "../model/ConnectorMixer.hpp"
+#include "../model/ConnectorMixer_Impl.hpp"
+#include "../model/ConnectorSplitter.hpp"
+#include "../model/ConnectorSplitter_Impl.hpp"
+#include "../model/Construction.hpp"
+#include "../model/Construction_Impl.hpp"
+#include "../model/DaylightingControl.hpp"
+#include "../model/DaylightingControl_Impl.hpp"
+#include "../model/DesignSpecificationOutdoorAir.hpp"
+#include "../model/DesignSpecificationOutdoorAir_Impl.hpp"
+#include "../model/ElectricEquipment.hpp"
+#include "../model/ElectricEquipment_Impl.hpp"
+#include "../model/ExteriorLights.hpp"
+#include "../model/ExteriorLights_Impl.hpp"
+#include "../model/ExteriorLightsDefinition.hpp"
+#include "../model/ExteriorLightsDefinition_Impl.hpp"
+#include "../model/Gas.hpp"
+#include "../model/Gas_Impl.hpp"
+#include "../model/GasEquipment.hpp"
+#include "../model/GasEquipment_Impl.hpp"
+#include "../model/GasMixture.hpp"
+#include "../model/GasMixture_Impl.hpp"
+#include "../model/InternalMassDefinition.hpp"
+#include "../model/InternalMassDefinition_Impl.hpp"
+#include "../model/Lights.hpp"
+#include "../model/Lights_Impl.hpp"
+#include "../model/Luminaire.hpp"
+#include "../model/Luminaire_Impl.hpp"
+#include "../model/MasslessOpaqueMaterial.hpp"
+#include "../model/MasslessOpaqueMaterial_Impl.hpp"
+#include "../model/Node.hpp"
+#include "../model/Node_Impl.hpp"
+#include "../model/OpaqueMaterial.hpp"
+#include "../model/OpaqueMaterial_Impl.hpp"
+#include "../model/People.hpp"
+#include "../model/People_Impl.hpp"
+#include "../model/PipeAdiabatic.hpp"
+#include "../model/PipeAdiabatic_Impl.hpp"
+#include "../model/PlantLoop.hpp"
+#include "../model/PlantLoop_Impl.hpp"
+#include "../model/RefractionExtinctionGlazing.hpp"
+#include "../model/RefractionExtinctionGlazing_Impl.hpp"
+#include "../model/RoofVegetation.hpp"
+#include "../model/RoofVegetation_Impl.hpp"
+#include "../model/ScheduleDay.hpp"
+#include "../model/ScheduleDay_Impl.hpp"
+#include "../model/ScheduleRuleset.hpp"
+#include "../model/ScheduleRuleset_Impl.hpp"
+#include "../model/SimpleGlazing.hpp"
+#include "../model/SimpleGlazing_Impl.hpp"
+#include "../model/Site.hpp"
+#include "../model/Site_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
+#include "../model/StandardGlazing.hpp"
+#include "../model/StandardGlazing_Impl.hpp"
+#include "../model/StandardOpaqueMaterial.hpp"
+#include "../model/StandardOpaqueMaterial_Impl.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/SubSurface_Impl.hpp"
+#include "../model/Surface.hpp"
+#include "../model/Surface_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/ThermochromicGlazing.hpp"
+#include "../model/ThermochromicGlazing_Impl.hpp"
+#include "../model/ThermostatSetpointDualSetpoint.hpp"
+#include "../model/ThermostatSetpointDualSetpoint_Impl.hpp"
+#include "../model/WaterHeaterMixed.hpp"
+#include "../model/WaterHeaterMixed_Impl.hpp"
+#include "../model/WaterUseConnections.hpp"
+#include "../model/WaterUseConnections_Impl.hpp"
+#include "../model/WaterUseEquipment.hpp"
+#include "../model/WaterUseEquipment_Impl.hpp"
+#include "../model/WaterUseEquipmentDefinition.hpp"
+#include "../model/WaterUseEquipmentDefinition_Impl.hpp"
+#include "../model/YearDescription.hpp"
+#include "../model/YearDescription_Impl.hpp"
 
-#include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
-#include <model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp>
-#include <model/ZoneHVACPackagedTerminalHeatPump.hpp>
-#include <model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp>
-#include <model/ZoneHVACUnitHeater.hpp>
-#include <model/ZoneHVACUnitHeater_Impl.hpp>
-#include <model/ZoneHVACWaterToAirHeatPump.hpp>
-#include <model/ZoneHVACWaterToAirHeatPump_Impl.hpp>
+#include "../model/ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "../model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
+#include "../model/ZoneHVACPackagedTerminalHeatPump.hpp"
+#include "../model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
+#include "../model/ZoneHVACUnitHeater.hpp"
+#include "../model/ZoneHVACUnitHeater_Impl.hpp"
+#include "../model/ZoneHVACWaterToAirHeatPump.hpp"
+#include "../model/ZoneHVACWaterToAirHeatPump_Impl.hpp"
 
 #include <QElapsedTimer>
 
@@ -413,7 +413,7 @@ namespace isomodel {
     std::map<std::string, double> const_U;
     std::map<std::string, double> const_SHGC;
 
-    BOOST_FOREACH(const openstudio::model::Construction &construction, constructions) {
+    for (const openstudio::model::Construction &construction : constructions) {
       std::string name=construction.name().get();
       std::vector<openstudio::model::Material> layers=construction.layers();
       const_names.push_back(name);
@@ -441,7 +441,7 @@ namespace isomodel {
         //set the starting R at 0.04 + 0.13 = avg outside film coeff + inside film coeff for walls;
         double const_R = outside_air_film_R + inside_air_film_R;
         double const_heat_capacity = 0.0;
-        BOOST_FOREACH(const openstudio::model::Material &layer, layers) {
+        for (const openstudio::model::Material &layer : layers) {
           double layer_R = 0;
           double layer_heat_capacity = 0;
 
@@ -611,7 +611,7 @@ namespace isomodel {
       }
     }
 
-    BOOST_FOREACH(const std::string &name, const_names) {
+    for (const std::string &name : const_names) {
       LOG(Debug, "Construction: " << name);
       LOG(Debug, "Ufactor = " << const_U[name] << " W/K/m2, Heat Capacity = " << const_heatCapacity[name] << " J/K/m2");
       LOG(Debug, "Solar Absorption = " << const_solarAbsorptance[name] << ", Thermal Absorption = " << const_thermalAbsorptance[name] << ", SHGC = " << const_SHGC[name]);
@@ -645,7 +645,7 @@ namespace isomodel {
 
       std::map<std::string, openstudio::model::ScheduleRuleset> sched_rulesets;
 
-      BOOST_FOREACH(const openstudio::model::ScheduleRuleset &ruleset, schedule_rulesets)
+      for (const openstudio::model::ScheduleRuleset &ruleset : schedule_rulesets)
       {
         std::string name=ruleset.name().get();
         sched_rulesets.insert(std::make_pair(name, ruleset));
@@ -657,12 +657,12 @@ namespace isomodel {
 
       // get an area weighted average over all the space types. 
 
-      BOOST_FOREACH(const openstudio::model::SpaceType &space_type, space_types)
+      for (const openstudio::model::SpaceType &space_type : space_types)
       {
         double space_area = space_type.floorArea();
         space_area_total += space_area;
 
-        BOOST_FOREACH(const openstudio::model::People &people, space_type.people())
+        for (const openstudio::model::People &people : space_type.people())
         {
           // look for an occupancy schedule
 
@@ -806,7 +806,7 @@ namespace isomodel {
 
     // gets all the schedule for each day of the year in one array
     
-    BOOST_FOREACH(const openstudio::model::ScheduleRuleset &schedule, schedule_rulesets) {
+    for (const openstudio::model::ScheduleRuleset &schedule : schedule_rulesets) {
       double occupied_sum=0;
       double unoccupied_sum=0;
 
@@ -816,7 +816,7 @@ namespace isomodel {
       std::vector<openstudio::model::ScheduleDay> daySchedules = schedule.getDaySchedules(startDate, endDate);
 
       // loop over the schedule for each day of the year
-      BOOST_FOREACH(const openstudio::model::ScheduleDay &daySchedule, daySchedules) {
+      for (const openstudio::model::ScheduleDay &daySchedule : daySchedules) {
         day_of_week +=1; // increment the day of week counter wrapping around at 7
 
         if (day_of_week > 6) {
@@ -897,10 +897,10 @@ namespace isomodel {
     //std::vector<double> light_areas=[];
     //light_scheds=[];
 
-    BOOST_FOREACH(const openstudio::model::SpaceType &space_type, space_types) {
+    for (const openstudio::model::SpaceType &space_type : space_types) {
       // work with the lighting schedule - luminaires are !supported at this time;
       double space_area = space_type.floorArea();
-      BOOST_FOREACH(const openstudio::model::Lights &light, space_type.lights()) {
+      for (const openstudio::model::Lights &light : space_type.lights()) {
         if (light.schedule()) {
           // look for a lighting schedule;
           // get the schedule;
@@ -911,7 +911,7 @@ namespace isomodel {
         }
       }
 
-      BOOST_FOREACH(const openstudio::model::ElectricEquipment &electric, space_type.electricEquipment()) {
+      for (const openstudio::model::ElectricEquipment &electric : space_type.electricEquipment()) {
         // look for an electric equipment schedule;
         if (electric.schedule()) {
           openstudio::model::Schedule sched = electric.schedule().get();
@@ -921,7 +921,7 @@ namespace isomodel {
         }
       }
 
-      BOOST_FOREACH(const openstudio::model::GasEquipment &gas, space_type.gasEquipment()) {
+      for (const openstudio::model::GasEquipment &gas : space_type.gasEquipment()) {
         // look for a gas equipment schedule;
         if (gas.schedule()) {
           openstudio::model::Schedule sched = gas.schedule().get();
@@ -931,7 +931,7 @@ namespace isomodel {
         }
       }
 
-      BOOST_FOREACH(const openstudio::model::People &people, space_type.people()) {
+      for (const openstudio::model::People &people : space_type.people()) {
         // look for an occupancy schedule;
         if (people.numberofPeopleSchedule()) {
           openstudio::model::Schedule sched = people.numberofPeopleSchedule().get();
@@ -1030,7 +1030,7 @@ namespace isomodel {
       // get the vector of exterior lights;
       std::vector<openstudio::model::ExteriorLights> ext_lights=facility.exteriorLights();
       // loop over the lights;
-      BOOST_FOREACH(const openstudio::model::ExteriorLights &exlight, ext_lights) {
+      for (const openstudio::model::ExteriorLights &exlight : ext_lights) {
         double ext_light_mult = exlight.multiplier();
         double ext_light_base = exlight.exteriorLightsDefinition().designLevel();
         exterior_lighting_power += ext_light_base * ext_light_mult;
@@ -1073,7 +1073,7 @@ namespace isomodel {
       // loop through the zones and find the thermostats rather than use the thermostat vector we can get from the model;
       // we want to do a zone area weighted average in case the different zones have different;
       //loop through the zones;
-      BOOST_FOREACH(const openstudio::model::ThermalZone &zone, thermal_zones) {
+      for (const openstudio::model::ThermalZone &zone : thermal_zones) {
         double zone_area=zone.floorArea() * zone.multiplier();
         total_zone_area += zone_area;
 
@@ -1122,7 +1122,7 @@ namespace isomodel {
     double daylight_area = 0.0;
     double total_area=0;
 
-    BOOST_FOREACH(const openstudio::model::Space &s, spaces) {
+    for (const openstudio::model::Space &s : spaces) {
       // add up the total floor area;
       total_area += s.floorArea() * s.multiplier();
       std::vector<openstudio::model::DaylightingControl> daylight_ctrls = s.daylightingControls();
@@ -1170,11 +1170,11 @@ namespace isomodel {
     // Compute the building height as the difference from max and min vertex height;
     double maxz = -1000.0;
     double minz = 1000.0;
-    BOOST_FOREACH(const openstudio::model::Space &sp, spaces) {
+    for (const openstudio::model::Space &sp : spaces) {
       // loop through space surfaces to find max z value;
-      BOOST_FOREACH(const openstudio::model::Surface &s, sp.surfaces()) {
+      for (const openstudio::model::Surface &s : sp.surfaces()) {
         std::vector<double> z_points;
-        BOOST_FOREACH(const openstudio::Point3d &vertex, s.vertices()) {
+        for (const openstudio::Point3d &vertex : s.vertices()) {
           z_points.push_back(vertex.z());
         }
 
@@ -1220,7 +1220,7 @@ namespace isomodel {
 
     // extract outside walls and windows, and add up areas and add up weighted surface properties;
     LOG(Debug, "Found " << building.exteriorWalls().size() << " exterior wall surfaces");
-    BOOST_FOREACH(const openstudio::model::Surface &s, building.exteriorWalls()) {
+    for (const openstudio::model::Surface &s : building.exteriorWalls()) {
 
       double absorption = const_solarAbsorptance[s.construction().get().name().get()];
       double emissivity = const_thermalAbsorptance[s.construction().get().name().get()];
@@ -1256,7 +1256,7 @@ namespace isomodel {
             wall_U_sum[i] += wallU * s.netArea();
           }
           std::vector<openstudio::model::SubSurface> subsurface=s.subSurfaces();
-          BOOST_FOREACH(const openstudio::model::SubSurface &ss, subsurface) {
+          for (const openstudio::model::SubSurface &ss : subsurface) {
             double windowU = const_U[ss.construction().get().name().get()];
             double windowSHGC = const_SHGC[ss.construction().get().name().get()];
 #ifdef _MSC_VER
@@ -1308,12 +1308,12 @@ namespace isomodel {
     }
 
     double total_wall_area =0.0;
-    BOOST_FOREACH(double a, wall_areas) {
+    for (double a : wall_areas) {
       total_wall_area += a;
     }
 
     double total_window_area=0.0;
-    BOOST_FOREACH(double a, window_areas) {
+    for (double a : window_areas) {
       total_window_area += a;
     }
 
@@ -1336,7 +1336,7 @@ namespace isomodel {
     // the building.roofs() variable does !seem to return the roof surfaces in a vector as it supposed to;
     // so we search through all surfaces and find the outside roof surfaces ourselves;
     // calculate area and average solar absorption and thermal emissivity;
-    BOOST_FOREACH(const openstudio::model::Surface &s, surfaces) {
+    for (const openstudio::model::Surface &s : surfaces) {
       // skip surface if !labeled roof;
       if (s.surfaceType() != "RoofCeiling") { continue; }
       // skip surface if !outside;
@@ -1358,7 +1358,7 @@ namespace isomodel {
       skylight_area += s.grossArea() - s.netArea();
 
       std::vector<openstudio::model::SubSurface> subsurface=s.subSurfaces();
-      BOOST_FOREACH(const openstudio::model::SubSurface &ss, subsurface) {
+      for (const openstudio::model::SubSurface &ss : subsurface) {
         skylight_U_sum += const_U[ss.construction().get().name().get()] * ss.surface().get().netArea();
         skylight_SHGC_sum+= const_SHGC[ss.construction().get().name().get()] * ss.surface().get().netArea();
       }
@@ -1411,7 +1411,7 @@ namespace isomodel {
     // add up the heat capacity of the defined interior surfaces including any internal mass elements;
     // compute as normalized to floor area and !surface area;
     double interior_HC_sum = 0.0;
-    BOOST_FOREACH(const openstudio::model::Surface &s, surfaces) {
+    for (const openstudio::model::Surface &s : surfaces) {
       // skip surface if outside;
       if (s.outsideBoundaryCondition() == "Outdoors") { continue; }
       interior_HC_sum += const_heatCapacity[s.construction().get().name().get()] * s.netArea();
@@ -1419,7 +1419,7 @@ namespace isomodel {
 
     // get and add in the heat capacity of any defined internal masses;
     double internal_mass_HC_sum =0.0;
-    BOOST_FOREACH(const openstudio::model::InternalMassDefinition &mass, internal_masses) {
+    for (const openstudio::model::InternalMassDefinition &mass : internal_masses) {
       internal_mass_HC_sum += mass.surfaceArea().get() * const_heatCapacity[mass.construction().get().name().get()];
     }
     double interior_heat_capacity = (interior_HC_sum +internal_mass_HC_sum)/building.floorArea();
@@ -1441,7 +1441,7 @@ namespace isomodel {
         //std::vector<openstudio::model::SpaceInfiltrationEffectiveLeakageArea> infiltration = model.getConcreteModelObjects<openstudio::model::SpaceInfiltrationEffectiveLeakageArea>();
 
         /// \todo no reason for this to be in a loop
-        //      BOOST_FOREACH(const openstudio::model::SpaceInfiltrationEffectiveLeakageArea &infil, infiltration) {
+        //      for (const openstudio::model::SpaceInfiltrationEffectiveLeakageArea &infil : infiltration) {
         // set default average envelope air leakage (infiltration) as 7 m3/h/m2 which is about the EnergyPlus defaults;
         LOG(Debug, "EffectiveLeakageArea !Implemented Yet, Infiltration Rate Set to 7.0 m3/m2/h @ 75 Pa");
         infiltration_rate = infil_rate_default;
@@ -1455,7 +1455,7 @@ namespace isomodel {
         //double infil_frac_sum = 0.0;
         double infil_rate_sum = 0.0;
         int count = 0;
-        BOOST_FOREACH(const openstudio::model::SpaceInfiltrationDesignFlowRate &infil, infiltration) {
+        for (const openstudio::model::SpaceInfiltrationDesignFlowRate &infil : infiltration) {
           count += 1;
           std::string rate_type = infil.designFlowRateCalculationMethod();
           double infil_rate_temp = 0;
@@ -1487,7 +1487,7 @@ namespace isomodel {
             double st_exterior_area = 0.0;
             /// \todo this is not used
             //int st_num = st.spaces().size();
-            BOOST_FOREACH(const openstudio::model::Space &s, st.spaces()) {
+            for (const openstudio::model::Space &s : st.spaces()) {
               st_volume += s.volume();
               st_exterior_area += s.exteriorArea();
             }
@@ -1563,7 +1563,7 @@ namespace isomodel {
     int heating_fuel_type = 0;
 
     size_t num_ideal_air_loads = 0;
-    BOOST_FOREACH(const openstudio::model::ThermalZone &z, thermal_zones) {
+    for (const openstudio::model::ThermalZone &z : thermal_zones) {
       if (z.useIdealAirLoads()) ++num_ideal_air_loads; 
     }
 
@@ -1585,18 +1585,18 @@ namespace isomodel {
 
       // look through the air loops and extract the components;
       // for components that can connect to a plant water loop (namely things with water heating and cooling coils);
-      BOOST_FOREACH(openstudio::model::AirLoopHVAC &air_loop, air_loops) {
+      for (openstudio::model::AirLoopHVAC &air_loop : air_loops) {
         std::vector<openstudio::model::ModelObject> supply_components = air_loop.supplyComponents();
 
         double zone_area = 0.0;
         // get the total area of all the zones connected through the loop;
-        BOOST_FOREACH(const openstudio::model::ThermalZone &z, air_loop.thermalZones()) {
+        for (const openstudio::model::ThermalZone &z : air_loop.thermalZones()) {
           zone_area += z.floorArea();
         }
 
         // loop through the components and store them all in a single array;
         // if;
-        BOOST_FOREACH(const openstudio::model::ModelObject &component, supply_components) {
+        for (const openstudio::model::ModelObject &component : supply_components) {
           // skip if the component is a node;
           if (component.optionalCast<openstudio::model::Node>()) continue;
           // skip of component is a mixer connector;
@@ -1629,7 +1629,7 @@ namespace isomodel {
         std::vector<openstudio::model::ModelObject> supply_components = plant_loops_array[i].supplyComponents();
         double zone_area = plant_loops_area_array[i];
 
-        BOOST_FOREACH(const openstudio::model::ModelObject &component, supply_components) {
+        for (const openstudio::model::ModelObject &component : supply_components) {
           // skip if the component is a node;
           if (component.optionalCast<openstudio::model::Node>()) continue;
           // skip of component is a mixer connector;
@@ -1646,8 +1646,8 @@ namespace isomodel {
 
 
       // now add in any HVAC components !part of an air loop (PTAC, PTHP, unit heaters, etc);
-      BOOST_FOREACH(openstudio::model::ThermalZone &zone, thermal_zones) {
-        BOOST_FOREACH(const openstudio::model::ModelObject &component, zone.equipment()) {
+      for (openstudio::model::ThermalZone &zone : thermal_zones) {
+        for (const openstudio::model::ModelObject &component : zone.equipment()) {
           hvac_component_array.push_back(component);
           hvac_component_area_array.push_back(zone.floorArea());
         }
@@ -1764,11 +1764,11 @@ namespace isomodel {
       if ((cop_sum == 0.0  ) && (cooling_coil_array.size() > 0)) {
         LOG(Debug, "checking plant loop for chiller");
 
-        BOOST_FOREACH(openstudio::model::PlantLoop &plant_loop, plant_loops) {
+        for (openstudio::model::PlantLoop &plant_loop : plant_loops) {
           std::vector<openstudio::model::ModelObject> supply_components = plant_loop.supplyComponents();
           // loop through the components and get the efficiency;
           double area=building.floorArea();
-          BOOST_FOREACH(const openstudio::model::ModelObject &component, supply_components) {
+          for (const openstudio::model::ModelObject &component : supply_components) {
             // if we are here then we don't have a specific area assigned to the cooling unit so use the full building floor area;
             if (component.optionalCast<openstudio::model::CoilCoolingDXSingleSpeed>()) {
               // check for single speed DX coil;
@@ -1841,11 +1841,11 @@ namespace isomodel {
 
       // if there seems to be no heating energy used but there are heating elements detected, check the plant loop for a boiler;
       if (((gas_sum + elec_sum) == 0.0  ) && (heating_coil_array.size()>0)) {
-        BOOST_FOREACH(openstudio::model::PlantLoop &plant_loop, plant_loops) {
+        for (openstudio::model::PlantLoop &plant_loop : plant_loops) {
           std::vector<openstudio::model::ModelObject> supply_components = plant_loop.supplyComponents();
           // loop through the components and get the efficiency;
           double area=building.floorArea();
-          BOOST_FOREACH(const openstudio::model::ModelObject &component, supply_components) {
+          for (const openstudio::model::ModelObject &component : supply_components) {
             // check for a hot water boiler;
             if (component.optionalCast<openstudio::model::BoilerHotWater>()) {
               openstudio::model::BoilerHotWater boiler = component.optionalCast<openstudio::model::BoilerHotWater>().get();
@@ -1935,7 +1935,7 @@ namespace isomodel {
     // calculate fresh air ventilation rates;
     double freshair_flow_rate = 0.0;
     if (OSM_extract_vent_rate) {
-      BOOST_FOREACH(const openstudio::model::Space &s, spaces) 
+      for (const openstudio::model::Space &s : spaces) 
       {
         double space_air_rate = 0;
         if (s.designSpecificationOutdoorAir()) {
@@ -2002,10 +2002,10 @@ namespace isomodel {
       // search plant loops for water heaters;
       std::vector<double> dhw_gas_array;
       std::vector<double> dhw_elec_array;
-      BOOST_FOREACH(openstudio::model::PlantLoop &plant_loop, plant_loops) {
+      for (openstudio::model::PlantLoop &plant_loop : plant_loops) {
         std::vector<openstudio::model::ModelObject> supply_components = plant_loop.supplyComponents();
         // loop through the components and find the components that are water heaters;
-        BOOST_FOREACH(const openstudio::model::ModelObject &component, supply_components) {
+        for (const openstudio::model::ModelObject &component : supply_components) {
           // enter here if the item is a water heater;
           if (component.optionalCast<openstudio::model::WaterHeaterMixed>()) {
             // convert component to water heater type;
@@ -2024,11 +2024,11 @@ namespace isomodel {
 
       // add up all the uses from the individual components;
       double dhw_gas_sum=0.0;
-      BOOST_FOREACH(double gas, dhw_gas_array) {
+      for (double gas : dhw_gas_array) {
         dhw_gas_sum += gas;
       }
       double dhw_elec_sum=0.0;
-      BOOST_FOREACH(double elec, dhw_elec_array) {
+      for (double elec : dhw_elec_array) {
         dhw_elec_sum += elec;
       }
 
@@ -2051,9 +2051,9 @@ namespace isomodel {
 
       // extract the water usage by starting with the water use connections and then finding equipment;
       std::vector<openstudio::model::WaterUseConnections> water_connects = model.getConcreteModelObjects<openstudio::model::WaterUseConnections>();
-      BOOST_FOREACH(const openstudio::model::WaterUseConnections &connect, water_connects) {
+      for (const openstudio::model::WaterUseConnections &connect : water_connects) {
         std::vector<openstudio::model::WaterUseEquipment> equipments = connect.waterUseEquipment();
-        BOOST_FOREACH(const openstudio::model::WaterUseEquipment &equip, equipments) {
+        for (const openstudio::model::WaterUseEquipment &equip : equipments) {
           std::string frac_sched;
           double mult;
           if (equip.flowRateFractionSchedule()) {
@@ -2311,7 +2311,7 @@ std::vector<LogMessage> ForwardTranslator::warnings() const
 {
   std::vector<LogMessage> result;
 
-  BOOST_FOREACH(LogMessage logMessage, m_logSink.logMessages()){
+  for (LogMessage logMessage : m_logSink.logMessages()){
     if (logMessage.logLevel() == Warn){
       result.push_back(logMessage);
     }
@@ -2324,7 +2324,7 @@ std::vector<LogMessage> ForwardTranslator::warnings() const
   {
     std::vector<LogMessage> result;
 
-    BOOST_FOREACH(LogMessage logMessage, m_logSink.logMessages()){
+    for (LogMessage logMessage : m_logSink.logMessages()){
       if (logMessage.logLevel() > Warn){
         result.push_back(logMessage);
       }

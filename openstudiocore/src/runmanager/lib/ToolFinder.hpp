@@ -18,13 +18,13 @@
 **********************************************************************/
 
 
-#ifndef OPENSTUDIO_RUNMANAGER_LIB_TOOLFINDER_HPP
-#define OPENSTUDIO_RUNMANAGER_LIB_TOOLFINDER_HPP
+#ifndef RUNMANAGER_LIB_TOOLFINDER_HPP
+#define RUNMANAGER_LIB_TOOLFINDER_HPP
 
 #include "RunManagerAPI.hpp"
 
 #include <vector>
-#include <utilities/core/Path.hpp>
+#include "../../utilities/core/Path.hpp"
 #include <QProgressDialog>
 #include "ConfigOptions.hpp"
 
@@ -74,7 +74,7 @@ namespace runmanager {
       /// \returns true if the file is both accessible and exists
       static bool safeExists(const openstudio::path &t_path);
 
-      std::vector<openstudio::path> findExecutables(const openstudio::path &t_path, const std::vector<std::string> &t_names,  const boost::shared_ptr<QProgressDialog> &t_dlg,
+      std::vector<openstudio::path> findExecutables(const openstudio::path &t_path, const std::vector<std::string> &t_names,  const std::shared_ptr<QProgressDialog> &t_dlg,
         std::map<openstudio::path, int> &t_searchedPaths) const;
       std::vector<openstudio::path> findExecutables(const std::vector<openstudio::path> &t_searchPaths, const std::vector<std::string> &t_names, bool t_showProgressDialog) const;
 
@@ -97,5 +97,5 @@ namespace runmanager {
 }
 }
 
-#endif
+#endif // RUNMANAGER_LIB_TOOLFINDER_HPP
 

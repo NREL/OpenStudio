@@ -20,8 +20,8 @@
 #ifndef MODEL_ZONEHVACBASEBOARDCONVECTIVEELECTRIC_HPP
 #define MODEL_ZONEHVACBASEBOARDCONVECTIVEELECTRIC_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ZoneHVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "ZoneHVACComponent.hpp"
 
 namespace openstudio {
 
@@ -97,7 +97,7 @@ class MODEL_API ZoneHVACBaseboardConvectiveElectric : public ZoneHVACComponent {
   /// @cond
   typedef detail::ZoneHVACBaseboardConvectiveElectric_Impl ImplType;
 
-  explicit ZoneHVACBaseboardConvectiveElectric(boost::shared_ptr<detail::ZoneHVACBaseboardConvectiveElectric_Impl> impl);
+  explicit ZoneHVACBaseboardConvectiveElectric(std::shared_ptr<detail::ZoneHVACBaseboardConvectiveElectric_Impl> impl);
 
   friend class detail::ZoneHVACBaseboardConvectiveElectric_Impl;
   friend class Model;

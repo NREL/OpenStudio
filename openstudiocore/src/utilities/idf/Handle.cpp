@@ -17,15 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/idf/Handle.hpp>
-
-#include <boost/foreach.hpp>
+#include "Handle.hpp"
 
 namespace openstudio {
 
 Handle applyHandleMap(const Handle& original, const HandleMap& handleMap) {
   Handle result;
-  HandleMap::const_iterator it = handleMap.find(original);
+  auto it = handleMap.find(original);
   if (it != handleMap.end()) {
     result = it->second;
   }
@@ -34,8 +32,8 @@ Handle applyHandleMap(const Handle& original, const HandleMap& handleMap) {
 
 HandleVector applyHandleMap(const HandleVector& original,const HandleMap& handleMap) {
   HandleVector result;
-  BOOST_FOREACH(const Handle& oh,original) {
-    HandleMap::const_iterator it = handleMap.find(oh);
+  for (const Handle& oh : original) {
+    auto it = handleMap.find(oh);
     if (it != handleMap.end()) {
       result.push_back(it->second);
     }

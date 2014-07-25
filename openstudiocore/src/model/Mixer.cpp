@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Model.hpp>
-#include <model/Mixer.hpp>
-#include <model/Mixer_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include "Model.hpp"
+#include "Mixer.hpp"
+#include "Mixer_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -174,7 +174,7 @@ bool Mixer_Impl::isRemovable() const
 
 } // detail
 
-Mixer::Mixer(boost::shared_ptr<detail::Mixer_Impl> p)
+Mixer::Mixer(std::shared_ptr<detail::Mixer_Impl> p)
   : HVACComponent(p)
 {}
 

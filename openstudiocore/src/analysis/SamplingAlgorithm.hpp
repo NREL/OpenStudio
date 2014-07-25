@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_SAMPLINGALGORITHM_HPP
 #define ANALYSIS_SAMPLINGALGORITHM_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/DakotaAlgorithm.hpp>
+#include "AnalysisAPI.hpp"
+#include "DakotaAlgorithm.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -74,7 +74,7 @@ class ANALYSIS_API SamplingAlgorithm : public DakotaAlgorithm {
   /// @cond
   typedef detail::SamplingAlgorithm_Impl ImplType;
 
-  explicit SamplingAlgorithm(boost::shared_ptr<detail::SamplingAlgorithm_Impl> impl);
+  explicit SamplingAlgorithm(std::shared_ptr<detail::SamplingAlgorithm_Impl> impl);
 
   friend class detail::SamplingAlgorithm_Impl;
   friend class AnalysisObject;

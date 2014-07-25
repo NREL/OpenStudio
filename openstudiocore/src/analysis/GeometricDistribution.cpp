@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/GeometricDistribution.hpp>
-#include <analysis/UncertaintyDescription_Impl.hpp>
+#include "GeometricDistribution.hpp"
+#include "UncertaintyDescription_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace analysis {
 
 GeometricDistribution::GeometricDistribution() 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(GeometricDistribution::type())))
 {}
 
 GeometricDistribution::GeometricDistribution(double probabilityPerTrial) 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(GeometricDistribution::type())))
 {
   setProbabilityPerTrial(probabilityPerTrial);
@@ -56,7 +56,7 @@ bool GeometricDistribution::setProbabilityPerTrial(double value) {
   }
 }
 
-GeometricDistribution::GeometricDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
+GeometricDistribution::GeometricDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
   OS_ASSERT(type() == GeometricDistribution::type());

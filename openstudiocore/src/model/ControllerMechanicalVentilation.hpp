@@ -20,8 +20,8 @@
 #ifndef MODEL_CONTROLLERMECHANICALVENTILATION_HPP
 #define MODEL_CONTROLLERMECHANICALVENTILATION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -73,7 +73,7 @@ class MODEL_API ControllerMechanicalVentilation : public ModelObject {
   /// @cond
   typedef detail::ControllerMechanicalVentilation_Impl ImplType;
 
-  explicit ControllerMechanicalVentilation(boost::shared_ptr<detail::ControllerMechanicalVentilation_Impl> impl);
+  explicit ControllerMechanicalVentilation(std::shared_ptr<detail::ControllerMechanicalVentilation_Impl> impl);
 
   friend class detail::ControllerMechanicalVentilation_Impl;
   friend class Model;

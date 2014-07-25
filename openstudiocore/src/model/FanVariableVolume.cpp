@@ -17,27 +17,27 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/FanVariableVolume.hpp>
-#include <model/FanVariableVolume_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/ZoneHVACComponent.hpp>
-#include <model/ZoneHVACComponent_Impl.hpp>
-#include <model/ZoneHVACFourPipeFanCoil.hpp>
-#include <model/ZoneHVACFourPipeFanCoil_Impl.hpp>
-#include <model/ZoneHVACUnitHeater.hpp>
-#include <model/ZoneHVACUnitHeater_Impl.hpp>
-#include <model/AirLoopHVACUnitarySystem.hpp>
-#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
-#include <model/SetpointManagerMixedAir.hpp>
+#include "FanVariableVolume.hpp"
+#include "FanVariableVolume_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "Model.hpp"
+#include "ZoneHVACComponent.hpp"
+#include "ZoneHVACComponent_Impl.hpp"
+#include "ZoneHVACFourPipeFanCoil.hpp"
+#include "ZoneHVACFourPipeFanCoil_Impl.hpp"
+#include "ZoneHVACUnitHeater.hpp"
+#include "ZoneHVACUnitHeater_Impl.hpp"
+#include "AirLoopHVACUnitarySystem.hpp"
+#include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "SetpointManagerMixedAir.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Fan_VariableVolume_FieldEnums.hxx>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -786,15 +786,13 @@ namespace detail {
     // AirLoopHVACUnitarySystem
     std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
 
-    for( std::vector<AirLoopHVACUnitarySystem>::iterator it = airLoopHVACUnitarySystems.begin();
-    it < airLoopHVACUnitarySystems.end();
-    ++it )
+    for( const auto & airLoopHVACUnitarySystem : airLoopHVACUnitarySystems )
     {
-      if( boost::optional<HVACComponent> fan = it->supplyFan() )
+      if( boost::optional<HVACComponent> fan = airLoopHVACUnitarySystem.supplyFan() )
       {
         if( fan->handle() == this->handle() )
         {
-          return *it;
+          return airLoopHVACUnitarySystem;
         }
       }
     }
@@ -809,15 +807,13 @@ namespace detail {
 
     zoneHVACFourPipeFanCoils = this->model().getConcreteModelObjects<ZoneHVACFourPipeFanCoil>();
 
-    for( std::vector<ZoneHVACFourPipeFanCoil>::iterator it = zoneHVACFourPipeFanCoils.begin();
-    it < zoneHVACFourPipeFanCoils.end();
-    ++it )
+    for( const auto & zoneHVACFourPipeFanCoil : zoneHVACFourPipeFanCoils )
     {
-      if( boost::optional<HVACComponent> coil = it->supplyAirFan() )
+      if( boost::optional<HVACComponent> coil = zoneHVACFourPipeFanCoil.supplyAirFan() )
       {
         if( coil->handle() == this->handle() )
         {
-          return *it;
+          return zoneHVACFourPipeFanCoil;
         }
       }
     }
@@ -828,15 +824,13 @@ namespace detail {
 
     zoneHVACUnitHeater = this->model().getConcreteModelObjects<ZoneHVACUnitHeater>();
 
-    for( std::vector<ZoneHVACUnitHeater>::iterator it = zoneHVACUnitHeater.begin();
-    it < zoneHVACUnitHeater.end();
-    ++it )
+    for( const auto & elem : zoneHVACUnitHeater )
     {
-      if( boost::optional<HVACComponent> coil = it->supplyAirFan() )
+      if( boost::optional<HVACComponent> coil = elem.supplyAirFan() )
       {
         if( coil->handle() == this->handle() )
         {
-          return *it;
+          return elem;
         }
       }
     }
@@ -1188,7 +1182,7 @@ void FanVariableVolume::resetEndUseSubcategory() {
 }
 
 /// @cond
-FanVariableVolume::FanVariableVolume(boost::shared_ptr<detail::FanVariableVolume_Impl> impl)
+FanVariableVolume::FanVariableVolume(std::shared_ptr<detail::FanVariableVolume_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

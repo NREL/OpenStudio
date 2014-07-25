@@ -20,8 +20,8 @@
 #ifndef UTILITIES_CORE_SYSTEM_HPP
 #define UTILITIES_CORE_SYSTEM_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/time/Time.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "../time/Time.hpp"
 
 #include <boost/optional.hpp>
 

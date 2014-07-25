@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <isomodel/Test/ISOModelFixture.hpp>
+#include "ISOModelFixture.hpp"
 
 #include <resources.hxx>
 
@@ -28,12 +28,12 @@ void ISOModelFixture::TearDown() {}
 void ISOModelFixture::SetUpTestCase() {
   // set up logging
   openstudio::Logger::instance().standardOutLogger().disable();
-  logFile = boost::shared_ptr<openstudio::FileLogSink>(new openstudio::FileLogSink(openstudio::toPath("./ISOModelFixture.log")));
+  logFile = std::shared_ptr<openstudio::FileLogSink>(new openstudio::FileLogSink(openstudio::toPath("./ISOModelFixture.log")));
 }
 
 void ISOModelFixture::TearDownTestCase() {
   logFile->disable();
 }
 
-boost::shared_ptr<openstudio::FileLogSink> ISOModelFixture::logFile;
+std::shared_ptr<openstudio::FileLogSink> ISOModelFixture::logFile;
 

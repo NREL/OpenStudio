@@ -19,9 +19,9 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class Space_Test < Test::Unit::TestCase
+class Space_Test < MiniTest::Unit::TestCase
   
   def test_Space
     workspace = OpenStudio::Workspace.new

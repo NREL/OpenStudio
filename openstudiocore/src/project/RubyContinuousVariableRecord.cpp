@@ -17,18 +17,18 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/RubyContinuousVariableRecord.hpp>
-#include <project/RubyContinuousVariableRecord_Impl.hpp>
-#include <project/ProjectDatabase.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/FunctionRecord.hpp>
-#include <project/RubyMeasureRecord.hpp>
-#include <project/OSArgumentRecord.hpp>
+#include "RubyContinuousVariableRecord.hpp"
+#include "RubyContinuousVariableRecord_Impl.hpp"
+#include "ProjectDatabase.hpp"
+#include "ProblemRecord.hpp"
+#include "FunctionRecord.hpp"
+#include "RubyMeasureRecord.hpp"
+#include "OSArgumentRecord.hpp"
 
-#include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/RubyContinuousVariable_Impl.hpp>
+#include "../analysis/RubyContinuousVariable.hpp"
+#include "../analysis/RubyContinuousVariable_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 using namespace openstudio::ruleset;
 
@@ -85,7 +85,7 @@ namespace detail {
     return result;
   }
 
-  void RubyContinuousVariableRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void RubyContinuousVariableRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<RubyContinuousVariableRecord>(query);
@@ -210,7 +210,7 @@ RubyContinuousVariableRecord::RubyContinuousVariableRecord(
     const analysis::RubyContinuousVariable& rubyContinuousVariable,
     ProblemRecord& problemRecord,
     int variableVectorIndex)
-  : ContinuousVariableRecord(boost::shared_ptr<detail::RubyContinuousVariableRecord_Impl>(
+  : ContinuousVariableRecord(std::shared_ptr<detail::RubyContinuousVariableRecord_Impl>(
         new detail::RubyContinuousVariableRecord_Impl(rubyContinuousVariable,
                                                       problemRecord,
                                                       variableVectorIndex)),
@@ -227,7 +227,7 @@ RubyContinuousVariableRecord::RubyContinuousVariableRecord(
     FunctionRecord& functionRecord,
     int variableVectorIndex,
     boost::optional<double> functionCoefficient)
-  : ContinuousVariableRecord(boost::shared_ptr<detail::RubyContinuousVariableRecord_Impl>(
+  : ContinuousVariableRecord(std::shared_ptr<detail::RubyContinuousVariableRecord_Impl>(
         new detail::RubyContinuousVariableRecord_Impl(rubyContinuousVariable,
                                                       functionRecord,
                                                       variableVectorIndex,
@@ -241,7 +241,7 @@ RubyContinuousVariableRecord::RubyContinuousVariableRecord(
 }
 
 RubyContinuousVariableRecord::RubyContinuousVariableRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : ContinuousVariableRecord(boost::shared_ptr<detail::RubyContinuousVariableRecord_Impl>(
+  : ContinuousVariableRecord(std::shared_ptr<detail::RubyContinuousVariableRecord_Impl>(
         new detail::RubyContinuousVariableRecord_Impl(query, database)),
         database,
         analysis::OptionalContinuousVariable())
@@ -249,7 +249,7 @@ RubyContinuousVariableRecord::RubyContinuousVariableRecord(const QSqlQuery& quer
   OS_ASSERT(getImpl<detail::RubyContinuousVariableRecord_Impl>());
 }
 
-RubyContinuousVariableRecord::RubyContinuousVariableRecord(boost::shared_ptr<detail::RubyContinuousVariableRecord_Impl> impl,
+RubyContinuousVariableRecord::RubyContinuousVariableRecord(std::shared_ptr<detail::RubyContinuousVariableRecord_Impl> impl,
                                                            ProjectDatabase database)
   : ContinuousVariableRecord(impl, database, analysis::OptionalContinuousVariable())
 {
@@ -324,7 +324,7 @@ analysis::RubyContinuousVariable RubyContinuousVariableRecord::rubyContinuousVar
 }
 
 /// @cond
-RubyContinuousVariableRecord::RubyContinuousVariableRecord(boost::shared_ptr<detail::RubyContinuousVariableRecord_Impl> impl)
+RubyContinuousVariableRecord::RubyContinuousVariableRecord(std::shared_ptr<detail::RubyContinuousVariableRecord_Impl> impl)
   : ContinuousVariableRecord(impl)
 {}
 /// @endcond

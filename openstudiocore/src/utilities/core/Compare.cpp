@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/bcl/BCLComponent.hpp>
-#include <utilities/core/Assert.hpp>
+#include "Compare.hpp"
+#include "Logger.hpp"
+#include "../idf/WorkspaceObject.hpp"
+#include "../bcl/BCLComponent.hpp"
+#include "Assert.hpp"
 
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
@@ -43,7 +43,7 @@ void IstringFind::addTarget(const std::string& target)
 
 bool IstringFind::operator()(const std::string& other) const
 {
-  BOOST_FOREACH(const std::string& target, m_targets){
+  for (const std::string& target : m_targets){
     if (istringEqual(target, other)){
       return true;
     }

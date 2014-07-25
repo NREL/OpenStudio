@@ -20,11 +20,11 @@
 #ifndef MODEL_SETPOINTMANAGEROUTDOORAIRRESET_IMPL_HPP
 #define MODEL_SETPOINTMANAGEROUTDOORAIRRESET_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/HVACComponent_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "SetpointManager_Impl.hpp"
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -34,8 +34,8 @@ class Schedule;
 
 namespace detail {
 
-  /** SetpointManagerOutdoorAirReset_Impl is a HVACComponent_Impl that is the implementation class for SetpointManagerOutdoorAirReset.*/
-  class MODEL_API SetpointManagerOutdoorAirReset_Impl : public HVACComponent_Impl {
+  /** SetpointManagerOutdoorAirReset_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerOutdoorAirReset.*/
+  class MODEL_API SetpointManagerOutdoorAirReset_Impl : public SetpointManager_Impl {
     Q_OBJECT;
 
     Q_PROPERTY(std::string controlVariable READ controlVariable WRITE setControlVariable RESET resetControlVariable);
@@ -103,11 +103,13 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
 
+    virtual bool addToNode(Node & node);
+
     //@}
     /** @name Getters */
     //@{
 
-    std::string controlVariable() const;
+    virtual std::string controlVariable() const;
 
     bool isControlVariableDefaulted() const;
 
@@ -127,7 +129,7 @@ namespace detail {
 
     Quantity getOutdoorHighTemperature(bool returnIP=false) const;
 
-    boost::optional<Node> setpointNode() const;
+    virtual boost::optional<Node> setpointNode() const;
 
     boost::optional<Schedule> schedule() const;
 
@@ -151,7 +153,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    bool setControlVariable(std::string controlVariable);
+    virtual bool setControlVariable(const std::string& controlVariable);
 
     void resetControlVariable();
 
@@ -170,10 +172,6 @@ namespace detail {
     void setOutdoorHighTemperature(double outdoorHighTemperature);
 
     bool setOutdoorHighTemperature(const Quantity& outdoorHighTemperature);
-
-    bool setSetpointNode(const boost::optional<Node>& node);
-
-    void resetSetpointNode();
 
     bool setSchedule(Schedule& schedule);
 
@@ -207,11 +205,15 @@ namespace detail {
     /** @name Other */
     //@{
 
-    bool addToNode(Node & node);
+    // bool addToNode(Node & node);
 
     //@}
    protected:
    private:
+    virtual bool setSetpointNode(const Node& node);
+
+    virtual void resetSetpointNode();
+
     REGISTER_LOGGER("openstudio.model.SetpointManagerOutdoorAirReset");
 
     std::vector<std::string> controlVariableValues() const;

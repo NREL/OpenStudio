@@ -18,21 +18,21 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
-#include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/FanConstantVolume.hpp>
-#include <model/CoilHeatingDXSingleSpeed.hpp>
-#include <model/CoilCoolingDXSingleSpeed.hpp>
-#include <model/CoilHeatingElectric.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
+#include "ModelFixture.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../PlantLoop.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
+#include "../AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../FanConstantVolume.hpp"
+#include "../CoilHeatingDXSingleSpeed.hpp"
+#include "../CoilCoolingDXSingleSpeed.hpp"
+#include "../CoilHeatingElectric.hpp"
+#include "../CurveBiquadratic.hpp"
+#include "../CurveQuadratic.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
 
 using namespace openstudio::model;
 

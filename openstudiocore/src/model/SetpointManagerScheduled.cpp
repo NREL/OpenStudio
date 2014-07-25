@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SetpointManagerScheduled.hpp>
-#include <model/SetpointManagerScheduled_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
+#include "SetpointManagerScheduled.hpp"
+#include "SetpointManagerScheduled_Impl.hpp"
+#include "Model.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "PlantLoop.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
-#include <utilities/idd/IddKey.hpp>
+#include "../utilities/idd/IddKey.hpp"
 #include <utilities/idd/OS_SetpointManager_Scheduled_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -41,14 +41,14 @@ namespace detail{
 
   SetpointManagerScheduled_Impl::SetpointManagerScheduled_Impl(
       const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : HVACComponent_Impl(idfObject, model, keepHandle)
+    : SetpointManager_Impl(idfObject, model, keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == SetpointManagerScheduled::iddObjectType());
   }
 
   SetpointManagerScheduled_Impl::SetpointManagerScheduled_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
-    : HVACComponent_Impl(other,model,keepHandle)
+    : SetpointManager_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == SetpointManagerScheduled::iddObjectType());
   }
@@ -57,7 +57,7 @@ namespace detail{
       const SetpointManagerScheduled_Impl& other, 
       Model_Impl* model,
       bool keepHandles)
-    : HVACComponent_Impl(other,model,keepHandles)
+    : SetpointManager_Impl(other,model,keepHandles)
   {
   }
 
@@ -75,6 +75,18 @@ namespace detail{
     return SetpointManagerScheduled::iddObjectType();
   }
 
+  bool SetpointManagerScheduled_Impl::addToNode(Node & node) {
+    bool added = SetpointManager_Impl::addToNode( node );
+    if( added ) {
+      return added;
+    } else if( boost::optional<PlantLoop> plantLoop = node.plantLoop() ) {
+      if( plantLoop->supplyComponent(node.handle()) ) {
+        return this->setSetpointNode(node);
+      }
+    }
+    return added;
+  }
+
   std::vector<ScheduleTypeKey> SetpointManagerScheduled_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
     std::vector<ScheduleTypeKey> result;
@@ -87,97 +99,20 @@ namespace detail{
     return result;
   }
 
-  boost::optional<ParentObject> SetpointManagerScheduled_Impl::parent() const {
-    NodeVector nodes = getObject<ModelObject>().getModelObjectSources<Node>();
-    if (nodes.size() == 1u) {
-      return nodes[0];
-    }
-    return boost::none;
-  }
-
-  std::vector<ModelObject> SetpointManagerScheduled_Impl::children() const
-  {
-    std::vector<ModelObject> result;
-    return result;
-  }
-
-  bool SetpointManagerScheduled_Impl::addToNode(Node & node)
-  {
-    if( node.model() != this->model() )
-    {
-      return false;
-    } 
-
-    node.removeSetpointManagerMixedAir();
-
-    node.removeSetpointManagerSingleZoneReheat();
-
-    node.removeSetpointManagerScheduled();
-
-    node.removeSetpointManagerFollowOutdoorAirTemperature();
-
-    node.removeSetpointManagerOutdoorAirReset();
-
-    node.removeSetpointManagerWarmest();
-
-    if( OptionalAirLoopHVAC airLoop = node.airLoopHVAC() )
-    {
-      if( airLoop->supplyComponent(node.handle()) )
-      {
-        this->setSetpointNode(node);
-
-        return true;
-      }
-      if(OptionalAirLoopHVACOutdoorAirSystem oaSystem = airLoop->airLoopHVACOutdoorAirSystem())
-      {
-        if(node == oaSystem->outboardOANode().get())
-        {
-          return false;
-        }
-
-        if(oaSystem->oaComponent(node.handle()))
-        {
-          this->setSetpointNode(node);
-        
-          return true;
-        }
-      }
-    }
-    else if( boost::optional<PlantLoop> plantLoop = node.plantLoop() )
-    {
-      if( plantLoop->supplyComponent(node.handle()) )
-      {
-        this->setSetpointNode(node);
-
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  std::vector<openstudio::IdfObject> SetpointManagerScheduled_Impl::remove()
-  {
-    return HVACComponent_Impl::remove();
-  }
-
-  ModelObject SetpointManagerScheduled_Impl::clone(Model model)
-  {
-    return HVACComponent_Impl::clone( model );
-  }
-
   boost::optional<Node> SetpointManagerScheduled_Impl::setpointNode() const
   {
-    SetpointManagerScheduled thisModelObject = this->getObject<SetpointManagerScheduled>();
-
-    return thisModelObject.getModelObjectTarget<Node>(OS_SetpointManager_ScheduledFields::SetpointNodeorNodeListName);
+    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_ScheduledFields::SetpointNodeorNodeListName);
   }
 
-  void SetpointManagerScheduled_Impl::setSetpointNode( Node & node )
+  bool SetpointManagerScheduled_Impl::setSetpointNode( const Node & node )
   {
-    SetpointManagerScheduled thisModelObject = this->getObject<SetpointManagerScheduled>();
+    return setPointer(OS_SetpointManager_ScheduledFields::SetpointNodeorNodeListName,node.handle());
+  }
 
-    thisModelObject.setPointer(OS_SetpointManager_ScheduledFields::SetpointNodeorNodeListName,node.handle());
+  void SetpointManagerScheduled_Impl::resetSetpointNode()
+  {
+    bool result = setString(OS_SetpointManager_ScheduledFields::SetpointNodeorNodeListName,"");
+    OS_ASSERT(result);
   }
 
   std::string SetpointManagerScheduled_Impl::controlVariable() const
@@ -187,14 +122,23 @@ namespace detail{
     return value.get();
   }
 
-  bool SetpointManagerScheduled_Impl::setControlVariable(std::string value) {
-    if (boost::optional<IddKey> key = iddObject().getField(OS_SetpointManager_ScheduledFields::ControlVariable).get().getKey(value)) {
-      std::string currentScheduleDisplayName = scheduleDisplayName();
-      if (currentScheduleDisplayName.empty() || (scheduleDisplayName() == scheduleDisplayName(key->name()))) {
-        return setString(OS_SetpointManager_ScheduledFields::ControlVariable,key->name());
-      }
+  bool SetpointManagerScheduled_Impl::setControlVariable(const std::string& value) {
+    std::string result;
+    if( istringEqual(value,"Temperature") ) { result = "Temperature"; }
+    else if( istringEqual(value,"MaximumTemperature") ) { result = "MaximumTemperature"; }
+    else if( istringEqual(value,"MinimumTemperature") ) { result = "MinimumTemperature"; }
+    else if( istringEqual(value,"HumidityRatio") ) { result = "HumidityRatio"; }
+    else if( istringEqual(value,"MaximumHumidityRatio") ) { result = "MaximumHumidityRatio"; }
+    else if( istringEqual(value,"MinimumHumidityRatio") ) { result = "MinimumHumidityRatio"; }
+    else if( istringEqual(value,"MassFlowRate") ) { result = "MassFlowRate"; }
+    else if( istringEqual(value,"MaximumMassFlowRate") ) { result = "MaximumMassFlowRate"; }
+    else if( istringEqual(value,"MinimumMassFlowRate") ) { result = "MinimumMassFlowRate"; }
+
+    if( !result.empty() ) {
+      return setString(OS_SetpointManager_ScheduledFields::ControlVariable,result);
+    } else {
+      return false;
     }
-    return false;
   }
 
   Schedule SetpointManagerScheduled_Impl::schedule() const
@@ -244,13 +188,16 @@ namespace detail{
   std::string SetpointManagerScheduled_Impl::scheduleDisplayName(const std::string& candidateControlVariable) const
   {
     std::string result;
-    if (boost::regex_search(candidateControlVariable,boost::regex("Temperature"))) {
+    const static boost::regex temperatureRegex("Temperature");
+    const static boost::regex humidityRatioRegex("HumidityRatio");
+    const static boost::regex massFlowRateRegex("MassFlowRate");
+    if (boost::regex_search(candidateControlVariable,temperatureRegex)) {
       result = std::string("(Exact, Min, Max) Temperature");
     }
-    else if (boost::regex_search(candidateControlVariable,boost::regex("HumidityRatio"))) {
+    else if (boost::regex_search(candidateControlVariable,humidityRatioRegex)) {
       result = std::string("(Exact, Min, Max) Humidity Ratio");
     }
-    else if (boost::regex_search(candidateControlVariable,boost::regex("MassFlowRate"))) {
+    else if (boost::regex_search(candidateControlVariable,massFlowRateRegex)) {
       result = std::string("(Exact, Min, Max) Mass Flow Rate");
     }
     return result;
@@ -280,7 +227,7 @@ namespace detail{
   
 SetpointManagerScheduled::SetpointManagerScheduled(const Model& model,
                                                    Schedule& schedule)
-  : HVACComponent(SetpointManagerScheduled::iddObjectType(),model) 
+  : SetpointManager(SetpointManagerScheduled::iddObjectType(),model) 
 {
   OS_ASSERT(getImpl<detail::SetpointManagerScheduled_Impl>());
   bool ok = setControlVariable("Temperature");
@@ -295,7 +242,7 @@ SetpointManagerScheduled::SetpointManagerScheduled(const Model& model,
 SetpointManagerScheduled::SetpointManagerScheduled(const Model& model,
                                                    const std::string& controlVariable,
                                                    Schedule& setpointSchedule)
-  : HVACComponent(SetpointManagerScheduled::iddObjectType(),model)
+  : SetpointManager(SetpointManagerScheduled::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::SetpointManagerScheduled_Impl>());
   bool ok = setControlVariable(controlVariable);
@@ -311,8 +258,8 @@ SetpointManagerScheduled::SetpointManagerScheduled(const Model& model,
   }
 }
 
-SetpointManagerScheduled::SetpointManagerScheduled(boost::shared_ptr<detail::SetpointManagerScheduled_Impl> p)
-  : HVACComponent(p)
+SetpointManagerScheduled::SetpointManagerScheduled(std::shared_ptr<detail::SetpointManagerScheduled_Impl> p)
+  : SetpointManager(p)
 {
 }
 
@@ -337,7 +284,7 @@ std::string SetpointManagerScheduled::controlVariable() const
   return getImpl<detail::SetpointManagerScheduled_Impl>()->controlVariable();
 }
 
-bool SetpointManagerScheduled::setControlVariable(std::string value)
+bool SetpointManagerScheduled::setControlVariable(const std::string& value)
 {
   return getImpl<detail::SetpointManagerScheduled_Impl>()->setControlVariable(value);
 }

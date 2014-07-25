@@ -22,18 +22,18 @@
 #include <runmanager/Test/ToolBin.hxx>
 #include <resources.hxx>
 
-#include <runmanager/lib/JobFactory.hpp>
-#include <runmanager/lib/OpenStudioPostProcessJob.hpp>
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Workflow.hpp>
+#include "../JobFactory.hpp"
+#include "../OpenStudioPostProcessJob.hpp"
+#include "../RunManager.hpp"
+#include "../Workflow.hpp"
 
-#include <model/Model.hpp>
+#include "../../../model/Model.hpp"
 
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/IdfObject.hpp>
-#include <utilities/data/EndUses.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/sql/SqlFile.hpp>
+#include "../../../utilities/idf/IdfFile.hpp"
+#include "../../../utilities/idf/IdfObject.hpp"
+#include "../../../utilities/data/EndUses.hpp"
+#include "../../../utilities/data/Attribute.hpp"
+#include "../../../utilities/sql/SqlFile.hpp"
 
 #include <boost/filesystem/path.hpp>
 
@@ -62,7 +62,7 @@ TEST_F(RunManagerTestFixture, OpenStudioPostProcessJob)
 
   boost::optional<IdfFile> idfFile = IdfFile::load(originalfile);
   ASSERT_TRUE(idfFile);
-  BOOST_FOREACH(IdfObject idfObject, idfFile->getObjectsByType(IddObjectType::RunPeriod)){
+  for (IdfObject idfObject : idfFile->getObjectsByType(IddObjectType::RunPeriod)){
     idfObject.setInt(1, 1);
     idfObject.setInt(2, 1);
     idfObject.setInt(3, 1);

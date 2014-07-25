@@ -147,7 +147,7 @@ bool TreeItem::insertChildren(openstudio::model::ModelObject& object, const QLis
     return false;
 
   for (int row = 0; row < count; ++row) {
-    TreeItem *item = new TreeItem(object, data, this);
+    auto item = new TreeItem(object, data, this);
     mChildItems.insert(position, item);
   }
 

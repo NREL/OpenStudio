@@ -19,32 +19,32 @@
 
 #include "ApplyMeasureNowDialog.hpp"
 
-#include <shared_gui_components/BusyWidget.hpp>
-#include <shared_gui_components/EditController.hpp>
-#include <shared_gui_components/EditView.hpp>
-#include <shared_gui_components/LocalLibraryController.hpp>
-#include <shared_gui_components/LocalLibraryView.hpp>
-#include <shared_gui_components/MeasureManager.hpp>
-#include <shared_gui_components/OSViewSwitcher.hpp>
-#include <shared_gui_components/VariableList.hpp>
+#include "../shared_gui_components/BusyWidget.hpp"
+#include "../shared_gui_components/EditController.hpp"
+#include "../shared_gui_components/EditView.hpp"
+#include "../shared_gui_components/LocalLibraryController.hpp"
+#include "../shared_gui_components/LocalLibraryView.hpp"
+#include "../shared_gui_components/MeasureManager.hpp"
+#include "../shared_gui_components/OSViewSwitcher.hpp"
+#include "../shared_gui_components/VariableList.hpp"
 
-#include <openstudio_lib/MainRightColumnController.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/OSDocument.hpp>
-#include <openstudio_lib/OSItem.hpp>
+#include "MainRightColumnController.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
+#include "OSItem.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
 
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/RubyException.hpp>
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/core/RubyException.hpp"
 
-#include <runmanager/lib/AdvancedStatus.hpp>
-#include <runmanager/lib/Job.hpp>
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/RubyJobUtils.hpp>
-#include <runmanager/lib/Workflow.hpp>
+#include "../runmanager/lib/AdvancedStatus.hpp"
+#include "../runmanager/lib/Job.hpp"
+#include "../runmanager/lib/RunManager.hpp"
+#include "../runmanager/lib/RubyJobUtils.hpp"
+#include "../runmanager/lib/Workflow.hpp"
 
 #include <QBoxLayout>
 #include <QCloseEvent>
@@ -225,7 +225,7 @@ void ApplyMeasureNowDialog::createWidgets()
 
   #ifdef Q_OS_MAC
     setWindowFlags(Qt::FramelessWindowHint);
-  #elif defined(Q_OS_WIN32)
+  #elif defined(Q_OS_WIN)
     setWindowFlags(Qt::WindowCloseButtonHint | Qt::MSWindowsFixedSizeDialogHint);
   #endif
 }
@@ -679,18 +679,18 @@ void DataPointJobItemView::update(analysis::RubyMeasure & rubyMeasure, BCLMeasur
   m_dataPointJobContentView->clear();
 
   std::vector<std::string> initialConditions = jobErrors.initialConditions();
-  Q_FOREACH(const std::string& initialCondition, initialConditions){
+  for (const std::string& initialCondition : initialConditions){
     m_dataPointJobContentView->addInitialConditionMessage(initialCondition);
   }
 
   std::vector<std::string> finalConditions = jobErrors.finalConditions();
-  Q_FOREACH(const std::string& finalCondition, finalConditions){
+  for (const std::string& finalCondition : finalConditions){
     m_dataPointJobContentView->addFinalConditionMessage(finalCondition);
   }
 
   std::vector<std::string> errors = jobErrors.errors();
   m_dataPointJobHeaderView->setNumErrors(errors.size());
-  Q_FOREACH(const std::string& errorMessage, errors){
+  for (const std::string& errorMessage : errors){
     m_dataPointJobContentView->addErrorMessage(errorMessage);
   }
 
@@ -713,12 +713,12 @@ void DataPointJobItemView::update(analysis::RubyMeasure & rubyMeasure, BCLMeasur
 
   std::vector<std::string> warnings = jobErrors.warnings();
   m_dataPointJobHeaderView->setNumWarnings(warnings.size());
-  Q_FOREACH(const std::string& warningMessage, warnings){
+  for (const std::string& warningMessage : warnings){
     m_dataPointJobContentView->addWarningMessage(warningMessage);
   }
 
   std::vector<std::string> infos = jobErrors.infos();
-  Q_FOREACH(const std::string& infoMessage, infos){
+  for (const std::string& infoMessage : infos){
     m_dataPointJobContentView->addInfoMessage(infoMessage);
   }
 

@@ -18,10 +18,10 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idf/Test/IdfFixture.hpp>
+#include "IdfFixture.hpp"
 
-#include <utilities/idf/IdfRegex.hpp>
-#include <utilities/idd/CommentRegex.hpp>
+#include "../IdfRegex.hpp"
+#include "../../idd/CommentRegex.hpp"
 
 using openstudio::commentRegex::commentWhitespaceOnlyBlock;
 

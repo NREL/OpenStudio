@@ -17,17 +17,16 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/idf/IdfObject.hpp>
-#include <utilities/idf/IdfObject_Impl.hpp>
+#include "IdfExtensibleGroup.hpp"
+#include "IdfObject.hpp"
+#include "IdfObject_Impl.hpp"
 
-#include <utilities/idd/IddObjectProperties.hpp>
-#include <utilities/idd/IddFieldProperties.hpp>
+#include "../idd/IddObjectProperties.hpp"
+#include "../idd/IddFieldProperties.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 #include <boost/lexical_cast.hpp>
-#include <boost/foreach.hpp>
 
 namespace openstudio {
 
@@ -252,7 +251,7 @@ bool IdfExtensibleGroup::operator!=(const IdfExtensibleGroup& other) const {
 
 // PRIVATE
 
-IdfExtensibleGroup::IdfExtensibleGroup(boost::shared_ptr<detail::IdfObject_Impl> impl,unsigned index)
+IdfExtensibleGroup::IdfExtensibleGroup(std::shared_ptr<detail::IdfObject_Impl> impl,unsigned index)
     : m_impl(impl), m_index(index) {}
 
 unsigned IdfExtensibleGroup::mf_toIndex(unsigned fieldIndex) const {
@@ -279,7 +278,7 @@ UnsignedVector IdfExtensibleGroup::mf_subsetAndToFieldIndices(UnsignedVector ind
   UnsignedVector result;
   OS_ASSERT(!empty());
   // downselect and convert to only this ExtensibleGroup
-  BOOST_FOREACH(unsigned index,indices) {
+  for (unsigned index : indices) {
     if (index >= m_index) {
       unsigned fieldIndex = index - m_index;
       if (isValid(fieldIndex)) { result.push_back(fieldIndex); }

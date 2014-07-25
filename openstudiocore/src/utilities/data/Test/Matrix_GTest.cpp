@@ -18,10 +18,10 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/data/Test/DataFixture.hpp>
+#include "DataFixture.hpp"
 
-#include <utilities/data/Matrix.hpp>
-#include <utilities/data/Vector.hpp>
+#include "../Matrix.hpp"
+#include "../Vector.hpp"
 
 #include <exception>
 #include <iostream>

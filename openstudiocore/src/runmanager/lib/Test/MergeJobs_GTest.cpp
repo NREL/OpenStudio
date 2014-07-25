@@ -19,9 +19,9 @@
 
 #include <gtest/gtest.h>
 #include "RunManagerTestFixture.hpp"
-#include <runmanager/lib/Job.hpp>
-#include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/JobFactory.hpp>
+#include "../Job.hpp"
+#include "../Workflow.hpp"
+#include "../JobFactory.hpp"
 
 
 

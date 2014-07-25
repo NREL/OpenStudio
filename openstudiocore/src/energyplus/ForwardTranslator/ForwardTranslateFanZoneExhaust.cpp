@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/FanZoneExhaust.hpp>
-#include <model/FanZoneExhaust_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/FanZoneExhaust.hpp"
+#include "../../model/FanZoneExhaust_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Model_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/Fan_ZoneExhaust_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -50,7 +50,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFanZoneExhaust( FanZoneEx
   IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::Fan_ZoneExhaust,modelObject);
   
   // Model Name (A2)
-  std::string baseName = modelObject.name().get();
+  //std::string baseName = modelObject.name().get();
 
   // A3, Field Availability Schedule Name
   boost::optional<Schedule> availabilitySchedule = modelObject.availabilitySchedule();

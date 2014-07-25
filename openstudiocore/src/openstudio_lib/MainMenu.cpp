@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_lib/MainMenu.hpp>
+#include "MainMenu.hpp"
 
-#include <openstudio_lib/FileOperations.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/OSDocument.hpp>
+#include "FileOperations.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
 
-#include <osversion/VersionTranslator.hpp>
+#include "../osversion/VersionTranslator.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Path.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Path.hpp"
 
 #include <QMenu>
 

@@ -17,86 +17,86 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/HVACTemplates.hpp>
-#include <model/Model.hpp>
-#include <model/PipeAdiabatic.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/ChillerElectricEIR.hpp>
-#include <model/ChillerElectricEIR_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/ZoneHVACPackagedTerminalHeatPump.hpp>
-#include <model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp>
-#include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
-#include <model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp>
-#include <model/BoilerHotWater.hpp>
-#include <model/BoilerHotWater_Impl.hpp>
-#include <model/PumpVariableSpeed.hpp>
-#include <model/PumpVariableSpeed_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
-#include <model/SizingPlant.hpp>
-#include <model/SizingPlant_Impl.hpp>
-#include <model/CoilCoolingDXSingleSpeed.hpp>
-#include <model/CoilCoolingDXSingleSpeed_Impl.hpp>
-#include <model/CoilCoolingDXTwoSpeed.hpp>
-#include <model/CoilCoolingDXTwoSpeed_Impl.hpp>
-#include <model/CurveCubic.hpp>
-#include <model/CurveCubic_Impl.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/CurveQuadratic_Impl.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveBiquadratic_Impl.hpp>
-#include <model/CoilHeatingGas.hpp>
-#include <model/CoilHeatingGas_Impl.hpp>
-#include <model/CoilHeatingElectric.hpp>
-#include <model/CoilHeatingElectric_Impl.hpp>
-#include <model/CoilHeatingDXSingleSpeed.hpp>
-#include <model/CoilHeatingDXSingleSpeed_Impl.hpp>
-#include <model/ScheduleRuleset.hpp>
-#include <model/ScheduleRuleset_Impl.hpp>
-#include <model/ScheduleDay.hpp>
-#include <model/ScheduleDay_Impl.hpp>
-#include <model/FanConstantVolume.hpp>
-#include <model/FanConstantVolume_Impl.hpp>
-#include <model/FanVariableVolume.hpp>
-#include <model/FanVariableVolume_Impl.hpp>
-#include <model/SetpointManagerMixedAir.hpp>
-#include <model/SetpointManagerMixedAir_Impl.hpp>
-#include <model/SetpointManagerSingleZoneReheat.hpp>
-#include <model/SetpointManagerSingleZoneReheat_Impl.hpp>
-#include <model/SetpointManagerScheduled.hpp>
-#include <model/SetpointManagerScheduled_Impl.hpp>
-#include <model/SetpointManagerFollowOutdoorAirTemperature.hpp>
-#include <model/SetpointManagerFollowOutdoorAirTemperature_Impl.hpp>
-#include <model/SizingSystem.hpp>
-#include <model/SizingSystem_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
-#include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
-#include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
-#include <model/AirTerminalSingleDuctParallelPIUReheat.hpp>
-#include <model/AirTerminalSingleDuctParallelPIUReheat_Impl.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled_Impl.hpp>
-#include <model/AirTerminalSingleDuctVAVReheat.hpp>
-#include <model/AirTerminalSingleDuctVAVReheat_Impl.hpp>
-#include <model/ControllerOutdoorAir.hpp>
-#include <model/ControllerOutdoorAir_Impl.hpp>
-#include <model/CoilCoolingWater.hpp>
-#include <model/CoilCoolingWater_Impl.hpp>
-#include <model/CoilHeatingWater.hpp>
-#include <model/CoilHeatingWater_Impl.hpp>
-#include <model/Splitter.hpp>
-#include <model/Splitter_Impl.hpp>
-#include <model/Mixer.hpp>
-#include <model/Mixer_Impl.hpp>
-#include <model/CoolingTowerSingleSpeed.hpp>
-#include <model/CoolingTowerSingleSpeed_Impl.hpp>
-#include <utilities/time/Time.hpp>
+#include "HVACTemplates.hpp"
+#include "Model.hpp"
+#include "PipeAdiabatic.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "ChillerElectricEIR.hpp"
+#include "ChillerElectricEIR_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "ZoneHVACPackagedTerminalHeatPump.hpp"
+#include "ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
+#include "ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
+#include "BoilerHotWater.hpp"
+#include "BoilerHotWater_Impl.hpp"
+#include "PumpVariableSpeed.hpp"
+#include "PumpVariableSpeed_Impl.hpp"
+#include "PlantLoop.hpp"
+#include "PlantLoop_Impl.hpp"
+#include "SizingPlant.hpp"
+#include "SizingPlant_Impl.hpp"
+#include "CoilCoolingDXSingleSpeed.hpp"
+#include "CoilCoolingDXSingleSpeed_Impl.hpp"
+#include "CoilCoolingDXTwoSpeed.hpp"
+#include "CoilCoolingDXTwoSpeed_Impl.hpp"
+#include "CurveCubic.hpp"
+#include "CurveCubic_Impl.hpp"
+#include "CurveQuadratic.hpp"
+#include "CurveQuadratic_Impl.hpp"
+#include "CurveBiquadratic.hpp"
+#include "CurveBiquadratic_Impl.hpp"
+#include "CoilHeatingGas.hpp"
+#include "CoilHeatingGas_Impl.hpp"
+#include "CoilHeatingElectric.hpp"
+#include "CoilHeatingElectric_Impl.hpp"
+#include "CoilHeatingDXSingleSpeed.hpp"
+#include "CoilHeatingDXSingleSpeed_Impl.hpp"
+#include "ScheduleRuleset.hpp"
+#include "ScheduleRuleset_Impl.hpp"
+#include "ScheduleDay.hpp"
+#include "ScheduleDay_Impl.hpp"
+#include "FanConstantVolume.hpp"
+#include "FanConstantVolume_Impl.hpp"
+#include "FanVariableVolume.hpp"
+#include "FanVariableVolume_Impl.hpp"
+#include "SetpointManagerMixedAir.hpp"
+#include "SetpointManagerMixedAir_Impl.hpp"
+#include "SetpointManagerSingleZoneReheat.hpp"
+#include "SetpointManagerSingleZoneReheat_Impl.hpp"
+#include "SetpointManagerScheduled.hpp"
+#include "SetpointManagerScheduled_Impl.hpp"
+#include "SetpointManagerFollowOutdoorAirTemperature.hpp"
+#include "SetpointManagerFollowOutdoorAirTemperature_Impl.hpp"
+#include "SizingSystem.hpp"
+#include "SizingSystem_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
+#include "AirTerminalSingleDuctParallelPIUReheat.hpp"
+#include "AirTerminalSingleDuctParallelPIUReheat_Impl.hpp"
+#include "AirTerminalSingleDuctUncontrolled.hpp"
+#include "AirTerminalSingleDuctUncontrolled_Impl.hpp"
+#include "AirTerminalSingleDuctVAVReheat.hpp"
+#include "AirTerminalSingleDuctVAVReheat_Impl.hpp"
+#include "ControllerOutdoorAir.hpp"
+#include "ControllerOutdoorAir_Impl.hpp"
+#include "CoilCoolingWater.hpp"
+#include "CoilCoolingWater_Impl.hpp"
+#include "CoilHeatingWater.hpp"
+#include "CoilHeatingWater_Impl.hpp"
+#include "Splitter.hpp"
+#include "Splitter_Impl.hpp"
+#include "Mixer.hpp"
+#include "Mixer_Impl.hpp"
+#include "CoolingTowerSingleSpeed.hpp"
+#include "CoolingTowerSingleSpeed_Impl.hpp"
+#include "../utilities/time/Time.hpp"
 
 namespace openstudio {
 
@@ -263,13 +263,11 @@ void addSystemType1(Model & model, std::vector<ThermalZone> zones)
 {
   std::vector<model::ThermalZone> zonesToAddTo;
 
-  for( std::vector<model::ThermalZone>::iterator it = zones.begin();
-       it < zones.end();
-       ++it )
+  for( const auto & zone : zones )
   {
-    if( it->model() == model )
+    if( zone.model() == model )
     {
-      zonesToAddTo.push_back(*it);
+      zonesToAddTo.push_back(zone);
     }
   }
 
@@ -318,13 +316,11 @@ void addSystemType1(Model & model, std::vector<ThermalZone> zones)
 
     hotWaterSPM.addToNode(hotWaterOutletNode);
 
-    for( std::vector<model::ThermalZone>::iterator it = zonesToAddTo.begin();
-         it < zonesToAddTo.end();
-         ++it )
+    for( auto & zone : zonesToAddTo )
     {
         model::ZoneHVACPackagedTerminalAirConditioner ptac = addSystemType1(model);
 
-        ptac.addToThermalZone(*it);
+        ptac.addToThermalZone(zone);
 
         HVACComponent comp = ptac.heatingCoil();
 
@@ -454,15 +450,13 @@ ZoneHVACPackagedTerminalHeatPump addSystemType2(Model & model)
 
 void addSystemType2(Model & model, std::vector<ThermalZone> zones)
 {
-  for( std::vector<model::ThermalZone>::iterator it = zones.begin();
-       it < zones.end();
-       ++it )
+  for( auto & zone : zones )
   {
-    if( it->model() == model )
+    if( zone.model() == model )
     {
       ZoneHVACPackagedTerminalHeatPump pthp = addSystemType2(model);
 
-      pthp.addToThermalZone(*it);
+      pthp.addToThermalZone(zone);
     }
   }
 }

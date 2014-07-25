@@ -18,19 +18,19 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysis/test/AnalysisFixture.hpp>
+#include "AnalysisFixture.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/DataPoint_Impl.hpp>
+#include "../Analysis.hpp"
+#include "../DataPoint.hpp"
+#include "../DataPoint_Impl.hpp"
 
-#include <runmanager/lib/WorkItem.hpp>
+#include "../../runmanager/lib/WorkItem.hpp"
 
-#include <utilities/data/Attribute.hpp>
+#include "../../utilities/data/Attribute.hpp"
 
-#include <utilities/time/Date.hpp>
+#include "../../utilities/time/Date.hpp"
 
-#include <utilities/core/Containers.hpp>
+#include "../../utilities/core/Containers.hpp"
 
 #include <resources.hxx>
 #include <OpenStudio.hxx>
@@ -117,9 +117,9 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_Versioning) {
   EXPECT_TRUE(ok);
 
   // loop through all versions' json files
-  for (openstudio::directory_iterator it(dir); it != openstudio::directory_iterator(); ++it) {
+  for (boost::filesystem::directory_iterator it(dir); it != boost::filesystem::directory_iterator(); ++it) {
     if (boost::regex_match(toString(it->path().stem()),boost::regex("data_point_.*"))) {
-      LOG(Debug,"Loading " << toString(it->filename()) << ".");
+      LOG(Debug,"Loading " << toString(it->path().filename()) << ".");
 
       // open and check results
       AnalysisJSONLoadResult loadResult = loadJSON(it->path());

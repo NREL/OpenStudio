@@ -18,13 +18,13 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/SizingPlant.hpp>
-#include <model/SizingPlant_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/Unit.hpp>
+#include "ModelFixture.hpp"
+#include "../SizingPlant.hpp"
+#include "../SizingPlant_Impl.hpp"
+#include "../PlantLoop.hpp"
+#include "../PlantLoop_Impl.hpp"
+#include "../../utilities/units/Quantity.hpp"
+#include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

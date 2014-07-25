@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSINTEGEREDIT_HPP
-#define OPENSTUDIO_OSINTEGEREDIT_HPP
+#ifndef SHAREDGUICOMPONENTS_OSINTEGEREDIT_HPP
+#define SHAREDGUICOMPONENTS_OSINTEGEREDIT_HPP
 
-#include <shared_gui_components/FieldMethodTypedefs.hpp>
+#include "FieldMethodTypedefs.hpp"
 
-#include <model/ModelObject.hpp>
-#include <model/ModelExtensibleGroup.hpp>
+#include "../model/ModelObject.hpp"
+#include "../model/ModelExtensibleGroup.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 #include <QLineEdit>
 
@@ -36,7 +36,7 @@ class OSIntegerEdit2: public QLineEdit {
 
  public:
 
-  OSIntegerEdit2(QWidget * parent = 0);
+  OSIntegerEdit2(QWidget * parent = nullptr);
 
   virtual ~OSIntegerEdit2() {}
 
@@ -120,7 +120,7 @@ class OSIntegerEdit: public QLineEdit {
 
  public:
 
-  OSIntegerEdit(QWidget * parent = 0);
+  OSIntegerEdit(QWidget * parent = nullptr);
 
   virtual ~OSIntegerEdit() {}
 
@@ -159,5 +159,5 @@ class OSIntegerEdit: public QLineEdit {
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSINTEGEREDIT_HPP
+#endif // SHAREDGUICOMPONENTS_OSINTEGEREDIT_HPP
 

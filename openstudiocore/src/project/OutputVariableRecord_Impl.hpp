@@ -20,9 +20,9 @@
 #ifndef PROJECT_OUTPUTVARIABLERECORD_IMPL_HPP
 #define PROJECT_OUTPUTVARIABLERECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/VariableRecord_Impl.hpp>
-#include <project/OutputVariableRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "VariableRecord_Impl.hpp"
+#include "OutputVariableRecord.hpp"
 
 namespace openstudio {
 namespace project {

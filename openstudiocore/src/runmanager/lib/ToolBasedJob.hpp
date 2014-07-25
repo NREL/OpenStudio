@@ -17,13 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_TOOLBASEDJOB_HPP_
-#define OPENSTUDIO_TOOLBASEDJOB_HPP_
+#ifndef RUNMANAGER_LIB_TOOLBASEDJOB_HPP
+#define RUNMANAGER_LIB_TOOLBASEDJOB_HPP
 
 #include <boost/filesystem.hpp>
-#include <boost/tuple/tuple.hpp>
 #include <string>
-#include <utilities/core/Logger.hpp>
+#include "../../utilities/core/Logger.hpp"
 #include "Job_Impl.hpp"
 #include "ToolInfo.hpp"
 #include <boost/optional.hpp>
@@ -35,7 +34,7 @@
 #include <QMutex>
 #include <QMutexLocker>
 #include <boost/regex.hpp>
-#include <energyplus/ErrorFile.hpp>
+#include "../../energyplus/ErrorFile.hpp"
 
 namespace openstudio {
 namespace runmanager {
@@ -85,37 +84,13 @@ namespace detail {
        virtual ~ToolBasedJob();
 
       // Reimplemented virtual functions from Job_Impl
-      virtual void startImpl(const boost::shared_ptr<ProcessCreator> &t_pc);
+      virtual void startImpl(const std::shared_ptr<ProcessCreator> &t_pc);
       virtual bool outOfDateImpl(const boost::optional<QDateTime> &t_lastrun) const;
       virtual Files outputFilesImpl() const;
       virtual std::string getOutput() const;
       virtual void cleanup();
       virtual std::string description() const;
       virtual std::string detailedDescription() const;
-
-
-      /// \returns true if the set of ToolInfo has remote execution capabilities
-      virtual bool remoteRunnable() const
-      {
-        if (!runnable())
-        {
-          return false;
-        } else {
-          try {
-            for (size_t i = 0; i < m_toolNames.size(); ++i)
-            {
-              if (!getTool(m_toolNames[i]).remoteExecutable())
-              {
-                return false; // abort on the first not remote executable tool
-              }
-            }
-            return true; // all of the required tools are remote executable
-          } catch (const std::exception &) {
-            // we couldn't find the required tool
-            return false;
-          }
-        }
-      }
 
       /// Requests that the tool stop execution
       virtual void requestStop();
@@ -270,10 +245,10 @@ namespace detail {
       std::vector<std::pair<QUrl, openstudio::path> > m_required_files;
       std::map<std::string, std::vector<std::string> > m_parameters;
       std::set<openstudio::path> m_expectedOutputFiles;
-      boost::shared_ptr<ProcessCreator> m_process_creator;
-      std::map<ToolInfo, boost::shared_ptr<Process> > m_processes;
-      boost::shared_ptr<Process> m_currentprocess;
-      std::vector<boost::tuple<FileInfo, std::string, openstudio::path> > m_copyRequiredFiles;
+      std::shared_ptr<ProcessCreator> m_process_creator;
+      std::map<ToolInfo, std::shared_ptr<Process> > m_processes;
+      std::shared_ptr<Process> m_currentprocess;
+      std::vector<std::tuple<FileInfo, std::string, openstudio::path> > m_copyRequiredFiles;
 
       std::set<std::pair<openstudio::path, openstudio::path> > m_addedRequiredFiles;
 
@@ -285,9 +260,6 @@ namespace detail {
       size_t m_currentToolIndex; ///< Index of the currently processing tool for this job
 
     private slots:
-      void remoteStarted(int t_remoteid, int t_remotetaskid);
-      void remoteFinished(int t_remoteid, int t_remotetaskid);
-
       /// Connected to m_process
       void processStarted();
 
@@ -320,4 +292,4 @@ namespace detail {
 }
 }
 }
-#endif
+#endif // RUNMANAGER_LIB_TOOLBASEDJOB_HPP

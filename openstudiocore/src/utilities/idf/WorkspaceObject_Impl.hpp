@@ -25,9 +25,6 @@
 #include <utilities/idf/IdfObject_Impl.hpp>
 #include <utilities/idf/ObjectPointer.hpp>
 
-#include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
-
 #include <QObject>
 
 namespace openstudio {
@@ -94,7 +91,7 @@ namespace detail {
                                                             unsigned fieldIndex)
   {
     return std::find_if(pointerSet.begin(),pointerSet.end(),
-                        boost::bind(fieldIndexEqualTo<typename T::pointer_type>,_1,fieldIndex));
+                        std::bind(fieldIndexEqualTo<typename T::pointer_type>,std::placeholders::_1,fieldIndex));
   }
 
   template<class T>
@@ -103,7 +100,7 @@ namespace detail {
                                                                        unsigned fieldIndex)
   {
     return std::find_if(pointerSet.begin(),pointerSet.end(),
-                        boost::bind(fieldIndexEqualTo<typename T::pointer_type>,_1,fieldIndex));
+                        std::bind(fieldIndexEqualTo<typename T::pointer_type>,std::placeholders::_1,fieldIndex));
   }
 
   class UTILITIES_API WorkspaceObject_Impl : public IdfObject_Impl {
@@ -353,7 +350,7 @@ namespace detail {
   };
 
   /** \relates WorkspaceObject_Impl */
-  typedef boost::shared_ptr<WorkspaceObject_Impl> WorkspaceObject_ImplPtr;
+  typedef std::shared_ptr<WorkspaceObject_Impl> WorkspaceObject_ImplPtr;
 
   /** \relates WorkspaceObject_Impl */
   typedef std::vector<WorkspaceObject_ImplPtr> WorkspaceObject_ImplPtrVector;
@@ -362,6 +359,6 @@ namespace detail {
 
 } // openstudio
 
-Q_DECLARE_METATYPE(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)
+Q_DECLARE_METATYPE(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)
 
 #endif // UTILITIES_IDF_WORKSPACEOBJECT_IMPL_HPP

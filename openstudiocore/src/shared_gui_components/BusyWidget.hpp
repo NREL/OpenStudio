@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef BUSYWIDGET_H
-#define BUSYWIDGET_H
+#ifndef SHAREDGUICOMPONENTS_BUSYWIDGET_HPP
+#define SHAREDGUICOMPONENTS_BUSYWIDGET_HPP
 
 #include <QWidget>
 #include <boost/smart_ptr.hpp>
@@ -35,7 +35,7 @@ class BusyWidget : public QWidget
 
   public:
 
-  BusyWidget(QWidget * parent = 0);
+  BusyWidget(QWidget * parent = nullptr);
 
   virtual ~BusyWidget() {}
 
@@ -51,7 +51,7 @@ class BusyWidget : public QWidget
 
   private:
 
-  boost::shared_ptr<QPixmap> m_pixmap;
+  std::shared_ptr<QPixmap> m_pixmap;
 
   float m_rotation;
 
@@ -59,4 +59,4 @@ class BusyWidget : public QWidget
 
 } // namespace openstudio
 
-#endif // BUSYWIDGET_H
+#endif // SHAREDGUICOMPONENTS_BUSYWIDGET_HPP

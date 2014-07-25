@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_STARTUPMENU_H
-#define OPENSTUDIO_STARTUPMENU_H
+#ifndef OPENSTUDIO_STARTUPMENU_HPP
+#define OPENSTUDIO_STARTUPMENU_HPP
 
 #include <QMenuBar>
 
@@ -32,7 +32,7 @@ class StartupMenu : public QMenuBar
 
   public:
 
-  StartupMenu(QWidget *parent = 0);
+  StartupMenu(QWidget *parent = nullptr);
 
   virtual ~StartupMenu() {}
 
@@ -68,5 +68,5 @@ class StartupMenu : public QMenuBar
 
 } // openstudio
 
-#endif // OPENSTUDIO_STARTUPMENU_H
+#endif // OPENSTUDIO_STARTUPMENU_HPP
 

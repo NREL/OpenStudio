@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/WeibullDistribution.hpp>
-#include <analysis/UncertaintyDescription_Impl.hpp>
+#include "WeibullDistribution.hpp"
+#include "UncertaintyDescription_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace analysis {
 
 WeibullDistribution::WeibullDistribution() 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(WeibullDistribution::type())))
 {}
 
 WeibullDistribution::WeibullDistribution(double alpha, double beta) 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(WeibullDistribution::type())))
 {
   setAlpha(alpha);
@@ -72,7 +72,7 @@ bool WeibullDistribution::setBeta(double value) {
   }  
 }
 
-WeibullDistribution::WeibullDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
+WeibullDistribution::WeibullDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
   OS_ASSERT(type() == WeibullDistribution::type());

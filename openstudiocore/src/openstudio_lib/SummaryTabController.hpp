@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SUMMARYTABCONTROLLER_H
-#define OPENSTUDIO_SUMMARYTABCONTROLLER_H
+#ifndef OPENSTUDIO_SUMMARYTABCONTROLLER_HPP
+#define OPENSTUDIO_SUMMARYTABCONTROLLER_HPP
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 #include <boost/smart_ptr.hpp>
-#include <openstudio_lib/MainTabController.hpp>
+#include "MainTabController.hpp"
 
 namespace openstudio {
 
@@ -39,4 +39,4 @@ class SummaryTabController : public MainTabController
 
 } // openstudio
 
-#endif // OPENSTUDIO_SUMMARYTABCONTROLLER_H
+#endif // OPENSTUDIO_SUMMARYTABCONTROLLER_HPP

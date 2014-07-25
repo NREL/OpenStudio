@@ -17,19 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ScheduleTypeRegistry.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeLimits_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Model.hpp>
+#include "ScheduleTypeRegistry.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeLimits_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "Model.hpp"
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
 
-#include <utilities/core/Containers.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Containers.hpp"
 
 namespace openstudio {
 namespace model {
@@ -60,7 +58,7 @@ OSOptionalQuantity ScheduleType::getUpperLimitValue(bool returnIP) const {
 
 std::vector<std::string> ScheduleTypeRegistrySingleton::classNames() const {
   StringVector result;
-  BOOST_FOREACH(const ClassNameToScheduleTypesMap::value_type& p,m_classNameToScheduleTypesMap) {
+  for (const ClassNameToScheduleTypesMap::value_type& p : m_classNameToScheduleTypesMap) {
     result.push_back(p.first);
   }
   return result;
@@ -70,7 +68,7 @@ std::vector<ScheduleType> ScheduleTypeRegistrySingleton::getScheduleTypesByClass
     const std::string& className) const
 {
   ScheduleTypeVector result;
-  ClassNameToScheduleTypesMap::const_iterator it = m_classNameToScheduleTypesMap.find(className);
+  auto it = m_classNameToScheduleTypesMap.find(className);
   if (it != m_classNameToScheduleTypesMap.end()) {
     result = it->second;
   }
@@ -81,7 +79,7 @@ ScheduleType ScheduleTypeRegistrySingleton::getScheduleType(const std::string &c
                                                             const std::string &scheduleDisplayName) const
 {
   ScheduleTypeVector scheduleTypes = getScheduleTypesByClassName(className);
-  BOOST_FOREACH(const ScheduleType& scheduleType,scheduleTypes) {
+  for (const ScheduleType& scheduleType : scheduleTypes) {
     if (scheduleType.scheduleDisplayName == scheduleDisplayName) {
       return scheduleType;
     }
@@ -97,7 +95,7 @@ ScheduleTypeLimits ScheduleTypeRegistrySingleton::getOrCreateScheduleTypeLimits(
   // if fully specified, try to retrieve
   if (scheduleType.lowerLimitValue && scheduleType.upperLimitValue) {
     ScheduleTypeLimitsVector candidates = model.getConcreteModelObjectsByName<ScheduleTypeLimits>(getDefaultName(scheduleType));
-    BOOST_FOREACH(const ScheduleTypeLimits& candidate, candidates) {
+    for (const ScheduleTypeLimits& candidate : candidates) {
       if (isCompatible(scheduleType,candidate)) {
         return candidate;
       }
@@ -245,6 +243,8 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"SetpointManagerScheduled","(Exact, Min, Max) Temperature","schedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"SetpointManagerScheduled","(Exact, Min, Max) Humidity Ratio","schedule",true,"",0.0,OptionalDouble()},
     {"SetpointManagerScheduled","(Exact, Min, Max) Mass Flow Rate","schedule",true,"MassFlowRate",OptionalDouble(),OptionalDouble()},
+    {"SetpointManagerScheduledDualSetpoint","High Setpoint","highSetpointSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
+    {"SetpointManagerScheduledDualSetpoint","Low Setpoint","lowSetpointSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"SetpointManagerOutdoorAirReset","Setpoint Manager Outdoor Air Reset","schedule",true,"",0.0,OptionalDouble()},
     {"ShadingSurface","Transmittance","transmittanceSchedule",true,"",0.0,1.0},
     {"SiteWaterMainsTemperature","Temperature","temperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
@@ -297,7 +297,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
 
   int i(0);
   while (!scheduleTypes[i].className.empty()) {
-    ClassNameToScheduleTypesMap::iterator it = m_classNameToScheduleTypesMap.find(scheduleTypes[i].className);
+    auto it = m_classNameToScheduleTypesMap.find(scheduleTypes[i].className);
     if (it == m_classNameToScheduleTypesMap.end()) {
       m_classNameToScheduleTypesMap.insert(ClassNameToScheduleTypesMap::value_type(scheduleTypes[i].className,ScheduleTypeVector(1u,scheduleTypes[i])));
     }
@@ -413,7 +413,7 @@ std::vector<ScheduleTypeLimits> getCompatibleScheduleTypeLimits(const Model& mod
   ScheduleTypeLimitsVector result;
   ScheduleTypeLimitsVector candidates = model.getConcreteModelObjects<ScheduleTypeLimits>();
   ScheduleType scheduleType = ScheduleTypeRegistry::instance().getScheduleType(className,scheduleDisplayName);
-  BOOST_FOREACH(const ScheduleTypeLimits& candidate,candidates) {
+  for (const ScheduleTypeLimits& candidate : candidates) {
     if (isCompatible(scheduleType,candidate)) {
       result.push_back(candidate);
     }
@@ -428,7 +428,7 @@ std::vector<Schedule> getCompatibleSchedules(const Model& model,
   ScheduleVector result;
   ScheduleVector candidates = model.getModelObjects<Schedule>();
   ScheduleTypeLimitsVector okTypes = getCompatibleScheduleTypeLimits(model,className,scheduleDisplayName);
-  BOOST_FOREACH(const Schedule& candidate,candidates) {
+  for (const Schedule& candidate : candidates) {
     if (OptionalScheduleTypeLimits candidateType = candidate.scheduleTypeLimits()) {
       if (std::find(okTypes.begin(),okTypes.end(),*candidateType) != okTypes.end()) {
         result.push_back(candidate);

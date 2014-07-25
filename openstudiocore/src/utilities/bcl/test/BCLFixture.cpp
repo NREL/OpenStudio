@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/bcl/test/BCLFixture.hpp>
+#include "BCLFixture.hpp"
 
-#include <utilities/bcl/LocalBCL.hpp>
+#include "../LocalBCL.hpp"
 
 using openstudio::LocalBCL;
 using openstudio::Logger;

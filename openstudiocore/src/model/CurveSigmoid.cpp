@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CurveSigmoid.hpp>
-#include <model/CurveSigmoid_Impl.hpp>
+#include "CurveSigmoid.hpp"
+#include "CurveSigmoid_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Curve_Sigmoid_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <cmath>
 
@@ -381,7 +381,7 @@ void CurveSigmoid::resetOutputUnitType() {
 }
 
 /// @cond
-CurveSigmoid::CurveSigmoid(boost::shared_ptr<detail::CurveSigmoid_Impl> impl)
+CurveSigmoid::CurveSigmoid(std::shared_ptr<detail::CurveSigmoid_Impl> impl)
   : Curve(impl)
 {}
 /// @endcond

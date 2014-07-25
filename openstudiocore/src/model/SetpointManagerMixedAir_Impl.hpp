@@ -20,7 +20,7 @@
 #ifndef MODEL_SETPOINTMANAGERMIXEDAIR_IMPL_HPP
 #define MODEL_SETPOINTMANAGERMIXEDAIR_IMPL_HPP
 
-#include <model/HVACComponent_Impl.hpp>
+#include "SetpointManager_Impl.hpp"
 #include <boost/optional.hpp>
 
 namespace openstudio {
@@ -28,7 +28,7 @@ namespace model {
 
 namespace detail {
 
-  class MODEL_API SetpointManagerMixedAir_Impl : public HVACComponent_Impl {
+  class MODEL_API SetpointManagerMixedAir_Impl : public SetpointManager_Impl {
     Q_OBJECT;
     Q_PROPERTY(std::string controlVariable READ controlVariable WRITE setControlVariable);
    public:
@@ -47,37 +47,39 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const;
 
-    virtual boost::optional<ParentObject> parent() const;
+    virtual ModelObject clone(Model model) const;
 
-    virtual std::vector<ModelObject> children() const;
+    virtual bool addToNode(Node & node);
 
-    std::string controlVariable();
+    virtual std::string controlVariable() const;
 
-    void setControlVariable( std::string value );
+    virtual bool setControlVariable( const std::string& controlVariable );
 
     boost::optional<Node> referenceSetpointNode();
 
     void setReferenceSetpointNode(Node& node );
 
+    void resetReferenceSetpointNode();
+
     boost::optional<Node> fanInletNode();
 
     void setFanInletNode(Node& node );
+
+    void resetFanInletNode();
 
     boost::optional<Node> fanOutletNode();
 
     void setFanOutletNode(Node& node );
 
-    boost::optional<Node> setpointNode();
+    void resetFanOutletNode();
 
-    void setSetpointNode( Node & node );
-
-    bool addToNode(Node & node);
-
-    std::vector<openstudio::IdfObject> remove();
-
-    ModelObject clone(Model model) const;
+    virtual boost::optional<Node> setpointNode() const;
 
    private:
+    virtual bool setSetpointNode( const Node & node );
+
+    virtual void resetSetpointNode();
+
     REGISTER_LOGGER("openstudio.model.SetpointManagerMixedAir");
   };
 

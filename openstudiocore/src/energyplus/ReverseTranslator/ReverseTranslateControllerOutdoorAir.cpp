@@ -17,9 +17,9 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ReverseTranslator.hpp>
-#include <model/ControllerOutdoorAir.hpp>
-#include <model/ControllerOutdoorAir_Impl.hpp>
+#include "../ReverseTranslator.hpp"
+#include "../../model/ControllerOutdoorAir.hpp"
+#include "../../model/ControllerOutdoorAir_Impl.hpp"
 #include <utilities/idd/Controller_OutdoorAir_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 

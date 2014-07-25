@@ -21,19 +21,19 @@
 #include "RunManagerTestFixture.hpp"
 #include <runmanager/Test/ToolBin.hxx>
 
-#include <runmanager/lib/JobFactory.hpp>
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/RubyJobUtils.hpp>
+#include "../JobFactory.hpp"
+#include "../RunManager.hpp"
+#include "../Workflow.hpp"
+#include "../RubyJobUtils.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../../../ruleset/OSArgument.hpp"
 
-#include <model/Model.hpp>
-#include <model/WeatherFile.hpp>
+#include "../../../model/Model.hpp"
+#include "../../../model/WeatherFile.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/System.hpp>
-#include <utilities/filetypes/EpwFile.hpp>
+#include "../../../utilities/core/Application.hpp"
+#include "../../../utilities/core/System.hpp"
+#include "../../../utilities/filetypes/EpwFile.hpp"
 
 #include <QDir>
 

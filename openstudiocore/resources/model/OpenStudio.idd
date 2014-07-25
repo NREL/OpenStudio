@@ -14507,6 +14507,74 @@ OS:SetpointManager:OutdoorAirReset,
        \note 2nd outdoor air temperature reset rule
        \units C
 
+OS:SetpointManager:OutdoorAirPretreat,
+       \min-fields 12
+       \memo This setpoint manager determines the required
+       \memo conditions at the outdoor air stream node which will
+       \memo produce the reference setpoint condition at the
+       \memo mixed air node when mixed with the return air stream
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \reference SetpointManagers
+  A3,  \field Control Variable
+       \type choice
+       \key Temperature
+       \key HumidityRatio
+       \key MaximumHumidityRatio
+       \key MinimumHumidityRatio
+       \default Temperature
+  N1,  \field Minimum Setpoint Temperature
+       \units C
+       \default -99
+       \note Applicable only if Control variable is Temperature
+  N2,  \field Maximum Setpoint Temperature
+       \units C
+       \default 99
+       \note Applicable only if Control variable is Temperature
+  N3,  \field Minimum Setpoint Humidity Ratio
+       \units kgWater/kgDryAir
+       \maximum 1.0
+       \default 0.00001
+       \note Applicable only if Control variable is
+       \note MaximumHumidityRatio, MinimumHumidityRatio, or HumidityRatio - then minimum is 0.00001
+  N4,  \field Maximum Setpoint Humidity Ratio
+       \units kgWater/kgDryAir
+       \maximum 1.0
+       \default 1.0
+       \note Applicable only if Control variable is
+       \note MaximumHumidityRatio, MinimumHumidityRatio, or HumidityRatio - then minimum is 0.00001
+  A4,  \field Reference Setpoint Node Name
+       \type object-list
+       \object-list Node
+       \note The current setpoint at this node is the
+       \note desired condition for the Mixed Air Node
+       \note This node must have a valid setpoint
+       \note which has been set by another setpoint manager
+  A5,  \field Mixed Air Stream Node Name
+       \type object-list
+       \object-list Node
+       \note Name of Mixed Air Node
+       \required-field
+  A6,  \field Outdoor Air Stream Node Name
+       \type object-list
+       \object-list Node
+       \note Name of Outdoor Air Stream Node
+       \required-field
+  A7,  \field Return Air Stream Node Name
+       \type object-list
+       \object-list Node
+       \note Name of Return Air Stream Node
+       \required-field
+  A8;  \field Setpoint Node or NodeList Name
+       \type object-list
+       \object-list Node
+       \required-field
+       \note Node(s) at which the temperature or humidity
+       \note ratio will be set
+
 OS:SetpointManager:SingleZone:Reheat,
        \min-fields 1
   A1, \field Handle
@@ -14522,15 +14590,19 @@ OS:SetpointManager:SingleZone:Reheat,
   N2, \field Maximum Supply Air Temperature
        \type real
        \units C
-  A4, \field Control Zone Name
+  A3, \field Control Zone Name
        \type object-list
        \required-field
        \object-list ThermalZoneNames
-  A7; \field Setpoint Node or NodeList Name
+  A4, \field Setpoint Node or NodeList Name
        \note Node(s) at which the temperature will be set
        \type object-list
        \required-field
        \object-list Node
+  A5; \field Control Variable
+       \type choice
+       \default Temperature
+       \key Temperature
 
 OS:SetpointManager:Scheduled,
        \min-fields 1
@@ -14561,6 +14633,34 @@ OS:SetpointManager:Scheduled,
        \note Node(s) at which control variable will be set
        \type object-list
        \required-field
+       \object-list Node
+
+OS:SetpointManager:Scheduled:DualSetpoint,
+     \memo This setpoint manager places a high and low schedule value
+     \memo on one or more nodes.
+     \min-fields 6
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \reference SetpointManagers
+  A3,  \field Control Variable
+       \type choice
+       \key Temperature
+       \default Temperature
+  A4,  \field High Setpoint Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \required-field
+  A5,  \field Low Setpoint Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \required-field
+  A6;  \field Setpoint Node or NodeList Name
+       \note Node(s) at which temperature will be set
+       \required-field
+       \type object-list
        \object-list Node
 
 OS:SetpointManager:Warmest,

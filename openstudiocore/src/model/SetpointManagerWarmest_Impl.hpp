@@ -20,8 +20,8 @@
 #ifndef MODEL_SETPOINTMANAGERWARMEST_IMPL_HPP
 #define MODEL_SETPOINTMANAGERWARMEST_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/HVACComponent_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "SetpointManager_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -30,8 +30,8 @@ class Node;
 
 namespace detail {
 
-/** SetpointManagerWarmest_Impl is a HVACComponent_Impl that is the implementation class for SetpointManagerWarmest.*/
-class MODEL_API SetpointManagerWarmest_Impl : public HVACComponent_Impl {
+/** SetpointManagerWarmest_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerWarmest.*/
+class MODEL_API SetpointManagerWarmest_Impl : public SetpointManager_Impl {
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -62,7 +62,7 @@ class MODEL_API SetpointManagerWarmest_Impl : public HVACComponent_Impl {
   /** @name Getters */
   //@{
 
-  std::string controlVariable() const;
+  virtual std::string controlVariable() const;
 
   double minimumSetpointTemperature() const;
 
@@ -70,31 +70,31 @@ class MODEL_API SetpointManagerWarmest_Impl : public HVACComponent_Impl {
 
   std::string strategy() const;
 
-  boost::optional<Node> setpointNode() const;
+  virtual boost::optional<Node> setpointNode() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  bool setControlVariable(std::string controlVariable);
+  virtual bool setControlVariable(const std::string& controlVariable);
 
   bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
 
   bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
 
-  bool setStrategy(std::string strategy);
-
-  bool setSetpointNode(const Node& node);
+  bool setStrategy(const std::string& strategy);
 
   //@}
   /** @name Other */
   //@{
 
-  bool addToNode(Node & node);
-
   //@}
  protected:
  private:
+  virtual bool setSetpointNode(const Node& node);
+
+  virtual void resetSetpointNode();
+
   REGISTER_LOGGER("openstudio.model.SetpointManagerWarmest");
 };
 

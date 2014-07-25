@@ -21,17 +21,17 @@ set(CMAKE_REQUIRED_DEFINITIONS -D_LARGEFILE64_SOURCE=1)
 # in CMake 2.4.x does not automatically do so and we want
 # compatibility with CMake 2.4.x.
 if(HAVE_SYS_TYPES_H)
-    list(APPEND CMAKE_REQUIRED_DEFINITIONS -DHAVE_SYS_TYPES_H)
+  list(APPEND CMAKE_REQUIRED_DEFINITIONS -DHAVE_SYS_TYPES_H)
 endif()
 if(HAVE_STDINT_H)
-    list(APPEND CMAKE_REQUIRED_DEFINITIONS -DHAVE_STDINT_H)
+  list(APPEND CMAKE_REQUIRED_DEFINITIONS -DHAVE_STDINT_H)
 endif()
 if(HAVE_STDDEF_H)
-    list(APPEND CMAKE_REQUIRED_DEFINITIONS -DHAVE_STDDEF_H)
+  list(APPEND CMAKE_REQUIRED_DEFINITIONS -DHAVE_STDDEF_H)
 endif()
 check_type_size(off64_t OFF64_T)
 if(HAVE_OFF64_T)
-   add_definitions(-D_LARGEFILE64_SOURCE=1)
+  add_definitions(-D_LARGEFILE64_SOURCE=1)
 endif()
 set(CMAKE_REQUIRED_DEFINITIONS) # clear variable
 
@@ -40,7 +40,7 @@ set(CMAKE_REQUIRED_DEFINITIONS) # clear variable
 #
 check_function_exists(fseeko HAVE_FSEEKO)
 if(NOT HAVE_FSEEKO)
-    add_definitions(-DNO_FSEEKO)
+  add_definitions(-DNO_FSEEKO)
 endif()
 
 #
@@ -49,20 +49,21 @@ endif()
 check_include_file(unistd.h Z_HAVE_UNISTD_H)
 
 if(MSVC)
-    set(CMAKE_DEBUG_POSTFIX "d")
-    add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
-    add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
+  set(CMAKE_DEBUG_POSTFIX "d")
+  add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
+  add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
 endif()
 
 if(NOT CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_CURRENT_BINARY_DIR)
-    # If we're doing an out of source build and the user has a zconf.h
-    # in their source tree...
-    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/zconf.h)
-        message(FATAL_ERROR
-            "You must remove ${CMAKE_CURRENT_SOURCE_DIR}/zconf.h "
-            "from the source tree.  This file is included with zlib "
-            "but CMake generates this file for you automatically "
-            "in the build directory.")
+  # If we're doing an out of source build and the user has a zconf.h
+  # in their source tree...
+  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/zconf.h)
+    message(FATAL_ERROR
+      "You must remove ${CMAKE_CURRENT_SOURCE_DIR}/zconf.h "
+      "from the source tree.  This file is included with zlib "
+      "but CMake generates this file for you automatically "
+      "in the build directory."
+    )
   endif()
 endif()
 
@@ -113,31 +114,32 @@ set(ZLIB_SRCS
 # minizip
 #============================================================================
 
-IF(APPLE)
+if(APPLE)
   add_definitions("-Dftello64=ftello")
   add_definitions("-Dfseeko64=fseeko")
   add_definitions("-Dfopen64=fopen")
-ENDIF(APPLE)
+endif()
 
 set(minizip_src
-    "contrib/minizip/ioapi.c"
-    "contrib/minizip/unzip.c"
-    "contrib/minizip/zip.c"
+  "contrib/minizip/ioapi.c"
+  "contrib/minizip/unzip.c"
+  "contrib/minizip/zip.c"
 )
 
-IF(MSVC)
-  LIST(APPEND minizip_src "contrib/minizip/iowin32.c")
-ELSE(MSVC)
+if(MSVC)
+  list(APPEND minizip_src "contrib/minizip/iowin32.c")
+else()
   add_definitions(-Dunix)
-ENDIF(MSVC)
+endif()
 
 add_library(miniziplib STATIC ${ZLIB_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS} ${minizip_src})
 
-#IF( NOT APPLE )
-#INSTALL(TARGETS miniziplib
-#  RUNTIME DESTINATION bin 
-#  LIBRARY DESTINATION lib )
-#ENDIF()
+#if(NOT APPLE)
+#  install(TARGETS miniziplib
+#    RUNTIME DESTINATION bin
+#    LIBRARY DESTINATION lib 
+#  )
+#endif()
 
 #add_executable(minizip "contrib/minizip/minizip.c")
 #target_link_libraries(minizip miniziplib)

@@ -20,7 +20,7 @@
 #ifndef MODEL_COMPONENT_HPP
 #define MODEL_COMPONENT_HPP
 
-#include <model/Model.hpp>
+#include "Model.hpp"
 
 namespace openstudio {
 
@@ -90,8 +90,8 @@ class MODEL_API Component : public Model {
   friend class detail::ModelObject_Impl;
   friend class detail::ParentObject_Impl;
 
-  /** Protected contructor from impl. */
-  Component(boost::shared_ptr<detail::Component_Impl> impl);
+  /** Protected constructor from impl. */
+  Component(std::shared_ptr<detail::Component_Impl> impl);
 
   /// @endcond
 

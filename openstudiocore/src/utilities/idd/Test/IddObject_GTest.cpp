@@ -18,16 +18,14 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idd/Test/IddFixture.hpp>
-#include <utilities/idd/IddObject.hpp>
+#include "IddFixture.hpp"
+#include "../IddObject.hpp"
 #include <utilities/idd/IddFactory.hxx>
-#include <utilities/idd/ExtensibleIndex.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../ExtensibleIndex.hpp"
+#include "../../core/Containers.hpp"
 
 #include <sstream>
 #include <string>
-
-#include <boost/foreach.hpp>
 
 #include <QVariant>
 
@@ -105,7 +103,7 @@ TEST_F(IddFixture,IddObjectVector_GetTypes) {
   IddObjectTypeVector typeVector = getIddObjectTypeVector(objects);
   EXPECT_EQ(objects.size(),typeVector.size());
   IddObjectVector roundtripObjects;
-  BOOST_FOREACH(const IddObjectType& type,typeVector) {
+  for (const IddObjectType& type : typeVector) {
     roundtripObjects.push_back(IddFactory::instance().getObject(type).get());
   }
   EXPECT_TRUE(roundtripObjects == objects);

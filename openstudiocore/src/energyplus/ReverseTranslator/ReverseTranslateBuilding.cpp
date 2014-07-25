@@ -17,19 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ReverseTranslator.hpp"
 
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
+#include "../../model/Building.hpp"
+#include "../../model/Building_Impl.hpp"
+#include "../../model/Site.hpp"
+#include "../../model/Site_Impl.hpp"
+#include "../../model/SimulationControl.hpp"
+#include "../../model/SimulationControl_Impl.hpp"
 
 #include <utilities/idd/Building_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-
-#include <boost/foreach.hpp>
 
 using namespace openstudio::model;
 
@@ -45,11 +43,11 @@ OptionalModelObject ReverseTranslator::translateBuilding( const WorkspaceObject 
   }
 
   // ensure that site and simulation control have been mapped
-  BOOST_FOREACH(const WorkspaceObject& siteObject, m_workspace.getObjectsByType(IddObjectType::Site_Location)){
+  for (const WorkspaceObject& siteObject : m_workspace.getObjectsByType(IddObjectType::Site_Location)){
     translateAndMapWorkspaceObject(siteObject);
   }
 
-  BOOST_FOREACH(const WorkspaceObject& simControlObject, m_workspace.getObjectsByType(IddObjectType::SimulationControl)){
+  for (const WorkspaceObject& simControlObject : m_workspace.getObjectsByType(IddObjectType::SimulationControl)){
     translateAndMapWorkspaceObject(simControlObject);
   }
 

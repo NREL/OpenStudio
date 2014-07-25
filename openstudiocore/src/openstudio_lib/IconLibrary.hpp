@@ -1,4 +1,26 @@
-#include <openstudio_lib/OpenStudioAPI.hpp>
+/**********************************************************************
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#ifndef OPENSTUDIO_ICONLIBRARY_HPP
+#define OPENSTUDIO_ICONLIBRARY_HPP
+
+#include "OpenStudioAPI.hpp"
 
 #include <QPixmap>
 #include <map>
@@ -9,8 +31,8 @@ namespace openstudio {
  *
  *
  * Pretty straightforward. The class stores pointers, there is no real advantage to using pointers over by value semantics
- * since Qt is doing internal referance counting in QPixMap anyway. Just check the pointer when you do a find operation on
- * it, becuase it might return NULL.
+ * since Qt is doing internal reference counting in QPixMap anyway. Just check the pointer when you do a find operation on
+ * it, because it might return NULL.
  *
  */
 class OPENSTUDIO_API IconLibrary
@@ -46,3 +68,4 @@ private:
 
 }
 
+#endif // OPENSTUDIO_ICONLIBRARY_HPP

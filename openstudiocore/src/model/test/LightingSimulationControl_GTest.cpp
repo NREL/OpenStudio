@@ -19,11 +19,11 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/LightingSimulationControl.hpp>
-#include <model/LightingSimulationControl_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../LightingSimulationControl.hpp"
+#include "../LightingSimulationControl_Impl.hpp"
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
 
 using namespace openstudio::model;
 using namespace openstudio;

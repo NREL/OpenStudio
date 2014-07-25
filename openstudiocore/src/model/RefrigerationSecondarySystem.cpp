@@ -17,30 +17,30 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/RefrigerationSecondarySystem.hpp>
-#include <model/RefrigerationSecondarySystem_Impl.hpp>
+#include "RefrigerationSecondarySystem.hpp"
+#include "RefrigerationSecondarySystem_Impl.hpp"
 
-#include <model/ModelObjectList.hpp>
-#include <model/ModelObjectList_Impl.hpp>
-#include <model/CurveCubic.hpp>
-#include <model/CurveCubic_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/RefrigerationAirChiller.hpp>
-#include <model/RefrigerationAirChiller_Impl.hpp>
-#include <model/RefrigerationCase.hpp>
-#include <model/RefrigerationCase_Impl.hpp>
-#include <model/RefrigerationWalkIn.hpp>
-#include <model/RefrigerationWalkIn_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "ModelObjectList.hpp"
+#include "ModelObjectList_Impl.hpp"
+#include "CurveCubic.hpp"
+#include "CurveCubic_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "RefrigerationAirChiller.hpp"
+#include "RefrigerationAirChiller_Impl.hpp"
+#include "RefrigerationCase.hpp"
+#include "RefrigerationCase_Impl.hpp"
+#include "RefrigerationWalkIn.hpp"
+#include "RefrigerationWalkIn_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_SecondarySystem_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -138,8 +138,8 @@ namespace detail {
     if( modelObjectList ) {
       std::vector<ModelObject> modelObjects = modelObjectList->modelObjects();
 
-      for(std::vector<ModelObject>::iterator it = modelObjects.begin(); it != modelObjects.end(); ++it) {
-          boost::optional<T> modelObject = it->optionalCast<T>();
+      for(const auto & elem : modelObjects) {
+          boost::optional<T> modelObject = elem.optionalCast<T>();
           if (modelObject) {
             result.push_back(modelObject.get());
           }
@@ -308,10 +308,10 @@ namespace detail {
     if( modelObjectList ) {
       std::vector<ModelObject> modelObjects = modelObjectList->modelObjects();
 
-      for(std::vector<ModelObject>::iterator it = modelObjects.begin(); it != modelObjects.end(); ++it) {
-          boost::optional<T> modelObject = it->optionalCast<T>();
+      for(const auto & elem : modelObjects) {
+          boost::optional<T> modelObject = elem.optionalCast<T>();
           if (modelObject) {
-            modelObjectList->removeModelObject(*it);
+            modelObjectList->removeModelObject(elem);
           }
       }
     }  
@@ -1037,7 +1037,7 @@ void RefrigerationSecondarySystem::resetEndUseSubcategory() {
 }
 
 /// @cond
-RefrigerationSecondarySystem::RefrigerationSecondarySystem(boost::shared_ptr<detail::RefrigerationSecondarySystem_Impl> impl)
+RefrigerationSecondarySystem::RefrigerationSecondarySystem(std::shared_ptr<detail::RefrigerationSecondarySystem_Impl> impl)
   : ParentObject(impl)
 {}
 /// @endcond

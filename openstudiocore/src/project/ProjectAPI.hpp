@@ -1,5 +1,5 @@
-#ifndef __PROJECT_API_HPP__
-#define __PROJECT_API_HPP__
+#ifndef PROJECT_PROJECTAPI_HPP
+#define PROJECT_PROJECTAPI_HPP
 
 #if _WIN32 || _MSC_VER
 

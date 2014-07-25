@@ -18,13 +18,13 @@
  **********************************************************************/
 
 
-#include <pat_app/ExportSpreadsheet.hpp>
+#include "ExportSpreadsheet.hpp"
 
-#include <analysisdriver/SimpleProject.hpp>
+#include "../analysisdriver/SimpleProject.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/System.hpp>
+#include "../utilities/core/Application.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/System.hpp"
 
 #include <QProcess>
 
@@ -50,7 +50,7 @@ bool ExportSpreadsheet::exportSpreadsheet(const analysisdriver::SimpleProject& p
   LOG_FREE(Debug, "ExportSpreadsheet", "Starting export of projectPath:" << toString(projectPath));
 
   openstudio::path rubyPath;
-#if defined(Q_OS_WIN32)
+#if defined(Q_OS_WIN)
   rubyPath = getOpenStudioEmbeddedRubyPath() / toPath("bin/ruby.exe");
 #else
   rubyPath = "ruby";
@@ -74,7 +74,7 @@ bool ExportSpreadsheet::exportSpreadsheet(const analysisdriver::SimpleProject& p
   args << openstudio::toQString(scriptPath);
   args << openstudio::toQString(projectPath);
 
-  QProcess *p = new QProcess();
+  auto p = new QProcess();
   p->start(toQString(rubyPath), args);
 
   if (!p->waitForStarted(30000)){

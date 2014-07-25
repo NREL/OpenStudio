@@ -20,13 +20,13 @@
 #ifndef UTILITIES_FILETYPES_TIMEDEPENDENTVALUATIONFILE_HPP
 #define UTILITIES_FILETYPES_TIMEDEPENDENTVALUATIONFILE_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/document/Table.hpp>
-#include <utilities/data/DataEnums.hpp>
+#include "../data/DataEnums.hpp"
+#include "../units/Unit.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../core/Path.hpp"
+#include "../core/Logger.hpp"
 
 #include <boost/optional.hpp>
 
@@ -94,13 +94,13 @@ class UTILITIES_API TimeDependentValuationFile {
 
   //@}
  private:
-  Table m_table;
+  std::vector<std::vector<std::string> > m_table;
   openstudio::path m_path;
   std::string m_checksum;
 
   REGISTER_LOGGER("openstudio.TimeDependentValuationFile");
 
-  TimeDependentValuationFile(const Table& table,const openstudio::path& p=openstudio::path());
+  TimeDependentValuationFile(const std::vector<std::vector<std::string> >& table,const openstudio::path& p=openstudio::path());
 
   boost::optional<Quantity> mf_extractNominalCostOfEnergy(const std::string& cellContents) const;
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
 #ifndef MODEL_AIRLOOPHVACSUPPLYPLENUM_HPP
 #define MODEL_AIRLOOPHVACSUPPLYPLENUM_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Splitter.hpp>
+#include "ModelAPI.hpp"
+#include "Splitter.hpp"
 
 namespace openstudio {
 namespace model {
@@ -76,7 +76,7 @@ class MODEL_API AirLoopHVACSupplyPlenum : public Splitter {
   /// @cond
   typedef detail::AirLoopHVACSupplyPlenum_Impl ImplType;
 
-  explicit AirLoopHVACSupplyPlenum(boost::shared_ptr<detail::AirLoopHVACSupplyPlenum_Impl> impl);
+  explicit AirLoopHVACSupplyPlenum(std::shared_ptr<detail::AirLoopHVACSupplyPlenum_Impl> impl);
 
   friend class detail::AirLoopHVACSupplyPlenum_Impl;
   friend class Model;

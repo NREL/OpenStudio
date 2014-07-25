@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef UTILITIES_IDF_OBJECTWATCHER_HPP
-#define UTILITIES_IDF_OBJECTWATCHER_HPP
+#ifndef UTILITIES_IDF_IDFOBJECTWATCHER_HPP
+#define UTILITIES_IDF_IDFOBJECTWATCHER_HPP
 
 #include <utilities/UtilitiesAPI.hpp>
 #include <utilities/idf/IdfObject.hpp>
@@ -38,7 +38,7 @@ namespace openstudio{
  *
  *  IdfObjectWatcher is an atypical QObject because it is designed to be stack allocated.  In many 
  *  cases it would be preferred to connect your own heap allocated QObject to the Workspace signals 
- *  directly rather than using this convienience class. **/
+ *  directly rather than using this convenience class. **/
 class UTILITIES_API IdfObjectWatcher : public QObject {
   Q_OBJECT;
  public:
@@ -99,4 +99,4 @@ class UTILITIES_API IdfObjectWatcher : public QObject {
 
 } // openstudio
 
-#endif //UTILITIES_IDF_OBJECTWATCHER_HPP
+#endif // UTILITIES_IDF_IDFOBJECTWATCHER_HPP

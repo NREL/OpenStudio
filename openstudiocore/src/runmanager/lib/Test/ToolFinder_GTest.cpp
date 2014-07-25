@@ -21,21 +21,21 @@
 #include "RunManagerTestFixture.hpp"
 #include <runmanager/Test/ToolBin.hxx>
 #include <resources.hxx>
-#include <runmanager/lib/JobFactory.hpp>
+#include "../JobFactory.hpp"
 #include <boost/filesystem/path.hpp>
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/LocalProcessCreator.hpp>
-#include <runmanager/lib/ToolFinder.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
+#include "../RunManager.hpp"
+#include "../LocalProcessCreator.hpp"
+#include "../ToolFinder.hpp"
+#include "../../../utilities/idf/IdfFile.hpp"
+#include "../../../utilities/idf/Workspace.hpp"
+#include "../../../utilities/idf/WorkspaceObject.hpp"
 
 TEST_F(RunManagerTestFixture, ToolFinder)
 {
   std::vector<openstudio::path> search;
 
  
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
   search.push_back(openstudio::toPath("C:\\"));
 #else
   search.push_back(openstudio::toPath("/"));

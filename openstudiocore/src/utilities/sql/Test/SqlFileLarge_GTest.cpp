@@ -19,20 +19,18 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/sql/Test/SqlFileLargeFixture.hpp>
+#include "SqlFileLargeFixture.hpp"
 
-#include <utilities/time/Date.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/data/TimeSeries.hpp>
-#include <utilities/plot/AnnotatedTimeline.hpp>
-#include <utilities/plot/FloodPlot.hpp>
-#include <utilities/plot/LinePlot.hpp>
+#include "../../time/Date.hpp"
+#include "../../core/Optional.hpp"
+#include "../../data/TimeSeries.hpp"
+#include "../../plot/AnnotatedTimeline.hpp"
+#include "../../plot/FloodPlot.hpp"
+#include "../../plot/LinePlot.hpp"
 
 #include <resources.hxx>
 
 #include <iostream>
-
-#include <boost/foreach.hpp>
 
 using namespace std;
 using namespace boost;

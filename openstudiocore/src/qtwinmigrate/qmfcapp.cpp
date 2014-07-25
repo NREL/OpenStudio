@@ -1,12 +1,11 @@
 /****************************************************************************
 **
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
-** All rights reserved.
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
+** Contact: http://www.qt-project.org/legal
 **
-** Contact: Nokia Corporation (qt-info@nokia.com)
+** This file is part of the Qt Solutions component.
 **
-** This file is part of a Qt Solutions component.
-**
+** $QT_BEGIN_LICENSE:BSD$
 ** You may use this file under the terms of the BSD license as follows:
 **
 ** "Redistribution and use in source and binary forms, with or without
@@ -18,10 +17,10 @@
 **     notice, this list of conditions and the following disclaimer in
 **     the documentation and/or other materials provided with the
 **     distribution.
-**   * Neither the name of Nokia Corporation and its Subsidiary(-ies) nor
-**     the names of its contributors may be used to endorse or promote
-**     products derived from this software without specific prior written
-**     permission.
+**   * Neither the name of Digia Plc and its Subsidiary(-ies) nor the names
+**     of its contributors may be used to endorse or promote products derived
+**     from this software without specific prior written permission.
+**
 **
 ** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ** "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,6 +33,8 @@
 ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
+**
+** $QT_END_LICENSE$
 **
 ****************************************************************************/
 
@@ -49,9 +50,9 @@
 
 #include "qmfcapp.h"
 
-#include <QtCore/QEventLoop>
-#include <QtCore/QAbstractEventDispatcher>
-#include <QtGui/QWidget>
+#include <QEventLoop>
+#include <QAbstractEventDispatcher>
+#include <QWidget>
 
 #ifdef QTWINMIGRATE_WITHMFC
 #include <afxwin.h>
@@ -63,6 +64,19 @@
 CWinApp *QMfcApp::mfc_app = 0;
 char **QMfcApp::mfc_argv = 0;
 int QMfcApp::mfc_argc = 0;
+#endif
+
+#if QT_VERSION >= 0x050000
+#define QT_WA(unicode, ansi) unicode
+
+QMfcAppEventFilter::QMfcAppEventFilter() : QAbstractNativeEventFilter()
+{
+}
+
+bool QMfcAppEventFilter::nativeEventFilter(const QByteArray &, void *message, long *result)
+{
+    return static_cast<QMfcApp*>(qApp)->winEventFilter((MSG*)message, result);
+}
 #endif
 
 /*! \class QMfcApp qmfcapp.h
@@ -194,6 +208,10 @@ bool QMfcApp::pluginInstance(Qt::HANDLE plugin)
 
     return TRUE;
 }
+
+#if QT_VERSION >= 0x050000
+Q_GLOBAL_STATIC(QMfcAppEventFilter, qmfcEventFilter);
+#endif
 
 #ifdef QTWINMIGRATE_WITHMFC
 /*!
@@ -344,11 +362,21 @@ QMfcApp::QMfcApp(CWinApp *mfcApp, int &argc, char **argv)
 : QApplication(argc, argv), idleCount(0), doIdle(FALSE)
 {
     mfc_app = mfcApp;
+#if QT_VERSION >= 0x050000
+    QAbstractEventDispatcher::instance()->installNativeEventFilter(qmfcEventFilter());
+#else
     QAbstractEventDispatcher::instance()->setEventFilter(qmfc_eventFilter);
+#endif
     setQuitOnLastWindowClosed(false);
 }
 #endif
 
+QMfcApp::QMfcApp(int &argc, char **argv) : QApplication(argc, argv)
+{
+#if QT_VERSION >= 0x050000
+    QAbstractEventDispatcher::instance()->installNativeEventFilter(qmfcEventFilter());
+#endif
+}
 /*!
     Destroys the QMfcApp object, freeing all allocated resources.
 */
@@ -383,10 +411,10 @@ bool QMfcApp::winEventFilter(MSG *msg, long *result)
 
     recursion = true;
 
-    QWidget *widget = QWidget::find(msg->hwnd);
+    QWidget *widget = QWidget::find((WId)msg->hwnd);
     HWND toplevel = 0;
     if (widget) {
-        HWND parent = widget->winId();
+        HWND parent = (HWND)widget->winId();
         while(parent) {
             toplevel = parent;
             parent = GetParent(parent);
@@ -427,5 +455,10 @@ bool QMfcApp::winEventFilter(MSG *msg, long *result)
 #endif
 
     recursion = false;
+#if QT_VERSION < 0x050000
     return QApplication::winEventFilter(msg, result);
+#else
+    Q_UNUSED(result);
+    return false;
+#endif
 }

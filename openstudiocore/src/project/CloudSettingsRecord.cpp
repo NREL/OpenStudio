@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/CloudSettingsRecord.hpp>
-#include <project/CloudSettingsRecord_Impl.hpp>
+#include "CloudSettingsRecord.hpp"
+#include "CloudSettingsRecord_Impl.hpp"
 
-#include <project/AWSSettingsRecord.hpp>
-#include <project/AWSSettingsRecord_Impl.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/VagrantSettingsRecord.hpp>
-#include <project/VagrantSettingsRecord_Impl.hpp>
+#include "AWSSettingsRecord.hpp"
+#include "AWSSettingsRecord_Impl.hpp"
+#include "JoinRecord.hpp"
+#include "VagrantSettingsRecord.hpp"
+#include "VagrantSettingsRecord_Impl.hpp"
 
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/cloud/AWSProvider_Impl.hpp>
-#include <utilities/cloud/VagrantProvider.hpp>
-#include <utilities/cloud/VagrantProvider_Impl.hpp>
+#include "../utilities/cloud/AWSProvider.hpp"
+#include "../utilities/cloud/AWSProvider_Impl.hpp"
+#include "../utilities/cloud/VagrantProvider.hpp"
+#include "../utilities/cloud/VagrantProvider_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace project {
@@ -83,7 +83,7 @@ namespace detail {
     return result;
   }
 
-  void CloudSettingsRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database) {
+  void CloudSettingsRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database) {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<CloudSettingsRecord>(query);
     this->bindValues(query);
@@ -154,7 +154,7 @@ UpdateByIdQueryData CloudSettingsRecord::updateByIdQueryData() {
     std::stringstream ss;
     ss << "UPDATE " << databaseTableName() << " SET ";
     int expectedValue = 0;
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+    for (auto it = result.columnValues.begin(),
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
@@ -162,7 +162,7 @@ UpdateByIdQueryData CloudSettingsRecord::updateByIdQueryData() {
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
-      std::set<int>::const_iterator nextIt = it;
+      auto nextIt = it;
       ++nextIt;
       if (nextIt == itend) {
         ss << " ";
@@ -176,11 +176,10 @@ UpdateByIdQueryData CloudSettingsRecord::updateByIdQueryData() {
     result.queryString = ss.str();
 
     // null values
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
-         itend = result.columnValues.end(); it != itend; ++it)
+    for (const auto & columnValue : result.columnValues)
     {
       // bind all values to avoid parameter mismatch error
-      if (istringEqual(ColumnsType::valueDescription(*it), "INTEGER")) {
+      if (istringEqual(ColumnsType::valueDescription(columnValue), "INTEGER")) {
         result.nulls.push_back(QVariant(QVariant::Int));
       }
       else {
@@ -229,7 +228,7 @@ CloudSettingsRecord CloudSettingsRecord::factoryFromCloudSettings(const CloudSet
   }
 
   OS_ASSERT(false);
-  return CloudSettingsRecord(boost::shared_ptr<detail::CloudSettingsRecord_Impl>());
+  return CloudSettingsRecord(std::shared_ptr<detail::CloudSettingsRecord_Impl>());
 }
 
 std::vector<CloudSettingsRecord> CloudSettingsRecord::getCloudSettingsRecords(ProjectDatabase& database) {
@@ -267,11 +266,11 @@ CloudSettings CloudSettingsRecord::cloudSettings() const {
 }
 
 /// @cond
-CloudSettingsRecord::CloudSettingsRecord(boost::shared_ptr<detail::CloudSettingsRecord_Impl> impl)
+CloudSettingsRecord::CloudSettingsRecord(std::shared_ptr<detail::CloudSettingsRecord_Impl> impl)
   : ObjectRecord(impl)
 {}
 
-CloudSettingsRecord::CloudSettingsRecord(boost::shared_ptr<detail::CloudSettingsRecord_Impl> impl,
+CloudSettingsRecord::CloudSettingsRecord(std::shared_ptr<detail::CloudSettingsRecord_Impl> impl,
                                          ProjectDatabase database)
   : ObjectRecord(impl, database)
 {

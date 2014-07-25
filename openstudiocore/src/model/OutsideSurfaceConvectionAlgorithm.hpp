@@ -20,8 +20,8 @@
 #ifndef MODEL_OUTSIDESURFACECONVECTIONALGORITHM_HPP
 #define MODEL_OUTSIDESURFACECONVECTIONALGORITHM_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -84,7 +84,7 @@ class MODEL_API OutsideSurfaceConvectionAlgorithm : public ModelObject {
   friend class openstudio::IdfObject;
 
   // constructor
-  explicit OutsideSurfaceConvectionAlgorithm(boost::shared_ptr<detail::OutsideSurfaceConvectionAlgorithm_Impl> impl);
+  explicit OutsideSurfaceConvectionAlgorithm(std::shared_ptr<detail::OutsideSurfaceConvectionAlgorithm_Impl> impl);
 
  private:
 

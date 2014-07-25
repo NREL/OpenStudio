@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/units/ScaleFactory.hpp>
+#include "../core/Assert.hpp"
+#include "ScaleFactory.hpp"
 
-#include <utilities/core/String.hpp>
-#include <utilities/core/Exception.hpp>
+#include "../core/String.hpp"
+#include "../core/Exception.hpp"
 
 #include <map>
 #include <vector>
@@ -131,12 +131,8 @@ ScaleConstant ScaleFactorySingleton::m_recoverFromFailedCreate() const {
 }
 
 std::ostream& operator<<(std::ostream& os,const ScaleFactorySingleton& factory) {
-  ScaleFactorySingleton::ExponentLookupMap::const_iterator mapIter = factory.m_exponentMap.begin();
-  ScaleFactorySingleton::ExponentLookupMap::const_iterator mapEnd = factory.m_exponentMap.end();
-
-  while (mapIter != mapEnd) {
-    os << mapIter->second() << std::endl; // output scale and go to next line
-    ++mapIter;
+  for (const auto & map : factory.m_exponentMap) {
+    os << map.second() << std::endl; // output scale and go to next line
   }
 
   return os;
@@ -155,10 +151,8 @@ std::pair<std::string,std::string> extractScaleAbbreviation(const std::string& s
   std::string escapeChar("\\");
 
   // loop through scales and look for regex match
-  std::vector<Scale>::const_iterator scaleIter;
-  std::vector<Scale>::const_iterator scalesEnd = scales.end();
-  for (scaleIter = scales.begin(); scaleIter != scalesEnd; ++scaleIter) {
-    std::string abbr = scaleIter->abbr;
+  for (const auto & scale : scales) {
+    std::string abbr = scale.abbr;
     if (abbr == "") { continue; }
     std::stringstream regexComposer;
     regexComposer << "^(" ;
@@ -168,7 +162,7 @@ std::pair<std::string,std::string> extractScaleAbbreviation(const std::string& s
     boost::regex re(regexComposer.str());
     boost::match_results<std::string::const_iterator> match;
     if (boost::regex_search(str,match,re)) {
-      result.first = scaleIter->abbr;
+      result.first = scale.abbr;
       result.second = std::string(match[0].second,str.end());
       break;
     }

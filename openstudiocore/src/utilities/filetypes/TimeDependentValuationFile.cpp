@@ -17,21 +17,25 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/filetypes/TimeDependentValuationFile.hpp>
+#include "TimeDependentValuationFile.hpp"
 
-#include <utilities/units/QuantityRegex.hpp>
-#include <utilities/units/UnitFactory.hpp>
-#include <utilities/units/QuantityFactory.hpp>
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/SIUnit.hpp>
+#include "../units/QuantityRegex.hpp"
+#include "../units/UnitFactory.hpp"
+#include "../units/QuantityFactory.hpp"
+#include "../units/QuantityConverter.hpp"
+#include "../units/SIUnit.hpp"
 
-#include <utilities/core/Checksum.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/StringHelpers.hpp>
+#include "../core/Checksum.hpp"
+#include "../core/Containers.hpp"
+#include "../core/Assert.hpp"
+#include "../core/StringHelpers.hpp"
 
 #include <boost/regex.hpp>
-#include <boost/foreach.hpp>
+
+#include <QFile>
+#include <QString>
+#include <QStringList>
+
 
 namespace openstudio {
 
@@ -40,38 +44,54 @@ openstudio::path TimeDependentValuationFile::path() const {
 }
 
 std::string TimeDependentValuationFile::name() const {
-  return m_table[0][0].toString();
+  std::string result;
+
+  OS_ASSERT(m_table.size() > 0);
+  if (m_table[0].size() > 0){
+    result = m_table[0][0];
+  }
+
+  return result;
 }
 
 std::string TimeDependentValuationFile::description() const {
   std::string result;
-  if (m_table.nCols() > 1) {
-    result = m_table[0][1].toString();
+
+  OS_ASSERT(m_table.size() > 0);
+  if (m_table[0].size() > 1){
+    result = m_table[0][1];
   }
+
   return result;
 }
 
 boost::optional<double> TimeDependentValuationFile::nominalCommercialCostOfEnergy() const {
   LOG(Debug,"Extracting nominalCommercialCostOfEnergy.");
-  if (m_table.nCols() > 2) {
-    std::string cell = m_table[0][2].toString();
+
+  OS_ASSERT(m_table.size() > 0);
+  if (m_table[0].size() > 2){
+    std::string cell = m_table[0][2];
     boost::optional<Quantity> oq = mf_extractAndConvertNominalCostOfEnergy(cell);
     if (oq) { 
       return oq->value(); 
     }
   }
+
   return boost::none;
 }
 
 boost::optional<double> TimeDependentValuationFile::nominalResidentialCostOfEnergy() const {
   LOG(Debug,"Extracting nominalResidentialCostOfEnergy.");
-  if (m_table.nCols() > 2) {
-    std::string cell = m_table[0][3].toString();
+
+  OS_ASSERT(m_table.size() > 0);
+  if (m_table[0].size() > 3){
+    std::string cell = m_table[0][3];
     boost::optional<Quantity> oq = mf_extractAndConvertNominalCostOfEnergy(cell);
-    if (oq) { 
-      return oq->value(); 
+    if (oq) {
+      return oq->value();
     }
   }
+
   return boost::none;
 }
 
@@ -81,14 +101,20 @@ std::string TimeDependentValuationFile::checksum() const {
 
 FuelType TimeDependentValuationFile::fuelType(unsigned columnIndex) const {
   OptionalFuelType oft;
+  
   if (columnIndex >= numColumns()) {
     LOG_AND_THROW("Cannot return fuelType for column " << columnIndex 
         << ", because the time dependent valuation file at '" << toString(m_path) 
         << "' only has " << numColumns() << " columns.");
   }
-  std::string cell = m_table[1][columnIndex].toString();
-  if (cell.empty() && columnIndex > 0) {
-    cell = m_table[1][columnIndex-1].toString();
+
+  std::string cell;
+  OS_ASSERT(m_table.size() > 1);
+  if (columnIndex < m_table[1].size()) {
+    cell = m_table[1][columnIndex];
+  }
+  if (cell.empty() && columnIndex > 0 && columnIndex-1 < m_table[1].size()) {
+    cell = m_table[1][columnIndex-1];
   }
   if (cell.empty()) {
     LOG_AND_THROW("Unexpected format in time dependent valuation file at '" << toString(m_path)
@@ -100,8 +126,10 @@ FuelType TimeDependentValuationFile::fuelType(unsigned columnIndex) const {
   }
   catch (...) {}
   if (!oft) {
-    // try pseuodonyms
-    if (istringEqual(cell,"Electric")) { oft = FuelType(FuelType::Electricity); }
+    // try pseudonyms
+    if (istringEqual(cell,"Electric")) { 
+      oft = FuelType(FuelType::Electricity); 
+    }
   }
   if (!oft) {
     LOG_AND_THROW("Unexpected format in time dependent valuation file at '" << toString(m_path)
@@ -113,12 +141,18 @@ FuelType TimeDependentValuationFile::fuelType(unsigned columnIndex) const {
 
 BuildingSector TimeDependentValuationFile::buildingSector(unsigned columnIndex) const {
   OptionalBuildingSector obs;
+
   if (columnIndex >= numColumns()) {
     LOG_AND_THROW("Cannot return buildingSector for column " << columnIndex 
         << ", because the time dependent valuation file at '" << toString(m_path) 
         << "' only has " << numColumns() << " columns.");
   }
-  std::string cell = m_table[2][columnIndex].toString();
+
+  OS_ASSERT(m_table.size() > 1);
+  std::string cell;
+  if (columnIndex < m_table[2].size()) {
+    cell = m_table[2][columnIndex];
+  }
   if (cell.empty()) {
     LOG_AND_THROW("Unexpected format in time dependent valuation file at '" << toString(m_path)
         << "'. Could not determine BuildingSector for column " << columnIndex << ".");
@@ -129,10 +163,16 @@ BuildingSector TimeDependentValuationFile::buildingSector(unsigned columnIndex) 
   }
   catch (...) {}
   if (!obs) {
-    // try pseuodonyms
-    if (istringEqual(cell,"Res")) { obs = BuildingSector(BuildingSector::Residential); }
-    else if (istringEqual(cell,"NonRes")) { obs = BuildingSector(BuildingSector::Commercial); }
-    else if (istringEqual(cell,"Non-Residential")) { obs = BuildingSector(BuildingSector::Commercial); }
+    // try pseudonyms
+    if (istringEqual(cell,"Res")) { 
+      obs = BuildingSector(BuildingSector::Residential); 
+    }
+    else if (istringEqual(cell,"NonRes")) { 
+      obs = BuildingSector(BuildingSector::Commercial); 
+    }
+    else if (istringEqual(cell,"Non-Residential")) { 
+      obs = BuildingSector(BuildingSector::Commercial); 
+    }
   }
   if (!obs) {
     LOG_AND_THROW("Unexpected format in time dependent valuation file at '" << toString(m_path)
@@ -143,7 +183,12 @@ BuildingSector TimeDependentValuationFile::buildingSector(unsigned columnIndex) 
 }
 
 std::string TimeDependentValuationFile::units(unsigned columnIndex) const {
-  return m_table.units(columnIndex,Table::HEAD,3);
+  OS_ASSERT(m_table.size() > 3);
+  std::string result;
+  if (columnIndex < m_table[3].size()){
+    result = m_table[3][columnIndex];
+  }
+  return result;
 }
 
 std::vector<double> TimeDependentValuationFile::values(unsigned columnIndex) const {
@@ -152,20 +197,25 @@ std::vector<double> TimeDependentValuationFile::values(unsigned columnIndex) con
         << "dependent valuation file at '" << toString(m_path) << "' only has " << numColumns() 
         << " columns.");
   }
-  if (m_table.nRows() - m_table.nHead() - m_table.nFoot() != 8760u) {
+  if (m_table.size() - 4 != 8760u) {
     LOG_AND_THROW("Unexpected format in time dependent valuation file at '" << toString(m_path)
         << "'. Expected 8760 hourly values, one hour per row in body of table, but body of table contains " 
-        << m_table.nRows() - m_table.nHead() - m_table.nFoot() << " values.");
+        << m_table.size() - 4 << " values.");
   }
   DoubleVector result;
-  for (unsigned i = m_table.nHead(), n = m_table.nRows() - m_table.nFoot(); i < n; ++i) {
-    TableElement e = m_table[i][columnIndex];
-    if (!(e.isDouble() || e.isInt())) {
-      LOG_AND_THROW("Unexpected format in time dependent valuation file at '" << toString(m_path)
-        << "'. Could not covert element at [" << i << "][" << columnIndex << "],'" << e 
-        << "', to double value.");
+  for (unsigned i = 4; i < 8764u; ++i) {
+    std::string cell;
+    if (columnIndex < m_table[i].size()){
+      cell = m_table[i][columnIndex];
+      bool ok;
+      double value = toQString(cell).toDouble(&ok);
+      if (!ok) {
+        LOG_AND_THROW("Unexpected format in time dependent valuation file at '" << toString(m_path)
+          << "'. Could not covert element at [" << i << "][" << columnIndex << "],'" << cell
+          << "', to double value.");
+      }
+      result.push_back(value);
     }
-    result.push_back(e.toDouble());
   }
   OS_ASSERT(result.size() == 8760u);
   return result;
@@ -175,7 +225,7 @@ std::vector<Quantity> TimeDependentValuationFile::quantities(unsigned columnInde
   std::string unitString = units(columnIndex);
   DoubleVector vals = values(columnIndex);
   QuantityVector result;
-  BOOST_FOREACH(double val,vals) {
+  for (double val : vals) {
     Quantity q;
     if (result.empty()) {
       q = createQuantity(val,unitString).get();
@@ -191,19 +241,28 @@ std::vector<Quantity> TimeDependentValuationFile::quantities(unsigned columnInde
 boost::optional<TimeDependentValuationFile> TimeDependentValuationFile::convertUnits(
     UnitSystem targetSystem) const
 {
-  if (system() == targetSystem) { return *this; }
-  Table result = m_table; // copy table to return if successful
+  if (system() == targetSystem) {
+    return *this; 
+  }
+  return boost::none;
+  /*
+  std::vector<std::vector<std::string> > result = m_table; // copy table to return if successful
+
+  OS_ASSERT(m_table.size() > 0);
 
   // try to convert nominal cost of energy
-  if (result.nCols() > 2) {
-    std::string cell = result[0][2].toString(); // commercial
+  if (numColumns() > 2) {
+    OS_ASSERT(m_table[0].size() > 2);
+    std::string cell = result[0][2]; // commercial
     std::string newCell = mf_convertNominalCostOfEnergyInPlace(cell,targetSystem);
     if (newCell.empty()) {
       LOG(Info,"Unable to convert units of nominal commercial cost of energy, '" << cell << "', in "
           << "time dependent valuation file '" << toString(m_path) << "'.");
     }
     result[0][2] = TableElement(newCell);
-    if (result.nCols() > 3) {
+
+    if (numColumns > 3) {
+      OS_ASSERT(m_table[0].size() > 3);
       cell = result[0][3].toString(); // residential
       newCell = mf_convertNominalCostOfEnergyInPlace(cell,targetSystem);
       if (newCell.empty()) {
@@ -244,16 +303,21 @@ boost::optional<TimeDependentValuationFile> TimeDependentValuationFile::convertU
   }
 
   return TimeDependentValuationFile(result);
+  */
 }
 
 unsigned TimeDependentValuationFile::numColumns() const {
-  return m_table.nCols();
+  unsigned result = 0;
+  if (m_table.size() > 2){
+    result = m_table[2].size();
+  }
+  return result;
 }
 
 UnitSystem TimeDependentValuationFile::system() const {
   bool foundASystem(false);
   UnitSystem result;
-  
+  /*
   // energy costs
   if (m_table.nCols() > 2) {
     std::string cell = print(m_table[0][2]); // commercial cost of energy
@@ -294,7 +358,7 @@ UnitSystem TimeDependentValuationFile::system() const {
       }
     }
   }
-
+  */
   return result;
 }
 
@@ -304,13 +368,46 @@ boost::optional<TimeDependentValuationFile> TimeDependentValuationFile::load(
   LOG(Debug,"Loading TimeDependentValuationFile from '" << toString(p) << "'.");
 
   // load table
-  TableLoadOptions options(false,false);
-  Table candidateTable = Table::load(p,options);
-  candidateTable.setNHead(4u);
-  candidateTable.trim();
-  if (candidateTable.nRows() != 8764u) {
+  std::vector<std::vector<std::string> > candidateTable;
+  QFile f(toQString(p));
+  if (f.open(QIODevice::ReadOnly)){
+    //file opened successfully
+    QTextStream in(&f);
+    while (!in.atEnd()){
+      QString line = in.readLine();
+
+      // DLM: this does not work for cells with commas in quotes
+      // Climate zone 13 with externalities,"Created April 18, 2006",Nominal nonres $0.145972/kBtu,Nominal res $0.164171/kBtu,,
+      // QStringList line = in.readLine().split(',', QString::KeepEmptyParts);
+
+      bool inside = (line.at(0) == QString("\"")); //true if the first character is "
+      QStringList tmpList = line.split(QRegExp("\""), QString::KeepEmptyParts); // Split by " and make sure you don't have an empty string at the beginning
+      QString escapedLine;
+      QString comma(",");
+      QString escapeSeq("&#45");
+      for (QString s: tmpList) {
+        if (inside) { // If 's' is inside quotes ...
+          escapedLine.append(s.replace(comma, escapeSeq)); // escape commas and add to the string
+        } else { // If 's' is outside quotes ...
+          escapedLine.append(s); // add to the string
+        }
+        inside = !inside;
+      }
+
+      QStringList csvList = escapedLine.split(",", QString::KeepEmptyParts);
+
+      std::vector<std::string> row;
+      for (QString cell : csvList){
+        row.push_back(toString(cell.replace(escapeSeq, comma)));
+      }
+      candidateTable.push_back(row);
+    }
+    f.close();
+  }
+
+  if (candidateTable.size() != 8764u) {
     LOG(Error,"Table loaded from '" << toString(p) << "' for construction of "
-        << " TimeDependentValuationFile has " << candidateTable.nRows() << " rows. "
+        << " TimeDependentValuationFile has " << candidateTable.size() << " rows. "
         << "Was expecting 8764.");
     return boost::none;
   }
@@ -323,9 +420,9 @@ boost::optional<TimeDependentValuationFile> TimeDependentValuationFile::load(
     // must be able to determine FuelType, BuildingSector, and energy/energy units.
     std::string unitString;
     try {
-      /* FuelType ft = */ candidateFile.fuelType(i);
-      /* BuildingSector bs = */ candidateFile.buildingSector(i);
-      /* unitString = */ candidateFile.units(i);
+       candidateFile.fuelType(i); //FuelType ft =
+       candidateFile.buildingSector(i); //BuildingSector bs = 
+       candidateFile.units(i); //unitString = 
     }
     catch (...) {
       LOG(Error,"Unexpected format in candidate time dependent valuation file '" << toString(p) 
@@ -355,15 +452,33 @@ boost::optional<TimeDependentValuationFile> TimeDependentValuationFile::load(
 }
 
 bool TimeDependentValuationFile::save(const openstudio::path& p, bool overwrite) {
-  bool ok = m_table.save(p,overwrite);
-  if (ok) {
-    m_path = p;
-    m_checksum = openstudio::checksum(p);
+
+  if (!overwrite && QFile::exists(toQString(p))){
+    return false;
   }
-  return ok;
+
+  QFile file(toQString(p));
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Text)){
+    return false;
+  }
+
+  QTextStream out(&file);
+  for (const std::vector<std::string>& row : m_table){
+    unsigned n = row.size();
+    for (unsigned i = 0; i < n; ++i){
+      out << row[i];
+      if (i < n - 1){
+        out << ", ";
+      }
+    }
+    out << "\n";
+  }
+  file.close();
+
+  return true;
 }
 
-TimeDependentValuationFile::TimeDependentValuationFile(const Table& table,
+TimeDependentValuationFile::TimeDependentValuationFile(const std::vector<std::vector<std::string> >& table,
                                                        const openstudio::path& p) 
   : m_table(table), m_path(p)
 {
@@ -376,6 +491,7 @@ boost::optional<Quantity> TimeDependentValuationFile::mf_extractNominalCostOfEne
     const std::string& cellContents) const
 {
   OptionalQuantity result;
+
   std::stringstream ss;
   ss << "[^\\$]*\\$(" << regexQuantity().str() << ")";
   boost::regex re(ss.str());
@@ -394,6 +510,7 @@ boost::optional<Quantity> TimeDependentValuationFile::mf_extractAndConvertNomina
     const std::string& cellContents,UnitSystem targetSystem) const
 {
   OptionalQuantity result;
+
   OptionalQuantity intermediate = mf_extractNominalCostOfEnergy(cellContents);
   if (intermediate) {
     try {
@@ -423,6 +540,7 @@ std::string TimeDependentValuationFile::mf_convertNominalCostOfEnergyInPlace(
 {
   std::string result;
   std::stringstream ss;
+
   ss << "[^\\$]*\\$(" << regexQuantity().str() << ")";
   boost::regex re(ss.str());
   boost::smatch matches;

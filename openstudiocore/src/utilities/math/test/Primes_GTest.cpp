@@ -19,7 +19,7 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/math/Primes.hpp>
+#include "../Primes.hpp"
 
 #include <iostream>
 

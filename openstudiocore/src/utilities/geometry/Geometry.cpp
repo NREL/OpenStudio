@@ -17,13 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Transformation.hpp>
+#include "Geometry.hpp"
+#include "Transformation.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 #include <boost/math/constants/constants.hpp>
-#include <boost/foreach.hpp>
 
 #include <polypartition/polypartition.h>
 
@@ -166,7 +165,7 @@ namespace openstudio{
     return result;
   }
 
-  std::vector<Point3d> removeColinear(const Point3dVector& points, double tol)
+  std::vector<Point3d> removeCollinear(const Point3dVector& points, double tol)
   {
     unsigned N = points.size();
     if (N < 3){
@@ -275,7 +274,7 @@ namespace openstudio{
     double b = E0.dot(E1);
 
     if (std::abs(b) > 1.0-1.0E-12){
-      // triangle is colinear
+      // triangle is collinear
       return 0;
     }
 
@@ -400,7 +399,7 @@ namespace openstudio{
 
   Point3d getCombinedPoint(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol)
   {
-    BOOST_FOREACH(const Point3d& otherPoint, allPoints){
+    for (const Point3d& otherPoint : allPoints){
       if (std::sqrt(std::pow(point3d.x()-otherPoint.x(), 2) + std::pow(point3d.y()-otherPoint.y(), 2) + std::pow(point3d.z()-otherPoint.z(), 2)) < tol){
         return otherPoint;
       }
@@ -442,7 +441,7 @@ namespace openstudio{
     polys.push_back(outerPoly);
 
 
-    BOOST_FOREACH(const std::vector<Point3d>& holeVertices, holes){
+    for (const std::vector<Point3d>& holeVertices : holes){
 
       if (holeVertices.size () < 3){
         LOG_FREE(Error, "utilities.geometry.computeTriangulation", "Hole has fewer than 3 points, ignoring");
@@ -499,7 +498,7 @@ namespace openstudio{
   std::vector<Point3d> moveVerticesTowardsPoint(const Point3dVector& vertices, const Point3d& point, double distance)
   {
     Point3dVector result;
-    BOOST_FOREACH(const Point3d& vertex, vertices){
+    for (const Point3d& vertex : vertices){
       Vector3d vector = point-vertex;
       vector.setLength(distance);
       result.push_back(vertex+vector);

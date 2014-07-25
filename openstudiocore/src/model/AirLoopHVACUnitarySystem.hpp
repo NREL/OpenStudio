@@ -20,8 +20,8 @@
 #ifndef MODEL_AIRLOOPHVACUNITARYSYSTEM_HPP
 #define MODEL_AIRLOOPHVACUNITARYSYSTEM_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/WaterToAirComponent.hpp>
+#include "ModelAPI.hpp"
+#include "WaterToAirComponent.hpp"
 
 namespace openstudio {
 
@@ -387,7 +387,7 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
   /// @cond
   typedef detail::AirLoopHVACUnitarySystem_Impl ImplType;
 
-  explicit AirLoopHVACUnitarySystem(boost::shared_ptr<detail::AirLoopHVACUnitarySystem_Impl> impl);
+  explicit AirLoopHVACUnitarySystem(std::shared_ptr<detail::AirLoopHVACUnitarySystem_Impl> impl);
 
   friend class detail::AirLoopHVACUnitarySystem_Impl;
   friend class Model;

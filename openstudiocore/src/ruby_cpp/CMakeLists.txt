@@ -1,19 +1,19 @@
-#INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_BINARY_DIR} )
-INCLUDE_DIRECTORIES( ${RUBY_INCLUDE_DIRS} )
-INCLUDE_DIRECTORIES( ${RUBY_CONFIG_INCLUDE_DIR} )
+#include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${RUBY_INCLUDE_DIRS})
+include_directories(${RUBY_CONFIG_INCLUDE_DIR})
 
-ADD_EXECUTABLE( ruby_cpp
+add_executable(ruby_cpp
   ruby.cpp
 )
 
-IF (MSVC)
-  SET(RUBY_CPP_EXE "${CMAKE_BINARY_DIR}/Products/$(ConfigurationName)/ruby_cpp" PARENT_SCOPE)
-ELSE()
-  SET(RUBY_CPP_EXE "${CMAKE_BINARY_DIR}/Products/ruby_cpp" PARENT_SCOPE)
-ENDIF()
+if(MSVC)
+  set(RUBY_CPP_EXE "${CMAKE_BINARY_DIR}/Products/$(ConfigurationName)/ruby_cpp" PARENT_SCOPE)
+else()
+  set(RUBY_CPP_EXE "${CMAKE_BINARY_DIR}/Products/ruby_cpp" PARENT_SCOPE)
+endif()
 
-IF (UNIX)
-  TARGET_LINK_LIBRARIES( ruby_cpp ${RUBY_LIBRARY} dl )
-ELSE()
-  TARGET_LINK_LIBRARIES( ruby_cpp ${RUBY_LIBRARY} )
-ENDIF()
+if(UNIX)
+  target_link_libraries(ruby_cpp ${RUBY_LIBRARY} dl)
+else()
+  target_link_libraries(ruby_cpp ${RUBY_LIBRARY})
+endif()

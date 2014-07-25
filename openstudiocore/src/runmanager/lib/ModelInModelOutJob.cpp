@@ -28,20 +28,18 @@
 #include "RunManager_Util.hpp"
 #include "MergeJobError.hpp"
 
-#include <utilities/time/DateTime.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
-#include <energyplus/ForwardTranslator.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/Workspace.hpp>
+#include "../../utilities/time/DateTime.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Model_Impl.hpp"
+#include "../../model/WeatherFile.hpp"
+#include "../../model/WeatherFile_Impl.hpp"
+#include "../../energyplus/ForwardTranslator.hpp"
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/Workspace.hpp"
 #include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
 
 #include <QDir>
 #include <QDateTime>
-
-#include <boost/bind.hpp>
 
 namespace openstudio {
 namespace runmanager {
@@ -106,7 +104,7 @@ namespace detail {
     return m_description;
   }
 
-  void ModelInModelOutJob::startImpl(const boost::shared_ptr<ProcessCreator> &)
+  void ModelInModelOutJob::startImpl(const std::shared_ptr<ProcessCreator> &)
   {
     openstudio::path outpath = outdir(true);
 
@@ -117,7 +115,7 @@ namespace detail {
       resetFiles(m_files, m_model);
     }
 
-    std::vector<boost::shared_ptr<ModelInModelOutJob> > mergedJobs = m_mergedJobs;
+    std::vector<std::shared_ptr<ModelInModelOutJob> > mergedJobs = m_mergedJobs;
     boost::optional<FileInfo> model = m_model;
 
     LOG(Info, "ModelInModelOut starting, filename: " << toString(m_model->fullPath));
@@ -147,12 +145,10 @@ namespace detail {
         LOG(Info, "ModelInModelOut executing primary job");
         model::Model outmodel = modelToModelRun(*m);
 
-        for (std::vector<boost::shared_ptr<ModelInModelOutJob> >::iterator itr = mergedJobs.begin();
-             itr != mergedJobs.end();
-             ++itr)
+        for (const auto & mergedJob : mergedJobs)
         {
           LOG(Info, "ModelInModelOut executing merged job");
-          outmodel = (*itr)->modelToModelRun(outmodel);
+          outmodel = mergedJob->modelToModelRun(outmodel);
         }
 
         openstudio::path outFile = outpath / toPath("out.osm");
@@ -207,10 +203,10 @@ namespace detail {
     return outfiles;
   }
 
-  void ModelInModelOutJob::mergeJobImpl(const boost::shared_ptr<Job_Impl> &t_parent, const boost::shared_ptr<Job_Impl> &t_job) 
+  void ModelInModelOutJob::mergeJobImpl(const std::shared_ptr<Job_Impl> &t_parent, const std::shared_ptr<Job_Impl> &t_job) 
   {
     QWriteLocker l(&m_mutex);
-    boost::shared_ptr<ModelInModelOutJob> mimojob = boost::dynamic_pointer_cast<ModelInModelOutJob>(t_job);
+    std::shared_ptr<ModelInModelOutJob> mimojob = std::dynamic_pointer_cast<ModelInModelOutJob>(t_job);
 
     if (!mimojob)
     {
@@ -231,10 +227,10 @@ namespace detail {
     LOG(Info, "Merging Job " << openstudio::toString(t_job->uuid()) << " into " << openstudio::toString(uuid()));
     
     removeChild(t_job);
-    std::vector<boost::shared_ptr<Job_Impl> > children = t_job->children();
-    std::for_each(children.begin(), children.end(), boost::bind(&Job_Impl::addChild, t_parent, _1));
+    std::vector<std::shared_ptr<Job_Impl> > children = t_job->children();
+    std::for_each(children.begin(), children.end(), std::bind(&Job_Impl::addChild, t_parent, std::placeholders::_1));
 
-    std::vector<boost::shared_ptr<ModelInModelOutJob> > existing_merged_jobs = mimojob->m_mergedJobs;
+    std::vector<std::shared_ptr<ModelInModelOutJob> > existing_merged_jobs = mimojob->m_mergedJobs;
     mimojob->m_mergedJobs.clear();
 
     m_mergedJobs.push_back(mimojob);

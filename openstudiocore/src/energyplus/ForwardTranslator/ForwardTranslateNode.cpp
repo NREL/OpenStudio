@@ -17,16 +17,9 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/SetpointManagerMixedAir.hpp>
-#include <model/SetpointManagerSingleZoneReheat.hpp>
-#include <model/SetpointManagerFollowOutdoorAirTemperature.hpp>
-#include <model/SetpointManagerScheduled.hpp>
-#include <model/SetpointManagerOutdoorAirReset.hpp>
-#include <model/SetpointManagerWarmest.hpp>
-#include <utilities/idd/IddEnums.hxx>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/SetpointManager.hpp"
 
 using namespace openstudio::model;
 
@@ -36,45 +29,10 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateNode( Node & modelObject )
 {
-  OptionalSetpointManagerMixedAir setpointManagerMixedAir = modelObject.getSetpointManagerMixedAir();
-  if( setpointManagerMixedAir )
+  std::vector<SetpointManager> _setpointManagers = modelObject.setpointManagers();
+  for(auto _setpointManager : _setpointManagers )
   {
-    translateAndMapModelObject( setpointManagerMixedAir.get() );
-  }
-
-  OptionalSetpointManagerSingleZoneReheat setpointManagerSingleZoneReheat
-    = modelObject.getSetpointManagerSingleZoneReheat();
-  if( setpointManagerSingleZoneReheat )
-  {
-    translateAndMapModelObject( setpointManagerSingleZoneReheat.get());
-  }
-
-  boost::optional<SetpointManagerFollowOutdoorAirTemperature> setpointManagerFollowOutdoorAirTemperature
-    = modelObject.setpointManagerFollowOutdoorAirTemperature();
-  if( setpointManagerFollowOutdoorAirTemperature )
-  {
-    translateAndMapModelObject( setpointManagerFollowOutdoorAirTemperature.get());
-  }
-
-  boost::optional<SetpointManagerScheduled> setpointManagerScheduled
-    = modelObject.setpointManagerScheduled();
-  if( setpointManagerScheduled )
-  {
-    translateAndMapModelObject( setpointManagerScheduled.get());
-  }
-
-  boost::optional<SetpointManagerOutdoorAirReset> setpointManagerOutdoorAirReset
-    = modelObject.setpointManagerOutdoorAirReset();
-  if( setpointManagerOutdoorAirReset )
-  {
-    translateAndMapModelObject( setpointManagerOutdoorAirReset.get());
-  }
-
-  boost::optional<SetpointManagerWarmest> setpointManagerWarmest
-    = modelObject.setpointManagerWarmest();
-  if( setpointManagerWarmest )
-  {
-    translateAndMapModelObject( setpointManagerWarmest.get());
+    translateAndMapModelObject( _setpointManager );
   }
 
   return boost::optional<IdfObject>();

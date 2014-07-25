@@ -19,20 +19,19 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/DaylightingDeviceShelf.hpp>
-#include <model/DaylightingDeviceShelf_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Surface.hpp>
-#include <model/SubSurface.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/InteriorPartitionSurfaceGroup.hpp>
-#include <model/InteriorPartitionSurface.hpp>
+#include "ModelFixture.hpp"
+#include "../Model_Impl.hpp"
+#include "../DaylightingDeviceShelf.hpp"
+#include "../DaylightingDeviceShelf_Impl.hpp"
+#include "../Space.hpp"
+#include "../Surface.hpp"
+#include "../SubSurface.hpp"
+#include "../ShadingSurfaceGroup.hpp"
+#include "../ShadingSurface.hpp"
+#include "../InteriorPartitionSurfaceGroup.hpp"
+#include "../InteriorPartitionSurface.hpp"
 
-#include <utilities/geometry/Point3d.hpp>
-#include <boost/foreach.hpp>
+#include "../../utilities/geometry/Point3d.hpp"
 
 using namespace openstudio::model;
 using namespace openstudio;

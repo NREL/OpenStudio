@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SIMSETTINGSTABVIEW_H
-#define OPENSTUDIO_SIMSETTINGSTABVIEW_H
+#ifndef OPENSTUDIO_SIMSETTINGSTABVIEW_HPP
+#define OPENSTUDIO_SIMSETTINGSTABVIEW_HPP
 
-#include <openstudio_lib/MainTabView.hpp>
+#include "MainTabView.hpp"
 
 //#include <model/Model.hpp> TODO delete
 
@@ -60,4 +60,4 @@ private:
 
 } // openstudio
 
-#endif // OPENSTUDIO_SIMSETTINGSTABVIEW_H
+#endif // OPENSTUDIO_SIMSETTINGSTABVIEW_HPP

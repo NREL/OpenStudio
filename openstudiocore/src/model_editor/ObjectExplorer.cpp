@@ -23,21 +23,21 @@
 #include <QLineEdit>
 #include <QListWidget>
 
-#include <model_editor/ListWidget.hpp>
+#include "ListWidget.hpp"
 
-#include <model_editor/ObjectExplorer.hpp>
+#include "ObjectExplorer.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace modeleditor
 {
 
 ObjectExplorer::ObjectExplorer(openstudio::IddFile& iddFile, QWidget * parent)
   : QWidget(parent),
-  mGroupEdit(NULL),
-  mObjectEdit(NULL),
-  mGroupList(NULL),
-  mObjectList(NULL),
+  mGroupEdit(nullptr),
+  mObjectEdit(nullptr),
+  mGroupList(nullptr),
+  mObjectList(nullptr),
   mIddFile(iddFile)
 {
   createWidgets();
@@ -95,27 +95,27 @@ void ObjectExplorer::createLayout()
   QLabel * objectLabel = new QLabel("Search classes:", this);
   objectLabel->setBuddy(mObjectEdit);
 
-  QHBoxLayout * groupEditLayout = new QHBoxLayout();
+  auto groupEditLayout = new QHBoxLayout();
   groupEditLayout->addWidget(groupLabel);
   groupEditLayout->addWidget(mGroupEdit);
 
-  QHBoxLayout * objectEditLayout = new QHBoxLayout();
+  auto objectEditLayout = new QHBoxLayout();
   objectEditLayout->addWidget(objectLabel);
   objectEditLayout->addWidget(mObjectEdit);
 
-  QVBoxLayout * groupLayout = new QVBoxLayout();
+  auto groupLayout = new QVBoxLayout();
   groupLayout->addLayout(groupEditLayout);
   groupLayout->addWidget(mGroupList);
   QGroupBox * groupBox = new QGroupBox(tr("Groups"));
   groupBox->setLayout(groupLayout);
 
-  QVBoxLayout * objectLayout = new QVBoxLayout();
+  auto objectLayout = new QVBoxLayout();
   objectLayout->addLayout(objectEditLayout);
   objectLayout->addWidget(mObjectList);
   QGroupBox * objectBox = new QGroupBox(tr("Classes"));
   objectBox->setLayout(objectLayout);
 
-  QHBoxLayout * hLayout = new QHBoxLayout();
+  auto hLayout = new QHBoxLayout();
   hLayout->addWidget(groupBox);
   hLayout->addWidget(objectBox);
 
@@ -137,7 +137,7 @@ void ObjectExplorer::updateIddFile()
   openstudio::IddObject object;
   std::vector<openstudio::IddObject> objects;
 
-  QListWidgetItem * newItem = NULL;
+  QListWidgetItem * newItem = nullptr;
 
   for(unsigned i=0 ; i<groups.size(); i++){
     group = groups.at(i);
@@ -168,7 +168,7 @@ void ObjectExplorer::groupTextEdited(const QString& text)
 
 void ObjectExplorer::objectTextEdited(const QString& text)
 {
-  QListWidgetItem * item = NULL;
+  QListWidgetItem * item = nullptr;
   for(int i=0; i<mObjectList->count(); i++){
     item = mObjectList->item(i);
     item->setHidden(!item->text().contains(text, Qt::CaseInsensitive));
@@ -214,7 +214,7 @@ void ObjectExplorer::groupItemSelectionChanged()
   }
 
   QString groupName;
-  QListWidgetItem * item = NULL;
+  QListWidgetItem * item = nullptr;
   QList<QListWidgetItem *> items;
   items = mGroupList->selectedItems();
   for(int i=0; i<items.size(); i++)

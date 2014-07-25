@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2012, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,9 +20,9 @@
 #ifndef RULESET_RUBYUSERSCRIPTARGUMENTGETTER_HPP
 #define RULESET_RUBYUSERSCRIPTARGUMENTGETTER_HPP
 
-#include <ruleset/RulesetAPI.hpp>
+#include "RulesetAPI.hpp"
 
-#include <utilities/core/Optional.hpp>
+#include "../utilities/core/Optional.hpp"
 
 #include <vector>
 #include <string>

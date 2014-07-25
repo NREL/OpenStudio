@@ -20,10 +20,10 @@
 #ifndef UTILITIES_GEOMETRY_TRANSFORMATION_HPP
 #define UTILITIES_GEOMETRY_TRANSFORMATION_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/data/Matrix.hpp>
-#include <utilities/data/Vector.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "../data/Matrix.hpp"
+#include "../data/Vector.hpp"
+#include "../core/Logger.hpp"
 
 #include <vector>
 #include <boost/optional.hpp>
@@ -40,7 +40,7 @@ namespace openstudio{
   class UTILITIES_API Transformation{
   public:
 
-    /// default constructor creates identity transfomation
+    /// default constructor creates identity transformation
     Transformation();
 
     /// constructor from storage, asserts matrix is 4x4

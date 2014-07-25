@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/RefrigerationWalkIn.hpp>
-#include <model/RefrigerationWalkIn_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/Schedule.hpp>
-#include <model/RefrigerationWalkInZoneBoundary.hpp>
-#include <utilities/time/Time.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/RefrigerationWalkIn.hpp"
+#include "../../model/RefrigerationWalkIn_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/RefrigerationWalkInZoneBoundary.hpp"
+#include "../../utilities/time/Time.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/Refrigeration_WalkIn_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -263,14 +263,12 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationWalkIn( Refr
 
   if( !zoneBoundaries.empty() )
   {
-    for( std::vector<RefrigerationWalkInZoneBoundary>::iterator _zoneBoundary = zoneBoundaries.begin();
-       _zoneBoundary != zoneBoundaries.end();
-       ++_zoneBoundary )
+    for( const auto & _zoneBoundary : zoneBoundaries )
     {
       IdfExtensibleGroup eg = refrigerationWalkIn.pushExtensibleGroup();
 
       //ZoneName
-        boost::optional<ThermalZone> thermalZone = _zoneBoundary->thermalZone();
+        boost::optional<ThermalZone> thermalZone = _zoneBoundary.thermalZone();
 
         if( thermalZone )
         {
@@ -283,37 +281,37 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationWalkIn( Refr
         }
 
       //TotalInsulatedSurfaceAreaFacingZone
-        d = _zoneBoundary->totalInsulatedSurfaceAreaFacingZone();
+        d = _zoneBoundary.totalInsulatedSurfaceAreaFacingZone();
         if (d) {
           eg.setDouble(Refrigeration_WalkInExtensibleFields::TotalInsulatedSurfaceAreaFacingZone,d.get());
         }
 
       //InsulatedSurfaceUValueFacingZone
-        d = _zoneBoundary->insulatedSurfaceUValueFacingZone();
+        d = _zoneBoundary.insulatedSurfaceUValueFacingZone();
         if (d) {
           eg.setDouble(Refrigeration_WalkInExtensibleFields::InsulatedSurfaceUValueFacingZone,d.get());
         }
 
       //AreaofGlassReachInDoorsFacingZone
-        d = _zoneBoundary->areaofGlassReachInDoorsFacingZone();
+        d = _zoneBoundary.areaofGlassReachInDoorsFacingZone();
         if (d) {
           eg.setDouble(Refrigeration_WalkInExtensibleFields::AreaofGlassReachInDoorsFacingZone,d.get());
         }
 
       //HeightofGlassReachInDoorsFacingZone
-        d = _zoneBoundary->heightofGlassReachInDoorsFacingZone();
+        d = _zoneBoundary.heightofGlassReachInDoorsFacingZone();
         if (d) {
           eg.setDouble(Refrigeration_WalkInExtensibleFields::HeightofGlassReachInDoorsFacingZone,d.get());
         }
 
       //GlassReachInDoorUValueFacingZone
-        d = _zoneBoundary->glassReachInDoorUValueFacingZone();
+        d = _zoneBoundary.glassReachInDoorUValueFacingZone();
         if (d) {
           eg.setDouble(Refrigeration_WalkInExtensibleFields::GlassReachInDoorUValueFacingZone,d.get());
         }
 
       //GlassReachInDoorOpeningScheduleNameFacingZone
-        boost::optional<Schedule> glassReachInDoorOpeningScheduleFacingZone = _zoneBoundary->glassReachInDoorOpeningScheduleFacingZone();
+        boost::optional<Schedule> glassReachInDoorOpeningScheduleFacingZone = _zoneBoundary.glassReachInDoorOpeningScheduleFacingZone();
 
         if( glassReachInDoorOpeningScheduleFacingZone )
         {
@@ -326,25 +324,25 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationWalkIn( Refr
         }
 
       //AreaofStockingDoorsFacingZone
-        d = _zoneBoundary->areaofStockingDoorsFacingZone();
+        d = _zoneBoundary.areaofStockingDoorsFacingZone();
         if (d) {
           eg.setDouble(Refrigeration_WalkInExtensibleFields::AreaofStockingDoorsFacingZone,d.get());
         }
 
       //HeightofStockingDoorsFacingZone
-        d = _zoneBoundary->heightofStockingDoorsFacingZone();
+        d = _zoneBoundary.heightofStockingDoorsFacingZone();
         if (d) {
           eg.setDouble(Refrigeration_WalkInExtensibleFields::HeightofStockingDoorsFacingZone,d.get());
         }
 
       //StockingDoorUValueFacingZone
-        d = _zoneBoundary->stockingDoorUValueFacingZone();
+        d = _zoneBoundary.stockingDoorUValueFacingZone();
         if (d) {
           eg.setDouble(Refrigeration_WalkInExtensibleFields::StockingDoorUValueFacingZone,d.get());
         }
 
       //StockingDoorOpeningScheduleNameFacingZone
-        boost::optional<Schedule> stockingDoorOpeningScheduleFacingZone = _zoneBoundary->stockingDoorOpeningScheduleFacingZone();
+        boost::optional<Schedule> stockingDoorOpeningScheduleFacingZone = _zoneBoundary.stockingDoorOpeningScheduleFacingZone();
 
         if( stockingDoorOpeningScheduleFacingZone )
         {
@@ -357,7 +355,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationWalkIn( Refr
         }
 
       //StockingDoorOpeningProtectionTypeFacingZone
-        s = _zoneBoundary->stockingDoorOpeningProtectionTypeFacingZone();
+        s = _zoneBoundary.stockingDoorOpeningProtectionTypeFacingZone();
         if (s) {
           eg.setString(Refrigeration_WalkInExtensibleFields::StockingDoorOpeningProtectionTypeFacingZone,s.get());
         }

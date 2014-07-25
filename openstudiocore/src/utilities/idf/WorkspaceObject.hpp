@@ -20,8 +20,8 @@
 #ifndef UTILITIES_IDF_WORKSPACEOBJECT_HPP
 #define UTILITIES_IDF_WORKSPACEOBJECT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/idf/IdfObject.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "IdfObject.hpp"
 
 namespace openstudio {
 
@@ -67,10 +67,10 @@ class UTILITIES_API WorkspaceObject : public IdfObject {
   /** Returns the index of the field in this object that points to targetHandle, if possible. */
   std::vector<unsigned> getSourceIndices(const Handle& targetHandle) const;
 
-  /** Returns all objects that point to this object. */
+  /** Returns all objects that point to this object, filtering for duplicate objects. */
   std::vector<WorkspaceObject> sources() const;
 
-  /** Returns all objects of type that point to this object. */
+  /** Returns all objects of type that point to this object, filtering for duplicate objects. */
   std::vector<WorkspaceObject> getSources(IddObjectType type) const;
 
   //@}
@@ -85,6 +85,8 @@ class UTILITIES_API WorkspaceObject : public IdfObject {
   //@}
   /** @name Queries */
   //@{
+
+  bool operator<(const WorkspaceObject& right) const;
 
   bool initialized() const;
 
@@ -151,7 +153,7 @@ class UTILITIES_API WorkspaceObject : public IdfObject {
   friend class detail::WorkspaceObject_Impl;
   friend class WorkspaceExtensibleGroup;
 
-  WorkspaceObject(boost::shared_ptr<detail::WorkspaceObject_Impl> impl);
+  WorkspaceObject(std::shared_ptr<detail::WorkspaceObject_Impl> impl);
 
  private:
  

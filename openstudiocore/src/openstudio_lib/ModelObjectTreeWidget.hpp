@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_MODELOBJECTTREEWIDGET_H
-#define OPENSTUDIO_MODELOBJECTTREEWIDGET_H
+#ifndef OPENSTUDIO_MODELOBJECTTREEWIDGET_HPP
+#define OPENSTUDIO_MODELOBJECTTREEWIDGET_HPP
 
-#include <openstudio_lib/OSItemSelector.hpp>
+#include "OSItemSelector.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
 class QTreeWidget;
 
@@ -58,9 +58,9 @@ class ModelObjectTreeWidget : public OSItemSelector
 
   private slots:
 
-    void objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
+    void objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
 
-    void objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
+    void objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
 
   private:
 
@@ -73,5 +73,5 @@ class ModelObjectTreeWidget : public OSItemSelector
 
 } // openstudio
 
-#endif // OPENSTUDIO_MODELOBJECTTREEWIDGET_H
+#endif // OPENSTUDIO_MODELOBJECTTREEWIDGET_HPP
 

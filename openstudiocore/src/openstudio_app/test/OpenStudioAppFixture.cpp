@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_app/test/OpenStudioAppFixture.hpp>
+#include "OpenStudioAppFixture.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/Path.hpp>
+#include "../../utilities/core/Application.hpp"
+#include "../../utilities/core/Path.hpp"
 
 void OpenStudioAppFixture::SetUp() {
   openstudio::Application::instance().application();

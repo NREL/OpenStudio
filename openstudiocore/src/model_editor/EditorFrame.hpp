@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef EDITORFRAME_H
-#define EDITORFRAME_H
+#ifndef MODELEDITOR_EDITORFRAME_HPP
+#define MODELEDITOR_EDITORFRAME_HPP
 
 #include <QMainWindow>
 #include <QString>
 
-#include <model/Building.hpp>
-#include <model_editor/ModelEditorAPI.hpp>
+#include "../model/Building.hpp"
+#include "ModelEditorAPI.hpp"
 
 class QAbstractItemModel;
 class QAction;
@@ -45,7 +45,7 @@ class MODELEDITOR_API EditorFrame : public QMainWindow
   Q_OBJECT
 
 public:
-  EditorFrame(QWidget * parent = 0);
+  EditorFrame(QWidget * parent = nullptr);
   virtual ~EditorFrame();
   void loadStyleSheet(QString& style);
 
@@ -160,4 +160,4 @@ signals:
 
 } // namespace modeleditor
 
-#endif // EDITORFRAME_H
+#endif // MODELEDITOR_EDITORFRAME_HPP

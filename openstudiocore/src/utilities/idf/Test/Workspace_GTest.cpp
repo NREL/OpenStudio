@@ -19,16 +19,16 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/idf/Test/IdfFixture.hpp>
+#include "IdfFixture.hpp"
 
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/Workspace_Impl.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/idf/WorkspaceObjectOrder.hpp>
-#include <utilities/idf/URLSearchPath.hpp>
-#include <utilities/idf/ValidityReport.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
+#include "../Workspace.hpp"
+#include "../Workspace_Impl.hpp"
+#include "../WorkspaceObject.hpp"
+#include "../WorkspaceObjectOrder.hpp"
+#include "../URLSearchPath.hpp"
+#include "../ValidityReport.hpp"
+#include "../IdfExtensibleGroup.hpp"
+#include "../WorkspaceExtensibleGroup.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -44,23 +44,22 @@
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/OS_TimeDependentValuation_FieldEnums.hxx>
 #include <utilities/idd/Sizing_Zone_FieldEnums.hxx>
-#include <utilities/idf/WorkspaceWatcher.hpp>
-#include <utilities/idf/Test/IdfTestQObjects.hpp>
+#include "../WorkspaceWatcher.hpp"
+#include "IdfTestQObjects.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../../core/Application.hpp"
+#include "../../core/Path.hpp"
+#include "../../core/Optional.hpp"
 
-#include <utilities/time/Time.hpp>
+#include "../../time/Time.hpp"
 
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/StringStreamLogSink.hpp>
+#include "../../core/Compare.hpp"
+#include "../../core/StringStreamLogSink.hpp"
 
 #include <resources.hxx>
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
 
 using namespace openstudio;
 
@@ -82,7 +81,7 @@ TEST_F(IdfFixture, IdfFile_Workspace_Roundtrip)
   IdfFile copyOfIdfFile = workspace.toIdfFile();
   // until == available, print out for diff
   openstudio::path outPath = outDir/toPath("passedThroughWorkspace.idf");
-  boost::filesystem::ofstream outFile(outPath); ASSERT_TRUE(outFile);
+  boost::filesystem::ofstream outFile(outPath); ASSERT_TRUE(outFile?true:false);
   copyOfIdfFile.print(outFile); outFile.close();
 }
 
@@ -221,7 +220,7 @@ TEST_F(IdfFixture, Workspace_FollowingPointers) {
   // forward (e.g. lights -> zone)
   WorkspaceObjectVector lights = workspace.getObjectsByType(IddObjectType::Lights);
   EXPECT_EQ(static_cast<size_t>(5), lights.size());
-  BOOST_FOREACH(const WorkspaceObject& light, lights){
+  for (const WorkspaceObject& light : lights){
 
     // check the light
     EXPECT_TRUE(light.canBeSource());
@@ -246,7 +245,7 @@ TEST_F(IdfFixture, Workspace_FollowingPointers) {
   // backward (e.g. zone -> lights)
   WorkspaceObjectVector zones = workspace.getObjectsByType(IddObjectType::Zone);
   EXPECT_EQ(static_cast<size_t>(6), zones.size());
-  BOOST_FOREACH(const WorkspaceObject& zone, zones){
+  for (const WorkspaceObject& zone : zones){
 
     // check the zone
     //EXPECT_TRUE(zone.canBeTarget());
@@ -341,7 +340,7 @@ TEST_F(IdfFixture, Workspace_Alpha1) {
   EXPECT_EQ(static_cast<size_t>(6), zones.size());
 
   // for each zone
-  BOOST_FOREACH(const WorkspaceObject& zone, zones){
+  for (const WorkspaceObject& zone : zones){
 
     // check zone name
     OptionalString zoneName = zone.getString(ZoneFields::Name);
@@ -1793,7 +1792,7 @@ std::string text = "\
             workspace1.getObjectsByType(IddObjectType::Construction)[0].getTarget(1)->handle());
 
   std::vector<IdfObject> idfObjects;
-  BOOST_FOREACH(WorkspaceObject workspaceObject, workspace1.objects()){
+  for (WorkspaceObject workspaceObject : workspace1.objects()){
     idfObjects.push_back(workspaceObject.idfObject());
   }
 
@@ -1918,7 +1917,7 @@ TEST_F(IdfFixture, Workspace_Signals)
 
   openstudio::Application::instance().processEvents();
 
-  ASSERT_TRUE(reciever->m_objectImpl);
+  ASSERT_TRUE(reciever->m_objectImpl.get());
   ASSERT_TRUE(reciever->m_iddObjectType);
   EXPECT_EQ(IddObjectType::Zone, reciever->m_iddObjectType->value());
   ASSERT_TRUE(reciever->m_handle);
@@ -1938,7 +1937,7 @@ TEST_F(IdfFixture, Workspace_Signals)
 
   Application::instance().processEvents();
 
-  ASSERT_TRUE(reciever->m_objectImpl);
+  ASSERT_TRUE(reciever->m_objectImpl.get());
   ASSERT_TRUE(reciever->m_iddObjectType);
   EXPECT_EQ(IddObjectType::Zone, reciever->m_iddObjectType->value());
   ASSERT_TRUE(reciever->m_handle);

@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/idd/Comments.hpp>
-#include <utilities/idd/CommentRegex.hpp>
+#include "Comments.hpp"
+#include "CommentRegex.hpp"
 
 #include <boost/algorithm/string.hpp>
 

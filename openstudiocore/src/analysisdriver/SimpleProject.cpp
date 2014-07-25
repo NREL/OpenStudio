@@ -17,67 +17,66 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysisdriver/SimpleProject.hpp>
-#include <analysisdriver/SimpleProject_Impl.hpp>
+#include "SimpleProject.hpp"
+#include "SimpleProject_Impl.hpp"
 
-#include <analysisdriver/CurrentAnalysis.hpp>
-#include <analysisdriver/AnalysisRunOptions.hpp>
-#include <analysisdriver/AnalysisDriverEnums.hpp>
-#include <analysisdriver/AnalysisDriver_Impl.hpp>
+#include "CurrentAnalysis.hpp"
+#include "AnalysisRunOptions.hpp"
+#include "AnalysisDriverEnums.hpp"
+#include "AnalysisDriver_Impl.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/CloudSessionRecord.hpp>
-#include <project/CloudSettingsRecord.hpp>
-#include <project/DataPointRecord.hpp>
-#include <project/DakotaAlgorithmRecord.hpp>
-#include <project/DakotaAlgorithmRecord_Impl.hpp>
+#include "../project/ProjectDatabase.hpp"
+#include "../project/AnalysisRecord.hpp"
+#include "../project/CloudSessionRecord.hpp"
+#include "../project/CloudSettingsRecord.hpp"
+#include "../project/DataPointRecord.hpp"
+#include "../project/DakotaAlgorithmRecord.hpp"
+#include "../project/DakotaAlgorithmRecord_Impl.hpp"
 
-#include <analysis/Algorithm.hpp>
-#include <analysis/Analysis_Impl.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/NullMeasure_Impl.hpp>
-#include <analysis/OptimizationDataPoint.hpp>
-#include <analysis/OptimizationDataPoint_Impl.hpp>
-#include <analysis/OptimizationProblem.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/RubyContinuousVariable_Impl.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
-#include <analysis/Variable.hpp>
+#include "../analysis/Algorithm.hpp"
+#include "../analysis/Analysis_Impl.hpp"
+#include "../analysis/DataPoint.hpp"
+#include "../analysis/MeasureGroup.hpp"
+#include "../analysis/MeasureGroup_Impl.hpp"
+#include "../analysis/NullMeasure.hpp"
+#include "../analysis/NullMeasure_Impl.hpp"
+#include "../analysis/OptimizationDataPoint.hpp"
+#include "../analysis/OptimizationDataPoint_Impl.hpp"
+#include "../analysis/OptimizationProblem.hpp"
+#include "../analysis/Problem.hpp"
+#include "../analysis/RubyContinuousVariable.hpp"
+#include "../analysis/RubyContinuousVariable_Impl.hpp"
+#include "../analysis/RubyMeasure.hpp"
+#include "../analysis/RubyMeasure_Impl.hpp"
+#include "../analysis/Variable.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/WorkItem.hpp>
-#include <runmanager/lib/RubyJobUtils.hpp>
+#include "../runmanager/lib/RunManager.hpp"
+#include "../runmanager/lib/Workflow.hpp"
+#include "../runmanager/lib/WorkItem.hpp"
+#include "../runmanager/lib/RubyJobUtils.hpp"
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../energyplus/ForwardTranslator.hpp"
 
-#include <osversion/VersionTranslator.hpp>
+#include "../osversion/VersionTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/UtilityBill.hpp>
-#include <model/UtilityBill_Impl.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/UtilityBill.hpp"
+#include "../model/UtilityBill_Impl.hpp"
+#include "../model/WeatherFile.hpp"
+#include "../model/WeatherFile_Impl.hpp"
 
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/FileLogSink.hpp>
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/ZipFile.hpp>
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/FileLogSink.hpp"
+#include "../utilities/core/FileReference.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/core/ZipFile.hpp"
 
 #include <OpenStudio.hxx>
 
-#include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
 
 using namespace openstudio;
@@ -132,7 +131,7 @@ namespace detail {
   }
 
   SimpleProject SimpleProject_Impl::simpleProject() const {
-    return SimpleProject(boost::const_pointer_cast<SimpleProject_Impl>(shared_from_this()));
+    return SimpleProject(std::const_pointer_cast<SimpleProject_Impl>(shared_from_this()));
   }
 
   openstudio::path SimpleProject_Impl::projectDir() const {
@@ -223,11 +222,11 @@ namespace detail {
         toRemove.push_back(it->second);
       }
     }
-    BOOST_FOREACH(BCLMeasure& gone,toRemove) {
-      std::map<UUID,BCLMeasure>::iterator it1 = m_measures.find(gone.uuid());
+    for (const BCLMeasure& gone : toRemove) {
+      auto it1 = m_measures.find(gone.uuid());
       OS_ASSERT(it1 != m_measures.end());
       m_measures.erase(it1);
-      std::map<UUID,std::vector<ruleset::OSArgument> >::iterator it2 = m_measureArguments.find(gone.uuid());
+      auto it2 = m_measureArguments.find(gone.uuid());
       if (it2 != m_measureArguments.end()) {
         m_measureArguments.erase(it2);
       }
@@ -238,13 +237,13 @@ namespace detail {
       return result;
     }
     StringVector candidateDirs;
-    for (directory_iterator dit(dir), ditEnd; dit != ditEnd; ++dit) {
+    for (boost::filesystem::directory_iterator dit(dir), ditEnd; dit != ditEnd; ++dit) {
       if (boost::filesystem::is_directory(dit->status())) {
         candidateDirs.push_back(toString(dit->path().stem()));
       }
     }
     if (candidateDirs.size() > result.size()) {
-      StringVector::iterator it = candidateDirs.begin();
+      auto it = candidateDirs.begin();
       while (it != candidateDirs.end()) {
         if (std::find(resultDirs.begin(),resultDirs.end(),*it) != resultDirs.end()) {
           it = candidateDirs.erase(it);
@@ -253,10 +252,10 @@ namespace detail {
           ++it;
         }
       }
-      BOOST_FOREACH(const std::string& newDir,candidateDirs) {
+      for (const std::string& newDir : candidateDirs) {
         if (OptionalBCLMeasure newMeasure = BCLMeasure::load(dir / toPath(newDir))) {
           UUID newUUID = newMeasure->uuid();
-          std::map<UUID,BCLMeasure>::iterator it = m_measures.find(newUUID);
+          auto it = m_measures.find(newUUID);
           if (it != m_measures.end()) {
             m_measures.erase(it);
             LOG(Warn,"There are measures with duplicate UUIDs in this project.");
@@ -274,7 +273,7 @@ namespace detail {
   boost::optional<BCLMeasure> SimpleProject_Impl::getMeasureByUUID(const UUID& uuid) const {
     OptionalBCLMeasure result;
     // check map
-    std::map<UUID,BCLMeasure>::iterator it = m_measures.find(uuid);
+    auto it = m_measures.find(uuid);
     if (it != m_measures.end()) {
       // make sure measure is still there
       if ((boost::filesystem::exists(it->second.directory()) &&
@@ -294,12 +293,12 @@ namespace detail {
       if (!boost::filesystem::exists(dir) || !boost::filesystem::is_directory(dir)) {
         return result;
       }
-      for (directory_iterator dit(dir), ditEnd; dit != ditEnd; ++dit) {
+      for (boost::filesystem::directory_iterator dit(dir), ditEnd; dit != ditEnd; ++dit) {
         if (boost::filesystem::is_directory(dit->status())) {
           OptionalBCLMeasure candidate = BCLMeasure::load(dit->path());
           if (candidate) {
             UUID candidateUUID = candidate->uuid();
-            std::map<UUID,BCLMeasure>::iterator it = m_measures.find(candidateUUID);
+            auto it = m_measures.find(candidateUUID);
             if (it != m_measures.end()) {
               m_measures.erase(it);
             }
@@ -414,7 +413,7 @@ namespace detail {
     if (requiresVersionTranslation(analysis().seed().path())) {
       return true;
     }
-    BOOST_FOREACH(const openstudio::path& p, alternateModelPaths()) {
+    for (const openstudio::path& p : alternateModelPaths()) {
       if (requiresVersionTranslation(p)) {
         return true;
       }
@@ -440,9 +439,9 @@ namespace detail {
       ++numReportWorkItems;
     }
 
-    BOOST_FOREACH(const InputVariable& variable,problem.variables()) {
+    for (const InputVariable& variable : problem.variables()) {
       if (OptionalMeasureGroup dv = variable.optionalCast<MeasureGroup>()) {
-        BOOST_FOREACH(const Measure& measure,dv->measures(false)) {
+        for (const Measure& measure : dv->measures(false)) {
           if (!measure.optionalCast<NullMeasure>() &&
               !measure.optionalCast<RubyMeasure>())
           {
@@ -468,7 +467,7 @@ namespace detail {
     bool inputVariableOk = true; // model measures ok
     boost::optional<JobType> nextWorkItemType = JobType(JobType::ModelToIdf);
     unsigned reportCount = 0u;
-    BOOST_FOREACH(const WorkflowStep& step,problem.workflow()) {
+    for (const WorkflowStep& step : problem.workflow()) {
       if (!inputVariableOk && step.isInputVariable()) {
         return false;
       }
@@ -537,7 +536,7 @@ namespace detail {
   boost::optional<MeasureGroup> SimpleProject_Impl::getAlternativeModelVariable() const {
     OptionalMeasureGroup result;
     Problem problem = analysis().problem();
-    BOOST_FOREACH(const InputVariable& ivar,problem.variables()) {
+    for (const InputVariable& ivar : problem.variables()) {
       if (OptionalMeasureGroup dvar = ivar.optionalCast<MeasureGroup>()) {
         // must have correct name
         if (dvar->name() != "Alternative Model") {
@@ -546,7 +545,7 @@ namespace detail {
         // must have correct measures
         bool first(true);
         bool found(true);
-        BOOST_FOREACH(const Measure& pert,dvar->measures(false)) {
+        for (const Measure& pert : dvar->measures(false)) {
           if (first) {
             if (!pert.optionalCast<NullMeasure>()) {
               found = false;
@@ -696,7 +695,7 @@ namespace detail {
     }
 
     // is not osm that made this osp
-    openstudio::path osmForThisOsp = projectDir().parent_path() / toPath(projectDir().stem());
+    openstudio::path osmForThisOsp = projectDir().parent_path() / projectDir().stem();
     osmForThisOsp = setFileExtension(osmForThisOsp,"osm");
     if (currentSeedLocation.path() == osmForThisOsp) {
       LOG(Warn,"Cannot set seed to " << toString(currentSeedLocation.path()) <<
@@ -732,7 +731,7 @@ namespace detail {
     boost::filesystem::create_directories(seedDir);
 
     // copy over main file
-    openstudio::path newPath = seedDir / toPath(currentSeedLocation.path().filename());
+    openstudio::path newPath = seedDir / currentSeedLocation.path().filename();
     boost::filesystem::copy_file(currentSeedLocation.path(),newPath);
     FileReference newSeed(newPath);
     OS_ASSERT(newSeed.fileType() == fileType);
@@ -815,12 +814,12 @@ namespace detail {
     }
     if ((!analysis().weatherFile()) || (!boost::filesystem::exists(analysis().weatherFile()->path()))) {
       // ETH@20130313 - Thought about not registering failure of setAnalysisWeatherFile, because not
-      // running EnergyPlus, and therefore not setting a weather file, is a legitamite workflow. However,
+      // running EnergyPlus, and therefore not setting a weather file, is a legitimate workflow. However,
       // in PAT there is no way to remove the EnergyPlus job, so not having a weather file really is a
       // problem.
       result = result && setAnalysisWeatherFile();
     }
-    BOOST_FOREACH(const openstudio::path& p, alternateModelPaths()) {
+    for (const openstudio::path& p : alternateModelPaths()) {
       if (requiresVersionTranslation(p)) {
         result = result && upgradeModel(p);
       }
@@ -846,10 +845,10 @@ namespace detail {
     openstudio::path scriptsDir = this->scriptsDir();
     std::map<UUID,openstudio::path> toUpdate;
     InputVariableVector vars = analysis().problem().variables();
-    BOOST_FOREACH(InputVariable& var,vars) {
+    for (InputVariable& var : vars) {
       if (OptionalMeasureGroup dv = var.optionalCast<MeasureGroup>()) {
         MeasureVector dps = dv->measures(false);
-        BOOST_FOREACH(Measure& dp,dps) {
+        for (Measure& dp : dps) {
           if (OptionalRubyMeasure rp = dp.optionalCast<RubyMeasure>()) {
             if (rp->usesBCLMeasure() &&
                 (rp->measureDirectory().parent_path() != scriptsDir))
@@ -908,7 +907,7 @@ namespace detail {
   void SimpleProject_Impl::stop() {
     // the following should be enough to kill any running jobs
     std::vector<analysisdriver::CurrentAnalysis> currentAnalyses = analysisDriver().currentAnalyses();
-    BOOST_FOREACH(analysisdriver::CurrentAnalysis currentAnalysis, currentAnalyses){
+    for (analysisdriver::CurrentAnalysis currentAnalysis : currentAnalyses){
       analysisDriver().stop(currentAnalysis);
     }
   }
@@ -927,7 +926,7 @@ namespace detail {
       bool didStartTransaction = database.startTransaction();
       AnalysisRecord analysisRecord = this->analysisRecord();
       DataPointRecordVector dataPointRecords = analysisRecord.dataPointRecords();
-      BOOST_FOREACH(DataPointRecord& dataPointRecord,dataPointRecords) {
+      for (DataPointRecord& dataPointRecord : dataPointRecords) {
         boost::optional<UUID> jobUUID = dataPointRecord.topLevelJobUUID();
         if (jobUUID) {
           try {
@@ -994,7 +993,7 @@ namespace detail {
       bool didStartTransaction = database.startTransaction();
       AnalysisRecord analysisRecord = this->analysisRecord();
       DataPointRecordVector dataPointRecords = analysisRecord.dataPointRecords();
-      BOOST_FOREACH(DataPointRecord& dataPointRecord,dataPointRecords) {
+      for (DataPointRecord& dataPointRecord : dataPointRecords) {
         boost::optional<UUID> jobUUID = dataPointRecord.topLevelJobUUID();
         if (jobUUID) {
           try {
@@ -1144,7 +1143,7 @@ namespace detail {
       if (!boost::filesystem::exists(tempFile)) {
         boost::filesystem::create_directory(tempFile);
       }
-      Q_FOREACH(const openstudio::path& alternate,alternates) {
+      for (const openstudio::path& alternate : alternates) {
         copyModel(alternate,tempFile,true);
       }
       zipFile.addDirectory(tempFile,toPath("alternatives"));
@@ -1159,13 +1158,13 @@ namespace detail {
     analysis::Problem problem = analysis.problem();
 
     std::vector<analysis::Measure> baselineMeasures;
-    BOOST_FOREACH(const analysis::InputVariable& inputVariable, problem.variables()){
+    for (const analysis::InputVariable& inputVariable : problem.variables()){
       boost::optional<analysis::MeasureGroup> measureGroup = inputVariable.optionalCast<analysis::MeasureGroup>();
       if (measureGroup){
         bool found(false);
         std::vector<Measure> measures = measureGroup->measures(false);
 
-        BOOST_FOREACH(const analysis::Measure& measure, measures){
+        for (const analysis::Measure& measure : measures){
           if (measure.optionalCast<analysis::NullMeasure>()){
             baselineMeasures.push_back(measure);
             found = true;
@@ -1216,7 +1215,7 @@ namespace detail {
 
     // add file to project
     copyModel(altModel,alternateModelsDir());
-    openstudio::path newPath = alternateModelsDir() / toPath(altModel.filename());
+    openstudio::path newPath = alternateModelsDir() / altModel.filename();
     OS_ASSERT(boost::filesystem::exists(newPath));
     upgradeModel(newPath);
 
@@ -1226,7 +1225,7 @@ namespace detail {
     std::vector<BCLMeasure>::const_iterator it = std::find_if(
           patMeasures.begin(),
           patMeasures.end(),
-          boost::bind(uuidEquals<BCLMeasure,openstudio::UUID>,_1,m_alternativeModelMeasureUUID));
+          std::bind(uuidEquals<BCLMeasure,openstudio::UUID>,std::placeholders::_1,m_alternativeModelMeasureUUID));
     OS_ASSERT(it != patMeasures.end());
     BCLMeasure replaceModelMeasure = insertMeasure(*it);
     RubyMeasure swapModel(replaceModelMeasure,false); // false so not used in algorithms
@@ -1243,7 +1242,7 @@ namespace detail {
     Analysis analysis = this->analysis();
     Problem problem = analysis.problem();
     std::vector<QVariant> variableValues;
-    BOOST_FOREACH(const InputVariable& ivar,problem.variables()) {
+    for (const InputVariable& ivar : problem.variables()) {
       if (ivar == amvar) {
         variableValues.push_back(QVariant(pIndex));
       }
@@ -1311,7 +1310,7 @@ namespace detail {
       Analysis temp = analysis();
       DataPointVector tempPoints = temp.dataPoints();
       DataPointVector dataPoints;
-      BOOST_FOREACH(const DataPoint& tempPoint,tempPoints) {
+      for (const DataPoint& tempPoint : tempPoints) {
         std::vector<QVariant> variableValues = tempPoint.variableValues();
         variableValues.insert(variableValues.begin(),QVariant(0));
         if (tempPoint.optionalCast<OptimizationDataPoint>()) {
@@ -1405,7 +1404,7 @@ namespace detail {
     std::vector<BCLMeasure>::const_iterator it = std::find_if(
           patMeasures.begin(),
           patMeasures.end(),
-          boost::bind(uuidEquals<BCLMeasure,openstudio::UUID>,_1,m_standardReportMeasureUUID));
+          std::bind(uuidEquals<BCLMeasure,openstudio::UUID>,std::placeholders::_1,m_standardReportMeasureUUID));
     OS_ASSERT(it != patMeasures.end());
     BCLMeasure bclMeasure = insertMeasure(*it);
 
@@ -1453,7 +1452,7 @@ namespace detail {
     std::vector<BCLMeasure>::const_iterator it = std::find_if(
           patMeasures.begin(),
           patMeasures.end(),
-          boost::bind(uuidEquals<BCLMeasure,openstudio::UUID>,_1,m_calibrationReportMeasureUUID));
+          std::bind(uuidEquals<BCLMeasure,openstudio::UUID>,std::placeholders::_1,m_calibrationReportMeasureUUID));
     OS_ASSERT(it != patMeasures.end());
     BCLMeasure bclMeasure = insertMeasure(*it);
 
@@ -1540,10 +1539,10 @@ namespace detail {
 
           bool didStartTransaction = database.startTransaction();
           if (!didStartTransaction) {
-            LOG(Debug,"Unable to start transation.");
+            LOG(Debug,"Unable to start transaction.");
           }
 
-          BOOST_FOREACH(ObjectRecord& nextToRemove,toRemove) {
+          for (ObjectRecord& nextToRemove : toRemove) {
             database.removeRecord(nextToRemove);
           }
 
@@ -1562,7 +1561,7 @@ namespace detail {
 
         bool didStartTransaction = database.startTransaction();
         if (!didStartTransaction) {
-          LOG(Debug,"Unable to start transation.");
+          LOG(Debug,"Unable to start transaction.");
         }
 
         if (m_cloudSession) {
@@ -1599,8 +1598,8 @@ namespace detail {
       return false;
     }
 
-    for (openstudio::directory_iterator it(newProjectDir),
-         itEnd = openstudio::directory_iterator(); it != itEnd; ++it)
+    for (boost::filesystem::directory_iterator it(newProjectDir),
+         itEnd = boost::filesystem::directory_iterator(); it != itEnd; ++it)
     {
       if (boost::filesystem::is_directory(it->status()) ||
           boost::filesystem::is_regular_file(it->status()))
@@ -1636,7 +1635,7 @@ namespace detail {
   std::vector<openstudio::path> SimpleProject_Impl::alternateModelPaths() const {
     std::vector<openstudio::path> result;
     if (boost::filesystem::exists(alternateModelsDir())) {
-      for (openstudio::directory_iterator it(alternateModelsDir()), itend; it != itend; ++it) {
+      for (boost::filesystem::directory_iterator it(alternateModelsDir()), itend; it != itend; ++it) {
         if (boost::filesystem::is_regular_file(it->path())) {
           FileReference temp(it->path());
           if (temp.fileType() == FileReferenceType::OSM) {
@@ -1671,15 +1670,15 @@ namespace detail {
     OS_ASSERT(boost::filesystem::exists(destinationDirectory));
 
     // copy primary file
-    openstudio::path newPath = destinationDirectory / toPath(modelPath.filename());
+    openstudio::path newPath = destinationDirectory / modelPath.filename();
     boost::filesystem::copy_file(modelPath,newPath,boost::filesystem::copy_option::overwrite_if_exists);
 
-    // pick up auxillary data
-    openstudio::path companionFolder = modelPath.parent_path() / toPath(modelPath.stem());
+    // pick up auxiliary data
+    openstudio::path companionFolder = modelPath.parent_path() / modelPath.stem();
     if (boost::filesystem::exists(companionFolder) &&
         boost::filesystem::is_directory(companionFolder))
     {
-      openstudio::path companionDestination = destinationDirectory / toPath(modelPath.stem());
+      openstudio::path companionDestination = destinationDirectory / modelPath.stem();
       if (minimal) {
         // only copy companionFolder/files
         openstudio::path filesFolder = companionFolder / toPath("files");
@@ -1758,7 +1757,7 @@ namespace detail {
 
     bool weatherFileLocated(false);
     openstudio::path modelPath = analysis().seed().path();
-    openstudio::path companionFolder = completeAndNormalize(modelPath.parent_path() / toPath(modelPath.stem()));
+    openstudio::path companionFolder = completeAndNormalize(modelPath.parent_path() / modelPath.stem());
     openstudio::path destinationFolder = companionFolder / toPath("files");
 
     // if absolute path, copy to companionFolder/files, set url relative to companionFolder
@@ -1770,7 +1769,7 @@ namespace detail {
 
     // if relative path, see if exists relative to companionFolder or destination folder
     if (!weatherFileLocated) {
-      openstudio::path filename = toPath(wfp->filename());
+      openstudio::path filename = wfp->filename();
       p = completeAndNormalize(companionFolder / *wfp);
       openstudio::path p2 = completeAndNormalize(companionFolder / filename);
       if (!(boost::filesystem::exists(p) || boost::filesystem::exists(p2))) {
@@ -1802,7 +1801,7 @@ namespace detail {
       if (!boost::filesystem::exists(destinationFolder)) {
         boost::filesystem::create_directories(destinationFolder);
       }
-      boost::filesystem::copy_file(p,destinationFolder / toPath(p.filename()),
+      boost::filesystem::copy_file(p,destinationFolder / p.filename(),
                                    boost::filesystem::copy_option::overwrite_if_exists);
     }
 
@@ -1824,7 +1823,7 @@ namespace detail {
 
   std::vector<BCLMeasure> SimpleProject_Impl::importSeedModelMeasures(ProgressBar* progressBar) {
     BCLMeasureVector result;
-    openstudio::path projectPath = seedDir() / toPath(seed().path().stem());
+    openstudio::path projectPath = seedDir() / seed().path().stem();
     if (boost::filesystem::exists(projectPath / toPath("project.osp"))) {
 
       // open seed model project
@@ -1870,7 +1869,7 @@ namespace detail {
         }
 
         // loop through seed model workflow
-        BOOST_FOREACH(const WorkflowStep& seedModelStep,sp->analysis().problem().workflow()) {
+        for (const WorkflowStep& seedModelStep : sp->analysis().problem().workflow()) {
 
           if (isPATFixedMeasure(seedModelStep)) {
             // seedModelStep needs to be imported as a fixed measure
@@ -1947,7 +1946,7 @@ namespace detail {
 
   void SimpleProject_Impl::removeOrphanedResultFiles() {
     // iterate through projectDir()
-    for(openstudio::directory_iterator it(projectDir()), endit; it != endit; ++it) {
+    for(boost::filesystem::directory_iterator it(projectDir()), endit; it != endit; ++it) {
       if (boost::filesystem::is_directory(it->status())) {
         boost::regex dpDir("dataPoint\\d+");
         boost::regex dakotaDir("[dD]akota");
@@ -1965,7 +1964,7 @@ namespace detail {
 
   BCLMeasure SimpleProject_Impl::addMeasure(const BCLMeasure& measure) {
     openstudio::path scriptsDir = this->scriptsDir();
-    openstudio::path dir = scriptsDir / toPath(measure.directory().stem());
+    openstudio::path dir = scriptsDir / measure.directory().stem();
 
     // DLM: boost::filesystem::exists can throw if the dir is in an indeterminate state (e.g. being deleted)
     bool fileExists = true;
@@ -1994,14 +1993,14 @@ namespace detail {
                     << toString(dir) << ".");
     }
     BCLMeasure result = *measureCopy;
-    std::map<UUID,BCLMeasure>::iterator it1 = m_measures.find(result.uuid());
+    auto it1 = m_measures.find(result.uuid());
     if (it1 != m_measures.end()) {
       m_measures.erase(it1);
     }
     std::pair<std::map<UUID,BCLMeasure>::const_iterator,bool> insertResult =
         m_measures.insert(std::map<UUID,BCLMeasure>::value_type(result.uuid(),result));
     OS_ASSERT(insertResult.second);
-    std::map<UUID,std::vector<ruleset::OSArgument> >::iterator it2 = m_measureArguments.find(result.uuid());
+    auto it2 = m_measureArguments.find(result.uuid());
     if (it2 != m_measureArguments.end()) {
       m_measureArguments.erase(it2);
     }
@@ -2010,7 +2009,7 @@ namespace detail {
 
   void SimpleProject_Impl::removeMeasure(const BCLMeasure& measure) {
     OS_ASSERT(completeAndNormalize(measure.directory().parent_path()) == completeAndNormalize(scriptsDir()));
-    std::map<UUID,BCLMeasure>::iterator it1 = m_measures.find(measure.uuid());
+    auto it1 = m_measures.find(measure.uuid());
     OS_ASSERT(it1 != m_measures.end());
     try {
       boost::filesystem::remove_all(measure.directory());
@@ -2020,7 +2019,7 @@ namespace detail {
           << " from file system, because " << e.what() << ".");
     }
     m_measures.erase(it1);
-    std::map<UUID,std::vector<ruleset::OSArgument> >::iterator it2 = m_measureArguments.find(measure.uuid());
+    auto it2 = m_measureArguments.find(measure.uuid());
     if (it2 != m_measureArguments.end()) {
       m_measureArguments.erase(it2);
     }
@@ -2078,12 +2077,12 @@ boost::optional<SimpleProject> SimpleProject::open(const openstudio::path& proje
   }
 
   openstudio::path projectDatabasePath;
-  for (openstudio::directory_iterator it(projectDir),
-       itEnd = openstudio::directory_iterator(); it != itEnd; ++it)
+  for (boost::filesystem::directory_iterator it(projectDir),
+       itEnd = boost::filesystem::directory_iterator(); it != itEnd; ++it)
   {
     if (boost::filesystem::is_regular_file(it->status()))
     {
-      // check for osp extenstion
+      // check for osp extension
       openstudio::path p = it->path();
       std::string ext = getFileExtension(p);
       if (ext != "osp") {
@@ -2122,7 +2121,7 @@ boost::optional<SimpleProject> SimpleProject::open(const openstudio::path& proje
     return result;
   }
 
-  result = SimpleProject(boost::shared_ptr<detail::SimpleProject_Impl>(
+  result = SimpleProject(std::shared_ptr<detail::SimpleProject_Impl>(
                            new detail::SimpleProject_Impl(projectDir,
                                                           analysisDriver,
                                                           OptionalAnalysis(),
@@ -2159,8 +2158,8 @@ boost::optional<SimpleProject> SimpleProject::create(const openstudio::path& pro
 
   if (!ignoreExistingFiles)
   {
-    for (openstudio::directory_iterator it(projectDir),
-        itEnd = openstudio::directory_iterator(); it != itEnd; ++it)
+    for (boost::filesystem::directory_iterator it(projectDir),
+        itEnd = boost::filesystem::directory_iterator(); it != itEnd; ++it)
     {
       if (boost::filesystem::is_directory(it->status()) ||
           boost::filesystem::is_regular_file(it->status()))
@@ -2190,7 +2189,7 @@ boost::optional<SimpleProject> SimpleProject::create(const openstudio::path& pro
 
   saveAnalysis(analysis,analysisDriver);
 
-  result = SimpleProject(boost::shared_ptr<detail::SimpleProject_Impl>(
+  result = SimpleProject(std::shared_ptr<detail::SimpleProject_Impl>(
                            new detail::SimpleProject_Impl(projectDir,
                                                           analysisDriver,
                                                           analysis,
@@ -2394,12 +2393,12 @@ bool SimpleProject::saveAs(const openstudio::path& newProjectDir) const {
   return getImpl()->saveAs(newProjectDir);
 }
 
-boost::shared_ptr<detail::SimpleProject_Impl> SimpleProject::getImpl() const {
+std::shared_ptr<detail::SimpleProject_Impl> SimpleProject::getImpl() const {
   return m_impl;
 }
 
 /// @cond
-SimpleProject::SimpleProject(boost::shared_ptr<detail::SimpleProject_Impl> impl)
+SimpleProject::SimpleProject(std::shared_ptr<detail::SimpleProject_Impl> impl)
   : m_impl(impl)
 {}
 /// @endcond
@@ -2434,12 +2433,11 @@ boost::optional<SimpleProject> openPATProject(const openstudio::path& projectDir
   OptionalSimpleProject result = SimpleProject::open(projectDir,options);
   if (result) {
     bool save(false);
-    bool ok(true);
 
     // check for swap variable, try to add if not present
     if (!result->getAlternativeModelVariable()) {
       LOG_FREE(Info, "openPATProject", "PAT Project doesn't contain alternative model variable");
-      ok = result->insertAlternativeModelVariable();
+      bool ok = result->insertAlternativeModelVariable();
       if (!ok) {
         LOG_FREE(Error, "openPATProject", "Unable to insert alternative model variable");
         result.reset();
@@ -2568,7 +2566,7 @@ AnalysisRunOptions standardRunOptions(const SimpleProject& project) {
   // weather file path
   openstudio::path seedPath = project.analysis().seed().path();
   if (boost::filesystem::exists(seedPath)) {
-    openstudio::path searchPath = seedPath.parent_path() / toPath(seedPath.stem()) / toPath("files");
+    openstudio::path searchPath = seedPath.parent_path() / seedPath.stem() / toPath("files");
     LOG_FREE(Debug,"openstudio.analysisdriver.SimpleProject",
              "Appending search path for weather files: " << toString(searchPath));
     runOptions.setUrlSearchPaths(std::vector<openstudio::URLSearchPath>(1u,searchPath));
@@ -2579,7 +2577,7 @@ AnalysisRunOptions standardRunOptions(const SimpleProject& project) {
   runOptions.setQueueSize(24);
 
   // DLM: in the future would be good to set JobCleanUpBehavior to standard
-  // however there seem to be intermittant failures when this is done (bug 1077)
+  // however there seem to be intermittent failures when this is done (bug 1077)
   // for now keep this setting, should also be a user option for debugging
   // ETH: changing back to standard, i think the bugs have been squashed
   runOptions.setJobCleanUpBehavior(analysisdriver::JobCleanUpBehavior::standard);

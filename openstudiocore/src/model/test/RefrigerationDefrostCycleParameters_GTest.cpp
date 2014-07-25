@@ -19,12 +19,12 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/RefrigerationDefrostCycleParameters.hpp>
-#include <model/RefrigerationDefrostCycleParameters_Impl.hpp>
+#include "../RefrigerationDefrostCycleParameters.hpp"
+#include "../RefrigerationDefrostCycleParameters_Impl.hpp"
 
-#include <utilities/time/Time.hpp>
+#include "../../utilities/time/Time.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -47,7 +47,7 @@ TEST_F(ModelFixture, RefrigerationDefrostCycleParameters_SettersAndGetters)
 {
   Model model;
   RefrigerationDefrostCycleParameters testObject = RefrigerationDefrostCycleParameters(model);
-  boost::shared_ptr<openstudio::model::detail::RefrigerationDefrostCycleParameters_Impl> testObjectImpl = testObject.getImpl<openstudio::model::detail::RefrigerationDefrostCycleParameters_Impl>();
+  std::shared_ptr<openstudio::model::detail::RefrigerationDefrostCycleParameters_Impl> testObjectImpl = testObject.getImpl<openstudio::model::detail::RefrigerationDefrostCycleParameters_Impl>();
 
   EXPECT_TRUE(testObjectImpl->setDurationofDefrostCycle(10));
   EXPECT_DOUBLE_EQ(10, *testObjectImpl->durationofDefrostCycle());

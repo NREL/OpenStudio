@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
 #ifndef MODEL_REFRIGERATIONAIRCHILLER_IMPL_HPP
 #define MODEL_REFRIGERATIONAIRCHILLER_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ZoneHVACComponent_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "ZoneHVACComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {

@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/units/IddUnitString.hpp>
+#include "IddUnitString.hpp"
 
-#include <utilities/units/Unit.hpp>
+#include "Unit.hpp"
 
 #include <boost/regex.hpp>
 

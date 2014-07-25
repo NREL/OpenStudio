@@ -20,8 +20,8 @@
 #ifndef MODEL_WEATHERFILEDAYS_HPP
 #define MODEL_WEATHERFILEDAYS_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SizingPeriod.hpp>
+#include "ModelAPI.hpp"
+#include "SizingPeriod.hpp"
 
 namespace openstudio {
 namespace model {
@@ -48,7 +48,7 @@ class MODEL_API WeatherFileDays : public SizingPeriod {
   friend class openstudio::IdfObject;
 
   // constructor
-  explicit WeatherFileDays(boost::shared_ptr<detail::WeatherFileDays_Impl> impl);
+  explicit WeatherFileDays(std::shared_ptr<detail::WeatherFileDays_Impl> impl);
 
  private:
 

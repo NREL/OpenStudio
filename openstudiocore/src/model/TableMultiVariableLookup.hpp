@@ -20,10 +20,10 @@
 #ifndef MODEL_TABLEMULTIVARIABLELOOKUP_HPP
 #define MODEL_TABLEMULTIVARIABLELOOKUP_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Curve.hpp>
+#include "ModelAPI.hpp"
+#include "Curve.hpp"
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/math/FloatCompare.hpp"
 
 namespace openstudio {
 
@@ -292,7 +292,7 @@ class MODEL_API TableMultiVariableLookup : public Curve {
   /// @cond
   typedef detail::TableMultiVariableLookup_Impl ImplType;
 
-  explicit TableMultiVariableLookup(boost::shared_ptr<detail::TableMultiVariableLookup_Impl> impl);
+  explicit TableMultiVariableLookup(std::shared_ptr<detail::TableMultiVariableLookup_Impl> impl);
 
   friend class detail::TableMultiVariableLookup_Impl;
   friend class Model;

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,18 +17,18 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/AirLoopHVACSupplyPlenum.hpp>
-#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled_Impl.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/AirLoopHVACSupplyPlenum.hpp"
+#include "../../model/AirLoopHVACSupplyPlenum_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/AirTerminalSingleDuctUncontrolled.hpp"
+#include "../../model/AirTerminalSingleDuctUncontrolled_Impl.hpp"
 #include <utilities/idd/AirLoopHVAC_SupplyPlenum_FieldEnums.hxx>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -77,12 +77,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACSupplyPlenum( 
   // OutletNodeName
   
   std::vector<ModelObject> outletModelObjects = modelObject.outletModelObjects();
-  for( std::vector<ModelObject>::iterator it = outletModelObjects.begin();
-       it < outletModelObjects.end();
-       it++ )
+  for( const auto & outletModelObject : outletModelObjects )
   {
     if( OptionalAirTerminalSingleDuctUncontrolled airTerminal =
-        it->optionalCast<AirTerminalSingleDuctUncontrolled>() )
+        outletModelObject.optionalCast<AirTerminalSingleDuctUncontrolled>() )
     {
       if( boost::optional<model::ModelObject> node = airTerminal->outletModelObject() )
       {
@@ -93,7 +91,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACSupplyPlenum( 
     else
     {
       IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
-      eg.setString(AirLoopHVAC_SupplyPlenumExtensibleFields::OutletNodeName,it->name().get());
+      eg.setString(AirLoopHVAC_SupplyPlenumExtensibleFields::OutletNodeName,outletModelObject.name().get());
     }
   }
 

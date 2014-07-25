@@ -27,56 +27,54 @@
 #include "JobOutputCleanup.hpp"
 #include "RunManager_Util.hpp"
 
-#include <utilities/time/DateTime.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/TimeDependentValuation.hpp>
-#include <model/TimeDependentValuation_Impl.hpp>
-#include <model/Timestep.hpp>
-#include <model/Timestep_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/SpaceItem.hpp>
-#include <model/SpaceItem_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurfaceGroup_Impl.hpp>
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
-#include <model/RunPeriod.hpp>
-#include <model/RunPeriod_Impl.hpp>
-#include <model/People.hpp>
-#include <model/People_Impl.hpp>
-#include <model/Lights.hpp>
-#include <model/Lights_Impl.hpp>
-#include <model/Luminaire.hpp>
-#include <model/Luminaire_Impl.hpp>
-#include <model/OutputVariable.hpp>
-#include <model/OutputVariable_Impl.hpp>
+#include "../../utilities/time/DateTime.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Model_Impl.hpp"
+#include "../../model/Building.hpp"
+#include "../../model/Building_Impl.hpp"
+#include "../../model/Facility.hpp"
+#include "../../model/Facility_Impl.hpp"
+#include "../../model/TimeDependentValuation.hpp"
+#include "../../model/TimeDependentValuation_Impl.hpp"
+#include "../../model/Timestep.hpp"
+#include "../../model/Timestep_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/WeatherFile.hpp"
+#include "../../model/WeatherFile_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/Surface_Impl.hpp"
+#include "../../model/SubSurface.hpp"
+#include "../../model/SubSurface_Impl.hpp"
+#include "../../model/SpaceItem.hpp"
+#include "../../model/SpaceItem_Impl.hpp"
+#include "../../model/ShadingSurfaceGroup.hpp"
+#include "../../model/ShadingSurfaceGroup_Impl.hpp"
+#include "../../model/SimulationControl.hpp"
+#include "../../model/SimulationControl_Impl.hpp"
+#include "../../model/RunPeriod.hpp"
+#include "../../model/RunPeriod_Impl.hpp"
+#include "../../model/People.hpp"
+#include "../../model/People_Impl.hpp"
+#include "../../model/Lights.hpp"
+#include "../../model/Lights_Impl.hpp"
+#include "../../model/Luminaire.hpp"
+#include "../../model/Luminaire_Impl.hpp"
+#include "../../model/OutputVariable.hpp"
+#include "../../model/OutputVariable_Impl.hpp"
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../../energyplus/ReverseTranslator.hpp"
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/sql/SqlFile.hpp>
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/sql/SqlFile.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../../utilities/core/Assert.hpp"
 
 #include <QDir>
 #include <QDateTime>
-
-#include <boost/bind.hpp>
 
 namespace openstudio {
 namespace runmanager {
@@ -136,7 +134,7 @@ namespace detail {
     return m_description;
   }
 
-  void ModelToRadPreProcessJob::startImpl(const boost::shared_ptr<ProcessCreator> &)
+  void ModelToRadPreProcessJob::startImpl(const std::shared_ptr<ProcessCreator> &)
   {
     openstudio::path outpath = outdir(true);
 
@@ -195,18 +193,16 @@ namespace detail {
       std::map<std::string, openstudio::model::ThermalZone> thermalZones;
 
       std::vector<openstudio::model::Space> spaces = model->getConcreteModelObjects<openstudio::model::Space>();
-      for (std::vector<openstudio::model::Space>::iterator itr = spaces.begin();
-           itr != spaces.end();
-           ++itr)
+      for (auto & space : spaces)
       {
-        itr->hardApplyConstructions();
-        itr->hardApplySpaceType(true);
-        itr->hardApplySpaceLoadSchedules();
+        space.hardApplyConstructions();
+        space.hardApplySpaceType(true);
+        space.hardApplySpaceLoadSchedules();
 
         // make all surfaces with surface boundary condition adiabatic
-        std::vector<openstudio::model::Surface> surfaces = itr->surfaces();
-        for (std::vector<openstudio::model::Surface>::iterator surf_it = surfaces.begin(); surf_it != surfaces.end(); ++surf_it){
-          boost::optional<openstudio::model::Surface> adjacentSurface = surf_it->adjacentSurface();
+        std::vector<openstudio::model::Surface> surfaces = space.surfaces();
+        for (auto & surf_it : surfaces){
+          boost::optional<openstudio::model::Surface> adjacentSurface = surf_it.adjacentSurface();
           if (adjacentSurface){
 
             // make sure to hard apply constructions in other space before messing with surface in other space
@@ -216,25 +212,25 @@ namespace detail {
             }
 
             // resets both surfaces
-            surf_it->resetAdjacentSurface();
+            surf_it.resetAdjacentSurface();
 
             // set both to adiabatic
-            surf_it->setOutsideBoundaryCondition("Adiabatic");
+            surf_it.setOutsideBoundaryCondition("Adiabatic");
             adjacentSurface->setOutsideBoundaryCondition("Adiabatic");
 
             // remove interior windows
-            BOOST_FOREACH(openstudio::model::SubSurface subSurface, surf_it->subSurfaces()){
+            for (openstudio::model::SubSurface subSurface : surf_it.subSurfaces()){
               subSurface.remove();
             }
-            BOOST_FOREACH(openstudio::model::SubSurface subSurface, adjacentSurface->subSurfaces()){
+            for (openstudio::model::SubSurface subSurface : adjacentSurface->subSurfaces()){
               subSurface.remove();
             }
           }
         }
 
-        openstudio::model::Space new_space = itr->clone(outmodel).optionalCast<openstudio::model::Space>().get();
+        openstudio::model::Space new_space = space.clone(outmodel).optionalCast<openstudio::model::Space>().get();
 
-        boost::optional<openstudio::model::ThermalZone> thermalZone = itr->thermalZone();
+        boost::optional<openstudio::model::ThermalZone> thermalZone = space.thermalZone();
 
         if (thermalZone && thermalZone->name())
         {
@@ -246,7 +242,7 @@ namespace detail {
             thermalZones.insert(std::make_pair(*thermalZone->name(), newThermalZone));
           }
 
-          std::map<std::string, openstudio::model::ThermalZone>::iterator itr = thermalZones.find(*thermalZone->name());
+          auto itr = thermalZones.find(*thermalZone->name());
           OS_ASSERT(itr != thermalZones.end()); // We just added it above if we needed it
           new_space.setThermalZone(itr->second);
         } else if (thermalZone && !thermalZone->name()) {
@@ -255,35 +251,29 @@ namespace detail {
       }
  
       std::vector<openstudio::model::ShadingSurfaceGroup> shadingsurfacegroups = outmodel.getConcreteModelObjects<openstudio::model::ShadingSurfaceGroup>(); 
-      for (std::vector<openstudio::model::ShadingSurfaceGroup>::iterator itr = shadingsurfacegroups.begin();
-           itr != shadingsurfacegroups.end();
-           ++itr)
+      for (auto & shadingSurfaceGroup : shadingsurfacegroups)
       {
-        itr->remove();
+        shadingSurfaceGroup.remove();
       }
   
       std::vector<openstudio::model::SpaceItem> spaceitems = outmodel.getModelObjects<openstudio::model::SpaceItem>(); 
-      for (std::vector<openstudio::model::SpaceItem>::iterator itr = spaceitems.begin();
-           itr != spaceitems.end();
-           ++itr)
+      for (auto & spaceItem : spaceitems)
       {
-        if (itr->optionalCast<openstudio::model::People>()){
+        if (spaceItem.optionalCast<openstudio::model::People>()){
           // keep people
-        }else if (itr->optionalCast<openstudio::model::Lights>()){
+        }else if (spaceItem.optionalCast<openstudio::model::Lights>()){
           // keep lights
-        }else if (itr->optionalCast<openstudio::model::Luminaire>()){
+        }else if (spaceItem.optionalCast<openstudio::model::Luminaire>()){
           // keep luminaires
         }else{
-          itr->remove();
+          spaceItem.remove();
         }
       }
 
       std::vector<openstudio::model::OutputVariable> outputVariables = outmodel.getConcreteModelObjects<openstudio::model::OutputVariable>();
-      for (std::vector<openstudio::model::OutputVariable>::iterator itr = outputVariables.begin();
-           itr != outputVariables.end();
-           ++itr)
+      for (auto & outputVariable : outputVariables)
       {
-        itr->remove();
+        outputVariable.remove();
       }
 
       openstudio::model::OutputVariable outputVariable("Site Exterior Horizontal Sky Illuminance", outmodel);

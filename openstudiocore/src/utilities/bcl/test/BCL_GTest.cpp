@@ -18,16 +18,16 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/bcl/test/BCLFixture.hpp>
+#include "BCLFixture.hpp"
 
-#include <utilities/bcl/BCLComponent.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/bcl/LocalBCL.hpp>
-#include <utilities/bcl/RemoteBCL.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/idd/IddFile.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/time/DateTime.hpp>
+#include "../BCLComponent.hpp"
+#include "../BCLMeasure.hpp"
+#include "../LocalBCL.hpp"
+#include "../RemoteBCL.hpp"
+#include "../../data/Attribute.hpp"
+#include "../../idd/IddFile.hpp"
+#include "../../idf/Workspace.hpp"
+#include "../../time/DateTime.hpp"
 
 #include <QDateTime>
 #include <QDir>
@@ -234,7 +234,7 @@ TEST_F(BCLFixture, RemoteBCLTest2)
   ASSERT_TRUE(lastDownload);
 
   EXPECT_FALSE(lastDownload->files().empty());
-  Q_FOREACH(const std::string& file, lastDownload->files()){
+  for (const std::string& file : lastDownload->files()) {
     openstudio::path path = toPath(lastDownload->directory() + "/files/" + file);
     EXPECT_TRUE(QDir().exists(toQString(path)));
     time_t time = QFileInfo(toQString(path)).lastModified().toTime_t();
@@ -247,7 +247,7 @@ TEST_F(BCLFixture, RemoteBCLTest2)
 
   // check that actually was downloaded
   EXPECT_FALSE(component->files().empty());
-  Q_FOREACH(const std::string& file, component->files()){
+  for (const std::string& file : component->files()) {
     openstudio::path path = toPath(component->directory() + "/files/" + file);
     EXPECT_TRUE(QDir().exists(toQString(path)));
     time_t time = QFileInfo(toQString(path)).lastModified().toTime_t();
@@ -256,7 +256,7 @@ TEST_F(BCLFixture, RemoteBCLTest2)
 
   // read all attributes, look for "OpenStudio Type"
   std::string openstudioType;
-  Q_FOREACH(const Attribute& attribute, component->attributes()){
+  for (const Attribute& attribute : component->attributes()) {
     if (istringEqual("OpenStudio Type", attribute.name())){
       openstudioType = attribute.valueAsString();
       break;
@@ -277,14 +277,14 @@ TEST_F(BCLFixture, RemoteBCLTest2)
 
   // search for components by type
   std::vector<std::pair<std::string, std::string> > searchTerms;
-  searchTerms.push_back(std::make_pair<std::string, std::string>("OpenStudio Type", openstudioType));
+  searchTerms.push_back(std::make_pair("OpenStudio Type", openstudioType));
 
   std::vector<BCLComponent> components = LocalBCL::instance().componentAttributeSearch(searchTerms);
   EXPECT_FALSE(components.empty());
 
   // check that search returns newly downloaded component
   bool found = false;
-  Q_FOREACH(const BCLComponent& testComponent, components){
+  for (const BCLComponent& testComponent : components) {
     if (component->uid() == testComponent.uid()){
       found = true;
       break;
@@ -341,9 +341,9 @@ TEST_F(BCLFixture, RemoteBCLMetaSearchTest)
   unsigned numResponsesSearch1 = result->numResults();
   EXPECT_GT(numResponsesSearch1, 0u);
   EXPECT_FALSE(result->facets().empty());
-  Q_FOREACH(const BCLFacet& facet, result->facets()){
+  for (const BCLFacet& facet : result->facets()) {
     EXPECT_FALSE(facet.items().empty());
-    Q_FOREACH(const PairType& item, facet.items()){
+    for (const PairType& item : facet.items()) {
       EXPECT_NE(item.first, "");
       EXPECT_GT(item.second, 0u);
     }
@@ -360,9 +360,9 @@ TEST_F(BCLFixture, RemoteBCLMetaSearchTest)
   EXPECT_GT(numResponsesSearch2, 0u);
   EXPECT_GT(numResponsesSearch1, numResponsesSearch2);
   EXPECT_FALSE(result->facets().empty());
-  Q_FOREACH(const BCLFacet& facet, result->facets()){
+  for (const BCLFacet& facet : result->facets()) {
     EXPECT_FALSE(facet.items().empty());
-    Q_FOREACH(const PairType& item, facet.items()){
+    for (const PairType& item : facet.items()) {
       EXPECT_NE(item.first, "");
       EXPECT_GT(item.second, 0u);
     }
@@ -378,9 +378,9 @@ TEST_F(BCLFixture, RemoteBCLMetaSearchTest)
   EXPECT_GT(numResponsesSearch3, 0u);
   EXPECT_GT(numResponsesSearch1, numResponsesSearch3);
   EXPECT_FALSE(result->facets().empty());
-  Q_FOREACH(const BCLFacet& facet, result->facets()){
+  for (const BCLFacet& facet : result->facets()) {
     EXPECT_FALSE(facet.items().empty());
-    Q_FOREACH(const PairType& item, facet.items()){
+    for (const PairType& item : facet.items()) {
       EXPECT_NE(item.first, "");
       EXPECT_GT(item.second, 0u);
     }
@@ -396,9 +396,9 @@ TEST_F(BCLFixture, RemoteBCLMetaSearchTest)
   EXPECT_GT(numResponsesSearch4, 0u);
   EXPECT_GE(numResponsesSearch4, numResponsesSearch3);
   EXPECT_FALSE(result->facets().empty());
-  Q_FOREACH(const BCLFacet& facet, result->facets()){
+  for (const BCLFacet& facet : result->facets()) {
     EXPECT_FALSE(facet.items().empty());
-    Q_FOREACH(const PairType& item, facet.items()){
+    for (const PairType& item : facet.items()) {
       EXPECT_NE(item.first, "");
       EXPECT_GT(item.second, 0u);
     }
@@ -413,9 +413,9 @@ TEST_F(BCLFixture, RemoteBCLMetaSearchTest)
   unsigned numResponsesSearch5 = result->numResults();
   EXPECT_EQ(0u, numResponsesSearch5);
   EXPECT_TRUE(result->facets().empty());
-  Q_FOREACH(const BCLFacet& facet, result->facets()){
+  for (const BCLFacet& facet : result->facets()) {
     EXPECT_FALSE(facet.items().empty());
-    Q_FOREACH(const PairType& item, facet.items()){
+    for (const PairType& item : facet.items()) {
       EXPECT_NE(item.first, "");
       EXPECT_GT(item.second, 0u);
     }

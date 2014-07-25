@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <runmanager/lib/Configuration.hpp>
-#include <runmanager/lib/AddTool.hpp>
-#include <runmanager/lib/JobFactory.hpp>
+#include "Configuration.hpp"
+#include "AddTool.hpp"
+#include "JobFactory.hpp"
 
-#include <utilities/core/Application.hpp>
+#include "../../utilities/core/Application.hpp"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -39,7 +39,7 @@ namespace runmanager {
       const QStyleOptionViewItem &/* option */,
       const QModelIndex &/* index */) const
   {
-    QSpinBox *editor = new QSpinBox(parent);
+    auto editor = new QSpinBox(parent);
     editor->setMinimum(-1);
     editor->setMaximum(100);
     editor->setSpecialValueText("-");
@@ -96,14 +96,12 @@ namespace runmanager {
       const QStyleOptionViewItem &/* option */,
       const QModelIndex &/* index */) const
   {
-    QComboBox *editor = new QComboBox(parent);
+    auto editor = new QComboBox(parent);
     std::set<int> values = ToolType::getValues();
 
-    for (std::set<int>::const_iterator itr = values.begin();
-         itr != values.end();
-         ++itr)
+    for (const auto & value : values)
     {
-      editor->addItem(toQString(ToolType::valueDescription(*itr)));
+      editor->addItem(toQString(ToolType::valueDescription(value)));
     }
     return editor;
   }
@@ -129,7 +127,7 @@ namespace runmanager {
     editor->setGeometry(option.rect);
   }
 
-  Configuration::Configuration(QWidget *parent, Qt::WFlags flags, const ConfigOptions &co)
+  Configuration::Configuration(QWidget *parent, Qt::WindowFlags flags, const ConfigOptions &co)
           : QDialog(parent, flags)
   {
     ui.setupUi(this);
@@ -149,22 +147,13 @@ namespace runmanager {
 
     // Set defaults
     ui.numLocalProcessesBox->setValue(co.getMaxLocalJobs());
-    ui.idfLocationTxt->setText(openstudio::toQString(co.getDefaultIDFLocation().external_file_string()));
-    ui.epwLocationTxt->setText(openstudio::toQString(co.getDefaultEPWLocation().external_file_string()));
-
-    ui.numSlurmProcessesBox->setValue(co.getMaxSLURMJobs());
-    ui.slurmUserNameTxt->setText(openstudio::toQString(co.getSLURMUserName()));
-    ui.slurmHostTxt->setText(openstudio::toQString(co.getSLURMHost()));
-
-    ui.maxSLURMRuntimeBox->setValue(co.getSLURMMaxTime());
-    ui.slurmPartitionTxt->setText(openstudio::toQString(co.getSLURMPartition()));
-    ui.slurmAccountTxt->setText(openstudio::toQString(co.getSLURMAccount()));
-
+    ui.idfLocationTxt->setText(openstudio::toQString(co.getDefaultIDFLocation().native()));
+    ui.epwLocationTxt->setText(openstudio::toQString(co.getDefaultEPWLocation().native()));
 
     openstudio::path outdir = co.getOutputLocation();
     if (!outdir.empty())
     {
-      ui.outputLocationTxt->setText(openstudio::toQString(outdir.external_file_string()));
+      ui.outputLocationTxt->setText(openstudio::toQString(outdir.native()));
       ui.outputLocationTxt->setEnabled(true);
       ui.btnOutputLocation->setEnabled(true);
       ui.cbOutputInPlace->setCheckState(Qt::Unchecked);
@@ -184,7 +173,6 @@ namespace runmanager {
     items.push_back("Minor");
     items.push_back("Build");
     items.push_back("Binary Directory");
-    items.push_back("Remote Binary Archive");
     m_model.setHorizontalHeaderLabels(items);
 
     std::vector<std::pair<ToolVersion, ToolLocationInfo> > tools = co.getToolLocations();
@@ -260,14 +248,7 @@ namespace runmanager {
 
     if (!tool.second.binaryDir.empty())
     {
-      row.push_back(new QStandardItem(toQString(tool.second.binaryDir.external_file_string())));
-    } else {
-      row.push_back(new QStandardItem(""));
-    }
-
-    if (!tool.second.linuxBinaryArchive.empty())
-    {
-      row.push_back(new QStandardItem(toQString(tool.second.linuxBinaryArchive.external_file_string())));
+      row.push_back(new QStandardItem(toQString(tool.second.binaryDir.native())));
     } else {
       row.push_back(new QStandardItem(""));
     }
@@ -307,7 +288,7 @@ namespace runmanager {
 
     if (!str.isEmpty() )
     {
-      ui.idfLocationTxt->setText(toQString(toPath(str).external_file_string()));
+      ui.idfLocationTxt->setText(toQString(toPath(str).native()));
     }
   }
 
@@ -317,7 +298,7 @@ namespace runmanager {
 
     if (!str.isEmpty() )
     {
-      ui.epwLocationTxt->setText(toQString(toPath(str).external_file_string()));
+      ui.epwLocationTxt->setText(toQString(toPath(str).native()));
     }
   }
 
@@ -327,7 +308,7 @@ namespace runmanager {
 
     if (!str.isEmpty() )
     {
-      ui.outputLocationTxt->setText(toQString(toPath(str).external_file_string()));
+      ui.outputLocationTxt->setText(toQString(toPath(str).native()));
     }
   }
 
@@ -339,10 +320,6 @@ namespace runmanager {
     co.setDefaultIDFLocation(toPath(ui.idfLocationTxt->text()));
     co.setDefaultEPWLocation(toPath(ui.epwLocationTxt->text()));
     co.setSimpleName(ui.cbSimpleName->checkState() == Qt::Checked);
-
-    co.setSLURMMaxTime(ui.maxSLURMRuntimeBox->value());
-    co.setSLURMPartition(toString(ui.slurmPartitionTxt->text()));
-    co.setSLURMAccount(toString(ui.slurmAccountTxt->text()));
 
     if (ui.cbOutputInPlace->checkState() != Qt::Checked)
     {
@@ -386,13 +363,9 @@ namespace runmanager {
             build),
           ToolLocationInfo(
             toString(m_model.item(i, 0)->text()),
-            toPath(m_model.item(i,4)->text()),
-            toPath(m_model.item(i,5)->text()))
+            toPath(m_model.item(i,4)->text()))
           );
     }
-    co.setMaxSLURMJobs(ui.numSlurmProcessesBox->value());
-    co.setSLURMUserName(toString(ui.slurmUserNameTxt->text()));
-    co.setSLURMHost(toString(ui.slurmHostTxt->text()));
 
 
     return co;

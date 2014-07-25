@@ -20,8 +20,8 @@
 #ifndef MODEL_VERSION_HPP
 #define MODEL_VERSION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -64,7 +64,7 @@ class MODEL_API Version : public ModelObject {
   friend class Model;
 
   // constructor
-  explicit Version(boost::shared_ptr<detail::Version_Impl> impl);
+  explicit Version(std::shared_ptr<detail::Version_Impl> impl);
 
  private:
   REGISTER_LOGGER("openstudio.model.RunPeriod");

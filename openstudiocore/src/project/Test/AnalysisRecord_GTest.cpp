@@ -19,40 +19,38 @@
 
 #include <gtest/gtest.h>
 
-#include <project/AnalysisRecord.hpp>
-#include <project/Test/ProjectFixture.hpp>
+#include "../AnalysisRecord.hpp"
+#include "ProjectFixture.hpp"
 
-#include <project/ProblemRecord.hpp>
-#include <project/MeasureGroupRecord.hpp>
-#include <project/MeasureGroupRecord_Impl.hpp>
-#include <project/NullMeasureRecord.hpp>
-#include <project/NullMeasureRecord_Impl.hpp>
-#include <project/RubyMeasureRecord.hpp>
-#include <project/RubyMeasureRecord_Impl.hpp>
-#include <project/LinearFunctionRecord.hpp>
-#include <project/LinearFunctionRecord_Impl.hpp>
-#include <project/DataPointRecord.hpp>
-#include <project/DataPointRecord_Impl.hpp>
+#include "../ProblemRecord.hpp"
+#include "../MeasureGroupRecord.hpp"
+#include "../MeasureGroupRecord_Impl.hpp"
+#include "../NullMeasureRecord.hpp"
+#include "../NullMeasureRecord_Impl.hpp"
+#include "../RubyMeasureRecord.hpp"
+#include "../RubyMeasureRecord_Impl.hpp"
+#include "../LinearFunctionRecord.hpp"
+#include "../LinearFunctionRecord_Impl.hpp"
+#include "../DataPointRecord.hpp"
+#include "../DataPointRecord_Impl.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/Problem_Impl.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/LinearFunction.hpp>
-#include <analysis/OutputAttributeVariable.hpp>
+#include "../../analysis/Analysis.hpp"
+#include "../../analysis/Problem.hpp"
+#include "../../analysis/Problem_Impl.hpp"
+#include "../../analysis/DataPoint.hpp"
+#include "../../analysis/MeasureGroup.hpp"
+#include "../../analysis/MeasureGroup_Impl.hpp"
+#include "../../analysis/NullMeasure.hpp"
+#include "../../analysis/RubyMeasure.hpp"
+#include "../../analysis/RubyContinuousVariable.hpp"
+#include "../../analysis/LinearFunction.hpp"
+#include "../../analysis/OutputAttributeVariable.hpp"
 
-#include <runmanager/lib/Workflow.hpp>
+#include "../../runmanager/lib/Workflow.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../../ruleset/OSArgument.hpp"
 
-#include <utilities/core/FileReference.hpp>
-
-#include <boost/foreach.hpp>
+#include "../../utilities/core/FileReference.hpp"
 
 using namespace openstudio;
 using namespace openstudio::analysis;
@@ -113,17 +111,17 @@ TEST_F(ProjectFixture,AnalysisRecord_AddAndRemoveDataPoints) {
 
   EXPECT_TRUE(analysis.isDirty());
   EXPECT_TRUE(problem.isDirty());
-  BOOST_FOREACH(const Variable& variable, problem.variables()) {
+  for (const Variable& variable : problem.variables()) {
     EXPECT_TRUE(variable.isDirty());
     ASSERT_TRUE(variable.optionalCast<MeasureGroup>());
-    BOOST_FOREACH(const Measure& measure,variable.cast<MeasureGroup>().measures(false)) {
+    for (const Measure& measure : variable.cast<MeasureGroup>().measures(false)) {
       EXPECT_TRUE(measure.isDirty());
     }
   }
-  BOOST_FOREACH(const Function& response, problem.responses()) {
+  for (const Function& response : problem.responses()) {
     EXPECT_TRUE(response.isDirty());
   }
-  BOOST_FOREACH(const DataPoint& dataPoint, analysis.dataPoints()) {
+  for (const DataPoint& dataPoint : analysis.dataPoints()) {
     EXPECT_TRUE(dataPoint.isDirty());
   }
 
@@ -156,17 +154,17 @@ TEST_F(ProjectFixture,AnalysisRecord_AddAndRemoveDataPoints) {
   analysis.clearDirtyFlag();
   EXPECT_FALSE(analysis.isDirty());
   EXPECT_FALSE(problem.isDirty());
-  BOOST_FOREACH(const Variable& variable, problem.variables()) {
+  for (const Variable& variable : problem.variables()) {
     EXPECT_FALSE(variable.isDirty());
     ASSERT_TRUE(variable.optionalCast<MeasureGroup>());
-    BOOST_FOREACH(const Measure& measure,variable.cast<MeasureGroup>().measures(false)) {
+    for (const Measure& measure : variable.cast<MeasureGroup>().measures(false)) {
       EXPECT_FALSE(measure.isDirty());
     }
   }
-  BOOST_FOREACH(const Function& response, problem.responses()) {
+  for (const Function& response : problem.responses()) {
     EXPECT_FALSE(response.isDirty());
   }
-  BOOST_FOREACH(const DataPoint& dataPoint, analysis.dataPoints()) {
+  for (const DataPoint& dataPoint : analysis.dataPoints()) {
     EXPECT_FALSE(dataPoint.isDirty());
   }
 
@@ -188,18 +186,18 @@ TEST_F(ProjectFixture,AnalysisRecord_AddAndRemoveDataPoints) {
   EXPECT_EQ(5u,analysis.dataPoints().size());
   EXPECT_TRUE(analysis.isDirty());
   EXPECT_FALSE(problem.isDirty());
-  BOOST_FOREACH(const Variable& variable, problem.variables()) {
+  for (const Variable& variable : problem.variables()) {
     EXPECT_FALSE(variable.isDirty());
     ASSERT_TRUE(variable.optionalCast<MeasureGroup>());
-    BOOST_FOREACH(const Measure& measure,variable.cast<MeasureGroup>().measures(false)) {
+    for (const Measure& measure : variable.cast<MeasureGroup>().measures(false)) {
       EXPECT_FALSE(measure.isDirty());
     }
   }
-  BOOST_FOREACH(const Function& response, problem.responses()) {
+  for (const Function& response : problem.responses()) {
     EXPECT_FALSE(response.isDirty());
   }
   int i = 0;
-  BOOST_FOREACH(const DataPoint& dataPoint, analysis.dataPoints()) {
+  for (const DataPoint& dataPoint : analysis.dataPoints()) {
     if (i < 3) {
       EXPECT_FALSE(dataPoint.isDirty());
     }
@@ -241,17 +239,17 @@ TEST_F(ProjectFixture,AnalysisRecord_AddAndRemoveDataPoints) {
   analysis.clearDirtyFlag();
   EXPECT_FALSE(analysis.isDirty());
   EXPECT_FALSE(problem.isDirty());
-  BOOST_FOREACH(const Variable& variable, problem.variables()) {
+  for (const Variable& variable : problem.variables()) {
     EXPECT_FALSE(variable.isDirty());
     ASSERT_TRUE(variable.optionalCast<MeasureGroup>());
-    BOOST_FOREACH(const Measure& measure,variable.cast<MeasureGroup>().measures(false)) {
+    for (const Measure& measure : variable.cast<MeasureGroup>().measures(false)) {
       EXPECT_FALSE(measure.isDirty());
     }
   }
-  BOOST_FOREACH(const Function& response, problem.responses()) {
+  for (const Function& response : problem.responses()) {
     EXPECT_FALSE(response.isDirty());
   }
-  BOOST_FOREACH(const DataPoint& dataPoint, analysis.dataPoints()) {
+  for (const DataPoint& dataPoint : analysis.dataPoints()) {
     EXPECT_FALSE(dataPoint.isDirty());
   }
 
@@ -325,7 +323,7 @@ TEST_F(ProjectFixture,AnalysisRecord_SetProblem) {
   analysis.clearDirtyFlag();
   EXPECT_FALSE(analysis.isDirty());
   EXPECT_FALSE(problem1.isDirty());
-  BOOST_FOREACH(const DataPoint& dataPoint, analysis.dataPoints()) {
+  for (const DataPoint& dataPoint : analysis.dataPoints()) {
     EXPECT_FALSE(dataPoint.isDirty());
   }
   EXPECT_FALSE(analysis.dataPointsAreInvalid());

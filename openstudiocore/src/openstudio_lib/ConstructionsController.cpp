@@ -17,24 +17,24 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ConstructionsController.hpp>
-#include <openstudio_lib/ConstructionsView.hpp>
+#include "ConstructionsController.hpp"
+#include "ConstructionsView.hpp"
 
-#include <model/CFactorUndergroundWallConstruction.hpp>
-#include <model/Component.hpp>
-#include <model/Component_Impl.hpp>
-#include <model/ComponentData.hpp>
-#include <model/ComponentData_Impl.hpp>
-#include <model/Construction.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/ConstructionWithInternalSource.hpp>
-#include <model/DefaultConstructionSet.hpp>
-#include <model/DefaultConstructionSet_Impl.hpp>
-#include <model/FFactorGroundFloorConstruction.hpp>
-#include <model/WindowDataFile.hpp>
+#include "../model/CFactorUndergroundWallConstruction.hpp"
+#include "../model/Component.hpp"
+#include "../model/Component_Impl.hpp"
+#include "../model/ComponentData.hpp"
+#include "../model/ComponentData_Impl.hpp"
+#include "../model/Construction.hpp"
+#include "../model/ConstructionBase.hpp"
+#include "../model/ConstructionBase_Impl.hpp"
+#include "../model/ConstructionWithInternalSource.hpp"
+#include "../model/DefaultConstructionSet.hpp"
+#include "../model/DefaultConstructionSet_Impl.hpp"
+#include "../model/FFactorGroundFloorConstruction.hpp"
+#include "../model/WindowDataFile.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
 

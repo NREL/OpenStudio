@@ -20,7 +20,7 @@
 #ifndef UTILITIES_IDF_VALIDITYENUMS_HPP
 #define UTILITIES_IDF_VALIDITYENUMS_HPP
 
-#include <utilities/core/Enum.hpp>
+#include "../core/Enum.hpp"
 
 namespace openstudio {
 
@@ -107,7 +107,6 @@ OPENSTUDIO_ENUM(DataErrorType,
     ((NullAndRequired)(required data is missing))
     ((NumberOfFields)(object has too few or too many fields))
     ((Duplicate)(unique data is duplicated)) );
-    
 
 } // openstudio
 

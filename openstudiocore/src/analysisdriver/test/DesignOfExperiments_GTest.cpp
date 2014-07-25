@@ -18,44 +18,41 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysisdriver/test/AnalysisDriverFixture.hpp>
+#include "AnalysisDriverFixture.hpp"
 
-#include <analysisdriver/SimpleProject.hpp>
-#include <analysisdriver/AnalysisDriver.hpp>
-#include <analysisdriver/CurrentAnalysis.hpp>
-#include <analysisdriver/AnalysisRunOptions.hpp>
+#include "../SimpleProject.hpp"
+#include "../AnalysisDriver.hpp"
+#include "../CurrentAnalysis.hpp"
+#include "../AnalysisRunOptions.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/DataPointRecord.hpp>
+#include "../../project/ProjectDatabase.hpp"
+#include "../../project/AnalysisRecord.hpp"
+#include "../../project/ProblemRecord.hpp"
+#include "../../project/DataPointRecord.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/DesignOfExperiments.hpp>
-#include <analysis/DesignOfExperimentsOptions.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
+#include "../../analysis/Analysis.hpp"
+#include "../../analysis/Problem.hpp"
+#include "../../analysis/DesignOfExperiments.hpp"
+#include "../../analysis/DesignOfExperimentsOptions.hpp"
+#include "../../analysis/DataPoint.hpp"
+#include "../../analysis/MeasureGroup.hpp"
+#include "../../analysis/MeasureGroup_Impl.hpp"
+#include "../../analysis/RubyMeasure.hpp"
+#include "../../analysis/RubyMeasure_Impl.hpp"
 
-#include <model/Model.hpp>
+#include "../../model/Model.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Workflow.hpp>
+#include "../../runmanager/lib/RunManager.hpp"
+#include "../../runmanager/lib/Workflow.hpp"
 
-#include <utilities/document/Table.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Checksum.hpp>
-#include <utilities/core/FileReference.hpp>
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/core/Optional.hpp"
+#include "../../utilities/core/Path.hpp"
+#include "../../utilities/core/Checksum.hpp"
+#include "../../utilities/core/FileReference.hpp"
 
 #include <resources.hxx>
 #include <OpenStudio.hxx>
-
-#include <boost/foreach.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -98,7 +95,7 @@ TEST_F(AnalysisDriverFixture, DesignOfExperiments_MeshAnalysis) {
   AnalysisRecord analysisRecord = project.analysisRecord();
   EXPECT_EQ(4,analysisRecord.problemRecord().combinatorialSize(true).get());
   EXPECT_EQ(4u, analysisRecord.dataPointRecords().size());
-  BOOST_FOREACH(const DataPointRecord& dataPointRecord, analysisRecord.dataPointRecords()) {
+  for (const DataPointRecord& dataPointRecord : analysisRecord.dataPointRecords()) {
     EXPECT_TRUE(dataPointRecord.isComplete());
     EXPECT_FALSE(dataPointRecord.failed());
   }

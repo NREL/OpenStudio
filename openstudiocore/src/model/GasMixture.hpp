@@ -20,8 +20,8 @@
 #ifndef MODEL_GASMIXTURE_HPP
 #define MODEL_GASMIXTURE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/GasLayer.hpp>
+#include "ModelAPI.hpp"
+#include "GasLayer.hpp"
 
 namespace openstudio {
 
@@ -218,7 +218,7 @@ class MODEL_API GasMixture : public GasLayer {
   /// @cond
   typedef detail::GasMixture_Impl ImplType;
 
-  explicit GasMixture(boost::shared_ptr<detail::GasMixture_Impl> impl);
+  explicit GasMixture(std::shared_ptr<detail::GasMixture_Impl> impl);
 
   friend class detail::GasMixture_Impl;
   friend class Model;

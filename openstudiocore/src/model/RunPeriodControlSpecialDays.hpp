@@ -20,8 +20,8 @@
 #ifndef MODEL_RUNPERIODCONTROLSPECIALDAYS_HPP
 #define MODEL_RUNPERIODCONTROLSPECIALDAYS_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 
@@ -92,7 +92,7 @@ class MODEL_API RunPeriodControlSpecialDays : public ModelObject {
   friend class openstudio::IdfObject;
 
   // constructor
-  explicit RunPeriodControlSpecialDays(boost::shared_ptr<detail::RunPeriodControlSpecialDays_Impl> impl);
+  explicit RunPeriodControlSpecialDays(std::shared_ptr<detail::RunPeriodControlSpecialDays_Impl> impl);
 
  private:
 

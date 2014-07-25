@@ -19,9 +19,9 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class Date_Test < Test::Unit::TestCase
+class Date_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end
@@ -34,12 +34,12 @@ class Date_Test < Test::Unit::TestCase
   end
 
   def test_ymd_constructor
-    assert_not_nil(OpenStudio::Date.new("Jan".to_MonthOfYear,1,2008))
-    assert_not_nil(OpenStudio::Date.new("Jan".to_MonthOfYear,31,2008))
-    assert_not_nil(OpenStudio::Date.new("Feb".to_MonthOfYear,28,2008))
-    assert_not_nil(OpenStudio::Date.new("Feb".to_MonthOfYear,29,2008))
-    assert_not_nil(OpenStudio::Date.new("Dec".to_MonthOfYear,1,2008))
-    assert_not_nil(OpenStudio::Date.new("Dec".to_MonthOfYear,31,2008))
+    assert(!OpenStudio::Date.new("Jan".to_MonthOfYear,1,2008).nil?)
+    assert(!OpenStudio::Date.new("Jan".to_MonthOfYear,31,2008).nil?)
+    assert(!OpenStudio::Date.new("Feb".to_MonthOfYear,28,2008).nil?)
+    assert(!OpenStudio::Date.new("Feb".to_MonthOfYear,29,2008).nil?)
+    assert(!OpenStudio::Date.new("Dec".to_MonthOfYear,1,2008).nil?)
+    assert(!OpenStudio::Date.new("Dec".to_MonthOfYear,31,2008).nil?)
   
     assert_raises(RuntimeError){OpenStudio::Date.new("Jan".to_MonthOfYear,0,2008)}
     assert_raises(RuntimeError){OpenStudio::Date.new("Jan".to_MonthOfYear,32,2008)}
@@ -181,8 +181,8 @@ class Date_Test < Test::Unit::TestCase
   end
   
   def test_to_s
-    assert_not_nil(OpenStudio::Date.new("Jan".to_MonthOfYear,1,2008).to_s)
-    assert_not_nil(OpenStudio::Date::fromDayOfYear(1,2008).to_s)
+    assert(!OpenStudio::Date.new("Jan".to_MonthOfYear,1,2008).to_s.nil?)
+    assert(!OpenStudio::Date::fromDayOfYear(1,2008).to_s.nil?)
   end
   
   def test_enums

@@ -20,7 +20,7 @@
 #ifndef MODEL_CHILLERELECTRICEIR_IMPL_HPP
 #define MODEL_CHILLERELECTRICEIR_IMPL_HPP
 
-#include <model/WaterToWaterComponent_Impl.hpp>
+#include "WaterToWaterComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {

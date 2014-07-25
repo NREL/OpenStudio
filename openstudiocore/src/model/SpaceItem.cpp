@@ -17,19 +17,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/SpaceItem.hpp>
-#include <model/SpaceItem_Impl.hpp>
+#include "SpaceItem.hpp"
+#include "SpaceItem_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/ParentObject.hpp>
-#include <model/ParentObject_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "ParentObject.hpp"
+#include "ParentObject_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -119,7 +117,7 @@ SpaceItem::SpaceItem(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::SpaceItem_Impl>());
 }
 
-SpaceItem::SpaceItem(boost::shared_ptr<detail::SpaceItem_Impl> impl)
+SpaceItem::SpaceItem(std::shared_ptr<detail::SpaceItem_Impl> impl)
   : ModelObject(impl)
 {}
 

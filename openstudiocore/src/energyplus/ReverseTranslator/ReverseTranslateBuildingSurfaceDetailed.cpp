@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ReverseTranslator.hpp>
-#include <energyplus/GeometryTranslator.hpp>
+#include "../ReverseTranslator.hpp"
+#include "../GeometryTranslator.hpp"
 
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
+#include "../../model/Surface.hpp"
+#include "../../model/Surface_Impl.hpp"
+#include "../../model/ConstructionBase.hpp"
+#include "../../model/ConstructionBase_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
 
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -117,7 +117,7 @@ OptionalModelObject ReverseTranslator::translateBuildingSurfaceDetailed( const W
           m_workspaceToModelMap.insert(std::make_pair(workspaceObject.handle(), surface.get()));
 
           // need to translate all sub surfaces here so they will be in adjacent space
-          BOOST_FOREACH(const WorkspaceObject& workspaceSubSurface, workspaceObject.getSources(IddObjectType::FenestrationSurface_Detailed)){
+          for (const WorkspaceObject& workspaceSubSurface : workspaceObject.getSources(IddObjectType::FenestrationSurface_Detailed)){
             translateAndMapWorkspaceObject(workspaceSubSurface);
           }
 
@@ -136,7 +136,7 @@ OptionalModelObject ReverseTranslator::translateBuildingSurfaceDetailed( const W
         surface->setOutsideBoundaryCondition("Adiabatic");
         return surface.get();
       }else{
-        std::map<Handle,ModelObject>::iterator it = m_workspaceToModelMap.find(target->handle());
+        auto it = m_workspaceToModelMap.find(target->handle());
         if( it !=  m_workspaceToModelMap.end()){
           if (it->second.optionalCast<Surface>()){
             // this will set other side boundary object on both surfaces

@@ -20,8 +20,8 @@
 #ifndef UTILITIES_UNITS_MISC1UNIT_HPP
 #define UTILITIES_UNITS_MISC1UNIT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/units/Unit.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "Unit.hpp"
 
 namespace openstudio {
 namespace detail {
@@ -110,7 +110,7 @@ class UTILITIES_API Misc1Unit : public Unit {
   /// @cond
   typedef detail::Misc1Unit_Impl ImplType;
 
-  explicit Misc1Unit(boost::shared_ptr<detail::Misc1Unit_Impl> impl);
+  explicit Misc1Unit(std::shared_ptr<detail::Misc1Unit_Impl> impl);
 
   friend class Unit;
   friend class detail::Misc1Unit_Impl;

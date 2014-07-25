@@ -17,16 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/ConnectorSplitter.hpp>
-#include <model/ConnectorSplitter_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "ConnectorSplitter.hpp"
+#include "ConnectorSplitter_Impl.hpp"
+#include "Node.hpp"
+#include "AirTerminalSingleDuctUncontrolled.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include <utilities/idd/OS_Connector_Splitter_FieldEnums.hxx>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
-#include <boost/foreach.hpp>
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -117,7 +116,7 @@ ConnectorSplitter::ConnectorSplitter(const Model& model)
   OS_ASSERT(getImpl<detail::ConnectorSplitter_Impl>());
 }
 
-ConnectorSplitter::ConnectorSplitter(boost::shared_ptr<detail::ConnectorSplitter_Impl> p)
+ConnectorSplitter::ConnectorSplitter(std::shared_ptr<detail::ConnectorSplitter_Impl> p)
   : Splitter(p)
 {}
 

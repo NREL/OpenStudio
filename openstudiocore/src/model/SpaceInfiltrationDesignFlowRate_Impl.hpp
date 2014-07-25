@@ -20,8 +20,8 @@
 #ifndef MODEL_SPACEINFILTRATIONDESIGNFLOWRATE_IMPL_HPP
 #define MODEL_SPACEINFILTRATIONDESIGNFLOWRATE_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceLoad_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceLoad_Impl.hpp"
 
 namespace openstudio {
 namespace model {

@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <shared_gui_components/SyncMeasuresDialogCentralWidget.hpp>
+#include "SyncMeasuresDialogCentralWidget.hpp"
 
 #include "../shared_gui_components/CollapsibleComponent.hpp"
 #include "../shared_gui_components/CollapsibleComponentHeader.hpp"
@@ -27,9 +27,9 @@
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/SyncMeasuresDialog.hpp"
 
-#include <analysisdriver/SimpleProject.hpp>
+#include "../analysisdriver/SimpleProject.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QBoxLayout>
 #include <QCheckBox>
@@ -189,7 +189,7 @@ Component * SyncMeasuresDialogCentralWidget::checkedComponent() const
 
 void SyncMeasuresDialogCentralWidget::upperPushButtonClicked()
 {
-  Q_FOREACH(Component* component, m_collapsibleComponentList->components()){
+  for (Component* component : m_collapsibleComponentList->components()){
     if (component->checkBox()->isEnabled()){
       component->checkBox()->setChecked(true);
     }
@@ -202,7 +202,7 @@ void SyncMeasuresDialogCentralWidget::lowerPushButtonClicked()
 
   // Must convert from the checked component to the appropriate measure for updating
   unsigned index = 0;
-  Q_FOREACH(Component* component, m_collapsibleComponentList->components()){
+  for (Component* component : m_collapsibleComponentList->components()){
     if (component->checkBox()->isChecked() && component->checkBox()->isEnabled()){
       newMeasures.push_back(m_measures.at(m_pageIdx * NUM_COMPONENTS_DISPLAYED + index));
     }

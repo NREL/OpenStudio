@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/RefrigerationCondenserAirCooled.hpp>
-#include <model/CurveLinear.hpp>
-#include <model/ThermalZone.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/RefrigerationCondenserAirCooled.hpp"
+#include "../../model/CurveLinear.hpp"
+#include "../../model/ThermalZone.hpp"
 
 #include <utilities/idd/Refrigeration_Condenser_AirCooled_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>

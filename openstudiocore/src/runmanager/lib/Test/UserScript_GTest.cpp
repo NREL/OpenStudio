@@ -23,22 +23,22 @@
 
 #include "RunManagerTestFixture.hpp"
 #include <runmanager/Test/ToolBin.hxx>
-#include <runmanager/lib/JobFactory.hpp>
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/LocalProcessCreator.hpp>
-#include <runmanager/lib/RubyJobUtils.hpp>
-#include <runmanager/lib/WorkItem.hpp>
-#include <runmanager/lib/MergedJobResults.hpp>
+#include "../JobFactory.hpp"
+#include "../RunManager.hpp"
+#include "../LocalProcessCreator.hpp"
+#include "../RubyJobUtils.hpp"
+#include "../WorkItem.hpp"
+#include "../MergedJobResults.hpp"
 
-#include <model/Model.hpp>
-#include <model/WeatherFile.hpp>
+#include "../../../model/Model.hpp"
+#include "../../../model/WeatherFile.hpp"
 
-#include <utilities/filetypes/EpwFile.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
+#include "../../../utilities/filetypes/EpwFile.hpp"
+#include "../../../utilities/idf/IdfFile.hpp"
+#include "../../../utilities/idf/Workspace.hpp"
+#include "../../../utilities/idf/WorkspaceObject.hpp"
+#include "../../../utilities/bcl/BCLMeasure.hpp"
+#include "../../../utilities/core/ApplicationPathHelpers.hpp"
 
 
 #include <utilities/idd/OS_TimeDependentValuation_FieldEnums.hxx>
@@ -46,7 +46,7 @@
 
 #include <boost/filesystem/path.hpp>
 
-#include <ruleset/OSArgument.hpp>
+#include "../../../ruleset/OSArgument.hpp"
 
 #include <resources.hxx>
 
@@ -271,8 +271,7 @@ openstudio::runmanager::Job buildScriptMergingWorkflow(const openstudio::path &t
 
   openstudio::runmanager::Tools tools 
     = openstudio::runmanager::ConfigOptions::makeTools(energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), 
-        rubyExePath().parent_path(), openstudio::path(),
-        openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
+        rubyExePath().parent_path(), openstudio::path());
 
   wf.add(tools);
   wf.addParam(runmanager::JobParam("flatoutdir"));
@@ -452,8 +451,7 @@ TEST_F(RunManagerTestFixture, BCLMeasureRubyScript)
   wf.addJob(rubyjobbuilder.toWorkItem());
   openstudio::runmanager::Tools tools 
     = openstudio::runmanager::ConfigOptions::makeTools(energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), 
-        rubyExePath().parent_path(), openstudio::path(),
-        openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
+        rubyExePath().parent_path(), openstudio::path());
 
   wf.add(tools);
 

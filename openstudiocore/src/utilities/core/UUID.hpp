@@ -20,7 +20,7 @@
 #ifndef UTILITIES_CORE_UUID_HPP
 #define UTILITIES_CORE_UUID_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
 #include <QUuid>
 #include <QMetaType>

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
 #ifndef MODEL_AIRLOOPHVACRETURNPLENUM_HPP
 #define MODEL_AIRLOOPHVACRETURNPLENUM_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Mixer.hpp>
+#include "ModelAPI.hpp"
+#include "Mixer.hpp"
 
 namespace openstudio {
 namespace model {
@@ -72,7 +72,7 @@ class MODEL_API AirLoopHVACReturnPlenum : public Mixer {
   /// @cond
   typedef detail::AirLoopHVACReturnPlenum_Impl ImplType;
 
-  explicit AirLoopHVACReturnPlenum(boost::shared_ptr<detail::AirLoopHVACReturnPlenum_Impl> impl);
+  explicit AirLoopHVACReturnPlenum(std::shared_ptr<detail::AirLoopHVACReturnPlenum_Impl> impl);
 
   friend class detail::AirLoopHVACReturnPlenum_Impl;
   friend class Model;

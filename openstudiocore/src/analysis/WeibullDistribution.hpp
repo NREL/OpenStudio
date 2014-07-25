@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef ANALYSIS_WeibullDistribution_HPP
-#define ANALYSIS_WeibullDistribution_HPP
+#ifndef ANALYSIS_WEIBULLDISTRIBUTION_HPP
+#define ANALYSIS_WEIBULLDISTRIBUTION_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/UncertaintyDescription.hpp>
+#include "AnalysisAPI.hpp"
+#include "UncertaintyDescription.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -33,7 +33,7 @@ class ANALYSIS_API WeibullDistribution : public UncertaintyDescription {
   /** @name Constructors and Destructors */
   //@{
 
-  /** Returns a Weibull distrubition with alpha 1 and beta 1. */
+  /** Returns a Weibull distribution with alpha 1 and beta 1. */
   WeibullDistribution();
 
   WeibullDistribution(double alpha, double beta);
@@ -63,7 +63,7 @@ class ANALYSIS_API WeibullDistribution : public UncertaintyDescription {
 
   //@}
  protected:
-  explicit WeibullDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl);
+  explicit WeibullDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl);
 
   friend class AnalysisObject;
   friend class UncertaintyDescription;
@@ -74,4 +74,4 @@ class ANALYSIS_API WeibullDistribution : public UncertaintyDescription {
 } // analysis
 } // openstudio
 
-#endif // ANALYSIS_WeibullDistribution_HPP
+#endif // ANALYSIS_WEIBULLDISTRIBUTION_HPP

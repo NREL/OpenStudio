@@ -17,26 +17,26 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/InteriorPartitionSurfaceGroup.hpp>
-#include <model/InteriorPartitionSurfaceGroup_Impl.hpp>
+#include "InteriorPartitionSurfaceGroup.hpp"
+#include "InteriorPartitionSurfaceGroup_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/InteriorPartitionSurface.hpp>
-#include <model/InteriorPartitionSurface_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "InteriorPartitionSurface.hpp"
+#include "InteriorPartitionSurface_Impl.hpp"
 
 #include <utilities/idd/OS_InteriorPartitionSurfaceGroup_FieldEnums.hxx>
 
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/geometry/Vector3d.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/EulerAngles.hpp>
-#include <utilities/geometry/BoundingBox.hpp>
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/Vector3d.hpp"
+#include "../utilities/geometry/Point3d.hpp"
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/geometry/EulerAngles.hpp"
+#include "../utilities/geometry/BoundingBox.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -128,7 +128,7 @@ namespace detail {
 
     Transformation childTransformation = transformation.inverse() * oldTransformation;
 
-    BOOST_FOREACH(InteriorPartitionSurface interiorPartitionSurface, this->interiorPartitionSurfaces()){
+    for (InteriorPartitionSurface interiorPartitionSurface : this->interiorPartitionSurfaces()){
       bool test = interiorPartitionSurface.setVertices(childTransformation * interiorPartitionSurface.vertices());
       if(!test){
         LOG(Error, "Could not transform vertices for InteriorPartitionSurface '" << interiorPartitionSurface.name().get() << "'.");
@@ -141,7 +141,7 @@ namespace detail {
   BoundingBox InteriorPartitionSurfaceGroup_Impl::boundingBox() const
   {
     BoundingBox result;
-    BOOST_FOREACH(InteriorPartitionSurface interiorPartitionSurface, this->interiorPartitionSurfaces()){
+    for (InteriorPartitionSurface interiorPartitionSurface : this->interiorPartitionSurfaces()){
       result.addPoints(interiorPartitionSurface.vertices());
     }
     return result;
@@ -347,7 +347,7 @@ InteriorPartitionSurfaceVector InteriorPartitionSurfaceGroup::interiorPartitionS
 }
 
 /// @cond
-InteriorPartitionSurfaceGroup::InteriorPartitionSurfaceGroup(boost::shared_ptr<detail::InteriorPartitionSurfaceGroup_Impl> impl)
+InteriorPartitionSurfaceGroup::InteriorPartitionSurfaceGroup(std::shared_ptr<detail::InteriorPartitionSurfaceGroup_Impl> impl)
   : PlanarSurfaceGroup(impl)
 {}
 /// @endcond

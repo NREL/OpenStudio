@@ -21,7 +21,7 @@
 #define MODEL_SCHEDULECOMPACT_HPP
 
 #include "ModelAPI.hpp"
-#include <model/Schedule.hpp>
+#include "Schedule.hpp"
 
 namespace openstudio {
 namespace model {
@@ -36,7 +36,7 @@ class MODEL_API ScheduleCompact : public Schedule {
   /** @name Constructors and Destructors */
   //@{
 
-  /** Creates an emtpy (no values set for any days) ScheduleCompact. */
+  /** Creates an empty (no values set for any days) ScheduleCompact. */
   explicit ScheduleCompact(const Model& model);
 
   /** Creates a ScheduleCompact with constantValue applied to the entire year. */
@@ -90,7 +90,7 @@ class MODEL_API ScheduleCompact : public Schedule {
   friend class openstudio::IdfObject;
 
   // constructor
-  explicit ScheduleCompact(boost::shared_ptr<detail::ScheduleCompact_Impl> impl);
+  explicit ScheduleCompact(std::shared_ptr<detail::ScheduleCompact_Impl> impl);
 
  private:
 

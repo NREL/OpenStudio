@@ -17,54 +17,54 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/AirLoopHVACSupplyPlenum.hpp>
-#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
-#include <model/AirLoopHVACReturnPlenum.hpp>
-#include <model/AirLoopHVACReturnPlenum_Impl.hpp>
-#include <model/SizingSystem.hpp>
-#include <model/SizingSystem_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/ZoneHVACComponent.hpp>
-#include <model/ZoneHVACComponent_Impl.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/StraightComponent_Impl.hpp>
-#include <model/WaterToAirComponent.hpp>
-#include <model/WaterToAirComponent_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
-#include <model/AirLoopHVACZoneMixer.hpp>
-#include <model/AirLoopHVACZoneMixer_Impl.hpp>
-#include <model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp>
-#include <model/AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled_Impl.hpp>
-#include <model/AirTerminalSingleDuctVAVReheat.hpp>
-#include <model/AirTerminalSingleDuctVAVReheat_Impl.hpp>
-#include <model/AvailabilityManagerAssignmentList.hpp>
-#include <model/AvailabilityManagerAssignmentList_Impl.hpp>
-#include <model/AvailabilityManagerScheduled.hpp>
-#include <model/AvailabilityManagerScheduled_Impl.hpp>
-#include <model/AvailabilityManagerNightCycle.hpp>
-#include <model/AvailabilityManagerNightCycle_Impl.hpp>
-#include <model/CoilHeatingWater.hpp>
-#include <model/CoilHeatingWater_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/PortList.hpp>
-#include <model/PortList_Impl.hpp>
-#include <model/ScheduleYear.hpp>
-#include <model/ScheduleYear_Impl.hpp>
-#include <model/SetpointManagerSingleZoneReheat.hpp>
-#include <model/SetpointManagerSingleZoneReheat_Impl.hpp>
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "AirLoopHVACSupplyPlenum.hpp"
+#include "AirLoopHVACSupplyPlenum_Impl.hpp"
+#include "AirLoopHVACReturnPlenum.hpp"
+#include "AirLoopHVACReturnPlenum_Impl.hpp"
+#include "SizingSystem.hpp"
+#include "SizingSystem_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "ZoneHVACComponent.hpp"
+#include "ZoneHVACComponent_Impl.hpp"
+#include "HVACComponent.hpp"
+#include "HVACComponent_Impl.hpp"
+#include "StraightComponent.hpp"
+#include "StraightComponent_Impl.hpp"
+#include "WaterToAirComponent.hpp"
+#include "WaterToAirComponent_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "AirLoopHVACZoneSplitter.hpp"
+#include "AirLoopHVACZoneSplitter_Impl.hpp"
+#include "AirLoopHVACZoneMixer.hpp"
+#include "AirLoopHVACZoneMixer_Impl.hpp"
+#include "AirTerminalSingleDuctConstantVolumeCooledBeam.hpp"
+#include "AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp"
+#include "AirTerminalSingleDuctUncontrolled.hpp"
+#include "AirTerminalSingleDuctUncontrolled_Impl.hpp"
+#include "AirTerminalSingleDuctVAVReheat.hpp"
+#include "AirTerminalSingleDuctVAVReheat_Impl.hpp"
+#include "AvailabilityManagerAssignmentList.hpp"
+#include "AvailabilityManagerAssignmentList_Impl.hpp"
+#include "AvailabilityManagerScheduled.hpp"
+#include "AvailabilityManagerScheduled_Impl.hpp"
+#include "AvailabilityManagerNightCycle.hpp"
+#include "AvailabilityManagerNightCycle_Impl.hpp"
+#include "CoilHeatingWater.hpp"
+#include "CoilHeatingWater_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "PortList.hpp"
+#include "PortList_Impl.hpp"
+#include "ScheduleYear.hpp"
+#include "ScheduleYear_Impl.hpp"
+#include "SetpointManagerSingleZoneReheat.hpp"
+#include "SetpointManagerSingleZoneReheat_Impl.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_AirLoopHVAC_FieldEnums.hxx>
 #include <utilities/idd/OS_AirLoopHVAC_ZoneMixer_FieldEnums.hxx>
@@ -72,13 +72,11 @@
 #include <utilities/idd/OS_Node_FieldEnums.hxx>
 #include <utilities/idd/OS_AirLoopHVAC_ZoneSplitter_FieldEnums.hxx>
 #include <utilities/idd/OS_AirTerminal_SingleDuct_Uncontrolled_FieldEnums.hxx>
-#include <utilities/idd/OS_AirLoopHVAC_ZoneMixer_FieldEnums.hxx>
 #include <utilities/idd/OS_AvailabilityManagerAssignmentList_FieldEnums.hxx>
 #include <utilities/idd/OS_AirLoopHVAC_ControllerList_FieldEnums.hxx>
 #include <utilities/idd/OS_Controller_OutdoorAir_FieldEnums.hxx>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
-#include <boost/foreach.hpp>
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -428,15 +426,13 @@ namespace detail {
   {
     std::vector<WaterToAirComponent> comps = airTerminal.model().getModelObjects<WaterToAirComponent>();
 
-    for( std::vector<WaterToAirComponent>::iterator it = comps.begin();
-         it < comps.end();
-         ++it )
+    for( const auto & elem : comps )
     {
-      if( boost::optional<HVACComponent> comp = it->containingHVACComponent() )
+      if( boost::optional<HVACComponent> comp = elem.containingHVACComponent() )
       {
         if( comp.get() == airTerminal )
         {
-          if( boost::optional<PlantLoop> plantLoop = it->plantLoop() )
+          if( boost::optional<PlantLoop> plantLoop = elem.plantLoop() )
           {
             return plantLoop;
           }
@@ -455,15 +451,13 @@ namespace detail {
   {
     std::vector<WaterToAirComponent> comps = airTerminal.model().getModelObjects<WaterToAirComponent>();
 
-    for( std::vector<WaterToAirComponent>::iterator it = comps.begin();
-         it < comps.end();
-         ++it )
+    for( const auto & elem : comps )
     {
-      if( boost::optional<HVACComponent> comp = it->containingHVACComponent() )
+      if( boost::optional<HVACComponent> comp = elem.containingHVACComponent() )
       {
         if( comp.get() == airTerminal )
         {
-          plantLoop.addDemandBranchForComponent(*it);
+          plantLoop.addDemandBranchForComponent(elem);
 
           return;
         }
@@ -512,28 +506,25 @@ namespace detail {
     zoneSplitter.removePortForBranch(zoneSplitter.branchIndexForOutletModelObject(splitterOutletObject.get()));
     zoneMixer.removePortForBranch(zoneMixer.branchIndexForInletModelObject(mixerInletObject.get()));
 
-    for( std::vector<ModelObject>::iterator it = modelObjects.begin();
-         it < modelObjects.end();
-         it++ )
+    for( const auto & modelObject : modelObjects )
     {
-      it->cast<HVACComponent>().disconnect();
+      modelObject.cast<HVACComponent>().disconnect();
     }
 
-    for( std::vector<ModelObject>::reverse_iterator it = modelObjects.rbegin();
-         it < modelObjects.rend();
-         it++ )
+    for( auto & modelObject : modelObjects )
     {
-      if( ! it->optionalCast<ThermalZone>() )
+      if( ! modelObject.optionalCast<ThermalZone>() )
       {
-        it->remove();
+        modelObject.remove();
       }
     }
 
-    if( boost::optional<SetpointManagerSingleZoneReheat> spm = t_airLoopHVAC->supplyOutletNode().getSetpointManagerSingleZoneReheat() )
-    {
-      if( spm->controlZone() == thermalZone )
+    std::vector<SetpointManagerSingleZoneReheat> setpointManagers = subsetCastVector<SetpointManagerSingleZoneReheat>(t_airLoopHVAC->supplyOutletNode().setpointManagers());
+    if( ! setpointManagers.empty() ) {
+      SetpointManagerSingleZoneReheat spm = setpointManagers.front();
+      if( spm.controlZone() == thermalZone )
       {
-        spm->resetControlZone();
+        spm.resetControlZone();
       }
     }
 
@@ -778,18 +769,16 @@ namespace detail {
 
     sizingObjects = getObject<AirLoopHVAC>().getModelObjectSources<SizingSystem>();
 
-    for( std::vector<SizingSystem>::iterator it = sizingObjects.begin();
-         it < sizingObjects.end();
-         ++it )
+    for( const auto & sizingObject : sizingObjects )
     {
       try {
-        if( it->airLoopHVAC().handle() == this->handle() )
+        if( sizingObject.airLoopHVAC().handle() == this->handle() )
         {
-          sizingSystem = *it;
+          sizingSystem = sizingObject;
         }
       }
       catch (...) {
-        LOG(Debug,it->briefDescription() << " is not attached to an AirLoopHVAC object.");
+        LOG(Debug,sizingObject.briefDescription() << " is not attached to an AirLoopHVAC object.");
       }
     }
 
@@ -810,11 +799,9 @@ namespace detail {
 
     std::vector<ThermalZone> result;
 
-    for( std::vector<ModelObject>::iterator it = objects.begin();
-         it != objects.end();
-         ++it )
+    for( const auto & elem : objects )
     {
-      result.push_back(it->cast<ThermalZone>());
+      result.push_back(elem.cast<ThermalZone>());
     }
 
     return result;
@@ -987,7 +974,7 @@ AirLoopHVAC::AirLoopHVAC(Model& model)
   SizingSystem sizingSystem(model,*this);
 }
 
-AirLoopHVAC::AirLoopHVAC(boost::shared_ptr<detail::AirLoopHVAC_Impl> impl)
+AirLoopHVAC::AirLoopHVAC(std::shared_ptr<detail::AirLoopHVAC_Impl> impl)
   : Loop(impl)
 {}
 

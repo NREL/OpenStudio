@@ -19,20 +19,20 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/units/test/UnitsFixture.hpp>
+#include "UnitsFixture.hpp"
 
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSQuantityVector.hpp>
-#include <utilities/units/UnitFactory.hpp>
+#include "../QuantityConverter.hpp"
+#include "../Quantity.hpp"
+#include "../OSQuantityVector.hpp"
+#include "../UnitFactory.hpp"
 
-#include <utilities/units/BTUUnit.hpp>
-#include <utilities/units/CelsiusUnit.hpp>
-#include <utilities/units/CFMUnit.hpp>
-#include <utilities/units/FahrenheitUnit.hpp>
-#include <utilities/units/IPUnit.hpp>
-#include <utilities/units/SIUnit.hpp>
-#include <utilities/units/Unit.hpp>
+#include "../BTUUnit.hpp"
+#include "../CelsiusUnit.hpp"
+#include "../CFMUnit.hpp"
+#include "../FahrenheitUnit.hpp"
+#include "../IPUnit.hpp"
+#include "../SIUnit.hpp"
+#include "../Unit.hpp"
 
 using namespace openstudio;
 

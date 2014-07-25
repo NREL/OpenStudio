@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_CONSTRUCTIONFFACTORGROUNDFLOORINSPECTORVIEW_H
-#define OPENSTUDIO_CONSTRUCTIONFFACTORGROUNDFLOORINSPECTORVIEW_H
+#ifndef OPENSTUDIO_CONSTRUCTIONFFACTORGROUNDFLOORINSPECTORVIEW_HPP
+#define OPENSTUDIO_CONSTRUCTIONFFACTORGROUNDFLOORINSPECTORVIEW_HPP
 
-#include <openstudio_lib/ModelObjectInspectorView.hpp>
-#include <openstudio_lib/ModelObjectVectorController.hpp>
+#include "ModelObjectInspectorView.hpp"
+#include "ModelObjectVectorController.hpp"
 
-#include <model/StandardsInformationConstruction.hpp>
+#include "../model/StandardsInformationConstruction.hpp"
 
 class QComboBox;
 
@@ -100,5 +100,5 @@ class ConstructionFfactorGroundFloorInspectorView : public ModelObjectInspectorV
 
 } // openstudio
 
-#endif // OPENSTUDIO_CONSTRUCTIONFFACTORGROUNDFLOORINSPECTORVIEW_H
+#endif // OPENSTUDIO_CONSTRUCTIONFFACTORGROUNDFLOORINSPECTORVIEW_HPP
 

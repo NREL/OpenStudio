@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ElectricEquipmentDefinition.hpp>
-#include <model/ElectricEquipmentDefinition_Impl.hpp>
-#include <model/attributes.hpp>
+#include "ElectricEquipmentDefinition.hpp"
+#include "ElectricEquipmentDefinition_Impl.hpp"
+#include "attributes.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_ElectricEquipment_Definition_FieldEnums.hxx>
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/math/FloatCompare.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -449,7 +449,7 @@ bool ElectricEquipmentDefinition::setDesignLevelCalculationMethod(const std::str
 }
 
 /// @cond
-ElectricEquipmentDefinition::ElectricEquipmentDefinition(boost::shared_ptr<detail::ElectricEquipmentDefinition_Impl> impl)
+ElectricEquipmentDefinition::ElectricEquipmentDefinition(std::shared_ptr<detail::ElectricEquipmentDefinition_Impl> impl)
   : SpaceLoadDefinition(impl)
 {}
 /// @endcond

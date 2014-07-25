@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_MODELSUBTABVIEW_H
-#define OPENSTUDIO_MODELSUBTABVIEW_H
+#ifndef OPENSTUDIO_MODELSUBTABVIEW_HPP
+#define OPENSTUDIO_MODELSUBTABVIEW_HPP
 
-#include <openstudio_lib/MainTabView.hpp>
-#include <openstudio_lib/SubTabView.hpp>
+#include "MainTabView.hpp"
+#include "SubTabView.hpp"
 
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
 
 #include <QWidget>
 
@@ -78,5 +78,5 @@ class ModelSubTabView : public SubTabView
 
 } // openstudio
 
-#endif // OPENSTUDIO_MODELSUBTABVIEW_H
+#endif // OPENSTUDIO_MODELSUBTABVIEW_HPP
 

@@ -19,9 +19,9 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/FileLogSink.hpp>
-#include <utilities/core/StringStreamLogSink.hpp>
+#include "../Logger.hpp"
+#include "../FileLogSink.hpp"
+#include "../StringStreamLogSink.hpp"
 
 #include <sstream>
 

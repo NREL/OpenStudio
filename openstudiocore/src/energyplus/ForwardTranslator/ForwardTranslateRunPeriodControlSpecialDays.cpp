@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/RunPeriodControlSpecialDays.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/RunPeriodControlSpecialDays.hpp"
 #include <utilities/idd/RunPeriodControl_SpecialDays_FieldEnums.hxx>
 #include <utilities/idd/OS_RunPeriodControl_SpecialDays_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>

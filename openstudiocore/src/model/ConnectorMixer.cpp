@@ -17,15 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ConnectorMixer.hpp>
-#include <model/ConnectorMixer_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "ConnectorMixer.hpp"
+#include "ConnectorMixer_Impl.hpp"
+#include "Node.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include <utilities/idd/OS_Connector_Mixer_FieldEnums.hxx>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
-#include <boost/foreach.hpp>
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -116,7 +115,7 @@ ConnectorMixer::ConnectorMixer(const Model& model)
 }
 
 ConnectorMixer::ConnectorMixer(
-    boost::shared_ptr<detail::ConnectorMixer_Impl> p)
+    std::shared_ptr<detail::ConnectorMixer_Impl> p)
   : Mixer(p)
 {}
 

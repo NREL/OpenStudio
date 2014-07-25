@@ -20,10 +20,10 @@
 #ifndef UTILITIES_CORE_FILELOGSINK_HPP
 #define UTILITIES_CORE_FILELOGSINK_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/LogSink.hpp>
-#include <utilities/core/Path.hpp>
+#include "LogSink.hpp"
+#include "Path.hpp"
 
 namespace openstudio{
 

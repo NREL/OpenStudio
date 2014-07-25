@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/units/CFMUnit.hpp>
-#include <utilities/units/CFMUnit_Impl.hpp>
+#include "CFMUnit.hpp"
+#include "CFMUnit_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 namespace openstudio {
 
@@ -64,13 +64,13 @@ namespace detail {
 
   Unit CFMUnit_Impl::clone() const {
     OS_ASSERT(system() == UnitSystem::CFM);
-    boost::shared_ptr<CFMUnit_Impl> impl(new CFMUnit_Impl(*this));
+    std::shared_ptr<CFMUnit_Impl> impl(new CFMUnit_Impl(*this));
     return CFMUnit(impl).cast<Unit>();
   }
 
   void CFMUnit_Impl::setBaseUnitExponent(const std::string& baseUnit,int exponent)
   {
-    std::vector<UnitElement>::iterator loc = findBaseUnit(baseUnit);
+    auto loc = findBaseUnit(baseUnit);
     if (loc != m_units.end()) {
       loc->second = exponent;
     }
@@ -84,20 +84,20 @@ namespace detail {
 CFMUnit::CFMUnit(const CFMExpnt& exponents,
                  int scaleExponent,
                  const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::CFMUnit_Impl>(
-             new detail::CFMUnit_Impl(exponents,scaleExponent,prettyString)))
+  : Unit(std::shared_ptr<detail::Unit_Impl>(
+             new detail::CFMUnit_Impl(exponents, scaleExponent, prettyString)))
 {}
 
 CFMUnit::CFMUnit(const std::string& scaleAbbreviation,
                  const CFMExpnt& exponents,
                  const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::CFMUnit_Impl>(
+  : Unit(std::shared_ptr<detail::Unit_Impl>(
              new detail::CFMUnit_Impl(scaleAbbreviation,exponents,prettyString)))
 {}
 
 /// @cond
-CFMUnit::CFMUnit(boost::shared_ptr<detail::CFMUnit_Impl> impl)
-  : Unit(impl)
+CFMUnit::CFMUnit(std::shared_ptr<detail::CFMUnit_Impl> impl)
+  : Unit(std::dynamic_pointer_cast<detail::Unit_Impl>(impl))
 {}
 /// @endcond
 

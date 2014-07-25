@@ -28,21 +28,20 @@
 #include "JobOutputCleanup.hpp"
 #include "RunManager_Util.hpp"
 
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/time/DateTime.hpp>
-#include <utilities/sql/SqlFile.hpp>
+#include "../../utilities/geometry/Transformation.hpp"
+#include "../../utilities/time/DateTime.hpp"
+#include "../../utilities/sql/SqlFile.hpp"
 
-#include <model/Model.hpp>
+#include "../../model/Model.hpp"
 
-#include <radiance/ForwardTranslator.hpp>
+#include "../../radiance/ForwardTranslator.hpp"
 
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/Workspace.hpp>
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/Workspace.hpp"
 
 #include <QDir>
 #include <QDateTime>
 
-#include <boost/bind.hpp>
 #include <boost/algorithm/string/regex.hpp>
 
 namespace openstudio {
@@ -108,7 +107,7 @@ namespace detail {
 
 
 
-  void ModelToRadJob::startImpl(const boost::shared_ptr<ProcessCreator> &)
+  void ModelToRadJob::startImpl(const std::shared_ptr<ProcessCreator> &)
   {
     openstudio::path outpath = outdir();
     QWriteLocker l(&m_mutex);
@@ -261,7 +260,7 @@ namespace detail {
   {
     if (!m_model)
     {
-      boost::shared_ptr<Job_Impl> p = parent();
+      std::shared_ptr<Job_Impl> p = parent();
       while (p)
       {
         if (p->jobType() == JobType::ModelToRadPreProcess)

@@ -18,9 +18,9 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idf/Test/IdfFixture.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/idf/WorkspaceObjectOrder.hpp>
+#include "IdfFixture.hpp"
+#include "../WorkspaceObject.hpp"
+#include "../WorkspaceObjectOrder.hpp"
 
 using namespace openstudio;
 
@@ -75,7 +75,7 @@ TEST_F(IdfFixture,WorkspaceObjectOrder_ByIddObjectType) {
   WorkspaceObjectOrder wsOrder = workspace.order();
   IddObjectTypeVector orderByType;
   IntSet enumValues = IddObjectType::getValues();
-  BOOST_FOREACH(int val,enumValues) {
+  for (int val : enumValues) {
     orderByType.push_back(IddObjectType(val));
   }
   wsOrder.setIddOrder(orderByType);
@@ -86,7 +86,7 @@ TEST_F(IdfFixture,WorkspaceObjectOrder_ByIddObjectType) {
   // expect Materials before Constructions
   OptionalWorkspaceObject oMaterial;
   OptionalWorkspaceObject oConstruction;
-  BOOST_FOREACH(const WorkspaceObject& object,objectsInNewOrder) {
+  for (const WorkspaceObject& object : objectsInNewOrder) {
     if (!oMaterial && (object.iddObject().type() == IddObjectType::Material)) {
       oMaterial = object;
       EXPECT_FALSE(oConstruction);
@@ -104,7 +104,7 @@ TEST_F(IdfFixture,WorkspaceObjectOrder_ByIddObjectType) {
   objectsInNewOrder = workspace.objects(true);
   oMaterial = boost::none;
   oConstruction = boost::none;
-  BOOST_FOREACH(const WorkspaceObject& object,objectsInNewOrder) {
+  for (const WorkspaceObject& object : objectsInNewOrder) {
     if (!oMaterial && (object.iddObject().type() == IddObjectType::Material)) {
       oMaterial = object;
     }

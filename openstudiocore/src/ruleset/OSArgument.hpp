@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2012, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,13 +20,13 @@
 #ifndef RULESET_OSARGUMENT_HPP
 #define RULESET_OSARGUMENT_HPP
 
-#include <ruleset/RulesetAPI.hpp>
+#include "RulesetAPI.hpp"
 
-#include <utilities/idf/Workspace.hpp>
+#include "../utilities/idf/Workspace.hpp"
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Enum.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/Enum.hpp"
+#include "../utilities/core/Logger.hpp"
 
 #include <QVariant>
 
@@ -85,13 +85,16 @@ typedef OSArgumentType UserScriptArgumentType;
 /** OSArgument is an argument to a UserScript or a Ruleset. **/
 class RULESET_API OSArgument {
  public:
-  /** @name Construtors and Destructors */
+  /** @name Constructors and Destructors */
   //@{
 
   // ETH@20121211 - Consider adding a constructor or otherwise tweaking the code to fix
   // the issue of having to explicitly call clone (at least in Ruby) in order to setValue.
   // It would be incorrect to always clone on copy since these objects go back and forth
   // to ProjectDatabase.
+
+  OSArgument();
+  OSArgument(const std::string& name, const OSArgumentType& type, bool required);
 
   /** Constructor provided for deserialization; not for general use. */
   OSArgument(const UUID& uuid,
@@ -410,14 +413,16 @@ class RULESET_API OSArgument {
   friend class std::map<std::string, OSArgument>;
   friend struct std::pair<std::string, OSArgument>;
 
-#if _MSC_VER >= 1600
-  friend class std::pair<const std::string, OSArgument>;
-  friend class std::_Pair_base<std::string, OSArgument>;
+#ifdef _LIBCPP_VERSION
+  friend struct std::allocator_traits<std::allocator<std::__tree_node<std::__value_type<std::string, OSArgument>, void *> > >;
 #endif
 
-
-  OSArgument();
-  OSArgument(const std::string& name, const OSArgumentType& type, bool required);
+#if _MSC_VER >= 1800
+  friend struct std::pair<const std::string, OSArgument>;
+#elif _MSC_VER >= 1600
+  friend struct std::pair<const std::string, OSArgument>;
+  friend struct std::_Pair_base<std::string, OSArgument>;
+#endif
 
   bool setStringInternal(QVariant& variant, const std::string& value);
 

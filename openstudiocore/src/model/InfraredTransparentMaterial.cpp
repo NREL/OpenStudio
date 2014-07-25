@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/InfraredTransparentMaterial.hpp>
-#include <model/InfraredTransparentMaterial_Impl.hpp>
+#include "InfraredTransparentMaterial.hpp"
+#include "InfraredTransparentMaterial_Impl.hpp"
 
 #include <utilities/idd/OS_Material_InfraredTransparent_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -81,7 +81,7 @@ IddObjectType InfraredTransparentMaterial::iddObjectType() {
 }
 
 /// @cond
-InfraredTransparentMaterial::InfraredTransparentMaterial(boost::shared_ptr<detail::InfraredTransparentMaterial_Impl> impl)
+InfraredTransparentMaterial::InfraredTransparentMaterial(std::shared_ptr<detail::InfraredTransparentMaterial_Impl> impl)
   : ModelPartitionMaterial(impl)
 {}
 /// @endcond

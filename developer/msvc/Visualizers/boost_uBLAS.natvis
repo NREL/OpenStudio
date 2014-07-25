@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='utf-8'?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+<Type Name="boost::numeric::ublas::unbounded_array&lt;*,*&gt;">
+    <DisplayString>{{ size={size_} }}</DisplayString>
+    <Expand>
+        <Item Name="[size]" ExcludeView="simple">size_</Item>
+        <ArrayItems>
+            <Size>size_</Size>
+            <ValuePointer>data_</ValuePointer>
+        </ArrayItems>
+    </Expand>
+</Type>
+
+<Type Name="boost::numeric::ublas::vector&lt;*&gt;">
+    <DisplayString>{data_}</DisplayString>
+    <Expand>
+        <ExpandedItem>data_</ExpandedItem>
+    </Expand>
+</Type>
+
+<Type Name="boost::numeric::ublas::mapped_vector&lt;*&gt;">
+    <DisplayString>{{ size={size_} }}</DisplayString>
+    <Expand>
+        <Item Name="[size]" ExcludeView="simple">size_</Item>
+        <ExpandedItem>data_</ExpandedItem>
+    </Expand>
+</Type>
+
+<Type Name="boost::numeric::ublas::compressed_vector&lt;*&gt;">
+    <DisplayString>{{ size={size_} }}</DisplayString>
+    <Expand>
+        <Item Name="[size]" ExcludeView="simple">size_</Item>
+        <Item Name="[capacity]" ExcludeView="simple">capacity_</Item>
+        <Item Name="[filled]" ExcludeView="simple">filled_</Item>
+        <Item Name="index_data">index_data_</Item>
+        <Item Name="value_data">value_data_</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::numeric::ublas::matrix&lt;*&gt;">
+    <DisplayString>{{ size={size1_}x{size2_} }}</DisplayString>
+    <Expand>
+        <ExpandedItem>data_</ExpandedItem>
+    </Expand>
+</Type>
+
+</AutoVisualizer>

@@ -18,11 +18,9 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/data/Test/DataFixture.hpp>
+#include "DataFixture.hpp"
 
-#include <utilities/data/EndUses.hpp>
-
-#include <boost/foreach.hpp>
+#include "../EndUses.hpp"
 
 using namespace openstudio;
 
@@ -95,7 +93,7 @@ TEST_F(DataFixture, EndUses)
 
   // figure out which fuel types are used
   std::vector<EndUseFuelType> fuelTypes;
-  BOOST_FOREACH(const EndUseFuelType& fuelType, allFuelTypes){
+  for (const EndUseFuelType& fuelType : allFuelTypes){
     if (endUses.getEndUseByFuelType(fuelType) != 0){
       fuelTypes.push_back(fuelType);
     }
@@ -103,7 +101,7 @@ TEST_F(DataFixture, EndUses)
 
   // figure out which categories are used
   std::vector<EndUseCategoryType> categories;
-  BOOST_FOREACH(const EndUseCategoryType& category, allCategories){
+  for (const EndUseCategoryType& category : allCategories){
     if (endUses.getEndUseByCategory(category) != 0){
       categories.push_back(category);
     }
@@ -113,10 +111,10 @@ TEST_F(DataFixture, EndUses)
   EXPECT_EQ(static_cast<unsigned>(5), categories.size());
   EXPECT_EQ(static_cast<unsigned>(2), subCategories.size());
 
-  BOOST_FOREACH(const EndUseFuelType& fuelType, fuelTypes){
+  for (const EndUseFuelType& fuelType : fuelTypes){
     std::string units = endUses.getUnitsForFuelType(fuelType);
-    BOOST_FOREACH(const EndUseCategoryType& category, categories){
-      BOOST_FOREACH(const std::string& subCategory, subCategories){
+    for (const EndUseCategoryType& category : categories){
+      for (const std::string& subCategory : subCategories){
         /* double value =*/ endUses.getEndUse(fuelType, category, subCategory);
         // barchart(value, units) ??
       }
@@ -207,7 +205,7 @@ TEST_F(DataFixture, EndUses2)
 TEST_F(DataFixture, EndUses3)
 {
   // EndUseCategoryType is a subset of EndUseType
-  BOOST_FOREACH(int i, EndUseCategoryType::getValues()){
+  for (int i : EndUseCategoryType::getValues()){
     EndUseCategoryType endUseCategoryType(i);
     EXPECT_NO_THROW(EndUseType(endUseCategoryType.valueName())) << endUseCategoryType.valueName();
   }

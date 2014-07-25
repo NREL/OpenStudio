@@ -19,10 +19,10 @@
 #include <cstdlib>
 #include <cmath>
 
-#include <utilities/economics/CostObject.hpp>
-#include <utilities/economics/Economics.hpp>
+#include "CostObject.hpp"
+#include "Economics.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 #define MAX_ERR 0.0001
 #define MAX_LIMIT 100000
@@ -95,8 +95,8 @@ Economics::Economics():
   m_remainingUsefulLifeProjectEnd(0),
   m_variablesSet(false),
 
-  m_refBuilding(boost::shared_ptr<CostObject>(new CostObject)),
-  m_selBuilding(boost::shared_ptr<CostObject>(new CostObject))
+  m_refBuilding(std::shared_ptr<CostObject>(new CostObject)),
+  m_selBuilding(std::shared_ptr<CostObject>(new CostObject))
 {
 }
 
@@ -494,9 +494,9 @@ void Economics::getDistrictCool( BuildingType buildingType, double& use, double&
   } //case
 }
 
-boost::shared_ptr<CostObject> Economics::getBuildingObject( BuildingType buildingType )
+std::shared_ptr<CostObject> Economics::getBuildingObject( BuildingType buildingType )
 {
-  boost::shared_ptr<CostObject> result;
+  std::shared_ptr<CostObject> result;
   switch ( buildingType )
   {
     case btReference:
@@ -754,7 +754,7 @@ double Economics::getPayBack( const std::vector< double >& cashFlowSavings )
 double Economics::payBack( const std::vector< double >& cashFlowSavings )
 {
   //this calculates payback.  warning... if the expected life or
-  //the equipment isn't symetrical, then the SPB may be longer than required.
+  //the equipment isn't symmetrical, then the SPB may be longer than required.
   double result = 0.0;
   double diff = 0.0;
   double iResult = 0.0;
@@ -773,7 +773,7 @@ double Economics::payBack( const std::vector< double >& cashFlowSavings )
       }
       else
       {
-        //skip the initial captial for the iterated years
+        //skip the initial capital for the iterated years
         if ( iYear != 0 ) 
           diff = diff + cashFlowSavings.at(iYear);
       }

@@ -19,20 +19,18 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/TimeDependentValuation.hpp>
-#include <model/TimeDependentValuation_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../TimeDependentValuation.hpp"
+#include "../TimeDependentValuation_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
+#include "../Model.hpp"
+#include "../Site.hpp"
+#include "../Site_Impl.hpp"
+#include "../Facility.hpp"
+#include "../Facility_Impl.hpp"
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/math/FloatCompare.hpp>
-
-#include <boost/foreach.hpp>
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/math/FloatCompare.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model_editor/TableWidget.hpp>
+#include "TableWidget.hpp"
 
 using namespace openstudio::model;
 using namespace openstudio;

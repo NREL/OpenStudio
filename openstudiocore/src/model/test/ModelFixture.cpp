@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <utilities/idd/IddKey.hpp>
-#include <utilities/core/Finder.hpp>
+#include "../../utilities/idd/IddKey.hpp"
+#include "../../utilities/core/Finder.hpp"
 
 #include <resources.hxx>
 

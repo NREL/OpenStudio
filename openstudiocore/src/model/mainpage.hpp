@@ -164,7 +164,7 @@ namespace model {
  *  building models may be simulated with EnergyPlus, which is developed by the Department of Energy
  *  and is our primary simulation target (http://apps1.eere.energy.gov/buildings/energyplus/).
  *  Daylighting simulation with Radiance is also supported, and OpenStudio can conduct some economic
- *  analyses natively. The OpenStudio Model aims to integerate input and output data into a seamless
+ *  analyses natively. The OpenStudio Model aims to integrate input and output data into a seamless
  *  whole. EnergyPlus output data is accessed through the Model by connecting to an appropriate SqlFile (see the
  *  utilities documentation), which provides a basic interface to the EnergyPlus SQLite output. Once
  *  the basic connection to an output file is established, intuitive interfaces to specific pieces of
@@ -192,7 +192,7 @@ namespace model {
  *         'OS:StandardsInforamtion:Building', BuildingStandardsInformation)</li>
  *  </ol>
  *
- *  Each OpenStudio IDD object is wrapped by a corresponding ModelObject which provides an intellegent API for working
+ *  Each OpenStudio IDD object is wrapped by a corresponding ModelObject which provides an intelligent API for working
  *  with that data object in an OpenStudio Model.
  *
  *  \link Model Models\endlink are serialized to files with the extension '.osm', which are
@@ -272,7 +272,7 @@ namespace model {
  *  of the OpenStudio SDK should not need to resort to that low-level interface in most
  *  circumstances. ModelObject is the base class for a large inheritance hierarchy, the terminating
  *  nodes of which each wrap a specific object in the OpenStudio IDD. Each data field that should
- *  be publically accessible is wrapped into a getter and a setter method (see \ref
+ *  be publicly accessible is wrapped into a getter and a setter method (see \ref
  *  modelobjectGetSet), several types of \ref modelobjectCompoundMethods and \ref
  *  modelobjectOutputDataAccessMethods are provided, as are object getters and setters appropriate
  *  to the various \ref modelobjectRelationships in the Model. Methods for creating and deleting
@@ -320,14 +320,14 @@ namespace model {
  *  by one setter, are documented.
  *
  *  Data fields in extensible groups also have getters and setters, but may be exposed in different
- *  ways, for instance, in a getter that takes the extensible group's index as an argurment
+ *  ways, for instance, in a getter that takes the extensible group's index as an argument
  *  (e.g., GasMixture::getGasType, GasMixture::setGasType), as part of a class that derives from
  *  ModelExtensibleGroup (e.g. ClimateZone), or through the introduction of a specialized data
  *  structure (e.g. PlanarSurface::vertices, PlanarSurface::setVertices). Classes that derive from
  *  ModelExtensibleGroup are generally preferred, as they let the extensible groups be dealt with
  *  on their own terms as individual objects. An exception to this is the case where there are just
  *  a few simple pieces of data in the group, then a small struct (like the one used by
- *  PlanarSurface::vertices) may be preferrable. A ModelObject with a companion ModelExtensibleGroup
+ *  PlanarSurface::vertices) may be preferable. A ModelObject with a companion ModelExtensibleGroup
  *  should provide a wrapper method for numExtensibleGroups with the name of the ModelExtesibleGroup
  *  derived class replacing "ExtensibleGroups", and similar wrappers for getExtensibleGroup,
  *  extensibleGroups, clearExtensibleGroups and pushExtensibleGroup (perhaps replacing "push" with
@@ -406,22 +406,22 @@ namespace model {
  *  the bool getter will return a boost::optional<bool> the user must be careful not to confuse whether this optional is initialized with
  *  the actual value of the field.
  *
- *  Other choice fields operate soley off of std::string. The allowable values are case insensitive,
+ *  Other choice fields operate solely off of std::string. The allowable values are case insensitive,
  *  defined by the IDD and exposed through static methods like Gas::validGasTypes(). The setters can
  *  always fail; whether a boost::optional<std::string> is returned by the getter or accepted by the
  *  setter conforms to the general rules.
  *
- *  \todo Return OptionalString() for unset choice fields (rather than emtpy strings)?
+ *  \todo Return OptionalString() for unset choice fields (rather than empty strings)?
  *
  *  \subsubsection urlFields URL Fields
  *
  *  The OpenStudio IDD introduces the '\\type url' field to help with locating files other than the
  *  OSM on which a simulation depends. (See WeatherFile and TimeDependentValuation, for instance.)
  *  RunManager provides functionality to normalize url fields at job creation time.  RunManager
- *  looks for the file accross all URLSearchPaths (see utilities documentation) passed in to the
+ *  looks for the file across all URLSearchPaths (see utilities documentation) passed in to the
  *  job creation. In this process, if the referenced file can be found, RunManager ensures that the
  *  file is copied to the local computer running the job and that the url field is set to a valid
- *  absolute path to that file for all child jobs (the url field is unchanged in the orginal input
+ *  absolute path to that file for all child jobs (the url field is unchanged in the original input
  *  Model). If the field immediately following a url field is named 'Checksum' and is of type alpha,
  *  that field contains a checksum (computed by openstudio::checksum()) that RunManager uses to
  *  verify that the file found is the desired file. External files may be referenced using url
@@ -454,7 +454,7 @@ namespace model {
  *  All other types of fields ('\\type alpha' or '\\type external-list') are treated as strings and
  *  conform to the general rules.
  *
- *  \todo Return OptionalString() for unset string fields (rather than emtpy strings)?
+ *  \todo Return OptionalString() for unset string fields (rather than empty strings)?
  *
  *  An extended example of data field getter and setter usage:
  *
@@ -520,8 +520,8 @@ namespace model {
  *  example that brings a lot of pieces together to expose a high-level piece of data. Depending on
  *  the underlying construction type, these methods may operate directly on a SimpleGlazing object;
  *  may use static film resistance data in conjunction with one or more Material objects, and maybe
- *  a ConstructionBaseStandardsInformation object (the latter is sometimed needed for the u-factor
- *  setter); or may query the output data in the SqlFile. If u-factor is availabe through input and
+ *  a ConstructionBaseStandardsInformation object (the latter is sometimes needed for the u-factor
+ *  setter); or may query the output data in the SqlFile. If u-factor is available through input and
  *  output data, the output data is returned, but in the meantime the two values are compared and a
  *  message is logged if their difference exceeds some tolerance. Related methods are available
  *  through ConstructionBase.
@@ -579,7 +579,7 @@ namespace model {
  *      input or output data, the user must refer to the documentation for the specific derived types to understand how the virtual method
  *      will operate in all situations.
  *
- *  The connection to the SqlFile can be reset using model.resetSqlFile().  Closing the SqlFile connection is neccesary in order
+ *  The connection to the SqlFile can be reset using model.resetSqlFile().  Closing the SqlFile connection is necessary in order
  *  to resimulate the Model using EnergyPlus.
  *
  *  \subsection modelobjectRelationships Relationships
@@ -631,7 +631,7 @@ namespace model {
  *  the same role as nodes in EnergyPlus, but OpenStudio connections can be applied in contexts other 
  *  than the EnergyPlus system nodes. OpenStudio's connections and ports can be used any time one 
  *  ModelObject can be arbitrarily connected to another ModelObject. For example, EnergyPlus EMS 
- *  sensors and actuaters could be thought of as source and target ports, and a connection could be 
+ *  sensors and actuators could be thought of as source and target ports, and a connection could be 
  *  made between the two.
  *
  *  \subsection modelobject_hierachy Parent-Child Hierarchy
@@ -1050,7 +1050,7 @@ namespace model {
  *  ModelObject::remove is used to remove a ModelObject from a Model. When a model object is
  *  removed, all of its children are also removed. Objects related to the removed object through
  *  a resource or connection relationship are not deleted. Resources persist so they can be used
- *  by other objects. Connections are broken by object removal, but the adjancent object is left
+ *  by other objects. Connections are broken by object removal, but the adjacent object is left
  *  behind, unless it happens to also be a child of the removed object. However, when a resource or
  *  child object is removed, its user objects or parents may also be removed, if the relationship
  *  is a required one for the user/parent. For instance, SpaceLoadDefinition::remove also removes 
@@ -1122,7 +1122,7 @@ namespace model {
  *  or other, IDD is referenced). Model, ModelObject and everything else in the openstudio::model
  *  namespace exists to turn that data model into a full-featured object model.
  *
- *  Because Model and ModelObject publically inherit from Workspace and WorkspaceObject, methods of
+ *  Because Model and ModelObject publicly inherit from Workspace and WorkspaceObject, methods of
  *  Workspace and WorkspaceObject are directly available for use through Model and ModelObject.
  *  Use of these methods is discouraged where it is not necessary as these data model-level 
  *  modifications bypass the best-practice logic built into classes derived from ModelObject.
@@ -1140,7 +1140,7 @@ namespace model {
  *  OS_ASSERT(spaceA.name().get() == "Space B"); // may not be the intended behavior ...
  *                                                  // use clone() to get a deep copy
  *
- *  // Sharing also happens just by passing objects around as aruguments.
+ *  // Sharing also happens just by passing objects around as arguments.
  *  // For instance, this function takes a non-const copy, it does not pass by reference.
  *  void changeName(ModelObject object) {
  *    object.setName("New Name");

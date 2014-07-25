@@ -21,12 +21,10 @@
 #define PROJECT_VARIABLERECORD_IMPL_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/ObjectRecord_Impl.hpp>
-#include <project/VariableRecord.hpp>
+#include "ObjectRecord_Impl.hpp"
+#include "VariableRecord.hpp"
 
-#include <utilities/core/Logger.hpp>
-
-#include <boost/shared_ptr.hpp>
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
 namespace project {

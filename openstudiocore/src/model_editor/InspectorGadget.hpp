@@ -16,20 +16,20 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#ifndef INSPECTORGADGET
-#define INSPECTORGADGET
+#ifndef MODELEDITOR_INSPECTORGADGET_HPP
+#define MODELEDITOR_INSPECTORGADGET_HPP
 
 #include <QWidget>
 #include <QComboBox>
 #include <QEvent>
-#include <model/AccessPolicyStore.hpp>
-#include <model/ModelObject.hpp>
-#include <model_editor/ModelEditorAPI.hpp>
-#include <utilities/idd/IddField.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/Workspace_Impl.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/idf/WorkspaceObject_Impl.hpp>
+#include "../model/AccessPolicyStore.hpp"
+#include "../model/ModelObject.hpp"
+#include "ModelEditorAPI.hpp"
+#include "../utilities/idd/IddField.hpp"
+#include "../utilities/idf/Workspace.hpp"
+#include "../utilities/idf/Workspace_Impl.hpp"
+#include "../utilities/idf/WorkspaceObject.hpp"
+#include "../utilities/idf/WorkspaceObject_Impl.hpp"
 #include <string>
 
 class QDoubleSpinBox;
@@ -45,7 +45,7 @@ class IGWidget : public QWidget
 {
   public:
   
-  IGWidget( QWidget * parent = 0 )
+  IGWidget( QWidget * parent = nullptr )
     : QWidget(parent)
   {
     setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Preferred);
@@ -61,7 +61,7 @@ class IGComboBox : public QComboBox
 {
   public:
 
-  IGComboBox( QWidget * parent = 0 )
+  IGComboBox( QWidget * parent = nullptr )
     : QComboBox( parent )
   {
   }
@@ -83,12 +83,12 @@ class IGComboBox : public QComboBox
 
 /*! \brief InspectorGadget will take a ModelObejct (or WorkspaceObject) and display it attributes
  *
- * InsepctorGadget interogates objects and displays thier fields/attributes based on the values 
+ * InsepctorGadget interrogates objects and displays their fields/attributes based on the values 
  * contained in the AccessPolicyStore. When a new model is passed into the IG, it will delete all
  * its old QWidgets and create new ones.
  *
  * AccessPolicy::FREE Real and Integers get displayed as spinboxes
- * AccessPolicy::LOCKED Real and Interger and all Alpha get displayed as labels.
+ * AccessPolicy::LOCKED Real and Integer and all Alpha get displayed as labels.
  * Choice is displayed as a ComboBox
  *
  */
@@ -116,7 +116,7 @@ public:
    * \sa IGChildFrame
    * \sa layoutModel
    */
-  InspectorGadget(QWidget* parent = 0, int indent = 0, ComboHighlightBridge* bridge=NULL);
+  InspectorGadget(QWidget* parent = nullptr, int indent = 0, ComboHighlightBridge* bridge=nullptr);
   /*! destructor
    *
    * The really shouldn't need to call this, the parent Widget ought to delete the IG.
@@ -127,7 +127,7 @@ public:
   /*! \brief lays out the WorkspaceObj
    *
    * \param modelObj the modelObj to layout
-   * \param force forces a layout even if we just layed out this modelObj
+   * \param force forces a layout even if we just laid out this modelObj
    * \param if true, delete the children and rebuild them
    * \param locked set all the FREE items to LOCKED
    *
@@ -136,14 +136,14 @@ public:
    * function will create an IGChildFrame and that child calls layoutItems for
    * its frame.
    *
-   * Calling this meathod a 2nd time will delete everything that was previously built and
+   * Calling this method a 2nd time will delete everything that was previously built and
    * regenerate the QWidgets.
    *
    * Recursive only effects anything if you are sending in the same modelObj, if you pick a different one, the
-   * children are ALWAYS deleted and rebuilt. (becuase they are different children!)
+   * children are ALWAYS deleted and rebuilt. (because they are different children!)
    *
    * If you are calling this from a place where the user should not be allowed to edit the fields, set the lock
-   * paramater to true
+   * parameter to true
    *
    */
   void layoutModelObj(openstudio::WorkspaceObject& workObj,
@@ -158,9 +158,9 @@ public:
    * \param dispType how to format the floating point number
    *
    * If you pass in a zero to this function, IG will not format the number in anyway,
-   * meaning you will see exactly the string that was typed into the IDF/OSM file. (Default behaviour)
-   * If you pass in a non zero number, all number fileds will display that number of significant figures
-   * in scinetific notation.
+   * meaning you will see exactly the string that was typed into the IDF/OSM file. (Default behavior)
+   * If you pass in a non zero number, all number fields will display that number of significant figures
+   * in scientific notation.
    */
   void setPrecision( unsigned int prec, FLOAT_DISPLAY dispType );
 
@@ -172,8 +172,8 @@ public slots:
 
 /*! \brief lays out the last object again.
    *
-   *\param recursive if true, aply the change to the children
-   * Use this if you change a config paramater that controls how the layout happens.
+   *\param recursive if true, apply the change to the children
+   * Use this if you change a config parameter that controls how the layout happens.
    *
    */
   void rebuild(bool recursive);
@@ -189,9 +189,9 @@ public slots:
 
   /*! \brief changes the color of widgets
    *
-   * When widget are built, if the Field is requiered but there is no value and no default value
+   * When widget are built, if the Field is required but there is no value and no default value
    *(which in a way, is bad idf) the IG will put 0 or 0.0 in there for you, but color it red
-   * to point out that you should address this. Once you set a value, this fuction is automatically
+   * to point out that you should address this. Once you set a value, this function is automatically
    * called for you and sets the color back to black.
    *
    */
@@ -203,12 +203,12 @@ public slots:
 
   void IGautosize(bool toggled);
 
-  /*! \brief show/hide commment fields
+  /*! \brief show/hide comment fields
    *
    * \param showComments if true, show comments, if false, hide them
    *
-   * IdfObjects have comments about thier fields. (and about themselves)
-   * This funciton allows you to toggle weather or not you wish IG to show those comments. 
+   * IdfObjects have comments about their fields. (and about themselves)
+   * This function allows you to toggle weather or not you wish IG to show those comments. 
    * The Default is not to show them.
    */
   void commentConfig(bool showComments);
@@ -251,7 +251,7 @@ protected slots:
 protected:
 
 /*! \brief constructor
-    \param parent the owner of all ths stuff we just made.
+    \param parent the owner of all the stuff we just made.
     \param model the model to get data from
     \param indent indentation for the child frame
     \param bridge pass in a bridge here if you need signals to get out of the IG (or the IG's children)
@@ -259,7 +259,7 @@ protected:
     \param style sets the style of floating point display
     \param showComments show or hide idf comment field
     \param locked if true, lock all fields the ACCESS_POLICY sets to FREE
-    If model has children, those children will get thier own InspectorGadget, indent
+    If model has children, those children will get their own InspectorGadget, indent
     will be passed again to that constructor so the frames will nest.
   */
   InspectorGadget( openstudio::WorkspaceObject& workspaceObj,
@@ -375,4 +375,4 @@ protected:
     void connectSignalsAndSlots();
 };
 
-#endif 
+#endif // MODELEDITOR_INSPECTORGADGET_HPP

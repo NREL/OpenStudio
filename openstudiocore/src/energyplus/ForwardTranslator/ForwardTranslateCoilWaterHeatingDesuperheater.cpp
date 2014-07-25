@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,20 +17,20 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveBiquadratic_Impl.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
-#include <model/CoilWaterHeatingDesuperheater.hpp>
-#include <model/CoilWaterHeatingDesuperheater_Impl.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/CurveBiquadratic.hpp"
+#include "../../model/CurveBiquadratic_Impl.hpp"
+#include "../../model/HVACComponent.hpp"
+#include "../../model/HVACComponent_Impl.hpp"
+#include "../../model/CoilWaterHeatingDesuperheater.hpp"
+#include "../../model/CoilWaterHeatingDesuperheater_Impl.hpp"
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/Coil_WaterHeating_Desuperheater_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>

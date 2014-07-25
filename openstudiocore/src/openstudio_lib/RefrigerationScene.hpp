@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_REFRIGERATIONSCENE_H
-#define OPENSTUDIO_REFRIGERATIONSCENE_H
+#ifndef OPENSTUDIO_REFRIGERATIONSCENE_HPP
+#define OPENSTUDIO_REFRIGERATIONSCENE_HPP
 
 #include <QGraphicsScene>
 
@@ -41,5 +41,5 @@ class RefrigerationScene : public QGraphicsScene
 
 } // openstudio
 
-#endif // OPENSTUDIO_REFRIGERATIONSCENE_H
+#endif // OPENSTUDIO_REFRIGERATIONSCENE_HPP
 

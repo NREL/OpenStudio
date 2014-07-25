@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <ruleset/test/RulesetFixture.hpp>
+#include "RulesetFixture.hpp"
 
-#include <utilities/core/Path.hpp>
+#include "../../utilities/core/Path.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 #include <boost/filesystem.hpp>

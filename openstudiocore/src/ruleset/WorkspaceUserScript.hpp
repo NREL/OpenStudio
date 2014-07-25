@@ -20,10 +20,10 @@
 #ifndef RULESET_WORKSPACEUSERSCRIPT_HPP
 #define RULESET_WORKSPACEUSERSCRIPT_HPP
 
-#include <ruleset/RulesetAPI.hpp>
-#include <ruleset/UserScript.hpp>
+#include "RulesetAPI.hpp"
+#include "UserScript.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
 

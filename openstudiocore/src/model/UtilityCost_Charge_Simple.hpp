@@ -20,9 +20,9 @@
 #ifndef MODEL_UTILITYCOST_CHARGE_SIMPLE_HPP
 #define MODEL_UTILITYCOST_CHARGE_SIMPLE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
-#include <utilities/core/Optional.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio{
 namespace model{
@@ -90,7 +90,7 @@ protected:
   friend class IdfObject;
 
   // constructor
-  explicit UtilityCost_Charge_Simple(boost::shared_ptr<detail::UtilityCost_Charge_Simple_Impl> impl);
+  explicit UtilityCost_Charge_Simple(std::shared_ptr<detail::UtilityCost_Charge_Simple_Impl> impl);
 
 private:
   REGISTER_LOGGER("openstudio.model.UtilityCost_Charge_Simple");

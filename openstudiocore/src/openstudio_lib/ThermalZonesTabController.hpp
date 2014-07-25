@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_THERMALZONESTABCONTROLLER_H
-#define OPENSTUDIO_THERMALZONESTABCONTROLLER_H
+#ifndef OPENSTUDIO_THERMALZONESTABCONTROLLER_HPP
+#define OPENSTUDIO_THERMALZONESTABCONTROLLER_HPP
 
-#include <openstudio_lib/MainTabController.hpp>
-#include <model/Model.hpp>
+#include "MainTabController.hpp"
+#include "../model/Model.hpp"
 
 namespace openstudio {
 
@@ -43,9 +43,9 @@ class ThermalZonesTabController : public MainTabController
 
   private:
 
-  boost::shared_ptr<ThermalZonesController> m_thermalZonesController;
+  std::shared_ptr<ThermalZonesController> m_thermalZonesController;
 };
 
 } // openstudio
 
-#endif // OPENSTUDIO_THERMALZONESTABCONTROLLER_H
+#endif // OPENSTUDIO_THERMALZONESTABCONTROLLER_HPP

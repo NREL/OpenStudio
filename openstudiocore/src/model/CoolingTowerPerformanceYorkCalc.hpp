@@ -20,8 +20,8 @@
 #ifndef MODEL_COOLINGTOWERPERFORMANCEYORKCALC_HPP
 #define MODEL_COOLINGTOWERPERFORMANCEYORKCALC_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 
@@ -207,7 +207,7 @@ class MODEL_API CoolingTowerPerformanceYorkCalc : public ModelObject {
   /// @cond
   typedef detail::CoolingTowerPerformanceYorkCalc_Impl ImplType;
 
-  explicit CoolingTowerPerformanceYorkCalc(boost::shared_ptr<detail::CoolingTowerPerformanceYorkCalc_Impl> impl);
+  explicit CoolingTowerPerformanceYorkCalc(std::shared_ptr<detail::CoolingTowerPerformanceYorkCalc_Impl> impl);
 
   friend class detail::CoolingTowerPerformanceYorkCalc_Impl;
   friend class Model;

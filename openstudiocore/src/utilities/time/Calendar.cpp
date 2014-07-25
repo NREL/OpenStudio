@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/time/Calendar.hpp>
-#include <utilities/time/DateTime.hpp>
+#include "Calendar.hpp"
+#include "DateTime.hpp"
 
 using namespace std;
 using namespace boost;
@@ -161,7 +161,7 @@ namespace openstudio{
     }
 
     bool result = false;
-    MapType::const_iterator it = m_dateMap.find(date);
+    auto it = m_dateMap.find(date);
     if (it != m_dateMap.end()){
       result = it->second.isHoliday;
     }
@@ -200,7 +200,7 @@ namespace openstudio{
     }
 
     std::string result;
-    MapType::const_iterator it = m_dateMap.find(date);
+    auto it = m_dateMap.find(date);
     if (it != m_dateMap.end()){
       result = it->second.name;
     }

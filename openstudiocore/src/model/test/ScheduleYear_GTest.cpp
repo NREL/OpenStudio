@@ -19,19 +19,19 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/ScheduleYear.hpp>
-#include <model/ScheduleYear_Impl.hpp>
-#include <model/ScheduleWeek.hpp>
-#include <model/ScheduleWeek_Impl.hpp>
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeLimits_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../ScheduleYear.hpp"
+#include "../ScheduleYear_Impl.hpp"
+#include "../ScheduleWeek.hpp"
+#include "../ScheduleWeek_Impl.hpp"
+#include "../YearDescription.hpp"
+#include "../YearDescription_Impl.hpp"
+#include "../ScheduleTypeLimits.hpp"
+#include "../ScheduleTypeLimits_Impl.hpp"
 
-#include <utilities/core/UUID.hpp>
-#include <utilities/time/Date.hpp>
-#include <utilities/time/Time.hpp>
+#include "../../utilities/core/UUID.hpp"
+#include "../../utilities/time/Date.hpp"
+#include "../../utilities/time/Time.hpp"
 
 using namespace openstudio::model;
 using namespace openstudio;

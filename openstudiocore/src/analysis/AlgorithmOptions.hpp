@@ -20,11 +20,10 @@
 #ifndef ANALYSIS_ALGORITHMOPTIONS_HPP
 #define ANALYSIS_ALGORITHMOPTIONS_HPP
 
-#include <analysis/AnalysisAPI.hpp>
+#include "AnalysisAPI.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
 #include <vector>
@@ -90,14 +89,14 @@ class ANALYSIS_API AlgorithmOptions {
 
   /** Get the impl pointer */
   template<typename T>
-  boost::shared_ptr<T> getImpl() const {
-    return boost::dynamic_pointer_cast<T>(m_impl);
+  std::shared_ptr<T> getImpl() const {
+    return std::dynamic_pointer_cast<T>(m_impl);
   }
 
   /** Cast to type T. Throws std::bad_cast if object is not a T. */
   template<typename T>
   T cast() const {
-    boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+    std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (!impl) {
       throw(std::bad_cast());
     }
@@ -109,7 +108,7 @@ class ANALYSIS_API AlgorithmOptions {
   template<typename T>
   boost::optional<T> optionalCast() const{
     boost::optional<T> result;
-    boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+    std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (impl){
       result = T(impl);
     }
@@ -121,7 +120,7 @@ class ANALYSIS_API AlgorithmOptions {
   /// @cond
   typedef detail::AlgorithmOptions_Impl ImplType;
 
-  explicit AlgorithmOptions(boost::shared_ptr<detail::AlgorithmOptions_Impl> impl);
+  explicit AlgorithmOptions(std::shared_ptr<detail::AlgorithmOptions_Impl> impl);
 
   friend class detail::AlgorithmOptions_Impl;
   /// @endcond
@@ -134,7 +133,7 @@ class ANALYSIS_API AlgorithmOptions {
 
   QVariant toVariant() const;
  private:
-  boost::shared_ptr<detail::AlgorithmOptions_Impl> m_impl;
+  std::shared_ptr<detail::AlgorithmOptions_Impl> m_impl;
 
   REGISTER_LOGGER("openstudio.analysis.AlgorithmOptions");
 };

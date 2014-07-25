@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/idf/Test/IdfFixture.hpp>
+#include "IdfFixture.hpp"
 
-#include <utilities/time/Time.hpp>
+#include "../../time/Time.hpp"
 
 using openstudio::Logger;
 using openstudio::FileLogSink;

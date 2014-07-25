@@ -17,25 +17,22 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SetpointManagerOutdoorAirReset.hpp>
-#include <model/SetpointManagerOutdoorAirReset_Impl.hpp>
+#include "SetpointManagerOutdoorAirReset.hpp"
+#include "SetpointManagerOutdoorAirReset_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "Model.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SetpointManager_OutdoorAirReset_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
-
-#include <utilities/core/Assert.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -45,7 +42,7 @@ namespace detail {
   SetpointManagerOutdoorAirReset_Impl::SetpointManagerOutdoorAirReset_Impl(const IdfObject& idfObject,
                                                                            Model_Impl* model,
                                                                            bool keepHandle)
-    : HVACComponent_Impl(idfObject,model,keepHandle)
+    : SetpointManager_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == SetpointManagerOutdoorAirReset::iddObjectType());
   }
@@ -53,7 +50,7 @@ namespace detail {
   SetpointManagerOutdoorAirReset_Impl::SetpointManagerOutdoorAirReset_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                            Model_Impl* model,
                                                                            bool keepHandle)
-    : HVACComponent_Impl(other,model,keepHandle)
+    : SetpointManager_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == SetpointManagerOutdoorAirReset::iddObjectType());
   }
@@ -61,7 +58,7 @@ namespace detail {
   SetpointManagerOutdoorAirReset_Impl::SetpointManagerOutdoorAirReset_Impl(const SetpointManagerOutdoorAirReset_Impl& other,
                                                                            Model_Impl* model,
                                                                            bool keepHandle)
-    : HVACComponent_Impl(other,model,keepHandle)
+    : SetpointManager_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& SetpointManagerOutdoorAirReset_Impl::outputVariableNames() const
@@ -74,6 +71,18 @@ namespace detail {
 
   IddObjectType SetpointManagerOutdoorAirReset_Impl::iddObjectType() const {
     return SetpointManagerOutdoorAirReset::iddObjectType();
+  }
+
+  bool SetpointManagerOutdoorAirReset_Impl::addToNode(Node & node) {
+    bool added = SetpointManager_Impl::addToNode( node );
+    if( added ) {
+      return added;
+    } else if( boost::optional<PlantLoop> plantLoop = node.plantLoop() ) {
+      if( plantLoop->supplyComponent(node.handle()) ) {
+        return this->setSetpointNode(node);
+      }
+    }
+    return added;
   }
 
   std::vector<ScheduleTypeKey> SetpointManagerOutdoorAirReset_Impl::getScheduleTypeKeys(const Schedule& schedule) const
@@ -195,9 +204,8 @@ namespace detail {
     return getQuantityFromDouble(OS_SetpointManager_OutdoorAirResetFields::OutdoorHighTemperature2, value, returnIP);
   }
 
-  bool SetpointManagerOutdoorAirReset_Impl::setControlVariable(std::string controlVariable) {
-    bool result = setString(OS_SetpointManager_OutdoorAirResetFields::ControlVariable, controlVariable);
-    return result;
+  bool SetpointManagerOutdoorAirReset_Impl::setControlVariable(const std::string& controlVariable) {
+    return setString(OS_SetpointManager_OutdoorAirResetFields::ControlVariable, controlVariable);
   }
 
   void SetpointManagerOutdoorAirReset_Impl::resetControlVariable() {
@@ -261,16 +269,8 @@ namespace detail {
     return true;
   }
 
-  bool SetpointManagerOutdoorAirReset_Impl::setSetpointNode(const boost::optional<Node>& node) {
-    bool result(false);
-    if (node) {
-      result = setPointer(OS_SetpointManager_OutdoorAirResetFields::SetpointNodeorNodeListName, node.get().handle());
-    }
-    else {
-      resetSetpointNode();
-      result = true;
-    }
-    return result;
+  bool SetpointManagerOutdoorAirReset_Impl::setSetpointNode(const Node& node) {
+    return setPointer(OS_SetpointManager_OutdoorAirResetFields::SetpointNodeorNodeListName, node.handle());
   }
 
   void SetpointManagerOutdoorAirReset_Impl::resetSetpointNode() {
@@ -550,65 +550,10 @@ namespace detail {
     return true;
   }
 
-  bool SetpointManagerOutdoorAirReset_Impl::addToNode(Node & node)
-  {
-    if( node.model() != this->model() )
-    {
-      return false;
-    } 
-
-    node.removeSetpointManagerMixedAir();
-
-    node.removeSetpointManagerSingleZoneReheat();
-
-    node.removeSetpointManagerScheduled();
-
-    node.removeSetpointManagerFollowOutdoorAirTemperature();
-
-    node.removeSetpointManagerOutdoorAirReset();
-
-    node.removeSetpointManagerWarmest();
-
-    if( OptionalAirLoopHVAC airLoop = node.airLoopHVAC() )
-    {
-      if( airLoop->supplyComponent(node.handle()) )
-      {
-        this->setSetpointNode(node);
-
-        return true;
-      }
-      if(OptionalAirLoopHVACOutdoorAirSystem oaSystem = airLoop->airLoopHVACOutdoorAirSystem())
-      {
-        if(node == oaSystem->outboardOANode().get())
-        {
-          return false;
-        }
-
-        if(oaSystem->oaComponent(node.handle()))
-        {
-          this->setSetpointNode(node);
-        
-          return true;
-        }
-      }
-    }
-    else if( boost::optional<PlantLoop> plantLoop = node.plantLoop() )
-    {
-      if( plantLoop->supplyComponent(node.handle()) )
-      {
-        this->setSetpointNode(node);
-
-        return true;
-      }
-    }
-
-    return false;
-  }
-
 } // detail
 
 SetpointManagerOutdoorAirReset::SetpointManagerOutdoorAirReset(const Model& model)
-  : HVACComponent(SetpointManagerOutdoorAirReset::iddObjectType(),model)
+  : SetpointManager(SetpointManagerOutdoorAirReset::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::SetpointManagerOutdoorAirReset_Impl>());
 
@@ -709,7 +654,7 @@ OSOptionalQuantity SetpointManagerOutdoorAirReset::getOutdoorHighTemperature2(bo
   return getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->getOutdoorHighTemperature2(returnIP);
 }
 
-bool SetpointManagerOutdoorAirReset::setControlVariable(std::string controlVariable) {
+bool SetpointManagerOutdoorAirReset::setControlVariable(const std::string& controlVariable) {
   return getImpl<detail::SetpointManagerOutdoorAirReset_Impl>()->setControlVariable(controlVariable);
 }
 
@@ -811,8 +756,8 @@ boost::optional<Node> SetpointManagerOutdoorAirReset::setpointNode() const
 }
 
 /// @cond
-SetpointManagerOutdoorAirReset::SetpointManagerOutdoorAirReset(boost::shared_ptr<detail::SetpointManagerOutdoorAirReset_Impl> impl)
-  : HVACComponent(impl)
+SetpointManagerOutdoorAirReset::SetpointManagerOutdoorAirReset(std::shared_ptr<detail::SetpointManagerOutdoorAirReset_Impl> impl)
+  : SetpointManager(impl)
 {}
 /// @endcond
 

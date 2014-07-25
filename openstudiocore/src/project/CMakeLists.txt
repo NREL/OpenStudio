@@ -1,6 +1,6 @@
-SET( target_name openstudio_project )
+set(target_name openstudio_project)
 
-SET( ${target_name}_src
+set(${target_name}_src
   ProjectAPI.hpp
   mainpage.hpp
   JoinRecord.hpp
@@ -163,33 +163,34 @@ SET( ${target_name}_src
   VariableRecord.cpp
 )
 
-SET( ${target_name}_moc
+set(${target_name}_moc
   ProjectDatabase_Impl.hpp
   Record_Impl.hpp
 )
 
-qt4_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
+qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
 
-SET( ${target_name}_depends
+set(${target_name}_depends
   openstudio_energyplus
   openstudio_runmanager
   openstudio_ruleset
   openstudio_analysis
 )
 
-ADD_LIBRARY( ${target_name} SHARED
+add_library(${target_name} SHARED
   ${${target_name}_src}
   ${${target_name}_moc_src}
- )
-TARGET_LINK_LIBRARIES(${target_name} ${${target_name}_depends} )
+)
+target_link_libraries(${target_name} ${${target_name}_depends})
 
-IF( NOT APPLE )
-INSTALL(TARGETS ${target_name}
-  RUNTIME DESTINATION bin
-  LIBRARY DESTINATION lib )
-ENDIF()
+if(NOT APPLE)
+  install(TARGETS ${target_name}
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+  )
+endif()
 
-SET( ${target_name}_test_src
+set(${target_name}_test_src
   Test/ProjectFixture.hpp
   Test/ProjectFixture.cpp
   Test/AlgorithmRecord_GTest.cpp
@@ -212,19 +213,19 @@ SET( ${target_name}_test_src
   Test/Versioning_GTest.cpp
 )
 
-SET( project_swig_src
+set(project_swig_src
   Project.i
 )
 
-MAKE_SWIG_TARGET( OpenStudioProject project "${CMAKE_CURRENT_SOURCE_DIR}/Project.i" "${project_swig_src}" "openstudio_project" "OpenStudioRunManager;OpenStudioRuleset;OpenStudioAnalysis")
+MAKE_SWIG_TARGET(OpenStudioProject project "${CMAKE_CURRENT_SOURCE_DIR}/Project.i" "${project_swig_src}" "openstudio_project" "OpenStudioRunManager;OpenStudioRuleset;OpenStudioAnalysis")
 
-CREATE_TEST_TARGETS( ${target_name} "${${target_name}_test_src}" "${${target_name}_depends}" )
+CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
 
 AddPCH(${target_name})
 
-IF( BUILD_TESTING )
-  ADD_DEPENDENCIES(${target_name}_tests
-      openstudio_runmanager_resources
-      openstudio_project_resources)
-ENDIF()
-
+if(BUILD_TESTING)
+  add_dependencies(${target_name}_tests
+    openstudio_runmanager_resources
+    openstudio_project_resources
+  )
+endif()

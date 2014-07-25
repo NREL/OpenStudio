@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CurveCubic.hpp>
-#include <model/CurveCubic_Impl.hpp>
+#include "CurveCubic.hpp"
+#include "CurveCubic_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Curve_Cubic_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <cmath>
 
@@ -357,7 +357,7 @@ void CurveCubic::resetOutputUnitType() {
 }
 
 /// @cond
-CurveCubic::CurveCubic(boost::shared_ptr<detail::CurveCubic_Impl> impl)
+CurveCubic::CurveCubic(std::shared_ptr<detail::CurveCubic_Impl> impl)
   : Curve(impl)
 {}
 /// @endcond

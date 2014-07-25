@@ -17,20 +17,20 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ZoneHVACIdealLoadsAirSystem.hpp>
-#include <model/ZoneHVACIdealLoadsAirSystem_Impl.hpp>
+#include "ZoneHVACIdealLoadsAirSystem.hpp"
+#include "ZoneHVACIdealLoadsAirSystem_Impl.hpp"
 
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/DesignSpecificationOutdoorAir.hpp>
-#include <model/DesignSpecificationOutdoorAir_Impl.hpp>
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "DesignSpecificationOutdoorAir.hpp"
+#include "DesignSpecificationOutdoorAir_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_ZoneHVAC_IdealLoadsAirSystem_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -1476,7 +1476,7 @@ void ZoneHVACIdealLoadsAirSystem::resetLatentHeatRecoveryEffectiveness() {
 }
 
 /// @cond
-ZoneHVACIdealLoadsAirSystem::ZoneHVACIdealLoadsAirSystem(boost::shared_ptr<detail::ZoneHVACIdealLoadsAirSystem_Impl> impl)
+ZoneHVACIdealLoadsAirSystem::ZoneHVACIdealLoadsAirSystem(std::shared_ptr<detail::ZoneHVACIdealLoadsAirSystem_Impl> impl)
   : ZoneHVACComponent(impl)
 {}
 /// @endcond

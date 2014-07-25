@@ -22,9 +22,9 @@
 #include "Buttons.hpp"
 #include "OSViewSwitcher.hpp"
 
-#include <openstudio_lib/OSItem.hpp>
+#include "../openstudio_lib/OSItem.hpp"
 
-#include <shared_gui_components/MeasureBadge.hpp>
+#include "MeasureBadge.hpp"
 
 #include <QApplication>
 #include <QButtonGroup>
@@ -41,12 +41,12 @@ namespace openstudio{
 LocalLibraryView::LocalLibraryView(QWidget * parent)
   : QWidget(parent)
 {
-  QVBoxLayout * mainVLayout = new QVBoxLayout();
+  auto mainVLayout = new QVBoxLayout();
   mainVLayout->setSpacing(0);
   mainVLayout->setContentsMargins(0,0,0,0);
   setLayout(mainVLayout);
 
-  QButtonGroup * buttonGroup = new QButtonGroup();
+  auto buttonGroup = new QButtonGroup();
   buttonGroup->setExclusive(true);
 
   mainViewSwitcher = new OSViewSwitcher();
@@ -58,18 +58,18 @@ LocalLibraryView::LocalLibraryView(QWidget * parent)
   style.append("background-color: qlineargradient(x1:0,y1:0,x2:0,y2:1,stop: 0 #B6B5B6, stop: 1 #737172); ");
   style.append("}");
 
-  QWidget * footer = new QWidget();
+  auto footer = new QWidget();
   footer->setObjectName("Footer");
   footer->setStyleSheet(style);
   //footer->setFixedHeight(40);
   mainVLayout->addWidget(footer);
 
-  QVBoxLayout * footerVLayout = new QVBoxLayout();
+  auto footerVLayout = new QVBoxLayout();
   footerVLayout->setContentsMargins(5,5,5,5);
   footerVLayout->setSpacing(5);
   footer->setLayout(footerVLayout);
 
-  QHBoxLayout * footerHLayout = new QHBoxLayout();
+  auto footerHLayout = new QHBoxLayout();
   footerHLayout->setContentsMargins(0,0,0,0);
   footerHLayout->setSpacing(5);
   footerVLayout->addLayout(footerHLayout);
@@ -89,7 +89,7 @@ LocalLibraryView::LocalLibraryView(QWidget * parent)
   myMeasuresFolderButton->setToolTip("Open the My Measures Directory");
   footerHLayout->addWidget(myMeasuresFolderButton);
 
-  QHBoxLayout * footerHLayout2 = new QHBoxLayout();
+  auto footerHLayout2 = new QHBoxLayout();
   footerHLayout2->setContentsMargins(10,0,10,0);
   footerHLayout2->setSpacing(5);
   footerVLayout->addLayout(footerHLayout2);
@@ -141,7 +141,7 @@ LibraryItemView::LibraryItemView(QWidget * parent)
   setObjectName("Container");
   setHasEmphasis(false);
 
-  QHBoxLayout * mainHBoxLayout = new QHBoxLayout();
+  auto mainHBoxLayout = new QHBoxLayout();
   mainHBoxLayout->setContentsMargins(5,0,5,0);
 
   setLayout(mainHBoxLayout);

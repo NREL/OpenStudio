@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_BUILDINGSTORIESVIEW_H
-#define OPENSTUDIO_BUILDINGSTORIESVIEW_H
+#ifndef OPENSTUDIO_BUILDINGSTORIESVIEW_HPP
+#define OPENSTUDIO_BUILDINGSTORIESVIEW_HPP
 
-#include <openstudio_lib/ModelSubTabView.hpp>
-#include <openstudio_lib/ModelObjectInspectorView.hpp>
+#include "ModelSubTabView.hpp"
+#include "ModelObjectInspectorView.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
-#include <utilities/idf/WorkspaceObject_Impl.hpp>
+#include "../utilities/idf/WorkspaceObject_Impl.hpp"
 
 class QLabel;
 
@@ -48,4 +48,4 @@ class BuildingStoriesView : public ModelSubTabView
 
 } // openstudio
 
-#endif // OPENSTUDIO_BUILDINGSTORIESVIEW_H
+#endif // OPENSTUDIO_BUILDINGSTORIESVIEW_HPP

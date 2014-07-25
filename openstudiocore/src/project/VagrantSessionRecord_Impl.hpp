@@ -20,8 +20,8 @@
 #ifndef PROJECT_VAGRANTSESSIONRECORD_IMPL_HPP
 #define PROJECT_VAGRANTSESSIONRECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/CloudSessionRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "CloudSessionRecord_Impl.hpp"
 
 namespace openstudio {
 
@@ -50,7 +50,7 @@ namespace detail {
     //@{
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(const boost::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
 
     //@}
     /** @name Getters */

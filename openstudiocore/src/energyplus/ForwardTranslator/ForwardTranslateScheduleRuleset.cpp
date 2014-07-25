@@ -17,27 +17,27 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
 
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeLimits_Impl.hpp>
-#include <model/ScheduleRuleset.hpp>
-#include <model/ScheduleRuleset_Impl.hpp>
-#include <model/ScheduleRule.hpp>
-#include <model/ScheduleRule_Impl.hpp>
-#include <model/ScheduleDay.hpp>
-#include <model/ScheduleDay_Impl.hpp>
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
+#include "../../model/ScheduleTypeLimits.hpp"
+#include "../../model/ScheduleTypeLimits_Impl.hpp"
+#include "../../model/ScheduleRuleset.hpp"
+#include "../../model/ScheduleRuleset_Impl.hpp"
+#include "../../model/ScheduleRule.hpp"
+#include "../../model/ScheduleRule_Impl.hpp"
+#include "../../model/ScheduleDay.hpp"
+#include "../../model/ScheduleDay_Impl.hpp"
+#include "../../model/YearDescription.hpp"
+#include "../../model/YearDescription_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/time/Date.hpp>
-#include <utilities/time/Time.hpp>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/time/Date.hpp"
+#include "../../utilities/time/Time.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/Assert.hpp"
 
 #include <utilities/idd/Schedule_Week_Daily_FieldEnums.hxx>
 #include <utilities/idd/Schedule_Year_FieldEnums.hxx>
@@ -158,7 +158,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
 
     // iterate over the schedule for each day of the year
     std::vector<ScheduleDay> daySchedules = modelObject.getDaySchedules(jan1, dec31);
-    BOOST_FOREACH(ScheduleDay& daySchedule, daySchedules){
+    for (ScheduleDay& daySchedule : daySchedules){
 
       // translate the day schedule
       translateAndMapModelObject(daySchedule);
@@ -360,7 +360,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
   translateAndMapModelObject(winterDesignDaySchedule);
 
   // translate schedule rules, these are returned in order
-  BOOST_FOREACH(ScheduleRule scheduleRule, modelObject.scheduleRules()){
+  for (ScheduleRule scheduleRule : modelObject.scheduleRules()){
     ScheduleDay daySchedule = scheduleRule.daySchedule();
     translateAndMapModelObject(daySchedule);
   }

@@ -18,28 +18,26 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <project/Test/ProjectFixture.hpp>
+#include "ProjectFixture.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/ProblemRecord_Impl.hpp>
+#include "../ProjectDatabase.hpp"
+#include "../ProblemRecord.hpp"
+#include "../ProblemRecord_Impl.hpp"
 
-#include <analysis/Problem.hpp>
-#include <analysis/Problem_Impl.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
-#include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/RubyContinuousVariable_Impl.hpp>
+#include "../../analysis/Problem.hpp"
+#include "../../analysis/Problem_Impl.hpp"
+#include "../../analysis/RubyMeasure.hpp"
+#include "../../analysis/RubyMeasure_Impl.hpp"
+#include "../../analysis/RubyContinuousVariable.hpp"
+#include "../../analysis/RubyContinuousVariable_Impl.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../../ruleset/OSArgument.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Workflow.hpp>
+#include "../../runmanager/lib/RunManager.hpp"
+#include "../../runmanager/lib/Workflow.hpp"
 
 #include <resources.hxx>
 #include <OpenStudio.hxx>
-
-#include <boost/foreach.hpp>
 
 using namespace openstudio;
 using namespace openstudio::analysis;

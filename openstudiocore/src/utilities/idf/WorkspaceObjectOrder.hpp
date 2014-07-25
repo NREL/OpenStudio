@@ -20,13 +20,11 @@
 #ifndef UTILITIES_IDF_WORKSPACEOBJECTORDER_HPP
 #define UTILITIES_IDF_WORKSPACEOBJECTORDER_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/idf/Handle.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/idf/ObjectOrderBase.hpp>
-
-#include <boost/function.hpp>
+#include "Handle.hpp"
+#include "WorkspaceObject.hpp"
+#include "ObjectOrderBase.hpp"
 
 namespace openstudio {
 
@@ -39,7 +37,7 @@ namespace detail {
   /** Implementation of WorkspaceObjectOrder. */
   class UTILITIES_API WorkspaceObjectOrder_Impl : public ObjectOrderBase {
    public:
-    typedef boost::function<boost::optional<WorkspaceObject> (const Handle&)> ObjectGetter;
+    typedef std::function<boost::optional<WorkspaceObject> (const Handle&)> ObjectGetter;
 
     WorkspaceObjectOrder_Impl(const ObjectGetter& objectGetter);
 
@@ -136,14 +134,14 @@ namespace detail {
     WorkspaceObjectVector getObjects(const std::vector<Handle>& handles) const;
 
     // ETH@20100409 boost::bind seems to need non-overloaded functions
-    // These are (ugly) wrappers to accomodate.
+    // These are (ugly) wrappers to accommodate.
     bool less_Handle(const Handle& left,const Handle& right) const;
     bool less_WorkspaceObject(const WorkspaceObject& left,const WorkspaceObject& right) const;
     virtual bool less_IddObjectType(IddObjectType left, IddObjectType right) const;
 
   };
 
-  typedef boost::shared_ptr<WorkspaceObjectOrder_Impl> WorkspaceObjectOrder_ImplPtr;
+  typedef std::shared_ptr<WorkspaceObjectOrder_Impl> WorkspaceObjectOrder_ImplPtr;
 } // detail
 
 class Workspace; // forward declaration
@@ -169,7 +167,7 @@ class UTILITIES_API WorkspaceObjectOrder {
 
   // GETTERS AND SETTERS
 
-  /// reterns whether or not currently ordering by IddObjectType
+  /// returns whether or not currently ordering by IddObjectType
   bool orderByIddEnum() const;
   /// deletes other ordering options and orders by IddObjectType
   void setOrderByIddEnum();
@@ -243,10 +241,10 @@ class UTILITIES_API WorkspaceObjectOrder {
   friend class detail::Workspace_Impl;
 
   // Workspace constructs the public interface of the orderer when it is requested.
-  WorkspaceObjectOrder(const boost::shared_ptr<detail::WorkspaceObjectOrder_Impl>& impl);
+  WorkspaceObjectOrder(const std::shared_ptr<detail::WorkspaceObjectOrder_Impl>& impl);
 
  private:
-  boost::shared_ptr<detail::WorkspaceObjectOrder_Impl> m_impl;
+  std::shared_ptr<detail::WorkspaceObjectOrder_Impl> m_impl;
 
   REGISTER_LOGGER("utilities.idf.WorkspaceObjectOrder");
 };

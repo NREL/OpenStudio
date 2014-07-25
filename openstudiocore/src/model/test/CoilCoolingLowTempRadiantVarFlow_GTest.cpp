@@ -19,16 +19,16 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/ScheduleConstant.hpp>
-#include <model/ScheduleConstant_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/CoilCoolingLowTempRadiantVarFlow.hpp>
-#include <model/CoilCoolingLowTempRadiantVarFlow_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../PlantLoop.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
+#include "../CoilCoolingLowTempRadiantVarFlow.hpp"
+#include "../CoilCoolingLowTempRadiantVarFlow_Impl.hpp"
 
 
 using namespace openstudio;

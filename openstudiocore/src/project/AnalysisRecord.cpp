@@ -17,31 +17,29 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/AnalysisRecord.hpp>
-#include <project/AnalysisRecord_Impl.hpp>
+#include "AnalysisRecord.hpp"
+#include "AnalysisRecord_Impl.hpp"
 
-#include <project/JoinRecord.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/ProblemRecord_Impl.hpp>
-#include <project/AlgorithmRecord.hpp>
-#include <project/DataPointRecord.hpp>
-#include <project/DataPointRecord_Impl.hpp>
-#include <project/FileReferenceRecord.hpp>
-#include <project/InputVariableRecord.hpp>
-#include <project/MeasureRecord.hpp>
-#include <project/DataPoint_Measure_JoinRecord.hpp>
-#include <project/TagRecord.hpp>
+#include "JoinRecord.hpp"
+#include "ProblemRecord.hpp"
+#include "ProblemRecord_Impl.hpp"
+#include "AlgorithmRecord.hpp"
+#include "DataPointRecord.hpp"
+#include "DataPointRecord_Impl.hpp"
+#include "FileReferenceRecord.hpp"
+#include "InputVariableRecord.hpp"
+#include "MeasureRecord.hpp"
+#include "DataPoint_Measure_JoinRecord.hpp"
+#include "TagRecord.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/Algorithm.hpp>
-#include <analysis/DataPoint.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/Problem.hpp"
+#include "../analysis/Algorithm.hpp"
+#include "../analysis/DataPoint.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/Containers.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FileReference.hpp"
+#include "../utilities/core/Containers.hpp"
 
 using namespace openstudio::analysis;
 
@@ -131,7 +129,7 @@ namespace detail {
     return result;
   }
 
-  void AnalysisRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void AnalysisRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<AnalysisRecord>(query);
@@ -266,11 +264,11 @@ namespace detail {
     // called during AnalysisRecord construction (and because they are super-tangled here).
 
     // TODO: Have this work for Problems with ContinuousVariables. Perhaps need eps bound on
-    // actual value of continous variables.
+    // actual value of continuous variables.
 
     InputVariableRecordVector ivrs = problemRecord().inputVariableRecords();
     IntVector variableVectorIndices;
-    Q_FOREACH(const InputVariableRecord& ivr, ivrs) {
+    for (const InputVariableRecord& ivr : ivrs) {
       variableVectorIndices.push_back(ivr.variableVectorIndex());
     }
     if (variableValues.size() > variableVectorIndices.size()) {
@@ -391,7 +389,7 @@ namespace detail {
     }
 
     analysis::DataPointVector dataPoints;
-    BOOST_FOREACH(const DataPointRecord& dataPointRecord,dataPointRecords()) {
+    for (const DataPointRecord& dataPointRecord : dataPointRecords()) {
       dataPoints.push_back(dataPointRecord.dataPoint());
     }
 
@@ -576,7 +574,7 @@ namespace detail {
 } // detail
 
 AnalysisRecord::AnalysisRecord(const analysis::Analysis& analysis, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::AnalysisRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::AnalysisRecord_Impl>(
         new detail::AnalysisRecord_Impl(analysis, database)),
         database)
 {
@@ -694,7 +692,7 @@ AnalysisRecord::AnalysisRecord(const analysis::Analysis& analysis, ProjectDataba
   DataPointVector dataPoints = analysis.dataPoints();
   std::vector<UUID> dataPointUUIDs;
   OptionalProblemRecord problemRecord;
-  BOOST_FOREACH(const DataPoint& dataPoint,dataPoints) {
+  for (const DataPoint& dataPoint : dataPoints) {
     dataPointUUIDs.push_back(dataPoint.uuid());
     if (dataPoint.isDirty() || isNew) {
       if (!problemRecord) {
@@ -723,14 +721,14 @@ AnalysisRecord::AnalysisRecord(const analysis::Analysis& analysis, ProjectDataba
 }
 
 AnalysisRecord::AnalysisRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::AnalysisRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::AnalysisRecord_Impl>(
         new detail::AnalysisRecord_Impl(query, database)),
         database)
 {
   OS_ASSERT(getImpl<detail::AnalysisRecord_Impl>());
 }
 
-AnalysisRecord::AnalysisRecord(boost::shared_ptr<detail::AnalysisRecord_Impl> impl,
+AnalysisRecord::AnalysisRecord(std::shared_ptr<detail::AnalysisRecord_Impl> impl,
                                ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
@@ -751,7 +749,7 @@ UpdateByIdQueryData AnalysisRecord::updateByIdQueryData() {
     std::stringstream ss;
     ss << "UPDATE " << databaseTableName() << " SET ";
     int expectedValue = 0;
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+    for (auto it = result.columnValues.begin(),
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
@@ -759,7 +757,7 @@ UpdateByIdQueryData AnalysisRecord::updateByIdQueryData() {
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
-      std::set<int>::const_iterator nextIt = it;
+      auto nextIt = it;
       ++nextIt;
       if (nextIt == itend) {
         ss << " ";
@@ -773,7 +771,7 @@ UpdateByIdQueryData AnalysisRecord::updateByIdQueryData() {
     result.queryString = ss.str();
 
     // null values
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+    for (auto it = result.columnValues.begin(),
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // bind all values to avoid parameter mismatch error
@@ -909,7 +907,7 @@ void AnalysisRecord::setDataPointsAreInvalid(bool value) {
 }
 
 /// @cond
-AnalysisRecord::AnalysisRecord(boost::shared_ptr<detail::AnalysisRecord_Impl> impl)
+AnalysisRecord::AnalysisRecord(std::shared_ptr<detail::AnalysisRecord_Impl> impl)
   : ObjectRecord(impl)
 {}
 /// @endcond
@@ -922,7 +920,7 @@ void AnalysisRecord::removeDataPointRecords(const std::vector<UUID>& uuidsToKeep
   ss << "SELECT * FROM " + DataPointRecord::databaseTableName() +
         " WHERE (analysisRecordId=:analysisRecordId) AND (handle NOT IN (";
   std::string sep("");
-  BOOST_FOREACH(const UUID& handle,uuidsToKeep) {
+  for (const UUID& handle : uuidsToKeep) {
     ss << sep << "'" << toString(handle) << "'";
     sep = std::string(", ");
   }

@@ -19,9 +19,9 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class ClimateZones_Test < Test::Unit::TestCase
+class ClimateZones_Test < MiniTest::Unit::TestCase
   
   def test_basic
     

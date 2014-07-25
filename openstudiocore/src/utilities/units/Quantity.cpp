@@ -17,18 +17,18 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/units/Quantity.hpp>
+#include "Quantity.hpp"
 
-#include <utilities/units/UnitFactory.hpp>
-#include <utilities/units/ScaleFactory.hpp>
-#include <utilities/units/IPUnit.hpp>
-#include <utilities/units/IPUnit_Impl.hpp>
-#include <utilities/units/TemperatureUnit.hpp>
-#include <utilities/units/TemperatureUnit_Impl.hpp>
+#include "UnitFactory.hpp"
+#include "ScaleFactory.hpp"
+#include "IPUnit.hpp"
+#include "IPUnit_Impl.hpp"
+#include "TemperatureUnit.hpp"
+#include "TemperatureUnit_Impl.hpp"
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../math/FloatCompare.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 #include <cmath>
 

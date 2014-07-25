@@ -19,7 +19,7 @@
 
 require 'openstudio'
 require 'openstudio/energyplus/find_energyplus'
-require 'test/unit'
+require 'minitest/autorun'
 
 class RunManagerWatcherImpl < OpenStudio::Runmanager::RunManagerWatcher
   def initialize(runmanager)
@@ -51,7 +51,7 @@ class RunManagerWatcherImpl < OpenStudio::Runmanager::RunManagerWatcher
   end
 end
 
-class RunManagerWatcher_Test < Test::Unit::TestCase
+class RunManagerWatcher_Test < MiniTest::Unit::TestCase
 
 
   def test_RunManagerWatcher

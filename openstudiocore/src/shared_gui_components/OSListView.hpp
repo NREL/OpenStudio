@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSLISTVIEW_H
-#define OPENSTUDIO_OSLISTVIEW_H
+#ifndef SHAREDGUICOMPONENTS_OSLISTVIEW_HPP
+#define SHAREDGUICOMPONENTS_OSLISTVIEW_HPP
 
 #include "OSListController.hpp"
 #include <QWidget>
 #include <QSharedPointer>
 #include <map>
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 class QScrollArea;
 class QVBoxLayout;
@@ -47,7 +47,7 @@ class OSListView : public QWidget
 
  public:
 
-  OSListView(bool scrollable = false, QWidget * parent = 0);
+  OSListView(bool scrollable = false, QWidget * parent = nullptr);
 
   virtual ~OSListView() {}
 
@@ -103,5 +103,5 @@ class OSListView : public QWidget
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSLISTVIEW_H
+#endif // SHAREDGUICOMPONENTS_OSLISTVIEW_HPP
 

@@ -22,9 +22,9 @@
 
 #include <gtest/gtest.h>
 
-#include <analysisdriver/AnalysisDriverWatcher.hpp>
+#include "../AnalysisDriverWatcher.hpp"
 
-#include <utilities/time/Time.hpp>
+#include "../../utilities/time/Time.hpp"
 
 class StopWatcher : public openstudio::analysisdriver::AnalysisDriverWatcher {
  public:

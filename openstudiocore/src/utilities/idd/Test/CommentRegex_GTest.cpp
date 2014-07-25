@@ -18,10 +18,10 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idd/Test/IddFixture.hpp>
+#include "IddFixture.hpp"
 
-#include <utilities/idd/CommentRegex.hpp>
-#include <utilities/idd/Comments.hpp>
+#include "../CommentRegex.hpp"
+#include "../Comments.hpp"
 
 using namespace openstudio::commentRegex;
 using openstudio::makeComment;
@@ -92,12 +92,14 @@ TEST_F(IddFixture,CommentRegex_Lines) {
   line = "  \t\t !-IdfEditor-style comments are ok too.";
   EXPECT_TRUE(boost::regex_match(line,matches,commentWhitespaceOnlyLine()));
   ASSERT_EQ(static_cast<unsigned>(2),matches.size());
+  // cppcheck-suppress arrayIndexOutOfBounds
   match = std::string(matches[1].first,matches[1].second);
   EXPECT_EQ("-IdfEditor-style comments are ok too.",match);
 
   line = " !- One last boring comment, with some math: 1 + 1 = (1^1)*2.";
   EXPECT_TRUE(boost::regex_match(line,matches,commentWhitespaceOnlyLine()));
   ASSERT_EQ(static_cast<unsigned>(2),matches.size());
+  // cppcheck-suppress arrayIndexOutOfBounds
   match = std::string(matches[1].first,matches[1].second);
   EXPECT_EQ("- One last boring comment, with some math: 1 + 1 = (1^1)*2.",match);
 
@@ -113,6 +115,7 @@ TEST_F(IddFixture,CommentRegex_Lines) {
   EXPECT_FALSE(matches.empty());
   ASSERT_EQ(static_cast<unsigned>(2),matches.size());
   EXPECT_TRUE(matches[0].matched);
+  // cppcheck-suppress arrayIndexOutOfBounds
   EXPECT_FALSE(matches[1].matched);
 
   line = "     \t \t";
@@ -120,6 +123,7 @@ TEST_F(IddFixture,CommentRegex_Lines) {
   EXPECT_FALSE(matches.empty());
   ASSERT_EQ(static_cast<unsigned>(2),matches.size());
   EXPECT_TRUE(matches[0].matched);
+  // cppcheck-suppress arrayIndexOutOfBounds
   EXPECT_FALSE(matches[1].matched);
 
   line = "  ";
@@ -127,6 +131,7 @@ TEST_F(IddFixture,CommentRegex_Lines) {
   EXPECT_FALSE(matches.empty());
   ASSERT_EQ(static_cast<unsigned>(2),matches.size());
   EXPECT_TRUE(matches[0].matched);
+  // cppcheck-suppress arrayIndexOutOfBounds
   EXPECT_FALSE(matches[1].matched);
 
   line = "  \t !A plain comment, no space";
@@ -138,12 +143,14 @@ TEST_F(IddFixture,CommentRegex_Lines) {
   line = "  \t\t !-IdfEditor-style comments are ok too.";
   EXPECT_TRUE(boost::regex_match(line,matches,editorCommentWhitespaceOnlyLine()));
   ASSERT_EQ(static_cast<unsigned>(2),matches.size());
+  // cppcheck-suppress arrayIndexOutOfBounds
   match = std::string(matches[1].first,matches[1].second);
   EXPECT_EQ("IdfEditor-style comments are ok too.",match);
 
   line = " !- One last boring comment, with some math: 1 + 1 = (1^1)*2.";
   EXPECT_TRUE(boost::regex_match(line,matches,editorCommentWhitespaceOnlyLine()));
   ASSERT_EQ(static_cast<unsigned>(2),matches.size());
+  // cppcheck-suppress arrayIndexOutOfBounds
   match = std::string(matches[1].first,matches[1].second);
   EXPECT_EQ(" One last boring comment, with some math: 1 + 1 = (1^1)*2.",match);
 

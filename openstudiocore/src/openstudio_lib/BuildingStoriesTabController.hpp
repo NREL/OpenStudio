@@ -17,12 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_BUILDINGSTORIESTABCONTROLLER_H
-#define OPENSTUDIO_BUILDINGSTORIESTABCONTROLLER_H
+#ifndef OPENSTUDIO_BUILDINGSTORIESTABCONTROLLER_HPP
+#define OPENSTUDIO_BUILDINGSTORIESTABCONTROLLER_HPP
 
-#include <openstudio_lib/MainTabController.hpp>
-
-#include <boost/shared_ptr.hpp>
+#include "MainTabController.hpp"
 
 namespace openstudio {
 
@@ -40,10 +38,10 @@ class BuildingStoriesTabController : public MainTabController
 
   private:
 
-    boost::shared_ptr<BuildingStoriesController> m_buildingStoriesController;
+    std::shared_ptr<BuildingStoriesController> m_buildingStoriesController;
  
 };
 
 } // openstudio
 
-#endif // OPENSTUDIO_BUILDINGSTORIESTABCONTROLLER_H
+#endif // OPENSTUDIO_BUILDINGSTORIESTABCONTROLLER_HPP

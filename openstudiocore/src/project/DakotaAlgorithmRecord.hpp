@@ -20,8 +20,8 @@
 #ifndef PROJECT_DAKOTAALGORITHMRECORD_HPP
 #define PROJECT_DAKOTAALGORITHMRECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/AlgorithmRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "AlgorithmRecord.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -87,12 +87,12 @@ class PROJECT_API DakotaAlgorithmRecord : public AlgorithmRecord {
   //@}
  protected:
   /** Construct from impl. */
-  DakotaAlgorithmRecord(boost::shared_ptr<detail::DakotaAlgorithmRecord_Impl> impl,
+  DakotaAlgorithmRecord(std::shared_ptr<detail::DakotaAlgorithmRecord_Impl> impl,
                         ProjectDatabase database,
                         const boost::optional<analysis::DakotaAlgorithm>& algorithm);
 
   /// @cond
-  explicit DakotaAlgorithmRecord(boost::shared_ptr<detail::DakotaAlgorithmRecord_Impl> impl);
+  explicit DakotaAlgorithmRecord(std::shared_ptr<detail::DakotaAlgorithmRecord_Impl> impl);
 
   friend class detail::DakotaAlgorithmRecord_Impl;
   friend class Record;

@@ -19,16 +19,16 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/ShadingControl.hpp>
-#include <model/Construction.hpp>
-#include <model/Schedule.hpp>
-#include <model/Blind.hpp>
-#include <model/SimpleGlazing.hpp>
-#include <model/SubSurface.hpp>
+#include "../ShadingControl.hpp"
+#include "../Construction.hpp"
+#include "../Schedule.hpp"
+#include "../Blind.hpp"
+#include "../SimpleGlazing.hpp"
+#include "../SubSurface.hpp"
 
-#include <utilities/geometry/Point3d.hpp>
+#include "../../utilities/geometry/Point3d.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

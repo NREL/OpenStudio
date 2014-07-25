@@ -1,6 +1,6 @@
-SET( target_name openstudio_contam )
+set(target_name openstudio_contam)
 
-SET( ${target_name}_src
+set(${target_name}_src
   ContamAPI.hpp
   ForwardTranslator.hpp
   ForwardTranslator.cpp
@@ -30,25 +30,25 @@ SET( ${target_name}_src
 )
 
 # resource files
-SET( ${target_name}_qrc
+set(${target_name}_qrc
   contam.qrc
 )
 
 # generate rules for building source files from the resources
-qt4_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
+qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
 
-SET( ${target_name}_test_src
+set(${target_name}_test_src
   Test/ContamFixture.hpp
   Test/ContamFixture.cpp
   Test/ForwardTranslator_GTest.cpp
 )
 
-SET( ${target_name}_swig_src
+set(${target_name}_swig_src
   Contam.i
 )
 
 # Someone should make sure these are all really needed
-SET( ${target_name}_depends
+set(${target_name}_depends
   ${Boost_LIBRARIES}
   ${CMAKE_THREAD_LIBS}
   ${QT_LIBS}
@@ -56,33 +56,31 @@ SET( ${target_name}_depends
   openstudio_model
   openstudio_osversion
   zkexpat
-  boost_log
 )
 
-ADD_LIBRARY( ${target_name} 
-             SHARED 
-			 ${${target_name}_src} 
-			 ${${target_name}_qrcs} )
+add_library(${target_name} SHARED
+  ${${target_name}_src}
+  ${${target_name}_qrcs}
+)
 
-TARGET_LINK_LIBRARIES( ${target_name} ${${target_name}_depends} )
+target_link_libraries(${target_name} ${${target_name}_depends})
 
 AddPCH(${target_name})
 
-#IF( NOT APPLE )
-INSTALL(TARGETS ${target_name} 
-  RUNTIME DESTINATION bin 
-  LIBRARY DESTINATION lib )
-#ENDIF()
+#if(NOT APPLE)
+install(TARGETS ${target_name}
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+)
+#endif()
 
-CREATE_SRC_GROUPS( "${${target_name}_src}" )
-CREATE_SRC_GROUPS( "${${target_name}_test_src}" )
-CREATE_SRC_GROUPS( "${${target_name}_swig_src}" )
+CREATE_SRC_GROUPS("${${target_name}_src}")
+CREATE_SRC_GROUPS("${${target_name}_test_src}")
+CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 
-CREATE_TEST_TARGETS( ${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
-IF(BUILD_TESTING)
-  ADD_DEPENDENCIES(${target_name}_tests 
-    openstudio_contam_resources)
-ENDIF()
+CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
+if(BUILD_TESTING)
+  add_dependencies(${target_name}_tests openstudio_contam_resources)
+endif()
 
-MAKE_SWIG_TARGET( OpenStudioContam Contam "${CMAKE_CURRENT_SOURCE_DIR}/Contam.i" "${${target_name}_swig_src}" ${target_name} OpenStudioEnergyPlus)
-
+MAKE_SWIG_TARGET(OpenStudioContam Contam "${CMAKE_CURRENT_SOURCE_DIR}/Contam.i" "${${target_name}_swig_src}" ${target_name} OpenStudioEnergyPlus)

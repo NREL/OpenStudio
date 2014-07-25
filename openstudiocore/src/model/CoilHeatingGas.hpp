@@ -20,10 +20,10 @@
 #ifndef MODEL_COILHEATINGGAS_HPP
 #define MODEL_COILHEATINGGAS_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/Connection.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
+#include "StraightComponent.hpp"
+#include "Connection.hpp"
 
 namespace openstudio {
 namespace model {
@@ -128,7 +128,7 @@ class MODEL_API CoilHeatingGas : public StraightComponent {
 
   typedef detail::CoilHeatingGas_Impl ImplType;
 
-  explicit CoilHeatingGas(boost::shared_ptr<detail::CoilHeatingGas_Impl> impl);
+  explicit CoilHeatingGas(std::shared_ptr<detail::CoilHeatingGas_Impl> impl);
 
  private:
 

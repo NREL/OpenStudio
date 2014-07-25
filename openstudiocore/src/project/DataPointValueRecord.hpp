@@ -20,8 +20,8 @@
 #ifndef PROJECT_DATAPOINTVALUERECORD_HPP
 #define PROJECT_DATAPOINTVALUERECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/ObjectRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "ObjectRecord.hpp"
 
 namespace openstudio {
 namespace project {
@@ -122,11 +122,11 @@ class PROJECT_API DataPointValueRecord : public ObjectRecord {
   friend class detail::DataPointValueRecord_Impl;
 
   /** Construct from impl. */
-  DataPointValueRecord(boost::shared_ptr<detail::DataPointValueRecord_Impl> impl,
+  DataPointValueRecord(std::shared_ptr<detail::DataPointValueRecord_Impl> impl,
                        ProjectDatabase database);
 
   /// Construct from impl. Does not register in the database, so use with caution.
-  explicit DataPointValueRecord(boost::shared_ptr<detail::DataPointValueRecord_Impl> impl);
+  explicit DataPointValueRecord(std::shared_ptr<detail::DataPointValueRecord_Impl> impl);
 
   /// @endcond
  private:

@@ -22,11 +22,11 @@
 
 #include <QObject>
 
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/Workspace_Impl.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
+#include "../Workspace.hpp"
+#include "../Workspace_Impl.hpp"
+#include "../WorkspaceObject.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../../core/Assert.hpp"
 
 #include <boost/optional.hpp>
 
@@ -38,16 +38,16 @@ class WorkspaceReciever : public QObject {
 
   WorkspaceReciever(const Workspace& workspace)
   {
-    boost::shared_ptr<openstudio::detail::Workspace_Impl> impl = workspace.getImpl<openstudio::detail::Workspace_Impl>();
+    std::shared_ptr<openstudio::detail::Workspace_Impl> impl = workspace.getImpl<openstudio::detail::Workspace_Impl>();
     
     bool test;
-    test = connect(impl.get(), SIGNAL(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                   this, SLOT(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+    test = connect(impl.get(), SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                   this, SLOT(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                    Qt::QueuedConnection);
     OS_ASSERT(test);
 
-    test = connect(impl.get(), SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                   this, SLOT(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+    test = connect(impl.get(), SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                   this, SLOT(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                    Qt::QueuedConnection);
     OS_ASSERT(test);
   }
@@ -59,7 +59,7 @@ class WorkspaceReciever : public QObject {
     m_handle.reset();
   }
 
-  boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> m_objectImpl;
+  std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> m_objectImpl;
 
   boost::optional<IddObjectType> m_iddObjectType;
 
@@ -67,14 +67,14 @@ class WorkspaceReciever : public QObject {
 
  public slots:
 
-  void removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) 
+  void removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) 
   {
     m_objectImpl = object;
     m_iddObjectType = iddObjectType;
     m_handle = handle;
   }
 
-  void addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) 
+  void addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) 
   {
     m_objectImpl = object;
     m_iddObjectType = iddObjectType;

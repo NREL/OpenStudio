@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CurveDoubleExponentialDecay.hpp>
-#include <model/CurveDoubleExponentialDecay_Impl.hpp>
+#include "CurveDoubleExponentialDecay.hpp"
+#include "CurveDoubleExponentialDecay_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Curve_DoubleExponentialDecay_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <cmath>
 
@@ -374,7 +374,7 @@ void CurveDoubleExponentialDecay::resetOutputUnitType() {
 }
 
 /// @cond
-CurveDoubleExponentialDecay::CurveDoubleExponentialDecay(boost::shared_ptr<detail::CurveDoubleExponentialDecay_Impl> impl)
+CurveDoubleExponentialDecay::CurveDoubleExponentialDecay(std::shared_ptr<detail::CurveDoubleExponentialDecay_Impl> impl)
   : Curve(impl)
 {}
 /// @endcond

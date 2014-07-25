@@ -17,79 +17,78 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <sdd/ReverseTranslator.hpp>
+#include "ReverseTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/Component.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurfaceGroup_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
-#include <model/TimeDependentValuation.hpp>
-#include <model/TimeDependentValuation_Impl.hpp>
-#include <model/Construction.hpp>
-#include <model/SimpleGlazing.hpp>
-#include <model/StandardOpaqueMaterial.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
-#include <model/Timestep.hpp>
-#include <model/Timestep_Impl.hpp>
-#include <model/Meter.hpp>
-#include <model/OutputVariable.hpp>
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
-#include <model/RunPeriod.hpp>
-#include <model/RunPeriod_Impl.hpp>
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
-#include <model/OutputControlReportingTolerances.hpp>
-#include <model/OutputControlReportingTolerances_Impl.hpp>
-#include <model/ChillerElectricEIR.hpp>
-#include <model/ChillerElectricEIR_Impl.hpp>
-#include <model/CoolingTowerSingleSpeed.hpp>
-#include <model/CoolingTowerSingleSpeed_Impl.hpp>
-#include <model/BoilerHotWater.hpp>
-#include <model/BoilerHotWater_Impl.hpp>
-#include <model/SizingParameters.hpp>
-#include <model/SizingParameters_Impl.hpp>
-#include <model/SiteWaterMainsTemperature.hpp>
-#include <model/SiteWaterMainsTemperature_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Component.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/Node.hpp"
+#include "../model/Node_Impl.hpp"
+#include "../model/AirLoopHVAC.hpp"
+#include "../model/AirLoopHVAC_Impl.hpp"
+#include "../model/Facility.hpp"
+#include "../model/Facility_Impl.hpp"
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/ShadingSurfaceGroup.hpp"
+#include "../model/ShadingSurfaceGroup_Impl.hpp"
+#include "../model/Site.hpp"
+#include "../model/Site_Impl.hpp"
+#include "../model/WeatherFile.hpp"
+#include "../model/WeatherFile_Impl.hpp"
+#include "../model/TimeDependentValuation.hpp"
+#include "../model/TimeDependentValuation_Impl.hpp"
+#include "../model/Construction.hpp"
+#include "../model/SimpleGlazing.hpp"
+#include "../model/StandardOpaqueMaterial.hpp"
+#include "../model/PlantLoop.hpp"
+#include "../model/PlantLoop_Impl.hpp"
+#include "../model/Timestep.hpp"
+#include "../model/Timestep_Impl.hpp"
+#include "../model/Meter.hpp"
+#include "../model/OutputVariable.hpp"
+#include "../model/SimulationControl.hpp"
+#include "../model/SimulationControl_Impl.hpp"
+#include "../model/RunPeriod.hpp"
+#include "../model/RunPeriod_Impl.hpp"
+#include "../model/YearDescription.hpp"
+#include "../model/YearDescription_Impl.hpp"
+#include "../model/OutputControlReportingTolerances.hpp"
+#include "../model/OutputControlReportingTolerances_Impl.hpp"
+#include "../model/ChillerElectricEIR.hpp"
+#include "../model/ChillerElectricEIR_Impl.hpp"
+#include "../model/CoolingTowerSingleSpeed.hpp"
+#include "../model/CoolingTowerSingleSpeed_Impl.hpp"
+#include "../model/BoilerHotWater.hpp"
+#include "../model/BoilerHotWater_Impl.hpp"
+#include "../model/SizingParameters.hpp"
+#include "../model/SizingParameters_Impl.hpp"
+#include "../model/SiteWaterMainsTemperature.hpp"
+#include "../model/SiteWaterMainsTemperature_Impl.hpp"
+#include "../model/Schedule.hpp"
+#include "../model/Schedule_Impl.hpp"
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../energyplus/ReverseTranslator.hpp"
 
-#include <osversion/VersionTranslator.hpp>
+#include "../osversion/VersionTranslator.hpp"
 
-#include <utilities/filetypes/EpwFile.hpp>
-#include <utilities/plot/ProgressBar.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/IPUnit.hpp>
-#include <utilities/units/SIUnit.hpp>
-#include <utilities/units/BTUUnit.hpp>
-#include <utilities/units/CFMUnit.hpp>
-#include <utilities/units/FahrenheitUnit.hpp>
-#include <utilities/units/MPHUnit.hpp>
-#include <utilities/units/WhUnit.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/time/Time.hpp>
-#include <utilities/units/UnitFactory.hpp>
-#include <utilities/units/Unit.hpp>
+#include "../utilities/filetypes/EpwFile.hpp"
+#include "../utilities/plot/ProgressBar.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/units/QuantityConverter.hpp"
+#include "../utilities/units/IPUnit.hpp"
+#include "../utilities/units/SIUnit.hpp"
+#include "../utilities/units/BTUUnit.hpp"
+#include "../utilities/units/CFMUnit.hpp"
+#include "../utilities/units/FahrenheitUnit.hpp"
+#include "../utilities/units/MPHUnit.hpp"
+#include "../utilities/units/WhUnit.hpp"
+#include "../utilities/time/Time.hpp"
+#include "../utilities/units/UnitFactory.hpp"
+#include "../utilities/units/Unit.hpp"
 
 #include <QFile>
 #include <QDomDocument>
@@ -153,7 +152,7 @@ namespace sdd {
   {
     std::vector<LogMessage> result;
 
-    BOOST_FOREACH(LogMessage logMessage, m_logSink.logMessages()){
+    for (LogMessage logMessage : m_logSink.logMessages()){
       if (logMessage.logLevel() == Warn){
         result.push_back(logMessage);
       }
@@ -166,7 +165,7 @@ namespace sdd {
   {
     std::vector<LogMessage> result;
 
-    BOOST_FOREACH(LogMessage logMessage, m_logSink.logMessages()){
+    for (LogMessage logMessage : m_logSink.logMessages()){
       if (logMessage.logLevel() > Warn){
         result.push_back(logMessage);
       }
@@ -551,7 +550,7 @@ namespace sdd {
 
       // request output meters for TDV calculations
       std::set<int> fuelTypes = FuelType::getValues();
-      BOOST_FOREACH(int fuelType, fuelTypes){
+      for (int fuelType : fuelTypes){
 
         if (fuelType == FuelType::Gasoline ||
             fuelType == FuelType::Diesel ||
@@ -572,7 +571,7 @@ namespace sdd {
         meter.setReportingFrequency("Hourly");
 
         std::set<int> endUseTypes = EndUseType::getValues();
-        BOOST_FOREACH(int endUseType, endUseTypes){
+        for (int endUseType : endUseTypes){
 
           if (endUseType == EndUseType::HeatingCoils ||
               endUseType == EndUseType::CoolingCoils ||
@@ -791,27 +790,25 @@ namespace sdd {
 
         std::vector<model::AirLoopHVAC> airloops = result->getModelObjects<model::AirLoopHVAC>();
 
-        for( std::vector<model::AirLoopHVAC>::iterator it = airloops.begin();
-             it != airloops.end();
-             ++it )
+        for( auto & airloop : airloops)
         {
           var = model::OutputVariable("System Node Temperature",*result);
           var.setReportingFrequency(interval);
-          var.setKeyValue(it->supplyInletNode().name().get());
+          var.setKeyValue(airloop.supplyInletNode().name().get());
 
           var = model::OutputVariable("System Node Mass Flow Rate",*result);
           var.setReportingFrequency(interval);
-          var.setKeyValue(it->supplyInletNode().name().get());
+          var.setKeyValue(airloop.supplyInletNode().name().get());
 
           var = model::OutputVariable("System Node Temperature",*result);
           var.setReportingFrequency(interval);
-          var.setKeyValue(it->supplyOutletNode().name().get());
+          var.setKeyValue(airloop.supplyOutletNode().name().get());
 
           var = model::OutputVariable("System Node Mass Flow Rate",*result);
           var.setReportingFrequency(interval);
-          var.setKeyValue(it->supplyOutletNode().name().get());
+          var.setKeyValue(airloop.supplyOutletNode().name().get());
 
-          if( boost::optional<model::Node> node = it->mixedAirNode() )
+          if( boost::optional<model::Node> node = airloop.mixedAirNode() )
           {
             var = model::OutputVariable("System Node Temperature",*result);
             var.setReportingFrequency(interval);

@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/units/BTUUnit.hpp>
-#include <utilities/units/BTUUnit_Impl.hpp>
+#include "BTUUnit.hpp"
+#include "BTUUnit_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 namespace openstudio {
 
@@ -64,13 +64,13 @@ namespace detail {
 
   Unit BTUUnit_Impl::clone() const {
     OS_ASSERT(system() == UnitSystem::BTU);
-    boost::shared_ptr<BTUUnit_Impl> impl(new BTUUnit_Impl(*this));
+    std::shared_ptr<BTUUnit_Impl> impl(new BTUUnit_Impl(*this));
     return BTUUnit(impl).cast<Unit>();
   }
 
   void BTUUnit_Impl::setBaseUnitExponent(const std::string& baseUnit,int exponent)
   {
-    std::vector<UnitElement>::iterator loc = findBaseUnit(baseUnit);
+    auto loc = findBaseUnit(baseUnit);
     if (loc != m_units.end()) {
       loc->second = exponent;
     }
@@ -84,20 +84,20 @@ namespace detail {
 BTUUnit::BTUUnit(const BTUExpnt& exponents,
                  int scaleExponent,
                  const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::BTUUnit_Impl>(
+  : Unit(std::shared_ptr<detail::Unit_Impl>(
              new detail::BTUUnit_Impl(exponents,scaleExponent,prettyString)))
 {}
 
 BTUUnit::BTUUnit(const std::string& scaleAbbreviation,
                  const BTUExpnt& exponents,
                  const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::BTUUnit_Impl>(
+  : Unit(std::shared_ptr<detail::Unit_Impl>(
              new detail::BTUUnit_Impl(scaleAbbreviation,exponents,prettyString)))
 {}
 
 /// @cond
-BTUUnit::BTUUnit(boost::shared_ptr<detail::BTUUnit_Impl> impl)
-  : Unit(impl)
+BTUUnit::BTUUnit(std::shared_ptr<detail::BTUUnit_Impl> impl)
+  : Unit(std::dynamic_pointer_cast<detail::Unit_Impl>(impl))
 {}
 /// @endcond
 

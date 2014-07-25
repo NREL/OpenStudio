@@ -20,8 +20,8 @@
 #ifndef MODEL_YEARDESCRIPTION_HPP
 #define MODEL_YEARDESCRIPTION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
 
 namespace openstudio {
 
@@ -109,7 +109,7 @@ class MODEL_API YearDescription : public ParentObject {
   friend class IdfObject;
   friend class detail::YearDescription_Impl;
 
-  explicit YearDescription(boost::shared_ptr<detail::YearDescription_Impl> impl);
+  explicit YearDescription(std::shared_ptr<detail::YearDescription_Impl> impl);
 
   explicit YearDescription(Model& model);
 

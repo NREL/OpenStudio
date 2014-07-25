@@ -1,3 +1,22 @@
+/**********************************************************************
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -58,7 +77,7 @@ SqliteObject::SqliteObject(const openstudio::path &file)
 {
 
   // Open a database connection
-  m_db = 0;
+  m_db = nullptr;
   int rc = sqlite3_open(openstudio::toString(file).c_str(), &m_db);
   if (rc)
   {
@@ -73,7 +92,7 @@ SqliteObject::~SqliteObject(){
   //std::cout << "closing database" << std::endl;
   sqlite3_close(m_db);
 
-  if( m_results != 0) {
+  if( m_results != nullptr) {
     delete m_results;
   }
 
@@ -141,7 +160,7 @@ bool SqliteObject::execute(const std::string& cmd){
 
   //std::cout << " Execute: " << m_results->header.size() << std::endl;
 
-  char *zErrMsg = 0;
+  char *zErrMsg = nullptr;
   int rc = sqlite3_exec(m_db, cmd.c_str(), callback, m_results, &zErrMsg);
   if (rc != SQLITE_OK)
   {

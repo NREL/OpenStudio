@@ -20,8 +20,8 @@
 #ifndef MODEL_EXTERIORLIGHTSDEFINITION_HPP
 #define MODEL_EXTERIORLIGHTSDEFINITION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ResourceObject.hpp>
+#include "ModelAPI.hpp"
+#include "ResourceObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -68,7 +68,7 @@ class MODEL_API ExteriorLightsDefinition : public ResourceObject {
   /// @cond
   typedef detail::ExteriorLightsDefinition_Impl ImplType;
 
-  explicit ExteriorLightsDefinition(boost::shared_ptr<detail::ExteriorLightsDefinition_Impl> impl);
+  explicit ExteriorLightsDefinition(std::shared_ptr<detail::ExteriorLightsDefinition_Impl> impl);
 
   friend class detail::ExteriorLightsDefinition_Impl;
   friend class Model;

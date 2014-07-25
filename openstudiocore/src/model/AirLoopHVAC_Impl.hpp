@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #ifndef MODEL_AIRLOOPHVAC_IMPL_HPP
 #define MODEL_AIRLOOPHVAC_IMPL_HPP
 
-#include <model/Loop_Impl.hpp>
+#include "Loop_Impl.hpp"
 
 namespace openstudio {
 namespace model {

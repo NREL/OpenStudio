@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <pat_app/HorizontalTabWidget.hpp>
+#include "HorizontalTabWidget.hpp"
 #include "../shared_gui_components/OSViewSwitcher.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QBoxLayout>
 #include <QPainter>
@@ -39,7 +39,7 @@ namespace pat {
 HorizontalTabWidget::HorizontalTabWidget(QWidget * parent)
   : QWidget(parent)
 {
-  QVBoxLayout * mainLayout = new QVBoxLayout();
+  auto mainLayout = new QVBoxLayout();
 
   mainLayout->setSpacing(0);
 
@@ -80,7 +80,7 @@ HorizontalTabWidget::HorizontalTabWidget(QWidget * parent)
 void HorizontalTabWidget::addTab( int id,
                                   const QString & label )
 {
-  QPushButton * button = new QPushButton(m_tabBar);
+  auto button = new QPushButton(m_tabBar);
 
   button->setText(label);
 
@@ -102,11 +102,9 @@ void HorizontalTabWidget::select()
 
   int index = 0;
 
-  for( std::vector<QPushButton*>::iterator  it = m_tabButtons.begin();
-       it < m_tabButtons.end();
-       ++it )
+  for( const auto & tabButton : m_tabButtons )
   {
-    if( *it == button )
+    if( tabButton == button )
     {
       break;
     }

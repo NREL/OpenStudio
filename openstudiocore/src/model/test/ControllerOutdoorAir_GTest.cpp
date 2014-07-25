@@ -19,14 +19,12 @@
 
 #include <gtest/gtest.h>
 /*
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/Model.hpp>
-#include <model/ControllerOutdoorAir.hpp>
+#include "../Model.hpp"
+#include "../ControllerOutdoorAir.hpp"
 
 #include <utilities/idd/OS_Controller_OutdoorAir_FieldEnums.hxx>
-
-#include <boost/foreach.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -43,7 +41,7 @@ TEST_F(ModelFixture,ControllerOutdoorAir_IddKeys) {
   LOG(Info,"Keys for field " << Controller_OutdoorAirFields::EconomizerControlType
       << ", " << f->name() << ", of IddObject " << obj.name() << ":");
   unsigned i = 0;
-  BOOST_FOREACH(IddKey& key,keys) {
+  for (IddKey& key : keys) {
     LOG(Info,"  Key " << i << ": " << key.name());
     ++i;
   }

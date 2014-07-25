@@ -17,26 +17,25 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Meter.hpp>
-#include <model/Meter_Impl.hpp>
+#include "Meter.hpp"
+#include "Meter_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
+#include "Model.hpp"
+#include "Facility.hpp"
+#include "Facility_Impl.hpp"
+#include "Building.hpp"
+#include "Building_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Meter_FieldEnums.hxx>
 
-#include <utilities/data/DataEnums.hpp>
-#include <utilities/data/TimeSeries.hpp>
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/sql/SqlFileEnums.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/data/DataEnums.hpp"
+#include "../utilities/data/TimeSeries.hpp"
+#include "../utilities/sql/SqlFile.hpp"
+#include "../utilities/sql/SqlFileEnums.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/regex.hpp>
-#include <boost/foreach.hpp>
 #include <boost/algorithm/string.hpp>
 
 namespace openstudio {
@@ -631,7 +630,7 @@ bool MeterFuelTypeEquals(const Meter& meter,const FuelType& ft) {
 }
 
 /// @cond
-Meter::Meter(boost::shared_ptr<detail::Meter_Impl> impl)
+Meter::Meter(std::shared_ptr<detail::Meter_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

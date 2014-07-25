@@ -17,18 +17,18 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ScriptFolderListView.hpp>
-#include <openstudio_lib/ScriptsListView.hpp>
-#include <openstudio_lib/ScriptItem.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/ModelObjectListView.hpp>
-#include <openstudio_lib/OSCollapsibleItemHeader.hpp>
-#include <openstudio_lib/OSCollapsibleItem.hpp>
-#include <openstudio_lib/OSItem.hpp>
+#include "ScriptFolderListView.hpp"
+#include "ScriptsListView.hpp"
+#include "ScriptItem.hpp"
+#include "ModelObjectItem.hpp"
+#include "ModelObjectListView.hpp"
+#include "OSCollapsibleItemHeader.hpp"
+#include "OSCollapsibleItem.hpp"
+#include "OSItem.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../utilities/core/Assert.hpp"
 #include <boost/filesystem.hpp>
 #include <iostream>
 #include <fstream>
@@ -44,7 +44,7 @@ ScriptFolderListView::ScriptFolderListView(const openstudio::path &folder,
   : OSCollapsibleItemList(addScrollArea, parent), m_rootPath(folder), m_headerType(headerType),
     m_draggable(draggable),
     m_removeable(removeable), 
-    m_fswatcher(boost::make_shared<QFileSystemWatcher>())
+    m_fswatcher(std::make_shared<QFileSystemWatcher>())
 { 
   setItemsDraggable(draggable);
   setItemsRemoveable(removeable);
@@ -153,7 +153,7 @@ openstudio::path ScriptFolderListView::selectedFolder() const {
       {
         if (itr->second == selectedCollapsibleItem->itemList())
         {
-          return openstudio::toPath(itr->first.filename());
+          return itr->first.filename();
         }
       }
     }
@@ -197,7 +197,7 @@ std::vector<ruleset::UserScriptInfo> ScriptFolderListView::folderUserScripts(
   return it->second->userScripts();
 }
 
-boost::shared_ptr<QFileSystemWatcher> ScriptFolderListView::fsWatcher() const
+std::shared_ptr<QFileSystemWatcher> ScriptFolderListView::fsWatcher() const
 {
   return m_fswatcher;
 }

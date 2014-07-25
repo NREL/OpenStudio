@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODEL_DistrictCooling_HPP
-#define MODEL_DistrictCooling_HPP
+#ifndef MODEL_DISTRICTCOOLING_HPP
+#define MODEL_DISTRICTCOOLING_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 class Quantity;
@@ -83,7 +83,7 @@ class MODEL_API DistrictCooling : public StraightComponent {
   /// @cond
   typedef detail::DistrictCooling_Impl ImplType;
 
-  explicit DistrictCooling(boost::shared_ptr<detail::DistrictCooling_Impl> impl);
+  explicit DistrictCooling(std::shared_ptr<detail::DistrictCooling_Impl> impl);
 
   friend class detail::DistrictCooling_Impl;
   friend class Model;
@@ -108,7 +108,7 @@ typedef std::vector<DistrictCooling> DistrictCoolingVector;
 } // model
 } // openstudio
 
-#endif // MODEL_DistrictCooling_HPP
+#endif // MODEL_DISTRICTCOOLING_HPP
 
 
 

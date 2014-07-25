@@ -17,26 +17,26 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVACZoneMixer.hpp>
-#include <model/AirLoopHVACZoneMixer_Impl.hpp>
-#include <model/AirLoopHVACReturnPlenum.hpp>
-#include <model/AirLoopHVACReturnPlenum_Impl.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/WorkspaceObjectOrder.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
-#include <utilities/geometry/EulerAngles.hpp>
-#include <utilities/geometry/Transformation.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/AirLoopHVAC_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/AirLoopHVACZoneMixer.hpp"
+#include "../../model/AirLoopHVACZoneMixer_Impl.hpp"
+#include "../../model/AirLoopHVACReturnPlenum.hpp"
+#include "../../model/AirLoopHVACReturnPlenum_Impl.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/idf/WorkspaceObjectOrder.hpp"
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/Assert.hpp"
+#include "../../utilities/geometry/Geometry.hpp"
+#include "../../utilities/geometry/Point3d.hpp"
+#include "../../utilities/geometry/Vector3d.hpp"
+#include "../../utilities/geometry/EulerAngles.hpp"
+#include "../../utilities/geometry/Transformation.hpp"
 #include <utilities/idd/AirLoopHVAC_ReturnPath_FieldEnums.hxx>
 
 using namespace openstudio::model;
@@ -49,8 +49,6 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::createAirLoopHVACReturnPath( AirLoopHVAC & airLoopHVAC )
 {
-  std::string s;
-
   IdfObject returnPathIdf(openstudio::IddObjectType::AirLoopHVAC_ReturnPath);
   m_idfObjects.push_back(returnPathIdf);
 
@@ -60,12 +58,10 @@ boost::optional<IdfObject> ForwardTranslator::createAirLoopHVACReturnPath( AirLo
   returnPathIdf.setString(openstudio::AirLoopHVAC_ReturnPathFields::ReturnAirPathOutletNodeName,node.name().get());
 
   std::vector<ModelObject> returnPlenums = airLoopHVAC.demandComponents(AirLoopHVACReturnPlenum::iddObjectType());
-  for( std::vector<ModelObject>::iterator it = returnPlenums.begin();
-       it != returnPlenums.end();
-       it++ )
+  for( auto & returnPlenum : returnPlenums )
   {
     IdfExtensibleGroup eg = returnPathIdf.pushExtensibleGroup();
-    boost::optional<IdfObject> _returnPlenum = translateAndMapModelObject(*it);
+    boost::optional<IdfObject> _returnPlenum = translateAndMapModelObject(returnPlenum);
     OS_ASSERT(_returnPlenum);
     eg.setString(AirLoopHVAC_ReturnPathExtensibleFields::ComponentObjectType,_returnPlenum->iddObject().name());
     eg.setString(AirLoopHVAC_ReturnPathExtensibleFields::ComponentName,_returnPlenum->name().get());

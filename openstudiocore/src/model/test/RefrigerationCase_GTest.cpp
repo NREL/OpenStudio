@@ -19,16 +19,16 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/CurveCubic.hpp>
-#include <model/CurveCubic_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/RefrigerationCase.hpp>
-#include <model/RefrigerationCase_Impl.hpp>
-#include <model/RefrigerationDefrostCycleParameters.hpp>
-#include <model/RefrigerationDefrostCycleParameters_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../CurveCubic.hpp"
+#include "../CurveCubic_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../RefrigerationCase.hpp"
+#include "../RefrigerationCase_Impl.hpp"
+#include "../RefrigerationDefrostCycleParameters.hpp"
+#include "../RefrigerationDefrostCycleParameters_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

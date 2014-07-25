@@ -22,15 +22,15 @@
 #include <runmanager/Test/ToolBin.hxx>
 #include <resources.hxx>
 #include <OpenStudio.hxx>
-#include <runmanager/lib/JobFactory.hpp>
+#include "../JobFactory.hpp"
 #include <boost/filesystem/path.hpp>
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/RubyJobUtils.hpp>
+#include "../RunManager.hpp"
+#include "../Workflow.hpp"
+#include "../RubyJobUtils.hpp"
 #include <QDir>
-#include <utilities/core/Application.hpp>
-#include <utilities/core/System.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../../../utilities/core/Application.hpp"
+#include "../../../utilities/core/System.hpp"
+#include "../../../utilities/core/Logger.hpp"
 
 #ifdef _MSC_VER
 #include <Windows.h>
@@ -139,7 +139,7 @@ TEST_F(RunManagerTestFixture, JobRunOrder)
   kit.setPaused(false);
   kit.waitForFinished();
 
-  // successfull tree first
+  // successful tree first
   EXPECT_TRUE(successful11.errors().succeeded());
   EXPECT_TRUE(successful12.errors().succeeded());
   EXPECT_TRUE(successful13.errors().succeeded());

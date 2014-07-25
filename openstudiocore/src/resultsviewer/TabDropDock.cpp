@@ -17,11 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <resultsviewer/TabDropDock.hpp>
-#include <resultsviewer/TabBarDrag.hpp>
-#include <resultsviewer/BrowserView.hpp>
-#include <resultsviewer/PlotView.hpp>
+#include "TabDropDock.hpp"
+#include "TabBarDrag.hpp"
+#include "BrowserView.hpp"
+#include "PlotView.hpp"
 #include <QApplication>
+#include <QDrag>
 
 
 namespace resultsviewer{
@@ -31,7 +32,7 @@ TabDropDock::TabDropDock( QWidget* parent): QTabWidget(parent)
 //  setAcceptDrops(true);
 //  setAttribute(Qt::WA_Hover,true);
 //  setMouseTracking(true);
-  resultsviewer::TabBarDrag *tabBar = new resultsviewer::TabBarDrag(this);
+  auto tabBar = new resultsviewer::TabBarDrag(this);
   connect(tabBar, SIGNAL(signalPerformDrag()), this, SLOT(slotPerformDrag()));
   setTabBar(tabBar);
 }
@@ -84,17 +85,17 @@ void TabDropDock::mouseMoveEvent(QMouseEvent *e)
 void TabDropDock::slotPerformDrag()
 {
 //  emit(signalFloatOrDockMe(this));
-  QDrag *drag = new QDrag(this);
+  auto drag = new QDrag(this);
   QWidget *widget = currentWidget();
   if (widget)
   {
-    WidgetMimeData *mimeData = new WidgetMimeData(widget);
+    auto mimeData = new WidgetMimeData(widget);
     drag->setMimeData(mimeData);
     if (drag->exec(Qt::MoveAction) != Qt::MoveAction)
     {
-      if (widget->parent() != 0)
+      if (widget->parent() != nullptr)
       {
-        widget->setParent(0);
+        widget->setParent(nullptr);
         widget->setGeometry(QCursor::pos().x(),QCursor::pos().y(),width(),height());
         widget->show();
         widget->raise();

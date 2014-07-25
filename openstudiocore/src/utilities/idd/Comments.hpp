@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef UTILITIES_COMMENTS_HPP
-#define UTILITIES_COMMENTS_HPP
+#ifndef UTILITIES_IDD_COMMENTS_HPP
+#define UTILITIES_IDD_COMMENTS_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 #include <string>
 
 /** \file Comments.hpp 
@@ -57,4 +57,4 @@ UTILITIES_API std::string makeIdfEditorComment(const std::string& str);
 
 } // openstudio
 
-#endif // UTILITIES_COMMENTS_HPP
+#endif // UTILITIES_IDD_COMMENTS_HPP

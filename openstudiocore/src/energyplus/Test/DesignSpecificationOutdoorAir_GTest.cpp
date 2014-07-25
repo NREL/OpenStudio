@@ -18,14 +18,14 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <energyplus/Test/EnergyPlusFixture.hpp>
+#include "EnergyPlusFixture.hpp"
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/DesignSpecificationOutdoorAir.hpp>
-#include <model/DesignSpecificationOutdoorAir_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/DesignSpecificationOutdoorAir.hpp"
+#include "../../model/DesignSpecificationOutdoorAir_Impl.hpp"
 
 #include <resources.hxx>
 

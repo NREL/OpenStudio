@@ -20,14 +20,12 @@
 #ifndef UTILITIES_IDF_IDFFILE_HPP
 #define UTILITIES_IDF_IDFFILE_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/idd/IddFileAndFactoryWrapper.hpp>
-#include <utilities/idf/IdfObject.hpp>
+#include "../idd/IddFileAndFactoryWrapper.hpp"
+#include "IdfObject.hpp"
 
-#include <utilities/core/Path.hpp>
-
-#include <boost/shared_ptr.hpp>
+#include "../core/Path.hpp"
 
 #include <string>
 #include <ostream>
@@ -169,30 +167,30 @@ class UTILITIES_API IdfFile {
    *  possible. */
   static boost::optional<IdfFile> load(std::istream& is,
                                        const IddFileType& iddFileType,
-                                       ProgressBar* progressBar=NULL);
+                                       ProgressBar* progressBar=nullptr);
 
   /** Load an IdfFile from std::istream using iddFile, if possible. */
   static boost::optional<IdfFile> load(std::istream& is,
                                        const IddFile& iddFile,
-                                       ProgressBar* progressBar=NULL);
+                                       ProgressBar* progressBar=nullptr);
 
   /** Load an IdfFile from path using the IddFactory, and choosing iddFileType based on file
    *  extension, if possible. (IddFileType::OpenStudio if extension is modelFileExtension() or
    *  componentFileExtension(), IddFileType::EnergyPlus otherwise.) */
   static boost::optional<IdfFile> load(const path& p, 
-                                       ProgressBar* progressBar=NULL);
+                                       ProgressBar* progressBar=nullptr);
 
   /** Load an IdfFile from path using the IddFactory and iddFileType, if possible. Will attempt to
    *  complete the path by tacking on .osm or .idf as appropriate. */
   static boost::optional<IdfFile> load(const path& p,
                                        const IddFileType& iddFileType,
-                                       ProgressBar* progressBar=NULL);
+                                       ProgressBar* progressBar=nullptr);
 
   /** Load an IdfFile from path using iddFile, if possible. If no file extension is provided, will
    *  try "idf". */
   static boost::optional<IdfFile> load(const path& p,
                                        const IddFile& iddFile,
-                                       ProgressBar* progressBar=NULL);
+                                       ProgressBar* progressBar=nullptr);
 
   /** Quick load method that uses the IddFile::catchallIddFile and stops parsing once a version
    *  identifier is found. Used to determine the appropriate IddFile to use for a full load. */
@@ -237,7 +235,7 @@ class UTILITIES_API IdfFile {
   // SERIALIZATION
 
   /// private load function that uses m_iddFile and m_iddFileType initialized elsewhere
-  bool m_load(std::istream& is, ProgressBar* progressBar=NULL, bool versionOnly=false);
+  bool m_load(std::istream& is, ProgressBar* progressBar=nullptr, bool versionOnly=false);
 
   // configure logging
   REGISTER_LOGGER("utilities.idf.IdfFile");

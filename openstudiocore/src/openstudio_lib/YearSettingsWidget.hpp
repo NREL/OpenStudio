@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_YEARSETTINGSWIDGET_H
-#define OPENSTUDIO_YEARSETTINGSWIDGET_H
+#ifndef OPENSTUDIO_YEARSETTINGSWIDGET_HPP
+#define OPENSTUDIO_YEARSETTINGSWIDGET_HPP
 
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "../model/YearDescription.hpp"
+#include "../model/YearDescription_Impl.hpp"
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
 #include <QWidget>
 
 class QRadioButton;
@@ -91,9 +91,9 @@ class YearSettingsWidget : public QWidget
 
   void onFirstDayofYearClicked();
 
-  void onWorkspaceObjectAdd(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wo);
+  void onWorkspaceObjectAdd(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wo);
 
-  void onWorkspaceObjectRemove(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wo);
+  void onWorkspaceObjectRemove(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wo);
 
   void onDstStartDayWeekMonthChanged();
 
@@ -166,5 +166,5 @@ class YearSettingsWidget : public QWidget
 
 } // openstudio
 
-#endif // OPENSTUDIO_YEARSETTINGSWIDGET_H
+#endif // OPENSTUDIO_YEARSETTINGSWIDGET_HPP
 

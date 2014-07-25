@@ -17,39 +17,38 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/units/UnitFactory.hpp>
+#include "UnitFactory.hpp"
 
-#include <utilities/units/ScaleFactory.hpp>
-#include <utilities/units/QuantityRegex.hpp>
-#include <utilities/units/SIUnit.hpp>
-#include <utilities/units/SIUnit_Impl.hpp>
-#include <utilities/units/IPUnit.hpp>
-#include <utilities/units/IPUnit_Impl.hpp>
-#include <utilities/units/BTUUnit.hpp>
-#include <utilities/units/BTUUnit_Impl.hpp>
-#include <utilities/units/CFMUnit.hpp>
-#include <utilities/units/CFMUnit_Impl.hpp>
-#include <utilities/units/GPDUnit.hpp>
-#include <utilities/units/GPDUnit_Impl.hpp>
-#include <utilities/units/MPHUnit.hpp>
-#include <utilities/units/MPHUnit_Impl.hpp>
-#include <utilities/units/WhUnit.hpp>
-#include <utilities/units/WhUnit_Impl.hpp>
-#include <utilities/units/ThermUnit.hpp>
-#include <utilities/units/ThermUnit_Impl.hpp>
-#include <utilities/units/Misc1Unit.hpp>
-#include <utilities/units/Misc1Unit_Impl.hpp>
-#include <utilities/units/CelsiusUnit.hpp>
-#include <utilities/units/CelsiusUnit_Impl.hpp>
-#include <utilities/units/FahrenheitUnit.hpp>
-#include <utilities/units/FahrenheitUnit_Impl.hpp>
+#include "ScaleFactory.hpp"
+#include "QuantityRegex.hpp"
+#include "SIUnit.hpp"
+#include "SIUnit_Impl.hpp"
+#include "IPUnit.hpp"
+#include "IPUnit_Impl.hpp"
+#include "BTUUnit.hpp"
+#include "BTUUnit_Impl.hpp"
+#include "CFMUnit.hpp"
+#include "CFMUnit_Impl.hpp"
+#include "GPDUnit.hpp"
+#include "GPDUnit_Impl.hpp"
+#include "MPHUnit.hpp"
+#include "MPHUnit_Impl.hpp"
+#include "WhUnit.hpp"
+#include "WhUnit_Impl.hpp"
+#include "ThermUnit.hpp"
+#include "ThermUnit_Impl.hpp"
+#include "Misc1Unit.hpp"
+#include "Misc1Unit_Impl.hpp"
+#include "CelsiusUnit.hpp"
+#include "CelsiusUnit_Impl.hpp"
+#include "FahrenheitUnit.hpp"
+#include "FahrenheitUnit_Impl.hpp"
 
-#include <utilities/core/Exception.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../core/Exception.hpp"
+#include "../core/Containers.hpp"
+#include "../core/Assert.hpp"
 
 #include <boost/pointer_cast.hpp>
-#include <boost/foreach.hpp>
 
 #include <map>
 #include <vector>
@@ -73,18 +72,17 @@ bool UnitFactorySingleton::registerUnit(CreateUnitCallback createFn,UnitSystem s
             << " and there is not enough information to resolve the conflict. "
             << "Note that C and F are assumed to not conflict--all other units use K and R.";
     // mask registry in main map, save in case need to reconstitute
-    m_callbackMaps[UnitSystem(UnitSystem::Mixed)][standardString] = NULL;
+    m_callbackMaps[UnitSystem(UnitSystem::Mixed)][standardString] = 0;
 
     // make sure string registered elsewhere
     bool found(false);
-    for (CallbackMapMap::const_iterator it = m_callbackMaps.begin(), itEnd = m_callbackMaps.end();
-         it != itEnd; ++it)
+    for (const auto & callbackMap : m_callbackMaps)
     {
-      if ((it->first == UnitSystem::Mixed) || (it->first == system)) {
+      if ((callbackMap.first == UnitSystem::Mixed) || (callbackMap.first == system)) {
         continue;
       }
-      StandardStringCallbackMap::const_iterator lookupPair = it->second.find(standardString);
-      if (lookupPair != it->second.end()) {
+      auto lookupPair = callbackMap.second.find(standardString);
+      if (lookupPair != callbackMap.second.end()) {
         found = true;
         break;
       }
@@ -283,12 +281,12 @@ boost::optional<Unit> UnitFactorySingleton::createUnitSimple(const std::string& 
 
   OptionalUnit candidate;
   StandardStringLookupMap::const_iterator lookupPair;
-  StandardStringLookupMap::const_iterator standardStringMapEnd = m_standardStringLookupMap.end();
+  auto standardStringMapEnd = m_standardStringLookupMap.end();
   lookupPair = m_standardStringLookupMap.find(unitString);
   if (lookupPair != standardStringMapEnd) {
 
     // unitString is registered
-    BOOST_FOREACH(const std::string& standardString, lookupPair->second) {
+    for (const std::string& standardString : lookupPair->second) {
 
       // instantiate the standardString
       CallbackMapMap::const_iterator callbackMap;
@@ -313,7 +311,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnitSimple(const std::string& 
 
         // try all other maps
         if (!temp) {
-          BOOST_FOREACH(int sysValue, UnitSystem::getValues()) {
+          for (int sysValue : UnitSystem::getValues()) {
             UnitSystem tempSystem(sysValue);
             if ((tempSystem == UnitSystem::Mixed) || (tempSystem == system)) {
               continue;
@@ -342,7 +340,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnitSimple(const std::string& 
         break;
       }
 
-    } // BOOST_FOREACH
+    } // foreach
 
   } // if
 
@@ -663,7 +661,7 @@ bool containsRegisteredBaseUnit(const std::string& unitString) {
   if (isUnitString(unitString)) {
     Unit u = createUnit(unitString).get();
     StringVector bus = u.baseUnits();
-    BOOST_FOREACH(const std::string& bu,bus) {
+    for (const std::string& bu : bus) {
       if (getSystem(bu) != UnitSystem::Mixed) {
         return true;
       }

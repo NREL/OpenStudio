@@ -17,17 +17,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/WindowMaterialGlazingInspectorView.hpp>
+#include "WindowMaterialGlazingInspectorView.hpp"
 
 #include "../shared_gui_components/OSComboBox.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
 #include "../shared_gui_components/OSSwitch.hpp"
 
-#include <model/Glazing.hpp>
-#include <model/Glazing_Impl.hpp>
+#include "../model/Glazing.hpp"
+#include "../model/Glazing_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QGridLayout>
 #include <QLabel>

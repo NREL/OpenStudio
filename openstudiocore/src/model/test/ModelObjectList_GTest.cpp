@@ -19,12 +19,12 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/ModelObjectList.hpp>
-#include <model/ModelObjectList_Impl.hpp>
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
+#include "../ModelObjectList.hpp"
+#include "../ModelObjectList_Impl.hpp"
+#include "../Connection.hpp"
+#include "../Connection_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

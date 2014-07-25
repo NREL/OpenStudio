@@ -17,17 +17,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_RUBYJOB_HPP_
-#define OPENSTUDIO_RUBYJOB_HPP_
+#ifndef RUNMANAGER_LIB_RUBYJOB_HPP
+#define RUNMANAGER_LIB_RUBYJOB_HPP
 
 #include <boost/filesystem.hpp>
 #include <string>
-#include <utilities/core/Logger.hpp>
+#include "../../utilities/core/Logger.hpp"
 #include "Job_Impl.hpp"
 #include "ToolInfo.hpp"
 #include "ToolBasedJob.hpp"
 #include "MergedJobResults.hpp"
-#include <energyplus/ErrorFile.hpp>
+#include "../../energyplus/ErrorFile.hpp"
 
 #include <QProcess>
 #include <QFileSystemWatcher>
@@ -78,7 +78,7 @@ namespace detail {
 
       virtual void basePathChanged();
 
-      virtual void mergeJobImpl(const boost::shared_ptr<Job_Impl> &t_parent, const boost::shared_ptr<Job_Impl> &t_job);
+      virtual void mergeJobImpl(const std::shared_ptr<Job_Impl> &t_parent, const std::shared_ptr<Job_Impl> &t_job);
 
       virtual bool hasMergedJobsImpl() const;
       virtual std::vector<MergedJobResults> mergedJobResultsImpl() const;
@@ -97,4 +97,4 @@ namespace detail {
 }
 }
 }
-#endif
+#endif // RUNMANAGER_LIB_RUBYJOB_HPP

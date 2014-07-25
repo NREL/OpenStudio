@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/MasslessOpaqueMaterial.hpp>
-#include <model/MasslessOpaqueMaterial_Impl.hpp>
+#include "MasslessOpaqueMaterial.hpp"
+#include "MasslessOpaqueMaterial_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Material_NoMass_FieldEnums.hxx>
 #include <utilities/idd/OS_Material_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -635,7 +635,7 @@ bool MasslessOpaqueMaterial::setSpecificHeat(const Quantity& value) {
 }
 
 /// @cond
-MasslessOpaqueMaterial::MasslessOpaqueMaterial(boost::shared_ptr<detail::MasslessOpaqueMaterial_Impl> impl)
+MasslessOpaqueMaterial::MasslessOpaqueMaterial(std::shared_ptr<detail::MasslessOpaqueMaterial_Impl> impl)
   : OpaqueMaterial(impl)
 {}
 /// @endcond

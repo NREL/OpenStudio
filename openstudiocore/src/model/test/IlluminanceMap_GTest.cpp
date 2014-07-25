@@ -19,20 +19,18 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/IlluminanceMap.hpp>
-#include <model/IlluminanceMap_Impl.hpp>
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
+#include "../Space.hpp"
+#include "../IlluminanceMap.hpp"
+#include "../IlluminanceMap_Impl.hpp"
 
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/geometry/Geometry.hpp>
-
-#include <boost/foreach.hpp>
+#include "../../utilities/geometry/Point3d.hpp"
+#include "../../utilities/geometry/Vector3d.hpp"
+#include "../../utilities/geometry/Transformation.hpp"
+#include "../../utilities/geometry/Geometry.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

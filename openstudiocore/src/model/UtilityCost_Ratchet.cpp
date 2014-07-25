@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/UtilityCost_Ratchet.hpp>
-#include <model/UtilityCost_Ratchet_Impl.hpp>
+#include "UtilityCost_Ratchet.hpp"
+#include "UtilityCost_Ratchet_Impl.hpp"
 
-#include <model/Model_Impl.hpp>
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_UtilityCost_Ratchet_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/algorithm/string.hpp>
 
@@ -167,7 +167,7 @@ UtilityCost_Ratchet::UtilityCost_Ratchet(const Model& model)
 }
 
 // constructor
-UtilityCost_Ratchet::UtilityCost_Ratchet(boost::shared_ptr<detail::UtilityCost_Ratchet_Impl> impl)
+UtilityCost_Ratchet::UtilityCost_Ratchet(std::shared_ptr<detail::UtilityCost_Ratchet_Impl> impl)
   : ParentObject(impl)
 {}
 

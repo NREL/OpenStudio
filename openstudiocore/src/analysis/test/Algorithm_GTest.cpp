@@ -18,18 +18,18 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysis/test/AnalysisFixture.hpp>
+#include "AnalysisFixture.hpp"
 
-#include <analysis/Algorithm.hpp>
-#include <analysis/AlgorithmOptions.hpp>
-#include <analysis/DesignOfExperiments.hpp>
-#include <analysis/DesignOfExperimentsOptions.hpp>
-#include <analysis/SamplingAlgorithm.hpp>
-#include <analysis/SamplingAlgorithmOptions.hpp>
+#include "../Algorithm.hpp"
+#include "../AlgorithmOptions.hpp"
+#include "../DesignOfExperiments.hpp"
+#include "../DesignOfExperimentsOptions.hpp"
+#include "../SamplingAlgorithm.hpp"
+#include "../SamplingAlgorithmOptions.hpp"
 
-#include <runmanager/lib/Job.hpp>
+#include "../../runmanager/lib/Job.hpp"
 
-#include <utilities/core/FileReference.hpp>
+#include "../../utilities/core/FileReference.hpp"
 
 using namespace openstudio;
 using namespace openstudio::analysis;

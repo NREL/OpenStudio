@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef MODELEDITOR_H
-#define MODELEDITOR_H
+#ifndef MODELEDITOR_MODELEDITOR_HPP
+#define MODELEDITOR_MODELEDITOR_HPP
 
-#include <model_editor/EditorFrame.hpp>
+#include "EditorFrame.hpp"
 
 class ModelEditor : public modeleditor::EditorFrame
 {
@@ -40,4 +40,4 @@ signals:
 
 };
 
-#endif // MODELEDITOR_H
+#endif // MODELEDITOR_MODELEDITOR_HPP

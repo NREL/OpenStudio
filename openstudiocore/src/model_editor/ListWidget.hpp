@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef LISTWIDGET_H
-#define LISTWIDGET_H
+#ifndef MODELEDITOR_LISTWIDGET_HPP
+#define MODELEDITOR_LISTWIDGET_HPP
 
 #include <QListWidget>
 
@@ -30,7 +30,7 @@ class ListWidget : public QListWidget
   Q_OBJECT
 
 public:
-  ListWidget(QWidget * parent = 0);
+  ListWidget(QWidget * parent = nullptr);
   virtual ~ListWidget();
 
   static const QString& getMimeType(){return mMimeType;}
@@ -49,4 +49,4 @@ private:
 
 } // namespace modeleditor
 
-#endif // LISTWIDGET_H
+#endif // MODELEDITOR_LISTWIDGET_HPP

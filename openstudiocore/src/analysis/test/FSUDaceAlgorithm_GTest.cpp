@@ -18,10 +18,10 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysis/test/AnalysisFixture.hpp>
+#include "AnalysisFixture.hpp"
 
-#include <analysis/FSUDaceAlgorithmOptions.hpp>
-#include <analysis/FSUDaceAlgorithm.hpp>
+#include "../FSUDaceAlgorithmOptions.hpp"
+#include "../FSUDaceAlgorithm.hpp"
 
 using namespace openstudio;
 using namespace openstudio::analysis;

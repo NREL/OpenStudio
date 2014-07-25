@@ -20,10 +20,11 @@
 #ifndef MODEL_NODE_HPP
 #define MODEL_NODE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/Connection.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
+#include "StraightComponent.hpp"
+#include "Connection.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 namespace model {
@@ -39,6 +40,8 @@ class SetpointManagerFollowOutdoorAirTemperature;
 class SetpointManagerOutdoorAirReset;
 
 class SetpointManagerWarmest;
+
+class SetpointManager;
 
 namespace detail {
   class Node_Impl;
@@ -59,59 +62,79 @@ class MODEL_API Node : public StraightComponent {
 
   virtual ~Node() {}
 
-  /** Adds setPointManager of type SetpointManagerSingleZoneReheat to this Node. **/
-  void addSetpointManager( SetpointManagerSingleZoneReheat setPointManager );
+  std::vector<SetpointManager> setpointManagers() const;
 
-  /** Removes any SetpointManagerSingleZoneReheat objects from this Node. **/
-  void removeSetpointManagerSingleZoneReheat();
+  /** \deprecated Node::addSetpointManager has been deprecated and will be removed in a future release, please use SetpointManagerSingleZoneReheat::addToNode \n
+    * Adds setPointManager of type SetpointManagerSingleZoneReheat to this Node. **/
+  OS_DEPRECATED void addSetpointManager( SetpointManagerSingleZoneReheat & setPointManager );
 
-  /** Returns the optional SetpointManagerSingleZoneReheat associated with this Node.  **/
-  boost::optional<SetpointManagerSingleZoneReheat> getSetpointManagerSingleZoneReheat();
+  /** \deprecated Node::removeSetpointManagerSingleZoneReheat has been deprecated and will be removed in a future release, please use SetpointManagerSingleZoneReheat::remove \n
+    * Removes any SetpointManagerSingleZoneReheat objects from this Node. **/
+  OS_DEPRECATED void removeSetpointManagerSingleZoneReheat();
 
-  /** Adds setPointManager of type SetpointManagerMixedAir to this Node. **/
-  void addSetpointManager( SetpointManagerMixedAir setPointManager );
+  /** \deprecated Node::getSetpointManagerSingleZoneReheat has been deprecated and will be removed in a future release, please use Node::setpointManagers \n
+    * Returns the optional SetpointManagerSingleZoneReheat associated with this Node.  **/
+  OS_DEPRECATED boost::optional<SetpointManagerSingleZoneReheat> getSetpointManagerSingleZoneReheat();
 
-  /** Removes any SetpointManagerMixedAir objects from this Node. **/
-  void removeSetpointManagerMixedAir();
+  /** \deprecated Node::addSetpointManager has been deprecated and will be removed in a future release, please use SetpointManagerMixedAir::addToNode \n
+    * Adds setPointManager of type SetpointManagerMixedAir to this Node. **/
+  OS_DEPRECATED void addSetpointManager( SetpointManagerMixedAir & setPointManager );
 
-  /** Returns the optional SetpointManagerMixedAir associated with this Node.  **/
-  boost::optional<SetpointManagerMixedAir> getSetpointManagerMixedAir();
+  /** \deprecated Node::removeSetpointManagerMixedAir has been deprecated and will be removed in a future release, please use SetpointManagerMixedAir::remove \n
+    * Removes any SetpointManagerMixedAir objects from this Node. **/
+  OS_DEPRECATED void removeSetpointManagerMixedAir();
 
-  /** Returns the optional SetpointManagerScheduled associated with this Node.  **/
-  boost::optional<SetpointManagerScheduled> setpointManagerScheduled() const;
+  /** \deprecated Node::getSetpointManagerMixedAir has been deprecated and will be removed in a future release, please use Node::setpointManagers \n
+    * Returns the optional SetpointManagerMixedAir associated with this Node.  **/
+  OS_DEPRECATED boost::optional<SetpointManagerMixedAir> getSetpointManagerMixedAir();
 
-  /** Adds setPointManager of type SetpointManagerScheduled to this Node. **/
-  void addSetpointManager( SetpointManagerScheduled & setPointManager );
+  /** \deprecated Node::setpointManagerScheduled has been deprecated and will be removed in a future release, please use Node::setpointManagers \n
+    * Returns the optional SetpointManagerScheduled associated with this Node.  **/
+  OS_DEPRECATED boost::optional<SetpointManagerScheduled> setpointManagerScheduled() const;
 
-  /** Removes any SetpointManagerScheduled objects from this Node. **/
-  void removeSetpointManagerScheduled();
+  /** \deprecated Node::addSetpointManager has been deprecated and will be removed in a future release, please use SetpointManagerScheduled::addToNode \n
+    * Adds setPointManager of type SetpointManagerScheduled to this Node. **/
+  OS_DEPRECATED void addSetpointManager( SetpointManagerScheduled & setPointManager );
 
-  /** Returns the optional SetpointManagerFollowOutdoorAirTemperature associated with this Node.  **/
-  boost::optional<SetpointManagerFollowOutdoorAirTemperature> setpointManagerFollowOutdoorAirTemperature() const;
+  /** \deprecated Node::removeSetpointManagerScheduled has been deprecated and will be removed in a future release, please use SetpointManagerScheduled::remove \n
+    * Removes any SetpointManagerScheduled objects from this Node. **/
+  OS_DEPRECATED void removeSetpointManagerScheduled();
 
-  /** Adds setPointManager of type SetpointManagerFollowOutdoorAirTemperature to this Node. **/
-  void addSetpointManager( SetpointManagerFollowOutdoorAirTemperature & setPointManager );
+  /** \deprecated Node::setpointManagerFollowOutdoorAirTemperature has been deprecated and will be removed in a future release, please use Node::setpointManagers \n
+    * Returns the optional SetpointManagerFollowOutdoorAirTemperature associated with this Node.  **/
+  OS_DEPRECATED boost::optional<SetpointManagerFollowOutdoorAirTemperature> setpointManagerFollowOutdoorAirTemperature() const;
 
-  /** Removes any SetpointManagerFollowOutdoorAirTemperature objects from this Node. **/
-  void removeSetpointManagerFollowOutdoorAirTemperature();
+  /** \deprecated Node::addSetpointManager has been deprecated and will be removed in a future release, please use SetpointManagerFollowOutdoorAirTemperature::addToNode \n
+    * Adds setPointManager of type SetpointManagerFollowOutdoorAirTemperature to this Node. **/
+  OS_DEPRECATED void addSetpointManager( SetpointManagerFollowOutdoorAirTemperature & setPointManager );
 
-  /** Adds setPointManager of type SetpointManagerOutdoorAirReset to this Node. **/
-  void addSetpointManager( SetpointManagerOutdoorAirReset & setPointManager );
+  /** \deprecated Node::removeSetpointManagerFollowOutdoorAirTemperature has been deprecated and will be removed in a future release, please use SetpointManagerFollowOutdoorAirTemperature::remove \n
+    * Removes any SetpointManagerFollowOutdoorAirTemperature objects from this Node. **/
+  OS_DEPRECATED void removeSetpointManagerFollowOutdoorAirTemperature();
 
-  /** Removes any SetpointManagerOutdoorAirReset objects from this Node. **/
-  void removeSetpointManagerOutdoorAirReset();
+  /** \deprecated Node::addSetpointManager has been deprecated and will be removed in a future release, please use SetpointManagerOutdoorAirReset::addToNode \n
+    * Adds setPointManager of type SetpointManagerOutdoorAirReset to this Node. **/
+  OS_DEPRECATED void addSetpointManager( SetpointManagerOutdoorAirReset & setPointManager );
 
-  /** Returns the optional SetpointManagerOutdoorAirReset associated with this Node.  **/
-  boost::optional<SetpointManagerOutdoorAirReset> setpointManagerOutdoorAirReset() const;
+  /** \deprecated Node::removeSetpointManagerOutdoorAirReset has been deprecated and will be removed in a future release, please use SetpointManagerOutdoorAirReset::remove \n
+    * Removes any SetpointManagerOutdoorAirReset objects from this Node. **/
+  OS_DEPRECATED void removeSetpointManagerOutdoorAirReset();
 
-  /** Removes any SetpointManagerWarmest objects from this Node. **/
-  void removeSetpointManagerWarmest();
+  /** \deprecated Node::setpointManagerOutdoorAirReset has been deprecated and will be removed in a future release, please use Node::setpointManagers \n
+    * Returns the optional SetpointManagerOutdoorAirReset associated with this Node.  **/
+  OS_DEPRECATED boost::optional<SetpointManagerOutdoorAirReset> setpointManagerOutdoorAirReset() const;
 
-  /** Returns the optional SetpointManagerWarmest associated with this Node.  **/
-  boost::optional<SetpointManagerWarmest> setpointManagerWarmest() const;
+  /** \deprecated Node::removeSetpointManagerWarmest has been deprecated and will be removed in a future release, please use SetpointManagerWarmest::remove \n
+    * Removes any SetpointManagerWarmest objects from this Node. **/
+  OS_DEPRECATED void removeSetpointManagerWarmest();
 
-  /** Adds setPointManager of type SetpointManagerWarmest to this Node. **/
-  void addSetpointManagerWarmest( SetpointManagerWarmest & setPointManager );
+  /** \deprecated Node::setpointManagerWarmest has been deprecated and will be removed in a future release, please use Node::setpointManagers \n
+    * Returns the optional SetpointManagerWarmest associated with this Node.  **/
+  OS_DEPRECATED boost::optional<SetpointManagerWarmest> setpointManagerWarmest() const;
+
+  /** \deprecated Node::addSetpointManagerWarmest has been deprecated and will be removed in a future release, please use SetpointManagerWarmest::addToNode \n
+    * Adds setPointManager of type SetpointManagerWarmest to this Node. **/
+  OS_DEPRECATED void addSetpointManagerWarmest( SetpointManagerWarmest & setPointManager );
 
   bool addToNode(Node & node);
 
@@ -135,7 +158,7 @@ class MODEL_API Node : public StraightComponent {
 
   typedef detail::Node_Impl ImplType;
 
-  explicit Node(boost::shared_ptr<detail::Node_Impl> impl);
+  explicit Node(std::shared_ptr<detail::Node_Impl> impl);
 
  private:
 

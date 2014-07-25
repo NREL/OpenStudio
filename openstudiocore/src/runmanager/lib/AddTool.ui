@@ -107,27 +107,6 @@
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QLabel" name="label_6">
-       <property name="text">
-        <string>SLURM Tool File</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <item>
-        <widget class="QLineEdit" name="txtRemoteToolLocation"/>
-       </item>
-       <item>
-        <widget class="QToolButton" name="btnRemoteToolLocationBrowse">
-         <property name="text">
-          <string>Browse</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
     </layout>
    </item>
    <item>

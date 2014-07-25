@@ -20,8 +20,8 @@
 #ifndef PROJECT_CLOUDSESSIONRECORD_HPP
 #define PROJECT_CLOUDSESSIONRECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/ObjectRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "ObjectRecord.hpp"
 
 namespace openstudio {
 
@@ -126,14 +126,14 @@ class PROJECT_API CloudSessionRecord : public ObjectRecord {
   //@}
  protected:
   /// @cond
-  explicit CloudSessionRecord(boost::shared_ptr<detail::CloudSessionRecord_Impl> impl);
+  explicit CloudSessionRecord(std::shared_ptr<detail::CloudSessionRecord_Impl> impl);
 
   friend class detail::CloudSessionRecord_Impl;
   friend class Record;
   friend class ProjectDatabase;
 
   /** Construct from impl. */
-  CloudSessionRecord(boost::shared_ptr<detail::CloudSessionRecord_Impl> impl,
+  CloudSessionRecord(std::shared_ptr<detail::CloudSessionRecord_Impl> impl,
                      ProjectDatabase database);
 
   /// @endcond

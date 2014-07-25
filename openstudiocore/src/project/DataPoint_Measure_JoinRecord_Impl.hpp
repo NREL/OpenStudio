@@ -20,8 +20,8 @@
 #ifndef PROJECT_DATAPOINT_MEASURE_JOINRECORD_IMPL_HPP
 #define PROJECT_DATAPOINT_MEASURE_JOINRECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/JoinRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "JoinRecord_Impl.hpp"
 
 namespace openstudio {
 namespace project {
@@ -54,7 +54,7 @@ namespace detail {
     virtual std::string databaseTableName() const;
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(const boost::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
 
     virtual ObjectRecord leftObject() const;
 

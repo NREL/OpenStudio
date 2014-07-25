@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/System.hpp>
+#include "../../utilities/core/UUID.hpp"
+#include "../../utilities/core/System.hpp"
 #include "Job.hpp"
 #include "Job_Impl.hpp"
 #include "JSON.hpp"
@@ -28,7 +28,7 @@ namespace openstudio {
 namespace runmanager {
 
 
-  Job::Job(const boost::shared_ptr<detail::Job_Impl> &t_impl)
+  Job::Job(const std::shared_ptr<detail::Job_Impl> &t_impl)
     : m_impl(t_impl)
   {
 
@@ -90,11 +90,6 @@ namespace runmanager {
     return m_impl->isRunning();
   }
 
-  bool Job::runningRemotely() const
-  {
-    return m_impl->runningRemotely();
-  }
-
   bool Job::outOfDate() const
   {
     return m_impl->outOfDate();
@@ -108,11 +103,6 @@ namespace runmanager {
   void Job::setRunnable(bool force)
   {
     m_impl->setRunnable(force);
-  }
-
-  bool Job::remoteRunnable() const
-  {
-    return m_impl->remoteRunnable();
   }
 
   bool Job::runnable() const
@@ -259,16 +249,9 @@ namespace runmanager {
     return m_impl->getOutput();
   }
 
-  void Job::start(const boost::shared_ptr<ProcessCreator> &t_pc)
+  void Job::start(const std::shared_ptr<ProcessCreator> &t_pc)
   {
     m_impl->setProcessCreator(t_pc);
-    m_impl->start();
-  }
-
-  void Job::start(const boost::shared_ptr<ProcessCreator> &t_pc, int t_remoteid, int t_remoteTaskId)
-  {
-    m_impl->setProcessCreator(t_pc);
-    m_impl->setRemoteId(t_remoteid, t_remoteTaskId);
     m_impl->start();
   }
 
@@ -363,10 +346,10 @@ namespace runmanager {
   {
     std::vector<Job> ret;
 
-    std::vector<boost::shared_ptr<detail::Job_Impl> > childvec = 
+    std::vector<std::shared_ptr<detail::Job_Impl> > childvec = 
       m_impl->children();
 
-    for (std::vector<boost::shared_ptr<detail::Job_Impl> >::const_iterator itr = childvec.begin();
+    for (std::vector<std::shared_ptr<detail::Job_Impl> >::const_iterator itr = childvec.begin();
          itr != childvec.end();
          ++itr)
     {
@@ -388,7 +371,7 @@ namespace runmanager {
 
   boost::optional<Job> Job::finishedJob() const
   {
-    boost::shared_ptr<detail::Job_Impl> fj = 
+    std::shared_ptr<detail::Job_Impl> fj = 
       m_impl->finishedJob();
 
     if (fj)
@@ -406,7 +389,7 @@ namespace runmanager {
 
   boost::optional<Job> Job::parent() const
   {
-    boost::shared_ptr<detail::Job_Impl> p = 
+    std::shared_ptr<detail::Job_Impl> p = 
       m_impl->parent();
 
     if (p)

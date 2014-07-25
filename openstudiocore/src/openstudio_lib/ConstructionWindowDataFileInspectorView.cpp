@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ConstructionWindowDataFileInspectorView.hpp>
+#include "ConstructionWindowDataFileInspectorView.hpp"
 
 #include "../shared_gui_components/OSLineEdit.hpp"
 
-#include <model/WindowDataFile.hpp>
-#include <model/WindowDataFile_Impl.hpp>
+#include "../model/WindowDataFile.hpp"
+#include "../model/WindowDataFile_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QGridLayout>
 #include <QLabel>

@@ -18,8 +18,8 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <project/Test/ProjectFixture.hpp>
+#include "ProjectFixture.hpp"
 
-#include <project/FileReferenceRecord.hpp>
+#include "../FileReferenceRecord.hpp"
 
 

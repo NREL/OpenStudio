@@ -19,17 +19,15 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
-#include <model/Model.hpp>
-#include <model/ScheduleConstant.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/Lights.hpp>
+#include "ModelFixture.hpp"
+#include "../ScheduleTypeRegistry.hpp"
+#include "../Model.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleTypeLimits.hpp"
+#include "../LightsDefinition.hpp"
+#include "../Lights.hpp"
 
-#include <utilities/core/Containers.hpp>
-
-#include <boost/foreach.hpp>
+#include "../../utilities/core/Containers.hpp"
 
 #include <sstream>
 
@@ -40,7 +38,7 @@ TEST_F(ModelFixture, ScheduleTypeRegistry_ClassNames) {
   StringVector classesWithSchedules = ScheduleTypeRegistry::instance().classNames();
   EXPECT_FALSE(classesWithSchedules.empty());
   std::stringstream ss;
-  BOOST_FOREACH(const std::string& className,classesWithSchedules) {
+  for (const std::string& className : classesWithSchedules) {
     EXPECT_FALSE(ScheduleTypeRegistry::instance().getScheduleTypesByClassName(className).empty());
     ss << "  " << className << std::endl;
   }

@@ -17,9 +17,9 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_lib/HVACTemplateHelperDialog.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+#include "HVACTemplateHelperDialog.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QButtonGroup>

@@ -18,20 +18,18 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <project/Test/ProjectFixture.hpp>
+#include "ProjectFixture.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/WorkflowRecord.hpp>
-#include <project/ProblemRecord.hpp>
+#include "../ProjectDatabase.hpp"
+#include "../WorkflowRecord.hpp"
+#include "../ProblemRecord.hpp"
 
-#include <analysis/Problem.hpp>
-#include <analysis/WorkflowStep.hpp>
+#include "../../analysis/Problem.hpp"
+#include "../../analysis/WorkflowStep.hpp"
 
-#include <runmanager/lib/Workflow.hpp>
+#include "../../runmanager/lib/Workflow.hpp"
 
-#include <utilities/core/System.hpp>
-
-#include <boost/foreach.hpp>
+#include "../../utilities/core/System.hpp"
 
 using namespace openstudio;
 using namespace openstudio::analysis;

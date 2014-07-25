@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,27 +17,27 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CoilHeatingDesuperheater.hpp>
-#include <model/CoilHeatingDesuperheater_Impl.hpp>
+#include "CoilHeatingDesuperheater.hpp"
+#include "CoilHeatingDesuperheater_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVACUnitarySystem.hpp>
-#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "ModelObject.hpp"
+#include "ModelObject_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "AirLoopHVACUnitarySystem.hpp"
+#include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/OS_Coil_Heating_Desuperheater_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -203,22 +203,20 @@ namespace detail {
     // AirLoopHVACUnitarySystem
     std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
 
-    for( std::vector<AirLoopHVACUnitarySystem>::iterator it = airLoopHVACUnitarySystems.begin();
-    it < airLoopHVACUnitarySystems.end();
-    ++it )
+    for( const auto & airLoopHVACUnitarySystem : airLoopHVACUnitarySystems )
     {
-      if( boost::optional<HVACComponent> heatingCoil = it->heatingCoil() )
+      if( boost::optional<HVACComponent> heatingCoil = airLoopHVACUnitarySystem.heatingCoil() )
       {
         if( heatingCoil->handle() == this->handle() )
         {
-          return *it;
+          return airLoopHVACUnitarySystem;
         }
       }
-      if( boost::optional<HVACComponent> suppHeatingCoil = it->supplementalHeatingCoil() )
+      if( boost::optional<HVACComponent> suppHeatingCoil = airLoopHVACUnitarySystem.supplementalHeatingCoil() )
       {
         if( suppHeatingCoil->handle() == this->handle() )
         {
-          return *it;
+          return airLoopHVACUnitarySystem;
         }
       }
     }
@@ -232,8 +230,7 @@ CoilHeatingDesuperheater::CoilHeatingDesuperheater(const Model& model)
 {
   OS_ASSERT(getImpl<detail::CoilHeatingDesuperheater_Impl>());
 
-  bool ok = true;
-  ok = setHeatReclaimRecoveryEfficiency(0.8);
+  bool ok = setHeatReclaimRecoveryEfficiency(0.8);
   OS_ASSERT(ok);
   ok = setParasiticElectricLoad(0.0);
   OS_ASSERT(ok);
@@ -300,7 +297,7 @@ void CoilHeatingDesuperheater::resetParasiticElectricLoad() {
 }
 
 /// @cond
-CoilHeatingDesuperheater::CoilHeatingDesuperheater(boost::shared_ptr<detail::CoilHeatingDesuperheater_Impl> impl)
+CoilHeatingDesuperheater::CoilHeatingDesuperheater(std::shared_ptr<detail::CoilHeatingDesuperheater_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

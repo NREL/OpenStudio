@@ -18,22 +18,22 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/HeatExchangerAirToAirSensibleAndLatent.hpp>
-#include <model/HeatExchangerAirToAirSensibleAndLatent_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
-#include <model/EvaporativeCoolerDirectResearchSpecial.hpp>
-#include <model/EvaporativeCoolerDirectResearchSpecial_Impl.hpp>
-#include <model/HVACTemplates.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/Unit.hpp>
+#include "ModelFixture.hpp"
+#include "../HeatExchangerAirToAirSensibleAndLatent.hpp"
+#include "../HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../AirLoopHVAC_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../AirLoopHVACOutdoorAirSystem.hpp"
+#include "../AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "../EvaporativeCoolerDirectResearchSpecial.hpp"
+#include "../EvaporativeCoolerDirectResearchSpecial_Impl.hpp"
+#include "../HVACTemplates.hpp"
+#include "../../utilities/units/Quantity.hpp"
+#include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

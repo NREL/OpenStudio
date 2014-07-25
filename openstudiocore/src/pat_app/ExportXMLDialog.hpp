@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_EXPORTXMLDIALOG_H
-#define OPENSTUDIO_EXPORTXMLDIALOG_H
+#ifndef PATAPP_EXPORTXMLDIALOG_HPP
+#define PATAPP_EXPORTXMLDIALOG_HPP
 
-#include <shared_gui_components/OSDialog.hpp>
+#include "../shared_gui_components/OSDialog.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../utilities/bcl/BCLMeasure.hpp"
 
 class QLineEdit;
 class QTextEdit;
@@ -39,7 +39,7 @@ class ExportXMLDialog : public OSDialog
   public:
 
     /// Constructor of the dialog to create a new BCL Measure
-    ExportXMLDialog(const std::vector<std::string>& alternatives, QWidget* parent = 0);
+    ExportXMLDialog(const std::vector<std::string>& alternatives, QWidget* parent = nullptr);
 
     virtual ~ExportXMLDialog();
 
@@ -64,4 +64,4 @@ class ExportXMLDialog : public OSDialog
 
 } // openstudio
 
-#endif // OPENSTUDIO_EXPORTXMLDIALOG_H
+#endif // PATAPP_EXPORTXMLDIALOG_HPP

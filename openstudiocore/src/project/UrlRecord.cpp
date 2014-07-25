@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/UrlRecord.hpp>
-#include <project/UrlRecord_Impl.hpp>
+#include "UrlRecord.hpp"
+#include "UrlRecord_Impl.hpp"
 
-#include <project/CloudSessionRecord.hpp>
-#include <project/CloudSettingsRecord.hpp>
-#include <project/JoinRecord.hpp>
+#include "CloudSessionRecord.hpp"
+#include "CloudSettingsRecord.hpp"
+#include "JoinRecord.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace project {
@@ -97,7 +97,7 @@ namespace detail {
     return result;
   }
 
-  void UrlRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database) {
+  void UrlRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database) {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<UrlRecord>(query);
     this->bindValues(query);
@@ -181,7 +181,7 @@ namespace detail {
 } // detail
 
 UrlRecord::UrlRecord(const openstudio::Url& url, ObjectRecord& parentRecord)
-  : ObjectRecord(boost::shared_ptr<detail::UrlRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::UrlRecord_Impl>(
         new detail::UrlRecord_Impl(url, parentRecord)),
         parentRecord.projectDatabase())
 {
@@ -189,7 +189,7 @@ UrlRecord::UrlRecord(const openstudio::Url& url, ObjectRecord& parentRecord)
 }
 
 UrlRecord::UrlRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::UrlRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::UrlRecord_Impl>(
         new detail::UrlRecord_Impl(query, database)),
         database)
 {
@@ -210,7 +210,7 @@ UpdateByIdQueryData UrlRecord::updateByIdQueryData() {
     std::stringstream ss;
     ss << "UPDATE " << databaseTableName() << " SET ";
     int expectedValue = 0;
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+    for (auto it = result.columnValues.begin(),
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
@@ -218,7 +218,7 @@ UpdateByIdQueryData UrlRecord::updateByIdQueryData() {
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
-      std::set<int>::const_iterator nextIt = it;
+      auto nextIt = it;
       ++nextIt;
       if (nextIt == itend) {
         ss << " ";
@@ -232,11 +232,10 @@ UpdateByIdQueryData UrlRecord::updateByIdQueryData() {
     result.queryString = ss.str();
 
     // null values
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
-         itend = result.columnValues.end(); it != itend; ++it)
+    for (const auto & columnValue : result.columnValues)
     {
       // bind all values to avoid parameter mismatch error
-      if (istringEqual(ColumnsType::valueDescription(*it), "INTEGER")) {
+      if (istringEqual(ColumnsType::valueDescription(columnValue), "INTEGER")) {
         result.nulls.push_back(QVariant(QVariant::Int));
       }
       else {
@@ -301,11 +300,11 @@ openstudio::Url UrlRecord::url() const {
 }
 
 /// @cond
-UrlRecord::UrlRecord(boost::shared_ptr<detail::UrlRecord_Impl> impl)
+UrlRecord::UrlRecord(std::shared_ptr<detail::UrlRecord_Impl> impl)
   : ObjectRecord(impl)
 {}
 
-UrlRecord::UrlRecord(boost::shared_ptr<detail::UrlRecord_Impl> impl,
+UrlRecord::UrlRecord(std::shared_ptr<detail::UrlRecord_Impl> impl,
                      ProjectDatabase database)
   : ObjectRecord(impl, database)
 {

@@ -18,11 +18,11 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/units/test/UnitsFixture.hpp>
+#include "UnitsFixture.hpp"
 
-#include <utilities/units/QuantityRegex.hpp>
+#include "../QuantityRegex.hpp"
 
-#include <utilities/core/Exception.hpp>
+#include "../../core/Exception.hpp"
 
 using openstudio::isFixedPrecisionValue;
 using openstudio::containsFixedPrecisionValue;

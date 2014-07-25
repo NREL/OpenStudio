@@ -20,7 +20,7 @@
 #ifndef MODEL_SPACELOADINSTANCE_IMPL_HPP
 #define MODEL_SPACELOADINSTANCE_IMPL_HPP
 
-#include <model/SpaceLoad_Impl.hpp>
+#include "SpaceLoad_Impl.hpp"
 
 #include <QObject>
 

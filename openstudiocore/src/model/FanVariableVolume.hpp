@@ -20,8 +20,8 @@
 #ifndef MODEL_FANVARIABLEVOLUME_HPP
 #define MODEL_FANVARIABLEVOLUME_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 class Quantity;
@@ -225,7 +225,7 @@ class MODEL_API FanVariableVolume : public StraightComponent {
 
   friend class openstudio::IdfObject;
 
-  explicit FanVariableVolume(boost::shared_ptr<detail::FanVariableVolume_Impl> impl);
+  explicit FanVariableVolume(std::shared_ptr<detail::FanVariableVolume_Impl> impl);
 
   /// @endcond
  private:

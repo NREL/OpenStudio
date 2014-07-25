@@ -20,14 +20,14 @@
 #ifndef UTILITIES_IDD_IDDOBJECT_IMPL_HPP
 #define UTILITIES_IDD_IDDOBJECT_IMPL_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/idd/IddObjectProperties.hpp>
-#include <utilities/idd/IddFieldProperties.hpp>
-#include <utilities/idd/IddField.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "IddObjectProperties.hpp"
+#include "IddFieldProperties.hpp"
+#include "IddField.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../core/Logger.hpp"
+#include "../core/Containers.hpp"
 
 #include <string>
 #include <ostream>
@@ -68,7 +68,7 @@ namespace detail {
     /** Get the properties of this object. */
     const IddObjectProperties& properties() const;
 
-    /** Get all non-extensible \linnk IddField IddFields\endlink. */
+    /** Get all non-extensible \link IddField IddFields\endlink. */
     const IddFieldVector& nonextensibleFields() const;
 
     /** Get this object's extensible group, that is, the vector of extensible \link IddFields
@@ -130,7 +130,7 @@ namespace detail {
     /** Get this IddObject's url flag. True if this object has a url in it */
     bool hasURL() const;
 
-    /** Returns ExtensibleIndex(groupIndex,fieldIndex) that corresponds to field index. Thows if
+    /** Returns ExtensibleIndex(groupIndex,fieldIndex) that corresponds to field index. Throws if
      *  !isExtensibleField(index). */
     ExtensibleIndex extensibleIndex(unsigned index) const;
 
@@ -163,7 +163,7 @@ namespace detail {
     //@{
 
     /** Load from name, group, type, and text. */
-    static boost::shared_ptr<IddObject_Impl> load(const std::string& name, 
+    static std::shared_ptr<IddObject_Impl> load(const std::string& name, 
                                                   const std::string& group,
                                                   const std::string& text, 
                                                   IddObjectType type);

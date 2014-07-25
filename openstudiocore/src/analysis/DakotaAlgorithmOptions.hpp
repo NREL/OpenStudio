@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_DAKOTAALGORITHMOPTIONS_HPP
 #define ANALYSIS_DAKOTAALGORITHMOPTIONS_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/AlgorithmOptions.hpp>
+#include "AnalysisAPI.hpp"
+#include "AlgorithmOptions.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -46,7 +46,7 @@ class ANALYSIS_API DakotaAlgorithmOptions : public AlgorithmOptions {
   /// @cond
   typedef detail::DakotaAlgorithmOptions_Impl ImplType;
 
-  explicit DakotaAlgorithmOptions(boost::shared_ptr<detail::DakotaAlgorithmOptions_Impl> impl);
+  explicit DakotaAlgorithmOptions(std::shared_ptr<detail::DakotaAlgorithmOptions_Impl> impl);
 
   friend class detail::DakotaAlgorithmOptions_Impl;
   friend class AlgorithmOptions;

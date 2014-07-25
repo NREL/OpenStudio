@@ -16,11 +16,11 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#include <utilities/cloud/CloudProvider.hpp>
-#include <utilities/cloud/CloudProvider_Impl.hpp>
-#include <utilities/core/Application.hpp>
+#include "CloudProvider.hpp"
+#include "CloudProvider_Impl.hpp"
+#include "../core/Application.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 namespace openstudio{
   namespace detail {
@@ -149,7 +149,7 @@ namespace openstudio{
 
   } // detail
 
-  CloudSettings::CloudSettings(const boost::shared_ptr<detail::CloudSettings_Impl>& impl)
+  CloudSettings::CloudSettings(const std::shared_ptr<detail::CloudSettings_Impl>& impl)
     : m_impl(impl)
   {
     OS_ASSERT(getImpl<detail::CloudSettings_Impl>());
@@ -197,7 +197,7 @@ namespace openstudio{
     return getImpl<detail::CloudSettings_Impl>()->saveToSettings(overwriteExisting);
   }
 
-  CloudSession::CloudSession(const boost::shared_ptr<detail::CloudSession_Impl>& impl)
+  CloudSession::CloudSession(const std::shared_ptr<detail::CloudSession_Impl>& impl)
     : m_impl(impl)
   {
     OS_ASSERT(getImpl<detail::CloudSession_Impl>());
@@ -256,7 +256,7 @@ namespace openstudio{
   }
 
 
-  CloudProvider::CloudProvider(const boost::shared_ptr<detail::CloudProvider_Impl>& impl)
+  CloudProvider::CloudProvider(const std::shared_ptr<detail::CloudProvider_Impl>& impl)
     : m_impl(impl)
   {
     OS_ASSERT(getImpl<detail::CloudProvider_Impl>());

@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_LOSTCLOUDCONNECTIONDIALOG_H
-#define OPENSTUDIO_LOSTCLOUDCONNECTIONDIALOG_H
+#ifndef SHAREDGUICOMPONENTS_LOSTCLOUDCONNECTIONDIALOG_HPP
+#define SHAREDGUICOMPONENTS_LOSTCLOUDCONNECTIONDIALOG_HPP
 
-#include <shared_gui_components/OSDialog.hpp>
+#include "OSDialog.hpp"
 
 class QVBoxLayout;
 
@@ -35,7 +35,7 @@ public:
   LostCloudConnectionDialog(bool internetAvailable,
     bool authenticated,
     bool cloudRunning,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
 
   virtual ~LostCloudConnectionDialog();
 
@@ -65,4 +65,4 @@ private slots:
 
 } // openstudio
 
-#endif // OPENSTUDIO_LOSTCLOUDCONNECTIONDIALOG_H
+#endif // SHAREDGUICOMPONENTS_LOSTCLOUDCONNECTIONDIALOG_HPP

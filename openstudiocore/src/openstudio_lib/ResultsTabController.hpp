@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_RESULTSTABCONTROLLER_H
-#define OPENSTUDIO_RESULTSTABCONTROLLER_H
+#ifndef OPENSTUDIO_RESULTSTABCONTROLLER_HPP
+#define OPENSTUDIO_RESULTSTABCONTROLLER_HPP
 
-#include <openstudio_lib/MainTabController.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Logger.hpp>
+#include "MainTabController.hpp"
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
 
@@ -64,4 +64,4 @@ class ResultsTabController : public MainTabController
 
 } // openstudio
 
-#endif // OPENSTUDIO_RESULTSTABCONTROLLER_H
+#endif // OPENSTUDIO_RESULTSTABCONTROLLER_HPP

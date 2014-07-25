@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/DefaultSurfaceConstructions.hpp>
-#include <model/DefaultSurfaceConstructions_Impl.hpp>
+#include "DefaultSurfaceConstructions.hpp"
+#include "DefaultSurfaceConstructions_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "ConstructionBase.hpp"
+#include "ConstructionBase_Impl.hpp"
 
 #include <utilities/idd/OS_DefaultSurfaceConstructions_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -266,7 +266,7 @@ void DefaultSurfaceConstructions::merge(const DefaultSurfaceConstructions& other
 }
 
 /// @cond
-DefaultSurfaceConstructions::DefaultSurfaceConstructions(boost::shared_ptr<detail::DefaultSurfaceConstructions_Impl> impl)
+DefaultSurfaceConstructions::DefaultSurfaceConstructions(std::shared_ptr<detail::DefaultSurfaceConstructions_Impl> impl)
   : ResourceObject(impl)
 {}
 /// @endcond

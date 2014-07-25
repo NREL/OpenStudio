@@ -19,27 +19,25 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/ComponentCostAdjustments.hpp>
-#include <model/ComponentCostAdjustments_Impl.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/Meter.hpp>
-#include <model/Meter_Impl.hpp>
-#include <model/RunPeriod.hpp>
-#include <model/RunPeriod_Impl.hpp>
-#include <model/LifeCycleCostParameters.hpp>
-#include <model/LifeCycleCostParameters_Impl.hpp>
-#include <model/LifeCycleCostUsePriceEscalation.hpp>
-#include <model/LifeCycleCostUsePriceEscalation_Impl.hpp>
-#include <model/Model_Impl.hpp>
+#include "../ComponentCostAdjustments.hpp"
+#include "../ComponentCostAdjustments_Impl.hpp"
+#include "../Facility.hpp"
+#include "../Facility_Impl.hpp"
+#include "../Meter.hpp"
+#include "../Meter_Impl.hpp"
+#include "../RunPeriod.hpp"
+#include "../RunPeriod_Impl.hpp"
+#include "../LifeCycleCostParameters.hpp"
+#include "../LifeCycleCostParameters_Impl.hpp"
+#include "../LifeCycleCostUsePriceEscalation.hpp"
+#include "../LifeCycleCostUsePriceEscalation_Impl.hpp"
+#include "../Model_Impl.hpp"
 
-#include <utilities/core/Optional.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/data/EndUses.hpp>
-
-#include <boost/foreach.hpp>
+#include "../../utilities/core/Optional.hpp"
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/data/EndUses.hpp"
 
 using namespace openstudio::model;
 using namespace openstudio;
@@ -153,42 +151,42 @@ TEST_F(ModelFixture, Facility_EconomicsTest) {
 
   ///! Remove unknown costs
   ComponentCost_AdjustmentsVector componentCostAdjustmentss = model.getModelObjects<ComponentCost_Adjustments>();
-  BOOST_FOREACH(ComponentCost_Adjustments componentCostAdjustments, componentCostAdjustmentss){
+  for (ComponentCost_Adjustments componentCostAdjustments : componentCostAdjustmentss){
     componentCostAdjustments.remove();
   }
 
   ComponentCost_LineItemVector componentCostLineItems = model.getModelObjects<ComponentCost_LineItem>();
-  BOOST_FOREACH(ComponentCost_LineItem componentCostLineItem, componentCostLineItems){
+  for (ComponentCost_LineItem componentCostLineItem : componentCostLineItems){
     componentCostLineItem.remove();
   }
 
   ComponentCost_ReferenceVector componentCostReferences = model.getModelObjects<ComponentCost_Reference>();
-  BOOST_FOREACH(ComponentCost_Reference componentCostReference, componentCostReferences){
+  for (ComponentCost_Reference componentCostReference : componentCostReferences){
     componentCostReference.remove();
   }
 
   LifeCycleCost_NonrecurringCostVector lifeCycleCostNonrecurringCosts = model.getModelObjects<LifeCycleCost_NonrecurringCost>();
-  BOOST_FOREACH(LifeCycleCost_NonrecurringCost lifeCycleCostNonrecurringCost, lifeCycleCostNonrecurringCosts){
+  for (LifeCycleCost_NonrecurringCost lifeCycleCostNonrecurringCost : lifeCycleCostNonrecurringCosts){
     lifeCycleCostNonrecurringCost.remove();
   }
 
   LifeCycleCost_ParametersVector lifeCycleCostParameterss = model.getModelObjects<LifeCycleCost_Parameters>();
-  BOOST_FOREACH(LifeCycleCost_Parameters lifeCycleCostParameters, lifeCycleCostParameterss){
+  for (LifeCycleCost_Parameters lifeCycleCostParameters : lifeCycleCostParameterss){
     lifeCycleCostParameters.remove();
   }
 
   LifeCycleCost_RecurringCostsVector lifeCycleCostRecurringCostss = model.getModelObjects<LifeCycleCost_RecurringCosts>();
-  BOOST_FOREACH(LifeCycleCost_RecurringCosts lifeCycleCostRecurringCosts, lifeCycleCostRecurringCostss){
+  for (LifeCycleCost_RecurringCosts lifeCycleCostRecurringCosts : lifeCycleCostRecurringCostss){
     lifeCycleCostRecurringCosts.remove();
   }
 
   LifeCycleCost_UseAdjustmentVector lifeCycleCostUseAdjustments = model.getModelObjects<LifeCycleCost_UseAdjustment>();
-  BOOST_FOREACH(LifeCycleCost_UseAdjustment lifeCycleCostUseAdjustment, lifeCycleCostUseAdjustments){
+  for (LifeCycleCost_UseAdjustment lifeCycleCostUseAdjustment : lifeCycleCostUseAdjustments){
     lifeCycleCostUseAdjustment.remove();
   }
 
   LifeCycleCost_UsePriceEscalationVector lifeCycleCostUsePriceEscalations = model.getModelObjects<LifeCycleCost_UsePriceEscalation>();
-  BOOST_FOREACH(LifeCycleCost_UsePriceEscalation lifeCycleCostUsePriceEscalation, lifeCycleCostUsePriceEscalations){
+  for (LifeCycleCost_UsePriceEscalation lifeCycleCostUsePriceEscalation : lifeCycleCostUsePriceEscalations){
     lifeCycleCostUsePriceEscalation.remove();
   }
 
@@ -395,42 +393,42 @@ TEST_F(ModelFixture, Facility_EconomicsTest_NoLifeCycleParameters) {
 
   ///! Remove unknown costs
   ComponentCost_AdjustmentsVector componentCostAdjustmentss = model.getModelObjects<ComponentCost_Adjustments>();
-  BOOST_FOREACH(ComponentCost_Adjustments componentCostAdjustments, componentCostAdjustmentss){
+  for (ComponentCost_Adjustments componentCostAdjustments : componentCostAdjustmentss){
     componentCostAdjustments.remove();
   }
 
   ComponentCost_LineItemVector componentCostLineItems = model.getModelObjects<ComponentCost_LineItem>();
-  BOOST_FOREACH(ComponentCost_LineItem componentCostLineItem, componentCostLineItems){
+  for (ComponentCost_LineItem componentCostLineItem : componentCostLineItems){
     componentCostLineItem.remove();
   }
 
   ComponentCost_ReferenceVector componentCostReferences = model.getModelObjects<ComponentCost_Reference>();
-  BOOST_FOREACH(ComponentCost_Reference componentCostReference, componentCostReferences){
+  for (ComponentCost_Reference componentCostReference : componentCostReferences){
     componentCostReference.remove();
   }
 
   LifeCycleCost_NonrecurringCostVector lifeCycleCostNonrecurringCosts = model.getModelObjects<LifeCycleCost_NonrecurringCost>();
-  BOOST_FOREACH(LifeCycleCost_NonrecurringCost lifeCycleCostNonrecurringCost, lifeCycleCostNonrecurringCosts){
+  for (LifeCycleCost_NonrecurringCost lifeCycleCostNonrecurringCost : lifeCycleCostNonrecurringCosts){
     lifeCycleCostNonrecurringCost.remove();
   }
 
   LifeCycleCost_ParametersVector lifeCycleCostParameterss = model.getModelObjects<LifeCycleCost_Parameters>();
-  BOOST_FOREACH(LifeCycleCost_Parameters lifeCycleCostParameters, lifeCycleCostParameterss){
+  for (LifeCycleCost_Parameters lifeCycleCostParameters : lifeCycleCostParameterss){
     lifeCycleCostParameters.remove();
   }
 
   LifeCycleCost_RecurringCostsVector lifeCycleCostRecurringCostss = model.getModelObjects<LifeCycleCost_RecurringCosts>();
-  BOOST_FOREACH(LifeCycleCost_RecurringCosts lifeCycleCostRecurringCosts, lifeCycleCostRecurringCostss){
+  for (LifeCycleCost_RecurringCosts lifeCycleCostRecurringCosts : lifeCycleCostRecurringCostss){
     lifeCycleCostRecurringCosts.remove();
   }
 
   LifeCycleCost_UseAdjustmentVector lifeCycleCostUseAdjustments = model.getModelObjects<LifeCycleCost_UseAdjustment>();
-  BOOST_FOREACH(LifeCycleCost_UseAdjustment lifeCycleCostUseAdjustment, lifeCycleCostUseAdjustments){
+  for (LifeCycleCost_UseAdjustment lifeCycleCostUseAdjustment : lifeCycleCostUseAdjustments){
     lifeCycleCostUseAdjustment.remove();
   }
 
   LifeCycleCost_UsePriceEscalationVector lifeCycleCostUsePriceEscalations = model.getModelObjects<LifeCycleCost_UsePriceEscalation>();
-  BOOST_FOREACH(LifeCycleCost_UsePriceEscalation lifeCycleCostUsePriceEscalation, lifeCycleCostUsePriceEscalations){
+  for (LifeCycleCost_UsePriceEscalation lifeCycleCostUsePriceEscalation : lifeCycleCostUsePriceEscalations){
     lifeCycleCostUsePriceEscalation.remove();
   }
 
@@ -457,42 +455,42 @@ TEST_F(ModelFixture, FacilityEconomicsTest_NoSqlFile) {
 
   ///! Remove unknown costs
   ComponentCost_AdjustmentsVector componentCostAdjustmentss = model.getModelObjects<ComponentCost_Adjustments>();
-  BOOST_FOREACH(ComponentCost_Adjustments componentCostAdjustments, componentCostAdjustmentss){
+  for (ComponentCost_Adjustments componentCostAdjustments : componentCostAdjustmentss){
     componentCostAdjustments.remove();
   }
 
   ComponentCost_LineItemVector componentCostLineItems = model.getModelObjects<ComponentCost_LineItem>();
-  BOOST_FOREACH(ComponentCost_LineItem componentCostLineItem, componentCostLineItems){
+  for (ComponentCost_LineItem componentCostLineItem : componentCostLineItems){
     componentCostLineItem.remove();
   }
 
   ComponentCost_ReferenceVector componentCostReferences = model.getModelObjects<ComponentCost_Reference>();
-  BOOST_FOREACH(ComponentCost_Reference componentCostReference, componentCostReferences){
+  for (ComponentCost_Reference componentCostReference : componentCostReferences){
     componentCostReference.remove();
   }
 
   LifeCycleCost_NonrecurringCostVector lifeCycleCostNonrecurringCosts = model.getModelObjects<LifeCycleCost_NonrecurringCost>();
-  BOOST_FOREACH(LifeCycleCost_NonrecurringCost lifeCycleCostNonrecurringCost, lifeCycleCostNonrecurringCosts){
+  for (LifeCycleCost_NonrecurringCost lifeCycleCostNonrecurringCost : lifeCycleCostNonrecurringCosts){
     lifeCycleCostNonrecurringCost.remove();
   }
 
   LifeCycleCost_ParametersVector lifeCycleCostParameterss = model.getModelObjects<LifeCycleCost_Parameters>();
-  BOOST_FOREACH(LifeCycleCost_Parameters lifeCycleCostParameters, lifeCycleCostParameterss){
+  for (LifeCycleCost_Parameters lifeCycleCostParameters : lifeCycleCostParameterss){
     lifeCycleCostParameters.remove();
   }
 
   LifeCycleCost_RecurringCostsVector lifeCycleCostRecurringCostss = model.getModelObjects<LifeCycleCost_RecurringCosts>();
-  BOOST_FOREACH(LifeCycleCost_RecurringCosts lifeCycleCostRecurringCosts, lifeCycleCostRecurringCostss){
+  for (LifeCycleCost_RecurringCosts lifeCycleCostRecurringCosts : lifeCycleCostRecurringCostss){
     lifeCycleCostRecurringCosts.remove();
   }
 
   LifeCycleCost_UseAdjustmentVector lifeCycleCostUseAdjustments = model.getModelObjects<LifeCycleCost_UseAdjustment>();
-  BOOST_FOREACH(LifeCycleCost_UseAdjustment lifeCycleCostUseAdjustment, lifeCycleCostUseAdjustments){
+  for (LifeCycleCost_UseAdjustment lifeCycleCostUseAdjustment : lifeCycleCostUseAdjustments){
     lifeCycleCostUseAdjustment.remove();
   }
 
   LifeCycleCost_UsePriceEscalationVector lifeCycleCostUsePriceEscalations = model.getModelObjects<LifeCycleCost_UsePriceEscalation>();
-  BOOST_FOREACH(LifeCycleCost_UsePriceEscalation lifeCycleCostUsePriceEscalation, lifeCycleCostUsePriceEscalations){
+  for (LifeCycleCost_UsePriceEscalation lifeCycleCostUsePriceEscalation : lifeCycleCostUsePriceEscalations){
     lifeCycleCostUsePriceEscalation.remove();
   }
 

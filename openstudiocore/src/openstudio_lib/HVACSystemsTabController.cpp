@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/HVACSystemsTabController.hpp>
-#include <openstudio_lib/HVACSystemsController.hpp>
-#include <openstudio_lib/HVACSystemsView.hpp>
-#include <openstudio_lib/HVACSystemsTabView.hpp>
+#include "HVACSystemsTabController.hpp"
+#include "HVACSystemsController.hpp"
+#include "HVACSystemsView.hpp"
+#include "HVACSystemsTabView.hpp"
 
 namespace openstudio {
 
@@ -28,7 +28,7 @@ HVACSystemsTabController::HVACSystemsTabController(bool isIP, const model::Model
   : MainTabController(new HVACSystemsTabView()),
   m_isIP(isIP)
 {
-  m_hvacSystemsController = boost::shared_ptr<HVACSystemsController>(new HVACSystemsController(isIP, model));
+  m_hvacSystemsController = std::shared_ptr<HVACSystemsController>(new HVACSystemsController(isIP, model));
 
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              m_hvacSystemsController.get(), SIGNAL(toggleUnitsClicked(bool)));

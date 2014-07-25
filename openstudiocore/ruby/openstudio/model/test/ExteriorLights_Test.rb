@@ -19,9 +19,9 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class ExteriorLights_Test < Test::Unit::TestCase
+class ExteriorLights_Test < MiniTest::Unit::TestCase
 
   def test_ExteriorLights  
     model = OpenStudio::Model::Model.new

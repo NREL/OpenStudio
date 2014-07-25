@@ -19,9 +19,9 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/core/UpdateManager.hpp>
-#include <utilities/core/Application.hpp>
-#include <utilities/core/System.hpp>
+#include "../UpdateManager.hpp"
+#include "../Application.hpp"
+#include "../System.hpp"
 #include <OpenStudio.hxx>
 
 #include <QApplication>

@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SUMMARYTABVIEW_H
-#define OPENSTUDIO_SUMMARYTABVIEW_H
+#ifndef OPENSTUDIO_SUMMARYTABVIEW_HPP
+#define OPENSTUDIO_SUMMARYTABVIEW_HPP
 
-#include <model/Model.hpp>
-#include <openstudio_lib/MainTabView.hpp>
+#include "../model/Model.hpp"
+#include "MainTabView.hpp"
 
 namespace openstudio {
 
@@ -39,4 +39,4 @@ class SummaryTabView : public MainTabView
 
 } // openstudio
 
-#endif // OPENSTUDIO_SUMMARYTABVIEW_H
+#endif // OPENSTUDIO_SUMMARYTABVIEW_HPP

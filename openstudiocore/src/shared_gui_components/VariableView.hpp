@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_VARIABLEVIEW_HPP
-#define OPENSTUDIO_VARIABLEVIEW_HPP
+#ifndef SHAREDGUICOMPONENTS_VARIABLEVIEW_HPP
+#define SHAREDGUICOMPONENTS_VARIABLEVIEW_HPP
 
 #include "OSCollapsibleView.hpp"
 #include "OSListView.hpp"
@@ -253,4 +253,4 @@ class MeasureItemView : public QWidget
 
 } // openstudio
 
-#endif // OPENSTUDIO_MEASURESVIEW_H
+#endif // SHAREDGUICOMPONENTS_VARIABLEVIEW_HPP

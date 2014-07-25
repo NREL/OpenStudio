@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/ModelPartitionMaterial.hpp>
-#include <model/ModelPartitionMaterial_Impl.hpp>
+#include "ModelPartitionMaterial.hpp"
+#include "ModelPartitionMaterial_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -170,7 +170,7 @@ ModelPartitionMaterial::ModelPartitionMaterial(IddObjectType type,const Model& m
 
 /// @cond
 ModelPartitionMaterial::ModelPartitionMaterial(
-    boost::shared_ptr<detail::ModelPartitionMaterial_Impl> impl)
+    std::shared_ptr<detail::ModelPartitionMaterial_Impl> impl)
   : Material(impl)
 {}
 /// @endcond

@@ -14,7 +14,7 @@
 %ignore openstudio::Economics::getIRR;
 %ignore openstudio::Economics::recursiveNewtonCalc;
 
-%template(CostObjectPtr) boost::shared_ptr<openstudio::CostObject>;
+%template(CostObjectPtr) std::shared_ptr<openstudio::CostObject>;
 %include <utilities/economics/CostObject.hpp>
 %include <utilities/economics/Economics.hpp>
 

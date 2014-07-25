@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
 #ifndef MODEL_REFRIGERATIONTRANSCRITICALSYSTEM_HPP
 #define MODEL_REFRIGERATIONTRANSCRITICALSYSTEM_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 
@@ -183,7 +183,7 @@ class MODEL_API RefrigerationTranscriticalSystem : public ModelObject {
   /// @cond
   typedef detail::RefrigerationTranscriticalSystem_Impl ImplType;
 
-  explicit RefrigerationTranscriticalSystem(boost::shared_ptr<detail::RefrigerationTranscriticalSystem_Impl> impl);
+  explicit RefrigerationTranscriticalSystem(std::shared_ptr<detail::RefrigerationTranscriticalSystem_Impl> impl);
 
   friend class detail::RefrigerationTranscriticalSystem_Impl;
   friend class Model;

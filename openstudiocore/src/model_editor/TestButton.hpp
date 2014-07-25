@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef MODELEDITOR_TEST_TESTBUTTON_HPP
-#define MODELEDITOR_TEST_TESTBUTTON_HPP
+#ifndef MODELEDITOR_TESTBUTTON_HPP
+#define MODELEDITOR_TESTBUTTON_HPP
 
 #include <QObject>
 
-#include <model_editor/ModelEditorAPI.hpp>
+#include "ModelEditorAPI.hpp"
 
 class MODELEDITOR_API TestButton : public QObject
 {
@@ -40,4 +40,4 @@ class MODELEDITOR_API TestButton : public QObject
     bool m_clickValue;
 };
 
-#endif // MODELEDITOR_TEST_TESTBUTTON_HPP
+#endif // MODELEDITOR_TESTBUTTON_HPP

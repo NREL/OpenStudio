@@ -17,16 +17,16 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/bcl/LocalBCL.hpp>
+#include "BCLMeasure.hpp"
+#include "LocalBCL.hpp"
 
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/System.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/FileReference.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../core/ApplicationPathHelpers.hpp"
+#include "../core/System.hpp"
+#include "../core/Path.hpp"
+#include "../core/PathHelpers.hpp"
+#include "../core/FileReference.hpp"
+#include "../data/Attribute.hpp"
+#include "../core/Assert.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -45,7 +45,7 @@ namespace openstudio{
         LOG_AND_THROW("'" << toString(dir) << "' exists but is not an empty directory");
       }
     }else{
-      if (!boost::filesystem::create_directories(dir)){
+      if (!QDir().mkpath(toQString(dir))){
         LOG_AND_THROW("'" << toString(dir) << "' cannot be created as an empty directory");
       }
     }
@@ -67,10 +67,8 @@ namespace openstudio{
     QString testTemplate;
     QString templateName;
     QString testOSM;
-    QString testEPW;
     QString resourceFile;
     openstudio::path testOSMPath;
-    openstudio::path testEPWPath;
     openstudio::path resourceFilePath;
     if (measureType == MeasureType::ModelMeasure){
       measureTemplate = ":/templates/ModelMeasure/measure.rb";
@@ -90,14 +88,12 @@ namespace openstudio{
       templateName = "ReportingMeasure";
 
       testOSM = ":/templates/ReportingMeasure/tests/ExampleModel.osm";
-      testEPW = ":/templates/ReportingMeasure/tests/ExampleModel/files/USA_CO_Golden-NREL.724666_TMY3.epw";
       resourceFile = ":/templates/ReportingMeasure/resources/report.html.in";
 
-      createDirectory(dir / toPath("tests/ExampleModel/files"));
+      createDirectory(dir / toPath("tests"));
       createDirectory(dir / toPath("resources"));
 
       testOSMPath = dir / toPath("tests/ExampleModel.osm");
-      testEPWPath = dir / toPath("tests/ExampleModel/files/USA_CO_Golden-NREL.724666_TMY3.epw");
       resourceFilePath = dir / toPath("resources/report.html.in");
     }
 
@@ -129,16 +125,6 @@ namespace openstudio{
       if(file.open(QFile::ReadOnly)){
         QTextStream docIn(&file);
         testOSMString = docIn.readAll();
-        file.close();
-      }
-    }
-
-    QString testEPWString;
-    if (!testEPW.isEmpty()){
-      QFile file(testEPW);
-      if(file.open(QFile::ReadOnly)){
-        QTextStream docIn(&file);
-        testEPWString = docIn.readAll();
         file.close();
       }
     }
@@ -208,25 +194,6 @@ namespace openstudio{
         m_bclXML.addFile(measureTestOSMFileReference);
       }
     }
-
-    // write test epw
-    {
-      if (!testEPWString.isEmpty()){
-        QFile file(toQString(testEPWPath));
-        bool opened = file.open(QIODevice::WriteOnly);
-        if (!opened){
-          LOG_AND_THROW("Cannot write test epw file to '" << toString(testEPWPath) << "'");
-        }
-        QTextStream textStream(&file);
-        textStream << testEPWString;
-        file.close();
-
-        BCLFileReference measureTestEPWFileReference(testEPWPath, true);
-        measureTestEPWFileReference.setUsageType("test");
-        m_bclXML.addFile(measureTestEPWFileReference);
-      }
-    }
-
 
     // write resource
     {
@@ -304,7 +271,7 @@ namespace openstudio{
 
     QString result;
     QStringList parts = str.split(' ', QString::SkipEmptyParts);
-    Q_FOREACH(QString part, parts){
+    for (const QString& part : parts) {
       part[0].toUpper();
       result.append(part);
     }
@@ -413,8 +380,8 @@ namespace openstudio{
     }
 
     try{
-      directory_iterator endit; // default construction yields past-the-end
-      directory_iterator it(dir);
+      boost::filesystem::directory_iterator endit; // default construction yields past-the-end
+      boost::filesystem::directory_iterator it(dir);
       for( ; it != endit; ++it )
       {
         if ( is_directory(it->status()) )
@@ -602,7 +569,7 @@ namespace openstudio{
 
     std::vector<BCLFileReference> filesToRemove;
     std::vector<BCLFileReference> filesToAdd;
-    Q_FOREACH(BCLFileReference file, m_bclXML.files()){
+    for (BCLFileReference file : m_bclXML.files()) {
       if (!exists(file.path())){
         result = true;
         filesToRemove.push_back(file);
@@ -613,43 +580,35 @@ namespace openstudio{
     }
 
     // look for new files and add them
-    try {
-      directory_iterator endit; // default construction yields past-the-end
-      directory_iterator it(m_directory / toPath("tests/"));
-      for( ; it != endit; ++it ){
-        if ( is_regular_file(it->status()) ){
-          if (!m_bclXML.hasFile(*it)){
-            BCLFileReference file(*it, true);
-            file.setUsageType("test");
-            result = true;
-            filesToAdd.push_back(file);
-          }
-        }
+    openstudio::path srcDir = m_directory / "tests";
+    for (const QFileInfo &info : QDir(toQString(srcDir)).entryInfoList(QDir::Files))
+    {
+      openstudio::path srcItemPath = srcDir / toPath(info.fileName());
+      if (!m_bclXML.hasFile(srcItemPath)){
+        BCLFileReference file(srcItemPath, true);
+        file.setUsageType("test");
+        result = true;
+        filesToAdd.push_back(file);
       }
-    }catch(const std::exception&){
     }
 
-    try {
-      directory_iterator endit; // default construction yields past-the-end
-      directory_iterator it(m_directory / toPath("resources/"));
-      for( ; it != endit; ++it ){
-        if ( is_regular_file(it->status()) ){
-          if (!m_bclXML.hasFile(*it)){
-            BCLFileReference file(*it, true);
-            file.setUsageType("resource");
-            result = true;
-            filesToAdd.push_back(file);
-          }
-        }
+    srcDir = m_directory / "resources";
+    for (const QFileInfo &info : QDir(toQString(srcDir)).entryInfoList(QDir::Files))
+    {
+      openstudio::path srcItemPath = srcDir / toPath(info.fileName());
+      if (!m_bclXML.hasFile(srcItemPath)){
+        BCLFileReference file(srcItemPath, true);
+        file.setUsageType("resource");
+        result = true;
+        filesToAdd.push_back(file);
       }
-    }catch(const std::exception&){
     }
 
-    Q_FOREACH(BCLFileReference file, filesToRemove){
+    for (const BCLFileReference& file : filesToRemove) {
       m_bclXML.removeFile(file.path());
     }
 
-    Q_FOREACH(BCLFileReference file, filesToAdd){
+    for (const BCLFileReference& file : filesToAdd) {
       m_bclXML.addFile(file);
     }
 
@@ -677,12 +636,12 @@ namespace openstudio{
 
   boost::optional<BCLMeasure> BCLMeasure::clone(const openstudio::path& newDir) const
   {
-    if (exists(newDir)){
+    if (QFile::exists(toQString(newDir))){
       if (!isEmptyDirectory(newDir)){
         return boost::none;
       }
     }else{
-      if (!boost::filesystem::create_directories(newDir)){
+      if (!QDir().mkpath(toQString(newDir))){
         return boost::none;
       }
     }

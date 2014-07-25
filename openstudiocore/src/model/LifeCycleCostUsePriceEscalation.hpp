@@ -20,9 +20,9 @@
 #ifndef MODEL_LIFECYCLECOSTUSEPRICEESCALATION_HPP
 #define MODEL_LIFECYCLECOSTUSEPRICEESCALATION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
-#include <utilities/core/Optional.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio{
 namespace model{
@@ -90,7 +90,7 @@ protected:
   friend class IdfObject;
 
   // constructor
-  explicit LifeCycleCostUsePriceEscalation(boost::shared_ptr<detail::LifeCycleCostUsePriceEscalation_Impl> impl);
+  explicit LifeCycleCostUsePriceEscalation(std::shared_ptr<detail::LifeCycleCostUsePriceEscalation_Impl> impl);
 
 private:
 

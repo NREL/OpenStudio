@@ -20,8 +20,8 @@
 #ifndef MODEL_PARENTOBJECT_HPP
 #define MODEL_PARENTOBJECT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -78,7 +78,7 @@ class MODEL_API ParentObject : public ModelObject {
   friend class openstudio::detail::IdfObject_Impl;
   friend class detail::ParentObject_Impl;
 
-  explicit ParentObject(boost::shared_ptr<detail::ParentObject_Impl> impl);
+  explicit ParentObject(std::shared_ptr<detail::ParentObject_Impl> impl);
 
  private:
 
@@ -96,7 +96,7 @@ typedef std::vector<ParentObject> ParentObjectVector;
 
 /** Returns object and all other objects accessible by calling children() on encountered 
  *  \link ParentObject ParentObjects \endlink. LifeCycleCost objects are not technically children but may be included 
- *  by setting the optional secondard argument to true. \relates ParentObject */
+ *  by setting the optional second argument to true. \relates ParentObject */
 MODEL_API std::vector<ModelObject> getRecursiveChildren(const ParentObject& object, bool includeLifeCycleCosts = false);
 
 /** Returns all objects in getRecursiveChildren(object) that can be cast to type T. */
@@ -104,7 +104,7 @@ template <typename T>
 std::vector<T> getSubsetOfRecursiveChildren(const ParentObject& object) {
   std::vector<ModelObject> allChildren = getRecursiveChildren(object);
   std::vector<T> result;
-  BOOST_FOREACH(const ModelObject& child,allChildren) {
+  for (const ModelObject& child : allChildren) {
     boost::optional<T> candidate = child.optionalCast<T>();
     if (candidate) { result.push_back(*candidate); }
   }
@@ -120,7 +120,7 @@ template <typename T>
 std::vector<T> getSubsetOfRecursiveChildrenAndResources(const ModelObject& object) {
   std::vector<ModelObject> allChildrenAndResources = getRecursiveChildrenAndResources(object);
   std::vector<T> result;
-  BOOST_FOREACH(const ModelObject& childOrResource,allChildrenAndResources) {
+  for (const ModelObject& childOrResource : allChildrenAndResources) {
     boost::optional<T> candidate = childOrResource.optionalCast<T>();
     if (candidate) { result.push_back(*candidate); }
   }

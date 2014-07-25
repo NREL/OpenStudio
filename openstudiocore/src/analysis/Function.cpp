@@ -17,17 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/Function.hpp>
-#include <analysis/Function_Impl.hpp>
+#include "Function.hpp"
+#include "Function_Impl.hpp"
 
-#include <analysis/InputVariable.hpp>
-#include <analysis/InputVariable_Impl.hpp>
-#include <analysis/LinearFunction.hpp>
-#include <analysis/LinearFunction_Impl.hpp>
-#include <analysis/WorkflowStep.hpp>
-#include <analysis/WorkflowStep_Impl.hpp>
-
-#include <boost/foreach.hpp>
+#include "InputVariable.hpp"
+#include "InputVariable_Impl.hpp"
+#include "LinearFunction.hpp"
+#include "LinearFunction_Impl.hpp"
+#include "WorkflowStep.hpp"
+#include "WorkflowStep_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -38,7 +36,7 @@ namespace detail {
                                const std::vector<Variable>& variables)
     : AnalysisObject_Impl(name), m_variables(variables)
   {
-    BOOST_FOREACH(Variable& variable,m_variables) {
+    for (Variable& variable : m_variables) {
       variable.onChange();
       connectChild(variable,false);
     }
@@ -53,7 +51,7 @@ namespace detail {
     : AnalysisObject_Impl(uuid,versionUUID,name,displayName,description),
       m_variables(variables)
   {
-    BOOST_FOREACH(Variable& variable,m_variables) {
+    for (Variable& variable : m_variables) {
       connectChild(variable,false);
     }
   }
@@ -61,7 +59,7 @@ namespace detail {
   Function_Impl::Function_Impl(const Function_Impl &other)
     : AnalysisObject_Impl(other)
   {
-    BOOST_FOREACH(const Variable& var,other.variables()) {
+    for (const Variable& var : other.variables()) {
       m_variables.push_back(var.clone().cast<Variable>());
       connectChild(m_variables.back(),false);
     }
@@ -111,7 +109,7 @@ double Function::getValue(const DataPoint& dataPoint) const {
 }
 
 /// @cond
-Function::Function(boost::shared_ptr<detail::Function_Impl> impl)
+Function::Function(std::shared_ptr<detail::Function_Impl> impl)
   : AnalysisObject(impl)
 {}
 /// @endcond

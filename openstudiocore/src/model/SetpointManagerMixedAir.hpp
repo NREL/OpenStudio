@@ -21,7 +21,7 @@
 #define MODEL_SETPOINTMANAGERMIXEDAIR_HPP
 
 #include "ModelAPI.hpp"
-#include <model/HVACComponent.hpp>
+#include "SetpointManager.hpp"
 #include <boost/optional.hpp>
 
 namespace openstudio {
@@ -40,7 +40,7 @@ namespace detail {
  *  The purpose of this class is to simplify the construction and manipulation
  *  of the EnergyPlus SetpointManager:MixedAir object.
  */
-class MODEL_API SetpointManagerMixedAir : public HVACComponent
+class MODEL_API SetpointManagerMixedAir : public SetpointManager
 {
   public:
   virtual ~SetpointManagerMixedAir() {}
@@ -51,12 +51,12 @@ class MODEL_API SetpointManagerMixedAir : public HVACComponent
   explicit SetpointManagerMixedAir(const Model& model);
 
   /** Returns the value of the ControlVariable field. **/
-  std::string controlVariable();
+  std::string controlVariable() const;
 
   /** Sets the value of the ControlVariable field.
    *  Options are Temperature.
    */
-  void setControlVariable( std::string value );
+  bool setControlVariable( const std::string& controlVariable );
 
   /** Returns the Node referred to by the referenceSetpointNodeName. **/
   boost::optional<Node> referenceSetpointNode();
@@ -77,16 +77,7 @@ class MODEL_API SetpointManagerMixedAir : public HVACComponent
   void setFanOutletNode( Node & node );
 
   /** Returns the Node this setpoint manager is acting on. **/
-  boost::optional<Node> setpointNode();
-
-  /** Sets the Node this setpoint manager is acting on. **/
-  void setSetpointNode( Node & node );
-
-  virtual bool addToNode(Node & node);
-
-  virtual std::vector<openstudio::IdfObject> remove();
-
-  virtual ModelObject clone(Model model) const;
+  boost::optional<Node> setpointNode() const;
 
   static IddObjectType iddObjectType();
 
@@ -106,7 +97,7 @@ class MODEL_API SetpointManagerMixedAir : public HVACComponent
 
   typedef detail::SetpointManagerMixedAir_Impl ImplType;
 
-  explicit SetpointManagerMixedAir(boost::shared_ptr<detail::SetpointManagerMixedAir_Impl> impl);
+  explicit SetpointManagerMixedAir(std::shared_ptr<detail::SetpointManagerMixedAir_Impl> impl);
 
   private:
 

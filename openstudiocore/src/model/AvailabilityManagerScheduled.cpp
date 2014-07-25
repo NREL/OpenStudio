@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/AvailabilityManagerScheduled.hpp>
-#include <model/AvailabilityManagerScheduled_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleConstant.hpp>
-#include <model/ScheduleConstant_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
-#include <model/Model.hpp>
+#include "AvailabilityManagerScheduled.hpp"
+#include "AvailabilityManagerScheduled_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ScheduleConstant.hpp"
+#include "ScheduleConstant_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
+#include "Model.hpp"
 #include <utilities/idd/OS_AvailabilityManager_Scheduled_FieldEnums.hxx>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -153,7 +153,7 @@ bool AvailabilityManagerScheduled::setSchedule(Schedule& schedule) {
 }
 
 /// @cond
-AvailabilityManagerScheduled::AvailabilityManagerScheduled(boost::shared_ptr<detail::AvailabilityManagerScheduled_Impl> impl)
+AvailabilityManagerScheduled::AvailabilityManagerScheduled(std::shared_ptr<detail::AvailabilityManagerScheduled_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

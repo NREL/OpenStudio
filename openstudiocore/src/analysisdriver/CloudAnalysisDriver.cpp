@@ -17,29 +17,27 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysisdriver/CloudAnalysisDriver.hpp>
-#include <analysisdriver/CloudAnalysisDriver_Impl.hpp>
+#include "CloudAnalysisDriver.hpp"
+#include "CloudAnalysisDriver_Impl.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/DataPointRecord.hpp>
-#include <project/DataPointRecord_Impl.hpp>
+#include "../project/ProjectDatabase.hpp"
+#include "../project/DataPointRecord.hpp"
+#include "../project/DataPointRecord_Impl.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Problem.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/Problem.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Job.hpp>
-#include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/AdvancedStatus.hpp>
-#include <runmanager/lib/JSON.hpp>
+#include "../runmanager/lib/RunManager.hpp"
+#include "../runmanager/lib/Job.hpp"
+#include "../runmanager/lib/Workflow.hpp"
+#include "../runmanager/lib/AdvancedStatus.hpp"
+#include "../runmanager/lib/JSON.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/System.hpp>
-#include <utilities/data/Tag.hpp>
-#include <utilities/idf/URLSearchPath.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/System.hpp"
+#include "../utilities/data/Tag.hpp"
+#include "../utilities/idf/URLSearchPath.hpp"
 
 #include <QTimer>
 
@@ -138,7 +136,7 @@ namespace detail {
 
   unsigned CloudAnalysisDriver_Impl::numFailedDataPoints() const {
     unsigned result=0;
-    BOOST_FOREACH(const DataPoint& dataPoint,m_iteration) {
+    for (const DataPoint& dataPoint : m_iteration) {
       if (dataPoint.complete() && dataPoint.failed()) {
         ++result;
       }
@@ -253,7 +251,7 @@ namespace detail {
     }
 
     // make sure run type is a cloud run type
-    BOOST_FOREACH(DataPoint& dataPoint,m_iteration) {
+    for (DataPoint& dataPoint : m_iteration) {
       if (dataPoint.runType() == DataPointRunType::Local) {
         dataPoint.setRunType(DataPointRunType::CloudSlim);
       }
@@ -383,7 +381,7 @@ namespace detail {
       }
       else {
         // if failed before, trying again now, so un-register the failure
-        DataPointVector::iterator it = std::find(m_detailsFailures.begin(),m_detailsFailures.end(),actualDataPoint);
+        auto it = std::find(m_detailsFailures.begin(),m_detailsFailures.end(),actualDataPoint);
         if (it != m_detailsFailures.end()) {
           m_detailsFailures.erase(it);
         }
@@ -693,7 +691,7 @@ namespace detail {
       UUIDVector allUUIDs = m_requestRun->lastDataPointUUIDs();
       UUIDVector completeUUIDs = m_requestRun->lastCompleteDataPointUUIDs();
 
-      BOOST_FOREACH(const DataPoint& missingPoint, m_iteration) {
+      for (const DataPoint& missingPoint : m_iteration) {
         if (std::find(allUUIDs.begin(),allUUIDs.end(),missingPoint.uuid()) == allUUIDs.end()) {
           // missingPoint is not on the server. add it to the ...
           // post queue -- need to be run and are not in allUUIDs
@@ -711,9 +709,9 @@ namespace detail {
         }
       }
 
-      BOOST_FOREACH(const DataPoint& missingDetails, project().analysis().dataPointsNeedingDetails()) {
+      for (const DataPoint& missingDetails : project().analysis().dataPointsNeedingDetails()) {
         if (std::find(completeUUIDs.begin(),completeUUIDs.end(),missingDetails.uuid()) != completeUUIDs.end()) {
-          // details queue -- are complete, but details were reqeusted and have not yet been downloaded
+          // details queue -- are complete, but details were requested and have not yet been downloaded
           if (!inIteration(missingDetails)) {
             m_iteration.push_back(missingDetails);
           }
@@ -790,14 +788,14 @@ namespace detail {
       if (success) {
 
         OS_ASSERT(m_waitingQueue.size() >= m_batchSize);
-        DataPointVector::iterator batchStart = m_waitingQueue.end();
+        auto batchStart = m_waitingQueue.end();
         for (unsigned i = 0; i < m_batchSize; ++i) {
           --batchStart;
         }
         DataPointVector batch(batchStart,m_waitingQueue.end());
         OS_ASSERT(batch.size() == m_batchSize);
 
-        BOOST_FOREACH(DataPoint& queued,batch) {
+        for (DataPoint& queued : batch) {
           boost::optional<Job> topLevelJob = queued.topLevelJob();
           OS_ASSERT(topLevelJob);
           topLevelJob->setStatus(AdvancedStatusEnum(AdvancedStatusEnum::WaitingInQueue));
@@ -1016,7 +1014,7 @@ namespace detail {
       std::set<UUID> completeUUIDs(temp.begin(),temp.end());
       LOG(Debug,"There are " << completeUUIDs.size() << " complete DataPoints on the server.");
       // complete points could be running or waiting
-      DataPointVector::iterator it = m_waitingQueue.begin();
+      auto it = m_waitingQueue.begin();
       while (it != m_waitingQueue.end()) {
         if (completeUUIDs.find(it->uuid()) != completeUUIDs.end()) {
           DataPoint completePoint = *it;
@@ -1174,7 +1172,7 @@ namespace detail {
     if (success) {
       // move DataPoints from waiting to running
       std::set<UUID> runningUUIDs(temp.begin(),temp.end());
-      DataPointVector::iterator it = m_waitingQueue.begin();
+      auto it = m_waitingQueue.begin();
       while (it != m_waitingQueue.end()) {
         if (runningUUIDs.find(it->uuid()) != runningUUIDs.end()) {
           DataPoint nowRunning = *it;
@@ -1295,7 +1293,7 @@ namespace detail {
       LOG(Debug,"Received reply to request for data points ready for download. There are "
           << readyUUIDs.size() << ".");
       unsigned initialSize = m_preDetailsQueue.size();
-      DataPointVector::iterator it = m_preDetailsQueue.begin();
+      auto it = m_preDetailsQueue.begin();
       while (it != m_preDetailsQueue.end()) {
         if (readyUUIDs.find(it->uuid()) != readyUUIDs.end()) {
           m_detailsQueue.push_back(*it);
@@ -1652,7 +1650,7 @@ namespace detail {
 
     if (result) {
 
-      BOOST_FOREACH(DataPoint& toQueue,batch) {
+      for (DataPoint& toQueue : batch) {
 
         // here we are going to create a dummy job to attach to the datapoint for saving job state
         runmanager::Workflow workflow = project().analysis().problem().createWorkflow(toQueue,openstudio::path());
@@ -1697,7 +1695,7 @@ namespace detail {
         }catch (const std::out_of_range &) {
           std::cout << "UUID is " << toString(job.uuid()) << std::endl;
           std::cout << "DB has " << std::endl;
-          BOOST_FOREACH(runmanager::Job j, project().runManager().getJobs()){
+          for (runmanager::Job j : project().runManager().getJobs()){
             std::cout << "  " << toString(j.uuid()) << std::endl;
           }
           OS_ASSERT(false);
@@ -2101,7 +2099,7 @@ namespace detail {
   void CloudAnalysisDriver_Impl::clearSessionTags(DataPoint& dataPoint) const {
     TagVector tags = dataPoint.tags();
     boost::regex re("CloudSession_.*");
-    BOOST_FOREACH(const Tag& tag,tags) {
+    for (const Tag& tag : tags) {
       if (boost::regex_match(tag.name(),re)) {
         dataPoint.deleteTag(tag.name());
       }
@@ -2112,7 +2110,7 @@ namespace detail {
 
 CloudAnalysisDriver::CloudAnalysisDriver(const CloudSession& session,
                                          const SimpleProject& project)
-  : m_impl(boost::shared_ptr<detail::CloudAnalysisDriver_Impl>(
+  : m_impl(std::shared_ptr<detail::CloudAnalysisDriver_Impl>(
              new detail::CloudAnalysisDriver_Impl(session,project)))
 {}
 
@@ -2230,7 +2228,7 @@ void CloudAnalysisDriver::moveToThread(QThread* targetThread) {
 }
 
 /// @cond
-CloudAnalysisDriver::CloudAnalysisDriver(boost::shared_ptr<detail::CloudAnalysisDriver_Impl> impl)
+CloudAnalysisDriver::CloudAnalysisDriver(std::shared_ptr<detail::CloudAnalysisDriver_Impl> impl)
   : m_impl(impl)
 {}
 /// @endcond

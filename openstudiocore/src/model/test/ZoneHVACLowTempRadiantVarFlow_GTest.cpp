@@ -19,33 +19,33 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/CoilCoolingLowTempRadiantVarFlow.hpp>
-#include <model/CoilCoolingLowTempRadiantVarFlow_Impl.hpp>
-#include <model/CoilHeatingLowTempRadiantVarFlow.hpp>
-#include <model/CoilHeatingLowTempRadiantVarFlow_Impl.hpp>
-#include <model/ConstructionWithInternalSource.hpp>
-#include <model/ConstructionWithInternalSource_Impl.hpp>
-#include <model/DefaultConstructionSet.hpp>
-#include <model/DefaultConstructionSet_Impl.hpp>
-#include <model/DefaultSurfaceConstructions.hpp>
-#include <model/DefaultSurfaceConstructions_Impl.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/ScheduleConstant.hpp>
-#include <model/ScheduleConstant_Impl.hpp>
-#include <model/StandardOpaqueMaterial.hpp>
-#include <model/StandardOpaqueMaterial_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/ZoneHVACLowTempRadiantVarFlow.hpp>
-#include <model/ZoneHVACLowTempRadiantVarFlow_Impl.hpp>
+#include "../CoilCoolingLowTempRadiantVarFlow.hpp"
+#include "../CoilCoolingLowTempRadiantVarFlow_Impl.hpp"
+#include "../CoilHeatingLowTempRadiantVarFlow.hpp"
+#include "../CoilHeatingLowTempRadiantVarFlow_Impl.hpp"
+#include "../ConstructionWithInternalSource.hpp"
+#include "../ConstructionWithInternalSource_Impl.hpp"
+#include "../DefaultConstructionSet.hpp"
+#include "../DefaultConstructionSet_Impl.hpp"
+#include "../DefaultSurfaceConstructions.hpp"
+#include "../DefaultSurfaceConstructions_Impl.hpp"
+#include "../HVACComponent.hpp"
+#include "../HVACComponent_Impl.hpp"
+#include "../Model.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
+#include "../StandardOpaqueMaterial.hpp"
+#include "../StandardOpaqueMaterial_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
+#include "../ZoneHVACLowTempRadiantVarFlow.hpp"
+#include "../ZoneHVACLowTempRadiantVarFlow_Impl.hpp"
 
-#include <utilities/units/Unit.hpp>
+#include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -164,7 +164,7 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions)
   Model model = model::exampleModel();
 
   //loop through all zones and add a radiant system to each one
-  BOOST_FOREACH(ThermalZone thermalZone, model.getModelObjects<ThermalZone>()){
+  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()){
     //make a variable flow radiant unit
     ScheduleConstant availabilitySched(model);
     ScheduleConstant coolingControlTemperatureSchedule(model);
@@ -212,10 +212,10 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions)
   defConSet.defaultExteriorSurfaceConstructions()->setRoofCeilingConstruction(construction);
 
   //loop through all zones and check the flow fraction for each surface in the surface group.  it should be 0.25
-  BOOST_FOREACH(ThermalZone thermalZone, model.getModelObjects<ThermalZone>()){
+  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()){
 
     //get the radiant zone equipment
-    BOOST_FOREACH(const ModelObject& equipment, thermalZone.equipment()){
+    for (const ModelObject& equipment : thermalZone.equipment()){
       if (equipment.optionalCast<ZoneHVACLowTempRadiantVarFlow>()){
         ZoneHVACLowTempRadiantVarFlow testRad = equipment.optionalCast<ZoneHVACLowTempRadiantVarFlow>().get();
         EXPECT_EQ(4,testRad.surfaces().size());

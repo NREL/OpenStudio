@@ -17,29 +17,29 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Luminaire.hpp>
-#include <model/Luminaire_Impl.hpp>
+#include "Luminaire.hpp"
+#include "Luminaire_Impl.hpp"
 
-#include <model/LuminaireDefinition.hpp>
-#include <model/LuminaireDefinition_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/DefaultScheduleSet.hpp>
-#include <model/DefaultScheduleSet_Impl.hpp>
-#include <model/LifeCycleCost.hpp>
+#include "LuminaireDefinition.hpp"
+#include "LuminaireDefinition_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "SpaceType.hpp"
+#include "SpaceType_Impl.hpp"
+#include "DefaultScheduleSet.hpp"
+#include "DefaultScheduleSet_Impl.hpp"
+#include "LifeCycleCost.hpp"
 
 #include <utilities/idd/OS_Luminaire_FieldEnums.hxx>
 
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/geometry/EulerAngles.hpp>
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/geometry/Point3d.hpp"
+#include "../utilities/geometry/Vector3d.hpp"
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/EulerAngles.hpp"
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -100,7 +100,7 @@ namespace detail {
     this->makeUnique();
 
     LuminaireDefinition definition = this->luminaireDefinition();
-    BOOST_FOREACH(LifeCycleCost cost, definition.lifeCycleCosts()){
+    for (LifeCycleCost cost : definition.lifeCycleCosts()){
       // DLM: is this appropriate for a luminaire?
       cost.convertToCostPerEach();
     }
@@ -850,7 +850,7 @@ double Luminaire::getPowerPerPerson(double numPeople) const {
 }
 
 /// @cond
-Luminaire::Luminaire(boost::shared_ptr<detail::Luminaire_Impl> impl)
+Luminaire::Luminaire(std::shared_ptr<detail::Luminaire_Impl> impl)
   : SpaceLoadInstance(impl)
 {}
 /// @endcond

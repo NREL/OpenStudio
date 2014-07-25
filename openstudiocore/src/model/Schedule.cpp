@@ -17,20 +17,18 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
-#include <model/ScheduleDay.hpp>
-#include <model/ScheduleDay_Impl.hpp>
+#include "Model.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
+#include "ScheduleDay.hpp"
+#include "ScheduleDay_Impl.hpp"
 
-#include <utilities/idf/ValidityReport.hpp>
+#include "../utilities/idf/ValidityReport.hpp"
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
 
 using openstudio::Handle;
 using openstudio::OptionalHandle;
@@ -64,13 +62,13 @@ namespace detail {
   bool Schedule_Impl::candidateIsCompatibleWithCurrentUse(const ScheduleTypeLimits& candidate) const {
     ModelObjectVector users = getObject<Schedule>().getModelObjectSources<ModelObject>();
     Schedule copyOfThis = getObject<Schedule>();
-    BOOST_FOREACH(const ModelObject& user,users) {
+    for (const ModelObject& user : users) {
       std::vector<ScheduleTypeKey> keys = user.getScheduleTypeKeys(copyOfThis);
       // ETH@20120806 - Ideally would make the following OS_ASSERT, but is too
       // strict for now. (Too easy for a user to trigger this first, before a unit
       // test or app tester catches it.)
       // OS_ASSERT(!keys.empty());
-      BOOST_FOREACH(const ScheduleTypeKey& key,keys) {
+      for (const ScheduleTypeKey& key : keys) {
         if (!isCompatible(key.first,key.second,candidate)) {
           return false;
         }
@@ -82,7 +80,7 @@ namespace detail {
   bool Schedule_Impl::okToResetScheduleTypeLimits() const {
     // ok to zero out if all users are schedules
     Schedule copyOfThis = getObject<Schedule>();
-    BOOST_FOREACH(const ModelObject& user, getObject<Schedule>().getModelObjectSources<ModelObject>()) {
+    for (const ModelObject& user : getObject<Schedule>().getModelObjectSources<ModelObject>()) {
       if (!user.getScheduleTypeKeys(copyOfThis).empty()) {
         return false;
       }
@@ -99,7 +97,7 @@ Schedule::Schedule(IddObjectType type,const Model& model)
 }
 
 // constructor from impl
-Schedule::Schedule(boost::shared_ptr<detail::Schedule_Impl> impl)
+Schedule::Schedule(std::shared_ptr<detail::Schedule_Impl> impl)
   : ScheduleBase(impl)
 {
   OS_ASSERT(getImpl<detail::Schedule_Impl>());

@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <radiance/LightFixture.hpp>
+#include "LightFixture.hpp"
 
 namespace openstudio{
 namespace radiance{

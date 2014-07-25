@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='utf-8'?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+<Type Name="boost::unordered::detail::table_impl&lt;boost::unordered::detail::map&lt;*,*,*&gt;&gt;">
+    <DisplayString>{{ size={size_} }}</DisplayString>
+    <Expand>
+        <LinkedListItems>
+            <Size>size_</Size>
+            <HeadPointer>buckets_[bucket_count_].next_</HeadPointer>
+            <NextPointer>next_</NextPointer>
+            <ValueNode>*((std::pair&lt;$T2 const ,$T3&gt;*)&amp;((boost::unordered::detail::ptr_node&lt;std::pair&lt;$T2 const ,$T3&gt; &gt;*)this)->data_)</ValueNode>
+        </LinkedListItems>
+    </Expand>
+</Type>
+
+<Type Name="boost::unordered::detail::grouped_table_impl&lt;boost::unordered::detail::multimap&lt;*,*,*&gt;&gt;">
+    <DisplayString>{{ size={size_} }}</DisplayString>
+    <Expand>
+        <LinkedListItems>
+            <Size>size_</Size>
+            <HeadPointer>buckets_[bucket_count_].next_</HeadPointer>
+            <NextPointer>next_</NextPointer>
+            <ValueNode>*((std::pair&lt;$T2 const ,$T3&gt;*)&amp;((boost::unordered::detail::grouped_ptr_node&lt;std::pair&lt;$T2 const ,$T3&gt; &gt;*)this)->data_)</ValueNode>
+        </LinkedListItems>
+    </Expand>
+</Type>
+
+<Type Name="boost::unordered::detail::table_impl&lt;boost::unordered::detail::set&lt;*,*&gt;&gt;">
+    <DisplayString>{{ size={size_} }}</DisplayString>
+    <Expand>
+        <LinkedListItems>
+            <Size>size_</Size>
+            <HeadPointer>buckets_[bucket_count_].next_</HeadPointer>
+            <NextPointer>next_</NextPointer>
+            <ValueNode>*(($T2*)&amp;((boost::unordered::detail::ptr_node&lt;$T2&gt;*)this)->data_)</ValueNode>
+        </LinkedListItems>
+    </Expand>
+</Type>
+
+<Type Name="boost::unordered::detail::grouped_table_impl&lt;boost::unordered::detail::multiset&lt;*,*&gt;&gt;">
+    <DisplayString>{{ size={size_} }}</DisplayString>
+    <Expand>
+        <LinkedListItems>
+            <Size>size_</Size>
+            <HeadPointer>buckets_[bucket_count_].next_</HeadPointer>
+            <NextPointer>next_</NextPointer>
+            <ValueNode>*(($T2*)&amp;((boost::unordered::detail::grouped_ptr_node&lt;$T2&gt;*)this)->data_)</ValueNode>
+        </LinkedListItems>
+    </Expand>
+</Type>
+
+<Type Name="boost::unordered::unordered_map&lt;*&gt;">
+    <AlternativeType Name="boost::unordered::unordered_multimap&lt;*&gt;" />
+    <AlternativeType Name="boost::unordered::unordered_set&lt;*&gt;" />
+    <AlternativeType Name="boost::unordered::unordered_multiset&lt;*&gt;" />
+    <DisplayString>{table_}</DisplayString>
+    <Expand>
+        <ExpandedItem>table_</ExpandedItem>
+    </Expand>
+</Type>
+</AutoVisualizer>

@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/plot/Plot2D.hpp>
+#include "Plot2D.hpp"
 
 using namespace std;
 using namespace boost;
@@ -25,7 +25,7 @@ using namespace boost;
 namespace openstudio{
 
 
-Plot2D::Plot2D(QWidget* parent, Qt::WFlags flags):QWidget(parent)
+Plot2D::Plot2D(QWidget* parent, Qt::WindowFlags flags):QWidget(parent)
 {
   setupUi(this);
   // accept drops
@@ -354,7 +354,7 @@ void Plot2D::generateImage(const openstudio::path& file, int w, int h)
     QPainter p(&pixmap);
     this->m_qwtPlot->print(&p, rect());
     p.end();
-    pixmap.save(toQString(file), 0, -1);
+    pixmap.save(toQString(file), nullptr, -1);
   }
   else
   {
@@ -364,7 +364,7 @@ void Plot2D::generateImage(const openstudio::path& file, int w, int h)
     QPainter p(&pixmap);
     this->m_qwtPlot->print(&p, r);
     p.end();
-    pixmap.save(toQString(file), 0, -1);
+    pixmap.save(toQString(file), nullptr, -1);
   }
 }
 

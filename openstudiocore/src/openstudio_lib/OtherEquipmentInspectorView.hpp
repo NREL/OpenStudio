@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OTHEREQUIPMENTINSPECTORVIEW_H
-#define OPENSTUDIO_OTHEREQUIPMENTINSPECTORVIEW_H
+#ifndef OPENSTUDIO_OTHEREQUIPMENTINSPECTORVIEW_HPP
+#define OPENSTUDIO_OTHEREQUIPMENTINSPECTORVIEW_HPP
 
-#include <openstudio_lib/ModelObjectInspectorView.hpp>
+#include "ModelObjectInspectorView.hpp"
 
 namespace openstudio {
 
@@ -85,5 +85,5 @@ class OtherEquipmentDefinitionInspectorView : public ModelObjectInspectorView
 
 } // openstudio
 
-#endif // OPENSTUDIO_OTHEREQUIPMENTINSPECTORVIEW_H
+#endif // OPENSTUDIO_OTHEREQUIPMENTINSPECTORVIEW_HPP
 

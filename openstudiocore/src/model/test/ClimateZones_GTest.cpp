@@ -19,18 +19,16 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/ClimateZones.hpp>
-#include <model/ClimateZones_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../ClimateZones.hpp"
+#include "../ClimateZones_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
+#include "../Site.hpp"
+#include "../Site_Impl.hpp"
 
-#include <utilities/data/Attribute.hpp>
-
-#include <boost/foreach.hpp>
+#include "../../utilities/data/Attribute.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

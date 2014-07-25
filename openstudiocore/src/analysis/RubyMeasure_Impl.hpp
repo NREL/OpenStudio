@@ -20,14 +20,14 @@
 #ifndef ANALYSIS_RUBYMEASURE_IMPL_HPP
 #define ANALYSIS_RUBYMEASURE_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/Measure_Impl.hpp>
+#include "AnalysisAPI.hpp"
+#include "Measure_Impl.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../ruleset/OSArgument.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../utilities/bcl/BCLMeasure.hpp"
 
-#include <utilities/core/FileReference.hpp>
+#include "../utilities/core/FileReference.hpp"
 
 namespace openstudio {
 namespace analysis {

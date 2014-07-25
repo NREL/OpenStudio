@@ -20,8 +20,8 @@
 #ifndef MODEL_SCHEDULETYPELIMITS_HPP
 #define MODEL_SCHEDULETYPELIMITS_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ResourceObject.hpp>
+#include "ModelAPI.hpp"
+#include "ResourceObject.hpp"
 
 namespace openstudio {
 class Quantity;
@@ -105,7 +105,7 @@ class MODEL_API ScheduleTypeLimits : public ResourceObject {
   /// @cond
   typedef detail::ScheduleTypeLimits_Impl ImplType;
 
-  explicit ScheduleTypeLimits(boost::shared_ptr<detail::ScheduleTypeLimits_Impl> impl);
+  explicit ScheduleTypeLimits(std::shared_ptr<detail::ScheduleTypeLimits_Impl> impl);
 
   friend class detail::ScheduleTypeLimits_Impl;
   friend class Model;

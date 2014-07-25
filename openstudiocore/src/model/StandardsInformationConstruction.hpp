@@ -20,8 +20,8 @@
 #ifndef MODEL_STANDARDSINFORMATIONCONSTRUCTION_HPP
 #define MODEL_STANDARDSINFORMATIONCONSTRUCTION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -136,7 +136,7 @@ class MODEL_API StandardsInformationConstruction : public ModelObject {
   explicit StandardsInformationConstruction(const ConstructionBase& construction);
 
   explicit StandardsInformationConstruction(
-      boost::shared_ptr<detail::StandardsInformationConstruction_Impl> impl);  
+      std::shared_ptr<detail::StandardsInformationConstruction_Impl> impl);  
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.StandardsInformationConstruction");

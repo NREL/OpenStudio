@@ -19,9 +19,9 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/LightingDesignDay.hpp>
+#include "../LightingDesignDay.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2012, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,10 +20,10 @@
 #ifndef RULESET_REPORTINGUSERSCRIPT_HPP
 #define RULESET_REPORTINGUSERSCRIPT_HPP
 
-#include <ruleset/RulesetAPI.hpp>
-#include <ruleset/UserScript.hpp>
+#include "RulesetAPI.hpp"
+#include "UserScript.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
 namespace ruleset {

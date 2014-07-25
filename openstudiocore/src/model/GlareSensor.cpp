@@ -17,20 +17,20 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/GlareSensor.hpp>
-#include <model/GlareSensor_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+#include "GlareSensor.hpp"
+#include "GlareSensor_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Glare_Sensor_FieldEnums.hxx>
 
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/geometry/EulerAngles.hpp>
-#include <utilities/geometry/Vector3d.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/EulerAngles.hpp"
+#include "../utilities/geometry/Vector3d.hpp"
+#include "../utilities/geometry/Point3d.hpp"
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -436,7 +436,7 @@ bool GlareSensor::aimAt(const Point3d& target)
 }
 
 /// @cond
-GlareSensor::GlareSensor(boost::shared_ptr<detail::GlareSensor_Impl> impl)
+GlareSensor::GlareSensor(std::shared_ptr<detail::GlareSensor_Impl> impl)
   : SpaceItem(impl)
 {}
 /// @endcond

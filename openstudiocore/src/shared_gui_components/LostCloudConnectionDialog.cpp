@@ -20,7 +20,7 @@
 #include "LostCloudConnectionDialog.hpp"
 #include "../shared_gui_components/Buttons.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QBoxLayout>
 #include <QDesktopServices>
@@ -59,7 +59,7 @@ void LostCloudConnectionDialog::createWidgets(bool internetAvailable,
 {
   //// OS SETTINGS
 
-  #ifdef Q_WS_MAC
+  #ifdef Q_OS_MAC
     setWindowFlags(Qt::FramelessWindowHint);
   #else
     setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
@@ -71,7 +71,7 @@ void LostCloudConnectionDialog::createWidgets(bool internetAvailable,
   this->okButton()->hide();
   this->backButton()->hide();
 
-  QLabel * label = 0;
+  QLabel * label = nullptr;
   
   QVBoxLayout * mainLayout = this->upperLayout();
   mainLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
@@ -85,7 +85,7 @@ void LostCloudConnectionDialog::createWidgets(bool internetAvailable,
   label->setText("<b>" + (tr("Requirements for cloud:")) + "</b>");
   mainLayout->addWidget(label);
 
-  QVBoxLayout * vLayout = new QVBoxLayout;
+  auto vLayout = new QVBoxLayout;
   vLayout->setContentsMargins(QMargins(0,0,0,0));
   vLayout->setSpacing(5);
   vLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
@@ -125,15 +125,15 @@ void LostCloudConnectionDialog::createWidgets(bool internetAvailable,
 
 void LostCloudConnectionDialog::createCloudConnectionWidgets(QVBoxLayout * vLayout)
 {
-  QHBoxLayout * hLayout = 0;
+  QHBoxLayout * hLayout = nullptr;
 
-  QSpacerItem * horizontalSpacer = 0;
+  QSpacerItem * horizontalSpacer = nullptr;
 
-  QPushButton * button = 0;
+  QPushButton * button = nullptr;
 
   bool isConnected = false;
 
-  QLabel * label = 0;
+  QLabel * label = nullptr;
         
   label = new QLabel;
   label->setText("<b>" + tr("Options to correct the problem:") + "</b>");
@@ -166,7 +166,7 @@ void LostCloudConnectionDialog::createCloudConnectionWidgets(QVBoxLayout * vLayo
 
   label = new QLabel;
   label->setWordWrap(true);
-  label->setText("<b>" + tr("Stop Cloud. ") + "</b>" + tr("Disconnect from cloud.  This option will make the failed cloud session unavaible to Pat.  Any data that has not been downloaded to Pat will be lost.  Use the AWS Console to verify that the Amazon service have been completely shutdown."));
+  label->setText("<b>" + tr("Stop Cloud. ") + "</b>" + tr("Disconnect from cloud.  This option will make the failed cloud session unavailable to Pat.  Any data that has not been downloaded to Pat will be lost.  Use the AWS Console to verify that the Amazon service have been completely shutdown."));
   hLayout->addWidget(label);
 
   label = new QLabel;

@@ -18,26 +18,26 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <energyplus/Test/EnergyPlusFixture.hpp>
+#include "EnergyPlusFixture.hpp"
 
-#include <energyplus/ErrorFile.hpp>
-#include <energyplus/ForwardTranslator.hpp>
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ErrorFile.hpp"
+#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/Building.hpp"
+#include "../../model/Building_Impl.hpp"
+#include "../../model/Site.hpp"
+#include "../../model/Site_Impl.hpp"
+#include "../../model/SimulationControl.hpp"
+#include "../../model/SimulationControl_Impl.hpp"
 
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Checksum.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/IdfObject.hpp>
+#include "../../utilities/core/Optional.hpp"
+#include "../../utilities/core/Checksum.hpp"
+#include "../../utilities/core/UUID.hpp"
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/IdfObject.hpp"
 
 #include <utilities/idd/Building_FieldEnums.hxx>
 #include <utilities/idd/Site_Location_FieldEnums.hxx>

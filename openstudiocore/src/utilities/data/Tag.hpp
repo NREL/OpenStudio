@@ -20,9 +20,9 @@
 #ifndef UTILITIES_DATA_TAG_HPP
 #define UTILITIES_DATA_TAG_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/UUID.hpp>
+#include "../core/UUID.hpp"
 
 #include <boost/optional.hpp>
 

@@ -17,9 +17,9 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../ForwardTranslator.hpp"
 
-#include <model/Blind.hpp>
+#include "../../model/Blind.hpp"
 #include <utilities/idd/OS_WindowMaterial_Blind_FieldEnums.hxx>
 
 #include <utilities/idd/WindowMaterial_Blind_FieldEnums.hxx>

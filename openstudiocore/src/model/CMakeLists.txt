@@ -1,6 +1,6 @@
-SET( target_name openstudio_model )
+set(target_name openstudio_model)
 
-SET( ${target_name}_src
+set(${target_name}_src
 
   mainpage.hpp
   ModelAPI.hpp
@@ -346,7 +346,7 @@ SET( ${target_name}_src
   FanVariableVolume.cpp
   FanZoneExhaust.hpp
   FanZoneExhaust_Impl.hpp
-  FanZoneExhaust.cpp  
+  FanZoneExhaust.cpp
   FenestrationMaterial.hpp
   FenestrationMaterial_Impl.hpp
   FenestrationMaterial.cpp
@@ -640,18 +640,27 @@ SET( ${target_name}_src
   Screen.hpp
   Screen_Impl.hpp
   Screen.cpp
+  SetpointManager.hpp
+  SetpointManager_Impl.hpp
+  SetpointManager.cpp
   SetpointManagerFollowOutdoorAirTemperature.hpp
   SetpointManagerFollowOutdoorAirTemperature_Impl.hpp
   SetpointManagerFollowOutdoorAirTemperature.cpp
   SetpointManagerMixedAir.hpp
   SetpointManagerMixedAir_Impl.hpp
   SetpointManagerMixedAir.cpp
+  SetpointManagerOutdoorAirPretreat.hpp
+  SetpointManagerOutdoorAirPretreat_Impl.hpp
+  SetpointManagerOutdoorAirPretreat.cpp
   SetpointManagerOutdoorAirReset.hpp
   SetpointManagerOutdoorAirReset_Impl.hpp
   SetpointManagerOutdoorAirReset.cpp
   SetpointManagerScheduled.hpp
   SetpointManagerScheduled_Impl.hpp
   SetpointManagerScheduled.cpp
+  SetpointManagerScheduledDualSetpoint.hpp
+  SetpointManagerScheduledDualSetpoint_Impl.hpp
+  SetpointManagerScheduledDualSetpoint.cpp
   SetpointManagerSingleZoneReheat.hpp
   SetpointManagerSingleZoneReheat_Impl.hpp
   SetpointManagerSingleZoneReheat.cpp
@@ -747,7 +756,7 @@ SET( ${target_name}_src
   StandardOpaqueMaterial.cpp
   StandardsInformationConstruction.hpp
   StandardsInformationConstruction_Impl.hpp
-  StandardsInformationConstruction.cpp  
+  StandardsInformationConstruction.cpp
   SteamEquipment.hpp
   SteamEquipment_Impl.hpp
   SteamEquipment.cpp
@@ -887,7 +896,7 @@ SET( ${target_name}_src
   ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
   ZoneHVACPackagedTerminalAirConditioner.cpp
   ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp
-  ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp   
+  ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp
   ZoneHVACTerminalUnitVariableRefrigerantFlow.cpp
   ZoneHVACWaterToAirHeatPump.hpp
   ZoneHVACWaterToAirHeatPump_Impl.hpp
@@ -897,7 +906,7 @@ SET( ${target_name}_src
   ZoneHVACUnitHeater.cpp
 )
 
-SET( ${target_name}_swig_src
+set(${target_name}_swig_src
   Model_Common_Include.i
   Model.i
   ModelCore.i
@@ -907,7 +916,7 @@ SET( ${target_name}_swig_src
   ModelHVAC.i
 )
 
-SET( ${target_name}_moc
+set(${target_name}_moc
   Model_Impl.hpp
   Component_Impl.hpp
   ComponentWatcher_Impl.hpp
@@ -997,13 +1006,13 @@ SET( ${target_name}_moc
   HeatBalanceAlgorithm_Impl.hpp
   HeatExchangerAirToAirSensibleAndLatent_Impl.hpp
   HotWaterEquipment_Impl.hpp
-  HotWaterEquipmentDefinition_Impl.hpp 
+  HotWaterEquipmentDefinition_Impl.hpp
   HVACComponent_Impl.hpp
   IlluminanceMap_Impl.hpp
   InsideSurfaceConvectionAlgorithm_Impl.hpp
   InternalMass_Impl.hpp
-  InternalMassDefinition_Impl.hpp 
-  InteriorPartitionSurface_Impl.hpp    
+  InternalMassDefinition_Impl.hpp
+  InteriorPartitionSurface_Impl.hpp
   InteriorPartitionSurfaceGroup_Impl.hpp
   LayeredConstruction_Impl.hpp
   LifeCycleCost_Impl.hpp
@@ -1095,40 +1104,41 @@ SET( ${target_name}_moc
   ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
 )
 
-qt4_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
+qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
 
-SET( ${target_name}_qrc
+set(${target_name}_qrc
   Model.qrc
 )
 
 # generate rules for building source files from the resources
-qt4_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
+qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
 
 
-SET( ${target_name}_depends
+set(${target_name}_depends
   openstudio_utilities
 )
 
-ADD_LIBRARY( ${target_name} SHARED ${${target_name}_src} ${${target_name}_moc_src} ${${target_name}_qrcs} )
-TARGET_LINK_LIBRARIES(${target_name} "${${target_name}_depends}")
+add_library(${target_name} SHARED ${${target_name}_src} ${${target_name}_moc_src} ${${target_name}_qrcs})
+target_link_libraries(${target_name} "${${target_name}_depends}")
 AddPCH(${target_name})
 
 
 
-IF( NOT APPLE )
-INSTALL(TARGETS ${target_name}
-  RUNTIME DESTINATION bin
-  LIBRARY DESTINATION lib )
-ENDIF()
+if(NOT APPLE)
+  install(TARGETS ${target_name}
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+  )
+endif()
 
 
 # Compiler and system specific options
-IF(UNIX OR MINGW)
+if(UNIX OR MINGW)
   # treat warnings as errors
-  #SET_TARGET_PROPERTIES("${target_name}" PROPERTIES "COMPILE_FLAGS" "-Werror")
-ENDIF(UNIX OR MINGW)
+  #set_target_properties("${target_name}" PROPERTIES "COMPILE_FLAGS" "-Werror")
+endif()
 
-SET( ${target_name}_test_src
+set(${target_name}_test_src
   test/AirConditionerVariableRefrigerantFlow_GTest.cpp
   test/AirGap_GTest.cpp
   test/AirLoopHVACOutdoorAirSystem_GTest.cpp
@@ -1192,7 +1202,7 @@ SET( ${target_name}_test_src
   test/Facility_GTest.cpp
   test/FanVariableVolume_GTest.cpp
   test/FanConstantVolume_GTest.cpp
-  test/FanZoneExhaust_GTest.cpp  
+  test/FanZoneExhaust_GTest.cpp
   test/FanOnOff_GTest.cpp
   test/FenestrationMaterial_GTest.cpp
   test/GasEquipment_GTest.cpp
@@ -1257,7 +1267,13 @@ SET( ${target_name}_test_src
   test/RoofVegetation_GTest.cpp
   test/RunPeriodControlDaylightSavingTime_GTest.cpp
   test/RunPeriodControlSpecialDays_GTest.cpp
+  test/SetpointManagerFollowOutdoorAirTemperature_GTest.cpp
+  test/SetpointManagerMixedAir_GTest.cpp
+  test/SetpointManagerOutdoorAirPretreat_GTest.cpp
   test/SetpointManagerOutdoorAirReset_GTest.cpp
+  test/SetpointManagerScheduled_GTest.cpp
+  test/SetpointManagerScheduledDualSetpoint_GTest.cpp
+  test/SetpointManagerSingleZoneReheat_GTest.cpp
   test/SetpointManagerWarmest_GTest.cpp
   test/ScheduleDay_GTest.cpp
   test/ScheduleInterval_GTest.cpp
@@ -1310,36 +1326,36 @@ SET( ${target_name}_test_src
   test/ZoneHVACUnitHeater_GTest.cpp
 )
 
-SET (${target_name}_test_depends
+set(${target_name}_test_depends
   ${${target_name}_depends}
 )
 
-CREATE_TEST_TARGETS( ${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}" )
-CREATE_SRC_GROUPS( "${${target_name}_test_src}" )
-IF( BUILD_TESTING )
+CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
+CREATE_SRC_GROUPS("${${target_name}_test_src}")
+if(BUILD_TESTING)
 
-  ADD_DEPENDENCIES("${target_name}_tests"
+  add_dependencies("${target_name}_tests"
     openstudio_model_resources
   )
 
   # Compiler and system specific options
-  IF(UNIX OR MINGW)
+  if(UNIX OR MINGW)
     # treat warnings as errors
-    #SET_TARGET_PROPERTIES("${target_name}_tests" PROPERTIES "COMPILE_FLAGS" "-Werror")
-  ENDIF(UNIX OR MINGW)
-ENDIF()
+    #set_target_properties("${target_name}_tests" PROPERTIES "COMPILE_FLAGS" "-Werror")
+  endif()
+endif()
 
 
-MAKE_SWIG_TARGET( OpenStudioModelCore model "${CMAKE_CURRENT_SOURCE_DIR}/ModelCore.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilities )
+MAKE_SWIG_TARGET(OpenStudioModelCore model "${CMAKE_CURRENT_SOURCE_DIR}/ModelCore.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilities)
 
-MAKE_SWIG_TARGET( OpenStudioModelSimulation model "${CMAKE_CURRENT_SOURCE_DIR}/ModelSimulation.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelCore )
+MAKE_SWIG_TARGET(OpenStudioModelSimulation model "${CMAKE_CURRENT_SOURCE_DIR}/ModelSimulation.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelCore)
 
-MAKE_SWIG_TARGET( OpenStudioModelResources model "${CMAKE_CURRENT_SOURCE_DIR}/ModelResources.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelSimulation )
+MAKE_SWIG_TARGET(OpenStudioModelResources model "${CMAKE_CURRENT_SOURCE_DIR}/ModelResources.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelSimulation)
 
-MAKE_SWIG_TARGET( OpenStudioModelGeometry model "${CMAKE_CURRENT_SOURCE_DIR}/ModelGeometry.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelResources )
+MAKE_SWIG_TARGET(OpenStudioModelGeometry model "${CMAKE_CURRENT_SOURCE_DIR}/ModelGeometry.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelResources)
 
-MAKE_SWIG_TARGET( OpenStudioModelHVAC model "${CMAKE_CURRENT_SOURCE_DIR}/ModelHVAC.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelGeometry )
+MAKE_SWIG_TARGET(OpenStudioModelHVAC model "${CMAKE_CURRENT_SOURCE_DIR}/ModelHVAC.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelGeometry)
 
-MAKE_SWIG_TARGET( OpenStudioModelRefrigeration model "${CMAKE_CURRENT_SOURCE_DIR}/ModelRefrigeration.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelHVAC )
+MAKE_SWIG_TARGET(OpenStudioModelRefrigeration model "${CMAKE_CURRENT_SOURCE_DIR}/ModelRefrigeration.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelHVAC)
 
-MAKE_SWIG_TARGET( OpenStudioModel model "${CMAKE_CURRENT_SOURCE_DIR}/Model.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelRefrigeration )
+MAKE_SWIG_TARGET(OpenStudioModel model "${CMAKE_CURRENT_SOURCE_DIR}/Model.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelRefrigeration)

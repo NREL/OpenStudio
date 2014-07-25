@@ -1,5 +1,24 @@
-#ifndef OPENSTUDIO_RUNMANAGER_PROCESS_HPP__
-#define OPENSTUDIO_RUNMANAGER_PROCESS_HPP__
+/**********************************************************************
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#ifndef RUNMANAGER_LIB_PROCESS_HPP
+#define RUNMANAGER_LIB_PROCESS_HPP
 
 #include <string>
 #include "FileInfo.hpp"
@@ -9,7 +28,7 @@
 namespace openstudio {
 namespace runmanager {
 
-  /// Base class for all types of processes (Local, Remote (SLURM) )
+  /// Base class for local processes
   class Process : public QObject
   {
     Q_OBJECT;
@@ -87,12 +106,6 @@ namespace runmanager {
       /// Emitted whenever the status changes
       void statusChanged(const openstudio::runmanager::AdvancedStatus &s);
 
-      /// Emitted when a process has started on a remote server
-      void remoteStarted(int t_remoteid, int t_remoteTaskNumber);
-
-      /// Emitted when a process has finished on a remote server
-      void remoteFinished(int t_remoteid, int t_remoteTaskNumber);
-
     private:
 
       /// The status of the Process. Defaults to "Idle"
@@ -107,4 +120,4 @@ namespace runmanager {
 }
 }
 
-#endif
+#endif // RUNMANAGER_LIB_PROCESS_HPP

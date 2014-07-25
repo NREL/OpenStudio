@@ -19,25 +19,23 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/People.hpp>
-#include <model/People_Impl.hpp>
-#include <model/PeopleDefinition.hpp>
-#include <model/PeopleDefinition_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../Model_Impl.hpp"
+#include "../Space.hpp"
+#include "../People.hpp"
+#include "../People_Impl.hpp"
+#include "../PeopleDefinition.hpp"
+#include "../PeopleDefinition_Impl.hpp"
 
-#include <model/ScheduleRuleset.hpp>
-#include <model/ScheduleDay.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
+#include "../ScheduleRuleset.hpp"
+#include "../ScheduleDay.hpp"
+#include "../ScheduleTypeRegistry.hpp"
 
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSQuantityVector.hpp>
-#include <utilities/units/SIUnit.hpp>
-#include <utilities/units/BTUUnit.hpp>
-
-#include <boost/foreach.hpp>
+#include "../../utilities/units/QuantityConverter.hpp"
+#include "../../utilities/units/Quantity.hpp"
+#include "../../utilities/units/OSQuantityVector.hpp"
+#include "../../utilities/units/SIUnit.hpp"
+#include "../../utilities/units/BTUUnit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

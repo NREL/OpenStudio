@@ -21,19 +21,17 @@
 #define PROJECT_PROJECTDATABASE_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/Record.hpp>
+#include "Record.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/time/DateTime.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/UUID.hpp"
+#include "../utilities/time/DateTime.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
+#include "../runmanager/lib/RunManager.hpp"
 
 #include <QSqlQuery>
-
-#include <boost/shared_ptr.hpp>
 
 #include <sstream>
 
@@ -224,7 +222,7 @@ class PROJECT_API ProjectDatabase {
       }
     }
     catch (const std::exception& e) {
-      LOG(Error,"Unable to execute getObjectRecordByName query, becuase '" << e.what() << "'.");
+      LOG(Error,"Unable to execute getObjectRecordByName query, because '" << e.what() << "'.");
     }
     return result;
   }
@@ -251,7 +249,7 @@ class PROJECT_API ProjectDatabase {
       }
     }
     catch (const std::exception& e) {
-      LOG(Error,"Unable to execute getObjectRecordByName query, becuase '" << e.what() << "'.");
+      LOG(Error,"Unable to execute getObjectRecordByName query, because '" << e.what() << "'.");
     }
     return result;
   }
@@ -303,7 +301,7 @@ class PROJECT_API ProjectDatabase {
 
   // DLM@20110615: can this be protected?
   /// Returns the QSqlDatabase.
-  boost::shared_ptr<QSqlDatabase> qSqlDatabase() const;
+  std::shared_ptr<QSqlDatabase> qSqlDatabase() const;
 
   /// Finds Record by handle, will check all maps but does not query database.
   boost::optional<Record> findLoadedRecord(const UUID& handle) const;
@@ -312,7 +310,7 @@ class PROJECT_API ProjectDatabase {
   /// \todo Want to have a timer that periodically calls this.
   void unloadUnusedCleanRecords();
 
-  /// Finalizes removal of removed objects, neccesary to do before importing objects with same UUID.
+  /// Finalizes removal of removed objects, necessary to do before importing objects with same UUID.
   /// Undoing a removal will no longer be possible after this.
   void commitRemove(const RemoveUndo& removeUndo);
 
@@ -322,7 +320,7 @@ class PROJECT_API ProjectDatabase {
  protected:
 
   /// Constructor from implementation object.
-  ProjectDatabase(boost::shared_ptr<detail::ProjectDatabase_Impl> impl);
+  ProjectDatabase(std::shared_ptr<detail::ProjectDatabase_Impl> impl);
 
   /// Add a new Record, will set id on the object record.
   void addNewRecord(Record& record);
@@ -348,7 +346,7 @@ class PROJECT_API ProjectDatabase {
   /// @cond
   REGISTER_LOGGER("openstudio.project.ProjectDatabase");
 
-  boost::shared_ptr<detail::ProjectDatabase_Impl> m_impl;
+  std::shared_ptr<detail::ProjectDatabase_Impl> m_impl;
   /// @endcond
 
   void initialize(const openstudio::path& path);

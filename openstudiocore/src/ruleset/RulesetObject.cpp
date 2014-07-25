@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <ruleset/RulesetObject.hpp>
-#include <ruleset/RulesetObject_Impl.hpp>
+#include "RulesetObject.hpp"
+#include "RulesetObject_Impl.hpp"
 
 #include <QDomDocument>
 #include <QDomElement>
@@ -157,7 +157,7 @@ bool RulesetObject::operator<(const RulesetObject& other) const {
 }
 
 /// @cond
-RulesetObject::RulesetObject(boost::shared_ptr<detail::RulesetObject_Impl> impl)
+RulesetObject::RulesetObject(std::shared_ptr<detail::RulesetObject_Impl> impl)
   : m_impl(impl)
 {
   OS_ASSERT(impl);

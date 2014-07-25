@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <gbxml/Test/gbXMLFixture.hpp>
+#include "gbXMLFixture.hpp"
 
 #include <resources.hxx>
 
@@ -28,11 +28,11 @@ void gbXMLFixture::TearDown() {}
 void gbXMLFixture::SetUpTestCase() {
   // set up logging
   openstudio::Logger::instance().standardOutLogger().disable();
-  logFile = boost::shared_ptr<openstudio::FileLogSink>(new openstudio::FileLogSink(openstudio::toPath("./gbXMLFixture.log")));
+  logFile = std::shared_ptr<openstudio::FileLogSink>(new openstudio::FileLogSink(openstudio::toPath("./gbXMLFixture.log")));
 }
 
 void gbXMLFixture::TearDownTestCase() {
   logFile->disable();
 }
 
-boost::shared_ptr<openstudio::FileLogSink> gbXMLFixture::logFile;
+std::shared_ptr<openstudio::FileLogSink> gbXMLFixture::logFile;

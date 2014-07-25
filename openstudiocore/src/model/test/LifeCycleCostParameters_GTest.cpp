@@ -19,12 +19,12 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/LifeCycleCostParameters.hpp>
-#include <model/LifeCycleCostParameters_Impl.hpp>
+#include "../LifeCycleCostParameters.hpp"
+#include "../LifeCycleCostParameters_Impl.hpp"
 
-#include <utilities/time/Date.hpp>
+#include "../../utilities/time/Date.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

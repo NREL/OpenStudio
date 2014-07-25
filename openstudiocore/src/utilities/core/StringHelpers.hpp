@@ -20,11 +20,30 @@
 #ifndef UTILITIES_CORE_STRINGHELPERS_HPP
 #define UTILITIES_CORE_STRINGHELPERS_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
+
+#include "./Enum.hpp"
+
+#include <boost/regex.hpp>
 
 #include <string>
 
 namespace openstudio {
+
+  /** \class DocumentFormat
+  * \brief Document output formats supported by OpenStudio.
+  * \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
+  * macro call is:
+  * \code
+  OPENSTUDIO_ENUM(DocumentFormat,
+  ((COUT))
+  ((LaTeX))
+  ((XHTML)) );
+  * \endcode */
+  OPENSTUDIO_ENUM(DocumentFormat,
+    ((COUT))
+    ((LaTeX))
+    ((XHTML)));
 
   /** Replace all non-letters and digits with spaces, and then remove spaces by to make camel 
    *  case. */
@@ -72,6 +91,21 @@ namespace openstudio {
   /** Rounds value to a number of significant figures (rather than to a particular
    *  decimal place). Throws if numSigFigs == 0. */
   UTILITIES_API double toNumSigFigs(double value, unsigned numSigFigs);
+
+  UTILITIES_API boost::regex superscript();
+
+  UTILITIES_API boost::regex subscript();
+
+  UTILITIES_API std::string formatText(const std::string& str, DocumentFormat fmt);
+
+  /** Ensures that underscores will remain as underscores (not changed to subscripts). */
+  UTILITIES_API std::string formatUnderscore(const std::string& str);
+
+  UTILITIES_API std::string formatSuperAndSubscripts(const std::string& str, DocumentFormat fmt);
+
+  /** Applies formatSuperAndSubscripts, and replaces '*' with small dot. Does nothing for fmt ==
+  * DocumentFormat::COUT. */
+  UTILITIES_API std::string formatUnitString(const std::string& str, DocumentFormat fmt);
 
 }
 

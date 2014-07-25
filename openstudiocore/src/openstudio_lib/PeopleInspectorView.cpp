@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/PeopleInspectorView.hpp>
+#include "PeopleInspectorView.hpp"
 
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/OSDropZone.hpp>
-#include <openstudio_lib/OSVectorController.hpp>
-#include <openstudio_lib/SpaceLoadInstancesWidget.hpp>
+#include "ModelObjectItem.hpp"
+#include "OSDropZone.hpp"
+#include "OSVectorController.hpp"
+#include "SpaceLoadInstancesWidget.hpp"
 
 #include "../shared_gui_components/OSCheckBox.hpp"
 #include "../shared_gui_components/OSComboBox.hpp"
@@ -30,14 +30,14 @@
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
 
-#include <model/People.hpp>
-#include <model/People_Impl.hpp>
-#include <model/PeopleDefinition.hpp>
-#include <model/PeopleDefinition_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/SpaceLoadInstance.hpp>
+#include "../model/People.hpp"
+#include "../model/People_Impl.hpp"
+#include "../model/PeopleDefinition.hpp"
+#include "../model/PeopleDefinition_Impl.hpp"
+#include "../model/Schedule.hpp"
+#include "../model/SpaceLoadInstance.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QGridLayout>
 #include <QHBoxLayout>
@@ -441,53 +441,53 @@ void PeopleDefinitionInspectorView::attach(openstudio::model::PeopleDefinition& 
 {
   m_peopleDefinition = peopleDefinition;
   m_nameEdit->bind(*m_peopleDefinition,
-                   OptionalStringGetter(boost::bind(&model::PeopleDefinition::name,m_peopleDefinition.get_ptr(),true)),
-                   boost::optional<StringSetter>(boost::bind(&model::PeopleDefinition::setName,m_peopleDefinition.get_ptr(),_1)));
+                   OptionalStringGetter(std::bind(&model::PeopleDefinition::name,m_peopleDefinition.get_ptr(),true)),
+                   boost::optional<StringSetter>(std::bind(&model::PeopleDefinition::setName,m_peopleDefinition.get_ptr(),std::placeholders::_1)));
   
   // bind to PeopleDefinition methods
   m_numberofPeopleEdit->bind(
       *m_peopleDefinition,
-      OptionalDoubleGetter(boost::bind(&model::PeopleDefinition::numberofPeople,m_peopleDefinition.get_ptr())),
-      boost::optional<DoubleSetter>(boost::bind(&model::PeopleDefinition::setNumberofPeople,m_peopleDefinition.get_ptr(),_1)));
+      OptionalDoubleGetter(std::bind(&model::PeopleDefinition::numberofPeople,m_peopleDefinition.get_ptr())),
+      boost::optional<DoubleSetter>(std::bind(&model::PeopleDefinition::setNumberofPeople,m_peopleDefinition.get_ptr(),std::placeholders::_1)));
   
   m_peopleperSpaceFloorAreaEdit->bind(
       m_isIP,
       *m_peopleDefinition,
-      OptionalDoubleGetter(boost::bind(&model::PeopleDefinition::peopleperSpaceFloorArea,m_peopleDefinition.get_ptr())),
-      boost::optional<DoubleSetter>(boost::bind(&model::PeopleDefinition::setPeopleperSpaceFloorArea,m_peopleDefinition.get_ptr(),_1)));
+      OptionalDoubleGetter(std::bind(&model::PeopleDefinition::peopleperSpaceFloorArea,m_peopleDefinition.get_ptr())),
+      boost::optional<DoubleSetter>(std::bind(&model::PeopleDefinition::setPeopleperSpaceFloorArea,m_peopleDefinition.get_ptr(),std::placeholders::_1)));
 
   m_spaceFloorAreaperPersonEdit->bind(
       m_isIP,
       *m_peopleDefinition,
-      OptionalDoubleGetter(boost::bind(&model::PeopleDefinition::spaceFloorAreaperPerson,m_peopleDefinition.get_ptr())),
-      boost::optional<DoubleSetter>(boost::bind(&model::PeopleDefinition::setSpaceFloorAreaperPerson,m_peopleDefinition.get_ptr(),_1)));
+      OptionalDoubleGetter(std::bind(&model::PeopleDefinition::spaceFloorAreaperPerson,m_peopleDefinition.get_ptr())),
+      boost::optional<DoubleSetter>(std::bind(&model::PeopleDefinition::setSpaceFloorAreaperPerson,m_peopleDefinition.get_ptr(),std::placeholders::_1)));
 
   // ETH: Note that this is overkill for this dimensionless value. Should switch to OSDoubleEdit(2).
   m_fractionRadiantEdit->bind(
       *m_peopleDefinition,
-      DoubleGetter(boost::bind(&model::PeopleDefinition::fractionRadiant,m_peopleDefinition.get_ptr())),
-      boost::optional<DoubleSetter>(boost::bind(&model::PeopleDefinition::setFractionRadiant,m_peopleDefinition.get_ptr(),_1)));
+      DoubleGetter(std::bind(&model::PeopleDefinition::fractionRadiant,m_peopleDefinition.get_ptr())),
+      boost::optional<DoubleSetter>(std::bind(&model::PeopleDefinition::setFractionRadiant,m_peopleDefinition.get_ptr(),std::placeholders::_1)));
 
   m_sensibleHeatFractionEdit->bind(
       *m_peopleDefinition,
-      OptionalDoubleGetter(boost::bind(&model::PeopleDefinition::sensibleHeatFraction,m_peopleDefinition.get_ptr())),
-      boost::optional<DoubleSetter>(boost::bind(&model::PeopleDefinition::setSensibleHeatFraction,m_peopleDefinition.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::PeopleDefinition::resetSensibleHeatFraction,m_peopleDefinition.get_ptr())),
+      OptionalDoubleGetter(std::bind(&model::PeopleDefinition::sensibleHeatFraction,m_peopleDefinition.get_ptr())),
+      boost::optional<DoubleSetter>(std::bind(&model::PeopleDefinition::setSensibleHeatFraction,m_peopleDefinition.get_ptr(),std::placeholders::_1)),
+      boost::optional<NoFailAction>(std::bind(&model::PeopleDefinition::resetSensibleHeatFraction,m_peopleDefinition.get_ptr())),
       boost::none,
-      boost::optional<NoFailAction>(boost::bind(&model::PeopleDefinition::autocalculateSensibleHeatFraction,m_peopleDefinition.get_ptr())),
-      boost::optional<BasicQuery>(boost::bind(&model::PeopleDefinition::isSensibleHeatFractionDefaulted,m_peopleDefinition.get_ptr())),
+      boost::optional<NoFailAction>(std::bind(&model::PeopleDefinition::autocalculateSensibleHeatFraction,m_peopleDefinition.get_ptr())),
+      boost::optional<BasicQuery>(std::bind(&model::PeopleDefinition::isSensibleHeatFractionDefaulted,m_peopleDefinition.get_ptr())),
       boost::none,
-      boost::optional<BasicQuery>(boost::bind(&model::PeopleDefinition::isSensibleHeatFractionAutocalculated,m_peopleDefinition.get_ptr())));
+      boost::optional<BasicQuery>(std::bind(&model::PeopleDefinition::isSensibleHeatFractionAutocalculated,m_peopleDefinition.get_ptr())));
 
   m_carbonDioxideGenerationRateEdit->bind(
       m_isIP,
       *m_peopleDefinition,
-      DoubleGetter(boost::bind(&model::PeopleDefinition::carbonDioxideGenerationRate,m_peopleDefinition.get_ptr())),
-      boost::optional<DoubleSetter>(boost::bind(&model::PeopleDefinition::setCarbonDioxideGenerationRate,m_peopleDefinition.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::PeopleDefinition::resetCarbonDioxideGenerationRate,m_peopleDefinition.get_ptr())),
+      DoubleGetter(std::bind(&model::PeopleDefinition::carbonDioxideGenerationRate,m_peopleDefinition.get_ptr())),
+      boost::optional<DoubleSetter>(std::bind(&model::PeopleDefinition::setCarbonDioxideGenerationRate,m_peopleDefinition.get_ptr(),std::placeholders::_1)),
+      boost::optional<NoFailAction>(std::bind(&model::PeopleDefinition::resetCarbonDioxideGenerationRate,m_peopleDefinition.get_ptr())),
       boost::none,
       boost::none,
-      boost::optional<BasicQuery>(boost::bind(&model::PeopleDefinition::isCarbonDioxideGenerationRateDefaulted,m_peopleDefinition.get_ptr())));
+      boost::optional<BasicQuery>(std::bind(&model::PeopleDefinition::isCarbonDioxideGenerationRateDefaulted,m_peopleDefinition.get_ptr())));
 
   this->stackedWidget()->setCurrentIndex(1);
 }

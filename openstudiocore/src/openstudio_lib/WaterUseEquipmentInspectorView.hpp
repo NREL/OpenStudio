@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_WATERUSEEQUIPMENTINSPECTORVIEW_H
-#define OPENSTUDIO_WATERUSEEQUIPMENTINSPECTORVIEW_H
+#ifndef OPENSTUDIO_WATERUSEEQUIPMENTINSPECTORVIEW_HPP
+#define OPENSTUDIO_WATERUSEEQUIPMENTINSPECTORVIEW_HPP
 
-#include <openstudio_lib/ModelObjectInspectorView.hpp>
-#include <openstudio_lib/ModelObjectVectorController.hpp>
+#include "ModelObjectInspectorView.hpp"
+#include "ModelObjectVectorController.hpp"
 
 namespace openstudio {
 
@@ -143,5 +143,5 @@ class WaterUseEquipmentDefinitionInspectorView : public ModelObjectInspectorView
 
 } // openstudio
 
-#endif // OPENSTUDIO_WATERUSEEQUIPMENTINSPECTORVIEW_H
+#endif // OPENSTUDIO_WATERUSEEQUIPMENTINSPECTORVIEW_HPP
 

@@ -17,16 +17,16 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/Record.hpp>
-#include <project/Record_Impl.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/ObjectRecord.hpp>
-#include <project/ProjectDatabase.hpp>
-#include <project/ProjectDatabase_Impl.hpp>
+#include "Record.hpp"
+#include "Record_Impl.hpp"
+#include "JoinRecord.hpp"
+#include "ObjectRecord.hpp"
+#include "ProjectDatabase.hpp"
+#include "ProjectDatabase_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/time/DateTime.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/String.hpp"
+#include "../utilities/time/DateTime.hpp"
 
 #include <QSqlQuery>
 #include <QSqlError>
@@ -86,7 +86,7 @@ namespace project {
 
     ProjectDatabase Record_Impl::projectDatabase() const
     {
-      boost::shared_ptr<detail::ProjectDatabase_Impl> impl = m_projectDatabaseWeakImpl.lock();
+      std::shared_ptr<detail::ProjectDatabase_Impl> impl = m_projectDatabaseWeakImpl.lock();
       OS_ASSERT(impl);
       return ProjectDatabase(impl);
     }
@@ -205,7 +205,7 @@ namespace project {
       return result;
    }
 
-    void Record_Impl::insertRow(const boost::shared_ptr<QSqlDatabase> &database)
+    void Record_Impl::insertRow(const std::shared_ptr<QSqlDatabase> &database)
     {
       QSqlQuery query(*database);
 
@@ -233,7 +233,7 @@ namespace project {
       }
     }
 
-    void Record_Impl::removeRow(const boost::shared_ptr<QSqlDatabase> &database)
+    void Record_Impl::removeRow(const std::shared_ptr<QSqlDatabase> &database)
     {
       QSqlQuery query(*database);
       this->makeDeleteByIdQuery(query);
@@ -310,7 +310,7 @@ namespace project {
   } // detail
 
 
-  Record::Record(boost::shared_ptr<detail::Record_Impl> impl, ProjectDatabase projectDatabase)
+  Record::Record(std::shared_ptr<detail::Record_Impl> impl, ProjectDatabase projectDatabase)
   {
     // check if this object is already loaded
     boost::optional<Record> record = projectDatabase.findLoadedRecord(impl->handle());
@@ -355,7 +355,7 @@ namespace project {
     OS_ASSERT(m_impl);
   }
 
-  Record::Record(boost::shared_ptr<detail::Record_Impl> impl)
+  Record::Record(std::shared_ptr<detail::Record_Impl> impl)
     : m_impl(impl)
   {
     OS_ASSERT(m_impl);
@@ -401,7 +401,7 @@ namespace project {
     m_impl->saveRow(projectDatabase.qSqlDatabase());
   }
 
-  void Record::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void Record::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     m_impl->saveRow(database);
   }
@@ -451,7 +451,7 @@ namespace project {
     return m_impl->findIdByHandle();
   }
 
-  void Record::insertRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void Record::insertRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     m_impl->insertRow(database);
   }
@@ -461,7 +461,7 @@ namespace project {
     m_impl->insertRow(projectDatabase.qSqlDatabase());
   }
 
-  void Record::removeRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void Record::removeRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     m_impl->removeRow(database);
   }

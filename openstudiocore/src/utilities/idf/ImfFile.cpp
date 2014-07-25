@@ -17,17 +17,16 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/idf/ImfFile.hpp>
-#include <utilities/idf/IdfRegex.hpp>
-#include <utilities/idd/CommentRegex.hpp>
+#include "ImfFile.hpp"
+#include "IdfRegex.hpp"
+#include "../idd/CommentRegex.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/String.hpp>
+#include "../core/Assert.hpp"
+#include "../core/PathHelpers.hpp"
+#include "../core/String.hpp"
 
 #include <boost/algorithm/string.hpp>
-#include <boost/foreach.hpp>
 #include <boost/iostreams/filter/newline.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
 
@@ -54,7 +53,7 @@ IddFileType ImfFile::iddFileType() const {
 
 StringVector ImfFile::sectionNames() const {
   StringVector result;
-  BOOST_FOREACH(const SectionMapType::value_type& pair, m_sectionMap){
+  for (const SectionMapType::value_type& pair : m_sectionMap){
     result.push_back(pair.first);
   }
   return result;
@@ -62,7 +61,7 @@ StringVector ImfFile::sectionNames() const {
 
 IdfObjectVector ImfFile::section(const std::string& section) const {
   IdfObjectVector result;
-  SectionMapType::const_iterator it = m_sectionMap.find(section);
+  auto it = m_sectionMap.find(section);
   if (it != m_sectionMap.end()) {
     result = it->second;
   }
@@ -125,12 +124,12 @@ OptionalImfFile ImfFile::load(const openstudio::path& p, const IddFile& iddFile)
 
 std::ostream& ImfFile::print(std::ostream& os) const
 {
-  BOOST_FOREACH(const SectionMapType::value_type& pair, m_sectionMap){
+  for (const SectionMapType::value_type& pair : m_sectionMap){
     os << "##def " << pair.first << "[]" << std::endl;
-    BOOST_FOREACH(const IdfObject& object, pair.second) {
+    for (const IdfObject& object : pair.second) {
       os << object;
     }
-    os << "##endef " << pair.first << std::endl << std::endl;
+    os << "##enddef " << pair.first << std::endl << std::endl;
   }
   return os;
 }

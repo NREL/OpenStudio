@@ -20,8 +20,8 @@
 #ifndef PROJECT_SEQUENTIALSEARCHRECORD_HPP
 #define PROJECT_SEQUENTIALSEARCHRECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/OpenStudioAlgorithmRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "OpenStudioAlgorithmRecord.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -76,11 +76,11 @@ class PROJECT_API SequentialSearchRecord : public OpenStudioAlgorithmRecord {
   friend class detail::SequentialSearchRecord_Impl;
 
   /** Construct from impl. */
-  SequentialSearchRecord(boost::shared_ptr<detail::SequentialSearchRecord_Impl> impl,
+  SequentialSearchRecord(std::shared_ptr<detail::SequentialSearchRecord_Impl> impl,
                          ProjectDatabase database);
 
   /// Construct from impl. Does not register in the database, so use with caution.
-  explicit SequentialSearchRecord(boost::shared_ptr<detail::SequentialSearchRecord_Impl> impl);
+  explicit SequentialSearchRecord(std::shared_ptr<detail::SequentialSearchRecord_Impl> impl);
 
   /// @endcond
  private:

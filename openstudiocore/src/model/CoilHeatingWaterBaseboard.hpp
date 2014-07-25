@@ -20,8 +20,8 @@
 #ifndef MODEL_COILHEATINGWATERBASEBOARD_HPP
 #define MODEL_COILHEATINGWATERBASEBOARD_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 
@@ -107,7 +107,7 @@ class MODEL_API CoilHeatingWaterBaseboard : public StraightComponent {
   /// @cond
   typedef detail::CoilHeatingWaterBaseboard_Impl ImplType;
 
-  explicit CoilHeatingWaterBaseboard(boost::shared_ptr<detail::CoilHeatingWaterBaseboard_Impl> impl);
+  explicit CoilHeatingWaterBaseboard(std::shared_ptr<detail::CoilHeatingWaterBaseboard_Impl> impl);
 
   friend class detail::CoilHeatingWaterBaseboard_Impl;
   friend class Model;

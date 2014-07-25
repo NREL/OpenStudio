@@ -20,7 +20,7 @@
 #ifndef MODEL_SETPOINTMANAGERSINGLEZONEREHEAT_IMPL_HPP
 #define MODEL_SETPOINTMANAGERSINGLEZONEREHEAT_IMPL_HPP
 
-#include <model/HVACComponent_Impl.hpp>
+#include "SetpointManager_Impl.hpp"
 
 namespace openstudio {
 
@@ -30,7 +30,7 @@ class ZoneHVACEquipmentConnections;
 
 namespace detail {
 
-  class MODEL_API SetpointManagerSingleZoneReheat_Impl : public HVACComponent_Impl {
+  class MODEL_API SetpointManagerSingleZoneReheat_Impl : public SetpointManager_Impl {
     Q_OBJECT;
     Q_PROPERTY(double minimumSupplyAirTemperature READ minimumSupplyAirTemperature WRITE setMinimumSupplyAirTemperature);
     Q_PROPERTY(double maximumSupplyAirTemperature READ maximumSupplyAirTemperature WRITE setMaximumSupplyAirTemperature);
@@ -54,15 +54,9 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const;
 
-    boost::optional<ParentObject> parent() const;
+    virtual ModelObject clone(Model model) const;
 
-    std::vector<ModelObject> children() const;
-
-    bool addToNode(Node & node);
-
-    std::vector<openstudio::IdfObject> remove();
-
-    ModelObject clone(Model model);
+    virtual bool addToNode(Node & node);
     
     double minimumSupplyAirTemperature();
     
@@ -72,9 +66,11 @@ namespace detail {
     
     void setMaximumSupplyAirTemperature( double value );
     
-    boost::optional<Node> setpointNode();
-    
-    void setSetpointNode( Node & node );
+    virtual boost::optional<Node> setpointNode() const;
+
+    virtual std::string controlVariable() const;
+
+    virtual bool setControlVariable( const std::string& controlVariable );
 
     boost::optional<ThermalZone> controlZone();
 
@@ -83,6 +79,9 @@ namespace detail {
     void resetControlZone();
 
    private:
+    virtual bool setSetpointNode( const Node & node );
+
+    virtual void resetSetpointNode();
 
     boost::optional<ModelObject> controlZoneAsModelObject();
 

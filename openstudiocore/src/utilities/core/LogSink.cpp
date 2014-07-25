@@ -17,19 +17,18 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/LogSink.hpp>
-#include <utilities/core/LogSink_Impl.hpp>
+#include "LogSink.hpp"
+#include "LogSink_Impl.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "Logger.hpp"
 
 #include <boost/log/common.hpp>
-#include <boost/log/formatters.hpp>
-#include <boost/log/filters.hpp>
-#include <boost/log/filters/attr.hpp>
 #include <boost/log/support/regex.hpp>
-#include <boost/log/utility/init/to_file.hpp>
-#include <boost/log/utility/init/to_console.hpp>
-#include <boost/log/utility/init/common_attributes.hpp>
+#include <boost/log/expressions.hpp>
+#include <boost/log/expressions/keyword.hpp>
+#include <boost/log/expressions/attr_fwd.hpp>
+#include <boost/log/expressions/attr.hpp>
+#include <boost/log/attributes/value_extraction.hpp>
 
 #include <QReadWriteLock>
 #include <QWriteLocker>
@@ -37,15 +36,14 @@
 
 namespace sinks = boost::log::sinks;
 namespace keywords = boost::log::keywords;
-namespace fmt = boost::log::formatters;
-namespace flt = boost::log::filters;
+namespace expr = boost::log::expressions;
 
 namespace openstudio{
 
   namespace detail{
 
     LogSink_Impl::LogSink_Impl()
-      : m_mutex(new QReadWriteLock()), m_threadId(NULL)
+      : m_mutex(new QReadWriteLock()), m_threadId(nullptr)
     {
       m_sink = boost::shared_ptr<LogSinkBackend>(new LogSinkBackend());
     }
@@ -156,7 +154,7 @@ namespace openstudio{
     {
       QWriteLocker l(m_mutex);
 
-      m_threadId = NULL;
+      m_threadId = nullptr;
 
       this->updateFilter(l);
     }
@@ -171,10 +169,10 @@ namespace openstudio{
       // DLM@20110701: would like to format Severity as string but can't figure out how to do it
       // because you can't overload operator<< for an enum type
       // this seems to suggest this should work: http://www.edm2.com/0405/enumeration.html
-      m_sink->locked_backend()->set_formatter(fmt::stream
-        << "[" << fmt::attr< LogChannel >("Channel")
-        << "] <" << fmt::attr< LogLevel >("Severity")
-        << "> " << fmt::message());
+      m_sink->set_formatter(expr::stream
+        << "[" << expr::attr< LogChannel >("Channel")
+        << "] <" << expr::attr< LogLevel >("Severity")
+        << "> " << expr::smessage);
 
       //m_sink->locked_backend()->set_formatter(fmt::stream
       //  << "[" << fmt::attr< LogChannel >("Channel")
@@ -211,13 +209,14 @@ namespace openstudio{
       }
 
       if (m_threadId){
-        m_sink->set_filter(flt::attr< LogLevel >("Severity") >= filterLogLevel &&
-                           flt::attr< QThread* >("QThread") == m_threadId &&
-                           flt::attr< LogChannel >("Channel").matches(filterChannelRegex));
+        m_sink->set_filter(expr::attr< LogLevel >("Severity") >= filterLogLevel &&
+                           expr::attr< QThread* >("QThread") == m_threadId &&
+                           expr::matches(expr::attr< LogChannel >("Channel"), filterChannelRegex));
       }else{
-        m_sink->set_filter(flt::attr< LogLevel >("Severity") >= filterLogLevel &&
-                           flt::attr< LogChannel >("Channel").matches(filterChannelRegex));
+        m_sink->set_filter(expr::attr< LogLevel >("Severity") >= filterLogLevel &&
+                           expr::matches(expr::attr< LogChannel >("Channel"), filterChannelRegex));
       }
+     
     }
 
   } // detail

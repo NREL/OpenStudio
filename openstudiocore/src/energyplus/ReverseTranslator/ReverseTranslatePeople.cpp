@@ -17,25 +17,25 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ReverseTranslator.hpp"
 
-#include <model/People.hpp>
-#include <model/People_Impl.hpp>
-#include <model/PeopleDefinition.hpp>
-#include <model/PeopleDefinition_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
+#include "../../model/People.hpp"
+#include "../../model/People_Impl.hpp"
+#include "../../model/PeopleDefinition.hpp"
+#include "../../model/PeopleDefinition_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/SpaceType.hpp"
+#include "../../model/SpaceType_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/People_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../../utilities/core/Assert.hpp"
 
 using namespace openstudio::model;
 

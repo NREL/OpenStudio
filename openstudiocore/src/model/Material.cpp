@@ -17,12 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/Material.hpp>
-#include <model/Material_Impl.hpp>
+#include "Material.hpp"
+#include "Material_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -80,7 +78,7 @@ bool Material::setThickness(double value) {
 }
 
 /// @cond
-Material::Material(boost::shared_ptr<detail::Material_Impl> impl)
+Material::Material(std::shared_ptr<detail::Material_Impl> impl)
   : ResourceObject(impl)
 {}
 /// @endcond

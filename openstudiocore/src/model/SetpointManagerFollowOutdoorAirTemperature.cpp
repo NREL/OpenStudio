@@ -17,20 +17,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SetpointManagerFollowOutdoorAirTemperature.hpp>
-#include <model/SetpointManagerFollowOutdoorAirTemperature_Impl.hpp>
+#include "SetpointManagerFollowOutdoorAirTemperature.hpp"
+#include "SetpointManagerFollowOutdoorAirTemperature_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
+#include "Model.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "PlantLoop.hpp"
+#include "Schedule.hpp"
 
 #include <utilities/idd/OS_SetpointManager_FollowOutdoorAirTemperature_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -40,14 +39,14 @@ namespace detail{
 
   SetpointManagerFollowOutdoorAirTemperature_Impl::SetpointManagerFollowOutdoorAirTemperature_Impl(
       const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : HVACComponent_Impl(idfObject, model, keepHandle)
+    : SetpointManager_Impl(idfObject, model, keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == SetpointManagerFollowOutdoorAirTemperature::iddObjectType());
   }
 
   SetpointManagerFollowOutdoorAirTemperature_Impl::SetpointManagerFollowOutdoorAirTemperature_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
-    : HVACComponent_Impl(other,model,keepHandle)
+    : SetpointManager_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == SetpointManagerFollowOutdoorAirTemperature::iddObjectType());
   }
@@ -56,7 +55,7 @@ namespace detail{
       const SetpointManagerFollowOutdoorAirTemperature_Impl& other, 
       Model_Impl* model,
       bool keepHandles)
-    : HVACComponent_Impl(other,model,keepHandles)
+    : SetpointManager_Impl(other,model,keepHandles)
   {
   }
 
@@ -74,97 +73,32 @@ namespace detail{
     return SetpointManagerFollowOutdoorAirTemperature::iddObjectType();
   }
 
-  boost::optional<ParentObject> SetpointManagerFollowOutdoorAirTemperature_Impl::parent() const {
-    NodeVector nodes = getObject<ModelObject>().getModelObjectSources<Node>();
-    if (nodes.size() == 1u) {
-      return nodes[0];
-    }
-    return boost::none;
-  }
-
-  std::vector<ModelObject> SetpointManagerFollowOutdoorAirTemperature_Impl::children() const
-  {
-    std::vector<ModelObject> result;
-    return result;
-  }
-
-  bool SetpointManagerFollowOutdoorAirTemperature_Impl::addToNode(Node & node)
-  {
-    if( node.model() != this->model() )
-    {
-      return false;
-    } 
-
-    node.removeSetpointManagerMixedAir();
-
-    node.removeSetpointManagerSingleZoneReheat();
-
-    node.removeSetpointManagerScheduled();
-
-    node.removeSetpointManagerFollowOutdoorAirTemperature();
-
-    node.removeSetpointManagerOutdoorAirReset();
-
-    node.removeSetpointManagerWarmest();
-
-    if( OptionalAirLoopHVAC airLoop = node.airLoopHVAC() )
-    {
-      if( airLoop->supplyComponent(node.handle()) )
-      {
-        this->setSetpointNode(node);
-
-        return true;
-      }
-      if(OptionalAirLoopHVACOutdoorAirSystem oaSystem = airLoop->airLoopHVACOutdoorAirSystem())
-      {
-        if(node == oaSystem->outboardOANode().get())
-        {
-          return false;
-        }
-
-        if(oaSystem->oaComponent(node.handle()))
-        {
-          this->setSetpointNode(node);
-        
-          return true;
-        }
+  bool SetpointManagerFollowOutdoorAirTemperature_Impl::addToNode(Node & node) {
+    bool added = SetpointManager_Impl::addToNode( node );
+    if( added ) {
+      return added;
+    } else if( boost::optional<PlantLoop> plantLoop = node.plantLoop() ) {
+      if( plantLoop->supplyComponent(node.handle()) ) {
+        return this->setSetpointNode(node);
       }
     }
-    else if( boost::optional<PlantLoop> plantLoop = node.plantLoop() )
-    {
-      if( plantLoop->supplyComponent(node.handle()) )
-      {
-        this->setSetpointNode(node);
-
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  std::vector<openstudio::IdfObject> SetpointManagerFollowOutdoorAirTemperature_Impl::remove()
-  {
-    return HVACComponent_Impl::remove();
-  }
-
-  ModelObject SetpointManagerFollowOutdoorAirTemperature_Impl::clone(Model model)
-  {
-    return HVACComponent_Impl::clone( model );
+    return added;
   }
 
   boost::optional<Node> SetpointManagerFollowOutdoorAirTemperature_Impl::setpointNode() const
   {
-    SetpointManagerFollowOutdoorAirTemperature thisModelObject = this->getObject<SetpointManagerFollowOutdoorAirTemperature>();
-
-    return thisModelObject.getModelObjectTarget<Node>(OS_SetpointManager_FollowOutdoorAirTemperatureFields::SetpointNodeorNodeListName);
+    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_FollowOutdoorAirTemperatureFields::SetpointNodeorNodeListName);
   }
 
-  void SetpointManagerFollowOutdoorAirTemperature_Impl::setSetpointNode( Node & node )
+  bool SetpointManagerFollowOutdoorAirTemperature_Impl::setSetpointNode(const Node & node )
   {
-    SetpointManagerFollowOutdoorAirTemperature thisModelObject = this->getObject<SetpointManagerFollowOutdoorAirTemperature>();
+    return setPointer(OS_SetpointManager_FollowOutdoorAirTemperatureFields::SetpointNodeorNodeListName,node.handle());
+  }
 
-    thisModelObject.setPointer(OS_SetpointManager_FollowOutdoorAirTemperatureFields::SetpointNodeorNodeListName,node.handle());
+  void SetpointManagerFollowOutdoorAirTemperature_Impl::resetSetpointNode()
+  {
+    bool result = setString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::SetpointNodeorNodeListName,"");
+    OS_ASSERT(result);
   }
 
   std::string SetpointManagerFollowOutdoorAirTemperature_Impl::controlVariable() const
@@ -172,19 +106,23 @@ namespace detail{
     return this->getString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ControlVariable).get();
   }
 
-  void SetpointManagerFollowOutdoorAirTemperature_Impl::setControlVariable(const std::string & value)
+  bool SetpointManagerFollowOutdoorAirTemperature_Impl::setControlVariable(const std::string & value)
   {
     if( istringEqual(value,"Temperature") )
     {
-      this->setString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ControlVariable,"Temperature");
+      return this->setString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ControlVariable,"Temperature");
     }
     else if( istringEqual(value,"MaximumTemperature") )
     {
-      this->setString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ControlVariable,"MaximumTemperature");
+      return this->setString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ControlVariable,"MaximumTemperature");
     }
     else if( istringEqual(value,"MinimumTemperature") )
     {
-      this->setString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ControlVariable,"MinimumTemperature");
+      return this->setString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ControlVariable,"MinimumTemperature");
+    }
+    else
+    {
+      return false;
     }
   }
 
@@ -238,7 +176,7 @@ namespace detail{
 } // detail
   
 SetpointManagerFollowOutdoorAirTemperature::SetpointManagerFollowOutdoorAirTemperature(const Model& model)
-  : HVACComponent(SetpointManagerFollowOutdoorAirTemperature::iddObjectType(),model) 
+  : SetpointManager(SetpointManagerFollowOutdoorAirTemperature::iddObjectType(),model) 
 {
   OS_ASSERT(getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>());
 
@@ -249,8 +187,8 @@ SetpointManagerFollowOutdoorAirTemperature::SetpointManagerFollowOutdoorAirTempe
   setMinimumSetpointTemperature(6.0);
 }
 
-SetpointManagerFollowOutdoorAirTemperature::SetpointManagerFollowOutdoorAirTemperature(boost::shared_ptr<detail::SetpointManagerFollowOutdoorAirTemperature_Impl> p)
-  : HVACComponent(p)
+SetpointManagerFollowOutdoorAirTemperature::SetpointManagerFollowOutdoorAirTemperature(std::shared_ptr<detail::SetpointManagerFollowOutdoorAirTemperature_Impl> p)
+  : SetpointManager(p)
 {
 }
 
@@ -268,9 +206,9 @@ std::string SetpointManagerFollowOutdoorAirTemperature::controlVariable() const
   return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->controlVariable();
 }
 
-void SetpointManagerFollowOutdoorAirTemperature::setControlVariable(const std::string & value)
+bool SetpointManagerFollowOutdoorAirTemperature::setControlVariable(const std::string & value)
 {
-  getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->setControlVariable(value);
+  return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->setControlVariable(value);
 }
 
 std::string SetpointManagerFollowOutdoorAirTemperature::referenceTemperatureType() const

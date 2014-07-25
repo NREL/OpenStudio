@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/AirTerminalSingleDuctUncontrolled.hpp"
+#include "../../model/AirTerminalSingleDuctUncontrolled_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
 #include <utilities/idd/AirTerminal_SingleDuct_Uncontrolled_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>

@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_INSPECTORCONTROLLER_H
-#define OPENSTUDIO_INSPECTORCONTROLLER_H
+#ifndef OPENSTUDIO_INSPECTORCONTROLLER_HPP
+#define OPENSTUDIO_INSPECTORCONTROLLER_HPP
 
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
 #include <boost/smart_ptr.hpp>
 #include <QObject>
 
@@ -84,5 +84,5 @@ class InspectorController : public QObject
 
 } // openstudio
 
-#endif // OPENSTUDIO_INSPECTORCONTROLLER_H
+#endif // OPENSTUDIO_INSPECTORCONTROLLER_HPP
 

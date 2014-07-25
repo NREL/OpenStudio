@@ -20,10 +20,10 @@
 #ifndef MODEL_REFRIGERATIONWALKIN_HPP
 #define MODEL_REFRIGERATIONWALKIN_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
-#include <model/RefrigerationSystem.hpp>
-#include <model/ThermalZone.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
+#include "RefrigerationSystem.hpp"
+#include "ThermalZone.hpp"
 
 namespace openstudio {
 
@@ -311,7 +311,7 @@ class MODEL_API RefrigerationWalkIn : public ModelObject {
   /// @cond
   typedef detail::RefrigerationWalkIn_Impl ImplType;
 
-  explicit RefrigerationWalkIn(boost::shared_ptr<detail::RefrigerationWalkIn_Impl> impl);
+  explicit RefrigerationWalkIn(std::shared_ptr<detail::RefrigerationWalkIn_Impl> impl);
 
   friend class detail::RefrigerationWalkIn_Impl;
   friend class Model;

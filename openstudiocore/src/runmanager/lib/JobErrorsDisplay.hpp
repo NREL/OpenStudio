@@ -17,13 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNMANAGER_JOBERRORDISPLAY_HPP__
-#define OPENSTUDIO_RUNMANAGER_JOBERRORDISPLAY_HPP__
+#ifndef RUNMANAGER_LIB_JOBERRORSDISPLAY_HPP
+#define RUNMANAGER_LIB_JOBERRORSDISPLAY_HPP
 
 #include <string>
 #include <QTimer>
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/ui_JobErrorsDisplay.hxx>
+#include "RunManager.hpp"
+#include <runmanager/lib/ui_JobErrorsDisplay.h>
 #include "JobErrors.hpp"
 
 
@@ -38,7 +38,7 @@ namespace runmanager {
 
   public:
     /** Create a JobErrorsDisplay dialog for displaying job warning / error output */
-    JobErrorsDisplay(QWidget *parent = 0, Qt::WFlags flags = 0, const JobErrors &errors = JobErrors());
+    JobErrorsDisplay(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr, const JobErrors &errors = JobErrors());
 
     virtual ~JobErrorsDisplay();
 
@@ -52,4 +52,4 @@ namespace runmanager {
 } // openstudio namespace
 
 
-#endif // OPENSTUDIO_RUNMANAGER_JOBERRORDISPLAY_HPP_
+#endif // RUNMANAGER_LIB_JOBERRORSDISPLAY_HPP

@@ -21,8 +21,8 @@
 #define UTILITIES_DATA_CALIBRATIONRESULT_HPP
 
 #include "../UtilitiesAPI.hpp"
-#include <utilities/data/Attribute.hpp>
-#include <utilities/data/DataEnums.hpp>
+#include "Attribute.hpp"
+#include "DataEnums.hpp"
 
 namespace openstudio {
 
@@ -36,7 +36,7 @@ class UTILITIES_API CalibrationBillingPeriod {
   /// Returns the expected name for attributes of this type, 'CalibrationBillingPeriod'.
   static std::string attributeName();
 
-  /// Creates a CalibrationBillingPeriod wrapper around attribute if it is correclty formatted.
+  /// Creates a CalibrationBillingPeriod wrapper around attribute if it is correctly formatted.
   static boost::optional<CalibrationBillingPeriod> fromAttribute(const Attribute& attribute);
 
   /// Create attribute wrapper with all required information. 
@@ -96,7 +96,7 @@ class UTILITIES_API CalibrationUtilityBill {
   /// Returns the expected name for attributes of this type, 'CalibrationUtilityBill'.
   static std::string attributeName();
 
-  /// Creates a CalibrationUtilityBill wrapper around attribute if it is correclty formatted.
+  /// Creates a CalibrationUtilityBill wrapper around attribute if it is correctly formatted.
   static boost::optional<CalibrationUtilityBill> fromAttribute(const Attribute& attribute);
 
   /// Create attribute wrapper with all required information. 
@@ -163,7 +163,7 @@ class UTILITIES_API CalibrationResult {
   /// Returns the expected name for attributes of this type, 'CalibrationResult'.
   static std::string attributeName();
 
-  /// Creates a CalibrationResult wrapper around attribute if it is correclty formatted.
+  /// Creates a CalibrationResult wrapper around attribute if it is correctly formatted.
   static boost::optional<CalibrationResult> fromAttribute(const Attribute& attribute);
 
   /// Constructs a new calibration result attribute

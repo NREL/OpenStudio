@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef CLASSVIEWWIDGET_H
-#define CLASSVIEWWIDGET_H
+#ifndef MODELEDITOR_CLASSVIEWWIDGET_HPP
+#define MODELEDITOR_CLASSVIEWWIDGET_HPP
 
 #include <QModelIndex>
 
-#include <model_editor/ViewWidget.hpp>
+#include "ViewWidget.hpp"
 
-#include <model/Building.hpp>
-#include <model_editor/ModelEditorAPI.hpp>
+#include "../model/Building.hpp"
+#include "ModelEditorAPI.hpp"
 
 namespace modeleditor
 {
@@ -38,8 +38,8 @@ class ClassViewWidget : public ViewWidget
   Q_OBJECT
 
 public:
-  ClassViewWidget(openstudio::model::Model& model, QWidget *parent = 0);
-  ClassViewWidget(QWidget *parent = 0);
+  ClassViewWidget(openstudio::model::Model& model, QWidget *parent = nullptr);
+  ClassViewWidget(QWidget *parent = nullptr);
   virtual ~ClassViewWidget();
   void loadWorkspace(const openstudio::Workspace& workspace);
   virtual void addObjects(openstudio::IddObjectType type = openstudio::IddObjectType::UserCustom);
@@ -79,4 +79,4 @@ private:
 
 } // namespace modeleditor
 
-#endif // CLASSVIEWWIDGET_H
+#endif // MODELEDITOR_CLASSVIEWWIDGET_HPP

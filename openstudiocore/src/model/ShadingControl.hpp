@@ -20,8 +20,8 @@
 #ifndef MODEL_SHADINGCONTROL_HPP
 #define MODEL_SHADINGCONTROL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ResourceObject.hpp>
+#include "ModelAPI.hpp"
+#include "ResourceObject.hpp"
 
 namespace openstudio {
 
@@ -91,7 +91,7 @@ class MODEL_API ShadingControl : public ResourceObject {
   /// @cond
   typedef detail::ShadingControl_Impl ImplType;
 
-  explicit ShadingControl(boost::shared_ptr<detail::ShadingControl_Impl> impl);
+  explicit ShadingControl(std::shared_ptr<detail::ShadingControl_Impl> impl);
 
   friend class detail::ShadingControl_Impl;
   friend class Model;

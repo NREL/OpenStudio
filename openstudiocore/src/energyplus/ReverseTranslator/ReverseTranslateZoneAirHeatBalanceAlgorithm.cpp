@@ -17,9 +17,9 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ReverseTranslator.hpp>
-#include <model/ZoneAirHeatBalanceAlgorithm.hpp>
-#include <model/ZoneAirHeatBalanceAlgorithm_Impl.hpp>
+#include "../ReverseTranslator.hpp"
+#include "../../model/ZoneAirHeatBalanceAlgorithm.hpp"
+#include "../../model/ZoneAirHeatBalanceAlgorithm_Impl.hpp"
 #include <utilities/idd/ZoneAirHeatBalanceAlgorithm_FieldEnums.hxx>
 #include <utilities/idd/OS_ZoneAirHeatBalanceAlgorithm_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>

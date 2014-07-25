@@ -66,7 +66,7 @@ class HideManifoldSolidSpaces < OpenStudio::Ruleset::ModelUserScript
             end
           end
 
-          # explode group to add back in with colinear points (needed for manoifold test)
+          # explode group to add back in with collinear points (needed for manifold test)
           temp_group.explode
 
           # run manifold solid test on outer group

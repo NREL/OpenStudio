@@ -19,60 +19,59 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/GenericModelObject.hpp>
-#include <model/GenericModelObject_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/ScheduleCompact_Impl.hpp>
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
-#include <model/OutputVariable.hpp>
-#include <model/OutputVariable_Impl.hpp>
-#include <model/ParentObject_Impl.hpp>
-#include <model/RunPeriod.hpp>
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
+#include "../GenericModelObject.hpp"
+#include "../GenericModelObject_Impl.hpp"
+#include "../ScheduleTypeLimits.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../ScheduleCompact_Impl.hpp"
+#include "../SimulationControl.hpp"
+#include "../SimulationControl_Impl.hpp"
+#include "../OutputVariable.hpp"
+#include "../OutputVariable_Impl.hpp"
+#include "../ParentObject_Impl.hpp"
+#include "../RunPeriod.hpp"
 
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/BuildingStory.hpp>
-#include <model/BuildingStory_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/DefaultConstructionSet.hpp>
-#include <model/DefaultConstructionSet_Impl.hpp>
-#include <model/DefaultScheduleSet.hpp>
-#include <model/DefaultScheduleSet_Impl.hpp>
-#include <model/Lights.hpp>
-#include <model/Lights_Impl.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/LightsDefinition_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
+#include "../Site.hpp"
+#include "../Site_Impl.hpp"
+#include "../Facility.hpp"
+#include "../Facility_Impl.hpp"
+#include "../Building.hpp"
+#include "../Building_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
+#include "../BuildingStory.hpp"
+#include "../BuildingStory_Impl.hpp"
+#include "../SpaceType.hpp"
+#include "../SpaceType_Impl.hpp"
+#include "../DefaultConstructionSet.hpp"
+#include "../DefaultConstructionSet_Impl.hpp"
+#include "../DefaultScheduleSet.hpp"
+#include "../DefaultScheduleSet_Impl.hpp"
+#include "../Lights.hpp"
+#include "../Lights_Impl.hpp"
+#include "../LightsDefinition.hpp"
+#include "../LightsDefinition_Impl.hpp"
+#include "../Space.hpp"
+#include "../Space_Impl.hpp"
+#include "../Surface.hpp"
+#include "../Surface_Impl.hpp"
 
-#include <model/FanConstantVolume.hpp>
-#include <model/FanConstantVolume_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
+#include "../FanConstantVolume.hpp"
+#include "../FanConstantVolume_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../AirLoopHVAC_Impl.hpp"
 
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/data/TimeSeries.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/idf/ValidityReport.hpp>
+#include "../../utilities/sql/SqlFile.hpp"
+#include "../../utilities/data/TimeSeries.hpp"
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/idf/WorkspaceObject.hpp"
+#include "../../utilities/idf/ValidityReport.hpp"
 
-#include <boost/foreach.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 
 using namespace openstudio::model;
@@ -102,12 +101,12 @@ void checkObject(ModelObject object){
   if (name) { ss << " and named '" << *name << "'"; }
 
   // loop over all possible output variables the user could request
-  BOOST_FOREACH(const std::string& variableName, object.outputVariableNames()){
+  for (const std::string& variableName : object.outputVariableNames()){
     EXPECT_FALSE(variableName.empty());
   }
 
   // loop over all output variables the user has already requested
-  BOOST_FOREACH(const OutputVariable& variable, object.outputVariables()){
+  for (const OutputVariable& variable : object.outputVariables()){
     OptionalString variableName = variable.getString(Output_VariableFields::VariableName);
     ASSERT_TRUE(variableName);
 
@@ -137,7 +136,7 @@ void checkObject(ModelObject object){
 
   if (parentObject){
     // loop through each child
-    BOOST_FOREACH(ModelObject child, parentObject->children()){
+    for (ModelObject child : parentObject->children()){
       OptionalParentObject parent = child.parent();
       if (!parent){
         std::cout << "Child " << child << " does not have a parent" << std::endl;
@@ -252,8 +251,7 @@ TEST_F(ModelFixture, UniqueModelObjects)
 
   EXPECT_EQ(modelObjects.size(),uniqueWorkspaceObjectNames.size());
 
-  std::string name;
-  BOOST_FOREACH(name, uniqueWorkspaceObjectNames)
+  for (const std::string& name : uniqueWorkspaceObjectNames)
   {
     EXPECT_NE(name,"");
   }
@@ -417,7 +415,7 @@ TEST_F(ModelFixture, ExampleModel)
   ASSERT_EQ(1u, defaultScheduleSets.size());
   EXPECT_EQ(4u, spaces.size());
 
-  BOOST_FOREACH(const Space& space, spaces){
+  for (const Space& space : spaces){
     boost::optional<SpaceType> testSpaceType = space.spaceType();
     ASSERT_TRUE(testSpaceType);
     EXPECT_EQ(spaceTypes[0].handle(), testSpaceType->handle());

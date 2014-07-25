@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/UtilityCost_Tariff.hpp>
-#include <model/UtilityCost_Tariff_Impl.hpp>
+#include "UtilityCost_Tariff.hpp"
+#include "UtilityCost_Tariff_Impl.hpp"
 
-#include <model/Model_Impl.hpp>
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_UtilityCost_Tariff_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/algorithm/string.hpp>
 
@@ -237,7 +237,7 @@ UtilityCost_Tariff::UtilityCost_Tariff(const Model& model)
 }
 
 // constructor
-UtilityCost_Tariff::UtilityCost_Tariff(boost::shared_ptr<detail::UtilityCost_Tariff_Impl> impl)
+UtilityCost_Tariff::UtilityCost_Tariff(std::shared_ptr<detail::UtilityCost_Tariff_Impl> impl)
   : ParentObject(impl)
 {}
 

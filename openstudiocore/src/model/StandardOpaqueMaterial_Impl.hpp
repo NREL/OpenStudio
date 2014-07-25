@@ -20,12 +20,12 @@
 #ifndef MODEL_STANDARDOPAQUEMATERIAL_IMPL_HPP
 #define MODEL_STANDARDOPAQUEMATERIAL_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/OpaqueMaterial_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "OpaqueMaterial_Impl.hpp"
 
 #include <QObject>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {

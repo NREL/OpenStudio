@@ -20,8 +20,8 @@
 #ifndef MODEL_LIGHTSDEFINITION_HPP
 #define MODEL_LIGHTSDEFINITION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceLoadDefinition.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceLoadDefinition.hpp"
 
 namespace openstudio {
 namespace model {
@@ -157,7 +157,7 @@ class MODEL_API LightsDefinition : public SpaceLoadDefinition {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit LightsDefinition(boost::shared_ptr<detail::LightsDefinition_Impl> impl);
+  explicit LightsDefinition(std::shared_ptr<detail::LightsDefinition_Impl> impl);
 
   /// @endcond
  private:

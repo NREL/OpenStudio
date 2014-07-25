@@ -17,144 +17,135 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <sdd/ReverseTranslator.hpp>
-#include <sdd/ForwardTranslator.hpp>
+#include "../sdd/ReverseTranslator.hpp"
+#include "../sdd/ForwardTranslator.hpp"
 
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/ControllerMechanicalVentilation.hpp>
-#include <model/ControllerMechanicalVentilation_Impl.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/ControllerOutdoorAir.hpp>
-#include <model/FanConstantVolume.hpp>
-#include <model/FanVariableVolume.hpp>
-#include <model/FanOnOff.hpp>
-#include <model/FanOnOff_Impl.hpp>
-#include <model/CoilCoolingDXSingleSpeed.hpp>
-#include <model/CoilCoolingDXTwoSpeed.hpp>
-#include <model/CoilHeatingGas.hpp>
-#include <model/CoilHeatingElectric.hpp>
-#include <model/CoilHeatingDXSingleSpeed.hpp>
-#include <model/ControllerWaterCoil.hpp>
-#include <model/ControllerWaterCoil_Impl.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveBiquadratic_Impl.hpp>
-#include <model/CurveCubic.hpp>
-#include <model/CurveCubic_Impl.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/CurveQuadratic_Impl.hpp>
-#include <model/Curve.hpp>
-#include <model/Curve_Impl.hpp>
-#include <model/ScheduleRuleset.hpp>
-#include <model/ScheduleDay.hpp>
-#include <model/ScheduleDay_Impl.hpp>
-#include <model/ScheduleYear.hpp>
-#include <model/ScheduleYear_Impl.hpp>
-#include <model/ScheduleWeek.hpp>
-#include <model/ScheduleWeek_Impl.hpp>
-#include <model/SizingZone.hpp>
-#include <model/SizingZone_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/DesignSpecificationOutdoorAir.hpp>
-#include <model/DesignSpecificationOutdoorAir_Impl.hpp>
-#include <model/CurveCubic.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CoolingTowerSingleSpeed.hpp>
-#include <model/CoolingTowerVariableSpeed.hpp>
-#include <model/SetpointManagerFollowOutdoorAirTemperature.hpp>
-#include <model/SetpointManagerMixedAir.hpp>
-#include <model/SetpointManagerSingleZoneReheat.hpp>
-#include <model/SetpointManagerScheduled.hpp>
-#include <model/SetpointManagerWarmest.hpp>
-#include <model/SetpointManagerOutdoorAirReset.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled.hpp>
-#include <model/AirTerminalSingleDuctVAVReheat.hpp>
-#include <model/AirTerminalSingleDuctParallelPIUReheat.hpp>
-#include <model/ThermostatSetpointDualSetpoint.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/FanVariableVolume.hpp>
-#include <model/FanVariableVolume_Impl.hpp>
-#include <model/FanConstantVolume.hpp>
-#include <model/FanConstantVolume_Impl.hpp>
-#include <model/PumpConstantSpeed.hpp>
-#include <model/PumpConstantSpeed_Impl.hpp>
-#include <model/PumpVariableSpeed.hpp>
-#include <model/PumpVariableSpeed_Impl.hpp>
-#include <model/BoilerHotWater.hpp>
-#include <model/BoilerHotWater_Impl.hpp>
-#include <model/ChillerElectricEIR.hpp>
-#include <model/ChillerElectricEIR_Impl.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveBiquadratic_Impl.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/CurveQuadratic_Impl.hpp>
-#include <model/CoilCoolingCooledBeam.hpp>
-#include <model/CoilCoolingCooledBeam_Impl.hpp>
-#include <model/CoilCoolingWater.hpp>
-#include <model/CoilCoolingWater_Impl.hpp>
-#include <model/CoilHeatingWater.hpp>
-#include <model/CoilHeatingWater_Impl.hpp>
-#include <model/WaterToAirComponent.hpp>
-#include <model/WaterToAirComponent_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
-#include <model/ZoneHVACComponent.hpp>
-#include <model/ZoneHVACComponent_Impl.hpp>
-#include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
-#include <model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp>
-#include <model/ZoneHVACPackagedTerminalHeatPump.hpp>
-#include <model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp>
-#include <model/ZoneHVACFourPipeFanCoil.hpp>
-#include <model/ZoneHVACFourPipeFanCoil_Impl.hpp>
-#include <model/ZoneHVACBaseboardConvectiveElectric.hpp>
-#include <model/ZoneHVACBaseboardConvectiveElectric_Impl.hpp>
-#include <model/ZoneHVACBaseboardConvectiveWater.hpp>
-#include <model/ZoneHVACBaseboardConvectiveWater_Impl.hpp>
-#include <model/CoilHeatingWaterBaseboard.hpp>
-#include <model/CoilHeatingWaterBaseboard_Impl.hpp>
-#include <model/WaterHeaterMixed.hpp>
-#include <model/WaterHeaterMixed_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/PortList.hpp>
-#include <model/SizingPlant.hpp>
-#include <model/SizingPlant_Impl.hpp>
-#include <model/SizingSystem.hpp>
-#include <model/SizingSystem_Impl.hpp>
-#include <model/AirTerminalSingleDuctVAVReheat.hpp>
-#include <model/AirTerminalSingleDuctVAVReheat_Impl.hpp>
-#include <model/PipeAdiabatic.hpp>
-#include <model/PipeAdiabatic_Impl.hpp>
-#include <model/Splitter.hpp>
-#include <model/Splitter_Impl.hpp>
-#include <model/Mixer.hpp>
-#include <model/Mixer_Impl.hpp>
-#include <model/DaylightingControl.hpp>
+#include "../model/AirLoopHVAC.hpp"
+#include "../model/AirLoopHVAC_Impl.hpp"
+#include "../model/ControllerMechanicalVentilation.hpp"
+#include "../model/ControllerMechanicalVentilation_Impl.hpp"
+#include "../model/AirLoopHVACZoneSplitter.hpp"
+#include "../model/AirLoopHVACZoneSplitter_Impl.hpp"
+#include "../model/AirLoopHVACOutdoorAirSystem.hpp"
+#include "../model/ControllerOutdoorAir.hpp"
+#include "../model/FanOnOff.hpp"
+#include "../model/FanOnOff_Impl.hpp"
+#include "../model/CoilCoolingDXSingleSpeed.hpp"
+#include "../model/CoilCoolingDXTwoSpeed.hpp"
+#include "../model/CoilHeatingGas.hpp"
+#include "../model/CoilHeatingElectric.hpp"
+#include "../model/CoilHeatingDXSingleSpeed.hpp"
+#include "../model/ControllerWaterCoil.hpp"
+#include "../model/ControllerWaterCoil_Impl.hpp"
+#include "../model/CurveBiquadratic.hpp"
+#include "../model/CurveBiquadratic_Impl.hpp"
+#include "../model/CurveCubic.hpp"
+#include "../model/CurveCubic_Impl.hpp"
+#include "../model/CurveQuadratic.hpp"
+#include "../model/CurveQuadratic_Impl.hpp"
+#include "../model/Curve.hpp"
+#include "../model/Curve_Impl.hpp"
+#include "../model/ScheduleRuleset.hpp"
+#include "../model/ScheduleDay.hpp"
+#include "../model/ScheduleDay_Impl.hpp"
+#include "../model/ScheduleYear.hpp"
+#include "../model/ScheduleYear_Impl.hpp"
+#include "../model/ScheduleWeek.hpp"
+#include "../model/ScheduleWeek_Impl.hpp"
+#include "../model/SizingZone.hpp"
+#include "../model/SizingZone_Impl.hpp"
+#include "../model/Node.hpp"
+#include "../model/Node_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/DesignSpecificationOutdoorAir.hpp"
+#include "../model/DesignSpecificationOutdoorAir_Impl.hpp"
+#include "../model/CoolingTowerSingleSpeed.hpp"
+#include "../model/CoolingTowerVariableSpeed.hpp"
+#include "../model/SetpointManagerFollowOutdoorAirTemperature.hpp"
+#include "../model/SetpointManagerMixedAir.hpp"
+#include "../model/SetpointManagerSingleZoneReheat.hpp"
+#include "../model/SetpointManagerSingleZoneReheat_Impl.hpp"
+#include "../model/SetpointManagerScheduled.hpp"
+#include "../model/SetpointManagerWarmest.hpp"
+#include "../model/SetpointManagerOutdoorAirReset.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp"
+#include "../model/AirTerminalSingleDuctUncontrolled.hpp"
+#include "../model/AirTerminalSingleDuctParallelPIUReheat.hpp"
+#include "../model/ThermostatSetpointDualSetpoint.hpp"
+#include "../model/Schedule.hpp"
+#include "../model/Schedule_Impl.hpp"
+#include "../model/FanVariableVolume.hpp"
+#include "../model/FanVariableVolume_Impl.hpp"
+#include "../model/FanConstantVolume.hpp"
+#include "../model/FanConstantVolume_Impl.hpp"
+#include "../model/PumpConstantSpeed.hpp"
+#include "../model/PumpConstantSpeed_Impl.hpp"
+#include "../model/PumpVariableSpeed.hpp"
+#include "../model/PumpVariableSpeed_Impl.hpp"
+#include "../model/BoilerHotWater.hpp"
+#include "../model/BoilerHotWater_Impl.hpp"
+#include "../model/ChillerElectricEIR.hpp"
+#include "../model/ChillerElectricEIR_Impl.hpp"
+#include "../model/CoilCoolingCooledBeam.hpp"
+#include "../model/CoilCoolingCooledBeam_Impl.hpp"
+#include "../model/CoilCoolingWater.hpp"
+#include "../model/CoilCoolingWater_Impl.hpp"
+#include "../model/CoilHeatingWater.hpp"
+#include "../model/CoilHeatingWater_Impl.hpp"
+#include "../model/WaterToAirComponent.hpp"
+#include "../model/WaterToAirComponent_Impl.hpp"
+#include "../model/PlantLoop.hpp"
+#include "../model/PlantLoop_Impl.hpp"
+#include "../model/ZoneHVACComponent.hpp"
+#include "../model/ZoneHVACComponent_Impl.hpp"
+#include "../model/ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "../model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
+#include "../model/ZoneHVACPackagedTerminalHeatPump.hpp"
+#include "../model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
+#include "../model/ZoneHVACFourPipeFanCoil.hpp"
+#include "../model/ZoneHVACFourPipeFanCoil_Impl.hpp"
+#include "../model/ZoneHVACBaseboardConvectiveElectric.hpp"
+#include "../model/ZoneHVACBaseboardConvectiveElectric_Impl.hpp"
+#include "../model/ZoneHVACBaseboardConvectiveWater.hpp"
+#include "../model/ZoneHVACBaseboardConvectiveWater_Impl.hpp"
+#include "../model/CoilHeatingWaterBaseboard.hpp"
+#include "../model/CoilHeatingWaterBaseboard_Impl.hpp"
+#include "../model/WaterHeaterMixed.hpp"
+#include "../model/WaterHeaterMixed_Impl.hpp"
+#include "../model/Model.hpp"
+#include "../model/PortList.hpp"
+#include "../model/SizingPlant.hpp"
+#include "../model/SizingPlant_Impl.hpp"
+#include "../model/SizingSystem.hpp"
+#include "../model/SizingSystem_Impl.hpp"
+#include "../model/AirTerminalSingleDuctVAVReheat.hpp"
+#include "../model/AirTerminalSingleDuctVAVReheat_Impl.hpp"
+#include "../model/PipeAdiabatic.hpp"
+#include "../model/PipeAdiabatic_Impl.hpp"
+#include "../model/Splitter.hpp"
+#include "../model/Splitter_Impl.hpp"
+#include "../model/Mixer.hpp"
+#include "../model/Mixer_Impl.hpp"
+#include "../model/DaylightingControl.hpp"
 
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/IPUnit.hpp>
-#include <utilities/units/SIUnit.hpp>
-#include <utilities/units/BTUUnit.hpp>
-#include <utilities/units/CFMUnit.hpp>
-#include <utilities/units/FahrenheitUnit.hpp>
-#include <utilities/units/MPHUnit.hpp>
-#include <utilities/units/WhUnit.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/time/Time.hpp>
-#include <utilities/time/Date.hpp>
-#include <utilities/units/UnitFactory.hpp>
-#include <utilities/math/FloatCompare.hpp>
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/BoundingBox.hpp>
+#include "../utilities/units/QuantityConverter.hpp"
+#include "../utilities/units/IPUnit.hpp"
+#include "../utilities/units/SIUnit.hpp"
+#include "../utilities/units/BTUUnit.hpp"
+#include "../utilities/units/CFMUnit.hpp"
+#include "../utilities/units/FahrenheitUnit.hpp"
+#include "../utilities/units/MPHUnit.hpp"
+#include "../utilities/units/WhUnit.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/time/Time.hpp"
+#include "../utilities/time/Date.hpp"
+#include "../utilities/units/UnitFactory.hpp"
+#include "../utilities/math/FloatCompare.hpp"
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/geometry/BoundingBox.hpp"
 
 #include <QFile>
 #include <QDomDocument>
@@ -201,43 +192,39 @@ void adjustSchedule(model::ScheduleYear & scheduleYear, int startOffset)
 {
   std::vector<model::ScheduleWeek> scheduleWeeks = scheduleYear.scheduleWeeks();
 
-  for( std::vector<model::ScheduleWeek>::iterator it = scheduleWeeks.begin();
-       it != scheduleWeeks.end();
-       ++it )
+  for( const auto & scheduleWeek : scheduleWeeks)
   {
     std::vector<boost::optional<model::ScheduleDay> > scheduleDays;
 
-    scheduleDays.push_back(it->sundaySchedule());
+    scheduleDays.push_back(scheduleWeek.sundaySchedule());
 
-    scheduleDays.push_back(it->mondaySchedule());
+    scheduleDays.push_back(scheduleWeek.mondaySchedule());
 
-    scheduleDays.push_back(it->tuesdaySchedule());
+    scheduleDays.push_back(scheduleWeek.tuesdaySchedule());
 
-    scheduleDays.push_back(it->wednesdaySchedule());
+    scheduleDays.push_back(scheduleWeek.wednesdaySchedule());
 
-    scheduleDays.push_back(it->thursdaySchedule());
+    scheduleDays.push_back(scheduleWeek.thursdaySchedule());
 
-    scheduleDays.push_back(it->fridaySchedule());
+    scheduleDays.push_back(scheduleWeek.fridaySchedule());
 
-    scheduleDays.push_back(it->saturdaySchedule());
+    scheduleDays.push_back(scheduleWeek.saturdaySchedule());
 
-    scheduleDays.push_back(it->holidaySchedule());
+    scheduleDays.push_back(scheduleWeek.holidaySchedule());
 
-    scheduleDays.push_back(it->summerDesignDaySchedule());
+    scheduleDays.push_back(scheduleWeek.summerDesignDaySchedule());
 
-    scheduleDays.push_back(it->winterDesignDaySchedule());
+    scheduleDays.push_back(scheduleWeek.winterDesignDaySchedule());
 
-    scheduleDays.push_back(it->customDay1Schedule());
+    scheduleDays.push_back(scheduleWeek.customDay1Schedule());
 
-    scheduleDays.push_back(it->customDay2Schedule());
+    scheduleDays.push_back(scheduleWeek.customDay2Schedule());
 
-    for( std::vector<boost::optional<model::ScheduleDay> >::iterator scheduleDayIt = scheduleDays.begin();
-         scheduleDayIt != scheduleDays.end();
-         ++scheduleDayIt )
+    for( auto & scheduleDayIt : scheduleDays)
     {
-      if( *scheduleDayIt )
+      if( scheduleDayIt )
       {
-        adjustScheduleDay( (*scheduleDayIt).get(), startOffset );
+        adjustScheduleDay( scheduleDayIt.get(), startOffset );
       }
     }
   }
@@ -255,98 +242,96 @@ model::ScheduleYear deepScheduleYearClone(const model::ScheduleYear & scheduleYe
   std::vector<model::ScheduleWeek> scheduleWeeks = scheduleYear.scheduleWeeks();
   std::vector<Date> dates = scheduleYear.dates();
 
-  std::vector<Date>::iterator dateIt = dates.begin();
+  auto dateIt = dates.begin();
 
   int i = 1;
 
-  for( std::vector<model::ScheduleWeek>::iterator it = scheduleWeeks.begin();
-       it != scheduleWeeks.end();
-       ++it )
+  for( const auto & scheduleWeek : scheduleWeeks)
   {
-    model::ScheduleWeek scheduleWeekClone = it->clone(model).cast<model::ScheduleWeek>();
+    model::ScheduleWeek scheduleWeekClone = scheduleWeek.clone(model).cast<model::ScheduleWeek>();
     scheduleWeekClone.setName(name + " Week " + QString::number(i).toStdString());
     scheduleYearClone.addScheduleWeek(*dateIt,scheduleWeekClone);
 
     boost::optional<model::ScheduleDay> scheduleDay;
 
-    if( (scheduleDay = it->sundaySchedule()) )
+    if( (scheduleDay = scheduleWeek.sundaySchedule()) )
     {
       model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
       s.setName(name + " Week " + QString::number(i).toStdString() + " Sunday");
       scheduleWeekClone.setSundaySchedule(s);
     }
 
-    if( (scheduleDay = it->mondaySchedule()) )
+    if( (scheduleDay = scheduleWeek.mondaySchedule()) )
     {
       model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
       s.setName(name + " Week " + QString::number(i).toStdString() + " Monday");
       scheduleWeekClone.setMondaySchedule(s);
     }
 
-    if( (scheduleDay = it->tuesdaySchedule()) )
+    if( (scheduleDay = scheduleWeek.tuesdaySchedule()) )
     {
       model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
       s.setName(name + " Week " + QString::number(i).toStdString() + " Tuesday");
       scheduleWeekClone.setTuesdaySchedule(s);
     }
 
-    if( (scheduleDay = it->wednesdaySchedule()) )
+    if( (scheduleDay = scheduleWeek.wednesdaySchedule()) )
     {
       model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
       s.setName(name + " Week " + QString::number(i).toStdString() + " Wednesday");
       scheduleWeekClone.setWednesdaySchedule(s);
     }
 
-    if( (scheduleDay = it->thursdaySchedule()) )
+    if( (scheduleDay = scheduleWeek.thursdaySchedule()) )
     {
       model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
       s.setName(name + " Week " + QString::number(i).toStdString() + " Thursday");
       scheduleWeekClone.setThursdaySchedule(s);
     }
 
-    if( (scheduleDay = it->fridaySchedule()) )
+    if( (scheduleDay = scheduleWeek.fridaySchedule()) )
     {
       model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
       s.setName(name + " Week " + QString::number(i).toStdString() + " Friday");
       scheduleWeekClone.setFridaySchedule(s);
     }
 
-    if( (scheduleDay = it->saturdaySchedule()) )
+    if( (scheduleDay = scheduleWeek.saturdaySchedule()) )
     {
       model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
       s.setName(name + " Week " + QString::number(i).toStdString() + " Saturday");
       scheduleWeekClone.setSaturdaySchedule(s);
     }
 
-    if( (scheduleDay = it->holidaySchedule()) )
+    if( (scheduleDay = scheduleWeek.holidaySchedule()) )
     {
       model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
       s.setName(name + " Week " + QString::number(i).toStdString() + " Holiday");
       scheduleWeekClone.setHolidaySchedule(s);
     }
 
-    if( (scheduleDay = it->summerDesignDaySchedule()) )
+    if( (scheduleDay = scheduleWeek.summerDesignDaySchedule()) )
     {
       model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
       s.setName(name + " Week " + QString::number(i).toStdString() + " Summer");
       scheduleWeekClone.setSummerDesignDaySchedule(s);
     }
 
-    if( (scheduleDay = it->winterDesignDaySchedule()) )
+    if( (scheduleDay = scheduleWeek.winterDesignDaySchedule()) )
     {
       model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
       s.setName(name + " Week " + QString::number(i).toStdString() + " Winter");
       scheduleWeekClone.setWinterDesignDaySchedule(s);
     }
 
-    if( (scheduleDay = it->customDay1Schedule()) )
+    if( (scheduleDay = scheduleWeek.customDay1Schedule()) )
     {
       model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
       s.setName(name + " Week " + QString::number(i).toStdString() + " Custom 1");
       scheduleWeekClone.setCustomDay1Schedule(s);
     }
 
-    if( (scheduleDay = it->customDay2Schedule()) )
+    if( (scheduleDay = scheduleWeek.customDay2Schedule()) )
     {
       model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
       s.setName(name + " Week " + QString::number(i).toStdString() + " Custom 2");
@@ -1069,7 +1054,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
     deckSPM = spm;
 
-    supplyOutletNode.addSetpointManager(spm);
+    spm.addToNode(supplyOutletNode);
   }
   else if(istringEqual(clgCtrlElement.text().toStdString(),"NoSATControl"))
   {
@@ -1077,7 +1062,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
     deckSPM = spm;
 
-    supplyOutletNode.addSetpointManager(spm);
+    spm.addToNode(supplyOutletNode);
+
   }
   else if( istringEqual(clgCtrlElement.text().toStdString(),"WarmestResetFlowFirst") ||
            istringEqual(clgCtrlElement.text().toStdString(),"WarmestReset") )
@@ -1091,7 +1077,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
     deckSPM = spm;
 
-    supplyOutletNode.addSetpointManagerWarmest(spm);
+    spm.addToNode(supplyOutletNode);
 
     if( istringEqual("SZVAVAC",airSystemTypeElement.text().toStdString()) || 
         istringEqual("SZVAVHP",airSystemTypeElement.text().toStdString()) ) 
@@ -1144,7 +1130,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
     deckSPM = spm;
 
-    supplyOutletNode.addSetpointManager(spm);
+    spm.addToNode(supplyOutletNode);
   }
   else if( istringEqual(clgCtrlElement.text().toStdString(),"OutsideAirReset") )
   {
@@ -1152,7 +1138,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
     deckSPM = spm;
 
-    supplyOutletNode.addSetpointManager(spm);
+    spm.addToNode(supplyOutletNode);
 
     boost::optional<double> rstSupHi;
     boost::optional<double> rstSupLow;
@@ -1222,14 +1208,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
   {
     std::vector<model::ModelObject> supplyNodes = airLoopHVAC.supplyComponents(model::Node::iddObjectType());
 
-    for( std::vector<model::ModelObject>::iterator it = supplyNodes.begin();
-         it != supplyNodes.end();
-         ++it )
+    for( const auto & supplyNode : supplyNodes)
     {
-      if( *it != airLoopHVAC.supplyInletNode() &&
-          *it != airLoopHVAC.supplyOutletNode() )
+      if( supplyNode != airLoopHVAC.supplyInletNode() &&
+          supplyNode != airLoopHVAC.supplyOutletNode() )
       {
-        model::Node node = it->cast<model::Node>();
+        model::Node node = supplyNode.cast<model::Node>();
 
         model::SetpointManagerMixedAir spm(model);
 
@@ -1263,11 +1247,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
         supplyNodes.erase(supplyNodes.end() - 1);
 
-        for( std::vector<model::ModelObject>::iterator it = supplyNodes.begin();
-             it != supplyNodes.end();
-             ++it )
+        for( const auto & supplyNode : supplyNodes)
         {
-          model::Node node = it->cast<model::Node>();
+          model::Node node = supplyNode.cast<model::Node>();
 
           model::HVACComponent spmClone = deckSPM->clone(model).cast<model::HVACComponent>();
 
@@ -2705,11 +2687,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
 
   std::vector<model::Space> spaces = thermalZone.spaces();
 
-  for( std::vector<model::Space>::iterator it = spaces.begin();
-       it != spaces.end();
-       ++it )
+  for( auto & space : spaces)
   {
-    it->setDesignSpecificationOutdoorAir(designSpecificationOutdoorAir);
+    space.setDesignSpecificationOutdoorAir(designSpecificationOutdoorAir);
   }
 
   // Daylighting
@@ -2811,7 +2791,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
 
     BoundingBox pointBox;
     pointBox.addPoint(Point3d(x,y,z));
-    BOOST_FOREACH(model::Space space, spaces){
+    for (model::Space space : spaces){
       BoundingBox boundingBox = space.boundingBox();
       if (boundingBox.intersects(pointBox)){
         daylightingControl1->setSpace(space);
@@ -2892,7 +2872,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
 
       BoundingBox pointBox;
       pointBox.addPoint(Point3d(x,y,z));
-      BOOST_FOREACH(model::Space space, spaces){
+      for (model::Space space : spaces){
         BoundingBox boundingBox = space.boundingBox();
         if (boundingBox.intersects(pointBox)){
           daylightingControl2->setSpace(space);
@@ -3198,9 +3178,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   {
     model::Node supplyOutletNode = airLoopHVAC->supplyOutletNode();
 
-    boost::optional<model::SetpointManagerSingleZoneReheat> spm; 
+    boost::optional<model::SetpointManagerSingleZoneReheat> spm;
 
-    spm = supplyOutletNode.getSetpointManagerSingleZoneReheat();
+    std::vector<model::SetpointManagerSingleZoneReheat> _setpointManagers = subsetCastVector<model::SetpointManagerSingleZoneReheat>(supplyOutletNode.setpointManagers());
+    if( !_setpointManagers.empty() ) {
+      spm = _setpointManagers.front();
+    }
 
     // Only set the control zone if there is a SetpointManagerSingleZoneReheat on the supply outlet node
     if( spm && ! airSystemElement.isNull() )
@@ -3728,7 +3711,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
     model::SetpointManagerScheduled spm(model,schedule);
 
-    supplyOutletNode.addSetpointManager(spm);
+    spm.addToNode(supplyOutletNode);
   }
   else if( istringEqual(tempCtrlElement.text().toStdString(),"Scheduled") )
   {
@@ -3751,7 +3734,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
     model::SetpointManagerScheduled spm(model,schedule.get());
 
-    supplyOutletNode.addSetpointManager(spm);
+    spm.addToNode(supplyOutletNode);
   }
   else if( istringEqual(tempCtrlElement.text().toStdString(),"WetBulbReset") )
   {
@@ -3759,7 +3742,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
     spm.setReferenceTemperatureType("OutdoorAirWetBulb");
 
-    supplyOutletNode.addSetpointManager(spm);
+    spm.addToNode(supplyOutletNode);
 
     boost::optional<double> rstSupHi;
     boost::optional<double> rstSupLow;
@@ -3799,7 +3782,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   {
     model::SetpointManagerOutdoorAirReset spm(model);
 
-    supplyOutletNode.addSetpointManager(spm);
+    spm.addToNode(supplyOutletNode);
 
     boost::optional<double> rstSupHi;
     boost::optional<double> rstSupLow;
@@ -3879,7 +3862,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
       model::SetpointManagerScheduled spm(model,schedule);
 
-      supplyOutletNode.addSetpointManager(spm);
+      spm.addToNode(supplyOutletNode);
 
       LOG(Warn,plantLoop.name().get() << " Using DsgnSupWtrTemp for LoadReset temperature control.  This control scheme is not fully implemented.");
     }
@@ -4201,11 +4184,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
                                          model::PumpConstantSpeed::iddObjectType());
       if( constantPumps.size() > 0 )
       {
-        for( std::vector<model::ModelObject>::iterator it = constantPumps.begin();
-             it != constantPumps.end();
-             ++it )
+        for( const auto & constantPump : constantPumps )
         {
-          if( boost::optional<double> ratedFlowRate = it->cast<model::PumpConstantSpeed>().ratedFlowRate() )
+          if( boost::optional<double> ratedFlowRate = constantPump.cast<model::PumpConstantSpeed>().ratedFlowRate() )
           {
             flowRate = flowRate + ratedFlowRate.get();
 
@@ -4219,15 +4200,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
                                                  model::PumpVariableSpeed::iddObjectType());
       if( variablePumps.size() > 0 )
       {
-        for( std::vector<model::ModelObject>::iterator it = variablePumps.begin();
-             it != variablePumps.end();
-             ++it )
+        for( const auto & variablePump : variablePumps )
         {
-          if( boost::optional<double> ratedFlowRate = it->cast<model::PumpVariableSpeed>().ratedFlowRate() )
+          if( boost::optional<double> ratedFlowRate = variablePump.cast<model::PumpVariableSpeed>().ratedFlowRate() )
           {
             flowRate = flowRate + ratedFlowRate.get();
           }
-          if( boost::optional<double> minimumFlowRate = it->cast<model::PumpVariableSpeed>().minimumFlowRate() )
+          if( boost::optional<double> minimumFlowRate = variablePump.cast<model::PumpVariableSpeed>().minimumFlowRate() )
           {
             minimums.push_back(minimumFlowRate.get());
           }

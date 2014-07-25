@@ -18,7 +18,7 @@
  **********************************************************************/
 
 #include "OSListController.hpp"
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 #include <algorithm>
 #include <QWidget>
 
@@ -76,7 +76,7 @@ void OSListController::registerItem(QPointer<OSListItem> item)
 
 void OSListController::unregisterItem(QPointer<OSListItem> item)
 {
-  std::vector<QPointer<OSListItem> >::iterator it = std::find(m_registeredItems.begin(),m_registeredItems.end(),item);
+  auto it = std::find(m_registeredItems.begin(),m_registeredItems.end(),item);
 
   // This should be true because we manage m_registeredItems and the use of the acccessor methods.
   OS_ASSERT(it != m_registeredItems.end());
@@ -149,8 +149,7 @@ void OSListItem::setSelected(bool isSelected)
   {
     QSharedPointer<OSItemSelectionController> selectionController = m_listController->selectionController();
 
-    std::vector<QPointer<OSListItem> >::iterator it = 
-      std::find(selectionController->m_selectedItems.begin(),selectionController->m_selectedItems.end(),this);
+    auto it = std::find(selectionController->m_selectedItems.begin(),selectionController->m_selectedItems.end(),this);
 
     bool wasSelected = ( it != selectionController->m_selectedItems.end() );
 
@@ -225,17 +224,11 @@ void OSItemSelectionController::selectAllItems()
 {
   if( m_allowMultipleSelections )
   {
-    for( std::vector<QPointer<OSListController> >::iterator listIt = m_listControllers.begin(); 
-         listIt != m_listControllers.end();
-         ++listIt )
+    for( const auto & listController : m_listControllers )
     {
-      QPointer<OSListController> t_listController = (*listIt);
-
-      for( std::vector<QPointer<OSListItem> >::iterator itemit = t_listController->m_registeredItems.begin();
-           itemit != t_listController->m_registeredItems.end();
-           ++itemit )
+      for( auto & registeredItem : listController->m_registeredItems)
       {
-        (*itemit)->setSelected(true);
+        registeredItem->setSelected(true);
       }
     }
   }
@@ -263,7 +256,7 @@ void OSItemSelectionController::registerListController(OSListController * listCo
 
 void OSItemSelectionController::unregisterListController(OSListController * listController)
 {
-  std::vector<QPointer<OSListController> >::iterator it = std::find(m_listControllers.begin(),m_listControllers.end(),listController);
+  auto it = std::find(m_listControllers.begin(),m_listControllers.end(),listController);
 
   // This should be true because we manage m_listControllers and the use of the acccessor methods.
   OS_ASSERT(it != m_listControllers.end());
@@ -284,7 +277,7 @@ void OSItemSelectionController::removeSelectedItem(OSListItem * item)
 {
   OS_ASSERT(item);
 
-  std::vector<QPointer<OSListItem> >::iterator it = 
+  auto it = 
     std::find(m_selectedItems.begin(),m_selectedItems.end(),item);
 
   if( it != m_selectedItems.end() )
@@ -302,7 +295,7 @@ QWidget * OSItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
 QGraphicsObject * OSGraphicsItemDelegate::view(QSharedPointer<OSListItem> dataSource) 
 { 
-  return NULL;
+  return nullptr;
 }
 
 } // openstudio

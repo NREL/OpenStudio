@@ -17,18 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/AvailabilityManagerAssignmentList.hpp>
-#include <model/AvailabilityManagerAssignmentList_Impl.hpp>
-#include <model/AvailabilityManagerScheduled.hpp>
-#include <model/AvailabilityManagerScheduled_Impl.hpp>
-#include <model/AvailabilityManagerNightCycle.hpp>
-#include <model/AvailabilityManagerNightCycle_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "AvailabilityManagerAssignmentList.hpp"
+#include "AvailabilityManagerAssignmentList_Impl.hpp"
+#include "AvailabilityManagerScheduled.hpp"
+#include "AvailabilityManagerScheduled_Impl.hpp"
+#include "AvailabilityManagerNightCycle.hpp"
+#include "AvailabilityManagerNightCycle_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include <utilities/idd/OS_AvailabilityManagerAssignmentList_FieldEnums.hxx>
-#include <utilities/idd/OS_AvailabilityManagerAssignmentList_FieldEnums.hxx>
-#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -150,7 +149,7 @@ IddObjectType AvailabilityManagerAssignmentList::iddObjectType() {
 }
 
 /// @cond
-AvailabilityManagerAssignmentList::AvailabilityManagerAssignmentList(boost::shared_ptr<detail::AvailabilityManagerAssignmentList_Impl> impl)
+AvailabilityManagerAssignmentList::AvailabilityManagerAssignmentList(std::shared_ptr<detail::AvailabilityManagerAssignmentList_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond
