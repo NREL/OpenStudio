@@ -87,16 +87,11 @@
 
 namespace openstudio {
 
-//BuildingStoriesView::BuildingStoriesView(const openstudio::model::Model& model, 
-//                                         QWidget * parent)
-//  : SubTabView(new ModelObjectListView(IddObjectType::OS_BuildingStory, model, true, parent),
-//               new BuildingStoryInspectorView(model, parent),
-//               parent)
-
 ThermalZonesView::ThermalZonesView(bool isIP, const model::Model & model,
                                    QWidget * parent)
   : ModelSubTabView(new ModelObjectListView(IddObjectType::OS_ThermalZone,model,true,parent),
                     new ThermalZoneView(isIP,model,parent),
+                    true,
                     parent)
 {
 }

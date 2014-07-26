@@ -56,6 +56,7 @@ namespace openstudio {
 FacilityView::FacilityView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
   : ModelSubTabView(new FacilityTreeWidget(model, parent),
                     new FacilityInspectorView(isIP, model, parent),
+                    false,
                     parent)
 {
   this->itemSelectorButtons()->hide();

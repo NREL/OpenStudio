@@ -53,8 +53,9 @@ namespace openstudio {
 
 ModelSubTabView::ModelSubTabView(OSItemSelector* itemSelector,
                        ModelObjectInspectorView* modelObjectInspectorView,
+                       bool showGridViewLayout,
                        QWidget * parent)
-  : SubTabView(itemSelector, modelObjectInspectorView, parent),
+                       : SubTabView(itemSelector, modelObjectInspectorView, showGridViewLayout, parent),
     m_modelObjectInspectorView(modelObjectInspectorView)
 {
   bool bingo = false;

@@ -52,6 +52,7 @@ LoadsView::LoadsView(bool isIP, const openstudio::model::Model& model, QWidget *
                                                                    OSItemType::CollapsibleListHeader, 
                                                                    parent),
                                        new LoadsInspectorView(isIP, model,parent),
+                                       false,
                                        parent)
 {
   bool isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),

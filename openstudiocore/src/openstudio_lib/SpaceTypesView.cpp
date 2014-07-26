@@ -43,6 +43,7 @@ SpaceTypesView::SpaceTypesView(const openstudio::model::Model& model,
                               QWidget * parent)
   : ModelSubTabView(new ModelObjectListView(IddObjectType::OS_SpaceType, model, true, parent),
                     new SpaceTypeInspectorView(model, parent),
+                    false,
                     parent)
 {
   ModelObjectListView* modelObjectListView = qobject_cast<ModelObjectListView*>(this->itemSelector());

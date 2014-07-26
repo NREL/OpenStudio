@@ -497,7 +497,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
   wrapper->setObjectName("TableCell");
   if(row == 0){
-    wrapper->setMinimumSize(QSize(140,60));
+    wrapper->setMinimumSize(QSize(140,70));
   } else {
     wrapper->setMinimumSize(QSize(140,34));
   }
