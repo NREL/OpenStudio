@@ -369,7 +369,9 @@ public:
 
   virtual int columnCount() const;
 
-  QWidget * OSGridController::cell(int rowIndex, int columnIndex);
+  QWidget * cell(int rowIndex, int columnIndex);
+
+  model::ModelObject modelObject(int rowIndex);
 
   virtual std::vector<QWidget *> row(int rowIndex);
 
@@ -459,6 +461,8 @@ private:
 signals:
 
   // These signals will be used by the GridView to update
+
+  void itemSelected(OSItem*);
 
   // Emit this signal when an item has been added to the underlying model or data structure.
   void itemInserted(int row, int column);
