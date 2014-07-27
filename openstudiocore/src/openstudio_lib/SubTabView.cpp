@@ -187,6 +187,7 @@ void SubTabView::createGridViewLayout()
 
   layout->addWidget(m_inspectorView);
 
+  m_itemSelectorButtons->hideDropZone();
   layout->addWidget(m_itemSelectorButtons);
 
   //setStretchFactor(1, 100000);
