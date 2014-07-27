@@ -22,6 +22,8 @@
 
 #include <QWidget>
 
+#include "../openstudio_lib/OSItem.hpp"
+
 #include "../model/ModelObject.hpp"
 
 class QGridLayout;
@@ -50,6 +52,8 @@ public:
   OSDropZone * m_dropZone;
 
 signals:
+
+  void itemSelected(OSItem *);
 
   void cellClicked(int row, int column);
 

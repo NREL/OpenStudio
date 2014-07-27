@@ -84,6 +84,9 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   isConnected = connect(m_dropZone,SIGNAL(itemDropped(const OSItemId&)), m_gridController,SLOT(onItemDropped(const OSItemId&)));
   OS_ASSERT(isConnected);
 
+  isConnected = connect(this, SIGNAL(itemSelected(OSItem*)), m_gridController, SIGNAL(itemSelected(OSItem*)));
+  OS_ASSERT(isConnected);
+
   buttonLayout->addWidget(m_dropZone,0,Qt::AlignLeft);
 
   std::vector<QString> categories = m_gridController->categories();

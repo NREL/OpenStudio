@@ -28,6 +28,7 @@
 #include "OSQuantityEdit.hpp"
 #include "OSUnsignedEdit.hpp"
 
+#include "../openstudio_lib/ModelObjectItem.hpp"
 #include "../openstudio_lib/OSDropZone.hpp"
 #include "../openstudio_lib/SchedulesView.hpp"
 
@@ -581,6 +582,17 @@ QWidget * OSGridController::cell(int rowIndex, int columnIndex)
   return widget;
 }
 
+model::ModelObject OSGridController::modelObject(int rowIndex)
+{
+  if (m_hasHorizontalHeader){
+    OS_ASSERT(rowIndex > 0);
+    return m_modelObjects.at(rowIndex - 1);
+  }
+  else {
+    return m_modelObjects.at(rowIndex);
+  }
+}
+
 std::vector<QWidget *> OSGridController::row(int rowIndex)
 {
   std::vector<QWidget *> row;
@@ -649,6 +661,10 @@ void OSGridController::cellChecked(int index)
     auto button = qobject_cast<QPushButton *>(widget);
     OS_ASSERT(button);
     selectRow(r, button->isChecked());
+
+    OSItemId itemId = modelObjectToItemId(modelObject(r), false);
+    OSItem * item = OSItem::makeItem(itemId, OSItemType::ListItem);
+    emit itemSelected(item);
   }
 }
 
