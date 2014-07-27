@@ -22,9 +22,6 @@
 #include "ModelObjectListView.hpp"
 #include "ThermalZonesGridView.hpp"
 
-#include "../model/ThermostatSetpointDualSetpoint.hpp"
-#include "../model/ThermostatSetpointDualSetpoint_Impl.hpp"
-
 #include <QPainter>
 #include <QStackedWidget>
 #include <QStyleOption>

@@ -60,10 +60,6 @@ public slots:
 
 signals:
 
-  void enableThermostatClicked(model::ThermalZone &, bool);
-
-  void enableHumidistatClicked(model::ThermalZone &, bool);
-
   void modelObjectSelected(model::OptionalModelObject & modelObject, bool readOnly);
 
   void toggleUnitsClicked(bool);

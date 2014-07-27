@@ -18,28 +18,29 @@
 **********************************************************************/
 
 #include "ThermalZonesController.hpp"
-#include "ThermalZonesView.hpp"
+
+
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 #include "OSItemSelectorButtons.hpp"
+#include "ThermalZonesView.hpp"
 
-#include "../model/ThermalZone.hpp"
-#include "../model/ThermalZone_Impl.hpp"
-#include "../model/ZoneHVACComponent.hpp"
-#include "../model/ZoneHVACComponent_Impl.hpp"
 #include "../model/AirLoopHVAC.hpp"
 #include "../model/AirLoopHVAC_Impl.hpp"
 #include "../model/Space.hpp"
 #include "../model/Space_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
 #include "../model/ThermostatSetpointDualSetpoint.hpp"
 #include "../model/ThermostatSetpointDualSetpoint_Impl.hpp"
 #include "../model/ZoneControlHumidistat.hpp"
 #include "../model/ZoneControlHumidistat_Impl.hpp"
+#include "../model/ZoneHVACComponent.hpp"
+#include "../model/ZoneHVACComponent_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
 #include <QApplication>
-#include <QInputDialog>
 #include <QMessageBox>
 
 namespace openstudio {
@@ -49,60 +50,28 @@ ThermalZonesController::ThermalZonesController(bool isIP, const model::Model & m
 {
   subTabView()->itemSelectorButtons()->disableCopyButton();
 
-  //bool isConnected = false;
+  bool isConnected = false;
 
   QWidget * thermalZoneView = subTabView()->inspectorView(); 
 
-  connect( thermalZoneView,SIGNAL(enableThermostatClicked(model::ThermalZone &, bool)),
-           this,SLOT(enableThermostat(model::ThermalZone &, bool)) );
+  isConnected = connect(thermalZoneView, SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool)), this, SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool)));
 
-  connect( thermalZoneView,SIGNAL(enableHumidistatClicked(model::ThermalZone &, bool)),
-           this,SLOT(enableHumidistat(model::ThermalZone &, bool)) );
-
-  connect( thermalZoneView,SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
-           this,SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )) );
-
-  connect( this,SIGNAL(toggleUnitsClicked( bool )),
-           thermalZoneView,SIGNAL(toggleUnitsClicked( bool )) );
-
-  //isConnected = connect(m_thermalZonesView,SIGNAL(componentDropped(model::ThermalZone &, Handle &)),
-  //        this,SLOT(addComponentToZone(model::ThermalZone &, Handle &)));
-  //OS_ASSERT(isConnected);
-
-  //isConnected = connect( m_thermalZonesView,SIGNAL(removeZoneHVACComponentClicked( model::ZoneHVACComponent & )),
-  //         this,SLOT(removeZoneHVACComponent( model::ZoneHVACComponent & )) );
-  //OS_ASSERT(isConnected);
-
-  //isConnected = connect( m_thermalZonesView,SIGNAL(zoneHVACComponentClicked( model::ZoneHVACComponent & )),
-  //         this,SLOT(onZoneHVACComponentClicked( model::ZoneHVACComponent & )) );
-  //OS_ASSERT(isConnected);
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), thermalZoneView, SIGNAL(toggleUnitsClicked(bool)));
 }
 
-//void ThermalZonesController::removeThermalZone(model::ThermalZone & thermalZone)
+//void ThermalZonesController::enableThermostat(model::ThermalZone & thermalZone, bool enable)
 //{
-//  if( model::OptionalAirLoopHVAC airLoop = thermalZone.airLoopHVAC() )
+//  if( enable )
 //  {
-//    airLoop->removeBranchForZone(thermalZone);
+//    model::ThermostatSetpointDualSetpoint thermostat(model());
 //
-//    QApplication::processEvents();
+//    thermalZone.setThermostatSetpointDualSetpoint(thermostat);
 //  }
-//
-//  thermalZone.remove();
+//  else
+//  {
+//    thermalZone.resetThermostatSetpointDualSetpoint();
+//  }
 //}
-
-void ThermalZonesController::enableThermostat(model::ThermalZone & thermalZone, bool enable)
-{
-  if( enable )
-  {
-    model::ThermostatSetpointDualSetpoint thermostat(model());
-
-    thermalZone.setThermostatSetpointDualSetpoint(thermostat);
-  }
-  else
-  {
-    thermalZone.resetThermostatSetpointDualSetpoint();
-  }
-}
 
 void ThermalZonesController::setHeatingSchedule(model::ThermalZone & thermalZone, model::OptionalSchedule & schedule)
 {
@@ -138,19 +107,19 @@ void ThermalZonesController::setCoolingSchedule(model::ThermalZone & thermalZone
   }
 }
 
-void ThermalZonesController::enableHumidistat(model::ThermalZone & thermalZone, bool enable)
-{
-  if( enable )
-  {
-    model::ZoneControlHumidistat humidistat(model());
-
-    thermalZone.setZoneControlHumidistat(humidistat);
-  }
-  else
-  {
-    thermalZone.resetZoneControlHumidistat();
-  }
-}
+//void ThermalZonesController::enableHumidistat(model::ThermalZone & thermalZone, bool enable)
+//{
+//  if( enable )
+//  {
+//    model::ZoneControlHumidistat humidistat(model());
+//
+//    thermalZone.setZoneControlHumidistat(humidistat);
+//  }
+//  else
+//  {
+//    thermalZone.resetZoneControlHumidistat();
+//  }
+//}
 
 void ThermalZonesController::setHumidifyingSchedule(model::ThermalZone & thermalZone, model::OptionalSchedule & schedule)
 {
@@ -331,4 +300,3 @@ void ThermalZonesController::onInspectItem(OSItem* item)
 }
 
 } // openstudio
-
