@@ -167,7 +167,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_CloneOneModelWithCustomData)
 
   std::vector<CurveCubic> refrigerationSecondarySystemCurves = model.getModelObjects<CurveCubic>();
   for(std::vector<CurveCubic>::iterator it = refrigerationSecondarySystemCurves.begin(); it != refrigerationSecondarySystemCurves.end(); ++it) {
-  	EXPECT_TRUE(it->parent());
+    EXPECT_TRUE(it->parent());
   }
 
   EXPECT_EQ("R410a", testObjectClone.circulatingFluidName());

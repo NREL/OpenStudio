@@ -45,43 +45,43 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCondenserWat
   // Rated Effective Total Heat Rejection Rate
   d = modelObject.ratedEffectiveTotalHeatRejectionRate();
   if (d) {
-  	waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::RatedEffectiveTotalHeatRejectionRate,d.get());
+    waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::RatedEffectiveTotalHeatRejectionRate,d.get());
   }
 
   // Rated Condensing Temperature
   d = modelObject.ratedCondensingTemperature();
   if (d) {
-  	waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::RatedCondensingTemperature,d.get());
+    waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::RatedCondensingTemperature,d.get());
   }
         
   // Rated Subcooling Temperature Difference
   d = modelObject.ratedSubcoolingTemperatureDifference();
   if (d) {
-  	waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::RatedSubcoolingTemperatureDifference,d.get());
+    waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::RatedSubcoolingTemperatureDifference,d.get());
   }
    
   // Rated Water Inlet Temperature
   d = modelObject.ratedWaterInletTemperature();
   if (d) {
-  	waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::RatedWaterInletTemperature,d.get());
+    waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::RatedWaterInletTemperature,d.get());
   }
 
   // Water Inlet Node Name
   if( (temp = modelObject.inletModelObject()) )
   {
-	  if(temp->name())
-	  {
-		waterCooled.setString(Refrigeration_Condenser_WaterCooledFields::WaterInletNodeName,temp->name().get());
-	  }
+    if(temp->name())
+    {
+      waterCooled.setString(Refrigeration_Condenser_WaterCooledFields::WaterInletNodeName,temp->name().get());
+    }
   }
   
   // Water Outlet Node Name
   if( (temp = modelObject.outletModelObject()) )
   {
-	  if(temp->name())
-	  {
-		waterCooled.setString(Refrigeration_Condenser_WaterCooledFields::WaterOutletNodeName,temp->name().get());
-	  }
+    if(temp->name())
+    {
+      waterCooled.setString(Refrigeration_Condenser_WaterCooledFields::WaterOutletNodeName,temp->name().get());
+    }
   }
 
   // Water-Cooled Loop Flow Type
@@ -107,25 +107,25 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCondenserWat
   // Water Design Flow Rate
   d = modelObject.waterDesignFlowRate();
   if (d) {
-  	waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::WaterDesignFlowRate,d.get());
+    waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::WaterDesignFlowRate,d.get());
   }
 
   // Water Maximum Flow Rate
   d = modelObject.waterMaximumFlowRate();
   if (d) {
-  	waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::WaterMaximumFlowRate,d.get());
+    waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::WaterMaximumFlowRate,d.get());
   }
 
   // Water Maximum Water Outlet Temperature
   d = modelObject.waterMaximumWaterOutletTemperature();
   if (d) {
-  	waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::WaterMaximumWaterOutletTemperature,d.get());
+    waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::WaterMaximumWaterOutletTemperature,d.get());
   }
 
   // Water Minimum Water Inlet Temperature
   d = modelObject.waterMinimumWaterInletTemperature();
   if (d) {
-  	waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::WaterMinimumWaterInletTemperature,d.get());
+    waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::WaterMinimumWaterInletTemperature,d.get());
   }
 
   // End-Use Subcategory
@@ -137,19 +137,19 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCondenserWat
   // Condenser Refrigerant Operating Charge Inventory
   d = modelObject.condenserRefrigerantOperatingChargeInventory();
   if (d) {
-  	waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::CondenserRefrigerantOperatingChargeInventory,d.get());
+    waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::CondenserRefrigerantOperatingChargeInventory,d.get());
   }
 
   // Condensate Receiver Refrigerant Inventory
   d = modelObject.condensateReceiverRefrigerantInventory();
   if (d) {
-  	waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::CondensateReceiverRefrigerantInventory,d.get());
+    waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::CondensateReceiverRefrigerantInventory,d.get());
   }
 
   //Condensate Piping Refrigerant Inventory
   d = modelObject.condensatePipingRefrigerantInventory();
   if (d) {
-  	waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::CondensatePipingRefrigerantInventory,d.get());
+    waterCooled.setDouble(Refrigeration_Condenser_WaterCooledFields::CondensatePipingRefrigerantInventory,d.get());
   }
   
   return waterCooled;

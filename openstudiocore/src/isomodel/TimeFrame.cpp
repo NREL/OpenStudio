@@ -40,7 +40,7 @@ namespace isomodel {
           Month[i] = I;
           YTD[i++] = j;
         }
-      }		
+      }
     }
   }
 

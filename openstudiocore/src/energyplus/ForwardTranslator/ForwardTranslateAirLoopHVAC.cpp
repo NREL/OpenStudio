@@ -122,7 +122,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
     upperNodes.erase(upperNodes.end() - 1);
   }
 
-  for( 	auto & upperNode : upperNodes )
+  for( auto & upperNode : upperNodes )
   {
     std::vector<SetpointManager> _setpointManagers = upperNode.setpointManagers();
     if( _setpointManagers.empty() ) {

@@ -48,19 +48,19 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSubcoolerLiq
   // Liquid Suction Design Subcooling Temperature Difference
   d = modelObject.liquidSuctionDesignSubcoolingTemperatureDifference();
   if (d) {
-	  subcoolerLiquidSuction.setDouble(Refrigeration_SubcoolerFields::LiquidSuctionDesignSubcoolingTemperatureDifference,d.get());
+    subcoolerLiquidSuction.setDouble(Refrigeration_SubcoolerFields::LiquidSuctionDesignSubcoolingTemperatureDifference,d.get());
   }
 
   // Design Liquid Inlet Temperature
   d = modelObject.designLiquidInletTemperature();
   if (d) {
-	  subcoolerLiquidSuction.setDouble(Refrigeration_SubcoolerFields::DesignLiquidInletTemperature,d.get());
+    subcoolerLiquidSuction.setDouble(Refrigeration_SubcoolerFields::DesignLiquidInletTemperature,d.get());
   }
 
   // Design Vapor Inlet Temperature
   d = modelObject.designVaporInletTemperature();
   if (d) {
-	  subcoolerLiquidSuction.setDouble(Refrigeration_SubcoolerFields::DesignVaporInletTemperature,d.get());
+    subcoolerLiquidSuction.setDouble(Refrigeration_SubcoolerFields::DesignVaporInletTemperature,d.get());
   }
 
   return subcoolerLiquidSuction;

@@ -27,7 +27,7 @@ namespace isomodel {
   class Location
   {
   public:
-    double terrain() const {return _terrain;}	
+    double terrain() const {return _terrain;}
     void setTerrain(double value) {_terrain = value;}
     std::shared_ptr<WeatherData> weather() const {return _weather; }
     void setWeatherData(std::shared_ptr<WeatherData> value){ _weather = value;}

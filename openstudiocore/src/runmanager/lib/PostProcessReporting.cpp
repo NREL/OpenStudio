@@ -227,9 +227,9 @@ namespace detail {
       LOG(Warn, "No attributes loaded for report");
     }
 
-	  for (Attribute& attribute : attributes) {
+    for (Attribute& attribute : attributes) {
       attribute.setSource(jobType);
-	  }
+    }
 
     return attributes;
   }

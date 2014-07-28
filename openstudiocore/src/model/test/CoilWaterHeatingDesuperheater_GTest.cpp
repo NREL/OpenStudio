@@ -95,7 +95,7 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_Remove)
     curves = model.getModelObjects<CurveBiquadratic>();
     EXPECT_EQ(0, curves.size());
 
-	nodes = model.getModelObjects<Node>();
+    nodes = model.getModelObjects<Node>();
     EXPECT_EQ(0, nodes.size());
 
     EXPECT_FALSE(heatRejection.demandInletModelObject());
