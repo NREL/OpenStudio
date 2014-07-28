@@ -680,12 +680,12 @@ namespace detail {
           std::vector<RunManagerDB::JobFileInfo> files = litesql::select<RunManagerDB::JobFileInfo>(m_db).all();
           std::vector<RunManagerDB::RequiredFile> requiredfiles = litesql::select<RunManagerDB::RequiredFile>(m_db).all();
 
-          QFuture<std::map<openstudio::UUID, Files> > futurefiles = QtConcurrent::run(std::bind(&loadJobFiles<RunManagerDB::JobFileInfo, RunManagerDB::RequiredFile>, std::ref(files), std::ref(requiredfiles)),  m_dbPath.parent_path());
+          QFuture<std::map<openstudio::UUID, Files> > futurefiles = QtConcurrent::run(std::bind(&loadJobFiles<RunManagerDB::JobFileInfo, RunManagerDB::RequiredFile>, std::ref(files), std::ref(requiredfiles),  m_dbPath.parent_path() ));
 
           std::vector<RunManagerDB::JobToolInfo> tools = litesql::select<RunManagerDB::JobToolInfo>(m_db).all();
           std::vector<RunManagerDB::JobParam> params = litesql::select<RunManagerDB::JobParam>(m_db).all();
 
-          QFuture<std::map<openstudio::UUID, JobParams> > futureparams = QtConcurrent::run(std::bind(&loadJobParams, std::ref(params)),  m_dbPath.parent_path());
+          QFuture<std::map<openstudio::UUID, JobParams> > futureparams = QtConcurrent::run(std::bind(&loadJobParams, std::ref(params),  m_dbPath.parent_path() ));
 
           std::vector<RunManagerDB::JobStatus> status = litesql::select<RunManagerDB::JobStatus>(m_db).all();
           std::vector<RunManagerDB::JobErrors> errors = litesql::select<RunManagerDB::JobErrors>(m_db).all();
@@ -693,7 +693,7 @@ namespace detail {
           std::vector<RunManagerDB::OutputFileInfo> outputfiles = litesql::select<RunManagerDB::OutputFileInfo>(m_db).all();
           std::vector<RunManagerDB::OutputRequiredFile> outputrequiredfiles = litesql::select<RunManagerDB::OutputRequiredFile>(m_db).all();
 
-          QFuture<std::map<openstudio::UUID, Files> > futureoutputfiles = QtConcurrent::run(std::bind(&loadJobFiles<RunManagerDB::OutputFileInfo, RunManagerDB::OutputRequiredFile>, std::ref(outputfiles), std::ref(outputrequiredfiles)),  m_dbPath.parent_path());
+          QFuture<std::map<openstudio::UUID, Files> > futureoutputfiles = QtConcurrent::run(std::bind(&loadJobFiles<RunManagerDB::OutputFileInfo, RunManagerDB::OutputRequiredFile>, std::ref(outputfiles), std::ref(outputrequiredfiles),  m_dbPath.parent_path() ));
 
           LOG(Info, "Time to load all RunManager data: " << et.restart() << " sizes: " << tools.size() << " " << params.size() << " " << outputfiles.size() << " " << outputrequiredfiles.size() << " " << files.size() << " " << requiredfiles.size() << " " << jobs.size() << " " << status.size() << " " << errors.size());
 
