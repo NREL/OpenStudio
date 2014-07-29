@@ -63,13 +63,17 @@ signals:
 
   void dropZoneItemClicked(OSItem* item);
 
+public slots:
+
+  void onItemSelected(OSItem * item, bool selected);
+
+  void refreshAll();
+  
 private slots:
 
   void refresh(int row, int column);
 
   void deleteAll();
-
-  void refreshAll();
 
   void addWidget(int row, int column);
 

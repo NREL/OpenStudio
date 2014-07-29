@@ -272,5 +272,10 @@ void OSGridView::selectCategory(int index)
 
 }
 
+void OSGridView::onItemSelected(OSItem * item, bool selected)
+{
+  m_gridController->onItemSelected(item, selected);
+}
+
 } // openstudio
 

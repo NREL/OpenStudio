@@ -54,6 +54,8 @@ class ModelObjectInspectorView : public OSInspectorView
 
     void toggleUnitsClicked(bool displayIP);
 
+    void osItemSelected(OSItem * item, bool selected);
+
   public slots:
 
     void selectModelObject(const openstudio::model::ModelObject& modelObject);

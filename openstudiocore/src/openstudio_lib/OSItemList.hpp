@@ -87,6 +87,8 @@ signals:
 
   void itemsRequested();
 
+  void osItemSelected(OSItem * item, bool selected);
+
 protected:
 
   void paintEvent( QPaintEvent * event );

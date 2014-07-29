@@ -377,6 +377,8 @@ public:
 
   void selectRow(int rowIndex, bool select);
 
+  int rowIndexFromModelIndex(int modelIndex);
+
   QWidget * widgetAt(int row, int column);
 
   // Call this function on a model update
@@ -487,6 +489,10 @@ public slots:
 
   virtual void onComboBoxIndexChanged(int index);
 
+  void selectItemId(const OSItemId& itemId);
+
+  void onItemSelected(OSItem * item, bool selected);
+  
 protected slots:
 
   void reset();
@@ -496,7 +502,7 @@ private slots:
   void horizontalHeaderChecked(int index);
 
   void cellChecked(int index);
-
+  
 };
 
 class HorizontalHeaderWidget : public QWidget

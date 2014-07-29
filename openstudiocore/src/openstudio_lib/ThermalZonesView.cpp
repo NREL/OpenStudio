@@ -37,6 +37,10 @@ ThermalZonesView::ThermalZonesView(bool isIP, const model::Model & model,
                     true,
                     parent)
 {
+  bool isConnected = false;
+
+  isConnected = connect(itemSelector(), SIGNAL(osItemSelected(OSItem *, bool)), inspectorView(), SIGNAL(osItemSelected(OSItem *, bool)));
+  OS_ASSERT(isConnected);
 }
 
 ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
@@ -54,6 +58,11 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
   this->stackedWidget()->addWidget(thermalZonesGridView);
 
   isConnected = connect(thermalZonesGridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
+  OS_ASSERT(isConnected);
+
+  //ModelObjectListView = subTabView()->itemSelector()
+  //ThermalZoneView = subTabView()->inspectorView()
+  isConnected = connect(this, SIGNAL(osItemSelected(OSItem *, bool)), thermalZonesGridView, SIGNAL(osItemSelected(OSItem *, bool)));
   OS_ASSERT(isConnected);
 
   refresh();
@@ -95,6 +104,11 @@ void ThermalZoneView::refreshNow()
 void ThermalZoneView::onToggleUnitsClicked(bool isIP)
 {
   m_isIP = isIP;
+}
+
+void onItemSelected(OSItem * item, bool selected)
+{
+
 }
 
 } // openstudio

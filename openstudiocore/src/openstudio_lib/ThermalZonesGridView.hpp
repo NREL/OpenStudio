@@ -49,6 +49,8 @@ signals:
 
   void dropZoneItemClicked(OSItem* item);
 
+  void osItemSelected(OSItem * item, bool selected);
+
 };
 
 class ThermalZonesGridController : public OSGridController

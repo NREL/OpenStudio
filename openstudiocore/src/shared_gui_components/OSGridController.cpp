@@ -593,6 +593,16 @@ model::ModelObject OSGridController::modelObject(int rowIndex)
   }
 }
 
+int OSGridController::rowIndexFromModelIndex(int modelIndex)
+{
+  if (m_hasHorizontalHeader){
+    return modelIndex + 1;
+  }
+  else {
+    return modelIndex;
+  }
+}
+
 std::vector<QWidget *> OSGridController::row(int rowIndex)
 {
   std::vector<QWidget *> row;
@@ -690,6 +700,25 @@ int OSGridController::columnIndexFromButtonIndex(int index)
   int columnIndex = buttonIndex % columnCount();
 
   return columnIndex;
+}
+
+void OSGridController::selectItemId(const OSItemId& itemId)
+{
+}
+
+void OSGridController::onItemSelected(OSItem * item, bool selected)
+{
+  int i = 0;
+  refreshModelObjects();
+  gridView()->refreshAll();
+  for (auto modelObject : m_modelObjects){
+    OSItemId itemId = modelObjectToItemId(modelObject, false);
+    if (item->itemId() == itemId){
+      selectRow(rowIndexFromModelIndex(i), selected);
+      break;
+    }
+    i++;
+  }
 }
 
 HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)

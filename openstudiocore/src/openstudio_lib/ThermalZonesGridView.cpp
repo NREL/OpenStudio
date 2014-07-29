@@ -112,6 +112,9 @@ ThermalZonesGridView::ThermalZonesGridView(bool isIP, const model::Model & model
   isConnected = connect(gridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
 
+  isConnected = connect(this, SIGNAL(osItemSelected(OSItem *, bool)), gridView, SLOT(onItemSelected(OSItem *, bool)));
+  OS_ASSERT(isConnected);
+
   gridView->m_dropZone->hide();
 
   layout->addWidget(gridView,0,Qt::AlignTop);

@@ -69,7 +69,7 @@ class ModelSubTabView : public SubTabView
 
     void dropZoneItemClicked(OSItem* item);
 
-    void onItemSelected();
+    //void onItemSelected(); EW: Dead slot
 
   private:
 
