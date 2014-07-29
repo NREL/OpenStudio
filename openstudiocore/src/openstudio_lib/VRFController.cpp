@@ -127,9 +127,9 @@ void VRFController::refreshNow()
         {
           vrfTerminalView->zoneDropZone->setHasZone(true);
           vrfTerminalView->removeZoneButtonItem->setVisible(true);
-		  QString zoneName = QString::fromStdString(zone->name().get());
+          QString zoneName = QString::fromStdString(zone->name().get());
           vrfTerminalView->zoneDropZone->setText(zoneName);
-		  vrfTerminalView->zoneDropZone->setToolTip(zoneName);
+          vrfTerminalView->zoneDropZone->setToolTip(zoneName);
         }
       }
     }

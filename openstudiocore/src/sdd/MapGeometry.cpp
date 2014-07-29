@@ -917,10 +917,10 @@ namespace sdd {
     //***** Elevator Loads *****
     {
       //<ElevPwr>20000</ElevPwr> 
-			//<ElevSchRef>OfficeElevator</ElevSchRef>
-			//<ElevRadFrac>0</ElevRadFrac>
-			//<ElevLatFrac>0</ElevLatFrac>
-			//<ElevLostFrac>0.8</ElevLostFrac>
+      //<ElevSchRef>OfficeElevator</ElevSchRef>
+      //<ElevRadFrac>0</ElevRadFrac>
+      //<ElevLatFrac>0</ElevLatFrac>
+      //<ElevLostFrac>0.8</ElevLostFrac>
 
       QDomElement elevPwrElement = element.firstChildElement("ElevPwr");
       QDomElement elevSchRefElement = element.firstChildElement("ElevSchRef");
@@ -962,11 +962,11 @@ namespace sdd {
 
     //***** Escalator Loads *****
     {
-			//<EscalPwr>7860</EscalPwr>
-			//<EscalSchRef>OfficeEscalator Sch</EscalSchRef>
-			//<EscalRadFrac>0</EscalRadFrac>
-			//<EscalLatFrac>0</EscalLatFrac>
-			//<EscalLostFrac>0.2</EscalLostFrac>
+      //<EscalPwr>7860</EscalPwr>
+      //<EscalSchRef>OfficeEscalator Sch</EscalSchRef>
+      //<EscalRadFrac>0</EscalRadFrac>
+      //<EscalLatFrac>0</EscalLatFrac>
+      //<EscalLostFrac>0.2</EscalLostFrac>
 
       QDomElement escalPwrElement = element.firstChildElement("EscalPwr");
       QDomElement escalSchRefElement = element.firstChildElement("EscalSchRef");

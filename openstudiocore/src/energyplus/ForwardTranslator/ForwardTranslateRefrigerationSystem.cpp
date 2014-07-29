@@ -67,39 +67,39 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
 
   if( !cases.empty() || !walkins.empty() || !airChillers.empty() )
   {
-  	// Name
-  	name = " Case and Walkin List";
-  	refrigerationSystem.setString(Refrigeration_SystemFields::RefrigeratedCaseorWalkinorCaseAndWalkInListName, refrigerationSystem.name().get() + name);
+    // Name
+    name = " Case and Walkin List";
+    refrigerationSystem.setString(Refrigeration_SystemFields::RefrigeratedCaseorWalkinorCaseAndWalkInListName, refrigerationSystem.name().get() + name);
 
-  	IdfObject _caseAndWalkinList(IddObjectType::Refrigeration_CaseAndWalkInList);
+    IdfObject _caseAndWalkinList(IddObjectType::Refrigeration_CaseAndWalkInList);
 
-  	m_idfObjects.push_back(_caseAndWalkinList);
+    m_idfObjects.push_back(_caseAndWalkinList);
 
-  	_caseAndWalkinList.setName(refrigerationSystem.name().get() + name);
+    _caseAndWalkinList.setName(refrigerationSystem.name().get() + name);
 
-  	for( auto & elem : cases )
-  	{
-  		boost::optional<IdfObject> _case = translateAndMapModelObject(elem);
+    for( auto & elem : cases )
+    {
+      boost::optional<IdfObject> _case = translateAndMapModelObject(elem);
 
-  		if( _case )
-  		{
-  		  IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
+      if( _case )
+      {
+        IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
 
-  		  eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_case->name().get()); 
-  		}
-  	}
+        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_case->name().get()); 
+      }
+    }
 
-  	for( auto & elem : walkins )
-  	{
-  		boost::optional<IdfObject> _walkin = translateAndMapModelObject(elem);
+    for( auto & elem : walkins )
+    {
+      boost::optional<IdfObject> _walkin = translateAndMapModelObject(elem);
 
-  		if( _walkin )
-  		{
-  		  IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
+      if( _walkin )
+      {
+        IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
 
-  		  eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_walkin->name().get()); 
-  		}
-  	}
+        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_walkin->name().get()); 
+      }
+    }
 
     for( auto & elem : airChillers )
     {

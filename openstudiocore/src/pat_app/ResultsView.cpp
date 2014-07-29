@@ -980,7 +980,7 @@ void DataPointResultsView::update()
     name = "Baseline";
     listOfMeasures = "";
     
-    netSiteEnergyIntensity = getBaselineValue("Net Site Energy Use Intentsity");
+    netSiteEnergyIntensity = getBaselineValue("Net Site Energy Use Intensity");
     peakElectricDemand = getBaselineValue("Instantaneous Peak Electricity Demand");
     // NOTE: convert E+'s "W" value to a "kW" value
     if(peakElectricDemand){
@@ -1016,7 +1016,7 @@ void DataPointResultsView::update()
 
     listOfMeasures = listOfMeasures.trimmed();
 
-    netSiteEnergyIntensity = getDifference("Net Site Energy Use Intentsity");
+    netSiteEnergyIntensity = getDifference("Net Site Energy Use Intensity");
     peakElectricDemand = getDifference("Instantaneous Peak Electricity Demand");
     // NOTE: convert E+'s "W" value to a "kW" value
     if(peakElectricDemand){
@@ -1033,7 +1033,7 @@ void DataPointResultsView::update()
     energyCost = getDifference("Annual Total Utility Cost");
     lifeCycleCost = getDifference("Total Life Cycle Cost");
 
-    netSiteEnergyIntensityPct = getPctDifference("Net Site Energy Use Intentsity");
+    netSiteEnergyIntensityPct = getPctDifference("Net Site Energy Use Intensity");
     peakElectricDemandPct = getPctDifference("Instantaneous Peak Electricity Demand");
     electricityPct = getPctDifference("Electricity Total End Uses");
     naturalGasPct = getPctDifference("Natural Gas Total End Uses");

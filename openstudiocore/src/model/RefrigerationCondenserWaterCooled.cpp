@@ -62,12 +62,12 @@ namespace detail {
 
   unsigned RefrigerationCondenserWaterCooled_Impl::inletPort()
   {
-	  return OS_Refrigeration_Condenser_WaterCooledFields::WaterInletNodeName;
+    return OS_Refrigeration_Condenser_WaterCooledFields::WaterInletNodeName;
   }
 
   unsigned RefrigerationCondenserWaterCooled_Impl::outletPort()
   {
-	  return OS_Refrigeration_Condenser_WaterCooledFields::WaterOutletNodeName;
+    return OS_Refrigeration_Condenser_WaterCooledFields::WaterOutletNodeName;
   }
 
   const std::vector<std::string>& RefrigerationCondenserWaterCooled_Impl::outputVariableNames() const

@@ -58,39 +58,39 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationTranscritica
 
   if( !mediumTemperatureCases.empty() || !mediumTemperatureWalkins.empty() )
   {
-  	// Name
-  	name = " Medium Temperature Case and Walkin List";
-  	idfObject.setString(Refrigeration_TranscriticalSystemFields::MediumTemperatureRefrigeratedCaseorWalkinorCaseAndWalkInListName, idfObject.name().get() + name);
+    // Name
+    name = " Medium Temperature Case and Walkin List";
+    idfObject.setString(Refrigeration_TranscriticalSystemFields::MediumTemperatureRefrigeratedCaseorWalkinorCaseAndWalkInListName, idfObject.name().get() + name);
 
-  	IdfObject _caseAndWalkinList(IddObjectType::Refrigeration_CaseAndWalkInList);
+    IdfObject _caseAndWalkinList(IddObjectType::Refrigeration_CaseAndWalkInList);
 
-  	m_idfObjects.push_back(_caseAndWalkinList);
+    m_idfObjects.push_back(_caseAndWalkinList);
 
-  	_caseAndWalkinList.setName(idfObject.name().get() + name);
+    _caseAndWalkinList.setName(idfObject.name().get() + name);
 
-  	for( auto & mediumTemperatureCase : mediumTemperatureCases )
-  	{
-  		boost::optional<IdfObject> _case = translateAndMapModelObject(mediumTemperatureCase);
+    for( auto & mediumTemperatureCase : mediumTemperatureCases )
+    {
+      boost::optional<IdfObject> _case = translateAndMapModelObject(mediumTemperatureCase);
 
-  		if( _case )
-  		{
-  		  IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
+      if( _case )
+      {
+        IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
 
-  		  eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_case->name().get()); 
-  		}
-  	}
+        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_case->name().get()); 
+      }
+    }
 
-  	for( auto & mediumTemperatureWalkin : mediumTemperatureWalkins )
-  	{
-  		boost::optional<IdfObject> _walkin = translateAndMapModelObject(mediumTemperatureWalkin);
+    for( auto & mediumTemperatureWalkin : mediumTemperatureWalkins )
+    {
+      boost::optional<IdfObject> _walkin = translateAndMapModelObject(mediumTemperatureWalkin);
 
-  		if( _walkin )
-  		{
-  		  IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
+      if( _walkin )
+      {
+        IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
 
-  		  eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_walkin->name().get()); 
-  		}
-  	}
+        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_walkin->name().get()); 
+      }
+    }
   }
 
 //LowTemperatureRefrigeratedCaseAndWalkInListName

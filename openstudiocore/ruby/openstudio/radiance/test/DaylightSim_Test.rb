@@ -60,8 +60,8 @@ class DaylightSim_Test < MiniTest::Unit::TestCase
     radiancePath = co.getTools().getLastByName("rad").localBinPath.parent_path
     
     Dir.chdir(outdir.to_s)
-    	
-	  #run DaylightCalculations.rb (executes end-to-end Radiance annual daylight simulation)
+
+    #run DaylightCalculations.rb (executes end-to-end Radiance annual daylight simulation)
     assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/radiance/DaylightCalculations.rb' '#{modelFile}' '#{radiancePath}' "))
   
   end

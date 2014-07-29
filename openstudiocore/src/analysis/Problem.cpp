@@ -1521,10 +1521,12 @@ namespace detail {
 
     try {
       FileReferenceVector xmlOutputData;
-      for (const runmanager::FileInfo& file : allFiles.getAllByExtension("ossr").files()) {
+      runmanager::Files ossrFiles = allFiles.getAllByExtension("ossr");
+      for (const runmanager::FileInfo& file : ossrFiles.files()) {
         xmlOutputData.push_back(FileReference(file.fullPath));
       }
-      for (const runmanager::FileInfo& file : allFiles.getAllByExtension("xml").files()) {
+      runmanager::Files xmlFiles = allFiles.getAllByExtension("xml");
+      for (const runmanager::FileInfo& file : xmlFiles.files()) {
         xmlOutputData.push_back(FileReference(file.fullPath));
       }
       dataPoint.setXmlOutputData(xmlOutputData);

@@ -94,13 +94,13 @@ namespace detail {
       attributes.push_back(Attribute("Annual Water Total Cost", *val, "$"));
     }
 
-    //Net Site Energy Use Intentsity (MJ/m^2)
+    //Net Site Energy Use Intensity (MJ/m^2)
     boost::optional<double> hours = t_sqlFile.hoursSimulated();
     if (!hours){
-    LOG(Warn, "Reporting Net Site Energy Use Intentsity \
-              with unknown number of simulation hours");
+      LOG(Warn, "Reporting Net Site Energy Use Intensity \
+                with unknown number of simulation hours");
     }else if(*hours != 8760){
-    LOG(Warn, "Reporting Net Site Energy Use Intentsity with " << *hours << " hrs");
+      LOG(Warn, "Reporting Net Site Energy Use Intensity with " << *hours << " hrs");
     }
     query = "SELECT Value FROM tabulardatawithstrings WHERE \
                             ReportName='AnnualBuildingUtilityPerformanceSummary' AND \
@@ -111,7 +111,7 @@ namespace detail {
                             Units='MJ/m2'";
     val = t_sqlFile.execAndReturnFirstDouble(query);    
     if (val){
-      attributes.push_back(Attribute("Net Site Energy Use Intentsity", *val, "MJ/m^2"));
+      attributes.push_back(Attribute("Net Site Energy Use Intensity", *val, "MJ/m^2"));
     }    
 
     //Instantaneous Peak Electricity Demand (W)    
@@ -227,9 +227,9 @@ namespace detail {
       LOG(Warn, "No attributes loaded for report");
     }
 
-	  for (Attribute& attribute : attributes) {
+    for (Attribute& attribute : attributes) {
       attribute.setSource(jobType);
-	  }
+    }
 
     return attributes;
   }

@@ -264,13 +264,15 @@ namespace detail {
       runmanager::Files allFiles = topLevelJob()->treeAllFiles();
       FileReferenceVector xmlOutputData;
       try {
-        for (const runmanager::FileInfo& file : allFiles.getAllByExtension("ossr").files()) {
+        runmanager::Files ossrFiles = allFiles.getAllByExtension("ossr");
+        for (const runmanager::FileInfo& file : ossrFiles.files()) {
           xmlOutputData.push_back(FileReference(file.fullPath));
         }
       }
       catch (...) {}
       try {
-        for (const runmanager::FileInfo& file : allFiles.getAllByExtension("xml").files()) {
+        runmanager::Files xmlFiles = allFiles.getAllByExtension("xml");
+        for (const runmanager::FileInfo& file : xmlFiles.files()) {
           xmlOutputData.push_back(FileReference(file.fullPath));
         }
       }

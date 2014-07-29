@@ -117,15 +117,15 @@ class Set
   def flatten_merge(set, seen = Set.new)
     set.each { |e|
       if e.is_a?(Set)
-	if seen.include?(e_id = e.object_id)
-	  raise ArgumentError, "tried to flatten recursive Set"
-	end
+        if seen.include?(e_id = e.object_id)
+          raise ArgumentError, "tried to flatten recursive Set"
+        end
 
-	seen.add(e_id)
-	flatten_merge(e, seen)
-	seen.delete(e_id)
+        seen.add(e_id)
+        flatten_merge(e, seen)
+        seen.delete(e_id)
       else
-	add(e)
+        add(e)
       end
     }
 
