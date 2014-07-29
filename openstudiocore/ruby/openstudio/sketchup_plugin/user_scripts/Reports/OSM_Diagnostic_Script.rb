@@ -109,13 +109,13 @@ class DiagnosticScript < OpenStudio::Ruleset::UtilityUserScript
     partition_surfaces = model.getInteriorPartitionSurfaces
     puts "Model has " + partition_surfaces.size.to_s + " interior partition surfaces"
     
-#    puts ""
-#    puts "Outputting Draft Validity Report"
-#    puts workspace.validityReport("Draft".to_StrictnessLevel)
-#
-#    puts ""
-#    puts "Outputting Final Validity Report (note: some errors are expected here)"
-#    puts workspace.validityReport("Final".to_StrictnessLevel)
+    puts ""
+    puts "Outputting Draft Validity Report"
+    puts workspace.validityReport("Draft".to_StrictnessLevel)
+ 
+    puts ""
+    puts "Outputting Final Validity Report (note: some errors are expected here)"
+    puts workspace.validityReport("Final".to_StrictnessLevel)
 
     savediagnostic = false # this will change to true later in script if necessary
 
