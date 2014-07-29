@@ -774,12 +774,12 @@ namespace detail {
           std::vector<RunManagerDB::JobFileInfo> files = litesql::select<RunManagerDB::JobFileInfo>(m_db).all();
           std::vector<RunManagerDB::RequiredFile> requiredfiles = litesql::select<RunManagerDB::RequiredFile>(m_db).all();
 
-          QFuture<std::map<openstudio::UUID, Files> > futurefiles = QtConcurrent::run(boost::bind(&loadJobFiles<RunManagerDB::JobFileInfo, RunManagerDB::RequiredFile>, boost::ref(files), boost::ref(requiredfiles)));
+          QFuture<std::map<openstudio::UUID, Files> > futurefiles = QtConcurrent::run(boost::bind(&loadJobFiles<RunManagerDB::JobFileInfo, RunManagerDB::RequiredFile>, boost::ref(files), boost::ref(requiredfiles), m_dbPath.parent_path()));
 
           std::vector<RunManagerDB::JobToolInfo> tools = litesql::select<RunManagerDB::JobToolInfo>(m_db).all();
           std::vector<RunManagerDB::JobParam> params = litesql::select<RunManagerDB::JobParam>(m_db).all();
 
-          QFuture<std::map<openstudio::UUID, JobParams> > futureparams = QtConcurrent::run(boost::bind(&loadJobParams, boost::ref(params)));
+          QFuture<std::map<openstudio::UUID, JobParams> > futureparams = QtConcurrent::run(boost::bind(&loadJobParams, boost::ref(params), m_dbPath.parent_path()));
 
           std::vector<RunManagerDB::JobStatus> status = litesql::select<RunManagerDB::JobStatus>(m_db).all();
           std::vector<RunManagerDB::JobErrors> errors = litesql::select<RunManagerDB::JobErrors>(m_db).all();
@@ -787,7 +787,7 @@ namespace detail {
           std::vector<RunManagerDB::OutputFileInfo> outputfiles = litesql::select<RunManagerDB::OutputFileInfo>(m_db).all();
           std::vector<RunManagerDB::OutputRequiredFile> outputrequiredfiles = litesql::select<RunManagerDB::OutputRequiredFile>(m_db).all();
 
-          QFuture<std::map<openstudio::UUID, Files> > futureoutputfiles = QtConcurrent::run(boost::bind(&loadJobFiles<RunManagerDB::OutputFileInfo, RunManagerDB::OutputRequiredFile>, boost::ref(outputfiles), boost::ref(outputrequiredfiles)));
+          QFuture<std::map<openstudio::UUID, Files> > futureoutputfiles = QtConcurrent::run(boost::bind(&loadJobFiles<RunManagerDB::OutputFileInfo, RunManagerDB::OutputRequiredFile>, boost::ref(outputfiles), boost::ref(outputrequiredfiles), m_dbPath.parent_path()));
 
           LOG(Info, "Time to load all RunManager data: " << et.restart() << " sizes: " << tools.size() << " " << params.size() << " " << outputfiles.size() << " " << outputrequiredfiles.size() << " " << files.size() << " " << requiredfiles.size() << " " << jobs.size() << " " << status.size() << " " << errors.size());
 
@@ -837,9 +837,9 @@ namespace detail {
 
             allTools[uuid] = loadJobTools(tools)[uuid];
             LOG(Info, "Time to parse tools for uuid: " << uuidstr << " " << et.restart());
-            allJobParams[uuid] = loadJobParams(params)[uuid];
+            allJobParams[uuid] = loadJobParams(params, m_dbPath.parent_path())[uuid];
             LOG(Info, "Time to parse params for uuid: " << uuidstr << " " << et.restart());
-            allFiles[uuid] = loadJobFiles(files, requiredfiles)[uuid];
+            allFiles[uuid] = loadJobFiles(files, requiredfiles, m_dbPath.parent_path())[uuid];
             LOG(Info, "Time to parse files for uuid: " << uuidstr << " " << et.restart());
           }
         }
@@ -963,7 +963,7 @@ namespace detail {
 
       }
 
-      static std::map<openstudio::UUID, JobParams> loadJobParams(const std::vector<RunManagerDB::JobParam> &t_params)
+      static std::map<openstudio::UUID, JobParams> loadJobParams(const std::vector<RunManagerDB::JobParam> &t_params, const openstudio::path &t_basePath)
       {
         std::map<openstudio::UUID, std::list<std::pair<RunManagerDB::JobParam, JobParam> > > allloadedparams;
 
@@ -972,7 +972,7 @@ namespace detail {
              ++itr)
         {
           JobParam param(itr->value);
-          param.value = fixupPath(param.value);
+          param.value = fixupPath(param.value, t_basePath);
           allloadedparams[openstudio::toUUID(itr->jobUuid)].push_back(std::make_pair(*itr, JobParam(param)));
         }
 
@@ -1219,14 +1219,14 @@ namespace detail {
         }
       }
 
-      static std::string fixupPath(const std::string &t_path)
+      static std::string fixupPath(const std::string &t_path, const openstudio::path &t_basePath)
       {
-        return openstudio::toString(fixupPath(openstudio::toPath(t_path)));
+        return openstudio::toString(fixupPath(openstudio::toPath(t_path), t_basePath));
       }
 
-      static openstudio::path fixupPath(const openstudio::path &t_path)
+      static openstudio::path fixupPath(const openstudio::path &t_path, const openstudio::path &t_basePath)
       {
-        openstudio::path modified = fixupPathImpl(t_path);
+        openstudio::path modified = fixupPathImpl(t_path, t_basePath);
         if (modified != t_path)
         {
           LOG(Debug, "Fixed up path from: " << openstudio::toString(t_path) << " to " << openstudio::toString(modified));
@@ -1234,66 +1234,55 @@ namespace detail {
         return modified;
       }
 
-      static openstudio::path fixupPathImpl(const openstudio::path &t_path)
+      static openstudio::path fixupPathImpl(const openstudio::path &t_path, const openstudio::path &t_basePath)
       {
-        // only attempt this for things that look like ruby scripts
-        if (t_path.extension() == openstudio::toPath(".rb"))
+        openstudio::path head = t_path;
+        openstudio::path tail;
+
+        while (head.has_parent_path())
         {
-          /// \todo delete this block. Testing fixing up paths regardless
-          /// of if they exist or not.
-          /*
+          // LOG(Debug, "Examining path: head: " << openstudio::toString(head) << " tail: " << openstudio::toString(tail));
+
+          if (!tail.empty())
+          {
+            tail = head.filename() / tail;
+          } else {
+            tail = head.filename();
+          }
+
+          head = head.parent_path();
+
           try {
-            if (boost::filesystem::exists(t_path)) {
-              return t_path;
+            openstudio::path potentialNewPath = openstudio::getOpenStudioRubyScriptsPath() / tail;
+            // LOG(Debug, "Looking at path: " << openstudio::toString(potentialNewPath));
+            if (boost::filesystem::exists(potentialNewPath))
+            {
+              return potentialNewPath;
             }
           } catch (const std::exception &) {
-            // keep moving
-          }*/
+            // couldn't check if path exists, so returning original
+            // return t_path;
+          }
 
-         
-
-          openstudio::path head = t_path;
-          openstudio::path tail;
-
-          while (head.has_parent_path())
-          {
-            // LOG(Debug, "Examining path: head: " <<  openstudio::toString(head) << " tail: " << openstudio::toString(tail));
-
-            if (!tail.empty())
+          try {
+            openstudio::path potentialNewPath = t_basePath / tail;
+            LOG(Debug, "Looking at path: " << openstudio::toString(potentialNewPath));
+            if (boost::filesystem::exists(potentialNewPath))
             {
-              tail = head.filename() / tail;
-            } else {
-              tail = head.filename();
+              // return tail;
+              return potentialNewPath;
             }
-
-            head = head.parent_path();
-
-            if (*tail.begin() == openstudio::toPath("openstudio")
-                && (head.filename() == openstudio::toPath("ruby")
-                  || head.filename() == openstudio::toPath("Ruby")))
-            {
-              try {
-                openstudio::path potentialNewPath = openstudio::getOpenStudioRubyScriptsPath() / tail;
-                // LOG(Debug, "Looking at path: " << openstudio::toString(potentialNewPath));
-                if (boost::filesystem::exists(potentialNewPath))
-                {
-                  return potentialNewPath;
-                }
-              } catch (const std::exception &) {
-                // couldn't check if path exists, so returning original
-                return t_path;
-              }
-            }
-
+          } catch (const std::exception &) {
           }
         }
 
-        // all other options failed, return original 
+        // all other options failed, return original
         return t_path;
       }
 
       template<typename JobFileType, typename RequiredFileType>
-      static std::map<openstudio::UUID, Files> loadJobFiles(const std::vector<JobFileType> &t_files, const std::vector<RequiredFileType> &t_requiredFiles)
+      static std::map<openstudio::UUID, Files> loadJobFiles(const std::vector<JobFileType> &t_files, const std::vector<RequiredFileType> &t_requiredFiles,
+        const openstudio::path &t_basePath)
       {
         std::map<int, std::list<std::pair<QUrl, openstudio::path> > > requiredFiles;
 
@@ -1311,7 +1300,7 @@ namespace detail {
              ++itr)
         {
           openstudio::path fullpath = itr->fullPath.value().empty()?openstudio::path():toPath(itr->fullPath);
-          fullpath = fixupPath(fullpath);
+          fullpath = fixupPath(fullpath, t_basePath);
 
           DateTime dt;
           if (!fullpath.empty() && boost::filesystem::exists(fullpath))
@@ -1337,7 +1326,7 @@ namespace detail {
               QUrl url = itr2->first;
               if (itr2->first.scheme() == "file")
               {
-                openstudio::path p = fixupPath(openstudio::toPath(url.toLocalFile()));
+                openstudio::path p = fixupPath(openstudio::toPath(url.toLocalFile()), t_basePath);
                 url = QUrl::fromLocalFile(openstudio::toQString(p));
               }
 
