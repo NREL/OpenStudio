@@ -583,6 +583,7 @@ DataPointJobContentView::DataPointJobContentView()
   m_textEdit = new QLabel();
   m_textEdit->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
   m_textEdit->setWordWrap(true);
+  m_textEdit->setOpenExternalLinks(true);
 
   mainHLayout->addWidget(m_textEdit);
 }
