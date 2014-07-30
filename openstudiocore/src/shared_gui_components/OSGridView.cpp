@@ -87,6 +87,9 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   isConnected = connect(this, SIGNAL(itemSelected(OSItem*)), m_gridController, SIGNAL(itemSelected(OSItem*)));
   OS_ASSERT(isConnected);
 
+  isConnected = connect(this, SIGNAL(itemsRequested()), m_gridController, SIGNAL(itemsRequested()));
+  OS_ASSERT(isConnected);
+
   buttonLayout->addWidget(m_dropZone,0,Qt::AlignLeft);
 
   std::vector<QString> categories = m_gridController->categories();
@@ -272,9 +275,19 @@ void OSGridView::selectCategory(int index)
 
 }
 
-void OSGridView::onItemSelected(OSItem * item, bool selected)
+void OSGridView::onItemSelected(OSItem * item)
 {
-  m_gridController->onItemSelected(item, selected);
+  m_gridController->onItemSelected(item); // TODO  is this being used now?
+}
+
+//void OSGridView::onOsItemSelected(OSItem * item, bool selected) // TODO delete if not needed by multi-edit
+//{
+//  m_gridController->onOsItemSelected(item, selected);
+//}
+
+void OSGridView::onSelectionCleared()
+{
+  m_gridController->onSelectionCleared();
 }
 
 } // openstudio

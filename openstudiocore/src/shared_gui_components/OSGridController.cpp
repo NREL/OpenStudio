@@ -620,7 +620,9 @@ void OSGridController::selectRow(int rowIndex, bool select)
   std::vector<QWidget *> row = this->row(rowIndex);
   for (auto widget : row){
     auto button = qobject_cast<QPushButton *>(widget);
+    button->setEnabled(false);
     button->setChecked(select);
+    button->setEnabled(true);
     button->setStyleSheet(cellStyle(rowIndex, columnIndex++));
   }
 }
@@ -674,7 +676,8 @@ void OSGridController::cellChecked(int index)
 
     OSItemId itemId = modelObjectToItemId(modelObject(r), false);
     OSItem * item = OSItem::makeItem(itemId, OSItemType::ListItem);
-    emit itemSelected(item);
+
+    emit itemsRequested();
   }
 }
 
@@ -706,8 +709,9 @@ void OSGridController::selectItemId(const OSItemId& itemId)
 {
 }
 
-void OSGridController::onItemSelected(OSItem * item, bool selected)
+void OSGridController::onItemSelected(OSItem * item)
 {
+  bool selected = true;
   int i = 0;
   refreshModelObjects();
   gridView()->refreshAll();
@@ -719,6 +723,28 @@ void OSGridController::onItemSelected(OSItem * item, bool selected)
     }
     i++;
   }
+}
+
+//void OSGridController::onOsItemSelected(OSItem * item, bool selected) // TODO delete if not needed by multi-edit
+//{
+//  int i = 0;
+//  refreshModelObjects();
+//  gridView()->refreshAll();
+//  for (auto modelObject : m_modelObjects){
+//    OSItemId itemId = modelObjectToItemId(modelObject, false);
+//    if (item->itemId() == itemId){
+//      selectRow(rowIndexFromModelIndex(i), selected);
+//      break;
+//    }
+//    i++;
+//  }
+//}
+
+void OSGridController::onSelectionCleared()
+{
+  // TODO use a single shot timer, just once to handle this
+  refreshModelObjects();
+  gridView()->refreshAll();
 }
 
 HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)
@@ -734,7 +760,6 @@ HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidge
   layout->addWidget(m_label);
 
   layout->addWidget(m_checkBox);
-
 }
 
 } // openstudio

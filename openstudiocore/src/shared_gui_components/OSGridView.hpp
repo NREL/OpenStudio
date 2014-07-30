@@ -63,9 +63,15 @@ signals:
 
   void dropZoneItemClicked(OSItem* item);
 
+  void itemsRequested();
+
 public slots:
 
-  void onItemSelected(OSItem * item, bool selected);
+  void onItemSelected(OSItem * item);
+
+  //void onOsItemSelected(OSItem * item, bool selected); // TODO delete if not needed by multi-edit
+
+  void onSelectionCleared();
 
   void refreshAll();
   

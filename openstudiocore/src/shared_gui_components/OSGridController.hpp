@@ -481,6 +481,8 @@ signals:
 
   void toggleUnitsClicked(bool displayIP);
 
+  void itemsRequested();
+
 public slots:
 
   virtual void onItemDropped(const OSItemId& itemId) = 0;
@@ -491,8 +493,12 @@ public slots:
 
   void selectItemId(const OSItemId& itemId);
 
-  void onItemSelected(OSItem * item, bool selected);
-  
+  void onItemSelected(OSItem * item);
+
+  //void onOsItemSelected(OSItem * item, bool selected); // TODO delete if not needed by multi-edit
+
+  void onSelectionCleared();
+
 protected slots:
 
   void reset();

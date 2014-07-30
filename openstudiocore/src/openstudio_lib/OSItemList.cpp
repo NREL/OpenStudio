@@ -268,7 +268,7 @@ void OSItemList::selectItem(OSItem* selectItem)
     if(m_selectedItem){
       // deselect
       m_selectedItem->setSelected(false);
-      emit osItemSelected(m_selectedItem, false);
+      //emit osItemSelected(m_selectedItem, false); // TODO delete if not needed by multi-edit
     }
     m_selectedItem = NULL;
     emit selectionCleared();
@@ -290,14 +290,14 @@ void OSItemList::selectItem(OSItem* selectItem)
           }else{
             // deselect
             m_selectedItem->setSelected(false);
-            emit osItemSelected(m_selectedItem, false);
+            //emit osItemSelected(m_selectedItem, false); // TODO delete if not needed by multi-edit
           }
         }
 
         m_selectedItem = item;
         m_selectedItem->setSelected(true);
         emit itemSelected(m_selectedItem);
-        emit osItemSelected(m_selectedItem, true);
+        //emit osItemSelected(m_selectedItem, true); // TODO delete if not needed by multi-edit
         return;
       }
     }
@@ -307,7 +307,7 @@ void OSItemList::selectItem(OSItem* selectItem)
   if(m_selectedItem){
     // deselect
     m_selectedItem->setSelected(false);
-    emit osItemSelected(m_selectedItem, true);
+    //emit osItemSelected(m_selectedItem, true); // TODO delete if not needed by multi-edit
   }
   m_selectedItem = NULL;
   emit selectionCleared();

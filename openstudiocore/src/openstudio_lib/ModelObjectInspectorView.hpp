@@ -54,7 +54,13 @@ class ModelObjectInspectorView : public OSInspectorView
 
     void toggleUnitsClicked(bool displayIP);
 
-    void osItemSelected(OSItem * item, bool selected);
+    void itemSelected(OSItem * item);
+
+    //void osItemSelected(OSItem * item, bool selected); // TODO delete if not needed by multi-edit
+
+    void selectionCleared();
+
+    void itemsRequested();
 
   public slots:
 

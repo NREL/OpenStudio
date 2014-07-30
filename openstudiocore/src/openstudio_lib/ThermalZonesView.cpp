@@ -39,7 +39,16 @@ ThermalZonesView::ThermalZonesView(bool isIP, const model::Model & model,
 {
   bool isConnected = false;
 
-  isConnected = connect(itemSelector(), SIGNAL(osItemSelected(OSItem *, bool)), inspectorView(), SIGNAL(osItemSelected(OSItem *, bool)));
+  isConnected = connect(itemSelector(), SIGNAL(itemSelected(OSItem *)), inspectorView(), SIGNAL(itemSelected(OSItem *)));
+  OS_ASSERT(isConnected);
+
+  //isConnected = connect(itemSelector(), SIGNAL(osItemSelected(OSItem *, bool)), inspectorView(), SIGNAL(osItemSelected(OSItem *, bool))); // TODO delete if not needed by multi-edit
+  //OS_ASSERT(isConnected);
+
+  isConnected = connect(itemSelector(), SIGNAL(selectionCleared()), inspectorView(), SIGNAL(selectionCleared()));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(itemSelector(), SIGNAL(itemsRequested()), inspectorView(), SIGNAL(itemsRequested()));
   OS_ASSERT(isConnected);
 }
 
@@ -60,9 +69,16 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
   isConnected = connect(thermalZonesGridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
 
-  //ModelObjectListView = subTabView()->itemSelector()
-  //ThermalZoneView = subTabView()->inspectorView()
-  isConnected = connect(this, SIGNAL(osItemSelected(OSItem *, bool)), thermalZonesGridView, SIGNAL(osItemSelected(OSItem *, bool)));
+  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), thermalZonesGridView, SIGNAL(itemSelected(OSItem *)));
+  OS_ASSERT(isConnected);
+
+  //isConnected = connect(this, SIGNAL(osItemSelected(OSItem *, bool)), thermalZonesGridView, SIGNAL(osItemSelected(OSItem *, bool))); // TODO delete if not needed by multi-edit
+  //OS_ASSERT(isConnected);
+
+  isConnected = connect(this, SIGNAL(selectionCleared()), thermalZonesGridView, SIGNAL(selectionCleared()));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(this, SIGNAL(itemsRequested()), thermalZonesGridView, SIGNAL(itemsRequested()));
   OS_ASSERT(isConnected);
 
   refresh();
