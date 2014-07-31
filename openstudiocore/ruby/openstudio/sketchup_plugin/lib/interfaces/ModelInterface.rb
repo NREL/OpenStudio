@@ -543,7 +543,10 @@ module OpenStudio
         warnings.each {|warning| add_warning("Warning: #{warning.logMessage}\n\n", false)}
       end
 
-      if Plugin.read_pref('Show Errors on SDD Translation') and not result
+      #if Plugin.read_pref('Show Errors on SDD Translation') and not result
+      
+      # always show these errors and warnings
+      if errors or warnings
         show_errors
       end
 
