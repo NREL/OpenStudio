@@ -189,12 +189,12 @@ namespace runmanager {
       ui.tableTools->resizeColumnToContents(i);
     }
 
-    connect(ui.btnIDFLocation, SIGNAL(clicked()), this, SLOT(updateIDFLocation()));
-    connect(ui.btnEPWLocation, SIGNAL(clicked()), this, SLOT(updateEPWLocation()));
-    connect(ui.btnOutputLocation, SIGNAL(clicked()), this, SLOT(updateOutputLocation()));
-    connect(ui.btnAddTool, SIGNAL(clicked()), this, SLOT(addTool()));
-    connect(ui.btnRemoveTool, SIGNAL(clicked()), this, SLOT(removeSelectedTool()));
-    connect(ui.cbOutputInPlace, SIGNAL(stateChanged(int)), this, SLOT(inPlaceStateChanged(int)));
+    connect(ui.btnIDFLocation, &QPushButton::clicked, this, &Configuration::updateIDFLocation);
+    connect(ui.btnEPWLocation, &QPushButton::clicked, this, &Configuration::updateEPWLocation);
+    connect(ui.btnOutputLocation, &QPushButton::clicked, this, &Configuration::updateOutputLocation);
+    connect(ui.btnAddTool, &QToolButton::clicked, this, &Configuration::addTool);
+    connect(ui.btnRemoveTool, &QToolButton::clicked, this, &Configuration::removeSelectedTool);
+    connect(ui.cbOutputInPlace, &QCheckBox::stateChanged, this, &Configuration::inPlaceStateChanged);
 
     QItemDelegate *tooldelegate = new ToolNameDelegate(ui.tableTools);
     ui.tableTools->setItemDelegateForColumn(0, tooldelegate);

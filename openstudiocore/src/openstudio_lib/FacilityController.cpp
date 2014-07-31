@@ -27,9 +27,7 @@ namespace openstudio {
 FacilityController::FacilityController(bool isIP, const model::Model& model)
   : ModelSubTabController(new FacilityView(isIP, model), model)
 {
-  bool isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
-                             subTabView(),SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &FacilityController::toggleUnitsClicked, static_cast<ModelSubTabView*>(subTabView()), &ModelSubTabView::toggleUnitsClicked);
 }
 
 FacilityController::~FacilityController()

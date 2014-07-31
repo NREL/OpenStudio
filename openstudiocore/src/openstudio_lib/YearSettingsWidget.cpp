@@ -80,8 +80,7 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
   m_calendarYearButton = new QRadioButton("Calendar Year",this);
   yearGridLayout->addWidget(m_calendarYearButton,0,0);
   yearButtonGroup->addButton(m_calendarYearButton);
-  connect(m_calendarYearButton,SIGNAL(clicked()),this,SLOT(onCalendarYearButtonClicked()));
-
+  connect(m_calendarYearButton, &QRadioButton::clicked, this, &YearSettingsWidget::onCalendarYearButtonClicked);
   m_calendarYearEdit = new OSComboBox();
   for( int i = FIRSTYEAR;
        i <= LASTYEAR;
@@ -90,23 +89,22 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
     m_calendarYearEdit->addItem(QString::number(i));
   }
   m_calendarYearEdit->setCurrentIndex(100);
-  connect(m_calendarYearEdit,SIGNAL(currentIndexChanged(int)),this,SLOT(onCalendarYearChanged(int)));
+  connect(m_calendarYearEdit, static_cast<void (OSComboBox::*)(int)>(&OSComboBox::currentIndexChanged),
+    this, &YearSettingsWidget::onCalendarYearChanged);
   yearGridLayout->addWidget(m_calendarYearEdit,0,1);
 
   m_firstDayOfYearButton = new QRadioButton("First Day of Year",this);
   yearGridLayout->addWidget(m_firstDayOfYearButton,1,0);
   yearButtonGroup->addButton(m_firstDayOfYearButton);
-  connect(m_firstDayOfYearButton,SIGNAL(clicked()),this,SLOT(onFirstDayofYearClicked()));
-
+  connect(m_firstDayOfYearButton, &QRadioButton::clicked, this, &YearSettingsWidget::onFirstDayofYearClicked);
   m_firstDayOfYearEdit = new OSComboBox();
   std::vector<std::string> dayOfWeekValues = model::YearDescription::validDayofWeekforStartDayValues();
-  for( std::vector<std::string>::iterator it = dayOfWeekValues.begin();
-       it < dayOfWeekValues.end();
-       ++it )
+  for( const auto dayOfWeekValue : dayOfWeekValues )
   {
-    m_firstDayOfYearEdit->addItem(QString::fromStdString(*it));
+    m_firstDayOfYearEdit->addItem(QString::fromStdString(dayOfWeekValue));
   }
-  connect(m_firstDayOfYearEdit,SIGNAL(currentIndexChanged(const QString &)),this,SIGNAL(firstDayofYearSelected(const QString &)));
+  connect(m_firstDayOfYearEdit, static_cast<void (OSComboBox::*)(const QString &)>(&OSComboBox::currentIndexChanged),
+    this, &YearSettingsWidget::firstDayofYearSelected);
   yearGridLayout->addWidget(m_firstDayOfYearEdit,1,1);
 
   yearGridLayout->setColumnStretch(2,10);
@@ -128,8 +126,7 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
 
   m_dstOnOffButton = new OSSwitch();
   dstHLayout1->addWidget(m_dstOnOffButton);
-  connect(m_dstOnOffButton,SIGNAL(clicked(bool)),this,SIGNAL(daylightSavingTimeClicked(bool)));
-
+  connect(m_dstOnOffButton, &OSSwitch::clicked, this, &YearSettingsWidget::daylightSavingTimeClicked);
   dstHLayout1->addStretch();
 
   mainVLayout->addLayout(dstHLayout1);
@@ -150,9 +147,7 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
   m_dayOfWeekAndMonthStartButton = new QRadioButton("Define by Day of The Week And Month",this);
   dstStartButtonGroup->addButton(m_dayOfWeekAndMonthStartButton);
   dstGridLayout->addWidget(m_dayOfWeekAndMonthStartButton,1,0);
-  connect(m_dayOfWeekAndMonthStartButton,SIGNAL(clicked()),
-          this,SLOT(onDefineStartByDayWeekMonthClicked()));
-
+  connect(m_dayOfWeekAndMonthStartButton, &QRadioButton::clicked, this, &YearSettingsWidget::onDefineStartByDayWeekMonthClicked);
   m_startWeekBox = new OSComboBox();
   dstGridLayout->addWidget(m_startWeekBox,1,1);
 
@@ -165,9 +160,7 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
   m_dateStartButton = new QRadioButton("Define by Date",this);
   dstStartButtonGroup->addButton(m_dateStartButton);
   dstGridLayout->addWidget(m_dateStartButton,2,0);
-  connect(m_dateStartButton,SIGNAL(clicked()),
-          this,SLOT(onDefineStartByDateClicked()));
-
+  connect(m_dateStartButton, &QRadioButton::clicked, this, &YearSettingsWidget::onDefineStartByDateClicked);
   m_startDateEdit = new QDateEdit();
   m_startDateEdit->setCalendarPopup(true);
   dstGridLayout->addWidget(m_startDateEdit,2,1);
@@ -183,9 +176,7 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
   m_dayOfWeekAndMonthEndButton = new QRadioButton("Define by Day of The Week And Month",this);
   dstEndButtonGroup->addButton(m_dayOfWeekAndMonthEndButton);
   dstGridLayout->addWidget(m_dayOfWeekAndMonthEndButton,4,0);
-  connect(m_dayOfWeekAndMonthEndButton,SIGNAL(clicked()),
-          this,SLOT(onDefineEndByDayWeekMonthClicked()));
-
+  connect(m_dayOfWeekAndMonthEndButton, &QRadioButton::clicked, this, &YearSettingsWidget::onDefineEndByDayWeekMonthClicked);
   m_endWeekBox = new OSComboBox();
   dstGridLayout->addWidget(m_endWeekBox,4,1);
 
@@ -198,9 +189,7 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
   m_dateEndButton = new QRadioButton("Define by Date",this);
   dstEndButtonGroup->addButton(m_dateEndButton);
   dstGridLayout->addWidget(m_dateEndButton,5,0);
-  connect(m_dateEndButton,SIGNAL(clicked()),
-          this,SLOT(onDefineEndByDateClicked()));
-
+  connect(m_dateEndButton, &QRadioButton::clicked, this, &YearSettingsWidget::onDefineEndByDateClicked);
   m_endDateEdit = new QDateEdit();
   m_endDateEdit->setCalendarPopup(true);
   dstGridLayout->addWidget(m_endDateEdit,5,1);
@@ -252,43 +241,43 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
 
   // Connect
 
-  connect( m_yearDescription->getImpl<openstudio::model::detail::YearDescription_Impl>().get(),
-           SIGNAL(onChange()),
-           this,
-           SLOT(scheduleRefresh()) );
+  connect(m_yearDescription->getImpl<model::detail::YearDescription_Impl>().get(), &model::detail::YearDescription_Impl::onChange,
+    this, &YearSettingsWidget::scheduleRefresh);
+  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
+    this,
+    &YearSettingsWidget::onWorkspaceObjectAdd);
 
-  QObject::connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-                   SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>,
-                   const openstudio::IddObjectType&, const openstudio::UUID&)),
-                   this,
-                   SLOT(onWorkspaceObjectAdd(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
+  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
+    this,
+    &YearSettingsWidget::onWorkspaceObjectRemove);
 
-  QObject::connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-                   SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>,
-                   const openstudio::IddObjectType&, const openstudio::UUID&)),
-                   this,
-                   SLOT(onWorkspaceObjectRemove(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
+  connect(m_startWeekBox, static_cast<void (OSComboBox::*)(const QString &)>(&OSComboBox::currentIndexChanged),
+    this, &YearSettingsWidget::onDstStartDayWeekMonthChanged);
+  connect(m_startDayBox, static_cast<void (OSComboBox::*)(const QString &)>(&OSComboBox::currentIndexChanged),
+    this, &YearSettingsWidget::onDstStartDayWeekMonthChanged);
+  connect(m_startMonthBox, static_cast<void (OSComboBox::*)(const QString &)>(&OSComboBox::currentIndexChanged),
+    this, &YearSettingsWidget::onDstStartDayWeekMonthChanged);
+  connect(m_startDateEdit, &QDateEdit::dateChanged, this, &YearSettingsWidget::dstStartDateChanged);
 
-  connect(m_startWeekBox,SIGNAL(currentIndexChanged(int)),this,SLOT(onDstStartDayWeekMonthChanged()));
-  connect(m_startDayBox,SIGNAL(currentIndexChanged(int)),this,SLOT(onDstStartDayWeekMonthChanged()));
-  connect(m_startMonthBox,SIGNAL(currentIndexChanged(int)),this,SLOT(onDstStartDayWeekMonthChanged()));
-  connect(m_startDateEdit,SIGNAL(dateChanged(const QDate &)),this,SIGNAL(dstStartDateChanged(const QDate &)));
-
-  connect(m_endWeekBox,SIGNAL(currentIndexChanged(int)),this,SLOT(onDstEndDayWeekMonthChanged()));
-  connect(m_endDayBox,SIGNAL(currentIndexChanged(int)),this,SLOT(onDstEndDayWeekMonthChanged()));
-  connect(m_endMonthBox,SIGNAL(currentIndexChanged(int)),this,SLOT(onDstEndDayWeekMonthChanged()));
-  connect(m_endDateEdit,SIGNAL(dateChanged(const QDate &)),this,SIGNAL(dstEndDateChanged(const QDate &)));
-
+  connect(m_endWeekBox, static_cast<void (OSComboBox::*)(const QString &)>(&OSComboBox::currentIndexChanged),
+    this, &YearSettingsWidget::onDstEndDayWeekMonthChanged);
+  connect(m_endDayBox, static_cast<void (OSComboBox::*)(const QString &)>(&OSComboBox::currentIndexChanged),
+    this, &YearSettingsWidget::onDstEndDayWeekMonthChanged);
+  connect(m_endMonthBox, static_cast<void (OSComboBox::*)(const QString &)>(&OSComboBox::currentIndexChanged),
+    this, &YearSettingsWidget::onDstEndDayWeekMonthChanged);
+  connect(m_endDateEdit, &QDateEdit::dateChanged, this, &YearSettingsWidget::dstEndDateChanged);
 }
 
 void YearSettingsWidget::onWorkspaceObjectAdd(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wo)
 {
   if(wo->iddObject().type() == IddObjectType::OS_RunPeriodControl_DaylightSavingTime)
   {
-    connect( wo.get(),
-             SIGNAL(onChange()),
-             this,
-             SLOT(scheduleRefresh()) );
+    connect(wo.get(),
+      &detail::WorkspaceObject_Impl::onChange,
+      this,
+      &YearSettingsWidget::scheduleRefresh);
 
     scheduleRefresh();
   }

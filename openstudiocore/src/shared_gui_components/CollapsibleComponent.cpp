@@ -51,37 +51,23 @@ CollapsibleComponent::CollapsibleComponent(CollapsibleComponentHeader * collapsi
   m_mainLayout->setContentsMargins(0,0,0,0);
   setLayout(m_mainLayout);
 
-  bool isConnected = false;
-
   // collapsible header
   m_mainLayout->addWidget(m_collapsibleComponentHeader);
 
-  isConnected = connect(collapsibleComponentHeader, SIGNAL(clicked(bool)),
-                             this, SIGNAL(headerClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(collapsibleComponentHeader, &CollapsibleComponentHeader::clicked, this, &CollapsibleComponent::headerClicked);
 
-  isConnected = connect(collapsibleComponentHeader, SIGNAL(clicked(bool)),
-                        this, SLOT(on_headerClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(collapsibleComponentHeader, &CollapsibleComponentHeader::clicked, this, &CollapsibleComponent::on_headerClicked);
 
-  isConnected = connect(collapsibleComponentHeader, SIGNAL(getComponentsByPage(int)), 
-                        this, SIGNAL(getComponentsByPage(int)));
-  OS_ASSERT(isConnected);
+  connect(collapsibleComponentHeader, &CollapsibleComponentHeader::getComponentsByPage, this, &CollapsibleComponent::getComponentsByPage);
 
-  isConnected = connect(collapsibleComponentHeader, SIGNAL(getComponentsByPage(int)),
-                        this, SLOT(on_getComponentsByPage(int)));
-  OS_ASSERT(isConnected);
+  connect(collapsibleComponentHeader, &CollapsibleComponentHeader::getComponentsByPage, this, &CollapsibleComponent::on_getComponentsByPage);
 
   // component list
   m_mainLayout->addWidget(m_componentList);
   
-  isConnected = connect(componentList, SIGNAL(componentClicked(bool)),
-                        this, SIGNAL(componentClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(componentList, &ComponentList::componentClicked, this, &CollapsibleComponent::componentClicked);
 
-  isConnected = connect(componentList, SIGNAL(componentClicked(bool)),
-                        this, SLOT(on_componentClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(componentList, &ComponentList::componentClicked, this, &CollapsibleComponent::on_componentClicked);
 
   m_mainLayout->addStretch();
 

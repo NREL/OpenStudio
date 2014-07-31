@@ -34,21 +34,20 @@ WorkspaceWatcher::WorkspaceWatcher(const Workspace& work)
   openstudio::Application::instance().application();
 
   detail::Workspace_ImplPtr wsImpl = work.getImpl<detail::Workspace_Impl>();
-  bool connected = connect(wsImpl.get(), SIGNAL(onChange()), SLOT(change()));
-  OS_ASSERT(connected);
+  connect(wsImpl.get(), &detail::Workspace_Impl::onChange, this, &WorkspaceWatcher::change);
 
   // ideally this would be a queued connection so objects can be initialized before signal is processed
   // However, WorkspaceObject is not a QObject.  Instead we use QTimer to give a delay.
-  connected = connected && connect(wsImpl.get(),
-      SIGNAL(addWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
-      SLOT(objectAdd(const WorkspaceObject&)));
-  OS_ASSERT(connected);
+  connect(wsImpl.get(),
+    static_cast<void (detail::Workspace_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&detail::Workspace_Impl::addWorkspaceObject),
+    this,
+    &WorkspaceWatcher::objectAdd);
 
   // this signal happens immediately
-  connected = connected && connect(wsImpl.get(),
-      SIGNAL(removeWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
-      SLOT(objectRemove(const WorkspaceObject&)));
-  OS_ASSERT(connected);
+  connect(wsImpl.get(),
+    static_cast<void (detail::Workspace_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&detail::Workspace_Impl::removeWorkspaceObject),
+    this,
+    &WorkspaceWatcher::objectRemove);
 }
 
 WorkspaceWatcher::~WorkspaceWatcher()

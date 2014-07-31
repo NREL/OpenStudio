@@ -66,8 +66,7 @@ StartupView::StartupView( QWidget * parent )
   QIcon openIcon(":/images/open_file.png");
   openButton->setIcon(openIcon);
   openButton->setIconSize(QSize(40,40));
-  connect( openButton, SIGNAL(clicked()), this, SIGNAL(openClicked()) );
-
+  connect(openButton, &QToolButton::clicked, this, &StartupView::openClicked);
   auto importButton = new QToolButton();
   importButton->setText("Import Idf");
   importButton->setStyleSheet("QToolButton { font: bold; }");
@@ -75,7 +74,7 @@ StartupView::StartupView( QWidget * parent )
   QIcon importIcon(":/images/import_file.png");
   importButton->setIcon(importIcon);
   importButton->setIconSize(QSize(40,40));
-  connect( importButton, SIGNAL(clicked()), this, SIGNAL(importClicked()) );
+  connect(importButton, &QToolButton::clicked, this, &StartupView::importClicked);
 /*  
   QToolButton * importSDDButton = new QToolButton();
   importSDDButton->setText("Import SDD");
@@ -84,7 +83,7 @@ StartupView::StartupView( QWidget * parent )
   QIcon importSDDIcon(":/images/import_file.png");
   importSDDButton->setIcon(importSDDIcon);
   importSDDButton->setIconSize(QSize(40,40));
-  connect( importSDDButton, SIGNAL(clicked()), this, SIGNAL(importSDDClicked()) );
+  connect(importSDDButton, &QToolButton::clicked, this, &StartupView::importSDDClicked);
 */
   auto projectChooserView = new QWidget();
   projectChooserView->setFixedWidth(238);
@@ -121,14 +120,14 @@ StartupView::StartupView( QWidget * parent )
   cancelButton->setMinimumSize(QSize(99,28));
   #ifdef OPENSTUDIO_PLUGIN
     cancelButton->setText("Cancel");
-    connect( cancelButton, SIGNAL(clicked()), this, SLOT(hide()) );
+    connect(cancelButton, &QPushButton::clicked, this, &StartupView::hide);
   #else
     #ifdef Q_OS_MAC
       cancelButton->setText("Quit");
     #else
       cancelButton->setText("Exit");
     #endif
-    connect( cancelButton, SIGNAL(clicked()), OpenStudioApp::instance(), SLOT(quit()) );
+    connect(cancelButton, &QPushButton::clicked, OpenStudioApp::instance(), &OpenStudioApp::quit);
   #endif
   cancelButton->setStyleSheet("QPushButton { font: bold; }");
 
@@ -136,7 +135,7 @@ StartupView::StartupView( QWidget * parent )
   chooseButton->setObjectName("StandardBlueButton");
   chooseButton->setText("Choose");
   chooseButton->setMinimumSize(QSize(99,28));
-  connect( chooseButton, SIGNAL(clicked()), this, SLOT(newFromTemplateSlot()) );
+  connect(chooseButton, &QPushButton::clicked, this, &StartupView::newFromTemplateSlot);
   chooseButton->setStyleSheet("QPushButton { font: bold; }");
 
   auto hFooterLayout = new QHBoxLayout();
@@ -166,7 +165,7 @@ StartupView::StartupView( QWidget * parent )
 
   setLayout(vLayout);
 
-  connect(m_listView,SIGNAL(clicked( const QModelIndex &)),this,SLOT( showDetailsForItem( const QModelIndex & ) ));
+  connect(m_listView, &QListView::clicked, this, &StartupView::showDetailsForItem);
 
   m_listView->setCurrentIndex(m_templateListModel->index(0,0));
   showDetailsForItem(m_templateListModel->index(0,0));

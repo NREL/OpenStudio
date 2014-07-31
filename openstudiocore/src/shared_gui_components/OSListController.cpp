@@ -78,7 +78,7 @@ void OSListController::unregisterItem(QPointer<OSListItem> item)
 {
   auto it = std::find(m_registeredItems.begin(),m_registeredItems.end(),item);
 
-  // This should be true because we manage m_registeredItems and the use of the acccessor methods.
+  // This should be true because we manage m_registeredItems and the use of the accessor methods.
   OS_ASSERT(it != m_registeredItems.end());
 
   m_registeredItems.erase(it);
@@ -258,7 +258,7 @@ void OSItemSelectionController::unregisterListController(OSListController * list
 {
   auto it = std::find(m_listControllers.begin(),m_listControllers.end(),listController);
 
-  // This should be true because we manage m_listControllers and the use of the acccessor methods.
+  // This should be true because we manage m_listControllers and the use of the accessor methods.
   OS_ASSERT(it != m_listControllers.end());
 
   m_listControllers.erase(it);

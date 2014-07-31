@@ -103,8 +103,7 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
     m_isIP(isIP),
     m_dirty(false)
 {
-  connect(this,SIGNAL(toggleUnitsClicked(bool)),this,SLOT(onToggleUnitsClicked(bool)));
-
+  connect(this, &ThermalZoneView::toggleUnitsClicked, this, &ThermalZoneView::onToggleUnitsClicked);
   QWidget* emptyWidget = new QWidget();
   this->stackedWidget()->insertWidget(0, emptyWidget);
 
@@ -200,8 +199,7 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
   equipmentDropZone->setUseLargeIcon(true);
   equipmentDropZone->setMinItems(0);
   equipmentDropZone->setItemsAcceptDrops(true);
-  connect(equipmentDropZone,SIGNAL(itemClicked(OSItem*)),this,SLOT(onZoneHVACEquipmentItemClicked(OSItem*)));
-
+  connect(equipmentDropZone, &OSDropZone::itemClicked, this, &ThermalZoneView::onZoneHVACEquipmentItemClicked);
   QHBoxLayout * equipmentHLayout = new QHBoxLayout();
   equipmentHLayout->setContentsMargins(0,0,0,0);
   equipmentHLayout->setSpacing(10);
@@ -276,8 +274,7 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
 
   m_thermostatButton = new OSSwitch();
   thermostatHeaderLayout->addWidget(m_thermostatButton);
-  connect( m_thermostatButton, SIGNAL(clicked(bool)), this, SLOT(onThermostatButtonClicked(bool)));
-
+  connect(m_thermostatButton, &OSSwitch::clicked, this, &ThermalZoneView::onThermostatButtonClicked);
   QFrame * hvacLine2 = new QFrame();
   hvacLine2->setFrameShape(QFrame::HLine);
   hvacLine2->setFrameShadow(QFrame::Sunken);
@@ -345,8 +342,7 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
 
   m_humidistatButton = new OSSwitch();
   humidistatHeaderLayout->addWidget(m_humidistatButton);
-  connect( m_humidistatButton, SIGNAL(clicked(bool)), this, SLOT(onHumidistatButtonClicked(bool)));
-
+  connect(m_humidistatButton, &OSSwitch::clicked, this, &ThermalZoneView::onHumidistatButtonClicked);
   QFrame * hvacLine3 = new QFrame();
   hvacLine3->setFrameShape(QFrame::HLine);
   hvacLine3->setFrameShadow(QFrame::Sunken);
@@ -385,8 +381,7 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
   m_sizingParametersView = new ModelObjectPropertyView(m_isIP);
   sizingLayout->addWidget(m_sizingParametersView,row,1);
 
-  connect(this,SIGNAL(toggleUnitsClicked(bool)),m_sizingParametersView,SIGNAL(toggleUnitsClicked(bool)));
-
+  connect(this, &ThermalZoneView::toggleUnitsClicked, m_sizingParametersView, &ModelObjectPropertyView::toggleUnitsClicked);
   m_sizingParametersView->addQuantityEdit("Zone Cooling Design Supply Air Temperature",
                                           "zoneCoolingDesignSupplyAirTemperature");
 
@@ -1122,8 +1117,7 @@ void ModelObjectPropertyView::addQuantityEdit(const QString & label, const char*
   mainVBoxLayout->addWidget(labelWidget);
 
   OSQuantityEdit * quantityEdit = new OSQuantityEdit(m_isIP);
-  connect(this, SIGNAL(toggleUnitsClicked(bool)), 
-          quantityEdit, SLOT(onUnitSystemChange(bool)));
+  connect(this, &ModelObjectPropertyView::toggleUnitsClicked, quantityEdit, &OSQuantityEdit::onUnitSystemChange);
   mainVBoxLayout->addWidget(quantityEdit);
 
   m_labels.push_back(label);

@@ -161,35 +161,26 @@ void OSCollapsibleItemList::addCollapsibleItem(OSCollapsibleItem * collapsibleIt
 
   collapsibleItem->setStyleSheet(style);
 
-  bool isConnected = false;
+  connect(collapsibleItem, &OSCollapsibleItem::collapsableItemSelected,
+          this, &OSCollapsibleItemList::onCollapsableItemSelected);
 
-  isConnected = connect(collapsibleItem, SIGNAL(collapsableItemSelected(OSCollapsibleItem *)),
-                        this, SLOT(onCollapsableItemSelected(OSCollapsibleItem *)));
-  OS_ASSERT(isConnected);
+  connect(collapsibleItem, &OSCollapsibleItem::itemSelected,
+          this, &OSCollapsibleItemList::onItemSelected);
 
-  isConnected = connect(collapsibleItem, SIGNAL(itemSelected(OSItem*)),
-                        this, SLOT(onItemSelected(OSItem*)));
-  OS_ASSERT(isConnected);
+  connect(collapsibleItem, &OSCollapsibleItem::itemSelected,
+          this, &OSCollapsibleItemList::itemSelected);
 
-  isConnected = connect(collapsibleItem, SIGNAL(itemSelected(OSItem*)),
-                        this, SIGNAL(itemSelected(OSItem*)));
-  OS_ASSERT(isConnected);
+  connect(collapsibleItem, &OSCollapsibleItem::itemReplacementDropped,
+          this, &OSCollapsibleItemList::itemReplacementDropped);
 
-  isConnected = connect(collapsibleItem, SIGNAL(itemReplacementDropped(OSItem*, const OSItemId&)),
-                        this, SIGNAL(itemReplacementDropped(OSItem*, const OSItemId&)));
-  OS_ASSERT(isConnected);
+  connect(collapsibleItem, &OSCollapsibleItem::itemRemoveClicked,
+          this, &OSCollapsibleItemList::itemRemoveClicked);
 
-  isConnected = connect(collapsibleItem, SIGNAL(itemRemoveClicked(OSItem*)),
-                        this, SIGNAL(itemRemoveClicked(OSItem*)));
-  OS_ASSERT(isConnected);
+  connect(collapsibleItem, &OSCollapsibleItem::selectionCleared,
+          this, &OSCollapsibleItemList::selectionCleared);
 
-  isConnected = connect(collapsibleItem, SIGNAL(selectionCleared()),
-                        this, SIGNAL(selectionCleared()));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(collapsibleItem,SIGNAL(openLibDlgClicked()),
-                        this,SIGNAL(openLibDlgClicked()));
-  OS_ASSERT(isConnected);
+  connect(collapsibleItem, &OSCollapsibleItem::openLibDlgClicked,
+          this, &OSCollapsibleItemList::openLibDlgClicked);
 
   if (!selectedItem()){
     collapsibleItem->itemList()->selectItem(collapsibleItem->itemList()->firstItem());

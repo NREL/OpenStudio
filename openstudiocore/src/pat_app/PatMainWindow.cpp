@@ -84,8 +84,6 @@ PatMainWindow::PatMainWindow(QWidget *parent) :
 
   verticalTabWidget = new PatVerticalTabWidget();
 
-  bool isConnected = false;
-
   m_mainSplitter->addWidget(verticalTabWidget);
 
   m_mainRightColumnContainer = new QStackedWidget();
@@ -100,56 +98,39 @@ PatMainWindow::PatMainWindow(QWidget *parent) :
 
   this->setMenuBar(mainMenu);
 
-  isConnected = connect(mainMenu, SIGNAL(newClicked()), this, SIGNAL(newClicked()));
-  OS_ASSERT(isConnected);
+  connect(mainMenu, &PatMainMenu::newClicked, this, &PatMainWindow::newClicked);
 
-  isConnected = connect(mainMenu, SIGNAL(loadFileClicked()), this, SIGNAL(loadFileClicked()));
-  OS_ASSERT(isConnected);
+  connect(mainMenu, &PatMainMenu::loadFileClicked, this, &PatMainWindow::loadFileClicked);
 
-  isConnected = connect(mainMenu, SIGNAL(saveFileClicked()), this, SIGNAL(saveFileClicked()));
-  OS_ASSERT(isConnected);
+  connect(mainMenu, &PatMainMenu::saveFileClicked, this, &PatMainWindow::saveFileClicked);
 
-  isConnected = connect(mainMenu, SIGNAL(saveAsFileClicked()), this, SIGNAL(saveAsFileClicked()));
-  OS_ASSERT(isConnected);
+  connect(mainMenu, &PatMainMenu::saveAsFileClicked, this, &PatMainWindow::saveAsFileClicked);
 
-  isConnected = connect(mainMenu, SIGNAL(clearAllResultsClicked()), this, SIGNAL(clearAllResultsClicked()));
-  OS_ASSERT(isConnected);
+  connect(mainMenu, &PatMainMenu::clearAllResultsClicked, this, &PatMainWindow::clearAllResultsClicked);
 
-  isConnected = connect(mainMenu, SIGNAL(exportXmlClicked()), this, SIGNAL(exportXmlClicked()));
-  OS_ASSERT(isConnected);
+  connect(mainMenu, &PatMainMenu::exportXmlClicked, this, &PatMainWindow::exportXmlClicked);
 
-  isConnected = connect(mainMenu, SIGNAL(exportSpreadsheetClicked()), this, SIGNAL(exportSpreadsheetClicked()));
-  OS_ASSERT(isConnected);
+  connect(mainMenu, &PatMainMenu::exportSpreadsheetClicked, this, &PatMainWindow::exportSpreadsheetClicked);
 
-  isConnected = connect(mainMenu, SIGNAL(scanForToolsClicked()),this,SIGNAL(scanForToolsClicked()));
-  OS_ASSERT(isConnected);
+  connect(mainMenu, &PatMainMenu::scanForToolsClicked, this, &PatMainWindow::scanForToolsClicked);
 
-  isConnected = connect(mainMenu, SIGNAL(showToolsClicked()),this,SIGNAL(showToolsClicked()));
-  OS_ASSERT(isConnected);
+  connect(mainMenu, &PatMainMenu::showToolsClicked, this, &PatMainWindow::showToolsClicked);
 
-  isConnected = connect(mainMenu, SIGNAL(exitClicked()),this,SIGNAL(exitClicked()));
-  OS_ASSERT(isConnected);
+  connect(mainMenu, &PatMainMenu::exitClicked, this, &PatMainWindow::exitClicked);
   
-  isConnected = connect(mainMenu, SIGNAL(changeMeasuresClicked()),this,SIGNAL(changeMeasuresClicked()));
-  OS_ASSERT(isConnected);
+  connect(mainMenu, &PatMainMenu::changeMeasuresClicked, this, &PatMainWindow::changeMeasuresClicked);
 
-  isConnected = connect(mainMenu, SIGNAL(openBclDlgClicked()), this, SIGNAL(openBclDlgClicked()));
-  OS_ASSERT(isConnected);
+  connect(mainMenu, &PatMainMenu::openBclDlgClicked, this, &PatMainWindow::openBclDlgClicked);
 
-  isConnected = connect(mainMenu, SIGNAL(openCloudDlgClicked()), this, SIGNAL(openCloudDlgClicked()));
-  OS_ASSERT(isConnected);
+  connect(mainMenu, &PatMainMenu::openCloudDlgClicked, this, &PatMainWindow::openCloudDlgClicked);
 
-  isConnected = connect(mainMenu, SIGNAL(openMonitorUseDlgClicked()), this, SIGNAL(openMonitorUseDlgClicked()));
-  OS_ASSERT(isConnected);
+  connect(mainMenu, &PatMainMenu::openMonitorUseDlgClicked, this, &PatMainWindow::openMonitorUseDlgClicked);
 
-  isConnected = connect(mainMenu, SIGNAL(helpClicked()),this,SIGNAL(helpClicked()));
-  OS_ASSERT(isConnected);
+  connect(mainMenu, &PatMainMenu::helpClicked, this, &PatMainWindow::helpClicked);
 
-  isConnected = connect(mainMenu, SIGNAL(aboutClicked()),this,SIGNAL(aboutClicked()));
-  OS_ASSERT(isConnected);
+  connect(mainMenu, &PatMainMenu::aboutClicked, this, &PatMainWindow::aboutClicked);
 
-  isConnected = connect(mainMenu, SIGNAL(configureProxyClicked()),this,SLOT(configureProxyClicked()));
-  OS_ASSERT(isConnected);
+  connect(mainMenu, &PatMainMenu::configureProxyClicked, this, &PatMainWindow::configureProxyClicked);
 
   QTimer::singleShot(0, this, SLOT(loadProxySettings()));
 }

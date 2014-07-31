@@ -142,10 +142,7 @@ void OSGridController::setHorizontalHeader()
     m_horizontalHeaderBtnGrp = new QButtonGroup();
     m_horizontalHeaderBtnGrp->setExclusive(false);
 
-    bool isConnected = false;
-    isConnected = connect(m_horizontalHeaderBtnGrp, SIGNAL(buttonClicked(int)),
-      this, SLOT(horizontalHeaderChecked(int)));
-    OS_ASSERT(isConnected);
+    connect(m_horizontalHeaderBtnGrp, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &OSGridController::horizontalHeaderChecked);
 
   } else {
     QList<QAbstractButton *> buttons = m_horizontalHeaderBtnGrp->buttons();
@@ -180,8 +177,6 @@ QWidget * OSGridController::widgetAt(int row, int column)
   OS_ASSERT(static_cast<int>(m_baseConcepts.size()) > column);
 
   QWidget * widget = nullptr;
-
-  bool isConnected = false;
 
   QString cellColor("#FFFFFF"); // white
 
@@ -219,9 +214,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
         widget = comboBox;
 
-        isConnected = connect(comboBox, SIGNAL(currentIndexChanged(int)),
-          this, SLOT(onComboBoxIndexChanged(int)));
-        OS_ASSERT(isConnected);
+        connect(comboBox, static_cast<void (OSComboBox2::*)(int)>(&OSComboBox2::currentIndexChanged), this, &OSGridController::onComboBoxIndexChanged);
 
     } else if(QSharedPointer<ValueEditConcept<double> > doubleEditConcept = baseConcept.dynamicCast<ValueEditConcept<double> >()) {
 
@@ -306,9 +299,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
                            DoubleGetter(std::bind(&QuantityEditConcept<double>::get,quantityEditConcept.data(),mo)),
                            boost::optional<DoubleSetter>(std::bind(&QuantityEditConcept<double>::set,quantityEditConcept.data(),mo,std::placeholders::_1)));
 
-        isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-          quantityEdit, SLOT(onUnitSystemChange(bool)));
-        OS_ASSERT(isConnected);
+        connect(this, &OSGridController::toggleUnitsClicked, quantityEdit, &OSQuantityEdit2::onUnitSystemChange);
 
         widget = quantityEdit;
 
@@ -325,9 +316,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
                                    OptionalDoubleGetter(std::bind(&OptionalQuantityEditConcept<double>::get,optionalQuantityEditConcept.data(),mo)),
                                    boost::optional<DoubleSetter>(std::bind(&OptionalQuantityEditConcept<double>::set,optionalQuantityEditConcept.data(),mo,std::placeholders::_1)));
 
-        isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-          optionalQuantityEdit, SLOT(onUnitSystemChange(bool)));
-        OS_ASSERT(isConnected);
+        connect(this, &OSGridController::toggleUnitsClicked, optionalQuantityEdit, &OSQuantityEdit2::onUnitSystemChange);
 
         widget = optionalQuantityEdit;
 
@@ -344,9 +333,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
                                      DoubleGetter(std::bind(&QuantityEditVoidReturnConcept<double>::get,quantityEditVoidReturnConcept.data(),mo)),
                                      DoubleSetterVoidReturn(std::bind(&QuantityEditVoidReturnConcept<double>::set,quantityEditVoidReturnConcept.data(),mo,std::placeholders::_1)));
 
-        isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-          quantityEditVoidReturn, SLOT(onUnitSystemChange(bool)));
-        OS_ASSERT(isConnected);
+        connect(this, &OSGridController::toggleUnitsClicked, quantityEditVoidReturn, &OSQuantityEdit2::onUnitSystemChange);
 
         widget = quantityEditVoidReturn;
 
@@ -363,9 +350,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
                                              OptionalDoubleGetter(std::bind(&OptionalQuantityEditVoidReturnConcept<double>::get,optionalQuantityEditVoidReturnConcept.data(),mo)),
                                              DoubleSetterVoidReturn(std::bind(&OptionalQuantityEditVoidReturnConcept<double>::set,optionalQuantityEditVoidReturnConcept.data(),mo,std::placeholders::_1)));
 
-        isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-          optionalQuantityEditVoidReturn, SLOT(onUnitSystemChange(bool)));
-        OS_ASSERT(isConnected);
+        connect(this, &OSGridController::toggleUnitsClicked, optionalQuantityEditVoidReturn, &OSQuantityEdit2::onUnitSystemChange);
 
         widget = optionalQuantityEditVoidReturn;
 

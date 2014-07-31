@@ -143,15 +143,6 @@ namespace detail {
     bool requestDownloadDetailedResults(analysis::DataPoint& dataPoint);
 
     //@}
-    /** @name Signals, Slots, Threads */
-    //@{
-
-    bool connect(const std::string& signal,
-                 const QObject* qObject,
-                 const std::string& slot,
-                 Qt::ConnectionType type = Qt::AutoConnection) const;
-
-    //@}
     /** @name Type Casting */
     //@{
 

@@ -42,17 +42,11 @@ UtilityBillsController::UtilityBillsController(const model::Model& model)
   subTabView()->itemSelectorButtons()->disablePurgeButton();
   subTabView()->itemSelectorButtons()->hideDropZone();
 
-  QWidget * utilityBillsView = subTabView()->inspectorView(); 
+  UtilityBillsInspectorView * utilityBillsInspectorView = static_cast<UtilityBillsInspectorView *>(subTabView()->inspectorView());
 
-  bool isConnected = false;
+  connect(this, &UtilityBillsController::toggleUnitsClicked, utilityBillsInspectorView, &UtilityBillsInspectorView::toggleUnitsClicked);
 
-  isConnected = connect(this,SIGNAL(toggleUnitsClicked( bool )),
-                        utilityBillsView,SIGNAL(toggleUnitsClicked( bool )) );
-  OS_ASSERT(isConnected);
-
-  isConnected = connect( utilityBillsView,SIGNAL(enableAddNewObjectButton( bool )),
-    this,SLOT(enableAddNewObjectButton( bool )) );
-  OS_ASSERT(isConnected);
+  connect(utilityBillsInspectorView, &UtilityBillsInspectorView::enableAddNewObjectButton, this, &UtilityBillsController::enableAddNewObjectButton);
 }
 
 void UtilityBillsController::onAddObject(const openstudio::IddObjectType& iddObjectType)

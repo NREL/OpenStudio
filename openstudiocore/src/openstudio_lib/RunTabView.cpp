@@ -121,8 +121,7 @@ RunView::RunView(const model::Model & model,
 //  m_playButton->setStyleSheet("QAbstractButton:!hover { border: none; }");
 
   mainLayout->addWidget(m_playButton, 0, 0);
-  isConnected = connect(m_playButton, SIGNAL(clicked(bool)), this, SLOT(playButtonClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_playButton, &QToolButton::clicked, this, &RunView::playButtonClicked);
 
   // Progress bar area
   m_progressBar = new QProgressBar();
@@ -135,9 +134,7 @@ RunView::RunView(const model::Model & model,
 
   m_radianceGroup = new QButtonGroup(this);
 
-  isConnected = connect(m_radianceGroup, SIGNAL(buttonClicked(int)),
-    this, SLOT(on_radianceGroupClicked(int)));
-  OS_ASSERT(isConnected);
+  connect(m_radianceGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &RunView::on_radianceGroupClicked);
 
   int buttonCount = 0;
 
@@ -178,9 +175,7 @@ RunView::RunView(const model::Model & model,
   m_radianceWarningsAndErrorsButton->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Preferred);
   m_radianceWarningsAndErrorsButton->hide();
 
-  isConnected = connect(m_radianceWarningsAndErrorsButton, SIGNAL(clicked(bool)),
-                        this, SLOT(on_radianceWarningsAndErrorsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_radianceWarningsAndErrorsButton, &QPushButton::clicked, this, &RunView::on_radianceWarningsAndErrorsClicked);
 
   QHBoxLayout * radianceHLayout = new QHBoxLayout();
   radianceHLayout->addWidget(m_radianceButton);

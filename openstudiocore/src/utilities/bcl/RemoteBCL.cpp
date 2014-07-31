@@ -82,9 +82,7 @@ namespace openstudio{
     useRemoteProductionUrl();
 
 #ifndef QT_NO_OPENSSL
-    bool isConnected = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
-      this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-    OS_ASSERT(isConnected);
+    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
 #endif
   }
 
@@ -254,13 +252,10 @@ namespace openstudio{
       //LOG(Warn, toString(url));
 
       // when the reply is finished call onSearchResponseComplete
-      bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
-      OS_ASSERT(test);
+      connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onSearchResponseComplete);
 
 #ifndef QT_NO_OPENSSL
-      test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
-        this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-      OS_ASSERT(test);
+      connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
 #endif
 
       QNetworkRequest request = QNetworkRequest(QUrl(url));
@@ -298,13 +293,10 @@ namespace openstudio{
       //LOG(Warn, toString(url));
 
       // when the reply is finished call onSearchResponseComplete
-      bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
-      OS_ASSERT(test);
+      connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onSearchResponseComplete);
 
 #ifndef QT_NO_OPENSSL
-      test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
-        this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-      OS_ASSERT(test);
+      connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
 #endif
 
       QNetworkRequest request = QNetworkRequest(QUrl(url));
@@ -524,13 +516,10 @@ namespace openstudio{
       disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
 
       // when the reply is finished call onSearchResponseComplete
-      bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
-      OS_ASSERT(test);
+      connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onSearchResponseComplete);
 
 #ifndef QT_NO_OPENSSL
-      test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
-        this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-      OS_ASSERT(test);
+      connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
 #endif
 
       QNetworkRequest request = QNetworkRequest(QUrl(url));
@@ -634,19 +623,15 @@ namespace openstudio{
     //OS_ASSERT(test);
 
     // when the reply is finished call onDownloadComplete
-    bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onDownloadComplete(QNetworkReply*)));
-    OS_ASSERT(test);
+    connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onDownloadComplete);
 
 #ifndef QT_NO_OPENSSL
-    test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
-      this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-    OS_ASSERT(test);
+    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
 #endif
 
     m_downloadReply = m_networkManager->post(request, data);
         
-    test = connect(m_downloadReply, SIGNAL(readyRead()), this, SLOT(downloadData()));
-    OS_ASSERT(test);
+    connect(m_downloadReply, &QNetworkReply::readyRead, this, &RemoteBCL::downloadData);
 
     return true;
   }
@@ -673,13 +658,10 @@ namespace openstudio{
     //OS_ASSERT(test);
 
     // when the reply is finished call onOnDemandGeneratorResponseComplete
-    bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onOnDemandGeneratorResponseComplete(QNetworkReply*)));
-    OS_ASSERT(test);
+    connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onOnDemandGeneratorResponseComplete);
 
 #ifndef QT_NO_OPENSSL
-    test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
-      this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-    OS_ASSERT(test);
+    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
 #endif
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
@@ -755,19 +737,15 @@ namespace openstudio{
     //OS_ASSERT(test);
 
     // when the reply is finished call onDownloadComplete
-    bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onDownloadComplete(QNetworkReply*)));
-    OS_ASSERT(test);
+    connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onDownloadComplete);
 
 #ifndef QT_NO_OPENSSL
-    test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
-      this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-    OS_ASSERT(test);
+    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
 #endif
 
     m_downloadReply = m_networkManager->get(request);
 
-    test = connect(m_downloadReply, SIGNAL(readyRead()), this, SLOT(downloadData()));
-    OS_ASSERT(test);
+    connect(m_downloadReply, &QNetworkReply::readyRead, this, &RemoteBCL::downloadData);
 
     return true;
   }
@@ -804,13 +782,10 @@ namespace openstudio{
     //OS_ASSERT(test);
 
     // when the reply is finished call onMetaSearchResponseComplete
-    bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onMetaSearchResponseComplete(QNetworkReply*)));
-    OS_ASSERT(test);
+    connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onMetaSearchResponseComplete);
 
 #ifndef QT_NO_OPENSSL
-    test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
-      this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-    OS_ASSERT(test);
+    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
 #endif
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
@@ -852,13 +827,10 @@ namespace openstudio{
     //OS_ASSERT(test);
 
     // when the reply is finished call onMetaSearchResponseComplete
-    bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onMetaSearchResponseComplete(QNetworkReply*)));
-    OS_ASSERT(test);
+    connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onMetaSearchResponseComplete);
 
 #ifndef QT_NO_OPENSSL
-    test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
-      this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-    OS_ASSERT(test);
+    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
 #endif
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
@@ -906,13 +878,10 @@ namespace openstudio{
     //OS_ASSERT(test);
 
     // when the reply is finished call onSearchResponseComplete
-    bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
-    OS_ASSERT(test);
+    connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onSearchResponseComplete);
 
 #ifndef QT_NO_OPENSSL
-    test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
-      this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-    OS_ASSERT(test);
+    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
 #endif
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
@@ -958,13 +927,10 @@ namespace openstudio{
     //OS_ASSERT(test);
 
     // when the reply is finished call onSearchResponseComplete
-    bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
-    OS_ASSERT(test);
+    connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onSearchResponseComplete);
 
 #ifndef QT_NO_OPENSSL
-    test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
-      this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-    OS_ASSERT(test);
+    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
 #endif
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));

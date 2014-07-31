@@ -130,11 +130,8 @@ InteriorPartitionSurfaceInspectorView::InteriorPartitionSurfaceInspectorView(boo
   label->setStyleSheet("QLabel { font: bold; }");
   vLayout->addWidget(label);
 
-  bool isConnected = false;
-
   m_surfaceAreaEdit = new OSQuantityEdit(this);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_surfaceAreaEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &InteriorPartitionSurfaceInspectorView::toggleUnitsClicked, m_surfaceAreaEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_surfaceAreaEdit);
 
   mainGridLayout->addLayout(vLayout,2,0, Qt::AlignTop|Qt::AlignLeft);
@@ -161,8 +158,7 @@ InteriorPartitionSurfaceInspectorView::InteriorPartitionSurfaceInspectorView(boo
 
   // planar surface widget
   m_planarSurfaceWidget = new PlanarSurfaceWidget(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_surfaceAreaEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &InteriorPartitionSurfaceInspectorView::toggleUnitsClicked, m_surfaceAreaEdit, &OSQuantityEdit::onUnitSystemChange);
 
   mainGridLayout->addWidget(m_planarSurfaceWidget,4,0,1,2);
 

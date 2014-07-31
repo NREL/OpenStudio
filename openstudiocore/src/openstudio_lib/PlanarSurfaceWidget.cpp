@@ -51,11 +51,8 @@ void PlanarSurfaceWidget::attach(const openstudio::model::PlanarSurface& planarS
 
   m_planarSurface = planarSurface;
 
-  bool isConnected = connect(m_planarSurface->getImpl<model::detail::ModelObject_Impl>().get(),
-                             SIGNAL(onChange()),
-                             this, 
-                             SLOT(refresh()));
-  OS_ASSERT(isConnected);
+  connect(m_planarSurface->getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onChange,
+    this, &PlanarSurfaceWidget::refresh);
 
   refresh();
 }
@@ -65,7 +62,7 @@ void PlanarSurfaceWidget::detach()
   clear();
 
   if (m_planarSurface){
-    this->disconnect(m_planarSurface->getImpl<model::detail::ModelObject_Impl>().get());
+    disconnect(m_planarSurface->getImpl<model::detail::ModelObject_Impl>().get());
     m_planarSurface.reset();
   }
 }

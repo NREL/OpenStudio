@@ -78,89 +78,49 @@ SchedulesTabController::SchedulesTabController(bool isIP, const model::Model & m
   addQObject(m_schedulesView);
   this->mainContentWidget()->addSubTab("Schedules",m_schedulesView,SCHEDULES);
 
-  bool isConnected = false;
+  connect(this, &SchedulesTabController::toggleUnitsClicked, this, &SchedulesTabController::toggleUnits);
 
-  isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
-                        this,SLOT(toggleUnits(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &SchedulesTabController::toggleUnitsClicked, m_schedulesView, &SchedulesView::toggleUnitsClicked);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        m_schedulesView, SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_scheduleSetsController.get(), &ScheduleSetsController::downloadComponentsClicked, this, &SchedulesTabController::downloadComponentsClicked);
 
-  isConnected = connect(m_scheduleSetsController.get(), SIGNAL(downloadComponentsClicked()),
-                        this, SIGNAL(downloadComponentsClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_scheduleSetsController.get(), &ScheduleSetsController::openLibDlgClicked, this, &SchedulesTabController::openLibDlgClicked);
 
-  isConnected = connect(m_scheduleSetsController.get(), SIGNAL(openLibDlgClicked()),
-                        this, SIGNAL(openLibDlgClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_schedulesView, &SchedulesView::addScheduleClicked, this, &SchedulesTabController::addScheduleRuleset);
 
-  isConnected = connect(m_schedulesView,SIGNAL(addScheduleClicked()),this,SLOT(addScheduleRuleset()));
-  OS_ASSERT(isConnected);
+  connect(m_schedulesView, &SchedulesView::removeSelectedScheduleClicked, this, &SchedulesTabController::removeSelectedSchedule);
 
-  isConnected = connect(m_schedulesView,SIGNAL(removeSelectedScheduleClicked()),this,SLOT(removeSelectedSchedule()));
-  OS_ASSERT(isConnected);
+  connect(m_schedulesView, &SchedulesView::purgeUnusedScheduleRulesetsClicked, this, &SchedulesTabController::purgeUnusedScheduleRulesets);
 
-  isConnected = connect(m_schedulesView,SIGNAL(purgeUnusedScheduleRulesetsClicked()),this,SLOT(purgeUnusedScheduleRulesets()));
-  OS_ASSERT(isConnected);
+  connect(m_schedulesView, &SchedulesView::addRuleClicked, this, &SchedulesTabController::addRule);
 
-  isConnected = connect(m_schedulesView,SIGNAL(addRuleClicked(model::ScheduleRuleset &)),this,SLOT(addRule(model::ScheduleRuleset &)));
-  OS_ASSERT(isConnected);
+  connect(m_schedulesView, &SchedulesView::addSummerProfileClicked, this, &SchedulesTabController::addSummerProfile);
 
-  isConnected = connect(m_schedulesView,SIGNAL(addSummerProfileClicked(model::ScheduleRuleset &)),this,SLOT(addSummerProfile(model::ScheduleRuleset &)));
-  OS_ASSERT(isConnected);
+  connect(m_schedulesView, &SchedulesView::addWinterProfileClicked, this, &SchedulesTabController::addWinterProfile);
 
-  isConnected = connect(m_schedulesView,SIGNAL(addWinterProfileClicked(model::ScheduleRuleset &)),this,SLOT(addWinterProfile(model::ScheduleRuleset &)));
-  OS_ASSERT(isConnected);
+  connect(m_schedulesView, &SchedulesView::dayScheduleSceneChanged, this, &SchedulesTabController::onDayScheduleSceneChanged);
 
-  isConnected = connect( m_schedulesView,SIGNAL(dayScheduleSceneChanged( DayScheduleScene *, double, double )),
-           this,SLOT(onDayScheduleSceneChanged( DayScheduleScene *, double, double )));
-  OS_ASSERT(isConnected);
+  connect(m_schedulesView, &SchedulesView::startDateTimeChanged, this, &SchedulesTabController::onStartDateTimeChanged);
 
-  isConnected = connect( m_schedulesView,SIGNAL(startDateTimeChanged(model::ScheduleRule &, const QDateTime &)),
-           this,SLOT(onStartDateTimeChanged(model::ScheduleRule &, const QDateTime &)) );
-  OS_ASSERT(isConnected);
+  connect(m_schedulesView, &SchedulesView::endDateTimeChanged, this, &SchedulesTabController::onEndDateTimeChanged);
 
-  isConnected = connect( m_schedulesView,SIGNAL(endDateTimeChanged(model::ScheduleRule &, const QDateTime &)),
-           this,SLOT(onEndDateTimeChanged(model::ScheduleRule &, const QDateTime &)) );
-  OS_ASSERT(isConnected);
+  connect(m_schedulesView, &SchedulesView::removeScheduleRuleClicked, this, &SchedulesTabController::removeScheduleRule);
 
-  isConnected = connect( m_schedulesView,SIGNAL(removeScheduleRuleClicked(model::ScheduleRule &)),
-           this,SLOT(removeScheduleRule(model::ScheduleRule &)) );
-  OS_ASSERT(isConnected);
+  connect(m_schedulesView, &SchedulesView::itemDropped, this, &SchedulesTabController::onItemDropped);
 
-  isConnected = connect( m_schedulesView,SIGNAL(itemDropped(const OSItemId &)),
-           this,SLOT(onItemDropped(const OSItemId &)) );
-  OS_ASSERT(isConnected);
+  connect(m_yearSettingsWidget, &YearSettingsWidget::calendarYearSelected, this, &SchedulesTabController::setCalendarYear);
 
-  isConnected = connect( m_yearSettingsWidget,SIGNAL(calendarYearSelected(int)),
-           this,SLOT(setCalendarYear(int)) );
-  OS_ASSERT(isConnected);
+  connect(m_yearSettingsWidget, &YearSettingsWidget::firstDayofYearSelected, this, &SchedulesTabController::setFirstDayofYear);
 
-  isConnected = connect( m_yearSettingsWidget,SIGNAL(firstDayofYearSelected(const QString &)),
-           this,SLOT(setFirstDayofYear(const QString &)) );
-  OS_ASSERT(isConnected);
+  connect(m_yearSettingsWidget, &YearSettingsWidget::daylightSavingTimeClicked, this, &SchedulesTabController::setDaylightSavingsTime);
 
-  isConnected = connect( m_yearSettingsWidget,SIGNAL(daylightSavingTimeClicked(bool)),
-           this,SLOT(setDaylightSavingsTime(bool)) );
-  OS_ASSERT(isConnected);
+  connect(m_yearSettingsWidget, &YearSettingsWidget::dstStartDayOfWeekAndMonthChanged, this, &SchedulesTabController::setDstStartDayOfWeekAndMonth);
 
-  isConnected = connect( m_yearSettingsWidget,SIGNAL(dstStartDayOfWeekAndMonthChanged(int, int, int)),
-           this,SLOT(setDstStartDayOfWeekAndMonth(int, int, int)) );
-  OS_ASSERT(isConnected);
+  connect(m_yearSettingsWidget, &YearSettingsWidget::dstStartDateChanged, this, &SchedulesTabController::setDstStartDate);
 
-  isConnected = connect( m_yearSettingsWidget,SIGNAL(dstStartDateChanged(const QDate &)),
-           this,SLOT(setDstStartDate(const QDate &)) );
-  OS_ASSERT(isConnected);
+  connect(m_yearSettingsWidget, &YearSettingsWidget::dstEndDayOfWeekAndMonthChanged, this, &SchedulesTabController::setDstEndDayOfWeekAndMonth);
 
-  isConnected = connect( m_yearSettingsWidget,SIGNAL(dstEndDayOfWeekAndMonthChanged(int, int, int)),
-           this,SLOT(setDstEndDayOfWeekAndMonth(int, int, int)) );
-  OS_ASSERT(isConnected);
-
-  isConnected = connect( m_yearSettingsWidget,SIGNAL(dstEndDateChanged(const QDate &)),
-           this,SLOT(setDstEndDate(const QDate &)) );
-  OS_ASSERT(isConnected);
+  connect(m_yearSettingsWidget, &YearSettingsWidget::dstEndDateChanged, this, &SchedulesTabController::setDstEndDate);
 }
 
 YearSettingsWidget * SchedulesTabController::yearSettingsWidget()
@@ -181,9 +141,7 @@ void SchedulesTabController::showScheduleDialog()
   if(!m_scheduleDialog){
     m_scheduleDialog = new ScheduleDialog(m_isIP,m_model);
 
-    bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                               m_scheduleDialog, SIGNAL(toggleUnitsClicked(bool)));
-    OS_ASSERT(isConnected);
+    connect(this, &SchedulesTabController::toggleUnitsClicked, m_scheduleDialog, &ScheduleDialog::toggleUnitsClicked);
   }
   m_scheduleDialog->show();
 }

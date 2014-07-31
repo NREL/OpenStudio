@@ -39,8 +39,6 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
 
   QAction * action = 0;
 
-  bool isConnected = 0;
-
   // File menu
   m_fileMenu = new QMenu(tr("&File"),this);
   addMenu(m_fileMenu);
@@ -49,34 +47,29 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   action = new QAction(tr("&New"), this);
   action->setShortcut(QKeySequence(QKeySequence::New));
   m_fileMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(newClicked()), Qt::QueuedConnection);
-  OS_ASSERT(isConnected);
+  connect(action, &QAction::triggered, this, &MainMenu::newClicked, Qt::QueuedConnection);
 
   // DLM: actions which result in this menu being deleted should be queued
   action = new QAction(tr("&Open"), this);
   action->setShortcut(QKeySequence(QKeySequence::Open));
   m_fileMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(loadFileClicked()), Qt::QueuedConnection);
-  OS_ASSERT(isConnected);
+  connect(action, &QAction::triggered, this, &MainMenu::loadFileClicked, Qt::QueuedConnection);
 
   m_fileMenu->addSeparator();
   
   m_revertToSavedAction = new QAction(tr("Revert to Saved"), this);
   m_revertToSavedAction->setDisabled(true);
   m_fileMenu->addAction(m_revertToSavedAction);
-  isConnected = connect(m_revertToSavedAction, SIGNAL(triggered()), this, SIGNAL(revertFileClicked()), Qt::QueuedConnection);
-  OS_ASSERT(isConnected);
+  connect(m_revertToSavedAction, &QAction::triggered, this, &MainMenu::revertFileClicked, Qt::QueuedConnection);
 
   action = new QAction(tr("&Save"), this);
   action->setShortcut(QKeySequence(QKeySequence::Save)); 
   m_fileMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(saveFileClicked()));
-  OS_ASSERT(isConnected);
+  connect(action, &QAction::triggered, this, &MainMenu::saveFileClicked);
 
   action = new QAction(tr("Save &As"), this);
   m_fileMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(saveAsFileClicked()));
-  OS_ASSERT(isConnected); 
+  connect(action, &QAction::triggered, this, &MainMenu::saveAsFileClicked);
 
   m_fileMenu->addSeparator();
 
@@ -85,56 +78,47 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
 
   action = new QAction(tr("IDF"), this);
   importMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(importClicked()), Qt::QueuedConnection);
-  OS_ASSERT(isConnected);
+  connect(action, &QAction::triggered, this, &MainMenu::importClicked, Qt::QueuedConnection);
 
   action = new QAction(tr("gbXML"), this); 
   importMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(importgbXMLClicked()), Qt::QueuedConnection);
-  OS_ASSERT(isConnected);
+  connect(action, &QAction::triggered, this, &MainMenu::importgbXMLClicked, Qt::QueuedConnection);
 
   action = new QAction(tr("SDD"), this); 
   importMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(importSDDClicked()), Qt::QueuedConnection);
-  OS_ASSERT(isConnected);
+  connect(action, &QAction::triggered, this, &MainMenu::importSDDClicked, Qt::QueuedConnection);
 
   QMenu * exportMenu = m_fileMenu->addMenu(tr("Export"));
 
   action = new QAction(tr("IDF"), this);
   exportMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(exportClicked()));
-  OS_ASSERT(isConnected);
+  connect(action, &QAction::triggered, this, &MainMenu::exportClicked);
 
   action = new QAction(tr("gbXML"), this);
   exportMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(exportgbXMLClicked()));
-  OS_ASSERT(isConnected);
+  connect(action, &QAction::triggered, this, &MainMenu::exportgbXMLClicked);
 
   action = new QAction(tr("SDD"), this);
   exportMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(exportSDDClicked()));
-  OS_ASSERT(isConnected);
+  connect(action, &QAction::triggered, this, &MainMenu::exportSDDClicked);
 
   action = new QAction(tr("&Load Library"), this);
   m_fileMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(loadLibraryClicked()));
-  OS_ASSERT(isConnected);
+  connect(action, &QAction::triggered, this, &MainMenu::loadLibraryClicked);
 
   if (!m_isPlugin){
 
     m_fileMenu->addSeparator();
 
     //m_fileMenu->addAction(action);
-    //isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(showRubyConsoleClicked()));
-    //OS_ASSERT(isConnected);
+    //connect(action, &QAction::triggered, this, &MainMenu::showRubyConsoleClicked);
 
     m_fileMenu->addSeparator();
 
     action = new QAction(tr("E&xit"), this);
     action->setShortcuts(QKeySequence::Quit);
     m_fileMenu->addAction(action);
-    isConnected = connect(action, SIGNAL(triggered()),this,SIGNAL(exitClicked()), Qt::QueuedConnection);
-    OS_ASSERT(isConnected);
+    connect(action, &QAction::triggered, this, &MainMenu::exitClicked, Qt::QueuedConnection);
 
   }
 
@@ -146,38 +130,31 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
 
   m_displaySIUnitsAction = new QAction(tr("Metric (&SI)"),this);
   unitsMenu->addAction(m_displaySIUnitsAction);
-  isConnected = connect(m_displaySIUnitsAction, SIGNAL(triggered()),this,SLOT(displaySIUnitsClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_displaySIUnitsAction, &QAction::triggered, this, &MainMenu::displaySIUnitsClicked);
 
   m_displayIPUnitsAction = new QAction(tr("English (&I-P)"),this);
   unitsMenu->addAction(m_displayIPUnitsAction);
-  isConnected = connect(m_displayIPUnitsAction, SIGNAL(triggered()),this,SLOT(displayIPUnitsClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_displayIPUnitsAction, &QAction::triggered, this, &MainMenu::displayIPUnitsClicked);
 
   action = new QAction(tr("Change My Measures Directory"),this);
   m_preferencesMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()),this,SIGNAL(changeMyMeasuresDir()));
-  OS_ASSERT(isConnected);
+  connect(action, &QAction::triggered, this, &MainMenu::changeMyMeasuresDir);
 
   action = new QAction(tr("Scan for Tools"),this);
   m_preferencesMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()),this,SIGNAL(scanForToolsClicked()));
-  OS_ASSERT(isConnected);
+  connect(action, &QAction::triggered, this, &MainMenu::scanForToolsClicked);
 
   action = new QAction(tr("Show Tools"),this);
   m_preferencesMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()),this,SIGNAL(showRunManagerPreferencesClicked()));
-  OS_ASSERT(isConnected);
+  connect(action, &QAction::triggered, this, &MainMenu::showRunManagerPreferencesClicked);
 
   action = new QAction(tr("Change BCL Login Information"),this);
   //m_preferencesMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()),this,SIGNAL(changeBclLogin()));
-  OS_ASSERT(isConnected);
+  connect(action, &QAction::triggered, this, &MainMenu::changeBclLogin);
 
   action = new QAction(tr("&Configure Internet Proxy"),this);
   m_preferencesMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()),this,SIGNAL(configureProxyClicked()));
-  OS_ASSERT(isConnected);
+  connect(action, &QAction::triggered, this, &MainMenu::configureProxyClicked);
 
   if(m_isIP){
     m_displayIPUnitsAction->trigger();
@@ -193,18 +170,15 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   action = new QAction(tr("Apply Measure Now"),this);
   action->setShortcut(QKeySequence(QKeySequence(tr("Ctrl+M"))));
   m_measureMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()),this,SIGNAL(applyMeasureClicked()));
-  OS_ASSERT(isConnected);
+  connect(action, &QAction::triggered, this, &MainMenu::applyMeasureClicked);
 
   action = new QAction(tr("Find Measures"),this);
   m_measureMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()),this,SIGNAL(downloadMeasuresClicked()));
-  OS_ASSERT(isConnected);
+  connect(action, &QAction::triggered, this, &MainMenu::downloadMeasuresClicked);
 
   action = new QAction(tr("Find Components"),this);
   m_measureMenu->addAction(action); 
-  isConnected = connect(action, SIGNAL(triggered()),this,SIGNAL(downloadComponentsClicked()));
-  OS_ASSERT(isConnected);
+  connect(action, &QAction::triggered, this, &MainMenu::downloadComponentsClicked);
 
   // Help menu
   m_helpMenu = new QMenu(tr("&Help"),this);
@@ -212,13 +186,11 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
 
   action = new QAction(tr("OpenStudio &Help"),this);
   m_helpMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()),this,SIGNAL(helpClicked()));
-  OS_ASSERT(isConnected);
+  connect(action, &QAction::triggered, this, &MainMenu::helpClicked);
 
   action = new QAction(tr("&About"),this);
   m_helpMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()),this,SIGNAL(aboutClicked()));
-  OS_ASSERT(isConnected);
+  connect(action, &QAction::triggered, this, &MainMenu::aboutClicked);
 
 }
 

@@ -49,10 +49,10 @@ namespace openstudio {
     public slots:
       void resultsGenerated(const openstudio::path &t_sqlFile, const openstudio::path &t_radianceResultsPath);
       void onUnitSystemChange(bool t_isIP);
+      void treeChanged(const openstudio::UUID &t_uuid);
 
     private slots:
       void openResultsViewerClicked();
-      void treeChanged(const openstudio::UUID &t_uuid);
       void comboBoxChanged(int index);
 
     private:

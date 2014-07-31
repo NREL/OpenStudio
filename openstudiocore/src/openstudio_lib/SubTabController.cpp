@@ -41,54 +41,29 @@ SubTabController::SubTabController(SubTabView* subTabView)
 {
   addQObject(subTabView);
 
-  bool isConnected = false;
-  isConnected = connect(subTabView, SIGNAL(itemSelected(OSItem*)),
-                        this, SLOT(selectItem(OSItem*)));
-  OS_ASSERT(isConnected);
+  connect(subTabView, &SubTabView::itemSelected, this, &SubTabController::selectItem);
 
-  isConnected = connect(subTabView, SIGNAL(itemRemoveClicked(OSItem*)),
-                        this, SLOT(removeItem(OSItem*)));
-  OS_ASSERT(isConnected);
+  connect(subTabView, &SubTabView::itemRemoveClicked, this, &SubTabController::removeItem);
+  
+  connect(subTabView, &SubTabView::itemReplacementDropped, this, &SubTabController::replaceItem);
 
-  isConnected = connect(subTabView, SIGNAL(itemReplacementDropped(OSItem*, const OSItemId&)),
-                        this, SLOT(replaceItem(OSItem*, const OSItemId&)));
-  OS_ASSERT(isConnected);
+  connect(subTabView, &SubTabView::selectionCleared, this, &SubTabController::clearSelection);
 
-  isConnected = connect(subTabView, SIGNAL(selectionCleared()),
-                        this, SLOT(clearSelection()));
-  OS_ASSERT(isConnected);
+  connect(subTabView, &SubTabView::itemDropped, this, &SubTabController::handleDrop);
 
-  isConnected = connect(subTabView, SIGNAL(itemDropped(const OSItemId&)),
-                        this, SLOT(handleDrop(const OSItemId&)));
-  OS_ASSERT(isConnected);
+  connect(subTabView, &SubTabView::addClicked, this, &SubTabController::doAdd);
 
-  isConnected = connect(subTabView, SIGNAL(addClicked()),
-                        this, SLOT(doAdd()));
-  OS_ASSERT(isConnected);
+  connect(subTabView, &SubTabView::copyClicked, this, &SubTabController::doCopy);
 
-  isConnected = connect(subTabView, SIGNAL(copyClicked()),
-                        this, SLOT(doCopy()));
-  OS_ASSERT(isConnected);
+  connect(subTabView, &SubTabView::removeClicked, this, &SubTabController::doRemove);
 
-  isConnected = connect(subTabView, SIGNAL(removeClicked()),
-                        this, SLOT(doRemove()));
-  OS_ASSERT(isConnected);
+  connect(subTabView, &SubTabView::purgeClicked, this, &SubTabController::doPurge);
 
-  isConnected = connect(subTabView, SIGNAL(purgeClicked()),
-                        this, SLOT(doPurge()));
-  OS_ASSERT(isConnected);
+  connect(subTabView, &SubTabView::downloadComponentsClicked, this, &SubTabController::downloadComponentsClicked);
 
-  isConnected = connect(subTabView, SIGNAL(downloadComponentsClicked()),
-                        this, SIGNAL(downloadComponentsClicked()));
-  OS_ASSERT(isConnected);
+  connect(subTabView, &SubTabView::openLibDlgClicked, this, &SubTabController::openLibDlgClicked);
 
-  isConnected = connect(subTabView, SIGNAL(openLibDlgClicked()),
-                        this, SIGNAL(openLibDlgClicked()));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(subTabView, SIGNAL(dropZoneItemClicked(OSItem*)),
-                        this, SLOT(inspectItem(OSItem*)));
-  OS_ASSERT(isConnected);
+  connect(subTabView, &SubTabView::dropZoneItemClicked, this, &SubTabController::inspectItem);
 }
 
 SubTabView * SubTabController::subTabView()

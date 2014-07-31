@@ -78,8 +78,7 @@ VRFSystemView::VRFSystemView()
 {
   vrfIconButton = new ButtonItem(m_vrfPixmap,m_vrfPixmap,m_vrfPixmap);
   vrfIconButton->setParentItem(this);
-  bool bingo = connect(vrfIconButton,SIGNAL(mouseClicked()),this,SLOT(onVRFIconClicked()));
-  OS_ASSERT(bingo);
+  connect(vrfIconButton, &ButtonItem::mouseClicked, this, &VRFSystemView::onVRFIconClicked);
 
   terminalDropZone = new OSDropZoneItem();
   terminalDropZone->setParentItem(this);
@@ -228,30 +227,26 @@ void VRFSystemView::removeAllVRFTerminalViews()
 VRFTerminalView::VRFTerminalView()
   : m_terminalPixmap(QPixmap(":images/vrf_unit.png"))
 {
-  bool bingo;
   double x = VRFSystemView::margin;
 
   removeButtonItem = new RemoveButtonItem();
   removeButtonItem->setParentItem(this);
   removeButtonItem->setPos(x,(VRFSystemView::terminalViewHeight - removeButtonItem->boundingRect().height()) / 2.0);
-  bingo = connect(removeButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveTerminalClicked()));
-  OS_ASSERT(bingo);
+  connect(removeButtonItem, &RemoveButtonItem::mouseClicked, this, &VRFTerminalView::onRemoveTerminalClicked);
 
   x = x + removeButtonItem->boundingRect().width() + VRFSystemView::margin;
 
   terminalIconButton = new ButtonItem(m_terminalPixmap,m_terminalPixmap,m_terminalPixmap);
   terminalIconButton->setParentItem(this);
   terminalIconButton->setPos(x,(VRFSystemView::terminalViewHeight - terminalIconButton->boundingRect().height()) / 2.0);
-  bingo = connect(terminalIconButton,SIGNAL(mouseClicked()),this,SLOT(onTerminalIconClicked()));
-  OS_ASSERT(bingo);
+  connect(terminalIconButton, &ButtonItem::mouseClicked, this, &VRFTerminalView::onTerminalIconClicked);
 
   x = x + terminalIconButton->boundingRect().width() + VRFSystemView::margin;
 
   zoneDropZone = new VRFThermalZoneDropZoneView();
   zoneDropZone->setParentItem(this);
   zoneDropZone->setPos(x,(VRFSystemView::terminalViewHeight - zoneDropZone->boundingRect().height()) / 2.0);
-  bingo = connect(zoneDropZone,SIGNAL(componentDropped(const OSItemId &)),this,SLOT(onComponenDroppedOnZone(const OSItemId &)));
-  OS_ASSERT(bingo);
+  connect(zoneDropZone, &OSDropZoneItem::componentDropped, this, &VRFTerminalView::onComponenDroppedOnZone);
 
   x = x + zoneDropZone->boundingRect().width() + VRFSystemView::margin;
 
@@ -259,8 +254,7 @@ VRFTerminalView::VRFTerminalView()
   removeZoneButtonItem->setParentItem(this);
   removeZoneButtonItem->setPos(zoneDropZone->x() + zoneDropZone->boundingRect().width() - 10,zoneDropZone->y() - 10);
   removeZoneButtonItem->setVisible(false);
-  bingo = connect(removeZoneButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveZoneClicked()));
-  OS_ASSERT(bingo);
+  connect(removeZoneButtonItem, &RemoveButtonItem::mouseClicked, this, &VRFTerminalView::onRemoveZoneClicked);
 }
 
 void VRFTerminalView::setId(const OSItemId & id)

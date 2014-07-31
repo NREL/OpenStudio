@@ -91,16 +91,6 @@ namespace detail {
     boost::optional<runmanager::JobErrors> dakotaJobErrors() const;
 
     //@}
-    /** @name Run Management */
-    //@{
-
-    /// Connect signal from this CurrentAnalysis implementation object to slot on qObject.
-    bool connect(const std::string& signal,
-                 const QObject* qObject,
-                 const std::string& slot,
-                 Qt::ConnectionType type = Qt::AutoConnection) const;
-
-    //@}
    signals:
 
     void iterationProgress(int numCompletedJobs,int numJobsInIteration);

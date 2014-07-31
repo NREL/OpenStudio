@@ -46,11 +46,7 @@ PatVerticalTabWidget::PatVerticalTabWidget(QWidget * parent)
   m_buttonGroup = new QButtonGroup(this);
   m_buttonGroup->setExclusive(true);
 
-  bool isConnected = false;
-
-  isConnected = connect(m_buttonGroup,SIGNAL(buttonClicked(int)),
-                        this,SLOT(on_buttonClicked(int)));
-  OS_ASSERT(isConnected);
+  connect(m_buttonGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &PatVerticalTabWidget::on_buttonClicked);
 
   auto mainLayout = new QHBoxLayout();
 
@@ -77,12 +73,10 @@ PatVerticalTabWidget::PatVerticalTabWidget(QWidget * parent)
   currentIndex = -1;
 
   QShortcut* nextTabShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Tab), this);
-  isConnected = connect(nextTabShortcut, SIGNAL(activated()), this, SLOT(nextTab()));
-  OS_ASSERT(isConnected);
+  connect(nextTabShortcut, &QShortcut::activated, this, &PatVerticalTabWidget::nextTab);
 
   QShortcut* previousTabShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Tab), this);
-  isConnected = connect(previousTabShortcut, SIGNAL(activated()), this, SLOT(previousTab()));
-  OS_ASSERT(isConnected);
+  connect(previousTabShortcut, &QShortcut::activated, this, &PatVerticalTabWidget::previousTab);
 }
 
 PatVerticalTabWidget::~PatVerticalTabWidget() 

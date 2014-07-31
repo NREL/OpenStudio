@@ -88,9 +88,7 @@ MainRightColumnController::MainRightColumnController(const model::Model & model,
 
   // Inspector, we're keeping it around to be able to follow the units toggled
   m_inspectorController = std::shared_ptr<InspectorController>( new InspectorController() );
-  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                             m_inspectorController.get(), SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MainRightColumnController::toggleUnitsClicked, m_inspectorController.get(), &InspectorController::toggleUnitsClicked);
 }
 
 void MainRightColumnController::registerSystemItem(const Handle & systemHandle, SystemItem * systemItem)
