@@ -129,6 +129,14 @@ RetType OneParamOptionalProxy(FromDataType *t_from, Param1 t_param1, const std::
   return t ? t_outter(t.get_ptr(), t_param1) : t_defaultValue;
 }
 
+template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
+RetType OneConstParamOptionalProxy(FromDataType *t_from, const Param1 & t_param1, const std::function<RetType (ToDataType *, const Param1 &)> &t_outter, const std::function<boost::optional<ToDataType> (FromDataType *)> t_inner, const RetType &t_defaultValue)
+{
+  boost::optional<ToDataType> t(t_inner(t_from));
+  Param1 param1Copy(t_param1);
+  return t ? t_outter(t.get_ptr(), param1Copy) : t_defaultValue;
+}
+
 // Consider the example
 // class B
 // {
@@ -168,22 +176,13 @@ std::function<RetType (FromDataType *, Param1)> ProxyAdapter(RetType (ToDataType
 template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
 std::function<RetType (FromDataType *, const Param1 &)> ProxyAdapter(RetType (ToDataType::*t_func)(Param1 &), boost::optional<ToDataType> (FromDataType:: *t_proxyFunc)() const, const RetType &t_defaultValue)
 {
-  std::function<RetType (ToDataType *, Param1 &)> outter(CastNullAdapter<ToDataType>(t_func));
+  std::function<RetType (ToDataType *, Param1)> outter(CastNullAdapter<ToDataType>(t_func));
   std::function<boost::optional<ToDataType> (FromDataType *)> inner(CastNullAdapter<FromDataType>(t_proxyFunc));
-
-  return [&] (FromDataType * t_from, const Param1 & t_param1) {
-    boost::optional<ToDataType> t(inner(t_from));
-    if(t) {
-      Param1 param1Copy(t_param1);
-      return outter(t.get_ptr(),param1Copy);
-    } else {
-      return t_defaultValue;
-    }
-  };
+  return std::bind(&OneConstParamOptionalProxy<RetType,FromDataType,Param1,ToDataType>, std::placeholders::_1, std::placeholders::_2, outter, inner, t_defaultValue);
 }
 
 template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
-std::function<RetType (FromDataType *, Param1)> ProxyAdapter(RetType (ToDataType::*t_func)(Param1) const, boost::optional<ToDataType> (FromDataType:: *t_proxyFunc)() const, const RetType &t_defaultValue)
+std::function<RetType (FromDataType *, Param1 )> ProxyAdapter(RetType (ToDataType::*t_func)(Param1) const, boost::optional<ToDataType> (FromDataType:: *t_proxyFunc)() const, const RetType &t_defaultValue)
 {
   std::function<RetType (ToDataType *, Param1)> outter(CastNullAdapter<ToDataType>(t_func));
   std::function<boost::optional<ToDataType> (FromDataType *)> inner(CastNullAdapter<FromDataType>(t_proxyFunc));
@@ -1290,7 +1289,11 @@ class DropZoneConceptImpl : public DropZoneConcept
 
   virtual bool set(const ConceptProxy & obj, const model::ModelObject & value)
   {
-    return setImpl(obj,value.cast<ValueType>());
+    if( boost::optional<ValueType> mo = value.optionalCast<ValueType>() ) {
+      return setImpl(obj,mo.get());
+    } else {
+      return false;
+    }
   }
 
   virtual boost::optional<ValueType> getImpl(const ConceptProxy & t_obj)

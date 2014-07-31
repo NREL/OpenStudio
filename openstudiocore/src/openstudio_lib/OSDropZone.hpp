@@ -61,15 +61,28 @@ public:
 
   void unbind();
 
-protected:
-
-  void paintEvent ( QPaintEvent * event );
-
 signals:
 
   // TODO this is not yet wired in the implementation
   // emitted if item is clicked
   void itemClicked(OSItem* item);
+
+protected:
+
+  void paintEvent ( QPaintEvent * event );
+
+private slots:
+
+  void refresh();
+  void dragEnterEvent(QDragEnterEvent *event);
+  void dropEvent(QDropEvent *event);
+
+private:
+
+  boost::optional<OptionalModelObjectGetter> m_get;
+  boost::optional<ModelObjectSetter> m_set;
+  boost::optional<model::ModelObject> m_modelObject;
+  QString m_text;
 };
 
 class OSDropZone2 : public QWidget

@@ -317,8 +317,8 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
 
     }else if(field == COOLINGTHERMOSTATSCHEDULE){
       addDropZoneColumn(QString(COOLINGTHERMOSTATSCHEDULE),
-                        ProxyAdapter(static_cast<boost::optional<model::Schedule> (model::ThermostatSetpointDualSetpoint::*)() const>(&model::ThermostatSetpointDualSetpoint::coolingSetpointTemperatureSchedule),
-                                     static_cast<boost::optional<model::ThermostatSetpointDualSetpoint> (model::ThermalZone::*)() const>(&model::ThermalZone::thermostatSetpointDualSetpoint),
+                        ProxyAdapter(&model::ThermostatSetpointDualSetpoint::coolingSetpointTemperatureSchedule,
+                                     &model::ThermalZone::thermostatSetpointDualSetpoint,
                                      boost::optional<model::Schedule>()),
                         ProxyAdapter(&openstudio::model::ThermostatSetpointDualSetpoint::setCoolingSetpointTemperatureSchedule,
                                      &model::ThermalZone::thermostatSetpointDualSetpoint,

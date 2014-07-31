@@ -20,6 +20,8 @@
 #include "OSDropZone.hpp"
 #include "OSVectorController.hpp"
 #include "IconLibrary.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
 
 #include "../model/Model_Impl.hpp"
 #include "../model/ModelObject_Impl.hpp"
@@ -952,15 +954,43 @@ OSDropZone3::OSDropZone3()
   setFixedSize(75,25);
 }
 
+void OSDropZone3::refresh()
+{
+  //disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
+  m_text.clear();
+
+  if( m_modelObject ) {
+    if( m_get ) {
+      if( boost::optional<model::ModelObject> targetModelObject = (*m_get)() ) {
+        m_text = QString::fromStdString(targetModelObject->name().get());
+      }
+    }
+  }
+
+  update();
+}
+
 void OSDropZone3::bind(
   model::ModelObject & modelObject,
   OptionalModelObjectGetter get,
   ModelObjectSetter set)
 {
+  m_get = get;
+  m_set = set;
+  m_modelObject = modelObject;
+  setAcceptDrops(true);
+
+  refresh();
 }
 
 void OSDropZone3::unbind()
 {
+  m_modelObject.reset();
+  m_get.reset();
+  m_set.reset();
+  setAcceptDrops(false);
+
+  refresh();
 }
 
 void OSDropZone3::paintEvent( QPaintEvent * event )
@@ -969,6 +999,40 @@ void OSDropZone3::paintEvent( QPaintEvent * event )
   opt.init(this);
   QPainter p(this);
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+
+  p.drawText(rect(),Qt::AlignCenter,m_text);
+}
+
+void OSDropZone3::dragEnterEvent(QDragEnterEvent *event)
+{
+  if(event->proposedAction() == Qt::CopyAction){
+    event->accept();
+  }
+}
+
+void OSDropZone3::dropEvent(QDropEvent *event)
+{
+  event->accept();
+
+  if((event->proposedAction() == Qt::CopyAction) && m_modelObject && m_set){
+
+    OSItemId itemId(event->mimeData());
+    boost::optional<model::ModelObject> modelObject = OSAppBase::instance()->currentDocument()->getModelObject(itemId);
+
+    if(modelObject){
+      if(OSAppBase::instance()->currentDocument()->fromComponentLibrary(itemId)){
+        modelObject = modelObject->clone(m_modelObject->model());
+        (*m_set)(modelObject.get());
+        refresh();
+      }
+      else
+      {
+        (*m_set)(modelObject.get());
+        refresh();
+      }
+    }
+
+  }
 }
 
 } // openstudio
