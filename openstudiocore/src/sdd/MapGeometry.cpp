@@ -1587,6 +1587,13 @@ namespace sdd {
       }
     }
 
+    for (const model::Space& space : spaces){
+      if (!space.thermalZone()){
+        LOG(Warn, "Model contains spaces which are not assigned to a thermal zone.");
+        break;
+      }
+    }
+
     // translate thermal zones
     std::vector<model::ThermalZone> thermalZones = building.model().getConcreteModelObjects<model::ThermalZone>();
     std::sort(thermalZones.begin(), thermalZones.end(), WorkspaceObjectNameLess());
@@ -1840,8 +1847,6 @@ namespace sdd {
       }else{
         LOG(Error, "Cannot compute exposed perimeter for surface '" << name << "'.");
       }
-    }else{
-      LOG(Error, "Cannot compute exposed perimeter for surface '" << name << "'.");
     }
 
     // if underground wall try to write out height
@@ -1863,8 +1868,6 @@ namespace sdd {
       }else{
         LOG(Error, "Cannot compute height for surface '" << name << "'.");
       }
-    }else{
-      LOG(Error, "Cannot compute height for surface '" << name << "'.");
     }
 
     // translate vertices
