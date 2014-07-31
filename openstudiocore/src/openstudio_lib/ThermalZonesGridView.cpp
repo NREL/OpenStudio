@@ -32,14 +32,16 @@
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
 #include "../model/Model_Impl.hpp"
+#include "../model/Schedule.hpp"
+#include "../model/Schedule_Impl.hpp"
 #include "../model/SizingZone.hpp"
 #include "../model/SizingZone_Impl.hpp"
 #include "../model/ThermalZone.hpp"
 #include "../model/ThermalZone_Impl.hpp"
 #include "../model/ThermostatSetpointDualSetpoint.hpp"
 #include "../model/ThermostatSetpointDualSetpoint_Impl.hpp"
-#include "../model/Schedule.hpp"
-#include "../model/Schedule_Impl.hpp"
+#include "../model/ZoneControlHumidistat.hpp"
+#include "../model/ZoneControlHumidistat_Impl.hpp"
 
 #include "../utilities/idd/OS_ThermalZone_FieldEnums.hxx"
 
@@ -155,12 +157,12 @@ void ThermalZonesGridController::setCategoriesAndFields()
   {
     std::vector<QString> fields;
     fields.push_back(IDEALAIRLOADS);
-    //fields.push_back(AIRLOOPNAME);                   // TODO LineEdit, but needs an optional AirLoopHVAC 
-    //fields.push_back(ZONEEQUIPMENT);                 // TODO Extensible DropZone
-    fields.push_back(COOLINGTHERMOSTATSCHEDULE);     // TODO DropZone
-    //fields.push_back(HEATINGTHERMOSTATSCHEDULE);     // TODO DropZone
-    //fields.push_back(HUMIDIFYINGSETPOINTSCHEDULE);   // TODO DropZone
-    //fields.push_back(DEHUMIDIFYINGSETPOINTSCHEDULE); // TODO DropZone
+    fields.push_back(AIRLOOPNAME);
+    //fields.push_back(ZONEEQUIPMENT); // TODO Extensible DropZone
+    fields.push_back(COOLINGTHERMOSTATSCHEDULE);
+    fields.push_back(HEATINGTHERMOSTATSCHEDULE);
+    fields.push_back(HUMIDIFYINGSETPOINTSCHEDULE);
+    fields.push_back(DEHUMIDIFYINGSETPOINTSCHEDULE);
     fields.push_back(MULTIPLIER);
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("HVAC Systems"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
@@ -322,13 +324,36 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                                      boost::optional<model::Schedule>()),
                         ProxyAdapter(&openstudio::model::ThermostatSetpointDualSetpoint::setCoolingSetpointTemperatureSchedule,
                                      &model::ThermalZone::thermostatSetpointDualSetpoint,
-                                     false)
-                       );
+                                     false));
 
-    //////fields.push_back(HEATINGTHERMOSTATSCHEDULE);     // TODO DropZone
-    //////fields.push_back(HUMIDIFYINGSETPOINTSCHEDULE);   // TODO DropZone
-    //////fields.push_back(DEHUMIDIFYINGSETPOINTSCHEDULE); // TODO DropZone
-    //////fields.push_back(ZONEEQUIPMENT);                 // TODO Extensible DropZone
+    }else if (field == HEATINGTHERMOSTATSCHEDULE){
+      addDropZoneColumn(QString(HEATINGTHERMOSTATSCHEDULE),
+                        ProxyAdapter(&model::ThermostatSetpointDualSetpoint::heatingSetpointTemperatureSchedule,
+                                     &model::ThermalZone::thermostatSetpointDualSetpoint,
+                                     boost::optional<model::Schedule>()),
+                        ProxyAdapter(&openstudio::model::ThermostatSetpointDualSetpoint::setHeatingSetpointTemperatureSchedule,
+                                     &model::ThermalZone::thermostatSetpointDualSetpoint,
+                                     false));
+
+    }else if (field == HUMIDIFYINGSETPOINTSCHEDULE){
+      addDropZoneColumn(QString(HUMIDIFYINGSETPOINTSCHEDULE),
+                        ProxyAdapter(&model::ZoneControlHumidistat::humidifyingRelativeHumiditySetpointSchedule,
+                                     &model::ThermalZone::zoneControlHumidistat,
+                                     boost::optional<model::Schedule>()),
+                        ProxyAdapter(&openstudio::model::ZoneControlHumidistat::setHumidifyingRelativeHumiditySetpointSchedule,
+                                     &model::ThermalZone::zoneControlHumidistat,
+                                     false));
+
+    }else if (field == DEHUMIDIFYINGSETPOINTSCHEDULE){
+      addDropZoneColumn(QString(DEHUMIDIFYINGSETPOINTSCHEDULE),
+                        ProxyAdapter(&model::ZoneControlHumidistat::dehumidifyingRelativeHumiditySetpointSchedule,
+                                     &model::ThermalZone::zoneControlHumidistat,
+                                     boost::optional<model::Schedule>()),
+                        ProxyAdapter(&openstudio::model::ZoneControlHumidistat::setDehumidifyingRelativeHumiditySetpointSchedule,
+                                     &model::ThermalZone::zoneControlHumidistat,
+                                     false));
+
+    //fields.push_back(ZONEEQUIPMENT); // TODO Extensible DropZone
 
     }else if(field == NAME){
       addNameLineEditColumn(QString(NAME),
