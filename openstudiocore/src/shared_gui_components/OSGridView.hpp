@@ -63,18 +63,14 @@ signals:
 
   void dropZoneItemClicked(OSItem* item);
 
-  void itemsRequested();
+  void gridRowSelected(OSItem*);
 
 public slots:
-
-  void onItemSelected(OSItem * item);
-
-  //void onOsItemSelected(OSItem * item, bool selected); // TODO delete if not needed by multi-edit
 
   void onSelectionCleared();
 
   void refreshAll();
-  
+
 private slots:
 
   void refresh(int row, int column);
@@ -108,6 +104,10 @@ private:
   OSCollapsibleView * m_CollapsibleView;
 
   OSGridController * m_gridController;
+
+public slots:
+
+  void myTestSlot(OSItem * item);
 
 };
 

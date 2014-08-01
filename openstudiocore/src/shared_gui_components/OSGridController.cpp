@@ -675,8 +675,9 @@ void OSGridController::cellChecked(int index)
     selectRow(r, button->isChecked());
 
     OSItemId itemId = modelObjectToItemId(modelObject(r), false);
+    OSItem* item = OSItem::makeItem(itemId, OSItemType::ListItem);
 
-    emit itemsRequested();
+    //emit gridRowSelected(item);
   }
 }
 
@@ -723,21 +724,6 @@ void OSGridController::onItemSelected(OSItem * item)
     i++;
   }
 }
-
-//void OSGridController::onOsItemSelected(OSItem * item, bool selected) // TODO delete if not needed by multi-edit
-//{
-//  int i = 0;
-//  refreshModelObjects();
-//  gridView()->refreshAll();
-//  for (auto modelObject : m_modelObjects){
-//    OSItemId itemId = modelObjectToItemId(modelObject, false);
-//    if (item->itemId() == itemId){
-//      selectRow(rowIndexFromModelIndex(i), selected);
-//      break;
-//    }
-//    i++;
-//  }
-//}
 
 void OSGridController::onSelectionCleared()
 {

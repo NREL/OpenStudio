@@ -87,7 +87,7 @@ signals:
 
   void itemsRequested();
 
-  //void osItemSelected(OSItem * item, bool selected); // TODO delete if not needed by multi-edit
+  void gridRowSelected(OSItem*);
 
 protected:
 

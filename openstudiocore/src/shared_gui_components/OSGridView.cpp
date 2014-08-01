@@ -84,12 +84,6 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   isConnected = connect(m_dropZone,SIGNAL(itemDropped(const OSItemId&)), m_gridController,SLOT(onItemDropped(const OSItemId&)));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(itemSelected(OSItem*)), m_gridController, SIGNAL(itemSelected(OSItem*)));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(this, SIGNAL(itemsRequested()), m_gridController, SIGNAL(itemsRequested()));
-  OS_ASSERT(isConnected);
-
   buttonLayout->addWidget(m_dropZone,0,Qt::AlignLeft);
 
   std::vector<QString> categories = m_gridController->categories();
@@ -170,6 +164,15 @@ void OSGridView::setGridController(OSGridController * gridController)
 
   isConnected = connect(m_gridController,SIGNAL(modelReset()),this,SLOT(refreshAll()));
   OS_ASSERT(isConnected);
+
+  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), m_gridController, SLOT(onItemSelected(OSItem *)));
+  OS_ASSERT(isConnected);
+
+  //isConnected = connect(m_gridController, SIGNAL(gridRowSelected(OSItem *)), this, SIGNAL(gridRowSelected(OSItem *)));
+  //OS_ASSERT(isConnected);
+
+  //isConnected = connect(m_gridController, SIGNAL(gridRowSelected(OSItem *)), this, SLOT(myTestSlot(OSItem *))); // TODO delete
+  //OS_ASSERT(isConnected);
 
   refreshAll();
 }
@@ -275,19 +278,13 @@ void OSGridView::selectCategory(int index)
 
 }
 
-void OSGridView::onItemSelected(OSItem * item)
-{
-  m_gridController->onItemSelected(item); // TODO  is this being used now?
-}
-
-//void OSGridView::onOsItemSelected(OSItem * item, bool selected) // TODO delete if not needed by multi-edit
-//{
-//  m_gridController->onOsItemSelected(item, selected);
-//}
-
 void OSGridView::onSelectionCleared()
 {
   m_gridController->onSelectionCleared();
+}
+
+void OSGridView::myTestSlot(OSItem * item)
+{
 }
 
 } // openstudio

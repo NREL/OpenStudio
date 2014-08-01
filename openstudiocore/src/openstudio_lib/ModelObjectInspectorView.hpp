@@ -56,11 +56,11 @@ class ModelObjectInspectorView : public OSInspectorView
 
     void itemSelected(OSItem * item);
 
-    //void osItemSelected(OSItem * item, bool selected); // TODO delete if not needed by multi-edit
-
     void selectionCleared();
 
     void itemsRequested();
+
+    void gridRowSelected(OSItem * item);
 
   public slots:
 

@@ -114,17 +114,17 @@ ThermalZonesGridView::ThermalZonesGridView(bool isIP, const model::Model & model
   isConnected = connect(gridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), gridView, SLOT(onItemSelected(OSItem *)));
+  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), gridView, SIGNAL(itemSelected(OSItem*)));
   OS_ASSERT(isConnected);
 
-  //isConnected = connect(this, SIGNAL(osItemSelected(OSItem *, bool)), gridView, SLOT(onOsItemSelected(OSItem *, bool))); // TODO delete if not needed by multi-edit
-  //OS_ASSERT(isConnected);
+  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), gridView, SIGNAL(itemSelected(OSItem *)));
+  OS_ASSERT(isConnected);
 
   isConnected = connect(this, SIGNAL(selectionCleared()), gridView, SLOT(onSelectionCleared()));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(itemsRequested()), gridView, SIGNAL(itemsRequested()));
-  OS_ASSERT(isConnected);
+  //isConnected = connect(this, SIGNAL(gridRowSelected(OSItem*)), gridView, SIGNAL(gridRowSelected(OSItem*)));
+  //OS_ASSERT(isConnected);
 
   gridView->m_dropZone->hide();
 

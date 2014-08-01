@@ -462,10 +462,6 @@ private:
 
 signals:
 
-  // These signals will be used by the GridView to update
-
-  void itemSelected(OSItem*);
-
   // Emit this signal when an item has been added to the underlying model or data structure.
   void itemInserted(int row, int column);
 
@@ -481,7 +477,7 @@ signals:
 
   void toggleUnitsClicked(bool displayIP);
 
-  void itemsRequested();
+  void gridRowSelected(OSItem*);
 
 public slots:
 
@@ -494,8 +490,6 @@ public slots:
   void selectItemId(const OSItemId& itemId);
 
   void onItemSelected(OSItem * item);
-
-  //void onOsItemSelected(OSItem * item, bool selected); // TODO delete if not needed by multi-edit
 
   void onSelectionCleared();
 
