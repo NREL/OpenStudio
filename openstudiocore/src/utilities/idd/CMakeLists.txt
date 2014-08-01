@@ -1,22 +1,41 @@
 # generate the IddFactory files
-  
-ADD_CUSTOM_COMMAND(
-  OUTPUT 
-  "${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactoryFileIndex.hxx"
-  "${CMAKE_CURRENT_BINARY_DIR}/idd/IddEnums.hxx"
-  "${CMAKE_CURRENT_BINARY_DIR}/idd/IddFieldEnums.hxx"
-  "${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory.hxx"
-  "${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory.cxx"
-  "${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory_EnergyPlus.cxx"
-  "${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory_OpenStudio.cxx"
-  "${CMAKE_CURRENT_BINARY_DIR}/idd/IddFieldEnums.ixx"
-  COMMAND GenerateIddFactory "--outdir=${CMAKE_CURRENT_BINARY_DIR}/idd" "EnergyPlus,${CMAKE_SOURCE_DIR}/resources/energyplus/ProposedEnergy+.idd" "${CMAKE_SOURCE_DIR}/resources/model/OpenStudio.idd"
-  DEPENDS 
-  GenerateIddFactory
-  "${CMAKE_SOURCE_DIR}/resources/energyplus/ProposedEnergy+.idd" 
-  "${CMAKE_SOURCE_DIR}/resources/model/OpenStudio.idd"
-)
-
+if (MSVC)
+  get_filename_component(QT_BIN_DIR ${QT_QMAKE_EXECUTABLE} PATH)
+  ADD_CUSTOM_COMMAND(
+    OUTPUT 
+    "${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactoryFileIndex.hxx"
+    "${CMAKE_CURRENT_BINARY_DIR}/idd/IddEnums.hxx"
+    "${CMAKE_CURRENT_BINARY_DIR}/idd/IddFieldEnums.hxx"
+    "${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory.hxx"
+    "${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory.cxx"
+    "${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory_EnergyPlus.cxx"
+    "${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory_OpenStudio.cxx"
+    "${CMAKE_CURRENT_BINARY_DIR}/idd/IddFieldEnums.ixx"
+    COMMAND set "PATH=${QT_BIN_DIR};%PATH%"
+    COMMAND GenerateIddFactory "--outdir=${CMAKE_CURRENT_BINARY_DIR}/idd" "EnergyPlus,${CMAKE_SOURCE_DIR}/resources/energyplus/ProposedEnergy+.idd" "${CMAKE_SOURCE_DIR}/resources/model/OpenStudio.idd"
+    DEPENDS 
+    GenerateIddFactory
+    "${CMAKE_SOURCE_DIR}/resources/energyplus/ProposedEnergy+.idd" 
+    "${CMAKE_SOURCE_DIR}/resources/model/OpenStudio.idd"
+  )
+else()
+  ADD_CUSTOM_COMMAND(
+    OUTPUT 
+    "${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactoryFileIndex.hxx"
+    "${CMAKE_CURRENT_BINARY_DIR}/idd/IddEnums.hxx"
+    "${CMAKE_CURRENT_BINARY_DIR}/idd/IddFieldEnums.hxx"
+    "${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory.hxx"
+    "${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory.cxx"
+    "${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory_EnergyPlus.cxx"
+    "${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory_OpenStudio.cxx"
+    "${CMAKE_CURRENT_BINARY_DIR}/idd/IddFieldEnums.ixx"
+    COMMAND GenerateIddFactory "--outdir=${CMAKE_CURRENT_BINARY_DIR}/idd" "EnergyPlus,${CMAKE_SOURCE_DIR}/resources/energyplus/ProposedEnergy+.idd" "${CMAKE_SOURCE_DIR}/resources/model/OpenStudio.idd"
+    DEPENDS 
+    GenerateIddFactory
+    "${CMAKE_SOURCE_DIR}/resources/energyplus/ProposedEnergy+.idd" 
+    "${CMAKE_SOURCE_DIR}/resources/model/OpenStudio.idd"
+  )
+endif()
 
 # include the generated files
 #INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_BINARY_DIR}/idd/ )
