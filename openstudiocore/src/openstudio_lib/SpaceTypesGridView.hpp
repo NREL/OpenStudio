@@ -49,6 +49,12 @@ signals:
 
   void dropZoneItemClicked(OSItem* item);
 
+  void itemSelected(OSItem * item);
+
+  void selectionCleared();
+
+  void itemsRequested();
+
 };
 
 class SpaceTypesGridController : public OSGridController

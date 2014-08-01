@@ -225,6 +225,12 @@ class SpaceTypeInspectorView : public ModelObjectInspectorView
 
     void dropZoneItemClicked(OSItem* item);
 
+    void itemSelected(OSItem * item);
+
+    void selectionCleared();
+
+    void itemsRequested();
+
   protected slots:
 
     void editStandardsBuildingType(const QString & text);

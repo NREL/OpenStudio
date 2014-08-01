@@ -31,6 +31,8 @@ class QLabel;
 
 namespace openstudio {
 
+class OSItem;
+
 class SpaceTypesView : public ModelSubTabView
 {
   Q_OBJECT
@@ -42,6 +44,9 @@ class SpaceTypesView : public ModelSubTabView
 
     virtual ~SpaceTypesView() {}
 
+  //public slots:
+
+  /*  void test(OSItem * item);*/
 };
 
 } // openstudio

@@ -22,6 +22,8 @@
 #include "ModelObjectListView.hpp"
 #include "SpaceTypeInspectorView.hpp"
 
+#include "../openstudio_lib/OSItem.hpp"
+
 #include "../model/Model_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
@@ -50,9 +52,33 @@ SpaceTypesView::SpaceTypesView(const openstudio::model::Model& model,
   OS_ASSERT(modelObjectListView);
   modelObjectListView->setItemsDraggable(false);
 
-  bool isConnected = connect(this, SIGNAL(dropZoneItemClicked(OSItem*)), modelObjectInspectorView(), SIGNAL(dropZoneItemClicked(OSItem*)));
+  bool isConnected = false;
+    
+  isConnected = connect(this, SIGNAL(dropZoneItemClicked(OSItem*)), modelObjectInspectorView(), SIGNAL(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
+
+  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), inspectorView(), SIGNAL(itemSelected(OSItem *)));
+  OS_ASSERT(isConnected);
+
+  //isConnected = connect(this, SLOT(test(OSItem *)), inspectorView(), SIGNAL(itemSelected(OSItem *))); // TODO TEST SLOT
+  //OS_ASSERT(isConnected);
+
+  isConnected = connect(itemSelector(), SIGNAL(itemSelected(OSItem *)), inspectorView(), SIGNAL(itemSelected(OSItem *)));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(itemSelector(), SIGNAL(selectionCleared()), inspectorView(), SIGNAL(selectionCleared()));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(itemSelector(), SIGNAL(itemsRequested()), inspectorView(), SIGNAL(itemsRequested()));
+  OS_ASSERT(isConnected);
+
+  //itemSelected(OSItem*)
+
 }
+
+//void SpaceTypesView::test(OSItem * item)
+//{
+//}
 
 } // openstudio
 

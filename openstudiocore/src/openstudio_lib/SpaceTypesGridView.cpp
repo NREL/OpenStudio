@@ -123,6 +123,12 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
   isConnected = connect(gridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
 
+  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), gridView, SIGNAL(itemSelected(OSItem *)));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(this, SIGNAL(selectionCleared()), gridView, SLOT(onSelectionCleared()));
+  OS_ASSERT(isConnected);
+
   gridView->m_dropZone->hide();
  
   layout->addWidget(gridView,0,Qt::AlignTop);

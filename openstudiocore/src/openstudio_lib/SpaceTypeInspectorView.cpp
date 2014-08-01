@@ -552,13 +552,21 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
 
   int row = 0;
 
-  //SpaceTypesGridView * spaceTypesGridView = new SpaceTypesGridView(this->m_isIP, this->m_model, this);
   SpaceTypesGridView * spaceTypesGridView = new SpaceTypesGridView(true, this->m_model, this);
   mainGridLayout->addWidget(spaceTypesGridView, row, 0);
 
   bool isConnected = false;
 
   isConnected = connect(spaceTypesGridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), spaceTypesGridView, SIGNAL(itemSelected(OSItem *)));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(this, SIGNAL(selectionCleared()), spaceTypesGridView, SIGNAL(selectionCleared()));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(this, SIGNAL(itemsRequested()), spaceTypesGridView, SIGNAL(itemsRequested()));
   OS_ASSERT(isConnected);
 
   ++row;
