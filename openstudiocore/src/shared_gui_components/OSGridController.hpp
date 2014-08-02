@@ -460,6 +460,8 @@ private:
 
   QButtonGroup * m_cellBtnGrp;
 
+  int m_oldIndex = -1;
+
 signals:
 
   // Emit this signal when an item has been added to the underlying model or data structure.

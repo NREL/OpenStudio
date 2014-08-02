@@ -662,23 +662,36 @@ void OSGridController::reset()
 
 void OSGridController::cellChecked(int index)
 {
-  auto r = rowIndexFromButtonIndex(index);
-  auto c = columnIndexFromButtonIndex(index);
+  if (columnIndexFromButtonIndex(index) != 0) {
+    OS_ASSERT(false); // Should never get here
+  }
 
-  if (c == 0){
-    QLayoutItem * child = gridView()->m_gridLayout->itemAtPosition(r, 0);
-    OS_ASSERT(child);
-    QWidget * widget = child->widget();
-    OS_ASSERT(widget);
-    auto button = qobject_cast<QPushButton *>(widget);
+  if (index == m_oldIndex) {
+    // Note: 1 row must always be checked
+    QAbstractButton * button = nullptr;
+    button = m_cellBtnGrp->button(index);
     OS_ASSERT(button);
-    selectRow(r, button->isChecked());
+    button->blockSignals(true);
+    button->setChecked(true);
+    button->blockSignals(false);
+  }
+  else {
+    // Deselect the old row...
+    if (m_oldIndex >= 0) selectRow(rowIndexFromButtonIndex(m_oldIndex), false);
 
-    OSItemId itemId = modelObjectToItemId(modelObject(r), false);
+    // ... select the new...
+    selectRow(rowIndexFromButtonIndex(index), true);
+
+    // ... and tell the world.
+    OSItemId itemId = modelObjectToItemId(modelObject(rowIndexFromButtonIndex(index)), false);
     OSItem* item = OSItem::makeItem(itemId, OSItemType::ListItem);
 
-    //emit gridRowSelected(item);
+    emit gridRowSelected(item);
+
+    // Remember who's selected
+    m_oldIndex = index;
   }
+  
 }
 
 int OSGridController::rowIndexFromButtonIndex(int index)
