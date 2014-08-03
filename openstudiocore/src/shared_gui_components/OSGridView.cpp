@@ -168,11 +168,11 @@ void OSGridView::setGridController(OSGridController * gridController)
   isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), m_gridController, SLOT(onItemSelected(OSItem *)));
   OS_ASSERT(isConnected);
 
-  //isConnected = connect(m_gridController, SIGNAL(gridRowSelected(OSItem *)), this, SIGNAL(gridRowSelected(OSItem *)));
-  //OS_ASSERT(isConnected);
+  isConnected = connect(m_gridController, SIGNAL(gridRowSelected(OSItem *)), this, SIGNAL(gridRowSelected(OSItem *)));
+  OS_ASSERT(isConnected);
 
-  //isConnected = connect(m_gridController, SIGNAL(gridRowSelected(OSItem *)), this, SLOT(myTestSlot(OSItem *))); // TODO delete
-  //OS_ASSERT(isConnected);
+  isConnected = connect(m_gridController, SIGNAL(gridRowSelected(OSItem *)), this, SLOT(myTestSlot(OSItem *))); // TODO delete
+  OS_ASSERT(isConnected);
 
   refreshAll();
 }

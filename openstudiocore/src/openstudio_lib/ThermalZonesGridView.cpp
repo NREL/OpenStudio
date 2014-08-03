@@ -120,8 +120,8 @@ ThermalZonesGridView::ThermalZonesGridView(bool isIP, const model::Model & model
   isConnected = connect(this, SIGNAL(selectionCleared()), gridView, SLOT(onSelectionCleared()));
   OS_ASSERT(isConnected);
 
-  //isConnected = connect(this, SIGNAL(gridRowSelected(OSItem*)), gridView, SIGNAL(gridRowSelected(OSItem*)));
-  //OS_ASSERT(isConnected);
+  isConnected = connect(this, SIGNAL(gridRowSelected(OSItem*)), gridView, SIGNAL(gridRowSelected(OSItem*)));
+  OS_ASSERT(isConnected);
 
   gridView->m_dropZone->hide();
 

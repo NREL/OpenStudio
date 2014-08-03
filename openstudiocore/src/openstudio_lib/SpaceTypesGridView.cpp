@@ -123,14 +123,23 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
   isConnected = connect(gridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
 
+  //isConnected = connect(gridView, SIGNAL(itemSelected(OSItem *)), this, SIGNAL(itemSelected(OSItem *))); // TODO crash bug
+  //OS_ASSERT(isConnected);
+
   isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), gridView, SIGNAL(itemSelected(OSItem *)));
   OS_ASSERT(isConnected);
 
   isConnected = connect(this, SIGNAL(selectionCleared()), gridView, SLOT(onSelectionCleared()));
   OS_ASSERT(isConnected);
 
+  isConnected = connect(this, SIGNAL(gridRowSelected(OSItem*)), gridView, SIGNAL(gridRowSelected(OSItem*)));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(gridView, SIGNAL(gridRowSelected(OSItem *)), this, SLOT(myTestSlot(OSItem *)));
+  OS_ASSERT(isConnected);
+
   gridView->m_dropZone->hide();
- 
+
   layout->addWidget(gridView,0,Qt::AlignTop);
 
   layout->addStretch(1);
@@ -143,6 +152,10 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
 
   std::vector<model::SpaceType> spaceType = model.getModelObjects<model::SpaceType>(); // NOTE for horizontal system lists
 
+}
+
+void SpaceTypesGridView::myTestSlot(OSItem * item)
+{
 }
 
 SpaceTypesGridController::SpaceTypesGridController(bool isIP,

@@ -229,7 +229,7 @@ class SpaceTypeInspectorView : public ModelObjectInspectorView
 
     void selectionCleared();
 
-    void itemsRequested();
+    void gridRowSelected(OSItem*);
 
   protected slots:
 

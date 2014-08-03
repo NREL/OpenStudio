@@ -566,7 +566,7 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
   isConnected = connect(this, SIGNAL(selectionCleared()), spaceTypesGridView, SIGNAL(selectionCleared()));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(itemsRequested()), spaceTypesGridView, SIGNAL(itemsRequested()));
+  isConnected = connect(this, SIGNAL(gridRowSelected(OSItem*)), spaceTypesGridView, SIGNAL(gridRowSelected(OSItem*)));
   OS_ASSERT(isConnected);
 
   ++row;

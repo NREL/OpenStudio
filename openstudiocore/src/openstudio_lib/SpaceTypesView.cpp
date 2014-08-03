@@ -20,6 +20,7 @@
 #include "SpaceTypesView.hpp"
 
 #include "ModelObjectListView.hpp"
+#include "OSItem.hpp"
 #include "SpaceTypeInspectorView.hpp"
 
 #include "../openstudio_lib/OSItem.hpp"
@@ -53,15 +54,12 @@ SpaceTypesView::SpaceTypesView(const openstudio::model::Model& model,
   modelObjectListView->setItemsDraggable(false);
 
   bool isConnected = false;
-    
+
   isConnected = connect(this, SIGNAL(dropZoneItemClicked(OSItem*)), modelObjectInspectorView(), SIGNAL(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
 
   isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), inspectorView(), SIGNAL(itemSelected(OSItem *)));
   OS_ASSERT(isConnected);
-
-  //isConnected = connect(this, SLOT(test(OSItem *)), inspectorView(), SIGNAL(itemSelected(OSItem *))); // TODO TEST SLOT
-  //OS_ASSERT(isConnected);
 
   isConnected = connect(itemSelector(), SIGNAL(itemSelected(OSItem *)), inspectorView(), SIGNAL(itemSelected(OSItem *)));
   OS_ASSERT(isConnected);
@@ -69,16 +67,17 @@ SpaceTypesView::SpaceTypesView(const openstudio::model::Model& model,
   isConnected = connect(itemSelector(), SIGNAL(selectionCleared()), inspectorView(), SIGNAL(selectionCleared()));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(itemSelector(), SIGNAL(itemsRequested()), inspectorView(), SIGNAL(itemsRequested()));
+  isConnected = connect(inspectorView(), SIGNAL(gridRowSelected(OSItem *)), this, SLOT(myTestSlot(OSItem *)));
   OS_ASSERT(isConnected);
 
-  //itemSelected(OSItem*)
+  isConnected = connect(itemSelector(), SIGNAL(gridRowSelected(OSItem*)), inspectorView(), SIGNAL(gridRowSelected(OSItem*))); // TODO
+  OS_ASSERT(isConnected);
 
 }
 
-//void SpaceTypesView::test(OSItem * item)
-//{
-//}
+void SpaceTypesView::myTestSlot(OSItem * item)
+{
+}
 
 } // openstudio
 

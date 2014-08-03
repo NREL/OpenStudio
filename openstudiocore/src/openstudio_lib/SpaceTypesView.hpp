@@ -44,9 +44,9 @@ class SpaceTypesView : public ModelSubTabView
 
     virtual ~SpaceTypesView() {}
 
-  //public slots:
+  public slots:
 
-  /*  void test(OSItem * item);*/
+    void myTestSlot(OSItem * item);
 };
 
 } // openstudio

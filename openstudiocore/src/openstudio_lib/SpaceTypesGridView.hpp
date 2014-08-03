@@ -53,7 +53,11 @@ signals:
 
   void selectionCleared();
 
-  void itemsRequested();
+  void gridRowSelected(OSItem*);
+
+public slots:
+
+  void myTestSlot(OSItem * item);
 
 };
 
