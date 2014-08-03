@@ -37,6 +37,7 @@
 
 #include "../utilities/core/Assert.hpp"
 
+#include <QApplication>
 #include <QBoxLayout>
 #include <QButtonGroup>
 #include <QCheckBox>
@@ -728,6 +729,7 @@ void OSGridController::onItemSelected(OSItem * item)
   int i = 0;
   refreshModelObjects();
   gridView()->refreshAll();
+  QApplication::processEvents();
   for (auto modelObject : m_modelObjects){
     OSItemId itemId = modelObjectToItemId(modelObject, false);
     if (item->itemId() == itemId){
