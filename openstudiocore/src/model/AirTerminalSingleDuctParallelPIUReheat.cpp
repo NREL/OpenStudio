@@ -624,7 +624,8 @@ namespace detail {
     if( result )
     {
       Model t_model = model();
-      t_model.connect(plenum.get(),plenum->getImpl<detail::AirLoopHVACReturnPlenum_Impl>()->inducedAirOutletPort(),t_secondaryAirInletNode.get(),t_secondaryAirInletNode->inletPort());
+      PortList pl = plenum->getImpl<detail::AirLoopHVACReturnPlenum_Impl>()->inducedAirOutletPortList();
+      t_model.connect(pl,pl.nextPort(),t_secondaryAirInletNode.get(),t_secondaryAirInletNode->inletPort());
     }
 
     return result;

@@ -7798,10 +7798,9 @@ OS:AirLoopHVAC:ReturnPlenum,
        \type object-list
        \required-field
        \object-list ConnectionNames
-   A5, \field Induced Air Outlet Node
+   A5, \field Induced Air Outlet Port List
        \type object-list
-       \required-field
-       \object-list ConnectionNames
+       \object-list PortLists
    A6; \field Inlet 1 Node
        \begin-extensible
        \type object-list

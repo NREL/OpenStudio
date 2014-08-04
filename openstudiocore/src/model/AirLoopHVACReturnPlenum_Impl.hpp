@@ -27,6 +27,7 @@ namespace openstudio {
 namespace model {
 
 class ThermalZone;
+class PortList;
 
 namespace detail {
 
@@ -61,7 +62,7 @@ namespace detail {
 
     unsigned outletPort();
 
-    unsigned inducedAirOutletPort();
+    PortList inducedAirOutletPortList();
 
     unsigned inletPort(unsigned branchIndex);
 

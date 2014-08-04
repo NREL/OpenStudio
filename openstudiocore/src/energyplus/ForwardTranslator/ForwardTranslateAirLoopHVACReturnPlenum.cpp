@@ -25,7 +25,10 @@
 #include <model/ThermalZone_Impl.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
+#include <model/PortList.hpp>
+#include <model/PortList_Impl.hpp>
 #include <utilities/idd/AirLoopHVAC_ReturnPlenum_FieldEnums.hxx>
+#include <utilities/idd/NodeList_FieldEnums.hxx>
 #include <utilities/idf/IdfExtensibleGroup.hpp>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -54,10 +57,21 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACReturnPlenum( 
   //((ZoneNodeName)(Zone Node Name))
   
   //  InducedAirOutletNodeorNodeListName
-  boost::optional<ModelObject> mo = modelObject.connectedObject(modelObject.getImpl<model::detail::AirLoopHVACReturnPlenum_Impl>()->inducedAirOutletPort());
-  if( mo )
+  PortList po = modelObject.getImpl<model::detail::AirLoopHVACReturnPlenum_Impl>()->inducedAirOutletPortList();
+  std::vector<ModelObject> inducedNodes = po.modelObjects();
+  if( ! inducedNodes.empty() )
   {
-    idfObject.setString(AirLoopHVAC_ReturnPlenumFields::InducedAirOutletNodeorNodeListName,mo->name().get());
+    IdfObject nodeList(openstudio::IddObjectType::NodeList); 
+    m_idfObjects.push_back(nodeList);
+    nodeList.setName(s + " Induced Air Node List");
+    idfObject.setString(AirLoopHVAC_ReturnPlenumFields::InducedAirOutletNodeorNodeListName,nodeList.name().get());
+    for( std::vector<ModelObject>::const_iterator it = inducedNodes.begin();
+         it != inducedNodes.end();
+         ++it )
+    {
+      IdfExtensibleGroup eg = nodeList.pushExtensibleGroup();
+      eg.setString(NodeListExtensibleFields::NodeName,it->name().get());
+    }
   }
 
   // OutletNodeName
