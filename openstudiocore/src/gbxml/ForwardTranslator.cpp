@@ -312,6 +312,18 @@ namespace gbxml {
       result.setAttribute("zoneIdRef", escapeName(thermalZoneName));
     }
 
+    // append floor area
+    double area = space.floorArea();
+    QDomElement areaElement = doc.createElement("Area");
+    areaElement.appendChild(doc.createTextNode(QString::number(area)));
+    result.appendChild(areaElement);
+    
+    // append volume
+    double volume = space.volume();
+    QDomElement volumeElement = doc.createElement("Volume");
+    volumeElement.appendChild(doc.createTextNode(QString::number(volume)));
+    result.appendChild(volumeElement);
+
     return result;
   }
 
