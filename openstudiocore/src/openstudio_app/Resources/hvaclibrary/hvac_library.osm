@@ -1,6 +1,6 @@
 
 OS:Version,
-  {2d6cc8ab-2eed-4735-917a-929c21956250}, !- Handle
+  {06636d91-f17e-4b21-944d-e735102da9fc}, !- Handle
   1.4.1;                                  !- Version Identifier
 
 OS:Schedule:Constant,
@@ -243,13 +243,13 @@ OS:SetpointManager:Scheduled:DualSetpoint,
 
 OS:Schedule:Ruleset,
   {7aec1e64-640d-4bb1-ba20-f89f7e911d11}, !- Handle
-  Dual SP High Schedule,                     !- Name
+  Dual SP High Schedule,                  !- Name
   {919bbba6-e6ba-472c-968a-3444cb36c6e6}, !- Schedule Type Limits Name
   {47fec27d-6610-4f32-94f3-860c2949a1d8}; !- Default Day Schedule Name
 
 OS:Schedule:Day,
   {47fec27d-6610-4f32-94f3-860c2949a1d8}, !- Handle
-  Dual SP High Day,                         !- Name
+  Dual SP High Day,                       !- Name
   {919bbba6-e6ba-472c-968a-3444cb36c6e6}, !- Schedule Type Limits Name
   ,                                       !- Interpolate to Timestep
   24,                                     !- Hour 1
@@ -258,13 +258,13 @@ OS:Schedule:Day,
 
 OS:Schedule:Ruleset,
   {3515ff9e-912f-4d2e-bf1f-163a63d2662b}, !- Handle
-  Dual SP Low Schedule,                     !- Name
+  Dual SP Low Schedule,                   !- Name
   {554ee901-8dc9-456e-884a-409b5b97127b}, !- Schedule Type Limits Name
   {2e127e60-a413-4470-9836-838e2468abe2}; !- Default Day Schedule Name
 
 OS:Schedule:Day,
   {2e127e60-a413-4470-9836-838e2468abe2}, !- Handle
-  Dual SP Low Day,                         !- Name
+  Dual SP Low Day,                        !- Name
   {554ee901-8dc9-456e-884a-409b5b97127b}, !- Schedule Type Limits Name
   ,                                       !- Interpolate to Timestep
   24,                                     !- Hour 1
@@ -273,7 +273,7 @@ OS:Schedule:Day,
 
 OS:ScheduleTypeLimits,
   {919bbba6-e6ba-472c-968a-3444cb36c6e6}, !- Handle
-  Dual SP High Limits,                            !- Name
+  Dual SP High Limits,                    !- Name
   ,                                       !- Lower Limit Value {BasedOnField A4}
   ,                                       !- Upper Limit Value {BasedOnField A4}
   Continuous,                             !- Numeric Type
@@ -281,7 +281,7 @@ OS:ScheduleTypeLimits,
 
 OS:ScheduleTypeLimits,
   {554ee901-8dc9-456e-884a-409b5b97127b}, !- Handle
-  Dual SP Low Limits,                          !- Name
+  Dual SP Low Limits,                     !- Name
   ,                                       !- Lower Limit Value {BasedOnField A4}
   ,                                       !- Upper Limit Value {BasedOnField A4}
   Continuous,                             !- Numeric Type
@@ -457,9 +457,30 @@ OS:Curve:Quadratic,
   0,                                      ! Minimum Value of x {BasedOnField A2}
   1;                                      ! Maximum Value of x {BasedOnField A2}
 
+OS:EvaporativeCooler:Indirect:ResearchSpecial,
+  {70e2147c-5b58-49a7-b1a3-1cc1b1bd8854}, !- Handle
+  Indirect Evaporative Cooler, !- Name
+  ,                                       !- Availability Schedule Name
+  0.75,                                   !- Cooler Maximum Effectiveness
+  ,                                       !- Cooler Flow Ratio
+  30,                                     !- Recirculating Water Pump Power Consumption {W}
+  ,                                       !- Secondary Fan Flow Rate {m3/s}
+  0.6,                                    !- Secondary Fan Total Efficiency
+  124.6,                                  !- Secondary Fan Delta Pressure {Pa}
+  ,                                       !- Primary Air Inlet Node
+  ,                                       !- Primary Air Outlet Node
+  ,                                       !- Control Type
+  0.9,                                    !- Dewpoint Effectiveness Factor
+  ,                                       !- Secondary Air Inlet Node
+  ,                                       !- Sensor Node Name
+  ,                                       !- Relief Air Inlet Node
+  ,                                       !- Water Supply Storage Tank Name
+  0,                                      !- Drift Loss Fraction
+  ;                                       !- Blowdown Concentration Ratio
+
 OS:EvaporativeCooler:Direct:ResearchSpecial,
   {8d3b17e0-88c9-4d17-9de4-0b9dd0481b36}, ! Handle
-  OS:EvaporativeCooler:Direct:ResearchSpecial, ! Name
+  Direct Evaporative Cooler,              ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   1,                                      !- Cooler Effectiveness
   0,                                      !- Recirculating Water Pump Power Consumption {W}
@@ -738,6 +759,46 @@ OS:Coil:Heating:Electric,
   ,                                       ! Nominal Capacity {W}
   ,                                       ! Air Inlet Node Name
   ;                                       ! Air Outlet Node Name
+
+OS:Fan:ConstantVolume,
+  {6bab1791-64db-4620-aff4-f0682054ce4f}, !- Handle
+  Series PIU Fan,                         !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Fan Efficiency
+  ,                                       !- Pressure Rise {Pa}
+  AutoSize,                               !- Maximum Flow Rate {m3/s}
+  ,                                       !- Motor Efficiency
+  ,                                       !- Motor In Airstream Fraction
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ;                                       !- End-Use Subcategory
+
+OS:Coil:Heating:Electric,
+  {f5afd62c-fd37-470c-b61a-89f2683ddc8b}, !- Handle
+  Series PIU Coil,                        !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Efficiency
+  ,                                       !- Nominal Capacity {W}
+  ,                                       !- Air Inlet Node Name
+  ;                                       !- Air Outlet Node Name
+
+OS:AirTerminal:SingleDuct:SeriesPIU:Reheat,
+  {1c4961f3-614c-4530-854d-18b47804b9f6}, !- Handle
+  Series Fan Powered Terminal, !- Name
+  ,                                       !- Availability Schedule Name
+  autosize,                               !- Maximum Air Flow Rate {m3/s}
+  autosize,                               !- Maximum Primary Air Flow Rate {m3/s}
+  autosize,                               !- Minimum Primary Air Flow Fraction
+  ,                                       !- Supply Air Inlet Node
+  ,                                       !- Secondary Air Inlet Node
+  ,                                       !- Outlet Node
+  ,                                       !- Reheat Coil Air Inlet Node
+  ,                                       !- Zone Mixer Name
+  {6bab1791-64db-4620-aff4-f0682054ce4f}, !- Fan Name
+  {f5afd62c-fd37-470c-b61a-89f2683ddc8b}, !- Reheat Coil Name
+  autosize,                               !- Maximum Hot Water or Steam Flow Rate {m3/s}
+  0,                                      !- Minimum Hot Water or Steam Flow Rate {m3/s}
+  0.001;                                  !- Convergence Tolerance
 
 OS:AirLoopHVAC:OutdoorAirSystem,
   {4b8b842c-2628-4074-aaa1-e3636b179cce}, !- Handle

@@ -71,6 +71,9 @@ set(${target_name}_src
   AirTerminalSingleDuctParallelPIUReheat.hpp
   AirTerminalSingleDuctParallelPIUReheat_Impl.hpp
   AirTerminalSingleDuctParallelPIUReheat.cpp
+  AirTerminalSingleDuctSeriesPIUReheat.hpp
+  AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp
+  AirTerminalSingleDuctSeriesPIUReheat.cpp
   AirTerminalSingleDuctUncontrolled.hpp
   AirTerminalSingleDuctUncontrolled_Impl.hpp
   AirTerminalSingleDuctUncontrolled.cpp
@@ -323,6 +326,9 @@ set(${target_name}_src
   EvaporativeCoolerDirectResearchSpecial.hpp
   EvaporativeCoolerDirectResearchSpecial_Impl.hpp
   EvaporativeCoolerDirectResearchSpecial.cpp
+  EvaporativeCoolerIndirectResearchSpecial.hpp
+  EvaporativeCoolerIndirectResearchSpecial_Impl.hpp
+  EvaporativeCoolerIndirectResearchSpecial.cpp
   EvaporativeFluidCoolerSingleSpeed.hpp
   EvaporativeFluidCoolerSingleSpeed_Impl.hpp
   EvaporativeFluidCoolerSingleSpeed.cpp
@@ -1148,6 +1154,7 @@ set(${target_name}_test_src
   test/AirTerminalSingleDuctConstantVolumeCooledBeam_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeReheat_GTest.cpp
   test/AirTerminalSingleDuctParallelPIUReheat_GTest.cpp
+  test/AirTerminalSingleDuctSeriesPIUReheat_GTest.cpp
   test/AirTerminalSingleDuctUncontrolled_GTest.cpp
   test/AirTerminalSingleDuctVAVNoReheat_GTest.cpp
   test/AirTerminalSingleDuctVAVReheat_GTest.cpp
@@ -1198,6 +1205,7 @@ set(${target_name}_test_src
   test/DistrictHeating_GTest.cpp
   test/ElectricEquipment_GTest.cpp
   test/EvaporativeCoolerDirectResearchSpecial_GTest.cpp
+  test/EvaporativeCoolerIndirectResearchSpecial_GTest.cpp
   test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
   test/Facility_GTest.cpp
   test/FanVariableVolume_GTest.cpp
