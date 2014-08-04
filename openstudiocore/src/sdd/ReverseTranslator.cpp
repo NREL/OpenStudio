@@ -1049,6 +1049,14 @@ namespace sdd {
           var.setReportingFrequency(interval);
           var.setKeyValue(it->supplyOutletNode().name().get());
 
+          var = model::OutputVariable("System Node Temperature",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(it->demandInletNode().name().get());
+
+          var = model::OutputVariable("System Node Mass Flow Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(it->demandInletNode().name().get());
+
           if( boost::optional<model::Node> node = it->mixedAirNode() )
           {
             var = model::OutputVariable("System Node Temperature",*result);
