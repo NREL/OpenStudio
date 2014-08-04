@@ -1009,7 +1009,7 @@ namespace sdd {
 
       if( simVarsHVACSecElement.text().toInt() == 1 )
       {
-        model::OutputVariable var("Heating Coil Heating Rate",*result);
+        model::OutputVariable var("Heating Coil Air Heating Rate",*result);
         var.setReportingFrequency(interval);
 
         var = model::OutputVariable("Cooling Coil Total Cooling Rate",*result);
