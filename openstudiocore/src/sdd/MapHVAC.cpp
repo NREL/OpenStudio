@@ -542,43 +542,29 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
   model::SizingSystem sizingSystem = airLoopHVAC.sizingSystem();
 
   // clgDsgnSupAirTemp
-
+  double clgDsgnSupAirTemp = 12.8;
   QDomElement clgSupAirTempElement = airSystemElement.firstChildElement("ClgDsgnSupAirTemp");
-
   bool ok;
-
   value = clgSupAirTempElement.text().toDouble(&ok);
-
   if( ok )
   {
-    sizingSystem.setCentralCoolingDesignSupplyAirTemperature(unitToUnit(value,"F","C").get());
+    clgDsgnSupAirTemp = unitToUnit(value,"F","C").get();
   }
-  else
-  {
-    sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8);
-  }
+  sizingSystem.setCentralCoolingDesignSupplyAirTemperature(clgDsgnSupAirTemp);
 
   // HtgDsgnSupAirTemp
-
+  double htgDsgnSupAirTemp = 40.0;
   QDomElement htgSupAirTempElement = airSystemElement.firstChildElement("HtgDsgnSupAirTemp");
-
   value = htgSupAirTempElement.text().toDouble(&ok);
-
   if( ok )
   {
-    sizingSystem.setCentralHeatingDesignSupplyAirTemperature(unitToUnit(value,"F","C").get());
+    htgDsgnSupAirTemp = unitToUnit(value,"F","C").get();
   }
-  else
-  {
-    sizingSystem.setCentralHeatingDesignSupplyAirTemperature(40.0);
-  }
+  sizingSystem.setCentralHeatingDesignSupplyAirTemperature(htgDsgnSupAirTemp);
 
   // DsgnAirFlowMin
-
   QDomElement dsgnAirFlowMinElement = airSystemElement.firstChildElement("DsgnAirFlowMin");
-
   value = dsgnAirFlowMinElement.text().toDouble(&ok);
-
   if( ok )
   {
     sizingSystem.setMinimumSystemAirFlowRatio(value);
@@ -1172,6 +1158,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
     spm.addToNode(supplyOutletNode);
 
+    if( istringEqual("SZVAVAC",airSystemTypeElement.text().toStdString()) || 
+        istringEqual("SZVAVHP",airSystemTypeElement.text().toStdString()) ) 
+    {
+      spm.setMaximumSupplyAirTemperature(htgDsgnSupAirTemp);
+      spm.setMinimumSupplyAirTemperature(clgDsgnSupAirTemp);
+    }
   }
   else if( istringEqual(clgCtrlElement.text().toStdString(),"WarmestResetFlowFirst") ||
            istringEqual(clgCtrlElement.text().toStdString(),"WarmestReset") )
@@ -1187,33 +1179,19 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
     spm.addToNode(supplyOutletNode);
 
-    //if( istringEqual("SZVAVAC",airSystemTypeElement.text().toStdString()) || 
-    //    istringEqual("SZVAVHP",airSystemTypeElement.text().toStdString()) ) 
-    //{
-    //  spm.setMaximumSetpointTemperature(23.89);
-    //}
-    //else
-    //{
-      QDomElement clRstSupHiElement = airSystemElement.firstChildElement("ClRstSupHi");
-
-      value = clRstSupHiElement.text().toDouble(&ok);
-
-      if( ok )
-      {
-        value = unitToUnit(value,"F","C").get();
-
-        spm.setMaximumSetpointTemperature(value);
-      }
-    //}
-
-    QDomElement clRstSupLowElement = airSystemElement.firstChildElement("ClRstSupLow");
-
-    value = clRstSupLowElement.text().toDouble(&ok);
-
+    QDomElement clRstSupHiElement = airSystemElement.firstChildElement("ClRstSupHi");
+    value = clRstSupHiElement.text().toDouble(&ok);
     if( ok )
     {
       value = unitToUnit(value,"F","C").get();
+      spm.setMaximumSetpointTemperature(value);
+    }
 
+    QDomElement clRstSupLowElement = airSystemElement.firstChildElement("ClRstSupLow");
+    value = clRstSupLowElement.text().toDouble(&ok);
+    if( ok )
+    {
+      value = unitToUnit(value,"F","C").get();
       spm.setMinimumSetpointTemperature(value);
     }
   }
