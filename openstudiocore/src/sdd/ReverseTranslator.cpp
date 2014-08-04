@@ -908,16 +908,11 @@ namespace sdd {
         var.setReportingFrequency(interval);
       }
 
-      // SimVarsThrmlZn
-
-      QDomElement simVarsThrmlZnElement = projectElement.firstChildElement("SimVarsThrmlZn");      
-
-      if( simVarsThrmlZnElement.text().toInt() == 1 )
+      // SimVarsDayltg
+      QDomElement simVarsDayltgElement = projectElement.firstChildElement("SimVarsDayltg");
+      if( simVarsDayltgElement.text().toInt() == 1 )
       {
-        model::OutputVariable var("Zone Air Temperature",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Zone Lights Electric Power",*result);
+        model::OutputVariable var("Zone Lights Electric Power",*result);
         var.setReportingFrequency(interval);
 
         var = model::OutputVariable("Daylighting Reference Point 1 Illuminance",*result);
@@ -927,6 +922,16 @@ namespace sdd {
         var.setReportingFrequency(interval);
 
         var = model::OutputVariable("Daylighting Lighting Power Multiplier",*result);
+        var.setReportingFrequency(interval);
+      }
+
+      // SimVarsThrmlZn
+
+      QDomElement simVarsThrmlZnElement = projectElement.firstChildElement("SimVarsThrmlZn");      
+
+      if( simVarsThrmlZnElement.text().toInt() == 1 )
+      {
+        model::OutputVariable var("Zone Air Temperature",*result);
         var.setReportingFrequency(interval);
 
         std::vector<model::ThermalZone> zones = result->getModelObjects<model::ThermalZone>();
