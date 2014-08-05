@@ -199,8 +199,19 @@ namespace gbxml {
     QDomElement result = doc.createElement("Campus");
     m_translatedObjects[facility.handle()] = result;
 
+    boost::optional<std::string> name = facility.name();
+
     // id
     result.setAttribute("id", "Facility");
+
+    // name
+    QDomElement nameElement = doc.createElement("Name");
+    result.appendChild(nameElement);
+    if (name){
+      nameElement.appendChild(doc.createTextNode(QString::fromStdString(name.get())));
+    }else{
+      nameElement.appendChild(doc.createTextNode("Facility"));
+    }
 
     model::Model model = facility.model();
 
@@ -260,6 +271,11 @@ namespace gbxml {
       //result.setAttribute("buildingType", escapeName(spaceTypeName));
     }
 
+    // name
+    QDomElement nameElement = doc.createElement("Name");
+    result.appendChild(nameElement);
+    nameElement.appendChild(doc.createTextNode(QString::fromStdString(name)));
+
     // area
     QDomElement areaElement = doc.createElement("Area");
     result.appendChild(areaElement);
@@ -293,7 +309,7 @@ namespace gbxml {
     QDomElement result = doc.createElement("Space");
     m_translatedObjects[space.handle()] = result;
 
-    // name
+    // id
     std::string name = space.name().get();
     result.setAttribute("id", escapeName(name));
 
@@ -311,6 +327,23 @@ namespace gbxml {
       std::string thermalZoneName = thermalZone->name().get();
       result.setAttribute("zoneIdRef", escapeName(thermalZoneName));
     }
+
+    // name
+    QDomElement nameElement = doc.createElement("Name");
+    result.appendChild(nameElement);
+    nameElement.appendChild(doc.createTextNode(QString::fromStdString(name)));
+
+    // append floor area
+    double area = space.floorArea();
+    QDomElement areaElement = doc.createElement("Area");
+    areaElement.appendChild(doc.createTextNode(QString::number(area)));
+    result.appendChild(areaElement);
+    
+    // append volume
+    double volume = space.volume();
+    QDomElement volumeElement = doc.createElement("Volume");
+    volumeElement.appendChild(doc.createTextNode(QString::number(volume)));
+    result.appendChild(volumeElement);
 
     return result;
   }
@@ -677,6 +710,11 @@ namespace gbxml {
     // id
     std::string name = thermalZone.name().get();
     result.setAttribute("id", escapeName(name));
+
+    // name
+    QDomElement nameElement = doc.createElement("Name");
+    result.appendChild(nameElement);
+    nameElement.appendChild(doc.createTextNode(QString::fromStdString(name)));
 
     return result;
   }
