@@ -1607,7 +1607,7 @@ namespace sdd {
     std::vector<model::Surface> surfaces = building.model().getConcreteModelObjects<model::Surface>();
     std::sort(surfaces.begin(), surfaces.end(), WorkspaceObjectNameLess());
     std::string surfacesWithoutSpace;
-    for (const model::Surface& surface : surfaces){
+    BOOST_FOREACH(const model::Surface& surface, surfaces){
       if (!surface.space()){
         surfacesWithoutSpace += " '" + surface.name().get() + "',";
       }
@@ -1622,7 +1622,7 @@ namespace sdd {
     std::vector<model::SubSurface> subSurfaces = building.model().getConcreteModelObjects<model::SubSurface>();
     std::sort(subSurfaces.begin(), subSurfaces.end(), WorkspaceObjectNameLess());
     std::string subSurfacesWithoutSurface;
-    for (const model::SubSurface& subSurface : subSurfaces){
+    BOOST_FOREACH(const model::SubSurface& subSurface, subSurfaces){
       if (!subSurface.surface()){
         subSurfacesWithoutSurface += " '" + subSurface.name().get() + "',";
       }
@@ -1793,11 +1793,10 @@ namespace sdd {
     // translate surfaces
     std::vector<model::Surface> surfaces = space.surfaces();
     std::sort(surfaces.begin(), surfaces.end(), WorkspaceObjectNameLess());
-
-    BOOST_FOREACH(const model::Surface& surface, surfaces){
     unsigned numFloors = 0;
     unsigned numWalls = 0;
     unsigned numRoofCeilings = 0;
+    BOOST_FOREACH(const model::Surface& surface, surfaces){
       std::string surfaceType = surface.surfaceType();
       if (istringEqual("Wall", surfaceType)){
         ++numWalls;
