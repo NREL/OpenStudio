@@ -42,8 +42,9 @@ TEST_F(BCLFixture, LocalBCLTest)
   EXPECT_TRUE(LocalBCL::instance().setProdAuthKey(defaultProdAuthKey));
   EXPECT_EQ(defaultProdAuthKey, LocalBCL::instance().prodAuthKey());
 
-  EXPECT_TRUE(LocalBCL::instance().setDevAuthKey(defaultDevAuthKey));
-  EXPECT_EQ(defaultDevAuthKey, LocalBCL::instance().devAuthKey());
+  // Don't bother testing this since bcl7.development.nrel.gov is internal only
+  //EXPECT_TRUE(LocalBCL::instance().setDevAuthKey(defaultDevAuthKey));
+  //EXPECT_EQ(defaultDevAuthKey, LocalBCL::instance().devAuthKey());
 }
 
 TEST_F(BCLFixture, RemoteBCLTest)
@@ -55,9 +56,10 @@ TEST_F(BCLFixture, RemoteBCLTest)
   EXPECT_EQ(prodAuthKey, remoteBCL.prodAuthKey());
   EXPECT_EQ(remoteBCL.prodAuthKey(), remoteBCL.authKey());
 
+  // Don't bother testing this since bcl7.development.nrel.gov is internal only
   // set temporary development auth key
-  remoteBCL.setDevAuthKey(devAuthKey);
-  EXPECT_EQ(devAuthKey, remoteBCL.devAuthKey());
+  //remoteBCL.setDevAuthKey(devAuthKey);
+  //EXPECT_EQ(devAuthKey, remoteBCL.devAuthKey());
 
   // check that defaults to production url
   EXPECT_EQ(remoteBCL.remoteProductionUrl(), remoteBCL.remoteUrl());
@@ -85,7 +87,7 @@ TEST_F(BCLFixture, RemoteBCLTest)
   responses = remoteBCL.searchComponentLibrary("ashrae","Exterior Roof");
   EXPECT_GT(static_cast<int>(responses.size()),0);
 
-  // get all things wall, via non-null first string and and default arg second string
+  // get all things wall, via non-null first string and default arg second string
   responses = remoteBCL.searchComponentLibrary("wall","");
   EXPECT_GT(static_cast<int>(responses.size()),0);
 
@@ -155,7 +157,7 @@ TEST_F(BCLFixture, RemoteBCLTest)
   responses = remoteBCL.searchComponentLibrary("ashrae","Exterior Roof");
   EXPECT_GT(static_cast<int>(responses.size()),0);
 
-  // get all things wall, via non-null first string and and default arg second string
+  // get all things wall, via non-null first string and default arg second string
   responses = remoteBCL.searchComponentLibrary("wall","");
   ASSERT_GT(static_cast<int>(responses.size()),0);
 
@@ -387,7 +389,7 @@ TEST_F(BCLFixture, RemoteBCLMetaSearchTest)
   }
   EXPECT_FALSE(result->taxonomyTerms().empty());
 
-  // get all things office, via non-null first string and and empty second string
+  // get all things office, via non-null first string and empty second string
   test = remoteBCL.metaSearchComponentLibrary("office","");
   ASSERT_TRUE(test);
   result = remoteBCL.waitForMetaSearch();

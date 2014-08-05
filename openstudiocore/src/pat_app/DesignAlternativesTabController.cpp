@@ -73,23 +73,17 @@ DesignAlternativesTabController::DesignAlternativesTabController()
   designAlternativesTabView->designAltsView->designAltsListView->setListController(m_designAltListController);
   designAlternativesTabView->designAltsView->designAltsListView->setDelegate(m_designAltItemDelegate);
 
-  bool bingo = connect(designAlternativesTabView->designAltsView->createOneWithSelectedMeasuresButton,SIGNAL(clicked()),m_designAltListController.data(),SLOT(addOneItemWithAllSelectedMeasures()));
-  OS_ASSERT(bingo);
+  connect(designAlternativesTabView->designAltsView->createOneWithSelectedMeasuresButton, &QPushButton::clicked, m_designAltListController.data(), &DesignAltListController::addOneItemWithAllSelectedMeasures);
 
-  bingo = connect(designAlternativesTabView->designAltsView->createOneForEachSelectedMeasureButton,SIGNAL(clicked()),m_designAltListController.data(),SLOT(addOneItemForEachSelectedMeasure()));
-  OS_ASSERT(bingo);
+  connect(designAlternativesTabView->designAltsView->createOneForEachSelectedMeasureButton, &QPushButton::clicked, m_designAltListController.data(), &DesignAltListController::addOneItemForEachSelectedMeasure);
 
-  bingo = connect(designAlternativesTabView->designAltsView->createFromFileButton,SIGNAL(clicked()),m_designAltListController.data(),SLOT(addItemFromExternalFile()));
-  OS_ASSERT(bingo);
+  connect(designAlternativesTabView->designAltsView->createFromFileButton, &QPushButton::clicked, m_designAltListController.data(), &DesignAltListController::addItemFromExternalFile);
 
-  bingo = connect(designAlternativesTabView->clearSelectionsButton,SIGNAL(clicked()),m_variableGroupListController->selectionController().data(),SLOT(unselectAllItems()));
-  OS_ASSERT(bingo);
+  connect(designAlternativesTabView->clearSelectionsButton, &QPushButton::clicked, m_variableGroupListController->selectionController().data(), &OSItemSelectionController::unselectAllItems);
 
-  bingo = connect(designAlternativesTabView->selectAllButton,SIGNAL(clicked()),m_variableGroupListController->selectionController().data(),SLOT(selectAllItems()));
-  OS_ASSERT(bingo);
+  connect(designAlternativesTabView->selectAllButton, &QPushButton::clicked, m_variableGroupListController->selectionController().data(), &OSItemSelectionController::selectAllItems);
 
-  bingo = connect(m_variableGroupListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(updateButtonStatusBasedOnSelection()));
-  OS_ASSERT(bingo);
+  connect(m_variableGroupListController->selectionController().data(), &OSItemSelectionController::selectionChanged, this, &DesignAlternativesTabController::updateButtonStatusBasedOnSelection);
 }
 
 DesignAlternativesTabController::~DesignAlternativesTabController()
@@ -259,21 +253,15 @@ QWidget * MeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     measureItemView->label->setText(measureItem->name());
 
-    bool bingo = connect(measureItem.data(),SIGNAL(nameChanged(const QString &)),measureItemView->label,SLOT(setText(const QString &)));
-
-    OS_ASSERT(bingo);
+    connect(measureItem.data(), &measuretab::MeasureItem::nameChanged, measureItemView->label, &QLabel::setText);
 
     // Selection
 
     measureItemView->setHasEmphasis(measureItem->isSelected());
 
-    bingo = connect(measureItemView,SIGNAL(clicked()),measureItem.data(),SLOT(toggleSelected()));
+    connect(measureItemView, &MeasureItemView::clicked, measureItem.data(), &measuretab::MeasureItem::toggleSelected);
 
-    OS_ASSERT(bingo);
-
-    bingo = connect(measureItem.data(),SIGNAL(selectedChanged(bool)),measureItemView,SLOT(setHasEmphasis(bool)));
-
-    OS_ASSERT(bingo);
+    connect(measureItem.data(), &measuretab::MeasureItem::selectedChanged, measureItemView, &MeasureItemView::setHasEmphasis);
 
     return measureItemView;
   }
@@ -641,23 +629,17 @@ QWidget * DesignAltItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     designAltItemView->designAltHeaderView->designAltNameEdit->setText(designAltItem->name());
 
-    bool bingo = connect(designAltItemView->designAltHeaderView->designAltNameEdit,SIGNAL(textEdited(const QString &)),designAltItem.data(),SLOT(setName(const QString &)));
-
-    OS_ASSERT(bingo);
+    connect(designAltItemView->designAltHeaderView->designAltNameEdit, &QLineEdit::textEdited, designAltItem.data(), &DesignAltItem::setName);
 
     // Description
 
     designAltItemView->designAltContentView->descriptionTextEdit->setText(designAltItem->description());
 
-    bingo = connect(designAltItemView->designAltContentView,SIGNAL(descriptionChanged(const QString &)),designAltItem.data(),SLOT(setDescription(const QString &)));
-
-    OS_ASSERT(bingo);
+    connect(designAltItemView->designAltContentView, &DesignAltContentView::descriptionChanged, designAltItem.data(), &DesignAltItem::setDescription);
 
     // Remove
 
-    bingo = connect(designAltItemView->designAltHeaderView->removeButton,SIGNAL(clicked()),designAltItem.data(),SLOT(remove()));
-
-    OS_ASSERT(bingo);
+    connect(designAltItemView->designAltHeaderView->removeButton, &QPushButton::clicked, designAltItem.data(), &DesignAltItem::remove);
 
     // Perturbations
 

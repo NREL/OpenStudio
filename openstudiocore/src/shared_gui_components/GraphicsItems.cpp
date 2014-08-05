@@ -239,11 +239,10 @@ void GridLayoutItem::setListController(QSharedPointer<OSListController> listCont
 
   m_listController = listController;
 
-  connect(m_listController.data(),SIGNAL(itemInserted(int)),this,SLOT(insertItemView(int)));
-  connect(m_listController.data(),SIGNAL(itemRemoved(int)),this,SLOT(removeItemView(int)));
-  connect(m_listController.data(),SIGNAL(itemChanged(int)),this,SLOT(refreshItemView(int)));
-  connect(m_listController.data(),SIGNAL(modelReset()),this,SLOT(refreshAllItemViews()));
-
+  connect(m_listController.data(), &OSListController::itemInserted, this, &GridLayoutItem::insertItemView);
+  connect(m_listController.data(), &OSListController::itemRemoved, this, &GridLayoutItem::removeItemView);
+  connect(m_listController.data(), &OSListController::itemChanged, this, &GridLayoutItem::refreshItemView);
+  connect(m_listController.data(), &OSListController::modelReset, this, &GridLayoutItem::refreshAllItemViews);
   refreshAllItemViews();
 }
 
@@ -289,9 +288,7 @@ QGraphicsObject * GridLayoutItem::createNewItemView(int i)
 
     m_widgetItemPairs.insert( std::make_pair(graphicsItem,itemData) );
 
-    bool bingo = connect(graphicsItem,SIGNAL(destroyed(QObject *)),this,SLOT(removePair(QObject *)));
-
-    OS_ASSERT(bingo);
+    connect(graphicsItem, &QGraphicsObject::destroyed, this, &GridLayoutItem::removePair);
 
     return graphicsItem;
   }

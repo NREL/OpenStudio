@@ -50,11 +50,7 @@ ModelObjectInspectorView::ModelObjectInspectorView(const openstudio::model::Mode
   : OSInspectorView(addScrollArea, parent),
     m_model(model)
 {
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             this, 
-                             SLOT(toggleUnits(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &ModelObjectInspectorView::toggleUnitsClicked, this, &ModelObjectInspectorView::toggleUnits);
 }
 
 void ModelObjectInspectorView::selectModelObject(const openstudio::model::ModelObject& modelObject)
@@ -65,11 +61,7 @@ void ModelObjectInspectorView::selectModelObject(const openstudio::model::ModelO
 
   m_modelObject = modelObject;
 
-  bool isConnected = connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),
-                             SIGNAL(onChange()),
-                             this,
-                             SLOT(update()));
-  OS_ASSERT(isConnected);
+  connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onChange, this, &ModelObjectInspectorView::update);
 
   onSelectModelObject(*m_modelObject);
 }
@@ -77,7 +69,7 @@ void ModelObjectInspectorView::selectModelObject(const openstudio::model::ModelO
 void ModelObjectInspectorView::onClearSelection()
 {
   if (m_modelObject){
-    this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
+    this->disconnect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get());
   }
 
   m_modelObject.reset();

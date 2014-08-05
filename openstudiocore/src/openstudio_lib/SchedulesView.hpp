@@ -686,6 +686,9 @@ class ScheduleDayView : public QWidget
 
   //void endDateTimeChanged(model::ScheduleRule & scheduleRule, const QDateTime & newDate);
 
+ public slots:
+  void onToggleUnitsClicked(bool displayIP);
+
  private slots:
 
   //void refresh();
@@ -705,8 +708,6 @@ class ScheduleDayView : public QWidget
   void onLowerValueChanged(double d);
 
   void onUpperValueChanged(double d);
-
-  void onToggleUnitsClicked(bool displayIP);
 
  private:
 

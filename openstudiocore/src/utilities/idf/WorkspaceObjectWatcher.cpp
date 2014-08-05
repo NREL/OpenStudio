@@ -30,15 +30,9 @@ WorkspaceObjectWatcher::WorkspaceObjectWatcher(const openstudio::WorkspaceObject
 {
   detail::WorkspaceObject_ImplPtr objectImpl = workspaceObject.getImpl<detail::WorkspaceObject_Impl>();
  
-  bool connected = this->connect(objectImpl.get(), 
-      SIGNAL(onRelationshipChange(int,Handle,Handle)), 
-      SLOT(relationshipChange(int,Handle,Handle)));
-  OS_ASSERT(connected);
+  connect(objectImpl.get(), &detail::WorkspaceObject_Impl::onRelationshipChange, this, &WorkspaceObjectWatcher::relationshipChange);
 
-  connected = this->connect(objectImpl.get(), 
-      SIGNAL(onRemoveFromWorkspace(Handle)), 
-      SLOT(removedFromWorkspace(Handle)));
-  OS_ASSERT(connected);
+  connect(objectImpl.get(), &detail::WorkspaceObject_Impl::onRemoveFromWorkspace, this, static_cast<void (WorkspaceObjectWatcher::*)(Handle)>(&WorkspaceObjectWatcher::removedFromWorkspace));
 }
 
 WorkspaceObjectWatcher::~WorkspaceObjectWatcher() {}

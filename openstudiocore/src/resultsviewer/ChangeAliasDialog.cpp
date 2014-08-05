@@ -59,10 +59,9 @@ ChangeAliasDialog::ChangeAliasDialog(const QString& oldAlias, const QString& fil
 
   QPushButton *cancelButton = new QPushButton(tr("Cancel"));
 
-  connect(m_updateButton, SIGNAL(clicked()), this, SLOT(updateClicked()));
-  connect(cancelButton, SIGNAL(clicked()), this, SLOT(close()));
-  connect(m_newAliasName, SIGNAL(textChanged(const QString&)), this, SLOT(enableUpdateButton(const QString&)));
-
+  connect(m_updateButton, &QPushButton::clicked, this, &ChangeAliasDialog::updateClicked);
+  connect(cancelButton, &QPushButton::clicked, this, &ChangeAliasDialog::close);
+  connect(m_newAliasName, &QLineEdit::textChanged, this, &ChangeAliasDialog::enableUpdateButton);
 // layout
   auto gridLayout = new QGridLayout;
   gridLayout->addWidget(fileLabel, 0, 0);

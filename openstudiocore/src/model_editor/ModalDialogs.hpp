@@ -72,6 +72,10 @@ public:
 
   void setCancelButtonText(const std::string& text);
 
+  void onPushButtonOK(bool);
+
+  void onPushButtonCancel(bool);
+
 signals:
 
   // emitted when the dialog is closed
@@ -79,8 +83,6 @@ signals:
 
 private slots:
 
-  void onPushButtonOK(bool);
-  void onPushButtonCancel(bool);
   void onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl);
   void onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl);
 

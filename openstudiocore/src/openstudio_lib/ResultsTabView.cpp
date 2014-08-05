@@ -54,9 +54,7 @@ ResultsTabView::ResultsTabView(const QString & tabLabel,
   addTabWidget(m_resultsView);
   m_resultsView->setAutoFillBackground(false);
 
-  bool isConnected = connect(this, SIGNAL(treeChanged(const openstudio::UUID &)),
-    m_resultsView, SLOT(treeChanged(const openstudio::UUID &)));
-  OS_ASSERT(isConnected);
+  connect(this, &ResultsTabView::treeChanged, m_resultsView, &ResultsView::treeChanged);
 
 }
 
@@ -85,14 +83,11 @@ ResultsView::ResultsView(QWidget *t_parent)
     m_isIP(true),
     m_openResultsViewerBtn(new QPushButton("Open ResultsViewer\nfor Detailed Reports"))
 {
-  bool isConnected = false;
 
   QVBoxLayout * mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
 
-  isConnected = connect(m_openResultsViewerBtn, SIGNAL(clicked()),
-      this, SLOT(openResultsViewerClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_openResultsViewerBtn, &QPushButton::clicked, this, &ResultsView::openResultsViewerClicked);
   
   QHBoxLayout * hLayout = new QHBoxLayout(this);
   mainLayout->addLayout(hLayout);
@@ -103,9 +98,7 @@ ResultsView::ResultsView(QWidget *t_parent)
   hLayout->addWidget(m_reportLabel, 0, Qt::AlignLeft | Qt::AlignVCenter);
 
   m_comboBox = new QComboBox(this);
-  isConnected = connect(m_comboBox, SIGNAL(currentIndexChanged( int )),
-    this, SLOT(comboBoxChanged( int )));
-  OS_ASSERT(isConnected);
+  connect(m_comboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &ResultsView::comboBoxChanged);
   hLayout->addWidget(m_comboBox, 0, Qt::AlignLeft | Qt::AlignVCenter);
 
   hLayout->addStretch();

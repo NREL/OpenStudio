@@ -30,8 +30,8 @@ PlotViewProperties::PlotViewProperties(QWidget *parent, Qt::WindowFlags flags)
   ui.cboCurveStyle->addItem(tr("Stair"));
   ui.cboCurveStyle->addItem(tr("Bar"));
 
-  connect(ui.btnApply, SIGNAL(clicked()), this, SLOT(btnApply_onClick()));
-  connect(ui.btnClose, SIGNAL(clicked()), this, SLOT(btnClose_onClick()));
+  connect(ui.btnApply, &QPushButton::clicked, this, &PlotViewProperties::btnApply_onClick);
+  connect(ui.btnClose, &QPushButton::clicked, this, &PlotViewProperties::btnClose_onClick);
 }
 
 PlotViewProperties::~PlotViewProperties()
@@ -97,8 +97,8 @@ void PlotViewProperties::setPlotView(resultsviewer::PlotView *PlotViewItem)
       ui.listWidget->setRowHidden(7,true); // hide "Flood Plot" properties
       ui.listWidget->setRowHidden(8,true); // hide "Illuminance Map" properties
       updateCurves();
-      connect(ui.cboCurves, SIGNAL(currentIndexChanged(int)), this, SLOT(slotCurveChanged(int)));
-      connect(ui.btnRemoveCurve, SIGNAL(clicked()), this, SLOT(slotRemoveCurve()));
+      connect(ui.cboCurves, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &PlotViewProperties::slotCurveChanged);
+      connect(ui.btnRemoveCurve, &QPushButton::clicked, this, &PlotViewProperties::slotRemoveCurve);
       break;
     case resultsviewer::RVPV_FLOODPLOT:
       ui.listWidget->setRowHidden(5,true); //  hide "Legend" properties

@@ -52,17 +52,11 @@ void OSSwitch2::bind(model::ModelObject & modelObject,
   m_reset = reset;
   m_isDefaulted = isDefaulted;
 
-  bool isConnected = false;
-  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
-                         this,SLOT(onModelObjectChange()) );
-  OS_ASSERT(isConnected);
+  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSSwitch2::onModelObjectChange);
 
-  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
-                         this,SLOT(onModelObjectRemove(Handle)) );
-  OS_ASSERT(isConnected);
+  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSSwitch2::onModelObjectRemove);
 
-  isConnected = connect( this, SIGNAL(clicked(bool)), this, SLOT(onClicked(bool)) );
-  OS_ASSERT(isConnected);
+  connect(this, &OSSwitch2::clicked, this, &OSSwitch2::onClicked);
 
   onModelObjectChange();
 }
@@ -115,17 +109,11 @@ void OSSwitch::bind(model::ModelObject & modelObject, const char * property)
 
   m_property = property;
 
-  bool isConnected = false;
-  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
-                         this,SLOT(onModelObjectChange()) );
-  OS_ASSERT(isConnected);
+  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSSwitch::onModelObjectChange);
 
-  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
-                         this,SLOT(onModelObjectRemove(Handle)) );
-  OS_ASSERT(isConnected);
+  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSSwitch::onModelObjectRemove);
 
-  isConnected = connect( this, SIGNAL(clicked(bool)), this, SLOT(onClicked(bool)) );
-  OS_ASSERT(isConnected);
+  connect(this, &OSSwitch::clicked, this, &OSSwitch::onClicked);
 
   onModelObjectChange();
 }

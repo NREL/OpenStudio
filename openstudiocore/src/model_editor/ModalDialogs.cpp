@@ -223,30 +223,19 @@ void ModelObjectSelectorDialog::createWidgets()
 
 void ModelObjectSelectorDialog::connectSignalsAndSlots()
 {
-  bool connected;
-  connected = connect(m_okButton,
-                      SIGNAL(clicked(bool)),
-                      this,
-                      SLOT(onPushButtonOK(bool)));
-  OS_ASSERT(connected);
+  connect(m_okButton, &QPushButton::clicked, this, &ModelObjectSelectorDialog::onPushButtonOK);
 
-  connected = connect(m_cancelButton,
-                      SIGNAL(clicked(bool)),
-                      this,
-                      SLOT(onPushButtonCancel(bool)));
-  OS_ASSERT(connected);
+  connect(m_cancelButton, &QPushButton::clicked, this, &ModelObjectSelectorDialog::onPushButtonCancel);
 
-  connected = connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-                     SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                     this,
-                     SLOT(onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
-  OS_ASSERT(connected);
+  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
+    this,
+    &ModelObjectSelectorDialog::onAddWorkspaceObject);
 
-  connected = connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-                     SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                     this,
-                     SLOT(onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
-  OS_ASSERT(connected);
+  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
+    this,
+    &ModelObjectSelectorDialog::onRemoveWorkspaceObject);
 }
 
 void ModelObjectSelectorDialog::loadStyleSheet()
@@ -304,12 +293,7 @@ ModelObjectSelectorDialogWatcher::ModelObjectSelectorDialogWatcher(std::shared_p
 {
   OS_ASSERT(modelObjectSelectorDialog);
 
-  bool connected;
-  connected = connect(modelObjectSelectorDialog.get(),
-                      SIGNAL(closed(const boost::optional<openstudio::model::ModelObject>&)),
-                      this,
-                      SLOT(onClose(const boost::optional<openstudio::model::ModelObject>&)));
-  OS_ASSERT(connected);
+  connect(modelObjectSelectorDialog.get(), &ModelObjectSelectorDialog::closed, this, &ModelObjectSelectorDialogWatcher::onClose);
 }
 
 boost::optional<openstudio::model::ModelObject> ModelObjectSelectorDialogWatcher::selectedModelObject() const

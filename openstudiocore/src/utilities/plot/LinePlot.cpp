@@ -254,6 +254,7 @@ void LinePlot::init()
   this->bottomAxisTitle("Hour of Year");
 
   /// legend checked event
+  // This seems to have trouble with qt5 connect
   connect(m_qwtPlot, SIGNAL(legendChecked(QwtPlotItem *, bool)), SLOT(showCurve(QwtPlotItem *, bool)));
 
   m_colorVec.push_back(Qt::black);

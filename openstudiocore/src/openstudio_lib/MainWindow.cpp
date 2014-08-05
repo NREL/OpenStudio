@@ -81,7 +81,7 @@ MainWindow::MainWindow(bool isPlugin, QWidget *parent) :
   m_mainSplitter = new QSplitter(Qt::Horizontal); 
 
   m_verticalTabWidget = new VerticalTabWidget();
-  connect(m_verticalTabWidget,SIGNAL(tabSelected(int)),this,SIGNAL(verticalTabSelected(int)));
+  connect(m_verticalTabWidget, &VerticalTabWidget::tabSelected, this, &MainWindow::verticalTabSelected);
   m_mainSplitter->addWidget(m_verticalTabWidget);
 
   m_mainRightColumnContainer = new QStackedWidget();
@@ -93,65 +93,37 @@ MainWindow::MainWindow(bool isPlugin, QWidget *parent) :
   setCentralWidget(m_mainSplitter);  
 
   MainMenu * mainMenu = new MainMenu(m_displayIP, m_isPlugin);
-  bool isConnected = connect(mainMenu, SIGNAL(toggleUnitsClicked(bool)), this, SLOT(toggleUnits(bool)));
-  OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(downloadComponentsClicked()), this, SIGNAL(downloadComponentsClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(openLibDlgClicked()), this, SIGNAL(openLibDlgClicked()));
-  OS_ASSERT(isConnected);
+  connect(mainMenu, &MainMenu::toggleUnitsClicked, this, &MainWindow::toggleUnits);
+  connect(mainMenu, &MainMenu::downloadComponentsClicked, this, &MainWindow::downloadComponentsClicked);
+  connect(mainMenu, &MainMenu::openLibDlgClicked, this, &MainWindow::openLibDlgClicked);
 
   this->setMenuBar(mainMenu);
 
-  isConnected = connect(mainMenu, SIGNAL(exportClicked()), this, SIGNAL(exportClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(exportgbXMLClicked()), this, SIGNAL(exportgbXMLClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(exportSDDClicked()), this, SIGNAL(exportSDDClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(importClicked()), this, SIGNAL(importClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(importgbXMLClicked()), this, SIGNAL(importgbXMLClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(importSDDClicked()), this, SIGNAL(importSDDClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(loadFileClicked()), this, SIGNAL(loadFileClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(loadLibraryClicked()), this, SIGNAL(loadLibraryClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(saveAsFileClicked()), this, SIGNAL(saveAsFileClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(saveFileClicked()), this, SIGNAL(saveFileClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(revertFileClicked()), this, SIGNAL(revertFileClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(newClicked()), this, SIGNAL(newClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(exitClicked()),this,SIGNAL(exitClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(helpClicked()),this,SIGNAL(helpClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(aboutClicked()),this,SIGNAL(aboutClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(scanForToolsClicked()),this,SIGNAL(scanForToolsClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(showRunManagerPreferencesClicked()),this,SIGNAL(showRunManagerPreferencesClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(showRubyConsoleClicked()),this,SIGNAL(showRubyConsoleClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(toggleUnitsClicked(bool)),this,SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(changeMyMeasuresDir()),this,SIGNAL(changeMyMeasuresDir()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(applyMeasureClicked()),this,SIGNAL(applyMeasureClicked()));
-  OS_ASSERT(isConnected); 
-  isConnected = connect(mainMenu, SIGNAL(downloadMeasuresClicked()),this,SIGNAL(downloadMeasuresClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(changeBclLogin()),this,SIGNAL(changeBclLogin()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(configureProxyClicked()),this,SLOT(configureProxyClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(this, SIGNAL(enableRevertToSaved(bool)),mainMenu,SLOT(enableRevertToSavedAction(bool)));
-  OS_ASSERT(isConnected);
+  connect(mainMenu, &MainMenu::exportClicked, this, &MainWindow::exportClicked);
+  connect(mainMenu, &MainMenu::exportgbXMLClicked, this, &MainWindow::exportgbXMLClicked);
+  connect(mainMenu, &MainMenu::exportSDDClicked, this, &MainWindow::exportSDDClicked);
+  connect(mainMenu, &MainMenu::importClicked, this, &MainWindow::importClicked);
+  connect(mainMenu, &MainMenu::importgbXMLClicked, this, &MainWindow::importgbXMLClicked);
+  connect(mainMenu, &MainMenu::importSDDClicked, this, &MainWindow::importSDDClicked);
+  connect(mainMenu, &MainMenu::loadFileClicked, this, &MainWindow::loadFileClicked);
+  connect(mainMenu, &MainMenu::loadLibraryClicked, this, &MainWindow::loadLibraryClicked);
+  connect(mainMenu, &MainMenu::saveAsFileClicked, this, &MainWindow::saveAsFileClicked);
+  connect(mainMenu, &MainMenu::saveFileClicked, this, &MainWindow::saveFileClicked);
+  connect(mainMenu, &MainMenu::revertFileClicked, this, &MainWindow::revertFileClicked);
+  connect(mainMenu, &MainMenu::newClicked, this, &MainWindow::newClicked);
+  connect(mainMenu, &MainMenu::exitClicked, this, &MainWindow::exitClicked);
+  connect(mainMenu, &MainMenu::helpClicked, this, &MainWindow::helpClicked);
+  connect(mainMenu, &MainMenu::aboutClicked, this, &MainWindow::aboutClicked);
+  connect(mainMenu, &MainMenu::scanForToolsClicked, this, &MainWindow::scanForToolsClicked);
+  connect(mainMenu, &MainMenu::showRunManagerPreferencesClicked, this, &MainWindow::showRunManagerPreferencesClicked);
+  connect(mainMenu, &MainMenu::showRubyConsoleClicked, this, &MainWindow::showRubyConsoleClicked);
+  connect(mainMenu, &MainMenu::toggleUnitsClicked, this, &MainWindow::toggleUnitsClicked);
+  connect(mainMenu, &MainMenu::changeMyMeasuresDir, this, &MainWindow::changeMyMeasuresDir);
+  connect(mainMenu, &MainMenu::applyMeasureClicked, this, &MainWindow::applyMeasureClicked);
+  connect(mainMenu, &MainMenu::downloadMeasuresClicked, this, &MainWindow::downloadMeasuresClicked);
+  connect(mainMenu, &MainMenu::changeBclLogin, this, &MainWindow::changeBclLogin);
+  connect(mainMenu, &MainMenu::configureProxyClicked, this, &MainWindow::configureProxyClicked);
+  connect(this, &MainWindow::enableRevertToSaved, mainMenu, &MainMenu::enableRevertToSavedAction);
 }
 
 QSize MainWindow::sizeHint() const

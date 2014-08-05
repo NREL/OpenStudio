@@ -453,8 +453,6 @@ SpaceLoadInstanceMiniView::SpaceLoadInstanceMiniView(const model::SpaceLoadInsta
   QGridLayout* mainGridLayout = new QGridLayout();
   this->setLayout(mainGridLayout);
 
-  bool isConnected = false;
-
   // top row
   QHBoxLayout* hLayout = new QHBoxLayout();
 
@@ -493,8 +491,7 @@ SpaceLoadInstanceMiniView::SpaceLoadInstanceMiniView(const model::SpaceLoadInsta
   }
   hLayout->addWidget(m_removeButton);
   
-  isConnected = connect(m_removeButton,SIGNAL(clicked()),this,SLOT(onRemoveClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_removeButton, &QPushButton::clicked, this, &SpaceLoadInstanceMiniView::onRemoveClicked);
 
   // inherited label
   label = new QLabel();
@@ -755,41 +752,26 @@ void SpaceLoadInstancesWidget::attach(const model::Space& space)
   m_space = space;
   m_model = space.model();
 
-  bool isConnected = false;
-  isConnected = connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(), 
-                        SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        this,
-                        SLOT(objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        Qt::QueuedConnection);
-  OS_ASSERT(isConnected);
+  connect(m_model->getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
+    this,
+    &SpaceLoadInstancesWidget::objectAdded,
+    Qt::QueuedConnection);
 
-  isConnected = connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(), 
-                        SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        this,
-                        SLOT(objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        Qt::QueuedConnection);
-  OS_ASSERT(isConnected);
+  connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
+    this,
+    &SpaceLoadInstancesWidget::objectRemoved,
+    Qt::QueuedConnection);
 
   model::Building building = m_model->getUniqueModelObject<model::Building>();
-  isConnected = connect(building.getImpl<model::detail::ModelObject_Impl>().get(),
-                        SIGNAL(onRelationshipChange(int, Handle, Handle)),
-                        this, 
-                        SLOT(onBuildingRelationshipChange(int, Handle, Handle)));
-  OS_ASSERT(isConnected);
+  connect(building.getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onRelationshipChange, this, &SpaceLoadInstancesWidget::onBuildingRelationshipChange);
 
   for (model::SpaceType spaceType : m_model->getConcreteModelObjects<model::SpaceType>()){
-    isConnected = connect(spaceType.getImpl<model::detail::ModelObject_Impl>().get(),
-                          SIGNAL(onRelationshipChange(int, Handle, Handle)),
-                          this, 
-                          SLOT(onSpaceTypeRelationshipChange(int, Handle, Handle)));
-    OS_ASSERT(isConnected);
+    connect(spaceType.getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onRelationshipChange, this, &SpaceLoadInstancesWidget::onSpaceTypeRelationshipChange);
   }
 
-  isConnected = connect(m_space->getImpl<model::detail::ModelObject_Impl>().get(),
-                        SIGNAL(onRelationshipChange(int, Handle, Handle)),
-                        this, 
-                        SLOT(onSpaceRelationshipChange(int, Handle, Handle)));
-  OS_ASSERT(isConnected);
+  connect(m_space->getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onRelationshipChange, this, &SpaceLoadInstancesWidget::onSpaceRelationshipChange);
 
   m_dirty = true;
   QTimer::singleShot(0, this, SLOT(refresh()));
@@ -802,34 +784,23 @@ void SpaceLoadInstancesWidget::attach(const model::SpaceType& spaceType)
   m_spaceType = spaceType;
   m_model = spaceType.model();
 
-  bool isConnected = false;
-  isConnected = connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(), 
-                        SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        this,
-                        SLOT(objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        Qt::QueuedConnection);
-  OS_ASSERT(isConnected);
+  connect(m_model->getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
+    this,
+    &SpaceLoadInstancesWidget::objectAdded,
+    Qt::QueuedConnection);
 
-  isConnected = connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(), 
-                        SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        this,
-                        SLOT(objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        Qt::QueuedConnection);
-  OS_ASSERT(isConnected);
+  connect(m_model->getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
+    this,
+    &SpaceLoadInstancesWidget::objectRemoved,
+    Qt::QueuedConnection);
 
   model::Building building = m_model->getUniqueModelObject<model::Building>();
-  isConnected = connect(building.getImpl<model::detail::ModelObject_Impl>().get(),
-                        SIGNAL(onRelationshipChange(int, Handle, Handle)),
-                        this, 
-                        SLOT(onBuildingRelationshipChange(int, Handle, Handle)));
-  OS_ASSERT(isConnected);
+  connect(building.getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onRelationshipChange, this, &SpaceLoadInstancesWidget::onBuildingRelationshipChange);
 
   for (model::SpaceType spaceType : m_model->getConcreteModelObjects<model::SpaceType>()){
-    isConnected = connect(spaceType.getImpl<model::detail::ModelObject_Impl>().get(),
-                          SIGNAL(onRelationshipChange(int, Handle, Handle)),
-                          this, 
-                          SLOT(onSpaceTypeRelationshipChange(int, Handle, Handle)));
-    OS_ASSERT(isConnected);
+    connect(spaceType.getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onRelationshipChange, this, &SpaceLoadInstancesWidget::onSpaceTypeRelationshipChange);
   }
 
   m_dirty = true;
@@ -875,11 +846,7 @@ void SpaceLoadInstancesWidget::onSpaceRelationshipChange(int index, Handle newHa
 void SpaceLoadInstancesWidget::objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
   if (iddObjectType == IddObjectType::OS_SpaceType){
-    bool isConnected = connect(impl.get(),
-                               SIGNAL(onRelationshipChange(int, Handle, Handle)),
-                               this, 
-                               SLOT(onSpaceTypeRelationshipChange(int, Handle, Handle)));
-    OS_ASSERT(isConnected);
+    connect(impl.get(), &detail::WorkspaceObject_Impl::onRelationshipChange, this, &SpaceLoadInstancesWidget::onSpaceTypeRelationshipChange);
     return;
   }
 
@@ -1099,9 +1066,7 @@ void SpaceLoadInstancesWidget::addSpaceLoadInstance(const model::SpaceLoadInstan
 {
   SpaceLoadInstanceMiniView* spaceLoadInstanceMiniView = new SpaceLoadInstanceMiniView(spaceLoadInstance, isDefault);
 
-  bool isConnected = connect(spaceLoadInstanceMiniView, SIGNAL(removeClicked(SpaceLoadInstanceMiniView*)),
-                             this, SLOT(remove(SpaceLoadInstanceMiniView*)));
-  OS_ASSERT(isConnected);
+  connect(spaceLoadInstanceMiniView, &SpaceLoadInstanceMiniView::removeClicked, this, &SpaceLoadInstancesWidget::remove);
 
   m_mainVLayout->addWidget(spaceLoadInstanceMiniView);
 }

@@ -30,25 +30,13 @@ FacilityTabController::FacilityTabController(bool isIP, const model::Model& mode
 {
   m_facilityController = std::shared_ptr<FacilityController>(new FacilityController(isIP, model));
 
-  bool isConnected = false;
+  connect(m_facilityController.get(), &FacilityController::modelObjectSelected, this, &FacilityTabController::modelObjectSelected);
 
-  isConnected = connect(m_facilityController.get(),
-                        SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
-                        this,
-                        SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )));
-  OS_ASSERT(isConnected);
+  connect(this, &FacilityTabController::toggleUnitsClicked, m_facilityController.get(), &FacilityController::toggleUnitsClicked);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        m_facilityController.get(), SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_facilityController.get(), &FacilityController::downloadComponentsClicked, this, &FacilityTabController::downloadComponentsClicked);
 
-  isConnected = QObject::connect(m_facilityController.get(), SIGNAL(downloadComponentsClicked()),
-                                 this, SIGNAL(downloadComponentsClicked()));
-  OS_ASSERT(isConnected);
-
-  isConnected = QObject::connect(m_facilityController.get(), SIGNAL(openLibDlgClicked()),
-                                 this, SIGNAL(openLibDlgClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_facilityController.get(), &FacilityController::openLibDlgClicked, this, &FacilityTabController::openLibDlgClicked);
   
   this->mainContentWidget()->addTabWidget(m_facilityController->subTabView());
 }

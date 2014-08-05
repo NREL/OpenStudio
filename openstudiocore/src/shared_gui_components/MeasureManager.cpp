@@ -107,7 +107,7 @@ BCLMeasure MeasureManager::insertReplaceMeasure(analysisdriver::SimpleProject &t
   OS_ASSERT(measure);
 
   // if this is a user measure check one last time if there are updates
-  // DLM: not sure if this is neccesary
+  // DLM: not sure if this is necessary
   bool isMyMeasure = (m_myMeasures.find(t_id) != m_myMeasures.end());
   if (isMyMeasure) {
     bool updated = measure->checkForUpdates();
@@ -144,12 +144,10 @@ BCLMeasure MeasureManager::insertReplaceMeasure(analysisdriver::SimpleProject &t
     buttons->addWidget(cancel);
     buttons->addWidget(apply);
 
-    bool connected = connect(cancel, SIGNAL(pressed()), &dialog, SLOT(reject()));
-    OS_ASSERT(connected);
+    connect(cancel, &QPushButton::pressed, &dialog, &QDialog::reject);
 
-    connected = connect(apply, SIGNAL(pressed()), &dialog, SLOT(accept()));
-    OS_ASSERT(connected);
-
+    connect(apply, &QPushButton::pressed, &dialog, &QDialog::accept);
+    
     mainContentVLayout->addLayout(buttons);
 
     if (dialog.exec() == QDialog::Accepted)

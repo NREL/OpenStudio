@@ -139,30 +139,17 @@ void TreeViewWidget::createWidgets()
 
 void TreeViewWidget::connectSignalsAndSlots()
 {
-  bool connected;
-  connected = connect(mTreeView,SIGNAL(eventUpDnKeyRelease()), 
-    this,SLOT(viewSelection()));
-  OS_ASSERT(connected);
+  connect(mTreeView, &TreeView::eventUpDnKeyRelease, this, static_cast<void (TreeViewWidget::*)()>(&TreeViewWidget::viewSelection));
 
-  connected = connect(mTreeView,SIGNAL(clicked(const QModelIndex&)), 
-    this,SLOT(viewSelection(const QModelIndex&)));
-  OS_ASSERT(connected);
+  connect(mTreeView, &TreeView::clicked, this, static_cast<void (TreeViewWidget::*)()>(&TreeViewWidget::viewSelection));
 
-  connected = connect(mTreeView,SIGNAL(eventEnter()),
-    this,SIGNAL(eventEnter()));
-  OS_ASSERT(connected);
+  connect(mTreeView, &TreeView::eventEnter, this, &TreeViewWidget::eventEnter);
 
-  connected = connect(mTreeView,SIGNAL(eventLeave()),
-    this,SIGNAL(eventLeave()));
-  OS_ASSERT(connected);
+  connect(mTreeView, &TreeView::eventLeave, this, &TreeViewWidget::eventLeave);
 
-  connected = connect(this,SIGNAL(expandAll()),
-    mTreeView,SLOT(expandAll()));
-  OS_ASSERT(connected);
+  connect(this, &TreeViewWidget::expandAll, mTreeView, &TreeView::expandAll);
 
-  connected = connect(this,SIGNAL(collapseAll()),
-    mTreeView,SLOT(collapseAll()));
-  OS_ASSERT(connected);
+  connect(this, &TreeViewWidget::collapseAll, mTreeView, &TreeView::collapseAll);
 }
 
 void TreeViewWidget::expandAllNodes()

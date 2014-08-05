@@ -81,17 +81,11 @@ void OSLineEdit2::bind(model::ModelObject& modelObject,
 void OSLineEdit2::completeBind() {
   setEnabled(true);
 
-  bool isConnected = false;
-  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
-                         this,SLOT(onModelObjectChange()) );
-  OS_ASSERT(isConnected);
+  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSLineEdit2::onModelObjectChange);
 
-  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
-                         this,SLOT(onModelObjectRemove(Handle)) );
-  OS_ASSERT(isConnected);
+  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSLineEdit2::onModelObjectRemove);
 
-  isConnected = connect( this, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()) );
-  OS_ASSERT(isConnected);
+  connect(this, &OSLineEdit2::editingFinished, this, &OSLineEdit2::onEditingFinished);
 
   onModelObjectChange();
 }
@@ -166,17 +160,11 @@ void OSLineEdit::bind(model::ModelObject & modelObject, const char * property)
 
   setEnabled(true);
 
-  bool isConnected = false;
-  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
-                         this,SLOT(onModelObjectChange()) );
-  OS_ASSERT(isConnected);
+  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSLineEdit::onModelObjectChange);
 
-  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
-                         this,SLOT(onModelObjectRemove(Handle)) );
-  OS_ASSERT(isConnected);
+  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSLineEdit::onModelObjectRemove);
 
-  isConnected = connect( this, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()) );
-  OS_ASSERT(isConnected);
+  connect(this, &OSLineEdit::editingFinished, this, &OSLineEdit::onEditingFinished);
 
   onModelObjectChange();
 }

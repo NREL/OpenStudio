@@ -52,6 +52,10 @@ class LoopChooserView : public QWidget
 
   void layoutModelObject(boost::optional<model::ModelObject> & modelObject);
 
+  void onAddToLoopClicked(model::Loop &);
+
+  void onRemoveFromLoopClicked(model::Loop &);
+
   signals:
 
   void addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
@@ -61,12 +65,6 @@ class LoopChooserView : public QWidget
   protected:
 
   void paintEvent ( QPaintEvent * event );
-
-  private slots:
-
-  void onAddToLoopClicked(model::Loop &);
-
-  void onRemoveFromLoopClicked(model::Loop &);
 
  private:
 

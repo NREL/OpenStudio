@@ -134,39 +134,21 @@ void CollapsibleComponentList::addCollapsibleComponent(CollapsibleComponent * co
   m_mainLayout->addWidget(collapsibleComponent);
   m_collapsibleComponentGroup->addButton(collapsibleComponent,m_collapsibleComponentGroup->buttons().size());
 
-  bool isConnected = false;
+  connect(collapsibleComponent, &CollapsibleComponent::headerClicked, this, &CollapsibleComponentList::headerClicked);
 
-  isConnected = connect(collapsibleComponent, SIGNAL(headerClicked(bool)),
-                        this, SIGNAL(headerClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(collapsibleComponent, &CollapsibleComponent::headerClicked, this, &CollapsibleComponentList::on_headerClicked);
 
-  isConnected = connect(collapsibleComponent, SIGNAL(headerClicked(bool)),
-                        this, SLOT(on_headerClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(collapsibleComponent, &CollapsibleComponent::componentClicked, this, &CollapsibleComponentList::componentClicked);
 
-  isConnected = connect(collapsibleComponent, SIGNAL(componentClicked(bool)),
-                        this, SIGNAL(componentClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(collapsibleComponent, &CollapsibleComponent::componentClicked, this, &CollapsibleComponentList::on_componentClicked);
 
-  isConnected = connect(collapsibleComponent, SIGNAL(componentClicked(bool)),
-                        this, SLOT(on_componentClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(collapsibleComponent, &CollapsibleComponent::clicked, this, &CollapsibleComponentList::collapsibleComponentClicked);
 
-  isConnected = connect(collapsibleComponent, SIGNAL(clicked(bool)),
-                        this, SIGNAL(collapsibleComponentClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(collapsibleComponent, &CollapsibleComponent::clicked, this, &CollapsibleComponentList::on_collapsibleComponentClicked);
 
-  isConnected = connect(collapsibleComponent, SIGNAL(clicked(bool)),
-                        this, SLOT(on_collapsibleComponentClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(collapsibleComponent, &CollapsibleComponent::getComponentsByPage, this, &CollapsibleComponentList::getComponentsByPage);
 
-  isConnected = connect(collapsibleComponent, SIGNAL(getComponentsByPage(int)), 
-                        this, SIGNAL(getComponentsByPage(int)));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(collapsibleComponent, SIGNAL(getComponentsByPage(int)),
-                        this, SLOT(on_getComponentsByPage(int)));
-  OS_ASSERT(isConnected);
+  connect(collapsibleComponent, &CollapsibleComponent::getComponentsByPage, this, &CollapsibleComponentList::on_getComponentsByPage);
 
   collapsibleComponent->setChecked(true);
 

@@ -85,8 +85,6 @@ void BuildingComponentDialog::createLayout(bool isBclDlg)
   leftPaneWidget->setObjectName("GrayWidget");
   leftPaneWidget->setLayout(leftPanelayout);
 
-  bool isConnected = false;
-
   m_lineEdit = new QLineEdit(this);
 
   auto searchButton = new QPushButton();
@@ -94,9 +92,7 @@ void BuildingComponentDialog::createLayout(bool isBclDlg)
   searchButton->setStyleSheet("QPushButton { border: none; background-image: url(\":/shared_gui_components/images/searchbox_magnifyingglass.png\"); }");
   searchButton->setFixedSize(24,24);
 
-  isConnected = connect(searchButton,SIGNAL(clicked()),
-                        this,SLOT(on_searchButton()));
-  OS_ASSERT(isConnected);
+  connect(searchButton, &QPushButton::clicked, this, &BuildingComponentDialog::on_searchButton);
 
   auto searchlayout = new QHBoxLayout();
   searchlayout->addWidget(searchButton);
@@ -141,9 +137,7 @@ void BuildingComponentDialog::createLayout(bool isBclDlg)
 
   m_tidTreeView->setRootIsDecorated(true);
 
-  isConnected = connect(m_tidTreeView, SIGNAL(clicked(const QModelIndex &)),
-                        this, SLOT(on_tidClicked(const QModelIndex &)));
-  OS_ASSERT(isConnected);
+  connect(m_tidTreeView, &QTreeView::clicked, this, &BuildingComponentDialog::on_tidClicked);
 
   leftPanelayout->addWidget(m_tidTreeView,10);
 
@@ -153,49 +147,27 @@ void BuildingComponentDialog::createLayout(bool isBclDlg)
 
   m_centralWidget = new BuildingComponentDialogCentralWidget();
 
-  isConnected = connect(m_centralWidget, SIGNAL(headerClicked(bool)),
-                        this, SIGNAL(headerClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_centralWidget, &BuildingComponentDialogCentralWidget::headerClicked, this, &BuildingComponentDialog::headerClicked);
 
-  isConnected = connect(m_centralWidget, SIGNAL(headerClicked(bool)),
-                        this, SLOT(on_headerClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_centralWidget, &BuildingComponentDialogCentralWidget::headerClicked, this, &BuildingComponentDialog::on_headerClicked);
 
-  isConnected = connect(m_centralWidget, SIGNAL(componentClicked(bool)),
-                        this, SIGNAL(componentClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_centralWidget, &BuildingComponentDialogCentralWidget::componentClicked, this, &BuildingComponentDialog::componentClicked);
 
-  isConnected = connect(m_centralWidget, SIGNAL(componentClicked(bool)),
-                        this, SLOT(on_componentClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_centralWidget, &BuildingComponentDialogCentralWidget::componentClicked, this, &BuildingComponentDialog::on_componentClicked);
 
-  isConnected = connect(m_centralWidget, SIGNAL(collapsibleComponentClicked(bool)),
-                        this, SIGNAL(collapsibleComponentClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_centralWidget, &BuildingComponentDialogCentralWidget::collapsibleComponentClicked, this, &BuildingComponentDialog::collapsibleComponentClicked);
 
-  isConnected = connect(m_centralWidget, SIGNAL(collapsibleComponentClicked(bool)),
-                        this, SLOT(on_collapsibleComponentClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_centralWidget, &BuildingComponentDialogCentralWidget::collapsibleComponentClicked, this, &BuildingComponentDialog::on_collapsibleComponentClicked);
 
-  isConnected = connect(m_centralWidget, SIGNAL(getComponentsByPage(int)),
-                        this, SIGNAL(getComponentsByPage(int)));
-  OS_ASSERT(isConnected);
+  connect(m_centralWidget, &BuildingComponentDialogCentralWidget::getComponentsByPage, this, &BuildingComponentDialog::getComponentsByPage);
 
-  isConnected = connect(m_centralWidget, SIGNAL(getComponentsByPage(int)),
-                        this, SLOT(on_getComponentsByPage(int)));
-  OS_ASSERT(isConnected);
+  connect(m_centralWidget, &BuildingComponentDialogCentralWidget::getComponentsByPage, this, &BuildingComponentDialog::on_getComponentsByPage);
 
-  isConnected = connect(m_centralWidget, SIGNAL(componentsReady()),
-                        this, SLOT(on_componentsReady()));
-  OS_ASSERT(isConnected);
+  connect(m_centralWidget, &BuildingComponentDialogCentralWidget::componentsReady, this, &BuildingComponentDialog::on_componentsReady);
 
-  isConnected = connect(m_centralWidget, SIGNAL(requestComponents(const std::string&,int,int,const QString &)),
-                        this, SLOT(on_requestComponents(const std::string&,int,int,const QString &)));
-  OS_ASSERT(isConnected);
+  connect(m_centralWidget, &BuildingComponentDialogCentralWidget::requestComponents, this, &BuildingComponentDialog::on_requestComponents);
 
-  isConnected = connect(m_centralWidget, SIGNAL(noComponents()),
-                        this, SLOT(on_noComponents()));
-  OS_ASSERT(isConnected);
+  connect(m_centralWidget, &BuildingComponentDialogCentralWidget::noComponents, this, &BuildingComponentDialog::on_noComponents);
 
   auto centralScrollArea = new QScrollArea(this);
   centralScrollArea->setFrameStyle(QFrame::NoFrame);
@@ -228,8 +200,7 @@ void BuildingComponentDialog::createLayout(bool isBclDlg)
   busyLayout->addStretch();
 
   m_timer = new QTimer(this);
-  connect(m_timer,SIGNAL(timeout()),busyIcon,SLOT(rotate()));
-
+  connect(m_timer, &QTimer::timeout, busyIcon, &BusyWidget::rotate);
   auto busy = new QWidget();
   busy->setLayout(busyLayout);
 

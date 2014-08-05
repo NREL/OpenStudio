@@ -75,8 +75,6 @@ void MaterialRoofVegetationInspectorView::createLayout()
   unsigned row = 0;
   unsigned col = 0;
 
-  bool isConnected = false;
-
   // Name
 
   QLabel * label = new QLabel("Name: ");
@@ -93,8 +91,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_heightOfPlants = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_heightOfPlants, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_heightOfPlants, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_heightOfPlants,row++,0,1,3);
 
   // Leaf Area Index
@@ -104,8 +101,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_leafAreaIndex = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_leafAreaIndex, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_leafAreaIndex, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_leafAreaIndex,row++,0,1,3);
 
   // Leaf Reflectivity
@@ -115,8 +111,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_leafReflectivity = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_leafReflectivity, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_leafReflectivity, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_leafReflectivity,row++,0,1,3);
 
   // Leaf Emissivity
@@ -126,8 +121,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_leafEmissivity = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_leafEmissivity, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_leafEmissivity, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_leafEmissivity,row++,0,1,3);
 
   // Minimum Stomatal Resistance
@@ -137,8 +131,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_minimumStomatalResistance = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_minimumStomatalResistance, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_minimumStomatalResistance, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_minimumStomatalResistance,row++,0,1,3);
 
   // Soil Layer Name
@@ -172,8 +165,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_thickness = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_thickness, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_thickness, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_thickness,row++,0,1,3);
 
   // Conductivity Of Dry Soil
@@ -183,8 +175,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_conductivityOfDrySoil = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_conductivityOfDrySoil, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_conductivityOfDrySoil, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_conductivityOfDrySoil,row++,0,1,3);
 
   // Density Of Dry Soil
@@ -194,8 +185,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_densityOfDrySoil = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_densityOfDrySoil, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_densityOfDrySoil, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_densityOfDrySoil,row++,0,1,3);
 
   // Specific Heat Of Dry Soil
@@ -205,8 +195,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_specificHeatOfDrySoil = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_specificHeatOfDrySoil, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_specificHeatOfDrySoil, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_specificHeatOfDrySoil,row++,0,1,3);
 
   // Thermal Absorptance
@@ -216,8 +205,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_thermalAbsorptance = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_thermalAbsorptance, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_thermalAbsorptance, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_thermalAbsorptance,row++,0,1,3);
 
   // Solar Absorptance
@@ -227,8 +215,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_solarAbsorptance = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_solarAbsorptance, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_solarAbsorptance, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_solarAbsorptance,row++,0,1,3);
 
   // Visible Absorptance
@@ -238,8 +225,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_visibleAbsorptance = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_visibleAbsorptance, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_visibleAbsorptance, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_visibleAbsorptance,row++,0,1,3);
 
   // Saturation Volumetric Moisture Content Of The Soil Layer
@@ -249,8 +235,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_saturationVolumetricMoistureContentOfTheSoilLayer = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_saturationVolumetricMoistureContentOfTheSoilLayer, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_saturationVolumetricMoistureContentOfTheSoilLayer, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_saturationVolumetricMoistureContentOfTheSoilLayer,row++,0,1,3);
 
   // Residual Volumetric Moisture Content Of The Soil Layer
@@ -260,8 +245,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_residualVolumetricMoistureContentOfTheSoilLayer = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_residualVolumetricMoistureContentOfTheSoilLayer, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_residualVolumetricMoistureContentOfTheSoilLayer, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_residualVolumetricMoistureContentOfTheSoilLayer,row++,0,1,3);
 
   // Initial Volumetric Moisture Content Of The Soil Layer
@@ -271,8 +255,7 @@ void MaterialRoofVegetationInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_initialVolumetricMoistureContentOfTheSoilLayer = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_initialVolumetricMoistureContentOfTheSoilLayer, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_initialVolumetricMoistureContentOfTheSoilLayer, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_initialVolumetricMoistureContentOfTheSoilLayer,row++,0,1,3);
 
   // Moisture Diffusion Calculation Method

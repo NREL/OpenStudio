@@ -60,28 +60,17 @@ RunTabController::RunTabController()
 {
   runView = new RunView();
 
-  bool bingo;
-  bingo = connect(runView->runStatusView->playButton, SIGNAL(clicked()), this, SLOT(onPlayButtonClicked()));
-  OS_ASSERT(bingo);
+  connect(runView->runStatusView->playButton, &PlayButton::clicked, this, &RunTabController::onPlayButtonClicked);
 
-  bingo = connect(runView->runStatusView, SIGNAL(radianceEnabledChanged(bool)), this, SLOT(onRadianceEnabledChanged(bool)));
-  OS_ASSERT(bingo);
+  connect(runView->runStatusView, &RunStatusView::radianceEnabledChanged, this, &RunTabController::onRadianceEnabledChanged);
 
-  bingo = connect(runView->runStatusView->cloudOnButton,SIGNAL(clicked()),
-                  PatApp::instance()->cloudMonitor().data(),SLOT(toggleCloud()));
-  OS_ASSERT(bingo);
+  connect(runView->runStatusView->cloudOnButton, &CloudOnButton::clicked, PatApp::instance()->cloudMonitor().data(), &CloudMonitor::toggleCloud);
 
-  bingo = connect(runView->runStatusView->cloudOffButton,SIGNAL(clicked()),
-                  PatApp::instance()->cloudMonitor().data(),SLOT(toggleCloud()));
-  OS_ASSERT(bingo);
+  connect(runView->runStatusView->cloudOffButton, &CloudOffButton::clicked, PatApp::instance()->cloudMonitor().data(), &CloudMonitor::toggleCloud);
 
-  bingo = connect(runView->runStatusView->cloudLostConnectionButton,SIGNAL(clicked()),
-                  PatApp::instance()->cloudMonitor().data(),SLOT(toggleCloud()));
-  OS_ASSERT(bingo);
+  connect(runView->runStatusView->cloudLostConnectionButton, &CloudLostConnectionButton::clicked, PatApp::instance()->cloudMonitor().data(), &CloudMonitor::toggleCloud);
 
-  bingo = connect(runView->runStatusView,SIGNAL(dataPointResultsCleared(const openstudio::UUID&)),
-                  this,SLOT(onDataPointResultsCleared(const openstudio::UUID&)));
-  OS_ASSERT(bingo);
+  connect(runView->runStatusView, &RunStatusView::dataPointResultsCleared, this, &RunTabController::onDataPointResultsCleared);
 
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){
@@ -124,11 +113,7 @@ RunTabController::RunTabController()
     m_dataPointRunListController = QSharedPointer<DataPointRunListController>(new DataPointRunListController(analysis));
     m_dataPointRunItemDelegate = QSharedPointer<DataPointRunItemDelegate>(new DataPointRunItemDelegate());
     
-    // ETH: Is the following the right way to connect to a signal emanating from a QSharedPointer?
-    // (Suprisinging hard to google and get a good answer.)
-    bingo = connect(m_dataPointRunItemDelegate.data(),SIGNAL(dataPointResultsCleared(const openstudio::UUID&)),
-                    this,SLOT(onDataPointResultsCleared(const openstudio::UUID&)));
-    OS_ASSERT(bingo);
+    connect(m_dataPointRunItemDelegate.data(), &DataPointRunItemDelegate::dataPointResultsCleared, this, &RunTabController::onDataPointResultsCleared);
 
     runView->dataPointRunListView->setListController(m_dataPointRunListController);
     runView->dataPointRunListView->setDelegate(m_dataPointRunItemDelegate);
@@ -616,23 +601,16 @@ QWidget * DataPointRunItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
   // connect signals to DataPointRunItemView 
   auto result = new DataPointRunItemView(dataPoint);
-  bool test = connect(dataPoint.getImpl<openstudio::analysis::detail::DataPoint_Impl>().get(), SIGNAL(changed(ChangeType)),
-                      result, SLOT(checkForUpdate()));
-  OS_ASSERT(test);
-  test = connect(result,SIGNAL(dataPointResultsCleared(const openstudio::UUID&)),
-                 this,SIGNAL(dataPointResultsCleared(const openstudio::UUID&)));
-  OS_ASSERT(test);
+  connect(dataPoint.getImpl<openstudio::analysis::detail::DataPoint_Impl>().get(), &openstudio::analysis::detail::DataPoint_Impl::changed, result, &DataPointRunItemView::checkForUpdate);
+  connect(result, &DataPointRunItemView::dataPointResultsCleared, this, &DataPointRunItemDelegate::dataPointResultsCleared);
 
   // connect signals to header
-  test = connect(dataPoint.getImpl<openstudio::analysis::detail::DataPoint_Impl>().get(), SIGNAL(changed(ChangeType)),
-                      result->dataPointRunHeaderView, SLOT(requestUpdate()));
-  OS_ASSERT(test);
+  connect(dataPoint.getImpl<openstudio::analysis::detail::DataPoint_Impl>().get(), &openstudio::analysis::detail::DataPoint_Impl::changed, result->dataPointRunHeaderView, &DataPointRunHeaderView::requestUpdate);
   
-  test = connect(cloudMonitor.data(), SIGNAL(cloudStatusChanged(const CloudStatus&)), result->dataPointRunHeaderView, SLOT(requestUpdate()));
-  OS_ASSERT(test);
+  connect(cloudMonitor.data(), &CloudMonitor::cloudStatusChanged, result->dataPointRunHeaderView, &DataPointRunHeaderView::requestUpdate);
 
   if (dataPoint.topLevelJob()){
-    test = dataPoint.topLevelJob()->connect(SIGNAL(treeChanged(const openstudio::UUID&)),
+    bool test = dataPoint.topLevelJob()->connect(SIGNAL(treeChanged(const openstudio::UUID&)),
                                             result->dataPointRunHeaderView, SLOT(requestUpdate()));
     OS_ASSERT(test);
   }

@@ -73,15 +73,9 @@ void CollapsibleComponentHeader::createLayout(const std::string& text, int numRe
   m_pageNavigator = new PageNavigator(numPages,NUM_PAGES_LISTED,this);
   mainHLayout->addWidget(m_pageNavigator);
 
-  bool isConnected = false;
+  connect(m_pageNavigator, &PageNavigator::getComponentsByPage, this, &CollapsibleComponentHeader::getComponentsByPage);
 
-  isConnected = connect(m_pageNavigator, SIGNAL(getComponentsByPage(int)),
-                             this, SIGNAL(getComponentsByPage(int)));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(m_pageNavigator, SIGNAL(getComponentsByPage(int)),
-                        this, SLOT(on_getComponentsByPage(int)));
-  OS_ASSERT(isConnected);
+  connect(m_pageNavigator, &PageNavigator::getComponentsByPage, this, &CollapsibleComponentHeader::on_getComponentsByPage);
 
   // Stretch
   mainHLayout->addStretch();

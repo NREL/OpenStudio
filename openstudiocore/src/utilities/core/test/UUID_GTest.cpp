@@ -80,7 +80,7 @@ TEST(UUID, UUID_QVariant)
 {
   UUID uuid = createUUID();
   QVariant variant = QVariant::fromValue(uuid);
-  EXPECT_EQ("openstudio::UUID", std::string(variant.typeName()));
+  EXPECT_EQ("QUuid", std::string(variant.typeName()));
   ASSERT_TRUE(variant.canConvert<UUID>());
   UUID uuid2 = variant.value<UUID>();
   EXPECT_TRUE(uuid == uuid2);

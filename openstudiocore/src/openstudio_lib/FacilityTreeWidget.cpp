@@ -86,11 +86,7 @@ FacilityTreeWidget::FacilityTreeWidget(const model::Model& model, QWidget* paren
 
   vLayout->addLayout(hLayout);
 
-  bool isConnected = false;
-
-  isConnected = connect(comboBox, SIGNAL(currentIndexChanged(const QString&)),
-                        this, SLOT(onSortByChanged(const QString&)));
-  OS_ASSERT(isConnected);
+  connect(comboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &FacilityTreeWidget::onSortByChanged);
 
   this->vLayout()->insertLayout(0, vLayout);
   this->treeWidget()->header()->close();
@@ -101,9 +97,7 @@ FacilityTreeWidget::FacilityTreeWidget(const model::Model& model, QWidget* paren
   this->treeWidget()->setAlternatingRowColors(true);
   this->treeWidget()->setColumnCount(1);
 
-  isConnected = connect(this->treeWidget(), SIGNAL(currentItemChanged(QTreeWidgetItem*, QTreeWidgetItem*)),
-                        this, SLOT(currentItemChanged(QTreeWidgetItem*, QTreeWidgetItem*)));
-  OS_ASSERT(isConnected);
+  connect(this->treeWidget(), &QTreeWidget::currentItemChanged, this, &FacilityTreeWidget::currentItemChanged);
 
   // allow time for signals to be connected between this and inspector
   QTimer::singleShot(0, this, SLOT(initialize()));

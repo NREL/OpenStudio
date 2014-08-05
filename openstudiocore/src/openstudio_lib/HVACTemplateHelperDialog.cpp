@@ -99,12 +99,12 @@ HVACTemplateHelperDialog::HVACTemplateHelperDialog(const model::Model & model, Q
   QPushButton * cancelButton = new QPushButton();
   cancelButton->setText("Cancel");
   hLayout->addWidget(cancelButton);
-  connect(cancelButton,SIGNAL(clicked(bool)),this,SLOT(reject()));
+  connect(cancelButton, &QPushButton::clicked, this, &HVACTemplateHelperDialog::reject);
 
   QPushButton * okButton = new QPushButton();
   okButton->setText("OK");
   hLayout->addWidget(okButton);
-  connect(okButton,SIGNAL(clicked(bool)),this,SLOT(accept()));
+  connect(okButton, &QPushButton::clicked, this, &HVACTemplateHelperDialog::accept);
 }
 
 std::vector<model::ThermalZone> HVACTemplateHelperDialog::selectedZones()

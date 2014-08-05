@@ -53,8 +53,7 @@ namespace detail {
     OS_ASSERT(idfObject.iddObject().type() == ScheduleDay::iddObjectType());
 
     // connect signals
-    bool connected = connect(this, SIGNAL(onChange()), this, SLOT(clearCachedVariables()));
-    OS_ASSERT(connected);
+    connect(this, &ScheduleDay_Impl::onChange, this, &ScheduleDay_Impl::clearCachedVariables);
   }
 
   ScheduleDay_Impl::ScheduleDay_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -65,8 +64,7 @@ namespace detail {
     OS_ASSERT(other.iddObject().type() == ScheduleDay::iddObjectType());
 
     // connect signals
-    bool connected = connect(this, SIGNAL(onChange()), this, SLOT(clearCachedVariables()));
-    OS_ASSERT(connected);
+    connect(this, &ScheduleDay_Impl::onChange, this, &ScheduleDay_Impl::clearCachedVariables);
   }
 
   ScheduleDay_Impl::ScheduleDay_Impl(const ScheduleDay_Impl& other,
@@ -75,8 +73,7 @@ namespace detail {
     : ScheduleBase_Impl(other,model,keepHandle)
   {
     // connect signals
-    bool connected = connect(this, SIGNAL(onChange()), this, SLOT(clearCachedVariables()));
-    OS_ASSERT(connected);
+    connect(this, &ScheduleDay_Impl::onChange, this, &ScheduleDay_Impl::clearCachedVariables);
   }
 
   std::vector<IdfObject> ScheduleDay_Impl::remove() {

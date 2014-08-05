@@ -56,9 +56,7 @@ TEST_F(ModelEditorFixture, ModalDialogs_EmptyModel_Cancel)
 
   std::shared_ptr<TestButton> button(new TestButton);
 
-  bool connected = QObject::connect(button.get(), SIGNAL(clicked(bool)),
-                                    modelObjectSelectorDialog.get(), SLOT(onPushButtonCancel(bool)));
-  ASSERT_TRUE(connected);
+  QObject::connect(button.get(), &TestButton::clicked, modelObjectSelectorDialog.get(), &ModelObjectSelectorDialog::onPushButtonCancel);
 
   button->doClick();
 
@@ -80,9 +78,7 @@ TEST_F(ModelEditorFixture, ModalDialogs_EmptyModel_Ok)
 
   std::shared_ptr<TestButton> button(new TestButton);
 
-  bool connected = QObject::connect(button.get(), SIGNAL(clicked(bool)),
-                                    modelObjectSelectorDialog.get(), SLOT(onPushButtonOK(bool)));
-  ASSERT_TRUE(connected);
+  QObject::connect(button.get(), &TestButton::clicked, modelObjectSelectorDialog.get(), &ModelObjectSelectorDialog::onPushButtonOK);
 
   button->doClick();
 
@@ -107,10 +103,8 @@ TEST_F(ModelEditorFixture, ModalDialogs_Cancel)
 
   std::shared_ptr<TestButton> button(new TestButton);
 
-  bool connected = QObject::connect(button.get(), SIGNAL(clicked(bool)),
-                                    modelObjectSelectorDialog.get(), SLOT(onPushButtonCancel(bool)));
-  ASSERT_TRUE(connected);
-
+  QObject::connect(button.get(), &TestButton::clicked, modelObjectSelectorDialog.get(), &ModelObjectSelectorDialog::onPushButtonCancel);
+  
   button->doClick();
 
   EXPECT_FALSE(watcher.selectedModelObject());
@@ -134,9 +128,7 @@ TEST_F(ModelEditorFixture, ModalDialogs_Ok)
 
   std::shared_ptr<TestButton> button(new TestButton);
 
-  bool connected = QObject::connect(button.get(), SIGNAL(clicked(bool)),
-                                    modelObjectSelectorDialog.get(), SLOT(onPushButtonOK(bool)));
-  ASSERT_TRUE(connected);
+  QObject::connect(button.get(), &TestButton::clicked, modelObjectSelectorDialog.get(), &ModelObjectSelectorDialog::onPushButtonOK);
 
   button->doClick();
 

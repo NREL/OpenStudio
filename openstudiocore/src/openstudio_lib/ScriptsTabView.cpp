@@ -78,9 +78,7 @@ ScriptsTabView::ScriptsTabView(QWidget * parent)
   layout->addStretch();
   layout->addWidget(m_updateMeasuresButton);
 
-  bool isConnected = false;
-  isConnected = connect(m_updateMeasuresButton,SIGNAL(clicked()), this,SLOT(openUpdateMeasuresDlg()));
-  OS_ASSERT(isConnected);
+  connect(m_updateMeasuresButton, &QPushButton::clicked, this, &ScriptsTabView::openUpdateMeasuresDlg);
 }
 
 void ScriptsTabView::showEvent(QShowEvent *e)

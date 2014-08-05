@@ -280,9 +280,7 @@ DesignAltContentView::DesignAltContentView(bool t_isBaseline)
   }
 
 
-  bool bingo = connect(descriptionTextEdit,SIGNAL(textChanged()),this,SLOT(onDescriptionTextChanged()));
-
-  OS_ASSERT(bingo);
+  connect(descriptionTextEdit, &QTextEdit::textChanged, this, &DesignAltContentView::onDescriptionTextChanged);
 }
 
 void DesignAltContentView::onDescriptionTextChanged()
