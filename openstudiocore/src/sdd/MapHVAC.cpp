@@ -3761,8 +3761,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
     airSystemTypeElement = airSysElement.firstChildElement("Type");
   }
 
-  if( istringEqual("SZVAVAC",airSystemTypeElement.text().toStdString()) || 
-      istringEqual("SZVAVHP",airSystemTypeElement.text().toStdString()) )
+  if( istringEqual("VAVNoReheatBox",typeElement.text().toStdString()) )
   {
     model::Schedule schedule = alwaysOnSchedule(model);
 
@@ -3775,26 +3774,12 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
       terminal.setMinimumAirFlowFractionSchedule(minAirFracSch.get());
     }
 
-    boost::optional<model::AirLoopHVAC> airLoopHVAC = 
-      model.getModelObjectByName<model::AirLoopHVAC>(airSysElement.firstChildElement("Name").text().toStdString());
-    bool fixedFlowRate = false;
-    if( ! autosize() )
+    if( primaryAirFlowMin )
     {
-      if( airLoopHVAC )
-      {
-        std::vector<model::ModelObject> fans = airLoopHVAC->supplyComponents(model::FanVariableVolume::iddObjectType());
-        if( ! fans.empty() )
-        {
-          if( boost::optional<double> minflow = fans.front().cast<model::FanVariableVolume>().fanPowerMinimumAirFlowRate() )
-          {
-            fixedFlowRate = true;
-            terminal.setZoneMinimumAirFlowInputMethod("FixedFlowRate");
-            terminal.setFixedMinimumAirFlowRate(minflow.get());
-          }
-        }
-      }
+      terminal.setZoneMinimumAirFlowInputMethod("FixedFlowRate");
+      terminal.setFixedMinimumAirFlowRate(primaryAirFlowMin.get());
     }
-    if( ! fixedFlowRate )
+    else
     {
       terminal.setZoneMinimumAirFlowInputMethod("Constant");
       terminal.setConstantMinimumAirFlowFraction(0.5);
