@@ -44,7 +44,8 @@ struct UTILITIES_API IPExpnt {
           int deg=0,
           int sr=0,
           int people=0,
-          int cycle=0)
+          int cycle=0, 
+          int dollar=0)
     : m_lbm(lbm),
       m_ft(ft),
       m_s(s),
@@ -56,7 +57,8 @@ struct UTILITIES_API IPExpnt {
       m_deg(deg),
       m_sr(sr),
       m_people(people),
-      m_cycle(cycle)
+      m_cycle(cycle),
+      m_dollar(dollar)
   {}
  private:
   int m_lbm;
@@ -71,6 +73,7 @@ struct UTILITIES_API IPExpnt {
   int m_sr;
   int m_people;
   int m_cycle;
+  int m_dollar;
 
   friend class detail::IPUnit_Impl;
 };
@@ -169,6 +172,8 @@ UTILITIES_API IPUnit createIPSolidAngle();
 UTILITIES_API IPUnit createIPPeople();
 /** relates IPUnit */
 UTILITIES_API IPUnit createIPCycle();
+/** relates IPUnit */
+UTILITIES_API IPUnit createIPCurrency();
 
 // first order derived units
 

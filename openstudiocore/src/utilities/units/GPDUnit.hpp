@@ -46,7 +46,8 @@ struct UTILITIES_API GPDExpnt {
            int deg=0,
            int sr=0,
            int people=0,
-           int cycle=0)
+           int cycle=0,
+           int dollar=0)
     : m_inH2O(inH2O),
       m_crgal(3*gal),
       m_day(day),
@@ -57,7 +58,8 @@ struct UTILITIES_API GPDExpnt {
       m_deg(deg),
       m_sr(sr),
       m_people(people),
-      m_cycle(cycle)
+      m_cycle(cycle),
+      m_dollar(dollar)
   {}
  private:
   int m_inH2O;
@@ -71,6 +73,7 @@ struct UTILITIES_API GPDExpnt {
   int m_sr;
   int m_people;
   int m_cycle;
+  int m_dollar;
 
   friend class detail::GPDUnit_Impl;
 };
@@ -152,6 +155,8 @@ UTILITIES_API GPDUnit createGPDSolidAngle();
 UTILITIES_API GPDUnit createGPDPeople();
 /** relates GPDUnit */
 UTILITIES_API GPDUnit createGPDCycle();
+/** relates GPDUnit */
+UTILITIES_API GPDUnit createGPDCurrency();
 
 // first order derived units
 
