@@ -118,21 +118,6 @@ namespace detail {
     return true;
   }
 
-  bool AnalysisObject_Impl::connect(const char* signal,
-                                    const QObject* receiver,
-                                    const char* slot,
-                                    Qt::ConnectionType type) const
-  {
-    return QObject::connect(this, signal, receiver, slot, type);
-  }
-
-  bool AnalysisObject_Impl::disconnect(const char* signal,
-                                       const QObject* receiver,
-                                       const char* slot) const
-  {
-    return QObject::disconnect(this,signal,receiver,slot);
-  }
-
   void AnalysisObject_Impl::updateInputPathData(const openstudio::path& originalBase,
                                                 const openstudio::path& newBase)
   {}
@@ -198,13 +183,8 @@ namespace detail {
       child.setParent(copyOfThis);
     }
 
-    bool connected = connect(SIGNAL(clean()),
-                             child.getImpl<detail::AnalysisObject_Impl>().get(),
-                             SLOT(onParentClean()));
-    OS_ASSERT(connected);
-    connected = child.connect(SIGNAL(changed(ChangeType)),
-                              this,
-                              SLOT(onChildChanged(ChangeType)));
+    connect(this, &AnalysisObject_Impl::clean, child.getImpl<detail::AnalysisObject_Impl>().get(), &detail::AnalysisObject_Impl::onParentClean);
+    bool connected = child.connect(SIGNAL(changed(ChangeType)), this, SLOT(onChildChanged(ChangeType)));
     OS_ASSERT(connected);
   }
 
@@ -213,11 +193,8 @@ namespace detail {
       child.clearParent();
     }
 
-    bool disconnected = disconnect(SIGNAL(clean()),
-                                   child.getImpl<detail::AnalysisObject_Impl>().get(),
-                                   SLOT(onParentClean()));
-    OS_ASSERT(disconnected);
-    disconnected = child.disconnect(SIGNAL(changed(ChangeType)),
+    disconnect(this, &AnalysisObject_Impl::clean, child.getImpl<detail::AnalysisObject_Impl>().get(), &detail::AnalysisObject_Impl::onParentClean);
+    bool disconnected = child.disconnect(SIGNAL(changed(ChangeType)),
                                     this,
                                     SLOT(onChildChanged(ChangeType)));
     OS_ASSERT(disconnected);
@@ -295,14 +272,14 @@ bool AnalysisObject::connect(const char* signal,
                              const char* slot,
                              Qt::ConnectionType type) const
 {
-  return getImpl<detail::AnalysisObject_Impl>()->connect(signal,qObject,slot,type);
+  return QObject::connect(getImpl<detail::AnalysisObject_Impl>().get(), signal, qObject, slot, type);
 }
 
 bool AnalysisObject::disconnect(const char* signal,
                                 const QObject* receiver,
                                 const char* slot) const
 {
-  return getImpl<detail::AnalysisObject_Impl>()->disconnect(signal,receiver,slot);
+  return QObject::disconnect(getImpl<detail::AnalysisObject_Impl>().get(), signal, receiver, slot);
 }
 
 /// @cond

@@ -61,11 +61,8 @@ LuminaireDefinitionInspectorView::LuminaireDefinitionInspectorView(bool isIP, co
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,0);
 
-  bool isConnected = false;
-
   m_lightingPowerEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_lightingPowerEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &LuminaireDefinitionInspectorView::toggleUnitsClicked, m_lightingPowerEdit, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_lightingPowerEdit,3,0);
 
   // Fraction Radiant
@@ -75,8 +72,7 @@ LuminaireDefinitionInspectorView::LuminaireDefinitionInspectorView(bool isIP, co
   mainGridLayout->addWidget(label,4,0);
 
   m_fractionRadiantEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_fractionRadiantEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &LuminaireDefinitionInspectorView::toggleUnitsClicked, m_fractionRadiantEdit, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_fractionRadiantEdit,5,0);
 
   // Fraction Visible
@@ -86,8 +82,7 @@ LuminaireDefinitionInspectorView::LuminaireDefinitionInspectorView(bool isIP, co
   mainGridLayout->addWidget(label,4,1);
 
   m_fractionVisibleEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_fractionVisibleEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &LuminaireDefinitionInspectorView::toggleUnitsClicked, m_fractionVisibleEdit, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_fractionVisibleEdit,5,1);
 
   // Return Air Fraction 
@@ -97,8 +92,7 @@ LuminaireDefinitionInspectorView::LuminaireDefinitionInspectorView(bool isIP, co
   mainGridLayout->addWidget(label,6,0);
 
   m_returnAirFractionEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_returnAirFractionEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &LuminaireDefinitionInspectorView::toggleUnitsClicked, m_returnAirFractionEdit, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_returnAirFractionEdit,7,0);
 
   // Stretch

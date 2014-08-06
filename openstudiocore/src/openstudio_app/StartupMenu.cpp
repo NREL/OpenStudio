@@ -36,12 +36,11 @@ StartupMenu::StartupMenu(QWidget *parent) :
   QAction * exitAction = new QAction(tr("E&xit"), this);
   exitAction->setShortcuts(QKeySequence::Quit);
 
-  connect(importAction, SIGNAL(triggered()), this, SIGNAL(importClicked()));
-  //connect(importSDDAction, SIGNAL(triggered()), this, SIGNAL(importSDDClicked()));
-  connect(loadFileAction, SIGNAL(triggered()), this, SIGNAL(loadFileClicked()));
-  connect(newAction, SIGNAL(triggered()), this, SIGNAL(newClicked()));
-  connect(exitAction, SIGNAL(triggered()),this,SIGNAL(exitClicked()));
-
+  connect(importAction, &QAction::triggered, this, &StartupMenu::importClicked);
+  //connect(importSDDAction, &QAction::triggered, this, &StartupMenu::importSDDClicked);
+  connect(loadFileAction, &QAction::triggered, this, &StartupMenu::loadFileClicked);
+  connect(newAction, &QAction::triggered, this, &StartupMenu::newClicked);
+  connect(exitAction, &QAction::triggered, this, &StartupMenu::exitClicked);
   m_fileMenu->addAction(newAction);
   m_fileMenu->addAction(loadFileAction);
   m_fileMenu->addSeparator();
@@ -59,8 +58,7 @@ StartupMenu::StartupMenu(QWidget *parent) :
 
   QAction * helpAction = new QAction(tr("OpenStudio &Help"),this);
 
-  connect(helpAction, SIGNAL(triggered()),this,SIGNAL(helpClicked()));
-
+  connect(helpAction, &QAction::triggered, this, &StartupMenu::helpClicked);
   m_helpMenu->addAction(helpAction);
 }
 

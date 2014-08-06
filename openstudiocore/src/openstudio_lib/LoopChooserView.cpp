@@ -176,10 +176,9 @@ LoopChooserItem::LoopChooserItem(model::Loop & loop, LoopChooserView * parent)
   
   m_checkBox->setText(toQString(loop.name().get()));
 
-  connect( m_checkBox, SIGNAL(clicked(bool)), this, SLOT(sendClickedSignal(bool)) );
-  connect( this, SIGNAL(addToLoopClicked(model::Loop &)), m_loopChooserView,SLOT(onAddToLoopClicked(model::Loop &)) );
-  connect( this, SIGNAL(removeFromLoopClicked(model::Loop &)), m_loopChooserView,SLOT(onRemoveFromLoopClicked(model::Loop &)) );
-
+  connect(m_checkBox, &QCheckBox::clicked, this, &LoopChooserItem::sendClickedSignal);
+  connect(this, &LoopChooserItem::addToLoopClicked, m_loopChooserView, &LoopChooserView::onAddToLoopClicked);
+  connect(this, &LoopChooserItem::removeFromLoopClicked, m_loopChooserView, &LoopChooserView::onRemoveFromLoopClicked);
   hLayout->addWidget(m_checkBox);
 
   setLayout(hLayout);

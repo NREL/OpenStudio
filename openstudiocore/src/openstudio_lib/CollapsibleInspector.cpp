@@ -51,9 +51,7 @@ void CollapsibleInspector::createLayout()
   mainLayout->addWidget(m_header);
   mainLayout->addWidget(m_inspector);
 
-  bool isConnected = connect(m_header,SIGNAL(toggled(bool)),
-                             this,SLOT(on_headerToggled(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_header, &CollapsibleInspectorHeader::toggled, this, &CollapsibleInspector::on_headerToggled);
 }
 
 ///! SLOTS
@@ -104,9 +102,7 @@ void CollapsibleInspectorHeader::createLayout()
   // Stretch
   mainHLayout->addStretch();
 
-  bool isConnected = connect(this,SIGNAL(toggled(bool)),
-                             this,SLOT(on_toggled(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &CollapsibleInspectorHeader::toggled, this, &CollapsibleInspectorHeader::on_toggled);
 
   setChecked(false);
 }

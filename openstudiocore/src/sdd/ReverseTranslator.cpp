@@ -1026,7 +1026,7 @@ namespace sdd {
     }
     if (latElement.isNull()){
       test = false;
-      LOG(Error, "No lattitude specified");
+      LOG(Error, "No latitude specified");
     }
     if (longElement.isNull()){
       test = false;

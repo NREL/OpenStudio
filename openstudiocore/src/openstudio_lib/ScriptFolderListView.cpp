@@ -54,11 +54,8 @@ ScriptFolderListView::ScriptFolderListView(const openstudio::path &folder,
   addScriptFolder(openstudio::toPath("model_resources"), "Model Script Resources");
   addScriptFolder(openstudio::toPath("model_scripts"), "Model Scripts");
 
-  connect(m_fswatcher.get(), SIGNAL(directoryChanged(const QString &)),
-      this, SIGNAL(scriptListChanged()));
-  connect(m_fswatcher.get(), SIGNAL(fileChanged(const QString &)),
-      this, SIGNAL(scriptListChanged()));
-
+  connect(m_fswatcher.get(), &QFileSystemWatcher::directoryChanged, this, &ScriptFolderListView::scriptListChanged);
+  connect(m_fswatcher.get(), &QFileSystemWatcher::fileChanged, this, &ScriptFolderListView::scriptListChanged);
 }
 
 ScriptFolderListView::~ScriptFolderListView()

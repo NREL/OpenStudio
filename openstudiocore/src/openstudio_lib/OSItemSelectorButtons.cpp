@@ -73,9 +73,7 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
 
   m_vLayout->addLayout(dropZoneLayout);
 
-  bool isConnected = false;
-  isConnected = connect(m_dropZone,SIGNAL(itemDropped(const OSItemId&)),this,SIGNAL(itemDropped(const OSItemId&)));
-  OS_ASSERT(isConnected);
+  connect(m_dropZone, &OSDropZone::itemDropped, this, &OSItemSelectorButtons::itemDropped);
     
   // buttons
   QWidget * buttonBox = new QWidget();
@@ -95,8 +93,7 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
   m_addButton->setFixedSize(24,24);
   buttonLayout->addWidget(m_addButton);
   
-  isConnected = connect(m_addButton,SIGNAL(clicked()),this,SIGNAL(addClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_addButton, &QPushButton::clicked, this, &OSItemSelectorButtons::addClicked);
 
   m_copyButton = new QPushButton();
   m_copyButton->setEnabled(false);
@@ -106,8 +103,7 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
   m_copyButton->setFixedSize(24,24);
   buttonLayout->addWidget(m_copyButton);
   
-  isConnected = connect(m_copyButton,SIGNAL(clicked()),this,SIGNAL(copyClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_copyButton, &QPushButton::clicked, this, &OSItemSelectorButtons::copyClicked);
 
   m_removeButton = new QPushButton();
   m_removeButton->setEnabled(false);
@@ -117,8 +113,7 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
   m_removeButton->setFixedSize(24,24);
   buttonLayout->addWidget(m_removeButton);
   
-  isConnected = connect(m_removeButton,SIGNAL(clicked()),this,SIGNAL(removeClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_removeButton, &QPushButton::clicked, this, &OSItemSelectorButtons::removeClicked);
 
   buttonLayout->addStretch();
 
@@ -129,8 +124,7 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
   m_purgeButton->setFixedSize(24,24);
   buttonLayout->addWidget(m_purgeButton);
   
-  isConnected = connect(m_purgeButton,SIGNAL(clicked()),this,SIGNAL(purgeClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_purgeButton, &QPushButton::clicked, this, &OSItemSelectorButtons::purgeClicked);
 
   //m_openBclDlgButton = new QPushButton(this);
   //m_openBclDlgButton->setObjectName("OpenBclDlgButton");
@@ -138,8 +132,7 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
   //m_openBclDlgButton->hide();
   //m_vLayout->addWidget(m_openBclDlgButton);
   //
-  //isConnected = connect(m_openBclDlgButton,SIGNAL(clicked()),this,SIGNAL(downloadComponentsClicked()));
-  //OS_ASSERT(isConnected);
+  //connect(m_openBclDlgButton, &QPushButton::clicked, this, &OSItemSelectorButtons::downloadComponentsClicked);
 }
 
 void OSItemSelectorButtons::showDropZone()

@@ -82,7 +82,6 @@ LocationView::LocationView(const model::Model & model,
     m_model(model),
     m_modelTempDir(modelTempDir)
 {
-  bool isConnected = false;
   QLabel * label = 0;
   QPushButton * btn = 0;
   QHBoxLayout * hLayout = 0;
@@ -142,8 +141,7 @@ LocationView::LocationView(const model::Model & model,
   OS_ASSERT(i != -1);
   m_ashraeClimateZone->setCurrentIndex(i);
 
-  isConnected = connect(m_ashraeClimateZone, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onASHRAEClimateZoneChanged(const QString&)));
-  OS_ASSERT(isConnected);
+  connect(m_ashraeClimateZone, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &LocationView::onASHRAEClimateZoneChanged);
 
   vLayout = new QVBoxLayout();
   vLayout->setContentsMargins(10,0,10,0);
@@ -175,8 +173,7 @@ LocationView::LocationView(const model::Model & model,
   OS_ASSERT(i != -1);
   m_cecClimateZone->setCurrentIndex(i);
 
-  isConnected = connect(m_cecClimateZone, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onCECClimateZoneChanged(const QString&)));
-  OS_ASSERT(isConnected);
+  connect(m_cecClimateZone, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &LocationView::onCECClimateZoneChanged);
 
   hLayout->addStretch();
   mainVLayout->addLayout(hLayout);
@@ -198,8 +195,7 @@ LocationView::LocationView(const model::Model & model,
   btn = new QPushButton("Browse",this);
   btn->setFlat(true);
   btn->setObjectName("StandardGrayButton");
-  isConnected = connect(btn,SIGNAL(clicked()),this,SLOT(onWeatherFileBtnClicked()));
-  OS_ASSERT(isConnected);
+  connect(btn, &QPushButton::clicked, this, &LocationView::onWeatherFileBtnClicked);
 
   hLayout = new QHBoxLayout();
   hLayout->setContentsMargins(0,5,0,5);
@@ -237,8 +233,7 @@ LocationView::LocationView(const model::Model & model,
   btn = new QPushButton("Browse",this);
   btn->setFlat(true);
   btn->setObjectName("StandardGrayButton");
-  isConnected = connect(btn,SIGNAL(clicked()),this,SLOT(onDesignDayBtnClicked()));
-  OS_ASSERT(isConnected);
+  connect(btn, &QPushButton::clicked, this, &LocationView::onDesignDayBtnClicked);
 
   hLayout = new QHBoxLayout();
   hLayout->setContentsMargins(0,5,0,5);

@@ -34,6 +34,10 @@ class UtilityBillsController : public ModelSubTabController
 
     virtual ~UtilityBillsController() {}
 
+  public slots:
+
+    void enableAddNewObjectButton(bool enable);
+
   protected:
 
     virtual void onAddObject(const openstudio::IddObjectType& iddObjectType);
@@ -53,10 +57,6 @@ class UtilityBillsController : public ModelSubTabController
     virtual void onSelectItem(OSItem *item);
 
     virtual void onClearSelection();
-
-  private slots:
-
-    void enableAddNewObjectButton(bool enable);
 
 };
 

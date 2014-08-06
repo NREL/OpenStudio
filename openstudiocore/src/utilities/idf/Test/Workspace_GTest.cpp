@@ -277,7 +277,7 @@ TEST_F(IdfFixture, Workspace_FollowingPointers) {
 // This test mimics the creation of a budget building. In particular, it blindly changes out
 // all lights objects and their schedules.
 //
-// The test building has 6 Zone objects and 5 Lights objects. All zones are maked "Office"
+// The test building has 6 Zone objects and 5 Lights objects. All zones are marked "Office"
 // even though one is a plenum.
 TEST_F(IdfFixture, Workspace_Alpha1) {
 
@@ -1428,6 +1428,8 @@ TEST_F(IdfFixture,Workspace_LocateURLs) {
 
   EXPECT_EQ(tdv.getString(OS_TimeDependentValuationFields::Url).get(), "file:TDV_2008_kBtu_CZ13.csv");
   ASSERT_EQ(located.size(), 1u);
+  std::string a = located[0].first.toString().toStdString();
+  std::string b = QUrl::fromLocalFile(openstudio::toQString(absoluteTdvFilePath)).toString().toStdString();
   EXPECT_TRUE(located[0].first == QUrl::fromLocalFile(openstudio::toQString(absoluteTdvFilePath)));
   EXPECT_EQ(located[0].second, openstudio::toPath("TDV_2008_kBtu_CZ13.csv"));
 

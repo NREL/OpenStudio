@@ -72,8 +72,6 @@ void ScheduleDialog::createLayout()
 
   QVBoxLayout * vLayout = NULL;
 
-  bool isConnected = false;
-
   //CLASS NAME
   {
     vLayout = new QVBoxLayout();
@@ -89,12 +87,8 @@ void ScheduleDialog::createLayout()
 
     m_className = new QComboBox(this);
     m_className->setObjectName("ScheduleDialog");
-    isConnected = connect(m_className, SIGNAL(currentIndexChanged(const QString &)),
-                          this, SLOT(on_classNameComboBox(const QString &)));
-    OS_ASSERT(isConnected);
-    isConnected = connect(m_className, SIGNAL(currentIndexChanged(const QString &)),
-                          this, SIGNAL(classNameCurrentIndexChanged(const QString &)));
-    OS_ASSERT(isConnected);
+    connect(m_className, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &ScheduleDialog::on_classNameComboBox);
+    connect(m_className, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &ScheduleDialog::classNameCurrentIndexChanged);
     hLayout->addWidget(m_className);
     hLayout->addStretch();
 
@@ -125,12 +119,8 @@ void ScheduleDialog::createLayout()
 
     m_scheduleType = new QComboBox(this);
     m_scheduleType->setObjectName("ScheduleDialog");
-    isConnected = connect(m_scheduleType, SIGNAL(currentIndexChanged(int)),
-                          this, SLOT(on_scheduleTypeComboBox(int)));
-    OS_ASSERT(isConnected);
-    isConnected = connect(m_scheduleType, SIGNAL(currentIndexChanged(const QString &)),
-                          this, SIGNAL(scheduleTypeCurrentIndexChanged(const QString &)));
-    OS_ASSERT(isConnected);
+    connect(m_scheduleType, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &ScheduleDialog::on_scheduleTypeComboBox);
+    connect(m_scheduleType, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &ScheduleDialog::scheduleTypeCurrentIndexChanged);
     hLayout->addWidget(m_scheduleType);
     hLayout->addStretch();
    
@@ -216,9 +206,7 @@ void ScheduleDialog::createLayout()
 
   vertLayout->addStretch();
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        this, SLOT(toggleUnits(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &ScheduleDialog::toggleUnitsClicked, this, &ScheduleDialog::toggleUnits);
 
   m_className->setCurrentIndex(1); // TODO awkward way to load all 3 comboBoxes
   m_className->setCurrentIndex(0);

@@ -64,35 +64,21 @@ InspectorController::InspectorController()
 {
   m_inspectorView = new InspectorView();
 
-  connect( m_inspectorView,SIGNAL(addZoneClicked(model::ThermalZone &)),
-           this,SLOT(addBranchForZone(model::ThermalZone &)));
+  connect(m_inspectorView, &InspectorView::addZoneClicked, this, &InspectorController::addBranchForZone);
 
-  bool bingo = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                             m_inspectorView, SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(bingo);
+  connect(this, &InspectorController::toggleUnitsClicked, m_inspectorView, &InspectorView::toggleUnitsClicked);
 
-  bingo = connect( m_inspectorView,SIGNAL(removeZoneClicked(model::ThermalZone &)),
-                   this,SLOT(removeBranchForZone(model::ThermalZone &)));
-  OS_ASSERT(bingo);
+  connect(m_inspectorView, &InspectorView::removeZoneClicked, this, &InspectorController::removeBranchForZone);
 
-  bingo = connect( m_inspectorView,SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)),
-           this,SLOT(addToLoop(model::Loop &, boost::optional<model::HVACComponent> &)));
-  OS_ASSERT(bingo);
+  connect(m_inspectorView, &InspectorView::addToLoopClicked, this, &InspectorController::addToLoop);
 
-  bingo = connect( m_inspectorView,SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)),
-           this,SLOT(removeFromLoop(model::Loop &, boost::optional<model::HVACComponent> &)));
-  OS_ASSERT(bingo);
+  connect(m_inspectorView, &InspectorView::removeFromLoopClicked, this, &InspectorController::removeFromLoop);
 
-  bingo = connect(m_inspectorView,SIGNAL(destroyed(QObject *)),this,SLOT(onViewDestroyed(QObject *)));
-  OS_ASSERT(bingo);
+  connect(m_inspectorView, &InspectorView::destroyed, this, &InspectorController::onViewDestroyed);
 
-  bingo = connect(m_inspectorView,SIGNAL(moveBranchForZoneSupplySelected(model::ThermalZone &, const Handle &)),
-                  this,SLOT(moveBranchForZoneSupply(model::ThermalZone &, const Handle &)));
-  OS_ASSERT(bingo);
+  connect(m_inspectorView, &InspectorView::moveBranchForZoneSupplySelected, this, &InspectorController::moveBranchForZoneSupply);
 
-  bingo = connect(m_inspectorView,SIGNAL(moveBranchForZoneReturnSelected(model::ThermalZone &, const Handle &)),
-                  this,SLOT(moveBranchForZoneReturn(model::ThermalZone &, const Handle &)));
-  OS_ASSERT(bingo);
+  connect(m_inspectorView, &InspectorView::moveBranchForZoneReturnSelected, this, &InspectorController::moveBranchForZoneReturn);
 }
 
 InspectorController::~InspectorController()

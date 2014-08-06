@@ -106,16 +106,6 @@ namespace detail {
      *  cannot be cleared for some reason. */
     virtual bool clearDirtyFlag();
 
-    /** Connect signal from this AnalysisObject to slot on qObject. */
-    bool connect(const char* signal,
-                 const QObject* receiver,
-                 const char* slot,
-                 Qt::ConnectionType type = Qt::AutoConnection) const;
-
-    bool disconnect(const char* signal=nullptr,
-                    const QObject* receiver=nullptr,
-                    const char* slot=nullptr) const;
-
     //@}
     /** @name Type Casting */
     //@{

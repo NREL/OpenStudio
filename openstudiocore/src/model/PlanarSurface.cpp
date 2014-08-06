@@ -66,8 +66,7 @@ namespace model {
       : ParentObject_Impl(type, model)
     {
       // connect signals
-      bool connected = connect(this, SIGNAL(onChange()), this, SLOT(clearCachedVariables()));
-      OS_ASSERT(connected);
+      connect(this, &PlanarSurface_Impl::onChange, this, &PlanarSurface_Impl::clearCachedVariables);
     }
 
     // constructor
@@ -77,8 +76,7 @@ namespace model {
       : ParentObject_Impl(idfObject, model, keepHandle)
     {
       // connect signals
-      bool connected = connect(this, SIGNAL(onChange()), this, SLOT(clearCachedVariables()));
-      OS_ASSERT(connected);
+      connect(this, &PlanarSurface_Impl::onChange, this, &PlanarSurface_Impl::clearCachedVariables);
     }
 
     PlanarSurface_Impl::PlanarSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -87,8 +85,7 @@ namespace model {
       : ParentObject_Impl(other,model,keepHandle)
     {
       // connect signals
-      bool connected = connect(this, SIGNAL(onChange()), this, SLOT(clearCachedVariables()));
-      OS_ASSERT(connected);
+      connect(this, &PlanarSurface_Impl::onChange, this, &PlanarSurface_Impl::clearCachedVariables);
     }
 
     PlanarSurface_Impl::PlanarSurface_Impl(const PlanarSurface_Impl& other,
@@ -97,8 +94,7 @@ namespace model {
       : ParentObject_Impl(other,model,keepHandle)
     {
       // connect signals
-      bool connected = connect(this, SIGNAL(onChange()), this, SLOT(clearCachedVariables()));
-      OS_ASSERT(connected);
+      connect(this, &PlanarSurface_Impl::onChange, this, &PlanarSurface_Impl::clearCachedVariables);
     }
 
     boost::optional<ConstructionBase> PlanarSurface_Impl::construction() const

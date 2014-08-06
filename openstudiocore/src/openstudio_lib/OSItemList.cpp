@@ -84,25 +84,16 @@ OSItemList::OSItemList(OSVectorController* vectorController,
   m_vLayout->setSpacing(0);
   m_vLayout->addStretch();
 
-  bool isConnected = false;
-  isConnected = connect(this, SIGNAL(itemsRequested()),
-                        vectorController, SLOT(reportItems())); 
-  OS_ASSERT(isConnected);
+  connect(this, &OSItemList::itemsRequested, vectorController, &OSVectorController::reportItems);
 
   /* Vector controller does not handle removing items in list from model
   *
-  isConnected = connect(this, SIGNAL(itemRemoveClicked(OSItem*)),
-                        vectorController, SLOT(removeItem(OSItem*)));
-  OS_ASSERT(isConnected);
+  connect(this, &OSItemList::itemRemoveClicked, vectorController, &OSVectorController::removeItem);
   */
 
-  isConnected = connect(vectorController, SIGNAL(itemIds(const std::vector<OSItemId>&)),
-                        this, SLOT(setItemIds(const std::vector<OSItemId>&))); 
-  OS_ASSERT(isConnected);
+  connect(vectorController, &OSVectorController::itemIds, this, &OSItemList::setItemIds);
 
-  isConnected = connect(vectorController, SIGNAL(selectedItemId(const OSItemId&)),
-                        this, SLOT(selectItemId(const OSItemId&))); 
-  OS_ASSERT(isConnected);
+  connect(vectorController, &OSVectorController::selectedItemId, this, &OSItemList::selectItemId);
 
   // allow time for OSDocument to finish constructing
   QTimer::singleShot(0, vectorController, SLOT(reportItems()));
@@ -239,18 +230,11 @@ void OSItemList::addItem(OSItem* item, bool selectItem)
 
   item->setOSItemType(m_type);
 
-  bool isConnected = false;
-  isConnected = connect(item, SIGNAL(itemClicked(OSItem*)),
-                        this, SLOT(selectItem(OSItem*)));
-  OS_ASSERT(isConnected);
+  connect(item, &OSItem::itemClicked, this, &OSItemList::selectItem);
 
-  isConnected = connect(item, SIGNAL(itemRemoveClicked(OSItem*)),
-                        this, SIGNAL(itemRemoveClicked(OSItem*)));
-  OS_ASSERT(isConnected);
+  connect(item, &OSItem::itemRemoveClicked, this, &OSItemList::itemRemoveClicked);
 
-  isConnected = connect(item, SIGNAL(itemReplacementDropped(OSItem*, const OSItemId&)),
-                        this, SIGNAL(itemReplacementDropped(OSItem*, const OSItemId&)));
-  OS_ASSERT(isConnected);
+  connect(item, &OSItem::itemReplacementDropped, this, &OSItemList::itemReplacementDropped);
 
   m_vLayout->insertWidget(0, item);
 

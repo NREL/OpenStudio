@@ -118,12 +118,6 @@ namespace detail {
     /** Stop a running data point. */
     void stop(analysis::DataPoint& dataPoint);
 
-    /// Connect signal from this AnalysisDriver implementation object to slot on qObject.
-    bool connect(const std::string& signal,
-                 const QObject* qObject,
-                 const std::string& slot,
-                 Qt::ConnectionType type = Qt::AutoConnection) const;
-
     //@}
    public slots:
 

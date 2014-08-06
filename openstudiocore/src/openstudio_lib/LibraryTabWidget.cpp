@@ -68,7 +68,7 @@ void LibraryTabWidget::addTab( QWidget * widget,
 
   m_tabButtons.push_back(button);
 
-  connect(button,SIGNAL(clicked()),this,SLOT(select()));
+  connect(button, &QPushButton::clicked, this, &LibraryTabWidget::select);
 
   m_pageStack->addWidget(widget);
 

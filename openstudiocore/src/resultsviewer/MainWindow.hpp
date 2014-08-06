@@ -82,8 +82,8 @@ private:
   QList<resultsviewer::PlotView *> m_plotViewList;
 
   int m_plotTitleNumber;
-  resultsviewer::PlotViewData plotViewDataFromResultsViewerPlotData(const resultsviewer::ResultsViewerPlotData &rvplotData);
-  resultsviewer::PlotViewData plotViewDataDifference(const resultsviewer::PlotViewData &plotViewData1, const resultsviewer::PlotViewData &plotViewData2);
+  PlotViewData plotViewDataFromResultsViewerPlotData(const resultsviewer::ResultsViewerPlotData &rvplotData);
+  PlotViewData plotViewDataDifference(const resultsviewer::PlotViewData &plotViewData1, const resultsviewer::PlotViewData &plotViewData2);
 
   // recent file list
   QStringList m_recentFiles;
@@ -100,10 +100,10 @@ private:
   void writeSettings();
 
   // main widgets
-  resultsviewer::TableView *m_tableView;
-  resultsviewer::TreeView *m_treeView;
+  TableView *m_tableView;
+  TreeView *m_treeView;
   QTabWidget *m_mainTabView;
-  resultsviewer::TabDropDock *m_mainTabDock;
+  TabDropDock *m_mainTabDock;
   QToolBar *m_plotToolBar;
   QComboBox *m_plotComboBox;
   QToolBar *m_fileToolBar;
@@ -111,7 +111,7 @@ private:
   QLineEdit *m_viewFilterText;
 
   // data
-  resultsviewer::ResultsViewerData *m_data;
+  ResultsViewerData *m_data;
 
   // close open file
   void closeFile(const QString& filename);
@@ -156,7 +156,7 @@ private:
   //            location before opening and delete them when the process exits.
   void openFileList(const QStringList& fileList, bool t_makeTempCopies);
 
-  // timesseries specific context menus
+  // timeseries specific context menus
   void timeseriesTableViewMenu( QMenu& menu);
   void timeseriesTreeViewMenu( QMenu& menu);
 

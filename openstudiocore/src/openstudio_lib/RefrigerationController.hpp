@@ -156,7 +156,7 @@ class RefrigerationSystemListController : public OSListController
   QPointer<RefrigerationController> m_refrigerationController;
 };
 
-// A delegate to provide cells of the refigeration system grid
+// A delegate to provide cells of the refrigeration system grid
 class RefrigerationSystemItemDelegate : public OSGraphicsItemDelegate
 {
   Q_OBJECT;

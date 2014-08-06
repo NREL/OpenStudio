@@ -310,11 +310,8 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   label->setStyleSheet("QLabel { font: bold; }");
   vLayout->addWidget(label);
 
-  bool isConnected = false;
-
   m_northAxisEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_northAxisEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &BuildingInspectorView::toggleUnitsClicked, m_northAxisEdit, &OSQuantityEdit::onUnitSystemChange);
 
   vLayout->addWidget(m_northAxisEdit);
 
@@ -503,11 +500,8 @@ void BuildingInspectorView::populateStandardsBuildingTypes()
     }
   }
 
-  bool isConnected = false;
-  isConnected = connect(m_standardsBuildingTypeComboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(standardsBuildingTypeChanged(const QString&)));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_standardsBuildingTypeComboBox, SIGNAL(editTextChanged(const QString&)), this, SLOT(editStandardsBuildingType(const QString&)));
-  OS_ASSERT(isConnected);
+  connect(m_standardsBuildingTypeComboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &BuildingInspectorView::standardsBuildingTypeChanged);
+  connect(m_standardsBuildingTypeComboBox, &QComboBox::editTextChanged, this, &BuildingInspectorView::editStandardsBuildingType);
 }
 
 void BuildingInspectorView::toggleUnits(bool displayIP)

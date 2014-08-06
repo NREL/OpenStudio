@@ -36,19 +36,19 @@ namespace runmanager {
 
     ui.actionGoToOutput->setVisible(false);
 
-    connect(ui.actionRaisePriority, SIGNAL(triggered()), this, SLOT(raiseJobPriority()));
-    connect(ui.actionLowerPriority, SIGNAL(triggered()), this, SLOT(lowerJobPriority()));
-    connect(ui.actionRerun, SIGNAL(triggered()), this, SLOT(rerunJob()));
-    connect(ui.actionShowWarnings, SIGNAL(triggered()), this, SLOT(showJobWarnings()));
-    connect(ui.actionGoToOutput, SIGNAL(triggered()), this, SLOT(emitGoToOutput()));
-    connect(ui.actionDelete, SIGNAL(triggered()), this, SLOT(deleteJob()));
-    connect(ui.actionOpenOutputFolder, SIGNAL(triggered()), this, SLOT(openOutputFolder()));
+    connect(ui.actionRaisePriority, &QAction::triggered, this, &RunManagerStatusWidget::raiseJobPriority);
+    connect(ui.actionLowerPriority, &QAction::triggered, this, &RunManagerStatusWidget::lowerJobPriority);
+    connect(ui.actionRerun, &QAction::triggered, this, &RunManagerStatusWidget::rerunJob);
+    connect(ui.actionShowWarnings, &QAction::triggered, this, &RunManagerStatusWidget::showJobWarnings);
+    connect(ui.actionGoToOutput, &QAction::triggered, this, &RunManagerStatusWidget::emitGoToOutput);
+    connect(ui.actionDelete, &QAction::triggered, this, &RunManagerStatusWidget::deleteJob);
+    connect(ui.actionOpenOutputFolder, &QAction::triggered, this, &RunManagerStatusWidget::openOutputFolder);
 
 
     ui.actionSep->setSeparator(true);
 
-    connect(ui.treeView, SIGNAL(activated(const QModelIndex &)), ui.actionGoToOutput, SLOT(trigger()));
-    connect(ui.completedTreeView, SIGNAL(activated(const QModelIndex &)), ui.actionGoToOutput, SLOT(trigger()));
+    connect(ui.treeView, &QTreeView::activated, ui.actionGoToOutput, &QAction::trigger);
+    connect(ui.completedTreeView, &QTreeView::activated, ui.actionGoToOutput, &QAction::trigger);
 
     clearActions();
   }
@@ -113,14 +113,11 @@ namespace runmanager {
 
     ui.treeView->setModel(m_runmanager->getQItemModel());
     ui.completedTreeView->setModel(m_runmanager->getQItemModel());
-    connect(ui.treeView->model(), SIGNAL(itemChanged(QStandardItem *)), 
-        this, SLOT(itemChanged(QStandardItem *)));
-    connect(ui.treeView->model(), SIGNAL(rowsInserted( const QModelIndex &, int, int)),
-        this, SLOT(rowInserted()));
-    connect(ui.treeView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
-        this, SLOT(jobTreeSelectionChanged(const QItemSelection &)));
-    connect(ui.completedTreeView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
-        this, SLOT(completedJobTreeSelectionChanged(const QItemSelection &)));
+    connect(static_cast<QStandardItemModel *>(ui.treeView->model()), &QStandardItemModel::itemChanged, this, &RunManagerStatusWidget::itemChanged);
+    connect(ui.treeView->model(), &QAbstractItemModel::rowsInserted, this, &RunManagerStatusWidget::rowInserted);
+    connect(ui.treeView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &RunManagerStatusWidget::jobTreeSelectionChanged);
+    connect(ui.completedTreeView->selectionModel(), &QItemSelectionModel::selectionChanged,
+      this, &RunManagerStatusWidget::completedJobTreeSelectionChanged);
 
     QStandardItemModel *model = dynamic_cast<QStandardItemModel *>(ui.treeView->model());
 

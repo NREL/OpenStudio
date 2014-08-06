@@ -271,7 +271,7 @@ class MODEL_API TableMultiVariableLookup : public Curve {
   boost::optional<double> yValue(const std::vector<double> & xValues) const;
 
   /** Return all of the x values for independent variable i
-    * in asscending order.
+    * in ascending order.
     *
     * The independent variables are indexed from 0.
     */

@@ -465,7 +465,7 @@ namespace gbxml {
       QDomNodeList coordinateElements = cartesianPointElements.at(i).toElement().elementsByTagName("Coordinate");
       OS_ASSERT(coordinateElements.size() == 3);
 
-      /* Calling these conversions every time is uneccesarily slow
+      /* Calling these conversions every time is unnecessarily slow
 
       Unit targetUnit = UnitFactory::instance().createUnit("m").get();
       Quantity xQuantity(coordinateElements.at(0).toElement().text().toDouble(), m_lengthUnit);
@@ -645,7 +645,7 @@ namespace gbxml {
       QDomNodeList coordinateElements = cartesianPointElements.at(i).toElement().elementsByTagName("Coordinate");
       OS_ASSERT(coordinateElements.size() == 3);
 
-      /* Calling these conversions every time is uneccesarily slow
+      /* Calling these conversions every time is unnecessarily slow
 
       Unit targetUnit = UnitFactory::instance().createUnit("m").get();
       Quantity xQuantity(coordinateElements.at(0).toElement().text().toDouble(), m_lengthUnit);

@@ -115,60 +115,23 @@ void ViewWidget::createWidgets()
 
 void ViewWidget::connectSignalsAndSlots()
 {
-  bool connected;
-  connected = connect(mIG,
-                      SIGNAL(nameChanged(QString)), 
-                      this,
-                      SLOT(on_nameChanged(QString)));
-  OS_ASSERT(connected);
+  connect(mIG, &InspectorGadget::nameChanged, this, &ViewWidget::on_nameChanged);
 
-  connected = connect(this,
-                      SIGNAL(commentsShow(bool)),
-                      mIG,
-                      SLOT(commentConfig(bool)));
-  OS_ASSERT(connected);
+  connect(this, &ViewWidget::commentsShow, mIG, &InspectorGadget::commentConfig);
 
-  connected = connect(this,
-                      SIGNAL(precisionDlgShow()),
-                      mIGPrecisionDlg,
-                      SLOT(show()));
-  OS_ASSERT(connected);
+  connect(this, &ViewWidget::precisionDlgShow, mIGPrecisionDlg, &IGPrecisionDialog::show);
 
-  connected = connect(this,
-                      SIGNAL(precisionDlgHide()),
-                      mIGPrecisionDlg,
-                      SLOT(hide()));
-  OS_ASSERT(connected);
+  connect(this, &ViewWidget::precisionDlgHide, mIGPrecisionDlg, &IGPrecisionDialog::hide);
 
-  connected = connect(mIGPrecisionDlg,
-                      SIGNAL(accepted()),
-                      mIG,
-                      SLOT(setPrec()));
-  OS_ASSERT(connected);
+  connect(mIGPrecisionDlg, &IGPrecisionDialog::accepted, mIG, &InspectorGadget::setPrec);
 
-  connected = connect(mIGPrecisionDlg,
-                      SIGNAL(accepted()),
-                      this,
-                      SIGNAL(precisionDlgFinished()));
-  OS_ASSERT(connected);
+  connect(mIGPrecisionDlg, &IGPrecisionDialog::accepted, this, &ViewWidget::precisionDlgFinished);
 
-  connected = connect(mIGPrecisionDlg,
-                      SIGNAL(rejected()),
-                      this,
-                      SIGNAL(precisionDlgFinished()));
-  OS_ASSERT(connected);
+  connect(mIGPrecisionDlg, &IGPrecisionDialog::rejected, this, &ViewWidget::precisionDlgFinished);
 
-  connected = connect(mIGPrecisionDlg,
-                      SIGNAL(finished(int)),
-                      this,
-                      SIGNAL(precisionDlgFinished()));
-  OS_ASSERT(connected);
+  connect(mIGPrecisionDlg, &IGPrecisionDialog::finished, this, &ViewWidget::precisionDlgFinished);
 
-  connected = connect(mIG,
-                      SIGNAL(dirty()),
-                      this,
-                      SIGNAL(modelDirty()));
-  OS_ASSERT(connected);
+  connect(mIG, &InspectorGadget::dirty, this, &ViewWidget::modelDirty);
 
  
 }

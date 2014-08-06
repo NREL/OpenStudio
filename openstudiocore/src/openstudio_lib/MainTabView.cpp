@@ -140,7 +140,7 @@ bool MainTabView::addSubTab(const QString & subTablabel, QWidget * widget, int i
   button->setText(subTablabel);
   button->setFixedHeight(21);
   m_tabButtons.push_back(button);
-  connect(button,SIGNAL(clicked()),this,SLOT(select()));
+  connect(button, &QPushButton::clicked, this, &MainTabView::select);
 
   m_stackedWidget->addWidget(widget);
 

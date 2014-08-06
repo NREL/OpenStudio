@@ -77,7 +77,6 @@ void BuildingComponentDialogCentralWidget::init()
 
 void BuildingComponentDialogCentralWidget::createLayout()
 {
-  bool isConnected = false;
 
   QLabel * label = new QLabel("Sort by:");
   label->hide(); // TODO remove this hack when we have sorts to do
@@ -85,14 +84,10 @@ void BuildingComponentDialogCentralWidget::createLayout()
   auto comboBox = new QComboBox(this);
   comboBox->hide(); // TODO remove this hack when we have sorts to do
 
-  isConnected = connect(comboBox, SIGNAL(currentIndexChanged(const QString &)),
-                             this, SLOT(comboBoxIndexChanged(const QString &)));
-  OS_ASSERT(isConnected);
+  connect(comboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &BuildingComponentDialogCentralWidget::comboBoxIndexChanged);
 
   QPushButton * upperPushButton = new QPushButton("Check All");
-  isConnected = connect(upperPushButton, SIGNAL(clicked()),
-                        this, SLOT(upperPushButtonClicked()));
-  OS_ASSERT(isConnected);
+  connect(upperPushButton, &QPushButton::clicked, this, &BuildingComponentDialogCentralWidget::upperPushButtonClicked);
 
   auto upperLayout = new QHBoxLayout();
   upperLayout->addWidget(label);
@@ -102,37 +97,21 @@ void BuildingComponentDialogCentralWidget::createLayout()
 
   m_collapsibleComponentList = new CollapsibleComponentList();
 
-  isConnected = connect(m_collapsibleComponentList, SIGNAL(headerClicked(bool)),
-                        this, SIGNAL(headerClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_collapsibleComponentList, &CollapsibleComponentList::headerClicked, this, &BuildingComponentDialogCentralWidget::headerClicked);
 
-  isConnected = connect(m_collapsibleComponentList, SIGNAL(headerClicked(bool)),
-                        this, SLOT(on_headerClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_collapsibleComponentList, &CollapsibleComponentList::headerClicked, this, &BuildingComponentDialogCentralWidget::on_headerClicked);
 
-  isConnected = connect(m_collapsibleComponentList, SIGNAL(componentClicked(bool)),
-                        this, SIGNAL(componentClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_collapsibleComponentList, &CollapsibleComponentList::componentClicked, this, &BuildingComponentDialogCentralWidget::componentClicked);
 
-  isConnected = connect(m_collapsibleComponentList, SIGNAL(componentClicked(bool)),
-                        this, SLOT(on_componentClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_collapsibleComponentList, &CollapsibleComponentList::componentClicked, this, &BuildingComponentDialogCentralWidget::on_componentClicked);
 
-  isConnected = connect(m_collapsibleComponentList, SIGNAL(collapsibleComponentClicked(bool)),
-                        this, SIGNAL(collapsibleComponentClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_collapsibleComponentList, &CollapsibleComponentList::collapsibleComponentClicked, this, &BuildingComponentDialogCentralWidget::collapsibleComponentClicked);
 
-  isConnected = connect(m_collapsibleComponentList, SIGNAL(collapsibleComponentClicked(bool)),
-                        this, SLOT(on_collapsibleComponentClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_collapsibleComponentList, &CollapsibleComponentList::collapsibleComponentClicked, this, &BuildingComponentDialogCentralWidget::on_collapsibleComponentClicked);
 
-  isConnected = connect(m_collapsibleComponentList, SIGNAL(getComponentsByPage(int)),
-                        this, SIGNAL(getComponentsByPage(int)));
-  OS_ASSERT(isConnected);
+  connect(m_collapsibleComponentList, &CollapsibleComponentList::getComponentsByPage, this, &BuildingComponentDialogCentralWidget::getComponentsByPage);
 
-  isConnected = connect(m_collapsibleComponentList, SIGNAL(getComponentsByPage(int)),
-                        this, SLOT(on_getComponentsByPage(int)));
-  OS_ASSERT(isConnected);
+  connect(m_collapsibleComponentList, &CollapsibleComponentList::getComponentsByPage, this, &BuildingComponentDialogCentralWidget::on_getComponentsByPage);
 
   //*******************************************************************
   // Hack code to be removed (TODO)
@@ -151,9 +130,7 @@ void BuildingComponentDialogCentralWidget::createLayout()
   m_progressBar->setVisible(false);
 
   QPushButton * lowerPushButton = new QPushButton("Download");
-  isConnected = connect(lowerPushButton, SIGNAL(clicked()),
-                        this, SLOT(lowerPushButtonClicked()));
-  OS_ASSERT(isConnected);
+  connect(lowerPushButton, &QPushButton::clicked, this, &BuildingComponentDialogCentralWidget::lowerPushButtonClicked);
 
   auto lowerLayout = new QHBoxLayout();
   lowerLayout->addStretch();
@@ -276,9 +253,7 @@ void BuildingComponentDialogCentralWidget::lowerPushButtonClicked()
 
       if (m_filterType == "components")
       {
-        bool isConnected = connect(remoteBCL, SIGNAL(componentDownloaded(const std::string&, const boost::optional<BCLComponent>&)),
-                                   this, SLOT(componentDownloadComplete(const std::string&, const boost::optional<BCLComponent>&)));
-        OS_ASSERT(isConnected);
+        connect(remoteBCL, &RemoteBCL::componentDownloaded, this, &BuildingComponentDialogCentralWidget::componentDownloadComplete);
 
         bool downloadStarted = remoteBCL->downloadComponent(component->uid());
         if (downloadStarted){
@@ -303,9 +278,7 @@ void BuildingComponentDialogCentralWidget::lowerPushButtonClicked()
       }
       else if (m_filterType == "measures")
       {
-        bool isConnected = connect(remoteBCL, SIGNAL(measureDownloaded(const std::string&, const boost::optional<BCLMeasure>&)),
-                                   this, SLOT(measureDownloadComplete(const std::string&, const boost::optional<BCLMeasure>&)));
-        OS_ASSERT(isConnected);
+        connect(remoteBCL, &RemoteBCL::measureDownloaded, this, &BuildingComponentDialogCentralWidget::measureDownloadComplete);
 
         bool downloadStarted = remoteBCL->downloadMeasure(component->uid());
         if (downloadStarted){

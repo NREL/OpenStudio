@@ -134,22 +134,13 @@ void ClassViewWidget::createWidgets()
 
 void ClassViewWidget::connectSignalsAndSlots()
 {
-  bool connected;
-  connected = connect(mTableView,SIGNAL(eventUpDnKeyRelease()), 
-    this,SLOT(viewSelection()));
-  OS_ASSERT(connected);
+  connect(mTableView, &TableView::eventUpDnKeyRelease, this, static_cast<void (ClassViewWidget::*)()>(&ClassViewWidget::viewSelection));
 
-  connected = connect(mTableView,SIGNAL(clicked(const QModelIndex&)), 
-    this,SLOT(viewSelection(const QModelIndex&)));
-  OS_ASSERT(connected);
+  connect(mTableView, &TableView::clicked, this, static_cast<void (ClassViewWidget::*)()>(&ClassViewWidget::viewSelection));
 
-  connected = connect(mTableView,SIGNAL(eventEnter()),
-    this,SIGNAL(eventEnter()));
-  OS_ASSERT(connected);
+  connect(mTableView, &TableView::eventEnter, this, &ClassViewWidget::eventEnter);
 
-  connected = connect(mTableView,SIGNAL(eventLeave()),
-    this,SIGNAL(eventLeave()));
-  OS_ASSERT(connected);
+  connect(mTableView, &TableView::eventLeave, this, &ClassViewWidget::eventLeave);
 }
 
 void ClassViewWidget::createLayout()

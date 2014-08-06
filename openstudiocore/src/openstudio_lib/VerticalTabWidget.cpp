@@ -64,12 +64,10 @@ VerticalTabWidget::VerticalTabWidget(QWidget * parent)
   currentIndex = -1;
 
   QShortcut* nextTabShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Tab), this);
-  bool isConnected = connect(nextTabShortcut, SIGNAL(activated()), this, SLOT(nextTab()));
-  OS_ASSERT(isConnected);
+  connect(nextTabShortcut, &QShortcut::activated, this, &VerticalTabWidget::nextTab);
 
   QShortcut* previousTabShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Tab), this);
-  isConnected = connect(previousTabShortcut, SIGNAL(activated()), this, SLOT(previousTab()));
-  OS_ASSERT(isConnected);
+  connect(previousTabShortcut, &QShortcut::activated, this, &VerticalTabWidget::previousTab);
 }
 
 void VerticalTabWidget::addTab( QWidget * widget,
@@ -86,8 +84,7 @@ void VerticalTabWidget::addTab( QWidget * widget,
 
   m_tabButtons.push_back(button);
 
-  connect(button,SIGNAL(clicked()),this,SLOT(select()));
-
+  connect(button, &QPushButton::clicked, this, &VerticalTabWidget::select);
   m_pageStack->addWidget(widget);
 
   m_selectedPixmaps.push_back(selectedImagePath); 

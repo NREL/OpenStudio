@@ -40,11 +40,7 @@ ModelSubTabController::ModelSubTabController(ModelSubTabView* subTabView, const 
   : SubTabController(subTabView),
     m_model(model)
 {
-  bool isConnected = connect(subTabView,
-                             SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
-                             this,
-                             SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )));
-  OS_ASSERT(isConnected);
+  connect(subTabView, &ModelSubTabView::modelObjectSelected, this, &ModelSubTabController::modelObjectSelected);
 }
 
 openstudio::model::Model ModelSubTabController::model() const

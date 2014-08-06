@@ -140,8 +140,6 @@ OSDocument::OSDocument( openstudio::model::Model library,
     m_startTabIndex(startTabIndex),
     m_startSubTabIndex(startSubTabIndex)
 {
-  bool isConnected = false;
-
   m_combinedCompLibrary = model::Model(m_compLibrary.clone());
   m_combinedCompLibrary.insertObjects(m_hvacCompLibrary.objects());
 
@@ -313,74 +311,44 @@ OSDocument::OSDocument( openstudio::model::Model library,
   openstudio::runmanager::ConfigOptions co(true);
   m_simpleProject->runManager().setConfigOptions(co);
 
-  isConnected = analysis.connect(SIGNAL(changed(ChangeType)), this, SLOT(markAsModified()));
+  bool isConnected = analysis.connect(SIGNAL(changed(ChangeType)), this, SLOT(markAsModified()));
   OS_ASSERT(isConnected);
 
   // set the model, this will create widgets
   setModel(*model, modifiedOnLoad, false);
 
   // connect signals to main window
-  isConnected = connect(m_mainWindow, SIGNAL(downloadComponentsClicked()), this, SLOT(openBclDlg()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(openLibDlgClicked()), this, SLOT(openLibDlg()));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect( m_mainWindow, SIGNAL(closeClicked()), this, SIGNAL(closeClicked()) );
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(m_mainWindow,SIGNAL(verticalTabSelected(int)),this,SLOT(onVerticalTabSelected(int)));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(m_mainWindow, SIGNAL(importClicked()), this, SIGNAL(importClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(importgbXMLClicked()), this, SIGNAL(importgbXMLClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(importSDDClicked()), this, SIGNAL(importSDDClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(loadFileClicked()), this, SIGNAL(loadFileClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(loadLibraryClicked()), this, SIGNAL(loadLibraryClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(newClicked()), this, SIGNAL(newClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(exitClicked()),this,SIGNAL(exitClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(helpClicked()),this,SIGNAL(helpClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(aboutClicked()),this,SIGNAL(aboutClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(osmDropped(QString)),this,SIGNAL(osmDropped(QString)));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(exportClicked()), this, SLOT(exportIdf()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(exportgbXMLClicked()), this, SLOT(exportgbXML()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(exportSDDClicked()), this, SLOT(exportSDD()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(saveAsFileClicked()), this, SLOT(saveAs()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(saveFileClicked()), this, SLOT(save()));
-  OS_ASSERT(isConnected);
+  connect(m_mainWindow, &MainWindow::downloadComponentsClicked, this, &OSDocument::openBclDlg);
+  connect(m_mainWindow, &MainWindow::openLibDlgClicked, this, &OSDocument::openLibDlg);
+  connect(m_mainWindow, &MainWindow::closeClicked, this, &OSDocument::closeClicked);
+  connect(m_mainWindow, &MainWindow::verticalTabSelected, this, &OSDocument::onVerticalTabSelected);
+  connect(m_mainWindow, &MainWindow::importClicked, this, &OSDocument::importClicked);
+  connect(m_mainWindow, &MainWindow::importgbXMLClicked, this, &OSDocument::importgbXMLClicked);
+  connect(m_mainWindow, &MainWindow::importSDDClicked, this, &OSDocument::importSDDClicked);
+  connect(m_mainWindow, &MainWindow::loadFileClicked, this, &OSDocument::loadFileClicked);
+  connect(m_mainWindow, &MainWindow::loadLibraryClicked, this, &OSDocument::loadLibraryClicked);
+  connect(m_mainWindow, &MainWindow::newClicked, this, &OSDocument::newClicked);
+  connect(m_mainWindow, &MainWindow::exitClicked, this, &OSDocument::exitClicked);
+  connect(m_mainWindow, &MainWindow::helpClicked, this, &OSDocument::helpClicked);
+  connect(m_mainWindow, &MainWindow::aboutClicked, this, &OSDocument::aboutClicked);
+  connect(m_mainWindow, &MainWindow::osmDropped, this, &OSDocument::osmDropped);
+  connect(m_mainWindow, &MainWindow::exportClicked, this, &OSDocument::exportIdf);
+  connect(m_mainWindow, &MainWindow::exportgbXMLClicked, this, &OSDocument::exportgbXML);
+  connect(m_mainWindow, &MainWindow::exportSDDClicked, this, &OSDocument::exportSDD);
+  connect(m_mainWindow, &MainWindow::saveAsFileClicked, this, &OSDocument::saveAs);
+  connect(m_mainWindow, &MainWindow::saveFileClicked, this, &OSDocument::save);
+  // Using old-style connect here to avoid including OpenStudioApp files
   isConnected = connect(m_mainWindow, SIGNAL(revertFileClicked()), OSAppBase::instance(), SLOT(revertToSaved()));
   OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(scanForToolsClicked()), this, SLOT(scanForTools()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(showRunManagerPreferencesClicked()), this, SLOT(showRunManagerPreferences()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(toggleUnitsClicked(bool)), this, SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(applyMeasureClicked()), this, SLOT(openMeasuresDlg()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(downloadMeasuresClicked()), this, SLOT(openMeasuresBclDlg()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(changeMyMeasuresDir()), this, SLOT(openChangeMeasuresDirDlg()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(changeBclLogin()), this, SLOT(changeBclLogin()));
-  OS_ASSERT(isConnected);
-  isConnected = QObject::connect(this, SIGNAL(downloadComponentsClicked()), this, SLOT(openBclDlg()));
-  OS_ASSERT(isConnected);
-  isConnected = QObject::connect(this, SIGNAL(openLibDlgClicked()), this, SLOT(openLibDlg()));
-  OS_ASSERT(isConnected);
+  connect(m_mainWindow, &MainWindow::scanForToolsClicked, this, &OSDocument::scanForTools);
+  connect(m_mainWindow, &MainWindow::showRunManagerPreferencesClicked, this, &OSDocument::showRunManagerPreferences);
+  connect(m_mainWindow, &MainWindow::toggleUnitsClicked, this, &OSDocument::toggleUnitsClicked);
+  connect(m_mainWindow, &MainWindow::applyMeasureClicked, this, &OSDocument::openMeasuresDlg);
+  connect(m_mainWindow, &MainWindow::downloadMeasuresClicked, this, &OSDocument::openMeasuresBclDlg);
+  connect(m_mainWindow, &MainWindow::changeMyMeasuresDir, this, &OSDocument::openChangeMeasuresDirDlg);
+  connect(m_mainWindow, &MainWindow::changeBclLogin, this, &OSDocument::changeBclLogin);
+  connect(this, &OSDocument::downloadComponentsClicked, this, &OSDocument::openBclDlg);
+  connect(this, &OSDocument::openLibDlgClicked, this, &OSDocument::openLibDlg);
 
   // call to setModel will register this
   //QTimer::singleShot(0, this, SLOT(showStartTabAndStartSubTab())); 
@@ -476,8 +444,6 @@ model::Model OSDocument::model()
 
 void OSDocument::setModel(const model::Model& model, bool modified, bool saveCurrentTabs)
 {
-  bool isConnected = false;
-
   bool wasVisible = m_mainWindow->isVisible();
   m_mainWindow->setVisible(false);
   openstudio::OSAppBase * app = OSAppBase::instance();
@@ -497,9 +463,7 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
   // Main Right Column
 
   m_mainRightColumnController = std::shared_ptr<MainRightColumnController>(new MainRightColumnController(m_model, m_resourcesPath));
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        m_mainRightColumnController.get(), SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &OSDocument::toggleUnitsClicked, m_mainRightColumnController.get(), &MainRightColumnController::toggleUnitsClicked);
 
   m_mainWindow->setMainRightColumnView(m_mainRightColumnController->mainRightColumnView());
 
@@ -515,8 +479,8 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
                                 "Site",
                                 ":images/on_location_tab.png",
                                 ":images/off_location_tab.png" );
-  connect(m_locationTabController->mainContentWidget(),SIGNAL(tabSelected(int)),
-          m_mainRightColumnController.get(),SLOT(configureForSiteSubTab(int)));
+  connect(m_locationTabController->mainContentWidget(), &MainTabView::tabSelected,
+          m_mainRightColumnController.get(), &MainRightColumnController::configureForSiteSubTab);
 
   // Schedules
 
@@ -526,20 +490,17 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
                                 "Schedules",
                                 ":images/on_schedules_tab.png",
                                 ":images/off_schedules_tab.png" );
-  connect(m_schedulesTabController->mainContentWidget(),SIGNAL(tabSelected(int)),
-          m_mainRightColumnController.get(),SLOT(configureForSchedulesSubTab(int)));
+  connect(m_schedulesTabController->mainContentWidget(), &MainTabView::tabSelected,
+          m_mainRightColumnController.get(), &MainRightColumnController::configureForSchedulesSubTab);
 
-  isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
-                        m_schedulesTabController.get(),SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &OSDocument::toggleUnitsClicked,
+          m_schedulesTabController.get(), &SchedulesTabController::toggleUnitsClicked);
+  
+  connect(m_schedulesTabController.get(), &SchedulesTabController::downloadComponentsClicked,
+          this, &OSDocument::downloadComponentsClicked);
 
-  isConnected = QObject::connect(m_schedulesTabController.get(), SIGNAL(downloadComponentsClicked()),
-                                 this, SIGNAL(downloadComponentsClicked()));
-  OS_ASSERT(isConnected);
-
-  isConnected = QObject::connect(m_schedulesTabController.get(), SIGNAL(openLibDlgClicked()),
-                                 this, SIGNAL(openLibDlgClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_schedulesTabController.get(), &SchedulesTabController::openLibDlgClicked,
+          this, &OSDocument::openLibDlgClicked);
 
   // Constructions
 
@@ -549,20 +510,17 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
                                 "Constructions",
                                 ":images/on_constructions_tab.png",
                                 ":images/off_constructions_tab.png" );
-  connect(m_constructionsTabController->mainContentWidget(),SIGNAL(tabSelected(int)),
-          m_mainRightColumnController.get(),SLOT(configureForConstructionsSubTab(int)));
+  connect(m_constructionsTabController->mainContentWidget(), &MainTabView::tabSelected,
+          m_mainRightColumnController.get(), &MainRightColumnController::configureForConstructionsSubTab);
 
-  isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
-                        m_constructionsTabController.get(),SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &OSDocument::toggleUnitsClicked,
+          m_constructionsTabController.get(), &ConstructionsTabController::toggleUnitsClicked);
 
-  isConnected = QObject::connect(m_constructionsTabController.get(), SIGNAL(downloadComponentsClicked()),
-                                 this, SIGNAL(downloadComponentsClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_constructionsTabController.get(), &ConstructionsTabController::downloadComponentsClicked,
+          this, &OSDocument::downloadComponentsClicked);
 
-  isConnected = QObject::connect(m_constructionsTabController.get(), SIGNAL(openLibDlgClicked()),
-                                 this, SIGNAL(openLibDlgClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_constructionsTabController.get(), &ConstructionsTabController::openLibDlgClicked,
+          this, &OSDocument::openLibDlgClicked);
 
   // Loads
 
@@ -572,20 +530,17 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
                                 "Loads",
                                 ":images/on_loads_tab.png",
                                 ":images/off_loads_tab.png" );
-  connect(m_loadsTabController->mainContentWidget(),SIGNAL(tabSelected(int)),
-          m_mainRightColumnController.get(),SLOT(configureForLoadsSubTab(int)));
+  connect(m_loadsTabController->mainContentWidget(), &MainTabView::tabSelected,
+          m_mainRightColumnController.get(), &MainRightColumnController::configureForLoadsSubTab);
 
-  isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
-                        m_loadsTabController.get(),SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &OSDocument::toggleUnitsClicked,
+          m_loadsTabController.get(), &LoadsTabController::toggleUnitsClicked);
 
-  isConnected = QObject::connect(m_loadsTabController.get(), SIGNAL(downloadComponentsClicked()),
-                                 this, SIGNAL(downloadComponentsClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_loadsTabController.get(), &LoadsTabController::downloadComponentsClicked,
+          this, &OSDocument::downloadComponentsClicked);
 
-  isConnected = QObject::connect(m_loadsTabController.get(), SIGNAL(openLibDlgClicked()),
-                                 this, SIGNAL(openLibDlgClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_loadsTabController.get(), &LoadsTabController::openLibDlgClicked,
+          this, &OSDocument::openLibDlgClicked);
 
   // Space Types
 
@@ -595,21 +550,17 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
                                 "Space Types",
                                 ":images/on_space_types_tab.png",
                                 ":images/off_space_types_tab.png" );
-  connect(m_spaceTypesTabController->mainContentWidget(),SIGNAL(tabSelected(int)),
-          m_mainRightColumnController.get(),SLOT(configureForSpaceTypesSubTab(int)));
+  connect(m_spaceTypesTabController->mainContentWidget(), &MainTabView::tabSelected,
+          m_mainRightColumnController.get(), &MainRightColumnController::configureForSpaceTypesSubTab);
 
-  connect( m_spaceTypesTabController.get(),
-           SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
-           m_mainRightColumnController.get(),
-           SLOT(inspectModelObject( model::OptionalModelObject &, bool )) );
+  connect(m_spaceTypesTabController.get(), &SpaceTypesTabController::modelObjectSelected,
+          m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObject);
 
-  isConnected = QObject::connect(m_spaceTypesTabController.get(), SIGNAL(downloadComponentsClicked()),
-                                 this, SIGNAL(downloadComponentsClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_spaceTypesTabController.get(), &SpaceTypesTabController::downloadComponentsClicked,
+          this, &OSDocument::downloadComponentsClicked);
 
-  isConnected = QObject::connect(m_spaceTypesTabController.get(), SIGNAL(openLibDlgClicked()),
-                                 this, SIGNAL(openLibDlgClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_spaceTypesTabController.get(), &SpaceTypesTabController::openLibDlgClicked,
+          this, &OSDocument::openLibDlgClicked);
 
   // Building Stories
 
@@ -619,16 +570,14 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
                                 "Building Stories",
                                 ":images/on_building_stories_tab.png",
                                 ":images/off_building_stories_tab.png" );
-  connect(m_buildingStoriesTabController->mainContentWidget(),SIGNAL(tabSelected(int)),
-          m_mainRightColumnController.get(),SLOT(configureForBuildingSummarySubTab(int)));
+  connect(m_buildingStoriesTabController->mainContentWidget(), &MainTabView::tabSelected,
+          m_mainRightColumnController.get(), &MainRightColumnController::configureForBuildingSummarySubTab);
   
-  isConnected = QObject::connect(m_buildingStoriesTabController.get(), SIGNAL(downloadComponentsClicked()),
-                                 this, SIGNAL(downloadComponentsClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_buildingStoriesTabController.get(), &BuildingStoriesTabController::downloadComponentsClicked,
+          this, &OSDocument::downloadComponentsClicked);
 
-  isConnected = QObject::connect(m_buildingStoriesTabController.get(), SIGNAL(openLibDlgClicked()),
-                                 this, SIGNAL(openLibDlgClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_buildingStoriesTabController.get(), &BuildingStoriesTabController::openLibDlgClicked,
+          this, &OSDocument::openLibDlgClicked);
 
   // Facility
 
@@ -638,25 +587,20 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
                                 "Facility",
                                 ":images/on_building_tab.png",
                                 ":images/off_building_tab.png" );
-  connect(m_facilityTabController->mainContentWidget(),SIGNAL(tabSelected(int)),
-          m_mainRightColumnController.get(),SLOT(configureForFacilitySubTab(int)));
+  connect(m_facilityTabController->mainContentWidget(), &MainTabView::tabSelected,
+          m_mainRightColumnController.get(), &MainRightColumnController::configureForFacilitySubTab);
 
-  isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
-                        m_facilityTabController.get(),SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &OSDocument::toggleUnitsClicked,
+          m_facilityTabController.get(), &FacilityTabController::toggleUnitsClicked);
 
-  connect( m_facilityTabController.get(),
-           SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
-           m_mainRightColumnController.get(),
-           SLOT(inspectModelObject( model::OptionalModelObject &, bool )) );
+  connect(m_facilityTabController.get(), &FacilityTabController::modelObjectSelected,
+          m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObject);
 
-  isConnected = QObject::connect(m_facilityTabController.get(), SIGNAL(downloadComponentsClicked()),
-                                 this, SIGNAL(downloadComponentsClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_facilityTabController.get(), &FacilityTabController::downloadComponentsClicked,
+          this, &OSDocument::downloadComponentsClicked);
 
-  isConnected = QObject::connect(m_facilityTabController.get(), SIGNAL(openLibDlgClicked()),
-                                 this, SIGNAL(openLibDlgClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_facilityTabController.get(), &FacilityTabController::openLibDlgClicked,
+          this, &OSDocument::openLibDlgClicked);
 
   // Thermal Zones 
 
@@ -666,17 +610,13 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
                                 "Thermal Zones",
                                 ":images/on_thermal_zone_tab.png",
                                 ":images/off_thermal_zone_tab.png" );
-  connect(m_thermalZonesTabController->mainContentWidget(),SIGNAL(tabSelected(int)),
-          m_mainRightColumnController.get(),SLOT(configureForThermalZonesSubTab(int)));
+  connect(m_thermalZonesTabController->mainContentWidget(), &MainTabView::tabSelected,
+          m_mainRightColumnController.get(), &MainRightColumnController::configureForThermalZonesSubTab);
 
-  connect( m_thermalZonesTabController.get(),
-           SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
-           m_mainRightColumnController.get(),
-           SLOT(inspectModelObject( model::OptionalModelObject &, bool )) );
+  connect(m_thermalZonesTabController.get(), &ThermalZonesTabController::modelObjectSelected,
+          m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObject);
 
-  isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
-                        m_thermalZonesTabController.get(),SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &OSDocument::toggleUnitsClicked, m_thermalZonesTabController.get(), &ThermalZonesTabController::toggleUnitsClicked);
 
   // HVAC Systems
 
@@ -686,12 +626,10 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
                                 "HVAC Systems",
                                 ":images/on_hvac_tab.png",
                                 ":images/off_hvac_tab.png" );
-  connect(m_hvacSystemsTabController->mainContentWidget(),SIGNAL(tabSelected(int)),
-          m_mainRightColumnController.get(),SLOT(configureForHVACSystemsSubTab(int)));
+  connect(m_hvacSystemsTabController->mainContentWidget(), &MainTabView::tabSelected,
+          m_mainRightColumnController.get(), &MainRightColumnController::configureForHVACSystemsSubTab);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        m_hvacSystemsTabController.get(), SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &OSDocument::toggleUnitsClicked, m_hvacSystemsTabController.get(), &HVACSystemsTabController::toggleUnitsClicked);
 
   //******************************************************************************************************
   //
@@ -705,8 +643,8 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
   //                              "Building Summary",
   //                              ":images/on_summary_tab.png",
   //                              ":images/off_summary_tab.png" );
-  //connect(m_summaryTabController->mainContentWidget(),SIGNAL(tabSelected(int)),
-  //        m_mainRightColumnController.get(),SLOT(configureForBuildingSummarySubTab(int)));
+  //connect(m_summaryTabController->mainContentWidget(), &MainTabView::tabSelected,
+  //        m_mainRightColumnController.get(), &MainRightColumnController::configureForBuildingSummarySubTab);
   //
   //******************************************************************************************************
 
@@ -718,8 +656,8 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
                                 "Output Variables",
                                 ":images/on_var_tab.png",
                                 ":images/off_var_tab.png" );
-  connect(m_variablesTabController->mainContentWidget(),SIGNAL(tabSelected(int)),
-          m_mainRightColumnController.get(),SLOT(configureForOutputVariablesSubTab(int)));
+  connect(m_variablesTabController->mainContentWidget(), &MainTabView::tabSelected,
+          m_mainRightColumnController.get(), &MainRightColumnController::configureForOutputVariablesSubTab);
 
   // Sim Settings
 
@@ -729,12 +667,9 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
                                 "Simulation Settings",
                                 ":images/on_sim_settings_tab.png",
                                 ":images/off_sim_settings_tab.png" );
-  connect(m_simSettingsTabController->mainContentWidget(),SIGNAL(tabSelected(int)),
-          m_mainRightColumnController.get(),SLOT(configureForSimulationSettingsSubTab(int)));
+  connect(m_simSettingsTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForSimulationSettingsSubTab);
 
-  isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
-                        m_simSettingsTabController.get(),SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &OSDocument::toggleUnitsClicked, m_simSettingsTabController.get(), &SimSettingsTabController::toggleUnitsClicked);
 
   // Scripts
 
@@ -744,8 +679,8 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
                                 "Measures",
                                 ":images/on_scripts_tab.png",
                                 ":images/off_scripts_tab.png" );
-  connect(m_scriptsTabController->mainContentWidget(),SIGNAL(tabSelected(int)),
-          m_mainRightColumnController.get(),SLOT(configureForScriptsSubTab(int)));
+  connect(m_scriptsTabController->mainContentWidget(), &MainTabView::tabSelected,
+          m_mainRightColumnController.get(), &MainRightColumnController::configureForScriptsSubTab);
 
   //connect(m_scriptsTabController->scriptFolderListView(), SIGNAL(scriptListChanged()),
   //    this, SLOT(markAsModified()));
@@ -768,71 +703,44 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
                                 "Run Simulation",
                                 ":images/on_run_tab.png",
                                 ":images/off_run_tab.png" );
-  connect(m_runTabController->mainContentWidget(),SIGNAL(tabSelected(int)),
-          m_mainRightColumnController.get(),SLOT(configureForRunSimulationSubTab(int)));
-  // DLM: this signal is not connected, is it needed?
-  connect(this, SIGNAL(modelSaving(const openstudio::path &)), 
-          m_runTabController.get(), SLOT(saveDatabase(const openstudio::path &)));
-  connect(m_runTabController.get(), SIGNAL(useRadianceStateChanged(bool)),
-          this, SLOT(markAsModified()));
+  connect(m_runTabController->mainContentWidget(), &MainTabView::tabSelected,
+          m_mainRightColumnController.get(), &MainRightColumnController::configureForRunSimulationSubTab);
+  connect(m_runTabController.get(), &RunTabController::useRadianceStateChanged, this, &OSDocument::markAsModified);
 
-  connect(m_runTabController.get(), SIGNAL(resultsGenerated(const openstudio::path &, const openstudio::path &)), 
-      m_resultsTabController.get(), SLOT(resultsGenerated(const openstudio::path &, const openstudio::path &)));
-
-  connect(m_runTabController.get(), SIGNAL(resultsGenerated(const openstudio::path &, const openstudio::path &)),
-      this, SLOT(runComplete())); 
+  connect(m_runTabController.get(), &RunTabController::resultsGenerated, this, &OSDocument::runComplete); 
   
   // Results
 
   m_resultsTabController = std::shared_ptr<ResultsTabController>( new ResultsTabController() );
+
+  connect(m_runTabController.get(), &RunTabController::resultsGenerated,
+    m_resultsTabController.get(), &ResultsTabController::resultsGenerated);
+
   m_mainWindow->addVerticalTab( m_resultsTabController->mainContentWidget(),
                                 RESULTS_SUMMARY,
                                 "Results Summary",
                                 ":images/on_results_tab.png",
                                 ":images/off_results_tab.png" );
-  connect(m_resultsTabController->mainContentWidget(),SIGNAL(tabSelected(int)),
-          m_mainRightColumnController.get(),SLOT(configureForResultsSummarySubTab(int)));
+  connect(m_resultsTabController->mainContentWidget(), &MainTabView::tabSelected,
+          m_mainRightColumnController.get(), &MainRightColumnController::configureForResultsSummarySubTab);
 
-  isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
-                        m_resultsTabController.get(), SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &OSDocument::toggleUnitsClicked, m_resultsTabController.get(), &ResultsTabController::onUnitSystemChange);
 
-  isConnected = connect(this, SIGNAL(treeChanged(const openstudio::UUID &)),
-    m_resultsTabController->mainContentWidget(), SIGNAL(treeChanged(const openstudio::UUID &)));
-  OS_ASSERT(isConnected);
+  connect(this, &OSDocument::treeChanged, static_cast<ResultsTabView *>(m_resultsTabController->mainContentWidget()), &ResultsTabView::treeChanged);
 
   m_resultsTabController->searchForExistingResults(openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources") / openstudio::toPath("run"));
 
-  // DLM: this signal is not connected, is it needed?
-  connect(m_runTabController.get(), SIGNAL(toolsUpdated()),
-      m_scriptsTabController.get(), SIGNAL(updateRubyInterpreterWarning()));
+  connect(m_runTabController.get(), &RunTabController::toolsUpdated, this, &OSDocument::markAsModified);
 
-  // DLM: this signal is not connected, is it needed?
-  connect(m_scriptsTabController.get(), SIGNAL(toolsUpdated()),
-      this, SLOT(markAsModified()));
+  connect(this, &OSDocument::toolsUpdated, this, &OSDocument::markAsModified);
 
-  connect(m_runTabController.get(), SIGNAL(toolsUpdated()),
-      this, SLOT(markAsModified()));
+  connect(this, &OSDocument::toolsUpdated, m_runTabController.get(), &RunTabController::updateToolsWarnings);
 
-  connect(this, SIGNAL(toolsUpdated()),
-          this, SLOT(markAsModified()));
+  connect(m_runTabController.get(), &RunTabController::toolsUpdated, m_runTabController.get(), &RunTabController::updateToolsWarnings);
+  connect(m_model.getImpl<model::detail::Model_Impl>().get(), &model::detail::Model_Impl::onChange,
+          this, &OSDocument::markAsModified);
 
-  // DLM: this signal is not connected, is it needed?
-  connect(this, SIGNAL(toolsUpdated()),
-      m_scriptsTabController.get(), SIGNAL(updateRubyInterpreterWarning()));
-
-  connect(this, SIGNAL(toolsUpdated()),
-      m_runTabController.get(), SLOT(updateToolsWarnings()));
-  connect(m_runTabController.get(), SIGNAL(toolsUpdated()),
-      m_runTabController.get(), SLOT(updateToolsWarnings()));
-  isConnected = connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(), SIGNAL(onChange()), this, SLOT(markAsModified()) );
-  OS_ASSERT(isConnected);
-
-  isConnected = connect( m_hvacSystemsTabController.get(),
-           SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
-           this,
-           SLOT(inspectModelObject( model::OptionalModelObject &, bool )) );
-  OS_ASSERT(isConnected);
+  connect(m_hvacSystemsTabController.get(), &HVACSystemsTabController::modelObjectSelected, this, &OSDocument::inspectModelObject);
 
   if (modified){
     QTimer::singleShot(0, this, SLOT(markAsModified()));
@@ -1440,9 +1348,7 @@ void OSDocument::openMeasuresDlg()
   m_applyMeasureNowDialog = boost::shared_ptr<ApplyMeasureNowDialog>(new ApplyMeasureNowDialog());
   
   // connect signal before exec dialog
-  bool isConnected = false;
-  isConnected = connect(m_applyMeasureNowDialog.get(), SIGNAL(toolsUpdated()), this, SIGNAL(toolsUpdated()));
-  OS_ASSERT(isConnected);
+  connect(m_applyMeasureNowDialog.get(), &ApplyMeasureNowDialog::toolsUpdated, this, &OSDocument::toolsUpdated);
 
   m_applyMeasureNowDialog->exec();
 
@@ -1520,9 +1426,7 @@ void OSDocument::openBclDlg()
     std::string filterType = "components";
     m_onlineBclDialog = new BuildingComponentDialog(filterType, true, m_mainWindow);
 
-    bool isConnected = connect(m_onlineBclDialog, SIGNAL(rejected()),
-                          this, SLOT(on_closeBclDlg()));
-    OS_ASSERT(isConnected);
+    connect(m_onlineBclDialog, &BuildingComponentDialog::rejected, this, &OSDocument::on_closeBclDlg);
   }
   if(m_onlineBclDialog && !m_onlineBclDialog->isVisible()){
     m_onlineBclDialog->setGeometry(m_mainWindow->geometry());
@@ -1593,9 +1497,7 @@ void OSDocument::openMeasuresBclDlg()
     std::string filterType = "measures";
     m_onlineMeasuresBclDialog = new BuildingComponentDialog(filterType, true, m_mainWindow);
 
-    bool isConnected = connect(m_onlineMeasuresBclDialog, SIGNAL(rejected()),
-                          this, SLOT(on_closeMeasuresBclDlg()));
-    OS_ASSERT(isConnected);
+    connect(m_onlineMeasuresBclDialog, &BuildingComponentDialog::rejected, this, &OSDocument::on_closeMeasuresBclDlg);
   }
   if(m_onlineMeasuresBclDialog && !m_onlineMeasuresBclDialog->isVisible()){
     m_onlineMeasuresBclDialog->setGeometry(m_mainWindow->geometry());

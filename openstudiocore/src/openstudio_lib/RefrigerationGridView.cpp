@@ -180,23 +180,13 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
 
   scrollLayout->addStretch(1);
 
-  bool isConnected = false;
+  connect(this, &RefrigerationGridView::toggleUnitsClicked, refrigerationCaseGridController, &RefrigerationCaseGridController::toggleUnitsClicked);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        refrigerationCaseGridController, SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        refrigerationWalkInGridController, SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &RefrigerationGridView::toggleUnitsClicked, refrigerationWalkInGridController, &RefrigerationWalkInGridController::toggleUnitsClicked);
   
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        refrigerationCaseGridController, SLOT(toggleUnits(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &RefrigerationGridView::toggleUnitsClicked, refrigerationCaseGridController, &RefrigerationCaseGridController::toggleUnits);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        refrigerationWalkInGridController, SLOT(toggleUnits(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &RefrigerationGridView::toggleUnitsClicked, refrigerationWalkInGridController, &RefrigerationWalkInGridController::toggleUnits);
 
   std::vector<model::RefrigerationSystem> refrigerationSystems = model.getModelObjects<model::RefrigerationSystem>(); // NOTE for horizontal system list
 

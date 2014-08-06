@@ -75,8 +75,7 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::createLayout()
   label->hide();
 
   m_opticalDataTemperature = new OSQuantityEdit2("C", "C", "F", m_isIP);
-  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_opticalDataTemperature, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialGlazingGroupThermochromicInspectorView::toggleUnitsClicked, m_opticalDataTemperature, &OSQuantityEdit2::onUnitSystemChange);
   mainGridLayout->addWidget(m_opticalDataTemperature,row++,0,1,3);
   m_opticalDataTemperature->hide();
 

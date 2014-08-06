@@ -30,12 +30,10 @@ IdfObjectWatcher::IdfObjectWatcher(const IdfObject& idfObject)
   // make sure a QApplication exists
   openstudio::Application::instance().application();
   
-  detail::IdfObject_ImplPtr objectImpl = idfObject.getImpl<openstudio::detail::IdfObject_Impl>();
-  bool connected = this->connect(objectImpl.get(), SIGNAL(onChange()), SLOT(change()));
-  connected = connected && this->connect(objectImpl.get(), SIGNAL(onDataChange()), SLOT(dataChange()));
-  connected = connected && this->connect(objectImpl.get(), SIGNAL(onNameChange()), SLOT(nameChange()));
-  
-  OS_ASSERT(connected);
+  detail::IdfObject_ImplPtr objectImpl = idfObject.getImpl<detail::IdfObject_Impl>();
+  connect(objectImpl.get(), &detail::IdfObject_Impl::onChange, this, &IdfObjectWatcher::change);
+  connect(objectImpl.get(), &detail::IdfObject_Impl::onDataChange, this, &IdfObjectWatcher::dataChange);
+  connect(objectImpl.get(), &detail::IdfObject_Impl::onNameChange, this, &IdfObjectWatcher::nameChange);
 }
 
 IdfObjectWatcher::~IdfObjectWatcher()

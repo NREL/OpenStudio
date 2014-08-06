@@ -384,14 +384,13 @@ void BCLMeasureDialog::init()
   upperLayout->addLayout(vLayout);
   upperLayout->addStretch();
 
-  bool test = connect(m_nameLineEdit, SIGNAL(textChanged(const QString&)), this, SLOT(nameChanged(const QString&)));
-  OS_ASSERT(test);
+  connect(m_nameLineEdit, &QLineEdit::textChanged, this, &BCLMeasureDialog::nameChanged);
 
-  test = connect(m_measureTypeComboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(measureTypeChanged(const QString&)));
-  OS_ASSERT(test);
+  connect(m_measureTypeComboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged),
+    this, &BCLMeasureDialog::measureTypeChanged);
   
-  test = connect(m_taxonomyFirstLevelComboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(firstLevelTaxonomyChanged(const QString&)));
-  OS_ASSERT(test);
+  connect(m_taxonomyFirstLevelComboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged),
+    this, &BCLMeasureDialog::firstLevelTaxonomyChanged);
 
   this->setWindowModality(Qt::ApplicationModal);
   //this->setSizeGripEnabled(true);

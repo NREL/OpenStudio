@@ -119,11 +119,10 @@ void OSListView::setListController(QSharedPointer<OSListController> listControll
 
   m_listController = listController;
 
-  connect(m_listController.data(),SIGNAL(itemInserted(int)),this,SLOT(insertItemView(int)));
-  connect(m_listController.data(),SIGNAL(itemRemoved(int)),this,SLOT(removeItemView(int)));
-  connect(m_listController.data(),SIGNAL(itemChanged(int)),this,SLOT(refreshItemView(int)));
-  connect(m_listController.data(),SIGNAL(modelReset()),this,SLOT(refreshAllViews()));
-
+  connect(m_listController.data(), &OSListController::itemInserted, this, &OSListView::insertItemView);
+  connect(m_listController.data(), &OSListController::itemRemoved, this, &OSListView::removeItemView);
+  connect(m_listController.data(), &OSListController::itemChanged, this, &OSListView::refreshItemView);
+  connect(m_listController.data(), &OSListController::modelReset, this, &OSListView::refreshAllViews);
   refreshAllViews();
 }
 
@@ -181,9 +180,7 @@ void OSListView::insertItemView(int i)
 
   m_widgetItemPairs.insert( std::make_pair(itemView,itemData) );
 
-  bool bingo = connect(itemView,SIGNAL(destroyed(QObject *)),this,SLOT(removePair(QObject *)));
-
-  OS_ASSERT(bingo);
+  connect(itemView, &QWidget::destroyed, this, &OSListView::removePair);
 }
 
 void OSListView::removeItemView(int i)
@@ -201,9 +198,10 @@ void OSListView::removeItemView(int i)
   delete item;
 }
 
-void OSListView::removePair(QObject * object)
-{
-  m_widgetItemPairs.erase(m_widgetItemPairs.find(object));
+void OSListView::removePair(QObject * object) {
+  if (!m_widgetItemPairs.empty()) {
+    m_widgetItemPairs.erase(m_widgetItemPairs.find(object));
+  }
 }
 
 void OSListView::refreshItemView(int i)

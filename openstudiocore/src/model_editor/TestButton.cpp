@@ -33,7 +33,7 @@ void TestButton::doClick(double msecDelay)
 {
   auto timer = new QTimer(this);
   timer->setSingleShot(true);
-  connect(timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
+  connect(timer, &QTimer::timeout, this, &TestButton::onTimeout);
   timer->start(msecDelay);
 }
 

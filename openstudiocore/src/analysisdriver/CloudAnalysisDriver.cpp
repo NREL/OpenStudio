@@ -350,7 +350,7 @@ namespace detail {
     actualDataPoint->setRunType(DataPointRunType::CloudDetailed);
 
     if (!(isRunning() || isDownloading())) {
-      // if not running or downloading rignt now, can be sure that only downloading is
+      // if not running or downloading right now, can be sure that only downloading is
       // going to be going on
       m_onlyProcessingDownloadRequests = true;
     }
@@ -398,14 +398,6 @@ namespace detail {
     }
 
     return success;
-  }
-
-  bool CloudAnalysisDriver_Impl::connect(const std::string& signal,
-                                         const QObject* qObject,
-                                         const std::string& slot,
-                                         Qt::ConnectionType type) const
-  {
-    return QObject::connect(this, signal.c_str(), qObject, slot.c_str(), type);
   }
 
   void CloudAnalysisDriver_Impl::availableForRun(bool success) {
@@ -2220,7 +2212,7 @@ bool CloudAnalysisDriver::connect(const std::string& signal,
                                   const std::string& slot,
                                   Qt::ConnectionType type) const
 {
-  return getImpl<detail::CloudAnalysisDriver_Impl>()->connect(signal,qObject,slot,type);
+  return QObject::connect(getImpl<detail::CloudAnalysisDriver_Impl>().get(), signal.c_str(), qObject, slot.c_str(), type);
 }
 
 void CloudAnalysisDriver::moveToThread(QThread* targetThread) {
