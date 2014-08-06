@@ -67,11 +67,18 @@ TEST_F(UnitsFixture,IPUnit_Constructors)
   u2.lbfToLbm();
   testStreamOutput("lb_m*ft/s^2", u2);
 
-  IPUnit u3(IPExpnt(0, -2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
-  testStreamOutput("$/ft^2", u2);
+  IPUnit u3(IPExpnt(0, -2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1));
+  testStreamOutput("$/ft^2", u3);
   ASSERT_TRUE(u3.baseUnitExponent("$") == 1);
   ASSERT_TRUE(u3.baseUnitExponent("ft") == -2);
   ASSERT_TRUE(u3.baseUnitExponent("s") == 0);
+  u3.lbmToLbf();
+  testStreamOutput("$/ft^2", u3);
+  ASSERT_TRUE(u3.baseUnitExponent("$") == 1);
+  ASSERT_TRUE(u3.baseUnitExponent("ft") == -2);
+  ASSERT_TRUE(u3.baseUnitExponent("s") == 0);
+  u3.lbfToLbm();
+  testStreamOutput("$/ft^2", u3);
 }
 
 TEST_F(UnitsFixture, IPUnit_convert)
