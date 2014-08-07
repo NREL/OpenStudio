@@ -26,7 +26,7 @@
 #include "OSAppBase.hpp"
 #include "MainRightColumnController.hpp"
 
-#include "../utilities/core/Assert.hpp"
+#include <utilities/core/Assert.hpp>
 
 #include <QPainter>
 #include <QMimeData>
@@ -37,44 +37,42 @@
 #include <QGraphicsView>
 #include <QApplication>
 #include <QMenu>
-#include "../model/HVACComponent.hpp"
-#include "../model/HVACComponent_Impl.hpp"
-#include "../model/WaterUseConnections.hpp"
-#include "../model/WaterUseConnections_Impl.hpp"
-#include "../model/WaterToAirComponent.hpp"
-#include "../model/WaterToAirComponent_Impl.hpp"
-#include "../model/WaterToWaterComponent.hpp"
-#include "../model/WaterToWaterComponent_Impl.hpp"
-#include "../model/AirLoopHVACOutdoorAirSystem.hpp"
-#include "../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
-#include "../model/AirLoopHVAC.hpp"
-#include "../model/AirLoopHVAC_Impl.hpp"
-#include "../model/AirLoopHVACSupplyPlenum.hpp"
-#include "../model/AirLoopHVACSupplyPlenum_Impl.hpp"
-#include "../model/AirLoopHVACReturnPlenum.hpp"
-#include "../model/AirLoopHVACReturnPlenum_Impl.hpp"
-#include "../model/AirToAirComponent.hpp"
-#include "../model/AirToAirComponent_Impl.hpp"
-#include "../model/PlantLoop.hpp"
-#include "../model/PlantLoop_Impl.hpp"
-#include "../model/SetpointManager.hpp"
-#include "../model/SetpointManagerMixedAir.hpp"
-#include "../model/SetpointManagerOutdoorAirReset.hpp"
-#include "../model/SetpointManagerSingleZoneReheat.hpp"
-#include "../model/SetpointManagerScheduled.hpp"
-#include "../model/SetpointManagerFollowOutdoorAirTemperature.hpp"
-#include "../model/SetpointManagerWarmest.hpp"
-#include "../model/SetpointManagerScheduledDualSetpoint.hpp"
-#include "../model/SetpointManagerOutdoorAirPretreat.hpp"
-#include "../model/RenderingColor.hpp"
-#include "../model/RenderingColor_Impl.hpp"
-#include "../model/Node.hpp"
-#include "../model/Node_Impl.hpp"
-#include "../model/Splitter.hpp"
-#include "../model/Splitter_Impl.hpp"
-#include "../model/Mixer.hpp"
-#include "../model/ThermalZone.hpp"
-#include "../model/ThermalZone_Impl.hpp"
+#include <model/HVACComponent.hpp>
+#include <model/HVACComponent_Impl.hpp>
+#include <model/WaterUseConnections.hpp>
+#include <model/WaterUseConnections_Impl.hpp>
+#include <model/WaterToAirComponent.hpp>
+#include <model/WaterToAirComponent_Impl.hpp>
+#include <model/WaterToWaterComponent.hpp>
+#include <model/WaterToWaterComponent_Impl.hpp>
+#include <model/AirLoopHVACOutdoorAirSystem.hpp>
+#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/AirLoopHVAC_Impl.hpp>
+#include <model/AirLoopHVACSupplyPlenum.hpp>
+#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
+#include <model/AirLoopHVACReturnPlenum.hpp>
+#include <model/AirLoopHVACReturnPlenum_Impl.hpp>
+#include <model/AirToAirComponent.hpp>
+#include <model/AirToAirComponent_Impl.hpp>
+#include <model/PlantLoop.hpp>
+#include <model/PlantLoop_Impl.hpp>
+#include <model/SetpointManager.hpp>
+#include <model/SetpointManagerMixedAir.hpp>
+#include <model/SetpointManagerOutdoorAirReset.hpp>
+#include <model/SetpointManagerSingleZoneReheat.hpp>
+#include <model/SetpointManagerScheduled.hpp>
+#include <model/SetpointManagerFollowOutdoorAirTemperature.hpp>
+#include <model/SetpointManagerWarmest.hpp>
+#include <model/RenderingColor.hpp>
+#include <model/RenderingColor_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/Splitter.hpp>
+#include <model/Splitter_Impl.hpp>
+#include <model/Mixer.hpp>
+#include <model/ThermalZone.hpp>
+#include <model/ThermalZone_Impl.hpp>
 #include <algorithm>
 
 using namespace openstudio::model;
@@ -101,19 +99,30 @@ GridItem::GridItem( QGraphicsItem * parent ):
   setFlag(QGraphicsItem::ItemIsSelectable,false);
   if( QGraphicsScene * _scene = scene() )
   {
-    GridScene * gridScene = static_cast<GridScene *>(_scene);
+    connect( this, 
+             SIGNAL(modelObjectSelected( model::OptionalModelObject &, bool ) ),
+             _scene,
+             SIGNAL(modelObjectSelected( model::OptionalModelObject &, bool ) ) );
 
-    connect(this, &GridItem::modelObjectSelected, gridScene, &GridScene::modelObjectSelected);
+    connect( this, 
+             SIGNAL(removeModelObjectClicked( model::ModelObject & ) ),
+             _scene,
+             SIGNAL(removeModelObjectClicked( model::ModelObject & ) ) );
 
-    connect(this, &GridItem::removeModelObjectClicked, gridScene, &GridScene::removeModelObjectClicked);
+    connect( this, 
+             SIGNAL( hvacComponentDropped(OSItemId, model::HVACComponent &) ),
+             _scene,
+             SIGNAL( hvacComponentDropped(OSItemId, model::HVACComponent &) ) );
 
-    connect(this, static_cast<void (GridItem::*)(OSItemId, model::HVACComponent&)>(&GridItem::hvacComponentDropped),
-      gridScene, static_cast<void (GridScene::*)(OSItemId, model::HVACComponent&)>(&GridScene::hvacComponentDropped));
+    connect( this, 
+             SIGNAL( hvacComponentDropped(OSItemId) ),
+             _scene,
+             SIGNAL( hvacComponentDropped(OSItemId) ) );
 
-    connect(this, static_cast<void (GridItem::*)(OSItemId)>(&GridItem::hvacComponentDropped),
-      gridScene, static_cast<void (GridScene::*)(OSItemId)>(&GridScene::hvacComponentDropped));
-
-    connect(this, &GridItem::innerNodeClicked, gridScene, &GridScene::innerNodeClicked);
+    connect( this, 
+             SIGNAL( innerNodeClicked(model::ModelObject &) ),
+             _scene,
+             SIGNAL( innerNodeClicked(model::ModelObject & ) ) );
   }
 }
 
@@ -130,7 +139,7 @@ void GridItem::setDeletable(bool deletable)
 
     m_removeButtonItem->setPos(boundingRect().width() - 30, boundingRect().height() - 30);
   
-    connect(m_removeButtonItem, &RemoveButtonItem::mouseClicked, this, &GridItem::onRemoveButtonClicked);
+    connect(m_removeButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveButtonClicked()));
   }
   else
   {
@@ -259,8 +268,8 @@ void GridItem::setModelObject( model::OptionalModelObject modelObject )
 
   if( m_modelObject )
   {
-    connect(m_modelObject->getImpl<detail::IdfObject_Impl>().get(), &detail::IdfObject_Impl::onNameChange,
-            this, &GridItem::onNameChange);
+    connect(m_modelObject->getImpl<detail::IdfObject_Impl>().get(),SIGNAL(onNameChange()),
+            this, SLOT(onNameChange()));
 
     setFlag(QGraphicsItem::ItemIsSelectable);
 
@@ -1037,8 +1046,8 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
     m_loop(loop),
     m_loopScene(loopScene)
 {
-  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
-  std::shared_ptr<MainRightColumnController> mrc = doc->mainRightColumnController(); 
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  boost::shared_ptr<MainRightColumnController> mrc = doc->mainRightColumnController(); 
   mrc->registerSystemItem(m_loop.handle(),this);
 
   m_loopScene->addItem(this);
@@ -1063,10 +1072,10 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
         color.setRed(rc->renderingRedValue());
         color.setBlue(rc->renderingBlueValue());
         color.setGreen(rc->renderingGreenValue());
-        m_plenumColorMap.insert(std::make_pair(it->handle(),color));
+        m_plenumColorMap.insert(std::make_pair<Handle,QColor>(it->handle(),color));
       }
     }
-    m_plenumIndexMap.insert(std::make_pair(it->handle(),i));
+    m_plenumIndexMap.insert(std::make_pair<Handle,int>(it->handle(),i));
     i++;
   }
 
@@ -1082,10 +1091,10 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
         color.setRed(rc->renderingRedValue());
         color.setBlue(rc->renderingBlueValue());
         color.setGreen(rc->renderingGreenValue());
-        m_plenumColorMap.insert(std::make_pair(it->handle(),color));
+        m_plenumColorMap.insert(std::make_pair<Handle,QColor>(it->handle(),color));
       }
     }
-    m_plenumIndexMap.insert(std::make_pair(it->handle(),i));
+    m_plenumIndexMap.insert(std::make_pair<Handle,int>(it->handle(),i));
     i++;
   }
 
@@ -1137,8 +1146,8 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
 
 SystemItem::~SystemItem()
 {
-  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
-  std::shared_ptr<MainRightColumnController> mrc = doc->mainRightColumnController(); 
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  boost::shared_ptr<MainRightColumnController> mrc = doc->mainRightColumnController(); 
   mrc->unregisterSystemItem(m_loop.handle());
 }
 
@@ -1407,11 +1416,11 @@ void OneThreeWaterToAirItem::setModelObject( model::OptionalModelObject modelObj
       {
         LinkItem * linkItem1 = new LinkItem(this);
         linkItem1->setPos(40,5); 
-        connect(linkItem1, &LinkItem::mouseClicked, this, &OneThreeWaterToAirItem::onLinkItemClicked);
+        connect(linkItem1,SIGNAL(mouseClicked()),this,SLOT(onLinkItemClicked()));
         
         LinkItem * linkItem2 = new LinkItem(this);
         linkItem2->setPos(40,75); 
-        connect(linkItem2, &LinkItem::mouseClicked, this, &OneThreeWaterToAirItem::onLinkItemClicked);
+        connect(linkItem2,SIGNAL(mouseClicked()),this,SLOT(onLinkItemClicked()));
 
         m_showLinks = true;
       }
@@ -1491,11 +1500,11 @@ void OneThreeWaterToWaterItem::setModelObject( model::OptionalModelObject modelO
       {
         LinkItem * linkItem1 = new LinkItem(this);
         linkItem1->setPos(40,5); 
-        connect(linkItem1, &LinkItem::mouseClicked, this, &OneThreeWaterToWaterItem::onLinkItemClicked);
+        connect(linkItem1,SIGNAL(mouseClicked()),this,SLOT(onLinkItemClicked()));
         
         LinkItem * linkItem2 = new LinkItem(this);
         linkItem2->setPos(40,75); 
-        connect(linkItem2, &LinkItem::mouseClicked, this, &OneThreeWaterToWaterItem::onLinkItemClicked);
+        connect(linkItem2,SIGNAL(mouseClicked()),this,SLOT(onLinkItemClicked()));
 
         m_showLinks = true;
       }
@@ -1750,12 +1759,23 @@ OASupplyBranchItem::OASupplyBranchItem( std::vector<model::ModelObject> supplyMo
 {
   setAcceptHoverEvents(false);
 
-  std::vector<model::ModelObject>::reverse_iterator it2 = reliefModelObjects.rbegin();
+  std::vector<model::ModelObject>::iterator reliefIt = reliefModelObjects.begin();
+  std::vector<model::ModelObject>::iterator supplyIt = supplyModelObjects.begin();
 
-  for( std::vector<model::ModelObject>::iterator it = supplyModelObjects.begin();
-       it < supplyModelObjects.end(); ++it )
+  while(supplyIt < supplyModelObjects.end())
   {
-    if(model::OptionalNode comp = it->optionalCast<model::Node>())
+    if(boost::optional<model::AirToAirComponent> comp = supplyIt->optionalCast<model::AirToAirComponent>())
+    {
+      while( (reliefIt < reliefModelObjects.end()) && (! reliefIt->optionalCast<model::AirToAirComponent>()) )
+      {
+        GridItem * gridItem = new OASupplyStraightItem(this); 
+        m_gridItems.push_back(gridItem);
+        ++reliefIt;
+      }
+      ++reliefIt;
+      m_gridItems.push_back(NULL);
+    }
+    else if(boost::optional<model::Node> comp = supplyIt->optionalCast<model::Node>())
     {
       GridItem * gridItem = new OAStraightNodeItem(this); 
       gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
@@ -1764,46 +1784,35 @@ OASupplyBranchItem::OASupplyBranchItem( std::vector<model::ModelObject> supplyMo
         gridItem->setDeletable(true);
       }
       m_gridItems.push_back(gridItem);
+
+      if( (reliefIt < reliefModelObjects.end()) && (! reliefIt->optionalCast<model::AirToAirComponent>()) )
+      {
+        ++reliefIt;
+      }
     }
-    else if(model::OptionalStraightComponent comp = it->optionalCast<model::StraightComponent>())
+    else if(boost::optional<model::StraightComponent> comp = supplyIt->optionalCast<model::StraightComponent>())
     {
-      GridItem * gridItem = new OASupplyStraightItem(this); 
+      GridItem * gridItem = new OAReliefStraightItem(this); 
       gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
       if( comp->isRemovable() )
       {
         gridItem->setDeletable(true);
       }
       m_gridItems.push_back(gridItem);
-    }
-    else if(boost::optional<model::AirToAirComponent> comp = it->optionalCast<model::AirToAirComponent>())
-    {
-      while( it2 != reliefModelObjects.rend() )
-      {
-        if( boost::optional<model::AirToAirComponent> comp2 = it2->optionalCast<model::AirToAirComponent>() )
-        {
-          break;
-        }
-        else
-        {
-          GridItem * gridItem = new OASupplyStraightItem(this); 
-          m_gridItems.push_back(gridItem);
-          ++it2;
-        }
-      }
-      m_gridItems.push_back(NULL);
-    }
 
-    if( it2 != reliefModelObjects.rend() )
-    {
-      ++it2;
+      if( (reliefIt < reliefModelObjects.end()) && (! reliefIt->optionalCast<model::AirToAirComponent>()) )
+      {
+        ++reliefIt;
+      }
     }
+    ++supplyIt;
   }
 
-  while( it2 != reliefModelObjects.rend() )
+  while(reliefIt < reliefModelObjects.end())
   {
     GridItem * gridItem = new OASupplyStraightItem(this); 
-    m_gridItems.insert(m_gridItems.begin(),gridItem);
-    ++it2;
+    m_gridItems.push_back(gridItem);
+    ++reliefIt;
   }
 
   layout();
@@ -1812,8 +1821,8 @@ OASupplyBranchItem::OASupplyBranchItem( std::vector<model::ModelObject> supplyMo
 void OASupplyBranchItem::layout()
 {
   int j = 0;
-  for( std::vector<GridItem *>::iterator it = m_gridItems.begin();
-       it < m_gridItems.end(); ++it )
+  for( std::vector<GridItem *>::reverse_iterator it = m_gridItems.rbegin();
+       it < m_gridItems.rend(); ++it )
   {
     if( *it )
     {
@@ -1839,12 +1848,25 @@ OAReliefBranchItem::OAReliefBranchItem( std::vector<model::ModelObject> reliefMo
 {
   setAcceptHoverEvents(false);
 
-  std::vector<model::ModelObject>::reverse_iterator it2 = supplyModelObjects.rbegin();
+  std::vector<model::ModelObject>::iterator reliefIt = reliefModelObjects.begin();
+  std::vector<model::ModelObject>::iterator supplyIt = supplyModelObjects.begin();
 
-  for( std::vector<model::ModelObject>::iterator it = reliefModelObjects.begin();
-       it < reliefModelObjects.end(); ++it )
+  while(reliefIt < reliefModelObjects.end())
   {
-    if(model::OptionalNode comp = it->optionalCast<model::Node>())
+    if(boost::optional<model::AirToAirComponent> comp = reliefIt->optionalCast<model::AirToAirComponent>())
+    {
+      while( (supplyIt < supplyModelObjects.end()) && (! supplyIt->optionalCast<model::AirToAirComponent>()) )
+      {
+        GridItem * gridItem = new OAReliefStraightItem(this); 
+        m_gridItems.push_back(gridItem);
+        ++supplyIt;
+      }
+      GridItem * gridItem = new OAAirToAirItem(this);
+      gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
+      m_gridItems.push_back(gridItem);
+      ++supplyIt;
+    }
+    else if(boost::optional<model::Node> comp = reliefIt->optionalCast<model::Node>())
     {
       GridItem * gridItem = new OAStraightNodeItem(this); 
       gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
@@ -1853,8 +1875,12 @@ OAReliefBranchItem::OAReliefBranchItem( std::vector<model::ModelObject> reliefMo
         gridItem->setDeletable(true);
       }
       m_gridItems.push_back(gridItem);
+      if( (supplyIt < supplyModelObjects.end()) && (! supplyIt->optionalCast<model::AirToAirComponent>()) )
+      {
+        ++supplyIt;
+      }
     }
-    else if(model::OptionalStraightComponent comp = it->optionalCast<model::StraightComponent>())
+    else if(boost::optional<model::StraightComponent> comp = reliefIt->optionalCast<model::StraightComponent>())
     {
       GridItem * gridItem = new OAReliefStraightItem(this); 
       gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
@@ -1863,42 +1889,20 @@ OAReliefBranchItem::OAReliefBranchItem( std::vector<model::ModelObject> reliefMo
         gridItem->setDeletable(true);
       }
       m_gridItems.push_back(gridItem);
-    }
-    else if(boost::optional<model::AirToAirComponent> comp = it->optionalCast<model::AirToAirComponent>())
-    {
-      while( it2 != supplyModelObjects.rend() )
+      if( (supplyIt < supplyModelObjects.end()) && (! supplyIt->optionalCast<model::AirToAirComponent>()) )
       {
-        if( boost::optional<model::AirToAirComponent> comp2 = it2->optionalCast<model::AirToAirComponent>() )
-        {
-          break;
-        }
-        else
-        {
-          GridItem * gridItem = new OAReliefStraightItem(this); 
-          m_gridItems.push_back(gridItem);
-          ++it2;
-        }
+        ++supplyIt;
       }
-      GridItem * gridItem = new OAAirToAirItem(this); 
-      gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
-      if( comp->isRemovable() )
-      {
-        gridItem->setDeletable(true);
-      }
-      m_gridItems.push_back(gridItem);
     }
 
-    if( it2 != supplyModelObjects.rend() )
-    {
-      ++it2;
-    }
+    ++reliefIt;
   }
 
-  while( it2 != supplyModelObjects.rend() )
+  while(supplyIt < supplyModelObjects.end())
   {
     GridItem * gridItem = new OAReliefStraightItem(this); 
     m_gridItems.push_back(gridItem);
-    ++it2;
+    ++supplyIt;
   }
 
   layout();
@@ -1910,8 +1914,15 @@ void OAReliefBranchItem::layout()
   for( std::vector<GridItem *>::reverse_iterator it = m_gridItems.rbegin();
        it < m_gridItems.rend(); ++it )
   {
-    (*it)->setGridPos( 0, j );
-    j = j + (*it)->getVGridLength();
+    if( *it )
+    {
+      (*it)->setGridPos( 0, j );
+      j = j + (*it)->getVGridLength();
+    }
+    else
+    {
+      j = j + 1;
+    }
   }
   setVGridLength( j );
 }
@@ -2085,14 +2096,6 @@ void OneThreeNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
           {
             painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_warmest.png"));
           }
-          else if( it->iddObjectType() == SetpointManagerScheduledDualSetpoint::iddObjectType() )
-          {
-            painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_dual.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerOutdoorAirPretreat::iddObjectType() )
-          {
-            painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_pretreat.png"));
-          }
           break;
         }
       }
@@ -2240,14 +2243,6 @@ void TwoFourNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
           {
             painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_warmest_right.png"));
           }
-          else if( it->iddObjectType() == SetpointManagerScheduledDualSetpoint::iddObjectType() )
-          {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_dual.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerOutdoorAirPretreat::iddObjectType() )
-          {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_pretreat.png"));
-          }
           break;
         }
       }
@@ -2344,14 +2339,6 @@ void OAStraightNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
           {
             painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_warmest.png"));
           }
-          else if( it->iddObjectType() == SetpointManagerOutdoorAirPretreat::iddObjectType() )
-          {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_pretreat.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerScheduledDualSetpoint::iddObjectType() )
-          {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_dual.png"));
-          }
           break;
         }
       }
@@ -2404,6 +2391,7 @@ OASystemItem::OASystemItem( model::AirLoopHVACOutdoorAirSystem & oaSystem,
 
   std::vector<model::ModelObject> oaComponents = oaSystem.oaComponents();
   std::vector<model::ModelObject> oaBranchComponents( oaComponents.begin() + 1, oaComponents.end() );
+  std::reverse(oaBranchComponents.begin(),oaBranchComponents.end());
 
   std::vector<model::ModelObject> reliefComponents = oaSystem.reliefComponents();
   std::vector<model::ModelObject> reliefBranchComponents( reliefComponents.begin(), reliefComponents.end() - 1 );
@@ -3144,9 +3132,16 @@ NodeContextButtonItem::NodeContextButtonItem(GridItem * parent)
                QPixmap(":/images/contextual_arrow.png"),
                parent)
 {
-  connect(this, &NodeContextButtonItem::mouseClicked, this, &NodeContextButtonItem::showContextMenu);
+  bool bingo;
 
-  connect(this, &NodeContextButtonItem::removeModelObjectClicked, parent, &GridItem::removeModelObjectClicked);
+  bingo = connect(this,SIGNAL(mouseClicked()),this,SLOT(showContextMenu()));
+  OS_ASSERT(bingo);
+
+  bingo = connect( this, 
+             SIGNAL(removeModelObjectClicked( model::ModelObject & ) ),
+             parent,
+             SIGNAL(removeModelObjectClicked( model::ModelObject & ) ) );
+  OS_ASSERT(bingo);
 }
 
 void NodeContextButtonItem::showContextMenu()
@@ -3162,10 +3157,13 @@ void NodeContextButtonItem::showContextMenu()
     QPoint viewP = v->mapFromScene(sceneP);
     QPoint menuPos = v->viewport()->mapToGlobal(viewP);
 
+    bool bingo;
+
     QMenu menu;
     QAction removeSPMAction(QIcon(":/images/delete-icon.png"),"Delete Setpoint Manager",&menu);
     menu.addAction(&removeSPMAction);
-    connect(&removeSPMAction, &QAction::triggered, this, &NodeContextButtonItem::onRemoveSPMActionTriggered);
+    bingo = connect(&removeSPMAction,SIGNAL(triggered()),this,SLOT(onRemoveSPMActionTriggered()));
+    OS_ASSERT(bingo);
 
     menu.exec(menuPos); 
   }

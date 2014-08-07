@@ -83,9 +83,9 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // std::string controlType() const;
+    std::string controlType() const;
 
-    // bool isControlTypeDefaulted() const;
+    bool isControlTypeDefaulted() const;
 
     boost::optional<ThermalZone> controllingZoneorThermostatLocation() const;
 
@@ -213,9 +213,9 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    // bool setControlType(std::string controlType);
+    bool setControlType(std::string controlType);
 
-    // void resetControlType();
+    void resetControlType();
 
     bool setControllingZoneorThermostatLocation(const boost::optional<ThermalZone>& thermalZone);
 

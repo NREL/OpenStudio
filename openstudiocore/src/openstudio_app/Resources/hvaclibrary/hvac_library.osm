@@ -221,8 +221,7 @@ OS:SetpointManager:SingleZone:Reheat,
   -99,                                    ! Minimum Supply Air Temperature {C}
   99,                                     ! Maximum Supply Air Temperature {C}
   ,                                       ! Control Zone Name
-  ,                                       ! Setpoint Node or NodeList Name
-  Temperature;                            ! Control Variable
+  ;                                       ! Setpoint Node or NodeList Name
 
 OS:SetpointManager:Warmest,
   {4f12e925-01e9-4ce2-9f56-daa5d024ac5d}, !- Handle
@@ -477,7 +476,6 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
   ,                                       !- Water Supply Storage Tank Name
   0,                                      !- Drift Loss Fraction
   ;                                       !- Blowdown Concentration Ratio
-
 OS:EvaporativeCooler:Direct:ResearchSpecial,
   {8d3b17e0-88c9-4d17-9de4-0b9dd0481b36}, ! Handle
   Direct Evaporative Cooler,              ! Name

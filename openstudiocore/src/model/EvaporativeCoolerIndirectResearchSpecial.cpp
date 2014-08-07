@@ -256,6 +256,16 @@ namespace detail {
     return false;
   }
 
+  bool EvaporativeCoolerIndirectResearchSpecial_Impl::setReliefAirInletNode(const Node & node)
+  {
+    return setPointer(OS_EvaporativeCooler_Indirect_ResearchSpecialFields::ReliefAirInletNode, node.handle());
+  }
+
+  boost::optional<Node> EvaporativeCoolerIndirectResearchSpecial_Impl::reliefAirInletNode() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_EvaporativeCooler_Indirect_ResearchSpecialFields::ReliefAirInletNode);
+  }
+
 } // detail
 
 EvaporativeCoolerIndirectResearchSpecial::EvaporativeCoolerIndirectResearchSpecial(const Model& model)
