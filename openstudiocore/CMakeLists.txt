@@ -433,65 +433,22 @@ if(BUILD_DOCUMENTATION)
   # need doxygen
   find_package(Doxygen REQUIRED)
 
-  option(DOXYGEN_INLINE_INHERITED_MEMBERS_OPTION "Show all inherited members of a class as if those members were ordinary class members" OFF)
-
-  mark_as_advanced(DOXYGEN_INLINE_INHERITED_MEMBERS_OPTION)
-
-  if(DOXYGEN_INLINE_INHERITED_MEMBERS_OPTION)
-    set(DOXYGEN_INLINE_INHERITED_MEMBERS "YES")
-  else()
-    set(DOXYGEN_INLINE_INHERITED_MEMBERS "NO")
-  endif()
-
   # if have dot you have more options
-  if(DOXYGEN_DOT_FOUND)
+  #if(DOXYGEN_DOT_FOUND)
 
-    option(DOXYGEN_COLLABORATION_GRAPH_OPTION "Generate implementation dependency diagrams (inheritance, containment, and class reference)" OFF)
-    option(DOXYGEN_CLASS_GRAPH_OPTION "Graph direct and indirect inheritance relations" ON)
-    option(DOXYGEN_UML_LOOK_OPTION "Generate graphs in UML format" OFF)
-    option(DOXYGEN_GRAPHICAL_HIERARCHY_OPTION "Graphical hierarchy of all classes instead of a textual one" OFF)
+  #endif()
 
-    mark_as_advanced(
-      DOXYGEN_COLLABORATION_GRAPH_OPTION
-      DOXYGEN_CLASS_GRAPH_OPTION
-      DOXYGEN_UML_LOOK_OPTION
-      DOXYGEN_GRAPHICAL_HIERARCHY_OPTION
-    )
-
-    if(DOXYGEN_COLLABORATION_GRAPH_OPTION)
-      set(DOXYGEN_COLLABORATION_GRAPH "YES")
-    else()
-      set(DOXYGEN_COLLABORATION_GRAPH "NO")
-    endif()
-
-    if(DOXYGEN_CLASS_GRAPH_OPTION)
-      set(DOXYGEN_CLASS_GRAPH "YES")
-    else()
-      set(DOXYGEN_CLASS_GRAPH "NO")
-    endif()
-
-    if(DOXYGEN_UML_LOOK_OPTION)
-      set(DOXYGEN_UML_LOOK "YES")
-    else()
-      set(DOXYGEN_UML_LOOK "NO")
-    endif()
-
-    if(DOXYGEN_GRAPHICAL_HIERARCHY_OPTION)
-      set(DOXYGEN_GRAPHICAL_HIERARCHY "YES")
-    else()
-      set(DOXYGEN_GRAPHICAL_HIERARCHY "NO")
-    endif()
-
-  endif()
-
-  configure_file(${CMAKE_SOURCE_DIR}/doc/index.html.in ${CMAKE_BINARY_DIR}/doc/index.html)
+  configure_file(${CMAKE_SOURCE_DIR}/doc/index.html ${CMAKE_BINARY_DIR}/doc/index.html COPYONLY)
 
   set(doxygen_directories ${project_directories})
   # Add the idd files to the documentation list as a separate entry
   list(APPEND doxygen_directories utilities/idd)
 
+  # Remove directories we don't want documentation generated for
+  list(REMOVE_ITEM doxygen_directories generateiddfactory)
+
   # ETH@20110823 In theory, doxygen tag files let you have links between individual projects.
-  # In practice, the links generated do not quite work (at least in the verison of Doxygen that
+  # In practice, the links generated do not quite work (at least in the version of Doxygen that
   # I have on my desktop). I also didn't quite figure out how to make the custom _doc targets
   # dependent on each other. (I didn't try very hard since the tag links don't work right.)
 
@@ -528,10 +485,22 @@ if(BUILD_DOCUMENTATION)
     endif()
     configure_file(${CMAKE_SOURCE_DIR}/Doxyfile.in ${CMAKE_BINARY_DIR}/Doxyfile_${DOC_NAME})
 
+    if(UNIX)
+      set(CLEANUP_COMMAND ${CMAKE_COMMAND} -E remove doc/${DOC_NAME}/html/*.map doc/${DOC_NAME}/html/*.md5)
+    else()
+      set(CLEANUP_COMMAND cmd /C del "doc\\${DOC_NAME}\\html\\*.map" "doc\\${DOC_NAME}\\html\\*.md5")
+    endif()
+
     add_custom_target(openstudio_${DOC_NAME}_doc
-      COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/doc/${DOC_NAME}
-      COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/doc/${DOC_NAME}
+      COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/doc/${DOC_NAME}"
+      COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/doc/${DOC_NAME}"
       COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile_${DOC_NAME}
+      COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/css" "${CMAKE_BINARY_DIR}/doc/${DOC_NAME}/html/css"
+      COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/fonts" "${CMAKE_BINARY_DIR}/doc/${DOC_NAME}/html/fonts"
+      COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/js" "${CMAKE_BINARY_DIR}/doc/${DOC_NAME}/html/js"
+      COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/search" "${CMAKE_BINARY_DIR}/doc/${DOC_NAME}/html/search"
+      COMMAND ${PATCH_EXE} "${CMAKE_BINARY_DIR}/doc/${DOC_NAME}/html/search/search.js" < "${CMAKE_SOURCE_DIR}/doc/patch/search.js.patch"
+      COMMAND ${CLEANUP_COMMAND}
       WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     )
 

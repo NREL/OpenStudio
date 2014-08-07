@@ -33,8 +33,7 @@ namespace detail {
 } // detail
 
 /** CurveBicubic is a Curve that wraps the OpenStudio IDD object 'OS:Curve:Bicubic'. The
- *  functional form is f(x) = c1 + c2 * x + c3 * x^2 + c4 * y + c5 * y^2 + c6 * x * y + 
- *  c7 * x^3 + c8 * y^3 + c9 * x^2 * y + c10 * x * y^2. */
+ *  functional form is \f$f(x) = c_1 + c_2 \cdot x + c_3 \cdot x^2 + c_4 \cdot y + c_5 \cdot y^2 + c_6 \cdot x \cdot y + c_7 \cdot x^3 + c_8 \cdot y^3 + c_9 \cdot x^2 \cdot y + c_{10} \cdot x \cdot y^2\f$ */
 class MODEL_API CurveBicubic : public Curve {
  public:
 

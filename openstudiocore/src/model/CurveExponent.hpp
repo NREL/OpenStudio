@@ -33,14 +33,14 @@ namespace detail {
 } // detail
 
 /** CurveExponent is a Curve that wraps the OpenStudio IDD object 'OS:Curve:Exponent'. The
- *  functional form is f(x) = c1 + c2 * x^c3. */
+ *  functional form is \f$f(x) = c_1 + c_2 \cdot x^{c_3}\f$ */
 class MODEL_API CurveExponent : public Curve {
  public:
 
   /** @name Constructors and Destructors */
   //@{
 
-  /** Initializes c1 = 0.0, c2 = c3 = 1.0. Sets the range for x to [0.0,1.0]. */
+  /** Initializes \f$c_1 = 0.0,\ c_2 = c_3 = 1.0\f$. Sets the range for x to [0.0,1.0]. */
   explicit CurveExponent(const Model& model);
 
   virtual ~CurveExponent() {}

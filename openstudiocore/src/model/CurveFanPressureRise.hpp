@@ -33,17 +33,14 @@ namespace detail {
 } // detail
 
 /** CurveFanPressureRise is a Curve that wraps the OpenStudio IDD object 
- *  'OS:Curve:FanPressureRise'. The functional form is deltaP_fan,tot = 
- *  c1 * Q_fan^2 + c2 * Q_fan + c3 * Q_fan * sqrt(P_sm - P_o) + c4 * (P_sm - P_o),
- *  where
- *  P_o = 0.0. */
+ *  'OS:Curve:FanPressureRise'. The functional form is \f$\Delta P_{fan,tot} = c_1 \cdot {Q_{fan}}^2 + c_2 \cdot Q_{fan} + c_3 \cdot Q_{fan} \cdot \sqrt{P_{sm} - P_o} + c_4 \cdot (P_{sm} - P_o),\ \text{where}\ P_o = 0.0\f$ */
 class MODEL_API CurveFanPressureRise : public Curve {
  public:
 
   /** @name Constructors and Destructors */
   //@{
 
-  /** Sets c1 = c2 = c3 = c4 = 1.0, Q_fan within [0.0,10.0], P_sm within [0.0,500.0]. */
+  /** Sets \f$c_1 = c_2 = c_3 = c_4 = 1.0,\ Q_{fan}\ \text{within}\ [0.0,10.0], P_{sm}\ \text{within}\ [0.0,500.0]\f$ */
   explicit CurveFanPressureRise(const Model& model);
 
   virtual ~CurveFanPressureRise() {}

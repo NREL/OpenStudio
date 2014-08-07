@@ -33,19 +33,14 @@ namespace detail {
 } // detail
 
 /** CurveExponentialSkewNormal is a Curve that wraps the OpenStudio IDD object 
- *  'OS:Curve:ExponentialSkewNormal'. The functional form is f(x) = 
- *  ( exp(-0.5 * z1^2) * (1 + z2/abs(z2) * erf (abs(z2)/sqrt(2)) ) / 
- *  ( exp(-.05 * z3^2) * (1 + z3/abs(z3) * erf (abs(z3)/sqrt(2)) ), where
- *  z1 = (x - c1)/c2, 
- *  z2 = (exp(c3 * x) * c4 * x - c1)/c2, and
- *  z3 = -c1 / c2 */
+ *  'OS:Curve:ExponentialSkewNormal'. The functional form is \f[\displaystyle f(x) = \frac{{e^{ - 0.5 \cdot {z_1}^2}} \cdot \left( {1 + \frac{z_2}{\left| {z_2} \right|} \cdot erf\left( {\frac{\left| {z_2} \right|}{\sqrt 2 }} \right)} \right)}{{e^{ - 0.5 \cdot {z_3}^2}} \cdot \left( {1 + \frac{z_3}{\left| {z_3} \right|} \cdot erf\left( \frac{\left| {z_3} \right|}{\sqrt 2 } \right)} \right)},\ \text{where}\ {z_1} = \frac{x - {c_1}}{c_2}, {z_2} = \frac{{e^{{c_3} \cdot x}} \cdot {c_4} \cdot x - {c_1}}{c_2},\ \text{and}\ {z_3} = \frac{-{c_1}}{c_2}\f] */
 class MODEL_API CurveExponentialSkewNormal : public Curve {
  public:
 
   /** @name Constructors and Destructors */
   //@{
 
-  /** Sets c1 = c2 = c4 = 1.0, c3 = -1.0, x within [-1.0,1.0]. */
+  /** Sets \f$c_1 = c_2 = c_4 = 1.0,\ c_3 = -1.0\f$, x within [-1.0,1.0]. */
   explicit CurveExponentialSkewNormal(const Model& model);
 
   virtual ~CurveExponentialSkewNormal() {}

@@ -140,12 +140,12 @@ namespace runmanager {
 
       //! Convert a pair returned from getToolLocation to a ToolInfo object
       //! appropriate for creating a rtrace job
-      //! \param[in] rad results from getToolLocations create ToolInfo from
+      //! \param[in] rtrace results from getToolLocations create ToolInfo from
       static openstudio::runmanager::ToolInfo toRTraceToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &rad);
 
       //! Convert a pair returned from getToolLocation to a ToolInfo object
-      //! appropriate for creating a rtrace job
-      //! \param[in] rad results from getToolLocations create ToolInfo from
+      //! appropriate for creating a epw job
+      //! \param[in] eplus results from getToolLocations create ToolInfo from
       static openstudio::runmanager::ToolInfo toEpw2Wea(const std::pair<ToolVersion, ToolLocationInfo> &eplus);
 
       //! Convert a pair returned from getToolLocation to a ToolInfo object
@@ -171,6 +171,7 @@ namespace runmanager {
       //! \param[in] t_xmlpreproc Path to xmlpreproc binary
       //! \param[in] t_radiance Path to radiance binaries
       //! \param[in] t_ruby Path to ruby binary
+      //! \param[in] t_dakota Path to dakota binary
       static openstudio::runmanager::Tools makeTools(const openstudio::path &t_energyplus, 
                                                      const openstudio::path &t_xmlpreproc, 
                                                      const openstudio::path &t_radiance,

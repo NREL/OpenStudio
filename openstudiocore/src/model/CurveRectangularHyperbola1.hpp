@@ -33,14 +33,14 @@ namespace detail {
 } // detail
 
 /** CurveRectangularHyperbola1 is a Curve that wraps the OpenStudio IDD object 
- *  'OS:Curve:RectangularHyperbola1'. The functional form is f(x) = (c1 * x) / (c2 + x) + c3 */
+ *  'OS:Curve:RectangularHyperbola1'. The functional form is \f$\displaystyle f(x) = \frac{c_1 \cdot x}{c_2 + x} + c_3\f$ */
 class MODEL_API CurveRectangularHyperbola1 : public Curve {
  public:
 
   /** @name Constructors and Destructors */
   //@{
 
-  /** Initializes c1 = c2 = 1.0, c3 = 0.0, xmin = 0.0, xmax = 1.0. */
+  /** Initializes \f$c_1 = c_2 = 1.0,\ c_3 = 0.0,\ xmin = 0.0,\ xmax = 1.0\f$ */
   explicit CurveRectangularHyperbola1(const Model& model);
 
   virtual ~CurveRectangularHyperbola1() {}

@@ -107,6 +107,7 @@ namespace openstudio {
 
         /// Adds the data of an ISOResults from an ISO simulation into the ErrorEstimation and returns the error corrected values;
         /// 
+        /// \param[in] t_userModel The isomodel UserModel
         /// \param[in] t_results The SqlFile to pull the year end summary data from
         /// \param[in] t_sourceName The name of the simulation source this data is from, registered with addSource
         /// \param[in] t_variables The name of the variable that this data is for
@@ -118,7 +119,7 @@ namespace openstudio {
 
         /// Returns an estimated FuelUsage for the given variable at the given value
         /// 
-        /// \param[in] t_variable The variable to 
+        /// \param[in] t_variables The variable to 
         openstudio::runmanager::FuelUses approximate(const std::vector<double> &t_variables) const;
 
 
