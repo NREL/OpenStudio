@@ -137,8 +137,11 @@ ModelObjectListView::ModelObjectListView(const openstudio::IddObjectType& iddObj
                                          bool showLocalBCL,
                                          QWidget * parent )
   : OSItemList(new ModelObjectListController(iddObjectType, model,showLocalBCL), addScrollArea)
-{ 
-}  
+{
+  bool isConnected = false;
+  isConnected = connect(this, SIGNAL(gridRowSelected(OSItem*)), this, SLOT(selectItem(OSItem*)));
+  OS_ASSERT(isConnected);
+}
 
 boost::optional<openstudio::model::ModelObject> ModelObjectListView::selectedModelObject() const
 {
