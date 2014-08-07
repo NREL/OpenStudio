@@ -31,11 +31,16 @@ ThermalZonesTabController::ThermalZonesTabController(bool isIP, const model::Mod
 
   this->mainContentWidget()->addTabWidget(m_thermalZonesController->subTabView());
 
-  connect( m_thermalZonesController.get(),SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
-           this,SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )) );
+  bool isConnected = false;
 
-  connect( this,SIGNAL(toggleUnitsClicked( bool )),
-           m_thermalZonesController.get(),SIGNAL(toggleUnitsClicked( bool )) );
+  isConnected = connect(m_thermalZonesController.get(), SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool)), this,SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )) );
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_thermalZonesController.get(),SIGNAL(toggleUnitsClicked( bool )) );
+  OS_ASSERT(isConnected);
+
+  isConnected = QObject::connect(m_thermalZonesController->subTabView(), SIGNAL(gridRowSelected(OSItem *)), m_thermalZonesController.get(), SLOT(selectItem(OSItem* item)));
+  OS_ASSERT(isConnected);
 }
 
 } // openstudio

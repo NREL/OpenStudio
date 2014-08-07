@@ -55,10 +55,6 @@ signals:
 
   void gridRowSelected(OSItem*);
 
-public slots:
-
-  void myTestSlot(OSItem * item);
-
 };
 
 class SpaceTypesGridController : public OSGridController

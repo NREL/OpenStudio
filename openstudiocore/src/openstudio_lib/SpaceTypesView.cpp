@@ -55,22 +55,22 @@ SpaceTypesView::SpaceTypesView(const openstudio::model::Model& model,
 
   bool isConnected = false;
 
-  isConnected = connect(this, SIGNAL(dropZoneItemClicked(OSItem*)), modelObjectInspectorView(), SIGNAL(dropZoneItemClicked(OSItem*)));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), inspectorView(), SIGNAL(itemSelected(OSItem *)));
-  OS_ASSERT(isConnected);
-
   isConnected = connect(itemSelector(), SIGNAL(itemSelected(OSItem *)), inspectorView(), SIGNAL(itemSelected(OSItem *)));
   OS_ASSERT(isConnected);
 
   isConnected = connect(itemSelector(), SIGNAL(selectionCleared()), inspectorView(), SIGNAL(selectionCleared()));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(inspectorView(), SIGNAL(gridRowSelected(OSItem *)), this, SLOT(myTestSlot(OSItem *)));
+  isConnected = connect(inspectorView(), SIGNAL(gridRowSelected(OSItem *)), this, SLOT(myTestSlot(OSItem *))); // TODO delete this
   OS_ASSERT(isConnected);
 
-  isConnected = connect(itemSelector(), SIGNAL(gridRowSelected(OSItem*)), inspectorView(), SIGNAL(gridRowSelected(OSItem*))); // TODO
+  isConnected = connect(inspectorView(), SIGNAL(gridRowSelected(OSItem*)), itemSelector(), SIGNAL(gridRowSelected(OSItem*)));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(inspectorView(), SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), inspectorView(), SIGNAL(itemSelected(OSItem *)));
   OS_ASSERT(isConnected);
 
 }

@@ -560,13 +560,13 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
   isConnected = connect(spaceTypesGridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
 
+  isConnected = connect(spaceTypesGridView, SIGNAL(gridRowSelected(OSItem*)), this, SIGNAL(gridRowSelected(OSItem*)));
+  OS_ASSERT(isConnected);
+
   isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), spaceTypesGridView, SIGNAL(itemSelected(OSItem *)));
   OS_ASSERT(isConnected);
 
   isConnected = connect(this, SIGNAL(selectionCleared()), spaceTypesGridView, SIGNAL(selectionCleared()));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(this, SIGNAL(gridRowSelected(OSItem*)), spaceTypesGridView, SIGNAL(gridRowSelected(OSItem*)));
   OS_ASSERT(isConnected);
 
   ++row;
@@ -980,7 +980,6 @@ void SpaceTypeInspectorView::populateStandardsSpaceTypes()
   isConnected = connect(m_standardsSpaceTypeComboBox, SIGNAL(editTextChanged(const QString&)), this, SLOT(editStandardsSpaceType(const QString&)));
   OS_ASSERT(isConnected);
 }
-
 
 } // openstudio
 

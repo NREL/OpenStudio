@@ -60,9 +60,6 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
 {
   bool isConnected = false;
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), this, SLOT(onToggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
-
   ThermalZonesGridView * thermalZonesGridView = new ThermalZonesGridView(this->m_isIP,this->m_model,this);
   this->stackedWidget()->addWidget(thermalZonesGridView);
 
@@ -76,6 +73,9 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
   OS_ASSERT(isConnected);
 
   isConnected = connect(this, SIGNAL(gridRowSelected(OSItem*)), thermalZonesGridView, SIGNAL(gridRowSelected(OSItem*)));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), this, SLOT(onToggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
 
   refresh();

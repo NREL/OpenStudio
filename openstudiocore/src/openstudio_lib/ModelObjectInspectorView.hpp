@@ -62,6 +62,8 @@ class ModelObjectInspectorView : public OSInspectorView
 
     void gridRowSelected(OSItem * item);
 
+    void dropZoneItemClicked(OSItem* item);
+
   public slots:
 
     void selectModelObject(const openstudio::model::ModelObject& modelObject);

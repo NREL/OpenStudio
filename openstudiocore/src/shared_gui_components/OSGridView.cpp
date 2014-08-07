@@ -165,13 +165,10 @@ void OSGridView::setGridController(OSGridController * gridController)
   isConnected = connect(m_gridController,SIGNAL(modelReset()),this,SLOT(refreshAll()));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), m_gridController, SLOT(onItemSelected(OSItem *)));
-  OS_ASSERT(isConnected);
-
   isConnected = connect(m_gridController, SIGNAL(gridRowSelected(OSItem *)), this, SIGNAL(gridRowSelected(OSItem *)));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(m_gridController, SIGNAL(gridRowSelected(OSItem *)), this, SLOT(myTestSlot(OSItem *))); // TODO delete
+  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), m_gridController, SLOT(onItemSelected(OSItem *)));
   OS_ASSERT(isConnected);
 
   refreshAll();
@@ -281,10 +278,6 @@ void OSGridView::selectCategory(int index)
 void OSGridView::onSelectionCleared()
 {
   m_gridController->onSelectionCleared();
-}
-
-void OSGridView::myTestSlot(OSItem * item)
-{
 }
 
 } // openstudio

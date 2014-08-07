@@ -351,14 +351,6 @@ public:
     m_baseConcepts.push_back(QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter)));
   }
 
-  //template<typename ValueType, typename DataSourceType>
-  //QSharedPointer<DropZoneConcept<ValueType> > makeDropZoneConcept(QString headingLabel,
-  //                       std::function<boost::optional<ValueType> (DataSourceType *)>  getter,
-  //                       std::function<bool (DataSourceType *, const ValueType &)> setter)
-  //{
-  //  return QSharedPointer<DropZoneConcept<ValueType> >(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter));
-  //}
-
   std::vector<QString> categories();
 
   std::vector<std::pair<QString,std::vector<QString> > > categoriesAndFields();

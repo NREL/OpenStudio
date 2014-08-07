@@ -49,6 +49,10 @@ SpaceTypesTabController::SpaceTypesTabController(const model::Model& model)
   OS_ASSERT(isConnected);
 
   this->mainContentWidget()->addTabWidget(m_spaceTypesController->subTabView());
+
+  isConnected = QObject::connect(m_spaceTypesController->subTabView(), SIGNAL(gridRowSelected(OSItem *)), m_spaceTypesController.get(), SLOT(selectItem(OSItem* item)));
+  OS_ASSERT(isConnected);
+
 }
 
 } // openstudio

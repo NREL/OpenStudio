@@ -62,8 +62,6 @@ signals:
 
   void modelObjectSelected(model::OptionalModelObject & modelObject, bool readOnly);
 
-  void toggleUnitsClicked(bool);
-
 protected:
 
   void onClearSelection();

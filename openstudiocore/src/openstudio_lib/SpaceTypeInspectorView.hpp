@@ -221,16 +221,6 @@ class SpaceTypeInspectorView : public ModelObjectInspectorView
 
     virtual void onUpdate();
 
-  signals:
-
-    void dropZoneItemClicked(OSItem* item);
-
-    void itemSelected(OSItem * item);
-
-    void selectionCleared();
-
-    void gridRowSelected(OSItem*);
-
   protected slots:
 
     void editStandardsBuildingType(const QString & text);
@@ -268,6 +258,7 @@ class SpaceTypeInspectorView : public ModelObjectInspectorView
     //SpaceTypeSpacesVectorController* m_spacesVectorController;
     //OSDropZone* m_spacesDropZone;
     SpaceLoadInstancesWidget* m_spaceLoadInstancesWidget;
+
 };
 
 

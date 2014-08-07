@@ -105,10 +105,6 @@ private:
 
   OSGridController * m_gridController;
 
-public slots:
-
-  void myTestSlot(OSItem * item);
-
 };
 
 } // openstudio
