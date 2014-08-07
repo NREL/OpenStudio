@@ -39,7 +39,7 @@ ThermalZonesTabController::ThermalZonesTabController(bool isIP, const model::Mod
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_thermalZonesController.get(),SIGNAL(toggleUnitsClicked( bool )) );
   OS_ASSERT(isConnected);
 
-  isConnected = QObject::connect(m_thermalZonesController->subTabView(), SIGNAL(gridRowSelected(OSItem *)), m_thermalZonesController.get(), SLOT(selectItem(OSItem* item)));
+  isConnected = QObject::connect(m_thermalZonesController->subTabView()->inspectorView(), SIGNAL(gridRowSelected(OSItem*)), m_thermalZonesController.get(), SLOT(selectItem(OSItem*)));
   OS_ASSERT(isConnected);
 }
 

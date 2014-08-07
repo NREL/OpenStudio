@@ -61,9 +61,6 @@ SpaceTypesView::SpaceTypesView(const openstudio::model::Model& model,
   isConnected = connect(itemSelector(), SIGNAL(selectionCleared()), inspectorView(), SIGNAL(selectionCleared()));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(inspectorView(), SIGNAL(gridRowSelected(OSItem *)), this, SLOT(myTestSlot(OSItem *))); // TODO delete this
-  OS_ASSERT(isConnected);
-
   isConnected = connect(inspectorView(), SIGNAL(gridRowSelected(OSItem*)), itemSelector(), SIGNAL(gridRowSelected(OSItem*)));
   OS_ASSERT(isConnected);
 
@@ -72,11 +69,6 @@ SpaceTypesView::SpaceTypesView(const openstudio::model::Model& model,
 
   isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), inspectorView(), SIGNAL(itemSelected(OSItem *)));
   OS_ASSERT(isConnected);
-
-}
-
-void SpaceTypesView::myTestSlot(OSItem * item)
-{
 }
 
 } // openstudio

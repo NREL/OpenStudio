@@ -18,8 +18,10 @@
 **********************************************************************/
 
 #include "SpaceTypesTabController.hpp"
-#include "SpaceTypesTabView.hpp"
+
+#include "SpaceTypeInspectorView.hpp"
 #include "SpaceTypesController.hpp"
+#include "SpaceTypesTabView.hpp"
 
 #include "../model/Model.hpp"
 
@@ -50,7 +52,10 @@ SpaceTypesTabController::SpaceTypesTabController(const model::Model& model)
 
   this->mainContentWidget()->addTabWidget(m_spaceTypesController->subTabView());
 
-  isConnected = QObject::connect(m_spaceTypesController->subTabView(), SIGNAL(gridRowSelected(OSItem *)), m_spaceTypesController.get(), SLOT(selectItem(OSItem* item)));
+  SpaceTypeInspectorView * spaceTypeInspectorView = qobject_cast<SpaceTypeInspectorView *>(m_spaceTypesController->subTabView()->inspectorView());
+  OS_ASSERT(spaceTypeInspectorView);
+
+  isConnected = connect(spaceTypeInspectorView, SIGNAL(gridRowSelected(OSItem*)), m_spaceTypesController.get(), SLOT(selectItem(OSItem*)));
   OS_ASSERT(isConnected);
 
 }
