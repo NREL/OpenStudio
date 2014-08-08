@@ -90,11 +90,6 @@ namespace runmanager {
     return m_impl->isRunning();
   }
 
-  bool Job::runningRemotely() const
-  {
-    return m_impl->runningRemotely();
-  }
-
   bool Job::outOfDate() const
   {
     return m_impl->outOfDate();
@@ -108,11 +103,6 @@ namespace runmanager {
   void Job::setRunnable(bool force)
   {
     m_impl->setRunnable(force);
-  }
-
-  bool Job::remoteRunnable() const
-  {
-    return m_impl->remoteRunnable();
   }
 
   bool Job::runnable() const
@@ -262,13 +252,6 @@ namespace runmanager {
   void Job::start(const std::shared_ptr<ProcessCreator> &t_pc)
   {
     m_impl->setProcessCreator(t_pc);
-    m_impl->start();
-  }
-
-  void Job::start(const std::shared_ptr<ProcessCreator> &t_pc, int t_remoteid, int t_remoteTaskId)
-  {
-    m_impl->setProcessCreator(t_pc);
-    m_impl->setRemoteId(t_remoteid, t_remoteTaskId);
     m_impl->start();
   }
 

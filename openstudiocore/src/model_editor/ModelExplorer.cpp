@@ -177,55 +177,31 @@ namespace modeleditor
 
   void ModelExplorer::connectSignalsAndSlots()
   {
-    bool connected;
-    connected = connect(mClassAction, SIGNAL(triggered()), this, SLOT(classAction()));
-    OS_ASSERT(connected);
+    connect(mClassAction, &QAction::triggered, this, &ModelExplorer::classAction);
 
-    connected = connect(mSystemOutlinerAction, SIGNAL(triggered()), this, SLOT(systemOutlinerAction()));
-    OS_ASSERT(connected);
+    connect(mSystemOutlinerAction, &QAction::triggered, this, &ModelExplorer::systemOutlinerAction);
 
-    connected = connect(mTreeAction, SIGNAL(triggered()), this, SLOT(treeAction()));
-    OS_ASSERT(connected);
+    connect(mTreeAction, &QAction::triggered, this, &ModelExplorer::treeAction);
 
-    connected = connect(mClassViewWidget,SIGNAL(eventEnter()),
-                        this,SLOT(on_ClassViewEventEnter()));
-    OS_ASSERT(connected);
+    connect(mClassViewWidget, &ClassViewWidget::eventEnter, this, &ModelExplorer::on_ClassViewEventEnter);
 
-    connected = connect(mClassViewWidget,SIGNAL(eventLeave()),
-                        this,SLOT(on_ClassViewEventLeave()));
-    OS_ASSERT(connected);
+    connect(mClassViewWidget, &ClassViewWidget::eventLeave, this, &ModelExplorer::on_ClassViewEventLeave);
 
-    connected = connect(mTreeViewWidget,SIGNAL(eventEnter()),
-                        this,SLOT(on_TreeViewEventEnter()));
-    OS_ASSERT(connected);
+    connect(mTreeViewWidget, &TreeViewWidget::eventEnter, this, &ModelExplorer::on_TreeViewEventEnter);
 
-    connected = connect(mTreeViewWidget,SIGNAL(eventLeave()),
-                        this,SLOT(on_TreeViewEventLeave()));
-    OS_ASSERT(connected);
+    connect(mTreeViewWidget, &TreeViewWidget::eventLeave, this, &ModelExplorer::on_TreeViewEventLeave);
 
-    connected = connect(mTreeViewWidget,SIGNAL(modelDirty()),
-                        mClassViewWidget,SLOT(on_modelDirty()));
-    OS_ASSERT(connected);
+    connect(mTreeViewWidget, &TreeViewWidget::modelDirty, mClassViewWidget, &ClassViewWidget::on_modelDirty);
 
-    connected = connect(mClassViewWidget,SIGNAL(modelDirty()),
-                        mTreeViewWidget,SLOT(on_modelDirty()));
-    OS_ASSERT(connected);
+    connect(mClassViewWidget, &ClassViewWidget::modelDirty, mTreeViewWidget, &TreeViewWidget::on_modelDirty);
 
-    connected = connect(mTreeViewWidget,SIGNAL(modelDirty()),
-                        this,SIGNAL(modelDirty()));
-    OS_ASSERT(connected);
+    connect(mTreeViewWidget, &TreeViewWidget::modelDirty, this, &ModelExplorer::modelDirty);
 
-    connected = connect(mClassViewWidget,SIGNAL(modelDirty()),
-                        this,SIGNAL(modelDirty()));
-    OS_ASSERT(connected);
+    connect(mClassViewWidget, &ClassViewWidget::modelDirty, this, &ModelExplorer::modelDirty);
 
-    connected = connect(mTreeViewWidget,SIGNAL(precisionDlgFinished()),
-                        this,SIGNAL(precisionDlgFinished()));
-    OS_ASSERT(connected);
+    connect(mTreeViewWidget, &TreeViewWidget::precisionDlgFinished, this, &ModelExplorer::precisionDlgFinished);
 
-    connected = connect(mClassViewWidget,SIGNAL(precisionDlgFinished()),
-                        this,SIGNAL(precisionDlgFinished()));
-    OS_ASSERT(connected);
+    connect(mClassViewWidget, &ClassViewWidget::precisionDlgFinished, this, &ModelExplorer::precisionDlgFinished);
   }
 
   void ModelExplorer::showComments(const bool showComments)

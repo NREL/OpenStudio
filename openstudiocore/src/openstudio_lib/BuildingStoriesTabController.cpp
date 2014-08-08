@@ -33,15 +33,9 @@ BuildingStoriesTabController::BuildingStoriesTabController(const model::Model& m
   m_buildingStoriesController = std::shared_ptr<BuildingStoriesController>(new BuildingStoriesController(model));
   this->mainContentWidget()->addTabWidget(m_buildingStoriesController->subTabView());
 
-  bool isConnected = false;
+  connect(m_buildingStoriesController.get(), &BuildingStoriesController::downloadComponentsClicked, this, &BuildingStoriesTabController::downloadComponentsClicked);
 
-  isConnected = QObject::connect(m_buildingStoriesController.get(), SIGNAL(downloadComponentsClicked()),
-                                 this, SIGNAL(downloadComponentsClicked()));
-  OS_ASSERT(isConnected);
-
-  isConnected = QObject::connect(m_buildingStoriesController.get(), SIGNAL(openLibDlgClicked()),
-                                 this, SIGNAL(openLibDlgClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_buildingStoriesController.get(), &BuildingStoriesController::openLibDlgClicked, this, &BuildingStoriesTabController::openLibDlgClicked);
 }
 
 } // openstudio

@@ -50,7 +50,7 @@ bool ExportSpreadsheet::exportSpreadsheet(const analysisdriver::SimpleProject& p
   LOG_FREE(Debug, "ExportSpreadsheet", "Starting export of projectPath:" << toString(projectPath));
 
   openstudio::path rubyPath;
-#if defined(Q_OS_WIN32)
+#if defined(Q_OS_WIN)
   rubyPath = getOpenStudioEmbeddedRubyPath() / toPath("bin/ruby.exe");
 #else
   rubyPath = "ruby";

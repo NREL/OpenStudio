@@ -7,7 +7,7 @@
 *  License as published by the Free Software Foundation; either
 *  version 2.1 of the License, or (at your option) any later version.
 *  
-*  Thsis library is distributed in the hope that it will be useful,
+*  This library is distributed in the hope that it will be useful,
 *  but WITHOUT ANY WARRANTY; without even the implied warranty of
 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 *  Lesser General Public License for more details.
@@ -149,9 +149,7 @@ InspectorGadget::~InspectorGadget()
 
 void InspectorGadget::connectSignalsAndSlots()
 {
-  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                             this, SLOT(toggleUnits(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &InspectorGadget::toggleUnitsClicked, this, &InspectorGadget::toggleUnits);
 }
 
 void InspectorGadget::rebuild(bool recursive)
@@ -258,7 +256,9 @@ void InspectorGadget::clear(bool recursive)
     m_deleteHandle=nullptr;
   }
 
-  m_workspaceObj.reset();
+  // This line is commented out to prevent a crash when displaying the Inspector Gadget
+  // within SketchUp 2014.  We have no idea why this works or what repercussions it may cause
+  //m_workspaceObj.reset();
 }
 
 void InspectorGadget::setPrecision( unsigned int prec, FLOAT_DISPLAY dispType )
@@ -319,7 +319,7 @@ void InspectorGadget::layoutItems(QVBoxLayout* masterLayout,
     //{
     //  if(comment == m_workspaceObjs[it]->fieldComment(i,true)){
     //    // keep track of a field set to the value FIELDS_MATCH,
-    //    // if it changed, change the repective elements in any
+    //    // if it changed, change the respective elements in any
     //    // other
     //    comment == FIELDS_MATCH;
     //    break;
@@ -545,15 +545,15 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
     hbox->addWidget( text );
     text->setProperty(s_indexSlotName,index);
     
-    //connect(text, SIGNAL(textEdited(const QString&)), this, SLOT(IGvalueChanged(const QString&)), Qt::QueuedConnection);
+    //connect(text, &IGLineEdit::textEdited, this, &InspectorGadget::IGvalueChanged, Qt::QueuedConnection);
     
-    connect(text, SIGNAL(editingFinished()), text, SLOT(editDone()));
-    connect(text, SIGNAL(newValue(const QString&)), this, SLOT(IGvalueChanged(const QString&)));
+    connect(text, &IGLineEdit::editingFinished, text, &IGLineEdit::editDone);
+    connect(text, &IGLineEdit::newValue, this, &InspectorGadget::IGvalueChanged);
   }
 
   QLineEdit* commentText = new QLineEdit( QString(comment.c_str()), parent  );
   commentText->setProperty(s_indexSlotName,index);
-  connect(commentText, SIGNAL(textEdited(const QString&)), this, SLOT(IGcommentChanged(const QString&)));
+  connect(commentText, &QLineEdit::textEdited, this, &InspectorGadget::IGcommentChanged);
   if( !m_showComments )
   {
     commentText->hide();
@@ -599,12 +599,12 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
   }
   else
   {
-    //connect(text, SIGNAL(textEdited(const QString&)), this, SLOT(IGvalueChanged(const QString&)), Qt::QueuedConnection);
+    //connect(text, &IGLineEdit::textEdited, this, &InspectorGadget::IGvalueChanged, Qt::QueuedConnection);
     
-    connect(text, SIGNAL(editingFinished()), text, SLOT(editDone()));
-    connect(text, SIGNAL(newValue(const QString&)), this, SLOT(IGvalueChanged(const QString&)));
+    connect(text, &IGLineEdit::editingFinished, text, &IGLineEdit::editDone);
+    connect(text, &IGLineEdit::newValue, this, &InspectorGadget::IGvalueChanged);
 
-    connect(commentText, SIGNAL(textEdited(const QString&)), this, SLOT(IGcommentChanged(const QString&)));
+    connect(commentText, &QLineEdit::textEdited, this, &InspectorGadget::IGcommentChanged);
   }
 
   if( number )
@@ -728,23 +728,11 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
       hardSizedLayout->addWidget( units );
 
       // enable the hard size field
-      connect( hardSizedRadio,
-               SIGNAL(toggled(bool)),
-               text,
-               SLOT(setEnabled(bool)) );
-
+      connect(hardSizedRadio, &QRadioButton::toggled, text, &IGLineEdit::setEnabled);
       // when clicking on the hard size radio set text
-      connect( hardSizedRadio,
-               SIGNAL(clicked(bool)),
-               text,
-               SLOT(hardsizeClicked(bool)) );
-
+      connect(hardSizedRadio, &QRadioButton::clicked, text, &IGLineEdit::hardsizeClicked);
       // set the field to auto size
-      connect( autosizedRadio,
-               SIGNAL(toggled(bool)),
-               this,
-               SLOT(IGautosize(bool)) );
-
+      connect(autosizedRadio, &QRadioButton::toggled, this, &InspectorGadget::IGautosize);
       vbox->addLayout(hardSizedLayout);
       vbox->addLayout(autoSizedLayout);
     }
@@ -765,8 +753,7 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
       hardSizedLayout->addWidget( btn );
 
       btn->setProperty(s_indexSlotName,index);
-      connect(btn,SIGNAL(clicked()),text,SLOT(togglePrec()));
-
+      connect(btn, &QPushButton::clicked, text, &IGLineEdit::togglePrec);
       text->setPrec(m_precision);
       text->setStyle(m_floatDisplayType);
       text->setDisplay(true);
@@ -860,7 +847,7 @@ void InspectorGadget::layoutComboBox( QVBoxLayout* layout,
   if( -1 == idx )
   {
     idx=0;
-    connect(combo, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(IGdefaultRemoved(const QString&)));
+    connect(combo, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &InspectorGadget::IGdefaultRemoved);
     //QString errormsg("We have a value:");
     //errormsg += curVal.c_str();
     //errormsg += " that does not match the allowable values in the idd.Name:";
@@ -873,18 +860,17 @@ void InspectorGadget::layoutComboBox( QVBoxLayout* layout,
   
   if( m_comboBridge)
   {
-    connect(combo, SIGNAL(highlighted(const QString&)), m_comboBridge, SLOT(highlighted(const QString&)));
-    connect(combo, SIGNAL(activated(const QString&)), m_comboBridge, SLOT(activated(const QString&)));
+    connect(combo, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::highlighted), m_comboBridge, &ComboHighlightBridge::highlighted);
+    connect(combo, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::activated), m_comboBridge, &ComboHighlightBridge::activated);
   }
   combo->setCurrentIndex( idx );
-  connect(combo, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(IGvalueChanged(const QString&)));
-
+  connect(combo, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &InspectorGadget::IGvalueChanged);
   vbox->addWidget(label);
   vbox->addWidget(combo);
 
   QLineEdit* commentText = new QLineEdit( QString(comment.c_str()), parent  );
   commentText->setProperty(s_indexSlotName,index);
-  connect(commentText, SIGNAL(textEdited(const QString&)), this, SLOT(IGcommentChanged(const QString&)));
+  connect(commentText, &QLineEdit::textEdited, this, &InspectorGadget::IGcommentChanged);
   vbox->addWidget(commentText);
   if(!m_showComments)
   {
@@ -935,9 +921,8 @@ void InspectorGadget::createExtensibleToolBar( QVBoxLayout* layout,
   subBtn->setIcon( ico2 );
   subBtn->setStyleSheet(" margin: 0px; border: 0px;" );
 
-  connect(addBtn,SIGNAL(clicked()),this,SLOT(addExtensible()));
-  connect(subBtn,SIGNAL(clicked()),this,SLOT(removeExtensible()));
-
+  connect(addBtn, &QPushButton::clicked, this, &InspectorGadget::addExtensible);
+  connect(subBtn, &QPushButton::clicked, this, &InspectorGadget::removeExtensible);
   checkRemoveBtn( subBtn );
 
   hbox->addSpacing(10);//because this row doesn't have a vbox, we need to move the text over some to get it to line up
@@ -1225,13 +1210,11 @@ void InspectorGadget::onWorkspaceObjectRemoved()
 void InspectorGadget::connectWorkspaceObjectSignals() const
 {
   if (m_workspaceObj){
-    QObject* impl = m_workspaceObj->getImpl<openstudio::detail::WorkspaceObject_Impl>().get();
+    openstudio::detail::WorkspaceObject_Impl* impl = m_workspaceObj->getImpl<openstudio::detail::WorkspaceObject_Impl>().get();
     if (impl){
-      bool connected = this->connect(impl, SIGNAL(onChange()), SLOT(onWorkspaceObjectChanged()));
-      OS_ASSERT(connected);
+      connect(impl, &openstudio::detail::WorkspaceObject_Impl::onChange, this, &InspectorGadget::onWorkspaceObjectChanged);
 
-      connected = this->connect(impl, SIGNAL(onRemoveFromWorkspace(Handle)), SLOT(onWorkspaceObjectRemoved()));
-      OS_ASSERT(connected);
+      connect(impl, &openstudio::detail::WorkspaceObject_Impl::onRemoveFromWorkspace, this, &InspectorGadget::onWorkspaceObjectRemoved);
     }
   }
 }

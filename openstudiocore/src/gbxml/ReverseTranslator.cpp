@@ -40,6 +40,8 @@
 #include "../model/ShadingSurface_Impl.hpp"
 #include "../model/ShadingSurfaceGroup.hpp"
 #include "../model/ShadingSurfaceGroup_Impl.hpp"
+#include "../model/ConstructionBase.hpp"
+#include "../model/ConstructionBase_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/units/UnitFactory.hpp"
@@ -463,7 +465,7 @@ namespace gbxml {
       QDomNodeList coordinateElements = cartesianPointElements.at(i).toElement().elementsByTagName("Coordinate");
       OS_ASSERT(coordinateElements.size() == 3);
 
-      /* Calling these conversions every time is uneccesarily slow
+      /* Calling these conversions every time is unnecessarily slow
 
       Unit targetUnit = UnitFactory::instance().createUnit("m").get();
       Quantity xQuantity(coordinateElements.at(0).toElement().text().toDouble(), m_lengthUnit);
@@ -565,6 +567,16 @@ namespace gbxml {
 
       result = surface;
 
+      // translate construction
+      QString constructionIdRef = element.attribute("constructionIdRef");
+      if (!constructionIdRef.isEmpty()){
+        std::string constructionName = escapeName(constructionIdRef);
+        boost::optional<model::ConstructionBase> construction = model.getModelObjectByName<model::ConstructionBase>(constructionName);
+        if (construction){
+          surface.setConstruction(*construction);
+        }
+      }
+
       // translate subSurfaces
       QDomNodeList subSurfaceElements = element.elementsByTagName("Opening");
       for (int i = 0; i < subSurfaceElements.count(); ++i){
@@ -633,7 +645,7 @@ namespace gbxml {
       QDomNodeList coordinateElements = cartesianPointElements.at(i).toElement().elementsByTagName("Coordinate");
       OS_ASSERT(coordinateElements.size() == 3);
 
-      /* Calling these conversions every time is uneccesarily slow
+      /* Calling these conversions every time is unnecessarily slow
 
       Unit targetUnit = UnitFactory::instance().createUnit("m").get();
       Quantity xQuantity(coordinateElements.at(0).toElement().text().toDouble(), m_lengthUnit);
@@ -659,6 +671,18 @@ namespace gbxml {
     subSurface.setName(escapeName(id));
 
     result = subSurface;
+
+    // translate construction
+    QString constructionIdRef = element.attribute("constructionIdRef");
+    if (!constructionIdRef.isEmpty()){
+      std::string constructionName = escapeName(constructionIdRef);
+      boost::optional<model::ConstructionBase> construction = model.getModelObjectByName<model::ConstructionBase>(constructionName);
+      if (construction){
+        surface.setConstruction(*construction);
+      }
+    }
+
+    // todo: translate "interiorShadeType", "exteriorShadeType", "windowTypeIdRef", and other properties of the opening
 
     return result;
   }

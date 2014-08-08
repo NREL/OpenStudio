@@ -639,8 +639,7 @@ namespace detail {
     std::shared_ptr<Process> process = m_process_creator->createProcess(ti,
         requiredFiles, m_parameters[t_toolName],
         outpath, std::vector<openstudio::path>(m_expectedOutputFiles.begin(), m_expectedOutputFiles.end()), "\n\n",
-        getBasePath(),
-        getRemoteId());
+        getBasePath());
 
     if (m_currentprocess)
     {
@@ -650,27 +649,16 @@ namespace detail {
     m_currentprocess = process;
     m_processes[ti] = process;
 
-    connect(process.get(), SIGNAL(started()), 
-        this, SLOT(processStarted()));
-    connect(process.get(), SIGNAL(outputFileChanged(const openstudio::runmanager::FileInfo &)), 
-        this, SLOT(processOutputFileChanged(const openstudio::runmanager::FileInfo &)));
-    connect(process.get(), SIGNAL(standardErrDataAdded(const std::string &)),
-        this, SLOT(processStandardErrDataAdded(const std::string &)));
-    connect(process.get(), SIGNAL(standardOutDataAdded(const std::string &)),
-        this, SLOT(processStandardOutDataAdded(const std::string &)));
-    connect(process.get(), SIGNAL(error(QProcess::ProcessError)),
-        this, SLOT(processError(QProcess::ProcessError)));
-    connect(process.get(), SIGNAL(error(QProcess::ProcessError, const std::string &)),
-      this, SLOT(processError(QProcess::ProcessError, const std::string &)));
-    connect(process.get(), SIGNAL(finished(int, QProcess::ExitStatus)),
-        this, SLOT(processFinished(int, QProcess::ExitStatus)));
-    connect(process.get(), SIGNAL(statusChanged(const openstudio::runmanager::AdvancedStatus &)),
-        this, SLOT(processStatusChanged(const openstudio::runmanager::AdvancedStatus &)));
-    connect(process.get(), SIGNAL(remoteStarted(int, int)),
-        this, SLOT(remoteStarted(int, int)));
-    connect(process.get(), SIGNAL(remoteFinished(int, int)),
-        this, SLOT(remoteFinished(int, int)));
-
+    connect(process.get(), &Process::started, this, &ToolBasedJob::processStarted);
+    connect(process.get(), &Process::outputFileChanged, this, &ToolBasedJob::processOutputFileChanged);
+    connect(process.get(), &Process::standardErrDataAdded, this, &ToolBasedJob::processStandardErrDataAdded);
+    connect(process.get(), &Process::standardOutDataAdded, this, &ToolBasedJob::processStandardOutDataAdded);
+    connect(process.get(), static_cast<void (Process::*)(QProcess::ProcessError)>(&Process::error),
+      this, static_cast<void (ToolBasedJob::*)(QProcess::ProcessError)>(&ToolBasedJob::processError));
+    connect(process.get(), static_cast<void (Process::*)(QProcess::ProcessError, const std::string &)>(&Process::error),
+      this, static_cast<void (ToolBasedJob::*)(QProcess::ProcessError, const std::string &)>(&ToolBasedJob::processError));
+    connect(process.get(), &Process::finished, this, &ToolBasedJob::processFinished);
+    connect(process.get(), &Process::statusChanged, this, &ToolBasedJob::processStatusChanged);
     process->start();
   }
 
@@ -799,17 +787,6 @@ namespace detail {
     err.push_back(std::make_pair(ErrorType::Error, e.what()));
     setErrors(JobErrors(ruleset::OSResultValue::Fail, err));
     LOG(Error, "ToolBasedJob error starting job: " << e.what());
-  }
-
-
-  void ToolBasedJob::remoteStarted(int t_remoteid, int t_remoteTaskId)
-  {
-    emit remoteProcessStarted(uuid(), t_remoteid, t_remoteTaskId);
-  }
-
-  void ToolBasedJob::remoteFinished(int t_remoteid, int t_remoteTaskId)
-  {
-    emit remoteProcessFinished(uuid(), t_remoteid, t_remoteTaskId);
   }
 
   void ToolBasedJob::requestStop()

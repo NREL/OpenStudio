@@ -140,26 +140,26 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
 
     m_startupMenu = std::shared_ptr<StartupMenu>(new StartupMenu());
 
-    connect( m_startupMenu.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
-    connect( m_startupMenu.get(), SIGNAL(importClicked()), this,SLOT(importIdf()) );
-    connect( m_startupMenu.get(), SIGNAL(importgbXMLClicked()), this,SLOT(importgbXML()) );
-    connect( m_startupMenu.get(), SIGNAL(importSDDClicked()), this,SLOT(importSDD()) );
-    connect( m_startupMenu.get(), SIGNAL(loadFileClicked()), this,SLOT(open()) );
-    //connect( m_startupMenu.get(), SIGNAL(loadLibraryClicked()), this,SLOT(loadLibrary()) );
-    connect( m_startupMenu.get(), SIGNAL(newClicked()), this,SLOT(newModel()) );
-    connect( m_startupMenu.get(), SIGNAL(helpClicked()), this,SLOT(showHelp()) );
-    connect( m_startupMenu.get(), SIGNAL(aboutClicked()), this,SLOT(showAbout()) );
+    connect(m_startupMenu.get(), &StartupMenu::exitClicked, this, &OpenStudioApp::quit);
+    connect(m_startupMenu.get(), &StartupMenu::importClicked, this, &OpenStudioApp::importIdf);
+    connect(m_startupMenu.get(), &StartupMenu::importgbXMLClicked, this, &OpenStudioApp::importgbXML);
+    connect(m_startupMenu.get(), &StartupMenu::importSDDClicked, this, &OpenStudioApp::importSDD);
+    connect(m_startupMenu.get(), &StartupMenu::loadFileClicked, this, &OpenStudioApp::open);
+    //connect(m_startupMenu.get(), &StartupMenu::loadLibraryClicked, this, &OpenStudioApp::loadLibrary);
+    connect(m_startupMenu.get(), &StartupMenu::newClicked, this, &OpenStudioApp::newModel);
+    connect(m_startupMenu.get(), &StartupMenu::helpClicked, this, &OpenStudioApp::showHelp);
+    connect(m_startupMenu.get(), &StartupMenu::aboutClicked, this, &OpenStudioApp::showAbout);
   #endif
 
   this->buildCompLibraries();
 
   m_startupView = std::shared_ptr<openstudio::StartupView>(new openstudio::StartupView());
 
-  connect( m_startupView.get(), SIGNAL( newFromTemplate( NewFromTemplateEnum ) ), this, SLOT( newFromTemplateSlot( NewFromTemplateEnum ) ) ) ;
-  connect( m_startupView.get(), SIGNAL( openClicked() ), this, SLOT( open() ) ) ;
-  connect( m_startupView.get(), SIGNAL( importClicked() ), this, SLOT( importIdf() ) ) ;
-  connect( m_startupView.get(), SIGNAL( importgbXMLClicked() ), this, SLOT( importgbXML() ) ) ;
-  connect( m_startupView.get(), SIGNAL( importSDDClicked() ), this, SLOT( importSDD() ) ) ;
+  connect(m_startupView.get(), &StartupView::newFromTemplate, this, &OpenStudioApp::newFromTemplateSlot);
+  connect(m_startupView.get(), &StartupView::openClicked, this, &OpenStudioApp::open);
+  connect(m_startupView.get(), &StartupView::importClicked, this, &OpenStudioApp::importIdf);
+  //connect(m_startupView.get(), &StartupView::importgbXMLClicked, this, &OpenStudioApp::importgbXML);
+  connect(m_startupView.get(), &StartupView::importSDDClicked, this, &OpenStudioApp::importSDD);
 
   bool openedCommandLine = false;
 
@@ -184,18 +184,17 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
                                                                    model,
                                                                    fileName) );
 
-      connect( m_osDocument.get(), SIGNAL(closeClicked()), this, SLOT(onCloseClicked()) );
-      connect( m_osDocument.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
-      connect( m_osDocument.get(), SIGNAL(importClicked()), this,SLOT(importIdf()) );
-      connect( m_osDocument.get(), SIGNAL(importgbXMLClicked()), this,SLOT(importgbXML()) );
-      connect( m_osDocument.get(), SIGNAL(importSDDClicked()), this,SLOT(importSDD()) );
-      connect( m_osDocument.get(), SIGNAL(loadFileClicked()), this,SLOT(open()) );
-      connect( m_osDocument.get(), SIGNAL(osmDropped(QString)), this,SLOT(openFromDrag(QString)) );
-      connect( m_osDocument.get(), SIGNAL(loadLibraryClicked()), this,SLOT(loadLibrary()) );
-      connect( m_osDocument.get(), SIGNAL(newClicked()), this,SLOT(newModel()) );
-      connect( m_osDocument.get(), SIGNAL(helpClicked()), this,SLOT(showHelp()) );
-      connect( m_osDocument.get(), SIGNAL(aboutClicked()), this,SLOT(showAbout()) );
-
+      connect(m_osDocument.get(), &OSDocument::closeClicked, this, &OpenStudioApp::onCloseClicked);
+      connect(m_osDocument.get(), &OSDocument::exitClicked, this, &OpenStudioApp::quit);
+      connect(m_osDocument.get(), &OSDocument::importClicked, this, &OpenStudioApp::importIdf);
+      connect(m_osDocument.get(), &OSDocument::importgbXMLClicked, this, &OpenStudioApp::importgbXML);
+      connect(m_osDocument.get(), &OSDocument::importSDDClicked, this, &OpenStudioApp::importSDD);
+      connect(m_osDocument.get(), &OSDocument::loadFileClicked, this, &OpenStudioApp::open);
+      connect(m_osDocument.get(), &OSDocument::osmDropped, this, &OpenStudioApp::openFromDrag);
+      connect(m_osDocument.get(), &OSDocument::loadLibraryClicked, this, &OpenStudioApp::loadLibrary);
+      connect(m_osDocument.get(), &OSDocument::newClicked, this, &OpenStudioApp::newModel);
+      connect(m_osDocument.get(), &OSDocument::helpClicked, this, &OpenStudioApp::showHelp);
+      connect(m_osDocument.get(), &OSDocument::aboutClicked, this, &OpenStudioApp::showAbout);
       if(args.size() == 2){
         // check for 'noSavePath'
         if (args.at(1) == QString("noSavePath")){
@@ -283,18 +282,17 @@ bool OpenStudioApp::openFile(const QString& fileName, bool restoreTabs)
                                                                    startTabIndex, 
                                                                    startSubTabIndex) );
 
-      connect( m_osDocument.get(), SIGNAL(closeClicked()), this, SLOT(onCloseClicked()) );
-      connect( m_osDocument.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
-      connect( m_osDocument.get(), SIGNAL(importClicked()), this,SLOT(importIdf()) );
-      connect( m_osDocument.get(), SIGNAL(importgbXMLClicked()), this,SLOT(importgbXML()) );
-      connect( m_osDocument.get(), SIGNAL(importSDDClicked()), this,SLOT(importSDD()) );
-      connect( m_osDocument.get(), SIGNAL(loadFileClicked()), this,SLOT(open()) );
-      connect( m_osDocument.get(), SIGNAL(osmDropped(QString)), this,SLOT(openFromDrag(QString)) );
-      connect( m_osDocument.get(), SIGNAL(loadLibraryClicked()), this,SLOT(loadLibrary()) );
-      connect( m_osDocument.get(), SIGNAL(newClicked()), this,SLOT(newModel()) );
-      connect( m_osDocument.get(), SIGNAL(helpClicked()), this,SLOT(showHelp()) );
-      connect( m_osDocument.get(), SIGNAL(aboutClicked()), this,SLOT(showAbout()) );
-
+      connect(m_osDocument.get(), &OSDocument::closeClicked, this, &OpenStudioApp::onCloseClicked);
+      connect(m_osDocument.get(), &OSDocument::exitClicked, this, &OpenStudioApp::quit);
+      connect(m_osDocument.get(), &OSDocument::importClicked, this, &OpenStudioApp::importIdf);
+      connect(m_osDocument.get(), &OSDocument::importgbXMLClicked, this, &OpenStudioApp::importgbXML);
+      connect(m_osDocument.get(), &OSDocument::importSDDClicked, this, &OpenStudioApp::importSDD);
+      connect(m_osDocument.get(), &OSDocument::loadFileClicked, this, &OpenStudioApp::open);
+      connect(m_osDocument.get(), &OSDocument::osmDropped, this, &OpenStudioApp::openFromDrag);
+      connect(m_osDocument.get(), &OSDocument::loadLibraryClicked, this, &OpenStudioApp::loadLibrary);
+      connect(m_osDocument.get(), &OSDocument::newClicked, this, &OpenStudioApp::newModel);
+      connect(m_osDocument.get(), &OSDocument::helpClicked, this, &OpenStudioApp::showHelp);
+      connect(m_osDocument.get(), &OSDocument::aboutClicked, this, &OpenStudioApp::showAbout);
       waitDialog()->setVisible(false);
 
       m_startupView->hide();
@@ -365,18 +363,17 @@ void OpenStudioApp::newFromTemplateSlot( NewFromTemplateEnum newFromTemplateEnum
 {
   m_osDocument = std::shared_ptr<OSDocument>( new OSDocument( componentLibrary(), hvacComponentLibrary(), resourcesPath() ) );
 
-  connect( m_osDocument.get(), SIGNAL(closeClicked()), this, SLOT(onCloseClicked()) );
-  connect( m_osDocument.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
-  connect( m_osDocument.get(), SIGNAL(importClicked()), this,SLOT(importIdf()) );
-  connect( m_osDocument.get(), SIGNAL(importgbXMLClicked()), this,SLOT(importgbXML()) );
-  connect( m_osDocument.get(), SIGNAL(importSDDClicked()), this,SLOT(importSDD()) );
-  connect( m_osDocument.get(), SIGNAL(loadFileClicked()), this,SLOT(open()) );
-  connect( m_osDocument.get(), SIGNAL(osmDropped(QString)), this,SLOT(openFromDrag(QString)) );
-  connect( m_osDocument.get(), SIGNAL(loadLibraryClicked()), this,SLOT(loadLibrary()) );
-  connect( m_osDocument.get(), SIGNAL(newClicked()), this,SLOT(newModel()) );
-  connect( m_osDocument.get(), SIGNAL(helpClicked()), this,SLOT(showHelp()) );
-  connect( m_osDocument.get(), SIGNAL(aboutClicked()), this,SLOT(showAbout()) );
- 
+  connect(m_osDocument.get(), &OSDocument::closeClicked, this, &OpenStudioApp::onCloseClicked);
+  connect(m_osDocument.get(), &OSDocument::exitClicked, this, &OpenStudioApp::quit);
+  connect(m_osDocument.get(), &OSDocument::importClicked, this, &OpenStudioApp::importIdf);
+  connect(m_osDocument.get(), &OSDocument::importgbXMLClicked, this, &OpenStudioApp::importgbXML);
+  connect(m_osDocument.get(), &OSDocument::importSDDClicked, this, &OpenStudioApp::importSDD);
+  connect(m_osDocument.get(), &OSDocument::loadFileClicked, this, &OpenStudioApp::open);
+  connect(m_osDocument.get(), &OSDocument::osmDropped, this, &OpenStudioApp::openFromDrag);
+  connect(m_osDocument.get(), &OSDocument::loadLibraryClicked, this, &OpenStudioApp::loadLibrary);
+  connect(m_osDocument.get(), &OSDocument::newClicked, this, &OpenStudioApp::newModel);
+  connect(m_osDocument.get(), &OSDocument::helpClicked, this, &OpenStudioApp::showHelp);
+  connect(m_osDocument.get(), &OSDocument::aboutClicked, this, &OpenStudioApp::showAbout);
   m_startupView->hide();
 }
 
@@ -448,18 +445,17 @@ void OpenStudioApp::importIdf()
         // ETH: parent should change now ...
         //parent = m_osDocument->mainWindow();
 
-        connect( m_osDocument.get(), SIGNAL(closeClicked()), this, SLOT(onCloseClicked()) );
-        connect( m_osDocument.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
-        connect( m_osDocument.get(), SIGNAL(importClicked()), this,SLOT(importIdf()) );
-        connect( m_osDocument.get(), SIGNAL(importgbXMLClicked()), this,SLOT(importgbXML()) );
-        connect( m_osDocument.get(), SIGNAL(importSDDClicked()), this,SLOT(importSDD()) );
-        connect( m_osDocument.get(), SIGNAL(loadFileClicked()), this,SLOT(open()) );
-        connect( m_osDocument.get(), SIGNAL(osmDropped(QString)), this,SLOT(openFromDrag(QString)) );
-        connect( m_osDocument.get(), SIGNAL(loadLibraryClicked()), this,SLOT(loadLibrary()) );
-        connect( m_osDocument.get(), SIGNAL(newClicked()), this,SLOT(newModel()) );
-        connect( m_osDocument.get(), SIGNAL(helpClicked()), this,SLOT(showHelp()) );
-        connect( m_osDocument.get(), SIGNAL(aboutClicked()), this,SLOT(showAbout()) );
-
+        connect(m_osDocument.get(), &OSDocument::closeClicked, this, &OpenStudioApp::onCloseClicked);
+        connect(m_osDocument.get(), &OSDocument::exitClicked, this, &OpenStudioApp::quit);
+        connect(m_osDocument.get(), &OSDocument::importClicked, this, &OpenStudioApp::importIdf);
+        connect(m_osDocument.get(), &OSDocument::importgbXMLClicked, this, &OpenStudioApp::importgbXML);
+        connect(m_osDocument.get(), &OSDocument::importSDDClicked, this, &OpenStudioApp::importSDD);
+        connect(m_osDocument.get(), &OSDocument::loadFileClicked, this, &OpenStudioApp::open);
+        connect(m_osDocument.get(), &OSDocument::osmDropped, this, &OpenStudioApp::openFromDrag);
+        connect(m_osDocument.get(), &OSDocument::loadLibraryClicked, this, &OpenStudioApp::loadLibrary);
+        connect(m_osDocument.get(), &OSDocument::newClicked, this, &OpenStudioApp::newModel);
+        connect(m_osDocument.get(), &OSDocument::helpClicked, this, &OpenStudioApp::showHelp);
+        connect(m_osDocument.get(), &OSDocument::aboutClicked, this, &OpenStudioApp::showAbout);
         m_startupView->hide();
         
         QMessageBox messageBox; // (parent); ETH: ... but is hidden, so don't actually use
@@ -573,18 +569,17 @@ void OpenStudioApp::import(OpenStudioApp::fileType type)
       // ETH: parent should change now ...
       //parent = m_osDocument->mainWindow();
 
-      connect( m_osDocument.get(), SIGNAL(closeClicked()), this, SLOT(onCloseClicked()) );
-      connect( m_osDocument.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
-      connect( m_osDocument.get(), SIGNAL(importClicked()), this,SLOT(importIdf()) );
-      connect( m_osDocument.get(), SIGNAL(importgbXMLClicked()), this,SLOT(importgbXML()) );
-      connect( m_osDocument.get(), SIGNAL(importSDDClicked()), this,SLOT(importSDD()) );
-      connect( m_osDocument.get(), SIGNAL(loadFileClicked()), this,SLOT(open()) );
-      connect( m_osDocument.get(), SIGNAL(osmDropped(QString)), this,SLOT(openFromDrag(QString)) );
-      connect( m_osDocument.get(), SIGNAL(loadLibraryClicked()), this,SLOT(loadLibrary()) );
-      connect( m_osDocument.get(), SIGNAL(newClicked()), this,SLOT(newModel()) );
-      connect( m_osDocument.get(), SIGNAL(helpClicked()), this,SLOT(showHelp()) );
-      connect( m_osDocument.get(), SIGNAL(aboutClicked()), this,SLOT(showAbout()) );
-
+      connect(m_osDocument.get(), &OSDocument::closeClicked, this, &OpenStudioApp::onCloseClicked);
+      connect(m_osDocument.get(), &OSDocument::exitClicked, this, &OpenStudioApp::quit);
+      connect(m_osDocument.get(), &OSDocument::importClicked, this, &OpenStudioApp::importIdf);
+      connect(m_osDocument.get(), &OSDocument::importgbXMLClicked, this, &OpenStudioApp::importgbXML);
+      connect(m_osDocument.get(), &OSDocument::importSDDClicked, this, &OpenStudioApp::importSDD);
+      connect(m_osDocument.get(), &OSDocument::loadFileClicked, this, &OpenStudioApp::open);
+      connect(m_osDocument.get(), &OSDocument::osmDropped, this, &OpenStudioApp::openFromDrag);
+      connect(m_osDocument.get(), &OSDocument::loadLibraryClicked, this, &OpenStudioApp::loadLibrary);
+      connect(m_osDocument.get(), &OSDocument::newClicked, this, &OpenStudioApp::newModel);
+      connect(m_osDocument.get(), &OSDocument::helpClicked, this, &OpenStudioApp::showHelp);
+      connect(m_osDocument.get(), &OSDocument::aboutClicked, this, &OpenStudioApp::showAbout);
       m_startupView->hide();
 
       bool errorsOrWarnings = false;

@@ -514,7 +514,7 @@ namespace openstudio{
 
       m_ruby = getOpenStudioAWSRubyPath();
       
-#if defined(Q_OS_WIN32)
+#if defined(Q_OS_WIN)
       m_ruby /= toPath("bin/ruby.exe");
 #else
       m_ruby /= toPath("bin/ruby");
@@ -1475,9 +1475,7 @@ namespace openstudio{
     QProcess *AWSProvider_Impl::makeCheckInternetProcess() const
     {
       auto p = new QProcess();
-      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
-                          this, SLOT(onCheckInternetComplete(int, QProcess::ExitStatus)));
-      OS_ASSERT(test);
+      connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &AWSProvider_Impl::onCheckInternetComplete);
       QStringList args;
       addProcessArguments(args);
       args << QString("EC2");
@@ -1491,9 +1489,7 @@ namespace openstudio{
     QProcess *AWSProvider_Impl::makeCheckServiceProcess() const
     {
       auto p = new QProcess();
-      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
-                          this, SLOT(onCheckServiceComplete(int, QProcess::ExitStatus)));
-      OS_ASSERT(test);
+      connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &AWSProvider_Impl::onCheckServiceComplete);
       QStringList args;
       addProcessArguments(args);
       args << QString("EC2");
@@ -1507,9 +1503,7 @@ namespace openstudio{
     QProcess *AWSProvider_Impl::makeCheckValidateProcess() const
     {
       auto p = new QProcess();
-      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
-                          this, SLOT(onCheckValidateComplete(int, QProcess::ExitStatus)));
-      OS_ASSERT(test);
+      connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &AWSProvider_Impl::onCheckValidateComplete);
       QStringList args;
       addProcessArguments(args);
       args << QString("EC2");
@@ -1523,9 +1517,7 @@ namespace openstudio{
     QProcess *AWSProvider_Impl::makeCheckResourcesProcess() const
     {
       auto p = new QProcess();
-      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
-                          this, SLOT(onCheckResourcesComplete(int, QProcess::ExitStatus)));
-      OS_ASSERT(test);
+      connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &AWSProvider_Impl::onCheckResourcesComplete);
       QStringList args;
       addProcessArguments(args);
       args << QString("EC2");
@@ -1539,13 +1531,9 @@ namespace openstudio{
     QProcess *AWSProvider_Impl::makeStartServerProcess() const
     {
       auto p = new QProcess();
-      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
-                          this, SLOT(onServerStarted(int, QProcess::ExitStatus)));
-      OS_ASSERT(test);
+      connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &AWSProvider_Impl::onServerStarted);
 
-      test = connect(p, SIGNAL(error(QProcess::ProcessError)), 
-                     this, SLOT(onServerStartedError(QProcess::ProcessError)));
-      OS_ASSERT(test);
+      connect(p, static_cast<void (QProcess::*)(QProcess::ProcessError)>(&QProcess::error), this, &AWSProvider_Impl::onServerStartedError);
 
       QStringList args;
       addProcessArguments(args);
@@ -1564,9 +1552,7 @@ namespace openstudio{
     QProcess *AWSProvider_Impl::makeStartWorkerProcess() const
     {
       auto p = new QProcess();
-      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
-                          this, SLOT(onWorkerStarted(int, QProcess::ExitStatus)));
-      OS_ASSERT(test);
+      connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &AWSProvider_Impl::onWorkerStarted);
       QStringList args;
       addProcessArguments(args);
       args << QString("EC2");
@@ -1594,9 +1580,8 @@ namespace openstudio{
     QProcess *AWSProvider_Impl::makeCheckServerRunningProcess() const
     {
       auto p = new QProcess();
-      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
-                          this, SLOT(onCheckServerRunningComplete(int, QProcess::ExitStatus)));
-      OS_ASSERT(test);
+      connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+        this, &AWSProvider_Impl::onCheckServerRunningComplete);
       QStringList args;
       addProcessArguments(args);
       args << QString("EC2");
@@ -1614,9 +1599,8 @@ namespace openstudio{
     QProcess *AWSProvider_Impl::makeCheckWorkerRunningProcess() const
     {
       auto p = new QProcess();
-      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
-                          this, SLOT(onCheckWorkerRunningComplete(int, QProcess::ExitStatus)));
-      OS_ASSERT(test);
+      connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+        this, &AWSProvider_Impl::onCheckWorkerRunningComplete);
       QStringList args;
       addProcessArguments(args);
       args << QString("EC2");
@@ -1630,9 +1614,7 @@ namespace openstudio{
     QProcess *AWSProvider_Impl::makeStopInstancesProcess() const
     {
       auto p = new QProcess();
-      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
-                          this, SLOT(onInstancesStopped(int, QProcess::ExitStatus)));
-      OS_ASSERT(test);
+      connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &AWSProvider_Impl::onInstancesStopped);
       QStringList args;
       addProcessArguments(args);
       args << QString("EC2");
@@ -1656,9 +1638,7 @@ namespace openstudio{
     QProcess *AWSProvider_Impl::makeCheckTerminateProcess() const
     {
       auto p = new QProcess();
-      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
-                          this, SLOT(onCheckTerminatedComplete(int, QProcess::ExitStatus)));
-      OS_ASSERT(test);
+      connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &AWSProvider_Impl::onCheckTerminatedComplete);
       QStringList args;
       addProcessArguments(args);
       args << QString("EC2");
@@ -1682,9 +1662,8 @@ namespace openstudio{
     QProcess *AWSProvider_Impl::makeCheckEstimatedChargesProcess() const
     {
       auto p = new QProcess();
-      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
-                          this, SLOT(onCheckEstimatedChargesComplete(int, QProcess::ExitStatus)));
-      OS_ASSERT(test);
+      connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+        this, &AWSProvider_Impl::onCheckEstimatedChargesComplete);
       QStringList args;
       addProcessArguments(args);
       args << QString("CloudWatch");
@@ -1698,9 +1677,8 @@ namespace openstudio{
     QProcess *AWSProvider_Impl::makeCheckTotalInstancesProcess() const
     {
       auto p = new QProcess();
-      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
-                          this, SLOT(onCheckTotalInstancesComplete(int, QProcess::ExitStatus)));
-      OS_ASSERT(test);
+      connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+        this, &AWSProvider_Impl::onCheckTotalInstancesComplete);
       QStringList args;
       addProcessArguments(args);
       args << QString("EC2");

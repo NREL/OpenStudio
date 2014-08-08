@@ -72,17 +72,13 @@ void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseA
 
   editRubyMeasureView->nameLineEdit->setText(m_measureItem->name());
 
-  bool bingo = connect(editRubyMeasureView->nameLineEdit,SIGNAL(textEdited(const QString &)),m_measureItem.data(),SLOT(setName(const QString &)));
-
-  OS_ASSERT(bingo);
+  connect(editRubyMeasureView->nameLineEdit, &QLineEdit::textEdited, m_measureItem.data(), &measuretab::MeasureItem::setName);
 
   // Measure Description
 
   editRubyMeasureView->descriptionTextEdit->setText(m_measureItem->description());
 
-  bingo = connect(editRubyMeasureView->descriptionTextEdit,SIGNAL(textChanged()),this,SLOT(updateDescription()));
-
-  OS_ASSERT(bingo);
+  connect(editRubyMeasureView->descriptionTextEdit, &QTextEdit::textChanged, this, &EditController::updateDescription);
 
   // Measure Modeler Description
 
@@ -166,9 +162,7 @@ InputController::InputController(EditController * editController,const ruleset::
       doubleInputView->lineEdit->setText(QString::fromStdString(m_argument.defaultValueAsString()));
     }
 
-    bool bingo = connect(doubleInputView->lineEdit,SIGNAL(textEdited(const QString &)),this,SLOT(setValue(const QString &)));
-
-    OS_ASSERT(bingo);
+    connect(doubleInputView->lineEdit, &QLineEdit::textEdited, this, static_cast<void (InputController::*)(const QString &)>(&InputController::setValue));
 
     inputView = doubleInputView;
   }
@@ -227,9 +221,7 @@ InputController::InputController(EditController * editController,const ruleset::
       choiceInputView->comboBox->setCurrentIndex(0);
     }
 
-    bool bingo = connect(choiceInputView->comboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(setValueForIndex(int)));
-
-    OS_ASSERT(bingo);
+    connect(choiceInputView->comboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &InputController::setValueForIndex);
 
     inputView = choiceInputView;
   }
@@ -252,9 +244,7 @@ InputController::InputController(EditController * editController,const ruleset::
       m_argument.setValue(false);
     }
 
-    bool bingo = connect(boolInputView->checkBox,SIGNAL(clicked(bool)),this,SLOT(setValue(bool)));
-
-    OS_ASSERT(bingo);
+    connect(boolInputView->checkBox, &InputCheckBox::clicked, this, static_cast<void (InputController::*)(bool)>(&InputController::setValue));
 
     inputView = boolInputView;
   }
@@ -273,9 +263,7 @@ InputController::InputController(EditController * editController,const ruleset::
       integerInputView->lineEdit->setText(QString::fromStdString(m_argument.defaultValueAsString()));
     }
 
-    bool bingo = connect(integerInputView->lineEdit,SIGNAL(textEdited(const QString &)),this,SLOT(setValue(const QString &)));
-
-    OS_ASSERT(bingo);
+    connect(integerInputView->lineEdit, &QLineEdit::textEdited, this, static_cast<void (InputController::*)(const QString &)>(&InputController::setValue));
 
     inputView = integerInputView;
   }
@@ -294,9 +282,7 @@ InputController::InputController(EditController * editController,const ruleset::
       stringInputView->lineEdit->setText(QString::fromStdString(m_argument.defaultValueAsString()));
     }
 
-    bool bingo = connect(stringInputView->lineEdit,SIGNAL(textEdited(const QString &)),this,SLOT(setValue(const QString &)));
-
-    OS_ASSERT(bingo);
+    connect(stringInputView->lineEdit, &QLineEdit::textEdited, this, static_cast<void (InputController::*)(const QString &)>(&InputController::setValue));
 
     inputView = stringInputView;
   }

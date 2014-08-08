@@ -54,37 +54,26 @@ PatMainMenu::PatMainMenu(QWidget *parent) :
   m_saveFileAction->setShortcut(QKeySequence(QKeySequence::Save));
 
   // DLM: actions which result in this menu being deleted should be queued
-  bool isConnected = false;
 
-  isConnected = connect(m_newAction, SIGNAL(triggered()), this, SIGNAL(newClicked()), Qt::QueuedConnection);
-  OS_ASSERT(isConnected);
+  connect(m_newAction, &QAction::triggered, this, &PatMainMenu::newClicked, Qt::QueuedConnection);
 
-  isConnected = connect(m_loadFileAction, SIGNAL(triggered()), this, SIGNAL(loadFileClicked()), Qt::QueuedConnection);
-  OS_ASSERT(isConnected);
+  connect(m_loadFileAction, &QAction::triggered, this, &PatMainMenu::loadFileClicked, Qt::QueuedConnection);
 
-  isConnected = connect(m_saveFileAction, SIGNAL(triggered()), this, SIGNAL(saveFileClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_saveFileAction, &QAction::triggered, this, &PatMainMenu::saveFileClicked);
 
-  isConnected = connect(m_saveAsFileAction, SIGNAL(triggered()), this, SIGNAL(saveAsFileClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_saveAsFileAction, &QAction::triggered, this, &PatMainMenu::saveAsFileClicked);
 
-  isConnected = connect(m_clearAllResultsAction, SIGNAL(triggered()), this, SIGNAL(clearAllResultsClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_clearAllResultsAction, &QAction::triggered, this, &PatMainMenu::clearAllResultsClicked);
 
-  isConnected = connect(m_exportXmlAction, SIGNAL(triggered()), this, SIGNAL(exportXmlClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_exportXmlAction, &QAction::triggered, this, &PatMainMenu::exportXmlClicked);
 
-  isConnected = connect(m_exportSpreadsheetAction, SIGNAL(triggered()), this, SIGNAL(exportSpreadsheetClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_exportSpreadsheetAction, &QAction::triggered, this, &PatMainMenu::exportSpreadsheetClicked);
 
-  isConnected = connect(m_scanForToolsAction, SIGNAL(triggered()), this, SIGNAL(scanForToolsClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_scanForToolsAction, &QAction::triggered, this, &PatMainMenu::scanForToolsClicked);
 
-  isConnected = connect(m_showToolsAction, SIGNAL(triggered()), this, SIGNAL(showToolsClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_showToolsAction, &QAction::triggered, this, &PatMainMenu::showToolsClicked);
 
-  isConnected = connect(m_exitAction, SIGNAL(triggered()),this,SIGNAL(exitClicked()), Qt::QueuedConnection);
-  OS_ASSERT(isConnected);
+  connect(m_exitAction, &QAction::triggered, this, &PatMainMenu::exitClicked, Qt::QueuedConnection);
 
   m_fileMenu->addAction(m_newAction);
   m_fileMenu->addAction(m_loadFileAction);
@@ -107,15 +96,13 @@ PatMainMenu::PatMainMenu(QWidget *parent) :
 
   m_changeMeasuresDir = new QAction(tr("&Change My Measures Directory"),this);
 
-  isConnected = connect(m_changeMeasuresDir, SIGNAL(triggered()),this,SIGNAL(changeMeasuresClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_changeMeasuresDir, &QAction::triggered, this, &PatMainMenu::changeMeasuresClicked);
 
   m_preferencesMenu->addAction(m_changeMeasuresDir);
   
   m_configureProxy = new QAction(tr("&Configure Internet Proxy"),this);
 
-  isConnected = connect(m_configureProxy, SIGNAL(triggered()),this,SIGNAL(configureProxyClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_configureProxy, &QAction::triggered, this, &PatMainMenu::configureProxyClicked);
 
   m_preferencesMenu->addAction(m_scanForToolsAction);
   m_preferencesMenu->addAction(m_showToolsAction);
@@ -128,8 +115,7 @@ PatMainMenu::PatMainMenu(QWidget *parent) :
 
   m_openBclDlgAction = new QAction(tr("Find &Measures"),this);
 
-  isConnected = connect(m_openBclDlgAction, SIGNAL(triggered()),this,SIGNAL(openBclDlgClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_openBclDlgAction, &QAction::triggered, this, &PatMainMenu::openBclDlgClicked);
 
   m_windowMenu->addAction(m_openBclDlgAction);
   
@@ -139,15 +125,13 @@ PatMainMenu::PatMainMenu(QWidget *parent) :
 
   m_openCloudDlgAction = new QAction(tr("&Cloud Settings"),this);
 
-  isConnected = connect(m_openCloudDlgAction, SIGNAL(triggered()),this,SIGNAL(openCloudDlgClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_openCloudDlgAction, &QAction::triggered, this, &PatMainMenu::openCloudDlgClicked);
 
   m_cloudMenu->addAction(m_openCloudDlgAction);
 
   m_openMonitorUseDlgAction = new QAction(tr("&Monitor Use"),this);
 
-  isConnected = connect(m_openMonitorUseDlgAction, SIGNAL(triggered()),this,SIGNAL(openMonitorUseDlgClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_openMonitorUseDlgAction, &QAction::triggered, this, &PatMainMenu::openMonitorUseDlgClicked);
 
   m_cloudMenu->addAction(m_openMonitorUseDlgAction);
   
@@ -158,11 +142,9 @@ PatMainMenu::PatMainMenu(QWidget *parent) :
   m_helpAction = new QAction(tr("PAT &Help"),this);
   m_aboutAction = new QAction(tr("&About"),this);
 
-  isConnected = connect(m_helpAction, SIGNAL(triggered()),this,SIGNAL(helpClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_helpAction, &QAction::triggered, this, &PatMainMenu::helpClicked);
 
-  isConnected = connect(m_aboutAction, SIGNAL(triggered()),this,SIGNAL(aboutClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_aboutAction, &QAction::triggered, this, &PatMainMenu::aboutClicked);
 
   m_helpMenu->addAction(m_helpAction);
   m_helpMenu->addAction(m_aboutAction);

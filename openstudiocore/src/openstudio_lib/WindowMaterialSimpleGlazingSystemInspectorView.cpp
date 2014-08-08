@@ -59,8 +59,6 @@ void WindowMaterialSimpleGlazingSystemInspectorView::createLayout()
   unsigned row = 0;
   unsigned col = 0;
 
-  bool isConnected = false;
-
   // Name
 
   QLabel * label = new QLabel("Name: ");
@@ -77,8 +75,7 @@ void WindowMaterialSimpleGlazingSystemInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_uFactor = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_uFactor, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialSimpleGlazingSystemInspectorView::toggleUnitsClicked, m_uFactor, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_uFactor,row++,0,1,3);
 
   // Solar Heat Gain Coefficient
@@ -88,8 +85,7 @@ void WindowMaterialSimpleGlazingSystemInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_solarHeatGainCoefficient = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_solarHeatGainCoefficient, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialSimpleGlazingSystemInspectorView::toggleUnitsClicked, m_solarHeatGainCoefficient, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_solarHeatGainCoefficient,row++,0,1,3);
 
     // Visible Transmittance
@@ -99,8 +95,7 @@ void WindowMaterialSimpleGlazingSystemInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_visibleTransmittance = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_visibleTransmittance, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialSimpleGlazingSystemInspectorView::toggleUnitsClicked, m_visibleTransmittance, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_visibleTransmittance,row++,0,1,3);
 
   // Stretch

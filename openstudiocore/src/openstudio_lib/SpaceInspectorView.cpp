@@ -794,12 +794,7 @@ SpaceInspectorView::SpaceInspectorView(bool isIP, const openstudio::model::Model
   m_designSpecificationOutdoorAirDropZone->showAddButton();
   vLayout->addWidget(m_designSpecificationOutdoorAirDropZone);
 
-  bool isConnected = false;
-  isConnected = connect(m_designSpecificationOutdoorAirDropZone, 
-                             SIGNAL(itemClicked(OSItem*)),
-                             this, 
-                             SIGNAL(dropZoneItemClicked(OSItem*)));
-  OS_ASSERT(isConnected);
+  connect(m_designSpecificationOutdoorAirDropZone, &OSDropZone::itemClicked, this, &SpaceInspectorView::dropZoneItemClicked);
 
   vLayout->addStretch();
 
@@ -821,11 +816,7 @@ SpaceInspectorView::SpaceInspectorView(bool isIP, const openstudio::model::Model
   m_spaceInfiltrationDesignFlowRateDropZone->showAddButton();
   vLayout->addWidget(m_spaceInfiltrationDesignFlowRateDropZone);
 
-  isConnected = connect(m_spaceInfiltrationDesignFlowRateDropZone, 
-                        SIGNAL(itemClicked(OSItem*)),
-                        this, 
-                        SIGNAL(dropZoneItemClicked(OSItem*)));
-  OS_ASSERT(isConnected);
+  connect(m_spaceInfiltrationDesignFlowRateDropZone, &OSDropZone::itemClicked, this, &SpaceInspectorView::dropZoneItemClicked);
 
   vLayout->addStretch();
 
@@ -847,11 +838,7 @@ SpaceInspectorView::SpaceInspectorView(bool isIP, const openstudio::model::Model
   m_spaceInfiltrationEffectiveLeakageAreaDropZone->showAddButton();
   vLayout->addWidget(m_spaceInfiltrationEffectiveLeakageAreaDropZone);
 
-  isConnected = connect(m_spaceInfiltrationEffectiveLeakageAreaDropZone, 
-                        SIGNAL(itemClicked(OSItem*)),
-                        this, 
-                        SIGNAL(dropZoneItemClicked(OSItem*)));
-  OS_ASSERT(isConnected);
+  connect(m_spaceInfiltrationEffectiveLeakageAreaDropZone, &OSDropZone::itemClicked, this, &SpaceInspectorView::dropZoneItemClicked);
 
   vLayout->addStretch();
 
@@ -866,8 +853,7 @@ SpaceInspectorView::SpaceInspectorView(bool isIP, const openstudio::model::Model
   vLayout->addWidget(label);
 
   m_directionofRelativeNorthEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_directionofRelativeNorthEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &SpaceInspectorView::toggleUnitsClicked, m_directionofRelativeNorthEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_directionofRelativeNorthEdit);
 
   vLayout->addStretch();
@@ -899,8 +885,7 @@ SpaceInspectorView::SpaceInspectorView(bool isIP, const openstudio::model::Model
   vLayout->addWidget(label);
 
   m_xOriginEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_xOriginEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &SpaceInspectorView::toggleUnitsClicked, m_xOriginEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_xOriginEdit);
 
   hLayout->addLayout(vLayout);
@@ -915,8 +900,7 @@ SpaceInspectorView::SpaceInspectorView(bool isIP, const openstudio::model::Model
   vLayout->addWidget(label);
 
   m_yOriginEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_yOriginEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &SpaceInspectorView::toggleUnitsClicked, m_yOriginEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_yOriginEdit);
 
   vLayout->addStretch();
@@ -931,8 +915,7 @@ SpaceInspectorView::SpaceInspectorView(bool isIP, const openstudio::model::Model
   vLayout->addWidget(label);
 
   m_zOriginEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_zOriginEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &SpaceInspectorView::toggleUnitsClicked, m_zOriginEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_zOriginEdit);
 
   vLayout->addStretch();

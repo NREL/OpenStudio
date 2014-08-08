@@ -86,7 +86,6 @@ CloudDialog::~CloudDialog()
 void CloudDialog::createWidgets()
 {
   QLabel * label = nullptr;
-  bool isConnected = false;
 
   m_amazonProviderWidget = new AmazonProviderWidget(this);
   m_blankProviderWidget = new BlankProviderWidget(this);
@@ -121,9 +120,7 @@ void CloudDialog::createWidgets()
   if(showVagrant()) m_cloudResourceComboBox->addItem(VAGRANT_PROVIDER);
   m_cloudResourceComboBox->addItem(AMAZON_PROVIDER);
 
-  isConnected = connect(m_cloudResourceComboBox, SIGNAL(currentIndexChanged(const QString &)),
-    this, SLOT(cloudResourceChanged(const QString &)));
-  OS_ASSERT(isConnected); 
+  connect(m_cloudResourceComboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &CloudDialog::cloudResourceChanged);
 
   // LOGIN STACKED WIDGET
 
@@ -165,9 +162,7 @@ void CloudDialog::createWidgets()
 
   m_rightLoginLayout->addSpacing(5);
 
-  isConnected = connect(m_iAcceptCheckBox, SIGNAL(clicked(bool)),
-    this, SLOT(iAcceptClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_iAcceptCheckBox, &QCheckBox::clicked, this, &CloudDialog::iAcceptClicked);
 
   m_rightLoginLayout->addSpacing(5);
     
@@ -244,7 +239,7 @@ void CloudDialog::createWidgets()
 
   #ifdef Q_OS_MAC
     setWindowFlags(Qt::FramelessWindowHint);
-  #elif defined(Q_OS_WIN32)
+  #elif defined(Q_OS_WIN)
     setWindowFlags(Qt::WindowCloseButtonHint | Qt::MSWindowsFixedSizeDialogHint);
   #endif
 
@@ -622,7 +617,6 @@ void VagrantProviderWidget::createSettingsWidget()
   QHBoxLayout * hLayout = nullptr;
   QLabel * label = nullptr;
   QPushButton * pushButton = nullptr;
-  bool isConnected = false;
 
   // LEFT SETTINGS PAGE
 
@@ -643,9 +637,7 @@ void VagrantProviderWidget::createSettingsWidget()
   pushButton = new QPushButton("Browse");
   pushButton->setCheckable(false);
   hLayout->addWidget(pushButton,0,Qt::AlignTop | Qt::AlignLeft);
-  isConnected = connect(pushButton, SIGNAL(clicked(bool)),
-    this, SLOT(serverDirButtonClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(pushButton, &QPushButton::clicked, this, &VagrantProviderWidget::serverDirButtonClicked);
 
   hLayout->addStretch();
 
@@ -686,9 +678,7 @@ void VagrantProviderWidget::createSettingsWidget()
   pushButton = new QPushButton("Browse");
   pushButton->setCheckable(false);
   hLayout->addWidget(pushButton,0,Qt::AlignTop | Qt::AlignLeft);
-  isConnected = connect(pushButton, SIGNAL(clicked(bool)),
-    this, SLOT(workerDirButtonClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(pushButton, &QPushButton::clicked, this, &VagrantProviderWidget::workerDirButtonClicked);
 
   hLayout->addStretch();
 
@@ -888,8 +878,6 @@ void AmazonProviderWidget::createSettingsWidget()
 
   QLabel * label = nullptr;
 
-  bool isConnected = false;
-
   // LEFT SETTINGS PAGE
 
   label = new QLabel;
@@ -929,9 +917,7 @@ void AmazonProviderWidget::createSettingsWidget()
   m_serverInstanceTypeComboBox = new QComboBox();
   vLayout->addWidget(m_serverInstanceTypeComboBox,0,Qt::AlignTop | Qt::AlignLeft);
 
-  isConnected = connect(m_serverInstanceTypeComboBox, SIGNAL(currentIndexChanged(const QString &)),
-    this, SLOT(on_serverInstanceTypeComboBox(const QString &)));
-  OS_ASSERT(isConnected); 
+  connect(m_serverInstanceTypeComboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &AmazonProviderWidget::on_serverInstanceTypeComboBox);
 
   vLayout = new QVBoxLayout;
   vLayout->setContentsMargins(QMargins(0,0,0,0));
@@ -986,9 +972,7 @@ void AmazonProviderWidget::createSettingsWidget()
   m_workerInstanceTypeComboBox = new QComboBox();
   vLayout->addWidget(m_workerInstanceTypeComboBox,0,Qt::AlignTop | Qt::AlignLeft);
 
-  isConnected = connect(m_workerInstanceTypeComboBox, SIGNAL(currentIndexChanged(const QString &)),
-    this, SLOT(on_workerInstanceTypeComboBox(const QString &)));
-  OS_ASSERT(isConnected); 
+  connect(m_workerInstanceTypeComboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &AmazonProviderWidget::on_workerInstanceTypeComboBox);
 
   vLayout = new QVBoxLayout;
   vLayout->setContentsMargins(QMargins(0,0,0,0));

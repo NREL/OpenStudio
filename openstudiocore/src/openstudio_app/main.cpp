@@ -46,20 +46,14 @@ static const char *logfilepath = "/var/log/openstudio.log";
 #include "../utilities/core/RubyInterpreter.hpp"
 #include "../ruleset/EmbeddedRubyUserScriptArgumentGetter.hpp"
 
-#ifdef HAVE_RUBY_VERSION_H
-#include <ruby/version.h>
-#endif
-
 int main(int argc, char *argv[])
 {
 
-#if RUBY_API_VERSION_MAJOR && RUBY_API_VERSION_MAJOR==2
   ruby_sysinit(&argc, &argv);
   {
     RUBY_INIT_STACK;
     ruby_init();
   }
-#endif
 
 
 #if _DEBUG || (__GNUC__ && !NDEBUG)

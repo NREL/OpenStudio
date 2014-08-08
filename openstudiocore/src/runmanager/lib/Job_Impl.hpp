@@ -87,12 +87,6 @@ namespace detail {
       /// \returns all of the input and output files from all of the children of this job
       Files allChildFiles() const;
 
-      /// Return true if the job can be run remotely
-      virtual bool remoteRunnable() const = 0;
-
-      /// Return true if the job is running remotely
-      bool runningRemotely() const;
-
       /// Return true if the job is out of date OR
       /// if any dependency is out of date OR if any dependency
       /// last executed before this job
@@ -207,12 +201,6 @@ namespace detail {
 
       /// Sets the ProcessCreator to be used when the Job is executed
       void setProcessCreator(const std::shared_ptr<ProcessCreator> &t_pc);
-
-      /// Sets the remote job id to use when recovering a process left running on a remote server
-      void setRemoteId(int t_remoteid, int t_remotetaskid);
-
-      /// Returns the set remote job id
-      boost::optional<std::pair<int,int> > getRemoteId();
 
 
       /// \returns the Job's index in the work queue. Or -1 if unset
@@ -451,12 +439,6 @@ namespace detail {
       /// Emitted whenever this state of this job tree (this job and any child) changes
       void treeChanged(const openstudio::UUID &id) const;
 
-      /// Emitted when a process has started on a remote server
-      void remoteProcessStarted(const openstudio::UUID &t_uuid, int t_remoteid, int t_remotetaskid);
-
-      /// Emitted when a process has finished on a remote server
-      void remoteProcessFinished(const openstudio::UUID &t_uuid, int t_remoteid, int t_remotetaskid);
-
       /// Emitted when a Job's UUID has changed via a updateJob() call
       void uuidChanged(const openstudio::UUID &t_oldUUID, const openstudio::UUID &t_newUUID);
 
@@ -526,8 +508,6 @@ namespace detail {
       std::weak_ptr<Job_Impl> m_parent; //< parent of this job
       std::shared_ptr<Job_Impl> m_finishedJob; //< Job to execute after this job and all its children have finished
       std::vector<std::shared_ptr<Job_Impl> > m_children; //< List of children that this job has
-
-      boost::optional<std::pair<int,int> > m_remoteid; //< Id to use when reconnecting to remote job
 
       boost::optional<QDateTime> m_lastStartTime;
       boost::optional<QDateTime> m_lastEndTime;

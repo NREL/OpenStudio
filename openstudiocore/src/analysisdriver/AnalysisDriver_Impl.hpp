@@ -84,12 +84,12 @@ namespace detail {
      *  one of three ways:
      *
      *  <ol>
-     *  <li> analysis may alreay contain dataPointsToBeQueued</li>
+     *  <li> analysis may already contain dataPointsToBeQueued</li>
      *  <li> If analysis.algorithm().optionalCast<OpenStudioAlgorithm>(), then AnalysisDriver will
      *       call analysis.algorithm().cast<OpenStudioAlgorithm>().createNextIteration() as soon as
      *       all the dataPointsToBeQueued are complete.</li>
      *  <li> If analysis.algorithm().optionalCast<DakotaAlgorithm>(), then AnalysisDriver will
-     *       kick off a runmanager::DakotaJob and create a new DataPoint from each paramter file
+     *       kick off a runmanager::DakotaJob and create a new DataPoint from each parameter file
      *       dropped by Dakota. Depending on the circumstances, this may include an explicit restart
      *       of DAKOTA.</li>
      *  </ol>
@@ -117,12 +117,6 @@ namespace detail {
 
     /** Stop a running data point. */
     void stop(analysis::DataPoint& dataPoint);
-
-    /// Connect signal from this AnalysisDriver implementation object to slot on qObject.
-    bool connect(const std::string& signal,
-                 const QObject* qObject,
-                 const std::string& slot,
-                 Qt::ConnectionType type = Qt::AutoConnection) const;
 
     //@}
    public slots:

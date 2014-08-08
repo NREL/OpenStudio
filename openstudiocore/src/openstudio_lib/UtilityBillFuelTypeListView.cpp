@@ -37,21 +37,18 @@ UtilityBillFuelTypeListController::UtilityBillFuelTypeListController(const model
   openstudio::FuelType fuelType)
   : m_iddObjectType(model::UtilityBill::iddObjectType()), m_fuelType(fuelType), m_model(model)
 {
-  bool isConnected = false;
-  isConnected = connect(model.getImpl<model::detail::Model_Impl>().get(), 
-                        SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        this,
-                        SLOT(objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        Qt::QueuedConnection);
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(model.getImpl<model::detail::Model_Impl>().get(), 
-                        SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        this,
-                        SLOT(objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        Qt::QueuedConnection);
-  OS_ASSERT(isConnected);
-
+  connect(model.getImpl<model::detail::Model_Impl>().get(), 
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
+    this,
+    &UtilityBillFuelTypeListController::objectAdded,
+    Qt::QueuedConnection);
+  
+  connect(model.getImpl<model::detail::Model_Impl>().get(), 
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
+    this,
+    &UtilityBillFuelTypeListController::objectRemoved,
+    Qt::QueuedConnection);
+  
 }
 
 IddObjectType UtilityBillFuelTypeListController::iddObjectType() const

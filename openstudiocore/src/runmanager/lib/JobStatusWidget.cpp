@@ -280,11 +280,11 @@ namespace runmanager {
 
     clearWorkflow();
 
-    connect(ui.actionRerun, SIGNAL(triggered()), this, SLOT(rerunJob()));
-    connect(ui.actionShowWarnings, SIGNAL(triggered()), this, SLOT(showJobWarnings()));
-    connect(ui.actionCleanupOutput, SIGNAL(triggered()), this, SLOT(cleanupJobOutput()));
-    connect(ui.actionOpenEditFile, SIGNAL(triggered()), this, SLOT(openEditFile()));
-    connect(ui.actionOpenDirectory, SIGNAL(triggered()), this, SLOT(openDirectory()));
+    connect(ui.actionRerun, &QAction::triggered, this, &JobStatusWidget::rerunJob);
+    connect(ui.actionShowWarnings, &QAction::triggered, this, &JobStatusWidget::showJobWarnings);
+    connect(ui.actionCleanupOutput, &QAction::triggered, this, &JobStatusWidget::cleanupJobOutput);
+    connect(ui.actionOpenEditFile, &QAction::triggered, this, &JobStatusWidget::openEditFile);
+    connect(ui.actionOpenDirectory, &QAction::triggered, this, &JobStatusWidget::openDirectory);
 
     m_runmanager.connect(SIGNAL(statsChanged()), this, SLOT(runmanagerStatsChanged()), Qt::QueuedConnection);
 
@@ -299,14 +299,10 @@ namespace runmanager {
 
     ui.treeJobs->setModel(&m_model);
 
-    connect(ui.treeJobs->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
-        this, SLOT(jobTreeSelectionChanged(const QItemSelection &)));
-    connect(ui.treeJobs, SIGNAL(activated(const QModelIndex &)), 
-        this, SLOT(itemActivated(const QModelIndex &)));
-    connect(&m_model, SIGNAL(rowsInserted(const QModelIndex &, int, int)),
-        this, SLOT(rowsInserted(const QModelIndex &, int, int)));
-    connect(ui.treeView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
-        this, SLOT(workflowTreeSelectionChanged(const QItemSelection &)));
+    connect(ui.treeJobs->selectionModel(), &QItemSelectionModel::selectionChanged, this, &JobStatusWidget::jobTreeSelectionChanged);
+    connect(ui.treeJobs, &QTreeView::activated, this, &JobStatusWidget::itemActivated);
+    connect(&m_model, &QStandardItemModel::rowsInserted, this, &JobStatusWidget::rowsInserted);
+    connect(ui.treeView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &JobStatusWidget::workflowTreeSelectionChanged);
 
     ui.actionSep->setSeparator(true);
 
@@ -373,7 +369,6 @@ namespace runmanager {
     std::map<std::string, double> stats = m_runmanager.statistics();
     ui.lblJobsInQueue->setText(QString::number(stats["Number of Jobs"]));
     ui.lblLocalJobsRunning->setText(QString::number(stats["Locally Running Jobs"]));
-    ui.lblRemoteJobsRunning->setText(QString::number(stats["Remotely Running Jobs"]));
     ui.lblFailedJobs->setText(QString::number(stats["Failed Jobs"]));
     ui.lblCompletedJobs->setText(QString::number(stats["Completed Jobs"]));
   }

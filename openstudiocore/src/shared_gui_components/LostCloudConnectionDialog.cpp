@@ -131,8 +131,6 @@ void LostCloudConnectionDialog::createCloudConnectionWidgets(QVBoxLayout * vLayo
 
   QPushButton * button = nullptr;
 
-  bool isConnected = false;
-
   QLabel * label = nullptr;
         
   label = new QLabel;
@@ -199,26 +197,20 @@ void LostCloudConnectionDialog::createCloudConnectionWidgets(QVBoxLayout * vLayo
   button = new OrangeButton(this);
   button->setText("Launch AWS Console");
   button->setCheckable(false);
-  isConnected = connect(button, SIGNAL(clicked(bool)),
-    this, SLOT(on_launchAWSConsole(bool)));
-  OS_ASSERT(isConnected);
+  connect(button, &OrangeButton::clicked, this, &LostCloudConnectionDialog::on_launchAWSConsole);
   hLayout->addWidget(button);
   hLayout->addStretch();
 
   button = new OrangeButton(this);
   button->setText("Stop Cloud");
   button->setCheckable(false);
-  isConnected = connect(button, SIGNAL(clicked(bool)),
-    this, SLOT(on_clearCloudSession(bool)));
-  OS_ASSERT(isConnected);
+  connect(button, &OrangeButton::clicked, this, &LostCloudConnectionDialog::on_clearCloudSession);
   hLayout->addWidget(button);
 
   button = new OrangeButton(this);
   button->setText("Try Again Later");
   button->setCheckable(false);
-  isConnected = connect(button, SIGNAL(clicked(bool)),
-    this, SLOT(accept()));
-  OS_ASSERT(isConnected);
+  connect(button, &OrangeButton::clicked, this, &LostCloudConnectionDialog::accept);
   hLayout->addWidget(button);
 }
 

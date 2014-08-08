@@ -215,8 +215,7 @@ void ConstructionInternalSourceInspectorView::createLayout()
   ++row;
 
   m_tubeSpacingEdit = new OSQuantityEdit(m_isIP);
-  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_tubeSpacingEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &ConstructionInternalSourceInspectorView::toggleUnitsClicked, m_tubeSpacingEdit, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_tubeSpacingEdit,row,0);
 
   ++row;
@@ -293,11 +292,8 @@ void ConstructionInternalSourceInspectorView::populateStandardsConstructionType(
     }
   }
 
-  bool isConnected = false;
-  isConnected = connect(m_standardsConstructionType, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(standardsConstructionTypeChanged(const QString&)));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_standardsConstructionType, SIGNAL(editTextChanged(const QString&)), this, SLOT(editStandardsConstructionType(const QString&)));
-  OS_ASSERT(isConnected);
+  connect(m_standardsConstructionType, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &ConstructionInternalSourceInspectorView::standardsConstructionTypeChanged);
+  connect(m_standardsConstructionType, &QComboBox::editTextChanged, this, &ConstructionInternalSourceInspectorView::editStandardsConstructionType);
 }
 
 void ConstructionInternalSourceInspectorView::attach(openstudio::model::ConstructionWithInternalSource & constructionWithInternalSource)
@@ -323,8 +319,7 @@ void ConstructionInternalSourceInspectorView::attach(openstudio::model::Construc
       std::bind(&openstudio::model::StandardsInformationConstruction::setIntendedSurfaceType,m_standardsInformation.get_ptr(),std::placeholders::_1),
       NoFailAction(std::bind(&model::StandardsInformationConstruction::resetIntendedSurfaceType,m_standardsInformation.get_ptr())));
 
-  bool test = connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(populateStandardsConstructionType()));
-  OS_ASSERT(test);
+  connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &ConstructionInternalSourceInspectorView::populateStandardsConstructionType);
 
   m_standardsConstructionType->setEnabled(true);
   populateStandardsConstructionType();

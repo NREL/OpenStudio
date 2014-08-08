@@ -96,9 +96,7 @@ void MonitorUseDialog::createWidgets()
   m_billingInfoButton->setStyleSheet(style);
   m_billingInfoButton->setFlat(true);
   m_billingInfoButton->setToolTip(BILLING_MESSAGE);
-  bool isConnected = connect(m_billingInfoButton, SIGNAL(clicked(bool)),
-                             this, SLOT(displayBillingMessage(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_billingInfoButton, &QPushButton::clicked, this, &MonitorUseDialog::displayBillingMessage);
   hlayout->addWidget(m_billingInfoButton);
 
   hlayout->addStretch();
@@ -164,9 +162,7 @@ void MonitorUseDialog::createWidgets()
           "}";
   m_cloudStatus->setStyleSheet(style);
   layout->addWidget(m_cloudStatus,0,Qt::AlignTop | Qt::AlignLeft);
-  isConnected = connect(m_cloudStatus, SIGNAL(clicked(bool)),
-                             this, SLOT(on_cloudStatus(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_cloudStatus, &QPushButton::clicked, this, &MonitorUseDialog::on_cloudStatus);
 
   layout->addSpacing(5);
 
@@ -185,24 +181,18 @@ void MonitorUseDialog::createWidgets()
 
   /////
  
-  isConnected = connect(m_awsProvider.getImpl<detail::CloudProvider_Impl>().get(), SIGNAL(estimatedChargesAvailable()),
-                        this, SLOT(on_estimatedChargesAvailable()));
-  OS_ASSERT(isConnected);
+  connect(m_awsProvider.getImpl<detail::AWSProvider_Impl>().get(), &detail::AWSProvider_Impl::estimatedChargesAvailable, this, &MonitorUseDialog::on_estimatedChargesAvailable);
 
-  isConnected = connect(m_awsProvider.getImpl<detail::CloudProvider_Impl>().get(), SIGNAL(totalInstancesAvailable()),
-                        this, SLOT(on_totalInstancesAvailable()));
-  OS_ASSERT(isConnected);
+  connect(m_awsProvider.getImpl<detail::AWSProvider_Impl>().get(), &detail::AWSProvider_Impl::totalInstancesAvailable, this, &MonitorUseDialog::on_totalInstancesAvailable);
 
   m_timer = new QTimer(this);
-  isConnected = connect(m_timer, SIGNAL(timeout()),
-                        this, SLOT(updateData()));
-  OS_ASSERT(isConnected);
+  connect(m_timer, &QTimer::timeout, this, &MonitorUseDialog::updateData);
 
   // OS SETTINGS
 
   #ifdef Q_OS_MAC
     setWindowFlags(Qt::FramelessWindowHint);
-  #elif defined(Q_OS_WIN32)
+  #elif defined(Q_OS_WIN)
     setWindowFlags(Qt::WindowCloseButtonHint | Qt::MSWindowsFixedSizeDialogHint);
   #endif
 }

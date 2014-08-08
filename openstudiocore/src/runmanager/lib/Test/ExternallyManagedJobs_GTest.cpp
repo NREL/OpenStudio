@@ -60,9 +60,9 @@ TEST_F(RunManagerTestFixture, UpdateJobStatus)
   ASSERT_EQ(AdvancedStatus(AdvancedStatusEnum::Queuing), j.status());
   
   // And note that advanced messages are allowed too
-  ASSERT_NO_THROW(j.setStatus(AdvancedStatus(AdvancedStatusEnum::Queuing, "Waiting in remote queue"))); 
+  ASSERT_NO_THROW(j.setStatus(AdvancedStatus(AdvancedStatusEnum::Queuing, "Waiting in queue"))); 
   ASSERT_EQ(AdvancedStatus(AdvancedStatusEnum::Queuing), j.status().value());
-  ASSERT_EQ("Waiting in remote queue", j.status().description());
+  ASSERT_EQ("Waiting in queue", j.status().description());
 
 }
 

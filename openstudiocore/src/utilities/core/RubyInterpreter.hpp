@@ -595,10 +595,6 @@ namespace openstudio
             const openstudio::path &t_rubyIncludePath,
             const std::vector<std::string> &t_moduleNames)
         {
-#if RUBY_API_VERSION_MAJOR && RUBY_API_VERSION_MAJOR==2
-#else
-          ruby_init();
-#endif
           openstudio::path rubypath = openstudio::getOpenStudioEmbeddedRubyPath();
 
           ruby_incpush(toString(t_moduleSearchPath.native()).c_str());
@@ -606,66 +602,6 @@ namespace openstudio
 
           if (!rubypath.empty())
           {
-// Not defined for 1.8.6
-#ifdef RUBY_SEARCH_PATH
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_SEARCH_PATH))).native()).c_str());
-#endif
-            
-// 1.8.6: /lib/ruby/site_ruby/1.8
-#ifdef RUBY_SITE_LIB2
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_SITE_LIB2))).native()).c_str());
-#endif
-            
-// Not defined for 1.8.6
-#ifdef RUBY_SITE_THIN_ARCHLIB
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_SITE_THIN_ARCHLIB))).native()).c_str());
-#endif
-
-// 1.8.6 Win: /lib/ruby/site_ruby/1.8/i386-msvcrt
-#ifdef RUBY_SITE_ARCHLIB
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_SITE_ARCHLIB))).native()).c_str());
-#endif
-
-// 1.8.6: /lib/ruby/site_ruby
-#ifdef RUBY_SITE_LIB
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_SITE_LIB))).native()).c_str());
-#endif
-
-// Not defined for 1.8.6
-#ifdef RUBY_VENDOR_LIB2
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_VENDOR_LIB2))).native()).c_str());
-#endif
-
-// Not defined for 1.8.6
-#ifdef RUBY_VENDOR_THIN_ARCHLIB
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_VENDOR_THIN_ARCHLIB))).native()).c_str());
-#endif
-
-// Not defined for 1.8.6
-#ifdef RUBY_VENDOR_ARCHLIB
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_VENDOR_ARCHLIB))).native()).c_str());
-#endif
-
-// Not defined for 1.8.6
-#ifdef RUBY_VENDOR_LIB
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_VENDOR_LIB))).native()).c_str());
-#endif
-
-// 1.8.6: /lib/ruby/1.8
-#ifdef RUBY_LIB
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_LIB))).native()).c_str());
-#endif
-
-// Not defined for 1.8.6
-#ifdef RUBY_THIN_ARCHLIB
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_THIN_ARCHLIB))).native()).c_str());
-#endif
-
-// 1.8.6 Win: /lib/ruby/1.8/i386-mswin32
-#ifdef RUBY_ARCHLIB
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_ARCHLIB))).native()).c_str());
-#endif
-
 #if defined(WIN32) 
   #if (defined(_M_X64) || defined(__amd64__))
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0"))).native()).c_str());

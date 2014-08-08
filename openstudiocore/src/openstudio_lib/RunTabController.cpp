@@ -36,14 +36,11 @@ RunTabController::RunTabController(const model::Model & model, const openstudio:
   mainContentWidget()->addSubTab("Output", m_runView,OUTPUT);
   mainContentWidget()->addSubTab("Tree", m_status,TREE);
 
-  connect(m_runView, SIGNAL(resultsGenerated(const openstudio::path &, const openstudio::path &)),
-      this, SIGNAL(resultsGenerated(const openstudio::path &, const openstudio::path &)));
+  connect(m_runView, &RunView::resultsGenerated, this, &RunTabController::resultsGenerated);
 
-  connect(m_runView, SIGNAL(toolsUpdated()),
-      this, SIGNAL(toolsUpdated()));
+  connect(m_runView, &RunView::toolsUpdated, this, &RunTabController::toolsUpdated);
 
-  connect(m_runView, SIGNAL(useRadianceStateChanged(bool)),
-      this, SIGNAL(useRadianceStateChanged(bool)));
+  connect(m_runView, &RunView::useRadianceStateChanged, this, &RunTabController::useRadianceStateChanged);
 }
 
 openstudio::RunView * RunTabController::runView(){

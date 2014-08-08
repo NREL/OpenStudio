@@ -49,21 +49,15 @@ ThermalZonesController::ThermalZonesController(bool isIP, const model::Model & m
 {
   subTabView()->itemSelectorButtons()->disableCopyButton();
 
-  //bool isConnected = false;
+  ThermalZoneView * thermalZoneView = static_cast<ThermalZoneView *>(subTabView()->inspectorView());
 
-  QWidget * thermalZoneView = subTabView()->inspectorView(); 
+  connect(thermalZoneView, &ThermalZoneView::enableThermostatClicked, this, &ThermalZonesController::enableThermostat);
 
-  connect( thermalZoneView,SIGNAL(enableThermostatClicked(model::ThermalZone &, bool)),
-           this,SLOT(enableThermostat(model::ThermalZone &, bool)) );
+  connect(thermalZoneView, &ThermalZoneView::enableHumidistatClicked, this, &ThermalZonesController::enableHumidistat);
 
-  connect( thermalZoneView,SIGNAL(enableHumidistatClicked(model::ThermalZone &, bool)),
-           this,SLOT(enableHumidistat(model::ThermalZone &, bool)) );
+  connect(thermalZoneView, &ThermalZoneView::modelObjectSelected, this, &ThermalZonesController::modelObjectSelected);
 
-  connect( thermalZoneView,SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
-           this,SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )) );
-
-  connect( this,SIGNAL(toggleUnitsClicked( bool )),
-           thermalZoneView,SIGNAL(toggleUnitsClicked( bool )) );
+  connect(this, &ThermalZonesController::toggleUnitsClicked, thermalZoneView, &ThermalZoneView::toggleUnitsClicked);
 
   //isConnected = connect(m_thermalZonesView,SIGNAL(componentDropped(model::ThermalZone &, Handle &)),
   //        this,SLOT(addComponentToZone(model::ThermalZone &, Handle &)));

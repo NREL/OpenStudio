@@ -57,7 +57,6 @@ LifeCycleCostsView::LifeCycleCostsView(const model::Model & model)
 
 void LifeCycleCostsView::createWidgets()
 {
-  bool isConnected = false;
 
   QRadioButton * radioButton = NULL; 
 
@@ -102,9 +101,7 @@ void LifeCycleCostsView::createWidgets()
 
   m_fempGroup = new QButtonGroup(this);
 
-  isConnected = connect(m_fempGroup, SIGNAL(buttonClicked(int)),
-    this, SLOT(fempGroupClicked(int)));
-  OS_ASSERT(isConnected);
+  connect(m_fempGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &LifeCycleCostsView::fempGroupClicked);
 
   radioButton = new QRadioButton("Federal Energy Management Program (FEMP)");
   m_fempGroup->addButton(radioButton,0);
@@ -166,9 +163,7 @@ void LifeCycleCostsView::createWidgets()
 
   m_nistGroup = new QButtonGroup(this);
 
-  isConnected = connect(m_nistGroup, SIGNAL(buttonClicked(int)),
-    this, SLOT(nistGroupClicked(int)));
-  OS_ASSERT(isConnected);
+  connect(m_nistGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &LifeCycleCostsView::nistGroupClicked);
 
   radioButton = new QRadioButton("Yes");
   m_nistGroup->addButton(radioButton,0);

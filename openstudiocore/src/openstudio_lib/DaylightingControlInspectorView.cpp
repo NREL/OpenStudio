@@ -75,11 +75,8 @@ DaylightingControlInspectorView::DaylightingControlInspectorView(bool isIP, cons
   label->setStyleSheet("QLabel { font: bold; }");
   vLayout->addWidget(label);
 
-  bool isConnected = false;
-
   m_xCoordinateEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_xCoordinateEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &DaylightingControlInspectorView::toggleUnitsClicked, m_xCoordinateEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_xCoordinateEdit);
 
   mainGridLayout->addLayout(vLayout,1,0, Qt::AlignTop|Qt::AlignLeft);
@@ -92,8 +89,7 @@ DaylightingControlInspectorView::DaylightingControlInspectorView(bool isIP, cons
   vLayout->addWidget(label);
 
   m_yCoordinateEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_yCoordinateEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &DaylightingControlInspectorView::toggleUnitsClicked, m_yCoordinateEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_yCoordinateEdit);
 
   mainGridLayout->addLayout(vLayout,1,1, Qt::AlignTop|Qt::AlignLeft);
@@ -106,8 +102,7 @@ DaylightingControlInspectorView::DaylightingControlInspectorView(bool isIP, cons
   vLayout->addWidget(label);
 
   m_zCoordinateEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_zCoordinateEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &DaylightingControlInspectorView::toggleUnitsClicked, m_zCoordinateEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_zCoordinateEdit);
 
   mainGridLayout->addLayout(vLayout,1,2, Qt::AlignTop|Qt::AlignLeft);
@@ -121,8 +116,7 @@ DaylightingControlInspectorView::DaylightingControlInspectorView(bool isIP, cons
   vLayout->addWidget(label);
 
   m_psiRotationEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_psiRotationEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &DaylightingControlInspectorView::toggleUnitsClicked, m_psiRotationEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_psiRotationEdit);
 
   mainGridLayout->addLayout(vLayout,2,0, Qt::AlignTop|Qt::AlignLeft);
@@ -135,8 +129,7 @@ DaylightingControlInspectorView::DaylightingControlInspectorView(bool isIP, cons
   vLayout->addWidget(label);
 
   m_thetaRotationEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_thetaRotationEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &DaylightingControlInspectorView::toggleUnitsClicked, m_thetaRotationEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_thetaRotationEdit);
 
   mainGridLayout->addLayout(vLayout,2,1, Qt::AlignTop|Qt::AlignLeft);
@@ -149,8 +142,7 @@ DaylightingControlInspectorView::DaylightingControlInspectorView(bool isIP, cons
   vLayout->addWidget(label);
 
   m_phiRotationEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_phiRotationEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &DaylightingControlInspectorView::toggleUnitsClicked, m_phiRotationEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_phiRotationEdit);
 
   mainGridLayout->addLayout(vLayout,2,2, Qt::AlignTop|Qt::AlignLeft);
@@ -164,8 +156,7 @@ DaylightingControlInspectorView::DaylightingControlInspectorView(bool isIP, cons
   vLayout->addWidget(label);
 
   m_illuminanceSetpointEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_illuminanceSetpointEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &DaylightingControlInspectorView::toggleUnitsClicked, m_illuminanceSetpointEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_illuminanceSetpointEdit);
 
   mainGridLayout->addLayout(vLayout,3,0, Qt::AlignTop|Qt::AlignLeft);
@@ -191,8 +182,7 @@ DaylightingControlInspectorView::DaylightingControlInspectorView(bool isIP, cons
   vLayout->addWidget(label);
 
   m_numberOfStepsEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_numberOfStepsEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &DaylightingControlInspectorView::toggleUnitsClicked, m_numberOfStepsEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_numberOfStepsEdit);
 
   mainGridLayout->addLayout(vLayout,4,0, Qt::AlignTop|Qt::AlignLeft);
@@ -205,8 +195,7 @@ DaylightingControlInspectorView::DaylightingControlInspectorView(bool isIP, cons
   vLayout->addWidget(label);
 
   m_probabilityResetEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_probabilityResetEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &DaylightingControlInspectorView::toggleUnitsClicked, m_probabilityResetEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_probabilityResetEdit);
 
   mainGridLayout->addLayout(vLayout,4,1, Qt::AlignTop|Qt::AlignLeft);
@@ -220,8 +209,7 @@ DaylightingControlInspectorView::DaylightingControlInspectorView(bool isIP, cons
   vLayout->addWidget(label);
 
   m_numberOfViewsEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_numberOfViewsEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &DaylightingControlInspectorView::toggleUnitsClicked, m_numberOfViewsEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_numberOfViewsEdit);
 
   mainGridLayout->addLayout(vLayout,5,0, Qt::AlignTop|Qt::AlignLeft);
@@ -234,8 +222,7 @@ DaylightingControlInspectorView::DaylightingControlInspectorView(bool isIP, cons
   vLayout->addWidget(label);
 
   m_maxGlareEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_maxGlareEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &DaylightingControlInspectorView::toggleUnitsClicked, m_maxGlareEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_maxGlareEdit);
 
   mainGridLayout->addLayout(vLayout,5,1, Qt::AlignTop|Qt::AlignLeft);

@@ -56,6 +56,7 @@ namespace openstudio {
       return boost::none;
     }
     try{
+      // cppcheck-suppress unusedScopedObject
       Date(test->valueAsString());
     }catch(const std::exception&){
       LOG(Warn,"Cannot create CalibrationBillingPeriod from Attribute with improper 'startDate'.");
@@ -269,6 +270,7 @@ namespace openstudio {
       return boost::none;
     }
     try{
+      // cppcheck-suppress unusedScopedObject
       FuelType(test->valueAsString());
     }catch(const std::exception&){
       LOG(Warn,"Cannot create CalibrationUtilityBill from Attribute with improper 'fuelType'.");
@@ -281,6 +283,7 @@ namespace openstudio {
       return boost::none;
     }
     try{
+      // cppcheck-suppress unusedScopedObject
       InstallLocationType(test->valueAsString());
     }catch(const std::exception&){
       LOG(Warn,"Cannot create CalibrationUtilityBill from Attribute with improper 'meterInstallLocation'.");

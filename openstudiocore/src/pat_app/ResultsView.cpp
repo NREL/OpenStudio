@@ -157,8 +157,7 @@ ResultsView::ResultsView()
   hLayout->addWidget(reportLabel, 0, Qt::AlignLeft | Qt::AlignTop);
 
   auto buttonGroup = new QButtonGroup(this);
-  bool isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)), this, SIGNAL(viewSelected(int)));
-  OS_ASSERT(isConnected);
+  connect(buttonGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &ResultsView::viewSelected);
 
   m_standardResultsBtn = new QPushButton("Standard",this);
   m_standardResultsBtn->setCheckable(true);
@@ -241,9 +240,7 @@ ResultsView::ResultsView()
 
   hLayout->addStretch();
 
-  isConnected = connect(calibrationComboBox, SIGNAL(currentIndexChanged(const QString &)),
-    this, SLOT(selectCalibrationMethod(const QString &)));
-  OS_ASSERT(isConnected);
+  connect(calibrationComboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &ResultsView::selectCalibrationMethod);
 
   innerContentVLayout->addLayout(hLayout);
 
@@ -291,9 +288,7 @@ ResultsView::ResultsView()
     enableDownloadResultsButton(LOCAL_MODE);
   }
   
-  isConnected = connect(m_downloadResultsButton, SIGNAL(clicked(bool)),
-    this, SIGNAL(downloadResultsButtonClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_downloadResultsButton, &QPushButton::clicked, this, &ResultsView::downloadResultsButtonClicked);
 
   m_viewFileButton = new QPushButton();
   m_viewFileButton->setFlat(true);
@@ -301,17 +296,14 @@ ResultsView::ResultsView()
   enableViewFileButton(false);
   hLayout->addWidget(m_viewFileButton);
   
-  isConnected = connect(m_viewFileButton, SIGNAL(clicked(bool)),
-    this, SIGNAL(openButtonClicked(bool)));
-  OS_ASSERT(isConnected); 
+  connect(m_viewFileButton, &QPushButton::clicked, this, &ResultsView::openButtonClicked);
 
   m_openDirButton = new OpenDirectoryButton(this);
   m_openDirButton->setToolTip("Open the directory for the selected file.");
   m_openDirButton->setEnabled(false);
   hLayout->addWidget(m_openDirButton);
 
-  isConnected = connect(m_openDirButton, SIGNAL(clicked(bool)), this, SIGNAL(openDirButtonClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_openDirButton, &OpenDirectoryButton::clicked, this, &ResultsView::openDirButtonClicked);
   
   hLayout->addStretch();
   mainContentVLayout->addWidget(footer);
@@ -571,8 +563,7 @@ void ResultsView::populateMenu(QMenu& menu, const openstudio::path& directory)
       auto openAct = new QAction(name, &menu);
       openAct->setToolTip(fullPathString);
       openAct->setData(fullPathString);
-      bool test = connect(openAct, SIGNAL(triggered()), this, SLOT(openReport()));
-      OS_ASSERT(test);
+      connect(openAct, &QAction::triggered, this, &ResultsView::openReport);
       menu.addAction(openAct);
     }
   }else{
@@ -939,9 +930,7 @@ DataPointResultsView::DataPointResultsView(const openstudio::analysis::DataPoint
   OS_ASSERT(test);
 
   this->setContextMenuPolicy(Qt::CustomContextMenu);
-  test = connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
-    this, SLOT(showContextMenu(const QPoint&)));
-  OS_ASSERT(test);
+  connect(this, &DataPointResultsView::customContextMenuRequested, this, &DataPointResultsView::showContextMenu);
 
   update();
 }
@@ -980,7 +969,7 @@ void DataPointResultsView::update()
     name = "Baseline";
     listOfMeasures = "";
     
-    netSiteEnergyIntensity = getBaselineValue("Net Site Energy Use Intentsity");
+    netSiteEnergyIntensity = getBaselineValue("Net Site Energy Use Intensity");
     peakElectricDemand = getBaselineValue("Instantaneous Peak Electricity Demand");
     // NOTE: convert E+'s "W" value to a "kW" value
     if(peakElectricDemand){
@@ -1016,7 +1005,7 @@ void DataPointResultsView::update()
 
     listOfMeasures = listOfMeasures.trimmed();
 
-    netSiteEnergyIntensity = getDifference("Net Site Energy Use Intentsity");
+    netSiteEnergyIntensity = getDifference("Net Site Energy Use Intensity");
     peakElectricDemand = getDifference("Instantaneous Peak Electricity Demand");
     // NOTE: convert E+'s "W" value to a "kW" value
     if(peakElectricDemand){
@@ -1033,7 +1022,7 @@ void DataPointResultsView::update()
     energyCost = getDifference("Annual Total Utility Cost");
     lifeCycleCost = getDifference("Total Life Cycle Cost");
 
-    netSiteEnergyIntensityPct = getPctDifference("Net Site Energy Use Intentsity");
+    netSiteEnergyIntensityPct = getPctDifference("Net Site Energy Use Intensity");
     peakElectricDemandPct = getPctDifference("Instantaneous Peak Electricity Demand");
     electricityPct = getPctDifference("Electricity Total End Uses");
     naturalGasPct = getPctDifference("Natural Gas Total End Uses");
@@ -1441,9 +1430,7 @@ DataPointCalibrationView::DataPointCalibrationView(const openstudio::analysis::D
 
   this->setContextMenuPolicy(Qt::CustomContextMenu);
 
-  bool test = connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
-    this, SLOT(showContextMenu(const QPoint&)));
-  OS_ASSERT(test);
+  connect(this, &DataPointCalibrationView::customContextMenuRequested, this, &DataPointCalibrationView::showContextMenu);
 
   update();
 }

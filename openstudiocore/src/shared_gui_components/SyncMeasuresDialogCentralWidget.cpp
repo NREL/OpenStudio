@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <shared_gui_components/SyncMeasuresDialogCentralWidget.hpp>
+#include "SyncMeasuresDialogCentralWidget.hpp"
 
 #include "../shared_gui_components/CollapsibleComponent.hpp"
 #include "../shared_gui_components/CollapsibleComponentHeader.hpp"
@@ -27,9 +27,9 @@
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/SyncMeasuresDialog.hpp"
 
-#include <analysisdriver/SimpleProject.hpp>
+#include "../analysisdriver/SimpleProject.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QBoxLayout>
 #include <QCheckBox>
@@ -59,12 +59,9 @@ void SyncMeasuresDialogCentralWidget::init()
 
 void SyncMeasuresDialogCentralWidget::createLayout()
 {
-  bool isConnected = false;
 
   QPushButton * upperPushButton = new QPushButton("Check All");
-  isConnected = connect(upperPushButton, SIGNAL(clicked()),
-                        this, SLOT(upperPushButtonClicked()));
-  OS_ASSERT(isConnected);
+  connect(upperPushButton, &QPushButton::clicked, this, &SyncMeasuresDialogCentralWidget::upperPushButtonClicked);
 
   QHBoxLayout * upperLayout = new QHBoxLayout();
   upperLayout->addStretch();
@@ -72,17 +69,11 @@ void SyncMeasuresDialogCentralWidget::createLayout()
 
   m_collapsibleComponentList = new CollapsibleComponentList();
 
-  isConnected = connect(m_collapsibleComponentList, SIGNAL(componentClicked(bool)),
-                        this, SIGNAL(componentClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_collapsibleComponentList, &CollapsibleComponentList::componentClicked, this, &SyncMeasuresDialogCentralWidget::componentClicked);
 
-  isConnected = connect(m_collapsibleComponentList, SIGNAL(getComponentsByPage(int)),
-                        this, SIGNAL(getComponentsByPage(int)));
-  OS_ASSERT(isConnected);
+  connect(m_collapsibleComponentList, &CollapsibleComponentList::getComponentsByPage, this, &SyncMeasuresDialogCentralWidget::getComponentsByPage);
 
-  isConnected = connect(m_collapsibleComponentList, SIGNAL(getComponentsByPage(int)),
-                        this, SLOT(on_getComponentsByPage(int)));
-  OS_ASSERT(isConnected);
+  connect(m_collapsibleComponentList, &CollapsibleComponentList::getComponentsByPage, this, &SyncMeasuresDialogCentralWidget::on_getComponentsByPage);
 
   //*******************************************************************
 
@@ -99,8 +90,7 @@ void SyncMeasuresDialogCentralWidget::createLayout()
   //*******************************************************************
 
   lowerPushButton = new QPushButton("Update");
-  isConnected = connect(lowerPushButton, SIGNAL(clicked()), this, SLOT(lowerPushButtonClicked()));
-  OS_ASSERT(isConnected);
+  connect(lowerPushButton, &QPushButton::clicked, this, &SyncMeasuresDialogCentralWidget::lowerPushButtonClicked);
 
   QHBoxLayout * lowerLayout = new QHBoxLayout();
   lowerLayout->addStretch();

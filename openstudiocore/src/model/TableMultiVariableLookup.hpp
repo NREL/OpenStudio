@@ -20,10 +20,10 @@
 #ifndef MODEL_TABLEMULTIVARIABLELOOKUP_HPP
 #define MODEL_TABLEMULTIVARIABLELOOKUP_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Curve.hpp>
+#include "ModelAPI.hpp"
+#include "Curve.hpp"
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/math/FloatCompare.hpp"
 
 namespace openstudio {
 
@@ -271,7 +271,7 @@ class MODEL_API TableMultiVariableLookup : public Curve {
   boost::optional<double> yValue(const std::vector<double> & xValues) const;
 
   /** Return all of the x values for independent variable i
-    * in asscending order.
+    * in ascending order.
     *
     * The independent variables are indexed from 0.
     */

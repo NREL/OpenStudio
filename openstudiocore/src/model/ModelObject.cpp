@@ -571,7 +571,7 @@ namespace detail {
         ReportingFrequency rf(ReportingFrequency::Hourly);
         try { ReportingFrequency rf(boost::trim_copy(*reportingFrequency)); }
         catch (...) {
-          LOG(Warn, "Unregonized reporting frequency string. Defaulting to hourly.");
+          LOG(Warn, "Unrecognized reporting frequency string. Defaulting to hourly.");
         }
         SqlFileTimeSeriesQuery q(envPeriod,rf,*variableName,*keyValue);
         TimeSeriesVector tsVec = sqlFile->timeSeries(q);

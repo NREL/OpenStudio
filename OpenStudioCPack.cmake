@@ -2,7 +2,7 @@ file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Modules")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR}/Modules")
 
 set(CPACK_PACKAGE_VENDOR "National Renewable Energy Laboratory")
-set(CPACK_PACKAGE_CONTACT "OpenStudio@nrel.gov")
+set(CPACK_PACKAGE_CONTACT "${CPACK_PACKAGE_VENDOR} <OpenStudio@nrel.gov>")
 
 set(CPACK_PACKAGE_VERSION_MAJOR "${CMAKE_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${CMAKE_VERSION_MINOR}")
@@ -25,9 +25,8 @@ endif()
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/copyright.txt")
 
 set(CPACK_PACKAGE_EXECUTABLES "OpenStudio" "OpenStudio"
-                               "Pat" "ParametricAnalysisTool"
-                               "ResultsViewer" "ResultsViewer"
-                               "RunManager" "RunManager"
+                              "Pat" "ParametricAnalysisTool"
+                              "ResultsViewer" "ResultsViewer"
 )
 
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "OpenStudio is a cross-platform collection of software tools to support whole building energy modeling using EnergyPlus and advanced daylight analysis using Radiance. OpenStudio is an open source project to facilitate community development, extension, and private sector adoption. It includes graphical interfaces along with a Software Development Kit (SDK).")
@@ -37,27 +36,15 @@ set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/CPack.Description.tx
 set(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_CURRENT_SOURCE_DIR}/CPack.Welcome.txt")
 
 set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "OpenStudio\n ${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-thread1.46.1, libboost-system1.46.1, libboost-regex1.46.1, libboost-filesystem1.46.1, libboost-date-time1.46.1, libboost-program-options1.46.1, libboost-serialization1.46.1, libqt4-sql, libqt4-network, libruby1.8, ruby1.8, ruby, libqt4-sql-sqlite, libqtgui4, libqt4-xml, libqt4-webkit")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-thread1.55.0, libboost-system1.55.0, libboost-regex1.55.0, libboost-filesystem1.55.0, libboost-date-time1.55.0, libboost-program-options1.55.0, libboost-log1.55.0, libqt5sql5, libqt5network5, libqt5sql5-sqlite, libqt5gui5, libqt5xml5, libqt5webkit5, libruby2.0, ruby2.0")
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "http://openstudio.nrel.gov")
 set(CPACK_DEBIAN_PACKAGE_SECTION "science")
 set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/CMake/debian/postinst")
 
 if(APPLE)
-  set(CPACK_OSX_PACKAGE_VERSION 10.8)
+  set(CPACK_OSX_PACKAGE_VERSION 10.9)
   set(CPACK_PACKAGING_INSTALL_PREFIX "/Applications" CACHE PATH "Package install location")
   set(CPACK_PACKAGING_INSTALL_PREFIX "${CPACK_PACKAGING_INSTALL_PREFIX}/OpenStudio ${OPENSTUDIO_VERSION}")
-
-  if(CMAKE_OSX_DEPLOYMENT_TARGET MATCHES ".*10\\.9.*" OR CMAKE_OSX_SYSROOT MATCHES ".*10\\.9.*")
-    set(MAC_RUBY_2 "true")
-  else()
-    set(MAC_RUBY_2 "false")
-  endif()
-  list(FIND CMAKE_OSX_ARCHITECTURES "i386" I386_FOUND)
-  if(NOT I386_FOUND EQUAL -1)
-    set(I386_FOUND "true")
-  else()
-    set(I386_FOUND "false")
-  endif()
 
   configure_file("${CMAKE_SOURCE_DIR}/DarwinPostFlight.sh.in" "${CMAKE_BINARY_DIR}/DarwinPostFlight.sh")
   set(CPACK_POSTFLIGHT_SCRIPT "${CMAKE_BINARY_DIR}/DarwinPostFlight.sh")
@@ -126,6 +113,21 @@ endif()
 
 ###############################################################################
 # Additional install commands
+
+if(CPACK_BINARY_DEB)
+  add_custom_target(package_deb
+    COMMAND ${CMAKE_CPACK_COMMAND}
+    COMMAND ${CMAKE_COMMAND} -E echo "Fixing Debian Package:"
+    COMMAND ${CMAKE_COMMAND} -E make_directory fixup_deb
+    COMMAND dpkg-deb -x ${CPACK_PACKAGE_FILE_NAME}.deb fixup_deb
+    COMMAND dpkg-deb --control ${CPACK_PACKAGE_FILE_NAME}.deb fixup_deb/DEBIAN
+    COMMAND ${CMAKE_COMMAND} -E remove ${CPACK_PACKAGE_FILE_NAME}.deb
+    COMMAND chmod 0644 fixup_deb/DEBIAN/md5sums
+    COMMAND find -type d -print0 |xargs -0 chmod 755
+    COMMAND fakeroot dpkg -b fixup_deb ${CPACK_PACKAGE_FILE_NAME}.deb
+    COMMAND ${CMAKE_COMMAND} -E remove_directory fixup_deb
+  )
+endif()
 
 set(CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/;Required;ALL;/")
 

@@ -90,7 +90,7 @@ class PatMainWindow : public QMainWindow
 
   void changeMeasuresClicked();
 
-  void exitClicked();
+  void exitClicked(bool fromCloseEvent);
 
   void helpClicked();
 

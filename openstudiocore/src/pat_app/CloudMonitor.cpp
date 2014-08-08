@@ -185,30 +185,23 @@ CloudMonitor::CloudMonitor()
   m_worker = QSharedPointer<CloudMonitorWorker>(new CloudMonitorWorker(this));
   m_worker->moveToThread(m_workerThread.data());
 
-  bool bingo;
-  bingo = connect(m_worker.data(),SIGNAL(cloudConnectionError()),
-                  this,SLOT(onCloudConnectionError()));
-  OS_ASSERT(bingo);
+  connect(m_worker.data(), &CloudMonitorWorker::cloudConnectionError, this, &CloudMonitor::onCloudConnectionError);
 
   // StartCloudWorker
   m_startCloudWorker = QSharedPointer<StartCloudWorker>(new StartCloudWorker(this));
-  bingo = connect(m_startCloudWorker.data(),SIGNAL(doneWorking()),this,SLOT(onStartCloudWorkerComplete()));
-  OS_ASSERT(bingo);
+  connect(m_startCloudWorker.data(), &StartCloudWorker::doneWorking, this, &CloudMonitor::onStartCloudWorkerComplete);
 
   // StopCloudWorker
   m_stopCloudWorker = QSharedPointer<StopCloudWorker>(new StopCloudWorker(this));
-  bingo = connect(m_stopCloudWorker.data(),SIGNAL(doneWorking()),this,SLOT(onStopCloudWorkerComplete()));
-  OS_ASSERT(bingo);
+  connect(m_stopCloudWorker.data(), &StopCloudWorker::doneWorking, this, &CloudMonitor::onStopCloudWorkerComplete);
 
   // ReconnectCloudWorker
   m_reconnectCloudWorker = QSharedPointer<ReconnectCloudWorker>(new ReconnectCloudWorker(this));
-  bingo = connect(m_reconnectCloudWorker.data(),SIGNAL(doneWorking()),this,SLOT(onReconnectCloudWorkerComplete()));
-  OS_ASSERT(bingo);
+  connect(m_reconnectCloudWorker.data(), &ReconnectCloudWorker::doneWorking, this, &CloudMonitor::onReconnectCloudWorkerComplete);
 
   // RecoverCloudWorker
   m_recoverCloudWorker = QSharedPointer<RecoverCloudWorker>(new RecoverCloudWorker(this));
-  bingo = connect(m_recoverCloudWorker.data(),SIGNAL(doneWorking()),this,SLOT(onRecoverCloudWorkerComplete()));
-  OS_ASSERT(bingo);
+  connect(m_recoverCloudWorker.data(), &RecoverCloudWorker::doneWorking, this, &CloudMonitor::onRecoverCloudWorkerComplete);
 
   // Start the CloudMonitorWorker thread
   m_workerThread->start();

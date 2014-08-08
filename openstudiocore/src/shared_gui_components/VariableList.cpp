@@ -142,17 +142,12 @@ QWidget * VariableGroupItemDelegate::view(QSharedPointer<OSListItem> dataSource)
       variableGroupItemView->variableGroupContentView->newGroupView->setVisible(true);
       variableGroupItemView->variableGroupContentView->newGroupView->dropZone->setAcceptedMimeType(acceptedMimeType);
 
-      bool bingo = connect(variableGroupItemView->variableGroupContentView->newGroupView->dropZone,SIGNAL(dataDropped(QDropEvent * )),
-          variableListController.data(),SLOT(addItemForDroppedMeasure(QDropEvent *)));
-
-      OS_ASSERT(bingo);
+      connect(variableGroupItemView->variableGroupContentView->newGroupView->dropZone, &NewGroupDropZone::dataDropped, variableListController.data(), &VariableListController::addItemForDroppedMeasure);
     }
 
     variableGroupItemView->variableGroupContentView->newFixedGroupView->dropZone->setAcceptedMimeType(acceptedMimeType);
 
-    bool bingo = connect(variableGroupItemView->variableGroupContentView->newFixedGroupView->dropZone,SIGNAL(dataDropped(QDropEvent * )),
-                         variableListController.data(),SLOT(addFixedItemForDroppedMeasure(QDropEvent *)));
-    OS_ASSERT(bingo);
+    connect(variableGroupItemView->variableGroupContentView->newFixedGroupView->dropZone, &NewGroupDropZone::dataDropped, variableListController.data(), &VariableListController::addFixedItemForDroppedMeasure);
 
     variableGroupItemView->variableGroupContentView->variableListView->setListController(variableListController);
     variableGroupItemView->variableGroupContentView->variableListView->setDelegate(variableItemDelegate);
@@ -611,9 +606,7 @@ QWidget * VariableItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     auto variableItemView = new VariableItemView(variableItem->isFixedMeasure());
     variableItemView->variableHeaderView->variableNameEdit->setText(variableItem->name());
 
-    bool bingo = connect(variableItemView->variableHeaderView->variableNameEdit,SIGNAL(textEdited(const QString &)),
-                         variableItem.data(),SLOT(setName(const QString &)));
-    OS_ASSERT(bingo);
+    connect(variableItemView->variableHeaderView->variableNameEdit, &QLineEdit::textEdited, variableItem.data(), &VariableItem::setName);
 
     QSharedPointer<MeasureListController> measureListController = variableItem->measureListController();
     variableItemView->variableContentView->measureListView->setListController(measureListController);
@@ -623,23 +616,16 @@ QWidget * VariableItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     if (!variableItem->isFixedMeasure())
     {
       variableItemView->variableContentView->dropZone->setAcceptedMimeType(acceptedMimeType);
-      bingo = connect(variableItemView->variableContentView->dropZone,SIGNAL(dataDropped(QDropEvent *)),
-          variableItem->measureListController().data(),SLOT(addItemForDroppedMeasure(QDropEvent *)));
-      OS_ASSERT(bingo);
+      connect(variableItemView->variableContentView->dropZone, &MeasureDropZone::dataDropped,
+        variableItem->measureListController().data(), &MeasureListController::addItemForDroppedMeasure);
     }
 
-    bingo = connect(variableItemView->variableHeaderView->removeButton,SIGNAL(clicked()),
-                    variableItem.data(),SLOT(remove()));
-    OS_ASSERT(bingo);
-
-    bingo = connect(variableItemView->variableHeaderView->upButton,SIGNAL(clicked()),
-                    variableItem.data(),SLOT(moveUp()));
-    OS_ASSERT(bingo);
-
-    bingo = connect(variableItemView->variableHeaderView->downButton,SIGNAL(clicked()),
-                    variableItem.data(),SLOT(moveDown()));
-    OS_ASSERT(bingo);
-
+    connect(variableItemView->variableHeaderView->removeButton, &QPushButton::clicked, variableItem.data(), &VariableItem::remove);
+    
+    connect(variableItemView->variableHeaderView->upButton, &QPushButton::clicked, variableItem.data(), &VariableItem::moveUp);
+    
+    connect(variableItemView->variableHeaderView->downButton, &QPushButton::clicked, variableItem.data(), &VariableItem::moveDown);
+    
     QSharedPointer<MeasureItemDelegate> measureItemDelegate = QSharedPointer<MeasureItemDelegate>(new MeasureItemDelegate(variableItem->isFixedMeasure()));
     variableItemView->variableContentView->measureListView->setDelegate(measureItemDelegate);
 
@@ -1007,42 +993,30 @@ QWidget * MeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     measureItemView->measureItemButton->nameLabel->setText(measureItem->name());
 
-    bool bingo = connect(measureItem.data(),SIGNAL(nameChanged(const QString &)),measureItemView->measureItemButton->nameLabel,SLOT(setText(const QString &)));
-
-    OS_ASSERT(bingo);
-
+    connect(measureItem.data(), &MeasureItem::nameChanged, measureItemView->measureItemButton->nameLabel, &QLabel::setText);
+    
     // Duplicate
 
-    bingo = connect(measureItemView->duplicateButton,SIGNAL(clicked()),measureItem.data(),SLOT(duplicate()));
-
-    OS_ASSERT(bingo);
+    connect(measureItemView->duplicateButton, &QPushButton::clicked, measureItem.data(), &MeasureItem::duplicate);
 
     // Remove
 
-    bingo = connect(measureItemView->removeButton,SIGNAL(clicked()),measureItem.data(),SLOT(remove()));
-
-    OS_ASSERT(bingo);
+    connect(measureItemView->removeButton, &QPushButton::clicked, measureItem.data(), &MeasureItem::remove);
 
     // Selection
 
     measureItemView->measureItemButton->setHasEmphasis(measureItem->isSelected());
 
-    bingo = connect(measureItemView->measureItemButton,SIGNAL(clicked()),measureItem.data(),SLOT(toggleSelected()));
+    connect(measureItemView->measureItemButton, &MeasureItemButton::clicked, measureItem.data(), &MeasureItem::toggleSelected);
 
-    OS_ASSERT(bingo);
-
-    bingo = connect(measureItem.data(),SIGNAL(selectedChanged(bool)),measureItemView->measureItemButton,SLOT(setHasEmphasis(bool)));
-
-    OS_ASSERT(bingo);
-
+    connect(measureItem.data(), &MeasureItem::selectedChanged, measureItemView->measureItemButton, &MeasureItemButton::setHasEmphasis);
+    
     // Warning Icon
 
     measureItemView->measureItemButton->cautionLabel->setVisible(measureItem->hasIncompleteArguments());
 
-    bingo = connect(measureItem.data(),SIGNAL(argumentsChanged(bool)),measureItemView->measureItemButton->cautionLabel,SLOT(setVisible(bool)));
-
-    OS_ASSERT(bingo);
-
+    connect(measureItem.data(), &MeasureItem::argumentsChanged, measureItemView->measureItemButton->cautionLabel, &QLabel::setVisible);
+    
     return measureItemView;
   }
 

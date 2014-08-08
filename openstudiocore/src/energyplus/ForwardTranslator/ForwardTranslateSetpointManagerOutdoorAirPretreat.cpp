@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/SetpointManagerOutdoorAirPretreat.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/SetpointManagerOutdoorAirPretreat.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
 #include <utilities/idd/SetpointManager_OutdoorAirPretreat_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 

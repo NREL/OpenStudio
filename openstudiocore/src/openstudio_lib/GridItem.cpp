@@ -101,30 +101,19 @@ GridItem::GridItem( QGraphicsItem * parent ):
   setFlag(QGraphicsItem::ItemIsSelectable,false);
   if( QGraphicsScene * _scene = scene() )
   {
-    connect( this, 
-             SIGNAL(modelObjectSelected( model::OptionalModelObject &, bool ) ),
-             _scene,
-             SIGNAL(modelObjectSelected( model::OptionalModelObject &, bool ) ) );
+    GridScene * gridScene = static_cast<GridScene *>(_scene);
 
-    connect( this, 
-             SIGNAL(removeModelObjectClicked( model::ModelObject & ) ),
-             _scene,
-             SIGNAL(removeModelObjectClicked( model::ModelObject & ) ) );
+    connect(this, &GridItem::modelObjectSelected, gridScene, &GridScene::modelObjectSelected);
 
-    connect( this, 
-             SIGNAL( hvacComponentDropped(OSItemId, model::HVACComponent &) ),
-             _scene,
-             SIGNAL( hvacComponentDropped(OSItemId, model::HVACComponent &) ) );
+    connect(this, &GridItem::removeModelObjectClicked, gridScene, &GridScene::removeModelObjectClicked);
 
-    connect( this, 
-             SIGNAL( hvacComponentDropped(OSItemId) ),
-             _scene,
-             SIGNAL( hvacComponentDropped(OSItemId) ) );
+    connect(this, static_cast<void (GridItem::*)(OSItemId, model::HVACComponent&)>(&GridItem::hvacComponentDropped),
+      gridScene, static_cast<void (GridScene::*)(OSItemId, model::HVACComponent&)>(&GridScene::hvacComponentDropped));
 
-    connect( this, 
-             SIGNAL( innerNodeClicked(model::ModelObject &) ),
-             _scene,
-             SIGNAL( innerNodeClicked(model::ModelObject & ) ) );
+    connect(this, static_cast<void (GridItem::*)(OSItemId)>(&GridItem::hvacComponentDropped),
+      gridScene, static_cast<void (GridScene::*)(OSItemId)>(&GridScene::hvacComponentDropped));
+
+    connect(this, &GridItem::innerNodeClicked, gridScene, &GridScene::innerNodeClicked);
   }
 }
 
@@ -141,7 +130,7 @@ void GridItem::setDeletable(bool deletable)
 
     m_removeButtonItem->setPos(boundingRect().width() - 30, boundingRect().height() - 30);
   
-    connect(m_removeButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveButtonClicked()));
+    connect(m_removeButtonItem, &RemoveButtonItem::mouseClicked, this, &GridItem::onRemoveButtonClicked);
   }
   else
   {
@@ -270,8 +259,8 @@ void GridItem::setModelObject( model::OptionalModelObject modelObject )
 
   if( m_modelObject )
   {
-    connect(m_modelObject->getImpl<detail::IdfObject_Impl>().get(),SIGNAL(onNameChange()),
-            this, SLOT(onNameChange()));
+    connect(m_modelObject->getImpl<detail::IdfObject_Impl>().get(), &detail::IdfObject_Impl::onNameChange,
+            this, &GridItem::onNameChange);
 
     setFlag(QGraphicsItem::ItemIsSelectable);
 
@@ -1418,11 +1407,11 @@ void OneThreeWaterToAirItem::setModelObject( model::OptionalModelObject modelObj
       {
         LinkItem * linkItem1 = new LinkItem(this);
         linkItem1->setPos(40,5); 
-        connect(linkItem1,SIGNAL(mouseClicked()),this,SLOT(onLinkItemClicked()));
+        connect(linkItem1, &LinkItem::mouseClicked, this, &OneThreeWaterToAirItem::onLinkItemClicked);
         
         LinkItem * linkItem2 = new LinkItem(this);
         linkItem2->setPos(40,75); 
-        connect(linkItem2,SIGNAL(mouseClicked()),this,SLOT(onLinkItemClicked()));
+        connect(linkItem2, &LinkItem::mouseClicked, this, &OneThreeWaterToAirItem::onLinkItemClicked);
 
         m_showLinks = true;
       }
@@ -1502,11 +1491,11 @@ void OneThreeWaterToWaterItem::setModelObject( model::OptionalModelObject modelO
       {
         LinkItem * linkItem1 = new LinkItem(this);
         linkItem1->setPos(40,5); 
-        connect(linkItem1,SIGNAL(mouseClicked()),this,SLOT(onLinkItemClicked()));
+        connect(linkItem1, &LinkItem::mouseClicked, this, &OneThreeWaterToWaterItem::onLinkItemClicked);
         
         LinkItem * linkItem2 = new LinkItem(this);
         linkItem2->setPos(40,75); 
-        connect(linkItem2,SIGNAL(mouseClicked()),this,SLOT(onLinkItemClicked()));
+        connect(linkItem2, &LinkItem::mouseClicked, this, &OneThreeWaterToWaterItem::onLinkItemClicked);
 
         m_showLinks = true;
       }
@@ -3155,16 +3144,9 @@ NodeContextButtonItem::NodeContextButtonItem(GridItem * parent)
                QPixmap(":/images/contextual_arrow.png"),
                parent)
 {
-  bool bingo;
+  connect(this, &NodeContextButtonItem::mouseClicked, this, &NodeContextButtonItem::showContextMenu);
 
-  bingo = connect(this,SIGNAL(mouseClicked()),this,SLOT(showContextMenu()));
-  OS_ASSERT(bingo);
-
-  bingo = connect( this, 
-             SIGNAL(removeModelObjectClicked( model::ModelObject & ) ),
-             parent,
-             SIGNAL(removeModelObjectClicked( model::ModelObject & ) ) );
-  OS_ASSERT(bingo);
+  connect(this, &NodeContextButtonItem::removeModelObjectClicked, parent, &GridItem::removeModelObjectClicked);
 }
 
 void NodeContextButtonItem::showContextMenu()
@@ -3180,13 +3162,10 @@ void NodeContextButtonItem::showContextMenu()
     QPoint viewP = v->mapFromScene(sceneP);
     QPoint menuPos = v->viewport()->mapToGlobal(viewP);
 
-    bool bingo;
-
     QMenu menu;
     QAction removeSPMAction(QIcon(":/images/delete-icon.png"),"Delete Setpoint Manager",&menu);
     menu.addAction(&removeSPMAction);
-    bingo = connect(&removeSPMAction,SIGNAL(triggered()),this,SLOT(onRemoveSPMActionTriggered()));
-    OS_ASSERT(bingo);
+    connect(&removeSPMAction, &QAction::triggered, this, &NodeContextButtonItem::onRemoveSPMActionTriggered);
 
     menu.exec(menuPos); 
   }

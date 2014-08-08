@@ -1,9 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Name=RunManager
-Comment=Runs a series of EnergyPlus simulations
-Exec=${CMAKE_INSTALL_PREFIX}/bin/RunManager
-Terminal=false
-Type=Application
-Icon=RunManager
-Categories=Science;Engineering;

@@ -31,11 +31,9 @@ ThermalZonesTabController::ThermalZonesTabController(bool isIP, const model::Mod
 
   this->mainContentWidget()->addTabWidget(m_thermalZonesController->subTabView());
 
-  connect( m_thermalZonesController.get(),SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
-           this,SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )) );
+  connect(m_thermalZonesController.get(), &ThermalZonesController::modelObjectSelected, this, &ThermalZonesTabController::modelObjectSelected);
 
-  connect( this,SIGNAL(toggleUnitsClicked( bool )),
-           m_thermalZonesController.get(),SIGNAL(toggleUnitsClicked( bool )) );
+  connect(this, &ThermalZonesTabController::toggleUnitsClicked, m_thermalZonesController.get(), &ThermalZonesController::toggleUnitsClicked);
 }
 
 } // openstudio

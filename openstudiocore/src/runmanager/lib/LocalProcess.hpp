@@ -116,7 +116,7 @@ namespace detail {
 
       /// Immutable members, do not need thread mutex protection
       const openstudio::runmanager::ToolInfo m_tool; //< Tool that is executing
-      const std::vector<std::pair<openstudio::path, openstudio::path> > m_requiredFiles; //< Files requried to execute tool
+      const std::vector<std::pair<openstudio::path, openstudio::path> > m_requiredFiles; //< Files required to execute tool
       const std::vector<std::string> m_parameters; //< parameters to pass to tool
       const openstudio::path m_outdir;  //< Tool's output directory
       const std::vector<openstudio::path> m_expectedOutputFiles; //< List of expected output files

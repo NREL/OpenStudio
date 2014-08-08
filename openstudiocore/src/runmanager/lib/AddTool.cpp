@@ -37,8 +37,7 @@ namespace runmanager {
       ui.cbToolType->addItem(toQString(ToolType::valueDescription(value)));
     }
 
-    connect(ui.btnRemoteToolLocationBrowse, SIGNAL(clicked()), this, SLOT(remoteBrowse()));
-    connect(ui.btnToolLocationBrowse, SIGNAL(clicked()), this, SLOT(localBrowse()));
+    connect(ui.btnToolLocationBrowse, &QToolButton::clicked, this, &AddTool::localBrowse);
   }
 
   AddTool::~AddTool()
@@ -55,20 +54,9 @@ namespace runmanager {
     }
   }
 
-  void AddTool::remoteBrowse()
-  {
-    QString str = QFileDialog::getOpenFileName(this, "Choose Archive Containing Remote Tools", ui.txtRemoteToolLocation->text());
-
-    if (!str.isEmpty() )
-    {
-      ui.txtRemoteToolLocation->setText(toQString(toPath(str).native()));
-    }
-  }
-
   boost::optional<std::pair<ToolVersion, ToolLocationInfo> > AddTool::getTool()
   {
     openstudio::path localpath = toPath(ui.txtToolLocation->text());
-    openstudio::path remotepath = toPath(ui.txtRemoteToolLocation->text());
 
     int major = ui.sbMajorVersionNumber->value();
     int minor = ui.sbMinorVersionNumber->value();
@@ -81,18 +69,18 @@ namespace runmanager {
         if (build > -1)
         {
           return std::make_pair(ToolVersion(major, minor, build), 
-              ToolLocationInfo(ToolType(toString(ui.cbToolType->currentText())), localpath, remotepath));
+              ToolLocationInfo(ToolType(toString(ui.cbToolType->currentText())), localpath));
         } else {
           return std::make_pair(ToolVersion(major, minor), 
-              ToolLocationInfo(ToolType(toString(ui.cbToolType->currentText())), localpath, remotepath));
+              ToolLocationInfo(ToolType(toString(ui.cbToolType->currentText())), localpath));
         }
       } else {
         return std::make_pair(ToolVersion(major), 
-            ToolLocationInfo(ToolType(toString(ui.cbToolType->currentText())), localpath, remotepath));
+            ToolLocationInfo(ToolType(toString(ui.cbToolType->currentText())), localpath));
       }
     } else {
       return std::make_pair(ToolVersion(), 
-          ToolLocationInfo(ToolType(toString(ui.cbToolType->currentText())), localpath, remotepath));
+          ToolLocationInfo(ToolType(toString(ui.cbToolType->currentText())), localpath));
     }
 
   }

@@ -75,11 +75,8 @@ GlareSensorInspectorView::GlareSensorInspectorView(bool isIP, const openstudio::
   label->setStyleSheet("QLabel { font: bold; }");
   vLayout->addWidget(label);
 
-  bool isConnected = false;
-
   m_xCoordinateEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_xCoordinateEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &GlareSensorInspectorView::toggleUnitsClicked, m_xCoordinateEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_xCoordinateEdit);
 
   mainGridLayout->addLayout(vLayout,1,0, Qt::AlignTop|Qt::AlignLeft);
@@ -92,8 +89,7 @@ GlareSensorInspectorView::GlareSensorInspectorView(bool isIP, const openstudio::
   vLayout->addWidget(label);
 
   m_yCoordinateEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_yCoordinateEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &GlareSensorInspectorView::toggleUnitsClicked, m_yCoordinateEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_yCoordinateEdit);
 
   mainGridLayout->addLayout(vLayout,1,1, Qt::AlignTop|Qt::AlignLeft);
@@ -106,8 +102,7 @@ GlareSensorInspectorView::GlareSensorInspectorView(bool isIP, const openstudio::
   vLayout->addWidget(label);
 
   m_zCoordinateEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_zCoordinateEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &GlareSensorInspectorView::toggleUnitsClicked, m_zCoordinateEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_zCoordinateEdit);
 
   mainGridLayout->addLayout(vLayout,1,2, Qt::AlignTop|Qt::AlignLeft);
@@ -121,8 +116,7 @@ GlareSensorInspectorView::GlareSensorInspectorView(bool isIP, const openstudio::
   vLayout->addWidget(label);
 
   m_psiRotationEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_psiRotationEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &GlareSensorInspectorView::toggleUnitsClicked, m_psiRotationEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_psiRotationEdit);
 
   mainGridLayout->addLayout(vLayout,2,0, Qt::AlignTop|Qt::AlignLeft);
@@ -135,8 +129,7 @@ GlareSensorInspectorView::GlareSensorInspectorView(bool isIP, const openstudio::
   vLayout->addWidget(label);
 
   m_thetaRotationEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_thetaRotationEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &GlareSensorInspectorView::toggleUnitsClicked, m_thetaRotationEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_thetaRotationEdit);
 
   mainGridLayout->addLayout(vLayout,2,1, Qt::AlignTop|Qt::AlignLeft);
@@ -149,8 +142,7 @@ GlareSensorInspectorView::GlareSensorInspectorView(bool isIP, const openstudio::
   vLayout->addWidget(label);
 
   m_phiRotationEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_phiRotationEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &GlareSensorInspectorView::toggleUnitsClicked, m_phiRotationEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_phiRotationEdit);
 
   mainGridLayout->addLayout(vLayout,2,2, Qt::AlignTop|Qt::AlignLeft);
@@ -164,8 +156,7 @@ GlareSensorInspectorView::GlareSensorInspectorView(bool isIP, const openstudio::
   vLayout->addWidget(label);
 
   m_numberOfViewsEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_numberOfViewsEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &GlareSensorInspectorView::toggleUnitsClicked, m_numberOfViewsEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_numberOfViewsEdit);
 
   mainGridLayout->addLayout(vLayout,5,0, Qt::AlignTop|Qt::AlignLeft);
@@ -178,8 +169,7 @@ GlareSensorInspectorView::GlareSensorInspectorView(bool isIP, const openstudio::
   vLayout->addWidget(label);
 
   m_maxGlareEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_maxGlareEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &GlareSensorInspectorView::toggleUnitsClicked, m_maxGlareEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_maxGlareEdit);
 
   mainGridLayout->addLayout(vLayout,5,1, Qt::AlignTop|Qt::AlignLeft);

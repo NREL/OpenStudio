@@ -150,15 +150,6 @@ namespace runmanager {
     ui.idfLocationTxt->setText(openstudio::toQString(co.getDefaultIDFLocation().native()));
     ui.epwLocationTxt->setText(openstudio::toQString(co.getDefaultEPWLocation().native()));
 
-    ui.numSlurmProcessesBox->setValue(co.getMaxSLURMJobs());
-    ui.slurmUserNameTxt->setText(openstudio::toQString(co.getSLURMUserName()));
-    ui.slurmHostTxt->setText(openstudio::toQString(co.getSLURMHost()));
-
-    ui.maxSLURMRuntimeBox->setValue(co.getSLURMMaxTime());
-    ui.slurmPartitionTxt->setText(openstudio::toQString(co.getSLURMPartition()));
-    ui.slurmAccountTxt->setText(openstudio::toQString(co.getSLURMAccount()));
-
-
     openstudio::path outdir = co.getOutputLocation();
     if (!outdir.empty())
     {
@@ -182,7 +173,6 @@ namespace runmanager {
     items.push_back("Minor");
     items.push_back("Build");
     items.push_back("Binary Directory");
-    items.push_back("Remote Binary Archive");
     m_model.setHorizontalHeaderLabels(items);
 
     std::vector<std::pair<ToolVersion, ToolLocationInfo> > tools = co.getToolLocations();
@@ -199,12 +189,12 @@ namespace runmanager {
       ui.tableTools->resizeColumnToContents(i);
     }
 
-    connect(ui.btnIDFLocation, SIGNAL(clicked()), this, SLOT(updateIDFLocation()));
-    connect(ui.btnEPWLocation, SIGNAL(clicked()), this, SLOT(updateEPWLocation()));
-    connect(ui.btnOutputLocation, SIGNAL(clicked()), this, SLOT(updateOutputLocation()));
-    connect(ui.btnAddTool, SIGNAL(clicked()), this, SLOT(addTool()));
-    connect(ui.btnRemoveTool, SIGNAL(clicked()), this, SLOT(removeSelectedTool()));
-    connect(ui.cbOutputInPlace, SIGNAL(stateChanged(int)), this, SLOT(inPlaceStateChanged(int)));
+    connect(ui.btnIDFLocation, &QPushButton::clicked, this, &Configuration::updateIDFLocation);
+    connect(ui.btnEPWLocation, &QPushButton::clicked, this, &Configuration::updateEPWLocation);
+    connect(ui.btnOutputLocation, &QPushButton::clicked, this, &Configuration::updateOutputLocation);
+    connect(ui.btnAddTool, &QToolButton::clicked, this, &Configuration::addTool);
+    connect(ui.btnRemoveTool, &QToolButton::clicked, this, &Configuration::removeSelectedTool);
+    connect(ui.cbOutputInPlace, &QCheckBox::stateChanged, this, &Configuration::inPlaceStateChanged);
 
     QItemDelegate *tooldelegate = new ToolNameDelegate(ui.tableTools);
     ui.tableTools->setItemDelegateForColumn(0, tooldelegate);
@@ -259,13 +249,6 @@ namespace runmanager {
     if (!tool.second.binaryDir.empty())
     {
       row.push_back(new QStandardItem(toQString(tool.second.binaryDir.native())));
-    } else {
-      row.push_back(new QStandardItem(""));
-    }
-
-    if (!tool.second.linuxBinaryArchive.empty())
-    {
-      row.push_back(new QStandardItem(toQString(tool.second.linuxBinaryArchive.native())));
     } else {
       row.push_back(new QStandardItem(""));
     }
@@ -338,10 +321,6 @@ namespace runmanager {
     co.setDefaultEPWLocation(toPath(ui.epwLocationTxt->text()));
     co.setSimpleName(ui.cbSimpleName->checkState() == Qt::Checked);
 
-    co.setSLURMMaxTime(ui.maxSLURMRuntimeBox->value());
-    co.setSLURMPartition(toString(ui.slurmPartitionTxt->text()));
-    co.setSLURMAccount(toString(ui.slurmAccountTxt->text()));
-
     if (ui.cbOutputInPlace->checkState() != Qt::Checked)
     {
       QString txt = ui.outputLocationTxt->text();
@@ -384,13 +363,9 @@ namespace runmanager {
             build),
           ToolLocationInfo(
             toString(m_model.item(i, 0)->text()),
-            toPath(m_model.item(i,4)->text()),
-            toPath(m_model.item(i,5)->text()))
+            toPath(m_model.item(i,4)->text()))
           );
     }
-    co.setMaxSLURMJobs(ui.numSlurmProcessesBox->value());
-    co.setSLURMUserName(toString(ui.slurmUserNameTxt->text()));
-    co.setSLURMHost(toString(ui.slurmHostTxt->text()));
 
 
     return co;

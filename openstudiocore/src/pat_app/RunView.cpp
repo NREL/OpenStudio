@@ -191,9 +191,7 @@ RunStatusView::RunStatusView()
   vLayout->addWidget(m_cloudInstances);
   statusContainer->setLayout(vLayout);
   m_timer = new QTimer(this);
-  bool isConnected = connect(m_timer, SIGNAL(timeout()),
-                        this, SLOT(updateCloudData()));
-  OS_ASSERT(isConnected);
+  connect(m_timer, &QTimer::timeout, this, &RunStatusView::updateCloudData);
   mainHLayout->addWidget(statusContainer);
 
   // "Radiance" Button Layout
@@ -206,9 +204,7 @@ RunStatusView::RunStatusView()
   radianceWidget->setObjectName("RunStatusViewRadiance");
   auto radianceInteriorLayout = new QHBoxLayout();
 
-  isConnected = connect(m_radiance, SIGNAL(toggled(bool)),
-                        this, SLOT(radianceToggled(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_radiance, &QRadioButton::toggled, this, &RunStatusView::radianceToggled);
 
   radianceWidget->setLayout(radianceInteriorLayout);
   radianceInteriorLayout->addWidget(radianceLabel);
@@ -239,9 +235,7 @@ RunStatusView::RunStatusView()
           "  border:none;"
           "}";
   m_selectAllDataPoints->setStyleSheet(style);
-  isConnected = connect(m_selectAllDataPoints, SIGNAL(clicked(bool)),
-                        this, SLOT(on_selectAllDataPoints(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_selectAllDataPoints, &QPushButton::clicked, this, &RunStatusView::on_selectAllDataPoints);
   buttonHLayout->addWidget(m_selectAllDataPoints);
 
   horizontalSpacer = new QSpacerItem(5, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -255,9 +249,7 @@ RunStatusView::RunStatusView()
           "  border:none;"
           "}";
   m_clearSelectionDataPoints->setStyleSheet(style);
-  isConnected = connect(m_clearSelectionDataPoints, SIGNAL(clicked(bool)),
-                        this, SLOT(on_clearSelectionDataPoints(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_clearSelectionDataPoints, &QPushButton::clicked, this, &RunStatusView::on_clearSelectionDataPoints);
   buttonHLayout->addWidget(m_clearSelectionDataPoints);
 
   buttonHLayout->addStretch();
@@ -265,9 +257,7 @@ RunStatusView::RunStatusView()
   m_selectAllDownloads = new QPushButton(this);
   m_selectAllDownloads->setFlat(true);
   m_selectAllDownloads->setFixedSize(QSize(18,18));
-  isConnected = connect(m_selectAllDownloads, SIGNAL(clicked(bool)),
-                        this, SLOT(on_selectAllDownloads(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_selectAllDownloads, &QPushButton::clicked, this, &RunStatusView::on_selectAllDownloads);
   buttonHLayout->addWidget(m_selectAllDownloads);
 
   m_selectAllDownloadsLabel = new QLabel();
@@ -284,9 +274,7 @@ RunStatusView::RunStatusView()
                         "  border:none;"
                         "}";
   m_selectAllClears->setStyleSheet(style);
-  isConnected = connect(m_selectAllClears, SIGNAL(clicked(bool)),
-                        this, SLOT(on_selectAllClears(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_selectAllClears, &QPushButton::clicked, this, &RunStatusView::on_selectAllClears);
   buttonHLayout->addWidget(m_selectAllClears);
 
   label = new QLabel("All");
@@ -663,10 +651,7 @@ DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataP
   m_download->setFixedSize(QSize(18,18));
   mainHLayout->addWidget(m_download);
 
-  bool isConnected;
-  isConnected = connect(m_download,SIGNAL(clicked(bool)),
-                        this,SLOT(on_downloadClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_download, &QPushButton::clicked, this, &DataPointRunHeaderView::on_downloadClicked);
 
   auto horizontalSpacer = new QSpacerItem(20, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
   mainHLayout->addSpacerItem(horizontalSpacer);
@@ -677,18 +662,14 @@ DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataP
   m_clear->setFixedSize(QSize(18,18));
   mainHLayout->addWidget(m_clear);
 
-  isConnected = connect(m_clear,SIGNAL(clicked(bool)),
-                this,SLOT(on_clearClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_clear, &QPushButton::clicked, this, &DataPointRunHeaderView::on_clearClicked);
 
   horizontalSpacer = new QSpacerItem(20, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
   mainHLayout->addSpacerItem(horizontalSpacer);
 
   this->setCheckable(true);
 
-  isConnected = connect(this,SIGNAL(clicked(bool)),
-                this,SLOT(on_clicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &DataPointRunHeaderView::clicked, this, &DataPointRunHeaderView::on_clicked);
 
   update();
 }
@@ -981,9 +962,7 @@ DataPointRunItemView::DataPointRunItemView(const openstudio::analysis::DataPoint
   setContent(dataPointRunContentView);
 
   // pass dataPointResultsCleared signal through
-  bool bingo = connect(dataPointRunHeaderView,SIGNAL(dataPointResultsCleared(const openstudio::UUID&)),
-                       this,SIGNAL(dataPointResultsCleared(const openstudio::UUID&)));
-  OS_ASSERT(bingo);
+  connect(dataPointRunHeaderView, &DataPointRunHeaderView::dataPointResultsCleared, this, &DataPointRunItemView::dataPointResultsCleared);
 
   checkForUpdate();
 }
@@ -1113,6 +1092,7 @@ DataPointJobContentView::DataPointJobContentView()
   m_textEdit = new QLabel();
   m_textEdit->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
   m_textEdit->setWordWrap(true);
+  m_textEdit->setOpenExternalLinks(true);
 
   mainHLayout->addWidget(m_textEdit);
 }

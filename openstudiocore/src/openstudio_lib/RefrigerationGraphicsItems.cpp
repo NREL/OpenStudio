@@ -201,8 +201,7 @@ RefrigerationSystemView::RefrigerationSystemView()
   refrigerationCasesView = new RefrigerationCasesView();
   refrigerationCasesView->setParentItem(this);
 
-  bool bingo = connect(refrigerationCasesView->expandButton,SIGNAL(mouseClicked(bool)),this,SLOT(setCasesExpanded(bool)));
-  OS_ASSERT(bingo);
+  connect(refrigerationCasesView->expandButton, &CaseViewExpandButton::mouseClicked, this, &RefrigerationSystemView::setCasesExpanded);
 
   // Secondary Item
 
@@ -657,8 +656,7 @@ RefrigerationCaseDetailView::RefrigerationCaseDetailView()
 
   removeButtonItem->setPos(size().width() - removeButtonItem->boundingRect().width() - RefrigerationSystemView::margin,RefrigerationSystemView::margin);
 
-  bool bingo = connect(removeButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveButtonClicked()));
-  OS_ASSERT(bingo);
+  connect(removeButtonItem, &RemoveButtonItem::mouseClicked, this, &RefrigerationCaseDetailView::onRemoveButtonClicked);
 
   setId(OSItemId());
 }
@@ -757,8 +755,7 @@ RefrigerationCondenserView::RefrigerationCondenserView()
 
   removeButtonItem->setPos(size().width() - removeButtonItem->boundingRect().width() - RefrigerationSystemView::margin,RefrigerationSystemView::margin);
 
-  bool bingo = connect(removeButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveButtonClicked()));
-  OS_ASSERT(bingo);
+  connect(removeButtonItem, &RemoveButtonItem::mouseClicked, this, &RefrigerationCondenserView::onRemoveButtonClicked);
 
   setCondenserId(OSItemId());
 }
@@ -869,8 +866,7 @@ RefrigerationCompressorDetailView::RefrigerationCompressorDetailView()
 
   removeButtonItem->setPos(size().width() - removeButtonItem->boundingRect().width(),0);
 
-  bool bingo = connect(removeButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveButtonClicked()));
-  OS_ASSERT(bingo);
+  connect(removeButtonItem, &RemoveButtonItem::mouseClicked, this, &RefrigerationCompressorDetailView::onRemoveButtonClicked);
 
   setId(OSItemId());
 }
@@ -1083,8 +1079,7 @@ RefrigerationSubCoolerView::RefrigerationSubCoolerView()
 
   removeButtonItem->setPos(size().width() - removeButtonItem->boundingRect().width() - RefrigerationSystemView::margin,RefrigerationSystemView::margin);
 
-  bool bingo = connect(removeButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveButtonClicked()));
-  OS_ASSERT(bingo);
+  connect(removeButtonItem, &RemoveButtonItem::mouseClicked, this, &RefrigerationSubCoolerView::onRemoveButtonClicked);
 
   setId(OSItemId());
 }
@@ -1234,8 +1229,7 @@ RefrigerationSHXView::RefrigerationSHXView()
 
   removeButtonItem->setPos(size().width() - removeButtonItem->boundingRect().width() - RefrigerationSystemView::margin,RefrigerationSystemView::margin);
 
-  bool bingo = connect(removeButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveButtonClicked()));
-  OS_ASSERT(bingo);
+  connect(removeButtonItem, &RemoveButtonItem::mouseClicked, this, &RefrigerationSHXView::onRemoveButtonClicked);
 
   setId(OSItemId());
 }
@@ -1325,14 +1319,12 @@ SecondaryDetailView::SecondaryDetailView()
   zoomInButtonItem = new ZoomInButtonItem();
   zoomInButtonItem->setParentItem(this);
   zoomInButtonItem->setPos(width() - RefrigerationSystemView::margin - zoomInButtonItem->boundingRect().width(),RefrigerationSystemView::margin);
-  bool bingo = connect(zoomInButtonItem,SIGNAL(mouseClicked()),this,SLOT(onZoomButtonClicked()));
-  OS_ASSERT(bingo);
+  connect(zoomInButtonItem, &ZoomInButtonItem::mouseClicked, this, &SecondaryDetailView::onZoomButtonClicked);
 
   removeButtonItem = new RemoveButtonItem();
   removeButtonItem->setParentItem(this);
   removeButtonItem->setPos(zoomInButtonItem->x() - removeButtonItem->boundingRect().width() - RefrigerationSystemView::margin,RefrigerationSystemView::margin); 
-  bingo = connect(removeButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveButtonClicked()));
-  OS_ASSERT(bingo);
+  connect(removeButtonItem, &RemoveButtonItem::mouseClicked, this, &SecondaryDetailView::onRemoveButtonClicked);
 }
 
 double SecondaryDetailView::width()

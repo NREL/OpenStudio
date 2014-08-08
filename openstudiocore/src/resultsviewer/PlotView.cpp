@@ -20,6 +20,7 @@
 #include "PlotView.hpp"
 #include "PlotViewProperties.hpp"
 #include "../utilities/sql/SqlFile.hpp"
+#include "../utilities/core/Assert.hpp"
 #include "../utilities/data/Vector.hpp"
 
 #include <qwt/qwt_symbol.h>
@@ -377,8 +378,7 @@ namespace resultsviewer{
   {
     m_toolBar = new PlotViewToolbar("PlotToolBar",this);
 
-    connect(m_toolBar, SIGNAL(signalDoubleClick()), this, SLOT(slotFloatOrDock()));
-
+    connect(m_toolBar, &PlotViewToolbar::signalDoubleClick, this, &PlotView::slotFloatOrDock);
     auto exclusiveButtons = new QButtonGroup(this);
     exclusiveButtons->setExclusive(true);
 
@@ -389,8 +389,7 @@ namespace resultsviewer{
     pointer->setCheckable(true);
     m_toolBar->addWidget(pointer);
     exclusiveButtons->addButton(pointer);
-    connect(pointer, SIGNAL(toggled(bool)), this, SLOT(slotPointerMode(bool)));
-
+    connect(pointer, &QToolButton::toggled, this, &PlotView::slotPointerMode);
     m_selectCursor = QCursor(Qt::ArrowCursor);
 
     auto pan = new QToolButton(this);
@@ -400,8 +399,7 @@ namespace resultsviewer{
     pan->setCheckable(true);
     m_toolBar->addWidget(pan);
     exclusiveButtons->addButton(pan);
-    connect(pan, SIGNAL(toggled(bool)), this, SLOT(slotPanMode(bool)));
-
+    connect(pan, &QToolButton::toggled, this, &PlotView::slotPanMode);
     m_panCursor = QCursor(Qt::OpenHandCursor);
 
     auto valueInfo = new QToolButton(this);
@@ -411,8 +409,7 @@ namespace resultsviewer{
     valueInfo->setCheckable(true);
     m_toolBar->addWidget(valueInfo);
     exclusiveButtons->addButton(valueInfo);
-    connect(valueInfo, SIGNAL(toggled(bool)), this, SLOT(slotValueInfoMode(bool)));
-
+    connect(valueInfo, &QToolButton::toggled, this, &PlotView::slotValueInfoMode);
     m_valueInfoCursor = QCursor(Qt::ArrowCursor);
 
     auto zoom = new QToolButton(this);
@@ -422,28 +419,27 @@ namespace resultsviewer{
     zoom->setCheckable(true);
     m_toolBar->addWidget(zoom);
     exclusiveButtons->addButton(zoom);
-    connect(zoom, SIGNAL(toggled(bool)), this, SLOT(slotZoomMode(bool)));
-
+    connect(zoom, &QToolButton::toggled, this, &PlotView::slotZoomMode);
     m_zoomCursor = QCursor(QPixmap(":/images/zoom_cursor.png"),0,0);
 
     QAction *zoomIn = new QAction(QIcon(":/images/zoom_in.png"),tr("Zoom In"), this);
     zoomIn->setToolTip("Zoom In");
     m_toolBar->addAction(zoomIn);
-    connect(zoomIn, SIGNAL(triggered()), this, SLOT(slotZoomIn()));
+    connect(zoomIn, &QAction::triggered, this, &PlotView::slotZoomIn);
 
     QAction *zoomOut = new QAction(QIcon(":/images/zoom_out.png"),tr("Zoom Out"), this);
     zoomOut->setToolTip("Zoom Out");
     m_toolBar->addAction(zoomOut);
-    connect(zoomOut, SIGNAL(triggered()), this, SLOT(slotZoomOut()));
+    connect(zoomOut, &QAction::triggered, this, &PlotView::slotZoomOut);
 
 
     auto saveMenu = new QMenu(this);
     QAction *saveImageScreenSize = new QAction(tr("Save Image (Screen Size)"), this);
-    connect(saveImageScreenSize, SIGNAL(triggered()), this, SLOT(slotSaveImageScreenSize()));
+    connect(saveImageScreenSize, &QAction::triggered, this, &PlotView::slotSaveImageScreenSize);
     QAction *saveImage800x600 = new QAction(tr("Save Image (800x600)"), this);
-    connect(saveImage800x600, SIGNAL(triggered()), this, SLOT(slotSaveImage800x600()));
+    connect(saveImage800x600, &QAction::triggered, this, &PlotView::slotSaveImage800x600);
     QAction *saveImage400x300 = new QAction(tr("Save Image (400x300)"), this);
-    connect(saveImage400x300, SIGNAL(triggered()), this, SLOT(slotSaveImage400x300()));
+    connect(saveImage400x300, &QAction::triggered, this, &PlotView::slotSaveImage400x300);
     saveMenu->addAction(saveImageScreenSize);
     saveMenu->addAction(saveImage800x600);
     saveMenu->addAction(saveImage400x300);
@@ -458,12 +454,12 @@ namespace resultsviewer{
     QAction *print = new QAction(QIcon(":/images/print_plot.png"),tr("Print"), this);
     print->setToolTip("Print Image");
     m_toolBar->addAction(print);
-    connect(print, SIGNAL(triggered()), this, SLOT(slotPrint()));
+    connect(print, &QAction::triggered, this, &PlotView::slotPrint);
 
     QAction *properties = new QAction(QIcon(":/images/plot_preferences.png"),tr("Properties"), this);
     properties->setToolTip("Plot Properties");
     m_toolBar->addAction(properties);
-    connect(properties, SIGNAL(triggered()), this, SLOT(slotProperties()));
+    connect(properties, &QAction::triggered, this, &PlotView::slotProperties);
 
     // default select tool
     pointer->setChecked(true);
@@ -501,7 +497,9 @@ namespace resultsviewer{
     m_zoomer[1] = new Zoomer(QwtPlot::xTop, QwtPlot::yRight, m_plot->canvas());
     m_zoomer[1]->setEnabled(false);
 
-    connect(m_zoomer[0], SIGNAL(zoomed(const QwtDoubleRect &)), this, SLOT(slotZoomed(const QwtDoubleRect &)));
+    // This seems to have trouble with qt5 connect
+    bool isConnected = connect(m_zoomer[0], SIGNAL(zoomed(const QwtDoubleRect &)), this, SLOT(slotZoomed(const QwtDoubleRect &)));
+    OS_ASSERT(isConnected);
 
 
 
@@ -516,7 +514,9 @@ namespace resultsviewer{
     m_picker->setRubberBand(QwtPicker::CrossRubberBand);
     m_picker->setTrackerPen(QColor(Qt::white));
 
-    connect(m_picker, SIGNAL(appended(const QPoint &)), this,  SLOT(slotValueInfo(const QPoint &)));
+    // This seems to have trouble with qt5 connect
+    isConnected = connect(m_picker, SIGNAL(appended(const QPoint &)), this, SLOT(slotValueInfo(const QPoint &)));
+    OS_ASSERT(isConnected);
 
     m_valueInfo = new QTextEdit(this);
     m_valueInfo->setReadOnly(true);
@@ -602,10 +602,10 @@ namespace resultsviewer{
       centerBoxLayout->addWidget(m_spinHour,0,Qt::AlignLeft);
 
       mainLayout->addLayout(centerBoxLayout);
-      connect(m_centerSlider, SIGNAL(valueChanged(int)), this, SLOT(slotCenterIlluminance(int)));
-      connect(m_centerDate, SIGNAL(editingFinished()), this, SLOT(slotIlluminanceDateChanged()));
-      connect(m_spinDay, SIGNAL(valueChanged(int)), this, SLOT(slotSpinDayChanged(int)));
-      connect(m_spinHour, SIGNAL(valueChanged(int)), this, SLOT(slotSpinHourChanged(int)));
+      connect(m_centerSlider, &QSlider::valueChanged, this, &PlotView::slotCenterIlluminance);
+      connect(m_centerDate, &QLineEdit::editingFinished, this, &PlotView::slotIlluminanceDateChanged);
+      connect(m_spinDay, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &PlotView::slotSpinDayChanged);
+      connect(m_spinHour, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &PlotView::slotSpinHourChanged);
     }
     else
     {
@@ -620,9 +620,9 @@ namespace resultsviewer{
 
 
       mainLayout->addLayout(centerBoxLayout);
-      connect(m_centerSlider, SIGNAL(valueChanged(int)), this, SLOT(slotCenterSliderToDouble(int)));
-      connect(m_centerSpinBox, SIGNAL(valueChanged(double)), this, SLOT(slotCenterSpinBoxToInt(double)));
-      connect(m_centerSpinBox, SIGNAL(valueChanged(double)), this, SLOT(slotCenterValue(double)));
+      connect(m_centerSlider, &QSlider::valueChanged, this, &PlotView::slotCenterSliderToDouble);
+      connect(m_centerSpinBox, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged), this, &PlotView::slotCenterSpinBoxToInt);
+      connect(m_centerSpinBox, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged), this, &PlotView::slotCenterValue);
 
       auto spanBoxLayout = new QHBoxLayout;
 
@@ -634,9 +634,9 @@ namespace resultsviewer{
       spanBoxLayout->addWidget(m_spanSlider);
       spanBoxLayout->addWidget(m_spanSpinBox);
 
-      connect(m_spanSlider, SIGNAL(valueChanged(int)), this, SLOT(slotSpanSliderToDouble(int)));
-      connect(m_spanSpinBox, SIGNAL(valueChanged(double)), this, SLOT(slotSpanSpinBoxToInt(double)));
-      connect(m_spanSpinBox, SIGNAL(valueChanged(double)), this, SLOT(slotSpanValue(double)));
+      connect(m_spanSlider, &QSlider::valueChanged, this, &PlotView::slotSpanSliderToDouble);
+      connect(m_spanSpinBox, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged), this, &PlotView::slotSpanSpinBoxToInt);
+      connect(m_spanSpinBox, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged), this, &PlotView::slotSpanValue);
 
       mainLayout->addLayout(spanBoxLayout);
     }

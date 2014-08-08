@@ -58,11 +58,8 @@ LocationTabController::LocationTabController(const model::Model & model,
 
   m_utilityBillsStackedWidget->setCurrentIndex(m_warningWidgetIndex);
 
-  bool isConnected = false;
-
-  isConnected = connect(m_utilityBillsController->subTabView()->inspectorView(),SIGNAL(showSubTabView(bool)),
-    this,SLOT(showSubTabView(bool)));
-  OS_ASSERT(isConnected);
+  connect(static_cast<UtilityBillsInspectorView *>(m_utilityBillsController->subTabView()->inspectorView()), &UtilityBillsInspectorView::showSubTabView,
+          this, &LocationTabController::showSubTabView);
 
   // Hack code to remove when tab active
   label = new QLabel();

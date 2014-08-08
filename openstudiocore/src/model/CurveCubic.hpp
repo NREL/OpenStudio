@@ -33,14 +33,14 @@ namespace detail {
 } // detail
 
 /** CurveCubic is a Curve that wraps the OpenStudio IDD object 'OS:Curve:Cubic'. The
- *  functional form is f(x) = c1 + c2 * x + c3 * x^2 + c4 * x^3 */
+ *  functional form is \f$f(x) = c_1 + c_2 \cdot x + c_3 \cdot x^2 + c_4 \cdot x^3\f$ */
 class MODEL_API CurveCubic : public Curve {
  public:
 
   /** @name Constructors and Destructors */
   //@{
 
-  /** Sets c1 = c2 = c3 = 0.0, c4 = 1.0, and sets the range for x at [0.0,1.0]. */
+  /** Sets \f$c_1 = c_2 = c_3 = 0.0,\ c_4 = 1.0\f$, and sets the range for x at [0.0,1.0]. */
   explicit CurveCubic(const Model& model);
 
   virtual ~CurveCubic() {}

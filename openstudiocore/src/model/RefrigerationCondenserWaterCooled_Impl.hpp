@@ -54,7 +54,7 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-	virtual unsigned inletPort();
+    virtual unsigned inletPort();
 
     virtual unsigned outletPort();
 

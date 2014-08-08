@@ -25,6 +25,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctConstantVolumeCooledBeam.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctConstantVolumeReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctParallelPIUReheat.cpp
+  ForwardTranslator/ForwardTranslateAirTerminalSingleDuctSeriesPIUReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctUncontrolled.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVNoReheat.cpp
@@ -84,6 +85,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateDistrictHeating.cpp
   ForwardTranslator/ForwardTranslateElectricEquipment.cpp
   ForwardTranslator/ForwardTranslateEvaporativeCoolerDirectResearchSpecial.cpp
+  ForwardTranslator/ForwardTranslateEvaporativeCoolerIndirectResearchSpecial.cpp
   ForwardTranslator/ForwardTranslateEvaporativeFluidCoolerSingleSpeed.cpp
   ForwardTranslator/ForwardTranslateExteriorLights.cpp
   ForwardTranslator/ForwardTranslateFanConstantVolume.cpp

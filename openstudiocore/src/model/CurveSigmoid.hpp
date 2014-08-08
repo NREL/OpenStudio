@@ -33,14 +33,14 @@ namespace detail {
 } // detail
 
 /** CurveSigmoid is a Curve that wraps the OpenStudio IDD object 'OS:Curve:Sigmoid'. The
- *  functional form is f(x) = c1 + c2 / ( 1 + (e^((c3 - x)/c4))^c5 ). */
+ *  functional form is \f$\displaystyle f(x) = c_1 + \frac{c_2}{\left(1 + e^\left[\frac{c_3 - x}{c_4}\right]\right)^{c_5}}\f$ */
 class MODEL_API CurveSigmoid : public Curve {
  public:
 
   /** @name Constructors and Destructors */
   //@{
 
-  /** Initializes c1 = 0.0, c2 = c3 = c4 = c5 = 1.0, xmin = 0.0, xmax = 1.0. */
+  /** Initializes \f$c_1 = 0.0,\ c_2 = c_3 = c_4 = c_5 = 1.0,\ xmin = 0.0,\ xmax = 1.0\f$ */
   explicit CurveSigmoid(const Model& model);
 
   virtual ~CurveSigmoid() {}

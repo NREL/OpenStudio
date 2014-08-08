@@ -235,11 +235,8 @@ void ConstructionInspectorView::populateStandardsConstructionType()
     }
   }
 
-  bool isConnected = false;
-  isConnected = connect(m_standardsConstructionType, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(standardsConstructionTypeChanged(const QString&)));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_standardsConstructionType, SIGNAL(editTextChanged(const QString&)), this, SLOT(editStandardsConstructionType(const QString&)));
-  OS_ASSERT(isConnected);
+  connect(m_standardsConstructionType, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &ConstructionInspectorView::standardsConstructionTypeChanged);
+  connect(m_standardsConstructionType, &QComboBox::editTextChanged, this, &ConstructionInspectorView::editStandardsConstructionType);
 }
 
 void ConstructionInspectorView::attach(openstudio::model::Construction & construction)
@@ -259,8 +256,7 @@ void ConstructionInspectorView::attach(openstudio::model::Construction & constru
       std::bind(&openstudio::model::StandardsInformationConstruction::setIntendedSurfaceType,m_standardsInformation.get_ptr(),std::placeholders::_1),
       NoFailAction(std::bind(&model::StandardsInformationConstruction::resetIntendedSurfaceType,m_standardsInformation.get_ptr())));
 
-  bool test = connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(populateStandardsConstructionType()));
-  OS_ASSERT(test);
+  connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &ConstructionInspectorView::populateStandardsConstructionType);
 
   m_standardsConstructionType->setEnabled(true);
   populateStandardsConstructionType();

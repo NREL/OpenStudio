@@ -39,15 +39,15 @@ ServiceWaterScene::ServiceWaterScene(const model::Model & model)
     m_dirty(true),
     m_model(model)
 {
-  connect( m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-           SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-           this,
-           SLOT(onAddedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)) );
+  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
+    this,
+    &ServiceWaterScene::onAddedWorkspaceObject);
 
-  connect( m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-           SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-           this,
-           SLOT(onRemovedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)) );
+  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
+    this,
+    &ServiceWaterScene::onRemovedWorkspaceObject);
 
   layout();
 }
@@ -102,15 +102,15 @@ WaterUseConnectionsDetailScene::WaterUseConnectionsDetailScene(const model::Wate
 {
   model::Model model = m_waterUseConnections.model();
 
-  connect( model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-           SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-           this,
-           SLOT(onAddedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)) );
+  connect(model.getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
+    this,
+    &WaterUseConnectionsDetailScene::onAddedWorkspaceObject);
 
-  connect( model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-           SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-           this,
-           SLOT(onRemovedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)) );
+  connect(model.getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
+    this,
+    &WaterUseConnectionsDetailScene::onRemovedWorkspaceObject);
 
   layout();
 }

@@ -19,14 +19,14 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/SetpointManagerScheduled.hpp>
-#include <model/SetpointManagerScheduled_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/ScheduleConstant.hpp>
+#include "ModelFixture.hpp"
+#include "../SetpointManagerScheduled.hpp"
+#include "../SetpointManagerScheduled_Impl.hpp"
+#include "../Model.hpp"
+#include "../Node.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../PlantLoop.hpp"
+#include "../ScheduleConstant.hpp"
 
 using namespace openstudio::model;
 

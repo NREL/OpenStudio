@@ -669,11 +669,7 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
   m_designSpecificationOutdoorAirDropZone->showAddButton();
   vLayout->addWidget(m_designSpecificationOutdoorAirDropZone);
 
-  bool isConnected = connect(m_designSpecificationOutdoorAirDropZone, 
-                             SIGNAL(itemClicked(OSItem*)),
-                             this, 
-                             SIGNAL(dropZoneItemClicked(OSItem*)));
-  OS_ASSERT(isConnected);
+  connect(m_designSpecificationOutdoorAirDropZone, &OSDropZone::itemClicked, this, &SpaceTypeInspectorView::dropZoneItemClicked);
 
   mainGridLayout->addLayout(vLayout,row,0,1,2);
 
@@ -696,11 +692,7 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
   m_spaceInfiltrationDesignFlowRateDropZone->showAddButton();
   vLayout->addWidget(m_spaceInfiltrationDesignFlowRateDropZone);
 
-  isConnected = connect(m_spaceInfiltrationDesignFlowRateDropZone, 
-                        SIGNAL(itemClicked(OSItem*)),
-                        this, 
-                        SIGNAL(dropZoneItemClicked(OSItem*)));
-  OS_ASSERT(isConnected);
+  connect(m_spaceInfiltrationDesignFlowRateDropZone, &OSDropZone::itemClicked, this, &SpaceTypeInspectorView::dropZoneItemClicked);
 
   mainGridLayout->addLayout(vLayout,row,0,1,2);
 
@@ -723,11 +715,7 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
   m_spaceInfiltrationEffectiveLeakageAreaDropZone->showAddButton();
   vLayout->addWidget(m_spaceInfiltrationEffectiveLeakageAreaDropZone);
 
-  isConnected = connect(m_spaceInfiltrationEffectiveLeakageAreaDropZone, 
-                        SIGNAL(itemClicked(OSItem*)),
-                        this, 
-                        SIGNAL(dropZoneItemClicked(OSItem*)));
-  OS_ASSERT(isConnected);
+  connect(m_spaceInfiltrationEffectiveLeakageAreaDropZone, &OSDropZone::itemClicked, this, &SpaceTypeInspectorView::dropZoneItemClicked);
 
   mainGridLayout->addLayout(vLayout,row,0,1,2);
 
@@ -927,11 +915,9 @@ void SpaceTypeInspectorView::populateStandardsBuildingTypes()
     }
   }
 
-  bool isConnected = false;
-  isConnected = connect(m_standardsBuildingTypeComboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(standardsBuildingTypeChanged(const QString&)));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_standardsBuildingTypeComboBox, SIGNAL(editTextChanged(const QString&)), this, SLOT(editStandardsBuildingType(const QString&)));
-  OS_ASSERT(isConnected);
+  connect(m_standardsBuildingTypeComboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged),
+    this, &SpaceTypeInspectorView::standardsBuildingTypeChanged);
+  connect(m_standardsBuildingTypeComboBox, &QComboBox::editTextChanged, this, &SpaceTypeInspectorView::editStandardsBuildingType);
 }
 
 void SpaceTypeInspectorView::populateStandardsSpaceTypes()
@@ -954,11 +940,9 @@ void SpaceTypeInspectorView::populateStandardsSpaceTypes()
     }
   }
 
-  bool isConnected = false;
-  isConnected = connect(m_standardsSpaceTypeComboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(standardsSpaceTypeChanged(const QString&)));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_standardsSpaceTypeComboBox, SIGNAL(editTextChanged(const QString&)), this, SLOT(editStandardsSpaceType(const QString&)));
-  OS_ASSERT(isConnected);
+  connect(m_standardsSpaceTypeComboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged),
+    this, &SpaceTypeInspectorView::standardsSpaceTypeChanged);
+  connect(m_standardsSpaceTypeComboBox, &QComboBox::editTextChanged, this, &SpaceTypeInspectorView::editStandardsSpaceType);
 }
 
 

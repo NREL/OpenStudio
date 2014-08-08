@@ -64,8 +64,6 @@ OSCollapsibleItem::OSCollapsibleItem(OSCollapsibleItemHeader * collapsibleItemHe
   // collapsible header
   m_mainLayout->addWidget(m_collapsibleItemHeader);
 
-  bool isConnected = false;
-
   m_filterWidget = new QWidget();
   m_filterWidget->setObjectName("GrayWidget");
 
@@ -81,13 +79,11 @@ OSCollapsibleItem::OSCollapsibleItem(OSCollapsibleItemHeader * collapsibleItemHe
   m_filtersOnBtn = new QRadioButton(this);
   m_filtersOnBtn->setText(FILTERS_ON);
   m_filtersOnBtn->setChecked(true);
-  isConnected = connect(m_filtersOnBtn,SIGNAL(clicked()),this,SLOT(filtersOnClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_filtersOnBtn, &QRadioButton::clicked, this, &OSCollapsibleItem::filtersOnClicked);
 
   m_filtersOffBtn = new QRadioButton(this);
   m_filtersOffBtn->setText(FILTERS_OFF);
-  isConnected = connect(m_filtersOffBtn,SIGNAL(clicked()),this,SLOT(filtersOffClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_filtersOffBtn, &QRadioButton::clicked, this, &OSCollapsibleItem::filtersOffClicked);
 
   m_filterBtnGroup = new QButtonGroup(this);
   m_filterBtnGroup->setExclusive(true);
@@ -104,8 +100,7 @@ OSCollapsibleItem::OSCollapsibleItem(OSCollapsibleItemHeader * collapsibleItemHe
   m_openLibDlgButton->setObjectName("OpenLibDlgButton");
   m_openLibDlgButton->setLayoutDirection(Qt::RightToLeft);
   m_openLibDlgButton->setText("Edit");
-  isConnected = connect(m_openLibDlgButton,SIGNAL(clicked()),this,SIGNAL(openLibDlgClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_openLibDlgButton, &QPushButton::clicked, this, &OSCollapsibleItem::openLibDlgClicked);
 
   QHBoxLayout * btnHLayout = new QHBoxLayout();
   btnHLayout->addLayout(radioBtnVLayout);
@@ -120,8 +115,7 @@ OSCollapsibleItem::OSCollapsibleItem(OSCollapsibleItemHeader * collapsibleItemHe
   m_sortComboBox->addItem("Relevance");
   m_sortComboBox->addItem("Recently Downloaded from BCL");
   m_sortComboBox->addItem("BCL Components");
-  isConnected = connect(m_sortComboBox,SIGNAL(currentIndexChanged(const QString &)),this,SLOT(comboBoxClicked(const QString &)));
-  OS_ASSERT(isConnected);
+  connect(m_sortComboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &OSCollapsibleItem::comboBoxClicked);
 
   QVBoxLayout * vLayout = new QVBoxLayout();
   vLayout->addLayout(btnHLayout);
@@ -132,29 +126,20 @@ OSCollapsibleItem::OSCollapsibleItem(OSCollapsibleItemHeader * collapsibleItemHe
 
   m_mainLayout->addWidget(m_filterWidget);
 
-  isConnected = connect(collapsibleItemHeader, SIGNAL(clicked(OSCollapsibleItemHeader *)),
-                        this, SLOT(onHeaderClicked(OSCollapsibleItemHeader *)));
-  OS_ASSERT(isConnected);
+  connect(collapsibleItemHeader, &OSCollapsibleItemHeader::clicked,
+          this, &OSCollapsibleItem::onHeaderClicked);
 
   // item list
   m_mainLayout->addWidget(m_itemList);
   
-  isConnected = connect(itemList, SIGNAL(itemSelected(OSItem*)),
-                        this, SIGNAL(itemSelected(OSItem*)));
-  OS_ASSERT(isConnected);
+  connect(itemList, &OSItemList::itemSelected, this, &OSCollapsibleItem::itemSelected);
 
-  isConnected = connect(itemList, SIGNAL(itemRemoveClicked(OSItem*)),
-                        this, SIGNAL(itemRemoveClicked(OSItem*)));
-  OS_ASSERT(isConnected);
+  connect(itemList, &OSItemList::itemRemoveClicked, this, &OSCollapsibleItem::itemRemoveClicked);
 
-  isConnected = connect(itemList, SIGNAL(itemReplacementDropped(OSItem*, const OSItemId&)),
-                        this, SIGNAL(itemReplacementDropped(OSItem*, const OSItemId&)));
-  OS_ASSERT(isConnected);
+  connect(itemList, &OSItemList::itemReplacementDropped, this, &OSCollapsibleItem::itemReplacementDropped);
 
-  isConnected = connect(itemList, SIGNAL(selectionCleared()),
-                        this, SIGNAL(selectionCleared()));
-  OS_ASSERT(isConnected);
-
+  connect(itemList, &OSItemList::selectionCleared, this, &OSCollapsibleItem::selectionCleared);
+  
   m_mainLayout->addStretch();
 
   setShowFilterWidgets(m_showFilterLayout);

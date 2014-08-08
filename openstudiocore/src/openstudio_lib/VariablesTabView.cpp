@@ -51,17 +51,14 @@ namespace openstudio {
     hbox->setSpacing(10);
 
     m_onOffButton = new OSSwitch();
-    connect(m_onOffButton, SIGNAL(clicked(bool)), this, SLOT(onOffClicked(bool)));
-
+    connect(m_onOffButton, &OSSwitch::clicked, this, &VariableListItem::onOffClicked);
     hbox->addWidget(m_onOffButton);
     m_onOffButton->setChecked(m_variable.is_initialized());
 
     hbox->addWidget(new QLabel(openstudio::toQString(m_name)));
     hbox->addStretch();
     m_combobox = new OSComboBox();
-    connect(m_combobox, SIGNAL(currentIndexChanged(const QString &)),
-        this, SLOT(indexChanged(const QString &)));
-    
+    connect(m_combobox, static_cast<void (OSComboBox::*)(const QString &)>(&OSComboBox::currentIndexChanged), this, &VariableListItem::indexChanged);
     if (m_variable)
     {
       m_combobox->bind(*m_variable, "reportingFrequency");
@@ -135,14 +132,15 @@ namespace openstudio {
   VariablesList::VariablesList(openstudio::model::Model t_model)
     : m_model(t_model), m_dirty(true)
   {
-    connect(t_model.getImpl<openstudio::model::detail::Model_Impl>().get(), 
-        SIGNAL(addWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
-        this, SLOT(onAdded(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)));
+    connect(t_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
+      static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
+      this,
+      &VariablesList::onAdded);
 
-    connect(t_model.getImpl<openstudio::model::detail::Model_Impl>().get(), 
-        SIGNAL(removeWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
-        this, SLOT(onRemoved(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)));
-
+    connect(t_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
+      static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
+      this,
+      &VariablesList::onRemoved);
     QVBoxLayout *vbox = new QVBoxLayout();
     vbox->setContentsMargins(10,10,10,10);
     vbox->setSpacing(10);
@@ -160,12 +158,8 @@ namespace openstudio {
     innerbox->addWidget(m_allOnBtn);
     innerbox->addWidget(m_allOffBtn);
 
-    connect(m_allOnBtn, SIGNAL(clicked(bool)),
-        this, SLOT(allOnClicked()));
-    connect(m_allOffBtn, SIGNAL(clicked(bool)),
-        this, SLOT(allOffClicked()));
-
-
+    connect(m_allOnBtn, &QPushButton::clicked, this, &VariablesList::allOnClicked);
+    connect(m_allOffBtn, &QPushButton::clicked, this, &VariablesList::allOffClicked);
     QHBoxLayout *outerbox = new QHBoxLayout();
     outerbox->addLayout(innerbox);
     outerbox->addStretch();

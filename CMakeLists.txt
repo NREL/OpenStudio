@@ -96,12 +96,12 @@ if(UNIX)
 elseif(WIN32)
   if(CMAKE_CL_64)
     set(OPENSSL_ARCH 64)
-    set(OPENSSL_EXPECTED_HASH b63ff40c9d4f94aef43e3c4d8085a5c5)
+    set(OPENSSL_EXPECTED_HASH 33b9a5f93e4a50594bff8e30801c827c)
   else()
     set(OPENSSL_ARCH 32)
-    set(OPENSSL_EXPECTED_HASH 507b6a190e282ab3018ee4a69371f6d8)
+    set(OPENSSL_EXPECTED_HASH a1c92599c51897dce7128edb3cc5c888)
   endif()
-  set(OPENSSL_VERSION "1.0.1g")
+  set(OPENSSL_VERSION "1.0.1h")
   set(OPENSSL_PATH "OpenSSL-Win${OPENSSL_ARCH}")
   if(EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip")
     file(MD5 "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" OPENSSL_HASH)
@@ -115,22 +115,19 @@ elseif(WIN32)
   set(OPENSSL_ROOT_DIR "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
 endif()
 
-
-
 if(MSVC)
-  # Visual Studio information for the user
-  if    (${CMAKE_C_COMPILER_VERSION} VERSION_LESS "15.00.21022.08")
-    message(FATAL_ERROR "Visual Studio earlier than VS2008 is not supported")
-  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "15.00.21022.08")
-    message(WARNING "Service Pack 1 for Visual Studio 2008 is strongly recommended")
-  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "15.00.30729.01")
-    # vc90sp1
-  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "16.00.30319.01")
-    message(WARNING "Service Pack 1 for Visual Studio 2010 is strongly recommended")
-  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "16.00.40219.01")
-    # vc100sp1
+  # Visual Studio compiler check
+  # http://en.wikipedia.org/wiki/Visual_C%2B%2B#32-bit_and_64-bit_versions
+  if    (${CMAKE_C_COMPILER_VERSION} VERSION_LESS "18.0.21005.1")
+    message(FATAL_ERROR "Visual Studio earlier than VS2013 is not supported")
   elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.0.21005.1")
-    # vc120: no-op
+    # VS2013
+    message(WARNING "Update 3 for Visual Studio 2013 is strongly recommended")
+  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.30501")
+    # VS2013 Update 2:
+    message(WARNING "Update 3 for Visual Studio 2013 is strongly recommended")
+  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.30723")
+    # VS2013 Update 3: no-op
   endif()
 
   # Build with Multiple Processes
@@ -138,8 +135,31 @@ if(MSVC)
   mark_as_advanced(BUILD_WITH_MULTIPLE_PROCESSES)
 endif()
 
+# Apple Sanity Check
+if(APPLE)
+  if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
+    message(FATAL_ERROR "OSX Deployment Target Must Be Set")
+  endif()
+
+  if(NOT CMAKE_OSX_SYSROOT)
+    message(FATAL_ERROR "OSX Sysroot must be set")
+  elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.8.*")
+    set(OSX_SDK "10.8")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
+  elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.9.*")
+    set(OSX_SDK "10.9")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
+  else()
+    message(FATAL_ERROR "OSX Sysroot must use the 10.8 or 10.9 SDK")
+  endif()
+
+endif()
+
 # EnergyPlus
-find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
+find_package(EnergyPlus "${ENERGYPLUS_VERSION}")
+if(NOT ${EnergyPlus_FOUND})
+  message(FATAL_ERROR "EnergyPlus ${ENERGYPLUS_VERSION} could not be found")
+endif()
 mark_as_advanced(
   ENERGYPLUS_EXE
   ENERGYPLUS_IDD
@@ -222,7 +242,7 @@ find_package(Qt5Xml) #Qt5Core, Qt5Xml
 find_package(Qt5WebKit) #Qt5Core, Qt5Gui, Qt5Network, Qt5WebKit
 find_package(Qt5WebKitWidgets) #Qt5Core, Qt5Gui, Qt5Multimedia, Qt5MultimediaWidgets, Qt5Network, Qt5OpenGL, Qt5Positioning, Qt5PrintSupport, Qt5Qml, Qt5Quick, Qt5Sensors, Qt5WebKit, Qt5WebKitWidgets, Qt5Widgets
 #find_package(Qt5WinExtras) #Qt5Core, Qt5Gui, Qt5WinExtras
-find_package(Qt5Concurrent) #Qt5Concurrent, Qt5Core
+find_package(Qt5Concurrent) #Qt5Core, Qt5Concurrent
 mark_as_advanced(
   Qt5Concurrent_DIR
   Qt5Core_DIR
@@ -250,35 +270,45 @@ mark_as_advanced(
 if(Qt5Widgets_DIR)
   option(BUILD_QT "Build Qt" OFF)
 
-  if(${Qt5Widgets_VERSION} VERSION_LESS "5.1.1")
-    message(FATAL_ERROR "Minimum supported Qt is v5.1.1")
+  if(${Qt5Widgets_VERSION} VERSION_LESS "5.2.1")
+    message(FATAL_ERROR "Minimum supported Qt is v5.2.1")
   endif()
 else()
   option(BUILD_QT "Build Qt" ON)
 endif()
 
-# Apple Sanity Check
-if(APPLE)
-  if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
-    message(FATAL_ERROR "OSX Deployment Target Must Be Set")
-  endif()
-
-  if(NOT CMAKE_OSX_SYSROOT)
-    message(FATAL_ERROR "OSX Sysroot must be set")
-  endif()
-
-  if(CMAKE_OSX_DEPLOYMENT_TARGET MATCHES ".*10\\.9.*" OR CMAKE_OSX_SYSROOT MATCHES ".*10\\.9.*")
-    message(WARNING "You are building against the 10.9 SDK which means ruby 2.0")
-  endif()
-
-endif()
-
 include(ExternalProject)
 include(ProcessorCount)
 
+# set number of cores to be used when building boost and qt, idea is you will do make -jX so boost and qt will build in parralel
 ProcessorCount(CPUCOUNT)
 if(CPUCOUNT EQUAL 0)
-  set(CPUCOUNT "1")
+  set(CPUCOUNT 1)
+endif()
+  
+if(UNIX)
+  if(CPUCOUNT EQUAL 1)
+    set(BOOST_CPUCOUNT "1")
+    set(QT_CPUCOUNT "1")
+  elseif(CPUCOUNT EQUAL 2)
+    set(BOOST_CPUCOUNT "1")
+    set(QT_CPUCOUNT "1")
+  elseif(CPUCOUNT EQUAL 4)
+    set(BOOST_CPUCOUNT "1")
+    set(QT_CPUCOUNT "3")
+  elseif(CPUCOUNT EQUAL 8)
+    set(BOOST_CPUCOUNT "2")
+    set(QT_CPUCOUNT "6")
+  elseif(CPUCOUNT EQUAL 12)
+    set(BOOST_CPUCOUNT "3")
+    set(QT_CPUCOUNT "9")
+  elseif(CPUCOUNT EQUAL 16)
+    set(BOOST_CPUCOUNT "4")
+    set(QT_CPUCOUNT "12")
+  else()
+    set(BOOST_CPUCOUNT "1")
+    set(QT_CPUCOUNT "1")
+  endif()
 endif()
 
 mark_as_advanced(
@@ -315,9 +345,7 @@ if(MSVC AND NOT Boost_FOUND AND EXISTS "C:/local/boost_1_55_0/")
   else()
     set(BOOST_ARCH 32)
   endif()
-  if(MSVC10)
-    set(BOOST_MSVC 10.0)
-  elseif(MSVC12)
+  if(MSVC12)
     set(BOOST_MSVC 12.0)
   endif()
   
@@ -340,7 +368,7 @@ else()
 endif()
 
 
-find_package(SWIG 2.0)
+find_package(SWIG 2.0.10)
 mark_as_advanced(
   SWIG_DIR
   SWIG_EXECUTABLE
@@ -348,51 +376,42 @@ mark_as_advanced(
 )
 
 # Currently MacOS and/or V8 require special builds
-# as of 2014-06-04. This should be re-checked after swig >= 3.0.2 is released
-if(SWIG_FOUND AND NOT BUILD_V8_BINDINGS AND NOT APPLE)
+# as of 2014-06-04. This should be re-checked after swig > 3.0.2 is released.
+# 64-bit MSVC also requires BUILD_SWIG
+if(SWIG_FOUND AND NOT BUILD_V8_BINDINGS AND NOT APPLE AND NOT (WIN32 AND MSVC AND CMAKE_CL_64))
   option(BUILD_SWIG "Build SWIG" OFF)
 else()
   option(BUILD_SWIG "Build SWIG" ON)
 endif()
 
-find_program(RUBY_EXECUTABLE NAMES ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH)
-find_package(Ruby)
+if(NOT WIN32)
+  find_program(RUBY_EXECUTABLE NAMES ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH)
+  find_package(Ruby)
+endif()
 
 
 if(WIN32 AND MSVC AND CMAKE_CL_64)
-  message(WARNING "64bit Support on Windows is EXPERIMENTAL. Ruby 2.0.0 will be built. The SketchUp plugin will not work. Expect problems with ruby support in general. Unless you've already built Boost and Qt you probably want to let this super build do it. There are lots of warnings, so we are disabling warnings as errors.")
+  message(WARNING "Treat Warnings As Errors is disabled for 64-bit Windows builds")
 endif()
 
-if(UNIX)
+if(APPLE)
+  if (OSX_SDK STREQUAL "10.8") 
+    # Ruby 2.0 is not in 10.8 SDK
+    option(BUILD_RUBY "Build Ruby" ON)
+  else()
+    option(BUILD_RUBY "Build Ruby" OFF)
+  endif()
+elseif(UNIX)
   if(RUBY_FOUND)
     option(BUILD_RUBY "Build Ruby" OFF)
   else()
     option(BUILD_RUBY "Build Ruby" ON)
   endif()
-else()
-  # Always provide ruby on Windows
-  option(BUILD_RUBY "Build Ruby" ON)
-  mark_as_advanced(BUILD_RUBY)
-
-  if(WIN32 AND MSVC)
-    if(CMAKE_CL_64)
-      if(MSVC12)
-        message(WARNING "Cannot use 32bit mingw build of Ruby 2.0 with 64bit build of OpenStudio, forcing 64bit msvc build of Ruby 2.0")
-      else()
-        message(SEND_ERROR "64bit build of Ruby 2.0 only supported with MSVC12")
-      endif()
-    else()
-      option(BUILD_RUBY_MINGW32_2_0 "Use mingw32 Ruby 2.0" OFF)
-      mark_as_advanced(BUILD_RUBY_MINGW32_2_0)
-    endif()
-  endif()
 endif()
 
-if(NOT BUILD_RUBY AND NOT BUILD_SWIG)
-  set(RUBY_VER "${RUBY_VERSION_MAJOR}.${RUBY_VERSION_MINOR}.${RUBY_VERSION_PATCH}")
-
-  if(${RUBY_VER} VERSION_GREATER "1.8.8" AND ${SWIG_VERSION} VERSION_LESS "2.0.10")
-    message(SEND_ERROR "For Ruby >= 1.9.0, SWIG >= 2.0.10 is required. Use of the BUILD_SWIG option is suggested")
+if(NOT BUILD_SWIG)
+  if(${SWIG_VERSION} VERSION_LESS "2.0.10")
+    set(BUILD_SWIG ON)
   endif()
 endif()
 
@@ -402,20 +421,11 @@ endif()
 
 if(CMAKE_CL_64 OR (MSVC AND BUILD_QT))
   if(CMAKE_CL_64)
-    if(MSVC10)
-      set(NMAKE_ARCH "/amd64")
-    elseif(MSVC12)
-      set(NMAKE_ARCH "")
-    endif()
+    set(NMAKE_ARCH "/amd64")
   else()
     set(NMAKE_ARCH "")
   endif()
-  if(MSVC10)
-    find_program(NMAKE_EXE nmake PATHS
-      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\10.0;InstallDir]/../../VC/bin${NMAKE_ARCH}"
-      $ENV{VS100COMNTOOLS}../../VC/bin${NMAKE_ARCH}
-    )
-  elseif(MSVC12)
+  if(MSVC12)
     find_program(NMAKE_EXE nmake PATHS
       "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\12.0;InstallDir]/../../VC/bin${NMAKE_ARCH}"
       $ENV{VS120COMNTOOLS}../../VC/bin${NMAKE_ARCH}
@@ -450,78 +460,78 @@ if(BUILD_V8)
   set(V8_INCLUDE_DIR ${CMAKE_BINARY_DIR}/V8-prefix/src/V8/include)
 endif()
 
-if(BUILD_RUBY)
+if(BUILD_RUBY AND UNIX)
   if(APPLE)
-    # OSX can work with a static ruby library
-    ExternalProject_Add(Ruby
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-1.8.7-p370.tar.gz
-      URL_MD5 98b00bbd1cdde3116155edb6e555b781
-      CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && sh -c "./configure --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install --without-tcl --without-tk  CFLAGS=\"-arch i386 -arch x86_64 -fPIC\" LDFLAGS=\"-arch i386 -arch x86_64\""
-      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE)
-      INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE) install
-    )
-    set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
-  elseif(UNIX)
-    # but linux cannot, it has a double free when unloading a ruby module
-    ExternalProject_Add(Ruby
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-1.8.7-p370.tar.gz
-      URL_MD5 98b00bbd1cdde3116155edb6e555b781
-      CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && sh -c "./configure --enable-shared --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install CFLAGS=\"-fPIC\" "
-      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE)
-      INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE) install
-    )
-    set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
-  else()
-
-    if(CMAKE_CL_64)
-      #find_program(NMAKE_EXE nmake)
-      
-      # Ruby 1.8 cannot be built for 64bit windows because of faulty assumptions in the code,
-      # and Ruby 2.0 isn't shipped in any way we can link to it, so for now we build our own
+    if (OSX_SDK STREQUAL "10.8") 
+      # Unpackage build of Ruby 2.0 made on Mac 10.8
+      ExternalProject_Add(Ruby
+        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p481-shared.zip
+        URL_MD5 af634ed75a961e69c03c6458a2e8c110
+        PATCH_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ && sh -c "chmod +x *" 
+              COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/ && sh -c "install_name_tool -id ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/libruby.2.0.0.dylib	${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/libruby.2.0.0.dylib"
+        CONFIGURE_COMMAND ""
+        BUILD_COMMAND ""
+        INSTALL_COMMAND ""
+      )      
+      set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby)
+      set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/libruby.2.0.0.dylib)
+    else()
+      # build shared libraries for compatibility with SketchUp
       ExternalProject_Add(Ruby
         URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p481.tar.gz
         URL_MD5 3913e0ad6cc572b7358e4c6a8c4b2551
-        PATCH_COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/mkexports.rb ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/win32/mkexports.rb COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/ruby-2.0.0-p481/Makefile.sub ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/win32/Makefile.sub
-        CONFIGURE_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-build && ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/win32/configure.bat --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install --target=x64-mswin64 --disable-install-doc --disable-win95"
-        BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-build && ${NMAKE_EXE}
-        INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-build && ${NMAKE_EXE} install
-      )
-      set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby.exe )
+        CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && sh -c "./configure --enable-shared --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install --with-arch=i386,x86_64 CFLAGS=\"-fPIC\" LDFLAGS=\"\""
+        BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE)
+        INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE) install
+        )
+      set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
+      set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby.2.0.0.dylib)
+    endif()
+  else()
+    # have to build shared libraries on linux otherwise has a double free when unloading a ruby module
+    ExternalProject_Add(Ruby
+      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p481.tar.gz
+      URL_MD5 3913e0ad6cc572b7358e4c6a8c4b2551
+      CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && sh -c "./configure --enable-shared --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install CFLAGS=\"-fPIC\" "
+      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE)
+      INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE) install
+    )
+    set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
+    set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby.so)
+  endif()
+endif()
+
+# Always build Ruby on Windows
+if(WIN32)
+  if(CMAKE_CL_64)
+    ExternalProject_Add(Ruby
+      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p481.tar.gz
+      URL_MD5 3913e0ad6cc572b7358e4c6a8c4b2551
+      PATCH_COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/mkexports.rb ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/win32/mkexports.rb COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/ruby-2.0.0-p481/Makefile.sub ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/win32/Makefile.sub
+      CONFIGURE_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-build && ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/win32/configure.bat --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install --target=x64-mswin64 --disable-install-doc --disable-win95"
+      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-build && ${NMAKE_EXE}
+      INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-build && ${NMAKE_EXE} install
+    )
+    set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby.exe)
+    if(MSVC12)
       set(RUBY_DLL x64-msvcr120-ruby200.dll)
       set(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/${RUBY_DLL}")
       set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/x64-msvcr120-ruby200.lib")
-    else()
-      if(BUILD_RUBY_MINGW32_2_0)
-        # And windows requires mingw to build ruby, so we just unpackage it locally
-        ExternalProject_Add(Ruby
-          URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-win32.zip
-          URL_MD5 1f6e4348099b26e92909db62dcd3b173
-          PATCH_COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/msvcrt-ruby200.lib  ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/config.h ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/include/ruby-2.0.0/i386-mingw32/ruby COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/missing.h ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/include/ruby-2.0.0/ruby COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/ruby.h ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/include/ruby-2.0.0/ruby
-          CONFIGURE_COMMAND ""
-          BUILD_COMMAND ""
-          INSTALL_COMMAND ""
-        )
-        set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe)
-        set(RUBY_DLL msvcrt-ruby200.dll)
-        set(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
-        set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/msvcrt-ruby200.lib")
-      else()
-        # And windows requires mingw to build ruby, so we just unpackage it locally
-        ExternalProject_Add(Ruby
-          URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-1.8.6-msvc-ssl.zip
-          URL_MD5 d3fdb49726e63f123941f5f41f594149
-          CONFIGURE_COMMAND ""
-          BUILD_COMMAND ""
-          INSTALL_COMMAND ""
-        )
-        set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe)
-        set(RUBY_DLL msvcrt-ruby18.dll)
-        set(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
-        set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/msvcrt-ruby18.lib")
-      endif()
     endif()
-
-
+  else()
+    # And windows requires mingw to build ruby, so we just unpackage it locally
+    ExternalProject_Add(Ruby
+      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-win32.zip
+      URL_MD5 1f6e4348099b26e92909db62dcd3b173
+      PATCH_COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/msvcrt-ruby200.lib  ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/config.h ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/include/ruby-2.0.0/i386-mingw32/ruby COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/missing.h ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/include/ruby-2.0.0/ruby COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/ruby.h ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/include/ruby-2.0.0/ruby
+      CONFIGURE_COMMAND ""
+      BUILD_COMMAND ""
+      INSTALL_COMMAND ""
+    )
+    set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe)
+    set(RUBY_DLL msvcrt-ruby200.dll)
+    set(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
+    set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/msvcrt-ruby200.lib")
   endif()
 endif()
 
@@ -539,8 +549,6 @@ if(BUILD_SWIG)
         get_filename_component(autoconf_path "${autoconf}" PATH)
         message("autoconf directory: ${autoconf_path}")
       endif()
-
-
 
       # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
       ExternalProject_Add(SWIG
@@ -581,17 +589,13 @@ endif()
 
 if(BUILD_BOOST)
   if(APPLE)
-    if(CMAKE_OSX_DEPLOYMENT_TARGET MATCHES ".*10\\.9.*")
-      set(apple-frameworks "-stdlib=libc++ -std=c++11")
-    else()
-      set(apple-frameworks "-stdlib=libstdc++")
-    endif()
+    set(apple-flags "-arch i386 -arch x86_64 -std=c11 -std=c++11 -stdlib=libc++")
     ExternalProject_Add(Boost
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
       URL_MD5 93780777cfbf999a600f62883bd54b17
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./bootstrap.sh
-      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51a.diff < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51b.diff
-      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 toolset=clang cxxflags=${apple-frameworks} linkflags=${apple-frameworks} variant=debug,release address-model=32_64 architecture=x86 define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT} install
+      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51.patch
+      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 toolset=clang cxxflags=${apple-flags} linkflags=${apple-flags} variant=debug,release define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${BOOST_CPUCOUNT} install
       INSTALL_COMMAND ""
     )
     set(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
@@ -601,7 +605,7 @@ if(BUILD_BOOST)
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
       URL_MD5 93780777cfbf999a600f62883bd54b17
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./bootstrap.sh
-      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 cxxflags=-fPIC link=static variant=debug,release define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT} install
+      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 cxxflags=-fPIC link=static variant=debug,release define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${BOOST_CPUCOUNT} install
       INSTALL_COMMAND ""
     )
     set(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
@@ -611,9 +615,7 @@ if(BUILD_BOOST)
     # be trying to find it
 
     set(B2_TOOLSET "")
-    if(MSVC10)
-      set(B2_TOOLSET "toolset=msvc-10.0")
-    elseif(MSVC12)
+    if(MSVC12)
       set(B2_TOOLSET "toolset=msvc-12.0")
     endif()
 
@@ -663,16 +665,18 @@ set(GTEST_INCLUDE_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest/inclu
 set(GTEST_LIB_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest-build)
 
 if(BUILD_QT)
+  set(Qt5Widgets_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Widgets)
+  set(Qt5Sql_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Sql)
+  set(Qt5Network_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Network)
+  set(Qt5Xml_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Xml)
+  set(Qt5WebKit_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5WebKit)
+  set(Qt5WebKitWidgets_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5WebKitWidgets)
+  set(Qt5Concurrent_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Concurrent)
+
   if(APPLE)
     # We're going to explicitly use the SDK specified in the configuration by the user
     #set(APPLE_SDK_COMMAND "-sdk \"${CMAKE_OSX_SYSROOT}\"" )
-    set(APPLE_SDK_COMMAND "-sdk macosx10.9")
-
-    if(CMAKE_OSX_SYSROOT MATCHES ".*10.7.sdk")
-      set(APPLE_PATCH_COMMAND "${CMAKE_COMMAND}" -E rename "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/src/3rdparty/webkit/WebKitLibraries/libWebKitSystemInterfaceMountainLion.a" "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/src/3rdparty/webkit/WebKitLibraries/libWebKitSystemInterfaceMountainLion.a.bak" COMMAND "${CMAKE_COMMAND}" -E copy "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/src/3rdparty/webkit/WebKitLibraries/libWebKitSystemInterfaceLion.a" "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/src/3rdparty/webkit/WebKitLibraries/libWebKitSystemInterfaceMountainLion.a")
-    else()
-      set(APPLE_PATCH_COMMAND "")
-    endif()
+    set(APPLE_SDK_COMMAND "-sdk macosx${OSX_SDK}")
 
     # At the moment we are building all of debug,release,x86 and x86_64
     # it would appear that calling "make" in some way that CMake can detect that we are calling
@@ -681,9 +685,9 @@ if(BUILD_QT)
     ExternalProject_Add(Qt
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-5.3.1.tar.gz
       URL_MD5 a355749e4f200a6392ecad151d1d0cdc
-      CONFIGURE_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && ./configure -v ${APPLE_SDK_COMMAND} -platform macx-clang-32-64 -debug-and-release -opensource -openssl -no-pch -no-sse3 -qt-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install"
-      PATCH_COMMAND ${APPLE_PATCH_COMMAND} COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_SOURCE_DIR}/dependencies/qt/macx-clang-32-64/  ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/qtbase/mkspecs/macx-clang-32-64/
-      BUILD_COMMAND  /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && make -j${CPUCOUNT}"
+      CONFIGURE_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && ./configure -v ${APPLE_SDK_COMMAND} -platform macx-clang-32-64 -release -opensource -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install"
+      PATCH_COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_SOURCE_DIR}/dependencies/qt/macx-clang-32-64/ ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/qtbase/mkspecs/macx-clang-32-64/
+      BUILD_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && make -j${QT_CPUCOUNT}"
       INSTALL_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && make -j1 install"
     )
   elseif(UNIX)
@@ -732,7 +736,7 @@ if(BUILD_BOOST)
   list(APPEND OpenStudioCore_DEPENDS Boost)
 endif()
 
-if(BUILD_RUBY)
+if(BUILD_RUBY OR WIN32)
   list(APPEND OpenStudioCore_DEPENDS Ruby)
 endif()
 
@@ -805,6 +809,7 @@ ExternalProject_Add(OpenStudioCore
     -DENERGYPLUS_LOCATION:PATH=${ENERGYPLUS_LOCATION}
     -DRADIANCE_LOCATION:PATH=${RADIANCE_LOCATION}
     -DOPENSSL_ROOT_DIR:PATH=${OPENSSL_ROOT_DIR}
+    -DPATCH_EXE:PATH=${PATCH_EXE}
     INSTALL_COMMAND ""
 )
 
@@ -831,7 +836,7 @@ if(BUILD_QT AND MSVC)
   endforeach()
 endif()
 
-if(BUILD_RUBY AND MSVC)
+if(MSVC)
   ExternalProject_Add_Step(OpenStudioCore MakeRubyReleaseFolder
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Release
     DEPENDERS configure

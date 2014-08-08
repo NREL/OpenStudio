@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SetpointManagerScheduledDualSetpoint.hpp>
-#include <model/SetpointManagerScheduledDualSetpoint_Impl.hpp>
+#include "SetpointManagerScheduledDualSetpoint.hpp"
+#include "SetpointManagerScheduledDualSetpoint_Impl.hpp"
 
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "PlantLoop.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SetpointManager_Scheduled_DualSetpoint_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

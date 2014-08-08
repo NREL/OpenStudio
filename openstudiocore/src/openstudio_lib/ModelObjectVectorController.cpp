@@ -39,38 +39,26 @@ void ModelObjectVectorController::attach(const model::ModelObject& modelObject)
 
   attachModel(modelObject.model());
 
-  bool isConnected = false;
-  isConnected = connect(m_model->getImpl<model::detail::Model_Impl>().get(),
-                        SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        this,
-                        SLOT(objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        Qt::QueuedConnection);
-  OS_ASSERT(isConnected);
+  connect(m_model->getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
+    this,
+    &ModelObjectVectorController::objectAdded,
+    Qt::QueuedConnection);
+  
+  connect(m_model->getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
+    this,
+    &ModelObjectVectorController::objectRemoved,
+    Qt::QueuedConnection);
+  
+  connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onRelationshipChange,
+          this, &ModelObjectVectorController::changeRelationship);
 
-  isConnected = connect(m_model->getImpl<model::detail::Model_Impl>().get(),
-                        SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        this,
-                        SLOT(objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        Qt::QueuedConnection);
-  OS_ASSERT(isConnected);
+  connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onDataChange,
+          this, &ModelObjectVectorController::dataChange);
 
-  isConnected = connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(),
-                        SIGNAL(onRelationshipChange(int, Handle, Handle)),
-                        this,
-                        SLOT(changeRelationship(int, Handle, Handle)));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(),
-                        SIGNAL(onDataChange()),
-                        this,
-                        SLOT(dataChange()));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(),
-                        SIGNAL(onChange()),
-                        this,
-                        SLOT(change()));
-  OS_ASSERT(isConnected);
+  connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onChange,
+          this, &ModelObjectVectorController::change);
 }
 
 void ModelObjectVectorController::attachModel(const model::Model& model)
@@ -82,20 +70,17 @@ void ModelObjectVectorController::attachModel(const model::Model& model)
   
   m_model = model;
 
-  bool isConnected = false;
-  isConnected = connect(m_model->getImpl<model::detail::Model_Impl>().get(),
-                        SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        this,
-                        SLOT(objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        Qt::QueuedConnection);
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(m_model->getImpl<model::detail::Model_Impl>().get(),
-                        SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        this,
-                        SLOT(objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        Qt::QueuedConnection);
-  OS_ASSERT(isConnected);
+  connect(m_model->getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
+    this,
+    &ModelObjectVectorController::objectAdded,
+    Qt::QueuedConnection);
+  
+  connect(m_model->getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
+    this,
+    &ModelObjectVectorController::objectRemoved,
+    Qt::QueuedConnection);
 }
 
 void ModelObjectVectorController::attachOtherModelObject(const model::ModelObject& modelObject)
@@ -109,12 +94,8 @@ void ModelObjectVectorController::attachOtherModelObject(const model::ModelObjec
 
   m_otherModelObjects.push_back(modelObject);
 
-  bool isConnected = false;
-  isConnected = connect(modelObject.getImpl<model::detail::ModelObject_Impl>().get(),
-                        SIGNAL(onRelationshipChange(int, Handle, Handle)),
-                        this,
-                        SLOT(changeRelationship(int, Handle, Handle)));
-  OS_ASSERT(isConnected);
+  connect(modelObject.getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onRelationshipChange,
+          this, &ModelObjectVectorController::changeRelationship);
 }
 
 void ModelObjectVectorController::detach()

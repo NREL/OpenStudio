@@ -74,11 +74,8 @@ ShadingSurfaceGroupInspectorView::ShadingSurfaceGroupInspectorView(bool isIP, co
   label->setStyleSheet("QLabel { font: bold; }");
   vLayout->addWidget(label);
 
-  bool isConnected = false;
-
   m_directionofRelativeNorthEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_directionofRelativeNorthEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &ShadingSurfaceGroupInspectorView::toggleUnitsClicked, m_directionofRelativeNorthEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_directionofRelativeNorthEdit);
 
   mainGridLayout->addLayout(vLayout,1,0, Qt::AlignTop|Qt::AlignLeft);
@@ -92,8 +89,7 @@ ShadingSurfaceGroupInspectorView::ShadingSurfaceGroupInspectorView(bool isIP, co
   vLayout->addWidget(label);
 
   m_xOriginEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_xOriginEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &ShadingSurfaceGroupInspectorView::toggleUnitsClicked, m_xOriginEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_xOriginEdit);
 
   mainGridLayout->addLayout(vLayout,2,0, Qt::AlignTop|Qt::AlignLeft);
@@ -106,8 +102,7 @@ ShadingSurfaceGroupInspectorView::ShadingSurfaceGroupInspectorView(bool isIP, co
   vLayout->addWidget(label);
 
   m_yOriginEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_yOriginEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &ShadingSurfaceGroupInspectorView::toggleUnitsClicked, m_yOriginEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_yOriginEdit);
 
   mainGridLayout->addLayout(vLayout,2,1, Qt::AlignTop|Qt::AlignLeft);
@@ -120,8 +115,7 @@ ShadingSurfaceGroupInspectorView::ShadingSurfaceGroupInspectorView(bool isIP, co
   vLayout->addWidget(label);
 
   m_zOriginEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_zOriginEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &ShadingSurfaceGroupInspectorView::toggleUnitsClicked, m_zOriginEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_zOriginEdit);
 
   mainGridLayout->addLayout(vLayout,2,2, Qt::AlignTop|Qt::AlignLeft);
