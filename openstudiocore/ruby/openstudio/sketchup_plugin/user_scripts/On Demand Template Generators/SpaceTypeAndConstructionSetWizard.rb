@@ -62,16 +62,19 @@ class SpaceTypeAndConstructionSetWizard < OpenStudio::Ruleset::ModelUserScript
     #make an argument for building type
     buildingType = OpenStudio::Ruleset::OSArgument::makeChoiceArgument("buildingType", building_types, true)
     buildingType.setDisplayName("Building Type")
+    buildingType.setDefaultValue("Office")
     args << buildingType
 
     #make an argument for vintage
     template = OpenStudio::Ruleset::OSArgument::makeChoiceArgument("template", templates, true) # vintage or standard for building
     template.setDisplayName("Template")
+    template.setDefaultValue("189.1-2009")
     args << template
 
     #make an argument for climate zone
     climateZone = OpenStudio::Ruleset::OSArgument::makeChoiceArgument("climateZone", climate_zones, true)
     climateZone.setDisplayName("ASHRAE Climate Zone")
+    climateZone.setDefaultValue("ASHRAE 169-2006-5B")
     args << climateZone
 
     #make an argument to add new space types
@@ -229,7 +232,9 @@ class SpaceTypeAndConstructionSetWizard < OpenStudio::Ruleset::ModelUserScript
     #reporting final condition of model
     finishing_spaceTypes = model.getSpaceTypes
     finishing_constructionSets = model.getDefaultConstructionSets
-    runner.registerFinalCondition("The building finished with #{finishing_spaceTypes.size} space types and #{finishing_constructionSets.size} construction sets.")
+
+    # updated for the benefit of SketchUp UserScript workflow
+    runner.registerFinalCondition("The model has #{finishing_spaceTypes.size} space types and #{finishing_constructionSets.size} construction sets.")
     
     return true
  

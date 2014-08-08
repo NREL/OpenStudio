@@ -31,7 +31,20 @@ module OpenStudio
 
     def new_openstudio
       if (prompt_to_continue_open)
-        Plugin.model_manager.new_from_template(Sketchup.active_model)
+
+        # store starting render mode
+        starting_render_mode = Plugin.model_manager.model_interface.materials_interface.rendering_mode
+
+        # always load empty model vs. default template
+        path = "#{Plugin.default_template_dir}/empty.osm"
+        Plugin.model_manager.open_openstudio(path, Sketchup.active_model, false, false)
+
+        # switch to render back to starting render mode
+        Plugin.model_manager.model_interface.materials_interface.rendering_mode = starting_render_mode
+
+        # code to run on demand user script when loading new file
+        Plugin.user_script_runner.run_user_script("Space Type and Construction Set Wizard")
+
       end
     end
     

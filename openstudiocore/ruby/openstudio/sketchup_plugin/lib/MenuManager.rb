@@ -138,11 +138,11 @@ module OpenStudio
       }
         
       # Create all the commands (They must still be added to menus and toolbars next)
-      @new_from_template_cmd = UI::Command.new("New OpenStudio Model From Template") { Plugin.command_manager.new_openstudio_from_template }
+      @new_from_template_cmd = UI::Command.new("New OpenStudio Model From Wizard") { Plugin.command_manager.new_openstudio }
       @new_from_template_cmd.small_icon = Plugin.dir + "/lib/resources/icons/OSNew-16.png"
       @new_from_template_cmd.large_icon = Plugin.dir + "/lib/resources/icons/OSNew-24.png"
-      @new_from_template_cmd.tooltip = "New OpenStudio Model From Template"
-      @new_from_template_cmd.status_bar_text = "Create a new OpenStudio model from a template"
+      @new_from_template_cmd.tooltip = "New OpenStudio Model From Wizard"
+      @new_from_template_cmd.status_bar_text = "Create a new OpenStudio model from a wizard"
       @new_from_template_cmd.set_validation_proc { enable_if_model_interface }
         
       @open_cmd = UI::Command.new("Open OpenStudio Model") { Plugin.command_manager.open_openstudio }
