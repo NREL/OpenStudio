@@ -153,14 +153,14 @@ void OSGridView::setGridController(OSGridController * gridController)
 
   bool isConnected = false;
 
-  isConnected = connect(m_gridController,SIGNAL(itemInserted(int,int)),this,SLOT(addWidget(int,int)));
-  OS_ASSERT(isConnected);
+  //isConnected = connect(m_gridController,SIGNAL(itemInserted(int,int)),this,SLOT(addWidget(int,int)));
+  //OS_ASSERT(isConnected);
 
-  isConnected = connect(m_gridController,SIGNAL(itemRemoved(int,int)),this,SLOT(removeWidget(int,int)));
-  OS_ASSERT(isConnected);
+  //isConnected = connect(m_gridController,SIGNAL(itemRemoved(int,int)),this,SLOT(removeWidget(int,int)));
+  //OS_ASSERT(isConnected);
 
-  isConnected = connect(m_gridController,SIGNAL(itemChanged(int,int)),this,SLOT(refresh(int,int)));
-  OS_ASSERT(isConnected);
+  //isConnected = connect(m_gridController,SIGNAL(itemChanged(int,int)),this,SLOT(refresh(int,int)));
+  //OS_ASSERT(isConnected);
 
   isConnected = connect(m_gridController,SIGNAL(modelReset()),this,SLOT(refreshAll()));
   OS_ASSERT(isConnected);
