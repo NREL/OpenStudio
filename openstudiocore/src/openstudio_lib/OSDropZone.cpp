@@ -602,12 +602,18 @@ void OSDropZone3::refresh()
 {
   //disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
   m_text.clear();
+  setFixedWidth(75);
 
-  if( m_modelObject ) {
-    if( m_get ) {
-      if( boost::optional<model::ModelObject> targetModelObject = (*m_get)() ) {
-        m_text = QString::fromStdString(targetModelObject->name().get());
-      }
+  if (m_item) {
+    boost::optional<model::ModelObject> modelObject = OSAppBase::instance()->currentDocument()->getModelObject(m_item->itemId());
+    if (modelObject) {
+      m_text = QString::fromStdString(modelObject->name().get());
+
+      // Adjust the width to accommodate the text
+      QFont myFont;
+      QFontMetrics fm(myFont);
+      auto width = fm.width(m_text);
+      setFixedWidth(width + 10);
     }
   }
 
