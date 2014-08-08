@@ -1,0 +1,561 @@
+[openstudio.LocalLibraryController] <-2> Creating LocalLibraryController with base app 003BF928
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[utilities.bcl.BCLMeasure] <-2> Loading measures in path: C:/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/CalibrationReports
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/CalibrationReports
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/ReplaceModel
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/ReplaceModel
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/StandardReports
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/StandardReports
+[utilities.bcl.BCLMeasure] <-2> Loading measures in path: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddCostPerAreaToConstruction
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddCostPerAreaToConstruction
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddCostperAreatoUnusedConstruction
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddCostperAreatoUnusedConstruction
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddCostPerFloorAreaToBuilding
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddCostPerFloorAreaToBuilding
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddCostPerFloorAreaToElectricEquipment
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddCostPerFloorAreaToElectricEquipment
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddCostPerFloorAreaToLights
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddCostPerFloorAreaToLights
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddCostPerFloorAreaUnusedToLights
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddCostPerFloorAreaUnusedToLights
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddCostToSupplySideHVACComponentByAirLoop
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddCostToSupplySideHVACComponentByAirLoop
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddDaylightSensors
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddDaylightSensors
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddDencityMeters
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddDencityMeters
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddExteriorLights
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddExteriorLights
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddMeter
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddMeter
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddOutputDiagnostics
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddOutputDiagnostics
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddOutputVariable
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddOutputVariable
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddOverhangsByProjectionFactor
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddOverhangsByProjectionFactor
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddPTAC
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddPTAC
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddSimplePvToShadingSurfacesByType
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddSimplePvToShadingSurfacesByType
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddSys10ElectricWarmAirFurnace
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddSys10ElectricWarmAirFurnace
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddSys1PTACResidential
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddSys1PTACResidential
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddSys2PTHPResidential
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddSys2PTHPResidential
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddSys3PSZAC
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddSys3PSZAC
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddSys4PSZHP
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddSys4PSZHP
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddSys5PackagedVAVwReheat
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddSys5PackagedVAVwReheat
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddSys6PackagedVAVwPFPBoxes
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddSys6PackagedVAVwPFPBoxes
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddSys7VAVwReheat
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddSys7VAVwReheat
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddSys8VAVwPFPBoxes
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddSys8VAVwPFPBoxes
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddSys9GasFiredWarmAirFurnace
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AddSys9GasFiredWarmAirFurnace
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AdjustThermostatSetpointsByDegrees
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AdjustThermostatSetpointsByDegrees
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12ElectricEquipment
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12ElectricEquipment
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12ElectricEquipmentControls
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12ElectricEquipmentControls
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12EnvelopeAndEntryInfiltration
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12EnvelopeAndEntryInfiltration
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12ExteriorDoorConstruction
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12ExteriorDoorConstruction
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12ExteriorFloorConstruction
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12ExteriorFloorConstruction
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12ExteriorLighting
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12ExteriorLighting
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12ExteriorWallConstruction
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12ExteriorWallConstruction
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12FenestrationAndDaylightingControls
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12FenestrationAndDaylightingControls
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12HvacDualDuctDoas
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12HvacDualDuctDoas
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12HvacFanCoilDoas
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12HvacFanCoilDoas
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12HvacGshpDoas
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12HvacGshpDoas
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12InteriorFinishes
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12InteriorFinishes
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12InteriorLighting
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12InteriorLighting
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12InteriorLightingControls
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12InteriorLightingControls
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12Kitchen
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12Kitchen
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12RoofConstruction
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12RoofConstruction
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12SlabAndBasement
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12SlabAndBasement
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12Swh
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgK12Swh
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgOfficeHvacAshpDoas
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgOfficeHvacAshpDoas
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgOfficeHvacFanCoilDoas
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgOfficeHvacFanCoilDoas
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgOfficeHvacRadiantDoas
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgOfficeHvacRadiantDoas
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgOfficeHvacVavChW
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgOfficeHvacVavChW
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgOfficeHvacVavDx
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgOfficeHvacVavDx
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgOfficeHvacWshpDoas
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgOfficeHvacWshpDoas
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgOfficeSwh
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgOfficeSwh
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeElectricEquipment
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeElectricEquipment
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeElectricEquipmentControls
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeElectricEquipmentControls
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeEnvelopeAndEntryInfiltration
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeEnvelopeAndEntryInfiltration
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeExteriorDoorConstruction
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeExteriorDoorConstruction
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeExteriorFloorConstruction
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeExteriorFloorConstruction
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeExteriorLighting
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeExteriorLighting
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeExteriorWallConstruction
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeExteriorWallConstruction
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeFenestrationAndDaylightingControls
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeFenestrationAndDaylightingControls
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeInteriorFinishes
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeInteriorFinishes
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeInteriorLighting
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeInteriorLighting
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeInteriorLightingControls
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeInteriorLightingControls
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeRoofConstruction
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeRoofConstruction
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeSlabAndBasement
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AedgSmallToMediumOfficeSlabAndBasement
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AnalysisPeriodCashFlows
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AnalysisPeriodCashFlows
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AnnualEndUseBreakdown
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AnnualEndUseBreakdown
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AssignConstructionSetToBuilding
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AssignConstructionSetToBuilding
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AssignSpacesToStories
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AssignSpacesToStories
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AssignSpaceTypeBySpaceName
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AssignSpaceTypeBySpaceName
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AssignSpaceTypeToBuilding
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AssignSpaceTypeToBuilding
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AssignThermostatsBasedonStandardsBuildingTypeandStandardsSpaceType
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/AssignThermostatsBasedonStandardsBuildingTypeandStandardsSpaceType
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/BarAspectRatioSlicedBySpaceType
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/BarAspectRatioSlicedBySpaceType
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/BarAspectRatioStudy
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/BarAspectRatioStudy
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/BarAspectRatioStudySlicedBySpaceTypeMidriseApartment
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/BarAspectRatioStudySlicedBySpaceTypeMidriseApartment
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/BarAspectRatioStudySlicedBySpaceTypeOffice
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/BarAspectRatioStudySlicedBySpaceTypeOffice
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/BarAspectRatioStudySlicedBySpaceTypeRetail
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/BarAspectRatioStudySlicedBySpaceTypeRetail
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/BarAspectRatioStudySlicedBySpaceTypeStripMall
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/BarAspectRatioStudySlicedBySpaceTypeStripMall
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ChangeBuildingLocation
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ChangeBuildingLocation
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CleanupSpaceOrigins
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CleanupSpaceOrigins
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/DencityReports
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/DencityReports
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/EnableDemandControlledVentilation
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/EnableDemandControlledVentilation
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/EnableEconomizerControl
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/EnableEconomizerControl
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/EnableIdealAirLoadsForAllZones
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/EnableIdealAirLoadsForAllZones
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ExportScheduleCSV
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ExportScheduleCSV
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/FindAndReplaceObjectNames
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/FindAndReplaceObjectNames
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/find_and_replace_in_all_thermal_zone_names
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/find_and_replace_in_all_thermal_zone_names
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ImportEnvelopeAndInternalLoadsFromIdf
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ImportEnvelopeAndInternalLoadsFromIdf
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ImproveFanBeltEfficiency
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ImproveFanBeltEfficiency
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ImproveMotorEfficiency
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ImproveMotorEfficiency
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/IncreaseInsulationRValueForExteriorWalls
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/IncreaseInsulationRValueForExteriorWalls
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/IncreaseInsulationRValueForRoofs
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/IncreaseInsulationRValueForRoofs
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/InjectOsmGeometryIntoAnExternalIdf
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/InjectOsmGeometryIntoAnExternalIdf
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/IntersectSpaceGeometry
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/IntersectSpaceGeometry
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ListOfConstructions
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ListOfConstructions
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/LPDtoLamps
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/LPDtoLamps
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/MeterFlodPlot
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/MeterFlodPlot
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ModelMeasure
+[utilities.bcl.BCLXML] <2> 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ModelMeasure/measure.xml' does not exist
+[utilities.bcl.BCLMeasure] <2> 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ModelMeasure' is not a measure
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ModifyEnergyPlusCoilCoolingDXSingleSpeedObjects
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ModifyEnergyPlusCoilCoolingDXSingleSpeedObjects
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ModifyEnergyPlusFanVariableVolumeObjects
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ModifyEnergyPlusFanVariableVolumeObjects
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/NoOp
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/NoOp
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/NRELOpenStudioQAQCChecks
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/NRELOpenStudioQAQCChecks
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/PredictedMeanVote
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/PredictedMeanVote
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReduceElectricEquipmentLoadsByPercentage
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReduceElectricEquipmentLoadsByPercentage
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReduceLightingLoadsByPercentage
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReduceLightingLoadsByPercentage
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReduceNightTimeElectricEquipmentLoads
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReduceNightTimeElectricEquipmentLoads
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReduceNightTimeLightingLoads
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReduceNightTimeLightingLoads
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReduceSpaceInfiltrationByPercentage
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReduceSpaceInfiltrationByPercentage
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReduceVentilationByPercentage
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReduceVentilationByPercentage
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/RemoveHardAssignedConstructions
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/RemoveHardAssignedConstructions
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/RemoveInternalLoadsDirectlyAssignedToSpaces
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/RemoveInternalLoadsDirectlyAssignedToSpaces
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/RemoveUnusedDefaultProfiles
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/RemoveUnusedDefaultProfiles
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/RenameSpaceSurfacesBasedonParentSpaceandOrientation
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/RenameSpaceSurfacesBasedonParentSpaceandOrientation
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceExteriorWindowConstruction
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceExteriorWindowConstruction
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceThermostatSchedules
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceThermostatSchedules
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReportModelChanges
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReportModelChanges
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/RotateBuilding
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/RotateBuilding
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetCOPforSingleSpeedDXCoolingUnits
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetCOPforSingleSpeedDXCoolingUnits
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetCOPforTwoSpeedDXCoolingUnits
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetCOPforTwoSpeedDXCoolingUnits
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetEnergyPlusInfiltrationFlowRatePerFloorArea
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetEnergyPlusInfiltrationFlowRatePerFloorArea
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetEnergyPlusLightObjectsLPD
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetEnergyPlusLightObjectsLPD
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetEnergyPlusMinimumOutdoorAirFlowRate
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetEnergyPlusMinimumOutdoorAirFlowRate
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetExtWallToGroundBoundaryConditionByStory
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetExtWallToGroundBoundaryConditionByStory
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetGasBurnerEfficiency
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetGasBurnerEfficiency
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetInteriorWallsAndFloorsToAdiabatic
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetInteriorWallsAndFloorsToAdiabatic
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetInteriorWallsToSelectedConstruction
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetInteriorWallsToSelectedConstruction
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetLifecycleCostParameters
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetLifecycleCostParameters
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetLightingLoadsByLPD
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetLightingLoadsByLPD
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetSpaceInfiltrationByExteriorSurfaceArea
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetSpaceInfiltrationByExteriorSurfaceArea
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetThermostatSchedules
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetThermostatSchedules
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetWindowToWallRatioByFacade
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SetWindowToWallRatioByFacade
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ShiftScheduleProfileTime
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ShiftScheduleProfileTime
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SimplifyGeometryToSlicedBar
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SimplifyGeometryToSlicedBar
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SpaceTypeAndConstructionSetWizard
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SpaceTypeAndConstructionSetWizard
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SurfaceMatching
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SurfaceMatching
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SwapAllLightsForNewDefinition
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SwapAllLightsForNewDefinition
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SwapLightsDefinition
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/SwapLightsDefinition
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/XcelEDAReportingandQAQC
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/XcelEDAReportingandQAQC
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/XcelEDATariffSelectionandModelSetup
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/XcelEDATariffSelectionandModelSetup
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/ReplaceModel' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/CalibrationReports' conflicts with other measure, other measure will be used instead
+[openstudio.MeasureManager] <1> UUID of user measure at 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/StandardReports' conflicts with other measure, other measure will be used instead
+[openstudio.VariablesList] <-2> onAdded: OS_RadianceParameters
+[openstudio.VariablesList] <-2> onAdded: OS_SimulationControl
+[openstudio.VariablesList] <-2> onAdded: OS_Sizing_Parameters
+[openstudio.VariablesList] <-2> onAdded: OS_ProgramControl
+[openstudio.VariablesList] <-2> onAdded: OS_Timestep
+[openstudio.VariablesList] <-2> onAdded: OS_OutputControl_ReportingTolerances
+[openstudio.VariablesList] <-2> onAdded: OS_ConvergenceLimits
+[openstudio.VariablesList] <-2> onAdded: OS_ShadowCalculation
+[openstudio.VariablesList] <-2> onAdded: OS_SurfaceConvectionAlgorithm_Inside
+[openstudio.VariablesList] <-2> onAdded: OS_SurfaceConvectionAlgorithm_Outside
+[openstudio.VariablesList] <-2> onAdded: OS_HeatBalanceAlgorithm
+[openstudio.VariablesList] <-2> onAdded: OS_ZoneAirHeatBalanceAlgorithm
+[openstudio.VariablesList] <-2> onAdded: OS_ZoneAirContaminantBalance
+[openstudio.VariablesList] <-2> onAdded: OS_ZoneCapacitanceMultiplier_ResearchSpecial
+[openstudio.VariablesList] <-2> onAdded: OS_RunPeriod
+[openstudio.model.YearDescription] <1> 'UseWeatherFile' is not yet a supported option for YearDescription
+[openstudio.model.YearDescription] <1> 'UseWeatherFile' is not yet a supported option for YearDescription
+[openstudio.model.YearDescription] <1> 'UseWeatherFile' is not yet a supported option for YearDescription
+[openstudio.model.YearDescription] <1> 'UseWeatherFile' is not yet a supported option for YearDescription
+[openstudio.model.YearDescription] <1> 'UseWeatherFile' is not yet a supported option for YearDescription
+[openstudio.model.YearDescription] <1> 'UseWeatherFile' is not yet a supported option for YearDescription
+[openstudio::ResultsTabController] <-2> searchForExistingResults C:/Users/dgoldwas/AppData/Local/Temp/1/OpenStudio.xuD432/resources/run
+[openstudio::ResultsTabView] <-2> searchForExistingResults C:/Users/dgoldwas/AppData/Local/Temp/1/OpenStudio.xuD432/resources/run
+[openstudio::ResultsView] <-2> Looking for existing results in: C:/Users/dgoldwas/AppData/Local/Temp/1/OpenStudio.xuD432/resources/run
+[openstudio::ResultsView] <-2> resultsGenerated  
+[openstudio.VariablesList] <-2> onAdded: OS_Building
+[openstudio.VariablesList] <-2> onAdded: OS_Facility
+[openstudio.runmanager.Workflow] <-2> creating workflow
+[openstudio.runmanager.Job_Impl] <-2> Returning previously saved outputfiles
+[openstudio.runmanager.RunManager] <-2> (C:/Users/dgoldwas/AppData/Local/Temp/1/OpenStudio.xuD432/resources/run.db) Persisting job status for {364f2ac2-1bd0-4b35-ac74-c50c9c20520c}
+[openstudio.runmanager.RunManager] <-2> Deleted previous data job status for {364f2ac2-1bd0-4b35-ac74-c50c9c20520c}
+[openstudio.runmanager.RunManager] <-2> Not persisting, job has not actually finished {364f2ac2-1bd0-4b35-ac74-c50c9c20520c}
+[openstudio.runmanager.Job_Impl] <-2> Returning previously saved outputfiles
+[openstudio.runmanager.RunManager] <-2> (C:/Users/dgoldwas/AppData/Local/Temp/1/OpenStudio.xuD432/resources/run.db) Persisting job status for {ad62b5b3-fda2-4350-9e7d-897de1d6b559}
+[openstudio.runmanager.RunManager] <-2> Deleted previous data job status for {ad62b5b3-fda2-4350-9e7d-897de1d6b559}
+[openstudio.runmanager.RunManager] <-2> Not persisting, job has not actually finished {ad62b5b3-fda2-4350-9e7d-897de1d6b559}
+[openstudio.runmanager.Job_Impl] <-2> Returning previously saved outputfiles
+[openstudio.runmanager.RunManager] <-2> (C:/Users/dgoldwas/AppData/Local/Temp/1/OpenStudio.xuD432/resources/run.db) Persisting job status for {78c7ef53-d24c-488a-af81-dde5498d3c48}
+[openstudio.runmanager.RunManager] <-2> Deleted previous data job status for {78c7ef53-d24c-488a-af81-dde5498d3c48}
+[openstudio.runmanager.RunManager] <-2> Not persisting, job has not actually finished {78c7ef53-d24c-488a-af81-dde5498d3c48}
+[openstudio.runmanager.Job_Impl] <-2> Returning previously saved outputfiles
+[openstudio.runmanager.RunManager] <-2> (C:/Users/dgoldwas/AppData/Local/Temp/1/OpenStudio.xuD432/resources/run.db) Persisting job status for {4785638b-852c-4a5e-aa29-61ae175e4fbf}
+[openstudio.runmanager.RunManager] <-2> Deleted previous data job status for {4785638b-852c-4a5e-aa29-61ae175e4fbf}
+[openstudio.runmanager.RunManager] <-2> Not persisting, job has not actually finished {4785638b-852c-4a5e-aa29-61ae175e4fbf}
+[openstudio.runmanager.Job_Impl] <-2> Returning previously saved outputfiles
+[openstudio.runmanager.RunManager] <-2> (C:/Users/dgoldwas/AppData/Local/Temp/1/OpenStudio.xuD432/resources/run.db) Persisting job status for {1455d73d-006e-4a9a-b586-6156c521298e}
+[openstudio.runmanager.RunManager] <-2> Deleted previous data job status for {1455d73d-006e-4a9a-b586-6156c521298e}
+[openstudio.runmanager.RunManager] <-2> Not persisting, job has not actually finished {1455d73d-006e-4a9a-b586-6156c521298e}
+[openstudio.project.ProjectDatabase] <-1> DB Message: cannot start a transaction within a transaction Unable to begin transaction
+[saveModel] <-2> Saved model to 'C:/Users/dgoldwas/AppData/Local/Temp/1/OpenStudio.xuD432/in.osm'
+[saveModelTempDir] <-2> Copying C:/Users/dgoldwas/AppData/Local/Temp/1/OpenStudio.xuD432/resources to C:/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/ruby/openstudio/sketchup_plugin/resources/templates/empty
+[copyDir] <-1> copyDir 'C:/Users/dgoldwas/AppData/Local/Temp/1/OpenStudio.xuD432/resources' to 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/ruby/openstudio/sketchup_plugin/resources/templates/empty'
+[copyDir] <-1> Creating directory named = 'empty' in parentDstDir = 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/ruby/openstudio/sketchup_plugin/resources/templates'
+[synchDirStructures] <-1> Synching destination 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/ruby/openstudio/sketchup_plugin/resources/templates/empty' with source 'C:/Users/dgoldwas/AppData/Local/Temp/1/OpenStudio.xuD432/resources'
+[copyDir] <-1> copyDir 'C:/Users/dgoldwas/AppData/Local/Temp/1/OpenStudio.xuD432/resources/files' to 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/ruby/openstudio/sketchup_plugin/resources/templates/empty/files'
+[copyDir] <-1> Creating directory named = 'files' in parentDstDir = 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/ruby/openstudio/sketchup_plugin/resources/templates/empty'
+[synchDirStructures] <-1> Synching destination 'C:/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/ruby/openstudio/sketchup_plugin/resources/templates/empty/files' with source 'C:/Users/dgoldwas/AppData/Local/Temp/1/OpenStudio.xuD432/resources/files'
