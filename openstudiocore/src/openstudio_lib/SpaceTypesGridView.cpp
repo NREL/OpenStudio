@@ -26,37 +26,40 @@
 
 #include "../shared_gui_components/OSGridView.hpp"
 
-#include "../model/Model.hpp"
-#include "../model/Model_Impl.hpp"
-#include "../model/ModelObject.hpp"
-#include "../model/ModelObject_Impl.hpp"
-#include "../model/SpaceType.hpp"
-#include "../model/SpaceType_Impl.hpp"
-#include "../model/SpaceLoad.hpp"
-#include "../model/SpaceLoad_Impl.hpp"
-#include "../model/InternalMass.hpp"
-#include "../model/InternalMass_Impl.hpp"
-#include "../model/People.hpp"
-#include "../model/People_Impl.hpp"
-#include "../model/Lights.hpp"
-#include "../model/Lights_Impl.hpp"
-#include "../model/Luminaire.hpp"
-#include "../model/Luminaire_Impl.hpp"
+#include "../model/DefaultConstructionSet.hpp"
+#include "../model/DefaultConstructionSet_Impl.hpp"
+#include "../model/DefaultScheduleSet.hpp"
+#include "../model/DefaultScheduleSet_Impl.hpp"
 #include "../model/ElectricEquipment.hpp"
 #include "../model/ElectricEquipment_Impl.hpp"
 #include "../model/GasEquipment.hpp"
 #include "../model/GasEquipment_Impl.hpp"
 #include "../model/HotWaterEquipment.hpp"
 #include "../model/HotWaterEquipment_Impl.hpp"
-#include "../model/SteamEquipment.hpp"
-#include "../model/SteamEquipment_Impl.hpp"
+#include "../model/InternalMass.hpp"
+#include "../model/InternalMass_Impl.hpp"
+#include "../model/Lights.hpp"
+#include "../model/Lights_Impl.hpp"
+#include "../model/Luminaire.hpp"
+#include "../model/Luminaire_Impl.hpp"
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/Model_Impl.hpp"
 #include "../model/OtherEquipment.hpp"
 #include "../model/OtherEquipment_Impl.hpp"
+#include "../model/People.hpp"
+#include "../model/People_Impl.hpp"
 #include "../model/SpaceInfiltrationDesignFlowRate.hpp"
 #include "../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
 #include "../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
 #include "../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
-
+#include "../model/SpaceLoad.hpp"
+#include "../model/SpaceLoad_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
+#include "../model/SteamEquipment.hpp"
+#include "../model/SteamEquipment_Impl.hpp"
 
 #include "../utilities/idd/OS_SpaceType_FieldEnums.hxx"
 
@@ -77,20 +80,20 @@
 #define RENDERINGCOLOR "Rendering color" // colored button
 #define DEFAULTCONSTRUCTIONSET "Default Construction Set" // DropZone
 #define DEFAULTSCHEDULESET "Default Schedule Set" // DropZone
-#define DESIGNSPECIFICATIONOUTDOORAIR "Design Specification Outdoor Air" // DropZone
-#define SPACEINFILTRATIONDESIGNFLOWRATES "Space Infiltration Design Flow Rates" // DropZone
-#define SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS "Space Infiltration Effective Leakage Areas" // DropZone
+#define DESIGNSPECIFICATIONOUTDOORAIR "Design Specification\nOutdoor Air" // DropZone
+#define SPACEINFILTRATIONDESIGNFLOWRATES "Space Infiltration\nDesign Flow Rates" // DropZone
+#define SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS "Space Infiltration\nEffective Leakage Areas" // DropZone
 
 // LOADS
 #define LOADNAME "Name" // Name Edit
 #define MULTIPLIER "Multiplier" // Value Edit
 #define DEFINITION "Definition" // DropZone
 #define SCHEDULE "Schedule" // DropZone
-#define ACTIVITYSCHEDULE "Activity Schedule" // DropZone
+#define ACTIVITYSCHEDULE "Activity Schedule\n(People Only)" // DropZone
 
 // MEASURE TAGS
-#define STANDARDSBUILDINGTYPE "Standards Building Type" // comboBox
-#define STANDARDSSPACETYPE "Standards Space Type" // comboBox
+#define STANDARDSBUILDINGTYPE "Standards Building Type\n(Optional)" // comboBox
+#define STANDARDSSPACETYPE "Standards Space Type\n(Optional)" // comboBox
 
 namespace openstudio {
 
@@ -163,8 +166,8 @@ void SpaceTypesGridController::setCategoriesAndFields()
   {
     std::vector<QString> fields;
     //fields.push_back(RENDERINGCOLOR); // colored button
-    //fields.push_back(DEFAULTCONSTRUCTIONSET); // TODO DropZone
-    //fields.push_back(DEFAULTSCHEDULESET); // TODO DropZone
+    fields.push_back(DEFAULTCONSTRUCTIONSET); // DropZone
+    fields.push_back(DEFAULTSCHEDULESET); // DropZone
     //fields.push_back(DESIGNSPECIFICATIONOUTDOORAIR); // TODO DropZone
     //fields.push_back(SPACEINFILTRATIONDESIGNFLOWRATES); // TODO DropZone
     //fields.push_back(SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS); // TODO DropZone
@@ -204,7 +207,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
   m_baseConcepts.clear();
 
   Q_FOREACH(QString field, fields){
-    if(field == NAME){
+    if (field == NAME) {
       auto getter = CastNullAdapter<model::SpaceType>(&model::SpaceType::name);
       auto setter = CastNullAdapter<model::SpaceType>(&model::SpaceType::setName);
 
@@ -272,7 +275,17 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
       //    )
       //    );
 
-    }else{
+    } else if (field == DEFAULTCONSTRUCTIONSET) {
+      addDropZoneColumn(QString(DEFAULTCONSTRUCTIONSET),
+        CastNullAdapter<model::SpaceType>(&model::SpaceType::defaultConstructionSet),
+        CastNullAdapter<model::SpaceType>(&model::SpaceType::setDefaultConstructionSet));
+
+    } else if (field == DEFAULTSCHEDULESET) {
+      addDropZoneColumn(QString(DEFAULTSCHEDULESET),
+        CastNullAdapter<model::SpaceType>(&model::SpaceType::defaultScheduleSet),
+        CastNullAdapter<model::SpaceType>(&model::SpaceType::setDefaultScheduleSet));
+
+    } else {
       // unhandled
       //OS_ASSERT(false);
     }
