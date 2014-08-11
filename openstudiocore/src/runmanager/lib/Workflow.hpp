@@ -376,7 +376,11 @@ namespace runmanager {
       /// \param[in] t_rubyInstalled indicates if ruby exists as a tool and if ruby scripts should be added
       ///            to the workflow
       /// \param[in] t_rubyIncludePath include path to pass to the ruby interpreter
+      /// \param[in] t_userScriptsByFolder map containing paths to model, idf, and post EnergyPlus scripts
       /// \param[in] t_useRadianceForDaylightCalculations If true, use radiance. Requires radiance and ruby installed
+      /// \param[in] t_radiancePath path to Radiance
+      /// \param[in] t_relativeTo (unused)
+      /// \param[in] t_copyFileTrue (unused)
       bool addStandardWorkflow(const openstudio::path &t_scriptsPath,
                                bool t_rubyInstalled,
                                const openstudio::path &t_rubyIncludePath,
