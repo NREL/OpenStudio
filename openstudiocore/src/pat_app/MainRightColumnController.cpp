@@ -49,7 +49,7 @@ MainRightColumnController::MainRightColumnController()
 
   horizontalTabWidget->addTab(EDIT,"Edit");
 
-  connect(horizontalTabWidget, &HorizontalTabWidget::tabSelected, this, &MainRightColumnController::showHorizontalTab);
+  connect(horizontalTabWidget.data(), &HorizontalTabWidget::tabSelected, this, &MainRightColumnController::showHorizontalTab);
 
   showHorizontalTab(MEASURE_LIBRARY);
 }

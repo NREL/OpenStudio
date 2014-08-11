@@ -20,6 +20,7 @@
 #include "SchedulesView.hpp"
 
 #include "../shared_gui_components/OSCheckBox.hpp"
+#include "OSItem.hpp"
 #include "OSItemSelectorButtons.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 

@@ -328,7 +328,7 @@ void RefrigerationController::zoomInOnSystem(model::RefrigerationSystem & refrig
 
   connect(m_detailView->refrigerationSHXView, &RefrigerationSHXView::inspectClicked, this, &RefrigerationController::inspectOSItem);
 
-  connect(m_detailView, &RefrigerationSystemView::inspectClicked, this, &RefrigerationController::inspectOSItem);
+  connect(m_detailView.data(), &RefrigerationSystemView::inspectClicked, this, &RefrigerationController::inspectOSItem);
 
   connect(m_detailView->refrigerationSecondaryView->secondaryDropZoneView, &SecondaryDropZoneView::componentDropped, this, &RefrigerationController::onSecondaryViewDrop);
 

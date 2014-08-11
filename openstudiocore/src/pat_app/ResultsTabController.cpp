@@ -51,13 +51,13 @@ ResultsTabController::ResultsTabController()
 {
   resultsView = new ResultsView();
 
-  connect(resultsView, &ResultsView::openButtonClicked, this, &ResultsTabController::onOpenButtonClicked);
+  connect(resultsView.data(), &ResultsView::openButtonClicked, this, &ResultsTabController::onOpenButtonClicked);
 
-  connect(resultsView, &ResultsView::openDirButtonClicked, this, &ResultsTabController::openDirectory);
+  connect(resultsView.data(), &ResultsView::openDirButtonClicked, this, &ResultsTabController::openDirectory);
   
-  connect(resultsView, &ResultsView::downloadResultsButtonClicked, this, &ResultsTabController::downloadResults);
+  connect(resultsView.data(), &ResultsView::downloadResultsButtonClicked, this, &ResultsTabController::downloadResults);
 
-  connect(resultsView, &ResultsView::viewSelected, this, &ResultsTabController::selectView);
+  connect(resultsView.data(), &ResultsView::viewSelected, this, &ResultsTabController::selectView);
 
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){
@@ -75,10 +75,10 @@ ResultsTabController::ResultsTabController()
     // can only select one item between both lists
     m_dataPointResultsListController->setSelectionController(m_baselineDataPointResultListController->selectionController());
 
-    connect(resultsView, &ResultsView::calibrationThresholdsChanged, m_dataPointCalibrationItemDelegate.data(), &DataPointCalibrationItemDelegate::setCalibrationThresholds);
+    connect(resultsView.data(), &ResultsView::calibrationThresholdsChanged, m_dataPointCalibrationItemDelegate.data(), &DataPointCalibrationItemDelegate::setCalibrationThresholds);
 
     // want to reset the list after changing the delegate
-    connect(resultsView, &ResultsView::calibrationThresholdsChanged, resultsView->dataPointCalibrationListView, &OSListView::refreshAllViews);
+    connect(resultsView.data(), &ResultsView::calibrationThresholdsChanged, resultsView->dataPointCalibrationListView, &OSListView::refreshAllViews);
 
     resultsView->baselineDataPointResultListView->setListController(m_baselineDataPointResultListController);
     resultsView->baselineDataPointResultListView->setDelegate(m_dataPointResultItemDelegate);
