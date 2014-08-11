@@ -442,7 +442,7 @@ private:
 
   int columnIndexFromButtonIndex(int index);
 
-  QString cellStyle(int rowIndex, int columnIndex);
+  QString cellStyle(int rowIndex, int columnIndex, bool isSelected);
 
   OSGridView * gridView();
 

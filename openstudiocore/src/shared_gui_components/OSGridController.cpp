@@ -381,12 +381,10 @@ OSGridView * OSGridController::gridView(){
   return gridView;
 }
 
-QString OSGridController::cellStyle(int rowIndex, int columnIndex)
+QString OSGridController::cellStyle(int rowIndex, int columnIndex, bool isSelected)
 {
-  auto button = qobject_cast<QPushButton *>(cell(rowIndex, columnIndex));
-
   QString cellColor;
-  if (button && button->isChecked()){
+  if (isSelected) {
     // blue
     cellColor = "#94b3de";
   }
@@ -504,7 +502,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
     wrapper->setMinimumSize(QSize(140,34));
   }
 
-  wrapper->setStyleSheet(this->cellStyle(row,column));
+  wrapper->setStyleSheet(this->cellStyle(row,column,false));
 
   auto layout = new QVBoxLayout();
   layout->setSpacing(0);
@@ -621,10 +619,10 @@ void OSGridController::selectRow(int rowIndex, bool select)
   std::vector<QWidget *> row = this->row(rowIndex);
   for (auto widget : row){
     auto button = qobject_cast<QPushButton *>(widget);
-    button->setEnabled(false);
+    button->blockSignals(true);
     button->setChecked(select);
-    button->setEnabled(true);
-    button->setStyleSheet(cellStyle(rowIndex, columnIndex++));
+    button->blockSignals(false);
+    button->setStyleSheet(cellStyle(rowIndex, columnIndex++, select));
   }
 }
 
