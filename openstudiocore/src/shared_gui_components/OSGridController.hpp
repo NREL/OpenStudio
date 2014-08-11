@@ -454,6 +454,8 @@ private:
 
   int m_oldIndex = -1;
 
+  bool m_acceptItemSelectedSignals = true;
+
 signals:
 
   //// Emit this signal when an item has been added to the underlying model or data structure.

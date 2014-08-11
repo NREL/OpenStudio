@@ -685,12 +685,16 @@ void OSGridController::cellChecked(int index)
     OSItemId itemId = modelObjectToItemId(modelObject(rowIndexFromButtonIndex(index)), false);
     OSItem* item = OSItem::makeItem(itemId, OSItemType::ListItem);
 
+    // Remember who's selected
+    m_oldIndex = index;   
+
+    // Note: emitting gridRowSelected will trigger itemSelected emitted from OSItemList,
+    //       creating unwanted feedback
+    m_acceptItemSelectedSignals = false;
     emit gridRowSelected(item);
 
-    // Remember who's selected
-    m_oldIndex = index;
   }
-  
+
 }
 
 int OSGridController::rowIndexFromButtonIndex(int index)
@@ -723,6 +727,10 @@ void OSGridController::selectItemId(const OSItemId& itemId)
 
 void OSGridController::onItemSelected(OSItem * item)
 {
+  if (!m_acceptItemSelectedSignals) {
+    m_acceptItemSelectedSignals = true;
+    return;
+  }
   bool selected = true;
   int i = 0;
   refreshModelObjects();
