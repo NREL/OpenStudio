@@ -30,6 +30,8 @@
 #include "../model/DefaultConstructionSet_Impl.hpp"
 #include "../model/DefaultScheduleSet.hpp"
 #include "../model/DefaultScheduleSet_Impl.hpp"
+#include "../model/DesignSpecificationOutdoorAir.hpp"
+#include "../model/DesignSpecificationOutdoorAir_Impl.hpp"
 #include "../model/ElectricEquipment.hpp"
 #include "../model/ElectricEquipment_Impl.hpp"
 #include "../model/GasEquipment.hpp"
@@ -73,27 +75,26 @@
 // These defines provide a common area for field display names
 // used on column headers, and other grid widgets
 
-#define NAME "Name"
-#define NAME_LOAD "Load Name"
+#define NAME "Space Type Name"
 
 // GENERAL
-#define RENDERINGCOLOR "Rendering color" // colored button
-#define DEFAULTCONSTRUCTIONSET "Default Construction Set" // DropZone
-#define DEFAULTSCHEDULESET "Default Schedule Set" // DropZone
-#define DESIGNSPECIFICATIONOUTDOORAIR "Design Specification\nOutdoor Air" // DropZone
-#define SPACEINFILTRATIONDESIGNFLOWRATES "Space Infiltration\nDesign Flow Rates" // DropZone
-#define SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS "Space Infiltration\nEffective Leakage Areas" // DropZone
+#define RENDERINGCOLOR "Rendering color"
+#define DEFAULTCONSTRUCTIONSET "Default Construction\nSet"
+#define DEFAULTSCHEDULESET "Default Schedule\nSet"
+#define DESIGNSPECIFICATIONOUTDOORAIR "Design Specification\nOutdoor Air"
+#define SPACEINFILTRATIONDESIGNFLOWRATES "Space Infiltration\nDesign Flow Rates"
+#define SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS "Space Infiltration\nEffective Leakage Areas"
 
 // LOADS
-#define LOADNAME "Name" // Name Edit
-#define MULTIPLIER "Multiplier" // Value Edit
-#define DEFINITION "Definition" // DropZone
-#define SCHEDULE "Schedule" // DropZone
-#define ACTIVITYSCHEDULE "Activity Schedule\n(People Only)" // DropZone
+#define LOADNAME "Load Name"
+#define MULTIPLIER "Multiplier"
+#define DEFINITION "Definition"
+#define SCHEDULE "Schedule"
+#define ACTIVITYSCHEDULE "Activity Schedule\n(People Only)"
 
 // MEASURE TAGS
-#define STANDARDSBUILDINGTYPE "Standards Building Type\n(Optional)" // comboBox
-#define STANDARDSSPACETYPE "Standards Space Type\n(Optional)" // comboBox
+#define STANDARDSBUILDINGTYPE "Standards Building Type\n(Optional)"
+#define STANDARDSSPACETYPE "Standards Space Type\n(Optional)"
 
 namespace openstudio {
 
@@ -165,19 +166,19 @@ void SpaceTypesGridController::setCategoriesAndFields()
 
   {
     std::vector<QString> fields;
-    //fields.push_back(RENDERINGCOLOR); // colored button
-    fields.push_back(DEFAULTCONSTRUCTIONSET); // DropZone
-    fields.push_back(DEFAULTSCHEDULESET); // DropZone
-    //fields.push_back(DESIGNSPECIFICATIONOUTDOORAIR); // TODO DropZone
-    //fields.push_back(SPACEINFILTRATIONDESIGNFLOWRATES); // TODO DropZone
-    //fields.push_back(SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS); // TODO DropZone
+    //fields.push_back(RENDERINGCOLOR); // Colored Button
+    fields.push_back(DEFAULTCONSTRUCTIONSET);
+    fields.push_back(DEFAULTSCHEDULESET);
+    fields.push_back(DESIGNSPECIFICATIONOUTDOORAIR);
+    //fields.push_back(SPACEINFILTRATIONDESIGNFLOWRATES); // TODO Extensible DropZone
+    //fields.push_back(SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS); // TODO Extensible DropZone
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("General"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
-    //fields.push_back(LOADNAME); // Name Edit
+    fields.push_back(LOADNAME); // Name Edit
     //fields.push_back(MULTIPLIER); // Value Edit
     //fields.push_back(DEFINITION); // DropZone
     //fields.push_back(SCHEDULE); // DropZone
@@ -202,7 +203,6 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
 {
   // always show name column
   fields.insert(fields.begin(), NAME);
-  //fields.insert(fields.begin(), NAME_LOAD);
 
   m_baseConcepts.clear();
 
@@ -215,7 +215,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         getter,
         setter);
 
-    } else if (field == NAME_LOAD) {
+    } else if (field == LOADNAME) {
       // Create a lambda function that collates all of the loads in a space type 
       // and returns them as an std::vector
       std::function<std::vector<model::ModelObject> (const model::SpaceType &)> allLoads(
@@ -261,33 +261,34 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
       // The final argument to DataSource tells the system that we want an additional widget to be displayed
       // at the bottom of each list. In this case, it's a dropZone. Any type of BaseConcept would work.
 
-      //addNameLineEditColumn(QString(NAME_LOAD),
-      //    CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::name),
-      //    CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::setName),
-      //    DataSource(
-      //      allLoads,
-      //      false,
-      //      // I have *no idea* what this needs to actually be
-      //      makeDropZoneConcept(QString("Heading"),
-      //        std::function<boost::optional<model::ModelObject> (model::ModelObject *)>([] (model::ModelObject *m) { return *m; }),
-      //        std::function<bool (model::ModelObject *, const model::ModelObject &)>([] (model::ModelObject *, const model::ModelObject &) { return false;  })
-      //      )
-      //    )
-      //    );
+      addNameLineEditColumn(QString(LOADNAME),
+        CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::name),
+        CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::setName),
+        DataSource(
+          allLoads,
+          true
+          //QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel, getter, setter)
+        )
+      );
 
-    } else if (field == DEFAULTCONSTRUCTIONSET) {
+    } else if (field == DEFAULTCONSTRUCTIONSET){
       addDropZoneColumn(QString(DEFAULTCONSTRUCTIONSET),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::defaultConstructionSet),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::setDefaultConstructionSet));
 
-    } else if (field == DEFAULTSCHEDULESET) {
+    } else if (field == DEFAULTSCHEDULESET){
       addDropZoneColumn(QString(DEFAULTSCHEDULESET),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::defaultScheduleSet),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::setDefaultScheduleSet));
 
+    } else if (field == DESIGNSPECIFICATIONOUTDOORAIR){
+      addDropZoneColumn(QString(DESIGNSPECIFICATIONOUTDOORAIR),
+        CastNullAdapter<model::SpaceType>(&model::SpaceType::designSpecificationOutdoorAir),
+        CastNullAdapter<model::SpaceType>(&model::SpaceType::setDesignSpecificationOutdoorAir));
+
     } else {
       // unhandled
-      //OS_ASSERT(false);
+      OS_ASSERT(false);
     }
   }
 }
