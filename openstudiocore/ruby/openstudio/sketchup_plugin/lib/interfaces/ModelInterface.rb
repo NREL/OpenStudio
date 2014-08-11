@@ -48,11 +48,7 @@ require("openstudio/sketchup_plugin/lib/observers/ModelEntitiesObserver.rb")
 
 require("openstudio/sketchup_plugin/lib/dialogs/ProgressDialog")
 
-if Sketchup.version_number > 14000000
-  require("set")
-else
-  require("openstudio/sketchup_plugin/stdruby/set")
-end
+require("set")
 
 module OpenStudio
 
