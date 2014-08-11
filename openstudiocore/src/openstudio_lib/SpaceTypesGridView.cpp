@@ -58,6 +58,8 @@
 #include "../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
 #include "../model/SpaceLoad.hpp"
 #include "../model/SpaceLoad_Impl.hpp"
+#include "../model/SpaceLoadInstance.hpp"
+#include "../model/SpaceLoadInstance_Impl.hpp"
 #include "../model/SpaceType.hpp"
 #include "../model/SpaceType_Impl.hpp"
 #include "../model/SteamEquipment.hpp"
