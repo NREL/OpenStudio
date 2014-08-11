@@ -1327,9 +1327,9 @@ HVACLayoutController::HVACLayoutController(HVACSystemsController * hvacSystemsCo
 
   //m_refrigerationController = std::shared_ptr<RefrigerationController>(new RefrigerationController());
 
-  connect(m_hvacSystemsController->hvacSystemsView()->hvacToolbarView->zoomOutButton, &QPushButton::clicked, m_hvacGraphicsView, &HVACGraphicsView::zoomOut);
+  connect(m_hvacSystemsController->hvacSystemsView()->hvacToolbarView->zoomOutButton, &QPushButton::clicked, m_hvacGraphicsView.data(), &HVACGraphicsView::zoomOut);
 
-  connect(m_hvacSystemsController->hvacSystemsView()->hvacToolbarView->zoomInButton, &QPushButton::clicked, m_hvacGraphicsView, &HVACGraphicsView::zoomIn);
+  connect(m_hvacSystemsController->hvacSystemsView()->hvacToolbarView->zoomInButton, &QPushButton::clicked, m_hvacGraphicsView.data(), &HVACGraphicsView::zoomIn);
 
   updateLater();
 }

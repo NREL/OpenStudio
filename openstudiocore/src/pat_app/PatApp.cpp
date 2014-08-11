@@ -202,7 +202,7 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
 
   connect(mainWindow->verticalTabWidget, &PatVerticalTabWidget::tabSelected, this, &PatApp::showVerticalTab);
 
-  connect(mainWindow, &PatMainWindow::loadFileClicked, this, &PatApp::open);
+  connect(mainWindow.data(), &PatMainWindow::loadFileClicked, this, &PatApp::open);
 
   connect(mainWindow, &PatMainWindow::newClicked, this, &PatApp::create);
 
