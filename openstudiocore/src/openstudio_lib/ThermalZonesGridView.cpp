@@ -372,7 +372,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
 
     }else{
       // unhandled
-      //OS_ASSERT(false);
+      OS_ASSERT(false);
     }
   }
 }
