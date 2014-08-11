@@ -793,7 +793,12 @@ void  OpenStudioApp::showHelp()
 
 void  OpenStudioApp::showAbout()
 {
-  QMessageBox about(currentDocument()->mainWindow());
+  QWidget * parent = nullptr;
+
+  if (currentDocument()) {
+    parent = currentDocument()->mainWindow();
+  }
+  QMessageBox about(parent);
   about.setText(OPENSTUDIO_ABOUTBOX);
   about.setStyleSheet("qproperty-alignment: AlignCenter;");
   about.setWindowTitle("About " + applicationName());
