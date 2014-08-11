@@ -53,10 +53,12 @@ boost::optional<IdfObject> ForwardTranslator::translateHeatExchangerFluidToFluid
   }
 
   // AvailabilityScheduleName
-  boost::optional<Schedule> sched = modelObject.availabilitySchedule();
-  if( (idfo = translateAndMapModelObject(sched.get())) )
+  if( boost::optional<Schedule> sched = modelObject.availabilitySchedule() )
   {
-    idfObject.setString(HeatExchanger_FluidToFluidFields::AvailabilityScheduleName,idfo->name().get());
+    if( (idfo = translateAndMapModelObject(sched.get())) )
+    {
+      idfObject.setString(HeatExchanger_FluidToFluidFields::AvailabilityScheduleName,idfo->name().get());
+    }
   }
 
   // LoopDemandSideInletNode

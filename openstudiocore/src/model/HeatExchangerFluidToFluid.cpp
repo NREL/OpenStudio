@@ -416,9 +416,6 @@ HeatExchangerFluidToFluid::HeatExchangerFluidToFluid(const Model& model)
 {
   OS_ASSERT(getImpl<detail::HeatExchangerFluidToFluid_Impl>());
 
-  Schedule s = model.alwaysOnDiscreteSchedule();
-  setAvailabilitySchedule(s);
-
   autosizeLoopDemandSideDesignFlowRate();
   autosizeLoopSupplySideDesignFlowRate();
   setHeatExchangeModelType("Ideal");
