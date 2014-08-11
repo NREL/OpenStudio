@@ -760,6 +760,101 @@ OS:Coil:Heating:Electric,
   ,                                       ! Air Inlet Node Name
   ;                                       ! Air Outlet Node Name
 
+OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
+  {f2eca4ed-3132-4bfe-bc53-5088dc113393}, !- Handle
+  Parallel PIU Terminal w CAV Fan and Gas Reheat, !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  Autosize,                               !- Maximum Primary Air Flow Rate {m3/s}
+  Autosize,                               !- Maximum Secondary Air Flow Rate {m3/s}
+  Autosize,                               !- Minimum Primary Air Flow Fraction
+  Autosize,                               !- Fan On Flow Fraction
+  ,                                       !- Supply Air Inlet Node Name
+  ,                                       !- Secondary Air Inlet Node Name
+  ,                                       !- Outlet Node Name
+  ,                                       !- Reheat Coil Air Inlet Node Name
+  ,                                       !- Zone Mixer Name
+  {95ce84e5-c2ba-4833-a75d-3c89720f76d4}, !- Fan Name
+  {8cf0d111-ff4c-435e-9d5e-bfe12c2962d7}, !- Reheat Coil Name
+  Autosize,                               !- Maximum Hot Water or Steam Flow Rate {m3/s}
+  0,                                      !- Minimum Hot Water or Steam Flow Rate {m3/s}
+  0.001;                                  !- Convergence Tolerance
+
+OS:Fan:ConstantVolume,
+  {95ce84e5-c2ba-4833-a75d-3c89720f76d4}, !- Handle
+  Parallel PIU Fan,                       !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Fan Efficiency
+  ,                                       !- Pressure Rise {Pa}
+  AutoSize,                               !- Maximum Flow Rate {m3/s}
+  ,                                       !- Motor Efficiency
+  ,                                       !- Motor In Airstream Fraction
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ;                                       !- End-Use Subcategory
+
+OS:Coil:Heating:Gas,
+  {8cf0d111-ff4c-435e-9d5e-bfe12c2962d7}, !- Handle
+  Parallel PIU Coil,                      !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  0.8,                                    !- Gas Burner Efficiency
+  AutoSize,                               !- Nominal Capacity {W}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Temperature Setpoint Node Name
+  0,                                      !- Parasitic Electric Load {W}
+  ,                                       !- Part Load Fraction Correlation Curve Name
+  0;                                      !- Parasitic Gas Load {W}
+
+OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
+  {0c5479be-55e2-4a40-a050-be17e603fba8}, !- Handle
+  Parallel PIU Terminal w CAV Fan and Hot Water Reheat, !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  Autosize,                               !- Maximum Primary Air Flow Rate {m3/s}
+  Autosize,                               !- Maximum Secondary Air Flow Rate {m3/s}
+  Autosize,                               !- Minimum Primary Air Flow Fraction
+  Autosize,                               !- Fan On Flow Fraction
+  ,                                       !- Supply Air Inlet Node Name
+  ,                                       !- Secondary Air Inlet Node Name
+  ,                                       !- Outlet Node Name
+  ,                                       !- Reheat Coil Air Inlet Node Name
+  ,                                       !- Zone Mixer Name
+  {a638e8d6-0db3-43dd-b160-aaae12a7abbc}, !- Fan Name
+  {e48c9cdf-2762-4a27-9584-0eefbb889726}, !- Reheat Coil Name
+  Autosize,                               !- Maximum Hot Water or Steam Flow Rate {m3/s}
+  0,                                      !- Minimum Hot Water or Steam Flow Rate {m3/s}
+  0.001;                                  !- Convergence Tolerance
+
+OS:Fan:ConstantVolume,
+  {a638e8d6-0db3-43dd-b160-aaae12a7abbc}, !- Handle
+  Parallel PIU Fan,                       !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Fan Efficiency
+  ,                                       !- Pressure Rise {Pa}
+  AutoSize,                               !- Maximum Flow Rate {m3/s}
+  ,                                       !- Motor Efficiency
+  ,                                       !- Motor In Airstream Fraction
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ;                                       !- End-Use Subcategory
+
+OS:Coil:Heating:Water,
+  {e48c9cdf-2762-4a27-9584-0eefbb889726}, !- Handle
+  Parallel PIU Coil,                      !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- U-Factor Times Area Value {W/K}
+  ,                                       !- Maximum Water Flow Rate {m3/s}
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Performance Input Method
+  ,                                       !- Rated Capacity {W}
+  ,                                       !- Rated Inlet Water Temperature {C}
+  ,                                       !- Rated Inlet Air Temperature {C}
+  ,                                       !- Rated Outlet Water Temperature {C}
+  ,                                       !- Rated Outlet Air Temperature {C}
+  ;                                       !- Rated Ratio for Air and Water Convection
+
 OS:Fan:ConstantVolume,
   {6bab1791-64db-4620-aff4-f0682054ce4f}, !- Handle
   Series PIU Fan,                         !- Name
