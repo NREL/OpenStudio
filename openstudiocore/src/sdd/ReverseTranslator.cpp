@@ -1050,13 +1050,13 @@ namespace sdd {
 
           var = model::OutputVariable("System Node Temperature",*result);
           var.setReportingFrequency(interval);
-          var.setKeyValue(it->demandInletNode().name().get());
+          var.setKeyValue(airloop.demandInletNode().name().get());
 
           var = model::OutputVariable("System Node Mass Flow Rate",*result);
           var.setReportingFrequency(interval);
-          var.setKeyValue(it->demandInletNode().name().get());
+          var.setKeyValue(airloop.demandInletNode().name().get());
 
-          if( boost::optional<model::Node> node = it->mixedAirNode() )
+          if( boost::optional<model::Node> node = airloop.mixedAirNode() )
           {
             var = model::OutputVariable("System Node Temperature",*result);
             var.setReportingFrequency(interval);
@@ -1067,7 +1067,7 @@ namespace sdd {
             var.setKeyValue(node->name().get());
           }
 
-          if( boost::optional<model::AirLoopHVACOutdoorAirSystem> oaSystem = it->airLoopHVACOutdoorAirSystem() )
+          if( boost::optional<model::AirLoopHVACOutdoorAirSystem> oaSystem = airloop.airLoopHVACOutdoorAirSystem() )
           {
             if( boost::optional<model::ModelObject> node = oaSystem->reliefAirModelObject() )
             {

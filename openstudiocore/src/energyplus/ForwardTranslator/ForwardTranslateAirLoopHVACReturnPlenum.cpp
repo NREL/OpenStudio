@@ -25,8 +25,8 @@
 #include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
-#include "../../PortList.hpp"
-#include "../../PortList_Impl.hpp"
+#include "../../model/PortList.hpp"
+#include "../../model/PortList_Impl.hpp"
 #include <utilities/idd/AirLoopHVAC_ReturnPlenum_FieldEnums.hxx>
 #include <utilities/idd/NodeList_FieldEnums.hxx>
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"

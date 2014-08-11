@@ -18,8 +18,8 @@
  **********************************************************************/
 
 #include "../ForwardTranslator.hpp"
-#include "../../AirToAirComponent.hpp"
-#include "../../AirToAirComponent_Impl.hpp"
+#include "../../model/AirToAirComponent.hpp"
+#include "../../model/AirToAirComponent_Impl.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "../../model/ControllerOutdoorAir.hpp"
