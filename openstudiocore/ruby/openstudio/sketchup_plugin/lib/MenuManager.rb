@@ -47,7 +47,7 @@ module OpenStudio
     
     attr_accessor :about_cmd, :prefs_cmd
     attr_accessor :online_help_cmd, :forum_cmd, :contact_cmd
-    attr_accessor :new_cmd, :new_from_template_cmd, :open_cmd, :save_cmd, :save_as_cmd
+    attr_accessor :new_cmd, :new_from_wizard_cmd, :open_cmd, :save_cmd, :save_as_cmd
     attr_accessor :import_openstudio_cmd, :import_constructions_cmd, :import_schedules_cmd, :import_space_types_cmd
     attr_accessor :import_idf_cmd, :import_idf_constructions_cmd, :import_idf_schedules_cmd, :import_gbxml_cmd, :import_sdd_cmd
     attr_accessor :export_openstudio_cmd, :export_untranslated_idf_cmd, :export_idf_cmd, :export_gbxml_cmd, :export_sdd_cmd
@@ -138,12 +138,12 @@ module OpenStudio
       }
         
       # Create all the commands (They must still be added to menus and toolbars next)
-      @new_from_template_cmd = UI::Command.new("New OpenStudio Model From Wizard") { Plugin.command_manager.new_openstudio }
-      @new_from_template_cmd.small_icon = Plugin.dir + "/lib/resources/icons/OSNew-16.png"
-      @new_from_template_cmd.large_icon = Plugin.dir + "/lib/resources/icons/OSNew-24.png"
-      @new_from_template_cmd.tooltip = "New OpenStudio Model From Wizard"
-      @new_from_template_cmd.status_bar_text = "Create a new OpenStudio model from a wizard"
-      @new_from_template_cmd.set_validation_proc { enable_if_model_interface }
+      @new_from_wizard_cmd = UI::Command.new("New OpenStudio Model From Wizard") { Plugin.command_manager.new_openstudio_from_wizard }
+      @new_from_wizard_cmd.small_icon = Plugin.dir + "/lib/resources/icons/OSNew-16.png"
+      @new_from_wizard_cmd.large_icon = Plugin.dir + "/lib/resources/icons/OSNew-24.png"
+      @new_from_wizard_cmd.tooltip = "New OpenStudio Model From Wizard"
+      @new_from_wizard_cmd.status_bar_text = "Create a new OpenStudio model from a wizard"
+      @new_from_wizard_cmd.set_validation_proc { enable_if_model_interface }
         
       @open_cmd = UI::Command.new("Open OpenStudio Model") { Plugin.command_manager.open_openstudio }
       @open_cmd.small_icon = Plugin.dir + "/lib/resources/icons/OSOpen-16.png"
@@ -787,7 +787,7 @@ module OpenStudio
       # Add the file menu
       @file_menu = @plugin_menu.add_submenu("File")
       @file_menu.add_item(@new_cmd)
-      @file_menu.add_item(@new_from_template_cmd)
+      @file_menu.add_item(@new_from_wizard_cmd)
       @file_menu.add_item(@open_cmd)
       @file_menu.add_item(@save_cmd)
       @file_menu.add_item(@save_as_cmd)
@@ -944,7 +944,8 @@ module OpenStudio
       # Add the OpenStudio command toolbar
 
       @command_toolbar = UI::Toolbar.new("OpenStudio Tools")
-      @command_toolbar.add_item(@new_from_template_cmd)
+      @command_toolbar.add_item(@new_cmd) 
+      #@command_toolbar.add_item(@new_from_wizard_cmd)
       @command_toolbar.add_item(@open_cmd)
       @command_toolbar.add_item(@save_cmd)
       @command_toolbar.add_item(@save_as_cmd)

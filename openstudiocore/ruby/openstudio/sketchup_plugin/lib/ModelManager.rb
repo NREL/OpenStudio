@@ -91,14 +91,14 @@ module OpenStudio
           if result == 6 # YES
             if not Plugin.command_manager.open_openstudio
               # not sure when this would get triggered
-              new_from_template(skp_model)
+              new_from_path(skp_model, Plugin.minimal_template_path)
             end
           else
-            new_from_template(skp_model)
+            new_from_path(skp_model, Plugin.minimal_template_path)
           end
         end
       else
-        new_from_template(skp_model)
+        new_from_path(skp_model, Plugin.minimal_template_path)
       end
     end    
     
@@ -116,40 +116,35 @@ module OpenStudio
 
     end
     
-    # this method cannot fail
-    def new_from_template(skp_model)
+    # this method cannot fail, if path cannot be loaded then will fall back on Plugin.minimal_template_path
+    def new_from_path(skp_model, path)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
 
       success = false
-      path = Plugin.default_template_path
       
       if not path.nil? and not path.empty?
         @dont_zoom = true
         success = open_openstudio(path, skp_model, false, false)
-        Plugin.log(OpenStudio::Debug, "new_from_template: #{path}, #{success}")
+        Plugin.log(OpenStudio::Debug, "new_from_path: #{path}, #{success}")
         @dont_zoom = false
       end
 
       if not success
-        
-        # default template path is bad, erase it here
-        #UI.messagebox("Default template path #{path} is not valid, it will be reset")
-        Plugin.write_pref("Default Template Path", Plugin.minimal_template_path)
-              
+        # user path is bad, reset to minimal template
         path = Plugin.minimal_template_path
         @dont_zoom = true
         success = open_openstudio(path, skp_model, false, false)
-        Plugin.log(OpenStudio::Debug, "new_from_template: #{path}, #{success}")
+        Plugin.log(OpenStudio::Debug, "new_from_path: #{path}, #{success}")
         @dont_zoom = false
       end
       
       if not success
         
-        # minimal template path is bad, erase it here
+        # minimal template path is bad
         UI.messagebox("Minimal template path #{path} is not valid, your OpenStudio installation has been corrupted, please reinstall.")
         
-        Plugin.log(OpenStudio::Fatal, "new_from_template: failed to load openstudio model from template at #{path}")
-        raise "new_from_template: failed to load openstudio model from template at #{path}"
+        Plugin.log(OpenStudio::Fatal, "new_from_path: failed to load openstudio model from template at #{path}")
+        raise "new_from_path: failed to load openstudio model from template at #{path}"
       end
     end
 

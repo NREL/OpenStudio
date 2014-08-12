@@ -29,41 +29,32 @@ module OpenStudio
       # Should this just be a Mixin?  or module?
     end
 
+    # this method starts a new OpenStudio Model from the minimal template with no user input
     def new_openstudio
       if (prompt_to_continue_open)
 
-        # store starting render mode
-        starting_render_mode = Plugin.model_manager.model_interface.materials_interface.rendering_mode
-
-        # always load empty model vs. default template
-        path = "#{Plugin.default_template_dir}/empty.osm"
-        Plugin.model_manager.open_openstudio(path, Sketchup.active_model, false, false)
-
-        # switch to render back to starting render mode
-        Plugin.model_manager.model_interface.materials_interface.rendering_mode = starting_render_mode
-
-        # code to run on demand user script when loading new file
-        Plugin.user_script_runner.run_user_script("Space Type and Construction Set Wizard")
+        # load minimal template
+        Plugin.model_manager.open_openstudio(Plugin.minimal_template_path, Sketchup.active_model, false, false)
 
       end
     end
     
-    def new_openstudio_from_template
+    # this method starts a new OpenStudio Model from the empty template and then requests user input from a wizard
+    def new_openstudio_from_wizard
       if (prompt_to_continue_open)
-        default_template_dir = Plugin.default_template_dir
-        if (path = UI.open_panel("New OpenStudio Model From Template", default_template_dir, "*.osm"))  # bug in SU7 prevents file filters from working
-
-          success = Plugin.model_manager.open_openstudio(path, Sketchup.active_model, false, false)
+      
+        # load empty model 
+        Plugin.model_manager.open_openstudio(Plugin.empty_template_path, Sketchup.active_model, false, false)
+        model_interface = Plugin.model_manager.model_interface
+        model_interface.materials_interface.rendering_mode = RenderByClass
+        
+        # run on demand user script on new file
+        if not Plugin.user_script_runner.run_user_script("Space Type and Construction Set Wizard") 
           
-          if success and (not Plugin.default_template_path or Plugin.default_template_path.empty?)
-            result = UI.messagebox("Would you like to set this file as your default OpenStudio template model?", MB_YESNO)
-
-            if result == 6 # YES
-              Plugin.write_pref("Default Template Path", path)
-            end 
-
-          end
+          # if user cancels or measure fails open the minimal template instead
+          Plugin.model_manager.open_openstudio(Plugin.minimal_template_path, Sketchup.active_model, false, false)
         end
+        
       end
     end
     
@@ -181,28 +172,6 @@ module OpenStudio
       end
       
       return result
-    end
-    
-    def select_default_template
-      default_template_dir = Plugin.default_template_dir
-      if (path = UI.open_panel("Select Default OpenStudio Template", default_template_dir, "*.osm"))  # bug in SU7 prevents file filters from working
-        
-        idf = nil
-        if $OPENSTUDIO_SKETCHUPPLUGIN_PROGRESS_DIALOGS
-          progress_dialog = ProgressDialog.new("Verifying OpenStudio Model")
-          idf = OpenStudio::IdfFile::load(OpenStudio::Path.new(path), "OpenStudio".to_IddFileType, progress_dialog)
-          progress_dialog.destroy
-        else
-          idf = OpenStudio::IdfFile::load(OpenStudio::Path.new(path), "OpenStudio".to_IddFileType)
-        end
-        
-        if not idf.empty? and idf.get.isValid("Draft".to_StrictnessLevel)
-          # only keep if good
-          Plugin.write_pref("Default Template Path", path)
-        else
-          UI.messagebox("Failed to import OpenStudio model from #{path}")
-        end
-      end
     end
     
     def import_openstudio

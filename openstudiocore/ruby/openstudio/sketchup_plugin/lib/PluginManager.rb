@@ -392,10 +392,7 @@ module OpenStudio
       elsif (platform == Platform_Mac)
         hash['Text Editor Path'] = "/Applications/TextEdit.app"
       end
-      
-      # decided to have user pick this at first launch
-      # hash['Default Template Path'] = Plugin.dir + "/resources/templates/MinimalTemplate.osm"
-        
+
       return(hash)
     end
     
@@ -405,7 +402,6 @@ module OpenStudio
       write_pref("New Zone for Space", nil)
       write_pref("Disable OpenStudio User Scripts", nil)
       write_pref("Unit System", nil)   
-      write_pref("Default Template Path", nil)
       write_pref("Erase Entities", nil)
       write_pref("Last Construction Sets Import Dir", nil)
       write_pref("Last Constructions Import Dir", nil)
@@ -443,18 +439,9 @@ module OpenStudio
     def minimal_template_path
       return(Plugin.dir + "/resources/templates/MinimalTemplate.osm")
     end
-
-    def default_template_path
-      return(read_pref("Default Template Path"))
-    end
     
-    def default_template_dir
-      result = Plugin.dir + "/resources/templates/"
-      path = default_template_path
-      if path and not path.empty?
-        result = File.dirname(path)
-      end
-      return(result)
+    def empty_template_path
+      return(Plugin.dir + "/resources/templates/empty.osm")
     end
     
     def log_dir

@@ -77,6 +77,8 @@ module OpenStudio
           end
           if argument.type.valueName == "Choice"
             list << argument.choiceValueDisplayNames.join("|")
+          elsif argument.type.valueName == "Boolean"
+            list << "true|false"
           else
             list << String.new
           end
@@ -282,6 +284,9 @@ module OpenStudio
       # discover user scripts in dir
       dirs = Dir.glob(current_directory + '/*/')
       dirs.each do |dir|
+        next if /resource[s]?/i.match(dir)
+        next if /test[s]?/i.match(dir)
+        
         menu = current_menu.add_submenu(File.basename(dir))
         discover_user_script_directory(dir, menu)
       end 
@@ -312,7 +317,7 @@ module OpenStudio
       return @user_scripts 
     end
     
-    # run a user script
+    # run a user script, returns true if script runs with no errors
     def run_user_script(name)
     
       user_script = nil
@@ -324,7 +329,7 @@ module OpenStudio
       end
       
       if not user_script
-        return
+        return false
       end
       
       model_interface = Plugin.model_manager.model_interface
@@ -430,6 +435,8 @@ module OpenStudio
 
       # resume event processing
       Plugin.start_event_processing if event_processing_stopped
+      
+      return (not has_errors)
     end
     
     # create a progress bar
