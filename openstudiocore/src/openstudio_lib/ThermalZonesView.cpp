@@ -48,7 +48,7 @@ ThermalZonesView::ThermalZonesView(bool isIP, const model::Model & model,
   isConnected = connect(itemSelector(), SIGNAL(selectionCleared()), inspectorView(), SIGNAL(selectionCleared()));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(itemSelector(), SIGNAL(gridRowSelected(OSItem*)), inspectorView(), SIGNAL(gridRowSelected(OSItem*)));
+  isConnected = connect(inspectorView(), SIGNAL(gridRowSelected(OSItem*)), itemSelector(), SIGNAL(gridRowSelected(OSItem*)));
   OS_ASSERT(isConnected);
 }
 
@@ -72,7 +72,7 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
   isConnected = connect(this, SIGNAL(selectionCleared()), thermalZonesGridView, SIGNAL(selectionCleared()));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(gridRowSelected(OSItem*)), thermalZonesGridView, SIGNAL(gridRowSelected(OSItem*)));
+  isConnected = connect(thermalZonesGridView, SIGNAL(gridRowSelected(OSItem*)), this, SIGNAL(gridRowSelected(OSItem*)));
   OS_ASSERT(isConnected);
 
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), this, SLOT(onToggleUnitsClicked(bool)));
