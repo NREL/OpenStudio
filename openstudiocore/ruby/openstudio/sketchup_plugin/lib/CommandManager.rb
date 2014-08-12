@@ -50,9 +50,9 @@ module OpenStudio
         
         # run on demand user script on new file
         if not Plugin.user_script_runner.run_user_script("Space Type and Construction Set Wizard") 
-          
-          # if user cancels or measure fails open the minimal template instead
-          Plugin.model_manager.open_openstudio(Plugin.minimal_template_path, Sketchup.active_model, false, false)
+          # user canceled or measure fails open the minimal template instead
+          # warn user that they have an empty model
+          UI.messagebox("Space Type and Construction Set Wizard failed to run, model is currently empty.", MB_OK)
         end
         
       end

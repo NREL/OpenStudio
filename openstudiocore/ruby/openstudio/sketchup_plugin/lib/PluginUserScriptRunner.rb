@@ -346,6 +346,7 @@ module OpenStudio
       error_msg = ""
       has_errors = false
       has_warnings = false
+      was_canceled = true
     
       # open ruby console to show any errors
       #Sketchup.send_action("showRubyPanel:")
@@ -364,6 +365,8 @@ module OpenStudio
       
       # canceling passes back empty map
       if arguments.size == narg
+      
+        was_canceled = false
 
         begin
 
@@ -436,7 +439,7 @@ module OpenStudio
       # resume event processing
       Plugin.start_event_processing if event_processing_stopped
       
-      return (not has_errors)
+      return ((not was_canceled) and (not has_errors))
     end
     
     # create a progress bar
