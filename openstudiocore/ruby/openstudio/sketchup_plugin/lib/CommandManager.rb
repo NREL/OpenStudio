@@ -45,15 +45,17 @@ module OpenStudio
       
         # load empty model 
         Plugin.model_manager.open_openstudio(Plugin.empty_template_path, Sketchup.active_model, false, false)
-        model_interface = Plugin.model_manager.model_interface
-        model_interface.materials_interface.rendering_mode = RenderByClass
-        
-        # run on demand user script on new file
-        if not Plugin.user_script_runner.run_user_script("Space Type and Construction Set Wizard") 
-          # user canceled or measure fails open the minimal template instead
-          # warn user that they have an empty model
-          UI.messagebox("Space Type and Construction Set Wizard failed to run, model is currently empty.", MB_OK)
-        end
+
+        # run user script in future process so SketchUp entities are made for each color
+        proc = Proc.new { 
+          # run on demand user script on new file
+          if not Plugin.user_script_runner.run_user_script("Space Type and Construction Set Wizard") 
+            # user canceled or measure fails open the minimal template instead
+            # warn user that they have an empty model
+            UI.messagebox("Space Type and Construction Set Wizard failed to run, model is currently empty.", MB_OK)
+          end
+        }
+        Plugin.add_event( proc )
         
       end
     end
