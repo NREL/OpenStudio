@@ -425,6 +425,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
   OS_ASSERT(static_cast<int>(m_baseConcepts.size()) > column);
 
   QWidget * widget = nullptr;
+  auto layout = new QVBoxLayout();
 
   if(m_hasHorizontalHeader && row == 0){
     if(column == 0){
@@ -433,6 +434,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
       OS_ASSERT(m_horizontalHeader.size() == m_baseConcepts.size());
     }
     widget = m_horizontalHeader.at(column);
+    layout->addWidget(widget,0,Qt::AlignTop | Qt::AlignCenter);
   } else {
 
     model::ModelObject mo = m_modelObjects[modelObjectRow];
@@ -449,7 +451,6 @@ QWidget * OSGridController::widgetAt(int row, int column)
       // The spacing around the list is a little awkward. The padding might need to be set to 0
       // all the way around.
 
-      auto layout = new QVBoxLayout();
 
       // we have a data source that provides multiple rows.
       // This should be working and doing what you want
@@ -480,13 +481,12 @@ QWidget * OSGridController::widgetAt(int row, int column)
       // to know how you'd want to do that. For now we make a fixed list that's got a VBoxLayout
       //
       // And think about this.
-      widget = new QWidget();
-      widget->setLayout(layout);
     } else {
       // This case is exactly what it used to do before the DataSource idea was added.
 
       // just the one
       widget = makeWidget(mo, baseConcept);
+      layout->addWidget(widget,0,Qt::AlignTop | Qt::AlignCenter);
     }
   }
 
@@ -504,14 +504,12 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
   wrapper->setStyleSheet(this->cellStyle(row,column,false));
 
-  auto layout = new QVBoxLayout();
   layout->setSpacing(0);
   if(row == 0){
     layout->setContentsMargins(0,0,0,0);
   } else {
     layout->setContentsMargins(5,5,5,5);
   }
-  layout->addWidget(widget,0,Qt::AlignTop | Qt::AlignCenter);
   wrapper->setLayout(layout);
 
   return wrapper;
