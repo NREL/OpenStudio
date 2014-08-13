@@ -1592,14 +1592,14 @@ namespace sdd {
     }
 
     if (spacesWithoutStory.size() > 0){
-      spacesWithoutStory.pop_back();
+      spacesWithoutStory.erase(spacesWithoutStory.size()-1);
       LOG(Warn, "Model contains spaces which are not assigned to a building story, these have not been translated:" << spacesWithoutStory);
     }
 
     if (spacesWithoutZone.size() > 0){
       // DLM: desired workflow is to assign thermal zones in cbecc
       //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
-      //spacesWithoutZone.pop_back();
+      //spacesWithoutZone.erase(spacesWithoutZone.size()-1);
       //LOG(Warn, "Model contains spaces which are not assigned to a thermal zone, these have not been translated:" << spacesWithoutZone);
     }
 
@@ -1614,7 +1614,7 @@ namespace sdd {
     }
 
     if (surfacesWithoutSpace.size() > 0){
-      surfacesWithoutSpace.pop_back();
+      surfacesWithoutSpace.erase(surfacesWithoutSpace.size()-1);
       LOG(Warn, "Model contains surfaces which are not assigned to a space, these have not been translated:" << surfacesWithoutSpace);
     }
 
@@ -1629,7 +1629,7 @@ namespace sdd {
     }
 
     if (subSurfacesWithoutSurface.size() > 0){
-      subSurfacesWithoutSurface.pop_back();
+      subSurfacesWithoutSurface.erase(subSurfacesWithoutSurface.size()-1);
       LOG(Warn, "Model contains sub surfaces which are not assigned to a surface, these have not been translated:" << subSurfacesWithoutSurface);
     }
 
