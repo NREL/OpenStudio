@@ -298,12 +298,17 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
     } else if (field == SPACEINFILTRATIONDESIGNFLOWRATES) {
       std::function<boost::optional<model::SpaceInfiltrationDesignFlowRate> (model::SpaceType *)>  getter;
       std::function<bool (model::SpaceType *, const model::SpaceInfiltrationDesignFlowRate &)> setter;
+      std::function<std::vector<model::SpaceInfiltrationDesignFlowRate> (const model::SpaceType &)> flowRates(
+        [](const model::SpaceType &s) {
+          return s.spaceInfiltrationDesignFlowRates();
+        }
+      );
 
       addNameLineEditColumn(QString(LOADNAME),
         CastNullAdapter<model::SpaceInfiltrationDesignFlowRate>(&model::SpaceInfiltrationDesignFlowRate::name),
         CastNullAdapter<model::SpaceInfiltrationDesignFlowRate>(&model::SpaceInfiltrationDesignFlowRate::setName),
         DataSource(
-          std::function<std::vector<model::SpaceInfiltrationDesignFlowRate> (const model::SpaceType &)>(&model::SpaceType::spaceInfiltrationDesignFlowRates),
+          flowRates,
           true,
           QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::SpaceInfiltrationDesignFlowRate, model::SpaceType>("Space Infiltration", 
              getter, setter))
