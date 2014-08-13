@@ -30,6 +30,7 @@
 
 #include "../openstudio_lib/ModelObjectItem.hpp"
 #include "../openstudio_lib/OSDropZone.hpp"
+#include "../openstudio_lib/RenderingColorWidget.hpp"
 #include "../openstudio_lib/SchedulesView.hpp"
 
 #include "../model/Model_Impl.hpp"
@@ -367,6 +368,16 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
     OS_ASSERT(isConnected);
 
     widget = dropZone;
+
+  } else if (QSharedPointer<RenderingColorConcept> renderingColorConcept = t_baseConcept.dynamicCast<RenderingColorConcept>()) {
+    auto * renderingColorWidget = new RenderingColorWidget2();
+
+    renderingColorWidget->bind(t_mo,
+      OptionalModelObjectGetter(std::bind(&RenderingColorConcept::get, renderingColorConcept.data(), t_mo)),
+      ModelObjectSetter(std::bind(&RenderingColorConcept::set, renderingColorConcept.data(), t_mo, std::placeholders::_1)));
+
+    widget = renderingColorWidget;
+
   } else {
     // Unknown type
     OS_ASSERT(false);

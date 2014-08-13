@@ -52,6 +52,8 @@
 #include "../model/OtherEquipment_Impl.hpp"
 #include "../model/People.hpp"
 #include "../model/People_Impl.hpp"
+#include "../model/RenderingColor.hpp"
+#include "../model/RenderingColor_Impl.hpp"
 #include "../model/SpaceInfiltrationDesignFlowRate.hpp"
 #include "../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
 #include "../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
@@ -168,7 +170,7 @@ void SpaceTypesGridController::setCategoriesAndFields()
 
   {
     std::vector<QString> fields;
-    //fields.push_back(RENDERINGCOLOR); // Colored Button
+    fields.push_back(RENDERINGCOLOR);
     fields.push_back(DEFAULTCONSTRUCTIONSET);
     fields.push_back(DEFAULTSCHEDULESET);
     fields.push_back(DESIGNSPECIFICATIONOUTDOORAIR);
@@ -287,6 +289,11 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
       addDropZoneColumn(QString(DESIGNSPECIFICATIONOUTDOORAIR),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::designSpecificationOutdoorAir),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::setDesignSpecificationOutdoorAir));
+
+    } else if (field == RENDERINGCOLOR){
+      addRenderingColorColumn(QString(RENDERINGCOLOR),
+        CastNullAdapter<model::SpaceType>(&model::SpaceType::renderingColor),
+        CastNullAdapter<model::SpaceType>(&model::SpaceType::setRenderingColor));    
 
     } else {
       // unhandled

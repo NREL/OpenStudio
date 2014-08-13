@@ -1315,6 +1315,77 @@ class DropZoneConceptImpl : public DropZoneConcept
 };
 
 
+///////////////////////////////////////////////////////////////////////////////////
+
+class RenderingColorConcept : public BaseConcept
+{
+public:
+
+  RenderingColorConcept(QString t_headingLabel)
+    : BaseConcept(t_headingLabel)
+  {
+  }
+
+  virtual ~RenderingColorConcept() {}
+
+  virtual boost::optional<model::ModelObject> get(const ConceptProxy & obj) = 0;
+  virtual bool set(const ConceptProxy & obj, const model::ModelObject &) = 0;
+};
+
+template<typename ValueType, typename DataSourceType>
+class RenderingColorConceptImpl : public RenderingColorConcept
+{
+public:
+
+  RenderingColorConceptImpl(QString t_headingLabel,
+    std::function<boost::optional<ValueType>(DataSourceType *)>  t_getter,
+    std::function<bool(DataSourceType *, const ValueType &)> t_setter)
+    : RenderingColorConcept(t_headingLabel),
+    m_getter(t_getter),
+    m_setter(t_setter)
+  {
+  }
+
+  virtual ~RenderingColorConceptImpl() {}
+
+  virtual boost::optional<model::ModelObject> get(const ConceptProxy & obj)
+  {
+    if (boost::optional<ValueType> result = getImpl(obj)) {
+      return result->template optionalCast<model::ModelObject>();
+    }
+    else {
+      return boost::optional<model::ModelObject>();
+    }
+  }
+
+  virtual bool set(const ConceptProxy & obj, const model::ModelObject & value)
+  {
+    if (boost::optional<ValueType> mo = value.optionalCast<ValueType>()) {
+      return setImpl(obj, mo.get());
+    }
+    else {
+      return false;
+    }
+  }
+
+  virtual boost::optional<ValueType> getImpl(const ConceptProxy & t_obj)
+  {
+    DataSourceType obj = t_obj.cast<DataSourceType>();
+    return boost::optional<ValueType>(m_getter(&obj));
+  }
+
+  virtual bool setImpl(const ConceptProxy & t_obj, const ValueType & t_value)
+  {
+    DataSourceType obj = t_obj.cast<DataSourceType>();
+    return m_setter(&obj, t_value);
+  }
+
+private:
+
+  std::function<boost::optional<ValueType>(DataSourceType *)>  m_getter;
+  std::function<bool(DataSourceType *, const ValueType &)> m_setter;
+};
+
 } // openstudio
 
 #endif // SHAREDGUICOMPONENTS_OSCONCEPTS_HPP
