@@ -944,8 +944,8 @@ module OpenStudio
       # Add the OpenStudio command toolbar
 
       @command_toolbar = UI::Toolbar.new("OpenStudio Tools")
-      @command_toolbar.add_item(@new_cmd) 
-      #@command_toolbar.add_item(@new_from_wizard_cmd)
+      #@command_toolbar.add_item(@new_cmd)
+      @command_toolbar.add_item(@new_from_wizard_cmd)
       @command_toolbar.add_item(@open_cmd)
       @command_toolbar.add_item(@save_cmd)
       @command_toolbar.add_item(@save_as_cmd)
