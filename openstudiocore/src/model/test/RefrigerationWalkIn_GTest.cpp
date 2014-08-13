@@ -39,8 +39,8 @@ TEST_F(ModelFixture, RefrigerationWalkIn_DefaultConstructor)
   ASSERT_EXIT ( 
   {  
     Model model;
-	ScheduleCompact wds(model);
-	RefrigerationWalkIn testObject = RefrigerationWalkIn(model, wds);
+    ScheduleCompact wds(model);
+    RefrigerationWalkIn testObject = RefrigerationWalkIn(model, wds);
 
     exit(0); 
   } ,

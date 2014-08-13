@@ -32,7 +32,7 @@ namespace openstudio {
     bool checksumIgnore(char c) 
     { 
       // ignore all whitespace
-      //bool result = (c == ' ' || c == '\t' || c == '\n' ||  c == '\v'	|| c == '\f' || c == '\r');
+      //bool result = (c == ' ' || c == '\t' || c == '\n' ||  c == '\v' || c == '\f' || c == '\r');
 
       // ignore just line feed
       bool result = (c == '\r');

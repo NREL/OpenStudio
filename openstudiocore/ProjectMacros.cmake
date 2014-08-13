@@ -407,7 +407,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     #")
   endif()
 
-  execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\")
+  execute_process(COMMAND ${CMAKE_COMMAND} -E copy "${resolved_item_var}" "${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/")
 
   # add this target to a "global" variable so ruby tests can require these
   list(APPEND ALL_RUBY_BINDING_TARGETS "${swig_target}")
@@ -963,7 +963,16 @@ function(QT5_WRAP_CPP_MINIMALLY outfiles)
   # Remove Boost and possibly other include directories
   get_directory_property(_inc_DIRS INCLUDE_DIRECTORIES)
   set(_orig_DIRS ${_inc_DIRS})
-  if(UNIX)
+  if(APPLE)
+    if(NOT ${target_name} STREQUAL "zkqwt")
+      foreach(_current ${_inc_DIRS})
+        if(NOT "${_current}" MATCHES "[Qq][Tt]5")
+          list(REMOVE_ITEM _inc_DIRS "${_current}")
+        endif()
+      endforeach()
+      set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/src;${CMAKE_BINARY_DIR}/src;${_inc_DIRS}")
+    endif()
+  elseif(UNIX)
     foreach(_current ${_inc_DIRS})
       if(NOT "${_current}" MATCHES "[Qq][Tt]5")
         list(REMOVE_ITEM _inc_DIRS "${_current}")

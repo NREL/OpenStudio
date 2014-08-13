@@ -48,26 +48,23 @@ ModelObjectTreeWidget::ModelObjectTreeWidget(const model::Model& model, QWidget*
   
   m_vLayout->addWidget(m_treeWidget);
 
-  bool isConnected = false;
-  isConnected = connect(model.getImpl<model::detail::Model_Impl>().get(), 
-                        SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        this,
-                        SLOT(objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        Qt::QueuedConnection);
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(model.getImpl<model::detail::Model_Impl>().get(), 
-                        SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        this,
-                        SLOT(objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        Qt::QueuedConnection);
-  OS_ASSERT(isConnected);
+  connect(model.getImpl<model::detail::Model_Impl>().get(), 
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
+    this,
+    &ModelObjectTreeWidget::objectAdded,
+    Qt::QueuedConnection);
+  
+  connect(model.getImpl<model::detail::Model_Impl>().get(), 
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
+    this,
+    &ModelObjectTreeWidget::objectRemoved,
+    Qt::QueuedConnection);
 }
 
 OSItem* ModelObjectTreeWidget::selectedItem() const
 {
   // todo: something
-  return NULL;
+  return nullptr;
 }
 
 QTreeWidget* ModelObjectTreeWidget::treeWidget() const

@@ -37,7 +37,7 @@ namespace runmanager {
       ui.cbToolType->addItem(toQString(ToolType::valueDescription(value)));
     }
 
-    connect(ui.btnToolLocationBrowse, SIGNAL(clicked()), this, SLOT(localBrowse()));
+    connect(ui.btnToolLocationBrowse, &QToolButton::clicked, this, &AddTool::localBrowse);
   }
 
   AddTool::~AddTool()

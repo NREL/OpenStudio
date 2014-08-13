@@ -744,7 +744,7 @@ TEST_F(IdfFixture, Handle_QVariant)
 {
   Handle handle = createUUID();
   QVariant variant = QVariant::fromValue(handle);
-  EXPECT_EQ("openstudio::UUID", std::string(variant.typeName()));
+  EXPECT_EQ("QUuid", std::string(variant.typeName()));
   ASSERT_TRUE(variant.canConvert<Handle>());
   Handle handle2 = variant.value<Handle>();
   EXPECT_TRUE(handle == handle2);

@@ -149,24 +149,11 @@ ModelObjectTreeItem::ModelObjectTreeItem(const openstudio::model::ModelObject& m
   this->setText(0, toQString(modelObject.name().get()));
   this->setStyle(0, "");
 
-  bool isConnected = false;
-  isConnected = connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(),
-                        SIGNAL(onNameChange()),
-                        this, 
-                        SLOT(changeName()));
-  OS_ASSERT(isConnected);
+  connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onNameChange, this, &ModelObjectTreeItem::changeName);
    
-  isConnected = connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(),
-                        SIGNAL(onChange()),
-                        this, 
-                        SLOT(change()));
-  OS_ASSERT(isConnected);
+  connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onChange, this, &ModelObjectTreeItem::change);
 
-  isConnected = connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(),
-                        SIGNAL(onRelationshipChange(int, Handle, Handle)),
-                        this, 
-                        SLOT(changeRelationship(int, Handle, Handle)));
-  OS_ASSERT(isConnected);
+  connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onRelationshipChange, this, &ModelObjectTreeItem::changeRelationship);
 }
 
 ModelObjectTreeItem::ModelObjectTreeItem(const std::string& name, const openstudio::model::Model& model, QTreeWidgetItem* parent)

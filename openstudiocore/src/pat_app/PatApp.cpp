@@ -112,8 +112,7 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
     m_cloudDialog(nullptr),
     m_measureManager(t_argumentGetter, this)
 {
-  bool isConnected = connect(this,SIGNAL(userMeasuresDirChanged()),&m_measureManager,SLOT(updateMeasuresLists()));
-  OS_ASSERT(isConnected);
+  connect(this, &PatApp::userMeasuresDirChanged, &m_measureManager, &MeasureManager::updateMeasuresLists);
 
   setOrganizationName("NREL");
   setOrganizationDomain("nrel.gov");
@@ -146,9 +145,7 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
 
   m_cloudMonitor = QSharedPointer<CloudMonitor>(new CloudMonitor());
 
-  isConnected = connect(m_cloudMonitor.data(),SIGNAL(cloudStatusChanged(const CloudStatus &)),
-                        this,SLOT(onCloudStatusChanged(const CloudStatus &)));
-  OS_ASSERT(isConnected);
+  connect(m_cloudMonitor.data(), &CloudMonitor::cloudStatusChanged, this, &PatApp::onCloudStatusChanged);
 
   mainWindow = new PatMainWindow();
 
@@ -203,56 +200,39 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
                                          ":images/tab_results_done.png",
                                          false );
 
-  isConnected = connect(mainWindow->verticalTabWidget,SIGNAL(tabSelected(int)),this,SLOT(showVerticalTab(int)));
-  OS_ASSERT(isConnected);
+  connect(mainWindow->verticalTabWidget, &PatVerticalTabWidget::tabSelected, this, &PatApp::showVerticalTab);
 
-  isConnected = connect(mainWindow, SIGNAL(loadFileClicked()), this, SLOT(open()));
-  OS_ASSERT(isConnected);
+  connect(mainWindow.data(), &PatMainWindow::loadFileClicked, this, &PatApp::open);
 
-  isConnected = connect(mainWindow, SIGNAL(newClicked()), this, SLOT(create()));
-  OS_ASSERT(isConnected);
+  connect(mainWindow.data(), &PatMainWindow::newClicked, this, &PatApp::create);
 
-  isConnected = connect(mainWindow, SIGNAL(exitClicked()),this,SLOT(quit()));
-  OS_ASSERT(isConnected);
+  connect(mainWindow.data(), &PatMainWindow::exitClicked, this, &PatApp::quit);
 
-  isConnected = connect(mainWindow, SIGNAL(openBclDlgClicked()),this,SLOT(openBclDlg()));
-  OS_ASSERT(isConnected);
+  connect(mainWindow.data(), &PatMainWindow::openBclDlgClicked, this, &PatApp::openBclDlg);
 
-  isConnected = connect(mainWindow, SIGNAL(openCloudDlgClicked()),this,SLOT(openCloudDlg()));
-  OS_ASSERT(isConnected);
+  connect(mainWindow.data(), &PatMainWindow::openCloudDlgClicked, this, &PatApp::openCloudDlg);
 
-  isConnected = connect(mainWindow, SIGNAL(openMonitorUseDlgClicked()),this,SLOT(openMonitorUseDlg()));
-  OS_ASSERT(isConnected);
+  connect(mainWindow.data(), &PatMainWindow::openMonitorUseDlgClicked, this, &PatApp::openMonitorUseDlg);
 
-  isConnected = connect(mainWindow, SIGNAL(helpClicked()),this,SLOT(showHelp()));
-  OS_ASSERT(isConnected);
+  connect(mainWindow.data(), &PatMainWindow::helpClicked, this, &PatApp::showHelp);
 
-  isConnected = connect(mainWindow, SIGNAL(aboutClicked()),this,SLOT(showAbout()));
-  OS_ASSERT(isConnected);
+  connect(mainWindow.data(), &PatMainWindow::aboutClicked, this, &PatApp::showAbout);
 
-  isConnected = connect(mainWindow, SIGNAL(saveAsFileClicked()), this, SLOT(saveAs()));
-  OS_ASSERT(isConnected);
+  connect(mainWindow.data(), &PatMainWindow::saveAsFileClicked, this, &PatApp::saveAs);
 
-  isConnected = connect(mainWindow, SIGNAL(saveFileClicked()), this, SLOT(save()));
-  OS_ASSERT(isConnected);
+  connect(mainWindow.data(), &PatMainWindow::saveFileClicked, this, &PatApp::save);
 
-  isConnected = connect(mainWindow, SIGNAL(clearAllResultsClicked()), this, SLOT(clearAllResults()));
-  OS_ASSERT(isConnected);
+  connect(mainWindow.data(), &PatMainWindow::clearAllResultsClicked, this, &PatApp::clearAllResults);
 
-  isConnected = connect(mainWindow, SIGNAL(exportXmlClicked()), this, SLOT(exportXml()));
-  OS_ASSERT(isConnected);
+  connect(mainWindow.data(), &PatMainWindow::exportXmlClicked, this, &PatApp::exportXml);
 
-  isConnected = connect(mainWindow, SIGNAL(exportSpreadsheetClicked()), this, SLOT(exportSpreadsheet()));
-  OS_ASSERT(isConnected);
+  connect(mainWindow.data(), &PatMainWindow::exportSpreadsheetClicked, this, &PatApp::exportSpreadsheet);
 
-  isConnected = connect(mainWindow, SIGNAL(scanForToolsClicked()), this, SLOT(scanForTools()));
-  OS_ASSERT(isConnected);
+  connect(mainWindow.data(), &PatMainWindow::scanForToolsClicked, this, &PatApp::scanForTools);
 
-  isConnected = connect(mainWindow, SIGNAL(showToolsClicked()), this, SLOT(showTools()));
-  OS_ASSERT(isConnected);
+  connect(mainWindow.data(), &PatMainWindow::showToolsClicked, this, &PatApp::showTools);
 
-  isConnected = connect(mainWindow, SIGNAL(changeMeasuresClicked()), this, SLOT(changeUserMeasuresDir()));
-  OS_ASSERT(isConnected);
+  connect(mainWindow.data(), &PatMainWindow::changeMeasuresClicked, this, &PatApp::changeUserMeasuresDir);
 
   mainWindow->show();
 
@@ -620,9 +600,7 @@ void PatApp::openBclDlg()
     std::string filterType = "measures";
     m_onlineBclDialog = new BuildingComponentDialog(filterType, true, mainWindow);
 
-    bool isConnected = connect(m_onlineBclDialog, SIGNAL(rejected()),
-                          this, SLOT(on_closeBclDlg()));
-    OS_ASSERT(isConnected);
+    connect(m_onlineBclDialog.data(), &BuildingComponentDialog::rejected, this, &PatApp::on_closeBclDlg);
   }
   if(m_onlineBclDialog && !m_onlineBclDialog->isVisible()){
     m_onlineBclDialog->setGeometry(mainWindow->geometry());
@@ -654,9 +632,7 @@ void PatApp::openCloudDlg()
   if(!m_cloudDialog){
     m_cloudDialog = new CloudDialog();
 
-    bool isConnected = connect(m_cloudDialog, SIGNAL(rejected()),
-                               this, SLOT(on_closeBclDlg()));
-    OS_ASSERT(isConnected);
+    connect(m_cloudDialog.data(), &CloudDialog::rejected, this, &PatApp::on_closeBclDlg);
   }
   if(m_cloudDialog && !m_cloudDialog->isVisible()){
     m_cloudDialog->show();
@@ -673,9 +649,7 @@ void PatApp::openMonitorUseDlg()
   if(!m_monitorUseDialog){
     m_monitorUseDialog = new MonitorUseDialog();
 
-    bool isConnected = connect(m_monitorUseDialog, SIGNAL(rejected()),
-                               this, SLOT(on_closeMonitorUseDlg()));
-    OS_ASSERT(isConnected);
+    connect(m_monitorUseDialog.data(), &MonitorUseDialog::rejected, this, &PatApp::on_closeMonitorUseDlg);
   }
   if(m_monitorUseDialog && !m_monitorUseDialog->isVisible()){
     m_monitorUseDialog->show();
@@ -1434,9 +1408,7 @@ void PatApp::attachProject(boost::optional<analysisdriver::SimpleProject> projec
     isConnected = analysis.connect(SIGNAL(seedChanged()), this, SLOT(analysisSeedChanged()));
     OS_ASSERT(isConnected);
 
-    isConnected = connect(m_project->getImpl().get(),SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)),
-                          this,SLOT(onAnalysisStatusChanged(analysisdriver::AnalysisStatus)));
-    OS_ASSERT(isConnected);
+    connect(m_project->getImpl().get(), &analysisdriver::detail::SimpleProject_Impl::analysisStatusChanged, this, &PatApp::onAnalysisStatusChanged);
 
     m_cloudMonitor->reconnectCloud();
 
@@ -1809,8 +1781,7 @@ NewProjectDialog::NewProjectDialog(QWidget * parent)
 
   m_projectNameLineEdit = new QLineEdit();
   m_okButton->setEnabled(false);
-  bool bingo = connect(m_projectNameLineEdit,SIGNAL(textChanged(const QString &)),this,SLOT(enableOkButton()));
-  OS_ASSERT(bingo);
+  connect(m_projectNameLineEdit, &QLineEdit::textChanged, this, &NewProjectDialog::enableOkButton);
 
   QRegExp regExp("^([a-zA-Z0-9 ]+[-]?[_]?)*$");
   m_projectNameLineEdit->setValidator( new QRegExpValidator(regExp, this) );

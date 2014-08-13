@@ -42,8 +42,7 @@ namespace detail {
     : ParentObject_Impl(idfObject, model, keepHandle)
   {
     // connect signals
-    bool connected = connect(this, SIGNAL(onChange()), this, SLOT(clearCachedVariables()));
-    OS_ASSERT(connected);
+    connect(this, &PlanarSurfaceGroup_Impl::onChange, this, &PlanarSurfaceGroup_Impl::clearCachedVariables);
   }
 
   PlanarSurfaceGroup_Impl::PlanarSurfaceGroup_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -52,8 +51,7 @@ namespace detail {
     : ParentObject_Impl(other,model,keepHandle)
   {
     // connect signals
-    bool connected = connect(this, SIGNAL(onChange()), this, SLOT(clearCachedVariables()));
-    OS_ASSERT(connected);
+    connect(this, &PlanarSurfaceGroup_Impl::onChange, this, &PlanarSurfaceGroup_Impl::clearCachedVariables);
   }
 
   PlanarSurfaceGroup_Impl::PlanarSurfaceGroup_Impl(const PlanarSurfaceGroup_Impl& other,
@@ -62,8 +60,7 @@ namespace detail {
     : ParentObject_Impl(other,model,keepHandle)
   {
     // connect signals
-    bool connected = connect(this, SIGNAL(onChange()), this, SLOT(clearCachedVariables()));
-    OS_ASSERT(connected);
+    connect(this, &PlanarSurfaceGroup_Impl::onChange, this, &PlanarSurfaceGroup_Impl::clearCachedVariables);
   }
 
   openstudio::Transformation PlanarSurfaceGroup_Impl::transformation() const

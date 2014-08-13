@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang=en-us>
+<head>
+<meta charset="utf-8">
+<title>Commercial Buildings Research - OpenStudio Documentation</title>
+<link href="model/html/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="container">
+  <ul class="list-unstyled">
+    <li><a href="http://www.nrel.gov/buildings/">Buildings Research Home</a></li>
+    <li><a href="http://apps1.eere.energy.gov/buildings/energyplus/">DOE EnergyPlus Site</a></li>
+    <li><a href="http://apps1.eere.energy.gov/buildings/energyplus/openstudio_suite.cfm">DOE OpenStudio Site</a></li>
+    <li><a href="http://apps1.eere.energy.gov/buildings/energyplus/openstudio.cfm">DOE Legacy OpenStudio Site</a></li>
+    <li><a href="http://apps1.eere.energy.gov/buildings/energyplus/resultsviewer.cfm">DOE ResultsViewer Site</a></li>
+  </ul>
+  <h1>OpenStudio Platform Documentation</h1>
+  <h2>OpenStudio SDK Documentation</h2>
+  <p>The components of the OpenStudio SDK are documented for use by internal and external
+    interface developers. The C++ Documentation is the primary source for information
+    about the classes and methods available in the OpenStudio SDK.  The Ruby
+    Documentation details name changes or other differences between the C++ interface
+    and the Ruby interface.</p>
+  <table class="table table-striped">
+    <tr>
+      <th>Component</th>
+      <th>Description</th>
+      <th>C++ Documentation</th>
+      <th>Ruby Documentation</th>
+    </tr>
+    <tr>
+      <td>Utilities</td>
+      <td>Utility functionality used throughout the OpenStudio C++ SDK. Includes parsers for Idf and Idd file formats.</td>
+      <td><a href="utilities/html/index.html">utilities</a><br/>
+        <a href="utilities_idd/html/index.html">utilities/idd</a></td>
+      <td><a href="../ruby/rdocify/OpenStudioUtilities/doc/index.html">OpenStudio Utilities</a><br/>
+        <a href="../ruby/rdocify/OpenStudioUtilitiesBCL/doc/index.html">OpenStudio BCL Utilities</a><br/>
+        <a href="../ruby/rdocify/OpenStudioUtilitiesCore/doc/index.html">OpenStudio Core Utilities</a><br/>
+        <a href="../ruby/rdocify/OpenStudioUtilitiesData/doc/index.html">OpenStudio Data Utilities</a><br/>
+        <a href="../ruby/rdocify/OpenStudioUtilitiesDocument/doc/index.html">OpenStudio Document Utilities</a><br/>
+        <a href="../ruby/rdocify/OpenStudioUtilitiesEconomics/doc/index.html">OpenStudio Economics Utilities</a><br/>
+        <a href="../ruby/rdocify/OpenStudioUtilitiesFileTypes/doc/index.html">OpenStudio FileTypes Utilities</a><br/>
+        <a href="../ruby/rdocify/OpenStudioUtilitiesGeometry/doc/index.html">OpenStudio Geometry Utilities</a><br/>
+        <a href="../ruby/rdocify/OpenStudioUtilitiesIdd/doc/index.html">OpenStudio Idd Utilities</a><br/>
+        <a href="../ruby/rdocify/OpenStudioUtilitiesIdf/doc/index.html">OpenStudio Idf Utilities</a><br/>
+        <a href="../ruby/rdocify/OpenStudioUtilitiesPlot/doc/index.html">OpenStudio Plot Utilities (deprecated)</a><br/>
+        <a href="../ruby/rdocify/OpenStudioUtilitiesSql/doc/index.html">OpenStudio Sql Utilities</a><br/>
+        <a href="../ruby/rdocify/OpenStudioUtilitiesTime/doc/index.html">OpenStudio Time Utilities</a><br/>
+        <a href="../ruby/rdocify/OpenStudioUtilitiesUnits/doc/index.html">OpenStudio Units Utilities</a></td>
+    </tr>
+    <tr>
+      <td>Building Modeler</td>
+      <td>The OpenStudio Building Model.</td>
+      <td><a href="model/html/index.html">model</a></td>
+      <td><a href="../ruby/rdocify/OpenStudioModel/doc/index.html">OpenStudio::Model</a><br/>
+        <a href="../ruby/rdocify/OpenStudioModelCore/doc/index.html">OpenStudio::Model (Core)</a><br/>
+        <a href="../ruby/rdocify/OpenStudioModelSimulation/doc/index.html">OpenStudio::Model (Simulation)</a><br/>
+        <a href="../ruby/rdocify/OpenStudioModelResources/doc/index.html">OpenStudio::Model (Resources)</a><br/>
+        <a href="../ruby/rdocify/OpenStudioModelGeometry/doc/index.html">OpenStudio::Model (Geometry)</a><br/>
+        <a href="../ruby/rdocify/OpenStudioModelHVAC/doc/index.html">OpenStudio::Model (HVAC)</a></td>
+    </tr>
+    <tr>
+      <td>Version Translator</td>
+      <td>Backwards compatibility for OpenStudio Model and Component.</td>
+      <td><a href="osversion/html/index.html">osversion</a></td>
+      <td><a href="../ruby/rdocify/OpenStudioOSVersion/doc/index.html">OpenStudio::OSVersion</a></td>
+    </tr>
+    <tr>
+      <td>EnergyPlus Manager</td>
+      <td>Translators to and from EnergyPlus.</td>
+      <td><a href="energyplus/html/index.html">energyplus</a></td>
+      <td><a href="../ruby/rdocify/OpenStudioEnergyPlus/doc/index.html">OpenStudio::EnergyPlus</a></td>
+    </tr>
+    <tr>
+      <td>Radiance Manager</td>
+      <td>Translators to and from Radiance.</td>
+      <td><a href="radiance/html/index.html">radiance</a></td>
+      <td><a href="../ruby/rdocify/OpenStudioRadiance/doc/index.html">OpenStudio::Radiance</a></td>
+    </tr>
+    <tr>
+      <td>Building Analyzer: Ruleset</td>
+      <td>Electronic representation of measures for changing or analyzing buildng energy models</td>
+      <td><a href="ruleset/html/index.html">ruleset</a></td>
+      <td><a href="../ruby/rdocify/OpenStudioRuleset/doc/index.html">OpenStudio::Ruleset</a></td>
+    </tr>
+    <tr>
+      <td>Run Manager</td>
+      <td>Simulation workflow and run management functionality.</td>
+      <td><a href="runmanager_lib/html/index.html">runmanager</a></td>
+      <td><a href="../ruby/rdocify/OpenStudioRunManager/doc/index.html">OpenStudio::Runmanager</a></td>
+    </tr>
+    <tr>
+      <td>Building Analyzer: Analysis Framework</td>
+      <td>Perturbation, optimization, and uncertainty handling of OpenStudio Building Models.</td>
+      <td><a href="analysis/html/index.html">analysis</a></td>
+      <td><a href="../ruby/rdocify/OpenStudioAnalysis/doc/index.html">OpenStudio::Analysis</a></td>
+    </tr>
+    <tr>
+      <td>Project Manager</td>
+      <td>Management of multiple OpenStudio Building Models associated with a single project.</td>
+      <td><a href="project/html/index.html">project</a></td>
+      <td><a href="../ruby/rdocify/OpenStudioProject/doc/index.html">OpenStudio::Project</a></td>
+    </tr>
+    <tr>
+      <td>Analysis Manager</td>
+      <td>Management of applying analysis::Algorithms to analysis::Problems, with data
+        persistence to a project database. </td>
+      <td><a href="analysisdriver/html/index.html">analysisdriver</a></td>
+      <td><a href="../ruby/rdocify/OpenStudioAnalysisDriver/doc/index.html">OpenStudio::AnalysisDriver</a></td>
+    </tr>
+    <tr>
+      <td>Translator: gbXML</td>
+      <td>Import of gbXML models into OpenStudio</td>
+      <td><a href="gbxml/html/index.html">gbxml</a></td>
+      <td><a href="../ruby/rdocify/OpenStudioGBXML/doc/index.html">OpenStudio::GbXML</a></td>
+    </tr>
+    <tr>
+      <td>Translator: SDD</td>
+      <td>Import and export of SDD models</td>
+      <td><a href="sdd/html/index.html">sdd</a></td>
+      <td><a href="../ruby/rdocify/OpenStudioSDD/doc/index.html">OpenStudio::SDD</a></td>
+    </tr>
+    <tr>
+      <td>OpenStudio Application Components</td>
+      <td>Library of Qt Widgets and related code that is used to build up the OpenStudio Application</td>
+      <td><a href="openstudio_lib/html/index.html">openstudio_lib</a><br/>
+        <a href="model_editor/html/index.html">model_editor</a></td>
+      <td><a href="../ruby/rdocify/OpenStudioLib/doc/index.html">OpenStudio::Openstudiolib</a><br/>
+        <a href="../ruby/rdocify/OpenStudioModelEditor/doc/index.html">OpenStudio::Modeleditor</a></td>
+    </tr>
+  </table>
+  <h2>OpenStudio Application Documentation for Developers</h2>
+  <table class="table table-striped">
+    <tr>
+      <th>Application</th>
+      <th>Description</th>
+      <th>Documentation</th>
+    </tr>
+    <tr>
+      <td>OpenStudio Plug-in for SketchUp</td>
+      <td>Programmers guide to the OpenStudio Plug-in for SketchUp</td>
+      <td><a href="../ruby/rdocify/OpenStudio/doc/index.html">OpenStudio::Plugin</a><br/>
+        <a href="plugin/html/index.html">plugin</a></td>
+    </tr>
+    <tr>
+      <td>OpenStudio Application</td>
+      <td>Building energy modeling and analysis interface for one model</td>
+      <td><a href="openstudio_app/html/index.html">openstudio_app</a></td>
+    </tr>
+    <tr>
+      <td>ParametricAnalysisTool</td>
+      <td>Create, run, and compare design alternatives</td>
+      <td><a href="pat_app/html/index.html">pat_app</a></td>
+    </tr>
+    <tr>
+      <td>ResultsViewer</td>
+      <td>Browse and plot EnergyPlus Sqlite time series data</td>
+      <td><a href="resultsviewer/html/index.html">resultsviewer</a></td>
+    </tr>
+    <tr>
+      <td>RunManager</td>
+      <td>Run and monitor multiple simulation workflows</td>
+      <td><a href="runmanager_app/html/index.html">runmanager_app</a></td>
+    </tr>
+  </table>
+</div>
+</body>
+</html>

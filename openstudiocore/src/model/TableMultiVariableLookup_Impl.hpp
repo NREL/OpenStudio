@@ -256,7 +256,7 @@ namespace detail {
     int numVariables() const;
 
     /** Return all of the x values for independent variable i
-      * in asscending order.
+      * in ascending order.
       *
       * The independent variables are indexed from 0.
       */

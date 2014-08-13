@@ -62,10 +62,7 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   m_gridLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
   auto buttonGroup = new QButtonGroup();
-  bool isConnected = false;
-  isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)),
-    this, SLOT(selectCategory(int)));
-  OS_ASSERT(isConnected);
+  connect(buttonGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &OSGridView::selectCategory);
 
   auto buttonLayout = new QHBoxLayout();
   buttonLayout->setSpacing(3);
@@ -81,9 +78,7 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
 #endif
   dropZone->setMaxItems(1);
 
-  isConnected = connect(dropZone,SIGNAL(itemDropped(const OSItemId&)),
-    m_gridController,SLOT(onItemDropped(const OSItemId&)));
-  OS_ASSERT(isConnected);
+  connect(dropZone, &OSDropZone::itemDropped, m_gridController, &OSGridController::onItemDropped);
 
   buttonLayout->addWidget(dropZone,0,Qt::AlignLeft);
 
@@ -152,19 +147,13 @@ void OSGridView::setGridController(OSGridController * gridController)
 
   m_gridController->setParent(this);
 
-  bool isConnected = false;
+  connect(m_gridController, &OSGridController::itemInserted, this, &OSGridView::addWidget);
 
-  isConnected = connect(m_gridController,SIGNAL(itemInserted(int,int)),this,SLOT(addWidget(int,int)));
-  OS_ASSERT(isConnected);
+  connect(m_gridController, &OSGridController::itemRemoved, this, &OSGridView::removeWidget);
 
-  isConnected = connect(m_gridController,SIGNAL(itemRemoved(int,int)),this,SLOT(removeWidget(int,int)));
-  OS_ASSERT(isConnected);
+  connect(m_gridController, &OSGridController::itemChanged, this, &OSGridView::refresh);
 
-  isConnected = connect(m_gridController,SIGNAL(itemChanged(int,int)),this,SLOT(refresh(int,int)));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(m_gridController,SIGNAL(modelReset()),this,SLOT(refreshAll()));
-  OS_ASSERT(isConnected);
+  connect(m_gridController, &OSGridController::modelReset, this, &OSGridView::refreshAll);
 
   refreshAll();
 }

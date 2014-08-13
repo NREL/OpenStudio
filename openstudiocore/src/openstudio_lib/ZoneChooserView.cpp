@@ -197,10 +197,9 @@ ZoneChooserItem::ZoneChooserItem(model::ThermalZone & zone, ZoneChooserView * pa
   
   m_checkBox->setText(toQString(zone.name().get()));
 
-  connect( m_checkBox, SIGNAL(clicked(bool)), this, SLOT(sendClickedSignal(bool)) );
-  connect( this, SIGNAL(addZoneClicked(model::ThermalZone &)), m_zoneChooserView,SIGNAL(addZoneClicked(model::ThermalZone &)) );
-  connect( this, SIGNAL(removeZoneClicked(model::ThermalZone &)), m_zoneChooserView,SIGNAL(removeZoneClicked(model::ThermalZone &)) );
-
+  connect(m_checkBox, &QCheckBox::clicked, this, &ZoneChooserItem::sendClickedSignal);
+  connect(this, &ZoneChooserItem::addZoneClicked, m_zoneChooserView, &ZoneChooserView::addZoneClicked);
+  connect(this, &ZoneChooserItem::removeZoneClicked, m_zoneChooserView, &ZoneChooserView::removeZoneClicked);
   hLayout->addWidget(m_checkBox);
 
   setLayout(hLayout);

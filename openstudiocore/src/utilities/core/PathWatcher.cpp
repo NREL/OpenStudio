@@ -45,14 +45,12 @@ namespace openstudio {
         LOG_FREE_AND_THROW("openstudio.PathWatcher", "Directory '" << openstudio::toString(p) << "' does not exist, cannot be watched");
       }
 
-      bool connected = this->connect(m_impl.get(), SIGNAL(directoryChanged(const QString&)), SLOT(directoryChanged(const QString&)));
-      OS_ASSERT(connected);
+      connect(m_impl.get(), &QFileSystemWatcher::directoryChanged, this, &PathWatcher::directoryChanged);
       m_impl->addPath(openstudio::toQString(p));
 
     }else{
       m_timer = std::shared_ptr<QTimer>(new QTimer());
-      bool connected = this->connect(m_timer.get(), SIGNAL(timeout()), SLOT(checkFile()));
-      OS_ASSERT(connected);
+      connect(m_timer.get(), &QTimer::timeout, this, &PathWatcher::checkFile);
       m_timer->start(m_msec);
 
       // DLM: do not use QFileSystemWatcher to watch individual files, was acting glitchy

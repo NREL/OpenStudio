@@ -38,7 +38,7 @@ TEST_F(ModelFixture,EvaporativeCoolerDirectResearchSpecial_EvaporativeCoolerDire
   {
     Model m;
     Schedule s = m.alwaysOnDiscreteSchedule();
-  	EvaporativeCoolerDirectResearchSpecial testObject(m,s);
+    EvaporativeCoolerDirectResearchSpecial testObject(m,s);
 
     exit(0); 
   } ,

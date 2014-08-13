@@ -48,8 +48,7 @@ void OSQObjectController::addQObject(QObject * object)
 {
   m_objects.push_back(object);
 
-  bool isConnected = connect(object,SIGNAL(destroyed(QObject *)),this,SLOT(onObjectDestroyed(QObject *)));
-  OS_ASSERT(isConnected);
+  connect(object, &QObject::destroyed, this, &OSQObjectController::onObjectDestroyed);
 }
 
 void OSQObjectController::onObjectDestroyed(QObject * object)

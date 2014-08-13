@@ -134,121 +134,98 @@ void EditorFrame::setModels()
 
 void EditorFrame::createActions()
 {
-  bool connected = false;
 
   mNewIdkAction = new QAction(QIcon(":/images/new.png"), tr("New OSM"), this);
   //mNewIdkAction->setShortcuts(QKeySequence::New);
   mNewIdkAction->setStatusTip(tr("Create a new OSM file"));
-  connected = connect(mNewIdkAction, SIGNAL(triggered()), this, SLOT(newIdk()));
-  OS_ASSERT(connected);
+  connect(mNewIdkAction, &QAction::triggered, this, &EditorFrame::newIdk);
 
   mOpenIdkAction = new QAction(QIcon(":/images/open.png"), tr("Open OSM..."), this);
   //mOpenIdkAction->setShortcuts(QKeySequence::Open);
   mOpenIdkAction->setStatusTip(tr("Open an existing OSM file"));
-  connected = connect(mOpenIdkAction, SIGNAL(triggered()), this, SLOT(openIdk()));
-  OS_ASSERT(connected);
+  connect(mOpenIdkAction, &QAction::triggered, this, &EditorFrame::openIdk);
 
   mSaveIdkAction = new QAction(QIcon(":/images/save.png"), tr("Save OSM"), this);
   //mSaveIdkAction->setShortcuts(QKeySequence::Save);
   mSaveIdkAction->setStatusTip(tr("Save the OSM document to disk"));
-  connected = connect(mSaveIdkAction, SIGNAL(triggered()), this, SLOT(saveIdk()));
-  OS_ASSERT(connected);
+  connect(mSaveIdkAction, &QAction::triggered, this, &EditorFrame::saveIdk);
 
   mSaveIdkAsAction = new QAction(tr("Save OSM As..."), this);
   //mSaveIdkAsAction->setShortcuts(QKeySequence::SaveAs);
   mSaveIdkAsAction->setStatusTip(tr("Save the OSM document under a new name"));
-  connected = connect(mSaveIdkAsAction, SIGNAL(triggered()), this, SLOT(saveIdkAs()));
-  OS_ASSERT(connected);
+  connect(mSaveIdkAsAction, &QAction::triggered, this, &EditorFrame::saveIdkAs);
 
   mImportIdfAction = new QAction(QIcon(":/images/me-import.png"), tr("Import IDF..."), this);
   //mImportIdfAction->setShortcuts(QKeySequence::Open);
   mImportIdfAction->setStatusTip(tr("Open an existing file"));
-  connected = connect(mImportIdfAction, SIGNAL(triggered()), this, SLOT(importIdf()));
-  OS_ASSERT(connected);
+  connect(mImportIdfAction, &QAction::triggered, this, &EditorFrame::importIdf);
 
   mExportIdfAction = new QAction(QIcon(":/images/me-export.png"), tr("Export IDF"), this);
   //mExportIdfAction->setShortcuts(QKeySequence::Save);
   mExportIdfAction->setStatusTip(tr("Save the IDF document to disk"));
-  connected = connect(mExportIdfAction, SIGNAL(triggered()), this, SLOT(exportIdf()));
-  OS_ASSERT(connected);
+  connect(mExportIdfAction, &QAction::triggered, this, &EditorFrame::exportIdf);
 
   mExitAction = new QAction(tr("E&xit"), this);
   mExitAction->setShortcuts(QKeySequence::Quit);
   mExitAction->setStatusTip(tr("Exit the application"));
-  connected = connect(mExitAction, SIGNAL(triggered()), this, SLOT(close()));
-  OS_ASSERT(connected);
+  connect(mExitAction, &QAction::triggered, this, &EditorFrame::close);
 
   mCopyAction = new QAction(QIcon(":/images/copy.png"), tr("&Copy"), this);
   mCopyAction->setShortcuts(QKeySequence::Copy);
   mCopyAction->setStatusTip(tr("Copy the current selection's contents to the clipboard"));
-  connected = connect(mCopyAction, SIGNAL(triggered()), this, SLOT(copyObjects()));
-  OS_ASSERT(connected);
+  connect(mCopyAction, &QAction::triggered, this, &EditorFrame::copyObjects);
 
   mPasteAction = new QAction(QIcon(":/images/paste.png"), tr("&Paste"), this);
   mPasteAction->setShortcuts(QKeySequence::Paste);
   mPasteAction->setStatusTip(tr("Paste the clipboard's contents into the current selection"));
-  connected = connect(mPasteAction, SIGNAL(triggered()), this, SLOT(pasteObjects()));
-  OS_ASSERT(connected);
+  connect(mPasteAction, &QAction::triggered, this, &EditorFrame::pasteObjects);
 
   mAboutAction = new QAction(tr("&About"), this);
   mAboutAction->setStatusTip(tr("Show About"));
-  connected = connect(mAboutAction, SIGNAL(triggered()), this, SLOT(about()));
-  OS_ASSERT(connected);
+  connect(mAboutAction, &QAction::triggered, this, &EditorFrame::about);
 
   mExpandAllNodesAction = new QAction(tr("&Expand All Nodes"), this);
   mExpandAllNodesAction->setStatusTip(tr("Expand All Tree View Nodes"));
-  connected = connect(mExpandAllNodesAction, SIGNAL(triggered()), this, SLOT(expandAllNodes()));
-  OS_ASSERT(connected);
+  connect(mExpandAllNodesAction, &QAction::triggered, this, &EditorFrame::expandAllNodes);
 
   mToggleGUIDsAction = new QAction(QIcon(":/images/number_off.png"), tr("Toggle GUIDs"), this);
   mToggleGUIDsAction->setStatusTip(tr("Toggle to show or hide model name GUIDs"));
-  connected = connect(mToggleGUIDsAction, SIGNAL(triggered()), mModelExplorer, SLOT(toggleGUIDs()));
-  OS_ASSERT(connected);
-  connected = connect(mToggleGUIDsAction, SIGNAL(triggered()), this, SLOT(on_toggleGUIDs()));
-  OS_ASSERT(connected);
+  connect(mToggleGUIDsAction, &QAction::triggered, mModelExplorer, &ModelExplorer::toggleGUIDs);
+  connect(mToggleGUIDsAction, &QAction::triggered, this, &EditorFrame::on_toggleGUIDs);
 
   mToggleCommentsAction = new QAction(QIcon(":/images/comment_off.png"), tr("Toggle comments"), this);
   mToggleCommentsAction->setCheckable(true);
   mToggleCommentsAction->setStatusTip(tr("Toggle to show or hide model object comments"));
-  connected = connect(mToggleCommentsAction, SIGNAL(triggered()), this, SLOT(on_toggleComments()));
-  OS_ASSERT(connected);
+  connect(mToggleCommentsAction, &QAction::triggered, this, &EditorFrame::on_toggleComments);
 
   mShowAllFields = new QAction(tr("Show all Fields"),this);
   mShowAllFields->setCheckable(true);
   mShowAllFields->setChecked(true);
-  connected = connect(mShowAllFields,SIGNAL(triggered(bool)),mModelExplorer,SLOT(showAllFields(bool)));
-  OS_ASSERT(connected);
+  connect(mShowAllFields, &QAction::triggered, mModelExplorer, &ModelExplorer::showAllFields);
     
   mCreateAllFields = new QAction(tr("Create all Fields"),this);
-  connected = connect(mCreateAllFields,SIGNAL(triggered()),mModelExplorer,SLOT(createAllFields()));
-  OS_ASSERT(connected);
+  connect(mCreateAllFields, &QAction::triggered, mModelExplorer, &ModelExplorer::createAllFields);
 
   mIGRecursive = new QAction(tr("Apply preferences to children objects"), this);
   mIGRecursive->setCheckable(true);
-  connect(mIGRecursive,SIGNAL(triggered(bool)),mModelExplorer,SLOT(setRecursive(bool)));
-  
-
+  connect(mIGRecursive, &QAction::triggered, mModelExplorer, &ModelExplorer::setRecursive);
   mTogglePrecisionAction = new QAction(QIcon(":/images/precision_off.png"), tr("Display precision panel"), this);
   mTogglePrecisionAction->setStatusTip(tr("Toggle to show or hide high precision data"));
-  connected = connect(mTogglePrecisionAction, SIGNAL(triggered()), this, SLOT(on_togglePrecision()));
-  OS_ASSERT(connected);
+  connect(mTogglePrecisionAction, &QAction::triggered, this, &EditorFrame::on_togglePrecision);
 
   mToggleUnitsAction = new QAction(QIcon(":/images/precision_off.png"), tr("Display precision panel"), this);
   mTogglePrecisionAction->setStatusTip(tr("Toggle to show or hide high precision data"));
-  connected = connect(mTogglePrecisionAction, SIGNAL(triggered()), this, SLOT(on_toggleUnits()));
-  OS_ASSERT(connected);
+  connect(mTogglePrecisionAction, &QAction::triggered, this, &EditorFrame::on_toggleUnits);
 
   mAddAction = new QAction(QIcon(":/images/edit_add.png"), tr("&Add"), this);
   mAddAction->setShortcuts(QKeySequence::New);
   mAddAction->setStatusTip(tr("Add an object"));
-  connected = connect(mAddAction, SIGNAL(triggered()), this, SLOT(addObjects()));
-  OS_ASSERT(connected);
+  connect(mAddAction, &QAction::triggered, this, &EditorFrame::addObjects);
   
   mRemoveAction = new QAction(QIcon(":/images/edit_remove.png"), tr("&Remove"), this);
   mRemoveAction->setShortcuts(QKeySequence::Delete);
   mRemoveAction->setStatusTip(tr("Remove an object"));
-  connected = connect(mRemoveAction, SIGNAL(triggered()), this, SLOT(removeObjects()));
-  OS_ASSERT(connected);
+  connect(mRemoveAction, &QAction::triggered, this, &EditorFrame::removeObjects);
 }
 
 void EditorFrame::createMenus()
@@ -278,8 +255,7 @@ void EditorFrame::createMenus()
 
   mContextMenu = new QMenu(this);
   ///! Use context menu signal to inform addObject() the text of the action clicked
-  bool connected = connect(mContextMenu, SIGNAL(triggered(QAction *)), this, SLOT(addObject(QAction *)));
-  OS_ASSERT(connected);
+  connect(mContextMenu, &QMenu::triggered, this, &EditorFrame::addObject);
 }
 
 void EditorFrame::createToolBars()
@@ -321,23 +297,14 @@ void EditorFrame::createStatusBar()
 
 void EditorFrame::connectSignalsAndSlots()
 {
-  bool connected = false;
 
-  connected = connect(mModelExplorer,SIGNAL(modelDirty()),
-    this,SLOT(on_modelDirty()));
-  OS_ASSERT(connected);
+  connect(mModelExplorer, &ModelExplorer::modelDirty, this, &EditorFrame::on_modelDirty);
 
-  connected = connect(mModelExplorer,SIGNAL(showStatusBarMsg(const QString&, const int)),
-    this,SLOT(on_showStatusBarMsg(const QString&, const int)));
-  OS_ASSERT(connected);
+  connect(mModelExplorer, &ModelExplorer::showStatusBarMsg, this, &EditorFrame::on_showStatusBarMsg);
 
-  connected = connect(mModelExplorer,SIGNAL(precisionDlgHidden()),
-    this,SLOT(on_precisionDlgHidden()));
-  OS_ASSERT(connected);
+  connect(mModelExplorer, &ModelExplorer::precisionDlgHidden, this, &EditorFrame::on_precisionDlgHidden);
 
-  connected = connect(mModelExplorer,SIGNAL(precisionDlgFinished()),
-    this,SLOT(on_precisionDlgFinished()));
-  OS_ASSERT(connected);
+  connect(mModelExplorer, &ModelExplorer::precisionDlgFinished, this, &EditorFrame::on_precisionDlgFinished);
 }
 
 void EditorFrame::createLayout()

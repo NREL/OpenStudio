@@ -30,13 +30,9 @@ HVACSystemsTabController::HVACSystemsTabController(bool isIP, const model::Model
 {
   m_hvacSystemsController = std::shared_ptr<HVACSystemsController>(new HVACSystemsController(isIP, model));
 
-  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                             m_hvacSystemsController.get(), SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &HVACSystemsTabController::toggleUnitsClicked, m_hvacSystemsController.get(), &HVACSystemsController::toggleUnitsClicked);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        this, SLOT(toggleUnits(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &HVACSystemsTabController::toggleUnitsClicked, this, &HVACSystemsTabController::toggleUnits);
 
   this->mainContentWidget()->addTabWidget(m_hvacSystemsController->hvacSystemsView());
 }

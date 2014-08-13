@@ -79,6 +79,7 @@
 #include "../model/ThermostatSetpointDualSetpoint.hpp"
 
 #include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/Geometry.hpp"
 #include "../utilities/units/QuantityConverter.hpp"
 #include "../utilities/units/IPUnit.hpp"
 #include "../utilities/units/SIUnit.hpp"
@@ -917,10 +918,10 @@ namespace sdd {
     //***** Elevator Loads *****
     {
       //<ElevPwr>20000</ElevPwr> 
-			//<ElevSchRef>OfficeElevator</ElevSchRef>
-			//<ElevRadFrac>0</ElevRadFrac>
-			//<ElevLatFrac>0</ElevLatFrac>
-			//<ElevLostFrac>0.8</ElevLostFrac>
+      //<ElevSchRef>OfficeElevator</ElevSchRef>
+      //<ElevRadFrac>0</ElevRadFrac>
+      //<ElevLatFrac>0</ElevLatFrac>
+      //<ElevLostFrac>0.8</ElevLostFrac>
 
       QDomElement elevPwrElement = element.firstChildElement("ElevPwr");
       QDomElement elevSchRefElement = element.firstChildElement("ElevSchRef");
@@ -962,11 +963,11 @@ namespace sdd {
 
     //***** Escalator Loads *****
     {
-			//<EscalPwr>7860</EscalPwr>
-			//<EscalSchRef>OfficeEscalator Sch</EscalSchRef>
-			//<EscalRadFrac>0</EscalRadFrac>
-			//<EscalLatFrac>0</EscalLatFrac>
-			//<EscalLostFrac>0.2</EscalLostFrac>
+      //<EscalPwr>7860</EscalPwr>
+      //<EscalSchRef>OfficeEscalator Sch</EscalSchRef>
+      //<EscalRadFrac>0</EscalRadFrac>
+      //<EscalLatFrac>0</EscalLatFrac>
+      //<EscalLostFrac>0.2</EscalLostFrac>
 
       QDomElement escalPwrElement = element.firstChildElement("EscalPwr");
       QDomElement escalSchRefElement = element.firstChildElement("EscalSchRef");
@@ -1579,12 +1580,57 @@ namespace sdd {
     // issue warning if any spaces not assigned to building story
     std::vector<model::Space> spaces = building.model().getConcreteModelObjects<model::Space>();
     std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
-
+    std::string spacesWithoutStory;
+    std::string spacesWithoutZone;
     for (const model::Space& space : spaces){
       if (!space.buildingStory()){
-        LOG(Warn, "Model contains spaces which are not assigned to a building story, these have not been translated.");
-        break;
+        spacesWithoutStory += " '" + space.name().get() + "',";
       }
+      if (!space.thermalZone()){
+        spacesWithoutZone += " '" + space.name().get() + "',";
+      }
+    }
+
+    if (spacesWithoutStory.size() > 0){
+      spacesWithoutStory.pop_back();
+      LOG(Warn, "Model contains spaces which are not assigned to a building story, these have not been translated:" << spacesWithoutStory);
+    }
+
+    if (spacesWithoutZone.size() > 0){
+      // DLM: desired workflow is to assign thermal zones in cbecc
+      //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
+      //spacesWithoutZone.pop_back();
+      //LOG(Warn, "Model contains spaces which are not assigned to a thermal zone, these have not been translated:" << spacesWithoutZone);
+    }
+
+    // issue warning if any surfaces not assigned to space
+    std::vector<model::Surface> surfaces = building.model().getConcreteModelObjects<model::Surface>();
+    std::sort(surfaces.begin(), surfaces.end(), WorkspaceObjectNameLess());
+    std::string surfacesWithoutSpace;
+    for (const model::Surface& surface : surfaces){
+      if (!surface.space()){
+        surfacesWithoutSpace += " '" + surface.name().get() + "',";
+      }
+    }
+
+    if (surfacesWithoutSpace.size() > 0){
+      surfacesWithoutSpace.pop_back();
+      LOG(Warn, "Model contains surfaces which are not assigned to a space, these have not been translated:" << surfacesWithoutSpace);
+    }
+
+    // issue warning if any sub surfaces not assigned to surface
+    std::vector<model::SubSurface> subSurfaces = building.model().getConcreteModelObjects<model::SubSurface>();
+    std::sort(subSurfaces.begin(), subSurfaces.end(), WorkspaceObjectNameLess());
+    std::string subSurfacesWithoutSurface;
+    for (const model::SubSurface& subSurface : subSurfaces){
+      if (!subSurface.surface()){
+        subSurfacesWithoutSurface += " '" + subSurface.name().get() + "',";
+      }
+    }
+
+    if (subSurfacesWithoutSurface.size() > 0){
+      subSurfacesWithoutSurface.pop_back();
+      LOG(Warn, "Model contains sub surfaces which are not assigned to a surface, these have not been translated:" << subSurfacesWithoutSurface);
     }
 
     // translate thermal zones
@@ -1662,6 +1708,11 @@ namespace sdd {
     result.appendChild(volumeElement);
     volumeElement.appendChild(doc.createTextNode(QString::number(volumeIP->value())));
 
+    // log warning if volume is 0
+    if (volumeIP->value() < std::numeric_limits<double>::epsilon()){
+      LOG(Warn, "Space '" << name << "' has zero volume.");
+    }
+
     // floorArea
     double floorArea = space.floorArea();
     Quantity floorAreaSI(floorArea, SIUnit(SIExpnt(0,2,0)));
@@ -1672,10 +1723,30 @@ namespace sdd {
     result.appendChild(floorAreaElement);
     floorAreaElement.appendChild(doc.createTextNode(QString::number(floorAreaIP->value())));
 
+    // log warning if area is 0
+    if (floorAreaIP->value() < std::numeric_limits<double>::epsilon()){
+      LOG(Warn, "Space '" << name << "' has zero floor area.");
+    }
+
     // translate floorPrint
     Transformation transformation = space.siteTransformation();
    
     Point3dVector vertices = transformation*space.floorPrint();
+    boost::optional<double> floorPrintArea = openstudio::getArea(vertices);
+    if (vertices.empty() || !floorPrintArea){
+      LOG(Warn, "Cannot compute floor print for space '" << name << "'.");
+    }else{
+      Quantity floorPrintAreaSI(*floorPrintArea, SIUnit(SIExpnt(0, 2, 0)));
+      OptionalQuantity floorPrintAreaIP = QuantityConverter::instance().convert(floorPrintAreaSI, ipSys);
+      OS_ASSERT(floorPrintAreaIP);
+      OS_ASSERT(floorPrintAreaIP->units() == IPUnit(IPExpnt(0, 2, 0)));
+
+      // log warning if floor print area is 0
+      if (floorPrintAreaIP->value() < std::numeric_limits<double>::epsilon()){
+        LOG(Warn, "Space '" << name << "' has zero floor print area.");
+      }
+    }
+
     QDomElement polyLoopElement = doc.createElement("PolyLp");
     result.appendChild(polyLoopElement);
     for (const Point3d& vertex : vertices){
@@ -1723,11 +1794,33 @@ namespace sdd {
     std::vector<model::Surface> surfaces = space.surfaces();
     std::sort(surfaces.begin(), surfaces.end(), WorkspaceObjectNameLess());
 
+    unsigned numFloors = 0;
+    unsigned numWalls = 0;
+    unsigned numRoofCeilings = 0;
     for (const model::Surface& surface : surfaces){
+      std::string surfaceType = surface.surfaceType();
+      if (istringEqual("Wall", surfaceType)){
+        ++numWalls;
+      } else if (istringEqual("RoofCeiling", surfaceType)){
+        ++numRoofCeilings;
+      } else if (istringEqual("Floor", surfaceType)){
+        ++numFloors;
+      }
+
       boost::optional<QDomElement> surfaceElement = translateSurface(surface, transformation, doc);
       if (surfaceElement){
         result.appendChild(*surfaceElement);
       }
+    }
+
+    if (numFloors < 1){
+      LOG(Warn, "Space '" << name << "' has less than 1 floor surfaces.")
+    }
+    if (numWalls < 3){
+      LOG(Warn, "Space '" << name << "' has less than 3 wall surfaces.")
+    }
+    if (numRoofCeilings < 1){
+      LOG(Warn, "Space '" << name << "' has less than 1 roof or ceiling surfaces.")
     }
 
     return result;
@@ -1817,7 +1910,8 @@ namespace sdd {
         result->appendChild(constructionReferenceElement);
         constructionReferenceElement.appendChild(doc.createTextNode(escapeName(constructionName)));
       }else{
-        LOG(Error, "Surface '" << name << "' uses construction '" << constructionName << "' which has not been translated");
+        //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
+        //LOG(Error, "Surface '" << name << "' uses construction '" << constructionName << "' which has not been translated");
       }
     }
 
@@ -1835,13 +1929,13 @@ namespace sdd {
           result->appendChild(perimExposedElement);
           perimExposedElement.appendChild(doc.createTextNode(QString::number(perimeterExposedIP)));
         }else{
-          LOG(Error, "Cannot compute exposed perimeter for surface '" << name << "'.");
+          //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
+          //LOG(Error, "Cannot compute exposed perimeter for surface '" << name << "'.");
         }
       }else{
-        LOG(Error, "Cannot compute exposed perimeter for surface '" << name << "'.");
+        //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
+        //LOG(Error, "Cannot compute exposed perimeter for surface '" << name << "'.");
       }
-    }else{
-      LOG(Error, "Cannot compute exposed perimeter for surface '" << name << "'.");
     }
 
     // if underground wall try to write out height
@@ -1858,13 +1952,25 @@ namespace sdd {
           result->appendChild(heightElement);
           heightElement.appendChild(doc.createTextNode(QString::number(heightIP)));
         }else{
-          LOG(Error, "Cannot compute height for surface '" << name << "'.");
+          //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
+          //LOG(Error, "Cannot compute height for surface '" << name << "'.");
         }
       }else{
-        LOG(Error, "Cannot compute height for surface '" << name << "'.");
+        //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
+        //LOG(Error, "Cannot compute height for surface '" << name << "'.");
       }
-    }else{
-      LOG(Error, "Cannot compute height for surface '" << name << "'.");
+    }
+
+    // check area
+    double grossArea = surface.grossArea();
+    Quantity grossAreaSI(grossArea, SIUnit(SIExpnt(0, 2, 0)));
+    OptionalQuantity grossAreaIP = QuantityConverter::instance().convert(grossAreaSI, ipSys);
+    OS_ASSERT(grossAreaIP);
+    OS_ASSERT(grossAreaIP->units() == IPUnit(IPExpnt(0, 2, 0)));
+
+    // log warning if area is 0
+    if (grossAreaIP->value() < std::numeric_limits<double>::epsilon()){
+      LOG(Warn, "Surface '" << name << "' has zero area.")
     }
 
     // translate vertices
@@ -1985,8 +2091,21 @@ namespace sdd {
         result->appendChild(constructionReferenceElement);
         constructionReferenceElement.appendChild(doc.createTextNode(escapeName(constructionName)));
       }else{
-        LOG(Error, "SubSurface '" << name << "' uses construction '" << constructionName << "' which has not been translated");
+        //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
+        //LOG(Error, "SubSurface '" << name << "' uses construction '" << constructionName << "' which has not been translated");
       }
+    }
+
+    // check area
+    double grossArea = subSurface.grossArea();
+    Quantity grossAreaSI(grossArea, SIUnit(SIExpnt(0, 2, 0)));
+    OptionalQuantity grossAreaIP = QuantityConverter::instance().convert(grossAreaSI, ipSys);
+    OS_ASSERT(grossAreaIP);
+    OS_ASSERT(grossAreaIP->units() == IPUnit(IPExpnt(0, 2, 0)));
+
+    // log warning if area is 0
+    if (grossAreaIP->value() < std::numeric_limits<double>::epsilon()){
+      LOG(Warn, "Sub Surface '" << name << "' has zero area.")
     }
 
     // translate vertices

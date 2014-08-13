@@ -77,71 +77,30 @@ SubTabView::SubTabView(OSItemSelector* itemSelector,
   // Item Selector
   outerLeftVLayout->addWidget(m_itemSelector, 10);
 
-  bool isConnected = false;
-  isConnected = QObject::connect(m_itemSelector,
-                                 SIGNAL(itemSelected(OSItem*)),
-                                 this,
-                                 SIGNAL(itemSelected(OSItem*)));
-  OS_ASSERT(isConnected);
+  connect(m_itemSelector, &OSItemSelector::itemSelected, this, &SubTabView::itemSelected);
 
-  isConnected = QObject::connect(m_itemSelector,
-                                 SIGNAL(itemRemoveClicked(OSItem*)),
-                                 this,
-                                 SIGNAL(itemRemoveClicked(OSItem*)));
-  OS_ASSERT(isConnected);
+  connect(m_itemSelector, &OSItemSelector::itemRemoveClicked, this, &SubTabView::itemRemoveClicked);
 
-  isConnected = QObject::connect(m_itemSelector,
-                                 SIGNAL(itemReplacementDropped(OSItem*, const OSItemId&)),
-                                 this,
-                                 SIGNAL(itemReplacementDropped(OSItem*, const OSItemId&)));
-  OS_ASSERT(isConnected);
+  connect(m_itemSelector, &OSItemSelector::itemReplacementDropped, this, &SubTabView::itemReplacementDropped);
 
-  isConnected = QObject::connect(m_itemSelector,
-                                 SIGNAL(selectionCleared()),
-                                 this,
-                                 SIGNAL(selectionCleared()));
-  OS_ASSERT(isConnected);
+  connect(m_itemSelector, &OSItemSelector::selectionCleared, this, &SubTabView::selectionCleared);
 
 
   // Item Selector Buttons
   m_itemSelectorButtons = new OSItemSelectorButtons();
   outerLeftVLayout->addWidget(m_itemSelectorButtons);
   
-  isConnected = QObject::connect(m_itemSelectorButtons,
-                                 SIGNAL(itemDropped(const OSItemId&)),
-                                 this,
-                                 SIGNAL(itemDropped(const OSItemId&)));
-  OS_ASSERT(isConnected);
+  connect(m_itemSelectorButtons, &OSItemSelectorButtons::itemDropped, this, &SubTabView::itemDropped);
 
-  isConnected = QObject::connect(m_itemSelectorButtons,
-                                 SIGNAL(addClicked()),
-                                 this,
-                                 SIGNAL(addClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_itemSelectorButtons, &OSItemSelectorButtons::addClicked, this, &SubTabView::addClicked);
 
-  isConnected = QObject::connect(m_itemSelectorButtons,
-                                 SIGNAL(copyClicked()),
-                                 this,
-                                 SIGNAL(copyClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_itemSelectorButtons, &OSItemSelectorButtons::copyClicked, this, &SubTabView::copyClicked);
 
-  isConnected = QObject::connect(m_itemSelectorButtons,
-                                 SIGNAL(removeClicked()),
-                                 this,
-                                 SIGNAL(removeClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_itemSelectorButtons, &OSItemSelectorButtons::removeClicked, this, &SubTabView::removeClicked);
 
-  isConnected = QObject::connect(m_itemSelectorButtons,
-                                 SIGNAL(purgeClicked()),
-                                 this,
-                                 SIGNAL(purgeClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_itemSelectorButtons, &OSItemSelectorButtons::purgeClicked, this, &SubTabView::purgeClicked);
 
-  isConnected = QObject::connect(m_itemSelectorButtons,
-                                 SIGNAL(downloadComponentsClicked()),
-                                 this,
-                                 SIGNAL(downloadComponentsClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_itemSelectorButtons, &OSItemSelectorButtons::downloadComponentsClicked, this, &SubTabView::downloadComponentsClicked);
 
   //isConnected = QObject::connect(m_itemSelectorButtons,
   //                               SIGNAL(openLibDlgClicked()),
@@ -161,11 +120,7 @@ SubTabView::SubTabView(OSItemSelector* itemSelector,
   addWidget(m_inspectorView);
   setStretchFactor(1,100000);
 
-  isConnected = QObject::connect(m_inspectorView,
-                                 SIGNAL(dropZoneItemClicked(OSItem*)),
-                                 this,
-                                 SIGNAL(dropZoneItemClicked(OSItem*)));
-  OS_ASSERT(isConnected);
+  connect(m_inspectorView, &OSInspectorView::dropZoneItemClicked, this, &SubTabView::dropZoneItemClicked);
 }
    
 OSItemSelector* SubTabView::itemSelector()

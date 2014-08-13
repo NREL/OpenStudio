@@ -2,7 +2,7 @@ file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Modules")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR}/Modules")
 
 set(CPACK_PACKAGE_VENDOR "National Renewable Energy Laboratory")
-set(CPACK_PACKAGE_CONTACT "OpenStudio@nrel.gov")
+set(CPACK_PACKAGE_CONTACT "${CPACK_PACKAGE_VENDOR} <OpenStudio@nrel.gov>")
 
 set(CPACK_PACKAGE_VERSION_MAJOR "${CMAKE_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${CMAKE_VERSION_MINOR}")
@@ -25,8 +25,8 @@ endif()
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/copyright.txt")
 
 set(CPACK_PACKAGE_EXECUTABLES "OpenStudio" "OpenStudio"
-                               "Pat" "ParametricAnalysisTool"
-                               "ResultsViewer" "ResultsViewer"
+                              "Pat" "ParametricAnalysisTool"
+                              "ResultsViewer" "ResultsViewer"
 )
 
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "OpenStudio is a cross-platform collection of software tools to support whole building energy modeling using EnergyPlus and advanced daylight analysis using Radiance. OpenStudio is an open source project to facilitate community development, extension, and private sector adoption. It includes graphical interfaces along with a Software Development Kit (SDK).")
@@ -113,6 +113,21 @@ endif()
 
 ###############################################################################
 # Additional install commands
+
+if(CPACK_BINARY_DEB)
+  add_custom_target(package_deb
+    COMMAND ${CMAKE_CPACK_COMMAND}
+    COMMAND ${CMAKE_COMMAND} -E echo "Fixing Debian Package:"
+    COMMAND ${CMAKE_COMMAND} -E make_directory fixup_deb
+    COMMAND dpkg-deb -x ${CPACK_PACKAGE_FILE_NAME}.deb fixup_deb
+    COMMAND dpkg-deb --control ${CPACK_PACKAGE_FILE_NAME}.deb fixup_deb/DEBIAN
+    COMMAND ${CMAKE_COMMAND} -E remove ${CPACK_PACKAGE_FILE_NAME}.deb
+    COMMAND chmod 0644 fixup_deb/DEBIAN/md5sums
+    COMMAND find -type d -print0 |xargs -0 chmod 755
+    COMMAND fakeroot dpkg -b fixup_deb ${CPACK_PACKAGE_FILE_NAME}.deb
+    COMMAND ${CMAKE_COMMAND} -E remove_directory fixup_deb
+  )
+endif()
 
 set(CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/;Required;ALL;/")
 

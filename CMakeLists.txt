@@ -121,9 +121,13 @@ if(MSVC)
   if    (${CMAKE_C_COMPILER_VERSION} VERSION_LESS "18.0.21005.1")
     message(FATAL_ERROR "Visual Studio earlier than VS2013 is not supported")
   elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.0.21005.1")
-    message(WARNING "Update 2 for Visual Studio 2013 is strongly recommended")
+    # VS2013
+    message(WARNING "Update 3 for Visual Studio 2013 is strongly recommended")
   elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.30501")
-    # VS2013 Update 2: no-op
+    # VS2013 Update 2:
+    message(WARNING "Update 3 for Visual Studio 2013 is strongly recommended")
+  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.30723")
+    # VS2013 Update 3: no-op
   endif()
 
   # Build with Multiple Processes
@@ -590,8 +594,8 @@ if(BUILD_BOOST)
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
       URL_MD5 93780777cfbf999a600f62883bd54b17
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./bootstrap.sh
-      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51a.diff < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51b.diff
-      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 toolset=clang cxxflags=${apple-flags} linkflags=${apple-flags} variant=debug,release  define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${BOOST_CPUCOUNT} install
+      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51.patch
+      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 toolset=clang cxxflags=${apple-flags} linkflags=${apple-flags} variant=debug,release define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${BOOST_CPUCOUNT} install
       INSTALL_COMMAND ""
     )
     set(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
@@ -805,6 +809,7 @@ ExternalProject_Add(OpenStudioCore
     -DENERGYPLUS_LOCATION:PATH=${ENERGYPLUS_LOCATION}
     -DRADIANCE_LOCATION:PATH=${RADIANCE_LOCATION}
     -DOPENSSL_ROOT_DIR:PATH=${OPENSSL_ROOT_DIR}
+    -DPATCH_EXE:PATH=${PATCH_EXE}
     INSTALL_COMMAND ""
 )
 

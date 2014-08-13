@@ -67,14 +67,8 @@ namespace detail {
     : m_running(false), m_status(AnalysisStatus::Idle), m_database(database)
   {
     // connect signals and slots
-    bool connected = connect(SIGNAL(analysisComplete(const openstudio::UUID&)),
-                             this,
-                             SLOT(catchAnalysisCompleteOrStopped(const openstudio::UUID&)));
-    OS_ASSERT(connected);
-    connected = connect(SIGNAL(analysisStopped(const openstudio::UUID&)),
-                        this,
-                        SLOT(catchAnalysisCompleteOrStopped(const openstudio::UUID&)));
-    OS_ASSERT(connected);
+    connect(this, &AnalysisDriver_Impl::analysisComplete, this, &AnalysisDriver_Impl::catchAnalysisCompleteOrStopped);
+    connect(this, &AnalysisDriver_Impl::analysisStopped, this, &AnalysisDriver_Impl::catchAnalysisCompleteOrStopped);
   }
 
   AnalysisDriver_Impl::~AnalysisDriver_Impl() {}
@@ -286,14 +280,6 @@ namespace detail {
     runManager.setPaused(wasPaused);
   }
 
-  bool AnalysisDriver_Impl::connect(const std::string& signal,
-                                    const QObject* qObject,
-                                    const std::string& slot,
-                                    Qt::ConnectionType type) const
-  {
-    return QObject::connect(this, signal.c_str(), qObject, slot.c_str(), type);
-  }
-
   void AnalysisDriver_Impl::dakotaJobOutputFileChanged(const openstudio::UUID& dakotaJob,
                                                        const openstudio::runmanager::FileInfo& file)
   {
@@ -494,7 +480,7 @@ namespace detail {
 
   void AnalysisDriver_Impl::catchAnalysisCompleteOrStopped(const openstudio::UUID& analysisUUID) {
     if (m_currentAnalyses.empty()) {
-      LOG(Debug, "AnalysisDriver no longer runnning.");
+      LOG(Debug, "AnalysisDriver no longer running.");
       m_running = false;
       setStatus(AnalysisStatus::Idle);
     }
@@ -927,7 +913,7 @@ namespace detail {
       job = m_database.runManager().getJob(uuid);
     }
     catch(const std::exception& e) {
-      LOG(Error, "Job " << toString(uuid) << " not found in RunManager, maybe it was cancelled? "
+      LOG(Error, "Job " << toString(uuid) << " not found in RunManager, maybe it was canceled? "
           << e.what());
       return boost::none;
     }
@@ -1043,7 +1029,7 @@ bool AnalysisDriver::connect(const std::string& signal,
                              const std::string& slot,
                              Qt::ConnectionType type) const
 {
-  return getImpl()->connect(signal,qObject,slot,type);
+  return QObject::connect(m_impl.get(), signal.c_str(), qObject, slot.c_str(), type);
 }
 
 /// @cond
@@ -1069,7 +1055,7 @@ project::AnalysisRecord saveAnalysis(analysis::Analysis& analysis,
   ProjectDatabase database = analysisDriver.database();
   bool didStartTransaction = database.startTransaction();
   if (!didStartTransaction) {
-    LOG_FREE(Debug,"openstudio.analysisdriver.AnalysisDriver","Unable to start transation "
+    LOG_FREE(Debug,"openstudio.analysisdriver.AnalysisDriver","Unable to start transaction "
              << "for saving analysis '" << analysis.name() << "' to the ProjectDatabase at "
              << toString(database.path()) << ".");
   }

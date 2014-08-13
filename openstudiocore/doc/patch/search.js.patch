@@ -1,0 +1,20 @@
+--- a\search.js	Sun Aug  3 13:07:37 2014
++++ b\search.js	Fri Aug  1 16:54:05 2014
+@@ -105,7 +105,7 @@
+   this.searchIndex           = 0;
+   this.searchActive          = false;
+   this.insideFrame           = inFrame;
+-  this.searchLabel           = label;
++  this.searchLabel           = '';
+ 
+   // ----------- DOM Elements
+ 
+@@ -387,7 +387,7 @@
+        else
+        {
+          var domPopupSearchResults = this.DOMPopupSearchResults();
+-         var left = getXPos(domSearchBox) + 150; // domSearchBox.offsetWidth;
++         var left = getXPos(domSearchBox) + 250; // domSearchBox.offsetWidth;
+          var top  = getYPos(domSearchBox) + 20;  // domSearchBox.offsetHeight + 1;
+          domPopupSearchResultsWindow.style.display = 'block';
+          left -= domPopupSearchResults.offsetWidth;

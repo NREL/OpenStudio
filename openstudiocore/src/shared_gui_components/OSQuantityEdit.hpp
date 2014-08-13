@@ -89,13 +89,15 @@ class OSQuantityEdit2: public QWidget {
 
   void unbind();
 
+ public slots:
+
+  void onUnitSystemChange(bool isIP);
+
  private slots:
 
   void onEditingFinished();
 
   void onModelObjectChange();
-
-  void onUnitSystemChange(bool isIP);
 
   void onModelObjectRemove(Handle handle);
 
@@ -142,7 +144,7 @@ class OSQuantityEdit2: public QWidget {
 /** \deprecated Use OSQuantityEdit2. */
 class OSQuantityEdit: public QWidget {
   Q_OBJECT
-
+  
  public:
 
   OSQuantityEdit(bool isIP, QWidget * parent = nullptr);
@@ -158,13 +160,15 @@ class OSQuantityEdit: public QWidget {
 
   void unbind();
 
+ public slots:
+
+  void onUnitSystemChange(bool isIP);
+
  private slots:
 
   void onEditingFinished();
 
   void onModelObjectChange();
-
-  void onUnitSystemChange(bool isIP);
 
   void onModelObjectRemove(Handle handle);
 

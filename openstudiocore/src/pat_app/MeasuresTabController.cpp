@@ -71,8 +71,7 @@ MeasuresTabController::MeasuresTabController()
   measuresTabView->variableGroupListView->setListController(m_variableGroupListController);
   measuresTabView->variableGroupListView->setDelegate(m_variableGroupItemDelegate);
 
-  bool bingo = connect(measuresTabView->selectBaselineButton,SIGNAL(clicked()),this,SLOT(selectBaseline()));
-  OS_ASSERT(bingo);
+  connect(measuresTabView->selectBaselineButton, &QPushButton::clicked, this, &MeasuresTabController::selectBaseline);
 
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){

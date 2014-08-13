@@ -66,16 +66,11 @@ void SyncMeasuresDialog::createLayout()
   // The central pane
   m_centralWidget = new SyncMeasuresDialogCentralWidget(m_project,m_measureManager);
 
-  bool isConnected = false;
+  connect(m_centralWidget, &SyncMeasuresDialogCentralWidget::componentClicked, this, &SyncMeasuresDialog::on_componentClicked);
 
-  isConnected = connect(m_centralWidget, SIGNAL(componentClicked(bool)), this, SLOT(on_componentClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_centralWidget, &SyncMeasuresDialogCentralWidget::noComponents, this, &SyncMeasuresDialog::on_noComponents);
 
-  isConnected = connect(m_centralWidget, SIGNAL(noComponents()), this, SLOT(on_noComponents()));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(m_centralWidget, SIGNAL(closeDlg()), this, SLOT(closeDlg()));
-  OS_ASSERT(isConnected);
+  connect(m_centralWidget, &SyncMeasuresDialogCentralWidget::closeDlg, this, &SyncMeasuresDialog::closeDlg);
 
   QScrollArea * centralScrollArea = new QScrollArea(this);
   centralScrollArea->setFrameStyle(QFrame::NoFrame);

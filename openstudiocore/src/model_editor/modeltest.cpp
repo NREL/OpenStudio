@@ -32,44 +32,28 @@ ModelTest::ModelTest(QAbstractItemModel *_model, QObject *parent) : QObject(pare
 {
     OS_ASSERT(model);
 
-    connect(model, SIGNAL(columnsAboutToBeInserted(const QModelIndex &, int, int)),
-            this, SLOT(runAllTests()));
-    connect(model, SIGNAL(columnsAboutToBeRemoved(const QModelIndex &, int, int)),
-            this, SLOT(runAllTests()));
-    connect(model, SIGNAL(columnsInserted(const QModelIndex &, int, int)),
-            this, SLOT(runAllTests()));
-    connect(model, SIGNAL(columnsRemoved(const QModelIndex &, int, int)),
-            this, SLOT(runAllTests()));
-    connect(model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
-            this, SLOT(runAllTests()));
-    connect(model, SIGNAL(headerDataChanged(Qt::Orientation, int, int)),
-            this, SLOT(runAllTests()));
-    connect(model, SIGNAL(layoutAboutToBeChanged ()), this, SLOT(runAllTests()));
-    connect(model, SIGNAL(layoutChanged ()), this, SLOT(runAllTests()));
-    connect(model, SIGNAL(modelReset ()), this, SLOT(runAllTests()));
-    connect(model, SIGNAL(rowsAboutToBeInserted(const QModelIndex &, int, int)),
-            this, SLOT(runAllTests()));
-    connect(model, SIGNAL(rowsAboutToBeRemoved(const QModelIndex &, int, int)),
-            this, SLOT(runAllTests()));
-    connect(model, SIGNAL(rowsInserted(const QModelIndex &, int, int)),
-            this, SLOT(runAllTests()));
-    connect(model, SIGNAL(rowsRemoved(const QModelIndex &, int, int)),
-            this, SLOT(runAllTests()));
+    connect(model, &QAbstractItemModel::columnsAboutToBeInserted, this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::columnsAboutToBeRemoved, this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::columnsInserted, this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::columnsRemoved, this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::dataChanged, this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::headerDataChanged, this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::layoutAboutToBeChanged, this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::layoutChanged, this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::modelReset, this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::rowsAboutToBeInserted, this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::rowsAboutToBeRemoved, this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::rowsInserted, this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::rowsRemoved, this, &ModelTest::runAllTests);
 
     // Special checks for inserting/removing
-    connect(model, SIGNAL(layoutAboutToBeChanged()),
-            this, SLOT(layoutAboutToBeChanged()));
-    connect(model, SIGNAL(layoutChanged()),
-            this, SLOT(layoutChanged()));
+    connect(model, &QAbstractItemModel::layoutAboutToBeChanged, this, &ModelTest::layoutAboutToBeChanged);
+    connect(model, &QAbstractItemModel::layoutChanged, this, &ModelTest::layoutChanged);
 
-    connect(model, SIGNAL(rowsAboutToBeInserted(const QModelIndex &, int, int)),
-            this, SLOT(rowsAboutToBeInserted(const QModelIndex &, int, int)));
-    connect(model, SIGNAL(rowsAboutToBeRemoved(const QModelIndex &, int, int)),
-            this, SLOT(rowsAboutToBeRemoved(const QModelIndex &, int, int)));
-    connect(model, SIGNAL(rowsInserted(const QModelIndex &, int, int)),
-            this, SLOT(rowsInserted(const QModelIndex &, int, int)));
-    connect(model, SIGNAL(rowsRemoved(const QModelIndex &, int, int)),
-            this, SLOT(rowsRemoved(const QModelIndex &, int, int)));
+    connect(model, &QAbstractItemModel::rowsAboutToBeInserted, this, &ModelTest::rowsAboutToBeInserted);
+    connect(model, &QAbstractItemModel::rowsAboutToBeRemoved, this, &ModelTest::rowsAboutToBeRemoved);
+    connect(model, &QAbstractItemModel::rowsInserted, this, &ModelTest::rowsInserted);
+    connect(model, &QAbstractItemModel::rowsRemoved, this, &ModelTest::rowsRemoved);
 
     runAllTests();
 }

@@ -33,14 +33,14 @@ namespace detail {
 } // detail
 
 /** CurveLinear is a Curve that wraps the OpenStudio IDD object 'OS:Curve:Linear'. The
- *  functional form is f(x) = c1 + c2 * x. */
+ *  functional form is \f$f(x) = c_1 + c_2 \cdot x\f$. */
 class MODEL_API CurveLinear : public Curve {
  public:
 
   /** @name Constructors and Destructors */
   //@{
 
-  /** Sets c1 = 0, c2 = 1.0, x within [0.0,1.0]. */
+  /** Sets \f$c_1 = 0,\ c_2 = 1.0,\ x\ \text{within}\ [0.0,1.0]\f$ */
   explicit CurveLinear(const Model& model);
 
   virtual ~CurveLinear() {}

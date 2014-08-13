@@ -133,11 +133,8 @@ void ConstructionFfactorGroundFloorInspectorView::createLayout()
 
   ++row;
 
-  bool isConnected = false;
-
   m_ffactorEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_ffactorEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &ConstructionFfactorGroundFloorInspectorView::toggleUnitsClicked, m_ffactorEdit, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_ffactorEdit,row,0);
 
   ++row;
@@ -151,8 +148,7 @@ void ConstructionFfactorGroundFloorInspectorView::createLayout()
   ++row;
 
   m_areaEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_areaEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &ConstructionFfactorGroundFloorInspectorView::toggleUnitsClicked, m_areaEdit, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_areaEdit,row,0);
 
   ++row;
@@ -166,8 +162,7 @@ void ConstructionFfactorGroundFloorInspectorView::createLayout()
   ++row;
 
   m_perimeterExposedEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_perimeterExposedEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &ConstructionFfactorGroundFloorInspectorView::toggleUnitsClicked, m_perimeterExposedEdit, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_perimeterExposedEdit,row,0);
 
   ++row;
@@ -244,11 +239,8 @@ void ConstructionFfactorGroundFloorInspectorView::populateStandardsConstructionT
     }
   }
 
-  bool isConnected = false;
-  isConnected = connect(m_standardsConstructionType, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(standardsConstructionTypeChanged(const QString&)));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_standardsConstructionType, SIGNAL(editTextChanged(const QString&)), this, SLOT(editStandardsConstructionType(const QString&)));
-  OS_ASSERT(isConnected);
+  connect(m_standardsConstructionType, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &ConstructionFfactorGroundFloorInspectorView::standardsConstructionTypeChanged);
+  connect(m_standardsConstructionType, &QComboBox::editTextChanged, this, &ConstructionFfactorGroundFloorInspectorView::editStandardsConstructionType);
 }
 
 void ConstructionFfactorGroundFloorInspectorView::attach(openstudio::model::FFactorGroundFloorConstruction & fFactorGroundFloorConstruction)
@@ -271,8 +263,7 @@ void ConstructionFfactorGroundFloorInspectorView::attach(openstudio::model::FFac
       std::bind(&openstudio::model::StandardsInformationConstruction::setIntendedSurfaceType,m_standardsInformation.get_ptr(),std::placeholders::_1),
       NoFailAction(std::bind(&model::StandardsInformationConstruction::resetIntendedSurfaceType,m_standardsInformation.get_ptr())));
 
-  bool test = connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(populateStandardsConstructionType()));
-  OS_ASSERT(test);
+  connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &ConstructionFfactorGroundFloorInspectorView::populateStandardsConstructionType);
 
   m_standardsConstructionType->setEnabled(true);
   populateStandardsConstructionType();

@@ -36,7 +36,7 @@ class OSListItem;
 class OSItemDelegate;
 
 /** The purpose of OSListView is to display a list of items in a vertical column.
- *  This class's primary resposibility is to visually arrange a list of things.
+ *  This class's primary responsibility is to visually arrange a list of things.
  *  Data is provided to OSListView by a subclass of OSListController.
  *  For each item provided by the OSListController, OSListView draws a view provided by OSItemDelegate.
  *  It should be uncommon to subclass OSListView.
