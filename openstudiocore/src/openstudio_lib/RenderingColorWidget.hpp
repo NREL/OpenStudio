@@ -20,6 +20,8 @@
 #ifndef OPENSTUDIO_RENDERINGCOLORWIDGET_HPP
 #define OPENSTUDIO_RENDERINGCOLORWIDGET_HPP
 
+#include "../shared_gui_components/FieldMethodTypedefs.hpp"
+
 #include "../model/RenderingColor.hpp"
 
 #include <QWidget>
@@ -27,6 +29,39 @@
 class QPushButton;
 
 namespace openstudio {
+
+  class RenderingColorWidget2 : public QWidget
+  {
+    Q_OBJECT
+
+  public:
+
+    RenderingColorWidget2(QWidget* parent = 0);
+
+    virtual ~RenderingColorWidget2() {}
+
+    virtual void bind(model::ModelObject & modelObject,
+      OptionalModelObjectGetter get,
+      ModelObjectSetter set);
+
+    virtual void unbind();
+
+  private slots:
+
+    void clear();
+
+    void refresh();
+
+    void renderColorButtonClicked();
+
+  private:
+
+    boost::optional<OptionalModelObjectGetter> m_get;
+    boost::optional<ModelObjectSetter> m_set;
+    boost::optional<model::ModelObject> m_modelObject;
+    QPushButton * m_renderColorButton;
+    boost::optional<model::RenderingColor> m_renderingColor;
+  };
 
 class RenderingColorWidget : public QWidget
 {
@@ -51,7 +86,7 @@ private slots:
   void renderColorButtonClicked();
 
 private:
-  
+
   QWidget* m_renderColorWidget;
   QPushButton* m_renderColorButton;
   boost::optional<openstudio::model::RenderingColor> m_renderingColor;

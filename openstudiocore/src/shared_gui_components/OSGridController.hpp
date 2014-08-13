@@ -347,8 +347,16 @@ public:
                          std::function<bool (DataSourceType *, const ValueType &)> setter,
                          const boost::optional<DataSource> &t_source = boost::none)
   {
-    //m_baseConcepts.push_back(makeDataSourceAdapter(makeDropZoneConcept(headingLabel, getter, setter), t_source));
     m_baseConcepts.push_back(QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter)));
+  }
+
+  template<typename ValueType, typename DataSourceType>
+  void addRenderingColorColumn(QString headingLabel,
+    std::function<boost::optional<ValueType>(DataSourceType *)>  getter,
+    std::function<bool(DataSourceType *, const ValueType &)> setter,
+    const boost::optional<DataSource> &t_source = boost::none)
+  {
+    m_baseConcepts.push_back(QSharedPointer<RenderingColorConcept>(new RenderingColorConceptImpl<ValueType, DataSourceType>(headingLabel, getter, setter)));
   }
 
   std::vector<QString> categories();
