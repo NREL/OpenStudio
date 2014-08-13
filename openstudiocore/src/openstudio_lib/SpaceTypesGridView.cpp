@@ -174,7 +174,7 @@ void SpaceTypesGridController::setCategoriesAndFields()
     fields.push_back(DEFAULTCONSTRUCTIONSET);
     fields.push_back(DEFAULTSCHEDULESET);
     fields.push_back(DESIGNSPECIFICATIONOUTDOORAIR);
-    //fields.push_back(SPACEINFILTRATIONDESIGNFLOWRATES); // TODO Extensible DropZone
+    fields.push_back(SPACEINFILTRATIONDESIGNFLOWRATES); // TODO Extensible DropZone
     //fields.push_back(SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS); // TODO Extensible DropZone
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("General"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
@@ -294,6 +294,21 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
       addRenderingColorColumn(QString(RENDERINGCOLOR),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::renderingColor),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::setRenderingColor));    
+
+    } else if (field == SPACEINFILTRATIONDESIGNFLOWRATES) {
+      std::function<boost::optional<model::SpaceInfiltrationDesignFlowRate> (model::SpaceType *)>  getter;
+      std::function<bool (model::SpaceType *, const model::SpaceInfiltrationDesignFlowRate &)> setter;
+
+      addNameLineEditColumn(QString(LOADNAME),
+        CastNullAdapter<model::SpaceInfiltrationDesignFlowRate>(&model::SpaceInfiltrationDesignFlowRate::name),
+        CastNullAdapter<model::SpaceInfiltrationDesignFlowRate>(&model::SpaceInfiltrationDesignFlowRate::setName),
+        DataSource(
+          std::function<std::vector<model::SpaceInfiltrationDesignFlowRate> (const model::SpaceType &)>(&model::SpaceType::spaceInfiltrationDesignFlowRates),
+          true,
+          QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::SpaceInfiltrationDesignFlowRate, model::SpaceType>("Space Infiltration", 
+             getter, setter))
+        )
+      );
 
     } else {
       // unhandled
