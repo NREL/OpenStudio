@@ -271,25 +271,33 @@ bool OSRunner::validateUserArguments(const std::vector<OSArgument>& script_argum
     else {
       // script_argument is in user_arguments
       OSArgument user_argument = it->second;
+
+      // check that names still match 
       if (user_argument.name() != script_argument.name()) {
         ss << "User argument name '" << user_argument.name() << "' does not match map key ";
         ss << script_argument.name() << ".";
         registerWarning(ss.str()); ss.str("");
       }
+
+      // check that types still match
       if (user_argument.type() != script_argument.type()) {
         ss << "User argument type " << user_argument.type().valueName() << " does not match ";
         ss << "script argument type " << script_argument.type().valueName() << ".";
         registerError(ss.str()); ss.str("");
         result = false;
       }
-      if ((script_argument.required() || script_argument.hasDefaultValue()) &&
+
+      //  check that we have values
+      if ((script_argument.required()) &&
           !(user_argument.hasValue() || user_argument.hasDefaultValue()))
       {
-        ss << "Script argument '" << script_argument.name() << "' is required or has a default ";
-        ss << "value, but the user argument does not have a value or default value set.";
+        ss << "Script argument '" << script_argument.name() << "' is required, ";
+        ss << "but the user argument does not have a value or default value set.";
         registerError(ss.str()); ss.str("");
         result = false;
       }
+
+      // check for default value mismatch
       if (script_argument.hasDefaultValue() && !user_argument.hasDefaultValue()) {
         ss << "Script argument '" << script_argument.name() << "' has a default value, but the ";
         ss << "user-supplied version does not.";
@@ -312,7 +320,7 @@ bool OSRunner::validateUserArguments(const std::vector<OSArgument>& script_argum
             }
             break;
           case OSArgumentType::Double :
-            if (!equal<double>(user_argument.defaultValueAsDouble(),script_argument.defaultValueAsDouble())) {
+            if (user_argument.defaultValueAsDouble() != script_argument.defaultValueAsDouble()) {
               registerWarning(ss.str());
             }
             break;
@@ -338,30 +346,81 @@ bool OSRunner::validateUserArguments(const std::vector<OSArgument>& script_argum
         }
         ss.str("");
       }
+
+      // check for domain mismatch
+      if (script_argument.hasDomain() && !user_argument.hasDomain()) {
+        ss << "Script argument '" << script_argument.name() << "' has a specified domain, but the ";
+        ss << "user-supplied version does not.";
+        registerWarning(ss.str()); ss.str("");
+      }
+      if (!script_argument.hasDomain() && user_argument.hasDomain()) {
+        ss << "Script argument '" << script_argument.name() << "' does not have a specified domain, ";
+        ss << "but the user-supplied version does.";
+        registerWarning(ss.str()); ss.str("");
+      }
+      if (script_argument.hasDomain() && user_argument.hasDomain() &&
+        (user_argument.type() == script_argument.type()))
+      {
+        ss << "The domain of script argument " << std::endl << script_argument << std::endl;
+        ss << "does not match that of the corresponding user argument " << std::endl << user_argument << ".";
+        switch (script_argument.type().value()) {
+        case OSArgumentType::Boolean:
+          // DLM: should bool's even have domains?
+          if (user_argument.domainAsBool() != script_argument.domainAsBool()) {
+            registerWarning(ss.str());
+          }
+          break;
+        case OSArgumentType::Double:
+          if (user_argument.domainAsDouble() != script_argument.domainAsDouble()) {
+            registerWarning(ss.str());
+          }
+          break;
+        case OSArgumentType::Quantity:
+          // DLM: deprecated forget about getting this to compile
+          //if (user_argument.domainAsQuantity() != script_argument.domainAsQuantity()) {
+          //  registerWarning(ss.str());
+          //}
+          break;
+        case OSArgumentType::Integer:
+          if (user_argument.domainAsInteger() != script_argument.domainAsInteger()) {
+            registerWarning(ss.str());
+          }
+          break;
+        case OSArgumentType::String:
+        case OSArgumentType::Choice:
+        case OSArgumentType::Path:
+          if (user_argument.domainAsString() != script_argument.domainAsString()) {
+            registerWarning(ss.str());
+          }
+          break;
+        default:
+          OS_ASSERT(false);
+        }
+        ss.str("");
+      }
+
+      // success, set the values
       if (result) {
         Quantity q;
         switch(user_argument.type().value()) {
           case OSArgumentType::Boolean :
             if (user_argument.hasValue()) {
               argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.valueAsBool()));
-            }
-            else if (user_argument.hasDefaultValue()) {
+            } else if (user_argument.hasDefaultValue()) {
               argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.defaultValueAsBool()));
             }
            break;
           case OSArgumentType::Double :
             if (user_argument.hasValue()) {
               argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.valueAsDouble()));
-            }
-            else if (user_argument.hasDefaultValue()) {
+            } else if (user_argument.hasDefaultValue()) {
               argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.defaultValueAsDouble()));
             }
            break;
           case OSArgumentType::Quantity :
             if (user_argument.hasValue()) {
               q = user_argument.valueAsQuantity();
-            }
-            else if (user_argument.hasDefaultValue()) {
+            } else if (user_argument.hasDefaultValue()) {
               q = user_argument.defaultValueAsQuantity();
             }
             argumentValueAttributes.push_back(Attribute(user_argument.name(),q.value(),q.units().print()));
@@ -369,8 +428,7 @@ bool OSRunner::validateUserArguments(const std::vector<OSArgument>& script_argum
           case OSArgumentType::Integer :
             if (user_argument.hasValue()) {
               argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.valueAsInteger()));
-            }
-            else if (user_argument.hasDefaultValue()) {
+            } else if (user_argument.hasDefaultValue()) {
               argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.defaultValueAsInteger()));
             }
            break;
@@ -379,8 +437,7 @@ bool OSRunner::validateUserArguments(const std::vector<OSArgument>& script_argum
           case OSArgumentType::Path :
             if (user_argument.hasValue()) {
               argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.valueAsString()));
-            }
-            else if (user_argument.hasDefaultValue()) {
+            } else if (user_argument.hasDefaultValue()) {
               argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.defaultValueAsString()));
             }
            break;
