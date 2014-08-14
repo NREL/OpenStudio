@@ -1028,9 +1028,17 @@ namespace radiance {
               || subSurfaceUpCase == "SKYLIGHT")
           {
 
+           std::string winUpVector = "Z";
+            if (subSurfaceUpCase == "SKYLIGHT"){
+              winUpVector = "Y";
+            }
+
             if (m_radWindowGroups.find(windowGroup_name) == m_radWindowGroups.end())
             {
               m_radWindowGroups[windowGroup_name] = "# OpenStudio Window Group: " + windowGroup_name + "\n";
+              // 3-phase/rfluxmtx support
+              m_radWindowGroups[windowGroup_name] += "#@rfluxmtx h=kf u=" + winUpVector + "\n";
+
             }
 
             LOG(Info, "found a "+subSurface.subSurfaceType()+", azimuth = "+formatString(azi, 3)+ "("+subSurface_name+")");
@@ -1114,6 +1122,7 @@ namespace radiance {
             // polygon header
             m_radWindowGroups[windowGroup_name] += "\n# SubSurface = " + subSurface_name + "\n";
             m_radWindowGroups[windowGroup_name] += "# Tvis = " + formatString(tVis, 2) + " (tn = " + formatString(tn, 2) + ")\n";
+
             // write the polygon
             m_radWindowGroups[windowGroup_name] += windowGroup_name + " polygon " + subSurface_name + "\n";
             m_radWindowGroups[windowGroup_name] += "0\n0\n" + formatString(polygon.size()*3) + "\n";
@@ -1289,7 +1298,7 @@ namespace radiance {
             m_radSpaces[space_name] += formatString(vertex.x()) + " " + formatString(vertex.y()) + " " + formatString(vertex.z()) + "\n\n";
           }
         }
-      } //interior partitions
+      } // interior partitions
 
       // get luminaires
       ///  \todo fully implement once luminaires are fully supported in model
@@ -1327,7 +1336,7 @@ namespace radiance {
         }
 
         LOG(Debug, "Wrote " << space_name << ".sns");
-      }
+      } // daylighting controls
        
       // get glare sensor
       std::vector<openstudio::model::GlareSensor> glareSensors = space.glareSensors();
@@ -1359,7 +1368,7 @@ namespace radiance {
         }
 
         LOG(Debug, "Wrote " << space_name << ".glr");
-      }
+      } // glare sensor
 
       //{  
       //  m_radViews[space_name] = "";
@@ -1461,7 +1470,7 @@ namespace radiance {
       }
 
       // write radiance DC vmx materials (lights) file
-      m_radMaterialsDC.insert("# OpenStudio Materials File\n# sets all windows as material=\"light\" for daylight coefficient calcs\n\n");
+      m_radMaterialsDC.insert("# OpenStudio Materials File\n# sets all windows as material=\"light\" for view matrix calcs\n\n");
       openstudio::path materials_vmxfilename = t_radDir / openstudio::toPath("materials/materials_vmx.rad");
       OFSTREAM materials_vmxfile(materials_vmxfilename);
       if (materials_vmxfile.is_open()){
