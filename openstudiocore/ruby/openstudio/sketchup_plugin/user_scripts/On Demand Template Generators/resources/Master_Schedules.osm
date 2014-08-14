@@ -1,7 +1,7 @@
 
 OS:Version,
-  {5c60d628-ec8b-4bd6-9cfb-07c154d19d39}, !- Handle
-  1.2.3;                                  !- Version Identifier
+  {57acad9e-596d-427d-9ac3-e6db1af04bcc}, !- Handle
+  1.4.0;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {61ee91e7-3892-4844-8796-1f9cc0409717}, !- Handle
@@ -5395,9 +5395,21 @@ OS:Schedule:Day,
   MidriseApartment Office ClgSetp Default Schedule, ! Name
   {88723928-732f-4f74-9251-626311727dea}, ! Schedule Type Limits Name
   ,                                       ! Interpolate to Timestep
-  24,                                     !- Hour 1
+  7,                                      !- Hour 1
   0,                                      !- Minute 1
-  29.4;                                   !- Value Until Time 1
+  29.3999996185303,                       !- Value Until Time 1
+  8,                                      !- Hour 2
+  0,                                      !- Minute 2
+  26.6999988555908,                       !- Value Until Time 2
+  17,                                     !- Hour 3
+  0,                                      !- Minute 3
+  23.8999996185303,                       !- Value Until Time 3
+  18,                                     !- Hour 4
+  0,                                      !- Minute 4
+  26.6999988555908,                       !- Value Until Time 4
+  24,                                     !- Hour 5
+  0,                                      !- Minute 5
+  29.3999996185303;                       !- Value Until Time 5
 
 OS:Schedule:Day,
   {aec59476-1c21-4574-afc1-4c37ccd78c42}, ! Handle
@@ -12884,16 +12896,18 @@ OS:Schedule:Ruleset,
   {506f8552-9669-4801-abe0-9972ea9f5053}, ! Handle
   MidriseApartment Apartment ClgSetp,     ! Name
   {62d9b67d-f2fb-41f4-9eba-b91a23c9edef}, ! Schedule Type Limits Name
-  {4154bf20-c248-4b04-9ae6-8d865c7cdbba}; ! Default Day Schedule Name
+  {4154bf20-c248-4b04-9ae6-8d865c7cdbba}, ! Default Day Schedule Name
+  {e4a5df7e-8b2e-4360-91d9-19a346f33ce1}, !- Summer Design Day Schedule Name
+  {df1d5c93-d777-4e35-9c7e-572f5c703358}; !- Winter Design Day Schedule Name
 
 OS:Schedule:Day,
   {4154bf20-c248-4b04-9ae6-8d865c7cdbba}, ! Handle
   MidriseApartment Apartment ClgSetp Default Schedule, ! Name
   {62d9b67d-f2fb-41f4-9eba-b91a23c9edef}, ! Schedule Type Limits Name
   ,                                       ! Interpolate to Timestep
-  24,                                     ! Hour 1
-  0,                                      ! Minute 1
-  0;                                      ! Value Until Time 1
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  23.8999996185303;                       !- Value Until Time 1
 
 OS:Schedule:Ruleset,
   {ace239e7-d8b6-4848-93e3-3b1423086e99}, ! Handle
@@ -18536,9 +18550,21 @@ OS:Schedule:Day,
   MidriseApartment Office HtgSetp Default Schedule, ! Name
   {21ccdf3e-cfc1-497f-92b4-44e5a91ce539}, ! Schedule Type Limits Name
   ,                                       ! Interpolate to Timestep
-  24,                                     !- Hour 1
+  7,                                      !- Hour 1
   0,                                      !- Minute 1
-  15.6;                                   !- Value Until Time 1
+  15.600001335144,                        !- Value Until Time 1
+  8,                                      !- Hour 2
+  0,                                      !- Minute 2
+  18.2999992370605,                       !- Value Until Time 2
+  17,                                     !- Hour 3
+  0,                                      !- Minute 3
+  21.1000003814697,                       !- Value Until Time 3
+  18,                                     !- Hour 4
+  0,                                      !- Minute 4
+  18.3000011444092,                       !- Value Until Time 4
+  24,                                     !- Hour 5
+  0,                                      !- Minute 5
+  15.6000003814697;                       !- Value Until Time 5
 
 OS:Schedule:Day,
   {6c597bb1-16dc-41d9-88f2-d9aa8c9d5dbc}, ! Handle
@@ -26363,16 +26389,18 @@ OS:Schedule:Ruleset,
   {74939c8a-7858-4f00-9dcf-4a5cf3668770}, ! Handle
   MidriseApartment Apartment HtgSetp,     ! Name
   {fe4d2b05-f02d-42bc-9255-ef6f56d1ea4e}, ! Schedule Type Limits Name
-  {80011705-0f3c-45ec-8ac0-154c012ab8a0}; ! Default Day Schedule Name
+  {80011705-0f3c-45ec-8ac0-154c012ab8a0}, ! Default Day Schedule Name
+  {2173af64-ec0b-4c19-ae48-f50750c2d1a8}, !- Summer Design Day Schedule Name
+  {7d7fff33-2670-4026-96e7-611b9d566e12}; !- Winter Design Day Schedule Name
 
 OS:Schedule:Day,
   {80011705-0f3c-45ec-8ac0-154c012ab8a0}, ! Handle
   MidriseApartment Apartment HtgSetp Default Schedule, ! Name
   {fe4d2b05-f02d-42bc-9255-ef6f56d1ea4e}, ! Schedule Type Limits Name
   ,                                       ! Interpolate to Timestep
-  24,                                     ! Hour 1
-  0,                                      ! Minute 1
-  0;                                      ! Value Until Time 1
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  21.1000003814697;                       !- Value Until Time 1
 
 OS:Schedule:Ruleset,
   {b27247b5-6bf5-4840-95bd-04ebaa9df578}, ! Handle
@@ -28616,4 +28644,146 @@ OS:Schedule:Day,
   24,                                     !- Hour 5
   0,                                      !- Minute 5
   0;                                      !- Value Until Time 5
+
+OS:LifeCycleCost:Parameters,
+  {20590073-aef7-4031-9775-4c50bfbaf016}, !- Handle
+  FEMP,                                   !- Analysis Type
+  ,                                       !- Discounting Convention
+  ,                                       !- Inflation Approach
+  ,                                       !- Real Discount Rate
+  ,                                       !- Nominal Discount Rate
+  ,                                       !- Inflation
+  ,                                       !- Base Date Month
+  ,                                       !- Base Date Year
+  ,                                       !- Service Date Month
+  ,                                       !- Service Date Year
+  ,                                       !- Length of Study Period in Years
+  ,                                       !- Tax Rate
+  ,                                       !- Depreciation Method
+  Yes;                                    !- Use NIST Fuel Escalation Rates
+
+OS:Facility,
+  {5b51c238-7f26-4d66-a74f-af94599eca01}; !- Handle
+
+OS:Schedule:Day,
+  {df1d5c93-d777-4e35-9c7e-572f5c703358}, !- Handle
+  Schedule Day 2,                         !- Name
+  {62d9b67d-f2fb-41f4-9eba-b91a23c9edef}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  23.8999996185303;                       !- Value Until Time 1
+
+OS:Schedule:Day,
+  {e4a5df7e-8b2e-4360-91d9-19a346f33ce1}, !- Handle
+  Schedule Day 3,                         !- Name
+  {62d9b67d-f2fb-41f4-9eba-b91a23c9edef}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  23.8999996185303;                       !- Value Until Time 1
+
+OS:Schedule:Day,
+  {7d7fff33-2670-4026-96e7-611b9d566e12}, !- Handle
+  Schedule Day 4,                         !- Name
+  {fe4d2b05-f02d-42bc-9255-ef6f56d1ea4e}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  21.1000003814697;                       !- Value Until Time 1
+
+OS:Schedule:Day,
+  {2173af64-ec0b-4c19-ae48-f50750c2d1a8}, !- Handle
+  Schedule Day 5,                         !- Name
+  {fe4d2b05-f02d-42bc-9255-ef6f56d1ea4e}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  21.1000003814697;                       !- Value Until Time 1
+
+OS:ScheduleTypeLimits,
+  {7560f443-e372-4b18-ba7f-f661320db7ef}, !- Handle
+  Temperature 60,                         !- Name
+  ,                                       !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
+  Continuous,                             !- Numeric Type
+  Temperature;                            !- Unit Type
+
+OS:Schedule:Ruleset,
+  {b8779dd4-dfba-4038-9fdb-247ec3707418}, !- Handle
+  MidriseApartment Corridor HtgSetp,      !- Name
+  {7560f443-e372-4b18-ba7f-f661320db7ef}, !- Schedule Type Limits Name
+  {e9cd9dfc-1cbb-4936-b0fe-a1a59acc2876}, !- Default Day Schedule Name
+  {73b0568e-b6f0-4625-8024-140e1bdb1256}, !- Summer Design Day Schedule Name
+  {7152e8d9-ffd3-468d-b8c3-6d8d58fb6a1b}; !- Winter Design Day Schedule Name
+
+OS:Schedule:Day,
+  {e9cd9dfc-1cbb-4936-b0fe-a1a59acc2876}, !- Handle
+  Schedule Day 1,                         !- Name
+  {7560f443-e372-4b18-ba7f-f661320db7ef}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  15.6000003814697;                       !- Value Until Time 1
+
+OS:Schedule:Day,
+  {7152e8d9-ffd3-468d-b8c3-6d8d58fb6a1b}, !- Handle
+  Schedule Day 7,                         !- Name
+  {7560f443-e372-4b18-ba7f-f661320db7ef}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  15.6000003814697;                       !- Value Until Time 1
+
+OS:Schedule:Day,
+  {73b0568e-b6f0-4625-8024-140e1bdb1256}, !- Handle
+  Schedule Day 8,                         !- Name
+  {7560f443-e372-4b18-ba7f-f661320db7ef}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  15.6000003814697;                       !- Value Until Time 1
+
+OS:ScheduleTypeLimits,
+  {eba03ad1-d8f0-40f2-a552-34b5daa5d022}, !- Handle
+  Temperature 61,                         !- Name
+  ,                                       !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
+  Continuous,                             !- Numeric Type
+  Temperature;                            !- Unit Type
+
+OS:Schedule:Ruleset,
+  {8d4d1775-5037-46a4-a3dc-c164d8b0a104}, !- Handle
+  MidriseApartment Corridor ClgSetp,      !- Name
+  {eba03ad1-d8f0-40f2-a552-34b5daa5d022}, !- Schedule Type Limits Name
+  {d500578b-2ddc-42d6-bc2e-5100cf1dc5b1}, !- Default Day Schedule Name
+  {22af8d33-fed8-4f52-ad40-edc4036c9156}, !- Summer Design Day Schedule Name
+  {27529f23-70a3-44ec-a9ad-d8d0120bb388}; !- Winter Design Day Schedule Name
+
+OS:Schedule:Day,
+  {d500578b-2ddc-42d6-bc2e-5100cf1dc5b1}, !- Handle
+  Schedule Day 6,                         !- Name
+  {eba03ad1-d8f0-40f2-a552-34b5daa5d022}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  40;                                     !- Value Until Time 1
+
+OS:Schedule:Day,
+  {27529f23-70a3-44ec-a9ad-d8d0120bb388}, !- Handle
+  Schedule Day 10,                        !- Name
+  {eba03ad1-d8f0-40f2-a552-34b5daa5d022}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  40;                                     !- Value Until Time 1
+
+OS:Schedule:Day,
+  {22af8d33-fed8-4f52-ad40-edc4036c9156}, !- Handle
+  Schedule Day 11,                        !- Name
+  {eba03ad1-d8f0-40f2-a552-34b5daa5d022}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  40;                                     !- Value Until Time 1
 
