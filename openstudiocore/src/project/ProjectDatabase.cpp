@@ -754,6 +754,10 @@ namespace detail {
       update_1_0_6_to_1_0_7(dbv);
     }
 
+    if (dbv < VersionString("1.3.6")) {
+      update_1_3_5_to_1_3_6(dbv);
+    }
+    
     if (dbv < osv) {
       LOG(Info,"Updating database version to " << osv << ".");
       bool didStartTransaction = startTransaction();
