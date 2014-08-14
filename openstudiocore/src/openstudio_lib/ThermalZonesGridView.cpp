@@ -155,7 +155,7 @@ void ThermalZonesGridController::setCategoriesAndFields()
     std::vector<QString> fields;
     fields.push_back(IDEALAIRLOADS);
     fields.push_back(AIRLOOPNAME);
-    //fields.push_back(ZONEEQUIPMENT); // TODO Extensible DropZone
+    fields.push_back(ZONEEQUIPMENT);
     fields.push_back(COOLINGTHERMOSTATSCHEDULE);
     fields.push_back(HEATINGTHERMOSTATSCHEDULE);
     fields.push_back(HUMIDIFYINGSETPOINTSCHEDULE);
@@ -350,7 +350,25 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                                      &model::ThermalZone::zoneControlHumidistat,
                                      false));
 
-    //fields.push_back(ZONEEQUIPMENT); // TODO Extensible DropZone
+    } else if (field == ZONEEQUIPMENT) {
+      std::function<boost::optional<model::ModelObject>(model::ThermalZone *)>  getter;
+      std::function<bool(model::ThermalZone *, const model::ModelObject &)> setter;
+      std::function<std::vector<model::ModelObject>( model::ThermalZone &)> equipment(
+        []( model::ThermalZone &t) {
+        return t.equipmentInHeatingOrder();
+      }
+      );
+
+      addNameLineEditColumn(QString(ZONEEQUIPMENT),
+        CastNullAdapter<model::ModelObject>(&model::ModelObject::name),
+        CastNullAdapter<model::ModelObject>(&model::ModelObject::setName),
+        DataSource(
+        equipment,
+        true,
+        QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::ModelObject, model::ThermalZone>(ZONEEQUIPMENT,
+        getter, setter))
+        )
+        );
 
     }else if(field == NAME){
       addNameLineEditColumn(QString(NAME),
