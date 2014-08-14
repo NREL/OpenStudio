@@ -55,8 +55,19 @@ namespace openstudio {
     m_set = set;
     m_modelObject = modelObject;
 
-    bool isConnected = connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()),
-      this, SLOT(refresh()));
+    bool isConnected = false;
+
+    if (m_modelObject && m_get) {
+      boost::optional<model::ModelObject> modelObject = (*m_get)();
+      if (modelObject){
+        m_renderingColor = modelObject->cast<model::RenderingColor>();
+        OS_ASSERT(m_renderingColor);
+        isConnected = connect(modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(refresh()));
+        OS_ASSERT(isConnected);
+      }
+    }
+
+    isConnected = connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(refresh()));
     OS_ASSERT(isConnected);
 
     refresh();
@@ -96,11 +107,6 @@ namespace openstudio {
   {
     clear();
 
-    if (m_modelObject && m_get) {
-//      boost::optional<model::ModelObject> modelObject = (*m_get)();
-//      m_renderingColor = modelObject->cast<model::RenderingColor>();
-    }
-
     if (m_renderingColor){
 
       int r = m_renderingColor->renderingRedValue();
@@ -126,11 +132,6 @@ namespace openstudio {
 
   void RenderingColorWidget2::renderColorButtonClicked()
   {
-    if (m_modelObject && m_get) {
-//      boost::optional<model::ModelObject> modelObject = (*m_get)();
-//      m_renderingColor = modelObject->cast<model::RenderingColor>();
-    }
-
     if (m_renderingColor){
       int r = m_renderingColor->renderingRedValue();
       int g = m_renderingColor->renderingGreenValue();
