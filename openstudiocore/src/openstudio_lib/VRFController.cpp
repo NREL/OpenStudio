@@ -99,7 +99,7 @@ void VRFController::refreshNow()
     {
       m_detailView->setId(OSItemId(m_currentSystem->handle().toString(),modelToSourceId(m_currentSystem->model()),false));
 
-      connect(m_detailView, &VRFSystemView::inspectClicked, this, &VRFController::inspectOSItem);
+      connect(m_detailView.data(), &VRFSystemView::inspectClicked, this, &VRFController::inspectOSItem);
 
       std::vector<model::ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals = m_currentSystem->terminals();
       for(std::vector<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>::iterator it = terminals.begin();

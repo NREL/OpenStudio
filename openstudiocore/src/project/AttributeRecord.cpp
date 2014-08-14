@@ -128,8 +128,8 @@ namespace detail{
       m_attributeValueType(attribute.valueType()),
       m_attributeValue(attribute.valueAsQVariant()),
       m_attributeUnits(attribute.units()),
-      m_dataPointRecordId(dataPointRecord.id()),
-      m_source(attribute.source())
+      m_source(attribute.source()),
+      m_dataPointRecordId(dataPointRecord.id())
   {
     storeAttribute(attribute);
   }

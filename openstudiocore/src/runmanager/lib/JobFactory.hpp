@@ -410,7 +410,7 @@ namespace runmanager {
       /// \param[in] t_args Arguments to pass to the UserScript job
       /// \param[in] t_uuid Option to specify the UUID of the job.
       ///
-      /// \sa \ref UserScriptJob
+      /// \sa \ref RubyJobType
       static Job createUserScriptJob(
           const openstudio::path &t_rubyfile,
           const std::vector<ruleset::OSArgument> &t_args,

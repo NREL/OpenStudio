@@ -202,37 +202,37 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
 
   connect(mainWindow->verticalTabWidget, &PatVerticalTabWidget::tabSelected, this, &PatApp::showVerticalTab);
 
-  connect(mainWindow, &PatMainWindow::loadFileClicked, this, &PatApp::open);
+  connect(mainWindow.data(), &PatMainWindow::loadFileClicked, this, &PatApp::open);
 
-  connect(mainWindow, &PatMainWindow::newClicked, this, &PatApp::create);
+  connect(mainWindow.data(), &PatMainWindow::newClicked, this, &PatApp::create);
 
-  connect(mainWindow, &PatMainWindow::exitClicked, this, &PatApp::quit);
+  connect(mainWindow.data(), &PatMainWindow::exitClicked, this, &PatApp::quit);
 
-  connect(mainWindow, &PatMainWindow::openBclDlgClicked, this, &PatApp::openBclDlg);
+  connect(mainWindow.data(), &PatMainWindow::openBclDlgClicked, this, &PatApp::openBclDlg);
 
-  connect(mainWindow, &PatMainWindow::openCloudDlgClicked, this, &PatApp::openCloudDlg);
+  connect(mainWindow.data(), &PatMainWindow::openCloudDlgClicked, this, &PatApp::openCloudDlg);
 
-  connect(mainWindow, &PatMainWindow::openMonitorUseDlgClicked, this, &PatApp::openMonitorUseDlg);
+  connect(mainWindow.data(), &PatMainWindow::openMonitorUseDlgClicked, this, &PatApp::openMonitorUseDlg);
 
-  connect(mainWindow, &PatMainWindow::helpClicked, this, &PatApp::showHelp);
+  connect(mainWindow.data(), &PatMainWindow::helpClicked, this, &PatApp::showHelp);
 
-  connect(mainWindow, &PatMainWindow::aboutClicked, this, &PatApp::showAbout);
+  connect(mainWindow.data(), &PatMainWindow::aboutClicked, this, &PatApp::showAbout);
 
-  connect(mainWindow, &PatMainWindow::saveAsFileClicked, this, &PatApp::saveAs);
+  connect(mainWindow.data(), &PatMainWindow::saveAsFileClicked, this, &PatApp::saveAs);
 
-  connect(mainWindow, &PatMainWindow::saveFileClicked, this, &PatApp::save);
+  connect(mainWindow.data(), &PatMainWindow::saveFileClicked, this, &PatApp::save);
 
-  connect(mainWindow, &PatMainWindow::clearAllResultsClicked, this, &PatApp::clearAllResults);
+  connect(mainWindow.data(), &PatMainWindow::clearAllResultsClicked, this, &PatApp::clearAllResults);
 
-  connect(mainWindow, &PatMainWindow::exportXmlClicked, this, &PatApp::exportXml);
+  connect(mainWindow.data(), &PatMainWindow::exportXmlClicked, this, &PatApp::exportXml);
 
-  connect(mainWindow, &PatMainWindow::exportSpreadsheetClicked, this, &PatApp::exportSpreadsheet);
+  connect(mainWindow.data(), &PatMainWindow::exportSpreadsheetClicked, this, &PatApp::exportSpreadsheet);
 
-  connect(mainWindow, &PatMainWindow::scanForToolsClicked, this, &PatApp::scanForTools);
+  connect(mainWindow.data(), &PatMainWindow::scanForToolsClicked, this, &PatApp::scanForTools);
 
-  connect(mainWindow, &PatMainWindow::showToolsClicked, this, &PatApp::showTools);
+  connect(mainWindow.data(), &PatMainWindow::showToolsClicked, this, &PatApp::showTools);
 
-  connect(mainWindow, &PatMainWindow::changeMeasuresClicked, this, &PatApp::changeUserMeasuresDir);
+  connect(mainWindow.data(), &PatMainWindow::changeMeasuresClicked, this, &PatApp::changeUserMeasuresDir);
 
   mainWindow->show();
 
@@ -600,7 +600,7 @@ void PatApp::openBclDlg()
     std::string filterType = "measures";
     m_onlineBclDialog = new BuildingComponentDialog(filterType, true, mainWindow);
 
-    connect(m_onlineBclDialog, &BuildingComponentDialog::rejected, this, &PatApp::on_closeBclDlg);
+    connect(m_onlineBclDialog.data(), &BuildingComponentDialog::rejected, this, &PatApp::on_closeBclDlg);
   }
   if(m_onlineBclDialog && !m_onlineBclDialog->isVisible()){
     m_onlineBclDialog->setGeometry(mainWindow->geometry());
@@ -632,7 +632,7 @@ void PatApp::openCloudDlg()
   if(!m_cloudDialog){
     m_cloudDialog = new CloudDialog();
 
-    connect(m_cloudDialog, &CloudDialog::rejected, this, &PatApp::on_closeBclDlg);
+    connect(m_cloudDialog.data(), &CloudDialog::rejected, this, &PatApp::on_closeBclDlg);
   }
   if(m_cloudDialog && !m_cloudDialog->isVisible()){
     m_cloudDialog->show();
@@ -649,7 +649,7 @@ void PatApp::openMonitorUseDlg()
   if(!m_monitorUseDialog){
     m_monitorUseDialog = new MonitorUseDialog();
 
-    connect(m_monitorUseDialog, &MonitorUseDialog::rejected, this, &PatApp::on_closeMonitorUseDlg);
+    connect(m_monitorUseDialog.data(), &MonitorUseDialog::rejected, this, &PatApp::on_closeMonitorUseDlg);
   }
   if(m_monitorUseDialog && !m_monitorUseDialog->isVisible()){
     m_monitorUseDialog->show();

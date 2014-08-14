@@ -196,7 +196,7 @@ namespace runmanager {
     return makeTools(t_type, std::make_pair(t_version, ToolLocationInfo(t_type, t_local)));
   }
 
-  openstudio::runmanager::ToolInfo ConfigOptions::toRTraceToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus) 
+  openstudio::runmanager::ToolInfo ConfigOptions::toRTraceToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &rtrace) 
   {
 #ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
@@ -206,8 +206,8 @@ namespace runmanager {
 
     return openstudio::runmanager::ToolInfo(
         "rtrace",
-        eplus.first,
-        change_extension(eplus.second.binaryDir / toPath("rtrace"), exeext),
+        rtrace.first,
+        change_extension(rtrace.second.binaryDir / toPath("rtrace"), exeext),
         boost::regex(""));
   } 
 

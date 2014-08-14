@@ -42,6 +42,8 @@ class StartupMenu : public QMenuBar
 
   void importClicked();
 
+  void importgbXMLClicked();
+
   void importSDDClicked();
 
   void loadFileClicked();
@@ -55,6 +57,8 @@ class StartupMenu : public QMenuBar
   void exitClicked();
 
   void helpClicked();
+
+  void aboutClicked();
 
   private:
 
