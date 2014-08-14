@@ -54,12 +54,16 @@
 #include "../model/People_Impl.hpp"
 #include "../model/RenderingColor.hpp"
 #include "../model/RenderingColor_Impl.hpp"
+#include "../model/Schedule.hpp"
+#include "../model/Schedule_Impl.hpp"
 #include "../model/SpaceInfiltrationDesignFlowRate.hpp"
 #include "../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
 #include "../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
 #include "../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
 #include "../model/SpaceLoad.hpp"
 #include "../model/SpaceLoad_Impl.hpp"
+#include "../model/SpaceLoadDefinition.hpp"
+#include "../model/SpaceLoadDefinition_Impl.hpp"
 #include "../model/SpaceLoadInstance.hpp"
 #include "../model/SpaceLoadInstance_Impl.hpp"
 #include "../model/SpaceType.hpp"
@@ -211,7 +215,8 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
   m_baseConcepts.clear();
 
   Q_FOREACH(QString field, fields){
-    if (field == NAME) {
+
+    if ( field == NAME ) {
       auto getter = CastNullAdapter<model::SpaceType>(&model::SpaceType::name);
       auto setter = CastNullAdapter<model::SpaceType>(&model::SpaceType::setName);
 
@@ -219,7 +224,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         getter,
         setter);
 
-    } else if (field == LOADNAME) {
+    } else if (field == LOADNAME || field == MULTIPLIER || field == DEFINITION || field == SCHEDULE || field == ACTIVITYSCHEDULE) {
       // Create a lambda function that collates all of the loads in a space type 
       // and returns them as an std::vector
       std::function<std::vector<model::ModelObject> (const model::SpaceType &)> allLoads(
@@ -253,27 +258,80 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         }
       );
 
-      // Here we create a NameLineEdit column, but this one includes a "DataSource" object
-      // The DataSource object is used in OSGridController::widgetAt to make a list of NameLineEdit widgets
-      // for each SpaceType that is passed in.
-      //
-      // Notice that it takes the "allLoads" functor from above.
-      //
-      // Just as an implementation note, it would be possible to use the DataSource as an alternative
-      // to the ProxyAdapter function, if the DataSource were to return a vector of 1.
-      //
-      // The final argument to DataSource tells the system that we want an additional widget to be displayed
-      // at the bottom of each list. In this case, it's a dropZone. Any type of BaseConcept would work.
+      if (field == LOADNAME) {
 
-      addNameLineEditColumn(QString(LOADNAME),
-        CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::name),
-        CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::setName),
-        DataSource(
+        // Here we create a NameLineEdit column, but this one includes a "DataSource" object
+        // The DataSource object is used in OSGridController::widgetAt to make a list of NameLineEdit widgets
+        // for each SpaceType that is passed in.
+        //
+        // Notice that it takes the "allLoads" functor from above.
+        //
+        // Just as an implementation note, it would be possible to use the DataSource as an alternative
+        // to the ProxyAdapter function, if the DataSource were to return a vector of 1.
+        //
+        // The final argument to DataSource tells the system that we want an additional widget to be displayed
+        // at the bottom of each list. In this case, it's a dropZone. Any type of BaseConcept would work.
+
+        addNameLineEditColumn(QString(LOADNAME),
+          CastNullAdapter<model::SpaceLoadInstance>(&model::SpaceLoadInstance::name),
+          CastNullAdapter<model::SpaceLoadInstance>(&model::SpaceLoadInstance::setName),
+          DataSource(
           allLoads,
           true
           //QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel, getter, setter)
-        )
-      );
+          )
+          );
+
+      }
+      else if (field == MULTIPLIER) {
+
+        //addValueEditColumn(QString(MULTIPLIER),
+        //  CastNullAdapter<model::SpaceLoadInstance>(&model::SpaceLoadInstance::multiplier),
+        //  CastNullAdapter<model::SpaceLoadInstance>(&model::SpaceLoadInstance::setMultiplier),
+        //  DataSource(
+        //  allLoads,
+        //  true
+        //  //QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel, getter, setter)
+        //  )
+        //  );
+
+      } else if (field == DEFINITION) {
+
+        //addDropZoneColumn(QString(DEFINITION),
+        //  CastNullAdapter<model::SpaceLoadInstance>(&model::SpaceLoadInstance::definition),
+        //  CastNullAdapter<model::SpaceLoadInstance>(&model::SpaceLoadInstance::setDefinition),
+        //  DataSource(
+        //  allLoads,
+        //  true
+        //  //QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel, getter, setter)
+        //  )
+        //  );
+
+      } else if (field == SCHEDULE) {
+
+        //addDropZoneColumn(QString(SCHEDULE),
+        //  CastNullAdapter<model::SpaceLoadInstance>(&model::SpaceLoadInstance::schedule),
+        //  CastNullAdapter<model::SpaceLoadInstance>(&model::SpaceLoadInstance::setSchedule),
+        //  DataSource(
+        //  allLoads,
+        //  true
+        //  //QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel, getter, setter)
+        //  )
+        //  );
+
+      } else if (field == ACTIVITYSCHEDULE) {
+
+        //addDropZoneColumn(QString(ACTIVITYSCHEDULE),
+        //  CastNullAdapter<model::SpaceLoadInstance>(&model::SpaceLoadInstance::name),
+        //  CastNullAdapter<model::SpaceLoadInstance>(&model::SpaceLoadInstance::setName),
+        //  DataSource(
+        //  allLoads,
+        //  true
+        //  //QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel, getter, setter)
+        //  )
+        //  );
+
+      }
 
     } else if (field == DEFAULTCONSTRUCTIONSET){
       addDropZoneColumn(QString(DEFAULTCONSTRUCTIONSET),
@@ -304,7 +362,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         }
       );
 
-      addNameLineEditColumn(QString(LOADNAME),
+      addNameLineEditColumn(QString(SPACEINFILTRATIONDESIGNFLOWRATES),
         CastNullAdapter<model::SpaceInfiltrationDesignFlowRate>(&model::SpaceInfiltrationDesignFlowRate::name),
         CastNullAdapter<model::SpaceInfiltrationDesignFlowRate>(&model::SpaceInfiltrationDesignFlowRate::setName),
         DataSource(
@@ -324,7 +382,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
       }
       );
 
-      addNameLineEditColumn(QString(LOADNAME),
+      addNameLineEditColumn(QString(SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS),
         CastNullAdapter<model::SpaceInfiltrationEffectiveLeakageArea>(&model::SpaceInfiltrationEffectiveLeakageArea::name),
         CastNullAdapter<model::SpaceInfiltrationEffectiveLeakageArea>(&model::SpaceInfiltrationEffectiveLeakageArea::setName),
         DataSource(
