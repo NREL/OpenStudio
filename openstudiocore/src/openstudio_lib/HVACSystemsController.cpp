@@ -56,6 +56,7 @@
 #include <model/ControllerMechanicalVentilation_Impl.hpp>
 #include <model/ControllerOutdoorAir.hpp>
 #include <model/ControllerOutdoorAir_Impl.hpp>
+#include <model/SetpointManager.hpp>
 #include <model/SetpointManagerSingleZoneReheat.hpp>
 #include <model/SetpointManagerSingleZoneReheat_Impl.hpp>
 #include <model/SetpointManagerScheduled.hpp>
@@ -1082,8 +1083,32 @@ void HVACControlsController::update()
       }
 
       // Supply Air Temperature
+      boost::optional<model::SetpointManager> _spm;
+      std::vector<model::SetpointManager> _setpointManagers = t_airLoopHVAC->supplyOutletNode().setpointManagers();
+      for(std::vector<model::SetpointManager>::iterator it = _setpointManagers.begin();
+          it != _setpointManagers.end();
+          ++it)
+      {
+        if( istringEqual("Temperature", it->controlVariable()) ) 
+        {
+          _spm = *it;
+          break;
+        }
+      }
 
-      if( boost::optional<model::SetpointManagerSingleZoneReheat> spm = t_airLoopHVAC->supplyOutletNode().getSetpointManagerSingleZoneReheat() )
+      // NEED TO REDO THIS PROBABLY
+      // std::vector<model::SetpointManager> _setpointManagers = t_airLoopHVAC->supplyOutletNode().setpointManagers();
+      // std::vector<model::SetpointManagerSingleZoneReheat> _spmSingleZoneReheat = subsetCastVector<model::SetpointManagerSingleZoneReheat>(_setpointManagers);
+      // std::vector<model::SetpointManagerScheduled> _spmScheduled = subsetCastVector<model::SetpointManagerScheduled>(_setpointManagers);
+      // std::vector<model::SetpointManagerFollowOutdoorAirTemperature> _spmFollowOutdoorAirTemperature = subsetCastVector<model::SetpointManagerFollowOutdoorAirTemperature>(_setpointManagers);
+      // std::vector<model::SetpointManagerOutdoorAirReset> _spmOutdoorAirReset = subsetCastVector<model::SetpointManagerOutdoorAirReset>(_setpointManagers);
+
+      // if( !_spmSingleZoneReheat.empty() ) {
+      //   model::SetpointManagerSingleZoneReheat spm = _spmSingleZoneReheat.front();
+      // }
+      // if( boost::optional<model::SetpointManagerSingleZoneReheat> spm = t_airLoopHVAC->supplyOutletNode().getSetpointManagerSingleZoneReheat() )
+      // {
+      if( boost::optional<model::SetpointManagerSingleZoneReheat> spm = _spm->optionalCast<model::SetpointManagerSingleZoneReheat>() )
       {
         m_singleZoneReheatSPMView = new SingleZoneReheatSPMView();
 
@@ -1101,6 +1126,7 @@ void HVACControlsController::update()
         m_singleZoneReheatSPMView->controlZoneComboBox->addItem("",QUuid().toString());
 
         if( boost::optional<model::ThermalZone> tz = spm->controlZone() )
+        // if( boost::optional<model::ThermalZone> tz = spm.controlZone() )
         {
           int index = m_singleZoneReheatSPMView->controlZoneComboBox->findData(tz->handle().toString());
 
@@ -1130,7 +1156,11 @@ void HVACControlsController::update()
                         this,SLOT(onControlZoneComboBoxChanged(int))); 
         OS_ASSERT(bingo);
       }
-      else if( boost::optional<model::SetpointManagerScheduled> spm = t_airLoopHVAC->supplyOutletNode().setpointManagerScheduled() )
+      // else if( !_spmScheduled.empty() ) {
+      //   model::SetpointManagerScheduled spm = _spmScheduled.front();
+      // else if( boost::optional<model::SetpointManagerScheduled> spm = t_airLoopHVAC->supplyOutletNode().setpointManagerScheduled() )
+      // {
+      else if( boost::optional<model::SetpointManagerScheduled> spm = _spm->optionalCast<model::SetpointManagerScheduled>() )
       {
         m_scheduledSPMView = new ScheduledSPMView();
 
@@ -1138,6 +1168,7 @@ void HVACControlsController::update()
 
         SupplyAirTempScheduleVectorController * supplyAirTempScheduleVectorController = new SupplyAirTempScheduleVectorController();
         supplyAirTempScheduleVectorController->attach(spm.get());
+        // supplyAirTempScheduleVectorController->attach(spm);
         m_supplyAirTempScheduleDropZone = new OSDropZone(supplyAirTempScheduleVectorController);
         m_supplyAirTempScheduleDropZone->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
         m_supplyAirTempScheduleDropZone->setMinItems(1);
@@ -1148,13 +1179,21 @@ void HVACControlsController::update()
         m_supplyAirTempScheduleDropZone->setEnabled(true);
         m_scheduledSPMView->supplyAirTemperatureViewSwitcher->setView(m_supplyAirTempScheduleDropZone);
       }
-      else if( boost::optional<model::SetpointManagerFollowOutdoorAirTemperature> spm = t_airLoopHVAC->supplyOutletNode().setpointManagerFollowOutdoorAirTemperature() )
+      // else if( !_spmFollowOutdoorAirTemperature.empty() ) {
+      //   model::SetpointManagerFollowOutdoorAirTemperature spm = _spmFollowOutdoorAirTemperature.front();
+      // else if( boost::optional<model::SetpointManagerFollowOutdoorAirTemperature> spm = t_airLoopHVAC->supplyOutletNode().setpointManagerFollowOutdoorAirTemperature() )
+      // {
+      else if( boost::optional<model::SetpointManagerFollowOutdoorAirTemperature> spm = _spm->optionalCast<model::SetpointManagerFollowOutdoorAirTemperature>() )
       {
         m_followOATempSPMView = new FollowOATempSPMView();
 
         m_hvacControlsView->supplyAirTemperatureViewSwitcher->setView(m_followOATempSPMView);
       }
-      else if( boost::optional<model::SetpointManagerOutdoorAirReset> spm = t_airLoopHVAC->supplyOutletNode().setpointManagerOutdoorAirReset() )
+      // else if( !_spmOutdoorAirReset.empty() ) {
+      //   model::SetpointManagerOutdoorAirReset spm = _spmOutdoorAirReset.front();
+      // else if( boost::optional<model::SetpointManagerOutdoorAirReset> spm = t_airLoopHVAC->supplyOutletNode().setpointManagerOutdoorAirReset() )
+      // {
+      else if( boost::optional<model::SetpointManagerOutdoorAirReset> spm = _spm->optionalCast<model::SetpointManagerOutdoorAirReset>() )
       {
         m_oaResetSPMView = new OAResetSPMView();
 
@@ -1290,18 +1329,29 @@ void HVACControlsController::onControlZoneComboBoxChanged(int index)
 
   OS_ASSERT(t_airLoopHVAC);
 
-  boost::optional<model::SetpointManagerSingleZoneReheat> spm = t_airLoopHVAC->supplyOutletNode().getSetpointManagerSingleZoneReheat();
-
-  OS_ASSERT(spm);
-
-  if( tz )
-  {
-    spm->setControlZone(tz.get());
+  std::vector<model::SetpointManagerSingleZoneReheat> setpointManagers = subsetCastVector<model::SetpointManagerSingleZoneReheat>(t_airLoopHVAC->supplyOutletNode().setpointManagers());
+  if( ! setpointManagers.empty() ) {
+    model::SetpointManagerSingleZoneReheat spm = setpointManagers.front();
+    if( tz ) {
+      spm.setControlZone(*tz);
+    }
+    else {
+      spm.resetControlZone();
+    }
   }
-  else
-  {
-    spm->resetControlZone();
-  }
+
+  // boost::optional<model::SetpointManagerSingleZoneReheat> spm = t_airLoopHVAC->supplyOutletNode().getSetpointManagerSingleZoneReheat();
+
+  // OS_ASSERT(spm);
+
+  // if( tz )
+  // {
+  //   spm->setControlZone(tz.get());
+  // }
+  // else
+  // {
+  //   spm->resetControlZone();
+  // }
 }
 void HVACControlsController::onUnitaryHeatPumpControlZoneChanged(int index)
 {

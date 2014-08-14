@@ -314,11 +314,11 @@ void SetpointManagerMixedAir::updateFanInletOutletNodes(AirLoopHVAC & airLoopHVA
          it != nodes.end();
          ++it )
     {
-      if( boost::optional<model::SetpointManagerMixedAir> spm = it->getSetpointManagerMixedAir() )
-      {
-        spm->setFanInletNode(fanInletNode.get());
-
-        spm->setFanOutletNode(fanOutletNode.get());
+      std::vector<SetpointManagerMixedAir> setpointManagers = subsetCastVector<SetpointManagerMixedAir>(it->setpointManagers());
+      if( ! setpointManagers.empty() ) {
+        SetpointManagerMixedAir spm = setpointManagers.front();
+        spm.setFanInletNode(fanInletNode.get());
+        spm.setFanOutletNode(fanOutletNode.get());
       }
     }
   }

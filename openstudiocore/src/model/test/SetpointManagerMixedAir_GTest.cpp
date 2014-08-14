@@ -94,6 +94,55 @@ TEST_F(ModelFixture, SetpointManagerMixedAir_addToNode)
   EXPECT_EQ(2, setpointManagerMixedAirs.size());
 }
 
+TEST_F(ModelFixture, SetpointManagerMixedAir_updateFanInletOutletNodes)
+{
+  Model m;
+  AirLoopHVAC airloop(m);
+  PlantLoop plantLoop(m);
+  Node supplyNode = airloop.supplyOutletNode();
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanVariableVolume fan(m,s);
+  CoilHeatingElectric coil1(m,s);
+  CoilHeatingElectric coil2(m,s);
+  CoilHeatingElectric coil3(m,s);
+
+  coil1.addToNode(supplyNode);
+  coil2.addToNode(supplyNode);
+  coil3.addToNode(supplyNode);
+
+  Node node1 = coil1.outletModelObject()->cast<Node>();
+  Node node2 = coil2.outletModelObject()->cast<Node>();
+  Node node3 = coil3.outletModelObject()->cast<Node>();
+
+  SetpointManagerMixedAir spm_1(m);
+  spm_1.setControlVariable("Temperature");
+  spm_1.addToNode(node1);
+
+  SetpointManagerMixedAir spm_2(m);
+  spm_2.setControlVariable("Temperature");
+  spm_2.addToNode(node2);
+
+  SetpointManagerMixedAir spm_3(m);
+  spm_3.setControlVariable("Temperature");
+  spm_3.addToNode(node3);
+
+  EXPECT_FALSE(spm_1.fanInletNode());
+  EXPECT_FALSE(spm_1.fanOutletNode());
+  EXPECT_FALSE(spm_2.fanInletNode());
+  EXPECT_FALSE(spm_2.fanOutletNode());
+  EXPECT_FALSE(spm_3.fanInletNode());
+  EXPECT_FALSE(spm_3.fanOutletNode());
+
+  fan.addToNode(supplyNode);
+
+  EXPECT_TRUE(spm_1.fanInletNode());
+  EXPECT_TRUE(spm_1.fanOutletNode());
+  EXPECT_TRUE(spm_2.fanInletNode());
+  EXPECT_TRUE(spm_2.fanOutletNode());
+  EXPECT_TRUE(spm_3.fanInletNode());
+  EXPECT_TRUE(spm_3.fanOutletNode());
+}
+
 TEST_F(ModelFixture, SetpointManagerMixedAir_remove)
 {
   Model m;
