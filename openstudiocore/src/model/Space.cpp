@@ -2796,6 +2796,11 @@ namespace detail {
         // remove additional collinear points that occur after reordering
         innerLoop = removeCollinear(innerLoop);
 
+        // if inner loop is now empty just ignore it
+        if (innerLoop.empty()){
+          continue;
+        }
+
         // reverse the inner loop
         std::reverse(innerLoop.begin(), innerLoop.end());
 
