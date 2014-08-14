@@ -2777,6 +2777,11 @@ namespace detail {
       // remove additional colinear points that occur after reordering
       result = removeColinear(result);
 
+      // if result is now empty just quit
+      if (result.size() < 3){
+        return std::vector<Point3d>();
+      }
+
       Point3d lastOuterVertex = result.back();
 
       BOOST_FOREACH(const BoostRing& boostInner, boostResult[0].inners()){
@@ -2797,7 +2802,7 @@ namespace detail {
         innerLoop = removeColinear(innerLoop);
 
         // if inner loop is now empty just ignore it
-        if (innerLoop.empty()){
+        if (innerLoop.size() < 3){
           continue;
         }
 
@@ -2823,6 +2828,11 @@ namespace detail {
     
     // remove additional colinear points that occur after reordering
     result = removeColinear(result);
+
+    // if result is now empty just quit
+    if (result.size() < 3){
+      return std::vector<Point3d>();
+    }
 
     return result;
   }
