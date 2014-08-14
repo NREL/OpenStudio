@@ -309,7 +309,7 @@ AUTOLINK_SUPPORT       = YES
 # diagrams that involve STL classes more complete and accurate.
 # The default value is: NO.
 
-BUILTIN_STL_SUPPORT    = NO
+BUILTIN_STL_SUPPORT    = YES
 
 # If you use Microsoft's C++/CLI language, you should set this option to YES to
 # enable parsing support.
@@ -755,8 +755,7 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = ${DOXY_INPUT_DIR} \
-                         ${DOXY_ADDITIONAL_DIR} \
-                         ${DOXY_ADDITIONAL_FILES}
+                         ${DOXY_ADDITIONAL_DIR}
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
@@ -2045,7 +2044,7 @@ TAGFILES               = ${DOXY_TAGFILES}
 # tag file that is based on the input files it reads. See section "Linking to
 # external documentation" for more information about the usage of tag files.
 
-GENERATE_TAGFILE       = "${CMAKE_BINARY_DIR}/${DOC_NAME}.tag"
+GENERATE_TAGFILE       = "${DOC_NAME}/${DOC_NAME}.tag"
 
 # If the ALLEXTERNALS tag is set to YES all external class will be listed in the
 # class index. If set to NO only the inherited external classes will be listed.

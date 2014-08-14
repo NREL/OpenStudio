@@ -151,10 +151,13 @@ $(function() {
     var btnGroup = $('<div class="btn-group btn-group-sm">');
     for (var i = 0; i < length; ++i) {
       var btn = $('<button type="button" class="btn btn-default">' + (i + 1) + '</button>');
+      if (i + 1 == 3) $(btn).addClass('active');
       (function() {
         var it = i;
         $(btn).click(function() {
           toggleLevel(it + 1);
+          $(this).parent().children().removeClass('active');
+          $(this).addClass('active');
         });
       })();
       btnGroup.append(btn);
