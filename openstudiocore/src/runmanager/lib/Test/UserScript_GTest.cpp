@@ -109,8 +109,11 @@ TEST_F(RunManagerTestFixture, UserScript_Params)
   UUID versionUuid;
   std::string name = "name";
   std::string displayName = "displayName";
+  std::string description = "A good description";
   ruleset::OSArgumentType type = ruleset::OSArgumentType::Double;
+  boost::optional<std::string> units;
   bool required = false;
+  bool modelDependent = false;
   std::string value = toString(10.0);
   std::string defaultValue = toString(11.89);
   std::vector<std::string> choices, choiceDisplayNames;
@@ -128,8 +131,11 @@ TEST_F(RunManagerTestFixture, UserScript_Params)
       versionUuid,
       name,
       displayName,
+      description,
       type,
+      units,
       required,
+      modelDependent,
       value,
       defaultValue,
       domainType,
@@ -177,8 +183,11 @@ TEST_F(RunManagerTestFixture, UserScript_WorkItemWithArg)
   UUID versionUuid;
   std::string name = "name";
   std::string displayName = "displayName";
+  std::string description = "A good description";
   ruleset::OSArgumentType type = ruleset::OSArgumentType::Path;
+  boost::optional<std::string> units;
   bool required = false;
+  bool modelDependent = false;
   std::string value = "test.osm";
   std::string defaultValue = "empty.osm";
   bool isRead = true;
@@ -193,8 +202,11 @@ TEST_F(RunManagerTestFixture, UserScript_WorkItemWithArg)
       versionUuid,
       name,
       displayName,
+      description,
       type,
+      units,
       required,
+      modelDependent,
       value,
       defaultValue,
       domainType,

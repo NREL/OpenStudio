@@ -756,9 +756,15 @@ JobParams RubyJobBuilder::toJobParams(const std::vector<ruleset::OSArgument> &t_
     param.append("versionUUID", openstudio::toString(arg.versionUUID()));
     param.append("name", arg.name());
     param.append("displayName", arg.displayName());
+    if (arg.description()){
+      param.append("description", arg.description().get());
+    }
     param.append("type", arg.type().valueName());
+    if (arg.units()){
+      param.append("units", arg.units().get());
+    }
     param.append("required", boolToString(arg.required()));
-
+    param.append("modelDependent", boolToString(arg.modelDependent()));
     if (arg.hasValue())
     {
       if (arg.type() == openstudio::ruleset::OSArgumentType::Path && !t_basePath.empty())
@@ -874,9 +880,28 @@ std::vector<ruleset::OSArgument> RubyJobBuilder::toOSArguments(const JobParams &
       std::string name = arg.get("name").children.at(0).value;
       std::string displayName = arg.get("displayName").children.at(0).value;
 
+      boost::optional<std::string> description;
+      try{
+        description = arg.get("displayName").children.at(0).value;
+      } catch (...) {}
+
+
       LOG(Debug, "Setting OSArgumentType " << arg.get("type").children.at(0).value);
       openstudio::ruleset::OSArgumentType type(arg.get("type").children.at(0).value);
+
+      boost::optional<std::string> units;
+      try{
+        units = arg.get("units").children.at(0).value;
+      } catch (...) {}
+
       bool required = stringToBool(arg.get("required").children.at(0).value);
+
+      bool modelDependent = false;
+      try{
+        // DLM: added in 1.4.2
+        modelDependent = stringToBool(arg.get("modelDependent").children.at(0).value);
+      } catch (...) {}
+      
       boost::optional<std::string> value;
       try {
         if (type == openstudio::ruleset::OSArgumentType::Path && !t_basePath.empty())
@@ -927,8 +952,11 @@ std::vector<ruleset::OSArgument> RubyJobBuilder::toOSArguments(const JobParams &
               versionUUID,
               name,
               displayName,
+              description,
               type,
+              units,
               required,
+              modelDependent,
               value,
               defaultValue,
               domainType,
