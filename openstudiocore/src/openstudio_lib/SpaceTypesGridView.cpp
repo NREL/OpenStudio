@@ -174,15 +174,15 @@ void SpaceTypesGridController::setCategoriesAndFields()
     fields.push_back(DEFAULTCONSTRUCTIONSET);
     fields.push_back(DEFAULTSCHEDULESET);
     fields.push_back(DESIGNSPECIFICATIONOUTDOORAIR);
-    fields.push_back(SPACEINFILTRATIONDESIGNFLOWRATES); // TODO Extensible DropZone
-    //fields.push_back(SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS); // TODO Extensible DropZone
+    fields.push_back(SPACEINFILTRATIONDESIGNFLOWRATES);
+    fields.push_back(SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS);
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("General"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
-    fields.push_back(LOADNAME); // Name Edit
+    fields.push_back(LOADNAME);
     //fields.push_back(MULTIPLIER); // Value Edit
     //fields.push_back(DEFINITION); // DropZone
     //fields.push_back(SCHEDULE); // DropZone
@@ -310,10 +310,30 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         DataSource(
           flowRates,
           true,
-          QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::SpaceInfiltrationDesignFlowRate, model::SpaceType>("Space Infiltration", 
+          QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::SpaceInfiltrationDesignFlowRate, model::SpaceType>(SPACEINFILTRATIONDESIGNFLOWRATES,
              getter, setter))
         )
       );
+
+    } else if (field == SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS) {
+      std::function<boost::optional<model::SpaceInfiltrationEffectiveLeakageArea>(model::SpaceType *)>  getter;
+      std::function<bool(model::SpaceType *, const model::SpaceInfiltrationEffectiveLeakageArea &)> setter;
+      std::function<std::vector<model::SpaceInfiltrationEffectiveLeakageArea>(const model::SpaceType &)> leakageAreas(
+        [](const model::SpaceType &s) {
+        return s.spaceInfiltrationEffectiveLeakageAreas();
+      }
+      );
+
+      addNameLineEditColumn(QString(LOADNAME),
+        CastNullAdapter<model::SpaceInfiltrationEffectiveLeakageArea>(&model::SpaceInfiltrationEffectiveLeakageArea::name),
+        CastNullAdapter<model::SpaceInfiltrationEffectiveLeakageArea>(&model::SpaceInfiltrationEffectiveLeakageArea::setName),
+        DataSource(
+        leakageAreas,
+        true,
+        QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::SpaceInfiltrationEffectiveLeakageArea, model::SpaceType>(SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS,
+        getter, setter))
+        )
+        );
 
     } else {
       // unhandled
