@@ -152,10 +152,10 @@ path = OpenStudio::Path.new(radiancePath).to_s
 raypath = (OpenStudio::Path.new(radiancePath).parent_path() / OpenStudio::Path.new("lib")).to_s()
 
 epw2weapath = (OpenStudio::Path.new(radiancePath) / OpenStudio::Path.new("epw2wea")).to_s
-epw2weaglob = "epw2weapath"
+programExtension = ""
 
 if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
-  epw2weaglob = "epw2weapath + \".exe\""
+  programExtension = ".exe"
   perlpath = ""
   if OpenStudio::applicationIsRunningFromBuildDirectory()
     perlpath = OpenStudio::getApplicationRunDirectory().parent_path().parent_path() / OpenStudio::Path.new("strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin")
@@ -170,7 +170,7 @@ else
   ENV["RAYPATH"] = path + ":" + raypath + ":."
 end
 
-if Dir.glob(epw2weapath).empty?
+if Dir.glob(epw2weapath + programExtension).empty?
   puts "Cannot find epw2wea tool in radiance installation at '#{radiancePath}'.  You may need to install a newer version of Radiance."
   exit false
 end
