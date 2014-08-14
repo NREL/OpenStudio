@@ -169,7 +169,8 @@ namespace radiance {
         }else if (daylightingControl.isSecondaryDaylightingControl()){
           // is this ok? DaylightSim only seems to write out values for one DaylightingControl
         }else{
-          LOG(Warn, "DaylightingControl " << daylightingControl.name().get() << " is not associated with this Space's ThermalZone, it will not be translated.");
+          LOG(Warn, "DaylightingControl " << daylightingControl.name().get() << \
+            " is not associated with this Space's ThermalZone, it will not be translated.");
           daylightingControl.remove();
         }
       }
@@ -180,7 +181,8 @@ namespace radiance {
         if (thermalZoneIlluminanceMap && (thermalZoneIlluminanceMap->handle() == illuminanceMap.handle())){
           // ok
         }else{
-          LOG(Warn, "IlluminanceMap " << illuminanceMap.name().get() << " is not associated with this Space's ThermalZone, it will not be translated.");
+          LOG(Warn, "IlluminanceMap " << illuminanceMap.name().get() << \
+            " is not associated with this Space's ThermalZone, it will not be translated.");
           illuminanceMap.remove();
         }
       }
@@ -193,7 +195,8 @@ namespace radiance {
         numSpacesToSimulate += 1;
 
         if (glareSensors.empty()){
-          LOG(Warn, "Space " << space.name().get() << " contains Radiance daylighting objects but no GlareSensor objects.");
+          LOG(Warn, "Space " << space.name().get() << \
+            " contains Radiance daylighting objects but no GlareSensor objects.");
         }
       }
     }
@@ -257,7 +260,7 @@ namespace radiance {
       LOG(Debug, "Total aperture headings: " << totalVectors);
       if (totalVectors > 8)
       {
-        LOG(Warn, formatString(totalVectors) << " glazing orientations detected (can cause long simulation times if using daylight coefficient approach)");
+        LOG(Warn, formatString(totalVectors) << " glazing orientations detected (can cause long simulation times if using daylight coefficients).");
       }
 
       //    std::string dcmatsString = dcmatsStringin.gsub(',', ' ');
@@ -1007,7 +1010,8 @@ namespace radiance {
           WindowGroupControl control = windowGroup.windowGroupControl();
           if (control.outwardNormal){
 
-            std::cout << "outward normal:" + formatString(control.outwardNormal->x()) + " " + formatString(control.outwardNormal->y()) + " " + formatString(control.outwardNormal->z()) + "\n";
+            std::cout << "outward normal:" + formatString(control.outwardNormal->x()) + " " + formatString(control.outwardNormal->y()) + " " + \
+            formatString(control.outwardNormal->z()) + "\n";
 
           }
 
@@ -1118,7 +1122,10 @@ namespace radiance {
                 vertex != polygon.rend();
                 ++vertex)
             {
-              m_radWindowGroups[windowGroup_name] += "" + formatString(vertex->x()) + " " + formatString(vertex->y()) + " " + formatString(vertex->z()) + "\n";
+              m_radWindowGroups[windowGroup_name] += "" + \
+              formatString(vertex->x()) + " " + \
+              formatString(vertex->y()) + " " + \
+              formatString(vertex->z()) + "\n";
             }
 
             // copy required bsdf files into place
@@ -1127,15 +1134,15 @@ namespace radiance {
  
             if (rMaterial == "glass"){
 
-              openstudio::path sourcePath = openstudio::toPath("C:/Users/rgugliel/test/cl_Tn" + formatString(tVis, 2) + ".xml");
+              openstudio::path sourcePath = openstudio::toPath("/Users/rgugliel/src/support/bsdf/cl_Tn" + formatString(tVis, 2) + ".xml");
               std::cout << "tVis = " << openstudio::toString(tVis) << std::endl;
               std::cout << "the source path is " << openstudio::toString(sourcePath) << ", exists = " << boost::filesystem::exists(sourcePath) << std::endl;
               std::cout << "the dest path is " << openstudio::toString(bsdfoutpath) << ", exists = " << boost::filesystem::exists(bsdfoutpath) << std::endl;
 
-              boost::filesystem::copy_file(openstudio::toPath("C:/Users/rgugliel/test/cl_Tn" + formatString(tVis, 2) + ".xml"), bsdfoutpath / \
+              boost::filesystem::copy_file(openstudio::toPath("/Users/rgugliel/src/support/bsdf/cl_Tn" + formatString(tVis, 2) + ".xml"), bsdfoutpath / \
                 openstudio::toPath("cl_Tn" + formatString(tVis, 2) + ".xml"), boost::filesystem::copy_option::overwrite_if_exists);
 
-              boost::filesystem::copy_file(openstudio::toPath("C:/Users/rgugliel/test/cl_Tn" + formatString(tVis, 2) + "_blinds.xml"), bsdfoutpath / \
+              boost::filesystem::copy_file(openstudio::toPath("/Users/rgugliel/src/support/bsdf/cl_Tn" + formatString(tVis, 2) + "_blinds.xml"), bsdfoutpath / \
                 openstudio::toPath("cl_Tn" + formatString(tVis, 2) + "_blinds.xml"), boost::filesystem::copy_option::overwrite_if_exists);
               
               // add job to vmx problem set
@@ -1147,12 +1154,12 @@ namespace radiance {
 
             } else if (rMaterial == "trans"){
 
-              openstudio::path sourcePath = openstudio::toPath("C:/Users/rgugliel/test/df_Tn" + formatString(tVis, 2) + ".xml");
+              openstudio::path sourcePath = openstudio::toPath("/Users/rgugliel/src/support/bsdf/df_Tn" + formatString(tVis, 2) + ".xml");
               std::cout << "tVis = " << openstudio::toString(tVis) << std::endl;
               std::cout << "the source path is " << openstudio::toString(sourcePath) << ", exists = " << boost::filesystem::exists(sourcePath) << std::endl;
               std::cout << "the dest path is " << openstudio::toString(bsdfoutpath) << ", exists = " << boost::filesystem::exists(bsdfoutpath) << std::endl;
 
-              boost::filesystem::copy_file(openstudio::toPath("C:/Users/rgugliel/test/df_Tn" + formatString(tVis, 2) + ".xml"), bsdfoutpath / \
+              boost::filesystem::copy_file(openstudio::toPath("/Users/rgugliel/src/support/bsdf/df_Tn" + formatString(tVis, 2) + ".xml"), bsdfoutpath / \
                 openstudio::toPath("df_Tn" + formatString(tVis, 2) + ".xml"), boost::filesystem::copy_option::overwrite_if_exists);
 
               // add job to vmx problem set
@@ -1175,7 +1182,10 @@ namespace radiance {
             m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance, 3) + "\n";
             m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance) + "\n";
             // write material
-            m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3) + "\n0\n0\n5\n" + formatString(interiorVisibleReflectance, 3) + " " + formatString(interiorVisibleReflectance, 3) + " " + formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
+            m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3) + "\n0\n0\n5\n" + \
+              formatString(interiorVisibleReflectance, 3) + " " + \
+              formatString(interiorVisibleReflectance, 3) + " " + \
+              formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
             // write polygon
             m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3) + " polygon " + subSurface_name + "\n";
             m_radSpaces[space_name] += "0\n0\n" + formatString(polygon.size()*3) + "\n";
@@ -1218,13 +1228,17 @@ namespace radiance {
           }
 
           // write material
-          m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3) + "\n0\n0\n5\n" + formatString(interiorVisibleReflectance, 3) + " " + formatString(interiorVisibleReflectance, 3) + " " + formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
+          m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3) + "\n0\n0\n5\n" + \
+            formatString(interiorVisibleReflectance, 3) + " " + \
+            formatString(interiorVisibleReflectance, 3) + " " + \
+            formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
           // polygon header
           m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance, 3) + "\n";
           // get / write surface polygon
           //
           openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(shadingSurface);
-          m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3) + " polygon " + shadingSurface_name + "\n0\n0\n" + formatString(polygon.size()*3) + "\n";
+          m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3) + " polygon " + \
+          shadingSurface_name + "\n0\n0\n" + formatString(polygon.size()*3) + "\n";
 
           for (const auto & vertex : polygon)
           {
@@ -1258,14 +1272,18 @@ namespace radiance {
           double exteriorVisibleReflectance = 1.0 - exteriorVisibleAbsorptance;
 
           // write material
-          m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3) + "\n0\n0\n5\n" + formatString(interiorVisibleReflectance, 3) + " " + formatString(interiorVisibleReflectance, 3) + " " + formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
+          m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3) + "\n0\n0\n5\n" + \
+            formatString(interiorVisibleReflectance, 3) + " " + \
+            formatString(interiorVisibleReflectance, 3) + " " + \
+            formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
           // polygon header
           m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance, 3) + "\n";
           m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance) + "\n";
           // get / write surface polygon
 
           openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(interiorPartitionSurface);
-          m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3) + " polygon " + interiorPartitionSurface_name + "\n0\n0\n" + formatString(polygon.size()*3) + "\n";
+          m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3) + " polygon " + \
+          interiorPartitionSurface_name + "\n0\n0\n" + formatString(polygon.size()*3) + "\n";
           for (const auto & vertex : polygon)
           {
             m_radSpaces[space_name] += formatString(vertex.x()) + " " + formatString(vertex.y()) + " " + formatString(vertex.z()) + "\n\n";
@@ -1290,7 +1308,13 @@ namespace radiance {
 
         openstudio::Point3d sensor_point = openstudio::radiance::ForwardTranslator::getReferencePoint(control);
         openstudio::Vector3d sensor_aimVector = openstudio::radiance::ForwardTranslator::getSensorVector(control);
-        m_radSensors[space_name] += formatString(sensor_point.x()) + " " + formatString(sensor_point.y()) + " " + formatString(sensor_point.z()) + " " + formatString(sensor_aimVector.x()) + " " + formatString(sensor_aimVector.y()) + " " + formatString(sensor_aimVector.z()) + "\n";
+        m_radSensors[space_name] += \
+        formatString(sensor_point.x()) + " " + \
+        formatString(sensor_point.y()) + " " + \
+        formatString(sensor_point.z()) + " " + \
+        formatString(sensor_aimVector.x()) + " " + \
+        formatString(sensor_aimVector.y()) + " " + \
+        formatString(sensor_aimVector.z()) + "\n";
        
         // write daylighting controls
         openstudio::path filename = t_radDir/openstudio::toPath("numeric")/openstudio::toPath(space_name + ".sns");
@@ -1315,7 +1339,13 @@ namespace radiance {
         // openstudio::Vector3dVector sensor_viewVector = openstudio::radiance::ForwardTranslator::getViewVectors(*sensor);
         openstudio::Vector3dVector viewVectors = openstudio::radiance::ForwardTranslator::getViewVectors(sensor);
         for (const Vector3d& viewVector : viewVectors){        
-          m_radGlareSensors[space_name] += formatString(sensor_point.x()) + " " + formatString(sensor_point.y()) + " " + formatString(sensor_point.z()) + " " + formatString(viewVector.x()) + " " + formatString(viewVector.y()) + " " + formatString(viewVector.z()) + "\n";
+          m_radGlareSensors[space_name] += \
+          formatString(sensor_point.x()) + " " + \
+          formatString(sensor_point.y()) + " " + \
+          formatString(sensor_point.z()) + " " + \
+          formatString(viewVector.x()) + " " + \
+          formatString(viewVector.y()) + " " + \
+          formatString(viewVector.z()) + "\n";
         }
 
         // write glare sensor
@@ -1336,7 +1366,9 @@ namespace radiance {
       //
       //  openstudio::Point3d sensor_point = openstudio::radiance::ForwardTranslator::getReferencePoint(*viewpoints);
       //  openstudio::Vector3dVector sensor_viewVector = openstudio::radiance::ForwardTranslator::getViewVectors(*viewpoints);
-      //  m_radViews[space_name] += "rvu -vta -vp " + formatString(sensor_point.x()) + " " + formatString(sensor_point.y()) + " " + formatString(sensor_point.z()) + " -vd " + formatString(sensor_viewVector[0].x()) + " " + formatString(sensor_viewVector[0].y()) + " " + formatString(sensor_viewVector[0].z()) + " -vu 0 0 1 -vh 180 -vv 180 -vo 0 -vs 0 -vl 0\n";
+      //  m_radViews[space_name] += "rvu -vta -vp " + formatString(sensor_point.x()) + " " + formatString(sensor_point.y()) + " " + \
+      //  formatString(sensor_point.z()) + " -vd " + formatString(sensor_viewVector[0].x()) + " " + formatString(sensor_viewVector[0].y()) + " " + \
+      //  formatString(sensor_viewVector[0].z()) + " -vu 0 0 1 -vh 180 -vv 180 -vo 0 -vs 0 -vl 0\n";
       //
       //  // write views
       //  openstudio::path filename = t_radDir/openstudio::toPath("views")/openstudio::toPath(space_name + ".vw");
@@ -1414,7 +1446,8 @@ namespace radiance {
       }
 
       // write radiance materials file
-      m_radMaterials.insert("# OpenStudio Materials File\n\n# default mats for daylight coefficients\nvoid plastic dc_black\n0\n0\n3\n0 0 0\nvoid light dc_light\n0\n0\n3\n1 1 1\n\n");
+      m_radMaterials.insert("# OpenStudio Materials File\n\n# default mats for daylight coefficients\nvoid plastic dc_black\n0\n0\n3\n0 0 0\n\
+        void light dc_light\n0\n0\n3\n1 1 1\n\n");
       openstudio::path materialsfilename = t_radDir / openstudio::toPath("materials/materials.rad");
       OFSTREAM materialsfile(materialsfilename);
       if (materialsfile.is_open()){
@@ -1443,7 +1476,8 @@ namespace radiance {
 
       // write radiance vmx materials list
       // format of this file is: window group, bsdf, bsdf
-      m_radDCmats.insert("# OpenStudio windowGroup->BSDF \"Mapping\" File\n# maps Window Groups to BSDF files\n# windowGroup,inwardNormal,bsdf0.xml,bsdf1.xml(optional),etc...\n");
+      m_radDCmats.insert("# OpenStudio windowGroup->BSDF \"Mapping\" File\n# maps Window Groups to BSDF files\n\
+      # windowGroup,inwardNormal,bsdf0.xml,bsdf1.xml(optional),etc...\n");
       openstudio::path materials_dcfilename = t_radDir / openstudio::toPath("bsdf/mapping.rad");
       OFSTREAM materials_dcfile(materials_dcfilename);
       if (materials_dcfile.is_open()){
