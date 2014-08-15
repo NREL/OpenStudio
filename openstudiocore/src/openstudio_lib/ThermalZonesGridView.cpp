@@ -353,8 +353,10 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
     } else if (field == ZONEEQUIPMENT) {
       std::function<boost::optional<model::ModelObject>(model::ThermalZone *)>  getter;
       std::function<bool(model::ThermalZone *, const model::ModelObject &)> setter;
-      std::function<std::vector<model::ModelObject>( model::ThermalZone &)> equipment(
-        []( model::ThermalZone &t) {
+      std::function<std::vector<model::ModelObject>( const model::ThermalZone &)> equipment(
+        []( model::ThermalZone t ) {
+        // we need to pass in a const &, but the function expects non-const, so let's copy the wrapper
+        // object in the param list
         return t.equipmentInHeatingOrder();
       }
       );
