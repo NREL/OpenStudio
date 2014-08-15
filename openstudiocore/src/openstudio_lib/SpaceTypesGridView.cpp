@@ -273,8 +273,8 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         // at the bottom of each list. In this case, it's a dropZone. Any type of BaseConcept would work.
 
         addNameLineEditColumn(QString(LOADNAME),
-          CastNullAdapter<model::SpaceLoadInstance>(&model::SpaceLoadInstance::name),
-          CastNullAdapter<model::SpaceLoadInstance>(&model::SpaceLoadInstance::setName),
+          CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::name),
+          CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::setName),
           DataSource(
           allLoads,
           true
@@ -356,9 +356,10 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
     } else if (field == SPACEINFILTRATIONDESIGNFLOWRATES) {
       std::function<boost::optional<model::SpaceInfiltrationDesignFlowRate> (model::SpaceType *)>  getter;
       std::function<bool (model::SpaceType *, const model::SpaceInfiltrationDesignFlowRate &)> setter;
-      std::function<std::vector<model::SpaceInfiltrationDesignFlowRate> (const model::SpaceType &)> flowRates(
+      std::function<std::vector<model::ModelObject> (const model::SpaceType &)> flowRates(
         [](const model::SpaceType &s) {
-          return s.spaceInfiltrationDesignFlowRates();
+          auto rates = s.spaceInfiltrationDesignFlowRates();
+          return std::vector<model::ModelObject>(rates.begin(), rates.end());
         }
       );
 
@@ -367,7 +368,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         CastNullAdapter<model::SpaceInfiltrationDesignFlowRate>(&model::SpaceInfiltrationDesignFlowRate::setName),
         DataSource(
           flowRates,
-          true,
+          true, 
           QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::SpaceInfiltrationDesignFlowRate, model::SpaceType>(SPACEINFILTRATIONDESIGNFLOWRATES,
              getter, setter))
         )

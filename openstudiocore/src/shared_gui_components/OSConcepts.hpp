@@ -245,11 +245,26 @@ class ConceptProxy
         try {
           return boost::any_cast<T>(m_any);
         } catch (const boost::bad_any_cast &) {
-          return boost::any_cast<model::ModelObject>(m_any).cast<T>();
+          LOG(Warn, "ConceptProxy does not contain a " << typeid(T).name() << " attempting to extract ModelObject");
+          try {
+            model::ModelObject obj(boost::any_cast<model::ModelObject>(m_any));
+
+            try {
+              return obj.cast<T>();
+            } catch (...) {
+              LOG(Error, "ModelObject cannot be converted to: " << typeid(T).name());
+              assert(false);
+              throw;
+            }
+          } catch (...) {
+            assert(false);
+            throw;
+          }
         }
       }
 
   private:
+    REGISTER_LOGGER("openstudio.ConceptProxy");
     boost::any m_any;
 };
 
