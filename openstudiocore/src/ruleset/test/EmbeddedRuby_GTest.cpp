@@ -39,10 +39,17 @@
 
 // This one is a bit more globally accessible, but no one can instantiate the template without the two above
 #include "../EmbeddedRubyUserScriptArgumentGetter.hpp"
+#include "../EmbeddedRubyUserScriptInfoGetter.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 using namespace openstudio::ruleset;
+
+
+#if defined(_MSC_VER)
+#pragma warning( push )
+#pragma warning( disable : 4996 )
+#endif
 
 TEST_F(RulesetFixture, UserScript_EmbeddedRubyTest) {
 
@@ -102,31 +109,68 @@ TEST_F(RulesetFixture, UserScript_EmbeddedRubyTest) {
   ASSERT_EQ(v.size(), 3u);
   EXPECT_EQ(v[0], 3);
   EXPECT_EQ(v[1], 8);
-  EXPECT_EQ(v[2], 3*2+8);
+  EXPECT_EQ(v[2], 3 * 2 + 8);
 
-  // Initialize the argument getter
-  std::shared_ptr<openstudio::ruleset::RubyUserScriptArgumentGetter>
-    rsc(new openstudio::ruleset::EmbeddedRubyUserScriptArgumentGetter<openstudio::detail::RubyInterpreter>(ri));
+  // Deprecated RubyUserScriptArgumentGetter
+  {
+    // Initialize the argument getter
+    std::shared_ptr<openstudio::ruleset::RubyUserScriptArgumentGetter>
+      rsc(new openstudio::ruleset::EmbeddedRubyUserScriptArgumentGetter<openstudio::detail::RubyInterpreter>(ri));
 
-  // Test calling the actual function we are concerned about
-  std::vector<OSArgument> args;
+    // Test calling the actual function we are concerned about
+    std::vector<OSArgument> args;
 
-  Model someModel;
-  Workspace someWorkspace(StrictnessLevel::Draft,IddFileType::EnergyPlus);
+    Model someModel;
+    Workspace someWorkspace(StrictnessLevel::Draft, IddFileType::EnergyPlus);
 
-  openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/SetWindowToWallRatioByFacade/");
-  boost::optional<BCLMeasure> oMeasure = BCLMeasure::load(dir);
-  ASSERT_TRUE(oMeasure);
-  BCLMeasure measure = oMeasure.get();
+    openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/SetWindowToWallRatioByFacade/");
+    boost::optional<BCLMeasure> oMeasure = BCLMeasure::load(dir);
+    ASSERT_TRUE(oMeasure);
+    BCLMeasure measure = oMeasure.get();
 
-  // Works no matter what overloaded form we use. If not provided, empty models are passed to
-  // the arguments method.
-  args = rsc->getArguments(measure);
-  EXPECT_EQ(3u,args.size());
-  args = rsc->getArguments(measure, someModel);
-  EXPECT_EQ(3u,args.size());
-  args = rsc->getArguments(measure, someWorkspace);
-  EXPECT_EQ(3u,args.size());
-  args = rsc->getArguments(measure, someModel, someWorkspace);
-  EXPECT_EQ(3u,args.size());
+    // Works no matter what overloaded form we use. If not provided, empty models are passed to
+    // the arguments method.
+    args = rsc->getArguments(measure);
+    EXPECT_EQ(3u, args.size());
+    args = rsc->getArguments(measure, someModel);
+    EXPECT_EQ(3u, args.size());
+    args = rsc->getArguments(measure, someWorkspace);
+    EXPECT_EQ(3u, args.size());
+    args = rsc->getArguments(measure, someModel, someWorkspace);
+    EXPECT_EQ(3u, args.size());
+  }
+  /*
+  // New RubyUserScriptInfoGetter
+  {
+    // Initialize the info getter
+    std::shared_ptr<openstudio::ruleset::RubyUserScriptInfoGetter>
+      rsc(new openstudio::ruleset::EmbeddedRubyUserScriptInfoGetter<openstudio::detail::RubyInterpreter>(ri));
+
+    // Test calling the actual function we are concerned about
+    
+    Model someModel;
+    Workspace someWorkspace(StrictnessLevel::Draft, IddFileType::EnergyPlus);
+
+    openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/SetWindowToWallRatioByFacade/");
+    boost::optional<BCLMeasure> oMeasure = BCLMeasure::load(dir);
+    ASSERT_TRUE(oMeasure);
+    BCLMeasure measure = oMeasure.get();
+
+    // Works no matter what overloaded form we use. If not provided, empty models are passed to
+    // the arguments method.
+    RubyUserScriptInfo info = rsc->getInfo(measure);
+    EXPECT_EQ(3u, info.arguments().size());
+    info = rsc->getInfo(measure, someModel);
+    EXPECT_EQ(3u, info.arguments().size());
+    info = rsc->getInfo(measure, someWorkspace);
+    EXPECT_EQ(3u, info.arguments().size());
+    info = rsc->getInfo(measure, someModel, someWorkspace);
+    EXPECT_EQ(3u, info.arguments().size());
+  }
+  */
 }
+
+
+#if defined(_MSC_VER)
+#pragma warning( pop )
+#endif
