@@ -1,4 +1,4 @@
-!IDD_Version 1.4.1
+!IDD_Version 1.4.2
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -8504,6 +8504,80 @@ OS:AirTerminal:SingleDuct:ConstantVolume:Reheat,
        \minimum> 0
        \default 35.0
 
+OS:AirTerminal:SingleDuct:SeriesPIU:Reheat,
+       \min-fields 1
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \type alpha
+       \required-field
+       \reference ConnectionObject
+  A3 , \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  N1,  \field Maximum Air Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum 0.0
+       \autosizable
+  N2,  \field Maximum Primary Air Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum 0.0
+       \autosizable
+  N3,  \field Minimum Primary Air Flow Fraction
+       \required-field
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+       \autosizable
+  A4,  \field Supply Air Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+  A5,  \field Secondary Air Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+  A6,  \field Outlet Node
+       \type object-list
+       \object-list ConnectionNames
+  A7,  \field Reheat Coil Air Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+  A8,  \field Zone Mixer Name
+       \type object-list
+       \object-list ZoneMixers
+  A9,  \field Fan Name
+       \note Fan type must be Fan:ConstantVolume
+       \required-field
+       \type object-list
+       \object-list FansCV
+  A10, \field Reheat Coil Name
+       \required-field
+       \type object-list
+       \object-list HeatingCoilName
+  N4,  \field Maximum Hot Water or Steam Flow Rate
+       \note Not used when reheat coil type is gas or electric
+       \type real
+       \units m3/s
+       \autosizable
+       \ip-units gal/min
+  N5,  \field Minimum Hot Water or Steam Flow Rate
+       \note Not used when reheat coil type is gas or electric
+       \type real
+       \units m3/s
+       \minimum 0.0
+       \ip-units gal/min
+       \required-field
+  N6;  \field Convergence Tolerance
+       \type real
+       \minimum> 0.0
+       \required-field
+
 OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
        \min-fields 1
   A1, \field Handle
@@ -13265,6 +13339,82 @@ OS:DesignSpecification:ZoneAirDistribution,
         \default 0.0
         \minimum 0.0
         \units dimensionless
+
+OS:EvaporativeCooler:Indirect:ResearchSpecial,
+       \min-fields 1
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \type alpha
+       \required-field
+       \reference ConnectionObject
+  A3 , \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  N1 , \field Cooler Maximum Effectiveness
+       \type real
+       \minimum 0.0
+       \maximum 2.0
+       \required-field
+  N2 , \field Cooler Flow Ratio
+       \type real
+  N3 , \field Recirculating Water Pump Power Consumption
+       \units W
+       \ip-units W
+       \required-field
+  N4 , \field Secondary Fan Flow Rate
+       \units m3/s
+       \minimum 0.0
+       \autosizable
+  N5 , \field Secondary Fan Total Efficiency
+       \type real
+       \minimum> 0.0
+       \maximum 1.0
+       \required-field
+  N6 , \field Secondary Fan Delta Pressure
+       \units Pa
+       \minimum 0.0
+       \ip-units inH2O
+       \required-field
+  A4 , \field Primary Air Inlet Node
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A5 , \field Primary Air Outlet Node
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A6 , \Field Control Type
+  N7 , \field Dewpoint Effectiveness Factor
+       \required-field
+  A7 , \Field Secondary Air Inlet Node
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A8 , \Field Sensor Node Name
+       \object-list Node
+  A9 , \Field Relief Air Inlet Node
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A9 , \Field Water Supply Storage Tank Name
+       \type object-list
+       \object-list WaterStorageTankNames
+  N8 , \field Drift Loss Fraction
+       \type real
+       \minimum 0.0
+       \note Rate of drift loss as a fraction of evaporated water flow rate
+  N9 ; \field Blowdown Concentration Ratio
+       \type real
+       \minimum 2.0
+       \note Characterizes the rate of blowdown in the evaporative cooler.
+       \note Blowdown is water intentionally drained from the cooler in order to offset the build up
+       \note of solids in the water that would otherwise occur because of evaporation.
+       \note Ratio of solids in the blowdown water to solids in the make up water.
+       \note A typical value is 3.  If left blank then there is no blowdown.
 
 OS:EvaporativeCooler:Direct:ResearchSpecial,
        \min-fields 1

@@ -53,9 +53,7 @@ TEST_F(ModelEditorFixture, InspectorDialog_EmptyModel)
 
   std::shared_ptr<TestButton> button(new TestButton);
 
-  bool connected = QObject::connect(button.get(), SIGNAL(clicked(bool)),
-                                    inspectorDialog.get(), SLOT(onPushButtonNew(bool)));
-  ASSERT_TRUE(connected);
+  QObject::connect(button.get(), &TestButton::clicked, inspectorDialog.get(), &InspectorDialog::onPushButtonNew);
 
   Model model = inspectorDialog->model();
   EXPECT_EQ(0u, model.numObjects());
@@ -79,9 +77,7 @@ TEST_F(ModelEditorFixture, InspectorDialog_Remove1Object)
 
   std::shared_ptr<TestButton> button(new TestButton);
 
-  bool connected = QObject::connect(button.get(), SIGNAL(clicked(bool)),
-                                    inspectorDialog.get(), SLOT(onPushButtonDelete(bool)));
-  ASSERT_TRUE(connected);
+  QObject::connect(button.get(), &TestButton::clicked, inspectorDialog.get(), &InspectorDialog::onPushButtonDelete);
 
   EXPECT_TRUE(inspectorDialog->setIddObjectType(Space::iddObjectType()));
   EXPECT_EQ(Space::iddObjectType(), inspectorDialog->iddObjectType());
@@ -115,9 +111,7 @@ TEST_F(ModelEditorFixture, InspectorDialog_Copy1Object)
 
   std::shared_ptr<TestButton> button(new TestButton);
 
-  bool connected = QObject::connect(button.get(), SIGNAL(clicked(bool)),
-                                    inspectorDialog.get(), SLOT(onPushButtonCopy(bool)));
-  ASSERT_TRUE(connected);
+  QObject::connect(button.get(), &TestButton::clicked, inspectorDialog.get(), &InspectorDialog::onPushButtonCopy);
 
   EXPECT_TRUE(inspectorDialog->setIddObjectType(Space::iddObjectType()));
   EXPECT_EQ(Space::iddObjectType(), inspectorDialog->iddObjectType());
@@ -154,9 +148,7 @@ TEST_F(ModelEditorFixture, InspectorDialog_ModelObjectRemove)
 
   std::shared_ptr<TestButton> button(new TestButton);
 
-  bool connected = QObject::connect(button.get(), SIGNAL(clicked(bool)),
-                                    inspectorDialog.get(), SLOT(onPushButtonDelete(bool)));
-  ASSERT_TRUE(connected);
+  QObject::connect(button.get(), &TestButton::clicked, inspectorDialog.get(), &InspectorDialog::onPushButtonDelete);
 
   EXPECT_TRUE(inspectorDialog->setIddObjectType(LightsDefinition::iddObjectType()));
   EXPECT_EQ(LightsDefinition::iddObjectType(), inspectorDialog->iddObjectType());

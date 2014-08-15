@@ -100,25 +100,16 @@ namespace detail {
     }
 
 
-    connect(&m_process, SIGNAL(error(QProcess::ProcessError)), 
-        this, SLOT(processError(QProcess::ProcessError)));
-    connect(&m_process, SIGNAL(finished(int, QProcess::ExitStatus)), 
-        this, SLOT(processFinished(int, QProcess::ExitStatus)));
-    connect(&m_process, SIGNAL(zombied(QProcess::ProcessError)),
-        this, SLOT(processZombied(QProcess::ProcessError)));
+    connect(&m_process, static_cast<void (MyQProcess::*)(QProcess::ProcessError)>(&MyQProcess::error), this, &LocalProcess::processError);
+    connect(&m_process, static_cast<void (MyQProcess::*)(int, QProcess::ExitStatus)>(&MyQProcess::finished), this, &LocalProcess::processFinished);
+    connect(&m_process, &MyQProcess::zombied, this, &LocalProcess::processZombied);
 
-    connect(&m_process, SIGNAL(readyReadStandardError()), 
-         this, SLOT(processReadyReadStandardError()));
- 
+    connect(&m_process, &MyQProcess::readyReadStandardError, this, &LocalProcess::processReadyReadStandardError);
 
-    connect(&m_process, SIGNAL(readyReadStandardOutput()), 
-         this, SLOT(processReadyReadStandardOutput()));
-    connect(&m_process, SIGNAL(started()), 
-         this, SLOT(processStarted()));
-
+    connect(&m_process, &MyQProcess::readyReadStandardOutput, this, &LocalProcess::processReadyReadStandardOutput);
+    connect(&m_process, &MyQProcess::started, this, &LocalProcess::processStarted);
     /*
-    connect(&m_process, SIGNAL(stateChanged(QProcess::ProcessState)), 
-         this, SLOT(processStateChanged(QProcess::ProcessState)));
+    connect(&m_process, &MyQProcess::stateChanged, this, &LocalProcess::processStateChanged);
 */
 
     LOG(Debug, "Setting working directory: " << toString(m_outdir));
@@ -211,9 +202,7 @@ namespace detail {
     directoryChanged(openstudio::toQString(m_outdir));
 
     m_fileCheckTimer.start(2000); // check for updated files every 2 seconds.
-    connect(&m_fileCheckTimer, SIGNAL(timeout()), this, SLOT(directoryChanged()));
-
-
+    connect(&m_fileCheckTimer, &QTimer::timeout, this, static_cast<void (LocalProcess::*)()>(&LocalProcess::directoryChanged));
     emitStatusChanged(AdvancedStatus(AdvancedStatusEnum::Starting));
 
     LOG(Error, "Starting LocalProcess: " << openstudio::toString(m_tool.localBinPath));

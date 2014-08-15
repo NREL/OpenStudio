@@ -31,9 +31,7 @@ namespace openstudio {
 SimSettingsTabController::SimSettingsTabController(bool isIP, const model::Model & model)
   : MainTabController(new SimSettingsTabView(isIP,model,"Simulation Settings",false))
 {
-  bool isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
-                             mainContentWidget(),SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &SimSettingsTabController::toggleUnitsClicked, mainContentWidget(), &MainTabView::toggleUnitsClicked);
 }
 
 void SimSettingsTabController::toggleUnits(bool displayIP)

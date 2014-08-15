@@ -33,7 +33,7 @@ namespace detail {
 } // detail
 
 /** CurveDoubleExponentialDecay is a Curve that wraps the OpenStudio IDD object 
- *  'OS:Curve:DoubleExponentialDecay'. The functional form is f(x) = ? */
+ *  'OS:Curve:DoubleExponentialDecay'. The functional form is \f$f(x) = ?\f$ */
 class MODEL_API CurveDoubleExponentialDecay : public Curve {
  public:
 

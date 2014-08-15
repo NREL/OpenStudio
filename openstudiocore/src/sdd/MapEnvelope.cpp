@@ -712,9 +712,10 @@ namespace sdd {
         }
       }
 
-      if (!foundUFactor){
-        LOG(Error, "Could not calculate UFactor for DrCons '" << name << "'");
-      }
+      //if (!foundUFactor){
+      //  //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
+      //  //LOG(Error, "Could not calculate UFactor for DrCons '" << name << "'");
+      //}
 
       // mark the construction as translated, not the material
       m_translatedObjects[construction.handle()] = result.get();
@@ -782,11 +783,13 @@ namespace sdd {
         }
       }
 
-      if (!foundUFactor){
-        LOG(Error, "Could not calculate SHGC, UFactor, or VT for FenCons '" << name << "'");
-      }else if (!foundVT){
-        LOG(Error, "Could not calculate VT for FenCons '" << name << "'");
-      }
+      //if (!foundUFactor){
+      //  //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
+      //  //LOG(Error, "Could not calculate SHGC, UFactor, or VT for FenCons '" << name << "'");
+      //}else if (!foundVT){
+      //  //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
+      //  LOG(Error, "Could not calculate VT for FenCons '" << name << "'");
+      //}
 
       // mark the construction as translated, not the material
       m_translatedObjects[construction.handle()] = result.get();

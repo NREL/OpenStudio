@@ -55,54 +55,24 @@ namespace detail {
       // connect to object's signals
       implPtr = object.getImpl<ModelObject_Impl>();
       // data change
-      bool connected = connect(implPtr.get(),SIGNAL(onDataChange()),SLOT(dataChange()));
-      if (!connected) {
-        LOG_AND_THROW("Cannot connect onDataChange() signal.");
-      }
+      connect(implPtr.get(), &ModelObject_Impl::onDataChange, this, &ComponentWatcher_Impl::dataChange);
       // name change
-      connected = connect(implPtr.get(),SIGNAL(onNameChange()),SLOT(nameChange()));
-      if (!connected) {
-        LOG_AND_THROW("Cannot connect onNameChange() signal.");
-      }
+      connect(implPtr.get(), &ModelObject_Impl::onNameChange, this, &ComponentWatcher_Impl::nameChange);
       // relationship change
-      connected = connect(implPtr.get(),
-                          SIGNAL(onRelationshipChange(int,Handle,Handle)),
-                          SLOT(relationshipChange(int,Handle,Handle)));
-      if (!connected) {
-        LOG_AND_THROW("Cannot connect onRelationshipChange() signal.");
-      }
+      connect(implPtr.get(), &ModelObject_Impl::onRelationshipChange, this, &ComponentWatcher_Impl::relationshipChange);
       // remove
-      connected = connect(implPtr.get(),
-                          SIGNAL(onRemoveFromWorkspace(Handle)),
-                          SLOT(objectRemove(Handle)));
-      if (!connected) {
-        LOG_AND_THROW("Cannot connect onRemoveFromWorkspace() signal.");
-      }
+      connect(implPtr.get(), &ModelObject_Impl::onRemoveFromWorkspace, this, &ComponentWatcher_Impl::objectRemove);
     }
     // connect signals for ComponentData, ComponentDataTags, and ComponentDataAttributes
     implPtr = componentData.getImpl<ModelObject_Impl>();
     // component data change
-    bool connected = connect(implPtr.get(),
-                             SIGNAL(onDataChange()),
-                             SLOT(componentDataChange()));
-    if (!connected) {
-      LOG_AND_THROW("Cannot connect onDataChange() signal.");
-    }
+    connect(implPtr.get(), &ModelObject_Impl::onDataChange, this, &ComponentWatcher_Impl::componentDataChange);
     // component data remove
-    connected = connect(implPtr.get(),
-                        SIGNAL(onRemoveFromWorkspace(Handle)),
-                        SLOT(objectRemove(Handle)));
-    if (!connected) {
-      LOG_AND_THROW("Cannot connect onRemoveFromWorkspace() signal.");
-    }
+    connect(implPtr.get(), &ModelObject_Impl::onRemoveFromWorkspace, this, &ComponentWatcher_Impl::objectRemove);
     // connect to addWorkspaceObject signal
     std::shared_ptr<Model_Impl> modelImplPtr = m_componentData.model().getImpl<Model_Impl>();
-    connected = connect(modelImplPtr.get(),
-                        SIGNAL(addWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        SLOT(objectAdd(const WorkspaceObject&)));
-    if (!connected) {
-      LOG_AND_THROW("Cannot connect addWorkspaceObject() signal.");
-    }
+    connect(modelImplPtr.get(), static_cast<void (Model_Impl::*)(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&) const>(&Model_Impl::addWorkspaceObject),
+      this, &ComponentWatcher_Impl::objectAdd);
   }
 
   ComponentWatcher ComponentWatcher_Impl::componentWatcher() const {
@@ -173,22 +143,19 @@ namespace detail {
   void ComponentWatcher_Impl::mf_changeComponentVersion() {
     // disconnect componentDataChange slot to avoid endless loop
     std::shared_ptr<ModelObject_Impl> implPtr = m_componentData.getImpl<ModelObject_Impl>();
-    bool ok = disconnect(implPtr.get(),SIGNAL(onDataChange()),this,SLOT(componentDataChange()));
-    OS_ASSERT(ok);
+    disconnect(implPtr.get(), &ModelObject_Impl::onDataChange, this, &ComponentWatcher_Impl::componentDataChange);
 
     // change version UUID
     m_componentData.createVersionUUID();
 
     // reconnect componentDataChange
-    ok = connect(implPtr.get(),SIGNAL(onDataChange()),SLOT(componentDataChange()));
-    OS_ASSERT(ok);
+    connect(implPtr.get(), &ModelObject_Impl::onDataChange, this, &ComponentWatcher_Impl::componentDataChange);
   }
 
   void ComponentWatcher_Impl::mf_refreshComponentContents(bool logWarnings) {
     // disconnect componentDataChange slot to avoid endless loop
     std::shared_ptr<ModelObject_Impl> implPtr = m_componentData.getImpl<ModelObject_Impl>();
-    bool ok = disconnect(implPtr.get(),SIGNAL(onDataChange()),this,SLOT(componentDataChange()));
-    OS_ASSERT(ok);
+    disconnect(implPtr.get(), &ModelObject_Impl::onDataChange, this, &ComponentWatcher_Impl::componentDataChange);
 
     // \todo logWarnings
     m_componentData.clearExtensibleGroups();
@@ -197,8 +164,7 @@ namespace detail {
     }
 
     // reconnect componentDataChange
-    ok = connect(implPtr.get(),SIGNAL(onDataChange()),SLOT(componentDataChange()));
-    OS_ASSERT(ok);
+    connect(implPtr.get(), &ModelObject_Impl::onDataChange, this, &ComponentWatcher_Impl::componentDataChange);
   }
 
   void ComponentWatcher_Impl::mf_removeComponent() {

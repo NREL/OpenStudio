@@ -54,15 +54,15 @@ LoopScene::LoopScene( model::Loop loop,
     m_loop(loop),
     m_dirty(true)
 {
-  connect( loop.model().getImpl<openstudio::model::detail::Model_Impl>().get(),
-           SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-           this,
-           SLOT(addedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)) );
+  connect(loop.model().getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
+    this,
+    &LoopScene::addedWorkspaceObject);
 
-  connect( loop.model().getImpl<openstudio::model::detail::Model_Impl>().get(),
-           SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-           this,
-           SLOT(removedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)) );
+  connect(loop.model().getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
+    this,
+    &LoopScene::removedWorkspaceObject);
 
   layout();
 }

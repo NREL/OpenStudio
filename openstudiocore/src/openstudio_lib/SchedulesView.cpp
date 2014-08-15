@@ -20,6 +20,7 @@
 #include "SchedulesView.hpp"
 
 #include "../shared_gui_components/OSCheckBox.hpp"
+#include "OSItem.hpp"
 #include "OSItemSelectorButtons.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 
@@ -132,31 +133,17 @@ SchedulesView::SchedulesView(bool isIP,
   selectorButtons->enablePurgeButton();
   selectorButtons->enableRemoveButton();
 
-  bool isConnected = false;
+  connect(selectorButtons, &OSItemSelectorButtons::itemDropped, this, &SchedulesView::itemDropped);
 
-  isConnected = connect(selectorButtons,SIGNAL(itemDropped(const OSItemId &)),
-                        this,SIGNAL(itemDropped(const OSItemId &)));
-  OS_ASSERT(isConnected);
+  connect(selectorButtons, &OSItemSelectorButtons::addClicked, this, &SchedulesView::addScheduleClicked);
 
-  isConnected = connect(selectorButtons,SIGNAL(addClicked()),
-                        this,SIGNAL(addScheduleClicked()));
-  OS_ASSERT(isConnected);
+  connect(selectorButtons, &OSItemSelectorButtons::removeClicked, this, &SchedulesView::removeSelectedScheduleClicked);
 
-  isConnected = connect(selectorButtons,SIGNAL(removeClicked()),
-                        this,SIGNAL(removeSelectedScheduleClicked()));
-  OS_ASSERT(isConnected);
+  connect(selectorButtons, &OSItemSelectorButtons::purgeClicked, this, &SchedulesView::purgeUnusedScheduleRulesetsClicked);
 
-  isConnected = connect(selectorButtons,SIGNAL(purgeClicked()),
-                        this,SIGNAL(purgeUnusedScheduleRulesetsClicked()));
-  OS_ASSERT(isConnected);
+  connect(selectorButtons, &OSItemSelectorButtons::downloadComponentsClicked, this, &SchedulesView::downloadComponentsClicked);
 
-  isConnected = connect(selectorButtons,SIGNAL(downloadComponentsClicked()),
-                        this,SIGNAL(downloadComponentsClicked()));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        this, SLOT(toggleUnits(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &SchedulesView::toggleUnitsClicked, this, &SchedulesView::toggleUnits);
 
   outerLeftVLayout->addWidget(selectorButtons);
 
@@ -183,20 +170,17 @@ SchedulesView::SchedulesView(bool isIP,
   m_contentLayout->setContentsMargins(0,0,0,0);
   mainHLayout->addLayout(m_contentLayout,100);
 
-  connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-          SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>,
-                                    const openstudio::IddObjectType&, const openstudio::UUID&)),
-          this,
-          SLOT(onModelAdd(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-          Qt::QueuedConnection);
+  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
+    this,
+    &SchedulesView::onModelAdd,
+    Qt::QueuedConnection);
  
-  connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-          SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, 
-                                       const openstudio::IddObjectType&, const openstudio::UUID&)),
-          this,
-          SLOT(removeSchedule(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, 
-                              const openstudio::UUID&)),
-          Qt::QueuedConnection);
+  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
+    this,
+    &SchedulesView::removeSchedule,
+    Qt::QueuedConnection);
 
   // get all schedules
   std::vector<model::ScheduleRuleset> schedules = m_model.getConcreteModelObjects<model::ScheduleRuleset>();
@@ -290,7 +274,7 @@ void SchedulesView::updateRowColors()
 void SchedulesView::addSchedule( model::ScheduleRuleset & schedule )
 {
   ScheduleTab * scheduleTab = new ScheduleTab(schedule,this);
-  connect(scheduleTab,SIGNAL(scheduleClicked(const model::ScheduleRuleset &)),this,SLOT(setCurrentSchedule(const model::ScheduleRuleset &)));
+  connect(scheduleTab, &ScheduleTab::scheduleClicked, this, &SchedulesView::setCurrentSchedule);
   m_leftVLayout->insertWidget(0,scheduleTab);
 
   // todo: sort?
@@ -308,8 +292,10 @@ void SchedulesView::addScheduleRule( model::ScheduleRule & rule )
   {
     tab->scheduleTabContent()->scheduleRefresh();
   
-    connect(rule.getImpl<model::detail::ScheduleRule_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
-            tab->scheduleTabContent(),SLOT(scheduleRefresh()));
+    connect(rule.getImpl<model::detail::ScheduleRule_Impl>().get(),
+      &model::detail::ScheduleRule_Impl::onRemoveFromWorkspace,
+      tab->scheduleTabContent(),
+      &ScheduleTabContent::scheduleRefresh);
   }
 
 }
@@ -477,14 +463,12 @@ void SchedulesView::showScheduleRule(model::ScheduleRule scheduleRule)
 
   ScheduleRuleView * scheduleView = new ScheduleRuleView(m_isIP,scheduleRule,this);
   
-  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                             scheduleView, SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &SchedulesView::toggleUnitsClicked, scheduleView, &ScheduleRuleView::toggleUnitsClicked);
 
   m_contentLayout->addWidget(scheduleView);
 
-  connect(scheduleRule.getImpl<openstudio::detail::WorkspaceObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
-          this,SLOT(onScheduleRuleRemoved(Handle)));
+  connect(scheduleRule.getImpl<detail::WorkspaceObject_Impl>().get(), &detail::WorkspaceObject_Impl::onRemoveFromWorkspace,
+    this, &SchedulesView::onScheduleRuleRemoved);
 
   scheduleView->show();
 
@@ -510,9 +494,7 @@ void SchedulesView::showDefaultScheduleDay(const model::ScheduleRuleset & schedu
 
   DefaultScheduleDayView * scheduleView = new DefaultScheduleDayView(m_isIP,schedule,this);
     
-  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                             scheduleView, SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &SchedulesView::toggleUnitsClicked, scheduleView, &DefaultScheduleDayView::toggleUnitsClicked);
 
   m_contentLayout->addWidget(scheduleView);
 
@@ -537,9 +519,7 @@ void SchedulesView::showSummerScheduleDay(model::ScheduleRuleset schedule)
   {
     SizingScheduleDayView * scheduleView = new SizingScheduleDayView(m_isIP, schedule,this,SizingScheduleDayView::SUMMER);
 
-    bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                               scheduleView, SIGNAL(toggleUnitsClicked(bool)));
-    OS_ASSERT(isConnected);
+    connect(this, &SchedulesView::toggleUnitsClicked, scheduleView, &SizingScheduleDayView::toggleUnitsClicked);
 
     m_contentLayout->addWidget(scheduleView);
 
@@ -571,9 +551,7 @@ void SchedulesView::showWinterScheduleDay(model::ScheduleRuleset schedule)
   {
     SizingScheduleDayView * scheduleView = new SizingScheduleDayView(m_isIP,schedule,this,SizingScheduleDayView::WINTER);
         
-    bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                               scheduleView, SIGNAL(toggleUnitsClicked(bool)));
-    OS_ASSERT(isConnected);
+    connect(this, &SchedulesView::toggleUnitsClicked, scheduleView, &SizingScheduleDayView::toggleUnitsClicked);
 
     m_contentLayout->addWidget(scheduleView);
 
@@ -688,7 +666,7 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
   removeButton->setObjectName("DeleteButton");
   removeButton->setFlat(true);
   removeButton->setFixedSize(24,24);
-  connect(removeButton,SIGNAL(clicked()),this,SLOT(onRemoveClicked()));
+  connect(removeButton, &QPushButton::clicked, this, &ScheduleRuleView::onRemoveClicked);
   ruleHLayout->addWidget(removeButton,0,Qt::AlignTop);
   ruleHLayout->addSpacing(MARGINRIGHT);
 
@@ -731,14 +709,12 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
   m_startDateEdit->setDisplayFormat("MM/dd");
   m_startDateEdit->setCalendarPopup(true);
   dateHLayout->addWidget(m_startDateEdit);
-  connect(m_startDateEdit,SIGNAL(dateTimeChanged(const QDateTime &)),this,SLOT(onStartDateTimeChanged(const QDateTime &)));
-
+  connect(m_startDateEdit, &QDateTimeEdit::dateTimeChanged, this, &ScheduleRuleView::onStartDateTimeChanged);
   m_endDateEdit = new QDateTimeEdit();
   m_endDateEdit->setDisplayFormat("MM/dd");
   m_endDateEdit->setCalendarPopup(true);
   dateHLayout->addWidget(m_endDateEdit);
-  connect(m_endDateEdit,SIGNAL(dateTimeChanged(const QDateTime &)),this,SLOT(onEndDateTimeChanged(const QDateTime &)));
-
+  connect(m_endDateEdit, &QDateTimeEdit::dateTimeChanged, this, &ScheduleRuleView::onEndDateTimeChanged);
   dateHLayout->addStretch();
 
   ruleVLayout->addLayout(dateHLayout);
@@ -822,16 +798,10 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
   // Schedule Day
 
   m_scheduleDayView = new ScheduleDayView(isIP,m_scheduleRule.daySchedule(),m_schedulesView);
-    
-  bool isConnected = false;
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        m_scheduleDayView, SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);  
-  
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        m_scheduleDayView, SLOT(onToggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &ScheduleRuleView::toggleUnitsClicked, m_scheduleDayView, &ScheduleDayView::toggleUnitsClicked);
+
+  connect(this, &ScheduleRuleView::toggleUnitsClicked, m_scheduleDayView, &ScheduleDayView::onToggleUnitsClicked);
 
   mainVLayout->addWidget(m_scheduleDayView);
 
@@ -848,25 +818,15 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
 
   // Connect
 
-  connect( m_scheduleRule.getImpl<openstudio::model::detail::ScheduleRule_Impl>().get(),
-           SIGNAL(onChange()),
-           this,
-           SLOT(scheduleRefresh()) );
+  connect(m_scheduleRule.getImpl<model::detail::ScheduleRule_Impl>().get(), &model::detail::ScheduleRule_Impl::onChange, this, &ScheduleRuleView::scheduleRefresh);
 
-  connect( m_yearDescription->getImpl<openstudio::model::detail::YearDescription_Impl>().get(),
-           SIGNAL(onChange()),
-           this,
-           SLOT(scheduleRefresh()) );
+  connect(m_yearDescription->getImpl<model::detail::YearDescription_Impl>().get(), &model::detail::YearDescription_Impl::onChange, this, &ScheduleRuleView::scheduleRefresh);
 
-  connect( this,SIGNAL(startDateTimeChanged(model::ScheduleRule &, const QDateTime &)),
-           m_schedulesView,SIGNAL(startDateTimeChanged(model::ScheduleRule &, const QDateTime &)) );
+  connect(this, &ScheduleRuleView::startDateTimeChanged, m_schedulesView, &SchedulesView::startDateTimeChanged);
 
-  connect( this,SIGNAL(endDateTimeChanged(model::ScheduleRule &, const QDateTime &)),
-           m_schedulesView,SIGNAL(endDateTimeChanged(model::ScheduleRule &, const QDateTime &)) );
+  connect(this, &ScheduleRuleView::endDateTimeChanged, m_schedulesView, &SchedulesView::endDateTimeChanged);
 
-  connect( this,SIGNAL(removeScheduleRuleClicked(model::ScheduleRule &)),
-           m_schedulesView,SIGNAL(removeScheduleRuleClicked(model::ScheduleRule &)) );
-
+  connect(this, &ScheduleRuleView::removeScheduleRuleClicked, m_schedulesView, &SchedulesView::removeScheduleRuleClicked);
   // Refresh
 
   scheduleRefresh();
@@ -969,9 +929,7 @@ DefaultScheduleDayView::DefaultScheduleDayView( bool isIP,
 
   ScheduleDayView * scheduleDayView = new ScheduleDayView(isIP,scheduleRuleset.defaultDaySchedule(),schedulesView); 
     
-  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                             scheduleDayView, SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &DefaultScheduleDayView::toggleUnitsClicked, scheduleDayView, &ScheduleDayView::toggleUnitsClicked);
 
   mainVLayout->addWidget(scheduleDayView);
 
@@ -1026,9 +984,7 @@ SizingScheduleDayView::SizingScheduleDayView( bool isIP,
 
       ScheduleDayView * scheduleDayView = new ScheduleDayView(isIP,scheduleDay,schedulesView);
 
-      bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                                 scheduleDayView, SIGNAL(toggleUnitsClicked(bool)));
-      OS_ASSERT(isConnected);
+      connect(this, &SizingScheduleDayView::toggleUnitsClicked, scheduleDayView, &ScheduleDayView::toggleUnitsClicked);
 
       mainVLayout->addWidget(scheduleDayView);
     }
@@ -1045,9 +1001,7 @@ SizingScheduleDayView::SizingScheduleDayView( bool isIP,
 
       ScheduleDayView * scheduleDayView = new ScheduleDayView(isIP,scheduleDay,schedulesView);
 
-      bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                                 scheduleDayView, SIGNAL(toggleUnitsClicked(bool)));
-      OS_ASSERT(isConnected);
+      connect(this, &SizingScheduleDayView::toggleUnitsClicked, scheduleDayView, &ScheduleDayView::toggleUnitsClicked);
 
       mainVLayout->addWidget(scheduleDayView);
     }
@@ -1071,8 +1025,6 @@ ScheduleDayView::ScheduleDayView(bool isIP,
     m_dirty(false),
     m_isIP(isIP)
 {
-  bool isConnected = false;
-
   // Note: QDoubleSpinBox are used, rather than OSQuantityEdit
   // because limits are not connected via Q_PROPERTY. 
   m_lowerLimitSpinBox = new QDoubleSpinBox();
@@ -1091,9 +1043,8 @@ ScheduleDayView::ScheduleDayView(bool isIP,
   }  
   m_lowerLimitSpinBox->setValue(lowerLimitSpinBoxValue);
   m_lowerLimitSpinBox->setMinimum(-1E10);
-  isConnected = connect(m_lowerLimitSpinBox,SIGNAL(valueChanged(double)),
-                        this,SLOT(onLowerValueChanged(double)));
-  OS_ASSERT(isConnected);
+  connect(m_lowerLimitSpinBox, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+    this, &ScheduleDayView::onLowerValueChanged);
 
   m_upperLimitSpinBox = new QDoubleSpinBox();
   double upperLimitSpinBoxValue = UPPER_LIMIT;
@@ -1110,13 +1061,10 @@ ScheduleDayView::ScheduleDayView(bool isIP,
   }
   m_upperLimitSpinBox->setValue(upperLimitSpinBoxValue);
   m_upperLimitSpinBox->setMaximum(1E10);
-  isConnected = connect(m_upperLimitSpinBox,SIGNAL(valueChanged(double)),
-                        this,SLOT(onUpperValueChanged(double)));
-  OS_ASSERT(isConnected);
+  connect(m_upperLimitSpinBox, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+    this, &ScheduleDayView::onUpperValueChanged);
 
-  isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
-                        this,SLOT(onToggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &ScheduleDayView::toggleUnitsClicked, this, &ScheduleDayView::onToggleUnitsClicked);
 
   // Scene
 
@@ -1182,9 +1130,7 @@ ScheduleDayView::ScheduleDayView(bool isIP,
 
   m_scheduleDayEditor = new ScheduleDayEditor(isIP, this, m_scheduleDay );
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        m_scheduleDayEditor, SLOT(toggleUnits(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &ScheduleDayView::toggleUnitsClicked, m_scheduleDayEditor, &ScheduleDayEditor::toggleUnits);
 
   mainVLayout->addWidget(m_scheduleDayEditor);
 
@@ -1207,8 +1153,7 @@ ScheduleDayView::ScheduleDayView(bool isIP,
 
   hourlyZoomButton->setText("Hourly");
  
-  connect(hourlyZoomButton,SIGNAL(clicked()),this,SLOT(setHourlyZoom()));
-
+  connect(hourlyZoomButton, &QPushButton::clicked, this, &ScheduleDayView::setHourlyZoom);
   zoomButtonLayout->addWidget(hourlyZoomButton);
   zoomButtonLayout->addSpacing(10);
 
@@ -1221,8 +1166,7 @@ ScheduleDayView::ScheduleDayView(bool isIP,
 
   quarterHourlyZoomButton->setText("15 Minutes");
  
-  connect(quarterHourlyZoomButton,SIGNAL(clicked()),this,SLOT(setQuarterHourlyZoom()));
-
+  connect(quarterHourlyZoomButton, &QPushButton::clicked, this, &ScheduleDayView::setQuarterHourlyZoom);
   zoomButtonLayout->addWidget(quarterHourlyZoomButton);
   zoomButtonLayout->addSpacing(10);
 
@@ -1235,8 +1179,7 @@ ScheduleDayView::ScheduleDayView(bool isIP,
   
   oneMinuteZommButton->setText("1 Minute");
  
-  connect(oneMinuteZommButton,SIGNAL(clicked()),this,SLOT(setOneMinuteZoom()));
-
+  connect(oneMinuteZommButton, &QPushButton::clicked, this, &ScheduleDayView::setOneMinuteZoom);
   zoomButtonLayout->addWidget(oneMinuteZommButton);
 
   zoomButtonLayout->addStretch();
@@ -1490,14 +1433,10 @@ ScheduleDayEditor::ScheduleDayEditor(bool isIP, ScheduleDayView * scheduleDayVie
 
   setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
 
-  //connect( m_scheduleDay.scheduleTypeLimits().getImpl<model::detail::ScheduleTypeLimits_Impl>().get(),
-  //         SIGNAL(onChange()),
-  //         this,
-  //         SLOT(scheduleRefresh()) );
+  //connect(m_scheduleDay.scheduleTypeLimits()->getImpl<model::detail::ScheduleTypeLimits_Impl>().get(),
+  //  &model::detail::ScheduleTypeLimits_Impl::onChange, this, &ScheduleDayEditor::scheduleRefresh);
 
-  connect( this, SIGNAL(changeVerticalAxisClicked(model::ScheduleDay)),
-           m_scheduleDayView->schedulesView(),SIGNAL(changeVerticalAxisClicked(model::ScheduleDay)));
-
+  connect(this, &ScheduleDayEditor::changeVerticalAxisClicked, m_scheduleDayView->schedulesView(), &SchedulesView::changeVerticalAxisClicked);
   QTimer::singleShot(0,this,SLOT(fitInView()));
 }
 
@@ -2125,7 +2064,7 @@ DayScheduleOverview::DayScheduleOverview(ScheduleDayView * scheduleRuleView)
 
   updateFocusRectangleGeometry();
 
-  connect(m_scheduleRuleView,SIGNAL(zoomChanged(double)),this,SLOT(onZoomChange(double)));
+  connect(m_scheduleRuleView, &ScheduleDayView::zoomChanged, this, &DayScheduleOverview::onZoomChange);
 }
 
 void DayScheduleOverview::onZoomChange(double newZoom)
@@ -2214,9 +2153,7 @@ DaySchedulePlotArea::DaySchedulePlotArea(ScheduleDayEditor * scheduleDayEditor)
     m_currentItem(NULL),
     m_currentHoverItem(NULL)
 {
-  connect(this,SIGNAL(dayScheduleSceneChanged( DayScheduleScene *, double, double )),
-          m_scheduleDayEditor->scheduleDayView()->schedulesView(),SIGNAL(dayScheduleSceneChanged( DayScheduleScene *, double, double )));
-
+  connect(this, &DaySchedulePlotArea::dayScheduleSceneChanged, m_scheduleDayEditor->scheduleDayView()->schedulesView(), &SchedulesView::dayScheduleSceneChanged);
   setFocusPolicy(Qt::StrongFocus);
 }
 
@@ -2566,11 +2503,7 @@ DayScheduleScene::DayScheduleScene(ScheduleDayView * scheduleDayView, const mode
 {
   setSceneRect(0,0,SCENEWIDTH,SCENEHEIGHT);
 
-  connect( m_scheduleDay.getImpl<openstudio::model::detail::ScheduleDay_Impl>().get(),
-           SIGNAL(onChange()),
-           this,
-           SLOT(scheduleRefresh()) );
-
+  connect(m_scheduleDay.getImpl<model::detail::ScheduleDay_Impl>().get(), &model::detail::ScheduleDay_Impl::onChange, this, &DayScheduleScene::scheduleRefresh);
   refresh();
 }
 
@@ -3057,12 +2990,11 @@ YearOverview::YearOverview( const model::ScheduleRuleset & scheduleRuleset, QWid
 
   mainLayout->addStretch(10);
 
-  connect(m_scheduleRuleset.model().getImpl<openstudio::model::detail::Model_Impl>().get(),
-          SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>,
-                                    const openstudio::IddObjectType&, const openstudio::UUID&)),
-          this,
-          SLOT(onModelAdd(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-          Qt::QueuedConnection);
+  connect(m_scheduleRuleset.model().getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
+    this,
+    &YearOverview::onModelAdd,
+    Qt::QueuedConnection);
 
   std::vector<model::ScheduleRule> scheduleRules = m_scheduleRuleset.scheduleRules();
 
@@ -3070,18 +3002,13 @@ YearOverview::YearOverview( const model::ScheduleRuleset & scheduleRuleset, QWid
        it < scheduleRules.end();
        ++it )
   {
-    connect( it->getImpl<openstudio::model::detail::ScheduleRule_Impl>().get(),
-             SIGNAL(onChange()),
-             this,
-             SLOT(scheduleRefresh()) );
+    connect(it->getImpl<model::detail::ScheduleRule_Impl>().get(), &model::detail::ScheduleRule_Impl::onChange, this, &YearOverview::scheduleRefresh);
   }
 
   model::YearDescription yearDescription = m_scheduleRuleset.model().getUniqueModelObject<model::YearDescription>();
 
-  connect( yearDescription.getImpl<openstudio::model::detail::YearDescription_Impl>().get(),
-           SIGNAL(onChange()),
-           this,
-           SLOT(scheduleRefresh()) );
+  connect(yearDescription.getImpl<model::detail::YearDescription_Impl>().get(), &model::detail::YearDescription_Impl::onChange,
+    this, &YearOverview::scheduleRefresh);
 
   refresh();
 }
@@ -3108,10 +3035,8 @@ void YearOverview::onModelAdd( std::shared_ptr<openstudio::detail::WorkspaceObje
   {
     if( scheduleRule->scheduleRuleset().handle() == m_scheduleRuleset.handle() )
     {
-      connect( scheduleRule->getImpl<openstudio::model::detail::ScheduleRule_Impl>().get(),
-               SIGNAL(onChange()),
-               this,
-               SLOT(scheduleRefresh()) );
+      connect(scheduleRule->getImpl<model::detail::ScheduleRule_Impl>().get(), &model::detail::ScheduleRule_Impl::onChange,
+        this, &YearOverview::scheduleRefresh);
     }
   }
 }
@@ -3188,7 +3113,7 @@ ScheduleTabHeader::ScheduleTabHeader( ScheduleTab * scheduleTab, QWidget * paren
   m_toggleButton->setCheckable(true);
   m_toggleButton->setChecked(false);
   m_toggleButton->setEnabled(false);
-  connect(m_toggleButton,SIGNAL(toggled(bool)),this,SIGNAL(toggleHeaderClicked(bool)));
+  connect(m_toggleButton, &QPushButton::toggled, this, &ScheduleTabHeader::toggleHeaderClicked);
   mainHLayout->addWidget(m_toggleButton);
   style.clear();
   style.append("QPushButton { ");
@@ -3220,12 +3145,10 @@ ScheduleTabHeader::ScheduleTabHeader( ScheduleTab * scheduleTab, QWidget * paren
 
   refresh();
 
-  connect(this,SIGNAL(scheduleClicked(const model::ScheduleRuleset &)),m_scheduleTab,SIGNAL(scheduleClicked(const model::ScheduleRuleset &)));
+  connect(this, &ScheduleTabHeader::scheduleClicked, m_scheduleTab, &ScheduleTab::scheduleClicked);
 
-  connect( m_scheduleTab->schedule().getImpl<openstudio::model::detail::ScheduleRuleset_Impl>().get(),
-           SIGNAL(onChange()),
-           this,
-           SLOT(refresh()) );
+  connect(m_scheduleTab->schedule().getImpl<model::detail::ScheduleRuleset_Impl>().get(),
+    &model::detail::ScheduleRuleset_Impl::onChange, this, &ScheduleTabHeader::refresh);
 }
 
 void ScheduleTabHeader::expand()
@@ -3363,14 +3286,13 @@ ScheduleTabContent::ScheduleTabContent( ScheduleTab * scheduleTab, QWidget * par
   runPeriodButton->setToolTip("Click to add new run period profile");
   runPeriodLayout->addWidget(runPeriodButton);
   runPeriodLayout->addStretch();
-  connect(runPeriodButton,SIGNAL(clicked()),this,SLOT(onRunPeriodRulesClicked()));
-  connect( this,SIGNAL(runPeriodRulesClicked(const model::ScheduleRuleset)),
-           m_scheduleTab->schedulesView(),SLOT(showAddRulePage(const model::ScheduleRuleset)));
+  connect(runPeriodButton, &QPushButton::clicked, this, &ScheduleTabContent::onRunPeriodRulesClicked);
+  connect(this, &ScheduleTabContent::runPeriodRulesClicked, m_scheduleTab->schedulesView(), &SchedulesView::showAddRulePage);
 
   QPushButton * addButton = new QPushButton();
   addButton->setStyleSheet("QPushButton { border: none; background-image: url(\":/images/add-small.png\"); }");
   addButton->setFixedSize(20,20);
-  connect(addButton,SIGNAL(clicked()),this,SLOT(onRunPeriodRulesClicked()));
+  connect(addButton, &QPushButton::clicked, this, &ScheduleTabContent::onRunPeriodRulesClicked);
   runPeriodLayout->addWidget(addButton);
 
   m_ruleLayout = new QVBoxLayout();
@@ -3450,20 +3372,12 @@ DefaultTab::DefaultTab( ScheduleTab * scheduleTab, TabType type  )
     m_hovering(false)
 {
   setFixedHeight(25);
-  
-  bool isConnected = false;
 
-  isConnected = connect( this,SIGNAL(defaultClicked(model::ScheduleRuleset)),
-                         m_scheduleTab->schedulesView(),SLOT(showDefaultScheduleDay(const model::ScheduleRuleset)) );
-  OS_ASSERT(isConnected);
+  connect(this, &DefaultTab::defaultClicked, m_scheduleTab->schedulesView(), &SchedulesView::showDefaultScheduleDay);
 
-  isConnected = connect( this,SIGNAL(winterClicked(model::ScheduleRuleset)),
-                         m_scheduleTab->schedulesView(),SLOT(showWinterScheduleDay(model::ScheduleRuleset)) );
-  OS_ASSERT(isConnected);
+  connect(this, &DefaultTab::winterClicked, m_scheduleTab->schedulesView(), &SchedulesView::showWinterScheduleDay);
   
-  isConnected = connect( this,SIGNAL(summerClicked(model::ScheduleRuleset)),
-                         m_scheduleTab->schedulesView(),SLOT(showSummerScheduleDay(model::ScheduleRuleset)) );
-  OS_ASSERT(isConnected);
+  connect(this, &DefaultTab::summerClicked, m_scheduleTab->schedulesView(), &SchedulesView::showSummerScheduleDay);
 
   QHBoxLayout * mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(10,0,0,0);
@@ -3585,8 +3499,7 @@ ScheduleTabRule::ScheduleTabRule( ScheduleTab * scheduleTab,
 {
   setFixedHeight(25);
 
-  connect(this,SIGNAL(clicked(model::ScheduleRule)),
-          m_scheduleTab->schedulesView(),SLOT(showScheduleRule(model::ScheduleRule)));
+  connect(this, &ScheduleTabRule::clicked, m_scheduleTab->schedulesView(), &SchedulesView::showScheduleRule);
 
   QHBoxLayout * mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(10,0,0,0);
@@ -3598,10 +3511,8 @@ ScheduleTabRule::ScheduleTabRule( ScheduleTab * scheduleTab,
 
   scheduleRefresh();
 
-  connect( m_scheduleRule.getImpl<openstudio::model::detail::ScheduleRule_Impl>().get(),
-           SIGNAL(onChange()),
-           this,
-           SLOT(scheduleRefresh()) );
+  connect(m_scheduleRule.getImpl<model::detail::ScheduleRule_Impl>().get(), &model::detail::ScheduleRule_Impl::onChange,
+    this, &ScheduleTabRule::scheduleRefresh);
 
   setMouseTracking(true); 
 }
@@ -3736,7 +3647,7 @@ ScheduleTab::ScheduleTab(const model::ScheduleRuleset & schedule, SchedulesView 
   line2->setFixedHeight(1);
   mainVLayout->addWidget(line2);
 
-  connect(m_header,SIGNAL(toggleHeaderClicked( bool)),this,SLOT(onToggleHeaderClicked(bool)));
+  connect(m_header, &ScheduleTabHeader::toggleHeaderClicked, this, &ScheduleTab::onToggleHeaderClicked);
 }
 
 void ScheduleTab::expand()
@@ -3919,10 +3830,10 @@ NewRuleView::NewRuleView( const model::ScheduleRuleset & scheduleRuleset, Schedu
   addButton->setObjectName("StandardBlueButton");
   addLayout->addWidget(addButton);
   innerVLayout->addLayout(addLayout);
-  connect(addButton,SIGNAL(clicked()),SLOT(onAddClicked()));
-  connect(this,SIGNAL(addRuleClicked(model::ScheduleRuleset &)),schedulesView,SIGNAL(addRuleClicked(model::ScheduleRuleset &)));
-  connect(this,SIGNAL(addSummerProfileClicked(model::ScheduleRuleset &)),schedulesView,SIGNAL(addSummerProfileClicked(model::ScheduleRuleset &)));
-  connect(this,SIGNAL(addWinterProfileClicked(model::ScheduleRuleset &)),schedulesView,SIGNAL(addWinterProfileClicked(model::ScheduleRuleset &)));
+  connect(addButton, &QPushButton::clicked, this, &NewRuleView::onAddClicked);
+  connect(this, &NewRuleView::addRuleClicked, schedulesView, &SchedulesView::addRuleClicked);
+  connect(this, &NewRuleView::addSummerProfileClicked, schedulesView, &SchedulesView::addSummerProfileClicked);
+  connect(this, &NewRuleView::addWinterProfileClicked, schedulesView, &SchedulesView::addWinterProfileClicked);
 
   innerVLayout->addStretch();
 

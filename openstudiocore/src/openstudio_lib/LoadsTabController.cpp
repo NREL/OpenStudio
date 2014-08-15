@@ -34,17 +34,11 @@ LoadsTabController::LoadsTabController(bool isIP, const model::Model& model)
   m_LoadsController = std::shared_ptr<LoadsController>(new LoadsController(isIP, model));
   this->mainContentWidget()->addTabWidget(m_LoadsController->subTabView());
 
-  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        m_LoadsController.get(), SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &LoadsTabController::toggleUnitsClicked, m_LoadsController.get(), &LoadsController::toggleUnitsClicked);
 
-  isConnected = QObject::connect(m_LoadsController.get(), SIGNAL(downloadComponentsClicked()),
-                                 this, SIGNAL(downloadComponentsClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_LoadsController.get(), &LoadsController::downloadComponentsClicked, this, &LoadsTabController::downloadComponentsClicked);
 
-  isConnected = QObject::connect(m_LoadsController.get(), SIGNAL(openLibDlgClicked()),
-                                 this, SIGNAL(openLibDlgClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_LoadsController.get(), &LoadsController::openLibDlgClicked, this, &LoadsTabController::openLibDlgClicked);
 }
 
 LoadsTabController::~LoadsTabController()

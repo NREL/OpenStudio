@@ -1,0 +1,51 @@
+
+OS:Version,
+  {9ff90d3d-f2b0-4b6a-8b94-a6b6510c44dc}, !- Handle
+  1.4.1;                                  !- Version Identifier
+
+OS:Construction,
+  {dbbeda84-f534-469c-b256-89e4016b1bd1}, !- Handle
+  Exterior Door,                          !- Name
+  ,                                       !- Surface Rendering Name
+  {5230d212-8c5c-4ca4-abd1-82ba706a7dba}, !- Layer 1
+  {c10040a3-2aca-4ae7-813a-1fcdd7993051}; !- Layer 2
+
+OS:Material,
+  {5230d212-8c5c-4ca4-abd1-82ba706a7dba}, !- Handle
+  F08 Metal surface,                      !- Name
+  Smooth,                                 !- Roughness
+  0.0008,                                 !- Thickness {m}
+  45.28,                                  !- Conductivity {W/m-K}
+  7824,                                   !- Density {kg/m3}
+  500;                                    !- Specific Heat {J/kg-K}
+
+OS:Material,
+  {c10040a3-2aca-4ae7-813a-1fcdd7993051}, !- Handle
+  I02 25mm insulation board,              !- Name
+  MediumRough,                            !- Roughness
+  0.0254,                                 !- Thickness {m}
+  0.03,                                   !- Conductivity {W/m-K}
+  43,                                     !- Density {kg/m3}
+  1210;                                   !- Specific Heat {J/kg-K}
+
+OS:StandardsInformation:Construction,
+  {b05fe598-0d91-42f2-8cf3-493a0f5c577b}, !- Handle
+  {dbbeda84-f534-469c-b256-89e4016b1bd1}, !- Construction Name
+  ,                                       !- Intended Surface Type
+  ,                                       !- Standards Construction Type
+  1,                                      !- Perturbable Layer
+  Insulation,                             !- Perturbable Layer Type
+  ;                                       !- Other Perturbable Layer Type
+
+OS:ComponentData,
+  {01d36280-e680-46ac-9f3c-1c1be231f67a}, !- Handle
+  Component Data 1,                       !- Name
+  {865a2aad-ee51-4f44-bc4f-b41ce9736890}, !- UUID
+  {1f624636-db48-41aa-9683-0f859341f3bd}, !- Version UUID
+  1407946050,                             !- Creation Timestamp
+  1407946050,                             !- Version Timestamp
+  {dbbeda84-f534-469c-b256-89e4016b1bd1}, !- Name of Object 1
+  {5230d212-8c5c-4ca4-abd1-82ba706a7dba}, !- Name of Object 2
+  {c10040a3-2aca-4ae7-813a-1fcdd7993051}, !- Name of Object 3
+  {b05fe598-0d91-42f2-8cf3-493a0f5c577b}; !- Name of Object 4
+

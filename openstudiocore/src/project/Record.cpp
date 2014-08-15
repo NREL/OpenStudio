@@ -112,11 +112,6 @@ namespace project {
       return true;
     }
 
-    bool Record_Impl::connect(const std::string& signal, const QObject* qObject, const std::string& slot, Qt::ConnectionType type) const
-    {
-      return QObject::connect(this, signal.c_str(), qObject, slot.c_str(), type);
-    }
-
     void Record_Impl::bindValues(QSqlQuery& query) const
     {
       OS_ASSERT(m_id);
@@ -413,7 +408,7 @@ namespace project {
 
   bool Record::connect(const std::string& signal, const QObject* qObject, const std::string& slot, Qt::ConnectionType type) const
   {
-    return m_impl->connect(signal, qObject, slot, type);
+    return QObject::connect(m_impl.get(), signal.c_str(), qObject, slot.c_str(), type);
   }
 
   unsigned Record::useCount() const

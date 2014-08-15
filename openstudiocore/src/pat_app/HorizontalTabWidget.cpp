@@ -88,8 +88,7 @@ void HorizontalTabWidget::addTab( int id,
 
   m_tabButtons.push_back(button);
 
-  bool isConnected = connect(button,SIGNAL(clicked()),this,SLOT(select()));
-  OS_ASSERT(isConnected);
+  connect(button, &QPushButton::clicked, this, &HorizontalTabWidget::select);
 
   m_ids.push_back(id);
 

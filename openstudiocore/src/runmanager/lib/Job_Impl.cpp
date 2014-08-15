@@ -63,6 +63,7 @@ namespace detail {
 
     m_history.push_back(std::make_pair(boost::posix_time::microsec_clock::universal_time(), AdvancedStatus(AdvancedStatusEnum::Idle)));
 
+    // For some reason, this *must* use the old style connect (Pat run view)
     connect(this, SIGNAL(finished()), this, SLOT(threadFinished()));
   }
 
@@ -915,7 +916,7 @@ namespace detail {
     QWriteLocker l(&m_mutex);
     m_children.push_back(t_child);
     LOG(Trace, "Child added: " + toString(m_id) + " " + toString(t_child->m_id) + " num children " + boost::lexical_cast<std::string>(m_children.size()));
-    connect(t_child.get(), SIGNAL(treeChanged(const openstudio::UUID &)), this, SIGNAL(treeChanged(const openstudio::UUID &)));
+    connect(t_child.get(), &Job_Impl::treeChanged, this, &Job_Impl::treeChanged);
   }
 
   void Job_Impl::addChild(const std::shared_ptr<Job_Impl> &t_parent, const std::shared_ptr<Job_Impl> &t_job)
@@ -939,7 +940,7 @@ namespace detail {
     {
       if (t_job == m_finishedJob)
       {
-        disconnect(m_finishedJob.get(), SIGNAL(treeChanged(const openstudio::UUID &)), this, SIGNAL(treeChanged(const openstudio::UUID &)));
+        disconnect(m_finishedJob.get(), &Job_Impl::treeChanged, this, &Job_Impl::treeChanged);
         m_finishedJob.reset();
         return true;
       }
@@ -954,7 +955,7 @@ namespace detail {
 
           (*itr)->setParent(std::shared_ptr<Job_Impl>());
           m_children.erase(itr);
-          disconnect(t_job.get(), SIGNAL(treeChanged(const openstudio::UUID &)), this, SIGNAL(treeChanged(const openstudio::UUID &)));
+          disconnect(t_job.get(), &Job_Impl::treeChanged, this, &Job_Impl::treeChanged);
           emitChildrenChanged();
           return true;
         }
@@ -1015,7 +1016,7 @@ namespace detail {
   {
     QWriteLocker l(&m_mutex);
     m_finishedJob = t_job;
-    connect(t_job.get(), SIGNAL(treeChanged(const openstudio::UUID &)), this, SIGNAL(treeChanged(const openstudio::UUID &)));
+    connect(t_job.get(), &Job_Impl::treeChanged, this, &Job_Impl::treeChanged);
   }
 
   void Job_Impl::setFinishedJob(const std::shared_ptr<Job_Impl> &t_parent, const std::shared_ptr<Job_Impl> &t_job)

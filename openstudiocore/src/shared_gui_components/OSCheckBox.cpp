@@ -49,14 +49,11 @@ void OSCheckBox2::bind(model::ModelObject & modelObject,
 
   setEnabled(true);
 
-  connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
-           this,SLOT(onModelObjectChange()) );
+  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSCheckBox2::onModelObjectChange);
 
-  connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
-           this,SLOT(onModelObjectRemove(Handle)) );
+  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSCheckBox2::onModelObjectRemove);
 
-  connect( this, SIGNAL(toggled(bool)), this, SLOT(onToggled(bool)) );
-
+  connect(this, &OSCheckBox2::toggled, this, &OSCheckBox2::onToggled);
   bool checked = (*m_get)();
 
   this->setChecked(checked);
@@ -112,14 +109,11 @@ void OSCheckBox::bind(model::ModelObject & modelObject, const char * property)
 
   setEnabled(true);
 
-  connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
-           this,SLOT(onModelObjectChange()) );
+  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSCheckBox::onModelObjectChange);
 
-  connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
-           this,SLOT(onModelObjectRemove(Handle)) );
+  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSCheckBox::onModelObjectRemove);
 
-  connect( this, SIGNAL(toggled(bool)), this, SLOT(onToggled(bool)) );
-
+  connect(this, &OSCheckBox::toggled, this, &OSCheckBox::onToggled);
   bool checked = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str()).toBool();
 
   this->setChecked(checked);

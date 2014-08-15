@@ -64,7 +64,8 @@ WaterUseConnectionsDetailItem::WaterUseConnectionsDetailItem(WaterUseConnections
 
   sewerItem->sewerButton()->setToolTip("Go back to water mains editor");
 
-  connect(sewerItem->sewerButton(),SIGNAL(mouseClicked()),waterUseConnectionsDetailScene,SIGNAL(goToServiceWaterSceneClicked()));
+  connect(sewerItem->sewerButton(), &ButtonItem::mouseClicked,
+    waterUseConnectionsDetailScene, &WaterUseConnectionsDetailScene::goToServiceWaterSceneClicked);
 
   sewerItem->setGridPos(i,j + 3);
 
@@ -214,7 +215,8 @@ WaterUseConnectionsDetailItem::WaterUseConnectionsDetailItem(WaterUseConnections
 
   mainsSupplyItem->mainsSupplyButton()->setToolTip("Go back to water mains editor");
 
-  connect(mainsSupplyItem->mainsSupplyButton(),SIGNAL(mouseClicked()),waterUseConnectionsDetailScene,SIGNAL(goToServiceWaterSceneClicked()));
+  connect(mainsSupplyItem->mainsSupplyButton(), &ButtonItem::mouseClicked,
+    waterUseConnectionsDetailScene, &WaterUseConnectionsDetailScene::goToServiceWaterSceneClicked);
 
   mainsSupplyItem->setGridPos(i,j + 3);
 
@@ -310,7 +312,8 @@ WaterUseConnectionsDetailItem::WaterUseConnectionsDetailItem(WaterUseConnections
   MakeupWaterItem * makeupWaterItem = new MakeupWaterItem(this);
   makeupWaterItem->setGridPos(1,1);
 
-  connect(makeupWaterItem->mainsSupplyButton(),SIGNAL(mouseClicked()),waterUseConnectionsDetailScene,SIGNAL(goToServiceWaterSceneClicked()));
+  connect(makeupWaterItem->mainsSupplyButton(), &ButtonItem::mouseClicked,
+    waterUseConnectionsDetailScene, &WaterUseConnectionsDetailScene::goToServiceWaterSceneClicked);
 
 }
 
@@ -616,7 +619,7 @@ HotWaterSupplyItem::HotWaterSupplyItem(QGraphicsItem * parent)
 
   m_hotWaterSupplyButton->setToolTip("Go back to hot water supply system");
 
-  connect(m_hotWaterSupplyButton,SIGNAL(mouseClicked()),this,SLOT(onHotWaterSupplyButtonClicked()));
+  connect(m_hotWaterSupplyButton, &ButtonItem::mouseClicked, this, &HotWaterSupplyItem::onHotWaterSupplyButtonClicked);
 
   m_hotWaterSupplyButton->setPos(105.9,37);
 }
@@ -917,14 +920,14 @@ MakeupWaterItem::MakeupWaterItem(QGraphicsItem * parent)
 
   m_hotWaterSupplyButton->setToolTip("Go back to hot water supply system");
 
-  connect(m_hotWaterSupplyButton,SIGNAL(mouseClicked()),this,SLOT(onHotWaterSupplyButtonClicked()));
+  connect(m_hotWaterSupplyButton, &ButtonItem::mouseClicked, this, &MakeupWaterItem::onHotWaterSupplyButtonClicked);
 
   m_hotWaterSupplyButton->setPos(90,137);
 }
 
 void MakeupWaterItem::paint(QPainter *painter, 
-                                  const QStyleOptionGraphicsItem *option, 
-                                  QWidget *widget)
+                            const QStyleOptionGraphicsItem *option, 
+                            QWidget *widget)
 {
   painter->setRenderHint(QPainter::Antialiasing, true);
   painter->setBrush(QBrush(Qt::lightGray,Qt::SolidPattern));

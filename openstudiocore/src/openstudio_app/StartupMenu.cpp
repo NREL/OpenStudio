@@ -30,23 +30,30 @@ StartupMenu::StartupMenu(QWidget *parent) :
   // File menu
   m_fileMenu = new QMenu(tr("&File"),this);
   QAction * newAction = new QAction(tr("&New"), this);
+  newAction->setShortcut(QKeySequence(QKeySequence::New));
   QAction * loadFileAction = new QAction(tr("&Open"), this);
-  QAction * importAction = new QAction(tr("&Import IDF"), this);
-  //QAction * importSDDAction = new QAction(tr("&Import SDD"), this);
+  loadFileAction->setShortcut(QKeySequence(QKeySequence::Open));
   QAction * exitAction = new QAction(tr("E&xit"), this);
-  exitAction->setShortcuts(QKeySequence::Quit);
+  exitAction->setShortcut(QKeySequence(QKeySequence::Quit));
 
-  connect(importAction, SIGNAL(triggered()), this, SIGNAL(importClicked()));
-  //connect(importSDDAction, SIGNAL(triggered()), this, SIGNAL(importSDDClicked()));
-  connect(loadFileAction, SIGNAL(triggered()), this, SIGNAL(loadFileClicked()));
-  connect(newAction, SIGNAL(triggered()), this, SIGNAL(newClicked()));
-  connect(exitAction, SIGNAL(triggered()),this,SIGNAL(exitClicked()));
+  QMenu * importMenu = new QMenu(tr("Import"), this);
+  QAction * action = new QAction(tr("IDF"), this);
+  importMenu->addAction(action);
+  connect(action, &QAction::triggered, this, &StartupMenu::importClicked);
+  action = new QAction(tr("gbXML"), this);
+  importMenu->addAction(action);
+  connect(action, &QAction::triggered, this, &StartupMenu::importgbXMLClicked);
+  action = new QAction(tr("SDD"), this);
+  importMenu->addAction(action);
+  connect(action, &QAction::triggered, this, &StartupMenu::importSDDClicked);
 
+  connect(loadFileAction, &QAction::triggered, this, &StartupMenu::loadFileClicked);
+  connect(newAction, &QAction::triggered, this, &StartupMenu::newClicked);
+  connect(exitAction, &QAction::triggered, this, &StartupMenu::exitClicked);
   m_fileMenu->addAction(newAction);
   m_fileMenu->addAction(loadFileAction);
   m_fileMenu->addSeparator();
-  m_fileMenu->addAction(importAction);
-  //m_fileMenu->addAction(importSDDAction);
+  m_fileMenu->addMenu(importMenu);
   m_fileMenu->addSeparator();
   m_fileMenu->addAction(exitAction);
 
@@ -59,9 +66,12 @@ StartupMenu::StartupMenu(QWidget *parent) :
 
   QAction * helpAction = new QAction(tr("OpenStudio &Help"),this);
 
-  connect(helpAction, SIGNAL(triggered()),this,SIGNAL(helpClicked()));
-
+  connect(helpAction, &QAction::triggered, this, &StartupMenu::helpClicked);
   m_helpMenu->addAction(helpAction);
+
+  action = new QAction(tr("&About"),this);
+  m_helpMenu->addAction(action);
+  connect(action, &QAction::triggered, this, &StartupMenu::aboutClicked);
 }
 
 } // openstudio

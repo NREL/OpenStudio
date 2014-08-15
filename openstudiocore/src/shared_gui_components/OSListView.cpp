@@ -32,6 +32,7 @@ namespace openstudio {
 
 OSListView::OSListView(bool scrollable, QWidget * parent)
   : QWidget(parent),
+  m_widgetItemPairs(std::map<QObject *,QSharedPointer<OSListItem> >()),
   m_scrollable(scrollable),
   m_scrollArea(nullptr)
 {
@@ -119,11 +120,10 @@ void OSListView::setListController(QSharedPointer<OSListController> listControll
 
   m_listController = listController;
 
-  connect(m_listController.data(),SIGNAL(itemInserted(int)),this,SLOT(insertItemView(int)));
-  connect(m_listController.data(),SIGNAL(itemRemoved(int)),this,SLOT(removeItemView(int)));
-  connect(m_listController.data(),SIGNAL(itemChanged(int)),this,SLOT(refreshItemView(int)));
-  connect(m_listController.data(),SIGNAL(modelReset()),this,SLOT(refreshAllViews()));
-
+  connect(m_listController.data(), &OSListController::itemInserted, this, &OSListView::insertItemView);
+  connect(m_listController.data(), &OSListController::itemRemoved, this, &OSListView::removeItemView);
+  connect(m_listController.data(), &OSListController::itemChanged, this, &OSListView::refreshItemView);
+  connect(m_listController.data(), &OSListController::modelReset, this, &OSListView::refreshAllViews);
   refreshAllViews();
 }
 
@@ -181,9 +181,9 @@ void OSListView::insertItemView(int i)
 
   m_widgetItemPairs.insert( std::make_pair(itemView,itemData) );
 
-  bool bingo = connect(itemView,SIGNAL(destroyed(QObject *)),this,SLOT(removePair(QObject *)));
-
-  OS_ASSERT(bingo);
+  // For some reason, this needs to use the old-style connect on mac (exiting OS app crash)
+  bool isConnected = connect(itemView, SIGNAL(destroyed(QObject *)), this, SLOT(removePair(QObject *)));
+  OS_ASSERT(isConnected);
 }
 
 void OSListView::removeItemView(int i)
@@ -201,8 +201,7 @@ void OSListView::removeItemView(int i)
   delete item;
 }
 
-void OSListView::removePair(QObject * object)
-{
+void OSListView::removePair(QObject * object) {
   m_widgetItemPairs.erase(m_widgetItemPairs.find(object));
 }
 

@@ -41,9 +41,7 @@ SimSettingsTabView::SimSettingsTabView(bool isIP,
   addTabWidget(scrollarea);
   m_simSettingsView->setAutoFillBackground(false);
 
-  bool isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
-                             m_simSettingsView,SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &SimSettingsTabView::toggleUnitsClicked, m_simSettingsView, &SimSettingsView::toggleUnitsClicked);
 }
 
 void SimSettingsTabView::toggleUnits(bool displayIP)

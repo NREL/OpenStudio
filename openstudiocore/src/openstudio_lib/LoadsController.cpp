@@ -53,9 +53,7 @@ namespace openstudio {
 LoadsController::LoadsController(bool isIP, const model::Model& model)
   : ModelSubTabController(new LoadsView(isIP, model), model)
 {
-  bool isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
-                             subTabView(),SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &LoadsController::toggleUnitsClicked, static_cast<ModelSubTabView*>(subTabView()), &ModelSubTabView::toggleUnitsClicked);
 }
 
 LoadsController::~LoadsController()

@@ -70,7 +70,7 @@ class PatMainMenu : public QMenuBar
 
   void configureProxyClicked();
 
-  void exitClicked();
+  void exitClicked(bool fromCloseEvent);
 
   void helpClicked();
 

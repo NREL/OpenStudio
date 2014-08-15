@@ -63,35 +63,21 @@ void OSDialog::createLayout()
 
   lowerLayout->addStretch();
 
-  bool isConnected = false;
-
   m_backButton = new QPushButton("Back",this);
-  isConnected = connect(m_backButton, SIGNAL(clicked(bool)),
-                        this, SLOT(on_backButton(bool))) ;
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_backButton, SIGNAL(clicked(bool)),
-                        this, SIGNAL(backButtonClicked(bool))) ;
-  OS_ASSERT(isConnected);
+  connect(m_backButton, &QPushButton::clicked, this, &OSDialog::on_backButton);
+  connect(m_backButton, &QPushButton::clicked, this, &OSDialog::backButtonClicked);
   lowerLayout->addWidget(m_backButton);
   m_backButton->hide();
 
   m_okButton = new QPushButton("OK",this);
   m_okButton->setDefault(true);
-  isConnected = connect(m_okButton, SIGNAL(clicked(bool)),
-                        this, SLOT(on_okButton(bool))) ;
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_okButton, SIGNAL(clicked(bool)),
-                        this, SIGNAL(okButtonClicked(bool))) ;
-  OS_ASSERT(isConnected);
+  connect(m_okButton, &QPushButton::clicked, this, &OSDialog::on_okButton);
+  connect(m_okButton, &QPushButton::clicked, this, &OSDialog::okButtonClicked);
   lowerLayout->addWidget(m_okButton);
 
   m_cancelButton = new QPushButton("Cancel",this);
-  isConnected = connect(m_cancelButton, SIGNAL(clicked(bool)),
-                        this, SLOT(on_cancelButton(bool))) ;
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_cancelButton, SIGNAL(clicked(bool)),
-                        this, SIGNAL(cancelButtonClicked(bool))) ;
-  OS_ASSERT(isConnected);
+  connect(m_cancelButton, &QPushButton::clicked, this, &OSDialog::on_cancelButton);
+  connect(m_cancelButton, &QPushButton::clicked, this, &OSDialog::cancelButtonClicked);
   lowerLayout->addWidget(m_cancelButton);
 
   auto mainLayout = new QVBoxLayout();

@@ -68,8 +68,6 @@ void WindowMaterialGasMixtureInspectorView::createLayout()
   unsigned row = 0;
   unsigned col = 0;
 
-  bool isConnected = false;
-
   // Name
 
   QLabel * label = new QLabel("Name: ");
@@ -86,8 +84,7 @@ void WindowMaterialGasMixtureInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_thickness = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_thickness, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialGasMixtureInspectorView::toggleUnitsClicked, m_thickness, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_thickness,row++,0,1,3);
 
   // Number Of Gases In Mixture
@@ -108,8 +105,7 @@ void WindowMaterialGasMixtureInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_gas1Fraction = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_gas1Fraction, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialGasMixtureInspectorView::toggleUnitsClicked, m_gas1Fraction, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_gas1Fraction,row++,0,1,3);
 
   // Gas Type
@@ -135,8 +131,7 @@ void WindowMaterialGasMixtureInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_gas2Fraction = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_gas2Fraction, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialGasMixtureInspectorView::toggleUnitsClicked, m_gas2Fraction, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_gas2Fraction,row++,0,1,3);
 
   // Gas Type
@@ -161,8 +156,7 @@ void WindowMaterialGasMixtureInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_gas3Fraction = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_gas3Fraction, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialGasMixtureInspectorView::toggleUnitsClicked, m_gas3Fraction, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_gas3Fraction,row++,0,1,3);
 
   // Gas Type
@@ -187,8 +181,7 @@ void WindowMaterialGasMixtureInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_gas4Fraction = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_gas4Fraction, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialGasMixtureInspectorView::toggleUnitsClicked, m_gas4Fraction, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_gas4Fraction,row++,0,1,3);
 
   // Gas Type

@@ -49,8 +49,7 @@ MainRightColumnController::MainRightColumnController()
 
   horizontalTabWidget->addTab(EDIT,"Edit");
 
-  bool isConnected = connect(horizontalTabWidget,SIGNAL(tabSelected(int)),this,SLOT(showHorizontalTab(int)));
-  OS_ASSERT(isConnected);
+  connect(horizontalTabWidget.data(), &HorizontalTabWidget::tabSelected, this, &MainRightColumnController::showHorizontalTab);
 
   showHorizontalTab(MEASURE_LIBRARY);
 }

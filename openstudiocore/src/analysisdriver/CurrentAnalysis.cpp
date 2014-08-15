@@ -96,14 +96,6 @@ namespace detail {
     return m_dakotaJobErrors;
   }
 
-  bool CurrentAnalysis_Impl::connect(const std::string& signal,
-                                     const QObject* qObject,
-                                     const std::string& slot,
-                                     Qt::ConnectionType type) const
-  {
-    return QObject::connect(this, signal.c_str(), qObject, slot.c_str(), type);
-  }
-
   void CurrentAnalysis_Impl::setNumOSJobsInIteration(int numJobs) {
     OS_ASSERT(m_numOSJobsInIteration == m_numOSJobsComplete);
     OS_ASSERT(m_queuedOSDataPoints.size() == 0u);
@@ -410,7 +402,7 @@ bool CurrentAnalysis::connect(const std::string& signal,
                               const std::string& slot,
                               Qt::ConnectionType type) const
 {
-  return getImpl()->connect(signal,qObject,slot,type);
+  return QObject::connect(m_impl.get(), signal.c_str(), qObject, slot.c_str(), type);
 }
 
 void CurrentAnalysis::moveToThread(QThread* targetThread) {

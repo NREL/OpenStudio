@@ -1447,7 +1447,7 @@ namespace detail {
     LOG(Info, "Starting Runmanager");
     start();
 
-    connect(&m_timer, SIGNAL(timeout()), this, SLOT(processQueue()));
+    connect(&m_timer, &QTimer::timeout, this, &RunManager_Impl::processQueue);
     m_timer.start(1000);
 
 

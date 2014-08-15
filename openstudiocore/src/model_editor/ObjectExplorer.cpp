@@ -69,22 +69,13 @@ void ObjectExplorer::createWidgets()
 
 void ObjectExplorer::connectSignalsAndSlots()
 {
-  bool connected;
-  connected = connect(mGroupEdit, SIGNAL(textEdited(const QString&)),
-    this, SLOT(on_groupTextEdited(const QString&)));
-  OS_ASSERT(connected);
+  connect(mGroupEdit, &QLineEdit::textEdited, this, &ObjectExplorer::on_groupTextEdited);
 
-  connected = connect(mObjectEdit, SIGNAL(textEdited(const QString&)),
-    this, SLOT(on_objectTextEdited(const QString&)));
-  OS_ASSERT(connected);
+  connect(mObjectEdit, &QLineEdit::textEdited, this, &ObjectExplorer::on_objectTextEdited);
 
-  connected = connect(mGroupList, SIGNAL(itemSelectionChanged()),
-    this, SLOT(on_groupItemSelectionChanged()));
-  OS_ASSERT(connected);
+  connect(mGroupList, &QListWidget::itemSelectionChanged, this, &ObjectExplorer::on_groupItemSelectionChanged);
 
-  connected = connect(mObjectList, SIGNAL(itemSelectionChanged()),
-    this, SLOT(on_objectItemSelectionChanged()));
-  OS_ASSERT(connected);
+  connect(mObjectList, &ListWidget::itemSelectionChanged, this, &ObjectExplorer::on_objectItemSelectionChanged);
 }
 
 void ObjectExplorer::createLayout()

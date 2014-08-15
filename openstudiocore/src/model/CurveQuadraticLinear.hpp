@@ -34,14 +34,14 @@ namespace detail {
 
 /** CurveQuadraticLinear is a Curve that wraps the OpenStudio IDD object 
  *  'OS:Curve:QuadraticLinear'. The functional form is 
- *  f(x) = c1 + c2 * x + c3 * x^2 + (c4 + c5 * x + c6 * x^2) * y. */
+ *  \f$f(x) = c_1 + c_2 \cdot x + c_3 \cdot x^2 + (c_4 + c_5 \cdot x + c_6 \cdot x^2) \cdot y\f$ */
 class MODEL_API CurveQuadraticLinear : public Curve {
  public:
 
   /** @name Constructors and Destructors */
   //@{
 
-  /** Initializes c1 = c2 = c3 = c4 = c5 = 0.0, c6 = 1.0, x and y within [0.0,1.0]. */
+  /** Initializes \f$c_1 = c_2 = c_3 = c_4 = c_5 = 0.0,\ c_6 = 1.0,\ x\ \text{and}\ y\ \text{within}\ [0.0,1.0]\f$ */
   explicit CurveQuadraticLinear(const Model& model);
 
   virtual ~CurveQuadraticLinear() {}

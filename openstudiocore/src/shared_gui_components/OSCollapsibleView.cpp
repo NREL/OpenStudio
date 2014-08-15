@@ -68,9 +68,7 @@ void OSCollapsibleView::setHeader(QWidget * header)
 
   if( m_osHeader )
   {
-    bool bingo = connect(m_osHeader->toggleButton,SIGNAL(toggled(bool)),this,SLOT(setExpanded(bool)));
-
-    OS_ASSERT(bingo);
+    connect(m_osHeader->toggleButton, &QPushButton::toggled, this, &OSCollapsibleView::setExpanded);
   }
 }
 

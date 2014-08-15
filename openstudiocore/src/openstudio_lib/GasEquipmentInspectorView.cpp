@@ -61,11 +61,8 @@ GasEquipmentDefinitionInspectorView::GasEquipmentDefinitionInspectorView(bool is
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,0);
 
-  bool isConnected = false;
-
   m_designLevelEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_designLevelEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_designLevelEdit, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_designLevelEdit,3,0);
 
   // Energy Per Space Floor Area
@@ -75,8 +72,7 @@ GasEquipmentDefinitionInspectorView::GasEquipmentDefinitionInspectorView(bool is
   mainGridLayout->addWidget(label,2,1);
 
   m_wattsPerSpaceFloorAreaEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_wattsPerSpaceFloorAreaEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_wattsPerSpaceFloorAreaEdit, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_wattsPerSpaceFloorAreaEdit,3,1);
 
   // Energy Per Person
@@ -86,8 +82,7 @@ GasEquipmentDefinitionInspectorView::GasEquipmentDefinitionInspectorView(bool is
   mainGridLayout->addWidget(label,2,2);
 
   m_wattsPerPersonEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_wattsPerPersonEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_wattsPerPersonEdit, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_wattsPerPersonEdit,3,2);
 
   // Fraction Latent
@@ -97,8 +92,7 @@ GasEquipmentDefinitionInspectorView::GasEquipmentDefinitionInspectorView(bool is
   mainGridLayout->addWidget(label,4,0);
 
   m_fractionLatentEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_fractionLatentEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_fractionLatentEdit, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_fractionLatentEdit,5,0);
 
   // Fraction Radiant
@@ -108,8 +102,7 @@ GasEquipmentDefinitionInspectorView::GasEquipmentDefinitionInspectorView(bool is
   mainGridLayout->addWidget(label,4,1);
 
   m_fractionRadiantEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_fractionRadiantEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_fractionRadiantEdit, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_fractionRadiantEdit,5,1);
 
   // Fraction Lost
@@ -119,8 +112,7 @@ GasEquipmentDefinitionInspectorView::GasEquipmentDefinitionInspectorView(bool is
   mainGridLayout->addWidget(label,6,0);
 
   m_fractionLostEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_fractionLostEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_fractionLostEdit, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_fractionLostEdit,7,0);
 
   // Carbon Dioxide Generation Rate
@@ -130,8 +122,7 @@ GasEquipmentDefinitionInspectorView::GasEquipmentDefinitionInspectorView(bool is
   mainGridLayout->addWidget(label,8,0);
 
   m_carbonDioxideGenerationRateEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_carbonDioxideGenerationRateEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked, m_carbonDioxideGenerationRateEdit, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_carbonDioxideGenerationRateEdit,9,0);
 
   // Stretch

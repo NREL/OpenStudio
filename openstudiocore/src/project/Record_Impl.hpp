@@ -108,8 +108,6 @@ namespace project {
           return result;
         }
 
-        bool connect(const std::string& signal, const QObject* qObject, const std::string& slot, Qt::ConnectionType type) const;
-
       signals:
 
         void onChange(const UUID& handle);

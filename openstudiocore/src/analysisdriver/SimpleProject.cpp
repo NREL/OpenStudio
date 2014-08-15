@@ -358,12 +358,11 @@ namespace detail {
   boost::optional<CloudAnalysisDriver> SimpleProject_Impl::cloudAnalysisDriver() const{
     if (!m_cloudAnalysisDriver) {
       if (boost::optional<CloudSession> session = cloudSession()) {
-        bool test = disconnect(m_analysisDriver.getImpl().get(), SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)), this, SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)));
-        OS_ASSERT(test);
+        disconnect(m_analysisDriver.getImpl().get(), &detail::AnalysisDriver_Impl::analysisStatusChanged, this, &SimpleProject_Impl::analysisStatusChanged);
 
         m_cloudAnalysisDriver = CloudAnalysisDriver(*session,simpleProject());
         
-        test = m_cloudAnalysisDriver->connect(SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)), this, SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)));
+        bool test = m_cloudAnalysisDriver->connect(SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)), this, SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)));
         OS_ASSERT(test);
 
         emit analysisStatusChanged(m_cloudAnalysisDriver->status());
