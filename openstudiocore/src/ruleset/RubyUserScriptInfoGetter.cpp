@@ -179,7 +179,7 @@ std::string infoExtractorRubyFunction() {
   ss << "    }" << std::endl;
   ss << "  end" << std::endl;
   ss << std::endl;
-  ss << "  return RubyUserScriptInfo.new(measureType, className, name, description, modelerDescription, args)" << std::endl;
+  ss << "  return OpenStudio::Ruleset::RubyUserScriptInfo.new(measureType, className, name, description, modelerDescription, args)" << std::endl;
   ss << "end" << std::endl;
   return ss.str();
 }

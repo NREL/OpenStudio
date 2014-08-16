@@ -40,7 +40,7 @@ namespace ruleset {
       m_rubyInterpreter->template registerType<openstudio::Workspace>("openstudio::Workspace");
       m_rubyInterpreter->template registerType<openstudio::model::Model>("openstudio::model::Model");
       //m_rubyInterpreter->template registerType<openstudio::ruleset::OSArgument>("openstudio::ruleset::OSArgument");
-      m_rubyInterpreter->template registerType<openstudio::ruleset::OSArgument>("openstudio::ruleset::RubyUserScriptInfo");
+      m_rubyInterpreter->template registerType<openstudio::ruleset::RubyUserScriptInfo>("openstudio::ruleset::RubyUserScriptInfo");
 
       m_rubyInterpreter->evalString(infoExtractorRubyFunction());
     }
@@ -49,17 +49,17 @@ namespace ruleset {
 
     RubyUserScriptInfo getInfo(const BCLMeasure& measure) {
       return m_rubyInterpreter->template execWithReturn<RubyUserScriptInfo>(
-          "infoExtractorRubyFunction", measure, model::OptionalModel(), OptionalWorkspace());
+          "infoExtractor", measure, model::OptionalModel(), OptionalWorkspace());
     }
 
     RubyUserScriptInfo getInfo(const BCLMeasure& measure, const Workspace& workspace) {
       if (model::OptionalModel model = workspace.optionalCast<model::Model>()) {
         return m_rubyInterpreter->template execWithReturn<RubyUserScriptInfo>(
-              "infoExtractorRubyFunction", measure, model::OptionalModel(model), OptionalWorkspace());
+              "infoExtractor", measure, model::OptionalModel(model), OptionalWorkspace());
       }
       else {
         return m_rubyInterpreter->template execWithReturn<RubyUserScriptInfo>(
-            "infoExtractorRubyFunction", measure, model::OptionalModel(), OptionalWorkspace(workspace));
+            "infoExtractor", measure, model::OptionalModel(), OptionalWorkspace(workspace));
       }
     }
 
@@ -68,7 +68,7 @@ namespace ruleset {
                                const Workspace& workspace)
     {
       return m_rubyInterpreter->template execWithReturn<RubyUserScriptInfo>(
-          "infoExtractorRubyFunction", measure, model::OptionalModel(model), OptionalWorkspace(workspace));
+          "infoExtractor", measure, model::OptionalModel(model), OptionalWorkspace(workspace));
     }
 
    private:
