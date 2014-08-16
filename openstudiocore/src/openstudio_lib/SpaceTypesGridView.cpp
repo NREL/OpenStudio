@@ -189,8 +189,8 @@ void SpaceTypesGridController::setCategoriesAndFields()
     fields.push_back(LOADNAME);
     //fields.push_back(MULTIPLIER); // Value Edit
     //fields.push_back(DEFINITION); // DropZone
-    //fields.push_back(SCHEDULE); // DropZone
-    fields.push_back(ACTIVITYSCHEDULE); // DropZone
+    fields.push_back(SCHEDULE);
+    fields.push_back(ACTIVITYSCHEDULE);
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Loads"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
@@ -256,6 +256,104 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
 
           return loads;
         }
+      );
+
+      std::function<std::vector<boost::optional<model::ModelObject>>(const model::SpaceType &)> schedules(
+        [allLoads](const model::SpaceType &t_spaceType) {
+        std::vector<boost::optional<model::ModelObject>> retval;
+
+        for (const auto &l : allLoads(t_spaceType))
+        {
+
+          boost::optional<model::People> p = l.optionalCast<model::People>();
+          if (p)
+          {
+            auto s = p->numberofPeopleSchedule();
+            retval.push_back(boost::optional<model::ModelObject>(s));
+            continue;
+          }
+
+          boost::optional<model::Lights> light = l.optionalCast<model::Lights>();
+          if (light)
+          {
+            auto s = light->schedule();
+            retval.push_back(boost::optional<model::ModelObject>(s));
+            continue;
+          }
+
+          boost::optional<model::Luminaire> lum = l.optionalCast<model::Luminaire>();
+          if (lum)
+          {
+            auto s = lum->schedule();
+            retval.push_back(boost::optional<model::ModelObject>(s));
+            continue;
+          }
+
+          boost::optional<model::ElectricEquipment> e = l.optionalCast<model::ElectricEquipment>();
+          if (e)
+          {
+            auto s = e->schedule();
+            retval.push_back(boost::optional<model::ModelObject>(s));
+            continue;
+          }
+
+          boost::optional<model::GasEquipment> g = l.optionalCast<model::GasEquipment>();
+          if (g)
+          {
+            auto s = g->schedule();
+            retval.push_back(boost::optional<model::ModelObject>(s));
+            continue;
+          }
+
+          boost::optional<model::HotWaterEquipment> h = l.optionalCast<model::HotWaterEquipment>();
+          if (h)
+          {
+            auto s = h->schedule();
+            retval.push_back(boost::optional<model::ModelObject>(s));
+            continue;
+          }
+
+          boost::optional<model::SteamEquipment> se = l.optionalCast<model::SteamEquipment>();
+          if (se)
+          {
+            auto s = se->schedule();
+            retval.push_back(boost::optional<model::ModelObject>(s));
+            continue;
+          }
+
+          boost::optional<model::OtherEquipment> o = l.optionalCast<model::OtherEquipment>();
+          if (o)
+          {
+            auto s = o->schedule();
+            retval.push_back(boost::optional<model::ModelObject>(s));
+            continue;
+          }
+
+          boost::optional<model::SpaceInfiltrationDesignFlowRate> f = l.optionalCast<model::SpaceInfiltrationDesignFlowRate>();
+          if (f)
+          {
+            auto s = f->schedule();
+            retval.push_back(boost::optional<model::ModelObject>(s));
+            continue;
+          }
+
+          boost::optional<model::SpaceInfiltrationEffectiveLeakageArea> la = l.optionalCast<model::SpaceInfiltrationEffectiveLeakageArea>();
+          if (la)
+          {
+            auto s = la->schedule();
+            retval.push_back(boost::optional<model::ModelObject>(s));
+            continue;
+          }
+
+          else {
+            // Should never get here
+            OS_ASSERT(false);
+          }
+
+        }
+
+        return retval;
+      }
       );
 
       std::function<std::vector<boost::optional<model::ModelObject>> (const model::SpaceType &)> activityLevelSchedules(
@@ -329,15 +427,15 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
 
       } else if (field == SCHEDULE) {
 
-        //addDropZoneColumn(QString(SCHEDULE),
-        //  CastNullAdapter<model::SpaceLoadInstance>(&model::SpaceLoadInstance::schedule),
-        //  CastNullAdapter<model::SpaceLoadInstance>(&model::SpaceLoadInstance::setSchedule),
-        //  DataSource(
-        //  allLoads,
-        //  true
-        //  //QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel, getter, setter)
-        //  )
-        //  );
+        addNameLineEditColumn(QString(SCHEDULE),
+          CastNullAdapter<model::Schedule>(&model::Schedule::name),
+          CastNullAdapter<model::Schedule>(&model::Schedule::setName),
+          DataSource(
+            schedules,
+            true
+            //QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel, getter, setter)
+          )
+        );
 
       } else if (field == ACTIVITYSCHEDULE) {
 
