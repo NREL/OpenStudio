@@ -139,7 +139,7 @@ TEST_F(RulesetFixture, UserScript_EmbeddedRubyTest) {
     args = rsc->getArguments(measure, someModel, someWorkspace);
     EXPECT_EQ(3u, args.size());
   }
-  /*
+ 
   // New RubyUserScriptInfoGetter
   {
     // Initialize the info getter
@@ -167,7 +167,7 @@ TEST_F(RulesetFixture, UserScript_EmbeddedRubyTest) {
     info = rsc->getInfo(measure, someModel, someWorkspace);
     EXPECT_EQ(3u, info.arguments().size());
   }
-  */
+  
 }
 
 
