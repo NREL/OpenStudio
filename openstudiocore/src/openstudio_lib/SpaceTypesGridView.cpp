@@ -190,7 +190,7 @@ void SpaceTypesGridController::setCategoriesAndFields()
     //fields.push_back(MULTIPLIER); // Value Edit
     //fields.push_back(DEFINITION); // DropZone
     //fields.push_back(SCHEDULE); // DropZone
-    //fields.push_back(ACTIVITYSCHEDULE); // DropZone
+    fields.push_back(ACTIVITYSCHEDULE); // DropZone
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Loads"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
@@ -258,6 +258,26 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         }
       );
 
+      std::function<std::vector<boost::optional<model::ModelObject>> (const model::SpaceType &)> activityLevelSchedules(
+        [allLoads] (const model::SpaceType &t_spaceType) {
+          std::vector<boost::optional<model::ModelObject>> retval;
+
+          for (const auto &l : allLoads(t_spaceType))
+          {
+            boost::optional<model::People> p = l.optionalCast<model::People>();
+            if (p)
+            {
+              auto als = p->activityLevelSchedule();
+              retval.push_back(boost::optional<model::ModelObject>(als));
+            } else {
+              retval.emplace_back();
+            }
+          }
+
+          return retval;
+        }
+      );
+ 
       if (field == LOADNAME) {
 
         // Here we create a NameLineEdit column, but this one includes a "DataSource" object
@@ -321,15 +341,15 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
 
       } else if (field == ACTIVITYSCHEDULE) {
 
-        //addDropZoneColumn(QString(ACTIVITYSCHEDULE),
-        //  CastNullAdapter<model::SpaceLoadInstance>(&model::SpaceLoadInstance::name),
-        //  CastNullAdapter<model::SpaceLoadInstance>(&model::SpaceLoadInstance::setName),
-        //  DataSource(
-        //  allLoads,
-        //  true
-        //  //QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel, getter, setter)
-        //  )
-        //  );
+        addNameLineEditColumn(QString(ACTIVITYSCHEDULE),
+          CastNullAdapter<model::Schedule>(&model::Schedule::name),
+          CastNullAdapter<model::Schedule>(&model::Schedule::setName),
+          DataSource(
+            activityLevelSchedules,
+            true
+            //QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel, getter, setter)
+          )
+        );
 
       }
 

@@ -438,6 +438,8 @@ QWidget * OSGridController::widgetAt(int row, int column)
   QWidget * widget = nullptr;
   auto layout = new QVBoxLayout();
 
+  int numwidgets = 0;
+
   if(m_hasHorizontalHeader && row == 0){
     if(column == 0){
       setHorizontalHeader();
@@ -445,6 +447,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
       OS_ASSERT(m_horizontalHeader.size() == m_baseConcepts.size());
     }
     widget = m_horizontalHeader.at(column);
+    ++numwidgets;
     layout->addWidget(widget,0,Qt::AlignTop | Qt::AlignCenter);
   } else {
 
@@ -467,7 +470,13 @@ QWidget * OSGridController::widgetAt(int row, int column)
       // This should be working and doing what you want
       for (auto &item : dataSource->source().items(mo))
       {
-        layout->addWidget(makeWidget(item.cast<model::ModelObject>(), dataSource->innerConcept()));
+        if (item)
+        {
+          layout->addWidget(makeWidget(item->cast<model::ModelObject>(), dataSource->innerConcept()));
+        } else {
+          layout->addStretch();
+        }
+        ++numwidgets;
       }
 
       if (dataSource->source().wantsPlaceholder())
@@ -475,7 +484,8 @@ QWidget * OSGridController::widgetAt(int row, int column)
         // use this space to put in a blank placeholder of some kind to make sure the 
         // widget is evenly laid out relative to its friends in the adjacent columns
         // Fix this.
-        layout->addWidget(new QWidget());
+        layout->addStretch();
+        ++numwidgets;
       } 
 
       if (dataSource->source().dropZoneConcept())
@@ -484,6 +494,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
         // not an object the rest in the list was derived from
         // this should also be working and doing what you want
         layout->addWidget(makeWidget(mo, dataSource->source().dropZoneConcept()));
+        ++numwidgets;
       }
 
 
@@ -498,6 +509,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
       // just the one
       widget = makeWidget(mo, baseConcept);
       layout->addWidget(widget,0,Qt::AlignTop | Qt::AlignCenter);
+      ++numwidgets;
     }
   }
 
@@ -510,7 +522,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
   if(row == 0){
     wrapper->setMinimumSize(QSize(140,70));
   } else {
-    wrapper->setMinimumSize(QSize(140,34));
+    wrapper->setMinimumSize(QSize(140,34 * numwidgets));
   }
 
   wrapper->setStyleSheet(this->cellStyle(row,column,false));

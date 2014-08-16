@@ -102,12 +102,12 @@ class DataSource
 
       m_sourceFunc = [t_sourceFunc](ConceptProxy t_proxy)  {
         auto result = t_sourceFunc(t_proxy.cast<ParamType>());
-        return std::vector<ConceptProxy>(result.begin(), result.end());
+        return std::vector<boost::optional<ConceptProxy>>(result.begin(), result.end());
       };
     }
 
 
-    std::vector<ConceptProxy> items(const ConceptProxy &t_proxy) const
+    std::vector<boost::optional<ConceptProxy>> items(const ConceptProxy &t_proxy) const
     {
       return m_sourceFunc(t_proxy);
     }
@@ -123,7 +123,7 @@ class DataSource
     }
 
   private:
-    std::function<std::vector<ConceptProxy> (const ConceptProxy &)> m_sourceFunc;
+    std::function<std::vector<boost::optional<ConceptProxy>> (const ConceptProxy &)> m_sourceFunc;
     bool m_wantsPlaceholder;
     QSharedPointer<BaseConcept> m_dropZoneConcept;
 };
