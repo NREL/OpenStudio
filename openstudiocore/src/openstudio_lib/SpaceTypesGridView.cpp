@@ -187,8 +187,8 @@ void SpaceTypesGridController::setCategoriesAndFields()
   {
     std::vector<QString> fields;
     fields.push_back(LOADNAME);
-    //fields.push_back(MULTIPLIER); // Value Edit
-    fields.push_back(DEFINITION); // DropZone
+    fields.push_back(MULTIPLIER);
+    fields.push_back(DEFINITION);
     fields.push_back(SCHEDULE);
     fields.push_back(ACTIVITYSCHEDULE);
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Loads"),fields);
@@ -457,7 +457,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           }
         }
       );
-      
+
       std::function<std::vector<boost::optional<model::ModelObject>>(const model::SpaceType &)> schedules(
         [allLoads](const model::SpaceType &t_spaceType) {
           std::vector<boost::optional<model::ModelObject>> retval;
