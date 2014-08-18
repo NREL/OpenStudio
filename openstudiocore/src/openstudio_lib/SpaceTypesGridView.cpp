@@ -71,6 +71,27 @@
 #include "../model/SteamEquipment.hpp"
 #include "../model/SteamEquipment_Impl.hpp"
 
+
+#include "../model/InternalMassDefinition.hpp"
+#include "../model/PeopleDefinition.hpp"
+#include "../model/LightsDefinition.hpp"
+#include "../model/LuminaireDefinition.hpp"
+#include "../model/ElectricEquipmentDefinition.hpp"
+#include "../model/GasEquipmentDefinition.hpp"
+#include "../model/HotWaterEquipmentDefinition.hpp"
+#include "../model/SteamEquipmentDefinition.hpp"
+#include "../model/OtherEquipmentDefinition.hpp"
+
+#include "../model/InternalMassDefinition_Impl.hpp"
+#include "../model/PeopleDefinition_Impl.hpp"
+#include "../model/LightsDefinition_Impl.hpp"
+#include "../model/LuminaireDefinition_Impl.hpp"
+#include "../model/ElectricEquipmentDefinition_Impl.hpp"
+#include "../model/GasEquipmentDefinition_Impl.hpp"
+#include "../model/HotWaterEquipmentDefinition_Impl.hpp"
+#include "../model/SteamEquipmentDefinition_Impl.hpp"
+#include "../model/OtherEquipmentDefinition_Impl.hpp"
+
 #include "../utilities/idd/OS_SpaceType_FieldEnums.hxx"
 
 #include <QBoxLayout>
@@ -615,7 +636,68 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
 
       } else if (field == DEFINITION) {
         std::function<boost::optional<model::SpaceLoadDefinition> (model::SpaceType *)>  getter;
-        std::function<bool (model::SpaceType *, const model::SpaceLoadDefinition &)> setter;
+
+        std::function<bool (model::SpaceType *, const model::SpaceLoadDefinition &)> setter(
+          [](model::SpaceType *t_spaceType, const model::SpaceLoadDefinition &t_definition) {
+            boost::optional<model::PeopleDefinition> p = t_definition.optionalCast<model::PeopleDefinition>();
+            if (p)
+            {
+              model::People(*p).setParent(*t_spaceType);
+              return true;
+            }
+
+            boost::optional<model::LightsDefinition> light = t_definition.optionalCast<model::LightsDefinition>();
+            if (light)
+            {
+              model::Lights(*light).setParent(*t_spaceType);
+              return true;
+            }
+
+            boost::optional<model::LuminaireDefinition> lum = t_definition.optionalCast<model::LuminaireDefinition>();
+            if (lum)
+            {
+              model::Luminaire(*lum).setParent(*t_spaceType);
+              return true;
+            }
+
+            boost::optional<model::ElectricEquipmentDefinition> e = t_definition.optionalCast<model::ElectricEquipmentDefinition>();
+            if (e)
+            {
+              model::ElectricEquipment(*e).setParent(*t_spaceType);
+              return true;
+            }
+
+            boost::optional<model::GasEquipmentDefinition> g = t_definition.optionalCast<model::GasEquipmentDefinition>();
+            if (g)
+            {
+              model::GasEquipment(*g).setParent(*t_spaceType);
+              return true;
+            }
+
+            boost::optional<model::HotWaterEquipmentDefinition> h = t_definition.optionalCast<model::HotWaterEquipmentDefinition>();
+            if (h)
+            {
+              model::HotWaterEquipment(*h).setParent(*t_spaceType);
+              return true;
+            }
+
+            boost::optional<model::SteamEquipmentDefinition> se = t_definition.optionalCast<model::SteamEquipmentDefinition>();
+            if (se)
+            {
+              model::SteamEquipment(*se).setParent(*t_spaceType);
+              return true;
+            }
+
+            boost::optional<model::OtherEquipmentDefinition> o = t_definition.optionalCast<model::OtherEquipmentDefinition>();
+            if (o)
+            {
+              model::OtherEquipment(*o).setParent(*t_spaceType);
+              return true;
+            }
+
+            return false;
+          }
+        );
 
         addNameLineEditColumn(QString(DEFINITION),
           CastNullAdapter<model::SpaceLoadDefinition>(&model::SpaceLoadDefinition::name),
