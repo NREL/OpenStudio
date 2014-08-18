@@ -329,7 +329,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
 
       std::function<double(model::ModelObject *)> multiplier(
         [allLoads](model::ModelObject *t_modelObject) {
-          double retval;
+          double retval = 0;
 
           boost::optional<model::People> p = t_modelObject->optionalCast<model::People>();
           if (p)
