@@ -188,7 +188,7 @@ void SpaceTypesGridController::setCategoriesAndFields()
     std::vector<QString> fields;
     fields.push_back(LOADNAME);
     //fields.push_back(MULTIPLIER); // Value Edit
-    //fields.push_back(DEFINITION); // DropZone
+    fields.push_back(DEFINITION); // DropZone
     fields.push_back(SCHEDULE);
     fields.push_back(ACTIVITYSCHEDULE);
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Loads"),fields);
@@ -257,6 +257,34 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           return loads;
         }
       );
+
+      std::function<std::vector<boost::optional<model::ModelObject>>(const model::SpaceType &)> allLoadInstances(
+          [allLoads](const model::SpaceType &t_spaceType) {
+            std::vector<boost::optional<model::ModelObject>> loadInstances;
+            for (const auto &l : allLoads(t_spaceType))
+            {
+              loadInstances.push_back(boost::optional<model::ModelObject>(l.optionalCast<model::SpaceLoadInstance>()));
+            }
+            return loadInstances;
+          }
+          );
+
+      std::function<std::vector<boost::optional<model::ModelObject>>(const model::SpaceType &)> allDefinitions(
+          [allLoadInstances](const model::SpaceType &t_spaceType) {
+            std::vector<boost::optional<model::ModelObject>> definitions;
+            for (const auto &l : allLoadInstances(t_spaceType))
+            {
+              if (l)
+              {
+                definitions.push_back(l->cast<model::SpaceLoadInstance>().definition());
+              } else {
+                definitions.emplace_back();
+              }
+            }
+            return definitions;
+          }
+          );
+
 
       std::function<std::vector<boost::optional<model::ModelObject>>(const model::SpaceType &)> schedules(
         [allLoads](const model::SpaceType &t_spaceType) {
@@ -396,7 +424,6 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           DataSource(
           allLoads,
           true
-          //QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel, getter, setter)
           )
           );
 
@@ -414,16 +441,19 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         //  );
 
       } else if (field == DEFINITION) {
+        std::function<boost::optional<model::SpaceLoadDefinition> (model::SpaceType *)>  getter;
+        std::function<bool (model::SpaceType *, const model::SpaceLoadDefinition &)> setter;
 
-        //addDropZoneColumn(QString(DEFINITION),
-        //  CastNullAdapter<model::SpaceLoadInstance>(&model::SpaceLoadInstance::definition),
-        //  CastNullAdapter<model::SpaceLoadInstance>(&model::SpaceLoadInstance::setDefinition),
-        //  DataSource(
-        //  allLoads,
-        //  true
-        //  //QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel, getter, setter)
-        //  )
-        //  );
+        addNameLineEditColumn(QString(DEFINITION),
+          CastNullAdapter<model::SpaceLoadDefinition>(&model::SpaceLoadDefinition::name),
+          CastNullAdapter<model::SpaceLoadDefinition>(&model::SpaceLoadDefinition::setName),
+          DataSource(
+            allDefinitions,
+            false ,
+            QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::SpaceLoadDefinition, model::SpaceType>(DEFINITION,
+                getter, setter))
+          )
+          );
 
       } else if (field == SCHEDULE) {
 
@@ -433,7 +463,6 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           DataSource(
             schedules,
             true
-            //QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel, getter, setter)
           )
         );
 
@@ -445,7 +474,6 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           DataSource(
             activityLevelSchedules,
             true
-            //QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel, getter, setter)
           )
         );
 
