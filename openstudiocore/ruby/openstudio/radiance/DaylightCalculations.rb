@@ -190,7 +190,6 @@ if not result
   puts "failed to run ModelToRad"
   exit false
 end
-puts "ran modeltorad only."
 
 # if no sqlPath given, glob under the modelPath to find it
 if sqlPath.empty?

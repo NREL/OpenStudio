@@ -1028,7 +1028,7 @@ namespace radiance {
               || subSurfaceUpCase == "SKYLIGHT")
           {
 
-           std::string winUpVector = "Z";
+            std::string winUpVector = "Z";
             if (subSurfaceUpCase == "SKYLIGHT"){
               winUpVector = "Y";
             }
@@ -1037,7 +1037,7 @@ namespace radiance {
             {
               m_radWindowGroups[windowGroup_name] = "# OpenStudio Window Group: " + windowGroup_name + "\n";
               // 3-phase/rfluxmtx support
-              m_radWindowGroups[windowGroup_name] += "#@rfluxmtx h=kf u=" + winUpVector + "\n";
+              m_radWindowGroups[windowGroup_name] += "#@rfluxmtx h=kf u=" + winUpVector + " o=" + windowGroup_name + ".vmx\n";
 
             }
 
@@ -1485,8 +1485,8 @@ namespace radiance {
 
       // write radiance vmx materials list
       // format of this file is: window group, bsdf, bsdf
-      m_radDCmats.insert("# OpenStudio windowGroup->BSDF \"Mapping\" File\n# maps Window Groups to BSDF files\n\
-      # windowGroup,inwardNormal,bsdf0.xml,bsdf1.xml(optional),etc...\n");
+      m_radDCmats.insert("#OpenStudio windowGroup->BSDF \"Mapping\" File\n# windowGroup,inwardNormal,bsdf0.xml,bsdf1.xml(optional),etc...\n");
+      m_radDCmats.insert("#DO NOT EDIT\n");
       openstudio::path materials_dcfilename = t_radDir / openstudio::toPath("bsdf/mapping.rad");
       OFSTREAM materials_dcfile(materials_dcfilename);
       if (materials_dcfile.is_open()){

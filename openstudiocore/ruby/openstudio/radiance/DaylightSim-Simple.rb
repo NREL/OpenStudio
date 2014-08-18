@@ -367,57 +367,51 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
   if t_options.z == true
 
     # TODO actually generate the necessary DMX files
-    # rpg777 this is copy and pasted from the old code
     binPairs = Array.new
     matrixGroups = Array.new
     aziVectorX = ""
     aziVectorY = ""
-    puts "Warning: using unsupported 3-phase method"
-    #puts "Using 3-phase method"
-    system("oconv #{t_outPath}/materials/materials.rad #{t_outPath}/materials/materials_vmx.rad model.rad #{t_outPath}/skies/dc.sky > #{t_outPath}/octrees/model_dc.oct")
+    puts "Using 3-phase method"
+
     #read DC materials file
     windowMaps = File::open("#{t_outPath}/bsdf/mapping.rad")
-    # get materials, compute vectors
-    # plan (2D) only for now
-      #t_space_names_to_calculate.each do |space_name|
       windowMaps.each do |row|
-          #row[0..-1].each do |azi|
-          matchVmx = /glaz_(.*?)_azi-(.*?)_tn-(.*).vmx/.match(row)
-          space_name = matchVmx[1]
-          # DLM: aziVector is not actually a vector right?  just the angle in radians?
-          aziVector = matchVmx[2]
-          glazingTransmissivity = matchVmx[3]
-          aziAngle = aziVector.to_f * (180 / Math::PI)
-          # swap sin and cos so we get vectors that align with compass headings (which makes sense to this idiot -->(RPG).)
-          aziVectorX = Math::sin(aziVector.to_f)
-          aziVectorY = Math::cos(aziVector.to_f)
-          viewVectorX = -aziVectorX
-          viewVectorY = -aziVectorY
-          # sanity checks
-          puts "window azimuth: #{aziAngle}"
-          puts "daylight vector (window to sky): #{aziVectorX.round_to_str(2)},#{aziVectorY.round_to_str(2)},0.00"
-          puts "view vector (window to interior): #{viewVectorX.round_to_str(2)},#{viewVectorY.round_to_str(2)},0.00"
-          binPairs << " -b 'kbin(#{viewVectorX.round_to_str(2)},#{viewVectorY.round_to_str(2)},0,0,0,1)' -m glaz_#{space_name}_azi-#{aziVector}_tn-#{glazingTransmissivity}"
-          # compute daylight matri(ces)
-          system("#{t_catCommand} #{t_outPath}/materials/materials_vmx.rad #{t_outPath}/scene/glazing/#{space_name}_glaz_#{aziVector}.rad > #{t_outPath}/window_temp.rad")
-
-          exec_statement("#{perlPrefix}genklemsamp#{perlExtension} #{t_options.klemsDensity} -vd #{aziVectorX.round_to_str(2)} #{aziVectorY.round_to_str(2)} 0.00 #{t_outPath}/window_temp.rad \
-          | rcontrib #{t_options.klemsDensity} #{t_options.tregVars} -m skyglow -fa #{t_outPath}/octrees/model_dc.oct > \
-                         #{t_outPath}/output/dc/merged_space/maps/glaz_#{space_name}_azi-#{aziVector}_tn-#{glazingTransmissivity}.dmx")
-          #end
+        next if row[0] == "#"
+        puts row
       end
-      #end
+
+    #       matchVmx = /glaz_(.*?)_azi-(.*?)_tn-(.*).vmx/.match(row)
+    #       space_name = matchVmx[1]
+    #       # DLM: aziVector is not actually a vector right?  just the angle in radians?
+    #       aziVector = matchVmx[2]
+    #       glazingTransmissivity = matchVmx[3]
+    #       aziAngle = aziVector.to_f * (180 / Math::PI)
+    #       # swap sin and cos so we get vectors that align with compass headings (which makes sense to this idiot -->(RPG).)
+    #       aziVectorX = Math::sin(aziVector.to_f)
+    #       aziVectorY = Math::cos(aziVector.to_f)
+    #       viewVectorX = -aziVectorX
+    #       viewVectorY = -aziVectorY
+    #       # sanity checks
+    #       puts "window azimuth: #{aziAngle}"
+    #       puts "daylight vector (window to sky): #{aziVectorX.round_to_str(2)},#{aziVectorY.round_to_str(2)},0.00"
+    #       puts "view vector (window to interior): #{viewVectorX.round_to_str(2)},#{viewVectorY.round_to_str(2)},0.00"
+    #       binPairs << " -b 'kbin(#{viewVectorX.round_to_str(2)},#{viewVectorY.round_to_str(2)},0,0,0,1)' -m glaz_#{space_name}_azi-#{aziVector}_tn-#{glazingTransmissivity}"
+    #       # compute daylight matri(ces)
+    #       system("#{t_catCommand} #{t_outPath}/materials/materials_vmx.rad #{t_outPath}/scene/glazing/#{space_name}_glaz_#{aziVector}.rad > #{t_outPath}/window_temp.rad")
+
+    #       exec_statement("#{perlPrefix}genklemsamp#{perlExtension} #{t_options.klemsDensity} -vd #{aziVectorX.round_to_str(2)} #{aziVectorY.round_to_str(2)} 0.00 #{t_outPath}/window_temp.rad \
+    #       | rcontrib #{t_options.klemsDensity} #{t_options.tregVars} -m skyglow -fa #{t_outPath}/octrees/model_dc.oct > \
+    #                      #{t_outPath}/output/dc/merged_space/maps/glaz_#{space_name}_azi-#{aziVector}_tn-#{glazingTransmissivity}.dmx")
+    #       #end
+    #   end
+    #end
+    
     # compute view matri(ces)
     puts "computing view matri(ces) for merged_space.map..."
-    if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM) #Windows commands
-      exec_statement("#{t_catCommand} #{t_outPath}/numeric/merged_space.map | \
-        rcontrib #{rtrace_args} -I+ -fo #{t_options.klemsDensity} #{t_options.tregVars} \
-       -o #{t_outPath}/output/dc/merged_space/maps/%s.vmx -m skyglow model_dc.oct")
-    else #UNIX commands
-      exec_statement("#{t_catCommand} #{t_outPath}/numeric/merged_space.map | \
-        rcontrib #{rtrace_args} -n #{t_simCores} -I+ -fa #{t_options.klemsDensity} #{t_options.tregVars} \
-      -o #{t_outPath}/output/dc/merged_space/maps/%s.vmx #{binPairs} #{t_outPath}/octrees/model_dc.oct")
-    end
+    exec_statement("#{t_catCommand} #{t_outPath}/materials/materials_vmx.rad scene/glazing/WG*.rad > receivers_vmx.rad")
+    exec_statement("oconv #{t_outPath}/materials/materials.rad #{t_outPath}/scene/*.rad > model_vmx.oct")
+    # need to add support for Windows (no wc, use "FIND")
+    exec_statement("rfluxmtx -faa -n #{t_simCores} -y `wc -l < #{t_outPath}/numeric/merged_space.map` -I -v - receivers_vmx.rad -i model_vmx.oct < #{t_outPath}/numeric/merged_space.map")
 
   end
 end # def(calculateDaylightCoeffecients)
