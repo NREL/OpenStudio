@@ -327,147 +327,133 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         }
       );
 
-      std::function<double(const model::SpaceType &)> multiplier(
-        [allLoads](const model::SpaceType &t_spaceType) {
+      std::function<double(model::ModelObject *)> multiplier(
+        [allLoads](model::ModelObject *t_modelObject) {
           double retval;
 
-          for (const auto &l : allLoads(t_spaceType))
+          boost::optional<model::People> p = t_modelObject->optionalCast<model::People>();
+          if (p)
           {
-
-            boost::optional<model::People> p = l.optionalCast<model::People>();
-            if (p)
-            {
-              retval = p->multiplier();
-              continue;
-            }
-
-            boost::optional<model::Lights> light = l.optionalCast<model::Lights>();
-            if (light)
-            {
-              retval = light->multiplier();
-              continue;
-            }
-
-            boost::optional<model::Luminaire> lum = l.optionalCast<model::Luminaire>();
-            if (lum)
-            {
-              retval = lum->multiplier();
-              continue;
-            }
-
-            boost::optional<model::ElectricEquipment> e = l.optionalCast<model::ElectricEquipment>();
-            if (e)
-            {
-              retval = e->multiplier();
-              continue;
-            }
-
-            boost::optional<model::GasEquipment> g = l.optionalCast<model::GasEquipment>();
-            if (g)
-            {
-              retval = g->multiplier();
-              continue;
-            }
-
-            boost::optional<model::HotWaterEquipment> h = l.optionalCast<model::HotWaterEquipment>();
-            if (h)
-            {
-              retval = h->multiplier();
-              continue;
-            }
-
-            boost::optional<model::SteamEquipment> se = l.optionalCast<model::SteamEquipment>();
-            if (se)
-            {
-              retval = se->multiplier();
-              continue;
-            }
-
-            boost::optional<model::OtherEquipment> o = l.optionalCast<model::OtherEquipment>();
-            if (o)
-            {
-              retval = o->multiplier();
-              continue;
-            }
-
-            else {
-              // Should never get here
-              OS_ASSERT(false);
-            }
-
+            retval = p->multiplier();
+            return retval;
           }
 
+          boost::optional<model::Lights> light = t_modelObject->optionalCast<model::Lights>();
+          if (light)
+          {
+            retval = light->multiplier();
+            return retval;
+          }
+
+          boost::optional<model::Luminaire> lum = t_modelObject->optionalCast<model::Luminaire>();
+          if (lum)
+          {
+            retval = lum->multiplier();
+            return retval;
+          }
+
+          boost::optional<model::ElectricEquipment> e = t_modelObject->optionalCast<model::ElectricEquipment>();
+          if (e)
+          {
+            retval = e->multiplier();
+            return retval;
+          }
+
+          boost::optional<model::GasEquipment> g = t_modelObject->optionalCast<model::GasEquipment>();
+          if (g)
+          {
+            retval = g->multiplier();
+            return retval;
+          }
+
+          boost::optional<model::HotWaterEquipment> h = t_modelObject->optionalCast<model::HotWaterEquipment>();
+          if (h)
+          {
+            retval = h->multiplier();
+            return retval;
+          }
+
+          boost::optional<model::SteamEquipment> se = t_modelObject->optionalCast<model::SteamEquipment>();
+          if (se)
+          {
+            retval = se->multiplier();
+            return retval;
+          }
+
+          boost::optional<model::OtherEquipment> o = t_modelObject->optionalCast<model::OtherEquipment>();
+          if (o)
+          {
+            retval = o->multiplier();
+            return retval;
+          }
+
+          // Should never get here
+          OS_ASSERT(false);
           return retval;
         }
       );
-      
-      std::function<void(const model::SpaceType &, double)> setMultiplier(
-        [allLoads](const model::SpaceType &t_spaceType, double multiplier) {
 
-          for (const auto &l : allLoads(t_spaceType))
+      std::function<void(model::ModelObject *, double)> setMultiplier(
+        [](model::ModelObject *t_modelObject, double multiplier) {
+          boost::optional<model::People> p = t_modelObject->optionalCast<model::People>();
+          if (p)
           {
+            p->setMultiplier(multiplier);
+            return;
+          }
 
-            boost::optional<model::People> p = l.optionalCast<model::People>();
-            if (p)
-            {
-              p->setMultiplier(multiplier);
-              continue;
-            }
+          boost::optional<model::Lights> light = t_modelObject->optionalCast<model::Lights>();
+          if (light)
+          {
+            light->setMultiplier(multiplier);
+            return;
+          }
 
-            boost::optional<model::Lights> light = l.optionalCast<model::Lights>();
-            if (light)
-            {
-              light->setMultiplier(multiplier);
-              continue;
-            }
+          boost::optional<model::Luminaire> lum = t_modelObject->optionalCast<model::Luminaire>();
+          if (lum)
+          {
+            lum->setMultiplier(multiplier);
+            return;
+          }
 
-            boost::optional<model::Luminaire> lum = l.optionalCast<model::Luminaire>();
-            if (lum)
-            {
-              lum->setMultiplier(multiplier);
-              continue;
-            }
+          boost::optional<model::ElectricEquipment> e = t_modelObject->optionalCast<model::ElectricEquipment>();
+          if (e)
+          {
+            e->setMultiplier(multiplier);
+            return;
+          }
 
-            boost::optional<model::ElectricEquipment> e = l.optionalCast<model::ElectricEquipment>();
-            if (e)
-            {
-              e->setMultiplier(multiplier);
-              continue;
-            }
+          boost::optional<model::GasEquipment> g = t_modelObject->optionalCast<model::GasEquipment>();
+          if (g)
+          {
+            g->setMultiplier(multiplier);
+            return;
+          }
 
-            boost::optional<model::GasEquipment> g = l.optionalCast<model::GasEquipment>();
-            if (g)
-            {
-              g->setMultiplier(multiplier);
-              continue;
-            }
+          boost::optional<model::HotWaterEquipment> h = t_modelObject->optionalCast<model::HotWaterEquipment>();
+          if (h)
+          {
+            h->setMultiplier(multiplier);
+            return;
+          }
 
-            boost::optional<model::HotWaterEquipment> h = l.optionalCast<model::HotWaterEquipment>();
-            if (h)
-            {
-              h->setMultiplier(multiplier);
-              continue;
-            }
+          boost::optional<model::SteamEquipment> se = t_modelObject->optionalCast<model::SteamEquipment>();
+          if (se)
+          {
+            se->setMultiplier(multiplier);
+            return;
+          }
 
-            boost::optional<model::SteamEquipment> se = l.optionalCast<model::SteamEquipment>();
-            if (se)
-            {
-              se->setMultiplier(multiplier);
-              continue;
-            }
+          boost::optional<model::OtherEquipment> o = t_modelObject->optionalCast<model::OtherEquipment>();
+          if (o)
+          {
+            o->setMultiplier(multiplier);
+            return;
+          }
 
-            boost::optional<model::OtherEquipment> o = l.optionalCast<model::OtherEquipment>();
-            if (o)
-            {
-              o->setMultiplier(multiplier);
-              continue;
-            }
-
-            else {
-              // Should never get here
-              OS_ASSERT(false);
-            }
-
+          else {
+            // Should never get here
+            OS_ASSERT(false);
           }
         }
       );
