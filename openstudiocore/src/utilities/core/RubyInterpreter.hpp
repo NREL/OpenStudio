@@ -580,10 +580,7 @@
 // in a known shared place.
 #include <utilities/SWIGRubyRuntime.hxx>
 
-//#include <ruby/encoding.h>
-
-
-
+#include <ruby/encoding.h>
 
 namespace openstudio
 {
@@ -596,6 +593,18 @@ namespace openstudio
             const openstudio::path &t_rubyIncludePath,
             const std::vector<std::string> &t_moduleNames)
         {
+          // fake some calls to initialize Ruby options
+          // https://github.com/ruby/ruby/blob/ee5edc5950dcd6d9577b35935e8028b25c0415c5/ruby.c#L1258
+
+          // set up default encoding
+          // https://www.ruby-forum.com/topic/3796516
+          int idx = rb_enc_find_index("UTF-8");
+          rb_encoding *enc = rb_enc_from_index(idx);
+          VALUE val = rb_enc_from_encoding(enc);
+          rb_enc_set_default_external(val);
+          //rb_enc_set_default_internal(val); // DLM: ruby and irb leave this blank
+
+          // set load paths
           openstudio::path rubypath = openstudio::getOpenStudioEmbeddedRubyPath();
 
           ruby_incpush(toString(t_moduleSearchPath.native()).c_str());
@@ -628,12 +637,6 @@ namespace openstudio
 
           ruby_init_loadpath();
 
-          /* FIXME: Fake ruby_init_gems(Qtrue) */
-          // http://subforge.org/blogs/show_by_tag/embed
-          //ruby_script("subtle");
-          //rb_define_module("Gem");
-          //Init_prelude();
-
           // load the modules. If an error occurs, an exception will be thrown explaining the problem
           for (std::vector<std::string>::const_iterator itr = t_moduleNames.begin();
               itr != t_moduleNames.end();
@@ -642,13 +645,14 @@ namespace openstudio
             evalString("require '" + openstudio::toString(t_moduleSearchPath / openstudio::toPath(*itr)) + "'");
           }
 
-          // set up default encoding
-          // https://www.ruby-forum.com/topic/3796516
-          //int idx = rb_enc_find_index("UTF-8");
-          //rb_encoding *enc = rb_enc_from_index(idx);
-          //VALUE val = rb_enc_from_encoding(enc);
-          //rb_enc_set_default_external(val);
-          //rb_enc_set_default_internal(val);
+          // allow ruby gems
+          // http://subforge.org/blogs/show_by_tag/embed
+          rb_define_module("Gem");
+          //Init_prelude();
+          //rb_const_remove(rb_cObject, rb_intern_const("TMP_RUBY_PREFIX"));
+          //https://www.ruby-forum.com/topic/2323190
+          //Set the GEM_HOME and GEM_PATH environment variables to:
+          //rubypath / openstudio::toPath("lib/ruby/gems/2.0.0")
 
           // register some default types that we want to pass in / out of the ruby system
           registerType<int>("int");
@@ -658,6 +662,9 @@ namespace openstudio
           registerType<std::string>("std::string");
           registerType<float>("float");
           registerType<openstudio::path>("openstudio::path");
+
+          // set the script name if desired
+          //ruby_script("OpenStudio");
         }
 
         ~RubyInterpreter()
