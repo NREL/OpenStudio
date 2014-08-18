@@ -258,102 +258,288 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         }
       );
 
+      std::function<std::vector<boost::optional<model::ModelObject>>(const model::SpaceType &)> allLoadsWithMultipliers(
+        [](const model::SpaceType &t_spaceType) {
+          std::vector<boost::optional<model::ModelObject>> loads;
+          auto InternalMass = t_spaceType.internalMass();
+          auto People = t_spaceType.people();
+          auto Lights = t_spaceType.lights();
+          auto Luminaire = t_spaceType.luminaires();
+          auto ElectricEquipment = t_spaceType.electricEquipment();
+          auto GasEquipment = t_spaceType.gasEquipment();
+          auto HotWaterEquipment = t_spaceType.hotWaterEquipment();
+          auto SteamEquipment = t_spaceType.steamEquipment();
+          auto OtherEquipment = t_spaceType.otherEquipment();
+          auto SpaceInfiltrationDesignFlowRate = t_spaceType.spaceInfiltrationDesignFlowRates();
+          auto SpaceInfiltrationEffectiveLeakageArea = t_spaceType.spaceInfiltrationEffectiveLeakageAreas();
+
+          loads.insert(loads.end(), InternalMass.begin(), InternalMass.end());
+          loads.insert(loads.end(), People.begin(), People.end());
+          loads.insert(loads.end(), Lights.begin(), Lights.end());
+          loads.insert(loads.end(), Luminaire.begin(), Luminaire.end());
+          loads.insert(loads.end(), ElectricEquipment.begin(), ElectricEquipment.end());
+          loads.insert(loads.end(), GasEquipment.begin(), GasEquipment.end());
+          loads.insert(loads.end(), HotWaterEquipment.begin(), HotWaterEquipment.end());
+          loads.insert(loads.end(), SteamEquipment.begin(), SteamEquipment.end());
+          loads.insert(loads.end(), OtherEquipment.begin(), OtherEquipment.end());
+          //loads.insert(loads.end(), SpaceInfiltrationDesignFlowRate.begin(), SpaceInfiltrationDesignFlowRate.end());
+          //loads.insert(loads.end(), SpaceInfiltrationEffectiveLeakageArea.begin(), SpaceInfiltrationEffectiveLeakageArea.end());
+
+          for (const auto &l : SpaceInfiltrationDesignFlowRate)
+          {
+            loads.emplace_back();
+          }
+
+          for (const auto &l : SpaceInfiltrationEffectiveLeakageArea)
+          {
+            loads.emplace_back();
+          }
+
+          return loads;
+        }
+      );
+
+      std::function<double(const model::SpaceType &)> multiplier(
+        [allLoads](const model::SpaceType &t_spaceType) {
+          double retval;
+
+          for (const auto &l : allLoads(t_spaceType))
+          {
+
+            boost::optional<model::People> p = l.optionalCast<model::People>();
+            if (p)
+            {
+              retval = p->multiplier();
+              continue;
+            }
+
+            boost::optional<model::Lights> light = l.optionalCast<model::Lights>();
+            if (light)
+            {
+              retval = light->multiplier();
+              continue;
+            }
+
+            boost::optional<model::Luminaire> lum = l.optionalCast<model::Luminaire>();
+            if (lum)
+            {
+              retval = lum->multiplier();
+              continue;
+            }
+
+            boost::optional<model::ElectricEquipment> e = l.optionalCast<model::ElectricEquipment>();
+            if (e)
+            {
+              retval = e->multiplier();
+              continue;
+            }
+
+            boost::optional<model::GasEquipment> g = l.optionalCast<model::GasEquipment>();
+            if (g)
+            {
+              retval = g->multiplier();
+              continue;
+            }
+
+            boost::optional<model::HotWaterEquipment> h = l.optionalCast<model::HotWaterEquipment>();
+            if (h)
+            {
+              retval = h->multiplier();
+              continue;
+            }
+
+            boost::optional<model::SteamEquipment> se = l.optionalCast<model::SteamEquipment>();
+            if (se)
+            {
+              retval = se->multiplier();
+              continue;
+            }
+
+            boost::optional<model::OtherEquipment> o = l.optionalCast<model::OtherEquipment>();
+            if (o)
+            {
+              retval = o->multiplier();
+              continue;
+            }
+
+            else {
+              // Should never get here
+              OS_ASSERT(false);
+            }
+
+          }
+
+          return retval;
+        }
+      );
+      
+      std::function<void(const model::SpaceType &, double)> setMultiplier(
+        [allLoads](const model::SpaceType &t_spaceType, double multiplier) {
+
+          for (const auto &l : allLoads(t_spaceType))
+          {
+
+            boost::optional<model::People> p = l.optionalCast<model::People>();
+            if (p)
+            {
+              p->setMultiplier(multiplier);
+              continue;
+            }
+
+            boost::optional<model::Lights> light = l.optionalCast<model::Lights>();
+            if (light)
+            {
+              light->setMultiplier(multiplier);
+              continue;
+            }
+
+            boost::optional<model::Luminaire> lum = l.optionalCast<model::Luminaire>();
+            if (lum)
+            {
+              lum->setMultiplier(multiplier);
+              continue;
+            }
+
+            boost::optional<model::ElectricEquipment> e = l.optionalCast<model::ElectricEquipment>();
+            if (e)
+            {
+              e->setMultiplier(multiplier);
+              continue;
+            }
+
+            boost::optional<model::GasEquipment> g = l.optionalCast<model::GasEquipment>();
+            if (g)
+            {
+              g->setMultiplier(multiplier);
+              continue;
+            }
+
+            boost::optional<model::HotWaterEquipment> h = l.optionalCast<model::HotWaterEquipment>();
+            if (h)
+            {
+              h->setMultiplier(multiplier);
+              continue;
+            }
+
+            boost::optional<model::SteamEquipment> se = l.optionalCast<model::SteamEquipment>();
+            if (se)
+            {
+              se->setMultiplier(multiplier);
+              continue;
+            }
+
+            boost::optional<model::OtherEquipment> o = l.optionalCast<model::OtherEquipment>();
+            if (o)
+            {
+              o->setMultiplier(multiplier);
+              continue;
+            }
+
+            else {
+              // Should never get here
+              OS_ASSERT(false);
+            }
+
+          }
+        }
+      );
+      
       std::function<std::vector<boost::optional<model::ModelObject>>(const model::SpaceType &)> schedules(
         [allLoads](const model::SpaceType &t_spaceType) {
-        std::vector<boost::optional<model::ModelObject>> retval;
+          std::vector<boost::optional<model::ModelObject>> retval;
 
-        for (const auto &l : allLoads(t_spaceType))
-        {
-
-          boost::optional<model::People> p = l.optionalCast<model::People>();
-          if (p)
+          for (const auto &l : allLoads(t_spaceType))
           {
-            auto s = p->numberofPeopleSchedule();
-            retval.push_back(boost::optional<model::ModelObject>(s));
-            continue;
+
+            boost::optional<model::People> p = l.optionalCast<model::People>();
+            if (p)
+            {
+              auto s = p->numberofPeopleSchedule();
+              retval.push_back(boost::optional<model::ModelObject>(s));
+              continue;
+            }
+
+            boost::optional<model::Lights> light = l.optionalCast<model::Lights>();
+            if (light)
+            {
+              auto s = light->schedule();
+              retval.push_back(boost::optional<model::ModelObject>(s));
+              continue;
+            }
+
+            boost::optional<model::Luminaire> lum = l.optionalCast<model::Luminaire>();
+            if (lum)
+            {
+              auto s = lum->schedule();
+              retval.push_back(boost::optional<model::ModelObject>(s));
+              continue;
+            }
+
+            boost::optional<model::ElectricEquipment> e = l.optionalCast<model::ElectricEquipment>();
+            if (e)
+            {
+              auto s = e->schedule();
+              retval.push_back(boost::optional<model::ModelObject>(s));
+              continue;
+            }
+
+            boost::optional<model::GasEquipment> g = l.optionalCast<model::GasEquipment>();
+            if (g)
+            {
+              auto s = g->schedule();
+              retval.push_back(boost::optional<model::ModelObject>(s));
+              continue;
+            }
+
+            boost::optional<model::HotWaterEquipment> h = l.optionalCast<model::HotWaterEquipment>();
+            if (h)
+            {
+              auto s = h->schedule();
+              retval.push_back(boost::optional<model::ModelObject>(s));
+              continue;
+            }
+
+            boost::optional<model::SteamEquipment> se = l.optionalCast<model::SteamEquipment>();
+            if (se)
+            {
+              auto s = se->schedule();
+              retval.push_back(boost::optional<model::ModelObject>(s));
+              continue;
+            }
+
+            boost::optional<model::OtherEquipment> o = l.optionalCast<model::OtherEquipment>();
+            if (o)
+            {
+              auto s = o->schedule();
+              retval.push_back(boost::optional<model::ModelObject>(s));
+              continue;
+            }
+
+            boost::optional<model::SpaceInfiltrationDesignFlowRate> f = l.optionalCast<model::SpaceInfiltrationDesignFlowRate>();
+            if (f)
+            {
+              auto s = f->schedule();
+              retval.push_back(boost::optional<model::ModelObject>(s));
+              continue;
+            }
+
+            boost::optional<model::SpaceInfiltrationEffectiveLeakageArea> la = l.optionalCast<model::SpaceInfiltrationEffectiveLeakageArea>();
+            if (la)
+            {
+              auto s = la->schedule();
+              retval.push_back(boost::optional<model::ModelObject>(s));
+              continue;
+            }
+
+            else {
+              // Should never get here
+              OS_ASSERT(false);
+            }
+
           }
 
-          boost::optional<model::Lights> light = l.optionalCast<model::Lights>();
-          if (light)
-          {
-            auto s = light->schedule();
-            retval.push_back(boost::optional<model::ModelObject>(s));
-            continue;
-          }
-
-          boost::optional<model::Luminaire> lum = l.optionalCast<model::Luminaire>();
-          if (lum)
-          {
-            auto s = lum->schedule();
-            retval.push_back(boost::optional<model::ModelObject>(s));
-            continue;
-          }
-
-          boost::optional<model::ElectricEquipment> e = l.optionalCast<model::ElectricEquipment>();
-          if (e)
-          {
-            auto s = e->schedule();
-            retval.push_back(boost::optional<model::ModelObject>(s));
-            continue;
-          }
-
-          boost::optional<model::GasEquipment> g = l.optionalCast<model::GasEquipment>();
-          if (g)
-          {
-            auto s = g->schedule();
-            retval.push_back(boost::optional<model::ModelObject>(s));
-            continue;
-          }
-
-          boost::optional<model::HotWaterEquipment> h = l.optionalCast<model::HotWaterEquipment>();
-          if (h)
-          {
-            auto s = h->schedule();
-            retval.push_back(boost::optional<model::ModelObject>(s));
-            continue;
-          }
-
-          boost::optional<model::SteamEquipment> se = l.optionalCast<model::SteamEquipment>();
-          if (se)
-          {
-            auto s = se->schedule();
-            retval.push_back(boost::optional<model::ModelObject>(s));
-            continue;
-          }
-
-          boost::optional<model::OtherEquipment> o = l.optionalCast<model::OtherEquipment>();
-          if (o)
-          {
-            auto s = o->schedule();
-            retval.push_back(boost::optional<model::ModelObject>(s));
-            continue;
-          }
-
-          boost::optional<model::SpaceInfiltrationDesignFlowRate> f = l.optionalCast<model::SpaceInfiltrationDesignFlowRate>();
-          if (f)
-          {
-            auto s = f->schedule();
-            retval.push_back(boost::optional<model::ModelObject>(s));
-            continue;
-          }
-
-          boost::optional<model::SpaceInfiltrationEffectiveLeakageArea> la = l.optionalCast<model::SpaceInfiltrationEffectiveLeakageArea>();
-          if (la)
-          {
-            auto s = la->schedule();
-            retval.push_back(boost::optional<model::ModelObject>(s));
-            continue;
-          }
-
-          else {
-            // Should never get here
-            OS_ASSERT(false);
-          }
-
+          return retval;
         }
-
-        return retval;
-      }
       );
 
       std::function<std::vector<boost::optional<model::ModelObject>> (const model::SpaceType &)> activityLevelSchedules(
@@ -398,20 +584,21 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           true
           //QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel, getter, setter)
           )
-          );
+        );
 
       }
+
       else if (field == MULTIPLIER) {
 
-        //addValueEditColumn(QString(MULTIPLIER),
-        //  CastNullAdapter<model::SpaceLoadInstance>(&model::SpaceLoadInstance::multiplier),
-        //  CastNullAdapter<model::SpaceLoadInstance>(&model::SpaceLoadInstance::setMultiplier),
-        //  DataSource(
-        //  allLoads,
-        //  true
-        //  //QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel, getter, setter)
-        //  )
-        //  );
+        addValueEditColumn(QString(MULTIPLIER),
+          multiplier,
+          setMultiplier,
+          DataSource(
+            allLoadsWithMultipliers,
+            true
+            //QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel, getter, setter)
+          )
+        );
 
       } else if (field == DEFINITION) {
 
