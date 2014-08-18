@@ -607,30 +607,30 @@ namespace openstudio
           std::vector<std::string> includePaths;
           openstudio::path rubypath = openstudio::getOpenStudioEmbeddedRubyPath();
 
-          includePaths.push_back("-I'" + toString(t_moduleSearchPath.native()) + "'");
-          includePaths.push_back("-I'" + toString(t_rubyIncludePath.native()) + "'");
+          includePaths.push_back("-I" + toString(t_moduleSearchPath) + "");
+          includePaths.push_back("-I" + toString(t_rubyIncludePath) + "");
 
           if (!rubypath.empty())
           {
 #if defined(WIN32) 
 #if (defined(_M_X64) || defined(__amd64__))
-            includePaths.push_back("-I'" + toString((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0"))) + "'");
-            includePaths.push_back("-I'" + toString((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/x64-msvcr100"))) + "'");
-            includePaths.push_back("-I'" + toString((rubypath / openstudio::toPath("lib/ruby/site_ruby"))) + "'");
-            includePaths.push_back("-I'" + toString((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0"))) + "'");
-            includePaths.push_back("-I'" + toString((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/x64-msvcr100"))) + "'");
-            includePaths.push_back("-I'" + toString(rubypath / openstudio::toPath("lib/ruby/vendor_ruby"))) + "'");
-            includePaths.push_back("-I'" + toString((rubypath / openstudio::toPath("lib/ruby/2.0.0"))) + "'");
-            includePaths.push_back("-I'" + toString((rubypath / openstudio::toPath("lib/ruby/2.0.0/x64-mswin64_10"))) + "'");
+            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0"))) + "");
+            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/x64-msvcr100"))) + "");
+            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/site_ruby"))) + "");
+            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0"))) + "");
+            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/x64-msvcr100"))) + "");
+            includePaths.push_back("-I" + toString(rubypath / openstudio::toPath("lib/ruby/vendor_ruby"))) + "");
+            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/2.0.0"))) + "");
+            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/2.0.0/x64-mswin64_10"))) + "");
 #else
-            includePaths.push_back("-I'" + toString((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0"))) + "'");
-            includePaths.push_back("-I'" + toString((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/i386-mingw32"))) + "'");
-            includePaths.push_back("-I'" + toString((rubypath / openstudio::toPath("lib/ruby/site_ruby"))) + "'");
-            includePaths.push_back("-I'" + toString((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0"))) + "'");
-            includePaths.push_back("-I'" + toString((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/i386-mingw32"))) + "'");
-            includePaths.push_back("-I'" + toString((rubypath / openstudio::toPath("lib/ruby/vendor_ruby"))) + "'");
-            includePaths.push_back("-I'" + toString((rubypath / openstudio::toPath("lib/ruby/2.0.0"))) + "'");
-            includePaths.push_back("-I'" + toString((rubypath / openstudio::toPath("lib/ruby/2.0.0/i386-mingw32"))) + "'");
+            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0"))) + "");
+            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/i386-mingw32"))) + "");
+            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/site_ruby"))) + "");
+            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0"))) + "");
+            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/i386-mingw32"))) + "");
+            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/vendor_ruby"))) + "'");
+            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/2.0.0"))) + "");
+            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/2.0.0/i386-mingw32"))) + "");
 #endif
 #endif
           }
