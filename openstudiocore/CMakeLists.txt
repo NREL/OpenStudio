@@ -433,114 +433,68 @@ if(BUILD_DOCUMENTATION)
   # need doxygen
   find_package(Doxygen REQUIRED)
 
-  option(DOXYGEN_INLINE_INHERITED_MEMBERS_OPTION "Show all inherited members of a class as if those members were ordinary class members" OFF)
-
-  mark_as_advanced(DOXYGEN_INLINE_INHERITED_MEMBERS_OPTION)
-
-  if(DOXYGEN_INLINE_INHERITED_MEMBERS_OPTION)
-    set(DOXYGEN_INLINE_INHERITED_MEMBERS "YES")
-  else()
-    set(DOXYGEN_INLINE_INHERITED_MEMBERS "NO")
-  endif()
-
   # if have dot you have more options
-  if(DOXYGEN_DOT_FOUND)
+  #if(DOXYGEN_DOT_FOUND)
 
-    option(DOXYGEN_COLLABORATION_GRAPH_OPTION "Generate implementation dependency diagrams (inheritance, containment, and class reference)" OFF)
-    option(DOXYGEN_CLASS_GRAPH_OPTION "Graph direct and indirect inheritance relations" ON)
-    option(DOXYGEN_UML_LOOK_OPTION "Generate graphs in UML format" OFF)
-    option(DOXYGEN_GRAPHICAL_HIERARCHY_OPTION "Graphical hierarchy of all classes instead of a textual one" OFF)
+  #endif()
 
-    mark_as_advanced(
-      DOXYGEN_COLLABORATION_GRAPH_OPTION
-      DOXYGEN_CLASS_GRAPH_OPTION
-      DOXYGEN_UML_LOOK_OPTION
-      DOXYGEN_GRAPHICAL_HIERARCHY_OPTION
-    )
-
-    if(DOXYGEN_COLLABORATION_GRAPH_OPTION)
-      set(DOXYGEN_COLLABORATION_GRAPH "YES")
-    else()
-      set(DOXYGEN_COLLABORATION_GRAPH "NO")
-    endif()
-
-    if(DOXYGEN_CLASS_GRAPH_OPTION)
-      set(DOXYGEN_CLASS_GRAPH "YES")
-    else()
-      set(DOXYGEN_CLASS_GRAPH "NO")
-    endif()
-
-    if(DOXYGEN_UML_LOOK_OPTION)
-      set(DOXYGEN_UML_LOOK "YES")
-    else()
-      set(DOXYGEN_UML_LOOK "NO")
-    endif()
-
-    if(DOXYGEN_GRAPHICAL_HIERARCHY_OPTION)
-      set(DOXYGEN_GRAPHICAL_HIERARCHY "YES")
-    else()
-      set(DOXYGEN_GRAPHICAL_HIERARCHY "NO")
-    endif()
-
-  endif()
-
-  configure_file(${CMAKE_SOURCE_DIR}/doc/index.html.in ${CMAKE_BINARY_DIR}/doc/index.html)
+  configure_file(${CMAKE_SOURCE_DIR}/doc/index.html ${CMAKE_BINARY_DIR}/doc/index.html COPYONLY)
 
   set(doxygen_directories ${project_directories})
   # Add the idd files to the documentation list as a separate entry
   list(APPEND doxygen_directories utilities/idd)
 
-  # ETH@20110823 In theory, doxygen tag files let you have links between individual projects.
-  # In practice, the links generated do not quite work (at least in the verison of Doxygen that
-  # I have on my desktop). I also didn't quite figure out how to make the custom _doc targets
-  # dependent on each other. (I didn't try very hard since the tag links don't work right.)
+  # Remove directories we don't want documentation generated for
+  list(REMOVE_ITEM doxygen_directories generateiddfactory)
 
-  # Default TAGFILES
-  set(DOXY_TAGFILES "")
 
   foreach(D ${doxygen_directories})
     string(REPLACE "/" "_" DOC_NAME ${D})
+
+    set(DOXY_INPUT_DIR "\"${CMAKE_SOURCE_DIR}/src/${D}\"")
+    set(DOXY_ADDITIONAL_DIR "")
+    set(DOXY_EXCLUDE_DIR "")
+    set(DOXY_TAGFILES "")
+
+    # Specific settings
     if(${D} MATCHES "utilities/idd")
       # We want to build the idd documentation separately because of the generated files
-      set(DOXY_INPUT_DIR "\"${CMAKE_SOURCE_DIR}/src/${D}\"")
       set(DOXY_ADDITIONAL_DIR "\"${CMAKE_BINARY_DIR}/src/${D}\"")
-      set(DOXY_ADDITIONAL_FILES "")
-      set(DOXY_EXCLUDE_DIR "")
-      set(DOXY_DEPENDS "")
     elseif(${D} MATCHES "utilities")
       # Exclude the idd directory when building the utilities documentation
-      set(DOXY_INPUT_DIR "\"${CMAKE_SOURCE_DIR}/src/${D}\"")
-      set(DOXY_ADDITIONAL_DIR "")
-      set(DOXY_ADDITIONAL_FILES "")
       set(DOXY_EXCLUDE_DIR "\"${CMAKE_SOURCE_DIR}/src/utilities/idd\"")
-      #set(DOXY_TAGFILES "utilities_idd.tag")
+      set(DOXY_TAGFILES "utilities_idd/utilities_idd.tag=../../utilities_idd/html")
     elseif(${D} MATCHES "model")
-      set(DOXY_INPUT_DIR "\"${CMAKE_SOURCE_DIR}/src/${D}\"")
-      set(DOXY_ADDITIONAL_DIR "")
-      set(DOXY_ADDITIONAL_FILES "")
-      set(DOXY_EXCLUDE_DIR "")
-      #set(DOXY_TAGFILES "utilities_idd.tag utilities.tag")
-    else()
-      set(DOXY_INPUT_DIR "\"${CMAKE_SOURCE_DIR}/src/${D}\"")
-      set(DOXY_ADDITIONAL_DIR "")
-      set(DOXY_ADDITIONAL_FILES "")
-      set(DOXY_EXCLUDE_DIR "")
+      set(DOXY_TAGFILES "utilities_idd/utilities_idd.tag=../../utilities_idd/html utilities/utilities.tag=../../utilities/html")
     endif()
-    configure_file(${CMAKE_SOURCE_DIR}/Doxyfile.in ${CMAKE_BINARY_DIR}/Doxyfile_${DOC_NAME})
+    configure_file(${CMAKE_SOURCE_DIR}/Doxyfile.in ${CMAKE_BINARY_DIR}/doc/${DOC_NAME}.cfg)
 
     add_custom_target(openstudio_${DOC_NAME}_doc
-      COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/doc/${DOC_NAME}
-      COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/doc/${DOC_NAME}
-      COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile_${DOC_NAME}
-      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+      COMMAND ${CMAKE_COMMAND} -E remove_directory "${DOC_NAME}"
+      COMMAND ${CMAKE_COMMAND} -E make_directory "${DOC_NAME}"
+      COMMAND ${DOXYGEN_EXECUTABLE} ${DOC_NAME}.cfg
+      COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/css" "${DOC_NAME}/html/css"
+      COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/fonts" "${DOC_NAME}/html/fonts"
+      COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/js" "${DOC_NAME}/html/js"
+      COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/search" "${DOC_NAME}/html/search"
+      COMMAND ${PATCH_EXE} "${DOC_NAME}/html/search/search.js" < "${CMAKE_SOURCE_DIR}/doc/patch/search.js.patch"
+      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/doc
     )
 
     set(ALL_CPP_DOC_TARGETS ${ALL_CPP_DOC_TARGETS}
       openstudio_${DOC_NAME}_doc
     )
-    #list(APPEND ALL_CPP_DOC_TARGETS "openstudio_${DOC_NAME}_doc")
 
   endforeach()
+
+  # Set up dependencies after all targets have been created
+  add_dependencies(openstudio_utilities_doc
+    openstudio_utilities_idd_doc
+  )
+  add_dependencies(openstudio_model_doc
+    openstudio_utilities_doc
+    openstudio_utilities_idd_doc
+  )
 
 
 endif()
@@ -856,6 +810,27 @@ if(BUILD_DOCUMENTATION)
 
   add_custom_target(ALL_RDOC)
   add_dependencies(ALL_RDOC ${ALL_RDOC_TARGETS})
+
+  # Zip documentation
+  if(WIN32)
+    if(NOT EXISTS "${CMAKE_BINARY_DIR}/7za.exe")
+      file(DOWNLOAD "http://developer.nrel.gov/downloads/buildings/openstudio/src/7za.zip" "${CMAKE_BINARY_DIR}/7za.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 EXPECTED_MD5 860077d3f314e939abab680218a3febe)
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/7za.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    endif()
+    add_custom_command(TARGET ALL_DOXYGEN
+      POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E remove OpenStudio-${OPENSTUDIO_VERSION}-doc.zip
+      COMMAND ${CMAKE_BINARY_DIR}/7za a -mmt -mx9 -tzip OpenStudio-${OPENSTUDIO_VERSION}-doc.zip * -r -x!*.cfg -x!*.tag -x!*.map -x!*.md5
+      COMMAND ${CMAKE_BINARY_DIR}/7za d OpenStudio-${OPENSTUDIO_VERSION}-doc.zip index.html
+      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/doc
+    )
+    add_custom_command(TARGET ALL_RDOC
+      POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E remove OpenStudio-${OPENSTUDIO_VERSION}-rdoc.zip
+      COMMAND ${CMAKE_BINARY_DIR}/7za a -mmt -mx9 -tzip OpenStudio-${OPENSTUDIO_VERSION}-rdoc.zip * -r
+      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/ruby/rdocify
+    )
+  endif()
 
 endif()
 

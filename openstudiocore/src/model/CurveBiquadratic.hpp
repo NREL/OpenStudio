@@ -33,7 +33,7 @@ namespace detail {
 } // detail
 
 /** CurveBiquadratic is a Curve that wraps the OpenStudio IDD object 'OS:Curve:Biquadratic'. The
- *  functional form is f(x) = c1 + c2 * x + c3 * x^2 + c4 * y + c5 * y^2 + c6 * x * y. */
+ *  functional form is \f$f(x) = c_1 + c_2 \cdot x + c_3 \cdot x^2 + c_4 \cdot y + c_5 \cdot y^2 + c_6 \cdot x \cdot y\f$ */
 class MODEL_API CurveBiquadratic : public Curve {
  public:
 

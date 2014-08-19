@@ -34,20 +34,22 @@ namespace detail {
 
 /** CurveFunctionalPressureDrop is a Curve that wraps the OpenStudio IDD object 
  *  'OS:Curve:Functional:PressureDrop'. The functional form is 
- *  deltaP = (K + f * (L/D)) * (rho * V^2) / 2.0,
- *  where
- *  K = minorLossCoefficient
- *  f calculated from roughness and Moody-chart, or set by fixed friction factor
- *  L = length
- *  D = diameter
- *  rho, V from plant simulation. */
+ *  \f[\displaystyle \begin{array}{lll}
+ *  \Delta P = \left(K + f \cdot \frac{L}{D} \right) \cdot \frac{\rho V^2}{2}\\\\
+ *  \text{Where:}\\\\
+ *  K & = & \text{minorLossCoefficient}\\
+ *  f & = & \text{calculated from roughness and Moody-chart, or set by fixed friction factor}\\
+ *  L & = & \text{length}\\
+ *  D & = & \text{diameter}\\
+ *  \rho & = & V\ \text{from plant simulation}\\
+ *  \end{array}\f] */
 class MODEL_API CurveFunctionalPressureDrop : public Curve {
  public:
 
   /** @name Constructors and Destructors */
   //@{
 
-  /** Sets D = 0.05. */
+  /** Sets \f$D = 0.05\f$ */
   explicit CurveFunctionalPressureDrop(const Model& model);
 
   virtual ~CurveFunctionalPressureDrop() {}

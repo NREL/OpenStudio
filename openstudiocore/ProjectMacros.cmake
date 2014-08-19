@@ -407,7 +407,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     #")
   endif()
 
-  execute_process(COMMAND ${CMAKE_COMMAND} -E copy "${resolved_item_var}" "${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/")
+  execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\")
 
   # add this target to a "global" variable so ruby tests can require these
   list(APPEND ALL_RUBY_BINDING_TARGETS "${swig_target}")

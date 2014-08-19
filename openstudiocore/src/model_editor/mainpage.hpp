@@ -23,7 +23,7 @@
  *  \section model_views Model Views
  *
  *  <b>Hierarchical tree view:</b> all objects are displayed in a hierarchical
- *  tree view with nodes determined by the BuildingModel’s parent/child
+ *  tree view with nodes determined by the BuildingModel's parent/child
  *  metadata.  Orphan objects (i.e. an object with no parent) are also
  *  displayed in the tree view.  As an additional note, orphan objects
  *  may have children of their own.
@@ -47,7 +47,7 @@
  *  definition, not by order encountered in the various IDFs.
  *
  *  <b>Error view:</b> to better ensure robust model and IDF creation,
- *  BuildingModel’s IDD rule interpretation will be leveraged to
+ *  BuildingModel's IDD rule interpretation will be leveraged to
  *  analyze the user created model prior to IDF creation.  Similar
  *  to an XML schema verification tool, the error view will clearly
  *  highlight BuildingModel identified issues, and then provide

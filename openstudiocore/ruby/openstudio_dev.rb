@@ -20,11 +20,7 @@
 # no handling of symlinks but that should be ok for developer build
 require "#{File.dirname(__FILE__)}/config"
 
-if (defined? Sketchup) && (Sketchup.version_number <= 14000000)
-  require "#{$OpenStudio_LibPath}/openstudio/sketchup_plugin/stdruby/pathname"
-else
-  require 'pathname'
-end
+require "pathname"
 
 if RUBY_PLATFORM =~ /darwin/
   mac_version = `/usr/bin/sw_vers -productVersion | tr -d "\n"`.split('.')

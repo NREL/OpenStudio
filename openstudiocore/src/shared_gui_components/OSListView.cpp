@@ -32,6 +32,7 @@ namespace openstudio {
 
 OSListView::OSListView(bool scrollable, QWidget * parent)
   : QWidget(parent),
+  m_widgetItemPairs(std::map<QObject *,QSharedPointer<OSListItem> >()),
   m_scrollable(scrollable),
   m_scrollArea(nullptr)
 {
@@ -180,7 +181,9 @@ void OSListView::insertItemView(int i)
 
   m_widgetItemPairs.insert( std::make_pair(itemView,itemData) );
 
-  connect(itemView, &QWidget::destroyed, this, &OSListView::removePair);
+  // For some reason, this needs to use the old-style connect on mac (exiting OS app crash)
+  bool isConnected = connect(itemView, SIGNAL(destroyed(QObject *)), this, SLOT(removePair(QObject *)));
+  OS_ASSERT(isConnected);
 }
 
 void OSListView::removeItemView(int i)
@@ -199,9 +202,7 @@ void OSListView::removeItemView(int i)
 }
 
 void OSListView::removePair(QObject * object) {
-  if (!m_widgetItemPairs.empty()) {
-    m_widgetItemPairs.erase(m_widgetItemPairs.find(object));
-  }
+  m_widgetItemPairs.erase(m_widgetItemPairs.find(object));
 }
 
 void OSListView::refreshItemView(int i)

@@ -33,14 +33,14 @@ namespace detail {
 } // detail
 
 /** CurveQuadratic is a Curve that wraps the OpenStudio IDD object 'OS:Curve:Quadratic'. The
- *  functional form is f(x) = c1 + c2*x + c3 * x^2. */
+ *  functional form is \f$f(x) = c_1 + c_2 \cdot x + c_3 \cdot x^2\f$ */
 class MODEL_API CurveQuadratic : public Curve {
  public:
 
   /** @name Constructors and Destructors */
   //@{
 
-  /** Initializes c1 = c2 = 0.0, c3 = 1.0, xmin = 0, xmax = 1. */
+  /** Initializes \f$c_1 = c_2 = 0.0,\ c_3 = 1.0,\ xmin = 0,\ xmax = 1\f$ */
   explicit CurveQuadratic(const Model& model);
 
   virtual ~CurveQuadratic() {}

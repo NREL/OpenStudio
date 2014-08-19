@@ -41,7 +41,7 @@ namespace runmanager {
   struct RUNMANAGER_API JobErrors 
   {
     /// Default constructor
-    /// Defaults to succeded = false
+    /// Defaults to succeeded = false
     JobErrors()
       : result(openstudio::ruleset::OSResultValue::Fail), numNAs(0)
     {
@@ -49,7 +49,6 @@ namespace runmanager {
 
     /// Constructor
     /// \param[in] t_result Set to true if the job was considered a success regardless of errors generated
-    /// \param[in] t_warnings The vector of warning description strings to set
     /// \param[in] t_errors The vector of error description strings to set
     JobErrors(openstudio::ruleset::OSResultValue t_result, 
         const std::vector<std::pair<ErrorType, std::string> > &t_errors)

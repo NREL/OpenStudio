@@ -108,7 +108,7 @@ namespace detail {
 
       /// Executes a workflow which is defined by a JSON string from Nick
       ///
-      /// \param[in] t_json the path to a json file to load and parse
+      /// \param[in] t_jsonPath the path to a json file to load and parse
       /// \param[in] t_basePath the path of the directory containing the input files necessary
       /// \param[in] t_runPath directory to execute the simulations in
       /// \param[in] t_tools tools to use for executing job
@@ -149,7 +149,7 @@ namespace detail {
       /// Queue up a job (and all children) for processing
       /// \param[in] job Job to enqueue
       /// \param[in] force Process job even if it is out of date
-      /// \param[in] t_basePath Path by which relative paths in this job should be evaluated. If not provided,
+      /// \param[in] basePath Path by which relative paths in this job should be evaluated. If not provided,
       ///                       the path of the runmanager db is used.
       bool enqueue(const Job &job,
                    bool force,

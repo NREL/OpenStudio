@@ -33,14 +33,14 @@ namespace detail {
 } // detail
 
 /** CurveExponentialDecay is a Curve that wraps the OpenStudio IDD object 
- *  'OS:Curve:ExponentialDecay'. The functional form is f(x) = c1 + c2 * exp(c3 * x). */
+ *  'OS:Curve:ExponentialDecay'. The functional form is \f$f(x) = c_1 + c_2 \cdot e^{c_3 \cdot x}\f$ */
 class MODEL_API CurveExponentialDecay : public Curve {
  public:
 
   /** @name Constructors and Destructors */
   //@{
 
-  /** Sets c1 = 0.0, c2 = 1.0, c3 = -1.0, and bounds x within [0.0,1.0]. */
+  /** Sets \f$c_1 = 0.0,\ c_2 = 1.0,\ c_3 = -1.0\f$, and bounds x within [0.0,1.0]. */
   explicit CurveExponentialDecay(const Model& model);
 
   virtual ~CurveExponentialDecay() {}

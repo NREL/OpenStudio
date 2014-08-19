@@ -19,17 +19,40 @@
 
 #include "RulesetFixture.hpp"
 
+
 #include "../../utilities/core/Path.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
 
 #include <boost/filesystem.hpp>
 
 #include <resources.hxx>
 
+// Pretty much the only safe place to include these files is here (or another app)
+// and in this order
+
+#include "../../utilities/core/RubyInterpreter.hpp"
+#include "../ruleset/EmbeddedRubyUserScriptArgumentGetter.hpp"
+
 using openstudio::FileLogSink;
 using openstudio::toPath;
 
-void RulesetFixture::SetUp() {}
+void RulesetFixture::SetUp() 
+{
+  // required for EmbeddedRubyTest
+  // the ruby interpreter must be initialized this way exactly once
+  // normally this should be done right at the beginning of main
+  // this will do for this test suite but do not add any more fixtures to this test suite
+  int argc = 0;
+  char **argv;
+  ruby_sysinit(&argc, &argv);
+  {
+    RUBY_INIT_STACK;
+    ruby_init();
+  }
+
+}
 
 void RulesetFixture::TearDown() {}
 

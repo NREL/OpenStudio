@@ -580,6 +580,7 @@
 // in a known shared place.
 #include <utilities/SWIGRubyRuntime.hxx>
 
+//#include <ruby/encoding.h>
 
 
 
@@ -627,6 +628,12 @@ namespace openstudio
 
           ruby_init_loadpath();
 
+          /* FIXME: Fake ruby_init_gems(Qtrue) */
+          // http://subforge.org/blogs/show_by_tag/embed
+          //ruby_script("subtle");
+          //rb_define_module("Gem");
+          //Init_prelude();
+
           // load the modules. If an error occurs, an exception will be thrown explaining the problem
           for (std::vector<std::string>::const_iterator itr = t_moduleNames.begin();
               itr != t_moduleNames.end();
@@ -634,6 +641,14 @@ namespace openstudio
           {
             evalString("require '" + openstudio::toString(t_moduleSearchPath / openstudio::toPath(*itr)) + "'");
           }
+
+          // set up default encoding
+          // https://www.ruby-forum.com/topic/3796516
+          //int idx = rb_enc_find_index("UTF-8");
+          //rb_encoding *enc = rb_enc_from_index(idx);
+          //VALUE val = rb_enc_from_encoding(enc);
+          //rb_enc_set_default_external(val);
+          //rb_enc_set_default_internal(val);
 
           // register some default types that we want to pass in / out of the ruby system
           registerType<int>("int");
