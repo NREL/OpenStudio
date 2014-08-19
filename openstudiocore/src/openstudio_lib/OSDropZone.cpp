@@ -24,6 +24,7 @@
 #include "OSDocument.hpp"
 #include "OSItem.hpp"
 #include "OSVectorController.hpp"
+#include "ModelObjectItem.hpp"
 
 #include "../model/ModelObject_Impl.hpp"
 #include "../model/Model_Impl.hpp"
@@ -701,6 +702,16 @@ void OSDropZone3::mouseReleaseEvent(QMouseEvent * event)
 {
   if (event->button() == Qt::LeftButton){
     event->accept();
+
+    if (!m_item && m_get && *m_get) {
+      boost::optional<model::ModelObject> modelObject = (*m_get)();
+
+      if (modelObject)
+      {
+        m_item = OSItem::makeItem(modelObjectToItemId(*modelObject, false));
+      }
+    }
+
     if (m_item) {
       emit itemClicked(m_item);
     }
