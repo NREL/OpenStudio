@@ -514,9 +514,10 @@ QWidget * OSGridController::widgetAt(int row, int column)
   }
 
   auto wrapper = new QPushButton();
-  wrapper->setCheckable(true);
-  auto size = m_cellBtnGrp->buttons().size();
-  m_cellBtnGrp->addButton(wrapper, size);
+  if (modelObjectRow >= 0 && column == 0){
+    auto size = m_cellBtnGrp->buttons().size();
+    m_cellBtnGrp->addButton(wrapper, size);
+  }
 
   wrapper->setObjectName("TableCell");
   if(row == 0){
@@ -682,10 +683,6 @@ void OSGridController::reset()
 
 void OSGridController::cellChecked(int index)
 {
-  if (columnIndexFromButtonIndex(index) != 0) {
-    OS_ASSERT(false); // Should never get here
-  }
-
   if (index == m_oldIndex) {
     // Note: 1 row must always be checked
     QAbstractButton * button = nullptr;
@@ -697,13 +694,13 @@ void OSGridController::cellChecked(int index)
   }
   else {
     // Deselect the old row...
-    if (m_oldIndex >= 0) selectRow(rowIndexFromButtonIndex(m_oldIndex), false);
+    if (m_oldIndex >= 0) selectRow(m_oldIndex, false);
 
     // ... select the new...
-    selectRow(rowIndexFromButtonIndex(index), true);
+    selectRow(index, true);
 
     // ... and tell the world.
-    OSItemId itemId = modelObjectToItemId(modelObject(rowIndexFromButtonIndex(index)), false);
+    OSItemId itemId = modelObjectToItemId(modelObject(index), false);
     OSItem* item = OSItem::makeItem(itemId, OSItemType::ListItem);
 
     // Remember who's selected
@@ -716,30 +713,6 @@ void OSGridController::cellChecked(int index)
 
   }
 
-}
-
-int OSGridController::rowIndexFromButtonIndex(int index)
-{
-  auto button = qobject_cast<QPushButton *>(m_cellBtnGrp->button(index));
-  OS_ASSERT(button);
-  auto buttonIndex = gridView()->m_gridLayout->indexOf(button);
-  OS_ASSERT(buttonIndex == index);
-
-  int rowIndex = buttonIndex / columnCount();
-
-  return rowIndex;
-}
-
-int OSGridController::columnIndexFromButtonIndex(int index)
-{
-  auto button = qobject_cast<QPushButton *>(m_cellBtnGrp->button(index));
-  OS_ASSERT(button);
-  auto buttonIndex = gridView()->m_gridLayout->indexOf(button);
-  OS_ASSERT(buttonIndex == index);
-
-  int columnIndex = buttonIndex % columnCount();
-
-  return columnIndex;
 }
 
 void OSGridController::selectItemId(const OSItemId& itemId)

@@ -604,17 +604,24 @@ void OSDropZone3::refresh()
   m_text.clear();
   setFixedWidth(75);
 
-  if (m_item) {
-    boost::optional<model::ModelObject> modelObject = OSAppBase::instance()->currentDocument()->getModelObject(m_item->itemId());
-    if (modelObject) {
-      m_text = QString::fromStdString(modelObject->name().get());
 
-      // Adjust the width to accommodate the text
-      QFont myFont;
-      QFontMetrics fm(myFont);
-      auto width = fm.width(m_text);
-      setFixedWidth(width + 10);
-    }
+  boost::optional<model::ModelObject> modelObject;
+ 
+  if (m_item)
+  {
+    modelObject = OSAppBase::instance()->currentDocument()->getModelObject(m_item->itemId());
+  } else if (m_get && *m_get) {
+    modelObject = (*m_get)();
+  }
+
+  if (modelObject) {
+    m_text = QString::fromStdString(modelObject->name().get());
+
+    // Adjust the width to accommodate the text
+    QFont myFont;
+    QFontMetrics fm(myFont);
+    auto width = fm.width(m_text);
+    setFixedWidth(width + 10);
   }
 
   update();

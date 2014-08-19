@@ -1315,8 +1315,12 @@ class DropZoneConceptImpl : public DropZoneConcept
 
   virtual boost::optional<ValueType> getImpl(const ConceptProxy & t_obj)
   {
-    DataSourceType obj = t_obj.cast<DataSourceType>();
-    return boost::optional<ValueType>(m_getter(&obj));
+    if (m_getter) {
+      DataSourceType obj = t_obj.cast<DataSourceType>();
+      return boost::optional<ValueType>(m_getter(&obj));
+    } else {
+      return boost::optional<ValueType>();
+    }
   }
 
   virtual bool setImpl(const ConceptProxy & t_obj, const ValueType & t_value)
