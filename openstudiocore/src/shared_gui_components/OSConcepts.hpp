@@ -257,6 +257,7 @@ class ConceptProxy
               throw;
             }
           } catch (...) {
+            LOG(Error, "ModelObject cast failed and cannot be converted to: " << typeid(T).name());
             assert(false);
             throw;
           }
