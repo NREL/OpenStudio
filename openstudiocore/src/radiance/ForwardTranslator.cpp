@@ -222,6 +222,7 @@ namespace radiance {
       boost::filesystem::create_directory(radDir / openstudio::toPath("views"));
       boost::filesystem::create_directory(radDir / openstudio::toPath("options"));
       boost::filesystem::create_directory(radDir / openstudio::toPath("bsdf"));
+      boost::filesystem::create_directory(radDir / openstudio::toPath("skies"));
 
       // get the building
       openstudio::model::Building building = m_model.getUniqueModelObject<openstudio::model::Building>();
@@ -291,6 +292,7 @@ namespace radiance {
       }
 
       // write Radiance options to file(s)
+
       // view matrix options
       openstudio::path vmxoptpath = radDir / openstudio::toPath("options/vmx.opt");
       OFSTREAM vmxopt(vmxoptpath);
@@ -345,6 +347,23 @@ namespace radiance {
       }else{
         LOG(Error, "Cannot open file '" << toString(tregoptpath) << "' for writing");
       }
+
+      // write dc sky sampling file
+      openstudio::path dcskyfilepath = radDir / openstudio::toPath("skies/dc_sky.rad");
+      OFSTREAM skyfile(dcskyfilepath);
+      if (skyfile.is_open()){
+        outfiles.push_back(dcskyfilepath);
+        if (radianceParameters.skyDiscretizationResolution() == "146"){
+          skyfile << "@#rfluxmtx u=Y h=r1\n";
+        } else if (radianceParameters.skyDiscretizationResolution() == "578"){
+          skyfile << "@#rfluxmtx u=Y h=r2\n";
+        } else if (radianceParameters.skyDiscretizationResolution() == "2306"){
+          skyfile << "@#rfluxmtx u=Y h=r4\n";
+        }
+        skyfile << "void glow skyglow\n0\n0\n4\n1 1 1 0\n\nskyglow source sky\n0\n0\n4\n0 0 1 180\nskyglow source ground\n0\n0\n4\n0 0 -1 180";
+      }else{
+        LOG(Error, "Cannot open file '" << toString(dcskyfilepath) << "' for writing");
+      }      
 
       // Hi Qual options (illuminance maps)
       openstudio::path mapsoptpath = radDir / openstudio::toPath("options/maps.opt");
@@ -1037,7 +1056,7 @@ namespace radiance {
             {
               m_radWindowGroups[windowGroup_name] = "# OpenStudio Window Group: " + windowGroup_name + "\n";
               // 3-phase/rfluxmtx support
-              m_radWindowGroups[windowGroup_name] += "#@rfluxmtx h=kf u=" + winUpVector + " o=" + windowGroup_name + ".vmx\n";
+              m_radWindowGroups[windowGroup_name] += "#@rfluxmtx h=kf u=" + winUpVector + " o=output/dc/" + windowGroup_name + ".vmx\n";
 
             }
 

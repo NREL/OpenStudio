@@ -323,14 +323,6 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
 
   Dir.chdir("#{t_outPath}")
   FileUtils.mkdir_p("#{t_outPath}/output/dc") unless File.exists?("#{t_outPath}/output/dc")
-  # generate sky/ground model
-  radEnvSphere = ""
-  # create generic 1w sky/ground sphere
-  # TODO: set rflux option based on treg options
-  radEnvSphere = "@#rfluxmtx u=Y h=r1\nvoid glow skyglow\n0\n0\n4\n1 1 1 0\n\nskyglow source sky\n0\n0\n4\n0 0 1 360"
-  File.open("#{t_outPath}/skies/dc.sky", "w") do |file|
-    file << radEnvSphere
-  end
 
   binDir = "#{t_outPath}/output/dc/merged_space/maps"
   FileUtils.mkdir_p("#{binDir}") unless File.exists?("#{binDir}")
@@ -349,29 +341,22 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
     rtrace_args = "#{t_options.vmx}"
     puts "#{Time.now.getutc}: creating model_dc.oct"
     system("oconv \"#{t_outPath}/materials/materials.rad\" model.rad \
-      \"#{t_outPath}/skies/dc.sky\" > model_dc.oct")
+      \"#{t_outPath}/skies/dc_sky.rad\" > model_dc.oct")
     puts "#{Time.now.getutc}: creating model_dc_skyonly.oct"
-    system("oconv \"#{t_outPath}/skies/dc.sky\" > model_dc_skyonly.oct")
+    system("oconv \"#{t_outPath}/skies/dc_sky.rad\" > model_dc_skyonly.oct")
     #compute illuminance map(s)
     puts "#{Time.now.getutc}: computing sky-to-point daylight coefficients (single phase)..."
-
-    # do map
     exec_statement("#{t_catCommand} \"#{t_outPath}/numeric/merged_space.map\" \
       | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{t_options.tregVars} \
       -o \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" \
       -m skyglow model_dc.oct")
     puts "#{Time.now.getutc}: daylight coefficients computed, \
     stored in #{t_outPath}/output/dc/merged_space/maps"
+
   end # compute DC (single phase)
 
   # 3-phase method
   if t_options.z == true
-
-    binPairs = Array.new
-    matrixGroups = Array.new
-    aziVectorX = ""
-    aziVectorY = ""
-    puts "Using 3-phase method"
 
     # compute daylight matrices
     windowMaps = File::open("#{t_outPath}/bsdf/mapping.rad")
@@ -379,7 +364,8 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
       next if row[0] == "#"
       wg=row.split(",")[0]
       puts "calculating daylight matrix for window group #{wg}..."
-      exec_statement("rfluxmtx -fa -v #{t_outPath}/scene/glazing/#{wg}.rad #{t_outPath}/skies/dc.sky -i model.oct > #{t_outPath}/output/dc/#{wg}.dmx")
+      exec_statement("rfluxmtx -fa -v #{t_outPath}/scene/glazing/#{wg}.rad #{t_outPath}/skies/dc_sky.rad -i model.oct > #{t_outPath}/output/dc/#{wg}.dmx")
+
     end
 
     # compute view matrices
@@ -387,9 +373,13 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
     exec_statement("#{t_catCommand} #{t_outPath}/materials/materials_vmx.rad #{t_outPath}/scene/glazing/WG*.rad > receivers_vmx.rad")
     exec_statement("oconv #{t_outPath}/materials/materials.rad #{t_outPath}/scene/*.rad > model_vmx.oct")
     # TODO: need to add support for Windows (no wc, use "FIND")
-    exec_statement("rfluxmtx -faa -n #{t_simCores} -y `wc -l < #{t_outPath}/numeric/merged_space.map` -I -v - receivers_vmx.rad -i model_vmx.oct < #{t_outPath}/numeric/merged_space.map")
+    exec_statement("rfluxmtx -faa -n #{t_simCores} -y `wc -l < #{t_outPath}/numeric/merged_space.map` -I -v - receivers_vmx.rad -i model_vmx.oct < \
+      #{t_outPath}/numeric/merged_space.map")
 
-  end
+    puts "#{Time.now.getutc}: daylight coefficients computed, stored in #{t_outPath}/output/dc/"
+
+  end # compute coefficients (3-phase)
+
 end # def(calculateDaylightCoeffecients)
 
 def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
@@ -1197,7 +1187,7 @@ else
 end
 
 # setup some directories
-FileUtils.mkdir("#{outPath}/skies/") unless File.exists?("#{outPath}/skies/")
+# FileUtils.mkdir("#{outPath}/skies/") unless File.exists?("#{outPath}/skies/")
 FileUtils.mkdir("#{outPath}/octrees/") unless File.exists?("#{outPath}/octrees/")
 FileUtils.mkdir("#{outPath}/output/") unless File.exists?("#{outPath}/output/")
 
