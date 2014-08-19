@@ -808,10 +808,11 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
     } else if (field == SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS) {
       std::function<boost::optional<model::SpaceInfiltrationEffectiveLeakageArea>(model::SpaceType *)>  getter;
       std::function<bool(model::SpaceType *, const model::SpaceInfiltrationEffectiveLeakageArea &)> setter;
-      std::function<std::vector<model::SpaceInfiltrationEffectiveLeakageArea>(const model::SpaceType &)> leakageAreas(
+      std::function<std::vector<model::ModelObject>(const model::SpaceType &)> leakageAreas(
         [](const model::SpaceType &s) {
-        return s.spaceInfiltrationEffectiveLeakageAreas();
-      }
+          auto areas = s.spaceInfiltrationEffectiveLeakageAreas();
+          return std::vector<model::ModelObject>(areas.begin(), areas.end());
+        }
       );
 
       addNameLineEditColumn(QString(SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS),
