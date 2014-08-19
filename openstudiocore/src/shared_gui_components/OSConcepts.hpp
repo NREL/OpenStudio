@@ -1296,8 +1296,10 @@ class DropZoneConceptImpl : public DropZoneConcept
   virtual boost::optional<model::ModelObject> get(const ConceptProxy & obj)
   {
     if(boost::optional<ValueType> result = getImpl(obj)) {
+      std::cout << "DROP ZONE OBJECT GOTTEN : " << typeid(ValueType).name() << std::endl;
       return result->template optionalCast<model::ModelObject>();
     } else {
+      std::cout << "DROP ZONE OBJECT not GOTTEN : " << typeid(ValueType).name() << std::endl;
       return boost::optional<model::ModelObject>();
     }
   }

@@ -347,7 +347,7 @@ public:
                          std::function<bool (DataSourceType *, const ValueType &)> setter,
                          const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter)));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter)), t_source));
   }
 
   template<typename ValueType, typename DataSourceType>

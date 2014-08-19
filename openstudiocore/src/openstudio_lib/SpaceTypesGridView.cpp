@@ -478,99 +478,129 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           }
         }
       );
-      
+
+      std::function<bool (model::ModelObject *, const model::Schedule &)> setSchedule(
+          [](model::ModelObject *l, model::Schedule t_s) {
+            if (boost::optional<model::People> p = l->optionalCast<model::People>())
+            {
+              return p->setNumberofPeopleSchedule(t_s);
+            }
+
+            if (boost::optional<model::Lights> light = l->optionalCast<model::Lights>())
+            {
+              return light->setSchedule(t_s);
+            }
+
+            if (boost::optional<model::Luminaire> lum = l->optionalCast<model::Luminaire>())
+            {
+              return lum->setSchedule(t_s);
+            }
+
+            if (boost::optional<model::ElectricEquipment> e = l->optionalCast<model::ElectricEquipment>())
+            {
+              return e->setSchedule(t_s);
+            }
+
+            if (boost::optional<model::GasEquipment> g = l->optionalCast<model::GasEquipment>())
+            {
+              return g->setSchedule(t_s);
+            }
+
+            if (boost::optional<model::HotWaterEquipment> h = l->optionalCast<model::HotWaterEquipment>())
+            {
+              return h->setSchedule(t_s);
+            }
+
+            if (boost::optional<model::SteamEquipment> se = l->optionalCast<model::SteamEquipment>())
+            {
+              return se->setSchedule(t_s);
+            }
+
+            if (boost::optional<model::OtherEquipment> o = l->optionalCast<model::OtherEquipment>())
+            {
+              return o->setSchedule(t_s);
+            }
+
+            if (boost::optional<model::SpaceInfiltrationDesignFlowRate> f = l->optionalCast<model::SpaceInfiltrationDesignFlowRate>())
+            {
+              return f->setSchedule(t_s);
+            }
+
+            if (boost::optional<model::SpaceInfiltrationEffectiveLeakageArea> la = l->optionalCast<model::SpaceInfiltrationEffectiveLeakageArea>())
+            {
+              return la->setSchedule(t_s);
+            }
+
+            OS_ASSERT(false);
+            return false;
+          }
+          );
+
+      std::function<boost::optional<model::Schedule> (model::ModelObject *)> schedule(
+          [](model::ModelObject *l) {
+            if (boost::optional<model::People> p = l->optionalCast<model::People>())
+            {
+              return p->numberofPeopleSchedule();
+            }
+
+            if (boost::optional<model::Lights> light = l->optionalCast<model::Lights>())
+            {
+              return light->schedule();
+            }
+
+            if (boost::optional<model::Luminaire> lum = l->optionalCast<model::Luminaire>())
+            {
+              return lum->schedule();
+            }
+
+            if (boost::optional<model::ElectricEquipment> e = l->optionalCast<model::ElectricEquipment>())
+            {
+              return e->schedule();
+            }
+
+            if (boost::optional<model::GasEquipment> g = l->optionalCast<model::GasEquipment>())
+            {
+              return g->schedule();
+            }
+
+            if (boost::optional<model::HotWaterEquipment> h = l->optionalCast<model::HotWaterEquipment>())
+            {
+              return h->schedule();
+            }
+
+            if (boost::optional<model::SteamEquipment> se = l->optionalCast<model::SteamEquipment>())
+            {
+              return se->schedule();
+            }
+
+            if (boost::optional<model::OtherEquipment> o = l->optionalCast<model::OtherEquipment>())
+            {
+              return o->schedule();
+            }
+
+            if (boost::optional<model::SpaceInfiltrationDesignFlowRate> f = l->optionalCast<model::SpaceInfiltrationDesignFlowRate>())
+            {
+              return f->schedule();
+            }
+
+            if (boost::optional<model::SpaceInfiltrationEffectiveLeakageArea> la = l->optionalCast<model::SpaceInfiltrationEffectiveLeakageArea>())
+            {
+              return la->schedule();
+            }
+
+            // should be impossible to get here
+            OS_ASSERT(false);
+            return boost::optional<model::Schedule>();
+          }
+          );
+
       std::function<std::vector<boost::optional<model::ModelObject>>(const model::SpaceType &)> schedules(
-        [allLoads](const model::SpaceType &t_spaceType) {
+        [allLoads, schedule](const model::SpaceType &t_spaceType) {
           std::vector<boost::optional<model::ModelObject>> retval;
 
-          for (const auto &l : allLoads(t_spaceType))
+          for (auto &l : allLoads(t_spaceType))
           {
-
-            boost::optional<model::People> p = l.optionalCast<model::People>();
-            if (p)
-            {
-              auto s = p->numberofPeopleSchedule();
-              retval.push_back(boost::optional<model::ModelObject>(s));
-              continue;
-            }
-
-            boost::optional<model::Lights> light = l.optionalCast<model::Lights>();
-            if (light)
-            {
-              auto s = light->schedule();
-              retval.push_back(boost::optional<model::ModelObject>(s));
-              continue;
-            }
-
-            boost::optional<model::Luminaire> lum = l.optionalCast<model::Luminaire>();
-            if (lum)
-            {
-              auto s = lum->schedule();
-              retval.push_back(boost::optional<model::ModelObject>(s));
-              continue;
-            }
-
-            boost::optional<model::ElectricEquipment> e = l.optionalCast<model::ElectricEquipment>();
-            if (e)
-            {
-              auto s = e->schedule();
-              retval.push_back(boost::optional<model::ModelObject>(s));
-              continue;
-            }
-
-            boost::optional<model::GasEquipment> g = l.optionalCast<model::GasEquipment>();
-            if (g)
-            {
-              auto s = g->schedule();
-              retval.push_back(boost::optional<model::ModelObject>(s));
-              continue;
-            }
-
-            boost::optional<model::HotWaterEquipment> h = l.optionalCast<model::HotWaterEquipment>();
-            if (h)
-            {
-              auto s = h->schedule();
-              retval.push_back(boost::optional<model::ModelObject>(s));
-              continue;
-            }
-
-            boost::optional<model::SteamEquipment> se = l.optionalCast<model::SteamEquipment>();
-            if (se)
-            {
-              auto s = se->schedule();
-              retval.push_back(boost::optional<model::ModelObject>(s));
-              continue;
-            }
-
-            boost::optional<model::OtherEquipment> o = l.optionalCast<model::OtherEquipment>();
-            if (o)
-            {
-              auto s = o->schedule();
-              retval.push_back(boost::optional<model::ModelObject>(s));
-              continue;
-            }
-
-            boost::optional<model::SpaceInfiltrationDesignFlowRate> f = l.optionalCast<model::SpaceInfiltrationDesignFlowRate>();
-            if (f)
-            {
-              auto s = f->schedule();
-              retval.push_back(boost::optional<model::ModelObject>(s));
-              continue;
-            }
-
-            boost::optional<model::SpaceInfiltrationEffectiveLeakageArea> la = l.optionalCast<model::SpaceInfiltrationEffectiveLeakageArea>();
-            if (la)
-            {
-              auto s = la->schedule();
-              retval.push_back(boost::optional<model::ModelObject>(s));
-              continue;
-            }
-
-            else {
-              // Should never get here
-              OS_ASSERT(false);
-            }
-
+            retval.push_back(boost::optional<model::ModelObject>(schedule(&l)));
           }
 
           return retval;
@@ -712,11 +742,11 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
 
       } else if (field == SCHEDULE) {
 
-        addNameLineEditColumn(QString(SCHEDULE),
-          CastNullAdapter<model::Schedule>(&model::Schedule::name),
-          CastNullAdapter<model::Schedule>(&model::Schedule::setName),
+        addDropZoneColumn(QString(SCHEDULE),
+          schedule,
+          setSchedule,
           DataSource(
-            schedules,
+            allLoads,
             true
           )
         );
