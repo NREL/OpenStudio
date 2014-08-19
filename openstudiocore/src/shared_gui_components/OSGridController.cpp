@@ -683,7 +683,13 @@ void OSGridController::reset()
 
 void OSGridController::cellChecked(int index)
 {
-  if (index == m_oldIndex) {
+  int tableRowIndex = index;
+  if (m_hasHorizontalHeader){
+    // The header is not considered part of the table row count
+    tableRowIndex++;
+  }
+
+  if (tableRowIndex == m_oldIndex) {
     // Note: 1 row must always be checked
     QAbstractButton * button = nullptr;
     button = m_cellBtnGrp->button(index);
@@ -697,14 +703,14 @@ void OSGridController::cellChecked(int index)
     if (m_oldIndex >= 0) selectRow(m_oldIndex, false);
 
     // ... select the new...
-    selectRow(index, true);
+    selectRow(tableRowIndex, true);
 
     // ... and tell the world.
-    OSItemId itemId = modelObjectToItemId(modelObject(index), false);
+    OSItemId itemId = modelObjectToItemId(modelObject(tableRowIndex), false);
     OSItem* item = OSItem::makeItem(itemId, OSItemType::ListItem);
 
     // Remember who's selected
-    m_oldIndex = index;   
+    m_oldIndex = tableRowIndex;
 
     // Note: emitting gridRowSelected will trigger itemSelected emitted from OSItemList,
     //       creating unwanted feedback
