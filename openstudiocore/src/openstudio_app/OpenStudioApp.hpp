@@ -79,7 +79,7 @@ class OpenStudioApp : public OSAppBase
 
  public:
 
-  OpenStudioApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUserScriptArgumentGetter> &t_argumentGetter);
+  OpenStudioApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUserScriptInfoGetter> &t_infoGetter);
 
   virtual ~OpenStudioApp() {}
 
@@ -155,7 +155,7 @@ class OpenStudioApp : public OSAppBase
 
   void setLastPath(const QString& t_lastPath);
 
-  QSharedPointer<ruleset::RubyUserScriptArgumentGetter> m_argumentGetter;
+  QSharedPointer<ruleset::RubyUserScriptInfoGetter> m_infoGetter;
 
   openstudio::model::Model m_compLibrary;
 

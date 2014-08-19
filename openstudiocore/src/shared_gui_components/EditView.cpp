@@ -175,12 +175,27 @@ DoubleInputView::DoubleInputView()
   setLayout(vLayout);
 
   nameLabel = new QLabel();
+  nameLabel->setTextFormat(Qt::RichText);
   nameLabel->setWordWrap(true);
   vLayout->addWidget(nameLabel);
 
   lineEdit = new QLineEdit();
   lineEdit->setValidator(new QDoubleValidator(lineEdit));
   vLayout->addWidget(lineEdit);
+}
+
+void DoubleInputView::setName(const std::string& name, boost::optional<std::string>& units, boost::optional<std::string>& description)
+{
+  QString text;
+  text += QString::fromStdString(name);
+  if (units){
+    text += QString::fromStdString(" (" + units.get() + ")");
+  }
+  if (description){
+    text += QString::fromStdString("<br/><i>" + description.get() + "</i>");
+  }
+
+  nameLabel->setText(text);
 }
 
 void DoubleInputView::setIncomplete(bool incomplete)
@@ -216,6 +231,20 @@ ChoiceInputView::ChoiceInputView()
   vLayout->addWidget(comboBox);
 }
 
+void ChoiceInputView::setName(const std::string& name, boost::optional<std::string>& units, boost::optional<std::string>& description)
+{
+  QString text;
+  text += QString::fromStdString(name);
+  if (units){
+    text += QString::fromStdString(" (" + units.get() + ")");
+  }
+  if (description){
+    text += QString::fromStdString("<br/><i>" + description.get() + "</i>");
+  }
+
+  nameLabel->setText(text);
+}
+
 void ChoiceInputView::setIncomplete(bool incomplete)
 {
   if( incomplete )
@@ -249,6 +278,20 @@ BoolInputView::BoolInputView()
   vLayout->addWidget(checkBox);
 }
 
+void BoolInputView::setName(const std::string& name, boost::optional<std::string>& units, boost::optional<std::string>& description)
+{
+  QString text;
+  text += QString::fromStdString(name);
+  if (units){
+    text += QString::fromStdString(" (" + units.get() + ")");
+  }
+  if (description){
+    text += QString::fromStdString("<br/><i>" + description.get() + "</i>");
+  }
+
+  checkBox->setText(text);
+}
+
 void BoolInputView::setIncomplete(bool incomplete)
 {
   checkBox->setIncomplete(incomplete);
@@ -274,6 +317,20 @@ IntegerInputView::IntegerInputView()
   lineEdit = new QLineEdit();
   lineEdit->setValidator(new QIntValidator(lineEdit));
   vLayout->addWidget(lineEdit);
+}
+
+void IntegerInputView::setName(const std::string& name, boost::optional<std::string>& units, boost::optional<std::string>& description)
+{
+  QString text;
+  text += QString::fromStdString(name);
+  if (units){
+    text += QString::fromStdString(" (" + units.get() + ")");
+  }
+  if (description){
+    text += QString::fromStdString("<br/><i>" + description.get() + "</i>");
+  }
+
+  nameLabel->setText(text);
 }
 
 void IntegerInputView::setIncomplete(bool incomplete)
@@ -307,6 +364,20 @@ StringInputView::StringInputView()
 
   lineEdit = new QLineEdit();
   vLayout->addWidget(lineEdit);
+}
+
+void StringInputView::setName(const std::string& name, boost::optional<std::string>& units, boost::optional<std::string>& description)
+{
+  QString text;
+  text += QString::fromStdString(name);
+  if (units){
+    text += QString::fromStdString(" (" + units.get() + ")");
+  }
+  if (description){
+    text += QString::fromStdString("<br/><i>" + description.get() + "</i>");
+  }
+
+  nameLabel->setText(text);
 }
 
 void StringInputView::setIncomplete(bool incomplete)

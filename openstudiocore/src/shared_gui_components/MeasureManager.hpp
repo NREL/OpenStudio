@@ -25,7 +25,7 @@
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/core/Path.hpp"
 #include "../utilities/core/UUID.hpp"
-#include "../ruleset/RubyUserScriptArgumentGetter.hpp"
+#include "../ruleset/RubyUserScriptInfoGetter.hpp"
 #include <vector>
 #include <map>
 #include <QSharedPointer>
@@ -89,8 +89,8 @@ class MeasureManager : public QObject
   Q_OBJECT;
 
   public:
-    // Constructor taking a RubyUserScriptArgumentGetter
-    MeasureManager(const QSharedPointer<ruleset::RubyUserScriptArgumentGetter> &t_argumentGetter, BaseApp *t_app);
+    // Constructor taking a RubyUserScriptInfoGetter
+    MeasureManager(const QSharedPointer<ruleset::RubyUserScriptInfoGetter> &t_infoGetter, BaseApp *t_app);
 
     virtual ~MeasureManager() {}
 
@@ -135,7 +135,7 @@ class MeasureManager : public QObject
 
     bool isMeasureSelected();
 
-    QSharedPointer<ruleset::RubyUserScriptArgumentGetter> argumentGetter() const;
+    QSharedPointer<ruleset::RubyUserScriptInfoGetter> infoGetter() const;
 
   public slots:
     /// Update the UI display for all measures. Does not re-get the arguments nor
@@ -182,7 +182,7 @@ class MeasureManager : public QObject
     std::map<UUID,BCLMeasure> m_patApplicationMeasures;
     std::map<UUID,BCLMeasure> m_myMeasures;
     std::map<UUID,BCLMeasure> m_bclMeasures;
-    QSharedPointer<ruleset::RubyUserScriptArgumentGetter> m_argumentGetter;
+    QSharedPointer<ruleset::RubyUserScriptInfoGetter> m_infoGetter;
     QSharedPointer<LocalLibraryController> m_libraryController;
 };
 

@@ -34,7 +34,7 @@ namespace ruleset {
    *  src/ruleset/test/EmbeddedRuby_GTest.cpp. 
    *  \deprecated in preference to EmbeddedRubyUserScriptInfoGetter */  
   template<typename RubyInterpreterType>
-  class OS_DEPRECATED EmbeddedRubyUserScriptArgumentGetter : public RubyUserScriptArgumentGetter {
+  class EmbeddedRubyUserScriptArgumentGetter : public RubyUserScriptArgumentGetter {
    public:
     EmbeddedRubyUserScriptArgumentGetter(const std::shared_ptr<RubyInterpreterType>& rubyInterpreter)
       : m_rubyInterpreter(rubyInterpreter)

@@ -68,8 +68,8 @@
 namespace openstudio {
 
 
-MeasureManager::MeasureManager(const QSharedPointer<ruleset::RubyUserScriptArgumentGetter> &t_argumentGetter, BaseApp *t_app)
-  : m_app(t_app), m_argumentGetter(t_argumentGetter)
+MeasureManager::MeasureManager(const QSharedPointer<ruleset::RubyUserScriptInfoGetter> &t_infoGetter, BaseApp *t_app)
+  : m_app(t_app), m_infoGetter(t_infoGetter)
 {
 }
 
@@ -203,7 +203,8 @@ std::vector<ruleset::OSArgument> MeasureManager::getArguments(analysisdriver::Si
       idf = boost::none;
     }
 
-    std::vector<ruleset::OSArgument> args = m_argumentGetter->getArguments(t_measure, model, idf);
+    ruleset::RubyUserScriptInfo info = m_infoGetter->getInfo(t_measure, model, idf);
+    std::vector<ruleset::OSArgument> args = info.arguments();
     LOG(Info, "Loaded " << args.size() << " arguments for measure " << t_measure.name() << "(" << toString(t_measure.uuid()) << " version: " << toString(t_measure.versionUUID()) << ")");
     t_project.registerArguments(t_measure, args);
     return args;
@@ -646,9 +647,9 @@ bool MeasureManager::isMeasureSelected()
   return false;
 }
 
-QSharedPointer<ruleset::RubyUserScriptArgumentGetter> MeasureManager::argumentGetter() const
+QSharedPointer<ruleset::RubyUserScriptInfoGetter> MeasureManager::infoGetter() const
 {
-  return m_argumentGetter;
+  return m_infoGetter;
 }
 
 std::vector<BCLMeasure> MeasureManager::combinedMeasures(bool includePatApplicationMeasures) const

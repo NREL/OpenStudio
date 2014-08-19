@@ -273,7 +273,8 @@ void ApplyMeasureNowDialog::displayMeasure()
 
       // pass in an empty workspace for the idf since you know it is a model measure
       Workspace dummyIdf;
-      std::vector<ruleset::OSArgument> args = app->measureManager().argumentGetter()->getArguments(*m_bclMeasure, m_model, dummyIdf);
+      ruleset::RubyUserScriptInfo info = app->measureManager().infoGetter()->getInfo(*m_bclMeasure, m_model, dummyIdf);
+      std::vector<ruleset::OSArgument> args = info.arguments();
       rubyMeasure.setArguments(args);
 
       // DLM: don't save the arguments to the project, if we need to preserve user inputs save to member variable map or something

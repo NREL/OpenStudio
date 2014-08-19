@@ -151,7 +151,7 @@ InputController::InputController(EditController * editController,const ruleset::
   {
     auto doubleInputView = new DoubleInputView();
 
-    doubleInputView->nameLabel->setText(QString::fromStdString(m_argument.displayName()));
+    doubleInputView->setName(m_argument.displayName(), m_argument.units(), m_argument.description());
 
     if( m_argument.hasValue() )
     {
@@ -170,7 +170,7 @@ InputController::InputController(EditController * editController,const ruleset::
   {
     auto choiceInputView = new ChoiceInputView();
 
-    choiceInputView->nameLabel->setText(QString::fromStdString(m_argument.displayName()));
+    choiceInputView->setName(m_argument.displayName(), m_argument.units(), m_argument.description());
 
     // Add all of the choices from the argument
 
@@ -229,7 +229,7 @@ InputController::InputController(EditController * editController,const ruleset::
   {
     auto boolInputView = new BoolInputView();
 
-    boolInputView->checkBox->setText(QString::fromStdString(m_argument.displayName()));
+    boolInputView->setName(m_argument.displayName(), m_argument.units(), m_argument.description());
 
     if( m_argument.hasValue() )
     {
@@ -252,7 +252,7 @@ InputController::InputController(EditController * editController,const ruleset::
   {
     auto integerInputView = new IntegerInputView();
 
-    integerInputView->nameLabel->setText(QString::fromStdString(m_argument.displayName()));
+    integerInputView->setName(m_argument.displayName(), m_argument.units(), m_argument.description());
 
     if( m_argument.hasValue() )
     {
@@ -271,7 +271,7 @@ InputController::InputController(EditController * editController,const ruleset::
   {
     auto stringInputView = new StringInputView();
 
-    stringInputView->nameLabel->setText(QString::fromStdString(m_argument.displayName()));
+    stringInputView->setName(m_argument.displayName(), m_argument.units(), m_argument.description());
 
     if( m_argument.hasValue() )
     {
