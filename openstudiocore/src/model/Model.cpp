@@ -437,6 +437,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveWater);  
     REGISTER_CONSTRUCTOR(ZoneHVACIdealLoadsAirSystem);
     REGISTER_CONSTRUCTOR(ZoneHVACFourPipeFanCoil);
+    REGISTER_CONSTRUCTOR(ZoneHVACHighTemperatureRadiant);
     REGISTER_CONSTRUCTOR(ZoneHVACLowTemperatureRadiantElectric);
     REGISTER_CONSTRUCTOR(ZoneHVACLowTempRadiantConstFlow);
     REGISTER_CONSTRUCTOR(ZoneHVACLowTempRadiantVarFlow);
@@ -732,6 +733,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardConvectiveWater);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACIdealLoadsAirSystem);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACFourPipeFanCoil);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACHighTemperatureRadiant);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACLowTemperatureRadiantElectric);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACLowTempRadiantConstFlow);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACLowTempRadiantVarFlow);

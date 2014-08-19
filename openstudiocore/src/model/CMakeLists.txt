@@ -883,6 +883,9 @@ set(${target_name}_src
   ZoneHVACFourPipeFanCoil.hpp
   ZoneHVACFourPipeFanCoil_Impl.hpp
   ZoneHVACFourPipeFanCoil.cpp
+  ZoneHVACHighTemperatureRadiant.hpp
+  ZoneHVACHighTemperatureRadiant_Impl.hpp
+  ZoneHVACHighTemperatureRadiant.cpp
   ZoneHVACLowTemperatureRadiantElectric.hpp
   ZoneHVACLowTemperatureRadiantElectric_Impl.hpp
   ZoneHVACLowTemperatureRadiantElectric.cpp
@@ -1325,6 +1328,7 @@ set(${target_name}_test_src
   test/ZoneHVACBaseboardConvectiveElectric_GTest.cpp
   test/ZoneHVACBaseboardConvectiveWater_GTest.cpp
   test/ZoneHVACFourPipeFanCoil_GTest.cpp
+  test/ZoneHVACHighTemperatureRadiant_GTest.cpp
   test/ZoneHVACLowTemperatureRadiantElectric_GTest.cpp
   test/ZoneHVACLowTempRadiantConstFlow_GTest.cpp
   test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp

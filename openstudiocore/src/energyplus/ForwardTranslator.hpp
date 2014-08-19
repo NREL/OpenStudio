@@ -225,6 +225,7 @@ class ZoneHVACBaseboardConvectiveElectric;
 class ZoneHVACBaseboardConvectiveWater;
 class ZoneHVACFourPipeFanCoil;
 class ZoneHVACIdealLoadsAirSystem;
+class ZoneHVACHighTemperatureRadiant;
 class ZoneHVACLowTempRadiantConstFlow;
 class ZoneHVACLowTempRadiantVarFlow;
 class ZoneHVACLowTemperatureRadiantElectric;
@@ -688,6 +689,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateZoneHVACFourPipeFanCoil( model::ZoneHVACFourPipeFanCoil & modelObject );
 
   boost::optional<IdfObject> translateZoneHVACIdealLoadsAirSystem( model::ZoneHVACIdealLoadsAirSystem & modelObject );
+
+  boost::optional<IdfObject> translateZoneHVACHighTemperatureRadiant(model::ZoneHVACHighTemperatureRadiant & modelObject );
 
   boost::optional<IdfObject> translateZoneHVACLowTempRadiantConstFlow(model::ZoneHVACLowTempRadiantConstFlow & modelObject );
 

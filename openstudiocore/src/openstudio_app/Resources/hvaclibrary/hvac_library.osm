@@ -1,7 +1,7 @@
 
 OS:Version,
-  {06636d91-f17e-4b21-944d-e735102da9fc}, !- Handle
-  1.4.1;                                  !- Version Identifier
+  {ff1d31eb-5df3-4720-83f0-4e592c339145}, !- Handle
+  1.4.2;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -235,8 +235,8 @@ OS:SetpointManager:Warmest,
 
 OS:SetpointManager:Scheduled:DualSetpoint,
   {9eae8047-b0c4-46a9-a37a-30889c83b4ae}, !- Handle
-  Dual Setpoint, !- Name
-  Temperature,                                       !- Control Variable
+  Dual Setpoint,                          !- Name
+  Temperature,                            !- Control Variable
   {7aec1e64-640d-4bb1-ba20-f89f7e911d11}, !- High Setpoint Schedule Name
   {3515ff9e-912f-4d2e-bf1f-163a63d2662b}, !- Low Setpoint Schedule Name
   ;                                       !- Setpoint Node or NodeList Name
@@ -289,8 +289,8 @@ OS:ScheduleTypeLimits,
 
 OS:SetpointManager:OutdoorAirPretreat,
   {e10c0dd1-1387-4356-a5c4-34671a43d30f}, !- Handle
-  OA Pretreat, !- Name
-  Temperature,                                       !- Control Variable
+  OA Pretreat,                            !- Name
+  Temperature,                            !- Control Variable
   ,                                       !- Minimum Setpoint Temperature {C}
   ,                                       !- Maximum Setpoint Temperature {C}
   ,                                       !- Minimum Setpoint Humidity Ratio {kgWater/kgDryAir}
@@ -459,7 +459,7 @@ OS:Curve:Quadratic,
 
 OS:EvaporativeCooler:Indirect:ResearchSpecial,
   {70e2147c-5b58-49a7-b1a3-1cc1b1bd8854}, !- Handle
-  Indirect Evaporative Cooler, !- Name
+  Indirect Evaporative Cooler,            !- Name
   ,                                       !- Availability Schedule Name
   0.75,                                   !- Cooler Maximum Effectiveness
   ,                                       !- Cooler Flow Ratio
@@ -826,7 +826,7 @@ OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
 
 OS:Fan:ConstantVolume,
   {a638e8d6-0db3-43dd-b160-aaae12a7abbc}, !- Handle
-  Parallel PIU Fan,                       !- Name
+  Parallel PIU Fan 1,                     !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Fan Efficiency
   ,                                       !- Pressure Rise {Pa}
@@ -839,7 +839,7 @@ OS:Fan:ConstantVolume,
 
 OS:Coil:Heating:Water,
   {e48c9cdf-2762-4a27-9584-0eefbb889726}, !- Handle
-  Parallel PIU Coil,                      !- Name
+  Parallel PIU Coil 1,                    !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- U-Factor Times Area Value {W/K}
   ,                                       !- Maximum Water Flow Rate {m3/s}
@@ -879,7 +879,7 @@ OS:Coil:Heating:Electric,
 
 OS:AirTerminal:SingleDuct:SeriesPIU:Reheat,
   {1c4961f3-614c-4530-854d-18b47804b9f6}, !- Handle
-  Series Fan Powered Terminal, !- Name
+  Series Fan Powered Terminal,            !- Name
   ,                                       !- Availability Schedule Name
   autosize,                               !- Maximum Air Flow Rate {m3/s}
   autosize,                               !- Maximum Primary Air Flow Rate {m3/s}
@@ -1150,6 +1150,46 @@ OS:Pump:ConstantSpeed,
   ,                                       !- Rotational Speed {rev/min}
   ,                                       !- Zone
   ;                                       !- Skin Loss Radiative Fraction
+
+OS:ZoneHVAC:HighTemperatureRadiant,
+  {78b89842-8c8d-46d2-8f30-1322d180980e}, !- Handle
+  High Temperature Radiant,   !- Name
+  ,                                       !- Availability Schedule Name
+  autosize,                               !- Maximum Power Input {W}
+  NaturalGas,                             !- Fuel Type
+  0.9,                                    !- Combustion Efficiency
+  0.7,                                    !- Fraction of Input Converted to Radiant Energy
+  0,                                      !- Fraction of Input Converted to Latent Energy
+  0,                                      !- Fraction of Input that Is Lost
+  OperativeTemperature,                   !- Temperature Control Type
+  2,                                      !- Heating Throttling Range {deltaC}
+  {a44e8152-896c-4b8f-8264-6456c7ddaaf5}, !- Heating Setpoint Temperature Schedule Name
+  0.04,                                   !- Fraction of Radiant Energy Incident on People
+  ;                                       !- Radiant Surface Type
+
+OS:ScheduleTypeLimits,
+  {a97fb7de-95e1-4e93-8e86-6fae9baf0f7e}, !- Handle
+  Temperature,                            !- Name
+  ,                                       !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
+  Discrete,                               !- Numeric Type
+  Temperature;                            !- Unit Type
+
+OS:Schedule:Ruleset,
+  {a44e8152-896c-4b8f-8264-6456c7ddaaf5}, !- Handle
+  High Temp Radiant Setpoint,                     !- Name
+  {a97fb7de-95e1-4e93-8e86-6fae9baf0f7e}, !- Schedule Type Limits Name
+  {9b35d3ba-4ce5-49f8-91ac-bdb91509399c}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {9b35d3ba-4ce5-49f8-91ac-bdb91509399c}, !- Handle
+  Schedule Day 1,                         !- Name
+  {a97fb7de-95e1-4e93-8e86-6fae9baf0f7e}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  15;                                     !- Value Until Time 1
+
 
 OS:ZoneHVAC:PackagedTerminalHeatPump,
   {b9232216-7c91-4457-9cda-1df2300bb3d4}, ! Handle
