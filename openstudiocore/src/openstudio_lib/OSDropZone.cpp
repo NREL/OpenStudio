@@ -680,6 +680,7 @@ void OSDropZone3::dropEvent(QDropEvent *event)
     // Tell EditView to display this object
     emit itemClicked(m_item);
 
+
     if(modelObject){
       if(OSAppBase::instance()->currentDocument()->fromComponentLibrary(itemId)){
         modelObject = modelObject->clone(m_modelObject->model());

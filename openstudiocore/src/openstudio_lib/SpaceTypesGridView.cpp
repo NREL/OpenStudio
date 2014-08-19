@@ -290,6 +290,21 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           }
           );
 
+      std::function<std::vector<boost::optional<model::ModelObject>>(const model::SpaceType &)> allLoadsWithActivityLevelSchedules(
+          [allLoads](const model::SpaceType &t_spaceType) {
+            std::vector<boost::optional<model::ModelObject>> retval;
+            for (const auto &l : allLoads(t_spaceType))
+            {
+              // only people have activity schedules, so this effectively gives us only
+              // the People objects while inserting blanks for those which are not people,
+              // which is what we want
+              retval.push_back(boost::optional<model::ModelObject>(l.optionalCast<model::People>()));
+            }
+            return retval;
+          }
+          );
+
+
       std::function<std::vector<boost::optional<model::ModelObject>>(const model::SpaceType &)> allDefinitions(
           [allLoadInstances](const model::SpaceType &t_spaceType) {
             std::vector<boost::optional<model::ModelObject>> definitions;
@@ -479,8 +494,23 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         }
       );
 
+      std::function<bool (model::ModelObject *, const model::Schedule &)> setActivityLevelSchedule(
+          [](model::ModelObject *l, model::Schedule t_s) {
+            if (boost::optional<model::People> p = l->optionalCast<model::People>())
+            {
+              return p->setActivityLevelSchedule(t_s);
+            }
+
+
+            OS_ASSERT(false);
+            return false;
+          }
+          );
+
+
       std::function<bool (model::ModelObject *, const model::Schedule &)> setSchedule(
           [](model::ModelObject *l, model::Schedule t_s) {
+
             if (boost::optional<model::People> p = l->optionalCast<model::People>())
             {
               return p->setNumberofPeopleSchedule(t_s);
@@ -533,6 +563,19 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
 
             OS_ASSERT(false);
             return false;
+          }
+          );
+
+      std::function<boost::optional<model::Schedule> (model::ModelObject *)> activityLevelSchedule(
+          [](model::ModelObject *l) {
+            if (boost::optional<model::People> p = l->optionalCast<model::People>())
+            {
+              return p->activityLevelSchedule();
+            }
+
+            // should be impossible to get here
+            OS_ASSERT(false);
+            return boost::optional<model::Schedule>();
           }
           );
 
@@ -753,11 +796,11 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
 
       } else if (field == ACTIVITYSCHEDULE) {
 
-        addNameLineEditColumn(QString(ACTIVITYSCHEDULE),
-          CastNullAdapter<model::Schedule>(&model::Schedule::name),
-          CastNullAdapter<model::Schedule>(&model::Schedule::setName),
+        addDropZoneColumn(QString(SCHEDULE),
+          activityLevelSchedule,
+          setActivityLevelSchedule,
           DataSource(
-            activityLevelSchedules,
+            allLoadsWithActivityLevelSchedules,
             true
           )
         );
