@@ -446,10 +446,6 @@ private:
 
   void setCustomCategoryAndFields();
 
-  int rowIndexFromButtonIndex(int index);
-
-  int columnIndexFromButtonIndex(int index);
-
   QString cellStyle(int rowIndex, int columnIndex, bool isSelected);
 
   OSGridView * gridView();
