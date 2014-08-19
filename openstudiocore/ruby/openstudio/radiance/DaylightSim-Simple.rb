@@ -326,7 +326,8 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
   # generate sky/ground model
   radEnvSphere = ""
   # create generic 1w sky/ground sphere
-  radEnvSphere = "void glow skyglow\n0\n0\n4\n1 1 1 0\n\nskyglow source sky\n0\n0\n4\n0 0 1 360"
+  # TODO: set rflux option based on treg options
+  radEnvSphere = "@#rfluxmtx u=Y h=r1\nvoid glow skyglow\n0\n0\n4\n1 1 1 0\n\nskyglow source sky\n0\n0\n4\n0 0 1 360"
   File.open("#{t_outPath}/skies/dc.sky", "w") do |file|
     file << radEnvSphere
   end
@@ -363,54 +364,29 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
     stored in #{t_outPath}/output/dc/merged_space/maps"
   end # compute DC (single phase)
 
-  # "three phase" method
+  # 3-phase method
   if t_options.z == true
 
-    # TODO actually generate the necessary DMX files
     binPairs = Array.new
     matrixGroups = Array.new
     aziVectorX = ""
     aziVectorY = ""
     puts "Using 3-phase method"
 
-    #read DC materials file
+    # compute daylight matrices
     windowMaps = File::open("#{t_outPath}/bsdf/mapping.rad")
-      windowMaps.each do |row|
-        next if row[0] == "#"
-        puts row
-      end
+    windowMaps.each do |row|
+      next if row[0] == "#"
+      wg=row.split(",")[0]
+      puts "calculating daylight matrix for window group #{wg}..."
+      exec_statement("rfluxmtx -fa -v #{t_outPath}/scene/glazing/#{wg}.rad #{t_outPath}/skies/dc.sky -i model.oct > #{t_outPath}/output/dc/#{wg}.dmx")
+    end
 
-    #       matchVmx = /glaz_(.*?)_azi-(.*?)_tn-(.*).vmx/.match(row)
-    #       space_name = matchVmx[1]
-    #       # DLM: aziVector is not actually a vector right?  just the angle in radians?
-    #       aziVector = matchVmx[2]
-    #       glazingTransmissivity = matchVmx[3]
-    #       aziAngle = aziVector.to_f * (180 / Math::PI)
-    #       # swap sin and cos so we get vectors that align with compass headings (which makes sense to this idiot -->(RPG).)
-    #       aziVectorX = Math::sin(aziVector.to_f)
-    #       aziVectorY = Math::cos(aziVector.to_f)
-    #       viewVectorX = -aziVectorX
-    #       viewVectorY = -aziVectorY
-    #       # sanity checks
-    #       puts "window azimuth: #{aziAngle}"
-    #       puts "daylight vector (window to sky): #{aziVectorX.round_to_str(2)},#{aziVectorY.round_to_str(2)},0.00"
-    #       puts "view vector (window to interior): #{viewVectorX.round_to_str(2)},#{viewVectorY.round_to_str(2)},0.00"
-    #       binPairs << " -b 'kbin(#{viewVectorX.round_to_str(2)},#{viewVectorY.round_to_str(2)},0,0,0,1)' -m glaz_#{space_name}_azi-#{aziVector}_tn-#{glazingTransmissivity}"
-    #       # compute daylight matri(ces)
-    #       system("#{t_catCommand} #{t_outPath}/materials/materials_vmx.rad #{t_outPath}/scene/glazing/#{space_name}_glaz_#{aziVector}.rad > #{t_outPath}/window_temp.rad")
-
-    #       exec_statement("#{perlPrefix}genklemsamp#{perlExtension} #{t_options.klemsDensity} -vd #{aziVectorX.round_to_str(2)} #{aziVectorY.round_to_str(2)} 0.00 #{t_outPath}/window_temp.rad \
-    #       | rcontrib #{t_options.klemsDensity} #{t_options.tregVars} -m skyglow -fa #{t_outPath}/octrees/model_dc.oct > \
-    #                      #{t_outPath}/output/dc/merged_space/maps/glaz_#{space_name}_azi-#{aziVector}_tn-#{glazingTransmissivity}.dmx")
-    #       #end
-    #   end
-    #end
-    
-    # compute view matri(ces)
+    # compute view matrices
     puts "computing view matri(ces) for merged_space.map..."
-    exec_statement("#{t_catCommand} #{t_outPath}/materials/materials_vmx.rad scene/glazing/WG*.rad > receivers_vmx.rad")
+    exec_statement("#{t_catCommand} #{t_outPath}/materials/materials_vmx.rad #{t_outPath}/scene/glazing/WG*.rad > receivers_vmx.rad")
     exec_statement("oconv #{t_outPath}/materials/materials.rad #{t_outPath}/scene/*.rad > model_vmx.oct")
-    # need to add support for Windows (no wc, use "FIND")
+    # TODO: need to add support for Windows (no wc, use "FIND")
     exec_statement("rfluxmtx -faa -n #{t_simCores} -y `wc -l < #{t_outPath}/numeric/merged_space.map` -I -v - receivers_vmx.rad -i model_vmx.oct < #{t_outPath}/numeric/merged_space.map")
 
   end
@@ -618,7 +594,6 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
   simulations = []
   windowMapping = nil
 
-  # exec_statement("gendaymtx -m #{t_options.skyvecDensity} -of \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" > \"#{t_outPath / OpenStudio::Path.new("daymtx.out")}\" ")
   exec_statement("gendaymtx #{genDaymtxHdr} -m #{t_options.skyvecDensity} \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" > \"#{t_outPath / OpenStudio::Path.new("daymtx.out")}\" ")
 
   if t_options.z == true
@@ -652,9 +627,6 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
 
   else
     # 2-phase 
-    #
-    # yo Rob!! (no floats, temp for debuging)
-    # simulations << "dctimestep -if -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" \"#{t_outPath / OpenStudio::Path.new("daymtx.out")}\" "
     simulations << "dctimestep -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" \"#{t_outPath / OpenStudio::Path.new("daymtx.out")}\" "
 
     # set window mapping to always be 'true, use this one'
