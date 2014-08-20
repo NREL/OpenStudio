@@ -360,7 +360,7 @@ namespace radiance {
         } else if (radianceParameters.skyDiscretizationResolution() == "2306"){
           skyfile << "@#rfluxmtx u=Y h=r4\n";
         }
-        skyfile << "void glow skyglow\n0\n0\n4\n1 1 1 0\n\nskyglow source sky\n0\n0\n4\n0 0 1 180\nskyglow source ground\n0\n0\n4\n0 0 -1 180";
+        skyfile << "void glow skyglow\n0\n0\n4\n1 1 1 0\n\nskyglow source sky\n0\n0\n4\n0 0 1 180\n\nvoid glow groundglow\n0\n0\n4\n1 1 1 0\n\ngroundglow source sky\n0\n0\n4\n0 0 -1 180";
       }else{
         LOG(Error, "Cannot open file '" << toString(dcskyfilepath) << "' for writing");
       }      
@@ -759,7 +759,6 @@ namespace radiance {
     m_radWindowGroups.clear();
 
   }
-
 
   WindowGroup ForwardTranslator::getWindowGroup(const openstudio::Vector3d& outwardNormal, const model::Space& space, const model::ConstructionBase& construction,
     const boost::optional<model::ShadingControl>& shadingControl, const openstudio::Point3dVector& polygon)
