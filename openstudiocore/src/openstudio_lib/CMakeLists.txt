@@ -426,6 +426,8 @@ set(${target_name}_SRC
   ../shared_gui_components/OSListController.hpp
   ../shared_gui_components/OSListView.cpp
   ../shared_gui_components/OSListView.hpp
+  ../shared_gui_components/OSLoadNamePixmapLineEdit.cpp
+  ../shared_gui_components/OSLoadNamePixmapLineEdit.hpp  
   ../shared_gui_components/OSQObjectController.cpp
   ../shared_gui_components/OSQObjectController.hpp
   ../shared_gui_components/OSQuantityEdit.cpp
@@ -662,6 +664,7 @@ set(${target_name}_moc
   ../shared_gui_components/OSLineEdit.hpp
   ../shared_gui_components/OSListController.hpp
   ../shared_gui_components/OSListView.hpp
+  ../shared_gui_components/OSLoadNamePixmapLineEdit.hpp  
   ../shared_gui_components/OSQObjectController.hpp
   ../shared_gui_components/OSQuantityEdit.hpp
   ../shared_gui_components/OSSwitch.hpp

@@ -25,6 +25,7 @@
 #include "OSGridView.hpp"
 #include "OSIntegerEdit.hpp"
 #include "OSLineEdit.hpp"
+#include "OSLoadNamePixmapLineEdit.hpp"
 #include "OSQuantityEdit.hpp"
 #include "OSUnsignedEdit.hpp"
 
@@ -263,6 +264,17 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
                    boost::optional<StringSetter>(std::bind(&ValueEditConcept<std::string>::set,lineEditConcept.data(),t_mo,std::placeholders::_1)));
 
     widget = lineEdit;
+
+  } else if(QSharedPointer<LoadNameConcept> loadNameConcept = t_baseConcept.dynamicCast<LoadNameConcept>()) {
+
+    auto loadName = new OSLoadNamePixmapLineEdit();
+
+    loadName->bind(t_mo,
+                   OptionalStringGetter(std::bind(&LoadNameConcept::get,loadNameConcept.data(),t_mo,true)),
+                   // If the concept is read only, pass an empty optional
+                   loadNameConcept->readOnly() ? boost::none : boost::optional<StringSetter>(std::bind(&LoadNameConcept::set,loadNameConcept.data(),t_mo,std::placeholders::_1)));
+
+    widget = loadName;
 
   } else if(QSharedPointer<NameLineEditConcept> nameLineEditConcept = t_baseConcept.dynamicCast<NameLineEditConcept>()) {
 

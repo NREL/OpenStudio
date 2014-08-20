@@ -952,6 +952,71 @@ class NameLineEditConceptImpl : public NameLineEditConcept
 ///////////////////////////////////////////////////////////////////////////////////
 
 
+class LoadNameConcept : public BaseConcept
+{
+public:
+
+  LoadNameConcept(QString t_headingLabel)
+    : BaseConcept(t_headingLabel)
+  {
+  }
+
+  virtual ~LoadNameConcept() {}
+
+  virtual boost::optional<std::string> get(const ConceptProxy & obj, bool) = 0;
+  virtual boost::optional<std::string> set(const ConceptProxy & obj, const std::string &) = 0;
+  virtual bool readOnly() const = 0;
+};
+
+template<typename DataSourceType>
+class LoadNameConceptImpl : public LoadNameConcept
+{
+public:
+
+  LoadNameConceptImpl(QString t_headingLabel,
+    std::function<boost::optional<std::string>(DataSourceType *, bool)>  t_getter,
+    std::function<boost::optional<std::string>(DataSourceType *, const std::string &)> t_setter)
+    : LoadNameConcept(t_headingLabel),
+    m_getter(t_getter),
+    m_setter(t_setter)
+  {
+  }
+
+  virtual ~LoadNameConceptImpl() {}
+
+  virtual boost::optional<std::string> get(const ConceptProxy & t_obj, bool value)
+  {
+    DataSourceType obj = t_obj.cast<DataSourceType>();
+    return m_getter(&obj, value);
+  }
+
+  virtual boost::optional<std::string> set(const ConceptProxy & t_obj, const std::string & value)
+  {
+    DataSourceType obj = t_obj.cast<DataSourceType>();
+    if (m_setter)
+    {
+      return m_setter(&obj, value);
+    }
+    else {
+      return boost::optional<std::string>();
+    }
+  }
+
+  virtual bool readOnly() const
+  {
+    return m_setter ? false : true;
+  }
+
+private:
+
+  std::function<boost::optional<std::string>(DataSourceType *, bool)>  m_getter;
+  std::function<boost::optional<std::string>(DataSourceType *, const std::string &)> m_setter;
+};
+
+
+///////////////////////////////////////////////////////////////////////////////////
+
+
 template<typename ValueType>
 class QuantityEditConcept : public BaseConcept
 {
