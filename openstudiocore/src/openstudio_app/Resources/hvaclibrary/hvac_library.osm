@@ -1,7 +1,7 @@
 
 OS:Version,
-  {06636d91-f17e-4b21-944d-e735102da9fc}, !- Handle
-  1.4.1;                                  !- Version Identifier
+  {e8d7f8c2-60bf-4bad-aa21-9c17ba7edd5f}, !- Handle
+  1.4.2;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -234,8 +234,8 @@ OS:SetpointManager:Warmest,
 
 OS:SetpointManager:Scheduled:DualSetpoint,
   {9eae8047-b0c4-46a9-a37a-30889c83b4ae}, !- Handle
-  Dual Setpoint, !- Name
-  Temperature,                                       !- Control Variable
+  Dual Setpoint,                          !- Name
+  Temperature,                            !- Control Variable
   {7aec1e64-640d-4bb1-ba20-f89f7e911d11}, !- High Setpoint Schedule Name
   {3515ff9e-912f-4d2e-bf1f-163a63d2662b}, !- Low Setpoint Schedule Name
   ;                                       !- Setpoint Node or NodeList Name
@@ -288,8 +288,8 @@ OS:ScheduleTypeLimits,
 
 OS:SetpointManager:OutdoorAirPretreat,
   {e10c0dd1-1387-4356-a5c4-34671a43d30f}, !- Handle
-  OA Pretreat, !- Name
-  Temperature,                                       !- Control Variable
+  OA Pretreat,                            !- Name
+  Temperature,                            !- Control Variable
   ,                                       !- Minimum Setpoint Temperature {C}
   ,                                       !- Maximum Setpoint Temperature {C}
   ,                                       !- Minimum Setpoint Humidity Ratio {kgWater/kgDryAir}
@@ -458,7 +458,7 @@ OS:Curve:Quadratic,
 
 OS:EvaporativeCooler:Indirect:ResearchSpecial,
   {70e2147c-5b58-49a7-b1a3-1cc1b1bd8854}, !- Handle
-  Indirect Evaporative Cooler, !- Name
+  Indirect Evaporative Cooler,            !- Name
   ,                                       !- Availability Schedule Name
   0.75,                                   !- Cooler Maximum Effectiveness
   ,                                       !- Cooler Flow Ratio
@@ -476,6 +476,7 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
   ,                                       !- Water Supply Storage Tank Name
   0,                                      !- Drift Loss Fraction
   ;                                       !- Blowdown Concentration Ratio
+
 OS:EvaporativeCooler:Direct:ResearchSpecial,
   {8d3b17e0-88c9-4d17-9de4-0b9dd0481b36}, ! Handle
   Direct Evaporative Cooler,              ! Name
@@ -824,7 +825,7 @@ OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
 
 OS:Fan:ConstantVolume,
   {a638e8d6-0db3-43dd-b160-aaae12a7abbc}, !- Handle
-  Parallel PIU Fan,                       !- Name
+  Parallel PIU Fan 1,                     !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Fan Efficiency
   ,                                       !- Pressure Rise {Pa}
@@ -837,7 +838,7 @@ OS:Fan:ConstantVolume,
 
 OS:Coil:Heating:Water,
   {e48c9cdf-2762-4a27-9584-0eefbb889726}, !- Handle
-  Parallel PIU Coil,                      !- Name
+  Parallel PIU Coil 1,                    !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- U-Factor Times Area Value {W/K}
   ,                                       !- Maximum Water Flow Rate {m3/s}
@@ -877,7 +878,7 @@ OS:Coil:Heating:Electric,
 
 OS:AirTerminal:SingleDuct:SeriesPIU:Reheat,
   {1c4961f3-614c-4530-854d-18b47804b9f6}, !- Handle
-  Series Fan Powered Terminal, !- Name
+  Series Fan Powered Terminal,            !- Name
   ,                                       !- Availability Schedule Name
   autosize,                               !- Maximum Air Flow Rate {m3/s}
   autosize,                               !- Maximum Primary Air Flow Rate {m3/s}
