@@ -217,8 +217,8 @@ void SpaceTypesGridController::setCategoriesAndFields()
 
   {
     std::vector<QString> fields;
-    //fields.push_back(STANDARDSBUILDINGTYPE);
-    //fields.push_back(STANDARDSSPACETYPE);
+    fields.push_back(STANDARDSBUILDINGTYPE);
+    fields.push_back(STANDARDSSPACETYPE);
     std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Measure Tags"), fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
@@ -866,6 +866,78 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         )
         );
 
+    } else if (field == STANDARDSBUILDINGTYPE) {
+
+      // nothing to do, it is a string already
+      std::function<std::string (std::string)> toString = [](std::string t_s) { return t_s; };
+
+      std::function<std::vector<std::string> (model::SpaceType *)> choices =
+        [](model::SpaceType *t_spaceType){
+          std::vector<std::string> retval;
+          retval.emplace_back();
+
+          const auto &types = t_spaceType->suggestedStandardsBuildingTypes();
+
+          retval.insert(retval.end(), types.begin(), types.end());
+          return retval;
+        };
+
+      std::function<boost::optional<std::string> (model::SpaceType *)> getter = 
+        [](model::SpaceType *t_spaceType) {
+          return t_spaceType->standardsBuildingType();
+        };
+
+      std::function<bool (model::SpaceType *t_spaceType, std::string )> setter = 
+        [](model::SpaceType *t_spaceType, std::string t_value) -> bool {
+          if (!t_value.empty()) {
+            return t_spaceType->setStandardsBuildingType(t_value);
+          } else {
+            t_spaceType->resetStandardsBuildingType();
+            return true;
+          }
+        };
+
+      addComboBoxColumn(QString(STANDARDSBUILDINGTYPE),
+          toString,
+          choices,
+          getter,
+          setter);
+    } else if (field == STANDARDSSPACETYPE) {
+
+      // nothing to do, it is a string already
+      std::function<std::string (std::string)> toString = [](std::string t_s) { return t_s; };
+
+      std::function<std::vector<std::string> (model::SpaceType *)> choices =
+        [](model::SpaceType *t_spaceType){
+          std::vector<std::string> retval;
+          retval.emplace_back();
+
+          const auto &types = t_spaceType->suggestedStandardsSpaceTypes();
+
+          retval.insert(retval.end(), types.begin(), types.end());
+          return retval;
+        };
+
+      std::function<boost::optional<std::string> (model::SpaceType *)> getter = 
+        [](model::SpaceType *t_spaceType) {
+          return t_spaceType->standardsSpaceType();
+        };
+
+      std::function<bool (model::SpaceType *t_spaceType, std::string )> setter = 
+        [](model::SpaceType *t_spaceType, std::string t_value) -> bool {
+          if (!t_value.empty()) {
+            return t_spaceType->setStandardsSpaceType(t_value);
+          } else {
+            t_spaceType->resetStandardsSpaceType();
+            return true;
+          }
+        };
+
+      addComboBoxColumn(QString(STANDARDSSPACETYPE),
+          toString,
+          choices,
+          getter,
+          setter);
     } else {
       // unhandled
       OS_ASSERT(false);
