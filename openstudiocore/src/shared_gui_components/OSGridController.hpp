@@ -30,8 +30,9 @@
 
 #include "../utilities/idd/IddObject.hpp"
 
-#include <boost/function.hpp>
-
+#include <string>
+#include <functional>
+#include <vector>
 #include <QObject>
 #include <QSharedPointer>
 #include <QWidget>
@@ -201,6 +202,64 @@ public:
                          std::function<bool (DataSourceType*, const ChoiceType &)> setter,
                          const boost::optional<DataSource> &t_source = boost::none)
   {
+    addComboBoxColumn<ChoiceType, DataSourceType>(
+        headingLabel,
+        toString,
+        std::function<std::vector<ChoiceType> (DataSourceType*)>([choices](DataSourceType*) { return choices(); }),
+        getter,
+        setter,
+        t_source);
+  }
+
+
+  template<typename ChoiceType, typename DataSourceType>
+  void addComboBoxColumn(QString headingLabel,
+                         std::function<std::string (ChoiceType)> toString,
+                         std::function<std::vector<ChoiceType> ()> choices,
+                         std::function<ChoiceType (DataSourceType*)> getter,
+                         std::function<bool (DataSourceType*, ChoiceType)> setter,
+                         const boost::optional<DataSource> &t_source = boost::none)
+  {
+    addComboBoxColumn<ChoiceType, DataSourceType>(
+        headingLabel,
+        toString,
+        std::function<std::vector<ChoiceType> (DataSourceType*)>([choices](DataSourceType*) { return choices(); }),
+        getter,
+        setter,
+        t_source);
+  }
+
+  template<typename ChoiceType, typename DataSourceType>
+  void addComboBoxColumn(QString headingLabel,
+                         std::function<std::string (ChoiceType)> toString,
+                         std::function<std::vector<ChoiceType> ()> choices,
+                         std::function<boost::optional<ChoiceType> (DataSourceType*)> getter,
+                         std::function<bool (DataSourceType*, ChoiceType)> setter,
+                         boost::optional<std::function<void (DataSourceType*)> > reset=boost::none,
+                         const boost::optional<DataSource> &t_source = boost::none)
+  {
+  addComboBoxColumn<ChoiceType, DataSourceType>(
+        headingLabel,
+        toString,
+        std::function<std::vector<ChoiceType> (DataSourceType*)>([choices](DataSourceType*) { return choices(); }),
+        getter,
+        setter,
+        reset,
+        t_source);
+  }
+
+
+
+
+
+  template<typename ChoiceType, typename DataSourceType>
+  void addComboBoxColumn(QString headingLabel,
+                         std::function<std::string (const ChoiceType &)> toString,
+                         std::function<std::vector<ChoiceType> (DataSourceType *)> choices,
+                         std::function<ChoiceType (DataSourceType*)> getter,
+                         std::function<bool (DataSourceType*, const ChoiceType &)> setter,
+                         const boost::optional<DataSource> &t_source = boost::none)
+  {
     m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<ComboBoxConcept>(
         new ComboBoxRequiredChoiceImpl<ChoiceType,DataSourceType>(headingLabel,
                                                                   toString,
@@ -213,7 +272,7 @@ public:
   template<typename ChoiceType, typename DataSourceType>
   void addComboBoxColumn(QString headingLabel,
                          std::function<std::string (ChoiceType)> toString,
-                         std::function<std::vector<ChoiceType> ()> choices,
+                         std::function<std::vector<ChoiceType> (DataSourceType *)> choices,
                          std::function<ChoiceType (DataSourceType*)> getter,
                          std::function<bool (DataSourceType*, ChoiceType)> setter,
                          const boost::optional<DataSource> &t_source = boost::none)
@@ -229,7 +288,7 @@ public:
   template<typename ChoiceType, typename DataSourceType>
   void addComboBoxColumn(QString headingLabel,
                          std::function<std::string (ChoiceType)> toString,
-                         std::function<std::vector<ChoiceType> ()> choices,
+                         std::function<std::vector<ChoiceType> (DataSourceType *)> choices,
                          std::function<boost::optional<ChoiceType> (DataSourceType*)> getter,
                          std::function<bool (DataSourceType*, ChoiceType)> setter,
                          boost::optional<std::function<void (DataSourceType*)> > reset=boost::none,

@@ -581,7 +581,7 @@ class ComboBoxRequiredChoiceImpl : public ComboBoxConcept
   ComboBoxRequiredChoiceImpl(
     QString t_headingLabel,
     std::function<std::string (ChoiceType)> t_toString,
-    std::function<std::vector<ChoiceType> (void)> t_choices,
+    std::function<std::vector<ChoiceType> (DataSourceType*)> t_choices,
     std::function<ChoiceType (DataSourceType*)>  t_getter,
     std::function<bool (DataSourceType*, ChoiceType)> t_setter)
     : ComboBoxConcept(t_headingLabel),
@@ -602,14 +602,14 @@ class ComboBoxRequiredChoiceImpl : public ComboBoxConcept
         new RequiredChoiceSaveDataSourceConceptImpl<ChoiceType,DataSourceType>(
             dataSource,
             m_toString,
-            m_choices,
+            std::bind(m_choices, dataSource.get()),
             std::bind(m_getter,dataSource.get()),
             std::bind(m_setter,dataSource.get(),std::placeholders::_1)));
   }
 
  private:
   std::function<std::string (ChoiceType)> m_toString;
-  std::function<std::vector<ChoiceType> (void)> m_choices;
+  std::function<std::vector<ChoiceType> (DataSourceType *)> m_choices;
   std::function<std::string (DataSourceType *)>  m_getter;
   std::function<bool (DataSourceType *, ChoiceType)> m_setter;
 };
@@ -622,7 +622,7 @@ class ComboBoxOptionalChoiceImpl : public ComboBoxConcept
   ComboBoxOptionalChoiceImpl(
     QString t_headingLabel,
     std::function<std::string (ChoiceType)> t_toString,
-    std::function<std::vector<ChoiceType> (void)> t_choices,
+    std::function<std::vector<ChoiceType> (DataSourceType *)> t_choices,
     std::function<boost::optional<ChoiceType> (DataSourceType*)>  t_getter,
     std::function<bool (DataSourceType*, ChoiceType)> t_setter,
     boost::optional<std::function<void (DataSourceType*)> > t_reset=boost::none)
@@ -645,7 +645,7 @@ class ComboBoxOptionalChoiceImpl : public ComboBoxConcept
           new OptionalChoiceSaveDataSourceConceptImpl<ChoiceType,DataSourceType>(
               dataSource,
               m_toString,
-              m_choices,
+              std::bind(m_choices,dataSource.get()),
               std::bind(m_getter,dataSource.get()),
               std::bind(m_setter,dataSource.get(),std::placeholders::_1),
               boost::optional<NoFailAction>(std::bind(m_reset.get(),dataSource.get()))));
@@ -655,7 +655,7 @@ class ComboBoxOptionalChoiceImpl : public ComboBoxConcept
         new OptionalChoiceSaveDataSourceConceptImpl<ChoiceType,DataSourceType>(
             dataSource,
             m_toString,
-            m_choices,
+            std::bind(m_choices, dataSource.get()),
             std::bind(m_getter,dataSource.get()),
             std::bind(m_setter,dataSource.get(),std::placeholders::_1)));
     }
@@ -664,7 +664,7 @@ class ComboBoxOptionalChoiceImpl : public ComboBoxConcept
 
  private:
   std::function<std::string (ChoiceType)> m_toString;
-  std::function<std::vector<ChoiceType> (void)> m_choices;
+  std::function<std::vector<ChoiceType> (DataSourceType *)> m_choices;
   std::function<boost::optional<ChoiceType> (DataSourceType *)>  m_getter;
   std::function<bool (DataSourceType *, ChoiceType)> m_setter;
   boost::optional<std::function<void (DataSourceType*)> > m_reset;

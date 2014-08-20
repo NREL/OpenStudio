@@ -465,11 +465,11 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
       addComboBoxColumn<model::Schedule,model::RefrigerationCase>(
           QString(CASELIGHTINGSCHEDULE),
           &openstudio::objectName,
-          std::bind(&openstudio::sortByObjectName<model::Schedule>,
+          std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
                                   m_model,
                                   "RefrigerationCase",
-                                  "Case Lighting")), // NOTE these strings found in ScheduleTypeRegistry.cpp
+                                  "Case Lighting"))), // NOTE these strings found in ScheduleTypeRegistry.cpp
           NullAdapter(&model::RefrigerationCase::caseLightingSchedule),
           NullAdapter(&model::RefrigerationCase::setCaseLightingSchedule),
           NullAdapter(&model::RefrigerationCase::resetCaseLightingSchedule));
@@ -477,11 +477,11 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
       addComboBoxColumn<model::Schedule,model::RefrigerationCase>(
           QString(CASEDEFROSTSCHEDULE),
           &openstudio::objectName,
-          std::bind(&openstudio::sortByObjectName<model::Schedule>,
+          std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
                                   m_model,
                                   "RefrigerationCase",
-                                  "Case Defrost")),
+                                  "Case Defrost"))),
           NullAdapter(&model::RefrigerationCase::caseDefrostSchedule),
           NullAdapter(&model::RefrigerationCase::setCaseDefrostSchedule),
           NullAdapter(&model::RefrigerationCase::resetCaseDefrostSchedule));
@@ -489,11 +489,11 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
       addComboBoxColumn<model::Schedule,model::RefrigerationCase>(
           QString(CASEDEFROSTDRIPDOWNSCHEDULE),
           &openstudio::objectName,
-          std::bind(&openstudio::sortByObjectName<model::Schedule>,
+          std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
                                   m_model,
                                   "RefrigerationCase",
-                                  "Case Defrost Drip-Down")),
+                                  "Case Defrost Drip-Down"))),
           NullAdapter(&model::RefrigerationCase::caseDefrostDripDownSchedule),
           NullAdapter(&model::RefrigerationCase::setCaseDefrostDripDownSchedule),
           NullAdapter(&model::RefrigerationCase::resetCaseDefrostDripDownSchedule));
@@ -501,11 +501,11 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
       addComboBoxColumn<model::Schedule,model::RefrigerationCase>(
           QString(REFRIGERATEDCASERESTOCKINGSCHEDULE),
           &openstudio::objectName,
-          std::bind(&openstudio::sortByObjectName<model::Schedule>,
+          std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
                                   m_model,
                                   "RefrigerationCase",
-                                  "Refrigerated Case Restocking")),
+                                  "Refrigerated Case Restocking"))),
           NullAdapter(&model::RefrigerationCase::refrigeratedCaseRestockingSchedule),
           NullAdapter(&model::RefrigerationCase::setRefrigeratedCaseRestockingSchedule),
           NullAdapter(&model::RefrigerationCase::resetRefrigeratedCaseRestockingSchedule));
@@ -513,11 +513,11 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
       addComboBoxColumn<model::Schedule,model::RefrigerationCase>(
           QString(CASECREDITFRACTIONSCHEDULE),
           &openstudio::objectName,
-          std::bind(&openstudio::sortByObjectName<model::Schedule>,
+          std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
                                   m_model,
                                   "RefrigerationCase",
-                                  "Case Credit Fraction")),
+                                  "Case Credit Fraction"))),
           NullAdapter(&model::RefrigerationCase::caseCreditFractionSchedule),
           NullAdapter(&model::RefrigerationCase::setCaseCreditFractionSchedule),
           NullAdapter(&model::RefrigerationCase::resetCaseCreditFractionSchedule));
@@ -525,11 +525,11 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
         addComboBoxColumn<model::Schedule,model::RefrigerationCase>(
           QString(AVAILABILITYSCHEDULE),
           &openstudio::objectName,
-          std::bind(&openstudio::sortByObjectName<model::Schedule>,
+          std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
                                   m_model,
                                   "RefrigerationCase",
-                                  "Availability")),
+                                  "Availability"))),
           NullAdapter(&model::RefrigerationCase::availabilitySchedule),
           NullAdapter(&model::RefrigerationCase::setAvailabilitySchedule),
           NullAdapter(&model::RefrigerationCase::resetAvailabilitySchedule));
@@ -537,8 +537,8 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
       addComboBoxColumn<model::ThermalZone,model::RefrigerationCase>(
           QString(THERMALZONE),
           &openstudio::objectName,
-          std::bind(&openstudio::sortByObjectName<model::ThermalZone>,
-      std::bind(&model::Model::getConcreteModelObjects<model::ThermalZone>, m_model)),
+          std::function<std::vector<model::ThermalZone> ()>(std::bind(&openstudio::sortByObjectName<model::ThermalZone>,
+              std::bind(&model::Model::getConcreteModelObjects<model::ThermalZone>, m_model))),
           CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::thermalZone),
           CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setThermalZone),
           NullAdapter(&model::RefrigerationCase::resetThermalZone));
@@ -546,8 +546,9 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
       addComboBoxColumn<model::RefrigerationSystem,model::RefrigerationCase>(
           QString(RACK),
           &openstudio::objectName,
-          std::bind(&openstudio::sortByObjectName<model::RefrigerationSystem>,
-          std::bind(&model::Model::getConcreteModelObjects<model::RefrigerationSystem>,m_model)),
+          std::function<std::vector<model::RefrigerationSystem> ()>(
+            std::bind(&openstudio::sortByObjectName<model::RefrigerationSystem>,
+              std::bind(&model::Model::getConcreteModelObjects<model::RefrigerationSystem>,m_model))),
           NullAdapter(&model::RefrigerationCase::system),
           NullAdapter(&model::RefrigerationCase::addToSystem),
           NullAdapter(&model::RefrigerationCase::removeFromSystem));
@@ -869,11 +870,11 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
       addComboBoxColumn<model::Schedule,model::RefrigerationWalkIn>(
           QString(AVAILABILITYSCHEDULE),
           &openstudio::objectName,
-          std::bind(&openstudio::sortByObjectName<model::Schedule>,
+          std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
                                   m_model,
                                   "RefrigerationWalkIn",
-                                  "Availability")),
+                                  "Availability"))),
           CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::availabilitySchedule),
           CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setAvailabilitySchedule),
           boost::optional<std::function<void(model::RefrigerationWalkIn*)> >(NullAdapter(&model::RefrigerationWalkIn::resetAvailabilitySchedule)));
@@ -882,11 +883,11 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
       addComboBoxColumn<model::Schedule,model::RefrigerationWalkIn>(
           QString(HEATINGPOWERSCHEDULE),
           &openstudio::objectName,
-          std::bind(&openstudio::sortByObjectName<model::Schedule>,
+          std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
                                   m_model,
                                   "RefrigerationWalkIn",
-                                  "Heating Power")),
+                                  "Heating Power"))),
           NullAdapter(&model::RefrigerationWalkIn::heatingPowerSchedule),
           NullAdapter(&model::RefrigerationWalkIn::setHeatingPowerSchedule),
           boost::optional<std::function<void (model::RefrigerationWalkIn*)> >(NullAdapter(&model::RefrigerationWalkIn::resetHeatingPowerSchedule)));
@@ -894,11 +895,11 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
       addComboBoxColumn<model::Schedule,model::RefrigerationWalkIn>(
           QString(LIGHTINGSCHEDULE),
           &openstudio::objectName,
-          std::bind(&openstudio::sortByObjectName<model::Schedule>,
+          std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
                                   m_model,
                                   "RefrigerationWalkIn",
-                                  "Lighting")),
+                                  "Lighting"))),
           NullAdapter(&model::RefrigerationWalkIn::lightingSchedule),
           NullAdapter(&model::RefrigerationWalkIn::setLightingSchedule),
           boost::optional<std::function<void (model::RefrigerationWalkIn*)> >(NullAdapter(&model::RefrigerationWalkIn::resetLightingSchedule)));
@@ -906,11 +907,11 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
       addComboBoxColumn<model::Schedule,model::RefrigerationWalkIn>(
           QString(DEFROSTDRIPDOWNSCHEDULE),
           &openstudio::objectName,
-          std::bind(&openstudio::sortByObjectName<model::Schedule>,
+          std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
                                   m_model,
                                   "RefrigerationWalkIn",
-                                  "Defrost Drip-Down")),
+                                  "Defrost Drip-Down"))),
           NullAdapter(&model::RefrigerationWalkIn::defrostDripDownSchedule),
           NullAdapter(&model::RefrigerationWalkIn::setDefrostDripDownSchedule),
           boost::optional<std::function<void (model::RefrigerationWalkIn*)> >(NullAdapter(&model::RefrigerationWalkIn::resetDefrostDripDownSchedule)));
@@ -918,11 +919,11 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
       addComboBoxColumn<model::Schedule,model::RefrigerationWalkIn>(
           QString(RESTOCKINGSCHEDULE),
           &openstudio::objectName,
-          std::bind(&openstudio::sortByObjectName<model::Schedule>,
+          std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
                                   m_model,
                                   "RefrigerationWalkIn",
-                                  "Restocking")),
+                                  "Restocking"))),
           NullAdapter(&model::RefrigerationWalkIn::restockingSchedule),
           NullAdapter(&model::RefrigerationWalkIn::setRestockingSchedule),
           boost::optional<std::function<void (model::RefrigerationWalkIn*)> >(NullAdapter(&model::RefrigerationWalkIn::resetRestockingSchedule)));
@@ -937,8 +938,8 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
           QString(RACK),
           &openstudio::objectName,
 
-          std::bind(&openstudio::sortByObjectName<model::RefrigerationSystem>,
-                      std::bind(&model::Model::getConcreteModelObjects<model::RefrigerationSystem>,m_model)),
+          std::function<std::vector<model::RefrigerationSystem> ()>(std::bind(&openstudio::sortByObjectName<model::RefrigerationSystem>,
+                      std::bind(&model::Model::getConcreteModelObjects<model::RefrigerationSystem>,m_model))),
           NullAdapter(&model::RefrigerationWalkIn::system),
           NullAdapter(&model::RefrigerationWalkIn::addToSystem),
 
@@ -948,8 +949,8 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
           QString(ZONEBOUNDARYTHERMALZONE),
           &openstudio::objectName,
 
-          std::bind(&openstudio::sortByObjectName<model::ThermalZone>,
-                      std::bind(&model::Model::getConcreteModelObjects<model::ThermalZone>,m_model)),
+          std::function<std::vector<model::ThermalZone> ()>(std::bind(&openstudio::sortByObjectName<model::ThermalZone>,
+                      std::bind(&model::Model::getConcreteModelObjects<model::ThermalZone>,m_model))),
           CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::zoneBoundaryThermalZone),
           CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setZoneBoundaryThermalZone),
 
@@ -1022,11 +1023,11 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
       addComboBoxColumn<model::Schedule,model::RefrigerationWalkIn>(
           QString(ZONEBOUNDARYSTOCKINGDOOROPENINGSCHEDULEFACINGZONE),
           &openstudio::objectName,
-          std::bind(&openstudio::sortByObjectName<model::Schedule>,
+          std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
                                   m_model,
                                   "RefrigerationWalkInZoneBoundary",
-                                  "Stocking Door Opening  Facing Zone")),
+                                  "Stocking Door Opening  Facing Zone"))),
           NullAdapter(&model::RefrigerationWalkIn::zoneBoundaryStockingDoorOpeningScheduleFacingZone),
           NullAdapter(&model::RefrigerationWalkIn::setZoneBoundaryStockingDoorOpeningScheduleFacingZone),
 
