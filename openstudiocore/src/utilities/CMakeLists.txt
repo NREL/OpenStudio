@@ -166,6 +166,8 @@ set(bcl_src
   bcl/BCLFileReference.cpp
   bcl/BCLMeasure.hpp
   bcl/BCLMeasure.cpp
+  bcl/BCLMeasureArgument.hpp
+  bcl/BCLMeasureArgument.cpp  
   bcl/BCLXML.hpp
   bcl/BCLXML.cpp
   bcl/LocalBCL.hpp

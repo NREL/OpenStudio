@@ -242,7 +242,7 @@ TEST_F(RunManagerTestFixture, UserScript_WorkItemWithArg)
 
 openstudio::runmanager::Job buildScriptMergingWorkflow(const openstudio::path &t_outdir)
 {
-  openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/SetWindowToWallRatioByFacade");
+  openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade");
   openstudio::path osm = resourcesPath() / toPath("/runmanager/SimpleModel.osm");
   openstudio::path epw = resourcesPath() / toPath("/runmanager/USA_CO_Golden-NREL.724666_TMY3.epw");
 

@@ -194,7 +194,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_InsertMeasure) {
   SimpleProject project = getCleanSimpleProject("SimpleProject_InsertMeasure");
 
   // open a measure
-  openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/SetWindowToWallRatioByFacade");
+  openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade");
   BCLMeasure measure = BCLMeasure::load(dir).get();
 
   // insert it into the project

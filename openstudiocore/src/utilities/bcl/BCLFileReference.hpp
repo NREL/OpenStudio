@@ -26,6 +26,9 @@
 
 #include <vector>
 
+class QDomDocument;
+class QDomElement;
+
 namespace openstudio{
 
   /** BCLFileReference is a class for tracking files that come with BCL components and measures.
@@ -83,6 +86,8 @@ namespace openstudio{
     /** @name Operators */
     //@{
 
+    void writeValues(QDomDocument& doc, QDomElement& element) const;
+
     /// Check if the file has been updated and return if so.  Will update checksum.
     bool checkForUpdate();
 
@@ -100,6 +105,9 @@ namespace openstudio{
     std::string m_fileType;
     std::string m_usageType;
   };
+
+  /** Prints BCLFileReference to os. \relates BCLFileReference */
+  UTILITIES_API std::ostream& operator<<(std::ostream& os, const BCLFileReference& file);
 
 } // openstudio
 

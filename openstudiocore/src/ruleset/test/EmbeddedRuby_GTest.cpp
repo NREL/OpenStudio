@@ -123,7 +123,7 @@ TEST_F(RulesetFixture, UserScript_EmbeddedRubyTest) {
     Model someModel;
     Workspace someWorkspace(StrictnessLevel::Draft, IddFileType::EnergyPlus);
 
-    openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/SetWindowToWallRatioByFacade/");
+    openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/");
     boost::optional<BCLMeasure> oMeasure = BCLMeasure::load(dir);
     ASSERT_TRUE(oMeasure);
     BCLMeasure measure = oMeasure.get();
@@ -151,7 +151,7 @@ TEST_F(RulesetFixture, UserScript_EmbeddedRubyTest) {
     Model someModel;
     Workspace someWorkspace(StrictnessLevel::Draft, IddFileType::EnergyPlus);
 
-    openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/SetWindowToWallRatioByFacade/");
+    openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/");
     boost::optional<BCLMeasure> oMeasure = BCLMeasure::load(dir);
     ASSERT_TRUE(oMeasure);
     BCLMeasure measure = oMeasure.get();

@@ -31,7 +31,7 @@ using namespace openstudio;
 
 TEST_F(BCLFixture, BCLMeasure)
 {
-  openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/SetWindowToWallRatioByFacade/");
+  openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/");
   boost::optional<BCLMeasure> measure = BCLMeasure::load(dir);
   ASSERT_TRUE(measure);
 
@@ -42,7 +42,6 @@ TEST_F(BCLFixture, BCLMeasure)
   EXPECT_EQ("This measure identifies exterior surfaces of the proper orientation. Then it runs a method that removes existing windows and applies a new window with a specified window to wall ratio and sill height. The construction chosen for the new window is defaulted to what is assigned to the space, or inherited from a higher level object, such as the building. If the baseline model uses hard assigned constructions you may not get the expected results. The measure doesn't have any cost or lifecycle arguments, however if lifecycle objects exist for exterior wall and window constructions, then this measure will be able to calculate the economic impact of change in window to wall ratio.", measure->modelerDescription());
 
   EXPECT_EQ(MeasureType::ModelMeasure, measure->measureType().value());
-  EXPECT_FALSE(measure->usesSketchUpAPI());
   EXPECT_TRUE(measure->primaryRubyScriptPath());
   EXPECT_EQ("Envelope.Fenestration", measure->taxonomyTag());
 
@@ -52,7 +51,7 @@ TEST_F(BCLFixture, BCLMeasure)
     EXPECT_FALSE(file.checkForUpdate());
   }
 
-  openstudio::path dir2 = resourcesPath() / toPath("/utilities/BCL/Measures/SetWindowToWallRatioByFacade2/");
+  openstudio::path dir2 = resourcesPath() / toPath("/utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade2/");
   if (QFile::exists(toQString(dir2))){
     ASSERT_TRUE(removeDirectory(dir2));
   }
@@ -61,21 +60,26 @@ TEST_F(BCLFixture, BCLMeasure)
 
   boost::optional<BCLMeasure> measure2 = measure->clone(dir2);
   ASSERT_TRUE(measure2);
-  EXPECT_FALSE(measure2->checkForUpdates());
+  EXPECT_FALSE(measure2->checkForUpdatesFiles());
+  EXPECT_FALSE(measure2->checkForUpdatesXML());
   EXPECT_TRUE(*measure == *measure2);
   EXPECT_FALSE(measure->directory() == measure2->directory());
   EXPECT_TRUE(dir2 == measure2->directory());
   EXPECT_EQ(6u, measure2->files().size());
   
   measure2->setName("New Measure");
-  EXPECT_FALSE(measure2->checkForUpdates());
+  EXPECT_FALSE(measure2->checkForUpdatesFiles());
+  EXPECT_TRUE(measure2->checkForUpdatesXML()); // name changed, this will trigger update
+  EXPECT_FALSE(measure2->checkForUpdatesXML()); // second time, no change
   EXPECT_FALSE(*measure == *measure2);
   measure2->save();
-  EXPECT_FALSE(measure2->checkForUpdates());
+  EXPECT_FALSE(measure2->checkForUpdatesFiles());
+  EXPECT_FALSE(measure2->checkForUpdatesXML());
 
   measure2 = BCLMeasure::load(dir2);
   ASSERT_TRUE(measure2);
-  EXPECT_FALSE(measure2->checkForUpdates());
+  EXPECT_FALSE(measure2->checkForUpdatesFiles());
+  EXPECT_FALSE(measure2->checkForUpdatesXML());
   EXPECT_FALSE(*measure == *measure2);
   EXPECT_EQ("New Measure", measure2->name());
   ASSERT_TRUE(measure2->primaryRubyScriptPath());
@@ -87,18 +91,20 @@ TEST_F(BCLFixture, BCLMeasure)
   QTextStream textStream(&file);
   textStream << "Hi";
   file.close();
-  EXPECT_TRUE(measure2->checkForUpdates());
+  EXPECT_FALSE(measure2->checkForUpdatesXML());
+  EXPECT_TRUE(measure2->checkForUpdatesFiles());
+  EXPECT_TRUE(measure2->checkForUpdatesXML());
 
   measure2.reset();
   ASSERT_TRUE(exists(dir2));
   ASSERT_TRUE(removeDirectory(dir2));
   ASSERT_FALSE(exists(dir2));
 
-  std::string className = BCLMeasure::className("Another Measure");
+  std::string className = BCLMeasure::makeClassName("Another Measure");
   EXPECT_EQ("AnotherMeasure", className);
 
   EXPECT_NO_THROW( measure2 = BCLMeasure("Another Measure", className, dir2, "Envelope.Fenestration", 
-    MeasureType::ReportingMeasure, false) );
+    MeasureType::ReportingMeasure) );
   ASSERT_TRUE(measure2);
   ASSERT_TRUE(exists(dir2));
   EXPECT_EQ("Another Measure", measure2->name());
@@ -106,7 +112,8 @@ TEST_F(BCLFixture, BCLMeasure)
 
   measure2 = BCLMeasure::load(dir2);
   ASSERT_TRUE(measure2);
-  EXPECT_FALSE(measure2->checkForUpdates());
+  EXPECT_FALSE(measure2->checkForUpdatesFiles());
+  EXPECT_FALSE(measure2->checkForUpdatesXML());
   ASSERT_TRUE(measure2->primaryRubyScriptPath());
 }
 
@@ -118,12 +125,12 @@ TEST_F(BCLFixture, BCLMeasure_CTor)
   }
   ASSERT_FALSE(exists(dir));
 
-  std::string className = BCLMeasure::className(" _ $ Test & Measure");
+  std::string className = BCLMeasure::makeClassName(" _ $ Test & Measure");
   EXPECT_EQ("ATestMeasure", className);
 
   try{
     BCLMeasure measure("Test Measure", className, dir, "Envelope.Fenestration", 
-                       MeasureType::ModelMeasure, false);
+                       MeasureType::ModelMeasure);
   }catch(std::exception&){
     ASSERT_TRUE(false);
   }
@@ -141,22 +148,22 @@ TEST_F(BCLFixture, PatApplicationMeasures)
   bool updated;
 
   BCLMeasure alternativeModelMeasure = BCLMeasure::alternativeModelMeasure();
-  updated = alternativeModelMeasure.checkForUpdates();
-  ASSERT_FALSE(updated);
+  updated = alternativeModelMeasure.checkForUpdatesFiles();
+  ASSERT_FALSE(updated); // DLM: comment out to update built in PAT measures
   if (updated){
     alternativeModelMeasure.save();
   }
 
   BCLMeasure standardReportMeasure = BCLMeasure::standardReportMeasure();
-  updated = standardReportMeasure.checkForUpdates();
-  ASSERT_FALSE(updated);
+  updated = standardReportMeasure.checkForUpdatesFiles();
+  ASSERT_FALSE(updated); // DLM: comment out to update built in PAT measures
   if (updated){
     standardReportMeasure.save();
   }
 
   BCLMeasure calibrationReportMeasure = BCLMeasure::calibrationReportMeasure();
-  updated = calibrationReportMeasure.checkForUpdates();
-  ASSERT_FALSE(updated);
+  updated = calibrationReportMeasure.checkForUpdatesFiles();
+  ASSERT_FALSE(updated); // DLM: comment out to update built in PAT measures
   if (updated){
     calibrationReportMeasure.save();
   }

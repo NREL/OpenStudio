@@ -27,7 +27,7 @@ using namespace openstudio;
 
 TEST_F(BCLFixture, BCLXML)
 {
-  openstudio::path path = resourcesPath() / toPath("/utilities/BCL/Measures/SetWindowToWallRatioByFacade/measure.xml");
+  openstudio::path path = resourcesPath() / toPath("/utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/measure.xml");
   boost::optional<BCLXML> bclXML = BCLXML::load(path);
   ASSERT_TRUE(bclXML);
 }

@@ -27,6 +27,7 @@
 #include "../core/FileReference.hpp"
 #include "../data/Attribute.hpp"
 #include "../core/Assert.hpp"
+#include "../core/Checksum.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -52,7 +53,7 @@ namespace openstudio{
   }
 
   BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, const openstudio::path& dir,
-    const std::string& taxonomyTag, MeasureType measureType, bool usesSketchUpAPI)
+    const std::string& taxonomyTag, MeasureType measureType)
     : m_directory(boost::filesystem::system_complete(dir)),
       m_bclXML(BCLXMLType::MeasureXML)
   {
@@ -217,7 +218,6 @@ namespace openstudio{
     m_bclXML.setName(name);
     m_bclXML.addTag(taxonomyTag);
     this->setMeasureType(measureType);
-    this->setUsesSketchUpAPI(usesSketchUpAPI);
     m_bclXML.saveAs(measureXMLPath);
   }
 
@@ -239,16 +239,10 @@ namespace openstudio{
     if (!measureType){
       LOG_AND_THROW("'" << toString(dir) << "' is missing the required attribute \"Measure Type\"");
     }
-
-    boost::optional<Attribute> usesSketchUpAPI = m_bclXML.getAttribute("Uses SketchUp API");
-    if (!usesSketchUpAPI){
-      LOG_AND_THROW("'" << toString(dir) << "' is missing the required attribute \"Uses SketchUp API\"");
-    }
-
-    // these may throw later, test here now
-    usesSketchUpAPI->valueAsBoolean();
-
+    
+    // check that opening the file did not modify it
     if (m_bclXML.versionId() != bclXML->versionId()){
+      // DLM: should this be an assert instead?
       LOG_AND_THROW("Measure version_id is no longer valid");
     }
   }
@@ -256,7 +250,7 @@ namespace openstudio{
   BCLMeasure::~BCLMeasure()
   {}
 
-  std::string BCLMeasure::className(const std::string& name)
+  std::string BCLMeasure::makeClassName(const std::string& name)
   {
     QString str = toQString(name);
 
@@ -400,6 +394,11 @@ namespace openstudio{
     return result;
   }
 
+  openstudio::path BCLMeasure::directory() const
+  {
+    return m_directory;
+  }
+
   std::string BCLMeasure::uid() const
   {
     return m_bclXML.uid();
@@ -423,6 +422,16 @@ namespace openstudio{
     return m_bclXML.name();
   }
 
+  std::string BCLMeasure::displayName() const
+  {
+    return m_bclXML.displayName();
+  }
+
+  std::string BCLMeasure::className() const
+  {
+    return m_bclXML.className();
+  }
+
   std::string BCLMeasure::description() const
   {
     return m_bclXML.description();
@@ -433,7 +442,57 @@ namespace openstudio{
     return m_bclXML.modelerDescription();
   }
 
-  std::string BCLMeasure::taxonomyTag() const
+  std::vector<BCLMeasureArgument> BCLMeasure::arguments() const
+  {
+    return m_bclXML.arguments();
+  }
+
+  std::vector<std::string> BCLMeasure::tags() const
+  {
+    return m_bclXML.tags();
+  }
+
+  std::vector<Attribute> BCLMeasure::attributes() const
+  {
+    return m_bclXML.attributes();
+  }
+
+  std::vector<BCLFileReference> BCLMeasure::files() const
+  {
+    return m_bclXML.files();
+  }
+
+  void BCLMeasure::setName(const std::string& name)
+  {
+    m_bclXML.setName(name);
+  }
+
+  void BCLMeasure::setDisplayName(const std::string& displayName)
+  {
+    m_bclXML.setDisplayName(displayName);
+  }
+
+  void BCLMeasure::setClassName(const std::string& className)
+  {
+    m_bclXML.setClassName(className);
+  }
+
+  void BCLMeasure::setDescription(const std::string& description)
+  {
+    m_bclXML.setDescription(description);
+  }
+
+  void BCLMeasure::setModelerDescription(const std::string& description)
+  {
+    m_bclXML.setModelerDescription(description);
+  }
+
+  void BCLMeasure::setArguments(const std::vector<BCLMeasureArgument>& arguments)
+  {
+    m_bclXML.setArguments(arguments);
+  }
+
+   std::string BCLMeasure::taxonomyTag() const
   {
     std::string result;
     std::vector<std::string> tags = m_bclXML.tags();
@@ -443,6 +502,12 @@ namespace openstudio{
     return result;
   }
 
+   void BCLMeasure::setTaxonomyTag(const std::string& taxonomyTag)
+   {
+     m_bclXML.clearTags();
+     m_bclXML.addTag(taxonomyTag);
+   }
+
   MeasureType BCLMeasure::measureType() const
   {
     boost::optional<Attribute> measureType = m_bclXML.getAttribute("Measure Type");
@@ -450,11 +515,31 @@ namespace openstudio{
     return MeasureType(measureType->valueAsString());
   }
 
-  bool BCLMeasure::usesSketchUpAPI() const
+  void BCLMeasure::setMeasureType(const MeasureType& measureType)
   {
-    boost::optional<Attribute> usesSketchUpAPI = m_bclXML.getAttribute("Uses SketchUp API");
-    OS_ASSERT(usesSketchUpAPI);
-    return usesSketchUpAPI->valueAsBoolean();
+    Attribute attribute("Measure Type", measureType.valueName());
+    m_bclXML.addAttribute(attribute);
+  }
+
+  std::vector<std::string> BCLMeasure::intendedSoftwareTools() const
+  {
+    std::vector<std::string> result;
+    std::vector<Attribute> attributes = m_bclXML.getAttributes("Intended Software Tool");
+    for (const Attribute& attribute : attributes){
+      result.push_back(attribute.valueAsString());
+    }
+    return result;
+  }
+
+  /// Returns values of any "Intended Use Case" attributes
+  std::vector<std::string> BCLMeasure::intendedUseCases() const
+  {
+    std::vector<std::string> result;
+    std::vector<Attribute> attributes = m_bclXML.getAttributes("Intended Use Case");
+    for (const Attribute& attribute : attributes){
+      result.push_back(attribute.valueAsString());
+    }
+    return result;
   }
 
   boost::optional<openstudio::path> BCLMeasure::primaryRubyScriptPath() const
@@ -464,21 +549,6 @@ namespace openstudio{
       return result;
     }
     return boost::none;
-  }
-
-  std::vector<BCLFileReference> BCLMeasure::files() const
-  {
-    return m_bclXML.files();
-  }
-
-  std::vector<Attribute> BCLMeasure::attributes() const
-  {
-    return m_bclXML.attributes();
-  }
-
-  std::vector<std::string> BCLMeasure::tags() const
-  {
-    return m_bclXML.tags();
   }
 
   FileReferenceType BCLMeasure::inputFileType() const
@@ -515,11 +585,6 @@ namespace openstudio{
     return result;
   }
 
-  openstudio::path BCLMeasure::directory() const
-  {
-    return m_directory;
-  }
-
   void BCLMeasure::changeUID()
   {
     m_bclXML.changeUID();
@@ -530,40 +595,7 @@ namespace openstudio{
     m_bclXML.incrementVersionId();
   }
 
-  void BCLMeasure::setName(const std::string& name)
-  {
-    m_bclXML.setName(name);
-  }
-
-  void BCLMeasure::setDescription(const std::string& description)
-  {
-    m_bclXML.setDescription(description);
-  }
-
-  void BCLMeasure::setModelerDescription(const std::string& description)
-  {
-    m_bclXML.setModelerDescription(description);
-  }
-
-  void BCLMeasure::setTaxonomyTag(const std::string& taxonomyTag)
-  {
-    m_bclXML.clearTags();
-    m_bclXML.addTag(taxonomyTag);
-  }
-
-  void BCLMeasure::setMeasureType(const MeasureType& measureType)
-  {
-    Attribute attribute("Measure Type", measureType.valueName());
-    m_bclXML.addAttribute(attribute);
-  }
-
-  void BCLMeasure::setUsesSketchUpAPI(bool usesSketchUpAPI)
-  {
-    Attribute attribute("Uses SketchUp API", usesSketchUpAPI);
-    m_bclXML.addAttribute(attribute);
-  }
-
-  bool BCLMeasure::checkForUpdates()
+  bool BCLMeasure::checkForUpdatesFiles()
   {
     bool result = false;
 
@@ -620,6 +652,12 @@ namespace openstudio{
     return result;
   }
 
+  bool BCLMeasure::checkForUpdatesXML()
+  {
+    return m_bclXML.checkForUpdatesXML();
+  }
+
+
   bool BCLMeasure::operator==(const BCLMeasure& other) const
   {
     return ((this->uid() == other.uid()) && (this->versionId() == other.versionId()));
@@ -653,6 +691,5 @@ namespace openstudio{
 
     return BCLMeasure::load(newDir);
   }
-
 
 } // openstudio
