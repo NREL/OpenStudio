@@ -1161,22 +1161,41 @@ namespace radiance {
 
             std::string testBSDFLib = "/Users/rgugliel/src/support/bsdf";
             //testBSDFLib = "E:/bsdf";
-            //LOG(Warn, "Using temporarily hard coded BSDF library '" + testBSDFLib + "' for testing");
+            LOG(Warn, "Using temporarily hard coded BSDF library '" + testBSDFLib + "' for testing");
  
             if (rMaterial == "glass"){
 
+              // get the bsdfs
+
+              // clear glass
               openstudio::path sourcePath = openstudio::toPath(testBSDFLib + "/cl_Tn" + formatString(tVis, 2) + ".xml");
+              
               std::cout << "tVis = " << openstudio::toString(tVis) << std::endl;
               std::cout << "the source path is " << openstudio::toString(sourcePath) << ", exists = " << boost::filesystem::exists(sourcePath) << std::endl;
               std::cout << "the dest path is " << openstudio::toString(bsdfoutpath) << ", exists = " << boost::filesystem::exists(bsdfoutpath) << std::endl;
 
               boost::filesystem::copy_file(openstudio::toPath(testBSDFLib + "/cl_Tn" + formatString(tVis, 2) + ".xml"), bsdfoutpath / \
                 openstudio::toPath("cl_Tn" + formatString(tVis, 2) + ".xml"), boost::filesystem::copy_option::overwrite_if_exists);
+              
+              //add xml file to the collection of crap to copy up
+              openstudio::path filename = t_radDir/openstudio::toPath("bsdf")/openstudio::toPath("/cl_Tn" + formatString(tVis, 2) + ".xml");
+              t_outfiles.push_back(filename);
+
+              // blinds
+              sourcePath = openstudio::toPath(testBSDFLib + "/cl_Tn" + formatString(tVis, 2) + "_blinds.xml");
+
+              std::cout << "tVis = " << openstudio::toString(tVis) << std::endl;
+              std::cout << "the source path is " << openstudio::toString(sourcePath) << ", exists = " << boost::filesystem::exists(sourcePath) << std::endl;
+              std::cout << "the dest path is " << openstudio::toString(bsdfoutpath) << ", exists = " << boost::filesystem::exists(bsdfoutpath) << std::endl;
 
               boost::filesystem::copy_file(openstudio::toPath(testBSDFLib + "/cl_Tn" + formatString(tVis, 2) + "_blinds.xml"), bsdfoutpath / \
                 openstudio::toPath("cl_Tn" + formatString(tVis, 2) + "_blinds.xml"), boost::filesystem::copy_option::overwrite_if_exists);
-              
-              // add job to vmx problem set
+
+              //add xml file to the collection of crap to copy up
+              filename = t_radDir/openstudio::toPath("bsdf")/openstudio::toPath("/cl_Tn" + formatString(tVis, 2) + "_blinds.xml");
+              t_outfiles.push_back(filename);
+
+              // store window group normal (may not need anymore with rfluxmtx)
               m_radDCmats.insert(windowGroup_name + "," + \
                 formatString((control.outwardNormal->x() * -1), 2) + " " + \
                 formatString((control.outwardNormal->y() * -1), 2) + " " + \
@@ -1185,15 +1204,16 @@ namespace radiance {
 
             } else if (rMaterial == "trans"){
 
+              // get bsdf
               openstudio::path sourcePath = openstudio::toPath(testBSDFLib + "/df_Tn" + formatString(tVis, 2) + ".xml");
-              std::cout << "tVis = " << openstudio::toString(tVis) << std::endl;
-              std::cout << "the source path is " << openstudio::toString(sourcePath) << ", exists = " << boost::filesystem::exists(sourcePath) << std::endl;
-              std::cout << "the dest path is " << openstudio::toString(bsdfoutpath) << ", exists = " << boost::filesystem::exists(bsdfoutpath) << std::endl;
-
               boost::filesystem::copy_file(openstudio::toPath(testBSDFLib + "/df_Tn" + formatString(tVis, 2) + ".xml"), bsdfoutpath / \
                 openstudio::toPath("df_Tn" + formatString(tVis, 2) + ".xml"), boost::filesystem::copy_option::overwrite_if_exists);
 
-              // add job to vmx problem set
+              //add xml file to the collection of crap to copy up
+              openstudio::path filename = t_radDir/openstudio::toPath("bsdf")/openstudio::toPath("/df_Tn" + formatString(tVis, 2) + ".xml");
+              t_outfiles.push_back(filename);
+
+              // store window group normal (may not need anymore with rfluxmtx)
               m_radDCmats.insert(windowGroup_name + "," + \
                 formatString((control.outwardNormal->x() * -1), 2) + " " + \
                 formatString((control.outwardNormal->y() * -1), 2) + " " + \
