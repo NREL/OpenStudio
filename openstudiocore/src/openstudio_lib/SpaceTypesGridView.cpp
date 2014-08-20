@@ -887,15 +887,9 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           return t_spaceType->standardsBuildingType();
         };
 
-      std::function<bool (model::SpaceType *t_spaceType, std::string )> setter = 
-        [](model::SpaceType *t_spaceType, std::string t_value) -> bool {
-          return t_spaceType->setStandardsBuildingType(t_value);
-        };
+      std::function<bool (model::SpaceType *t_spaceType, std::string )> setter(&model::SpaceType::setStandardsBuildingType);
 
-      boost::optional<std::function<void (model::SpaceType *t_spaceType)>> resetter( 
-        [](model::SpaceType *t_spaceType) {
-          t_spaceType->resetStandardsBuildingType();
-        });
+      boost::optional<std::function<void (model::SpaceType *t_spaceType)>> resetter(&model::SpaceType::resetStandardsBuildingType);
 
       addComboBoxColumn(QString(STANDARDSBUILDINGTYPE),
           toString,
@@ -924,15 +918,9 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           return t_spaceType->standardsSpaceType();
         };
 
-      std::function<bool (model::SpaceType *t_spaceType, std::string )> setter = 
-        [](model::SpaceType *t_spaceType, std::string t_value) -> bool {
-          return t_spaceType->setStandardsSpaceType(t_value);
-        };
+      std::function<bool (model::SpaceType *t_spaceType, std::string )> setter(&model::SpaceType::setStandardsSpaceType);
 
-      boost::optional<std::function<void (model::SpaceType *t_spaceType)>> resetter ( 
-        [](model::SpaceType *t_spaceType) {
-          t_spaceType->resetStandardsSpaceType();
-        });
+      boost::optional<std::function<void (model::SpaceType *t_spaceType)>> resetter(&model::SpaceType::resetStandardsSpaceType); 
 
       addComboBoxColumn(QString(STANDARDSSPACETYPE),
           toString,
