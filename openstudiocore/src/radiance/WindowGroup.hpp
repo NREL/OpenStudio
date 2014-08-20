@@ -42,7 +42,8 @@ namespace radiance{
   */ 
   class RADIANCE_API WindowGroup{
     public:
-      WindowGroup(double azimuth, const model::Space& space, const model::ConstructionBase& construction, 
+      WindowGroup(const openstudio::Vector3d& outwardNormal, const model::Space& space, 
+                  const model::ConstructionBase& construction,
                   const boost::optional<model::ShadingControl>& shadingControl);
 
       bool operator==(const WindowGroup& other) const;
@@ -51,10 +52,8 @@ namespace radiance{
 
       void setName(const std::string& name);
 
-      double azimuth() const;
+      openstudio::Vector3d outwardNormal() const;
 
-      std::string azimuthString() const;
-      
       model::Space space() const;
       
       model::ConstructionBase construction() const;
@@ -69,10 +68,9 @@ namespace radiance{
 
     private:
 
-      std::string makeName() const;
       std::string m_name;
 
-      double m_azimuth;
+      openstudio::Vector3d m_outwardNormal;
       model::Space m_space;
       model::ConstructionBase m_construction;
       boost::optional<model::ShadingControl> m_shadingControl;

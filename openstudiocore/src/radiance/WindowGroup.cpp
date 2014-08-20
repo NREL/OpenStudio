@@ -25,11 +25,14 @@
 namespace openstudio{
 namespace radiance{
 
-  WindowGroup::WindowGroup(double azimuth, const model::Space& space, const model::ConstructionBase& construction, 
-                            const boost::optional<model::ShadingControl>& shadingControl)
-    : m_azimuth(azimuth), m_space(space), m_construction(construction), m_shadingControl(shadingControl)
+  WindowGroup::WindowGroup(const openstudio::Vector3d& outwardNormal, const model::Space& space, 
+                           const model::ConstructionBase& construction,
+                           const boost::optional<model::ShadingControl>& shadingControl)
+    : m_outwardNormal(outwardNormal), m_space(space), m_construction(construction), m_shadingControl(shadingControl)
   {
-    m_name = makeName();
+    // start with a gross name, forward translator is in charge of nice names
+    m_name = "WG" + toString(createUUID());
+    m_outwardNormal.normalize();
   }
 
   bool WindowGroup::operator==(const WindowGroup& other) const
@@ -45,7 +48,9 @@ namespace radiance{
     if (m_space.handle() == other.space().handle()){
       if (m_construction.handle() == other.construction().handle()){
         if (m_shadingControl->handle() == other.shadingControl()->handle()){
-          if (this->azimuthString() == other.azimuthString()){
+          double angle = std::abs(radToDeg(getAngle(m_outwardNormal, other.outwardNormal())));
+          const double tol = 1.0;
+          if (angle < tol){
             return true;
           }
         }
@@ -65,17 +70,11 @@ namespace radiance{
     m_name = name;
   }
   
-  double WindowGroup::azimuth() const
+  openstudio::Vector3d WindowGroup::outwardNormal() const
   {
-    return m_azimuth;
+    return m_outwardNormal;
   }
 
-  std::string WindowGroup::azimuthString() const
-  {
-
-    std::string result = "AZ" + formatString(m_azimuth, 4);
-    return result;
-  }
   
   model::Space WindowGroup::space() const
   {
@@ -136,19 +135,6 @@ namespace radiance{
         formatString(control.outwardNormal->x()) + " " + formatString(control.outwardNormal->y()) + " " + formatString(control.outwardNormal->z()) + "\n";
     }
 
-    return result;
-  }
-
-  std::string WindowGroup::makeName() const
-  {
-    std::stringstream ss;
-    if (m_shadingControl){
-      ss << this->azimuthString() << "_" << m_space.name().get() << "_" << m_construction.name().get() << "_" << m_shadingControl->name().get();
-    }else{
-      ss << "UncontrolledWindows";
-    }
-
-    std::string result = cleanName(ss.str());
     return result;
   }
 

@@ -761,10 +761,10 @@ namespace radiance {
   }
 
 
-  WindowGroup ForwardTranslator::getWindowGroup(double azimuth, const model::Space& space, const model::ConstructionBase& construction, 
+  WindowGroup ForwardTranslator::getWindowGroup(const openstudio::Vector3d& outwardNormal, const model::Space& space, const model::ConstructionBase& construction,
     const boost::optional<model::ShadingControl>& shadingControl, const openstudio::Point3dVector& polygon)
   {
-    WindowGroup result(azimuth, space, construction, shadingControl);
+    WindowGroup result(outwardNormal, space, construction, shadingControl);
 
     std::stringstream ss;
     ss << "WG" << m_windowGroupId;
@@ -1020,9 +1020,9 @@ namespace radiance {
           boost::optional<model::ShadingControl> shadingControl = subSurface.shadingControl();
 
           // find window group
-          double azi = surface.azimuth();
+          openstudio::Vector3d outwardNormal = surface.outwardNormal();
           
-          WindowGroup windowGroup = getWindowGroup(azi, space, *construction, shadingControl, polygon);
+          WindowGroup windowGroup = getWindowGroup(outwardNormal, space, *construction, shadingControl, polygon);
           std::string windowGroup_name = windowGroup.name();
 
           // get the normal
@@ -1060,7 +1060,7 @@ namespace radiance {
 
             }
 
-            LOG(Info, "found a "+subSurface.subSurfaceType()+", azimuth = "+formatString(azi, 3)+ "("+subSurface_name+")");
+            LOG(Info, "found a " + subSurface.subSurfaceType() + " named '" + subSurface_name + "', windowGroup_name = '" + windowGroup_name + "'");
 
             // set transmittance...
             double visibleTransmittance = subSurface.visibleTransmittance().get();
@@ -1129,10 +1129,10 @@ namespace radiance {
               //double nTs = 1.0; // transmitted specularity
             }
 
-            std::string winId = "_azi-" + formatString(azi, 2);
-            if (subSurfaceUpCase == "SKYLIGHT"){
-              winId = "_skylight";
-            }
+            //std::string winId = "_azi-" + formatString(azi, 2);
+            //if (subSurfaceUpCase == "SKYLIGHT"){
+            //  winId = "_skylight";
+            //}
 
             // write material
             m_radMaterials.insert("void " + rMaterial + " " + windowGroup_name + "\n" + matString + "\n");
