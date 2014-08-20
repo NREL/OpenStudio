@@ -2471,7 +2471,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
         if( ok )
         {
           value = unitToUnit(value,"gal/min","m^3/s").get();
-          coil.setRatedAirFlowRate(value);
+          coil.setRatedWaterFlowRate(value);
         }
       }
 
