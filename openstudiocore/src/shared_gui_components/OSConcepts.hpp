@@ -625,13 +625,15 @@ class ComboBoxOptionalChoiceImpl : public ComboBoxConcept
     std::function<std::vector<ChoiceType> (DataSourceType *)> t_choices,
     std::function<boost::optional<ChoiceType> (DataSourceType*)>  t_getter,
     std::function<bool (DataSourceType*, ChoiceType)> t_setter,
-    boost::optional<std::function<void (DataSourceType*)> > t_reset=boost::none)
+    boost::optional<std::function<void (DataSourceType*)> > t_reset=boost::none,
+    bool t_editable = false)
     : ComboBoxConcept(t_headingLabel),
       m_toString(t_toString),
       m_choices(t_choices),
       m_getter(t_getter),
       m_setter(t_setter),
-      m_reset(t_reset)
+      m_reset(t_reset),
+      m_editable(t_editable)
   {}
 
   virtual ~ComboBoxOptionalChoiceImpl() {}
@@ -639,27 +641,21 @@ class ComboBoxOptionalChoiceImpl : public ComboBoxConcept
   virtual std::shared_ptr<ChoiceConcept> choiceConcept(const ConceptProxy& obj) {
     std::shared_ptr<DataSourceType> dataSource = std::shared_ptr<DataSourceType>(
         new DataSourceType(obj.cast<DataSourceType>()));
-    std::shared_ptr<ChoiceConcept> result;
+
+    boost::optional<NoFailAction> resetAction;
     if (m_reset) {
-      result = std::shared_ptr<ChoiceConcept>(
-          new OptionalChoiceSaveDataSourceConceptImpl<ChoiceType,DataSourceType>(
+      resetAction = std::bind(m_reset.get(), dataSource.get());
+    }
+
+    return std::make_shared<OptionalChoiceSaveDataSourceConceptImpl<ChoiceType,DataSourceType>>(
               dataSource,
               m_toString,
               std::bind(m_choices,dataSource.get()),
               std::bind(m_getter,dataSource.get()),
               std::bind(m_setter,dataSource.get(),std::placeholders::_1),
-              boost::optional<NoFailAction>(std::bind(m_reset.get(),dataSource.get()))));
-    }
-    else {
-      result = std::shared_ptr<ChoiceConcept>(
-        new OptionalChoiceSaveDataSourceConceptImpl<ChoiceType,DataSourceType>(
-            dataSource,
-            m_toString,
-            std::bind(m_choices, dataSource.get()),
-            std::bind(m_getter,dataSource.get()),
-            std::bind(m_setter,dataSource.get(),std::placeholders::_1)));
-    }
-    return result;
+              resetAction /*,
+              m_editable */);
+
   }
 
  private:
@@ -668,6 +664,7 @@ class ComboBoxOptionalChoiceImpl : public ComboBoxConcept
   std::function<boost::optional<ChoiceType> (DataSourceType *)>  m_getter;
   std::function<bool (DataSourceType *, ChoiceType)> m_setter;
   boost::optional<std::function<void (DataSourceType*)> > m_reset;
+  bool m_editable;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////
