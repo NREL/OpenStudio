@@ -71,7 +71,6 @@
 #include "../model/SteamEquipment.hpp"
 #include "../model/SteamEquipment_Impl.hpp"
 
-
 #include "../model/InternalMassDefinition.hpp"
 #include "../model/PeopleDefinition.hpp"
 #include "../model/LightsDefinition.hpp"
@@ -144,7 +143,7 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
   layout->setSpacing(0);
   layout->setContentsMargins(0,0,0,0);
   setLayout(layout);
-  
+
   std::vector<model::SpaceType> spaceTypes = model.getModelObjects<model::SpaceType>();
   std::vector<model::ModelObject> spaceTypeModelObjects = subsetCastVector<model::ModelObject>(spaceTypes);
 
@@ -320,7 +319,6 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
             return definitions;
           }
           );
-
 
       std::function<std::vector<boost::optional<model::ModelObject>>(const model::SpaceType &)> allLoadsWithMultipliers(
         [](const model::SpaceType &t_spaceType) {
@@ -507,7 +505,6 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           }
           );
 
-
       std::function<bool (model::ModelObject *, const model::Schedule &)> setSchedule(
           [](model::ModelObject *l, model::Schedule t_s) {
 
@@ -635,7 +632,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
             OS_ASSERT(false);
             return boost::optional<model::Schedule>();
           }
-          );
+        );
 
       std::function<std::vector<boost::optional<model::ModelObject>>(const model::SpaceType &)> schedules(
         [allLoads, schedule](const model::SpaceType &t_spaceType) {
@@ -684,7 +681,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         // The final argument to DataSource tells the system that we want an additional widget to be displayed
         // at the bottom of each list. In this case, it's a dropZone. Any type of BaseConcept would work.
 
-        addNameLineEditColumn(QString(LOADNAME),
+        addLoadNameColumn(QString(LOADNAME),
           CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::name),
           CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::setName),
           DataSource(

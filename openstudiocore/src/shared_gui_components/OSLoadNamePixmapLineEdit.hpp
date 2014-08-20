@@ -24,12 +24,15 @@
 
 #include "../model/Model.hpp"
 
-#include <QLineEdit>
-#include <QPixmap>
+#include <QWidget>
+
+class QLabel;
 
 namespace openstudio {
 
-class OSLoadNamePixmapLineEdit : public QLineEdit {
+class OSLineEdit2;
+
+class OSLoadNamePixmapLineEdit : public QWidget {
   Q_OBJECT
 
  public:
@@ -37,6 +40,10 @@ class OSLoadNamePixmapLineEdit : public QLineEdit {
   OSLoadNamePixmapLineEdit(QWidget * parent = nullptr);
 
   virtual ~OSLoadNamePixmapLineEdit() {}
+
+  void createWidgets();
+
+  void setIcon();
 
   void bind(model::ModelObject& modelObject,
             StringGetter get,
@@ -60,26 +67,17 @@ class OSLoadNamePixmapLineEdit : public QLineEdit {
 
  private slots:
 
-  void onEditingFinished();
-
   void onModelObjectChange();
-
-  void onModelObjectRemove(Handle handle);
 
  private:
 
   boost::optional<model::ModelObject> m_modelObject;
-  boost::optional<StringGetter> m_get;
-  boost::optional<OptionalStringGetter> m_getOptional;
-  boost::optional<OptionalStringGetterBoolArg> m_getOptionalBoolArg;
-  boost::optional<StringSetter> m_set;
-  boost::optional<StringSetterOptionalStringReturn> m_setOptionalStringReturn;
-  boost::optional<NoFailAction> m_reset;
-  boost::optional<BasicQuery> m_isDefaulted;
 
   void completeBind();
 
-  QPixmap * m_pixmap = nullptr;
+  OSLineEdit2 * m_lineEdit = nullptr;
+  QLabel * m_label = nullptr;
+
 };
 
 } // openstudio

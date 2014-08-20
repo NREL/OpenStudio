@@ -19,22 +19,53 @@
 
 #include "OSLoadNamePixmapLineEdit.hpp"
 
+#include "OSLineEdit.hpp"
+
+#include "../openstudio_lib/IconLibrary.hpp"
+
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
 
-#include "../utilities/core/Assert.hpp"
+#include <QBoxLayout>
+#include <QLabel>
+#include <QPixmap>
 
-#include <boost/optional.hpp>
-
-#include <QString>
+#define MINI_ICON_SIZE 24
 
 namespace openstudio {
 
 OSLoadNamePixmapLineEdit::OSLoadNamePixmapLineEdit( QWidget * parent )
-  : QLineEdit(parent)
+  : QWidget(parent)
 {
-  this->setAcceptDrops(false);
-  setEnabled(false);
+  createWidgets();
+}
+
+void OSLoadNamePixmapLineEdit::createWidgets()
+{
+  QPixmap m_pixmap(MINI_ICON_SIZE, MINI_ICON_SIZE);
+
+  m_label = new QLabel();
+  m_label->setFixedSize(MINI_ICON_SIZE, MINI_ICON_SIZE);
+  m_label->setPixmap(m_pixmap);
+  
+  m_lineEdit = new OSLineEdit2();
+
+  auto layout = new QHBoxLayout();
+  layout->addWidget(m_label);
+  layout->addWidget(m_lineEdit);
+  this->setLayout(layout);
+}
+
+void OSLoadNamePixmapLineEdit::setIcon()
+{
+  if (m_modelObject)
+  {
+    auto pixmap = IconLibrary::Instance().findMiniIcon(m_modelObject->iddObjectType().value());
+    if (pixmap)
+    {
+      m_label->setPixmap(*pixmap);
+    }
+  }
 }
 
 void OSLoadNamePixmapLineEdit::bind(model::ModelObject& modelObject,
@@ -44,10 +75,8 @@ void OSLoadNamePixmapLineEdit::bind(model::ModelObject& modelObject,
                        boost::optional<BasicQuery> isDefaulted)
 {
   m_modelObject = modelObject;
-  m_get = get;
-  m_set = set;
-  m_reset = reset;
-  m_isDefaulted = isDefaulted;
+
+  m_lineEdit->bind(modelObject,get,set,reset,isDefaulted);
 
   completeBind();
 }
@@ -59,10 +88,8 @@ void OSLoadNamePixmapLineEdit::bind(model::ModelObject& modelObject,
                        boost::optional<BasicQuery> isDefaulted)
 {
   m_modelObject = modelObject;
-  m_getOptional = get;
-  m_set = set;
-  m_reset = reset;
-  m_isDefaulted = isDefaulted;
+
+  m_lineEdit->bind(modelObject, get, set, reset, isDefaulted);
 
   completeBind();
 }
@@ -74,85 +101,31 @@ void OSLoadNamePixmapLineEdit::bind(model::ModelObject& modelObject,
                        boost::optional<BasicQuery> isDefaulted)
 {
   m_modelObject = modelObject;
-  m_getOptionalBoolArg = get;
-  m_setOptionalStringReturn = set;
-  m_reset = reset;
-  m_isDefaulted = isDefaulted;
+
+  m_lineEdit->bind(modelObject, get, set, reset, isDefaulted);
 
   completeBind();
 }
 
 void OSLoadNamePixmapLineEdit::completeBind() {
-  setEnabled(true);
+
+  setIcon();
 
   bool isConnected = false;
+
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
                          this,SLOT(onModelObjectChange()) );
   OS_ASSERT(isConnected);
-
-  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
-                         this,SLOT(onModelObjectRemove(Handle)) );
-  OS_ASSERT(isConnected);
-
-  isConnected = connect( this, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()) );
-  OS_ASSERT(isConnected);
-
-  onModelObjectChange();
 }
 
 void OSLoadNamePixmapLineEdit::unbind()
 {
-  if (m_modelObject){
-    this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
-    m_modelObject.reset();
-    m_get.reset();
-    m_getOptional.reset();
-    m_getOptionalBoolArg.reset();
-    m_set.reset();
-    m_setOptionalStringReturn.reset();
-    m_reset.reset();
-    m_isDefaulted.reset();
-    setEnabled(false);
-  }
+  m_lineEdit->unbind();
 }
 
-void OSLoadNamePixmapLineEdit::onEditingFinished() {
-  if(m_modelObject && m_set) {
-    bool result = (*m_set)(this->text().toStdString());
-    if (!result){
-      //restore
-      onModelObjectChange();
-    }
-  }
-}
-
-void OSLoadNamePixmapLineEdit::onModelObjectChange() {
-  if( m_modelObject ) {
-    OptionalString value;
-    if (m_get) {
-      value = (*m_get)();
-    }
-    else if (m_getOptional){
-      value = (*m_getOptional)();
-    }
-    else if (m_getOptionalBoolArg) {
-      value = (*m_getOptionalBoolArg)(true); // TODO may want to pass a variable
-    }
-    else{
-      // unhandled
-      OS_ASSERT(false);
-    }
-    std::string text;
-    if (value) {
-      text = *value;
-    }
-    setText(QString::fromStdString(text));
-  }
-}
-
-void OSLoadNamePixmapLineEdit::onModelObjectRemove(Handle handle)
+void OSLoadNamePixmapLineEdit::onModelObjectChange()
 {
-  unbind();
+  setIcon();
 }
-} // openstudio
 
+} // openstudio
