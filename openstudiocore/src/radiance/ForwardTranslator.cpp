@@ -1159,18 +1159,21 @@ namespace radiance {
             // copy required bsdf files into place
             openstudio::path bsdfoutpath = t_radDir/ openstudio::toPath("bsdf");
 
+            std::string testBSDFLib = "/Users/rgugliel/src/support/bsdf";
+            //testBSDFLib = "E:/bsdf";
+            //LOG(Warn, "Using temporarily hard coded BSDF library '" + testBSDFLib + "' for testing");
  
             if (rMaterial == "glass"){
 
-              openstudio::path sourcePath = openstudio::toPath("/Users/rgugliel/src/support/bsdf/cl_Tn" + formatString(tVis, 2) + ".xml");
+              openstudio::path sourcePath = openstudio::toPath(testBSDFLib + "/cl_Tn" + formatString(tVis, 2) + ".xml");
               std::cout << "tVis = " << openstudio::toString(tVis) << std::endl;
               std::cout << "the source path is " << openstudio::toString(sourcePath) << ", exists = " << boost::filesystem::exists(sourcePath) << std::endl;
               std::cout << "the dest path is " << openstudio::toString(bsdfoutpath) << ", exists = " << boost::filesystem::exists(bsdfoutpath) << std::endl;
 
-              boost::filesystem::copy_file(openstudio::toPath("/Users/rgugliel/src/support/bsdf/cl_Tn" + formatString(tVis, 2) + ".xml"), bsdfoutpath / \
+              boost::filesystem::copy_file(openstudio::toPath(testBSDFLib + "/cl_Tn" + formatString(tVis, 2) + ".xml"), bsdfoutpath / \
                 openstudio::toPath("cl_Tn" + formatString(tVis, 2) + ".xml"), boost::filesystem::copy_option::overwrite_if_exists);
 
-              boost::filesystem::copy_file(openstudio::toPath("/Users/rgugliel/src/support/bsdf/cl_Tn" + formatString(tVis, 2) + "_blinds.xml"), bsdfoutpath / \
+              boost::filesystem::copy_file(openstudio::toPath(testBSDFLib + "/cl_Tn" + formatString(tVis, 2) + "_blinds.xml"), bsdfoutpath / \
                 openstudio::toPath("cl_Tn" + formatString(tVis, 2) + "_blinds.xml"), boost::filesystem::copy_option::overwrite_if_exists);
               
               // add job to vmx problem set
@@ -1182,12 +1185,12 @@ namespace radiance {
 
             } else if (rMaterial == "trans"){
 
-              openstudio::path sourcePath = openstudio::toPath("/Users/rgugliel/src/support/bsdf/df_Tn" + formatString(tVis, 2) + ".xml");
+              openstudio::path sourcePath = openstudio::toPath(testBSDFLib + "/df_Tn" + formatString(tVis, 2) + ".xml");
               std::cout << "tVis = " << openstudio::toString(tVis) << std::endl;
               std::cout << "the source path is " << openstudio::toString(sourcePath) << ", exists = " << boost::filesystem::exists(sourcePath) << std::endl;
               std::cout << "the dest path is " << openstudio::toString(bsdfoutpath) << ", exists = " << boost::filesystem::exists(bsdfoutpath) << std::endl;
 
-              boost::filesystem::copy_file(openstudio::toPath("/Users/rgugliel/src/support/bsdf/df_Tn" + formatString(tVis, 2) + ".xml"), bsdfoutpath / \
+              boost::filesystem::copy_file(openstudio::toPath(testBSDFLib + "/df_Tn" + formatString(tVis, 2) + ".xml"), bsdfoutpath / \
                 openstudio::toPath("df_Tn" + formatString(tVis, 2) + ".xml"), boost::filesystem::copy_option::overwrite_if_exists);
 
               // add job to vmx problem set
