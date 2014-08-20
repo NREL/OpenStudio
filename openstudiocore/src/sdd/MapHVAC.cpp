@@ -3780,8 +3780,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
       terminal.setZoneMinimumAirFlowInputMethod("Scheduled");
       terminal.setMinimumAirFlowFractionSchedule(minAirFracSch.get());
     }
-
-    if( primaryAirFlowMin )
+    else if( primaryAirFlowMin )
     {
       terminal.setZoneMinimumAirFlowInputMethod("FixedFlowRate");
       terminal.setFixedMinimumAirFlowRate(primaryAirFlowMin.get());
@@ -3835,8 +3834,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
       terminal.setZoneMinimumAirFlowMethod("Scheduled");
       terminal.setMinimumAirFlowFractionSchedule(minAirFracSch.get());
     }
-
-    if( primaryAirFlowMin )
+    else if( primaryAirFlowMin )
     {
       terminal.setZoneMinimumAirFlowMethod("FixedFlowRate");
       terminal.setFixedMinimumAirFlowRate(primaryAirFlowMin.get());
