@@ -932,7 +932,11 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           return t_spaceType->setStandardsSpaceType(t_val);
         };
 
-      boost::optional<std::function<void (model::SpaceType *t_spaceType)>> resetter(&model::SpaceType::resetStandardsSpaceType); 
+      boost::optional<std::function<void (model::SpaceType *t_spaceType)>> resetter(
+          [](model::SpaceType *t_spaceType) {
+            t_spaceType->resetStandardsSpaceType();
+          }
+        );
 
       addComboBoxColumn(QString(STANDARDSSPACETYPE),
           toString,
