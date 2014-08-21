@@ -452,6 +452,44 @@ LibraryItem::LibraryItem(const BCLMeasure & bclMeasure, LocalLibrary::LibrarySou
   }
 }
 
+LibraryItem::~LibraryItem()
+{}
+
+QString LibraryItem::name() const 
+{ 
+  return QString::fromStdString(m_bclMeasure.name()); 
+}
+
+QString LibraryItem::displayName() const
+{
+  return QString::fromStdString(m_bclMeasure.displayName());
+}
+
+QString LibraryItem::className() const
+{
+  return QString::fromStdString(m_bclMeasure.className());
+}
+
+QString LibraryItem::description() const
+{
+  return QString::fromStdString(m_bclMeasure.description());
+}
+
+QString LibraryItem::modelerDescription() const
+{
+  return QString::fromStdString(m_bclMeasure.modelerDescription());
+}
+
+UUID LibraryItem::uuid() const 
+{ 
+  return m_bclMeasure.uuid(); 
+}
+
+bool LibraryItem::isAvailable() const 
+{ 
+  return m_available; 
+}
+
 void LibraryItem::dragItem(const OSDragPixmapData & dragPixmapData)
 {
   MeasureDragData measureDragData(m_bclMeasure.uuid());
@@ -504,8 +542,8 @@ QWidget * LibraryItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     // Name
 
-    widget->label->setText(libraryItem->name());
-    widget->setToolTip(libraryItem->name());
+    widget->label->setText(libraryItem->displayName());
+    widget->setToolTip(libraryItem->description());
 
     // Drag
     

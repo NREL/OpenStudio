@@ -92,7 +92,7 @@ std::pair<bool,std::string> MeasureManager::updateMeasure(analysisdriver::Simple
     } 
   } catch ( const RubyException &e ) {
     std::stringstream ss;
-    ss << "An error occurred while updating measure '" << t_measure.name() << "':" << std::endl;
+    ss << "An error occurred while updating measure '" << t_measure.displayName() << "':" << std::endl;
     ss << "  " << e.what();
     LOG(Error, ss.str());
     result = std::pair<bool,std::string>(false,ss.str());
@@ -110,12 +110,7 @@ BCLMeasure MeasureManager::insertReplaceMeasure(analysisdriver::SimpleProject &t
   // DLM: not sure if this is necessary
   bool isMyMeasure = (m_myMeasures.find(t_id) != m_myMeasures.end());
   if (isMyMeasure) {
-    bool updated = measure->checkForUpdatesFiles();
-    if (updated){
-      ruleset::RubyUserScriptInfo info = m_infoGetter->getInfo(*measure);
-      info.update(*measure);
-    }
-    updated = (updated && measure->checkForUpdatesXML());
+    bool updated = checkForUpdates(*measure);
     if (updated) {
       measure->save(); 
       m_myMeasures.erase(t_id);
@@ -196,7 +191,7 @@ std::vector<ruleset::OSArgument> MeasureManager::getArguments(analysisdriver::Si
       && t_project.hasStoredArguments(*projectMeasure)
       && !appmodel)
   {
-    LOG(Info, "returning stored arguments for measure " << t_measure.name() << "(" << toString(t_measure.uuid()) << " version: " << toString(t_measure.versionUUID()) << ")");
+    LOG(Info, "returning stored arguments for measure " << t_measure.displayName() << "(" << toString(t_measure.uuid()) << " version: " << toString(t_measure.versionUUID()) << ")");
     return t_project.getStoredArguments(*projectMeasure);
   } else {
     boost::optional<openstudio::model::Model> model = t_project.seedModel();
@@ -210,7 +205,7 @@ std::vector<ruleset::OSArgument> MeasureManager::getArguments(analysisdriver::Si
 
     ruleset::RubyUserScriptInfo info = m_infoGetter->getInfo(t_measure, model, idf);
     std::vector<ruleset::OSArgument> args = info.arguments();
-    LOG(Info, "Loaded " << args.size() << " arguments for measure " << t_measure.name() << "(" << toString(t_measure.uuid()) << " version: " << toString(t_measure.versionUUID()) << ")");
+    LOG(Info, "Loaded " << args.size() << " arguments for measure " << t_measure.displayName() << "(" << toString(t_measure.uuid()) << " version: " << toString(t_measure.versionUUID()) << ")");
     t_project.registerArguments(t_measure, args);
     return args;
   }
@@ -218,7 +213,7 @@ std::vector<ruleset::OSArgument> MeasureManager::getArguments(analysisdriver::Si
 
 std::string MeasureManager::suggestMeasureGroupName(const BCLMeasure &t_measure)
 {
-  std::string baseName = t_measure.name();
+  std::string baseName = t_measure.displayName();
 
   baseName.append(" Group");
 
@@ -244,7 +239,7 @@ std::string MeasureManager::suggestMeasureGroupName(const BCLMeasure &t_measure)
 
 std::string MeasureManager::suggestMeasureName(const BCLMeasure &t_measure, bool t_fixed)
 {
-  std::string baseName = t_measure.name();
+  std::string baseName = t_measure.displayName();
 
   if (!t_fixed)
   {
@@ -357,13 +352,6 @@ void MeasureManager::updatePatApplicationMeasures(analysisdriver::SimpleProject 
       itr != measures.end();
       ++itr)
   {
-    // DLM: this should not happen for applications measures, cannot save to application dir
-    // DLM: need to make sure these are updated before we ship!
-    bool isNewVersion = itr->checkForUpdatesFiles();
-    OS_ASSERT(!isNewVersion);
-    isNewVersion = itr->checkForUpdatesXML();
-    OS_ASSERT(!isNewVersion);
-
     boost::optional<BCLMeasure> projectmeasure = t_project.getMeasureByUUID(itr->uuid());
     if (projectmeasure)
     {
@@ -387,20 +375,6 @@ void MeasureManager::updateBCLMeasures(analysisdriver::SimpleProject &t_project)
 
   for (auto & measure : measures)
   {
-    // DLM: this should not happen for BCL measures but ok to check anyway
-    // DLM: check these in case we donwload a version 2 file and then it gets updated to version 3
-    bool isNewVersion = measure.checkForUpdatesFiles();
-    if (isNewVersion){
-      ruleset::RubyUserScriptInfo info = m_infoGetter->getInfo(measure);
-      info.update(measure);
-    }
-    isNewVersion = (isNewVersion && measure.checkForUpdatesXML());
-    if (isNewVersion) {
-      measure.save();
-      m_bclMeasures.erase(measure.uuid());
-      m_bclMeasures.insert(std::map<UUID,BCLMeasure>::value_type(measure.uuid(),measure));
-    }
-
     if (m_patApplicationMeasures.find(measure.uuid()) != m_patApplicationMeasures.end()){
       // do not attempt to update built in measures with different version in bcl
       LOG(Warn, "Skipping update of built in measure");
@@ -424,6 +398,25 @@ void MeasureManager::updateBCLMeasures(analysisdriver::SimpleProject &t_project)
   }
 
   updateMeasures(t_project, toUpdate);
+}
+
+bool MeasureManager::checkForUpdates(BCLMeasure& measure)
+{
+  // first check files for updates
+  bool result = measure.checkForUpdatesFiles();
+  if (result){
+    // if files updated, try to load the ruby measure
+    try{
+      ruleset::RubyUserScriptInfo info = m_infoGetter->getInfo(measure);
+      info.update(measure);
+    } catch(const std::exception&) {
+      // DLM: what to do here?
+    }
+  }
+  // last, check for xml updates
+  result = (result || measure.checkForUpdatesXML());
+
+  return result;
 }
 
 void MeasureManager::downloadBCLMeasures()
@@ -463,18 +456,6 @@ void MeasureManager::updateMyMeasures(analysisdriver::SimpleProject &t_project)
 
   for (auto & measure : measures)
   {
-    // DLM: this happens if user updates measure but does not update checksums, ok to save it for them
-    bool isNewVersion = measure.checkForUpdatesFiles();
-    if (isNewVersion){
-      ruleset::RubyUserScriptInfo info = m_infoGetter->getInfo(measure);
-      info.update(measure);
-    }
-    isNewVersion = (isNewVersion && measure.checkForUpdatesXML());
-    if (isNewVersion) {
-      measure.save();
-      m_myMeasures.erase(measure.uuid());
-      m_myMeasures.insert(std::map<UUID,BCLMeasure>::value_type(measure.uuid(),measure));
-    }
 
     if (m_patApplicationMeasures.find(measure.uuid()) != m_patApplicationMeasures.end()){
       // do not attempt to update built in measures
@@ -546,11 +527,14 @@ void MeasureManager::updateMeasuresLists()
   m_bclMeasures.clear();
   
   std::vector<BCLMeasure> patApplicationMeasures = BCLMeasure::patApplicationMeasures();
-  for( const auto & measure : patApplicationMeasures )
+  for( auto & measure : patApplicationMeasures )
   {
+    // installed measures should not change
+    OS_ASSERT(!checkForUpdates(measure));
+
     std::map<UUID,BCLMeasure>::iterator it = m_patApplicationMeasures.find(measure.uuid());
     if (it != m_patApplicationMeasures.end()){
-      // duplicate measure detected
+      // duplicate measure detected, user copy and paste
       LOG(Error, "UUID of built in measure at '" << measure.directory() << "' conflicts with other built in measure, measure at '" << it->second.directory() << "' will be used instead");
     }else{
       m_patApplicationMeasures.insert(std::pair<UUID,BCLMeasure>(measure.uuid(),measure));
@@ -558,21 +542,42 @@ void MeasureManager::updateMeasuresLists()
   }
 
   std::vector<BCLMeasure> userMeasures = BCLMeasure::userMeasures();
-  for( const auto & measure : userMeasures )
+  for( auto & measure : userMeasures )
   {
-    std::map<UUID,BCLMeasure>::iterator it = m_myMeasures.find(measure.uuid());
-    if (it != m_myMeasures.end()){
-      // duplicate measure detected, manual copy and paste likely cause
-      // DLM: could assign measure a new UUID here and save?
-      LOG(Error, "UUID of user measure at '" << measure.directory() << "' conflicts with other user measure, measure at '" << it->second.directory() << "' will be used instead");
-    }else{
-      m_myMeasures.insert(std::pair<UUID,BCLMeasure>(measure.uuid(),measure));
+    if (checkForUpdates(measure)){
+      measure.save();
     }
+
+    bool updateUUID = false;
+    if (m_myMeasures.find(measure.uuid()) != m_myMeasures.end()){
+      updateUUID = true;
+    }
+    if (m_bclMeasures.find(measure.uuid()) != m_bclMeasures.end()){
+      updateUUID = true;
+    }
+    if (m_patApplicationMeasures.find(measure.uuid()) != m_patApplicationMeasures.end()){
+      updateUUID = true;
+    }
+
+    if (updateUUID){
+      // duplicate measure detected, manual copy and paste likely cause
+      // assign measure a new UUID here and save
+      measure.changeUID();
+      measure.incrementVersionId();
+      measure.save();
+    }
+
+    m_myMeasures.insert(std::pair<UUID,BCLMeasure>(measure.uuid(),measure));
   }
 
   std::vector<BCLMeasure> localBCLMeasures = BCLMeasure::localBCLMeasures();
-  for( const auto & measure : localBCLMeasures )
+  for( auto & measure : localBCLMeasures )
   {
+    // downloaded measure might have been updated on version translation
+    if (checkForUpdates(measure)){
+      measure.save();
+    }
+
     std::map<UUID,BCLMeasure>::iterator it = m_bclMeasures.find(measure.uuid());
     if (it != m_bclMeasures.end()){
       // duplicate measure detected

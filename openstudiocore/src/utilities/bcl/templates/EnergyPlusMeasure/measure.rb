@@ -87,3 +87,6 @@ class EnergyPlusMeasure < OpenStudio::Ruleset::WorkspaceUserScript
   end 
 
 end 
+
+# register the measure to be used by the application
+EnergyPlusMeasure.new.registerWithApplication

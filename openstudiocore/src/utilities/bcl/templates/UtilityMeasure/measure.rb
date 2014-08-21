@@ -84,5 +84,5 @@ class UtilityMeasure < OpenStudio::Ruleset::UtilityUserScript
 
 end #end the measure
 
-#this allows the measure to be use by the application
+# register the measure to be used by the application
 UtilityMeasure.new.registerWithApplication

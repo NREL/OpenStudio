@@ -101,3 +101,6 @@ class ReportingMeasure < OpenStudio::Ruleset::ReportingUserScript
   end
 
 end 
+
+# register the measure to be used by the application
+ReportingMeasure.new.registerWithApplication

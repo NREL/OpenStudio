@@ -70,9 +70,9 @@ void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseA
 
   // Ruby Measure Name
 
-  editRubyMeasureView->nameLineEdit->setText(m_measureItem->name());
+  editRubyMeasureView->nameLineEdit->setText(m_measureItem->displayName());
 
-  connect(editRubyMeasureView->nameLineEdit, &QLineEdit::textEdited, m_measureItem.data(), &measuretab::MeasureItem::setName);
+  connect(editRubyMeasureView->nameLineEdit, &QLineEdit::textEdited, m_measureItem.data(), &measuretab::MeasureItem::setDisplayName);
 
   // Measure Description
 

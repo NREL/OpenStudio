@@ -76,28 +76,28 @@ namespace ruleset {
 
     // map snake cased class name to bcl measure name
     std::string lowerClassName = toUnderscoreCase(m_className);
-    if (measure.name() != lowerClassName){
+    if (!lowerClassName.empty() && measure.name() != lowerClassName){
       result = true;
       measure.setName(lowerClassName);
     }
 
     // map name from measure to bcl measure display name
-    if (measure.displayName() != m_name){
+    if (!m_name.empty() && measure.displayName() != m_name){
       result = true;
       measure.setDisplayName(m_name);
     }
 
-    if (measure.className() != m_className){
+    if (!m_className.empty() && measure.className() != m_className){
       result = true;
       measure.setClassName(m_className);
     }
 
-    if (measure.description() != m_description){
+    if (!m_description.empty() && measure.description() != m_description){
       result = true;
       measure.setDescription(m_description);
     }
 
-    if (measure.modelerDescription() != m_modelerDescription){
+    if (!m_modelerDescription.empty() && measure.modelerDescription() != m_modelerDescription){
       result = true;
       measure.setModelerDescription(m_modelerDescription);
     }
@@ -133,9 +133,6 @@ namespace ruleset {
 
       bclArguments.push_back(bclArgument);
     }
-
-
-
 
     std::vector<BCLMeasureArgument> otherArguments = measure.arguments();
     if (otherArguments.size() != n){

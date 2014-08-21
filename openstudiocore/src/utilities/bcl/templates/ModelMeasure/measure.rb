@@ -27,7 +27,7 @@ class ModelMeasure < OpenStudio::Ruleset::ModelUserScript
     space_name = OpenStudio::Ruleset::OSArgument::makeStringArgument("space_name", true)
     space_name.setDisplayName("New space name")
     space_name.setDescription("This name will be used as the name of the new space.")
-    args << zone_name
+    args << space_name
 
     return args
   end
@@ -69,3 +69,6 @@ class ModelMeasure < OpenStudio::Ruleset::ModelUserScript
   end
   
 end
+
+# register the measure to be used by the application
+ModelMeasure.new.registerWithApplication

@@ -35,6 +35,8 @@
 #include <QScrollArea>
 #include <QSplitter>
 #include <QStyleOption>
+#include <QProgressBar>
+
 
 namespace openstudio {
 
@@ -64,7 +66,7 @@ void SyncMeasuresDialog::createLayout()
   setObjectName("BlueGradientWidget");
 
   // The central pane
-  m_centralWidget = new SyncMeasuresDialogCentralWidget(m_project,m_measureManager);
+  m_centralWidget = new SyncMeasuresDialogCentralWidget(m_project, m_measureManager);
 
   connect(m_centralWidget, &SyncMeasuresDialogCentralWidget::componentClicked, this, &SyncMeasuresDialog::on_componentClicked);
 
@@ -109,16 +111,19 @@ void SyncMeasuresDialog::findUpdates()
 
   m_measuresNeedingUpdates.clear();
 
+  m_centralWidget->progressBar->setVisible(true);
+  m_centralWidget->progressBar->setStatusTip("Checking for updates");
+  m_centralWidget->progressBar->setMinimum(0);
+  m_centralWidget->progressBar->setMaximum(measures.size());
+  
+  int progressValue = 0;
   for (std::vector<BCLMeasure>::iterator itr = measures.begin();
       itr != measures.end();
       ++itr)
   {
-    bool isNewVersion = itr->checkForUpdatesFiles();
-    if (isNewVersion){
-      ruleset::RubyUserScriptInfo info = m_measureManager->infoGetter()->getInfo(*itr);
-      info.update(*itr);
-    }
-    isNewVersion = (isNewVersion && itr->checkForUpdatesXML());
+    m_centralWidget->progressBar->setValue(progressValue);
+
+    bool isNewVersion = m_measureManager->checkForUpdates(*itr);
     if (isNewVersion) {
       itr->save();
     }
@@ -131,10 +136,16 @@ void SyncMeasuresDialog::findUpdates()
         m_measuresNeedingUpdates.push_back(*itr);
       }
     }
+
+    ++progressValue;
   }
 
+  m_centralWidget->progressBar->setVisible(false);
+  m_centralWidget->progressBar->reset();
+  m_centralWidget->progressBar->setStatusTip("");
+
   // DLM: if m_measuresNeedingUpdates is empty should we do something else?  
-  // just say "No updates available and quit"
+  // just say "No updates available" and quit?
 
   m_centralWidget->setMeasures(m_measuresNeedingUpdates);
 

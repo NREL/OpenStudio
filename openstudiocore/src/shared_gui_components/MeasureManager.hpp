@@ -138,8 +138,8 @@ class MeasureManager : public QObject
     QSharedPointer<ruleset::RubyUserScriptInfoGetter> infoGetter() const;
 
   public slots:
-    /// Update the UI display for all measures. Does not re-get the arguments nor
-    /// update the measures in the project at all
+    /// Update the UI display for all measures. Does recompute the measure's XML.
+    /// Does not update the measures in the project at all
     void updateMeasuresLists();
 
     /// For all measures in the "patApplicationMeasures" list which have changed relative to the version
@@ -164,6 +164,9 @@ class MeasureManager : public QObject
     /// 
     /// Does not ask for user approval
     void updateBCLMeasures(analysisdriver::SimpleProject &t_project);
+
+    /// Checks a BCL measure for updates, returns true if updated
+    bool checkForUpdates(BCLMeasure& measure);
 
     /// Downloads updated versions of all BCL measures
     void downloadBCLMeasures();
