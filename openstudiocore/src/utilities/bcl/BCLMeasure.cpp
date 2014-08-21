@@ -439,6 +439,11 @@ namespace openstudio{
     return toUUID("{" + versionId() + "}");
   }
 
+  std::string BCLMeasure::xmlChecksum() const
+  {
+    return m_bclXML.xmlChecksum();
+  }
+
   std::string BCLMeasure::name() const
   {
     return m_bclXML.name();

@@ -113,7 +113,12 @@ void SyncMeasuresDialog::findUpdates()
       itr != measures.end();
       ++itr)
   {
-    bool isNewVersion = itr->checkForUpdates();
+    bool isNewVersion = itr->checkForUpdatesFiles();
+    if (isNewVersion){
+      ruleset::RubyUserScriptInfo info = m_measureManager->infoGetter()->getInfo(*itr);
+      info.update(*itr);
+    }
+    isNewVersion = (isNewVersion && itr->checkForUpdatesXML());
     if (isNewVersion) {
       itr->save();
     }
