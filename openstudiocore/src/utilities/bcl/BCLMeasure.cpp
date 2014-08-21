@@ -24,6 +24,7 @@
 #include "../core/System.hpp"
 #include "../core/Path.hpp"
 #include "../core/PathHelpers.hpp"
+#include "../core/StringHelpers.hpp"
 #include "../core/FileReference.hpp"
 #include "../data/Attribute.hpp"
 #include "../core/Assert.hpp"
@@ -59,6 +60,7 @@ namespace openstudio{
   {
 
     openstudio::path measureTestDir = dir / toPath("tests");
+    std::string lowerClassName = toUnderscoreCase(className);
 
     createDirectory(dir);
     createDirectory(measureTestDir);
@@ -73,29 +75,39 @@ namespace openstudio{
     openstudio::path resourceFilePath;
     if (measureType == MeasureType::ModelMeasure){
       measureTemplate = ":/templates/ModelMeasure/measure.rb";
-      testTemplate = ":/templates/ModelMeasure/tests/ModelMeasure_Test.rb";
+      testTemplate = ":/templates/ModelMeasure/tests/model_measure_Test.rb";
       templateName = "ModelMeasure";
-    }else if (measureType == MeasureType::EnergyPlusMeasure){
-      measureTemplate = ":/templates/EnergyPlusMeasure/measure.rb";
-      testTemplate = ":/templates/EnergyPlusMeasure/tests/EnergyPlusMeasure_Test.rb";
-      templateName = "EnergyPlusMeasure";
-    }else if (measureType == MeasureType::UtilityMeasure){
-      measureTemplate = ":/templates/UtilityMeasure/measure.rb";
-      testTemplate = ":/templates/UtilityMeasure/tests/UtilityMeasure_Test.rb";
-      templateName = "UtilityMeasure";
-    }else if (measureType == MeasureType::ReportingMeasure){
-      measureTemplate = ":/templates/ReportingMeasure/measure.rb";
-      testTemplate = ":/templates/ReportingMeasure/tests/ReportingMeasure_Test.rb";
-      templateName = "ReportingMeasure";
-
-      testOSM = ":/templates/ReportingMeasure/tests/ExampleModel.osm";
-      resourceFile = ":/templates/ReportingMeasure/resources/report.html.in";
 
       createDirectory(dir / toPath("tests"));
-      createDirectory(dir / toPath("resources"));
+      testOSMPath = dir / toPath("tests/TestModel.osm");
 
+    }else if (measureType == MeasureType::EnergyPlusMeasure){
+      measureTemplate = ":/templates/EnergyPlusMeasure/measure.rb";
+      testTemplate = ":/templates/EnergyPlusMeasure/tests/energyplus_measure_Test.rb";
+      templateName = "EnergyPlusMeasure";
+
+      createDirectory(dir / toPath("tests"));
+
+    }else if (measureType == MeasureType::UtilityMeasure){
+      measureTemplate = ":/templates/UtilityMeasure/measure.rb";
+      testTemplate = ":/templates/UtilityMeasure/tests/utility_measure_Test.rb";
+      templateName = "UtilityMeasure";
+
+      createDirectory(dir / toPath("tests"));
+
+    }else if (measureType == MeasureType::ReportingMeasure){
+      measureTemplate = ":/templates/ReportingMeasure/measure.rb";
+      testTemplate = ":/templates/ReportingMeasure/tests/reporting_measure_Test.rb";
+      testOSM = ":/templates/ReportingMeasure/tests/ExampleModel.osm";
+      resourceFile = ":/templates/ReportingMeasure/resources/report.html.in";
+      templateName = "ReportingMeasure";
+
+      createDirectory(dir / toPath("tests"));
       testOSMPath = dir / toPath("tests/ExampleModel.osm");
+
+      createDirectory(dir / toPath("resources"));
       resourceFilePath = dir / toPath("resources/report.html.in");
+
     }
 
     QString measureString;
@@ -143,7 +155,7 @@ namespace openstudio{
     // write files
     openstudio::path measureXMLPath = dir / toPath("measure.xml");
     openstudio::path measureScriptPath = dir / toPath("measure.rb");
-    openstudio::path measureTestPath = measureTestDir / toPath(className + "_Test.rb");
+    openstudio::path measureTestPath = measureTestDir / toPath(lowerClassName + "_Test.rb");
 
     // write measure.rb
     {
@@ -245,7 +257,12 @@ namespace openstudio{
     if (!measureType){
       LOG_AND_THROW("'" << toString(dir) << "' is missing the required attribute \"Measure Type\"");
     }
-    
+
+    if (m_bclXML.xmlChecksum().empty()){
+      // this will set the checksum but not increment the version id
+      m_bclXML.checkForUpdatesXML();
+    }
+
     // check that opening the file did not modify it
     if (m_bclXML.versionId() != bclXML->versionId()){
       // DLM: should this be an assert instead?

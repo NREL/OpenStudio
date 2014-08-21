@@ -1,10 +1,27 @@
+# see the URL below for information on how to write OpenStudio measures
+# http://openstudio.nrel.gov/openstudio-measure-writing-guide
+
 #start the measure
 class UtilityMeasure < OpenStudio::Ruleset::UtilityUserScript
   
-  #define the name that a user will see, this method may be deprecated as
-  #the display name in PAT comes from the name field in measure.xml
+  # machine readable name
   def name
-    return "UtilityMeasure"
+    return "ReportingMeasure"
+  end
+  
+  # human readable name
+  def display_name
+    return "ReportingMeasure"
+  end
+  
+  # human readable description
+  def description
+    return "A human readable description goes here"
+  end
+  
+  # human readable description
+  def modeler_description
+    return "A human readable description of the technical implementation details goes here"
   end
   
   #define the arguments that the user will input
@@ -35,8 +52,8 @@ class UtilityMeasure < OpenStudio::Ruleset::UtilityUserScript
     end
 
     #assign the user inputs to variables
-    user_name = runner.getStringArgumentValue("user_name",user_arguments)
-    say_hello = runner.getBoolArgumentValue("say_hello",user_arguments)
+    user_name = runner.getStringArgumentValue("user_name", user_arguments)
+    say_hello = runner.getBoolArgumentValue("say_hello", user_arguments)
     
     #check the user_name for reasonableness
     puts user_name

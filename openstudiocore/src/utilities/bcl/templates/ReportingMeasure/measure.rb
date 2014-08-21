@@ -1,32 +1,50 @@
+# see the URL below for information on how to write OpenStudio measures
+# http://openstudio.nrel.gov/openstudio-measure-writing-guide
+
 require 'erb'
 
 #start the measure
 class ReportingMeasure < OpenStudio::Ruleset::ReportingUserScript
   
-  #define the name that a user will see, this method may be deprecated as
-  #the display name in PAT comes from the name field in measure.xml
+  # machine readable name
   def name
     return "ReportingMeasure"
   end
   
-  #define the arguments that the user will input
+  # human readable name
+  def display_name
+    return "ReportingMeasure"
+  end
+  
+  # human readable description
+  def description
+    return "A human readable description goes here"
+  end
+  
+  # human readable description
+  def modeler_description
+    return "A human readable description of the technical implementation details goes here"
+  end
+  
+  # define the arguments that the user will input
   def arguments()
     args = OpenStudio::Ruleset::OSArgumentVector.new
     
+    # this measure does not require any user arguments, return an empty list
+    
     return args
-  end #end the arguments method
+  end 
 
-  #define what happens when the measure is run
+  # define what happens when the measure is run
   def run(runner, user_arguments)
     super(runner, user_arguments)
     
-    #use the built-in error checking 
+    # use the built-in error checking 
     if not runner.validateUserArguments(arguments(), user_arguments)
       return false
     end
 
     # get the last model and sql file
-    
     model = runner.lastOpenStudioModel
     if model.empty?
       runner.registerError("Cannot find last model.")
@@ -42,7 +60,7 @@ class ReportingMeasure < OpenStudio::Ruleset::ReportingUserScript
     sqlFile = sqlFile.get
     model.setSqlFile(sqlFile)
  
-    # put data into variables, these are available in the local scope binding
+    # put data into the local variable 'output', all local variables are available for erb to use when configuring the input html file
     
     output =  "Measure Name = " << name << "<br>"
     output << "Building Name = " << model.getBuilding.name.get << "<br>"                       # optional variable
@@ -80,17 +98,11 @@ class ReportingMeasure < OpenStudio::Ruleset::ReportingUserScript
       end
     end
 
-    #closing the sql file
+    # close the sql file
     sqlFile.close()
-
-    #reporting final condition
-    runner.registerFinalCondition("Goodbye.")
     
     return true
  
-  end #end the run method
+  end
 
-end #end the measure
-
-#this allows the measure to be use by the application
-ReportingMeasure.new.registerWithApplication
+end 

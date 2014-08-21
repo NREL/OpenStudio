@@ -1,15 +1,14 @@
 require 'openstudio'
-
 require 'openstudio/ruleset/ShowRunnerOutput'
+require 'minitest/autorun'
 
-require "#{File.dirname(__FILE__)}/../measure.rb"
+require_relative '../measure.rb'
 
 require 'fileutils'
 
-require 'test/unit'
-
-class ReportingMeasure_Test < Test::Unit::TestCase
+class ReportingMeasure_Test < MiniTest::Unit::TestCase
   
+  # class level variable
   @@co = OpenStudio::Runmanager::ConfigOptions.new(true)
   
   # paths to expected test files, includes osm and eplusout.sql
@@ -18,18 +17,19 @@ class ReportingMeasure_Test < Test::Unit::TestCase
   end
   
   def runDir
-    return "#{File.dirname(__FILE__)}/ExampleModel/"
+    # always generate test output in specially named 'output' directory so result files are not made part of the measure
+    return "#{File.dirname(__FILE__)}/output/"
   end
   
   def sqlPath
-    return "#{File.dirname(__FILE__)}/ExampleModel/ModelToIdf/EnergyPlusPreProcess-0/EnergyPlus-0/eplusout.sql"
+    return "#{File.dirname(__FILE__)}/output/ModelToIdf/EnergyPlusPreProcess-0/EnergyPlus-0/eplusout.sql"
   end
   
   def reportPath
-    return "./report.html"
+    return "#{File.dirname(__FILE__)}/report.html"
   end
   
-  # create test files if they do not exist
+  # create test files if they do not exist when the test first runs 
   def setup
 
     if File.exist?(reportPath())
@@ -58,7 +58,7 @@ class ReportingMeasure_Test < Test::Unit::TestCase
     end
   end
 
-  # delete output files
+  # delete output files when tests end
   def teardown
   
     # comment this out if you don't want to rerun EnergyPlus each time
@@ -70,10 +70,19 @@ class ReportingMeasure_Test < Test::Unit::TestCase
     if File.exist?(reportPath())
       #FileUtils.rm(reportPath())
     end
+    
   end
   
-  # the actual test
-  def test_ReportingMeasure
+  def test_number_of_arguments_and_argument_names
+    # create an instance of the measure
+    measure = ReportingMeasure.new
+
+    # get arguments and test that they are what we are expecting
+    arguments = measure.arguments()
+    assert_equal(0, arguments.size)
+  end
+  
+  def test_good_argument_values
     
     assert(File.exist?(modelPath()))
     assert(File.exist?(sqlPath()))
@@ -84,28 +93,32 @@ class ReportingMeasure_Test < Test::Unit::TestCase
     # create an instance of a runner
     runner = OpenStudio::Ruleset::OSRunner.new
     
-    assert(!@@co.getDefaultEPWLocation.to_s.empty?)
-    epw = @@co.getDefaultEPWLocation / OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.epw")
-    assert(File.exist?(epw.to_s))
-    
-    # get arguments and test that they are what we are expecting
-    arguments = measure.arguments()
-    assert_equal(0, arguments.size)
-    
-    # set up runner, this will happen automatically when measure is run in PAT
+    # set up runner, this will happen automatically when measure is run in PAT or OpenStudio
     runner.setLastOpenStudioModelPath(OpenStudio::Path.new(modelPath))
     runner.setLastEpwFilePath(epw)
     runner.setLastEnergyPlusSqlFilePath(OpenStudio::Path.new(sqlPath))
     
-    # set argument values to good values and run the measure
-    argument_map = OpenStudio::Ruleset::OSArgumentMap.new
-    measure.run(runner, argument_map)
-    result = runner.result
-    show_output(result)
-    assert(result.value.valueName == "Success")
-    assert(result.warnings.size == 0)
-    #assert(result.info.size == 1)
+    # make sure we have a weather data location
+    assert(!@@co.getDefaultEPWLocation.to_s.empty?)
+    epw = @@co.getDefaultEPWLocation / OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.epw")
+    assert(File.exist?(epw.to_s))
     
+    # get arguments
+    arguments = measure.arguments()
+    argument_map = OpenStudio::Ruleset::convertOSArgumentVectorToMap(arguments)
+    
+    # delete the output if it exists
+    if File.exist?(reportPath())
+      FileUtils.rm(reportPath())
+    end
+    assert(not File.exist?(reportPath()))
+   
+    # run the measure
+    measure.run(model, runner, argument_map)
+    result = runner.result
+    assert_equal("Success", result.value.valueName)
+    
+    # make sure the report file exists
     assert(File.exist?(reportPath()))
     
   end  
