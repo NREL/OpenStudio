@@ -110,7 +110,12 @@ BCLMeasure MeasureManager::insertReplaceMeasure(analysisdriver::SimpleProject &t
   // DLM: not sure if this is necessary
   bool isMyMeasure = (m_myMeasures.find(t_id) != m_myMeasures.end());
   if (isMyMeasure) {
-    bool updated = measure->checkForUpdates();
+    bool updated = measure->checkForUpdatesFiles();
+    if (updated){
+      ruleset::RubyUserScriptInfo info = m_infoGetter->getInfo(*measure);
+      info.update(*measure);
+    }
+    updated = (updated && measure->checkForUpdatesXML());
     if (updated) {
       measure->save(); 
       m_myMeasures.erase(t_id);
@@ -354,7 +359,9 @@ void MeasureManager::updatePatApplicationMeasures(analysisdriver::SimpleProject 
   {
     // DLM: this should not happen for applications measures, cannot save to application dir
     // DLM: need to make sure these are updated before we ship!
-    bool isNewVersion = itr->checkForUpdates();
+    bool isNewVersion = itr->checkForUpdatesFiles();
+    OS_ASSERT(!isNewVersion);
+    isNewVersion = itr->checkForUpdatesXML();
     OS_ASSERT(!isNewVersion);
 
     boost::optional<BCLMeasure> projectmeasure = t_project.getMeasureByUUID(itr->uuid());
@@ -382,7 +389,12 @@ void MeasureManager::updateBCLMeasures(analysisdriver::SimpleProject &t_project)
   {
     // DLM: this should not happen for BCL measures but ok to check anyway
     // DLM: check these in case we donwload a version 2 file and then it gets updated to version 3
-    bool isNewVersion = measure.checkForUpdates();
+    bool isNewVersion = measure.checkForUpdatesFiles();
+    if (isNewVersion){
+      ruleset::RubyUserScriptInfo info = m_infoGetter->getInfo(measure);
+      info.update(measure);
+    }
+    isNewVersion = (isNewVersion && measure.checkForUpdatesXML());
     if (isNewVersion) {
       measure.save();
       m_bclMeasures.erase(measure.uuid());
@@ -452,7 +464,12 @@ void MeasureManager::updateMyMeasures(analysisdriver::SimpleProject &t_project)
   for (auto & measure : measures)
   {
     // DLM: this happens if user updates measure but does not update checksums, ok to save it for them
-    bool isNewVersion = measure.checkForUpdates();
+    bool isNewVersion = measure.checkForUpdatesFiles();
+    if (isNewVersion){
+      ruleset::RubyUserScriptInfo info = m_infoGetter->getInfo(measure);
+      info.update(measure);
+    }
+    isNewVersion = (isNewVersion && measure.checkForUpdatesXML());
     if (isNewVersion) {
       measure.save();
       m_myMeasures.erase(measure.uuid());
