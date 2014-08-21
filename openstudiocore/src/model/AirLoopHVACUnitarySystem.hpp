@@ -51,7 +51,7 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
 
   static IddObjectType iddObjectType();
 
-  // static std::vector<std::string> controlTypeValues();
+  static std::vector<std::string> controlTypeValues();
 
   static std::vector<std::string> dehumidificationControlTypeValues();
 
@@ -68,9 +68,9 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
   /** @name Getters */
   //@{
 
-  // std::string controlType() const;
+  //std::string controlType() const;
 
-  // bool isControlTypeDefaulted() const;
+  //bool isControlTypeDefaulted() const;
 
   boost::optional<ThermalZone> controllingZoneorThermostatLocation() const;
 
@@ -198,9 +198,9 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
   /** @name Setters */
   //@{
 
-  // bool setControlType(std::string controlType);
+  //bool setControlType(std::string controlType);
 
-  // void resetControlType();
+  //void resetControlType();
 
   bool setControllingZoneorThermostatLocation(const ThermalZone& thermalZone);
 

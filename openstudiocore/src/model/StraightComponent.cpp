@@ -456,7 +456,25 @@ bool StraightComponent_Impl::addToNode(Node & node)
   }
   else if( oaSystem )
   {
-    if(oaSystem->oaComponent(node.handle()))
+    if(oaSystem->outboardReliefNode() == node)
+    {
+      unsigned oldInletPort = node.inletPort();
+      unsigned oldOutletPort = node.connectedObjectPort( node.inletPort() ).get();
+      ModelObject oldSourceModelObject = node.connectedObject( node.inletPort() ).get();
+      ModelObject oldTargetModelObject = node;
+    
+      Node newNode( _model );
+      newNode.createName();
+
+      _model.connect( oldSourceModelObject, oldOutletPort,
+                      newNode, newNode.inletPort() );
+      _model.connect( newNode, newNode.outletPort(),
+                      thisModelObject, inletPort() );
+      _model.connect( thisModelObject, outletPort(),
+                      oldTargetModelObject, oldInletPort );
+      return true;
+    }
+    else if(oaSystem->component(node.handle()))
     {
       unsigned oldOutletPort = node.outletPort();
       unsigned oldInletPort = node.connectedObjectPort( node.outletPort() ).get();

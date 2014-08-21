@@ -7798,10 +7798,10 @@ OS:AirLoopHVAC:ReturnPlenum,
        \type object-list
        \required-field
        \object-list ConnectionNames
-   A5, \field Induced Air Outlet Node
+   A5, \field Induced Air Outlet Port List
        \type object-list
+       \object-list PortLists
        \required-field
-       \object-list ConnectionNames
    A6; \field Inlet 1 Node
        \begin-extensible
        \type object-list
@@ -13499,14 +13499,12 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
        \required-field
   A7 , \Field Secondary Air Inlet Node
        \type object-list
-       \required-field
-       \object-list ConnectionNames
+       \object-list Node
   A8 , \Field Sensor Node Name
        \object-list Node
   A9 , \Field Relief Air Inlet Node
        \type object-list
-       \required-field
-       \object-list ConnectionNames
+       \object-list Node
   A9 , \Field Water Supply Storage Tank Name
        \type object-list
        \object-list WaterStorageTankNames
