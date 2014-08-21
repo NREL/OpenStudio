@@ -421,28 +421,28 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
       addComboBoxColumn<std::string, model::RefrigerationCase>(
             QString(LATENTCASECREDITCURVETYPE),
             static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
-            &model::RefrigerationCase::latentCaseCreditCurveTypeValues,
+            std::function<std::vector<std::string> ()>(&model::RefrigerationCase::latentCaseCreditCurveTypeValues),
             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::latentCaseCreditCurveType),
             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setLatentCaseCreditCurveType));
     }else if(field == ANTISWEATHEATERCONTROLTYPE){
       addComboBoxColumn<std::string,model::RefrigerationCase>(
             QString(ANTISWEATHEATERCONTROLTYPE),
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-            &model::RefrigerationCase::antiSweatHeaterControlTypeValues,
+            std::function<std::vector<std::string> ()>(&model::RefrigerationCase::antiSweatHeaterControlTypeValues),
             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::antiSweatHeaterControlType),
             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setAntiSweatHeaterControlType));
     }else if(field == CASEDEFROSTTYPE){
       addComboBoxColumn<std::string,model::RefrigerationCase>(
             QString(CASEDEFROSTTYPE),
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-            &model::RefrigerationCase::caseDefrostTypeValues,
+            std::function<std::vector<std::string> ()>(&model::RefrigerationCase::caseDefrostTypeValues),
             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::caseDefrostType),
             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setCaseDefrostType));
     }else if(field == DEFROSTENERGYCORRECTIONCURVETYPE){
       addComboBoxColumn<std::string,model::RefrigerationCase>(
             QString(DEFROSTENERGYCORRECTIONCURVETYPE),
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-            &model::RefrigerationCase::defrostEnergyCorrectionCurveTypeValues,
+            std::function<std::vector<std::string> ()>(&model::RefrigerationCase::defrostEnergyCorrectionCurveTypeValues),
             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::defrostEnergyCorrectionCurveType),
             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setDefrostEnergyCorrectionCurveType));
     }else if(field == INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH){
@@ -752,14 +752,14 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
       addComboBoxColumn<std::string,model::RefrigerationWalkIn>(
             QString(DEFROSTTYPE),
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-            &model::RefrigerationWalkIn::defrostTypeValues,
+            std::function<std::vector<std::string> ()>(&model::RefrigerationWalkIn::defrostTypeValues),
             CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::defrostType),
             CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setDefrostType));
     }else if(field == DEFROSTCONTROLTYPE){
       addComboBoxColumn<std::string,model::RefrigerationWalkIn>(
             QString(DEFROSTCONTROLTYPE),
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-            &model::RefrigerationWalkIn::defrostControlTypeValues,
+            std::function<std::vector<std::string> ()>(&model::RefrigerationWalkIn::defrostControlTypeValues),
             CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::defrostControlType),
             CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setDefrostControlType));
     }else if(field == OPERATINGTEMPERATURE){
