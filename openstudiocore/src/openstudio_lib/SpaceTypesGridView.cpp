@@ -927,7 +927,10 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           return t_spaceType->standardsSpaceType();
         };
 
-      std::function<bool (model::SpaceType *t_spaceType, std::string )> setter(&model::SpaceType::setStandardsSpaceType);
+      std::function<bool (model::SpaceType *t_spaceType, std::string )> setter =
+        [](model::SpaceType *t_spaceType, std::string t_val) {
+          return t_spaceType->setStandardsSpaceType(t_val);
+        };
 
       boost::optional<std::function<void (model::SpaceType *t_spaceType)>> resetter(&model::SpaceType::resetStandardsSpaceType); 
 
