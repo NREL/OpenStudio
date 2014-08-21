@@ -354,13 +354,15 @@ namespace radiance {
       if (skyfile.is_open()){
         outfiles.push_back(dcskyfilepath);
         if (radianceParameters.skyDiscretizationResolution() == "146"){
-          skyfile << "@#rfluxmtx u=Y h=r1\n";
+          skyfile << "#@rfluxmtx h=r1 u=Y\n";
         } else if (radianceParameters.skyDiscretizationResolution() == "578"){
-          skyfile << "@#rfluxmtx u=Y h=r2\n";
+          skyfile << "#@rfluxmtx h=r2 u=Y\n";
         } else if (radianceParameters.skyDiscretizationResolution() == "2306"){
-          skyfile << "@#rfluxmtx u=Y h=r4\n";
+          skyfile << "#@rfluxmtx h=r4 u=Y\n";
         }
-        skyfile << "void glow skyglow\n0\n0\n4\n1 1 1 0\n\nskyglow source sky\n0\n0\n4\n0 0 1 180\n\nvoid glow groundglow\n0\n0\n4\n1 1 1 0\n\ngroundglow source sky\n0\n0\n4\n0 0 -1 180";
+        skyfile << "void glow skyglow\n0\n0\n4\n1 1 1 0\n\nskyglow source sky\n0\n0\n4\n0 0 1 180\n";
+        skyfile << "#@rfluxmtx h=u u=Y\nvoid glow groundglow\n0\n0\n4\n1 1 1 0\n\ngroundglow source sky\n0\n0\n4\n0 0 -1 180\n";
+
       }else{
         LOG(Error, "Cannot open file '" << toString(dcskyfilepath) << "' for writing");
       }      

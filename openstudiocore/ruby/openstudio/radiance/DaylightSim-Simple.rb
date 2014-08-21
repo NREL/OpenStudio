@@ -353,20 +353,20 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
     puts "#{Time.now.getutc}: daylight coefficients computed, \
     stored in #{t_outPath}/output/dc/merged_space/maps"
 
-  end # compute DC (single phase)
+  end # compute coefficients (single phase)
 
   # 3-phase method
   if t_options.z == true
 
     # compute daylight matrices
+    system("oconv materials/materials.rad model.rad > model_dc.oct")
     windowMaps = File::open("#{t_outPath}/bsdf/mapping.rad")
     windowMaps.each do |row|
       next if row[0] == "#"
       wg=row.split(",")[0]
-      puts "calculating daylight matrix for window group #{wg}..."
-      exec_statement("rfluxmtx -fa -v #{t_outPath}/scene/glazing/#{wg}.rad #{t_outPath}/skies/dc_sky.rad -i model.oct > #{t_outPath}/output/dc/#{wg}.dmx")
-
-    end
+      puts "computing daylight matrix for window group #{wg}..."
+      exec_statement("rfluxmtx -fa -v #{t_outPath}/scene/glazing/#{wg}.rad #{t_outPath}/skies/dc_sky.rad -i model_dc.oct > #{t_outPath}/output/dc/#{wg}.dmx")
+    end # maps
 
     # compute view matrices
     puts "computing view matri(ces) for merged_space.map..."
@@ -584,7 +584,7 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
   simulations = []
   #windowMapping = nil
 
-  exec_statement("gendaymtx #{genDaymtxHdr} -m #{t_options.skyvecDensity} \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" > \"#{t_outPath / OpenStudio::Path.new("daymtx.out")}\" ")
+  exec_statement("gendaymtx #{genDaymtxHdr} -m #{t_options.skyvecDensity} \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" > annual-sky.mtx")
 
   if t_options.z == true  # 3-phase
 
@@ -595,7 +595,6 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
       #azimuth = 1
       #window_group = "group"
       #blinds_closed = false
-      
     windowMaps = File::open("#{t_outPath}/bsdf/mapping.rad")
     windowMaps.each do |row|
       next if row[0] == "#"
@@ -605,13 +604,14 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
         puts "WARN: Window Group #{wg} has #{wgXMLs.size.to_s} BSDFs (2 max supported by OpenStudio application)."
       end
       wgXMLs.each_index do |i|
-        simulations << "dctimestep -n 8760 #{wg}.vmx #{wgXMLs[i].strip} #{wg}.dmx daymtx.out > #{wg}_#{wgXMLs[i].split[0]}.ill"
+        simulations << "dctimestep -n 8760 #{t_outPath}/output/dc/#{wg}.vmx #{t_outPath}/bsdf/#{wgXMLs[i].strip} #{t_outPath}/output/dc/#{wg}.dmx \\
+        annual-sky.mtx > #{wg}_#{wgXMLs[i].split[0]}.ill"
       end
     end
     puts "INFO: #{simulations.size.to_s} total simulations required:\n"
     puts simulations
 
-      #dmx_mapping_data << [azimuth, window_group, blinds_closed]
+    #dmx_mapping_data << [azimuth, window_group, blinds_closed]
 
     #windowMapping = lambda { |index, hour| 
     #  data = dmx_mapping_data[index]
