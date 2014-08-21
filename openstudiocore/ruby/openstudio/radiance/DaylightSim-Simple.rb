@@ -582,38 +582,46 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
   puts "Running annual simulation"
 
   simulations = []
-  windowMapping = nil
+  #windowMapping = nil
 
   exec_statement("gendaymtx #{genDaymtxHdr} -m #{t_options.skyvecDensity} \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" > \"#{t_outPath / OpenStudio::Path.new("daymtx.out")}\" ")
 
-  if t_options.z == true
-    # 3-phase
+  if t_options.z == true  # 3-phase
 
-    dmx_mapping_data = []
-
-    # expected file name:
-    Dir.glob("#{t_outPath}/output/dc/merged_space/maps/*.dmx") do |dmx_file|
-      # TODO parse filename here to get these things
+    # get all required matrices
+    #dmx_mapping_data = []
       # @rpg777
       # azimuth, window_group, blinds_closed = someparsingfunction(dmx_file)
-      azimuth = 1
-      window_group = "group"
-      blinds_closed = false
-
-      simulations << "dctimestep -if -n 8760 \"#{dmx_file}\" \"#{t_outPath / OpenStudio::Path.new("daymtx.out")}\" "
+      #azimuth = 1
+      #window_group = "group"
+      #blinds_closed = false
       
-      dmx_mapping_data << [azimuth, window_group, blinds_closed]
+    windowMaps = File::open("#{t_outPath}/bsdf/mapping.rad")
+    windowMaps.each do |row|
+      next if row[0] == "#"
+      wg = row.split(",")[0]
+      wgXMLs = row.split(",")[2..-1]
+      if wgXMLs.size > 2
+        puts "WARN: Window Group #{wg} has #{wgXMLs.size.to_s} BSDFs (2 max supported by OpenStudio application)."
+      end
+      wgXMLs.each_index do |i|
+        simulations << "dctimestep -n 8760 #{wg}.vmx #{wgXMLs[i].strip} #{wg}.dmx daymtx.out > #{wg}_#{wgXMLs[i].split[0]}.ill"
+      end
     end
+    puts "INFO: #{simulations.size.to_s} total simulations required:\n"
+    puts simulations
 
-    windowMapping = lambda { |index, hour| 
-      data = dmx_mapping_data[index]
+      #dmx_mapping_data << [azimuth, window_group, blinds_closed]
+
+    #windowMapping = lambda { |index, hour| 
+    #  data = dmx_mapping_data[index]
       # TODO are blinds open for this point in space time?
       # @rpg777
       # blindsopen = magicalFunction(data[0], data[1], hour)
-      blindsopen = false
+     # blindsopen = false
       
-      return data[2] == blindsopen;
-    }
+     # return data[2] == blindsopen;
+    #}
 
   else
     # 2-phase 
