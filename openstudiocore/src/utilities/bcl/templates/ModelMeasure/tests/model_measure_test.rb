@@ -4,8 +4,14 @@ require 'minitest/autorun'
 require 'fileutils'
 require_relative '../measure.rb'
 
-class ModelMeasureTest < MiniTest::Test
+class ModelMeasureTest < MiniTest::Unit::TestCase
 
+  # def setup
+  # end
+
+  # def teardown
+  # end
+  
   def test_number_of_arguments_and_argument_names
     # create an instance of the measure
     measure = ModelMeasure.new

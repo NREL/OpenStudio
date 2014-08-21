@@ -218,6 +218,12 @@ namespace openstudio{
     m_bclXML.setName(name);
     m_bclXML.addTag(taxonomyTag);
     this->setMeasureType(measureType);
+
+    if (m_bclXML.xmlChecksum().empty()){
+      // this will set the checksum but not increment the version id
+      m_bclXML.checkForUpdatesXML();
+    }
+
     m_bclXML.saveAs(measureXMLPath);
   }
 
@@ -613,9 +619,24 @@ namespace openstudio{
 
     // look for new files and add them
     openstudio::path srcDir = m_directory / "tests";
+    openstudio::path ignoreDir = srcDir / "output";
     for (const QFileInfo &info : QDir(toQString(srcDir)).entryInfoList(QDir::Files))
     {
       openstudio::path srcItemPath = srcDir / toPath(info.fileName());
+      openstudio::path parentPath = srcItemPath.parent_path();
+      bool ignore = false;
+      while (!parentPath.empty()){
+        if (parentPath == ignoreDir){
+          ignore = true;
+          break;
+        }
+        parentPath = parentPath.parent_path();
+      }
+
+      if (ignore){
+        continue;
+      }
+
       if (!m_bclXML.hasFile(srcItemPath)){
         BCLFileReference file(srcItemPath, true);
         file.setUsageType("test");

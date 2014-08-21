@@ -199,6 +199,7 @@ namespace openstudio{
     // configure logging
     REGISTER_LOGGER("utilities.bcl.BCLXML"); 
 
+    /// Compute the current xml checksum
     std::string computeXMLChecksum() const;
 
     openstudio::path m_path;

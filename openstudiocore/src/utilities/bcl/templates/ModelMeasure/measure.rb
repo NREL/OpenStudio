@@ -1,21 +1,28 @@
 # see the URL below for information on how to write OpenStudio measures
 # http://openstudio.nrel.gov/openstudio-measure-writing-guide
 
-# see the URL below for access to C++ documentation on model objects (click on "model" in the main window to view model objects)
-# http://openstudio.nrel.gov/sites/openstudio.nrel.gov/files/nv_data/cpp_documentation_it/model/html/namespaces.html
-
-# TODO update or remove the links above before the 1.5.0 release. Is there any other header information we want?
-
 # start the measure
 class ModelMeasure < OpenStudio::Ruleset::ModelUserScript
-
-  # TODO remove teh def name section once it can run without it.
-  # define the name that a user will see, this method may be deprecated as
-  # the display name in PAT comes from the name field in measure.xml
+  
+  # machine readable name
   def name
     return "ModelMeasure"
   end
-
+  # human readable name
+  def display_name
+    return "ModelMeasure"
+  end
+  
+  # human readable description
+  def description
+    return "A human readable description goes here"
+  end
+  
+  # human readable description
+  def modeler_description
+    return "A human readable description of the technical implementation details goes here"
+  end
+  
   # define the arguments that the user will input
   def arguments(model)
     args = OpenStudio::Ruleset::OSArgumentVector.new
@@ -44,8 +51,8 @@ class ModelMeasure < OpenStudio::Ruleset::ModelUserScript
     end
 
     # assign the user inputs to variables
-    user_name = runner.getStringArgumentValue("user_name",user_arguments)
-    add_space = runner.getBoolArgumentValue("add_space",user_arguments)
+    user_name = runner.getStringArgumentValue("user_name", user_arguments)
+    add_space = runner.getBoolArgumentValue("add_space", user_arguments)
 
     # check the user_name for reasonableness
     if user_name == ""

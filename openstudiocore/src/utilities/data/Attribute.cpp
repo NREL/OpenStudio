@@ -1689,6 +1689,12 @@ std::string toJSON(const std::vector<Attribute>& attributes) {
   return openstudio::toJSON(QVariant(result));
 }
 
+std::string toJSONWithoutMetadata(const std::vector<Attribute>& attributes) {
+  QVariantMap result;
+  result["attributes"] = detail::toVariant(attributes);
+  return openstudio::toJSON(QVariant(result));
+}
+
 std::vector<Attribute> toVectorOfAttribute(const openstudio::path& pathToJson) {
   QVariant variant = loadJSON(pathToJson);
   VersionString version = extractOpenStudioVersion(variant);

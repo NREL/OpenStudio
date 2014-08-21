@@ -100,7 +100,7 @@ QSize BCLMeasureDialog::sizeHint() const
 boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
 {
   std::string name = toString(m_nameLineEdit->text());
-  std::string className = BCLMeasure::className(name);
+  std::string className = BCLMeasure::makeClassName(name);
   std::string description = toString(m_descriptionTextEdit->toPlainText());
   std::string modelerDescription = toString(m_modelerDescriptionTextEdit->toPlainText());
 
@@ -115,8 +115,6 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
   }else if ( measureTypeStr == "Reporting Measure"){
     measureType = MeasureType::ReportingMeasure;
   }
-
-  bool usesSketchUpAPI = false; //disabled for now, m_usesSketchUpAPI->isChecked();
 
   openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
   QString folderName = toQString(className).append("/");
@@ -151,14 +149,12 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
       result->setModelerDescription(modelerDescription);
       result->setTaxonomyTag(taxonomyTag);
       result->setMeasureType(measureType);
-      result->setUsesSketchUpAPI(usesSketchUpAPI);
       result->save();
     }
   }else{
     try{
     // starting new measure
-    result = BCLMeasure(name, className, measureDir, taxonomyTag,
-                        measureType, usesSketchUpAPI);
+    result = BCLMeasure(name, className, measureDir, taxonomyTag, measureType);
     result->setDescription(description);
     result->setModelerDescription(modelerDescription);
     result->save();
@@ -171,7 +167,7 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
 
 void BCLMeasureDialog::nameChanged(const QString& newName)
 {
-  std::string className = BCLMeasure::className(toString(newName));
+  std::string className = BCLMeasure::makeClassName(toString(newName));
   m_classNameLabel->setText(toQString(className));
 }
 

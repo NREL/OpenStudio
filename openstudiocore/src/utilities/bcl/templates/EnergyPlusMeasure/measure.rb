@@ -1,22 +1,26 @@
 #see the URL below for information on how to write OpenStudio measures
 # http://openstudio.nrel.gov/openstudio-measure-writing-guide
 
-#see your EnergyPlus installation or the URL below for information on EnergyPlus objects
-# http://apps1.eere.energy.gov/buildings/energyplus/pdfs/inputoutputreference.pdf
-
-#see the URL below for information on using life cycle cost objects in OpenStudio
-# http://openstudio.nrel.gov/openstudio-life-cycle-examples
-
-#see the URL below for access to C++ documentation on workspace objects (click on "workspace" in the main window to view workspace objects)
-# http://openstudio.nrel.gov/sites/openstudio.nrel.gov/files/nv_data/cpp_documentation_it/utilities/html/idf_page.html
-
 #start the measure
 class EnergyPlusMeasure < OpenStudio::Ruleset::WorkspaceUserScript
   
-  #define the name that a user will see, this method may be deprecated as
-  #the display name in PAT comes from the name field in measure.xml
+  # machine readable name
   def name
     return "EnergyPlusMeasure"
+  end
+  # human readable name
+  def display_name
+    return "EnergyPlusMeasure"
+  end
+  
+  # human readable description
+  def description
+    return "A human readable description goes here"
+  end
+  
+  # human readable description
+  def modeler_description
+    return "A human readable description of the technical implementation details goes here"
   end
   
   #define the arguments that the user will input
@@ -24,16 +28,17 @@ class EnergyPlusMeasure < OpenStudio::Ruleset::WorkspaceUserScript
     args = OpenStudio::Ruleset::OSArgumentVector.new
     
     #make an argument for your name
-    user_name = OpenStudio::Ruleset::OSArgument::makeStringArgument("user_name",true)
+    user_name = OpenStudio::Ruleset::OSArgument::makeStringArgument("user_name", true)
     user_name.setDisplayName("What is your name?")
+    user_name.setDescription("This name will be appended to the zone name if a new zone is created.")
     args << user_name
 
     #make an argument to add new zone true/false
-    add_zone = OpenStudio::Ruleset::OSArgument::makeBoolArgument("add_zone",true)
+    add_zone = OpenStudio::Ruleset::OSArgument::makeBoolArgument("add_zone", true)
     add_zone.setDisplayName("Add a zone to your model?")
+    add_zone.setDescription("If true a new zone will be added to the model.")
     add_zone.setDefaultValue(true)
     args << add_zone
-    
     
     return args
   end #end the arguments method
@@ -48,8 +53,8 @@ class EnergyPlusMeasure < OpenStudio::Ruleset::WorkspaceUserScript
     end
 
     #assign the user inputs to variables
-    user_name = runner.getStringArgumentValue("user_name",user_arguments)
-    add_zone = runner.getBoolArgumentValue("add_zone",user_arguments)
+    user_name = runner.getStringArgumentValue("user_name", user_arguments)
+    add_zone = runner.getBoolArgumentValue("add_zone", user_arguments)
 
     #check the user_name for reasonableness
     puts user_name

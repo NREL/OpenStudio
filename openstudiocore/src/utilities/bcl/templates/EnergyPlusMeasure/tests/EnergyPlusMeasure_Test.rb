@@ -4,10 +4,15 @@ require 'openstudio/ruleset/ShowRunnerOutput'
 
 require "#{File.dirname(__FILE__)}/../measure.rb"
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class EnergyPlusMeasure_Test < Test::Unit::TestCase
+class EnergyPlusMeasure_Test < MiniTest::Unit::TestCase
 
+  # def setup
+  # end
+
+  # def teardown
+  # end
   
   def test_EnergyPlusMeasure
      

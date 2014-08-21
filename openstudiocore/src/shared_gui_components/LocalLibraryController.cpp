@@ -614,10 +614,7 @@ void LibraryListController::createItems()
   {
     if( m_taxonomyTag.compare(QString::fromStdString(measure.taxonomyTag()),Qt::CaseInsensitive) == 0 )
     {
-      // cannot use measures that rely on SketchUpAPI in this application
-      if (measure.usesSketchUpAPI()){
-        continue;
-      }
+      // filter on any measure attributes we want
 
       LocalLibrary::LibrarySource source = m_source;
       if (source == LocalLibrary::COMBINED){

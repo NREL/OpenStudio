@@ -67,10 +67,9 @@ TEST_F(BCLFixture, BCLMeasure)
   EXPECT_TRUE(dir2 == measure2->directory());
   EXPECT_EQ(6u, measure2->files().size());
   
-  measure2->setName("New Measure");
+  measure2->setName("New Measure"); // this would normally be initiated by a change from the measure
   EXPECT_FALSE(measure2->checkForUpdatesFiles());
-  EXPECT_TRUE(measure2->checkForUpdatesXML()); // name changed, this will trigger update
-  EXPECT_FALSE(measure2->checkForUpdatesXML()); // second time, no change
+  EXPECT_FALSE(measure2->checkForUpdatesXML()); // name change does not trigger xml update
   EXPECT_FALSE(*measure == *measure2);
   measure2->save();
   EXPECT_FALSE(measure2->checkForUpdatesFiles());
@@ -93,7 +92,6 @@ TEST_F(BCLFixture, BCLMeasure)
   file.close();
   EXPECT_FALSE(measure2->checkForUpdatesXML());
   EXPECT_TRUE(measure2->checkForUpdatesFiles());
-  EXPECT_TRUE(measure2->checkForUpdatesXML());
 
   measure2.reset();
   ASSERT_TRUE(exists(dir2));

@@ -353,6 +353,7 @@ void MeasureManager::updatePatApplicationMeasures(analysisdriver::SimpleProject 
       ++itr)
   {
     // DLM: this should not happen for applications measures, cannot save to application dir
+    // DLM: need to make sure these are updated before we ship!
     bool isNewVersion = itr->checkForUpdates();
     OS_ASSERT(!isNewVersion);
 
@@ -380,6 +381,7 @@ void MeasureManager::updateBCLMeasures(analysisdriver::SimpleProject &t_project)
   for (auto & measure : measures)
   {
     // DLM: this should not happen for BCL measures but ok to check anyway
+    // DLM: check these in case we donwload a version 2 file and then it gets updated to version 3
     bool isNewVersion = measure.checkForUpdates();
     if (isNewVersion) {
       measure.save();

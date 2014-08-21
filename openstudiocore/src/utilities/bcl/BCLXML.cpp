@@ -233,9 +233,9 @@ namespace openstudio{
     }
 
     // added in schema version 3
-    // do this last in case we need to compute it for the first time
     if (element.firstChildElement("xml_checksum").isNull()){
-      m_xmlChecksum = computeXMLChecksum();
+      // DLM: keep this empty for now
+      //m_xmlChecksum = computeXMLChecksum();
     } else{
       m_xmlChecksum = element.firstChildElement("xml_checksum").firstChild().nodeValue().toStdString();
     }
@@ -726,6 +726,13 @@ namespace openstudio{
   {
     std::string newChecksum = computeXMLChecksum();
 
+    if (m_xmlChecksum.empty()){
+      // we are unsure if this is a real change or update from version 2
+      // set this here and return false
+      m_xmlChecksum = newChecksum;
+      return false;
+    }
+
     if (m_xmlChecksum != newChecksum){
       incrementVersionId();
       m_xmlChecksum = newChecksum;
@@ -735,34 +742,85 @@ namespace openstudio{
     return false;
   }
 
+  void printAttributeForChecksum(std::ostream& os, const Attribute& attribute, const std::string& tabs)
+  {
+    if (attribute.valueType() == AttributeValueType::AttributeVector){
+      for (const Attribute& child : attribute.valueAsAttributeVector()){
+        printAttributeForChecksum(os, child, tabs + "  ");
+      }
+    } else{
+      os << tabs << "Name: " << attribute.name() << std::endl;
+      if (attribute.displayName()){
+        os << tabs << "Display Name: " << attribute.displayName().get() << std::endl;
+      }
+      os << tabs << "Value Type: " << attribute.valueType().valueName() << std::endl;
+      os << tabs << "Value: " << attribute.toString() << std::endl;
+      if (attribute.units()){
+        os << tabs << "Units: " << attribute.units().get() << std::endl;
+      }
+      os << std::endl;
+    }
+  }
+
   std::string BCLXML::computeXMLChecksum() const
   {
+    // DLM: CHANGING THE IMPLEMENTATION OF THIS FUNCTION WILL CAUSE 
+    // CHECKSUMS TO BE COMPUTED DIFFERENTLY
+    // WE WANT TO AVOID FIGHTING WHERE DIFFERENT VERSIONS OF OPENSTUDIO
+    // COMPUTE THE CHECKSUM IN DIFFERENT WAYS
     std::stringstream ss;
 
-    ss << m_name;
-    ss << m_displayName;
-    ss << m_className;
+    // will be picked up when Ruby file changes
+    //ss << "Name: " << m_name << std::endl;
+    
+    // will be picked up when Ruby file changes
+    //ss << "Display Name: " << m_displayName << std::endl;
+
+    // will be picked up when Ruby file changes
+    //ss << "Class Name: " << m_className << std::endl;
+
+    // not managed manually
     //ss << m_uid;
     //ss << m_versionId;
     //ss << m_xmlChecksum;
-    ss << m_description;
-    ss << m_modelerDescription;
 
-    for (const BCLMeasureArgument& argument : m_arguments){
-      ss << argument;
-    }
+    // will be picked up when Ruby file changes
+    //ss << "Description: " << m_description << std::endl;
 
-    for (const BCLFileReference& file : m_files){
-      ss << file;
-    }
+    // will be picked up when Ruby file changes
+    //ss << "Modeler Description: " << m_modelerDescription << std::endl;
 
+    // will be picked up when Ruby file changes
+    //ss << "Arguments: " << std::endl;
+    //for (const BCLMeasureArgument& argument : m_arguments){
+    //  ss << argument << std::endl;
+    //}
+
+    // will be picked up when checkForUpdatesFiles
+    //ss << "Files: " << std::endl;
+    //for (const BCLFileReference& file : m_files){
+    //  ss << file << std::endl;
+    //}
+
+    // attributes are edited in the xml
+    ss << "Attributes: " << std::endl;
     for (const Attribute& attribute : m_attributes){
-      ss << attribute;
+      //ss << attribute; // can't use this because attributes uuid are regenerated on each load
+
+      // DLM: in the end just create a new method that won't change
+      printAttributeForChecksum(ss, attribute, "  ");
+    }
+    //toJSON(m_attributes, ss); // can't use this because it writes out the openstudio version
+    //ss << toJSONWithoutMetadata(m_attributes); // don't use this because it may change
+
+    // tags are edited in the xml
+    ss << "Tags: " << std::endl;
+    for (const std::string& tag : m_tags){
+      ss << "  " << tag << std::endl;
     }
 
-    for (const std::string& tag : m_tags){
-      ss << tag;
-    }
+    //std::cout << "Checksum computed on:" << std::endl;
+    //std::cout << ss.str() << std::endl;
 
     return checksum(ss);
   }
