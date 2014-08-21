@@ -35,6 +35,8 @@
 #include "ZoneHVACUnitHeater_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
+#include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 #include "ScheduleCompact.hpp"
@@ -387,6 +389,20 @@ namespace detail{
         if( suppHeatingCoil->handle() == this->handle() )
         {
           return airLoopHVACUnitarySystem;
+        }
+      }
+    }
+
+    // AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass
+    std::vector<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass> bypassSystems = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>();
+
+    for( const auto & bypassSystem : bypassSystems )
+    {
+      if( boost::optional<HVACComponent> heatingCoil = bypassSystem.heatingCoil() )
+      {
+        if( heatingCoil->handle() == this->handle() )
+        {
+          return bypassSystem;
         }
       }
     }

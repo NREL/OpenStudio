@@ -39,6 +39,7 @@ namespace model{
 class AirConditionerVariableRefrigerantFlow;
 class AirGap;
 class AirLoopHVAC;
+class AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass;
 class AirLoopHVACUnitaryHeatPumpAirToAir;
 class AirLoopHVACUnitarySystem;
 class AirLoopHVACReturnPlenum;
@@ -312,6 +313,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateAirLoopHVAC( model::AirLoopHVAC & modelObject );
 
   boost::optional<IdfObject> translateAirLoopHVACOutdoorAirSystem( model::AirLoopHVACOutdoorAirSystem & modelObject );
+
+  boost::optional<IdfObject> translateAirLoopHVACUnitaryHeatCoolVAVChangeoverBypass( model::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass & modelObject );
 
   boost::optional<IdfObject> translateAirLoopHVACUnitaryHeatPumpAirToAir( model::AirLoopHVACUnitaryHeatPumpAirToAir & modelObject );
 

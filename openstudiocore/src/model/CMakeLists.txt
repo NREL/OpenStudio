@@ -41,6 +41,9 @@ set(${target_name}_src
   AirLoopHVAC.hpp
   AirLoopHVAC_Impl.hpp
   AirLoopHVAC.cpp
+  AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp
+  AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp
+  AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.cpp
   AirLoopHVACUnitaryHeatPumpAirToAir.hpp
   AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp
   AirLoopHVACUnitaryHeatPumpAirToAir.cpp
@@ -1150,6 +1153,7 @@ set(${target_name}_test_src
   test/AirLoopHVACOutdoorAirSystem_GTest.cpp
   test/AirLoopHVACUnitaryHeatPumpAirToAir_GTest.cpp
   test/AirLoopHVACUnitarySystem_GTest.cpp
+  test/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_GTest.cpp
   test/AirLoopHVAC_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeCooledBeam_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeReheat_GTest.cpp

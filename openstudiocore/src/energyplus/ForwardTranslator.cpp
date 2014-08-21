@@ -490,6 +490,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirLoopHVACUnitaryHeatPumpAirToAir(unitary);
       break;
     }
+  case openstudio::IddObjectType::OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass :
+    {
+      model::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary = modelObject.cast<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>();
+      retVal = translateAirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(unitary);
+      break;
+    }
   case openstudio::IddObjectType::OS_AirLoopHVAC_UnitarySystem :
     {
       model::AirLoopHVACUnitarySystem unitary = modelObject.cast<AirLoopHVACUnitarySystem>();
@@ -1862,6 +1868,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_AirLoopHVAC);
   result.push_back(IddObjectType::OS_AirLoopHVAC_ControllerList);
   result.push_back(IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem);
+  result.push_back(IddObjectType::OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass);
   result.push_back(IddObjectType::OS_AirLoopHVAC_UnitaryCoolOnly);
   result.push_back(IddObjectType::OS_AirLoopHVAC_ZoneMixer);
   result.push_back(IddObjectType::OS_AirLoopHVAC_ZoneSplitter);
