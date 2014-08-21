@@ -355,6 +355,7 @@ class ChoiceConcept {
   virtual bool set(std::string value) = 0;
   virtual void clear() {}
   virtual bool isDefaulted() { return false; }
+  virtual bool editable() { return false; }
 };
 
 /** Concept of a required choice, that is, one in which a non-empty choice,
@@ -468,12 +469,14 @@ class OptionalChoiceConceptImpl : public ChoiceConcept {
       std::function<std::vector<ChoiceType> ()> choices,
       std::function<boost::optional<ChoiceType> ()> getter,
       std::function<bool (ChoiceType)> setter,
-      boost::optional<NoFailAction> reset=boost::none)
+      boost::optional<NoFailAction> reset=boost::none,
+      bool editable = false)
     : m_toString(toString),
       m_choices(choices),
       m_getter(getter),
       m_setter(setter),
-      m_reset(reset)
+      m_reset(reset),
+      m_editable(editable)
   {}
 
   virtual ~OptionalChoiceConceptImpl() {}
@@ -506,15 +509,42 @@ class OptionalChoiceConceptImpl : public ChoiceConcept {
     return result;
   }
 
+  // overload specific for std::string setter, because we have the option of not doing
+  // a lookup, but the call to t_setter can compile only in the case that we know
+  // t_setter takes a string
+  bool setImpl(const std::string &t_value, const std::function<bool (std::string)> &t_setter)
+  {
+    if (m_editable) {
+      // no reason to do a lookup - it's editable
+      return t_setter(t_value);
+    } else {
+      return setImplWithLookup(t_value, t_setter);
+    }
+  }
+
+  template<typename T>
+  bool setImpl(const std::string &t_value, const std::function<bool (T)> &t_setter)
+  {
+    return setImplWithLookup(t_value, t_setter);
+  }
+
+  template<typename T>
+  bool setImplWithLookup(const std::string &t_value, const std::function<bool (T)> &t_setter)
+  {
+    typename std::map<std::string,ChoiceType>::const_iterator valuePair = m_choicesMap.find(t_value);
+    OS_ASSERT(valuePair != m_choicesMap.end());
+    return t_setter(valuePair->second);
+  }
+
+
   virtual bool set(std::string value) {
     if (value.empty()) {
       clear();
       return true;
     }
 
-    typename std::map<std::string,ChoiceType>::const_iterator valuePair = m_choicesMap.find(value);
-    OS_ASSERT(valuePair != m_choicesMap.end());
-    return m_setter(valuePair->second);
+    return setImpl(value, m_setter);
+
   }
 
   virtual void clear() {
@@ -523,12 +553,17 @@ class OptionalChoiceConceptImpl : public ChoiceConcept {
     }
   }
 
+  virtual bool editable() {
+    return m_editable;
+  }
+
  private:
   std::function<std::string (ChoiceType)> m_toString;
   std::function<std::vector<ChoiceType> ()> m_choices;
   std::function<boost::optional<ChoiceType> ()> m_getter;
   std::function<bool (ChoiceType)> m_setter;
   boost::optional<NoFailAction> m_reset;
+  bool m_editable;
 
   std::map<std::string,ChoiceType> m_choicesMap;
 };
@@ -542,12 +577,14 @@ class OptionalChoiceSaveDataSourceConceptImpl : public OptionalChoiceConceptImpl
       std::function<std::vector<ChoiceType> ()> choices,
       std::function<boost::optional<ChoiceType> ()> getter,
       std::function<bool (ChoiceType)> setter,
-      boost::optional<NoFailAction> reset=boost::none)
+      boost::optional<NoFailAction> reset=boost::none,
+      bool editable = false)
     : OptionalChoiceConceptImpl<ChoiceType>(toString,
                                             choices,
                                             getter,
                                             setter,
-                                            reset),
+                                            reset,
+                                            editable),
       m_dataSource(dataSource)
   {}
 
@@ -653,8 +690,8 @@ class ComboBoxOptionalChoiceImpl : public ComboBoxConcept
               std::bind(m_choices,dataSource.get()),
               std::bind(m_getter,dataSource.get()),
               std::bind(m_setter,dataSource.get(),std::placeholders::_1),
-              resetAction /*,
-              m_editable */);
+              resetAction,
+              m_editable);
 
   }
 

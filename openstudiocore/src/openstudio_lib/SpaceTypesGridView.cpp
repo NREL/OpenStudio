@@ -896,7 +896,9 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           choices,
           getter,
           setter,
-          resetter);
+          resetter,
+          boost::none,
+          true);
     } else if (field == STANDARDSSPACETYPE) {
 
       // nothing to do, it is a string already
@@ -927,7 +929,9 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           choices,
           getter,
           setter,
-          resetter);
+          resetter,
+          boost::none,
+          true);
     } else {
       // unhandled
       OS_ASSERT(false);

@@ -195,10 +195,11 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
 
   } else if(QSharedPointer<ComboBoxConcept> comboBoxConcept = t_baseConcept.dynamicCast<ComboBoxConcept>()) {
 
-    auto comboBox = new OSComboBox2();
+    auto choiceConcept = comboBoxConcept->choiceConcept(t_mo);
 
-    comboBox->bind(t_mo,
-                   comboBoxConcept->choiceConcept(t_mo));
+    auto comboBox = new OSComboBox2(nullptr, choiceConcept->editable());
+
+    comboBox->bind(t_mo, choiceConcept);
 
     widget = comboBox;
 

@@ -236,16 +236,18 @@ public:
                          std::function<boost::optional<ChoiceType> (DataSourceType*)> getter,
                          std::function<bool (DataSourceType*, ChoiceType)> setter,
                          boost::optional<std::function<void (DataSourceType*)> > reset=boost::none,
-                         const boost::optional<DataSource> &t_source = boost::none)
+                         const boost::optional<DataSource> &t_source = boost::none,
+                         bool editable = true)
   {
-  addComboBoxColumn<ChoiceType, DataSourceType>(
-        headingLabel,
-        toString,
-        std::function<std::vector<ChoiceType> (DataSourceType*)>([choices](DataSourceType*) { return choices(); }),
-        getter,
-        setter,
-        reset,
-        t_source);
+    addComboBoxColumn<ChoiceType, DataSourceType>(
+          headingLabel,
+          toString,
+          std::function<std::vector<ChoiceType> (DataSourceType*)>([choices](DataSourceType*) { return choices(); }),
+          getter,
+          setter,
+          reset,
+          t_source,
+          editable);
   }
 
 
@@ -292,7 +294,8 @@ public:
                          std::function<boost::optional<ChoiceType> (DataSourceType*)> getter,
                          std::function<bool (DataSourceType*, ChoiceType)> setter,
                          boost::optional<std::function<void (DataSourceType*)> > reset=boost::none,
-                         const boost::optional<DataSource> &t_source = boost::none)
+                         const boost::optional<DataSource> &t_source = boost::none,
+                         bool editable = false)
   {
     m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<ComboBoxConcept>(
       new ComboBoxOptionalChoiceImpl<ChoiceType,DataSourceType>(headingLabel,
@@ -300,7 +303,8 @@ public:
                                                                 choices,
                                                                 getter,
                                                                 setter,
-                                                                reset)), t_source));
+                                                                reset,
+                                                                editable)), t_source));
   }
 
   template<typename ValueType, typename DataSourceType>

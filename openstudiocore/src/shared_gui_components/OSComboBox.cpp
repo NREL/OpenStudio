@@ -168,12 +168,13 @@ void OSObjectListCBDS::onObjectChanged()
   }
 }
 
-OSComboBox2::OSComboBox2( QWidget * parent )
+OSComboBox2::OSComboBox2( QWidget * parent, bool editable )
   : QComboBox(parent)
 {
   this->setAcceptDrops(false);
   auto completer = new QCompleter();
   this->setCompleter(completer);
+  setEditable(editable);
   setEnabled(false);
 }
 
@@ -258,12 +259,27 @@ void OSComboBox2::onCurrentIndexChanged(const QString & text)
   }
 }
 
+void OSComboBox2::onEditTextChanged(const QString & text)
+{
+  OS_ASSERT(m_modelObject);
+
+  if( m_choiceConcept )
+  {
+    std::string value = text.toStdString();
+
+    this->blockSignals(true);
+    m_choiceConcept->set(value);
+    onModelObjectChanged(); // will be sure to display actual value
+    this->blockSignals(false);
+  }
+}
+
 void OSComboBox2::onChoicesRefreshTrigger() {
   if( m_choiceConcept )
   {
     m_values = m_choiceConcept->choices();
     this->blockSignals(true);
-    
+
     clear();
     for( const auto & value : m_values )
     {
@@ -319,6 +335,12 @@ void OSComboBox2::completeBind() {
 
     isConnected = connect( this, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onCurrentIndexChanged(const QString&)) );
     OS_ASSERT(isConnected);
+
+    if (isEditable())
+    {
+      isConnected = connect(this, SIGNAL(editTextChanged(const QString&)), this, SLOT(onEditTextChanged(const QString&)));
+      OS_ASSERT(isConnected);
+    }
 
     // isConnected = connect( m_modelObject->model().getImpl<openstudio::model::detail::Model_Impl>().get(),
     //                        SIGNAL(addWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
