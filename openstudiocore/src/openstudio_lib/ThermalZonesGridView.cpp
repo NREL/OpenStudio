@@ -315,13 +315,49 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                           &model::ThermalZone::sizingZone));
 
     }else if(field == COOLINGTHERMOSTATSCHEDULE){
+
+      std::function<boost::optional<model::Schedule>(model::ThermalZone *)> coolingSchedule(
+        [](model::ThermalZone * z) {
+          boost::optional<model::Schedule> schedule;
+          if (boost::optional<model::ThermostatSetpointDualSetpoint> thermostat = z->thermostatSetpointDualSetpoint()) {
+            schedule = thermostat->coolingSetpointTemperatureSchedule();
+          }
+          return schedule;
+        }
+      );
+
+      std::function<bool(model::ThermalZone *, const model::Schedule &)> setCoolingSchedule(
+        [](model::ThermalZone * z, model::Schedule t_s) {
+          if (boost::optional<model::ThermostatSetpointDualSetpoint> thermostat = z->thermostatSetpointDualSetpoint()) {
+            return thermostat->setCoolingSetpointTemperatureSchedule(t_s);
+          }
+          else {
+            model::ThermostatSetpointDualSetpoint t(z->model());
+            return t.setCoolingSetpointTemperatureSchedule(t_s);
+          }
+        }
+      );
+
+      std::function<void(model::ThermalZone *)> resetCoolingSchedule(
+        [](model::ThermalZone * z) {
+          if (boost::optional<model::ThermostatSetpointDualSetpoint> thermostat = z->thermostatSetpointDualSetpoint()) {
+            thermostat->resetCoolingSetpointTemperatureSchedule();
+          }
+        }
+      );
+
       addDropZoneColumn(QString(COOLINGTHERMOSTATSCHEDULE),
                         ProxyAdapter(&model::ThermostatSetpointDualSetpoint::coolingSetpointTemperatureSchedule,
                                      &model::ThermalZone::thermostatSetpointDualSetpoint,
                                      boost::optional<model::Schedule>()),
                         ProxyAdapter(&openstudio::model::ThermostatSetpointDualSetpoint::setCoolingSetpointTemperatureSchedule,
                                      &model::ThermalZone::thermostatSetpointDualSetpoint,
-                                     false));
+                                     false)//,
+                        //DataSource(
+                        //  allLoadsWithActivityLevelSchedules,
+                        //  true
+                        //)
+                       );
 
     }else if (field == HEATINGTHERMOSTATSCHEDULE){
       addDropZoneColumn(QString(HEATINGTHERMOSTATSCHEDULE),
