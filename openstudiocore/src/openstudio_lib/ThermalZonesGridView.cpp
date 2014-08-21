@@ -347,17 +347,10 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
       );
 
       addDropZoneColumn(QString(COOLINGTHERMOSTATSCHEDULE),
-                        ProxyAdapter(&model::ThermostatSetpointDualSetpoint::coolingSetpointTemperatureSchedule,
-                                     &model::ThermalZone::thermostatSetpointDualSetpoint,
-                                     boost::optional<model::Schedule>()),
-                        ProxyAdapter(&openstudio::model::ThermostatSetpointDualSetpoint::setCoolingSetpointTemperatureSchedule,
-                                     &model::ThermalZone::thermostatSetpointDualSetpoint,
-                                     false)//,
-                        //DataSource(
-                        //  allLoadsWithActivityLevelSchedules,
-                        //  true
-                        //)
-                       );
+        coolingSchedule,
+        setCoolingSchedule);
+        //setCoolingSchedule, TODO use once dropzone reset is implemented
+        //resetCoolingSchedule);
 
     }else if (field == HEATINGTHERMOSTATSCHEDULE){
       addDropZoneColumn(QString(HEATINGTHERMOSTATSCHEDULE),
