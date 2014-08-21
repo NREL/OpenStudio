@@ -4,14 +4,9 @@
 #start the measure
 class UtilityMeasure < OpenStudio::Ruleset::UtilityUserScript
   
-  # machine readable name
-  def name
-    return "ReportingMeasure"
-  end
-  
   # human readable name
-  def display_name
-    return "ReportingMeasure"
+  def name
+    return "UtilityMeasure"
   end
   
   # human readable description

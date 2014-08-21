@@ -64,6 +64,8 @@ namespace openstudio{
 
     void writeValues(QDomDocument& doc, QDomElement& element) const;
 
+    bool operator==(const BCLMeasureArgument& other) const;
+
   private:
     std::string m_name;
     std::string m_displayName;

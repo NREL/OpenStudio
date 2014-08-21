@@ -79,7 +79,6 @@ namespace openstudio{
       templateName = "ModelMeasure";
 
       createDirectory(dir / toPath("tests"));
-      testOSMPath = dir / toPath("tests/TestModel.osm");
 
     }else if (measureType == MeasureType::EnergyPlusMeasure){
       measureTemplate = ":/templates/EnergyPlusMeasure/measure.rb";
@@ -155,7 +154,7 @@ namespace openstudio{
     // write files
     openstudio::path measureXMLPath = dir / toPath("measure.xml");
     openstudio::path measureScriptPath = dir / toPath("measure.rb");
-    openstudio::path measureTestPath = measureTestDir / toPath(lowerClassName + "_Test.rb");
+    openstudio::path measureTestPath = measureTestDir / toPath(lowerClassName + "_test.rb");
 
     // write measure.rb
     {

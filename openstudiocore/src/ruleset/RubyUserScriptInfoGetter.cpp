@@ -23,7 +23,7 @@
 
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
-
+#include "../utilities/core/StringHelpers.hpp"
 
 #include <sstream>
 
@@ -72,8 +72,86 @@ namespace ruleset {
 
   bool RubyUserScriptInfo::update(BCLMeasure& measure) const
   {
+    bool result = false;
 
-    return false;
+    // map snake cased class name to bcl measure name
+    std::string lowerClassName = toUnderscoreCase(m_className);
+    if (measure.name() != lowerClassName){
+      result = true;
+      measure.setName(lowerClassName);
+    }
+
+    // map name from measure to bcl measure display name
+    if (measure.displayName() != m_name){
+      result = true;
+      measure.setDisplayName(m_name);
+    }
+
+    if (measure.className() != m_className){
+      result = true;
+      measure.setClassName(m_className);
+    }
+
+    if (measure.description() != m_description){
+      result = true;
+      measure.setDescription(m_description);
+    }
+
+    if (measure.modelerDescription() != m_modelerDescription){
+      result = true;
+      measure.setModelerDescription(m_modelerDescription);
+    }
+
+    unsigned n = m_arguments.size();
+    std::vector<BCLMeasureArgument> bclArguments;
+    bclArguments.reserve(n);
+    for (const OSArgument& argument : m_arguments){
+
+      std::string bclMeasureType = argument.type().valueName();
+      if (argument.type() == OSArgumentType::Quantity){
+        LOG(Warn, "Mapping deprecated OSArgumentType::Quantity to Double");
+        bclMeasureType = "Double";
+      }
+
+      boost::optional<std::string> defaultValue;
+      if (argument.hasDefaultValue()){
+        defaultValue = argument.defaultValueAsString();
+      }
+
+      boost::optional<std::string> minValue;
+      boost::optional<std::string> maxValue;
+      if (argument.hasDomain()){
+        // TODO
+      }
+
+      BCLMeasureArgument bclArgument(argument.name(), argument.displayName(),
+                                     argument.description(), bclMeasureType, 
+                                     argument.units(), argument.required(),
+                                     argument.modelDependent(), defaultValue,
+                                     argument.choiceValues(), argument.choiceValueDisplayNames(),
+                                     minValue,  maxValue);
+
+      bclArguments.push_back(bclArgument);
+    }
+
+
+
+
+    std::vector<BCLMeasureArgument> otherArguments = measure.arguments();
+    if (otherArguments.size() != n){
+      result = true;
+      measure.setArguments(bclArguments);
+    } else {
+      for (unsigned i = 0; i < n; ++i){
+        if (!(bclArguments[i] == otherArguments[i])){
+          result = true;
+          measure.setArguments(bclArguments);
+          break;
+        }
+      }
+    }
+
+    return result;
   }
 
   RubyUserScriptInfo RubyUserScriptInfoGetter::getInfo(

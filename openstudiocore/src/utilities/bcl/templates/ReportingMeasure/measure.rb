@@ -6,13 +6,8 @@ require 'erb'
 #start the measure
 class ReportingMeasure < OpenStudio::Ruleset::ReportingUserScript
   
-  # machine readable name
-  def name
-    return "ReportingMeasure"
-  end
-  
   # human readable name
-  def display_name
+  def name
     return "ReportingMeasure"
   end
   

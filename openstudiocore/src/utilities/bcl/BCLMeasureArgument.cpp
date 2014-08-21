@@ -240,6 +240,103 @@ namespace openstudio{
     }
   }
 
+  bool BCLMeasureArgument::operator == (const BCLMeasureArgument& other) const
+  {
+    if (m_name != other.name()){
+      return false;
+    }
+
+    if (m_displayName != other.displayName()){
+      return false;
+    }
+
+    if (m_description && !other.description()){
+      return false;
+    } else if (!m_description && other.description()){
+      return false;
+    } else if (m_description && other.description()){
+      if (m_description.get() != other.description().get()){
+        return false;
+      }
+    }
+
+    if (m_type != other.type()){
+      return false;
+    }
+
+    if (m_units && !other.units()){
+      return false;
+    } else if (!m_units && other.units()){
+      return false;
+    } else if (m_units && other.units()){
+      if (m_units.get() != other.units().get()){
+        return false;
+      }
+    }
+
+    if (m_required != other.required()){
+      return false;
+    }
+
+    if (m_modelDependent != other.modelDependent()){
+      return false;
+    }
+
+    if (m_defaultValue && !other.defaultValue()){
+      return false;
+    } else if (!m_defaultValue && other.defaultValue()){
+      return false;
+    } else if (m_defaultValue && other.defaultValue()){
+      if (m_defaultValue.get() != other.defaultValue().get()){
+        return false;
+      }
+    }
+
+    unsigned n = m_choiceValues.size();
+    std::vector<std::string> otherChoiceValues = other.choiceValues();
+    if (otherChoiceValues.size() != n){
+      return false;
+    }
+    for (unsigned i = 0; i < n; ++i){
+      if (m_choiceValues[i] != otherChoiceValues[i]){
+        return false;
+      }
+    }
+
+    n = m_choiceDisplayNames.size();
+    std::vector<std::string> otherChoiceDisplayNames = other.choiceDisplayNames();
+    if (otherChoiceDisplayNames.size() != n){
+      return false;
+    }
+    for (unsigned i = 0; i < n; ++i){
+      if (m_choiceDisplayNames[i] != otherChoiceDisplayNames[i]){
+        return false;
+      }
+    }
+
+    if (m_minValue && !other.minValue()){
+      return false;
+    } else if (!m_minValue && other.minValue()){
+      return false;
+    } else if (m_minValue && other.minValue()){
+      if (m_minValue.get() != other.minValue().get()){
+        return false;
+      }
+    }
+
+    if (m_maxValue && !other.maxValue()){
+      return false;
+    } else if (!m_maxValue && other.maxValue()){
+      return false;
+    } else if (m_maxValue && other.maxValue()){
+      if (m_maxValue.get() != other.maxValue().get()){
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   std::ostream& operator<<(std::ostream& os, const BCLMeasureArgument& argument)
   {
     QDomDocument doc;

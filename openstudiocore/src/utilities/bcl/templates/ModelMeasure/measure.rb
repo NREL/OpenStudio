@@ -4,12 +4,8 @@
 # start the measure
 class ModelMeasure < OpenStudio::Ruleset::ModelUserScript
   
-  # machine readable name
-  def name
-    return "ModelMeasure"
-  end
   # human readable name
-  def display_name
+  def name
     return "ModelMeasure"
   end
   

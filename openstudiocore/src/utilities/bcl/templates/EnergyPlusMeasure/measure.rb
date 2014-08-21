@@ -4,15 +4,11 @@
 # start the measure
 class EnergyPlusMeasure < OpenStudio::Ruleset::WorkspaceUserScript
   
-  # machine readable name
+  # human readable name
   def name
     return "EnergyPlusMeasure"
   end
-  # human readable name
-  def display_name
-    return "EnergyPlusMeasure"
-  end
-  
+
   # human readable description
   def description
     return "A human readable description goes here"

@@ -64,6 +64,8 @@ public:
   bool update(BCLMeasure& measure) const;
 
 private:
+  REGISTER_LOGGER("openstudio.ruleset.RubyUserScriptInfo");
+
   MeasureType m_measureType;
   std::string m_className;
   std::string m_name;
