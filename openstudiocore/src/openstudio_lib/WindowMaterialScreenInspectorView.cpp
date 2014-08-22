@@ -70,8 +70,6 @@ void WindowMaterialScreenInspectorView::createLayout()
   unsigned row = 0;
   unsigned col = 0;
 
-  bool isConnected = false;
-
   // Name
 
   QLabel * label = new QLabel("Name: ");
@@ -100,8 +98,7 @@ void WindowMaterialScreenInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_diffuseSolarReflectance = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_diffuseSolarReflectance, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_diffuseSolarReflectance, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_diffuseSolarReflectance,row++,0,1,3);
 
   // Diffuse Visible Reflectance
@@ -111,8 +108,7 @@ void WindowMaterialScreenInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_diffuseVisibleReflectance = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_diffuseVisibleReflectance, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_diffuseVisibleReflectance, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_diffuseVisibleReflectance,row++,0,1,3);
 
   // Thermal Hemispherical Emissivity
@@ -122,8 +118,7 @@ void WindowMaterialScreenInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_thermalHemisphericalEmissivity = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_thermalHemisphericalEmissivity, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_thermalHemisphericalEmissivity, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_thermalHemisphericalEmissivity,row++,0,1,3);
 
   // Conductivity
@@ -133,8 +128,7 @@ void WindowMaterialScreenInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_conductivity = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_conductivity, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_conductivity, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_conductivity,row++,0,1,3);
 
   // Screen Material Spacing
@@ -144,8 +138,7 @@ void WindowMaterialScreenInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_screenMaterialSpacing = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_screenMaterialSpacing, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_screenMaterialSpacing, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_screenMaterialSpacing,row++,0,1,3);
 
   // Screen Material Diameter
@@ -155,8 +148,7 @@ void WindowMaterialScreenInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_screenMaterialDiameter = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_screenMaterialDiameter, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_screenMaterialDiameter, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_screenMaterialDiameter,row++,0,1,3);
 
   // Screen To Glass Distance
@@ -166,8 +158,7 @@ void WindowMaterialScreenInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_screenToGlassDistance = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_screenToGlassDistance, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_screenToGlassDistance, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_screenToGlassDistance,row++,0,1,3);
 
   // Top Opening Multiplier
@@ -177,8 +168,7 @@ void WindowMaterialScreenInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_topOpeningMultiplier = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_topOpeningMultiplier, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_topOpeningMultiplier, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_topOpeningMultiplier,row++,0,1,3);
 
   // Bottom Opening Multiplier
@@ -188,8 +178,7 @@ void WindowMaterialScreenInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_bottomOpeningMultiplier = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_bottomOpeningMultiplier, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_bottomOpeningMultiplier, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_bottomOpeningMultiplier,row++,0,1,3);
 
   // Left Side Opening Multiplier
@@ -199,8 +188,7 @@ void WindowMaterialScreenInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_leftSideOpeningMultiplier = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_leftSideOpeningMultiplier, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_leftSideOpeningMultiplier, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_leftSideOpeningMultiplier,row++,0,1,3);
 
   // Right Side Opening Multiplier
@@ -210,8 +198,7 @@ void WindowMaterialScreenInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_rightSideOpeningMultiplier = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_rightSideOpeningMultiplier, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_rightSideOpeningMultiplier, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_rightSideOpeningMultiplier,row++,0,1,3);  
 
   // Angle Of Resolution For Screen Transmittance Output Map

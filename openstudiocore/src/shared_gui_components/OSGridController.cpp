@@ -153,9 +153,7 @@ void OSGridController::setHorizontalHeader()
     m_horizontalHeaderBtnGrp = new QButtonGroup();
     m_horizontalHeaderBtnGrp->setExclusive(false);
 
-    bool isConnected = false;
-    isConnected = connect(m_horizontalHeaderBtnGrp, SIGNAL(buttonClicked(int)), this, SLOT(horizontalHeaderChecked(int)));
-    OS_ASSERT(isConnected);
+    connect(m_horizontalHeaderBtnGrp, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &OSGridController::horizontalHeaderChecked);
 
   } else {
     QList<QAbstractButton *> buttons = m_horizontalHeaderBtnGrp->buttons();

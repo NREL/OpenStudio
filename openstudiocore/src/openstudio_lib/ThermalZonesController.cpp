@@ -50,13 +50,20 @@ ThermalZonesController::ThermalZonesController(bool isIP, const model::Model & m
 {
   subTabView()->itemSelectorButtons()->disableCopyButton();
 
+  ThermalZoneView * thermalZoneView = static_cast<ThermalZoneView *>(subTabView()->inspectorView());
+
+  connect(thermalZoneView, &ThermalZoneView::enableThermostatClicked, this, &ThermalZonesController::enableThermostat);
+
+  connect(thermalZoneView, &ThermalZoneView::enableHumidistatClicked, this, &ThermalZonesController::enableHumidistat);
+
+  connect(thermalZoneView, &ThermalZoneView::modelObjectSelected, this, &ThermalZonesController::modelObjectSelected);
+
+  connect(this, &ThermalZonesController::toggleUnitsClicked, thermalZoneView, &ThermalZoneView::toggleUnitsClicked);
+
   bool isConnected = false;
 
-  QWidget * thermalZoneView = subTabView()->inspectorView(); 
-
   isConnected = connect(thermalZoneView, SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool)), this, SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool)));
-
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), thermalZoneView, SIGNAL(toggleUnitsClicked(bool)));
+  OS_ASSERT(isConnected);
 }
 
 //void ThermalZonesController::enableThermostat(model::ThermalZone & thermalZone, bool enable)

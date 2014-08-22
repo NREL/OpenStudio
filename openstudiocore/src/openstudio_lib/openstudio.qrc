@@ -50,6 +50,7 @@
     <file>images/delete_press.png</file>
     <file>images/direct-air.png</file>
     <file>images/directEvap.png</file>
+    <file>images/indirectEvap.png</file>
     <file>images/divider_dots.png</file>
     <file>images/districtcooling.png</file>
     <file>images/districtheating.png</file>
@@ -134,6 +135,7 @@
     <file>images/os_256.png</file>
     <file>images/osm-icon-open.png</file>
     <file>images/parallel_fan_terminal.png</file>
+    <file>images/series_fan_terminal.png</file>
     <file>images/pipe.png</file>
     <file>images/plant_loop_icon.png</file>
     <file>images/plenum_on.png</file>
@@ -266,6 +268,7 @@
     <file>images/mini_icons/default_surface_construction_set.png</file>
     <file>images/mini_icons/direct-air.png</file>
     <file>images/mini_icons/directEvap.png</file>
+    <file>images/mini_icons/indirectEvap.png</file>
     <file>images/mini_icons/districtcooling.png</file>
     <file>images/mini_icons/districtheating.png</file>    
     <file>images/mini_icons/electric_equipment.png</file>
@@ -325,6 +328,7 @@
     <file>images/mini_icons/other_equipment_definition.png</file>
     <file>images/mini_icons/outdoor_air.png</file>
     <file>images/mini_icons/parallel_fan_terminal.png</file>
+    <file>images/mini_icons/series_fan_terminal.png</file>
     <file>images/mini_icons/people.png</file>
     <file>images/mini_icons/people_definition.png</file>
     <file>images/mini_icons/pipe.png</file>

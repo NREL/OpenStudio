@@ -24,13 +24,13 @@ namespace isomodel {
 class Population
   {
   public:
-    double hoursEnd() const {return _hoursEnd;}	
-    double hoursStart() const {return _hoursStart;}	
-    double daysEnd() const {return _daysEnd;}	
-    double daysStart() const {return _daysStart;}	
-    double densityOccupied() const {return _densityOccupied;}	
-    double densityUnoccupied() const {return _densityUnoccupied;}	
-    double heatGainPerPerson() const {return _heatGainPerPerson;}	
+    double hoursEnd() const {return _hoursEnd;}
+    double hoursStart() const {return _hoursStart;}
+    double daysEnd() const {return _daysEnd;}
+    double daysStart() const {return _daysStart;}
+    double densityOccupied() const {return _densityOccupied;}
+    double densityUnoccupied() const {return _densityUnoccupied;}
+    double heatGainPerPerson() const {return _heatGainPerPerson;}
 
     void setHoursEnd(double value) {_hoursEnd = value;}
     void setHoursStart(double value) {_hoursStart = value;}

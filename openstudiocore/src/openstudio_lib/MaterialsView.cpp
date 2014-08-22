@@ -55,9 +55,7 @@ MaterialsView::MaterialsView(bool isIP,
   false,
   parent)
 {
-  bool isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
-                             modelObjectInspectorView(),SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialsView::toggleUnitsClicked, modelObjectInspectorView(), &ModelObjectInspectorView::toggleUnitsClicked);
 }
 
 std::vector<std::pair<IddObjectType, std::string> > MaterialsView::modelObjectTypesAndNames()
@@ -185,11 +183,7 @@ void MaterialsInspectorView::onSelectModelObject(const openstudio::model::ModelO
 void MaterialsInspectorView::showMaterialAirGapInspectorView(const openstudio::model::ModelObject & modelObject)
 {
   MaterialAirGapInspectorView * view = new MaterialAirGapInspectorView(m_isIP, m_model);
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             view, 
-                             SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialsInspectorView::toggleUnitsClicked, view, &MaterialAirGapInspectorView::toggleUnitsClicked);
 
   view->selectModelObject(modelObject);
 
@@ -199,11 +193,7 @@ void MaterialsInspectorView::showMaterialAirGapInspectorView(const openstudio::m
 void MaterialsInspectorView::showMaterialAirWallInspectorView(const openstudio::model::ModelObject & modelObject)
 {
   MaterialAirWallInspectorView * view = new MaterialAirWallInspectorView(m_isIP, m_model);
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             view, 
-                             SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialsInspectorView::toggleUnitsClicked, view, &MaterialAirGapInspectorView::toggleUnitsClicked);
 
   view->selectModelObject(modelObject);
 
@@ -213,11 +203,7 @@ void MaterialsInspectorView::showMaterialAirWallInspectorView(const openstudio::
 void MaterialsInspectorView::showMaterialInfraredTransparentInspectorView(const openstudio::model::ModelObject & modelObject)
 {
   MaterialInfraredTransparentInspectorView * view = new MaterialInfraredTransparentInspectorView(m_isIP, m_model);
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             view, 
-                             SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialsInspectorView::toggleUnitsClicked, view, &MaterialAirGapInspectorView::toggleUnitsClicked);
 
   view->selectModelObject(modelObject);
 
@@ -227,11 +213,7 @@ void MaterialsInspectorView::showMaterialInfraredTransparentInspectorView(const 
 void MaterialsInspectorView::showMaterialInspectorView(const openstudio::model::ModelObject & modelObject)
 {
   MaterialInspectorView * view = new MaterialInspectorView(m_isIP, m_model);
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             view, 
-                             SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialsInspectorView::toggleUnitsClicked, view, &MaterialAirGapInspectorView::toggleUnitsClicked);
 
   view->selectModelObject(modelObject);
 
@@ -241,11 +223,7 @@ void MaterialsInspectorView::showMaterialInspectorView(const openstudio::model::
 void MaterialsInspectorView::showMaterialNoMassInspectorView(const openstudio::model::ModelObject & modelObject)
 {
   MaterialNoMassInspectorView * view = new MaterialNoMassInspectorView(m_isIP, m_model);
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             view, 
-                             SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialsInspectorView::toggleUnitsClicked, view, &MaterialAirGapInspectorView::toggleUnitsClicked);
 
   view->selectModelObject(modelObject);
 
@@ -255,11 +233,7 @@ void MaterialsInspectorView::showMaterialNoMassInspectorView(const openstudio::m
 void MaterialsInspectorView::showMaterialRoofVegetationInspectorView(const openstudio::model::ModelObject & modelObject)
 {
   MaterialRoofVegetationInspectorView * view = new MaterialRoofVegetationInspectorView(m_isIP, m_model);
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             view, 
-                             SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialsInspectorView::toggleUnitsClicked, view, &MaterialAirGapInspectorView::toggleUnitsClicked);
 
   view->selectModelObject(modelObject);
 
@@ -269,11 +243,7 @@ void MaterialsInspectorView::showMaterialRoofVegetationInspectorView(const opens
 void MaterialsInspectorView::showWindowMaterialBlindInspectorView(const openstudio::model::ModelObject & modelObject)
 {
   WindowMaterialBlindInspectorView * view = new WindowMaterialBlindInspectorView(m_isIP, m_model);
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             view, 
-                             SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialsInspectorView::toggleUnitsClicked, view, &MaterialAirGapInspectorView::toggleUnitsClicked);
 
   view->selectModelObject(modelObject);
 
@@ -283,11 +253,7 @@ void MaterialsInspectorView::showWindowMaterialBlindInspectorView(const openstud
 void MaterialsInspectorView::showWindowMaterialGasInspectorView(const openstudio::model::ModelObject & modelObject)
 {
   WindowMaterialGasInspectorView * view = new WindowMaterialGasInspectorView(m_isIP, m_model);
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             view, 
-                             SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialsInspectorView::toggleUnitsClicked, view, &MaterialAirGapInspectorView::toggleUnitsClicked);
 
   view->selectModelObject(modelObject);
 
@@ -297,11 +263,7 @@ void MaterialsInspectorView::showWindowMaterialGasInspectorView(const openstudio
 void MaterialsInspectorView::showWindowMaterialGasMixtureInspectorView(const openstudio::model::ModelObject & modelObject)
 {
   WindowMaterialGasMixtureInspectorView * view = new WindowMaterialGasMixtureInspectorView(m_isIP, m_model);
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             view, 
-                             SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialsInspectorView::toggleUnitsClicked, view, &MaterialAirGapInspectorView::toggleUnitsClicked);
 
   view->selectModelObject(modelObject);
 
@@ -311,11 +273,7 @@ void MaterialsInspectorView::showWindowMaterialGasMixtureInspectorView(const ope
 void MaterialsInspectorView::showWindowMaterialGlazingGroupThermochromicInspectorView(const openstudio::model::ModelObject & modelObject)
 {
   WindowMaterialGlazingGroupThermochromicInspectorView * view = new WindowMaterialGlazingGroupThermochromicInspectorView(m_isIP, m_model);
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             view, 
-                             SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialsInspectorView::toggleUnitsClicked, view, &MaterialAirGapInspectorView::toggleUnitsClicked);
 
   view->selectModelObject(modelObject);
 
@@ -325,11 +283,7 @@ void MaterialsInspectorView::showWindowMaterialGlazingGroupThermochromicInspecto
 void MaterialsInspectorView::showWindowMaterialGlazingInspectorView(const openstudio::model::ModelObject & modelObject)
 {
   WindowMaterialGlazingInspectorView * view = new WindowMaterialGlazingInspectorView(m_isIP, m_model);
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             view, 
-                             SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialsInspectorView::toggleUnitsClicked, view, &MaterialAirGapInspectorView::toggleUnitsClicked);
 
   view->selectModelObject(modelObject);
 
@@ -339,11 +293,7 @@ void MaterialsInspectorView::showWindowMaterialGlazingInspectorView(const openst
 void MaterialsInspectorView::showWindowMaterialGlazingRefractionExtinctionMethodInspectorView(const openstudio::model::ModelObject & modelObject)
 {
   WindowMaterialGlazingRefractionExtinctionMethodInspectorView * view = new WindowMaterialGlazingRefractionExtinctionMethodInspectorView(m_isIP, m_model);
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             view, 
-                             SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialsInspectorView::toggleUnitsClicked, view, &MaterialAirGapInspectorView::toggleUnitsClicked);
 
   view->selectModelObject(modelObject);
 
@@ -353,11 +303,7 @@ void MaterialsInspectorView::showWindowMaterialGlazingRefractionExtinctionMethod
 void MaterialsInspectorView::showWindowMaterialScreenInspectorView(const openstudio::model::ModelObject & modelObject)
 {
   WindowMaterialScreenInspectorView * view = new WindowMaterialScreenInspectorView(m_isIP, m_model);
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             view, 
-                             SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialsInspectorView::toggleUnitsClicked, view, &MaterialAirGapInspectorView::toggleUnitsClicked);
 
   view->selectModelObject(modelObject);
 
@@ -367,11 +313,7 @@ void MaterialsInspectorView::showWindowMaterialScreenInspectorView(const openstu
 void MaterialsInspectorView::showWindowMaterialShadeInspectorView(const openstudio::model::ModelObject & modelObject)
 {
   WindowMaterialShadeInspectorView * view = new WindowMaterialShadeInspectorView(m_isIP, m_model);
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             view, 
-                             SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialsInspectorView::toggleUnitsClicked, view, &MaterialAirGapInspectorView::toggleUnitsClicked);
 
   view->selectModelObject(modelObject);
 
@@ -381,11 +323,7 @@ void MaterialsInspectorView::showWindowMaterialShadeInspectorView(const openstud
 void MaterialsInspectorView::showWindowMaterialSimpleGlazingSystemInspectorView(const openstudio::model::ModelObject & modelObject)
 {
   WindowMaterialSimpleGlazingSystemInspectorView * view = new WindowMaterialSimpleGlazingSystemInspectorView(m_isIP, m_model);
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             view, 
-                             SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialsInspectorView::toggleUnitsClicked, view, &MaterialAirGapInspectorView::toggleUnitsClicked);
 
   view->selectModelObject(modelObject);
 

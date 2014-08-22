@@ -58,22 +58,19 @@ void OSObjectListCBDS::initialize()
     {
       m_workspaceObjects << modelObject;
 
-      connect( modelObject.getImpl<openstudio::model::detail::ModelObject_Impl>().get(),
-               SIGNAL(onChange()),
-               this,
-               SLOT(onObjectChanged()) );
+      connect(modelObject.getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onChange, this, &OSObjectListCBDS::onObjectChanged);
     }
   }
 
-  connect( m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-           SIGNAL(addWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
-           this,
-           SLOT(onObjectAdded(const WorkspaceObject&)) );
+  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject), 
+    this,
+    &OSObjectListCBDS::onObjectAdded);
 
-  connect( m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-           SIGNAL(removeWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
-           this,
-           SLOT(onObjectWillBeRemoved(const WorkspaceObject&)) );
+  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject), 
+    this,
+    &OSObjectListCBDS::onObjectWillBeRemoved);
 }
 
 int OSObjectListCBDS::numberOfItems()
@@ -113,11 +110,7 @@ void OSObjectListCBDS::onObjectAdded(const WorkspaceObject & workspaceObject)
   {
     m_workspaceObjects << workspaceObject;
 
-    connect( workspaceObject.getImpl<openstudio::model::detail::ModelObject_Impl>().get(),
-             SIGNAL(onChange()),
-             this,
-             SLOT(onObjectChanged()) );
-
+    connect(workspaceObject.getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onChange, this, &OSObjectListCBDS::onObjectChanged);
     if( m_allowEmptySelection )
     {
       emit itemAdded(m_workspaceObjects.size());
@@ -322,19 +315,13 @@ void OSComboBox2::onDataSourceRemove(int i)
 }
 
 void OSComboBox2::completeBind() {
-  bool isConnected(false);
   if (m_modelObject) {
     // connections
-    isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
-                           this,SLOT(onModelObjectChanged()) );
-    OS_ASSERT(isConnected);
+    connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSComboBox2::onModelObjectChanged);
 
-    isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
-                           this,SLOT(onModelObjectRemoved(Handle)) );
-    OS_ASSERT(isConnected);
+    connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSComboBox2::onModelObjectRemoved);
 
-    isConnected = connect( this, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onCurrentIndexChanged(const QString&)) );
-    OS_ASSERT(isConnected);
+    connect(this, static_cast<void (OSComboBox2::*)(const QString &)>(&OSComboBox2::currentIndexChanged), this, &OSComboBox2::onCurrentIndexChanged);
 
     if (isEditable())
     {
@@ -356,11 +343,7 @@ void OSComboBox2::completeBind() {
 
     // if this is too burdensome, implement Workspace_Impl onNameChange() signal and uncomment the above two connections.
     // (IdfObject_Impl already has onNameChange(); Workspace_Impl::onChange() includes object addition and removal.)
-    isConnected = connect( m_modelObject->model().getImpl<openstudio::model::detail::Model_Impl>().get(),
-                           SIGNAL(onChange()),
-                           this,
-                           SLOT(onChoicesRefreshTrigger()) );
-    OS_ASSERT(isConnected);
+    connect(m_modelObject->model().getImpl<openstudio::model::detail::Model_Impl>().get(), &openstudio::model::detail::Model_Impl::onChange, this, &OSComboBox2::onChoicesRefreshTrigger);
 
     // populate choices
     // ETH@20140228 - With extension of this class to choices of ModelObjects, and beyond,
@@ -380,12 +363,9 @@ void OSComboBox2::completeBind() {
   else if (m_dataSource) {
 
     // connections
-    isConnected = connect(m_dataSource.get(),SIGNAL(itemChanged(int)),this,SLOT(onDataSourceChange(int)));
-    OS_ASSERT(isConnected);
-    isConnected = connect(m_dataSource.get(),SIGNAL(itemAdded(int)),this,SLOT(onDataSourceAdd(int)));
-    OS_ASSERT(isConnected);
-    isConnected = connect(m_dataSource.get(),SIGNAL(itemRemoved(int)),this,SLOT(onDataSourceRemove(int)));
-    OS_ASSERT(isConnected);
+    connect(m_dataSource.get(), &OSComboBoxDataSource::itemChanged, this, &OSComboBox2::onDataSourceChange);
+    connect(m_dataSource.get(), &OSComboBoxDataSource::itemAdded, this, &OSComboBox2::onDataSourceAdd);
+    connect(m_dataSource.get(), &OSComboBoxDataSource::itemRemoved, this, &OSComboBox2::onDataSourceRemove);
 
     this->blockSignals(true);
 
@@ -439,17 +419,11 @@ void OSComboBox::bind(model::ModelObject & modelObject, const char * property)
 
   // Connections
 
-  bool isConnected = false;
-  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
-                         this,SLOT(onModelObjectChanged()) );
-  OS_ASSERT(isConnected);
+  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSComboBox::onModelObjectChanged);
 
-  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
-                         this,SLOT(onModelObjectRemoved(Handle)) );
-  OS_ASSERT(isConnected);
+  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSComboBox::onModelObjectRemoved);
 
-  isConnected = connect( this, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onCurrentIndexChanged(const QString&)) );
-  OS_ASSERT(isConnected);
+  connect(this, static_cast<void (OSComboBox::*)(const QString &)>(&OSComboBox::currentIndexChanged), this, &OSComboBox::onCurrentIndexChanged);
 
   // Populate choices
 
@@ -589,17 +563,16 @@ void OSComboBox::setDataSource(std::shared_ptr<OSComboBoxDataSource> dataSource)
 
   if( m_dataSource )
   {
-    disconnect(m_dataSource.get(),SIGNAL(itemChanged(int)),this,SLOT(onDataSourceChange(int)));
-    disconnect(m_dataSource.get(),SIGNAL(itemAdded(int)),this,SLOT(onDataSourceAdd(int)));
-    disconnect(m_dataSource.get(),SIGNAL(itemRemoved(int)),this,SLOT(onDataSourceRemove(int)));
+    disconnect(m_dataSource.get(), &OSComboBoxDataSource::itemChanged, this, &OSComboBox::onDataSourceChange);
+    disconnect(m_dataSource.get(), &OSComboBoxDataSource::itemAdded, this, &OSComboBox::onDataSourceAdd);
+    disconnect(m_dataSource.get(), &OSComboBoxDataSource::itemRemoved, this, &OSComboBox::onDataSourceRemove);
   }
 
   m_dataSource = dataSource;
 
-  connect(m_dataSource.get(),SIGNAL(itemChanged(int)),this,SLOT(onDataSourceChange(int)));
-  connect(m_dataSource.get(),SIGNAL(itemAdded(int)),this,SLOT(onDataSourceAdd(int)));
-  connect(m_dataSource.get(),SIGNAL(itemRemoved(int)),this,SLOT(onDataSourceRemove(int)));
-
+  connect(m_dataSource.get(), &OSComboBoxDataSource::itemChanged, this, &OSComboBox::onDataSourceChange);
+  connect(m_dataSource.get(), &OSComboBoxDataSource::itemAdded, this, &OSComboBox::onDataSourceAdd);
+  connect(m_dataSource.get(), &OSComboBoxDataSource::itemRemoved, this, &OSComboBox::onDataSourceRemove);
   this->clear();
 
   for( int i = 0;

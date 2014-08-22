@@ -64,7 +64,7 @@ ScriptItem::ScriptItem(const openstudio::path& path,
 
 
   std::shared_ptr<OSDocument> osDoc = OSAppBase::instance()->currentDocument();
-  connect(this,SIGNAL(argChanged()),osDoc.get(),SLOT(markAsModified()));
+  connect(this, &ScriptItem::argChanged, osDoc.get(), &OSDocument::markAsModified);
 }
 
 openstudio::path ScriptItem::path() const {

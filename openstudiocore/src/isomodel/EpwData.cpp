@@ -39,7 +39,7 @@ void EpwData::parseHeader(const std::string &line)
     std::string s;
     std::getline(linestream, s, ',');
     switch(i)
-    {	
+    {
       case 1:
         m_location = s;
         //cout << "\tLocation: " << s <<endl;
@@ -63,7 +63,7 @@ void EpwData::parseHeader(const std::string &line)
       default:
         break;
     }
-  }			
+  }
 }
 
 void EpwData::parseData(const std::string &line, size_t row)
@@ -76,7 +76,7 @@ void EpwData::parseData(const std::string &line, size_t row)
     std::string s;
     std::getline(linestream, s, ',');
     switch(i)
-    {	
+    {
       case 6:
       case 7:
       case 8:
@@ -91,7 +91,7 @@ void EpwData::parseData(const std::string &line, size_t row)
       default:
         break;
     }
-  }	
+  }
 }
 
 void EpwData::toISOData(Matrix &_msolar, Matrix &_mhdbt, Matrix &_mhEgh, Vector &_mEgh, Vector &_mdbt, Vector &_mwind) const

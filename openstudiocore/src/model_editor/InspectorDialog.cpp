@@ -879,9 +879,7 @@ void InspectorDialog::createWidgets()
   inspectorGadgetLabel->setMaximumHeight(40);
 
   m_inspectorGadget = new InspectorGadget(this);
-  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                             m_inspectorGadget, SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &InspectorDialog::toggleUnitsClicked, m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
 
   auto inspectorGadgetHolderLayout = new QVBoxLayout;
   inspectorGadgetHolderLayout->addWidget(inspectorGadgetLabel);
@@ -918,83 +916,38 @@ void InspectorDialog::createWidgets()
 
 void InspectorDialog::connectSelfSignalsAndSlots()
 {
-  bool connected;
-  connected = connect(m_pushButtonNew,
-                      SIGNAL(clicked(bool)),
-                      this,
-                      SLOT(onPushButtonNew(bool)));
-  OS_ASSERT(connected);
+  connect(m_pushButtonNew, &QPushButton::clicked, this, &InspectorDialog::onPushButtonNew);
 
-  connected = connect(m_pushButtonCopy,
-                      SIGNAL(clicked(bool)),
-                      this,
-                      SLOT(onPushButtonCopy(bool)));
-  OS_ASSERT(connected);
+  connect(m_pushButtonCopy, &QPushButton::clicked, this, &InspectorDialog::onPushButtonCopy);
 
-  connected = connect(m_pushButtonDelete,
-                      SIGNAL(clicked(bool)),
-                      this,
-                      SLOT(onPushButtonDelete(bool)));
-  OS_ASSERT(connected);
+  connect(m_pushButtonDelete, &QPushButton::clicked, this, &InspectorDialog::onPushButtonDelete);
 
-  connected = connect(m_pushButtonPurge,
-                      SIGNAL(clicked(bool)),
-                      this,
-                      SLOT(onPushButtonPurge(bool)));
-  OS_ASSERT(connected);
+  connect(m_pushButtonPurge, &QPushButton::clicked, this, &InspectorDialog::onPushButtonPurge);
 
-  connected = connect(m_listWidget,
-                      SIGNAL(itemSelectionChanged()),
-                      this,
-                      SLOT(onListWidgetSelectionChanged()));
-  OS_ASSERT(connected);
+  connect(m_listWidget, &QListWidget::itemSelectionChanged, this, &InspectorDialog::onListWidgetSelectionChanged);
 
-  connected = connect(m_tableWidget,
-                      SIGNAL(itemSelectionChanged()),
-                      this,
-                      SLOT(onTableWidgetSelectionChanged()));
-  OS_ASSERT(connected);
+  connect(m_tableWidget, &QTableWidget::itemSelectionChanged, this, &InspectorDialog::onTableWidgetSelectionChanged);
 
-  connected = connect(this,
-                     SIGNAL(iddObjectTypeChanged(const openstudio::IddObjectType&)),
-                     this,
-                     SLOT(onIddObjectTypeChanged(const openstudio::IddObjectType&)));
-  OS_ASSERT(connected);
+  connect(this, &InspectorDialog::iddObjectTypeChanged, this, &InspectorDialog::onIddObjectTypeChanged);
 
-  connected = connect(this,
-                     SIGNAL(selectedObjectHandlesChanged(const std::vector<openstudio::Handle>&)),
-                     this,
-                     SLOT(onSelectedObjectHandlesChanged(const std::vector<openstudio::Handle>&)));
-  OS_ASSERT(connected);
+  connect(this, &InspectorDialog::selectedObjectHandlesChanged, this, &InspectorDialog::onSelectedObjectHandlesChanged);
 
-  connected = connect(this,
-                     SIGNAL(modelChanged(openstudio::model::Model&)),
-                     this,
-                     SLOT(onModelChanged(openstudio::model::Model&)));
-  OS_ASSERT(connected);
+  connect(this, &InspectorDialog::modelChanged, this, &InspectorDialog::onModelChanged);
 }
 
 void InspectorDialog::connectModelSignalsAndSlots()
 {
-  bool connected;
+  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
+    this,
+    &InspectorDialog::onAddWorkspaceObject);
 
-  connected = connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-                     SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                     this,
-                     SLOT(onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
-  OS_ASSERT(connected);
+  connect(m_model.getImpl<model::detail::Model_Impl>().get(), &model::detail::Model_Impl::onChange, this, &InspectorDialog::onWorkspaceChange);
 
-  connected = connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-                     SIGNAL(onChange()),
-                     this,
-                     SLOT(onWorkspaceChange()));
-  OS_ASSERT(connected);
-
-  connected = connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-                     SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                     this,
-                     SLOT(onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
-  OS_ASSERT(connected);
+  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
+    this,
+    &InspectorDialog::onRemoveWorkspaceObject);
 }
 
 void InspectorDialog::hideSelectionWidget(bool hideSelectionWidget)

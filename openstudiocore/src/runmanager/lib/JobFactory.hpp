@@ -51,11 +51,12 @@ namespace runmanager {
        *  \param[in] t_type The job type to create. See JobType enumeration
        *  \param[in] t_tools A vector of ToolInfo objects for all known/used tools. The job specific
        *                     code finds and uses the ToolInfo objects that are needed for the specific job.
-       *  \param[in] t_params Named heirarchical parameter list that Job parameters are extracted from
+       *  \param[in] t_params Named hierarchical parameter list that Job parameters are extracted from
        *  \param[in] t_files Vector of FileInfo objects the specific job can choose from.
        *  \param[in] t_url_search_paths Vector of paths to search when fixing up URLs in an IDF or OSM
        *  \param[in] t_loading If loading from a db and you do not want to perform any fixing up, set to true
        *  \param[in] t_uuid Option to specify the UUID of the job.
+       *  \param[in] t_state Option to restore state.
        *
        *  \sa \ref RunManagerJobTypes
        **/
@@ -77,6 +78,7 @@ namespace runmanager {
       /// \param[in] t_url_search_paths Vector of paths to search when fixing up URLs in an IDF or OSM
       /// \param[in] t_loading If true, skip fixing up of URLs, used when loading RunManager database file.
       /// \param[in] t_uuid Option to specify the UUID of the job.
+      /// \param[in] t_state Option to restore state.
       ///
       /// \sa \ref EnergyPlusJobType
       static Job createEnergyPlusJob(
@@ -133,6 +135,7 @@ namespace runmanager {
       /// \param[in] t_url_search_paths Vector of paths to search when fixing up URLs in an IDF or OSM
       /// \param[in] t_loading If true, skip fixing up of URLs, used when loading RunManager database file.
       /// \param[in] t_uuid Option to specify the UUID of the job.
+      /// \param[in] t_state Option to restore state.
       ///
       /// \sa \ref ExpandObjectsJobType
       static Job createExpandObjectsJob(
@@ -153,6 +156,7 @@ namespace runmanager {
       /// \param[in] t_url_search_paths Vector of paths to search when fixing up URLs in an IDF or OSM
       /// \param[in] t_loading If true, skip fixing up of URLs, used when loading RunManager database file.
       /// \param[in] t_uuid Option to specify the UUID of the job.
+      /// \param[in] t_state Option to restore state.
       ///
       /// \sa \ref XMLPreprocessorJobType
       static Job createXMLPreprocessorJob(
@@ -173,6 +177,7 @@ namespace runmanager {
       /// \param[in] t_url_search_paths Vector of paths to search when fixing up URLs in an IDF or OSM
       /// \param[in] t_loading If true, skip fixing up of URLs, used when loading RunManager database file.
       /// \param[in] t_uuid Option to specify the UUID of the job.
+      /// \param[in] t_state Option to restore state.
       ///
       /// \sa \ref ReadVarsJobType
       static Job createReadVarsJob(
@@ -193,6 +198,7 @@ namespace runmanager {
       /// \param[in] t_url_search_paths Vector of paths to search when fixing up URLs in an IDF or OSM
       /// \param[in] t_loading If true, skip fixing up of URLs, used when loading RunManager database file.
       /// \param[in] t_uuid Option to specify the UUID of the job.
+      /// \param[in] t_state Option to restore state.
       ///
       /// \sa \ref ModelToIdfJobType
       static Job createModelToIdfJob(
@@ -225,6 +231,7 @@ namespace runmanager {
       /// \param[in] t_url_search_paths Vector of paths to search when fixing up URLs in an IDF or OSM
       /// \param[in] t_loading If true, skip fixing up of URLs, used when loading RunManager database file.
       /// \param[in] t_uuid Option to specify the UUID of the job.
+      /// \param[in] t_state Option to restore state.
       ///
       /// \sa \ref ModelToRadJobType
       static Job createModelToRadJob(
@@ -259,8 +266,7 @@ namespace runmanager {
       /// \param[in] t_url_search_paths Vector of paths to search when fixing up URLs in an IDF or OSM
       /// \param[in] t_loading If true, skip fixing up of URLs, used when loading RunManager database file.
       /// \param[in] t_uuid Option to specify the UUID of the job.
-      ///
-      /// \sa \ref IdfToModelJobType
+      /// \param[in] t_state Option to restore state.
       static Job createIdfToModelJob(
           const openstudio::runmanager::Tools &t_tools,
           const openstudio::runmanager::JobParams &t_params,
@@ -290,6 +296,7 @@ namespace runmanager {
       /// \param[in] t_url_search_paths Vector of paths to search when fixing up URLs in an IDF or OSM
       /// \param[in] t_loading If true, skip fixing up of URLs, used when loading RunManager database file.
       /// \param[in] t_uuid Option to specify the UUID of the job.
+      /// \param[in] t_state Option to restore state.
       ///
       /// \sa \ref CalculateEconomicsJobType
       static Job createCalculateEconomicsJob(
@@ -322,6 +329,7 @@ namespace runmanager {
       /// \param[in] t_url_search_paths Vector of paths to search when fixing up URLs in an IDF or OSM
       /// \param[in] t_loading If true, skip fixing up of URLs, used when loading RunManager database file.
       /// \param[in] t_uuid Option to specify the UUID of the job.
+      /// \param[in] t_state Option to restore state.
       ///
       /// \sa \ref PreviewIESJobType
       static Job createPreviewIESJob(
@@ -356,6 +364,7 @@ namespace runmanager {
       /// \param[in] t_url_search_paths Vector of paths to search when fixing up URLs in an IDF or OSM
       /// \param[in] t_loading If true, skip fixing up of URLs, used when loading RunManager database file.
       /// \param[in] t_uuid Option to specify the UUID of the job.
+      /// \param[in] t_state Option to restore state.
       ///
       /// \sa \ref RubyJobType
       static Job createRubyJob(
@@ -382,6 +391,7 @@ namespace runmanager {
       /// \param[in] t_url_search_paths Vector of paths to search when fixing up URLs in an IDF or OSM
       /// \param[in] t_loading If true, skip fixing up of URLs, used when loading RunManager database file.
       /// \param[in] t_uuid Option to specify the UUID of the job.
+      /// \param[in] t_state Option to restore state.
       ///
       /// \sa \ref RubyJobType
       static Job createUserScriptJob(
@@ -400,7 +410,7 @@ namespace runmanager {
       /// \param[in] t_args Arguments to pass to the UserScript job
       /// \param[in] t_uuid Option to specify the UUID of the job.
       ///
-      /// \sa \ref UserScriptJob
+      /// \sa \ref RubyJobType
       static Job createUserScriptJob(
           const openstudio::path &t_rubyfile,
           const std::vector<ruleset::OSArgument> &t_args,
@@ -414,6 +424,7 @@ namespace runmanager {
       /// \param[in] t_url_search_paths Vector of paths to search when fixing up URLs in an IDF or OSM
       /// \param[in] t_loading If true, skip fixing up of URLs, used when loading RunManager database file.
       /// \param[in] t_uuid Option to specify the UUID of the job.
+      /// \param[in] t_state Option to restore state.
       ///
       /// \sa \ref NullJobType
       static Job createNullJob(
@@ -434,6 +445,7 @@ namespace runmanager {
       /// \param[in] t_url_search_paths Vector of paths to search when fixing up URLs in an IDF or OSM
       /// \param[in] t_loading If true, skip fixing up of URLs, used when loading RunManager database file.
       /// \param[in] t_uuid Option to specify the UUID of the job.
+      /// \param[in] t_state Option to restore state.
       ///
       /// \sa \ref EnergyPlusPostProcessJobType
       static Job createEnergyPlusPostProcessJob(
@@ -454,6 +466,7 @@ namespace runmanager {
       /// \param[in] t_url_search_paths Vector of paths to search when fixing up URLs in an IDF or OSM
       /// \param[in] t_loading If true, skip fixing up of URLs, used when loading RunManager database file.
       /// \param[in] t_uuid Option to specify the UUID of the job.
+      /// \param[in] t_state Option to restore state.
       ///
       /// \sa \ref OpenStudioPostProcessJobType
       static Job createOpenStudioPostProcessJob(
@@ -474,6 +487,7 @@ namespace runmanager {
       /// \param[in] t_url_search_paths Vector of paths to search when fixing up URLs in an IDF or OSM
       /// \param[in] t_loading If true, skip fixing up of URLs, used when loading RunManager database file.
       /// \param[in] t_uuid Option to specify the UUID of the job.
+      /// \param[in] t_state Option to restore state.
       ///
       /// \sa \ref EnergyPlusPreProcessJobType
       static Job createEnergyPlusPreProcessJob(
@@ -494,6 +508,7 @@ namespace runmanager {
       /// \param[in] t_url_search_paths Vector of paths to search when fixing up URLs in an IDF or OSM
       /// \param[in] t_loading If true, skip fixing up of URLs, used when loading RunManager database file.
       /// \param[in] t_uuid Option to specify the UUID of the job.
+      /// \param[in] t_state Option to restore state.
       ///
       /// \sa \ref ModelToRadPreProcessJobType
       static Job createModelToRadPreProcessJob(
@@ -515,6 +530,7 @@ namespace runmanager {
       /// \param[in] t_url_search_paths Vector of paths to search when fixing up URLs in an IDF or OSM
       /// \param[in] t_loading If true, skip fixing up of URLs, used when loading RunManager database file.
       /// \param[in] t_uuid Option to specify the UUID of the job.
+      /// \param[in] t_state Option to restore state.
       ///
       /// \sa \ref ParallelEnergyPlusSplitJobType
       static Job createParallelEnergyPlusSplitJob(
@@ -535,6 +551,7 @@ namespace runmanager {
       /// \param[in] t_url_search_paths Vector of paths to search when fixing up URLs in an IDF or OSM
       /// \param[in] t_loading If true, skip fixing up of URLs, used when loading RunManager database file.
       /// \param[in] t_uuid Option to specify the UUID of the job.
+      /// \param[in] t_state Option to restore state.
       ///
       /// \sa \ref ParallelEnergyPlusJoinJobType
       static Job createParallelEnergyPlusJoinJob(
@@ -555,6 +572,7 @@ namespace runmanager {
       /// \param[in] t_url_search_paths Vector of paths to search when fixing up URLs in an IDF or OSM
       /// \param[in] t_loading If true, skip fixing up of URLs, used when loading RunManager database file.
       /// \param[in] t_uuid Option to specify the UUID of the job.
+      /// \param[in] t_state Option to restore state.
       ///
       /// \sa \ref BasementJobType
       static Job createBasementJob(
@@ -575,6 +593,7 @@ namespace runmanager {
       /// \param[in] t_url_search_paths Vector of paths to search when fixing up URLs in an IDF or OSM
       /// \param[in] t_loading If true, skip fixing up of URLs, used when loading RunManager database file.
       /// \param[in] t_uuid Option to specify the UUID of the job.
+      /// \param[in] t_state Option to restore state.
       ///
       /// \sa \ref SlabJobType
       static Job createSlabJob(
@@ -595,8 +614,7 @@ namespace runmanager {
       /// \param[in] t_url_search_paths Vector of paths to search when fixing up URLs in an IDF or OSM
       /// \param[in] t_loading If true, skip fixing up of URLs, used when loading RunManager database file.
       /// \param[in] t_uuid Option to specify the UUID of the job.
-      ///
-      /// \sa \ref DakotaJobType
+      /// \param[in] t_state Option to restore state.
       static Job createDakotaJob(
           const openstudio::runmanager::Tools &t_tools,
           const openstudio::runmanager::JobParams &t_params,

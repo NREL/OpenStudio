@@ -17,11 +17,7 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ######################################################################
 
-if (defined? Sketchup) && (Sketchup.version_number <= 14000000)
-  require File.expand_path(File.dirname(__FILE__)) + '/openstudio/sketchup_plugin/stdruby/pathname'
-else
-  require 'pathname'
-end
+require "pathname"
 
 if RUBY_PLATFORM =~ /darwin/
   mac_version = `/usr/bin/sw_vers -productVersion | tr -d "\n"`.split('.')

@@ -103,12 +103,8 @@ void RefrigerationController::refreshRefrigerationSystemView(RefrigerationSystem
          ++it )
     {
       SecondaryDetailView * detailView = new SecondaryDetailView();
-      bool bingo = connect(detailView,SIGNAL(zoomInOnSystemClicked(const Handle &)),
-                           this,SLOT(zoomInOnSystem(const Handle &)));
-      OS_ASSERT(bingo);
-      bingo = connect(detailView,SIGNAL(removeClicked(const Handle &)),
-                      this,SLOT(removeLoad(const Handle &)));
-      OS_ASSERT(bingo);
+      connect(detailView, &SecondaryDetailView::zoomInOnSystemClicked, this, static_cast<void (RefrigerationController::*)(const Handle &)>(&RefrigerationController::zoomInOnSystem));
+      connect(detailView, &SecondaryDetailView::removeClicked, this, &RefrigerationController::removeLoad);
       if( boost::optional<model::RefrigerationSystem> t_cascadeSystem = cascadeSystem(*it) )
       {
         detailView->setName(QString::fromStdString(t_cascadeSystem->name().get()));
@@ -138,13 +134,9 @@ void RefrigerationController::refreshRefrigerationSystemView(RefrigerationSystem
 
       detailView->setLabel(QString::number(compressorIndex));
 
-      bool bingo = connect(detailView,SIGNAL(removeClicked(const OSItemId &)),
-                           this,SLOT(removeCompressor(const OSItemId &)));
-      OS_ASSERT(bingo);
+      connect(detailView, &RefrigerationCompressorDetailView::removeClicked, this, &RefrigerationController::removeCompressor);
 
-      bingo = connect(detailView,SIGNAL(inspectClicked(const OSItemId &)),
-                      this,SLOT(inspectOSItem(const OSItemId &)));
-      OS_ASSERT(bingo);
+      connect(detailView, &RefrigerationCompressorDetailView::inspectClicked, this, &RefrigerationController::inspectOSItem);
 
       systemView->refrigerationCompressorView->insertCompressorDetailView(0,detailView);
 
@@ -167,13 +159,9 @@ void RefrigerationController::refreshRefrigerationSystemView(RefrigerationSystem
 
       detailView->setName(QString::fromStdString(it->name().get()));
 
-      bool bingo = connect(detailView,SIGNAL(removeClicked(const OSItemId &)),
-                           this,SLOT(removeCase(const OSItemId &)));
-      OS_ASSERT(bingo);
+      connect(detailView, &RefrigerationCaseDetailView::removeClicked, this, &RefrigerationController::removeCase);
 
-      bingo = connect(detailView,SIGNAL(inspectClicked(const OSItemId &)),
-                      this,SLOT(inspectOSItem(const OSItemId &)));
-      OS_ASSERT(bingo);
+      connect(detailView, &RefrigerationCaseDetailView::inspectClicked, this, &RefrigerationController::inspectOSItem);
 
       systemView->refrigerationCasesView->insertCaseDetailView(0,detailView);
     }
@@ -194,13 +182,9 @@ void RefrigerationController::refreshRefrigerationSystemView(RefrigerationSystem
 
       detailView->setName(QString::fromStdString(it->name().get()));
 
-      bool bingo = connect(detailView,SIGNAL(removeClicked(const OSItemId &)),
-                           this,SLOT(removeCase(const OSItemId &)));
-      OS_ASSERT(bingo);
+      connect(detailView, &RefrigerationCaseDetailView::removeClicked, this, &RefrigerationController::removeCase);
 
-      bingo = connect(detailView,SIGNAL(inspectClicked(const OSItemId &)),
-                      this,SLOT(inspectOSItem(const OSItemId &)));
-      OS_ASSERT(bingo);
+      connect(detailView, &RefrigerationCaseDetailView::inspectClicked, this, &RefrigerationController::inspectOSItem);
 
       systemView->refrigerationCasesView->insertCaseDetailView(0,detailView);
     }
@@ -216,9 +200,7 @@ RefrigerationController::RefrigerationController()
 
   m_refrigerationView = new RefrigerationView();
 
-  bool bingo;
-  bingo = connect(m_refrigerationView->zoomOutButton,SIGNAL(clicked()),this,SLOT(zoomOutToSystemGridView()));
-  OS_ASSERT(bingo);
+  connect(m_refrigerationView->zoomOutButton, &QPushButton::clicked, this, &RefrigerationController::zoomOutToSystemGridView);
 
   // These get deleted with when the scene is deleted
   m_refrigerationSystemGridView = new GridLayoutItem();
@@ -324,59 +306,31 @@ void RefrigerationController::zoomInOnSystem(model::RefrigerationSystem & refrig
 
   m_refrigerationView->graphicsView->setScene(m_refrigerationScene);
 
-  bool bingo;
+  connect(m_detailView->refrigerationCondenserView, &RefrigerationCondenserView::componentDropped, this, &RefrigerationController::onCondenserViewDrop);
 
-  bingo = connect(m_detailView->refrigerationCondenserView,SIGNAL(componentDropped(const OSItemId &)),
-                  this,SLOT(onCondenserViewDrop(const OSItemId &)));
-  OS_ASSERT(bingo);
+  connect(m_detailView->refrigerationCondenserView, &RefrigerationCondenserView::removeClicked, this, &RefrigerationController::removeCondenser);
 
-  bingo = connect(m_detailView->refrigerationCondenserView,SIGNAL(removeClicked(const OSItemId &)),
-                  this,SLOT(removeCondenser(const OSItemId &)));
-  OS_ASSERT(bingo);
+  connect(m_detailView->refrigerationCondenserView, &RefrigerationCondenserView::inspectClicked, this, &RefrigerationController::inspectOSItem);
 
-  bingo = connect(m_detailView->refrigerationCondenserView,SIGNAL(inspectClicked(const OSItemId &)),
-                  this,SLOT(inspectOSItem(const OSItemId &)));
-  OS_ASSERT(bingo);
+  connect(m_detailView->refrigerationCompressorView->refrigerationCompressorDropZoneView, &RefrigerationCompressorDropZoneView::componentDropped, this, &RefrigerationController::onCompressorViewDrop);
 
-  bingo = connect(m_detailView->refrigerationCompressorView->refrigerationCompressorDropZoneView,SIGNAL(componentDropped(const OSItemId &)),
-                  this,SLOT(onCompressorViewDrop(const OSItemId &)));
-  OS_ASSERT(bingo);
+  connect(m_detailView->refrigerationCasesView->refrigerationCasesDropZoneView, &RefrigerationCasesDropZoneView::componentDropped, this, &RefrigerationController::onCasesViewDrop);
 
-  bingo = connect(m_detailView->refrigerationCasesView->refrigerationCasesDropZoneView,SIGNAL(componentDropped(const OSItemId &)),
-                  this,SLOT(onCasesViewDrop(const OSItemId &)));
-  OS_ASSERT(bingo);
+  connect(m_detailView->refrigerationSubCoolerView, &RefrigerationSubCoolerView::componentDropped, this, &RefrigerationController::onSubCoolerViewDrop);
 
-  bingo = connect(m_detailView->refrigerationSubCoolerView,SIGNAL(componentDropped(const OSItemId &)),
-                  this,SLOT(onSubCoolerViewDrop(const OSItemId &)));
-  OS_ASSERT(bingo);
+  connect(m_detailView->refrigerationSubCoolerView, &RefrigerationSubCoolerView::removeClicked, this, &RefrigerationController::removeSubCooler);
 
-  bingo = connect(m_detailView->refrigerationSubCoolerView,SIGNAL(removeClicked(const OSItemId &)),
-                  this,SLOT(removeSubCooler(const OSItemId &)));
-  OS_ASSERT(bingo);
+  connect(m_detailView->refrigerationSubCoolerView, &RefrigerationSubCoolerView::inspectClicked, this, &RefrigerationController::inspectOSItem);
 
-  bingo = connect(m_detailView->refrigerationSubCoolerView,SIGNAL(inspectClicked(const OSItemId &)),
-                  this,SLOT(inspectOSItem(const OSItemId &)));
-  OS_ASSERT(bingo);
+  connect(m_detailView->refrigerationSHXView, &RefrigerationSHXView::componentDropped, this, &RefrigerationController::onSHXViewDrop);
 
-  bingo = connect(m_detailView->refrigerationSHXView,SIGNAL(componentDropped(const OSItemId &)),
-                  this,SLOT(onSHXViewDrop(const OSItemId &)));
-  OS_ASSERT(bingo);
+  connect(m_detailView->refrigerationSHXView, &RefrigerationSHXView::removeClicked, this, &RefrigerationController::removeSubCoolerLiquidSuction);
 
-  bingo = connect(m_detailView->refrigerationSHXView,SIGNAL(removeClicked(const OSItemId &)),
-                  this,SLOT(removeSubCoolerLiquidSuction(const OSItemId &)));
-  OS_ASSERT(bingo);
+  connect(m_detailView->refrigerationSHXView, &RefrigerationSHXView::inspectClicked, this, &RefrigerationController::inspectOSItem);
 
-  bingo = connect(m_detailView->refrigerationSHXView,SIGNAL(inspectClicked(const OSItemId &)),
-                  this,SLOT(inspectOSItem(const OSItemId &)));
-  OS_ASSERT(bingo);
+  connect(m_detailView.data(), &RefrigerationSystemView::inspectClicked, this, &RefrigerationController::inspectOSItem);
 
-  bingo = connect(m_detailView,SIGNAL(inspectClicked(const OSItemId &)),
-                  this,SLOT(inspectOSItem(const OSItemId &)));
-  OS_ASSERT(bingo);
-
-  bingo = connect(m_detailView->refrigerationSecondaryView->secondaryDropZoneView,SIGNAL(componentDropped(const OSItemId &)),
-                  this,SLOT(onSecondaryViewDrop(const OSItemId &)));
-  OS_ASSERT(bingo);
+  connect(m_detailView->refrigerationSecondaryView->secondaryDropZoneView, &SecondaryDropZoneView::componentDropped, this, &RefrigerationController::onSecondaryViewDrop);
 
   m_refrigerationView->graphicsView->setAlignment(Qt::AlignCenter);
 }
@@ -802,12 +756,12 @@ RefrigerationSystemListController::RefrigerationSystemListController(Refrigerati
 {
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
   model::Model t_model = doc->model();
-  bool bingo = connect(t_model.getImpl<model::detail::Model_Impl>().get(),SIGNAL(addWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                       this,SLOT(onModelObjectAdd(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)));
-  OS_ASSERT(bingo);
+  connect(t_model.getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
+    this,
+    &RefrigerationSystemListController::onModelObjectAdd);
 
-  bingo = connect(this,SIGNAL(itemInsertedPrivate(int)),this,SIGNAL(itemInserted(int)),Qt::QueuedConnection);
-  OS_ASSERT(bingo);
+  connect(this, &RefrigerationSystemListController::itemInsertedPrivate, this, &RefrigerationSystemListController::itemInserted, Qt::QueuedConnection);
 }
 
 void RefrigerationSystemListController::reset()
@@ -961,12 +915,11 @@ QGraphicsObject * RefrigerationSystemItemDelegate::view(QSharedPointer<OSListIte
   {
     RefrigerationSystemMiniView * refrigerationSystemMiniView = new RefrigerationSystemMiniView();
 
-    bool bingo;
-    bingo = connect(refrigerationSystemMiniView->removeButtonItem,SIGNAL(mouseClicked()),dataSource.data(),SLOT(remove()));
-    OS_ASSERT(bingo);
+    connect(refrigerationSystemMiniView->removeButtonItem, &RemoveButtonItem::mouseClicked,
+      static_cast<RefrigerationSystemListItem *>(dataSource.data()), &RefrigerationSystemListItem::remove);
 
-    bingo = connect(refrigerationSystemMiniView->zoomInButtonItem,SIGNAL(mouseClicked()),dataSource.data(),SLOT(zoomInOnSystem()));
-    OS_ASSERT(bingo);
+    connect(refrigerationSystemMiniView->zoomInButtonItem, &ZoomInButtonItem::mouseClicked,
+      static_cast<RefrigerationSystemListItem *>(dataSource.data()), &RefrigerationSystemListItem::zoomInOnSystem);
 
     refrigerationSystemMiniView->setName(listItem->systemName());
 
@@ -981,10 +934,8 @@ QGraphicsObject * RefrigerationSystemItemDelegate::view(QSharedPointer<OSListIte
   {
     RefrigerationSystemDropZoneView * refrigerationSystemDropZoneView = new RefrigerationSystemDropZoneView();
 
-    bool bingo;
-    bingo = connect(refrigerationSystemDropZoneView,SIGNAL(componentDropped(const OSItemId &)),
-                    qobject_cast<RefrigerationSystemListController *>(dataSource->controller()),SLOT(addSystem(const OSItemId &)));
-    OS_ASSERT(bingo);
+    connect(refrigerationSystemDropZoneView, &RefrigerationSystemDropZoneView::componentDropped,
+      qobject_cast<RefrigerationSystemListController *>(dataSource->controller()), &RefrigerationSystemListController::addSystem);
 
     itemView = refrigerationSystemDropZoneView;
   }

@@ -97,6 +97,12 @@ set(depends
 target_link_libraries(${target_name} ${depends})
 AddPCH(${target_name})
 
+if(APPLE)
+  # the following script will change the bindings to prefer the version of libruby included with SketchUp to the system library, preventing loading two different copies of libruby
+  get_property(target_location TARGET ${target_name} PROPERTY LOCATION)
+  add_custom_command(TARGET ${target_name} POST_BUILD COMMAND ${RUBY_EXECUTABLE} "${CMAKE_SOURCE_DIR}/SketchUpInstallName.rb" "${target_location}")
+endif()
+
 #------------------------------------------------------------------------------
 # Installation
 #------------------------------------------------------------------------------

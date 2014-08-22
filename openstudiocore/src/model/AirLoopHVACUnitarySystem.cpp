@@ -208,15 +208,15 @@ namespace detail {
     return OS_AirLoopHVAC_UnitarySystemFields::HeatRecoveryWaterOutletNodeName;
   }
 
-  // std::string AirLoopHVACUnitarySystem_Impl::controlType() const {
-  //   boost::optional<std::string> value = getString(OS_AirLoopHVAC_UnitarySystemFields::ControlType,true);
-  //   OS_ASSERT(value);
-  //   return value.get();
-  // }
+  std::string AirLoopHVACUnitarySystem_Impl::controlType() const {
+    boost::optional<std::string> value = getString(OS_AirLoopHVAC_UnitarySystemFields::ControlType,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
 
-  // bool AirLoopHVACUnitarySystem_Impl::isControlTypeDefaulted() const {
-  //   return isEmpty(OS_AirLoopHVAC_UnitarySystemFields::ControlType);
-  // }
+  bool AirLoopHVACUnitarySystem_Impl::isControlTypeDefaulted() const {
+    return isEmpty(OS_AirLoopHVAC_UnitarySystemFields::ControlType);
+  }
 
   boost::optional<ThermalZone> AirLoopHVACUnitarySystem_Impl::controllingZoneorThermostatLocation() const {
     return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_AirLoopHVAC_UnitarySystemFields::ControllingZoneorThermostatLocation);
@@ -510,15 +510,15 @@ namespace detail {
   //   return getObject<ModelObject>().getModelObjectTarget<UnitarySystemPerformace>(OS_AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedHeatPumpObjectName);
   // }
 
-  // bool AirLoopHVACUnitarySystem_Impl::setControlType(std::string controlType) {
-  //   bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::ControlType, controlType);
-  //   return result;
-  // }
+  bool AirLoopHVACUnitarySystem_Impl::setControlType(std::string controlType) {
+    bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::ControlType, controlType);
+    return result;
+  }
 
-  // void AirLoopHVACUnitarySystem_Impl::resetControlType() {
-  //   bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::ControlType, "");
-  //   OS_ASSERT(result);
-  // }
+  void AirLoopHVACUnitarySystem_Impl::resetControlType() {
+    bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::ControlType, "");
+    OS_ASSERT(result);
+  }
 
   bool AirLoopHVACUnitarySystem_Impl::setControllingZoneorThermostatLocation(const boost::optional<ThermalZone>& thermalZone) {
     bool result(false);
@@ -1155,8 +1155,8 @@ AirLoopHVACUnitarySystem::AirLoopHVACUnitarySystem(const Model& model)
   OS_ASSERT(getImpl<detail::AirLoopHVACUnitarySystem_Impl>());
 
   bool ok = true;
-  // ok = setControlType("Load");
-  // OS_ASSERT(ok);
+  ok = getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setControlType("Load");
+  OS_ASSERT(ok);
   ok = setDehumidificationControlType("None");
   OS_ASSERT(ok);
   ok = setDXHeatingCoilSizingRatio(1.0);
@@ -1191,10 +1191,10 @@ IddObjectType AirLoopHVACUnitarySystem::iddObjectType() {
   return IddObjectType(IddObjectType::OS_AirLoopHVAC_UnitarySystem);
 }
 
-// std::vector<std::string> AirLoopHVACUnitarySystem::controlTypeValues() {
-//   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-//                         OS_AirLoopHVAC_UnitarySystemFields::ControlType);
-// }
+std::vector<std::string> AirLoopHVACUnitarySystem::controlTypeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_AirLoopHVAC_UnitarySystemFields::ControlType);
+}
 
 std::vector<std::string> AirLoopHVACUnitarySystem::dehumidificationControlTypeValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
@@ -1226,13 +1226,13 @@ std::vector<std::string> AirLoopHVACUnitarySystem::supplyAirFlowRateMethodWhenNo
                         OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
 }
 
-// std::string AirLoopHVACUnitarySystem::controlType() const {
-//   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->controlType();
-// }
-
-// bool AirLoopHVACUnitarySystem::isControlTypeDefaulted() const {
-//   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->isControlTypeDefaulted();
-// }
+//std::string AirLoopHVACUnitarySystem::controlType() const {
+//  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->controlType();
+//}
+//
+//bool AirLoopHVACUnitarySystem::isControlTypeDefaulted() const {
+//  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->isControlTypeDefaulted();
+//}
 
 boost::optional<ThermalZone> AirLoopHVACUnitarySystem::controllingZoneorThermostatLocation() const {
   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->controllingZoneorThermostatLocation();
@@ -1478,13 +1478,13 @@ bool AirLoopHVACUnitarySystem::isAncilliaryOffCycleElectricPowerDefaulted() cons
 //   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->designSpecificationMultispeedHeatPumpObject();
 // }
 
-// bool AirLoopHVACUnitarySystem::setControlType(std::string controlType) {
-//   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setControlType(controlType);
-// }
-
-// void AirLoopHVACUnitarySystem::resetControlType() {
-//   getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetControlType();
-// }
+//bool AirLoopHVACUnitarySystem::setControlType(std::string controlType) {
+//  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setControlType(controlType);
+//}
+//
+//void AirLoopHVACUnitarySystem::resetControlType() {
+//  getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetControlType();
+//}
 
 bool AirLoopHVACUnitarySystem::setControllingZoneorThermostatLocation(const ThermalZone& thermalZone) {
   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setControllingZoneorThermostatLocation(thermalZone);

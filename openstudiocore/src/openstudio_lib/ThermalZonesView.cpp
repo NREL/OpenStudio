@@ -41,7 +41,7 @@ ThermalZonesView::ThermalZonesView(bool isIP, const model::Model & model,
 
   isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), inspectorView(), SIGNAL(itemSelected(OSItem *)));
   OS_ASSERT(isConnected); 
-  
+
   isConnected = connect(itemSelector(), SIGNAL(itemSelected(OSItem *)), inspectorView(), SIGNAL(itemSelected(OSItem *)));
   OS_ASSERT(isConnected);
 

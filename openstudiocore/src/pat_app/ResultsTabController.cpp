@@ -51,19 +51,13 @@ ResultsTabController::ResultsTabController()
 {
   resultsView = new ResultsView();
 
-  bool test = false;
+  connect(resultsView.data(), &ResultsView::openButtonClicked, this, &ResultsTabController::onOpenButtonClicked);
 
-  test = connect(resultsView, SIGNAL(openButtonClicked(bool)), this, SLOT(onOpenButtonClicked()));
-  OS_ASSERT(test);
-
-  test = connect(resultsView, SIGNAL(openDirButtonClicked(bool)), this, SLOT(openDirectory()));
-  OS_ASSERT(test); 
+  connect(resultsView.data(), &ResultsView::openDirButtonClicked, this, &ResultsTabController::openDirectory);
   
-  test = connect(resultsView, SIGNAL(downloadResultsButtonClicked(bool)), this, SLOT(downloadResults()));
-  OS_ASSERT(test);
+  connect(resultsView.data(), &ResultsView::downloadResultsButtonClicked, this, &ResultsTabController::downloadResults);
 
-  test = connect(resultsView, SIGNAL(viewSelected(int)), this, SLOT(selectView(int)));
-  OS_ASSERT(test);
+  connect(resultsView.data(), &ResultsView::viewSelected, this, &ResultsTabController::selectView);
 
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){
@@ -81,14 +75,10 @@ ResultsTabController::ResultsTabController()
     // can only select one item between both lists
     m_dataPointResultsListController->setSelectionController(m_baselineDataPointResultListController->selectionController());
 
-    bool bingo = false;
-
-    bingo = connect(resultsView,SIGNAL(calibrationThresholdsChanged(double, double)),m_dataPointCalibrationItemDelegate.data(),SLOT(setCalibrationThresholds(double, double)));
-    OS_ASSERT(bingo);
+    connect(resultsView.data(), &ResultsView::calibrationThresholdsChanged, m_dataPointCalibrationItemDelegate.data(), &DataPointCalibrationItemDelegate::setCalibrationThresholds);
 
     // want to reset the list after changing the delegate
-    bingo = connect(resultsView,SIGNAL(calibrationThresholdsChanged(double, double)),resultsView->dataPointCalibrationListView,SLOT(refreshAllViews()));
-    OS_ASSERT(bingo);
+    connect(resultsView.data(), &ResultsView::calibrationThresholdsChanged, resultsView->dataPointCalibrationListView, &OSListView::refreshAllViews);
 
     resultsView->baselineDataPointResultListView->setListController(m_baselineDataPointResultListController);
     resultsView->baselineDataPointResultListView->setDelegate(m_dataPointResultItemDelegate);
@@ -101,7 +91,7 @@ ResultsTabController::ResultsTabController()
    
     boost::optional<analysisdriver::CloudAnalysisDriver> cloudAnalysisDriver = project->cloudAnalysisDriver();
     if(cloudAnalysisDriver){
-      bingo = cloudAnalysisDriver->connect(SIGNAL(dataPointDetailsComplete(const openstudio::UUID&, const openstudio::UUID&)),this,SLOT(dataPointDetailsComplete(const openstudio::UUID&, const openstudio::UUID&)));
+      bool bingo = cloudAnalysisDriver->connect(SIGNAL(dataPointDetailsComplete(const openstudio::UUID&, const openstudio::UUID&)),this,SLOT(dataPointDetailsComplete(const openstudio::UUID&, const openstudio::UUID&)));
       OS_ASSERT(bingo);
     }
   }
@@ -116,15 +106,11 @@ ResultsTabController::~ResultsTabController()
 
 void ResultsTabController::selectView(int index)
 {
-  bool bingo = false;
 
   if (m_currentSelectionController){
-    bingo = disconnect(m_currentSelectionController.data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableViewFileButton()));
-    OS_ASSERT(bingo);
-    bingo = disconnect(m_currentSelectionController.data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableDownloadResultsButton()));
-    OS_ASSERT(bingo);
-    bingo = disconnect(m_currentSelectionController.data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableOpenDirectoryButton()));
-    OS_ASSERT(bingo);
+    disconnect(m_currentSelectionController.data(), &OSItemSelectionController::selectionChanged, this, &ResultsTabController::enableViewFileButton);
+    disconnect(m_currentSelectionController.data(), &OSItemSelectionController::selectionChanged, this, &ResultsTabController::enableDownloadResultsButton);
+    disconnect(m_currentSelectionController.data(), &OSItemSelectionController::selectionChanged, this, &ResultsTabController::enableOpenDirectoryButton);
   }
 
   if (index == 0){
@@ -134,12 +120,9 @@ void ResultsTabController::selectView(int index)
   }
 
   if (m_currentSelectionController){
-    bingo = connect(m_currentSelectionController.data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableViewFileButton()));
-    OS_ASSERT(bingo);
-    bingo = connect(m_currentSelectionController.data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableDownloadResultsButton()));
-    OS_ASSERT(bingo);
-    bingo = connect(m_currentSelectionController.data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableOpenDirectoryButton()));
-    OS_ASSERT(bingo);
+    connect(m_currentSelectionController.data(), &OSItemSelectionController::selectionChanged, this, &ResultsTabController::enableViewFileButton);
+    connect(m_currentSelectionController.data(), &OSItemSelectionController::selectionChanged, this, &ResultsTabController::enableDownloadResultsButton);
+    connect(m_currentSelectionController.data(), &OSItemSelectionController::selectionChanged, this, &ResultsTabController::enableOpenDirectoryButton);
 
     //m_currentSelectionController->unselectAllItems();
     m_currentSelectionController->emitSelectionChanged();
@@ -471,11 +454,9 @@ QWidget * DataPointResultItemDelegate::view(QSharedPointer<OSListItem> dataSourc
   auto result = new DataPointResultsView(dataPoint, baselineDataPoint, alternateRow);
   result->setHasEmphasis(dataPointResultListItem->isSelected());
 
-  bool test = connect(result,SIGNAL(clicked()),dataPointResultListItem.data(),SLOT(toggleSelected()));
-  OS_ASSERT(test);
+  connect(result, &DataPointResultsView::clicked, dataPointResultListItem.data(), &DataPointResultListItem::toggleSelected);
 
-  test = connect(dataPointResultListItem.data(),SIGNAL(selectedChanged(bool)),result,SLOT(setHasEmphasis(bool)));
-  OS_ASSERT(test);
+  connect(dataPointResultListItem.data(), &DataPointResultListItem::selectedChanged, result, &DataPointResultsView::setHasEmphasis);
 
   return result;
 }
@@ -496,11 +477,9 @@ QWidget * DataPointCalibrationItemDelegate::view(QSharedPointer<OSListItem> data
   auto result = new DataPointCalibrationView(dataPoint, baselineDataPoint, alternateRow, m_calibrationMaxNMBE, m_calibrationMaxCVRMSE);
   result->setHasEmphasis(dataPointCalibrationListItem->isSelected());
 
-  bool test = connect(result,SIGNAL(clicked()),dataPointCalibrationListItem.data(),SLOT(toggleSelected()));
-  OS_ASSERT(test);
+  connect(result, &DataPointResultsView::clicked, dataPointCalibrationListItem.data(), &DataPointResultListItem::toggleSelected);
 
-  test = connect(dataPointCalibrationListItem.data(),SIGNAL(selectedChanged(bool)),result,SLOT(setHasEmphasis(bool)));
-  OS_ASSERT(test);
+  connect(dataPointCalibrationListItem.data(), &DataPointResultListItem::selectedChanged, result, &DataPointCalibrationView::setHasEmphasis);
 
   return result;
 }

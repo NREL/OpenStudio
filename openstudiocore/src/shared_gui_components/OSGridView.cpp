@@ -63,10 +63,7 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   m_gridLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
   auto buttonGroup = new QButtonGroup();
-  bool isConnected = false;
-
-  isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(selectCategory(int)));
-  OS_ASSERT(isConnected);
+  connect(buttonGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &OSGridView::selectCategory);
 
   auto buttonLayout = new QHBoxLayout();
   buttonLayout->setSpacing(3);
@@ -81,8 +78,7 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
 #endif
   m_dropZone->setMaxItems(1);
 
-  isConnected = connect(m_dropZone,SIGNAL(itemDropped(const OSItemId&)), m_gridController,SLOT(onItemDropped(const OSItemId&)));
-  OS_ASSERT(isConnected);
+  connect(dropZone, &OSDropZone::itemDropped, m_gridController, &OSGridController::onItemDropped);
 
   buttonLayout->addWidget(m_dropZone,0,Qt::AlignLeft);
 
@@ -153,23 +149,14 @@ void OSGridView::setGridController(OSGridController * gridController)
 
   bool isConnected = false;
 
-  //isConnected = connect(m_gridController,SIGNAL(itemInserted(int,int)),this,SLOT(addWidget(int,int)));
-  //OS_ASSERT(isConnected);
-
-  //isConnected = connect(m_gridController,SIGNAL(itemRemoved(int,int)),this,SLOT(removeWidget(int,int)));
-  //OS_ASSERT(isConnected);
-
-  //isConnected = connect(m_gridController,SIGNAL(itemChanged(int,int)),this,SLOT(refresh(int,int)));
-  //OS_ASSERT(isConnected);
-
-  isConnected = connect(m_gridController,SIGNAL(modelReset()),this,SLOT(refreshAll()));
-  OS_ASSERT(isConnected);
 
   isConnected = connect(m_gridController, SIGNAL(gridRowSelected(OSItem *)), this, SIGNAL(gridRowSelected(OSItem *)));
   OS_ASSERT(isConnected);
 
   isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), m_gridController, SLOT(onItemSelected(OSItem *)));
   OS_ASSERT(isConnected);
+
+  connect(m_gridController, &OSGridController::modelReset, this, &OSGridView::refreshAll);
 
   refreshAll();
 }

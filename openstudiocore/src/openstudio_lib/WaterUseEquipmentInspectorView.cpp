@@ -255,8 +255,7 @@ WaterUseEquipmentDefinitionInspectorView::WaterUseEquipmentDefinitionInspectorVi
   mainGridLayout->addWidget(label,4,0);
 
   m_peakFlowRateEdit = new OSQuantityEdit(m_isIP);
-  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_peakFlowRateEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WaterUseEquipmentDefinitionInspectorView::toggleUnitsClicked, m_peakFlowRateEdit, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_peakFlowRateEdit,5,0,1,3);
 
   // Target Temperature Schedule

@@ -42,27 +42,15 @@ ConstructionsTabController::ConstructionsTabController(bool isIP, const model::M
   this->mainContentWidget()->addSubTab("Constructions", m_constructionsController->subTabView(),CONSTRUCTIONS);
   this->mainContentWidget()->addSubTab("Materials", m_materialsController->subTabView(),MATERIALS);
 
-  bool isConnected = false;
+  connect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>(m_defaultConstructionSetsController->subTabView()), &ModelSubTabView::toggleUnitsClicked);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        m_defaultConstructionSetsController->subTabView(), SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>(m_constructionsController->subTabView()), &ModelSubTabView::toggleUnitsClicked);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        m_constructionsController->subTabView(), SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>(m_materialsController->subTabView()), &ModelSubTabView::toggleUnitsClicked);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        m_materialsController->subTabView(), SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_defaultConstructionSetsController.get(), &DefaultConstructionSetsController::downloadComponentsClicked, this, &ConstructionsTabController::downloadComponentsClicked);
 
-  isConnected = QObject::connect(m_defaultConstructionSetsController.get(), SIGNAL(downloadComponentsClicked()),
-                                 this, SIGNAL(downloadComponentsClicked()));
-  OS_ASSERT(isConnected);
-
-  isConnected = QObject::connect(m_defaultConstructionSetsController.get(), SIGNAL(openLibDlgClicked()),
-                                 this, SIGNAL(openLibDlgClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_defaultConstructionSetsController.get(), &DefaultConstructionSetsController::openLibDlgClicked, this, &ConstructionsTabController::openLibDlgClicked);
 }
 
 ConstructionsTabController::~ConstructionsTabController()

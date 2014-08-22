@@ -73,8 +73,7 @@ void MaterialAirGapInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_thermalResistance = new OSQuantityEdit(m_isIP);
-  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_thermalResistance, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &MaterialAirGapInspectorView::toggleUnitsClicked, m_thermalResistance, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_thermalResistance,row++,0,1,3);
 
   // Stretch

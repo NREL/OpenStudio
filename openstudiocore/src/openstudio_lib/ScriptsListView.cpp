@@ -41,8 +41,7 @@ namespace openstudio {
       const std::shared_ptr<QFileSystemWatcher> &t_fswatcher)
     : m_path(t_path), m_fswatcher(t_fswatcher)
   {
-    connect(m_fswatcher.get(), SIGNAL(directoryChanged(const QString &)), this, SLOT(directoryChanged(const QString &)));
-
+    connect(m_fswatcher.get(), &QFileSystemWatcher::directoryChanged, this, &ScriptsVectorController::directoryChanged);
     if (boost::filesystem::exists(t_path))
     {
       m_fswatcher->addPath(openstudio::toQString(t_path));

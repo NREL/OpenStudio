@@ -211,7 +211,7 @@ daylightsimOpts = "--x"
 File.open("#{outPath}/options/daylightsim.opt", "r") do |file|
   tempIO = file.read
   daylightsimOpts = tempIO
-end	  
+end
 
 # execute DaylightSim to create daylighting coefficients (--dc option)
 result = exec_statement("ruby #{load_paths} '#{dirname}/DaylightSim-Simple.rb' '#{modelPath}' '#{sqlPath}' --dc #{daylightsimOpts}")

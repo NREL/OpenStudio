@@ -33,11 +33,14 @@ namespace detail {
 } // detail
 
 /** CurveTriquadratic is a Curve that wraps the OpenStudio IDD object 'OS:Curve:Triquadratic'. The
- *  functional form is f(x) = c1 + c2 * x^2 + c3 * x + c4 * y^2 + c5 * y + c6 * z^2 + c7 * z + 
- *  c8 * x^2 * y^2 + c9 * x * y + c10 * x * y^2 + c11 * x^2 * y + c12 * x^2 * z^2 + c13 * x * z + 
- *  c14 * x * z^2 + c15 * x^2 * z + c16 * y^2 * z^2 + c17 * y * z + c18 * y * z^2 + z19 * y^2 * z + 
- *  c20 * x^2 * y^2 * z^2 + c21 * z^2 * y^2 * z + c22 * x^2 * y * z^2 + c23 * x * y^2 * z^2 + 
- *  c24 * x^2 * y * z + c25 * x * y^2 * z + c26 * x * y * z^2 + c27 * x * y * z. */
+ *  functional form is
+ *  \f[\displaystyle \begin{array}{ll}
+    f(x) = & c_1 + c_2 \cdot x^2 + c_3 \cdot x + c_4 \cdot y^2 + c_5 \cdot y + c_6 \cdot z^2 + c_7 \cdot z + c_8 \cdot x^2 \cdot y^2 + \\
+           & c_9 \cdot x \cdot y + c_{10} \cdot x \cdot y^2 + c_{11} \cdot x^2 \cdot y + c_{12} \cdot x^2 \cdot z^2 + c_{13} \cdot x \cdot z + c_{14} \cdot x \cdot z^2 + \\
+           & c_{15} \cdot x^2 \cdot z + c_{16} \cdot y^2 \cdot z^2 + c_{17} \cdot y \cdot z + c_{18} \cdot y \cdot z^2 + c_{19} \cdot y^2 \cdot z + \\
+           & c_{20} \cdot x^2 \cdot y^2 \cdot z^2 + c_{21} \cdot z^2 \cdot y^2 \cdot z + c_{22} \cdot x^2 \cdot y \cdot z^2 + c_{23} \cdot x \cdot y^2 \cdot z^2 + \\
+           & c_{24} \cdot x^2 \cdot y \cdot z + c_{25} \cdot x \cdot y^2 \cdot z + c_{26} \cdot x \cdot y \cdot z^2 + c_{27} \cdot x \cdot y \cdot z
+    \end{array}\f] */
 class MODEL_API CurveTriquadratic : public Curve {
  public:
 

@@ -132,11 +132,8 @@ void ConstructionCfactorUndergroundWallInspectorView::createLayout()
 
   ++row;
 
-  bool isConnected = false;
-
   m_cfactorEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_cfactorEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &ConstructionCfactorUndergroundWallInspectorView::toggleUnitsClicked, m_cfactorEdit, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_cfactorEdit,row,0);
 
   ++row;
@@ -150,8 +147,7 @@ void ConstructionCfactorUndergroundWallInspectorView::createLayout()
   ++row;
 
   m_heightEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_heightEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &ConstructionCfactorUndergroundWallInspectorView::toggleUnitsClicked, m_heightEdit, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_heightEdit,row,0);
 
   ++row;
@@ -228,11 +224,8 @@ void ConstructionCfactorUndergroundWallInspectorView::populateStandardsConstruct
     }
   }
 
-  bool isConnected = false;
-  isConnected = connect(m_standardsConstructionType, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(standardsConstructionTypeChanged(const QString&)));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_standardsConstructionType, SIGNAL(editTextChanged(const QString&)), this, SLOT(editStandardsConstructionType(const QString&)));
-  OS_ASSERT(isConnected);
+  connect(m_standardsConstructionType, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &ConstructionCfactorUndergroundWallInspectorView::standardsConstructionTypeChanged);
+  connect(m_standardsConstructionType, &QComboBox::editTextChanged, this, &ConstructionCfactorUndergroundWallInspectorView::editStandardsConstructionType);
 }
 
 void ConstructionCfactorUndergroundWallInspectorView::attach(openstudio::model::CFactorUndergroundWallConstruction & cFactorUndergroundWallConstruction)
@@ -254,8 +247,7 @@ void ConstructionCfactorUndergroundWallInspectorView::attach(openstudio::model::
       std::bind(&openstudio::model::StandardsInformationConstruction::setIntendedSurfaceType,m_standardsInformation.get_ptr(),std::placeholders::_1),
       NoFailAction(std::bind(&model::StandardsInformationConstruction::resetIntendedSurfaceType,m_standardsInformation.get_ptr())));
 
-  bool test = connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(populateStandardsConstructionType()));
-  OS_ASSERT(test);
+  connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &ConstructionCfactorUndergroundWallInspectorView::populateStandardsConstructionType);
 
   m_standardsConstructionType->setEnabled(true);
   populateStandardsConstructionType();

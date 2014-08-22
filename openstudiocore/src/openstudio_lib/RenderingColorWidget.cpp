@@ -179,8 +179,7 @@ RenderingColorWidget::RenderingColorWidget(QWidget * parent )
   hLayout->addWidget(m_renderColorButton);
   hLayout->addStretch();
 
-  bool isConnected = connect(m_renderColorButton, SIGNAL(clicked()), this, SLOT(renderColorButtonClicked()));
-  OS_ASSERT(isConnected);
+  connect(m_renderColorButton, &QPushButton::clicked, this, &RenderingColorWidget::renderColorButtonClicked);
 }
 
 void RenderingColorWidget::attach(const openstudio::model::RenderingColor& renderingColor)
@@ -189,11 +188,8 @@ void RenderingColorWidget::attach(const openstudio::model::RenderingColor& rende
 
   m_renderingColor = renderingColor;
 
-  bool isConnected = connect(m_renderingColor->getImpl<model::detail::ModelObject_Impl>().get(),
-                        SIGNAL(onChange()),
-                        this, 
-                        SLOT(refresh()));
-  OS_ASSERT(isConnected);
+  connect(m_renderingColor->getImpl<model::detail::ModelObject_Impl>().get(),
+    &model::detail::ModelObject_Impl::onChange, this, &RenderingColorWidget::refresh);
 
   refresh();
 }

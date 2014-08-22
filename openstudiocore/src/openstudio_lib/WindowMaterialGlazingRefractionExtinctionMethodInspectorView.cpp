@@ -67,8 +67,6 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
   unsigned row = 0;
   unsigned col = 0;
 
-  bool isConnected = false;
-
   // Name
 
   QLabel * label = new QLabel("Name: ");
@@ -85,8 +83,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
   mainGridLayout->addWidget(label,row++,col);
 
   m_thickness = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_thickness, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_thickness, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_thickness,row++,0,1,3);
 
   // Solar Index Of Refraction
@@ -96,8 +93,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
   mainGridLayout->addWidget(label,row++,col);
 
   m_solarIndexOfRefraction = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_solarIndexOfRefraction, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_solarIndexOfRefraction, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_solarIndexOfRefraction,row++,0,1,3);
 
   // Solar Extinction Coefficient
@@ -107,8 +103,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
   mainGridLayout->addWidget(label,row++,col);
 
   m_solarExtinctionCoefficient = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_solarExtinctionCoefficient, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_solarExtinctionCoefficient, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_solarExtinctionCoefficient,row++,0,1,3);
 
   // Visible Index of Refraction
@@ -118,8 +113,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
   mainGridLayout->addWidget(label,row++,col);
 
   m_visibleIndexOfRefraction = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_visibleIndexOfRefraction, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_visibleIndexOfRefraction, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_visibleIndexOfRefraction,row++,0,1,3);
 
   // Visible Extinction Coefficient
@@ -129,8 +123,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
   mainGridLayout->addWidget(label,row++,col);
 
   m_visibleExtinctionCoefficient = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_visibleExtinctionCoefficient, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_visibleExtinctionCoefficient, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_visibleExtinctionCoefficient,row++,0,1,3);
 
   // Infrared Transmittance At Normal Incidence
@@ -140,8 +133,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
   mainGridLayout->addWidget(label,row++,col);
 
   m_infraredTransmittanceAtNormalIncidence = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_infraredTransmittanceAtNormalIncidence, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_infraredTransmittanceAtNormalIncidence, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_infraredTransmittanceAtNormalIncidence,row++,0,1,3);
 
   // Infrared Hemispherical Emissivity
@@ -151,8 +143,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
   mainGridLayout->addWidget(label,row++,col);
 
   m_infraredHemisphericalEmissivity = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_infraredHemisphericalEmissivity, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_infraredHemisphericalEmissivity, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_infraredHemisphericalEmissivity,row++,0,1,3);
 
   // Conductivity
@@ -162,8 +153,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
   mainGridLayout->addWidget(label,row++,col);
 
   m_conductivity = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_conductivity, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_conductivity, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_conductivity,row++,0,1,3);
 
   // Dirt Correction Factor For Solar And Visible Transmittance
@@ -173,8 +163,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
   mainGridLayout->addWidget(label,row++,col);
 
   m_dirtCorrectionFactorForSolarAndVisibleTransmittance = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_dirtCorrectionFactorForSolarAndVisibleTransmittance, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_dirtCorrectionFactorForSolarAndVisibleTransmittance, &OSQuantityEdit::onUnitSystemChange);
   mainGridLayout->addWidget(m_dirtCorrectionFactorForSolarAndVisibleTransmittance,row++,0,1,3);
 
   // Solar Diffusing

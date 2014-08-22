@@ -33,6 +33,8 @@
 #include "AirLoopHVAC_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
+#include "PortList.hpp"
+#include "PortList_Impl.hpp"
 #include <utilities/idd/OS_AirLoopHVAC_ReturnPlenum_FieldEnums.hxx>
 
 namespace openstudio {
@@ -105,6 +107,18 @@ namespace detail {
   unsigned AirLoopHVACReturnPlenum_Impl::outletPort()
   {
     return OS_AirLoopHVAC_ReturnPlenumFields::OutletNode;
+  }
+
+  PortList AirLoopHVACReturnPlenum_Impl::inducedAirOutletPortList()
+  {
+    model::AirLoopHVACReturnPlenum plenum = getObject<model::AirLoopHVACReturnPlenum>();
+    boost::optional<PortList> portList = plenum.getModelObjectTarget<PortList>(OS_AirLoopHVAC_ReturnPlenumFields::InducedAirOutletPortList);
+    if( ! portList )
+    {
+      portList = PortList(plenum);
+      setPointer(OS_AirLoopHVAC_ReturnPlenumFields::InducedAirOutletPortList,portList->handle());
+    }
+    return portList.get();
   }
 
   unsigned AirLoopHVACReturnPlenum_Impl::inletPort(unsigned branchIndex)

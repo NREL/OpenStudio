@@ -56,7 +56,7 @@ namespace openstudio
     // m_proxyType->addItem("Socks5 Proxy", QNetworkProxy::Socks5Proxy);
     m_proxyType->addItem("Http Proxy", QNetworkProxy::HttpProxy);
 
-    connect(m_proxyType, SIGNAL(currentIndexChanged(int)), this, SLOT(proxyTypeChanged(int)));
+    connect(m_proxyType, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &NetworkProxyDialog::proxyTypeChanged);
 
     m_hostName = new QLineEdit(this);
     m_port = new QLineEdit(this);
@@ -86,9 +86,9 @@ namespace openstudio
 
     layout->addLayout(buttonBox, 4,0,1,2);
 
-    connect(saveButton, SIGNAL(clicked()), this, SLOT(saveClicked()));
-    connect(cancelButton, SIGNAL(clicked()), this, SLOT(cancelClicked()));
-    connect(testButton, SIGNAL(clicked()), this, SLOT(testClicked()));
+    connect(saveButton, &QPushButton::clicked, this, &NetworkProxyDialog::saveClicked);
+    connect(cancelButton, &QPushButton::clicked, this, &NetworkProxyDialog::cancelClicked);
+    connect(testButton, &QPushButton::clicked, this, &NetworkProxyDialog::testClicked);
 
     QNetworkProxy proxy(createProxy(t_settings));
 

@@ -57,12 +57,8 @@ void PageNavigator::createLayout()
 
   setLayout(layout);
 
-  bool isConnected = false;
-
   m_buttonGroup = new QButtonGroup(this);
-  isConnected = connect(m_buttonGroup, SIGNAL(buttonClicked(QAbstractButton *)), 
-                        this, SLOT(on_buttonClicked(QAbstractButton *)));
-  OS_ASSERT(isConnected);
+  connect(m_buttonGroup, static_cast<void (QButtonGroup::*)(QAbstractButton *)>(&QButtonGroup::buttonClicked), this, &PageNavigator::on_buttonClicked);
 
   QPushButton * button = nullptr;
 
@@ -71,8 +67,7 @@ void PageNavigator::createLayout()
   button->setIcon(QIcon(":/shared_gui_components/images/fast_reverse.png"));
   button->setFixedSize(40,20);
   button->setCheckable(false);
-  isConnected = connect(button, SIGNAL(clicked(bool)), this, SLOT(on_firstPage(bool)));
-  OS_ASSERT(isConnected);
+  connect(button, &QPushButton::clicked, this, &PageNavigator::on_firstPage);
   layout->addWidget(button);
 
   ///! button previous page
@@ -80,8 +75,7 @@ void PageNavigator::createLayout()
   button->setIcon(QIcon(":/shared_gui_components/images/reverse.png"));
   button->setFixedSize(40,20);
   button->setCheckable(false);
-  isConnected = connect(button, SIGNAL(clicked(bool)), this, SLOT(on_previousPage(bool)));
-  OS_ASSERT(isConnected);
+  connect(button, &QPushButton::clicked, this, &PageNavigator::on_previousPage);
   layout->addWidget(button);
 
   ///! buttons for pages listed
@@ -96,8 +90,7 @@ void PageNavigator::createLayout()
   button->setIcon(QIcon(":/shared_gui_components/images/forward.png"));
   button->setFixedSize(40,20);
   button->setCheckable(false);
-  isConnected = connect(button, SIGNAL(clicked(bool)), this, SLOT(on_nextPage(bool)));
-  OS_ASSERT(isConnected);
+  connect(button, &QPushButton::clicked, this, &PageNavigator::on_nextPage);
   layout->addWidget(button);
 
   ///! button last page
@@ -105,8 +98,7 @@ void PageNavigator::createLayout()
   button->setIcon(QIcon(":/shared_gui_components/images/fast_forward.png"));
   button->setFixedSize(40,20);
   button->setCheckable(false);
-  isConnected = connect(button, SIGNAL(clicked(bool)), this, SLOT(on_lastPage(bool)));
-  OS_ASSERT(isConnected);
+  connect(button, &QPushButton::clicked, this, &PageNavigator::on_lastPage);
   layout->addWidget(button);
 
 }

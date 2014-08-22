@@ -70,9 +70,8 @@ UtilityBillsView::UtilityBillsView(const openstudio::model::Model& model, QWidge
                                        false,
                                        parent)
 {
-  bool isConnected = connect(modelObjectInspectorView(),SIGNAL(enableAddNewObjectButton( bool )),
-                             this,SIGNAL(enableAddNewObjectButton( bool )) );
-  OS_ASSERT(isConnected);
+  connect(dynamic_cast<UtilityBillsInspectorView *>(modelObjectInspectorView()), &UtilityBillsInspectorView::enableAddNewObjectButton,
+    this, &UtilityBillsView::enableAddNewObjectButton);
 }
 
 std::vector<std::pair<FuelType, std::string> > UtilityBillsView::utilityBillFuelTypesAndNames()
@@ -175,8 +174,6 @@ boost::optional<QString> UtilityBillsInspectorView::runPeriodDates()
 
 void UtilityBillsInspectorView::createWidgets()
 {
-  bool isConnected = false;
-
   QLabel * label = NULL;
 
   QVBoxLayout * vLayout = NULL;
@@ -192,9 +189,7 @@ void UtilityBillsInspectorView::createWidgets()
     yd = m_model.getUniqueModelObject<model::YearDescription>();
   }
   OS_ASSERT(yd);
-  isConnected = connect( yd->getImpl<openstudio::model::detail::YearDescription_Impl>().get(), SIGNAL(onChange()),
-    this, SLOT(updateRunPeriodDates()) );
-  OS_ASSERT(isConnected);
+  connect(yd->getImpl<model::detail::YearDescription_Impl>().get(), &model::detail::YearDescription_Impl::onChange, this, &UtilityBillsInspectorView::updateRunPeriodDates);
 
   // Regular inspector body
 
@@ -210,9 +205,7 @@ void UtilityBillsInspectorView::createWidgets()
 
   m_buttonGroup = new QButtonGroup(this);
 
-  isConnected = connect(m_buttonGroup, SIGNAL(buttonClicked(int)),
-    this, SLOT(deleteBillingPeriod(int)));
-  OS_ASSERT(isConnected);
+  connect(m_buttonGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &UtilityBillsInspectorView::deleteBillingPeriod);
   
   // Name
 
@@ -250,9 +243,8 @@ void UtilityBillsInspectorView::createWidgets()
   m_consumptionUnits = new OSComboBox2();
   vLayout->addWidget(m_consumptionUnits);
 
-  isConnected = connect(m_consumptionUnits, SIGNAL(currentIndexChanged(const QString&)),
-    this, SLOT(updateEnergyUseLabelText(const QString&)));
-  OS_ASSERT(isConnected);
+  connect(m_consumptionUnits, static_cast<void (OSComboBox2::*)(const QString &)>(&OSComboBox2::currentIndexChanged),
+    this, static_cast<void (UtilityBillsInspectorView::*)(const QString &)>(&UtilityBillsInspectorView::updateEnergyUseLabelText));
 
   gridLayout->addLayout(vLayout,0,0,Qt::AlignLeft | Qt::AlignTop);
 
@@ -268,9 +260,8 @@ void UtilityBillsInspectorView::createWidgets()
   m_peakDemandUnits = new OSComboBox2();
   vLayout->addWidget(m_peakDemandUnits);
 
-  isConnected = connect(m_peakDemandUnits, SIGNAL(currentIndexChanged(const QString&)),
-    this, SLOT(updatePeakLabelText(const QString&)));
-  OS_ASSERT(isConnected);
+  connect(m_peakDemandUnits, static_cast<void (OSComboBox2::*)(const QString &)>(&OSComboBox2::currentIndexChanged),
+    this, static_cast<void (UtilityBillsInspectorView::*)(const QString &)>(&UtilityBillsInspectorView::updatePeakLabelText));
   
   gridLayout->addLayout(vLayout,0,1,Qt::AlignLeft | Qt::AlignTop);
 
@@ -327,9 +318,8 @@ void UtilityBillsInspectorView::createWidgets()
 
   QButtonGroup * buttonGroup = new QButtonGroup(this);
 
-  isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)),
-    this, SLOT(setBillFormat(int)));
-  OS_ASSERT(isConnected);
+  connect(buttonGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked),
+          this, static_cast<void (UtilityBillsInspectorView::*)(int)>(&UtilityBillsInspectorView::setBillFormat));
 
   QRadioButton * radioButton = NULL; 
 
@@ -373,9 +363,7 @@ void UtilityBillsInspectorView::createWidgets()
   m_addBillingPeriod->setFixedSize(24,24);
   hLayout->addWidget(m_addBillingPeriod, 0, Qt::AlignLeft | Qt::AlignVCenter);
 
-  isConnected = connect(m_addBillingPeriod, SIGNAL(clicked(bool)),
-    this, SLOT(addBillingPeriod(bool)));
-  OS_ASSERT(isConnected);
+  connect(m_addBillingPeriod, &QPushButton::clicked, this, &UtilityBillsInspectorView::addBillingPeriod);
 
   label = new QLabel();
   label->setObjectName("H2");
@@ -848,18 +836,12 @@ void BillingPeriodWidget::createWidgets(FuelType fuelType,
   m_deleteBillWidget = new SofterRemoveButton();
   hLayout->addWidget(m_deleteBillWidget, 0, Qt::AlignLeft | Qt::AlignTop);
 
-  bool isConnected = false;
-
   if(m_startDateEdit){
-    isConnected = connect(m_startDateEdit,SIGNAL(dateChanged(const QDate &)),
-      this,SLOT(startDateChanged(const QDate &)));
-    OS_ASSERT(isConnected);
+    connect(m_startDateEdit, &QDateEdit::dateChanged, this, &BillingPeriodWidget::startDateChanged);
   }
 
   if(m_endDateEdit){
-    isConnected = connect(m_endDateEdit,SIGNAL(dateChanged(const QDate &)),
-      this,SLOT(endDateChanged(const QDate &)));
-    OS_ASSERT(isConnected);
+    connect(m_endDateEdit, &QDateEdit::dateChanged, this, &BillingPeriodWidget::endDateChanged);
   }
 }
 
@@ -899,9 +881,8 @@ void BillingPeriodWidget::attach(openstudio::model::BillingPeriod & billingPerio
   }
 
   model::ModelObject modelObject = m_billingPeriod->getObject<openstudio::model::ModelObject>();
-  bool isConnected = connect( modelObject.getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
-                              this,SLOT(modelObjectChanged()) );
-  OS_ASSERT(isConnected);
+  connect(modelObject.getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onChange,
+    this, &BillingPeriodWidget::modelObjectChanged);
 
   if(m_startDateEdit){
     m_startDateEdit->setEnabled(true);

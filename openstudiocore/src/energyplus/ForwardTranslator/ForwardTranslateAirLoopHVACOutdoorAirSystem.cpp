@@ -18,6 +18,8 @@
  **********************************************************************/
 
 #include "../ForwardTranslator.hpp"
+#include "../../model/AirToAirComponent.hpp"
+#include "../../model/AirToAirComponent_Impl.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "../../model/ControllerOutdoorAir.hpp"
@@ -98,11 +100,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
 
   // Field: Availability Manager List Name //////////////////////////////////
   IdfObject availabilityManagerListIdf(IddObjectType::AvailabilityManagerAssignmentList);
-  availabilityManagerListIdf.setName(name + " Availability Manager");
+  availabilityManagerListIdf.setName(name + " Availability Manager List");
   m_idfObjects.push_back(availabilityManagerListIdf);
 
   IdfObject availabilityManagerScheduledIdf = IdfObject(openstudio::IddObjectType::AvailabilityManager_Scheduled);
-  availabilityManagerScheduledIdf.createName();
+  availabilityManagerScheduledIdf.setName(name + " Availability Manager");
   m_idfObjects.push_back(availabilityManagerScheduledIdf);
 
   Schedule alwaysOn = modelObject.model().alwaysOnDiscreteSchedule();
@@ -168,23 +170,38 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
   s = outdoorAirMixerIdf.name();
   equipmentListIdf.setString(2,*s);
 
-  ModelObjectVector oaModelObjects = modelObject.oaComponents();
-  ModelObjectVector::iterator oaIt;
   unsigned i = 3;
-  for( oaIt = oaModelObjects.begin();
+  ModelObjectVector oaModelObjects = modelObject.oaComponents();
+  for( ModelObjectVector::iterator oaIt = oaModelObjects.begin();
        oaIt != oaModelObjects.end();
        ++oaIt )
   {
     if( ! oaIt->optionalCast<Node>() )
     {
-      s = stripOS2(oaIt->iddObject().name());
-      if(s)
-        equipmentListIdf.setString(i,*s);
-      i++;
-      s = oaIt->name();
-      if(s)
-        equipmentListIdf.setString(i,*s);
-      i++;
+      if( boost::optional<IdfObject> idfObject = translateAndMapModelObject(*oaIt) )
+      {
+        equipmentListIdf.setString(i,idfObject->iddObject().name());
+        i++;
+        equipmentListIdf.setString(i,idfObject->name().get());
+        i++;
+      }
+    }
+  }
+
+  ModelObjectVector reliefModelObjects = modelObject.reliefComponents();
+  for( ModelObjectVector::iterator reliefIt = reliefModelObjects.begin();
+       reliefIt != reliefModelObjects.end();
+       ++reliefIt )
+  {
+    if( (! reliefIt->optionalCast<Node>()) && (! reliefIt->optionalCast<AirToAirComponent>()) )
+    {
+      if( boost::optional<IdfObject> idfObject = translateAndMapModelObject(*reliefIt) )
+      {
+        equipmentListIdf.setString(i,idfObject->iddObject().name());
+        i++;
+        equipmentListIdf.setString(i,idfObject->name().get());
+        i++;
+      }
     }
   }
 
@@ -192,13 +209,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
   if(s)
   {
     idfObject.setString(openstudio::AirLoopHVAC_OutdoorAirSystemFields::OutdoorAirEquipmentListName,*s);
-  }
-
-  for( oaIt = oaModelObjects.begin();
-       oaIt != oaModelObjects.end();
-       ++oaIt )
-  {
-    translateAndMapModelObject(*oaIt);
   }
 
   return boost::optional<IdfObject>(idfObject);

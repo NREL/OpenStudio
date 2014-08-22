@@ -58,17 +58,10 @@ ModelSubTabView::ModelSubTabView(OSItemSelector* itemSelector,
                        : SubTabView(itemSelector, modelObjectInspectorView, showGridViewLayout, parent),
     m_modelObjectInspectorView(modelObjectInspectorView)
 {
-  bool bingo = false;
-  bingo = connect(this, 
-                  SIGNAL(dropZoneItemClicked(OSItem*)),
-                  this, 
-                  SLOT(dropZoneItemClicked(OSItem*)));
-  OS_ASSERT(bingo);
+  connect(this, &ModelSubTabView::dropZoneItemClicked, this, &ModelSubTabView::dropZoneItemClicked);
 
-  // DLM: can we remove this? 
-  //bingo = connect(itemSelector,SIGNAL(itemSelected(OSItem*)),
-  //                this,SLOT(onItemSelected()));
-  //OS_ASSERT(bingo);
+  // DLM: can we remove this?
+  //connect(itemSelector, &OSItemSelector::itemSelected, this, &ModelSubTabView::onItemSelected);
 }
 
 // DLM: what purpose does this serve? 

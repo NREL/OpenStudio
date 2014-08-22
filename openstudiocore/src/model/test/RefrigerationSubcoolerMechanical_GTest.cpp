@@ -36,7 +36,7 @@ TEST_F(ModelFixture,RefrigerationSubcoolerMechanical_RefrigerationSubcoolerMecha
   ASSERT_EXIT ( 
   {  
      Model m; 
-	 RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanical = RefrigerationSubcoolerMechanical(m);
+     RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanical = RefrigerationSubcoolerMechanical(m);
 
      exit(0); 
   } ,
@@ -45,38 +45,38 @@ TEST_F(ModelFixture,RefrigerationSubcoolerMechanical_RefrigerationSubcoolerMecha
 
 TEST_F(ModelFixture,RefrigerationSubcoolerMechanical_iddObjectType)
 {    
-	Model m; 
-	RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanical = RefrigerationSubcoolerMechanical(m);
+  Model m; 
+  RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanical = RefrigerationSubcoolerMechanical(m);
 
-	EXPECT_EQ( refrigerationSubcoolerMechanical.iddObjectType(), IddObjectType::OS_Refrigeration_Subcooler_Mechanical);
+  EXPECT_EQ( refrigerationSubcoolerMechanical.iddObjectType(), IddObjectType::OS_Refrigeration_Subcooler_Mechanical);
 }
 
 TEST_F(ModelFixture,RefrigerationSubcoolerMechanical_CapacityProvidingSystem)
 {    
-	Model m; 
-	
-	RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanical = RefrigerationSubcoolerMechanical(m);
-	RefrigerationSystem refrigerationSystem = RefrigerationSystem(m);
+  Model m; 
+  
+  RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanical = RefrigerationSubcoolerMechanical(m);
+  RefrigerationSystem refrigerationSystem = RefrigerationSystem(m);
 
-	refrigerationSubcoolerMechanical.setCapacityProvidingSystem(refrigerationSystem);
+  refrigerationSubcoolerMechanical.setCapacityProvidingSystem(refrigerationSystem);
 
-	boost::optional<RefrigerationSystem> refrigerationSystem2 = refrigerationSubcoolerMechanical.capacityProvidingSystem();
-	EXPECT_TRUE(refrigerationSystem2 != NULL);
-	EXPECT_EQ( refrigerationSystem.handle(), refrigerationSystem2.get().handle());
+  boost::optional<RefrigerationSystem> refrigerationSystem2 = refrigerationSubcoolerMechanical.capacityProvidingSystem();
+  EXPECT_TRUE(refrigerationSystem2 != NULL);
+  EXPECT_EQ( refrigerationSystem.handle(), refrigerationSystem2.get().handle());
 }
 
 TEST_F(ModelFixture,RefrigerationSubcoolerMechanical_OutletControlTemperature)
 {    
-	Model m; 
-	RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanical = RefrigerationSubcoolerMechanical(m);
+  Model m; 
+  RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanical = RefrigerationSubcoolerMechanical(m);
 
-	EXPECT_EQ( 10.0, refrigerationSubcoolerMechanical.outletControlTemperature() );  // Brian's value
-	
-	refrigerationSubcoolerMechanical.setOutletControlTemperature(15.0);
-	EXPECT_EQ( 15.0, refrigerationSubcoolerMechanical.outletControlTemperature() );
+  EXPECT_EQ( 10.0, refrigerationSubcoolerMechanical.outletControlTemperature() );  // Brian's value
+  
+  refrigerationSubcoolerMechanical.setOutletControlTemperature(15.0);
+  EXPECT_EQ( 15.0, refrigerationSubcoolerMechanical.outletControlTemperature() );
 
-	refrigerationSubcoolerMechanical.setOutletControlTemperature(-15.0);
-	EXPECT_EQ( -15.0, refrigerationSubcoolerMechanical.outletControlTemperature() );
+  refrigerationSubcoolerMechanical.setOutletControlTemperature(-15.0);
+  EXPECT_EQ( -15.0, refrigerationSubcoolerMechanical.outletControlTemperature() );
 }
 
 TEST_F(ModelFixture, RefrigerationSubcoolerMechanical_Remove)
@@ -111,64 +111,64 @@ TEST_F(ModelFixture, RefrigerationSubcoolerMechanical_RemoveRefrigerationSystem)
 
 TEST_F(ModelFixture, RefrigerationSubcoolerMechanical_CloneOneModelWithDefaultData)
 {
-	Model m; 
-	
-	RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanical = RefrigerationSubcoolerMechanical(m);
-	RefrigerationSystem refrigerationSystem = RefrigerationSystem(m);
+  Model m; 
+  
+  RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanical = RefrigerationSubcoolerMechanical(m);
+  RefrigerationSystem refrigerationSystem = RefrigerationSystem(m);
 
-	refrigerationSubcoolerMechanical.setCapacityProvidingSystem(refrigerationSystem);
+  refrigerationSubcoolerMechanical.setCapacityProvidingSystem(refrigerationSystem);
 
-	RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanicalClone = refrigerationSubcoolerMechanical.clone(m).cast<RefrigerationSubcoolerMechanical>();
+  RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanicalClone = refrigerationSubcoolerMechanical.clone(m).cast<RefrigerationSubcoolerMechanical>();
 
-	EXPECT_NE(refrigerationSubcoolerMechanicalClone.handle(), refrigerationSubcoolerMechanical.handle());
+  EXPECT_NE(refrigerationSubcoolerMechanicalClone.handle(), refrigerationSubcoolerMechanical.handle());
 
-	EXPECT_FALSE(refrigerationSubcoolerMechanicalClone.capacityProvidingSystem());
-	EXPECT_EQ(10.0, refrigerationSubcoolerMechanical.outletControlTemperature());
+  EXPECT_FALSE(refrigerationSubcoolerMechanicalClone.capacityProvidingSystem());
+  EXPECT_EQ(10.0, refrigerationSubcoolerMechanical.outletControlTemperature());
 }
 
 TEST_F(ModelFixture, RefrigerationSubcoolerMechanical_CloneOneModelWithCustomData)
 {
-	Model m; 
-	
-	RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanical = RefrigerationSubcoolerMechanical(m);
-	RefrigerationSystem refrigerationSystem = RefrigerationSystem(m);
-	refrigerationSubcoolerMechanical.setCapacityProvidingSystem(refrigerationSystem);
-	refrigerationSubcoolerMechanical.setOutletControlTemperature(15.0);
+  Model m; 
+  
+  RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanical = RefrigerationSubcoolerMechanical(m);
+  RefrigerationSystem refrigerationSystem = RefrigerationSystem(m);
+  refrigerationSubcoolerMechanical.setCapacityProvidingSystem(refrigerationSystem);
+  refrigerationSubcoolerMechanical.setOutletControlTemperature(15.0);
 
-	RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanicalClone = refrigerationSubcoolerMechanical.clone(m).cast<RefrigerationSubcoolerMechanical>();
+  RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanicalClone = refrigerationSubcoolerMechanical.clone(m).cast<RefrigerationSubcoolerMechanical>();
 
-	EXPECT_NE(refrigerationSubcoolerMechanicalClone.handle(), refrigerationSubcoolerMechanical.handle());
+  EXPECT_NE(refrigerationSubcoolerMechanicalClone.handle(), refrigerationSubcoolerMechanical.handle());
 
-	EXPECT_FALSE(refrigerationSubcoolerMechanicalClone.capacityProvidingSystem());
-	EXPECT_EQ(15.0, refrigerationSubcoolerMechanicalClone.outletControlTemperature());
+  EXPECT_FALSE(refrigerationSubcoolerMechanicalClone.capacityProvidingSystem());
+  EXPECT_EQ(15.0, refrigerationSubcoolerMechanicalClone.outletControlTemperature());
 }
 
 
 TEST_F(ModelFixture, RefrigerationSubcoolerMechanical_CloneTwoModelWithDefaultData)
 {
-	Model model; 
-	
-	RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanical = RefrigerationSubcoolerMechanical(model);
-	RefrigerationSystem refrigerationSystem = RefrigerationSystem(model);
+  Model model; 
+  
+  RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanical = RefrigerationSubcoolerMechanical(model);
+  RefrigerationSystem refrigerationSystem = RefrigerationSystem(model);
 
-	refrigerationSubcoolerMechanical.setCapacityProvidingSystem(refrigerationSystem);
+  refrigerationSubcoolerMechanical.setCapacityProvidingSystem(refrigerationSystem);
 
-	RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanicalClone = refrigerationSubcoolerMechanical.clone(model).cast<RefrigerationSubcoolerMechanical>();
+  RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanicalClone = refrigerationSubcoolerMechanical.clone(model).cast<RefrigerationSubcoolerMechanical>();
 
-	Model model2;
-	RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanicalClone2 = refrigerationSubcoolerMechanical.clone(model2).cast<RefrigerationSubcoolerMechanical>();
+  Model model2;
+  RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanicalClone2 = refrigerationSubcoolerMechanical.clone(model2).cast<RefrigerationSubcoolerMechanical>();
 
-	std::vector<RefrigerationSystem> refrigerationSystems = model.getModelObjects<RefrigerationSystem>();
-  	ASSERT_EQ(1, refrigerationSystems.size());
+  std::vector<RefrigerationSystem> refrigerationSystems = model.getModelObjects<RefrigerationSystem>();
+    ASSERT_EQ(1, refrigerationSystems.size());
 
-  	refrigerationSystems = model2.getModelObjects<RefrigerationSystem>();
-  	ASSERT_EQ(0, refrigerationSystems.size());
+    refrigerationSystems = model2.getModelObjects<RefrigerationSystem>();
+    ASSERT_EQ(0, refrigerationSystems.size());
 
-	EXPECT_NE(refrigerationSubcoolerMechanicalClone.handle(), refrigerationSubcoolerMechanical.handle());
-	EXPECT_NE(refrigerationSubcoolerMechanicalClone2.handle(), refrigerationSubcoolerMechanical.handle());
-	EXPECT_NE(refrigerationSubcoolerMechanicalClone2.handle(), refrigerationSubcoolerMechanicalClone.handle());
-	
-	EXPECT_FALSE(refrigerationSubcoolerMechanicalClone.capacityProvidingSystem());
-	EXPECT_FALSE(refrigerationSubcoolerMechanicalClone2.capacityProvidingSystem());
-	EXPECT_EQ(10.0, refrigerationSubcoolerMechanicalClone2.outletControlTemperature());
+  EXPECT_NE(refrigerationSubcoolerMechanicalClone.handle(), refrigerationSubcoolerMechanical.handle());
+  EXPECT_NE(refrigerationSubcoolerMechanicalClone2.handle(), refrigerationSubcoolerMechanical.handle());
+  EXPECT_NE(refrigerationSubcoolerMechanicalClone2.handle(), refrigerationSubcoolerMechanicalClone.handle());
+  
+  EXPECT_FALSE(refrigerationSubcoolerMechanicalClone.capacityProvidingSystem());
+  EXPECT_FALSE(refrigerationSubcoolerMechanicalClone2.capacityProvidingSystem());
+  EXPECT_EQ(10.0, refrigerationSubcoolerMechanicalClone2.outletControlTemperature());
 }

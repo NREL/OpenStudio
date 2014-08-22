@@ -710,8 +710,7 @@ namespace openstudio{
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
-      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processInternetAvailable()));
-      OS_ASSERT(test);
+      connect(m_networkReply, &QNetworkReply::finished, this, &VagrantProvider_Impl::processInternetAvailable);
 
       return true;
     }
@@ -719,9 +718,8 @@ namespace openstudio{
     QProcess *VagrantProvider_Impl::makeCheckServiceProcess() const
     {
       auto p = new QProcess();
-      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
-                          this, SLOT(onCheckServiceComplete(int, QProcess::ExitStatus)));
-      OS_ASSERT(test);
+      connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+        this, &VagrantProvider_Impl::onCheckServiceComplete);
       QStringList args;
       addProcessArguments(args);
       args << "-v";
@@ -780,9 +778,7 @@ namespace openstudio{
     QProcess *VagrantProvider_Impl::makeStartServerProcess() const
     {
       auto p = new QProcess();
-      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
-                          this, SLOT(onServerStarted(int, QProcess::ExitStatus)));
-      OS_ASSERT(test);
+      connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &VagrantProvider_Impl::onServerStarted);
 
       QStringList args;
       addProcessArguments(args);
@@ -820,9 +816,7 @@ namespace openstudio{
     QProcess *VagrantProvider_Impl::makeStartWorkerProcess() const
     {
       auto p = new QProcess();
-      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
-                          this, SLOT(onWorkerStarted(int, QProcess::ExitStatus)));
-      OS_ASSERT(test);
+      connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &VagrantProvider_Impl::onWorkerStarted);
 
 
       QStringList args;
@@ -861,9 +855,8 @@ namespace openstudio{
     QProcess *VagrantProvider_Impl::makeCheckServerRunningProcess() const
     {
       auto p = new QProcess();
-      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
-                          this, SLOT(onCheckServerRunningComplete(int, QProcess::ExitStatus)));
-      OS_ASSERT(test);
+      connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+        this, &VagrantProvider_Impl::onCheckServerRunningComplete);
 
       QStringList args;
       addProcessArguments(args);
@@ -898,9 +891,8 @@ namespace openstudio{
     QProcess *VagrantProvider_Impl::makeCheckWorkerRunningProcess() const
     {
       auto p = new QProcess();
-      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
-                          this, SLOT(onCheckWorkerRunningComplete(int, QProcess::ExitStatus)));
-      OS_ASSERT(test);
+      connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+        this, &VagrantProvider_Impl::onCheckWorkerRunningComplete);
 
       QStringList args;
       addProcessArguments(args);
@@ -936,9 +928,7 @@ namespace openstudio{
     {
       auto p = new QProcess();
       p->setWorkingDirectory(toQString(m_vagrantSettings.serverPath()));
-      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
-          this, SLOT(onServerStopped(int, QProcess::ExitStatus)));
-      OS_ASSERT(test);
+      connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &VagrantProvider_Impl::onServerStopped);
 
       QStringList args;
       addProcessArguments(args);
@@ -951,9 +941,7 @@ namespace openstudio{
     {
       auto p = new QProcess();
       p->setWorkingDirectory(toQString(m_vagrantSettings.workerPath()));
-      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
-          this, SLOT(onWorkerStopped(int, QProcess::ExitStatus)));
-      OS_ASSERT(test);
+      connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &VagrantProvider_Impl::onWorkerStopped);
 
       QStringList args;
       addProcessArguments(args);
@@ -997,9 +985,7 @@ namespace openstudio{
     QProcess *VagrantProvider_Impl::makeCheckTerminateProcess() const
     {
       auto p = new QProcess();
-      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
-                          this, SLOT(onCheckTerminatedComplete(int, QProcess::ExitStatus)));
-      OS_ASSERT(test);
+      connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &VagrantProvider_Impl::onCheckTerminatedComplete);
 
       QStringList args;
       addProcessArguments(args);

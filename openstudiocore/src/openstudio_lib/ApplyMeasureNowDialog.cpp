@@ -36,6 +36,8 @@
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
 
+#include "../openstudio_app/OpenStudioApp.hpp"
+
 #include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/core/RubyException.hpp"
@@ -84,9 +86,8 @@ ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
   setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   createWidgets();
 
-  openstudio::OSAppBase * app = OSAppBase::instance();
-  bool isConnected = connect(this, SIGNAL(reloadFile(const QString&, bool, bool)), app, SLOT(reloadFile(const QString&, bool, bool)), Qt::QueuedConnection);
-  OS_ASSERT(isConnected);
+  OSAppBase * app = OSAppBase::instance();
+  connect(this, &ApplyMeasureNowDialog::reloadFile, static_cast<OpenStudioApp *>(app), &OpenStudioApp::reloadFile, Qt::QueuedConnection);
 }
 
 ApplyMeasureNowDialog::~ApplyMeasureNowDialog()
@@ -109,7 +110,6 @@ void ApplyMeasureNowDialog::createWidgets()
   QWidget * widget = 0;
   QBoxLayout * layout = 0;
   QLabel * label = 0;
-  bool isConnected = false;
 
   openstudio::OSAppBase * app = OSAppBase::instance();
 
@@ -155,7 +155,7 @@ void ApplyMeasureNowDialog::createWidgets()
   BusyWidget * busyWidget = new BusyWidget();
 
   m_timer = new QTimer(this);
-  connect(m_timer,SIGNAL(timeout()),busyWidget,SLOT(rotate()));
+  connect(m_timer, &QTimer::timeout, busyWidget, &BusyWidget::rotate);
 
   layout = new QVBoxLayout();
   layout->addStretch();
@@ -188,8 +188,7 @@ void ApplyMeasureNowDialog::createWidgets()
   layout->addStretch(); 
 
   m_showAdvancedOutput = new QPushButton("Advanced Output"); 
-  isConnected = connect(m_showAdvancedOutput,SIGNAL(clicked(bool)),this,SLOT(showAdvancedOutput()));
-  OS_ASSERT(isConnected);
+  connect(m_showAdvancedOutput, &QPushButton::clicked, this, &ApplyMeasureNowDialog::showAdvancedOutput);
 
   //layout->addStretch();
 
@@ -291,9 +290,7 @@ void ApplyMeasureNowDialog::displayMeasure()
 
     m_currentMeasureItem = QSharedPointer<measuretab::MeasureItem>(new measuretab::MeasureItem(rubyMeasure, app));
 
-    bool isConnected = false;
-    isConnected = connect(m_currentMeasureItem.data(),SIGNAL(argumentsChanged(bool)),this,SLOT(disableOkButton(bool)));
-    OS_ASSERT(isConnected);
+    connect(m_currentMeasureItem.data(), &measuretab::MeasureItem::argumentsChanged, this, &ApplyMeasureNowDialog::disableOkButton);
 
     bool hasIncompleteArguments = m_currentMeasureItem->hasIncompleteArguments();
     disableOkButton(hasIncompleteArguments);
@@ -583,6 +580,7 @@ DataPointJobContentView::DataPointJobContentView()
   m_textEdit = new QLabel();
   m_textEdit->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
   m_textEdit->setWordWrap(true);
+  m_textEdit->setOpenExternalLinks(true);
 
   mainHLayout->addWidget(m_textEdit);
 }

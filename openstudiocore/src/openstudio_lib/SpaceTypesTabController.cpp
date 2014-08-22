@@ -34,23 +34,11 @@ SpaceTypesTabController::SpaceTypesTabController(const model::Model& model)
 {
   m_spaceTypesController = std::shared_ptr<SpaceTypesController>(new SpaceTypesController(model));
 
-  bool isConnected = false;
+  connect(m_spaceTypesController.get(), &SpaceTypesController::modelObjectSelected, this, &SpaceTypesTabController::modelObjectSelected);
 
-  isConnected = connect(m_spaceTypesController.get(),
-                        SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
-                        this,
-                        SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )));
-  OS_ASSERT(isConnected);
+  connect(m_spaceTypesController.get(), &SpaceTypesController::downloadComponentsClicked, this, &SpaceTypesTabController::downloadComponentsClicked);
 
-  isConnected = QObject::connect(m_spaceTypesController.get(), SIGNAL(downloadComponentsClicked()),
-                                 this, SIGNAL(downloadComponentsClicked()));
-  OS_ASSERT(isConnected);
-
-  isConnected = QObject::connect(m_spaceTypesController.get(), SIGNAL(openLibDlgClicked()),
-                                 this, SIGNAL(openLibDlgClicked()));
-  OS_ASSERT(isConnected);
-
-  this->mainContentWidget()->addTabWidget(m_spaceTypesController->subTabView());
+  connect(m_spaceTypesController.get(), &SpaceTypesController::openLibDlgClicked, this, &SpaceTypesTabController::openLibDlgClicked);
 
   SpaceTypeInspectorView * spaceTypeInspectorView = qobject_cast<SpaceTypeInspectorView *>(m_spaceTypesController->subTabView()->inspectorView());
   OS_ASSERT(spaceTypeInspectorView);
@@ -58,6 +46,7 @@ SpaceTypesTabController::SpaceTypesTabController(const model::Model& model)
   isConnected = connect(spaceTypeInspectorView, SIGNAL(gridRowSelected(OSItem*)), m_spaceTypesController.get(), SLOT(selectItem(OSItem*)));
   OS_ASSERT(isConnected);
 
+  mainContentWidget()->addTabWidget(m_spaceTypesController->subTabView());
 }
 
 } // openstudio

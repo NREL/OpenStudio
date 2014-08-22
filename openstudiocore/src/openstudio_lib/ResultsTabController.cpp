@@ -29,10 +29,9 @@ ResultsTabController::ResultsTabController()
 {
   m_resultsTabView = static_cast<ResultsTabView *>(mainContentWidget());
 
-  connect(m_resultsTabView,SIGNAL(removeResultClicked()),
-          this,SLOT(removeResult()));
+  connect(m_resultsTabView, &ResultsTabView::removeResultClicked, this, &ResultsTabController::removeResult);
 
-  connect(m_resultsTabView,SIGNAL(importResultClicked()),this,SLOT(importResult()));
+  connect(m_resultsTabView, &ResultsTabView::importResultClicked, this, &ResultsTabController::importResult);
 }
 
 //void ResultsController::removeResult(model::myModelClass & result)

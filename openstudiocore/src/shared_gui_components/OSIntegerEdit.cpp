@@ -145,17 +145,11 @@ void OSIntegerEdit2::completeBind() {
 
   setEnabled(true);
 
-  bool isConnected = false;
-  isConnected = connect( this, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()) );
-  OS_ASSERT(isConnected);
+  connect(this, &OSIntegerEdit2::editingFinished, this, &OSIntegerEdit2::onEditingFinished);
 
-  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
-                         this,SLOT(onModelObjectChange()) );
-  OS_ASSERT(isConnected);
+  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSIntegerEdit2::onModelObjectChange);
 
-  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
-                         this,SLOT(onModelObjectRemove(Handle)) );
-  OS_ASSERT(isConnected);
+  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSIntegerEdit2::onModelObjectRemove);
 
   refreshTextAndLabel();
 }
@@ -364,17 +358,11 @@ void OSIntegerEdit::bind(model::ModelObject& modelObject,
 
   setEnabled(true);
 
-  bool isConnected = false;
-  isConnected = connect( this, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()) );
-  OS_ASSERT(isConnected);
+  connect(this, &OSIntegerEdit::editingFinished, this, &OSIntegerEdit::onEditingFinished);
 
-  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
-                         this,SLOT(onModelObjectChange()) );
-  OS_ASSERT(isConnected);
+  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSIntegerEdit::onModelObjectChange);
 
-  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
-                         this,SLOT(onModelObjectRemove(Handle)) );
-  OS_ASSERT(isConnected);
+  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSIntegerEdit::onModelObjectRemove);
 
   refreshTextAndLabel();
 }

@@ -126,10 +126,11 @@ public:
 
   /*! \brief lays out the WorkspaceObj
    *
-   * \param modelObj the modelObj to layout
+   * \param workObj the current workspace
    * \param force forces a layout even if we just laid out this modelObj
-   * \param if true, delete the children and rebuild them
+   * \param recursive if true, delete the children and rebuild them
    * \param locked set all the FREE items to LOCKED
+   * \param hideChildren shows or hides the children
    *
    * This call lays out a model. It will ask the Model for its AttributeVector and use that
    * to decide what to display. If the ModelObject is a ParentChildObejct, then this
@@ -139,7 +140,7 @@ public:
    * Calling this method a 2nd time will delete everything that was previously built and
    * regenerate the QWidgets.
    *
-   * Recursive only effects anything if you are sending in the same modelObj, if you pick a different one, the
+   * Recursive only effects anything if you are sending in the same workObj, if you pick a different one, the
    * children are ALWAYS deleted and rebuilt. (because they are different children!)
    *
    * If you are calling this from a place where the user should not be allowed to edit the fields, set the lock
@@ -251,13 +252,14 @@ protected slots:
 protected:
 
 /*! \brief constructor
-    \param parent the owner of all the stuff we just made.
-    \param model the model to get data from
+    \param workspaceObj the current workspace
     \param indent indentation for the child frame
     \param bridge pass in a bridge here if you need signals to get out of the IG (or the IG's children)
     \param precision sets the number of sigfigs to display
     \param style sets the style of floating point display
     \param showComments show or hide idf comment field
+    \param showAllFields show or hide all fields
+    \param recursive recursively create and show fields
     \param locked if true, lock all fields the ACCESS_POLICY sets to FREE
     If model has children, those children will get their own InspectorGadget, indent
     will be passed again to that constructor so the frames will nest.
@@ -274,6 +276,7 @@ protected:
   /*!
     \param layout the layout to attach the items to
     \param parent the widget that owns all the items that will be created.
+    \param hideChildren show or hide children (hidden by default)
     
     
     This function is a big loop over the attributes or fields*, it does the core of the work for 

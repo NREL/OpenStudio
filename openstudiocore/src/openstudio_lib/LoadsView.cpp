@@ -55,9 +55,7 @@ LoadsView::LoadsView(bool isIP, const openstudio::model::Model& model, QWidget *
                                        false,
                                        parent)
 {
-  bool isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
-                        modelObjectInspectorView(),SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &LoadsView::toggleUnitsClicked, modelObjectInspectorView(), &ModelObjectInspectorView::toggleUnitsClicked);
 }
 
 std::vector<std::pair<IddObjectType, std::string> > LoadsView::modelObjectTypesAndNames()
@@ -151,11 +149,7 @@ void LoadsInspectorView::showInspector(QWidget * widget)
 void LoadsInspectorView::showPeopleDefinitionsInspector(const openstudio::model::ModelObject& modelObject)
 {
   PeopleDefinitionInspectorView * peopleDefinitionInspectorView = new PeopleDefinitionInspectorView(m_isIP, m_model);
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             peopleDefinitionInspectorView, 
-                             SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &LoadsInspectorView::toggleUnitsClicked, peopleDefinitionInspectorView, &PeopleDefinitionInspectorView::toggleUnitsClicked);
 
   peopleDefinitionInspectorView->selectModelObject(modelObject);
 
@@ -165,11 +159,7 @@ void LoadsInspectorView::showPeopleDefinitionsInspector(const openstudio::model:
 void LoadsInspectorView::showLightsDefinitionsInspector(const openstudio::model::ModelObject& modelObject)
 {
   LightsDefinitionInspectorView * lightsDefinitionInspectorView = new LightsDefinitionInspectorView(m_isIP, m_model);
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             lightsDefinitionInspectorView, 
-                             SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &LoadsInspectorView::toggleUnitsClicked, lightsDefinitionInspectorView, &LightsDefinitionInspectorView::toggleUnitsClicked);
 
   lightsDefinitionInspectorView->selectModelObject(modelObject);
 
@@ -179,11 +169,7 @@ void LoadsInspectorView::showLightsDefinitionsInspector(const openstudio::model:
 void LoadsInspectorView::showLuminaireDefinitionsInspector(const openstudio::model::ModelObject& modelObject)
 {
   LuminaireDefinitionInspectorView * luminaireDefinitionInspectorView = new LuminaireDefinitionInspectorView(m_isIP, m_model);
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             luminaireDefinitionInspectorView, 
-                             SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &LoadsInspectorView::toggleUnitsClicked, luminaireDefinitionInspectorView, &LuminaireDefinitionInspectorView::toggleUnitsClicked);
 
   luminaireDefinitionInspectorView->selectModelObject(modelObject);
 
@@ -193,11 +179,7 @@ void LoadsInspectorView::showLuminaireDefinitionsInspector(const openstudio::mod
 void LoadsInspectorView::showElectricEquipmentDefinitionsInspector(const openstudio::model::ModelObject& modelObject)
 {
   ElectricEquipmentDefinitionInspectorView * electricEquipmentDefinitionInspectorView = new ElectricEquipmentDefinitionInspectorView(m_isIP, m_model);
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             electricEquipmentDefinitionInspectorView, 
-                             SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &LoadsInspectorView::toggleUnitsClicked, electricEquipmentDefinitionInspectorView, &ElectricEquipmentDefinitionInspectorView::toggleUnitsClicked);
 
   electricEquipmentDefinitionInspectorView->selectModelObject(modelObject);
 
@@ -207,11 +189,7 @@ void LoadsInspectorView::showElectricEquipmentDefinitionsInspector(const openstu
 void LoadsInspectorView::showGasEquipmentDefinitionsInspector(const openstudio::model::ModelObject& modelObject)
 {
   GasEquipmentDefinitionInspectorView * gasEquipmentDefinitionInspectorView = new GasEquipmentDefinitionInspectorView(m_isIP, m_model);
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             gasEquipmentDefinitionInspectorView, 
-                             SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &LoadsInspectorView::toggleUnitsClicked, gasEquipmentDefinitionInspectorView, &GasEquipmentDefinitionInspectorView::toggleUnitsClicked);
 
   gasEquipmentDefinitionInspectorView->selectModelObject(modelObject);
 
@@ -221,11 +199,7 @@ void LoadsInspectorView::showGasEquipmentDefinitionsInspector(const openstudio::
 void LoadsInspectorView::showSteamEquipmentDefinitionsInspector(const openstudio::model::ModelObject& modelObject)
 {
   SteamEquipmentDefinitionInspectorView * steamEquipmentDefinitionInspectorView = new SteamEquipmentDefinitionInspectorView(m_isIP, m_model);
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             steamEquipmentDefinitionInspectorView, 
-                             SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &LoadsInspectorView::toggleUnitsClicked, steamEquipmentDefinitionInspectorView, &SteamEquipmentDefinitionInspectorView::toggleUnitsClicked);
 
   steamEquipmentDefinitionInspectorView->selectModelObject(modelObject);
 
@@ -235,11 +209,7 @@ void LoadsInspectorView::showSteamEquipmentDefinitionsInspector(const openstudio
 void LoadsInspectorView::showOtherEquipmentDefinitionsInspector(const openstudio::model::ModelObject& modelObject)
 {
   OtherEquipmentDefinitionInspectorView * otherEquipmentDefinitionInspectorView = new OtherEquipmentDefinitionInspectorView(m_isIP, m_model);
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             otherEquipmentDefinitionInspectorView, 
-                             SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &LoadsInspectorView::toggleUnitsClicked, otherEquipmentDefinitionInspectorView, &OtherEquipmentDefinitionInspectorView::toggleUnitsClicked);
 
   otherEquipmentDefinitionInspectorView->selectModelObject(modelObject);
 
@@ -249,11 +219,7 @@ void LoadsInspectorView::showOtherEquipmentDefinitionsInspector(const openstudio
 void LoadsInspectorView::showWaterUseEquipmentDefinitionsInspector(const openstudio::model::ModelObject& modelObject)
 {
   WaterUseEquipmentDefinitionInspectorView * waterUseEquipmentDefinitionInspectorView = new WaterUseEquipmentDefinitionInspectorView(m_isIP, m_model);
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             waterUseEquipmentDefinitionInspectorView, 
-                             SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &LoadsInspectorView::toggleUnitsClicked, waterUseEquipmentDefinitionInspectorView, &WaterUseEquipmentDefinitionInspectorView::toggleUnitsClicked);
 
   waterUseEquipmentDefinitionInspectorView->selectModelObject(modelObject);
 
@@ -263,11 +229,7 @@ void LoadsInspectorView::showWaterUseEquipmentDefinitionsInspector(const openstu
 void LoadsInspectorView::showInternalMassDefinitionsInspector(const openstudio::model::ModelObject& modelObject)
 {
   InternalMassDefinitionInspectorView * internalMassDefinitionInspectorView = new InternalMassDefinitionInspectorView(m_isIP, m_model);
-  bool isConnected = connect(this, 
-                             SIGNAL(toggleUnitsClicked(bool)),
-                             internalMassDefinitionInspectorView, 
-                             SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &LoadsInspectorView::toggleUnitsClicked, internalMassDefinitionInspectorView, &InternalMassDefinitionInspectorView::toggleUnitsClicked);
 
   internalMassDefinitionInspectorView->selectModelObject(modelObject);
 

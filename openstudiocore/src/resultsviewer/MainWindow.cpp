@@ -62,22 +62,22 @@ namespace resultsviewer{
     setWindowIcon(icon);
 #endif
 
-    connect(ui.actionFileOpen, SIGNAL(triggered()), this, SLOT(fileOpen()));
-    connect(ui.actionReset_Layout, SIGNAL(triggered()), this, SLOT(slotDefaultLayout()));
-    connect(ui.actionClear_Recent_Files, SIGNAL(triggered()), this, SLOT(slotClearRecentFiles()));
-    connect(ui.actionClear_Settings, SIGNAL(triggered()), this, SLOT(slotClearSettings()));
-    connect(ui.actionAbout, SIGNAL(triggered()), this, SLOT(slotHelpAbout()));
+    connect(ui.actionFileOpen, &QAction::triggered, this, &MainWindow::fileOpen);
+    connect(ui.actionReset_Layout, &QAction::triggered, this, &MainWindow::slotDefaultLayout);
+    connect(ui.actionClear_Recent_Files, &QAction::triggered, this, &MainWindow::slotClearRecentFiles);
+    connect(ui.actionClear_Settings, &QAction::triggered, this, &MainWindow::slotClearSettings);
+    connect(ui.actionAbout, &QAction::triggered, this, &MainWindow::slotHelpAbout);
 
     // file close
     /*
     m_fileCloseAction = new QAction(tr("&Close"), this);
     m_fileCloseAction->setToolTip("Close selected file.");
-    connect(m_fileCloseAction, SIGNAL(triggered()), this, SLOT(closeSelectedFiles()));
+    connect(m_fileCloseAction, &QAction::triggered, this, &MainWindow::closeSelectedFiles);
     ui.menuFile->addAction(m_fileCloseAction);
     */
     m_fileCloseAllAction = new QAction(tr("Close &All"), this);
     m_fileCloseAllAction->setToolTip("Close all files.");
-    connect(m_fileCloseAllAction, SIGNAL(triggered()), this, SLOT(slotCloseAllFiles()));
+    connect(m_fileCloseAllAction, &QAction::triggered, this, &MainWindow::slotCloseAllFiles);
     ui.menuFile->addAction(m_fileCloseAllAction);
 
     // recent files
@@ -86,14 +86,14 @@ namespace resultsviewer{
       elem = new QAction(this);
       elem->setVisible(false);
       ui.menuFile->addAction(elem);
-      connect(elem, SIGNAL(triggered()), this, SLOT(openRecentFile()));
+      connect(elem, &QAction::triggered, this, &MainWindow::openRecentFile);
     }
 
     ui.menuFile->addSeparator();
 
     // application exit
     QAction *exitAction = new QAction(tr("E&xit"), this);
-    connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
+    connect(exitAction, &QAction::triggered, this, &MainWindow::close);
     ui.menuFile->addAction(exitAction);
 
     // Data manager
@@ -125,7 +125,7 @@ namespace resultsviewer{
     m_mainTabDock->setObjectName("MainTabDock");
     m_mainTabDock->setTabsClosable(true);
     // m_mainTabDock->setMovable(true);
-    connect( m_mainTabDock, SIGNAL( tabCloseRequested ( int ) ), this, SLOT( slotCloseTab( int ) ) );
+    connect(m_mainTabDock, &TabDropDock::tabCloseRequested, this, &MainWindow::slotCloseTab);
 
     // filter data for searching views
     m_viewFilterText = new QLineEdit("", this);
@@ -149,9 +149,9 @@ namespace resultsviewer{
     QLabel *filterLabel = new QLabel("Filter Criteria", this);
     //QPushButton *btnApplyFilter = new QPushButton("Apply", this);
     QPushButton *btnClearFilter = new QPushButton("Clear", this);
-    //connect(btnApplyFilter, SIGNAL(clicked()),this,SLOT(slotApplyFilter()));
-    connect(m_viewFilterText, SIGNAL(textChanged(const QString&)), this, SLOT(slotApplyFilter(const QString&)));
-    connect(btnClearFilter, SIGNAL(clicked()),this,SLOT(slotClearFilter()));
+    //connect(btnApplyFilter, &QPushButton::clicked, this, &MainWindow::slotApplyFilter);
+    connect(m_viewFilterText, &QLineEdit::textChanged, this, &MainWindow::slotApplyFilter);
+    connect(btnClearFilter, &QPushButton::clicked, this, &MainWindow::slotClearFilter);
     auto filterButtonLayout = new QHBoxLayout;
     filterButtonLayout->addWidget(m_viewFilterText);
     //filterButtonLayout->addWidget(btnApplyFilter);
@@ -341,9 +341,9 @@ namespace resultsviewer{
     if (QFile::exists(abups))
     {
       // text browser for ABUPS
-      auto browser = new resultsviewer::BrowserView(this);
-      connect(browser,SIGNAL(signalClose(resultsviewer::BrowserView*)), this, SLOT(slotCloseBrowser(resultsviewer::BrowserView *)));
-      connect(browser,SIGNAL(signalFloatOrDockMe(resultsviewer::BrowserView*)), this, SLOT(floatOrDockBrowser(resultsviewer::BrowserView *)));
+      auto browser = new BrowserView(this);
+      connect(browser, &BrowserView::signalClose, this, &MainWindow::slotCloseBrowser);
+      connect(browser, &BrowserView::signalFloatOrDockMe, this, &MainWindow::floatOrDockBrowser);
       browser->setSource(QUrl::fromLocalFile(abups));
       browser->setFilename(filename);
       browser->setAlias(m_data->alias(filename));
@@ -776,9 +776,9 @@ namespace resultsviewer{
     QList<QTreeWidgetItem *> selectedTreeItems = m_treeView->selectedItems();
     // acts on all selected items
     QAction *floodPlotAction = new QAction(tr("Flood Plot"), this);
-    connect(floodPlotAction, SIGNAL(triggered()), m_treeView, SLOT(generateFloodPlotData()));
+    connect(floodPlotAction, &QAction::triggered, m_treeView, &TreeView::generateFloodPlotData);
     QAction *singleLinePlotAction = new QAction(tr("Line Plot"), this);
-    connect(singleLinePlotAction, SIGNAL(triggered()), m_treeView, SLOT(generateLinePlotData()));
+    connect(singleLinePlotAction, &QAction::triggered, m_treeView, &TreeView::generateLinePlotData);
 
     menu.addAction(floodPlotAction);
 
@@ -789,18 +789,18 @@ namespace resultsviewer{
       resultsviewer::ResultsViewerPlotData rvpd2 = m_treeView->resultsViewerPlotDataFromTreeItem(selectedTreeItems[1]);
 
       QAction *floodPlot1minus2Action = new QAction(tr("Flood Plot, %1 - %2").arg(rvpd1.idName()).arg(rvpd2.idName()), this);
-      connect(floodPlot1minus2Action, SIGNAL(triggered()), m_treeView, SLOT(generateFloodPlotComparisonData()));
+      connect(floodPlot1minus2Action, &QAction::triggered, m_treeView, &TreeView::generateFloodPlotComparisonData);
       QAction *floodPlot2minus1Action = new QAction(tr("Flood Plot, %1 - %2").arg(rvpd2.idName()).arg(rvpd1.idName()), this);
-      connect(floodPlot2minus1Action, SIGNAL(triggered()), m_treeView, SLOT(generateReverseFloodPlotComparisonData()));
+      connect(floodPlot2minus1Action, &QAction::triggered, m_treeView, &TreeView::generateReverseFloodPlotComparisonData);
       menu.addAction(floodPlot1minus2Action);
       menu.addAction(floodPlot2minus1Action);
 
       menu.addAction(singleLinePlotAction);
 
       QAction *linePlot1minus2Action = new QAction(tr("Line Plot, %1 - %2").arg(rvpd1.idName()).arg(rvpd2.idName()), this);
-      connect(linePlot1minus2Action, SIGNAL(triggered()), m_treeView, SLOT(generateLinePlotComparisonData()));
+      connect(linePlot1minus2Action, &QAction::triggered, m_treeView, &TreeView::generateLinePlotComparisonData);
       QAction *linePlot2minus1Action = new QAction(tr("Line Plot, %1 - %2").arg(rvpd2.idName()).arg(rvpd1.idName()), this);
-      connect(linePlot2minus1Action, SIGNAL(triggered()), m_treeView, SLOT(generateReverseLinePlotComparisonData()));
+      connect(linePlot2minus1Action, &QAction::triggered, m_treeView, &TreeView::generateReverseLinePlotComparisonData);
       menu.addAction(linePlot1minus2Action);
       menu.addAction(linePlot2minus1Action);
     }
@@ -812,7 +812,7 @@ namespace resultsviewer{
   {
     QList<QTreeWidgetItem *> selectedTreeItems = m_treeView->selectedItems();
     QAction *illuminancePlotAction = new QAction(tr("Illuminance Map"), this);
-    connect(illuminancePlotAction, SIGNAL(triggered()), m_treeView, SLOT(generateIlluminancePlotData()));
+    connect(illuminancePlotAction, &QAction::triggered, m_treeView, &TreeView::generateIlluminancePlotData);
 
     menu.addAction(illuminancePlotAction);
 
@@ -822,9 +822,9 @@ namespace resultsviewer{
       resultsviewer::ResultsViewerPlotData rvpd2 = m_treeView->resultsViewerPlotDataFromTreeItem(selectedTreeItems[1]);
 
       QAction *illuminanceMap1minus2Action = new QAction(tr("Illuminance Map, %1 - %2").arg(rvpd1.idName()).arg(rvpd2.idName()), this);
-      connect(illuminanceMap1minus2Action, SIGNAL(triggered()), m_treeView, SLOT(generateIlluminancePlotComparisonData()));
+      connect(illuminanceMap1minus2Action, &QAction::triggered, m_treeView, &TreeView::generateIlluminancePlotComparisonData);
       QAction *illuminanceMap2minus1Action = new QAction(tr("Illuminance Map, %1 - %2").arg(rvpd2.idName()).arg(rvpd1.idName()), this);
-      connect(illuminanceMap2minus1Action, SIGNAL(triggered()), m_treeView, SLOT(generateReverseIlluminancePlotComparisonData()));
+      connect(illuminanceMap2minus1Action, &QAction::triggered, m_treeView, &TreeView::generateReverseIlluminancePlotComparisonData);
       menu.addAction(illuminanceMap1minus2Action);
       menu.addAction(illuminanceMap2minus1Action);
     }
@@ -854,9 +854,9 @@ namespace resultsviewer{
   {
     // acts on all selected timeseries items
     QAction *floodPlotAction = new QAction(tr("Flood Plot"), this);
-    connect(floodPlotAction, SIGNAL(triggered()), m_tableView, SLOT(generateFloodPlotData()));
+    connect(floodPlotAction, &QAction::triggered, m_tableView, &TableView::generateFloodPlotData);
     QAction *singleLinePlotAction = new QAction(tr("Line Plot"), this);
-    connect(singleLinePlotAction, SIGNAL(triggered()), m_tableView, SLOT(generateLinePlotData()));
+    connect(singleLinePlotAction, &QAction::triggered, m_tableView, &TableView::generateLinePlotData);
 
     menu.addAction(floodPlotAction);
 
@@ -868,18 +868,18 @@ namespace resultsviewer{
       resultsviewer::ResultsViewerPlotData rvpd2 = m_tableView->resultsViewerPlotDataFromTableRow(selectedRows[1]);
 
       QAction *floodPlot1minus2Action = new QAction(tr("Flood Plot, %1 - %2").arg(rvpd1.idName()).arg(rvpd2.idName()), this);
-      connect(floodPlot1minus2Action, SIGNAL(triggered()), m_tableView, SLOT(generateFloodPlotComparisonData()));
+      connect(floodPlot1minus2Action, &QAction::triggered, m_tableView, &TableView::generateFloodPlotComparisonData);
       QAction *floodPlot2minus1Action = new QAction(tr("Flood Plot, %1 - %2").arg(rvpd2.idName()).arg(rvpd1.idName()), this);
-      connect(floodPlot2minus1Action, SIGNAL(triggered()), m_tableView, SLOT(generateReverseFloodPlotComparisonData()));
+      connect(floodPlot2minus1Action, &QAction::triggered, m_tableView, &TableView::generateReverseFloodPlotComparisonData);
       menu.addAction(floodPlot1minus2Action);
       menu.addAction(floodPlot2minus1Action);
 
       menu.addAction(singleLinePlotAction);
 
       QAction *linePlot1minus2Action = new QAction(tr("Line Plot, %1 - %2").arg(rvpd1.idName()).arg(rvpd2.idName()), this);
-      connect(linePlot1minus2Action, SIGNAL(triggered()), m_tableView, SLOT(generateLinePlotComparisonData()));
+      connect(linePlot1minus2Action, &QAction::triggered, m_tableView, &TableView::generateLinePlotComparisonData);
       QAction *linePlot2minus1Action = new QAction(tr("Line Plot, %1 - %2").arg(rvpd2.idName()).arg(rvpd1.idName()), this);
-      connect(linePlot2minus1Action, SIGNAL(triggered()), m_tableView, SLOT(generateReverseLinePlotComparisonData()));
+      connect(linePlot2minus1Action, &QAction::triggered, m_tableView, &TableView::generateReverseLinePlotComparisonData);
       menu.addAction(linePlot1minus2Action);
       menu.addAction(linePlot2minus1Action);
     }
@@ -890,7 +890,7 @@ namespace resultsviewer{
   void MainWindow::illuminanceMapTableViewMenu(QMenu& menu)
   {
     QAction *illuminancePlotAction = new QAction(tr("Illuminance Map"), this);
-    connect(illuminancePlotAction, SIGNAL(triggered()), m_tableView, SLOT(generateIlluminancePlotData()));
+    connect(illuminancePlotAction, &QAction::triggered, m_tableView, &TableView::generateIlluminancePlotData);
 
     menu.addAction(illuminancePlotAction);
 
@@ -901,9 +901,9 @@ namespace resultsviewer{
       resultsviewer::ResultsViewerPlotData rvpd2 = m_tableView->resultsViewerPlotDataFromTableRow(selectedRows[1]);
 
       QAction *illuminanceMap1minus2Action = new QAction(tr("Illuminance Map, %1 - %2").arg(rvpd1.idName()).arg(rvpd2.idName()), this);
-      connect(illuminanceMap1minus2Action, SIGNAL(triggered()), m_tableView, SLOT(generateIlluminancePlotComparisonData()));
+      connect(illuminanceMap1minus2Action, &QAction::triggered, m_tableView, &TableView::generateIlluminancePlotComparisonData);
       QAction *illuminanceMap2minus1Action = new QAction(tr("Illuminance Map, %1 - %2").arg(rvpd2.idName()).arg(rvpd1.idName()), this);
-      connect(illuminanceMap2minus1Action, SIGNAL(triggered()), m_tableView, SLOT(generateReverseIlluminancePlotComparisonData()));
+      connect(illuminanceMap2minus1Action, &QAction::triggered, m_tableView, &TableView::generateReverseIlluminancePlotComparisonData);
       menu.addAction(illuminanceMap1minus2Action);
       menu.addAction(illuminanceMap2minus1Action);
     }
@@ -1124,7 +1124,7 @@ namespace resultsviewer{
 
     m_fileComboBox = new QComboBox;
     m_fileComboBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
-    connect(m_fileComboBox, SIGNAL( currentIndexChanged(int) ), this, SLOT( slotSelectedFileChanged(int) ) );
+    connect(m_fileComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &MainWindow::slotSelectedFileChanged);
 
     // to preserve settings
     m_fileToolBar->setObjectName("fileToolBar");
@@ -1133,32 +1133,32 @@ namespace resultsviewer{
     // previous next and close
     QAction *previousFileAction = new QAction(QIcon(":/images/previous.png"), tr("Previous File"), this);
     previousFileAction->setToolTip("Previous File");
-    connect(previousFileAction, SIGNAL(triggered()), this, SLOT(selectPreviousFile()));
+    connect(previousFileAction, &QAction::triggered, this, &MainWindow::selectPreviousFile);
     m_fileToolBar->addAction(previousFileAction);
 
     QAction *nextFileAction = new QAction(QIcon(":/images/next.png"), tr("Next File"), this);
     nextFileAction->setToolTip("Next File");
-    connect(nextFileAction, SIGNAL(triggered()), this, SLOT(selectNextFile()));
+    connect(nextFileAction, &QAction::triggered, this, &MainWindow::selectNextFile);
     m_fileToolBar->addAction(nextFileAction);
 
     QAction *fileContainingFolderAction = new QAction(QIcon(":/images/open_container_folder.png"), tr("Open Containing Folder"), this);
     fileContainingFolderAction->setToolTip("Open Containing Folder");
-    connect(fileContainingFolderAction, SIGNAL(triggered()), this, SLOT(openContainingFolder()));
+    connect(fileContainingFolderAction, &QAction::triggered, this, static_cast<void (MainWindow::*)()>(&MainWindow::openContainingFolder));
     m_fileToolBar->addAction(fileContainingFolderAction);
 
     QAction *updateAliasAction = new QAction(QIcon(":/images/update_alias.png"), tr("Update Alias"), this);
     updateAliasAction->setToolTip("Update Alias");
-    connect(updateAliasAction, SIGNAL(triggered()), this, SLOT(slotUpdateAlias()));
+    connect(updateAliasAction, &QAction::triggered, this, &MainWindow::slotUpdateAlias);
     m_fileToolBar->addAction(updateAliasAction);
 
     QAction *fileCloseAction = new QAction(QIcon(":/images/close_file.png"),tr("Close Selected File"), this);
     fileCloseAction->setToolTip("Close Selected File");
-    connect(fileCloseAction, SIGNAL(triggered()), this, SLOT(closeSelectedFiles()));
+    connect(fileCloseAction, &QAction::triggered, this, &MainWindow::closeSelectedFiles);
     m_fileToolBar->addAction(fileCloseAction);
 
     QAction *fileCloseAllAction = new QAction(QIcon(":/images/close_all.png"),tr("Close All Files"), this);
     fileCloseAllAction->setToolTip("Close All Files");
-    connect(fileCloseAllAction, SIGNAL(triggered()), this, SLOT(slotCloseAllFiles()));
+    connect(fileCloseAllAction, &QAction::triggered, this, &MainWindow::slotCloseAllFiles);
     m_fileToolBar->addAction(fileCloseAllAction);
 
     m_fileToolBar->setAllowedAreas(Qt::AllToolBarAreas);
@@ -1176,7 +1176,7 @@ namespace resultsviewer{
 
     m_plotComboBox = new QComboBox;
     m_plotComboBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
-    connect(m_plotComboBox, SIGNAL( currentIndexChanged(int) ), this, SLOT( onSelectedPlotChanged(int) ) );
+    connect(m_plotComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &MainWindow::onSelectedPlotChanged);
 
     m_plotToolBar->setObjectName("plotToolBar"); // to preserve settings
     // m_plotToolBar->addWidget(m_plotComboBox);
@@ -1186,46 +1186,46 @@ namespace resultsviewer{
     /*
     QAction *previousPlot = new QAction(QIcon(":/images/left.png"),tr("Previous Plot"), this);
     previousPlot->setToolTip("Previous plot");
-    connect(previousPlot, SIGNAL(triggered()), this, SLOT(showPreviousPlot()));
+    connect(previousPlot, &QAction::triggered, this, &MainWindow::showPreviousPlot);
     m_plotToolBar->addAction(previousPlot);
 
     QAction *nextPlot = new QAction(QIcon(":/images/right.png"),tr("Next Plot"), this);
     nextPlot->setToolTip("Next plot");
-    connect(nextPlot, SIGNAL(triggered()), this, SLOT(showNextPlot()));
+    connect(nextPlot, &QAction::triggered, this, &MainWindow::showNextPlot);
     m_plotToolBar->addAction(nextPlot);
     */
     QAction *newLinePlot = new QAction(QIcon(":/images/new_line_plot.png"),tr("New Line Plot"), this);
     newLinePlot->setToolTip("New Line Plot");
-    connect(newLinePlot, SIGNAL(triggered()), this, SLOT(slotNewLinePlot()));
+    connect(newLinePlot, &QAction::triggered, this, &MainWindow::slotNewLinePlot);
     m_plotToolBar->addAction(newLinePlot);
 
     QAction *newFloodPlot = new QAction(QIcon(":/images/new_flood_plot.png"),tr("New Flood Plot"), this);
     newFloodPlot->setToolTip("New Flood Plot");
-    connect(newFloodPlot, SIGNAL(triggered()), this, SLOT(slotNewFloodPlot()));
+    connect(newFloodPlot, &QAction::triggered, this, &MainWindow::slotNewFloodPlot);
     m_plotToolBar->addAction(newFloodPlot);
 
 
     QAction *closePlot = new QAction(QIcon(":/images/close_plot.png"),tr("Close Selected Plot"), this);
     closePlot->setToolTip("Close Selected Plot");
-    connect(closePlot, SIGNAL(triggered()), this, SLOT(closePlot()));
+    connect(closePlot, &QAction::triggered, this, &MainWindow::closePlot);
     m_plotToolBar->addAction(closePlot);
 
     QAction *closeAllPlot = new QAction(QIcon(":/images/close_all_plots.png"),tr("Close All Plots"), this);
     closeAllPlot->setToolTip("Close All Plots");
-    connect(closeAllPlot, SIGNAL(triggered()), this, SLOT(closeAllPlots()));
+    connect(closeAllPlot, &QAction::triggered, this, &MainWindow::closeAllPlots);
     m_plotToolBar->addAction(closeAllPlot);
 
     /*
     QAction *floatPlot = new QAction(QIcon(":/images/floatOrDock.png"),tr("Float or Dock Plot"), this);
     floatPlot->setToolTip("Float or dock selected plot.");
-    connect(floatPlot, SIGNAL(triggered()), this, SLOT(slotFloatPlot()));
+    connect(floatPlot, &QAction::triggered, this, &MainWindow::slotFloatPlot);
     m_plotToolBar->addAction(floatPlot);
     */
     m_plotToolBar->setAllowedAreas(Qt::AllToolBarAreas);
     addToolBar(m_plotToolBar);
 
 
-    connect(this, SIGNAL(signalAddPlot(resultsviewer::PlotView *) ), this, SLOT( slotAddPlot(resultsviewer::PlotView *) ) );
+    connect(this, &MainWindow::signalAddPlot, this, &MainWindow::slotAddPlot);
 
   }
 
@@ -1355,9 +1355,9 @@ namespace resultsviewer{
     m_mainTabDock->addTab(plot, windowTitle);
     m_mainTabDock->setCurrentWidget(plot);
 
-    connect(plot, SIGNAL(signalClose(QString&)),this,SLOT(slotClosePlot(QString&)));
-    connect(plot, SIGNAL(signalFloatOrDockMe(resultsviewer::PlotView*)),this,SLOT(slotFloatOrDockPlot(resultsviewer::PlotView*)));
-    connect(plot, SIGNAL(signalLastImageSavedPath(QString&)),this,SLOT(slotUpdateLastImageSavedPath(QString&)));
+    connect(plot, &PlotView::signalClose, this, &MainWindow::slotClosePlot);
+    connect(plot, &PlotView::signalFloatOrDockMe, this, &MainWindow::slotFloatOrDockPlot);
+    connect(plot, &PlotView::signalLastImageSavedPath, this, &MainWindow::slotUpdateLastImageSavedPath);
     m_plotViewList.push_back(plot);
     m_plotComboBox->addItem(m_plotViewList.back()->windowTitle());
     m_plotComboBox->setCurrentIndex(m_plotComboBox->count()-1);
@@ -1463,8 +1463,8 @@ namespace resultsviewer{
     browser->setWindowTitle(tr("Welcome"));
     browser->setSearchPaths(QStringList(":/doc"));
     browser->setSource(QUrl::fromLocalFile("Welcome.htm"));
-    connect(browser,SIGNAL(signalFloatOrDockMe(resultsviewer::BrowserView*)), this, SLOT(floatOrDockBrowser(resultsviewer::BrowserView *)));
-    connect(browser,SIGNAL(signalClose(resultsviewer::BrowserView*)), this, SLOT(slotCloseBrowser(resultsviewer::BrowserView *)));
+    connect(browser, &BrowserView::signalFloatOrDockMe, this, &MainWindow::floatOrDockBrowser);
+    connect(browser, &BrowserView::signalClose, this, &MainWindow::slotCloseBrowser);
     m_mainTabDock->addTab(browser, browser->windowTitle());
     m_browserList.push_back(browser);
   }
@@ -1493,16 +1493,16 @@ namespace resultsviewer{
   {
     m_tableView = new resultsviewer::TableView(this);
     m_tableView->setAlternatingRowColors(true);
-    connect(m_tableView, SIGNAL( customContextMenuRequested(const QPoint &) ), SLOT( showTableViewContextMenu(const QPoint &) ) );
-    //    connect(m_tableView, SIGNAL( itemDoubleClicked(QTableWidgetItem * ) ), m_tableView, SLOT( generateLinePlotData() ));
-    connect(m_tableView, SIGNAL( itemDoubleClicked(QTableWidgetItem * ) ), this, SLOT( slotTableViewDoubleClick(QTableWidgetItem * )));
-    connect(m_tableView, SIGNAL( signalAddLinePlot(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ), this, SLOT( slotAddLinePlot(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ) );
-    connect(m_tableView, SIGNAL( signalAddFloodPlot(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ), this, SLOT( slotAddFloodPlot(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ) );
-    connect(m_tableView, SIGNAL( signalAddLinePlotComparison(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ), this, SLOT( slotAddLinePlotComparison(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ) );
-    connect(m_tableView, SIGNAL( signalAddFloodPlotComparison(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ), this, SLOT( slotAddFloodPlotComparison(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ) );
-    connect(m_tableView, SIGNAL( signalDragResultsViewerPlotData(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ), this, SLOT( slotDragPlotViewData(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ) );
-    connect(m_tableView, SIGNAL( signalAddIlluminancePlot(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ), this, SLOT( slotAddIlluminancePlot(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ) );
-    connect(m_tableView, SIGNAL( signalAddIlluminancePlotComparison(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ), this, SLOT( slotAddIlluminancePlotComparison(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ) );
+    connect(m_tableView, &TableView::customContextMenuRequested, this, &MainWindow::showTableViewContextMenu);
+    //    connect(m_tableView, &TableView::itemDoubleClicked, m_tableView, &TableView::generateLinePlotData);
+    connect(m_tableView, &TableView::itemDoubleClicked, this, &MainWindow::slotTableViewDoubleClick);
+    connect(m_tableView, &TableView::signalAddLinePlot, this, &MainWindow::slotAddLinePlot);
+    connect(m_tableView, &TableView::signalAddFloodPlot, this, &MainWindow::slotAddFloodPlot);
+    connect(m_tableView, &TableView::signalAddLinePlotComparison, this, &MainWindow::slotAddLinePlotComparison);
+    connect(m_tableView, &TableView::signalAddFloodPlotComparison, this, &MainWindow::slotAddFloodPlotComparison);
+    connect(m_tableView, &TableView::signalDragResultsViewerPlotData, this, &MainWindow::slotDragPlotViewData);
+    connect(m_tableView, &TableView::signalAddIlluminancePlot, this, &MainWindow::slotAddIlluminancePlot);
+    connect(m_tableView, &TableView::signalAddIlluminancePlotComparison, this, &MainWindow::slotAddIlluminancePlotComparison);
   }
 
   void MainWindow::slotTableViewDoubleClick(QTableWidgetItem *item)
@@ -1537,17 +1537,17 @@ namespace resultsviewer{
     m_treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_treeView->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     m_treeView->setAlternatingRowColors(true);
-    connect(m_treeView, SIGNAL(customContextMenuRequested(const QPoint &)), SLOT(showTreeViewContextMenu(const QPoint &)));
-    //    connect(m_treeView, SIGNAL( itemDoubleClicked(QTreeWidgetItem *, int ) ), m_treeView, SLOT( generateLinePlotData() ));
-    connect(m_treeView, SIGNAL( itemDoubleClicked(QTreeWidgetItem *, int ) ), this, SLOT(slotTreeViewDoubleClick(QTreeWidgetItem *, int ) ));
-    connect(m_treeView, SIGNAL( itemSelectionChanged() ), this, SLOT( onTreeViewSelectionChanged() ));
-    connect(m_treeView, SIGNAL( signalAddLinePlot(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ), this, SLOT( slotAddLinePlot(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ) );
-    connect(m_treeView, SIGNAL( signalAddFloodPlot(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ), this, SLOT( slotAddFloodPlot(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ) );
-    connect(m_treeView, SIGNAL( signalAddLinePlotComparison(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ), this, SLOT( slotAddLinePlotComparison(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ) );
-    connect(m_treeView, SIGNAL( signalAddFloodPlotComparison(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ), this, SLOT( slotAddFloodPlotComparison(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ) );
-    connect(m_treeView, SIGNAL( signalDragResultsViewerPlotData(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ), this, SLOT( slotDragPlotViewData(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ) );
-    connect(m_treeView, SIGNAL( signalAddIlluminancePlot(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ), this, SLOT( slotAddIlluminancePlot(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ) );
-    connect(m_treeView, SIGNAL( signalAddIlluminancePlotComparison(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ), this, SLOT( slotAddIlluminancePlotComparison(const std::vector<resultsviewer::ResultsViewerPlotData>& ) ) );
+    connect(m_treeView, &TreeView::customContextMenuRequested, this, &MainWindow::showTreeViewContextMenu);
+    //    connect(m_treeView, &TreeView::itemDoubleClicked, m_treeView, &TreeView::generateLinePlotData);
+    connect(m_treeView, &TreeView::itemDoubleClicked, this, &MainWindow::slotTreeViewDoubleClick);
+    connect(m_treeView, &TreeView::itemSelectionChanged, this, &MainWindow::onTreeViewSelectionChanged);
+    connect(m_treeView, &TreeView::signalAddLinePlot, this, &MainWindow::slotAddLinePlot);
+    connect(m_treeView, &TreeView::signalAddFloodPlot, this, &MainWindow::slotAddFloodPlot);
+    connect(m_treeView, &TreeView::signalAddLinePlotComparison, this, &MainWindow::slotAddLinePlotComparison);
+    connect(m_treeView, &TreeView::signalAddFloodPlotComparison, this, &MainWindow::slotAddFloodPlotComparison);
+    connect(m_treeView, &TreeView::signalDragResultsViewerPlotData, this, &MainWindow::slotDragPlotViewData);
+    connect(m_treeView, &TreeView::signalAddIlluminancePlot, this, &MainWindow::slotAddIlluminancePlot);
+    connect(m_treeView, &TreeView::signalAddIlluminancePlotComparison, this, &MainWindow::slotAddIlluminancePlotComparison);
   }
 
   void MainWindow::slotApplyFilter(const QString& text)

@@ -75,11 +75,8 @@ IlluminanceMapInspectorView::IlluminanceMapInspectorView(bool isIP, const openst
   label->setStyleSheet("QLabel { font: bold; }");
   vLayout->addWidget(label);
 
-  bool isConnected = false;
-
   m_xCoordinateEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_xCoordinateEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &IlluminanceMapInspectorView::toggleUnitsClicked, m_xCoordinateEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_xCoordinateEdit);
 
   mainGridLayout->addLayout(vLayout,1,0, Qt::AlignTop|Qt::AlignLeft);
@@ -92,8 +89,7 @@ IlluminanceMapInspectorView::IlluminanceMapInspectorView(bool isIP, const openst
   vLayout->addWidget(label);
 
   m_yCoordinateEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_yCoordinateEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &IlluminanceMapInspectorView::toggleUnitsClicked, m_yCoordinateEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_yCoordinateEdit);
 
   mainGridLayout->addLayout(vLayout,1,1, Qt::AlignTop|Qt::AlignLeft);
@@ -106,8 +102,7 @@ IlluminanceMapInspectorView::IlluminanceMapInspectorView(bool isIP, const openst
   vLayout->addWidget(label);
 
   m_zCoordinateEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_zCoordinateEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &IlluminanceMapInspectorView::toggleUnitsClicked, m_zCoordinateEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_zCoordinateEdit);
 
   mainGridLayout->addLayout(vLayout,1,2, Qt::AlignTop|Qt::AlignLeft);
@@ -121,8 +116,7 @@ IlluminanceMapInspectorView::IlluminanceMapInspectorView(bool isIP, const openst
   vLayout->addWidget(label);
 
   m_psiRotationEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_psiRotationEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &IlluminanceMapInspectorView::toggleUnitsClicked, m_psiRotationEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_psiRotationEdit);
 
   mainGridLayout->addLayout(vLayout,2,0, Qt::AlignTop|Qt::AlignLeft);
@@ -135,8 +129,7 @@ IlluminanceMapInspectorView::IlluminanceMapInspectorView(bool isIP, const openst
   vLayout->addWidget(label);
 
   m_thetaRotationEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_thetaRotationEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &IlluminanceMapInspectorView::toggleUnitsClicked, m_thetaRotationEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_thetaRotationEdit);
 
   mainGridLayout->addLayout(vLayout,2,1, Qt::AlignTop|Qt::AlignLeft);
@@ -149,8 +142,7 @@ IlluminanceMapInspectorView::IlluminanceMapInspectorView(bool isIP, const openst
   vLayout->addWidget(label);
 
   m_phiRotationEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_phiRotationEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &IlluminanceMapInspectorView::toggleUnitsClicked, m_phiRotationEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_phiRotationEdit);
 
   mainGridLayout->addLayout(vLayout,2,2, Qt::AlignTop|Qt::AlignLeft);
@@ -164,8 +156,7 @@ IlluminanceMapInspectorView::IlluminanceMapInspectorView(bool isIP, const openst
   vLayout->addWidget(label);
 
   m_xLength = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_xLength, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &IlluminanceMapInspectorView::toggleUnitsClicked, m_xLength, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_xLength);
 
   mainGridLayout->addLayout(vLayout,3,0, Qt::AlignTop|Qt::AlignLeft);
@@ -178,8 +169,7 @@ IlluminanceMapInspectorView::IlluminanceMapInspectorView(bool isIP, const openst
   vLayout->addWidget(label);
 
   m_numberOfXPoints = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_numberOfXPoints, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &IlluminanceMapInspectorView::toggleUnitsClicked, m_numberOfXPoints, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_numberOfXPoints);
 
   mainGridLayout->addLayout(vLayout,3,1, Qt::AlignTop|Qt::AlignLeft);
@@ -193,8 +183,7 @@ IlluminanceMapInspectorView::IlluminanceMapInspectorView(bool isIP, const openst
   vLayout->addWidget(label);
 
   m_yLength = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_yLength, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &IlluminanceMapInspectorView::toggleUnitsClicked, m_yLength, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_yLength);
 
   mainGridLayout->addLayout(vLayout,4,0, Qt::AlignTop|Qt::AlignLeft);
@@ -207,8 +196,7 @@ IlluminanceMapInspectorView::IlluminanceMapInspectorView(bool isIP, const openst
   vLayout->addWidget(label);
 
   m_numberOfYPoints = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_numberOfYPoints, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &IlluminanceMapInspectorView::toggleUnitsClicked, m_numberOfYPoints, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_numberOfYPoints);
 
   mainGridLayout->addLayout(vLayout,4,1, Qt::AlignTop|Qt::AlignLeft);

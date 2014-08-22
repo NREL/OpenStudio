@@ -18,7 +18,6 @@
  **********************************************************************/
 
 #include "ReverseTranslator.hpp"
-
 #include "../model/Model.hpp"
 #include "../model/Component.hpp"
 #include "../model/ModelObject.hpp"
@@ -27,6 +26,8 @@
 #include "../model/Node_Impl.hpp"
 #include "../model/AirLoopHVAC.hpp"
 #include "../model/AirLoopHVAC_Impl.hpp"
+#include "../model/AirLoopHVACOutdoorAirSystem.hpp"
+#include "../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "../model/Facility.hpp"
 #include "../model/Facility_Impl.hpp"
 #include "../model/Building.hpp"
@@ -70,11 +71,20 @@
 #include "../model/SiteWaterMainsTemperature_Impl.hpp"
 #include "../model/Schedule.hpp"
 #include "../model/Schedule_Impl.hpp"
-
+#include "../model/Splitter.hpp"
+#include "../model/Splitter_Impl.hpp"
+#include "../model/Mixer.hpp"
+#include "../model/Mixer_Impl.hpp"
+#include "../model/WaterToWaterComponent.hpp"
+#include "../model/WaterToWaterComponent_Impl.hpp"
+#include "../model/WaterToAirComponent.hpp"
+#include "../model/WaterToAirComponent_Impl.hpp"
+#include "../model/ZoneHVACComponent.hpp"
+#include "../model/ZoneHVACComponent_Impl.hpp"
+#include "../model/PortList.hpp"
+#include "../model/PortList_Impl.hpp"
 #include "../energyplus/ReverseTranslator.hpp"
-
 #include "../osversion/VersionTranslator.hpp"
-
 #include "../utilities/filetypes/EpwFile.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/core/Assert.hpp"
@@ -86,6 +96,7 @@
 #include "../utilities/units/FahrenheitUnit.hpp"
 #include "../utilities/units/MPHUnit.hpp"
 #include "../utilities/units/WhUnit.hpp"
+#include "../utilities/core/Assert.hpp"
 #include "../utilities/time/Time.hpp"
 #include "../utilities/units/UnitFactory.hpp"
 #include "../utilities/units/Unit.hpp"
@@ -502,8 +513,7 @@ namespace sdd {
         }
 
         QDomElement airSystemElement = airSystemElements.at(i).toElement();
-        boost::optional<model::ModelObject> airLoopHVAC = translateAirSystem(airSystemElement,doc,*result);
-        OS_ASSERT(airLoopHVAC);
+        translateAirSystem(airSystemElement,doc,*result);
 
         if (m_progressBar){
           m_progressBar->setValue(m_progressBar->value() + 1);
@@ -530,6 +540,183 @@ namespace sdd {
 
         if (m_progressBar){
           m_progressBar->setValue(m_progressBar->value() + 1);
+        }
+      }
+
+      // Give the nodes better names
+      // We do this here because the loops need to be completely assembled 
+      // with their supply AND demand sides.  ie. After zones are attached.
+      std::vector<model::PlantLoop> plantLoops = result->getModelObjects<model::PlantLoop>();
+
+      for( std::vector<model::PlantLoop>::iterator plantLoop = plantLoops.begin();
+           plantLoop != plantLoops.end();
+           ++plantLoop )
+      {
+        std::string plantName = plantLoop->name().get();
+        plantLoop->supplyInletNode().setName(plantName + " Supply Inlet Node");
+        plantLoop->demandInletNode().setName(plantName + " Demand Inlet Node");
+        plantLoop->demandSplitter().setName(plantName + " Demand Splitter"); 
+        plantLoop->demandMixer().setName(plantName + " Demand Mixer"); 
+        plantLoop->supplySplitter().setName(plantName + " Supply Splitter"); 
+        plantLoop->supplyMixer().setName(plantName + " Supply Mixer"); 
+
+        std::vector<model::ModelObject> comps = plantLoop->components();
+        for( std::vector<model::ModelObject>::iterator it = comps.begin();
+             it != comps.end();
+             ++it )
+        {
+          if( ! it->optionalCast<model::Node>() )
+          {
+            if( boost::optional<model::StraightComponent> comp = it->optionalCast<model::StraightComponent>() )
+            {
+              if( boost::optional<model::ModelObject> mo = comp->outletModelObject() )
+              {
+                mo->setName(comp->name().get() + " Outlet Node");
+              }
+            }
+            else if( boost::optional<model::WaterToAirComponent> comp = it->optionalCast<model::WaterToAirComponent>() )
+            {
+              if( boost::optional<model::ModelObject> mo = comp->waterOutletModelObject() )
+              {
+                mo->setName(comp->name().get() + " Water Outlet Node");
+              }
+            }
+            else if( boost::optional<model::WaterToWaterComponent> comp = it->optionalCast<model::WaterToWaterComponent>() )
+            {
+              if( boost::optional<model::ModelObject> mo = comp->supplyOutletModelObject() )
+              {
+                mo->setName(comp->name().get() + " Supply Outlet Node");
+              }
+              if( boost::optional<model::ModelObject> mo = comp->demandOutletModelObject() )
+              {
+                mo->setName(comp->name().get() + " Demand Outlet Node");
+              }
+            }
+            else if( boost::optional<model::Splitter> comp = it->optionalCast<model::Splitter>() )
+            {
+              int branchI = 1;
+              std::vector<model::ModelObject> splitterOutletObjects = 
+                comp->outletModelObjects();
+              for( std::vector<model::ModelObject>::iterator it = splitterOutletObjects.begin();
+                   it != splitterOutletObjects.end();
+                   ++it )
+              {
+                if( it->optionalCast<model::Node>() )
+                {
+                  std::string branchOutuletName = 
+                    comp->name().get() + " Outlet Node " + boost::lexical_cast<std::string>(branchI);
+                  it->setName(branchOutuletName);
+                  ++branchI;
+                }
+              } 
+            }
+            else if( boost::optional<model::Mixer> comp = it->optionalCast<model::Mixer>() )
+            {
+              if( boost::optional<model::ModelObject> mixerOutlet = comp->outletModelObject() )
+              {
+                mixerOutlet->setName(comp->name().get() + " Outlet Node");
+              }
+            }
+          }
+        }
+      }
+
+      std::vector<model::AirLoopHVAC> airSystems = result->getModelObjects<model::AirLoopHVAC>();
+
+      for( std::vector<model::AirLoopHVAC>::iterator airSystem = airSystems.begin();
+           airSystem != airSystems.end();
+           ++airSystem )
+      {
+        std::string systemName = airSystem->name().get();
+        airSystem->supplyInletNode().setName(systemName + " Supply Side (Return Air) Inlet Node");
+        airSystem->demandInletNode().setName(systemName + " Demand Side (Supply Air) Inlet Node");
+        airSystem->demandSplitter().setName(systemName + " Zone Splitter"); 
+        airSystem->demandMixer().setName(systemName + " Zone Mixer"); 
+
+        std::vector<model::ModelObject> comps = airSystem->components();
+        for( std::vector<model::ModelObject>::iterator it = comps.begin();
+             it != comps.end();
+             ++it )
+        {
+          if( ! it->optionalCast<model::Node>() )
+          {
+            if( boost::optional<model::StraightComponent> comp = it->optionalCast<model::StraightComponent>() )
+            {
+              if( boost::optional<model::ModelObject> mo = comp->outletModelObject() )
+              {
+                mo->setName(comp->name().get() + " Outlet Node");
+              }
+            }
+            else if( boost::optional<model::WaterToAirComponent> comp = it->optionalCast<model::WaterToAirComponent>() )
+            {
+              if( boost::optional<model::ModelObject> mo = comp->airOutletModelObject() )
+              {
+                mo->setName(comp->name().get() + " Air Outlet Node");
+              }
+            }
+            else if( boost::optional<model::Splitter> comp = it->optionalCast<model::Splitter>() )
+            {
+              int branchI = 1;
+              std::vector<model::ModelObject> splitterOutletObjects = 
+                comp->outletModelObjects();
+              for( std::vector<model::ModelObject>::iterator it = splitterOutletObjects.begin();
+                   it != splitterOutletObjects.end();
+                   ++it )
+              {
+                if( it->optionalCast<model::Node>() )
+                {
+                  std::string branchOutuletName = 
+                    comp->name().get() + " Outlet Node " + boost::lexical_cast<std::string>(branchI);
+                  it->setName(branchOutuletName);
+                  ++branchI;
+                }
+              } 
+            }
+            else if( boost::optional<model::ThermalZone> comp = it->optionalCast<model::ThermalZone>() )
+            {
+              if( boost::optional<model::ModelObject> returnAir = comp->returnAirModelObject() )
+              {
+                returnAir->setName(comp->name().get() + " Return Air Node");
+              }
+            }
+            else if( boost::optional<model::AirLoopHVACOutdoorAirSystem> comp = it->optionalCast<model::AirLoopHVACOutdoorAirSystem>() )
+            {
+              if( boost::optional<model::ModelObject> mixedAir = comp->mixedAirModelObject() )
+              {
+                mixedAir->setName(comp->name().get() + " Mixed Air Node");
+              }
+              if( boost::optional<model::Node> oaNode = comp->outboardOANode() )
+              {
+                oaNode->setName(comp->name().get() + " OA Node");
+              }
+              if( boost::optional<model::Node> reliefNode = comp->outboardReliefNode() )
+              {
+                reliefNode->setName(comp->name().get() + " Relief Node");
+              }
+            }
+            else if( boost::optional<model::Mixer> comp = it->optionalCast<model::Mixer>() )
+            {
+              if( boost::optional<model::ModelObject> mixerOutlet = comp->outletModelObject() )
+              {
+                mixerOutlet->setName(comp->name().get() + " Outlet Node");
+              }
+            }
+          }
+        }
+      }
+
+      std::vector<model::ZoneHVACComponent> zoneEquipment = result->getModelObjects<model::ZoneHVACComponent>();
+      for( std::vector<model::ZoneHVACComponent>::iterator zoneComp = zoneEquipment.begin();
+           zoneComp != zoneEquipment.end();
+           ++zoneComp )
+      {
+        if( boost::optional<model::Node> inlet = zoneComp->inletNode() )
+        {
+          inlet->setName(zoneComp->name().get() + " Inlet Node");
+        }
+        if( boost::optional<model::Node> outlet = zoneComp->outletNode() )
+        {
+          outlet->setName(zoneComp->name().get() + " Outlet Node");
         }
       }
 
@@ -717,16 +904,11 @@ namespace sdd {
         var.setReportingFrequency(interval);
       }
 
-      // SimVarsThrmlZn
-
-      QDomElement simVarsThrmlZnElement = projectElement.firstChildElement("SimVarsThrmlZn");      
-
-      if( simVarsThrmlZnElement.text().toInt() == 1 )
+      // SimVarsDayltg
+      QDomElement simVarsDayltgElement = projectElement.firstChildElement("SimVarsDayltg");
+      if( simVarsDayltgElement.text().toInt() == 1 )
       {
-        model::OutputVariable var("Zone Air Temperature",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Zone Lights Electric Power",*result);
+        model::OutputVariable var("Zone Lights Electric Power",*result);
         var.setReportingFrequency(interval);
 
         var = model::OutputVariable("Daylighting Reference Point 1 Illuminance",*result);
@@ -737,6 +919,61 @@ namespace sdd {
 
         var = model::OutputVariable("Daylighting Lighting Power Multiplier",*result);
         var.setReportingFrequency(interval);
+      }
+
+      // SimVarsThrmlZn
+
+      QDomElement simVarsThrmlZnElement = projectElement.firstChildElement("SimVarsThrmlZn");      
+
+      if( simVarsThrmlZnElement.text().toInt() == 1 )
+      {
+        model::OutputVariable var("Zone Air Temperature",*result);
+        var.setReportingFrequency(interval);
+
+        std::vector<model::ThermalZone> zones = result->getModelObjects<model::ThermalZone>();
+        for( std::vector<model::ThermalZone>::iterator it = zones.begin();
+             it != zones.end();
+             ++it )
+        {
+          if( boost::optional<model::ModelObject> returnAirNode = it->returnAirModelObject() )
+          {
+            var = model::OutputVariable("System Node Temperature",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(returnAirNode->name().get());
+
+            var = model::OutputVariable("System Node Mass Flow Rate",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(returnAirNode->name().get());
+          }
+
+          std::vector<model::ModelObject> objects = it->inletPortList().modelObjects();
+          for( std::vector<model::ModelObject>::iterator inletIt = objects.begin();
+               inletIt != objects.end();
+               ++inletIt )
+          {
+            var = model::OutputVariable("System Node Temperature",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(inletIt->name().get());
+
+            var = model::OutputVariable("System Node Mass Flow Rate",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(inletIt->name().get());
+          }
+
+          objects = it->exhaustPortList().modelObjects();
+          for( std::vector<model::ModelObject>::iterator exhIt = objects.begin();
+               exhIt != objects.end();
+               ++exhIt )
+          {
+            var = model::OutputVariable("System Node Temperature",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(exhIt->name().get());
+
+            var = model::OutputVariable("System Node Mass Flow Rate",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(exhIt->name().get());
+          }
+        }
       }
 
       // SimVarsHVACZn
@@ -773,7 +1010,7 @@ namespace sdd {
 
       if( simVarsHVACSecElement.text().toInt() == 1 )
       {
-        model::OutputVariable var("Heating Coil Heating Rate",*result);
+        model::OutputVariable var("Heating Coil Air Heating Rate",*result);
         var.setReportingFrequency(interval);
 
         var = model::OutputVariable("Cooling Coil Total Cooling Rate",*result);
@@ -786,6 +1023,9 @@ namespace sdd {
         var.setReportingFrequency(interval);
 
         var = model::OutputVariable("Heating Coil Electric Power",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Evaporative Cooler Electric Power,hourly",*result);
         var.setReportingFrequency(interval);
 
         std::vector<model::AirLoopHVAC> airloops = result->getModelObjects<model::AirLoopHVAC>();
@@ -808,6 +1048,14 @@ namespace sdd {
           var.setReportingFrequency(interval);
           var.setKeyValue(airloop.supplyOutletNode().name().get());
 
+          var = model::OutputVariable("System Node Temperature",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(airloop.demandInletNode().name().get());
+
+          var = model::OutputVariable("System Node Mass Flow Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(airloop.demandInletNode().name().get());
+
           if( boost::optional<model::Node> node = airloop.mixedAirNode() )
           {
             var = model::OutputVariable("System Node Temperature",*result);
@@ -817,6 +1065,31 @@ namespace sdd {
             var = model::OutputVariable("System Node Mass Flow Rate",*result);
             var.setReportingFrequency(interval);
             var.setKeyValue(node->name().get());
+          }
+
+          if( boost::optional<model::AirLoopHVACOutdoorAirSystem> oaSystem = airloop.airLoopHVACOutdoorAirSystem() )
+          {
+            if( boost::optional<model::ModelObject> node = oaSystem->reliefAirModelObject() )
+            {
+              var = model::OutputVariable("System Node Temperature",*result);
+              var.setReportingFrequency(interval);
+              var.setKeyValue(node->name().get());
+
+              var = model::OutputVariable("System Node Mass Flow Rate",*result);
+              var.setReportingFrequency(interval);
+              var.setKeyValue(node->name().get());
+            }
+
+            if( boost::optional<model::Node> node = oaSystem->outboardOANode() )
+            {
+              var = model::OutputVariable("System Node Temperature",*result);
+              var.setReportingFrequency(interval);
+              var.setKeyValue(node->name().get());
+
+              var = model::OutputVariable("System Node Mass Flow Rate",*result);
+              var.setReportingFrequency(interval);
+              var.setKeyValue(node->name().get());
+            }
           }
         }
       }
@@ -1026,7 +1299,7 @@ namespace sdd {
     }
     if (latElement.isNull()){
       test = false;
-      LOG(Error, "No lattitude specified");
+      LOG(Error, "No latitude specified");
     }
     if (longElement.isNull()){
       test = false;

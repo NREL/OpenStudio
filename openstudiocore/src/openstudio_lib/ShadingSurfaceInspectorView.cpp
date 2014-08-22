@@ -176,8 +176,7 @@ ShadingSurfaceInspectorView::ShadingSurfaceInspectorView(bool isIP, const openst
 
   // planar surface widget
   m_planarSurfaceWidget = new PlanarSurfaceWidget(m_isIP);
-  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_planarSurfaceWidget, SLOT(toggleUnits(bool)));
-  OS_ASSERT(isConnected);
+  connect(this, &ShadingSurfaceInspectorView::toggleUnitsClicked, m_planarSurfaceWidget, &PlanarSurfaceWidget::toggleUnits);
 
   mainGridLayout->addWidget(m_planarSurfaceWidget,3,0,1,2);
 

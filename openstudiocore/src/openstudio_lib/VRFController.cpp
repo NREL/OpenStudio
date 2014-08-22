@@ -50,9 +50,7 @@ VRFController::VRFController()
   m_currentSystem = boost::none;
 
   m_vrfView = new VRFView();
-  bool bingo;
-  bingo = connect(m_vrfView->zoomOutButton,SIGNAL(clicked()),this,SLOT(zoomOutToSystemGridView()));
-  OS_ASSERT(bingo);
+  connect(m_vrfView->zoomOutButton, &QPushButton::clicked, this, &VRFController::zoomOutToSystemGridView);
 
   m_vrfSystemGridView = new GridLayoutItem();
   m_vrfSystemGridView->setCellSize(VRFSystemMiniView::cellSize());
@@ -101,10 +99,7 @@ void VRFController::refreshNow()
     {
       m_detailView->setId(OSItemId(m_currentSystem->handle().toString(),modelToSourceId(m_currentSystem->model()),false));
 
-      bool bingo;
-      bingo = connect(m_detailView,SIGNAL(inspectClicked(const OSItemId &)),
-                      this,SLOT(inspectOSItem(const OSItemId &)));
-      OS_ASSERT(bingo);
+      connect(m_detailView.data(), &VRFSystemView::inspectClicked, this, &VRFController::inspectOSItem);
 
       std::vector<model::ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals = m_currentSystem->terminals();
       for(std::vector<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>::iterator it = terminals.begin();
@@ -114,22 +109,17 @@ void VRFController::refreshNow()
         VRFTerminalView * vrfTerminalView = new VRFTerminalView();
         vrfTerminalView->setId(OSItemId(it->handle().toString(),modelToSourceId(it->model()),false));
         m_detailView->addVRFTerminalView(vrfTerminalView);
-        bingo = connect(vrfTerminalView,SIGNAL(componentDroppedOnZone(const OSItemId &, const OSItemId &)),
-                        this,SLOT(onVRFTerminalViewDrop(const OSItemId &, const OSItemId &)));
-        OS_ASSERT(bingo);
-        bingo = connect(vrfTerminalView,SIGNAL(removeZoneClicked(const OSItemId &)),this,SLOT(onRemoveZoneClicked(const OSItemId &)));
-        OS_ASSERT(bingo);
-        bingo = connect(vrfTerminalView,SIGNAL(removeTerminalClicked(const OSItemId &)),this,SLOT(onRemoveTerminalClicked(const OSItemId &)));
-        OS_ASSERT(bingo);
-        bingo = connect(vrfTerminalView,SIGNAL(terminalIconClicked(const OSItemId &)),this,SLOT(inspectOSItem(const OSItemId &)));
-        OS_ASSERT(bingo);
+        connect(vrfTerminalView, &VRFTerminalView::componentDroppedOnZone, this, &VRFController::onVRFTerminalViewDrop);
+        connect(vrfTerminalView, &VRFTerminalView::removeZoneClicked, this, &VRFController::onRemoveZoneClicked);
+        connect(vrfTerminalView, &VRFTerminalView::removeTerminalClicked, this, &VRFController::onRemoveTerminalClicked);
+        connect(vrfTerminalView, &VRFTerminalView::terminalIconClicked, this, &VRFController::inspectOSItem);
         if( boost::optional<model::ThermalZone> zone = it->thermalZone() )
         {
           vrfTerminalView->zoneDropZone->setHasZone(true);
           vrfTerminalView->removeZoneButtonItem->setVisible(true);
-		  QString zoneName = QString::fromStdString(zone->name().get());
+          QString zoneName = QString::fromStdString(zone->name().get());
           vrfTerminalView->zoneDropZone->setText(zoneName);
-		  vrfTerminalView->zoneDropZone->setToolTip(zoneName);
+          vrfTerminalView->zoneDropZone->setToolTip(zoneName);
         }
       }
     }
@@ -252,10 +242,8 @@ void VRFController::zoomInOnSystem(model::AirConditionerVariableRefrigerantFlow 
 
   m_detailScene = QSharedPointer<QGraphicsScene>(new QGraphicsScene());
   m_detailView = new VRFSystemView();
-  bool bingo = connect(m_detailView->terminalDropZone,SIGNAL(componentDropped(const OSItemId &)),this,SLOT(onVRFSystemViewDrop(const OSItemId &)));
-  OS_ASSERT(bingo);
-  bingo = connect(m_detailView->zoneDropZone,SIGNAL(componentDropped(const OSItemId &)),this,SLOT(onVRFSystemViewZoneDrop(const OSItemId &)));
-  OS_ASSERT(bingo);
+  connect(m_detailView->terminalDropZone, &OSDropZoneItem::componentDropped, this, &VRFController::onVRFSystemViewDrop);
+  connect(m_detailView->zoneDropZone, &OSDropZoneItem::componentDropped, this, &VRFController::onVRFSystemViewZoneDrop);
   m_detailScene->addItem(m_detailView);
   m_vrfView->header->show();
   m_vrfView->graphicsView->setScene(m_detailScene.data());
@@ -497,13 +485,10 @@ QGraphicsObject * VRFSystemItemDelegate::view(QSharedPointer<OSListItem> dataSou
   {
     VRFSystemMiniView * vrfSystemMiniView = new VRFSystemMiniView();
 
-    bool bingo;
-    bingo = connect(vrfSystemMiniView->removeButtonItem,SIGNAL(mouseClicked()),dataSource.data(),SLOT(remove()));
-    OS_ASSERT(bingo);
+    connect(vrfSystemMiniView->removeButtonItem, &RemoveButtonItem::mouseClicked, listItem.data(), &VRFSystemListItem::remove);
 
-    bingo = connect(vrfSystemMiniView->zoomInButtonItem,SIGNAL(mouseClicked()),dataSource.data(),SLOT(zoomInOnSystem()));
-    OS_ASSERT(bingo);
-
+    connect(vrfSystemMiniView->zoomInButtonItem, &ZoomInButtonItem::mouseClicked, listItem.data(), &VRFSystemListItem::zoomInOnSystem);
+    
     vrfSystemMiniView->setName(listItem->systemName());
     vrfSystemMiniView->setNumberOfZones(listItem->numberOfConnectedZones());
     vrfSystemMiniView->setNumberOfTerminals(listItem->numberOfConnectedTerminals());
@@ -514,10 +499,8 @@ QGraphicsObject * VRFSystemItemDelegate::view(QSharedPointer<OSListItem> dataSou
   {
     VRFSystemDropZoneView * vrfSystemDropZoneView = new VRFSystemDropZoneView();
 
-    bool bingo;
-    bingo = connect(vrfSystemDropZoneView,SIGNAL(componentDropped(const OSItemId &)),
-                    qobject_cast<VRFSystemListController *>(dataSource->controller()),SLOT(addSystem(const OSItemId &)));
-    OS_ASSERT(bingo);
+    connect(vrfSystemDropZoneView, &VRFSystemDropZoneView::componentDropped,
+      qobject_cast<VRFSystemListController *>(dataSource->controller()), &VRFSystemListController::addSystem);
 
     itemView = vrfSystemDropZoneView;
   }

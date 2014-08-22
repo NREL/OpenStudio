@@ -60,7 +60,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSubcoolerMec
   // Outlet Control Temperature
   d = modelObject.outletControlTemperature();
   if (d) {
-	  subcoolerMechanical.setDouble(Refrigeration_SubcoolerFields::OutletControlTemperature,d.get());
+    subcoolerMechanical.setDouble(Refrigeration_SubcoolerFields::OutletControlTemperature,d.get());
   }
   
   return subcoolerMechanical;

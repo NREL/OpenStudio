@@ -185,6 +185,7 @@ namespace runmanager {
                         const std::string &t_outputname);
 
       /// Adds the Ruby job as it is currently defined to the given workflow.
+      /// \param[in] t_wf Workflow
       /// \param[in] t_requiredFiles Set of files to add as required files to the script file
       /// \deprecated
       /// \sa toWorkItem

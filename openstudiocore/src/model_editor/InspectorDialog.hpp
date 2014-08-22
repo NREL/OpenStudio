@@ -111,6 +111,14 @@ public slots:
 
   virtual void onModelChanged(openstudio::model::Model&);
 
+  void onPushButtonNew(bool);
+
+  void onPushButtonCopy(bool);
+
+  void onPushButtonDelete(bool);
+
+  void onPushButtonPurge(bool);
+
 signals:
 
   // emitted when user selects a new idd object type, will be an allowable type
@@ -137,10 +145,6 @@ private slots:
   // for testing
   friend class ModelEditorFixture;
 
-  void onPushButtonNew(bool);
-  void onPushButtonCopy(bool);
-  void onPushButtonDelete(bool);
-  void onPushButtonPurge(bool);
   //void onCheckBox(bool checked);
   void onListWidgetSelectionChanged();
   void onTableWidgetSelectionChanged();

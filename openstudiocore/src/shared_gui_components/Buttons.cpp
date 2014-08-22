@@ -422,7 +422,7 @@ CloudStartingButton::CloudStartingButton(QWidget * parent)
   m_rotation = 0.0;
 
   m_timer = new QTimer(this);
-  connect(m_timer,SIGNAL(timeout()),this,SLOT(rotate()));
+  connect(m_timer, &QTimer::timeout, this, &CloudStartingButton::rotate);
   m_timer->start(50);
 }
 
@@ -475,7 +475,7 @@ CloudStoppingButton::CloudStoppingButton(QWidget * parent)
   m_rotation = 0.0;
 
   m_timer = new QTimer(this);
-  connect(m_timer,SIGNAL(timeout()),this,SLOT(rotate()));
+  connect(m_timer, &QTimer::timeout, this, &CloudStoppingButton::rotate);
   m_timer->start(50);
 }
 

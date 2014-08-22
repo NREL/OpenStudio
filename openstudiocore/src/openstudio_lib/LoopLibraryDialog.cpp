@@ -152,7 +152,7 @@ void LoopLibraryDialog::newItem( const AddToModelEnum & addToModelEnum,
                                               detailedText,
                                               pixmap );
 
-  connect( itemView,SIGNAL(addToModelClicked( AddToModelEnum )),this,SLOT(onAddToModelClicked( AddToModelEnum )) );
+  connect(itemView, &LoopItemView::addToModelClicked, this, &LoopLibraryDialog::onAddToModelClicked);
 
   m_scrollArea->widget()->layout()->addWidget(itemView);
 
@@ -189,7 +189,7 @@ LoopItemView::LoopItemView( const AddToModelEnum & addToModelEnum,
   button->setObjectName("StandardGrayButton");
   mainVLayout->addWidget(button,0,Qt::AlignRight);
 
-  connect( button,SIGNAL(clicked()),this,SLOT(emitAddToModelClicked()) );
+  connect(button, &QPushButton::clicked, this, &LoopItemView::emitAddToModelClicked);
 }
 
 void LoopItemView::emitAddToModelClicked()

@@ -32,8 +32,8 @@ TabDropDock::TabDropDock( QWidget* parent): QTabWidget(parent)
 //  setAcceptDrops(true);
 //  setAttribute(Qt::WA_Hover,true);
 //  setMouseTracking(true);
-  auto tabBar = new resultsviewer::TabBarDrag(this);
-  connect(tabBar, SIGNAL(signalPerformDrag()), this, SLOT(slotPerformDrag()));
+  auto tabBar = new TabBarDrag(this);
+  connect(tabBar, &TabBarDrag::signalPerformDrag, this, &TabDropDock::slotPerformDrag);
   setTabBar(tabBar);
 }
 
