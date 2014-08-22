@@ -95,6 +95,8 @@ namespace openstudio{
     /// Returns parent path of XML file.
     openstudio::path directory() const;
 
+    boost::optional<std::string> error() const;
+
     std::string uid() const;
 
     std::string versionId() const;
@@ -131,6 +133,10 @@ namespace openstudio{
     //@}
     /** @name Setters */
     //@{
+
+    void setError(const std::string& error);
+
+    void resetError();
 
     void setName(const std::string& name);
 
@@ -204,6 +210,7 @@ namespace openstudio{
 
     openstudio::path m_path;
     BCLXMLType m_bclXMLType;
+    boost::optional<std::string> m_error;
     std::string m_name;
     std::string m_displayName;
     std::string m_className; // only for measures

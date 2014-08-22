@@ -78,6 +78,11 @@ namespace openstudio{
       startingVersion = VersionString(element.firstChildElement("schema_version").firstChild().nodeValue().toStdString());
     }
 
+    // added in schema version 3
+    if (!element.firstChildElement("error").isNull()){
+      m_error = decodeString(element.firstChildElement("error").firstChild().nodeValue().toStdString());
+    }
+
     m_name = decodeString(element.firstChildElement("name").firstChild().nodeValue().toStdString());
 
     m_uid = element.firstChildElement("uid").firstChild().nodeValue().toStdString();
@@ -100,9 +105,9 @@ namespace openstudio{
     // added in schema version 3
     if (element.firstChildElement("display_name").isNull()){
       // use name
-      m_displayName = decodeString(element.firstChildElement("name").firstChild().nodeValue().replace("_", " ").toStdString());
+      m_displayName = decodeString(element.firstChildElement("name").firstChild().nodeValue().toStdString());
     }else{
-      m_displayName = decodeString(element.firstChildElement("display_name").firstChild().nodeValue().replace("_", " ").toStdString());
+      m_displayName = decodeString(element.firstChildElement("display_name").firstChild().nodeValue().toStdString());
     }
 
     m_description = decodeString(element.firstChildElement("description").firstChild().nodeValue().toStdString());
@@ -377,6 +382,23 @@ namespace openstudio{
     return m_path.parent_path();
   }
 
+  boost::optional<std::string> BCLXML::error() const
+  {
+    return m_error;
+  }
+
+  void BCLXML::setError(const std::string& error)
+  {
+    incrementVersionId();
+    m_error = escapeString(error);
+  }
+
+  void BCLXML::resetError()
+  {
+    incrementVersionId();
+    m_error.reset();
+  }
+
   void BCLXML::setName(const std::string& name)
   {
     incrementVersionId();
@@ -550,6 +572,12 @@ namespace openstudio{
     QDomElement element = doc.createElement("schema_version");
     docElement.appendChild(element);
     element.appendChild(doc.createTextNode("3.0"));
+
+    if (m_error){
+      element = doc.createElement("error");
+      docElement.appendChild(element);
+      element.appendChild(doc.createTextNode(toQString(escapeString(*m_error))));
+    }
 
     element = doc.createElement("name");
     docElement.appendChild(element);

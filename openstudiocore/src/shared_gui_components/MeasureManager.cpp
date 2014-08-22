@@ -409,8 +409,10 @@ bool MeasureManager::checkForUpdates(BCLMeasure& measure)
     try{
       ruleset::RubyUserScriptInfo info = m_infoGetter->getInfo(measure);
       info.update(measure);
-    } catch(const std::exception&) {
-      // DLM: what to do here?
+    } catch(const std::exception& e) {
+      // failed to get info, put error into the measure's xml
+      ruleset::RubyUserScriptInfo info(e.what());
+      info.update(measure);
     }
   }
   // last, check for xml updates

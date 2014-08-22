@@ -281,7 +281,9 @@ class LibraryItem : public OSListItem
 
   virtual ~LibraryItem();
 
-  Q_PROPERTY(QString name READ name)
+  //Q_PROPERTY(QString name READ name)
+
+  bool hasError() const;
 
   QString name() const;
 

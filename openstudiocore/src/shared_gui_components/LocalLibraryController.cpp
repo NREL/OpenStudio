@@ -455,6 +455,11 @@ LibraryItem::LibraryItem(const BCLMeasure & bclMeasure, LocalLibrary::LibrarySou
 LibraryItem::~LibraryItem()
 {}
 
+bool LibraryItem::hasError() const
+{
+  return m_bclMeasure.error();
+}
+
 QString LibraryItem::name() const 
 { 
   return QString::fromStdString(m_bclMeasure.name()); 
@@ -544,6 +549,7 @@ QWidget * LibraryItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     widget->label->setText(libraryItem->displayName());
     widget->setToolTip(libraryItem->description());
+    widget->errorLabel->setVisible(libraryItem->hasError());
 
     // Drag
     

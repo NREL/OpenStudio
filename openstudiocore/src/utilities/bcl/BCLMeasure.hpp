@@ -129,6 +129,8 @@ namespace openstudio{
 
     openstudio::path directory() const;
 
+    boost::optional<std::string> error() const;
+
     std::string uid() const;
 
     UUID uuid() const;
@@ -164,6 +166,10 @@ namespace openstudio{
     //@}
     /** @name Setters */
     //@{
+
+    void setError(const std::string& error);
+
+    void resetError();
 
     void setName(const std::string& name);
 

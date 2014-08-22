@@ -30,6 +30,9 @@
 namespace openstudio {
 namespace ruleset {
 
+  RubyUserScriptInfo::RubyUserScriptInfo(const std::string& error)
+    : m_error(error)
+  {}
 
   RubyUserScriptInfo::RubyUserScriptInfo(const MeasureType& measureType,
                                          const std::string& className,
@@ -39,6 +42,11 @@ namespace ruleset {
                                          const std::vector<OSArgument>& arguments)
     : m_measureType(measureType), m_className(className), m_name(name), m_description(description), m_modelerDescription(modelerDescription), m_arguments(arguments)
   {}
+
+  boost::optional<std::string> RubyUserScriptInfo::error() const
+  {
+    return m_error;
+  }
 
   MeasureType RubyUserScriptInfo::measureType() const
   {
@@ -73,6 +81,22 @@ namespace ruleset {
   bool RubyUserScriptInfo::update(BCLMeasure& measure) const
   {
     bool result = false;
+
+    if (m_error){
+      // have error
+      if (!measure.error() || measure.error().get() != *m_error){
+        result = true;
+        measure.setError(*m_error);
+      }
+      // return here so we don't blow away name or other information from last successful run
+      return result;
+    } else {
+      // no error
+      if (measure.error()){
+        result = true;
+        measure.resetError();
+      }
+    }
 
     // map snake cased class name to bcl measure name
     std::string lowerClassName = toUnderscoreCase(m_className);

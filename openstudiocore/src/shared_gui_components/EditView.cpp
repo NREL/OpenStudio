@@ -192,7 +192,7 @@ void DoubleInputView::setName(const std::string& name, boost::optional<std::stri
     text += QString::fromStdString(" (" + units.get() + ")");
   }
   if (description){
-    text += QString::fromStdString("<br/><span style=\"font-size: 75%;\">" + description.get() + "</span>");
+    text += QString::fromStdString("<br/><span style=\"font-size: small;\">" + description.get() + "</span>");
   }
 
   nameLabel->setText(text);
@@ -239,7 +239,7 @@ void ChoiceInputView::setName(const std::string& name, boost::optional<std::stri
     text += QString::fromStdString(" (" + units.get() + ")");
   }
   if (description){
-    text += QString::fromStdString("<br/><span style=\"font-size: 75%;\">" + description.get() + "</span>");
+    text += QString::fromStdString("<br/><span style=\"font-size: small;\">" + description.get() + "</span>");
   }
 
   nameLabel->setText(text);
@@ -286,7 +286,7 @@ void BoolInputView::setName(const std::string& name, boost::optional<std::string
     text += QString::fromStdString(" (" + units.get() + ")");
   }
   if (description){
-    text += QString::fromStdString("<br/><span style=\"font-size: 75%;\">" + description.get() + "</span>");
+    text += QString::fromStdString("<br/><span style=\"font-size: small;\">" + description.get() + "</span>");
   }
 
   checkBox->setText(text);
@@ -327,7 +327,7 @@ void IntegerInputView::setName(const std::string& name, boost::optional<std::str
     text += QString::fromStdString(" (" + units.get() + ")");
   }
   if (description){
-    text += QString::fromStdString("<br/><span style=\"font-size: 75%;\">" + description.get() + "</span>");
+    text += QString::fromStdString("<br/><span style=\"font-size: small;\">" + description.get() + "</span>");
   }
 
   nameLabel->setText(text);
@@ -374,7 +374,7 @@ void StringInputView::setName(const std::string& name, boost::optional<std::stri
     text += QString::fromStdString(" (" + units.get() + ")");
   }
   if (description){
-    text += QString::fromStdString("<br/><span style=\"font-size: 75%;\">" + description.get() + "</span>");
+    text += QString::fromStdString("<br/><span style=\"font-size: small;\">" + description.get() + "</span>");
   }
 
   nameLabel->setText(text);

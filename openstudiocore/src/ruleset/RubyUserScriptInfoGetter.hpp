@@ -45,6 +45,10 @@ namespace ruleset {
 class RULESET_API RubyUserScriptInfo {
 public:
 
+  /// Constructor used when Ruby interpreter fails to get information about the script
+  RubyUserScriptInfo(const std::string& error);
+
+  /// Constructor used when Ruby interpreter succeeds to get information about the script
   RubyUserScriptInfo(const MeasureType& measureType,
                      const std::string& className,
                      const std::string& name,
@@ -52,11 +56,25 @@ public:
                      const std::string& modelerDescription,
                      const std::vector<OSArgument>& arguments);
 
+  /// will be empty if information was successfully extracted from the script, otherwise includes error information
+  boost::optional<std::string> error() const;
+
+  /// type of measure if information was successfully extracted from the script, otherwise undefined
   MeasureType measureType() const;
+
+  /// name of measure class if information was successfully extracted from the script, otherwise empty
   std::string className() const;
+
+  /// result of measure's name method if information was successfully extracted from the script, otherwise empty
   std::string name() const;
+
+  /// result of measure's description method if information was successfully extracted from the script, otherwise empty
   std::string description() const;
+
+  /// result of measure's modeler_description method if information was successfully extracted from the script, otherwise empty
   std::string modelerDescription() const;
+
+  /// result of measure's arguments method called with empty model if information was successfully extracted from the script, otherwise empty
   std::vector<OSArgument> arguments() const;
 
   /// Compares the measure's information from the xml with information extracted from the ruby measure
@@ -66,6 +84,7 @@ public:
 private:
   REGISTER_LOGGER("openstudio.ruleset.RubyUserScriptInfo");
 
+  boost::optional<std::string> m_error;
   MeasureType m_measureType;
   std::string m_className;
   std::string m_name;

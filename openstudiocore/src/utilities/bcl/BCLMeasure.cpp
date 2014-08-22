@@ -421,6 +421,11 @@ namespace openstudio{
     return m_directory;
   }
 
+  boost::optional<std::string> BCLMeasure::error() const
+  {
+    return m_bclXML.error();
+  }
+
   std::string BCLMeasure::uid() const
   {
     return m_bclXML.uid();
@@ -487,6 +492,16 @@ namespace openstudio{
   std::vector<BCLFileReference> BCLMeasure::files() const
   {
     return m_bclXML.files();
+  }
+
+  void BCLMeasure::setError(const std::string& error)
+  {
+    m_bclXML.setError(error);
+  }
+
+  void BCLMeasure::resetError()
+  {
+    m_bclXML.resetError();
   }
 
   void BCLMeasure::setName(const std::string& name)
