@@ -530,7 +530,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
           {
             flowRate = optionalFlowRate.get();
           }
-          setpointComponents.push_back(SetpointComponentInfo(*it,*outletNode,0.0,true,COOLING));
+          setpointComponents.push_back(SetpointComponentInfo(*it,*outletNode,flowRate,autosize,COOLING));
         }
         else
         {
@@ -552,7 +552,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
           {
             flowRate = optionalFlowRate.get();
           }
-          setpointComponents.push_back(SetpointComponentInfo(*it,*outletNode,0.0,true,COOLING));
+          setpointComponents.push_back(SetpointComponentInfo(*it,*outletNode,flowRate,autosize,COOLING));
         }
         else
         {
