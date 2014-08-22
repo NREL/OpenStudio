@@ -809,6 +809,13 @@ namespace sdd {
 
       meter = model::Meter(*result);
       meter.setFuelType(FuelType::Electricity);
+      meter.setEndUseType(EndUseType::InteriorEquipment);
+      meter.setSpecificEndUse("Internal Transport");
+      meter.setInstallLocationType(InstallLocationType::Facility);
+      meter.setReportingFrequency("Hourly"); 
+
+      meter = model::Meter(*result);
+      meter.setFuelType(FuelType::Electricity);
       meter.setEndUseType(EndUseType::ExteriorEquipment);
       meter.setSpecificEndUse("Receptacle");
       meter.setInstallLocationType(InstallLocationType::Facility);
