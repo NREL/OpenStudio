@@ -589,6 +589,12 @@ namespace openstudio
 {
   namespace detail // I like to "hide" things I don't want regular uses to use in detail namespaces
   {
+    void addIncludePath(std::vector<std::string>& includePaths, const openstudio::path& includePath)
+    {
+      includePaths.push_back("-I");
+      includePaths.push_back(toString(includePath));
+    }
+
     class RubyInterpreter
     {
       private:
@@ -607,30 +613,30 @@ namespace openstudio
           std::vector<std::string> includePaths;
           openstudio::path rubypath = openstudio::getOpenStudioEmbeddedRubyPath();
 
-          includePaths.push_back("-I" + toString(t_moduleSearchPath) + "");
-          includePaths.push_back("-I" + toString(t_rubyIncludePath) + "");
+          addIncludePath(includePaths, t_moduleSearchPath);
+          addIncludePath(includePaths, t_rubyIncludePath);
 
           if (!rubypath.empty())
           {
 #if defined(WIN32) 
 #if (defined(_M_X64) || defined(__amd64__))
-            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0"))) + "");
-            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/x64-msvcr100"))) + "");
-            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/site_ruby"))) + "");
-            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0"))) + "");
-            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/x64-msvcr100"))) + "");
-            includePaths.push_back("-I" + toString(rubypath / openstudio::toPath("lib/ruby/vendor_ruby"))) + "");
-            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/2.0.0"))) + "");
-            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/2.0.0/x64-mswin64_10"))) + "");
+            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0"));
+            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/x64-msvcr100"));
+            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/site_ruby"));
+            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0"));
+            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/x64-msvcr100"));
+            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/vendor_ruby"));
+            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/2.0.0"));
+            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/2.0.0/x64-mswin64_10"));
 #else
-            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0"))) + "");
-            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/i386-mingw32"))) + "");
-            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/site_ruby"))) + "");
-            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0"))) + "");
-            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/i386-mingw32"))) + "");
-            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/vendor_ruby"))) + "'");
-            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/2.0.0"))) + "");
-            includePaths.push_back("-I" + toString((rubypath / openstudio::toPath("lib/ruby/2.0.0/i386-mingw32"))) + "");
+            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0"));
+            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/i386-mingw32"));
+            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/site_ruby"));
+            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0"));
+            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/i386-mingw32"));
+            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/vendor_ruby"));
+            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/2.0.0"));
+            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/2.0.0/i386-mingw32"));
 #endif
 #endif
           }
