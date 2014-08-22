@@ -589,11 +589,6 @@ namespace openstudio
 {
   namespace detail // I like to "hide" things I don't want regular uses to use in detail namespaces
   {
-    void addIncludePath(std::vector<std::string>& includePaths, const openstudio::path& includePath)
-    {
-      includePaths.push_back("-I");
-      includePaths.push_back(toString(includePath));
-    }
 
     class RubyInterpreter
     {
@@ -601,6 +596,12 @@ namespace openstudio
         // dummy arguments passed to ruby_options
         int m_argc;
         char** m_argv;
+
+        void addIncludePath(std::vector<std::string>& includePaths, const openstudio::path& includePath)
+        {
+          includePaths.push_back("-I");
+          includePaths.push_back(toString(includePath));
+        }
 
       public:
         RubyInterpreter(const openstudio::path &t_moduleSearchPath,
