@@ -43,6 +43,8 @@ SpaceTypesTabController::SpaceTypesTabController(const model::Model& model)
   SpaceTypeInspectorView * spaceTypeInspectorView = qobject_cast<SpaceTypeInspectorView *>(m_spaceTypesController->subTabView()->inspectorView());
   OS_ASSERT(spaceTypeInspectorView);
 
+  bool isConnected = false;
+
   isConnected = connect(spaceTypeInspectorView, SIGNAL(gridRowSelected(OSItem*)), m_spaceTypesController.get(), SLOT(selectItem(OSItem*)));
   OS_ASSERT(isConnected);
 

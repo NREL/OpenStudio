@@ -78,7 +78,7 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
 #endif
   m_dropZone->setMaxItems(1);
 
-  connect(dropZone, &OSDropZone::itemDropped, m_gridController, &OSGridController::onItemDropped);
+  connect(m_dropZone, &OSDropZone::itemDropped, m_gridController, &OSGridController::onItemDropped);
 
   buttonLayout->addWidget(m_dropZone,0,Qt::AlignLeft);
 

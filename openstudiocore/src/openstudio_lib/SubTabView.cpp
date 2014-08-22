@@ -72,8 +72,6 @@ namespace openstudio {
 void SubTabView::connectItemSelector()
 {
   // Item Selector
-  outerLeftVLayout->addWidget(m_itemSelector, 10);
-
   connect(m_itemSelector, &OSItemSelector::itemSelected, this, &SubTabView::itemSelected);
 
   connect(m_itemSelector, &OSItemSelector::itemRemoveClicked, this, &SubTabView::itemRemoveClicked);

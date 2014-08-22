@@ -52,9 +52,9 @@ ThermalZonesController::ThermalZonesController(bool isIP, const model::Model & m
 
   ThermalZoneView * thermalZoneView = static_cast<ThermalZoneView *>(subTabView()->inspectorView());
 
-  connect(thermalZoneView, &ThermalZoneView::enableThermostatClicked, this, &ThermalZonesController::enableThermostat);
+  //connect(thermalZoneView, &ThermalZoneView::enableThermostatClicked, this, &ThermalZonesController::enableThermostat);
 
-  connect(thermalZoneView, &ThermalZoneView::enableHumidistatClicked, this, &ThermalZonesController::enableHumidistat);
+  //connect(thermalZoneView, &ThermalZoneView::enableHumidistatClicked, this, &ThermalZonesController::enableHumidistat);
 
   connect(thermalZoneView, &ThermalZoneView::modelObjectSelected, this, &ThermalZonesController::modelObjectSelected);
 

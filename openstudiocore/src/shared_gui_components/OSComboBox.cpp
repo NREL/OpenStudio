@@ -323,6 +323,8 @@ void OSComboBox2::completeBind() {
 
     connect(this, static_cast<void (OSComboBox2::*)(const QString &)>(&OSComboBox2::currentIndexChanged), this, &OSComboBox2::onCurrentIndexChanged);
 
+    bool isConnected = false;
+
     if (isEditable())
     {
       isConnected = connect(this, SIGNAL(editTextChanged(const QString&)), this, SLOT(onEditTextChanged(const QString&)));
