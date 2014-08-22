@@ -52,6 +52,8 @@ set(core_src
   core/PathWatcher.hpp
   core/PathWatcher.cpp
   core/Queue.hpp
+  core/RubyInterpreter.hpp
+  core/RubyException.hpp
   core/Singleton.hpp
   core/StaticInitializer.hpp
   core/String.hpp
