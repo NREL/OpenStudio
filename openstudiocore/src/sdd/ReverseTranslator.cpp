@@ -1169,8 +1169,14 @@ namespace sdd {
 
         var = model::OutputVariable("Plant Supply Side Outlet Temperature",*result);
         var.setReportingFrequency(interval);
-      }
 
+        std::vector<model::PlantLoop> plants = result->getModelObjects<model::PlantLoop>();
+        for( auto plant: plants ) {
+          var = model::OutputVariable("System Node Mass Flow Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(plant.demandOutletNode().name().get());
+        }
+      }
 
       model::OutputControlReportingTolerances rt = result->getUniqueModelObject<model::OutputControlReportingTolerances>();
       rt.setToleranceforTimeCoolingSetpointNotMet(0.56);
