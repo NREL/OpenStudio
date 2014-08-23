@@ -30,6 +30,8 @@
 #include <QPushButton>
 #include <QRadioButton>
 #include <QGroupBox>
+#include <QListWidgetItem>
+#include <QListWidget>
 
 namespace openstudio {
   
@@ -85,7 +87,27 @@ BCLMeasureDialog::BCLMeasureDialog(const BCLMeasure& bclMeasure, QWidget* parent
     m_taxonomySecondLevelComboBox->setCurrentIndex(index);
   }
 
-  // todo: initialize uses sketchup api and requires e+ results
+  std::vector<std::string> intendedSoftwareTools = bclMeasure.intendedSoftwareTools();
+  QList<QListWidgetItem *> items = m_intendedSoftwareToolListWidget->findItems(".*", Qt::MatchRegExp);
+  for (QListWidgetItem * item : items){
+    std::string intendedSoftwareTool = toString(item->text());
+    if (std::find(intendedSoftwareTools.begin(), intendedSoftwareTools.end(), intendedSoftwareTool) == intendedSoftwareTools.end()){
+      item->setCheckState(Qt::Unchecked);
+    } else {
+      item->setCheckState(Qt::Checked);
+    }
+  }
+
+  std::vector<std::string> intendedUseCases = bclMeasure.intendedUseCases();
+  items = m_intendedUseCaseListWidget->findItems(".*", Qt::MatchRegExp);
+  for (QListWidgetItem * item : items){
+    std::string intendedUseCase = toString(item->text());
+    if (std::find(intendedUseCases.begin(), intendedUseCases.end(), intendedUseCase) == intendedUseCases.end()){
+      item->setCheckState(Qt::Unchecked);
+    } else {
+      item->setCheckState(Qt::Checked);
+    }
+  }
 }
 
 BCLMeasureDialog::~BCLMeasureDialog()
@@ -137,6 +159,24 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
   }
   std::string taxonomyTag = toString(taxonomyParts.join("."));
 
+  std::vector<Attribute> attributes;
+
+  QList<QListWidgetItem *> items =	m_intendedSoftwareToolListWidget->findItems(".*", Qt::MatchRegExp);
+  for (QListWidgetItem * item : items){
+    if (item->checkState() == Qt::Checked){
+      std::string intendedSoftwareTool = toString(item->text());
+      attributes.push_back(Attribute("Intended Software Tool", intendedSoftwareTool));
+    }
+  }
+
+  items = m_intendedUseCaseListWidget->findItems(".*", Qt::MatchRegExp);
+  for (QListWidgetItem * item : items){
+    if (item->checkState() == Qt::Checked){
+      std::string intendedUseCase = toString(item->text());
+      attributes.push_back(Attribute("Intended Use Case", intendedUseCase));
+    }
+  }
+
   boost::optional<BCLMeasure> result;
   if (m_bclMeasureToCopy){
     // have measure to copy, use clone
@@ -149,6 +189,11 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
       result->setModelerDescription(modelerDescription);
       result->setTaxonomyTag(taxonomyTag);
       result->setMeasureType(measureType);
+
+      for (const Attribute& attribute : attributes){
+        result->addAttribute(attribute);
+      }
+
       result->save();
     }
   }else{
@@ -157,6 +202,11 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
     result = BCLMeasure(name, className, measureDir, taxonomyTag, measureType);
     result->setDescription(description);
     result->setModelerDescription(modelerDescription);
+
+    for (const Attribute& attribute : attributes){
+      result->addAttribute(attribute);
+    }
+
     result->save();
     }catch(std::exception&){
     }
@@ -353,23 +403,45 @@ void BCLMeasureDialog::init()
   vLayout2->addLayout(tempHLayout);
   vLayout2->addSpacing(10);
 
-  /* Disable for now 
-  m_usesSketchUpAPI = new QRadioButton(this);
-  m_usesSketchUpAPI->setText("Yes");
-  m_usesSketchUpAPI->setChecked(false);
-  QRadioButton* notUsesSketchUpAPI = new QRadioButton(this);
-  notUsesSketchUpAPI->setText("No");
-  notUsesSketchUpAPI->setChecked(true);
-  tempHLayout = new QHBoxLayout;
-  tempHLayout->addWidget(m_usesSketchUpAPI);
-  tempHLayout->addWidget(notUsesSketchUpAPI);
-  tempHLayout->addStretch();
-  groupBox = new QGroupBox(this);
-  groupBox->setTitle("Uses SketchUp API");
-  groupBox->setLayout(tempHLayout);
-  vLayout2->addWidget(groupBox);
-  vLayout2->addSpacing(10);
-  */
+  label = new QLabel;
+  label->setText("Intended Software Tools:");
+  label->setObjectName("H2");
+  vLayout2->addWidget(label);
+  m_intendedSoftwareToolListWidget = new QListWidget(this);
+  vLayout2->addWidget(m_intendedSoftwareToolListWidget);
+  QStringList intendedSoftwareTools;
+  intendedSoftwareTools.append("Apply Measure Now");
+  intendedSoftwareTools.append("PAT");
+  intendedSoftwareTools.append("Analysis Spreadsheet");
+  //intendedSoftwareTools.append("simuwatt");
+  QStringListIterator it(intendedSoftwareTools);
+  while (it.hasNext()){
+    QListWidgetItem *listItem = new QListWidgetItem(it.next(), m_intendedSoftwareToolListWidget);
+    listItem->setCheckState(Qt::Checked);
+    listItem->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+    m_intendedSoftwareToolListWidget->addItem(listItem);
+  }
+  
+  label = new QLabel;
+  label->setText("Intended Software Tools:");
+  label->setObjectName("H2");
+  vLayout2->addWidget(label);
+  m_intendedUseCaseListWidget = new QListWidget();
+  vLayout2->addWidget(m_intendedUseCaseListWidget);
+  QStringList intendedUseCases;
+  intendedUseCases.append("Model Articulation");
+  intendedUseCases.append("Calibration");
+  intendedUseCases.append("Sensitivity Analysis");
+  intendedUseCases.append("New Construction EE");
+  intendedUseCases.append("Retrofit EE");
+  intendedUseCases.append("Automatic Report Generation");
+  it = QStringListIterator(intendedUseCases);
+  while (it.hasNext()){
+    QListWidgetItem *listItem = new QListWidgetItem(it.next(), m_intendedUseCaseListWidget);
+    listItem->setCheckState(Qt::Checked);
+    listItem->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+    m_intendedUseCaseListWidget->addItem(listItem);
+  }
 
   auto hLayout = new QHBoxLayout;
   hLayout->addLayout(vLayout2);

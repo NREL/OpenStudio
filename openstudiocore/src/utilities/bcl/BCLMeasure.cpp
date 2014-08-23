@@ -641,6 +641,21 @@ namespace openstudio{
   {
     m_bclXML.clearFiles();
   }
+  
+  void BCLMeasure::addAttribute(const Attribute& attribute)
+  {
+    m_bclXML.addAttribute(attribute);
+  }
+  
+  bool BCLMeasure::removeAttribute(const std::string& name)
+  {
+    return m_bclXML.removeAttribute(name);
+  }
+ 
+  void BCLMeasure::clearAttributes()
+  {
+    m_bclXML.clearAttributes();
+  }
 
   bool BCLMeasure::checkForUpdatesFiles()
   {

@@ -220,6 +220,15 @@ namespace openstudio{
     /// Clears all files
     void clearFiles();
 
+    /// Adds attribute to attribute list, existing attribute with same name will be removed
+    void addAttribute(const Attribute& attribute);
+
+    /// Removes attribute by name, returns true if attribute was found and removed
+    bool removeAttribute(const std::string& name);
+
+    /// Removes all attributes
+    void clearAttributes();
+
     /// Check for updates to files, will increment versionID and return true
     /// if any files have changed, been added, or removed from the measure
     /// The measure must still be saved to disk to preserve the new versionID
