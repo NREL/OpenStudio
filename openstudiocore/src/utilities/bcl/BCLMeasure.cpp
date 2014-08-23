@@ -636,6 +636,11 @@ namespace openstudio{
   {
     m_bclXML.incrementVersionId();
   }
+  
+  void BCLMeasure::clearFiles()
+  {
+    m_bclXML.clearFiles();
+  }
 
   bool BCLMeasure::checkForUpdatesFiles()
   {

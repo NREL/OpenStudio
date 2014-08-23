@@ -217,6 +217,9 @@ namespace openstudio{
     /// Returns the output file type for this measure
     FileReferenceType outputFileType() const;
 
+    /// Clears all files
+    void clearFiles();
+
     /// Check for updates to files, will increment versionID and return true
     /// if any files have changed, been added, or removed from the measure
     /// The measure must still be saved to disk to preserve the new versionID
@@ -240,7 +243,6 @@ namespace openstudio{
     /// newDir is a directory which either does not exist or is empty
     /// If the copy is successful a new BCLMeasure is returned
     boost::optional<BCLMeasure> clone(const openstudio::path& newDir) const;
-
 
     /// Change the UID for this measure
     void changeUID();
