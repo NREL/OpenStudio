@@ -1443,7 +1443,7 @@ class DropZoneConceptImpl : public DropZoneConcept
   {
     if (m_reset) {
       DataSourceType obj = t_obj.cast<DataSourceType>();
-      m_reset(&obj);
+      (*m_reset)(&obj);
     }
   }
 
