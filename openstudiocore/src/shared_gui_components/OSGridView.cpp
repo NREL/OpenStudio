@@ -59,7 +59,7 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   m_gridLayout = new QGridLayout();
   m_gridLayout->setSpacing(0);
   m_gridLayout->setContentsMargins(0,0,0,0);
-  m_gridLayout->setSizeConstraint(QLayout::SetMinimumSize);
+  //m_gridLayout->setSizeConstraint(QLayout::SetMinimumSize);
   m_gridLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
   auto buttonGroup = new QButtonGroup();
@@ -217,7 +217,7 @@ void OSGridView::refreshAll()
   // NOTE This was added to make dissimilar widget types in a given column to
   // fill and justify correctly.  It appeared to be the most simple solution.
   auto widget = new QWidget();
-  widget->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
+  //widget->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
   m_gridLayout->addWidget(widget,0,m_gridController->columnCount());
 }
 

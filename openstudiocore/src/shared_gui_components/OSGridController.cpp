@@ -459,7 +459,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
     l->setContentsMargins(0,0,0,0);
     l->addWidget(t_widget, stretch, alignment);
     holder->setLayout(l);
-    layout->addWidget(holder);
+    layout->addWidget(holder, 0, Qt::AlignCenter | Qt::AlignLeft);
     ++numWidgets;
   };
 
@@ -541,6 +541,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
   } else {
     wrapper->setMinimumSize(QSize(170,widgetHeight * numWidgets));
   }
+  wrapper->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
   wrapper->setStyleSheet(this->cellStyle(row,column,false));
 
