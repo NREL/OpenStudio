@@ -878,16 +878,22 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
       addDropZoneColumn(QString(DEFAULTCONSTRUCTIONSET),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::defaultConstructionSet),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::setDefaultConstructionSet));
+        //CastNullAdapter<model::SpaceType>(&model::SpaceType::setDefaultConstructionSet),
+        //CastNullAdapter<model::SpaceType>(&model::SpaceType::resetDefaultConstructionSet));
 
     } else if (field == DEFAULTSCHEDULESET){
       addDropZoneColumn(QString(DEFAULTSCHEDULESET),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::defaultScheduleSet),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::setDefaultScheduleSet));
+        //CastNullAdapter<model::SpaceType>(&model::SpaceType::setDefaultScheduleSet),
+        //CastNullAdapter<model::SpaceType>(&model::SpaceType::resetDefaultScheduleSet));
 
     } else if (field == DESIGNSPECIFICATIONOUTDOORAIR){
       addDropZoneColumn(QString(DESIGNSPECIFICATIONOUTDOORAIR),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::designSpecificationOutdoorAir),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::setDesignSpecificationOutdoorAir));
+        //CastNullAdapter<model::SpaceType>(&model::SpaceType::setDesignSpecificationOutdoorAir),
+        //CastNullAdapter<model::SpaceType>(&model::SpaceType::resetDesignSpecificationOutdoorAir));
 
     } else if (field == RENDERINGCOLOR){
       addRenderingColorColumn(QString(RENDERINGCOLOR),

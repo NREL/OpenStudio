@@ -338,7 +338,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
         }
       );
 
-      std::function<void(model::ThermalZone *)> resetCoolingSchedule(
+      boost::optional<std::function<void(model::ThermalZone *)> > resetCoolingSchedule(
         [](model::ThermalZone * z) {
           if (boost::optional<model::ThermostatSetpointDualSetpoint> thermostat = z->thermostatSetpointDualSetpoint()) {
             thermostat->resetCoolingSetpointTemperatureSchedule();
@@ -348,9 +348,8 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
 
       addDropZoneColumn(QString(COOLINGTHERMOSTATSCHEDULE),
         coolingSchedule,
-        setCoolingSchedule);
-        //setCoolingSchedule, TODO use once dropzone reset is implemented
-        //resetCoolingSchedule);
+        setCoolingSchedule,
+        resetCoolingSchedule);
 
     }else if (field == HEATINGTHERMOSTATSCHEDULE){
       addDropZoneColumn(QString(HEATINGTHERMOSTATSCHEDULE),
@@ -361,6 +360,10 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                                      &model::ThermalZone::thermostatSetpointDualSetpoint,
                                      false));
 
+                        //ProxyAdapter(&openstudio::model::ThermostatSetpointDualSetpoint::setHeatingSetpointTemperatureSchedule,
+                        //            &model::ThermalZone::thermostatSetpointDualSetpoint,
+                        //            false));
+
     }else if (field == HUMIDIFYINGSETPOINTSCHEDULE){
       addDropZoneColumn(QString(HUMIDIFYINGSETPOINTSCHEDULE),
                         ProxyAdapter(&model::ZoneControlHumidistat::humidifyingRelativeHumiditySetpointSchedule,
@@ -369,6 +372,10 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                         ProxyAdapter(&openstudio::model::ZoneControlHumidistat::setHumidifyingRelativeHumiditySetpointSchedule,
                                      &model::ThermalZone::zoneControlHumidistat,
                                      false));
+
+                        //ProxyAdapter(&openstudio::model::ZoneControlHumidistat::setHumidifyingRelativeHumiditySetpointSchedule,
+                        //            &model::ThermalZone::zoneControlHumidistat,
+                        //            false));
 
     }else if (field == DEHUMIDIFYINGSETPOINTSCHEDULE){
       addDropZoneColumn(QString(DEHUMIDIFYINGSETPOINTSCHEDULE),
@@ -379,10 +386,15 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                                      &model::ThermalZone::zoneControlHumidistat,
                                      false));
 
+                        //ProxyAdapter(&model::ZoneControlHumidistat::resetDehumidifyingRelativeHumiditySetpointSchedule,
+                        //             &model::ThermalZone::zoneControlHumidistat,
+                        //             false));
+
     } else if (field == ZONEEQUIPMENT) {
       std::function<boost::optional<model::ModelObject>(model::ThermalZone *)>  getter;
       std::function<bool(model::ThermalZone *, const model::ModelObject &)> setter;
-      std::function<std::vector<model::ModelObject>( const model::ThermalZone &)> equipment(
+      std::function<void(model::ThermalZone *)> reset;
+      std::function<std::vector<model::ModelObject>(const model::ThermalZone &)> equipment(
         []( model::ThermalZone t ) {
         // we need to pass in a const &, but the function expects non-const, so let's copy the wrapper
         // object in the param list
@@ -397,7 +409,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
         equipment,
         true,
         QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::ModelObject, model::ThermalZone>(ZONEEQUIPMENT,
-        getter, setter))
+        getter, setter, reset))
         )
         );
 
