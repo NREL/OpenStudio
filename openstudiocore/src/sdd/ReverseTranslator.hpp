@@ -108,6 +108,7 @@ namespace sdd {
     boost::optional<openstudio::model::ModelObject> translateAirSystem(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateCoilCooling(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateCoilHeating(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateEvapClr(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateFan(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateThermalZone(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateTrmlUnit(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
@@ -125,6 +126,11 @@ namespace sdd {
 
     // Return the "ZnSys" element with the name znSysName.
     QDomElement findZnSysElement(const QString & znSysName,const QDomDocument & doc);
+
+    QDomElement findAirSysElement(const QString & airSysName,const QDomDocument & doc);
+
+    // Return the "TrmlUnit" element serving zoneName
+    QDomElement findTrmlUnitElementForZone(const QString & zoneName,const QDomDocument & doc);
 
     model::Schedule alwaysOnSchedule(openstudio::model::Model& model);
     boost::optional<model::Schedule> m_alwaysOnSchedule;

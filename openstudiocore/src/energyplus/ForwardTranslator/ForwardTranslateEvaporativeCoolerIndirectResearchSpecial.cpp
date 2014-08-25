@@ -134,6 +134,12 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeCoolerIndirect
     idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::BlowdownConcentrationRatio,d.get());
   }
 
+  // SecondaryAirInletNode
+  if( boost::optional<model::Node> node = modelObject.getImpl<model::detail::EvaporativeCoolerIndirectResearchSpecial_Impl>()->reliefAirInletNode() )
+  {
+    idfObject.setString(EvaporativeCooler_Indirect_ResearchSpecialFields::ReliefAirInletNodeName,node->name().get());
+  }
+
   return boost::optional<IdfObject>(idfObject);
 }
 

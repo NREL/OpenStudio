@@ -19,6 +19,8 @@
 
 #include "AirTerminalSingleDuctSeriesPIUReheat.hpp"
 #include "AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp"
+#include "AirLoopHVACReturnPlenum.hpp"
+#include "AirLoopHVACReturnPlenum_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include "PortList.hpp"
@@ -418,6 +420,45 @@ namespace detail {
 
 
     return modelObjectClone;
+  }
+
+  bool AirTerminalSingleDuctSeriesPIUReheat_Impl::setInducedAirPlenumZone(ThermalZone & plenumZone)
+  {
+    bool result = true;
+
+    if( ! plenumZone.isPlenum() )
+    {
+      result = false;
+    }
+
+    boost::optional<Node> t_secondaryAirInletNode;
+    if( result )
+    {
+      t_secondaryAirInletNode = secondaryAirInletNode();
+      if( ! t_secondaryAirInletNode )
+      {
+        result = false;
+      }
+    }
+
+    boost::optional<AirLoopHVACReturnPlenum> plenum;
+    if( result )
+    {
+      plenum = plenumZone.getImpl<detail::ThermalZone_Impl>()->airLoopHVACReturnPlenum();
+      if( ! plenum )
+      {
+        result = false;
+      }
+    }
+
+    if( result )
+    {
+      Model t_model = model();
+      PortList pl = plenum->getImpl<detail::AirLoopHVACReturnPlenum_Impl>()->inducedAirOutletPortList();
+      t_model.connect(pl,pl.nextPort(),t_secondaryAirInletNode.get(),t_secondaryAirInletNode->inletPort());
+    }
+
+    return result;
   }
 
 } // detail

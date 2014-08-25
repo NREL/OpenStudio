@@ -108,10 +108,10 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
 
   // Name
   std::string name;
-  s = modelObject.name();
+  s = modelObject.thermalZone().name();
   if(s)
   {
-    name = s.get();
+    name = s.get() + " Equipment List";
     idfObject.setName(name);
   }
 
