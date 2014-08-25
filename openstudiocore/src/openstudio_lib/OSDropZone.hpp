@@ -47,18 +47,19 @@ class OSVectorController;
 // that looks different because it is initially designed to go 
 // in a grid.  It also works differently because it binds to function pointers.
 // There is no use of VectorController like in OSDropZone.
-class OSDropZone3 : public QWidget
+class OSDropZone2 : public QWidget
 {
   Q_OBJECT
 
 public:
 
-  OSDropZone3();
-  ~OSDropZone3() {}
+  OSDropZone2();
+  ~OSDropZone2() {}
 
   void bind(model::ModelObject & modelObject,
             OptionalModelObjectGetter get,
-            ModelObjectSetter set);
+            ModelObjectSetter set,
+            boost::optional<NoFailAction> reset = boost::none);
 
   void unbind();
 
@@ -81,6 +82,7 @@ private:
 
   boost::optional<OptionalModelObjectGetter> m_get;
   boost::optional<ModelObjectSetter> m_set;
+  boost::optional<NoFailAction> m_reset;
   boost::optional<model::ModelObject> m_modelObject;
   QString m_text;
   OSItem * m_item = nullptr;

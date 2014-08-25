@@ -369,7 +369,7 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
     widget = unsignedEdit;
 
   } else if(QSharedPointer<DropZoneConcept> dropZoneConcept = t_baseConcept.dynamicCast<DropZoneConcept>()) {
-    OSDropZone3 * dropZone = new OSDropZone3();
+    OSDropZone2 * dropZone = new OSDropZone2();
 
     dropZone->bind(t_mo,
       OptionalModelObjectGetter(std::bind(&DropZoneConcept::get,dropZoneConcept.data(),t_mo)),

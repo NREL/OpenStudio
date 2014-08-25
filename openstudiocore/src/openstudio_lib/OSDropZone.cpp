@@ -560,7 +560,7 @@ void OSDropZoneItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
   }
 }
 
-OSDropZone3::OSDropZone3()
+OSDropZone2::OSDropZone2()
   : QWidget()
 {
   setObjectName("OSDropZone");
@@ -574,7 +574,7 @@ OSDropZone3::OSDropZone3()
   setFixedSize(75,25);
 }
 
-void OSDropZone3::refresh()
+void OSDropZone2::refresh()
 {
   //disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
   m_text.clear();
@@ -603,30 +603,33 @@ void OSDropZone3::refresh()
   update();
 }
 
-void OSDropZone3::bind(
+void OSDropZone2::bind(
   model::ModelObject & modelObject,
   OptionalModelObjectGetter get,
-  ModelObjectSetter set)
+  ModelObjectSetter set,
+  boost::optional<NoFailAction> reset)
 {
   m_get = get;
   m_set = set;
+  m_reset = reset;
   m_modelObject = modelObject;
   setAcceptDrops(true);
 
   refresh();
 }
 
-void OSDropZone3::unbind()
+void OSDropZone2::unbind()
 {
   m_modelObject.reset();
   m_get.reset();
   m_set.reset();
+  m_reset.reset();
   setAcceptDrops(false);
 
   refresh();
 }
 
-void OSDropZone3::paintEvent( QPaintEvent * event )
+void OSDropZone2::paintEvent( QPaintEvent * event )
 {
   QStyleOption opt;
   opt.init(this);
@@ -636,14 +639,14 @@ void OSDropZone3::paintEvent( QPaintEvent * event )
   p.drawText(rect(),Qt::AlignCenter,m_text);
 }
 
-void OSDropZone3::dragEnterEvent(QDragEnterEvent *event)
+void OSDropZone2::dragEnterEvent(QDragEnterEvent *event)
 {
   if(event->proposedAction() == Qt::CopyAction){
     event->accept();
   }
 }
 
-void OSDropZone3::dropEvent(QDropEvent *event)
+void OSDropZone2::dropEvent(QDropEvent *event)
 {
   event->accept();
 
@@ -673,7 +676,7 @@ void OSDropZone3::dropEvent(QDropEvent *event)
   }
 }
 
-void OSDropZone3::mouseReleaseEvent(QMouseEvent * event)
+void OSDropZone2::mouseReleaseEvent(QMouseEvent * event)
 {
   if (event->button() == Qt::LeftButton){
     event->accept();
