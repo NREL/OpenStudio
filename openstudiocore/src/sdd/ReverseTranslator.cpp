@@ -1178,10 +1178,12 @@ namespace sdd {
         var.setReportingFrequency(interval);
 
         std::vector<model::PlantLoop> plants = result->getModelObjects<model::PlantLoop>();
-        for( auto plant: plants ) {
+		for( std::vector<model::PlantLoop>::iterator it = plants.begin();
+			 it != plants.end();
+			 ++it) {
           var = model::OutputVariable("System Node Mass Flow Rate",*result);
           var.setReportingFrequency(interval);
-          var.setKeyValue(plant.demandOutletNode().name().get());
+          var.setKeyValue(it->demandOutletNode().name().get());
         }
       }
 
