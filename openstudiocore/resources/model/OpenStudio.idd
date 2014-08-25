@@ -8449,6 +8449,26 @@ OS:AirLoopHVAC:ZoneSplitter,
        \begin-extensible
        \object-list ConnectionNames
 
+OS:AirTerminal:SingleDuct:InletSideMixer,
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2, \field Name
+       \required-field
+       \reference ConnectionObject
+   A3, \field Terminal Unit Outlet
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+   A4, \field Terminal Unit Primary Air Inlet
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+   A5; \field Terminal Unit Secondary Air Inlet
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+
 OS:AirTerminal:SingleDuct:ConstantVolume:Reheat,
        \min-fields 5
   A1, \field Handle

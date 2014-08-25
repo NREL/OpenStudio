@@ -29,6 +29,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctUncontrolled.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVNoReheat.cpp
+  ForwardTranslator/ForwardTranslateAirTerminalSingleDuctInletSideMixer.cpp
   ForwardTranslator/ForwardTranslateAirWallMaterial.cpp
   ForwardTranslator/ForwardTranslateBlind.cpp
   ForwardTranslator/ForwardTranslateBoilerHotWater.cpp

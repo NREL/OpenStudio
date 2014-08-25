@@ -489,6 +489,13 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
   0,                                      !- Drift Loss Fraction
   0;                                      !- Blowdown Concentration Ratio
 
+OS:AirTerminal:SingleDuct:InletSideMixer,
+  {2894623e-fbd9-4162-bf36-c674ee542793}, !- Handle
+  Inlet Side Mixer, !- Name
+  ,                                       !- Terminal Unit Outlet
+  ,                                       !- Terminal Unit Primary Air Inlet
+  ;                                       !- Terminal Unit Secondary Air Inlet
+
 OS:AirTerminal:SingleDuct:ConstantVolume:Reheat,
   {36193791-ae10-4f59-90dc-2bc06cf598d2}, !- Handle
   AirTerminal CAV With Electric Reheat,   !- Name

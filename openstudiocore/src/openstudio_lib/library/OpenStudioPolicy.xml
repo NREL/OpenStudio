@@ -388,6 +388,11 @@
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_AirTerminal_SingleDuct_InletSideMixer">
+    <rule IddField="Terminal Unit Outlet" Access="HIDDEN"/>
+    <rule IddField="Terminal Unit Primary Air Inlet" Access="HIDDEN"/>
+    <rule IddField="Terminal Unit Secondary Air Inlet" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam">
     <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
     <rule IddField="Supply Air Inlet Node Name" Access="HIDDEN"/>

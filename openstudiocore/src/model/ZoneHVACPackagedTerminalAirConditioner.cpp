@@ -137,12 +137,12 @@ namespace detail {
     return result;
   }
 
-  unsigned ZoneHVACPackagedTerminalAirConditioner_Impl::inletPort()
+  unsigned ZoneHVACPackagedTerminalAirConditioner_Impl::inletPort() const
   {
     return OS_ZoneHVAC_PackagedTerminalAirConditionerFields::AirInletNodeName;
   }
 
-  unsigned ZoneHVACPackagedTerminalAirConditioner_Impl::outletPort()
+  unsigned ZoneHVACPackagedTerminalAirConditioner_Impl::outletPort() const
   {
     return OS_ZoneHVAC_PackagedTerminalAirConditionerFields::AirOutletNodeName;
   }
