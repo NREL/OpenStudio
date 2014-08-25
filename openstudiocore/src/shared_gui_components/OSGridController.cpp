@@ -446,20 +446,21 @@ QWidget * OSGridController::widgetAt(int row, int column)
   OS_ASSERT(static_cast<int>(m_modelObjects.size()) > modelObjectRow);
   OS_ASSERT(static_cast<int>(m_baseConcepts.size()) > column);
 
-  QWidget * widget = nullptr;
   auto layout = new QVBoxLayout();
-  QSize minSize;
+  const int widgetHeight = 45;
   int numWidgets = 0;
 
-  auto addWidget = [&](QWidget *t_widget){
-    QWidget *p = new QWidget();
-    QVBoxLayout *l = new QVBoxLayout();
-    l->addWidget(t_widget, 0, Qt::AlignVCenter | Qt::AlignJustify);
-    p->setLayout(l);
-    layout->addWidget(p);
+  auto addWidget = [&](QWidget *t_widget, int stretch = 0, Qt::Alignment alignment = 0)
+  {
+    auto holder = new QWidget();
+    holder->setMinimumHeight(widgetHeight);
+    auto l = new QVBoxLayout();
+    l->setSpacing(0);
+    l->setContentsMargins(0,0,0,0);
+    l->addWidget(t_widget, stretch, alignment);
+    holder->setLayout(l);
+    layout->addWidget(holder);
     ++numWidgets;
-    minSize.expandedTo(p->minimumSize());
-    minSize.expandedTo(t_widget->minimumSize());
   };
 
   if(m_hasHorizontalHeader && row == 0){
@@ -468,8 +469,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
       // Each concept should have its own column
       OS_ASSERT(m_horizontalHeader.size() == m_baseConcepts.size());
     }
-    widget = m_horizontalHeader.at(column);
-    addWidget(widget);
+    addWidget(m_horizontalHeader.at(column),0,Qt::AlignTop | Qt::AlignCenter);
   } else {
 
     model::ModelObject mo = m_modelObjects[modelObjectRow];
@@ -505,7 +505,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
         // widget is evenly laid out relative to its friends in the adjacent columns
         // Fix this.
         addWidget(new QWidget());
-      } 
+      }
 
       if (dataSource->source().dropZoneConcept())
       {
@@ -525,8 +525,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
       // This case is exactly what it used to do before the DataSource idea was added.
 
       // just the one
-      widget = makeWidget(mo, baseConcept);
-      addWidget(widget);
+      addWidget(makeWidget(mo, baseConcept),0,Qt::AlignTop | Qt::AlignCenter);
     }
   }
 
@@ -538,23 +537,19 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
   wrapper->setObjectName("TableCell");
   if(row == 0){
-    wrapper->setMinimumSize(QSize(140,70));
+    wrapper->setMinimumSize(QSize(170,70));
   } else {
-//    wrapper->setMinimumSize(QSize(140,std::max(34, minSize.height())  * numWidgets));
-    wrapper->setMinimumSize(QSize(140,std::max(70, minSize.height())  * numWidgets));
+    wrapper->setMinimumSize(QSize(170,widgetHeight * numWidgets));
   }
 
   wrapper->setStyleSheet(this->cellStyle(row,column,false));
 
   layout->setSpacing(0);
-  /*
   if(row == 0){
     layout->setContentsMargins(0,0,0,0);
   } else {
     layout->setContentsMargins(5,5,5,5);
   }
-  */
-  layout->setContentsMargins(0,0,0,0);
   wrapper->setLayout(layout);
 
   return wrapper;
