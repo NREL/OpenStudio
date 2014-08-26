@@ -369,6 +369,10 @@ namespace openstudio{
     return BCLMeasure(patApplicationMeasuresDir() / toPath("ReplaceModel"));
   }
 
+  BCLMeasure BCLMeasure::reportRequestMeasure() {
+    return BCLMeasure(patApplicationMeasuresDir() / toPath("ReportRequest"));
+  }
+
   BCLMeasure BCLMeasure::standardReportMeasure() {
     return BCLMeasure(patApplicationMeasuresDir() / toPath("StandardReports"));
   }

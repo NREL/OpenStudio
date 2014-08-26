@@ -26,6 +26,9 @@
 #include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
+
+  class IdfObject;
+
 namespace ruleset {
 
 /** ReportingUserScript is an abstract base class for UserScripts that generate reports. */
@@ -59,6 +62,15 @@ class RULESET_API ReportingUserScript : public UserScript {
   virtual bool run(OSRunner& runner,
                    const std::map<std::string, OSArgument>& user_arguments) const;
 
+  /** This method is called on all reporting measures immediately before the E+
+   *  simulation. The code that injects these objects into the IDF checks that
+   *  only objects of allowed types are added to prevent changes that impact
+   *  energy use. The injector code also prevents duplicate report requests. 
+   *  The default implementation of this method returns an empty vector.
+   *  The runner allows the user to load the last osm/idf and to log messages.
+   * The argument map is available with the arguments for the reporting measure. */
+  virtual std::vector<IdfObject> energyPlusOutputRequests(OSRunner& runner,
+                                                          const std::map<std::string, OSArgument>& user_arguments) const;
   //@}
  protected:
   ReportingUserScript() {}

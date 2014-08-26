@@ -561,6 +561,7 @@ namespace openstudio {
         analysisdriver::AnalysisRunOptions runOptions = standardRunOptions(*p);
         std::vector<runmanager::WorkItem> workitems(prob.createWorkflow(p->baselineDataPoint(), runOptions.rubyIncludeDirectory()).toWorkItems());
 
+        openstudio::BCLMeasure reportRequestMeasure = openstudio::BCLMeasure::reportRequestMeasure();
         openstudio::BCLMeasure standardReportsMeasure = openstudio::BCLMeasure::standardReportMeasure();
         openstudio::BCLMeasure calibrationReportsMeasure = openstudio::BCLMeasure::calibrationReportMeasure();
 
@@ -601,7 +602,7 @@ namespace openstudio {
               }
             }
 
-            assert(modeltoidffound);
+            OS_ASSERT(modeltoidffound);
           } else {
             QMessageBox::information(parent, 
                 "Error with initiating simulation.",
@@ -609,6 +610,10 @@ namespace openstudio {
                 QMessageBox::Ok);
           }
         }
+
+        // add the report request measure before energyplus but after any other energyplus measures
+        test = addReportRequestMeasureWorkItem(workitems, reportRequestMeasure);
+        OS_ASSERT(test);
 
         runmanager::Workflow wf(workitems);
         wf.add(co.getTools());
@@ -713,6 +718,65 @@ namespace openstudio {
           }
         } catch (const std::exception &) {
         }
+      }
+    }
+
+    return false;
+  }
+
+  bool addReportRequestMeasureWorkItem(std::vector<runmanager::WorkItem>& workItems, const openstudio::BCLMeasure& bclMeasure)
+  {
+    // loop over all reporting measures and gather arguments
+    bool pastEnergyPlus = false;
+    std::string reportRequestManagerArgs = "[";
+    for (std::vector<runmanager::WorkItem>::iterator itr = workItems.begin();
+         itr != workItems.end();
+         ++itr)
+    {
+      if (itr->type == openstudio::runmanager::JobType::EnergyPlus){
+        pastEnergyPlus = true;
+      } if (pastEnergyPlus && itr->type == openstudio::runmanager::JobType::UserScript){
+        reportRequestManagerArgs += itr->toJSON() + ",";
+      }
+    }
+    if (reportRequestManagerArgs.size() > 1){
+      // get rid of trailing ','
+      reportRequestManagerArgs.pop_back();
+    }
+    reportRequestManagerArgs += "]";
+
+    ruleset::OSArgument argument = ruleset::OSArgument::makeStringArgument("json_work_items", true, false);
+    argument.setValue(reportRequestManagerArgs);
+
+    std::vector<ruleset::OSArgument> arguments;
+    arguments.push_back(argument);
+
+    runmanager::RubyJobBuilder rubyJobBuilder(bclMeasure, arguments);
+
+    rubyJobBuilder.addInputFile(openstudio::runmanager::FileSelection("last"),
+                                openstudio::runmanager::FileSource("All"),
+                                ".*\\.idf",
+                                "in.idf");
+    rubyJobBuilder.addInputFile(openstudio::runmanager::FileSelection("last"),
+                                openstudio::runmanager::FileSource("All"),
+                                ".*\\.osm",
+                                "in.osm");
+
+    // be able to access OpenStudio Ruby bindings
+    rubyJobBuilder.setIncludeDir(getOpenStudioRubyIncludePath());
+
+
+    runmanager::WorkItem workItem = rubyJobBuilder.toWorkItem();
+
+    for (std::vector<runmanager::WorkItem>::iterator itr = workItems.begin();
+         itr != workItems.end();
+         ++itr)
+    {
+      // currently we are doing ExpandObjects->EnergyPlusPreProcess->EnergyPlus
+      if (itr->type == openstudio::runmanager::JobType::ExpandObjects)
+      {
+        workItems.insert(itr, workItem);
+        return true;
       }
     }
 

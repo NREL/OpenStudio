@@ -96,6 +96,8 @@ namespace openstudio{
 
     static BCLMeasure alternativeModelMeasure();
 
+    static BCLMeasure reportRequestMeasure();
+
     static BCLMeasure standardReportMeasure();
 
     static BCLMeasure calibrationReportMeasure();
