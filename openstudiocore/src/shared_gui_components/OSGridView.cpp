@@ -171,6 +171,14 @@ void OSGridView::refresh(int row, int column)
   addWidget(row,column);
 }
 
+void OSGridView::refreshRow(int row)
+{
+  for( int j = 0; j < m_gridController->columnCount(); j++ )
+  {
+    refresh(row, j);
+  }
+}
+
 void OSGridView::removeWidget(int row, int column)
 {
   QLayoutItem * item = m_gridLayout->itemAtPosition(row,column);
@@ -183,7 +191,7 @@ void OSGridView::removeWidget(int row, int column)
 
   delete widget;
 
-  delete item;
+//  delete item;
 }
 
 void OSGridView::deleteAll()
@@ -211,6 +219,10 @@ void OSGridView::refreshAll()
 
     for( int i = 0; i < m_gridController->rowCount(); i++ )
     {
+      if (i > 0)
+      {
+        //connect(m_gridController->modelObject(i).getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, std::bind(&OSGridView::refreshRow, this, i));
+      }
       for( int j = 0; j < m_gridController->columnCount(); j++ )
       {
         addWidget(i,j);

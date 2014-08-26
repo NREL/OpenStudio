@@ -663,12 +663,18 @@ void OSDropZone2::dropEvent(QDropEvent *event)
     if(modelObject){
       if(OSAppBase::instance()->currentDocument()->fromComponentLibrary(itemId)){
         modelObject = modelObject->clone(m_modelObject->model());
-        (*m_set)(modelObject.get());
+        if (m_set)
+        {
+          (*m_set)(modelObject.get());
+        }
         refresh();
       }
       else
       {
-        (*m_set)(modelObject.get());
+        if (m_set)
+        {
+          (*m_set)(modelObject.get());
+        }
         refresh();
       }
     }

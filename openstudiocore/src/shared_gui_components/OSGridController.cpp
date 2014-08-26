@@ -83,6 +83,8 @@ OSGridController::OSGridController(bool isIP,
   bool isConnected = false;
   isConnected = connect(m_cellBtnGrp, SIGNAL(buttonClicked(int)), this, SLOT(cellChecked(int)));
   OS_ASSERT(isConnected);
+
+  connect(model.getImpl<openstudio::model::detail::Model_Impl>().get(), &openstudio::model::detail::Model_Impl::onChange, this, &openstudio::OSGridController::reset, Qt::QueuedConnection);
 }
 
 OSGridController::~OSGridController()
