@@ -20,20 +20,14 @@
 #ifndef MODEL_COOLINGTOWERTWOSPEED_HPP
 #define MODEL_COOLINGTOWERTWOSPEED_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Connection;
-class Connection;
 class Schedule;
-class Schedule;
-class WaterStorageTank;
-class Connection;
 
 namespace detail {
 
@@ -65,12 +59,6 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
 
   /** @name Getters */
   //@{
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection waterInletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection waterOutletNode() const;
 
   boost::optional<double> designWaterFlowRate() const;
 
@@ -166,7 +154,6 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
 
   bool isBasinHeaterSetpointTemperatureDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> basinHeaterOperatingSchedule() const;
 
   boost::optional<std::string> evaporationLossMode() const;
@@ -185,14 +172,9 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
 
   bool isBlowdownConcentrationRatioDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> blowdownMakeupWaterUsageSchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: WaterStorageTank.
-  boost::optional<WaterStorageTank> supplyWaterStorageTank() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  boost::optional<Connection> outdoorAirInletNode() const;
+  // boost::optional<WaterStorageTank> supplyWaterStorageTank() const;
 
   int numberofCells() const;
 
@@ -217,12 +199,6 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
   //@}
   /** @name Setters */
   //@{
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setWaterInletNode(const Connection& connection);
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setWaterOutletNode(const Connection& connection);
 
   bool setDesignWaterFlowRate(double designWaterFlowRate);
 
@@ -330,7 +306,6 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
 
   void resetBasinHeaterSetpointTemperature();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setBasinHeaterOperatingSchedule(Schedule& schedule);
 
   void resetBasinHeaterOperatingSchedule();
@@ -355,20 +330,13 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
 
   void resetBlowdownConcentrationRatio();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setBlowdownMakeupWaterUsageSchedule(Schedule& schedule);
 
   void resetBlowdownMakeupWaterUsageSchedule();
 
-  // TODO: Check argument type. From object lists, some candidates are: WaterStorageTank.
-  bool setSupplyWaterStorageTank(const WaterStorageTank& waterStorageTank);
+  // bool setSupplyWaterStorageTank(const WaterStorageTank& waterStorageTank);
 
-  void resetSupplyWaterStorageTank();
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setOutdoorAirInletNode(const Connection& connection);
-
-  void resetOutdoorAirInletNode();
+  // void resetSupplyWaterStorageTank();
 
   bool setNumberofCells(int numberofCells);
 

@@ -17,31 +17,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CoolingTowerTwoSpeed.hpp>
-#include <model/CoolingTowerTwoSpeed_Impl.hpp>
+#include "CoolingTowerTwoSpeed.hpp"
+#include "CoolingTowerTwoSpeed_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/WaterStorageTank.hpp>
-#include <model/WaterStorageTank_Impl.hpp>
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
+#include "PlantLoop.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_CoolingTower_TwoSpeed_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
-
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -99,20 +87,27 @@ namespace detail {
     return result;
   }
 
-  Connection CoolingTowerTwoSpeed_Impl::waterInletNode() const {
-    boost::optional<Connection> value = optionalWaterInletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Water Inlet Node attached.");
-    }
-    return value.get();
+  unsigned CoolingTowerTwoSpeed_Impl::inletPort()
+  {
+    return OS_CoolingTower_TwoSpeedFields::WaterInletNode;
   }
 
-  Connection CoolingTowerTwoSpeed_Impl::waterOutletNode() const {
-    boost::optional<Connection> value = optionalWaterOutletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Water Outlet Node attached.");
+  unsigned CoolingTowerTwoSpeed_Impl::outletPort()
+  {
+    return OS_CoolingTower_TwoSpeedFields::WaterOutletNode;
+  }
+
+  bool CoolingTowerTwoSpeed_Impl::addToNode(Node & node)
+  {
+    if( boost::optional<PlantLoop> plant = node.plantLoop() )
+    {
+      if( plant->supplyComponent(node.handle()) )
+      {
+        return StraightComponent_Impl::addToNode(node);
+      }
     }
-    return value.get();
+
+    return false;
   }
 
   boost::optional<double> CoolingTowerTwoSpeed_Impl::designWaterFlowRate() const {
@@ -426,13 +421,9 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_CoolingTower_TwoSpeedFields::BlowdownMakeupWaterUsageScheduleName);
   }
 
-  boost::optional<WaterStorageTank> CoolingTowerTwoSpeed_Impl::supplyWaterStorageTank() const {
-    return getObject<ModelObject>().getModelObjectTarget<WaterStorageTank>(OS_CoolingTower_TwoSpeedFields::SupplyWaterStorageTankName);
-  }
-
-  boost::optional<Connection> CoolingTowerTwoSpeed_Impl::outdoorAirInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_CoolingTower_TwoSpeedFields::OutdoorAirInletNodeName);
-  }
+  // boost::optional<WaterStorageTank> CoolingTowerTwoSpeed_Impl::supplyWaterStorageTank() const {
+  //   return getObject<ModelObject>().getModelObjectTarget<WaterStorageTank>(OS_CoolingTower_TwoSpeedFields::SupplyWaterStorageTankName);
+  // }
 
   int CoolingTowerTwoSpeed_Impl::numberofCells() const {
     boost::optional<int> value = getInt(OS_CoolingTower_TwoSpeedFields::NumberofCells,true);
@@ -482,16 +473,6 @@ namespace detail {
 
   bool CoolingTowerTwoSpeed_Impl::isSizingFactorDefaulted() const {
     return isEmpty(OS_CoolingTower_TwoSpeedFields::SizingFactor);
-  }
-
-  bool CoolingTowerTwoSpeed_Impl::setWaterInletNode(const Connection& connection) {
-    bool result = setPointer(OS_CoolingTower_TwoSpeedFields::WaterInletNodeName, connection.handle());
-    return result;
-  }
-
-  bool CoolingTowerTwoSpeed_Impl::setWaterOutletNode(const Connection& connection) {
-    bool result = setPointer(OS_CoolingTower_TwoSpeedFields::WaterOutletNodeName, connection.handle());
-    return result;
   }
 
   bool CoolingTowerTwoSpeed_Impl::setDesignWaterFlowRate(boost::optional<double> designWaterFlowRate) {
@@ -917,39 +898,22 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool CoolingTowerTwoSpeed_Impl::setSupplyWaterStorageTank(const boost::optional<WaterStorageTank>& waterStorageTank) {
-    bool result(false);
-    if (waterStorageTank) {
-      result = setPointer(OS_CoolingTower_TwoSpeedFields::SupplyWaterStorageTankName, waterStorageTank.get().handle());
-    }
-    else {
-      resetSupplyWaterStorageTank();
-      result = true;
-    }
-    return result;
-  }
+  // bool CoolingTowerTwoSpeed_Impl::setSupplyWaterStorageTank(const boost::optional<WaterStorageTank>& waterStorageTank) {
+  //   bool result(false);
+  //   if (waterStorageTank) {
+  //     result = setPointer(OS_CoolingTower_TwoSpeedFields::SupplyWaterStorageTankName, waterStorageTank.get().handle());
+  //   }
+  //   else {
+  //     resetSupplyWaterStorageTank();
+  //     result = true;
+  //   }
+  //   return result;
+  // }
 
-  void CoolingTowerTwoSpeed_Impl::resetSupplyWaterStorageTank() {
-    bool result = setString(OS_CoolingTower_TwoSpeedFields::SupplyWaterStorageTankName, "");
-    OS_ASSERT(result);
-  }
-
-  bool CoolingTowerTwoSpeed_Impl::setOutdoorAirInletNode(const boost::optional<Connection>& connection) {
-    bool result(false);
-    if (connection) {
-      result = setPointer(OS_CoolingTower_TwoSpeedFields::OutdoorAirInletNodeName, connection.get().handle());
-    }
-    else {
-      resetOutdoorAirInletNode();
-      result = true;
-    }
-    return result;
-  }
-
-  void CoolingTowerTwoSpeed_Impl::resetOutdoorAirInletNode() {
-    bool result = setString(OS_CoolingTower_TwoSpeedFields::OutdoorAirInletNodeName, "");
-    OS_ASSERT(result);
-  }
+  // void CoolingTowerTwoSpeed_Impl::resetSupplyWaterStorageTank() {
+  //   bool result = setString(OS_CoolingTower_TwoSpeedFields::SupplyWaterStorageTankName, "");
+  //   OS_ASSERT(result);
+  // }
 
   bool CoolingTowerTwoSpeed_Impl::setNumberofCells(int numberofCells) {
     bool result = setInt(OS_CoolingTower_TwoSpeedFields::NumberofCells, numberofCells);
@@ -1001,14 +965,6 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  boost::optional<Connection> CoolingTowerTwoSpeed_Impl::optionalWaterInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_CoolingTower_TwoSpeedFields::WaterInletNodeName);
-  }
-
-  boost::optional<Connection> CoolingTowerTwoSpeed_Impl::optionalWaterOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_CoolingTower_TwoSpeedFields::WaterOutletNodeName);
-  }
-
 } // detail
 
 CoolingTowerTwoSpeed::CoolingTowerTwoSpeed(const Model& model)
@@ -1058,14 +1014,6 @@ std::vector<std::string> CoolingTowerTwoSpeed::blowdownCalculationModeValues() {
 std::vector<std::string> CoolingTowerTwoSpeed::cellControlValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_CoolingTower_TwoSpeedFields::CellControl);
-}
-
-Connection CoolingTowerTwoSpeed::waterInletNode() const {
-  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->waterInletNode();
-}
-
-Connection CoolingTowerTwoSpeed::waterOutletNode() const {
-  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->waterOutletNode();
 }
 
 boost::optional<double> CoolingTowerTwoSpeed::designWaterFlowRate() const {
@@ -1296,13 +1244,9 @@ boost::optional<Schedule> CoolingTowerTwoSpeed::blowdownMakeupWaterUsageSchedule
   return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->blowdownMakeupWaterUsageSchedule();
 }
 
-boost::optional<WaterStorageTank> CoolingTowerTwoSpeed::supplyWaterStorageTank() const {
-  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->supplyWaterStorageTank();
-}
-
-boost::optional<Connection> CoolingTowerTwoSpeed::outdoorAirInletNode() const {
-  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->outdoorAirInletNode();
-}
+// boost::optional<WaterStorageTank> CoolingTowerTwoSpeed::supplyWaterStorageTank() const {
+//   return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->supplyWaterStorageTank();
+// }
 
 int CoolingTowerTwoSpeed::numberofCells() const {
   return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->numberofCells();
@@ -1342,14 +1286,6 @@ double CoolingTowerTwoSpeed::sizingFactor() const {
 
 bool CoolingTowerTwoSpeed::isSizingFactorDefaulted() const {
   return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->isSizingFactorDefaulted();
-}
-
-bool CoolingTowerTwoSpeed::setWaterInletNode(const Connection& connection) {
-  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->setWaterInletNode(connection);
-}
-
-bool CoolingTowerTwoSpeed::setWaterOutletNode(const Connection& connection) {
-  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->setWaterOutletNode(connection);
 }
 
 bool CoolingTowerTwoSpeed::setDesignWaterFlowRate(double designWaterFlowRate) {
@@ -1620,21 +1556,13 @@ void CoolingTowerTwoSpeed::resetBlowdownMakeupWaterUsageSchedule() {
   getImpl<detail::CoolingTowerTwoSpeed_Impl>()->resetBlowdownMakeupWaterUsageSchedule();
 }
 
-bool CoolingTowerTwoSpeed::setSupplyWaterStorageTank(const WaterStorageTank& waterStorageTank) {
-  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->setSupplyWaterStorageTank(waterStorageTank);
-}
+// bool CoolingTowerTwoSpeed::setSupplyWaterStorageTank(const WaterStorageTank& waterStorageTank) {
+//   return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->setSupplyWaterStorageTank(waterStorageTank);
+// }
 
-void CoolingTowerTwoSpeed::resetSupplyWaterStorageTank() {
-  getImpl<detail::CoolingTowerTwoSpeed_Impl>()->resetSupplyWaterStorageTank();
-}
-
-bool CoolingTowerTwoSpeed::setOutdoorAirInletNode(const Connection& connection) {
-  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->setOutdoorAirInletNode(connection);
-}
-
-void CoolingTowerTwoSpeed::resetOutdoorAirInletNode() {
-  getImpl<detail::CoolingTowerTwoSpeed_Impl>()->resetOutdoorAirInletNode();
-}
+// void CoolingTowerTwoSpeed::resetSupplyWaterStorageTank() {
+//   getImpl<detail::CoolingTowerTwoSpeed_Impl>()->resetSupplyWaterStorageTank();
+// }
 
 bool CoolingTowerTwoSpeed::setNumberofCells(int numberofCells) {
   return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->setNumberofCells(numberofCells);

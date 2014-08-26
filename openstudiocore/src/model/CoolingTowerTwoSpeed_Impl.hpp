@@ -20,25 +20,18 @@
 #ifndef MODEL_COOLINGTOWERTWOSPEED_IMPL_HPP
 #define MODEL_COOLINGTOWERTWOSPEED_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Connection;
-class Connection;
 class Schedule;
-class Schedule;
-class WaterStorageTank;
-class Connection;
 
 namespace detail {
 
   /** CoolingTowerTwoSpeed_Impl is a StraightComponent_Impl that is the implementation class for CoolingTowerTwoSpeed.*/
   class MODEL_API CoolingTowerTwoSpeed_Impl : public StraightComponent_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -67,15 +60,15 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
 
+    virtual unsigned inletPort();
+
+    virtual unsigned outletPort();
+
+    bool addToNode(Node & node);
+
     //@}
     /** @name Getters */
     //@{
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection waterInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection waterOutletNode() const;
 
     boost::optional<double> designWaterFlowRate() const;
 
@@ -171,7 +164,6 @@ namespace detail {
 
     bool isBasinHeaterSetpointTemperatureDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> basinHeaterOperatingSchedule() const;
 
     boost::optional<std::string> evaporationLossMode() const;
@@ -190,14 +182,9 @@ namespace detail {
 
     bool isBlowdownConcentrationRatioDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> blowdownMakeupWaterUsageSchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: WaterStorageTank.
-    boost::optional<WaterStorageTank> supplyWaterStorageTank() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> outdoorAirInletNode() const;
+    // boost::optional<WaterStorageTank> supplyWaterStorageTank() const;
 
     int numberofCells() const;
 
@@ -222,12 +209,6 @@ namespace detail {
     //@}
     /** @name Setters */
     //@{
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setWaterInletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setWaterOutletNode(const Connection& connection);
 
     bool setDesignWaterFlowRate(boost::optional<double> designWaterFlowRate);
 
@@ -335,7 +316,6 @@ namespace detail {
 
     void resetBasinHeaterSetpointTemperature();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setBasinHeaterOperatingSchedule(Schedule& schedule);
 
     void resetBasinHeaterOperatingSchedule();
@@ -360,20 +340,13 @@ namespace detail {
 
     void resetBlowdownConcentrationRatio();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setBlowdownMakeupWaterUsageSchedule(Schedule& schedule);
 
     void resetBlowdownMakeupWaterUsageSchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: WaterStorageTank.
-    bool setSupplyWaterStorageTank(const boost::optional<WaterStorageTank>& waterStorageTank);
+    // bool setSupplyWaterStorageTank(const boost::optional<WaterStorageTank>& waterStorageTank);
 
-    void resetSupplyWaterStorageTank();
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setOutdoorAirInletNode(const boost::optional<Connection>& connection);
-
-    void resetOutdoorAirInletNode();
+    // void resetSupplyWaterStorageTank();
 
     bool setNumberofCells(int numberofCells);
 
@@ -403,13 +376,6 @@ namespace detail {
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.CoolingTowerTwoSpeed");
-
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Connection> optionalWaterInletNode() const;
-    boost::optional<Connection> optionalWaterOutletNode() const;
   };
 
 } // detail
