@@ -718,9 +718,9 @@ namespace openstudio{
         fileString = docIn.readAll();
         fileString.replace(toQString(oldMeasureType.valueName()), toQString(newMeasureType.valueName()));
         fileString.replace(toQString(oldClassName), toQString(newClassName));
-        fileString.replace(QRegularExpression("$(\\s?)def name(.*?)end", opts), nameFunction);
-        fileString.replace(QRegularExpression("$(\\s?)def description(.*?)end", opts), descriptionFunction);
-        fileString.replace(QRegularExpression("$(\\s?)def modeler_description(.*?)end", opts), modelerDescriptionFunction);
+        fileString.replace(QRegularExpression("^(\\s+)def name(.*?)end", opts), nameFunction);
+        fileString.replace(QRegularExpression("^(\\s+)def description(.*?)end", opts), descriptionFunction);
+        fileString.replace(QRegularExpression("^(\\s+)def modeler_description(.*?)end", opts), modelerDescriptionFunction);
         file.close();
 
         if (file.open(QIODevice::WriteOnly)){
