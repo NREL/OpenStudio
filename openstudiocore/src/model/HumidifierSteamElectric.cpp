@@ -17,26 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/HumidifierSteamElectric.hpp>
-#include <model/HumidifierSteamElectric_Impl.hpp>
+#include "HumidifierSteamElectric.hpp"
+#include "HumidifierSteamElectric_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
-#include <model/WaterStorageTank.hpp>
-#include <model/WaterStorageTank_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/OS_Humidifier_Steam_Electric_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
-
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -79,7 +70,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> HumidifierSteamElectric_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -88,6 +78,16 @@ namespace detail {
       result.push_back(ScheduleTypeKey("HumidifierSteamElectric","Availability"));
     }
     return result;
+  }
+
+  unsigned HumidifierSteamElectric_Impl::inletPort()
+  {
+    return OS_Humidifier_Steam_ElectricFields::AirInletNodeName;
+  }
+
+  unsigned HumidifierSteamElectric_Impl::outletPort()
+  {
+    return OS_Humidifier_Steam_ElectricFields::AirOutletNodeName;
   }
 
   boost::optional<Schedule> HumidifierSteamElectric_Impl::availabilitySchedule() const {
@@ -119,17 +119,9 @@ namespace detail {
     return getDouble(OS_Humidifier_Steam_ElectricFields::StandbyPower,true);
   }
 
-  boost::optional<Connection> HumidifierSteamElectric_Impl::airInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Humidifier_Steam_ElectricFields::AirInletNodeName);
-  }
-
-  boost::optional<Connection> HumidifierSteamElectric_Impl::airOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Humidifier_Steam_ElectricFields::AirOutletNodeName);
-  }
-
-  boost::optional<WaterStorageTank> HumidifierSteamElectric_Impl::waterStorageTank() const {
-    return getObject<ModelObject>().getModelObjectTarget<WaterStorageTank>(OS_Humidifier_Steam_ElectricFields::WaterStorageTankName);
-  }
+  // boost::optional<WaterStorageTank> HumidifierSteamElectric_Impl::waterStorageTank() const {
+  //   return getObject<ModelObject>().getModelObjectTarget<WaterStorageTank>(OS_Humidifier_Steam_ElectricFields::WaterStorageTankName);
+  // }
 
   bool HumidifierSteamElectric_Impl::setAvailabilitySchedule(Schedule& schedule) {
     bool result = setSchedule(OS_Humidifier_Steam_ElectricFields::AvailabilityScheduleName,
@@ -217,56 +209,22 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool HumidifierSteamElectric_Impl::setAirInletNode(const boost::optional<Connection>& connection) {
-    bool result(false);
-    if (connection) {
-      result = setPointer(OS_Humidifier_Steam_ElectricFields::AirInletNodeName, connection.get().handle());
-    }
-    else {
-      resetAirInletNode();
-      result = true;
-    }
-    return result;
-  }
+  // bool HumidifierSteamElectric_Impl::setWaterStorageTank(const boost::optional<WaterStorageTank>& waterStorageTank) {
+  //   bool result(false);
+  //   if (waterStorageTank) {
+  //     result = setPointer(OS_Humidifier_Steam_ElectricFields::WaterStorageTankName, waterStorageTank.get().handle());
+  //   }
+  //   else {
+  //     resetWaterStorageTank();
+  //     result = true;
+  //   }
+  //   return result;
+  // }
 
-  void HumidifierSteamElectric_Impl::resetAirInletNode() {
-    bool result = setString(OS_Humidifier_Steam_ElectricFields::AirInletNodeName, "");
-    OS_ASSERT(result);
-  }
-
-  bool HumidifierSteamElectric_Impl::setAirOutletNode(const boost::optional<Connection>& connection) {
-    bool result(false);
-    if (connection) {
-      result = setPointer(OS_Humidifier_Steam_ElectricFields::AirOutletNodeName, connection.get().handle());
-    }
-    else {
-      resetAirOutletNode();
-      result = true;
-    }
-    return result;
-  }
-
-  void HumidifierSteamElectric_Impl::resetAirOutletNode() {
-    bool result = setString(OS_Humidifier_Steam_ElectricFields::AirOutletNodeName, "");
-    OS_ASSERT(result);
-  }
-
-  bool HumidifierSteamElectric_Impl::setWaterStorageTank(const boost::optional<WaterStorageTank>& waterStorageTank) {
-    bool result(false);
-    if (waterStorageTank) {
-      result = setPointer(OS_Humidifier_Steam_ElectricFields::WaterStorageTankName, waterStorageTank.get().handle());
-    }
-    else {
-      resetWaterStorageTank();
-      result = true;
-    }
-    return result;
-  }
-
-  void HumidifierSteamElectric_Impl::resetWaterStorageTank() {
-    bool result = setString(OS_Humidifier_Steam_ElectricFields::WaterStorageTankName, "");
-    OS_ASSERT(result);
-  }
+  // void HumidifierSteamElectric_Impl::resetWaterStorageTank() {
+  //   bool result = setString(OS_Humidifier_Steam_ElectricFields::WaterStorageTankName, "");
+  //   OS_ASSERT(result);
+  // }
 
 } // detail
 
@@ -274,11 +232,6 @@ HumidifierSteamElectric::HumidifierSteamElectric(const Model& model)
   : StraightComponent(HumidifierSteamElectric::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::HumidifierSteamElectric_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
 }
 
 IddObjectType HumidifierSteamElectric::iddObjectType() {
@@ -309,17 +262,9 @@ boost::optional<double> HumidifierSteamElectric::standbyPower() const {
   return getImpl<detail::HumidifierSteamElectric_Impl>()->standbyPower();
 }
 
-boost::optional<Connection> HumidifierSteamElectric::airInletNode() const {
-  return getImpl<detail::HumidifierSteamElectric_Impl>()->airInletNode();
-}
-
-boost::optional<Connection> HumidifierSteamElectric::airOutletNode() const {
-  return getImpl<detail::HumidifierSteamElectric_Impl>()->airOutletNode();
-}
-
-boost::optional<WaterStorageTank> HumidifierSteamElectric::waterStorageTank() const {
-  return getImpl<detail::HumidifierSteamElectric_Impl>()->waterStorageTank();
-}
+// boost::optional<WaterStorageTank> HumidifierSteamElectric::waterStorageTank() const {
+//   return getImpl<detail::HumidifierSteamElectric_Impl>()->waterStorageTank();
+// }
 
 bool HumidifierSteamElectric::setAvailabilitySchedule(Schedule& schedule) {
   return getImpl<detail::HumidifierSteamElectric_Impl>()->setAvailabilitySchedule(schedule);
@@ -365,29 +310,13 @@ void HumidifierSteamElectric::resetStandbyPower() {
   getImpl<detail::HumidifierSteamElectric_Impl>()->resetStandbyPower();
 }
 
-bool HumidifierSteamElectric::setAirInletNode(const Connection& connection) {
-  return getImpl<detail::HumidifierSteamElectric_Impl>()->setAirInletNode(connection);
-}
+// bool HumidifierSteamElectric::setWaterStorageTank(const WaterStorageTank& waterStorageTank) {
+//   return getImpl<detail::HumidifierSteamElectric_Impl>()->setWaterStorageTank(waterStorageTank);
+// }
 
-void HumidifierSteamElectric::resetAirInletNode() {
-  getImpl<detail::HumidifierSteamElectric_Impl>()->resetAirInletNode();
-}
-
-bool HumidifierSteamElectric::setAirOutletNode(const Connection& connection) {
-  return getImpl<detail::HumidifierSteamElectric_Impl>()->setAirOutletNode(connection);
-}
-
-void HumidifierSteamElectric::resetAirOutletNode() {
-  getImpl<detail::HumidifierSteamElectric_Impl>()->resetAirOutletNode();
-}
-
-bool HumidifierSteamElectric::setWaterStorageTank(const WaterStorageTank& waterStorageTank) {
-  return getImpl<detail::HumidifierSteamElectric_Impl>()->setWaterStorageTank(waterStorageTank);
-}
-
-void HumidifierSteamElectric::resetWaterStorageTank() {
-  getImpl<detail::HumidifierSteamElectric_Impl>()->resetWaterStorageTank();
-}
+// void HumidifierSteamElectric::resetWaterStorageTank() {
+//   getImpl<detail::HumidifierSteamElectric_Impl>()->resetWaterStorageTank();
+// }
 
 /// @cond
 HumidifierSteamElectric::HumidifierSteamElectric(boost::shared_ptr<detail::HumidifierSteamElectric_Impl> impl)

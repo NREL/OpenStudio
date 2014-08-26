@@ -20,18 +20,14 @@
 #ifndef MODEL_HUMIDIFIERSTEAMELECTRIC_HPP
 #define MODEL_HUMIDIFIERSTEAMELECTRIC_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
-class Connection;
-class Connection;
-class WaterStorageTank;
 
 namespace detail {
 
@@ -56,7 +52,6 @@ class MODEL_API HumidifierSteamElectric : public StraightComponent {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> availabilitySchedule() const;
 
   boost::optional<double> ratedCapacity() const;
@@ -69,20 +64,12 @@ class MODEL_API HumidifierSteamElectric : public StraightComponent {
 
   boost::optional<double> standbyPower() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  boost::optional<Connection> airInletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  boost::optional<Connection> airOutletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: WaterStorageTank.
-  boost::optional<WaterStorageTank> waterStorageTank() const;
+  // boost::optional<WaterStorageTank> waterStorageTank() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setAvailabilitySchedule(Schedule& schedule);
 
   void resetAvailabilitySchedule();
@@ -105,20 +92,9 @@ class MODEL_API HumidifierSteamElectric : public StraightComponent {
 
   void resetStandbyPower();
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setAirInletNode(const Connection& connection);
+  // bool setWaterStorageTank(const WaterStorageTank& waterStorageTank);
 
-  void resetAirInletNode();
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setAirOutletNode(const Connection& connection);
-
-  void resetAirOutletNode();
-
-  // TODO: Check argument type. From object lists, some candidates are: WaterStorageTank.
-  bool setWaterStorageTank(const WaterStorageTank& waterStorageTank);
-
-  void resetWaterStorageTank();
+  // void resetWaterStorageTank();
 
   //@}
   /** @name Other */

@@ -20,23 +20,18 @@
 #ifndef MODEL_HUMIDIFIERSTEAMELECTRIC_IMPL_HPP
 #define MODEL_HUMIDIFIERSTEAMELECTRIC_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
-class Connection;
-class Connection;
-class WaterStorageTank;
 
 namespace detail {
 
   /** HumidifierSteamElectric_Impl is a StraightComponent_Impl that is the implementation class for HumidifierSteamElectric.*/
   class MODEL_API HumidifierSteamElectric_Impl : public StraightComponent_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -65,11 +60,14 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
 
+    virtual unsigned inletPort();
+
+    virtual unsigned outletPort();
+
     //@}
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> availabilitySchedule() const;
 
     boost::optional<double> ratedCapacity() const;
@@ -82,20 +80,12 @@ namespace detail {
 
     boost::optional<double> standbyPower() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> airInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> airOutletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: WaterStorageTank.
-    boost::optional<WaterStorageTank> waterStorageTank() const;
+    // boost::optional<WaterStorageTank> waterStorageTank() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setAvailabilitySchedule(Schedule& schedule);
 
     void resetAvailabilitySchedule();
@@ -118,20 +108,9 @@ namespace detail {
 
     void resetStandbyPower();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setAirInletNode(const boost::optional<Connection>& connection);
+    // bool setWaterStorageTank(const boost::optional<WaterStorageTank>& waterStorageTank);
 
-    void resetAirInletNode();
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setAirOutletNode(const boost::optional<Connection>& connection);
-
-    void resetAirOutletNode();
-
-    // TODO: Check argument type. From object lists, some candidates are: WaterStorageTank.
-    bool setWaterStorageTank(const boost::optional<WaterStorageTank>& waterStorageTank);
-
-    void resetWaterStorageTank();
+    // void resetWaterStorageTank();
 
     //@}
     /** @name Other */
