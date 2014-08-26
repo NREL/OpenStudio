@@ -159,9 +159,13 @@ void OSLineEdit2::mouseReleaseEvent(QMouseEvent * event)
   if (event->button() == Qt::LeftButton){
     event->accept();
 
+// This m_item code is only relevant if we are building in
+// the context of openstudio_lib
+#ifdef openstudio_lib_EXPORTS
     if (!m_item && m_modelObject) {
       m_item = OSItem::makeItem(modelObjectToItemId(*m_modelObject, false));
     }
+#endif
 
     if (m_item) {
       // Tell EditView to display this object
