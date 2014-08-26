@@ -185,10 +185,16 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
     if (result){
       result->changeUID();
 
+      // change the files on disk
       result->updateMeasureScript(m_bclMeasureToCopy->measureType(), measureType, 
                                   m_bclMeasureToCopy->className(), className, 
                                   name, description, modelerDescription);
 
+      result->updateMeasureTests(m_bclMeasureToCopy->className(), className);
+
+      result->checkForUpdatesFiles();
+
+      // change the xml
       std::string lowerClassName = toUnderscoreCase(className);
 
       result->setName(lowerClassName);
@@ -199,6 +205,8 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
       result->setArguments(m_bclMeasureToCopy->arguments());
       result->setTaxonomyTag(taxonomyTag);
       result->setMeasureType(measureType);
+
+      // xml checksum is out of date
 
       for (const Attribute& attribute : attributes){
         result->addAttribute(attribute);

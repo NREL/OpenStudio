@@ -275,6 +275,9 @@ namespace openstudio{
                              const std::string& oldClassName, const std::string& newClassName,
                              const std::string& name, const std::string& description, const std::string& modelerDescription);
 
+    /// Update's the ruby measure tests to have this new information
+    bool updateMeasureTests(const std::string& oldClassName, const std::string& newClassName);
+
   //@}
   private:
     // configure logging

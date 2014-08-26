@@ -36,6 +36,7 @@
 #include <QDomDocument>
 #include <QFile>
 #include <QSettings>
+#include <QRegularExpression>
 
 #include <boost/filesystem.hpp>
 
@@ -708,17 +709,18 @@ namespace openstudio{
       QFile file(toQString(*path));
       if (file.open(QFile::ReadOnly)){
 
-        QString nameFunction = "def name\n  \"" + toQString(name) + "\"\nend";
-        QString descriptionFunction = "def description\n  \"" + toQString(description) + "\"\nend";
-        QString modelerDescriptionFunction = "def modeler_description\n  \"" + toQString(modelerDescription) + "\"\nend";
+        QRegularExpression::PatternOptions opts = QRegularExpression::DotMatchesEverythingOption | QRegularExpression::MultilineOption;
+        QString nameFunction = "\\1def name\n\\1  return \" " + toQString(name) + "\"\n\\1end";
+        QString descriptionFunction = "\\1def description\n\\1  return \"" + toQString(description) + "\"\n\\1end";
+        QString modelerDescriptionFunction = "\\1def modeler_description\n\\1  return \"" + toQString(modelerDescription) + "\"\n\\1end";
 
         QTextStream docIn(&file);
         fileString = docIn.readAll();
         fileString.replace(toQString(oldMeasureType.valueName()), toQString(newMeasureType.valueName()));
         fileString.replace(toQString(oldClassName), toQString(newClassName));
-        fileString.replace(QRegExp("def name(.*?)end"), nameFunction);
-        fileString.replace(QRegExp("def description(.*?)end"), descriptionFunction);
-        fileString.replace(QRegExp("def modeler_description(.*?)end"), modelerDescriptionFunction);
+        fileString.replace(QRegularExpression("$(\\s?)def name(.*?)end", opts), nameFunction);
+        fileString.replace(QRegularExpression("$(\\s?)def description(.*?)end", opts), descriptionFunction);
+        fileString.replace(QRegularExpression("$(\\s?)def modeler_description(.*?)end", opts), modelerDescriptionFunction);
         file.close();
 
         if (file.open(QIODevice::WriteOnly)){
@@ -733,6 +735,60 @@ namespace openstudio{
     return false;
   }
   
+  bool BCLMeasure::updateMeasureTests(const std::string& oldClassName, const std::string& newClassName)
+  {
+    bool result = true;
+    for (const BCLFileReference& fileRef : files()){
+      std::string usageType = fileRef.usageType();
+      if (usageType != "test"){
+        continue;
+      }
+
+      if (exists(fileRef.path())){
+
+        std::string oldLowerClassName = toUnderscoreCase(oldClassName);
+        std::string newLowerClassName = toUnderscoreCase(newClassName);
+
+        QString oldPath = toQString(fileRef.path());
+        QString newPath = oldPath;
+        newPath.replace(toQString(oldLowerClassName), toQString(newLowerClassName));
+
+        if (QFile::exists(newPath)) {
+          // somehow this file already exists, don't clobber it
+          newPath = oldPath;
+        }else{
+          QFile::copy(oldPath, newPath);
+          QFile::remove(oldPath);
+        }
+        
+
+        QString fileString;
+        QFile file(newPath);
+        if (file.open(QFile::ReadOnly)){
+
+          QTextStream docIn(&file);
+          fileString = docIn.readAll();
+          fileString.replace(toQString(oldClassName), toQString(newClassName));
+          file.close();
+
+          if (file.open(QIODevice::WriteOnly)){
+            QTextStream textStream(&file);
+            textStream << fileString;
+            file.close();
+
+          } else {
+            result = false;
+          }
+        } else {
+          result = false;
+        }
+      } else{
+        result = false;
+      }
+    }
+    return result;
+  }
+
   void BCLMeasure::clearFiles()
   {
     m_bclXML.clearFiles();
