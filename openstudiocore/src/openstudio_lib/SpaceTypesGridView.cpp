@@ -920,7 +920,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         CastNullAdapter<model::SpaceInfiltrationDesignFlowRate>(&model::SpaceInfiltrationDesignFlowRate::setName),
         DataSource(
           flowRates,
-          true, 
+          false, 
           QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::SpaceInfiltrationDesignFlowRate, model::SpaceType>(SPACEINFILTRATIONDESIGNFLOWRATES,
              getter, setter))
         )
@@ -946,7 +946,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         CastNullAdapter<model::SpaceInfiltrationEffectiveLeakageArea>(&model::SpaceInfiltrationEffectiveLeakageArea::setName),
         DataSource(
         leakageAreas,
-        true,
+        false,
         QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::SpaceInfiltrationEffectiveLeakageArea, model::SpaceType>(SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS,
         getter, setter))
         )
