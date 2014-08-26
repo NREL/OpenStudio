@@ -20,21 +20,14 @@
 #ifndef MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMEFOURPIPEINDUCTION_HPP
 #define MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMEFOURPIPEINDUCTION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
-class Connection;
-class Connection;
-class Connection;
-class HeatingCoilName;
-class CoolingCoilName;
-class ZoneMixers;
 
 namespace detail {
 
@@ -59,7 +52,6 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeInduction : public St
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> availabilitySchedule() const;
 
   boost::optional<double> maximumTotalAirFlowRate() const;
@@ -70,17 +62,7 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeInduction : public St
 
   bool isInductionRatioDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection supplyAirInletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection inducedAirInletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection airOutletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: HeatingCoilName.
-  HeatingCoilName heatingCoil() const;
+  HVACComponent heatingCoil() const;
 
   boost::optional<double> maximumHotWaterFlowRate() const;
 
@@ -94,8 +76,7 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeInduction : public St
 
   bool isHeatingConvergenceToleranceDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: CoolingCoilName.
-  boost::optional<CoolingCoilName> coolingCoil() const;
+  boost::optional<HVACComponent> coolingCoil() const;
 
   boost::optional<double> maximumColdWaterFlowRate() const;
 
@@ -109,14 +90,10 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeInduction : public St
 
   bool isCoolingConvergenceToleranceDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: ZoneMixers.
-  boost::optional<ZoneMixers> zoneMixer() const;
-
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setAvailabilitySchedule(Schedule& schedule);
 
   void resetAvailabilitySchedule();
@@ -129,17 +106,7 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeInduction : public St
 
   void resetInductionRatio();
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setSupplyAirInletNode(const Connection& connection);
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setInducedAirInletNode(const Connection& connection);
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setAirOutletNode(const Connection& connection);
-
-  // TODO: Check argument type. From object lists, some candidates are: HeatingCoilName.
-  bool setHeatingCoil(const HeatingCoilName& heatingCoilName);
+  bool setHeatingCoil(const HVACComponent& heatingCoilName);
 
   void setMaximumHotWaterFlowRate(double maximumHotWaterFlowRate);
 
@@ -155,8 +122,7 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeInduction : public St
 
   void resetHeatingConvergenceTolerance();
 
-  // TODO: Check argument type. From object lists, some candidates are: CoolingCoilName.
-  bool setCoolingCoil(const CoolingCoilName& coolingCoilName);
+  bool setCoolingCoil(const HVACComponent& coolingCoilName);
 
   void resetCoolingCoil();
 
@@ -173,11 +139,6 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeInduction : public St
   bool setCoolingConvergenceTolerance(double coolingConvergenceTolerance);
 
   void resetCoolingConvergenceTolerance();
-
-  // TODO: Check argument type. From object lists, some candidates are: ZoneMixers.
-  bool setZoneMixer(const ZoneMixers& zoneMixers);
-
-  void resetZoneMixer();
 
   //@}
   /** @name Other */

@@ -20,26 +20,18 @@
 #ifndef MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMEFOURPIPEINDUCTION_IMPL_HPP
 #define MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMEFOURPIPEINDUCTION_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
-class Connection;
-class Connection;
-class Connection;
-class HeatingCoilName;
-class CoolingCoilName;
-class ZoneMixers;
 
 namespace detail {
 
   /** AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl is a StraightComponent_Impl that is the implementation class for AirTerminalSingleDuctConstantVolumeFourPipeInduction.*/
   class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl : public StraightComponent_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -68,11 +60,24 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
 
+    virtual bool addToNode(Node & node);
+
+    virtual std::vector<ModelObject> children() const;
+
+    virtual ModelObject clone(Model model) const;
+
+    virtual std::vector<IdfObject> remove();
+
+    virtual bool isRemovable() const;
+
+    virtual unsigned inletPort();
+
+    virtual unsigned outletPort();
+
     //@}
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> availabilitySchedule() const;
 
     boost::optional<double> maximumTotalAirFlowRate() const;
@@ -83,17 +88,7 @@ namespace detail {
 
     bool isInductionRatioDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection supplyAirInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection inducedAirInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection airOutletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: HeatingCoilName.
-    HeatingCoilName heatingCoil() const;
+    HVACComponent heatingCoil() const;
 
     boost::optional<double> maximumHotWaterFlowRate() const;
 
@@ -107,8 +102,7 @@ namespace detail {
 
     bool isHeatingConvergenceToleranceDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: CoolingCoilName.
-    boost::optional<CoolingCoilName> coolingCoil() const;
+    boost::optional<HVACComponent> coolingCoil() const;
 
     boost::optional<double> maximumColdWaterFlowRate() const;
 
@@ -122,14 +116,10 @@ namespace detail {
 
     bool isCoolingConvergenceToleranceDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ZoneMixers.
-    boost::optional<ZoneMixers> zoneMixer() const;
-
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setAvailabilitySchedule(Schedule& schedule);
 
     void resetAvailabilitySchedule();
@@ -142,17 +132,7 @@ namespace detail {
 
     void resetInductionRatio();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setSupplyAirInletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setInducedAirInletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setAirOutletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: HeatingCoilName.
-    bool setHeatingCoil(const HeatingCoilName& heatingCoilName);
+    bool setHeatingCoil(const HVACComponent& heatingCoilName);
 
     void setMaximumHotWaterFlowRate(boost::optional<double> maximumHotWaterFlowRate);
 
@@ -168,8 +148,7 @@ namespace detail {
 
     void resetHeatingConvergenceTolerance();
 
-    // TODO: Check argument type. From object lists, some candidates are: CoolingCoilName.
-    bool setCoolingCoil(const boost::optional<CoolingCoilName>& coolingCoilName);
+    bool setCoolingCoil(const boost::optional<HVACComponent>& coolingCoilName);
 
     void resetCoolingCoil();
 
@@ -187,11 +166,6 @@ namespace detail {
 
     void resetCoolingConvergenceTolerance();
 
-    // TODO: Check argument type. From object lists, some candidates are: ZoneMixers.
-    bool setZoneMixer(const boost::optional<ZoneMixers>& zoneMixers);
-
-    void resetZoneMixer();
-
     //@}
     /** @name Other */
     //@{
@@ -205,10 +179,7 @@ namespace detail {
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
-    boost::optional<Connection> optionalSupplyAirInletNode() const;
-    boost::optional<Connection> optionalInducedAirInletNode() const;
-    boost::optional<Connection> optionalAirOutletNode() const;
-    boost::optional<HeatingCoilName> optionalHeatingCoil() const;
+    boost::optional<HVACComponent> optionalHeatingCoil() const;
   };
 
 } // detail
