@@ -902,7 +902,12 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
 
     } else if (field == SPACEINFILTRATIONDESIGNFLOWRATES) {
       std::function<boost::optional<model::SpaceInfiltrationDesignFlowRate> (model::SpaceType *)>  getter;
-      std::function<bool (model::SpaceType *, const model::SpaceInfiltrationDesignFlowRate &)> setter;
+
+      std::function<bool (model::SpaceType *, const model::SpaceInfiltrationDesignFlowRate &)> setter (
+        [](model::SpaceType *t_type, model::SpaceInfiltrationDesignFlowRate t_rate)  {
+          return t_rate.setSpaceType(*t_type);
+        });
+
       std::function<std::vector<model::ModelObject> (const model::SpaceType &)> flowRates(
         [](const model::SpaceType &s) {
           auto rates = s.spaceInfiltrationDesignFlowRates();
@@ -923,7 +928,12 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
 
     } else if (field == SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS) {
       std::function<boost::optional<model::SpaceInfiltrationEffectiveLeakageArea>(model::SpaceType *)>  getter;
-      std::function<bool(model::SpaceType *, const model::SpaceInfiltrationEffectiveLeakageArea &)> setter;
+
+      std::function<bool (model::SpaceType *, const model::SpaceInfiltrationEffectiveLeakageArea &)> setter (
+        [](model::SpaceType *t_type, model::SpaceInfiltrationEffectiveLeakageArea t_area)  {
+          return t_area.setSpaceType(*t_type);
+        });
+
       std::function<std::vector<model::ModelObject>(const model::SpaceType &)> leakageAreas(
         [](const model::SpaceType &s) {
           auto areas = s.spaceInfiltrationEffectiveLeakageAreas();
