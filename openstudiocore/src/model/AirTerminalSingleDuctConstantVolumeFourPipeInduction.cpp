@@ -34,6 +34,8 @@
 #include "PortList_Impl.hpp"
 #include "HVACComponent.hpp"
 #include "HVACComponent_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
 #include "AirLoopHVACZoneSplitter.hpp"
 #include "AirLoopHVACZoneSplitter_Impl.hpp"
 #include "AirLoopHVACZoneMixer.hpp"
@@ -101,7 +103,7 @@ namespace detail {
 
   unsigned AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::outletPort()
   {
-    return OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::SupplyAirOutletNodeName;
+    return OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::AirOutletNodeName;
   }
 
    bool AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::addToNode(Node & node)
@@ -190,6 +192,8 @@ namespace detail {
       }
     }
 
+    boost::optional<PlantLoop> loop;
+
     if( sourcePort && sourceModelObject
         && targetPort && targetModelObject )
     {
@@ -207,12 +211,12 @@ namespace detail {
             inletNode->disconnect();
             inletNode->remove();
 
-            if( _coolingCoil && boost::optional<PlantLoop> loop = _coolingCoil->plantLoop() )
+            if( _coolingCoil && ( loop = _coolingCoil->plantLoop() ) )
             {
               loop->removeDemandBranchWithComponent(*_coolingCoil);
             }
 
-            if( boost::optional<PlantLoop> loop = _heatingCoil.plantLoop() )
+            if( (loop = _heatingCoil.plantLoop()) )
             {
               loop->removeDemandBranchWithComponent(_heatingCoil);
             }
@@ -226,9 +230,14 @@ namespace detail {
     model().disconnect(getObject<ModelObject>(),inletPort());
     model().disconnect(getObject<ModelObject>(),outletPort());
 
-    if( boost::optional<PlantLoop> loop = _coolingCoil.plantLoop() )
+    if( _coolingCoil && ( loop = _coolingCoil->plantLoop() ) )
     {
-      loop->removeDemandBranchWithComponent(_coolingCoil);
+      loop->removeDemandBranchWithComponent(*_coolingCoil);
+    }
+
+    if( (loop = _heatingCoil.plantLoop()) )
+    {
+      loop->removeDemandBranchWithComponent(_heatingCoil);
     }
 
     return StraightComponent_Impl::remove();
@@ -244,10 +253,12 @@ namespace detail {
   {
     AirTerminalSingleDuctConstantVolumeFourPipeInduction airTerminalCVFourPipeInductionClone = StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
 
-    HVACComponent coilCoolingClone = this->coolingCoil().clone(model).cast<HVACComponent>();
-    HVACComponent coilHeatingClone = this->heatingCoil().clone(model).cast<HVACComponent>();
+    if( boost::optional<HVACComponent> coolingCoil = this->coolingCoil() ) {
+      HVACComponent coilCoolingClone = coolingCoil->clone(model).cast<HVACComponent>();
+      airTerminalCVFourPipeInductionClone.setCoolingCoil(coilCoolingClone);
+    }
 
-    airTerminalCVFourPipeInductionClone.setCoolingCoil(coilCoolingClone);
+    HVACComponent coilHeatingClone = this->heatingCoil().clone(model).cast<HVACComponent>();
     airTerminalCVFourPipeInductionClone.setHeatingCoil(coilHeatingClone);
 
     return airTerminalCVFourPipeInductionClone;
@@ -294,32 +305,8 @@ namespace detail {
     return isEmpty(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::InductionRatio);
   }
 
-  Connection AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::supplyAirInletNode() const {
-    boost::optional<Connection> value = optionalSupplyAirInletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Supply Air Inlet Node attached.");
-    }
-    return value.get();
-  }
-
-  Connection AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::inducedAirInletNode() const {
-    boost::optional<Connection> value = optionalInducedAirInletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Induced Air Inlet Node attached.");
-    }
-    return value.get();
-  }
-
-  Connection AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::airOutletNode() const {
-    boost::optional<Connection> value = optionalAirOutletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Air Outlet Node attached.");
-    }
-    return value.get();
-  }
-
-  HeatingCoilName AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::heatingCoil() const {
-    boost::optional<HeatingCoilName> value = optionalHeatingCoil();
+  HVACComponent AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::heatingCoil() const {
+    boost::optional<HVACComponent> value = optionalHeatingCoil();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Heating Coil attached.");
     }
@@ -359,8 +346,8 @@ namespace detail {
     return isEmpty(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::HeatingConvergenceTolerance);
   }
 
-  boost::optional<CoolingCoilName> AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::coolingCoil() const {
-    return getObject<ModelObject>().getModelObjectTarget<CoolingCoilName>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::CoolingCoilName);
+  boost::optional<HVACComponent> AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::coolingCoil() const {
+    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::CoolingCoilName);
   }
 
   boost::optional<double> AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::maximumColdWaterFlowRate() const {
@@ -394,10 +381,6 @@ namespace detail {
 
   bool AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::isCoolingConvergenceToleranceDefaulted() const {
     return isEmpty(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::CoolingConvergenceTolerance);
-  }
-
-  boost::optional<ZoneMixers> AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::zoneMixer() const {
-    return getObject<ModelObject>().getModelObjectTarget<ZoneMixers>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::ZoneMixerName);
   }
 
   bool AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::setAvailabilitySchedule(Schedule& schedule) {
@@ -436,22 +419,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::setSupplyAirInletNode(const Connection& connection) {
-    bool result = setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::SupplyAirInletNodeName, connection.handle());
-    return result;
-  }
-
-  bool AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::setInducedAirInletNode(const Connection& connection) {
-    bool result = setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::InducedAirInletNodeName, connection.handle());
-    return result;
-  }
-
-  bool AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::setAirOutletNode(const Connection& connection) {
-    bool result = setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::AirOutletNodeName, connection.handle());
-    return result;
-  }
-
-  bool AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::setHeatingCoil(const HeatingCoilName& heatingCoilName) {
+  bool AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::setHeatingCoil(const HVACComponent& heatingCoilName) {
     bool result = setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::HeatingCoilName, heatingCoilName.handle());
     return result;
   }
@@ -498,7 +466,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::setCoolingCoil(const boost::optional<CoolingCoilName>& coolingCoilName) {
+  bool AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::setCoolingCoil(const boost::optional<HVACComponent>& coolingCoilName) {
     bool result(false);
     if (coolingCoilName) {
       result = setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::CoolingCoilName, coolingCoilName.get().handle());
@@ -557,37 +525,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::setZoneMixer(const boost::optional<ZoneMixers>& zoneMixers) {
-    bool result(false);
-    if (zoneMixers) {
-      result = setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::ZoneMixerName, zoneMixers.get().handle());
-    }
-    else {
-      resetZoneMixer();
-      result = true;
-    }
-    return result;
-  }
-
-  void AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::resetZoneMixer() {
-    bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::ZoneMixerName, "");
-    OS_ASSERT(result);
-  }
-
-  boost::optional<Connection> AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::optionalSupplyAirInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::SupplyAirInletNodeName);
-  }
-
-  boost::optional<Connection> AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::optionalInducedAirInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::InducedAirInletNodeName);
-  }
-
-  boost::optional<Connection> AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::optionalAirOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::AirOutletNodeName);
-  }
-
-  boost::optional<HeatingCoilName> AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::optionalHeatingCoil() const {
-    return getObject<ModelObject>().getModelObjectTarget<HeatingCoilName>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::HeatingCoilName);
+  boost::optional<HVACComponent> AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::optionalHeatingCoil() const {
+    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::HeatingCoilName);
   }
 
 } // detail
@@ -641,19 +580,7 @@ bool AirTerminalSingleDuctConstantVolumeFourPipeInduction::isInductionRatioDefau
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->isInductionRatioDefaulted();
 }
 
-Connection AirTerminalSingleDuctConstantVolumeFourPipeInduction::supplyAirInletNode() const {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->supplyAirInletNode();
-}
-
-Connection AirTerminalSingleDuctConstantVolumeFourPipeInduction::inducedAirInletNode() const {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->inducedAirInletNode();
-}
-
-Connection AirTerminalSingleDuctConstantVolumeFourPipeInduction::airOutletNode() const {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->airOutletNode();
-}
-
-HeatingCoilName AirTerminalSingleDuctConstantVolumeFourPipeInduction::heatingCoil() const {
+HVACComponent AirTerminalSingleDuctConstantVolumeFourPipeInduction::heatingCoil() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->heatingCoil();
 }
 
@@ -681,7 +608,7 @@ bool AirTerminalSingleDuctConstantVolumeFourPipeInduction::isHeatingConvergenceT
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->isHeatingConvergenceToleranceDefaulted();
 }
 
-boost::optional<CoolingCoilName> AirTerminalSingleDuctConstantVolumeFourPipeInduction::coolingCoil() const {
+boost::optional<HVACComponent> AirTerminalSingleDuctConstantVolumeFourPipeInduction::coolingCoil() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->coolingCoil();
 }
 
@@ -709,10 +636,6 @@ bool AirTerminalSingleDuctConstantVolumeFourPipeInduction::isCoolingConvergenceT
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->isCoolingConvergenceToleranceDefaulted();
 }
 
-boost::optional<ZoneMixers> AirTerminalSingleDuctConstantVolumeFourPipeInduction::zoneMixer() const {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->zoneMixer();
-}
-
 bool AirTerminalSingleDuctConstantVolumeFourPipeInduction::setAvailabilitySchedule(Schedule& schedule) {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->setAvailabilitySchedule(schedule);
 }
@@ -737,19 +660,7 @@ void AirTerminalSingleDuctConstantVolumeFourPipeInduction::resetInductionRatio()
   getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->resetInductionRatio();
 }
 
-bool AirTerminalSingleDuctConstantVolumeFourPipeInduction::setSupplyAirInletNode(const Connection& connection) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->setSupplyAirInletNode(connection);
-}
-
-bool AirTerminalSingleDuctConstantVolumeFourPipeInduction::setInducedAirInletNode(const Connection& connection) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->setInducedAirInletNode(connection);
-}
-
-bool AirTerminalSingleDuctConstantVolumeFourPipeInduction::setAirOutletNode(const Connection& connection) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->setAirOutletNode(connection);
-}
-
-bool AirTerminalSingleDuctConstantVolumeFourPipeInduction::setHeatingCoil(const HeatingCoilName& heatingCoilName) {
+bool AirTerminalSingleDuctConstantVolumeFourPipeInduction::setHeatingCoil(const HVACComponent& heatingCoilName) {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->setHeatingCoil(heatingCoilName);
 }
 
@@ -781,7 +692,7 @@ void AirTerminalSingleDuctConstantVolumeFourPipeInduction::resetHeatingConvergen
   getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->resetHeatingConvergenceTolerance();
 }
 
-bool AirTerminalSingleDuctConstantVolumeFourPipeInduction::setCoolingCoil(const CoolingCoilName& coolingCoilName) {
+bool AirTerminalSingleDuctConstantVolumeFourPipeInduction::setCoolingCoil(const HVACComponent& coolingCoilName) {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->setCoolingCoil(coolingCoilName);
 }
 
@@ -817,16 +728,8 @@ void AirTerminalSingleDuctConstantVolumeFourPipeInduction::resetCoolingConvergen
   getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->resetCoolingConvergenceTolerance();
 }
 
-bool AirTerminalSingleDuctConstantVolumeFourPipeInduction::setZoneMixer(const ZoneMixers& zoneMixers) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->setZoneMixer(zoneMixers);
-}
-
-void AirTerminalSingleDuctConstantVolumeFourPipeInduction::resetZoneMixer() {
-  getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->resetZoneMixer();
-}
-
 /// @cond
-AirTerminalSingleDuctConstantVolumeFourPipeInduction::AirTerminalSingleDuctConstantVolumeFourPipeInduction(boost::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl> impl)
+AirTerminalSingleDuctConstantVolumeFourPipeInduction::AirTerminalSingleDuctConstantVolumeFourPipeInduction(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

@@ -25,6 +25,7 @@
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 #include "PlantLoop.hpp"
+#include "Node.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_CoolingTower_TwoSpeed_FieldEnums.hxx>
@@ -89,12 +90,12 @@ namespace detail {
 
   unsigned CoolingTowerTwoSpeed_Impl::inletPort()
   {
-    return OS_CoolingTower_TwoSpeedFields::WaterInletNode;
+    return OS_CoolingTower_TwoSpeedFields::WaterInletNodeName;
   }
 
   unsigned CoolingTowerTwoSpeed_Impl::outletPort()
   {
-    return OS_CoolingTower_TwoSpeedFields::WaterOutletNode;
+    return OS_CoolingTower_TwoSpeedFields::WaterOutletNodeName;
   }
 
   bool CoolingTowerTwoSpeed_Impl::addToNode(Node & node)
@@ -1605,7 +1606,7 @@ void CoolingTowerTwoSpeed::resetSizingFactor() {
 }
 
 /// @cond
-CoolingTowerTwoSpeed::CoolingTowerTwoSpeed(boost::shared_ptr<detail::CoolingTowerTwoSpeed_Impl> impl)
+CoolingTowerTwoSpeed::CoolingTowerTwoSpeed(std::shared_ptr<detail::CoolingTowerTwoSpeed_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

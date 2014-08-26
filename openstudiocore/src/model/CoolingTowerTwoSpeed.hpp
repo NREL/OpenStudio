@@ -367,7 +367,7 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
   /// @cond
   typedef detail::CoolingTowerTwoSpeed_Impl ImplType;
 
-  explicit CoolingTowerTwoSpeed(boost::shared_ptr<detail::CoolingTowerTwoSpeed_Impl> impl);
+  explicit CoolingTowerTwoSpeed(std::shared_ptr<detail::CoolingTowerTwoSpeed_Impl> impl);
 
   friend class detail::CoolingTowerTwoSpeed_Impl;
   friend class Model;

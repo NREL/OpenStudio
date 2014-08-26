@@ -65,6 +65,9 @@ set(${target_name}_src
   AirTerminalSingleDuctConstantVolumeCooledBeam.hpp
   AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp
   AirTerminalSingleDuctConstantVolumeCooledBeam.cpp
+  AirTerminalSingleDuctConstantVolumeFourPipeInduction.hpp
+  AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl.hpp
+  AirTerminalSingleDuctConstantVolumeFourPipeInduction.cpp
   AirTerminalSingleDuctConstantVolumeReheat.hpp
   AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp
   AirTerminalSingleDuctConstantVolumeReheat.cpp
@@ -224,6 +227,9 @@ set(${target_name}_src
   CoolingTowerSingleSpeed.hpp
   CoolingTowerSingleSpeed_Impl.hpp
   CoolingTowerSingleSpeed.cpp
+  CoolingTowerTwoSpeed.hpp
+  CoolingTowerTwoSpeed_Impl.hpp
+  CoolingTowerTwoSpeed.cpp
   CoolingTowerVariableSpeed.hpp
   CoolingTowerVariableSpeed_Impl.hpp
   CoolingTowerVariableSpeed.cpp
@@ -398,6 +404,9 @@ set(${target_name}_src
   HotWaterEquipmentDefinition.hpp
   HotWaterEquipmentDefinition_Impl.hpp
   HotWaterEquipmentDefinition.cpp
+  HumidifierSteamElectric.hpp
+  HumidifierSteamElectric_Impl.hpp
+  HumidifierSteamElectric.cpp
   HVACComponent.hpp
   HVACComponent_Impl.hpp
   HVACComponent.cpp
@@ -655,6 +664,12 @@ set(${target_name}_src
   SetpointManagerMixedAir.hpp
   SetpointManagerMixedAir_Impl.hpp
   SetpointManagerMixedAir.cpp
+  SetpointManagerMultiZoneHumidityMinimum.hpp
+  SetpointManagerMultiZoneHumidityMinimum_Impl.hpp
+  SetpointManagerMultiZoneHumidityMinimum.cpp
+  SetpointManagerMultiZoneMinimumHumidityAverage.hpp
+  SetpointManagerMultiZoneMinimumHumidityAverage_Impl.hpp
+  SetpointManagerMultiZoneMinimumHumidityAverage.cpp
   SetpointManagerOutdoorAirPretreat.hpp
   SetpointManagerOutdoorAirPretreat_Impl.hpp
   SetpointManagerOutdoorAirPretreat.cpp
@@ -667,6 +682,9 @@ set(${target_name}_src
   SetpointManagerScheduledDualSetpoint.hpp
   SetpointManagerScheduledDualSetpoint_Impl.hpp
   SetpointManagerScheduledDualSetpoint.cpp
+  SetpointManagerSingleZoneHumidityMinimum.hpp
+  SetpointManagerSingleZoneHumidityMinimum_Impl.hpp
+  SetpointManagerSingleZoneHumidityMinimum.cpp
   SetpointManagerSingleZoneReheat.hpp
   SetpointManagerSingleZoneReheat_Impl.hpp
   SetpointManagerSingleZoneReheat.cpp
@@ -1151,6 +1169,7 @@ set(${target_name}_test_src
   test/AirLoopHVACUnitaryHeatPumpAirToAir_GTest.cpp
   test/AirLoopHVACUnitarySystem_GTest.cpp
   test/AirLoopHVAC_GTest.cpp
+  test/AirTerminalSingleDuctConstantVolumeFourPipeInduction_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeCooledBeam_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeReheat_GTest.cpp
   test/AirTerminalSingleDuctParallelPIUReheat_GTest.cpp
@@ -1193,6 +1212,7 @@ set(${target_name}_test_src
   test/ControllerMechanicalVentilation_GTest.cpp
   test/ControllerWaterCoil_GTest.cpp
   test/CoolingTowerSingleSpeed_GTest.cpp
+  test/CoolingTowerTwoSpeed_GTest.cpp
   test/DaylightingControl_GTest.cpp
   test/DaylightingDeviceShelf_GTest.cpp
   test/DefaultConstructionSet_GTest.cpp
@@ -1221,6 +1241,7 @@ set(${target_name}_test_src
   test/HotWaterEquipment_GTest.cpp
   test/HeatExchangerAirToAirSensibleAndLatent_GTest.cpp
   test/HeatExchangerFluidToFluid_GTest.cpp
+  test/HumidifierSteamElectric_GTest.cpp
   test/IlluminanceMap_GTest.cpp
   test/InteriorPartitionSurfaceGroup_GTest.cpp
   test/InteriorPartitionSurface_GTest.cpp
@@ -1277,10 +1298,13 @@ set(${target_name}_test_src
   test/RunPeriodControlSpecialDays_GTest.cpp
   test/SetpointManagerFollowOutdoorAirTemperature_GTest.cpp
   test/SetpointManagerMixedAir_GTest.cpp
+  test/SetpointManagerMultiZoneHumidityMinimum_GTest.cpp
+  test/SetpointManagerMultiZoneMinimumHumidityAverage_GTest.cpp
   test/SetpointManagerOutdoorAirPretreat_GTest.cpp
   test/SetpointManagerOutdoorAirReset_GTest.cpp
   test/SetpointManagerScheduled_GTest.cpp
   test/SetpointManagerScheduledDualSetpoint_GTest.cpp
+  test/SetpointManagerSingleZoneHumidityMinimum_GTest.cpp
   test/SetpointManagerSingleZoneReheat_GTest.cpp
   test/SetpointManagerWarmest_GTest.cpp
   test/ScheduleDay_GTest.cpp

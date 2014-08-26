@@ -149,7 +149,7 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeInduction : public St
   /// @cond
   typedef detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl ImplType;
 
-  explicit AirTerminalSingleDuctConstantVolumeFourPipeInduction(boost::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl> impl);
+  explicit AirTerminalSingleDuctConstantVolumeFourPipeInduction(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl> impl);
 
   friend class detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl;
   friend class Model;

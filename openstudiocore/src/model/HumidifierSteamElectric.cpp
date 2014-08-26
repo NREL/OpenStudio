@@ -319,7 +319,7 @@ void HumidifierSteamElectric::resetStandbyPower() {
 // }
 
 /// @cond
-HumidifierSteamElectric::HumidifierSteamElectric(boost::shared_ptr<detail::HumidifierSteamElectric_Impl> impl)
+HumidifierSteamElectric::HumidifierSteamElectric(std::shared_ptr<detail::HumidifierSteamElectric_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

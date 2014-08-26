@@ -79,7 +79,7 @@ class MODEL_API SetpointManagerSingleZoneHumidityMinimum : public SetpointManage
   /// @cond
   typedef detail::SetpointManagerSingleZoneHumidityMinimum_Impl ImplType;
 
-  explicit SetpointManagerSingleZoneHumidityMinimum(boost::shared_ptr<detail::SetpointManagerSingleZoneHumidityMinimum_Impl> impl);
+  explicit SetpointManagerSingleZoneHumidityMinimum(std::shared_ptr<detail::SetpointManagerSingleZoneHumidityMinimum_Impl> impl);
 
   friend class detail::SetpointManagerSingleZoneHumidityMinimum_Impl;
   friend class Model;

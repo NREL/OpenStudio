@@ -105,7 +105,7 @@ class MODEL_API HumidifierSteamElectric : public StraightComponent {
   /// @cond
   typedef detail::HumidifierSteamElectric_Impl ImplType;
 
-  explicit HumidifierSteamElectric(boost::shared_ptr<detail::HumidifierSteamElectric_Impl> impl);
+  explicit HumidifierSteamElectric(std::shared_ptr<detail::HumidifierSteamElectric_Impl> impl);
 
   friend class detail::HumidifierSteamElectric_Impl;
   friend class Model;

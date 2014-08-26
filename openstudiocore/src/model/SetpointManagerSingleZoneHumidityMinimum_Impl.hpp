@@ -81,6 +81,8 @@ namespace detail {
 
     bool setControlZone(const ThermalZone& thermalZone);
 
+    void resetControlZone();
+
     //@}
     /** @name Other */
     //@{

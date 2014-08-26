@@ -89,7 +89,7 @@ class MODEL_API SetpointManagerMultiZoneMinimumHumidityAverage : public Setpoint
   /// @cond
   typedef detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl ImplType;
 
-  explicit SetpointManagerMultiZoneMinimumHumidityAverage(boost::shared_ptr<detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl> impl);
+  explicit SetpointManagerMultiZoneMinimumHumidityAverage(std::shared_ptr<detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl> impl);
 
   friend class detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl;
   friend class Model;

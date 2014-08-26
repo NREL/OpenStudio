@@ -179,7 +179,7 @@ void SetpointManagerSingleZoneHumidityMinimum::resetControlZone() {
 }
 
 /// @cond
-SetpointManagerSingleZoneHumidityMinimum::SetpointManagerSingleZoneHumidityMinimum(boost::shared_ptr<detail::SetpointManagerSingleZoneHumidityMinimum_Impl> impl)
+SetpointManagerSingleZoneHumidityMinimum::SetpointManagerSingleZoneHumidityMinimum(std::shared_ptr<detail::SetpointManagerSingleZoneHumidityMinimum_Impl> impl)
   : SetpointManager(impl)
 {}
 /// @endcond
