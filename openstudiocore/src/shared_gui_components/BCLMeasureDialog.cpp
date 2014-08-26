@@ -20,6 +20,7 @@
 #include "BCLMeasureDialog.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/StringHelpers.hpp"
 
 #include <QLabel>
 #include <QLineEdit>
@@ -183,10 +184,19 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
     result = m_bclMeasureToCopy->clone(measureDir);
     if (result){
       result->changeUID();
-      result->setName(name);
-      // todo: change class name? this would require opening the ruby files
+
+      result->updateMeasureScript(m_bclMeasureToCopy->measureType(), measureType, 
+                                  m_bclMeasureToCopy->className(), className, 
+                                  name, description, modelerDescription);
+
+      std::string lowerClassName = toUnderscoreCase(className);
+
+      result->setName(lowerClassName);
+      result->setClassName(className);
+      result->setDisplayName(name);
       result->setDescription(description);
       result->setModelerDescription(modelerDescription);
+      result->setArguments(m_bclMeasureToCopy->arguments());
       result->setTaxonomyTag(taxonomyTag);
       result->setMeasureType(measureType);
 
@@ -199,9 +209,7 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
   }else{
     try{
     // starting new measure
-    result = BCLMeasure(name, className, measureDir, taxonomyTag, measureType);
-    result->setDescription(description);
-    result->setModelerDescription(modelerDescription);
+    result = BCLMeasure(name, className, measureDir, taxonomyTag, measureType, description, modelerDescription);
 
     for (const Attribute& attribute : attributes){
       result->addAttribute(attribute);

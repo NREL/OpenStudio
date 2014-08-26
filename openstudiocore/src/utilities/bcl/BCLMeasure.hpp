@@ -77,7 +77,9 @@ namespace openstudio{
                const std::string& className,
                const openstudio::path& dir,
                const std::string& taxonomyTag,
-               MeasureType measureType);
+               MeasureType measureType, 
+               const std::string& description,
+               const std::string& modelerDescription);
 
     /// Constructor for downloaded measures, path is to directory containing "measure.xml" file
     /// Will throw exception if directory does not exist or does not represent a valid measure.
@@ -267,6 +269,11 @@ namespace openstudio{
 
     /// Change the Version ID for this measure
     void incrementVersionId();
+
+    /// Update's the ruby measure script to have this new information
+    bool updateMeasureScript(const MeasureType& oldMeasureType, const MeasureType& newMeasureType,
+                             const std::string& oldClassName, const std::string& newClassName,
+                             const std::string& name, const std::string& description, const std::string& modelerDescription);
 
   //@}
   private:

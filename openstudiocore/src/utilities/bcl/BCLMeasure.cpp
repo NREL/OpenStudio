@@ -54,7 +54,8 @@ namespace openstudio{
   }
 
   BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, const openstudio::path& dir,
-    const std::string& taxonomyTag, MeasureType measureType)
+                         const std::string& taxonomyTag, MeasureType measureType, 
+                         const std::string& description, const std::string& modelerDescription)
     : m_directory(boost::filesystem::system_complete(dir)),
       m_bclXML(BCLXMLType::MeasureXML)
   {
@@ -68,7 +69,11 @@ namespace openstudio{
     // read in template files
     QString measureTemplate;
     QString testTemplate;
-    QString templateName;
+    QString templateClassName;
+    QString templateName = "NAME_TEXT";
+    QString templateDescription = "DESCRIPTION_TEXT";
+    QString templateModelerDescription = "MODELER_DESCRIPTION_TEXT";
+    std::vector<BCLMeasureArgument> arguments;
     QString testOSM;
     QString resourceFile;
     openstudio::path testOSMPath;
@@ -80,12 +85,32 @@ namespace openstudio{
 
       createDirectory(dir / toPath("tests"));
 
+      std::string argName("space_name");
+      std::string argDisplayName("New space name");
+      std::string argDescription("This name will be used as the name of the new space.");
+      std::string argType("String");
+      BCLMeasureArgument arg(argName, argDisplayName, argDescription, argType,
+                             boost::none, true, false, boost::none,
+                             std::vector<std::string>(), std::vector<std::string>(),
+                             boost::none, boost::none);
+      arguments.push_back(arg);
+
     }else if (measureType == MeasureType::EnergyPlusMeasure){
       measureTemplate = ":/templates/EnergyPlusMeasure/measure.rb";
       testTemplate = ":/templates/EnergyPlusMeasure/tests/energyplus_measure_test.rb";
       templateName = "EnergyPlusMeasure";
 
       createDirectory(dir / toPath("tests"));
+
+      std::string argName("zone_name");
+      std::string argDisplayName("New zone name");
+      std::string argDescription("This name will be used as the name of the new zone.");
+      std::string argType("String");
+      BCLMeasureArgument arg(argName, argDisplayName, argDescription, argType, 
+                             boost::none, true, false, boost::none, 
+                             std::vector<std::string>(), std::vector<std::string>(),
+                             boost::none, boost::none);
+      arguments.push_back(arg);
 
     }else if (measureType == MeasureType::UtilityMeasure){
       measureTemplate = ":/templates/UtilityMeasure/measure.rb";
@@ -115,7 +140,10 @@ namespace openstudio{
       if(file.open(QFile::ReadOnly)){
         QTextStream docIn(&file);
         measureString = docIn.readAll();
-        measureString.replace(templateName, toQString(className));
+        measureString.replace(templateClassName, toQString(className));
+        measureString.replace(templateName, toQString(name));
+        measureString.replace(templateDescription, toQString(description));
+        measureString.replace(templateModelerDescription, toQString(modelerDescription));
         file.close();
       }
     }
@@ -229,14 +257,13 @@ namespace openstudio{
     m_bclXML.setName(lowerClassName);
     m_bclXML.setDisplayName(name);
     m_bclXML.setClassName(className);
+    m_bclXML.setDescription(description);
+    m_bclXML.setModelerDescription(modelerDescription);
+    m_bclXML.setArguments(arguments);
     m_bclXML.addTag(taxonomyTag);
     this->setMeasureType(measureType);
 
-    // description needs to be read from rb
-    // modelerDescription needs to be read from rb
-    // args needs to be read from rb
-
-    // reset the checksum to trigger update next time
+    // reset the checksum to trigger update even if nothing has changed
     m_bclXML.resetXMLChecksum();
 
     m_bclXML.saveAs(measureXMLPath);
@@ -667,6 +694,43 @@ namespace openstudio{
   void BCLMeasure::incrementVersionId()
   {
     m_bclXML.incrementVersionId();
+  }
+
+  bool BCLMeasure::updateMeasureScript(const MeasureType& oldMeasureType, const MeasureType& newMeasureType, 
+                                       const std::string& oldClassName, const std::string& newClassName, 
+                                       const std::string& name, const std::string& description, 
+                                       const std::string& modelerDescription)
+  {
+    boost::optional<openstudio::path> path = primaryRubyScriptPath();
+    if (path && exists(*path)){
+
+      QString fileString;
+      QFile file(toQString(*path));
+      if (file.open(QFile::ReadOnly)){
+
+        QString nameFunction = "def name\n  \"" + toQString(name) + "\"\nend";
+        QString descriptionFunction = "def description\n  \"" + toQString(description) + "\"\nend";
+        QString modelerDescriptionFunction = "def modeler_description\n  \"" + toQString(modelerDescription) + "\"\nend";
+
+        QTextStream docIn(&file);
+        fileString = docIn.readAll();
+        fileString.replace(toQString(oldMeasureType.valueName()), toQString(newMeasureType.valueName()));
+        fileString.replace(toQString(oldClassName), toQString(newClassName));
+        fileString.replace(QRegExp("def name(.*?)end"), nameFunction);
+        fileString.replace(QRegExp("def description(.*?)end"), descriptionFunction);
+        fileString.replace(QRegExp("def modeler_description(.*?)end"), modelerDescriptionFunction);
+        file.close();
+
+        if (file.open(QIODevice::WriteOnly)){
+          QTextStream textStream(&file);
+          textStream << fileString;
+          file.close();
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
   
   void BCLMeasure::clearFiles()

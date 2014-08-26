@@ -8,17 +8,17 @@ class ReportingMeasure < OpenStudio::Ruleset::ReportingUserScript
   
   # human readable name
   def name
-    return "ReportingMeasure"
+    return "NAME_TEXT"
   end
   
   # human readable description
   def description
-    return "A human readable description goes here"
+    return "DESCRIPTION_TEXT"
   end
   
-  # human readable description
+  # human readable description of modeling approach
   def modeler_description
-    return "A human readable description of the technical implementation details goes here"
+    return "MODELER_DESCRIPTION_TEXT"
   end
   
   # define the arguments that the user will input
