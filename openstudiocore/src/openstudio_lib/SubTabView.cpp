@@ -85,6 +85,9 @@ void SubTabView::connectInspectorView()
 {
   // Inspector View
   connect(m_inspectorView, &OSInspectorView::dropZoneItemClicked, this, &SubTabView::dropZoneItemClicked);
+
+  auto isConnected = connect(this, SIGNAL(dropZoneItemClicked(OSItem*)), this, SLOT(onDropZoneItemClicked(OSItem*)));
+  OS_ASSERT(isConnected);
 }
 
 void SubTabView::connectItemSelectorButtons()
@@ -182,6 +185,10 @@ void SubTabView::paintEvent ( QPaintEvent * event )
   opt.init(this);
   QPainter p(this);
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
+
+void SubTabView::onDropZoneItemClicked(OSItem*)
+{
 }
 
 } // openstudio

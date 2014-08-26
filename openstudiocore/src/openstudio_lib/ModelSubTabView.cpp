@@ -58,7 +58,7 @@ ModelSubTabView::ModelSubTabView(OSItemSelector* itemSelector,
                        : SubTabView(itemSelector, modelObjectInspectorView, showGridViewLayout, parent),
     m_modelObjectInspectorView(modelObjectInspectorView)
 {
-  connect(this, &ModelSubTabView::dropZoneItemClicked, this, &ModelSubTabView::dropZoneItemClicked);
+  connect(this, &ModelSubTabView::dropZoneItemClicked, this, &ModelSubTabView::onDropZoneItemClicked);
 
   // DLM: can we remove this?
   //connect(itemSelector, &OSItemSelector::itemSelected, this, &ModelSubTabView::onItemSelected);
@@ -77,7 +77,7 @@ ModelObjectInspectorView* ModelSubTabView::modelObjectInspectorView()
   return m_modelObjectInspectorView;
 }
 
-void ModelSubTabView::dropZoneItemClicked(OSItem* item)
+void ModelSubTabView::onDropZoneItemClicked(OSItem* item)
 { 
   std::shared_ptr<OSDocument> currentDocument = OSAppBase::instance()->currentDocument();
   if (currentDocument){
@@ -88,7 +88,6 @@ void ModelSubTabView::dropZoneItemClicked(OSItem* item)
 }
 
 /*
-
 
 void ModelSubTabView::addClicked()
 {
@@ -162,4 +161,3 @@ void ModelSubTabView::purgeClicked()
 */
 
 } // openstudio
-

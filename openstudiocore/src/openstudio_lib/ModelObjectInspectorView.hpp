@@ -68,6 +68,8 @@ class ModelObjectInspectorView : public OSInspectorView
 
     void selectModelObject(const openstudio::model::ModelObject& modelObject);
 
+    void onDropZoneItemClicked(OSItem* item);
+
   protected:
     virtual void onSelectItem(OSItem *item);
     virtual void onClearSelection();

@@ -284,6 +284,12 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
                        // If the concept is read only, pass an empty optional
                        nameLineEditConcept->readOnly() ? boost::none : boost::optional<StringSetter>(std::bind(&NameLineEditConcept::set,nameLineEditConcept.data(),t_mo,std::placeholders::_1)));
 
+    isConnected = connect(nameLineEdit, SIGNAL(itemClicked(OSItem*)), gridView(), SIGNAL(dropZoneItemClicked(OSItem*)));
+    OS_ASSERT(isConnected);
+
+    isConnected = connect(nameLineEdit, SIGNAL(itemClicked(OSItem*)), this, SLOT(onDropZoneItemClicked(OSItem*)));
+    OS_ASSERT(isConnected);
+
     widget = nameLineEdit;
 
   } else if(QSharedPointer<QuantityEditConcept<double> > quantityEditConcept = t_baseConcept.dynamicCast<QuantityEditConcept<double> >()) {
@@ -376,6 +382,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
       ModelObjectSetter(std::bind(&DropZoneConcept::set, dropZoneConcept.data(), t_mo, std::placeholders::_1)));
 
     isConnected = connect(dropZone, SIGNAL(itemClicked(OSItem*)), gridView(), SIGNAL(dropZoneItemClicked(OSItem*)));
+    OS_ASSERT(isConnected);
+
+    isConnected = connect(dropZone, SIGNAL(itemClicked(OSItem*)), this, SLOT(onDropZoneItemClicked(OSItem*)));
     OS_ASSERT(isConnected);
 
     widget = dropZone;
@@ -783,6 +792,10 @@ HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidge
   layout->addWidget(m_label);
 
   layout->addWidget(m_checkBox);
+}
+
+void OSGridController::onDropZoneItemClicked(OSItem*)
+{
 }
 
 } // openstudio

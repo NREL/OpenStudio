@@ -67,7 +67,7 @@ class ModelSubTabView : public SubTabView
 
   protected slots:
 
-    void dropZoneItemClicked(OSItem* item);
+    virtual void onDropZoneItemClicked(OSItem* item);
 
     //void onItemSelected(); EW: Dead slot
 

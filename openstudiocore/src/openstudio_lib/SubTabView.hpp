@@ -89,6 +89,10 @@ class SubTabView : public QSplitter
 
     void openLibDlgClicked();
 
+  protected slots:
+
+    virtual void onDropZoneItemClicked(OSItem*);
+
   protected:
 
     void paintEvent ( QPaintEvent * event );

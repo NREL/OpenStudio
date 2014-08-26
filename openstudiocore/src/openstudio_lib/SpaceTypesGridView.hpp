@@ -55,6 +55,10 @@ signals:
 
   void gridRowSelected(OSItem*);
 
+private slots:
+
+  void onDropZoneItemClicked(OSItem* item);
+
 };
 
 class SpaceTypesGridController : public OSGridController

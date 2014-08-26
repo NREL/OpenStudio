@@ -87,6 +87,8 @@ private slots:
 
   void selectCategory(int index);
 
+  void onDropZoneItemClicked(OSItem*);
+
 private:
 
   void setGridController(OSGridController * gridController);

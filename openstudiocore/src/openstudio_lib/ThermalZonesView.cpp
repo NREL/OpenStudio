@@ -50,6 +50,9 @@ ThermalZonesView::ThermalZonesView(bool isIP, const model::Model & model,
 
   isConnected = connect(inspectorView(), SIGNAL(gridRowSelected(OSItem*)), itemSelector(), SIGNAL(gridRowSelected(OSItem*)));
   OS_ASSERT(isConnected);
+
+  isConnected = connect(inspectorView(), SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
+  OS_ASSERT(isConnected);
 }
 
 ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,

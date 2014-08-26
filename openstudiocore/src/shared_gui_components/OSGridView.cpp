@@ -80,6 +80,9 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
 
   connect(m_dropZone, &OSDropZone::itemDropped, m_gridController, &OSGridController::onItemDropped);
 
+  auto isConnected = connect(this, SIGNAL(dropZoneItemClicked(OSItem*)), this, SLOT(onDropZoneItemClicked(OSItem*)));
+  OS_ASSERT(isConnected);
+
   buttonLayout->addWidget(m_dropZone,0,Qt::AlignLeft);
 
   std::vector<QString> categories = m_gridController->categories();
@@ -265,6 +268,10 @@ void OSGridView::selectCategory(int index)
 void OSGridView::onSelectionCleared()
 {
   m_gridController->onSelectionCleared();
+}
+
+void OSGridView::onDropZoneItemClicked(OSItem*)
+{
 }
 
 } // openstudio

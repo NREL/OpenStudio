@@ -575,7 +575,9 @@ private slots:
   void horizontalHeaderChecked(int index);
 
   void cellChecked(int index);
-  
+
+  void onDropZoneItemClicked(OSItem*);
+
 };
 
 class HorizontalHeaderWidget : public QWidget
