@@ -20,14 +20,13 @@
 #ifndef MODEL_SETPOINTMANAGERMULTIZONEHUMIDITYMINIMUM_HPP
 #define MODEL_SETPOINTMANAGERMULTIZONEHUMIDITYMINIMUM_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SetpointManager.hpp>
+#include "ModelAPI.hpp"
+#include "SetpointManager.hpp"
 
 namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Node;
 
 namespace detail {
@@ -63,12 +62,9 @@ class MODEL_API SetpointManagerMultiZoneHumidityMinimum : public SetpointManager
 
   bool isMaximumSetpointHumidityRatioDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Node.
-  Node setpointNodeorNodeList() const;
+  boost::optional<Node> setpointNode() const;
 
   std::string controlVariable() const;
-
-  bool isControlVariableDefaulted() const;
 
   //@}
   /** @name Setters */
@@ -82,12 +78,7 @@ class MODEL_API SetpointManagerMultiZoneHumidityMinimum : public SetpointManager
 
   void resetMaximumSetpointHumidityRatio();
 
-  // TODO: Check argument type. From object lists, some candidates are: Node.
-  bool setSetpointNodeorNodeList(const Node& node);
-
-  bool setControlVariable(std::string controlVariable);
-
-  void resetControlVariable();
+  bool setControlVariable(const std::string& controlVariable);
 
   //@}
   /** @name Other */

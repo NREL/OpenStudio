@@ -17,19 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SetpointManagerMultiZoneHumidityMinimum.hpp>
-#include <model/SetpointManagerMultiZoneHumidityMinimum_Impl.hpp>
+#include "SetpointManagerMultiZoneHumidityMinimum.hpp"
+#include "SetpointManagerMultiZoneHumidityMinimum_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SetpointManager_MultiZone_Humidity_Minimum_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
-
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -90,22 +87,14 @@ namespace detail {
     return isEmpty(OS_SetpointManager_MultiZone_Humidity_MinimumFields::MaximumSetpointHumidityRatio);
   }
 
-  Node SetpointManagerMultiZoneHumidityMinimum_Impl::setpointNodeorNodeList() const {
-    boost::optional<Node> value = optionalSetpointNodeorNodeList();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Setpoint Nodeor Node List attached.");
-    }
-    return value.get();
+  boost::optional<Node> SetpointManagerMultiZoneHumidityMinimum_Impl::setpointNode() const {
+    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_MultiZone_Humidity_MinimumFields::SetpointNodeorNodeListName);
   }
 
   std::string SetpointManagerMultiZoneHumidityMinimum_Impl::controlVariable() const {
     boost::optional<std::string> value = getString(OS_SetpointManager_MultiZone_Humidity_MinimumFields::ControlVariable,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  bool SetpointManagerMultiZoneHumidityMinimum_Impl::isControlVariableDefaulted() const {
-    return isEmpty(OS_SetpointManager_MultiZone_Humidity_MinimumFields::ControlVariable);
   }
 
   bool SetpointManagerMultiZoneHumidityMinimum_Impl::setMinimumSetpointHumidityRatio(double minimumSetpointHumidityRatio) {
@@ -128,23 +117,19 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool SetpointManagerMultiZoneHumidityMinimum_Impl::setSetpointNodeorNodeList(const Node& node) {
+  bool SetpointManagerMultiZoneHumidityMinimum_Impl::setSetpointNode(const Node& node) {
     bool result = setPointer(OS_SetpointManager_MultiZone_Humidity_MinimumFields::SetpointNodeorNodeListName, node.handle());
     return result;
   }
 
-  bool SetpointManagerMultiZoneHumidityMinimum_Impl::setControlVariable(std::string controlVariable) {
-    bool result = setString(OS_SetpointManager_MultiZone_Humidity_MinimumFields::ControlVariable, controlVariable);
-    return result;
-  }
-
-  void SetpointManagerMultiZoneHumidityMinimum_Impl::resetControlVariable() {
-    bool result = setString(OS_SetpointManager_MultiZone_Humidity_MinimumFields::ControlVariable, "");
+  void SetpointManagerMultiZoneHumidityMinimum_Impl::resetSetpointNode() {
+    bool result = setString(OS_SetpointManager_MultiZone_Humidity_MinimumFields::SetpointNodeorNodeListName,"");
     OS_ASSERT(result);
   }
 
-  boost::optional<Node> SetpointManagerMultiZoneHumidityMinimum_Impl::optionalSetpointNodeorNodeList() const {
-    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_MultiZone_Humidity_MinimumFields::SetpointNodeorNodeListName);
+  bool SetpointManagerMultiZoneHumidityMinimum_Impl::setControlVariable(const std::string& controlVariable) {
+    bool result = setString(OS_SetpointManager_MultiZone_Humidity_MinimumFields::ControlVariable, controlVariable);
+    return result;
   }
 
 } // detail
@@ -154,12 +139,7 @@ SetpointManagerMultiZoneHumidityMinimum::SetpointManagerMultiZoneHumidityMinimum
 {
   OS_ASSERT(getImpl<detail::SetpointManagerMultiZoneHumidityMinimum_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_SetpointManager_MultiZone_Humidity_MinimumFields::SetpointNodeorNodeListName
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
-  // ok = setSetpointNodeorNodeList();
+  bool ok = setControlVariable("MinimumHumidityRatio");
   OS_ASSERT(ok);
 }
 
@@ -188,16 +168,12 @@ bool SetpointManagerMultiZoneHumidityMinimum::isMaximumSetpointHumidityRatioDefa
   return getImpl<detail::SetpointManagerMultiZoneHumidityMinimum_Impl>()->isMaximumSetpointHumidityRatioDefaulted();
 }
 
-Node SetpointManagerMultiZoneHumidityMinimum::setpointNodeorNodeList() const {
-  return getImpl<detail::SetpointManagerMultiZoneHumidityMinimum_Impl>()->setpointNodeorNodeList();
+boost::optional<Node> SetpointManagerMultiZoneHumidityMinimum::setpointNode() const {
+  return getImpl<detail::SetpointManagerMultiZoneHumidityMinimum_Impl>()->setpointNode();
 }
 
 std::string SetpointManagerMultiZoneHumidityMinimum::controlVariable() const {
   return getImpl<detail::SetpointManagerMultiZoneHumidityMinimum_Impl>()->controlVariable();
-}
-
-bool SetpointManagerMultiZoneHumidityMinimum::isControlVariableDefaulted() const {
-  return getImpl<detail::SetpointManagerMultiZoneHumidityMinimum_Impl>()->isControlVariableDefaulted();
 }
 
 bool SetpointManagerMultiZoneHumidityMinimum::setMinimumSetpointHumidityRatio(double minimumSetpointHumidityRatio) {
@@ -216,16 +192,8 @@ void SetpointManagerMultiZoneHumidityMinimum::resetMaximumSetpointHumidityRatio(
   getImpl<detail::SetpointManagerMultiZoneHumidityMinimum_Impl>()->resetMaximumSetpointHumidityRatio();
 }
 
-bool SetpointManagerMultiZoneHumidityMinimum::setSetpointNodeorNodeList(const Node& node) {
-  return getImpl<detail::SetpointManagerMultiZoneHumidityMinimum_Impl>()->setSetpointNodeorNodeList(node);
-}
-
-bool SetpointManagerMultiZoneHumidityMinimum::setControlVariable(std::string controlVariable) {
+bool SetpointManagerMultiZoneHumidityMinimum::setControlVariable(const std::string& controlVariable) {
   return getImpl<detail::SetpointManagerMultiZoneHumidityMinimum_Impl>()->setControlVariable(controlVariable);
-}
-
-void SetpointManagerMultiZoneHumidityMinimum::resetControlVariable() {
-  getImpl<detail::SetpointManagerMultiZoneHumidityMinimum_Impl>()->resetControlVariable();
 }
 
 /// @cond
