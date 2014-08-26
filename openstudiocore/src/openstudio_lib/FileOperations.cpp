@@ -40,6 +40,8 @@
 
 #include "../osversion/VersionTranslator.hpp"
 
+#include "../ruleset/OSArgument.hpp"
+
 #include "../energyplus/ReverseTranslator.hpp"
 
 #include "../utilities/filetypes/EpwFile.hpp"
@@ -49,11 +51,13 @@
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/core/Assert.hpp"
+
 #include <OpenStudio.hxx>
 
 #include <QDir>
 #include <QMessageBox>
 #include <QTemporaryFile>
+#include <QJsonDocument>
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem.hpp>
@@ -728,7 +732,7 @@ namespace openstudio {
   {
     // loop over all reporting measures and gather arguments
     bool pastEnergyPlus = false;
-    std::string reportRequestManagerArgs = "[";
+    QVariantList measureList;
     for (std::vector<runmanager::WorkItem>::iterator itr = workItems.begin();
          itr != workItems.end();
          ++itr)
@@ -736,18 +740,35 @@ namespace openstudio {
       if (itr->type == openstudio::runmanager::JobType::EnergyPlus){
         pastEnergyPlus = true;
       } if (pastEnergyPlus && itr->type == openstudio::runmanager::JobType::UserScript){
-        reportRequestManagerArgs += itr->toJSON() + ",";
+
+        QVariantMap measureHash;
+
+        openstudio::runmanager::RubyJobBuilder rjb(*itr);
+        measureHash["script"] = toQString(rjb.script()); // keep in mind this is probably just UserScriptAdapter to get the actual script you need to use:
+       
+        QVariantList parameterList;
+        for (const auto& parameter : rjb.getScriptParameters()){
+          parameterList << toQString(parameter);
+        }
+        measureHash["parameters"] = parameterList;
+
+        QVariantList argList;
+        auto args = openstudio::runmanager::RubyJobBuilder::toOSArguments(itr->params);
+        for (const auto& arg : args){
+          argList << ruleset::detail::toVariant(arg);
+        }
+        measureHash["args"] = argList;
+
+        measureList << measureHash;
       }
     }
-    if (reportRequestManagerArgs.size() > 1){
-      // get rid of trailing ','
-      reportRequestManagerArgs.pop_back();
-    }
-    reportRequestManagerArgs += "]";
-    std::replace(reportRequestManagerArgs.begin(), reportRequestManagerArgs.end(), "\n", " "); // minify
+
+    QJsonDocument document = QJsonDocument::fromVariant(measureList);
+    QString jsonValue = document.toJson(QJsonDocument::Compact);
+    //QString jsonValue = document.toJson(QJsonDocument::Indented);
 
     ruleset::OSArgument argument = ruleset::OSArgument::makeStringArgument("json_work_items", true, false);
-    argument.setValue(reportRequestManagerArgs);
+    argument.setValue(toString(jsonValue));
 
     std::vector<ruleset::OSArgument> arguments;
     arguments.push_back(argument);

@@ -2,7 +2,7 @@
   <schema_version>3.0</schema_version>
   <name>report_request</name>
   <uid>060ee477-b04c-4a1b-8788-312d796ad132</uid>
-  <version_id>ecf4c865-140e-45f8-92c1-2e6bd263bbce</version_id>
+  <version_id>36836f29-f932-447e-bb51-0b48b3ec6458</version_id>
   <xml_checksum>2CF2EA46</xml_checksum>
   <class_name>ReportRequest</class_name>
   <display_name>Report Request</display_name>
@@ -10,12 +10,11 @@
   <modeler_description></modeler_description>
   <arguments>
     <argument>
-      <name>zone_name</name>
-      <display_name>New zone name</display_name>
-      <description>This name will be used as the name of the new zone.</description>
+      <name>json_work_items</name>
+      <display_name>json_work_items</display_name>
       <type>String</type>
       <required>true</required>
-      <model_dependent>false</model_dependent>
+      <model_dependent>true</model_dependent>
     </argument>
   </arguments>
   <provenances/>
@@ -46,6 +45,18 @@
   </attributes>
   <files>
     <file>
+      <filename>report_request_test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>898B4852</checksum>
+    </file>
+    <file>
+      <filename>example.json</filename>
+      <filetype>json</filetype>
+      <usage_type>test</usage_type>
+      <checksum>D88DBC57</checksum>
+    </file>
+    <file>
       <version>
         <software_program>OpenStudio</software_program>
         <identifier>1.4.2</identifier>
@@ -53,13 +64,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>21965880</checksum>
-    </file>
-    <file>
-      <filename>report_request_test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>898B4852</checksum>
+      <checksum>9B24CA96</checksum>
     </file>
   </files>
 </measure>
