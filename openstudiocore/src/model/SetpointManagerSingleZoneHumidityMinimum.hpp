@@ -20,13 +20,12 @@
 #ifndef MODEL_SETPOINTMANAGERSINGLEZONEHUMIDITYMINIMUM_HPP
 #define MODEL_SETPOINTMANAGERSINGLEZONEHUMIDITYMINIMUM_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SetpointManager.hpp>
+#include "ModelAPI.hpp"
+#include "SetpointManager.hpp"
 
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Node;
 class ThermalZone;
 
@@ -57,27 +56,19 @@ class MODEL_API SetpointManagerSingleZoneHumidityMinimum : public SetpointManage
 
   std::string controlVariable() const;
 
-  bool isControlVariableDefaulted() const;
+  boost::optional<Node> setpointNode() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Node.
-  Node setpointNodeorNodeList() const;
-
-  // TODO: Check return type. From object lists, some candidates are: ThermalZone.
-  ThermalZone controlZone() const;
+  boost::optional<ThermalZone> controlZone() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  bool setControlVariable(std::string controlVariable);
+  bool setControlVariable(const std::string& controlVariable);
 
-  void resetControlVariable();
-
-  // TODO: Check argument type. From object lists, some candidates are: Node.
-  bool setSetpointNodeorNodeList(const Node& node);
-
-  // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
   bool setControlZone(const ThermalZone& thermalZone);
+
+  void resetControlZone();
 
   //@}
   /** @name Other */

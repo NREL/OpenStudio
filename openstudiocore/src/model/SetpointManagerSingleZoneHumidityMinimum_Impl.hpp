@@ -20,13 +20,12 @@
 #ifndef MODEL_SETPOINTMANAGERSINGLEZONEHUMIDITYMINIMUM_IMPL_HPP
 #define MODEL_SETPOINTMANAGERSINGLEZONEHUMIDITYMINIMUM_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SetpointManager_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "SetpointManager_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Node;
 class ThermalZone;
 
@@ -34,7 +33,6 @@ namespace detail {
 
   /** SetpointManagerSingleZoneHumidityMinimum_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerSingleZoneHumidityMinimum.*/
   class MODEL_API SetpointManagerSingleZoneHumidityMinimum_Impl : public SetpointManager_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -61,32 +59,26 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const;
 
+    virtual ModelObject clone(Model model) const;
+
+    virtual bool addToNode(Node & node);
+
     //@}
     /** @name Getters */
     //@{
 
-    std::string controlVariable() const;
+    virtual std::string controlVariable() const;
 
-    bool isControlVariableDefaulted() const;
+    virtual boost::optional<Node> setpointNode() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Node.
-    Node setpointNodeorNodeList() const;
-
-    // TODO: Check return type. From object lists, some candidates are: ThermalZone.
-    ThermalZone controlZone() const;
+    boost::optional<ThermalZone> controlZone() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    bool setControlVariable(std::string controlVariable);
+    virtual bool setControlVariable(const std::string& controlVariable);
 
-    void resetControlVariable();
-
-    // TODO: Check argument type. From object lists, some candidates are: Node.
-    bool setSetpointNodeorNodeList(const Node& node);
-
-    // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
     bool setControlZone(const ThermalZone& thermalZone);
 
     //@}
@@ -96,14 +88,11 @@ namespace detail {
     //@}
    protected:
    private:
-    REGISTER_LOGGER("openstudio.model.SetpointManagerSingleZoneHumidityMinimum");
+    virtual bool setSetpointNode(const Node& node);
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Node> optionalSetpointNodeorNodeList() const;
-    boost::optional<ThermalZone> optionalControlZone() const;
+    virtual void resetSetpointNode();
+
+    REGISTER_LOGGER("openstudio.model.SetpointManagerSingleZoneHumidityMinimum");
   };
 
 } // detail
