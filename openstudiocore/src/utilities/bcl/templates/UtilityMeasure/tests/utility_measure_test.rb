@@ -4,7 +4,7 @@ require 'minitest/autorun'
 
 require_relative '../measure.rb'
 
-class UtilityMeasure_Test < MiniTest::Unit::TestCase
+class UtilityMeasure_Test < MiniTest::Test
   
   # def setup
   # end

@@ -81,7 +81,7 @@ namespace openstudio{
     if (measureType == MeasureType::ModelMeasure){
       measureTemplate = ":/templates/ModelMeasure/measure.rb";
       testTemplate = ":/templates/ModelMeasure/tests/model_measure_test.rb";
-      templateName = "ModelMeasure";
+      templateClassName = "ModelMeasure";
 
       createDirectory(dir / toPath("tests"));
 
@@ -98,7 +98,7 @@ namespace openstudio{
     }else if (measureType == MeasureType::EnergyPlusMeasure){
       measureTemplate = ":/templates/EnergyPlusMeasure/measure.rb";
       testTemplate = ":/templates/EnergyPlusMeasure/tests/energyplus_measure_test.rb";
-      templateName = "EnergyPlusMeasure";
+      templateClassName = "EnergyPlusMeasure";
 
       createDirectory(dir / toPath("tests"));
 
@@ -115,7 +115,7 @@ namespace openstudio{
     }else if (measureType == MeasureType::UtilityMeasure){
       measureTemplate = ":/templates/UtilityMeasure/measure.rb";
       testTemplate = ":/templates/UtilityMeasure/tests/utility_measure_test.rb";
-      templateName = "UtilityMeasure";
+      templateClassName = "UtilityMeasure";
 
       createDirectory(dir / toPath("tests"));
 
@@ -124,7 +124,7 @@ namespace openstudio{
       testTemplate = ":/templates/ReportingMeasure/tests/reporting_measure_test.rb";
       testOSM = ":/templates/ReportingMeasure/tests/example_model.osm";
       resourceFile = ":/templates/ReportingMeasure/resources/report.html.in";
-      templateName = "ReportingMeasure";
+      templateClassName = "ReportingMeasure";
 
       createDirectory(dir / toPath("tests"));
       testOSMPath = dir / toPath("tests/example_model.osm");
@@ -142,8 +142,8 @@ namespace openstudio{
         measureString = docIn.readAll();
         measureString.replace(templateClassName, toQString(className));
         measureString.replace(templateName, toQString(name));
+        measureString.replace(templateModelerDescription, toQString(modelerDescription)); // put first as this includes description tag
         measureString.replace(templateDescription, toQString(description));
-        measureString.replace(templateModelerDescription, toQString(modelerDescription));
         file.close();
       }
     }
@@ -154,7 +154,7 @@ namespace openstudio{
       if(file.open(QFile::ReadOnly)){
         QTextStream docIn(&file);
         testString = docIn.readAll();
-        testString.replace(templateName, toQString(className));
+        testString.replace(templateClassName, toQString(className));
         file.close();
       }
     }
@@ -322,8 +322,8 @@ namespace openstudio{
 
     QString result;
     QStringList parts = str.split(' ', QString::SkipEmptyParts);
-    for (const QString& part : parts) {
-      part[0].toUpper();
+    for (QString part : parts) {
+      part[0] = part[0].toUpper();
       result.append(part);
     }
 

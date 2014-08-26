@@ -102,7 +102,7 @@ TEST_F(BCLFixture, BCLMeasure)
   EXPECT_EQ("AnotherMeasure", className);
 
   EXPECT_NO_THROW( measure2 = BCLMeasure("Another Measure", className, dir2, "Envelope.Fenestration", 
-    MeasureType::ReportingMeasure) );
+    MeasureType::ReportingMeasure, "Description", "Modeler Description") );
   ASSERT_TRUE(measure2);
   ASSERT_TRUE(exists(dir2));
   EXPECT_EQ("Another Measure", measure2->name());
@@ -128,7 +128,7 @@ TEST_F(BCLFixture, BCLMeasure_CTor)
 
   try{
     BCLMeasure measure("Test Measure", className, dir, "Envelope.Fenestration", 
-                       MeasureType::ModelMeasure);
+                       MeasureType::ModelMeasure, "Description", "Modeler Description");
   }catch(std::exception&){
     ASSERT_TRUE(false);
   }

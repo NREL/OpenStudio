@@ -46,7 +46,7 @@ class EnergyPlusMeasure < OpenStudio::Ruleset::WorkspaceUserScript
 
     # check the user_name for reasonableness
     if zone_name.empty?
-      runner.registerError("Empty zone name was Entered.")
+      runner.registerError("Empty zone name was entered.")
       return false
     end
     

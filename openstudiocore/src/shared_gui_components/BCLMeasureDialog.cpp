@@ -59,7 +59,7 @@ BCLMeasureDialog::BCLMeasureDialog(const BCLMeasure& bclMeasure, QWidget* parent
 
   init();
 
-  m_nameLineEdit->setText(toQString(bclMeasure.name() + " Copy"));
+  m_nameLineEdit->setText(toQString(bclMeasure.displayName() + " Copy"));
   m_descriptionTextEdit->setText(toQString(bclMeasure.description()));
   m_modelerDescriptionTextEdit->setText(toQString(bclMeasure.modelerDescription()));
 

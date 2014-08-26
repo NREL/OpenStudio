@@ -46,7 +46,7 @@ class ModelMeasure < OpenStudio::Ruleset::ModelUserScript
     
     # check the space_name for reasonableness
     if space_name.empty?
-      runner.registerError("Empty space name was Entered.")
+      runner.registerError("Empty space name was entered.")
       return false
     end
 
