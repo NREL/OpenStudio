@@ -42,6 +42,11 @@ class ReportRequest < OpenStudio::Ruleset::WorkspaceUserScript
 
     # assign the user inputs to variables
     json_work_items = runner.getStringArgumentValue("json_work_items", user_arguments)
+    
+    File.open('example.json', 'w') do |f|
+      f << json_work_items
+    end
+    
     json_work_items = JSON.parse(json_work_items)
     json_work_items.each do |json_work_item|
       begin
@@ -56,11 +61,42 @@ class ReportRequest < OpenStudio::Ruleset::WorkspaceUserScript
         work_item.params.each do |p|
           puts p
         end
+
+        # Check list of objects in memory before loading the script
+        currentObjects = Hash.new
+        ObjectSpace.each_object(OpenStudio::Ruleset::UserScript) { |obj| currentObjects[obj] = true }
+        ObjectSpace.garbage_collect
+        
+        load measure_file.fullPath.to_s # need load in case have seen this script before
+        userScript = nil
+        type = String.new
+        ObjectSpace.each_object(OpenStudio::Ruleset::UserScript) do |obj|
+          if not currentObjects[obj]
+            if obj.is_a? OpenStudio::Ruleset::ReportingUserScript
+              userScript = obj
+              type = "report"
+            end
+          end
+        end
+        
+        if userScript.nil?
+          next
+        end
+        
+        runner = OpenStudio::Ruleset::OSRunner.new
+        user_arguments = OpenStudio::Ruleset::OSArgumentMap.new
+        
+        new_objects = userScript.energyPlusOutputRequests(runner, user_arguments)
+        
+        new_objects.each do |object|
+          workspace.addObject(object)
+        end
+        
       rescue Exception => e
         puts e
       end
     end
-    
+
     return true
  
   end 

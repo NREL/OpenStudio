@@ -744,6 +744,7 @@ namespace openstudio {
       reportRequestManagerArgs.pop_back();
     }
     reportRequestManagerArgs += "]";
+    std::replace(reportRequestManagerArgs.begin(), reportRequestManagerArgs.end(), "\n", " "); // minify
 
     ruleset::OSArgument argument = ruleset::OSArgument::makeStringArgument("json_work_items", true, false);
     argument.setValue(reportRequestManagerArgs);
