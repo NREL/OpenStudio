@@ -47,6 +47,9 @@
 #include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/bcl/BCL.hpp"
+#include "../utilities/bcl/RemoteBCL.hpp"
+#include "../utilities/bcl/LocalBCL.hpp"
 
 #include <QPolygonF>
 #include <QPointF>
@@ -984,13 +987,13 @@ namespace radiance {
         openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(surface);
 
         m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3)
-          + " polygon " + surface_name + "\n0\n0\n" + formatString(polygon.size()*3) +"\n";
+          + " polygon " + surface_name + "\n0\n0\n" + formatString(polygon.size() * 3) + "\n";
 
         for (const auto & vertex : polygon)
         {
           m_radSpaces[space_name] += formatString(vertex.x()) + " "
             + formatString(vertex.y()) + " "
-            + formatString(vertex.z()) +"\n";
+            + formatString(vertex.z()) + "\n";
         }
 
         // get sub surfaces
@@ -1021,7 +1024,7 @@ namespace radiance {
 
           // find window group
           openstudio::Vector3d outwardNormal = surface.outwardNormal();
-          
+
           WindowGroup windowGroup = getWindowGroup(outwardNormal, space, *construction, shadingControl, polygon);
           std::string windowGroup_name = windowGroup.name();
 
@@ -1036,7 +1039,7 @@ namespace radiance {
 
 
           std::string subSurface_name = cleanName(subSurface.name().get());
-        
+
           m_radSpaces[space_name] += "#--SubSurface = " + subSurface_name + "\n";
 
           std::string subSurfaceUpCase = boost::algorithm::to_upper_copy(subSurface.subSurfaceType());
@@ -1102,7 +1105,7 @@ namespace radiance {
               double cRGB = (0.95 - tVis);
 
               // trans parameters
-              double transA7 = tS / (tVis+tS);
+              double transA7 = tS / (tVis + tS);
               // transA6 = (tn + tS) / (rD + tVis + tS);
               double transA6 = (tn + tS) / (cRGB + tn + tS);
               double transA5 = sR;
@@ -1115,17 +1118,17 @@ namespace radiance {
               double transA1 = cRGB; // monochromatic
 
               rMaterial = "trans";
-              matString = "0\n0\n7\n"+formatString(transA1, 3)+" "+formatString(transA2, 3)+" "+formatString(transA3, 3)+\
-                " "+formatString(transA4, 3)+" "+formatString(transA5, 3)+" "+formatString(transA6, 3)+" "+formatString(transA7, 2)+"\n";
+              matString = "0\n0\n7\n" + formatString(transA1, 3) + " " + formatString(transA2, 3) + " " + formatString(transA3, 3) + \
+                " " + formatString(transA4, 3) + " " + formatString(transA5, 3) + " " + formatString(transA6, 3) + " " + formatString(transA7, 2) + "\n";
               //double nTs = 0.0; // transmitted specularity
 
               if (tVis >= 0.6) {
-                LOG( Warn, "dubious glazing material definition in "+space_name+"; Tvis ="+formatString(tVis, 2)+", yet diffuse? Suspect.");  
+                LOG(Warn, "dubious glazing material definition in " + space_name + "; Tvis =" + formatString(tVis, 2) + ", yet diffuse? Suspect.");
               }
-              
+
             } else {
 
-              matString = "0\n0\n3\n"+formatString(tn, 3)+" "+formatString(tn, 3)+" "+formatString(tn, 3)+"\n";
+              matString = "0\n0\n3\n" + formatString(tn, 3) + " " + formatString(tn, 3) + " " + formatString(tn, 3) + "\n";
               //double nTs = 1.0; // transmitted specularity
             }
 
@@ -1144,7 +1147,7 @@ namespace radiance {
 
             // write the polygon
             m_radWindowGroups[windowGroup_name] += windowGroup_name + " polygon " + subSurface_name + "\n";
-            m_radWindowGroups[windowGroup_name] += "0\n0\n" + formatString(polygon.size()*3) + "\n";
+            m_radWindowGroups[windowGroup_name] += "0\n0\n" + formatString(polygon.size() * 3) + "\n";
 
             for (Point3dVector::const_reverse_iterator vertex = polygon.rbegin();
                 vertex != polygon.rend();
@@ -1157,25 +1160,37 @@ namespace radiance {
             }
 
             // copy required bsdf files into place
-            openstudio::path bsdfoutpath = t_radDir/ openstudio::toPath("bsdf");
+            openstudio::path bsdfoutpath = t_radDir / openstudio::toPath("bsdf");
 
             std::string testBSDFLib = "/Users/rgugliel/src/support/bsdf";
-            //testBSDFLib = "E:/bsdf";
+            testBSDFLib = "E:/bsdf";
             //LOG(Warn, "Using temporarily hard coded BSDF library '" + testBSDFLib + "' for testing");
- 
+
             if (rMaterial == "glass"){
 
-              openstudio::path sourcePath = openstudio::toPath(testBSDFLib + "/cl_Tn" + formatString(tVis, 2) + ".xml");
-              std::cout << "tVis = " << openstudio::toString(tVis) << std::endl;
-              std::cout << "the source path is " << openstudio::toString(sourcePath) << ", exists = " << boost::filesystem::exists(sourcePath) << std::endl;
-              std::cout << "the dest path is " << openstudio::toString(bsdfoutpath) << ", exists = " << boost::filesystem::exists(bsdfoutpath) << std::endl;
+              boost::optional<openstudio::path> uncontrolledBSDF = getBSDF(tVis, 1.0, "None");
+              if (!uncontrolledBSDF){
+                LOG(Warn, "Using temporarily hard coded BSDF library '" + testBSDFLib + "' for testing");
+                uncontrolledBSDF = openstudio::toPath(testBSDFLib + "/cl_Tn" + formatString(tVis, 2) + ".xml");
+              }
 
-              boost::filesystem::copy_file(openstudio::toPath(testBSDFLib + "/cl_Tn" + formatString(tVis, 2) + ".xml"), bsdfoutpath / \
-                openstudio::toPath("cl_Tn" + formatString(tVis, 2) + ".xml"), boost::filesystem::copy_option::overwrite_if_exists);
+              boost::optional<openstudio::path> controlledBSDF = getBSDF(tVis, 1.0, "Blind");
+              if (!controlledBSDF){
+                LOG(Warn, "Using temporarily hard coded BSDF library '" + testBSDFLib + "' for testing");
+                controlledBSDF = openstudio::toPath(testBSDFLib + "/cl_Tn" + formatString(tVis, 2) + "_blinds.xml");
+              }
 
-              boost::filesystem::copy_file(openstudio::toPath(testBSDFLib + "/cl_Tn" + formatString(tVis, 2) + "_blinds.xml"), bsdfoutpath / \
-                openstudio::toPath("cl_Tn" + formatString(tVis, 2) + "_blinds.xml"), boost::filesystem::copy_option::overwrite_if_exists);
-              
+              //openstudio::path sourcePath = openstudio::toPath(testBSDFLib + "/cl_Tn" + formatString(tVis, 2) + ".xml");
+              //std::cout << "tVis = " << openstudio::toString(tVis) << std::endl;
+              //std::cout << "the source path is " << openstudio::toString(sourcePath) << ", exists = " << boost::filesystem::exists(sourcePath) << std::endl;
+              //std::cout << "the dest path is " << openstudio::toString(bsdfoutpath) << ", exists = " << boost::filesystem::exists(bsdfoutpath) << std::endl;
+
+              boost::filesystem::copy_file(*uncontrolledBSDF, bsdfoutpath / openstudio::toPath("cl_Tn" + formatString(tVis, 2) + ".xml"),
+                                           boost::filesystem::copy_option::overwrite_if_exists);
+
+              boost::filesystem::copy_file(*controlledBSDF, bsdfoutpath / openstudio::toPath("cl_Tn" + formatString(tVis, 2) + "_blinds.xml"),
+                                           boost::filesystem::copy_option::overwrite_if_exists);
+
               // add job to vmx problem set
               m_radDCmats.insert(windowGroup_name + "," + \
                 formatString((control.outwardNormal->x() * -1), 2) + " " + \
@@ -1185,13 +1200,19 @@ namespace radiance {
 
             } else if (rMaterial == "trans"){
 
-              openstudio::path sourcePath = openstudio::toPath(testBSDFLib + "/df_Tn" + formatString(tVis, 2) + ".xml");
-              std::cout << "tVis = " << openstudio::toString(tVis) << std::endl;
-              std::cout << "the source path is " << openstudio::toString(sourcePath) << ", exists = " << boost::filesystem::exists(sourcePath) << std::endl;
-              std::cout << "the dest path is " << openstudio::toString(bsdfoutpath) << ", exists = " << boost::filesystem::exists(bsdfoutpath) << std::endl;
+              boost::optional<openstudio::path> uncontrolledBSDF = getBSDF(tVis, 0.0, "None");
+              if (!uncontrolledBSDF){
+                LOG(Warn, "Using temporarily hard coded BSDF library '" + testBSDFLib + "' for testing");
+                uncontrolledBSDF = openstudio::toPath(testBSDFLib + "/df_Tn" + formatString(tVis, 2) + ".xml");
+              }
 
-              boost::filesystem::copy_file(openstudio::toPath(testBSDFLib + "/df_Tn" + formatString(tVis, 2) + ".xml"), bsdfoutpath / \
-                openstudio::toPath("df_Tn" + formatString(tVis, 2) + ".xml"), boost::filesystem::copy_option::overwrite_if_exists);
+              //openstudio::path sourcePath = openstudio::toPath(testBSDFLib + "/df_Tn" + formatString(tVis, 2) + ".xml");
+              //std::cout << "tVis = " << openstudio::toString(tVis) << std::endl;
+              //std::cout << "the source path is " << openstudio::toString(sourcePath) << ", exists = " << boost::filesystem::exists(sourcePath) << std::endl;
+              //std::cout << "the dest path is " << openstudio::toString(bsdfoutpath) << ", exists = " << boost::filesystem::exists(bsdfoutpath) << std::endl;
+
+              boost::filesystem::copy_file(*uncontrolledBSDF, bsdfoutpath / openstudio::toPath("df_Tn" + formatString(tVis, 2) + ".xml"),
+                                           boost::filesystem::copy_option::overwrite_if_exists);
 
               // add job to vmx problem set
               m_radDCmats.insert(windowGroup_name + "," + \
@@ -1219,7 +1240,7 @@ namespace radiance {
               formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
             // write polygon
             m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3) + " polygon " + subSurface_name + "\n";
-            m_radSpaces[space_name] += "0\n0\n" + formatString(polygon.size()*3) + "\n";
+            m_radSpaces[space_name] += "0\n0\n" + formatString(polygon.size() * 3) + "\n";
 
             for (const auto & vertex : polygon)
             {
@@ -1269,7 +1290,7 @@ namespace radiance {
           //
           openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(shadingSurface);
           m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3) + " polygon " + \
-          shadingSurface_name + "\n0\n0\n" + formatString(polygon.size()*3) + "\n";
+          shadingSurface_name + "\n0\n0\n" + formatString(polygon.size() * 3) + "\n";
 
           for (const auto & vertex : polygon)
           {
@@ -1314,7 +1335,7 @@ namespace radiance {
 
           openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(interiorPartitionSurface);
           m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3) + " polygon " + \
-          interiorPartitionSurface_name + "\n0\n0\n" + formatString(polygon.size()*3) + "\n";
+          interiorPartitionSurface_name + "\n0\n0\n" + formatString(polygon.size() * 3) + "\n";
           for (const auto & vertex : polygon)
           {
             m_radSpaces[space_name] += formatString(vertex.x()) + " " + formatString(vertex.y()) + " " + formatString(vertex.z()) + "\n\n";
@@ -1346,20 +1367,20 @@ namespace radiance {
         formatString(sensor_aimVector.x()) + " " + \
         formatString(sensor_aimVector.y()) + " " + \
         formatString(sensor_aimVector.z()) + "\n";
-       
+
         // write daylighting controls
-        openstudio::path filename = t_radDir/openstudio::toPath("numeric")/openstudio::toPath(space_name + ".sns");
+        openstudio::path filename = t_radDir / openstudio::toPath("numeric") / openstudio::toPath(space_name + ".sns");
         OFSTREAM file(filename);
         if (file.is_open()){
           t_outfiles.push_back(filename);
           file << m_radSensors[space_name];
-        }else{
+        } else{
           LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
         }
 
         LOG(Debug, "Wrote " << space_name << ".sns");
       } // daylighting controls
-       
+
       // get glare sensor
       std::vector<openstudio::model::GlareSensor> glareSensors = space.glareSensors();
       for (const auto & sensor : glareSensors)
@@ -1369,7 +1390,7 @@ namespace radiance {
         openstudio::Point3d sensor_point = openstudio::radiance::ForwardTranslator::getReferencePoint(sensor);
         // openstudio::Vector3dVector sensor_viewVector = openstudio::radiance::ForwardTranslator::getViewVectors(*sensor);
         openstudio::Vector3dVector viewVectors = openstudio::radiance::ForwardTranslator::getViewVectors(sensor);
-        for (const Vector3d& viewVector : viewVectors){        
+        for (const Vector3d& viewVector : viewVectors){
           m_radGlareSensors[space_name] += \
           formatString(sensor_point.x()) + " " + \
           formatString(sensor_point.y()) + " " + \
@@ -1380,12 +1401,12 @@ namespace radiance {
         }
 
         // write glare sensor
-        openstudio::path filename = t_radDir/openstudio::toPath("numeric")/openstudio::toPath(space_name + ".glr");
+        openstudio::path filename = t_radDir / openstudio::toPath("numeric") / openstudio::toPath(space_name + ".glr");
         OFSTREAM file(filename);
         if (file.is_open()){
           t_outfiles.push_back(filename);
           file << m_radGlareSensors[space_name];
-        }else{
+        } else{
           LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
         }
 
@@ -1398,8 +1419,8 @@ namespace radiance {
       //  openstudio::Point3d sensor_point = openstudio::radiance::ForwardTranslator::getReferencePoint(*viewpoints);
       //  openstudio::Vector3dVector sensor_viewVector = openstudio::radiance::ForwardTranslator::getViewVectors(*viewpoints);
       //  m_radViews[space_name] += "rvu -vta -vp " + formatString(sensor_point.x()) + " " + formatString(sensor_point.y()) + " " + \
-      //  formatString(sensor_point.z()) + " -vd " + formatString(sensor_viewVector[0].x()) + " " + formatString(sensor_viewVector[0].y()) + " " + \
-      //  formatString(sensor_viewVector[0].z()) + " -vu 0 0 1 -vh 180 -vv 180 -vo 0 -vs 0 -vl 0\n";
+            //  formatString(sensor_point.z()) + " -vd " + formatString(sensor_viewVector[0].x()) + " " + formatString(sensor_viewVector[0].y()) + " " + \
+            //  formatString(sensor_viewVector[0].z()) + " -vu 0 0 1 -vh 180 -vv 180 -vo 0 -vs 0 -vl 0\n";
       //
       //  // write views
       //  openstudio::path filename = t_radDir/openstudio::toPath("views")/openstudio::toPath(space_name + ".vw");
@@ -1409,7 +1430,7 @@ namespace radiance {
       //
       //  LOG(Debug, "INFO: wrote " << space_name << ".vw");
       //}
-      
+
       // get output illuminance map points, write to file
       std::vector<openstudio::model::IlluminanceMap> illuminanceMaps = space.illuminanceMaps();
       for (const auto & map : illuminanceMaps)
@@ -1418,7 +1439,7 @@ namespace radiance {
         m_radMapHandles[space_name] = map.handle();
 
         // write map file
-        openstudio::path filename = t_radDir/openstudio::toPath("numeric")/openstudio::toPath(space_name + ".map");
+        openstudio::path filename = t_radDir / openstudio::toPath("numeric") / openstudio::toPath(space_name + ".map");
         OFSTREAM file(filename);
         if (file.is_open()){
           t_outfiles.push_back(filename);
@@ -1429,7 +1450,7 @@ namespace radiance {
             m_radMaps[space_name] += "" + formatString(point.x()) + " " + formatString(point.y()) + " " + formatString(point.z()) + " 0 0 1\n";
           }
           file << m_radMaps[space_name];
-        }else{
+        } else{
           LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
         }
 
@@ -1443,7 +1464,7 @@ namespace radiance {
         t_outfiles.push_back(filename);
         m_radSceneFiles.push_back(filename);
         file << m_radSpaces[space_name];
-      }else{
+      } else{
         LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
       }
 
@@ -1460,17 +1481,17 @@ namespace radiance {
             t_outfiles.push_back(glazefilename);
             m_radSceneFiles.push_back(glazefilename);
             glazefile << m_radWindowGroups[windowGroup_name];
-          }else{
+          } else{
             LOG(Error, "Cannot open file '" << toString(glazefilename) << "' for writing");
           }
 
           // write window group control points
-          openstudio::path filename = t_radDir/openstudio::toPath("numeric")/openstudio::toPath(windowGroup_name + ".pts");
+          openstudio::path filename = t_radDir / openstudio::toPath("numeric") / openstudio::toPath(windowGroup_name + ".pts");
           OFSTREAM file(filename);
           if (file.is_open()){
             t_outfiles.push_back(filename);
             file << windowGroup.windowGroupPoints();
-          }else{
+          } else{
             LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
           }
         }
@@ -1478,7 +1499,7 @@ namespace radiance {
 
       // write radiance materials file
       m_radMaterials.insert("# OpenStudio Materials File\n\n# default mats for daylight coefficients\nvoid plastic dc_black\n0\n0\n3\n0 0 0\n\
-        void light dc_light\n0\n0\n3\n1 1 1\n\n");
+                                    void light dc_light\n0\n0\n3\n1 1 1\n\n");
       openstudio::path materialsfilename = t_radDir / openstudio::toPath("materials/materials.rad");
       OFSTREAM materialsfile(materialsfilename);
       if (materialsfile.is_open()){
@@ -1487,7 +1508,7 @@ namespace radiance {
         {
           materialsfile << line;
         };
-      }else{
+      } else{
         LOG(Error, "Cannot open file '" << toString(materialsfilename) << "' for writing");
       }
 
@@ -1501,7 +1522,7 @@ namespace radiance {
         {
           materials_vmxfile << line;
         };
-      }else{
+      } else{
         LOG(Error, "Cannot open file '" << toString(materials_vmxfilename) << "' for writing");
       }
 
@@ -1517,7 +1538,7 @@ namespace radiance {
         {
           materials_dcfile << line;
         };
-      }else{
+      } else{
         LOG(Error, "Cannot open file '" << toString(materials_dcfilename) << "' for writing");
       }
 
@@ -1531,10 +1552,122 @@ namespace radiance {
         {
           modelfile << "!xform ./" << openstudio::toString(openstudio::relativePath(filename, t_radDir)) << std::endl;
         }
-      }else{
+      } else{
         LOG(Error, "Cannot open file '" << toString(modelfilename) << "' for writing");
       }
     }
+  }
+
+  boost::optional<openstudio::path> ForwardTranslator::getBSDF(double vlt, double vltSpecular, const std::string& shadeType)
+  {
+    std::string searchTerm = "rgugliel"; // author who posted BSDFs
+    unsigned tid = 1316; // "Construction Assembly.Fenestration.Window";
+
+    boost::optional<std::string> result;
+
+    openstudio::LocalBCL& localBCL = openstudio::LocalBCL::instance();
+    result = getBSDF(localBCL, vlt, vltSpecular, shadeType, searchTerm, tid);
+    if (result){
+      return toPath(*result);
+    }
+
+    openstudio::RemoteBCL remoteBCL;
+    remoteBCL.useRemoteDevelopmentUrl(); // TODO: remove
+    result = getBSDF(localBCL, vlt, vltSpecular, shadeType, searchTerm, tid);
+    if (result){
+      return toPath(*result);
+    }
+
+    return boost::none;
+  }
+
+  boost::optional<std::string> ForwardTranslator::getBSDF(openstudio::LocalBCL& bcl, double vlt, double vltSpecular, const std::string& shadeType, const std::string& searchTerm, unsigned tid)
+  {
+    std::vector<BCLComponent> results = bcl.searchComponents(searchTerm, tid);
+    for (const BCLComponent& result : results){
+
+      try{
+        double vltDiff = std::numeric_limits<double>::max();
+        double vltSpecularDiff = std::numeric_limits<double>::max();
+        bool shadeTypeMatch = false;
+        for (const Attribute& attribute : result.attributes()){
+          std::string attributeName = attribute.name();
+          if (istringEqual(attributeName, "Visible Light Transmittance")){
+            vltDiff = std::abs(attribute.valueAsDouble() - vlt);
+          } else if (istringEqual(attributeName, "Visible Light Transmittance Specular Percentage")) {
+            vltSpecularDiff = std::abs(attribute.valueAsDouble() - vlt);
+          } else if (istringEqual(attributeName, "Interior Shade Layer Type")) {
+            shadeTypeMatch = istringEqual(attribute.valueAsString(), shadeType);
+          }
+        }
+
+        // check if meets criteria
+        if (vltDiff <= 0.01 && vltSpecularDiff <= 0.01 && shadeTypeMatch){
+          // this one works try to get payload
+          std::vector<std::string> files = result.files("xml");
+          if (files.size() == 0){
+            return files[0];
+          }
+        }
+
+      } catch (const std::exception&) {
+        // not the right one
+      }
+    }
+
+    return boost::none;
+  }
+
+  boost::optional<std::string> ForwardTranslator::getBSDF(openstudio::RemoteBCL& bcl, double vlt, double vltSpecular, const std::string& shadeType, const std::string& searchTerm, unsigned tid)
+  {
+    boost::optional<BCLMetaSearchResult> metaResult = bcl.metaSearchComponentLibrary(searchTerm, tid);
+    if (metaResult){
+      unsigned numResults = metaResult->numResults();
+      unsigned resultsPerQuery = bcl.resultsPerQuery();
+      unsigned numPages = numResults / resultsPerQuery;
+      if ((numResults % resultsPerQuery) > 0){
+        ++numPages;
+      }
+
+      for (unsigned page = 0; page < numPages; ++page){
+        std::vector<BCLSearchResult> results = bcl.searchComponentLibrary(searchTerm, tid, page);
+        for (const BCLSearchResult& result : results){
+
+          try{
+            double vltDiff = std::numeric_limits<double>::max();
+            double vltSpecularDiff = std::numeric_limits<double>::max();
+            bool shadeTypeMatch = false;
+            for (const Attribute& attribute : result.attributes()){
+              std::string attributeName = attribute.name();
+              if (istringEqual(attributeName, "Visible Light Transmittance")){
+                vltDiff = std::abs(attribute.valueAsDouble() - vlt);
+              } else if (istringEqual(attributeName, "Visible Light Transmittance Specular Percentage")) {
+                vltSpecularDiff = std::abs(attribute.valueAsDouble() - vlt);
+              } else if (istringEqual(attributeName, "Interior Shade Layer Type")) {
+                shadeTypeMatch = istringEqual(attribute.valueAsString(), shadeType);
+              }
+            }
+
+            // check if meets criteria
+            if (vltDiff <= 0.01 && vltSpecularDiff <= 0.01 && shadeTypeMatch){
+              // this one works try to get payload
+              boost::optional<BCLComponent> component = bcl.getComponent(result.uid());
+              if (component){
+                std::vector<std::string> files = component->files("xml");
+                if (files.size() == 0){
+                  return files[0];
+                }
+              }
+            }
+
+          } catch (const std::exception&) {
+            // not the right one
+          }
+        }
+      }
+    }
+
+    return boost::none;
   }
 
   std::string cleanName(const std::string& name)

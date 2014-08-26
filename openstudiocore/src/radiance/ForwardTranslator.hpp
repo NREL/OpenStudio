@@ -40,6 +40,10 @@
 #include "../utilities/core/StringStreamLogSink.hpp"
 
 namespace openstudio {
+
+  class RemoteBCL;
+  class LocalBCL;
+
 namespace radiance {
 
   /* Translates OpenStudio Building Model to Radiance simulation input.
@@ -149,7 +153,13 @@ namespace radiance {
       void buildingSpaces(const openstudio::path &t_radDir, 
           const std::vector<openstudio::model::Space> &t_spaces,
           std::vector<openstudio::path> &t_outpaths);
-    
+
+    // get a bsdf possibly from the BCL
+    boost::optional<openstudio::path> getBSDF(double vlt, double vltSpecular, const std::string& shadeType);
+    boost::optional<std::string> getBSDF(openstudio::LocalBCL& bcl, double vlt, double vltSpecular, const std::string& shadeType, const std::string& searchTerm, unsigned tid);
+    boost::optional<std::string> getBSDF(openstudio::RemoteBCL& bcl, double vlt, double vltSpecular, const std::string& shadeType, const std::string& searchTerm, unsigned tid);
+
+
     StringStreamLogSink m_logSink;
 
     REGISTER_LOGGER("openstudio.radiance.ForwardTranslator");
