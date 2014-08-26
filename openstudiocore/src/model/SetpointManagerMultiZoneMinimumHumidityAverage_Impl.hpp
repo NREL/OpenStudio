@@ -20,20 +20,18 @@
 #ifndef MODEL_SETPOINTMANAGERMULTIZONEMINIMUMHUMIDITYAVERAGE_IMPL_HPP
 #define MODEL_SETPOINTMANAGERMULTIZONEMINIMUMHUMIDITYAVERAGE_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SetpointManager_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "SetpointManager_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Node;
 
 namespace detail {
 
   /** SetpointManagerMultiZoneMinimumHumidityAverage_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerMultiZoneMinimumHumidityAverage.*/
   class MODEL_API SetpointManagerMultiZoneMinimumHumidityAverage_Impl : public SetpointManager_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -72,12 +70,9 @@ namespace detail {
 
     bool isMaximumSetpointHumidityRatioDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Node.
-    Node setpointNodeorNodeList() const;
+    virtual boost::optional<Node> setpointNode() const;
 
-    std::string controlVariable() const;
-
-    bool isControlVariableDefaulted() const;
+    virtual std::string controlVariable() const;
 
     //@}
     /** @name Setters */
@@ -91,12 +86,7 @@ namespace detail {
 
     void resetMaximumSetpointHumidityRatio();
 
-    // TODO: Check argument type. From object lists, some candidates are: Node.
-    bool setSetpointNodeorNodeList(const Node& node);
-
-    bool setControlVariable(std::string controlVariable);
-
-    void resetControlVariable();
+    virtual bool setControlVariable(const std::string& controlVariable);
 
     //@}
     /** @name Other */
@@ -105,13 +95,11 @@ namespace detail {
     //@}
    protected:
    private:
-    REGISTER_LOGGER("openstudio.model.SetpointManagerMultiZoneMinimumHumidityAverage");
+    virtual bool setSetpointNode(const Node& node);
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Node> optionalSetpointNodeorNodeList() const;
+    virtual void resetSetpointNode();
+
+    REGISTER_LOGGER("openstudio.model.SetpointManagerMultiZoneMinimumHumidityAverage");
   };
 
 } // detail

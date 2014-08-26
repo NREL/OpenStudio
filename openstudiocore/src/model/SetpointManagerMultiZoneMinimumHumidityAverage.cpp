@@ -17,19 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SetpointManagerMultiZoneMinimumHumidityAverage.hpp>
-#include <model/SetpointManagerMultiZoneMinimumHumidityAverage_Impl.hpp>
+#include "SetpointManagerMultiZoneMinimumHumidityAverage.hpp"
+#include "SetpointManagerMultiZoneMinimumHumidityAverage_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SetpointManager_MultiZone_MinimumHumidity_Average_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
-
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -90,22 +87,14 @@ namespace detail {
     return isEmpty(OS_SetpointManager_MultiZone_MinimumHumidity_AverageFields::MaximumSetpointHumidityRatio);
   }
 
-  Node SetpointManagerMultiZoneMinimumHumidityAverage_Impl::setpointNodeorNodeList() const {
-    boost::optional<Node> value = optionalSetpointNodeorNodeList();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Setpoint Nodeor Node List attached.");
-    }
-    return value.get();
+  boost::optional<Node> SetpointManagerMultiZoneMinimumHumidityAverage_Impl::setpointNode() const {
+    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_MultiZone_MinimumHumidity_AverageFields::SetpointNodeName);
   }
 
   std::string SetpointManagerMultiZoneMinimumHumidityAverage_Impl::controlVariable() const {
     boost::optional<std::string> value = getString(OS_SetpointManager_MultiZone_MinimumHumidity_AverageFields::ControlVariable,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  bool SetpointManagerMultiZoneMinimumHumidityAverage_Impl::isControlVariableDefaulted() const {
-    return isEmpty(OS_SetpointManager_MultiZone_MinimumHumidity_AverageFields::ControlVariable);
   }
 
   bool SetpointManagerMultiZoneMinimumHumidityAverage_Impl::setMinimumSetpointHumidityRatio(double minimumSetpointHumidityRatio) {
@@ -128,23 +117,19 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool SetpointManagerMultiZoneMinimumHumidityAverage_Impl::setSetpointNodeorNodeList(const Node& node) {
-    bool result = setPointer(OS_SetpointManager_MultiZone_MinimumHumidity_AverageFields::SetpointNodeorNodeListName, node.handle());
+  bool SetpointManagerMultiZoneMinimumHumidityAverage_Impl::setSetpointNode(const Node& node) {
+    bool result = setPointer(OS_SetpointManager_MultiZone_MinimumHumidity_AverageFields::SetpointNodeName, node.handle());
     return result;
   }
 
-  bool SetpointManagerMultiZoneMinimumHumidityAverage_Impl::setControlVariable(std::string controlVariable) {
-    bool result = setString(OS_SetpointManager_MultiZone_MinimumHumidity_AverageFields::ControlVariable, controlVariable);
-    return result;
-  }
-
-  void SetpointManagerMultiZoneMinimumHumidityAverage_Impl::resetControlVariable() {
-    bool result = setString(OS_SetpointManager_MultiZone_MinimumHumidity_AverageFields::ControlVariable, "");
+  void SetpointManagerMultiZoneMinimumHumidityAverage_Impl::resetSetpointNode() {
+    bool result = setString(OS_SetpointManager_MultiZone_MinimumHumidity_AverageFields::SetpointNodeorNodeListName,"");
     OS_ASSERT(result);
   }
 
-  boost::optional<Node> SetpointManagerMultiZoneMinimumHumidityAverage_Impl::optionalSetpointNodeorNodeList() const {
-    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_MultiZone_MinimumHumidity_AverageFields::SetpointNodeorNodeListName);
+  bool SetpointManagerMultiZoneMinimumHumidityAverage_Impl::setControlVariable(const std::string& controlVariable) {
+    bool result = setString(OS_SetpointManager_MultiZone_MinimumHumidity_AverageFields::ControlVariable, controlVariable);
+    return result;
   }
 
 } // detail
@@ -154,12 +139,7 @@ SetpointManagerMultiZoneMinimumHumidityAverage::SetpointManagerMultiZoneMinimumH
 {
   OS_ASSERT(getImpl<detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_SetpointManager_MultiZone_MinimumHumidity_AverageFields::SetpointNodeorNodeListName
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
-  // ok = setSetpointNodeorNodeList();
+  bool ok = setControlVariable("MinimumHumidityRatio");
   OS_ASSERT(ok);
 }
 
@@ -188,16 +168,12 @@ bool SetpointManagerMultiZoneMinimumHumidityAverage::isMaximumSetpointHumidityRa
   return getImpl<detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl>()->isMaximumSetpointHumidityRatioDefaulted();
 }
 
-Node SetpointManagerMultiZoneMinimumHumidityAverage::setpointNodeorNodeList() const {
-  return getImpl<detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl>()->setpointNodeorNodeList();
+boost::optional<Node> SetpointManagerMultiZoneMinimumHumidityAverage::setpointNode() const {
+  return getImpl<detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl>()->setpointNode();
 }
 
 std::string SetpointManagerMultiZoneMinimumHumidityAverage::controlVariable() const {
   return getImpl<detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl>()->controlVariable();
-}
-
-bool SetpointManagerMultiZoneMinimumHumidityAverage::isControlVariableDefaulted() const {
-  return getImpl<detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl>()->isControlVariableDefaulted();
 }
 
 bool SetpointManagerMultiZoneMinimumHumidityAverage::setMinimumSetpointHumidityRatio(double minimumSetpointHumidityRatio) {
@@ -216,16 +192,8 @@ void SetpointManagerMultiZoneMinimumHumidityAverage::resetMaximumSetpointHumidit
   getImpl<detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl>()->resetMaximumSetpointHumidityRatio();
 }
 
-bool SetpointManagerMultiZoneMinimumHumidityAverage::setSetpointNodeorNodeList(const Node& node) {
-  return getImpl<detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl>()->setSetpointNodeorNodeList(node);
-}
-
-bool SetpointManagerMultiZoneMinimumHumidityAverage::setControlVariable(std::string controlVariable) {
+bool SetpointManagerMultiZoneMinimumHumidityAverage::setControlVariable(const std::string& controlVariable) {
   return getImpl<detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl>()->setControlVariable(controlVariable);
-}
-
-void SetpointManagerMultiZoneMinimumHumidityAverage::resetControlVariable() {
-  getImpl<detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl>()->resetControlVariable();
 }
 
 /// @cond
