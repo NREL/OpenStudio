@@ -13,7 +13,7 @@ class ReportingMeasure_Test < MiniTest::Unit::TestCase
   
   # paths to expected test files, includes osm and eplusout.sql
   def modelPath
-    return "#{File.dirname(__FILE__)}/ExampleModel.osm"
+    return "#{File.dirname(__FILE__)}/example_model.osm"
   end
   
   def runDir

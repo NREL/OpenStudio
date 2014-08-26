@@ -78,15 +78,27 @@ TEST_F(BCLFixture, BCLXML_New)
   bclXML.addAttribute(attr);
   ASSERT_EQ(1u, bclXML.attributes().size());
   EXPECT_EQ("attribute", bclXML.attributes()[0].name());
-  EXPECT_TRUE(bclXML.getAttribute("attribute"));
+  EXPECT_EQ(1u, bclXML.getAttributes("attribute").size());
   EXPECT_NE(versionId, bclXML.versionId());
 
   versionId = bclXML.versionId();
   attr = Attribute("attribute", 2.0);
   bclXML.addAttribute(attr);
-  ASSERT_EQ(1u, bclXML.attributes().size());
+  ASSERT_EQ(2u, bclXML.attributes().size());
   EXPECT_EQ("attribute", bclXML.attributes()[0].name());
-  EXPECT_TRUE(bclXML.getAttribute("attribute"));
+  EXPECT_EQ("attribute", bclXML.attributes()[1].name());
+  EXPECT_EQ(2u, bclXML.getAttributes("attribute").size());
+  EXPECT_NE(versionId, bclXML.versionId());
+
+  versionId = bclXML.versionId();
+  attr = Attribute("another attribute", 2.0);
+  bclXML.addAttribute(attr);
+  ASSERT_EQ(3u, bclXML.attributes().size());
+  EXPECT_EQ("attribute", bclXML.attributes()[0].name());
+  EXPECT_EQ("attribute", bclXML.attributes()[1].name());
+  EXPECT_EQ("another attribute", bclXML.attributes()[1].name());
+  EXPECT_EQ(2u, bclXML.getAttributes("attribute").size());
+  EXPECT_EQ(1u, bclXML.getAttributes("another attribute").size());
   EXPECT_NE(versionId, bclXML.versionId());
 
   versionId = bclXML.versionId();

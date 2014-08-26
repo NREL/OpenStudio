@@ -346,16 +346,6 @@ namespace openstudio{
     return m_attributes;
   }
 
-  boost::optional<Attribute> BCLXML::getAttribute(const std::string& name) const
-  {
-    for (const Attribute& attribute : m_attributes) {
-      if (attribute.name() == name){
-        return attribute;
-      }
-    }
-    return boost::none;
-  }
-
   std::vector<Attribute> BCLXML::getAttributes(const std::string& name) const
   {
     std::vector<Attribute> result;
@@ -385,6 +375,12 @@ namespace openstudio{
   boost::optional<std::string> BCLXML::error() const
   {
     return m_error;
+  }
+
+  void BCLXML::resetXMLChecksum()
+  {
+    incrementVersionId();
+    m_xmlChecksum = "00000000";
   }
 
   void BCLXML::setError(const std::string& error)
@@ -490,13 +486,11 @@ namespace openstudio{
 
   void BCLXML::addAttribute(const Attribute& attribute)
   {
-    removeAttribute(attribute.name());
-
     incrementVersionId();
     m_attributes.push_back(attribute);
   }
 
-  bool BCLXML::removeAttribute(const std::string& name)
+  bool BCLXML::removeAttributes(const std::string& name)
   {
     bool result = false;
 
@@ -504,10 +498,10 @@ namespace openstudio{
     for (const Attribute& attribute : m_attributes) {
       if (attribute.name() == name){
         result = true;
-      }else{
+      } else{
         newAttributes.push_back(attribute);
       }
-    } 
+    }
 
     if (result == true){
       incrementVersionId();

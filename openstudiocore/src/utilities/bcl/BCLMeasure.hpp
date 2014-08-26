@@ -116,6 +116,12 @@ namespace openstudio{
     /// Clears the path to the user measures directory stored in settings.
     static void clearUserMeasuresDir();
 
+    /// Suggested values for "Intended Software Tool" attribute
+    static std::vector<std::string> suggestedIntendedSoftwareTools();
+
+    /// Suggested values for "Intended Use Case" attribute
+    static std::vector<std::string> suggestedIntendedUseCases();
+
     //@}
     /** @name Destructor */
     //@{
@@ -220,11 +226,14 @@ namespace openstudio{
     /// Clears all files
     void clearFiles();
 
-    /// Adds attribute to attribute list, existing attribute with same name will be removed
+    /// Adds attribute to attribute list
     void addAttribute(const Attribute& attribute);
 
+    /// get attributes by name
+    std::vector<Attribute> getAttributes(const std::string& name) const;
+
     /// Removes attribute by name, returns true if attribute was found and removed
-    bool removeAttribute(const std::string& name);
+    bool removeAttributes(const std::string& name);
 
     /// Removes all attributes
     void clearAttributes();

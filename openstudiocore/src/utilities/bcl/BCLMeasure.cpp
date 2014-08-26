@@ -75,34 +75,34 @@ namespace openstudio{
     openstudio::path resourceFilePath;
     if (measureType == MeasureType::ModelMeasure){
       measureTemplate = ":/templates/ModelMeasure/measure.rb";
-      testTemplate = ":/templates/ModelMeasure/tests/model_measure_Test.rb";
+      testTemplate = ":/templates/ModelMeasure/tests/model_measure_test.rb";
       templateName = "ModelMeasure";
 
       createDirectory(dir / toPath("tests"));
 
     }else if (measureType == MeasureType::EnergyPlusMeasure){
       measureTemplate = ":/templates/EnergyPlusMeasure/measure.rb";
-      testTemplate = ":/templates/EnergyPlusMeasure/tests/energyplus_measure_Test.rb";
+      testTemplate = ":/templates/EnergyPlusMeasure/tests/energyplus_measure_test.rb";
       templateName = "EnergyPlusMeasure";
 
       createDirectory(dir / toPath("tests"));
 
     }else if (measureType == MeasureType::UtilityMeasure){
       measureTemplate = ":/templates/UtilityMeasure/measure.rb";
-      testTemplate = ":/templates/UtilityMeasure/tests/utility_measure_Test.rb";
+      testTemplate = ":/templates/UtilityMeasure/tests/utility_measure_test.rb";
       templateName = "UtilityMeasure";
 
       createDirectory(dir / toPath("tests"));
 
     }else if (measureType == MeasureType::ReportingMeasure){
       measureTemplate = ":/templates/ReportingMeasure/measure.rb";
-      testTemplate = ":/templates/ReportingMeasure/tests/reporting_measure_Test.rb";
-      testOSM = ":/templates/ReportingMeasure/tests/ExampleModel.osm";
+      testTemplate = ":/templates/ReportingMeasure/tests/reporting_measure_test.rb";
+      testOSM = ":/templates/ReportingMeasure/tests/example_model.osm";
       resourceFile = ":/templates/ReportingMeasure/resources/report.html.in";
       templateName = "ReportingMeasure";
 
       createDirectory(dir / toPath("tests"));
-      testOSMPath = dir / toPath("tests/ExampleModel.osm");
+      testOSMPath = dir / toPath("tests/example_model.osm");
 
       createDirectory(dir / toPath("resources"));
       resourceFilePath = dir / toPath("resources/report.html.in");
@@ -226,14 +226,18 @@ namespace openstudio{
     }
 
     // set rest of measure fields
-    m_bclXML.setName(name);
+    m_bclXML.setName(lowerClassName);
+    m_bclXML.setDisplayName(name);
+    m_bclXML.setClassName(className);
     m_bclXML.addTag(taxonomyTag);
     this->setMeasureType(measureType);
 
-    if (m_bclXML.xmlChecksum().empty()){
-      // this will set the checksum but not increment the version id
-      m_bclXML.checkForUpdatesXML();
-    }
+    // description needs to be read from rb
+    // modelerDescription needs to be read from rb
+    // args needs to be read from rb
+
+    // reset the checksum to trigger update next time
+    m_bclXML.resetXMLChecksum();
 
     m_bclXML.saveAs(measureXMLPath);
   }
@@ -252,9 +256,13 @@ namespace openstudio{
     m_bclXML = *bclXML;
 
     // check for required attributes
-    boost::optional<Attribute> measureType = m_bclXML.getAttribute("Measure Type");
-    if (!measureType){
+    std::vector<Attribute> measureTypes = m_bclXML.getAttributes("Measure Type");
+    if (measureTypes.empty()){
       LOG_AND_THROW("'" << toString(dir) << "' is missing the required attribute \"Measure Type\"");
+    } else if (measureTypes.size() > 1) {
+      LOG_AND_THROW("'" << toString(dir) << "' has multiple copies of required attribute \"Measure Type\"");
+    } else if (measureTypes[0].valueType() != AttributeValueType::String) {
+      LOG_AND_THROW("'" << toString(dir) << "' has multiple copies of required attribute \"Measure Type\"");
     }
 
     if (m_bclXML.xmlChecksum().empty()){
@@ -383,6 +391,28 @@ namespace openstudio{
   {
     QSettings settings("OpenStudio", "BCLMeasure");
     settings.remove("userMeasuresDir");
+  }
+
+  std::vector<std::string> BCLMeasure::suggestedIntendedSoftwareTools()
+  {
+    std::vector<std::string> result;
+    result.push_back("Apply Measure Now");
+    result.push_back("OpenStudio Application");
+    result.push_back("Parametric Analysis Tool");
+    result.push_back("Analysis Spreadsheet");
+    return result;
+  }
+
+  std::vector<std::string> BCLMeasure::suggestedIntendedUseCases()
+  {
+    std::vector<std::string> result;
+    result.push_back("Model Articulation");
+    result.push_back("Calibration");
+    result.push_back("Sensitivity Analysis");
+    result.push_back("New Construction EE");
+    result.push_back("Retrofit EE");
+    result.push_back("Automatic Report Generation");
+    return result;
   }
 
   std::vector<BCLMeasure> BCLMeasure::getMeasuresInDir(openstudio::path dir)
@@ -552,14 +582,16 @@ namespace openstudio{
 
   MeasureType BCLMeasure::measureType() const
   {
-    boost::optional<Attribute> measureType = m_bclXML.getAttribute("Measure Type");
-    OS_ASSERT(measureType);
-    return MeasureType(measureType->valueAsString());
+    std::vector<Attribute> measureTypes = m_bclXML.getAttributes("Measure Type");
+    OS_ASSERT(measureTypes.size() == 1);
+    return MeasureType(measureTypes[0].valueAsString());
   }
 
   void BCLMeasure::setMeasureType(const MeasureType& measureType)
   {
-    Attribute attribute("Measure Type", measureType.valueName());
+    const std::string attributeName("Measure Type");
+    Attribute attribute(attributeName, measureType.valueName());
+    m_bclXML.removeAttributes(attributeName);
     m_bclXML.addAttribute(attribute);
   }
 
@@ -646,10 +678,15 @@ namespace openstudio{
   {
     m_bclXML.addAttribute(attribute);
   }
-  
-  bool BCLMeasure::removeAttribute(const std::string& name)
+
+  std::vector<Attribute> BCLMeasure::getAttributes(const std::string& name) const
   {
-    return m_bclXML.removeAttribute(name);
+    return m_bclXML.getAttributes(name);
+  }
+
+  bool BCLMeasure::removeAttributes(const std::string& name)
+  {
+    return m_bclXML.removeAttributes(name);
   }
  
   void BCLMeasure::clearAttributes()

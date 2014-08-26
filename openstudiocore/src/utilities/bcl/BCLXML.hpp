@@ -26,6 +26,7 @@
 #include "../core/Path.hpp"
 #include "../core/UUID.hpp"
 #include "../data/Attribute.hpp"
+#include "../core/Deprecated.hpp"
 #include "../UtilitiesAPI.hpp"
 
 #include <vector>
@@ -122,9 +123,6 @@ namespace openstudio{
 
     std::vector<Attribute> attributes() const;
 
-    /// get first attribute by name
-    boost::optional<Attribute> getAttribute(const std::string& name) const;
-
     /// get attributes by name
     std::vector<Attribute> getAttributes(const std::string& name) const;
 
@@ -133,6 +131,8 @@ namespace openstudio{
     //@}
     /** @name Setters */
     //@{
+
+    void resetXMLChecksum();
 
     void setError(const std::string& error);
 
@@ -162,11 +162,11 @@ namespace openstudio{
     /// clear all files
     void clearFiles();
 
-    /// adds attribute to attribute list, existing attribute with same name will be removed
+    /// adds attribute to attribute list
     void addAttribute(const Attribute& attribute);
 
-    /// removes attribute by name, returns true if attribute was found and removed
-    bool removeAttribute(const std::string& name);
+    /// removes all attributes with name, returns true if attributes were found and removed
+    bool removeAttributes(const std::string& name);
 
     /// removes all attributes
     void clearAttributes();

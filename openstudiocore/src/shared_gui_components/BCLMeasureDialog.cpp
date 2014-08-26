@@ -365,26 +365,31 @@ void BCLMeasureDialog::init()
   vLayout->addWidget(m_modelerDescriptionTextEdit);
   vLayout->addSpacing(10);
 
-  auto vLayout2 = new QVBoxLayout;
+  tempHLayout = new QHBoxLayout;
+  vLayout->addLayout(tempHLayout);
+
+  auto tempVLayout = new QVBoxLayout;
 
   label = new QLabel;
   label->setText("Measure Type:");
   label->setObjectName("H2");
-  vLayout2->addWidget(label);
+  tempVLayout->addWidget(label);
   m_measureTypeComboBox = new QComboBox(this);
   m_measureTypeComboBox->addItem("OpenStudio Measure");
   m_measureTypeComboBox->addItem("EnergyPlus Measure");
   //m_measureTypeComboBox->addItem("Utility Measure"); // Disable for now
   m_measureTypeComboBox->addItem("Reporting Measure");
   m_measureTypeComboBox->setCurrentIndex(0);
-  vLayout2->addWidget(m_measureTypeComboBox);
-  vLayout2->addSpacing(10);
+  tempVLayout->addWidget(m_measureTypeComboBox);
+  tempVLayout->addSpacing(10);
+  tempHLayout->addLayout(tempVLayout);
+
+  tempVLayout = new QVBoxLayout;
 
   label = new QLabel;
   label->setText("Taxonomy:");
   label->setObjectName("H2");
-  vLayout2->addWidget(label);
-  tempHLayout = new QHBoxLayout;
+  tempVLayout->addWidget(label);
   m_taxonomyFirstLevelComboBox = new QComboBox(this);
   m_taxonomyFirstLevelComboBox->addItem("Envelope");
   m_taxonomyFirstLevelComboBox->addItem("Electric Lighting");
@@ -397,23 +402,29 @@ void BCLMeasureDialog::init()
   m_taxonomyFirstLevelComboBox->addItem("Whole Building");
   m_taxonomyFirstLevelComboBox->addItem("Economics");
   m_taxonomyFirstLevelComboBox->addItem("Reporting");
-  tempHLayout->addWidget(m_taxonomyFirstLevelComboBox);
   m_taxonomySecondLevelComboBox = new QComboBox(this);
-  tempHLayout->addWidget(m_taxonomySecondLevelComboBox);
-  vLayout2->addLayout(tempHLayout);
-  vLayout2->addSpacing(10);
+  auto tempHLayout2 = new QHBoxLayout;
+  tempHLayout2->addWidget(m_taxonomyFirstLevelComboBox);
+  tempHLayout2->addWidget(m_taxonomySecondLevelComboBox);
+  tempVLayout->addLayout(tempHLayout2);
+  tempVLayout->addSpacing(10);
+  tempHLayout->addLayout(tempVLayout);
+
+  tempHLayout = new QHBoxLayout;
+  vLayout->addLayout(tempHLayout);
+
+  tempVLayout = new QVBoxLayout;
 
   label = new QLabel;
   label->setText("Intended Software Tools:");
   label->setObjectName("H2");
-  vLayout2->addWidget(label);
+  tempVLayout->addWidget(label);
   m_intendedSoftwareToolListWidget = new QListWidget(this);
-  vLayout2->addWidget(m_intendedSoftwareToolListWidget);
+  tempVLayout->addWidget(m_intendedSoftwareToolListWidget);
   QStringList intendedSoftwareTools;
-  intendedSoftwareTools.append("Apply Measure Now");
-  intendedSoftwareTools.append("PAT");
-  intendedSoftwareTools.append("Analysis Spreadsheet");
-  //intendedSoftwareTools.append("simuwatt");
+  for (const std::string& suggestedTool : BCLMeasure::suggestedIntendedSoftwareTools()){
+    intendedSoftwareTools.append(toQString(suggestedTool));
+  }
   QStringListIterator it(intendedSoftwareTools);
   while (it.hasNext()){
     QListWidgetItem *listItem = new QListWidgetItem(it.next(), m_intendedSoftwareToolListWidget);
@@ -421,20 +432,20 @@ void BCLMeasureDialog::init()
     listItem->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
     m_intendedSoftwareToolListWidget->addItem(listItem);
   }
+  tempHLayout->addLayout(tempVLayout);
   
+  tempVLayout = new QVBoxLayout;
+
   label = new QLabel;
-  label->setText("Intended Software Tools:");
+  label->setText("Intended Use Cases:");
   label->setObjectName("H2");
-  vLayout2->addWidget(label);
+  tempVLayout->addWidget(label);
   m_intendedUseCaseListWidget = new QListWidget();
-  vLayout2->addWidget(m_intendedUseCaseListWidget);
+  tempVLayout->addWidget(m_intendedUseCaseListWidget);
   QStringList intendedUseCases;
-  intendedUseCases.append("Model Articulation");
-  intendedUseCases.append("Calibration");
-  intendedUseCases.append("Sensitivity Analysis");
-  intendedUseCases.append("New Construction EE");
-  intendedUseCases.append("Retrofit EE");
-  intendedUseCases.append("Automatic Report Generation");
+  for (const std::string& suggestedUseCase : BCLMeasure::suggestedIntendedUseCases()){
+    intendedUseCases.append(toQString(suggestedUseCase));
+  }
   it = QStringListIterator(intendedUseCases);
   while (it.hasNext()){
     QListWidgetItem *listItem = new QListWidgetItem(it.next(), m_intendedUseCaseListWidget);
@@ -442,11 +453,7 @@ void BCLMeasureDialog::init()
     listItem->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
     m_intendedUseCaseListWidget->addItem(listItem);
   }
-
-  auto hLayout = new QHBoxLayout;
-  hLayout->addLayout(vLayout2);
-  hLayout->addStretch();
-  vLayout->addLayout(hLayout);
+  tempHLayout->addLayout(tempVLayout);
 
   QBoxLayout* upperLayout = this->upperLayout();
   upperLayout->addLayout(vLayout);
