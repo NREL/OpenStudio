@@ -760,8 +760,10 @@ namespace openstudio {
 
           QVariantList requiredFileList;
           for (const auto& requiredFile : rjb.requiredFiles()){
-            requiredFileList << toQString(requiredFile.first);
-            requiredFileList << toQString(requiredFile.second);
+            QVariantMap requiredFileMap;
+            // key is local file path, value is absolute system path
+            requiredFileMap[toQString(requiredFile.second)] = toQString(requiredFile.first);
+            requiredFileList << requiredFileMap;
           }
           measureHash["required_files"] = requiredFileList;
 
@@ -789,8 +791,10 @@ namespace openstudio {
 
             QVariantList requiredFileList;
             for (const auto& requiredFile : mergedRJB.requiredFiles()){
-              requiredFileList << toQString(requiredFile.first);
-              requiredFileList << toQString(requiredFile.second);
+              QVariantMap requiredFileMap;
+              // key is local file path, value is absolute system path
+              requiredFileMap[toQString(requiredFile.second)] = toQString(requiredFile.first);
+              requiredFileList << requiredFileMap;
             }
             measureHash["required_files"] = requiredFileList;
 
