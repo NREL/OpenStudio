@@ -18,6 +18,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateAirLoopHVACOutdoorAirSystem.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACReturnPlenum.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACSupplyPlenum.cpp
+  ForwardTranslator/ForwardTranslateAirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACUnitaryHeatPumpAirToAir.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACUnitarySystem.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACZoneMixer.cpp

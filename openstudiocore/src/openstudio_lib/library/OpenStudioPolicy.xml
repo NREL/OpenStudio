@@ -88,6 +88,16 @@
     <rule IddField="Inlet Branch Name" Access="HIDDEN"/>
     <rule IddField="Outlet Branch Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass">
+    <rule IddField="Air Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Bypass Duct Mixer Node" Access="HIDDEN"/>
+    <rule IddField="Bypass Duct Splitter Node" Access="HIDDEN"/>
+    <rule IddField="Outdoor Air Mixer" Access="HIDDEN"/>
+    <rule IddField="Supply Air Fan" Access="LOCKED"/>
+    <rule IddField="Cooling Coil" Access="LOCKED"/>
+    <rule IddField="Heating Coil" Access="LOCKED"/>
+  </POLICY>
   <POLICY IddObjectType="OS_AirLoopHVAC_UnitaryHeatPump_AirToAir">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>

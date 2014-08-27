@@ -37,6 +37,8 @@
 #include "ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
+#include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
+#include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
@@ -523,6 +525,20 @@ namespace detail{
         if( coolingCoil->handle() == this->handle() )
         {
           return airLoopHVACUnitarySystem;
+        }
+      }
+    }
+
+    // AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass
+    std::vector<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass> bypassSystems = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>();
+
+    for( const auto & bypassSystem : bypassSystems )
+    {
+      if( boost::optional<HVACComponent> coolingCoil = bypassSystem.coolingCoil() )
+      {
+        if( coolingCoil->handle() == this->handle() )
+        {
+          return bypassSystem;
         }
       }
     }

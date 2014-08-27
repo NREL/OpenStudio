@@ -49,6 +49,8 @@
 #include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
+#include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
 #include <utilities/idd/OS_Fan_OnOff_FieldEnums.hxx>
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
@@ -400,6 +402,20 @@ namespace detail {
         if( fan->handle() == this->handle() )
         {
           return airLoopHVACUnitarySystem;
+        }
+      }
+    }
+
+    // AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass
+    std::vector<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass> bypassSystems = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>();
+
+    for( const auto & bypassSystem : bypassSystems )
+    {
+      if( boost::optional<HVACComponent> fan = bypassSystem.supplyAirFan() )
+      {
+        if( fan->handle() == this->handle() )
+        {
+          return bypassSystem;
         }
       }
     }

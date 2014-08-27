@@ -8019,6 +8019,113 @@ OS:AirLoopHVAC:UnitaryHeatPump:AirToAir,
        \key Multimode
        \key CoolReheat
 
+OS:AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass,
+   A1, \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+        \type alpha
+        \reference ConnectionObject
+   A3 , \field Availability Schedule
+        \type object-list
+        \object-list ScheduleNames
+   N1 , \field System Air Flow Rate During Cooling Operation
+        \required-field
+        \type real
+        \units m3/s
+        \autosizable
+        \minimum> 0.0
+        \required-field
+   N2 , \field System Air Flow Rate During Heating Operation
+        \required-field
+        \type real
+        \units m3/s
+        \autosizable
+        \minimum> 0.0
+        \required-field
+   N3 , \field System Air Flow Rate When No Cooling or Heating is Needed
+        \type real
+        \units m3/s
+        \minimum 0.0
+        \autosizable
+        \required-field
+   N4 , \field Outdoor Air Flow Rate During Cooling Operation
+        \required-field
+        \type real
+        \units m3/s
+        \autosizable
+        \minimum 0.0
+        \required-field
+   N5 , \field Outdoor Air Flow Rate During Heating Operation
+        \required-field
+        \type real
+        \units m3/s
+        \autosizable
+        \minimum 0.0
+        \required-field
+   N6 , \field Outdoor Air Flow Rate When No Cooling or Heating is Needed
+        \type real
+        \units m3/s
+        \minimum 0.0
+        \autosizable
+        \required-field
+   A4 , \field Outdoor Air Flow Rate Multiplier Schedule
+        \type object-list
+        \object-list ScheduleNames
+   A5 , \field Air Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+   A6 , \field Bypass Duct Mixer Node
+   A7 , \field Bypass Duct Splitter Node
+   A8 , \field Air Outlet Node
+       \type object-list
+       \object-list ConnectionNames
+   A9 , \field Outdoor Air Mixer
+   A10, \field Supply Air Fan
+        \type object-list
+        \object-list FansCVandOnOff
+        \required-field
+   A11, \field Supply Air Fan Placement
+        \required-field
+        \type choice
+        \key BlowThrough
+        \key DrawThrough
+        \required-field
+   A12, \field Supply Air Fan Operating Mode Schedule
+        \type object-list
+        \object-list ScheduleNames
+   A13, \field Cooling Coil
+        \type object-list
+        \object-list CoolingCoilsDXMultiModeOrSingleSpeed
+        \required-field
+   A14, \field Heating Coil
+        \type object-list
+        \object-list HeatingCoilName
+        \required-field
+   A15, \field Priority Control Mode
+        \type choice
+        \key CoolingPriority
+        \key HeatingPriority
+        \key ZonePriority
+        \required-field
+   N7 , \field Minimum Outlet Air Temperature During Cooling Operation
+        \type real
+        \units C
+        \minimum> 0.0
+        \required-field
+   N8 , \field Maximum Outlet Air Temperature During Heating Operation
+        \type real
+        \units C
+        \minimum> 0.0
+        \required-field
+   A16; \field Dehumidification Control Type
+        \type choice
+        \key None
+        \key Multimode
+        \key CoolReheat
+        \required-field
+
 OS:AirLoopHVAC:UnitarySystem,
        \memo AirloopHVAC:UnitarySystem is a generic HVAC system type that allows any
        \memo configuration of coils and/or fan. This object is a replacement of other
