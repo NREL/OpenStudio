@@ -738,28 +738,74 @@ namespace openstudio {
          ++itr)
     {
       if (itr->type == openstudio::runmanager::JobType::EnergyPlus){
-        pastEnergyPlus = true;
-      } if (pastEnergyPlus && itr->type == openstudio::runmanager::JobType::UserScript){
 
-        QVariantMap measureHash;
+        pastEnergyPlus = true;
+
+      } if (pastEnergyPlus && itr->type == openstudio::runmanager::JobType::UserScript){
+        // DLM: Jason will merged jobs show up as user scripts?
 
         openstudio::runmanager::RubyJobBuilder rjb(*itr);
-        measureHash["script"] = toQString(rjb.script()); // keep in mind this is probably just UserScriptAdapter to get the actual script you need to use:
-       
-        QVariantList parameterList;
-        for (const auto& parameter : rjb.getScriptParameters()){
-          parameterList << toQString(parameter);
-        }
-        measureHash["parameters"] = parameterList;
 
-        QVariantList argList;
-        auto args = openstudio::runmanager::RubyJobBuilder::toOSArguments(itr->params);
-        for (const auto& arg : args){
-          argList << ruleset::detail::toVariant(arg);
-        }
-        measureHash["args"] = argList;
+        const std::vector<openstudio::runmanager::RubyJobBuilder>& mergedJobs = rjb.mergedJobs();
+        if (mergedJobs.empty()){
 
-        measureList << measureHash;
+          QVariantMap measureHash;
+          measureHash["script"] = toQString(rjb.script()); // keep in mind this is probably just UserScriptAdapter to get the actual script you need to use:
+
+          QVariantList parameterList;
+          for (const auto& parameter : rjb.getScriptParameters()){
+            parameterList << toQString(parameter);
+          }
+          measureHash["parameters"] = parameterList;
+
+          QVariantList requiredFileList;
+          for (const auto& requiredFile : rjb.requiredFiles()){
+            requiredFileList << toQString(requiredFile.first);
+            requiredFileList << toQString(requiredFile.second);
+          }
+          measureHash["required_files"] = requiredFileList;
+
+          QVariantList argList;
+          auto args = openstudio::runmanager::RubyJobBuilder::toOSArguments(itr->params);
+          for (const auto& arg : args){
+            argList << ruleset::detail::toVariant(arg);
+          }
+          measureHash["args"] = argList;
+
+          measureList << measureHash;
+
+        } else { 
+
+          for (const openstudio::runmanager::RubyJobBuilder& mergedRJB : mergedJobs){
+
+            QVariantMap measureHash;
+            measureHash["script"] = toQString(mergedRJB.script()); // keep in mind this is probably just UserScriptAdapter to get the actual script you need to use:
+
+            QVariantList parameterList;
+            for (const auto& parameter : mergedRJB.getScriptParameters()){
+              parameterList << toQString(parameter);
+            }
+            measureHash["parameters"] = parameterList;
+
+            QVariantList requiredFileList;
+            for (const auto& requiredFile : mergedRJB.requiredFiles()){
+              requiredFileList << toQString(requiredFile.first);
+              requiredFileList << toQString(requiredFile.second);
+            }
+            measureHash["required_files"] = requiredFileList;
+
+            QVariantList argList;
+            auto args = openstudio::runmanager::RubyJobBuilder::toOSArguments(itr->params);
+            for (const auto& arg : args){
+              argList << ruleset::detail::toVariant(arg);
+            }
+            measureHash["args"] = argList;
+
+            measureList << measureHash;
+
+          }
+        }
+
       }
     }
 
