@@ -1443,6 +1443,19 @@ namespace detail {
         if (workItem.jobkeyname == "pat-report-request-job"){
           reportRequestMeasureWorkItem = step.workItem();
           reportRequestMeasureIndex = result.size();
+        } else { 
+          try{
+            // DLM: this is a back up, work around
+            runmanager::JobParam jobkeyname = workItem.params.get("workflowjobkey");
+            if (jobkeyname.value == "pat-report-request-job"){
+              reportRequestMeasureWorkItem = step.workItem();
+              reportRequestMeasureIndex = result.size();
+            }
+          } catch (const std::exception&) {
+            // debugging
+            std::string json = workItem.toJSON();
+          }
+        
         }
         result.push_back(workItem);
       }
