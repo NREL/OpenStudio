@@ -5,6 +5,8 @@ project(OpenStudio)
 set(CMAKE_VERSION_MAJOR 1)
 set(CMAKE_VERSION_MINOR 4)
 set(CMAKE_VERSION_PATCH 2)
+SET(CMAKE_OSX_DEPLOYMENT_TARGET 10.9)
+SET(CMAKE_OSX_SYSROOT 10.9)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
@@ -285,7 +287,7 @@ ProcessorCount(CPUCOUNT)
 if(CPUCOUNT EQUAL 0)
   set(CPUCOUNT 1)
 endif()
-  
+
 if(UNIX)
   if(CPUCOUNT EQUAL 1)
     set(BOOST_CPUCOUNT "1")
@@ -348,7 +350,7 @@ if(MSVC AND NOT Boost_FOUND AND EXISTS "C:/local/boost_1_55_0/")
   if(MSVC12)
     set(BOOST_MSVC 12.0)
   endif()
-  
+
   if(EXISTS "C:/local/boost_1_55_0/lib${BOOST_ARCH}-msvc-${BOOST_MSVC}")
     set(BOOST_ROOT "C:/local/boost_1_55_0")
     set(BOOST_LIBRARYDIR "C:/local/boost_1_55_0/lib${BOOST_ARCH}-msvc-${BOOST_MSVC}")
@@ -395,7 +397,7 @@ if(WIN32 AND MSVC AND CMAKE_CL_64)
 endif()
 
 if(APPLE)
-  if (OSX_SDK STREQUAL "10.8") 
+  if (OSX_SDK STREQUAL "10.8")
     # Ruby 2.0 is not in 10.8 SDK
     option(BUILD_RUBY "Build Ruby" ON)
   else()
@@ -462,17 +464,17 @@ endif()
 
 if(BUILD_RUBY AND UNIX)
   if(APPLE)
-    if (OSX_SDK STREQUAL "10.8") 
+    if (OSX_SDK STREQUAL "10.8")
       # Unpackage build of Ruby 2.0 made on Mac 10.8
       ExternalProject_Add(Ruby
         URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p481-shared.zip
         URL_MD5 af634ed75a961e69c03c6458a2e8c110
-        PATCH_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ && sh -c "chmod +x *" 
+        PATCH_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ && sh -c "chmod +x *"
               COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/ && sh -c "install_name_tool -id ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/libruby.2.0.0.dylib	${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/libruby.2.0.0.dylib"
         CONFIGURE_COMMAND ""
         BUILD_COMMAND ""
         INSTALL_COMMAND ""
-      )      
+      )
       set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby)
       set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/libruby.2.0.0.dylib)
     else()
