@@ -13,7 +13,7 @@ class ModelMeasureTest < MiniTest::Test
 
   # def teardown
   # end
-  
+
   def test_number_of_arguments_and_argument_names
     # create an instance of the measure
     measure = ModelMeasure.new
@@ -26,7 +26,7 @@ class ModelMeasureTest < MiniTest::Test
     assert_equal(1, arguments.size)
     assert_equal("space_name", arguments[0].name)
   end
-  
+
   def test_bad_argument_values   
     # create an instance of the measure
     measure = ModelMeasure.new
@@ -36,13 +36,13 @@ class ModelMeasureTest < MiniTest::Test
 
     # make an empty model
     model = OpenStudio::Model::Model.new
-    
+
     # check that there are no spaces
     assert_equal(0, model.getSpaces.size)
-    
+
     # get arguments
     arguments = measure.arguments(model)
-    argument_map = OpenStudio::Ruleset::convertOSArgumentVectorToMap(arguments)
+    argument_map = OpenStudio::Ruleset.convertOSArgumentVectorToMap(arguments)
 
     # set argument values to bad value
     space_name = arguments[0].clone
@@ -53,12 +53,12 @@ class ModelMeasureTest < MiniTest::Test
     measure.run(model, runner, argument_map)
     result = runner.result
     assert_equal("Fail", result.value.valueName)
-    
+
     # check that there are still no spaces
-    assert_equal(0, model.getSpaces.size)    
+    assert_equal(0, model.getSpaces.size)
   end
-  
-  def test_good_argument_values   
+
+  def test_good_argument_values
     # create an instance of the measure
     measure = ModelMeasure.new
 
@@ -70,10 +70,10 @@ class ModelMeasureTest < MiniTest::Test
     
     # check that there are no spaces
     assert_equal(0, model.getSpaces.size)
-    
+
     # get arguments
     arguments = measure.arguments(model)
-    argument_map = OpenStudio::Ruleset::convertOSArgumentVectorToMap(arguments)
+    argument_map = OpenStudio::Ruleset.convertOSArgumentVectorToMap(arguments)
 
     # set argument values to bad value
     space_name = arguments[0].clone
@@ -84,13 +84,13 @@ class ModelMeasureTest < MiniTest::Test
     measure.run(model, runner, argument_map)
     result = runner.result
     assert_equal("Success", result.value.valueName)
-    
+
     # check that there is now 1 space
-    assert_equal(1, model.getSpaces.size)    
-    
+    assert_equal(1, model.getSpaces.size)
+
     # check that space is properly named
     space = model.getSpaces[0]
-    assert_equal("New Space", space.name.get)    
+    assert_equal("New Space", space.name.get)
   end
-  
+
 end
