@@ -103,7 +103,7 @@ FacilityInspectorView::FacilityInspectorView(bool isIP,
   index = this->stackedWidget()->addWidget(thermalZoneView);
   m_inspectorIndexMap[IddObjectType::OS_ThermalZone] = index;
 
-  SpaceTypeInspectorView* spaceTypeInspectorView = new SpaceTypeInspectorView(model, parent);
+  SpaceTypeInspectorView* spaceTypeInspectorView = new SpaceTypeInspectorView(isIP, model, parent);
   connect(spaceTypeInspectorView, &SpaceTypeInspectorView::dropZoneItemClicked, this, &FacilityInspectorView::dropZoneItemClicked);
   index = this->stackedWidget()->addWidget(spaceTypeInspectorView);
   m_inspectorIndexMap[IddObjectType::OS_SpaceType] = index;

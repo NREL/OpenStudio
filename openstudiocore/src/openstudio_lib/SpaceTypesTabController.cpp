@@ -29,10 +29,11 @@
 
 namespace openstudio {
 
-SpaceTypesTabController::SpaceTypesTabController(const model::Model& model)
+SpaceTypesTabController::SpaceTypesTabController(bool isIP,
+  const model::Model& model)
   : MainTabController(new SpaceTypesTabView())
 {
-  m_spaceTypesController = std::shared_ptr<SpaceTypesController>(new SpaceTypesController(model));
+  m_spaceTypesController = std::shared_ptr<SpaceTypesController>(new SpaceTypesController(isIP, model));
 
   connect(m_spaceTypesController.get(), &SpaceTypesController::modelObjectSelected, this, &SpaceTypesTabController::modelObjectSelected);
 

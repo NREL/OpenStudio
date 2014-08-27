@@ -50,13 +50,9 @@ public:
 
   virtual ~ThermalZoneView() {}
 
-  void paintEvent(QPaintEvent * event);
-
 public slots:
 
   void refresh();
-
-  void refreshNow();
 
 signals:
 
@@ -72,13 +68,11 @@ protected:
 
 private slots:
 
-  void onToggleUnitsClicked(bool);
+  void toggleUnits(bool);
 
 private:
 
   bool m_isIP;
-
-  bool m_dirty;
 
 };
 

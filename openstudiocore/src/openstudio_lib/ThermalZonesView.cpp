@@ -30,8 +30,9 @@
 
 namespace openstudio {
 
-ThermalZonesView::ThermalZonesView(bool isIP, const model::Model & model,
-                                   QWidget * parent)
+ThermalZonesView::ThermalZonesView(bool isIP,
+  const model::Model & model,
+  QWidget * parent)
   : ModelSubTabView(new ModelObjectListView(IddObjectType::OS_ThermalZone,model,true,parent),
                     new ThermalZoneView(isIP,model,parent),
                     true,
@@ -55,11 +56,11 @@ ThermalZonesView::ThermalZonesView(bool isIP, const model::Model & model,
   OS_ASSERT(isConnected);
 }
 
-ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
-                                 QWidget * parent )
+ThermalZoneView::ThermalZoneView(bool isIP,
+  const model::Model & model,
+  QWidget * parent )
   : ModelObjectInspectorView(model,true,parent),
-    m_isIP(isIP),
-    m_dirty(false)
+    m_isIP(isIP)
 {
   bool isConnected = false;
 
@@ -78,53 +79,27 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
   isConnected = connect(thermalZonesGridView, SIGNAL(gridRowSelected(OSItem*)), this, SIGNAL(gridRowSelected(OSItem*)));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), this, SLOT(onToggleUnitsClicked(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), this, SLOT(toggleUnits(bool)));
   OS_ASSERT(isConnected);
 
   refresh();
 }
 
 void ThermalZoneView::onClearSelection()
-{
-}
+{}
 
 void ThermalZoneView::onSelectModelObject(const openstudio::model::ModelObject& modelObject)
-{
-  refresh();
-}
+{}
 
 void ThermalZoneView::onUpdate()
-{
-  refresh();
-}
-
-void ThermalZoneView::paintEvent ( QPaintEvent * event )
-{
-  QStyleOption opt;
-  opt.init(this);
-  QPainter p(this);
-  style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-}
+{}
 
 void ThermalZoneView::refresh()
-{
-  m_dirty = true;
+{}
 
-  QTimer::singleShot(0,this,SLOT(refreshNow()));
-}
-
-void ThermalZoneView::refreshNow()
-{
-}
-
-void ThermalZoneView::onToggleUnitsClicked(bool isIP)
+void ThermalZoneView::toggleUnits(bool isIP)
 {
   m_isIP = isIP;
-}
-
-void onItemSelected(OSItem * item, bool selected)
-{
-
 }
 
 } // openstudio

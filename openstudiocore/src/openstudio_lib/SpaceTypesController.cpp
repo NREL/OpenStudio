@@ -33,8 +33,9 @@
 
 namespace openstudio {
 
-SpaceTypesController::SpaceTypesController(const model::Model& model)
-  : ModelSubTabController(new SpaceTypesView(model), model)
+  SpaceTypesController::SpaceTypesController(bool isIP,
+    const model::Model& model)
+    : ModelSubTabController(new SpaceTypesView(isIP, model), model)
 {
 }
 
