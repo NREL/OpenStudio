@@ -407,7 +407,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
         CastNullAdapter<model::ModelObject>(&model::ModelObject::setName),
         DataSource(
         equipment,
-        true,
+        false,
         QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::ModelObject, model::ThermalZone>(ZONEEQUIPMENT,
         getter, setter, reset))
         )
