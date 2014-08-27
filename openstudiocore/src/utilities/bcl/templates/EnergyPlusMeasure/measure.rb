@@ -3,7 +3,7 @@
 
 # start the measure
 class EnergyPlusMeasure < OpenStudio::Ruleset::WorkspaceUserScript
-  
+
   # human readable name
   def name
     return "NAME_TEXT"
@@ -13,31 +13,31 @@ class EnergyPlusMeasure < OpenStudio::Ruleset::WorkspaceUserScript
   def description
     return "DESCRIPTION_TEXT"
   end
-  
+
   # human readable description of modeling approach
   def modeler_description
     return "MODELER_DESCRIPTION_TEXT"
   end
-  
+
   # define the arguments that the user will input
   def arguments(workspace)
     args = OpenStudio::Ruleset::OSArgumentVector.new
-    
+
     # the name of the zone to add to the model
-    zone_name = OpenStudio::Ruleset::OSArgument::makeStringArgument("zone_name", true)
+    zone_name = OpenStudio::Ruleset::OSArgument.makeStringArgument("zone_name", true)
     zone_name.setDisplayName("New zone name")
     zone_name.setDescription("This name will be used as the name of the new zone.")
     args << zone_name
-    
+
     return args
   end 
 
   # define what happens when the measure is run
   def run(workspace, runner, user_arguments)
     super(workspace, runner, user_arguments)
-    
+
     # use the built-in error checking 
-    if not runner.validateUserArguments(arguments(workspace), user_arguments)
+    if !runner.validateUserArguments(arguments(workspace), user_arguments)
       return false
     end
 
@@ -74,7 +74,7 @@ class EnergyPlusMeasure < OpenStudio::Ruleset::WorkspaceUserScript
     object = idfObject.get
     wsObject = workspace.addObject(object)
     new_zone = wsObject.get
-  
+
     # echo the new zone's name back to the user, using the index based getString method
     runner.registerInfo("A zone named '#{new_zone.getString(0)}' was added.")
 
@@ -84,7 +84,7 @@ class EnergyPlusMeasure < OpenStudio::Ruleset::WorkspaceUserScript
     
     return true
  
-  end 
+  end
 
 end 
 
