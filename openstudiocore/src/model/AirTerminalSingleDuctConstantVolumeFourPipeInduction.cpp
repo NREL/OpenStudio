@@ -419,8 +419,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::setHeatingCoil(const HVACComponent& heatingCoilName) {
-    bool result = setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::HeatingCoilName, heatingCoilName.handle());
+  bool AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::setHeatingCoil(const HVACComponent& heatingCoil) {
+    bool result = setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::HeatingCoilName, heatingCoil.handle());
     return result;
   }
 
@@ -466,10 +466,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::setCoolingCoil(const boost::optional<HVACComponent>& coolingCoilName) {
+  bool AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::setCoolingCoil(const boost::optional<HVACComponent>& coolingCoil) {
     bool result(false);
-    if (coolingCoilName) {
-      result = setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::CoolingCoilName, coolingCoilName.get().handle());
+    if (coolingCoil) {
+      result = setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::CoolingCoilName, coolingCoil.get().handle());
     }
     else {
       resetCoolingCoil();
@@ -531,7 +531,7 @@ namespace detail {
 
 } // detail
 
-AirTerminalSingleDuctConstantVolumeFourPipeInduction::AirTerminalSingleDuctConstantVolumeFourPipeInduction(const Model& model)
+AirTerminalSingleDuctConstantVolumeFourPipeInduction::AirTerminalSingleDuctConstantVolumeFourPipeInduction(const Model& model, HVACComponent& heatingCoil)
   : StraightComponent(AirTerminalSingleDuctConstantVolumeFourPipeInduction::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>());
@@ -542,17 +542,9 @@ AirTerminalSingleDuctConstantVolumeFourPipeInduction::AirTerminalSingleDuctConst
   //     OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::AirOutletNodeName
   //     OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::HeatingCoilName
   bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
   // ok = setMaximumTotalAirFlowRate();
   OS_ASSERT(ok);
-  // ok = setSupplyAirInletNode();
-  OS_ASSERT(ok);
-  // ok = setInducedAirInletNode();
-  OS_ASSERT(ok);
-  // ok = setAirOutletNode();
-  OS_ASSERT(ok);
-  // ok = setHeatingCoil();
+  ok = setHeatingCoil(heatingCoil);
   OS_ASSERT(ok);
 }
 
@@ -660,8 +652,8 @@ void AirTerminalSingleDuctConstantVolumeFourPipeInduction::resetInductionRatio()
   getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->resetInductionRatio();
 }
 
-bool AirTerminalSingleDuctConstantVolumeFourPipeInduction::setHeatingCoil(const HVACComponent& heatingCoilName) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->setHeatingCoil(heatingCoilName);
+bool AirTerminalSingleDuctConstantVolumeFourPipeInduction::setHeatingCoil(const HVACComponent& heatingCoil) {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->setHeatingCoil(heatingCoil);
 }
 
 void AirTerminalSingleDuctConstantVolumeFourPipeInduction::setMaximumHotWaterFlowRate(double maximumHotWaterFlowRate) {
@@ -692,8 +684,8 @@ void AirTerminalSingleDuctConstantVolumeFourPipeInduction::resetHeatingConvergen
   getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->resetHeatingConvergenceTolerance();
 }
 
-bool AirTerminalSingleDuctConstantVolumeFourPipeInduction::setCoolingCoil(const HVACComponent& coolingCoilName) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->setCoolingCoil(coolingCoilName);
+bool AirTerminalSingleDuctConstantVolumeFourPipeInduction::setCoolingCoil(const HVACComponent& coolingCoil) {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->setCoolingCoil(coolingCoil);
 }
 
 void AirTerminalSingleDuctConstantVolumeFourPipeInduction::resetCoolingCoil() {

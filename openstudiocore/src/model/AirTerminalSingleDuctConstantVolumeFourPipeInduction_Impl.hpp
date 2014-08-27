@@ -132,7 +132,7 @@ namespace detail {
 
     void resetInductionRatio();
 
-    bool setHeatingCoil(const HVACComponent& heatingCoilName);
+    bool setHeatingCoil(const HVACComponent& heatingCoil);
 
     void setMaximumHotWaterFlowRate(boost::optional<double> maximumHotWaterFlowRate);
 
@@ -148,7 +148,7 @@ namespace detail {
 
     void resetHeatingConvergenceTolerance();
 
-    bool setCoolingCoil(const boost::optional<HVACComponent>& coolingCoilName);
+    bool setCoolingCoil(const boost::optional<HVACComponent>& coolingCoil);
 
     void resetCoolingCoil();
 

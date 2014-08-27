@@ -41,7 +41,7 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeInduction : public St
   /** @name Constructors and Destructors */
   //@{
 
-  explicit AirTerminalSingleDuctConstantVolumeFourPipeInduction(const Model& model);
+  explicit AirTerminalSingleDuctConstantVolumeFourPipeInduction(const Model& model, HVACComponent& heatingCoil);
 
   virtual ~AirTerminalSingleDuctConstantVolumeFourPipeInduction() {}
 
@@ -106,7 +106,7 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeInduction : public St
 
   void resetInductionRatio();
 
-  bool setHeatingCoil(const HVACComponent& heatingCoilName);
+  bool setHeatingCoil(const HVACComponent& heatingCoil);
 
   void setMaximumHotWaterFlowRate(double maximumHotWaterFlowRate);
 
@@ -122,7 +122,7 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeInduction : public St
 
   void resetHeatingConvergenceTolerance();
 
-  bool setCoolingCoil(const HVACComponent& coolingCoilName);
+  bool setCoolingCoil(const HVACComponent& coolingCoil);
 
   void resetCoolingCoil();
 
