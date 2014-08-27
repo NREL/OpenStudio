@@ -466,6 +466,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirTerminalSingleDuctVAVReheat(airTerminal);
       break;
     }
+  case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_InletSideMixer :
+    {
+      model::AirTerminalSingleDuctInletSideMixer airTerminal = modelObject.cast<AirTerminalSingleDuctInletSideMixer>();
+      retVal = translateAirTerminalSingleDuctInletSideMixer(airTerminal);
+      break;
+    }
   case openstudio::IddObjectType::OS_AirLoopHVAC_ZoneSplitter :
     {
       model::AirLoopHVACZoneSplitter splitter = modelObject.cast<AirLoopHVACZoneSplitter>();

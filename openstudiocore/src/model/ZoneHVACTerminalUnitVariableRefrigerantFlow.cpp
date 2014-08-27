@@ -378,12 +378,12 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFan);
   }
 
-  unsigned ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::inletPort()
+  unsigned ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::inletPort() const
   {
     return OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAirInletNode;
   }
 
-  unsigned ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::outletPort()
+  unsigned ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::outletPort() const
   {
     return OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAirOutletNode;
   }

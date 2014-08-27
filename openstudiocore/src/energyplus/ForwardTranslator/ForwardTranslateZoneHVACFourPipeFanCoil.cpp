@@ -64,6 +64,9 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACFourPipeFanCoil(
   std::string coolingCoilOutletNodeName = baseName + " Cooling Coil Outlet Node";
   std::string reliefAirNodeName = baseName + " Relief Air Node";
   std::string oaNodeName = baseName + " OA Node";
+
+  boost::optional<AirLoopHVAC> t_airLoopHVAC = modelObject.airLoopHVAC();
+
   // AirInletNodeName
   boost::optional<std::string> airInletNodeName;
   if( boost::optional<Node> node = modelObject.inletNode() )
@@ -103,21 +106,30 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACFourPipeFanCoil(
       // SupplyAirFanName
       idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::SupplyAirFanName,_supplyAirFan->name().get() );
       // Supply Air Fan Inlet and Outlet Nodes
-      if( airOutletNodeName )
+      if( airOutletNodeName && airInletNodeName )
       {
+        // If there is an AirLoopHVAC then we provide no mixer
+        std::string fanInletNodeName;
+        if( t_airLoopHVAC ) {
+          fanInletNodeName = airInletNodeName.get();
+        } else {
+          fanInletNodeName = mixedAirNodeName;
+        }
+
         if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_ConstantVolume )
         {
-          _supplyAirFan->setString(Fan_ConstantVolumeFields::AirInletNodeName,mixedAirNodeName );
+          _supplyAirFan->setString(Fan_ConstantVolumeFields::AirInletNodeName,fanInletNodeName );
           _supplyAirFan->setString(Fan_ConstantVolumeFields::AirOutletNodeName,fanOutletNodeName );
         }
         else if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_OnOff )
         {
-          _supplyAirFan->setString(Fan_OnOffFields::AirInletNodeName,mixedAirNodeName );
+          
+          _supplyAirFan->setString(Fan_OnOffFields::AirInletNodeName,fanInletNodeName );
           _supplyAirFan->setString(Fan_OnOffFields::AirOutletNodeName,fanOutletNodeName );
         }
         else if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_VariableVolume )
         {
-          _supplyAirFan->setString(Fan_VariableVolumeFields::AirInletNodeName,mixedAirNodeName );
+          _supplyAirFan->setString(Fan_VariableVolumeFields::AirInletNodeName,fanInletNodeName );
           _supplyAirFan->setString(Fan_VariableVolumeFields::AirOutletNodeName,fanOutletNodeName );
         }
       }
@@ -211,31 +223,33 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACFourPipeFanCoil(
     }
   }
 
-  // OutdoorAirMixerObjectType
-  idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::OutdoorAirMixerObjectType,
-                      modelObject.outdoorAirMixerObjectType());
+  if( ! t_airLoopHVAC ) {
+    // OutdoorAirMixerObjectType
+    idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::OutdoorAirMixerObjectType,
+                        modelObject.outdoorAirMixerObjectType());
 
-  // OutdoorAirMixerName
-  std::string oaMixerName = modelObject.name().get() + " OA Mixer";
-  idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::OutdoorAirMixerName,oaMixerName);
+    // OutdoorAirMixerName
+    std::string oaMixerName = modelObject.name().get() + " OA Mixer";
+    idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::OutdoorAirMixerName,oaMixerName);
 
-  // Create Outdoor Air Mixer
-  IdfObject _outdoorAirMixer(IddObjectType::OutdoorAir_Mixer);
-  _outdoorAirMixer.setName(oaMixerName);
-  m_idfObjects.push_back(_outdoorAirMixer);
+    // Create Outdoor Air Mixer
+    IdfObject _outdoorAirMixer(IddObjectType::OutdoorAir_Mixer);
+    _outdoorAirMixer.setName(oaMixerName);
+    m_idfObjects.push_back(_outdoorAirMixer);
 
-  _outdoorAirMixer.setString(OutdoorAir_MixerFields::MixedAirNodeName,mixedAirNodeName);
-  _outdoorAirMixer.setString(OutdoorAir_MixerFields::OutdoorAirStreamNodeName,oaNodeName);
-  _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReliefAirStreamNodeName,reliefAirNodeName);
-  if(airInletNodeName)
-  {
-    _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReturnAirStreamNodeName,airInletNodeName.get());
+    _outdoorAirMixer.setString(OutdoorAir_MixerFields::MixedAirNodeName,mixedAirNodeName);
+    _outdoorAirMixer.setString(OutdoorAir_MixerFields::OutdoorAirStreamNodeName,oaNodeName);
+    _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReliefAirStreamNodeName,reliefAirNodeName);
+    if(airInletNodeName)
+    {
+      _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReturnAirStreamNodeName,airInletNodeName.get());
+    }
+
+    // Create Outdoor Air Node List
+    IdfObject _oaNodeList(openstudio::IddObjectType::OutdoorAir_NodeList);
+    _oaNodeList.setString(0,oaNodeName);
+    m_idfObjects.push_back(_oaNodeList);
   }
-
-  // Create Outdoor Air Node List
-  IdfObject _oaNodeList(openstudio::IddObjectType::OutdoorAir_NodeList);
-  _oaNodeList.setString(0,oaNodeName);
-  m_idfObjects.push_back(_oaNodeList);
 
   // MaximumColdWaterFlowRate
   if( modelObject.isMaximumColdWaterFlowRateAutosized() )

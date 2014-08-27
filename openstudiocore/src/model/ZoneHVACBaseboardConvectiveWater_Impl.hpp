@@ -76,8 +76,8 @@ namespace detail {
     //@{
 
 
-    unsigned inletPort();
-    unsigned outletPort();
+    unsigned inletPort() const;
+    unsigned outletPort() const;
 
     Schedule availabilitySchedule() const;
 

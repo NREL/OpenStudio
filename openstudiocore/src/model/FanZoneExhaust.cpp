@@ -185,12 +185,12 @@ namespace detail {
     return getDouble(OS_Fan_ZoneExhaustFields::MaximumFlowRate,true);
   }
 
-  unsigned FanZoneExhaust_Impl::inletPort()
+  unsigned FanZoneExhaust_Impl::inletPort() const
   {
     return OS_Fan_ZoneExhaustFields::AirInletNodeName;
   }
 
-  unsigned FanZoneExhaust_Impl::outletPort()
+  unsigned FanZoneExhaust_Impl::outletPort() const
   {
     return OS_Fan_ZoneExhaustFields::AirOutletNodeName;
   }

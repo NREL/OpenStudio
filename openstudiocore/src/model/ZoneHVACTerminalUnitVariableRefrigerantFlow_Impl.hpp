@@ -159,9 +159,9 @@ namespace detail {
     /** @name Other */
     //@{
 
-    unsigned inletPort();
+    unsigned inletPort() const;
 
-    unsigned outletPort();
+    unsigned outletPort() const;
 
     bool setSupplyAirFan(const HVACComponent & component);
 

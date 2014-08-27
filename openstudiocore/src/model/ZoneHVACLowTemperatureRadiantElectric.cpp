@@ -104,12 +104,12 @@ namespace detail {
     return result;
   }
 
-  unsigned ZoneHVACLowTemperatureRadiantElectric_Impl::inletPort()
+  unsigned ZoneHVACLowTemperatureRadiantElectric_Impl::inletPort() const
   {
     return (0); // this object has no inlet or outlet node
   }
 
-  unsigned ZoneHVACLowTemperatureRadiantElectric_Impl::outletPort()
+  unsigned ZoneHVACLowTemperatureRadiantElectric_Impl::outletPort() const
   {
     return (0); // this object has no inlet or outlet node
   }

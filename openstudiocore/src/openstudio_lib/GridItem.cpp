@@ -39,6 +39,8 @@
 #include <QMenu>
 #include "../model/HVACComponent.hpp"
 #include "../model/HVACComponent_Impl.hpp"
+#include "../model/ZoneHVACComponent.hpp"
+#include "../model/ZoneHVACComponent_Impl.hpp"
 #include "../model/WaterUseConnections.hpp"
 #include "../model/WaterUseConnections_Impl.hpp"
 #include "../model/WaterToAirComponent.hpp"
@@ -499,6 +501,16 @@ HorizontalBranchItem::HorizontalBranchItem( std::vector<model::ModelObject> mode
     else if(boost::optional<model::WaterToWaterComponent> comp = it->optionalCast<model::WaterToWaterComponent>())
     {
       GridItem * gridItem = new OneThreeWaterToWaterItem(this); 
+      gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
+      if( comp->isRemovable() )
+      {
+        gridItem->setDeletable(true);
+      }
+      m_gridItems.push_back(gridItem);
+    }
+    else if(boost::optional<model::ZoneHVACComponent> comp = it->optionalCast<model::ZoneHVACComponent>())
+    {
+      GridItem * gridItem = new OneThreeStraightItem(this); 
       gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
       if( comp->isRemovable() )
       {

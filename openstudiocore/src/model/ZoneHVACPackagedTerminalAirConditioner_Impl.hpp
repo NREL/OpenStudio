@@ -90,9 +90,9 @@ namespace detail {
 
     virtual std::vector<ModelObject> children() const;
 
-    virtual unsigned inletPort();
+    virtual unsigned inletPort() const;
 
-    virtual unsigned outletPort();
+    virtual unsigned outletPort() const;
 
     //@}
     /** @name Getters */

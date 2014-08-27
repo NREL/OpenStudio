@@ -200,6 +200,7 @@
     <file>images/unitary_system.png</file>
     <file>images/vav_noreheat.png</file>
     <file>images/vav-reheat.png</file>
+    <file>images/inlet_mixer_terminal.png</file>
     <file>images/vrf_outdoor.png</file>
     <file>images/vrf_unit.png</file>
     <file>images/vrf_transfer.png</file>
@@ -361,6 +362,7 @@
     <file>images/mini_icons/variable_fan.png</file>
     <file>images/mini_icons/vav_noreheat.png</file>
     <file>images/mini_icons/vav-reheat.png</file>
+    <file>images/mini_icons/inlet_mixer_terminal.png</file>
     <file>images/mini_icons/mini_vrf_outdoor.png</file>
     <file>images/mini_icons/mini_vrf_unit.png</file>
     <file>images/mini_icons/wahpDXCC_mini.png</file>        
