@@ -2,7 +2,7 @@
   <schema_version>3.0</schema_version>
   <name>report_request</name>
   <uid>060ee477-b04c-4a1b-8788-312d796ad132</uid>
-  <version_id>c189eb34-a912-4925-94aa-f077bb61834e</version_id>
+  <version_id>b7054863-4a42-43e6-ae29-5e0a6d426b90</version_id>
   <xml_checksum>2CF2EA46</xml_checksum>
   <class_name>ReportRequest</class_name>
   <display_name>Report Request</display_name>
@@ -10,8 +10,8 @@
   <modeler_description></modeler_description>
   <arguments>
     <argument>
-      <name>json_work_items</name>
-      <display_name>json_work_items</display_name>
+      <name>measures_json</name>
+      <display_name>measures_json</display_name>
       <type>String</type>
       <required>true</required>
       <model_dependent>true</model_dependent>
@@ -64,7 +64,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>97F53D23</checksum>
+      <checksum>C13BB490</checksum>
     </file>
   </files>
 </measure>

@@ -360,7 +360,7 @@ class ANALYSISDRIVER_API SimpleProject {
    *  getAlternativeModelVariable() will return an initialized value after this method is called. */
   bool insertAlternativeModelVariable();
 
-  /** Returns false if cannot insert the workflow step before ExpandObjects. */
+  /** Returns false if cannot insert the workflow step. */
   bool insertReportRequestWorkflowStep();
 
   /** Returns false if cannot insert the workflow step in between EnergyPlus and

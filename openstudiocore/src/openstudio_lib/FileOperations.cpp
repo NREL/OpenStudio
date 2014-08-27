@@ -57,7 +57,6 @@
 #include <QDir>
 #include <QMessageBox>
 #include <QTemporaryFile>
-#include <QJsonDocument>
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem.hpp>
@@ -730,108 +729,10 @@ namespace openstudio {
 
   bool addReportRequestMeasureWorkItem(std::vector<runmanager::WorkItem>& workItems, const openstudio::BCLMeasure& bclMeasure)
   {
-    // loop over all reporting measures and gather arguments
-    bool pastEnergyPlus = false;
-    QVariantList measureList;
-    for (std::vector<runmanager::WorkItem>::iterator itr = workItems.begin();
-         itr != workItems.end();
-         ++itr)
-    {
-      if (itr->type == openstudio::runmanager::JobType::EnergyPlus){
-
-        pastEnergyPlus = true;
-
-      } if (pastEnergyPlus && itr->type == openstudio::runmanager::JobType::UserScript){
-        // DLM: Jason will merged jobs show up as user scripts?
-
-        openstudio::runmanager::RubyJobBuilder rjb(*itr);
-
-        const std::vector<openstudio::runmanager::RubyJobBuilder>& mergedJobs = rjb.mergedJobs();
-        if (mergedJobs.empty()){
-
-          QVariantMap measureHash;
-          //measureHash["script"] = toQString(rjb.script()); // keep in mind this is probably just UserScriptAdapter to get the actual script you need to use:
-
-          QVariantList parameterList;
-          for (const auto& parameter : rjb.getScriptParameters()){
-            parameterList << toQString(parameter);
-          }
-          measureHash["parameters"] = parameterList;
-
-          QVariantList requiredFileList;
-          for (const auto& requiredFile : rjb.requiredFiles()){
-            QVariantMap requiredFileMap;
-            // second is local file path, first is absolute system path
-            requiredFileMap[toQString(requiredFile.second)] = toQString(requiredFile.first);
-            requiredFileList << requiredFileMap;
-
-            if (istringEqual(toString(requiredFile.second), "measure.rb")){
-              measureHash["measure"] = toQString(requiredFile.first);
-            }
-          }
-          // DLM: I should probably be attaching these required files to this job in some way?  
-          // DLM: will this work for now given that we are removing the requirement for remote runs?
-          //measureHash["required_files"] = requiredFileList;
-
-          // DLM: args were not populated here
-          //QVariantList argList;
-          //auto args = openstudio::runmanager::RubyJobBuilder::toOSArguments(itr->params);
-          //for (const auto& arg : args){
-          //  argList << ruleset::detail::toVariant(arg);
-          //}
-          //measureHash["args"] = argList;
-
-          measureList << measureHash;
-
-        } else { 
-
-          for (const openstudio::runmanager::RubyJobBuilder& mergedRJB : mergedJobs){
-
-            QVariantMap measureHash;
-            //measureHash["script"] = toQString(mergedRJB.script()); // keep in mind this is probably just UserScriptAdapter to get the actual script you need to use:
-
-            QVariantList parameterList;
-            for (const auto& parameter : mergedRJB.getScriptParameters()){
-              parameterList << toQString(parameter);
-            }
-            measureHash["parameters"] = parameterList;
-
-            QVariantList requiredFileList;
-            for (const auto& requiredFile : mergedRJB.requiredFiles()){
-              QVariantMap requiredFileMap;
-              // key is local file path, value is absolute system path
-              requiredFileMap[toQString(requiredFile.second)] = toQString(requiredFile.first);
-              requiredFileList << requiredFileMap;
-
-              if (istringEqual(toString(requiredFile.second), "measure.rb")){
-                measureHash["measure"] = toQString(requiredFile.first);
-              }
-            }
-            // DLM: I should probably be attaching these required files to this job in some way?  
-            // DLM: will this work for now given that we are removing the requirement for remote runs?
-            //measureHash["required_files"] = requiredFileList;
-
-            // DLM: args were not populated here
-            //QVariantList argList;
-            //auto args = openstudio::runmanager::RubyJobBuilder::toOSArguments(itr->params);
-            //for (const auto& arg : args){
-            //  argList << ruleset::detail::toVariant(arg);
-            //}
-            //measureHash["args"] = argList;
-
-            measureList << measureHash;
-
-          }
-        }
-      }
-    }
-
-    QJsonDocument document = QJsonDocument::fromVariant(measureList);
-    QString jsonValue = document.toJson(QJsonDocument::Compact);
-    //QString jsonValue = document.toJson(QJsonDocument::Indented);
+    std::string reportingMeasureArgument = runmanager::getReportRequestMeasureArgument(workItems);
 
     ruleset::OSArgument argument = ruleset::OSArgument::makeStringArgument("measures_json", true, false);
-    argument.setValue(toString(jsonValue));
+    argument.setValue(reportingMeasureArgument);
 
     std::vector<ruleset::OSArgument> arguments;
     arguments.push_back(argument);
@@ -857,8 +758,8 @@ namespace openstudio {
          itr != workItems.end();
          ++itr)
     {
-      // currently we are doing ExpandObjects->EnergyPlusPreProcess->EnergyPlus
-      if (itr->type == openstudio::runmanager::JobType::ExpandObjects)
+      // currently we are doing ExpandObjects->(E+ Measures)->EnergyPlusPreProcess->EnergyPlus
+      if (itr->type == openstudio::runmanager::JobType::EnergyPlusPreProcess)
       {
         workItems.insert(itr, workItem);
         return true;

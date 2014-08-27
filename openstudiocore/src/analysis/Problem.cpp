@@ -1396,6 +1396,10 @@ namespace detail {
       const DataPoint& dataPoint,
       const openstudio::path& rubyIncludeDirectory) const
   {
+    // record the index of the report request measure if we find it
+    boost::optional<unsigned> reportRequestMeasureIndex;
+    boost::optional<runmanager::WorkItem> reportRequestMeasureWorkItem;
+
     std::vector<runmanager::WorkItem> result; // converted to Workflow at end
     std::vector<QVariant> values = dataPoint.variableValues();
     if (int(values.size()) != numVariables()) {
@@ -1436,6 +1440,10 @@ namespace detail {
           rjb.setIncludeDir(rubyIncludeDirectory);
           workItem = rjb.toWorkItem();
         }
+        if (workItem.jobkeyname == "pat-report-request-job"){
+          reportRequestMeasureWorkItem = step.workItem();
+          reportRequestMeasureIndex = result.size();
+        }
         result.push_back(workItem);
       }
       else {
@@ -1459,6 +1467,17 @@ namespace detail {
       result.push_back(compoundRubyMeasure->createWorkItem(rubyIncludeDirectory));
     }
 
+    if (reportRequestMeasureIndex){
+      // get the arguments for the report request measure, recreate the work item, and replace it
+      std::string reportingMeasureArgument = runmanager::getReportRequestMeasureArgument(result);
+
+      runmanager::RubyJobBuilder rjb(*reportRequestMeasureWorkItem);
+      rjb.setIncludeDir(rubyIncludeDirectory);
+      rjb.addScriptParameter("argumentName", "measures_json");
+      rjb.addScriptParameter("argumentValue", reportingMeasureArgument);
+      result[*reportRequestMeasureIndex] = rjb.toWorkItem();
+    }
+    
     // put a bow on it
     runmanager::Workflow simulationWorkflow(result);
     simulationWorkflow.addParam(runmanager::JobParam("flatoutdir"));

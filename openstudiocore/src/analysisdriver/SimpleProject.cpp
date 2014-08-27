@@ -492,6 +492,20 @@ namespace detail {
           }
         }
 
+        if (nextWorkItemType.get() == JobType(JobType::EnergyPlusPreProcess))
+        {
+          WorkItem wi = step.workItem();
+          if (wi.type == JobType(JobType::UserScript)
+              && wi.jobkeyname == "pat-report-request-job")
+          {
+            // we thought we were looking for ModelToIdf, but found
+            // the radiance script instead. That's OK, it means this is a project
+            // that uses radiance for its daylighting calculations
+            // continue to the next job in the loop
+            continue;
+          }
+        }
+
         if ((!nextWorkItemType) || (step.workItemType() != nextWorkItemType.get())) {
           return false;
         }
@@ -607,6 +621,7 @@ namespace detail {
           {
             if (it->value == "bcl_measure_uuid") {
               if (openstudio::toUUID(it->children.at(0).value) == m_reportRequestMeasureUUID) {
+                OS_ASSERT(workItem.jobkeyname == "pat-report-request-job");
                 result = step;
                 break;
               }
@@ -1439,7 +1454,7 @@ namespace detail {
     bool dataPointsOk = !analysis().dataPointsAreInvalid();
 
     Problem problem = analysis().problem();
-    OptionalInt index = problem.getWorkflowStepIndexByJobType(JobType::ExpandObjects);
+    OptionalInt index = problem.getWorkflowStepIndexByJobType(JobType::EnergyPlusPreProcess);
     if (!index) {
       return false;
     }
@@ -1465,8 +1480,10 @@ namespace detail {
     // be able to access OpenStudio Ruby bindings
     rubyJobBuilder.setIncludeDir(getOpenStudioRubyIncludePath());
     runmanager::WorkItem workItem = rubyJobBuilder.toWorkItem();
+    workItem.jobkeyname = "pat-report-request-job";
 
     bool ok = problem.insert(*index, WorkflowStep(workItem));
+
     if (!ok) {
       return false;
     }
