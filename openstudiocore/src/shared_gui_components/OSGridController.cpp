@@ -461,16 +461,16 @@ QWidget * OSGridController::widgetAt(int row, int column)
   const int widgetHeight = 45;
   int numWidgets = 0;
 
-  auto addWidget = [&](QWidget *t_widget, int stretch, Qt::Alignment alignment)
+  auto addWidget = [&](QWidget *t_widget)
   {
     auto holder = new QWidget();
     holder->setMinimumHeight(widgetHeight);
     auto l = new QVBoxLayout();
     l->setSpacing(0);
     l->setContentsMargins(0,0,0,0);
-    l->addWidget(t_widget, stretch, alignment);
+    l->addWidget(t_widget, 0, Qt::AlignVCenter | Qt::AlignLeft);
     holder->setLayout(l);
-    layout->addWidget(holder, 0, Qt::AlignCenter | Qt::AlignLeft);
+    layout->addWidget(holder, 0, Qt::AlignVCenter | Qt::AlignLeft);
     ++numWidgets;
   };
 
@@ -480,7 +480,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
       // Each concept should have its own column
       OS_ASSERT(m_horizontalHeader.size() == m_baseConcepts.size());
     }
-    addWidget(m_horizontalHeader.at(column),0,Qt::AlignTop | Qt::AlignCenter);
+    addWidget(m_horizontalHeader.at(column));
   } else {
 
     model::ModelObject mo = m_modelObjects[modelObjectRow];
@@ -504,9 +504,9 @@ QWidget * OSGridController::widgetAt(int row, int column)
       {
         if (item)
         {
-          addWidget(makeWidget(item->cast<model::ModelObject>(), dataSource->innerConcept()),0,0);
+          addWidget(makeWidget(item->cast<model::ModelObject>(), dataSource->innerConcept()));
         } else {
-          addWidget(new QWidget(),0,0);
+          addWidget(new QWidget());
         }
       }
 
@@ -515,7 +515,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
         // use this space to put in a blank placeholder of some kind to make sure the 
         // widget is evenly laid out relative to its friends in the adjacent columns
         // Fix this.
-        addWidget(new QWidget(),0,0);
+        addWidget(new QWidget());
       }
 
       if (dataSource->source().dropZoneConcept())
@@ -523,7 +523,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
         // it makes sense to me that the drop zone would need a reference to the parent containing object
         // not an object the rest in the list was derived from
         // this should also be working and doing what you want
-        addWidget(makeWidget(mo, dataSource->source().dropZoneConcept()),0,0);
+        addWidget(makeWidget(mo, dataSource->source().dropZoneConcept()));
       }
 
 
@@ -536,7 +536,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
       // This case is exactly what it used to do before the DataSource idea was added.
 
       // just the one
-      addWidget(makeWidget(mo, baseConcept),0,Qt::AlignTop | Qt::AlignCenter);
+      addWidget(makeWidget(mo, baseConcept));
     }
   }
 
