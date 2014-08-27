@@ -637,7 +637,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           OS_ASSERT(false);
         }
       );
-      
+
       std::function<boost::optional<model::Schedule> (model::ModelObject *)> activityLevelSchedule(
           [](model::ModelObject *l) {
             if (boost::optional<model::People> p = l->optionalCast<model::People>())
@@ -885,19 +885,19 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
       addDropZoneColumn(QString(DEFAULTCONSTRUCTIONSET),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::defaultConstructionSet),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::setDefaultConstructionSet),
-        boost::optional<std::function<void(model::SpaceType*)>>(&model::SpaceType::resetDefaultConstructionSet));
+        boost::optional<std::function<void(model::SpaceType*)>>(CastNullAdapter<model::SpaceType>(&model::SpaceType::resetDefaultConstructionSet)));
 
     } else if (field == DEFAULTSCHEDULESET){
       addDropZoneColumn(QString(DEFAULTSCHEDULESET),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::defaultScheduleSet),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::setDefaultScheduleSet),
-        boost::optional<std::function<void(model::SpaceType*)>>(&model::SpaceType::resetDefaultScheduleSet));
+        boost::optional<std::function<void(model::SpaceType*)>>(CastNullAdapter<model::SpaceType>(&model::SpaceType::resetDefaultScheduleSet)));
 
     } else if (field == DESIGNSPECIFICATIONOUTDOORAIR){
       addDropZoneColumn(QString(DESIGNSPECIFICATIONOUTDOORAIR),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::designSpecificationOutdoorAir),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::setDesignSpecificationOutdoorAir),
-        boost::optional<std::function<void(model::SpaceType*)>>(&model::SpaceType::resetDesignSpecificationOutdoorAir));
+        boost::optional<std::function<void(model::SpaceType*)>>(CastNullAdapter<model::SpaceType>(&model::SpaceType::resetDesignSpecificationOutdoorAir)));
 
     } else if (field == RENDERINGCOLOR){
       addRenderingColorColumn(QString(RENDERINGCOLOR),
