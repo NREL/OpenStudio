@@ -41,6 +41,9 @@
     <rule IddField="Water Outlet Node Name" Access="HIDDEN"/>
     <rule IddField="Condensate Collection Water Storage Tank Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_ZoneHVAC_HighTemperatureRadiant">
+    <rule IddField="Radiant Surface Type" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_ZoneHVAC_PackagedTerminalHeatPump">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>

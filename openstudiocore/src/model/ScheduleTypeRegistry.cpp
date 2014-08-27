@@ -291,6 +291,8 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"RefrigerationAirChiller","Defrost Drip-Down","defrostDripDownSchedule",true,"",0.0,1.0},
     {"ZoneHVACTerminalUnitVariableRefrigerantFlow","Terminal Unit Availability schedule","terminalUnitAvailabilityschedule",false,"Availability",0.0,1.0},
     {"ZoneHVACTerminalUnitVariableRefrigerantFlow","Supply Air Fan Operating Mode Schedule","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
+    {"ZoneHVACHighTemperatureRadiant","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"ZoneHVACHighTemperatureRadiant","Heating Setpoint Temperature","heatingSetpointTemperatureSchedule",false,"Temperature",OptionalDouble(),OptionalDouble()},
     {"ZoneHVACWaterToAirHeatPump","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACWaterToAirHeatPump","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
     {"ZoneHVACUnitHeater","Availability","availabilitySchedule",false,"Availability",0.0,1.0},

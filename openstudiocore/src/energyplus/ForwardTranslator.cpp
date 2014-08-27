@@ -1668,6 +1668,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateZoneHVACIdealLoadsAirSystem(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_ZoneHVAC_HighTemperatureRadiant :
+    { 
+      model::ZoneHVACHighTemperatureRadiant mo = modelObject.cast<ZoneHVACHighTemperatureRadiant>();
+      retVal = translateZoneHVACHighTemperatureRadiant(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow :
     { 
       model::ZoneHVACLowTempRadiantConstFlow mo = modelObject.cast<ZoneHVACLowTempRadiantConstFlow>();
@@ -1913,6 +1919,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Splitter);
   result.push_back(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Water);
   result.push_back(IddObjectType::OS_ZoneHVAC_IdealLoadsAirSystem);
+  result.push_back(IddObjectType::OS_ZoneHVAC_HighTemperatureRadiant);
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow);
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow);
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);

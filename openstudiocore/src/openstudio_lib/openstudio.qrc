@@ -91,6 +91,7 @@
     <file>images/loop_button_over.png</file>
     <file>images/loop_button_press.png</file>
     <file>images/loop_name_icon.png</file>
+    <file>images/hightempradiant.png</file>   
     <file>images/lowtempradiant_constflow.png</file>   
     <file>images/lowtempradiant_varflow.png</file>       
     <file>images/mechanical-sub-cooler.png</file>
@@ -304,6 +305,7 @@
     <file>images/mini_icons/lights.png</file>
     <file>images/mini_icons/lights_definition.png</file>
     <file>images/mini_icons/zonehvac_low_temperature_radiant_electric.png</file>    
+    <file>images/mini_icons/hightempradiant.png</file>
     <file>images/mini_icons/lowtempradiant_constflow.png</file>
     <file>images/mini_icons/lowtempradiant_varflow.png</file>    
     <file>images/mini_icons/luminaire.png</file>

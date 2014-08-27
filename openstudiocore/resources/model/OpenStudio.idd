@@ -15351,12 +15351,87 @@ OS:ZoneHVAC:Baseboard:Convective:Water,
        \required-field
        \object-list BaseboardHeatingCoil
 
+OS:ZoneHVAC:HighTemperatureRadiant,
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+   A3 , \field Availability Schedule Name
+        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+        \note If this field is blank, the system is always available.
+        \type object-list
+        \object-list ScheduleNames
+   N1 , \field Maximum Power Input
+        \required-field
+        \units W
+        \minimum 0
+        \autosizable
+        \required-field
+   A4 , \field Fuel Type
+        \note Natural gas or electricity
+        \required-field
+        \type choice
+        \key NaturalGas
+        \key Electricity
+   N2 , \field Combustion Efficiency
+        \note Not used for non-gas radiant heaters
+        \minimum 0
+        \maximum 1
+        \required-field
+   N3 , \field Fraction of Input Converted to Radiant Energy
+        \note Radiant+latent+lost fractions must sum to 1 or less, remainder is considered convective heat
+        \minimum 0
+        \maximum 1
+        \required-field
+   N4 , \field Fraction of Input Converted to Latent Energy
+        \minimum 0
+        \maximum 1
+        \required-field
+   N5 , \field Fraction of Input that Is Lost
+        \note Fraction of input vented to outdoor environment
+        \minimum 0
+        \maximum 1
+        \required-field
+   A5 , \field Temperature Control Type
+        \note Temperature type used to control unit
+        \type choice
+        \key MeanAirTemperature
+        \key MeanRadiantTemperature
+        \key OperativeTemperature
+        \key MeanAirTemperatureSetpoint
+        \key MeanRadiantTemperatureSetpoint
+        \key OperativeTemperatureSetpoint
+        \required-field
+   N6 , \field Heating Throttling Range
+        \units deltaC
+        \minimum 0
+        \required-field
+   A6 , \field Heating Setpoint Temperature Schedule Name
+        \note This setpoint is an "operative temperature" setpoint
+        \type object-list
+        \object-list ScheduleNames
+   N7,  \field Fraction of Radiant Energy Incident on People
+        \note This will affect thermal comfort but from an energy balance standpoint this value
+        \note gets added to the convective gains from the radiant heater
+        \minimum 0
+        \maximum 1
+        \required-field
+   A7;  \field Radiant Surface Type
+        \note Identifies they types of surfaces that radiant system is embedded in
+        \type choice
+        \key Ceilings
+        \key Floors
+        \key CeilingsAndFloors
+        \key AllSurfaces
+        \required-field
+
 OS:ZoneHVAC:LowTemperatureRadiant:Electric,
-			  \min-fields 8
+  \min-fields 8
    A1 , \field Handle
         \type handle
         \required-field
-	 A2 , \field Name
+   A2 , \field Name
         \required-field
    A3 , \field Availability Schedule Name
         \required-field

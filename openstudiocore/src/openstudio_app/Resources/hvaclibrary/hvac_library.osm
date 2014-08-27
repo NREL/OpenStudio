@@ -1150,6 +1150,46 @@ OS:Pump:ConstantSpeed,
   ,                                       !- Zone
   ;                                       !- Skin Loss Radiative Fraction
 
+OS:ZoneHVAC:HighTemperatureRadiant,
+  {78b89842-8c8d-46d2-8f30-1322d180980e}, !- Handle
+  High Temperature Radiant,   !- Name
+  ,                                       !- Availability Schedule Name
+  autosize,                               !- Maximum Power Input {W}
+  NaturalGas,                             !- Fuel Type
+  0.9,                                    !- Combustion Efficiency
+  0.7,                                    !- Fraction of Input Converted to Radiant Energy
+  0,                                      !- Fraction of Input Converted to Latent Energy
+  0,                                      !- Fraction of Input that Is Lost
+  OperativeTemperature,                   !- Temperature Control Type
+  2,                                      !- Heating Throttling Range {deltaC}
+  {a44e8152-896c-4b8f-8264-6456c7ddaaf5}, !- Heating Setpoint Temperature Schedule Name
+  0.04,                                   !- Fraction of Radiant Energy Incident on People
+  ;                                       !- Radiant Surface Type
+
+OS:ScheduleTypeLimits,
+  {a97fb7de-95e1-4e93-8e86-6fae9baf0f7e}, !- Handle
+  Temperature,                            !- Name
+  ,                                       !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
+  Discrete,                               !- Numeric Type
+  Temperature;                            !- Unit Type
+
+OS:Schedule:Ruleset,
+  {a44e8152-896c-4b8f-8264-6456c7ddaaf5}, !- Handle
+  High Temp Radiant Setpoint,                     !- Name
+  {a97fb7de-95e1-4e93-8e86-6fae9baf0f7e}, !- Schedule Type Limits Name
+  {9b35d3ba-4ce5-49f8-91ac-bdb91509399c}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {9b35d3ba-4ce5-49f8-91ac-bdb91509399c}, !- Handle
+  Schedule Day 1,                         !- Name
+  {a97fb7de-95e1-4e93-8e86-6fae9baf0f7e}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  15;                                     !- Value Until Time 1
+
+
 OS:ZoneHVAC:PackagedTerminalHeatPump,
   {b9232216-7c91-4457-9cda-1df2300bb3d4}, ! Handle
   OS:ZoneHVAC:PackagedTerminalHeatPump 1, ! Name

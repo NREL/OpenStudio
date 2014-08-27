@@ -201,6 +201,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateZoneHVACEquipmentList.cpp
   ForwardTranslator/ForwardTranslateZoneHVACFourPipeFanCoil.cpp
   ForwardTranslator/ForwardTranslateZoneHVACIdealLoadsAirSystem.cpp
+  ForwardTranslator/ForwardTranslateZoneHVACHighTemperatureRadiant.cpp
   ForwardTranslator/ForwardTranslateZoneHVACLowTemperatureRadiantElectric.cpp
   ForwardTranslator/ForwardTranslateZoneHVACLowTempRadiantConstFlow.cpp
   ForwardTranslator/ForwardTranslateZoneHVACLowTempRadiantVarFlow.cpp
