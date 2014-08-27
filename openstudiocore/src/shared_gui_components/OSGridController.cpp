@@ -458,11 +458,24 @@ QWidget * OSGridController::widgetAt(int row, int column)
   OS_ASSERT(static_cast<int>(m_baseConcepts.size()) > column);
 
   auto layout = new QVBoxLayout();
-  const int widgetHeight = 45;
+  const int widgetHeight = 43;
   int numWidgets = 0;
+  // start with a default sane value
+  QSize recommendedSize(100, 20);
 
   auto addWidget = [&](QWidget *t_widget)
   {
+    auto expand=[](QSize &t_s, const QSize &t_newS) {
+      if (t_newS.height() < 400 && t_newS.width() < 400)
+      {
+        t_s = t_s.expandedTo(t_newS);
+      }
+    };
+
+    expand(recommendedSize, t_widget->size());
+    expand(recommendedSize, t_widget->minimumSize());
+    expand(recommendedSize, t_widget->minimumSizeHint());
+
     auto holder = new QWidget();
     holder->setMinimumHeight(widgetHeight);
     auto l = new QVBoxLayout();
@@ -472,6 +485,9 @@ QWidget * OSGridController::widgetAt(int row, int column)
     holder->setLayout(l);
     layout->addWidget(holder, 0, Qt::AlignVCenter | Qt::AlignLeft);
     ++numWidgets;
+
+    //std::cout << " Width: " << recommendedSize.width() << " height " << recommendedSize.height() << std::endl;
+    expand(recommendedSize, t_widget->size());
   };
 
   if(m_hasHorizontalHeader && row == 0){
@@ -548,9 +564,9 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
   wrapper->setObjectName("TableCell");
   if(row == 0){
-    wrapper->setMinimumSize(QSize(170,70));
+    wrapper->setMinimumSize(QSize(recommendedSize.width(),recommendedSize.height()));
   } else {
-    wrapper->setMinimumSize(QSize(170,widgetHeight * numWidgets));
+    wrapper->setMinimumSize(QSize(recommendedSize.width() + 10,widgetHeight * numWidgets + 10));
   }
   wrapper->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 

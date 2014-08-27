@@ -107,11 +107,11 @@
 
 // GENERAL
 #define RENDERINGCOLOR "Rendering color"
-#define DEFAULTCONSTRUCTIONSET "Default Construction\nSet"
-#define DEFAULTSCHEDULESET "Default Schedule\nSet"
-#define DESIGNSPECIFICATIONOUTDOORAIR "Design Specification\nOutdoor Air"
-#define SPACEINFILTRATIONDESIGNFLOWRATES "Space Infiltration\nDesign Flow Rates"
-#define SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS "Space Infiltration\nEffective Leakage Areas"
+#define DEFAULTCONSTRUCTIONSET "Default Construction Set"
+#define DEFAULTSCHEDULESET "Default Schedule Set"
+#define DESIGNSPECIFICATIONOUTDOORAIR "Design Specification Outdoor Air"
+#define SPACEINFILTRATIONDESIGNFLOWRATES "Space Infiltration Design Flow Rates"
+#define SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS "Space Infiltration Effective Leakage Areas"
 
 // LOADS
 #define LOADNAME "Load Name"
@@ -885,7 +885,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
       addDropZoneColumn(QString(DEFAULTCONSTRUCTIONSET),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::defaultConstructionSet),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::setDefaultConstructionSet),
-        boost::optional<std::function<void(model::SpaceType*)>>(&model::SpaceType::resetDefaultConstructionSet));
+        boost::optional<std::function<void(model::SpaceType*)>>(CastNullAdapter<model::SpaceType>(&model::SpaceType::resetDefaultConstructionSet)));
 
     } else if (field == DEFAULTSCHEDULESET){
       addDropZoneColumn(QString(DEFAULTSCHEDULESET),
