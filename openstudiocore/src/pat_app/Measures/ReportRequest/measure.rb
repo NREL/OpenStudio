@@ -57,8 +57,7 @@ class ReportRequest < OpenStudio::Ruleset::WorkspaceUserScript
       end 
     end
   end
-  
-  
+
   # human readable name
   def name
     return "Report Request"
@@ -78,8 +77,8 @@ class ReportRequest < OpenStudio::Ruleset::WorkspaceUserScript
   def arguments(workspace)
     args = OpenStudio::Ruleset::OSArgumentVector.new
     
-    json_work_items = OpenStudio::Ruleset::OSArgument::makeStringArgument("json_work_items", true)
-    args << json_work_items
+    measures_json = OpenStudio::Ruleset::OSArgument::makeStringArgument("measures_json", true)
+    args << measures_json
     
     return args
   end
@@ -104,29 +103,24 @@ class ReportRequest < OpenStudio::Ruleset::WorkspaceUserScript
     end
 
     # assign the user inputs to variables
-    json_work_items = runner.getStringArgumentValue("json_work_items", user_arguments)
+    measures_json = runner.getStringArgumentValue("measures_json", user_arguments)
     
     File.open('example.json', 'w') do |f|
-      f << json_work_items
+      f << measures_json
     end
     
-    json_work_items = JSON.parse(json_work_items)
+    measures_json = JSON.parse(measures_json)
     
-    runner.registerInfo("Examining report requests from #{json_work_items.size} reporting measures")
+    runner.registerInfo("Examining report requests from #{measures_json.size} measures")
     
     error = false
     num_added = 0
-    json_work_items.each do |json_work_item|
+    measures_json.each do |measure_json|
       begin
         #work_item = OpenStudio::Runmanager::WorkItem.fromJSON(json_work_item.to_s)
         #measure_file = work_item.files.getLastByFilename("measure.rb")
         
-        measure_file = nil
-        json_work_item["required_files"].each do |required_file|
-          if measure_file = required_file["measure.rb"]
-            break
-          end
-        end
+        measure_file = measure_json["measure"]
         
         if measure_file.nil?
           error = true
@@ -163,38 +157,41 @@ class ReportRequest < OpenStudio::Ruleset::WorkspaceUserScript
           next
         end
  
-        # DLM: this code mirrors that in UserScriptAdapter, refactor out somewhere
-        parameters = json_work_item["parameters"]
-        
-        @options.clear
-        @options[:arguments] = []
-        @optparse.parse(parameters)
-        userArguments = @options[:arguments]
-        
-        #puts "parameters = #{parameters}"
-        #puts "@options = #{@options}"
-        #puts "userArguments = #{userArguments}"
-        
         arguments = OpenStudio::Ruleset::OSArgumentMap.new
-        userScript.arguments().each do |arg|
+        if parameters = measure_json["parameters"]
         
-          puts "Looking for #{arg}"
-        
-          # look for arg.name() in options
-          userArg = nil
-          userArguments.each do |candidate|
-            if candidate[0] == arg.name
-              userArg = candidate
-              break
+          # DLM: this code mirrors that in UserScriptAdapter, refactor out somewhere
+          # DLM: Nick this code would be different for the server as you would not likely want to populate 'parameters' the same way, you could populate 'arguments' instead
+          @options.clear
+          @options[:arguments] = []
+          @optparse.parse(parameters)
+          userArguments = @options[:arguments]
+    
+          userScript.arguments().each do |arg|
+          
+            puts "Looking for #{arg}"
+          
+            # look for arg.name() in options
+            userArg = nil
+            userArguments.each do |candidate|
+              if candidate[0] == arg.name
+                userArg = candidate
+                break
+              end
             end
+              
+            # if found, set
+            if userArg
+              arg.setValue(userArg[1])
+            end
+              
+            arguments[arg.name] = arg
           end
-            
-          # if found, set
-          if userArg
-            arg.setValue(userArg[1])
-          end
-            
-          arguments[arg.name] = arg
+          
+        elsif arguments = measure_json["arguments"]
+        
+          # DLM: Nick look here
+          
         end
         
         idf_objects = userScript.energyPlusOutputRequests(runner, arguments)
@@ -207,6 +204,7 @@ class ReportRequest < OpenStudio::Ruleset::WorkspaceUserScript
         error = true
         runner.registerError("#{e.message}\n#{e.backtrace}")
       end
+      
     end
     
     if error

@@ -750,7 +750,7 @@ namespace openstudio {
         if (mergedJobs.empty()){
 
           QVariantMap measureHash;
-          measureHash["script"] = toQString(rjb.script()); // keep in mind this is probably just UserScriptAdapter to get the actual script you need to use:
+          //measureHash["script"] = toQString(rjb.script()); // keep in mind this is probably just UserScriptAdapter to get the actual script you need to use:
 
           QVariantList parameterList;
           for (const auto& parameter : rjb.getScriptParameters()){
@@ -761,18 +761,25 @@ namespace openstudio {
           QVariantList requiredFileList;
           for (const auto& requiredFile : rjb.requiredFiles()){
             QVariantMap requiredFileMap;
-            // key is local file path, value is absolute system path
+            // second is local file path, first is absolute system path
             requiredFileMap[toQString(requiredFile.second)] = toQString(requiredFile.first);
             requiredFileList << requiredFileMap;
-          }
-          measureHash["required_files"] = requiredFileList;
 
-          QVariantList argList;
-          auto args = openstudio::runmanager::RubyJobBuilder::toOSArguments(itr->params);
-          for (const auto& arg : args){
-            argList << ruleset::detail::toVariant(arg);
+            if (istringEqual(toString(requiredFile.second), "measure.rb")){
+              measureHash["measure"] = toQString(requiredFile.first);
+            }
           }
-          measureHash["args"] = argList;
+          // DLM: I should probably be attaching these required files to this job in some way?  
+          // DLM: will this work for now given that we are removing the requirement for remote runs?
+          //measureHash["required_files"] = requiredFileList;
+
+          // DLM: args were not populated here
+          //QVariantList argList;
+          //auto args = openstudio::runmanager::RubyJobBuilder::toOSArguments(itr->params);
+          //for (const auto& arg : args){
+          //  argList << ruleset::detail::toVariant(arg);
+          //}
+          //measureHash["args"] = argList;
 
           measureList << measureHash;
 
@@ -781,7 +788,7 @@ namespace openstudio {
           for (const openstudio::runmanager::RubyJobBuilder& mergedRJB : mergedJobs){
 
             QVariantMap measureHash;
-            measureHash["script"] = toQString(mergedRJB.script()); // keep in mind this is probably just UserScriptAdapter to get the actual script you need to use:
+            //measureHash["script"] = toQString(mergedRJB.script()); // keep in mind this is probably just UserScriptAdapter to get the actual script you need to use:
 
             QVariantList parameterList;
             for (const auto& parameter : mergedRJB.getScriptParameters()){
@@ -795,21 +802,27 @@ namespace openstudio {
               // key is local file path, value is absolute system path
               requiredFileMap[toQString(requiredFile.second)] = toQString(requiredFile.first);
               requiredFileList << requiredFileMap;
-            }
-            measureHash["required_files"] = requiredFileList;
 
-            QVariantList argList;
-            auto args = openstudio::runmanager::RubyJobBuilder::toOSArguments(itr->params);
-            for (const auto& arg : args){
-              argList << ruleset::detail::toVariant(arg);
+              if (istringEqual(toString(requiredFile.second), "measure.rb")){
+                measureHash["measure"] = toQString(requiredFile.first);
+              }
             }
-            measureHash["args"] = argList;
+            // DLM: I should probably be attaching these required files to this job in some way?  
+            // DLM: will this work for now given that we are removing the requirement for remote runs?
+            //measureHash["required_files"] = requiredFileList;
+
+            // DLM: args were not populated here
+            //QVariantList argList;
+            //auto args = openstudio::runmanager::RubyJobBuilder::toOSArguments(itr->params);
+            //for (const auto& arg : args){
+            //  argList << ruleset::detail::toVariant(arg);
+            //}
+            //measureHash["args"] = argList;
 
             measureList << measureHash;
 
           }
         }
-
       }
     }
 
@@ -817,7 +830,7 @@ namespace openstudio {
     QString jsonValue = document.toJson(QJsonDocument::Compact);
     //QString jsonValue = document.toJson(QJsonDocument::Indented);
 
-    ruleset::OSArgument argument = ruleset::OSArgument::makeStringArgument("json_work_items", true, false);
+    ruleset::OSArgument argument = ruleset::OSArgument::makeStringArgument("measures_json", true, false);
     argument.setValue(toString(jsonValue));
 
     std::vector<ruleset::OSArgument> arguments;
