@@ -447,16 +447,23 @@ def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_s
   # Saying for that hour of the day, window1 and window3 blinds were open, but window2 blinds were closed.
   #
   # The result is the summation of each window's vLambda contributions.
+
+  # one index per window group simulation
   allValues.size().times do |index|
+  
+    # one row per illuminance calculation point
     allValues[index].size().times do |row|
       values[row] = [] if values[row].nil?
+      
+      # one value for each illuminance point per timestep
       8760.times do |hour|
         values[row][hour] = 0 if values[row][hour].nil?
-        if t_mapping.call(index, hour)
-          # does this index and hour match the mapping function? that is, should this index
-          # of data be used with this hour?
-          values[row][hour] = allValues[index][row][hour] + values[row][hour]
-        end 
+        
+        # figure out the active window state at this hour
+        active_index = t_mapping.call(index, hour)
+        
+        # add contribution from active window group to illuminance point
+        values[row][hour] += allValues[active_index][row][hour] 
       end
     end
   end
@@ -605,21 +612,21 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
       dmx_mapping_data << [azimuth, window_group, blinds_closed]
     end
 
+    # return the bsdf index for window group given by index at this hour
     windowMapping = lambda { |index, hour| 
       data = dmx_mapping_data[index]
       # TODO are blinds open for this point in space time?
       # @rpg777
       # blindsopen = magicalFunction(data[0], data[1], hour)
-      blindsopen = false
-      
-      return data[2] == blindsopen;
+
+      return 0
     }
 
   else
     # 2-phase 
     simulations << "dctimestep -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" \"#{t_outPath / OpenStudio::Path.new("daymtx.out")}\" "
 
-    # set window mapping to always be 'true, use this one'
+     # return the bsdf index for window group given by index at this hour
     windowMapping = lambda { |index, hour| return 0 }
   end
 
