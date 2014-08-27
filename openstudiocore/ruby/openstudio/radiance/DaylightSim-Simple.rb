@@ -599,7 +599,8 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
     windowMaps.each do |row|
       next if row[0] == "#"
       wg = row.split(",")[0]
-      wgXMLs = row.split(",")[2..-1]
+      next if wg[2].to_i == 0
+      wgXMLs = row.split(",")[4..-1]
       if wgXMLs.size > 2
         puts "WARN: Window Group #{wg} has #{wgXMLs.size.to_s} BSDFs (2 max supported by OpenStudio application)."
       end

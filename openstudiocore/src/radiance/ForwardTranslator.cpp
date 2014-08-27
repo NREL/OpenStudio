@@ -1200,8 +1200,8 @@ namespace radiance {
               m_radDCmats.insert(windowGroup_name + "," + \
                 formatString((control.outwardNormal->x() * -1), 2) + " " + \
                 formatString((control.outwardNormal->y() * -1), 2) + " " + \
-                formatString((control.outwardNormal->z() * -1), 2) + \
-                + ",cl_Tn" + formatString(tVis, 2) + ".xml,cl_Tn" + formatString(tVis, 2) + "_blinds.xml\n");
+                formatString((control.outwardNormal->z() * -1), 2) + ",1,1000,cl_Tn" + \
+                formatString(tVis, 2) + ".xml,cl_Tn" + formatString(tVis, 2) + "_blinds.xml\n");
 
             } else if (rMaterial == "trans"){
 
