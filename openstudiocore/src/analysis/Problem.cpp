@@ -67,6 +67,7 @@
 #include "../utilities/core/Json.hpp"
 #include "../utilities/core/Optional.hpp"
 #include "../utilities/core/URLHelpers.hpp"
+#include "../utilities/core/UUID.hpp"
 
 #include <sstream>
 #include <limits>
@@ -1444,6 +1445,24 @@ namespace detail {
           reportRequestMeasureWorkItem = workItem;
           reportRequestMeasureIndex = result.size();
         }
+
+        try{
+          runmanager::JobParam params = workItem.params.get("ruby_bclmeasureparameters");
+          for (std::vector<runmanager::JobParam>::const_iterator it = params.children.begin(),
+               itEnd = params.children.end(); it != itEnd; ++it)
+          {
+            if (it->value == "bcl_measure_uuid") {
+              if (openstudio::toUUID(it->children.at(0).value) == BCLMeasure::reportRequestMeasure().uuid()) {
+                reportRequestMeasureWorkItem = workItem;
+                reportRequestMeasureIndex = result.size();
+                break;
+              }
+            }
+          }
+        } catch (const std::exception&) {
+
+        }
+
 
         if (workItem.type == runmanager::JobType::UserScript
             || workItem.type == runmanager::JobType::Ruby) {
