@@ -103,7 +103,7 @@ class DoubleInputView : public InputView
   
   QLineEdit * lineEdit;
   
-  void setName(const std::string& name, boost::optional<std::string>& units, boost::optional<std::string>& description);
+  void setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description);
 
   void setIncomplete(bool incomplete);
 
@@ -125,7 +125,7 @@ class ChoiceInputView : public InputView
 
   QComboBox * comboBox;
 
-  void setName(const std::string& name, boost::optional<std::string>& units, boost::optional<std::string>& description);
+  void setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description);
 
   void setIncomplete(bool incomplete);
 
@@ -147,7 +147,7 @@ class BoolInputView : public InputView
 
   InputCheckBox * checkBox;
 
-  void setName(const std::string& name, boost::optional<std::string>& units, boost::optional<std::string>& description);
+  void setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description);
 
   void setIncomplete(bool incomplete);
 
@@ -165,7 +165,7 @@ class IntegerInputView : public InputView
 
   QLineEdit * lineEdit;
 
-  void setName(const std::string& name, boost::optional<std::string>& units, boost::optional<std::string>& description);
+  void setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description);
 
   void setIncomplete(bool incomplete);
 
@@ -187,7 +187,7 @@ class StringInputView : public InputView
 
   QLineEdit * lineEdit;
 
-  void setName(const std::string& name, boost::optional<std::string>& units, boost::optional<std::string>& description);
+  void setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description);
 
   void setIncomplete(bool incomplete);
 

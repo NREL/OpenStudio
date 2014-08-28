@@ -41,7 +41,7 @@ RubyJobBuilder::RubyJobBuilder(bool t_userScriptJob)
 {}
 
 RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem)
-  : m_userScriptJob(false)
+  : m_userScriptJob(false), m_jobkeyname(t_workItem.jobkeyname)
 {
   try {
     FileInfo fi = t_workItem.files.getLastByKey("rb");

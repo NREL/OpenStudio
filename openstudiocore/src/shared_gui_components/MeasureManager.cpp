@@ -532,7 +532,8 @@ void MeasureManager::updateMeasuresLists()
   for( auto & measure : patApplicationMeasures )
   {
     // installed measures should not change
-    OS_ASSERT(!checkForUpdates(measure));
+    // DLM: TODO!
+    //OS_ASSERT(!checkForUpdates(measure));
 
     std::map<UUID,BCLMeasure>::iterator it = m_patApplicationMeasures.find(measure.uuid());
     if (it != m_patApplicationMeasures.end()){

@@ -40,6 +40,8 @@
 
 #include "../osversion/VersionTranslator.hpp"
 
+#include "../ruleset/OSArgument.hpp"
+
 #include "../energyplus/ReverseTranslator.hpp"
 
 #include "../utilities/filetypes/EpwFile.hpp"
@@ -49,6 +51,7 @@
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/core/Assert.hpp"
+
 #include <OpenStudio.hxx>
 
 #include <QDir>
@@ -561,6 +564,7 @@ namespace openstudio {
         analysisdriver::AnalysisRunOptions runOptions = standardRunOptions(*p);
         std::vector<runmanager::WorkItem> workitems(prob.createWorkflow(p->baselineDataPoint(), runOptions.rubyIncludeDirectory()).toWorkItems());
 
+        openstudio::BCLMeasure reportRequestMeasure = openstudio::BCLMeasure::reportRequestMeasure();
         openstudio::BCLMeasure standardReportsMeasure = openstudio::BCLMeasure::standardReportMeasure();
         openstudio::BCLMeasure calibrationReportsMeasure = openstudio::BCLMeasure::calibrationReportMeasure();
 
@@ -601,7 +605,7 @@ namespace openstudio {
               }
             }
 
-            assert(modeltoidffound);
+            OS_ASSERT(modeltoidffound);
           } else {
             QMessageBox::information(parent, 
                 "Error with initiating simulation.",
@@ -609,6 +613,10 @@ namespace openstudio {
                 QMessageBox::Ok);
           }
         }
+
+        // add the report request measure before energyplus but after any other energyplus measures
+        test = addReportRequestMeasureWorkItem(workitems, reportRequestMeasure);
+        OS_ASSERT(test);
 
         runmanager::Workflow wf(workitems);
         wf.add(co.getTools());
@@ -713,6 +721,48 @@ namespace openstudio {
           }
         } catch (const std::exception &) {
         }
+      }
+    }
+
+    return false;
+  }
+
+  bool addReportRequestMeasureWorkItem(std::vector<runmanager::WorkItem>& workItems, const openstudio::BCLMeasure& bclMeasure)
+  {
+    std::string reportingMeasureArgument = runmanager::getReportRequestMeasureArgument(workItems);
+
+    ruleset::OSArgument argument = ruleset::OSArgument::makeStringArgument("measures_json", true, false);
+    argument.setValue(reportingMeasureArgument);
+
+    std::vector<ruleset::OSArgument> arguments;
+    arguments.push_back(argument);
+
+    runmanager::RubyJobBuilder rubyJobBuilder(bclMeasure, arguments);
+
+    rubyJobBuilder.addInputFile(openstudio::runmanager::FileSelection("last"),
+                                openstudio::runmanager::FileSource("All"),
+                                ".*\\.idf",
+                                "in.idf");
+    rubyJobBuilder.addInputFile(openstudio::runmanager::FileSelection("last"),
+                                openstudio::runmanager::FileSource("All"),
+                                ".*\\.osm",
+                                "in.osm");
+
+    // be able to access OpenStudio Ruby bindings
+    rubyJobBuilder.setIncludeDir(getOpenStudioRubyIncludePath());
+
+
+    runmanager::WorkItem workItem = rubyJobBuilder.toWorkItem();
+
+    for (std::vector<runmanager::WorkItem>::iterator itr = workItems.begin();
+         itr != workItems.end();
+         ++itr)
+    {
+      // currently we are doing ExpandObjects->(E+ Measures)->EnergyPlusPreProcess->EnergyPlus
+      if (itr->type == openstudio::runmanager::JobType::EnergyPlusPreProcess)
+      {
+        workItems.insert(itr, workItem);
+        return true;
       }
     }
 

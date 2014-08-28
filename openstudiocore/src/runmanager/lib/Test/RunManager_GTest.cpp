@@ -24,6 +24,7 @@
 #include "../JobFactory.hpp"
 #include "../RunManager.hpp"
 #include "../Workflow.hpp"
+#include "../WorkItem.hpp"
 #include "../RubyJobUtils.hpp"
 
 #include "../../../ruleset/OSArgument.hpp"
@@ -33,6 +34,7 @@
 
 #include "../../../utilities/core/Application.hpp"
 #include "../../../utilities/core/System.hpp"
+#include "../../../utilities/bcl/BCLMeasure.hpp"
 #include "../../../utilities/filetypes/EpwFile.hpp"
 
 #include <QDir>
@@ -331,5 +333,52 @@ TEST_F(RunManagerTestFixture, OSMWeatherObjectTest)
 
   EXPECT_EQ("USA_CO_Golden-NREL.724666_TMY3.epw", infilename);
   EXPECT_EQ("in.epw", outfilename);
+}
+
+TEST_F(RunManagerTestFixture, WorkItemPersist)
+{
+  openstudio::path outdir = openstudio::toPath(QDir::tempPath()) / openstudio::toPath("WorkItemPersist");
+  boost::filesystem::create_directories(outdir);
+  openstudio::path db = outdir / openstudio::toPath("WorkItemPersist");
+
+  {
+    openstudio::runmanager::RunManager kit(db, true, true);
+    EXPECT_EQ(0u, kit.getJobs().size());
+    EXPECT_EQ(0u, kit.loadWorkflows().size());
+
+    openstudio::runmanager::RubyJobBuilder rubyJobBuilder(openstudio::BCLMeasure::standardReportMeasure());
+    openstudio::runmanager::WorkItem workItem = rubyJobBuilder.toWorkItem();
+    workItem.jobkeyname = "my-job";
+
+    openstudio::runmanager::Workflow workflow;
+    workflow.addJob(workItem);
+
+    openstudio::runmanager::Job job = workflow.create(openstudio::tempDir() / openstudio::toPath("WorkItemPersist"));
+
+    kit.enqueue(job, true);
+
+    EXPECT_EQ(1u, kit.getJobs().size());
+    EXPECT_EQ(1u, kit.loadWorkflows().size());
+
+    std::vector<openstudio::runmanager::WorkItem> workItems = workflow.toWorkItems();
+    ASSERT_EQ(1u, workItems.size());
+    EXPECT_EQ("my-job", workItems[0].jobkeyname);
+  }
+
+
+  {
+    openstudio::runmanager::RunManager kit(db, false, true);
+
+    std::vector<openstudio::runmanager::Job> jobs = kit.getJobs();
+    ASSERT_EQ(1u, jobs.size());
+
+    std::vector<openstudio::runmanager::Workflow> workflows = kit.loadWorkflows();
+    ASSERT_EQ(1u, workflows.size());
+
+    std::vector<openstudio::runmanager::WorkItem> workItems = workflows[0].toWorkItems();
+    ASSERT_EQ(1u, workItems.size());
+    EXPECT_EQ("my-job", workItems[0].jobkeyname);
+  }
+  
 }
 

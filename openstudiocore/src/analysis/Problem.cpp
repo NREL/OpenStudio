@@ -67,6 +67,7 @@
 #include "../utilities/core/Json.hpp"
 #include "../utilities/core/Optional.hpp"
 #include "../utilities/core/URLHelpers.hpp"
+#include "../utilities/core/UUID.hpp"
 
 #include <sstream>
 #include <limits>
@@ -1396,6 +1397,10 @@ namespace detail {
       const DataPoint& dataPoint,
       const openstudio::path& rubyIncludeDirectory) const
   {
+    // record the index of the report request measure if we find it
+    boost::optional<unsigned> reportRequestMeasureIndex;
+    boost::optional<runmanager::WorkItem> reportRequestMeasureWorkItem;
+
     std::vector<runmanager::WorkItem> result; // converted to Workflow at end
     std::vector<QVariant> values = dataPoint.variableValues();
     if (int(values.size()) != numVariables()) {
@@ -1430,12 +1435,42 @@ namespace detail {
 
       if (step.isWorkItem()) {
         runmanager::WorkItem workItem = step.workItem();
+
+        if (!workItem.jobkeyname.empty()){
+          std::string jobkeyname = workItem.jobkeyname;
+        }
+
+        if (workItem.jobkeyname == "pat-report-request-job"){
+          // save the original work item, before we use RubyJobBuilder to make a new one
+          reportRequestMeasureWorkItem = workItem;
+          reportRequestMeasureIndex = result.size();
+        }
+
+        try{
+          runmanager::JobParam params = workItem.params.get("ruby_bclmeasureparameters");
+          for (std::vector<runmanager::JobParam>::const_iterator it = params.children.begin(),
+               itEnd = params.children.end(); it != itEnd; ++it)
+          {
+            if (it->value == "bcl_measure_uuid") {
+              if (openstudio::toUUID(it->children.at(0).value) == BCLMeasure::reportRequestMeasure().uuid()) {
+                reportRequestMeasureWorkItem = workItem;
+                reportRequestMeasureIndex = result.size();
+                break;
+              }
+            }
+          }
+        } catch (const std::exception&) {
+
+        }
+
+
         if (workItem.type == runmanager::JobType::UserScript
             || workItem.type == runmanager::JobType::Ruby) {
           runmanager::RubyJobBuilder rjb(workItem);
           rjb.setIncludeDir(rubyIncludeDirectory);
           workItem = rjb.toWorkItem();
         }
+
         result.push_back(workItem);
       }
       else {
@@ -1459,6 +1494,19 @@ namespace detail {
       result.push_back(compoundRubyMeasure->createWorkItem(rubyIncludeDirectory));
     }
 
+    if (reportRequestMeasureIndex){
+      OS_ASSERT(reportRequestMeasureWorkItem);
+
+      // get the arguments for the report request measure, recreate the work item, and replace it
+      std::string reportingMeasureArgument = runmanager::getReportRequestMeasureArgument(result);
+
+      runmanager::RubyJobBuilder rjb(*reportRequestMeasureWorkItem);
+      rjb.setIncludeDir(rubyIncludeDirectory);
+      rjb.addScriptParameter("argumentName", "measures_json");
+      rjb.addScriptParameter("argumentValue", reportingMeasureArgument);
+      result[*reportRequestMeasureIndex] = rjb.toWorkItem();
+    }
+    
     // put a bow on it
     runmanager::Workflow simulationWorkflow(result);
     simulationWorkflow.addParam(runmanager::JobParam("flatoutdir"));
