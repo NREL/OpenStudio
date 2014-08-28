@@ -1434,29 +1434,24 @@ namespace detail {
 
       if (step.isWorkItem()) {
         runmanager::WorkItem workItem = step.workItem();
+
+        if (!workItem.jobkeyname.empty()){
+          std::string jobkeyname = workItem.jobkeyname;
+        }
+
+        if (workItem.jobkeyname == "pat-report-request-job"){
+          // save the original work item, before we use RubyJobBuilder to make a new one
+          reportRequestMeasureWorkItem = workItem;
+          reportRequestMeasureIndex = result.size();
+        }
+
         if (workItem.type == runmanager::JobType::UserScript
             || workItem.type == runmanager::JobType::Ruby) {
           runmanager::RubyJobBuilder rjb(workItem);
           rjb.setIncludeDir(rubyIncludeDirectory);
           workItem = rjb.toWorkItem();
         }
-        if (workItem.jobkeyname == "pat-report-request-job"){
-          reportRequestMeasureWorkItem = step.workItem();
-          reportRequestMeasureIndex = result.size();
-        } else { 
-          try{
-            // DLM: this is a back up, work around
-            runmanager::JobParam jobkeyname = workItem.params.get("workflowjobkey");
-            if (jobkeyname.value == "pat-report-request-job"){
-              reportRequestMeasureWorkItem = step.workItem();
-              reportRequestMeasureIndex = result.size();
-            }
-          } catch (const std::exception&) {
-            // debugging
-            std::string json = workItem.toJSON();
-          }
-        
-        }
+
         result.push_back(workItem);
       }
       else {
@@ -1481,6 +1476,8 @@ namespace detail {
     }
 
     if (reportRequestMeasureIndex){
+      OS_ASSERT(reportRequestMeasureWorkItem);
+
       // get the arguments for the report request measure, recreate the work item, and replace it
       std::string reportingMeasureArgument = runmanager::getReportRequestMeasureArgument(result);
 
