@@ -357,13 +357,15 @@ namespace radiance {
       if (skyfile.is_open()){
         outfiles.push_back(dcskyfilepath);
         if (radianceParameters.skyDiscretizationResolution() == "146"){
-          skyfile << "@#rfluxmtx u=Y h=r1\n";
+          skyfile << "#@rfluxmtx h=r1 u=Y\n";
         } else if (radianceParameters.skyDiscretizationResolution() == "578"){
-          skyfile << "@#rfluxmtx u=Y h=r2\n";
+          skyfile << "#@rfluxmtx h=r2 u=Y\n";
         } else if (radianceParameters.skyDiscretizationResolution() == "2306"){
-          skyfile << "@#rfluxmtx u=Y h=r4\n";
+          skyfile << "#@rfluxmtx h=r4 u=Y\n";
         }
-        skyfile << "void glow skyglow\n0\n0\n4\n1 1 1 0\n\nskyglow source sky\n0\n0\n4\n0 0 1 180\nskyglow source ground\n0\n0\n4\n0 0 -1 180";
+        skyfile << "void glow skyglow\n0\n0\n4\n1 1 1 0\n\nskyglow source sky\n0\n0\n4\n0 0 1 180\n";
+        skyfile << "#@rfluxmtx h=u u=Y\nvoid glow groundglow\n0\n0\n4\n1 1 1 0\n\ngroundglow source sky\n0\n0\n4\n0 0 -1 180\n";
+
       }else{
         LOG(Error, "Cannot open file '" << toString(dcskyfilepath) << "' for writing");
       }      
@@ -762,7 +764,6 @@ namespace radiance {
     m_radWindowGroups.clear();
 
   }
-
 
   WindowGroup ForwardTranslator::getWindowGroup(const openstudio::Vector3d& outwardNormal, const model::Space& space, const model::ConstructionBase& construction,
     const boost::optional<model::ShadingControl>& shadingControl, const openstudio::Point3dVector& polygon)
@@ -1163,58 +1164,69 @@ namespace radiance {
             openstudio::path bsdfoutpath = t_radDir / openstudio::toPath("bsdf");
 
             std::string testBSDFLib = "/Users/rgugliel/src/support/bsdf";
+
             testBSDFLib = "E:/bsdf";
             //LOG(Warn, "Using temporarily hard coded BSDF library '" + testBSDFLib + "' for testing");
 
             if (rMaterial == "glass"){
 
-              boost::optional<openstudio::path> uncontrolledBSDF = getBSDF(tVis, 1.0, "None");
+              // uncomment out getBSDF to try BCL
+              boost::optional<openstudio::path> uncontrolledBSDF; // = getBSDF(tVis, 1.0, "None");
               if (!uncontrolledBSDF){
                 LOG(Warn, "Using temporarily hard coded BSDF library '" + testBSDFLib + "' for testing");
                 uncontrolledBSDF = openstudio::toPath(testBSDFLib + "/cl_Tn" + formatString(tVis, 2) + ".xml");
               }
 
-              boost::optional<openstudio::path> controlledBSDF = getBSDF(tVis, 1.0, "Blind");
+              // copy uncontrolledBSDF
+              openstudio::path uncontrolledBSDFOut = t_radDir / openstudio::toPath("bsdf") / openstudio::toPath("/cl_Tn" + formatString(tVis, 2) + ".xml");
+              boost::filesystem::copy_file(*uncontrolledBSDF, uncontrolledBSDFOut, boost::filesystem::copy_option::overwrite_if_exists);
+
+              // add xml file to the collection of crap to copy up
+              t_outfiles.push_back(uncontrolledBSDFOut);
+
+              // uncomment out getBSDF to try BCL
+              boost::optional<openstudio::path> controlledBSDF; // = getBSDF(tVis, 1.0, "Blind");
               if (!controlledBSDF){
                 LOG(Warn, "Using temporarily hard coded BSDF library '" + testBSDFLib + "' for testing");
                 controlledBSDF = openstudio::toPath(testBSDFLib + "/cl_Tn" + formatString(tVis, 2) + "_blinds.xml");
               }
 
-              //openstudio::path sourcePath = openstudio::toPath(testBSDFLib + "/cl_Tn" + formatString(tVis, 2) + ".xml");
-              //std::cout << "tVis = " << openstudio::toString(tVis) << std::endl;
-              //std::cout << "the source path is " << openstudio::toString(sourcePath) << ", exists = " << boost::filesystem::exists(sourcePath) << std::endl;
-              //std::cout << "the dest path is " << openstudio::toString(bsdfoutpath) << ", exists = " << boost::filesystem::exists(bsdfoutpath) << std::endl;
+              // copy controlledBSDF
+              openstudio::path controlledBSDFOut = t_radDir / openstudio::toPath("bsdf") / openstudio::toPath("/cl_Tn" + formatString(tVis, 2) + "_blinds.xml");
+              boost::filesystem::copy_file(*controlledBSDF, controlledBSDFOut, boost::filesystem::copy_option::overwrite_if_exists);
 
-              boost::filesystem::copy_file(*uncontrolledBSDF, bsdfoutpath / openstudio::toPath("cl_Tn" + formatString(tVis, 2) + ".xml"),
-                                           boost::filesystem::copy_option::overwrite_if_exists);
+              // add xml file to the collection of crap to copy up
+              t_outfiles.push_back(controlledBSDFOut);
+
 
               boost::filesystem::copy_file(*controlledBSDF, bsdfoutpath / openstudio::toPath("cl_Tn" + formatString(tVis, 2) + "_blinds.xml"),
                                            boost::filesystem::copy_option::overwrite_if_exists);
 
-              // add job to vmx problem set
+
+              // store window group normal (may not need anymore with rfluxmtx)
               m_radDCmats.insert(windowGroup_name + "," + \
                 formatString((control.outwardNormal->x() * -1), 2) + " " + \
                 formatString((control.outwardNormal->y() * -1), 2) + " " + \
-                formatString((control.outwardNormal->z() * -1), 2) + \
-                + ",cl_Tn" + formatString(tVis, 2) + ".xml,cl_Tn" + formatString(tVis, 2) + "_blinds.xml\n");
+                formatString((control.outwardNormal->z() * -1), 2) + ",1,1000,cl_Tn" + \
+                formatString(tVis, 2) + ".xml,cl_Tn" + formatString(tVis, 2) + "_blinds.xml\n");
 
             } else if (rMaterial == "trans"){
 
-              boost::optional<openstudio::path> uncontrolledBSDF = getBSDF(tVis, 0.0, "None");
+              // uncomment out getBSDF to try BCL
+              boost::optional<openstudio::path> uncontrolledBSDF; // = getBSDF(tVis, 0.0, "None");
               if (!uncontrolledBSDF){
                 LOG(Warn, "Using temporarily hard coded BSDF library '" + testBSDFLib + "' for testing");
                 uncontrolledBSDF = openstudio::toPath(testBSDFLib + "/df_Tn" + formatString(tVis, 2) + ".xml");
               }
 
-              //openstudio::path sourcePath = openstudio::toPath(testBSDFLib + "/df_Tn" + formatString(tVis, 2) + ".xml");
-              //std::cout << "tVis = " << openstudio::toString(tVis) << std::endl;
-              //std::cout << "the source path is " << openstudio::toString(sourcePath) << ", exists = " << boost::filesystem::exists(sourcePath) << std::endl;
-              //std::cout << "the dest path is " << openstudio::toString(bsdfoutpath) << ", exists = " << boost::filesystem::exists(bsdfoutpath) << std::endl;
+              // copy uncontrolledBSDF
+              openstudio::path uncontrolledBSDFOut = t_radDir / openstudio::toPath("bsdf") / openstudio::toPath("/cl_Tn" + formatString(tVis, 2) + ".xml");
+              boost::filesystem::copy_file(*uncontrolledBSDF, uncontrolledBSDFOut, boost::filesystem::copy_option::overwrite_if_exists);
 
-              boost::filesystem::copy_file(*uncontrolledBSDF, bsdfoutpath / openstudio::toPath("df_Tn" + formatString(tVis, 2) + ".xml"),
-                                           boost::filesystem::copy_option::overwrite_if_exists);
+              // add xml file to the collection of crap to copy up
+              t_outfiles.push_back(uncontrolledBSDFOut);
 
-              // add job to vmx problem set
+              // store window group normal (may not need anymore with rfluxmtx)
               m_radDCmats.insert(windowGroup_name + "," + \
                 formatString((control.outwardNormal->x() * -1), 2) + " " + \
                 formatString((control.outwardNormal->y() * -1), 2) + " " + \

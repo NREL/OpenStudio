@@ -35,30 +35,40 @@ namespace radiance{
     m_outwardNormal.normalize();
   }
 
-  bool WindowGroup::operator==(const WindowGroup& other) const
-  {
-    if (!m_shadingControl && !other.shadingControl()){
-      return true;
-    }else if (m_shadingControl && !other.shadingControl()){
-      return false;
-    }else if (!m_shadingControl && other.shadingControl()){
-      return false;
-    }  
+ bool WindowGroup::operator==(const WindowGroup& other) const
+{
+  if (!m_shadingControl && !other.shadingControl()){
   
     if (m_space.handle() == other.space().handle()){
       if (m_construction.handle() == other.construction().handle()){
-        if (m_shadingControl->handle() == other.shadingControl()->handle()){
-          double angle = std::abs(radToDeg(getAngle(m_outwardNormal, other.outwardNormal())));
-          const double tol = 1.0;
-          if (angle < tol){
-            return true;
-          }
+        double angle = std::abs(radToDeg(getAngle(m_outwardNormal, other.outwardNormal())));
+        const double tol = 1.0;
+        if (angle < tol){
+          return true;
         }
       }
     }
-
+    return false;
+  
+  }else if (m_shadingControl && !other.shadingControl()){
+    return false;
+  }else if (!m_shadingControl && other.shadingControl()){
     return false;
   }
+  
+  if (m_space.handle() == other.space().handle()){
+    if (m_construction.handle() == other.construction().handle()){
+      if (m_shadingControl->handle() == other.shadingControl()->handle()){
+        double angle = std::abs(radToDeg(getAngle(m_outwardNormal, other.outwardNormal())));
+        const double tol = 1.0;
+        if (angle < tol){
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
 
   std::string WindowGroup::name() const
   {
@@ -74,7 +84,6 @@ namespace radiance{
   {
     return m_outwardNormal;
   }
-
   
   model::Space WindowGroup::space() const
   {
