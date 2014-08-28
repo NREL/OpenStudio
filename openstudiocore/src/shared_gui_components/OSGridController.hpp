@@ -566,6 +566,8 @@ public slots:
 
   void onSelectionCleared();
 
+  void refreshGrid();
+
 protected slots:
 
   void reset();

@@ -71,6 +71,8 @@ public slots:
 
   void refreshAll();
 
+  void refreshGrid();
+
   void refreshRow(int row);
 
 private slots:

@@ -188,8 +188,10 @@ void OSGridView::removeWidget(int row, int column)
   QWidget * widget = item->widget();
 
   OS_ASSERT(widget);
+  widget->setParent(nullptr);
+  widget->deleteLater();
 
-  delete widget;
+//  delete widget;
 
 //  delete item;
 }
@@ -209,8 +211,26 @@ void OSGridView::deleteAll()
   }
 }
 
+void OSGridView::refreshGrid()
+{
+  std::cout << " REFRESH GRID CALLED " << std::endl;
+
+  if( m_gridController )
+  {
+    for( int i = 1; i < m_gridController->rowCount(); i++ )
+    {
+      for( int j = 0; j < m_gridController->columnCount(); j++ )
+      {
+        refresh(i,j);
+      }
+    }
+  }
+}
+
+
 void OSGridView::refreshAll()
 {
+  std::cout << " REFRESHALL CALLED " << std::endl;
   deleteAll();
 
   if( m_gridController )
