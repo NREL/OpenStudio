@@ -84,7 +84,7 @@ TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeFourPipeInduction_addToNo
   EXPECT_EQ( (unsigned)10, airLoop.demandComponents().size() );
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_RemoveAirTerminalWaterHeatingCoilFromPlant)
+TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_remove)
 {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
@@ -109,4 +109,41 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_Remove
 
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
   EXPECT_EQ((unsigned)7, airLoop.demandComponents().size());  
+}
+
+TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_clone)
+{
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  CoilHeatingWater heatingCoil(m,s);
+  CoilCoolingWater coolingCoil(m,s);
+  AirTerminalSingleDuctConstantVolumeFourPipeInduction testObject(m,heatingCoil);
+
+  testObject.setCoolingCoil(coolingCoil);
+
+  AirLoopHVAC airLoop(m);
+  ThermalZone thermalZone(m);
+  PlantLoop plantLoop(m);
+
+  airLoop.addBranchForZone(thermalZone, testObject);
+  plantLoop.addDemandBranchForComponent(heatingCoil);
+  plantLoop.addDemandBranchForComponent(coolingCoil);
+
+  AirTerminalSingleDuctConstantVolumeFourPipeInduction testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
+  ASSERT_NO_THROW(testObjectClone.heatingCoil());
+  ASSERT_TRUE(testObjectClone.coolingCoil());
+  EXPECT_FALSE(testObjectClone.airLoopHVAC());
+
+  EXPECT_NE(testObjectClone.heatingCoil(),testObject.heatingCoil());
+  EXPECT_NE(testObjectClone.coolingCoil().get(),testObject.coolingCoil().get());
+
+  Model m2;
+
+  AirTerminalSingleDuctConstantVolumeFourPipeInduction testObjectClone2 = testObject.clone(m2).cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
+  ASSERT_NO_THROW(testObjectClone2.heatingCoil());
+  ASSERT_TRUE(testObjectClone2.coolingCoil());
+  EXPECT_FALSE(testObjectClone.airLoopHVAC());
+
+  EXPECT_NE(testObjectClone2.heatingCoil(),testObject.heatingCoil());
+  EXPECT_NE(testObjectClone2.coolingCoil().get(),testObject.coolingCoil().get());
 }

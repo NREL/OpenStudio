@@ -30,13 +30,99 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctConstantVolumeFourPipeInduction( AirTerminalSingleDuctConstantVolumeFourPipeInduction & modelObject )
 {
-  boost::optional<double> d;
-  boost::optional<std::string> s;
+  OptionalString s;
+  OptionalDouble d;
+  OptionalModelObject temp;
 
   // Name
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::AirTerminal_SingleDuct_ConstantVolume_FourPipeInduction, modelObject);
 
-  // AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields
+  // Availability Schedule Name
+  if( (temp = modelObject.availabilitySchedule()) )
+  {
+    if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(temp.get()) )
+    {
+      idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::AvailabilityScheduleName,_schedule->name().get());
+    }
+  }
+
+  // Maximum Total Air Flow Rate
+  if( (d = modelObject.maximumTotalAirFlowRate()) )
+  {
+    idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::MaximumTotalAirFlowRate,d.get());
+  }
+  else if( modelObject.isMaximumTotalAirFlowRateAutosized() )
+  {
+    idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::MaximumTotalAirFlowRate,"Autosize");
+  }
+
+  // Induction Ratio
+  if( (d = modelObject.inductionRatio()) )
+  {
+    idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::InductionRatio,d.get());
+  }
+
+  // Supply Air Inlet Node Name
+  // Induced Air Inlet Node Name
+  // Air Outlet Node Name
+
+  // Hot Water Inlet Node Name
+  // deprecated
+
+  // Cold Water Inlet Node Name
+  //deprecated
+
+  // Heating Coil Object Type
+  // Heating Coil Name
+
+  // Maximum Hot Water Flow Rate
+  if( (d = modelObject.maximumHotWaterFlowRate()) )
+  {
+    idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::MaximumHotWaterFlowRate,d.get());
+  }
+  else if( modelObject.isMaximumHotWaterFlowRateAutosized() )
+  {
+    idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::MaximumHotWaterFlowRate,"Autosize");
+  }
+
+  // Minimum Hot Water Flow Rate
+  if( (d = modelObject.minimumHotWaterFlowRate()) )
+  {
+    idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::MinimumHotWaterFlowRate,d.get());
+  }
+
+  // Heating Convergence Tolerance
+  if( (d = modelObject.heatingConvergenceTolerance()) )
+  {
+    idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::HeatingConvergenceTolerance,d.get());
+  }
+
+  // Cooling Coil Object Type
+  // Cooling Coil Name
+  
+  // Maximum Cold Water Flow Rate
+  if( (d = modelObject.maximumColdWaterFlowRate()) )
+  {
+    idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::MaximumColdWaterFlowRate,d.get());
+  }
+  else if( modelObject.isMaximumColdWaterFlowRateAutosized() )
+  {
+    idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::MaximumColdWaterFlowRate,"Autosize");
+  }
+
+  // Minimum Cold Water Flow Rate
+  if( (d = modelObject.minimumColdWaterFlowRate()) )
+  {
+    idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::MinimumColdWaterFlowRate,d.get());
+  }
+
+  // Cooling Convergence Tolerance
+  if( (d = modelObject.coolingConvergenceTolerance()) )
+  {
+    idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::CoolingConvergenceTolerance,d.get());
+  }
+
+  // Zone Mixer Name
 
   return idfObject;
 }
