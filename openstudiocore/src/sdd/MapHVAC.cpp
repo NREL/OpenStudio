@@ -938,21 +938,35 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
         oaController.controllerMechanicalVentilation().setName(nameElement.text().toStdString() + " Mech Vent Controller");
       }
 
-      // MaxOARat
-      QDomElement maxOARatElement = airSystemOACtrlElement.firstChildElement("MaxOARat");
-      bool ok;
-      double maxOARat = maxOARatElement.text().toDouble(&ok);
-      if( ok && maxOARat > 0.0 && maxOARat <= 1.0 )
+      // MinOAFracSchRef
+      QDomElement minOAFracSchRefElement = airSystemOACtrlElement.firstChildElement("MinOAFracSchRef");
+      if( boost::optional<model::Schedule> schedule = 
+          model.getModelObjectByName<model::Schedule>(minOAFracSchRefElement.text().toStdString()) )
       {
-        model::ScheduleRuleset maxOARatSchedule(model);
-        maxOARatSchedule.setName(oaController.name().get() + " Max OA Schedule");
-        model::ScheduleDay scheduleDay = maxOARatSchedule.defaultDaySchedule();
-        scheduleDay.addValue(Time(1.0),maxOARat);
-        oaController.setMaximumFractionofOutdoorAirSchedule(maxOARatSchedule);
+        oaController.setMinimumFractionofOutdoorAirSchedule(schedule.get());
+      }
+      
+      // MaxOAFracSchRef
+      QDomElement maxOAFracSchRefElement = airSystemOACtrlElement.firstChildElement("MaxOAFracSchRef");
+      if( boost::optional<model::Schedule> schedule = 
+          model.getModelObjectByName<model::Schedule>(maxOAFracSchRefElement.text().toStdString()) ) {
+        oaController.setMaximumFractionofOutdoorAirSchedule(schedule.get());
+      } else {
+        // MaxOARat
+        QDomElement maxOARatElement = airSystemOACtrlElement.firstChildElement("MaxOARat");
+        bool ok;
+        double maxOARat = maxOARatElement.text().toDouble(&ok);
+        if( ok && maxOARat > 0.0 && maxOARat <= 1.0 )
+        {
+          model::ScheduleRuleset maxOARatSchedule(model);
+          maxOARatSchedule.setName(oaController.name().get() + " Max OA Schedule");
+          model::ScheduleDay scheduleDay = maxOARatSchedule.defaultDaySchedule();
+          scheduleDay.addValue(Time(1.0),maxOARat);
+          oaController.setMaximumFractionofOutdoorAirSchedule(maxOARatSchedule);
+        }
       }
 
       // OASchMthd 
-
       QDomElement oaSchMthdElement = airSystemOACtrlElement.firstChildElement("OASchMthd");
       if( istringEqual(oaSchMthdElement.text().toStdString(),"Constant") )
       {
