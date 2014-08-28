@@ -6,7 +6,7 @@ set(CMAKE_VERSION_MAJOR 1)
 set(CMAKE_VERSION_MINOR 4)
 set(CMAKE_VERSION_PATCH 2)
 SET(CMAKE_OSX_DEPLOYMENT_TARGET 10.9)
-SET(CMAKE_OSX_SYSROOT 10.9)
+SET(CMAKE_OSX_SYSROOT /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk)
 SET(CMAKE_PREFIX_PATH /usr/local/Cellar/qt5/5.3.1/)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
