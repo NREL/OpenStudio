@@ -23,12 +23,23 @@
 
 #include "../utilities/core/Assert.hpp"
 
-#include <QVBoxLayout>
-#include <QHBoxLayout>
+#include "../model/BuildingStory.hpp"
+#include "../model/BuildingStory_Impl.hpp"
+#include "../model/ConstructionBase.hpp"
+#include "../model/ConstructionBase_Impl.hpp"
+#include "../model/LightingSimulationZone.hpp"
+#include "../model/LightingSimulationZone_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+
+#include <QBoxLayout>
+#include <QColor>
+#include <QColorDialog>
 #include <QLabel>
 #include <QPushButton>
-#include <QColorDialog>
-#include <QColor>
+#include <QTimer>
 
 namespace openstudio {
 
@@ -53,24 +64,102 @@ namespace openstudio {
   {
     m_get = get;
     m_set = set;
-    m_modelObject = modelObject;
+    m_modelObject = modelObject;    
 
-    bool isConnected = false;
+    setRenderingColor();
+  }
 
-    if (m_modelObject && m_get) {
-      boost::optional<model::ModelObject> modelObject = (*m_get)();
-      if (modelObject){
-        m_renderingColor = modelObject->cast<model::RenderingColor>();
-        OS_ASSERT(m_renderingColor);
-        isConnected = connect(modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(refresh()));
-        OS_ASSERT(isConnected);
+  void RenderingColorWidget2::setRenderingColor()
+  {
+    if (m_modelObject) {
+      if (boost::optional<model::BuildingStory> bs = m_modelObject->optionalCast<model::BuildingStory>())
+      {
+        m_renderingColor = bs->renderingColor();
+      }
+      else if (boost::optional<model::ConstructionBase> cb = m_modelObject->optionalCast<model::ConstructionBase>())
+      {
+        m_renderingColor = cb->renderingColor();
+      }
+      else if (boost::optional<model::LightingSimulationZone> lsz = m_modelObject->optionalCast<model::LightingSimulationZone>())
+      {
+        m_renderingColor = lsz->renderingColor();
+      }
+      else if (boost::optional<model::SpaceType> st = m_modelObject->optionalCast<model::SpaceType>())
+      {
+        m_renderingColor = st->renderingColor();
+      }
+      else if (boost::optional<model::ThermalZone> tz = m_modelObject->optionalCast<model::ThermalZone>())
+      {
+        m_renderingColor = tz->renderingColor();
+      }
+      else
+      {
+        // Should never get here
+        OS_ASSERT(false);
       }
     }
 
-    isConnected = connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(refresh()));
-    OS_ASSERT(isConnected);
+    if (!m_renderingColor){
+      // app->processEvents not suficiant; must use singleShot
+      // to prevent race condition stack overflow
+      QTimer::singleShot(0, this, SLOT(getRenderingColor()));
+    }
+    else{
+      refresh();
+    }
+  }
 
-    refresh();
+  void RenderingColorWidget2::getRenderingColor()
+  {
+    bool isConnected = false;
+
+    if (m_modelObject) {
+      if (boost::optional<model::BuildingStory> bs = m_modelObject->optionalCast<model::BuildingStory>())
+      {
+        m_renderingColor = model::RenderingColor(bs->model());
+        bs->setRenderingColor(*m_renderingColor);
+        isConnected = connect(bs->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(refresh()));
+        OS_ASSERT(isConnected);
+      }
+      else if (boost::optional<model::ConstructionBase> cb = m_modelObject->optionalCast<model::ConstructionBase>())
+      {
+        m_renderingColor = model::RenderingColor(cb->model());
+        cb->setRenderingColor(*m_renderingColor);
+        isConnected = connect(cb->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(refresh()));
+        OS_ASSERT(isConnected);
+      }
+      else if (boost::optional<model::LightingSimulationZone> lsz = m_modelObject->optionalCast<model::LightingSimulationZone>())
+      {
+        m_renderingColor = model::RenderingColor(lsz->model());
+        lsz->setRenderingColor(*m_renderingColor);
+        isConnected = connect(lsz->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(refresh()));
+        OS_ASSERT(isConnected);
+      }
+      else if (boost::optional<model::SpaceType> st = m_modelObject->optionalCast<model::SpaceType>())
+      {
+        m_renderingColor = model::RenderingColor(st->model());
+        st->setRenderingColor(*m_renderingColor);
+        isConnected = connect(st->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(refresh()));
+        OS_ASSERT(isConnected);
+      }
+      else if (boost::optional<model::ThermalZone> tz = m_modelObject->optionalCast<model::ThermalZone>())
+      {
+        m_renderingColor = model::RenderingColor(tz->model());
+        tz->setRenderingColor(*m_renderingColor);
+        isConnected = connect(tz->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(refresh()));
+        OS_ASSERT(isConnected);
+      }
+      else
+      {
+        // Should never get here
+        OS_ASSERT(false);
+      }
+
+      isConnected = connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(refresh()));
+      OS_ASSERT(isConnected);
+
+      refresh();
+    }
   }
 
   void RenderingColorWidget2::unbind()

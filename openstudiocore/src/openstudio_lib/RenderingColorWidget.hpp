@@ -54,7 +54,11 @@ namespace openstudio {
 
     void renderColorButtonClicked();
 
+    void getRenderingColor();
+
   private:
+
+    void setRenderingColor();
 
     boost::optional<OptionalModelObjectGetter> m_get;
     boost::optional<ModelObjectSetter> m_set;
