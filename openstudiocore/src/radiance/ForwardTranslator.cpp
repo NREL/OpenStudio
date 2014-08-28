@@ -132,7 +132,7 @@ namespace radiance {
 
   // basic constructor
   ForwardTranslator::ForwardTranslator()
-    : m_windowGroupId(0)
+    : m_windowGroupId(1) // m_windowGroupId is reserved for uncontrolled
   {
     m_logSink.setLogLevel(Warn);
     m_logSink.setChannelRegex(boost::regex("openstudio\\.radiance\\.ForwardTranslator"));
@@ -774,6 +774,11 @@ namespace radiance {
     ss << "WG" << m_windowGroupId;
     std::string name = ss.str();
 
+    // set the uncontrolled window group name
+    if (!shadingControl){
+      name = "WG0";
+    }
+
     result.setName(name);
 
     std::vector<WindowGroup>::iterator it = std::find(m_windowGroups.begin(), m_windowGroups.end(), result);
@@ -782,7 +787,10 @@ namespace radiance {
       return *it;
     }
 
-    m_windowGroupId += 1;
+    // if we made a new group
+    if (shadingControl){
+      m_windowGroupId += 1;
+    }
 
     result.addWindowPolygon(polygon);
     m_windowGroups.push_back(result);
