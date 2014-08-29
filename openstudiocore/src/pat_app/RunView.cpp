@@ -1195,7 +1195,7 @@ void DataPointJobItemView::update()
   m_updateRequested = false;
 
   if (m_workflowStepJob.measure) {
-    dataPointJobHeaderView->setName(m_workflowStepJob.measure->name());
+    dataPointJobHeaderView->setName(m_workflowStepJob.measure->displayName());
   }
   else {
     OS_ASSERT(m_workflowStepJob.step.isWorkItem());
@@ -1209,7 +1209,7 @@ void DataPointJobItemView::update()
         boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
         OS_ASSERT(project);
         if (OptionalBCLMeasure measure = project->getMeasureByUUID(*measureUUID)) {
-          dataPointJobHeaderView->setName(measure->name());
+          dataPointJobHeaderView->setName(measure->displayName());
           nameSet = true;
         }
       }

@@ -184,7 +184,7 @@ DoubleInputView::DoubleInputView()
   vLayout->addWidget(lineEdit);
 }
 
-void DoubleInputView::setName(const std::string& name, boost::optional<std::string>& units, boost::optional<std::string>& description)
+void DoubleInputView::setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description)
 {
   QString text;
   text += QString::fromStdString(name);
@@ -231,7 +231,7 @@ ChoiceInputView::ChoiceInputView()
   vLayout->addWidget(comboBox);
 }
 
-void ChoiceInputView::setName(const std::string& name, boost::optional<std::string>& units, boost::optional<std::string>& description)
+void ChoiceInputView::setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description)
 {
   QString text;
   text += QString::fromStdString(name);
@@ -278,7 +278,7 @@ BoolInputView::BoolInputView()
   vLayout->addWidget(checkBox);
 }
 
-void BoolInputView::setName(const std::string& name, boost::optional<std::string>& units, boost::optional<std::string>& description)
+void BoolInputView::setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description)
 {
   QString text;
   text += QString::fromStdString(name);
@@ -319,7 +319,7 @@ IntegerInputView::IntegerInputView()
   vLayout->addWidget(lineEdit);
 }
 
-void IntegerInputView::setName(const std::string& name, boost::optional<std::string>& units, boost::optional<std::string>& description)
+void IntegerInputView::setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description)
 {
   QString text;
   text += QString::fromStdString(name);
@@ -366,7 +366,7 @@ StringInputView::StringInputView()
   vLayout->addWidget(lineEdit);
 }
 
-void StringInputView::setName(const std::string& name, boost::optional<std::string>& units, boost::optional<std::string>& description)
+void StringInputView::setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description)
 {
   QString text;
   text += QString::fromStdString(name);

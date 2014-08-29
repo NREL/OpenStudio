@@ -141,7 +141,7 @@ TEST_F(BCLFixture, BCLMeasure_CTor)
 TEST_F(BCLFixture, PatApplicationMeasures)
 {
   std::vector<BCLMeasure> patApplicationMeasures = BCLMeasure::patApplicationMeasures();
-  ASSERT_EQ(3u, patApplicationMeasures.size());
+  ASSERT_EQ(4u, patApplicationMeasures.size());
 
   bool updated;
 
@@ -150,6 +150,13 @@ TEST_F(BCLFixture, PatApplicationMeasures)
   ASSERT_FALSE(updated); // DLM: comment out to update built in PAT measures
   if (updated){
     alternativeModelMeasure.save();
+  }
+
+  BCLMeasure reportRequestMeasure = BCLMeasure::reportRequestMeasure();
+  updated = reportRequestMeasure.checkForUpdatesFiles();
+  ASSERT_FALSE(updated); // DLM: comment out to update built in PAT measures
+  if (updated){
+    reportRequestMeasure.save();
   }
 
   BCLMeasure standardReportMeasure = BCLMeasure::standardReportMeasure();
