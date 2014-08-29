@@ -232,6 +232,9 @@ HumidifierSteamElectric::HumidifierSteamElectric(const Model& model)
   : StraightComponent(HumidifierSteamElectric::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::HumidifierSteamElectric_Impl>());
+  setRatedCapacity(.00004);
+  setRatedPower(104000);
+  setString(OS_Humidifier_Steam_ElectricFields::WaterStorageTankName,"");
 }
 
 IddObjectType HumidifierSteamElectric::iddObjectType() {

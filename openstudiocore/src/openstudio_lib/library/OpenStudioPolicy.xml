@@ -12,6 +12,18 @@
     <rule IddField="Outlet Node" Access="HIDDEN"/>
     <rule IddField="Induced Air Outlet Node" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_SingleZone_Humidity_Minimum">
+    <rule IddField="Control Variable" Access="HIDDEN"/>
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_MultiZone_Humidity_Minimum">
+    <rule IddField="Control Variable" Access="HIDDEN"/>
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_MultiZone_MinimumHumidity_Average">
+    <rule IddField="Control Variable" Access="HIDDEN"/>
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_SetpointManager_FollowOutdoorAirTemperature">
     <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
   </POLICY>
@@ -651,10 +663,15 @@
     <rule IddField="Heat Recovery Heating Capacity Modifier Curve" Access="LOCKED"/>
     <rule IddField="Heat Recovery Heating Energy Modifier Curve" Access="LOCKED"/>
   </POLICY>
-  <POLICY IddObjectType="OS_Table_MultiVariableLookupFields">
+  <POLICY IddObjectType="OS_Table_MultiVariableLookup">
     <rule IddField="External File Name" Access="HIDDEN"/>
     <rule IddField="X1 Sort Order" Access="HIDDEN"/>
     <rule IddField="X2 Sort Order" Access="HIDDEN"/>
   </POLICY>
-
+  <POLICY IddObjectType="OS_Humidifier_Steam_Electric">
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Water Storage Tank Name" Access="HIDDEN"/>
+    <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
+  </POLICY>
 </ROOT>

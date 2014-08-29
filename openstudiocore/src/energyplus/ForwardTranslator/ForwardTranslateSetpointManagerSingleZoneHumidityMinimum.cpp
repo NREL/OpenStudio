@@ -45,7 +45,8 @@ boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerSingleZone
   // ControlZoneAirNodeName
   if( boost::optional<ThermalZone> thermalZone = modelObject.controlZone() )
   {
-    idfObject.setString(SetpointManager_SingleZone_Humidity_MinimumFields::ControlZoneAirNodeName,thermalZone->name().get());
+    auto node = thermalZone->zoneAirNode();
+    idfObject.setString(SetpointManager_SingleZone_Humidity_MinimumFields::ControlZoneAirNodeName,node.name().get());
   }
 
   // Setpoint Node or NodeList Name

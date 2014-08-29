@@ -9683,7 +9683,7 @@ OS:CoolingTower:TwoSpeed,
        \type real
        \units m3/s
        \minimum> 0.0
-       \autocalculatable
+       \autosizable
        \note Low speed air flow rate must be less than high speed air flow rate
        \note Low speed air flow rate must be greater than free convection air flow rate
   N6 , \field Low Fan Speed Air Flow Rate Sizing Factor
@@ -9698,7 +9698,7 @@ OS:CoolingTower:TwoSpeed,
        \type real
        \units W
        \minimum> 0.0
-       \autocalculatable
+       \autosizable
        \ip-units W
        \note This is the fan motor electric input power at low speed
   N8 , \field Low Fan Speed Fan Power Sizing Factor
@@ -9713,7 +9713,7 @@ OS:CoolingTower:TwoSpeed,
        \units W/K
        \minimum> 0.0
        \maximum 300000.0
-       \autocalculatable
+       \autosizable
        \note Leave field blank if tower Performance Input Method is NominalCapacity
        \note Low speed tower UA must be less than high speed tower UA
        \note Low speed tower UA must be greater than free convection tower UA
@@ -9730,7 +9730,7 @@ OS:CoolingTower:TwoSpeed,
        \units m3/s
        \minimum 0.0
        \default 0.0
-       \autocalculatable
+       \autosizable
   N12, \field Free Convection Regime Air Flow Rate Sizing Factor
        \required-field
        \type real
@@ -9744,7 +9744,7 @@ OS:CoolingTower:TwoSpeed,
        \minimum 0.0
        \maximum 300000.0
        \default 0.0
-       \autocalculatable
+       \autosizable
        \note Leave field blank if Tower Performance Input Method is NominalCapacity
   N14, \field Free Convection U-Factor Times Area Value Sizing Factor
        \required-field
@@ -9780,7 +9780,7 @@ OS:CoolingTower:TwoSpeed,
        \type real
        \units W
        \minimum> 0.0
-       \autocalculatable
+       \autosizable
        \note Nominal tower capacity with entering water at 35C (95F), leaving water at
        \note 29.44C (85F), entering air at 25.56C (78F) wet-bulb temperature and 35C (95F)
        \note dry-bulb temperature, with the tower fan operating at low speed. Design water flow
@@ -9799,7 +9799,7 @@ OS:CoolingTower:TwoSpeed,
        \type real
        \units W
        \minimum 0.0
-       \autocalculatable
+       \autosizable
        \note Tower capacity in free convection regime with entering water at 35C (95F),
        \note leaving water at 29.44C (85F), entering air at 25.56C (78F) wet-bulb temperature
        \note and 35C (95F) dry-bulb temperature. Design water flow rate assumed to be

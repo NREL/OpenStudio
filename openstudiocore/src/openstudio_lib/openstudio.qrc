@@ -81,6 +81,7 @@
     <file>images/heat_transfer_outdoorair.png</file>
     <file>images/humidify_schedule_icon.png</file>
     <file>images/humidistat.png</file>
+    <file>images/humidifier_steam_electric.png</file>
     <file>images/hvac-icon.png</file>
     <file>images/icon_scripts.png</file>
     <file>images/image_header.png</file>
@@ -169,6 +170,12 @@
     <file>images/setpoint_warmest_right.png</file>
     <file>images/setpoint_dual.png</file>
     <file>images/setpoint_pretreat.png</file>
+    <file>images/setpoint_multi_zone_humidity_ave.png</file>
+    <file>images/setpoint_multi_zone_humidity_ave_right.png</file>
+    <file>images/setpoint_multi_zone_humidity_min.png</file>
+    <file>images/setpoint_multi_zone_humidity_min_right.png</file>
+    <file>images/setpoint_single_zone_humidity_min.png</file>
+    <file>images/setpoint_single_zone_humidity_min_right.png</file>
     <file>images/sewer_alone.png</file>
     <file>images/sewer_over.png</file>
     <file>images/sewer_press.png</file>
@@ -297,6 +304,7 @@
     <file>images/mini_icons/coilheatinglowtemprad_varflow.png</file>    
     <file>images/mini_icons/heat_pump3.png</file>
     <file>images/mini_icons/heat_transfer_mini.png</file>
+    <file>images/mini_icons/humidifier_steam_electric.png</file>
     <file>images/mini_icons/illuminance_map.png</file>
     <file>images/mini_icons/infiltration.png</file>
     <file>images/mini_icons/insulation.png</file>
