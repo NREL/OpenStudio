@@ -47,6 +47,9 @@ set(${target_name}_src
   AirLoopHVACUnitaryHeatPumpAirToAir.hpp
   AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp
   AirLoopHVACUnitaryHeatPumpAirToAir.cpp
+  AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.hpp
+  AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp
+  AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.cpp
   AirLoopHVACUnitarySystem.hpp
   AirLoopHVACUnitarySystem_Impl.hpp
   AirLoopHVACUnitarySystem.cpp
@@ -131,6 +134,12 @@ set(${target_name}_src
   CoilCoolingCooledBeam.hpp
   CoilCoolingCooledBeam_Impl.hpp
   CoilCoolingCooledBeam.cpp
+  CoilCoolingDXMultiSpeed.hpp
+  CoilCoolingDXMultiSpeed_Impl.hpp
+  CoilCoolingDXMultiSpeed.cpp
+  CoilCoolingDXMultiSpeedStageData.hpp
+  CoilCoolingDXMultiSpeedStageData_Impl.hpp
+  CoilCoolingDXMultiSpeedStageData.cpp
   CoilCoolingDXSingleSpeed.hpp
   CoilCoolingDXSingleSpeed_Impl.hpp
   CoilCoolingDXSingleSpeed.cpp
@@ -167,6 +176,12 @@ set(${target_name}_src
   CoilHeatingGas.hpp
   CoilHeatingGas_Impl.hpp
   CoilHeatingGas.cpp
+  CoilHeatingGasMultiStage.hpp
+  CoilHeatingGasMultiStage_Impl.hpp
+  CoilHeatingGasMultiStage.cpp
+  CoilHeatingGasMultiStageStageData.hpp
+  CoilHeatingGasMultiStageStageData_Impl.hpp
+  CoilHeatingGasMultiStageStageData.cpp
   CoilHeatingLowTempRadiantConstFlow.hpp
   CoilHeatingLowTempRadiantConstFlow_Impl.hpp
   CoilHeatingLowTempRadiantConstFlow.cpp
@@ -793,9 +808,15 @@ set(${target_name}_src
   ThermochromicGlazing.hpp
   ThermochromicGlazing_Impl.hpp
   ThermochromicGlazing.cpp
+  Thermostat.hpp
+  Thermostat_Impl.hpp
+  Thermostat.cpp
   ThermostatSetpointDualSetpoint.hpp
   ThermostatSetpointDualSetpoint_Impl.hpp
   ThermostatSetpointDualSetpoint.cpp
+  ZoneControlThermostatStagedDualSetpoint.hpp
+  ZoneControlThermostatStagedDualSetpoint_Impl.hpp
+  ZoneControlThermostatStagedDualSetpoint.cpp
   TimeDependentValuation.hpp
   TimeDependentValuation_Impl.hpp
   TimeDependentValuation.cpp
@@ -1159,6 +1180,7 @@ set(${target_name}_test_src
   test/AirGap_GTest.cpp
   test/AirLoopHVACOutdoorAirSystem_GTest.cpp
   test/AirLoopHVACUnitaryHeatPumpAirToAir_GTest.cpp
+  test/AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_GTest.cpp
   test/AirLoopHVACUnitarySystem_GTest.cpp
   test/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_GTest.cpp
   test/AirLoopHVAC_GTest.cpp
@@ -1182,6 +1204,7 @@ set(${target_name}_test_src
   test/ClimateZones_GTest.cpp
   test/CoilCoolingCooledBeam_GTest.cpp
   test/CoilCoolingDXSingleSpeed_GTest.cpp
+  test/CoilCoolingDXMultiSpeed_GTest.cpp
   test/CoilCoolingDXTwoSpeed_GTest.cpp
   test/CoilCoolingLowTempRadiantConstFlow_GTest.cpp
   test/CoilCoolingLowTempRadiantVarFlow_GTest.cpp
@@ -1191,6 +1214,7 @@ set(${target_name}_test_src
   test/CoilHeatingDXSingleSpeed_GTest.cpp
   test/CoilHeatingElectric_GTest.cpp
   test/CoilHeatingGas_GTest.cpp
+  test/CoilHeatingGasMultiStage_GTest.cpp
   test/CoilHeatingLowTempRadiantConstFlow_GTest.cpp
   test/CoilHeatingLowTempRadiantVarFlow_GTest.cpp
   test/CoilHeatingWater_GTest.cpp

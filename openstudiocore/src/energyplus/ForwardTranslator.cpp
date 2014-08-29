@@ -502,6 +502,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(unitary);
       break;
     }
+  case openstudio::IddObjectType::OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeed :
+    {
+      model::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed unitary = modelObject.cast<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
+      retVal = translateAirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed(unitary);
+      break;
+    }
   case openstudio::IddObjectType::OS_AirLoopHVAC_UnitarySystem :
     {
       model::AirLoopHVACUnitarySystem unitary = modelObject.cast<AirLoopHVACUnitarySystem>();
@@ -579,6 +585,16 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       }
       break;
     }
+  case openstudio::IddObjectType::OS_Coil_Cooling_DX_MultiSpeed :
+    {
+      model::CoilCoolingDXMultiSpeed coil = modelObject.cast<CoilCoolingDXMultiSpeed>();
+      retVal = translateCoilCoolingDXMultiSpeed(coil);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Cooling_DX_MultiSpeed_StageData :
+    {
+      return retVal;
+    }
   case openstudio::IddObjectType::OS_Coil_Cooling_DX_TwoSpeed :
     {
       model::CoilCoolingDXTwoSpeed coil = modelObject.cast<CoilCoolingDXTwoSpeed>();
@@ -644,6 +660,17 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       model::CoilHeatingGas coil = modelObject.cast<CoilHeatingGas>();
       retVal = translateCoilHeatingGas(coil);
       break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Heating_Gas_MultiStage :
+    {
+      model::CoilHeatingGasMultiStage coil = modelObject.cast<CoilHeatingGasMultiStage>();
+      retVal = translateCoilHeatingGasMultiStage(coil);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Heating_Gas_MultiStage_StageData :
+    {
+      // no-op
+      return retVal;
     }
   case openstudio::IddObjectType::OS_Coil_Heating_LowTemperatureRadiant_ConstantFlow :
     {
@@ -1648,6 +1675,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::ZoneControlHumidistat mo = modelObject.cast<ZoneControlHumidistat>();
       retVal = translateZoneControlHumidistat(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ZoneControl_Thermostat_StagedDualSetpoint :
+    {
+      model::ZoneControlThermostatStagedDualSetpoint mo = modelObject.cast<ZoneControlThermostatStagedDualSetpoint>();
+      retVal = translateZoneControlThermostatStagedDualSetpoint(mo);
       break;
     }
   case openstudio::IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric :
