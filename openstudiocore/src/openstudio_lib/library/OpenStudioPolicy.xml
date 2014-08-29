@@ -18,9 +18,12 @@
   <POLICY IddObjectType="OS_CoolingTower_SingleSpeed">
     <rule IddField="Water Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Water Outlet Node Name" Access="HIDDEN"/>
-    <rule IddField="Performance Input Method" Access="HIDDEN"/>
-    <rule IddField="Nominal Capacity" Access="HIDDEN"/>
-    <rule IddField="Free Convection Capacity" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_CoolingTower_TwoSpeed">
+    <rule IddField="Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Water Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Supply Water Storage Tank Name" Access="HIDDEN"/>
+    <rule IddField="Outdoor Air Inlet Node Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_CoolingTower_VariableSpeed">
     <rule IddField="Water Inlet Node" Access="HIDDEN"/>

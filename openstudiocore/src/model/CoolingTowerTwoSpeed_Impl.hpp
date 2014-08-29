@@ -88,7 +88,7 @@ namespace detail {
 
     boost::optional<double> lowFanSpeedAirFlowRate() const;
 
-    bool isLowFanSpeedAirFlowRateAutocalculated() const;
+    bool isLowFanSpeedAirFlowRateAutosized() const;
 
     double lowFanSpeedAirFlowRateSizingFactor() const;
 
@@ -96,7 +96,7 @@ namespace detail {
 
     boost::optional<double> lowFanSpeedFanPower() const;
 
-    bool isLowFanSpeedFanPowerAutocalculated() const;
+    bool isLowFanSpeedFanPowerAutosized() const;
 
     double lowFanSpeedFanPowerSizingFactor() const;
 
@@ -104,7 +104,7 @@ namespace detail {
 
     boost::optional<double> lowFanSpeedUFactorTimesAreaValue() const;
 
-    bool isLowFanSpeedUFactorTimesAreaValueAutocalculated() const;
+    bool isLowFanSpeedUFactorTimesAreaValueAutosized() const;
 
     double lowFanSpeedUFactorTimesAreaSizingFactor() const;
 
@@ -114,7 +114,7 @@ namespace detail {
 
     bool isFreeConvectionRegimeAirFlowRateDefaulted() const;
 
-    bool isFreeConvectionRegimeAirFlowRateAutocalculated() const;
+    bool isFreeConvectionRegimeAirFlowRateAutosized() const;
 
     double freeConvectionRegimeAirFlowRateSizingFactor() const;
 
@@ -124,7 +124,7 @@ namespace detail {
 
     bool isFreeConvectionRegimeUFactorTimesAreaValueDefaulted() const;
 
-    bool isFreeConvectionRegimeUFactorTimesAreaValueAutocalculated() const;
+    bool isFreeConvectionRegimeUFactorTimesAreaValueAutosized() const;
 
     double freeConvectionUFactorTimesAreaValueSizingFactor() const;
 
@@ -142,7 +142,7 @@ namespace detail {
 
     boost::optional<double> lowSpeedNominalCapacity() const;
 
-    bool isLowSpeedNominalCapacityAutocalculated() const;
+    bool isLowSpeedNominalCapacityAutosized() const;
 
     double lowSpeedNominalCapacitySizingFactor() const;
 
@@ -150,7 +150,7 @@ namespace detail {
 
     boost::optional<double> freeConvectionNominalCapacity() const;
 
-    bool isFreeConvectionNominalCapacityAutocalculated() const;
+    bool isFreeConvectionNominalCapacityAutosized() const;
 
     double freeConvectionNominalCapacitySizingFactor() const;
 
@@ -232,7 +232,7 @@ namespace detail {
 
     bool setLowFanSpeedAirFlowRate(boost::optional<double> lowFanSpeedAirFlowRate);
 
-    void autocalculateLowFanSpeedAirFlowRate();
+    void autosizeLowFanSpeedAirFlowRate();
 
     bool setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor);
 
@@ -240,7 +240,7 @@ namespace detail {
 
     bool setLowFanSpeedFanPower(boost::optional<double> lowFanSpeedFanPower);
 
-    void autocalculateLowFanSpeedFanPower();
+    void autosizeLowFanSpeedFanPower();
 
     bool setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor);
 
@@ -250,7 +250,7 @@ namespace detail {
 
     void resetLowFanSpeedUFactorTimesAreaValue();
 
-    void autocalculateLowFanSpeedUFactorTimesAreaValue();
+    void autosizeLowFanSpeedUFactorTimesAreaValue();
 
     bool setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor);
 
@@ -260,7 +260,7 @@ namespace detail {
 
     void resetFreeConvectionRegimeAirFlowRate();
 
-    void autocalculateFreeConvectionRegimeAirFlowRate();
+    void autosizeFreeConvectionRegimeAirFlowRate();
 
     bool setFreeConvectionRegimeAirFlowRateSizingFactor(double freeConvectionRegimeAirFlowRateSizingFactor);
 
@@ -270,7 +270,7 @@ namespace detail {
 
     void resetFreeConvectionRegimeUFactorTimesAreaValue();
 
-    void autocalculateFreeConvectionRegimeUFactorTimesAreaValue();
+    void autosizeFreeConvectionRegimeUFactorTimesAreaValue();
 
     bool setFreeConvectionUFactorTimesAreaValueSizingFactor(double freeConvectionUFactorTimesAreaValueSizingFactor);
 
@@ -292,7 +292,7 @@ namespace detail {
 
     void resetLowSpeedNominalCapacity();
 
-    void autocalculateLowSpeedNominalCapacity();
+    void autosizeLowSpeedNominalCapacity();
 
     bool setLowSpeedNominalCapacitySizingFactor(double lowSpeedNominalCapacitySizingFactor);
 
@@ -302,7 +302,7 @@ namespace detail {
 
     void resetFreeConvectionNominalCapacity();
 
-    void autocalculateFreeConvectionNominalCapacity();
+    void autosizeFreeConvectionNominalCapacity();
 
     bool setFreeConvectionNominalCapacitySizingFactor(double freeConvectionNominalCapacitySizingFactor);
 

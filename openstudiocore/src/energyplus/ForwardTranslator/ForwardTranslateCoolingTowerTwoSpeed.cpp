@@ -98,7 +98,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerTwoSpeed( Coo
   {
     idfObject.setDouble(CoolingTower_TwoSpeedFields::LowFanSpeedAirFlowRate,d.get());
   }
-  else if( modelObject.isLowFanSpeedAirFlowRateAutocalculated() )
+  else if( modelObject.isLowFanSpeedAirFlowRateAutosized() )
   {
     idfObject.setString(CoolingTower_TwoSpeedFields::LowFanSpeedAirFlowRate,"Autocalculate");
   }
@@ -114,7 +114,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerTwoSpeed( Coo
   {
     idfObject.setDouble(CoolingTower_TwoSpeedFields::LowFanSpeedFanPower,d.get());
   }
-  else if( modelObject.isLowFanSpeedFanPowerAutocalculated() )
+  else if( modelObject.isLowFanSpeedFanPowerAutosized() )
   {
     idfObject.setString(CoolingTower_TwoSpeedFields::LowFanSpeedFanPower,"Autocalculate");
   }
@@ -130,7 +130,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerTwoSpeed( Coo
   {
     idfObject.setDouble(CoolingTower_TwoSpeedFields::LowFanSpeedUFactorTimesAreaValue,d.get());
   }
-  else if( modelObject.isLowFanSpeedUFactorTimesAreaValueAutocalculated() )
+  else if( modelObject.isLowFanSpeedUFactorTimesAreaValueAutosized() )
   {
     idfObject.setString(CoolingTower_TwoSpeedFields::LowFanSpeedUFactorTimesAreaValue,"Autocalculate");
   }
@@ -146,7 +146,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerTwoSpeed( Coo
   {
     idfObject.setDouble(CoolingTower_TwoSpeedFields::FreeConvectionRegimeAirFlowRate,d.get());
   }
-  else if( modelObject.isFreeConvectionRegimeAirFlowRateAutocalculated() )
+  else if( modelObject.isFreeConvectionRegimeAirFlowRateAutosized() )
   {
     idfObject.setString(CoolingTower_TwoSpeedFields::FreeConvectionRegimeAirFlowRate,"Autocalculate");
   }
@@ -162,7 +162,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerTwoSpeed( Coo
   {
     idfObject.setDouble(CoolingTower_TwoSpeedFields::FreeConvectionRegimeUFactorTimesAreaValue,d.get());
   }
-  else if( modelObject.isFreeConvectionRegimeUFactorTimesAreaValueAutocalculated() )
+  else if( modelObject.isFreeConvectionRegimeUFactorTimesAreaValueAutosized() )
   {
     idfObject.setString(CoolingTower_TwoSpeedFields::FreeConvectionRegimeUFactorTimesAreaValue,"Autocalculate");
   }
@@ -196,7 +196,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerTwoSpeed( Coo
   {
     idfObject.setDouble(CoolingTower_TwoSpeedFields::LowSpeedNominalCapacity,d.get());
   }
-  else if( modelObject.isLowSpeedNominalCapacityAutocalculated() )
+  else if( modelObject.isLowSpeedNominalCapacityAutosized() )
   {
     idfObject.setString(CoolingTower_TwoSpeedFields::LowSpeedNominalCapacity,"Autocalculate");
   }
@@ -212,7 +212,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerTwoSpeed( Coo
   {
     idfObject.setDouble(CoolingTower_TwoSpeedFields::FreeConvectionNominalCapacity,d.get());
   }
-  else if( modelObject.isFreeConvectionNominalCapacityAutocalculated() )
+  else if( modelObject.isFreeConvectionNominalCapacityAutosized() )
   {
     idfObject.setString(CoolingTower_TwoSpeedFields::FreeConvectionNominalCapacity,"Autocalculate");
   }

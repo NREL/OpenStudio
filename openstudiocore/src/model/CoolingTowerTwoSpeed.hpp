@@ -78,7 +78,7 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
 
   boost::optional<double> lowFanSpeedAirFlowRate() const;
 
-  bool isLowFanSpeedAirFlowRateAutocalculated() const;
+  bool isLowFanSpeedAirFlowRateAutosized() const;
 
   double lowFanSpeedAirFlowRateSizingFactor() const;
 
@@ -86,7 +86,7 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
 
   boost::optional<double> lowFanSpeedFanPower() const;
 
-  bool isLowFanSpeedFanPowerAutocalculated() const;
+  bool isLowFanSpeedFanPowerAutosized() const;
 
   double lowFanSpeedFanPowerSizingFactor() const;
 
@@ -94,7 +94,7 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
 
   boost::optional<double> lowFanSpeedUFactorTimesAreaValue() const;
 
-  bool isLowFanSpeedUFactorTimesAreaValueAutocalculated() const;
+  bool isLowFanSpeedUFactorTimesAreaValueAutosized() const;
 
   double lowFanSpeedUFactorTimesAreaSizingFactor() const;
 
@@ -104,7 +104,7 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
 
   bool isFreeConvectionRegimeAirFlowRateDefaulted() const;
 
-  bool isFreeConvectionRegimeAirFlowRateAutocalculated() const;
+  bool isFreeConvectionRegimeAirFlowRateAutosized() const;
 
   double freeConvectionRegimeAirFlowRateSizingFactor() const;
 
@@ -114,7 +114,7 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
 
   bool isFreeConvectionRegimeUFactorTimesAreaValueDefaulted() const;
 
-  bool isFreeConvectionRegimeUFactorTimesAreaValueAutocalculated() const;
+  bool isFreeConvectionRegimeUFactorTimesAreaValueAutosized() const;
 
   double freeConvectionUFactorTimesAreaValueSizingFactor() const;
 
@@ -132,7 +132,7 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
 
   boost::optional<double> lowSpeedNominalCapacity() const;
 
-  bool isLowSpeedNominalCapacityAutocalculated() const;
+  bool isLowSpeedNominalCapacityAutosized() const;
 
   double lowSpeedNominalCapacitySizingFactor() const;
 
@@ -140,7 +140,7 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
 
   boost::optional<double> freeConvectionNominalCapacity() const;
 
-  bool isFreeConvectionNominalCapacityAutocalculated() const;
+  bool isFreeConvectionNominalCapacityAutosized() const;
 
   double freeConvectionNominalCapacitySizingFactor() const;
 
@@ -222,7 +222,7 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
 
   bool setLowFanSpeedAirFlowRate(double lowFanSpeedAirFlowRate);
 
-  void autocalculateLowFanSpeedAirFlowRate();
+  void autosizeLowFanSpeedAirFlowRate();
 
   bool setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor);
 
@@ -230,7 +230,7 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
 
   bool setLowFanSpeedFanPower(double lowFanSpeedFanPower);
 
-  void autocalculateLowFanSpeedFanPower();
+  void autosizeLowFanSpeedFanPower();
 
   bool setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor);
 
@@ -240,7 +240,7 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
 
   void resetLowFanSpeedUFactorTimesAreaValue();
 
-  void autocalculateLowFanSpeedUFactorTimesAreaValue();
+  void autosizeLowFanSpeedUFactorTimesAreaValue();
 
   bool setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor);
 
@@ -250,7 +250,7 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
 
   void resetFreeConvectionRegimeAirFlowRate();
 
-  void autocalculateFreeConvectionRegimeAirFlowRate();
+  void autosizeFreeConvectionRegimeAirFlowRate();
 
   bool setFreeConvectionRegimeAirFlowRateSizingFactor(double freeConvectionRegimeAirFlowRateSizingFactor);
 
@@ -260,7 +260,7 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
 
   void resetFreeConvectionRegimeUFactorTimesAreaValue();
 
-  void autocalculateFreeConvectionRegimeUFactorTimesAreaValue();
+  void autosizeFreeConvectionRegimeUFactorTimesAreaValue();
 
   bool setFreeConvectionUFactorTimesAreaValueSizingFactor(double freeConvectionUFactorTimesAreaValueSizingFactor);
 
@@ -282,7 +282,7 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
 
   void resetLowSpeedNominalCapacity();
 
-  void autocalculateLowSpeedNominalCapacity();
+  void autosizeLowSpeedNominalCapacity();
 
   bool setLowSpeedNominalCapacitySizingFactor(double lowSpeedNominalCapacitySizingFactor);
 
@@ -292,7 +292,7 @@ class MODEL_API CoolingTowerTwoSpeed : public StraightComponent {
 
   void resetFreeConvectionNominalCapacity();
 
-  void autocalculateFreeConvectionNominalCapacity();
+  void autosizeFreeConvectionNominalCapacity();
 
   bool setFreeConvectionNominalCapacitySizingFactor(double freeConvectionNominalCapacitySizingFactor);
 

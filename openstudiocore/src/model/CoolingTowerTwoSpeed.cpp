@@ -73,7 +73,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> CoolingTowerTwoSpeed_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -167,11 +166,11 @@ namespace detail {
     return getDouble(OS_CoolingTower_TwoSpeedFields::LowFanSpeedAirFlowRate,true);
   }
 
-  bool CoolingTowerTwoSpeed_Impl::isLowFanSpeedAirFlowRateAutocalculated() const {
+  bool CoolingTowerTwoSpeed_Impl::isLowFanSpeedAirFlowRateAutosized() const {
     bool result = false;
     boost::optional<std::string> value = getString(OS_CoolingTower_TwoSpeedFields::LowFanSpeedAirFlowRate, true);
     if (value) {
-      result = openstudio::istringEqual(value.get(), "autocalculate");
+      result = openstudio::istringEqual(value.get(), "AutoSize");
     }
     return result;
   }
@@ -190,11 +189,11 @@ namespace detail {
     return getDouble(OS_CoolingTower_TwoSpeedFields::LowFanSpeedFanPower,true);
   }
 
-  bool CoolingTowerTwoSpeed_Impl::isLowFanSpeedFanPowerAutocalculated() const {
+  bool CoolingTowerTwoSpeed_Impl::isLowFanSpeedFanPowerAutosized() const {
     bool result = false;
     boost::optional<std::string> value = getString(OS_CoolingTower_TwoSpeedFields::LowFanSpeedFanPower, true);
     if (value) {
-      result = openstudio::istringEqual(value.get(), "autocalculate");
+      result = openstudio::istringEqual(value.get(), "AutoSize");
     }
     return result;
   }
@@ -213,11 +212,11 @@ namespace detail {
     return getDouble(OS_CoolingTower_TwoSpeedFields::LowFanSpeedUFactorTimesAreaValue,true);
   }
 
-  bool CoolingTowerTwoSpeed_Impl::isLowFanSpeedUFactorTimesAreaValueAutocalculated() const {
+  bool CoolingTowerTwoSpeed_Impl::isLowFanSpeedUFactorTimesAreaValueAutosized() const {
     bool result = false;
     boost::optional<std::string> value = getString(OS_CoolingTower_TwoSpeedFields::LowFanSpeedUFactorTimesAreaValue, true);
     if (value) {
-      result = openstudio::istringEqual(value.get(), "autocalculate");
+      result = openstudio::istringEqual(value.get(), "AutoSize");
     }
     return result;
   }
@@ -240,11 +239,11 @@ namespace detail {
     return isEmpty(OS_CoolingTower_TwoSpeedFields::FreeConvectionRegimeAirFlowRate);
   }
 
-  bool CoolingTowerTwoSpeed_Impl::isFreeConvectionRegimeAirFlowRateAutocalculated() const {
+  bool CoolingTowerTwoSpeed_Impl::isFreeConvectionRegimeAirFlowRateAutosized() const {
     bool result = false;
     boost::optional<std::string> value = getString(OS_CoolingTower_TwoSpeedFields::FreeConvectionRegimeAirFlowRate, true);
     if (value) {
-      result = openstudio::istringEqual(value.get(), "autocalculate");
+      result = openstudio::istringEqual(value.get(), "AutoSize");
     }
     return result;
   }
@@ -267,11 +266,11 @@ namespace detail {
     return isEmpty(OS_CoolingTower_TwoSpeedFields::FreeConvectionRegimeUFactorTimesAreaValue);
   }
 
-  bool CoolingTowerTwoSpeed_Impl::isFreeConvectionRegimeUFactorTimesAreaValueAutocalculated() const {
+  bool CoolingTowerTwoSpeed_Impl::isFreeConvectionRegimeUFactorTimesAreaValueAutosized() const {
     bool result = false;
     boost::optional<std::string> value = getString(OS_CoolingTower_TwoSpeedFields::FreeConvectionRegimeUFactorTimesAreaValue, true);
     if (value) {
-      result = openstudio::istringEqual(value.get(), "autocalculate");
+      result = openstudio::istringEqual(value.get(), "AutoSize");
     }
     return result;
   }
@@ -314,11 +313,11 @@ namespace detail {
     return getDouble(OS_CoolingTower_TwoSpeedFields::LowSpeedNominalCapacity,true);
   }
 
-  bool CoolingTowerTwoSpeed_Impl::isLowSpeedNominalCapacityAutocalculated() const {
+  bool CoolingTowerTwoSpeed_Impl::isLowSpeedNominalCapacityAutosized() const {
     bool result = false;
     boost::optional<std::string> value = getString(OS_CoolingTower_TwoSpeedFields::LowSpeedNominalCapacity, true);
     if (value) {
-      result = openstudio::istringEqual(value.get(), "autocalculate");
+      result = openstudio::istringEqual(value.get(), "AutoSize");
     }
     return result;
   }
@@ -337,11 +336,11 @@ namespace detail {
     return getDouble(OS_CoolingTower_TwoSpeedFields::FreeConvectionNominalCapacity,true);
   }
 
-  bool CoolingTowerTwoSpeed_Impl::isFreeConvectionNominalCapacityAutocalculated() const {
+  bool CoolingTowerTwoSpeed_Impl::isFreeConvectionNominalCapacityAutosized() const {
     bool result = false;
     boost::optional<std::string> value = getString(OS_CoolingTower_TwoSpeedFields::FreeConvectionNominalCapacity, true);
     if (value) {
-      result = openstudio::istringEqual(value.get(), "autocalculate");
+      result = openstudio::istringEqual(value.get(), "AutoSize");
     }
     return result;
   }
@@ -554,8 +553,8 @@ namespace detail {
     return result;
   }
 
-  void CoolingTowerTwoSpeed_Impl::autocalculateLowFanSpeedAirFlowRate() {
-    bool result = setString(OS_CoolingTower_TwoSpeedFields::LowFanSpeedAirFlowRate, "autocalculate");
+  void CoolingTowerTwoSpeed_Impl::autosizeLowFanSpeedAirFlowRate() {
+    bool result = setString(OS_CoolingTower_TwoSpeedFields::LowFanSpeedAirFlowRate, "AutoSize");
     OS_ASSERT(result);
   }
 
@@ -577,8 +576,8 @@ namespace detail {
     return result;
   }
 
-  void CoolingTowerTwoSpeed_Impl::autocalculateLowFanSpeedFanPower() {
-    bool result = setString(OS_CoolingTower_TwoSpeedFields::LowFanSpeedFanPower, "autocalculate");
+  void CoolingTowerTwoSpeed_Impl::autosizeLowFanSpeedFanPower() {
+    bool result = setString(OS_CoolingTower_TwoSpeedFields::LowFanSpeedFanPower, "AutoSize");
     OS_ASSERT(result);
   }
 
@@ -609,8 +608,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoolingTowerTwoSpeed_Impl::autocalculateLowFanSpeedUFactorTimesAreaValue() {
-    bool result = setString(OS_CoolingTower_TwoSpeedFields::LowFanSpeedUFactorTimesAreaValue, "autocalculate");
+  void CoolingTowerTwoSpeed_Impl::autosizeLowFanSpeedUFactorTimesAreaValue() {
+    bool result = setString(OS_CoolingTower_TwoSpeedFields::LowFanSpeedUFactorTimesAreaValue, "AutoSize");
     OS_ASSERT(result);
   }
 
@@ -641,8 +640,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoolingTowerTwoSpeed_Impl::autocalculateFreeConvectionRegimeAirFlowRate() {
-    bool result = setString(OS_CoolingTower_TwoSpeedFields::FreeConvectionRegimeAirFlowRate, "autocalculate");
+  void CoolingTowerTwoSpeed_Impl::autosizeFreeConvectionRegimeAirFlowRate() {
+    bool result = setString(OS_CoolingTower_TwoSpeedFields::FreeConvectionRegimeAirFlowRate, "AutoSize");
     OS_ASSERT(result);
   }
 
@@ -673,8 +672,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoolingTowerTwoSpeed_Impl::autocalculateFreeConvectionRegimeUFactorTimesAreaValue() {
-    bool result = setString(OS_CoolingTower_TwoSpeedFields::FreeConvectionRegimeUFactorTimesAreaValue, "autocalculate");
+  void CoolingTowerTwoSpeed_Impl::autosizeFreeConvectionRegimeUFactorTimesAreaValue() {
+    bool result = setString(OS_CoolingTower_TwoSpeedFields::FreeConvectionRegimeUFactorTimesAreaValue, "AutoSize");
     OS_ASSERT(result);
   }
 
@@ -742,8 +741,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoolingTowerTwoSpeed_Impl::autocalculateLowSpeedNominalCapacity() {
-    bool result = setString(OS_CoolingTower_TwoSpeedFields::LowSpeedNominalCapacity, "autocalculate");
+  void CoolingTowerTwoSpeed_Impl::autosizeLowSpeedNominalCapacity() {
+    bool result = setString(OS_CoolingTower_TwoSpeedFields::LowSpeedNominalCapacity, "AutoSize");
     OS_ASSERT(result);
   }
 
@@ -774,8 +773,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoolingTowerTwoSpeed_Impl::autocalculateFreeConvectionNominalCapacity() {
-    bool result = setString(OS_CoolingTower_TwoSpeedFields::FreeConvectionNominalCapacity, "autocalculate");
+  void CoolingTowerTwoSpeed_Impl::autosizeFreeConvectionNominalCapacity() {
+    bool result = setString(OS_CoolingTower_TwoSpeedFields::FreeConvectionNominalCapacity, "AutoSize");
     OS_ASSERT(result);
   }
 
@@ -973,24 +972,14 @@ CoolingTowerTwoSpeed::CoolingTowerTwoSpeed(const Model& model)
 {
   OS_ASSERT(getImpl<detail::CoolingTowerTwoSpeed_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_CoolingTower_TwoSpeedFields::WaterInletNodeName
-  //     OS_CoolingTower_TwoSpeedFields::WaterOutletNodeName
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
-  // ok = setWaterInletNode();
-  OS_ASSERT(ok);
-  // ok = setWaterOutletNode();
-  OS_ASSERT(ok);
-  // ok = setHighFanSpeedAirFlowRate();
-  OS_ASSERT(ok);
-  // ok = setHighFanSpeedFanPower();
-  OS_ASSERT(ok);
-  // ok = setLowFanSpeedAirFlowRate();
-  OS_ASSERT(ok);
-  // ok = setLowFanSpeedFanPower();
-  OS_ASSERT(ok);
+  autosizeDesignWaterFlowRate();
+  autosizeHighFanSpeedAirFlowRate();
+  autosizeHighFanSpeedFanPower();
+  autosizeHighFanSpeedUFactorTimesAreaValue();
+  autosizeLowFanSpeedAirFlowRate();
+  autosizeLowFanSpeedFanPower();
+  autosizeLowFanSpeedUFactorTimesAreaValue();
+  setSizingFactor(1.0);
 }
 
 IddObjectType CoolingTowerTwoSpeed::iddObjectType() {
@@ -1053,8 +1042,8 @@ boost::optional<double> CoolingTowerTwoSpeed::lowFanSpeedAirFlowRate() const {
   return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->lowFanSpeedAirFlowRate();
 }
 
-bool CoolingTowerTwoSpeed::isLowFanSpeedAirFlowRateAutocalculated() const {
-  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->isLowFanSpeedAirFlowRateAutocalculated();
+bool CoolingTowerTwoSpeed::isLowFanSpeedAirFlowRateAutosized() const {
+  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->isLowFanSpeedAirFlowRateAutosized();
 }
 
 double CoolingTowerTwoSpeed::lowFanSpeedAirFlowRateSizingFactor() const {
@@ -1069,8 +1058,8 @@ boost::optional<double> CoolingTowerTwoSpeed::lowFanSpeedFanPower() const {
   return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->lowFanSpeedFanPower();
 }
 
-bool CoolingTowerTwoSpeed::isLowFanSpeedFanPowerAutocalculated() const {
-  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->isLowFanSpeedFanPowerAutocalculated();
+bool CoolingTowerTwoSpeed::isLowFanSpeedFanPowerAutosized() const {
+  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->isLowFanSpeedFanPowerAutosized();
 }
 
 double CoolingTowerTwoSpeed::lowFanSpeedFanPowerSizingFactor() const {
@@ -1085,8 +1074,8 @@ boost::optional<double> CoolingTowerTwoSpeed::lowFanSpeedUFactorTimesAreaValue()
   return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->lowFanSpeedUFactorTimesAreaValue();
 }
 
-bool CoolingTowerTwoSpeed::isLowFanSpeedUFactorTimesAreaValueAutocalculated() const {
-  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->isLowFanSpeedUFactorTimesAreaValueAutocalculated();
+bool CoolingTowerTwoSpeed::isLowFanSpeedUFactorTimesAreaValueAutosized() const {
+  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->isLowFanSpeedUFactorTimesAreaValueAutosized();
 }
 
 double CoolingTowerTwoSpeed::lowFanSpeedUFactorTimesAreaSizingFactor() const {
@@ -1105,8 +1094,8 @@ bool CoolingTowerTwoSpeed::isFreeConvectionRegimeAirFlowRateDefaulted() const {
   return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->isFreeConvectionRegimeAirFlowRateDefaulted();
 }
 
-bool CoolingTowerTwoSpeed::isFreeConvectionRegimeAirFlowRateAutocalculated() const {
-  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->isFreeConvectionRegimeAirFlowRateAutocalculated();
+bool CoolingTowerTwoSpeed::isFreeConvectionRegimeAirFlowRateAutosized() const {
+  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->isFreeConvectionRegimeAirFlowRateAutosized();
 }
 
 double CoolingTowerTwoSpeed::freeConvectionRegimeAirFlowRateSizingFactor() const {
@@ -1125,8 +1114,8 @@ bool CoolingTowerTwoSpeed::isFreeConvectionRegimeUFactorTimesAreaValueDefaulted(
   return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->isFreeConvectionRegimeUFactorTimesAreaValueDefaulted();
 }
 
-bool CoolingTowerTwoSpeed::isFreeConvectionRegimeUFactorTimesAreaValueAutocalculated() const {
-  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->isFreeConvectionRegimeUFactorTimesAreaValueAutocalculated();
+bool CoolingTowerTwoSpeed::isFreeConvectionRegimeUFactorTimesAreaValueAutosized() const {
+  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->isFreeConvectionRegimeUFactorTimesAreaValueAutosized();
 }
 
 double CoolingTowerTwoSpeed::freeConvectionUFactorTimesAreaValueSizingFactor() const {
@@ -1161,8 +1150,8 @@ boost::optional<double> CoolingTowerTwoSpeed::lowSpeedNominalCapacity() const {
   return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->lowSpeedNominalCapacity();
 }
 
-bool CoolingTowerTwoSpeed::isLowSpeedNominalCapacityAutocalculated() const {
-  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->isLowSpeedNominalCapacityAutocalculated();
+bool CoolingTowerTwoSpeed::isLowSpeedNominalCapacityAutosized() const {
+  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->isLowSpeedNominalCapacityAutosized();
 }
 
 double CoolingTowerTwoSpeed::lowSpeedNominalCapacitySizingFactor() const {
@@ -1177,8 +1166,8 @@ boost::optional<double> CoolingTowerTwoSpeed::freeConvectionNominalCapacity() co
   return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->freeConvectionNominalCapacity();
 }
 
-bool CoolingTowerTwoSpeed::isFreeConvectionNominalCapacityAutocalculated() const {
-  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->isFreeConvectionNominalCapacityAutocalculated();
+bool CoolingTowerTwoSpeed::isFreeConvectionNominalCapacityAutosized() const {
+  return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->isFreeConvectionNominalCapacityAutosized();
 }
 
 double CoolingTowerTwoSpeed::freeConvectionNominalCapacitySizingFactor() const {
@@ -1333,8 +1322,8 @@ bool CoolingTowerTwoSpeed::setLowFanSpeedAirFlowRate(double lowFanSpeedAirFlowRa
   return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->setLowFanSpeedAirFlowRate(lowFanSpeedAirFlowRate);
 }
 
-void CoolingTowerTwoSpeed::autocalculateLowFanSpeedAirFlowRate() {
-  getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autocalculateLowFanSpeedAirFlowRate();
+void CoolingTowerTwoSpeed::autosizeLowFanSpeedAirFlowRate() {
+  getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizeLowFanSpeedAirFlowRate();
 }
 
 bool CoolingTowerTwoSpeed::setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor) {
@@ -1349,8 +1338,8 @@ bool CoolingTowerTwoSpeed::setLowFanSpeedFanPower(double lowFanSpeedFanPower) {
   return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->setLowFanSpeedFanPower(lowFanSpeedFanPower);
 }
 
-void CoolingTowerTwoSpeed::autocalculateLowFanSpeedFanPower() {
-  getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autocalculateLowFanSpeedFanPower();
+void CoolingTowerTwoSpeed::autosizeLowFanSpeedFanPower() {
+  getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizeLowFanSpeedFanPower();
 }
 
 bool CoolingTowerTwoSpeed::setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor) {
@@ -1369,8 +1358,8 @@ void CoolingTowerTwoSpeed::resetLowFanSpeedUFactorTimesAreaValue() {
   getImpl<detail::CoolingTowerTwoSpeed_Impl>()->resetLowFanSpeedUFactorTimesAreaValue();
 }
 
-void CoolingTowerTwoSpeed::autocalculateLowFanSpeedUFactorTimesAreaValue() {
-  getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autocalculateLowFanSpeedUFactorTimesAreaValue();
+void CoolingTowerTwoSpeed::autosizeLowFanSpeedUFactorTimesAreaValue() {
+  getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizeLowFanSpeedUFactorTimesAreaValue();
 }
 
 bool CoolingTowerTwoSpeed::setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor) {
@@ -1389,8 +1378,8 @@ void CoolingTowerTwoSpeed::resetFreeConvectionRegimeAirFlowRate() {
   getImpl<detail::CoolingTowerTwoSpeed_Impl>()->resetFreeConvectionRegimeAirFlowRate();
 }
 
-void CoolingTowerTwoSpeed::autocalculateFreeConvectionRegimeAirFlowRate() {
-  getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autocalculateFreeConvectionRegimeAirFlowRate();
+void CoolingTowerTwoSpeed::autosizeFreeConvectionRegimeAirFlowRate() {
+  getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizeFreeConvectionRegimeAirFlowRate();
 }
 
 bool CoolingTowerTwoSpeed::setFreeConvectionRegimeAirFlowRateSizingFactor(double freeConvectionRegimeAirFlowRateSizingFactor) {
@@ -1409,8 +1398,8 @@ void CoolingTowerTwoSpeed::resetFreeConvectionRegimeUFactorTimesAreaValue() {
   getImpl<detail::CoolingTowerTwoSpeed_Impl>()->resetFreeConvectionRegimeUFactorTimesAreaValue();
 }
 
-void CoolingTowerTwoSpeed::autocalculateFreeConvectionRegimeUFactorTimesAreaValue() {
-  getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autocalculateFreeConvectionRegimeUFactorTimesAreaValue();
+void CoolingTowerTwoSpeed::autosizeFreeConvectionRegimeUFactorTimesAreaValue() {
+  getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizeFreeConvectionRegimeUFactorTimesAreaValue();
 }
 
 bool CoolingTowerTwoSpeed::setFreeConvectionUFactorTimesAreaValueSizingFactor(double freeConvectionUFactorTimesAreaValueSizingFactor) {
@@ -1453,8 +1442,8 @@ void CoolingTowerTwoSpeed::resetLowSpeedNominalCapacity() {
   getImpl<detail::CoolingTowerTwoSpeed_Impl>()->resetLowSpeedNominalCapacity();
 }
 
-void CoolingTowerTwoSpeed::autocalculateLowSpeedNominalCapacity() {
-  getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autocalculateLowSpeedNominalCapacity();
+void CoolingTowerTwoSpeed::autosizeLowSpeedNominalCapacity() {
+  getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizeLowSpeedNominalCapacity();
 }
 
 bool CoolingTowerTwoSpeed::setLowSpeedNominalCapacitySizingFactor(double lowSpeedNominalCapacitySizingFactor) {
@@ -1473,8 +1462,8 @@ void CoolingTowerTwoSpeed::resetFreeConvectionNominalCapacity() {
   getImpl<detail::CoolingTowerTwoSpeed_Impl>()->resetFreeConvectionNominalCapacity();
 }
 
-void CoolingTowerTwoSpeed::autocalculateFreeConvectionNominalCapacity() {
-  getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autocalculateFreeConvectionNominalCapacity();
+void CoolingTowerTwoSpeed::autosizeFreeConvectionNominalCapacity() {
+  getImpl<detail::CoolingTowerTwoSpeed_Impl>()->autosizeFreeConvectionNominalCapacity();
 }
 
 bool CoolingTowerTwoSpeed::setFreeConvectionNominalCapacitySizingFactor(double freeConvectionNominalCapacitySizingFactor) {
