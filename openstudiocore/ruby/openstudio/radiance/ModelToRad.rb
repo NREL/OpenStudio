@@ -212,8 +212,6 @@ runmanager.getJobs.each { |job|
 if options.verbose == 'v'
   radDir = outPath / OpenStudio::Path.new("radiance")
   puts "Done. Radiance model located at: #{radDir}."
-else 
-  puts "Done."
 end
 
 

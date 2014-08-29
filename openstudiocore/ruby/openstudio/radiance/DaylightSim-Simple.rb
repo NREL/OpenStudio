@@ -358,23 +358,43 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
   # 3-phase method
   if t_options.z == true
 
-    # compute daylight matrices
+    # compute daylight matrices for controlled windows
+    
     system("oconv materials/materials.rad model.rad > model_dc.oct")
     windowMaps = File::open("#{t_outPath}/bsdf/mapping.rad")
     windowMaps.each do |row|
       next if row[0] == "#"
       wg=row.split(",")[0]
+      next if wg[2].to_i == 0 # skip uncontrolled windows, use single phase for those.
       puts "computing daylight matrix for window group #{wg}..."
       exec_statement("rfluxmtx -fa -v #{t_outPath}/scene/glazing/#{wg}.rad #{t_outPath}/skies/dc_sky.rad -i model_dc.oct > #{t_outPath}/output/dc/#{wg}.dmx")
     end # maps
 
-    # compute view matrices
-    puts "computing view matri(ces) for merged_space.map..."
-    exec_statement("#{t_catCommand} #{t_outPath}/materials/materials_vmx.rad #{t_outPath}/scene/glazing/WG*.rad > receivers_vmx.rad")
+    # compute view matrices for controlled windows
+
+    wgInput = Dir.glob("#{t_outPath}/scene/glazing/WG*.rad")[1..-1]
+    puts "computing view matri(ces) for controlled windows: #{wgInput}"
+    exec_statement("#{t_catCommand} #{t_outPath}/materials/materials_vmx.rad #{wgInput.join(" ")} > receivers_vmx.rad")
     exec_statement("oconv #{t_outPath}/materials/materials.rad #{t_outPath}/scene/*.rad > model_vmx.oct")
     # TODO: need to add support for Windows (no wc, use "FIND")
     exec_statement("rfluxmtx -faa -n #{t_simCores} -y `wc -l < #{t_outPath}/numeric/merged_space.map` -I -v - receivers_vmx.rad -i model_vmx.oct < \
       #{t_outPath}/numeric/merged_space.map")
+
+    
+    # compute view matrices for uncontrolled windows
+
+    puts "computing view matrix for uncontrolled windows..."
+    rtrace_args = "#{t_options.vmx}"
+    system("oconv \"#{t_outPath}/materials/materials.rad\" model.rad \
+      \"#{t_outPath}/skies/dc_sky.rad\" > model_dc.oct")
+    # system("oconv \"#{t_outPath}/skies/dc_sky.rad\" > model_dc_skyonly.oct")
+    puts "#{Time.now.getutc}: computing sky-to-point daylight coefficients (single phase)..."
+    exec_statement("#{t_catCommand} \"#{t_outPath}/numeric/merged_space.map\" \
+      | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{t_options.tregVars} \
+      -o \"#{t_outPath}/output/dc/WG0.vmx\" \
+      -m skyglow model_dc.oct")
+    puts "#{Time.now.getutc}: daylight coefficients computed, \
+    stored in #{t_outPath}/output/dc/merged_space/maps"
 
     puts "#{Time.now.getutc}: daylight coefficients computed, stored in #{t_outPath}/output/dc/"
 
@@ -604,20 +624,26 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
       #blinds_closed = false
     windowMaps = File::open("#{t_outPath}/bsdf/mapping.rad")
     windowMaps.each do |row|
+      # skip header
       next if row[0] == "#"
       wg = row.split(",")[0]
+      # do uncontrolled windows (WG0)
+      if wg[2].to_i == 0
+        simulations << "dctimestep -n 8760 #{t_outPath}/output/dc/#{wg}.vmx annual-sky.mtx > #{wg}.irr"
+      end
       next if wg[2].to_i == 0
+      # do all controlled window groups
       wgXMLs = row.split(",")[4..-1]
       if wgXMLs.size > 2
         puts "WARN: Window Group #{wg} has #{wgXMLs.size.to_s} BSDFs (2 max supported by OpenStudio application)."
       end
       wgXMLs.each_index do |i|
         simulations << "dctimestep -n 8760 #{t_outPath}/output/dc/#{wg}.vmx #{t_outPath}/bsdf/#{wgXMLs[i].strip} #{t_outPath}/output/dc/#{wg}.dmx \\
-        annual-sky.mtx > #{wg}_#{wgXMLs[i].split[0]}.ill"
+        annual-sky.mtx > #{wg}_#{wgXMLs[i].split[0]}.irr"
+
       end
     end
-    puts "INFO: #{simulations.size.to_s} total simulations required:\n"
-    puts simulations
+    puts "INFO: #{simulations.size.to_s} annual simulations required\n"
 
     # return the bsdf index for window group given by index at this hour
     windowMapping = lambda { |index, hour| 
@@ -631,7 +657,7 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
 
   else
     # 2-phase 
-    simulations << "dctimestep -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" \"#{t_outPath / OpenStudio::Path.new("daymtx.out")}\" "
+    simulations << "dctimestep -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" \"#{t_outPath / OpenStudio::Path.new("annual-sky.mtx")}\" "
 
      # return the bsdf index for window group given by index at this hour
     windowMapping = lambda { |index, hour| return 0 }
