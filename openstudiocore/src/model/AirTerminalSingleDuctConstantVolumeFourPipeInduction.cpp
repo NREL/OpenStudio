@@ -132,29 +132,45 @@ namespace detail {
             {
               Node inletNode(_model);
 
+              ModelObject thisObject = getObject<ModelObject>();
+
               _model.connect( sourceModelObject.get(),
                               sourcePort.get(),
                               inletNode,
                               inletNode.inletPort() );
-
+              
               _model.connect( inletNode,
                               inletNode.outletPort(),
-                              this->getObject<ModelObject>(),
-                              this->inletPort() );
+                              thisObject,
+                              inletPort() );
 
-              _model.connect( this->getObject<ModelObject>(),
+              _model.connect( thisObject,
                               outletPort(),
                               node,
                               node.inletPort() );
 
               if( thermalZone )
               {
-                AirTerminalSingleDuctConstantVolumeFourPipeInduction mo = this->getObject<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
+                Node inducedAirInletNode(_model);
+
+                PortList exhaustPortList = thermalZone->exhaustPortList();
+
+                _model.connect( exhaustPortList,
+                                exhaustPortList.nextPort(),
+                                inducedAirInletNode,
+                                inducedAirInletNode.inletPort() );
+
+                _model.connect( inducedAirInletNode,
+                                inducedAirInletNode.outletPort(),
+                                thisObject,
+                                inducedAirInletPort() );
+
+                ModelObject mo = this->getObject<ModelObject>();
 
                 thermalZone->addEquipment(mo);
               }
 
-              return true;
+              return true; 
             }
           }
         }
@@ -169,13 +185,14 @@ namespace detail {
   {
     Model _model = this->model();
     ModelObject thisObject = this->getObject<ModelObject>();
+    boost::optional<PlantLoop> loop;
 
-    OptionalHVACComponent _coolingCoil = coolingCoil();
     HVACComponent _heatingCoil = heatingCoil();
+    boost::optional<HVACComponent> _coolingCoil = coolingCoil();
 
     boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
     boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());
-
+    
     boost::optional<ModelObject> targetModelObject = this->outletModelObject();
     boost::optional<unsigned> targetPort = this->connectedObjectPort(this->outletPort());
 
@@ -187,12 +204,14 @@ namespace detail {
       if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
       {
         thermalZone.removeEquipment(thisObject);
-
         break;
       }
     }
 
-    boost::optional<PlantLoop> loop;
+    if( boost::optional<Node> t_inducedAirInletNode = inducedAirInletNode() )
+    {
+      t_inducedAirInletNode->remove();
+    }
 
     if( sourcePort && sourceModelObject
         && targetPort && targetModelObject )
@@ -529,6 +548,18 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::HeatingCoilName);
   }
 
+  boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::inducedAirInletNode() const {
+    boost::optional<Node> result;
+    if( auto modelObject = connectedObject(inducedAirInletPort()) ) {
+      result = modelObject->optionalCast<Node>();
+    }
+    return result;
+  }
+
+  unsigned AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::inducedAirInletPort() const {
+    return OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::InducedAirInletNodeName;
+  }
+
 } // detail
 
 AirTerminalSingleDuctConstantVolumeFourPipeInduction::AirTerminalSingleDuctConstantVolumeFourPipeInduction(const Model& model, HVACComponent& heatingCoil)
@@ -536,16 +567,12 @@ AirTerminalSingleDuctConstantVolumeFourPipeInduction::AirTerminalSingleDuctConst
 {
   OS_ASSERT(getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::SupplyAirInletNodeName
-  //     OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::InducedAirInletNodeName
-  //     OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::AirOutletNodeName
-  //     OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::HeatingCoilName
-  bool ok = true;
-  // ok = setMaximumTotalAirFlowRate();
-  OS_ASSERT(ok);
-  ok = setHeatingCoil(heatingCoil);
-  OS_ASSERT(ok);
+  autosizeMaximumTotalAirFlowRate();
+  autosizeMaximumColdWaterFlowRate();
+  setHeatingCoil(heatingCoil);
+  setMinimumColdWaterFlowRate(0.0);
+  setCoolingConvergenceTolerance(0.001);
+  setString(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::ZoneMixerName,"");
 }
 
 IddObjectType AirTerminalSingleDuctConstantVolumeFourPipeInduction::iddObjectType() {
@@ -718,6 +745,14 @@ bool AirTerminalSingleDuctConstantVolumeFourPipeInduction::setCoolingConvergence
 
 void AirTerminalSingleDuctConstantVolumeFourPipeInduction::resetCoolingConvergenceTolerance() {
   getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->resetCoolingConvergenceTolerance();
+}
+
+boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeInduction::inducedAirInletNode() const {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->inducedAirInletNode();
+}
+
+unsigned AirTerminalSingleDuctConstantVolumeFourPipeInduction::inducedAirInletPort() const {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl>()->inducedAirInletPort();
 }
 
 /// @cond

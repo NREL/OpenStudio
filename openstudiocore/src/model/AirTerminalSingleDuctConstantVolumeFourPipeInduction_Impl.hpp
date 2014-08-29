@@ -74,6 +74,10 @@ namespace detail {
 
     virtual unsigned outletPort();
 
+    boost::optional<Node> inducedAirInletNode() const;
+
+    unsigned inducedAirInletPort() const;
+
     //@}
     /** @name Getters */
     //@{

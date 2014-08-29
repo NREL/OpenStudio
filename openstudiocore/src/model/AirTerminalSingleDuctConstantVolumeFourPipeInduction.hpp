@@ -28,6 +28,7 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
+class Node;
 
 namespace detail {
 
@@ -89,6 +90,10 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeInduction : public St
   double coolingConvergenceTolerance() const;
 
   bool isCoolingConvergenceToleranceDefaulted() const;
+
+  boost::optional<Node> inducedAirInletNode() const;
+
+  unsigned inducedAirInletPort() const;
 
   //@}
   /** @name Setters */
