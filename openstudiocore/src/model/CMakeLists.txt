@@ -1113,6 +1113,7 @@ set(${target_name}_moc
   ZoneHVACBaseboardConvectiveElectric_Impl.hpp
   ZoneHVACIdealLoadsAirSystem_Impl.hpp
   ZoneHVACFourPipeFanCoil_Impl.hpp
+  ZoneHVACHighTemperatureRadiant_Impl.hpp
   ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp
   ZoneHVACLowTempRadiantVarFlow_Impl.hpp
   ZoneHVACPackagedTerminalHeatPump_Impl.hpp

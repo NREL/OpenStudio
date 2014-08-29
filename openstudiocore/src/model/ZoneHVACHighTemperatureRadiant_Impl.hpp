@@ -132,9 +132,9 @@ namespace detail {
 
     void removeFromThermalZone();
 
-    virtual unsigned inletPort();
+    virtual unsigned inletPort() const;
 
-    virtual unsigned outletPort();
+    virtual unsigned outletPort() const;
     //@}
 
    protected:
