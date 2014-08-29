@@ -375,6 +375,15 @@ void RubyJobBuilder::initializeFromParams(const JobParams &t_params,
       }
     }
   } catch (const std::exception &) {}
+
+  if (t_params.has("workflowjobkey"))
+  {
+    if (!t_params.get("workflowjobkey").children.empty())
+    {
+      m_jobkeyname = t_params.get("workflowjobkey").children[0].value;
+    }
+  }
+
 }
 
 

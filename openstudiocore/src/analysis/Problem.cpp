@@ -978,6 +978,7 @@ namespace detail {
               if (updateWorkItem) {
                 rjb = runmanager::RubyJobBuilder(newVersion,newArguments);
                 runmanager::WorkItem newWorkItem = rjb.toWorkItem();
+                newWorkItem.jobkeyname = workItem.jobkeyname;
                 step.set(newWorkItem);
               }
             }
