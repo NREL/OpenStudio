@@ -1796,6 +1796,21 @@ OASupplyBranchItem::OASupplyBranchItem( std::vector<model::ModelObject> supplyMo
         ++reliefIt;
       }
     }
+    else if(boost::optional<model::WaterToAirComponent> comp = supplyIt->optionalCast<model::WaterToAirComponent>())
+    {
+      GridItem * gridItem = new OAReliefStraightItem(this); 
+      gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
+      if( comp->isRemovable() )
+      {
+        gridItem->setDeletable(true);
+      }
+      m_gridItems.push_back(gridItem);
+
+      if( (reliefIt < reliefModelObjects.end()) && (! reliefIt->optionalCast<model::AirToAirComponent>()) )
+      {
+        ++reliefIt;
+      }
+    }
     ++supplyIt;
   }
 
@@ -1872,6 +1887,20 @@ OAReliefBranchItem::OAReliefBranchItem( std::vector<model::ModelObject> reliefMo
       }
     }
     else if(boost::optional<model::StraightComponent> comp = reliefIt->optionalCast<model::StraightComponent>())
+    {
+      GridItem * gridItem = new OAReliefStraightItem(this); 
+      gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
+      if( comp->isRemovable() )
+      {
+        gridItem->setDeletable(true);
+      }
+      m_gridItems.push_back(gridItem);
+      if( (supplyIt < supplyModelObjects.end()) && (! supplyIt->optionalCast<model::AirToAirComponent>()) )
+      {
+        ++supplyIt;
+      }
+    }
+    else if(boost::optional<model::WaterToAirComponent> comp = reliefIt->optionalCast<model::WaterToAirComponent>())
     {
       GridItem * gridItem = new OAReliefStraightItem(this); 
       gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
