@@ -17,13 +17,35 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 #include "InspectorGadget.hpp"
-#include "IGLineEdit.hpp"
-#include "IGSpinBoxes.hpp"
-#include "BridgeClasses.hpp"
-#include "IGPrecisionDialog.hpp"
 
-#include <iostream>
+#include "BridgeClasses.hpp"
+#include "IGLineEdit.hpp"
+#include "IGPrecisionDialog.hpp"
+#include "IGSpinBoxes.hpp"
+
+#include "../model/Model.hpp"
+#include "../model/ParentObject.hpp"
+#include "../model/ParentObject_Impl.hpp"
+
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/StringHelpers.hpp"
+
+#include "../utilities/idd/IddField.hpp"
+#include "../utilities/idd/IddFieldProperties.hpp"
+#include "../utilities/idd/IddKey.hpp"
+#include "../utilities/idd/IddObject.hpp"
+#include "../utilities/idd/IddObjectProperties.hpp"
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
+
+#include "../utilities/units/OSOptionalQuantity.hpp"
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/QuantityConverter.hpp"
+
+#include <boost/numeric/conversion/cast.hpp>
+
 #include <float.h>
+#include <iostream>
 #include <limits.h>
 #include <vector>
 
@@ -38,29 +60,8 @@
 #include <QPushButton>
 #include <QRadioButton>
 #include <QScrollArea>
-#include <QVBoxLayout>
 #include <QTimer>
-
-#include <boost/numeric/conversion/cast.hpp>  
-
-#include "../model/Model.hpp"
-#include "../model/ParentObject.hpp"
-#include "../model/ParentObject_Impl.hpp"
-
-#include "../utilities/idf/IdfExtensibleGroup.hpp"
-
-#include "../utilities/idd/IddObject.hpp"
-#include "../utilities/idd/IddField.hpp"
-#include "../utilities/idd/IddFieldProperties.hpp"
-#include "../utilities/idd/IddObjectProperties.hpp"
-#include "../utilities/idd/IddKey.hpp"
-
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
-#include "../utilities/units/QuantityConverter.hpp"
-#include "../utilities/core/Assert.hpp"
-#include "../utilities/core/Compare.hpp"
-#include "../utilities/core/StringHelpers.hpp"
+#include <QVBoxLayout>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -528,15 +529,33 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
   hbox->setSpacing(0);
   hbox->setMargin(0);
 
-  if( level == AccessPolicy::LOCKED )
-  {
-    string stripped(val);
-    //stripchar(stripped,'_');
+  if( level == AccessPolicy::LOCKED ) 
+  { 
+    string stripped(val); 
+    //stripchar(stripped,'_'); 
     QLabel* label = new QLabel( QString(stripped.c_str()), parent  );
     label->setObjectName("IGHeader");
-    // Qt::Alignment a = Qt::AlignHCenter;
-    hbox->addWidget( label );
     label->setStyleSheet("font : bold");
+    // Qt::Alignment a = Qt::AlignHCenter;
+    hbox->addWidget(label);
+
+    hbox->addStretch();
+
+    m_removeButton = new QPushButton(this);
+    hbox->addWidget(m_removeButton);
+
+    QString style;
+    style.append("QWidget { ");
+    style.append("border: none;");
+    style.append(" background-image: url(\":/images/delete.png\")");
+    style.append("}");
+
+    m_removeButton->setFlat(true);
+    m_removeButton->setStyleSheet(style);
+    m_removeButton->setFixedSize(20, 20);
+
+    auto isConnected = connect(m_removeButton, SIGNAL(clicked(bool)), this, SIGNAL(removeButtonClicked(bool)));
+    OS_ASSERT(isConnected);
   }
   else
   {

@@ -19,29 +19,29 @@
 
 #include "MainRightColumnController.hpp"
 
+#include "BuildingStoryInspectorView.hpp"
+#include "ConstructionsTabController.hpp"
 #include "HorizontalTabWidget.hpp"
-#include "ModelObjectTypeListView.hpp"
 #include "InspectorController.hpp"
 #include "InspectorView.hpp"
-#include "OSDocument.hpp"
-#include "OSAppBase.hpp"
 #include "LocationTabController.hpp"
-#include "SchedulesTabController.hpp"
-#include "BuildingStoryInspectorView.hpp"
-#include "SpaceTypeInspectorView.hpp"
-#include "ThermalZonesView.hpp"
-#include "OSItem.hpp"
-#include "OSItemList.hpp"
+#include "ModelObjectTypeListView.hpp"
+#include "OSAppBase.hpp"
 #include "OSCollapsibleItem.hpp"
 #include "OSCollapsibleItemHeader.hpp"
+#include "OSDocument.hpp"
+#include "OSItem.hpp"
+#include "OSItemList.hpp"
+#include "SchedulesTabController.hpp"
 #include "ScriptFolderListView.hpp"
-#include "ConstructionsTabController.hpp"
+#include "SpaceTypeInspectorView.hpp"
+#include "ThermalZonesView.hpp"
 
-#include "../shared_gui_components/MeasureManager.hpp"
+#include "../shared_gui_components/EditController.hpp"
+#include "../shared_gui_components/EditView.hpp"
 #include "../shared_gui_components/LocalLibraryController.hpp"
 #include "../shared_gui_components/LocalLibraryView.hpp"
-#include "../shared_gui_components/EditView.hpp"
-#include "../shared_gui_components/EditController.hpp"
+#include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/OSViewSwitcher.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
@@ -89,6 +89,10 @@ MainRightColumnController::MainRightColumnController(const model::Model & model,
   // Inspector, we're keeping it around to be able to follow the units toggled
   m_inspectorController = std::shared_ptr<InspectorController>( new InspectorController() );
   connect(this, &MainRightColumnController::toggleUnitsClicked, m_inspectorController.get(), &InspectorController::toggleUnitsClicked);
+
+  auto isConnected = connect(m_inspectorController.get(), SIGNAL(itemRemoveClicked(OSItem *)), this, SIGNAL(itemRemoveClicked(OSItem *)));
+  OS_ASSERT(isConnected);
+
 }
 
 void MainRightColumnController::registerSystemItem(const Handle & systemHandle, SystemItem * systemItem)

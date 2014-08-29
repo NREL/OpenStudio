@@ -18,59 +18,50 @@
 **********************************************************************/
 
 #include "ModelSubTabView.hpp"
-#include "OSItemSelector.hpp"
-#include "OSItemSelectorButtons.hpp"
+
 #include "ModelObjectInspectorView.hpp"
+#include "ModelObjectItem.hpp"
 #include "ModelObjectListView.hpp"
 #include "ModelObjectTypeListView.hpp"
-#include "ModelObjectItem.hpp"
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
+#include "OSItemSelector.hpp"
+#include "OSItemSelectorButtons.hpp"
 
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
+
 #include "../utilities/core/Assert.hpp"
 
-#include <QStyleOption>
-#include <QPainter>
-#include <QVBoxLayout>
-#include <QLabel>
-#include <QPushButton>
-#include <QStackedWidget>
-#include <QGraphicsView>
-#include <QGraphicsScene>
-#include <QButtonGroup>
-#include <QResizeEvent>
-#include <QTimer>
-#include <QMouseEvent>
-#include <QCalendarWidget>
-#include <QGridLayout>
-#include <QRadioButton>
-
 #include <iostream>
+
+#include <QButtonGroup>
+#include <QCalendarWidget>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QGridLayout>
+#include <QLabel>
+#include <QMouseEvent>
+#include <QPainter>
+#include <QPushButton>
+#include <QRadioButton>
+#include <QResizeEvent>
+#include <QStackedWidget>
+#include <QStyleOption>
+#include <QTimer>
+#include <QVBoxLayout>
 
 namespace openstudio {
 
 ModelSubTabView::ModelSubTabView(OSItemSelector* itemSelector,
-                       ModelObjectInspectorView* modelObjectInspectorView,
-                       bool showGridViewLayout,
-                       QWidget * parent)
-                       : SubTabView(itemSelector, modelObjectInspectorView, showGridViewLayout, parent),
+  ModelObjectInspectorView* modelObjectInspectorView,
+  bool showGridViewLayout,
+  QWidget * parent)
+  : SubTabView(itemSelector, modelObjectInspectorView, showGridViewLayout, parent),
     m_modelObjectInspectorView(modelObjectInspectorView)
 {
   connect(this, &ModelSubTabView::dropZoneItemClicked, this, &ModelSubTabView::onDropZoneItemClicked);
-
-  // DLM: can we remove this?
-  //connect(itemSelector, &OSItemSelector::itemSelected, this, &ModelSubTabView::onItemSelected);
 }
-
-// DLM: what purpose does this serve? 
-//void ModelSubTabView::onItemSelected()
-//{
-//  boost::optional<model::ModelObject> mo;
-//
-//  emit modelObjectSelected(mo,false);
-//}
 
 ModelObjectInspectorView* ModelSubTabView::modelObjectInspectorView()
 {
@@ -86,78 +77,5 @@ void ModelSubTabView::onDropZoneItemClicked(OSItem* item)
     emit modelObjectSelected(modelObject, readOnly);
   }
 }
-
-/*
-
-void ModelSubTabView::addClicked()
-{
-  ModelObjectListView* modelObjectListView = qobject_cast<ModelObjectListView*>(m_itemSelector);
-  if (modelObjectListView){
-    IddObjectType iddObjectType = modelObjectListView->iddObjectType();
-    emit addObjectClicked(iddObjectType);
-  }
-
-  ModelObjectTypeListView* modelObjectTypeListView = qobject_cast<ModelObjectTypeListView*>(m_itemSelector);
-  if (modelObjectTypeListView){
-    IddObjectType iddObjectType = modelObjectTypeListView->currentIddObjectType();
-    emit addObjectClicked(iddObjectType);
-  }
-}
-
-void ModelSubTabView::copyClicked()
-{
-  ModelObjectListView* modelObjectListView = qobject_cast<ModelObjectListView*>(m_itemSelector);
-  if (modelObjectListView){
-    boost::optional<openstudio::model::ModelObject> selectedModelObject = modelObjectListView->selectedModelObject();
-    if (selectedModelObject){
-      emit copyObjectClicked(*selectedModelObject);
-    }
-  }
-
-  ModelObjectTypeListView* modelObjectTypeListView = qobject_cast<ModelObjectTypeListView*>(m_itemSelector);
-  if (modelObjectTypeListView){
-    boost::optional<openstudio::model::ModelObject> selectedModelObject = modelObjectTypeListView->selectedModelObject();
-    if (selectedModelObject){
-      emit copyObjectClicked(*selectedModelObject);
-    }
-  }
-
-}
-
-void ModelSubTabView::removeClicked()
-{
-  ModelObjectListView* modelObjectListView = qobject_cast<ModelObjectListView*>(m_itemSelector);
-  if (modelObjectListView){
-    boost::optional<openstudio::model::ModelObject> selectedModelObject = modelObjectListView->selectedModelObject();
-    if (selectedModelObject){
-      emit removeObjectClicked(*selectedModelObject);
-    }
-  }
-
-  ModelObjectTypeListView* modelObjectTypeListView = qobject_cast<ModelObjectTypeListView*>(m_itemSelector);
-  if (modelObjectTypeListView){
-    boost::optional<openstudio::model::ModelObject> selectedModelObject = modelObjectTypeListView->selectedModelObject();
-    if (selectedModelObject){
-      emit removeObjectClicked(*selectedModelObject);
-    }
-  }
-
-}
-
-void ModelSubTabView::purgeClicked()
-{
-  ModelObjectListView* modelObjectListView = qobject_cast<ModelObjectListView*>(m_itemSelector);
-  if (modelObjectListView){
-    IddObjectType iddObjectType = modelObjectListView->iddObjectType();
-    emit purgeObjectsClicked(iddObjectType);
-  }
-
-  ModelObjectTypeListView* modelObjectTypeListView = qobject_cast<ModelObjectTypeListView*>(m_itemSelector);
-  if (modelObjectTypeListView){
-    IddObjectType iddObjectType = modelObjectTypeListView->currentIddObjectType();
-    emit purgeObjectsClicked(iddObjectType);
-  }
-}
-*/
 
 } // openstudio

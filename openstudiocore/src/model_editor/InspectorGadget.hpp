@@ -19,17 +19,21 @@
 #ifndef MODELEDITOR_INSPECTORGADGET_HPP
 #define MODELEDITOR_INSPECTORGADGET_HPP
 
-#include <QWidget>
 #include <QComboBox>
 #include <QEvent>
+#include <QWidget>
+
 #include "../model/AccessPolicyStore.hpp"
 #include "../model/ModelObject.hpp"
+
 #include "ModelEditorAPI.hpp"
+
 #include "../utilities/idd/IddField.hpp"
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/Workspace_Impl.hpp"
 #include "../utilities/idf/WorkspaceObject.hpp"
 #include "../utilities/idf/WorkspaceObject_Impl.hpp"
+
 #include <string>
 
 class QDoubleSpinBox;
@@ -234,6 +238,8 @@ public slots:
 
   void toggleUnitsClicked(bool);
 
+  void removeButtonClicked(bool);
+
   /*!
    *This signal is emitted when the IG changes the model. If your program
    *uses IG, then you should connect to this so that you know if the file needs saving or not
@@ -365,6 +371,7 @@ protected:
   FLOAT_DISPLAY m_floatDisplayType;
   UNIT_SYSTEM m_unitSystem;
   bool m_workspaceObjectChanged;
+  QPushButton * m_removeButton;
 
   typedef std::map <openstudio::model::ModelObject,InspectorGadget*> MODELMAP;
   MODELMAP m_childMap;

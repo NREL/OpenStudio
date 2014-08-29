@@ -32,11 +32,12 @@ class QStackedWidget;
 
 namespace openstudio {
 
+class EditController;
 class HorizontalTabWidget;
 class InspectorController;
 class LocalLibraryController;
-class EditController;
 class SystemItem;
+class OSItem;
 
 class MainRightColumnController : public OSQObjectController
 {
@@ -72,6 +73,8 @@ class MainRightColumnController : public OSQObjectController
   signals:
   
   void toggleUnitsClicked(bool displayIP);
+
+  void itemRemoveClicked(OSItem *);
 
   public slots:
 

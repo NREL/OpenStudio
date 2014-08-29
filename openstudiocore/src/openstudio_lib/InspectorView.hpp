@@ -20,37 +20,40 @@
 #ifndef OPENSTUDIO_INSPECTORVIEW_HPP
 #define OPENSTUDIO_INSPECTORVIEW_HPP
 
-#include <QWidget>
 #include <QDialog>
-#include "../model/ModelObject.hpp"
-#include "../model/WaterToAirComponent.hpp"
-#include "../model/WaterToAirComponent_Impl.hpp"
-#include "../model/StraightComponent.hpp"
-#include "../model/StraightComponent_Impl.hpp"
+#include <QWidget>
+
 #include "../model/HVACComponent.hpp"
 #include "../model/HVACComponent_Impl.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/StraightComponent.hpp"
+#include "../model/StraightComponent_Impl.hpp"
+#include "../model/WaterToAirComponent.hpp"
+#include "../model/WaterToAirComponent_Impl.hpp"
 
 class InspectorGadget;
-class QStackedWidget;
-class QVBoxLayout;
-class QTimer;
+
 class QComboBox;
 class QPushButton;
+class QStackedWidget;
+class QTimer;
 class QToolButton;
+class QVBoxLayout;
 
 namespace openstudio {
 
 namespace model {
 
-class ThermalZone;
 class Loop;
+class ThermalZone;
 
 }
 
-class ZoneChooserView;
 class BaseInspectorView;
 class LibraryTabWidget;
 class LoopChooserView;
+class ZoneChooserView;
+class OSItem;
 
 class InspectorView : public QWidget
 {
@@ -70,6 +73,7 @@ class InspectorView : public QWidget
   void addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
   void removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
   void toggleUnitsClicked(bool displayIP);
+  void itemRemoveClicked(OSItem *);
 
   void moveBranchForZoneSupplySelected(model::ThermalZone & zone, const Handle & newPlenumHandle);
   void moveBranchForZoneReturnSelected(model::ThermalZone & zone, const Handle & newPlenumHandle);
@@ -82,6 +86,8 @@ class InspectorView : public QWidget
 
   virtual void toggleUnits(bool displayIP);
 
+  void onRemoveButtonClicked(bool checked);
+
   protected:
 
   private:
@@ -89,6 +95,7 @@ class InspectorView : public QWidget
   QVBoxLayout * m_vLayout;
   BaseInspectorView * m_currentView;
   QStackedWidget * m_stackedWidget;
+  boost::optional<model::ModelObject> m_modelObject;
 };
 
 class BaseInspectorView : public QWidget
@@ -139,6 +146,11 @@ class GenericInspectorView : public BaseInspectorView
   private:
 
   InspectorGadget * m_inspectorGadget;
+
+  signals:
+
+  void removeButtonClicked(bool);
+
 };
 
 class SplitterMixerInspectorView : public BaseInspectorView

@@ -72,14 +72,16 @@ signals:
 
     void openLibDlgClicked();
 
+  public slots:
+
+    void removeItem(OSItem* item);
+
   protected slots:
 
     void selectItem(OSItem* item);
 
   private slots:
-
-    void removeItem(OSItem* item);
-
+  
     void replaceItem(OSItem* item, const OSItemId& replacementItemId);
 
     void clearSelection();

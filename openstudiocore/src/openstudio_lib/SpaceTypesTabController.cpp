@@ -49,6 +49,9 @@ SpaceTypesTabController::SpaceTypesTabController(bool isIP,
   isConnected = connect(spaceTypeInspectorView, SIGNAL(gridRowSelected(OSItem*)), m_spaceTypesController.get(), SLOT(selectItem(OSItem*)));
   OS_ASSERT(isConnected);
 
+  isConnected = connect(this, SIGNAL(itemRemoveClicked(OSItem *)), m_spaceTypesController.get(), SLOT(removeItem(OSItem *)));
+  OS_ASSERT(isConnected);
+
   mainContentWidget()->addTabWidget(m_spaceTypesController->subTabView());
 }
 

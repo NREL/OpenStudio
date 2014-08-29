@@ -562,6 +562,10 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
   connect(m_spaceTypesTabController.get(), &SpaceTypesTabController::openLibDlgClicked,
           this, &OSDocument::openLibDlgClicked);
 
+  //itemRemoveClicked(OSItem *)
+  connect(m_mainRightColumnController.get(), &MainRightColumnController::itemRemoveClicked,
+          m_spaceTypesTabController.get(), &SpaceTypesTabController::itemRemoveClicked);
+
   // Building Stories
 
   m_buildingStoriesTabController = std::shared_ptr<BuildingStoriesTabController>( new BuildingStoriesTabController(m_model) );
