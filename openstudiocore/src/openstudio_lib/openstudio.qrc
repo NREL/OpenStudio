@@ -40,6 +40,7 @@
     <file>images/coilcoolinglowtemprad_constflow.png</file>   
     <file>images/coilcoolinglowtemprad_varflow.png</file>      
     <file>images/cooling_tower.png</file>
+    <file>images/cooling_tower_two_speed.png</file>
     <file>images/cooling_tower_variable.png</file>
     <file>images/dehumidify_schedule_icon.png</file>
     <file>images/delete-icon.png</file>
@@ -80,6 +81,7 @@
     <file>images/heat_transfer_outdoorair.png</file>
     <file>images/humidify_schedule_icon.png</file>
     <file>images/humidistat.png</file>
+    <file>images/humidifier_steam_electric.png</file>
     <file>images/hvac-icon.png</file>
     <file>images/icon_scripts.png</file>
     <file>images/image_header.png</file>
@@ -135,6 +137,7 @@
     <file>images/os_128.png</file>
     <file>images/os_256.png</file>
     <file>images/osm-icon-open.png</file>
+    <file>images/four_pipe_induction_terminal.png</file>
     <file>images/parallel_fan_terminal.png</file>
     <file>images/series_fan_terminal.png</file>
     <file>images/pipe.png</file>
@@ -168,6 +171,12 @@
     <file>images/setpoint_warmest_right.png</file>
     <file>images/setpoint_dual.png</file>
     <file>images/setpoint_pretreat.png</file>
+    <file>images/setpoint_multi_zone_humidity_ave.png</file>
+    <file>images/setpoint_multi_zone_humidity_ave_right.png</file>
+    <file>images/setpoint_multi_zone_humidity_min.png</file>
+    <file>images/setpoint_multi_zone_humidity_min_right.png</file>
+    <file>images/setpoint_single_zone_humidity_min.png</file>
+    <file>images/setpoint_single_zone_humidity_min_right.png</file>
     <file>images/sewer_alone.png</file>
     <file>images/sewer_over.png</file>
     <file>images/sewer_press.png</file>
@@ -262,6 +271,7 @@
     <file>images/mini_icons/coilcoolinglowtemprad_constflow.png</file>   
     <file>images/mini_icons/coilcoolinglowtemprad_varflow.png</file>     
     <file>images/mini_icons/cooling_tower.png</file>
+    <file>images/mini_icons/cooling_tower_two_speed.png</file>
     <file>images/mini_icons/mini_cooling_tower_variable.png</file>
     <file>images/mini_icons/daylighting_control.png</file>
     <file>images/mini_icons/default_construction_set.png</file>
@@ -296,6 +306,7 @@
     <file>images/mini_icons/coilheatinglowtemprad_varflow.png</file>    
     <file>images/mini_icons/heat_pump3.png</file>
     <file>images/mini_icons/heat_transfer_mini.png</file>
+    <file>images/mini_icons/humidifier_steam_electric.png</file>
     <file>images/mini_icons/illuminance_map.png</file>
     <file>images/mini_icons/infiltration.png</file>
     <file>images/mini_icons/insulation.png</file>
@@ -330,6 +341,7 @@
     <file>images/mini_icons/other_equipment.png</file>
     <file>images/mini_icons/other_equipment_definition.png</file>
     <file>images/mini_icons/outdoor_air.png</file>
+    <file>images/mini_icons/four_pipe_induction_terminal.png</file>
     <file>images/mini_icons/parallel_fan_terminal.png</file>
     <file>images/mini_icons/series_fan_terminal.png</file>
     <file>images/mini_icons/people.png</file>

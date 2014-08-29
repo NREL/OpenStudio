@@ -200,6 +200,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(AirLoopHVACZoneSplitter);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctInletSideMixer);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeCooledBeam);
+    REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeFourPipeInduction);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeReheat);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctParallelPIUReheat);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctSeriesPIUReheat);
@@ -255,6 +256,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(CoolingTowerPerformanceCoolTools);
     REGISTER_CONSTRUCTOR(CoolingTowerPerformanceYorkCalc);
     REGISTER_CONSTRUCTOR(CoolingTowerSingleSpeed);
+    REGISTER_CONSTRUCTOR(CoolingTowerTwoSpeed);
     REGISTER_CONSTRUCTOR(CoolingTowerVariableSpeed);
     REGISTER_CONSTRUCTOR(CurrencyType);
     REGISTER_CONSTRUCTOR(CurveBicubic);
@@ -308,6 +310,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(HeatExchangerFluidToFluid);
     REGISTER_CONSTRUCTOR(HotWaterEquipment);
     REGISTER_CONSTRUCTOR(HotWaterEquipmentDefinition);
+    REGISTER_CONSTRUCTOR(HumidifierSteamElectric);
     REGISTER_CONSTRUCTOR(IlluminanceMap);
     REGISTER_CONSTRUCTOR(InfraredTransparentMaterial);
     REGISTER_CONSTRUCTOR(InsideSurfaceConvectionAlgorithm);
@@ -378,10 +381,13 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(Screen);
     REGISTER_CONSTRUCTOR(SetpointManagerFollowOutdoorAirTemperature);
     REGISTER_CONSTRUCTOR(SetpointManagerMixedAir);
+    REGISTER_CONSTRUCTOR(SetpointManagerMultiZoneHumidityMinimum);
+    REGISTER_CONSTRUCTOR(SetpointManagerMultiZoneMinimumHumidityAverage);
     REGISTER_CONSTRUCTOR(SetpointManagerOutdoorAirPretreat);
     REGISTER_CONSTRUCTOR(SetpointManagerOutdoorAirReset);
     REGISTER_CONSTRUCTOR(SetpointManagerScheduled);
     REGISTER_CONSTRUCTOR(SetpointManagerScheduledDualSetpoint);
+    REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneHumidityMinimum);
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneReheat);
     REGISTER_CONSTRUCTOR(SetpointManagerWarmest);
     REGISTER_CONSTRUCTOR(Shade);
@@ -504,6 +510,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACZoneSplitter);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctInletSideMixer);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeCooledBeam);
+    REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeFourPipeInduction);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeReheat);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctParallelPIUReheat);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctSeriesPIUReheat);
@@ -559,6 +566,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(CoolingTowerPerformanceCoolTools);
     REGISTER_COPYCONSTRUCTORS(CoolingTowerPerformanceYorkCalc);
     REGISTER_COPYCONSTRUCTORS(CoolingTowerSingleSpeed);
+    REGISTER_COPYCONSTRUCTORS(CoolingTowerTwoSpeed);
     REGISTER_COPYCONSTRUCTORS(CoolingTowerVariableSpeed);
     REGISTER_COPYCONSTRUCTORS(CurrencyType);
     REGISTER_COPYCONSTRUCTORS(CurveBicubic);
@@ -612,6 +620,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(HeatExchangerFluidToFluid);
     REGISTER_COPYCONSTRUCTORS(HotWaterEquipment);
     REGISTER_COPYCONSTRUCTORS(HotWaterEquipmentDefinition);
+    REGISTER_COPYCONSTRUCTORS(HumidifierSteamElectric);
     REGISTER_COPYCONSTRUCTORS(InfraredTransparentMaterial);
     REGISTER_COPYCONSTRUCTORS(InsideSurfaceConvectionAlgorithm);
     REGISTER_COPYCONSTRUCTORS(InteriorPartitionSurface);
@@ -682,10 +691,13 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(Screen);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerFollowOutdoorAirTemperature);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerMixedAir);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerMultiZoneHumidityMinimum);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerMultiZoneMinimumHumidityAverage);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerOutdoorAirPretreat);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerOutdoorAirReset);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerScheduled);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerScheduledDualSetpoint);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneHumidityMinimum);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneReheat);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerWarmest);
     REGISTER_COPYCONSTRUCTORS(Shade);

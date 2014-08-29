@@ -25,6 +25,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateAirLoopHVACZoneMixer.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACZoneSplitter.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctConstantVolumeCooledBeam.cpp
+  ForwardTranslator/ForwardTranslateAirTerminalSingleDuctConstantVolumeFourPipeInduction.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctConstantVolumeReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctParallelPIUReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctSeriesPIUReheat.cpp
@@ -63,6 +64,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCoolingTowerPerformanceCoolTools.cpp
   ForwardTranslator/ForwardTranslateCoolingTowerPerformanceYorkCalc.cpp
   ForwardTranslator/ForwardTranslateCoolingTowerSingleSpeed.cpp
+  ForwardTranslator/ForwardTranslateCoolingTowerTwoSpeed.cpp
   ForwardTranslator/ForwardTranslateCoolingTowerVariableSpeed.cpp
   ForwardTranslator/ForwardTranslateCurrencyType.cpp
   ForwardTranslator/ForwardTranslateCurveBicubic.cpp
@@ -106,6 +108,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateHeatExchangerAirToAirSensibleAndLatent.cpp
   ForwardTranslator/ForwardTranslateHeatExchangerFluidToFluid.cpp
   ForwardTranslator/ForwardTranslateHotWaterEquipment.cpp
+  ForwardTranslator/ForwardTranslateHumidifierSteamElectric.cpp
   ForwardTranslator/ForwardTranslateIlluminanceMap.cpp
   ForwardTranslator/ForwardTranslateInsideSurfaceConvectionAlgorithm.cpp
   ForwardTranslator/ForwardTranslateInfraredTransparentMaterial.cpp
@@ -160,10 +163,13 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateScheduleYear.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerFollowOutdoorAirTemperature.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerMixedAir.cpp
+  ForwardTranslator/ForwardTranslateSetpointManagerMultiZoneHumidityMinimum.cpp
+  ForwardTranslator/ForwardTranslateSetpointManagerMultiZoneMinimumHumidityAverage.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerOutdoorAirPretreat.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerOutdoorAirReset.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerScheduled.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerScheduledDualSetpoint.cpp
+  ForwardTranslator/ForwardTranslateSetpointManagerSingleZoneHumidityMinimum.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerSingleZoneReheat.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerWarmest.cpp
   ForwardTranslator/ForwardTranslateShade.cpp

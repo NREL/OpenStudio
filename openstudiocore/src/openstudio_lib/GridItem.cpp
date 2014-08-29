@@ -68,6 +68,9 @@
 #include "../model/SetpointManagerWarmest.hpp"
 #include "../model/SetpointManagerScheduledDualSetpoint.hpp"
 #include "../model/SetpointManagerOutdoorAirPretreat.hpp"
+#include "../model/SetpointManagerSingleZoneHumidityMinimum.hpp"
+#include "../model/SetpointManagerMultiZoneMinimumHumidityAverage.hpp"
+#include "../model/SetpointManagerMultiZoneHumidityMinimum.hpp"
 #include "../model/RenderingColor.hpp"
 #include "../model/RenderingColor_Impl.hpp"
 #include "../model/Node.hpp"
@@ -85,7 +88,15 @@ namespace openstudio {
 
 bool hasSPM(model::Node & node)
 {
-  return !node.setpointManagers().empty();
+  bool value = false;
+  auto spms = node.setpointManagers();
+  for( auto & spm: spms ) {
+    if( istringEqual("Temperature",spm.controlVariable()) ) {
+      value = true;
+      break;
+    }
+  }
+  return value;
 }
 
 GridItem::GridItem( QGraphicsItem * parent ):
@@ -1808,6 +1819,21 @@ OASupplyBranchItem::OASupplyBranchItem( std::vector<model::ModelObject> supplyMo
         ++reliefIt;
       }
     }
+    else if(boost::optional<model::WaterToAirComponent> comp = supplyIt->optionalCast<model::WaterToAirComponent>())
+    {
+      GridItem * gridItem = new OAReliefStraightItem(this); 
+      gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
+      if( comp->isRemovable() )
+      {
+        gridItem->setDeletable(true);
+      }
+      m_gridItems.push_back(gridItem);
+
+      if( (reliefIt < reliefModelObjects.end()) && (! reliefIt->optionalCast<model::AirToAirComponent>()) )
+      {
+        ++reliefIt;
+      }
+    }
     ++supplyIt;
   }
 
@@ -1884,6 +1910,20 @@ OAReliefBranchItem::OAReliefBranchItem( std::vector<model::ModelObject> reliefMo
       }
     }
     else if(boost::optional<model::StraightComponent> comp = reliefIt->optionalCast<model::StraightComponent>())
+    {
+      GridItem * gridItem = new OAReliefStraightItem(this); 
+      gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
+      if( comp->isRemovable() )
+      {
+        gridItem->setDeletable(true);
+      }
+      m_gridItems.push_back(gridItem);
+      if( (supplyIt < supplyModelObjects.end()) && (! supplyIt->optionalCast<model::AirToAirComponent>()) )
+      {
+        ++supplyIt;
+      }
+    }
+    else if(boost::optional<model::WaterToAirComponent> comp = reliefIt->optionalCast<model::WaterToAirComponent>())
     {
       GridItem * gridItem = new OAReliefStraightItem(this); 
       gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
@@ -2108,6 +2148,20 @@ void OneThreeNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
             painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_pretreat.png"));
           }
           break;
+        } else {
+          //else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMinimum::iddObjectType() )
+          //{
+          //  painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_single_zone_humidity_min.png"));
+          //}
+          //else if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMinimum::iddObjectType() )
+          //{
+          //  painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_multi_zone_humidity_min.png"));
+          //}
+          //else if( it->iddObjectType() == SetpointManagerMultiZoneMinimumHumidityAverage::iddObjectType() )
+          //{
+          //  painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_multi_zone_humidity_ave.png"));
+          //}
+          //break;
         }
       }
     }  
@@ -2263,6 +2317,20 @@ void TwoFourNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
             painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_pretreat.png"));
           }
           break;
+        } else {
+          //else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMinimum::iddObjectType() )
+          //{
+          //  painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_single_zone_humidity_min_right.png"));
+          //}
+          //else if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMinimum::iddObjectType() )
+          //{
+          //  painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_multi_zone_humidity_min_right.png"));
+          //}
+          //else if( it->iddObjectType() == SetpointManagerMultiZoneMinimumHumidityAverage::iddObjectType() )
+          //{
+          //  painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_multi_zone_humidity_ave_right.png"));
+          //}
+          //break;
         }
       }
     }  
@@ -2367,6 +2435,20 @@ void OAStraightNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
             painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_dual.png"));
           }
           break;
+        } else {
+          //else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMinimum::iddObjectType() )
+          //{
+          //  painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_single_zone_humidity_min.png"));
+          //}
+          //else if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMinimum::iddObjectType() )
+          //{
+          //  painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_multi_zone_humidity_min.png"));
+          //}
+          //else if( it->iddObjectType() == SetpointManagerMultiZoneMinimumHumidityAverage::iddObjectType() )
+          //{
+          //  painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_multi_zone_humidity_ave.png"));
+          //}
+          //break;
         }
       }
     }  

@@ -47,6 +47,7 @@ class AirLoopHVACReturnPlenum;
 class AirLoopHVACSupplyPlenum;
 class AirLoopHVACZoneSplitter;
 class AirTerminalSingleDuctConstantVolumeCooledBeam;
+class AirTerminalSingleDuctConstantVolumeFourPipeInduction;
 class AirTerminalSingleDuctConstantVolumeReheat;
 class AirTerminalSingleDuctParallelPIUReheat;
 class AirTerminalSingleDuctSeriesPIUReheat;
@@ -87,6 +88,7 @@ class ConvergenceLimits;
 class CoolingTowerPerformanceCoolTools;
 class CoolingTowerPerformanceYorkCalc;
 class CoolingTowerSingleSpeed;
+class CoolingTowerTwoSpeed;
 class CoolingTowerVariableSpeed;
 class CurrencyType;
 class CurveBicubic;
@@ -130,6 +132,7 @@ class HeatBalanceAlgorithm;
 class HeatExchangerAirToAirSensibleAndLatent;
 class HeatExchangerFluidToFluid;
 class HotWaterEquipment;
+class HumidifierSteamElectric;
 class IlluminanceMap;
 class InsideSurfaceConvectionAlgorithm;
 class InfraredTransparentMaterial;
@@ -175,10 +178,13 @@ class RunPeriodControlSpecialDays;
 class Screen;
 class SetpointManagerFollowOutdoorAirTemperature;
 class SetpointManagerMixedAir;
+class SetpointManagerMultiZoneHumidityMinimum;
+class SetpointManagerMultiZoneMinimumHumidityAverage;
 class SetpointManagerOutdoorAirPretreat;
 class SetpointManagerOutdoorAirReset;
 class SetpointManagerScheduled;
 class SetpointManagerScheduledDualSetpoint;
+class SetpointManagerSingleZoneHumidityMinimum;
 class SetpointManagerSingleZoneReheat;
 class SetpointManagerWarmest;
 class ShadowCalculation;
@@ -337,6 +343,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateAirLoopHVACZoneSplitter( model::AirLoopHVACZoneSplitter & airLoopHVACZoneSplitter );
 
   boost::optional<IdfObject> translateAirTerminalSingleDuctConstantVolumeCooledBeam ( model::AirTerminalSingleDuctConstantVolumeCooledBeam & modelObject );
+
+  boost::optional<IdfObject> translateAirTerminalSingleDuctConstantVolumeFourPipeInduction( model::AirTerminalSingleDuctConstantVolumeFourPipeInduction & modelObject );
   
   boost::optional<IdfObject> translateAirTerminalSingleDuctConstantVolumeReheat( model::AirTerminalSingleDuctConstantVolumeReheat & modelObject );
 
@@ -417,6 +425,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateCoolingTowerPerformanceCoolTools( model::CoolingTowerPerformanceCoolTools & modelObject );
 
   boost::optional<IdfObject> translateCoolingTowerPerformanceYorkCalc( model::CoolingTowerPerformanceYorkCalc & modelObject );
+
+  boost::optional<IdfObject> translateCoolingTowerTwoSpeed( model::CoolingTowerTwoSpeed & modelObject );
 
   boost::optional<IdfObject> translateCoolingTowerSingleSpeed( model::CoolingTowerSingleSpeed & modelObject );
 
@@ -503,6 +513,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateHeatExchangerAirToAirSensibleAndLatent( model::HeatExchangerAirToAirSensibleAndLatent & modelObject );
 
   boost::optional<IdfObject> translateHeatExchangerFluidToFluid( model::HeatExchangerFluidToFluid & modelObject );
+
+  boost::optional<IdfObject> translateHumidifierSteamElectric( model::HumidifierSteamElectric & modelObject );
 
   boost::optional<IdfObject> translateHotWaterEquipment( model::HotWaterEquipment & modelObject );
 
@@ -614,6 +626,10 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateSetpointManagerMixedAir( model::SetpointManagerMixedAir & modelObject );
 
+  boost::optional<IdfObject> translateSetpointManagerMultiZoneHumidityMinimum( model::SetpointManagerMultiZoneHumidityMinimum & modelObject );
+
+  boost::optional<IdfObject> translateSetpointManagerMultiZoneMinimumHumidityAverage( model::SetpointManagerMultiZoneMinimumHumidityAverage & modelObject );
+
   boost::optional<IdfObject> translateSetpointManagerOutdoorAirPretreat( model::SetpointManagerOutdoorAirPretreat & modelObject );
 
   boost::optional<IdfObject> translateSetpointManagerOutdoorAirReset( model::SetpointManagerOutdoorAirReset & modelObject );
@@ -621,6 +637,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateSetpointManagerScheduled( model::SetpointManagerScheduled & modelObject );
 
   boost::optional<IdfObject> translateSetpointManagerScheduledDualSetpoint( model::SetpointManagerScheduledDualSetpoint & modelObject );
+
+  boost::optional<IdfObject> translateSetpointManagerSingleZoneHumidityMinimum( model::SetpointManagerSingleZoneHumidityMinimum & modelObject);
 
   boost::optional<IdfObject> translateSetpointManagerSingleZoneReheat( model::SetpointManagerSingleZoneReheat & modelObject);
 

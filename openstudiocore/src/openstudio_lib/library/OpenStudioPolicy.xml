@@ -12,15 +12,30 @@
     <rule IddField="Outlet Node" Access="HIDDEN"/>
     <rule IddField="Induced Air Outlet Node" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_SingleZone_Humidity_Minimum">
+    <rule IddField="Control Variable" Access="HIDDEN"/>
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_MultiZone_Humidity_Minimum">
+    <rule IddField="Control Variable" Access="HIDDEN"/>
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_MultiZone_MinimumHumidity_Average">
+    <rule IddField="Control Variable" Access="HIDDEN"/>
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_SetpointManager_FollowOutdoorAirTemperature">
     <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_CoolingTower_SingleSpeed">
     <rule IddField="Water Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Water Outlet Node Name" Access="HIDDEN"/>
-    <rule IddField="Performance Input Method" Access="HIDDEN"/>
-    <rule IddField="Nominal Capacity" Access="HIDDEN"/>
-    <rule IddField="Free Convection Capacity" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_CoolingTower_TwoSpeed">
+    <rule IddField="Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Water Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Supply Water Storage Tank Name" Access="HIDDEN"/>
+    <rule IddField="Outdoor Air Inlet Node Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_CoolingTower_VariableSpeed">
     <rule IddField="Water Inlet Node" Access="HIDDEN"/>
@@ -406,6 +421,15 @@
     <rule IddField="Terminal Unit Primary Air Inlet" Access="HIDDEN"/>
     <rule IddField="Terminal Unit Secondary Air Inlet" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInduction">
+    <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
+    <rule IddField="Supply Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Induced Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Cooling Coil Name" Access="LOCKED"/>
+    <rule IddField="Heating Coil Name" Access="LOCKED"/>
+    <rule IddField="Zone Mixer Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam">
     <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
     <rule IddField="Supply Air Inlet Node Name" Access="HIDDEN"/>
@@ -657,10 +681,15 @@
     <rule IddField="Heat Recovery Heating Capacity Modifier Curve" Access="LOCKED"/>
     <rule IddField="Heat Recovery Heating Energy Modifier Curve" Access="LOCKED"/>
   </POLICY>
-  <POLICY IddObjectType="OS_Table_MultiVariableLookupFields">
+  <POLICY IddObjectType="OS_Table_MultiVariableLookup">
     <rule IddField="External File Name" Access="HIDDEN"/>
     <rule IddField="X1 Sort Order" Access="HIDDEN"/>
     <rule IddField="X2 Sort Order" Access="HIDDEN"/>
   </POLICY>
-
+  <POLICY IddObjectType="OS_Humidifier_Steam_Electric">
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Water Storage Tank Name" Access="HIDDEN"/>
+    <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
+  </POLICY>
 </ROOT>
