@@ -285,6 +285,13 @@ void OSGridView::doRefresh()
     refreshGrid();
   }
 
+  if (!m_refreshRequests.empty())
+  {
+    std::cout << " UPDATE TRIGGERED UPDATE" << std::endl;
+    refreshAll();
+    m_refreshRequests.clear();
+  }
+
   setEnabled(true);
 }
 
