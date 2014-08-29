@@ -84,13 +84,18 @@ OSGridController::OSGridController(bool isIP,
   isConnected = connect(m_cellBtnGrp, SIGNAL(buttonClicked(int)), this, SLOT(cellChecked(int)));
   OS_ASSERT(isConnected);
 
-  connect(model.getImpl<openstudio::model::detail::Model_Impl>().get(), &openstudio::model::detail::Model_Impl::onChange, this, &openstudio::OSGridController::refreshGrid);
+  connect(model.getImpl<openstudio::model::detail::Model_Impl>().get(), &openstudio::model::detail::Model_Impl::onChange, this, &openstudio::OSGridController::requestRefreshGrid);
 
 }
 
 OSGridController::~OSGridController()
 {
   saveQSettings();
+}
+
+void OSGridController::requestRefreshGrid()
+{
+  gridView()->requestRefreshGrid();
 }
 
 void OSGridController::refreshGrid()
@@ -800,7 +805,7 @@ void OSGridController::onSelectionCleared()
 {
   // TODO use a single shot timer, just once to handle this
   refreshModelObjects();
-  gridView()->refreshAll();
+  gridView()->requestRefreshAll();
 }
 
 HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)

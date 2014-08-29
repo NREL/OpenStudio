@@ -568,6 +568,8 @@ public slots:
 
   void refreshGrid();
 
+  void requestRefreshGrid();
+
 protected slots:
 
   void reset();

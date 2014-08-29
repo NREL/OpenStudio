@@ -21,6 +21,7 @@
 #define SHAREDGUICOMPONENTS_OSGRIDVIEW_HPP
 
 #include <QWidget>
+#include <QTimer>
 
 #include "../openstudio_lib/OSItem.hpp"
 
@@ -75,6 +76,13 @@ public slots:
 
   void refreshRow(int row);
 
+  void requestRefreshAll();
+
+  void requestRefreshGrid();
+
+  void requestRefreshRow(int row);
+
+
 private slots:
 
   void refresh(int row, int column);
@@ -93,7 +101,15 @@ private slots:
 
   void onDropZoneItemClicked(OSItem*);
 
+  void doRefresh();
+
 private:
+
+  enum RefreshType
+  {
+    RefreshAll,
+    RefreshGrid
+  };
 
   void setGridController(OSGridController * gridController);
 
@@ -111,6 +127,9 @@ private:
 
   OSGridController * m_gridController;
 
+  QTimer m_timer;
+
+  std::vector<RefreshType> m_refreshRequests;
 };
 
 } // openstudio
