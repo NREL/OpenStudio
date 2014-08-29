@@ -1193,7 +1193,7 @@ namespace radiance {
 
             std::string testBSDFLib = "/Users/rgugliel/src/support/bsdf";
 
-            //testBSDFLib = "E:/bsdf";
+            testBSDFLib = "c:/radiance/bsdf";
             //LOG(Warn, "Using temporarily hard coded BSDF library '" + testBSDFLib + "' for testing");
 
             if (rMaterial == "glass"){

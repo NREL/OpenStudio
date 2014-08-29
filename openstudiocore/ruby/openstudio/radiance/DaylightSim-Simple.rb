@@ -373,11 +373,19 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
     # compute view matrices for controlled windows
 
     wgInput = Dir.glob("#{t_outPath}/scene/glazing/WG*.rad")[1..-1]
-    puts "computing view matri(ces) for controlled windows: #{wgInput}"
+    puts "computing view matri(ces) for controlled windows"
     exec_statement("#{t_catCommand} #{t_outPath}/materials/materials_vmx.rad #{wgInput.join(" ")} > receivers_vmx.rad")
     exec_statement("oconv #{t_outPath}/materials/materials.rad #{t_outPath}/scene/*.rad > model_vmx.oct")
     # TODO: need to add support for Windows (no wc, use "FIND")
-    exec_statement("rfluxmtx -faa -n #{t_simCores} -y `wc -l < #{t_outPath}/numeric/merged_space.map` -I -v - receivers_vmx.rad -i model_vmx.oct < \
+    rfluxmtxDim = ""
+    if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
+      mapFile=File.open("#{t_outPath}/numeric/merged_space.map","r")
+      rfluxmtxDim = mapFile.readlines.size.to_s
+    else
+      rfluxmtxDim = "`wc -l < #{t_outPath}/numeric/merged_space.map`"
+    end
+    puts "map size: #{rfluxmtxDim} points"
+    exec_statement("rfluxmtx -faa -n #{t_simCores} -y #{rfluxmtxDim} -I -v - receivers_vmx.rad -i model_vmx.oct < \
       #{t_outPath}/numeric/merged_space.map")
 
     
