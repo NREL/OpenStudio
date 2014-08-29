@@ -1437,33 +1437,11 @@ namespace detail {
       if (step.isWorkItem()) {
         runmanager::WorkItem workItem = step.workItem();
 
-        if (!workItem.jobkeyname.empty()){
-          std::string jobkeyname = workItem.jobkeyname;
-        }
-
         if (workItem.jobkeyname == "pat-report-request-job"){
           // save the original work item, before we use RubyJobBuilder to make a new one
           reportRequestMeasureWorkItem = workItem;
           reportRequestMeasureIndex = result.size();
         }
-
-        try{
-          runmanager::JobParam params = workItem.params.get("ruby_bclmeasureparameters");
-          for (std::vector<runmanager::JobParam>::const_iterator it = params.children.begin(),
-               itEnd = params.children.end(); it != itEnd; ++it)
-          {
-            if (it->value == "bcl_measure_uuid") {
-              if (openstudio::toUUID(it->children.at(0).value) == BCLMeasure::reportRequestMeasure().uuid()) {
-                reportRequestMeasureWorkItem = workItem;
-                reportRequestMeasureIndex = result.size();
-                break;
-              }
-            }
-          }
-        } catch (const std::exception&) {
-
-        }
-
 
         if (workItem.type == runmanager::JobType::UserScript
             || workItem.type == runmanager::JobType::Ruby) {
