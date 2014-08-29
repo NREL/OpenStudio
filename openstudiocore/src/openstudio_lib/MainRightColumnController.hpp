@@ -119,6 +119,7 @@ class MainRightColumnController : public OSQObjectController
   QSharedPointer<EditController> measuresEditController();
 
   private:
+
   REGISTER_LOGGER("openstudio.openstudio_lib.MainRightColumnController");
 
   void setMyModelView(QWidget * widget);
@@ -148,6 +149,13 @@ class MainRightColumnController : public OSQObjectController
   QSharedPointer<EditController> m_measureEditController;
 
   bool m_myModelTabIsHidden;
+
+  private slots:
+
+  void onItemRemoveClicked(OSItem *);
+
+  void emitItemRemoveClicked(OSItem *);
+
 };
 
 } // openstudio

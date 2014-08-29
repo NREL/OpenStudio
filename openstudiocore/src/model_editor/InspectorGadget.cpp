@@ -556,6 +556,9 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
 
     auto isConnected = connect(m_removeButton, SIGNAL(clicked(bool)), this, SIGNAL(removeButtonClicked(bool)));
     OS_ASSERT(isConnected);
+
+    auto s = new QSpacerItem(5, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    hbox->addSpacerItem(s);
   }
   else
   {

@@ -50,6 +50,7 @@
 
 #include <QStackedWidget>
 #include <QLayout>
+#include <QTimer>
 
 namespace openstudio {
 
@@ -90,9 +91,20 @@ MainRightColumnController::MainRightColumnController(const model::Model & model,
   m_inspectorController = std::shared_ptr<InspectorController>( new InspectorController() );
   connect(this, &MainRightColumnController::toggleUnitsClicked, m_inspectorController.get(), &InspectorController::toggleUnitsClicked);
 
-  auto isConnected = connect(m_inspectorController.get(), SIGNAL(itemRemoveClicked(OSItem *)), this, SIGNAL(itemRemoveClicked(OSItem *)));
+  auto isConnected = connect(m_inspectorController.get(), SIGNAL(itemRemoveClicked(OSItem *)), this, SLOT(onItemRemoveClicked(OSItem *)));
   OS_ASSERT(isConnected);
+}
 
+void MainRightColumnController::onItemRemoveClicked(OSItem *)
+{
+  setEditView(NULL);
+  QTimer::singleShot(0, this, SLOT(markAsModified()));
+
+}
+
+void MainRightColumnController::emitItemRemoveClicked(OSItem * item)
+{
+  emit itemRemoveClicked(item);
 }
 
 void MainRightColumnController::registerSystemItem(const Handle & systemHandle, SystemItem * systemItem)
