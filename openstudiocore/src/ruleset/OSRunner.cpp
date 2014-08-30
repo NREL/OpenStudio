@@ -723,7 +723,11 @@ void OSRunner::resetLastOpenStudioModel()
 
 void OSRunner::setLastOpenStudioModelPath(const openstudio::path& lastOpenStudioModelPath)
 {
-  m_lastOpenStudioModelPath = lastOpenStudioModelPath;
+  if (boost::filesystem::exists(lastOpenStudioModelPath)){
+    m_lastOpenStudioModelPath = boost::filesystem::canonical(lastOpenStudioModelPath);
+  }else{
+    m_lastOpenStudioModelPath = lastOpenStudioModelPath;
+  }
   m_lastOpenStudioModel.reset();
 }
 
@@ -747,7 +751,11 @@ void OSRunner::resetLastEnergyPlusWorkspace()
 
 void OSRunner::setLastEnergyPlusWorkspacePath(const openstudio::path& lastEnergyPlusWorkspacePath)
 {
-  m_lastEnergyPlusWorkspacePath = lastEnergyPlusWorkspacePath;
+  if (boost::filesystem::exists(lastEnergyPlusWorkspacePath)){
+    m_lastEnergyPlusWorkspacePath = boost::filesystem::canonical(lastEnergyPlusWorkspacePath);
+  }else{
+    m_lastEnergyPlusWorkspacePath = lastEnergyPlusWorkspacePath;
+  }
   m_lastEnergyPlusWorkspace.reset();
 }
 
@@ -759,7 +767,11 @@ void OSRunner::resetLastEnergyPlusWorkspacePath()
 
 void OSRunner::setLastEnergyPlusSqlFilePath(const openstudio::path& lastEnergyPlusSqlFilePath)
 {
-  m_lastEnergyPlusSqlFilePath = lastEnergyPlusSqlFilePath;
+  if (boost::filesystem::exists(lastEnergyPlusSqlFilePath)){
+    m_lastEnergyPlusSqlFilePath = boost::filesystem::canonical(lastEnergyPlusSqlFilePath);
+  }else{
+    m_lastEnergyPlusSqlFilePath = lastEnergyPlusSqlFilePath;
+  }
   m_lastEnergyPlusSqlFile.reset();
 }
 
@@ -771,7 +783,11 @@ void OSRunner::resetLastEnergyPlusSqlFilePath()
 
 void OSRunner::setLastEpwFilePath(const openstudio::path& lastEpwFilePath)
 {
-  m_lastEpwFilePath = lastEpwFilePath;
+  if (boost::filesystem::exists(lastEpwFilePath)){
+    m_lastEpwFilePath = boost::filesystem::canonical(lastEpwFilePath);
+  }else{
+    m_lastEpwFilePath = lastEpwFilePath;
+  }
   m_lastEpwFile.reset();
 }
 
