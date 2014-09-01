@@ -1571,7 +1571,7 @@ namespace radiance {
 
 
       // write radiance WG0 vmx materials file (blacks out controlled window groups)
-      m_radMaterialsWG0.insert("# OpenStudio \"WG0\" Materials File\n# black out all controlled window groups.");
+      m_radMaterialsWG0.insert("# OpenStudio \"WG0\" Materials File\n# black out all controlled window groups.\n");
       openstudio::path materials_WG0filename = t_radDir / openstudio::toPath("materials/materials_WG0.rad");
       OFSTREAM materials_WG0file(materials_WG0filename);
       if (materials_WG0file.is_open()){
