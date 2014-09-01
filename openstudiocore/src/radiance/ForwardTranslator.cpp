@@ -750,6 +750,7 @@ namespace radiance {
   {
     m_radMaterials.clear();
     m_radMaterialsDC.clear();
+    m_radMaterialsWG0.clear();
 
     m_radDCmats.clear();
     
@@ -1169,6 +1170,8 @@ namespace radiance {
             else{
               m_radMaterials.insert("void " + rMaterial + " " + windowGroup_name + "\n" + matString + "\n");
               m_radMaterialsDC.insert("void light " + windowGroup_name + "\n0\n0\n3\n1 1 1\n");
+              m_radMaterialsWG0.insert("void plastic " + windowGroup_name + "\n0\n0\n5\n0 0 0 0 0\n");
+
               // polygon header
               m_radWindowGroups[windowGroup_name] += "\n# SubSurface = " + subSurface_name + "\n";
               m_radWindowGroups[windowGroup_name] += "# Tvis = " + formatString(tVis, 2) + " (tn = " + formatString(tn, 2) + ")\n";
@@ -1193,7 +1196,7 @@ namespace radiance {
 
             std::string testBSDFLib = "/Users/rgugliel/src/support/bsdf";
 
-            testBSDFLib = "c:/radiance/bsdf";
+            //testBSDFLib = "c:/radiance/bsdf";
             //LOG(Warn, "Using temporarily hard coded BSDF library '" + testBSDFLib + "' for testing");
 
             if (rMaterial == "glass"){
@@ -1565,6 +1568,22 @@ namespace radiance {
       } else{
         LOG(Error, "Cannot open file '" << toString(materials_vmxfilename) << "' for writing");
       }
+
+
+      // write radiance WG0 vmx materials file (blacks out controlled window groups)
+      m_radMaterialsWG0.insert("# OpenStudio \"WG0\" Materials File\n# black out all controlled window groups.");
+      openstudio::path materials_WG0filename = t_radDir / openstudio::toPath("materials/materials_WG0.rad");
+      OFSTREAM materials_WG0file(materials_WG0filename);
+      if (materials_WG0file.is_open()){
+        t_outfiles.push_back(materials_WG0filename);
+        for (const auto & line : m_radMaterialsWG0)
+        {
+          materials_WG0file << line;
+        };
+      } else{
+        LOG(Error, "Cannot open file '" << toString(materials_WG0filename) << "' for writing");
+      }
+
 
       // write radiance vmx materials list
       // format of this file is: window group, bsdf, bsdf

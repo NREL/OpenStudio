@@ -393,14 +393,14 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
 
     puts "computing view matrix for uncontrolled windows..."
     rtrace_args = "#{t_options.vmx}"
-    system("oconv \"#{t_outPath}/materials/materials.rad\" model.rad \
-      \"#{t_outPath}/skies/dc_sky.rad\" > model_dc.oct")
+    system("oconv \"#{t_outPath}/materials/materials.rad\" \"#{t_outPath}/materials/materials_WG0.rad\" model.rad \
+      \"#{t_outPath}/skies/dc_sky.rad\" > model_WG0.oct")
     # system("oconv \"#{t_outPath}/skies/dc_sky.rad\" > model_dc_skyonly.oct")
     puts "#{Time.now.getutc}: computing sky-to-point daylight coefficients (single phase)..."
     exec_statement("#{t_catCommand} \"#{t_outPath}/numeric/merged_space.map\" \
       | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{t_options.tregVars} \
       -o \"#{t_outPath}/output/dc/WG0.vmx\" \
-      -m skyglow model_dc.oct")
+      -m skyglow model_WG0.oct")
     puts "#{Time.now.getutc}: daylight coefficients computed, \
     stored in #{t_outPath}/output/dc/merged_space/maps"
 
