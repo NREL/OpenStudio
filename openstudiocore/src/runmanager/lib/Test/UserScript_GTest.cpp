@@ -474,8 +474,10 @@ TEST_F(RunManagerTestFixture, BCLMeasureRubyScript)
   rm.waitForFinished();
 
   // DLM: is this failing because we are in normal cleanup mode?
+  // DLM: stderr is also being written due to #1183
   std::vector<openstudio::runmanager::FileInfo> outfiles = j.outputFiles();
-  ASSERT_EQ(4u, outfiles.size());
+  //ASSERT_EQ(4u, outfiles.size());
+  ASSERT_EQ(5u, outfiles.size());
   
   openstudio::runmanager::FileInfo fi2 = outfiles[0];
   //Make sure epw got copied from input to output
