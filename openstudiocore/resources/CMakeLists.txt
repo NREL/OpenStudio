@@ -66,6 +66,8 @@ set(runmanager_resources_src
   runmanager/databasev1.db
   runmanager/DummyMeasure/measure.rb
   runmanager/DummyMeasure/measure.xml
+  runmanager/DummyMeasureEPW/measure.rb
+  runmanager/DummyMeasureEPW/measure.xml
   runmanager/in.file
   runmanager/jsonworkflowtest/small_seed.json
   runmanager/jsonworkflowtest/inputs/measures/adjust_thermostat_setpoints_by_degrees/measure.rb
