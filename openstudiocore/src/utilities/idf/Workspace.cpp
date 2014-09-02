@@ -2424,7 +2424,14 @@ namespace detail {
             {
               origpath = toPath(url->toLocalFile());
             } else {
-              origpath = toPath(url->toString());
+              // DLM: When using QUrl constructor from a string as in getURL, QUrl will assume the 
+              // drive letter in any file path is a scheme and automatically convert the scheme to lower case
+              boost::optional<std::string> rawString = workspaceObject.getString(i);
+              if (rawString && istringEqual(*rawString, url->toString().toStdString())){
+                origpath = toPath(*rawString);
+              } else {
+                origpath = toPath(url->toString());
+              }
             }
 
             if (!origpath.is_complete())
