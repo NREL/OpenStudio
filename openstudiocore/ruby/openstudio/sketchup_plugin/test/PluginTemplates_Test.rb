@@ -21,7 +21,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class PluginTemplates_Test < MiniTest::Unit::TestCase
+class PluginTemplates_Test < Minitest::Test
 
   def test_Templates
     templates_path = "#{$OpenStudio_LibPath}/openstudio/sketchup_plugin/resources/templates/"

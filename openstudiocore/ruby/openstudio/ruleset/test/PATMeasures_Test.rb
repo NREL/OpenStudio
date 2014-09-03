@@ -22,7 +22,7 @@ require 'fileutils'
 
 require 'minitest/autorun'
 
-class PATMeasures_Test < MiniTest::Unit::TestCase
+class PATMeasures_Test < Minitest::Test
 
   def test_PATMeasures
     patApplicationMeasuresDir = OpenStudio::BCLMeasure::patApplicationMeasuresDir

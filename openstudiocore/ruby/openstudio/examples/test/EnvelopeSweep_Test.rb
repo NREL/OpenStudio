@@ -22,7 +22,7 @@ require 'openstudio'
 require 'minitest/autorun'
 
 
-class EnvelopeSweep_Test < MiniTest::Unit::TestCase
+class EnvelopeSweep_Test < Minitest::Test
   
   # def setup
   # end

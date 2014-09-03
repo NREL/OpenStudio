@@ -22,7 +22,7 @@ require 'openstudio/energyplus/find_energyplus'
 
 require 'minitest/autorun'
 
-class Serialization_Test < MiniTest::Unit::TestCase
+class Serialization_Test < Minitest::Test
   
   # def setup
   # end
