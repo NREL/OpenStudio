@@ -485,6 +485,55 @@ TEST_F(RunManagerTestFixture, BCLMeasureRubyScript)
 
 }
 
+TEST_F(RunManagerTestFixture, BCLMeasureRubyScriptEPWPathUnmerged)
+{
+  openstudio::path dir = resourcesPath() / toPath("/runmanager/DummyMeasureEPW");
+  openstudio::path osm = resourcesPath() / toPath("/runmanager/SimpleModel.osm");
+  openstudio::path epw = resourcesPath() / toPath("/runmanager/USA_CO_Golden-NREL.724666_TMY3.epw");
+
+  boost::optional<BCLMeasure> measure = BCLMeasure::load(dir);
+  ASSERT_TRUE(measure);
+
+  openstudio::runmanager::RunManager rm(openstudio::tempDir() / openstudio::toPath("BCLMeasureRubyScriptEPWPath.db"), true, true);
+  openstudio::runmanager::Workflow wf;
+  openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("BCLMeasureRubyScriptEPWPath");
+
+  openstudio::runmanager::RubyJobBuilder rubyjobbuilder(*measure, std::vector<openstudio::ruleset::OSArgument>());
+  rubyjobbuilder.setIncludeDir(getOpenStudioRubyIncludePath());
+
+  wf.addJob(rubyjobbuilder.toWorkItem());
+  wf.addJob(rubyjobbuilder.toWorkItem());
+
+  openstudio::runmanager::Tools tools 
+    = openstudio::runmanager::ConfigOptions::makeTools(energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), 
+        rubyExePath().parent_path(), openstudio::path());
+
+  wf.add(tools);
+
+  boost::filesystem::remove_all(outdir); // Clean up test dir before starting
+
+  openstudio::runmanager::Job j = wf.create(outdir, osm, epw);
+
+  rm.enqueue(j, true);
+
+  std::vector<openstudio::runmanager::FileInfo> infiles = j.inputFiles();
+  ASSERT_EQ(2u, infiles.size());
+  
+  openstudio::runmanager::FileInfo fi = infiles[1];
+  //Make sure epw got attached properly
+  EXPECT_EQ("SimpleModel.osm", fi.filename);
+  ASSERT_EQ(1u, fi.requiredFiles.size());
+  ASSERT_EQ("in.epw", openstudio::toString(fi.requiredFiles[0].second));
+
+  rm.setPaused(false);
+
+  rm.waitForFinished();
+
+  // DLM: is this failing because we are in normal cleanup mode?
+  std::vector<openstudio::runmanager::FileInfo> outfiles = j.outputFiles();
+  EXPECT_TRUE(j.errors().succeeded());
+}
+
 
 TEST_F(RunManagerTestFixture, BCLMeasureRubyScriptEPWPath)
 {
