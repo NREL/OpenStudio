@@ -1232,7 +1232,7 @@ void IndexModelImpl::addAirflowPath(AirflowPath &path)
 void IndexModelImpl::rebuildContaminants()
 {
   m_contaminants.clear();
-  for(unsigned i=1;i<=m_species.size();i++)
+  for(size_t i=0;i<m_species.size();++i)
   {
     m_species[i].setNr(i);
     if(m_species[i].sflag())
