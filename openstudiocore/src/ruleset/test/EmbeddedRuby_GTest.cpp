@@ -45,6 +45,17 @@ using namespace openstudio::model;
 using namespace openstudio::ruleset;
 
 TEST_F(RulesetFixture, UserScript_EmbeddedRubyTest) {
+  const char *argv[] = {"executable"};
+  char **argvpnc = const_cast<char **>(argv);
+
+  int argc = 1;
+  ruby_sysinit(&argc, &argvpnc);
+
+  {
+    RUBY_INIT_STACK;
+    ruby_init();
+  }
+
 
   // Build the list of modules we want to load
   std::vector<std::string> modules;
