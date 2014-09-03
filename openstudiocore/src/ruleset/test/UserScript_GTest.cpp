@@ -497,7 +497,8 @@ TEST_F(RulesetFixture, UserScript_TestModelUserScript2) {
   // lights_definition_num_instances
   it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionNumInstancesFinder);
   ASSERT_FALSE(it == loadedAttributes.end());
-  EXPECT_TRUE(it->valueType() == AttributeValueType::Integer);
+  //EXPECT_TRUE(it->valueType() == AttributeValueType::Integer); // JSON does not distinguish between int and float
+  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
   // lights_definition_floor_area
   it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionFloorAreaFinder);
   ASSERT_FALSE(it == loadedAttributes.end());
@@ -551,7 +552,8 @@ TEST_F(RulesetFixture, UserScript_TestModelUserScript2) {
   // lights_definition_num_instances
   it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionNumInstancesFinder);
   ASSERT_FALSE(it == loadedAttributes.end());
-  EXPECT_TRUE(it->valueType() == AttributeValueType::Integer);
+  //EXPECT_TRUE(it->valueType() == AttributeValueType::Integer); // JSON does not distinguish between int and float
+  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
   // lights_definition_floor_area
   it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionFloorAreaFinder);
   ASSERT_FALSE(it == loadedAttributes.end());

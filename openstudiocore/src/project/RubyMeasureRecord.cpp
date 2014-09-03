@@ -160,7 +160,7 @@ namespace detail {
     ProjectDatabase database = projectDatabase();
     QSqlQuery query(*(database.qSqlDatabase()));
     query.prepare(toQString("SELECT * FROM " + OSArgumentRecord::databaseTableName() +
-                            " WHERE rubyPerturbationRecordId=:rubyPerturbationId"));
+                            " WHERE rubyPerturbationRecordId=:rubyPerturbationRecordId"));
     query.bindValue(":rubyPerturbationRecordId",id());
     assertExec(query);
     while (query.next()) {

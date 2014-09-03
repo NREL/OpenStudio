@@ -21,7 +21,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class InteriorPartitionSurface_Test < MiniTest::Unit::TestCase
+class InteriorPartitionSurface_Test < Minitest::Test
   
   def test_hierarchy
     workspace = OpenStudio::Workspace.new
@@ -73,10 +73,10 @@ class InteriorPartitionSurface_Test < MiniTest::Unit::TestCase
     spaceClone = model.getSpace(clone.handle())
     assert((not spaceClone.empty?))
     assert_equal(1, spaceClone.get.children().size())
-    assert_not_equal(group.handle(), spaceClone.get.children()[0].handle())
+    assert(group.handle().to_s != spaceClone.get.children()[0].handle().to_s)
     assert((not spaceClone.get.children()[0].to_ParentObject().empty?()))
     assert_equal(1, spaceClone.get.children()[0].to_ParentObject().get().children().size())
-    assert_not_equal(surface.handle(), spaceClone.get.children()[0].to_ParentObject().get().children()[0].handle());
+    assert(surface.handle().to_s != spaceClone.get.children()[0].to_ParentObject().get().children()[0].handle().to_s)
   end
 
 end

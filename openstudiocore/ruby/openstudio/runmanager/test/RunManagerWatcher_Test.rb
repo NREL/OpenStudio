@@ -51,7 +51,7 @@ class RunManagerWatcherImpl < OpenStudio::Runmanager::RunManagerWatcher
   end
 end
 
-class RunManagerWatcher_Test < MiniTest::Unit::TestCase
+class RunManagerWatcher_Test < Minitest::Test
 
 
   def test_RunManagerWatcher
@@ -109,8 +109,7 @@ class RunManagerWatcher_Test < MiniTest::Unit::TestCase
     ep_parent_path = ep_path.parent_path();
 
     tools = OpenStudio::Runmanager::ConfigOptions::makeTools(ep_parent_path, OpenStudio::Path.new(), OpenStudio::Path.new(), 
-                                                 $OpenStudio_RubyExeDir, OpenStudio::Path.new(),
-                                                 OpenStudio::Path.new(),OpenStudio::Path.new(),OpenStudio::Path.new(),OpenStudio::Path.new(),OpenStudio::Path.new())
+                                                 $OpenStudio_RubyExeDir, OpenStudio::Path.new())
 
     wf.add(tools);
     wf.addParam(OpenStudio::Runmanager::JobParam.new("flatoutdir"));

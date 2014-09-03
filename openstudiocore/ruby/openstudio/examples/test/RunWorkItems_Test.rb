@@ -23,7 +23,7 @@ require 'fileutils'
 
 require 'minitest/autorun'
 
-class RunWorkItems_Test < MiniTest::Unit::TestCase
+class RunWorkItems_Test < Minitest::Test
 
   # def setup
   # end

@@ -25,7 +25,7 @@ require 'fileutils'
 require 'openstudio/energyplus/find_energyplus'
 
 
-class ModelToRad_Test < MiniTest::Unit::TestCase
+class ModelToRad_Test < Minitest::Test
   
   #def setup
   

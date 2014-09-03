@@ -21,7 +21,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class ISOModel_Test < MiniTest::Unit::TestCase
+class ISOModel_Test < Minitest::Test
 
   def test_ISOModel
   
