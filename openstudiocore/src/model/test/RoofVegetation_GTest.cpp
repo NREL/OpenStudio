@@ -139,20 +139,29 @@ TEST_F(ModelFixture,RoofVegetation_ConductivityofDrySoil_Quantity) {
   // TODO: Check constructor.
   RoofVegetation roofVegetation(model);
 
-  Unit units = roofVegetation.getConductivityofDrySoil(true).units(); // Get IP units.
-
-  // Bounds: 0.2 <= value <= 1.5
+  Unit siUnits = roofVegetation.getConductivityofDrySoil(false).units(); // Get SI units.
+  Unit ipUnits = roofVegetation.getConductivityofDrySoil(true).units(); // Get IP units.
+  
+  // \units W / m - K
+  // \ip - units Btu - in / hr - ft2 - R
+  // Bounds: 0.2 <= value <= 1.5 W / m - K
+  // to convert from SI to IP multiply by	6.9334713
 
   double value(1.0);
-  Quantity testQ(value,units);
+  EXPECT_TRUE(roofVegetation.setConductivityofDrySoil(value));
+
+  Quantity testQ(value, siUnits);
+  EXPECT_TRUE(roofVegetation.setConductivityofDrySoil(testQ));
+  
+  testQ = Quantity(value, ipUnits);
   EXPECT_FALSE(roofVegetation.setConductivityofDrySoil(testQ));
 
   double value2(0.2);
-  Quantity testQ2(value2,units);
+  Quantity testQ2(value2, siUnits);
   EXPECT_TRUE(roofVegetation.setConductivityofDrySoil(testQ2));
   Quantity q2 = roofVegetation.getConductivityofDrySoil(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
+  EXPECT_NEAR(value2, q2.value(), 6.9334713*0.2);
+  EXPECT_EQ(ipUnits.standardString(),q2.units().standardString());
 }
 
 TEST_F(ModelFixture,RoofVegetation_DensityofDrySoil_Quantity) {

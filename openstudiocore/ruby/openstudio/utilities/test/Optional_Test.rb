@@ -60,11 +60,11 @@ class Optional_Test < MiniTest::Unit::TestCase
     end
 
     optional = OpenStudio::OptionalDouble.new
-    assert(!optional.is_initialized);
+    assert(!optional.is_initialized)
     assert_raises(RuntimeError) {optional.get}
-    optional.set(10.0);
-    assert(optional.is_initialized);
-    assert_nothing_raised { optional.get }
+    optional.set(10.0)
+    assert(optional.is_initialized)
+    assert_equal(10.0, optional.get)
 
 
     

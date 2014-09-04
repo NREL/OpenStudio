@@ -73,7 +73,8 @@ epw_path = OpenStudio::Path.new(epDir / OpenStudio::Path.new("in.epw"))
 
 # configure logging
 logFile = OpenStudio::FileLogSink.new(analysisDir / OpenStudio::Path.new("EnvelopeSweep.log"))
-logFile.setLogLevel(0)
+#logFile.setLogLevel(OpenStudio::Debug)
+logFile.setLogLevel(OpenStudio::Warn)
 OpenStudio::Logger.instance.standardOutLogger.disable
 
 # SEED MODEL
@@ -183,16 +184,13 @@ rmWorkflow.addJob(rubyJobBuilder.toWorkItem())
 # define the problem
 problem = OpenStudio::Analysis::Problem.new("Envelope Problem", variables, rmWorkflow)
 
-
 # ALGORITHM
 puts "Setting the algorithm."
 options = OpenStudio::Analysis::DesignOfExperimentsOptions.new("FullFactorial".to_DesignOfExperimentsType)
 algorithm = OpenStudio::Analysis::DesignOfExperiments.new(options)
 
-
 # ANALYSIS
 analysis = OpenStudio::Analysis::Analysis.new("Mesh Analysis", problem, algorithm, seed)
-
 
 # RUN ANALYSIS
 
@@ -209,8 +207,8 @@ database = OpenStudio::Project::ProjectDatabase.new(projectPath, runManager)
 # run generates all the models and runs them
 puts "Running the analysis."
 analysisDriver = OpenStudio::AnalysisDriver::AnalysisDriver.new(database)
-runOptions = OpenStudio::AnalysisDriver::AnalysisRunOptions.new(analysisDir,
-                                                                OpenStudio::Path.new($OpenStudio_Dir))
+runOptions = OpenStudio::AnalysisDriver::AnalysisRunOptions.new(analysisDir, OpenStudio::Path.new($OpenStudio_Dir))
+
 # add tools 
 runOptions.setRunManagerTools(OpenStudio::Runmanager::ConfigOptions::makeTools(
     ep_parent_path, 
@@ -226,13 +224,12 @@ analysisDriver.waitForFinished()
 
 # find the baseline
 puts "Post-processing the results."
-analysisRecord = OpenStudio::Project::AnalysisRecord::getAnalysisRecords(
-    analysisDriver.database)[0]
+analysisRecord = OpenStudio::Project::AnalysisRecord::getAnalysisRecords(analysisDriver.database)[0]
 testVariableValues = OpenStudio::QVariantVector.new
 testVariableValues.push(OpenStudio::QVariant.new(0))
 testVariableValues.push(OpenStudio::QVariant.new(0))
 testDataPoints = analysisRecord.getDataPointRecords(testVariableValues);
-raise "Unexpected number of baseline points." if not (testDataPoints.size == 1)
+raise "Unexpected number of baseline points #{testDataPoints.size}." if not (testDataPoints.size == 1)
 
 table = []
 row = ["wallInsulationThickness"]

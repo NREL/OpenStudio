@@ -330,6 +330,7 @@ namespace detail {
     ss.str("");
     query.bindValue(":analysisRecordId",id());
     for (int i = 0, n = discretePerturbationRecordIds.size(); i < n; ++i) {
+      ss.str("");
       ss << ":rightId" << i;
       query.bindValue(toQString(ss.str()),discretePerturbationRecordIds[i]);
     }

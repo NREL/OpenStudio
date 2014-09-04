@@ -81,7 +81,7 @@ QVariant loadJSON(const openstudio::path& p) {
 
 QVariant loadJSON(const std::string& json) {
   QJsonDocument doc = QJsonDocument::fromJson(toQString(json).toUtf8());
-  if (!doc.isNull()) {
+  if (doc.isNull()) {
     LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON");
   }
   return doc.toVariant();
