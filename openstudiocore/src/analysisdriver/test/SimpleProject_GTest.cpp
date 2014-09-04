@@ -259,6 +259,12 @@ TEST_F(AnalysisDriverFixture,SimpleProject_UpdateMeasure) {
   OSArgumentVector args = argumentGetter->getArguments(projectMeasure,
                                                        project.seedModel(),
                                                        project.seedIdf());
+
+  for (const auto &a : args)
+  {
+    EXPECT_TRUE(a.hasDefaultValue());
+  }
+
   project.registerArguments(projectMeasure,args);
   EXPECT_EQ(1u,project.measures().size());
 
@@ -269,7 +275,6 @@ TEST_F(AnalysisDriverFixture,SimpleProject_UpdateMeasure) {
   rp.setArguments(args);
   EXPECT_TRUE(dv.push(rp));
   EXPECT_EQ(args.size(),rp.arguments().size());
-  EXPECT_TRUE(rp.hasIncompleteArguments());
   for (const OSArgument& arg : args) {
     if (arg.name() == "wwr") {
       OSArgument temp = arg.clone();

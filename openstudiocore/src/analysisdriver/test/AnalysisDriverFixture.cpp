@@ -86,6 +86,17 @@ void AnalysisDriverFixture::SetUp() {}
 void AnalysisDriverFixture::TearDown() {}
 
 void AnalysisDriverFixture::SetUpTestCase() {
+  const char *argv[] = {"executable"};
+  char **argvpnc = const_cast<char **>(argv);
+
+  int argc = 1;
+  ruby_sysinit(&argc, &argvpnc);
+
+  {
+    RUBY_INIT_STACK;
+    ruby_init();
+  }
+
   // set up logging
   logFile = FileLogSink(toPath("./AnalysisDriverFixture.log"));
   logFile->setLogLevel(Debug); // SimpleProjects get set to same log level
