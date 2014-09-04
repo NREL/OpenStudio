@@ -47,7 +47,7 @@ namespace openstudio {
     QWidget * parent)
   : ModelSubTabView(new ModelObjectListView(IddObjectType::OS_SpaceType, model, true, parent),
                     new SpaceTypeInspectorView(isIP, model, parent),
-                    true,
+                    true, // Note: "true" creates a GridView SubTabView
                     parent)
 {
   ModelObjectListView* modelObjectListView = qobject_cast<ModelObjectListView*>(this->itemSelector());

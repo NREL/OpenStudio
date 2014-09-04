@@ -365,6 +365,12 @@ void OSGridView::selectCategory(int index)
 
 }
 
+ModelSubTabView * OSGridView::modelSubTabView()
+{
+  ModelSubTabView *  modelSubTabView = nullptr;
+  return modelSubTabView;
+}
+
 void OSGridView::onSelectionCleared()
 {
   m_gridController->onSelectionCleared();

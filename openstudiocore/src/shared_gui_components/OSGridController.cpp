@@ -29,8 +29,11 @@
 #include "OSQuantityEdit.hpp"
 #include "OSUnsignedEdit.hpp"
 
+#include "../openstudio_lib/ModelObjectInspectorView.hpp"
 #include "../openstudio_lib/ModelObjectItem.hpp"
+#include "../openstudio_lib/ModelSubTabView.hpp"
 #include "../openstudio_lib/OSDropZone.hpp"
+#include "../openstudio_lib/OSItemSelector.hpp"
 #include "../openstudio_lib/RenderingColorWidget.hpp"
 #include "../openstudio_lib/SchedulesView.hpp"
 
@@ -696,6 +699,9 @@ void OSGridController::selectRow(int rowIndex, bool select)
   std::vector<QWidget *> row = this->row(rowIndex);
   for (auto widget : row){
     auto button = qobject_cast<QPushButton *>(widget);
+    if (!button){
+      return;
+    }
     button->blockSignals(true);
     button->setChecked(select);
     button->blockSignals(false);
@@ -771,9 +777,7 @@ void OSGridController::cellChecked(int index)
     //       creating unwanted feedback
     m_acceptItemSelectedSignals = false;
     emit gridRowSelected(item);
-
   }
-
 }
 
 void OSGridController::selectItemId(const OSItemId& itemId)
@@ -791,11 +795,17 @@ void OSGridController::onItemSelected(OSItem * item)
   refreshModelObjects();
   gridView()->refreshAll();
   QApplication::processEvents();
+
+  auto modelSubTabView = gridView()->modelSubTabView();
+  if (!modelSubTabView) return;
+
+  item = modelSubTabView->itemSelector()->selectedItem();
+
   for (auto modelObject : m_modelObjects){
     OSItemId itemId = modelObjectToItemId(modelObject, false);
     if (item->itemId() == itemId){
       selectRow(rowIndexFromModelIndex(i), selected);
-      break;
+      return;
     }
     i++;
   }
@@ -806,6 +816,10 @@ void OSGridController::onSelectionCleared()
   // TODO use a single shot timer, just once to handle this
   refreshModelObjects();
   gridView()->requestRefreshAll();
+}
+
+void OSGridController::onDropZoneItemClicked(OSItem*)
+{
 }
 
 HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)
@@ -821,10 +835,6 @@ HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidge
   layout->addWidget(m_label);
 
   layout->addWidget(m_checkBox);
-}
-
-void OSGridController::onDropZoneItemClicked(OSItem*)
-{
 }
 
 } // openstudio

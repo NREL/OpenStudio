@@ -33,6 +33,7 @@ class QString;
 
 namespace openstudio{
 
+class ModelSubTabView;
 class OSCollapsibleView;
 class OSDropZone;
 class OSGridController;
@@ -51,6 +52,8 @@ public:
   QGridLayout * m_gridLayout;
 
   OSDropZone * m_dropZone;
+
+  virtual ModelSubTabView * modelSubTabView();
 
 signals:
 

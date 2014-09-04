@@ -19,7 +19,9 @@
 
 #include "SpaceTypesGridView.hpp"
 
+#include "ModelObjectInspectorView.hpp"
 #include "ModelObjectItem.hpp"
+#include "ModelSubTabView.hpp"
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 #include "OSDropZone.hpp"
@@ -33,24 +35,40 @@
 #include "../model/DesignSpecificationOutdoorAir.hpp"
 #include "../model/DesignSpecificationOutdoorAir_Impl.hpp"
 #include "../model/ElectricEquipment.hpp"
+#include "../model/ElectricEquipmentDefinition.hpp"
+#include "../model/ElectricEquipmentDefinition_Impl.hpp"
 #include "../model/ElectricEquipment_Impl.hpp"
 #include "../model/GasEquipment.hpp"
+#include "../model/GasEquipmentDefinition.hpp"
+#include "../model/GasEquipmentDefinition_Impl.hpp"
 #include "../model/GasEquipment_Impl.hpp"
 #include "../model/HotWaterEquipment.hpp"
+#include "../model/HotWaterEquipmentDefinition.hpp"
+#include "../model/HotWaterEquipmentDefinition_Impl.hpp"
 #include "../model/HotWaterEquipment_Impl.hpp"
 #include "../model/InternalMass.hpp"
+#include "../model/InternalMassDefinition.hpp"
+#include "../model/InternalMassDefinition_Impl.hpp"
 #include "../model/InternalMass_Impl.hpp"
 #include "../model/Lights.hpp"
+#include "../model/LightsDefinition.hpp"
+#include "../model/LightsDefinition_Impl.hpp"
 #include "../model/Lights_Impl.hpp"
 #include "../model/Luminaire.hpp"
+#include "../model/LuminaireDefinition.hpp"
+#include "../model/LuminaireDefinition_Impl.hpp"
 #include "../model/Luminaire_Impl.hpp"
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
 #include "../model/Model_Impl.hpp"
 #include "../model/OtherEquipment.hpp"
+#include "../model/OtherEquipmentDefinition.hpp"
+#include "../model/OtherEquipmentDefinition_Impl.hpp"
 #include "../model/OtherEquipment_Impl.hpp"
 #include "../model/People.hpp"
+#include "../model/PeopleDefinition.hpp"
+#include "../model/PeopleDefinition_Impl.hpp"
 #include "../model/People_Impl.hpp"
 #include "../model/RenderingColor.hpp"
 #include "../model/RenderingColor_Impl.hpp"
@@ -61,35 +79,17 @@
 #include "../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
 #include "../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
 #include "../model/SpaceLoad.hpp"
-#include "../model/SpaceLoad_Impl.hpp"
 #include "../model/SpaceLoadDefinition.hpp"
 #include "../model/SpaceLoadDefinition_Impl.hpp"
 #include "../model/SpaceLoadInstance.hpp"
 #include "../model/SpaceLoadInstance_Impl.hpp"
+#include "../model/SpaceLoad_Impl.hpp"
 #include "../model/SpaceType.hpp"
 #include "../model/SpaceType_Impl.hpp"
 #include "../model/SteamEquipment.hpp"
-#include "../model/SteamEquipment_Impl.hpp"
-
-#include "../model/InternalMassDefinition.hpp"
-#include "../model/PeopleDefinition.hpp"
-#include "../model/LightsDefinition.hpp"
-#include "../model/LuminaireDefinition.hpp"
-#include "../model/ElectricEquipmentDefinition.hpp"
-#include "../model/GasEquipmentDefinition.hpp"
-#include "../model/HotWaterEquipmentDefinition.hpp"
 #include "../model/SteamEquipmentDefinition.hpp"
-#include "../model/OtherEquipmentDefinition.hpp"
-
-#include "../model/InternalMassDefinition_Impl.hpp"
-#include "../model/PeopleDefinition_Impl.hpp"
-#include "../model/LightsDefinition_Impl.hpp"
-#include "../model/LuminaireDefinition_Impl.hpp"
-#include "../model/ElectricEquipmentDefinition_Impl.hpp"
-#include "../model/GasEquipmentDefinition_Impl.hpp"
-#include "../model/HotWaterEquipmentDefinition_Impl.hpp"
 #include "../model/SteamEquipmentDefinition_Impl.hpp"
-#include "../model/OtherEquipmentDefinition_Impl.hpp"
+#include "../model/SteamEquipment_Impl.hpp"
 
 #include "../utilities/idd/OS_SpaceType_FieldEnums.hxx"
 
@@ -97,6 +97,7 @@
 #include <QCheckBox>
 #include <QLabel>
 #include <QScrollArea>
+#include <QStackedWidget>
 #include <QSettings>
 #include <QTimer>
 
@@ -178,6 +179,34 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
 
   std::vector<model::SpaceType> spaceType = model.getModelObjects<model::SpaceType>(); // NOTE for horizontal system lists
 
+}
+
+ModelSubTabView * SpaceTypesGridView::modelSubTabView()
+{
+  auto spaceTypesGridView = qobject_cast<SpaceTypesGridView *>(this->parent());
+  OS_ASSERT(spaceTypesGridView);
+
+  auto stackedWidget = qobject_cast<QStackedWidget *>(spaceTypesGridView->parent());
+  OS_ASSERT(stackedWidget);
+
+  auto widget = qobject_cast<QWidget *>(stackedWidget->parent());
+  OS_ASSERT(widget);
+
+  auto scrollArea = qobject_cast<QScrollArea *>(widget->parent());
+  OS_ASSERT(scrollArea);
+
+  // SpaceTypeView
+  auto modelObjectInspectorView = qobject_cast<ModelObjectInspectorView *>(scrollArea->parent());
+  OS_ASSERT(modelObjectInspectorView);
+
+  auto object = qobject_cast<QObject *>(modelObjectInspectorView->parent());
+  OS_ASSERT(object);
+
+  // SpaceTypesView
+  auto modelSubTabView = qobject_cast<ModelSubTabView *>(object->parent());
+  OS_ASSERT(modelSubTabView);
+
+  return modelSubTabView;
 }
 
 void SpaceTypesGridView::onDropZoneItemClicked(OSItem* item)

@@ -29,6 +29,8 @@
 
 namespace openstudio{
 
+class ModelSubTabView;
+
 class ThermalZonesGridView : public QWidget
 {
   Q_OBJECT
@@ -38,6 +40,8 @@ public:
   ThermalZonesGridView(bool isIP, const model::Model & model, QWidget * parent = 0);
 
   virtual ~ThermalZonesGridView() {}
+
+  virtual ModelSubTabView * modelSubTabView();
 
 private:
 

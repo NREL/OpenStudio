@@ -29,6 +29,8 @@
 
 namespace openstudio{
 
+class ModelSubTabView;
+
 class SpaceTypesGridView : public QWidget
 {
   Q_OBJECT
@@ -38,6 +40,8 @@ public:
   SpaceTypesGridView(bool isIP, const model::Model & model, QWidget * parent = 0);
 
   virtual ~SpaceTypesGridView() {}
+
+  virtual ModelSubTabView * modelSubTabView();
 
 private:
 

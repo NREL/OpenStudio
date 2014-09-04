@@ -19,7 +19,9 @@
 
 #include "ThermalZonesGridView.hpp"
 
+#include "ModelObjectInspectorView.hpp"
 #include "ModelObjectItem.hpp"
+#include "ModelSubTabView.hpp"
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 #include "OSDropZone.hpp"
@@ -49,6 +51,7 @@
 #include <QCheckBox>
 #include <QLabel>
 #include <QScrollArea>
+#include <QStackedWidget>
 #include <QSettings>
 #include <QTimer>
 
@@ -137,6 +140,34 @@ ThermalZonesGridView::ThermalZonesGridView(bool isIP, const model::Model & model
 
   std::vector<model::ThermalZone> thermalZone = model.getModelObjects<model::ThermalZone>(); // NOTE for horizontal system lists
 
+}
+
+ModelSubTabView * ThermalZonesGridView::modelSubTabView()
+{
+  auto thermalZonesGridView = qobject_cast<ThermalZonesGridView *>(this->parent());
+  OS_ASSERT(thermalZonesGridView);
+
+  auto stackedWidget = qobject_cast<QStackedWidget *>(thermalZonesGridView->parent());
+  OS_ASSERT(stackedWidget);
+
+  auto widget = qobject_cast<QWidget *>(stackedWidget->parent());
+  OS_ASSERT(widget);
+
+  auto scrollArea = qobject_cast<QScrollArea *>(widget->parent());
+  OS_ASSERT(scrollArea);
+
+  // ThermalZoneView
+  auto modelObjectInspectorView = qobject_cast<ModelObjectInspectorView *>(scrollArea->parent());
+  OS_ASSERT(modelObjectInspectorView);
+
+  auto object = qobject_cast<QObject *>(modelObjectInspectorView->parent());
+  OS_ASSERT(object);
+
+  // ThermalZonesView
+  auto modelSubTabView = qobject_cast<ModelSubTabView *>(object->parent());
+  OS_ASSERT(modelSubTabView);
+
+  return modelSubTabView;
 }
 
 ThermalZonesGridController::ThermalZonesGridController(bool isIP,
