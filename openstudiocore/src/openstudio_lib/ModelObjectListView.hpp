@@ -74,7 +74,7 @@ public:
   IddObjectType iddObjectType() const;
 };
 
-  
+
 
 } // openstudio
 

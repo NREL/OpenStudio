@@ -284,7 +284,7 @@ namespace detail {
 
     void resetZoneCoolingSizingFactor();
 
-    bool setCoolingDesignAirFlowMethod(std::string coolingDesignAirFlowMethod);
+    bool setCoolingDesignAirFlowMethod(const std::string &coolingDesignAirFlowMethod);
 
     void resetCoolingDesignAirFlowMethod();
 

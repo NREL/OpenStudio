@@ -84,11 +84,10 @@
 #include "../model/SteamEquipment_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
-
-#include <utilities/idd/OS_Building_FieldEnums.hxx>
-#include <utilities/idd/OS_People_FieldEnums.hxx>
-#include <utilities/idd/OS_SpaceType_FieldEnums.hxx>
-#include <utilities/idd/OS_Space_FieldEnums.hxx>
+#include "../utilities/idd/OS_Building_FieldEnums.hxx"
+#include "../utilities/idd/OS_People_FieldEnums.hxx"
+#include "../utilities/idd/OS_SpaceType_FieldEnums.hxx"
+#include "../utilities/idd/OS_Space_FieldEnums.hxx"
 
 #include <QFrame>
 #include <QGridLayout>

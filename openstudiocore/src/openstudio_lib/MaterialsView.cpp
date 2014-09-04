@@ -52,6 +52,7 @@ MaterialsView::MaterialsView(bool isIP,
                              QWidget * parent)
 : ModelSubTabView(new ModelObjectTypeListView(MaterialsView::modelObjectTypesAndNames(), model, true, OSItemType::CollapsibleListHeader, parent),
   new MaterialsInspectorView(isIP, model, parent),
+  false,
   parent)
 {
   connect(this, &MaterialsView::toggleUnitsClicked, modelObjectInspectorView(), &ModelObjectInspectorView::toggleUnitsClicked);

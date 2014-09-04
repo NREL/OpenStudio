@@ -18,34 +18,58 @@
 **********************************************************************/
 
 #include "SpaceTypesView.hpp"
-#include "SpaceTypeInspectorView.hpp"
+
 #include "ModelObjectListView.hpp"
+#include "OSItem.hpp"
+#include "SpaceTypeInspectorView.hpp"
+
+#include "../openstudio_lib/OSItem.hpp"
 
 #include "../model/Model_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
-#include <QStyleOption>
-#include <QPainter>
-#include <QVBoxLayout>
 #include <QLabel>
+#include <QPainter>
 #include <QPushButton>
-#include <QStackedWidget>
 #include <QScrollArea>
+#include <QStackedWidget>
+#include <QStyleOption>
+#include <QVBoxLayout>
+
 #include <sstream>
 
 namespace openstudio {
 
 
-SpaceTypesView::SpaceTypesView(const openstudio::model::Model& model, 
-                              QWidget * parent)
+  SpaceTypesView::SpaceTypesView(bool isIP,
+    const openstudio::model::Model& model,
+    QWidget * parent)
   : ModelSubTabView(new ModelObjectListView(IddObjectType::OS_SpaceType, model, true, parent),
-                    new SpaceTypeInspectorView(model, parent),
+                    new SpaceTypeInspectorView(isIP, model, parent),
+                    true, // Note: "true" creates a GridView SubTabView
                     parent)
 {
   ModelObjectListView* modelObjectListView = qobject_cast<ModelObjectListView*>(this->itemSelector());
   OS_ASSERT(modelObjectListView);
   modelObjectListView->setItemsDraggable(false);
+
+  bool isConnected = false;
+
+  isConnected = connect(itemSelector(), SIGNAL(itemSelected(OSItem *)), inspectorView(), SIGNAL(itemSelected(OSItem *)));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(itemSelector(), SIGNAL(selectionCleared()), inspectorView(), SIGNAL(selectionCleared()));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(inspectorView(), SIGNAL(gridRowSelected(OSItem*)), itemSelector(), SIGNAL(gridRowSelected(OSItem*)));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(inspectorView(), SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), inspectorView(), SIGNAL(itemSelected(OSItem *)));
+  OS_ASSERT(isConnected);
 }
 
 } // openstudio

@@ -32,7 +32,8 @@ class SpaceTypesTabController : public MainTabController
 
   public:
 
-    SpaceTypesTabController(const openstudio::model::Model& model);
+    SpaceTypesTabController(bool isIP,
+      const openstudio::model::Model& model);
 
     virtual ~SpaceTypesTabController() {}
 

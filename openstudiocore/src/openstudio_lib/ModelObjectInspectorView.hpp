@@ -54,9 +54,21 @@ class ModelObjectInspectorView : public OSInspectorView
 
     void toggleUnitsClicked(bool displayIP);
 
+    void itemSelected(OSItem * item);
+
+    void selectionCleared();
+
+    void itemsRequested();
+
+    void gridRowSelected(OSItem * item);
+
+    void dropZoneItemClicked(OSItem* item);
+
   public slots:
 
     void selectModelObject(const openstudio::model::ModelObject& modelObject);
+
+    void onDropZoneItemClicked(OSItem* item);
 
   protected:
     virtual void onSelectItem(OSItem *item);

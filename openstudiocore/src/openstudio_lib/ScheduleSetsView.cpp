@@ -42,6 +42,7 @@ ScheduleSetsView::ScheduleSetsView(const openstudio::model::Model& model,
                                    QWidget * parent)
                                    : ModelSubTabView(new ModelObjectListView(IddObjectType::OS_DefaultScheduleSet, model, true, parent),
                                    new ScheduleSetInspectorView(model, parent),
+                                   false,
                                    parent)
 {
 }

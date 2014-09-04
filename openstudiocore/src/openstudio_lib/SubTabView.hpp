@@ -26,7 +26,6 @@
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
 
-//#include <QWidget>
 #include <QSplitter>
 
 class QPushButton;
@@ -46,8 +45,9 @@ class SubTabView : public QSplitter
   public:
 
     SubTabView(OSItemSelector* itemSelector,
-               OSInspectorView* inspectorView,
-               QWidget* parent = 0);
+      OSInspectorView* inspectorView,
+      bool showGridViewLayout = false,
+      QWidget * parent = 0);
 
     virtual ~SubTabView() {}
 
@@ -89,11 +89,27 @@ class SubTabView : public QSplitter
 
     void openLibDlgClicked();
 
+  protected slots:
+
+    virtual void onDropZoneItemClicked(OSItem*);
+
   protected:
 
     void paintEvent ( QPaintEvent * event );
 
   private:
+
+    void connectItemSelector();
+
+    void connectInspectorView();
+
+    void connectGridView();
+
+    void connectItemSelectorButtons();
+
+    void createLayout();
+
+    void createGridViewLayout();
 
     QScrollArea* m_selectorScrollArea;
 
@@ -102,10 +118,9 @@ class SubTabView : public QSplitter
     OSItemSelectorButtons* m_itemSelectorButtons;
 
     OSInspectorView* m_inspectorView;
-};
 
+};
 
 } // openstudio
 
 #endif // OPENSTUDIO_SUBTABVIEW_HPP
-

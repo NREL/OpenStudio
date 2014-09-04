@@ -48,6 +48,7 @@ class ModelSubTabView : public SubTabView
 
     ModelSubTabView(OSItemSelector* itemSelector,
                ModelObjectInspectorView* modelObjectInspectorView,
+               bool showGridViewLayout = false,
                QWidget* parent = 0);
 
     virtual ~ModelSubTabView() {}
@@ -66,9 +67,9 @@ class ModelSubTabView : public SubTabView
 
   protected slots:
 
-    void dropZoneItemClicked(OSItem* item);
+    virtual void onDropZoneItemClicked(OSItem* item);
 
-    void onItemSelected();
+    //void onItemSelected(); EW: Dead slot
 
   private:
 

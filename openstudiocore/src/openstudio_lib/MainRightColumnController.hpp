@@ -32,11 +32,12 @@ class QStackedWidget;
 
 namespace openstudio {
 
+class EditController;
 class HorizontalTabWidget;
 class InspectorController;
 class LocalLibraryController;
-class EditController;
 class SystemItem;
+class OSItem;
 
 class MainRightColumnController : public OSQObjectController
 {
@@ -72,6 +73,8 @@ class MainRightColumnController : public OSQObjectController
   signals:
   
   void toggleUnitsClicked(bool displayIP);
+
+  void itemRemoveClicked(OSItem *);
 
   public slots:
 
@@ -116,6 +119,7 @@ class MainRightColumnController : public OSQObjectController
   QSharedPointer<EditController> measuresEditController();
 
   private:
+
   REGISTER_LOGGER("openstudio.openstudio_lib.MainRightColumnController");
 
   void setMyModelView(QWidget * widget);
@@ -145,6 +149,13 @@ class MainRightColumnController : public OSQObjectController
   QSharedPointer<EditController> m_measureEditController;
 
   bool m_myModelTabIsHidden;
+
+  private slots:
+
+  void onItemRemoveClicked(OSItem *);
+
+  void emitItemRemoveClicked(OSItem *);
+
 };
 
 } // openstudio

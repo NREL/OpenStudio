@@ -67,6 +67,7 @@ UtilityBillsView::UtilityBillsView(const openstudio::model::Model& model, QWidge
                                                                            OSItemType::CollapsibleListHeader, 
                                                                            parent),
                                        new UtilityBillsInspectorView(model,parent),
+                                       false,
                                        parent)
 {
   connect(dynamic_cast<UtilityBillsInspectorView *>(modelObjectInspectorView()), &UtilityBillsInspectorView::enableAddNewObjectButton,

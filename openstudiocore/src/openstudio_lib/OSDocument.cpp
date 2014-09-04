@@ -544,7 +544,7 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
 
   // Space Types
 
-  m_spaceTypesTabController = std::shared_ptr<SpaceTypesTabController>( new SpaceTypesTabController(m_model) );
+  m_spaceTypesTabController = std::shared_ptr<SpaceTypesTabController>(new SpaceTypesTabController(isIP, m_model));
   m_mainWindow->addVerticalTab( m_spaceTypesTabController->mainContentWidget(),
                                 SPACE_TYPES,
                                 "Space Types",
@@ -561,6 +561,10 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
 
   connect(m_spaceTypesTabController.get(), &SpaceTypesTabController::openLibDlgClicked,
           this, &OSDocument::openLibDlgClicked);
+
+  //itemRemoveClicked(OSItem *)
+  connect(m_mainRightColumnController.get(), &MainRightColumnController::itemRemoveClicked,
+          m_spaceTypesTabController.get(), &SpaceTypesTabController::itemRemoveClicked);
 
   // Building Stories
 

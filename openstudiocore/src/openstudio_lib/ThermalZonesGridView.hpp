@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,27 +17,31 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_REFRIGERATIONGRIDVIEW_HPP
-#define OPENSTUDIO_REFRIGERATIONGRIDVIEW_HPP
+#ifndef OPENSTUDIO_THERMALZONESGRIDVIEW_H
+#define OPENSTUDIO_THERMALZONESGRIDVIEW_H
 
-#include "../shared_gui_components/OSGridController.hpp"
-#include "OSItem.hpp"
+#include <shared_gui_components/OSGridController.hpp>
+#include <openstudio_lib/OSItem.hpp>
 
-#include "../model/Model.hpp"
+#include <model/Model.hpp>
 
 #include <QWidget>
 
 namespace openstudio{
 
-class RefrigerationGridView : public QWidget
+class ModelSubTabView;
+
+class ThermalZonesGridView : public QWidget
 {
   Q_OBJECT
 
 public:
 
-  RefrigerationGridView(bool isIP, const model::Model & model, QWidget * parent = 0);
+  ThermalZonesGridView(bool isIP, const model::Model & model, QWidget * parent = 0);
 
-  virtual ~RefrigerationGridView() {}
+  virtual ~ThermalZonesGridView() {}
+
+  virtual ModelSubTabView * modelSubTabView();
 
 private:
 
@@ -49,55 +53,27 @@ signals:
 
   void dropZoneItemClicked(OSItem* item);
 
+  void itemSelected(OSItem * item);
+
+  void selectionCleared();
+
+  void gridRowSelected(OSItem*);
+
 };
 
-class RefrigerationCaseGridController : public OSGridController
+class ThermalZonesGridController : public OSGridController
 {
 
   Q_OBJECT
 
 public:
 
-  RefrigerationCaseGridController(bool isIP,
+  ThermalZonesGridController(bool isIP,
     const QString & headerText,
     model::Model model,
     std::vector<model::ModelObject> modelObjects);
 
-  virtual ~RefrigerationCaseGridController() {}
-
-  virtual void refreshModelObjects();
-
-protected:
-
-  virtual void setCategoriesAndFields();
-
-  virtual void addColumns(std::vector<QString> & fields);
-
-  virtual void checkSelectedFields();
-
-  virtual QString getColor(const model::ModelObject & modelObject);
-
-public slots:
-
-  virtual void onItemDropped(const OSItemId& itemId);
-
-  virtual void onComboBoxIndexChanged(int index);
-
-};
-
-class RefrigerationWalkInGridController : public OSGridController
-{
-
-  Q_OBJECT
-
-public:
-
-  RefrigerationWalkInGridController(bool isIP,
-    const QString & headerText,
-    model::Model model,
-    std::vector<model::ModelObject> modelObjects);
-
-  virtual ~RefrigerationWalkInGridController() {}
+  virtual ~ThermalZonesGridController() {}
 
   virtual void refreshModelObjects();
 
@@ -121,5 +97,5 @@ public slots:
 
 } // openstudio
 
-#endif // OPENSTUDIO_REFRIGERATIONGRIDVIEW_HPP
+#endif // OPENSTUDIO_THERMALZONESGRIDVIEW_H
 
