@@ -41,7 +41,7 @@ module OpenStudio
   end
 end
 
-class ProgressBar_Test < Minitest::Test
+class ProgressBar_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

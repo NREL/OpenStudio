@@ -21,7 +21,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class Component_Test < Minitest::Test
+class Component_Test < MiniTest::Unit::TestCase
 
   def test_lightingSchedule_fromScratch
   

@@ -21,7 +21,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class Comments_Test < Minitest::Test
+class Comments_Test < MiniTest::Unit::TestCase
 
   # def setup
   # end

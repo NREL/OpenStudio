@@ -23,7 +23,7 @@ require 'fileutils'
 
 require 'minitest/autorun'
 
-class AttributeRecord_Test < Minitest::Test
+class AttributeRecord_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

@@ -21,7 +21,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class Enum_Test < Minitest::Test
+class Enum_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

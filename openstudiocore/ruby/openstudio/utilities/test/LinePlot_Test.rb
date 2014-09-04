@@ -21,7 +21,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class LinePlot_Test < Minitest::Test
+class LinePlot_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

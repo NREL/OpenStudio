@@ -23,7 +23,7 @@ require 'fileutils'
 require 'minitest/autorun'
 
 
-class CreateScheduleLibrary_Test < Minitest::Test
+class CreateScheduleLibrary_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

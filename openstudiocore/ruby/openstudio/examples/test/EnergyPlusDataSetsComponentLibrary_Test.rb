@@ -22,7 +22,7 @@ require 'openstudio/energyplus/find_energyplus'
 
 require 'minitest/autorun'
 
-class EnergyPlusDataSetsComponentLibrary_Test < Minitest::Test
+class EnergyPlusDataSetsComponentLibrary_Test < MiniTest::Unit::TestCase
 
   # def setup
   # end

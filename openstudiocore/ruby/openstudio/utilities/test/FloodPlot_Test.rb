@@ -21,7 +21,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class FloodPlot_Test < Minitest::Test
+class FloodPlot_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

@@ -26,7 +26,7 @@ require 'openstudio/energyplus/find_energyplus'
 
 
 
-class DaylightSim_Test < Minitest::Test
+class DaylightSim_Test < MiniTest::Unit::TestCase
   
   def setup
  

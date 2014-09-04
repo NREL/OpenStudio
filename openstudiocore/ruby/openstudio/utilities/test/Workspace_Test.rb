@@ -21,7 +21,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class Workspace_Test < Minitest::Test
+class Workspace_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

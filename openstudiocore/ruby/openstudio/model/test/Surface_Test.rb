@@ -21,7 +21,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class Surface_Test < Minitest::Test
+class Surface_Test < MiniTest::Unit::TestCase
   
   def test_Surfaces
     model = OpenStudio::Model::exampleModel

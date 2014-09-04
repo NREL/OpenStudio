@@ -23,7 +23,7 @@ require 'fileutils'
 
 require 'minitest/autorun'
 
-class TimeDependentValuation_Test < Minitest::Test
+class TimeDependentValuation_Test < MiniTest::Unit::TestCase
   
   def test_TimeDependentValuation_Construction
   
