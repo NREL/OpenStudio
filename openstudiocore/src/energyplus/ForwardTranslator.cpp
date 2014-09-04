@@ -19,35 +19,40 @@
 
 #include "EnergyPlusAPI.hpp"
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "ForwardTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/ConstructionWithInternalSource.hpp>
-#include <model/ConstructionWithInternalSource_Impl.hpp>
-#include <model/RunPeriod.hpp>
-#include <model/RunPeriod_Impl.hpp>
-#include <model/RunPeriodControlSpecialDays.hpp>
-#include <model/RunPeriodControlSpecialDays_Impl.hpp>
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/UtilityBill.hpp>
-#include <model/UtilityBill_Impl.hpp>
-#include <model/ConcreteModelObjects.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/Surface.hpp"
+#include "../model/Surface_Impl.hpp"
+#include "../model/Construction.hpp"
+#include "../model/Construction_Impl.hpp"
+#include "../model/ConstructionWithInternalSource.hpp"
+#include "../model/ConstructionWithInternalSource_Impl.hpp"
+#include "../model/RunPeriod.hpp"
+#include "../model/RunPeriod_Impl.hpp"
+#include "../model/RunPeriodControlSpecialDays.hpp"
+#include "../model/RunPeriodControlSpecialDays_Impl.hpp"
+#include "../model/SimulationControl.hpp"
+#include "../model/SimulationControl_Impl.hpp"
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
+#include "../model/UtilityBill.hpp"
+#include "../model/UtilityBill_Impl.hpp"
+#include "../model/ConcreteModelObjects.hpp"
 
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/WorkspaceObjectOrder.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/time/Time.hpp>
+#include "../utilities/idf/Workspace.hpp"
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/idf/WorkspaceObjectOrder.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/geometry/BoundingBox.hpp"
+#include "../utilities/time/Time.hpp"
+#include "../utilities/plot/ProgressBar.hpp"
+
+#include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/FluidProperties_Name_FieldEnums.hxx>
 #include <utilities/idd/FluidProperties_GlycolConcentration_FieldEnums.hxx>
 #include <utilities/idd/GlobalGeometryRules_FieldEnums.hxx>
@@ -57,10 +62,6 @@
 #include <utilities/idd/Output_SQLite_FieldEnums.hxx>
 #include <utilities/idd/ProgramControl_FieldEnums.hxx>
 #include <utilities/idd/LifeCycleCost_NonrecurringCost_FieldEnums.hxx>
-
-#include <utilities/idd/IddEnums.hxx>
-#include <utilities/idd/IddFactory.hxx>
-#include <utilities/plot/ProgressBar.hpp>
 
 #include <QFile>
 #include <QTextStream>
@@ -217,6 +218,35 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
       otherEquipment.remove();
     }
   }  
+
+  // Temporary workaround for EnergyPlusTeam #4451
+  // requested by http://code.google.com/p/cbecc/issues/detail?id=736
+  // do this after combining spaces to avoid suprises about relative coordinate changes
+  for (const auto& thermalZone : model.getConcreteModelObjects<ThermalZone>()){
+    boost::optional<DaylightingControl> dc = thermalZone.secondaryDaylightingControl();
+    if (dc){
+      double z = dc->positionZCoordinate();
+      if (z < 0){
+        // find lowest point in thermalZone and move space origin down to that point
+        // lowest point will have z = 0 in relative coordinates
+        std::vector<Space> spaces = thermalZone.spaces();
+        OS_ASSERT(spaces.size() == 1);
+        
+        double minZ = z;
+        BoundingBox bb = spaces[0].boundingBox();
+        if (bb.minZ()){
+          minZ = std::min(minZ, bb.minZ().get());
+        }
+        OS_ASSERT(minZ < 0);
+
+        Transformation currentT = spaces[0].transformation();
+        Transformation newT = Transformation::translation(Vector3d(0, 0, minZ))*currentT;
+        bool test = spaces[0].changeTransformation(newT);
+        OS_ASSERT(test);
+      }
+    }
+  }
+
 
   // temp code
   if (!m_keepRunControlSpecialDays){
