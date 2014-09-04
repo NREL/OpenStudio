@@ -546,22 +546,22 @@ void Species::setNr(const int nr)
   m_impl->setNr(nr);
 }
 
-int Species::sflag() const
+bool Species::sflag() const
 {
   return m_impl->sflag();
 }
 
-void Species::setSflag(const int sflag)
+void Species::setSflag(const bool sflag)
 {
   m_impl->setSflag(sflag);
 }
 
-int Species::ntflag() const
+bool Species::ntflag() const
 {
   return m_impl->ntflag();
 }
 
-void Species::setNtflag(const int ntflag)
+void Species::setNtflag(const bool ntflag)
 {
   m_impl->setNtflag(ntflag);
 }

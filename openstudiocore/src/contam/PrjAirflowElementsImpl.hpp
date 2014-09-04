@@ -43,7 +43,7 @@ public:
 
   /** Returns the element number, in order from 1 to the number of airflow elements. */
   int nr() const;
-  /** Sets the elemt number. This should only be done with care. */
+  /** Sets the element number. This should only be done with care. */
   void setNr(const int nr);
   /** Returns the icon used to represent flow path. */
   int icon() const;

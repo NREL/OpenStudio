@@ -168,7 +168,7 @@ bool IndexModelImpl::read(Reader &input)
   m_rc.read(input); // Read the run control section
   input.read999();
   // Section 2: Species and Contaminants
-  m_contaminants = input.readIntVector(false);
+  std::vector<int> contaminants = input.readIntVector(false); // Might want to check that this matches the species data
   m_species = input.readSectionVector<Species>("species");
   // Section 3: Level and Icon Data
   m_levels = input.readSectionVector<Level>("level");
@@ -273,7 +273,7 @@ std::string IndexModelImpl::toString()
   output += m_rc.write();
   output += "-999\n";
   // Section 2: Species and Contaminants
-  output += writeArray(m_contaminants,"contaminants:");
+  output += writeArray(contaminants(),"contaminants:");
   output += writeSectionVector(m_species,"species:");
   // Section 3: Level and Icon Data
   output += writeSectionVector(m_levels,"levels:");
@@ -1057,9 +1057,18 @@ void IndexModelImpl::setRc(const RunControl rc)
   m_rc = rc;
 }
 
-std::vector<int> IndexModelImpl::contaminants() const
+std::vector<int> IndexModelImpl::contaminants()
 {
-  return m_contaminants;
+  std::vector<int> active;
+  int nr = 1;
+  for(Species &species : m_species) {
+    species.setNr(nr);
+    if(species.sflag()) {
+      active.push_back(nr);
+    }
+    nr++;
+  }
+  return active;
 }
 
 std::vector<Species> IndexModelImpl::species() const
@@ -1070,7 +1079,6 @@ std::vector<Species> IndexModelImpl::species() const
 void IndexModelImpl::setSpecies(const std::vector<Species> &species)
 {
   m_species = species;
-  rebuildContaminants();
 }
 
 void IndexModelImpl::addSpecies(Species &species)
@@ -1229,25 +1237,12 @@ void IndexModelImpl::addAirflowPath(AirflowPath &path)
   m_paths.push_back(path);
 }
 
-void IndexModelImpl::rebuildContaminants()
-{
-  m_contaminants.clear();
-  for(size_t i=1;i<=m_species.size();i++)
-  {
-    m_species[i-1].setNr(i);
-    if(m_species[i-1].sflag())
-    {
-      m_contaminants.push_back(i);
-    }
-  }
-}
-
 void IndexModelImpl::readZoneIc(Reader &input)
 {
   unsigned int nn = input.readUInt();
   if(nn != 0)
   {
-    unsigned int nctm = m_contaminants.size();
+    unsigned int nctm = contaminants().size();
     if(nn != nctm*m_zones.size())
     {
       QString mesg("Mismatch between number of zones, contaminants, and initial conditions");
@@ -1276,19 +1271,16 @@ void IndexModelImpl::readZoneIc(Reader &input)
 std::string IndexModelImpl::writeZoneIc(int start)
 {
   int offset = 1;
-  if(start != 0)
-  {
+  if(start != 0) {
     offset = 1-start;
   }
-  int nctm = m_contaminants.size()*(m_zones.size()-start);
+  int ncontaminants = contaminants().size();
+  int nctm = ncontaminants*(m_zones.size()-start);
   std::string string = ANY_TO_STR(nctm) + " ! initial zone concentrations:\n";
-  if(nctm)
-  {
-    for(unsigned i=start;i<m_zones.size();i++)
-    {
+  if(nctm) {
+    for(unsigned i=start;i<m_zones.size();i++) {
       string += ANY_TO_STR(i+offset);
-      for(unsigned j=0;j<m_contaminants.size();j++)
-      {
+      for(unsigned j=0;j<ncontaminants;j++) {
         string += ' ' + ANY_TO_STR(m_zones[i].ic(j));
       }
       string += '\n';
@@ -1299,10 +1291,8 @@ std::string IndexModelImpl::writeZoneIc(int start)
 
 int IndexModelImpl::airflowElementNrByName(std::string name) const
 {
-  for(int i=0;i<m_airflowElements.size();i++)
-  {
-    if(m_airflowElements[i]->name() == name)
-    {
+  for(int i=0;i<m_airflowElements.size();i++) {
+    if(m_airflowElements[i]->name() == name) {
       return m_airflowElements[i]->nr();
     }
   }

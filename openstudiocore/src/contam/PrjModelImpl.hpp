@@ -286,7 +286,7 @@ public:
   RunControl rc() const;
   void setRc(const RunControl rc);
 
-  std::vector<int> contaminants() const;
+  std::vector<int> contaminants();
   std::vector <Species> species() const;
   void setSpecies(const std::vector<Species> &species);
   void addSpecies(Species &species);
@@ -384,7 +384,6 @@ public:
 
 private:
   void setDefaults();
-  void rebuildContaminants();
   void readZoneIc(Reader &input);
   std::string writeZoneIc(int start=0);
   template <class T> std::string writeSectionVector(std::vector<T> vector, std::string label=std::string(), int start=0);
@@ -447,7 +446,7 @@ private:
   int m_u_a;  // units for elevation (I2)
 
   RunControl m_rc;
-  std::vector<int> m_contaminants;
+  //std::vector<int> m_contaminants;
   std::vector<Species> m_species;
   std::vector<Level> m_levels;
   std::vector<DaySchedule> m_daySchedules;

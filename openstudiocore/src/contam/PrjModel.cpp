@@ -700,6 +700,10 @@ void IndexModel::setSpecies(const std::vector<Species> species)
 {
   m_impl->setSpecies(species);
 }
+void IndexModel::addSpecies(Species &species)
+{
+    m_impl->addSpecies(species);
+}
 
 std::vector <Level> IndexModel::levels() const
 {
@@ -709,7 +713,7 @@ void IndexModel::setLevels(const std::vector<Level> levels)
 {
   m_impl->setLevels(levels);
 }
-void IndexModel::addLevel(Level level)
+void IndexModel::addLevel(Level &level)
 {
   m_impl->addLevel(level);
 }

@@ -848,24 +848,24 @@ void SpeciesImpl::setNr(const int nr)
   m_nr = nr;
 }
 
-int SpeciesImpl::sflag() const
+bool SpeciesImpl::sflag() const
 {
-  return m_sflag;
+  return m_sflag == 1;
 }
 
-void SpeciesImpl::setSflag(const int sflag)
+void SpeciesImpl::setSflag(const bool sflag)
 {
-  m_sflag = sflag;
+  m_sflag = (int)sflag;
 }
 
-int SpeciesImpl::ntflag() const
+bool SpeciesImpl::ntflag() const
 {
-  return m_ntflag;
+  return m_ntflag == 1;
 }
 
-void SpeciesImpl::setNtflag(const int ntflag)
+void SpeciesImpl::setNtflag(const bool ntflag)
 {
-  m_ntflag = ntflag;
+  m_ntflag = (int)ntflag;
 }
 
 double SpeciesImpl::molwt() const
