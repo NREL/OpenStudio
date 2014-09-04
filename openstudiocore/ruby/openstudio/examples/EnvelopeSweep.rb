@@ -73,7 +73,8 @@ epw_path = OpenStudio::Path.new(epDir / OpenStudio::Path.new("in.epw"))
 
 # configure logging
 logFile = OpenStudio::FileLogSink.new(analysisDir / OpenStudio::Path.new("EnvelopeSweep.log"))
-logFile.setLogLevel(0)
+#logFile.setLogLevel(OpenStudio::Debug)
+logFile.setLogLevel(OpenStudio::Warn)
 OpenStudio::Logger.instance.standardOutLogger.disable
 
 # SEED MODEL

@@ -22,7 +22,7 @@ require 'openstudio/energyplus/find_energyplus'
 
 require 'minitest/autorun'
 
-class ImportBuildingSiteThermostats_Test < Minitest::Test
+class ImportBuildingSiteThermostats_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

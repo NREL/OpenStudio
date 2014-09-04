@@ -28,7 +28,7 @@ def changeTestPath(p)
   return p
 end
 
-class Path_Test < Minitest::Test
+class Path_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

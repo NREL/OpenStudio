@@ -63,7 +63,7 @@ end
 
 # define the tests that the user cares about in this test case
 # this class can be configured for each project
-class QCTestCase < Minitest::Test
+class QCTestCase < MiniTest::Unit::TestCase
 
   @@model = nil
   

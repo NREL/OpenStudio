@@ -21,7 +21,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class Plot_Test < Minitest::Test
+class Plot_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

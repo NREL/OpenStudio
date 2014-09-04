@@ -40,7 +40,7 @@ class TestPathWatcher < OpenStudio::PathWatcher
   
 end
 
-class PathWatcher_Test < Minitest::Test
+class PathWatcher_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

@@ -21,7 +21,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class IddObject_Test < Minitest::Test
+class IddObject_Test < MiniTest::Unit::TestCase
 
   # def setup
   # end

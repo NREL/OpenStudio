@@ -21,7 +21,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class Site_Test < Minitest::Test
+class Site_Test < MiniTest::Unit::TestCase
   
   def test_construct_all_children
     

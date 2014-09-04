@@ -51,7 +51,7 @@ class RunManagerWatcherImpl < OpenStudio::Runmanager::RunManagerWatcher
   end
 end
 
-class RunManagerWatcher_Test < Minitest::Test
+class RunManagerWatcher_Test < MiniTest::Unit::TestCase
 
 
   def test_RunManagerWatcher

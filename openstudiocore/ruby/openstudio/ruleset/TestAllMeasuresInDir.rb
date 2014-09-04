@@ -123,7 +123,7 @@ Dir.glob("#{dir}/*/") do |measure_dir|
   end
 end
 
-class TestAllMeasures_Test < Minitest::Test
+class TestAllMeasures_Test < MiniTest::Unit::TestCase
   # def setup
   # end
 

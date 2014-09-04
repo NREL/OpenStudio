@@ -21,7 +21,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class Logger_Test < Minitest::Test
+class Logger_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

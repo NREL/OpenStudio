@@ -34,7 +34,7 @@ class TestScript < OpenStudio::Ruleset::UtilityUserScript
 
 end
 
-class OSArgument_Test < Minitest::Test
+class OSArgument_Test < MiniTest::Unit::TestCase
 
   def test_DeprecatedNames
 

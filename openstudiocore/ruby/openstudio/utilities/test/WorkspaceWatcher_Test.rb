@@ -72,7 +72,7 @@ module OpenStudio
 end
 
 
-class WorkspaceWatcher_Test < Minitest::Test
+class WorkspaceWatcher_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

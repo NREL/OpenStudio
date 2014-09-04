@@ -21,7 +21,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class ScaleFactory_Test < Minitest::Test
+class ScaleFactory_Test < MiniTest::Unit::TestCase
   # def setup
   # end
 
