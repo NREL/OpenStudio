@@ -142,34 +142,6 @@ ThermalZonesGridView::ThermalZonesGridView(bool isIP, const model::Model & model
 
 }
 
-ModelSubTabView * ThermalZonesGridView::modelSubTabView()
-{
-  auto thermalZonesGridView = qobject_cast<ThermalZonesGridView *>(this->parent());
-  OS_ASSERT(thermalZonesGridView);
-
-  auto stackedWidget = qobject_cast<QStackedWidget *>(thermalZonesGridView->parent());
-  OS_ASSERT(stackedWidget);
-
-  auto widget = qobject_cast<QWidget *>(stackedWidget->parent());
-  OS_ASSERT(widget);
-
-  auto scrollArea = qobject_cast<QScrollArea *>(widget->parent());
-  OS_ASSERT(scrollArea);
-
-  // ThermalZoneView
-  auto modelObjectInspectorView = qobject_cast<ModelObjectInspectorView *>(scrollArea->parent());
-  OS_ASSERT(modelObjectInspectorView);
-
-  auto object = qobject_cast<QObject *>(modelObjectInspectorView->parent());
-  OS_ASSERT(object);
-
-  // ThermalZonesView
-  auto modelSubTabView = qobject_cast<ModelSubTabView *>(object->parent());
-  OS_ASSERT(modelSubTabView);
-
-  return modelSubTabView;
-}
-
 ThermalZonesGridController::ThermalZonesGridController(bool isIP,
   const QString & headerText,
   model::Model model,
@@ -364,6 +336,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
           }
           else {
             model::ThermostatSetpointDualSetpoint t(z->model());
+            z->setThermostatSetpointDualSetpoint(t);
             return t.setCoolingSetpointTemperatureSchedule(t_s);
           }
         }
@@ -383,47 +356,132 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
         resetCoolingSchedule);
 
     }else if (field == HEATINGTHERMOSTATSCHEDULE){
-      addDropZoneColumn(QString(HEATINGTHERMOSTATSCHEDULE),
-                        ProxyAdapter(&model::ThermostatSetpointDualSetpoint::heatingSetpointTemperatureSchedule,
-                                     &model::ThermalZone::thermostatSetpointDualSetpoint,
-                                     boost::optional<model::Schedule>()),
-                        ProxyAdapter(&openstudio::model::ThermostatSetpointDualSetpoint::setHeatingSetpointTemperatureSchedule,
-                                     &model::ThermalZone::thermostatSetpointDualSetpoint,
-                                     false));
 
-                        //ProxyAdapter(&openstudio::model::ThermostatSetpointDualSetpoint::setHeatingSetpointTemperatureSchedule,
-                        //            &model::ThermalZone::thermostatSetpointDualSetpoint,
-                        //            false));
+      std::function<boost::optional<model::Schedule>(model::ThermalZone *)> heatingSchedule(
+        [](model::ThermalZone * z) {
+          boost::optional<model::Schedule> schedule;
+          if (boost::optional<model::ThermostatSetpointDualSetpoint> thermostat = z->thermostatSetpointDualSetpoint()) {
+            schedule = thermostat->heatingSetpointTemperatureSchedule();
+          }
+          return schedule;
+        }
+      );
+
+      std::function<bool(model::ThermalZone *, const model::Schedule &)> setHeatingSchedule(
+        [](model::ThermalZone * z, model::Schedule t_s) {
+          if (boost::optional<model::ThermostatSetpointDualSetpoint> thermostat = z->thermostatSetpointDualSetpoint()) {
+            return thermostat->setHeatingSetpointTemperatureSchedule(t_s);
+          }
+          else {
+            model::ThermostatSetpointDualSetpoint t(z->model());
+            z->setThermostatSetpointDualSetpoint(t);
+            return t.setHeatingSetpointTemperatureSchedule(t_s);
+          }
+        }
+      );
+
+      boost::optional<std::function<void(model::ThermalZone *)> > resetHeatingSchedule(
+        [](model::ThermalZone * z) {
+          if (boost::optional<model::ThermostatSetpointDualSetpoint> thermostat = z->thermostatSetpointDualSetpoint()) {
+            thermostat->resetHeatingSetpointTemperatureSchedule();
+          }
+        }
+      );
+
+      addDropZoneColumn(QString(HEATINGTHERMOSTATSCHEDULE),
+        heatingSchedule,
+        setHeatingSchedule,
+        resetHeatingSchedule);
 
     }else if (field == HUMIDIFYINGSETPOINTSCHEDULE){
-      addDropZoneColumn(QString(HUMIDIFYINGSETPOINTSCHEDULE),
-                        ProxyAdapter(&model::ZoneControlHumidistat::humidifyingRelativeHumiditySetpointSchedule,
-                                     &model::ThermalZone::zoneControlHumidistat,
-                                     boost::optional<model::Schedule>()),
-                        ProxyAdapter(&openstudio::model::ZoneControlHumidistat::setHumidifyingRelativeHumiditySetpointSchedule,
-                                     &model::ThermalZone::zoneControlHumidistat,
-                                     false));
 
-                        //ProxyAdapter(&openstudio::model::ZoneControlHumidistat::setHumidifyingRelativeHumiditySetpointSchedule,
-                        //            &model::ThermalZone::zoneControlHumidistat,
-                        //            false));
+      std::function<boost::optional<model::Schedule>(model::ThermalZone *)> humidifyingSchedule(
+        [](model::ThermalZone * z) {
+          boost::optional<model::Schedule> schedule;
+          if (boost::optional<model::ZoneControlHumidistat> thermostat = z->zoneControlHumidistat()) {
+            schedule = thermostat->humidifyingRelativeHumiditySetpointSchedule();
+          }
+          return schedule;
+        }
+      );
+
+      std::function<bool(model::ThermalZone *, const model::Schedule &)> setHumidifyingSchedule(
+        [](model::ThermalZone * z, model::Schedule t_s) {
+          if (boost::optional<model::ZoneControlHumidistat> thermostat = z->zoneControlHumidistat()) {
+            return thermostat->setHumidifyingRelativeHumiditySetpointSchedule(t_s);
+          }
+          else {
+            model::ZoneControlHumidistat t(z->model());
+            z->setZoneControlHumidistat(t);
+            return t.setHumidifyingRelativeHumiditySetpointSchedule(t_s);
+          }
+        }
+      );
+
+      boost::optional<std::function<void(model::ThermalZone *)> > resetHumidifyingSchedule(
+        [](model::ThermalZone * z) {
+          if (boost::optional<model::ZoneControlHumidistat> thermostat = z->zoneControlHumidistat()) {
+            thermostat->resetHumidifyingRelativeHumiditySetpointSchedule();
+          }
+        }
+      );
+
+      addDropZoneColumn(QString(HUMIDIFYINGSETPOINTSCHEDULE),
+        humidifyingSchedule,
+        setHumidifyingSchedule,
+        resetHumidifyingSchedule);
 
     }else if (field == DEHUMIDIFYINGSETPOINTSCHEDULE){
-      addDropZoneColumn(QString(DEHUMIDIFYINGSETPOINTSCHEDULE),
-                        ProxyAdapter(&model::ZoneControlHumidistat::dehumidifyingRelativeHumiditySetpointSchedule,
-                                     &model::ThermalZone::zoneControlHumidistat,
-                                     boost::optional<model::Schedule>()),
-                        ProxyAdapter(&openstudio::model::ZoneControlHumidistat::setDehumidifyingRelativeHumiditySetpointSchedule,
-                                     &model::ThermalZone::zoneControlHumidistat,
-                                     false));
 
-                        //ProxyAdapter(&model::ZoneControlHumidistat::resetDehumidifyingRelativeHumiditySetpointSchedule,
-                        //             &model::ThermalZone::zoneControlHumidistat,
-                        //             false));
+      std::function<boost::optional<model::Schedule>(model::ThermalZone *)> dehumidifyingSchedule(
+        [](model::ThermalZone * z) {
+          boost::optional<model::Schedule> schedule;
+          if (boost::optional<model::ZoneControlHumidistat> thermostat = z->zoneControlHumidistat()) {
+            schedule = thermostat->dehumidifyingRelativeHumiditySetpointSchedule();
+          }
+          return schedule;
+        }
+      );
+
+      std::function<bool(model::ThermalZone *, const model::Schedule &)> setDehumidifyingSchedule(
+        [](model::ThermalZone * z, model::Schedule t_s) {
+          if (boost::optional<model::ZoneControlHumidistat> thermostat = z->zoneControlHumidistat()) {
+            return thermostat->setDehumidifyingRelativeHumiditySetpointSchedule(t_s);
+          }
+          else {
+            model::ZoneControlHumidistat t(z->model());
+            z->setZoneControlHumidistat(t);
+            return t.setDehumidifyingRelativeHumiditySetpointSchedule(t_s);
+          }
+        }
+      );
+
+      boost::optional<std::function<void(model::ThermalZone *)> > resetDehumidifyingSchedule(
+        [](model::ThermalZone * z) {
+          if (boost::optional<model::ZoneControlHumidistat> thermostat = z->zoneControlHumidistat()) {
+            thermostat->resetDehumidifyingRelativeHumiditySetpointSchedule();
+          }
+        }
+      );
+
+      addDropZoneColumn(QString(DEHUMIDIFYINGSETPOINTSCHEDULE),
+        dehumidifyingSchedule,
+        setDehumidifyingSchedule,
+        resetDehumidifyingSchedule);
 
     } else if (field == ZONEEQUIPMENT) {
       std::function<boost::optional<model::ModelObject>(model::ThermalZone *)>  getter;
-      std::function<bool(model::ThermalZone *, const model::ModelObject &)> setter;
+      std::function<bool(model::ThermalZone *, const model::ModelObject &)> setter(
+      [](model::ThermalZone *t_z, const model::ModelObject &t_mo) {
+        try {
+          t_z->addEquipment(t_mo.clone());
+          return true;
+        } catch (const std::exception &) {
+          return false;
+        }
+      }
+      );
+
       std::function<void(model::ThermalZone *)> reset;
       std::function<std::vector<model::ModelObject>(const model::ThermalZone &)> equipment(
         []( model::ThermalZone t ) {

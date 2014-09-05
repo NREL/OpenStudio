@@ -181,34 +181,6 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
 
 }
 
-ModelSubTabView * SpaceTypesGridView::modelSubTabView()
-{
-  auto spaceTypesGridView = qobject_cast<SpaceTypesGridView *>(this->parent());
-  OS_ASSERT(spaceTypesGridView);
-
-  auto stackedWidget = qobject_cast<QStackedWidget *>(spaceTypesGridView->parent());
-  OS_ASSERT(stackedWidget);
-
-  auto widget = qobject_cast<QWidget *>(stackedWidget->parent());
-  OS_ASSERT(widget);
-
-  auto scrollArea = qobject_cast<QScrollArea *>(widget->parent());
-  OS_ASSERT(scrollArea);
-
-  // SpaceTypeView
-  auto modelObjectInspectorView = qobject_cast<ModelObjectInspectorView *>(scrollArea->parent());
-  OS_ASSERT(modelObjectInspectorView);
-
-  auto object = qobject_cast<QObject *>(modelObjectInspectorView->parent());
-  OS_ASSERT(object);
-
-  // SpaceTypesView
-  auto modelSubTabView = qobject_cast<ModelSubTabView *>(object->parent());
-  OS_ASSERT(modelSubTabView);
-
-  return modelSubTabView;
-}
-
 void SpaceTypesGridView::onDropZoneItemClicked(OSItem* item)
 {
 }
