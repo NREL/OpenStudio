@@ -362,8 +362,6 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
           boost::optional<model::Schedule> schedule;
           if (boost::optional<model::ThermostatSetpointDualSetpoint> thermostat = z->thermostatSetpointDualSetpoint()) {
             schedule = thermostat->heatingSetpointTemperatureSchedule();
-          } else {
-            std::cout << " NO THERMOSTAT NOTHING TO GET" << std::endl;
           }
           return schedule;
         }
