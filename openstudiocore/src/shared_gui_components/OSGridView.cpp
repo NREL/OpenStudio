@@ -23,6 +23,8 @@
 #include "OSCollapsibleView.hpp"
 #include "OSGridController.hpp"
 
+#include "../openstudio_lib/ModelObjectInspectorView.hpp"
+#include "../openstudio_lib/ModelSubTabView.hpp"
 #include "../openstudio_lib/OSDropZone.hpp"
 #include "../openstudio_lib/OSItem.hpp"
 
@@ -36,6 +38,8 @@
 #include <QButtonGroup>
 #include <QLabel>
 #include <QPushButton>
+#include <QScrollArea>
+#include <QStackedWidget>
 
 #ifdef Q_OS_MAC
   #define WIDTH  110
@@ -368,6 +372,23 @@ void OSGridView::selectCategory(int index)
 ModelSubTabView * OSGridView::modelSubTabView()
 {
   ModelSubTabView *  modelSubTabView = nullptr;
+
+  auto stackedWidget = qobject_cast<QStackedWidget *>(this->parent()->parent());
+  if (!stackedWidget) return modelSubTabView;
+
+  auto widget = qobject_cast<QWidget *>(stackedWidget->parent());
+  if (!widget) return modelSubTabView;
+
+  auto scrollArea = qobject_cast<QScrollArea *>(widget->parent());
+  if (!scrollArea) return modelSubTabView;
+
+  auto modelObjectInspectorView = qobject_cast<ModelObjectInspectorView *>(scrollArea->parent());
+  if (!modelObjectInspectorView) return modelSubTabView;
+
+  auto object = qobject_cast<QObject *>(modelObjectInspectorView->parent());
+  if (!object) return modelSubTabView;
+
+  modelSubTabView = qobject_cast<ModelSubTabView *>(object->parent());
   return modelSubTabView;
 }
 
@@ -381,4 +402,3 @@ void OSGridView::onDropZoneItemClicked(OSItem*)
 }
 
 } // openstudio
-
