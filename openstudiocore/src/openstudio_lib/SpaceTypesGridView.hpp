@@ -41,8 +41,6 @@ public:
 
   virtual ~SpaceTypesGridView() {}
 
-  virtual ModelSubTabView * modelSubTabView();
-
 private:
 
   bool m_isIP;
