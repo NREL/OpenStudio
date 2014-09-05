@@ -471,7 +471,17 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
 
     } else if (field == ZONEEQUIPMENT) {
       std::function<boost::optional<model::ModelObject>(model::ThermalZone *)>  getter;
-      std::function<bool(model::ThermalZone *, const model::ModelObject &)> setter;
+      std::function<bool(model::ThermalZone *, const model::ModelObject &)> setter(
+      [](model::ThermalZone *t_z, const model::ModelObject &t_mo) {
+        try {
+          t_z->addEquipment(t_mo.clone());
+          return true;
+        } catch (const std::exception &) {
+          return false;
+        }
+      }
+      );
+
       std::function<void(model::ThermalZone *)> reset;
       std::function<std::vector<model::ModelObject>(const model::ThermalZone &)> equipment(
         []( model::ThermalZone t ) {
