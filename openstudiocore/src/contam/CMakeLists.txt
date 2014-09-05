@@ -41,6 +41,7 @@ set(${target_name}_test_src
   Test/ContamFixture.hpp
   Test/ContamFixture.cpp
   Test/ForwardTranslator_GTest.cpp
+  Test/ContamModel_GTest.cpp
 )
 
 set(${target_name}_swig_src

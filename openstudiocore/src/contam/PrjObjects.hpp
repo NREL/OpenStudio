@@ -50,6 +50,10 @@ public:
   /** Create a new object with default values. */
   Zone();
   /** Create a new object. */
+  Zone(unsigned flags, std::string Vol, std::string T0, std::string name);
+  /** Create a new object. */
+  Zone(unsigned flags, double Vol, double T0, std::string name);
+  /** Create a new object. */
   Zone(int nr,unsigned int flags,int ps,int pc,int pk,int pl,std::string relHt,std::string Vol,std::string T0,std::string P0,
     std::string name,int color,int u_Ht,int u_V,int u_T,int u_P,int cdaxis,int cfd,std::string cfdname,std::string X1,
     std::string Y1,std::string H1,std::string X2,std::string Y2,std::string H2,std::string celldx,std::string axialD,int u_aD,int u_L);
@@ -266,6 +270,10 @@ public:
 
   /** Create a new object with default values. */
   Species();
+  /** Create a new gaseous species object. */
+  Species(std::string molwt, std::string Dm, std::string ccdef, std::string Cp, std::string name, std::string desc);
+  /** Create a new gaseous species object. */
+  Species(double molwt, double Dm, double ccdef, double Cp, std::string name, std::string desc);
   /** Create a new object. */
   Species(int nr,int sflag,int ntflag,std::string molwt,std::string mdiam,std::string edens,std::string decay,std::string Dm,
     std::string ccdef,std::string Cp,int uc,int umd,int ued,int udm,int ucp,std::string name,std::string desc);
@@ -1243,6 +1251,10 @@ public:
 
   /** Create a new object with default values. */
   Level();
+  /** Create a new object. */
+  Level(double delht, std::string name);
+  /** Create a new object. */
+  Level(std::string delht, std::string name);
   /** Create a new object. */
   Level(int nr,double refht,double delht,int u_rfht,int u_dlht,std::string name,std::vector<Icon> icons);
   /** Create a new object. */

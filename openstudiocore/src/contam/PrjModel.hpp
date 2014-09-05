@@ -335,6 +335,8 @@ public:
   void setSpecies(const std::vector<Species> species);
   /** Add a species to the model. */
   void addSpecies(Species &species);
+  /** Remove a species from the model. */
+  bool removeSpecies(const Species &species);
 
   /** Returns a vector of the levels in the model. */
   std::vector <Level> levels() const;

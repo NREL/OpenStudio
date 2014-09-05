@@ -29,6 +29,24 @@ Zone::Zone()
   m_impl = std::shared_ptr<detail::ZoneImpl>(new detail::ZoneImpl());
 }
 
+Zone::Zone(unsigned flags, std::string Vol, std::string T0, std::string name)
+{
+  m_impl = std::shared_ptr<detail::ZoneImpl>(new detail::ZoneImpl);
+  m_impl->setFlags(flags);
+  m_impl->setVol(Vol);
+  m_impl->setT0(T0);
+  m_impl->setName(name);
+}
+
+Zone::Zone(unsigned flags, double Vol, double T0, std::string name)
+{
+  m_impl = std::shared_ptr<detail::ZoneImpl>(new detail::ZoneImpl);
+  m_impl->setFlags(flags);
+  m_impl->setVol(Vol);
+  m_impl->setT0(T0);
+  m_impl->setName(name);
+}
+
 Zone::Zone(int nr,unsigned int flags,int ps,int pc,int pk,int pl,std::string relHt,std::string Vol,std::string T0,std::string P0,
   std::string name,int color,int u_Ht,int u_V,int u_T,int u_P,int cdaxis,int cfd,std::string cfdname,std::string X1,
   std::string Y1,std::string H1,std::string X2,std::string Y2,std::string H2,std::string celldx,std::string axialD,int u_aD,int u_L)
@@ -490,6 +508,26 @@ bool Zone::setIc(std::vector<std::string> &ic)
 Species::Species()
 {
   m_impl = std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl);
+}
+
+Species::Species(std::string molwt, std::string Dm, std::string ccdef, std::string Cp, std::string name, std::string desc)
+{
+  m_impl = std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl);
+  m_impl->setMolwt(molwt);
+  m_impl->setDm(Dm);
+  m_impl->setCcdef(ccdef);
+  m_impl->setName(name);
+  m_impl->setDesc(desc);
+}
+
+Species::Species(double molwt, double Dm, double ccdef, double Cp, std::string name, std::string desc)
+{
+  m_impl = std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl);
+  m_impl->setMolwt(molwt);
+  m_impl->setDm(Dm);
+  m_impl->setCcdef(ccdef);
+  m_impl->setName(name);
+  m_impl->setDesc(desc);
 }
 
 Species::Species(int nr,int sflag,int ntflag,std::string molwt,std::string mdiam,std::string edens,std::string decay,std::string Dm,
@@ -2602,6 +2640,20 @@ void RunControl::setCfd_dtcmo(const int cfd_dtcmo)
 Level::Level()
 {
   m_impl = std::shared_ptr<detail::LevelImpl>(new detail::LevelImpl);
+}
+
+Level::Level(double delht, std::string name)
+{
+  m_impl = std::shared_ptr<detail::LevelImpl>(new detail::LevelImpl);
+  m_impl->setDelht(delht);
+  m_impl->setName(name);
+}
+
+Level::Level(std::string delht, std::string name)
+{
+  m_impl = std::shared_ptr<detail::LevelImpl>(new detail::LevelImpl);
+  m_impl->setDelht(delht);
+  m_impl->setName(name);
 }
 
 Level::Level(int nr,double refht,double delht,int u_rfht,int u_dlht,std::string name,std::vector<Icon> icons)

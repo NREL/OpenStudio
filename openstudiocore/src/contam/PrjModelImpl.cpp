@@ -21,6 +21,7 @@
 #include "PrjReader.hpp"
 #include "SimFile.hpp"
 #include <QFile>
+#include <algorithm>
 
 namespace openstudio {
 namespace contam {
@@ -1087,6 +1088,18 @@ void IndexModelImpl::addSpecies(Species &species)
   m_species.push_back(species);
 }
 
+bool IndexModelImpl::removeSpecies(const Species &species)
+{
+  unsigned originalSize = m_species.size();
+  m_species.erase(std::remove_if(m_species.begin(), m_species.end(), [&](Species s){ return s==species; }), m_species.end());
+  // There's probably a better way to do this
+  if(m_species.size() != originalSize) {
+    renumberVector(m_species);
+    return true;
+  }
+  return false;
+}
+
 std::vector<Level> IndexModelImpl::levels() const
 {
   return m_levels;
@@ -1094,12 +1107,19 @@ std::vector<Level> IndexModelImpl::levels() const
 
 void IndexModelImpl::setLevels(const std::vector<Level> &levels)
 {
+  // This could use some validation, but we don't want to interfere too much in the loaded PRJ data
   m_levels = levels;
 }
 
 void IndexModelImpl::addLevel(Level &level)
 {
+  double refHt = 0;
+  if(m_levels.size() > 0) {
+    // Note that CONTAM stores heights in meters, so this next statement requires no conversion
+    refHt = m_levels[m_levels.size()-1].refht() + m_levels[m_levels.size()-1].delht();
+  }
   level.setNr(m_levels.size()+1);
+  level.setRefht(refHt);
   m_levels.push_back(level);
 }
 

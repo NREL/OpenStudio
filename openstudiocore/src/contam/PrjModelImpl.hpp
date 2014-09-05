@@ -290,6 +290,7 @@ public:
   std::vector <Species> species() const;
   void setSpecies(const std::vector<Species> &species);
   void addSpecies(Species &species);
+  bool removeSpecies(const Species &species);
 
   std::vector <Level> levels() const;
   void setLevels(const std::vector<Level> &levels);
@@ -389,6 +390,7 @@ private:
   template <class T> std::string writeSectionVector(std::vector<T> vector, std::string label=std::string(), int start=0);
   template <class T> std::string writeSectionVector(QVector<QSharedPointer<T> > vector, std::string label=std::string(), int start=0);
   template <class T> std::string writeArray(std::vector<T> vector, std::string label=std::string(), int start=0);
+  template <class T> void renumberVector(std::vector<T> &vector);
 
   bool m_valid;
 
@@ -517,6 +519,15 @@ template <class T> std::string IndexModelImpl::writeArray(std::vector<T> vector,
     string += ' ' + openstudio::toString(vector[i]);
   }
   return string +'\n';
+}
+
+template <class T> void IndexModelImpl::renumberVector(std::vector<T> &vector)
+{
+  int nr = 1;
+  for(T &t : vector) {
+    t.setNr(nr);
+    nr++;
+  }
 }
 
 } // detail
