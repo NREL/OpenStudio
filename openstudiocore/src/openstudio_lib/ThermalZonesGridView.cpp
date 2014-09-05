@@ -336,6 +336,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
           }
           else {
             model::ThermostatSetpointDualSetpoint t(z->model());
+            z->setThermostatSetpointDualSetpoint(t);
             return t.setCoolingSetpointTemperatureSchedule(t_s);
           }
         }
@@ -361,6 +362,8 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
           boost::optional<model::Schedule> schedule;
           if (boost::optional<model::ThermostatSetpointDualSetpoint> thermostat = z->thermostatSetpointDualSetpoint()) {
             schedule = thermostat->heatingSetpointTemperatureSchedule();
+          } else {
+            std::cout << " NO THERMOSTAT NOTHING TO GET" << std::endl;
           }
           return schedule;
         }
@@ -373,6 +376,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
           }
           else {
             model::ThermostatSetpointDualSetpoint t(z->model());
+            z->setThermostatSetpointDualSetpoint(t);
             return t.setHeatingSetpointTemperatureSchedule(t_s);
           }
         }
@@ -410,6 +414,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
           }
           else {
             model::ZoneControlHumidistat t(z->model());
+            z->setZoneControlHumidistat(t);
             return t.setHumidifyingRelativeHumiditySetpointSchedule(t_s);
           }
         }
@@ -447,6 +452,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
           }
           else {
             model::ZoneControlHumidistat t(z->model());
+            z->setZoneControlHumidistat(t);
             return t.setDehumidifyingRelativeHumiditySetpointSchedule(t_s);
           }
         }
