@@ -484,6 +484,16 @@ public:
 
   /** Create a new object with default values. */
   AirflowPath();
+  /** Create a new (exterior wall type) object. */
+  AirflowPath(int flags, int pzn, int pe, int pw, int pld, std::string relHt, std::string mult, std::string wPset, 
+    std::string wPmod, std::string wazm, unsigned int icon);
+  /** Create a new (exterior wall type) object. */
+  AirflowPath(int flags, int pzn, int pe, int pw, int pld, double relHt, double mult, double wPset,
+    double wPmod, double wazm, unsigned int icon);
+  /** Create a new (interior wall type) object. */
+  AirflowPath(int flags, int pzn, int pzm, int pe, int pld, std::string relHt, std::string mult, unsigned int icon);
+  /** Create a new (interior wall type) object. */
+  AirflowPath(int flags, int pzn, int pzm, int pe, int pld, double relHt, double mult, unsigned int icon);
   /** Create a new object. */
   AirflowPath(int nr,int flags,int pzn,int pzm,int pe,int pf,int pw,int pa,int ps,int pc,int pld,std::string X,std::string Y,
     std::string relHt,std::string mult,std::string wPset,std::string wPmod,std::string wazm,std::string Fahs,std::string Xmax,std::string Xmin,

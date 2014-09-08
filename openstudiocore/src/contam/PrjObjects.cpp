@@ -906,6 +906,68 @@ AirflowPath::AirflowPath()
   m_impl = std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl);
 }
 
+AirflowPath::AirflowPath(int flags, int pzn, int pe, int pw, int pld, std::string relHt, std::string mult, std::string wPset,
+  std::string wPmod, std::string wazm, unsigned int icon)
+{
+  m_impl = std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl);
+  m_impl->setFlags(flags);
+  m_impl->setPzn(pzn);
+  m_impl->setPzm(-1);
+  m_impl->setPe(pe);
+  m_impl->setPw(pw);
+  m_impl->setPld(pld);
+  m_impl->setRelHt(relHt);
+  m_impl->setMult(mult);
+  m_impl->setWPset(wPset);
+  m_impl->setWPmod(wPmod);
+  m_impl->setWazm(wazm);
+  m_impl->setIcon(icon);
+}
+
+AirflowPath::AirflowPath(int flags, int pzn, int pe, int pw, int pld, double relHt, double mult, double wPset,
+  double wPmod, double wazm, unsigned int icon)
+{
+  m_impl = std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl);
+  m_impl->setFlags(flags);
+  m_impl->setPzn(pzn);
+  m_impl->setPzm(-1);
+  m_impl->setPe(pe);
+  m_impl->setPw(pw);
+  m_impl->setPld(pld);
+  m_impl->setRelHt(relHt);
+  m_impl->setMult(mult);
+  m_impl->setWPset(wPset);
+  m_impl->setWPmod(wPmod);
+  m_impl->setWazm(wazm);
+  m_impl->setIcon(icon);
+}
+
+AirflowPath::AirflowPath(int flags, int pzn, int pzm, int pe, int pld, std::string relHt, std::string mult, unsigned int icon)
+{
+  m_impl = std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl);
+  m_impl->setFlags(flags);
+  m_impl->setPzn(pzn);
+  m_impl->setPzm(pzm);
+  m_impl->setPe(pe);
+  m_impl->setPld(pld);
+  m_impl->setRelHt(relHt);
+  m_impl->setMult(mult);
+  m_impl->setIcon(icon);
+}
+
+AirflowPath::AirflowPath(int flags, int pzn, int pzm, int pe, int pld, double relHt, double mult, unsigned int icon)
+{
+  m_impl = std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl);
+  m_impl->setFlags(flags);
+  m_impl->setPzn(pzn);
+  m_impl->setPzm(pzm);
+  m_impl->setPe(pe);
+  m_impl->setPld(pld);
+  m_impl->setRelHt(relHt);
+  m_impl->setMult(mult);
+  m_impl->setIcon(icon);
+}
+
 AirflowPath::AirflowPath(int nr,int flags,int pzn,int pzm,int pe,int pf,int pw,int pa,int ps,int pc,int pld,std::string X,
   std::string Y,std::string relHt,std::string mult,std::string wPset,std::string wPmod,std::string wazm,std::string Fahs,
   std::string Xmax,std::string Xmin,unsigned int icon,unsigned int dir,int u_Ht,int u_XY,int u_dP,
