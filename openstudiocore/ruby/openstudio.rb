@@ -62,6 +62,26 @@ else
   ENV['PATH'] = "#{$OpenStudio_Dir};#{$OpenStudio_Dir}openstudio;#{original_path}"
 end
 
+
+# NOTE: The order of module loading is critically important. The SWIG Ruby module prefers the type
+# information that is loaded *first* instead of the type information that can be considered *best*
+#
+# Example: OpenStudioGBXML references openstudio::model::Container, but does not define it
+# OpenStudioModelCore does define openstudio::model::Container.
+#
+# If OpenStudioGBXML is loaded first, the *incomplete* type information that it contains for Container is loaded.
+# When OpenStudioModelCore is subsequently loaded the *first* version of Container loaded (which is incomplete, from
+# OpenStudioGBXML) is considered the authoritative source of type information.
+#
+# When the code is OpenStudioModelCore, at some point in the future, goes to use the type information for Container
+# an odd, unchecked crash occurs inside of the SWIG generated code.
+#
+# To prevent this problem, make sure the module that defines the type is loaded before the module that uses the type.
+# 
+# True as of Ruby 3.0.1. There probably isn't any better way to handle this issue, so I'd be surprised if it changes
+#
+
+
 # load ruby extensions
 require 'openstudioutilitiescore'
 require 'openstudioutilitieseconomics'
@@ -77,10 +97,6 @@ require 'openstudioutilitiesidd'
 require 'openstudioutilitiesidf'
 require 'openstudioutilitiesfiletypes'
 require 'openstudioutilities'
-require 'openstudioenergyplus'
-require 'openstudioradiance'
-require 'openstudiogbxml'
-require 'openstudiocontam'
 require 'openstudiomodel'
 require 'openstudiomodelcore'
 require 'openstudiomodelsimulation'
@@ -88,6 +104,10 @@ require 'openstudiomodelresources'
 require 'openstudiomodelgeometry'
 require 'openstudiomodelhvac'
 require 'openstudiomodelrefrigeration'
+require 'openstudioenergyplus'
+require 'openstudioradiance'
+require 'openstudiogbxml'
+require 'openstudiocontam'
 require 'openstudioosversion'
 require 'openstudioruleset'
 require 'openstudiorunmanager'
