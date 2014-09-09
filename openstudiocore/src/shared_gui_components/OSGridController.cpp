@@ -158,7 +158,6 @@ void OSGridController::categorySelected(int index)
   m_currentFields = m_categoriesAndFields.at(index).second;
 
   addColumns(m_currentFields);
-
 }
 
 void OSGridController::setHorizontalHeader()

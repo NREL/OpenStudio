@@ -368,6 +368,8 @@ void OSGridView::setHorizontalHeader(std::vector<QString> names)
 void OSGridView::selectCategory(int index)
 {
   m_gridController->categorySelected(index);
+
+  requestRefreshAll();
 }
 
 ModelSubTabView * OSGridView::modelSubTabView()
