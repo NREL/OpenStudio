@@ -818,6 +818,10 @@ bool OSGridController::getRowIndexByItem(OSItem * item, int & rowIndex)
     // We found the model index and must convert it to the row index
     rowIndex = rowIndexFromModelIndex(rowIndex);
   }
+  else {
+    // We could never find a valid index
+    rowIndex = -1;
+  }
 
   return success;
 }
