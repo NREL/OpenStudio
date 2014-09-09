@@ -141,9 +141,6 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
     button->setChecked(true);
     selectCategory(0);
   }
-
-  m_timer.setSingleShot(true);
-  connect(&m_timer, &QTimer::timeout, this, &OSGridView::doRefresh);
 }
 
 void OSGridView::setGridController(OSGridController * gridController)
@@ -166,12 +163,10 @@ void OSGridView::setGridController(OSGridController * gridController)
   isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), m_gridController, SLOT(onItemSelected(OSItem *)));
   OS_ASSERT(isConnected);
 
-  connect(m_gridController, &OSGridController::modelReset, this, &OSGridView::requestRefreshAll);
-
   refreshAll();
 }
 
-void OSGridView::refresh(int row, int column)
+void OSGridView::refreshCell(int row, int column)
 {
   removeWidget(row,column);
 
@@ -184,7 +179,7 @@ void OSGridView::refreshRow(int row)
 
   for( int j = 0; j < m_gridController->columnCount(); j++ )
   {
-    refresh(row, j);
+    refreshCell(row, j);
   }
 }
 
@@ -197,12 +192,10 @@ void OSGridView::removeWidget(int row, int column)
   QWidget * widget = item->widget();
 
   OS_ASSERT(widget);
-//  widget->setParent(nullptr);
-//  widget->deleteLater();
 
   delete widget;
 
-//  delete item;
+  delete item;
 }
 
 void OSGridView::deleteAll()
@@ -230,7 +223,7 @@ void OSGridView::refreshGrid()
     {
       for( int j = 0; j < m_gridController->columnCount(); j++ )
       {
-        refresh(i,j);
+        refreshCell(i, j);
       }
     }
   }
@@ -240,25 +233,37 @@ void OSGridView::requestRefreshAll()
 {
   std::cout << "REQUEST REFRESHALL CALLED " << std::endl;
   setEnabled(false);
+
+  if (m_refreshRequests.empty()){
+    QTimer::singleShot(0, this, SLOT(doRefresh()));
+  }
+
   m_refreshRequests.emplace_back(RefreshAll);
-  m_timer.start(50);
 }
 
 void OSGridView::requestRefreshGrid()
 {
   std::cout << "REQUEST REFRESHGRID CALLED " << std::endl;
   setEnabled(false);
+
+  if (m_refreshRequests.empty()){
+    QTimer::singleShot(0, this, SLOT(doRefresh()));
+  }
+
   m_refreshRequests.emplace_back(RefreshGrid);
-  m_timer.start(50);
 }
 
 void OSGridView::requestRefreshRow(int t_row)
 {
   std::cout << "REQUEST REFRESH ROW CALLED " << std::endl;
   setEnabled(false);
-  // to do increase resolution here
+
+  if (m_refreshRequests.empty()){
+    QTimer::singleShot(0, this, SLOT(doRefresh()));
+  }
+
+  // TODO to do increase resolution here
   m_refreshRequests.emplace_back(RefreshGrid);
-  m_timer.start(50);
 }
 
 void OSGridView::doRefresh()
@@ -282,19 +287,20 @@ void OSGridView::doRefresh()
 
   m_refreshRequests.clear();
 
-  if (has_refresh_all)
+  if (true)
+  //if (has_refresh_all)
   {
     refreshAll();
   } else {
-    refreshGrid();
+    refreshGrid(); // This now causes a crash
   }
 
-  if (!m_refreshRequests.empty())
-  {
-    std::cout << " UPDATE TRIGGERED UPDATE" << std::endl;
-    refreshAll();
-    m_refreshRequests.clear();
-  }
+  //if (!m_refreshRequests.empty()) // Note: this can never hit
+  //{
+  //  std::cout << " UPDATE TRIGGERED UPDATE" << std::endl;
+  //  refreshAll();
+  //  m_refreshRequests.clear();
+  //}
 
   setEnabled(true);
 }
@@ -361,12 +367,7 @@ void OSGridView::setHorizontalHeader(std::vector<QString> names)
 
 void OSGridView::selectCategory(int index)
 {
-//  deleteAll();
-
   m_gridController->categorySelected(index);
-
-  requestRefreshAll();
-
 }
 
 ModelSubTabView * OSGridView::modelSubTabView()

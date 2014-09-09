@@ -616,7 +616,6 @@ void OSGridController::checkSelectedFields()
       horizontalHeaderWidget->m_checkBox->blockSignals(false);
     }
   }
-
 }
 
 void OSGridController::setCustomCategoryAndFields()
@@ -739,7 +738,7 @@ void OSGridController::onComboBoxIndexChanged(int index)
 
 void OSGridController::reset()
 {
-  emit modelReset();
+  //this->gridView()->requestRefreshAll(); TODO delete???
 }
 
 void OSGridController::cellChecked(int index)
@@ -766,17 +765,13 @@ void OSGridController::cellChecked(int index)
     // ... select the new...
     selectRow(tableRowIndex, true);
 
-    // ... and tell the world.
+    // ... tell the world...
     OSItemId itemId = modelObjectToItemId(modelObject(tableRowIndex), false);
     OSItem* item = OSItem::makeItem(itemId, OSItemType::ListItem);
-
-    // Remember who's selected
-    m_oldIndex = tableRowIndex;
-
-    // Note: emitting gridRowSelected will trigger itemSelected emitted from OSItemList,
-    //       creating unwanted feedback
-    m_acceptItemSelectedSignals = false;
     emit gridRowSelected(item);
+
+    // ... and remember who's selected
+    m_oldIndex = tableRowIndex;
   }
 }
 
@@ -786,35 +781,55 @@ void OSGridController::selectItemId(const OSItemId& itemId)
 
 void OSGridController::onItemSelected(OSItem * item)
 {
-  if (!m_acceptItemSelectedSignals) {
-    m_acceptItemSelectedSignals = true;
-    return;
-  }
-  bool selected = true;
+}
+
+bool OSGridController::selectRowByItem(OSItem * item, bool isSelected)
+{
+  auto success = false;
   int i = 0;
-  refreshModelObjects();
-  gridView()->refreshAll();
-  QApplication::processEvents();
-
-  auto modelSubTabView = gridView()->modelSubTabView();
-  if (!modelSubTabView) return;
-
-  item = modelSubTabView->itemSelector()->selectedItem();
 
   for (auto modelObject : m_modelObjects){
     OSItemId itemId = modelObjectToItemId(modelObject, false);
     if (item->itemId() == itemId){
-      selectRow(rowIndexFromModelIndex(i), selected);
-      return;
+      selectRow(rowIndexFromModelIndex(i), isSelected);
+      success = true;
+      break;
     }
     i++;
   }
+  return success;
+}
+
+bool OSGridController::getRowIndexByItem(OSItem * item)
+{
+  auto success = false;
+  int i = 0;
+
+  for (auto modelObject : m_modelObjects){
+    OSItemId itemId = modelObjectToItemId(modelObject, false);
+    if (item->itemId() == itemId){
+      success = true;
+      break;
+    }
+    i++;
+  }
+  return success;
+}
+
+OSItem * OSGridController::getSelectedItemFromModelSubTabView()
+{
+  OSItem * item = nullptr;
+
+  auto modelSubTabView = gridView()->modelSubTabView();
+  if (!modelSubTabView) return item;
+
+  item = modelSubTabView->itemSelector()->selectedItem();
+
+  return item;
 }
 
 void OSGridController::onSelectionCleared()
 {
-  // TODO use a single shot timer, just once to handle this
-  refreshModelObjects();
   gridView()->requestRefreshAll();
 }
 

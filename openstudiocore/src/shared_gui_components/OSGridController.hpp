@@ -457,6 +457,14 @@ public:
   // Call this function on a model update
   virtual void refreshModelObjects() = 0;
 
+  OSItem * getSelectedItemFromModelSubTabView();
+
+  bool selectRowByItem(OSItem * item, bool isSelected);
+
+  bool getRowIndexByItem(OSItem * item);
+
+  int m_oldIndex = -1;
+
 protected:
 
   // This function determines the category for
@@ -529,21 +537,7 @@ private:
 
   QButtonGroup * m_cellBtnGrp;
 
-  int m_oldIndex = -1;
-
-  bool m_acceptItemSelectedSignals = true;
-
 signals:
-
-  //// Emit this signal when an item has been added to the underlying model or data structure.
-  //void itemInserted(int row, int column);
-
-  //// Emit this signal when an item has been removed from the underlying model or data structure.
-  //void itemRemoved(int row, int column);
-
-  //// If the model or data structure beneath a single item has changed,
-  //// emit this signal to update the view attached to the item at this index.
-  //void itemChanged(int row, int column);
 
   // Nuclear reset of everything
   void modelReset();

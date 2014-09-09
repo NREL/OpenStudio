@@ -59,12 +59,6 @@ signals:
 
   void itemSelected(OSItem *);
 
-  //void cellClicked(int row, int column);
-
-  //void rowClicked(int row);
-
-  //void columnClicked(int column);
-
   void dropZoneItemClicked(OSItem* item);
 
   void gridRowSelected(OSItem*);
@@ -88,7 +82,7 @@ public slots:
 
 private slots:
 
-  void refresh(int row, int column);
+  void refreshCell(int row, int column);
 
   void deleteAll();
 
@@ -116,21 +110,9 @@ private:
 
   void setGridController(OSGridController * gridController);
 
-  //void refreshRow(model::ModelObject modelObject);
-
-  //void refreshColumn(int columnId);
-
-  //void selectCell(int row, int column);
-
-  //void selectRow(int row);
-
-  //void selectColumn(int column);
-
   OSCollapsibleView * m_CollapsibleView;
 
   OSGridController * m_gridController;
-
-  QTimer m_timer;
 
   std::vector<RefreshType> m_refreshRequests;
 };
@@ -138,4 +120,3 @@ private:
 } // openstudio
 
 #endif // SHAREDGUICOMPONENTS_OSGRIDVIEW_HPP
-
