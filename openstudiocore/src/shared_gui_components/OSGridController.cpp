@@ -803,16 +803,22 @@ bool OSGridController::selectRowByItem(OSItem * item, bool isSelected)
 bool OSGridController::getRowIndexByItem(OSItem * item, int & rowIndex)
 {
   auto success = false;
-  int i = -1;
+  rowIndex = -1;
 
   for (auto modelObject : m_modelObjects){
+    rowIndex++;
     OSItemId itemId = modelObjectToItemId(modelObject, false);
     if (item->itemId() == itemId){
-      i++;
       success = true;
       break;
     }
   }
+
+  if (success) {
+    // We found the model index and must convert it to the row index
+    rowIndex = rowIndexFromModelIndex(rowIndex);
+  }
+
   return success;
 }
 
