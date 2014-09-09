@@ -95,6 +95,12 @@ set(${target_name}_src
   AirTerminalSingleDuctVAVReheat.hpp
   AirTerminalSingleDuctVAVReheat_Impl.hpp
   AirTerminalSingleDuctVAVReheat.cpp
+  AirTerminalSingleDuctVAVHeatAndCoolReheat.hpp
+  AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl.hpp
+  AirTerminalSingleDuctVAVHeatAndCoolReheat.cpp
+  AirTerminalSingleDuctVAVHeatAndCoolNoReheat.hpp
+  AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl.hpp
+  AirTerminalSingleDuctVAVHeatAndCoolNoReheat.cpp
   AirToAirComponent.hpp
   AirToAirComponent_Impl.hpp
   AirToAirComponent.cpp
@@ -1211,6 +1217,8 @@ set(${target_name}_test_src
   test/AirTerminalSingleDuctUncontrolled_GTest.cpp
   test/AirTerminalSingleDuctVAVNoReheat_GTest.cpp
   test/AirTerminalSingleDuctVAVReheat_GTest.cpp
+  test/AirTerminalSingleDuctVAVHeatAndCoolReheat_GTest.cpp
+  test/AirTerminalSingleDuctVAVHeatAndCoolNoReheat_GTest.cpp
   test/Alpha1_GTest.cpp
   test/AvailabilityManagerAssignmentList_GTest.cpp
   test/AvailabilityManagerNightCycle_GTest.cpp

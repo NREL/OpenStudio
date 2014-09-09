@@ -8714,6 +8714,87 @@ OS:AirLoopHVAC:ZoneSplitter,
        \begin-extensible
        \object-list ConnectionNames
 
+OS:AirTerminal:SingleDuct:VAV:HeatAndCool:NoReheat,
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2,  \field Name
+       \required-field
+       \reference ConnectionObject
+  A3 , \field Availability Schedule
+       \type object-list
+       \object-list ScheduleNames
+  A4,  \field Air Outlet
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  A5,  \field Air Inlet
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  N1,  \field Maximum Air Flow Rate
+       \required-field
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+  N2;  \field Zone Minimum Air Flow Fraction
+       \required-field
+       \minimum 0.0
+       \maximum 1.0
+
+OS:AirTerminal:SingleDuct:VAV:HeatAndCool:Reheat,
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2,  \field Name
+       \required-field
+       \reference ConnectionObject
+  A3 , \field Availability Schedule
+       \type object-list
+       \object-list ScheduleNames
+  A4,  \field Damper Air Outlet
+  A5,  \field Air Inlet
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  N1,  \field Maximum Air Flow Rate
+       \required-field
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+  N2,  \field Zone Minimum Air Flow Fraction
+       \required-field
+       \minimum 0.0
+       \maximum 1.0
+  A6,  \field Reheat Coil
+       \required-field
+       \type object-list
+       \object-list HeatingCoilName
+  N3,  \field Maximum Hot Water or Steam Flow Rate
+       \units m3/s
+       \required-field
+       \minimum 0.0
+       \autosizable
+       \ip-units gal/min
+  N4,  \field Minimum Hot Water or Steam Flow Rate
+       \required-field
+       \units m3/s
+       \minimum 0.0
+       \ip-units gal/min
+  A7,  \field Air Outlet
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  N5,  \field Convergence Tolerance
+       \type real
+       \minimum> 0.0
+       \required-field
+  N6; \field Maximum Reheat Air Temperature
+      \required-field
+      \type real
+      \units C
+      \minimum> 0.0
+
 OS:AirTerminal:SingleDuct:InletSideMixer,
    A1, \field Handle
        \type handle
