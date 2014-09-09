@@ -98,8 +98,11 @@ int main(int argc, char *argv[])
     openstudio::OpenStudioApp app(argc, argv, argumentGetter);
     openstudio::Application::instance().setApplication(&app);
 
+#if !(_DEBUG || (__GNUC__ && !NDEBUG))
     try {
+#endif
       return app.exec();
+#if !(_DEBUG || (__GNUC__ && !NDEBUG))
     } catch (const std::exception &e) {
       LOG_FREE(Fatal, "OpenStudio", "An unhandled exception has occurred: " << e.what());
       cont = true;
@@ -126,5 +129,6 @@ int main(int argc, char *argv[])
         cont = false;
       }
     }
+#endif
   }
 }

@@ -313,7 +313,22 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
       addComboBoxColumn(QString(COOLINGDESIGNAIRFLOWMETHOD),
                         std::function<std::string (const std::string &)>(static_cast<std::string (*)(const std::string&)>(&openstudio::toString)),
                         std::function<std::vector<std::string> ()>(&model::SizingZone::coolingDesignAirFlowMethodValues),
-                        ProxyAdapter(&model::SizingZone::coolingDesignAirFlowMethod, &model::ThermalZone::sizingZone),
+                        std::function<std::string (model::ThermalZone *)>([](model::ThermalZone *t_z) {
+                            try {
+                              return t_z->sizingZone().coolingDesignAirFlowMethod();
+                            } catch (const std::exception &e) {
+                              // If this code is called there is no sizingZone currently set. This means
+                              // that the ThermalZone is probably in the process of being destructed. So,
+                              // we don't want to create a new sizingZone, we really just want to try to 
+                              // continue gracefully, so let's pretend that the current coolingDesignAirFlowMethod
+                              // is the 0th one in the list of possible options.
+                              //
+                              // This might not be the best solution to this problem
+                              LOG(Debug, "Exception while obtaining coolingDesignAirflowMethod " << e.what());
+                              return model::SizingZone::coolingDesignAirFlowMethodValues().at(0);
+                            }
+                          }
+                          ),
                         ProxyAdapter(static_cast<bool (model::SizingZone::*)(const std::string &)>(&model::SizingZone::setCoolingDesignAirFlowMethod),
                           &model::ThermalZone::sizingZone));
 
