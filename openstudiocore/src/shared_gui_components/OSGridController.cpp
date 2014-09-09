@@ -800,18 +800,18 @@ bool OSGridController::selectRowByItem(OSItem * item, bool isSelected)
   return success;
 }
 
-bool OSGridController::getRowIndexByItem(OSItem * item)
+bool OSGridController::getRowIndexByItem(OSItem * item, int & rowIndex)
 {
   auto success = false;
-  int i = 0;
+  int i = -1;
 
   for (auto modelObject : m_modelObjects){
     OSItemId itemId = modelObjectToItemId(modelObject, false);
     if (item->itemId() == itemId){
+      i++;
       success = true;
       break;
     }
-    i++;
   }
   return success;
 }

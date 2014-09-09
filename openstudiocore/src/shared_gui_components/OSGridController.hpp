@@ -461,7 +461,7 @@ public:
 
   bool selectRowByItem(OSItem * item, bool isSelected);
 
-  bool getRowIndexByItem(OSItem * item);
+  bool getRowIndexByItem(OSItem * item, int & rowIndex);
 
   int m_oldIndex = -1;
 
