@@ -738,7 +738,8 @@ void OSGridController::onComboBoxIndexChanged(int index)
 
 void OSGridController::reset()
 {
-  //this->gridView()->requestRefreshAll(); TODO delete???
+  // Should never be hit
+  OS_ASSERT(false);
 }
 
 void OSGridController::cellChecked(int index)
