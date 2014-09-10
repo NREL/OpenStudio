@@ -419,28 +419,36 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
             static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
             std::function<std::vector<std::string> ()>(&model::RefrigerationCase::latentCaseCreditCurveTypeValues),
             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::latentCaseCreditCurveType),
-            CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setLatentCaseCreditCurveType));
+            CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setLatentCaseCreditCurveType),
+            boost::optional<std::function<void(model::RefrigerationCase *)> >(),
+            boost::optional<DataSource>());
     }else if(field == ANTISWEATHEATERCONTROLTYPE){
       addComboBoxColumn<std::string,model::RefrigerationCase>(
             QString(ANTISWEATHEATERCONTROLTYPE),
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
             std::function<std::vector<std::string> ()>(&model::RefrigerationCase::antiSweatHeaterControlTypeValues),
             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::antiSweatHeaterControlType),
-            CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setAntiSweatHeaterControlType));
+            CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setAntiSweatHeaterControlType),
+            boost::optional<std::function<void(model::RefrigerationCase *)> >(),
+            boost::optional<DataSource>());
     }else if(field == CASEDEFROSTTYPE){
       addComboBoxColumn<std::string,model::RefrigerationCase>(
             QString(CASEDEFROSTTYPE),
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
             std::function<std::vector<std::string> ()>(&model::RefrigerationCase::caseDefrostTypeValues),
             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::caseDefrostType),
-            CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setCaseDefrostType));
+            CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setCaseDefrostType),
+            boost::optional<std::function<void(model::RefrigerationCase *)> >(),
+            boost::optional<DataSource>());
     }else if(field == DEFROSTENERGYCORRECTIONCURVETYPE){
       addComboBoxColumn<std::string,model::RefrigerationCase>(
             QString(DEFROSTENERGYCORRECTIONCURVETYPE),
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
             std::function<std::vector<std::string> ()>(&model::RefrigerationCase::defrostEnergyCorrectionCurveTypeValues),
             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::defrostEnergyCorrectionCurveType),
-            CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setDefrostEnergyCorrectionCurveType));
+            CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setDefrostEnergyCorrectionCurveType),
+            boost::optional<std::function<void(model::RefrigerationCase *)> >(),
+            boost::optional<DataSource>());
     }else if(field == INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH){
       addQuantityEditColumn(QString(INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH),
                             QString("W/m"),
@@ -530,14 +538,15 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
           NullAdapter(&model::RefrigerationCase::setAvailabilitySchedule),
           NullAdapter(&model::RefrigerationCase::resetAvailabilitySchedule));
     }else if(field == THERMALZONE){
-      addComboBoxColumn<model::ThermalZone,model::RefrigerationCase>(
-          QString(THERMALZONE),
-          &openstudio::objectName,
-          std::function<std::vector<model::ThermalZone> ()>(std::bind(&openstudio::sortByObjectName<model::ThermalZone>,
-              std::bind(&model::Model::getConcreteModelObjects<model::ThermalZone>, m_model))),
-          CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::thermalZone),
-          CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setThermalZone),
-          NullAdapter(&model::RefrigerationCase::resetThermalZone));
+    //  addComboBoxColumn<model::ThermalZone,model::RefrigerationCase>(
+    //      QString(THERMALZONE),
+    //      &openstudio::objectName,
+    //      std::function<std::vector<model::ThermalZone> ()>(std::bind(&openstudio::sortByObjectName<model::ThermalZone>,
+    //          std::bind(&model::Model::getConcreteModelObjects<model::ThermalZone>, m_model))),
+    //      CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::thermalZone),
+    //      CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setThermalZone),
+    //      NullAdapter(&model::RefrigerationCase::resetThermalZone),
+    //      boost::optional<std::function<bool(model::RefrigerationCase *)> >());
     }else if(field == RACK){
       addComboBoxColumn<model::RefrigerationSystem,model::RefrigerationCase>(
           QString(RACK),
@@ -750,14 +759,18 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
             std::function<std::vector<std::string> ()>(&model::RefrigerationWalkIn::defrostTypeValues),
             CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::defrostType),
-            CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setDefrostType));
+            CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setDefrostType),
+            boost::optional<std::function<void(model::RefrigerationWalkIn *)> >(),
+            boost::optional<DataSource>());
     }else if(field == DEFROSTCONTROLTYPE){
       addComboBoxColumn<std::string,model::RefrigerationWalkIn>(
             QString(DEFROSTCONTROLTYPE),
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
             std::function<std::vector<std::string> ()>(&model::RefrigerationWalkIn::defrostControlTypeValues),
             CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::defrostControlType),
-            CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setDefrostControlType));
+            CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setDefrostControlType),
+            boost::optional<std::function<void(model::RefrigerationWalkIn *)> >(),
+            boost::optional<DataSource>());
     }else if(field == OPERATINGTEMPERATURE){
       addQuantityEditColumn(QString(OPERATINGTEMPERATURE),
                             QString("C"),
@@ -941,16 +954,18 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
 
           boost::optional<std::function<void (model::RefrigerationWalkIn*)> >(NullAdapter(&model::RefrigerationWalkIn::removeFromSystem)));
     }else if(field == ZONEBOUNDARYTHERMALZONE){
-      addComboBoxColumn<model::ThermalZone,model::RefrigerationWalkIn>(
-          QString(ZONEBOUNDARYTHERMALZONE),
-          &openstudio::objectName,
+      //addComboBoxColumn<model::ThermalZone,model::RefrigerationWalkIn>(
+      //    QString(ZONEBOUNDARYTHERMALZONE),
+      //    &openstudio::objectName,
 
-          std::function<std::vector<model::ThermalZone> ()>(std::bind(&openstudio::sortByObjectName<model::ThermalZone>,
-                      std::bind(&model::Model::getConcreteModelObjects<model::ThermalZone>,m_model))),
-          CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::zoneBoundaryThermalZone),
-          CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setZoneBoundaryThermalZone),
+      //    std::function<std::vector<model::ThermalZone> ()>(std::bind(&openstudio::sortByObjectName<model::ThermalZone>,
+      //                std::bind(&model::Model::getConcreteModelObjects<model::ThermalZone>,m_model))),
+      //    CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::zoneBoundaryThermalZone),
+      //    CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setZoneBoundaryThermalZone),
 
-          NullAdapter(&model::RefrigerationWalkIn::resetZoneBoundaryThermalZone));
+      //    NullAdapter(&model::RefrigerationWalkIn::resetZoneBoundaryThermalZone),
+      //    boost::optional<std::function<bool(model::RefrigerationWalkIn *)> >(),
+      //    boost::optional<DataSource>());
     }else if(field == ZONEBOUNDARYTOTALINSULATEDSURFACEAREAFACINGZONE){
       addQuantityEditColumn(QString(ZONEBOUNDARYTOTALINSULATEDSURFACEAREAFACINGZONE),
                             QString("m^2"),
