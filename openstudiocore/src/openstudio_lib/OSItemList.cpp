@@ -38,8 +38,8 @@ OSItemList::OSItemList(OSVectorController* vectorController,
                        QWidget * parent)
   : OSItemSelector(parent),
     m_vectorController(vectorController),
-    m_vLayout(NULL),
-    m_selectedItem(NULL),
+    m_vLayout(nullptr),
+    m_selectedItem(nullptr),
     m_itemsDraggable(false),
     m_itemsRemoveable(false),
     m_type(OSItemType::ListItem),
@@ -110,7 +110,7 @@ OSItem* OSItemList::firstItem()
   if (!items.empty()){
     return items.front();
   }
-  return NULL;
+  return nullptr;
 }
 
 OSItem* OSItemList::lastItem()
@@ -119,7 +119,7 @@ OSItem* OSItemList::lastItem()
   if (!items.empty()){
     return items.back();
   }
-  return NULL;
+  return nullptr;
 }
 
 std::vector<OSItem *> OSItemList::items()
@@ -199,7 +199,7 @@ void OSItemList::setItemIds(const std::vector<OSItemId>& itemIds)
   }
   m_vLayout->addStretch();
 
-  m_selectedItem = NULL;
+  m_selectedItem = nullptr;
   
   for (const OSItemId& itemId : itemIds){
     OSItem* item = OSItem::makeItem(itemId, OSItemType::ListItem);
@@ -253,7 +253,7 @@ void OSItemList::selectItem(OSItem* selectItem)
       // deselect
       m_selectedItem->setSelected(false);
     }
-    m_selectedItem = NULL;
+    m_selectedItem = nullptr;
     emit selectionCleared();
     return;
   }
@@ -289,7 +289,7 @@ void OSItemList::selectItem(OSItem* selectItem)
     // deselect
     m_selectedItem->setSelected(false);
   }
-  m_selectedItem = NULL;
+  m_selectedItem = nullptr;
   emit selectionCleared();
 }
 
@@ -311,7 +311,7 @@ void OSItemList::selectItemId(const OSItemId& itemId)
 
 void OSItemList::clearSelection()
 {
-  m_selectedItem = NULL;
+  m_selectedItem = nullptr;
 
   for (int i = 0; i < m_vLayout->count(); ++i){
     QLayoutItem * layoutItem = m_vLayout->itemAt(i);
