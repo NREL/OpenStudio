@@ -37,10 +37,10 @@ namespace openstudio {
 
 WindowMaterialSimpleGlazingSystemInspectorView::WindowMaterialSimpleGlazingSystemInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
   : ModelObjectInspectorView(model, true, parent),
-    m_nameEdit(NULL),
-    m_uFactor(NULL),
-    m_solarHeatGainCoefficient(NULL),
-    m_visibleTransmittance(NULL),
+    m_nameEdit(nullptr),
+    m_uFactor(nullptr),
+    m_solarHeatGainCoefficient(nullptr),
+    m_visibleTransmittance(nullptr),
     m_isIP(isIP)
 {
   createLayout();

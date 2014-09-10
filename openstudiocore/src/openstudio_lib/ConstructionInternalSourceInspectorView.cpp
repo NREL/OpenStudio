@@ -48,12 +48,12 @@ namespace openstudio {
 
 ConstructionInternalSourceInspectorView::ConstructionInternalSourceInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
   : ModelObjectInspectorView(model, true, parent),
-    m_constructionDZ(NULL),
-    m_nameEdit(NULL),
-    m_sourcePresentAfterLayerNumberEdit(NULL),
-    m_temperatureCalculationRequestedAfterLayerNumberEdit(NULL),
-    m_dimensionsForTheCTFCalculationEdit(NULL),
-    m_tubeSpacingEdit(NULL),
+    m_constructionDZ(nullptr),
+    m_nameEdit(nullptr),
+    m_sourcePresentAfterLayerNumberEdit(nullptr),
+    m_temperatureCalculationRequestedAfterLayerNumberEdit(nullptr),
+    m_dimensionsForTheCTFCalculationEdit(nullptr),
+    m_tubeSpacingEdit(nullptr),
     m_isIP(isIP)
 {
   createLayout();

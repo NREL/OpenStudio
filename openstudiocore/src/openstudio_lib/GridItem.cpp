@@ -92,7 +92,7 @@ GridItem::GridItem( QGraphicsItem * parent ):
   m_highlight(false),
   m_hLength(1),
   m_vLength(1),
-  m_removeButtonItem(NULL),
+  m_removeButtonItem(nullptr),
   m_enableHighlight(true)
 {
   setAcceptHoverEvents(true);
@@ -138,7 +138,7 @@ void GridItem::setDeletable(bool deletable)
     {
       m_removeButtonItem->deleteLater();
 
-      m_removeButtonItem = NULL; 
+      m_removeButtonItem = nullptr; 
     }
   }
 }
@@ -861,7 +861,7 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
   : GridItem(parent),
     m_splitter(splitter),
     m_mixer(mixer),
-    m_dropZoneBranchItem(NULL)
+    m_dropZoneBranchItem(nullptr)
 {
   boost::optional<model::Loop> optionalLoop = splitter.loop();
   OS_ASSERT( optionalLoop );
@@ -961,7 +961,7 @@ void HorizontalBranchGroupItem::setShowDropZone(bool showDropZone)
     {
       m_branchItems.erase(it);
 
-      m_dropZoneBranchItem = NULL;
+      m_dropZoneBranchItem = nullptr;
     }
   }
 
@@ -1764,7 +1764,7 @@ OASupplyBranchItem::OASupplyBranchItem( std::vector<model::ModelObject> supplyMo
         ++reliefIt;
       }
       ++reliefIt;
-      m_gridItems.push_back(NULL);
+      m_gridItems.push_back(nullptr);
     }
     else if(boost::optional<model::Node> comp = supplyIt->optionalCast<model::Node>())
     {
@@ -2395,11 +2395,11 @@ void OAMixerItem::mouseReleaseEvent( QGraphicsSceneMouseEvent * event )
 OASystemItem::OASystemItem( model::AirLoopHVACOutdoorAirSystem & oaSystem,
                             QGraphicsItem * parent )
   : GridItem( parent ),
-    m_oaMixerItem(NULL), 
-    m_oaBranch(NULL), 
-    m_reliefBranch(NULL),
-    m_oaNodeItem(NULL),
-    m_reliefNodeItem(NULL)
+    m_oaMixerItem(nullptr), 
+    m_oaBranch(nullptr), 
+    m_reliefBranch(nullptr),
+    m_oaNodeItem(nullptr),
+    m_reliefNodeItem(nullptr)
 {
   m_oaMixerItem = new OAMixerItem(this);
   m_oaMixerItem->setModelObject( oaSystem );
@@ -2644,16 +2644,16 @@ DemandSideItem::DemandSideItem( QGraphicsItem * parent,
   : GridItem( parent ),
     m_demandInletNode(demandInletNode),
     m_demandOutletNode(demandOutletNode),
-    m_inletBranch(NULL), 
-    m_outletBranch(NULL),
-    m_zoneBranches(NULL),
-    m_splitterItem(NULL),
-    m_mixerItem(NULL),
-    m_inletNode(NULL),
-    m_outletNode(NULL),
+    m_inletBranch(nullptr), 
+    m_outletBranch(nullptr),
+    m_zoneBranches(nullptr),
+    m_splitterItem(nullptr),
+    m_mixerItem(nullptr),
+    m_inletNode(nullptr),
+    m_outletNode(nullptr),
     m_padding(0),
-    m_inletSpacer(NULL),
-    m_outletSpacer(NULL)
+    m_inletSpacer(nullptr),
+    m_outletSpacer(nullptr)
 {
   model::Loop loop = m_demandInletNode.loop().get(); 
 
@@ -2829,19 +2829,19 @@ SupplySideItem::SupplySideItem( QGraphicsItem * parent,
   : GridItem( parent ),
     m_supplyInletNode(supplyInletNode),
     m_supplyOutletNode(supplyOutletNode),
-    m_outletBranchItem(NULL), 
-    m_inletBranchItem(NULL),
-    m_mainBranchGroupItem(NULL),
-    m_oaSystemItem(NULL),
-    m_inletNodeItem(NULL),
-    m_outletNodeItem(NULL),
-    m_leftVerticalItem(NULL),
-    m_rightVerticalItem(NULL),
-    m_splitterItem(NULL),
-    m_mixerItem(NULL),
+    m_outletBranchItem(nullptr), 
+    m_inletBranchItem(nullptr),
+    m_mainBranchGroupItem(nullptr),
+    m_oaSystemItem(nullptr),
+    m_inletNodeItem(nullptr),
+    m_outletNodeItem(nullptr),
+    m_leftVerticalItem(nullptr),
+    m_rightVerticalItem(nullptr),
+    m_splitterItem(nullptr),
+    m_mixerItem(nullptr),
     m_padding(0),
-    m_inletSpacer(NULL),
-    m_outletSpacer(NULL)
+    m_inletSpacer(nullptr),
+    m_outletSpacer(nullptr)
 {
   model::Node _supplyInletNode = m_supplyInletNode;
   model::Node _supplyOutletNode = m_supplyOutletNode;
@@ -3154,10 +3154,10 @@ NodeContextButtonItem::NodeContextButtonItem(GridItem * parent)
 
 void NodeContextButtonItem::showContextMenu()
 {
-  if( scene() != NULL
+  if( scene() != nullptr
       && ! scene()->views().empty() 
-      && scene()->views().first() != NULL
-      && scene()->views().first()->viewport() != NULL )
+      && scene()->views().first() != nullptr
+      && scene()->views().first()->viewport() != nullptr )
   {
 
     QGraphicsView * v = scene()->views().first();
@@ -3178,7 +3178,7 @@ void NodeContextButtonItem::onRemoveSPMActionTriggered()
 {
   if(GridItem * gridItem = qobject_cast<GridItem *>(parentObject()))
   {
-    if( gridItem != NULL
+    if( gridItem != nullptr
         && gridItem->modelObject()
         && gridItem->modelObject()->optionalCast<model::Node>() )
     {

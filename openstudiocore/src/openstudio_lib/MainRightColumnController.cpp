@@ -97,7 +97,7 @@ MainRightColumnController::MainRightColumnController(const model::Model & model,
 
 void MainRightColumnController::onItemRemoveClicked(OSItem *)
 {
-  setEditView(NULL);
+  setEditView(nullptr);
   QTimer::singleShot(0, this, SLOT(markAsModified()));
 
 }
@@ -129,7 +129,7 @@ SystemItem * MainRightColumnController::systemItem(const Handle & systemHandle) 
     return it->second;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 void MainRightColumnController::inspectModelObject(model::OptionalModelObject & modelObject, bool readOnly)
@@ -218,9 +218,9 @@ void MainRightColumnController::configureForSiteSubTab(int subTabID)
 {
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
-  setLibraryView(NULL);
-  setMyModelView(NULL);
-  setEditView(NULL);
+  setLibraryView(nullptr);
+  setMyModelView(nullptr);
+  setEditView(nullptr);
 
   doc->openSidebar();
   //doc->closeSidebar();
@@ -230,9 +230,9 @@ void MainRightColumnController::configureForSchedulesSubTab(int subTabID)
 {
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
-  setLibraryView(NULL);
-  setMyModelView(NULL);
-  setEditView(NULL);
+  setLibraryView(nullptr);
+  setMyModelView(nullptr);
+  setEditView(nullptr);
 
   switch( subTabID )
   {
@@ -321,9 +321,9 @@ void MainRightColumnController::configureForConstructionsSubTab(int subTabID)
 {
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
-  setLibraryView(NULL);
-  setMyModelView(NULL);
-  setEditView(NULL);
+  setLibraryView(nullptr);
+  setMyModelView(nullptr);
+  setEditView(nullptr);
 
   switch( subTabID )
   {
@@ -484,7 +484,7 @@ void MainRightColumnController::configureForLoadsSubTab(int subTabID)
   model::Model lib = doc->componentLibrary();
 
 
-  setEditView(NULL);
+  setEditView(nullptr);
 
   // my model
 
@@ -545,7 +545,7 @@ void MainRightColumnController::configureForSpaceTypesSubTab(int subTabID)
   // no sub tabs
   OS_ASSERT(subTabID == -1);
 
-  setEditView(NULL);
+  setEditView(nullptr);
 
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
@@ -627,7 +627,7 @@ void MainRightColumnController::configureForBuildingStoriesSubTab(int subTabID)
   // no sub tabs
   OS_ASSERT(subTabID == -1);
 
-  setEditView(NULL);
+  setEditView(nullptr);
 
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
@@ -677,7 +677,7 @@ void MainRightColumnController::configureForFacilitySubTab(int subTabID)
   // no sub tabs
   OS_ASSERT(subTabID == -1);
 
-  setEditView(NULL);
+  setEditView(nullptr);
 
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
@@ -774,9 +774,9 @@ void MainRightColumnController::configureForThermalZonesSubTab(int subTabID)
 
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
-  setLibraryView(NULL);
-  setMyModelView(NULL);
-  setEditView(NULL);
+  setLibraryView(nullptr);
+  setMyModelView(nullptr);
+  setEditView(nullptr);
 
   // My Model
 
@@ -826,9 +826,9 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
 
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
-  setLibraryView(NULL);
-  setMyModelView(NULL);
-  setEditView(NULL);
+  setLibraryView(nullptr);
+  setMyModelView(nullptr);
+  setEditView(nullptr);
 
   // my model
   ModelObjectTypeListView* myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
@@ -930,9 +930,9 @@ void MainRightColumnController::configureForBuildingSummarySubTab(int subTabID)
 {
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
-  setLibraryView(NULL);
-  setMyModelView(NULL);
-  setEditView(NULL);
+  setLibraryView(nullptr);
+  setMyModelView(nullptr);
+  setEditView(nullptr);
 
   //doc->openSidebar();
   doc->closeSidebar();
@@ -942,9 +942,9 @@ void MainRightColumnController::configureForOutputVariablesSubTab(int subTabID)
 {
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
-  setLibraryView(NULL);
-  setMyModelView(NULL);
-  setEditView(NULL);
+  setLibraryView(nullptr);
+  setMyModelView(nullptr);
+  setEditView(nullptr);
 
   //doc->openSidebar();
   doc->closeSidebar();
@@ -954,9 +954,9 @@ void MainRightColumnController::configureForSimulationSettingsSubTab(int subTabI
 {
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
-  setLibraryView(NULL);
-  setMyModelView(NULL);
-  setEditView(NULL);
+  setLibraryView(nullptr);
+  setMyModelView(nullptr);
+  setEditView(nullptr);
 
   //doc->openSidebar();
   doc->closeSidebar();
@@ -967,7 +967,7 @@ void MainRightColumnController::configureForScriptsSubTab(int subTabID)
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   setLibraryView(m_measureLibraryController->localLibraryView.data());
-  setMyModelView(NULL);
+  setMyModelView(nullptr);
   setEditView(m_measureEditController->editView.data());
 
   doc->openSidebar();
@@ -977,9 +977,9 @@ void MainRightColumnController::configureForRunSimulationSubTab(int subTabID)
 {
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
-  setLibraryView(NULL);
-  setMyModelView(NULL);
-  setEditView(NULL);
+  setLibraryView(nullptr);
+  setMyModelView(nullptr);
+  setEditView(nullptr);
 
   //doc->openSidebar();
   doc->closeSidebar();
@@ -989,9 +989,9 @@ void MainRightColumnController::configureForResultsSummarySubTab(int subTabID)
 {
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
-  setLibraryView(NULL);
-  setMyModelView(NULL);
-  setEditView(NULL);
+  setLibraryView(nullptr);
+  setMyModelView(nullptr);
+  setEditView(nullptr);
 
   //doc->openSidebar();
   doc->closeSidebar();

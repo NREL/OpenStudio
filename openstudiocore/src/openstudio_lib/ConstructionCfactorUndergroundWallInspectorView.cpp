@@ -38,9 +38,9 @@ namespace openstudio {
 
 ConstructionCfactorUndergroundWallInspectorView::ConstructionCfactorUndergroundWallInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
   : ModelObjectInspectorView(model, true, parent),
-    m_nameEdit(NULL),
-    m_cfactorEdit(NULL),
-    m_heightEdit(NULL),
+    m_nameEdit(nullptr),
+    m_cfactorEdit(nullptr),
+    m_heightEdit(nullptr),
     m_isIP(isIP)
 {
   createLayout();

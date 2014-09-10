@@ -43,8 +43,8 @@ SyncMeasuresDialogCentralWidget::SyncMeasuresDialogCentralWidget(analysisdriver:
   MeasureManager * measureManager,
   QWidget * parent)
   : QWidget(parent),
-  m_collapsibleComponentList(NULL),
-  m_componentList(NULL),
+  m_collapsibleComponentList(nullptr),
+  m_componentList(nullptr),
   m_pageIdx(0),
   m_project(project),
   m_measureManager(measureManager)
@@ -79,10 +79,10 @@ void SyncMeasuresDialogCentralWidget::createLayout()
 
   m_componentList = new ComponentList();
 
-  CollapsibleComponentHeader * collapsibleComponentHeader = NULL;
+  CollapsibleComponentHeader * collapsibleComponentHeader = nullptr;
   collapsibleComponentHeader = new CollapsibleComponentHeader("Updates",100,5);
 
-  CollapsibleComponent * collapsibleComponent = NULL;
+  CollapsibleComponent * collapsibleComponent = nullptr;
   collapsibleComponent = new CollapsibleComponent(collapsibleComponentHeader,m_componentList);
 
   m_collapsibleComponentList->addCollapsibleComponent(collapsibleComponent);

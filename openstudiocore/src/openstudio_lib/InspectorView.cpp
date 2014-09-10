@@ -115,7 +115,7 @@ namespace openstudio {
 
 InspectorView::InspectorView(QWidget* parent)
   : QWidget(parent),
-    m_currentView(NULL)
+    m_currentView(nullptr)
 {
   m_vLayout = new QVBoxLayout();
 

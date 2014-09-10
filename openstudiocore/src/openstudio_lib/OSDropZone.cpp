@@ -80,7 +80,7 @@ OSDropZone::OSDropZone(OSVectorController* vectorController,
   m_scrollArea->setWidget(mainBox);
   m_scrollArea->setMinimumWidth(OSItem::ITEM_WIDTH);
 
-  QBoxLayout * mainLayout = NULL;
+  QBoxLayout * mainLayout = nullptr;
 
   if(m_growsHorizontally){
     m_scrollArea->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed);
@@ -383,7 +383,7 @@ OSItemDropZone::OSItemDropZone(bool growsHorizontally,
 
   setObjectName("DropBox");
 
-  QBoxLayout * mainLayout = NULL;
+  QBoxLayout * mainLayout = nullptr;
 
   if(m_growsHorizontally){
     mainLayout = new QHBoxLayout();

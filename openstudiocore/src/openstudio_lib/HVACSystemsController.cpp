@@ -542,7 +542,7 @@ boost::optional<model::Loop> HVACSystemsController::currentLoop() const
 
 void HVACLayoutController::removeModelObject(model::ModelObject & modelObject)
 {
-  if( modelObject.handle() == NULL ) return;
+  if( modelObject.handle() == nullptr ) return;
 
   model::OptionalModelObject mo;
 

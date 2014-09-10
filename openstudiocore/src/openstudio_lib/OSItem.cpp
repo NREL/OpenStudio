@@ -127,12 +127,12 @@ bool OSItemId::operator==(const OSItemId& other) const
 OSItem::OSItem(const OSItemId& itemId, OSItemType osItemType, QWidget * parent)
                : QWidget(parent),
                m_itemId(itemId),
-               m_selectionWidget(NULL),
-               m_borderWidget(NULL),
-               m_removeButton(NULL),
-               m_textLbl(NULL),
-               m_imageLeftLbl(NULL),
-               m_imageRightLbl(NULL),
+               m_selectionWidget(nullptr),
+               m_borderWidget(nullptr),
+               m_removeButton(nullptr),
+               m_textLbl(nullptr),
+               m_imageLeftLbl(nullptr),
+               m_imageRightLbl(nullptr),
                m_mouseDown(false),
                m_selected(false),
                m_draggable(true),
@@ -152,7 +152,7 @@ OSItem::OSItem(const OSItemId& itemId, OSItemType osItemType, QWidget * parent)
 
 OSItem* OSItem::makeItem(const OSItemId& itemId, OSItemType osItemType)
 {
-  OSItem* result = NULL;
+  OSItem* result = nullptr;
 
   OSAppBase* app = OSAppBase::instance();
 

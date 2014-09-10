@@ -74,7 +74,7 @@ void LoopScene::initDefault()
 
 void LoopScene::layout()
 {
-  if( m_dirty && m_loop.handle() != NULL )
+  if( m_dirty && m_loop.handle() != nullptr )
   {
     QList<QGraphicsItem *> itemList = items();
     for( QList<QGraphicsItem *>::iterator it = itemList.begin(); 
@@ -102,7 +102,7 @@ DemandSideItem * LoopScene::createDemandSide()
   model::Node demandInletNode = m_loop.demandInletNode();
   model::Node demandOutletNode = m_loop.demandOutletNode();
 
-  DemandSideItem * demandSideItem = new DemandSideItem( NULL,
+  DemandSideItem * demandSideItem = new DemandSideItem( nullptr,
                                                         demandInletNode,
                                                         demandOutletNode );
 
@@ -114,7 +114,7 @@ SupplySideItem * LoopScene::createSupplySide()
   model::Node supplyInletNode = m_loop.supplyInletNode();
   model::Node supplyOutletNode = m_loop.supplyOutletNode();
 
-  SupplySideItem * supplySideItem = new SupplySideItem( NULL,
+  SupplySideItem * supplySideItem = new SupplySideItem( nullptr,
                                                         supplyInletNode,
                                                         supplyOutletNode);
 

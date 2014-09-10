@@ -38,17 +38,17 @@ namespace openstudio {
 
 WindowMaterialGlazingRefractionExtinctionMethodInspectorView::WindowMaterialGlazingRefractionExtinctionMethodInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
   : ModelObjectInspectorView(model, true, parent),
-    m_solarDiffusing(NULL),
-    m_nameEdit(NULL),
-    m_thickness(NULL),
-    m_solarIndexOfRefraction(NULL),
-    m_solarExtinctionCoefficient(NULL),
-    m_visibleIndexOfRefraction(NULL),
-    m_visibleExtinctionCoefficient(NULL),
-    m_infraredTransmittanceAtNormalIncidence(NULL),
-    m_infraredHemisphericalEmissivity(NULL),
-    m_conductivity(NULL),
-    m_dirtCorrectionFactorForSolarAndVisibleTransmittance(NULL),
+    m_solarDiffusing(nullptr),
+    m_nameEdit(nullptr),
+    m_thickness(nullptr),
+    m_solarIndexOfRefraction(nullptr),
+    m_solarExtinctionCoefficient(nullptr),
+    m_visibleIndexOfRefraction(nullptr),
+    m_visibleExtinctionCoefficient(nullptr),
+    m_infraredTransmittanceAtNormalIncidence(nullptr),
+    m_infraredHemisphericalEmissivity(nullptr),
+    m_conductivity(nullptr),
+    m_dirtCorrectionFactorForSolarAndVisibleTransmittance(nullptr),
     m_isIP(isIP)
 {
   createLayout();

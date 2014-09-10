@@ -98,97 +98,97 @@ SimSettingsView::SimSettingsView(bool isIP,
   QWidget * parent)
   : QWidget(parent),
   m_model(model),
-  m_runSimWeatherFiles(NULL),
-  m_runSimDesignDays(NULL),
-  m_performZoneSizing(NULL),
-  m_performSystemSizing(NULL),
-  m_performPlantSizing(NULL),
-  m_dateRangelabel(NULL),
-  m_startDateEdit(NULL),
-  m_endDateEdit(NULL),
-  m_runPeriodGroup(NULL),
-  m_radianceGroup(NULL),
-  m_runPeriodName(NULL),
+  m_runSimWeatherFiles(nullptr),
+  m_runSimDesignDays(nullptr),
+  m_performZoneSizing(nullptr),
+  m_performSystemSizing(nullptr),
+  m_performPlantSizing(nullptr),
+  m_dateRangelabel(nullptr),
+  m_startDateEdit(nullptr),
+  m_endDateEdit(nullptr),
+  m_runPeriodGroup(nullptr),
+  m_radianceGroup(nullptr),
+  m_runPeriodName(nullptr),
   m_isIP(false),
   // SimulationControl
-  m_doZoneSizingCalculation(NULL),
-  m_doSystemSizingCalculation(NULL),
-  m_doPlantSizingCalculation(NULL),
-  m_runSimulationforSizingPeriods(NULL),
-  m_runSimulationforWeatherFileRunPeriods(NULL),
-  m_maximumNumberofWarmupDays(NULL),
-  m_minimumNumberofWarmupDays(NULL),
-  m_loadsConvergenceToleranceValue(NULL),
-  m_temperatureConvergenceToleranceValue(NULL),
-  m_solarDistribution(NULL),
+  m_doZoneSizingCalculation(nullptr),
+  m_doSystemSizingCalculation(nullptr),
+  m_doPlantSizingCalculation(nullptr),
+  m_runSimulationforSizingPeriods(nullptr),
+  m_runSimulationforWeatherFileRunPeriods(nullptr),
+  m_maximumNumberofWarmupDays(nullptr),
+  m_minimumNumberofWarmupDays(nullptr),
+  m_loadsConvergenceToleranceValue(nullptr),
+  m_temperatureConvergenceToleranceValue(nullptr),
+  m_solarDistribution(nullptr),
   // Radiance
-  m_accumulatedRaysperRecord(NULL),
-  m_directThreshold(NULL),
-  m_directCertainty(NULL),
-  m_directJitter(NULL),
-  m_directPretest(NULL),
-  m_ambientBouncesVMX(NULL),
-  m_ambientBouncesDMX(NULL),
-  m_ambientDivisionsVMX(NULL),
-  m_ambientDivisionsDMX(NULL),
-  m_ambientSupersamples(NULL),
-  m_limitWeightVMX(NULL),
-  m_limitWeightDMX(NULL),
-  m_klemsSamplingDensity(NULL),
-  m_skyDiscretizationResolution(NULL),
-  m_accumulatedRaysperRecordLbl(NULL),
-  m_directThresholdLbl(NULL),
-  m_directCertaintyLbl(NULL),
-  m_directJitterLbl(NULL),
-  m_directPretestLbl(NULL),
-  m_ambientBouncesVMXLbl(NULL),
-  m_ambientBouncesDMXLbl(NULL),
-  m_ambientDivisionsVMXLbl(NULL),
-  m_ambientDivisionsDMXLbl(NULL),
-  m_ambientSupersamplesLbl(NULL),
-  m_limitWeightVMXLbl(NULL),
-  m_limitWeightDMXLbl(NULL),
-  m_klemsSamplingDensityLbl(NULL),
-  m_skyDiscretizationResolutionLbl(NULL),
+  m_accumulatedRaysperRecord(nullptr),
+  m_directThreshold(nullptr),
+  m_directCertainty(nullptr),
+  m_directJitter(nullptr),
+  m_directPretest(nullptr),
+  m_ambientBouncesVMX(nullptr),
+  m_ambientBouncesDMX(nullptr),
+  m_ambientDivisionsVMX(nullptr),
+  m_ambientDivisionsDMX(nullptr),
+  m_ambientSupersamples(nullptr),
+  m_limitWeightVMX(nullptr),
+  m_limitWeightDMX(nullptr),
+  m_klemsSamplingDensity(nullptr),
+  m_skyDiscretizationResolution(nullptr),
+  m_accumulatedRaysperRecordLbl(nullptr),
+  m_directThresholdLbl(nullptr),
+  m_directCertaintyLbl(nullptr),
+  m_directJitterLbl(nullptr),
+  m_directPretestLbl(nullptr),
+  m_ambientBouncesVMXLbl(nullptr),
+  m_ambientBouncesDMXLbl(nullptr),
+  m_ambientDivisionsVMXLbl(nullptr),
+  m_ambientDivisionsDMXLbl(nullptr),
+  m_ambientSupersamplesLbl(nullptr),
+  m_limitWeightVMXLbl(nullptr),
+  m_limitWeightDMXLbl(nullptr),
+  m_klemsSamplingDensityLbl(nullptr),
+  m_skyDiscretizationResolutionLbl(nullptr),
   // SizingParameters
-  m_heatingSizingFactor(NULL),
-  m_coolingSizingFactor(NULL),
-  m_timestepsinAveragingWindow(NULL),
+  m_heatingSizingFactor(nullptr),
+  m_coolingSizingFactor(nullptr),
+  m_timestepsinAveragingWindow(nullptr),
   // ProgramControl
-  m_numberOfThreadsAllowed(NULL),
+  m_numberOfThreadsAllowed(nullptr),
   // Timestep
-  m_numberOfTimestepsPerHour(NULL),
+  m_numberOfTimestepsPerHour(nullptr),
   // OutputControlReportingTolerances
-  m_toleranceForTimeHeatingSetpointNotMet(NULL),
-  m_toleranceForTimeCoolingSetpointNotMet(NULL),
+  m_toleranceForTimeHeatingSetpointNotMet(nullptr),
+  m_toleranceForTimeCoolingSetpointNotMet(nullptr),
   // ConvergenceLimits
-  m_maximumHVACIterations(NULL),
-  m_minimumPlantIterations(NULL),
-  m_maximumPlantIterations(NULL),
-  m_minimumSystemTimestep(NULL),
+  m_maximumHVACIterations(nullptr),
+  m_minimumPlantIterations(nullptr),
+  m_maximumPlantIterations(nullptr),
+  m_minimumSystemTimestep(nullptr),
   // ShadowCalculation
-  m_calculationFrequency(NULL),
-  m_maximumFiguresInShadowOverlapCalculations(NULL),
-  m_polygonClippingAlgorithm(NULL),
-  m_skyDiffuseModelingAlgorithm(NULL),
+  m_calculationFrequency(nullptr),
+  m_maximumFiguresInShadowOverlapCalculations(nullptr),
+  m_polygonClippingAlgorithm(nullptr),
+  m_skyDiffuseModelingAlgorithm(nullptr),
   // SurfaceConvectionAlgorithmInside
-  m_algorithmSurfaceConvectionInside(NULL),
+  m_algorithmSurfaceConvectionInside(nullptr),
   // SurfaceConvectionAlgorithmOutside
-  m_algorithmSurfaceConvectionOutside(NULL),
+  m_algorithmSurfaceConvectionOutside(nullptr),
   // HeatBalance
-  m_algorithmHeatBalance(NULL),
-  m_surfaceTemperatureUpperLimit(NULL),
-  m_minimumSurfaceConvectionHeatTransferCoefficientValue(NULL),
-  m_maximumSurfaceConvectionHeatTransferCoefficientValue(NULL),
+  m_algorithmHeatBalance(nullptr),
+  m_surfaceTemperatureUpperLimit(nullptr),
+  m_minimumSurfaceConvectionHeatTransferCoefficientValue(nullptr),
+  m_maximumSurfaceConvectionHeatTransferCoefficientValue(nullptr),
   // ZoneAirHeatBalanceAlgorithm
-  m_algorithmZoneAirHeatBalance(NULL),
+  m_algorithmZoneAirHeatBalance(nullptr),
   // ZoneAirContaminantBalance
-  m_carbonDioxideConcentration(NULL),
-  m_outdoorCarbonDioxideScheduleName(NULL),
+  m_carbonDioxideConcentration(nullptr),
+  m_outdoorCarbonDioxideScheduleName(nullptr),
   // ZoneCapacitanceMultiplierResearchSpecial
-  m_temperatureCapacityMultiplier(NULL),
-  m_humidityCapacityMultiplier(NULL),
-  m_carbonDioxideCapacityMultiplier(NULL)
+  m_temperatureCapacityMultiplier(nullptr),
+  m_humidityCapacityMultiplier(nullptr),
+  m_carbonDioxideCapacityMultiplier(nullptr)
 {
   connect(this, &SimSettingsView::toggleUnitsClicked, this, &SimSettingsView::toggleUnits);
 
@@ -211,7 +211,7 @@ void SimSettingsView::createWidgets()
   setLayout(mainLayout);
   setContentsMargins(0,0,0,0);
 
-  CollapsibleInspector * collapsibleInspector = NULL;
+  CollapsibleInspector * collapsibleInspector = nullptr;
   
   //******************* OS:RunPeriod *******************
   mainLayout->addWidget(createRunPeriodWidget());
@@ -286,11 +286,11 @@ QWidget * SimSettingsView::createRunPeriodWidget()
   mainHLayout->setContentsMargins(7,7,7,7);
   mainHLayout->setSpacing(0);
 
-  QLabel * label = NULL;
+  QLabel * label = nullptr;
 
-  QVBoxLayout * vLayout = NULL;
+  QVBoxLayout * vLayout = nullptr;
 
-  QHBoxLayout * hLayout = NULL;
+  QHBoxLayout * hLayout = nullptr;
 
   label = new QLabel("Run Period");
   label->setObjectName("H1");
@@ -336,7 +336,7 @@ QWidget * SimSettingsView::createRunPeriodWidget()
   //  this, SLOT(on_runPeriodGroupClicked(int)));
   //OS_ASSERT(isConnected);
   //
-  //QRadioButton * radioButton = NULL;
+  //QRadioButton * radioButton = nullptr;
   //
   //int buttonCount = 0;
   //
@@ -398,7 +398,7 @@ QWidget * SimSettingsView::createRunControlWidget()
   mainLayout->setContentsMargins(0,0,0,0);
   mainLayout->setSpacing(0);
 
-  QLabel * label = NULL;
+  QLabel * label = nullptr;
 
   label = new QLabel("Run Control");
   label->setObjectName("H1");
@@ -449,7 +449,7 @@ QWidget * SimSettingsView::createSimulationControlWidget()
 
   int row = 0;
   int col = 0;
-  QSpacerItem * spacerItem = NULL;
+  QSpacerItem * spacerItem = nullptr;
 
   addField(gridLayout,row,col,"Do Zone Sizing Calculation",m_doZoneSizingCalculation);
   col++;
@@ -514,7 +514,7 @@ QWidget * SimSettingsView::createSizingParametersWidget()
   mainLayout->setContentsMargins(7,7,7,7);
   mainLayout->setSpacing(0);
 
-  QLabel * label = NULL;
+  QLabel * label = nullptr;
 
   label = new QLabel("Sizing Parameters");
   label->setObjectName("H1");
@@ -566,7 +566,7 @@ QWidget * SimSettingsView::createTimestepWidget()
   mainLayout->setContentsMargins(7,7,7,7);
   mainLayout->setSpacing(0);
 
-  QLabel * label = NULL;
+  QLabel * label = nullptr;
 
   label = new QLabel("Timestep");
   label->setObjectName("H1");
@@ -598,7 +598,7 @@ QWidget * SimSettingsView::createOutputControlReportingTolerancesWidget()
 
   int row = 0;
   int col = 0;
-  QSpacerItem * spacerItem = NULL;
+  QSpacerItem * spacerItem = nullptr;
 
   addField(gridLayout,row,col,"Tolerance For Time Heating Setpoint Not Met",m_toleranceForTimeHeatingSetpointNotMet);
   col++;
@@ -621,7 +621,7 @@ QWidget * SimSettingsView::createConvergenceLimitsWidget()
 
   int row = 0;
   int col = 0;
-  QSpacerItem * spacerItem = NULL;
+  QSpacerItem * spacerItem = nullptr;
 
   addField(gridLayout,row,col,"Maximum HVAC Iterations",m_maximumHVACIterations);
   col++;
@@ -657,7 +657,7 @@ QWidget * SimSettingsView::createShadowCalculationWidget()
 
   int row = 0;
   int col = 0;
-  QSpacerItem * spacerItem = NULL;
+  QSpacerItem * spacerItem = nullptr;
 
   addField(gridLayout,row,col,"Calculation Frequency",m_calculationFrequency);
   col++;
@@ -730,7 +730,7 @@ QWidget * SimSettingsView::createHeatBalanceAlgorithmWidget()
 
   int row = 0;
   int col = 0;
-  QSpacerItem * spacerItem = NULL;
+  QSpacerItem * spacerItem = nullptr;
 
   addField(gridLayout,row,col,"Surface Temperature Upper Limit",m_surfaceTemperatureUpperLimit);
   col++;
@@ -784,7 +784,7 @@ QWidget * SimSettingsView::createZoneAirContaminantBalanceWidget()
 
   int row = 0;
   int col = 0;
-  QSpacerItem * spacerItem = NULL;
+  QSpacerItem * spacerItem = nullptr;
 
   addField(gridLayout,row,col,"Carbon Dioxide Concentration",m_carbonDioxideConcentration);
   col++;
@@ -811,7 +811,7 @@ QWidget * SimSettingsView::createZoneCapacitanceMultipleResearchSpecialWidget()
 
   int row = 0;
   int col = 0;
-  QSpacerItem * spacerItem = NULL;
+  QSpacerItem * spacerItem = nullptr;
 
   addField(gridLayout,row,col,"Temperature Capacity Multiplier",m_temperatureCapacityMultiplier);
   col++;
@@ -843,7 +843,7 @@ QWidget * SimSettingsView::createRadianceParametersWidget()
 
   int buttonCount = 0;
 
-  QRadioButton * radioButton = NULL ;
+  QRadioButton * radioButton = nullptr ;
 
   radioButton = new QRadioButton("Coarse (Fast, less accurate)");
   m_radianceGroup->addButton(radioButton,buttonCount++);
@@ -863,7 +863,7 @@ QWidget * SimSettingsView::createRadianceParametersWidget()
 
   int row = 0;
   int col = 0;
-  QSpacerItem * spacerItem = NULL;
+  QSpacerItem * spacerItem = nullptr;
 
   addField(gridLayout,row,col,m_accumulatedRaysperRecordLbl,"Accumulated Rays per Record: ",m_accumulatedRaysperRecord);
   col++;

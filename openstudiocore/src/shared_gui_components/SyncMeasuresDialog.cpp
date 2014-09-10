@@ -42,9 +42,9 @@ SyncMeasuresDialog::SyncMeasuresDialog(analysisdriver::SimpleProject * project,
   MeasureManager * measureManager,
   QWidget * parent)
 : QDialog(parent, Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint),
-  m_centralWidget(NULL),
-  m_rightScrollArea(NULL),
-  m_expandedComponent(NULL),
+  m_centralWidget(nullptr),
+  m_rightScrollArea(nullptr),
+  m_expandedComponent(nullptr),
   m_measuresNeedingUpdates(std::vector<BCLMeasure>()),
   m_project(project),
   m_measureManager(measureManager)
@@ -149,7 +149,7 @@ void SyncMeasuresDialog::on_componentClicked(bool checked)
 {
   if(m_expandedComponent){
     delete m_expandedComponent;
-    m_expandedComponent = NULL;
+    m_expandedComponent = nullptr;
   }
   m_expandedComponent = new Component(*m_centralWidget->checkedComponent());
   m_expandedComponent->setCheckable(false);

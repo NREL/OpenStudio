@@ -57,8 +57,8 @@ Component::Component(const BCLMeasure & bclMeasure,
   m_tags(std::vector<std::string>()),
   m_showAbridgedView(showAbridgedView),
   m_showCheckBox(showCheckBox),
-  m_checkBox(NULL),
-  m_msg(NULL)
+  m_checkBox(nullptr),
+  m_msg(nullptr)
 {
   setCheckable(true);
   parseBCLMeasure(bclMeasure);

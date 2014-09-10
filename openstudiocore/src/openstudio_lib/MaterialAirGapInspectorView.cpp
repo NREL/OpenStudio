@@ -37,8 +37,8 @@ namespace openstudio {
 
 MaterialAirGapInspectorView::MaterialAirGapInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
   : ModelObjectInspectorView(model, true, parent),
-    m_nameEdit(NULL),
-    m_thermalResistance(NULL),
+    m_nameEdit(nullptr),
+    m_thermalResistance(nullptr),
     m_isIP(isIP)
 {
   createLayout();

@@ -37,9 +37,9 @@ namespace openstudio {
 
 WindowMaterialGlazingGroupThermochromicInspectorView::WindowMaterialGlazingGroupThermochromicInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
   : ModelObjectInspectorView(model, true, parent),
-    m_nameEdit(NULL),
-    m_opticalDataTemperature(NULL),
-    m_windowMaterialGlazingName(NULL),
+    m_nameEdit(nullptr),
+    m_opticalDataTemperature(nullptr),
+    m_windowMaterialGlazingName(nullptr),
     m_isIP(isIP)
 {
   createLayout();
