@@ -867,6 +867,8 @@ class ValueEditVoidReturnConcept : public BaseConcept
 
   virtual ValueType get(const ConceptProxy & obj) = 0;
   virtual void set(const ConceptProxy & obj, ValueType) = 0;
+  virtual void reset(const ConceptProxy &t_obj) = 0;
+  virtual bool isDefaulted(const ConceptProxy &t_obj) = 0;
 };
 
 template<typename ValueType, typename DataSourceType>
@@ -1321,6 +1323,8 @@ class QuantityEditVoidReturnConcept : public BaseConcept
 
   virtual ValueType get(const ConceptProxy & obj) = 0;
   virtual void set(const ConceptProxy & obj, ValueType) = 0;
+  virtual void reset(const ConceptProxy &t_obj) = 0;
+  virtual bool isDefaulted(const ConceptProxy &t_obj) = 0;
 
   QString modelUnits() const { return m_modelUnits; }
   QString siUnits() const { return m_siUnits; }
