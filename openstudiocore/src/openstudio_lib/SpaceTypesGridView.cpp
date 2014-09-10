@@ -770,6 +770,8 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         addValueEditColumn(QString(MULTIPLIER),
           multiplier,
           setMultiplier,
+          boost::optional<std::function<void (model::ModelObject *)>>(),
+          boost::optional<std::function<bool (model::ModelObject *)>>(),
           DataSource(
             allLoadsWithMultipliers,
             true
