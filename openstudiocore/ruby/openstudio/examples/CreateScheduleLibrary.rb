@@ -71,10 +71,8 @@ schedules.each { |schedule|
   components.push(newComponent)
 }
 
-# ETH@20121010 - For some reason, the Components are getting deleted out from under the 
-# components vector. The problem does not happen in C++, and the Trace messages I added 
-# to the Component and Component_Impl destructors do not appear in the log.
-  
+
+
 # save components to database
 index = 1
 puts "Saving " + components.size.to_s + " components to " + projectFilepath.to_s + "."
