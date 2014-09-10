@@ -478,14 +478,6 @@ public:
   // Call this function on a model update
   virtual void refreshModelObjects() = 0;
 
-  OSItem * getSelectedItemFromModelSubTabView();
-
-  bool selectRowByItem(OSItem * item, bool isSelected);
-
-  bool getRowIndexByItem(OSItem * item, int & rowIndex);
-
-  int m_oldIndex = -1;
-
 protected:
 
   // This function determines the category for
@@ -540,6 +532,8 @@ protected:
 
 private:
 
+  friend class OSGridView;
+
   QWidget * makeWidget(model::ModelObject t_mo, const QSharedPointer<BaseConcept> &t_baseConcept);
 
   void loadQSettings();
@@ -552,11 +546,19 @@ private:
 
   OSGridView * gridView();
 
+  OSItem * getSelectedItemFromModelSubTabView();
+
+  bool selectRowByItem(OSItem * item, bool isSelected);
+
+  bool getRowIndexByItem(OSItem * item, int & rowIndex);
+
   QButtonGroup * m_horizontalHeaderBtnGrp;
 
   QString m_headerText;
 
   QButtonGroup * m_cellBtnGrp;
+
+  int m_oldIndex = -1;
 
 signals:
 

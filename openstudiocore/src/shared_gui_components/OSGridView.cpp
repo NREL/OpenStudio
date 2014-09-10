@@ -34,6 +34,7 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/idd/IddObject.hpp"
 
+#include <QApplication>
 #include <QBoxLayout>
 #include <QButtonGroup>
 #include <QLabel>
@@ -332,6 +333,22 @@ void OSGridView::refreshAll()
   auto widget = new QWidget();
   //widget->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
   m_gridLayout->addWidget(widget,0,m_gridController->columnCount());
+
+  QApplication::processEvents();
+
+  // Get selected item
+  auto selectedItem = m_gridController->getSelectedItemFromModelSubTabView();
+  if (!selectedItem) return;
+
+  // Select new row
+  auto success = m_gridController->selectRowByItem(selectedItem, true);
+  //OS_ASSERT(success); // TODO this assert should work and be used, but Space Types causes fail
+
+  QApplication::processEvents();
+
+  // Update index
+  success = m_gridController->getRowIndexByItem(selectedItem, m_gridController->m_oldIndex);
+  //OS_ASSERT(success); // TODO this assert should work and be used, but Space Types causes fail
 }
 
 void OSGridView::addWidget(int row, int column)
@@ -368,6 +385,8 @@ void OSGridView::setHorizontalHeader(std::vector<QString> names)
 void OSGridView::selectCategory(int index)
 {
   m_gridController->categorySelected(index);
+
+  requestRefreshAll();
 }
 
 ModelSubTabView * OSGridView::modelSubTabView()
