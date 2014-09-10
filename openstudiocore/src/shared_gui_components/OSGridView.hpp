@@ -100,6 +100,8 @@ private slots:
 
   void doRefresh();
 
+  void doRowSelect();
+
 private:
 
   enum RefreshType

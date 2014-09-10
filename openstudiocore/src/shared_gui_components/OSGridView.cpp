@@ -296,13 +296,6 @@ void OSGridView::doRefresh()
     refreshGrid(); // This now causes a crash
   }
 
-  //if (!m_refreshRequests.empty()) // Note: this can never hit
-  //{
-  //  std::cout << " UPDATE TRIGGERED UPDATE" << std::endl;
-  //  refreshAll();
-  //  m_refreshRequests.clear();
-  //}
-
   setEnabled(true);
 }
 
@@ -334,21 +327,29 @@ void OSGridView::refreshAll()
   //widget->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
   m_gridLayout->addWidget(widget,0,m_gridController->columnCount());
 
-  QApplication::processEvents();
-
   // Get selected item
   auto selectedItem = m_gridController->getSelectedItemFromModelSubTabView();
   if (!selectedItem) return;
 
-  // Select new row
-  auto success = m_gridController->selectRowByItem(selectedItem, true);
-  //OS_ASSERT(success); // TODO this assert should work and be used, but Space Types causes fail
+  // Get new index
+  int newIndex;
+  if (m_gridController->getRowIndexByItem(selectedItem, newIndex)) {
+    // Update the old index
+    m_gridController->m_oldIndex = newIndex;
+  }
 
-  QApplication::processEvents();
+  // If the index is valid, call slot
+  if (m_gridController->m_oldIndex > -1){
+    QTimer::singleShot(0, this, SLOT(doRowSelect()));
+  }
+}
 
-  // Update index
-  success = m_gridController->getRowIndexByItem(selectedItem, m_gridController->m_oldIndex);
-  //OS_ASSERT(success); // TODO this assert should work and be used, but Space Types causes fail
+void OSGridView::doRowSelect()
+{
+  // If the index is valid, do some work
+  if (m_gridController->m_oldIndex > -1){
+    m_gridController->selectRow(m_gridController->m_oldIndex, true);
+  }
 }
 
 void OSGridView::addWidget(int row, int column)

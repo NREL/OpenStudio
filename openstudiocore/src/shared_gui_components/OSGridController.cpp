@@ -840,21 +840,26 @@ bool OSGridController::getRowIndexByItem(OSItem * item, int & rowIndex)
     }
   }
 
-  if (!success) {
-    rowIndex = -1;
-    for (auto modelObject : m_modelObjects){
-      rowIndex++;
-      if (auto parent = modelObject.parent())
-      {
-        OSItemId itemId = modelObjectToItemId(*parent, false);
-        if (item->itemId() == itemId){
-          success = true;
-          break;
-        }
-      }
-    }
-
-  }
+  // No success, let's try the parent (BTW, doesn't work, but concept is valid)
+  // (This is an attempt to handle SpaceTypesGridView making renderingColor objects
+  //  which trigger a model::onChange signal whose OSItem cannot be digested,
+  //  because we are working with SpaceType. One could use a filter to check the OSItem's
+  //  modelObject type and verify it equals that held by the OSGridController)
+  //  //if (!success) {
+  //  rowIndex = -1;
+  //  for (auto modelObject : m_modelObjects){
+  //    rowIndex++;
+  //    if (auto parent = modelObject.parent())
+  //    {
+  //      OSItemId itemId = modelObjectToItemId(*parent, false);
+  //      if (item->itemId() == itemId){
+  //        success = true;
+  //        break;
+  //      }
+  //    }
+  //  }
+  //
+  //}
 
   if (success) {
     // We found the model index and must convert it to the row index
