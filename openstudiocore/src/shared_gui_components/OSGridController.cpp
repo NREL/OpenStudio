@@ -103,7 +103,8 @@ void OSGridController::requestRefreshGrid()
 
 void OSGridController::refreshGrid()
 {
-  gridView()->refreshGrid();
+  // Never hit
+  OS_ASSERT(false);
 }
 
 void OSGridController::loadQSettings()

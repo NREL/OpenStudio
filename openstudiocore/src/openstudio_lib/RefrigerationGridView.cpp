@@ -538,7 +538,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
           NullAdapter(&model::RefrigerationCase::setAvailabilitySchedule),
           NullAdapter(&model::RefrigerationCase::resetAvailabilitySchedule));
     }else if(field == THERMALZONE){
-    //  addComboBoxColumn<model::ThermalZone,model::RefrigerationCase>(
+    //  addComboBoxColumn<model::ThermalZone,model::RefrigerationCase>( TODO
     //      QString(THERMALZONE),
     //      &openstudio::objectName,
     //      std::function<std::vector<model::ThermalZone> ()>(std::bind(&openstudio::sortByObjectName<model::ThermalZone>,
@@ -852,7 +852,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             NullAdapter(&model::RefrigerationWalkIn::averageRefrigerantChargeInventory),
                             NullAdapter(&model::RefrigerationWalkIn::setAverageRefrigerantChargeInventory));
     }else if(field == DEFROSTSCHEDULE){
-      //addComboBoxColumn<model::Schedule,model::RefrigerationWalkIn>(
+      //addComboBoxColumn<model::Schedule,model::RefrigerationWalkIn>( TODO
       //    QString(DEFROSTSCHEDULE),
       //    &openstudio::objectName,
       //    std::bind(&openstudio::sortByObjectName<model::Schedule>,
@@ -954,7 +954,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
 
           boost::optional<std::function<void (model::RefrigerationWalkIn*)> >(NullAdapter(&model::RefrigerationWalkIn::removeFromSystem)));
     }else if(field == ZONEBOUNDARYTHERMALZONE){
-      //addComboBoxColumn<model::ThermalZone,model::RefrigerationWalkIn>(
+      //addComboBoxColumn<model::ThermalZone,model::RefrigerationWalkIn>( TODO
       //    QString(ZONEBOUNDARYTHERMALZONE),
       //    &openstudio::objectName,
 
