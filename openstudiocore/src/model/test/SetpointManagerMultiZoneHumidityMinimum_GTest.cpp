@@ -21,6 +21,8 @@
 #include "ModelFixture.hpp"
 #include "../SetpointManagerMultiZoneHumidityMinimum.hpp"
 #include "../SetpointManagerMultiZoneHumidityMinimum_Impl.hpp"
+#include "../SetpointManagerSingleZoneReheat.hpp"
+#include "../SetpointManagerSingleZoneReheat_Impl.hpp"
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
 #include "../AirLoopHVAC.hpp"
@@ -152,3 +154,27 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneHumidityMinimum_customDataClone)
   EXPECT_EQ(0.012, testObjectClone.minimumSetpointHumidityRatio());
   EXPECT_EQ(0.005, testObjectClone.maximumSetpointHumidityRatio());
 }
+
+TEST_F(ModelFixture, SetpointManagerMultiZoneHumidityMinimum_multipleSPMs)
+{
+  Model m;
+  AirLoopHVAC airloop(m);
+  Node outletNode = airloop.supplyOutletNode();
+
+  SetpointManagerMultiZoneHumidityMinimum spmHumidity(m);
+  spmHumidity.addToNode(outletNode);
+  ASSERT_EQ(1u,outletNode.setpointManagers().size());
+  
+  SetpointManagerSingleZoneReheat spmTemp(m);
+  spmTemp.addToNode(outletNode);
+  ASSERT_EQ(2u,outletNode.setpointManagers().size());
+
+  auto node = spmHumidity.setpointNode();
+  ASSERT_TRUE(node);
+  ASSERT_EQ(outletNode,node.get());
+
+  node = spmTemp.setpointNode();
+  ASSERT_TRUE(node);
+  ASSERT_EQ(outletNode,node.get());
+}
+
