@@ -394,6 +394,8 @@ ModelSubTabView * OSGridView::modelSubTabView()
 {
   ModelSubTabView *  modelSubTabView = nullptr;
 
+  if (!this->parent() || !this->parent()->parent()) return modelSubTabView;
+
   auto stackedWidget = qobject_cast<QStackedWidget *>(this->parent()->parent());
   if (!stackedWidget) return modelSubTabView;
 
