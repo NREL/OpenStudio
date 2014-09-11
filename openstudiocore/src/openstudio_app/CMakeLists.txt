@@ -99,8 +99,7 @@ AddPCH(${target_name})
 
 if(APPLE)
   # the following script will change the bindings to prefer the version of libruby included with SketchUp to the system library, preventing loading two different copies of libruby
-  get_property(target_location TARGET ${target_name} PROPERTY LOCATION)
-  add_custom_command(TARGET ${target_name} POST_BUILD COMMAND ${RUBY_EXECUTABLE} "${CMAKE_SOURCE_DIR}/SketchUpInstallName.rb" "${target_location}")
+  add_custom_command(TARGET ${target_name} POST_BUILD COMMAND ${RUBY_EXECUTABLE} "${CMAKE_SOURCE_DIR}/SketchUpInstallName.rb" "$<TARGET_FILE:${target_name}>")
 endif()
 
 #------------------------------------------------------------------------------
@@ -135,19 +134,19 @@ if(APPLE OR WIN32)
 
   set(QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/sqldrivers/${QSQLITE_PLUGIN_NAME}")
 
-endif()
+  if(WIN32)		
+    get_target_property(QPA_PLUGIN Qt5::QWindowsIntegrationPlugin LOCATION)
+  elseif(APPLE)
+    get_target_property(QPA_PLUGIN Qt5::QCocoaIntegrationPlugin LOCATION)
+  endif()
 
-if(WIN32)
-
-  get_target_property(QT_WINDOWS_PLUGIN Qt5::QWindowsIntegrationPlugin LOCATION)
-
-  install(PROGRAMS "${QT_WINDOWS_PLUGIN}"
+  install(PROGRAMS "${QPA_PLUGIN}"
           DESTINATION "${plugin_dest_dir}/platforms/"
   )
 
-  get_filename_component(QWINDOWS_PLUGIN_NAME "${QT_WINDOWS_PLUGIN}" NAME)
+  get_filename_component(QPA_PLUGIN_NAME "${QPA_PLUGIN}" NAME)
 
-  list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/platforms/${QWINDOWS_PLUGIN_NAME}")
+  list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/platforms/${QPA_PLUGIN_NAME}")
 
 endif()
 
