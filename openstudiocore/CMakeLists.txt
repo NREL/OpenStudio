@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 2.8.11)
 project(OpenStudioCore)
 
 cmake_policy(SET CMP0020 NEW)
+cmake_policy(SET CMP0042 NEW)
 ###############################################################################
 # Project version information
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number") # git sha

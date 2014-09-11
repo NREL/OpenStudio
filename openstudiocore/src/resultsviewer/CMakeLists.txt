@@ -160,17 +160,21 @@ endif()
 # directories to look for dependencies
 set(DIRS ${QT_LIBRARY_DIR} ${LIBRARY_SEARCH_DIRECTORY})
 
-if(WIN32)
+if(APPLE OR WIN32)
 
-  get_target_property(QT_WINDOWS_PLUGIN Qt5::QWindowsIntegrationPlugin LOCATION)
+  if(WIN32)
+    get_target_property(QPA_PLUGIN Qt5::QWindowsIntegrationPlugin LOCATION)
+  elseif(APPLE)
+    get_target_property(QPA_PLUGIN Qt5::QCocoaIntegrationPlugin LOCATION)
+  endif()
 
-  install(PROGRAMS "${QT_WINDOWS_PLUGIN}"
+  install(PROGRAMS "${QPA_PLUGIN}"
           DESTINATION "${plugin_dest_dir}/platforms/"
   )
 
-  get_filename_component(QWINDOWS_PLUGIN_NAME "${QT_WINDOWS_PLUGIN}" NAME)
+  get_filename_component(QPA_PLUGIN_NAME "${QPA_PLUGIN}" NAME)
 
-  list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/platforms/${QWINDOWS_PLUGIN_NAME}")
+  list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/platforms/${QPA_PLUGIN_NAME}")
 
 endif()
 
