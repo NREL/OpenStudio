@@ -122,6 +122,13 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
   if( boost::optional<ThermalZone> tz = modelObject.controllingZoneorThermostatLocation() )
   {
     idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::ControllingZoneorThermostatLocation,tz->name().get() );
+  } else if( auto airLoop = modelObject.airLoopHVAC() ) {
+    auto zones = airLoop->thermalZones();
+    if( zones.size() == 1u ) {
+      if( auto zone = translateAndMapModelObject(zones.front()) ) {
+        idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::ControllingZoneorThermostatLocation,zone->name().get() );
+      }
+    }
   }
 
   // SupplyAirFanName
@@ -290,20 +297,14 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
     fanInletNodeName = airInletNodeName;
     fanOutletNodeName = baseName + " Fan Outlet";
 
-    coolingCoilInletNodeName = fanInletNodeName;
+    coolingCoilInletNodeName = fanOutletNodeName;
     coolingCoilOutletNodeName = baseName + " Cool Coil Outlet";
 
     heatingCoilInletNodeName = coolingCoilOutletNodeName;
-    if( _supplementalHeatingCoil ) {
-      heatingCoilOutletNodeName = baseName + " Heat Coil Outlet";
-    } else {
-      heatingCoilOutletNodeName = airOutletNodeName;
-    }
+    heatingCoilOutletNodeName = baseName + " Heat Coil Outlet";
 
-    if( _supplementalHeatingCoil ) {
-      suppCoilInletNodeName = heatingCoilOutletNodeName;
-      suppCoilOutletNodeName = airOutletNodeName;
-    }
+    suppCoilInletNodeName = heatingCoilOutletNodeName;
+    suppCoilOutletNodeName = airOutletNodeName;
   } else {
     coolingCoilInletNodeName = airInletNodeName;
     coolingCoilOutletNodeName = baseName + " Cool Coil Outlet";
@@ -311,17 +312,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
     heatingCoilInletNodeName = coolingCoilOutletNodeName; 
     heatingCoilOutletNodeName = baseName + " Heat Coil Outlet";
 
-    if( _supplementalHeatingCoil ) {
-      suppCoilInletNodeName = heatingCoilOutletNodeName;
-      suppCoilOutletNodeName = baseName + " Supp Coil Outlet";
-    }
+    fanInletNodeName = heatingCoilOutletNodeName;
+    fanOutletNodeName = baseName + " Fan Outlet";
 
-    if( _supplementalHeatingCoil ) {
-      fanInletNodeName = suppCoilOutletNodeName;
-    } else {
-      fanInletNodeName = heatingCoilOutletNodeName;
-    }
-    fanOutletNodeName = airOutletNodeName;
+    suppCoilInletNodeName = fanOutletNodeName;
+    suppCoilOutletNodeName = airOutletNodeName;
   }
 
   if(  _fan ) {

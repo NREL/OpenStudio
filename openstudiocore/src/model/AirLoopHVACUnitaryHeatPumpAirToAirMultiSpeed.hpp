@@ -42,7 +42,11 @@ class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed : public StraightCo
   /** @name Constructors and Destructors */
   //@{
 
-  explicit AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed(const Model& model, const HVACComponent& fan, const HVACComponent& heatingCoil, const HVACComponent& coolingCoil);
+  explicit AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed(const Model& model, 
+    const HVACComponent& fan, 
+    const HVACComponent& heatingCoil, 
+    const HVACComponent& supplementalHeatingCoil,
+    const HVACComponent& coolingCoil);
 
   virtual ~AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed() {}
 
@@ -63,7 +67,7 @@ class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed : public StraightCo
 
   std::string supplyAirFanPlacement() const;
 
-  boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
+  Schedule supplyAirFanOperatingModeSchedule() const;
 
   HVACComponent heatingCoil() const;
 
@@ -71,7 +75,7 @@ class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed : public StraightCo
 
   HVACComponent coolingCoil() const;
 
-  boost::optional<HVACComponent> supplementalHeatingCoil() const;
+  HVACComponent supplementalHeatingCoil() const;
 
   boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater() const;
 
@@ -145,8 +149,6 @@ class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed : public StraightCo
 
   bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
 
-  void resetSupplyAirFanOperatingModeSchedule();
-
   bool setHeatingCoil(const HVACComponent& coil);
 
   bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
@@ -154,8 +156,6 @@ class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed : public StraightCo
   bool setCoolingCoil(const HVACComponent& coil);
 
   bool setSupplementalHeatingCoil(const HVACComponent& coil);
-
-  void resetSupplementalHeatingCoil();
 
   void setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater);
 

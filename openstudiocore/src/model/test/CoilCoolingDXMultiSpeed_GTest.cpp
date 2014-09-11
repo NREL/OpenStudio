@@ -76,13 +76,26 @@ CoilCoolingDXMultiSpeedStageData makeStage(Model & model) {
   cooling_curve_5.setCoefficient3xPOW2(0.0);
   cooling_curve_5.setMinimumValueofx(0.0);
   cooling_curve_5.setMaximumValueofx(1.0);
+  
+  CurveBiquadratic cooling_curve_6(model);
+  cooling_curve_6.setCoefficient1Constant(1.0);
+  cooling_curve_6.setCoefficient2x(0.0);
+  cooling_curve_6.setCoefficient3xPOW2(0.0);
+  cooling_curve_6.setCoefficient4y(0.0);
+  cooling_curve_6.setCoefficient5yPOW2(0.0);
+  cooling_curve_6.setCoefficient6xTIMESY(0.0);
+  cooling_curve_6.setMinimumValueofx(0.0);
+  cooling_curve_6.setMaximumValueofx(0.0);
+  cooling_curve_6.setMinimumValueofy(0.0);
+  cooling_curve_6.setMaximumValueofy(0.0);
 
   CoilCoolingDXMultiSpeedStageData stage(model,
     cooling_curve_1,
     cooling_curve_2,
     cooling_curve_3,
     cooling_curve_4,
-    cooling_curve_5);
+    cooling_curve_5,
+    cooling_curve_6);
 
   return stage;
 }

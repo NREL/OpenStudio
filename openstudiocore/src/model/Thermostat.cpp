@@ -62,8 +62,10 @@ namespace detail {
     Handle h = handle();
     auto zones = model().getModelObjects<model::ThermalZone>();
     for( const auto & zone: zones ) {
-      if( zone.handle() == h ) {
-        return zone;
+      if( auto thermostat = zone.thermostat() ) {
+        if( thermostat->handle() == h ) {
+          return zone;
+        }
       }
     }
     return boost::none;

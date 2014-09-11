@@ -73,7 +73,7 @@ namespace detail {
 
     std::string supplyAirFanPlacement() const;
 
-    boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
+    Schedule supplyAirFanOperatingModeSchedule() const;
 
     HVACComponent heatingCoil() const;
 
@@ -81,7 +81,7 @@ namespace detail {
 
     HVACComponent coolingCoil() const;
 
-    boost::optional<HVACComponent> supplementalHeatingCoil() const;
+    HVACComponent supplementalHeatingCoil() const;
 
     boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater() const;
 
@@ -155,17 +155,13 @@ namespace detail {
 
     bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
 
-    void resetSupplyAirFanOperatingModeSchedule();
-
     bool setHeatingCoil(const HVACComponent& coil);
 
     bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
     bool setCoolingCoil(const HVACComponent& coil);
 
-    bool setSupplementalHeatingCoil(const boost::optional<HVACComponent>& coil);
-
-    void resetSupplementalHeatingCoil();
+    bool setSupplementalHeatingCoil(const HVACComponent& coil);
 
     void setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater);
 

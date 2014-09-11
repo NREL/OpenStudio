@@ -25509,7 +25509,7 @@ Coil:Cooling:DX:MultiSpeed,
        \note Recoverable waste heat at full load and rated conditions
   A18, \field Speed 1 Waste Heat Function of Temperature Curve Name
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
        \note curve = a + b*odb + c*odb**2 + d*db + e*db**2 + f*odb*db
        \note odb = Outdoor air dry-bulb temperature (C)
        \note db = entering coil dry-bulb temperature (C)
@@ -26395,6 +26395,7 @@ Coil:Heating:Gas:MultiStage,
        \memo system, then the coil is controlled by the parent component and the setpoint node name
        \memo is not entered.
        \min-fields 8
+       \extensible:3
   A1 , \field Name
        \required-field
        \reference HeatingCoilsGasMultiStage

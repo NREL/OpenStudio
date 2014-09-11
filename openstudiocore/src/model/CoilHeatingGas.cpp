@@ -261,10 +261,9 @@ namespace detail{
         if( heatingCoil.handle() == this->handle() ) {
           return system;
         }
-        if( auto supHeatingCoil = system.supplementalHeatingCoil() ) {
-          if( supHeatingCoil->handle() == this->handle() ) {
-            return system;
-          }
+        auto supHeatingCoil = system.supplementalHeatingCoil();
+        if( supHeatingCoil.handle() == this->handle() ) {
+          return system;
         }
       }
     }

@@ -187,8 +187,12 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<Curve> CoilCoolingDXMultiSpeedStageData_Impl::wasteHeatFunctionofTemperatureCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_MultiSpeed_StageDataFields::WasteHeatFunctionofTemperatureCurve);
+  Curve CoilCoolingDXMultiSpeedStageData_Impl::wasteHeatFunctionofTemperatureCurve() const {
+    auto curve = getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_MultiSpeed_StageDataFields::WasteHeatFunctionofTemperatureCurve);
+    if (!curve) {
+      LOG_AND_THROW(briefDescription() << " does not have an Waste Heat Function of Temperature Curve attached.");
+    }
+    return curve.get();
   }
 
   double CoilCoolingDXMultiSpeedStageData_Impl::evaporativeCondenserEffectiveness() const {
@@ -322,21 +326,9 @@ namespace detail {
     return result;
   }
 
-  bool CoilCoolingDXMultiSpeedStageData_Impl::setWasteHeatFunctionofTemperatureCurve(const boost::optional<Curve>& curve) {
-    bool result(false);
-    if (curve) {
-      result = setPointer(OS_Coil_Cooling_DX_MultiSpeed_StageDataFields::WasteHeatFunctionofTemperatureCurve, curve.get().handle());
-    }
-    else {
-      resetWasteHeatFunctionofTemperatureCurve();
-      result = true;
-    }
+  bool CoilCoolingDXMultiSpeedStageData_Impl::setWasteHeatFunctionofTemperatureCurve(const Curve& curve) {
+    bool result = setPointer(OS_Coil_Cooling_DX_MultiSpeed_StageDataFields::WasteHeatFunctionofTemperatureCurve, curve.handle());
     return result;
-  }
-
-  void CoilCoolingDXMultiSpeedStageData_Impl::resetWasteHeatFunctionofTemperatureCurve() {
-    bool result = setString(OS_Coil_Cooling_DX_MultiSpeed_StageDataFields::WasteHeatFunctionofTemperatureCurve, "");
-    OS_ASSERT(result);
   }
 
   bool CoilCoolingDXMultiSpeedStageData_Impl::setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness) {
@@ -398,9 +390,7 @@ namespace detail {
     result.push_back(energyInputRatioFunctionofTemperatureCurve());
     result.push_back(energyInputRatioFunctionofFlowFractionCurve());
     result.push_back(partLoadFractionCorrelationCurve());
-    if( auto curve = wasteHeatFunctionofTemperatureCurve() ) {
-      result.push_back(curve.get());
-    }
+    result.push_back(wasteHeatFunctionofTemperatureCurve());
 
     return result;
   }
@@ -423,10 +413,8 @@ namespace detail {
     curve = partLoadFractionCorrelationCurve().clone(model).cast<Curve>();
     t_clone.setPartLoadFractionCorrelationCurve(curve);
 
-    if( auto optionalCurve = wasteHeatFunctionofTemperatureCurve() ) {
-      curve = optionalCurve->clone(model).cast<Curve>(); 
-      t_clone.setWasteHeatFunctionofTemperatureCurve(curve);
-    }
+    curve = wasteHeatFunctionofTemperatureCurve().clone(model).cast<Curve>();
+    t_clone.setWasteHeatFunctionofTemperatureCurve(curve);
 
     return t_clone;
   }
@@ -438,7 +426,8 @@ CoilCoolingDXMultiSpeedStageData::CoilCoolingDXMultiSpeedStageData(const Model& 
   Curve& coolingCapacityFuncionofFlowFraction,
   Curve& energyInputRatioFunctionofTemperature,
   Curve& energyInputRatioFunctionofFlowFraction,
-  Curve& partLoadFractionCorrelation)
+  Curve& partLoadFractionCorrelation,
+  Curve& wasteHeatFunctionofTemperature)
   : ParentObject(CoilCoolingDXMultiSpeedStageData::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>());
@@ -452,6 +441,7 @@ CoilCoolingDXMultiSpeedStageData::CoilCoolingDXMultiSpeedStageData(const Model& 
   setTotalCoolingCapacityFunctionofFlowFractionCurve(coolingCapacityFuncionofFlowFraction);
   setEnergyInputRatioFunctionofTemperatureCurve(energyInputRatioFunctionofTemperature);
   setEnergyInputRatioFunctionofFlowFractionCurve(energyInputRatioFunctionofFlowFraction);
+  setWasteHeatFunctionofTemperatureCurve(wasteHeatFunctionofTemperature);
   setPartLoadFractionCorrelationCurve(partLoadFractionCorrelation);
   setNominalTimeforCondensateRemovaltoBegin(0.0);
   setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(0.0);
@@ -461,6 +451,8 @@ CoilCoolingDXMultiSpeedStageData::CoilCoolingDXMultiSpeedStageData(const Model& 
   setEvaporativeCondenserEffectiveness(0.9);
   autosizeEvaporativeCondenserAirFlowRate();
   autosizeRatedEvaporativeCondenserPumpPowerConsumption();
+  setRatedEvaporatorFanPowerPerVolumeFlowRate(773.3);
+  setRatedWasteHeatFractionofPowerInput(0.5);
 }
 
 IddObjectType CoilCoolingDXMultiSpeedStageData::iddObjectType() {
@@ -539,7 +531,7 @@ double CoilCoolingDXMultiSpeedStageData::ratedWasteHeatFractionofPowerInput() co
   return getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>()->ratedWasteHeatFractionofPowerInput();
 }
 
-boost::optional<Curve> CoilCoolingDXMultiSpeedStageData::wasteHeatFunctionofTemperatureCurve() const {
+Curve CoilCoolingDXMultiSpeedStageData::wasteHeatFunctionofTemperatureCurve() const {
   return getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>()->wasteHeatFunctionofTemperatureCurve();
 }
 
@@ -637,10 +629,6 @@ bool CoilCoolingDXMultiSpeedStageData::setRatedWasteHeatFractionofPowerInput(dou
 
 bool CoilCoolingDXMultiSpeedStageData::setWasteHeatFunctionofTemperatureCurve(const Curve& curve) {
   return getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>()->setWasteHeatFunctionofTemperatureCurve(curve);
-}
-
-void CoilCoolingDXMultiSpeedStageData::resetWasteHeatFunctionofTemperatureCurve() {
-  getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>()->resetWasteHeatFunctionofTemperatureCurve();
 }
 
 bool CoilCoolingDXMultiSpeedStageData::setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness) {

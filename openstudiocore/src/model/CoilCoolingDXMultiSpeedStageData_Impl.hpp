@@ -98,7 +98,7 @@ namespace detail {
 
     double ratedWasteHeatFractionofPowerInput() const;
 
-    boost::optional<Curve> wasteHeatFunctionofTemperatureCurve() const;
+    Curve wasteHeatFunctionofTemperatureCurve() const;
 
     double evaporativeCondenserEffectiveness() const;
 
@@ -150,9 +150,7 @@ namespace detail {
 
     bool setRatedWasteHeatFractionofPowerInput(double ratedWasteHeatFractionofPowerInput);
 
-    bool setWasteHeatFunctionofTemperatureCurve(const boost::optional<Curve>& curve);
-
-    void resetWasteHeatFunctionofTemperatureCurve();
+    bool setWasteHeatFunctionofTemperatureCurve(const Curve& curve);
 
     bool setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness);
 

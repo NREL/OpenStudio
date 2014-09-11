@@ -11336,8 +11336,9 @@ OS:Coil:Cooling:DX:MultiSpeed:StageData,
        \minimum> 0.0
        \maximum 1.0
   A8, \field Waste Heat Function of Temperature Curve
+       \required-field
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
   N11, \field Evaporative Condenser Effectiveness
        \type real
        \units dimensionless

@@ -46,7 +46,8 @@ class MODEL_API CoilCoolingDXMultiSpeedStageData : public ParentObject {
     Curve& coolingCapacityFuncionofFlowFraction,
     Curve& energyInputRatioFunctionofTemperature,
     Curve& energyInputRatioFunctionofFlowFraction,
-    Curve& partLoadFractionCorrelation);
+    Curve& partLoadFractionCorrelation,
+    Curve& wasteHeatFunctionofTemperature);
 
   virtual ~CoilCoolingDXMultiSpeedStageData() {}
 
@@ -93,7 +94,7 @@ class MODEL_API CoilCoolingDXMultiSpeedStageData : public ParentObject {
 
   double ratedWasteHeatFractionofPowerInput() const;
 
-  boost::optional<Curve> wasteHeatFunctionofTemperatureCurve() const;
+  Curve wasteHeatFunctionofTemperatureCurve() const;
 
   double evaporativeCondenserEffectiveness() const;
 
@@ -146,8 +147,6 @@ class MODEL_API CoilCoolingDXMultiSpeedStageData : public ParentObject {
   bool setRatedWasteHeatFractionofPowerInput(double ratedWasteHeatFractionofPowerInput);
 
   bool setWasteHeatFunctionofTemperatureCurve(const Curve& curve);
-
-  void resetWasteHeatFunctionofTemperatureCurve();
 
   bool setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness);
 

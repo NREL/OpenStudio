@@ -109,8 +109,12 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<Schedule> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::supplyAirFanOperatingModeSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::SupplyAirFanOperatingModeSchedule);
+  Schedule AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::supplyAirFanOperatingModeSchedule() const {
+    auto value = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::SupplyAirFanOperatingModeSchedule);
+    if (!value) {
+      LOG_AND_THROW(briefDescription() << " does not have an Air Fan Operating Mode Schedule attached.");
+    }
+    return value.get();
   }
 
   HVACComponent AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::heatingCoil() const {
@@ -135,8 +139,12 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<HVACComponent> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::supplementalHeatingCoil() const {
-    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::SupplementalHeatingCoil);
+  HVACComponent AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::supplementalHeatingCoil() const {
+    auto value = getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::SupplementalHeatingCoil);
+    if(!value) {
+      LOG_AND_THROW(briefDescription() << " does not have a Supplemental Heating Coil attached.");
+    }
+    return value.get();
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::maximumSupplyAirTemperaturefromSupplementalHeater() const {
@@ -359,11 +367,6 @@ namespace detail {
     return result;
   }
 
-  void AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::resetSupplyAirFanOperatingModeSchedule() {
-    bool result = setString(OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::SupplyAirFanOperatingModeSchedule, "");
-    OS_ASSERT(result);
-  }
-
   bool AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::setHeatingCoil(const HVACComponent& coil) {
     bool result = setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::HeatingCoil, coil.handle());
     return result;
@@ -379,21 +382,9 @@ namespace detail {
     return result;
   }
 
-  bool AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::setSupplementalHeatingCoil(const boost::optional<HVACComponent>& coil) {
-    bool result(false);
-    if (coil) {
-      result = setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::SupplementalHeatingCoil, coil.get().handle());
-    }
-    else {
-      resetSupplementalHeatingCoil();
-      result = true;
-    }
+  bool AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::setSupplementalHeatingCoil(const HVACComponent& coil) {
+    bool result = setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::SupplementalHeatingCoil, coil.handle());
     return result;
-  }
-
-  void AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::resetSupplementalHeatingCoil() {
-    bool result = setString(OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::SupplementalHeatingCoil, "");
-    OS_ASSERT(result);
   }
 
   void AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater) {
@@ -626,7 +617,8 @@ namespace detail {
 AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed(const Model& model,
   const HVACComponent& fan, 
   const HVACComponent& heatingCoil, 
-  const HVACComponent& coolingCoil)
+  const HVACComponent& coolingCoil,
+  const HVACComponent& supplementalHeatingCoil)
   : StraightComponent(AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl>());
@@ -634,6 +626,7 @@ AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::AirLoopHVACUnitaryHeatPumpAirToAir
   setSupplyAirFan(fan);
   setSupplyAirFanPlacement("DrawThrough");
   setHeatingCoil(heatingCoil);
+  setSupplementalHeatingCoil(supplementalHeatingCoil);
   setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-8.0);
   setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(21.0);
   setCoolingCoil(coolingCoil);
@@ -653,6 +646,8 @@ AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::AirLoopHVACUnitaryHeatPumpAirToAir
   autosizeSpeed2SupplyAirFlowRateDuringCoolingOperation();
   autosizeSpeed3SupplyAirFlowRateDuringCoolingOperation();
   autosizeSpeed4SupplyAirFlowRateDuringCoolingOperation();
+  auto schedule = model.alwaysOnDiscreteSchedule();
+  setSupplyAirFanOperatingModeSchedule(schedule);
 }
 
 IddObjectType AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::iddObjectType() {
@@ -680,7 +675,7 @@ std::string AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::supplyAirFanPlacement(
   return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl>()->supplyAirFanPlacement();
 }
 
-boost::optional<Schedule> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::supplyAirFanOperatingModeSchedule() const {
+Schedule AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::supplyAirFanOperatingModeSchedule() const {
   return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl>()->supplyAirFanOperatingModeSchedule();
 }
 
@@ -696,7 +691,7 @@ HVACComponent AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::coolingCoil() const 
   return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl>()->coolingCoil();
 }
 
-boost::optional<HVACComponent> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::supplementalHeatingCoil() const {
+HVACComponent AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::supplementalHeatingCoil() const {
   return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl>()->supplementalHeatingCoil();
 }
 
@@ -836,10 +831,6 @@ bool AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::setSupplyAirFanOperatingModeS
   return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl>()->setSupplyAirFanOperatingModeSchedule(schedule);
 }
 
-void AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::resetSupplyAirFanOperatingModeSchedule() {
-  getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl>()->resetSupplyAirFanOperatingModeSchedule();
-}
-
 bool AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::setHeatingCoil(const HVACComponent& coil) {
   return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl>()->setHeatingCoil(coil);
 }
@@ -854,10 +845,6 @@ bool AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::setCoolingCoil(const HVACComp
 
 bool AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::setSupplementalHeatingCoil(const HVACComponent& coil) {
   return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl>()->setSupplementalHeatingCoil(coil);
-}
-
-void AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::resetSupplementalHeatingCoil() {
-  getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl>()->resetSupplementalHeatingCoil();
 }
 
 void AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater) {

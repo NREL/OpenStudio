@@ -228,8 +228,9 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXMultiSpeed( 
     }
   
     // SpeedWasteHeatFunctionofTemperatureCurveName
-    if( auto curve = stage.wasteHeatFunctionofTemperatureCurve() ) {
-      if( auto _curve = translateAndMapModelObject(curve.get()) ) {
+    {
+      auto curve = stage.wasteHeatFunctionofTemperatureCurve();
+      if( auto _curve = translateAndMapModelObject(curve) ) {
         eg.setString(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedWasteHeatFunctionofTemperatureCurveName,_curve->name().get());
       }
     }
