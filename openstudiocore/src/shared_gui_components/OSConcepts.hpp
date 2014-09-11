@@ -655,7 +655,7 @@ class ComboBoxRequiredChoiceImpl : public ComboBoxConcept
  private:
   std::function<std::string (ChoiceType)> m_toString;
   std::function<std::vector<ChoiceType> (DataSourceType *)> m_choices;
-  std::function<std::string (DataSourceType *)>  m_getter;
+  std::function<ChoiceType (DataSourceType *)>  m_getter;
   std::function<bool (DataSourceType *, ChoiceType)> m_setter;
   boost::optional<std::function<void (DataSourceType*)> > m_reset;
   boost::optional<std::function<bool (DataSourceType*)> > m_defaulted;

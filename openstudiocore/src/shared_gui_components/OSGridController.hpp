@@ -194,36 +194,15 @@ public:
     m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<CheckBoxConcept>(new CheckBoxConceptImpl<DataSourceType>(headingLabel,t_getter,t_setter)), t_source));
   }
 
+
   template<typename ChoiceType, typename DataSourceType>
   void addComboBoxColumn(QString headingLabel,
                          std::function<std::string (const ChoiceType &)> toString,
                          std::function<std::vector<ChoiceType> ()> choices,
                          std::function<ChoiceType (DataSourceType*)> getter,
-                         std::function<bool (DataSourceType*, const ChoiceType &)> setter,
-                         const boost::optional<std::function<void (DataSourceType *)>> &reset = boost::none,
-                         const boost::optional<std::function<bool (DataSourceType*)> > &defaulted = boost::none,
-                         const boost::optional<DataSource> &t_source = boost::none)
-  {
-    addComboBoxColumn<ChoiceType, DataSourceType>(
-        headingLabel,
-        toString,
-        std::function<std::vector<ChoiceType> (DataSourceType*)>([choices](DataSourceType*) { return choices(); }),
-        getter,
-        setter,
-        reset,
-        defaulted,
-        t_source);
-  }
-
-
-  template<typename ChoiceType, typename DataSourceType>
-  void addComboBoxColumn(QString headingLabel,
-                         std::function<std::string (ChoiceType)> toString,
-                         std::function<std::vector<ChoiceType> ()> choices,
-                         std::function<ChoiceType (DataSourceType*)> getter,
                          std::function<bool (DataSourceType*, ChoiceType)> setter,
-                         const boost::optional<std::function<void (DataSourceType *)>> reset = boost::none,
-                         const boost::optional<std::function<bool (DataSourceType *)>> isDefaulted = boost::none,
+                         const boost::optional<std::function<void (DataSourceType *)>> &reset = boost::none,
+                         const boost::optional<std::function<bool (DataSourceType *)>> &isDefaulted = boost::none,
                          const boost::optional<DataSource> &t_source = boost::none)
   {
     addComboBoxColumn<ChoiceType, DataSourceType>(
@@ -239,7 +218,7 @@ public:
 
   template<typename ChoiceType, typename DataSourceType>
   void addComboBoxColumn(QString headingLabel,
-                         std::function<std::string (ChoiceType)> toString,
+                         std::function<std::string (const ChoiceType &)> toString,
                          std::function<std::vector<ChoiceType> ()> choices,
                          std::function<boost::optional<ChoiceType> (DataSourceType*)> getter,
                          std::function<bool (DataSourceType*, ChoiceType)> setter,
@@ -267,11 +246,10 @@ public:
                          std::function<std::string (const ChoiceType &)> toString,
                          std::function<std::vector<ChoiceType> (DataSourceType *)> choices,
                          std::function<ChoiceType (DataSourceType*)> getter,
-                         std::function<bool (DataSourceType*, const ChoiceType &)> setter,
+                         std::function<bool (DataSourceType*, ChoiceType)> setter,
                          const boost::optional<std::function<void (DataSourceType *)>> reset = boost::none,
                          const boost::optional<std::function<bool (DataSourceType *)>> isDefaulted = boost::none,
-                         const boost::optional<DataSource> &t_source = boost::none,
-                         boost::optional<std::function<bool (DataSourceType*)> > defaulted = boost::none)
+                         const boost::optional<DataSource> &t_source = boost::none)
   {
     m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<ComboBoxConcept>(
         new ComboBoxRequiredChoiceImpl<ChoiceType,DataSourceType>(headingLabel,
@@ -286,7 +264,7 @@ public:
 
   template<typename ChoiceType, typename DataSourceType>
   void addComboBoxColumn(QString headingLabel,
-                         std::function<std::string (ChoiceType)> toString,
+                         std::function<std::string (const ChoiceType &)> toString,
                          std::function<std::vector<ChoiceType> (DataSourceType *)> choices,
                          std::function<ChoiceType (DataSourceType*)> getter,
                          std::function<bool (DataSourceType*, ChoiceType)> setter,
@@ -302,7 +280,7 @@ public:
 
   template<typename ChoiceType, typename DataSourceType>
   void addComboBoxColumn(QString headingLabel,
-                         std::function<std::string (ChoiceType)> toString,
+                         std::function<std::string (const ChoiceType &)> toString,
                          std::function<std::vector<ChoiceType> (DataSourceType *)> choices,
                          std::function<boost::optional<ChoiceType> (DataSourceType*)> getter,
                          std::function<bool (DataSourceType*, ChoiceType)> setter,

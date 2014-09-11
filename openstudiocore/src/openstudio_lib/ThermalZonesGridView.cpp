@@ -310,7 +310,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                               &model::ThermalZone::sizingZone));
 
     }else if(field == COOLINGDESIGNAIRFLOWMETHOD){
-      addComboBoxColumn(QString(COOLINGDESIGNAIRFLOWMETHOD),
+      addComboBoxColumn<std::string, model::ThermalZone>(QString(COOLINGDESIGNAIRFLOWMETHOD),
                         std::function<std::string (const std::string &)>(static_cast<std::string (*)(const std::string&)>(&openstudio::toString)),
                         std::function<std::vector<std::string> ()>(&model::SizingZone::coolingDesignAirFlowMethodValues),
                         std::function<std::string (model::ThermalZone *)>([](model::ThermalZone *t_z) {
@@ -329,8 +329,11 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                             }
                           }
                           ),
-                        ProxyAdapter(static_cast<bool (model::SizingZone::*)(const std::string &)>(&model::SizingZone::setCoolingDesignAirFlowMethod),
-                          &model::ThermalZone::sizingZone));
+                          std::function<bool(model::ThermalZone *, std::string)>([](model::ThermalZone *t_z, std::string t_val){ auto sz = t_z->sizingZone(); return sz.setCoolingDesignAirFlowMethod(t_val); }),
+                          boost::optional<std::function<void(openstudio::model::ThermalZone *)>>(), 
+                          boost::optional<std::function<bool(openstudio::model::ThermalZone *)>>(),
+                          boost::optional<openstudio::DataSource>()
+                          );
 
     }else if(field == COOLINGTHERMOSTATSCHEDULE){
 

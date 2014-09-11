@@ -959,7 +959,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
     } else if (field == STANDARDSBUILDINGTYPE) {
 
       // nothing to do, it is a string already
-      std::function<std::string (std::string)> toString = [](std::string t_s) { return t_s; };
+      std::function<std::string (const std::string &)> toString = [](std::string t_s) { return t_s; };
 
       std::function<std::vector<std::string> (model::SpaceType *)> choices =
         [](model::SpaceType *t_spaceType){
@@ -1000,7 +1000,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
     } else if (field == STANDARDSSPACETYPE) {
 
       // nothing to do, it is a string already
-      std::function<std::string (std::string)> toString = [](std::string t_s) { return t_s; };
+      std::function<std::string (const std::string &)> toString = [](std::string t_s) { return t_s; };
 
       std::function<std::vector<std::string> (model::SpaceType *)> choices =
         [](model::SpaceType *t_spaceType){
