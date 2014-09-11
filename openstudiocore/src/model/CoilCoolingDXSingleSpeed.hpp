@@ -66,6 +66,8 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
                                     const Curve& energyInputRatioFofFlow,
                                     const Curve& partLoadFraction);
 
+  explicit CoilCoolingDXSingleSpeed(const Model& model);
+
   virtual ~CoilCoolingDXSingleSpeed() {}
 
   //@}

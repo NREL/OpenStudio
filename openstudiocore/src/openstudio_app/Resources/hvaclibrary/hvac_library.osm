@@ -391,7 +391,7 @@ OS:Coil:Cooling:DX:SingleSpeed,
 
 OS:CoolingTower:SingleSpeed,
   {c555c629-0c49-4248-9bd1-a04e0cf9e2d1}, ! Handle
-  OS:CoolingTower:SingleSpeed 1,          ! Name
+  OS:CoolingTower:SingleSpeed,          ! Name
   ,                                       ! Water Inlet Node Name
   ,                                       ! Water Outlet Node Name
   Autosize,                               ! Design Water Flow Rate {m3/s}
@@ -491,7 +491,7 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
 
 OS:AirTerminal:SingleDuct:InletSideMixer,
   {2894623e-fbd9-4162-bf36-c674ee542793}, !- Handle
-  Inlet Side Mixer, !- Name
+  Inlet Side Mixer,                       !- Name
   ,                                       !- Terminal Unit Outlet
   ,                                       !- Terminal Unit Primary Air Inlet
   ;                                       !- Terminal Unit Secondary Air Inlet
@@ -1159,7 +1159,7 @@ OS:Pump:ConstantSpeed,
 
 OS:ZoneHVAC:HighTemperatureRadiant,
   {78b89842-8c8d-46d2-8f30-1322d180980e}, !- Handle
-  High Temperature Radiant,   !- Name
+  High Temperature Radiant,               !- Name
   ,                                       !- Availability Schedule Name
   autosize,                               !- Maximum Power Input {W}
   NaturalGas,                             !- Fuel Type
@@ -1175,7 +1175,7 @@ OS:ZoneHVAC:HighTemperatureRadiant,
 
 OS:ScheduleTypeLimits,
   {a97fb7de-95e1-4e93-8e86-6fae9baf0f7e}, !- Handle
-  Temperature,                            !- Name
+  Temperature 1,                          !- Name
   ,                                       !- Lower Limit Value {BasedOnField A4}
   ,                                       !- Upper Limit Value {BasedOnField A4}
   Discrete,                               !- Numeric Type
@@ -1183,7 +1183,7 @@ OS:ScheduleTypeLimits,
 
 OS:Schedule:Ruleset,
   {a44e8152-896c-4b8f-8264-6456c7ddaaf5}, !- Handle
-  High Temp Radiant Setpoint,                     !- Name
+  High Temp Radiant Setpoint,             !- Name
   {a97fb7de-95e1-4e93-8e86-6fae9baf0f7e}, !- Schedule Type Limits Name
   {9b35d3ba-4ce5-49f8-91ac-bdb91509399c}; !- Default Day Schedule Name
 
@@ -1195,7 +1195,6 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   15;                                     !- Value Until Time 1
-
 
 OS:ZoneHVAC:PackagedTerminalHeatPump,
   {b9232216-7c91-4457-9cda-1df2300bb3d4}, ! Handle
@@ -6533,4 +6532,399 @@ OS:HeatExchanger:FluidToFluid,
   1,                                      !- Sizing Factor
   0,                                      !- Operation Minimum Temperature Limit {C}
   100;                                    !- Operation Maximum Temperature Limit {C}
+
+OS:Humidifier:Steam:Electric,
+  {831a05c6-b614-4cab-b86f-be4b81cb1397}, !- Handle
+  Electric Humidifier,            !- Name
+  ,                                       !- Availability Schedule Name
+  4e-05,                                  !- Rated Capacity {m3/s}
+  104000,                                 !- Rated Power {W}
+  ,                                       !- Rated Fan Power {W}
+  ,                                       !- Standby Power {W}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ;                                       !- Water Storage Tank Name
+
+OS:CoolingTower:TwoSpeed,
+  {86888698-0c15-40ab-9678-97550a440089}, !- Handle
+  Cooling Tower Two Speed,              !- Name
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  autosize,                               !- Design Water Flow Rate {m3/s}
+  autosize,                               !- High Fan Speed Air Flow Rate {m3/s}
+  autosize,                               !- High Fan Speed Fan Power {W}
+  autosize,                               !- High Fan Speed U-Factor Times Area Value {W/K}
+  AutoSize,                               !- Low Fan Speed Air Flow Rate {m3/s}
+  ,                                       !- Low Fan Speed Air Flow Rate Sizing Factor
+  AutoSize,                               !- Low Fan Speed Fan Power {W}
+  ,                                       !- Low Fan Speed Fan Power Sizing Factor
+  AutoSize,                               !- Low Fan Speed U-Factor Times Area Value {W/K}
+  ,                                       !- Low Fan Speed U-Factor Times Area Sizing Factor
+  ,                                       !- Free Convection Regime Air Flow Rate {m3/s}
+  ,                                       !- Free Convection Regime Air Flow Rate Sizing Factor
+  ,                                       !- Free Convection Regime U-Factor Times Area Value {W/K}
+  ,                                       !- Free Convection U-Factor Times Area Value Sizing Factor
+  ,                                       !- Performance Input Method
+  ,                                       !- Heat Rejection Capacity and Nominal Capacity Sizing Ratio
+  ,                                       !- High Speed Nominal Capacity {W}
+  ,                                       !- Low Speed Nominal Capacity {W}
+  ,                                       !- Low Speed Nominal Capacity Sizing Factor
+  ,                                       !- Free Convection Nominal Capacity {W}
+  ,                                       !- Free Convection Nominal Capacity Sizing Factor
+  ,                                       !- Basin Heater Capacity {W/K}
+  ,                                       !- Basin Heater Setpoint Temperature {C}
+  ,                                       !- Basin Heater Operating Schedule Name
+  ,                                       !- Evaporation Loss Mode
+  ,                                       !- Evaporation Loss Factor {percent/K}
+  ,                                       !- Drift Loss Percent {percent}
+  ,                                       !- Blowdown Calculation Mode
+  ,                                       !- Blowdown Concentration Ratio
+  ,                                       !- Blowdown Makeup Water Usage Schedule Name
+  ,                                       !- Supply Water Storage Tank Name
+  ,                                       !- Outdoor Air Inlet Node Name
+  ,                                       !- Number of Cells
+  ,                                       !- Cell Control
+  ,                                       !- Cell Minimum  Water Flow Rate Fraction
+  ,                                       !- Cell Maximum Water Flow Rate Fraction
+  1;                                      !- Sizing Factor
+
+OS:Coil:Heating:Water,
+  {852ba7c2-6dca-42d0-b8d0-523404c57aa0}, !- Handle
+  Four Pipe Terminal Heating Coil,                   !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- U-Factor Times Area Value {W/K}
+  ,                                       !- Maximum Water Flow Rate {m3/s}
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Performance Input Method
+  ,                                       !- Rated Capacity {W}
+  ,                                       !- Rated Inlet Water Temperature {C}
+  ,                                       !- Rated Inlet Air Temperature {C}
+  ,                                       !- Rated Outlet Water Temperature {C}
+  ,                                       !- Rated Outlet Air Temperature {C}
+  ;                                       !- Rated Ratio for Air and Water Convection
+
+OS:AirTerminal:SingleDuct:ConstantVolume:FourPipeInduction,
+  {c0451064-fc78-4567-8a3c-f406ceeadc5d}, !- Handle
+  Four Pipe Terminal with Heat, !- Name
+  ,                                       !- Availability Schedule Name
+  autosize,                               !- Maximum Total Air Flow Rate {m3/s}
+  ,                                       !- Induction Ratio
+  ,                                       !- Supply Air Inlet Node Name
+  ,                                       !- Induced Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {852ba7c2-6dca-42d0-b8d0-523404c57aa0}, !- Heating Coil Name
+  ,                                       !- Maximum Hot Water Flow Rate {m3/s}
+  ,                                       !- Minimum Hot Water Flow Rate {m3/s}
+  ,                                       !- Heating Convergence Tolerance
+  ,                                       !- Cooling Coil Name
+  autosize,                               !- Maximum Cold Water Flow Rate {m3/s}
+  0,                                      !- Minimum Cold Water Flow Rate {m3/s}
+  0.001,                                  !- Cooling Convergence Tolerance
+  ;                                       !- Zone Mixer Name
+
+OS:Coil:Heating:Water,
+  {69536627-2765-4ab8-97bb-10df1d28e114}, !- Handle
+  Four Pipe Terminal Heating Coil 2,                   !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- U-Factor Times Area Value {W/K}
+  ,                                       !- Maximum Water Flow Rate {m3/s}
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Performance Input Method
+  ,                                       !- Rated Capacity {W}
+  ,                                       !- Rated Inlet Water Temperature {C}
+  ,                                       !- Rated Inlet Air Temperature {C}
+  ,                                       !- Rated Outlet Water Temperature {C}
+  ,                                       !- Rated Outlet Air Temperature {C}
+  ;                                       !- Rated Ratio for Air and Water Convection
+
+OS:Coil:Cooling:Water,
+  {bc4929a1-8380-4e9a-8bc3-169aefd8a7ce}, !- Handle
+  Four Pipe Terminal Cooling Coil,                   !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Design Water Flow Rate {m3/s}
+  ,                                       !- Design Air Flow Rate {m3/s}
+  ,                                       !- Design Inlet Water Temperature {C}
+  ,                                       !- Design Inlet Air Temperature {C}
+  ,                                       !- Design Outlet Air Temperature {C}
+  ,                                       !- Design Inlet Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Design Outlet Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Type of Analysis
+  ;                                       !- Heat Exchanger Configuration
+
+OS:AirTerminal:SingleDuct:ConstantVolume:FourPipeInduction,
+  {b9341b91-2e32-4c99-a77f-3ddbfea144ee}, !- Handle
+  Four Pipe Terminal with Heat and Cool, !- Name
+  ,                                       !- Availability Schedule Name
+  autosize,                               !- Maximum Total Air Flow Rate {m3/s}
+  ,                                       !- Induction Ratio
+  ,                                       !- Supply Air Inlet Node Name
+  ,                                       !- Induced Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {69536627-2765-4ab8-97bb-10df1d28e114}, !- Heating Coil Name
+  ,                                       !- Maximum Hot Water Flow Rate {m3/s}
+  ,                                       !- Minimum Hot Water Flow Rate {m3/s}
+  ,                                       !- Heating Convergence Tolerance
+  {bc4929a1-8380-4e9a-8bc3-169aefd8a7ce}, !- Cooling Coil Name
+  autosize,                               !- Maximum Cold Water Flow Rate {m3/s}
+  0,                                      !- Minimum Cold Water Flow Rate {m3/s}
+  0.001,                                  !- Cooling Convergence Tolerance
+  ;                                       !- Zone Mixer Name
+
+OS:AirTerminal:SingleDuct:InletSideMixer,
+  {d002af37-5ae8-4f62-bf27-e8ed20486c06}, !- Handle
+  Air Terminal Single Duct Inlet Side Mixer, !- Name
+  ,                                       !- Terminal Unit Outlet
+  ,                                       !- Terminal Unit Primary Air Inlet
+  ;                                       !- Terminal Unit Secondary Air Inlet
+
+OS:Coil:Heating:Water,
+  {cce7c4c5-a5c4-4120-8f0f-cd3314c5ea41}, !- Handle
+  Heat and Cool Terminal Water Coil,                   !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- U-Factor Times Area Value {W/K}
+  ,                                       !- Maximum Water Flow Rate {m3/s}
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Performance Input Method
+  ,                                       !- Rated Capacity {W}
+  ,                                       !- Rated Inlet Water Temperature {C}
+  ,                                       !- Rated Inlet Air Temperature {C}
+  ,                                       !- Rated Outlet Water Temperature {C}
+  ,                                       !- Rated Outlet Air Temperature {C}
+  ;                                       !- Rated Ratio for Air and Water Convection
+
+OS:AirTerminal:SingleDuct:VAV:HeatAndCool:Reheat,
+  {1d368a86-cf5b-4af3-b56c-db741d32c688}, !- Handle
+  Heat and Cool Air Terminal with Hot Water Reheat, !- Name
+  ,                                       !- Availability Schedule
+  ,                                       !- Damper Air Outlet
+  ,                                       !- Air Inlet
+  autosize,                               !- Maximum Air Flow Rate {m3/s}
+  0,                                      !- Zone Minimum Air Flow Fraction
+  {cce7c4c5-a5c4-4120-8f0f-cd3314c5ea41}, !- Reheat Coil
+  autosize,                               !- Maximum Hot Water or Steam Flow Rate {m3/s}
+  0,                                      !- Minimum Hot Water or Steam Flow Rate {m3/s}
+  ,                                       !- Air Outlet
+  0.001,                                  !- Convergence Tolerance
+  1000;                                   !- Maximum Reheat Air Temperature {C}
+
+OS:Coil:Heating:Gas,
+  {2f374e48-b008-405b-b67f-c8f6b77ebba4}, !- Handle
+  Heat and Cool Terminal Gas Coil,                     !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  0.8,                                    !- Gas Burner Efficiency
+  AutoSize,                               !- Nominal Capacity {W}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Temperature Setpoint Node Name
+  0,                                      !- Parasitic Electric Load {W}
+  ,                                       !- Part Load Fraction Correlation Curve Name
+  0;                                      !- Parasitic Gas Load {W}
+
+OS:AirTerminal:SingleDuct:VAV:HeatAndCool:Reheat,
+  {2463f3b9-caea-4f6e-829c-94f1a9182562}, !- Handle
+  Heat and Cool Air Terminal with Gas Reheat, !- Name
+  ,                                       !- Availability Schedule
+  ,                                       !- Damper Air Outlet
+  ,                                       !- Air Inlet
+  autosize,                               !- Maximum Air Flow Rate {m3/s}
+  0,                                      !- Zone Minimum Air Flow Fraction
+  {2f374e48-b008-405b-b67f-c8f6b77ebba4}, !- Reheat Coil
+  autosize,                               !- Maximum Hot Water or Steam Flow Rate {m3/s}
+  0,                                      !- Minimum Hot Water or Steam Flow Rate {m3/s}
+  ,                                       !- Air Outlet
+  0.001,                                  !- Convergence Tolerance
+  1000;                                   !- Maximum Reheat Air Temperature {C}
+
+OS:Coil:Heating:Electric,
+  {37c3bb01-81cd-4547-a1ad-2ec512ae33e2}, !- Handle
+  Heat and Cool Terminal Electric Coil,                !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Efficiency
+  ,                                       !- Nominal Capacity {W}
+  ,                                       !- Air Inlet Node Name
+  ;                                       !- Air Outlet Node Name
+
+OS:AirTerminal:SingleDuct:VAV:HeatAndCool:Reheat,
+  {19760789-0ccd-4e0b-8b83-044afae8e8fc}, !- Handle
+  heat and Cool Air Terminal with Electric Reheat, !- Name
+  ,                                       !- Availability Schedule
+  ,                                       !- Damper Air Outlet
+  ,                                       !- Air Inlet
+  autosize,                               !- Maximum Air Flow Rate {m3/s}
+  0,                                      !- Zone Minimum Air Flow Fraction
+  {37c3bb01-81cd-4547-a1ad-2ec512ae33e2}, !- Reheat Coil
+  autosize,                               !- Maximum Hot Water or Steam Flow Rate {m3/s}
+  0,                                      !- Minimum Hot Water or Steam Flow Rate {m3/s}
+  ,                                       !- Air Outlet
+  0.001,                                  !- Convergence Tolerance
+  1000;                                   !- Maximum Reheat Air Temperature {C}
+
+OS:Coil:Cooling:DX:SingleSpeed,
+  {549ef360-0b78-4774-9d03-34115aaff70e}, !- Handle
+  VAVChangeover Cooling Coil,         !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  autosize,                               !- Rated Total Cooling Capacity {W}
+  autosize,                               !- Rated Sensible Heat Ratio
+  3,                                      !- Rated COP {W/W}
+  autosize,                               !- Rated Air Flow Rate {m3/s}
+  773.3,                                  !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {7ccc4496-7ef8-4e8a-9fe8-9d99536d773e}, !- Total Cooling Capacity Function of Temperature Curve Name
+  {99e951f0-55c5-4def-bc07-3729661eccca}, !- Total Cooling Capacity Function of Flow Fraction Curve Name
+  {14d4810c-aaa4-4396-b496-56c0f92dedab}, !- Energy Input Ratio Function of Temperature Curve Name
+  {755b9215-9c17-4fb8-963e-5a06f3d1dce5}, !- Energy Input Ratio Function of Flow Fraction Curve Name
+  {4eff1eb6-7727-4c85-94c3-1ad5550c5d2b}, !- Part Load Fraction Correlation Curve Name
+  ,                                       !- Nominal Time for Condensate Removal to Begin {s}
+  ,                                       !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+  ,                                       !- Maximum Cycling Rate {cycles/hr}
+  ,                                       !- Latent Capacity Time Constant {s}
+  ,                                       !- Condenser Air Inlet Node Name
+  AirCooled,                              !- Condenser Type
+  0,                                      !- Evaporative Condenser Effectiveness {dimensionless}
+  Autosize,                               !- Evaporative Condenser Air Flow Rate {m3/s}
+  Autosize,                               !- Evaporative Condenser Pump Rated Power Consumption {W}
+  0,                                      !- Crankcase Heater Capacity {W}
+  0,                                      !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  ,                                       !- Supply Water Storage Tank Name
+  ,                                       !- Condensate Collection Water Storage Tank Name
+  0,                                      !- Basin Heater Capacity {W/K}
+  10,                                     !- Basin Heater Setpoint Temperature {C}
+  ;                                       !- Basin Heater Operating Schedule Name
+
+OS:Curve:Biquadratic,
+  {7ccc4496-7ef8-4e8a-9fe8-9d99536d773e}, !- Handle
+  VAVChangeover Cooling Curve 1,                    !- Name
+  0.942587793,                            !- Coefficient1 Constant
+  0.009543347,                            !- Coefficient2 x
+  0.00068377,                             !- Coefficient3 x**2
+  -0.011042676,                           !- Coefficient4 y
+  5.249e-06,                              !- Coefficient5 y**2
+  -9.72e-06,                              !- Coefficient6 x*y
+  17,                                     !- Minimum Value of x {BasedOnField A2}
+  22,                                     !- Maximum Value of x {BasedOnField A2}
+  13,                                     !- Minimum Value of y {BasedOnField A3}
+  46;                                     !- Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Quadratic,
+  {99e951f0-55c5-4def-bc07-3729661eccca}, !- Handle
+  VAVChangeover Cooling Curve 2,                    !- Name
+  0.8,                                    !- Coefficient1 Constant
+  0.2,                                    !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0.5,                                    !- Minimum Value of x {BasedOnField A2}
+  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Biquadratic,
+  {14d4810c-aaa4-4396-b496-56c0f92dedab}, !- Handle
+  VAVChangeover Cooling Curve 3,                    !- Name
+  0.342414409,                            !- Coefficient1 Constant
+  0.034885008,                            !- Coefficient2 x
+  -0.0006237,                             !- Coefficient3 x**2
+  0.004977216,                            !- Coefficient4 y
+  0.000437951,                            !- Coefficient5 y**2
+  -0.000728028,                           !- Coefficient6 x*y
+  17,                                     !- Minimum Value of x {BasedOnField A2}
+  22,                                     !- Maximum Value of x {BasedOnField A2}
+  13,                                     !- Minimum Value of y {BasedOnField A3}
+  46;                                     !- Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Quadratic,
+  {755b9215-9c17-4fb8-963e-5a06f3d1dce5}, !- Handle
+  VAVChangeover Cooling Curve 4,                    !- Name
+  1.1552,                                 !- Coefficient1 Constant
+  -0.1808,                                !- Coefficient2 x
+  0.0256,                                 !- Coefficient3 x**2
+  0.5,                                    !- Minimum Value of x {BasedOnField A2}
+  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Quadratic,
+  {4eff1eb6-7727-4c85-94c3-1ad5550c5d2b}, !- Handle
+  VAVChangeover Cooling Curve 5,                    !- Name
+  0.85,                                   !- Coefficient1 Constant
+  0.15,                                   !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
+
+OS:Coil:Heating:Gas,
+  {7c90b827-b125-4a0b-a905-dc075571540e}, !- Handle
+  VAVChangeover Bypass Heating Coil,                     !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  0.8,                                    !- Gas Burner Efficiency
+  AutoSize,                               !- Nominal Capacity {W}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Temperature Setpoint Node Name
+  0,                                      !- Parasitic Electric Load {W}
+  ,                                       !- Part Load Fraction Correlation Curve Name
+  0;                                      !- Parasitic Gas Load {W}
+
+OS:Fan:ConstantVolume,
+  {5893df9a-65df-4686-bfae-fb4564bef2b9}, !- Handle
+  VAVChangeover Bypass Fan,                  !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Fan Efficiency
+  ,                                       !- Pressure Rise {Pa}
+  AutoSize,                               !- Maximum Flow Rate {m3/s}
+  ,                                       !- Motor Efficiency
+  ,                                       !- Motor In Airstream Fraction
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ;                                       !- End-Use Subcategory
+
+OS:AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass,
+  {8b3614b6-19a8-496b-ad68-96351a2ab688}, !- Handle
+  Unitary Heat Cool VAVChangeover Bypass, !- Name
+  ,                                       !- Availability Schedule
+  autosize,                               !- System Air Flow Rate During Cooling Operation {m3/s}
+  autosize,                               !- System Air Flow Rate During Heating Operation {m3/s}
+  autosize,                               !- System Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+  autosize,                               !- Outdoor Air Flow Rate During Cooling Operation {m3/s}
+  autosize,                               !- Outdoor Air Flow Rate During Heating Operation {m3/s}
+  autosize,                               !- Outdoor Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+  ,                                       !- Outdoor Air Flow Rate Multiplier Schedule
+  ,                                       !- Air Inlet Node
+  ,                                       !- Bypass Duct Mixer Node
+  ,                                       !- Bypass Duct Splitter Node
+  ,                                       !- Air Outlet Node
+  ,                                       !- Outdoor Air Mixer
+  {5893df9a-65df-4686-bfae-fb4564bef2b9}, !- Supply Air Fan
+  DrawThrough,                            !- Supply Air Fan Placement
+  ,                                       !- Supply Air Fan Operating Mode Schedule
+  {549ef360-0b78-4774-9d03-34115aaff70e}, !- Cooling Coil
+  {7c90b827-b125-4a0b-a905-dc075571540e}, !- Heating Coil
+  ZonePriority,                           !- Priority Control Mode
+  8,                                      !- Minimum Outlet Air Temperature During Cooling Operation {C}
+  50,                                     !- Maximum Outlet Air Temperature During Heating Operation {C}
+  None;                                   !- Dehumidification Control Type
+
+OS:SetpointManager:MultiZone:Humidity:Minimum,
+  {00bd9f3b-df01-4dae-8a06-befb066e1385}, !- Handle
+  Setpoint Manager Multi Zone Humidity Minimum, !- Name
+  ,                                       !- Minimum Setpoint Humidity Ratio {kgWater/kgDryAir}
+  ,                                       !- Maximum Setpoint Humidity Ratio {kgWater/kgDryAir}
+  ,                                       !- Setpoint Node or NodeList Name
+  MinimumHumidityRatio;                   !- Control Variable
+
+OS:SetpointManager:MultiZone:MinimumHumidity:Average,
+  {03f5dbe8-ebfa-40ea-913a-9bdff30ee3ba}, !- Handle
+  Setpoint Manager Multi Zone Minimum Humidity Average, !- Name
+  ,                                       !- Minimum Setpoint Humidity Ratio {kgWater/kgDryAir}
+  ,                                       !- Maximum Setpoint Humidity Ratio {kgWater/kgDryAir}
+  ,                                       !- Setpoint Node or NodeList Name
+  MinimumHumidityRatio;                   !- Control Variable
 

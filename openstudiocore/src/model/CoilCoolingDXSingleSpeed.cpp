@@ -816,6 +816,81 @@ namespace detail{
 
 }// detail
 
+CoilCoolingDXSingleSpeed::CoilCoolingDXSingleSpeed(const Model& model)
+  : StraightComponent(CoilCoolingDXSingleSpeed::iddObjectType(),model)
+{
+  model::CurveBiquadratic coolingCurveFofTemp = CurveBiquadratic(model);
+  coolingCurveFofTemp.setCoefficient1Constant(0.942587793);
+  coolingCurveFofTemp.setCoefficient2x(0.009543347);
+  coolingCurveFofTemp.setCoefficient3xPOW2(0.000683770);
+  coolingCurveFofTemp.setCoefficient4y(-0.011042676);
+  coolingCurveFofTemp.setCoefficient5yPOW2(0.000005249);
+  coolingCurveFofTemp.setCoefficient6xTIMESY(-0.000009720);
+  coolingCurveFofTemp.setMinimumValueofx(17.0);
+  coolingCurveFofTemp.setMaximumValueofx(22.0);
+  coolingCurveFofTemp.setMinimumValueofy(13.0);
+  coolingCurveFofTemp.setMaximumValueofy(46.0);
+
+  CurveQuadratic coolingCurveFofFlow = CurveQuadratic(model);
+  coolingCurveFofFlow.setCoefficient1Constant(0.8);
+  coolingCurveFofFlow.setCoefficient2x(0.2);
+  coolingCurveFofFlow.setCoefficient3xPOW2(0.0);
+  coolingCurveFofFlow.setMinimumValueofx(0.5);
+  coolingCurveFofFlow.setMaximumValueofx(1.5);
+
+  CurveBiquadratic energyInputRatioFofTemp = CurveBiquadratic(model);
+  energyInputRatioFofTemp.setCoefficient1Constant(0.342414409);
+  energyInputRatioFofTemp.setCoefficient2x(0.034885008);
+  energyInputRatioFofTemp.setCoefficient3xPOW2(-0.000623700);
+  energyInputRatioFofTemp.setCoefficient4y(0.004977216);
+  energyInputRatioFofTemp.setCoefficient5yPOW2(0.000437951);
+  energyInputRatioFofTemp.setCoefficient6xTIMESY(-0.000728028);
+  energyInputRatioFofTemp.setMinimumValueofx(17.0);
+  energyInputRatioFofTemp.setMaximumValueofx(22.0);
+  energyInputRatioFofTemp.setMinimumValueofy(13.0);
+  energyInputRatioFofTemp.setMaximumValueofy(46.0);
+
+  CurveQuadratic energyInputRatioFofFlow = CurveQuadratic(model);
+  energyInputRatioFofFlow.setCoefficient1Constant(1.1552);
+  energyInputRatioFofFlow.setCoefficient2x(-0.1808);
+  energyInputRatioFofFlow.setCoefficient3xPOW2(0.0256);
+  energyInputRatioFofFlow.setMinimumValueofx(0.5);
+  energyInputRatioFofFlow.setMaximumValueofx(1.5);
+
+  CurveQuadratic partLoadFraction = CurveQuadratic(model);
+  partLoadFraction.setCoefficient1Constant(0.85);
+  partLoadFraction.setCoefficient2x(0.15);
+  partLoadFraction.setCoefficient3xPOW2(0.0);
+  partLoadFraction.setMinimumValueofx(0.0);
+  partLoadFraction.setMaximumValueofx(1.0);
+
+  autosizeRatedTotalCoolingCapacity();//autosize
+  autosizeRatedSensibleHeatRatio();//autosize
+  autosizeRatedAirFlowRate();//autosize
+  setRatedCOP(3.0);
+  setRatedEvaporatorFanPowerPerVolumeFlowRate(773.3);
+  setTotalCoolingCapacityFunctionOfTemperatureCurve(coolingCurveFofTemp);
+  setTotalCoolingCapacityFunctionOfFlowFractionCurve(coolingCurveFofFlow);
+  setEnergyInputRatioFunctionOfTemperatureCurve(energyInputRatioFofTemp);
+  setEnergyInputRatioFunctionOfFlowFractionCurve(energyInputRatioFofFlow);
+  setPartLoadFractionCorrelationCurve(partLoadFraction);
+  setEvaporativeCondenserEffectiveness(0.0);
+  setEvaporativeCondenserAirFlowRate( boost::none );
+  setEvaporativeCondenserPumpRatedPowerConsumption(boost::none);
+  setCrankcaseHeaterCapacity(0.0);
+  setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(0.0);
+  //setSupplyWaterStorageTankName("");
+  //setCondensateCollectionWaterStorageTankName("");
+  setBasinHeaterCapacity(0.0);
+  setBasinHeaterSetpointTemperature(10.0);
+  //setBasinHeaterOperatingSchedule(boost::none);
+  setString(OS_Coil_Cooling_DX_SingleSpeedFields::BasinHeaterOperatingScheduleName,"");
+  setCondenserType("AirCooled");
+
+  auto schedule = model.alwaysOnDiscreteSchedule();
+  setAvailabilitySchedule(schedule);
+}
+
 // create a new CoilCoolingDXSingleSpeed object in the model's workspace
 CoilCoolingDXSingleSpeed::CoilCoolingDXSingleSpeed(const Model& model,
                                                    Schedule& availabilitySchedule,
