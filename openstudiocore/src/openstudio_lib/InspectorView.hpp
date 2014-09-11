@@ -372,6 +372,19 @@ class AirTerminalSingleDuctVAVReheatInspectorView : public AirTerminalInspectorV
   void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP);
 };
 
+class AirTerminalSingleDuctVAVHeatAndCoolReheatInspectorView : public AirTerminalInspectorView
+{
+  Q_OBJECT;
+
+  public:
+
+  AirTerminalSingleDuctVAVHeatAndCoolReheatInspectorView(QWidget * parent = 0);
+
+  virtual ~AirTerminalSingleDuctVAVHeatAndCoolReheatInspectorView() {}
+
+  void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP);
+};
+
 class ZoneHVACPackagedTerminalAirConditionerInspectorView : public BaseInspectorView
 {
   Q_OBJECT;

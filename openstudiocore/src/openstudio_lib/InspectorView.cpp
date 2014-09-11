@@ -66,6 +66,8 @@
 #include "../model/AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp"
 #include "../model/AirTerminalSingleDuctVAVReheat.hpp"
 #include "../model/AirTerminalSingleDuctVAVReheat_Impl.hpp"
+#include "../model/AirTerminalSingleDuctVAVHeatAndCoolReheat.hpp"
+#include "../model/AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl.hpp"
 #include "../model/ZoneHVACBaseboardConvectiveWater.hpp"
 #include "../model/ZoneHVACBaseboardConvectiveWater_Impl.hpp"
 #include "../model/ZoneHVACFourPipeFanCoil.hpp"
@@ -314,6 +316,26 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
               this, &InspectorView::addToLoopClicked);
       
       connect(static_cast<AirTerminalSingleDuctVAVReheatInspectorView *>(m_currentView), &AirTerminalSingleDuctVAVReheatInspectorView::removeFromLoopClicked,
+              this, &InspectorView::removeFromLoopClicked);
+    }
+    else if( boost::optional<model::AirTerminalSingleDuctVAVHeatAndCoolReheat> component = modelObject->optionalCast<model::AirTerminalSingleDuctVAVHeatAndCoolReheat>()  )
+    {
+      if( m_currentView )
+      {
+        delete m_currentView;
+      }
+
+      m_currentView = new AirTerminalSingleDuctVAVHeatAndCoolReheatInspectorView();
+      connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
+  
+      m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
+
+      m_vLayout->addWidget(m_currentView);
+
+      connect(static_cast<AirTerminalSingleDuctVAVHeatAndCoolReheatInspectorView *>(m_currentView), &AirTerminalSingleDuctVAVHeatAndCoolReheatInspectorView::addToLoopClicked,
+              this, &InspectorView::addToLoopClicked);
+      
+      connect(static_cast<AirTerminalSingleDuctVAVHeatAndCoolReheatInspectorView *>(m_currentView), &AirTerminalSingleDuctVAVHeatAndCoolReheatInspectorView::removeFromLoopClicked,
               this, &InspectorView::removeFromLoopClicked);
     }
     else if( boost::optional<model::ZoneHVACBaseboardConvectiveWater> component = 
@@ -1255,6 +1277,17 @@ AirTerminalSingleDuctVAVReheatInspectorView::AirTerminalSingleDuctVAVReheatInspe
 void AirTerminalSingleDuctVAVReheatInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP)
 {
   AirTerminalInspectorView::layoutModelObject<model::AirTerminalSingleDuctVAVReheat>(modelObject, readOnly, displayIP);
+}
+
+AirTerminalSingleDuctVAVHeatAndCoolReheatInspectorView::AirTerminalSingleDuctVAVHeatAndCoolReheatInspectorView( QWidget * parent )
+  : AirTerminalInspectorView(parent)
+{
+
+}
+
+void AirTerminalSingleDuctVAVHeatAndCoolReheatInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP)
+{
+  AirTerminalInspectorView::layoutModelObject<model::AirTerminalSingleDuctVAVHeatAndCoolReheat>(modelObject, readOnly, displayIP);
 }
 
 AirTerminalSingleDuctConstantVolumeCooledBeamInspectorView::AirTerminalSingleDuctConstantVolumeCooledBeamInspectorView( QWidget * parent )
