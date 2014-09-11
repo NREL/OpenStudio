@@ -129,7 +129,7 @@ if(CPACK_BINARY_DEB)
   )
 endif()
 
-set(CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/;Required;ALL;/")
+set(CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/;Required;ALL;/")
 
 if(BUILD_SIMXML)
   list(APPEND CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_BINARY_DIR}/SimXml-prefix/src/SimXml-build/;Required;ALL;/")
