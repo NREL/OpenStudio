@@ -56,31 +56,31 @@
 
 // Display Case Fields
 #define ANTISWEATHEATERCONTROLTYPE "Anti Sweat Heater Control Type"
-#define AVAILABILITYSCHEDULE "Availability Schedule"
-#define AVERAGEREFRIGERANTCHARGEINVENTORY "Average Refrigerant Charge Inventory"
+#define AVAILABILITYSCHEDULE "Availability Schedule" // TODO this has not yet been implemented
+#define AVERAGEREFRIGERANTCHARGEINVENTORY "Average Refrigerant Charge Inventory" // TODO this has not yet been implemented
 #define CASEANTISWEATHEATERPOWERPERUNITLENGTH "Case Anti Sweat Heater Power\nper Unit Length"
 #define CASECREDITFRACTIONSCHEDULE "Case Credit Fraction Schedule"
-#define CASEDEFROSTDRIPDOWNSCHEDULE "Case Defrost Drip Down Schedule"
+#define CASEDEFROSTDRIPDOWNSCHEDULE "Case Defrost Drip Down Schedule" // TODO this has not yet been implemented
 #define CASEDEFROSTPOWERPERUNITLENGTH "Case Defrost Power\nper Unit Length"
-#define CASEDEFROSTSCHEDULE "Case Defrost Schedule"
-#define CASEDEFROSTTYPE "Case Defrost Type"
-#define CASEHEIGHT "Case Height"
+#define CASEDEFROSTSCHEDULE "Case Defrost Schedule" // TODO this has not yet been implemented
+#define CASEDEFROSTTYPE "Case Defrost Type" // TODO this has not yet been implemented
+#define CASEHEIGHT "Case Height" // TODO this has not yet been implemented
 #define CASELENGTH "Case Length"
 #define CASELIGHTINGSCHEDULE "Case Lighting Schedule"
 #define CASEOPERATINGTEMPERATURE "Case Operating Temperature"
-#define DEFROSTENERGYCORRECTIONCURVE "Defrost Energy Correction Curve"
-#define DEFROSTENERGYCORRECTIONCURVETYPE "Defrost Energy Correction Curve Type"
+#define DEFROSTENERGYCORRECTIONCURVE "Defrost Energy Correction Curve" // TODO this has not yet been implemented
+#define DEFROSTENERGYCORRECTIONCURVETYPE "Defrost Energy Correction Curve Type" // TODO ***************************************** AVAILABLE, but this has not yet been called
 #define DESIGNEVAPORATORTEMPERATUREORBRINEINLETTEMPERATURE "Design Evaporator Temperature\nor Brine Inlet Temperature"
 #define FRACTIONOFANTISWEATHEATERENERGYTOCASE "Fraction of Anti Sweat\nHeater Energy to Case"
 #define FRACTIONOFLIGHTINGENERGYTOCASE "Fraction of Lighting Energy to Case"
 #define HUMIDITYATZEROANTISWEATHEATERENERGY "Humidity at Zero Anti Sweat\nHeater Energy"
 #define INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH "Installed Case Lighting Power\nper Unit Length"
-#define LATENTCASECREDITCURVETYPE "Latent Case Credit Curve Type"
+#define LATENTCASECREDITCURVETYPE "Latent Case Credit Curve Type" // TODO this has not yet been implemented
 #define MINIMUMANTISWEATHEATERPOWERPERUNITLENGTH "Minimum Anti Sweat Heater Power\nper Unit Length"
 #define NAME "Name"
 #define OPERATINGCASEFANPOWERPERUNITLENGTH "Operating Case Fan Power\nper Unit Length"
-#define RATEDAMBIENTRELATIVEHUMIDITY "Rated Ambient Relative Humidity"
-#define RATEDAMBIENTTEMPERATURE "Rated Ambient Temperature"
+#define RATEDAMBIENTRELATIVEHUMIDITY "Rated Ambient Relative Humidity" // TODO this has not yet been implemented
+#define RATEDAMBIENTTEMPERATURE "Rated Ambient Temperature" // ************************************************************* TODO AVAILABLE, but this has not yet been called
 #define RATEDLATENTHEATRATIO "Rated Latent Heat Ratio"
 #define RATEDRUNTIMEFRACTION "Rated Runtime Fraction"
 #define RATEDTOTALCOOLINGCAPACITYPERUNITLENGTH "Rated Total Cooling Capacity\nper Unit Length"
@@ -93,27 +93,27 @@
 
 // Walk In Fields
 #define AVAILABILITYSCHEDULE "Availability Schedule"
-#define AVERAGEREFRIGERANTCHARGEINVENTORY "Average Refrigerant Charge Inventory"
+#define AVERAGEREFRIGERANTCHARGEINVENTORY "Average Refrigerant Charge Inventory" // TODO this has not yet been implemented
 #define DEFROSTCONTROLTYPE "Defrost Control Type"
-#define DEFROSTDRIPDOWNSCHEDULE "Defrost Drip Down Schedule"
+#define DEFROSTDRIPDOWNSCHEDULE "Defrost Drip Down Schedule" // TODO this has not yet been implemented
 #define DEFROSTPOWER "Defrost Power"
-#define DEFROSTSCHEDULE "Defrost Schedule"
-#define DEFROSTTYPE "Defrost Type"
+#define DEFROSTSCHEDULE "Defrost Schedule" // TODO this has not yet been implemented
+#define DEFROSTTYPE "Defrost Type" // TODO this has not yet been implemented
 #define HEATINGPOWERSCHEDULE "Heating Power Schedule"
-#define INSULATEDFLOORSURFACEAREA "Insulated Floor Surface Area"
+#define INSULATEDFLOORSURFACEAREA "Insulated Floor Surface Area" // TODO this has not yet been implemented
 #define INSULATEDFLOORUVALUE "Insulated Floor U Value"
-#define LIGHTINGSCHEDULE "Lighting Schedule"
+#define LIGHTINGSCHEDULE "Lighting Schedule" // TODO this has not yet been implemented
 #define NAME "Name"
-#define OPERATINGTEMPERATURE "Operating Temperature"
-#define RATEDCIRCULATIONFANPOWER "Rated Circulation Fan Power"
-#define RATEDCOILCOOLINGCAPACITY "Rated Coil Cooling Capacity"
-#define RATEDCOOLINGCOILFANPOWER "Rated Cooling Coil Fan Power"
-#define RATEDCOOLINGSOURCETEMPERATURE "Rated Cooling Source Temperature"
-#define RATEDTOTALHEATINGPOWER "Rated Total Heating Power"
-#define RATEDTOTALLIGHTINGPOWER "Rated Total Lighting Power"
+#define OPERATINGTEMPERATURE "Operating Temperature" // TODO this has not yet been implemented
+#define RATEDCIRCULATIONFANPOWER "Rated Circulation Fan Power" // TODO this has not yet been implemented
+#define RATEDCOILCOOLINGCAPACITY "Rated Coil Cooling Capacity" // TODO this has not yet been implemented
+#define RATEDCOOLINGCOILFANPOWER "Rated Cooling Coil Fan Power" // TODO this has not yet been implemented
+#define RATEDCOOLINGSOURCETEMPERATURE "Rated Cooling Source Temperature" // TODO this has not yet been implemented
+#define RATEDTOTALHEATINGPOWER "Rated Total Heating Power" // TODO this has not yet been implemented
+#define RATEDTOTALLIGHTINGPOWER "Rated Total Lighting Power" // TODO this has not yet been implemented
 #define RESTOCKINGSCHEDULE "Restocking Schedule"
 #define TEMPERATURETERMINATIONDEFROSTFRACTIONTOICE "Temperature Termination\nDefrost Fraction to Ice"
-#define ZONEBOUNDARIES "Zone Boundaries"
+#define ZONEBOUNDARIES "Zone Boundaries" // TODO this has not yet been implemented
 #define ZONEBOUNDARYTHERMALZONE "Thermal Zone"
 #define ZONEBOUNDARYTOTALINSULATEDSURFACEAREAFACINGZONE "Total Insulated Surface\nArea Facing Zone"
 #define ZONEBOUNDARYAREAOFGLASSREACHINDOORSFACINGZONE "Area of Glass Reach In\nDoors Facing Zone"
@@ -214,8 +214,8 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
 
   {
     std::vector<QString> fields;
-    //fields.push_back(RACK);
-    //fields.push_back(THERMALZONE);
+    fields.push_back(RACK);
+    fields.push_back(THERMALZONE);
     fields.push_back(CASELENGTH);
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("General"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
