@@ -142,6 +142,9 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
     button->setChecked(true);
     selectCategory(0);
   }
+
+  m_timer.setSingleShot(true);
+  connect(&m_timer, &QTimer::timeout, this, &OSGridView::doRefresh);
 }
 
 void OSGridView::setGridController(OSGridController * gridController)
@@ -235,9 +238,7 @@ void OSGridView::requestRefreshAll()
   std::cout << "REQUEST REFRESHALL CALLED " << std::endl;
   setEnabled(false);
 
-  if (m_refreshRequests.empty()){
-    QTimer::singleShot(0, this, SLOT(doRefresh()));
-  }
+  m_timer.start();
 
   m_refreshRequests.emplace_back(RefreshAll);
 }
@@ -247,9 +248,7 @@ void OSGridView::requestRefreshGrid()
   std::cout << "REQUEST REFRESHGRID CALLED " << std::endl;
   setEnabled(false);
 
-  if (m_refreshRequests.empty()){
-    QTimer::singleShot(0, this, SLOT(doRefresh()));
-  }
+  m_timer.start();
 
   m_refreshRequests.emplace_back(RefreshGrid);
 }
@@ -259,9 +258,7 @@ void OSGridView::requestRefreshRow(int t_row)
   std::cout << "REQUEST REFRESH ROW CALLED " << std::endl;
   setEnabled(false);
 
-  if (m_refreshRequests.empty()){
-    QTimer::singleShot(0, this, SLOT(doRefresh()));
-  }
+  m_timer.start();
 
   // TODO to do increase resolution here
   m_refreshRequests.emplace_back(RefreshGrid);

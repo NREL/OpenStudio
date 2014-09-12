@@ -117,6 +117,8 @@ private:
   OSGridController * m_gridController;
 
   std::vector<RefreshType> m_refreshRequests;
+
+  QTimer m_timer;
 };
 
 } // openstudio
