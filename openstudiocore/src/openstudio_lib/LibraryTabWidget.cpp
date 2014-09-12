@@ -60,7 +60,7 @@ LibraryTabWidget::LibraryTabWidget(QWidget * parent)
   m_removeButton->setFixedSize(20, 20);
 
   auto isConnected = connect(m_removeButton, SIGNAL(clicked(bool)), this, SIGNAL(removeButtonClicked(bool)));
-  OS_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
   
   auto l = new QHBoxLayout();
   l->addStretch();

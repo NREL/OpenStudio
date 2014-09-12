@@ -957,20 +957,17 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
           NullAdapter(&model::RefrigerationWalkIn::addToSystem),
 
           boost::optional<std::function<void (model::RefrigerationWalkIn*)> >(NullAdapter(&model::RefrigerationWalkIn::removeFromSystem)));
-    }else if(field == ZONEBOUNDARYTHERMALZONE){
-      //addComboBoxColumn<model::ThermalZone,model::RefrigerationWalkIn>( TODO
-      //    QString(ZONEBOUNDARYTHERMALZONE),
-      //    &openstudio::objectName,
-
-      //    std::function<std::vector<model::ThermalZone> ()>(std::bind(&openstudio::sortByObjectName<model::ThermalZone>,
-      //                std::bind(&model::Model::getConcreteModelObjects<model::ThermalZone>,m_model))),
-      //    CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::zoneBoundaryThermalZone),
-      //    CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setZoneBoundaryThermalZone),
-
-      //    NullAdapter(&model::RefrigerationWalkIn::resetZoneBoundaryThermalZone),
-      //    boost::optional<std::function<bool(model::RefrigerationWalkIn *)> >(),
-      //    boost::optional<DataSource>());
-    }else if(field == ZONEBOUNDARYTOTALINSULATEDSURFACEAREAFACINGZONE){
+    }
+    else if (field == ZONEBOUNDARYTHERMALZONE){
+      addComboBoxColumn<model::ThermalZone, model::RefrigerationWalkIn>(
+        QString(ZONEBOUNDARYTHERMALZONE),
+        &openstudio::objectName,
+        std::function<std::vector<model::ThermalZone>()>(std::bind(&openstudio::sortByObjectName<model::ThermalZone>,
+        std::bind(&model::Model::getConcreteModelObjects<model::ThermalZone>, m_model))),
+        CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::zoneBoundaryThermalZone),
+        CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setZoneBoundaryThermalZone),
+        NullAdapter(&model::RefrigerationWalkIn::resetZoneBoundaryThermalZone));
+    }else if (field == ZONEBOUNDARYTOTALINSULATEDSURFACEAREAFACINGZONE){
       addQuantityEditColumn(QString(ZONEBOUNDARYTOTALINSULATEDSURFACEAREAFACINGZONE),
                             QString("m^2"),
                             QString("m^2"),
