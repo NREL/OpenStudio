@@ -74,7 +74,9 @@ void OSCheckBox2::unbind()
 void OSCheckBox2::onToggled(bool checked)
 {
   if(m_modelObject && m_set) {
-    (*m_set)(checked);
+    if ((*m_get)() != checked) {
+      (*m_set)(checked);
+    }
   }
 }
 
