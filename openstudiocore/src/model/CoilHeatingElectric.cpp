@@ -30,6 +30,8 @@
 #include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp"
 #include "ZoneHVACComponent.hpp"
 #include "ZoneHVACComponent_Impl.hpp"
 #include "ZoneHVACPackagedTerminalHeatPump.hpp"
@@ -285,6 +287,22 @@ namespace detail {
         if( supplementalHeatingCoil->handle() == this->handle() )
         {
           return airLoopHVACUnitaryHeatPumpAirToAir;
+        }
+      }
+    }
+
+    // AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed
+    {
+      auto systems = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
+
+      for( const auto & system : systems ) {
+        auto heatingCoil = system.heatingCoil();
+        if( heatingCoil.handle() == this->handle() ) {
+          return system;
+        }
+        auto supHeatingCoil = system.supplementalHeatingCoil();
+        if( supHeatingCoil.handle() == this->handle() ) {
+          return system;
         }
       }
     }

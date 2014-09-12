@@ -40,6 +40,7 @@ class AirConditionerVariableRefrigerantFlow;
 class AirGap;
 class AirLoopHVAC;
 class AirLoopHVACUnitaryHeatPumpAirToAir;
+class AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed;
 class AirLoopHVACUnitarySystem;
 class AirLoopHVACReturnPlenum;
 class AirLoopHVACSupplyPlenum;
@@ -60,6 +61,7 @@ class BoilerHotWater;
 class BoilerSteam;
 class CFactorUndergroundWallConstruction;
 class ChillerElectricEIR;
+class CoilCoolingDXMultiSpeed;
 class CoilCoolingDXSingleSpeed;
 class CoilCoolingDXTwoSpeed;
 class CoilCoolingDXVariableRefrigerantFlow;
@@ -70,6 +72,7 @@ class CoilHeatingDXSingleSpeed;
 class CoilHeatingDXVariableRefrigerantFlow;
 class CoilHeatingElectric;
 class CoilHeatingGas;
+class CoilHeatingGasMultiStage;
 class CoilHeatingWater;
 class CoilHeatingWaterToAirHeatPumpEquationFit;
 class CoilWaterHeatingDesuperheater;
@@ -221,6 +224,7 @@ class WaterUseConnections;
 class WaterUseEquipment;
 class ZoneAirHeatBalanceAlgorithm;
 class ZoneControlHumidistat;
+class ZoneControlThermostatStagedDualSetpoint;
 class ZoneHVACBaseboardConvectiveElectric;
 class ZoneHVACBaseboardConvectiveWater;
 class ZoneHVACFourPipeFanCoil;
@@ -315,6 +319,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateAirLoopHVACUnitaryHeatPumpAirToAir( model::AirLoopHVACUnitaryHeatPumpAirToAir & modelObject );
 
+  boost::optional<IdfObject> translateAirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed( model::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed & modelObject );
+
   boost::optional<IdfObject> translateAirLoopHVACUnitarySystem( model::AirLoopHVACUnitarySystem & modelObject );
 
   boost::optional<IdfObject> translateAirLoopHVACReturnPlenum( model::AirLoopHVACReturnPlenum & airLoopHVACReturnPlenum );
@@ -355,6 +361,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateCoilCoolingDXSingleSpeed( model::CoilCoolingDXSingleSpeed & modelObject );
 
+  boost::optional<IdfObject> translateCoilCoolingDXMultiSpeed( model::CoilCoolingDXMultiSpeed & modelObject );
+
   boost::optional<IdfObject> translateCoilCoolingDXSingleSpeedWithoutUnitary( model::CoilCoolingDXSingleSpeed & modelObject );
 
   boost::optional<IdfObject> translateCoilCoolingDXTwoSpeed( model::CoilCoolingDXTwoSpeed & modelObject );
@@ -378,6 +386,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateCoilHeatingElectric( model::CoilHeatingElectric & modelObject );
 
   boost::optional<IdfObject> translateCoilHeatingGas( model::CoilHeatingGas & modelObject );
+
+  boost::optional<IdfObject> translateCoilHeatingGasMultiStage( model::CoilHeatingGasMultiStage & modelObject );
 
   boost::optional<IdfObject> translateCoilHeatingWater( model::CoilHeatingWater & modelObject );
 
@@ -678,6 +688,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateZoneAirHeatBalanceAlgorithm( model::ZoneAirHeatBalanceAlgorithm & modelObject );
 
   boost::optional<IdfObject> translateZoneControlHumidistat( model::ZoneControlHumidistat& modelObject );
+
+  boost::optional<IdfObject> translateZoneControlThermostatStagedDualSetpoint( model::ZoneControlThermostatStagedDualSetpoint& modelObject );
   
   boost::optional<IdfObject> translateZoneHVACBaseboardConvectiveElectric( model::ZoneHVACBaseboardConvectiveElectric & modelObject );
 

@@ -95,6 +95,17 @@
     <rule IddField="Fan Placement" Access="HIDDEN"/>
     <rule IddField="Controlling Zone or Thermostat Location" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeed">
+    <rule IddField="Air Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Heat Recovery Water Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Heat Recovery Water Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Supply Air Fan" Access="LOCKED"/>
+    <rule IddField="Heating Coil" Access="LOCKED"/>
+    <rule IddField="Cooling Coil" Access="LOCKED"/>
+    <rule IddField="Supplemental Heating Coil" Access="LOCKED"/>
+    <rule IddField="Controlling Zone or Thermostat Location" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_AirLoopHVAC_UnitarySystem">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
@@ -249,6 +260,23 @@
     <rule IddField="Basin Heater Setpoint Temperature" Access="HIDDEN"/>
     <rule IddField="Basin Heater Operating Schedule Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_Coil_Cooling_DX_MultiSpeed">
+    <rule IddField="Availability Schedule" Access="HIDDEN"/>
+    <rule IddField="Air Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Condenser Air Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Supply Water Storage Tank" Access="HIDDEN"/>
+    <rule IddField="Condensate Collection Water Storage Tank" Access="HIDDEN"/>
+    <rule IddField="Stage" Access="LOCKED"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Coil_Cooling_DX_MultiSpeed_StageData">
+    <rule IddField="Total Cooling Capacity Function of Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Total Cooling Capacity Function of Flow Fraction Curve" Access="LOCKED"/>
+    <rule IddField="Energy Input Ratio Function of Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Energy Input Ratio Function of Flow Fraction Curve" Access="LOCKED"/>
+    <rule IddField="Part Load Fraction Correlation Curve" Access="LOCKED"/>
+    <rule IddField="Waste Heat Function of Temperature Curve" Access="LOCKED"/>
+  </POLICY>
   <POLICY IddObjectType="OS_Coil_Cooling_DX_TwoSpeed">
     <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
@@ -369,6 +397,13 @@
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
     <rule IddField="Part Load Fraction Correlation Curve Name" Access="LOCKED"/>
     <rule IddField="Temperature Setpoint Node Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Coil_Heating_Gas_MultiStage">
+    <rule IddField="Availability Schedule" Access="HIDDEN"/>
+    <rule IddField="Air Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Part Load Fraction Correlation Curve" Access="LOCKED"/>
+    <rule IddField="Stage" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Coil_Heating_LowTemperatureRadiant_ConstantFlow">
     <rule IddField="Heating Water Inlet Node Name" Access="HIDDEN"/>
