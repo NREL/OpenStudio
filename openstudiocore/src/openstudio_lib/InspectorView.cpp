@@ -491,9 +491,6 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       m_currentView = new GenericInspectorView();
       connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
 
-      auto isConnected = connect(m_currentView, SIGNAL(removeButtonClicked(bool)), this, SLOT(onRemoveButtonClicked(bool)));
-      OS_ASSERT(isConnected);
-
       m_currentView->layoutModelObject(modelObject.get(), readOnly, displayIP);
 
       m_vLayout->addWidget(m_currentView);

@@ -18,11 +18,12 @@
  **********************************************************************/
 
 #include "LibraryTabWidget.hpp"
-#include <QStackedWidget>
+
+#include <QBoxLayout>
 #include <QPixmap>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
 #include <QPushButton>
+#include <QStackedWidget>
+
 #include <vector>
 
 namespace openstudio {
@@ -45,6 +46,29 @@ LibraryTabWidget::LibraryTabWidget(QWidget * parent)
   m_tabBar->setObjectName("VBlueGradientWidget");
 
   m_tabBar->setContentsMargins(0,0,0,0);
+
+  QPushButton * m_removeButton = new QPushButton(this);
+
+  QString str;
+  str.append("QWidget { ");
+  str.append("border: none;");
+  str.append(" background-image: url(\":/images/delete.png\")");
+  str.append("}");
+
+  m_removeButton->setFlat(true);
+  m_removeButton->setStyleSheet(str);
+  m_removeButton->setFixedSize(20, 20);
+
+  auto isConnected = connect(m_removeButton, SIGNAL(clicked(bool)), this, SIGNAL(removeButtonClicked(bool)));
+  OS_ASSERT(isConnected);
+  
+  auto l = new QHBoxLayout();
+  l->addStretch();
+  l->addWidget(m_removeButton, 0, Qt::AlignVCenter);
+  //auto s = new QSpacerItem(5, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+  //l->addSpacerItem(s);
+
+  m_tabBar->setLayout(l);
 
   layout()->addWidget(m_tabBar);
 

@@ -540,25 +540,6 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
     hbox->addWidget(label);
 
     hbox->addStretch();
-
-    m_removeButton = new QPushButton(this);
-    hbox->addWidget(m_removeButton);
-
-    QString style;
-    style.append("QWidget { ");
-    style.append("border: none;");
-    style.append(" background-image: url(\":/images/delete.png\")");
-    style.append("}");
-
-    m_removeButton->setFlat(true);
-    m_removeButton->setStyleSheet(style);
-    m_removeButton->setFixedSize(20, 20);
-
-    auto isConnected = connect(m_removeButton, SIGNAL(clicked(bool)), this, SIGNAL(removeButtonClicked(bool)));
-    OS_ASSERT(isConnected);
-
-    auto s = new QSpacerItem(5, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
-    hbox->addSpacerItem(s);
   }
   else
   {
