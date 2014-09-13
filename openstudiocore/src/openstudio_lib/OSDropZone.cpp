@@ -656,6 +656,16 @@ void OSDropZone2::dropEvent(QDropEvent *event)
     boost::optional<model::ModelObject> modelObject = OSAppBase::instance()->currentDocument()->getModelObject(itemId);
     m_item = OSItem::makeItem(itemId, OSItemType::ListItem);
 
+    connect(m_item, &OSItem::itemRemoveClicked, this, &OSDropZone2::onItemRemoveClicked);
+    
+
+    QString itemIdStr = itemId.itemId();
+    QString sourceId = itemId.sourceId();
+    QString otherData = itemId.otherData();
+    QString mimeDataText = itemId.mimeDataText();
+    QString text = m_item->text();
+
+
     // Tell EditView to display this object
     emit itemClicked(m_item);
 
@@ -700,6 +710,11 @@ void OSDropZone2::mouseReleaseEvent(QMouseEvent * event)
       emit itemClicked(m_item);
     }
   }
+}
+
+void OSDropZone2::onItemRemoveClicked()
+{
+  (*m_reset)();
 }
 
 } // openstudio

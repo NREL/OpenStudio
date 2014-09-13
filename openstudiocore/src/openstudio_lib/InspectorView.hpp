@@ -74,6 +74,8 @@ class InspectorView : public QWidget
   void removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
   void toggleUnitsClicked(bool displayIP);
   void itemRemoveClicked(OSItem *);
+  void removeButtonClicked(bool);
+
 
   void moveBranchForZoneSupplySelected(model::ThermalZone & zone, const Handle & newPlenumHandle);
   void moveBranchForZoneReturnSelected(model::ThermalZone & zone, const Handle & newPlenumHandle);
@@ -86,7 +88,7 @@ class InspectorView : public QWidget
 
   virtual void toggleUnits(bool displayIP);
 
-  void onRemoveButtonClicked(bool checked);
+  //void onRemoveButtonClicked(bool checked);
 
   protected:
 
@@ -114,14 +116,14 @@ class BaseInspectorView : public QWidget
 
   virtual void update() {}
 
+  LibraryTabWidget * m_libraryTabWidget;
+
   signals:
 
   void toggleUnitsClicked(bool displayIP); 
 
-  protected:
-
-  LibraryTabWidget * m_libraryTabWidget;
-
+  void removeButtonClicked(bool);
+  
   private:
 
   QVBoxLayout * m_vLayout;

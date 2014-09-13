@@ -77,6 +77,7 @@ private slots:
   void refresh();
   void dragEnterEvent(QDragEnterEvent *event);
   void dropEvent(QDropEvent *event);
+  void onItemRemoveClicked();
 
 private:
 

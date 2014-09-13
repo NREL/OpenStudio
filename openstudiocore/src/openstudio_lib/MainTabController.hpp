@@ -49,6 +49,8 @@ class MainTabController : public OSQObjectController
 
     void modelObjectSelected(model::OptionalModelObject & modelObject, bool readOnly);
 
+    void dropZoneItemClicked(OSItem* item, bool readOnly);
+
     void toggleUnitsClicked(bool displayIP);
 
     void itemRemoveClicked(OSItem *);

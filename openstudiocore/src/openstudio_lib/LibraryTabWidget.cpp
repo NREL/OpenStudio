@@ -24,6 +24,8 @@
 #include <QPushButton>
 #include <QStackedWidget>
 
+#include "../utilities/core/Assert.hpp"
+
 #include <vector>
 
 namespace openstudio {
@@ -47,7 +49,7 @@ LibraryTabWidget::LibraryTabWidget(QWidget * parent)
 
   m_tabBar->setContentsMargins(0,0,0,0);
 
-  QPushButton * m_removeButton = new QPushButton(this);
+  m_removeButton = new QPushButton(this);
 
   QString str;
   str.append("QWidget { ");
@@ -59,16 +61,25 @@ LibraryTabWidget::LibraryTabWidget(QWidget * parent)
   m_removeButton->setStyleSheet(str);
   m_removeButton->setFixedSize(20, 20);
 
-  auto isConnected = connect(m_removeButton, SIGNAL(clicked(bool)), this, SIGNAL(removeButtonClicked(bool)));
-  //OS_ASSERT(isConnected);
-  
-  auto l = new QHBoxLayout();
-  l->addStretch();
-  l->addWidget(m_removeButton, 0, Qt::AlignVCenter);
-  //auto s = new QSpacerItem(5, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
-  //l->addSpacerItem(s);
+  // Default to hide
+  m_removeButton->hide();
 
-  m_tabBar->setLayout(l);
+  auto isConnected = connect(m_removeButton, SIGNAL(clicked(bool)), this, SIGNAL(removeButtonClicked(bool)));
+  OS_ASSERT(isConnected);
+  
+  auto vLayout = new QVBoxLayout();
+  vLayout->addWidget(m_removeButton, 0, Qt::AlignVCenter);
+  vLayout->addStretch();
+  //auto s = new QSpacerItem(15, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+  //vLayout->addSpacerItem(s);
+
+  auto hLayout = new QHBoxLayout();
+  hLayout->addStretch();
+  hLayout->addLayout(vLayout);
+  //s = new QSpacerItem(5, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+  //hLayout->addSpacerItem(s);
+
+  m_tabBar->setLayout(hLayout);
 
   layout()->addWidget(m_tabBar);
 
@@ -81,6 +92,15 @@ LibraryTabWidget::LibraryTabWidget(QWidget * parent)
   layout()->addWidget(m_pageStack);
 }
 
+void LibraryTabWidget::showRemoveButton()
+{
+  m_removeButton->show();
+}
+
+void LibraryTabWidget::hideRemoveButton()
+{
+  m_removeButton->hide();
+}
 
 void LibraryTabWidget::addTab( QWidget * widget,
                         const QString & selectedImagePath,

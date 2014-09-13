@@ -553,8 +553,9 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
   connect(m_spaceTypesTabController->mainContentWidget(), &MainTabView::tabSelected,
           m_mainRightColumnController.get(), &MainRightColumnController::configureForSpaceTypesSubTab);
 
-  connect(m_spaceTypesTabController.get(), &SpaceTypesTabController::modelObjectSelected,
-          m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObject);
+  connect(m_spaceTypesTabController.get(), &SpaceTypesTabController::modelObjectSelected, m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObject);
+
+  connect(m_spaceTypesTabController.get(), &SpaceTypesTabController::dropZoneItemClicked, m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObjectByItem);
 
   connect(m_spaceTypesTabController.get(), &SpaceTypesTabController::downloadComponentsClicked,
           this, &OSDocument::downloadComponentsClicked);
@@ -617,8 +618,9 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
   connect(m_thermalZonesTabController->mainContentWidget(), &MainTabView::tabSelected,
           m_mainRightColumnController.get(), &MainRightColumnController::configureForThermalZonesSubTab);
 
-  connect(m_thermalZonesTabController.get(), &ThermalZonesTabController::modelObjectSelected,
-          m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObject);
+  connect(m_thermalZonesTabController.get(), &ThermalZonesTabController::modelObjectSelected, m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObject);
+
+  connect(m_thermalZonesTabController.get(), &ThermalZonesTabController::dropZoneItemClicked, m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObjectByItem);
 
   connect(this, &OSDocument::toggleUnitsClicked, m_thermalZonesTabController.get(), &ThermalZonesTabController::toggleUnitsClicked);
 

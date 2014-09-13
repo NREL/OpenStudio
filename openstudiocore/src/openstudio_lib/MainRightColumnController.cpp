@@ -146,6 +146,29 @@ void MainRightColumnController::inspectModelObject(model::OptionalModelObject & 
   }
 }
 
+
+void MainRightColumnController::inspectModelObjectByItem(OSItem * item, bool readOnly)
+{
+  m_item = item;
+  if (m_item)
+  {
+    boost::optional<model::ModelObject> modelObject;
+    bool readOnly = false;
+    std::shared_ptr<OSDocument> currentDocument = OSAppBase::instance()->currentDocument();
+    if (currentDocument){
+      modelObject = currentDocument->getModelObject(item->itemId());
+      bool readOnly = item->itemId().isDefaulted(); // TODO this may work
+      readOnly = false; // but for now never allow an edit
+    }
+    inspectModelObject(modelObject, readOnly);
+  }
+}
+
+void MainRightColumnController::onRemoveButtonClicked(bool checked)
+{
+
+}
+
 HorizontalTabWidget * MainRightColumnController::mainRightColumnView() const
 {
   return m_horizontalTabWidget;
