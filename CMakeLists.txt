@@ -817,19 +817,19 @@ if(BUILD_QT AND MSVC)
   file(GLOB dlls ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/bin/*.dll)
   foreach(dll ${dlls})
     get_filename_component(filename "${dll}" NAME_WE)
-    ExternalProject_Add_Step(OpenStudioCore "Install${filename}ReleaseDLL"
+    ExternalProject_Add_Step(OSCore "Install${filename}ReleaseDLL"
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Release"
       DEPENDERS configure
     )
-    ExternalProject_Add_Step(OpenStudioCore "Install${filename}DebugDLL"
+    ExternalProject_Add_Step(OSCore "Install${filename}DebugDLL"
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Debug"
       DEPENDERS configure
     )
-    ExternalProject_Add_Step(OpenStudioCore "Install${filename}RelWithDebInfoDLL"
+    ExternalProject_Add_Step(OSCore "Install${filename}RelWithDebInfoDLL"
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/RelWithDebInfo"
       DEPENDERS configure
     )
-    ExternalProject_Add_Step(OpenStudioCore "Install${filename}MinSizeRelDLL"
+    ExternalProject_Add_Step(OSCore "Install${filename}MinSizeRelDLL"
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/MinSizeRel"
       DEPENDERS configure
     )
@@ -837,37 +837,37 @@ if(BUILD_QT AND MSVC)
 endif()
 
 if(MSVC)
-  ExternalProject_Add_Step(OpenStudioCore MakeRubyReleaseFolder
+  ExternalProject_Add_Step(OSCore MakeRubyReleaseFolder
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Release
     DEPENDERS configure
   )
-  ExternalProject_Add_Step(OpenStudioCore MakeRubyDebugFolder
+  ExternalProject_Add_Step(OSCore MakeRubyDebugFolder
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Debug
     DEPENDERS configure
   )
-  ExternalProject_Add_Step(OpenStudioCore MakeRubyRelWithDebInfoFolder
+  ExternalProject_Add_Step(OSCore MakeRubyRelWithDebInfoFolder
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/RelWithDebInfo
     DEPENDERS configure
   )
-  ExternalProject_Add_Step(OpenStudioCore MakeRubyMinSizeRelFolder
+  ExternalProject_Add_Step(OSCore MakeRubyMinSizeRelFolder
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/MinSizeRel
     DEPENDERS configure
   )
 
 
-  ExternalProject_Add_Step(OpenStudioCore MakeRubyReleaseDLL
+  ExternalProject_Add_Step(OSCore MakeRubyReleaseDLL
     COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Release/${RUBY_DLL}"
     DEPENDERS configure
   )
-  ExternalProject_Add_Step(OpenStudioCore MakeRubyDebugDLL
+  ExternalProject_Add_Step(OSCore MakeRubyDebugDLL
     COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Debug/${RUBY_DLL}"
     DEPENDERS configure
   )
-  ExternalProject_Add_Step(OpenStudioCore MakeRubyRelWithDebInfoDLL
+  ExternalProject_Add_Step(OSCore MakeRubyRelWithDebInfoDLL
     COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/RelWithDebInfo/${RUBY_DLL}"
     DEPENDERS configure
   )
-  ExternalProject_Add_Step(OpenStudioCore MakeRubyMinSizeRelDLL
+  ExternalProject_Add_Step(OSCore MakeRubyMinSizeRelDLL
     COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/MinSizeRel/${RUBY_DLL}"
     DEPENDERS configure
   )
