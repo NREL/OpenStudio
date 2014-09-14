@@ -212,12 +212,12 @@ namespace openstudio {
       
       if (filename == "Node-install" || filename == "Ruby-install")
       {
-        rundir = rundir.parent_path().parent_path().parent_path() / openstudio::toPath("OpenStudioCore-prefix/src/OpenStudioCore-build/Products");
+        rundir = rundir.parent_path().parent_path().parent_path() / openstudio::toPath("OSCore-prefix/src/OSCore-build/Products");
       }
 
       if (parentfilename == "Node-install" || parentfilename == "Ruby-install")
       {
-        rundir = rundir.parent_path().parent_path().parent_path().parent_path() / openstudio::toPath("OpenStudioCore-prefix/src/OpenStudioCore-build/Products");
+        rundir = rundir.parent_path().parent_path().parent_path().parent_path() / openstudio::toPath("OSCore-prefix/src/OSCore-build/Products");
       }
 
 //      std::cout << "Rundir: " << openstudio::toString(rundir) << std::endl; 
