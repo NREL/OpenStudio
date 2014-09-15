@@ -229,7 +229,7 @@ bool OSArgument::required() const {
 }
 
 bool OSArgument::modelDependent() const {
-  return m_required;
+  return m_modelDependent;
 }
 
 bool OSArgument::hasValue() const {
