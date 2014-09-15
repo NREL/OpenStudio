@@ -1,0 +1,39 @@
+<measure>
+  <name>Test Create Warning Msgs</name>
+  <uid>e15b432a-5834-4e4f-bcf0-56844a1a43be</uid>
+  <version_id>8fa6d760-542c-45d9-9430-7c8a55404b24</version_id>
+  <description>Measure for testing ability of UserScripts to register warning messages.</description>
+  <modeler_description></modeler_description>
+  <provenances/>
+  <tags/>
+  <attributes>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ModelMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Function</name>
+      <value>Measure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Requires EnergyPlus Results</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+    <attribute>
+      <name>Uses SketchUp API</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>7BCB235A</checksum>
+    </file>
+  </files>
+</measure>

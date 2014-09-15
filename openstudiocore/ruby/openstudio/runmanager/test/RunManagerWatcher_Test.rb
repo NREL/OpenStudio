@@ -62,7 +62,7 @@ class RunManagerWatcher_Test < MiniTest::Unit::TestCase
     OpenStudio::Logger.instance.standardOutLogger.setLogLevel(-2)
     #    OpenStudio::Logger.instance.standardOutLogger.disable
 
-    dir = OpenStudio::Path.new($OpenStudio_ResourcePath) / OpenStudio::Path.new("/utilities/BCL/Measures/SetWindowToWallRatioByFacade");
+    dir = OpenStudio::Path.new($OpenStudio_ResourcePath) / OpenStudio::Path.new("/utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade");
     osm = OpenStudio::Path.new($OpenStudio_ResourcePath) / OpenStudio::Path.new("/runmanager/SimpleModel.osm");
     epw = OpenStudio::Path.new($OpenStudio_ResourcePath) / OpenStudio::Path.new("/runmanager/USA_CO_Golden-NREL.724666_TMY3.epw");
 

@@ -165,6 +165,11 @@ namespace detail {
      *  use of a specific BCLMeasure (identified by UUID). */
     boost::optional<analysis::MeasureGroup> getAlternativeModelVariable() const;
 
+    /** Returns the WorkflowStep in analysis().problem() that runs the report
+    *  requests, if it exists. The step is identified by being a runmanager::WorkItem
+    *  of runmanager::JobType::Ruby that uses a specific BCLMeasure (identified by UUID). */
+    boost::optional<analysis::WorkflowStep> getReportRequestWorkflowStep() const;
+
     /** Returns the WorkflowStep in analysis().problem() that runs the standard OpenStudio
      *  Application reports, if it exists. The step is identified by being a runmanager::WorkItem
      *  of runmanager::JobType::Ruby that uses a specific BCLMeasure (identified by UUID). */
@@ -302,6 +307,9 @@ namespace detail {
      *  getAlternativeModelVariable() will return an initialized value after this method is called. */
     bool insertAlternativeModelVariable();
 
+    /** Returns false if cannot insert the workflow step. */
+    bool insertReportRequestWorkflowStep();
+
     /** Returns false if cannot insert the workflow step in between EnergyPlus and
      *  OpenStudioPostProcess. */
     bool insertStandardReportWorkflowStep();
@@ -341,6 +349,7 @@ namespace detail {
     openstudio::path m_projectDir;
     analysisdriver::AnalysisDriver m_analysisDriver;
     openstudio::UUID m_alternativeModelMeasureUUID;
+    openstudio::UUID m_reportRequestMeasureUUID;
     openstudio::UUID m_standardReportMeasureUUID;
     openstudio::UUID m_calibrationReportMeasureUUID;
     mutable boost::optional<analysis::Analysis> m_analysis; // mutable for lazy load on open

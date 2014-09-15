@@ -23,12 +23,15 @@
 #include "../core/System.hpp"
 
 #include <QFile>
+#include <QDomDocument>
+#include <QDomElement>
 
 namespace openstudio{
 
   BCLFileReference::BCLFileReference(const openstudio::path& path, const bool setMembers)
     : m_path(boost::filesystem::system_complete(path))
   {
+    // DLM: why would you not want to set the members?
     if (setMembers) {
       m_checksum = openstudio::checksum(m_path);
 
@@ -108,6 +111,38 @@ namespace openstudio{
     m_usageType = usageType;
   }
 
+  void BCLFileReference::writeValues(QDomDocument& doc, QDomElement& element) const
+  {
+    if (m_usageType == "script" && !m_softwareProgram.empty() && !m_softwareProgramVersion.empty()){
+      QDomElement versionElement = doc.createElement("version");
+      element.appendChild(versionElement);
+
+      QDomElement softwareProgramElement = doc.createElement("software_program");
+      versionElement.appendChild(softwareProgramElement);
+      softwareProgramElement.appendChild(doc.createTextNode(toQString(m_softwareProgram)));
+
+      QDomElement softwareProgramVersionElement = doc.createElement("identifier");
+      versionElement.appendChild(softwareProgramVersionElement);
+      softwareProgramVersionElement.appendChild(doc.createTextNode(toQString(m_softwareProgramVersion)));
+    }
+
+    QDomElement fileNameElement = doc.createElement("filename");
+    element.appendChild(fileNameElement);
+    fileNameElement.appendChild(doc.createTextNode(toQString(fileName()))); // careful to write out function result instead of member
+
+    QDomElement fileTypeElement = doc.createElement("filetype");
+    element.appendChild(fileTypeElement);
+    fileTypeElement.appendChild(doc.createTextNode(toQString(fileType()))); // careful to write out function result instead of member
+
+    QDomElement usageTypeElement = doc.createElement("usage_type");
+    element.appendChild(usageTypeElement);
+    usageTypeElement.appendChild(doc.createTextNode(toQString(m_usageType)));
+
+    QDomElement checksumElement = doc.createElement("checksum");
+    element.appendChild(checksumElement);
+    checksumElement.appendChild(doc.createTextNode(toQString(m_checksum)));
+  }
+
   bool BCLFileReference::checkForUpdate()
   {
     std::string newChecksum = openstudio::checksum(this->path());
@@ -116,6 +151,20 @@ namespace openstudio{
       return true;
     }
     return false;
+  }
+
+  std::ostream& operator<<(std::ostream& os, const BCLFileReference& file)
+  {
+    QDomDocument doc;
+    QDomElement element = doc.createElement(QString("File"));
+    doc.appendChild(element);
+    file.writeValues(doc, element);
+    
+    QString str;
+    QTextStream qts(&str);
+    doc.save(qts, 2);
+    os << str.toStdString();
+    return os;
   }
 
 } // openstudio

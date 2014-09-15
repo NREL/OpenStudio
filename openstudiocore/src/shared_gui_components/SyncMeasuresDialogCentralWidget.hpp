@@ -25,6 +25,7 @@
 #include "../utilities/bcl/BCLMeasure.hpp"
 
 class QPushButton;
+class QProgressBar;
 
 namespace openstudio {
 
@@ -53,6 +54,7 @@ public:
 
   Component * checkedComponent() const;
   void setMeasures(const std::vector<BCLMeasure> & measures);
+  QProgressBar * progressBar;
   QPushButton * lowerPushButton;
 
 protected:

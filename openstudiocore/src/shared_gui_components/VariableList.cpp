@@ -541,13 +541,22 @@ VariableItem::VariableItem(const analysis::MeasureGroup & variable, MeasureType 
 
 QString VariableItem::name() const
 {
-  return QString::fromStdString(m_variable.displayName());
+  return QString::fromStdString(m_variable.name());
 }
 
 void VariableItem::setName(const QString & name)
 {
   m_variable.setName(name.toStdString());
-  m_variable.setDisplayName(name.toStdString());
+}
+
+QString VariableItem::displayName() const
+{
+  return QString::fromStdString(m_variable.displayName());
+}
+
+void VariableItem::setDisplayName(const QString & displayName)
+{
+  m_variable.setDisplayName(displayName.toStdString());
 }
 
 bool VariableItem::isFixedMeasure()
@@ -604,7 +613,7 @@ QWidget * VariableItemDelegate::view(QSharedPointer<OSListItem> dataSource)
   if(QSharedPointer<VariableItem> variableItem = dataSource.objectCast<VariableItem>())
   {
     auto variableItemView = new VariableItemView(variableItem->isFixedMeasure());
-    variableItemView->variableHeaderView->variableNameEdit->setText(variableItem->name());
+    variableItemView->variableHeaderView->variableNameEdit->setText(variableItem->displayName());
 
     connect(variableItemView->variableHeaderView->variableNameEdit, &QLineEdit::textEdited, variableItem.data(), &VariableItem::setName);
 
@@ -841,9 +850,21 @@ QString MeasureItem::name() const
 void MeasureItem::setName(const QString & name)
 {
   m_measure.setName(name.toStdString());
-  m_measure.setDisplayName(name.toStdString());
 
-  emit nameChanged(name);
+  // TODO: uncomment
+  //emit nameChanged(name);
+}
+
+QString MeasureItem::displayName() const
+{
+  return QString::fromStdString(m_measure.displayName());
+}
+
+void MeasureItem::setDisplayName(const QString & displayName)
+{
+  m_measure.setDisplayName(displayName.toStdString());
+
+  emit displayNameChanged(displayName);
 }
 
 QString MeasureItem::description() const
@@ -991,9 +1012,9 @@ QWidget * MeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     // Name
 
-    measureItemView->measureItemButton->nameLabel->setText(measureItem->name());
+    measureItemView->measureItemButton->nameLabel->setText(measureItem->displayName());
 
-    connect(measureItem.data(), &MeasureItem::nameChanged, measureItemView->measureItemButton->nameLabel, &QLabel::setText);
+    connect(measureItem.data(), &MeasureItem::displayNameChanged, measureItemView->measureItemButton->nameLabel, &QLabel::setText);
     
     // Duplicate
 

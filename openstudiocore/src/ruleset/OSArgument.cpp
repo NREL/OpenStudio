@@ -42,8 +42,11 @@ OSArgument::OSArgument(const UUID& uuid,
                        const UUID& versionUUID,
                        const std::string& name,
                        const std::string& displayName,
+                       const boost::optional<std::string>& description,
                        const OSArgumentType& type,
+                       const boost::optional<std::string>& units,
                        bool required,
+                       bool modelDependent,
                        const boost::optional<std::string>& value,
                        const boost::optional<std::string>& defaultValue,
                        const OSDomainType& domainType,
@@ -55,8 +58,11 @@ OSArgument::OSArgument(const UUID& uuid,
   : m_uuid(uuid),
     m_name(name),
     m_displayName(displayName),
+    m_description(description),
     m_type(type),
+    m_units(units),
     m_required(required),
+    m_modelDependent(modelDependent),
     m_domainType(domainType),
     m_choices(choices),
     m_choiceDisplayNames(choiceDisplayNames),
@@ -83,8 +89,11 @@ OSArgument::OSArgument(const UUID& uuid,
                        const UUID& versionUUID,
                        const std::string& name,
                        const std::string& displayName,
+                       const boost::optional<std::string>& description,
                        const OSArgumentType& type,
+                       const boost::optional<std::string>& units,
                        bool required,
+                       bool modelDependent,
                        const QVariant& value,
                        const QVariant& defaultValue,
                        const OSDomainType& domainType,
@@ -97,8 +106,11 @@ OSArgument::OSArgument(const UUID& uuid,
     m_versionUUID(versionUUID),
     m_name(name),
     m_displayName(displayName),
+    m_description(description),
     m_type(type),
+    m_units(units),
     m_required(required),
+    m_modelDependent(modelDependent),
     m_value(value),
     m_defaultValue(defaultValue),
     m_domainType(domainType),
@@ -116,56 +128,56 @@ OSArgument OSArgument::clone() const {
   return result;
 }
 
-OSArgument OSArgument::makeBoolArgument(const std::string& name,bool required)
+OSArgument OSArgument::makeBoolArgument(const std::string& name, bool required, bool modelDependent)
 {
-  OSArgument result(name, OSArgumentType::Boolean, required);
+  OSArgument result(name, OSArgumentType::Boolean, required, modelDependent);
   result.setDomainType(OSDomainType::Enumeration);
   result.m_choices.push_back("true");
   result.m_choices.push_back("false");
   return result;
 }
 
-OSArgument OSArgument::makeDoubleArgument(const std::string& name,bool required)
+OSArgument OSArgument::makeDoubleArgument(const std::string& name, bool required, bool modelDependent)
 {
-  OSArgument result(name, OSArgumentType::Double, required);
+  OSArgument result(name, OSArgumentType::Double, required, modelDependent);
   result.setDomainType(OSDomainType::Interval);
   return result;
 }
 
-OSArgument OSArgument::makeQuantityArgument(const std::string& name,bool required)
+OSArgument OSArgument::makeQuantityArgument(const std::string& name, bool required, bool modelDependent)
 {
-  OSArgument result(name, OSArgumentType::Quantity, required);
+  OSArgument result(name, OSArgumentType::Quantity, required, modelDependent);
   result.setDomainType(OSDomainType::Interval);
   return result;
 }
 
-OSArgument OSArgument::makeIntegerArgument(const std::string& name,bool required)
+OSArgument OSArgument::makeIntegerArgument(const std::string& name, bool required, bool modelDependent)
 {
-  OSArgument result(name, OSArgumentType::Integer, required);
+  OSArgument result(name, OSArgumentType::Integer, required, modelDependent);
   result.setDomainType(OSDomainType::Interval);
   return result;
 }
 
-OSArgument OSArgument::makeStringArgument(const std::string& name,bool required)
+OSArgument OSArgument::makeStringArgument(const std::string& name, bool required, bool modelDependent)
 {
-  OSArgument result(name, OSArgumentType::String, required);
+  OSArgument result(name, OSArgumentType::String, required, modelDependent);
   result.setDomainType(OSDomainType::Enumeration);
   return result;
 }
 
 OSArgument OSArgument::makeChoiceArgument(const std::string& name,
                                           const std::vector<std::string>& choices,
-                                          bool required)
+                                          bool required, bool modelDependent)
 {
-  return makeChoiceArgument(name,choices,choices,required);
+  return makeChoiceArgument(name, choices, choices, required, modelDependent);
 }
 
 OSArgument OSArgument::makeChoiceArgument(const std::string& name,
                                           const std::vector<std::string>& choices,
                                           const std::vector<std::string>& displayNames,
-                                          bool required)
+                                          bool required, bool modelDependent)
 {
-  OSArgument result(name, OSArgumentType::Choice, required);
+  OSArgument result(name, OSArgumentType::Choice, required, modelDependent);
   result.setDomainType(OSDomainType::Enumeration);
   result.m_choices = choices;
   result.m_choiceDisplayNames = displayNames;
@@ -175,9 +187,9 @@ OSArgument OSArgument::makeChoiceArgument(const std::string& name,
 OSArgument OSArgument::makePathArgument(const std::string& name,
                                         bool isRead,
                                         const std::string& extension,
-                                        bool required)
+                                        bool required, bool modelDependent)
 {
-  OSArgument result(name, OSArgumentType::Path, required);
+  OSArgument result(name, OSArgumentType::Path, required, modelDependent);
   result.setDomainType(OSDomainType::Enumeration);
   result.m_isRead = isRead;
   result.m_extension = extension;
@@ -200,12 +212,24 @@ std::string OSArgument::displayName() const {
   return m_displayName;
 }
 
+boost::optional<std::string> OSArgument::description() const {
+  return m_description;
+}
+
 OSArgumentType OSArgument::type() const {
   return m_type;
 }
 
+boost::optional<std::string> OSArgument::units() const {
+  return m_units;
+}
+
 bool OSArgument::required() const {
   return m_required;
+}
+
+bool OSArgument::modelDependent() const {
+  return m_modelDependent;
 }
 
 bool OSArgument::hasValue() const {
@@ -479,6 +503,18 @@ std::string OSArgument::extension() const {
 
 void OSArgument::setDisplayName(const std::string& displayName) {
   m_displayName = displayName;
+  onChange();
+}
+
+void OSArgument::setDescription(const std::string& description)
+{
+  m_description = description;
+  onChange();
+}
+
+void OSArgument::setUnits(const std::string& units)
+{
+  m_units = units;
   onChange();
 }
 
@@ -780,6 +816,122 @@ void OSArgument::clearDomain() {
   m_domain.clear();
 }
 
+bool OSArgument::setMinValue(double minValue)
+{
+  if (m_type == OSArgumentType::Integer){
+    int test = floor(minValue);
+    if (test == minValue){
+      return setMinValue(test);
+    }
+    return false;
+  } else if (m_type != OSArgumentType::Double) {
+    return false;
+  }
+
+  double maxValue = std::numeric_limits<double>::max();
+  if (hasDomain() && (m_domainType == OSDomainType::Interval)){
+    std::vector<double> domain = domainAsDouble();
+    if (domain.size() == 2){
+      maxValue = domain[1];
+    }
+  }
+
+  m_domainType = OSDomainType::Interval;
+  m_domain.clear();
+  m_domain.push_back(QVariant(minValue));
+  m_domain.push_back(QVariant(maxValue));
+
+  onChange();
+
+  return true;
+}
+
+bool OSArgument::setMinValue(int minValue)
+{
+  if (m_type == OSArgumentType::Double) {
+    double test = (double)minValue;
+    return setMinValue(test);
+  } else if (m_type != OSArgumentType::Integer) {
+    return false;
+  }
+
+  double maxValue = std::numeric_limits<int>::max();
+  if (hasDomain() && (m_domainType == OSDomainType::Interval)){
+    std::vector<int> domain = domainAsInteger();
+    if (domain.size() == 2){
+      maxValue = domain[1];
+    }
+  }
+
+  m_domainType = OSDomainType::Interval;
+  m_domain.clear();
+  m_domain.push_back(QVariant(minValue));
+  m_domain.push_back(QVariant(maxValue));
+
+  onChange();
+
+  return true;
+}
+
+bool OSArgument::setMaxValue(double maxValue)
+{
+  if (m_type == OSArgumentType::Integer){
+    int test = floor(maxValue);
+    if (test == maxValue){
+      return setMaxValue(test);
+    }
+    return false;
+  }
+  else if (m_type != OSArgumentType::Double) {
+    return false;
+  }
+
+  double minValue = std::numeric_limits<double>::min();
+  if (hasDomain() && (m_domainType == OSDomainType::Interval)){
+    std::vector<double> domain = domainAsDouble();
+    if (domain.size() == 2){
+      minValue = domain[0];
+    }
+  }
+
+  m_domainType = OSDomainType::Interval;
+  m_domain.clear();
+  m_domain.push_back(QVariant(minValue));
+  m_domain.push_back(QVariant(maxValue));
+
+  onChange();
+
+  return true;
+}
+
+bool OSArgument::setMaxValue(int maxValue)
+{
+  if (m_type == OSArgumentType::Double) {
+    double test = (double)maxValue;
+    return setMaxValue(test);
+  }
+  else if (m_type != OSArgumentType::Integer) {
+    return false;
+  }
+
+  double minValue = std::numeric_limits<int>::min();
+  if (hasDomain() && (m_domainType == OSDomainType::Interval)){
+    std::vector<int> domain = domainAsInteger();
+    if (domain.size() == 2){
+      minValue = domain[0];
+    }
+  }
+
+  m_domainType = OSDomainType::Interval;
+  m_domain.clear();
+  m_domain.push_back(QVariant(minValue));
+  m_domain.push_back(QVariant(maxValue));
+
+  onChange();
+
+  return true;
+}
+
 std::string OSArgument::print() const {
   std::stringstream ss;
 
@@ -874,13 +1026,14 @@ OSArgument::OSArgument()
 
 OSArgument::OSArgument(const std::string& name,
                        const OSArgumentType& type,
-                       bool required)
+                       bool required, bool modelDependent)
   : m_uuid(createUUID()),
     m_versionUUID(createUUID()),
     m_name(name),
     m_displayName(name),
     m_type(type),
     m_required(required),
+    m_modelDependent(modelDependent),
     m_isRead(false)
 {}
 
@@ -895,40 +1048,34 @@ bool OSArgument::setStringInternal(QVariant& variant, const std::string& value) 
       variant.setValue(QString("false"));
       result = true;
     }
-  }
-  else if (m_type == OSArgumentType::Double) {
+  } else if (m_type == OSArgumentType::Double) {
     bool test;
     double temp = toQString(value).toDouble(&test);
     if (test){
       variant.setValue(temp);
       result = true;
     }
-  }
-  else if (m_type == OSArgumentType::Quantity) {
+  } else if (m_type == OSArgumentType::Quantity) {
     OptionalQuantity oq = createQuantity(value);
     if (oq) {
       variant = QVariant::fromValue<openstudio::Quantity>(*oq);
       result = true;
     }
-  }
-  else if (m_type == OSArgumentType::Integer) {
+  } else if (m_type == OSArgumentType::Integer) {
     bool test;
     int temp = toQString(value).toInt(&test);
     if (test){
       variant.setValue(temp);
       result = true;
     }
-  }
-  else if (m_type == OSArgumentType::String) {
+  } else if (m_type == OSArgumentType::String) {
     variant.setValue(toQString(value));
     result = true;
-  }
-  else if (m_type == OSArgumentType::Choice) {
+  } else if (m_type == OSArgumentType::Choice) {
     if (std::find(m_choices.begin(), m_choices.end(), value) != m_choices.end()){
       variant.setValue(toQString(value));
       result = true;
-    }
-    else {
+    } else {
       // can also set using display name
       StringVector::const_iterator it = std::find(m_choiceDisplayNames.begin(), m_choiceDisplayNames.end(), value);
       if (it != m_choiceDisplayNames.end()) {
@@ -939,8 +1086,7 @@ bool OSArgument::setStringInternal(QVariant& variant, const std::string& value) 
         }
       }
     }
-  }
-  else if (m_type == OSArgumentType::Path) {
+  } else if (m_type == OSArgumentType::Path) {
     QString temp = toQString(toPath(value));
     if (!temp.isEmpty()){
       variant.setValue(temp);
@@ -1075,9 +1221,16 @@ namespace detail {
     if (!argument.displayName().empty()) {
       argumentData["display_name"] = toQString(argument.displayName());
     }
+    if (argument.description() && !argument.description()->empty()) {
+      argumentData["description"] = toQString(argument.description().get());
+    }
     OSArgumentType type = argument.type();
+    if (argument.units() && !argument.units()->empty()) {
+      argumentData["units"] = toQString(argument.units().get());
+    }
     argumentData["type"] = toQString(type.valueName());
     argumentData["required"] = argument.required();
+    argumentData["model_dependent"] = argument.modelDependent();
     if (argument.hasValue()) {
       if (type == OSArgumentType::Quantity) {
         Quantity value = argument.valueAsQuantity();
@@ -1217,8 +1370,11 @@ namespace detail {
                       toUUID(map["version_uuid"].toString().toStdString()),
                       map["name"].toString().toStdString(),
                       map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+                      map.contains("description") ? map["description"].toString().toStdString() : boost::optional<std::string>(),
                       type,
+                      map.contains("units") ? map["units"].toString().toStdString() : boost::optional<std::string>(),
                       map["required"].toBool(),
+                      map["modelDependent"].toBool(),
                       value,
                       defaultValue,
                       OSDomainType(map["domain_type"].toString().toStdString()),

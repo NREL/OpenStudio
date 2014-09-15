@@ -449,6 +449,12 @@ UTILITIES_API std::ostream& toJSON(const std::vector<Attribute>& attributes,
  *  \relates Attribute */
 UTILITIES_API std::string toJSON(const std::vector<Attribute>& attributes);
 
+/** Returns attributes as a string in a flat json format. Discards uuid and version_uuid
+*  information. Recasts Unsigned attributes as Integer attributes, Quantity attributes
+*  as Double attributes with units, Unit attributes as String attributes. Does not print metadata.
+*  \relates Attribute */
+UTILITIES_API std::string toJSONWithoutMetadata(const std::vector<Attribute>& attributes);
+
 /** Deserializes the flat attribute json format. \relates Attribute */
 UTILITIES_API std::vector<Attribute> toVectorOfAttribute(const openstudio::path& pathToJson);
 

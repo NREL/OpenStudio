@@ -28,7 +28,7 @@ namespace detail {
   WhUnit_Impl::WhUnit_Impl(const WhExpnt& exponents,
                            int scaleExponent,
                            const std::string& prettyString)
-    : Unit_Impl(scaleExponent,prettyString,11,UnitSystem::Wh)
+    : Unit_Impl(scaleExponent,prettyString,12,UnitSystem::Wh)
   {
     m_units[0].first = "W"; m_units[0].second = exponents.m_W;
     m_units[1].first = "h"; m_units[1].second = exponents.m_h;
@@ -41,12 +41,13 @@ namespace detail {
     m_units[8].first = "sr"; m_units[8].second = exponents.m_sr;
     m_units[9].first = "people"; m_units[9].second = exponents.m_people;
     m_units[10].first = "cycle"; m_units[10].second = exponents.m_cycle;
+    m_units[11].first = "$"; m_units[11].second = exponents.m_dollar;
   }
 
   WhUnit_Impl::WhUnit_Impl(const std::string& scaleAbbreviation,
                            const WhExpnt& exponents,
                            const std::string& prettyString)
-    : Unit_Impl(scaleAbbreviation,prettyString,11,UnitSystem::Wh)
+    : Unit_Impl(scaleAbbreviation,prettyString,12,UnitSystem::Wh)
   {
     m_units[0].first = "W"; m_units[0].second = exponents.m_W;
     m_units[1].first = "h"; m_units[1].second = exponents.m_h;
@@ -59,6 +60,7 @@ namespace detail {
     m_units[8].first = "sr"; m_units[8].second = exponents.m_sr;
     m_units[9].first = "people"; m_units[9].second = exponents.m_people;
     m_units[10].first = "cycle"; m_units[10].second = exponents.m_cycle;
+    m_units[11].first = "$"; m_units[11].second = exponents.m_dollar;
   }
 
   Unit WhUnit_Impl::clone() const {
@@ -144,6 +146,9 @@ WhUnit createWhCycle() {
   return WhUnit(WhExpnt(0,0,0,0,0,0,0,0,0,0,1));
 }
 
+WhUnit createWhCurrency() {
+  return WhUnit(WhExpnt(0,0,0,0,0,0,0,0,0,0,0,1));
+}
 
 WhUnit createWhEnergy() {
   return WhUnit(WhExpnt(1,1),0,"Wh");

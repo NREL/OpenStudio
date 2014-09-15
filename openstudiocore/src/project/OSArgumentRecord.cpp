@@ -40,11 +40,13 @@ namespace detail {
                         osArgument.uuid(),
                         osArgument.name(),
                         osArgument.displayName(),
-                        "",
+                        osArgument.description().is_initialized() ? osArgument.description().get() : std::string(),
                         osArgument.versionUUID()),
       m_rubyMeasureRecordId(rubyMeasureRecord.id()),
       m_argumentType(osArgument.type()),
+      m_units(osArgument.units()),
       m_required(osArgument.required()),
+      m_modelDependent(osArgument.modelDependent()),
       m_domainType(osArgument.domainType()),
       m_isRead(osArgument.isRead()),
       m_extension(osArgument.extension())
@@ -75,11 +77,13 @@ namespace detail {
                         osArgument.uuid(),
                         osArgument.name(),
                         osArgument.displayName(),
-                        "",
+                        osArgument.description().is_initialized() ? osArgument.description().get() : std::string(),
                         osArgument.versionUUID()),
       m_rubyContinuousVariableRecordId(rubyContinuousVariableRecord.id()),
       m_argumentType(osArgument.type()),
+      m_units(osArgument.units()),
       m_required(osArgument.required()),
+      m_modelDependent(osArgument.modelDependent()),
       m_domainType(osArgument.domainType()),
       m_isRead(osArgument.isRead()),
       m_extension(osArgument.extension())
@@ -127,9 +131,18 @@ namespace detail {
     OS_ASSERT(value.isValid() && !value.isNull());
     m_argumentType = ruleset::OSArgumentType(value.toInt());
 
+    value = query.value(OSArgumentRecord::ColumnsType::units);
+    if (value.isValid() && !value.isNull()){
+      m_units = value.toString().toStdString();
+    }
+
     value = query.value(OSArgumentRecord::ColumnsType::required);
     OS_ASSERT(value.isValid() && !value.isNull());
     m_required = value.toBool();
+
+    value = query.value(OSArgumentRecord::ColumnsType::modelDependent);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_modelDependent = value.toBool();
 
     value = query.value(OSArgumentRecord::ColumnsType::argumentValue);
     if (value.isValid() && !value.isNull()) {
@@ -256,8 +269,11 @@ namespace detail {
                                uuidLast(),
                                name(),
                                displayName(),
+                               description().empty() ? boost::optional<std::string>() : description(),
                                m_argumentType,
+                               m_units,
                                m_required,
+                               m_modelDependent,
                                m_argumentValue,
                                m_defaultArgumentValue,
                                m_domainType,
@@ -308,8 +324,7 @@ namespace detail {
     if (m_rubyMeasureRecordId) {
       query.bindValue(OSArgumentRecord::ColumnsType::rubyPerturbationRecordId,
                       *m_rubyMeasureRecordId);
-    }
-    else {
+    } else {
       query.bindValue(OSArgumentRecord::ColumnsType::rubyPerturbationRecordId,
                       QVariant(QVariant::Int));
     }
@@ -317,39 +332,47 @@ namespace detail {
     if (m_rubyContinuousVariableRecordId) {
       query.bindValue(OSArgumentRecordColumns::rubyContinuousVariableRecordId,
                       *m_rubyContinuousVariableRecordId);
-    }
-    else {
+    } else {
       query.bindValue(OSArgumentRecordColumns::rubyContinuousVariableRecordId,
                       QVariant(QVariant::Int));
     }
 
-    query.bindValue(OSArgumentRecordColumns::argumentType,m_argumentType.value());
-    query.bindValue(OSArgumentRecordColumns::required,m_required);
+    query.bindValue(OSArgumentRecordColumns::argumentType, m_argumentType.value());
+
+    if (m_units){
+      query.bindValue(OSArgumentRecordColumns::units, toQString(*m_units));
+    } else{
+      query.bindValue(OSArgumentRecordColumns::units, QVariant(QVariant::String));
+    }
+
+    query.bindValue(OSArgumentRecordColumns::required, m_required);
+
+    query.bindValue(OSArgumentRecordColumns::modelDependent, m_modelDependent);
 
     if (m_argumentValue) {
       query.bindValue(OSArgumentRecordColumns::argumentValue,
                       toQString(*m_argumentValue));
-    }
-    else {
+    } else {
       query.bindValue(OSArgumentRecordColumns::argumentValue,
                       QVariant(QVariant::String));
     }
+
     if (m_defaultArgumentValue) {
       query.bindValue(OSArgumentRecordColumns::defaultArgumentValue,
                       toQString(*m_defaultArgumentValue));
-    }
-    else {
+    } else {
       query.bindValue(OSArgumentRecordColumns::defaultArgumentValue,
                       QVariant(QVariant::String));
     }
 
     query.bindValue(OSArgumentRecordColumns::domainType, m_domainType.value());
+
     if (m_domain) {
       query.bindValue(OSArgumentRecordColumns::domainValues, toQString(*m_domain));
-    }
-    else {
+    }  else {
       query.bindValue(OSArgumentRecordColumns::domainValues, QVariant(QVariant::String));
     }
+
     query.bindValue(OSArgumentRecordColumns::choices,toQString(m_choices));
     query.bindValue(OSArgumentRecordColumns::choiceDisplayNames,
                     toQString(m_choiceDisplayNames));
@@ -388,15 +411,25 @@ namespace detail {
     OS_ASSERT(value.isValid() && !value.isNull());
     m_lastArgumentType = ruleset::OSArgumentType(value.toInt());
 
+    value = query.value(OSArgumentRecord::ColumnsType::units);
+    if (value.isValid() && !value.isNull()) {
+      m_lastUnits = value.toString().toStdString();
+    } else {
+      m_lastUnits.reset();
+    }
+
     value = query.value(OSArgumentRecord::ColumnsType::required);
     OS_ASSERT(value.isValid() && !value.isNull());
     m_lastRequired = value.toBool();
 
+    value = query.value(OSArgumentRecord::ColumnsType::modelDependent);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastModelDependent = value.toBool();
+
     value = query.value(OSArgumentRecord::ColumnsType::argumentValue);
     if (value.isValid() && !value.isNull()) {
       m_lastArgumentValue = value.toString().toStdString();
-    }
-    else {
+    } else {
       m_lastArgumentValue.reset();
     }
 
@@ -449,16 +482,14 @@ namespace detail {
     value = query.value(OSArgumentRecordColumns::rubyPerturbationRecordId);
     if (value.isValid() && !value.isNull()) {
       result = result && m_rubyMeasureRecordId && (*m_rubyMeasureRecordId == value.toInt());
-    }
-    else {
+    } else {
       result = result && !m_rubyMeasureRecordId;
     }
 
     value = query.value(OSArgumentRecordColumns::rubyContinuousVariableRecordId);
     if (value.isValid() && !value.isNull()) {
       result = result && m_rubyContinuousVariableRecordId && (*m_rubyContinuousVariableRecordId == value.toInt());
-    }
-    else {
+    } else {
       result = result && !m_rubyContinuousVariableRecordId;
     }
 
@@ -466,15 +497,25 @@ namespace detail {
     OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_argumentType == ruleset::OSArgumentType(value.toInt()));
 
+    value = query.value(OSArgumentRecordColumns::units);
+    if (value.isValid() && !value.isNull()) {
+      result = result && m_units && (m_units.get() == value.toString().toStdString());
+    } else {
+      result = result && !m_units;
+    }
+
     value = query.value(OSArgumentRecordColumns::required);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_required == value.toBool());
+
+    value = query.value(OSArgumentRecordColumns::modelDependent);
     OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_required == value.toBool());
 
     value = query.value(OSArgumentRecordColumns::argumentValue);
     if (value.isValid() && !value.isNull()) {
       result = result && m_argumentValue && (m_argumentValue.get() == value.toString().toStdString());
-    }
-    else {
+    } else {
       result = result && !m_argumentValue;
     }
 
@@ -523,7 +564,9 @@ namespace detail {
     m_lastRubyMeasureRecordId = m_rubyMeasureRecordId;
     m_lastRubyContinuousVariableRecordId = m_rubyContinuousVariableRecordId;
     m_lastArgumentType = m_argumentType;
+    m_lastUnits = m_units;
     m_lastRequired = m_required;
+    m_lastModelDependent = m_modelDependent;
     m_lastArgumentValue = m_argumentValue;
     m_lastDefaultArgumentValue = m_defaultArgumentValue;
     m_lastDomainType = m_domainType;
@@ -540,7 +583,9 @@ namespace detail {
     m_rubyMeasureRecordId = m_lastRubyMeasureRecordId;
     m_rubyContinuousVariableRecordId = m_lastRubyContinuousVariableRecordId;
     m_argumentType = m_lastArgumentType;
+    m_units = m_lastUnits;
     m_required = m_lastRequired;
+    m_modelDependent = m_lastModelDependent;
     m_argumentValue = m_lastArgumentValue;
     m_defaultArgumentValue = m_lastDefaultArgumentValue;
     m_domainType = m_lastDomainType;

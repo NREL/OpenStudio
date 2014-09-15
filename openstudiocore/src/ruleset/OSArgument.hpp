@@ -34,7 +34,7 @@ namespace openstudio {
 namespace ruleset {
 
 /** \class OSArgumentType
- *  \brief Listing of OSArgument data types.
+ *  \brief Listing of OSArgument data types. Quantity type is \deprecated.
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
  *  macro call is:
  *  \code
@@ -94,15 +94,18 @@ class RULESET_API OSArgument {
   // to ProjectDatabase.
 
   OSArgument();
-  OSArgument(const std::string& name, const OSArgumentType& type, bool required);
+  OSArgument(const std::string& name, const OSArgumentType& type, bool required, bool modelDependent);
 
   /** Constructor provided for deserialization; not for general use. */
   OSArgument(const UUID& uuid,
              const UUID& versionUUID,
              const std::string& name,
              const std::string& displayName,
+             const boost::optional<std::string>& description, 
              const OSArgumentType& type,
+             const boost::optional<std::string>& units,
              bool required,
+             bool modelDependent,
              const boost::optional<std::string>& value,
              const boost::optional<std::string>& defaultValue,
              const OSDomainType& domainType,
@@ -117,8 +120,11 @@ class RULESET_API OSArgument {
              const UUID& versionUUID,
              const std::string& name,
              const std::string& displayName,
+             const boost::optional<std::string>& description,
              const OSArgumentType& type,
+             const boost::optional<std::string>& units,
              bool required,
+             bool modelDependent,
              const QVariant& value,
              const QVariant& defaultValue,
              const OSDomainType& domainType,
@@ -134,40 +140,43 @@ class RULESET_API OSArgument {
   //@}
 
   /** Creates an OSArgument for bool values. Defaults domainType() to OSDomainType::Enumeration. */
-  static OSArgument makeBoolArgument(const std::string& name, bool required = true);
+  static OSArgument makeBoolArgument(const std::string& name, bool required = true, bool modelDependent = false);
 
   /** Creates an OSArgument for double values. Defaults domaintType() to OSDomainType::Interval. */
-  static OSArgument makeDoubleArgument(const std::string& name, bool required = true);
+  static OSArgument makeDoubleArgument(const std::string& name, bool required = true, bool modelDependent = false);
 
   /** Creates an OSArgument for Quantity values. Defaults domaintType() to
-   *  OSDomainType::Interval. */
-  static OSArgument makeQuantityArgument(const std::string& name, bool required = true);
+   *  OSDomainType::Interval. \deprecated */
+  static OSArgument makeQuantityArgument(const std::string& name, bool required = true, bool modelDependent = false);
 
   /** Creates an OSArgument for int values. Defaults domaintType() to OSDomainType::Interval. */
-  static OSArgument makeIntegerArgument(const std::string& name, bool required = true);
+  static OSArgument makeIntegerArgument(const std::string& name, bool required = true, bool modelDependent = false);
 
   /** Creates an OSArgument for string values. Defaults domainType() to
    *  OSDomainType::Enumeration. */
-  static OSArgument makeStringArgument(const std::string& name, bool required = true);
+  static OSArgument makeStringArgument(const std::string& name, bool required = true, bool modelDependent = false);
 
   /** Creates an OSArgument for choice values. Defaults domainType() to
    *  OSDomainType::Enumeration. */
   static OSArgument makeChoiceArgument(const std::string& name,
                                        const std::vector<std::string>& choices,
-                                       bool required = true);
+                                       bool required = true,
+                                       bool modelDependent = false);
 
   /** Creates an OSArgument for choice values. Defaults domainType() to
    *  OSDomainType::Enumeration. */
   static OSArgument makeChoiceArgument(const std::string& name,
                                        const std::vector<std::string>& choices,
                                        const std::vector<std::string>& displayNames,
-                                       bool required = true);
+                                       bool required = true,
+                                       bool modelDependent = false);
 
   /** Creates an OSArgument for path values. Defaults domainType() to OSDomainType::Enumeration. */
   static OSArgument makePathArgument(const std::string& name,
                                      bool isRead,
                                      const std::string& extension,
-                                     bool required = true);
+                                     bool required = true, 
+                                     bool modelDependent = false);
 
   /** @name Getters */
   //@{
@@ -182,12 +191,22 @@ class RULESET_API OSArgument {
   /** Returns the display name of this argument. */
   std::string displayName() const;
 
+  /** Returns the description of this argument. */
+  boost::optional<std::string> description() const;
+
   /** Returns this argument's type. */
   OSArgumentType type() const;
+
+  /** Returns the units of this argument. */
+  boost::optional<std::string> units() const;
 
   /** Returns true if this argument is required, that is, if the argument must have a value or
    *  default value for the UserScript or Ruleset to run properly. */
   bool required() const;
+
+  /** Returns true if this argument's properties can changed based on the specific model used in the 
+   *  measure.  A choice argument which lists objects in the model would be model dependent. */
+  bool modelDependent() const;
 
   /** Returns true if this argument's value has been set. */
   bool hasValue() const;
@@ -201,7 +220,7 @@ class RULESET_API OSArgument {
   double valueAsDouble() const;
 
   /** Returns this argument's value as a Quantity. Throws if not hasValue() or if type() != 
-   *  OSArgumentType::Quantity. */
+   *  OSArgumentType::Quantity. \deprecated */
   Quantity valueAsQuantity() const;
 
   /** Returns this argument's value as an int. Throws if not hasValue() or if type() != 
@@ -231,7 +250,7 @@ class RULESET_API OSArgument {
   double defaultValueAsDouble() const;
 
   /** Returns this argument's default value as a Quantity. Throws if not hasDefaultValue() or if 
-   *  type() != OSArgumentType::Quantity. */
+   *  type() != OSArgumentType::Quantity. \deprecated */
   Quantity defaultValueAsQuantity() const;
 
   /** Returns this argument's default value as an int. Throws if not hasDefaultValue() or if 
@@ -268,7 +287,7 @@ class RULESET_API OSArgument {
   std::vector<double> domainAsDouble() const;
 
   /** Returns the domain as a vector of Quantities. Will throw if not hasDomain() or type() !=
-   *  OSArgumentType::Quantity. */
+   *  OSArgumentType::Quantity. \deprecated */
   std::vector<Quantity> domainAsQuantity() const;
 
   /** Returns the domain as a vector of ints. Will throw if not hasDomain() or type() !=
@@ -325,6 +344,12 @@ class RULESET_API OSArgument {
   /** Set the display name of this argument. */
   void setDisplayName(const std::string& displayName);
 
+  /** Set the description of this argument. */
+  void setDescription(const std::string& description);
+
+  /** Set the units for this argument. */
+  void setUnits(const std::string& units);
+
   /** Set the value of this argument by passing in data of a particular type. The method will do
    *  nothing and return false if the data is of an incorrect type. These methods do not check
    *  value against the domain (if set), as the domain is just a guideline for users. The string
@@ -333,7 +358,7 @@ class RULESET_API OSArgument {
   bool setValue(bool value);
   /// \overload
   bool setValue(double value);
-  /// \overload
+  /// \overload \deprecated
   bool setValue(const Quantity& value);
   /// \overload
   bool setValue(int value);
@@ -354,7 +379,7 @@ class RULESET_API OSArgument {
   bool setDefaultValue(bool defaultValue);
   /// \overload
   bool setDefaultValue(double defaultValue);
-  /// \overload
+  /// \overload \deprecated
   bool setDefaultValue(const Quantity& value);
   /// \overload
   bool setDefaultValue(int defaultValue);
@@ -375,7 +400,7 @@ class RULESET_API OSArgument {
   bool setDomain(const std::vector<bool>& domain);
   /// \overload
   bool setDomain(const std::vector<double>& domain);
-  /// \overload
+  /// \overload \deprecated
   bool setDomain(const std::vector<Quantity>& domain);
   /// \overload
   bool setDomain(const std::vector<int>& domain);
@@ -385,6 +410,18 @@ class RULESET_API OSArgument {
   bool setDomain(const std::vector<openstudio::path>& domain);
 
   void clearDomain();
+
+  /** Sets the domain type to OSDomainType::Interval and sets minimum value.
+   *  Preserves existing maximum value or sets it to infinity if it does not exist. 
+   *  Does not check for compatibility with current value, default value, or that min < max. */
+  bool setMinValue(double minValue);
+  /// \overload
+  bool setMinValue(int minValue);
+
+  /** Sets the domain type to OSDomainType::Interval and sets maximum value.
+  *  Preserves existing minimum value or sets it to infinity if it does not exist. */
+  bool setMaxValue(double maxValue);
+  bool setMaxValue(int maxValue);
 
   //@}
   /** @name Serialization */
@@ -434,8 +471,11 @@ class RULESET_API OSArgument {
   openstudio::UUID m_versionUUID;
   std::string m_name;
   std::string m_displayName;
+  boost::optional<std::string> m_description; 
   OSArgumentType m_type;
+  boost::optional<std::string> m_units; 
   bool m_required;
+  bool m_modelDependent;
   QVariant m_value;
   QVariant m_defaultValue;
   OSDomainType m_domainType;
