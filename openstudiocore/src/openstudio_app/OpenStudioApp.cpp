@@ -457,33 +457,20 @@ void OpenStudioApp::importIdf()
         connect(m_osDocument.get(), &OSDocument::helpClicked, this, &OpenStudioApp::showHelp);
         connect(m_osDocument.get(), &OSDocument::aboutClicked, this, &OpenStudioApp::showAbout);
         m_startupView->hide();
-        
-        QMessageBox messageBox; // (parent); ETH: ... but is hidden, so don't actually use
-        messageBox.setText("Some portions of the idf file were not imported.");
 
-        QString log;
-
-        std::vector<LogMessage> messages = trans.errors();
-
-        for( const auto & message : messages )
-        {
-          log.append(QString::fromStdString(message.logMessage()));
-          log.append("\n");
-          log.append("\n");
+        auto untranslatedIdfObjects = trans.untranslatedIdfObjects();
+        if( ! untranslatedIdfObjects.empty() ) {
+          QMessageBox messageBox;
+          messageBox.setText("Some portions of the idf file were not imported.");
+          QString log;
+          for( const auto & idfObject : untranslatedIdfObjects ) {
+            log.append("* ");
+            log.append(QString::fromStdString(idfObject.briefDescription()));
+            log.append("\n");
+          }
+          messageBox.setDetailedText(log);
+          messageBox.exec();
         }
-
-        messages = trans.warnings();
-
-        for( const auto & message : messages )
-        {
-          log.append(QString::fromStdString(message.logMessage()));
-          log.append("\n");
-          log.append("\n");
-        }
-
-        messageBox.setDetailedText(log);
-
-        messageBox.exec();
 
         this->setQuitOnLastWindowClosed(wasQuitOnLastWindowClosed);
       }
