@@ -1,14 +1,15 @@
 if(APPLE)
   cmake_minimum_required(VERSION 3.0.0)
-  cmake_policy(SET CMP0042 NEW)
 else()
   cmake_minimum_required(VERSION 2.8.11)
 endif()
 
-cmake_policy(SET CMP0020 NEW)
-
 project(OpenStudioCore)
 
+cmake_policy(SET CMP0020 NEW)
+if(NOT ${CMAKE_VERSION} VERSION_LESS "3.0")
+  cmake_policy(SET CMP0042 NEW)
+endif()
 
 ###############################################################################
 # Project version information
