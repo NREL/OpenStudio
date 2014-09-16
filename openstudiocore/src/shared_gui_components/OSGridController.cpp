@@ -891,7 +891,7 @@ void OSGridController::onSelectionCleared()
   gridView()->requestRefreshAll();
 }
 
-void OSGridController::onDropZoneItemClicked(OSItem*)
+void OSGridController::onDropZoneItemClicked(OSItem* item)
 {
 }
 

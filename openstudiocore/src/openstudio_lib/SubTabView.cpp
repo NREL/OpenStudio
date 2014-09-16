@@ -187,7 +187,7 @@ void SubTabView::paintEvent ( QPaintEvent * event )
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void SubTabView::onDropZoneItemClicked(OSItem*)
+void SubTabView::onDropZoneItemClicked(OSItem* item)
 {
 }
 

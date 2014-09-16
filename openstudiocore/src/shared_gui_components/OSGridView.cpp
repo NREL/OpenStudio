@@ -417,7 +417,7 @@ void OSGridView::onSelectionCleared()
   m_gridController->onSelectionCleared();
 }
 
-void OSGridView::onDropZoneItemClicked(OSItem*)
+void OSGridView::onDropZoneItemClicked(OSItem* item)
 {
 }
 

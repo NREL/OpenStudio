@@ -575,7 +575,7 @@ private slots:
 
   void cellChecked(int index);
 
-  void onDropZoneItemClicked(OSItem*);
+  void onDropZoneItemClicked(OSItem* item);
 
 };
 

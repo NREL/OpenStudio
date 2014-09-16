@@ -96,7 +96,7 @@ private slots:
 
   void selectCategory(int index);
 
-  void onDropZoneItemClicked(OSItem*);
+  void onDropZoneItemClicked(OSItem* item);
 
   void doRefresh();
 

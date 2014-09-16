@@ -657,14 +657,6 @@ void OSDropZone2::dropEvent(QDropEvent *event)
     m_item = OSItem::makeItem(itemId, OSItemType::ListItem);
 
     connect(m_item, &OSItem::itemRemoveClicked, this, &OSDropZone2::onItemRemoveClicked);
-    
-
-    QString itemIdStr = itemId.itemId();
-    QString sourceId = itemId.sourceId();
-    QString otherData = itemId.otherData();
-    QString mimeDataText = itemId.mimeDataText();
-    QString text = m_item->text();
-
 
     // Tell EditView to display this object
     emit itemClicked(m_item);
