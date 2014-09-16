@@ -286,11 +286,11 @@ def writeTimeSeriesToSql(sqlfile, simDateTimes, illum, space_name, ts_name, ts_u
 end
 
 def mergeSpaces(t_space_names_to_calculate, t_outPath)
+  # write window group control points to merged file
   File.open("#{t_outPath}/numeric/window_controls.map", "w") do |f|
 
     windows = Dir.glob("#{t_outPath}/numeric/WG*.pts")
     windows.each do |wg|
-      next if wg == "WG0.pts"
       f.write IO.read(wg)
     end
   end
@@ -399,9 +399,9 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
       #{t_outPath}/numeric/merged_space.map")
 
     
-    # compute view matrices for uncontrolled windows
+    # compute daylight coefficient matrix for uncontrolled windows
 
-    puts "computing view matrix for uncontrolled windows..."
+    puts "computing daylight coefficient matrix for uncontrolled windows..."
     rtrace_args = "#{t_options.vmx}"
     system("oconv \"#{t_outPath}/materials/materials.rad\" \"#{t_outPath}/materials/materials_WG0.rad\" model.rad \
       \"#{t_outPath}/skies/dc_sky.rad\" > model_WG0.oct")
@@ -415,6 +415,21 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
     stored in #{t_outPath}/output/dc/merged_space/maps"
 
     puts "#{Time.now.getutc}: daylight coefficients computed, stored in #{t_outPath}/output/dc/"
+
+    # compute daylight coefficient matrices for window group control points
+    puts "computing view matrix for uncontrolled windows..."
+    rtrace_args = "#{t_options.vmx}"
+    system("oconv \"#{t_outPath}/materials/materials.rad\" model.rad \
+      \"#{t_outPath}/skies/dc_sky.rad\" > model_wc.oct")
+    # system("oconv \"#{t_outPath}/skies/dc_sky.rad\" > model_dc_skyonly.oct")
+    puts "#{Time.now.getutc}: computing DCs for window controls..."
+    exec_statement("#{t_catCommand} \"#{t_outPath}/numeric/window_controls.map\" \
+      | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{t_options.tregVars} \
+      -o \"#{t_outPath}/output/dc/window_controls.vmx\" \
+      -m skyglow model_wc.oct")
+
+    puts "#{Time.now.getutc}: daylight coefficients computed, stored in #{t_outPath}/output/dc/"
+
 
   end # compute coefficients (3-phase)
 
