@@ -61,7 +61,6 @@ ModelSubTabView::ModelSubTabView(OSItemSelector* itemSelector,
     m_modelObjectInspectorView(modelObjectInspectorView)
 {
   //connect(this, &ModelSubTabView::dropZoneItemClicked, this, &ModelSubTabView::onDropZoneItemClicked);
-  connect(this, &ModelSubTabView::dropZoneItemClicked, this, &ModelSubTabView::dropZoneItemClicked);
 }
 
 ModelObjectInspectorView* ModelSubTabView::modelObjectInspectorView()
