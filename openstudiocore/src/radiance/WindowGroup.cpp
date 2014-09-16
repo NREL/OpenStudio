@@ -38,12 +38,7 @@ namespace radiance{
  bool WindowGroup::operator==(const WindowGroup& other) const
 {
   if (!m_shadingControl && !other.shadingControl()){
-
-    // for all uncontrolled shading in one group return true
-    return true;
   
-    // otherwise do some more comparisons
-    /*
     if (m_space.handle() == other.space().handle()){
       if (m_construction.handle() == other.construction().handle()){
         double angle = std::abs(radToDeg(getAngle(m_outwardNormal, other.outwardNormal())));
@@ -54,7 +49,6 @@ namespace radiance{
       }
     }
     return false;
-    */
   
   }else if (m_shadingControl && !other.shadingControl()){
     return false;
@@ -146,7 +140,13 @@ namespace radiance{
 
     std::string result;
     if (control.centroid && control.outwardNormal){
-      result = formatString(control.centroid->x()) + " " + formatString(control.centroid->y()) + " " + formatString(control.centroid->z()) + " " +
+
+      double offset = 0.05;
+      Vector3d vec = control.outwardNormal.get();
+      vec.setLength(offset);
+      Point3d wcPoint = control.centroid.get() + vec;
+
+      result = formatString(wcPoint.x()) + " " + formatString(wcPoint.y()) + " " + formatString(wcPoint.z()) + " " +
         formatString(control.outwardNormal->x()) + " " + formatString(control.outwardNormal->y()) + " " + formatString(control.outwardNormal->z()) + "\n";
     }
 
