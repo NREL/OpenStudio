@@ -59,11 +59,6 @@ ThermalZonesController::ThermalZonesController(bool isIP, const model::Model & m
   connect(thermalZoneView, &ThermalZoneView::modelObjectSelected, this, &ThermalZonesController::modelObjectSelected);
 
   connect(this, &ThermalZonesController::toggleUnitsClicked, thermalZoneView, &ThermalZoneView::toggleUnitsClicked);
-
-  bool isConnected = false;
-
-  isConnected = connect(thermalZoneView, SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool)), this, SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool)));
-  OS_ASSERT(isConnected);
 }
 
 //void ThermalZonesController::enableThermostat(model::ThermalZone & thermalZone, bool enable)
