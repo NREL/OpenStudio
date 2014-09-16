@@ -286,6 +286,15 @@ def writeTimeSeriesToSql(sqlfile, simDateTimes, illum, space_name, ts_name, ts_u
 end
 
 def mergeSpaces(t_space_names_to_calculate, t_outPath)
+  File.open("#{t_outPath}/numeric/window_controls.map", "w") do |f|
+
+    windows = Dir.glob("#{t_outPath}/numeric/WG*.pts")
+    windows.each do |wg|
+      next if wg == "WG0.pts"
+      f.write IO.read(wg)
+    end
+  end
+
   File.open("#{t_outPath}/numeric/merged_space.map", "w") do |f|
     t_space_names_to_calculate.each do |space_name|
 
@@ -297,6 +306,7 @@ def mergeSpaces(t_space_names_to_calculate, t_outPath)
 
       if File.exists?("#{t_outPath}/numeric/#{space_name}.glr")
         f.write IO.read("#{t_outPath}/numeric/#{space_name}.glr")
+
       end
     end
   end

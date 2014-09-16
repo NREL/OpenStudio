@@ -1530,13 +1530,16 @@ namespace radiance {
           }
 
           // write window group control points
-          openstudio::path filename = t_radDir / openstudio::toPath("numeric") / openstudio::toPath(windowGroup_name + ".pts");
-          OFSTREAM file(filename);
-          if (file.is_open()){
-            t_outfiles.push_back(filename);
-            file << windowGroup.windowGroupPoints();
-          } else{
-            LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
+          // only write for controlled window groups
+          if(windowGroup_name != "WG0"){
+            openstudio::path filename = t_radDir / openstudio::toPath("numeric") / openstudio::toPath(windowGroup_name + ".pts");
+            OFSTREAM file(filename);
+            if (file.is_open()){
+              t_outfiles.push_back(filename);
+              file << windowGroup.windowGroupPoints();
+            } else{
+              LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
+            }
           }
         }
       }
