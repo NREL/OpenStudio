@@ -530,22 +530,6 @@ void InspectorView:: toggleUnits(bool displayIP)
 {
 }
 
-//void InspectorView::onRemoveButtonClicked(bool checked) 
-//{
-//  if (!m_modelObject) return;
-//
-//  auto itemId = modelObjectToItemId(*m_modelObject, false);
-//  auto item = OSItem::makeItem(itemId, OSItemType::ListItem);
-//
-//  QString itemIdStr  = itemId.itemId();
-//  QString sourceId  = itemId.sourceId();
-//  QString otherData  = itemId.otherData();
-//  QString mimeDataText  = itemId.mimeDataText();
-//  QString text = item->text();
-//
-//  item->onRemoveClicked();
-//}
-
 BaseInspectorView::BaseInspectorView(QWidget * parent)
 {
   m_vLayout = new QVBoxLayout();

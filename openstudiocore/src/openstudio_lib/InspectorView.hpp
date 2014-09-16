@@ -88,10 +88,6 @@ class InspectorView : public QWidget
 
   virtual void toggleUnits(bool displayIP);
 
-  //void onRemoveButtonClicked(bool checked);
-
-  protected:
-
   private:
 
   QVBoxLayout * m_vLayout;
