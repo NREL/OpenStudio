@@ -258,7 +258,11 @@ void ApplyMeasureNowDialog::displayMeasure()
     m_bclMeasure = app->measureManager().getMeasure(id);
     OS_ASSERT(m_bclMeasure);
     OS_ASSERT(m_bclMeasure->measureType() == MeasureType::ModelMeasure);
-   
+
+    if (app->measureManager().checkForUpdates(*m_bclMeasure)){
+      m_bclMeasure->save();
+    }
+
     // measure
     analysis::RubyMeasure rubyMeasure(*m_bclMeasure);
     try{
@@ -273,7 +277,8 @@ void ApplyMeasureNowDialog::displayMeasure()
 
       // pass in an empty workspace for the idf since you know it is a model measure
       Workspace dummyIdf;
-      std::vector<ruleset::OSArgument> args = app->measureManager().argumentGetter()->getArguments(*m_bclMeasure, m_model, dummyIdf);
+      ruleset::RubyUserScriptInfo info = app->measureManager().infoGetter()->getInfo(*m_bclMeasure, m_model, dummyIdf);
+      std::vector<ruleset::OSArgument> args = info.arguments();
       rubyMeasure.setArguments(args);
 
       // DLM: don't save the arguments to the project, if we need to preserve user inputs save to member variable map or something
@@ -296,6 +301,7 @@ void ApplyMeasureNowDialog::displayMeasure()
     disableOkButton(hasIncompleteArguments);
 
     m_currentMeasureItem->setName(m_bclMeasure->name().c_str());
+    m_currentMeasureItem->setDisplayName(m_bclMeasure->displayName().c_str());
     m_currentMeasureItem->setDescription(m_bclMeasure->description().c_str());
 
     // DLM: this is ok, call with overload to ignore isItOKToClearResults

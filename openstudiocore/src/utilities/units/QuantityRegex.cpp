@@ -71,7 +71,7 @@ const boost::regex& regexBaseUnit() {
   // is not a good time to try removing it.
   // ETH@20120320 Should also tighten up to require {} if > 1 character in denominator.
   // ETH@20120711 Trying to address both of the issues above.
-  static boost::regex rgx("\\\\?[\\l\\u]{1,8}(?:_(?:[\\l\\u\\d]|\\{[\\l\\u\\d]{1,10}\\}))?[\\l\\u]{0,2}");
+  static boost::regex rgx("\\\\?[\\l\\u\\$]{1,8}(?:_(?:[\\l\\u\\d\\$]|\\{[\\l\\u\\d\\$]{1,10}\\}))?[\\l\\u\\$]{0,2}");
   return rgx;
 }
 
@@ -220,6 +220,7 @@ const boost::regex& regexEmbeddedUnit() {
 }
 
 bool isUnit(const std::string& s) {
+  std::string tmp = regexUnit().str();
   return boost::regex_match(s,regexUnit());
 }
 

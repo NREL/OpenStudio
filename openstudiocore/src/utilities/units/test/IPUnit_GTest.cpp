@@ -23,6 +23,7 @@
 #include "../IPUnit.hpp"
 #include "../IPUnit_Impl.hpp"
 #include "../Scale.hpp"
+#include "../QuantityConverter.hpp"
 
 #include "../../core/Exception.hpp"
 
@@ -39,10 +40,13 @@ using openstudio::createIPLength;
 using openstudio::createIPTime;
 using openstudio::createIPTemperature;
 using openstudio::createIPPeople;
+using openstudio::createIPCurrency;
 
 using openstudio::createIPForce;
 using openstudio::createIPEnergy;
 using openstudio::createIPPower;
+
+using openstudio::convert;
 
 TEST_F(UnitsFixture,IPUnit_Constructors)
 {
@@ -60,9 +64,50 @@ TEST_F(UnitsFixture,IPUnit_Constructors)
   ASSERT_TRUE(u2.baseUnitExponent("lb_f") == 1);
   ASSERT_TRUE(u2.baseUnitExponent("lb_m") == 0);
   ASSERT_TRUE(u2.baseUnitExponent("m") == 0);
-
   u2.lbfToLbm();
-  testStreamOutput("lb_m*ft/s^2",u2);
+  testStreamOutput("lb_m*ft/s^2", u2);
+
+  IPUnit u3(IPExpnt(0, -2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1));
+  testStreamOutput("$/ft^2", u3);
+  ASSERT_TRUE(u3.baseUnitExponent("$") == 1);
+  ASSERT_TRUE(u3.baseUnitExponent("ft") == -2);
+  ASSERT_TRUE(u3.baseUnitExponent("s") == 0);
+  u3.lbmToLbf();
+  testStreamOutput("$/ft^2", u3);
+  ASSERT_TRUE(u3.baseUnitExponent("$") == 1);
+  ASSERT_TRUE(u3.baseUnitExponent("ft") == -2);
+  ASSERT_TRUE(u3.baseUnitExponent("s") == 0);
+  u3.lbfToLbm();
+  testStreamOutput("$/ft^2", u3);
+}
+
+TEST_F(UnitsFixture, IPUnit_convert)
+{
+  boost::optional<double> value;
+
+  value = convert(1.0, "ft", "m");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(0.3048, value.get(), 0.0001);
+
+  value = convert(1.0, "m", "ft");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(3.28084, value.get(), 0.0001);
+
+  value = convert(1.0, "ft^2", "m^2");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(0.092903, value.get(), 0.0001);
+
+  value = convert(1.0, "m^2", "ft^2");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(10.7639, value.get(), 0.0001);
+
+  value = convert(1.0, "1/ft^2", "1/m^2");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(10.7639, value.get(), 0.0001);
+
+  value = convert(1.0, "$/ft^2", "$/m^2");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(10.7639, value.get(), 0.0001);
 }
 
 TEST_F(UnitsFixture,IPUnit_LogicalOperators)
@@ -140,6 +185,14 @@ TEST_F(UnitsFixture,IPUnit_createFunctions)
   u.pow(-1);
   EXPECT_EQ("1/person",u.standardString());
 
+  u = createIPCurrency();
+  EXPECT_EQ(1, u.baseUnitExponent("$"));
+  EXPECT_EQ(0, u.scale().exponent);
+  EXPECT_EQ("$", u.standardString());
+  EXPECT_EQ("", u.prettyString());
+  u.pow(-1);
+  EXPECT_EQ("1/$", u.standardString());
+
   u = createIPForce();
   EXPECT_EQ(0,u.scale().exponent);
   EXPECT_EQ("lb_f",u.standardString());
@@ -154,5 +207,6 @@ TEST_F(UnitsFixture,IPUnit_createFunctions)
   EXPECT_EQ(0,u.scale().exponent);
   EXPECT_EQ("ft*lb_f/s",u.standardString());
   EXPECT_EQ("",u.prettyString());
+
 
 }

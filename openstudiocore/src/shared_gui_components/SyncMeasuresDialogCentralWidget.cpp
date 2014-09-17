@@ -29,6 +29,7 @@
 
 #include "../analysisdriver/SimpleProject.hpp"
 
+#include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/core/Assert.hpp"
 
 #include <QBoxLayout>
@@ -89,10 +90,16 @@ void SyncMeasuresDialogCentralWidget::createLayout()
 
   //*******************************************************************
 
+  progressBar = new QProgressBar(this);
+  progressBar->setOrientation(Qt::Horizontal);
+  progressBar->setVisible(false);
+  progressBar->setTextVisible(false);
+
   lowerPushButton = new QPushButton("Update");
   connect(lowerPushButton, &QPushButton::clicked, this, &SyncMeasuresDialogCentralWidget::lowerPushButtonClicked);
 
   QHBoxLayout * lowerLayout = new QHBoxLayout();
+  lowerLayout->addWidget(progressBar);
   lowerLayout->addStretch();
   lowerLayout->addWidget(lowerPushButton);
 

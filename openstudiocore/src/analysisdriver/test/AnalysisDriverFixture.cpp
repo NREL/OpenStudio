@@ -975,25 +975,25 @@ openstudio::analysis::Problem AnalysisDriverFixture::createSimpleHistogramBinUQP
 openstudio::analysis::Problem AnalysisDriverFixture::createBuggyBCLMeasureProblem() {
   Problem problem("Buggy BCLMeasure Problem");
 
-  BCLMeasure measure = BCLMeasure::load(resourcesPath() / toPath("utilities/BCL/Measures/TestFlagAsNotApplicable")).get();
+  BCLMeasure measure = BCLMeasure::load(resourcesPath() / toPath("utilities/BCL/Measures/v2/TestFlagAsNotApplicable")).get();
   RubyMeasure rpert(measure);
   ruleset::OSArgument arg = ruleset::OSArgument::makeBoolArgument("applicable", true);
   arg.setValue(false);
   rpert.setArgument(arg);
   problem.push(MeasureGroup("NA Transformation",MeasureVector(1u,rpert)));
 
-  measure = BCLMeasure::load(resourcesPath() / toPath("utilities/BCL/Measures/TestCreateWarningMsgs")).get();
+  measure = BCLMeasure::load(resourcesPath() / toPath("utilities/BCL/Measures/v2/TestCreateWarningMsgs")).get();
   runmanager::RubyJobBuilder rjb(measure);
   rjb.setIncludeDir(toPath(rubyOpenStudioDir()));
   runmanager::WorkItem workItem = rjb.toWorkItem();
   problem.push(workItem);
 
-  measure = BCLMeasure::load(resourcesPath() / toPath("utilities/BCL/Measures/TestMissingARequiredArgWithNoDefault")).get();
+  measure = BCLMeasure::load(resourcesPath() / toPath("utilities/BCL/Measures/v2/TestMissingARequiredArgWithNoDefault")).get();
   rpert = RubyMeasure(measure);
   problem.push(MeasureGroup("Missing Argument",MeasureVector(1u,rpert)));
 
   // should never get to here b/c previous variable should fail
-  measure = BCLMeasure::load(resourcesPath() / toPath("utilities/BCL/Measures/TestFlagAsNotApplicable")).get();
+  measure = BCLMeasure::load(resourcesPath() / toPath("utilities/BCL/Measures/v2/TestFlagAsNotApplicable")).get();
   rjb = runmanager::RubyJobBuilder(measure);
   rjb.setIncludeDir(toPath(rubyOpenStudioDir()));
   workItem = rjb.toWorkItem();

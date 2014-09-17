@@ -101,6 +101,10 @@ RUNMANAGER_API std::vector<WorkItem> toVectorOfWorkItem(std::istream &t_json);
 
 RUNMANAGER_API std::vector<WorkItem> toVectorOfWorkItem(const std::string &t_json);
 
+/// gets the argument for the report request measure from a vector of work items
+// DLM: not sure if this is the best place for this
+RUNMANAGER_API std::string getReportRequestMeasureArgument(const std::vector<runmanager::WorkItem>& workItems);
+
 } // runmanager
 } // openstudio
 

@@ -27,6 +27,7 @@
   #include <ruleset/OSRunner.hpp>
   #include <ruleset/ReportingUserScript.hpp>
   #include <ruleset/RubyUserScriptArgumentGetter.hpp>
+  #include <ruleset/RubyUserScriptInfoGetter.hpp>
   #include <ruleset/TranslationUserScript.hpp>
   #include <ruleset/UserScript.hpp>
   #include <ruleset/UtilityUserScript.hpp>
@@ -36,6 +37,7 @@
   #include <model/ConcreteModelObjects.hpp>
 
   #include <utilities/core/Path.hpp>
+  #include <utilities/bcl/BCLMeasure.hpp>
 
   using namespace openstudio;
   using namespace openstudio::model;
@@ -83,12 +85,15 @@
 #if defined SWIGRUBY
 
   %ignore RubyUserScriptArgumentGetter;
+  %ignore RubyUserScripInfoGetter;
 
   // Abstract class. Just need static method.
   %include <ruleset/RubyUserScriptArgumentGetter.hpp>
+  %include <ruleset/RubyUserScriptInfoGetter.hpp>
 
   %init %{
     rb_eval_string("OpenStudio::Ruleset.instance_eval { def getArguments(measure,model=OpenStudio::Model::OptionalModel.new,workspace=OpenStudio::OptionalWorkspace.new) eval(OpenStudio::Ruleset::argumentExtractorRubyFunction); return argumentExtractor(measure,OpenStudio::Model::OptionalModel.new(model),OpenStudio::OptionalWorkspace.new(workspace)); end }");
+    rb_eval_string("OpenStudio::Ruleset.instance_eval { def getInfo(measure,model=OpenStudio::Model::OptionalModel.new,workspace=OpenStudio::OptionalWorkspace.new) eval(OpenStudio::Ruleset::infoExtractorRubyFunction); return infoExtractor(measure,OpenStudio::Model::OptionalModel.new(model),OpenStudio::OptionalWorkspace.new(workspace)); end }");
   %}
 
 #endif

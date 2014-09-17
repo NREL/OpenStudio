@@ -29,7 +29,7 @@ namespace detail {
   BTUUnit_Impl::BTUUnit_Impl(const BTUExpnt& exponents,
                              int scaleExponent,
                              const std::string& prettyString)
-    : Unit_Impl(scaleExponent,prettyString,11,UnitSystem::BTU)
+    : Unit_Impl(scaleExponent,prettyString,12,UnitSystem::BTU)
   {
     m_units[0].first = "Btu"; m_units[0].second = exponents.m_btu;
     m_units[1].first = "ft"; m_units[1].second = exponents.m_ft;
@@ -42,12 +42,13 @@ namespace detail {
     m_units[8].first = "sr"; m_units[8].second = exponents.m_sr;
     m_units[9].first = "people"; m_units[9].second = exponents.m_people;
     m_units[10].first = "cycle"; m_units[10].second = exponents.m_cycle;
+    m_units[11].first = "$"; m_units[11].second = exponents.m_dollar;
   }
 
   BTUUnit_Impl::BTUUnit_Impl(const std::string& scaleAbbreviation,
                              const BTUExpnt& exponents,
                              const std::string& prettyString)
-    : Unit_Impl(scaleAbbreviation,prettyString,11,UnitSystem::BTU)
+    : Unit_Impl(scaleAbbreviation,prettyString,12,UnitSystem::BTU)
   {
     m_units[0].first = "Btu"; m_units[0].second = exponents.m_btu;
     m_units[1].first = "ft"; m_units[1].second = exponents.m_ft;
@@ -60,6 +61,7 @@ namespace detail {
     m_units[8].first = "sr"; m_units[8].second = exponents.m_sr;
     m_units[9].first = "people"; m_units[9].second = exponents.m_people;
     m_units[10].first = "cycle"; m_units[10].second = exponents.m_cycle;
+    m_units[11].first = "$"; m_units[11].second = exponents.m_dollar;
   }
 
   Unit BTUUnit_Impl::clone() const {
@@ -145,6 +147,9 @@ BTUUnit createBTUCycle() {
   return BTUUnit(BTUExpnt(0,0,0,0,0,0,0,0,0,0,1));
 }
 
+BTUUnit createBTUCurrency() {
+  return BTUUnit(BTUExpnt(0,0,0,0,0,0,0,0,0,0,0,1));
+}
 
 BTUUnit createBTUPower() {
   return BTUUnit(BTUExpnt(1,0,-1));

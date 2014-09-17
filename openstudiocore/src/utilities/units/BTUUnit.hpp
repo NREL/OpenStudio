@@ -43,7 +43,8 @@ struct UTILITIES_API BTUExpnt {
            int deg=0,
            int sr=0,
            int people=0,
-           int cycle=0)
+           int cycle=0,
+           int dollar=0)
   : m_btu(btu),
     m_ft(ft),
     m_h(h),
@@ -54,7 +55,8 @@ struct UTILITIES_API BTUExpnt {
     m_deg(deg),
     m_sr(sr),
     m_people(people),
-    m_cycle(cycle)
+    m_cycle(cycle),
+    m_dollar(dollar)
   {}
  private:
   int m_btu;
@@ -68,6 +70,7 @@ struct UTILITIES_API BTUExpnt {
   int m_sr;
   int m_people;
   int m_cycle;
+  int m_dollar;
 
   friend class detail::BTUUnit_Impl;
 };
@@ -153,6 +156,8 @@ UTILITIES_API BTUUnit createBTUSolidAngle();
 UTILITIES_API BTUUnit createBTUPeople();
 /** \relates BTUUnit */
 UTILITIES_API BTUUnit createBTUCycle();
+/** \relates BTUUnit */
+UTILITIES_API BTUUnit createBTUCurrency();
 
 // first order derived units
 

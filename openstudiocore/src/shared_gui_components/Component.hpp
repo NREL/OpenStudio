@@ -74,6 +74,7 @@ private:
   QString m_description;
   QString m_fidelityLevel;
   std::vector<Attribute> m_attributes;
+  std::vector<BCLMeasureArgument> m_arguments;
   std::vector<BCLFile> m_files;
   std::vector<BCLFileReference> m_fileReferences;
   std::vector<BCLProvenance> m_provenances;

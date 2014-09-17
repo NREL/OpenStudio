@@ -28,7 +28,7 @@ namespace detail {
   MPHUnit_Impl::MPHUnit_Impl(const MPHExpnt& exponents,
                              int scaleExponent,
                              const std::string& prettyString)
-    : Unit_Impl(scaleExponent,prettyString,11,UnitSystem::MPH)
+    : Unit_Impl(scaleExponent,prettyString,12,UnitSystem::MPH)
   {
     m_units[0].first = "inHg"; m_units[0].second = exponents.m_inHg;
     m_units[1].first = "mi"; m_units[1].second = exponents.m_mi;
@@ -41,12 +41,13 @@ namespace detail {
     m_units[8].first = "sr"; m_units[8].second = exponents.m_sr;
     m_units[9].first = "people"; m_units[9].second = exponents.m_people;
     m_units[10].first = "cycle"; m_units[10].second = exponents.m_cycle;
+    m_units[11].first = "$"; m_units[11].second = exponents.m_dollar;
   }
 
   MPHUnit_Impl::MPHUnit_Impl(const std::string &scaleAbbreviation,
                              const MPHExpnt &exponents,
                              const std::string &prettyString)
-    : Unit_Impl(scaleAbbreviation,prettyString,11,UnitSystem::MPH)
+    : Unit_Impl(scaleAbbreviation,prettyString,12,UnitSystem::MPH)
   {
     m_units[0].first = "inHg"; m_units[0].second = exponents.m_inHg;
     m_units[1].first = "mi"; m_units[1].second = exponents.m_mi;
@@ -59,6 +60,7 @@ namespace detail {
     m_units[8].first = "sr"; m_units[8].second = exponents.m_sr;
     m_units[9].first = "people"; m_units[9].second = exponents.m_people;
     m_units[10].first = "cycle"; m_units[10].second = exponents.m_cycle;
+    m_units[11].first = "$"; m_units[11].second = exponents.m_dollar;
   }
 
   Unit MPHUnit_Impl::clone() const {
@@ -144,6 +146,9 @@ MPHUnit createMPHCycle() {
   return MPHUnit(MPHExpnt(0,0,0,0,0,0,0,0,0,0,1));
 }
 
+MPHUnit createMPHCurrency() {
+  return MPHUnit(MPHExpnt(0,0,0,0,0,0,0,0,0,0,0,1));
+}
 
 MPHUnit createMPHVelocity() {
   return MPHUnit(MPHExpnt(0,1,-1),0,"mph");

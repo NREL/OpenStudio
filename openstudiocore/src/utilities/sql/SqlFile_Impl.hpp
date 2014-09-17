@@ -787,7 +787,7 @@ namespace openstudio{
 
     private:
 
-      void init(const openstudio::path& path);
+      void init();
 
       void retrieveDataDictionary();
 

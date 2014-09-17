@@ -29,6 +29,9 @@
 namespace openstudio {
 namespace ruleset {
 
+RubyUserScriptArgumentGetter::~RubyUserScriptArgumentGetter()
+{}
+
 std::vector<OSArgument> RubyUserScriptArgumentGetter::getArguments(
     const BCLMeasure& measure,
     const boost::optional<model::Model>& model,

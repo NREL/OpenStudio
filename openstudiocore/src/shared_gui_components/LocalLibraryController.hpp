@@ -279,19 +279,29 @@ class LibraryItem : public OSListItem
 
   LibraryItem(const BCLMeasure & bclMeasure, LocalLibrary::LibrarySource source, BaseApp *t_app);
 
-  virtual ~LibraryItem() {}
+  virtual ~LibraryItem();
 
-  Q_PROPERTY(QString name READ name)
+  //Q_PROPERTY(QString name READ name)
 
-  QString name() const { return QString::fromStdString(m_bclMeasure.name()); }
+  bool hasError() const;
 
-  UUID uuid() const { return m_bclMeasure.uuid(); }
+  QString name() const;
+
+  QString displayName() const;
+
+  QString className() const;
+
+  QString description() const;
+
+  QString modelerDescription() const;
+
+  UUID uuid() const;
 
   BCLMeasure m_bclMeasure;
 
   LocalLibrary::LibrarySource m_source;
 
-  bool isAvailable() const { return m_available; }
+  bool isAvailable() const;
 
   public slots:
 

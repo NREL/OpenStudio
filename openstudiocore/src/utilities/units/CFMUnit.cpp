@@ -29,7 +29,7 @@ namespace detail {
   CFMUnit_Impl::CFMUnit_Impl(const CFMExpnt& exponents,
                              int scaleExponent,
                              const std::string& prettyString)
-    : Unit_Impl(scaleExponent,prettyString,11,UnitSystem::CFM)
+    : Unit_Impl(scaleExponent,prettyString,12,UnitSystem::CFM)
   {
     m_units[0].first = "ft"; m_units[0].second = exponents.m_ft;
     m_units[1].first = "min"; m_units[1].second = exponents.m_min;
@@ -42,12 +42,13 @@ namespace detail {
     m_units[8].first = "sr"; m_units[8].second = exponents.m_sr;
     m_units[9].first = "people"; m_units[9].second = exponents.m_people;
     m_units[10].first = "cycle"; m_units[10].second = exponents.m_cycle;
+    m_units[11].first = "$"; m_units[11].second = exponents.m_dollar;
   }
 
   CFMUnit_Impl::CFMUnit_Impl(const std::string& scaleAbbreviation,
                              const CFMExpnt& exponents,
                              const std::string& prettyString)
-    : Unit_Impl(scaleAbbreviation,prettyString,11,UnitSystem::CFM)
+    : Unit_Impl(scaleAbbreviation,prettyString,12,UnitSystem::CFM)
   {
     m_units[0].first = "ft"; m_units[0].second = exponents.m_ft;
     m_units[1].first = "min"; m_units[1].second = exponents.m_min;
@@ -60,6 +61,7 @@ namespace detail {
     m_units[8].first = "sr"; m_units[8].second = exponents.m_sr;
     m_units[9].first = "people"; m_units[9].second = exponents.m_people;
     m_units[10].first = "cycle"; m_units[10].second = exponents.m_cycle;
+    m_units[11].first = "$"; m_units[11].second = exponents.m_dollar;
   }
 
   Unit CFMUnit_Impl::clone() const {
@@ -145,6 +147,9 @@ CFMUnit createCFMCycle() {
   return CFMUnit(CFMExpnt(0,0,0,0,0,0,0,0,0,0,1));
 }
 
+CFMUnit createCFMCurrency() {
+  return CFMUnit(CFMExpnt(0,0,0,0,0,0,0,0,0,0,0,1));
+}
 
 CFMUnit createCFMVolumetricFlowrate() {
   return CFMUnit(CFMExpnt(3,-1),0,"cfm");
