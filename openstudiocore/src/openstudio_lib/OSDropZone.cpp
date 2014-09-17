@@ -582,7 +582,7 @@ void OSDropZone2::refresh()
 
 
   boost::optional<model::ModelObject> modelObject;
- 
+
   if (m_item)
   {
     modelObject = OSAppBase::instance()->currentDocument()->getModelObject(m_item->itemId());
@@ -696,6 +696,8 @@ void OSDropZone2::mouseReleaseEvent(QMouseEvent * event)
       if (modelObject)
       {
         m_item = OSItem::makeItem(modelObjectToItemId(*modelObject, false));
+        m_item->setParent(this);
+        connect(m_item, &OSItem::itemRemoveClicked, this, &OSDropZone2::onItemRemoveClicked);
       }
     }
 
@@ -707,7 +709,10 @@ void OSDropZone2::mouseReleaseEvent(QMouseEvent * event)
 
 void OSDropZone2::onItemRemoveClicked()
 {
-  (*m_reset)();
+  if (m_reset)
+  {
+    (*m_reset)();
+  }
 }
 
 } // openstudio
