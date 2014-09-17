@@ -24,6 +24,7 @@
 #include "ModelObjectItem.hpp"
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
+#include "OSDropZone.hpp"
 #include "ScriptItem.hpp"
 
 #include "../shared_gui_components/MeasureBadge.hpp"
@@ -614,6 +615,16 @@ void OSItem::dropEvent(QDropEvent *event)
 
 void OSItem::onRemoveClicked()
 {
+  // Note: a OSDropZone2 owns this OSItem;
+  // there should be a parent...
+  OS_ASSERT(this->parent());
+
+  // ... and it should be a OSDropZone2...
+  auto dropZone = qobject_cast<OSDropZone2 *>(this->parent());
+  OS_ASSERT(dropZone);
+
+  // ... and it needs to listen to, and act on,
+  // this signal to cause a model object reset
   emit itemRemoveClicked(this);
 }
 

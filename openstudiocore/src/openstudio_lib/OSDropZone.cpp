@@ -655,6 +655,7 @@ void OSDropZone2::dropEvent(QDropEvent *event)
     OSItemId itemId(event->mimeData());
     boost::optional<model::ModelObject> modelObject = OSAppBase::instance()->currentDocument()->getModelObject(itemId);
     m_item = OSItem::makeItem(itemId, OSItemType::ListItem);
+    m_item->setParent(this);
 
     connect(m_item, &OSItem::itemRemoveClicked, this, &OSDropZone2::onItemRemoveClicked);
 

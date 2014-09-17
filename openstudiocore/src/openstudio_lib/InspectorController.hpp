@@ -63,7 +63,7 @@ class InspectorController : public QObject
 
   void itemRemoveClicked(OSItem *);
 
-  void removeButtonClicked(OSItem *);
+  void removeButtonClicked(bool);
 
   public slots:
 

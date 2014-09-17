@@ -66,11 +66,11 @@ InspectorController::InspectorController()
 {
   m_inspectorView = new InspectorView();
 
-  auto isConnected = connect(m_inspectorView, SIGNAL(itemRemoveClicked(OSItem *)), this, SIGNAL(itemRemoveClicked(OSItem *)));
-  OS_ASSERT(isConnected);
+  //auto isConnected = connect(m_inspectorView, SIGNAL(itemRemoveClicked(OSItem *)), this, SIGNAL(itemRemoveClicked(OSItem *))); TODO these should all be deleted from this area of the code: cruft
+  //OS_ASSERT(isConnected);
 
-  isConnected = connect(m_inspectorView, SIGNAL(removeButtonClicked(OSItem *)), this, SIGNAL(removeButtonClicked(OSItem *)));
-  //(isConnected); TODO fails
+  auto isConnected = connect(m_inspectorView, SIGNAL(removeButtonClicked(bool)), this, SIGNAL(removeButtonClicked(bool)));
+  OS_ASSERT(isConnected);
 
   connect(m_inspectorView, &InspectorView::addZoneClicked, this, &InspectorController::addBranchForZone);
 
