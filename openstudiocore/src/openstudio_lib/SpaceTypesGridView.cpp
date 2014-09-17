@@ -165,8 +165,6 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
   isConnected = connect(gridView, SIGNAL(gridRowSelected(OSItem*)), this, SIGNAL(gridRowSelected(OSItem*)));
   OS_ASSERT(isConnected);
 
-  gridView->m_dropZone->hide();
-
   layout->addWidget(gridView,0,Qt::AlignTop);
 
   layout->addStretch(1);
