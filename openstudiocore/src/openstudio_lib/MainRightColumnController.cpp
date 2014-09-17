@@ -91,6 +91,8 @@ MainRightColumnController::MainRightColumnController(const model::Model & model,
   m_inspectorController = std::shared_ptr<InspectorController>( new InspectorController() );
   connect(this, &MainRightColumnController::toggleUnitsClicked, m_inspectorController.get(), &InspectorController::toggleUnitsClicked);
 
+  connect(m_inspectorController.get(), &InspectorController::removeButtonClicked, this, &MainRightColumnController::onRemoveButtonClicked);
+
   auto isConnected = connect(m_inspectorController.get(), SIGNAL(itemRemoveClicked(OSItem *)), this, SLOT(onItemRemoveClicked(OSItem *)));
   OS_ASSERT(isConnected);
 }
@@ -157,7 +159,7 @@ void MainRightColumnController::inspectModelObjectByItem(OSItem * item, bool rea
     if (currentDocument){
       modelObject = currentDocument->getModelObject(item->itemId());
       bool readOnly = item->itemId().isDefaulted(); // TODO this may work
-      readOnly = false; //                             but for now never allow an edit
+      readOnly = true; //                             but for now never allow an edit
     }
     inspectModelObject(modelObject, readOnly);
   }
@@ -165,7 +167,9 @@ void MainRightColumnController::inspectModelObjectByItem(OSItem * item, bool rea
 
 void MainRightColumnController::onRemoveButtonClicked(bool checked)
 {
-
+  if (m_item) {
+    m_item->onRemoveClicked();
+  }
 }
 
 HorizontalTabWidget * MainRightColumnController::mainRightColumnView() const

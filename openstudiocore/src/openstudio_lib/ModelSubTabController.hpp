@@ -52,7 +52,9 @@ class ModelSubTabController : public SubTabController
 
     void modelObjectSelected(model::OptionalModelObject & modelObject, bool readOnly);
 
-    void dropZoneItemClicked(OSItem* item, bool readOnly);
+    void dropZoneItemSelected(OSItem* item, bool readOnly);
+
+    void dropZoneItemClicked(OSItem* item);
 
     void toggleUnitsClicked(bool displayIP);
 

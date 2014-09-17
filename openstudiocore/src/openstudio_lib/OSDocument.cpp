@@ -18,6 +18,7 @@
  **********************************************************************/
 
 #include "OSDocument.hpp"
+
 #include "ApplyMeasureNowDialog.hpp"
 #include "BuildingStoriesTabController.hpp"
 #include "ConstructionsTabController.hpp"
@@ -555,7 +556,7 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
 
   connect(m_spaceTypesTabController.get(), &SpaceTypesTabController::modelObjectSelected, m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObject);
 
-  connect(m_spaceTypesTabController.get(), &SpaceTypesTabController::dropZoneItemClicked, m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObjectByItem);
+  connect(m_spaceTypesTabController.get(), &SpaceTypesTabController::dropZoneItemSelected, m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObjectByItem);
 
   connect(m_spaceTypesTabController.get(), &SpaceTypesTabController::downloadComponentsClicked,
           this, &OSDocument::downloadComponentsClicked);
@@ -620,7 +621,7 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
 
   connect(m_thermalZonesTabController.get(), &ThermalZonesTabController::modelObjectSelected, m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObject);
 
-  connect(m_thermalZonesTabController.get(), &ThermalZonesTabController::dropZoneItemClicked, m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObjectByItem);
+  connect(m_thermalZonesTabController.get(), &ThermalZonesTabController::dropZoneItemSelected, m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObjectByItem);
 
   connect(this, &OSDocument::toggleUnitsClicked, m_thermalZonesTabController.get(), &ThermalZonesTabController::toggleUnitsClicked);
 

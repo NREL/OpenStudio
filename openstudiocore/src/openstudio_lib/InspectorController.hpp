@@ -63,6 +63,8 @@ class InspectorController : public QObject
 
   void itemRemoveClicked(OSItem *);
 
+  void removeButtonClicked(OSItem *);
+
   public slots:
 
   void layoutModelObject( model::OptionalModelObject &, bool readOnly );

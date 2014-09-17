@@ -551,7 +551,7 @@ BaseInspectorView::BaseInspectorView(QWidget * parent)
   //m_vLayout->addWidget(tabBar);
 
   m_libraryTabWidget = new LibraryTabWidget();
-
+  
   auto isConnected = connect(m_libraryTabWidget, SIGNAL(removeButtonClicked(bool)), this, SIGNAL(removeButtonClicked(bool)));
   OS_ASSERT(isConnected);
 

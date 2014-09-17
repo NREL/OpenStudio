@@ -19,10 +19,10 @@
 
 #include "ThermalZonesController.hpp"
 
-
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 #include "OSItemSelectorButtons.hpp"
+#include "OSItem.hpp"
 #include "ThermalZonesView.hpp"
 
 #include "../model/AirLoopHVAC.hpp"
@@ -57,6 +57,8 @@ ThermalZonesController::ThermalZonesController(bool isIP, const model::Model & m
   //connect(thermalZoneView, &ThermalZoneView::enableHumidistatClicked, this, &ThermalZonesController::enableHumidistat);
 
   connect(thermalZoneView, &ThermalZoneView::modelObjectSelected, this, &ThermalZonesController::modelObjectSelected);
+
+  connect(thermalZoneView, &ThermalZoneView::dropZoneItemSelected, this, &ThermalZonesController::dropZoneItemSelected);
 
   connect(this, &ThermalZonesController::toggleUnitsClicked, thermalZoneView, &ThermalZoneView::toggleUnitsClicked);
 }

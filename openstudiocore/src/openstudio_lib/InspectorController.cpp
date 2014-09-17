@@ -69,6 +69,9 @@ InspectorController::InspectorController()
   auto isConnected = connect(m_inspectorView, SIGNAL(itemRemoveClicked(OSItem *)), this, SIGNAL(itemRemoveClicked(OSItem *)));
   OS_ASSERT(isConnected);
 
+  isConnected = connect(m_inspectorView, SIGNAL(removeButtonClicked(OSItem *)), this, SIGNAL(removeButtonClicked(OSItem *)));
+  //(isConnected); TODO fails
+
   connect(m_inspectorView, &InspectorView::addZoneClicked, this, &InspectorController::addBranchForZone);
 
   connect(this, &InspectorController::toggleUnitsClicked, m_inspectorView, &InspectorView::toggleUnitsClicked);
