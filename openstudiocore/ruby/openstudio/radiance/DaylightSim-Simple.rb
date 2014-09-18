@@ -350,11 +350,8 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
   # "single phase" method
   if t_options.x == true
     rtrace_args = "#{t_options.vmx}"
-    puts "#{Time.now.getutc}: creating model_dc.oct"
     system("oconv \"#{t_outPath}/materials/materials.rad\" model.rad \
       \"#{t_outPath}/skies/dc_sky.rad\" > model_dc.oct")
-    puts "#{Time.now.getutc}: creating model_dc_skyonly.oct"
-    system("oconv \"#{t_outPath}/skies/dc_sky.rad\" > model_dc_skyonly.oct")
     #compute illuminance map(s)
     puts "#{Time.now.getutc}: computing sky-to-point daylight coefficients (single phase)..."
     exec_statement("#{t_catCommand} \"#{t_outPath}/numeric/merged_space.map\" \
@@ -370,7 +367,7 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
   if t_options.z == true
 
     # compute daylight matrices for controlled windows
-    
+ 
     system("oconv materials/materials.rad model.rad > model_dc.oct")
     windowMaps = File::open("#{t_outPath}/bsdf/mapping.rad")
     windowMaps.each do |row|
@@ -383,6 +380,7 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
 
     # compute view matrices for controlled windows
 
+    rtrace_args = "#{t_options.vmx}" 
     wgInput = Dir.glob("#{t_outPath}/scene/glazing/WG*.rad")[1..-1]
     puts "computing view matri(ces) for controlled windows"
     exec_statement("#{t_catCommand} #{t_outPath}/materials/materials_vmx.rad #{wgInput.join(" ")} > receivers_vmx.rad")
@@ -406,7 +404,6 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
     rtrace_args = "#{t_options.vmx}"
     system("oconv \"#{t_outPath}/materials/materials.rad\" \"#{t_outPath}/materials/materials_WG0.rad\" model.rad \
       \"#{t_outPath}/skies/dc_sky.rad\" > model_WG0.oct")
-    # system("oconv \"#{t_outPath}/skies/dc_sky.rad\" > model_dc_skyonly.oct")
     puts "#{Time.now.getutc}: computing sky-to-point daylight coefficients (single phase)..."
     exec_statement("#{t_catCommand} \"#{t_outPath}/numeric/merged_space.map\" \
       | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{t_options.tregVars} \
@@ -422,7 +419,6 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
     rtrace_args = "#{t_options.vmx}"
     system("oconv \"#{t_outPath}/materials/materials.rad\" model.rad \
       \"#{t_outPath}/skies/dc_sky.rad\" > model_wc.oct")
-    # system("oconv \"#{t_outPath}/skies/dc_sky.rad\" > model_dc_skyonly.oct")
     puts "#{Time.now.getutc}: computing DCs for window controls..."
     exec_statement("#{t_catCommand} \"#{t_outPath}/numeric/window_controls.map\" \
       | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{t_options.tregVars} \
@@ -692,7 +688,7 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
 
   else
     # 2-phase 
-    simulations << "dctimestep -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" \"#{t_outPath / OpenStudio::Path.new("annual-sky.mtx")}\" "
+    simulations << "dctimestep \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" \"#{t_outPath / OpenStudio::Path.new("annual-sky.mtx")}\" "
 
      # return the bsdf index for window group given by index at this hour
     windowMapping = lambda { |index, hour| return 0 }
@@ -1109,7 +1105,6 @@ if model.sqlFile.empty?
   puts "Model's SqlFile is not initialized"
   return false
 end
-
 
 # get the top level simulation object
 simulation = model.getSimulationControl
