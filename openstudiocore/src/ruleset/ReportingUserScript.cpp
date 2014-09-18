@@ -22,6 +22,8 @@
 #include "OSArgument.hpp"
 #include "OSRunner.hpp"
 
+#include <vector>
+
 namespace openstudio {
 namespace ruleset {
 
@@ -36,6 +38,12 @@ bool ReportingUserScript::run(OSRunner& runner,
 {
   runner.prepareForUserScriptRun(*this);
   return true;
+}
+
+std::vector<IdfObject> ReportingUserScript::energyPlusOutputRequests(OSRunner& runner,
+                              const std::map<std::string, OSArgument>& user_arguments) const
+{
+  return std::vector<IdfObject>();
 }
 
 } // ruleset

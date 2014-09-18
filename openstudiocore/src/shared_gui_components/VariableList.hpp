@@ -159,6 +159,8 @@ class VariableItem : public OSListItem
 
   QString name() const;
 
+  QString displayName() const;
+
   analysis::MeasureGroup variable() const { return m_variable; }
 
   MeasureType measureType() const { return m_measureType; }
@@ -174,6 +176,8 @@ class VariableItem : public OSListItem
   void moveDown();
 
   void setName(const QString & name);
+
+  void setDisplayName(const QString & displayName);
 
   private:
   REGISTER_LOGGER("openstudio.measuretab.VariableItem");
@@ -236,6 +240,8 @@ class MeasureItem : public OSListItem
 
   QString name() const;
 
+  QString displayName() const;
+
   QString description() const;
 
   QString modelerDescription() const;
@@ -256,6 +262,8 @@ class MeasureItem : public OSListItem
 
   void setName(const QString & name);
 
+  void setDisplayName(const QString & displayName);
+
   void setDescription(const QString & description);
 
   void duplicate();
@@ -266,7 +274,9 @@ class MeasureItem : public OSListItem
 
   signals:
 
-  void nameChanged(const QString & name);
+  //void nameChanged(const QString & name);
+
+  void displayNameChanged(const QString & displayName);
 
   void descriptionChanged();
 

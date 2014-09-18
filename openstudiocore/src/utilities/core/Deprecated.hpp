@@ -29,6 +29,18 @@
 #ifdef __GNUC__
   #define OS_DEPRECATED __attribute__((deprecated))
 #elif defined(_MSC_VER)
+  /// In MSVC this will generate warning C4996
+  /// To intentionally disable this warning, e.g. in test code that still uses deprecated functionality
+  /// place this around the code that uses the deprecated functionality
+  /// #if defined(_MSC_VER)
+  ///   #pragma warning( push )
+  ///   #pragma warning( disable : 4996 )
+  /// #endif
+  /// Some code
+  /// #if defined(_MSC_VER)
+  ///   #pragma warning( pop ) 
+  /// #endif
+
   #define OS_DEPRECATED __declspec(deprecated)
 #else
   #pragma message("WARNING: You need to implement DEPRECATED for this compiler")

@@ -255,6 +255,10 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
     idfObject.setString(Chiller_Electric_EIRFields::ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName,_curve->name().get());
   }
 
+  if( value = modelObject.sizingFactor() ) {
+    idfObject.setDouble(Chiller_Electric_EIRFields::SizingFactor,value.get());
+  }
+
   return boost::optional<IdfObject>(idfObject);
 }
 

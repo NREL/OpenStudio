@@ -28,7 +28,7 @@ namespace detail {
   IPUnit_Impl::IPUnit_Impl(const IPExpnt& exponents,
                            int scaleExponent,
                            const std::string& prettyString)
-    : Unit_Impl(scaleExponent,prettyString,12,UnitSystem::IP)
+    : Unit_Impl(scaleExponent,prettyString,13,UnitSystem::IP)
   {
     m_units[0].first = "lb_m"; m_units[0].second = exponents.m_lbm;
     m_units[1].first = "ft"; m_units[1].second = exponents.m_ft;
@@ -42,12 +42,13 @@ namespace detail {
     m_units[9].first = "sr"; m_units[9].second = exponents.m_sr;
     m_units[10].first = "people"; m_units[10].second = exponents.m_people;
     m_units[11].first = "cycle"; m_units[11].second = exponents.m_cycle;
+    m_units[12].first = "$"; m_units[12].second = exponents.m_dollar;
   }
 
   IPUnit_Impl::IPUnit_Impl(const std::string& scaleAbbreviation,
                            const IPExpnt& exponents,
                            const std::string& prettyString)
-    : Unit_Impl(scaleAbbreviation,prettyString,12,UnitSystem::IP)
+    : Unit_Impl(scaleAbbreviation,prettyString,13,UnitSystem::IP)
   {
     m_units[0].first = "lb_m"; m_units[0].second = exponents.m_lbm;
     m_units[1].first = "ft"; m_units[1].second = exponents.m_ft;
@@ -61,6 +62,7 @@ namespace detail {
     m_units[9].first = "sr"; m_units[9].second = exponents.m_sr;
     m_units[10].first = "people"; m_units[10].second = exponents.m_people;
     m_units[11].first = "cycle"; m_units[11].second = exponents.m_cycle;
+    m_units[12].first = "$"; m_units[12].second = exponents.m_dollar;
   }
 
   Unit IPUnit_Impl::clone() const {
@@ -201,6 +203,9 @@ IPUnit createIPCycle() {
   return IPUnit(IPExpnt(0,0,0,0,0,0,0,0,0,0,0,1));
 }
 
+IPUnit createIPCurrency() {
+  return IPUnit(IPExpnt(0,0,0,0,0,0,0,0,0,0,0,0,1));
+}
 
 IPUnit createIPForce() {
   return IPUnit(IPExpnt(0,0,0,0,0,0,0,1)); // lb_f

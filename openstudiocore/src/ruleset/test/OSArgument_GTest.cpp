@@ -154,3 +154,58 @@ TEST_F(RulesetFixture, OSArgument_ClearValue) {
   EXPECT_ANY_THROW(stringArgument.valueAsString());
   EXPECT_ANY_THROW(choiceArgument.valueAsString());
 }
+
+TEST_F(RulesetFixture, OSArgument_Domain) {
+  
+  OSArgument doubleArg = OSArgument::makeDoubleArgument("double", true);
+  OSArgument integerArg = OSArgument::makeIntegerArgument("integer", true);
+  OSArgument stringArg = OSArgument::makeStringArgument("string", true);
+
+  EXPECT_FALSE(doubleArg.hasDomain());
+  EXPECT_FALSE(integerArg.hasDomain());
+  EXPECT_FALSE(stringArg.hasDomain());
+
+  double d = 0.0;
+  int i = 0;
+
+  EXPECT_TRUE(doubleArg.setMinValue(d));
+  EXPECT_TRUE(integerArg.setMinValue(i));
+  EXPECT_FALSE(stringArg.setMinValue(0.0));
+
+  ASSERT_TRUE(doubleArg.hasDomain());
+  ASSERT_TRUE(integerArg.hasDomain());
+  EXPECT_FALSE(stringArg.hasDomain());
+
+  EXPECT_EQ(0.0, doubleArg.domainAsDouble()[0]);
+  EXPECT_EQ(std::numeric_limits<double>::max(), doubleArg.domainAsDouble()[1]);
+  EXPECT_EQ(0, integerArg.domainAsInteger()[0]);
+  EXPECT_EQ(std::numeric_limits<int>::max(), integerArg.domainAsDouble()[1]);
+
+  d = 1.0;
+  i = 1;
+
+  EXPECT_TRUE(doubleArg.setMaxValue(i));
+  EXPECT_TRUE(integerArg.setMaxValue(d));
+  EXPECT_FALSE(stringArg.setMaxValue(1));
+
+  ASSERT_TRUE(doubleArg.hasDomain());
+  ASSERT_TRUE(integerArg.hasDomain());
+  EXPECT_FALSE(stringArg.hasDomain());
+
+  EXPECT_EQ(0.0, doubleArg.domainAsDouble()[0]);
+  EXPECT_EQ(1.0, doubleArg.domainAsDouble()[1]);
+  EXPECT_EQ(0, integerArg.domainAsInteger()[0]);
+  EXPECT_EQ(1, integerArg.domainAsDouble()[1]);
+
+  // the domain is not currently used to validate these values
+  EXPECT_TRUE(doubleArg.setValue(-1.0));
+  EXPECT_TRUE(doubleArg.setValue(0.0));
+  EXPECT_TRUE(doubleArg.setValue(0.5));
+  EXPECT_TRUE(doubleArg.setValue(1.0));
+  EXPECT_TRUE(doubleArg.setValue(2.0));
+
+  EXPECT_TRUE(integerArg.setValue(-1));
+  EXPECT_TRUE(integerArg.setValue(0));
+  EXPECT_TRUE(integerArg.setValue(1));
+  EXPECT_TRUE(integerArg.setValue(2));
+}

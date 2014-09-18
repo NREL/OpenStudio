@@ -43,7 +43,8 @@ struct UTILITIES_API WhExpnt {
           int rad=0,
           int sr=0,
           int people=0,
-          int cycle=0)
+          int cycle=0,
+          int dollar=0)
   : m_W(W),
     m_h(h),
     m_m(m),
@@ -54,7 +55,8 @@ struct UTILITIES_API WhExpnt {
     m_rad(rad),
     m_sr(sr),
     m_people(people),
-    m_cycle(cycle)
+    m_cycle(cycle),
+    m_dollar(dollar)
   {}
  private:
   int m_W;
@@ -68,6 +70,7 @@ struct UTILITIES_API WhExpnt {
   int m_sr;
   int m_people;
   int m_cycle;
+  int m_dollar;
 
   friend class detail::WhUnit_Impl;
 };
@@ -153,6 +156,8 @@ UTILITIES_API WhUnit createWhSolidAngle();
 UTILITIES_API WhUnit createWhPeople();
 /** \relates WhUnit */
 UTILITIES_API WhUnit createWhCycle();
+/** \relates WhUnit */
+UTILITIES_API WhUnit createWhCurrency();
 
 /** \relates WhUnit */
 UTILITIES_API WhUnit createWhEnergy();

@@ -272,7 +272,7 @@ TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_NewMeasureGroup) {
 
   // expected behavior for then adding first measure
   // test with BCLMeasure first. verify with RubyMeasure.
-  openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/SetWindowToWallRatioByFacade");
+  openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade");
   BCLMeasure bclMeasure = BCLMeasure::load(dir).get();
   EXPECT_EQ(FileReferenceType(FileReferenceType::OSM),bclMeasure.inputFileType());
   EXPECT_EQ(FileReferenceType(FileReferenceType::OSM),bclMeasure.outputFileType());
@@ -345,7 +345,7 @@ TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_ExistingMeasureGroup) {
   Problem problem("Problem",variables,workflow);
 
   // create measure to be pushed onto a variable
-  openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/SetWindowToWallRatioByFacade");
+  openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade");
   BCLMeasure bclMeasure = BCLMeasure::load(dir).get();
   EXPECT_EQ(FileReferenceType(FileReferenceType::OSM),bclMeasure.inputFileType());
   EXPECT_EQ(FileReferenceType(FileReferenceType::OSM),bclMeasure.outputFileType());

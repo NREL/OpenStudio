@@ -21,10 +21,12 @@
 #define UTILITIES_BCL_BCLXML_HPP
 
 #include "BCLFileReference.hpp"
+#include "BCLMeasureArgument.hpp"
 #include "../core/Optional.hpp"
 #include "../core/Path.hpp"
 #include "../core/UUID.hpp"
 #include "../data/Attribute.hpp"
+#include "../core/Deprecated.hpp"
 #include "../UtilitiesAPI.hpp"
 
 #include <vector>
@@ -94,15 +96,25 @@ namespace openstudio{
     /// Returns parent path of XML file.
     openstudio::path directory() const;
 
+    boost::optional<std::string> error() const;
+
     std::string uid() const;
 
     std::string versionId() const;
 
+    std::string xmlChecksum() const;
+
     std::string name() const;
+
+    std::string displayName() const;
+
+    std::string className() const;
 
     std::string description() const;
 
     std::string modelerDescription() const;
+
+    std::vector<BCLMeasureArgument> arguments() const;
 
     std::vector<BCLFileReference> files() const;
 
@@ -111,8 +123,8 @@ namespace openstudio{
 
     std::vector<Attribute> attributes() const;
 
-    /// get attribute by name
-    boost::optional<Attribute> getAttribute(const std::string& name) const;
+    /// get attributes by name
+    std::vector<Attribute> getAttributes(const std::string& name) const;
 
     std::vector<std::string> tags() const;
 
@@ -120,11 +132,23 @@ namespace openstudio{
     /** @name Setters */
     //@{
 
+    void resetXMLChecksum();
+
+    void setError(const std::string& error);
+
+    void resetError();
+
     void setName(const std::string& name);
+
+    void setDisplayName(const std::string& displayName);
+
+    void setClassName(const std::string& className);
 
     void setDescription(const std::string& description);
 
     void setModelerDescription(const std::string& modelerDescription);
+
+    void setArguments(const std::vector<BCLMeasureArgument>& arguments);
 
     /// adds file to list, file with same full path will be removed
     void addFile(const BCLFileReference& file);
@@ -138,11 +162,11 @@ namespace openstudio{
     /// clear all files
     void clearFiles();
 
-    /// adds attribute to attribute list, existing attribute with same name will be removed
+    /// adds attribute to attribute list
     void addAttribute(const Attribute& attribute);
 
-    /// removes attribute by name, returns true if attribute was found and removed
-    bool removeAttribute(const std::string& name);
+    /// removes all attributes with name, returns true if attributes were found and removed
+    bool removeAttributes(const std::string& name);
 
     /// removes all attributes
     void clearAttributes();
@@ -170,19 +194,32 @@ namespace openstudio{
 
     void incrementVersionId();
 
+    /// Check for updates to the xml, will increment versionID and xmlChecksum then return true
+    /// if any xml fields (other than uid, version id, or xml checksum) have changed 
+    /// The xml file must still be saved to disk to preserve the new versionID
+    bool checkForUpdatesXML();
+
     //@}
 
   private:
     // configure logging
     REGISTER_LOGGER("utilities.bcl.BCLXML"); 
 
+    /// Compute the current xml checksum
+    std::string computeXMLChecksum() const;
+
     openstudio::path m_path;
     BCLXMLType m_bclXMLType;
+    boost::optional<std::string> m_error;
     std::string m_name;
+    std::string m_displayName;
+    std::string m_className; // only for measures
     std::string m_uid;
     std::string m_versionId;
+    std::string m_xmlChecksum;
     std::string m_description;
     std::string m_modelerDescription; // only for measures
+    std::vector<BCLMeasureArgument> m_arguments; // only for measures
     std::vector<BCLFileReference> m_files; 
     std::vector<std::string> m_filetypes;
     std::vector<Attribute> m_attributes;

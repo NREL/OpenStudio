@@ -43,7 +43,8 @@ struct UTILITIES_API ThermExpnt {
              int deg=0,
              int sr=0,
              int people=0,
-             int cycle=0)
+             int cycle=0,
+             int dollar=0)
   : m_therm(therm),
     m_in(t_in),
     m_yr(yr),
@@ -54,7 +55,8 @@ struct UTILITIES_API ThermExpnt {
     m_deg(deg),
     m_sr(sr),
     m_people(people),
-    m_cycle(cycle)
+    m_cycle(cycle),
+    m_dollar(dollar)
   {}
  private:
   int m_therm;
@@ -68,6 +70,7 @@ struct UTILITIES_API ThermExpnt {
   int m_sr;
   int m_people;
   int m_cycle;
+  int m_dollar;
 
   friend class detail::ThermUnit_Impl;
 };
@@ -151,6 +154,8 @@ UTILITIES_API ThermUnit createThermSolidAngle();
 UTILITIES_API ThermUnit createThermPeople();
 /** \relates ThermUnit */
 UTILITIES_API ThermUnit createThermCycle();
+/** \relates ThermUnit */
+UTILITIES_API ThermUnit createThermCurrency();
 
 /** Lumen (lm) = cd*sr. \relates ThermUnit */
 UTILITIES_API ThermUnit createThermLuminousFlux();

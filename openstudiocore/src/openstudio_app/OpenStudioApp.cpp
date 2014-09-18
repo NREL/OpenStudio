@@ -111,9 +111,9 @@ using namespace openstudio::model;
 
 namespace openstudio {
 
-OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUserScriptArgumentGetter> &t_argumentGetter)
-  : OSAppBase(argc, argv, QSharedPointer<MeasureManager>(new MeasureManager(t_argumentGetter, this))),
-    m_argumentGetter(t_argumentGetter)
+OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUserScriptInfoGetter> &t_infoGetter)
+  : OSAppBase(argc, argv, QSharedPointer<MeasureManager>(new MeasureManager(t_infoGetter, this))),
+    m_infoGetter(t_infoGetter)
 {
   setOrganizationName("NREL");
   QCoreApplication::setOrganizationDomain("nrel.gov");

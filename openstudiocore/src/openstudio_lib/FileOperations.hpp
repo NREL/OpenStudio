@@ -106,6 +106,8 @@ namespace openstudio {
       bool useRadianceForDaylightingCalculations, bool requireCalibrationReports, QWidget* parent = NULL);
 
   OPENSTUDIO_API bool findBCLMeasureWorkItem(const std::vector<runmanager::WorkItem>& workItems, const openstudio::UUID& uuid);
+  
+  OPENSTUDIO_API bool addReportRequestMeasureWorkItem(std::vector<runmanager::WorkItem>& workItems, const openstudio::BCLMeasure& bclMeasure);
 
   OPENSTUDIO_API bool addReportingMeasureWorkItem(std::vector<runmanager::WorkItem>& workItems, const openstudio::BCLMeasure& bclMeasure);
 

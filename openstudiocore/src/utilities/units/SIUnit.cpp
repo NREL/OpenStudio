@@ -28,7 +28,7 @@ namespace detail {
   SIUnit_Impl::SIUnit_Impl(const SIExpnt& exponents,
                            int scaleExponent,
                            const std::string& prettyString)
-    : Unit_Impl(scaleExponent,prettyString,11,UnitSystem::SI)
+    : Unit_Impl(scaleExponent,prettyString,12,UnitSystem::SI)
   {
     m_units[0].first = "kg"; m_units[0].second = exponents.m_kg;
     m_units[1].first = "m"; m_units[1].second = exponents.m_m;
@@ -41,12 +41,13 @@ namespace detail {
     m_units[8].first = "sr"; m_units[8].second = exponents.m_sr;
     m_units[9].first = "people"; m_units[9].second = exponents.m_people;
     m_units[10].first = "cycle"; m_units[10].second = exponents.m_cycle;
+    m_units[11].first = "$"; m_units[11].second = exponents.m_dollar;
   }
 
   SIUnit_Impl::SIUnit_Impl(const std::string& scaleAbbreviation,
                            const SIExpnt& exponents,
                            const std::string& prettyString)
-    : Unit_Impl(scaleAbbreviation,prettyString,11,UnitSystem::SI)
+    : Unit_Impl(scaleAbbreviation,prettyString,12,UnitSystem::SI)
   {
     m_units[0].first = "kg"; m_units[0].second = exponents.m_kg;
     m_units[1].first = "m"; m_units[1].second = exponents.m_m;
@@ -59,6 +60,7 @@ namespace detail {
     m_units[8].first = "sr"; m_units[8].second = exponents.m_sr;
     m_units[9].first = "people"; m_units[9].second = exponents.m_people;
     m_units[10].first = "cycle"; m_units[10].second = exponents.m_cycle;
+    m_units[11].first = "$"; m_units[11].second = exponents.m_dollar;
   }
 
   Unit SIUnit_Impl::clone() const {
@@ -141,6 +143,9 @@ SIUnit createSICycle() {
   return SIUnit(SIExpnt(0,0,0,0,0,0,0,0,0,0,1));
 }
 
+SIUnit createSICurrency() {
+  return SIUnit(SIExpnt(0,0,0,0,0,0,0,0,0,0,0,1));
+}
 
 SIUnit createSIForce() {
   return SIUnit(SIExpnt(1,1,-2),0,"N");

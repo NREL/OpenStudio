@@ -13,19 +13,19 @@ set(utilities_resources_src
   "utilities/BCL/Components/philadelphia pa [724086 TMY2-13739]/component.xml"
   "utilities/BCL/Components/philadelphia pa [724086 TMY2-13739]/files/USA_PA_Philadelphia_TMY2.epw"
   "utilities/BCL/Components/philadelphia pa [724086 TMY2-13739]/images/noimage_100px.png"
-  utilities/BCL/Measures/SetWindowToWallRatioByFacade/measure.xml
-  utilities/BCL/Measures/SetWindowToWallRatioByFacade/measure.rb
-  utilities/BCL/Measures/SetWindowToWallRatioByFacade/tests/EnvelopeAndLoadTestModel_01.osm
-  utilities/BCL/Measures/SetWindowToWallRatioByFacade/tests/EnvelopeAndLoadTestModel_02_RotatedSpaceAndBuilding.osm
-  utilities/BCL/Measures/SetWindowToWallRatioByFacade/tests/ReverseTranslatedModel.osm
-  utilities/BCL/Measures/SetWindowToWallRatioByFacade/tests/SetWindowToWallRatioByFacade_Test.rb
-  utilities/BCL/Measures/SetWindowToWallRatioByFacade/tests/test.osm
-  utilities/BCL/Measures/TestCreateWarningMsgs/measure.rb
-  utilities/BCL/Measures/TestCreateWarningMsgs/measure.xml
-  utilities/BCL/Measures/TestFlagAsNotApplicable/measure.rb
-  utilities/BCL/Measures/TestFlagAsNotApplicable/measure.xml
-  utilities/BCL/Measures/TestMissingARequiredArgWithNoDefault/measure.rb
-  utilities/BCL/Measures/TestMissingARequiredArgWithNoDefault/measure.xml
+  utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/measure.xml
+  utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/measure.rb
+  utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/EnvelopeAndLoadTestModel_01.osm
+  utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/EnvelopeAndLoadTestModel_02_RotatedSpaceAndBuilding.osm
+  utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/ReverseTranslatedModel.osm
+  utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/SetWindowToWallRatioByFacade_Test.rb
+  utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/test.osm
+  utilities/BCL/Measures/v2/TestCreateWarningMsgs/measure.rb
+  utilities/BCL/Measures/v2/TestCreateWarningMsgs/measure.xml
+  utilities/BCL/Measures/v2/TestFlagAsNotApplicable/measure.rb
+  utilities/BCL/Measures/v2/TestFlagAsNotApplicable/measure.xml
+  utilities/BCL/Measures/v2/TestMissingARequiredArgWithNoDefault/measure.rb
+  utilities/BCL/Measures/v2/TestMissingARequiredArgWithNoDefault/measure.xml
   utilities/Checksum/Checksum.txt
   utilities/Checksum/Checksum2.txt
   utilities/Filetypes/CHN_Guangdong.Shaoguan.590820_CSWD.epw
@@ -311,6 +311,9 @@ set(osversion_resources_src
   osversion/1_4_2/OpenStudio.idd
   osversion/1_4_2/example.osm
   osversion/1_4_2/example.osc
+  osversion/1_4_3/OpenStudio.idd
+  osversion/1_4_3/example.osm
+  osversion/1_4_3/example.osc
   osversion/unknown.osc
 )
 

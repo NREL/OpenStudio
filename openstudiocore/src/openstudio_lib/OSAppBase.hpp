@@ -22,7 +22,7 @@
 
 #include "../shared_gui_components/BaseApp.hpp"
 
-#include "../ruleset/RubyUserScriptArgumentGetter.hpp"
+#include "../ruleset/RubyUserScriptInfoGetter.hpp"
 
 #include "OpenStudioAPI.hpp"
 #include "../utilities/core/Logger.hpp"

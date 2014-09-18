@@ -249,7 +249,7 @@ TEST_F(AnalysisFixture, Analysis_DataPointsAreInvalid) {
 
 TEST_F(AnalysisFixture, Analysis_ClearAllResults) {
   // create dummy problem
-  BCLMeasure bclMeasure(resourcesPath() / toPath("utilities/BCL/Measures/SetWindowToWallRatioByFacade"));
+  BCLMeasure bclMeasure(resourcesPath() / toPath("utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade"));
   RubyMeasure measure(bclMeasure);
   OSArgument arg = OSArgument::makeDoubleArgument("wwr");
   RubyContinuousVariable var("Window to Wall Ratio",

@@ -106,11 +106,11 @@ namespace openstudio {
 
 namespace pat {
 
-PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUserScriptArgumentGetter> &t_argumentGetter )
+PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUserScriptInfoGetter> &t_infoGetter )
   : QApplication(argc, argv),
     m_onlineBclDialog(nullptr),
     m_cloudDialog(nullptr),
-    m_measureManager(t_argumentGetter, this)
+    m_measureManager(t_infoGetter, this)
 {
   connect(this, &PatApp::userMeasuresDirChanged, &m_measureManager, &MeasureManager::updateMeasuresLists);
 
