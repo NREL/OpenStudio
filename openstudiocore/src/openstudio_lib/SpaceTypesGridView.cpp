@@ -222,7 +222,7 @@ void SpaceTypesGridController::setCategoriesAndFields()
     std::vector<QString> fields;
     fields.push_back(STANDARDSBUILDINGTYPE);
     fields.push_back(STANDARDSSPACETYPE);
-    std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Measure Tags"), fields);
+    std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Measure\nTags"), fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 

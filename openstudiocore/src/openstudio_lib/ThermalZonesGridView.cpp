@@ -164,7 +164,7 @@ void ThermalZonesGridController::setCategoriesAndFields()
     fields.push_back(HUMIDIFYINGSETPOINTSCHEDULE);
     fields.push_back(DEHUMIDIFYINGSETPOINTSCHEDULE);
     fields.push_back(MULTIPLIER);
-    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("HVAC Systems"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("HVAC\nSystems"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -176,7 +176,7 @@ void ThermalZonesGridController::setCategoriesAndFields()
     fields.push_back(COOLINGDESIGNAIRFLOWMETHOD);
     fields.push_back(COOLINGDESIGNAIRFLOWRATE);
     fields.push_back(DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINCOOLINGMODE);
-    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Cooling Sizing Parameters"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Cooling\nSizing\nParameters"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -188,7 +188,7 @@ void ThermalZonesGridController::setCategoriesAndFields()
     fields.push_back(HEATINGMAXIMUMAIRFLOWPERZONEFLOORAREA);
     fields.push_back(HEATINGMAXIMUMAIRFLOWFRACTION);
     fields.push_back(DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINHEATINGMODE);
-    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Heating  Sizing Parameters"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Heating\nSizing\nParameters"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
