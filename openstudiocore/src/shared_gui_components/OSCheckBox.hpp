@@ -24,11 +24,45 @@
 
 #include "../model/Model.hpp"
 
+#include <QCheckBox>
 #include <QPushButton>
 
 namespace openstudio {
 
-class OSCheckBox2 : public QPushButton {
+  class OSCheckBox3 : public QCheckBox {
+    Q_OBJECT
+
+  public:
+
+    OSCheckBox3(QWidget * parent = nullptr);
+
+    virtual ~OSCheckBox3() {}
+
+    void bind(model::ModelObject & modelObject,
+      BoolGetter get,
+      boost::optional<BoolSetter> set = boost::none,
+      boost::optional<NoFailAction> reset = boost::none,
+      boost::optional<BasicQuery> isDefaulted = boost::none);
+
+    void unbind();
+
+    private slots:
+
+    void onToggled(bool checked);
+
+    void onModelObjectChange();
+
+    void onModelObjectRemove(Handle handle);
+
+  private:
+    boost::optional<model::ModelObject> m_modelObject;
+    boost::optional<BoolGetter> m_get;
+    boost::optional<BoolSetter> m_set;
+    boost::optional<NoFailAction> m_reset;
+    boost::optional<BasicQuery> m_isDefaulted;
+  };
+
+  class OSCheckBox2 : public QPushButton {
   Q_OBJECT
 
  public:

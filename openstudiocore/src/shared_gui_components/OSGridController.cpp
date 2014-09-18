@@ -199,7 +199,7 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
 
   if(QSharedPointer<CheckBoxConcept> checkBoxConcept = t_baseConcept.dynamicCast<CheckBoxConcept>()){
 
-    auto checkBox = new OSCheckBox2();
+    auto checkBox = new OSCheckBox3(); // OSCheckBox3 is derived from QCheckBox, whereas OSCheckBox2 is derived from QPushButton
 
     checkBox->bind(t_mo,
                    BoolGetter(std::bind(&CheckBoxConcept::get,checkBoxConcept.data(),t_mo)),

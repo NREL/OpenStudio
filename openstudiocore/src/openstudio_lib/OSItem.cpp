@@ -615,7 +615,7 @@ void OSItem::dropEvent(QDropEvent *event)
 
 void OSItem::onRemoveClicked()
 {
-  // Note: a OSDropZone2 owns this OSItem;
+  // Note: an OSDropZone2 owns this OSItem;
   // there should be a parent...
   OS_ASSERT(this->parent());
 
