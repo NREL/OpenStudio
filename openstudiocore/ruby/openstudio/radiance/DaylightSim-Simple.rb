@@ -333,7 +333,8 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
 
   Dir.chdir("#{t_outPath}")
   FileUtils.mkdir_p("#{t_outPath}/output/dc") unless File.exists?("#{t_outPath}/output/dc")
-
+  FileUtils.mkdir_p("#{t_outPath}/output/ts") unless File.exists?("#{t_outPath}/output/ts")
+ 
   binDir = "#{t_outPath}/output/dc/merged_space/maps"
   FileUtils.mkdir_p("#{binDir}") unless File.exists?("#{binDir}")
 
@@ -607,7 +608,7 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
 
   # i can haz gendaymtx vintage? - 2014.07.02 RPG
   # gendaymtx >= v4.2.b adds header and -h option to suppress
-  genDaymtxHdr = "-h "
+  genDaymtxHdr = ""
  
   puts "Determining gendaymtx vintage..."   
   exec_statement("gendaymtx -h -m #{t_options.skyvecDensity} \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" > \"#{t_outPath / OpenStudio::Path.new("daymtx_out.tmp")}\" ")
@@ -615,8 +616,12 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
 
   if File.zero?("#{t_outPath / OpenStudio::Path.new("daymtx_out.tmp")}")
     genDaymtxHdr = ""
+    if t_options.z == true
+      puts "Old Radiance version detected, will not work with 3-phase method, quitting."
+      exit
+    end
   else 
-    puts "Suppressing sky matrix header with 'gendaymtx -h'"
+    puts "NOTE: Producing sky matrix headers"
   end
 
   File.delete("#{t_outPath / OpenStudio::Path.new("daymtx_out.tmp")}")
@@ -648,21 +653,16 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
 
   if t_options.z == true  # 3-phase
 
-    # get all required matrices
-    #dmx_mapping_data = []
-      # @rpg777
-      # azimuth, window_group, blinds_closed = someparsingfunction(dmx_file)
-      #azimuth = 1
-      #window_group = "group"
-      #blinds_closed = false
     windowMaps = File::open("#{t_outPath}/bsdf/mapping.rad")
+    
     windowMaps.each do |row|
       # skip header
       next if row[0] == "#"
       wg = row.split(",")[0]
       # do uncontrolled windows (WG0)
       if wg[2].to_i == 0
-        simulations << "dctimestep -n 8760 #{t_outPath}/output/dc/#{wg}.vmx annual-sky.mtx > #{wg}.irr"
+        simulations << "dctimestep #{t_outPath}/output/dc/#{wg}.vmx annual-sky.mtx | rmtxop -fa -t -c 47.4 120 11.6 - | getinfo - > #{t_outPath}/output/ts/#{wg}.ill"
+       
       end
       next if wg[2].to_i == 0
       # do all controlled window groups
@@ -670,21 +670,23 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
       if wgXMLs.size > 2
         puts "WARN: Window Group #{wg} has #{wgXMLs.size.to_s} BSDFs (2 max supported by OpenStudio application)."
       end
+      
       wgXMLs.each_index do |i|
-        simulations << "dctimestep -n 8760 #{t_outPath}/output/dc/#{wg}.vmx #{t_outPath}/bsdf/#{wgXMLs[i].strip} #{t_outPath}/output/dc/#{wg}.dmx \\
-        annual-sky.mtx > #{wg}_#{wgXMLs[i].split[0]}.irr"
-
+        simulations << "dctimestep #{t_outPath}/output/dc/#{wg}.vmx #{t_outPath}/bsdf/#{wgXMLs[i].strip} #{t_outPath}/output/dc/#{wg}.dmx \\
+        annual-sky.mtx | rmtxop -fa -t -c 47.4 120 11.6 - | getinfo - > #{t_outPath}/output/ts/#{wg}_#{wgXMLs[i].split[0]}.ill"
+ 
       end
+
     end
-    puts "INFO: #{simulations.size.to_s} annual simulations required\n"
+    
+    # get annual values for window control sensors (note: no transpose)
+    simulations << "dctimestep #{t_outPath}/output/dc/window_controls.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - | getinfo - > #{t_outPath}/output/ts/window_controls.ill"
 
     # return the bsdf index for window group given by index at this hour
+    # this is deprecated
     windowMapping = lambda { |index, hour| 
       data = dmx_mapping_data[index]
-      # TODO are blinds open for this point in space time?
-      # @rpg777
-      # blindsopen = magicalFunction(data[0], data[1], hour)
-
+      # TODO remove this bit for shade controls
       return 0
     }
 
@@ -950,7 +952,6 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
         end
 
       end
-
 
       #Print illuminance results to dat file
       FileUtils.mkdir_p("#{Dir.pwd}/output/ts/#{space_name}/maps") unless File.exists?("#{Dir.pwd}/output/ts/#{space_name}/maps")
