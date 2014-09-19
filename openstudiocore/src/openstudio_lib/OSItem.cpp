@@ -617,11 +617,11 @@ void OSItem::onRemoveClicked()
 {
   // Note: an OSDropZone2 owns this OSItem;
   // there should be a parent...
-  OS_ASSERT(this->parent());
+  //OS_ASSERT(this->parent());
 
   // ... and it should be a OSDropZone2...
-  auto dropZone = qobject_cast<OSDropZone2 *>(this->parent());
-  OS_ASSERT(dropZone);
+  //auto dropZone = qobject_cast<OSDropZone2 *>(this->parent());
+  //OS_ASSERT(dropZone);
 
   // ... and it needs to listen to, and act on,
   // this signal to cause a model object reset

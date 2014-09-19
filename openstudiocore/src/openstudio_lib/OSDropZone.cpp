@@ -660,8 +660,7 @@ void OSDropZone2::dropEvent(QDropEvent *event)
     connect(m_item, &OSItem::itemRemoveClicked, this, &OSDropZone2::onItemRemoveClicked);
 
     // Tell EditView to display this object
-    emit itemClicked(m_item);
-
+    //emit itemClicked(m_item); TODO For now, don't display on drop
 
     if(modelObject){
       if(OSAppBase::instance()->currentDocument()->fromComponentLibrary(itemId)){

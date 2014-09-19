@@ -54,7 +54,11 @@
 
 namespace openstudio {
 
-OSGridView::OSGridView(OSGridController * gridController, const QString & headerText, const QString & dropZoneText, QWidget * parent)
+OSGridView::OSGridView(OSGridController * gridController,
+  const QString & headerText,
+  const QString & dropZoneText,
+  bool useHeader,
+  QWidget * parent)
   : QWidget(parent),
     m_gridLayout(nullptr),
     m_dropZone(nullptr),
@@ -111,16 +115,19 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   layout->setContentsMargins(0,0,0,0);
   setLayout(layout);
 
-  auto header = new DarkGradientHeader();
-  header->label->setText(headerText);
-
   auto widget = new QWidget;
 
-  auto collabsibleView = new OSCollapsibleView(this);
-  layout->addWidget(collabsibleView);
-  collabsibleView->setHeader(header);
-  collabsibleView->setContent(widget);
-  collabsibleView->setExpanded(true);
+  if (useHeader) {
+    auto header = new DarkGradientHeader();
+    header->label->setText(headerText); 
+    auto collabsibleView = new OSCollapsibleView(this);
+    collabsibleView->setHeader(header);
+    collabsibleView->setContent(widget);
+    collabsibleView->setExpanded(true); 
+    layout->addWidget(collabsibleView);
+  } else {
+    layout->addWidget(widget);
+  }
 
   setGridController(m_gridController);
 

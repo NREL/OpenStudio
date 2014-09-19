@@ -107,7 +107,7 @@
 #define NAME "Space Type Name"
 
 // GENERAL
-#define RENDERINGCOLOR "Rendering color"
+#define RENDERINGCOLOR "Rendering\nColor"
 #define DEFAULTCONSTRUCTIONSET "Default Construction Set"
 #define DEFAULTSCHEDULESET "Default Schedule Set"
 #define DESIGNSPECIFICATIONOUTDOORAIR "Design Specification Outdoor Air"
@@ -149,7 +149,7 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
   std::vector<model::ModelObject> spaceTypeModelObjects = subsetCastVector<model::ModelObject>(spaceTypes);
 
   SpaceTypesGridController * spaceTypesGridController  = new SpaceTypesGridController(m_isIP, "Space Types", model, spaceTypeModelObjects);
-  OSGridView * gridView = new OSGridView(spaceTypesGridController, "Space Types", "Drop\nZone", parent);
+  OSGridView * gridView = new OSGridView(spaceTypesGridController, "Space Types", "Drop\nZone", false, parent);
 
   bool isConnected = false;
 

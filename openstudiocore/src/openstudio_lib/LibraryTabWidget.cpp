@@ -47,7 +47,7 @@ LibraryTabWidget::LibraryTabWidget(QWidget * parent)
 
   m_tabBar->setObjectName("VBlueGradientWidget");
 
-  m_tabBar->setContentsMargins(0,0,0,0);
+  m_tabBar->setContentsMargins(0,0,5,0);
 
   m_removeButton = new QPushButton(this);
 
@@ -60,24 +60,18 @@ LibraryTabWidget::LibraryTabWidget(QWidget * parent)
   m_removeButton->setFlat(true);
   m_removeButton->setStyleSheet(str);
   m_removeButton->setFixedSize(20, 20);
+  m_removeButton->setToolTip("Remove object");
 
   // Default to hide
   m_removeButton->hide();
 
   auto isConnected = connect(m_removeButton, SIGNAL(clicked(bool)), this, SIGNAL(removeButtonClicked(bool)));
   OS_ASSERT(isConnected);
-  
-  auto vLayout = new QVBoxLayout();
-  vLayout->addWidget(m_removeButton, 0, Qt::AlignVCenter);
-  vLayout->addStretch();
-  //auto s = new QSpacerItem(15, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
-  //vLayout->addSpacerItem(s);
-
+ 
   auto hLayout = new QHBoxLayout();
+  hLayout->setContentsMargins(0, 0, 0, 0);
   hLayout->addStretch();
-  hLayout->addLayout(vLayout);
-  //s = new QSpacerItem(5, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
-  //hLayout->addSpacerItem(s);
+  hLayout->addWidget(m_removeButton, 0, Qt::AlignVCenter);
 
   m_tabBar->setLayout(hLayout);
 

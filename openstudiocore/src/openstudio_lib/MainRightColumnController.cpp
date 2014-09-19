@@ -100,8 +100,6 @@ MainRightColumnController::MainRightColumnController(const model::Model & model,
 void MainRightColumnController::onItemRemoveClicked(OSItem *)
 {
   setEditView(nullptr);
-  QTimer::singleShot(0, this, SLOT(markAsModified()));
-
 }
 
 void MainRightColumnController::emitItemRemoveClicked(OSItem * item)
@@ -148,7 +146,6 @@ void MainRightColumnController::inspectModelObject(model::OptionalModelObject & 
   }
 }
 
-
 void MainRightColumnController::inspectModelObjectByItem(OSItem * item, bool readOnly)
 {
   m_item = item;
@@ -168,6 +165,7 @@ void MainRightColumnController::onRemoveButtonClicked(bool checked)
 {
   if (m_item) {
     m_item->onRemoveClicked();
+    setEditView(nullptr);
   }
 }
 

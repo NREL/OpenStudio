@@ -45,7 +45,11 @@ class OSGridView : public QWidget
 
 public:
 
-  OSGridView(OSGridController * gridController,  const QString & headerText, const QString & dropZoneText, QWidget * parent = nullptr);
+  OSGridView(OSGridController * gridController,
+    const QString & headerText,
+    const QString & dropZoneText,
+    bool useHeader,
+    QWidget * parent = nullptr);
 
   virtual ~OSGridView() {};
 
