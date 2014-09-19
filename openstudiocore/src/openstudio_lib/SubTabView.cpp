@@ -108,11 +108,6 @@ void SubTabView::connectItemSelectorButtons()
   connect(m_itemSelectorButtons, &OSItemSelectorButtons::downloadComponentsClicked, this, &SubTabView::downloadComponentsClicked);
 }
 
-void SubTabView::connectGridView()
-{
-  bool isConnected = false;
-}
-
 void SubTabView::createLayout()
 {
   QWidget * leftWidget = new QWidget();
@@ -187,7 +182,7 @@ void SubTabView::paintEvent ( QPaintEvent * event )
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void SubTabView::onDropZoneItemClicked(OSItem*)
+void SubTabView::onDropZoneItemClicked(OSItem* item)
 {
 }
 

@@ -58,6 +58,8 @@ signals:
 
   void modelObjectSelected(model::OptionalModelObject & modelObject, bool readOnly);
 
+  void dropZoneItemSelected(OSItem* item, bool readOnly);
+
 protected:
 
   void onClearSelection();

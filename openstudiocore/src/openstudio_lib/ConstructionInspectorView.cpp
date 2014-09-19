@@ -48,8 +48,8 @@ namespace openstudio {
 
 ConstructionInspectorView::ConstructionInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
   : ModelObjectInspectorView(model, true, parent),
-    m_constructionDZ(NULL),
-    m_nameEdit(NULL),
+    m_constructionDZ(nullptr),
+    m_nameEdit(nullptr),
     m_isIP(isIP)
 {
   createLayout();

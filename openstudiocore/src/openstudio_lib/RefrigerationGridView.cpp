@@ -56,31 +56,31 @@
 
 // Display Case Fields
 #define ANTISWEATHEATERCONTROLTYPE "Anti Sweat Heater Control Type"
-#define AVAILABILITYSCHEDULE "Availability Schedule"
-#define AVERAGEREFRIGERANTCHARGEINVENTORY "Average Refrigerant Charge Inventory"
+#define AVAILABILITYSCHEDULE "Availability Schedule" // TODO this has not yet been implemented
+#define AVERAGEREFRIGERANTCHARGEINVENTORY "Average Refrigerant Charge Inventory" // TODO this has not yet been implemented
 #define CASEANTISWEATHEATERPOWERPERUNITLENGTH "Case Anti Sweat Heater Power\nper Unit Length"
 #define CASECREDITFRACTIONSCHEDULE "Case Credit Fraction Schedule"
-#define CASEDEFROSTDRIPDOWNSCHEDULE "Case Defrost Drip Down Schedule"
+#define CASEDEFROSTDRIPDOWNSCHEDULE "Case Defrost Drip Down Schedule" // TODO this has not yet been implemented
 #define CASEDEFROSTPOWERPERUNITLENGTH "Case Defrost Power\nper Unit Length"
-#define CASEDEFROSTSCHEDULE "Case Defrost Schedule"
-#define CASEDEFROSTTYPE "Case Defrost Type"
-#define CASEHEIGHT "Case Height"
+#define CASEDEFROSTSCHEDULE "Case Defrost Schedule" // TODO this has not yet been implemented
+#define CASEDEFROSTTYPE "Case Defrost Type" // TODO this has not yet been implemented
+#define CASEHEIGHT "Case Height" // TODO this has not yet been implemented
 #define CASELENGTH "Case Length"
 #define CASELIGHTINGSCHEDULE "Case Lighting Schedule"
 #define CASEOPERATINGTEMPERATURE "Case Operating Temperature"
-#define DEFROSTENERGYCORRECTIONCURVE "Defrost Energy Correction Curve"
-#define DEFROSTENERGYCORRECTIONCURVETYPE "Defrost Energy Correction Curve Type"
+#define DEFROSTENERGYCORRECTIONCURVE "Defrost Energy Correction Curve" // TODO this has not yet been implemented
+#define DEFROSTENERGYCORRECTIONCURVETYPE "Defrost Energy Correction Curve Type" // TODO ***************************************** AVAILABLE, but this has not yet been called
 #define DESIGNEVAPORATORTEMPERATUREORBRINEINLETTEMPERATURE "Design Evaporator Temperature\nor Brine Inlet Temperature"
 #define FRACTIONOFANTISWEATHEATERENERGYTOCASE "Fraction of Anti Sweat\nHeater Energy to Case"
 #define FRACTIONOFLIGHTINGENERGYTOCASE "Fraction of Lighting Energy to Case"
 #define HUMIDITYATZEROANTISWEATHEATERENERGY "Humidity at Zero Anti Sweat\nHeater Energy"
 #define INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH "Installed Case Lighting Power\nper Unit Length"
-#define LATENTCASECREDITCURVETYPE "Latent Case Credit Curve Type"
+#define LATENTCASECREDITCURVETYPE "Latent Case Credit Curve Type" // TODO this has not yet been implemented
 #define MINIMUMANTISWEATHEATERPOWERPERUNITLENGTH "Minimum Anti Sweat Heater Power\nper Unit Length"
 #define NAME "Name"
 #define OPERATINGCASEFANPOWERPERUNITLENGTH "Operating Case Fan Power\nper Unit Length"
-#define RATEDAMBIENTRELATIVEHUMIDITY "Rated Ambient Relative Humidity"
-#define RATEDAMBIENTTEMPERATURE "Rated Ambient Temperature"
+#define RATEDAMBIENTRELATIVEHUMIDITY "Rated Ambient Relative Humidity" // TODO this has not yet been implemented
+#define RATEDAMBIENTTEMPERATURE "Rated Ambient Temperature" // ************************************************************* TODO AVAILABLE, but this has not yet been called
 #define RATEDLATENTHEATRATIO "Rated Latent Heat Ratio"
 #define RATEDRUNTIMEFRACTION "Rated Runtime Fraction"
 #define RATEDTOTALCOOLINGCAPACITYPERUNITLENGTH "Rated Total Cooling Capacity\nper Unit Length"
@@ -93,27 +93,27 @@
 
 // Walk In Fields
 #define AVAILABILITYSCHEDULE "Availability Schedule"
-#define AVERAGEREFRIGERANTCHARGEINVENTORY "Average Refrigerant Charge Inventory"
+#define AVERAGEREFRIGERANTCHARGEINVENTORY "Average Refrigerant Charge Inventory" // TODO this has not yet been implemented
 #define DEFROSTCONTROLTYPE "Defrost Control Type"
-#define DEFROSTDRIPDOWNSCHEDULE "Defrost Drip Down Schedule"
+#define DEFROSTDRIPDOWNSCHEDULE "Defrost Drip Down Schedule" // TODO this has not yet been implemented
 #define DEFROSTPOWER "Defrost Power"
-#define DEFROSTSCHEDULE "Defrost Schedule"
-#define DEFROSTTYPE "Defrost Type"
+#define DEFROSTSCHEDULE "Defrost Schedule" // TODO this has not yet been implemented
+#define DEFROSTTYPE "Defrost Type" // TODO this has not yet been implemented
 #define HEATINGPOWERSCHEDULE "Heating Power Schedule"
-#define INSULATEDFLOORSURFACEAREA "Insulated Floor Surface Area"
+#define INSULATEDFLOORSURFACEAREA "Insulated Floor Surface Area" // TODO this has not yet been implemented
 #define INSULATEDFLOORUVALUE "Insulated Floor U Value"
-#define LIGHTINGSCHEDULE "Lighting Schedule"
+#define LIGHTINGSCHEDULE "Lighting Schedule" // TODO this has not yet been implemented
 #define NAME "Name"
-#define OPERATINGTEMPERATURE "Operating Temperature"
-#define RATEDCIRCULATIONFANPOWER "Rated Circulation Fan Power"
-#define RATEDCOILCOOLINGCAPACITY "Rated Coil Cooling Capacity"
-#define RATEDCOOLINGCOILFANPOWER "Rated Cooling Coil Fan Power"
-#define RATEDCOOLINGSOURCETEMPERATURE "Rated Cooling Source Temperature"
-#define RATEDTOTALHEATINGPOWER "Rated Total Heating Power"
-#define RATEDTOTALLIGHTINGPOWER "Rated Total Lighting Power"
+#define OPERATINGTEMPERATURE "Operating Temperature" // TODO this has not yet been implemented
+#define RATEDCIRCULATIONFANPOWER "Rated Circulation Fan Power" // TODO this has not yet been implemented
+#define RATEDCOILCOOLINGCAPACITY "Rated Coil Cooling Capacity" // TODO this has not yet been implemented
+#define RATEDCOOLINGCOILFANPOWER "Rated Cooling Coil Fan Power" // TODO this has not yet been implemented
+#define RATEDCOOLINGSOURCETEMPERATURE "Rated Cooling Source Temperature" // TODO this has not yet been implemented
+#define RATEDTOTALHEATINGPOWER "Rated Total Heating Power" // TODO this has not yet been implemented
+#define RATEDTOTALLIGHTINGPOWER "Rated Total Lighting Power" // TODO this has not yet been implemented
 #define RESTOCKINGSCHEDULE "Restocking Schedule"
 #define TEMPERATURETERMINATIONDEFROSTFRACTIONTOICE "Temperature Termination\nDefrost Fraction to Ice"
-#define ZONEBOUNDARIES "Zone Boundaries"
+#define ZONEBOUNDARIES "Zone Boundaries" // TODO this has not yet been implemented
 #define ZONEBOUNDARYTHERMALZONE "Thermal Zone"
 #define ZONEBOUNDARYTOTALINSULATEDSURFACEAREAFACINGZONE "Total Insulated Surface\nArea Facing Zone"
 #define ZONEBOUNDARYAREAOFGLASSREACHINDOORSFACINGZONE "Area of Glass Reach In\nDoors Facing Zone"
@@ -166,7 +166,7 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
   std::vector<model::ModelObject> caseModelObjects = subsetCastVector<model::ModelObject>(refrigerationCases);
 
   RefrigerationCaseGridController * refrigerationCaseGridController  = new RefrigerationCaseGridController(m_isIP, "Display Cases", model, caseModelObjects);
-  OSGridView * caseGridView = new OSGridView(refrigerationCaseGridController, "Display Cases", "Drop\nCase", parent);
+  OSGridView * caseGridView = new OSGridView(refrigerationCaseGridController, "Display Cases", "Drop\nCase", true, parent);
 
   bool isConnected = false;
 
@@ -179,7 +179,7 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
   std::vector<model::ModelObject> walkInModelObjects = subsetCastVector<model::ModelObject>(refrigerationWalkIns);
 
   RefrigerationWalkInGridController * refrigerationWalkInGridController  = new RefrigerationWalkInGridController(m_isIP, "Walk Ins", model, walkInModelObjects);
-  OSGridView * walkInView = new OSGridView(refrigerationWalkInGridController, "Walk Ins", "Drop\nWalk In", parent);
+  OSGridView * walkInView = new OSGridView(refrigerationWalkInGridController, "Walk Ins", "Drop\nWalk In", true, parent);
 
   isConnected = connect(walkInView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
@@ -214,8 +214,8 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
 
   {
     std::vector<QString> fields;
-    //fields.push_back(RACK);
-    //fields.push_back(THERMALZONE);
+    fields.push_back(RACK);
+    fields.push_back(THERMALZONE);
     fields.push_back(CASELENGTH);
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("General"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
@@ -419,28 +419,36 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
             static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
             std::function<std::vector<std::string> ()>(&model::RefrigerationCase::latentCaseCreditCurveTypeValues),
             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::latentCaseCreditCurveType),
-            CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setLatentCaseCreditCurveType));
+            CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setLatentCaseCreditCurveType),
+            boost::optional<std::function<void(model::RefrigerationCase *)> >(),
+            boost::optional<DataSource>());
     }else if(field == ANTISWEATHEATERCONTROLTYPE){
       addComboBoxColumn<std::string,model::RefrigerationCase>(
             QString(ANTISWEATHEATERCONTROLTYPE),
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
             std::function<std::vector<std::string> ()>(&model::RefrigerationCase::antiSweatHeaterControlTypeValues),
             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::antiSweatHeaterControlType),
-            CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setAntiSweatHeaterControlType));
+            CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setAntiSweatHeaterControlType),
+            boost::optional<std::function<void(model::RefrigerationCase *)> >(),
+            boost::optional<DataSource>());
     }else if(field == CASEDEFROSTTYPE){
       addComboBoxColumn<std::string,model::RefrigerationCase>(
             QString(CASEDEFROSTTYPE),
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
             std::function<std::vector<std::string> ()>(&model::RefrigerationCase::caseDefrostTypeValues),
             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::caseDefrostType),
-            CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setCaseDefrostType));
+            CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setCaseDefrostType),
+            boost::optional<std::function<void(model::RefrigerationCase *)> >(),
+            boost::optional<DataSource>());
     }else if(field == DEFROSTENERGYCORRECTIONCURVETYPE){
       addComboBoxColumn<std::string,model::RefrigerationCase>(
             QString(DEFROSTENERGYCORRECTIONCURVETYPE),
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
             std::function<std::vector<std::string> ()>(&model::RefrigerationCase::defrostEnergyCorrectionCurveTypeValues),
             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::defrostEnergyCorrectionCurveType),
-            CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setDefrostEnergyCorrectionCurveType));
+            CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setDefrostEnergyCorrectionCurveType),
+            boost::optional<std::function<void(model::RefrigerationCase *)> >(),
+            boost::optional<DataSource>());
     }else if(field == INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH){
       addQuantityEditColumn(QString(INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH),
                             QString("W/m"),
@@ -530,14 +538,15 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
           NullAdapter(&model::RefrigerationCase::setAvailabilitySchedule),
           NullAdapter(&model::RefrigerationCase::resetAvailabilitySchedule));
     }else if(field == THERMALZONE){
-      addComboBoxColumn<model::ThermalZone,model::RefrigerationCase>(
+      addComboBoxColumn<model::ThermalZone,model::RefrigerationCase>( 
           QString(THERMALZONE),
-          &openstudio::objectName,
+          std::function<std::string (const openstudio::model::ThermalZone &)>(&openstudio::objectName),
           std::function<std::vector<model::ThermalZone> ()>(std::bind(&openstudio::sortByObjectName<model::ThermalZone>,
               std::bind(&model::Model::getConcreteModelObjects<model::ThermalZone>, m_model))),
           CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::thermalZone),
           CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setThermalZone),
-          NullAdapter(&model::RefrigerationCase::resetThermalZone));
+          boost::optional<std::function<void(openstudio::model::RefrigerationCase *)>>(NullAdapter(&model::RefrigerationCase::resetThermalZone)),
+          boost::optional<openstudio::DataSource>());
     }else if(field == RACK){
       addComboBoxColumn<model::RefrigerationSystem,model::RefrigerationCase>(
           QString(RACK),
@@ -750,14 +759,18 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
             std::function<std::vector<std::string> ()>(&model::RefrigerationWalkIn::defrostTypeValues),
             CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::defrostType),
-            CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setDefrostType));
+            CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setDefrostType),
+            boost::optional<std::function<void(model::RefrigerationWalkIn *)> >(),
+            boost::optional<DataSource>());
     }else if(field == DEFROSTCONTROLTYPE){
       addComboBoxColumn<std::string,model::RefrigerationWalkIn>(
             QString(DEFROSTCONTROLTYPE),
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
             std::function<std::vector<std::string> ()>(&model::RefrigerationWalkIn::defrostControlTypeValues),
             CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::defrostControlType),
-            CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setDefrostControlType));
+            CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setDefrostControlType),
+            boost::optional<std::function<void(model::RefrigerationWalkIn *)> >(),
+            boost::optional<DataSource>());
     }else if(field == OPERATINGTEMPERATURE){
       addQuantityEditColumn(QString(OPERATINGTEMPERATURE),
                             QString("C"),
@@ -839,17 +852,21 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             NullAdapter(&model::RefrigerationWalkIn::averageRefrigerantChargeInventory),
                             NullAdapter(&model::RefrigerationWalkIn::setAverageRefrigerantChargeInventory));
     }else if(field == DEFROSTSCHEDULE){
-      //addComboBoxColumn<model::Schedule,model::RefrigerationWalkIn>(
-      //    QString(DEFROSTSCHEDULE),
-      //    &openstudio::objectName,
-      //    std::bind(&openstudio::sortByObjectName<model::Schedule>,
-      //                std::bind(&openstudio::model::getCompatibleSchedules,
-      //                            m_model,
-      //                            "RefrigerationWalkIn",
-      //                            "Defrost")),
-      //    NullAdapter(&model::RefrigerationWalkIn::defrostSchedule),
-      //    NullAdapter(&model::RefrigerationWalkIn::setDefrostSchedule),
-      //    boost::none);
+      addComboBoxColumn<model::Schedule, model::RefrigerationWalkIn>(
+          QString(DEFROSTSCHEDULE),
+          std::function<std::string (const model::Schedule &)>(&openstudio::objectName),
+          std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
+                      std::bind(&openstudio::model::getCompatibleSchedules,
+                                  m_model,
+                                  "RefrigerationWalkIn",
+                                  "Defrost"))),
+          CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::defrostSchedule),
+          CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setDefrostSchedule),
+          boost::optional<std::function<void (model::RefrigerationWalkIn *)>>(),
+          boost::optional<std::function<bool (model::RefrigerationWalkIn *)>>(),
+          boost::optional<DataSource>()
+
+          );
     }else if(field == DEFROSTPOWER){
       addQuantityEditColumn(QString(DEFROSTPOWER),
                             QString("W"),
@@ -940,18 +957,17 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
           NullAdapter(&model::RefrigerationWalkIn::addToSystem),
 
           boost::optional<std::function<void (model::RefrigerationWalkIn*)> >(NullAdapter(&model::RefrigerationWalkIn::removeFromSystem)));
-    }else if(field == ZONEBOUNDARYTHERMALZONE){
-      addComboBoxColumn<model::ThermalZone,model::RefrigerationWalkIn>(
-          QString(ZONEBOUNDARYTHERMALZONE),
-          &openstudio::objectName,
-
-          std::function<std::vector<model::ThermalZone> ()>(std::bind(&openstudio::sortByObjectName<model::ThermalZone>,
-                      std::bind(&model::Model::getConcreteModelObjects<model::ThermalZone>,m_model))),
-          CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::zoneBoundaryThermalZone),
-          CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setZoneBoundaryThermalZone),
-
-          NullAdapter(&model::RefrigerationWalkIn::resetZoneBoundaryThermalZone));
-    }else if(field == ZONEBOUNDARYTOTALINSULATEDSURFACEAREAFACINGZONE){
+    }
+    else if (field == ZONEBOUNDARYTHERMALZONE){
+      addComboBoxColumn<model::ThermalZone, model::RefrigerationWalkIn>(
+        QString(ZONEBOUNDARYTHERMALZONE),
+        &openstudio::objectName,
+        std::function<std::vector<model::ThermalZone>()>(std::bind(&openstudio::sortByObjectName<model::ThermalZone>,
+        std::bind(&model::Model::getConcreteModelObjects<model::ThermalZone>, m_model))),
+        CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::zoneBoundaryThermalZone),
+        CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setZoneBoundaryThermalZone),
+        NullAdapter(&model::RefrigerationWalkIn::resetZoneBoundaryThermalZone));
+    }else if (field == ZONEBOUNDARYTOTALINSULATEDSURFACEAREAFACINGZONE){
       addQuantityEditColumn(QString(ZONEBOUNDARYTOTALINSULATEDSURFACEAREAFACINGZONE),
                             QString("m^2"),
                             QString("m^2"),

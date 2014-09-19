@@ -110,7 +110,7 @@ ThermalZonesGridView::ThermalZonesGridView(bool isIP, const model::Model & model
   std::vector<model::ModelObject> thermalZoneModelObjects = subsetCastVector<model::ModelObject>(thermalZones);
 
   ThermalZonesGridController * thermalZonesGridController  = new ThermalZonesGridController(m_isIP, "Thermal Zones", model, thermalZoneModelObjects);
-  OSGridView * gridView = new OSGridView(thermalZonesGridController, "Thermal Zones", "Drop\nZone", parent);
+  OSGridView * gridView = new OSGridView(thermalZonesGridController, "Thermal Zones", "Drop\nZone", false, parent);
 
   bool isConnected = false;
 
@@ -164,7 +164,7 @@ void ThermalZonesGridController::setCategoriesAndFields()
     fields.push_back(HUMIDIFYINGSETPOINTSCHEDULE);
     fields.push_back(DEHUMIDIFYINGSETPOINTSCHEDULE);
     fields.push_back(MULTIPLIER);
-    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("HVAC Systems"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("HVAC\nSystems"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -176,7 +176,7 @@ void ThermalZonesGridController::setCategoriesAndFields()
     fields.push_back(COOLINGDESIGNAIRFLOWMETHOD);
     fields.push_back(COOLINGDESIGNAIRFLOWRATE);
     fields.push_back(DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINCOOLINGMODE);
-    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Cooling Sizing Parameters"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Cooling\nSizing\nParameters"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -188,7 +188,7 @@ void ThermalZonesGridController::setCategoriesAndFields()
     fields.push_back(HEATINGMAXIMUMAIRFLOWPERZONEFLOORAREA);
     fields.push_back(HEATINGMAXIMUMAIRFLOWFRACTION);
     fields.push_back(DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINHEATINGMODE);
-    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Heating  Sizing Parameters"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Heating\nSizing\nParameters"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -310,12 +310,30 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                               &model::ThermalZone::sizingZone));
 
     }else if(field == COOLINGDESIGNAIRFLOWMETHOD){
-      addComboBoxColumn(QString(COOLINGDESIGNAIRFLOWMETHOD),
+      addComboBoxColumn<std::string, model::ThermalZone>(QString(COOLINGDESIGNAIRFLOWMETHOD),
                         std::function<std::string (const std::string &)>(static_cast<std::string (*)(const std::string&)>(&openstudio::toString)),
                         std::function<std::vector<std::string> ()>(&model::SizingZone::coolingDesignAirFlowMethodValues),
-                        ProxyAdapter(&model::SizingZone::coolingDesignAirFlowMethod, &model::ThermalZone::sizingZone),
-                        ProxyAdapter(static_cast<bool (model::SizingZone::*)(const std::string &)>(&model::SizingZone::setCoolingDesignAirFlowMethod),
-                          &model::ThermalZone::sizingZone));
+                        std::function<std::string (model::ThermalZone *)>([](model::ThermalZone *t_z) {
+                            try {
+                              return t_z->sizingZone().coolingDesignAirFlowMethod();
+                            } catch (const std::exception &e) {
+                              // If this code is called there is no sizingZone currently set. This means
+                              // that the ThermalZone is probably in the process of being destructed. So,
+                              // we don't want to create a new sizingZone, we really just want to try to 
+                              // continue gracefully, so let's pretend that the current coolingDesignAirFlowMethod
+                              // is the 0th one in the list of possible options.
+                              //
+                              // This might not be the best solution to this problem
+                              LOG(Debug, "Exception while obtaining coolingDesignAirflowMethod " << e.what());
+                              return model::SizingZone::coolingDesignAirFlowMethodValues().at(0);
+                            }
+                          }
+                          ),
+                          std::function<bool(model::ThermalZone *, std::string)>([](model::ThermalZone *t_z, std::string t_val){ auto sz = t_z->sizingZone(); return sz.setCoolingDesignAirFlowMethod(t_val); }),
+                          boost::optional<std::function<void(openstudio::model::ThermalZone *)>>(), 
+                          boost::optional<std::function<bool(openstudio::model::ThermalZone *)>>(),
+                          boost::optional<openstudio::DataSource>()
+                          );
 
     }else if(field == COOLINGTHERMOSTATSCHEDULE){
 

@@ -86,6 +86,7 @@ protected:
   virtual QString getColor(const model::ModelObject & modelObject);
 
 public slots:
+  REGISTER_LOGGER("openstudio.ThermalZonesGridController");
 
   virtual void onItemDropped(const OSItemId& itemId);
 

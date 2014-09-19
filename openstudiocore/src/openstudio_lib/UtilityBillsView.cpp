@@ -174,9 +174,9 @@ boost::optional<QString> UtilityBillsInspectorView::runPeriodDates()
 
 void UtilityBillsInspectorView::createWidgets()
 {
-  QLabel * label = NULL;
+  QLabel * label = nullptr;
 
-  QVBoxLayout * vLayout = NULL;
+  QVBoxLayout * vLayout = nullptr;
 
   QWidget* hiddenWidget = new QWidget();
   m_hiddenWidgetIndex = this->stackedWidget()->insertWidget(0, hiddenWidget);
@@ -321,7 +321,7 @@ void UtilityBillsInspectorView::createWidgets()
   connect(buttonGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked),
           this, static_cast<void (UtilityBillsInspectorView::*)(int)>(&UtilityBillsInspectorView::setBillFormat));
 
-  QRadioButton * radioButton = NULL; 
+  QRadioButton * radioButton = nullptr; 
 
   radioButton = new QRadioButton("Start Date and End Date");
   buttonGroup->addButton(radioButton,0);

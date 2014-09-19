@@ -458,7 +458,9 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     }
   case openstudio::IddObjectType::DesignSpecification_OutdoorAir :
     {
-      modelObject = translateDesignSpecificationOutdoorAir(workspaceObject);
+      // Call this directly because we don't want to translate all of them
+      // only those that are connected to the SizingZone object
+      //modelObject = translateDesignSpecificationOutdoorAir(workspaceObject);
       break;
     }
   case openstudio::IddObjectType::ElectricEquipment :

@@ -24,6 +24,7 @@
 #include "ModelObjectItem.hpp"
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
+#include "OSDropZone.hpp"
 #include "ScriptItem.hpp"
 
 #include "../shared_gui_components/MeasureBadge.hpp"
@@ -127,12 +128,12 @@ bool OSItemId::operator==(const OSItemId& other) const
 OSItem::OSItem(const OSItemId& itemId, OSItemType osItemType, QWidget * parent)
                : QWidget(parent),
                m_itemId(itemId),
-               m_selectionWidget(NULL),
-               m_borderWidget(NULL),
-               m_removeButton(NULL),
-               m_textLbl(NULL),
-               m_imageLeftLbl(NULL),
-               m_imageRightLbl(NULL),
+               m_selectionWidget(nullptr),
+               m_borderWidget(nullptr),
+               m_removeButton(nullptr),
+               m_textLbl(nullptr),
+               m_imageLeftLbl(nullptr),
+               m_imageRightLbl(nullptr),
                m_mouseDown(false),
                m_selected(false),
                m_draggable(true),
@@ -152,7 +153,7 @@ OSItem::OSItem(const OSItemId& itemId, OSItemType osItemType, QWidget * parent)
 
 OSItem* OSItem::makeItem(const OSItemId& itemId, OSItemType osItemType)
 {
-  OSItem* result = NULL;
+  OSItem* result = nullptr;
 
   OSAppBase* app = OSAppBase::instance();
 
@@ -614,6 +615,16 @@ void OSItem::dropEvent(QDropEvent *event)
 
 void OSItem::onRemoveClicked()
 {
+  // Note: an OSDropZone2 owns this OSItem;
+  // there should be a parent...
+  //OS_ASSERT(this->parent());
+
+  // ... and it should be a OSDropZone2...
+  //auto dropZone = qobject_cast<OSDropZone2 *>(this->parent());
+  //OS_ASSERT(dropZone);
+
+  // ... and it needs to listen to, and act on,
+  // this signal to cause a model object reset
   emit itemRemoveClicked(this);
 }
 
