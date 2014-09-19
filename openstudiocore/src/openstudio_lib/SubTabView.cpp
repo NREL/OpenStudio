@@ -108,11 +108,6 @@ void SubTabView::connectItemSelectorButtons()
   connect(m_itemSelectorButtons, &OSItemSelectorButtons::downloadComponentsClicked, this, &SubTabView::downloadComponentsClicked);
 }
 
-void SubTabView::connectGridView()
-{
-  bool isConnected = false;
-}
-
 void SubTabView::createLayout()
 {
   QWidget * leftWidget = new QWidget();

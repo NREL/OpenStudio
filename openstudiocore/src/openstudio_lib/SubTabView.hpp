@@ -103,8 +103,6 @@ class SubTabView : public QSplitter
 
     void connectInspectorView();
 
-    void connectGridView();
-
     void connectItemSelectorButtons();
 
     void createLayout();
