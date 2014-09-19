@@ -1,6 +1,42 @@
 #!/usr/bin/ruby
 
-windowGroups = File.open("mapping.rad")
+######################################################################
+#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  All rights reserved.
+#  
+#  This library is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU Lesser General Public
+#  License as published by the Free Software Foundation; either
+#  version 2.1 of the License, or (at your option) any later version.
+#  
+#  This library is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#  Lesser General Public License for more details.
+#  
+#  You should have received a copy of the GNU Lesser General Public
+#  License along with this library; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+######################################################################
+
+######################################################################
+# == Synopsis 
+#
+#    Merge window group illuminance files, based on solar trigger setpoints.
+#    Also creates shade schedules for EnergyPlus based on same solar evaluation.
+#
+# == Usage 
+#
+#  (from [osm_support_dir]/run/1-Ruby-0/in/model/radiance/output/ts):
+#  ruby MergeWindowGroups.rb
+#
+#  Intended to be run as a post-process on a Radiance annual daylight simulation,  
+#  from the Radiance "ts" output directory.
+#
+#
+######################################################################
+
+windowGroups = File.open("../../bsdf/mapping.rad")
 windowGroups.each do |wg|
 
   next if wg[0] == "#"

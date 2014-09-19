@@ -343,7 +343,7 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
     puts "Radiance does not support multiple cores on Windows"
     procsUsed = ""
   else
-    puts "MP Radiance using #{t_simCores} core(s)"
+    puts "Radiance using #{t_simCores} core(s)"
     procsUsed = "-n #{t_simCores}"
   end
 
@@ -366,17 +366,24 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
   # 3-phase method
   if t_options.z == true
 
+    puts "#{Time.now.getutc}: computing daylight coefficients with 3-phase method..."
+
+    mapFile=File.open("#{t_outPath}/numeric/merged_space.map","r")
+    rfluxmtxDim = mapFile.readlines.size.to_s
+    puts "total calculation points: #{rfluxmtxDim}"
+
     # compute daylight matrices for controlled windows
- 
+
+    rtrace_args = "#{t_options.dmx}"  
     system("oconv materials/materials.rad model.rad > model_dc.oct")
     windowMaps = File::open("#{t_outPath}/bsdf/mapping.rad")
     windowMaps.each do |row|
       next if row[0] == "#"
       wg=row.split(",")[0]
-      next if wg[2].to_i == 0 # skip uncontrolled windows, use single phase for those.
-      puts "computing daylight matrix for window group #{wg}..."
+      next if wg[2].to_i == 0 # skip uncontrolled windows (WG0), use single phase for those.
+      puts "computing daylight matrix for window group #{wg}"
       exec_statement("rfluxmtx -fa -v #{t_outPath}/scene/glazing/#{wg}.rad #{t_outPath}/skies/dc_sky.rad -i model_dc.oct > #{t_outPath}/output/dc/#{wg}.dmx")
-    end # maps
+    end
 
     # compute view matrices for controlled windows
 
@@ -385,48 +392,31 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
     puts "computing view matri(ces) for controlled windows"
     exec_statement("#{t_catCommand} #{t_outPath}/materials/materials_vmx.rad #{wgInput.join(" ")} > receivers_vmx.rad")
     exec_statement("oconv #{t_outPath}/materials/materials.rad #{t_outPath}/scene/*.rad > model_vmx.oct")
-    # TODO: need to add support for Windows (no wc, use "FIND")
-    rfluxmtxDim = ""
-    if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
-      mapFile=File.open("#{t_outPath}/numeric/merged_space.map","r")
-      rfluxmtxDim = mapFile.readlines.size.to_s
-    else
-      rfluxmtxDim = "`wc -l < #{t_outPath}/numeric/merged_space.map`"
-    end
-    puts "map size: #{rfluxmtxDim} points"
-    exec_statement("rfluxmtx -faa -n #{t_simCores} -y #{rfluxmtxDim} -I -v - receivers_vmx.rad -i model_vmx.oct < \
+    exec_statement("rfluxmtx #{rtrace_args} #{procsUsed} -faa -n #{t_simCores} -y #{rfluxmtxDim} -I -v - receivers_vmx.rad -i model_vmx.oct < \
       #{t_outPath}/numeric/merged_space.map")
-
     
     # compute daylight coefficient matrix for uncontrolled windows
 
-    puts "computing daylight coefficient matrix for uncontrolled windows..."
     rtrace_args = "#{t_options.vmx}"
     system("oconv \"#{t_outPath}/materials/materials.rad\" \"#{t_outPath}/materials/materials_WG0.rad\" model.rad \
       \"#{t_outPath}/skies/dc_sky.rad\" > model_WG0.oct")
-    puts "#{Time.now.getutc}: computing sky-to-point daylight coefficients (single phase)..."
+    puts "computing daylight coefficient matrix for uncontrolled windows (WG0)"
+    
     exec_statement("#{t_catCommand} \"#{t_outPath}/numeric/merged_space.map\" \
-      | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{t_options.tregVars} \
-      -o \"#{t_outPath}/output/dc/WG0.vmx\" \
-      -m skyglow model_WG0.oct")
-    puts "#{Time.now.getutc}: daylight coefficients computed, \
-    stored in #{t_outPath}/output/dc/merged_space/maps"
-
-    puts "#{Time.now.getutc}: daylight coefficients computed, stored in #{t_outPath}/output/dc/"
+      | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{t_options.tregVars} -o \"#{t_outPath}/output/dc/WG0.vmx\" -m skyglow model_WG0.oct")
 
     # compute daylight coefficient matrices for window group control points
-    puts "computing view matrix for uncontrolled windows..."
+
     rtrace_args = "#{t_options.vmx}"
     system("oconv \"#{t_outPath}/materials/materials.rad\" model.rad \
       \"#{t_outPath}/skies/dc_sky.rad\" > model_wc.oct")
-    puts "#{Time.now.getutc}: computing DCs for window controls..."
+    puts "computing DCs for window control points"
     exec_statement("#{t_catCommand} \"#{t_outPath}/numeric/window_controls.map\" \
       | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{t_options.tregVars} \
       -o \"#{t_outPath}/output/dc/window_controls.vmx\" \
       -m skyglow model_wc.oct")
 
-    puts "#{Time.now.getutc}: daylight coefficients computed, stored in #{t_outPath}/output/dc/"
-
+    puts "#{Time.now.getutc}: done (daylight coefficients)."
 
   end # compute coefficients (3-phase)
 
@@ -435,14 +425,13 @@ end # def(calculateDaylightCoeffecients)
 def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
 
   puts "#{Time.now.getutc}: Executing simulation"
-  puts "#{Time.now.getutc}: simulation commands: #{t_cmds}"
   
   allValues = []
 
   t_cmds.each do | command | 
   
     tempIO = IO.popen(command)
-    
+
     puts "#{Time.now.getutc}: Parsing result"
     
     cmdValues = []

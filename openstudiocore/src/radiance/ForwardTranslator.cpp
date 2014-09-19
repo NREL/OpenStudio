@@ -357,7 +357,7 @@ namespace radiance {
       if (skyfile.is_open()){
         outfiles.push_back(dcskyfilepath);
         // ground first (P0)!
-        skyfile << "#@rfluxmtx h=u u=Y\nvoid glow groundglow\n0\n0\n4\n1 1 1 0\n\ngroundglow source sky\n0\n0\n4\n0 0 -1 180\n";
+        skyfile << "#@rfluxmtx h=u u=Y\nvoid glow groundglow\n0\n0\n4\n1 1 1 0\n\ngroundglow source ground\n0\n0\n4\n0 0 -1 180\n";
         if (radianceParameters.skyDiscretizationResolution() == "146"){
           skyfile << "#@rfluxmtx h=r1 u=Y\n";
         } else if (radianceParameters.skyDiscretizationResolution() == "578"){
