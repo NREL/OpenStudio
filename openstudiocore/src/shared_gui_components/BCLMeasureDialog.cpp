@@ -124,6 +124,7 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
 {
   std::string name = toString(m_nameLineEdit->text());
   std::string className = BCLMeasure::makeClassName(name);
+  std::string lowerClassName = toUnderscoreCase(className);
   std::string description = toString(m_descriptionTextEdit->toPlainText());
   std::string modelerDescription = toString(m_modelerDescriptionTextEdit->toPlainText());
 
@@ -140,7 +141,7 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
   }
 
   openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
-  QString folderName = toQString(className).append("/");
+  QString folderName = toQString(lowerClassName).append("/");
   openstudio::path measureDir = userMeasuresDir / toPath(folderName);
 
   // prompt user ???

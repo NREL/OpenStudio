@@ -50,6 +50,7 @@ Component::Component(const BCLMeasure & bclMeasure,
   m_versionId(QString()),
   m_description(QString()),
   m_fidelityLevel(QString()),
+  m_error(boost::none),
   m_attributes(std::vector<Attribute>()),
   m_arguments(std::vector<BCLMeasureArgument>()),
   m_files(std::vector<BCLFile>()),
@@ -81,6 +82,15 @@ Component::Component(const BCLMeasure & bclMeasure,
         m_msg->setVisible(true);
       }
     }
+  }else if (m_error){
+    // This measures has been pre-filtered and is known to require an update but has an error
+    m_checkBox->setChecked(false);
+    m_checkBox->setEnabled(false);
+    m_updateAvailable = false;
+    if (m_msg){
+      m_msg->setText("This measure cannot be updated because it has an error");
+      m_msg->setVisible(true);
+    }
   }else{
     // This measures has been pre-filtered and is known to require an update
     m_checkBox->setChecked(false);
@@ -103,6 +113,7 @@ Component::Component(const BCLSearchResult & bclSearchResult,
   m_versionId(QString()),
   m_description(QString()),
   m_fidelityLevel(QString()),
+  m_error(boost::none),
   m_attributes(std::vector<Attribute>()),
   m_arguments(std::vector<BCLMeasureArgument>()),
   m_files(std::vector<BCLFile>()),
@@ -202,6 +213,7 @@ Component::Component(bool showAbridgedView,
   m_versionId(QString()),
   m_description(QString()),
   m_fidelityLevel(QString()),
+  m_error(boost::none),
   m_attributes(std::vector<Attribute>()),
   m_arguments(std::vector<BCLMeasureArgument>()),
   m_files(std::vector<BCLFile>()),
@@ -231,6 +243,7 @@ Component::Component(const Component & other)
     m_versionId = other.m_versionId;
     m_description = other.m_description;
     m_fidelityLevel = other.m_fidelityLevel;
+    m_error = other.m_error;
     m_attributes = other.m_attributes;
     m_arguments = other.m_arguments;
     m_files = other.m_files;
@@ -267,6 +280,7 @@ Component & Component::operator=(const Component & other)
     m_versionId = other.m_versionId;
     m_description = other.m_description;
     m_fidelityLevel = other.m_fidelityLevel;
+    m_error = other.m_error;
     m_attributes = other.m_attributes;
     m_arguments = other.m_arguments;
     m_files = other.m_files;
@@ -329,6 +343,7 @@ void Component::parseBCLMeasure(const BCLMeasure & bclMeasure)
   m_versionId = bclMeasure.versionId().c_str();
   m_description = bclMeasure.description().c_str();
 
+  m_error = bclMeasure.error();
   m_attributes = bclMeasure.attributes();
   m_arguments = bclMeasure.arguments();
   m_fileReferences = bclMeasure.files();
@@ -357,6 +372,7 @@ void Component::parseBCLSearchResult(const BCLSearchResult & bclSearchResult)
   m_description = bclSearchResult.description().c_str();
   m_fidelityLevel = bclSearchResult.fidelityLevel().c_str();
 
+  // m_error
   m_attributes = bclSearchResult.attributes();
   // TODO: arguments
   m_files = bclSearchResult.files();
@@ -381,7 +397,7 @@ void Component::createAbridgedLayout()
 {
   m_checkBox = new QCheckBox(this);
 
-  if(!m_showCheckBox){
+  if (!m_showCheckBox){
     m_checkBox->hide();
   }
 
@@ -398,10 +414,10 @@ void Component::createAbridgedLayout()
 
   for (const Attribute & attribute : m_attributes) {
     string = attribute.name().c_str();
-    if(m_componentType == "component"){
-      if(string.toStdString() == OPENSTUDIO_TYPE){
+    if (m_componentType == "component"){
+      if (string.toStdString() == OPENSTUDIO_TYPE){
         openstudio::AttributeValueType type = attribute.valueType();
-        if(type == AttributeValueType::String){
+        if (type == AttributeValueType::String){
           string = attribute.valueAsString().c_str();
           QString temp("Type: ");
           temp += string;
@@ -410,11 +426,10 @@ void Component::createAbridgedLayout()
           break;
         }
       }
-    }
-    else if(m_componentType == "measure" || m_componentType == "MeasureType"){
-      if(string.toStdString() == "Measure Type"){
+    } else if (m_componentType == "measure" || m_componentType == "MeasureType"){
+      if (string.toStdString() == "Measure Type"){
         openstudio::AttributeValueType type = attribute.valueType();
-        if(type == AttributeValueType::String){
+        if (type == AttributeValueType::String){
           string = attribute.valueAsString().c_str();
           QString temp("Measure Type: ");
           temp += string;
@@ -424,9 +439,13 @@ void Component::createAbridgedLayout()
       }
     }
   }
-  
+
   m_msg = new QLabel(this);
-  m_msg->setStyleSheet("color:#888;font-style:italic;");
+  if (m_error){
+    m_msg->setStyleSheet("color:#F00;font-style:italic;");
+  }else{
+    m_msg->setStyleSheet("color:#888;font-style:italic;");
+  }
   m_msg->setHidden(true);
   leftLayout->addWidget(m_msg);
   
@@ -447,6 +466,19 @@ void Component::createCompleteLayout()
   auto mainLayout = new QVBoxLayout();
 
   QTableWidget * tableWidget = nullptr;
+
+  ///! Error
+  if (m_error){
+    label = new QLabel("Errors");
+    label->setObjectName("H1");
+    mainLayout->addWidget(label);
+
+    label = new QLabel(m_error->c_str());
+    mainLayout->addWidget(label);
+
+    label = new QLabel();
+    mainLayout->addWidget(label);
+  }
 
   ///! Attributes
   ///! Class BCL only stores double (optional units),

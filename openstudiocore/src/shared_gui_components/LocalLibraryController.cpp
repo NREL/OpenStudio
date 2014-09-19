@@ -497,18 +497,22 @@ bool LibraryItem::isAvailable() const
 
 void LibraryItem::dragItem(const OSDragPixmapData & dragPixmapData)
 {
-  MeasureDragData measureDragData(m_bclMeasure.uuid());
+  // DLM: I think we want to allow user to drag in measure with error because that is the best 
+  // way currently to allow them to inspect the error
+  //if (!m_bclMeasure.error()){
+    MeasureDragData measureDragData(m_bclMeasure.uuid());
 
-  auto drag = new QDrag(m_app->mainWidget());
+    auto drag = new QDrag(m_app->mainWidget());
 
-  auto mimeData = new QMimeData;
-  mimeData->setData(MeasureDragData::mimeType(m_bclMeasure.measureType()), measureDragData.data());
-  drag->setMimeData(mimeData);
+    auto mimeData = new QMimeData;
+    mimeData->setData(MeasureDragData::mimeType(m_bclMeasure.measureType()), measureDragData.data());
+    drag->setMimeData(mimeData);
 
-  drag->setPixmap(dragPixmapData.pixmap);
-  drag->setHotSpot(dragPixmapData.hotSpot);
+    drag->setPixmap(dragPixmapData.pixmap);
+    drag->setHotSpot(dragPixmapData.hotSpot);
 
-  drag->exec(Qt::CopyAction);
+    drag->exec(Qt::CopyAction);
+  //}
 }
 
 LibraryItemDelegate::LibraryItemDelegate(BaseApp *t_app)
