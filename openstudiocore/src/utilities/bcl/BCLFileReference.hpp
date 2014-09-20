@@ -22,6 +22,7 @@
 
 #include "../core/Logger.hpp"
 #include "../core/Path.hpp"
+#include "../core/Compare.hpp"
 #include "../UtilitiesAPI.hpp"
 
 #include <vector>
@@ -64,6 +65,10 @@ namespace openstudio{
 
     std::string softwareProgramVersion() const;
 
+    boost::optional<VersionString> minCompatibleVersion() const;
+
+    boost::optional<VersionString> maxCompatibleVersion() const;
+
     std::string fileName() const;
 
     std::string fileType() const;
@@ -79,6 +84,14 @@ namespace openstudio{
     void setSoftwareProgram(const std::string& softwareProgram);
 
     void setSoftwareProgramVersion(const std::string& softwareProgramVersion);
+
+    void setMinCompatibleVersion(const VersionString& minCompatibleVersion);
+
+    void resetMinCompatibleVersion();
+
+    void setMaxCompatibleVersion(const VersionString& maxCompatibleVersion);
+
+    void resetMaxCompatibleVersion();
 
     void setUsageType(const std::string& usageType);
 
@@ -101,6 +114,8 @@ namespace openstudio{
     std::string m_checksum;
     std::string m_softwareProgram;
     std::string m_softwareProgramVersion;
+    boost::optional<VersionString> m_minCompatibleVersion;
+    boost::optional<VersionString> m_maxCompatibleVersion;
     std::string m_fileName;
     std::string m_fileType;
     std::string m_usageType;

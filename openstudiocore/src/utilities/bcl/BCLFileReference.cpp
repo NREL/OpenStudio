@@ -76,6 +76,16 @@ namespace openstudio{
     return m_softwareProgramVersion;
   }
 
+  boost::optional<VersionString> BCLFileReference::minCompatibleVersion() const
+  {
+    return m_minCompatibleVersion;
+  }
+
+  boost::optional<VersionString> BCLFileReference::maxCompatibleVersion() const
+  {
+    return m_maxCompatibleVersion;
+  }
+
   std::string BCLFileReference::fileName() const
   {
     return toString(m_path.filename());
@@ -106,6 +116,26 @@ namespace openstudio{
     m_softwareProgramVersion = softwareProgramVersion;
   }
 
+  void BCLFileReference::setMinCompatibleVersion(const VersionString& minCompatibleVersion)
+  {
+    m_minCompatibleVersion = minCompatibleVersion;
+  }
+
+  void BCLFileReference::resetMinCompatibleVersion()
+  {
+    m_minCompatibleVersion.reset();
+  }
+
+  void BCLFileReference::setMaxCompatibleVersion(const VersionString& maxCompatibleVersion)
+  {
+    m_maxCompatibleVersion = maxCompatibleVersion;
+  }
+
+  void BCLFileReference::resetMaxCompatibleVersion()
+  {
+    m_maxCompatibleVersion.reset();
+  }
+
   void BCLFileReference::setUsageType(const std::string& usageType)
   {
     m_usageType = usageType;
@@ -124,6 +154,19 @@ namespace openstudio{
       QDomElement softwareProgramVersionElement = doc.createElement("identifier");
       versionElement.appendChild(softwareProgramVersionElement);
       softwareProgramVersionElement.appendChild(doc.createTextNode(toQString(m_softwareProgramVersion)));
+    
+      if (m_minCompatibleVersion){
+        QDomElement minCompatibleVersionElement = doc.createElement("min_compatible");
+        versionElement.appendChild(minCompatibleVersionElement);
+        minCompatibleVersionElement.appendChild(doc.createTextNode(toQString(m_minCompatibleVersion->str())));
+      }
+
+      if (m_maxCompatibleVersion){
+        QDomElement maxCompatibleVersionElement = doc.createElement("max_compatible");
+        versionElement.appendChild(maxCompatibleVersionElement);
+        maxCompatibleVersionElement.appendChild(doc.createTextNode(toQString(m_maxCompatibleVersion->str())));
+      }
+
     }
 
     QDomElement fileNameElement = doc.createElement("filename");

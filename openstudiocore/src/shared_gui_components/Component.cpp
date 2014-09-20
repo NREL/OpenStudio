@@ -349,14 +349,27 @@ void Component::parseBCLMeasure(const BCLMeasure & bclMeasure)
   m_fileReferences = bclMeasure.files();
   m_tags = bclMeasure.tags();
 
-  std::string softwareProgramVersion;
+  boost::optional<VersionString> minCompatibleVersion;
+  boost::optional<VersionString> maxCompatibleVersion;
   Q_FOREACH(const BCLFileReference & fileReference, m_fileReferences){
     if (fileReference.usageType() == "script" && fileReference.softwareProgram() == "OpenStudio"){
-      softwareProgramVersion = fileReference.softwareProgramVersion();
+      minCompatibleVersion = fileReference.minCompatibleVersion();
+      maxCompatibleVersion = fileReference.maxCompatibleVersion();
+
+      if (!minCompatibleVersion){
+        try{
+          minCompatibleVersion = VersionString(fileReference.softwareProgramVersion());
+        } catch (const std::exception&){
+        }
+      }
       break;
     }
   }
-  if (!softwareProgramVersion.empty() && VersionString(softwareProgramVersion) > VersionString(openStudioVersion())){
+
+  VersionString currentVersion(openStudioVersion());
+  if (minCompatibleVersion && (*minCompatibleVersion) > currentVersion){
+    m_available = false;
+  } else if (maxCompatibleVersion && (*maxCompatibleVersion) < currentVersion){
     m_available = false;
   }else{
     m_available = true;
@@ -379,16 +392,29 @@ void Component::parseBCLSearchResult(const BCLSearchResult & bclSearchResult)
   m_provenances = bclSearchResult.provenances();
   m_tags = bclSearchResult.tags();
 
-  std::string componentVersion;
-  for (const BCLFile & file : m_files) {
+  boost::optional<VersionString> minCompatibleVersion;
+  boost::optional<VersionString> maxCompatibleVersion;
+  Q_FOREACH(const BCLFile & file, m_files){
     if (file.usageType() == "script" && file.softwareProgram() == "OpenStudio"){
-      componentVersion = file.identifier();
+      minCompatibleVersion = file.minCompatibleVersion();
+      maxCompatibleVersion = file.maxCompatibleVersion();
+
+      if (!minCompatibleVersion){
+        try{
+          minCompatibleVersion = VersionString(file.identifier());
+        } catch (const std::exception&){
+        }
+      }
       break;
     }
   }
-  if (!componentVersion.empty() && VersionString(componentVersion) > VersionString(openStudioVersion())){
+
+  VersionString currentVersion(openStudioVersion());
+  if (minCompatibleVersion && (*minCompatibleVersion) > currentVersion){
     m_available = false;
-  }else{
+  } else if (maxCompatibleVersion && (*maxCompatibleVersion) < currentVersion){
+    m_available = false;
+  } else{
     m_available = true;
   }
 }

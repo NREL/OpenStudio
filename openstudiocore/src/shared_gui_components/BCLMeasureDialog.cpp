@@ -244,7 +244,21 @@ void BCLMeasureDialog::measureTypeChanged(const QString& newName)
     int index = m_taxonomyFirstLevelComboBox->findText("Reporting");
     m_taxonomyFirstLevelComboBox->setCurrentIndex(index);
   }else{
+    // DLM: do we want to toggle this back?
     m_taxonomyFirstLevelComboBox->setCurrentIndex(0);
+  }
+
+  if (newName == "OpenStudio Measure"){
+    // DLM: do we want to toggle this back?
+    QList<QListWidgetItem *> items = m_intendedSoftwareToolListWidget->findItems("Apply Measure Now", Qt::MatchFixedString);
+    for (QListWidgetItem * item : items){
+      item->setCheckState(Qt::Checked);
+    }
+  }else{
+    QList<QListWidgetItem *> items = m_intendedSoftwareToolListWidget->findItems("Apply Measure Now", Qt::MatchFixedString);
+    for (QListWidgetItem * item : items){
+      item->setCheckState(Qt::Unchecked);
+    }
   }
 }
 
@@ -444,8 +458,14 @@ void BCLMeasureDialog::init()
   }
   QStringListIterator it(intendedSoftwareTools);
   while (it.hasNext()){
-    QListWidgetItem *listItem = new QListWidgetItem(it.next(), m_intendedSoftwareToolListWidget);
-    listItem->setCheckState(Qt::Checked);
+    QString intendedSoftwareTool = it.next();
+    QListWidgetItem *listItem = new QListWidgetItem(intendedSoftwareTool, m_intendedSoftwareToolListWidget);
+    // DLM: defaults per David
+    if (intendedSoftwareTool == "Analysis Spreadsheet"){
+      listItem->setCheckState(Qt::Unchecked);
+    }else{
+      listItem->setCheckState(Qt::Checked);
+    }
     listItem->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
     m_intendedSoftwareToolListWidget->addItem(listItem);
   }
@@ -465,8 +485,10 @@ void BCLMeasureDialog::init()
   }
   it = QStringListIterator(intendedUseCases);
   while (it.hasNext()){
-    QListWidgetItem *listItem = new QListWidgetItem(it.next(), m_intendedUseCaseListWidget);
-    listItem->setCheckState(Qt::Checked);
+    QString intendedUseCase = it.next();
+    QListWidgetItem *listItem = new QListWidgetItem(intendedUseCase, m_intendedUseCaseListWidget);
+    // DLM: default to unchecked per David
+    listItem->setCheckState(Qt::Unchecked);
     listItem->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
     m_intendedUseCaseListWidget->addItem(listItem);
   }

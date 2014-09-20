@@ -438,16 +438,29 @@ LibraryItem::LibraryItem(const BCLMeasure & bclMeasure, LocalLibrary::LibrarySou
   m_source(source),
   m_app(t_app)
 {
-  std::string componentVersion;
-  for (const BCLFileReference & file : bclMeasure.files()) {
-    if (file.usageType() == "script" && file.softwareProgram() == "OpenStudio"){
-      componentVersion = file.softwareProgramVersion();
+  boost::optional<VersionString> minCompatibleVersion;
+  boost::optional<VersionString> maxCompatibleVersion;
+  Q_FOREACH(const BCLFileReference & fileReference, bclMeasure.files()){
+    if (fileReference.usageType() == "script" && fileReference.softwareProgram() == "OpenStudio"){
+      minCompatibleVersion = fileReference.minCompatibleVersion();
+      maxCompatibleVersion = fileReference.maxCompatibleVersion();
+
+      if (!minCompatibleVersion){
+        try{
+          minCompatibleVersion = VersionString(fileReference.softwareProgramVersion());
+        } catch (const std::exception&){
+        }
+      }
       break;
     }
   }
-  if (componentVersion.empty() || VersionString(componentVersion) > VersionString(openStudioVersion())){
+
+  VersionString currentVersion(openStudioVersion());
+  if (minCompatibleVersion && (*minCompatibleVersion) > currentVersion){
     m_available = false;
-  }else{
+  } else if (maxCompatibleVersion && (*maxCompatibleVersion) < currentVersion){
+    m_available = false;
+  } else{
     m_available = true;
   }
 }
