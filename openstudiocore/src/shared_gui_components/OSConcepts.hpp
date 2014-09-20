@@ -1003,6 +1003,7 @@ class NameLineEditConcept : public BaseConcept
 
   virtual boost::optional<std::string> get(const ConceptProxy & obj, bool) = 0;
   virtual boost::optional<std::string> set(const ConceptProxy & obj, const std::string &) = 0;
+  virtual void reset(const ConceptProxy & obj) = 0;
   virtual bool readOnly() const = 0;
 };
 
@@ -1013,10 +1014,12 @@ class NameLineEditConceptImpl : public NameLineEditConcept
 
   NameLineEditConceptImpl(QString t_headingLabel,
     std::function<boost::optional<std::string> (DataSourceType *, bool)>  t_getter,
-    std::function<boost::optional<std::string> (DataSourceType *, const std::string &)> t_setter)
+    std::function<boost::optional<std::string> (DataSourceType *, const std::string &)> t_setter,
+    boost::optional<std::function<void(DataSourceType*)> > t_reset = boost::none)
     : NameLineEditConcept(t_headingLabel),
       m_getter(t_getter),
-      m_setter(t_setter)
+      m_setter(t_setter),
+      m_reset(t_reset)
   {
   }
 
@@ -1039,6 +1042,14 @@ class NameLineEditConceptImpl : public NameLineEditConcept
     }
   }
 
+  virtual void reset(const ConceptProxy & obj)
+  {
+    if (m_reset) {
+      DataSourceType obj = t_obj.cast<DataSourceType>();
+      (*m_reset)(&obj);
+    }
+  }
+
   virtual bool readOnly() const
   {
     return m_setter ? false : true;
@@ -1048,6 +1059,8 @@ class NameLineEditConceptImpl : public NameLineEditConcept
 
   std::function<boost::optional<std::string> (DataSourceType *, bool)>  m_getter;
   std::function<boost::optional<std::string> (DataSourceType *, const std::string &)> m_setter;
+  boost::optional<std::function<void(DataSourceType*)> > m_reset;
+
 };
 
 

@@ -164,6 +164,8 @@ void OSLineEdit2::mouseReleaseEvent(QMouseEvent * event)
 #ifdef openstudio_lib_EXPORTS
     if (!m_item && m_modelObject) {
       m_item = OSItem::makeItem(modelObjectToItemId(*m_modelObject, false));
+      m_item->setParent(this);
+      connect(m_item, &OSItem::itemRemoveClicked, this, &OSLineEdit2::onItemRemoveClicked);
     }
 #endif
 
@@ -171,6 +173,14 @@ void OSLineEdit2::mouseReleaseEvent(QMouseEvent * event)
       // Tell EditView to display this object
       emit itemClicked(m_item);
     }
+  }
+}
+
+void OSLineEdit2::onItemRemoveClicked()
+{
+  if (m_reset)
+  {
+    (*m_reset)();
   }
 }
 

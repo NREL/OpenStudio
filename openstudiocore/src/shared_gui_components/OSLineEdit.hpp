@@ -77,6 +77,8 @@ signals:
 
   void onModelObjectRemove(Handle handle);
 
+  void onItemRemoveClicked();
+
  private:
 
   void completeBind();
