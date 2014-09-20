@@ -83,6 +83,8 @@ namespace openstudio{
 
     std::string softwareProgram() const;
     std::string identifier() const;
+    boost::optional<VersionString> minCompatibleVersion() const;
+    boost::optional<VersionString> maxCompatibleVersion() const;
     std::string filename() const;
     std::string url() const;
     std::string filetype() const;
@@ -92,6 +94,8 @@ namespace openstudio{
   private:
     std::string m_softwareProgram;
     std::string m_identifier;
+    boost::optional<VersionString> m_minCompatibleVersion;
+    boost::optional<VersionString> m_maxCompatibleVersion;
     std::string m_filename;
     std::string m_url;
     std::string m_filetype;
