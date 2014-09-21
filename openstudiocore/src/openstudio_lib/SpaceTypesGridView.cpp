@@ -948,7 +948,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
       addNameLineEditColumn(QString(SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS),
         CastNullAdapter<model::SpaceInfiltrationEffectiveLeakageArea>(&model::SpaceInfiltrationEffectiveLeakageArea::name),
         CastNullAdapter<model::SpaceInfiltrationEffectiveLeakageArea>(&model::SpaceInfiltrationEffectiveLeakageArea::setName),
-        boost::optional<std::function<void (model::SpaceInfiltrationEffectiveLeakageArea *)>>(),
+        boost::optional<std::function<void(model::SpaceInfiltrationEffectiveLeakageArea *)>>(std::function<void(model::SpaceInfiltrationEffectiveLeakageArea *)>(&model::SpaceInfiltrationEffectiveLeakageArea::resetSchedule)),
         DataSource(
         leakageAreas,
         false,
