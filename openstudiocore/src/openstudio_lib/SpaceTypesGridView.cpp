@@ -921,7 +921,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
       addNameLineEditColumn(QString(SPACEINFILTRATIONDESIGNFLOWRATES),
         CastNullAdapter<model::SpaceInfiltrationDesignFlowRate>(&model::SpaceInfiltrationDesignFlowRate::name),
         CastNullAdapter<model::SpaceInfiltrationDesignFlowRate>(&model::SpaceInfiltrationDesignFlowRate::setName),
-        boost::optional<std::function<void (model::SpaceInfiltrationDesignFlowRate *)>>(),
+        boost::optional<std::function<void (model::SpaceInfiltrationDesignFlowRate *)>>(std::function<void (model::SpaceInfiltrationDesignFlowRate *)>(&model::SpaceInfiltrationDesignFlowRate::resetSpaceType)),
         DataSource(
           flowRates,
           false, 
