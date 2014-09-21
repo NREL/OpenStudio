@@ -1042,7 +1042,7 @@ class NameLineEditConceptImpl : public NameLineEditConcept
     }
   }
 
-  virtual void reset(const ConceptProxy & obj)
+  virtual void reset(const ConceptProxy & t_obj)
   {
     if (m_reset) {
       DataSourceType obj = t_obj.cast<DataSourceType>();
