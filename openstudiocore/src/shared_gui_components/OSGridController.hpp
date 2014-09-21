@@ -342,6 +342,7 @@ public:
   void addNameLineEditColumn(QString headingLabel,
                              const std::function<boost::optional<std::string> (DataSourceType *, bool)>  &getter,
                              const std::function<boost::optional<std::string> (DataSourceType *, const std::string &)> &setter,
+                             const boost::optional<std::function<void (DataSourceType *)>> &resetter = boost::none,
                              const boost::optional<DataSource> &t_source = boost::none)
   {
     m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<NameLineEditConcept>(new NameLineEditConceptImpl<DataSourceType>(headingLabel,getter,setter)), t_source));

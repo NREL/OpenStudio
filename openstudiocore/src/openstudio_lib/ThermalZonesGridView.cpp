@@ -512,6 +512,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
       addNameLineEditColumn(QString(ZONEEQUIPMENT),
         CastNullAdapter<model::ModelObject>(&model::ModelObject::name),
         CastNullAdapter<model::ModelObject>(&model::ModelObject::setName),
+        boost::optional<std::function<void (model::ModelObject *)>>(),
         DataSource(
         equipment,
         false,
@@ -523,7 +524,8 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
     }else if(field == NAME){
       addNameLineEditColumn(QString(NAME),
                             CastNullAdapter<model::ThermalZone>(&model::ThermalZone::name),
-                            CastNullAdapter<model::ThermalZone>(&model::ThermalZone::setName));
+                            CastNullAdapter<model::ThermalZone>(&model::ThermalZone::setName),
+                            boost::optional<std::function<void (model::ThermalZone *)>>());
 
     }else if(field == AIRLOOPNAME){
       // Notes: this only requires a static_cast because `name` comes from IdfObject
@@ -531,7 +533,8 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
       addNameLineEditColumn(QString(AIRLOOPNAME),
                             ProxyAdapter(static_cast<boost::optional<std::string> (model::AirLoopHVAC::*)(bool) const>(&model::AirLoopHVAC::name), 
                               &model::ThermalZone::airLoopHVAC, boost::optional<std::string>("None")),
-                            std::function<boost::optional<std::string>(model::HVACComponent*, const std::string &)>());
+                            std::function<boost::optional<std::string>(model::HVACComponent*, const std::string &)>(),
+                            boost::optional<std::function<void (model::HVACComponent *)>>());
 
     }else if(field == MULTIPLIER){
       addValueEditColumn(QString(MULTIPLIER),
