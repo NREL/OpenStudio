@@ -155,7 +155,6 @@ void MainRightColumnController::inspectModelObjectByItem(OSItem * item, bool rea
     std::shared_ptr<OSDocument> currentDocument = OSAppBase::instance()->currentDocument();
     if (currentDocument){
       modelObject = currentDocument->getModelObject(item->itemId());
-      readOnly = true; // TODO for now, never allow an edit
     }
     inspectModelObject(modelObject, readOnly);
   }
