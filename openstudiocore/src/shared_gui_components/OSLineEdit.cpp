@@ -117,10 +117,13 @@ void OSLineEdit2::unbind()
 
 void OSLineEdit2::onEditingFinished() {
   if(m_modelObject && m_set) {
-    bool result = (*m_set)(this->text().toStdString());
-    if (!result){
-      //restore
-      onModelObjectChange();
+    if (m_text != this->text().toStdString()) {
+      m_text = this->text().toStdString();
+      bool result = (*m_set)(m_text);
+      if (!result){
+        //restore
+        onModelObjectChange();
+      }
     }
   }
 }
@@ -144,8 +147,35 @@ void OSLineEdit2::onModelObjectChange() {
     std::string text;
     if (value) {
       text = *value;
+      if (m_text != text) {
+        m_text = text;
+        setText(QString::fromStdString(m_text));
+
+//        // This m_item code is only relevant if we are building in
+//        // the context of openstudio_lib
+//#ifdef openstudio_lib_EXPORTS
+//        if (!m_item && m_modelObject) {
+//
+//          OSItem * item = this->findChild<OSItem *>(QString(), Qt::FindDirectChildrenOnly);
+//          if (item) {
+//            delete item;
+//          }
+//
+//          m_item = OSItem::makeItem(modelObjectToItemId(*m_modelObject, false));
+//          OS_ASSERT(m_item);
+//          m_item->setParent(this);
+//          connect(m_item, &OSItem::itemRemoveClicked, this, &OSLineEdit2::onItemRemoveClicked);
+//          qApp->processEvents();
+//        }
+//
+//        if (m_item){
+//          // Tell EditView to display this object
+//          emit itemClicked(m_item);
+//        }
+//#endif
+
+      }
     }
-    setText(QString::fromStdString(text));
   }
 }
 
@@ -163,16 +193,24 @@ void OSLineEdit2::mouseReleaseEvent(QMouseEvent * event)
 // the context of openstudio_lib
 #ifdef openstudio_lib_EXPORTS
     if (!m_item && m_modelObject) {
+
+      OSItem * item = this->findChild<OSItem *>(QString(), Qt::FindDirectChildrenOnly);
+      if (item) {
+        delete item;
+      }
+
       m_item = OSItem::makeItem(modelObjectToItemId(*m_modelObject, false));
+      OS_ASSERT(m_item);
       m_item->setParent(this);
       connect(m_item, &OSItem::itemRemoveClicked, this, &OSLineEdit2::onItemRemoveClicked);
     }
-#endif
 
-    if (m_item) {
+    if (m_item){
       // Tell EditView to display this object
       emit itemClicked(m_item);
     }
+#endif
+
   }
 }
 

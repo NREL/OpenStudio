@@ -94,6 +94,8 @@ signals:
 
   OSItem * m_item = nullptr;
 
+  std::string m_text = "";
+
 };
 
 class OSLineEdit : public QLineEdit
