@@ -26,6 +26,8 @@
 
 #include <QLineEdit>
 
+#include <QTimer>
+
 class QMouseEvent;
 
 namespace openstudio {
@@ -79,6 +81,8 @@ signals:
 
   void onItemRemoveClicked();
 
+  void emitItemClicked();
+
  private:
 
   void completeBind();
@@ -96,6 +100,7 @@ signals:
 
   std::string m_text = "";
 
+  QTimer m_timer;
 };
 
 class OSLineEdit : public QLineEdit

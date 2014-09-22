@@ -30,8 +30,15 @@
 
 #include <boost/optional.hpp>
 
+#include <QApplication>
 #include <QMouseEvent>
 #include <QString>
+
+#ifdef NDEBUG
+#define TIMEOUT_INTERVAL 100
+#else
+#define TIMEOUT_INTERVAL 500
+#endif
 
 namespace openstudio {
 
@@ -96,6 +103,9 @@ void OSLineEdit2::completeBind() {
 
   connect(this, &OSLineEdit2::editingFinished, this, &OSLineEdit2::onEditingFinished);
 
+  m_timer.setSingleShot(true);
+  connect(&m_timer, &QTimer::timeout, this, &OSLineEdit2::emitItemClicked);
+
   onModelObjectChange();
 }
 
@@ -150,33 +160,30 @@ void OSLineEdit2::onModelObjectChange() {
       if (m_text != text) {
         m_text = text;
         setText(QString::fromStdString(m_text));
-
-//        // This m_item code is only relevant if we are building in
-//        // the context of openstudio_lib
-//#ifdef openstudio_lib_EXPORTS
-//        if (!m_item && m_modelObject) {
-//
-//          OSItem * item = this->findChild<OSItem *>(QString(), Qt::FindDirectChildrenOnly);
-//          if (item) {
-//            delete item;
-//          }
-//
-//          m_item = OSItem::makeItem(modelObjectToItemId(*m_modelObject, false));
-//          OS_ASSERT(m_item);
-//          m_item->setParent(this);
-//          connect(m_item, &OSItem::itemRemoveClicked, this, &OSLineEdit2::onItemRemoveClicked);
-//          qApp->processEvents();
-//        }
-//
-//        if (m_item){
-//          // Tell EditView to display this object
-//          emit itemClicked(m_item);
-//        }
-//#endif
-
+        qApp->processEvents();
+        m_timer.start(TIMEOUT_INTERVAL);
       }
     }
   }
+}
+
+void OSLineEdit2::emitItemClicked()
+{
+  // This m_item code is only relevant if we are building in
+  // the context of openstudio_lib
+#ifdef openstudio_lib_EXPORTS
+  if (!m_item && m_modelObject) {
+    m_item = OSItem::makeItem(modelObjectToItemId(*m_modelObject, false));
+    OS_ASSERT(m_item);
+    m_item->setParent(this);
+    connect(m_item, &OSItem::itemRemoveClicked, this, &OSLineEdit2::onItemRemoveClicked);
+  }
+
+  if (m_item){
+    // Tell EditView to display this object
+    emit itemClicked(m_item);
+  }
+#endif
 }
 
 void OSLineEdit2::onModelObjectRemove(Handle handle)
@@ -189,28 +196,8 @@ void OSLineEdit2::mouseReleaseEvent(QMouseEvent * event)
   if (event->button() == Qt::LeftButton){
     event->accept();
 
-// This m_item code is only relevant if we are building in
-// the context of openstudio_lib
-#ifdef openstudio_lib_EXPORTS
-    if (!m_item && m_modelObject) {
-
-      OSItem * item = this->findChild<OSItem *>(QString(), Qt::FindDirectChildrenOnly);
-      if (item) {
-        delete item;
-      }
-
-      m_item = OSItem::makeItem(modelObjectToItemId(*m_modelObject, false));
-      OS_ASSERT(m_item);
-      m_item->setParent(this);
-      connect(m_item, &OSItem::itemRemoveClicked, this, &OSLineEdit2::onItemRemoveClicked);
-    }
-
-    if (m_item){
-      // Tell EditView to display this object
-      emit itemClicked(m_item);
-    }
-#endif
-
+    qApp->processEvents();
+    m_timer.start(TIMEOUT_INTERVAL);
   }
 }
 
