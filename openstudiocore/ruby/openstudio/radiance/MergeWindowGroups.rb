@@ -36,6 +36,17 @@
 #
 ######################################################################
 
+require "FileUtils"
+
+# help those poor Windows users out
+catCommand = "cat"
+osQuote = "\'"
+if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
+  catCommand = "type"
+  osQuote = "\""
+end
+
+
 windowGroups = File.open("../../bsdf/mapping.rad")
 windowGroups.each do |wg|
 
@@ -49,12 +60,36 @@ windowGroups.each do |wg|
 
   puts "generating shade schedule for window group '#{windowGroup}', setpoint: #{shadeControlSetpoint} lux..."  
 
+
+  # separate header from data; so, so ugly. 
+  header = []
+  ill0 = []
+  ill1 = []
+
+  wgIllum_0 = File.open("#{wgIllumFiles[0]}").each_line do |line|
+    if line.chomp! =~ /^\s?\d/
+      ill0 << "#{line}\n"
+    else 
+      header << "#{line}\n"
+    end
+
+  end
+
+  wgIllum_1 = File.open("#{wgIllumFiles[1]}").each_line do |line|
+    if line.chomp! =~ /^\s?\d/
+      ill1 << "#{line}\n"
+    else 
+      next
+    end
+
+  end
+
+  # should be headerless file
   windowControls = File.open("window_controls.ill", "r")
 
   windowControls.each do |row|
+    
     data = row.split(" ")
-    wgIllum_0 = File.readlines("#{wgIllumFiles[0]}")
-    wgIllum_1 = File.readlines("#{wgIllumFiles[1]}")
 
     wgMerge = []
     wgShadeSched = []
@@ -62,22 +97,34 @@ windowGroups.each do |wg|
     data.each_index do |i|
 
       if data[i].to_f < shadeControlSetpoint
-        wgMerge << wgIllum_0[i]
+        wgMerge << ill0[i]
         wgShadeSched << "0\n"
       else
-        wgMerge << wgIllum_1[i]
+        wgMerge << ill1[i]
         wgShadeSched << "1\n"
       end
     
     end
 
-    wgIllum = File.open("#{windowGroup}.ill", "w")
+    wgIllum = File.open("m_#{windowGroup}.ill", "w")
     wgShade = File.open("#{windowGroup}.shd", "w")
+    header.each {|head| wgIllum.print "#{head}"}
     wgMerge.each {|ts| wgIllum.print "#{ts}"}
     wgShadeSched.each {|sh| wgShade.print "#{sh}"}
     wgIllum.close
     wgShade.close
+    FileUtils.rm Dir.glob('*.tmp')
 
   end
 
 end
+
+# make whole-building illuminance file
+mergedWindows = Dir.glob("m_*.ill")
+addFiles = ""
+mergedWindows.each do |file|
+  addFiles << "+ #{file} "
+end
+system("rmtxop -fa WG0.ill #{addFiles} > model.ill")
+
+

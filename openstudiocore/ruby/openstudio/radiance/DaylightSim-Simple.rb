@@ -646,7 +646,7 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
       wg = row.split(",")[0]
       # do uncontrolled windows (WG0)
       if wg[2].to_i == 0
-        simulations << "dctimestep #{t_outPath}/output/dc/#{wg}.vmx annual-sky.mtx | rmtxop -fa -t -c 47.4 120 11.6 - | getinfo - > #{t_outPath}/output/ts/#{wg}.ill"
+        simulations << "dctimestep #{t_outPath}/output/dc/#{wg}.vmx annual-sky.mtx | rmtxop -fa -t -c 47.4 120 11.6 - > #{t_outPath}/output/ts/#{wg}.ill"
        
       end
       next if wg[2].to_i == 0
@@ -658,13 +658,13 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
       
       wgXMLs.each_index do |i|
         simulations << "dctimestep #{t_outPath}/output/dc/#{wg}.vmx #{t_outPath}/bsdf/#{wgXMLs[i].strip} #{t_outPath}/output/dc/#{wg}.dmx \\
-        annual-sky.mtx | rmtxop -fa -t -c 47.4 120 11.6 - | getinfo - > #{t_outPath}/output/ts/#{wg}_#{wgXMLs[i].split[0]}.ill"
+        annual-sky.mtx | rmtxop -fa -t -c 47.4 120 11.6 - > #{t_outPath}/output/ts/#{wg}_#{wgXMLs[i].split[0]}.ill"
  
       end
 
     end
     
-    # get annual values for window control sensors (note: no transpose)
+    # get annual values for window control sensors (note: no transpose, no header)
     simulations << "dctimestep #{t_outPath}/output/dc/window_controls.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - | getinfo - > #{t_outPath}/output/ts/window_controls.ill"
 
     # return the bsdf index for window group given by index at this hour
