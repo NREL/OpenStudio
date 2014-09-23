@@ -34,9 +34,9 @@
 #include <QString>
 
 #ifdef NDEBUG
-#define TIMEOUT_INTERVAL 200
+#define TIMEOUT_INTERVAL 500
 #else
-#define TIMEOUT_INTERVAL 1000
+#define TIMEOUT_INTERVAL 2000
 #endif
 
 namespace openstudio {

@@ -922,13 +922,13 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         CastNullAdapter<model::SpaceInfiltrationDesignFlowRate>(&model::SpaceInfiltrationDesignFlowRate::name),
         CastNullAdapter<model::SpaceInfiltrationDesignFlowRate>(&model::SpaceInfiltrationDesignFlowRate::setName),
         boost::optional<std::function<void (model::SpaceInfiltrationDesignFlowRate *)>>(
-		      std::function<void (model::SpaceInfiltrationDesignFlowRate *)>(
-			      [](model::SpaceInfiltrationDesignFlowRate *t_fr)
-			      {
-	  		      t_fr->resetSpaceType();
-			      }
-		      )
-		    ),
+          std::function<void (model::SpaceInfiltrationDesignFlowRate *)>(
+            [](model::SpaceInfiltrationDesignFlowRate *t_fr)
+            {
+              t_fr->resetSpaceType();
+            }
+          )
+        ),
         DataSource(
           flowRates,
           false, 
@@ -957,9 +957,9 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         CastNullAdapter<model::SpaceInfiltrationEffectiveLeakageArea>(&model::SpaceInfiltrationEffectiveLeakageArea::setName),
         boost::optional<std::function<void(model::SpaceInfiltrationEffectiveLeakageArea *)>>(
         std::function<void(model::SpaceInfiltrationEffectiveLeakageArea *)>(
-          [](model::SpaceInfiltrationEffectiveLeakageArea *t_fr)
+          [](model::SpaceInfiltrationEffectiveLeakageArea *t_la)
             {
-              t_fr->resetSpaceType();
+              t_la->resetSpaceType();
             }
           )
         ),
