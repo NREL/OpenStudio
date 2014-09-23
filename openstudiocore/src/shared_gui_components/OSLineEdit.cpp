@@ -30,14 +30,13 @@
 
 #include <boost/optional.hpp>
 
-#include <QApplication>
 #include <QMouseEvent>
 #include <QString>
 
 #ifdef NDEBUG
-#define TIMEOUT_INTERVAL 100
+#define TIMEOUT_INTERVAL 200
 #else
-#define TIMEOUT_INTERVAL 500
+#define TIMEOUT_INTERVAL 1000
 #endif
 
 namespace openstudio {
@@ -160,7 +159,6 @@ void OSLineEdit2::onModelObjectChange() {
       if (m_text != text) {
         m_text = text;
         setText(QString::fromStdString(m_text));
-        qApp->processEvents();
         m_timer.start(TIMEOUT_INTERVAL);
       }
     }
@@ -196,7 +194,6 @@ void OSLineEdit2::mouseReleaseEvent(QMouseEvent * event)
   if (event->button() == Qt::LeftButton){
     event->accept();
 
-    qApp->processEvents();
     m_timer.start(TIMEOUT_INTERVAL);
   }
 }
