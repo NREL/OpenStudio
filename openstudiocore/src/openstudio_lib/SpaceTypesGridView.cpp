@@ -755,6 +755,14 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         addLoadNameColumn(QString(LOADNAME),
           CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::name),
           CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::setName),
+          boost::optional<std::function<void(model::SpaceLoad *)>>(
+            std::function<void(model::SpaceLoad *)>(
+              [](model::SpaceLoad *t_sl)
+              {
+                t_sl->remove();
+              }
+            )
+          ),
           DataSource(
           allLoads,
           true

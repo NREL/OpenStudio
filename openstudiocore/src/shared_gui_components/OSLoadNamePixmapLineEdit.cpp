@@ -22,6 +22,7 @@
 #include "OSLineEdit.hpp"
 
 #include "../openstudio_lib/IconLibrary.hpp"
+#include "../openstudio_lib/OSItem.hpp"
 
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
@@ -49,6 +50,9 @@ void OSLoadNamePixmapLineEdit::createWidgets()
   m_label->setPixmap(m_pixmap);
   
   m_lineEdit = new OSLineEdit2();
+
+  bool isConnected = connect(m_lineEdit, SIGNAL(itemClicked(OSItem*)), this, SIGNAL(itemClicked(OSItem*)));
+  OS_ASSERT(isConnected);
 
   auto layout = new QHBoxLayout();
   layout->addWidget(m_label);

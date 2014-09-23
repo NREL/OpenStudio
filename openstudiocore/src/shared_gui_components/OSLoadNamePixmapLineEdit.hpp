@@ -30,6 +30,7 @@ class QLabel;
 
 namespace openstudio {
 
+class OSItem;
 class OSLineEdit2;
 
 class OSLoadNamePixmapLineEdit : public QWidget {
@@ -64,6 +65,10 @@ class OSLoadNamePixmapLineEdit : public QWidget {
             boost::optional<BasicQuery> isDefaulted=boost::none);
 
   void unbind();
+
+signals:
+
+  void itemClicked(OSItem* item);
 
  private slots:
 

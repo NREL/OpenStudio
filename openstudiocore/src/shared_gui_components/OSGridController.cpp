@@ -301,7 +301,14 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
     loadName->bind(t_mo,
                    OptionalStringGetter(std::bind(&LoadNameConcept::get,loadNameConcept.data(),t_mo,true)),
                    // If the concept is read only, pass an empty optional
-                   loadNameConcept->readOnly() ? boost::none : boost::optional<StringSetter>(std::bind(&LoadNameConcept::set,loadNameConcept.data(),t_mo,std::placeholders::_1)));
+                   loadNameConcept->readOnly() ? boost::none : boost::optional<StringSetter>(std::bind(&LoadNameConcept::set,loadNameConcept.data(),t_mo,std::placeholders::_1)),
+                   boost::optional<NoFailAction>(std::bind(&LoadNameConcept::reset, loadNameConcept.data(), t_mo)));
+
+    isConnected = connect(loadName, SIGNAL(itemClicked(OSItem*)), gridView(), SIGNAL(dropZoneItemClicked(OSItem*)));
+    OS_ASSERT(isConnected);
+
+    isConnected = connect(loadName, SIGNAL(itemClicked(OSItem*)), this, SLOT(onDropZoneItemClicked(OSItem*)));
+    OS_ASSERT(isConnected);
 
     widget = loadName;
 
