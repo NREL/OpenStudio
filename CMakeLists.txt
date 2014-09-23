@@ -385,8 +385,18 @@ else()
 endif()
 
 if(NOT WIN32)
-  find_program(RUBY_EXECUTABLE NAMES ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH)
-  find_package(Ruby)
+  find_program(RUBY_EXECUTABLE NAMES ruby2.0 ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH)
+
+  find_package(Ruby 2.0)
+
+  if (NOT RUBY_FOUND)
+  find_path(RUBY_CONFIG_INCLUDE_DIR
+    NAMES ruby/config.h  config.h
+    HINTS
+    /usr/include/x86_64-linux-gnu/ruby-2.0.0
+    )
+    find_package(Ruby 2.0)
+  endif()
 endif()
 
 
