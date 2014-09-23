@@ -36,7 +36,7 @@ set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/CPack.Description.tx
 set(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_CURRENT_SOURCE_DIR}/CPack.Welcome.txt")
 
 set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "OpenStudio\n ${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-thread1.55.0, libboost-system1.55.0, libboost-regex1.55.0, libboost-filesystem1.55.0, libboost-date-time1.55.0, libboost-program-options1.55.0, libboost-log1.55.0, libqt5sql5, libqt5network5, libqt5sql5-sqlite, libqt5gui5, libqt5xml5, libqt5webkit5, libruby2.0, ruby2.0")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-thread1.55.0, libboost-system1.55.0, libboost-regex1.55.0, libboost-filesystem1.55.0, libboost-date-time1.55.0, libboost-program-options1.55.0, libboost-log1.55.0, libqt5sql5, libqt5network5, libqt5sql5-sqlite, libqt5gui5, libqt5xml5, libqt5webkit5, libqt5concurrent5, libqt5location5, libruby2.0, ruby2.0")
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "http://openstudio.nrel.gov")
 set(CPACK_DEBIAN_PACKAGE_SECTION "science")
 set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/CMake/debian/postinst")

@@ -107,7 +107,7 @@
 #define NAME "Space Type Name"
 
 // GENERAL
-#define RENDERINGCOLOR "Rendering color"
+#define RENDERINGCOLOR "Rendering\nColor"
 #define DEFAULTCONSTRUCTIONSET "Default Construction Set"
 #define DEFAULTSCHEDULESET "Default Schedule Set"
 #define DESIGNSPECIFICATIONOUTDOORAIR "Design Specification Outdoor Air"
@@ -149,7 +149,7 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
   std::vector<model::ModelObject> spaceTypeModelObjects = subsetCastVector<model::ModelObject>(spaceTypes);
 
   SpaceTypesGridController * spaceTypesGridController  = new SpaceTypesGridController(m_isIP, "Space Types", model, spaceTypeModelObjects);
-  OSGridView * gridView = new OSGridView(spaceTypesGridController, "Space Types", "Drop\nZone", parent);
+  OSGridView * gridView = new OSGridView(spaceTypesGridController, "Space Types", "Drop\nZone", false, parent);
 
   bool isConnected = false;
 
@@ -164,8 +164,6 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
 
   isConnected = connect(gridView, SIGNAL(gridRowSelected(OSItem*)), this, SIGNAL(gridRowSelected(OSItem*)));
   OS_ASSERT(isConnected);
-
-  gridView->m_dropZone->hide();
 
   layout->addWidget(gridView,0,Qt::AlignTop);
 
@@ -224,7 +222,7 @@ void SpaceTypesGridController::setCategoriesAndFields()
     std::vector<QString> fields;
     fields.push_back(STANDARDSBUILDINGTYPE);
     fields.push_back(STANDARDSSPACETYPE);
-    std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Measure Tags"), fields);
+    std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Measure\nTags"), fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -770,6 +768,8 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         addValueEditColumn(QString(MULTIPLIER),
           multiplier,
           setMultiplier,
+          boost::optional<std::function<void (model::ModelObject *)>>(),
+          boost::optional<std::function<bool (model::ModelObject *)>>(),
           DataSource(
             allLoadsWithMultipliers,
             true
@@ -957,7 +957,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
     } else if (field == STANDARDSBUILDINGTYPE) {
 
       // nothing to do, it is a string already
-      std::function<std::string (std::string)> toString = [](std::string t_s) { return t_s; };
+      std::function<std::string (const std::string &)> toString = [](std::string t_s) { return t_s; };
 
       std::function<std::vector<std::string> (model::SpaceType *)> choices =
         [](model::SpaceType *t_spaceType){
@@ -998,7 +998,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
     } else if (field == STANDARDSSPACETYPE) {
 
       // nothing to do, it is a string already
-      std::function<std::string (std::string)> toString = [](std::string t_s) { return t_s; };
+      std::function<std::string (const std::string &)> toString = [](std::string t_s) { return t_s; };
 
       std::function<std::vector<std::string> (model::SpaceType *)> choices =
         [](model::SpaceType *t_spaceType){

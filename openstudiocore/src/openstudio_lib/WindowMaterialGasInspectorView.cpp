@@ -38,16 +38,16 @@ namespace openstudio {
 
 WindowMaterialGasInspectorView::WindowMaterialGasInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
   : ModelObjectInspectorView(model, true, parent),
-    m_gasType(NULL),
-    m_nameEdit(NULL),
-    m_thickness(NULL),
-    m_conductivityCoefficientA(NULL),
-    m_conductivityCoefficientB(NULL),
-    m_viscosityCoefficientA(NULL),
-    m_viscosityCoefficientB(NULL),
-    m_specificHeatCoefficientA(NULL),
-    m_specificHeatCoefficientB(NULL),
-    m_molecularWeight(NULL),
+    m_gasType(nullptr),
+    m_nameEdit(nullptr),
+    m_thickness(nullptr),
+    m_conductivityCoefficientA(nullptr),
+    m_conductivityCoefficientB(nullptr),
+    m_viscosityCoefficientA(nullptr),
+    m_viscosityCoefficientB(nullptr),
+    m_specificHeatCoefficientA(nullptr),
+    m_specificHeatCoefficientB(nullptr),
+    m_molecularWeight(nullptr),
     m_isIP(isIP)
 {
   createLayout();

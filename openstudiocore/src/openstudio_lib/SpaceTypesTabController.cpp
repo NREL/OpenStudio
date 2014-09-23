@@ -19,6 +19,7 @@
 
 #include "SpaceTypesTabController.hpp"
 
+#include "OSItem.hpp"
 #include "SpaceTypeInspectorView.hpp"
 #include "SpaceTypesController.hpp"
 #include "SpaceTypesTabView.hpp"
@@ -36,6 +37,8 @@ SpaceTypesTabController::SpaceTypesTabController(bool isIP,
   m_spaceTypesController = std::shared_ptr<SpaceTypesController>(new SpaceTypesController(isIP, model));
 
   connect(m_spaceTypesController.get(), &SpaceTypesController::modelObjectSelected, this, &SpaceTypesTabController::modelObjectSelected);
+
+  connect(m_spaceTypesController.get(), &SpaceTypesController::dropZoneItemSelected, this, &SpaceTypesTabController::dropZoneItemSelected);
 
   connect(m_spaceTypesController.get(), &SpaceTypesController::downloadComponentsClicked, this, &SpaceTypesTabController::downloadComponentsClicked);
 

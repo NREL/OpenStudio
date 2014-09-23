@@ -909,7 +909,7 @@ RefrigerationSystemListDropZoneItem::RefrigerationSystemListDropZoneItem(OSListC
 
 QGraphicsObject * RefrigerationSystemItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
-  QGraphicsObject * itemView = NULL;
+  QGraphicsObject * itemView = nullptr;
 
   if( QSharedPointer<RefrigerationSystemListItem> listItem = dataSource.dynamicCast<RefrigerationSystemListItem>() )
   {

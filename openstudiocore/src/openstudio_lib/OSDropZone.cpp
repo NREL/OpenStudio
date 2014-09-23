@@ -80,7 +80,7 @@ OSDropZone::OSDropZone(OSVectorController* vectorController,
   m_scrollArea->setWidget(mainBox);
   m_scrollArea->setMinimumWidth(OSItem::ITEM_WIDTH);
 
-  QBoxLayout * mainLayout = NULL;
+  QBoxLayout * mainLayout = nullptr;
 
   if(m_growsHorizontally){
     m_scrollArea->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed);
@@ -383,7 +383,7 @@ OSItemDropZone::OSItemDropZone(bool growsHorizontally,
 
   setObjectName("DropBox");
 
-  QBoxLayout * mainLayout = NULL;
+  QBoxLayout * mainLayout = nullptr;
 
   if(m_growsHorizontally){
     mainLayout = new QHBoxLayout();
@@ -582,7 +582,7 @@ void OSDropZone2::refresh()
 
 
   boost::optional<model::ModelObject> modelObject;
- 
+
   if (m_item)
   {
     modelObject = OSAppBase::instance()->currentDocument()->getModelObject(m_item->itemId());
@@ -655,10 +655,12 @@ void OSDropZone2::dropEvent(QDropEvent *event)
     OSItemId itemId(event->mimeData());
     boost::optional<model::ModelObject> modelObject = OSAppBase::instance()->currentDocument()->getModelObject(itemId);
     m_item = OSItem::makeItem(itemId, OSItemType::ListItem);
+    m_item->setParent(this);
+
+    connect(m_item, &OSItem::itemRemoveClicked, this, &OSDropZone2::onItemRemoveClicked);
 
     // Tell EditView to display this object
-    emit itemClicked(m_item);
-
+    //emit itemClicked(m_item); TODO For now, don't display on drop
 
     if(modelObject){
       if(OSAppBase::instance()->currentDocument()->fromComponentLibrary(itemId)){
@@ -693,12 +695,22 @@ void OSDropZone2::mouseReleaseEvent(QMouseEvent * event)
       if (modelObject)
       {
         m_item = OSItem::makeItem(modelObjectToItemId(*modelObject, false));
+        m_item->setParent(this);
+        connect(m_item, &OSItem::itemRemoveClicked, this, &OSDropZone2::onItemRemoveClicked);
       }
     }
 
     if (m_item) {
       emit itemClicked(m_item);
     }
+  }
+}
+
+void OSDropZone2::onItemRemoveClicked()
+{
+  if (m_reset)
+  {
+    (*m_reset)();
   }
 }
 

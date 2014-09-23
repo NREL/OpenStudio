@@ -37,7 +37,7 @@ namespace openstudio {
 
 MaterialAirWallInspectorView::MaterialAirWallInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
   : ModelObjectInspectorView(model, true, parent),
-    m_nameEdit(NULL),
+    m_nameEdit(nullptr),
     m_isIP(isIP)
 {
   createLayout();

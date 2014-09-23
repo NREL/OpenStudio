@@ -152,7 +152,7 @@ LoopChooserItem * LoopChooserView::loopChooserItemForLoop(std::string loopName)
       return *it;
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 void LoopChooserView::onAddToLoopClicked(model::Loop & loop)

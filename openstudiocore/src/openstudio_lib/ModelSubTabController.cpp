@@ -41,6 +41,10 @@ ModelSubTabController::ModelSubTabController(ModelSubTabView* subTabView, const 
     m_model(model)
 {
   connect(subTabView, &ModelSubTabView::modelObjectSelected, this, &ModelSubTabController::modelObjectSelected);
+
+  connect(subTabView, &ModelSubTabView::dropZoneItemClicked, this, &ModelSubTabController::dropZoneItemClicked);
+
+  connect(subTabView, &ModelSubTabView::dropZoneItemSelected, this, &ModelSubTabController::dropZoneItemSelected);
 }
 
 openstudio::model::Model ModelSubTabController::model() const

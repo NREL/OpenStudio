@@ -45,7 +45,11 @@ class OSGridView : public QWidget
 
 public:
 
-  OSGridView(OSGridController * gridController,  const QString & headerText, const QString & dropZoneText, QWidget * parent = nullptr);
+  OSGridView(OSGridController * gridController,
+    const QString & headerText,
+    const QString & dropZoneText,
+    bool useHeader,
+    QWidget * parent = nullptr);
 
   virtual ~OSGridView() {};
 
@@ -58,12 +62,6 @@ public:
 signals:
 
   void itemSelected(OSItem *);
-
-  //void cellClicked(int row, int column);
-
-  //void rowClicked(int row);
-
-  //void columnClicked(int column);
 
   void dropZoneItemClicked(OSItem* item);
 
@@ -88,7 +86,7 @@ public slots:
 
 private slots:
 
-  void refresh(int row, int column);
+  void refreshCell(int row, int column);
 
   void deleteAll();
 
@@ -102,9 +100,11 @@ private slots:
 
   void selectCategory(int index);
 
-  void onDropZoneItemClicked(OSItem*);
+  void onDropZoneItemClicked(OSItem* item);
 
   void doRefresh();
+
+  void doRowSelect();
 
 private:
 
@@ -116,26 +116,15 @@ private:
 
   void setGridController(OSGridController * gridController);
 
-  //void refreshRow(model::ModelObject modelObject);
-
-  //void refreshColumn(int columnId);
-
-  //void selectCell(int row, int column);
-
-  //void selectRow(int row);
-
-  //void selectColumn(int column);
-
   OSCollapsibleView * m_CollapsibleView;
 
   OSGridController * m_gridController;
 
-  QTimer m_timer;
-
   std::vector<RefreshType> m_refreshRequests;
+
+  QTimer m_timer;
 };
 
 } // openstudio
 
 #endif // SHAREDGUICOMPONENTS_OSGRIDVIEW_HPP
-

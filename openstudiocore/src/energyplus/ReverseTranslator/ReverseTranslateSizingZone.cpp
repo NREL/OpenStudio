@@ -140,7 +140,7 @@ OptionalModelObject ReverseTranslator::translateSizingZone( const WorkspaceObjec
 
     target = workspaceObject.getTarget(Sizing_ZoneFields::DesignSpecificationOutdoorAirObjectName);
     if (target){
-      OptionalModelObject mo = translateAndMapWorkspaceObject(*target);
+      OptionalModelObject mo = translateDesignSpecificationOutdoorAir(*target);
       if (mo){
         if (mo->optionalCast<DesignSpecificationOutdoorAir>()){
           std::vector<Space> spaces = thermalZone.spaces();
@@ -249,7 +249,7 @@ OptionalModelObject ReverseTranslator::translateSizingZone( const WorkspaceObjec
     //DesignSpecification_ZoneAirDistribution
 
     boost::optional<WorkspaceObject> _designSpecification 
-        = workspaceObject.getTarget(Sizing_ZoneFields::DesignSpecificationOutdoorAirObjectName);
+        = workspaceObject.getTarget(Sizing_ZoneFields::DesignSpecificationZoneAirDistributionObjectName);
 
     if( _designSpecification )
     {

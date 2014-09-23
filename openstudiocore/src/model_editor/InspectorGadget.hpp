@@ -221,6 +221,7 @@ public slots:
   void setPrec();
 
   void addExtensible();
+
   void removeExtensible();
   /*!
    * Create all fields in the IDD. IDFObjects can be instantiated with some
@@ -234,11 +235,10 @@ public slots:
   void setRecursive( bool recursive);
 
  signals:
+
   void nameChanged(QString);
 
   void toggleUnitsClicked(bool);
-
-  void removeButtonClicked(bool);
 
   /*!
    *This signal is emitted when the IG changes the model. If your program
@@ -371,7 +371,6 @@ protected:
   FLOAT_DISPLAY m_floatDisplayType;
   UNIT_SYSTEM m_unitSystem;
   bool m_workspaceObjectChanged;
-  QPushButton * m_removeButton;
 
   typedef std::map <openstudio::model::ModelObject,InspectorGadget*> MODELMAP;
   MODELMAP m_childMap;
@@ -380,9 +379,9 @@ protected:
 
   void disconnectWorkspaceObjectSignals() const;
 
-  private:
+private:
 
-    void connectSignalsAndSlots();
+  void connectSignalsAndSlots();
 };
 
 #endif // MODELEDITOR_INSPECTORGADGET_HPP

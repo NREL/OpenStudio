@@ -103,7 +103,8 @@ void OSGridController::requestRefreshGrid()
 
 void OSGridController::refreshGrid()
 {
-  gridView()->refreshGrid();
+  // Never hit
+  OS_ASSERT(false);
 }
 
 void OSGridController::loadQSettings()
@@ -158,7 +159,6 @@ void OSGridController::categorySelected(int index)
   m_currentFields = m_categoriesAndFields.at(index).second;
 
   addColumns(m_currentFields);
-
 }
 
 void OSGridController::setHorizontalHeader()
@@ -199,7 +199,7 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
 
   if(QSharedPointer<CheckBoxConcept> checkBoxConcept = t_baseConcept.dynamicCast<CheckBoxConcept>()){
 
-    auto checkBox = new OSCheckBox2();
+    auto checkBox = new OSCheckBox3(); // OSCheckBox3 is derived from QCheckBox, whereas OSCheckBox2 is derived from QPushButton
 
     checkBox->bind(t_mo,
                    BoolGetter(std::bind(&CheckBoxConcept::get,checkBoxConcept.data(),t_mo)),
@@ -226,7 +226,11 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
 
     doubleEdit->bind(t_mo,
                      DoubleGetter(std::bind(&ValueEditConcept<double>::get,doubleEditConcept.data(),t_mo)),
-                     boost::optional<DoubleSetter>(std::bind(&ValueEditConcept<double>::set,doubleEditConcept.data(),t_mo,std::placeholders::_1)));
+                     boost::optional<DoubleSetter>(std::bind(&ValueEditConcept<double>::set,doubleEditConcept.data(),t_mo,std::placeholders::_1)),
+                     boost::optional<NoFailAction>(std::bind(&ValueEditConcept<double>::reset,doubleEditConcept.data(),t_mo)),
+                     boost::optional<NoFailAction>(),
+                     boost::optional<NoFailAction>(),
+                     boost::optional<BasicQuery>(std::bind(&ValueEditConcept<double>::isDefaulted,doubleEditConcept.data(),t_mo)));
 
     widget = doubleEdit;
 
@@ -246,7 +250,11 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
 
     doubleEditVoidReturn->bind(t_mo,
                                DoubleGetter(std::bind(&ValueEditVoidReturnConcept<double>::get,doubleEditVoidReturnConcept.data(),t_mo)),
-                               DoubleSetterVoidReturn(std::bind(&ValueEditVoidReturnConcept<double>::set,doubleEditVoidReturnConcept.data(),t_mo,std::placeholders::_1)));
+                               DoubleSetterVoidReturn(std::bind(&ValueEditVoidReturnConcept<double>::set,doubleEditVoidReturnConcept.data(),t_mo,std::placeholders::_1)),
+                     boost::optional<NoFailAction>(std::bind(&ValueEditVoidReturnConcept<double>::reset,doubleEditVoidReturnConcept.data(),t_mo)),
+                     boost::optional<NoFailAction>(),
+                     boost::optional<NoFailAction>(),
+                     boost::optional<BasicQuery>(std::bind(&ValueEditVoidReturnConcept<double>::isDefaulted,doubleEditVoidReturnConcept.data(),t_mo)));
 
     widget = doubleEditVoidReturn;
 
@@ -266,7 +274,11 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
 
     integerEdit->bind(t_mo,
                       IntGetter(std::bind(&ValueEditConcept<int>::get,integerEditConcept.data(),t_mo)),
-                      boost::optional<IntSetter>(std::bind(&ValueEditConcept<int>::set,integerEditConcept.data(),t_mo,std::placeholders::_1)));
+                      boost::optional<IntSetter>(std::bind(&ValueEditConcept<int>::set,integerEditConcept.data(),t_mo,std::placeholders::_1)),
+                      boost::optional<NoFailAction>(std::bind(&ValueEditConcept<int>::reset,integerEditConcept.data(),t_mo)),
+                      boost::optional<NoFailAction>(),
+                      boost::optional<NoFailAction>(),
+                      boost::optional<BasicQuery>(std::bind(&ValueEditConcept<int>::isDefaulted,integerEditConcept.data(),t_mo)));
 
     widget = integerEdit;
 
@@ -276,7 +288,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
 
     lineEdit->bind(t_mo,
                    StringGetter(std::bind(&ValueEditConcept<std::string>::get,lineEditConcept.data(),t_mo)),
-                   boost::optional<StringSetter>(std::bind(&ValueEditConcept<std::string>::set,lineEditConcept.data(),t_mo,std::placeholders::_1)));
+                   boost::optional<StringSetter>(std::bind(&ValueEditConcept<std::string>::set,lineEditConcept.data(),t_mo,std::placeholders::_1)),
+                   boost::optional<NoFailAction>(std::bind(&ValueEditConcept<std::string>::reset,lineEditConcept.data(),t_mo)),
+                   boost::optional<BasicQuery>(std::bind(&ValueEditConcept<std::string>::isDefaulted,lineEditConcept.data(),t_mo)));
 
     widget = lineEdit;
 
@@ -319,7 +333,11 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
     quantityEdit->bind(m_isIP,
                        t_mo,
                        DoubleGetter(std::bind(&QuantityEditConcept<double>::get,quantityEditConcept.data(),t_mo)),
-                       boost::optional<DoubleSetter>(std::bind(&QuantityEditConcept<double>::set,quantityEditConcept.data(),t_mo,std::placeholders::_1)));
+                       boost::optional<DoubleSetter>(std::bind(&QuantityEditConcept<double>::set,quantityEditConcept.data(),t_mo,std::placeholders::_1)),
+                   boost::optional<NoFailAction>(std::bind(&QuantityEditConcept<double>::reset,quantityEditConcept.data(),t_mo)),
+                   boost::optional<NoFailAction>(),
+                   boost::optional<NoFailAction>(),
+                   boost::optional<BasicQuery>(std::bind(&QuantityEditConcept<double>::isDefaulted,quantityEditConcept.data(),t_mo)));
 
     isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), quantityEdit, SLOT(onUnitSystemChange(bool)));
     OS_ASSERT(isConnected);
@@ -355,7 +373,11 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
     quantityEditVoidReturn->bind(m_isIP,
                                  t_mo,
                                  DoubleGetter(std::bind(&QuantityEditVoidReturnConcept<double>::get,quantityEditVoidReturnConcept.data(),t_mo)),
-                                 DoubleSetterVoidReturn(std::bind(&QuantityEditVoidReturnConcept<double>::set,quantityEditVoidReturnConcept.data(),t_mo,std::placeholders::_1)));
+                                 DoubleSetterVoidReturn(std::bind(&QuantityEditVoidReturnConcept<double>::set,quantityEditVoidReturnConcept.data(),t_mo,std::placeholders::_1)),
+                   boost::optional<NoFailAction>(std::bind(&QuantityEditVoidReturnConcept<double>::reset,quantityEditVoidReturnConcept.data(),t_mo)),
+                   boost::optional<NoFailAction>(),
+                   boost::optional<NoFailAction>(),
+                   boost::optional<BasicQuery>(std::bind(&QuantityEditVoidReturnConcept<double>::isDefaulted,quantityEditVoidReturnConcept.data(),t_mo)));
 
     isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), quantityEditVoidReturn, SLOT(onUnitSystemChange(bool)));
     OS_ASSERT(isConnected);
@@ -386,7 +408,11 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
 
     unsignedEdit->bind(t_mo,
                        UnsignedGetter(std::bind(&ValueEditConcept<unsigned>::get,unsignedEditConcept.data(),t_mo)),
-                       boost::optional<UnsignedSetter>(std::bind(&ValueEditConcept<unsigned>::set,unsignedEditConcept.data(),t_mo,std::placeholders::_1)));
+                       boost::optional<UnsignedSetter>(std::bind(&ValueEditConcept<unsigned>::set,unsignedEditConcept.data(),t_mo,std::placeholders::_1)),
+                   boost::optional<NoFailAction>(std::bind(&ValueEditConcept<unsigned>::reset,unsignedEditConcept.data(),t_mo)),
+                   boost::optional<NoFailAction>(),
+                   boost::optional<NoFailAction>(),
+                   boost::optional<BasicQuery>(std::bind(&ValueEditConcept<unsigned>::isDefaulted,unsignedEditConcept.data(),t_mo)));
 
     widget = unsignedEdit;
 
@@ -395,7 +421,8 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
 
     dropZone->bind(t_mo,
       OptionalModelObjectGetter(std::bind(&DropZoneConcept::get,dropZoneConcept.data(),t_mo)),
-      ModelObjectSetter(std::bind(&DropZoneConcept::set, dropZoneConcept.data(), t_mo, std::placeholders::_1)));
+      ModelObjectSetter(std::bind(&DropZoneConcept::set, dropZoneConcept.data(), t_mo, std::placeholders::_1)),
+      NoFailAction(std::bind(&DropZoneConcept::reset, dropZoneConcept.data(), t_mo)));
 
     isConnected = connect(dropZone, SIGNAL(itemClicked(OSItem*)), gridView(), SIGNAL(dropZoneItemClicked(OSItem*)));
     OS_ASSERT(isConnected);
@@ -616,7 +643,6 @@ void OSGridController::checkSelectedFields()
       horizontalHeaderWidget->m_checkBox->blockSignals(false);
     }
   }
-
 }
 
 void OSGridController::setCustomCategoryAndFields()
@@ -739,7 +765,8 @@ void OSGridController::onComboBoxIndexChanged(int index)
 
 void OSGridController::reset()
 {
-  emit modelReset();
+  // Should never be hit
+  OS_ASSERT(false);
 }
 
 void OSGridController::cellChecked(int index)
@@ -766,17 +793,13 @@ void OSGridController::cellChecked(int index)
     // ... select the new...
     selectRow(tableRowIndex, true);
 
-    // ... and tell the world.
+    // ... tell the world...
     OSItemId itemId = modelObjectToItemId(modelObject(tableRowIndex), false);
     OSItem* item = OSItem::makeItem(itemId, OSItemType::ListItem);
-
-    // Remember who's selected
-    m_oldIndex = tableRowIndex;
-
-    // Note: emitting gridRowSelected will trigger itemSelected emitted from OSItemList,
-    //       creating unwanted feedback
-    m_acceptItemSelectedSignals = false;
     emit gridRowSelected(item);
+
+    // ... and remember who's selected
+    m_oldIndex = tableRowIndex;
   }
 }
 
@@ -786,39 +809,90 @@ void OSGridController::selectItemId(const OSItemId& itemId)
 
 void OSGridController::onItemSelected(OSItem * item)
 {
-  if (!m_acceptItemSelectedSignals) {
-    m_acceptItemSelectedSignals = true;
-    return;
-  }
-  bool selected = true;
+}
+
+bool OSGridController::selectRowByItem(OSItem * item, bool isSelected)
+{
+  auto success = false;
   int i = 0;
-  refreshModelObjects();
-  gridView()->refreshAll();
-  QApplication::processEvents();
-
-  auto modelSubTabView = gridView()->modelSubTabView();
-  if (!modelSubTabView) return;
-
-  item = modelSubTabView->itemSelector()->selectedItem();
 
   for (auto modelObject : m_modelObjects){
     OSItemId itemId = modelObjectToItemId(modelObject, false);
     if (item->itemId() == itemId){
-      selectRow(rowIndexFromModelIndex(i), selected);
-      return;
+      selectRow(rowIndexFromModelIndex(i), isSelected);
+      success = true;
+      break;
     }
     i++;
   }
+  return success;
+}
+
+bool OSGridController::getRowIndexByItem(OSItem * item, int & rowIndex)
+{
+  auto success = false;
+  rowIndex = -1;
+
+  for (auto modelObject : m_modelObjects){
+    rowIndex++;
+    OSItemId itemId = modelObjectToItemId(modelObject, false);
+    if (item->itemId() == itemId){
+      success = true;
+      break;
+    }
+  }
+
+  // No success, let's try the parent (BTW, doesn't work, but concept is valid)
+  // (This is an attempt to handle SpaceTypesGridView making renderingColor objects
+  //  which trigger a model::onChange signal whose OSItem cannot be digested,
+  //  because we are working with SpaceType. One could use a filter to check the OSItem's
+  //  modelObject type and verify it equals that held by the OSGridController)
+  //  //if (!success) {
+  //  rowIndex = -1;
+  //  for (auto modelObject : m_modelObjects){
+  //    rowIndex++;
+  //    if (auto parent = modelObject.parent())
+  //    {
+  //      OSItemId itemId = modelObjectToItemId(*parent, false);
+  //      if (item->itemId() == itemId){
+  //        success = true;
+  //        break;
+  //      }
+  //    }
+  //  }
+  //
+  //}
+
+  if (success) {
+    // We found the model index and must convert it to the row index
+    rowIndex = rowIndexFromModelIndex(rowIndex);
+  }
+  else {
+    // We could never find a valid index
+    rowIndex = -1;
+  }
+
+  return success;
+}
+
+OSItem * OSGridController::getSelectedItemFromModelSubTabView()
+{
+  OSItem * item = nullptr;
+
+  auto modelSubTabView = gridView()->modelSubTabView();
+  if (!modelSubTabView) return item;
+
+  item = modelSubTabView->itemSelector()->selectedItem();
+
+  return item;
 }
 
 void OSGridController::onSelectionCleared()
 {
-  // TODO use a single shot timer, just once to handle this
-  refreshModelObjects();
   gridView()->requestRefreshAll();
 }
 
-void OSGridController::onDropZoneItemClicked(OSItem*)
+void OSGridController::onDropZoneItemClicked(OSItem* item)
 {
 }
 
