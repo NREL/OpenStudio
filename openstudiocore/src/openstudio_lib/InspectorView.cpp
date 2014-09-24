@@ -115,7 +115,7 @@ namespace openstudio {
 
 InspectorView::InspectorView(QWidget* parent)
   : QWidget(parent),
-    m_currentView(NULL)
+    m_currentView(nullptr)
 {
   m_vLayout = new QVBoxLayout();
 
@@ -489,10 +489,12 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       }
 
       m_currentView = new GenericInspectorView();
-      connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
 
-      auto isConnected = connect(m_currentView, SIGNAL(removeButtonClicked(bool)), this, SLOT(onRemoveButtonClicked(bool)));
-      OS_ASSERT(isConnected);
+      m_currentView->m_libraryTabWidget->showRemoveButton();
+
+      connect(m_currentView, &BaseInspectorView::removeButtonClicked, this, &InspectorView::removeButtonClicked);
+
+      connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
 
       m_currentView->layoutModelObject(modelObject.get(), readOnly, displayIP);
 
@@ -507,8 +509,9 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
     }
 
     m_currentView = new GenericInspectorView();
-    connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
 
+   connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
+   
     m_vLayout->addWidget(m_currentView);
   }
 
@@ -525,15 +528,6 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
 
 void InspectorView:: toggleUnits(bool displayIP)
 {
-}
-
-void InspectorView::onRemoveButtonClicked(bool checked)
-{
-  if (!m_modelObject) return;
-
-  auto itemId = modelObjectToItemId(*m_modelObject, false);
-  auto item = OSItem::makeItem(itemId, OSItemType::ListItem);
-  emit itemRemoveClicked(item);
 }
 
 BaseInspectorView::BaseInspectorView(QWidget * parent)
@@ -557,6 +551,9 @@ BaseInspectorView::BaseInspectorView(QWidget * parent)
   //m_vLayout->addWidget(tabBar);
 
   m_libraryTabWidget = new LibraryTabWidget();
+  
+  auto isConnected = connect(m_libraryTabWidget, SIGNAL(removeButtonClicked(bool)), this, SIGNAL(removeButtonClicked(bool)));
+  OS_ASSERT(isConnected);
 
   m_vLayout->addWidget(m_libraryTabWidget);
 
@@ -597,9 +594,6 @@ GenericInspectorView::GenericInspectorView( QWidget * parent )
   m_inspectorGadget = new InspectorGadget();
 
   connect(this, &GenericInspectorView::toggleUnitsClicked, m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
-
-  auto isConnected = connect(m_inspectorGadget, SIGNAL(removeButtonClicked(bool)), this, SIGNAL(removeButtonClicked(bool)));
-  OS_ASSERT(isConnected);
 
   m_libraryTabWidget->addTab( m_inspectorGadget,"","");
                               //":images/components_icon_pressed.png",

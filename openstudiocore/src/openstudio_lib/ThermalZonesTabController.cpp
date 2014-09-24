@@ -18,9 +18,11 @@
 **********************************************************************/
 
 #include "ThermalZonesTabController.hpp"
+
+#include "OSItem.hpp"
 #include "ThermalZonesController.hpp"
-#include "ThermalZonesView.hpp"
 #include "ThermalZonesTabView.hpp"
+#include "ThermalZonesView.hpp"
 
 namespace openstudio {
 
@@ -40,6 +42,8 @@ ThermalZonesTabController::ThermalZonesTabController(bool isIP, const model::Mod
   OS_ASSERT(isConnected);
 
   connect(m_thermalZonesController.get(), &ThermalZonesController::modelObjectSelected, this, &ThermalZonesTabController::modelObjectSelected);
+
+  connect(m_thermalZonesController.get(), &ThermalZonesController::dropZoneItemSelected, this, &ThermalZonesTabController::dropZoneItemSelected);
 
   connect(this, &ThermalZonesTabController::toggleUnitsClicked, m_thermalZonesController.get(), &ThermalZonesController::toggleUnitsClicked);
 }

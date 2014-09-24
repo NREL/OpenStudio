@@ -11,66 +11,77 @@ class ReportingMeasure_Test < MiniTest::Test
   # class level variable
   @@co = OpenStudio::Runmanager::ConfigOptions.new(true)
 
-  # paths to expected test files, includes osm and eplusout.sql
-  def modelPath
+  def model_in_path
     return "#{File.dirname(__FILE__)}/example_model.osm"
   end
+  
+  def epw_path
+    # make sure we have a weather data location
+    assert(!@@co.getDefaultEPWLocation.to_s.empty?)
+    epw = @@co.getDefaultEPWLocation / OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.epw")
+    assert(File.exist?(epw.to_s))
+    
+    return epw.to_s
+  end
 
-  def runDir
+  def run_dir(test_name)
     # always generate test output in specially named 'output' directory so result files are not made part of the measure
-    return "#{File.dirname(__FILE__)}/output/"
+    return "#{File.dirname(__FILE__)}/output/#{test_name}"
   end
-
-  def sqlPath
-    return "#{File.dirname(__FILE__)}/output/ModelToIdf/EnergyPlusPreProcess-0/EnergyPlus-0/eplusout.sql"
+  
+  def model_out_path(test_name)
+    return "#{run_dir(test_name)}/example_model.osm"
   end
-
-  def reportPath
-    return "#{File.dirname(__FILE__)}/report.html"
+  
+  def sql_path(test_name)
+    return "#{run_dir(test_name)}/ModelToIdf/EnergyPlusPreProcess-0/EnergyPlus-0/eplusout.sql"
+  end
+  
+  def report_path(test_name)
+    return "#{run_dir(test_name)}/report.html"
   end
 
   # create test files if they do not exist when the test first runs 
-  def setup
-
-    if File.exist?(reportPath())
-      FileUtils.rm(reportPath())
-    end
-
-    assert(File.exist?(modelPath()))
-
-    if !File.exist?(runDir())
-      Dir.mkdir "#{runDir()}"
-    end
-    assert(File.exist?(runDir()))
-
+  def setup_test(test_name, idf_output_requests)
+  
     @@co.findTools(false, true, false, true)
+    
+    if !File.exist?(run_dir(test_name))
+      FileUtils.mkdir_p(run_dir(test_name))
+    end
+    assert(File.exist?(run_dir(test_name)))
+    
+    if File.exist?(report_path(test_name))
+      FileUtils.rm(report_path(test_name))
+    end
 
-    if !File.exist?(sqlPath())
+    assert(File.exist?(model_in_path))
+    
+    if File.exist?(model_out_path(test_name))
+      FileUtils.rm(model_out_path(test_name))
+    end
+
+    # convert output requests to OSM for testing, OS App and PAT will add these to the E+ Idf 
+    workspace = OpenStudio::Workspace.new("Draft".to_StrictnessLevel, "EnergyPlus".to_IddFileType)
+    workspace.addObjects(idf_output_requests)
+    rt = OpenStudio::EnergyPlus::ReverseTranslator.new
+    request_model = rt.translateWorkspace(workspace)
+    
+    model = OpenStudio::Model::Model.load(model_in_path).get
+    model.addObjects(request_model.objects)
+    model.save(model_out_path(test_name), true)
+
+    if !File.exist?(sql_path(test_name))
       puts "Running EnergyPlus"
 
       wf = OpenStudio::Runmanager::Workflow.new("modeltoidf->energypluspreprocess->energyplus")
       wf.add(@@co.getTools())
-      job = wf.create(OpenStudio::Path.new(runDir()), OpenStudio::Path.new(modelPath()))
+      job = wf.create(OpenStudio::Path.new(run_dir(test_name)), OpenStudio::Path.new(model_out_path(test_name)), OpenStudio::Path.new(epw_path))
 
       rm = OpenStudio::Runmanager::RunManager.new
       rm.enqueue(job, true)
       rm.waitForFinished
     end
-  end
-
-  # delete output files when tests end
-  def teardown
-
-    # comment this out if you don't want to rerun EnergyPlus each time
-    if File.exist?(sqlPath())
-      #FileUtils.rm(sqlPath())
-    end
-
-    # comment this out if you want to see the resulting report
-    if File.exist?(reportPath())
-      #FileUtils.rm(reportPath())
-    end
-
   end
 
   def test_number_of_arguments_and_argument_names
@@ -83,9 +94,8 @@ class ReportingMeasure_Test < MiniTest::Test
   end
 
   def test_good_argument_values
-
-    assert(File.exist?(modelPath()))
-    assert(File.exist?(sqlPath()))
+  
+    test_name = "test_good_argument_values"
 
     # create an instance of the measure
     measure = ReportingMeasure.new
@@ -93,34 +103,47 @@ class ReportingMeasure_Test < MiniTest::Test
     # create an instance of a runner
     runner = OpenStudio::Ruleset::OSRunner.new
     
-    # make sure we have a weather data location
-    assert(!@@co.getDefaultEPWLocation.to_s.empty?)
-    epw = @@co.getDefaultEPWLocation / OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.epw")
-    assert(File.exist?(epw.to_s))
-    
-    # set up runner, this will happen automatically when measure is run in PAT or OpenStudio
-    runner.setLastOpenStudioModelPath(OpenStudio::Path.new(modelPath))
-    runner.setLastEpwFilePath(epw)
-    runner.setLastEnergyPlusSqlFilePath(OpenStudio::Path.new(sqlPath))
-
     # get arguments
     arguments = measure.arguments()
     argument_map = OpenStudio::Ruleset.convertOSArgumentVectorToMap(arguments)
+    
+    # get the energyplus output requests, this will be done automatically by OS App and PAT
+    idf_output_requests = measure.energyPlusOutputRequests(runner, argument_map)
+    assert_equal(1, idf_output_requests.size)
+
+    # mimic the process of running this measure in OS App or PAT
+    setup_test(test_name, idf_output_requests)
+    
+    assert(File.exist?(model_out_path(test_name)))
+    assert(File.exist?(sql_path(test_name)))
+    assert(File.exist?(epw_path))
+
+    # set up runner, this will happen automatically when measure is run in PAT or OpenStudio
+    runner.setLastOpenStudioModelPath(OpenStudio::Path.new(model_out_path(test_name)))
+    runner.setLastEpwFilePath(epw_path)
+    runner.setLastEnergyPlusSqlFilePath(OpenStudio::Path.new(sql_path(test_name)))
 
     # delete the output if it exists
-    if File.exist?(reportPath())
-      FileUtils.rm(reportPath())
+    if File.exist?(report_path(test_name))
+      FileUtils.rm(report_path(test_name))
     end
-    assert(!File.exist?(reportPath()))
+    assert(!File.exist?(report_path(test_name)))
+    
+    # temporarily change directory to the run directory and run the measure
+    start_dir = Dir.pwd
+    begin
+      Dir.chdir(run_dir(test_name))
 
-    # run the measure
-    measure.run(runner, argument_map)
-    result = runner.result
-    assert_equal("Success", result.value.valueName)
-
+      # run the measure
+      measure.run(runner, argument_map)
+      result = runner.result
+      assert_equal("Success", result.value.valueName)
+    ensure
+      Dir.chdir(start_dir)
+    end
+    
     # make sure the report file exists
-    assert(File.exist?(reportPath()))
-
+    assert(File.exist?(report_path(test_name)))
   end
 
 end

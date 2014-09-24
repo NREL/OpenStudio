@@ -438,16 +438,29 @@ LibraryItem::LibraryItem(const BCLMeasure & bclMeasure, LocalLibrary::LibrarySou
   m_source(source),
   m_app(t_app)
 {
-  std::string componentVersion;
-  for (const BCLFileReference & file : bclMeasure.files()) {
-    if (file.usageType() == "script" && file.softwareProgram() == "OpenStudio"){
-      componentVersion = file.softwareProgramVersion();
+  boost::optional<VersionString> minCompatibleVersion;
+  boost::optional<VersionString> maxCompatibleVersion;
+  Q_FOREACH(const BCLFileReference & fileReference, bclMeasure.files()){
+    if (fileReference.usageType() == "script" && fileReference.softwareProgram() == "OpenStudio"){
+      minCompatibleVersion = fileReference.minCompatibleVersion();
+      maxCompatibleVersion = fileReference.maxCompatibleVersion();
+
+      if (!minCompatibleVersion){
+        try{
+          minCompatibleVersion = VersionString(fileReference.softwareProgramVersion());
+        } catch (const std::exception&){
+        }
+      }
       break;
     }
   }
-  if (componentVersion.empty() || VersionString(componentVersion) > VersionString(openStudioVersion())){
+
+  VersionString currentVersion(openStudioVersion());
+  if (minCompatibleVersion && (*minCompatibleVersion) > currentVersion){
     m_available = false;
-  }else{
+  } else if (maxCompatibleVersion && (*maxCompatibleVersion) < currentVersion){
+    m_available = false;
+  } else{
     m_available = true;
   }
 }
@@ -497,18 +510,22 @@ bool LibraryItem::isAvailable() const
 
 void LibraryItem::dragItem(const OSDragPixmapData & dragPixmapData)
 {
-  MeasureDragData measureDragData(m_bclMeasure.uuid());
+  // DLM: I think we want to allow user to drag in measure with error because that is the best 
+  // way currently to allow them to inspect the error
+  //if (!m_bclMeasure.error()){
+    MeasureDragData measureDragData(m_bclMeasure.uuid());
 
-  auto drag = new QDrag(m_app->mainWidget());
+    auto drag = new QDrag(m_app->mainWidget());
 
-  auto mimeData = new QMimeData;
-  mimeData->setData(MeasureDragData::mimeType(m_bclMeasure.measureType()), measureDragData.data());
-  drag->setMimeData(mimeData);
+    auto mimeData = new QMimeData;
+    mimeData->setData(MeasureDragData::mimeType(m_bclMeasure.measureType()), measureDragData.data());
+    drag->setMimeData(mimeData);
 
-  drag->setPixmap(dragPixmapData.pixmap);
-  drag->setHotSpot(dragPixmapData.hotSpot);
+    drag->setPixmap(dragPixmapData.pixmap);
+    drag->setHotSpot(dragPixmapData.hotSpot);
 
-  drag->exec(Qt::CopyAction);
+    drag->exec(Qt::CopyAction);
+  //}
 }
 
 LibraryItemDelegate::LibraryItemDelegate(BaseApp *t_app)

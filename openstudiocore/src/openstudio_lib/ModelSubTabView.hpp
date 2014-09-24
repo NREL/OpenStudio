@@ -59,6 +59,10 @@ class ModelSubTabView : public SubTabView
 
     void modelObjectSelected(model::OptionalModelObject & modelObject, bool readOnly);
 
+    void dropZoneItemSelected(OSItem* item, bool readOnly);
+
+    void dropZoneItemClicked(OSItem* item);
+
     void toggleUnitsClicked(bool displayIP);
 
   protected:

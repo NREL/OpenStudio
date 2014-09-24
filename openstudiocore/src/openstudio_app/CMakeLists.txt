@@ -134,7 +134,7 @@ if(APPLE OR WIN32)
 
   set(QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/sqldrivers/${QSQLITE_PLUGIN_NAME}")
 
-  if(WIN32)		
+  if(WIN32)
     get_target_property(QPA_PLUGIN Qt5::QWindowsIntegrationPlugin LOCATION)
   elseif(APPLE)
     get_target_property(QPA_PLUGIN Qt5::QCocoaIntegrationPlugin LOCATION)

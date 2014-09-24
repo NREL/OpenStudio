@@ -82,7 +82,7 @@ class SubTabView : public QSplitter
     void removeClicked();
 
     void purgeClicked();
-    
+
     void dropZoneItemClicked(OSItem* item);
 
     void downloadComponentsClicked();
@@ -91,7 +91,7 @@ class SubTabView : public QSplitter
 
   protected slots:
 
-    virtual void onDropZoneItemClicked(OSItem*);
+    virtual void onDropZoneItemClicked(OSItem* item);
 
   protected:
 
@@ -102,8 +102,6 @@ class SubTabView : public QSplitter
     void connectItemSelector();
 
     void connectInspectorView();
-
-    void connectGridView();
 
     void connectItemSelectorButtons();
 

@@ -37,9 +37,9 @@ namespace openstudio {
 
 OSCollapsibleItemList::OSCollapsibleItemList(bool addScrollArea, QWidget * parent)
   : OSItemSelector(parent),
-  m_vLayout(NULL),
-  m_contentLayout(NULL),
-  m_selectedCollapsibleItem(NULL),
+  m_vLayout(nullptr),
+  m_contentLayout(nullptr),
+  m_selectedCollapsibleItem(nullptr),
   m_itemsDraggable(false),
   m_itemsRemoveable(false),
   m_showFilterLayout(false),
@@ -79,7 +79,7 @@ OSCollapsibleItem* OSCollapsibleItemList::selectedCollapsibleItem() const
 
 OSItem* OSCollapsibleItemList::selectedItem() const
 {
-  OSItem* result = NULL;
+  OSItem* result = nullptr;
   if (m_selectedCollapsibleItem){
     result = m_selectedCollapsibleItem->itemList()->selectedItem();
   }
@@ -191,9 +191,9 @@ void OSCollapsibleItemList::addCollapsibleItem(OSCollapsibleItem * collapsibleIt
 
 void OSCollapsibleItemList::onCollapsableItemSelected(OSCollapsibleItem* selectedItem)
 {
-  QLayoutItem * layoutItem = NULL;
-  OSCollapsibleItem* collapsibleItem = NULL;
-  OSItem* newSelectedItem = NULL;
+  QLayoutItem * layoutItem = nullptr;
+  OSCollapsibleItem* collapsibleItem = nullptr;
+  OSItem* newSelectedItem = nullptr;
 
   for (int i = 0; i < m_vLayout->count(); ++i){
 
@@ -224,8 +224,8 @@ void OSCollapsibleItemList::onCollapsableItemSelected(OSCollapsibleItem* selecte
 
 void OSCollapsibleItemList::onItemSelected(OSItem* item)
 {
-  QLayoutItem * layoutItem = NULL;
-  OSCollapsibleItem* collapsibleItem = NULL;
+  QLayoutItem * layoutItem = nullptr;
+  OSCollapsibleItem* collapsibleItem = nullptr;
 
   for (int i = 0; i < m_vLayout->count(); ++i){
 

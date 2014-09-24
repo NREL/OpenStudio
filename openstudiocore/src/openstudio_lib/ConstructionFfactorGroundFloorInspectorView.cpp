@@ -38,10 +38,10 @@ namespace openstudio {
 
 ConstructionFfactorGroundFloorInspectorView::ConstructionFfactorGroundFloorInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
   : ModelObjectInspectorView(model, true, parent),
-    m_nameEdit(NULL),
-    m_ffactorEdit(NULL),
-    m_areaEdit(NULL),
-    m_perimeterExposedEdit(NULL),
+    m_nameEdit(nullptr),
+    m_ffactorEdit(nullptr),
+    m_areaEdit(nullptr),
+    m_perimeterExposedEdit(nullptr),
     m_isIP(isIP)
 {
   createLayout();

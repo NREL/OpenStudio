@@ -129,7 +129,7 @@ class OSItem : public QWidget
     void itemRemoveClicked(OSItem *);
     void itemReplacementDropped(OSItem * currentItem, const OSItemId& replacementItemId);
 
-  private slots:
+  public slots:
     void onRemoveClicked();
 
   protected:

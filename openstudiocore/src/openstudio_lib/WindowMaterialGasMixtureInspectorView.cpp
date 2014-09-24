@@ -39,17 +39,17 @@ namespace openstudio {
 
 WindowMaterialGasMixtureInspectorView::WindowMaterialGasMixtureInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
   : ModelObjectInspectorView(model, true, parent),
-    m_gas1Type(NULL),
-    m_gas2Type(NULL),
-    m_gas3Type(NULL),
-    m_gas4Type(NULL),
-    m_nameEdit(NULL),
-    m_thickness(NULL),
-    m_numberOfGasesInMixture(NULL),
-    m_gas1Fraction(NULL),
-    m_gas2Fraction(NULL),
-    m_gas3Fraction(NULL),
-    m_gas4Fraction(NULL),
+    m_gas1Type(nullptr),
+    m_gas2Type(nullptr),
+    m_gas3Type(nullptr),
+    m_gas4Type(nullptr),
+    m_nameEdit(nullptr),
+    m_thickness(nullptr),
+    m_numberOfGasesInMixture(nullptr),
+    m_gas1Fraction(nullptr),
+    m_gas2Fraction(nullptr),
+    m_gas3Fraction(nullptr),
+    m_gas4Fraction(nullptr),
     m_isIP(isIP)
 {
   createLayout();

@@ -479,7 +479,7 @@ VRFSystemListDropZoneItem::VRFSystemListDropZoneItem(OSListController * listCont
 
 QGraphicsObject * VRFSystemItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
-  QGraphicsObject * itemView = NULL;
+  QGraphicsObject * itemView = nullptr;
 
   if( QSharedPointer<VRFSystemListItem> listItem = dataSource.dynamicCast<VRFSystemListItem>() )
   {

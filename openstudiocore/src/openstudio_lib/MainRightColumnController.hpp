@@ -110,6 +110,8 @@ class MainRightColumnController : public OSQObjectController
 
   void inspectModelObject(model::OptionalModelObject & modelObject, bool readOnly);
 
+  void inspectModelObjectByItem(OSItem * item, bool readOnly);
+
   void toggleUnits(bool displayIP);
 
   void chooseEditTab();
@@ -150,12 +152,15 @@ class MainRightColumnController : public OSQObjectController
 
   bool m_myModelTabIsHidden;
 
+  OSItem * m_item = nullptr;
+
   private slots:
 
   void onItemRemoveClicked(OSItem *);
 
   void emitItemRemoveClicked(OSItem *);
 
+  void onRemoveButtonClicked(bool checked);
 };
 
 } // openstudio

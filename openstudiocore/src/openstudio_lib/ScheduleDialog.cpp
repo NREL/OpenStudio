@@ -44,11 +44,11 @@ ScheduleDialog::ScheduleDialog(bool isIP,
   : OSDialog(parent),
   m_model(model),
   m_scheduleTypes(std::vector<model::ScheduleType>()),
-  m_className(NULL),
-  m_scheduleType(NULL),
-  m_scheduleUnits(NULL),
-  m_lowerLimit(NULL),
-  m_upperLimit(NULL)
+  m_className(nullptr),
+  m_scheduleType(nullptr),
+  m_scheduleUnits(nullptr),
+  m_lowerLimit(nullptr),
+  m_upperLimit(nullptr)
 {
   createLayout();
 }
@@ -57,7 +57,7 @@ void ScheduleDialog::createLayout()
 {
   okButton()->setText("Apply");
 
-  QLabel * label = NULL;
+  QLabel * label = nullptr;
 
   label = new QLabel("Define New Schedule",this);
   label->setObjectName("H1");
@@ -68,9 +68,9 @@ void ScheduleDialog::createLayout()
   vertLayout->setSpacing(20);
   upperLayout()->addLayout(vertLayout);
 
-  QHBoxLayout * hLayout = NULL;
+  QHBoxLayout * hLayout = nullptr;
 
-  QVBoxLayout * vLayout = NULL;
+  QVBoxLayout * vLayout = nullptr;
 
   //CLASS NAME
   {
@@ -166,7 +166,7 @@ void ScheduleDialog::createLayout()
     hLayout->setContentsMargins(20,0,10,0);
     hLayout->setSpacing(20);
 
-    QVBoxLayout * vertLimitLayout = NULL;
+    QVBoxLayout * vertLimitLayout = nullptr;
 
     {
       vertLimitLayout = new QVBoxLayout();

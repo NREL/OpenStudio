@@ -45,7 +45,7 @@ OSCollapsibleItem::OSCollapsibleItem(OSCollapsibleItemHeader * collapsibleItemHe
   : QWidget(parent),
     m_collapsibleItemHeader(collapsibleItemHeader),
     m_itemList(itemList),
-    m_mainLayout(NULL),
+    m_mainLayout(nullptr),
     m_showFilterLayout(false)
 {
   OS_ASSERT(m_collapsibleItemHeader);

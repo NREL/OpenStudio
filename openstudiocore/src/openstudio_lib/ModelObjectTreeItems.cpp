@@ -159,7 +159,7 @@ ModelObjectTreeItem::ModelObjectTreeItem(const openstudio::model::ModelObject& m
 ModelObjectTreeItem::ModelObjectTreeItem(const std::string& name, const openstudio::model::Model& model, QTreeWidgetItem* parent)
   : QTreeWidgetItem(parent), m_model(model), m_name(name), m_dirty(false)
 {
-  m_item = NULL;
+  m_item = nullptr;
 
   this->setText(0, toQString(name));
   this->setStyle(0, "");

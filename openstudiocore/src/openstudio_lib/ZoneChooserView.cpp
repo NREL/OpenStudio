@@ -183,7 +183,7 @@ ZoneChooserItem * ZoneChooserView::zoneChooserItemForZone(std::string zoneName)
       return *it;
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 ZoneChooserItem::ZoneChooserItem(model::ThermalZone & zone, ZoneChooserView * parent)

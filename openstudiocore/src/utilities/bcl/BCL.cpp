@@ -152,6 +152,8 @@ namespace openstudio{
   {
     QDomElement softwareProgramElement = fileElement.firstChildElement("version").firstChildElement("software_program");
     QDomElement identifierElement = fileElement.firstChildElement("version").firstChildElement("identifier");
+    QDomElement minCompatibleElement = fileElement.firstChildElement("version").firstChildElement("min_compatible");
+    QDomElement maxCompatibleElement = fileElement.firstChildElement("version").firstChildElement("max_compatible");
     QDomElement filenameElement = fileElement.firstChildElement("filename");
     QDomElement urlElement = fileElement.firstChildElement("url");
     QDomElement filetypeElement = fileElement.firstChildElement("filetype");
@@ -160,6 +162,24 @@ namespace openstudio{
 
     m_softwareProgram = softwareProgramElement.firstChild().nodeValue().toStdString();
     m_identifier = identifierElement.firstChild().nodeValue().toStdString();
+    if (minCompatibleElement.isNull()){
+      try{
+        // if minCompatibleVersion not explicitly set, assume identifier is min
+        m_minCompatibleVersion = VersionString(m_identifier);
+      } catch (const std::exception&){
+      }
+    }else{
+      try{
+        m_minCompatibleVersion = VersionString(minCompatibleElement.firstChild().nodeValue().toStdString());
+      } catch (const std::exception&){
+      }
+    }
+    if (!maxCompatibleElement.isNull()){
+      try{
+        m_maxCompatibleVersion = VersionString(maxCompatibleElement.firstChild().nodeValue().toStdString());
+      } catch (const std::exception&){
+      }
+    }
     m_filename = filenameElement.firstChild().nodeValue().toStdString();
     m_url = urlElement.firstChild().nodeValue().toStdString();
     m_filetype = filetypeElement.firstChild().nodeValue().toStdString();
@@ -175,6 +195,16 @@ namespace openstudio{
   std::string BCLFile::identifier() const
   {
     return m_identifier;
+  }
+
+  boost::optional<VersionString> BCLFile::minCompatibleVersion() const
+  {
+    return m_minCompatibleVersion;
+  }
+
+  boost::optional<VersionString> BCLFile::maxCompatibleVersion() const
+  {
+    return m_maxCompatibleVersion;
   }
 
   std::string BCLFile::filename() const

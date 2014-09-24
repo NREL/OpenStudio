@@ -47,7 +47,7 @@ const int YearSettingsWidget::LASTYEAR = 2100;
 
 YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * parent)
   : QWidget(parent),
-    m_dstOnOffButton(NULL),
+    m_dstOnOffButton(nullptr),
     m_model(model),
     m_dirty(false)
 {

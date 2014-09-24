@@ -82,7 +82,7 @@ void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseA
 
   // Measure Modeler Description
 
-  editRubyMeasureView->modelerDescriptionLabel->setText(m_measureItem->modelerDescription());
+  editRubyMeasureView->modelerDescriptionTextEdit->setText(m_measureItem->modelerDescription());
 
   // Inputs
 

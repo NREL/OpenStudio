@@ -34,6 +34,7 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/idd/IddObject.hpp"
 
+#include <QApplication>
 #include <QBoxLayout>
 #include <QButtonGroup>
 #include <QLabel>
@@ -53,7 +54,11 @@
 
 namespace openstudio {
 
-OSGridView::OSGridView(OSGridController * gridController, const QString & headerText, const QString & dropZoneText, QWidget * parent)
+OSGridView::OSGridView(OSGridController * gridController,
+  const QString & headerText,
+  const QString & dropZoneText,
+  bool useHeader,
+  QWidget * parent)
   : QWidget(parent),
     m_gridLayout(nullptr),
     m_dropZone(nullptr),
@@ -110,16 +115,19 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   layout->setContentsMargins(0,0,0,0);
   setLayout(layout);
 
-  auto header = new DarkGradientHeader();
-  header->label->setText(headerText);
-
   auto widget = new QWidget;
 
-  auto collabsibleView = new OSCollapsibleView(this);
-  layout->addWidget(collabsibleView);
-  collabsibleView->setHeader(header);
-  collabsibleView->setContent(widget);
-  collabsibleView->setExpanded(true);
+  if (useHeader) {
+    auto header = new DarkGradientHeader();
+    header->label->setText(headerText); 
+    auto collabsibleView = new OSCollapsibleView(this);
+    collabsibleView->setHeader(header);
+    collabsibleView->setContent(widget);
+    collabsibleView->setExpanded(true); 
+    layout->addWidget(collabsibleView);
+  } else {
+    layout->addWidget(widget);
+  }
 
   setGridController(m_gridController);
 
@@ -166,12 +174,10 @@ void OSGridView::setGridController(OSGridController * gridController)
   isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), m_gridController, SLOT(onItemSelected(OSItem *)));
   OS_ASSERT(isConnected);
 
-  connect(m_gridController, &OSGridController::modelReset, this, &OSGridView::requestRefreshAll);
-
   refreshAll();
 }
 
-void OSGridView::refresh(int row, int column)
+void OSGridView::refreshCell(int row, int column)
 {
   removeWidget(row,column);
 
@@ -184,7 +190,7 @@ void OSGridView::refreshRow(int row)
 
   for( int j = 0; j < m_gridController->columnCount(); j++ )
   {
-    refresh(row, j);
+    refreshCell(row, j);
   }
 }
 
@@ -197,12 +203,10 @@ void OSGridView::removeWidget(int row, int column)
   QWidget * widget = item->widget();
 
   OS_ASSERT(widget);
-//  widget->setParent(nullptr);
-//  widget->deleteLater();
 
   delete widget;
 
-//  delete item;
+  delete item;
 }
 
 void OSGridView::deleteAll()
@@ -230,7 +234,7 @@ void OSGridView::refreshGrid()
     {
       for( int j = 0; j < m_gridController->columnCount(); j++ )
       {
-        refresh(i,j);
+        refreshCell(i, j);
       }
     }
   }
@@ -240,25 +244,31 @@ void OSGridView::requestRefreshAll()
 {
   std::cout << "REQUEST REFRESHALL CALLED " << std::endl;
   setEnabled(false);
+
+  m_timer.start();
+
   m_refreshRequests.emplace_back(RefreshAll);
-  m_timer.start(50);
 }
 
 void OSGridView::requestRefreshGrid()
 {
   std::cout << "REQUEST REFRESHGRID CALLED " << std::endl;
   setEnabled(false);
+
+  m_timer.start();
+
   m_refreshRequests.emplace_back(RefreshGrid);
-  m_timer.start(50);
 }
 
 void OSGridView::requestRefreshRow(int t_row)
 {
   std::cout << "REQUEST REFRESH ROW CALLED " << std::endl;
   setEnabled(false);
-  // to do increase resolution here
+
+  m_timer.start();
+
+  // TODO to do increase resolution here
   m_refreshRequests.emplace_back(RefreshGrid);
-  m_timer.start(50);
 }
 
 void OSGridView::doRefresh()
@@ -282,18 +292,12 @@ void OSGridView::doRefresh()
 
   m_refreshRequests.clear();
 
-  if (has_refresh_all)
+  if (true)
+  //if (has_refresh_all)
   {
     refreshAll();
   } else {
-    refreshGrid();
-  }
-
-  if (!m_refreshRequests.empty())
-  {
-    std::cout << " UPDATE TRIGGERED UPDATE" << std::endl;
-    refreshAll();
-    m_refreshRequests.clear();
+    refreshGrid(); // This now causes a crash
   }
 
   setEnabled(true);
@@ -326,6 +330,30 @@ void OSGridView::refreshAll()
   auto widget = new QWidget();
   //widget->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
   m_gridLayout->addWidget(widget,0,m_gridController->columnCount());
+
+  // Get selected item
+  auto selectedItem = m_gridController->getSelectedItemFromModelSubTabView();
+  if (!selectedItem) return;
+
+  // Get new index
+  int newIndex;
+  if (m_gridController->getRowIndexByItem(selectedItem, newIndex)) {
+    // Update the old index
+    m_gridController->m_oldIndex = newIndex;
+  }
+
+  // If the index is valid, call slot
+  if (m_gridController->m_oldIndex > -1){
+    QTimer::singleShot(0, this, SLOT(doRowSelect()));
+  }
+}
+
+void OSGridView::doRowSelect()
+{
+  // If the index is valid, do some work
+  if (m_gridController->m_oldIndex > -1){
+    m_gridController->selectRow(m_gridController->m_oldIndex, true);
+  }
 }
 
 void OSGridView::addWidget(int row, int column)
@@ -361,17 +389,16 @@ void OSGridView::setHorizontalHeader(std::vector<QString> names)
 
 void OSGridView::selectCategory(int index)
 {
-//  deleteAll();
-
   m_gridController->categorySelected(index);
 
   requestRefreshAll();
-
 }
 
 ModelSubTabView * OSGridView::modelSubTabView()
 {
   ModelSubTabView *  modelSubTabView = nullptr;
+
+  if (!this->parent() || !this->parent()->parent()) return modelSubTabView;
 
   auto stackedWidget = qobject_cast<QStackedWidget *>(this->parent()->parent());
   if (!stackedWidget) return modelSubTabView;
@@ -397,7 +424,7 @@ void OSGridView::onSelectionCleared()
   m_gridController->onSelectionCleared();
 }
 
-void OSGridView::onDropZoneItemClicked(OSItem*)
+void OSGridView::onDropZoneItemClicked(OSItem* item)
 {
 }
 
