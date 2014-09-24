@@ -458,6 +458,10 @@ public:
   // Call this function on a model update
   virtual void refreshModelObjects() = 0;
 
+  void connectToModel();
+
+  void disconnectFromModel();
+
 protected:
 
   // This function determines the category for

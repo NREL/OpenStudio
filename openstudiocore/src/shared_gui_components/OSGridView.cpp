@@ -37,9 +37,11 @@
 #include <QApplication>
 #include <QBoxLayout>
 #include <QButtonGroup>
+#include <QHideEvent>
 #include <QLabel>
 #include <QPushButton>
 #include <QScrollArea>
+#include <QShowEvent>
 #include <QStackedWidget>
 
 #ifdef Q_OS_MAC
@@ -152,6 +154,11 @@ OSGridView::OSGridView(OSGridController * gridController,
 
   m_timer.setSingleShot(true);
   connect(&m_timer, &QTimer::timeout, this, &OSGridView::doRefresh);
+
+  if (this->isVisible()) {
+    m_gridController->connectToModel();
+    refreshAll();
+  }
 }
 
 void OSGridView::setGridController(OSGridController * gridController)
@@ -173,8 +180,6 @@ void OSGridView::setGridController(OSGridController * gridController)
 
   isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), m_gridController, SLOT(onItemSelected(OSItem *)));
   OS_ASSERT(isConnected);
-
-  refreshAll();
 }
 
 void OSGridView::refreshCell(int row, int column)
@@ -426,6 +431,21 @@ void OSGridView::onSelectionCleared()
 
 void OSGridView::onDropZoneItemClicked(OSItem* item)
 {
+}
+
+void OSGridView::hideEvent(QHideEvent * event)
+{
+  m_gridController->disconnectFromModel();
+
+  QWidget::hideEvent(event);
+}
+
+void OSGridView::showEvent(QShowEvent * event)
+{
+  m_gridController->connectToModel();
+  refreshAll();
+
+  QWidget::showEvent(event);
 }
 
 } // openstudio

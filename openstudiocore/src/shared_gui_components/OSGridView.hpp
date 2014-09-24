@@ -20,15 +20,17 @@
 #ifndef SHAREDGUICOMPONENTS_OSGRIDVIEW_HPP
 #define SHAREDGUICOMPONENTS_OSGRIDVIEW_HPP
 
-#include <QWidget>
 #include <QTimer>
+#include <QWidget>
 
 #include "../openstudio_lib/OSItem.hpp"
 
 #include "../model/ModelObject.hpp"
 
 class QGridLayout;
+class QHideEvent;
 class QLabel;
+class QShowEvent;
 class QString;
 
 namespace openstudio{
@@ -58,6 +60,12 @@ public:
   OSDropZone * m_dropZone;
 
   virtual ModelSubTabView * modelSubTabView();
+
+protected:
+
+  virtual void hideEvent(QHideEvent * event);
+
+  virtual void showEvent(QShowEvent * event);
 
 signals:
 

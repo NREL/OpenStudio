@@ -86,9 +86,6 @@ OSGridController::OSGridController(bool isIP,
   bool isConnected = false;
   isConnected = connect(m_cellBtnGrp, SIGNAL(buttonClicked(int)), this, SLOT(cellChecked(int)));
   OS_ASSERT(isConnected);
-
-  connect(model.getImpl<openstudio::model::detail::Model_Impl>().get(), &openstudio::model::detail::Model_Impl::onChange, this, &openstudio::OSGridController::requestRefreshGrid);
-
 }
 
 OSGridController::~OSGridController()
@@ -893,6 +890,16 @@ OSItem * OSGridController::getSelectedItemFromModelSubTabView()
   item = modelSubTabView->itemSelector()->selectedItem();
 
   return item;
+}
+
+void OSGridController::connectToModel()
+{
+  connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(), &openstudio::model::detail::Model_Impl::onChange, this, &openstudio::OSGridController::requestRefreshGrid);
+}
+
+void OSGridController::disconnectFromModel()
+{
+  disconnect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get());
 }
 
 void OSGridController::onSelectionCleared()
