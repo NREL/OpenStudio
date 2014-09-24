@@ -105,7 +105,8 @@ void OSLineEdit2::completeBind() {
   m_timer.setSingleShot(true);
   connect(&m_timer, &QTimer::timeout, this, &OSLineEdit2::emitItemClicked);
 
-  onModelObjectChange();
+  onModelObjectChangeInternal(true);
+
 }
 
 void OSLineEdit2::unbind()
@@ -137,7 +138,12 @@ void OSLineEdit2::onEditingFinished() {
   }
 }
 
-void OSLineEdit2::onModelObjectChange() {
+void OSLineEdit2::onModelObjectChange()
+{
+  onModelObjectChangeInternal(false);
+}
+
+void OSLineEdit2::onModelObjectChangeInternal(bool startingup) {
   if( m_modelObject ) {
     OptionalString value;
     if (m_get) {
@@ -159,7 +165,7 @@ void OSLineEdit2::onModelObjectChange() {
       if (m_text != text) {
         m_text = text;
         setText(QString::fromStdString(m_text));
-        m_timer.start(TIMEOUT_INTERVAL);
+        if (!startingup) m_timer.start(TIMEOUT_INTERVAL);
       }
     }
   }

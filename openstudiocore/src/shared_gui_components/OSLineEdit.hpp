@@ -85,6 +85,7 @@ signals:
 
  private:
 
+  void onModelObjectChangeInternal(bool startingup);
   void completeBind();
 
   boost::optional<model::ModelObject> m_modelObject;
