@@ -143,33 +143,42 @@ TEST_F(BCLFixture, PatApplicationMeasures)
   std::vector<BCLMeasure> patApplicationMeasures = BCLMeasure::patApplicationMeasures();
   ASSERT_EQ(4u, patApplicationMeasures.size());
 
-  bool updated;
+  bool filesUpdated;
+  bool xmlUpdated;
 
   BCLMeasure alternativeModelMeasure = BCLMeasure::alternativeModelMeasure();
-  updated = alternativeModelMeasure.checkForUpdatesFiles();
-  ASSERT_FALSE(updated); // DLM: comment out to update built in PAT measures
-  if (updated){
+  filesUpdated = alternativeModelMeasure.checkForUpdatesFiles();
+  ASSERT_FALSE(filesUpdated); // DLM: comment out to update built in PAT measures
+  xmlUpdated = alternativeModelMeasure.checkForUpdatesXML();
+  ASSERT_FALSE(xmlUpdated); // DLM: comment out to update built in PAT measures
+  if (filesUpdated || xmlUpdated){
     alternativeModelMeasure.save();
   }
 
   BCLMeasure reportRequestMeasure = BCLMeasure::reportRequestMeasure();
-  updated = reportRequestMeasure.checkForUpdatesFiles();
-  ASSERT_FALSE(updated); // DLM: comment out to update built in PAT measures
-  if (updated){
+  filesUpdated = reportRequestMeasure.checkForUpdatesFiles();
+  ASSERT_FALSE(filesUpdated); // DLM: comment out to update built in PAT measures
+  xmlUpdated = reportRequestMeasure.checkForUpdatesXML();
+  ASSERT_FALSE(xmlUpdated); // DLM: comment out to update built in PAT measures
+  if (filesUpdated || xmlUpdated){
     reportRequestMeasure.save();
   }
 
   BCLMeasure standardReportMeasure = BCLMeasure::standardReportMeasure();
-  updated = standardReportMeasure.checkForUpdatesFiles();
-  ASSERT_FALSE(updated); // DLM: comment out to update built in PAT measures
-  if (updated){
+  filesUpdated = standardReportMeasure.checkForUpdatesFiles();
+  ASSERT_FALSE(filesUpdated); // DLM: comment out to update built in PAT measures
+  xmlUpdated = standardReportMeasure.checkForUpdatesXML();
+  ASSERT_FALSE(xmlUpdated); // DLM: comment out to update built in PAT measures
+  if (filesUpdated || xmlUpdated){
     standardReportMeasure.save();
   }
 
   BCLMeasure calibrationReportMeasure = BCLMeasure::calibrationReportMeasure();
-  updated = calibrationReportMeasure.checkForUpdatesFiles();
-  ASSERT_FALSE(updated); // DLM: comment out to update built in PAT measures
-  if (updated){
+  filesUpdated = calibrationReportMeasure.checkForUpdatesFiles();
+  ASSERT_FALSE(filesUpdated); // DLM: comment out to update built in PAT measures
+  xmlUpdated = calibrationReportMeasure.checkForUpdatesXML();
+  ASSERT_FALSE(xmlUpdated); // DLM: comment out to update built in PAT measures
+  if (filesUpdated || xmlUpdated){
     calibrationReportMeasure.save();
   }
 

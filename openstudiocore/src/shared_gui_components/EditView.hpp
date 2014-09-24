@@ -63,7 +63,7 @@ class EditRubyMeasureView : public QWidget
 
   QTextEdit * descriptionTextEdit;
 
-  QLabel * modelerDescriptionLabel;
+  QTextEdit * modelerDescriptionTextEdit;
 
   void addInputView(QWidget * widget);
 

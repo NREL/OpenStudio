@@ -41,6 +41,9 @@ class ReportingMeasure < OpenStudio::Ruleset::ReportingUserScript
       return result
     end
     
+    request = OpenStudio::IdfObject.load("Output:Variable,,Site Outdoor Air Drybulb Temperature,Hourly;").get
+    result << request
+    
     return result
   end
   
@@ -91,10 +94,40 @@ class ReportingMeasure < OpenStudio::Ruleset::ReportingUserScript
       html_in = file.read
     end
 
+    # get the weather file run period (as opposed to design day run period)
+    ann_env_pd = nil
+    sqlFile.availableEnvPeriods.each do |env_pd|
+      env_type = sqlFile.environmentType(env_pd)
+      if env_type.is_initialized
+        if env_type.get == OpenStudio::EnvironmentType.new("WeatherRunPeriod")
+          ann_env_pd = env_pd
+          break
+        end
+      end
+    end
+
+    # only try to get the annual timeseries if an annual simulation was run
+    if ann_env_pd
+
+      # get desired variable
+      key_value =  "" # when used should be in all caps. In this case I'm using a meter vs. an output variable, and it doesn't have a key
+      time_step = "Hourly" # "Zone Timestep", "Hourly", "HVAC System Timestep"
+      variable_name = "Site Outdoor Air Drybulb Temperature"
+      output_timeseries = sqlFile.timeSeries(ann_env_pd, time_step, variable_name, key_value) # key value would go at the end if we used it.
+      
+      if output_timeseries.empty?
+        runner.registerWarning("Timeseries not found.")
+      else
+        runner.registerInfo("Found timeseries.")
+      end
+    else
+      runner.registerWarning("No annual environment period found.")
+    end
+    
     # configure template with variable values
     renderer = ERB.new(html_in)
     html_out = renderer.result(binding)
-
+    
     # write html file
     html_out_path = "./report.html"
     File.open(html_out_path, 'w') do |file|

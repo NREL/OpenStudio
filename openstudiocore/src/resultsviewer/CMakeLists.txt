@@ -164,17 +164,26 @@ if(APPLE OR WIN32)
 
   if(WIN32)
     get_target_property(QPA_PLUGIN Qt5::QWindowsIntegrationPlugin LOCATION)
+    get_target_property(PRINT_PLUGIN Qt5::QWindowsPrinterSupportPlugin LOCATION)
   elseif(APPLE)
     get_target_property(QPA_PLUGIN Qt5::QCocoaIntegrationPlugin LOCATION)
+    get_target_property(PRINT_PLUGIN Qt5::QCocoaPrinterSupportPlugin LOCATION)
   endif()
 
   install(PROGRAMS "${QPA_PLUGIN}"
           DESTINATION "${plugin_dest_dir}/platforms/"
   )
+  install(PROGRAMS "${PRINT_PLUGIN}"
+          DESTINATION "${plugin_dest_dir}/printsupport/"
+  )
 
   get_filename_component(QPA_PLUGIN_NAME "${QPA_PLUGIN}" NAME)
+  get_filename_component(PRINT_PLUGIN_NAME "${PRINT_PLUGIN}" NAME)
 
-  list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/platforms/${QPA_PLUGIN_NAME}")
+  list(APPEND QTPLUGINS
+    "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/platforms/${QPA_PLUGIN_NAME}"
+    "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/printsupport/${PRINT_PLUGIN_NAME}"
+  )
 
 endif()
 

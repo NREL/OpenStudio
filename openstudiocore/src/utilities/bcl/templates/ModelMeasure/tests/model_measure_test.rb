@@ -75,7 +75,7 @@ class ModelMeasureTest < MiniTest::Test
     arguments = measure.arguments(model)
     argument_map = OpenStudio::Ruleset.convertOSArgumentVectorToMap(arguments)
 
-    # set argument values to bad value
+    # set argument values to good values
     space_name = arguments[0].clone
     assert(space_name.setValue("New Space"))
     argument_map["space_name"] = space_name

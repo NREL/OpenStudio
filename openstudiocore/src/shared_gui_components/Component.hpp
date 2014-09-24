@@ -73,6 +73,7 @@ private:
   QString m_versionId;
   QString m_description;
   QString m_fidelityLevel;
+  boost::optional<std::string> m_error;
   std::vector<Attribute> m_attributes;
   std::vector<BCLMeasureArgument> m_arguments;
   std::vector<BCLFile> m_files;

@@ -75,7 +75,10 @@ namespace openstudio{
     // added in schema version 3
     VersionString startingVersion("2.0");
     if (!element.firstChildElement("schema_version").isNull()){
-      startingVersion = VersionString(element.firstChildElement("schema_version").firstChild().nodeValue().toStdString());
+      try{
+        startingVersion = VersionString(element.firstChildElement("schema_version").firstChild().nodeValue().toStdString());
+      } catch (const std::exception&){
+      }
     }
 
     // added in schema version 3
@@ -136,10 +139,37 @@ namespace openstudio{
 
         std::string softwareProgram;
         std::string softwareProgramVersion;
+        boost::optional<VersionString> minCompatibleVersion;
+        boost::optional<VersionString> maxCompatibleVersion;
         QDomElement versionElement = fileElement.firstChildElement("version");
         if (!versionElement.isNull()){
           softwareProgram = versionElement.firstChildElement("software_program").firstChild().nodeValue().toStdString();
           softwareProgramVersion = versionElement.firstChildElement("identifier").firstChild().nodeValue().toStdString();
+        
+          // added in schema version 3
+          QDomElement minCompatibleVersionElement = versionElement.firstChildElement("min_compatible");
+          if (minCompatibleVersionElement.isNull()){
+            try{
+              // if minCompatibleVersion not explicitly set, assume softwareProgramVersion is min
+              minCompatibleVersion = VersionString(softwareProgramVersion);
+            } catch (const std::exception&){
+            }
+          }else{
+            try{
+              minCompatibleVersion = VersionString(minCompatibleVersionElement.firstChild().nodeValue().toStdString());
+            } catch (const std::exception&){
+            }
+          }
+
+          // added in schema version 3
+          QDomElement maxCompatibleVersionElement = versionElement.firstChildElement("max_compatible");
+          if (!maxCompatibleVersionElement.isNull()){
+            try{
+              maxCompatibleVersion = VersionString(maxCompatibleVersionElement.firstChild().nodeValue().toStdString());
+            } catch (const std::exception&){
+            }
+          }
+
         }
         std::string fileName = fileElement.firstChildElement("filename").firstChild().nodeValue().toStdString();
         //std::string fileType = fileElement.firstChildElement("filetype").firstChild().nodeValue().toStdString();
@@ -160,6 +190,12 @@ namespace openstudio{
         BCLFileReference file(path);
         file.setSoftwareProgram(softwareProgram);
         file.setSoftwareProgramVersion(softwareProgramVersion);
+        if (minCompatibleVersion){
+          file.setMinCompatibleVersion(*minCompatibleVersion);
+        }
+        if (maxCompatibleVersion){
+          file.setMaxCompatibleVersion(*maxCompatibleVersion);
+        }
         file.setUsageType(usageType);
         file.setChecksum(checksum);
 

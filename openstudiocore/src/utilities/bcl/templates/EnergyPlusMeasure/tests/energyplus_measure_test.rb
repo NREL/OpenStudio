@@ -75,7 +75,7 @@ class EnergyPlusMeasure_Test < MiniTest::Test
     arguments = measure.arguments(workspace)
     argument_map = OpenStudio::Ruleset.convertOSArgumentVectorToMap(arguments)
 
-    # set argument values to bad value
+    # set argument values to good values
     zone_name = arguments[0].clone
     assert(zone_name.setValue("New Zone"))
     argument_map["zone_name"] = zone_name
