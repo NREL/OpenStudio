@@ -145,7 +145,7 @@ TEST_F(ModelFixture,RoofVegetation_ConductivityofDrySoil_Quantity) {
   // \units W / m - K
   // \ip - units Btu - in / hr - ft2 - R
   // Bounds: 0.2 <= value <= 1.5 W / m - K
-  // to convert from SI to IP multiply by	6.9334713
+  // to convert from SI to IP multiply by 6.9334713
 
   double value(1.0);
   EXPECT_TRUE(roofVegetation.setConductivityofDrySoil(value));
