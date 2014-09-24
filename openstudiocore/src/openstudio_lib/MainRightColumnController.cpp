@@ -24,6 +24,7 @@
 #include "HorizontalTabWidget.hpp"
 #include "InspectorController.hpp"
 #include "InspectorView.hpp"
+#include "LibraryTabWidget.hpp"
 #include "LocationTabController.hpp"
 #include "ModelObjectTypeListView.hpp"
 #include "OSAppBase.hpp"
@@ -144,6 +145,7 @@ void MainRightColumnController::inspectModelObject(model::OptionalModelObject & 
   {
     m_inspectorController->layoutModelObject(modelObject, readOnly);
   }
+  m_inspectorController->inspectorView()->currentView()->m_libraryTabWidget->hideRemoveButton();
 }
 
 void MainRightColumnController::inspectModelObjectByItem(OSItem * item, bool readOnly)
@@ -157,7 +159,19 @@ void MainRightColumnController::inspectModelObjectByItem(OSItem * item, bool rea
       modelObject = currentDocument->getModelObject(item->itemId());
       readOnly = true; // TODO for now, never allow an edit
     }
-    inspectModelObject(modelObject, readOnly);
+
+    if (modelObject)
+    {
+      m_horizontalTabWidget->setCurrentId(EDIT);
+      setEditView(m_inspectorController->inspectorView());
+      m_inspectorController->layoutModelObject(modelObject, readOnly);
+    }
+    else
+    {
+      m_inspectorController->layoutModelObject(modelObject, readOnly);
+    }
+
+    m_inspectorController->inspectorView()->currentView()->m_libraryTabWidget->showRemoveButton();
   }
 }
 
