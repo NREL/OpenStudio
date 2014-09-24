@@ -66,6 +66,8 @@ class InspectorView : public QWidget
 
   void update();
 
+  BaseInspectorView * currentView() { return m_currentView; }
+
   signals:
 
   void addZoneClicked(model::ThermalZone &);
