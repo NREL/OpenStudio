@@ -22,7 +22,6 @@
 #include "../openstudio_lib/OSItem.hpp"
 #include "../openstudio_lib/ModelObjectItem.hpp"
 
-
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
 
