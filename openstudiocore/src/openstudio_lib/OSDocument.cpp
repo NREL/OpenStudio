@@ -602,6 +602,9 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
   connect(m_facilityTabController.get(), &FacilityTabController::modelObjectSelected,
           m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObject);
 
+  connect(m_facilityTabController.get(), &FacilityTabController::dropZoneItemSelected,
+          m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObjectByItem);
+
   connect(m_facilityTabController.get(), &FacilityTabController::downloadComponentsClicked,
           this, &OSDocument::downloadComponentsClicked);
 
