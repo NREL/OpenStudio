@@ -2,7 +2,7 @@
   <schema_version>3.0</schema_version>
   <name>report_request</name>
   <uid>060ee477-b04c-4a1b-8788-312d796ad132</uid>
-  <version_id>51b65064-c19a-41ef-96dc-1e10f3698561</version_id>
+  <version_id>80296393-7098-41b3-a12d-42604dbf2f8f</version_id>
   <xml_checksum>2CF2EA46</xml_checksum>
   <class_name>ReportRequest</class_name>
   <display_name>Report Request</display_name>
@@ -14,7 +14,7 @@
       <display_name>measures_json</display_name>
       <type>String</type>
       <required>true</required>
-      <model_dependent>true</model_dependent>
+      <model_dependent>false</model_dependent>
     </argument>
   </arguments>
   <provenances/>
@@ -60,11 +60,12 @@
       <version>
         <software_program>OpenStudio</software_program>
         <identifier>1.4.2</identifier>
+        <min_compatible>1.4.2</min_compatible>
       </version>
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>4E035E36</checksum>
+      <checksum>C45035B3</checksum>
     </file>
   </files>
 </measure>

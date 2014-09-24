@@ -43,6 +43,35 @@ class ReportRequest < OpenStudio::Ruleset::WorkspaceUserScript
     return false
   end
   
+  # merge all summary reports that are not in the current workspace
+  def merge_output_table_summary_reports(current_object, new_object)
+  
+    current_fields = []
+    current_object.extensibleGroups.each do |current_extensible_group|
+      current_fields << current_extensible_group.getString(0).to_s
+    end
+        
+    fields_to_add = []
+    new_object.extensibleGroups.each do |new_extensible_group|
+      field = new_extensible_group.getString(0).to_s
+      if !current_fields.include?(field)
+        current_fields << field
+        fields_to_add << field
+      end
+    end
+    
+    if !fields_to_add.empty?
+      fields_to_add.each do |field|
+        values = OpenStudio::StringVector.new
+        values << field
+        current_object.pushExtensibleGroup(values)
+      end
+      return true
+    end
+    
+    return false
+  end
+  
   # examines object and determines whether or not to add it to the workspace
   def add_object(runner, workspace, idf_object)
 
@@ -75,15 +104,26 @@ class ReportRequest < OpenStudio::Ruleset::WorkspaceUserScript
     end
     
     allowed_unique_objects = []
-    #allowed_objects << "Output:EnergyManagementSystem" # TODO: have to merge
-    #allowed_objects << "OutputControl:SurfaceColorScheme" # TODO: have to merge
-    #allowed_objects << "Output:Table:SummaryReports" # TODO: have to merge
+    #allowed_unique_objects << "Output:EnergyManagementSystem" # TODO: have to merge
+    #allowed_unique_objects << "OutputControl:SurfaceColorScheme" # TODO: have to merge
+    allowed_unique_objects << "Output:Table:SummaryReports" # TODO: have to merge
     # OutputControl:Table:Style # not allowed
     # OutputControl:ReportingTolerances # not allowed
     # Output:SQLite # not allowed
    
     if allowed_unique_objects.include?(idf_object.iddObject.name)
-    
+      if idf_object.iddObject.name == "Output:Table:SummaryReports"
+        summary_reports = workspace.getObjectsByType(idf_object.iddObject.type)
+        if summary_reports.empty?
+          runner.registerInfo("Adding idf object #{idf_object.to_s.strip}")
+          workspace.addObject(idf_object)
+          num_added += 1
+        elsif merge_output_table_summary_reports(summary_reports[0], idf_object)
+          runner.registerInfo("Merged idf object #{idf_object.to_s.strip}")     
+        else
+          runner.registerInfo("Workspace already includes #{idf_object.to_s.strip}")
+        end
+      end
     end
     
     return num_added

@@ -40,9 +40,11 @@
 namespace openstudio {
 
   VariableListItem::VariableListItem(const std::string &t_name, 
+      const std::string& t_keyValue,
       const boost::optional<openstudio::model::OutputVariable> &t_variable,
       const openstudio::model::Model &t_model)
     : m_name(t_name),
+      m_keyValue(t_keyValue),
       m_variable(t_variable),
       m_model(t_model)
   {
@@ -55,7 +57,8 @@ namespace openstudio {
     hbox->addWidget(m_onOffButton);
     m_onOffButton->setChecked(m_variable.is_initialized());
 
-    hbox->addWidget(new QLabel(openstudio::toQString(m_name)));
+    hbox->addWidget(new QLabel(openstudio::toQString(m_name + ",")));
+    hbox->addWidget(new QLabel(openstudio::toQString(m_keyValue)));
     hbox->addStretch();
     m_combobox = new OSComboBox();
     connect(m_combobox, static_cast<void (OSComboBox::*)(const QString &)>(&OSComboBox::currentIndexChanged), this, &VariableListItem::indexChanged);
@@ -64,9 +67,7 @@ namespace openstudio {
       m_combobox->bind(*m_variable, "reportingFrequency");
     }
 
-
     hbox->addWidget(m_combobox);
-
 
     setLayout(hbox);
     onOffClicked(m_variable.is_initialized());
@@ -115,7 +116,7 @@ namespace openstudio {
       {
         openstudio::model::OutputVariable outputVariable(m_name, m_model);
         outputVariable.setReportingFrequency("Hourly");
-        outputVariable.setKeyValue("*");
+        outputVariable.setKeyValue(m_keyValue);
         m_variable = outputVariable;
         m_combobox->bind(*m_variable, "reportingFrequency");
       }
@@ -220,6 +221,12 @@ namespace openstudio {
     }
   }
 
+  struct PotentialOutputVariable{
+    std::string name;
+    std::string keyValue;
+    boost::optional<openstudio::model::OutputVariable> variable;
+  };
+
 
   void VariablesList::updateVariableList()
   {
@@ -232,42 +239,65 @@ namespace openstudio {
     }
 
     
-    // map of variable name to output variable
-    std::map<std::string, boost::optional<openstudio::model::OutputVariable> > outputVariableMap;
+    // map of variable name + keyValue to PotentialOutputVariable
+    std::map<std::string, PotentialOutputVariable> potentialOutputVariableMap;
 
-    // get list of all variable names
+    // make list of all potential variables
     for (const openstudio::model::ModelObject& modelObject : m_model.getModelObjects<openstudio::model::ModelObject>())
     {
       for (const std::string& variableName : modelObject.outputVariableNames())
       {
-        LOG(Debug, "Found variableName: " << variableName);
-        outputVariableMap[variableName] = boost::none;
+        //LOG(Debug, "Found variableName: " << variableName);
+        std::string variableNameKeyValue = variableName + "*";
+        if (potentialOutputVariableMap.count(variableNameKeyValue) == 0){
+          PotentialOutputVariable pov;
+          pov.name = variableName;
+          pov.keyValue = "*";
+          potentialOutputVariableMap.insert(std::pair<std::string, PotentialOutputVariable>(variableNameKeyValue, pov));
+        }
       }
     }
 
-    // add all variables to map, allow only one variable per variable name in this application 
+    // add all variables to map, allow only one variable per variable name + keyValue in this application 
     for (openstudio::model::OutputVariable outputVariable : m_model.getConcreteModelObjects<openstudio::model::OutputVariable>())
     {
-      if (outputVariableMap.count(outputVariable.variableName()) == 0)
+      std::string variableName = outputVariable.variableName();
+      std::string keyValue = outputVariable.keyValue();
+      std::string variableNameKeyValue = variableName + keyValue;
+
+      if (potentialOutputVariableMap.count(variableNameKeyValue) == 0)
       {
+        // DLM: this was causing too much trouble because it kept deleting variables added by users
         // there is no place for this outputvariable with the current objects, delete it.
-        outputVariable.remove();
+        //outputVariable.remove();
+
+        // user defined variable, add it to the list
+        PotentialOutputVariable pov;
+        pov.name = outputVariable.variableName();
+        pov.keyValue = outputVariable.keyValue();
+        pov.variable = outputVariable;
+        potentialOutputVariableMap.insert(std::pair<std::string, PotentialOutputVariable>(variableNameKeyValue, pov));
+
       } else {
-        if (outputVariableMap[outputVariable.variableName()]) {
-          // already have output variable for this name, then remove this object
+
+        if (potentialOutputVariableMap[variableNameKeyValue].variable) {
+          // already have output variable for this name + keyName, then remove this object
           outputVariable.remove();
         } else {
-          // make sure that key value is set to '*'
-          outputVariable.setKeyValue("*");
+          // this is a predefined variable 
 
-          outputVariableMap[outputVariable.variableName()] = outputVariable;
+          // make sure that key value is set to '*'
+          // DLM: we know this is already '*' because all predefined variables are set to '*'
+          //outputVariable.setKeyValue("*");
+
+          potentialOutputVariableMap[variableNameKeyValue].variable = outputVariable;
         }
       }
     }
 
     
-    for (std::map<std::string, boost::optional<openstudio::model::OutputVariable> >::const_iterator itr = outputVariableMap.begin();
-         itr != outputVariableMap.end();
+    for (std::map<std::string, PotentialOutputVariable>::const_iterator itr = potentialOutputVariableMap.begin();
+         itr != potentialOutputVariableMap.end();
          ++itr)
     {
       QFrame *hline = new QFrame();
@@ -275,8 +305,10 @@ namespace openstudio {
       hline->setFrameShadow(QFrame::Sunken);
       m_listLayout->addWidget(hline);
 
-      LOG(Debug, "Creating VariableListItem for: " << itr->first);
-      VariableListItem *li = new VariableListItem(itr->first, itr->second, m_model);
+      PotentialOutputVariable pov = itr->second;
+
+      //LOG(Debug, "Creating VariableListItem for: " << pov.name << ", " << pov.keyValue);
+      VariableListItem *li = new VariableListItem(pov.name, pov.keyValue, pov.variable, m_model);
       m_listLayout->addWidget(li);
       m_variables.push_back(li);
     }

@@ -39,6 +39,7 @@ namespace openstudio {
 
     public:
       VariableListItem(const std::string &t_name, 
+          const std::string& t_keyValue,
           const boost::optional<openstudio::model::OutputVariable> &t_variable,
           const openstudio::model::Model &t_model);
 
@@ -55,6 +56,7 @@ namespace openstudio {
       REGISTER_LOGGER("openstudio.VariableListItem");
 
       std::string m_name;
+      std::string m_keyValue;
       boost::optional<openstudio::model::OutputVariable> m_variable;
       openstudio::model::Model m_model;
 
