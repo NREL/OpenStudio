@@ -684,7 +684,7 @@ QWidget * OSGridController::cell(int rowIndex, int columnIndex)
 {
   QWidget * widget = nullptr;
 
-  QLayoutItem * child = gridView()->m_gridLayout->itemAtPosition(rowIndex, columnIndex);
+  QLayoutItem * child = gridView()->itemAtPosition(rowIndex, columnIndex);
   if (child) {
     widget = child->widget();
   }
