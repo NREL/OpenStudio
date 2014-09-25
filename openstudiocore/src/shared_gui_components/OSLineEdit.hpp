@@ -87,6 +87,7 @@ signals:
 
   void onModelObjectChangeInternal(bool startingup);
   void completeBind();
+  void adjustWidth();
 
   boost::optional<model::ModelObject> m_modelObject;
   boost::optional<StringGetter> m_get;

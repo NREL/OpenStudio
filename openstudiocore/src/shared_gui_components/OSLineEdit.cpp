@@ -138,7 +138,21 @@ void OSLineEdit2::onEditingFinished() {
         //restore
         onModelObjectChange();
       }
+      else {
+        adjustWidth();
+      }
     }
+  }
+}
+
+void OSLineEdit2::adjustWidth()
+{
+  if (m_modelObject) {
+    // Adjust the width to accommodate the text
+    QFont myFont;
+    QFontMetrics fm(myFont);
+    auto width = fm.width(toQString(m_text));
+    setFixedWidth(width + 10);
   }
 }
 
@@ -169,6 +183,7 @@ void OSLineEdit2::onModelObjectChangeInternal(bool startingup) {
       if (m_text != text) {
         m_text = text;
         setText(QString::fromStdString(m_text));
+        adjustWidth();
         if (!startingup) m_timer.start(TIMEOUT_INTERVAL);
       }
     }
