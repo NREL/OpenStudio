@@ -292,6 +292,25 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           }
           );
 
+      std::function<std::vector<boost::optional<model::ModelObject>>(const model::SpaceType &)> allLoadsWithSchedules(
+          [allLoads](const model::SpaceType &t_spaceType) {
+            std::vector<boost::optional<model::ModelObject>> retval;
+            for (auto &l : allLoads(t_spaceType))
+            {
+              // internal mass does not have a schedule
+              if (!l.optionalCast<model::InternalMass>())
+              {
+                retval.push_back(boost::optional<model::ModelObject>(std::move(l)));
+              } else {
+                retval.emplace_back();
+              }
+            }
+            return retval;
+          }
+          );
+
+
+
       std::function<std::vector<boost::optional<model::ModelObject>>(const model::SpaceType &)> allLoadsWithActivityLevelSchedules(
           [allLoads](const model::SpaceType &t_spaceType) {
             std::vector<boost::optional<model::ModelObject>> retval;
@@ -350,12 +369,12 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           //loads.insert(loads.end(), SpaceInfiltrationDesignFlowRate.begin(), SpaceInfiltrationDesignFlowRate.end());
           //loads.insert(loads.end(), SpaceInfiltrationEffectiveLeakageArea.begin(), SpaceInfiltrationEffectiveLeakageArea.end());
 
-          for (const auto &l : SpaceInfiltrationDesignFlowRate)
+          for (int i = 0; i < SpaceInfiltrationDesignFlowRate.size(); ++i)
           {
             loads.emplace_back();
           }
 
-          for (const auto &l : SpaceInfiltrationEffectiveLeakageArea)
+          for (int i = 0; i < SpaceInfiltrationEffectiveLeakageArea.size(); ++i)
           {
             loads.emplace_back();
           }
@@ -495,10 +514,15 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
             return;
           }
 
-          else {
-            // Should never get here
-            OS_ASSERT(false);
+          boost::optional<model::InternalMass> im = t_modelObject->optionalCast<model::InternalMass>();
+          if (im)
+          {
+            im->setMultiplier(multiplier);
+            return;
           }
+
+          // Should never get here
+          OS_ASSERT(false);
         }
       );
 
@@ -882,7 +906,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           setSchedule,
           resetSchedule,
           DataSource(
-            allLoads,
+            allLoadsWithSchedules,
             true
           )
         );
