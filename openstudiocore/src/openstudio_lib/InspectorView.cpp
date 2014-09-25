@@ -490,9 +490,11 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
 
       m_currentView = new GenericInspectorView();
 
-      m_currentView->m_libraryTabWidget->showRemoveButton();
+      if (!readOnly){
+        m_currentView->m_libraryTabWidget->showRemoveButton();
 
-      connect(m_currentView, &BaseInspectorView::removeButtonClicked, this, &InspectorView::removeButtonClicked);
+        connect(m_currentView, &BaseInspectorView::removeButtonClicked, this, &InspectorView::removeButtonClicked);
+      }
 
       connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
 
