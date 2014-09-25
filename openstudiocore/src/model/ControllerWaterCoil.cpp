@@ -236,6 +236,7 @@ ControllerWaterCoil::ControllerWaterCoil(const Model& model)
   : HVACComponent(ControllerWaterCoil::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ControllerWaterCoil_Impl>());
+  setMinimumActuatedFlow(0.0);
 }
 
 IddObjectType ControllerWaterCoil::iddObjectType() {

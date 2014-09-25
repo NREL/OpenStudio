@@ -7,6 +7,7 @@
     <file>images/add_over.png</file>
     <file>images/add_press.png</file>
     <file>images/air_loop_icon.png</file>
+    <file>images/air_terminal_inlet_mixer.png</file>
     <file>images/arrow.png</file>
     <file>images/baseboard_electric.png</file>
     <file>images/baseboard_water.png</file>
@@ -40,6 +41,7 @@
     <file>images/coilcoolinglowtemprad_constflow.png</file>   
     <file>images/coilcoolinglowtemprad_varflow.png</file>      
     <file>images/cooling_tower.png</file>
+    <file>images/cooling_tower_2speed.png</file>
     <file>images/cooling_tower_variable.png</file>
     <file>images/dehumidify_schedule_icon.png</file>
     <file>images/delete-icon.png</file>
@@ -61,7 +63,9 @@
     <file>images/duplicate_press.png</file>
     <file>images/dxcoolingcoil_singlespeed.png</file>
     <file>images/dxcoolingcoil_2speed.png</file>
+    <file>images/dx_cooling_multispeed.png</file>
     <file>images/electric_furnace.png</file>
+    <file>images/electric_humidifier.png</file>
     <file>images/evap_fluid_cooler.png</file>
     <file>images/fan_constant.png</file>
     <file>images/fan_on_off.png</file>   
@@ -73,6 +77,7 @@
     <file>images/forward.png</file>
     <file>images/four_pipe_fan_coil.png</file>    
     <file>images/furnace.png</file>    
+    <file>images/furnace_multi_stage.png</file>
     <file>images/ground_heat_exchanger_vertical.png</file>
     <file>images/header-backgnd-1px-wide.png</file>
     <file>images/heat_coil.png</file>
@@ -91,6 +96,7 @@
     <file>images/loop_button_over.png</file>
     <file>images/loop_button_press.png</file>
     <file>images/loop_name_icon.png</file>
+    <file>images/hightempradiant.png</file>   
     <file>images/lowtempradiant_constflow.png</file>   
     <file>images/lowtempradiant_varflow.png</file>       
     <file>images/mechanical-sub-cooler.png</file>
@@ -167,6 +173,13 @@
     <file>images/setpoint_warmest_right.png</file>
     <file>images/setpoint_dual.png</file>
     <file>images/setpoint_pretreat.png</file>
+    <file>images/setpoint_multi_zone_humidity_ave.png</file>
+    <file>images/setpoint_multi_zone_humidity_ave_right.png</file>
+    <file>images/setpoint_multi_zone_humidity_min.png</file>
+    <file>images/setpoint_multi_zone_humidity_min_right.png</file>
+    <file>images/setpoint_single_zone_humidity_min.png</file>
+    <file>images/setpoint_single_zone_humidity_min_right.png</file>
+    <file>images/single_ducts_constant_vol_4pipe.png</file>
     <file>images/sewer_alone.png</file>
     <file>images/sewer_over.png</file>
     <file>images/sewer_press.png</file>
@@ -233,6 +246,7 @@
     <file>images/condenser_cascade.png</file>
     <file>images/evap_cooled.png</file>
     <file>images/water_cooled.png</file>
+
 
     <file>images/mini_icons/mini_compressor.png</file>
     <file>images/mini_icons/mini_condensor.png</file>
@@ -304,6 +318,7 @@
     <file>images/mini_icons/lights.png</file>
     <file>images/mini_icons/lights_definition.png</file>
     <file>images/mini_icons/zonehvac_low_temperature_radiant_electric.png</file>    
+    <file>images/mini_icons/hightempradiant.png</file>
     <file>images/mini_icons/lowtempradiant_constflow.png</file>
     <file>images/mini_icons/lowtempradiant_varflow.png</file>    
     <file>images/mini_icons/luminaire.png</file>
@@ -327,6 +342,7 @@
     <file>images/mini_icons/other_equipment.png</file>
     <file>images/mini_icons/other_equipment_definition.png</file>
     <file>images/mini_icons/outdoor_air.png</file>
+    <file>images/mini_icons/four_pipe_induction_terminal.png</file>
     <file>images/mini_icons/parallel_fan_terminal.png</file>
     <file>images/mini_icons/series_fan_terminal.png</file>
     <file>images/mini_icons/people.png</file>
@@ -374,6 +390,15 @@
     <file>images/mini_icons/mini_condenser_cascade.png</file>
     <file>images/mini_icons/mini_evap_cooled.png</file>
     <file>images/mini_icons/mini_water_cooled.png</file>
+    <file>images/mini_icons/mini_air_terminal_inlet_mixer.png</file>
+    <file>images/mini_icons/mini_cooling_tower.png</file>
+    <file>images/mini_icons/mini_cooling_tower_2speed.png</file>
+    <file>images/mini_icons/mini_dx_cooling_coil_multispeed.png</file>
+    <file>images/mini_icons/mini_dx_cooling_coil_two_speed.png</file>
+    <file>images/mini_icons/mini_electric_humidifier.png</file>
+    <file>images/mini_icons/mini_furnace.png</file>
+    <file>images/mini_icons/mini_furnace_multi_stage.png</file>
+    <file>images/mini_icons/mini_single_ducts_constant_vol_4pipe.png</file>
 
     <file>library/tid_api.xml</file>
 
@@ -386,6 +411,7 @@
     <file alias="shared_gui_components/images/arrow_up.png">../shared_gui_components/images/arrow_up.png</file>
     <file alias="shared_gui_components/images/arrow_up_over.png">../shared_gui_components/images/arrow_up_over.png</file>
     <file alias="shared_gui_components/images/arrow_up_press.png">../shared_gui_components/images/arrow_up_press.png</file>
+    <file alias="shared_gui_components/images/broken_script.png">../shared_gui_components/images/broken_script.png</file>
     <file alias="shared_gui_components/images/clear_cloud_session.png">../shared_gui_components/images/clear_cloud_session.png</file>
     <file alias="shared_gui_components/images/cloud_arrow.png">../shared_gui_components/images/cloud_arrow.png</file>
     <file alias="shared_gui_components/images/cloud_arrow_magenta.png">../shared_gui_components/images/cloud_arrow_magenta.png</file>

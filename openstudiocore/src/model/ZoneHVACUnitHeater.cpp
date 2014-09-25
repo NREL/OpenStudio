@@ -138,12 +138,12 @@ namespace detail {
     return result;
   }
 
-  unsigned ZoneHVACUnitHeater_Impl::inletPort()
+  unsigned ZoneHVACUnitHeater_Impl::inletPort() const
   {
     return OS_ZoneHVAC_UnitHeaterFields::AirInletNodeName;
   }
 
-  unsigned ZoneHVACUnitHeater_Impl::outletPort()
+  unsigned ZoneHVACUnitHeater_Impl::outletPort() const
   {
     return OS_ZoneHVAC_UnitHeaterFields::AirOutletNodeName;
   }

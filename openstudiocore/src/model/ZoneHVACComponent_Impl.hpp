@@ -19,7 +19,7 @@
 #ifndef MODEL_ZONEHVACCOMPONENT_IMPL_HPP
 #define MODEL_ZONEHVACCOMPONENT_IMPL_HPP
 
-#include "ParentObject_Impl.hpp"
+#include "HVACComponent_Impl.hpp"
 
 namespace openstudio {
 
@@ -27,10 +27,12 @@ namespace model {
 
 class Node;
 class ThermalZone;
+class AirLoopHVAC;
+class HVACComponent;
 
 namespace detail {
 
-class MODEL_API ZoneHVACComponent_Impl : public ParentObject_Impl {
+class MODEL_API ZoneHVACComponent_Impl : public HVACComponent_Impl {
 
   public:
 
@@ -54,13 +56,13 @@ class MODEL_API ZoneHVACComponent_Impl : public ParentObject_Impl {
 
   virtual ModelObject clone(Model model) const;
 
-  virtual unsigned inletPort() = 0;
+  virtual unsigned inletPort() const = 0;
 
-  virtual unsigned outletPort() = 0;
+  virtual unsigned outletPort() const = 0;
 
-  boost::optional<Node> inletNode();
+  boost::optional<Node> inletNode() const;
 
-  boost::optional<Node> outletNode();
+  boost::optional<Node> outletNode() const;
 
   virtual boost::optional<ThermalZone> thermalZone();
 
@@ -69,6 +71,14 @@ class MODEL_API ZoneHVACComponent_Impl : public ParentObject_Impl {
   virtual void removeFromThermalZone();
 
   std::vector<openstudio::IdfObject> remove();
+
+  bool addToNode(Node & node);
+
+  void removeFromAirLoopHVAC();
+
+  boost::optional<AirLoopHVAC> airLoopHVAC() const;
+
+  std::vector<HVACComponent> edges(bool isDemandComponent);
 
  protected:
 

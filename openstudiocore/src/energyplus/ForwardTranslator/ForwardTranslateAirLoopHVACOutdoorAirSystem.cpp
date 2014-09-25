@@ -24,6 +24,12 @@
 #include "../../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "../../model/ControllerOutdoorAir.hpp"
 #include "../../model/ControllerOutdoorAir_Impl.hpp"
+#include "../../model/ControllerWaterCoil.hpp"
+#include "../../model/ControllerWaterCoil_Impl.hpp"
+#include "../../model/CoilCoolingWater.hpp"
+#include "../../model/CoilCoolingWater_Impl.hpp"
+#include "../../model/CoilHeatingWater.hpp"
+#include "../../model/CoilHeatingWater_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
 #include "../../model/Schedule.hpp"
@@ -62,40 +68,44 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
  
 
   // Controller List
-  IdfObject controllerListIdf(IddObjectType::AirLoopHVAC_ControllerList);
-  controllerListIdf.setName(name + " Controller List");
-  controllerListIdf.clearExtensibleGroups();
-
-  m_idfObjects.push_back(controllerListIdf);
+  IdfObject _controllerList(IddObjectType::AirLoopHVAC_ControllerList);
+  _controllerList.setName(name + " Controller List");
+  _controllerList.clearExtensibleGroups();
+  m_idfObjects.push_back(_controllerList);
 
   ControllerOutdoorAir controllerOutdoorAir = modelObject.getControllerOutdoorAir();
-  boost::optional<IdfObject> temp = translateAndMapModelObject(controllerOutdoorAir);
+  boost::optional<IdfObject> _controllerOutdoorAir = translateAndMapModelObject(controllerOutdoorAir);
+  OS_ASSERT(_controllerOutdoorAir);
 
-  s = controllerListIdf.name();
-  if(s)
-  {
-    idfObject.setString(openstudio::AirLoopHVAC_OutdoorAirSystemFields::ControllerListName,*s);
-  }
+  idfObject.setString(openstudio::AirLoopHVAC_OutdoorAirSystemFields::ControllerListName,_controllerList.name().get());
 
-  s = temp->iddObject().name();
-  StringVector groupFields(2u);
-  bool addGroup(false);
-  if(s)
-  {
-    groupFields[0] = *s;
-    addGroup = true;
-  }
+  IdfExtensibleGroup eg = _controllerList.pushExtensibleGroup();
+  eg.setString(AirLoopHVAC_ControllerListExtensibleFields::ControllerObjectType,_controllerOutdoorAir->iddObject().name());
+  eg.setString(AirLoopHVAC_ControllerListExtensibleFields::ControllerName,_controllerOutdoorAir->name().get());
 
-  s = temp->name();
-  if(s)
-  {
-    groupFields[1] = *s;
-    addGroup = true;
-  }
+  std::vector<ModelObject> controllers;
+  auto components = modelObject.components();
+  for( const auto & component : components ) {
+    boost::optional<ControllerWaterCoil> controller;
 
-  if (addGroup) {
-    IdfExtensibleGroup eg = controllerListIdf.pushExtensibleGroup(groupFields);
-    OS_ASSERT(!eg.empty());
+    if( auto coil = component.optionalCast<CoilCoolingWater>() ) {
+      controller = coil->controllerWaterCoil();
+    } else if ( auto coil = component.optionalCast<CoilHeatingWater>() ) {
+      controller = coil->controllerWaterCoil();
+    }
+
+    if( controller ) {
+      controllers.push_back(controller.get());
+    }
+  } 
+  
+  for( auto & controller: controllers ) {
+    auto _controller = translateAndMapModelObject(controller);
+    if( _controller ) {
+      IdfExtensibleGroup eg = _controllerList.pushExtensibleGroup();
+      eg.setString(AirLoopHVAC_ControllerListExtensibleFields::ControllerObjectType,_controller->iddObject().name());
+      eg.setString(AirLoopHVAC_ControllerListExtensibleFields::ControllerName,_controller->name().get());
+    }
   }
 
   // Field: Availability Manager List Name //////////////////////////////////

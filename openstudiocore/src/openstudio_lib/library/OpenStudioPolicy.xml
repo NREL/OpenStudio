@@ -12,15 +12,30 @@
     <rule IddField="Outlet Node" Access="HIDDEN"/>
     <rule IddField="Induced Air Outlet Node" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_SingleZone_Humidity_Minimum">
+    <rule IddField="Control Variable" Access="HIDDEN"/>
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_MultiZone_Humidity_Minimum">
+    <rule IddField="Control Variable" Access="HIDDEN"/>
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_MultiZone_MinimumHumidity_Average">
+    <rule IddField="Control Variable" Access="HIDDEN"/>
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_SetpointManager_FollowOutdoorAirTemperature">
     <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_CoolingTower_SingleSpeed">
     <rule IddField="Water Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Water Outlet Node Name" Access="HIDDEN"/>
-    <rule IddField="Performance Input Method" Access="HIDDEN"/>
-    <rule IddField="Nominal Capacity" Access="HIDDEN"/>
-    <rule IddField="Free Convection Capacity" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_CoolingTower_TwoSpeed">
+    <rule IddField="Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Water Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Supply Water Storage Tank Name" Access="HIDDEN"/>
+    <rule IddField="Outdoor Air Inlet Node Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_CoolingTower_VariableSpeed">
     <rule IddField="Water Inlet Node" Access="HIDDEN"/>
@@ -40,6 +55,9 @@
     <rule IddField="Water Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Water Outlet Node Name" Access="HIDDEN"/>
     <rule IddField="Condensate Collection Water Storage Tank Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_ZoneHVAC_HighTemperatureRadiant">
+    <rule IddField="Radiant Surface Type" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_ZoneHVAC_PackagedTerminalHeatPump">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
@@ -84,6 +102,16 @@
   <POLICY IddObjectType="OS_Connector_Splitter">
     <rule IddField="Inlet Branch Name" Access="HIDDEN"/>
     <rule IddField="Outlet Branch Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass">
+    <rule IddField="Air Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Bypass Duct Mixer Node" Access="HIDDEN"/>
+    <rule IddField="Bypass Duct Splitter Node" Access="HIDDEN"/>
+    <rule IddField="Outdoor Air Mixer" Access="HIDDEN"/>
+    <rule IddField="Supply Air Fan" Access="LOCKED"/>
+    <rule IddField="Cooling Coil" Access="LOCKED"/>
+    <rule IddField="Heating Coil" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_AirLoopHVAC_UnitaryHeatPump_AirToAir">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
@@ -388,6 +416,20 @@
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_AirTerminal_SingleDuct_InletSideMixer">
+    <rule IddField="Terminal Unit Outlet" Access="HIDDEN"/>
+    <rule IddField="Terminal Unit Primary Air Inlet" Access="HIDDEN"/>
+    <rule IddField="Terminal Unit Secondary Air Inlet" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInduction">
+    <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
+    <rule IddField="Supply Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Induced Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Cooling Coil Name" Access="HIDDEN"/>
+    <rule IddField="Heating Coil Name" Access="HIDDEN"/>
+    <rule IddField="Zone Mixer Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam">
     <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
     <rule IddField="Supply Air Inlet Node Name" Access="HIDDEN"/>
@@ -437,6 +479,18 @@
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
     <rule IddField="Design Specification Outdoor Air Object Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheat">
+    <rule IddField="Availability Schedule" Access="HIDDEN"/>
+    <rule IddField="Air Inlet" Access="HIDDEN"/>
+    <rule IddField="Air Outlet" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_AirTerminal_SingleDuct_VAV_HeatAndCool_Reheat">
+    <rule IddField="Availability Schedule" Access="HIDDEN"/>
+    <rule IddField="Air Inlet" Access="HIDDEN"/>
+    <rule IddField="Air Outlet" Access="HIDDEN"/>
+    <rule IddField="Damper Air Outlet" Access="HIDDEN"/>
+    <rule IddField="Reheat Coil" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_AirLoopHVAC">
     <rule IddField="Controller List Name" Access="HIDDEN"/>
@@ -639,10 +693,15 @@
     <rule IddField="Heat Recovery Heating Capacity Modifier Curve" Access="LOCKED"/>
     <rule IddField="Heat Recovery Heating Energy Modifier Curve" Access="LOCKED"/>
   </POLICY>
-  <POLICY IddObjectType="OS_Table_MultiVariableLookupFields">
+  <POLICY IddObjectType="OS_Table_MultiVariableLookup">
     <rule IddField="External File Name" Access="HIDDEN"/>
     <rule IddField="X1 Sort Order" Access="HIDDEN"/>
     <rule IddField="X2 Sort Order" Access="HIDDEN"/>
   </POLICY>
-
+  <POLICY IddObjectType="OS_Humidifier_Steam_Electric">
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Water Storage Tank Name" Access="HIDDEN"/>
+    <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
+  </POLICY>
 </ROOT>

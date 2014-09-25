@@ -188,6 +188,9 @@ namespace detail {
           boost::optional<std::pair<QProcess::ProcessError, std::string> > m_process_error;
       };
 
+      /// returns the list of files that will be installed at runtime of this ToolBasedJob
+      std::vector<std::pair<openstudio::path, openstudio::path> > getRequiredFilePaths();
+
      private:
       /// Called internally when the job is in a runnable state and we are ready to get
       /// the version of the tool required to run the job, just in case it is dependent on 
@@ -204,6 +207,7 @@ namespace detail {
 
       void updateOutOfDateStatus(bool newvalue) const;
       std::vector<std::pair<QUrl, openstudio::path> > complete_required_files();
+
       std::vector<std::pair<openstudio::path, openstudio::path> > acquireRequiredFiles(
           const std::vector<std::pair<QUrl, openstudio::path> > &t_urls);
 
