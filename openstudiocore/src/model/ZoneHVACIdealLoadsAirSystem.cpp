@@ -91,12 +91,12 @@ namespace detail {
     return result;
   }
 
-  unsigned ZoneHVACIdealLoadsAirSystem_Impl::inletPort()
+  unsigned ZoneHVACIdealLoadsAirSystem_Impl::inletPort() const
   {
     return OS_ZoneHVAC_IdealLoadsAirSystemFields::ZoneSupplyAirNodeName;
   }
 
-  unsigned ZoneHVACIdealLoadsAirSystem_Impl::outletPort()
+  unsigned ZoneHVACIdealLoadsAirSystem_Impl::outletPort() const
   {
     return OS_ZoneHVAC_IdealLoadsAirSystemFields::ZoneExhaustAirNodeName;
   }

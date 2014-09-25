@@ -120,12 +120,12 @@ namespace detail {
   //   return result;
   // }
 
-  unsigned RefrigerationAirChiller_Impl::inletPort()
+  unsigned RefrigerationAirChiller_Impl::inletPort() const
   {
     return 0; // this object has no inlet or outlet node
   }
 
-  unsigned RefrigerationAirChiller_Impl::outletPort()
+  unsigned RefrigerationAirChiller_Impl::outletPort() const
   {
     return 0; // this object has no inlet or outlet node
   }

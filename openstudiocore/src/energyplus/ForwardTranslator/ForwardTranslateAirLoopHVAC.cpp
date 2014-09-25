@@ -122,10 +122,14 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
     lowerNodes.erase(lowerNodes.end() - 1);
   }
 
+  auto isTemperatureControl = [] ( SetpointManager & spm ) -> bool {
+    return istringEqual("Temperature",spm.controlVariable());
+  };
+
   for( auto & upperNode : upperNodes )
   {
     std::vector<SetpointManager> _setpointManagers = upperNode.setpointManagers();
-    if( _setpointManagers.empty() ) {
+    if( std::find_if(_setpointManagers.begin(),_setpointManagers.end(),isTemperatureControl) == _setpointManagers.end() ) {
       SetpointManagerMixedAir spm(t_model);
       spm.addToNode(upperNode);
     }
@@ -137,7 +141,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
     for( auto & lowerNode : lowerNodes )
     {
       std::vector<SetpointManager> _setpointManagers = lowerNode.setpointManagers();
-      if( _setpointManagers.empty() ) {
+      if( std::find_if(_setpointManagers.begin(),_setpointManagers.end(),isTemperatureControl) == _setpointManagers.end() ) {
         for( auto _setpointManager : _supplyOutletSetpointManagers )
         {
           SetpointManager spmClone = _setpointManager.clone(t_model).cast<SetpointManager>();
@@ -158,7 +162,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
         if( oaNode != outboardOANode.get() )
         {
           std::vector<SetpointManager> _setpointManagers = oaNode.setpointManagers();
-          if( _setpointManagers.empty() ) {
+          if( std::find_if(_setpointManagers.begin(),_setpointManagers.end(),isTemperatureControl) == _setpointManagers.end() ) {
             SetpointManagerMixedAir spm(t_model);
             spm.addToNode(oaNode);
           }

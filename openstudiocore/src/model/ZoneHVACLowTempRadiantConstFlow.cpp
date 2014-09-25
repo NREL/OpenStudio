@@ -150,12 +150,12 @@ namespace detail {
     return result;
   }
 
-  unsigned ZoneHVACLowTempRadiantConstFlow_Impl::inletPort()
+  unsigned ZoneHVACLowTempRadiantConstFlow_Impl::inletPort() const
   {
     return 0;
   }
 
-  unsigned ZoneHVACLowTempRadiantConstFlow_Impl::outletPort()
+  unsigned ZoneHVACLowTempRadiantConstFlow_Impl::outletPort() const
   {
     return 0;
   }

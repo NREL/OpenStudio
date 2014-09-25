@@ -216,12 +216,12 @@ namespace detail {
     return false;
   }
 
-  unsigned ZoneHVACBaseboardConvectiveElectric_Impl::inletPort()
+  unsigned ZoneHVACBaseboardConvectiveElectric_Impl::inletPort() const
   {
     return 0; // this object has no inlet or outlet node
   }
 
-  unsigned ZoneHVACBaseboardConvectiveElectric_Impl::outletPort()
+  unsigned ZoneHVACBaseboardConvectiveElectric_Impl::outletPort() const
   {
     return 0; // this object has no inlet or outlet node
   }

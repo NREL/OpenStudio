@@ -26,6 +26,7 @@
 #include "../shared_gui_components/LocalLibraryView.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/OSViewSwitcher.hpp"
+#include "../shared_gui_components/TextEditDialog.hpp"
 #include "../shared_gui_components/VariableList.hpp"
 
 #include "MainRightColumnController.hpp"
@@ -80,7 +81,8 @@ ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
   m_timer(0),
   m_showAdvancedOutput(0),
   m_advancedOutput(QString()),
-  m_workingDir(openstudio::path())
+  m_workingDir(openstudio::path()),
+  m_advancedOutputDialog(0)
 {
   setWindowTitle("Apply Measure Now");
   setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -88,6 +90,8 @@ ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
 
   OSAppBase * app = OSAppBase::instance();
   connect(this, &ApplyMeasureNowDialog::reloadFile, static_cast<OpenStudioApp *>(app), &OpenStudioApp::reloadFile, Qt::QueuedConnection);
+
+  m_advancedOutputDialog = new TextEditDialog("Advanced Output");
 }
 
 ApplyMeasureNowDialog::~ApplyMeasureNowDialog()
@@ -97,6 +101,10 @@ ApplyMeasureNowDialog::~ApplyMeasureNowDialog()
   openstudio::OSAppBase * app = OSAppBase::instance();
   if (app){
     app->measureManager().setLibraryController(app->currentDocument()->mainRightColumnController()->measureLibraryController()); 
+  }
+
+  if(m_advancedOutputDialog){
+    delete m_advancedOutputDialog;
   }
 }
 
@@ -819,11 +827,13 @@ void ApplyMeasureNowDialog::disableOkButton(bool disable)
 }
 
 void ApplyMeasureNowDialog::showAdvancedOutput()
-{
+{ 
   if(m_advancedOutput.isEmpty()){
     QMessageBox::information(this, QString("Advanced Output"), QString("No advanced output."));
   }else{
-    QMessageBox::information(this, QString("Advanced Output"), QString("Advanced output:\n") + m_advancedOutput);
+    m_advancedOutputDialog->setText(m_advancedOutput);
+    m_advancedOutputDialog->exec();
+    m_advancedOutputDialog->raise();
   }
 }
 

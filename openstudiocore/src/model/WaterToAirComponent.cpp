@@ -200,6 +200,49 @@ bool WaterToAirComponent_Impl::addToNode(Node & node)
       }
     }
   }
+  else if( oaSystem )
+  {
+    if(oaSystem->outboardReliefNode() == node)
+    {
+      unsigned oldInletPort = node.inletPort();
+      unsigned oldOutletPort = node.connectedObjectPort( node.inletPort() ).get();
+      ModelObject oldSourceModelObject = node.connectedObject( node.inletPort() ).get();
+      ModelObject oldTargetModelObject = node;
+    
+      Node newNode( _model );
+      newNode.createName();
+
+      _model.connect( oldSourceModelObject, oldOutletPort,
+                      newNode, newNode.inletPort() );
+      _model.connect( newNode, newNode.outletPort(),
+                      thisModelObject, airInletPort() );
+      _model.connect( thisModelObject, airOutletPort(),
+                      oldTargetModelObject, oldInletPort );
+      return true;
+    }
+    else if(oaSystem->component(node.handle()))
+    {
+      unsigned oldOutletPort = node.outletPort();
+      unsigned oldInletPort = node.connectedObjectPort( node.outletPort() ).get();
+      ModelObject oldSourceModelObject = node;
+      ModelObject oldTargetModelObject = node.connectedObject( node.outletPort() ).get();
+    
+      Node newNode( _model );
+      newNode.createName();
+
+      _model.connect( oldSourceModelObject, oldOutletPort,
+                      thisModelObject, airInletPort() );
+      _model.connect( thisModelObject, airOutletPort(),
+                      newNode, newNode.inletPort() );
+      _model.connect( newNode, newNode.outletPort(),
+                      oldTargetModelObject, oldInletPort );
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
   else if( node.plantLoop() )
   {
     PlantLoop _plantLoop = node.plantLoop().get();

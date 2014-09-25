@@ -7831,6 +7831,164 @@ OS:AirLoopHVAC:SupplyPlenum,
        \required-field
        \object-list ConnectionNames
 
+OS:AirLoopHVAC:UnitaryHeatPump:AirToAir:MultiSpeed,
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+        \reference ConnectionObject
+   A3,  \field Availability Schedule
+        \type object-list
+        \object-list ScheduleNames
+   A4,  \field Air Inlet Node
+        \required-field
+        \type object-list
+        \object-list ConnectionNames
+   A5,  \field Air Outlet Node
+        \required-field
+        \type object-list
+        \object-list ConnectionNames
+   A6,  \field Controlling Zone or Thermostat Location
+        \type object-list
+        \object-list ThermalZoneNames
+   A7,  \field Supply Air Fan
+        \required-field
+        \type object-list
+        \object-list FansCVandOnOff
+   A8,  \field Supply Air Fan Placement
+        \required-field
+        \type choice
+        \key BlowThrough
+        \key DrawThrough
+   A9 , \field Supply Air Fan Operating Mode Schedule
+        \type object-list
+        \object-list ScheduleNames
+   A10, \field Heating Coil
+        \required-field
+        \type object-list
+        \object-list HeatingCoilsElectricMultiStage
+        \object-list HeatingCoilsGasMultiStage
+   N1 , \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
+        \type real
+        \minimum -20.0
+        \units C
+        \required-field
+   A11, \field Cooling Coil
+        \required-field
+        \note Needs to match in the DX Cooling Coil object
+        \type object-list
+        \object-list CoolingCoilsDXMultiSpeed
+   A12, \field Supplemental Heating Coil
+        \type object-list
+        \object-list HeatingCoilName
+   N2 , \field Maximum Supply Air Temperature from Supplemental Heater
+        \type real
+        \units C
+        \autosizable
+        \required-field
+   N3 , \field Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation
+        \type real
+        \maximum 21.0
+        \units C
+        \required-field
+   N4 , \field Auxiliary On-Cycle Electric Power
+        \type real
+        \units W
+        \minimum 0
+        \required-field
+   N5 , \field Auxiliary Off-Cycle Electric Power
+        \type real
+        \units W
+        \minimum 0
+        \required-field
+   N6 , \field Design Heat Recovery Water Flow Rate
+        \type real
+        \note If non-zero, then the heat recovery inlet and outlet node names must be entered.
+        \note Used for heat recovery to an EnergyPlus plant loop.
+        \units m3/s
+        \minimum 0.0
+        \required-field
+   N7,  \field Maximum Temperature for Heat Recovery
+        \units C
+        \maximum 100.0
+        \minimum 0.0
+        \required-field
+   A13, \field Heat Recovery Water Inlet Node
+        \required-field
+        \type object-list
+        \object-list ConnectionNames
+   A14, \field Heat Recovery Water Outlet Node
+        \required-field
+        \type object-list
+        \object-list ConnectionNames
+   N8 , \field Supply Air Flow Rate When No Cooling or Heating is Needed
+        \type real
+        \units m3/s
+        \minimum 0
+        \autosizable
+        \required-field
+   N9, \field Number of Speeds for Heating
+        \required-field
+        \type integer
+        \minimum 1
+        \maximum 4
+   N10, \field Number of Speeds for Cooling
+        \required-field
+        \type integer
+        \minimum 2
+        \maximum 4
+   N11, \field Speed 1 Supply Air Flow Rate During Heating Operation
+        \required-field
+        \type real
+        \units m3/s
+        \autosizable
+        \minimum> 0
+   N12, \field Speed 2 Supply Air Flow Rate During Heating Operation
+        \type real
+        \units m3/s
+        \autosizable
+        \minimum> 0
+        \required-field
+   N13, \field Speed 3 Supply Air Flow Rate During Heating Operation
+        \type real
+        \units m3/s
+        \autosizable
+        \minimum> 0
+        \required-field
+   N14, \field Speed 4 Supply Air Flow Rate During Heating Operation
+        \type real
+        \units m3/s
+        \autosizable
+        \minimum> 0
+        \required-field
+   N15, \field Speed 1 Supply Air Flow Rate During Cooling Operation
+        \required-field
+        \type real
+        \units m3/s
+        \autosizable
+        \minimum> 0
+        \required-field
+   N16, \field Speed 2 Supply Air Flow Rate During Cooling Operation
+        \required-field
+        \type real
+        \units m3/s
+        \autosizable
+        \minimum> 0
+        \required-field
+   N17, \field Speed 3 Supply Air Flow Rate During Cooling Operation
+        \type real
+        \units m3/s
+        \autosizable
+        \minimum> 0
+        \required-field
+   N18; \field Speed 4 Supply Air Flow Rate During Cooling Operation
+        \type real
+        \units m3/s
+        \autosizable
+        \minimum> 0
+        \required-field
+
 OS:AirLoopHVAC:UnitaryCoolOnly,
        \min-fields 8
   A1, \field Handle
@@ -8018,6 +8176,113 @@ OS:AirLoopHVAC:UnitaryHeatPump:AirToAir,
        \key None
        \key Multimode
        \key CoolReheat
+
+OS:AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass,
+   A1, \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+        \type alpha
+        \reference ConnectionObject
+   A3 , \field Availability Schedule
+        \type object-list
+        \object-list ScheduleNames
+   N1 , \field System Air Flow Rate During Cooling Operation
+        \required-field
+        \type real
+        \units m3/s
+        \autosizable
+        \minimum> 0.0
+        \required-field
+   N2 , \field System Air Flow Rate During Heating Operation
+        \required-field
+        \type real
+        \units m3/s
+        \autosizable
+        \minimum> 0.0
+        \required-field
+   N3 , \field System Air Flow Rate When No Cooling or Heating is Needed
+        \type real
+        \units m3/s
+        \minimum 0.0
+        \autosizable
+        \required-field
+   N4 , \field Outdoor Air Flow Rate During Cooling Operation
+        \required-field
+        \type real
+        \units m3/s
+        \autosizable
+        \minimum 0.0
+        \required-field
+   N5 , \field Outdoor Air Flow Rate During Heating Operation
+        \required-field
+        \type real
+        \units m3/s
+        \autosizable
+        \minimum 0.0
+        \required-field
+   N6 , \field Outdoor Air Flow Rate When No Cooling or Heating is Needed
+        \type real
+        \units m3/s
+        \minimum 0.0
+        \autosizable
+        \required-field
+   A4 , \field Outdoor Air Flow Rate Multiplier Schedule
+        \type object-list
+        \object-list ScheduleNames
+   A5 , \field Air Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+   A6 , \field Bypass Duct Mixer Node
+   A7 , \field Bypass Duct Splitter Node
+   A8 , \field Air Outlet Node
+       \type object-list
+       \object-list ConnectionNames
+   A9 , \field Outdoor Air Mixer
+   A10, \field Supply Air Fan
+        \type object-list
+        \object-list FansCVandOnOff
+        \required-field
+   A11, \field Supply Air Fan Placement
+        \required-field
+        \type choice
+        \key BlowThrough
+        \key DrawThrough
+        \required-field
+   A12, \field Supply Air Fan Operating Mode Schedule
+        \type object-list
+        \object-list ScheduleNames
+   A13, \field Cooling Coil
+        \type object-list
+        \object-list CoolingCoilsDXMultiModeOrSingleSpeed
+        \required-field
+   A14, \field Heating Coil
+        \type object-list
+        \object-list HeatingCoilName
+        \required-field
+   A15, \field Priority Control Mode
+        \type choice
+        \key CoolingPriority
+        \key HeatingPriority
+        \key ZonePriority
+        \required-field
+   N7 , \field Minimum Outlet Air Temperature During Cooling Operation
+        \type real
+        \units C
+        \minimum> 0.0
+        \required-field
+   N8 , \field Maximum Outlet Air Temperature During Heating Operation
+        \type real
+        \units C
+        \minimum> 0.0
+        \required-field
+   A16; \field Dehumidification Control Type
+        \type choice
+        \key None
+        \key Multimode
+        \key CoolReheat
+        \required-field
 
 OS:AirLoopHVAC:UnitarySystem,
        \memo AirloopHVAC:UnitarySystem is a generic HVAC system type that allows any
@@ -8449,6 +8714,107 @@ OS:AirLoopHVAC:ZoneSplitter,
        \begin-extensible
        \object-list ConnectionNames
 
+OS:AirTerminal:SingleDuct:VAV:HeatAndCool:NoReheat,
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2,  \field Name
+       \required-field
+       \reference ConnectionObject
+  A3 , \field Availability Schedule
+       \type object-list
+       \object-list ScheduleNames
+  A4,  \field Air Outlet
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  A5,  \field Air Inlet
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  N1,  \field Maximum Air Flow Rate
+       \required-field
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+  N2;  \field Zone Minimum Air Flow Fraction
+       \required-field
+       \minimum 0.0
+       \maximum 1.0
+
+OS:AirTerminal:SingleDuct:VAV:HeatAndCool:Reheat,
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2,  \field Name
+       \required-field
+       \reference ConnectionObject
+  A3 , \field Availability Schedule
+       \type object-list
+       \object-list ScheduleNames
+  A4,  \field Damper Air Outlet
+  A5,  \field Air Inlet
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  N1,  \field Maximum Air Flow Rate
+       \required-field
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+  N2,  \field Zone Minimum Air Flow Fraction
+       \required-field
+       \minimum 0.0
+       \maximum 1.0
+  A6,  \field Reheat Coil
+       \required-field
+       \type object-list
+       \object-list HeatingCoilName
+  N3,  \field Maximum Hot Water or Steam Flow Rate
+       \units m3/s
+       \required-field
+       \minimum 0.0
+       \autosizable
+       \ip-units gal/min
+  N4,  \field Minimum Hot Water or Steam Flow Rate
+       \required-field
+       \units m3/s
+       \minimum 0.0
+       \ip-units gal/min
+  A7,  \field Air Outlet
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  N5,  \field Convergence Tolerance
+       \type real
+       \minimum> 0.0
+       \required-field
+  N6; \field Maximum Reheat Air Temperature
+      \required-field
+      \type real
+      \units C
+      \minimum> 0.0
+
+OS:AirTerminal:SingleDuct:InletSideMixer,
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2, \field Name
+       \required-field
+       \reference ConnectionObject
+   A3, \field Terminal Unit Outlet
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+   A4, \field Terminal Unit Primary Air Inlet
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+   A5; \field Terminal Unit Secondary Air Inlet
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+
 OS:AirTerminal:SingleDuct:ConstantVolume:Reheat,
        \min-fields 5
   A1, \field Handle
@@ -8649,6 +9015,90 @@ OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
        \type real
        \minimum> 0
        \default 0.001
+
+OS:AirTerminal:SingleDuct:ConstantVolume:FourPipeInduction,
+       \memo Central air system terminal unit, single duct, variable volume, induction unit with
+       \memo hot water reheat coil and chilled water recool coil.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference ConnectionObject
+  A3 , \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  N1,  \field Maximum Total Air Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \autosizable
+       \minimum 0.0
+  N2,  \field Induction Ratio
+       \required-field
+       \type real
+       \minimum 0.0
+       \default 2.5
+       \note ratio of induced air flow rate to primary air flow rate
+  A4,  \field Supply Air Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \required-field
+  A5,  \field Induced Air Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \required-field
+       \note should be a zone exhaust node, also the heating coil inlet node
+  A6,  \field Air Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \required-field
+       \note should be a zone inlet node
+  A7,  \field Heating Coil Name
+       \required-field
+       \type object-list
+       \object-list HeatingCoilName
+  N3,  \field Maximum Hot Water Flow Rate
+       \note Not used when heating coil type is gas or electric
+       \type real
+       \units m3/s
+       \autosizable
+       \ip-units gal/min
+  N4,  \field Minimum Hot Water Flow Rate
+       \note Not used when heating coil type is gas or electric
+       \type real
+       \units m3/s
+       \minimum 0.0
+       \default 0.0
+       \ip-units gal/min
+  N5,  \field Heating Convergence Tolerance
+       \type real
+       \minimum> 0.0
+       \default 0.001
+  A8,  \field Cooling Coil Name
+       \type object-list
+       \object-list CoolingCoilName
+  N6,  \field Maximum Cold Water Flow Rate
+       \type real
+       \units m3/s
+       \autosizable
+       \ip-units gal/min
+  N7,  \field Minimum Cold Water Flow Rate
+       \type real
+       \units m3/s
+       \minimum 0.0
+       \default 0.0
+       \ip-units gal/min
+  N8,  \field Cooling Convergence Tolerance
+       \type real
+       \minimum> 0.0
+       \default 0.001
+  A9;  \field Zone Mixer Name
+       \type object-list
+       \object-list ZoneMixers
 
 OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
        \memo Central air system terminal unit, single duct, constant volume, with cooled beam
@@ -9538,6 +9988,283 @@ OS:CoolingTower:SingleSpeed,
        \default 2.5
        \note The allowable maximal fraction of the nominal flow rate per cell
   N17; \field Sizing Factor
+       \note Multiplies the autosized capacity and flow rates
+       \type real
+       \minimum> 0.0
+       \default 1.0
+
+OS:CoolingTower:TwoSpeed,
+       \min-fields 25
+       \memo This tower model is based on Merkel's theory, which is also the basis
+       \memo for the tower model in ASHRAE's HVAC1 Toolkit. The closed-circuit cooling tower
+       \memo is modeled as a counter flow heat exchanger with a two-speed fan drawing air
+       \memo through the tower (induced-draft configuration).
+       \memo For a multi-cell tower, the capacity and air/water flow rate inputs are for the entire tower.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference CoolingTowers
+       \reference ConnectionObject
+  A3 , \field Water Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A4 , \field Water Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  N1 , \field Design Water Flow Rate
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+       \note Leave field blank if Tower Performance Input Method is NominalCapacity
+       \ip-units gal/min
+  N2 , \field High Fan Speed Air Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+  N3 , \field High Fan Speed Fan Power
+       \required-field
+       \type real
+       \units W
+       \minimum> 0.0
+       \autosizable
+       \ip-units W
+       \note This is the fan motor electric input power at high speed
+  N4 , \field High Fan Speed U-Factor Times Area Value
+       \type real
+       \units W/K
+       \minimum> 0.0
+       \maximum 2100000.0
+       \autosizable
+       \note Leave field blank if Tower Performance Input Method is NominalCapacity
+  N5 , \field Low Fan Speed Air Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+       \note Low speed air flow rate must be less than high speed air flow rate
+       \note Low speed air flow rate must be greater than free convection air flow rate
+  N6 , \field Low Fan Speed Air Flow Rate Sizing Factor
+       \required-field
+       \type real
+       \default 0.5
+       \minimum> 0.0
+       \maximum< 1.0
+       \note This field is only used if the previous field is set to autocalculate.
+  N7 , \field Low Fan Speed Fan Power
+       \required-field
+       \type real
+       \units W
+       \minimum> 0.0
+       \autosizable
+       \ip-units W
+       \note This is the fan motor electric input power at low speed
+  N8 , \field Low Fan Speed Fan Power Sizing Factor
+       \required-field
+       \type real
+       \default 0.16
+       \minimum> 0.0
+       \maximum< 1.0
+       \note This field is only used if the previous field is set to autocalculate.
+  N9 , \field Low Fan Speed U-Factor Times Area Value
+       \type real
+       \units W/K
+       \minimum> 0.0
+       \maximum 300000.0
+       \autosizable
+       \note Leave field blank if tower Performance Input Method is NominalCapacity
+       \note Low speed tower UA must be less than high speed tower UA
+       \note Low speed tower UA must be greater than free convection tower UA
+  N10, \field Low Fan Speed U-Factor Times Area Sizing Factor
+       \required-field
+       \type real
+       \default 0.6
+       \minimum> 0.0
+       \maximum< 1.0
+       \note This field is only used if the previous field is set to autocalculate and
+       \note the Performance Input Method is UFactorTimesAreaAndDesignWaterFlowRate
+  N11, \field Free Convection Regime Air Flow Rate
+       \type real
+       \units m3/s
+       \minimum 0.0
+       \default 0.0
+       \autosizable
+  N12, \field Free Convection Regime Air Flow Rate Sizing Factor
+       \required-field
+       \type real
+       \default 0.1
+       \minimum> 0.0
+       \maximum< 1.0
+       \note This field is only used if the previous field is set to autocalculate.
+  N13, \field Free Convection Regime U-Factor Times Area Value
+       \type real
+       \units W/K
+       \minimum 0.0
+       \maximum 300000.0
+       \default 0.0
+       \autosizable
+       \note Leave field blank if Tower Performance Input Method is NominalCapacity
+  N14, \field Free Convection U-Factor Times Area Value Sizing Factor
+       \required-field
+       \type real
+       \default 0.1
+       \minimum> 0.0
+       \maximum< 1.0
+       \note This field is only used if the previous field is set to autocalculate and
+       \note the Performance Input Method is UFactorTimesAreaAndDesignWaterFlowRate
+  A5 , \field Performance Input Method
+       \type choice
+       \key UFactorTimesAreaAndDesignWaterFlowRate
+       \key NominalCapacity
+       \default UFactorTimesAreaAndDesignWaterFlowRate
+       \note User can define tower thermal performance by specifying the tower UA,
+       \note the Design Air Flow Rate and the Design Water Flow Rate,
+       \note or by specifying the tower nominal capacity
+  N15, \field Heat Rejection Capacity and Nominal Capacity Sizing Ratio
+       \required-field
+       \type real
+       \default 1.25
+  N16, \field High Speed Nominal Capacity
+       \type real
+       \units W
+       \minimum> 0.0
+       \note Nominal tower capacity with entering water at 35C (95F), leaving water at
+       \note 29.44C (85F), entering air at 25.56C (78F) wet-bulb temperature and 35C (95F)
+       \note dry-bulb temperature, with the tower fan operating at high speed. Design water
+       \note flow rate assumed to be 5.382E-8 m3/s per watt(3 gpm/ton). Nominal tower capacity
+       \note times the Heat Rejection Capacity and Nominal Capacity Sizing Ratio (e.g. 1.25)
+       \note gives the actual tower heat rejection at these operating conditions.
+  N17, \field Low Speed Nominal Capacity
+       \type real
+       \units W
+       \minimum> 0.0
+       \autosizable
+       \note Nominal tower capacity with entering water at 35C (95F), leaving water at
+       \note 29.44C (85F), entering air at 25.56C (78F) wet-bulb temperature and 35C (95F)
+       \note dry-bulb temperature, with the tower fan operating at low speed. Design water flow
+       \note rate assumed to be 5.382E-8 m3/s per watt of tower high-speed nominal capacity
+       \note (3 gpm/ton). Nominal tower capacity times the Heat Rejection Capacity and Nominal
+       \note Capacity Sizing Ratio (e.g. 1.25) gives the actual tower heat
+       \note rejection at these operating conditions.
+  N18, \field Low Speed Nominal Capacity Sizing Factor
+       \required-field
+       \type real
+       \default 0.5
+       \minimum> 0.0
+       \maximum< 1.0
+       \note This field is only used if the previous field is set to autocalculate
+  N19, \field Free Convection Nominal Capacity
+       \type real
+       \units W
+       \minimum 0.0
+       \autosizable
+       \note Tower capacity in free convection regime with entering water at 35C (95F),
+       \note leaving water at 29.44C (85F), entering air at 25.56C (78F) wet-bulb temperature
+       \note and 35C (95F) dry-bulb temperature. Design water flow rate assumed to be
+       \note 5.382E-8 m3/s per watt of tower high-speed nominal capacity (3 gpm/ton). Tower
+       \note free convection capacity times the Heat Rejection Capacity and Nominal Capacity Sizing Ratio
+       \note (e.g. 1.25)  gives the actual tower heat rejection at these operating conditions
+  N20, \field Free Convection Nominal Capacity Sizing Factor
+       \required-field
+       \type real
+       \default 0.1
+       \minimum> 0.0
+       \maximum< 1.0
+       \note This field is only used if the previous field is set to autocalculate
+  N21, \field Basin Heater Capacity
+       \type real
+       \units W/K
+       \minimum 0.0
+       \default 0.0
+       \note This heater maintains the basin water temperature at the basin heater setpoint
+       \note temperature when the outdoor air temperature falls below the setpoint temperature.
+       \note The basin heater only operates when water is not flowing through the tower.
+  N22, \field Basin Heater Setpoint Temperature
+       \type real
+       \units C
+       \minimum 2.0
+       \default 2.0
+       \note Enter the outdoor dry-bulb temperature when the basin heater turns on
+  A6 , \field Basin Heater Operating Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Schedule values greater than 0 allow the basin heater to operate whenever the outdoor
+       \note air dry-bulb temperature is below the basin heater setpoint temperature.
+       \note If a schedule name is not entered, the basin heater is allowed to operate
+       \note throughout the entire simulation.
+  A7 , \field Evaporation Loss Mode
+       \type choice
+       \key LossFactor
+       \key SaturatedExit
+  N23, \field Evaporation Loss Factor
+       \type real
+       \units percent/K
+       \note Rate of water evaporated from the cooling tower and lost to the outdoor air [%/K]
+       \note Evaporation loss is calculated as percentage of the circulating condenser water rate
+       \note Value entered here is percent-per-degree K of temperature drop in the condenser water
+       \note Typical values are from 0.15 to 0.27 [%/K].
+       \default 0.2
+  N24, \field Drift Loss Percent
+       \type real
+       \units percent
+       \default 0.008
+       \note Rate of drift loss as a percentage of circulating condenser water flow rate
+       \note Typical values are between 0.002 and 0.2% The default value is 0.008%
+  A8 , \field Blowdown Calculation Mode
+       \type choice
+       \key ConcentrationRatio
+       \key ScheduledRate
+  N25, \field Blowdown Concentration Ratio
+       \type real
+       \minimum 2.0
+       \default 3.0
+       \note Characterizes the rate of blowdown in the cooling tower.
+       \note Blowdown is water intentionally drained from the tower in order to offset the build up
+       \note of solids in the water that would otherwise occur because of evaporation.
+       \note Ratio of solids in the blowdown water to solids in the make up water.
+       \note Typical values for tower operation are 3 to 5.  The default value is 3.
+  A9 , \field Blowdown Makeup Water Usage Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Makeup water usage due to blowdown results from occasionally draining some amount
+       \note of water in the tower basin to purge scale or other contaminants to reduce their
+       \note concentration in order to maintain an acceptable level of water quality.
+       \note Schedule values should reflect water usage in m3/s.
+  A10, \field Supply Water Storage Tank Name
+       \type object-list
+       \object-list WaterStorageTankNames
+  A11, \field Outdoor Air Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+  N26, \field Number of Cells
+       \type integer
+       \minimum 1
+       \default 1
+  A12, \field Cell Control
+       \type choice
+       \key MinimalCell
+       \key MaximalCell
+       \default MinimalCell
+  N27, \field Cell Minimum  Water Flow Rate Fraction
+       \type real
+       \minimum> 0.0
+       \maximum 1.0
+       \default 0.33
+       \note The allowable mininal fraction of the nominal flow rate per cell
+  N28, \field Cell Maximum Water Flow Rate Fraction
+       \type real
+       \minimum 1
+       \default 2.5
+       \note The allowable maximal fraction of the nominal flow rate per cell
+  N29; \field Sizing Factor
        \note Multiplies the autosized capacity and flow rates
        \type real
        \minimum> 0.0
@@ -10437,6 +11164,200 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \type object-list
        \object-list ScheduleNames
 
+OS:Coil:Cooling:DX:MultiSpeed,
+       \extensible:1
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference CoolingCoilsDXMultiSpeed
+       \reference AFNCoilNames
+       \reference ConnectionObject
+  A3 , \field Availability Schedule
+       \type object-list
+       \object-list ScheduleNames
+  A4 , \field Air Inlet Node
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A5 , \field Air Outlet Node
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A6 , \field Condenser Air Inlet Node
+       \type object-list
+       \object-list Node
+  A7 , \field Condenser Type
+       \type choice
+       \key AirCooled
+       \key EvaporativelyCooled
+       \required-field
+  A8 , \field Supply Water Storage Tank
+  A9 , \field Condensate Collection Water Storage Tank
+  A10 , \field Apply Part Load Fraction to Speeds Greater than 1
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A11, \field Apply Latent Degradation to Speeds Greater than 1
+       \type choice
+       \key Yes
+       \key No
+       \default No
+       \required-field
+  N1 , \field Crankcase Heater Capacity
+       \type real
+       \minimum 0.0
+       \units W
+       \ip-units W
+       \required-field
+  N2 , \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
+       \type real
+       \minimum 0.0
+       \units C
+       \required-field
+  N3,  \field Basin Heater Capacity
+       \type real
+       \units W/K
+       \minimum 0.0
+       \required-field
+  N4,  \field Basin Heater Setpoint Temperature
+       \type real
+       \units C
+       \minimum 2.0
+       \required-field
+  A12, \field Basin Heater Operating Schedule
+       \type object-list
+       \object-list ScheduleNames
+  A13, \field Fuel Type
+       \type choice
+       \key Electricity
+       \key NaturalGas
+       \key PropaneGas
+       \key Diesel
+       \key Gasoline
+       \key FuelOil#1
+       \key FuelOil#2
+       \key OtherFuel1
+       \key OtherFuel2
+       \required-field
+  A14; \field Stage 1
+       \begin-extensible
+       \type object-list
+       \object-list CoilCoolingDXMultiSpeedStageData
+
+OS:Coil:Cooling:DX:MultiSpeed:StageData,
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference CoilCoolingDXMultiSpeedStageData
+  N1 , \field Gross Rated Total Cooling Capacity
+       \required-field
+       \type real
+       \units W
+       \minimum> 0.0
+       \autosizable
+  N2 , \field Gross Rated Sensible Heat Ratio
+       \required-field
+       \type real
+       \minimum 0.5
+       \maximum 1.0
+       \autosizable
+  N3 , \field Gross Rated Cooling COP
+       \type real
+       \units W/W
+       \minimum> 0.0
+       \required-field
+  N4 , \field Rated Air Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+  N5, \field Rated Evaporator Fan Power Per Volume Flow Rate
+       \type real
+       \units W/(m3/s)
+       \minimum 0.0
+       \maximum 1250.0
+       \required-field
+  A3, \field Total Cooling Capacity Function of Temperature Curve
+       \required-field
+       \type object-list
+       \object-list BiquadraticCurves
+  A4, \field Total Cooling Capacity Function of Flow Fraction Curve
+       \required-field
+       \type object-list
+       \object-list QuadraticCubicCurves
+  A5, \field Energy Input Ratio Function of Temperature Curve
+       \required-field
+       \type object-list
+       \object-list BiquadraticCurves
+  A6, \field Energy Input Ratio Function of Flow Fraction Curve
+       \required-field
+       \type object-list
+       \object-list QuadraticCubicCurves
+  A7, \field Part Load Fraction Correlation Curve
+       \required-field
+       \type object-list
+       \object-list QuadraticCubicCurves
+  N6, \field Nominal Time for Condensate Removal to Begin
+       \type real
+       \units s
+       \minimum 0.0
+       \maximum 3000.0
+       \required-field
+  N7, \field Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
+       \type real
+       \units dimensionless
+       \minimum 0.0
+       \maximum 5.0
+       \required-field
+  N8, \field Maximum Cycling Rate
+       \type real
+       \units cycles/hr
+       \minimum 0.0
+       \maximum 5.0
+       \required-field
+  N9, \field Latent Capacity Time Constant
+       \type real
+       \units s
+       \minimum 0.0
+       \maximum 500.0
+       \required-field
+  N10, \field Rated Waste Heat Fraction of Power Input
+       \required-field
+       \type real
+       \units dimensionless
+       \minimum> 0.0
+       \maximum 1.0
+  A8, \field Waste Heat Function of Temperature Curve
+       \required-field
+       \type object-list
+       \object-list BiquadraticCurves
+  N11, \field Evaporative Condenser Effectiveness
+       \type real
+       \units dimensionless
+       \minimum 0.0
+       \maximum 1.0
+       \required-field
+  N12, \field Evaporative Condenser Air Flow Rate
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+       \required-field
+  N13; \field Rated Evaporative Condenser Pump Power Consumption
+       \type real
+       \units W
+       \minimum 0.0
+       \autosizable
+       \required-field
+
 OS:Coil:Cooling:DX:TwoSpeed,
        \min-fields 20
   A1, \field Handle
@@ -11283,6 +12204,61 @@ OS:Coil:Heating:Gas,
        \note parasitic gas load associated with the gas coil operation (i.e., standing pilot)
        \type real
        \units W
+
+OS:Coil:Heating:Gas:MultiStage,
+       \extensible:1
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2, \field Name
+      \required-field
+      \reference HeatingCoilsGasMultiStage
+      \type alpha
+      \reference ConnectionObject
+  A3, \field Availability Schedule
+      \type object-list
+      \object-list ScheduleNames
+  A4, \field Air Inlet Node
+      \type object-list
+      \required-field
+      \object-list ConnectionNames
+  A5, \field Air Outlet Node
+      \type object-list
+      \required-field
+      \object-list ConnectionNames
+  A6, \field Part Load Fraction Correlation Curve
+      \type object-list
+      \object-list QuadraticCubicCurves
+  N1, \field Parasitic Gas Load
+      \units W
+  A7; \field Stage 1
+      \begin-extensible
+      \type object-list
+      \object-list CoilHeatingGasMultiStageStageData
+
+OS:Coil:Heating:Gas:MultiStage:StageData,
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference CoilHeatingGasMultiStageStageData
+       \type alpha
+  N1, \field Gas Burner Efficiency
+       \required-field
+       \type real
+       \units W/W
+       \minimum> 0.0
+  N2, \field Nominal Capacity
+       \required-field
+       \type real
+       \units W
+       \minimum> 0.0
+       \autosizable
+  N3; \field Parasitic Electric Load
+       \required-field
+       \units W
+       \ip-units W
 
 OS:Coil:Heating:Desuperheater,
        \memo Desuperheater air heating coil. The heating energy provided by this coil is reclaimed
@@ -13340,6 +14316,55 @@ OS:DesignSpecification:ZoneAirDistribution,
         \minimum 0.0
         \units dimensionless
 
+OS:Humidifier:Steam:Electric,
+      \memo Electrically heated steam humidifier with fan.
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2, \field Name
+      \required-field
+      \type alpha
+      \reference ConnectionObject
+  A3, \field Availability Schedule Name
+      \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+      \note If this field is blank, the system is always available.
+      \type object-list
+      \object-list ScheduleNames
+  N1, \field Rated Capacity
+      \note Capacity is m3/s of water at 5.05 C
+      \type real
+      \units m3/s
+      \minimum 0.0
+      \ip-units gal/min
+  N2, \field Rated Power
+      \type real
+      \units W
+      \minimum 0.0
+      \ip-units W
+      \autosizable
+      \note if autosized the rated power is calculated from the rated capacity
+      \note and enthalpy rise of water from 20.0C to 100.0C steam and assumes
+      \note electric to thermal energy conversion efficiency of 100.0%
+  N3, \field Rated Fan Power
+      \type real
+      \units W
+      \minimum 0.0
+      \ip-units W
+  N4, \field Standby Power
+      \type real
+      \units W
+      \minimum 0.0
+      \ip-units W
+  A4, \field Air Inlet Node Name
+      \type object-list
+      \object-list ConnectionNames
+  A5, \field Air Outlet Node Name
+      \type object-list
+      \object-list ConnectionNames
+  A6; \field Water Storage Tank Name
+      \type object-list
+      \object-list WaterStorageTankNames
+
 OS:EvaporativeCooler:Indirect:ResearchSpecial,
        \min-fields 1
   A1, \field Handle
@@ -14752,6 +15777,89 @@ OS:SetpointManager:SingleZone:Reheat,
        \default Temperature
        \key Temperature
 
+OS:SetpointManager:SingleZone:Humidity:Minimum,
+     \memo The Single Zone Minimum Humidity Setpoint Manager allows the
+     \memo control of a single zone minimum humidity level.
+     \memo This setpoint manager can be used in conjunction with
+     \memo object ZoneControl:Humidistat to detect humidity levels.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \reference SetpointManagers
+  A3,  \field Control Variable
+       \type choice
+       \default MinimumHumidityRatio
+       \key MinimumHumidityRatio
+  A4,  \field Setpoint Node or NodeList Name
+       \type object-list
+       \required-field
+       \object-list Node
+  A5;  \field Control Zone Name
+       \type object-list
+       \required-field
+       \object-list ThermalZoneNames
+
+OS:SetpointManager:MultiZone:MinimumHumidity:Average,
+       \min-fields 5
+       \memo This setpoint manager sets the average supply air minimum humidity ratio based on moisture
+       \memo load requirements of all controlled zones in an air loop served by a central air-conditioner.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \reference SetpointManagers
+  N1,  \field Minimum Setpoint Humidity Ratio
+       \units kgWater/kgDryAir
+       \type real
+       \minimum> 0.0
+       \default 0.005
+  N2,  \field Maximum Setpoint Humidity Ratio
+       \units kgWater/kgDryAir
+       \type real
+       \minimum> 0.0
+       \default 0.012
+  A3,  \field Setpoint Node or NodeList Name
+       \type object-list
+       \required-field
+       \object-list Node
+  A4;  \field Control Variable
+       \type choice
+       \default MinimumHumidityRatio
+       \key MinimumHumidityRatio
+
+OS:SetpointManager:MultiZone:Humidity:Minimum,
+       \min-fields 5
+       \memo This setpoint manager sets the minimum supply air humidity ratio based on humidification
+       \memo requirements of a controlled zone with critical humidity ratio setpoint (i.e., a zone with
+       \memo the highest humidity ratio setpoint) in an air loop served by a central air-conditioner.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \reference SetpointManagers
+  N1,  \field Minimum Setpoint Humidity Ratio
+       \units kgWater/kgDryAir
+       \type real
+       \minimum> 0.0
+       \default 0.005
+  N2,  \field Maximum Setpoint Humidity Ratio
+       \units kgWater/kgDryAir
+       \type real
+       \minimum> 0.0
+       \default 0.012
+  A3,  \field Setpoint Node or NodeList Name
+       \type object-list
+       \required-field
+       \object-list Node
+  A4;  \field Control Variable
+       \type choice
+       \default MinimumHumidityRatio
+       \key MinimumHumidityRatio
+
 OS:SetpointManager:Scheduled,
        \min-fields 1
   A1, \field Handle
@@ -15271,6 +16379,80 @@ OS:ThermostatSetpoint:DualSetpoint,
        \type object-list
        \object-list ScheduleNames
 
+OS:ZoneControl:Thermostat:StagedDualSetpoint,
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference ThermostatNames
+  N1 , \field Number of Heating Stages
+       \required-field
+       \type integer
+       \minimum 1
+       \maximum 4
+  A3 , \field Heating Temperature Setpoint Schedule
+       \type object-list
+       \object-list ScheduleNames
+  N2 , \field Heating Throttling Temperature Range
+       \units deltaC
+       \minimum 0.0
+       \required-field
+  N3 , \field Stage 1 Heating Temperature Offset
+       \required-field
+       \type real
+       \units deltaC
+       \maximum 0.0
+       \required-field
+  N4 , \field Stage 2 Heating Temperature Offset
+       \type real
+       \units deltaC
+       \maximum 0.0
+       \required-field
+  N5 , \field Stage 3 Heating Temperature Offset
+       \type real
+       \units deltaC
+       \maximum 0.0
+       \required-field
+  N6 , \field Stage 4 Heating Temperature Offset
+       \type real
+       \units deltaC
+       \maximum 0.0
+       \required-field
+  N7 , \field Number of Cooling Stages
+       \required-field
+       \type integer
+       \minimum 1
+       \maximum 4
+       \required-field
+  A4 , \field Cooling Temperature Setpoint Base Schedule
+       \type object-list
+       \object-list ScheduleNames
+  N8 , \field Cooling Throttling Temperature Range
+       \units deltaC
+       \minimum 0.0
+       \required-field
+  N9 , \field Stage 1 Cooling Temperature Offset
+       \required-field
+       \type real
+       \units deltaC
+       \minimum 0.0
+  N10, \field Stage 2 Cooling Temperature Offset
+       \type real
+       \units deltaC
+       \minimum 0.0
+       \required-field
+  N11, \field Stage 3 Cooling Temperature Offset
+       \type real
+       \units deltaC
+       \minimum 0.0
+       \required-field
+  N12; \field Stage 4 Cooling Temperature Offset
+       \type real
+       \units deltaC
+       \minimum 0.0
+       \required-field
+
 OS:ZoneHVAC:EquipmentList,
        \min-fields 1
        \extensible:3 Duplicate the three fields Zone Equipment Object Type through Heating Priority
@@ -15351,12 +16533,87 @@ OS:ZoneHVAC:Baseboard:Convective:Water,
        \required-field
        \object-list BaseboardHeatingCoil
 
+OS:ZoneHVAC:HighTemperatureRadiant,
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+   A3 , \field Availability Schedule Name
+        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+        \note If this field is blank, the system is always available.
+        \type object-list
+        \object-list ScheduleNames
+   N1 , \field Maximum Power Input
+        \required-field
+        \units W
+        \minimum 0
+        \autosizable
+        \required-field
+   A4 , \field Fuel Type
+        \note Natural gas or electricity
+        \required-field
+        \type choice
+        \key NaturalGas
+        \key Electricity
+   N2 , \field Combustion Efficiency
+        \note Not used for non-gas radiant heaters
+        \minimum 0
+        \maximum 1
+        \required-field
+   N3 , \field Fraction of Input Converted to Radiant Energy
+        \note Radiant+latent+lost fractions must sum to 1 or less, remainder is considered convective heat
+        \minimum 0
+        \maximum 1
+        \required-field
+   N4 , \field Fraction of Input Converted to Latent Energy
+        \minimum 0
+        \maximum 1
+        \required-field
+   N5 , \field Fraction of Input that Is Lost
+        \note Fraction of input vented to outdoor environment
+        \minimum 0
+        \maximum 1
+        \required-field
+   A5 , \field Temperature Control Type
+        \note Temperature type used to control unit
+        \type choice
+        \key MeanAirTemperature
+        \key MeanRadiantTemperature
+        \key OperativeTemperature
+        \key MeanAirTemperatureSetpoint
+        \key MeanRadiantTemperatureSetpoint
+        \key OperativeTemperatureSetpoint
+        \required-field
+   N6 , \field Heating Throttling Range
+        \units deltaC
+        \minimum 0
+        \required-field
+   A6 , \field Heating Setpoint Temperature Schedule Name
+        \note This setpoint is an "operative temperature" setpoint
+        \type object-list
+        \object-list ScheduleNames
+   N7,  \field Fraction of Radiant Energy Incident on People
+        \note This will affect thermal comfort but from an energy balance standpoint this value
+        \note gets added to the convective gains from the radiant heater
+        \minimum 0
+        \maximum 1
+        \required-field
+   A7;  \field Radiant Surface Type
+        \note Identifies they types of surfaces that radiant system is embedded in
+        \type choice
+        \key Ceilings
+        \key Floors
+        \key CeilingsAndFloors
+        \key AllSurfaces
+        \required-field
+
 OS:ZoneHVAC:LowTemperatureRadiant:Electric,
-			  \min-fields 8
+  \min-fields 8
    A1 , \field Handle
         \type handle
         \required-field
-	 A2 , \field Name
+   A2 , \field Name
         \required-field
    A3 , \field Availability Schedule Name
         \required-field
