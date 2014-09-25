@@ -29,9 +29,13 @@
 #include "OSQuantityEdit.hpp"
 #include "OSUnsignedEdit.hpp"
 
+#include "../openstudio_lib/HorizontalTabWidget.hpp"
+#include "../openstudio_lib/MainRightColumnController.hpp"
 #include "../openstudio_lib/ModelObjectInspectorView.hpp"
 #include "../openstudio_lib/ModelObjectItem.hpp"
 #include "../openstudio_lib/ModelSubTabView.hpp"
+#include "../openstudio_lib/OSAppBase.hpp"
+#include "../openstudio_lib/OSDocument.hpp"
 #include "../openstudio_lib/OSDropZone.hpp"
 #include "../openstudio_lib/OSItemSelector.hpp"
 #include "../openstudio_lib/RenderingColorWidget.hpp"
@@ -738,6 +742,12 @@ void OSGridController::selectRow(int rowIndex, bool select)
     button->blockSignals(false);
     button->setStyleSheet(cellStyle(rowIndex, columnIndex++, select));
   }
+
+  OSItem * item = nullptr;
+  OSAppBase::instance()->currentDocument()->mainRightColumnController()->inspectModelObjectByItem(item, true);
+  qApp->processEvents();
+  OSAppBase::instance()->currentDocument()->mainRightColumnController()->mainRightColumnView()->setCurrentId(MainRightColumnController::LIBRARY);
+  qApp->processEvents();
 }
 
 void OSGridController::horizontalHeaderChecked(int index)

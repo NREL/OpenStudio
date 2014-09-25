@@ -23,7 +23,6 @@
 #include "OSCollapsibleView.hpp"
 #include "OSGridController.hpp"
 
-#include "../utilities/core/Application.hpp"
 #include "../openstudio_lib/ModelObjectInspectorView.hpp"
 #include "../openstudio_lib/ModelSubTabView.hpp"
 #include "../openstudio_lib/OSDropZone.hpp"
@@ -32,6 +31,7 @@
 #include "../model/Model_Impl.hpp"
 #include "../model/ModelObject_Impl.hpp"
 
+#include "../utilities/core/Application.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/idd/IddObject.hpp"
 
