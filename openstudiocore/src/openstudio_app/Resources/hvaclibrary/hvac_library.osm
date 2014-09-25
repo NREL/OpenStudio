@@ -1,7 +1,7 @@
 
 OS:Version,
   {e8d7f8c2-60bf-4bad-aa21-9c17ba7edd5f}, !- Handle
-  1.4.2;                                  !- Version Identifier
+  1.5.0;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -6616,7 +6616,7 @@ OS:AirTerminal:SingleDuct:ConstantVolume:FourPipeInduction,
   ,                                       !- Induced Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
   {852ba7c2-6dca-42d0-b8d0-523404c57aa0}, !- Heating Coil Name
-  ,                                       !- Maximum Hot Water Flow Rate {m3/s}
+  autosize,                                       !- Maximum Hot Water Flow Rate {m3/s}
   ,                                       !- Minimum Hot Water Flow Rate {m3/s}
   ,                                       !- Heating Convergence Tolerance
   ,                                       !- Cooling Coil Name
@@ -6679,13 +6679,6 @@ OS:AirTerminal:SingleDuct:ConstantVolume:FourPipeInduction,
   0,                                      !- Minimum Cold Water Flow Rate {m3/s}
   0.001,                                  !- Cooling Convergence Tolerance
   ;                                       !- Zone Mixer Name
-
-OS:AirTerminal:SingleDuct:InletSideMixer,
-  {d002af37-5ae8-4f62-bf27-e8ed20486c06}, !- Handle
-  Air Terminal Single Duct Inlet Side Mixer, !- Name
-  ,                                       !- Terminal Unit Outlet
-  ,                                       !- Terminal Unit Primary Air Inlet
-  ;                                       !- Terminal Unit Secondary Air Inlet
 
 OS:Coil:Heating:Water,
   {cce7c4c5-a5c4-4120-8f0f-cd3314c5ea41}, !- Handle

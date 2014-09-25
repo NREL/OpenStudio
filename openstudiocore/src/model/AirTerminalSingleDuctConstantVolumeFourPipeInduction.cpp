@@ -569,6 +569,7 @@ AirTerminalSingleDuctConstantVolumeFourPipeInduction::AirTerminalSingleDuctConst
 
   autosizeMaximumTotalAirFlowRate();
   autosizeMaximumColdWaterFlowRate();
+  autosizeMaximumHotWaterFlowRate();
   setHeatingCoil(heatingCoil);
   setMinimumColdWaterFlowRate(0.0);
   setCoolingConvergenceTolerance(0.001);
