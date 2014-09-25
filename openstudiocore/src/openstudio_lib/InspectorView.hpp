@@ -384,6 +384,19 @@ class AirTerminalSingleDuctVAVReheatInspectorView : public AirTerminalInspectorV
   void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP);
 };
 
+class AirTerminalSingleDuctVAVHeatAndCoolReheatInspectorView : public AirTerminalInspectorView
+{
+  Q_OBJECT;
+
+  public:
+
+  AirTerminalSingleDuctVAVHeatAndCoolReheatInspectorView(QWidget * parent = 0);
+
+  virtual ~AirTerminalSingleDuctVAVHeatAndCoolReheatInspectorView() {}
+
+  void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP);
+};
+
 class ZoneHVACPackagedTerminalAirConditionerInspectorView : public BaseInspectorView
 {
   Q_OBJECT;
@@ -608,6 +621,35 @@ class AirLoopHVACUnitarySystemInspectorView : public BaseInspectorView
   LoopChooserView * m_heatingLoopChooserView;
   LoopChooserView * m_coolingLoopChooserView;
   LoopChooserView * m_secondaryLoopChooserView;
+
+};
+
+class AirTerminalSingleDuctConstantVolumeFourPipeInductionInspectorView : public BaseInspectorView
+{
+  Q_OBJECT;
+
+  public:
+
+  AirTerminalSingleDuctConstantVolumeFourPipeInductionInspectorView(QWidget * parent = 0);
+
+  virtual ~AirTerminalSingleDuctConstantVolumeFourPipeInductionInspectorView() {}
+
+  void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP );
+
+  signals:
+
+  void addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
+
+  void removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
+
+  private:
+
+  boost::optional<model::ModelObject> m_modelObject;
+
+  InspectorGadget * m_inspectorGadget;
+
+  LoopChooserView * m_heatingLoopChooserView;
+  LoopChooserView * m_coolingLoopChooserView;
 
 };
 

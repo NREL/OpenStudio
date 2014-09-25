@@ -498,6 +498,15 @@ QString LibraryItem::modelerDescription() const
   return QString::fromStdString(m_bclMeasure.modelerDescription());
 }
 
+QString LibraryItem::error() const
+{
+  QString result;
+  if (m_bclMeasure.error()){
+    result = toQString(m_bclMeasure.error().get());
+  }
+  return result;
+}
+
 UUID LibraryItem::uuid() const 
 { 
   return m_bclMeasure.uuid(); 
@@ -565,8 +574,13 @@ QWidget * LibraryItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     // Name
 
     widget->label->setText(libraryItem->displayName());
-    widget->setToolTip(libraryItem->description());
-    widget->errorLabel->setVisible(libraryItem->hasError());
+    if (libraryItem->hasError()){
+      widget->setToolTip(libraryItem->error());
+      widget->errorLabel->setVisible(true);
+    }else{
+      widget->setToolTip(libraryItem->description());
+      widget->errorLabel->setVisible(false);
+    }
 
     // Drag
     

@@ -133,12 +133,12 @@ namespace detail {
     return result;
   }
 
-  unsigned ZoneHVACPackagedTerminalHeatPump_Impl::inletPort()
+  unsigned ZoneHVACPackagedTerminalHeatPump_Impl::inletPort() const
   {
     return OS_ZoneHVAC_PackagedTerminalHeatPumpFields::AirInletNodeName;
   }
 
-  unsigned ZoneHVACPackagedTerminalHeatPump_Impl::outletPort()
+  unsigned ZoneHVACPackagedTerminalHeatPump_Impl::outletPort() const
   {
     return OS_ZoneHVAC_PackagedTerminalHeatPumpFields::AirOutletNodeName;
   }

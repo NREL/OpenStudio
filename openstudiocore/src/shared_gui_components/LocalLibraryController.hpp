@@ -295,6 +295,8 @@ class LibraryItem : public OSListItem
 
   QString modelerDescription() const;
 
+  QString error() const;
+
   UUID uuid() const;
 
   BCLMeasure m_bclMeasure;

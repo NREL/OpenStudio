@@ -25509,7 +25509,7 @@ Coil:Cooling:DX:MultiSpeed,
        \note Recoverable waste heat at full load and rated conditions
   A18, \field Speed 1 Waste Heat Function of Temperature Curve Name
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
        \note curve = a + b*odb + c*odb**2 + d*db + e*db**2 + f*odb*db
        \note odb = Outdoor air dry-bulb temperature (C)
        \note db = entering coil dry-bulb temperature (C)
@@ -26395,6 +26395,7 @@ Coil:Heating:Gas:MultiStage,
        \memo system, then the coil is controlled by the parent component and the setpoint node name
        \memo is not entered.
        \min-fields 8
+       \extensible:3
   A1 , \field Name
        \required-field
        \reference HeatingCoilsGasMultiStage
@@ -26439,6 +26440,7 @@ Coil:Heating:Gas:MultiStage,
        \note capacity and Gas Burner Efficiency.
   N3, \field Stage 1 Gas Burner Efficiency
        \required-field
+       \begin-extensible
        \type real
        \units W/W
        \minimum> 0.0
@@ -26448,54 +26450,9 @@ Coil:Heating:Gas:MultiStage,
        \units W
        \minimum> 0.0
        \autosizable
-  N5, \field Stage 1 Parasitic Electric Load
+  N5; \field Stage 1 Parasitic Electric Load
        \units W
        \note Stage 1 parasitic electric load associated with the gas coil operation
-       \note such as an inducer fan, etc.  This will be modified by the part
-       \note load ratio to reflect the time of operation in a timestep.
-       \ip-units W
-  N6, \field Stage 2 Gas Burner Efficiency
-       \type real
-       \units W/W
-       \minimum> 0.0
-  N7, \field Stage 2 Nominal Capacity
-       \type real
-       \units W
-       \minimum> 0.0
-       \autosizable
-  N8, \field Stage 2 Parasitic Electric Load
-       \units W
-       \note Stage 2 parasitic electric load associated with the gas coil operation
-       \note such as an inducer fan, etc.  This will be modified by the part
-       \note load ratio to reflect the time of operation in a timestep.
-       \ip-units W
-  N9, \field Stage 3 Gas Burner Efficiency
-       \type real
-       \units W/W
-       \minimum> 0.0
-  N10, \field Stage 3 Nominal Capacity
-       \type real
-       \units W
-       \minimum> 0.0
-       \autosizable
-  N11, \field Stage 3 Parasitic Electric Load
-       \units W
-       \note Stage 3 parasitic electric load associated with the gas coil operation
-       \note such as an inducer fan, etc.  This will be modified by the part
-       \note load ratio to reflect the time of operation in a timestep.
-       \ip-units W
-  N12, \field Stage 4 Gas Burner Efficiency
-       \type real
-       \units W/W
-       \minimum> 0.0
-  N13, \field Stage 4 Nominal Capacity
-       \type real
-       \units W
-       \minimum> 0.0
-       \autosizable
-  N14; \field Stage 4 Parasitic Electric Load
-       \units W
-       \note Stage 4 parasitic electric load associated with the gas coil operation
        \note such as an inducer fan, etc.  This will be modified by the part
        \note load ratio to reflect the time of operation in a timestep.
        \ip-units W

@@ -35,6 +35,10 @@
 #include "ZoneHVACUnitHeater_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
+#include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 #include "ScheduleCompact.hpp"
@@ -391,6 +395,20 @@ namespace detail{
       }
     }
 
+    // AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass
+    std::vector<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass> bypassSystems = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>();
+
+    for( const auto & bypassSystem : bypassSystems )
+    {
+      if( boost::optional<HVACComponent> heatingCoil = bypassSystem.heatingCoil() )
+      {
+        if( heatingCoil->handle() == this->handle() )
+        {
+          return bypassSystem;
+        }
+      }
+    }
+
     // AirTerminalSingleDuctVAVReheat
 
     std::vector<AirTerminalSingleDuctVAVReheat> airTerminalSingleDuctVAVReheatObjects = this->model().getConcreteModelObjects<AirTerminalSingleDuctVAVReheat>();
@@ -432,6 +450,22 @@ namespace detail{
         if( coil->handle() == this->handle() )
         {
           return airTerminalSingleDuctParallelPIUReheatObject;
+        }
+      }
+    }
+
+    // AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed
+    {
+      auto systems = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
+
+      for( const auto & system : systems ) {
+        auto heatingCoil = system.heatingCoil();
+        if( heatingCoil.handle() == this->handle() ) {
+          return system;
+        }
+        auto supHeatingCoil = system.supplementalHeatingCoil();
+        if( supHeatingCoil.handle() == this->handle() ) {
+          return system;
         }
       }
     }
