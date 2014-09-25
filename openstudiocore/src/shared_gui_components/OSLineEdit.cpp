@@ -95,6 +95,11 @@ void OSLineEdit2::bind(model::ModelObject& modelObject,
 void OSLineEdit2::completeBind() {
   setEnabled(true);
 
+  if (!m_set && !m_setOptionalStringReturn)
+  {
+    setReadOnly(true);
+  }
+
   connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSLineEdit2::onModelObjectChange);
 
   connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSLineEdit2::onModelObjectRemove);
