@@ -82,6 +82,9 @@ ThermalZoneView::ThermalZoneView(bool isIP,
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), this, SLOT(toggleUnits(bool)));
   OS_ASSERT(isConnected);
 
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), thermalZonesGridView, SIGNAL(toggleUnitsClicked(bool)));
+  OS_ASSERT(isConnected);
+
   refresh();
 }
 
