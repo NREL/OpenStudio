@@ -504,7 +504,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
   OS_ASSERT(static_cast<int>(m_baseConcepts.size()) > column);
 
   auto layout = new QVBoxLayout();
-  const int widgetHeight = 43;
+  const int widgetHeight = 35;
   int numWidgets = 0;
   // start with a default sane value
   QSize recommendedSize(100, 20);
@@ -512,9 +512,11 @@ QWidget * OSGridController::widgetAt(int row, int column)
   auto addWidget = [&](QWidget *t_widget)
   {
     auto expand=[](QSize &t_s, const QSize &t_newS) {
-      if (t_newS.height() < 400 && t_newS.width() < 400)
+      if (t_newS.height() < 400 && t_newS.width() < 600)
       {
         t_s = t_s.expandedTo(t_newS);
+      } else if (t_newS.height() < 400) {
+        t_s = t_s.expandedTo(QSize(std::min(t_newS.width(), 600), 0));
       }
     };
 
@@ -612,7 +614,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
   if(row == 0){
     wrapper->setMinimumSize(QSize(recommendedSize.width(),recommendedSize.height()));
   } else {
-    wrapper->setMinimumSize(QSize(recommendedSize.width() + 10,widgetHeight * numWidgets + 10));
+    wrapper->setMinimumSize(QSize(recommendedSize.width() + 10,widgetHeight * numWidgets ));
   }
   wrapper->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
@@ -622,7 +624,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
   if(row == 0){
     layout->setContentsMargins(0,0,0,0);
   } else {
-    layout->setContentsMargins(5,5,5,5);
+    layout->setContentsMargins(5,0,5,0);
   }
   wrapper->setLayout(layout);
 

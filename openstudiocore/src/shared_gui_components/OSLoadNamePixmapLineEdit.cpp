@@ -55,6 +55,7 @@ void OSLoadNamePixmapLineEdit::createWidgets()
   OS_ASSERT(isConnected);
 
   auto layout = new QHBoxLayout();
+  layout->setContentsMargins(0,0,0,0);
   layout->addWidget(m_label);
   layout->addWidget(m_lineEdit);
   this->setLayout(layout);
