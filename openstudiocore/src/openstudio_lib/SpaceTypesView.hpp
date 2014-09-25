@@ -31,14 +31,17 @@ class QLabel;
 
 namespace openstudio {
 
+class OSItem;
+
 class SpaceTypesView : public ModelSubTabView
 {
   Q_OBJECT
 
   public:
 
-    SpaceTypesView(const openstudio::model::Model& model, 
-                   QWidget * parent = 0);
+    SpaceTypesView(bool isIP, 
+      const openstudio::model::Model& model,
+      QWidget * parent = 0);
 
     virtual ~SpaceTypesView() {}
 

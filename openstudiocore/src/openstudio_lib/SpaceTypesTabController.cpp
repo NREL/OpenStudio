@@ -18,8 +18,11 @@
 **********************************************************************/
 
 #include "SpaceTypesTabController.hpp"
-#include "SpaceTypesTabView.hpp"
+
+#include "OSItem.hpp"
+#include "SpaceTypeInspectorView.hpp"
 #include "SpaceTypesController.hpp"
+#include "SpaceTypesTabView.hpp"
 
 #include "../model/Model.hpp"
 
@@ -27,16 +30,30 @@
 
 namespace openstudio {
 
-SpaceTypesTabController::SpaceTypesTabController(const model::Model& model)
+SpaceTypesTabController::SpaceTypesTabController(bool isIP,
+  const model::Model& model)
   : MainTabController(new SpaceTypesTabView())
 {
-  m_spaceTypesController = std::shared_ptr<SpaceTypesController>(new SpaceTypesController(model));
+  m_spaceTypesController = std::shared_ptr<SpaceTypesController>(new SpaceTypesController(isIP, model));
 
   connect(m_spaceTypesController.get(), &SpaceTypesController::modelObjectSelected, this, &SpaceTypesTabController::modelObjectSelected);
+
+  connect(m_spaceTypesController.get(), &SpaceTypesController::dropZoneItemSelected, this, &SpaceTypesTabController::dropZoneItemSelected);
 
   connect(m_spaceTypesController.get(), &SpaceTypesController::downloadComponentsClicked, this, &SpaceTypesTabController::downloadComponentsClicked);
 
   connect(m_spaceTypesController.get(), &SpaceTypesController::openLibDlgClicked, this, &SpaceTypesTabController::openLibDlgClicked);
+
+  SpaceTypeInspectorView * spaceTypeInspectorView = qobject_cast<SpaceTypeInspectorView *>(m_spaceTypesController->subTabView()->inspectorView());
+  OS_ASSERT(spaceTypeInspectorView);
+
+  bool isConnected = false;
+
+  isConnected = connect(spaceTypeInspectorView, SIGNAL(gridRowSelected(OSItem*)), m_spaceTypesController.get(), SLOT(selectItem(OSItem*)));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(this, SIGNAL(itemRemoveClicked(OSItem *)), m_spaceTypesController.get(), SLOT(removeItem(OSItem *)));
+  OS_ASSERT(isConnected);
 
   mainContentWidget()->addTabWidget(m_spaceTypesController->subTabView());
 }

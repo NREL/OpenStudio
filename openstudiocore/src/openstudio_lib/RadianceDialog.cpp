@@ -38,7 +38,7 @@ void RadianceDialog::createLayout()
 {
   okButton()->setText("Apply");
 
-  QLabel * label = NULL;
+  QLabel * label = nullptr;
 
   label = new QLabel("Custom Radiance Parameter Settings",this);
   label->setObjectName("H1");

@@ -18,9 +18,11 @@
 **********************************************************************/
 
 #include "ThermalZonesTabController.hpp"
+
+#include "OSItem.hpp"
 #include "ThermalZonesController.hpp"
-#include "ThermalZonesView.hpp"
 #include "ThermalZonesTabView.hpp"
+#include "ThermalZonesView.hpp"
 
 namespace openstudio {
 
@@ -31,7 +33,17 @@ ThermalZonesTabController::ThermalZonesTabController(bool isIP, const model::Mod
 
   this->mainContentWidget()->addTabWidget(m_thermalZonesController->subTabView());
 
+  bool isConnected = false;
+
+  isConnected = QObject::connect(m_thermalZonesController->subTabView()->inspectorView(), SIGNAL(gridRowSelected(OSItem*)), m_thermalZonesController.get(), SLOT(selectItem(OSItem*)));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(this, SIGNAL(itemRemoveClicked(OSItem *)), m_thermalZonesController.get(), SLOT(removeItem(OSItem *)));
+  OS_ASSERT(isConnected);
+
   connect(m_thermalZonesController.get(), &ThermalZonesController::modelObjectSelected, this, &ThermalZonesTabController::modelObjectSelected);
+
+  connect(m_thermalZonesController.get(), &ThermalZonesController::dropZoneItemSelected, this, &ThermalZonesTabController::dropZoneItemSelected);
 
   connect(this, &ThermalZonesTabController::toggleUnitsClicked, m_thermalZonesController.get(), &ThermalZonesController::toggleUnitsClicked);
 }

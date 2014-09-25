@@ -79,7 +79,7 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
   // Create problem and analysis
   Problem problem("My Problem");
 
-  BCLMeasure bclMeasure(resourcesPath() / toPath("utilities/BCL/Measures/SetWindowToWallRatioByFacade"));
+  BCLMeasure bclMeasure(resourcesPath() / toPath("utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade"));
   RubyMeasure measure(bclMeasure);
 
   // Measure Group
@@ -437,7 +437,7 @@ openstudio::analysis::Analysis AnalysisFixture::analysis2(bool simulate) {
   // Create problem and analysis
   Problem problem("My Problem");
 
-  BCLMeasure bclMeasure(resourcesPath() / toPath("utilities/BCL/Measures/SetWindowToWallRatioByFacade"));
+  BCLMeasure bclMeasure(resourcesPath() / toPath("utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade"));
   RubyMeasure measure(bclMeasure);
   StringVector choices;
   choices.push_back("North");

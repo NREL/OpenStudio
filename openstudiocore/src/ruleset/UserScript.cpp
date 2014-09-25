@@ -25,6 +25,18 @@ namespace ruleset {
 UserScript::~UserScript()
 {}
 
+std::string UserScript::name() const{
+  return "";
+}
+
+std::string UserScript::description() const{
+  return "";
+}
+
+std::string UserScript::modeler_description() const{
+  return "";
+}
+
 bool UserScript::registerWithSketchUp() const {
   return false;
 }

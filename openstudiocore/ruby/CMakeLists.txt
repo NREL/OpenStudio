@@ -81,30 +81,37 @@ if(WIN32 OR APPLE)
   get_filename_component(QSQLITE_PLUGIN_NAME "${QT_QSQLITE_PLUGIN}" NAME)
 
   if(WIN32)
-    get_target_property(QT_WINDOWS_PLUGIN Qt5::QWindowsIntegrationPlugin LOCATION)
-
-    install(PROGRAMS "${QT_WINDOWS_PLUGIN}"
-            DESTINATION "Ruby/openstudio/platforms/" 
-    )
+    get_target_property(QPA_PLUGIN Qt5::QWindowsIntegrationPlugin LOCATION)
+  elseif(APPLE)
+    get_target_property(QPA_PLUGIN Qt5::QCocoaIntegrationPlugin LOCATION)
   endif()
 
+  install(PROGRAMS "${QPA_PLUGIN}"
+          DESTINATION "Ruby/openstudio/platforms/" 
+  )
+
+  get_filename_component(QPA_PLUGIN_NAME "${QPA_PLUGIN}" NAME)
+
   if(APPLE)
-    set(QTPLUGIN "\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/sqldrivers/${QSQLITE_PLUGIN_NAME}")
+    set(QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/sqldrivers/${QSQLITE_PLUGIN_NAME};\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/platforms/${QPA_PLUGIN_NAME}")
 
-    set(Prereq_Dirs)
+    foreach(QTPLUGIN ${QTPLUGINS})
+      set(Prereq_Dirs)
 
-    install(CODE "
-      include(GetPrerequisites)
-      get_prerequisites(\"${QTPLUGIN}\" PREREQUISITES 1 0 \"\" \"${Prereq_Dirs}\")
+      install(CODE "
+        include(GetPrerequisites)
+        get_prerequisites(\"${QTPLUGIN}\" PREREQUISITES 1 0 \"\" \"${Prereq_Dirs}\")
 
-      foreach(PREREQ IN LISTS PREREQUISITES)
-        gp_resolve_item(\"\" \${PREREQ} \"\" \"${LIBRARY_SEARCH_DIRECTORY}\" resolved_item_var)
+        foreach(PREREQ IN LISTS PREREQUISITES)
+          gp_resolve_item(\"\" \${PREREQ} \"\" \"${LIBRARY_SEARCH_DIRECTORY}\" resolved_item_var)
 
-        get_filename_component(PREREQNAME \${resolved_item_var} NAME)
+          get_filename_component(PREREQNAME \${resolved_item_var} NAME)
 
-        execute_process(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/../\${PREREQNAME}\" \"${QTPLUGIN}\")
-      endforeach()
-    ")
+          execute_process(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/../\${PREREQNAME}\" \"${QTPLUGIN}\")
+        endforeach()
+      ")
+    endforeach()
+
   endif()
 endif()
 

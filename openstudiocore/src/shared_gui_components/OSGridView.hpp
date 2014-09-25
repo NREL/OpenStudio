@@ -21,6 +21,9 @@
 #define SHAREDGUICOMPONENTS_OSGRIDVIEW_HPP
 
 #include <QWidget>
+#include <QTimer>
+
+#include "../openstudio_lib/OSItem.hpp"
 
 #include "../model/ModelObject.hpp"
 
@@ -30,8 +33,11 @@ class QString;
 
 namespace openstudio{
 
+class ModelSubTabView;
 class OSCollapsibleView;
+class OSDropZone;
 class OSGridController;
+class OSItem;
 
 class OSGridView : public QWidget
 {
@@ -39,27 +45,50 @@ class OSGridView : public QWidget
 
 public:
 
-  OSGridView(OSGridController * gridController,  const QString & headerText, const QString & dropZoneText, QWidget * parent = nullptr);
+  OSGridView(OSGridController * gridController,
+    const QString & headerText,
+    const QString & dropZoneText,
+    bool useHeader,
+    QWidget * parent = nullptr);
 
   virtual ~OSGridView() {};
 
   QGridLayout * m_gridLayout;
 
+  OSDropZone * m_dropZone;
+
+  virtual ModelSubTabView * modelSubTabView();
+
 signals:
 
-  void cellClicked(int row, int column);
+  void itemSelected(OSItem *);
 
-  void rowClicked(int row);
+  void dropZoneItemClicked(OSItem* item);
 
-  void columnClicked(int column);
+  void gridRowSelected(OSItem*);
+
+public slots:
+
+  void onSelectionCleared();
+
+  void refreshAll();
+
+  void refreshGrid();
+
+  void refreshRow(int row);
+
+  void requestRefreshAll();
+
+  void requestRefreshGrid();
+
+  void requestRefreshRow(int row);
+
 
 private slots:
 
-  void refresh(int row, int column);
+  void refreshCell(int row, int column);
 
   void deleteAll();
-
-  void refreshAll();
 
   void addWidget(int row, int column);
 
@@ -71,27 +100,31 @@ private slots:
 
   void selectCategory(int index);
 
+  void onDropZoneItemClicked(OSItem* item);
+
+  void doRefresh();
+
+  void doRowSelect();
+
 private:
 
+  enum RefreshType
+  {
+    RefreshAll,
+    RefreshGrid
+  };
+
   void setGridController(OSGridController * gridController);
-
-  void refreshRow(model::ModelObject modelObject);
-
-  void refreshColumn(int columnId);
-
-  void selectCell(int row, int column);
-
-  void selectRow(int row);
-
-  void selectColumn(int column);
 
   OSCollapsibleView * m_CollapsibleView;
 
   OSGridController * m_gridController;
 
+  std::vector<RefreshType> m_refreshRequests;
+
+  QTimer m_timer;
 };
 
 } // openstudio
 
 #endif // SHAREDGUICOMPONENTS_OSGRIDVIEW_HPP
-

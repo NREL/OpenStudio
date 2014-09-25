@@ -17,45 +17,56 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include "OSDocument.hpp"
-#include "OSAppBase.hpp"
-#include "GridItem.hpp"
-#include "MainRightColumnController.hpp"
 #include "InspectorView.hpp"
-#include "ZoneChooserView.hpp"
-#include "LoopChooserView.hpp"
+
+#include "GridItem.hpp"
 #include "LibraryTabWidget.hpp"
-#include "../model_editor/InspectorGadget.hpp"
-#include "../model/AirLoopHVACZoneSplitter.hpp"
-#include "../model/AirLoopHVACZoneSplitter_Impl.hpp"
+#include "LoopChooserView.hpp"
+#include "MainRightColumnController.hpp"
+#include "OSAppBase.hpp"
+#include "OSItem.hpp"
+#include "OSDocument.hpp"
+#include "ModelObjectItem.hpp"
+#include "ZoneChooserView.hpp"
+
+#include "../model/AirLoopHVACReturnPlenum.hpp"
+#include "../model/AirLoopHVACReturnPlenum_Impl.hpp"
+#include "../model/AirLoopHVACSupplyPlenum.hpp"
+#include "../model/AirLoopHVACSupplyPlenum_Impl.hpp"
+#include "../model/AirLoopHVACUnitarySystem.hpp"
+#include "../model/AirLoopHVACUnitarySystem_Impl.hpp"
 #include "../model/AirLoopHVACZoneMixer.hpp"
 #include "../model/AirLoopHVACZoneMixer_Impl.hpp"
-#include "../model/WaterToAirComponent.hpp"
-#include "../model/WaterToAirComponent_Impl.hpp"
-#include "../model/StraightComponent.hpp"
-#include "../model/StraightComponent_Impl.hpp"
+#include "../model/AirLoopHVACZoneSplitter.hpp"
+#include "../model/AirLoopHVACZoneSplitter_Impl.hpp"
+#include "../model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp"
+#include "../model/AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp"
+#include "../model/AirTerminalSingleDuctConstantVolumeReheat.hpp"
+#include "../model/AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp"
+#include "../model/AirTerminalSingleDuctVAVReheat.hpp"
+#include "../model/AirTerminalSingleDuctVAVReheat_Impl.hpp"
 #include "../model/CoilCoolingCooledBeam.hpp"
 #include "../model/CoilCoolingCooledBeam_Impl.hpp"
-#include "../model/CoilCoolingWater.hpp"
-#include "../model/CoilCoolingWater_Impl.hpp"
 #include "../model/CoilCoolingLowTempRadiantConstFlow.hpp"
 #include "../model/CoilCoolingLowTempRadiantConstFlow_Impl.hpp"
 #include "../model/CoilCoolingLowTempRadiantVarFlow.hpp"
 #include "../model/CoilCoolingLowTempRadiantVarFlow_Impl.hpp"
-#include "../model/CoilHeatingWater.hpp"
-#include "../model/CoilHeatingWater_Impl.hpp"
-#include "../model/CoilHeatingWaterBaseboard.hpp"
-#include "../model/CoilHeatingWaterBaseboard_Impl.hpp"
+#include "../model/CoilCoolingWater.hpp"
+#include "../model/CoilCoolingWater_Impl.hpp"
 #include "../model/CoilHeatingLowTempRadiantConstFlow.hpp"
 #include "../model/CoilHeatingLowTempRadiantConstFlow_Impl.hpp"
 #include "../model/CoilHeatingLowTempRadiantVarFlow.hpp"
 #include "../model/CoilHeatingLowTempRadiantVarFlow_Impl.hpp"
-#include "../model/ControllerWaterCoil.hpp"
-#include "../model/ControllerWaterCoil_Impl.hpp"
-#include "../model/ConnectorSplitter.hpp"
-#include "../model/ConnectorSplitter_Impl.hpp"
+#include "../model/CoilHeatingWater.hpp"
+#include "../model/CoilHeatingWaterBaseboard.hpp"
+#include "../model/CoilHeatingWaterBaseboard_Impl.hpp"
+#include "../model/CoilHeatingWater_Impl.hpp"
 #include "../model/ConnectorMixer.hpp"
 #include "../model/ConnectorMixer_Impl.hpp"
+#include "../model/ConnectorSplitter.hpp"
+#include "../model/ConnectorSplitter_Impl.hpp"
+#include "../model/ControllerWaterCoil.hpp"
+#include "../model/ControllerWaterCoil_Impl.hpp"
 #include "../model/HVACComponent.hpp"
 #include "../model/HVACComponent_Impl.hpp"
 #include "../model/AirTerminalSingleDuctConstantVolumeFourPipeInduction.hpp"
@@ -68,6 +79,15 @@
 #include "../model/AirTerminalSingleDuctVAVReheat_Impl.hpp"
 #include "../model/AirTerminalSingleDuctVAVHeatAndCoolReheat.hpp"
 #include "../model/AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/RefrigerationWalkIn.hpp"
+#include "../model/RefrigerationWalkInZoneBoundary.hpp"
+#include "../model/RefrigerationWalkInZoneBoundary_Impl.hpp"
+#include "../model/RefrigerationWalkIn_Impl.hpp"
+#include "../model/StraightComponent.hpp"
+#include "../model/StraightComponent_Impl.hpp"
+#include "../model/WaterToAirComponent.hpp"
+#include "../model/WaterToAirComponent_Impl.hpp"
 #include "../model/ZoneHVACBaseboardConvectiveWater.hpp"
 #include "../model/ZoneHVACBaseboardConvectiveWater_Impl.hpp"
 #include "../model/ZoneHVACFourPipeFanCoil.hpp"
@@ -76,42 +96,36 @@
 #include "../model/ZoneHVACLowTempRadiantConstFlow_Impl.hpp"
 #include "../model/ZoneHVACLowTempRadiantVarFlow.hpp"
 #include "../model/ZoneHVACLowTempRadiantVarFlow_Impl.hpp"
-#include "../model/ZoneHVACWaterToAirHeatPump.hpp"
-#include "../model/ZoneHVACWaterToAirHeatPump_Impl.hpp"
 #include "../model/ZoneHVACPackagedTerminalAirConditioner.hpp"
 #include "../model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
 #include "../model/ZoneHVACUnitHeater.hpp"
 #include "../model/ZoneHVACUnitHeater_Impl.hpp"
-#include "../model/AirLoopHVACSupplyPlenum.hpp"
-#include "../model/AirLoopHVACSupplyPlenum_Impl.hpp"
-#include "../model/AirLoopHVACReturnPlenum.hpp"
-#include "../model/AirLoopHVACReturnPlenum_Impl.hpp"
-#include "../model/RefrigerationWalkIn.hpp"
-#include "../model/RefrigerationWalkIn_Impl.hpp"
-#include "../model/RefrigerationWalkInZoneBoundary.hpp"
-#include "../model/RefrigerationWalkInZoneBoundary_Impl.hpp"
-#include "../model/AirLoopHVACUnitarySystem.hpp"
-#include "../model/AirLoopHVACUnitarySystem_Impl.hpp"
+#include "../model/ZoneHVACWaterToAirHeatPump.hpp"
+#include "../model/ZoneHVACWaterToAirHeatPump_Impl.hpp"
+
+#include "../model_editor/InspectorGadget.hpp"
+
 #include "../utilities/core/Assert.hpp"
-#include <QStackedWidget>
-#include <QVBoxLayout>
+
 #include <QApplication>
-#include <QTimer>
+#include <QBitmap>
+#include <QButtonGroup>
+#include <QCheckBox>
+#include <QDialogButtonBox>
 #include <QLabel>
 #include <QPainter>
 #include <QPixmap>
 #include <QPushButton>
+#include <QStackedWidget>
+#include <QTimer>
 #include <QToolButton>
-#include <QCheckBox>
-#include <QButtonGroup>
-#include <QDialogButtonBox>
-#include <QBitmap>
+#include <QVBoxLayout>
 
 namespace openstudio {
 
 InspectorView::InspectorView(QWidget* parent)
   : QWidget(parent),
-    m_currentView(NULL)
+    m_currentView(nullptr)
 {
   m_vLayout = new QVBoxLayout();
 
@@ -132,6 +146,8 @@ void InspectorView::update()
 
 void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & modelObject, bool readOnly, bool displayIP)
 {
+  m_modelObject = modelObject;
+
   if( QWidget * _parentWidget = parentWidget() )
   {
     _parentWidget->setUpdatesEnabled(false);
@@ -525,6 +541,13 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       }
 
       m_currentView = new GenericInspectorView();
+
+      if (!readOnly){
+        m_currentView->m_libraryTabWidget->showRemoveButton();
+
+        connect(m_currentView, &BaseInspectorView::removeButtonClicked, this, &InspectorView::removeButtonClicked);
+      }
+
       connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
 
       m_currentView->layoutModelObject(modelObject.get(), readOnly, displayIP);
@@ -540,8 +563,9 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
     }
 
     m_currentView = new GenericInspectorView();
-    connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
 
+   connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
+   
     m_vLayout->addWidget(m_currentView);
   }
 
@@ -581,6 +605,9 @@ BaseInspectorView::BaseInspectorView(QWidget * parent)
   //m_vLayout->addWidget(tabBar);
 
   m_libraryTabWidget = new LibraryTabWidget();
+  
+  auto isConnected = connect(m_libraryTabWidget, SIGNAL(removeButtonClicked(bool)), this, SIGNAL(removeButtonClicked(bool)));
+  OS_ASSERT(isConnected);
 
   m_vLayout->addWidget(m_libraryTabWidget);
 
@@ -619,6 +646,7 @@ GenericInspectorView::GenericInspectorView( QWidget * parent )
   : BaseInspectorView(parent)
 {
   m_inspectorGadget = new InspectorGadget();
+
   connect(this, &GenericInspectorView::toggleUnitsClicked, m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
 
   m_libraryTabWidget->addTab( m_inspectorGadget,"","");
@@ -945,6 +973,7 @@ void ThermalZoneInspectorView::update()
   boost::optional<model::ThermalZone> t_zone = m_modelObject->optionalCast<model::ThermalZone>();
   OS_ASSERT(t_zone);
   boost::optional<model::AirLoopHVAC> t_airLoopHVAC = t_zone->airLoopHVAC();
+  if (!t_airLoopHVAC) { return; }
   OS_ASSERT(t_airLoopHVAC);
 
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();

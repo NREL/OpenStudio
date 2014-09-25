@@ -38,15 +38,15 @@ namespace openstudio {
 
 MaterialInspectorView::MaterialInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
   : ModelObjectInspectorView(model, true, parent),
-    m_roughness(NULL),
-    m_nameEdit(NULL),
-    m_thickness(NULL),
-    m_conductivity(NULL),
-    m_density(NULL),
-    m_specificHeat(NULL),
-    m_thermalAbsorptance(NULL),
-    m_solarAbsorptance(NULL),
-    m_visibleAbsorptance(NULL),
+    m_roughness(nullptr),
+    m_nameEdit(nullptr),
+    m_thickness(nullptr),
+    m_conductivity(nullptr),
+    m_density(nullptr),
+    m_specificHeat(nullptr),
+    m_thermalAbsorptance(nullptr),
+    m_solarAbsorptance(nullptr),
+    m_visibleAbsorptance(nullptr),
     m_isIP(isIP)
 {
   createLayout();

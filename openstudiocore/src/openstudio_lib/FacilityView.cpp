@@ -57,6 +57,7 @@ namespace openstudio {
 FacilityView::FacilityView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
   : ModelSubTabView(new FacilityTreeWidget(model, parent),
                     new FacilityInspectorView(isIP, model, parent),
+                    false,
                     parent)
 {
   this->itemSelectorButtons()->hide();
@@ -102,10 +103,12 @@ FacilityInspectorView::FacilityInspectorView(bool isIP,
   index = this->stackedWidget()->addWidget(thermalZoneView);
   m_inspectorIndexMap[IddObjectType::OS_ThermalZone] = index;
 
-  SpaceTypeInspectorView* spaceTypeInspectorView = new SpaceTypeInspectorView(model, parent);
+  SpaceTypeInspectorView* spaceTypeInspectorView = new SpaceTypeInspectorView(isIP, model, parent);
+  connect(this, &FacilityInspectorView::toggleUnitsClicked, spaceTypeInspectorView, &SpaceTypeInspectorView::toggleUnitsClicked);
   connect(spaceTypeInspectorView, &SpaceTypeInspectorView::dropZoneItemClicked, this, &FacilityInspectorView::dropZoneItemClicked);
   index = this->stackedWidget()->addWidget(spaceTypeInspectorView);
   m_inspectorIndexMap[IddObjectType::OS_SpaceType] = index;
+
   SpaceInspectorView* spaceInspectorView = new SpaceInspectorView(isIP, model, parent);
   connect(this, &FacilityInspectorView::toggleUnitsClicked, spaceInspectorView, &SpaceInspectorView::toggleUnitsClicked);
   connect(spaceInspectorView, &SpaceInspectorView::dropZoneItemClicked, this, &FacilityInspectorView::dropZoneItemClicked);

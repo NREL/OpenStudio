@@ -19,17 +19,21 @@
 #ifndef MODELEDITOR_INSPECTORGADGET_HPP
 #define MODELEDITOR_INSPECTORGADGET_HPP
 
-#include <QWidget>
 #include <QComboBox>
 #include <QEvent>
+#include <QWidget>
+
 #include "../model/AccessPolicyStore.hpp"
 #include "../model/ModelObject.hpp"
+
 #include "ModelEditorAPI.hpp"
+
 #include "../utilities/idd/IddField.hpp"
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/Workspace_Impl.hpp"
 #include "../utilities/idf/WorkspaceObject.hpp"
 #include "../utilities/idf/WorkspaceObject_Impl.hpp"
+
 #include <string>
 
 class QDoubleSpinBox;
@@ -217,6 +221,7 @@ public slots:
   void setPrec();
 
   void addExtensible();
+
   void removeExtensible();
   /*!
    * Create all fields in the IDD. IDFObjects can be instantiated with some
@@ -230,6 +235,7 @@ public slots:
   void setRecursive( bool recursive);
 
  signals:
+
   void nameChanged(QString);
 
   void toggleUnitsClicked(bool);
@@ -373,9 +379,9 @@ protected:
 
   void disconnectWorkspaceObjectSignals() const;
 
-  private:
+private:
 
-    void connectSignalsAndSlots();
+  void connectSignalsAndSlots();
 };
 
 #endif // MODELEDITOR_INSPECTORGADGET_HPP

@@ -18,42 +18,44 @@
 **********************************************************************/
 
 #include "InspectorController.hpp"
+
 #include "InspectorView.hpp"
+#include "MainWindow.hpp"
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
-#include "MainWindow.hpp"
-#include "../model/AirLoopHVACZoneSplitter.hpp"
-#include "../model/AirLoopHVACZoneSplitter_Impl.hpp"
-#include "../model/AirLoopHVACZoneMixer.hpp"
-#include "../model/AirLoopHVACZoneMixer_Impl.hpp"
-#include "../model/AirLoopHVACSupplyPlenum.hpp"
-#include "../model/AirLoopHVACSupplyPlenum_Impl.hpp"
+
+#include "../model/AirLoopHVAC.hpp"
 #include "../model/AirLoopHVACReturnPlenum.hpp"
 #include "../model/AirLoopHVACReturnPlenum_Impl.hpp"
-#include "../model/AirLoopHVAC.hpp"
+#include "../model/AirLoopHVACSupplyPlenum.hpp"
+#include "../model/AirLoopHVACSupplyPlenum_Impl.hpp"
+#include "../model/AirLoopHVACZoneMixer.hpp"
+#include "../model/AirLoopHVACZoneMixer_Impl.hpp"
+#include "../model/AirLoopHVACZoneSplitter.hpp"
+#include "../model/AirLoopHVACZoneSplitter_Impl.hpp"
 #include "../model/AirLoopHVAC_Impl.hpp"
-#include "../model/ThermalZone.hpp"
-#include "../model/ThermalZone_Impl.hpp"
-#include "../model/PlantLoop.hpp"
-#include "../model/PlantLoop_Impl.hpp"
-#include "../model/HVACComponent.hpp"
-#include "../model/HVACComponent_Impl.hpp"
 #include "../model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp"
 #include "../model/AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp"
 #include "../model/AirTerminalSingleDuctUncontrolled.hpp"
 #include "../model/AirTerminalSingleDuctUncontrolled_Impl.hpp"
 #include "../model/AirTerminalSingleDuctVAVReheat.hpp"
 #include "../model/AirTerminalSingleDuctVAVReheat_Impl.hpp"
+#include "../model/HVACComponent.hpp"
+#include "../model/HVACComponent_Impl.hpp"
+#include "../model/PlantLoop.hpp"
+#include "../model/PlantLoop_Impl.hpp"
+#include "../model/ScheduleCompact.hpp"
+#include "../model/ScheduleCompact_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/WaterToAirComponent.hpp"
+#include "../model/WaterToAirComponent_Impl.hpp"
 #include "../model/ZoneHVACFourPipeFanCoil.hpp"
 #include "../model/ZoneHVACFourPipeFanCoil_Impl.hpp"
 #include "../model/ZoneHVACPackagedTerminalAirConditioner.hpp"
 #include "../model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
 #include "../model/ZoneHVACUnitHeater.hpp"
 #include "../model/ZoneHVACUnitHeater_Impl.hpp"
-#include "../model/ScheduleCompact.hpp"
-#include "../model/ScheduleCompact_Impl.hpp"
-#include "../model/WaterToAirComponent.hpp"
-#include "../model/WaterToAirComponent_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -63,6 +65,12 @@ InspectorController::InspectorController()
   : QObject()
 {
   m_inspectorView = new InspectorView();
+
+  //auto isConnected = connect(m_inspectorView, SIGNAL(itemRemoveClicked(OSItem *)), this, SIGNAL(itemRemoveClicked(OSItem *))); TODO these should all be deleted from this area of the code: cruft
+  //OS_ASSERT(isConnected);
+
+  auto isConnected = connect(m_inspectorView, SIGNAL(removeButtonClicked(bool)), this, SIGNAL(removeButtonClicked(bool)));
+  OS_ASSERT(isConnected);
 
   connect(m_inspectorView, &InspectorView::addZoneClicked, this, &InspectorController::addBranchForZone);
 

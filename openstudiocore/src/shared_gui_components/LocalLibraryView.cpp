@@ -161,6 +161,13 @@ LibraryItemView::LibraryItemView(QWidget * parent)
   mainHBoxLayout->addWidget(label,Qt::AlignLeft);
 
   mainHBoxLayout->addStretch();
+
+  errorLabel = new QLabel();
+  //errorLabel->setPixmap(QPixmap(":/shared_gui_components/images/error-alert.png"));
+  errorLabel->setPixmap(QPixmap(":/shared_gui_components/images/broken_script.png").scaled(24,24));
+  errorLabel->setFixedSize(24, 24);
+  errorLabel->setVisible(false);
+  mainHBoxLayout->addWidget(errorLabel, Qt::AlignRight);
 }
 
 void LibraryItemView::setHasEmphasis(bool hasEmphasis)

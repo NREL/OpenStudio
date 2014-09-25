@@ -747,7 +747,11 @@ namespace detail {
     if (dbv < VersionString("1.4.1")) {
       update_1_4_0_to_1_4_1(dbv);
     }
-    
+
+    if (dbv < VersionString("1.4.2")) {
+      update_1_4_1_to_1_4_2(dbv);
+    }
+
     if (dbv < osv) {
       LOG(Info,"Updating database version to " << osv << ".");
       bool didStartTransaction = startTransaction();
@@ -2569,6 +2573,42 @@ namespace detail {
 
     save();
     test = this->commitTransaction();
+    OS_ASSERT(test);
+  }
+
+  void ProjectDatabase_Impl::update_1_4_1_to_1_4_2(const VersionString& startVersion) {
+    bool didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    // add units and modelDependent columns to OSArgumentRecord 
+    LOG(Info, "Adding units and modelDependent columns to " << OSArgumentRecord::databaseTableName() << ".");
+
+    ProjectDatabase database(this->shared_from_this());
+    QSqlQuery query(*(database.qSqlDatabase()));
+
+    OSArgumentRecordColumns unitsColumn("units");
+    query.prepare(QString::fromStdString(
+      "ALTER TABLE " + OSArgumentRecord::databaseTableName() + " ADD COLUMN " +
+      unitsColumn.valueName() + " " + unitsColumn.valueDescription()));
+    assertExec(query);
+    query.clear();
+
+    OSArgumentRecordColumns modelDependentColumn("modelDependent");
+    query.prepare(QString::fromStdString(
+      "ALTER TABLE " + OSArgumentRecord::databaseTableName() + " ADD COLUMN " +
+      modelDependentColumn.valueName() + " " + modelDependentColumn.valueDescription()));
+    assertExec(query);
+    query.clear();
+
+    query.prepare(toQString("UPDATE " + OSArgumentRecord::databaseTableName() +
+      " SET units=:units, modelDependent=:modelDependent"));
+    query.bindValue(":units", QVariant(QVariant::String));
+    query.bindValue(":modelDependent", false);
+    assertExec(query);
+    query.clear();
+
+    save();
+    bool test = this->commitTransaction();
     OS_ASSERT(test);
   }
 

@@ -30,7 +30,8 @@ class SpaceTypesController : public ModelSubTabController
 
   public:
 
-    SpaceTypesController(const model::Model & model);
+    SpaceTypesController(bool isIP, 
+      const model::Model & model);
 
     virtual ~SpaceTypesController() {}
 

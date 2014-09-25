@@ -251,9 +251,9 @@ QWidget * MeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     // Name
 
-    measureItemView->label->setText(measureItem->name());
+    measureItemView->label->setText(measureItem->displayName());
 
-    connect(measureItem.data(), &measuretab::MeasureItem::nameChanged, measureItemView->label, &QLabel::setText);
+    connect(measureItem.data(), &measuretab::MeasureItem::displayNameChanged, measureItemView->label, &QLabel::setText);
 
     // Selection
 

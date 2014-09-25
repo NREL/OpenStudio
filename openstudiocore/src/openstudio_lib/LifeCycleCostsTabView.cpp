@@ -58,11 +58,11 @@ LifeCycleCostsView::LifeCycleCostsView(const model::Model & model)
 void LifeCycleCostsView::createWidgets()
 {
 
-  QRadioButton * radioButton = NULL; 
+  QRadioButton * radioButton = nullptr; 
 
-  QLabel * label = NULL;
+  QLabel * label = nullptr;
 
-  QVBoxLayout * vLayout = NULL;
+  QVBoxLayout * vLayout = nullptr;
 
   QVBoxLayout * mainLayout = new QVBoxLayout();
   mainLayout->setContentsMargins(10,10,10,10);
@@ -191,9 +191,9 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
   int rowCount = 0;
   int columnCount = 0;
 
-  QLabel * label = NULL;
+  QLabel * label = nullptr;
 
-  QVBoxLayout * vLayout = NULL;
+  QVBoxLayout * vLayout = nullptr;
 
   QVBoxLayout * widgetLayout = new QVBoxLayout();
   widgetLayout->setContentsMargins(0,0,0,0);
@@ -369,9 +369,9 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
 
 QWidget * LifeCycleCostsView::createNistWidget()
 {
-  QLabel * label = NULL;
+  QLabel * label = nullptr;
 
-  QVBoxLayout * vLayout = NULL;
+  QVBoxLayout * vLayout = nullptr;
 
   QGridLayout * gridLayout = new QGridLayout();
   gridLayout->setContentsMargins(0,0,0,0);

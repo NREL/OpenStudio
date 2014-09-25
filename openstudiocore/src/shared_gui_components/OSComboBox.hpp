@@ -99,7 +99,7 @@ class OSComboBox2 : public QComboBox {
   Q_OBJECT
  public:
   
-  OSComboBox2( QWidget * parent = nullptr );
+  OSComboBox2( QWidget * parent = nullptr, bool editable = false );
 
   virtual ~OSComboBox2() {}
 
@@ -171,6 +171,8 @@ class OSComboBox2 : public QComboBox {
   void onModelObjectRemoved(Handle handle);
 
   void onCurrentIndexChanged(const QString & text);
+
+  void onEditTextChanged(const QString & text);
 
   void onChoicesRefreshTrigger();
 

@@ -566,34 +566,34 @@ void OtherEquipmentScheduleVC::onDrop(const OSItemId& itemId)
 ScheduleSetInspectorView::ScheduleSetInspectorView(const model::Model& model,
   QWidget * parent)
   : ModelObjectInspectorView(model, true, parent),
-  m_nameEdit(NULL),
+  m_nameEdit(nullptr),
 
-  m_hoursOfOperationDZ(NULL),
-  m_numberOfPeopleDZ(NULL),
-  m_peopleActivityScheduleDZ(NULL),
-  m_lightingScheduleDZ(NULL),
-  m_electricEquipmentScheduleDZ(NULL),
-  m_gasEquipmentScheduleDZ(NULL),
-  m_hotWaterEquipmentScheduleDZ(NULL),
-  m_infiltrationScheduleDZ(NULL),
-  m_ventilationPerPersonScheduleDZ(NULL),
-  m_ventilationPerFloorAreaScheduleDZ(NULL),
+  m_hoursOfOperationDZ(nullptr),
+  m_numberOfPeopleDZ(nullptr),
+  m_peopleActivityScheduleDZ(nullptr),
+  m_lightingScheduleDZ(nullptr),
+  m_electricEquipmentScheduleDZ(nullptr),
+  m_gasEquipmentScheduleDZ(nullptr),
+  m_hotWaterEquipmentScheduleDZ(nullptr),
+  m_infiltrationScheduleDZ(nullptr),
+  m_ventilationPerPersonScheduleDZ(nullptr),
+  m_ventilationPerFloorAreaScheduleDZ(nullptr),
 
-  m_hoursOfOperationVC(NULL),
-  m_numberOfPeopleVC(NULL),
-  m_peopleActivityScheduleVC(NULL),
-  m_lightingScheduleVC(NULL),
-  m_electricEquipmentScheduleVC(NULL),
-  m_gasEquipmentScheduleVC(NULL),
-  m_hotWaterEquipmentScheduleVC(NULL),
-  m_infiltrationScheduleVC(NULL),
-  m_steamEquipmentScheduleVC(NULL),
-  m_otherEquipmentScheduleVC(NULL),
+  m_hoursOfOperationVC(nullptr),
+  m_numberOfPeopleVC(nullptr),
+  m_peopleActivityScheduleVC(nullptr),
+  m_lightingScheduleVC(nullptr),
+  m_electricEquipmentScheduleVC(nullptr),
+  m_gasEquipmentScheduleVC(nullptr),
+  m_hotWaterEquipmentScheduleVC(nullptr),
+  m_infiltrationScheduleVC(nullptr),
+  m_steamEquipmentScheduleVC(nullptr),
+  m_otherEquipmentScheduleVC(nullptr),
 
   m_vectorControllers(std::vector<ModelObjectVectorController *>()),
   m_dropZones(std::vector<OSDropZone *>())
 {
-  QLabel * label = NULL;
+  QLabel * label = nullptr;
 
   label = new QLabel();
   label->setObjectName("H2");

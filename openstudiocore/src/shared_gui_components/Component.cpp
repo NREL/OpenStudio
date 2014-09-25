@@ -50,15 +50,17 @@ Component::Component(const BCLMeasure & bclMeasure,
   m_versionId(QString()),
   m_description(QString()),
   m_fidelityLevel(QString()),
+  m_error(boost::none),
   m_attributes(std::vector<Attribute>()),
+  m_arguments(std::vector<BCLMeasureArgument>()),
   m_files(std::vector<BCLFile>()),
   m_fileReferences(std::vector<BCLFileReference>()),
   m_provenances(std::vector<BCLProvenance>()),
   m_tags(std::vector<std::string>()),
   m_showAbridgedView(showAbridgedView),
   m_showCheckBox(showCheckBox),
-  m_checkBox(NULL),
-  m_msg(NULL)
+  m_checkBox(nullptr),
+  m_msg(nullptr)
 {
   setCheckable(true);
   parseBCLMeasure(bclMeasure);
@@ -79,6 +81,15 @@ Component::Component(const BCLMeasure & bclMeasure,
         m_msg->setText("This measure requires a newer version of OpenStudio");
         m_msg->setVisible(true);
       }
+    }
+  }else if (m_error){
+    // This measures has been pre-filtered and is known to require an update but has an error
+    m_checkBox->setChecked(false);
+    m_checkBox->setEnabled(false);
+    m_updateAvailable = false;
+    if (m_msg){
+      m_msg->setText("This measure cannot be updated because it has an error");
+      m_msg->setVisible(true);
     }
   }else{
     // This measures has been pre-filtered and is known to require an update
@@ -102,7 +113,9 @@ Component::Component(const BCLSearchResult & bclSearchResult,
   m_versionId(QString()),
   m_description(QString()),
   m_fidelityLevel(QString()),
+  m_error(boost::none),
   m_attributes(std::vector<Attribute>()),
+  m_arguments(std::vector<BCLMeasureArgument>()),
   m_files(std::vector<BCLFile>()),
   m_provenances(std::vector<BCLProvenance>()),
   m_tags(std::vector<std::string>()),
@@ -200,7 +213,9 @@ Component::Component(bool showAbridgedView,
   m_versionId(QString()),
   m_description(QString()),
   m_fidelityLevel(QString()),
+  m_error(boost::none),
   m_attributes(std::vector<Attribute>()),
+  m_arguments(std::vector<BCLMeasureArgument>()),
   m_files(std::vector<BCLFile>()),
   m_fileReferences(std::vector<BCLFileReference>()),
   m_provenances(std::vector<BCLProvenance>()),
@@ -228,7 +243,9 @@ Component::Component(const Component & other)
     m_versionId = other.m_versionId;
     m_description = other.m_description;
     m_fidelityLevel = other.m_fidelityLevel;
+    m_error = other.m_error;
     m_attributes = other.m_attributes;
+    m_arguments = other.m_arguments;
     m_files = other.m_files;
     m_fileReferences = other.m_fileReferences;
     m_provenances = other.m_provenances;
@@ -263,7 +280,9 @@ Component & Component::operator=(const Component & other)
     m_versionId = other.m_versionId;
     m_description = other.m_description;
     m_fidelityLevel = other.m_fidelityLevel;
+    m_error = other.m_error;
     m_attributes = other.m_attributes;
+    m_arguments = other.m_arguments;
     m_files = other.m_files;
     m_fileReferences = other.m_fileReferences;
     m_provenances = other.m_provenances;
@@ -315,23 +334,42 @@ void Component::setChecked(bool checked)
 void Component::parseBCLMeasure(const BCLMeasure & bclMeasure)
 {
   m_componentType = bclMeasure.measureType().enumName().c_str();
-  m_name = bclMeasure.name().c_str();
+  m_name = bclMeasure.displayName().c_str();
+  if (m_name.isEmpty()){
+    m_name = bclMeasure.name().c_str();
+  }
+
   m_uid = bclMeasure.uid().c_str();
   m_versionId = bclMeasure.versionId().c_str();
   m_description = bclMeasure.description().c_str();
 
+  m_error = bclMeasure.error();
   m_attributes = bclMeasure.attributes();
+  m_arguments = bclMeasure.arguments();
   m_fileReferences = bclMeasure.files();
   m_tags = bclMeasure.tags();
 
-  std::string softwareProgramVersion;
+  boost::optional<VersionString> minCompatibleVersion;
+  boost::optional<VersionString> maxCompatibleVersion;
   Q_FOREACH(const BCLFileReference & fileReference, m_fileReferences){
     if (fileReference.usageType() == "script" && fileReference.softwareProgram() == "OpenStudio"){
-      softwareProgramVersion = fileReference.softwareProgramVersion();
+      minCompatibleVersion = fileReference.minCompatibleVersion();
+      maxCompatibleVersion = fileReference.maxCompatibleVersion();
+
+      if (!minCompatibleVersion){
+        try{
+          minCompatibleVersion = VersionString(fileReference.softwareProgramVersion());
+        } catch (const std::exception&){
+        }
+      }
       break;
     }
   }
-  if (!softwareProgramVersion.empty() && VersionString(softwareProgramVersion) > VersionString(openStudioVersion())){
+
+  VersionString currentVersion(openStudioVersion());
+  if (minCompatibleVersion && (*minCompatibleVersion) > currentVersion){
+    m_available = false;
+  } else if (maxCompatibleVersion && (*maxCompatibleVersion) < currentVersion){
     m_available = false;
   }else{
     m_available = true;
@@ -347,21 +385,36 @@ void Component::parseBCLSearchResult(const BCLSearchResult & bclSearchResult)
   m_description = bclSearchResult.description().c_str();
   m_fidelityLevel = bclSearchResult.fidelityLevel().c_str();
 
+  // m_error
   m_attributes = bclSearchResult.attributes();
+  // TODO: arguments
   m_files = bclSearchResult.files();
   m_provenances = bclSearchResult.provenances();
   m_tags = bclSearchResult.tags();
 
-  std::string componentVersion;
-  for (const BCLFile & file : m_files) {
+  boost::optional<VersionString> minCompatibleVersion;
+  boost::optional<VersionString> maxCompatibleVersion;
+  Q_FOREACH(const BCLFile & file, m_files){
     if (file.usageType() == "script" && file.softwareProgram() == "OpenStudio"){
-      componentVersion = file.identifier();
+      minCompatibleVersion = file.minCompatibleVersion();
+      maxCompatibleVersion = file.maxCompatibleVersion();
+
+      if (!minCompatibleVersion){
+        try{
+          minCompatibleVersion = VersionString(file.identifier());
+        } catch (const std::exception&){
+        }
+      }
       break;
     }
   }
-  if (!componentVersion.empty() && VersionString(componentVersion) > VersionString(openStudioVersion())){
+
+  VersionString currentVersion(openStudioVersion());
+  if (minCompatibleVersion && (*minCompatibleVersion) > currentVersion){
     m_available = false;
-  }else{
+  } else if (maxCompatibleVersion && (*maxCompatibleVersion) < currentVersion){
+    m_available = false;
+  } else{
     m_available = true;
   }
 }
@@ -370,7 +423,7 @@ void Component::createAbridgedLayout()
 {
   m_checkBox = new QCheckBox(this);
 
-  if(!m_showCheckBox){
+  if (!m_showCheckBox){
     m_checkBox->hide();
   }
 
@@ -387,10 +440,10 @@ void Component::createAbridgedLayout()
 
   for (const Attribute & attribute : m_attributes) {
     string = attribute.name().c_str();
-    if(m_componentType == "component"){
-      if(string.toStdString() == OPENSTUDIO_TYPE){
+    if (m_componentType == "component"){
+      if (string.toStdString() == OPENSTUDIO_TYPE){
         openstudio::AttributeValueType type = attribute.valueType();
-        if(type == AttributeValueType::String){
+        if (type == AttributeValueType::String){
           string = attribute.valueAsString().c_str();
           QString temp("Type: ");
           temp += string;
@@ -399,11 +452,10 @@ void Component::createAbridgedLayout()
           break;
         }
       }
-    }
-    else if(m_componentType == "measure" || m_componentType == "MeasureType"){
-      if(string.toStdString() == "Measure Type"){
+    } else if (m_componentType == "measure" || m_componentType == "MeasureType"){
+      if (string.toStdString() == "Measure Type"){
         openstudio::AttributeValueType type = attribute.valueType();
-        if(type == AttributeValueType::String){
+        if (type == AttributeValueType::String){
           string = attribute.valueAsString().c_str();
           QString temp("Measure Type: ");
           temp += string;
@@ -411,21 +463,15 @@ void Component::createAbridgedLayout()
           leftLayout->addWidget(label);
         }
       }
-      else if(string.toStdString() == "Measure Function"){
-        openstudio::AttributeValueType type = attribute.valueType();
-        if(type == AttributeValueType::String){
-          string = attribute.valueAsString().c_str();
-          QString temp("Measure Function: ");
-          temp += string;
-          label = new QLabel(temp);
-          leftLayout->addWidget(label);
-        }
-      }
     }
   }
-  
+
   m_msg = new QLabel(this);
-  m_msg->setStyleSheet("color:#888;font-style:italic;");
+  if (m_error){
+    m_msg->setStyleSheet("color:#F00;font-style:italic;");
+  }else{
+    m_msg->setStyleSheet("color:#888;font-style:italic;");
+  }
   m_msg->setHidden(true);
   leftLayout->addWidget(m_msg);
   
@@ -447,167 +493,234 @@ void Component::createCompleteLayout()
 
   QTableWidget * tableWidget = nullptr;
 
+  ///! Error
+  if (m_error){
+    label = new QLabel("Errors");
+    label->setObjectName("H1");
+    mainLayout->addWidget(label);
+
+    label = new QLabel(m_error->c_str());
+    mainLayout->addWidget(label);
+
+    label = new QLabel();
+    mainLayout->addWidget(label);
+  }
+
   ///! Attributes
   ///! Class BCL only stores double (optional units),
   ///! int (optional units), and string, with their names.
-  label = new QLabel("Attributes");
-  label->setObjectName("H1");
-  mainLayout->addWidget(label);
+  //if (!m_attributes.empty()){
+    label = new QLabel("Attributes");
+    label->setObjectName("H1");
+    mainLayout->addWidget(label);
 
-  tableWidget = new QTableWidget(0,2,this);
-  // really don't want the user to select or give focus to any table cells
-  tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers); 
-  tableWidget->setSelectionMode(QAbstractItemView::NoSelection);
-  tableWidget->setAlternatingRowColors(true);
-  tableWidget->verticalHeader()->hide();
-  tableWidget->horizontalHeader()->hide();
-  tableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  tableWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  tableWidget->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed);
-  tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-  tableWidget->horizontalHeader()->setStretchLastSection(true);
+    tableWidget = new QTableWidget(0, 2, this);
+    // really don't want the user to select or give focus to any table cells
+    tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    tableWidget->setSelectionMode(QAbstractItemView::NoSelection);
+    tableWidget->setAlternatingRowColors(true);
+    tableWidget->verticalHeader()->hide();
+    tableWidget->horizontalHeader()->hide();
+    tableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    tableWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    tableWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+    tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    tableWidget->horizontalHeader()->setStretchLastSection(true);
 
-  mainLayout->addWidget(tableWidget);
+    mainLayout->addWidget(tableWidget);
 
-  for (const Attribute & attribute : m_attributes) {
-    tableWidget->insertRow(tableWidget->rowCount());
+    for (const Attribute & attribute : m_attributes) {
+      tableWidget->insertRow(tableWidget->rowCount());
 
-    QTableWidgetItem * item = new QTableWidgetItem(attribute.name().c_str());
-    tableWidget->setItem(tableWidget->rowCount() - 1, 0, item);
-    
-    boost::optional<std::string> optionalUnits = attribute.units();
+      QTableWidgetItem * item = new QTableWidgetItem(attribute.name().c_str());
+      tableWidget->setItem(tableWidget->rowCount() - 1, 0, item);
 
-    openstudio::AttributeValueType type = attribute.valueType();
+      boost::optional<std::string> optionalUnits = attribute.units();
 
-    if(type == AttributeValueType::Boolean){
-      bool success = attribute.valueAsBoolean();
-      if(success){
-        string = "true";
-      } else {
-        string = "false";
+      openstudio::AttributeValueType type = attribute.valueType();
+
+      if (type == AttributeValueType::Boolean){
+        bool success = attribute.valueAsBoolean();
+        if (success){
+          string = "true";
+        } else {
+          string = "false";
+        }
+      } else if (type == AttributeValueType::Double){
+        string = string.setNum(attribute.valueAsDouble());
+      } else if (type == AttributeValueType::Quantity){
+        Quantity quantity = attribute.valueAsQuantity();
+        string = string.setNum(quantity.value());
+        string += " ";
+        string += quantity.prettyUnitsString().c_str();
+      } else if (type == AttributeValueType::Unit){
+        Unit unit = attribute.valueAsUnit();
+        string = unit.prettyString().c_str();
+      } else if (type == AttributeValueType::Integer){
+        string = string.setNum(attribute.valueAsInteger());
+      } else if (type == AttributeValueType::Unsigned){
+        string = string.setNum(attribute.valueAsUnsigned());
+      } else if (type == AttributeValueType::String){
+        string = attribute.valueAsString().c_str();
+      } else if (type == AttributeValueType::AttributeVector){
+        AttributeVector attributeVector = attribute.valueAsAttributeVector();
+        // TODO handle this case
+      } else{
+        // should never get here
       }
+      if (optionalUnits){
+        string += " ";
+        std::string temp = optionalUnits.get();
+        string += temp.c_str();
+      }
+      item = new QTableWidgetItem(string);
+      tableWidget->setItem(tableWidget->rowCount() - 1, 1, item);
     }
-    else if(type == AttributeValueType::Double){
-      string = string.setNum(attribute.valueAsDouble());
+
+    // make the table show completely
+    int rowHeight = tableWidget->rowHeight(0);
+    int rowCount = tableWidget->rowCount();
+    int tableHeight = rowHeight * rowCount;
+    tableWidget->setFixedHeight(tableHeight);
+
+    label = new QLabel();
+    mainLayout->addWidget(label);
+  //}
+
+  /////! Arguments
+  if (m_componentType != "component"){
+  //if (!m_arguments.empty()){
+
+    label = new QLabel("Arguments");
+    label->setObjectName("H1");
+    mainLayout->addWidget(label);
+
+    tableWidget = new QTableWidget(0, 2, this);
+    // really don't want the user to select or give focus to any table cells
+    tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    tableWidget->setSelectionMode(QAbstractItemView::NoSelection);
+    tableWidget->setAlternatingRowColors(true);
+    tableWidget->verticalHeader()->hide();
+    tableWidget->horizontalHeader()->hide();
+    tableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    tableWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    tableWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+    tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    tableWidget->horizontalHeader()->setStretchLastSection(true);
+
+    mainLayout->addWidget(tableWidget);
+
+    for (const BCLMeasureArgument & argument : m_arguments) {
+      tableWidget->insertRow(tableWidget->rowCount());
+
+      std::string name = argument.displayName();
+      if (name.empty()){
+        name = argument.name();
+      }
+
+      QTableWidgetItem * item = new QTableWidgetItem(name.c_str());
+      tableWidget->setItem(tableWidget->rowCount() - 1, 0, item);
+
+      std::string type = argument.type();
+      boost::optional<std::string> units = argument.units();
+      if (units){
+        type += " (" + units.get() + ")";
+      }
+
+      item = new QTableWidgetItem(type.c_str());
+      tableWidget->setItem(tableWidget->rowCount() - 1, 1, item);
     }
-    else if(type == AttributeValueType::Quantity){
-      Quantity quantity = attribute.valueAsQuantity();
-      string = string.setNum(quantity.value());
-      string += " ";
-      string += quantity.prettyUnitsString().c_str();
-    }
-    else if(type == AttributeValueType::Unit){
-      Unit unit = attribute.valueAsUnit();
-      string = unit.prettyString().c_str();
-    }
-    else if(type == AttributeValueType::Integer){
-      string = string.setNum(attribute.valueAsInteger());
-    }
-    else if(type == AttributeValueType::Unsigned){
-      string = string.setNum(attribute.valueAsUnsigned());
-    } 
-    else if(type == AttributeValueType::String){
-      string = attribute.valueAsString().c_str();
-    }
-    else if(type == AttributeValueType::AttributeVector){
-      AttributeVector attributeVector = attribute.valueAsAttributeVector();
-      // TODO handle this case
-    }
-    else{
-      // should never get here
-    }
-    if(optionalUnits){
-      string += " ";
-      std::string temp = optionalUnits.get();
-      string += temp.c_str();
-    }
-    item = new QTableWidgetItem(string);
-    tableWidget->setItem(tableWidget->rowCount() - 1, 1, item);
+
+    // make the table show completely
+    int rowHeight = tableWidget->rowHeight(0);
+    int rowCount = tableWidget->rowCount();
+    int tableHeight = rowHeight * rowCount;
+    tableWidget->setFixedHeight(tableHeight);
+
+    label = new QLabel();
+    mainLayout->addWidget(label);
   }
-
-  // make the table show completely
-  int rowHeight = tableWidget->rowHeight(0);
-  int rowCount =  tableWidget->rowCount();
-  int tableHeight = rowHeight * rowCount;
-  tableWidget->setFixedHeight(tableHeight);
-
-  label = new QLabel();
-  mainLayout->addWidget(label);
 
   /////! Files
-  label = new QLabel("Files");
-  label->setObjectName("H1");
-  mainLayout->addWidget(label);
-  for (const BCLFile & file : m_files) {
-    label = new QLabel(file.filename().c_str());
+  if (!m_files.empty()){
+    label = new QLabel("Files");
+    label->setObjectName("H1");
     mainLayout->addWidget(label);
+    for (const BCLFile & file : m_files) {
+      label = new QLabel(file.filename().c_str());
+      mainLayout->addWidget(label);
 
-    //label = new QLabel(file.filetype().c_str());
-    //mainLayout->addWidget(label);
+      //label = new QLabel(file.filetype().c_str());
+      //mainLayout->addWidget(label);
 
-    //label = new QLabel(file.softwareProgram().c_str());
-    //mainLayout->addWidget(label);
+      //label = new QLabel(file.softwareProgram().c_str());
+      //mainLayout->addWidget(label);
 
-    //label = new QLabel(file.identifier().c_str());
-    //mainLayout->addWidget(label);
-  }
-  for (const BCLFileReference & fileReference : m_fileReferences){
-    label = new QLabel(fileReference.fileName().c_str());
+      //label = new QLabel(file.identifier().c_str());
+      //mainLayout->addWidget(label);
+    }
+    for (const BCLFileReference & fileReference : m_fileReferences){
+      label = new QLabel(fileReference.fileName().c_str());
+      mainLayout->addWidget(label);
+
+      //label = new QLabel(fileReference.fileType().c_str());
+      //mainLayout->addWidget(label);
+
+      //label = new QLabel(fileReference.softwareProgram().c_str());
+      //mainLayout->addWidget(label);
+
+      //label = new QLabel(fileReference.softwareProgramVersion().c_str());
+      //mainLayout->addWidget(label);
+    }
+
+    label = new QLabel();
     mainLayout->addWidget(label);
-
-    //label = new QLabel(fileReference.fileType().c_str());
-    //mainLayout->addWidget(label);
-
-    //label = new QLabel(fileReference.softwareProgram().c_str());
-    //mainLayout->addWidget(label);
-
-    //label = new QLabel(fileReference.softwareProgramVersion().c_str());
-    //mainLayout->addWidget(label);
   }
-
-  label = new QLabel();
-  mainLayout->addWidget(label);
 
   ///! Provenances
-  label = new QLabel("Sources");
-  label->setObjectName("H1");
-  mainLayout->addWidget(label);
-  for (const BCLProvenance & provenance : m_provenances) {
-    string = "Author: ";
-    string += provenance.author().c_str();
-    label = new QLabel(string);
+  //if (!m_provenances.empty()){
+    label = new QLabel("Sources");
+    label->setObjectName("H1");
     mainLayout->addWidget(label);
+    for (const BCLProvenance & provenance : m_provenances) {
+      string = "Author: ";
+      string += provenance.author().c_str();
+      label = new QLabel(string);
+      mainLayout->addWidget(label);
 
-    string = "Comment: ";
-    string += provenance.comment().c_str();
-    label = new QLabel(string);
-    mainLayout->addWidget(label);
+      string = "Comment: ";
+      string += provenance.comment().c_str();
+      label = new QLabel(string);
+      mainLayout->addWidget(label);
 
-    string = "Date & time: ";
-    string += provenance.datetime().c_str();
-    label = new QLabel(string);
-    mainLayout->addWidget(label);
+      string = "Date & time: ";
+      string += provenance.datetime().c_str();
+      label = new QLabel(string);
+      mainLayout->addWidget(label);
 
-    label = new QLabel();
-    mainLayout->addWidget(label);
-  }
+      label = new QLabel();
+      mainLayout->addWidget(label);
+    }
 
-  if(m_provenances.size() == 0){
-    label = new QLabel();
-    mainLayout->addWidget(label);
-  }
+    if (m_provenances.size() == 0){
+      label = new QLabel();
+      mainLayout->addWidget(label);
+    }
+  //}
 
   ///! Tags
-  label = new QLabel("Tags");
-  label->setObjectName("H1");
-  mainLayout->addWidget(label);
-  for (const std::string & tag : m_tags) {
-    label = new QLabel(tag.c_str());
+  //if (!m_tags.empty()){
+    label = new QLabel("Tags");
+    label->setObjectName("H1");
     mainLayout->addWidget(label);
+    for (const std::string & tag : m_tags) {
+      label = new QLabel(tag.c_str());
+      mainLayout->addWidget(label);
 
-    label = new QLabel();
-    mainLayout->addWidget(label);
-  }
+      label = new QLabel();
+      mainLayout->addWidget(label);
+    }
+  //}
 
   setLayout(mainLayout);
 }

@@ -25,6 +25,9 @@
 #include "../../utilities/core/FileReference.hpp"
 #include "../../utilities/core/PathHelpers.hpp"
 
+#include <QJsonDocument>
+#include <QRegularExpression>
+
 namespace openstudio {
 namespace runmanager {
 
@@ -219,6 +222,96 @@ std::vector<WorkItem> toVectorOfWorkItem(std::istream &t_json) {
 std::vector<WorkItem> toVectorOfWorkItem(const std::string &t_json) {
   return detail::JSON::toVectorOfWorkItem(t_json);
 }
+
+std::string getReportRequestMeasureArgument(const std::vector<runmanager::WorkItem>& workItems)
+{
+  std::vector<openstudio::runmanager::RubyJobBuilder> rubyJobBuilders;
+
+  // loop over all reporting measures and gather ruby jobs
+  bool pastEnergyPlus = false;
+  for (const auto& workItem : workItems)
+  {
+    if (workItem.type == openstudio::runmanager::JobType::EnergyPlus){
+
+      pastEnergyPlus = true;
+
+    } if (pastEnergyPlus && workItem.type == openstudio::runmanager::JobType::UserScript){
+
+      openstudio::runmanager::RubyJobBuilder rjb(workItem);
+
+      const std::vector<openstudio::runmanager::RubyJobBuilder>& mergedJobs = rjb.mergedJobs();
+      if (mergedJobs.empty()){
+        rubyJobBuilders.push_back(rjb);
+      } else {
+        rubyJobBuilders.insert(rubyJobBuilders.end(), mergedJobs.begin(), mergedJobs.end());;
+      }
+    }
+  }
+
+
+  QVariantList measureList;
+  // loop over ruby jobs and gather information for report request measure
+  for (const auto& rjb : rubyJobBuilders){
+
+    QVariantMap measureHash;
+
+    // DLM: this is just UserScriptAdapter to get the actual script you need to use requiredFiles
+    //measureHash["script"] = toQString(rjb.script()); 
+
+    //QVariantList requiredFileList;
+    for (const auto& requiredFile : rjb.requiredFiles()){
+      //QVariantMap requiredFileMap;
+      // second is local file path, first is absolute system path
+      //requiredFileMap[toQString(requiredFile.second)] = toQString(requiredFile.first);
+      //requiredFileList << requiredFileMap;
+
+      if (istringEqual(toString(requiredFile.second), "measure.rb")){
+        measureHash["measure"] = toQString(requiredFile.first);
+      }
+    }
+    // DLM: I should probably be attaching these required files to this job in some way?  
+    // DLM: will this work for now given that we are removing the requirement for remote runs?
+    //measureHash["required_files"] = requiredFileList;
+
+    // The measure arguments will be script parameters in pairs of "--argumentName=name","argumentValue=value"
+    QVariantMap argumentHash;
+    QString lastArgumentName;
+    QRegularExpression argumentNameExp("--argumentName=(.*)");
+    QRegularExpression argumentValueExp("--argumentValue=(.*)");
+    for (const auto& parameter : rjb.getScriptParameters()){
+      QString temp = toQString(parameter);
+      QRegularExpressionMatch match = argumentNameExp.match(temp);
+      if (match.hasMatch()){
+        lastArgumentName = match.captured(1);
+      } else {
+        match = argumentValueExp.match(temp);
+        if (match.hasMatch()){
+          argumentHash[lastArgumentName] = match.captured(1);
+        } else {
+          LOG_FREE(Error, "openstudio.runmanager.getReportRequestMeasureArgument", "Unexpected parameter '" << parameter << "'");
+        }
+      }
+    };
+    measureHash["arguments"] = argumentHash;
+
+    // DLM: args were not populated here
+    //QVariantList argList;
+    //auto args = openstudio::runmanager::RubyJobBuilder::toOSArguments(itr->params);
+    //for (const auto& arg : args){
+    //  argList << ruleset::detail::toVariant(arg);
+    //}
+    //measureHash["arguments"] = argList;
+
+    measureList << measureHash;
+  }
+
+  QJsonDocument document = QJsonDocument::fromVariant(measureList);
+  QString jsonValue = document.toJson(QJsonDocument::Compact);
+  //QString jsonValue = document.toJson(QJsonDocument::Indented);
+
+  return toString(jsonValue);
+}
+
 
 } // runmanager
 } // openstudio

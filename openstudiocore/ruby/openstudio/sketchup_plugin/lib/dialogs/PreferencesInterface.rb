@@ -37,7 +37,6 @@ module OpenStudio
       @hash['DISABLE_USER_SCRIPTS'] = Plugin.read_pref("Disable OpenStudio User Scripts")
       @hash['UNIT_SYSTEM'] = Plugin.read_pref("Unit System")
       @hash['TEXT_EDITOR_PATH'] = Plugin.read_pref("Text Editor Path")
-      @hash['DEFAULT_TEMPLATE_PATH'] = Plugin.read_pref("Default Template Path")
       
       @hash['SHOW_ERRORS_ON_IDF_TRANSLATION'] = Plugin.read_pref("Show Errors on Idf Translation")
       @hash['SHOW_WARNINGS_ON_IDF_TRANSLATION'] = Plugin.read_pref("Show Warnings on Idf Translation")
@@ -86,13 +85,6 @@ module OpenStudio
       #    end
       #  end
       #end
-
-      path = @hash['DEFAULT_TEMPLATE_PATH']
-      if (path.nil? or path.empty?)
-        # do nothing
-      elsif (not File.exists?(path))  
-        UI.messagebox("WARNING:  Bad file path for the default OpenStudio template model.")
-      end
       
       need_update = false
       if @hash['SHOW_WARNINGS_ON_IDF_EXPORT'] and not @hash['SHOW_ERRORS_ON_IDF_EXPORT']
@@ -105,7 +97,6 @@ module OpenStudio
       Plugin.write_pref("Disable OpenStudio User Scripts", @hash['DISABLE_USER_SCRIPTS'])
       Plugin.write_pref("Unit System", @hash['UNIT_SYSTEM'])
       Plugin.write_pref("Text Editor Path", @hash['TEXT_EDITOR_PATH'])
-      Plugin.write_pref("Default Template Path", @hash['DEFAULT_TEMPLATE_PATH'])
 
       Plugin.write_pref("Show Errors on Idf Translation", @hash['SHOW_ERRORS_ON_IDF_TRANSLATION'])
       Plugin.write_pref("Show Warnings on Idf Translation", @hash['SHOW_WARNINGS_ON_IDF_TRANSLATION'])

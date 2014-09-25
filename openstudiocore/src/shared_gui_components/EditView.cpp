@@ -75,7 +75,7 @@ EditRubyMeasureView::EditRubyMeasureView(bool applyMeasureNow)
   descriptionTextEdit = new QTextEdit();
   descriptionTextEdit->setFixedHeight(70);
   descriptionTextEdit->setAcceptRichText(false);
-  descriptionTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  descriptionTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
   descriptionTextEdit->setTabChangesFocus(true);
   m_mainVLayout->addWidget(descriptionTextEdit);
 
@@ -83,9 +83,14 @@ EditRubyMeasureView::EditRubyMeasureView(bool applyMeasureNow)
   modelerDescriptionTitleLabel->setObjectName("H2");
   m_mainVLayout->addWidget(modelerDescriptionTitleLabel);
 
-  modelerDescriptionLabel = new QLabel();
-  modelerDescriptionLabel->setWordWrap(true);
-  m_mainVLayout->addWidget(modelerDescriptionLabel);
+  modelerDescriptionTextEdit = new QTextEdit();
+  modelerDescriptionTextEdit->setStyleSheet("background: #E6E6E6;");
+  modelerDescriptionTextEdit->setFixedHeight(70);
+  modelerDescriptionTextEdit->setAcceptRichText(false);
+  modelerDescriptionTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+  modelerDescriptionTextEdit->setTabChangesFocus(true);
+  modelerDescriptionTextEdit->setReadOnly(true);
+  m_mainVLayout->addWidget(modelerDescriptionTextEdit);
 
   auto line2 = new QFrame();
   line2->setFrameShape(QFrame::HLine);
@@ -175,12 +180,27 @@ DoubleInputView::DoubleInputView()
   setLayout(vLayout);
 
   nameLabel = new QLabel();
+  nameLabel->setTextFormat(Qt::RichText);
   nameLabel->setWordWrap(true);
   vLayout->addWidget(nameLabel);
 
   lineEdit = new QLineEdit();
   lineEdit->setValidator(new QDoubleValidator(lineEdit));
   vLayout->addWidget(lineEdit);
+}
+
+void DoubleInputView::setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description)
+{
+  QString text;
+  text += QString::fromStdString(name);
+  if (units){
+    text += QString::fromStdString(" (" + units.get() + ")");
+  }
+  if (description){
+    text += QString::fromStdString("<div style=\"font-size:small;margin-top:2px;\">" + description.get() + "</div>");
+  }
+
+  nameLabel->setText(text);
 }
 
 void DoubleInputView::setIncomplete(bool incomplete)
@@ -216,6 +236,20 @@ ChoiceInputView::ChoiceInputView()
   vLayout->addWidget(comboBox);
 }
 
+void ChoiceInputView::setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description)
+{
+  QString text;
+  text += QString::fromStdString(name);
+  if (units){
+    text += QString::fromStdString(" (" + units.get() + ")");
+  }
+  if (description){
+    text += QString::fromStdString("<div style=\"font-size:small;margin-top:2px;\">" + description.get() + "</div>");
+  }
+
+  nameLabel->setText(text);
+}
+
 void ChoiceInputView::setIncomplete(bool incomplete)
 {
   if( incomplete )
@@ -249,6 +283,20 @@ BoolInputView::BoolInputView()
   vLayout->addWidget(checkBox);
 }
 
+void BoolInputView::setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description)
+{
+  QString text;
+  text += QString::fromStdString(name);
+  if (units){
+    text += QString::fromStdString(" (" + units.get() + ")");
+  }
+  if (description){
+    text += QString::fromStdString("<div style=\"font-size:small;margin-top:2px;\">" + description.get() + "</div>");
+  }
+
+  checkBox->setText(text);
+}
+
 void BoolInputView::setIncomplete(bool incomplete)
 {
   checkBox->setIncomplete(incomplete);
@@ -274,6 +322,20 @@ IntegerInputView::IntegerInputView()
   lineEdit = new QLineEdit();
   lineEdit->setValidator(new QIntValidator(lineEdit));
   vLayout->addWidget(lineEdit);
+}
+
+void IntegerInputView::setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description)
+{
+  QString text;
+  text += QString::fromStdString(name);
+  if (units){
+    text += QString::fromStdString(" (" + units.get() + ")");
+  }
+  if (description){
+    text += QString::fromStdString("<div style=\"font-size:small;margin-top:2px;\">" + description.get() + "</div>");
+  }
+
+  nameLabel->setText(text);
 }
 
 void IntegerInputView::setIncomplete(bool incomplete)
@@ -307,6 +369,20 @@ StringInputView::StringInputView()
 
   lineEdit = new QLineEdit();
   vLayout->addWidget(lineEdit);
+}
+
+void StringInputView::setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description)
+{
+  QString text;
+  text += QString::fromStdString(name);
+  if (units){
+    text += QString::fromStdString(" (" + units.get() + ")");
+  }
+  if (description){
+    text += QString::fromStdString("<div style=\"font-size:small;margin-top:2px;\">" + description.get() + "</div>");
+  }
+
+  nameLabel->setText(text);
 }
 
 void StringInputView::setIncomplete(bool incomplete)

@@ -266,6 +266,7 @@ namespace runmanager {
     names.push_back("EPXMLPreproc2.exe");
 #else
     names.push_back("ies2rad");
+    names.push_back("ruby2.0");
     names.push_back("ruby");
     names.push_back("energyplus");
     names.push_back("_energyplus.tar.gz");
@@ -304,11 +305,12 @@ namespace runmanager {
     {
       LOG(Debug, "executable found: " + toString(exe));
 
-      if (boost::iequals(toString(exe.stem()), "ies2rad"))
-      {
+      if (boost::iequals(toString(exe.stem()), "ies2rad")) {
         mergeTool(tools, std::make_pair(ToolVersion(), ToolLocationInfo(ToolType::Radiance, exe.parent_path())));
       } else if (boost::iequals(toString(exe.stem()), "ruby")) {
         mergeTool(tools, std::make_pair(ToolVersion(), ToolLocationInfo(ToolType::Ruby, exe.parent_path())));
+      } else if (boost::iequals(toString(exe.filename()), "ruby2.0")) {
+        mergeTool(tools, std::make_pair(ToolVersion(2,0), ToolLocationInfo(ToolType::Ruby, exe.parent_path())));
       } else if (boost::iequals(toString(exe.stem()), "energyplus")) {
         if (safeExists(exe.parent_path() / toPath("WeatherData"))
           || safeExists(exe.parent_path().parent_path() / toPath("WeatherData")))

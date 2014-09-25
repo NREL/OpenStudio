@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 2.8.11)
 project(OpenStudio)
 
 set(CMAKE_VERSION_MAJOR 1)
-set(CMAKE_VERSION_MINOR 4)
-set(CMAKE_VERSION_PATCH 2)
+set(CMAKE_VERSION_MINOR 5)
+set(CMAKE_VERSION_PATCH 0)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
@@ -240,9 +240,10 @@ find_package(Qt5Sql) #Qt5Core, Qt5Sql
 find_package(Qt5Network) #Qt5Core, Qt5Network
 find_package(Qt5Xml) #Qt5Core, Qt5Xml
 find_package(Qt5WebKit) #Qt5Core, Qt5Gui, Qt5Network, Qt5WebKit
-find_package(Qt5WebKitWidgets) #Qt5Core, Qt5Gui, Qt5Multimedia, Qt5MultimediaWidgets, Qt5Network, Qt5OpenGL, Qt5Positioning, Qt5PrintSupport, Qt5Qml, Qt5Quick, Qt5Sensors, Qt5WebKit, Qt5WebKitWidgets, Qt5Widgets
+find_package(Qt5WebKitWidgets) #Qt5Core, Qt5Gui, Qt5Network, Qt5WebKit, Qt5WebKitWidgets, Qt5Widgets
 #find_package(Qt5WinExtras) #Qt5Core, Qt5Gui, Qt5WinExtras
 find_package(Qt5Concurrent) #Qt5Core, Qt5Concurrent
+find_package(Qt5PrintSupport) #Qt5Core, Qt5Gui, Qt5PrintSupport, Qt5Widgets
 mark_as_advanced(
   Qt5Concurrent_DIR
   Qt5Core_DIR
@@ -385,8 +386,18 @@ else()
 endif()
 
 if(NOT WIN32)
-  find_program(RUBY_EXECUTABLE NAMES ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH)
-  find_package(Ruby)
+  find_program(RUBY_EXECUTABLE NAMES ruby2.0 ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH)
+
+  find_package(Ruby 2.0)
+
+  if (NOT RUBY_FOUND)
+  find_path(RUBY_CONFIG_INCLUDE_DIR
+    NAMES ruby/config.h  config.h
+    HINTS
+    /usr/include/x86_64-linux-gnu/ruby-2.0.0
+    )
+    find_package(Ruby 2.0)
+  endif()
 endif()
 
 
@@ -672,6 +683,7 @@ if(BUILD_QT)
   set(Qt5WebKit_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5WebKit)
   set(Qt5WebKitWidgets_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5WebKitWidgets)
   set(Qt5Concurrent_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Concurrent)
+  set(Qt5PrintSupport_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5PrintSupport)
 
   if(APPLE)
     # We're going to explicitly use the SDK specified in the configuration by the user
@@ -797,6 +809,7 @@ ExternalProject_Add(OpenStudioCore
     -DQt5WebKitWidgets_DIR:STRING=${Qt5WebKitWidgets_DIR}
     #-DQt5WinExtras_DIR:STRING=${Qt5WinExtras_DIR}
     -DQt5Concurrent_DIR:STRING=${Qt5Concurrent_DIR}
+    -DQt5PrintSupport_DIR:STRING=${Qt5PrintSuppport_DIR}
     -DSWIG_EXECUTABLE:STRING=${SWIG_EXECUTABLE}
     -DRUBY_EXECUTABLE:STRING=${RUBY_EXECUTABLE}
     -DNODE_BIN_DIR:STRING=${NODE_BIN_DIR}

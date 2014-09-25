@@ -36,8 +36,8 @@ namespace openstudio {
 
 ConstructionWindowDataFileInspectorView::ConstructionWindowDataFileInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
   : ModelObjectInspectorView(model, true, parent),
-    m_nameEdit(NULL),
-    m_urlEdit(NULL),
+    m_nameEdit(nullptr),
+    m_urlEdit(nullptr),
     m_isIP(isIP)
 {
   createLayout();

@@ -39,6 +39,7 @@ ConstructionsView::ConstructionsView(bool isIP,
                                      QWidget * parent)
 : ModelSubTabView(new ModelObjectTypeListView(ConstructionsView::modelObjectTypesAndNames(), model, true, OSItemType::ListItem, parent),
                   new ConstructionsInspectorView(isIP, model, parent),
+                  false,
                   parent)
 {
   connect(this, &ConstructionsView::toggleUnitsClicked, modelObjectInspectorView(), &ModelObjectInspectorView::toggleUnitsClicked);

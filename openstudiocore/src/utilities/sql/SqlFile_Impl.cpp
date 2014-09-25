@@ -52,14 +52,20 @@ namespace openstudio{
     SqlFile_Impl::SqlFile_Impl(const openstudio::path& path)
       : m_path(path), m_connectionOpen(false), m_supportedVersion(false)
     {
+      if (boost::filesystem::exists(m_path)){
+        m_path = boost::filesystem::canonical(m_path);
+      }
       reopen();
     }
 
     SqlFile_Impl::SqlFile_Impl(const openstudio::path &t_path, const openstudio::EpwFile &t_epwFile, const openstudio::DateTime &t_simulationTime,
         const openstudio::Calendar &t_calendar)
-      : m_path(t_path), m_sqliteFilename(toString(m_path))
+      : m_path(t_path)
     {
-      m_sqliteFilename = toString(m_path);
+      if (boost::filesystem::exists(m_path)){
+        m_path = boost::filesystem::canonical(m_path);
+      }
+      m_sqliteFilename = toString(m_path.make_preferred().native());
       std::string fileName = m_sqliteFilename;
 
       bool initschema = false;
@@ -391,7 +397,7 @@ namespace openstudio{
       bool result = true;
       try{
         close();
-        init(m_path);
+        init();
       }catch(const std::exception&e){
         LOG(Error, "Exception while opening database at '" << toString(m_path) 
             << "': " << e.what());
@@ -400,9 +406,9 @@ namespace openstudio{
       return result;
     }
 
-    void SqlFile_Impl::init(const openstudio::path& path)
+    void SqlFile_Impl::init()
     {
-      m_sqliteFilename = toString(m_path);
+      m_sqliteFilename = toString(m_path.make_preferred().native());
       std::string fileName = m_sqliteFilename;
 
       int code = sqlite3_open_v2(fileName.c_str(), &m_db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_EXCLUSIVE, nullptr);

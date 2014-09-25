@@ -46,7 +46,8 @@ struct UTILITIES_API Misc1Expnt {
              int rad=0,
              int sr=0,
              int people=0,
-             int cycle=0)
+             int cycle=0,
+             int dollar=0)
     : m_ftH2O(ftH2O),
       m_crL(3*L),
       m_day(day),
@@ -57,7 +58,8 @@ struct UTILITIES_API Misc1Expnt {
       m_rad(rad),
       m_sr(sr),
       m_people(people),
-      m_cycle(cycle)
+      m_cycle(cycle),
+      m_dollar(dollar)
   {}
  private:
   int m_ftH2O;
@@ -71,6 +73,7 @@ struct UTILITIES_API Misc1Expnt {
   int m_sr;
   int m_people;
   int m_cycle;
+  int m_dollar;
 
   friend class detail::Misc1Unit_Impl;
 };
@@ -152,6 +155,8 @@ UTILITIES_API Misc1Unit createMisc1SolidAngle();
 UTILITIES_API Misc1Unit createMisc1People();
 /** relates Misc1Unit */
 UTILITIES_API Misc1Unit createMisc1Cycle();
+/** relates Misc1Unit */
+UTILITIES_API Misc1Unit createMisc1Currency();
 
 // first order derived units
 

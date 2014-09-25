@@ -23,6 +23,7 @@
 #include "RulesetAPI.hpp"
 
 #include "../utilities/core/Logger.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 namespace ruleset {
@@ -43,8 +44,14 @@ class RULESET_API UserScript {
   /** @name Getters */
   //@{
 
-  /// name of this script
-  virtual std::string name() const = 0;
+  /// user facing name of this script, defaults to empty
+  virtual std::string name() const;
+
+  /// user facing description of this script, defaults to empty
+  virtual std::string description() const;
+
+  /// user facing technical description of this script, defaults to empty
+  virtual std::string modeler_description() const;
 
   //@}
   /** @name Actions */
@@ -52,11 +59,11 @@ class RULESET_API UserScript {
 
   /** Register this script with SketchUp. Deprecated in favor of registerWithApplication().
    *  Base class implementation does nothing and returns false. \deprecated */
-  virtual bool registerWithSketchUp() const;
+  OS_DEPRECATED virtual bool registerWithSketchUp() const;
 
   /** Register this script with an Application. Base class implementation does nothing and
-   *  returns false. */
-  virtual bool registerWithApplication() const;
+   *  returns false. \deprecated */
+  OS_DEPRECATED virtual bool registerWithApplication() const;
 
  protected:
   UserScript() {}

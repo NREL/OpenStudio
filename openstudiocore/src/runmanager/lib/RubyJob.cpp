@@ -336,6 +336,17 @@ namespace detail {
 
       boost::optional<openstudio::path> lastEpwFilePath;
 
+      const auto files = allInputFiles().files();
+      for (const auto &f : files)
+      {
+        LOG(Debug, "all input files: " << openstudio::toString(f.fullPath));
+
+        for (const auto &r : f.requiredFiles)
+        {
+          LOG(Debug, "   Required File: " << openstudio::toString(r.second));
+        }
+      }
+
       try {
         FileInfo osm = allInputFiles().getLastByExtension("osm");
         std::string lastOpenStudioModelPathArgument = "--lastOpenStudioModelPath=" + toString(osm.fullPath);
@@ -372,6 +383,23 @@ namespace detail {
         std::string lastEnergyPlusSqlFilePathArgument = "--lastEnergyPlusSqlFilePath=" + toString(sql.fullPath);
         addParameter("ruby", lastEnergyPlusSqlFilePathArgument);
       } catch (const std::exception &) {
+      }
+
+
+
+      if (!lastEpwFilePath || lastEpwFilePath->is_relative())
+      {
+        // this epw probably doesn't exist, let's look for the one provided by the getRequiredFiles process
+        for (const auto &p : getRequiredFilePaths())
+        {
+          if (istringEqual(".epw", toString(p.second.extension())))
+          {
+            LOG(Info, "Found EpwFile in list of required files '" << toString(p.second.filename()) << "' prefered over previous relative location of: " << toString(lastEpwFilePath->filename()));
+
+            lastEpwFilePath = p.second;
+            break;
+          }
+        }
       }
 
       if (lastEpwFilePath){

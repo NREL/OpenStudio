@@ -44,7 +44,7 @@ static const char *logfilepath = "/var/log/openstudio.log";
 #define WSAAPI
 #include "../utilities/core/Path.hpp"
 #include "../utilities/core/RubyInterpreter.hpp"
-#include "../ruleset/EmbeddedRubyUserScriptArgumentGetter.hpp"
+#include "../ruleset/EmbeddedRubyUserScriptInfoGetter.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -92,14 +92,17 @@ int main(int argc, char *argv[])
           modules));
 
     // Initialize the argument getter
-    QSharedPointer<openstudio::ruleset::RubyUserScriptArgumentGetter> argumentGetter(
-        new openstudio::ruleset::EmbeddedRubyUserScriptArgumentGetter<openstudio::detail::RubyInterpreter>(rubyInterpreter));
+    QSharedPointer<openstudio::ruleset::RubyUserScriptInfoGetter> infoGetter(
+      new openstudio::ruleset::EmbeddedRubyUserScriptInfoGetter<openstudio::detail::RubyInterpreter>(rubyInterpreter));
 
-    openstudio::OpenStudioApp app(argc, argv, argumentGetter);
+    openstudio::OpenStudioApp app(argc, argv, infoGetter);
     openstudio::Application::instance().setApplication(&app);
 
+#if !(_DEBUG || (__GNUC__ && !NDEBUG))
     try {
+#endif
       return app.exec();
+#if !(_DEBUG || (__GNUC__ && !NDEBUG))
     } catch (const std::exception &e) {
       LOG_FREE(Fatal, "OpenStudio", "An unhandled exception has occurred: " << e.what());
       cont = true;
@@ -126,5 +129,6 @@ int main(int argc, char *argv[])
         cont = false;
       }
     }
+#endif
   }
 }

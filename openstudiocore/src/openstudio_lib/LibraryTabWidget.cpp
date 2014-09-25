@@ -18,11 +18,14 @@
  **********************************************************************/
 
 #include "LibraryTabWidget.hpp"
-#include <QStackedWidget>
+
+#include <QBoxLayout>
 #include <QPixmap>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
 #include <QPushButton>
+#include <QStackedWidget>
+
+#include "../utilities/core/Assert.hpp"
+
 #include <vector>
 
 namespace openstudio {
@@ -44,7 +47,33 @@ LibraryTabWidget::LibraryTabWidget(QWidget * parent)
 
   m_tabBar->setObjectName("VBlueGradientWidget");
 
-  m_tabBar->setContentsMargins(0,0,0,0);
+  m_tabBar->setContentsMargins(0,0,5,0);
+
+  m_removeButton = new QPushButton(this);
+
+  QString str;
+  str.append("QWidget { ");
+  str.append("border: none;");
+  str.append(" background-image: url(\":/images/delete.png\")");
+  str.append("}");
+
+  m_removeButton->setFlat(true);
+  m_removeButton->setStyleSheet(str);
+  m_removeButton->setFixedSize(20, 20);
+  m_removeButton->setToolTip("Remove object");
+
+  // Default to hide
+  m_removeButton->hide();
+
+  auto isConnected = connect(m_removeButton, SIGNAL(clicked(bool)), this, SIGNAL(removeButtonClicked(bool)));
+  OS_ASSERT(isConnected);
+ 
+  auto hLayout = new QHBoxLayout();
+  hLayout->setContentsMargins(0, 0, 0, 0);
+  hLayout->addStretch();
+  hLayout->addWidget(m_removeButton, 0, Qt::AlignVCenter);
+
+  m_tabBar->setLayout(hLayout);
 
   layout()->addWidget(m_tabBar);
 
@@ -57,6 +86,15 @@ LibraryTabWidget::LibraryTabWidget(QWidget * parent)
   layout()->addWidget(m_pageStack);
 }
 
+void LibraryTabWidget::showRemoveButton()
+{
+  m_removeButton->show();
+}
+
+void LibraryTabWidget::hideRemoveButton()
+{
+  m_removeButton->hide();
+}
 
 void LibraryTabWidget::addTab( QWidget * widget,
                         const QString & selectedImagePath,

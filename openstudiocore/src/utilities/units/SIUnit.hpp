@@ -46,7 +46,8 @@ struct UTILITIES_API SIExpnt {
           int rad=0,
           int sr=0,
           int people=0,
-          int cycle=0)
+          int cycle=0,
+          int dollar=0)
   : m_kg(kg),
     m_m(m),
     m_s(s),
@@ -57,7 +58,8 @@ struct UTILITIES_API SIExpnt {
     m_rad(rad),
     m_sr(sr),
     m_people(people),
-    m_cycle(cycle)
+    m_cycle(cycle),
+    m_dollar(dollar)
   {}
  private:
   int m_kg;
@@ -71,6 +73,7 @@ struct UTILITIES_API SIExpnt {
   int m_sr;
   int m_people;
   int m_cycle;
+  int m_dollar;
 
   friend class detail::SIUnit_Impl;
 };
@@ -158,6 +161,8 @@ UTILITIES_API SIUnit createSISolidAngle();
 UTILITIES_API SIUnit createSIPeople();
 /** \relates SIUnit */
 UTILITIES_API SIUnit createSICycle();
+/** \relates SIUnit */
+UTILITIES_API SIUnit createSICurrency();
 
 // first order derived units
 

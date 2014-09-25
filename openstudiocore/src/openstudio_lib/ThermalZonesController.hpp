@@ -20,11 +20,14 @@
 #ifndef OPENSTUDIO_THERMALZONESCONTROLLER_HPP
 #define OPENSTUDIO_THERMALZONESCONTROLLER_HPP
 
+#include "ModelSubTabController.hpp"
+
+#include "../shared_gui_components/OSQObjectController.hpp"
+
 #include "../model/Model.hpp"
 #include "../model/Schedule.hpp"
+
 #include <boost/smart_ptr.hpp>
-#include "../shared_gui_components/OSQObjectController.hpp"
-#include "ModelSubTabController.hpp"
 
 namespace openstudio {
 
@@ -40,17 +43,17 @@ class ThermalZonesController : public ModelSubTabController
 {
   Q_OBJECT
 
-  public:
+public:
 
   ThermalZonesController(bool isIP, const model::Model & model);
 
   virtual ~ThermalZonesController() {}
 
-  signals:
+signals:
 
   void toggleUnitsClicked(bool);
 
-  protected:
+protected:
 
   virtual void onSelectItem(OSItem *item);
 
@@ -68,15 +71,11 @@ class ThermalZonesController : public ModelSubTabController
 
   virtual void onInspectItem(OSItem* item);
 
-  public slots:
-
-  void enableThermostat(model::ThermalZone &,bool);
+public slots:
 
   void setHeatingSchedule(model::ThermalZone &, model::OptionalSchedule &);
 
   void setCoolingSchedule(model::ThermalZone &, model::OptionalSchedule &);
-
-  void enableHumidistat(model::ThermalZone &,bool);
 
   void setHumidifyingSchedule(model::ThermalZone &, model::OptionalSchedule &);
 
@@ -86,15 +85,10 @@ class ThermalZonesController : public ModelSubTabController
 
   void removeZoneHVACComponent( model::ZoneHVACComponent & );
 
-  private slots:
+private slots:
 
   void onZoneHVACComponentClicked( model::ZoneHVACComponent & );
 
-  private:
-
-  //model::Model m_model;
-
-  //model::Model m_library;
 };
 
 } // openstudio

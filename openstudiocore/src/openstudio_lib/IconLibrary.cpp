@@ -24,7 +24,7 @@ using std::map;
 
 namespace openstudio {
 
-IconLibrary* IconLibrary::s_instance=NULL;
+IconLibrary* IconLibrary::s_instance=nullptr;
 
 IconLibrary& IconLibrary::Instance()
 {
@@ -42,7 +42,7 @@ const QPixmap* IconLibrary::findIcon( unsigned int v) const
   if(i!=m_icons.end())
     return (*i).second;
 
-  return NULL;
+  return nullptr;
 
 }
 
@@ -52,7 +52,7 @@ const QPixmap* IconLibrary::findMiniIcon( unsigned int v) const
   if(i!=m_miniIcons.end())
     return (*i).second;
 
-  return NULL;
+  return nullptr;
 
 }
 

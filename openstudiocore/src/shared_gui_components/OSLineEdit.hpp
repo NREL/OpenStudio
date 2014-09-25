@@ -26,7 +26,11 @@
 
 #include <QLineEdit>
 
+class QMouseEvent;
+
 namespace openstudio {
+
+class OSItem;
 
 class OSLineEdit2 : public QLineEdit {
   Q_OBJECT
@@ -57,6 +61,14 @@ class OSLineEdit2 : public QLineEdit {
 
   void unbind();
 
+protected:
+
+  void mouseReleaseEvent(QMouseEvent* event);
+
+signals:
+
+  void itemClicked(OSItem* item);
+
  private slots:
 
   void onEditingFinished();
@@ -67,6 +79,8 @@ class OSLineEdit2 : public QLineEdit {
 
  private:
 
+  void completeBind();
+
   boost::optional<model::ModelObject> m_modelObject;
   boost::optional<StringGetter> m_get;
   boost::optional<OptionalStringGetter> m_getOptional;
@@ -76,7 +90,8 @@ class OSLineEdit2 : public QLineEdit {
   boost::optional<NoFailAction> m_reset;
   boost::optional<BasicQuery> m_isDefaulted;
 
-  void completeBind();
+  OSItem * m_item = nullptr;
+
 };
 
 class OSLineEdit : public QLineEdit

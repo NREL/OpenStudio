@@ -35,6 +35,8 @@
 #include <QScrollArea>
 #include <QSplitter>
 #include <QStyleOption>
+#include <QProgressBar>
+
 
 namespace openstudio {
 
@@ -42,9 +44,9 @@ SyncMeasuresDialog::SyncMeasuresDialog(analysisdriver::SimpleProject * project,
   MeasureManager * measureManager,
   QWidget * parent)
 : QDialog(parent, Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint),
-  m_centralWidget(NULL),
-  m_rightScrollArea(NULL),
-  m_expandedComponent(NULL),
+  m_centralWidget(nullptr),
+  m_rightScrollArea(nullptr),
+  m_expandedComponent(nullptr),
   m_measuresNeedingUpdates(std::vector<BCLMeasure>()),
   m_project(project),
   m_measureManager(measureManager)
@@ -64,7 +66,7 @@ void SyncMeasuresDialog::createLayout()
   setObjectName("BlueGradientWidget");
 
   // The central pane
-  m_centralWidget = new SyncMeasuresDialogCentralWidget(m_project,m_measureManager);
+  m_centralWidget = new SyncMeasuresDialogCentralWidget(m_project, m_measureManager);
 
   connect(m_centralWidget, &SyncMeasuresDialogCentralWidget::componentClicked, this, &SyncMeasuresDialog::on_componentClicked);
 
@@ -109,11 +111,19 @@ void SyncMeasuresDialog::findUpdates()
 
   m_measuresNeedingUpdates.clear();
 
+  m_centralWidget->progressBar->setVisible(true);
+  m_centralWidget->progressBar->setStatusTip("Checking for updates");
+  m_centralWidget->progressBar->setMinimum(0);
+  m_centralWidget->progressBar->setMaximum(measures.size());
+  
+  int progressValue = 0;
   for (std::vector<BCLMeasure>::iterator itr = measures.begin();
       itr != measures.end();
       ++itr)
   {
-    bool isNewVersion = itr->checkForUpdates();
+    m_centralWidget->progressBar->setValue(progressValue);
+
+    bool isNewVersion = m_measureManager->checkForUpdates(*itr);
     if (isNewVersion) {
       itr->save();
     }
@@ -126,10 +136,16 @@ void SyncMeasuresDialog::findUpdates()
         m_measuresNeedingUpdates.push_back(*itr);
       }
     }
+
+    ++progressValue;
   }
 
+  m_centralWidget->progressBar->setVisible(false);
+  m_centralWidget->progressBar->reset();
+  m_centralWidget->progressBar->setStatusTip("");
+
   // DLM: if m_measuresNeedingUpdates is empty should we do something else?  
-  // just say "No updates available and quit"
+  // just say "No updates available" and quit?
 
   m_centralWidget->setMeasures(m_measuresNeedingUpdates);
 
@@ -149,7 +165,7 @@ void SyncMeasuresDialog::on_componentClicked(bool checked)
 {
   if(m_expandedComponent){
     delete m_expandedComponent;
-    m_expandedComponent = NULL;
+    m_expandedComponent = nullptr;
   }
   m_expandedComponent = new Component(*m_centralWidget->checkedComponent());
   m_expandedComponent->setCheckable(false);

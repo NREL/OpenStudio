@@ -25,11 +25,13 @@
 #include "../model/ModelObject.hpp"
 
 namespace openstudio {
+
 namespace model {
   class Model;
 }
 
 class MainTabView;
+class OSItem;
 
 class MainTabController : public OSQObjectController
 {
@@ -47,7 +49,13 @@ class MainTabController : public OSQObjectController
 
     void modelObjectSelected(model::OptionalModelObject & modelObject, bool readOnly);
 
+    void dropZoneItemSelected(OSItem* item, bool readOnly);
+
+    void dropZoneItemClicked(OSItem* item);
+
     void toggleUnitsClicked(bool displayIP);
+
+    void itemRemoveClicked(OSItem *);
 
     void downloadComponentsClicked();
 

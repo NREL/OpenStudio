@@ -49,34 +49,29 @@
 
 namespace openstudio {
 
-SubTabView::SubTabView(OSItemSelector* itemSelector,
-                       OSInspectorView *inspectorView,
-                       QWidget * parent)
+  SubTabView::SubTabView(OSItemSelector* itemSelector,
+    OSInspectorView *inspectorView,
+    bool showGridViewLayout,
+    QWidget * parent)
   : QSplitter(parent),
-    m_itemSelector(itemSelector),
-    m_inspectorView(inspectorView)
+  m_itemSelector(itemSelector),
+  m_inspectorView(inspectorView)
 {
   this->setObjectName("GrayWidgetWithLeftTopBorders");
+  connectItemSelector();
+  connectInspectorView();
+  connectItemSelectorButtons();
+  if (showGridViewLayout){
+    createGridViewLayout();
+  }
+  else {
+    createLayout();
+  }
+}
 
-  //QHBoxLayout * mainHLayout = new QHBoxLayout();
-  //mainHLayout->setContentsMargins(1,1,0,0);
-  //mainHLayout->setSpacing(0);
-  //this->setLayout(mainHLayout);
-
-  QWidget * leftWidget = new QWidget();
-  //leftWidget->setFixedWidth(190);
-  //mainHLayout->addWidget(leftWidget);
-  addWidget(leftWidget);
-  
-  QVBoxLayout * outerLeftVLayout = new QVBoxLayout();
-  outerLeftVLayout->setContentsMargins(0,0,0,0);
-  outerLeftVLayout->setSpacing(0);
-  leftWidget->setLayout(outerLeftVLayout);
-  //mainHLayout->addLayout(outerLeftVLayout);
-
+void SubTabView::connectItemSelector()
+{
   // Item Selector
-  outerLeftVLayout->addWidget(m_itemSelector, 10);
-
   connect(m_itemSelector, &OSItemSelector::itemSelected, this, &SubTabView::itemSelected);
 
   connect(m_itemSelector, &OSItemSelector::itemRemoveClicked, this, &SubTabView::itemRemoveClicked);
@@ -84,12 +79,22 @@ SubTabView::SubTabView(OSItemSelector* itemSelector,
   connect(m_itemSelector, &OSItemSelector::itemReplacementDropped, this, &SubTabView::itemReplacementDropped);
 
   connect(m_itemSelector, &OSItemSelector::selectionCleared, this, &SubTabView::selectionCleared);
+}
 
+void SubTabView::connectInspectorView()
+{
+  // Inspector View
+  connect(m_inspectorView, &OSInspectorView::dropZoneItemClicked, this, &SubTabView::dropZoneItemClicked);
 
+  auto isConnected = connect(this, SIGNAL(dropZoneItemClicked(OSItem*)), this, SLOT(onDropZoneItemClicked(OSItem*)));
+  OS_ASSERT(isConnected);
+}
+
+void SubTabView::connectItemSelectorButtons()
+{
   // Item Selector Buttons
   m_itemSelectorButtons = new OSItemSelectorButtons();
-  outerLeftVLayout->addWidget(m_itemSelectorButtons);
-  
+
   connect(m_itemSelectorButtons, &OSItemSelectorButtons::itemDropped, this, &SubTabView::itemDropped);
 
   connect(m_itemSelectorButtons, &OSItemSelectorButtons::addClicked, this, &SubTabView::addClicked);
@@ -101,28 +106,44 @@ SubTabView::SubTabView(OSItemSelector* itemSelector,
   connect(m_itemSelectorButtons, &OSItemSelectorButtons::purgeClicked, this, &SubTabView::purgeClicked);
 
   connect(m_itemSelectorButtons, &OSItemSelectorButtons::downloadComponentsClicked, this, &SubTabView::downloadComponentsClicked);
-
-  //isConnected = QObject::connect(m_itemSelectorButtons,
-  //                               SIGNAL(openLibDlgClicked()),
-  //                               this,
-  //                               SIGNAL(openLibDlgClicked()));
-  //OS_ASSERT(isConnected); TODO
-
-  // vertical separator
-  //QWidget * vLine = new QWidget();
-  //vLine->setObjectName("VLine");
-  //vLine->setStyleSheet("QWidget#VLine { background: #445051;}");
-  //vLine->setFixedWidth(2);
-  //mainHLayout->addWidget(vLine);
-
-  // Inspector View
-  //mainHLayout->addWidget(m_inspectorView, 10);
-  addWidget(m_inspectorView);
-  setStretchFactor(1,100000);
-
-  connect(m_inspectorView, &OSInspectorView::dropZoneItemClicked, this, &SubTabView::dropZoneItemClicked);
 }
-   
+
+void SubTabView::createLayout()
+{
+  QWidget * leftWidget = new QWidget();
+  addWidget(leftWidget);
+
+  QVBoxLayout * outerLeftVLayout = new QVBoxLayout();
+  outerLeftVLayout->setContentsMargins(0, 0, 0, 0);
+  outerLeftVLayout->setSpacing(0);
+  leftWidget->setLayout(outerLeftVLayout);
+
+  outerLeftVLayout->addWidget(m_itemSelector, 10);
+
+  outerLeftVLayout->addWidget(m_itemSelectorButtons);
+
+  addWidget(m_inspectorView);
+  setStretchFactor(1, 100000);
+}
+
+void SubTabView::createGridViewLayout()
+{
+  auto widget = new QWidget();
+  addWidget(widget);
+
+  auto layout = new QVBoxLayout();
+  layout->setContentsMargins(0, 0, 0, 0);
+  layout->setSpacing(0);
+  widget->setLayout(layout);
+
+  layout->addWidget(m_inspectorView);
+
+  m_itemSelectorButtons->hideDropZone();
+  layout->addWidget(m_itemSelectorButtons);
+
+  //setStretchFactor(1, 100000);
+}
+
 OSItemSelector* SubTabView::itemSelector()
 {
   return m_itemSelector;
@@ -137,7 +158,6 @@ OSInspectorView* SubTabView::inspectorView()
 {
   return m_inspectorView;
 }
-
 
 const OSItemSelector* SubTabView::itemSelector() const
 {
@@ -154,7 +174,6 @@ const OSInspectorView* SubTabView::inspectorView() const
   return m_inspectorView;
 }
 
-
 void SubTabView::paintEvent ( QPaintEvent * event )
 {
   QStyleOption opt;
@@ -163,79 +182,9 @@ void SubTabView::paintEvent ( QPaintEvent * event )
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-/*
-
-
-void SubTabView::addClicked()
+void SubTabView::onDropZoneItemClicked(OSItem* item)
 {
-  ModelObjectListView* modelObjectListView = qobject_cast<ModelObjectListView*>(m_itemSelector);
-  if (modelObjectListView){
-    IddObjectType iddObjectType = modelObjectListView->iddObjectType();
-    emit addObjectClicked(iddObjectType);
-  }
-
-  ModelObjectTypeListView* modelObjectTypeListView = qobject_cast<ModelObjectTypeListView*>(m_itemSelector);
-  if (modelObjectTypeListView){
-    IddObjectType iddObjectType = modelObjectTypeListView->currentIddObjectType();
-    emit addObjectClicked(iddObjectType);
-  }
 }
-
-void SubTabView::copyClicked()
-{
-  ModelObjectListView* modelObjectListView = qobject_cast<ModelObjectListView*>(m_itemSelector);
-  if (modelObjectListView){
-    boost::optional<openstudio::model::ModelObject> selectedModelObject = modelObjectListView->selectedModelObject();
-    if (selectedModelObject){
-      emit copyObjectClicked(*selectedModelObject);
-    }
-  }
-
-  ModelObjectTypeListView* modelObjectTypeListView = qobject_cast<ModelObjectTypeListView*>(m_itemSelector);
-  if (modelObjectTypeListView){
-    boost::optional<openstudio::model::ModelObject> selectedModelObject = modelObjectTypeListView->selectedModelObject();
-    if (selectedModelObject){
-      emit copyObjectClicked(*selectedModelObject);
-    }
-  }
-
-}
-
-void SubTabView::removeClicked()
-{
-  ModelObjectListView* modelObjectListView = qobject_cast<ModelObjectListView*>(m_itemSelector);
-  if (modelObjectListView){
-    boost::optional<openstudio::model::ModelObject> selectedModelObject = modelObjectListView->selectedModelObject();
-    if (selectedModelObject){
-      emit removeObjectClicked(*selectedModelObject);
-    }
-  }
-
-  ModelObjectTypeListView* modelObjectTypeListView = qobject_cast<ModelObjectTypeListView*>(m_itemSelector);
-  if (modelObjectTypeListView){
-    boost::optional<openstudio::model::ModelObject> selectedModelObject = modelObjectTypeListView->selectedModelObject();
-    if (selectedModelObject){
-      emit removeObjectClicked(*selectedModelObject);
-    }
-  }
-
-}
-
-void SubTabView::purgeClicked()
-{
-  ModelObjectListView* modelObjectListView = qobject_cast<ModelObjectListView*>(m_itemSelector);
-  if (modelObjectListView){
-    IddObjectType iddObjectType = modelObjectListView->iddObjectType();
-    emit purgeObjectsClicked(iddObjectType);
-  }
-
-  ModelObjectTypeListView* modelObjectTypeListView = qobject_cast<ModelObjectTypeListView*>(m_itemSelector);
-  if (modelObjectTypeListView){
-    IddObjectType iddObjectType = modelObjectTypeListView->currentIddObjectType();
-    emit purgeObjectsClicked(iddObjectType);
-  }
-}
-*/
 
 } // openstudio
 

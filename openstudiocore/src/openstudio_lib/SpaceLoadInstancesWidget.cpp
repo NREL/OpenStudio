@@ -84,11 +84,10 @@
 #include "../model/SteamEquipment_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
-
-#include <utilities/idd/OS_Building_FieldEnums.hxx>
-#include <utilities/idd/OS_People_FieldEnums.hxx>
-#include <utilities/idd/OS_SpaceType_FieldEnums.hxx>
-#include <utilities/idd/OS_Space_FieldEnums.hxx>
+#include "../utilities/idd/OS_Building_FieldEnums.hxx"
+#include "../utilities/idd/OS_People_FieldEnums.hxx"
+#include "../utilities/idd/OS_SpaceType_FieldEnums.hxx"
+#include "../utilities/idd/OS_Space_FieldEnums.hxx"
 
 #include <QFrame>
 #include <QGridLayout>
@@ -446,7 +445,7 @@ void SpaceLoadInstanceActivityScheduleVectorController::onDrop(const OSItemId& i
 ****************************************************************************************************************************/
 
 SpaceLoadInstanceMiniView::SpaceLoadInstanceMiniView(const model::SpaceLoadInstance& spaceLoadInstance, bool isDefault)
-  : m_definitionVectorController(NULL), m_scheduleVectorController(NULL), m_spaceLoadInstance(spaceLoadInstance)
+  : m_definitionVectorController(nullptr), m_scheduleVectorController(nullptr), m_spaceLoadInstance(spaceLoadInstance)
 {
   this->setObjectName("SpaceLoadInstanceMiniView");
 
@@ -707,7 +706,7 @@ void NewSpaceLoadVectorController::onDrop(const OSItemId& itemId)
 // SpaceLoadInstancesWidget
 
 SpaceLoadInstancesWidget::SpaceLoadInstancesWidget(QWidget* parent)
-  : QWidget(parent), m_newSpaceLoadVectorController(NULL), m_newSpaceLoadDropZone(NULL), m_dirty(false)
+  : QWidget(parent), m_newSpaceLoadVectorController(nullptr), m_newSpaceLoadDropZone(nullptr), m_dirty(false)
 {
   this->setObjectName("GrayWidget");
 
@@ -904,8 +903,8 @@ void SpaceLoadInstancesWidget::refresh()
   } 
 
   // existing m_newSpaceLoadDropZone and m_newSpaceLoadVectorController were deleted above
-  m_newSpaceLoadVectorController = NULL;
-  m_newSpaceLoadDropZone = NULL;
+  m_newSpaceLoadVectorController = nullptr;
+  m_newSpaceLoadDropZone = nullptr;
 
   m_newSpaceLoadVectorController = new NewSpaceLoadVectorController();
 

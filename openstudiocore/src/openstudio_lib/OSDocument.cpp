@@ -18,6 +18,7 @@
  **********************************************************************/
 
 #include "OSDocument.hpp"
+
 #include "ApplyMeasureNowDialog.hpp"
 #include "BuildingStoriesTabController.hpp"
 #include "ConstructionsTabController.hpp"
@@ -132,9 +133,9 @@ OSDocument::OSDocument( openstudio::model::Model library,
     m_compLibrary(library),
     m_hvacCompLibrary(hvacLibrary),
     m_resourcesPath(resourcesPath),
-    m_onlineMeasuresBclDialog(NULL),
-    m_onlineBclDialog(NULL),
-    m_localLibraryDialog(NULL),
+    m_onlineMeasuresBclDialog(nullptr),
+    m_onlineBclDialog(nullptr),
+    m_localLibraryDialog(nullptr),
     m_savePath(filePath),
     m_isPlugin(isPlugin),
     m_startTabIndex(startTabIndex),
@@ -544,7 +545,7 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
 
   // Space Types
 
-  m_spaceTypesTabController = std::shared_ptr<SpaceTypesTabController>( new SpaceTypesTabController(m_model) );
+  m_spaceTypesTabController = std::shared_ptr<SpaceTypesTabController>(new SpaceTypesTabController(isIP, m_model));
   m_mainWindow->addVerticalTab( m_spaceTypesTabController->mainContentWidget(),
                                 SPACE_TYPES,
                                 "Space Types",
@@ -553,14 +554,19 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
   connect(m_spaceTypesTabController->mainContentWidget(), &MainTabView::tabSelected,
           m_mainRightColumnController.get(), &MainRightColumnController::configureForSpaceTypesSubTab);
 
-  connect(m_spaceTypesTabController.get(), &SpaceTypesTabController::modelObjectSelected,
-          m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObject);
+  connect(m_spaceTypesTabController.get(), &SpaceTypesTabController::modelObjectSelected, m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObject);
+
+  connect(m_spaceTypesTabController.get(), &SpaceTypesTabController::dropZoneItemSelected, m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObjectByItem);
 
   connect(m_spaceTypesTabController.get(), &SpaceTypesTabController::downloadComponentsClicked,
           this, &OSDocument::downloadComponentsClicked);
 
   connect(m_spaceTypesTabController.get(), &SpaceTypesTabController::openLibDlgClicked,
           this, &OSDocument::openLibDlgClicked);
+
+  //itemRemoveClicked(OSItem *)
+  connect(m_mainRightColumnController.get(), &MainRightColumnController::itemRemoveClicked,
+          m_spaceTypesTabController.get(), &SpaceTypesTabController::itemRemoveClicked);
 
   // Building Stories
 
@@ -596,6 +602,9 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
   connect(m_facilityTabController.get(), &FacilityTabController::modelObjectSelected,
           m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObject);
 
+  connect(m_facilityTabController.get(), &FacilityTabController::dropZoneItemSelected,
+          m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObjectByItem);
+
   connect(m_facilityTabController.get(), &FacilityTabController::downloadComponentsClicked,
           this, &OSDocument::downloadComponentsClicked);
 
@@ -613,8 +622,9 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
   connect(m_thermalZonesTabController->mainContentWidget(), &MainTabView::tabSelected,
           m_mainRightColumnController.get(), &MainRightColumnController::configureForThermalZonesSubTab);
 
-  connect(m_thermalZonesTabController.get(), &ThermalZonesTabController::modelObjectSelected,
-          m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObject);
+  connect(m_thermalZonesTabController.get(), &ThermalZonesTabController::modelObjectSelected, m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObject);
+
+  connect(m_thermalZonesTabController.get(), &ThermalZonesTabController::dropZoneItemSelected, m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObjectByItem);
 
   connect(this, &OSDocument::toggleUnitsClicked, m_thermalZonesTabController.get(), &ThermalZonesTabController::toggleUnitsClicked);
 

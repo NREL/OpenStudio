@@ -107,6 +107,7 @@ class LibraryItemView : public OSDragableView
   QLabel * label;
   QLabel * m_measureTypeBadge;
   MeasureBadge * m_measureBadge;
+  QLabel * errorLabel;
 
   public slots:
 

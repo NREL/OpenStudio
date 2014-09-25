@@ -438,34 +438,103 @@ LibraryItem::LibraryItem(const BCLMeasure & bclMeasure, LocalLibrary::LibrarySou
   m_source(source),
   m_app(t_app)
 {
-  std::string componentVersion;
-  for (const BCLFileReference & file : bclMeasure.files()) {
-    if (file.usageType() == "script" && file.softwareProgram() == "OpenStudio"){
-      componentVersion = file.softwareProgramVersion();
+  boost::optional<VersionString> minCompatibleVersion;
+  boost::optional<VersionString> maxCompatibleVersion;
+  Q_FOREACH(const BCLFileReference & fileReference, bclMeasure.files()){
+    if (fileReference.usageType() == "script" && fileReference.softwareProgram() == "OpenStudio"){
+      minCompatibleVersion = fileReference.minCompatibleVersion();
+      maxCompatibleVersion = fileReference.maxCompatibleVersion();
+
+      if (!minCompatibleVersion){
+        try{
+          minCompatibleVersion = VersionString(fileReference.softwareProgramVersion());
+        } catch (const std::exception&){
+        }
+      }
       break;
     }
   }
-  if (componentVersion.empty() || VersionString(componentVersion) > VersionString(openStudioVersion())){
+
+  VersionString currentVersion(openStudioVersion());
+  if (minCompatibleVersion && (*minCompatibleVersion) > currentVersion){
     m_available = false;
-  }else{
+  } else if (maxCompatibleVersion && (*maxCompatibleVersion) < currentVersion){
+    m_available = false;
+  } else{
     m_available = true;
   }
 }
 
+LibraryItem::~LibraryItem()
+{}
+
+bool LibraryItem::hasError() const
+{
+  return m_bclMeasure.error();
+}
+
+QString LibraryItem::name() const 
+{ 
+  return QString::fromStdString(m_bclMeasure.name()); 
+}
+
+QString LibraryItem::displayName() const
+{
+  return QString::fromStdString(m_bclMeasure.displayName());
+}
+
+QString LibraryItem::className() const
+{
+  return QString::fromStdString(m_bclMeasure.className());
+}
+
+QString LibraryItem::description() const
+{
+  return QString::fromStdString(m_bclMeasure.description());
+}
+
+QString LibraryItem::modelerDescription() const
+{
+  return QString::fromStdString(m_bclMeasure.modelerDescription());
+}
+
+QString LibraryItem::error() const
+{
+  QString result;
+  if (m_bclMeasure.error()){
+    result = toQString(m_bclMeasure.error().get());
+  }
+  return result;
+}
+
+UUID LibraryItem::uuid() const 
+{ 
+  return m_bclMeasure.uuid(); 
+}
+
+bool LibraryItem::isAvailable() const 
+{ 
+  return m_available; 
+}
+
 void LibraryItem::dragItem(const OSDragPixmapData & dragPixmapData)
 {
-  MeasureDragData measureDragData(m_bclMeasure.uuid());
+  // DLM: I think we want to allow user to drag in measure with error because that is the best 
+  // way currently to allow them to inspect the error
+  //if (!m_bclMeasure.error()){
+    MeasureDragData measureDragData(m_bclMeasure.uuid());
 
-  auto drag = new QDrag(m_app->mainWidget());
+    auto drag = new QDrag(m_app->mainWidget());
 
-  auto mimeData = new QMimeData;
-  mimeData->setData(MeasureDragData::mimeType(m_bclMeasure.measureType()), measureDragData.data());
-  drag->setMimeData(mimeData);
+    auto mimeData = new QMimeData;
+    mimeData->setData(MeasureDragData::mimeType(m_bclMeasure.measureType()), measureDragData.data());
+    drag->setMimeData(mimeData);
 
-  drag->setPixmap(dragPixmapData.pixmap);
-  drag->setHotSpot(dragPixmapData.hotSpot);
+    drag->setPixmap(dragPixmapData.pixmap);
+    drag->setHotSpot(dragPixmapData.hotSpot);
 
-  drag->exec(Qt::CopyAction);
+    drag->exec(Qt::CopyAction);
+  //}
 }
 
 LibraryItemDelegate::LibraryItemDelegate(BaseApp *t_app)
@@ -504,8 +573,14 @@ QWidget * LibraryItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     // Name
 
-    widget->label->setText(libraryItem->name());
-    widget->setToolTip(libraryItem->name());
+    widget->label->setText(libraryItem->displayName());
+    if (libraryItem->hasError()){
+      widget->setToolTip(libraryItem->error());
+      widget->errorLabel->setVisible(true);
+    }else{
+      widget->setToolTip(libraryItem->description());
+      widget->errorLabel->setVisible(false);
+    }
 
     // Drag
     
@@ -614,10 +689,7 @@ void LibraryListController::createItems()
   {
     if( m_taxonomyTag.compare(QString::fromStdString(measure.taxonomyTag()),Qt::CaseInsensitive) == 0 )
     {
-      // cannot use measures that rely on SketchUpAPI in this application
-      if (measure.usesSketchUpAPI()){
-        continue;
-      }
+      // filter on any measure attributes we want
 
       LocalLibrary::LibrarySource source = m_source;
       if (source == LocalLibrary::COMBINED){

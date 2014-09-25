@@ -24,9 +24,11 @@
 #include "../core/System.hpp"
 #include "../core/Path.hpp"
 #include "../core/PathHelpers.hpp"
+#include "../core/StringHelpers.hpp"
 #include "../core/FileReference.hpp"
 #include "../data/Attribute.hpp"
 #include "../core/Assert.hpp"
+#include "../core/Checksum.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -34,6 +36,7 @@
 #include <QDomDocument>
 #include <QFile>
 #include <QSettings>
+#include <QRegularExpression>
 
 #include <boost/filesystem.hpp>
 
@@ -52,12 +55,14 @@ namespace openstudio{
   }
 
   BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, const openstudio::path& dir,
-    const std::string& taxonomyTag, MeasureType measureType, bool usesSketchUpAPI)
+                         const std::string& taxonomyTag, MeasureType measureType, 
+                         const std::string& description, const std::string& modelerDescription)
     : m_directory(boost::filesystem::system_complete(dir)),
       m_bclXML(BCLXMLType::MeasureXML)
   {
 
     openstudio::path measureTestDir = dir / toPath("tests");
+    std::string lowerClassName = toUnderscoreCase(className);
 
     createDirectory(dir);
     createDirectory(measureTestDir);
@@ -65,36 +70,69 @@ namespace openstudio{
     // read in template files
     QString measureTemplate;
     QString testTemplate;
-    QString templateName;
+    QString templateClassName;
+    QString templateName = "NAME_TEXT";
+    QString templateDescription = "DESCRIPTION_TEXT";
+    QString templateModelerDescription = "MODELER_DESCRIPTION_TEXT";
+    std::vector<BCLMeasureArgument> arguments;
     QString testOSM;
     QString resourceFile;
     openstudio::path testOSMPath;
     openstudio::path resourceFilePath;
     if (measureType == MeasureType::ModelMeasure){
       measureTemplate = ":/templates/ModelMeasure/measure.rb";
-      testTemplate = ":/templates/ModelMeasure/tests/ModelMeasure_Test.rb";
-      templateName = "ModelMeasure";
-    }else if (measureType == MeasureType::EnergyPlusMeasure){
-      measureTemplate = ":/templates/EnergyPlusMeasure/measure.rb";
-      testTemplate = ":/templates/EnergyPlusMeasure/tests/EnergyPlusMeasure_Test.rb";
-      templateName = "EnergyPlusMeasure";
-    }else if (measureType == MeasureType::UtilityMeasure){
-      measureTemplate = ":/templates/UtilityMeasure/measure.rb";
-      testTemplate = ":/templates/UtilityMeasure/tests/UtilityMeasure_Test.rb";
-      templateName = "UtilityMeasure";
-    }else if (measureType == MeasureType::ReportingMeasure){
-      measureTemplate = ":/templates/ReportingMeasure/measure.rb";
-      testTemplate = ":/templates/ReportingMeasure/tests/ReportingMeasure_Test.rb";
-      templateName = "ReportingMeasure";
-
-      testOSM = ":/templates/ReportingMeasure/tests/ExampleModel.osm";
-      resourceFile = ":/templates/ReportingMeasure/resources/report.html.in";
+      testTemplate = ":/templates/ModelMeasure/tests/model_measure_test.rb";
+      templateClassName = "ModelMeasure";
 
       createDirectory(dir / toPath("tests"));
-      createDirectory(dir / toPath("resources"));
 
-      testOSMPath = dir / toPath("tests/ExampleModel.osm");
+      std::string argName("space_name");
+      std::string argDisplayName("New space name");
+      std::string argDescription("This name will be used as the name of the new space.");
+      std::string argType("String");
+      BCLMeasureArgument arg(argName, argDisplayName, argDescription, argType,
+                             boost::none, true, false, boost::none,
+                             std::vector<std::string>(), std::vector<std::string>(),
+                             boost::none, boost::none);
+      arguments.push_back(arg);
+
+    }else if (measureType == MeasureType::EnergyPlusMeasure){
+      measureTemplate = ":/templates/EnergyPlusMeasure/measure.rb";
+      testTemplate = ":/templates/EnergyPlusMeasure/tests/energyplus_measure_test.rb";
+      templateClassName = "EnergyPlusMeasure";
+
+      createDirectory(dir / toPath("tests"));
+
+      std::string argName("zone_name");
+      std::string argDisplayName("New zone name");
+      std::string argDescription("This name will be used as the name of the new zone.");
+      std::string argType("String");
+      BCLMeasureArgument arg(argName, argDisplayName, argDescription, argType, 
+                             boost::none, true, false, boost::none, 
+                             std::vector<std::string>(), std::vector<std::string>(),
+                             boost::none, boost::none);
+      arguments.push_back(arg);
+
+    }else if (measureType == MeasureType::UtilityMeasure){
+      measureTemplate = ":/templates/UtilityMeasure/measure.rb";
+      testTemplate = ":/templates/UtilityMeasure/tests/utility_measure_test.rb";
+      templateClassName = "UtilityMeasure";
+
+      createDirectory(dir / toPath("tests"));
+
+    }else if (measureType == MeasureType::ReportingMeasure){
+      measureTemplate = ":/templates/ReportingMeasure/measure.rb";
+      testTemplate = ":/templates/ReportingMeasure/tests/reporting_measure_test.rb";
+      testOSM = ":/templates/ReportingMeasure/tests/example_model.osm";
+      resourceFile = ":/templates/ReportingMeasure/resources/report.html.in";
+      templateClassName = "ReportingMeasure";
+
+      createDirectory(dir / toPath("tests"));
+      testOSMPath = dir / toPath("tests/example_model.osm");
+
+      createDirectory(dir / toPath("resources"));
       resourceFilePath = dir / toPath("resources/report.html.in");
+
     }
 
     QString measureString;
@@ -103,7 +141,10 @@ namespace openstudio{
       if(file.open(QFile::ReadOnly)){
         QTextStream docIn(&file);
         measureString = docIn.readAll();
-        measureString.replace(templateName, toQString(className));
+        measureString.replace(templateClassName, toQString(className));
+        measureString.replace(templateName, toQString(name));
+        measureString.replace(templateModelerDescription, toQString(modelerDescription)); // put first as this includes description tag
+        measureString.replace(templateDescription, toQString(description));
         file.close();
       }
     }
@@ -114,7 +155,7 @@ namespace openstudio{
       if(file.open(QFile::ReadOnly)){
         QTextStream docIn(&file);
         testString = docIn.readAll();
-        testString.replace(templateName, toQString(className));
+        testString.replace(templateClassName, toQString(className));
         file.close();
       }
     }
@@ -142,7 +183,7 @@ namespace openstudio{
     // write files
     openstudio::path measureXMLPath = dir / toPath("measure.xml");
     openstudio::path measureScriptPath = dir / toPath("measure.rb");
-    openstudio::path measureTestPath = measureTestDir / toPath(className + "_Test.rb");
+    openstudio::path measureTestPath = measureTestDir / toPath(lowerClassName + "_test.rb");
 
     // write measure.rb
     {
@@ -214,10 +255,18 @@ namespace openstudio{
     }
 
     // set rest of measure fields
-    m_bclXML.setName(name);
+    m_bclXML.setName(lowerClassName);
+    m_bclXML.setDisplayName(name);
+    m_bclXML.setClassName(className);
+    m_bclXML.setDescription(description);
+    m_bclXML.setModelerDescription(modelerDescription);
+    m_bclXML.setArguments(arguments);
     m_bclXML.addTag(taxonomyTag);
     this->setMeasureType(measureType);
-    this->setUsesSketchUpAPI(usesSketchUpAPI);
+
+    // reset the checksum to trigger update even if nothing has changed
+    m_bclXML.resetXMLChecksum();
+
     m_bclXML.saveAs(measureXMLPath);
   }
 
@@ -235,20 +284,23 @@ namespace openstudio{
     m_bclXML = *bclXML;
 
     // check for required attributes
-    boost::optional<Attribute> measureType = m_bclXML.getAttribute("Measure Type");
-    if (!measureType){
+    std::vector<Attribute> measureTypes = m_bclXML.getAttributes("Measure Type");
+    if (measureTypes.empty()){
       LOG_AND_THROW("'" << toString(dir) << "' is missing the required attribute \"Measure Type\"");
+    } else if (measureTypes.size() > 1) {
+      LOG_AND_THROW("'" << toString(dir) << "' has multiple copies of required attribute \"Measure Type\"");
+    } else if (measureTypes[0].valueType() != AttributeValueType::String) {
+      LOG_AND_THROW("'" << toString(dir) << "' has multiple copies of required attribute \"Measure Type\"");
     }
 
-    boost::optional<Attribute> usesSketchUpAPI = m_bclXML.getAttribute("Uses SketchUp API");
-    if (!usesSketchUpAPI){
-      LOG_AND_THROW("'" << toString(dir) << "' is missing the required attribute \"Uses SketchUp API\"");
+    if (m_bclXML.xmlChecksum().empty()){
+      // this will set the checksum but not increment the version id
+      m_bclXML.checkForUpdatesXML();
     }
 
-    // these may throw later, test here now
-    usesSketchUpAPI->valueAsBoolean();
-
+    // check that opening the file did not modify it
     if (m_bclXML.versionId() != bclXML->versionId()){
+      // DLM: should this be an assert instead?
       LOG_AND_THROW("Measure version_id is no longer valid");
     }
   }
@@ -256,7 +308,7 @@ namespace openstudio{
   BCLMeasure::~BCLMeasure()
   {}
 
-  std::string BCLMeasure::className(const std::string& name)
+  std::string BCLMeasure::makeClassName(const std::string& name)
   {
     QString str = toQString(name);
 
@@ -271,8 +323,8 @@ namespace openstudio{
 
     QString result;
     QStringList parts = str.split(' ', QString::SkipEmptyParts);
-    for (const QString& part : parts) {
-      part[0].toUpper();
+    for (QString part : parts) {
+      part[0] = part[0].toUpper();
       result.append(part);
     }
 
@@ -315,6 +367,10 @@ namespace openstudio{
 
   BCLMeasure BCLMeasure::alternativeModelMeasure() {
     return BCLMeasure(patApplicationMeasuresDir() / toPath("ReplaceModel"));
+  }
+
+  BCLMeasure BCLMeasure::reportRequestMeasure() {
+    return BCLMeasure(patApplicationMeasuresDir() / toPath("ReportRequest"));
   }
 
   BCLMeasure BCLMeasure::standardReportMeasure() {
@@ -369,6 +425,28 @@ namespace openstudio{
     settings.remove("userMeasuresDir");
   }
 
+  std::vector<std::string> BCLMeasure::suggestedIntendedSoftwareTools()
+  {
+    std::vector<std::string> result;
+    result.push_back("Apply Measure Now");
+    result.push_back("OpenStudio Application");
+    result.push_back("Parametric Analysis Tool");
+    result.push_back("Analysis Spreadsheet");
+    return result;
+  }
+
+  std::vector<std::string> BCLMeasure::suggestedIntendedUseCases()
+  {
+    std::vector<std::string> result;
+    result.push_back("Model Articulation");
+    result.push_back("Calibration");
+    result.push_back("Sensitivity Analysis");
+    result.push_back("New Construction EE");
+    result.push_back("Retrofit EE");
+    result.push_back("Automatic Report Generation");
+    return result;
+  }
+
   std::vector<BCLMeasure> BCLMeasure::getMeasuresInDir(openstudio::path dir)
   {
     LOG(Debug, "Loading measures in path: " << openstudio::toString(dir));
@@ -400,6 +478,16 @@ namespace openstudio{
     return result;
   }
 
+  openstudio::path BCLMeasure::directory() const
+  {
+    return m_directory;
+  }
+
+  boost::optional<std::string> BCLMeasure::error() const
+  {
+    return m_bclXML.error();
+  }
+
   std::string BCLMeasure::uid() const
   {
     return m_bclXML.uid();
@@ -418,9 +506,24 @@ namespace openstudio{
     return toUUID("{" + versionId() + "}");
   }
 
+  std::string BCLMeasure::xmlChecksum() const
+  {
+    return m_bclXML.xmlChecksum();
+  }
+
   std::string BCLMeasure::name() const
   {
     return m_bclXML.name();
+  }
+
+  std::string BCLMeasure::displayName() const
+  {
+    return m_bclXML.displayName();
+  }
+
+  std::string BCLMeasure::className() const
+  {
+    return m_bclXML.className();
   }
 
   std::string BCLMeasure::description() const
@@ -433,7 +536,67 @@ namespace openstudio{
     return m_bclXML.modelerDescription();
   }
 
-  std::string BCLMeasure::taxonomyTag() const
+  std::vector<BCLMeasureArgument> BCLMeasure::arguments() const
+  {
+    return m_bclXML.arguments();
+  }
+
+  std::vector<std::string> BCLMeasure::tags() const
+  {
+    return m_bclXML.tags();
+  }
+
+  std::vector<Attribute> BCLMeasure::attributes() const
+  {
+    return m_bclXML.attributes();
+  }
+
+  std::vector<BCLFileReference> BCLMeasure::files() const
+  {
+    return m_bclXML.files();
+  }
+
+  void BCLMeasure::setError(const std::string& error)
+  {
+    m_bclXML.setError(error);
+  }
+
+  void BCLMeasure::resetError()
+  {
+    m_bclXML.resetError();
+  }
+
+  void BCLMeasure::setName(const std::string& name)
+  {
+    m_bclXML.setName(name);
+  }
+
+  void BCLMeasure::setDisplayName(const std::string& displayName)
+  {
+    m_bclXML.setDisplayName(displayName);
+  }
+
+  void BCLMeasure::setClassName(const std::string& className)
+  {
+    m_bclXML.setClassName(className);
+  }
+
+  void BCLMeasure::setDescription(const std::string& description)
+  {
+    m_bclXML.setDescription(description);
+  }
+
+  void BCLMeasure::setModelerDescription(const std::string& description)
+  {
+    m_bclXML.setModelerDescription(description);
+  }
+
+  void BCLMeasure::setArguments(const std::vector<BCLMeasureArgument>& arguments)
+  {
+    m_bclXML.setArguments(arguments);
+  }
+
+   std::string BCLMeasure::taxonomyTag() const
   {
     std::string result;
     std::vector<std::string> tags = m_bclXML.tags();
@@ -443,18 +606,46 @@ namespace openstudio{
     return result;
   }
 
+   void BCLMeasure::setTaxonomyTag(const std::string& taxonomyTag)
+   {
+     m_bclXML.clearTags();
+     m_bclXML.addTag(taxonomyTag);
+   }
+
   MeasureType BCLMeasure::measureType() const
   {
-    boost::optional<Attribute> measureType = m_bclXML.getAttribute("Measure Type");
-    OS_ASSERT(measureType);
-    return MeasureType(measureType->valueAsString());
+    std::vector<Attribute> measureTypes = m_bclXML.getAttributes("Measure Type");
+    OS_ASSERT(measureTypes.size() == 1);
+    return MeasureType(measureTypes[0].valueAsString());
   }
 
-  bool BCLMeasure::usesSketchUpAPI() const
+  void BCLMeasure::setMeasureType(const MeasureType& measureType)
   {
-    boost::optional<Attribute> usesSketchUpAPI = m_bclXML.getAttribute("Uses SketchUp API");
-    OS_ASSERT(usesSketchUpAPI);
-    return usesSketchUpAPI->valueAsBoolean();
+    const std::string attributeName("Measure Type");
+    Attribute attribute(attributeName, measureType.valueName());
+    m_bclXML.removeAttributes(attributeName);
+    m_bclXML.addAttribute(attribute);
+  }
+
+  std::vector<std::string> BCLMeasure::intendedSoftwareTools() const
+  {
+    std::vector<std::string> result;
+    std::vector<Attribute> attributes = m_bclXML.getAttributes("Intended Software Tool");
+    for (const Attribute& attribute : attributes){
+      result.push_back(attribute.valueAsString());
+    }
+    return result;
+  }
+
+  /// Returns values of any "Intended Use Case" attributes
+  std::vector<std::string> BCLMeasure::intendedUseCases() const
+  {
+    std::vector<std::string> result;
+    std::vector<Attribute> attributes = m_bclXML.getAttributes("Intended Use Case");
+    for (const Attribute& attribute : attributes){
+      result.push_back(attribute.valueAsString());
+    }
+    return result;
   }
 
   boost::optional<openstudio::path> BCLMeasure::primaryRubyScriptPath() const
@@ -464,21 +655,6 @@ namespace openstudio{
       return result;
     }
     return boost::none;
-  }
-
-  std::vector<BCLFileReference> BCLMeasure::files() const
-  {
-    return m_bclXML.files();
-  }
-
-  std::vector<Attribute> BCLMeasure::attributes() const
-  {
-    return m_bclXML.attributes();
-  }
-
-  std::vector<std::string> BCLMeasure::tags() const
-  {
-    return m_bclXML.tags();
   }
 
   FileReferenceType BCLMeasure::inputFileType() const
@@ -515,11 +691,6 @@ namespace openstudio{
     return result;
   }
 
-  openstudio::path BCLMeasure::directory() const
-  {
-    return m_directory;
-  }
-
   void BCLMeasure::changeUID()
   {
     m_bclXML.changeUID();
@@ -530,40 +701,124 @@ namespace openstudio{
     m_bclXML.incrementVersionId();
   }
 
-  void BCLMeasure::setName(const std::string& name)
+  bool BCLMeasure::updateMeasureScript(const MeasureType& oldMeasureType, const MeasureType& newMeasureType, 
+                                       const std::string& oldClassName, const std::string& newClassName, 
+                                       const std::string& name, const std::string& description, 
+                                       const std::string& modelerDescription)
   {
-    m_bclXML.setName(name);
+    boost::optional<openstudio::path> path = primaryRubyScriptPath();
+    if (path && exists(*path)){
+
+      QString fileString;
+      QFile file(toQString(*path));
+      if (file.open(QFile::ReadOnly)){
+
+        QRegularExpression::PatternOptions opts = QRegularExpression::DotMatchesEverythingOption | QRegularExpression::MultilineOption;
+        QString nameFunction = "\\1def name\n\\1  return \" " + toQString(name) + "\"\n\\1end";
+        QString descriptionFunction = "\\1def description\n\\1  return \"" + toQString(description) + "\"\n\\1end";
+        QString modelerDescriptionFunction = "\\1def modeler_description\n\\1  return \"" + toQString(modelerDescription) + "\"\n\\1end";
+
+        QTextStream docIn(&file);
+        fileString = docIn.readAll();
+        fileString.replace(toQString(oldMeasureType.valueName()), toQString(newMeasureType.valueName()));
+        fileString.replace(toQString(oldClassName), toQString(newClassName));
+        fileString.replace(QRegularExpression("^(\\s+)def name(.*?)end", opts), nameFunction);
+        fileString.replace(QRegularExpression("^(\\s+)def description(.*?)end", opts), descriptionFunction);
+        fileString.replace(QRegularExpression("^(\\s+)def modeler_description(.*?)end", opts), modelerDescriptionFunction);
+        file.close();
+
+        if (file.open(QIODevice::WriteOnly)){
+          QTextStream textStream(&file);
+          textStream << fileString;
+          file.close();
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+  
+  bool BCLMeasure::updateMeasureTests(const std::string& oldClassName, const std::string& newClassName)
+  {
+    bool result = true;
+    for (const BCLFileReference& fileRef : files()){
+      std::string usageType = fileRef.usageType();
+      if (usageType != "test"){
+        continue;
+      }
+
+      if (exists(fileRef.path())){
+
+        std::string oldLowerClassName = toUnderscoreCase(oldClassName);
+        std::string newLowerClassName = toUnderscoreCase(newClassName);
+
+        QString oldPath = toQString(fileRef.path());
+        QString newPath = oldPath;
+        newPath.replace(toQString(oldLowerClassName), toQString(newLowerClassName));
+
+        if (QFile::exists(newPath)) {
+          // somehow this file already exists, don't clobber it
+          newPath = oldPath;
+        }else{
+          QFile::copy(oldPath, newPath);
+          QFile::remove(oldPath);
+        }
+        
+
+        QString fileString;
+        QFile file(newPath);
+        if (file.open(QFile::ReadOnly)){
+
+          QTextStream docIn(&file);
+          fileString = docIn.readAll();
+          fileString.replace(toQString(oldClassName), toQString(newClassName));
+          file.close();
+
+          if (file.open(QIODevice::WriteOnly)){
+            QTextStream textStream(&file);
+            textStream << fileString;
+            file.close();
+
+          } else {
+            result = false;
+          }
+        } else {
+          result = false;
+        }
+      } else{
+        result = false;
+      }
+    }
+    return result;
   }
 
-  void BCLMeasure::setDescription(const std::string& description)
+  void BCLMeasure::clearFiles()
   {
-    m_bclXML.setDescription(description);
+    m_bclXML.clearFiles();
   }
-
-  void BCLMeasure::setModelerDescription(const std::string& description)
+  
+  void BCLMeasure::addAttribute(const Attribute& attribute)
   {
-    m_bclXML.setModelerDescription(description);
-  }
-
-  void BCLMeasure::setTaxonomyTag(const std::string& taxonomyTag)
-  {
-    m_bclXML.clearTags();
-    m_bclXML.addTag(taxonomyTag);
-  }
-
-  void BCLMeasure::setMeasureType(const MeasureType& measureType)
-  {
-    Attribute attribute("Measure Type", measureType.valueName());
     m_bclXML.addAttribute(attribute);
   }
 
-  void BCLMeasure::setUsesSketchUpAPI(bool usesSketchUpAPI)
+  std::vector<Attribute> BCLMeasure::getAttributes(const std::string& name) const
   {
-    Attribute attribute("Uses SketchUp API", usesSketchUpAPI);
-    m_bclXML.addAttribute(attribute);
+    return m_bclXML.getAttributes(name);
   }
 
-  bool BCLMeasure::checkForUpdates()
+  bool BCLMeasure::removeAttributes(const std::string& name)
+  {
+    return m_bclXML.removeAttributes(name);
+  }
+ 
+  void BCLMeasure::clearAttributes()
+  {
+    m_bclXML.clearAttributes();
+  }
+
+  bool BCLMeasure::checkForUpdatesFiles()
   {
     bool result = false;
 
@@ -581,9 +836,24 @@ namespace openstudio{
 
     // look for new files and add them
     openstudio::path srcDir = m_directory / "tests";
+    openstudio::path ignoreDir = srcDir / "output";
     for (const QFileInfo &info : QDir(toQString(srcDir)).entryInfoList(QDir::Files))
     {
       openstudio::path srcItemPath = srcDir / toPath(info.fileName());
+      openstudio::path parentPath = srcItemPath.parent_path();
+      bool ignore = false;
+      while (!parentPath.empty()){
+        if (parentPath == ignoreDir){
+          ignore = true;
+          break;
+        }
+        parentPath = parentPath.parent_path();
+      }
+
+      if (ignore){
+        continue;
+      }
+
       if (!m_bclXML.hasFile(srcItemPath)){
         BCLFileReference file(srcItemPath, true);
         file.setUsageType("test");
@@ -620,6 +890,12 @@ namespace openstudio{
     return result;
   }
 
+  bool BCLMeasure::checkForUpdatesXML()
+  {
+    return m_bclXML.checkForUpdatesXML();
+  }
+
+
   bool BCLMeasure::operator==(const BCLMeasure& other) const
   {
     return ((this->uid() == other.uid()) && (this->versionId() == other.versionId()));
@@ -653,6 +929,5 @@ namespace openstudio{
 
     return BCLMeasure::load(newDir);
   }
-
 
 } // openstudio

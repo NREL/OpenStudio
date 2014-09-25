@@ -22,13 +22,17 @@
 
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
+
 #include <boost/smart_ptr.hpp>
+
 #include <QObject>
 
 namespace openstudio {
 
-namespace model {
+class OSItem;
 
+namespace model {
+  
 class ThermalZone;
 
 class Loop;
@@ -56,6 +60,10 @@ class InspectorController : public QObject
   signals:
   
   void toggleUnitsClicked(bool displayIP);
+
+  void itemRemoveClicked(OSItem *);
+
+  void removeButtonClicked(bool);
 
   public slots:
 

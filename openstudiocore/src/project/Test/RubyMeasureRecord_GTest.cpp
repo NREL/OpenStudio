@@ -64,8 +64,8 @@ TEST_F(ProjectFixture, RubyMeasureRecord_RubyScript) {
   openstudio::path rubyLibDirPath = openstudio::toPath(rubyLibDir());
   openstudio::path perturbScript = rubyLibDirPath/openstudio::toPath("openstudio/runmanager/rubyscripts/PerturbObject.rb");
   RubyMeasure rubyMeasure(perturbScript,
-                                    FileReferenceType::OSM,
-                                    FileReferenceType::OSM);
+                          FileReferenceType::OSM,
+                          FileReferenceType::OSM);
   rubyMeasure.addArgument("inputPath", "in.osm");
   rubyMeasure.addArgument("outputPath", "out.osm");
   rubyMeasure.addArgument("objectType", "OS:Material");

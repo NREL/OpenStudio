@@ -43,7 +43,8 @@ struct UTILITIES_API MPHExpnt {
            int deg=0,
            int sr=0,
            int people=0,
-           int cycle=0)
+           int cycle=0,
+           int dollar=0)
    : m_inHg(inHg),
      m_mi(mi),
      m_h(h),
@@ -54,7 +55,8 @@ struct UTILITIES_API MPHExpnt {
      m_deg(deg),
      m_sr(sr),
      m_people(people),
-     m_cycle(cycle)
+     m_cycle(cycle),
+     m_dollar(dollar)
   {}
  private:
   int m_inHg;
@@ -68,6 +70,7 @@ struct UTILITIES_API MPHExpnt {
   int m_sr;
   int m_people;
   int m_cycle;
+  int m_dollar;
 
   friend class detail::MPHUnit_Impl;
 };
@@ -149,6 +152,8 @@ UTILITIES_API MPHUnit createMPHSolidAngle();
 UTILITIES_API MPHUnit createMPHPeople();
 /** \relates MPHUnit */
 UTILITIES_API MPHUnit createMPHCycle();
+/** \relates MPHUnit */
+UTILITIES_API MPHUnit createMPHCurrency();
 
 // first order derived units
 

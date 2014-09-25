@@ -43,7 +43,8 @@ struct UTILITIES_API CFMExpnt {
            int deg=0,
            int sr=0,
            int people=0,
-           int cycle=0)
+           int cycle=0,
+           int dollar=0)
   : m_ft(ft),
     m_min(min),
     m_ton(ton),
@@ -54,7 +55,8 @@ struct UTILITIES_API CFMExpnt {
     m_deg(deg),
     m_sr(sr),
     m_people(people),
-    m_cycle(cycle)
+    m_cycle(cycle),
+    m_dollar(dollar)
   {}
  private:
   int m_ft;
@@ -68,6 +70,7 @@ struct UTILITIES_API CFMExpnt {
   int m_sr;
   int m_people;
   int m_cycle;
+  int m_dollar;
 
   friend class detail::CFMUnit_Impl;
 };
@@ -152,6 +155,8 @@ UTILITIES_API CFMUnit createCFMSolidAngle();
 UTILITIES_API CFMUnit createCFMPeople();
 /** \relates CFMUnit */
 UTILITIES_API CFMUnit createCFMCycle();
+/** \relates CFMUnit */
+UTILITIES_API CFMUnit createCFMCurrency();
 
 /** Cubic feet per minute (cfm) = ft^3/min. \relates CFMUnit */
 UTILITIES_API CFMUnit createCFMVolumetricFlowrate();
