@@ -386,6 +386,7 @@
     <file alias="shared_gui_components/images/arrow_up.png">../shared_gui_components/images/arrow_up.png</file>
     <file alias="shared_gui_components/images/arrow_up_over.png">../shared_gui_components/images/arrow_up_over.png</file>
     <file alias="shared_gui_components/images/arrow_up_press.png">../shared_gui_components/images/arrow_up_press.png</file>
+    <file alias="shared_gui_components/images/broken_script.png">../shared_gui_components/images/broken_script.png</file>
     <file alias="shared_gui_components/images/clear_cloud_session.png">../shared_gui_components/images/clear_cloud_session.png</file>
     <file alias="shared_gui_components/images/cloud_arrow.png">../shared_gui_components/images/cloud_arrow.png</file>
     <file alias="shared_gui_components/images/cloud_arrow_magenta.png">../shared_gui_components/images/cloud_arrow_magenta.png</file>
