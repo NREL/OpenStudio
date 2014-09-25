@@ -417,7 +417,7 @@ void OSGridView::addWidget(int row, int column)
 
 void OSGridView::addWidget(QWidget *w, int row, int column)
 {
-  auto layoutindex = row / ROWS_PER_LAYOUT;
+  unsigned layoutindex = row / ROWS_PER_LAYOUT;
   auto relativerow = row % ROWS_PER_LAYOUT;
 
   if (layoutindex >= m_gridLayouts.size())
