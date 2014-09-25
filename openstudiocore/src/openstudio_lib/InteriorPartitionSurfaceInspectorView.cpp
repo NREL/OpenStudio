@@ -130,7 +130,7 @@ InteriorPartitionSurfaceInspectorView::InteriorPartitionSurfaceInspectorView(boo
   label->setStyleSheet("QLabel { font: bold; }");
   vLayout->addWidget(label);
 
-  m_surfaceAreaEdit = new OSQuantityEdit(this);
+  m_surfaceAreaEdit = new OSQuantityEdit(false);
   connect(this, &InteriorPartitionSurfaceInspectorView::toggleUnitsClicked, m_surfaceAreaEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_surfaceAreaEdit);
 

@@ -128,7 +128,7 @@ OSGridView::OSGridView(OSGridController * gridController,
   if (useHeader) {
     auto header = new DarkGradientHeader();
     header->label->setText(headerText); 
-    auto collabsibleView = new OSCollapsibleView(this);
+    auto collabsibleView = new OSCollapsibleView(true);
     collabsibleView->setHeader(header);
     collabsibleView->setContent(widget);
     collabsibleView->setExpanded(true); 
