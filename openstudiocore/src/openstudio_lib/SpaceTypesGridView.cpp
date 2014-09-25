@@ -424,6 +424,13 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
             return retval;
           }
 
+          boost::optional<model::InternalMass> im = t_modelObject->optionalCast<model::InternalMass>();
+          if (im)
+          {
+            retval = im->multiplier();
+            return retval;
+          }
+
           // Should never get here
           OS_ASSERT(false);
           return retval;
@@ -697,6 +704,12 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
             if (boost::optional<model::SpaceInfiltrationEffectiveLeakageArea> la = l->optionalCast<model::SpaceInfiltrationEffectiveLeakageArea>())
             {
               return la->schedule();
+            }
+
+            if (boost::optional<model::InternalMass> im = l->optionalCast<model::InternalMass>())
+            {
+              // Note: InternalMass does not have a schedule
+              return boost::optional<model::Schedule>();
             }
 
             // should be impossible to get here
