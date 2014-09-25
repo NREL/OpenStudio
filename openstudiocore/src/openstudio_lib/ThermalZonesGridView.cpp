@@ -44,6 +44,9 @@
 #include "../model/ThermostatSetpointDualSetpoint_Impl.hpp"
 #include "../model/ZoneControlHumidistat.hpp"
 #include "../model/ZoneControlHumidistat_Impl.hpp"
+#include "../model/ZoneHVACComponent.hpp"
+#include "../model/ZoneHVACComponent_Impl.hpp"
+
 
 #include "../utilities/idd/OS_ThermalZone_FieldEnums.hxx"
 
@@ -492,8 +495,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
       std::function<bool(model::ThermalZone *, const model::ModelObject &)> setter(
       [](model::ThermalZone *t_z, const model::ModelObject &t_mo) {
         try {
-          t_z->addEquipment(t_mo.clone());
-          return true;
+          return t_mo.cast<model::ZoneHVACComponent>().addToThermalZone(*t_z);
         } catch (const std::exception &) {
           return false;
         }
