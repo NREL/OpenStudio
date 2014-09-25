@@ -131,6 +131,7 @@ private:
   // Add a widget, adding a new layout if necessary
   void addWidget(QWidget *w, int row, int column);
 
+  void normalizeColumnWidths();
 
   void setGridController(OSGridController * gridController);
 

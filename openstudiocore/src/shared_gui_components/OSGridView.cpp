@@ -84,7 +84,7 @@ OSGridView::OSGridView(OSGridController * gridController,
 
   auto buttonLayout = new QHBoxLayout();
   buttonLayout->setSpacing(3);
-  buttonLayout->setContentsMargins(0,0,0,0);
+  buttonLayout->setContentsMargins(0,0,0,10);
   buttonLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
   auto vectorController = new GridViewDropZoneVectorController();
@@ -140,7 +140,7 @@ OSGridView::OSGridView(OSGridController * gridController,
 
   m_contentLayout = new QVBoxLayout();
   m_contentLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-  m_contentLayout->setSpacing(10);
+  m_contentLayout->setSpacing(0);
   m_contentLayout->setContentsMargins(0,10,0,0);
   widget->setLayout(m_contentLayout);
   m_contentLayout->addLayout(buttonLayout);
@@ -364,9 +364,37 @@ void OSGridView::refreshAll()
     m_gridController->m_oldIndex = newIndex;
   }
 
+  normalizeColumnWidths();
+
   // If the index is valid, call slot
   if (m_gridController->m_oldIndex > -1){
     QTimer::singleShot(0, this, SLOT(doRowSelect()));
+  }
+}
+
+void OSGridView::normalizeColumnWidths()
+{
+
+  std::vector<int> colmins(m_gridController->columnCount(), 0);
+
+  for( int i = 0; i < m_gridController->rowCount(); i++ )
+  {
+    for( int j = 0; j < m_gridController->columnCount(); j++ )
+    {
+      const auto *w = itemAtPosition(i, j)->widget();
+      OS_ASSERT(w);
+      colmins[j] = std::max(colmins[j], w->minimumWidth());
+    }
+  }
+
+  for(int i = 0; i < m_gridController->rowCount(); i += ROWS_PER_LAYOUT)
+  {
+    for( int j = 0; j < m_gridController->columnCount(); j++ )
+    {
+      auto *w = itemAtPosition(i, j)->widget();
+      OS_ASSERT(w);
+      w->setMinimumWidth(colmins[j]);
+    }
   }
 }
 
