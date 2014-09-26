@@ -369,12 +369,12 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           //loads.insert(loads.end(), SpaceInfiltrationDesignFlowRate.begin(), SpaceInfiltrationDesignFlowRate.end());
           //loads.insert(loads.end(), SpaceInfiltrationEffectiveLeakageArea.begin(), SpaceInfiltrationEffectiveLeakageArea.end());
 
-          for (int i = 0; i < SpaceInfiltrationDesignFlowRate.size(); ++i)
+          for (unsigned i = 0; i < SpaceInfiltrationDesignFlowRate.size(); ++i)
           {
             loads.emplace_back();
           }
 
-          for (int i = 0; i < SpaceInfiltrationEffectiveLeakageArea.size(); ++i)
+          for (unsigned i = 0; i < SpaceInfiltrationEffectiveLeakageArea.size(); ++i)
           {
             loads.emplace_back();
           }
