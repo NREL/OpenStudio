@@ -20,8 +20,10 @@
 #include "MainWindow.hpp"
 
 #include "../utilities/core/Application.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/FileLogSink.hpp"
+#include "../utilities/core/String.hpp"
 
 #include <QApplication>
 
@@ -44,6 +46,9 @@ int main(int argc, char *argv[])
   bool cont = true;
   while(cont) {
     cont = false;
+
+    // Make the run path the default plugin search location
+    QCoreApplication::addLibraryPath(openstudio::toQString(openstudio::getApplicationRunDirectory()));
 
     QApplication qApplication(argc,argv);
     openstudio::Application::instance().setApplication(&qApplication);
