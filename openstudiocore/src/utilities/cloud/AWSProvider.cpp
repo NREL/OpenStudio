@@ -526,6 +526,8 @@ namespace openstudio{
       if (applicationIsRunningFromBuildDirectory())
       {
         m_script = getApplicationBuildDirectory() / openstudio::toPath("ruby/cloud/aws.rb");
+        //m_script = getOpenStudioAWSRubyPath() / openstudio::toPath("lib/ruby/gems/2.0.0/gems/openstudio-aws-0.2.2/lib/openstudio/lib/os-aws.rb");
+        //m_script = m_script.make_preferred();
       } else {
 #ifdef Q_OS_LINUX
         m_script = getApplicationInstallDirectory() / openstudio::toPath("share/openstudio-" + openStudioVersion() + "/Ruby/cloud/aws.rb");
@@ -1542,6 +1544,7 @@ namespace openstudio{
       
       QJsonObject options;
       options["instance_type"] = QJsonValue(toQString(m_awsSettings.serverInstanceType()));
+      options["openstudio_version"] = QJsonValue(toQString(openStudioVersion()));
       args << QString(QJsonDocument(options).toJson(QJsonDocument::Compact));
       
       p->start(toQString(m_ruby), args);
@@ -1570,6 +1573,7 @@ namespace openstudio{
         options["private_key"] = QJsonValue(m_privateKey.fileName());
         m_privateKey.close();
       }
+      options["openstudio_version"] = QJsonValue(toQString(openStudioVersion()));
       args << QString(QJsonDocument(options).toJson(QJsonDocument::Compact));
       
       p->start(toQString(m_ruby), args);
