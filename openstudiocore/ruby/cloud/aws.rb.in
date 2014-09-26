@@ -192,8 +192,8 @@ if (!defined?(@server_image_id) || !defined?(@worker_image_id))
 end
 
 def create_struct(instance, procs)
-  instance_struct = Struct.new(:instance, :id, :ip, :dns, :procs)
-  return instance_struct.new(instance, instance.instance_id, instance.ip_address, instance.dns_name, procs)
+  instance_struct = Struct.new(:instance, :id, :ip, :dns, :procs, :availability_zone)
+  return instance_struct.new(instance, instance.instance_id, instance.ip_address, instance.dns_name, procs, instance.availability_zone)
 end
 
 def find_processors(instance)
@@ -256,7 +256,8 @@ def launch_workers(num, server_ip)
                                    :key_pair => @key_pair,
                                    :security_groups => @group,
                                    :user_data => user_data,
-                                   :instance_type => @worker_instance_type)
+                                   :instance_type => @worker_instance_type,
+                                   :availability_zone => @server.availability_zone)
     worker.add_tag('Name', :value => "OpenStudio-Worker V#{OPENSTUDIO_VERSION}")
     instances.push(worker)
   end
@@ -488,9 +489,10 @@ begin
                  :id => @server.id,
                  :ip => 'http://' + @server.ip,
                  :dns => @server.dns,
-                 :procs => @server.procs
+                 :procs => @server.procs,
+                 :availability_zone => @server.availability_zone
              }}.to_json)
-      @logger.info("server info #{({:timestamp => @timestamp, :private_key => @private_key, :server => {:id => @server.id, :ip => @server.ip, :dns => @server.dns, :procs => @server.procs}}.to_json)}")
+      @logger.info("server info #{({:timestamp => @timestamp, :private_key => @private_key, :server => {:id => @server.id, :ip => @server.ip, :dns => @server.dns, :procs => @server.procs, :availability_zone => @server.availability_zone}}.to_json)}")
     when 'launch_workers'
       if ARGV.length < 6
         error(-1, 'Invalid number of args')
