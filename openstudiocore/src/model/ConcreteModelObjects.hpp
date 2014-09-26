@@ -57,7 +57,7 @@
 #include "ChillerElectricEIR.hpp"
 #include "CoilCoolingCooledBeam.hpp"
 #include "CoilCoolingDXMultiSpeed.hpp"
-#include "coilCoolingDXMultiSpeedStageData.hpp"
+#include "CoilCoolingDXMultiSpeedStageData.hpp"
 #include "CoilCoolingDXSingleSpeed.hpp"
 #include "CoilCoolingDXTwoSpeed.hpp"
 #include "CoilCoolingDXVariableRefrigerantFlow.hpp"
