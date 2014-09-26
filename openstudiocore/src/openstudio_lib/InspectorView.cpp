@@ -283,14 +283,14 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
 
       m_currentView = new AirTerminalSingleDuctConstantVolumeCooledBeamInspectorView();
       connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
-  
+
       m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
 
       m_vLayout->addWidget(m_currentView);
 
       connect(static_cast<AirTerminalSingleDuctConstantVolumeCooledBeamInspectorView *>(m_currentView), &AirTerminalSingleDuctConstantVolumeCooledBeamInspectorView::addToLoopClicked,
               this, &InspectorView::addToLoopClicked);
-      
+
       connect(static_cast<AirTerminalSingleDuctConstantVolumeCooledBeamInspectorView *>(m_currentView), &AirTerminalSingleDuctConstantVolumeCooledBeamInspectorView::removeFromLoopClicked,
               this, &InspectorView::removeFromLoopClicked);
     }
@@ -303,14 +303,14 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
 
       m_currentView = new AirTerminalSingleDuctConstantVolumeReheatInspectorView();
       connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
-  
+
       m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
 
       m_vLayout->addWidget(m_currentView);
 
       connect(static_cast<AirTerminalSingleDuctConstantVolumeReheatInspectorView *>(m_currentView), &AirTerminalSingleDuctConstantVolumeReheatInspectorView::addToLoopClicked,
               this, &InspectorView::addToLoopClicked);
-      
+
       connect(static_cast<AirTerminalSingleDuctConstantVolumeReheatInspectorView *>(m_currentView), &AirTerminalSingleDuctConstantVolumeReheatInspectorView::removeFromLoopClicked,
               this, &InspectorView::removeFromLoopClicked);
     }
@@ -323,14 +323,14 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
 
       m_currentView = new AirTerminalSingleDuctVAVReheatInspectorView();
       connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
-  
+
       m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
 
       m_vLayout->addWidget(m_currentView);
 
       connect(static_cast<AirTerminalSingleDuctVAVReheatInspectorView *>(m_currentView), &AirTerminalSingleDuctVAVReheatInspectorView::addToLoopClicked,
               this, &InspectorView::addToLoopClicked);
-      
+
       connect(static_cast<AirTerminalSingleDuctVAVReheatInspectorView *>(m_currentView), &AirTerminalSingleDuctVAVReheatInspectorView::removeFromLoopClicked,
               this, &InspectorView::removeFromLoopClicked);
     }
@@ -364,7 +364,7 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
 
       m_currentView = new ZoneHVACBaseboardConvectiveWaterInspectorView();
       connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
-  
+
       m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
 
       m_vLayout->addWidget(m_currentView);
@@ -385,14 +385,14 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
 
       m_currentView = new ZoneHVACFourPipeFanCoilInspectorView();
       connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
-  
+
       m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
 
       m_vLayout->addWidget(m_currentView);
 
       connect(static_cast<ZoneHVACFourPipeFanCoilInspectorView *>(m_currentView), &ZoneHVACFourPipeFanCoilInspectorView::addToLoopClicked,
               this, &InspectorView::addToLoopClicked);
-      
+
       connect(static_cast<ZoneHVACFourPipeFanCoilInspectorView *>(m_currentView), &ZoneHVACFourPipeFanCoilInspectorView::removeFromLoopClicked,
               this, &InspectorView::removeFromLoopClicked);
     }
@@ -406,18 +406,18 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
 
       m_currentView = new ZoneHVACLowTempRadiantConstFlowInspectorView();
       connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
-  
+
       m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
 
       m_vLayout->addWidget(m_currentView);
 
       connect(static_cast<ZoneHVACLowTempRadiantConstFlowInspectorView *>(m_currentView), &ZoneHVACLowTempRadiantConstFlowInspectorView::addToLoopClicked,
               this, &InspectorView::addToLoopClicked);
-      
+
       connect(static_cast<ZoneHVACLowTempRadiantConstFlowInspectorView *>(m_currentView), &ZoneHVACLowTempRadiantConstFlowInspectorView::removeFromLoopClicked,
               this, &InspectorView::removeFromLoopClicked);
     }
-    
+
     else if( boost::optional<model::ZoneHVACLowTempRadiantVarFlow> component = 
              modelObject->optionalCast<model::ZoneHVACLowTempRadiantVarFlow>()  )
     {
@@ -428,14 +428,14 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
 
       m_currentView = new ZoneHVACLowTempRadiantVarFlowInspectorView();
       connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
-  
+
       m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
 
       m_vLayout->addWidget(m_currentView);
 
       connect(static_cast<ZoneHVACLowTempRadiantVarFlowInspectorView *>(m_currentView), &ZoneHVACLowTempRadiantVarFlowInspectorView::addToLoopClicked,
               this, &InspectorView::addToLoopClicked);
-      
+
       connect(static_cast<ZoneHVACLowTempRadiantVarFlowInspectorView *>(m_currentView), &ZoneHVACLowTempRadiantVarFlowInspectorView::removeFromLoopClicked,
               this, &InspectorView::removeFromLoopClicked);
     }
@@ -449,20 +449,20 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
 
       m_currentView = new ZoneHVACWaterToAirHeatPumpInspectorView();
       connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
-  
+
       m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
 
       m_vLayout->addWidget(m_currentView);
 
       connect(static_cast<ZoneHVACWaterToAirHeatPumpInspectorView *>(m_currentView), &ZoneHVACWaterToAirHeatPumpInspectorView::addToLoopClicked,
               this, &InspectorView::addToLoopClicked);
-      
+
       connect(static_cast<ZoneHVACWaterToAirHeatPumpInspectorView *>(m_currentView), &ZoneHVACWaterToAirHeatPumpInspectorView::removeFromLoopClicked,
               this, &InspectorView::removeFromLoopClicked);
     }
     else if( boost::optional<model::ZoneHVACPackagedTerminalAirConditioner> component = 
              modelObject->optionalCast<model::ZoneHVACPackagedTerminalAirConditioner>()  )
-    
+
     {
       if( m_currentView )
       {
@@ -471,14 +471,14 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
 
       m_currentView = new ZoneHVACPackagedTerminalAirConditionerInspectorView();
       connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
-  
+
       m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
 
       m_vLayout->addWidget(m_currentView);
 
       connect(static_cast<ZoneHVACPackagedTerminalAirConditionerInspectorView *>(m_currentView), &ZoneHVACPackagedTerminalAirConditionerInspectorView::addToLoopClicked,
               this, &InspectorView::addToLoopClicked);
-      
+
       connect(static_cast<ZoneHVACPackagedTerminalAirConditionerInspectorView *>(m_currentView), &ZoneHVACPackagedTerminalAirConditionerInspectorView::removeFromLoopClicked,
               this, &InspectorView::removeFromLoopClicked);
     }
@@ -491,9 +491,9 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       }
 
       m_currentView = new ZoneHVACUnitHeaterInspectorView();
-      
+
       connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
-  
+
       m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
 
       m_vLayout->addWidget(m_currentView);
@@ -542,12 +542,6 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
 
       m_currentView = new GenericInspectorView();
 
-      if (!readOnly){
-        m_currentView->m_libraryTabWidget->showRemoveButton();
-
-        connect(m_currentView, &BaseInspectorView::removeButtonClicked, this, &InspectorView::removeButtonClicked);
-      }
-
       connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
 
       m_currentView->layoutModelObject(modelObject.get(), readOnly, displayIP);
@@ -564,14 +558,15 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
 
     m_currentView = new GenericInspectorView();
 
-   connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
-   
+    connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
+
     m_vLayout->addWidget(m_currentView);
   }
 
   if( m_currentView )
   {
     m_currentView->show();
+    connect(m_currentView, &BaseInspectorView::removeButtonClicked, this, &InspectorView::removeButtonClicked);
   }
 
   if( QWidget * _parentWidget = parentWidget() )

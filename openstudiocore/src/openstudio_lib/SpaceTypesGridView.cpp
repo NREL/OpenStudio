@@ -292,6 +292,25 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           }
           );
 
+      std::function<std::vector<boost::optional<model::ModelObject>>(const model::SpaceType &)> allLoadsWithSchedules(
+          [allLoads](const model::SpaceType &t_spaceType) {
+            std::vector<boost::optional<model::ModelObject>> retval;
+            for (auto &l : allLoads(t_spaceType))
+            {
+              // internal mass does not have a schedule
+              if (!l.optionalCast<model::InternalMass>())
+              {
+                retval.push_back(boost::optional<model::ModelObject>(std::move(l)));
+              } else {
+                retval.emplace_back();
+              }
+            }
+            return retval;
+          }
+          );
+
+
+
       std::function<std::vector<boost::optional<model::ModelObject>>(const model::SpaceType &)> allLoadsWithActivityLevelSchedules(
           [allLoads](const model::SpaceType &t_spaceType) {
             std::vector<boost::optional<model::ModelObject>> retval;
@@ -350,12 +369,12 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           //loads.insert(loads.end(), SpaceInfiltrationDesignFlowRate.begin(), SpaceInfiltrationDesignFlowRate.end());
           //loads.insert(loads.end(), SpaceInfiltrationEffectiveLeakageArea.begin(), SpaceInfiltrationEffectiveLeakageArea.end());
 
-          for (const auto &l : SpaceInfiltrationDesignFlowRate)
+          for (unsigned i = 0; i < SpaceInfiltrationDesignFlowRate.size(); ++i)
           {
             loads.emplace_back();
           }
 
-          for (const auto &l : SpaceInfiltrationEffectiveLeakageArea)
+          for (unsigned i = 0; i < SpaceInfiltrationEffectiveLeakageArea.size(); ++i)
           {
             loads.emplace_back();
           }
@@ -424,6 +443,13 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
             return retval;
           }
 
+          boost::optional<model::InternalMass> im = t_modelObject->optionalCast<model::InternalMass>();
+          if (im)
+          {
+            retval = im->multiplier();
+            return retval;
+          }
+
           // Should never get here
           OS_ASSERT(false);
           return retval;
@@ -488,10 +514,15 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
             return;
           }
 
-          else {
-            // Should never get here
-            OS_ASSERT(false);
+          boost::optional<model::InternalMass> im = t_modelObject->optionalCast<model::InternalMass>();
+          if (im)
+          {
+            im->setMultiplier(multiplier);
+            return;
           }
+
+          // Should never get here
+          OS_ASSERT(false);
         }
       );
 
@@ -699,6 +730,12 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
               return la->schedule();
             }
 
+            if (boost::optional<model::InternalMass> im = l->optionalCast<model::InternalMass>())
+            {
+              // Note: InternalMass does not have a schedule
+              return boost::optional<model::Schedule>();
+            }
+
             // should be impossible to get here
             OS_ASSERT(false);
             return boost::optional<model::Schedule>();
@@ -755,6 +792,14 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         addLoadNameColumn(QString(LOADNAME),
           CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::name),
           CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::setName),
+          boost::optional<std::function<void(model::SpaceLoad *)>>(
+            std::function<void(model::SpaceLoad *)>(
+              [](model::SpaceLoad *t_sl)
+              {
+                t_sl->remove();
+              }
+            )
+          ),
           DataSource(
           allLoads,
           true
@@ -845,6 +890,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         addNameLineEditColumn(QString(DEFINITION),
           CastNullAdapter<model::SpaceLoadDefinition>(&model::SpaceLoadDefinition::name),
           CastNullAdapter<model::SpaceLoadDefinition>(&model::SpaceLoadDefinition::setName),
+          boost::optional<std::function<void (model::SpaceLoadDefinition *)>>(),
           DataSource(
             allDefinitions,
             false ,
@@ -860,7 +906,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           setSchedule,
           resetSchedule,
           DataSource(
-            allLoads,
+            allLoadsWithSchedules,
             true
           )
         );
@@ -920,6 +966,14 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
       addNameLineEditColumn(QString(SPACEINFILTRATIONDESIGNFLOWRATES),
         CastNullAdapter<model::SpaceInfiltrationDesignFlowRate>(&model::SpaceInfiltrationDesignFlowRate::name),
         CastNullAdapter<model::SpaceInfiltrationDesignFlowRate>(&model::SpaceInfiltrationDesignFlowRate::setName),
+        boost::optional<std::function<void (model::SpaceInfiltrationDesignFlowRate *)>>(
+          std::function<void (model::SpaceInfiltrationDesignFlowRate *)>(
+            [](model::SpaceInfiltrationDesignFlowRate *t_fr)
+            {
+              t_fr->resetSpaceType();
+            }
+          )
+        ),
         DataSource(
           flowRates,
           false, 
@@ -946,6 +1000,14 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
       addNameLineEditColumn(QString(SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS),
         CastNullAdapter<model::SpaceInfiltrationEffectiveLeakageArea>(&model::SpaceInfiltrationEffectiveLeakageArea::name),
         CastNullAdapter<model::SpaceInfiltrationEffectiveLeakageArea>(&model::SpaceInfiltrationEffectiveLeakageArea::setName),
+        boost::optional<std::function<void(model::SpaceInfiltrationEffectiveLeakageArea *)>>(
+        std::function<void(model::SpaceInfiltrationEffectiveLeakageArea *)>(
+          [](model::SpaceInfiltrationEffectiveLeakageArea *t_la)
+            {
+              t_la->resetSpaceType();
+            }
+          )
+        ),
         DataSource(
         leakageAreas,
         false,
