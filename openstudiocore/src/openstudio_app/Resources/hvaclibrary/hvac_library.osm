@@ -162,7 +162,7 @@ OS:Schedule:Day,
 
 OS:SetpointManager:FollowOutdoorAirTemperature,
   {66411916-74d9-491e-8fdd-63249f651c0e}, ! Handle
-  Follow Outdoor Air Temperature,         ! Name
+  Follow OA Temp,         ! Name
   Temperature,                            ! Control Variable
   OutdoorAirWetBulb,                      ! Reference Temperature Type
   0,                                      ! Offset Temperature Difference {deltaC}
@@ -172,7 +172,7 @@ OS:SetpointManager:FollowOutdoorAirTemperature,
 
 OS:SetpointManager:OutdoorAirReset,
   {6150d904-49c8-4db7-a235-001a6bfccac0}, !- Handle
-  Setpoint Manager Outdoor Air Reset,     !- Name
+  OA Temp Reset,     !- Name
   Temperature,                            !- Control Variable
   22,                                     !- Setpoint at Outdoor Low Temperature {C}
   10,                                     !- Outdoor Low Temperature {C}
@@ -187,28 +187,28 @@ OS:SetpointManager:OutdoorAirReset,
 
 OS:SetpointManager:Scheduled,
   {2820afd7-ae39-48d4-80e9-beed1a4d2e00}, ! Handle
-  Deck Temp SPM,                          ! Name
+  Scheduled Deck Temp,                          ! Name
   Temperature,                            ! Control Variable
   {7b9a6d38-fb98-4fb3-a65f-3acd22246ad5}, ! Schedule Name
   ;                                       ! Setpoint Node or NodeList Name
 
 OS:SetpointManager:Scheduled,
   {2e8f0105-051f-4848-93fd-665d90864f10}, ! Handle
-  Hot Water SPM,                          ! Name
+  Scheduled HW Temp,                          ! Name
   Temperature,                            ! Control Variable
   {79d1a727-7423-4a1b-a207-ba52d7b79585}, ! Schedule Name
   ;                                       ! Setpoint Node or NodeList Name
 
 OS:SetpointManager:Scheduled,
   {258adc08-0f5c-4590-9dda-8e4997f4afcd}, ! Handle
-  Chilled Water SPM,                      ! Name
+  Scheduled CHW Temp,                      ! Name
   Temperature,                            ! Control Variable
   {65a1b0a1-d443-4036-bf41-434dd40cfc03}, ! Schedule Name
   ;                                       ! Setpoint Node or NodeList Name
 
 OS:SetpointManager:MixedAir,
   {b27ac206-d7fc-4ada-aacc-4806c3f43a7b}, ! Handle
-  OS:SetpointManager:MixedAir 1,          ! Name
+  Mixed Air Temp,          ! Name
   Temperature,                            ! Control Variable
   ,                                       ! Reference Setpoint Node Name
   ,                                       ! Fan Inlet Node Name
@@ -217,7 +217,7 @@ OS:SetpointManager:MixedAir,
 
 OS:SetpointManager:SingleZone:Reheat,
   {52b29f2b-e01f-47bf-bbe4-620a2322df12}, ! Handle
-  OS:SetpointManager:SingleZone:Reheat 1, ! Name
+  Single Zone Reheat Temp, ! Name
   -99,                                    ! Minimum Supply Air Temperature {C}
   99,                                     ! Maximum Supply Air Temperature {C}
   ,                                       ! Control Zone Name
@@ -225,7 +225,7 @@ OS:SetpointManager:SingleZone:Reheat,
 
 OS:SetpointManager:Warmest,
   {4f12e925-01e9-4ce2-9f56-daa5d024ac5d}, !- Handle
-  Setpoint Manager Warmest,               !- Name
+  Warmest Zone Supply Air Temp Reset,               !- Name
   Temperature,                            !- Control Variable
   12.2,                                   !- Minimum Setpoint Temperature {C}
   15.6,                                   !- Maximum Setpoint Temperature {C}
@@ -234,7 +234,7 @@ OS:SetpointManager:Warmest,
 
 OS:SetpointManager:Scheduled:DualSetpoint,
   {9eae8047-b0c4-46a9-a37a-30889c83b4ae}, !- Handle
-  Dual Setpoint,                          !- Name
+  Min Max Temp w Deadband,                          !- Name
   Temperature,                            !- Control Variable
   {7aec1e64-640d-4bb1-ba20-f89f7e911d11}, !- High Setpoint Schedule Name
   {3515ff9e-912f-4d2e-bf1f-163a63d2662b}, !- Low Setpoint Schedule Name
@@ -242,13 +242,13 @@ OS:SetpointManager:Scheduled:DualSetpoint,
 
 OS:Schedule:Ruleset,
   {7aec1e64-640d-4bb1-ba20-f89f7e911d11}, !- Handle
-  Dual SP High Schedule,                  !- Name
+  Min Max Temp w Deadband Max Temp Sch,                  !- Name
   {919bbba6-e6ba-472c-968a-3444cb36c6e6}, !- Schedule Type Limits Name
   {47fec27d-6610-4f32-94f3-860c2949a1d8}; !- Default Day Schedule Name
 
 OS:Schedule:Day,
   {47fec27d-6610-4f32-94f3-860c2949a1d8}, !- Handle
-  Dual SP High Day,                       !- Name
+  Min Max Temp w Deadband Max Day,                       !- Name
   {919bbba6-e6ba-472c-968a-3444cb36c6e6}, !- Schedule Type Limits Name
   ,                                       !- Interpolate to Timestep
   24,                                     !- Hour 1
@@ -257,13 +257,13 @@ OS:Schedule:Day,
 
 OS:Schedule:Ruleset,
   {3515ff9e-912f-4d2e-bf1f-163a63d2662b}, !- Handle
-  Dual SP Low Schedule,                   !- Name
+  Min Max Temp w Deadband Min Temp Schedule,                   !- Name
   {554ee901-8dc9-456e-884a-409b5b97127b}, !- Schedule Type Limits Name
   {2e127e60-a413-4470-9836-838e2468abe2}; !- Default Day Schedule Name
 
 OS:Schedule:Day,
   {2e127e60-a413-4470-9836-838e2468abe2}, !- Handle
-  Dual SP Low Day,                        !- Name
+  Min Max Temp w Deadband Min Day,                        !- Name
   {554ee901-8dc9-456e-884a-409b5b97127b}, !- Schedule Type Limits Name
   ,                                       !- Interpolate to Timestep
   24,                                     !- Hour 1
@@ -272,7 +272,7 @@ OS:Schedule:Day,
 
 OS:ScheduleTypeLimits,
   {919bbba6-e6ba-472c-968a-3444cb36c6e6}, !- Handle
-  Dual SP High Limits,                    !- Name
+  Min Max Temp w Deadband Max Limits,                    !- Name
   ,                                       !- Lower Limit Value {BasedOnField A4}
   ,                                       !- Upper Limit Value {BasedOnField A4}
   Continuous,                             !- Numeric Type
@@ -280,7 +280,7 @@ OS:ScheduleTypeLimits,
 
 OS:ScheduleTypeLimits,
   {554ee901-8dc9-456e-884a-409b5b97127b}, !- Handle
-  Dual SP Low Limits,                     !- Name
+  Min Max Temp w Deadband Min Limits,                     !- Name
   ,                                       !- Lower Limit Value {BasedOnField A4}
   ,                                       !- Upper Limit Value {BasedOnField A4}
   Continuous,                             !- Numeric Type
@@ -302,7 +302,7 @@ OS:SetpointManager:OutdoorAirPretreat,
 
 OS:Fan:ConstantVolume,
   {c15ef75a-56db-4ec3-9720-d06294deabcc}, ! Handle
-  Constant Speed Fan,                     ! Name
+  Const Spd Fan,                     ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   ,                                       ! Fan Efficiency
   ,                                       ! Pressure Rise {Pa}
@@ -315,7 +315,7 @@ OS:Fan:ConstantVolume,
 
 OS:Fan:VariableVolume,
   {ade4771b-26f4-404b-9a94-07c5fee085ca}, ! Handle
-  Variable Speed Fan,                     ! Name
+  Var Spd Fan,                     ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   0.60450000000000004,                    ! Fan Efficiency
   1017.592,                               ! Pressure Rise {Pa}
@@ -336,7 +336,7 @@ OS:Fan:VariableVolume,
 
 OS:Coil:Heating:Gas,
   {e5360a5e-82a4-4772-96b8-a55c6d871995}, ! Handle
-  OS:Coil:Heating:Gas 1,                  ! Name
+  Gas Htg Coil,                  ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   0.80000000000000004,                    ! Gas Burner Efficiency
   AutoSize,                               ! Nominal Capacity {W}
@@ -349,7 +349,7 @@ OS:Coil:Heating:Gas,
 
 OS:Coil:Heating:Electric,
   {c5aca90c-39a5-4144-b4a5-4cbdc860c65e}, ! Handle
-  OS:Coil:Heating:Electric 1,             ! Name
+  Elec Htg Coil,             ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   ,                                       ! Efficiency
   ,                                       ! Nominal Capacity {W}
@@ -358,7 +358,7 @@ OS:Coil:Heating:Electric,
 
 OS:Coil:Cooling:DX:SingleSpeed,
   {2323aae7-f591-444f-9ed4-ff6eb640f190}, ! Handle
-  OS:Coil:Cooling:DX:SingleSpeed 1,       ! Name
+  1 Spd DX Clg Coil,       ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   Autosize,                               ! Rated Total Cooling Capacity {W}
   Autosize,                               ! Rated Sensible Heat Ratio
@@ -391,7 +391,7 @@ OS:Coil:Cooling:DX:SingleSpeed,
 
 OS:CoolingTower:SingleSpeed,
   {c555c629-0c49-4248-9bd1-a04e0cf9e2d1}, ! Handle
-  OS:CoolingTower:SingleSpeed,          ! Name
+  1 Spd Cooling Tower,          ! Name
   ,                                       ! Water Inlet Node Name
   ,                                       ! Water Outlet Node Name
   Autosize,                               ! Design Water Flow Rate {m3/s}
@@ -458,7 +458,7 @@ OS:Curve:Quadratic,
 
 OS:EvaporativeCooler:Indirect:ResearchSpecial,
   {70e2147c-5b58-49a7-b1a3-1cc1b1bd8854}, !- Handle
-  Indirect Evaporative Cooler,            !- Name
+  Indirect Evap Cooler,            !- Name
   ,                                       !- Availability Schedule Name
   0.75,                                   !- Cooler Maximum Effectiveness
   ,                                       !- Cooler Flow Ratio
@@ -479,7 +479,7 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
 
 OS:EvaporativeCooler:Direct:ResearchSpecial,
   {8d3b17e0-88c9-4d17-9de4-0b9dd0481b36}, ! Handle
-  Direct Evaporative Cooler,              ! Name
+  Direct Evap Cooler,              ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   1,                                      !- Cooler Effectiveness
   0,                                      !- Recirculating Water Pump Power Consumption {W}
@@ -498,7 +498,7 @@ OS:AirTerminal:SingleDuct:InletSideMixer,
 
 OS:AirTerminal:SingleDuct:ConstantVolume:Reheat,
   {36193791-ae10-4f59-90dc-2bc06cf598d2}, !- Handle
-  AirTerminal CAV With Electric Reheat,   !- Name
+  CV Elec Rht,   !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Air Outlet Node Name
   ,                                       !- Air Inlet Node Name
@@ -511,7 +511,7 @@ OS:AirTerminal:SingleDuct:ConstantVolume:Reheat,
 
 OS:Coil:Heating:Electric,
   {49bb683c-774e-43f1-b346-cecc2a17abcf}, !- Handle
-  AirTerminal CAV Coil Heating Electric,  !- Name
+  CV Elec Rht Coil,  !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Efficiency
   ,                                       !- Nominal Capacity {W}
@@ -520,7 +520,7 @@ OS:Coil:Heating:Electric,
 
 OS:AirTerminal:SingleDuct:ConstantVolume:Reheat,
   {ddebc341-dda2-4ce9-b273-e5c04d43dd3b}, !- Handle
-  AirTerminal CAV With Gas Reheat,        !- Name
+  CV Gas Rht,        !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Air Outlet Node Name
   ,                                       !- Air Inlet Node Name
@@ -533,7 +533,7 @@ OS:AirTerminal:SingleDuct:ConstantVolume:Reheat,
 
 OS:Coil:Heating:Gas,
   {b31fd95d-d7a3-4acc-9f00-fa5fc59ac08a}, !- Handle
-  AirTerminal CAV Coil Heating Gas,       !- Name
+  CV Gas Rht Coil,       !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.8,                                    !- Gas Burner Efficiency
   AutoSize,                               !- Nominal Capacity {W}
@@ -546,7 +546,7 @@ OS:Coil:Heating:Gas,
 
 OS:AirTerminal:SingleDuct:ConstantVolume:Reheat,
   {a713621f-ee1b-4f97-84bb-2cec78fad3ed}, !- Handle
-  AirTerminal CAV With Hot Water Reheat,  !- Name
+  CV HW Rht,  !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Air Outlet Node Name
   ,                                       !- Air Inlet Node Name
@@ -559,7 +559,7 @@ OS:AirTerminal:SingleDuct:ConstantVolume:Reheat,
 
 OS:Coil:Heating:Water,
   {512b3639-980e-402f-9767-207776852799}, !- Handle
-  AirTerminal CAV Coil Heating Water,     !- Name
+  CV HW Rht Coil,     !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- U-Factor Times Area Value {W/K}
   ,                                       !- Maximum Water Flow Rate {m3/s}
@@ -577,7 +577,7 @@ OS:Coil:Heating:Water,
 
 OS:EvaporativeFluidCooler:SingleSpeed,
   {b04f495c-cbc1-4d89-acec-e5f7711f00de}, !- Handle
-  Evaporative Fluid Cooler Single Speed,  !- Name
+  1 Spd Evap Fluid Cooler,  !- Name
   ,                                       !- Water Inlet Node Name
   ,                                       !- Water Outlet Node Name
   autosize,                               !- Design Air Flow Rate {m3/s}
@@ -604,7 +604,7 @@ OS:EvaporativeFluidCooler:SingleSpeed,
 
 OS:AirTerminal:SingleDuct:Uncontrolled,
   {b883cca7-f436-48ce-ad23-7e8310c7a85d}, ! Handle
-  OS:AirTerminal:SingleDuct:Uncontrolled 1, ! Name
+  Diffuser, ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   ,                                       ! Inlet Air Node Name
   ,                                       ! Zone Supply Air Node Name
@@ -612,7 +612,7 @@ OS:AirTerminal:SingleDuct:Uncontrolled,
 
 OS:AirTerminal:SingleDuct:VAV:NoReheat,
   {bede16a8-c558-4028-9110-70994233f6f9}, !- Handle
-  Air Terminal VAV with No Reheat,        !- Name
+  VAV No Rht,        !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Air Outlet Node Name
   ,                                       !- Air Inlet Node Name
@@ -625,7 +625,7 @@ OS:AirTerminal:SingleDuct:VAV:NoReheat,
 
 OS:AirTerminal:SingleDuct:VAV:Reheat,
   {293eff65-3e25-4c91-97bc-a0d600b4e09b}, ! Handle
-  AirTerminal With Gas Reheat,            ! Name
+  VAV Gas Rht,            ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   ,                                       ! Air Inlet Node Name
   Autosize,                               ! Maximum Air Flow Rate {m3/s}
@@ -646,7 +646,7 @@ OS:AirTerminal:SingleDuct:VAV:Reheat,
 
 OS:Coil:Heating:Gas,
   {da758cb3-2282-4b60-a6a5-a3f283ede607}, ! Handle
-  OS:Coil:Heating:Gas 2,                  ! Name
+  VAV Gas Rht Coil,                  ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   0.80000000000000004,                    ! Gas Burner Efficiency
   AutoSize,                               ! Nominal Capacity {W}
@@ -659,7 +659,7 @@ OS:Coil:Heating:Gas,
 
 OS:AirTerminal:SingleDuct:VAV:Reheat,
   {0ecb2b1e-1405-4f99-8a45-10ad352ed99d}, ! Handle
-  AirTerminal With Electric Reheat,       ! Name
+  VAV Elec Rht,       ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   ,                                       ! Air Inlet Node Name
   Autosize,                               ! Maximum Air Flow Rate {m3/s}
@@ -679,7 +679,7 @@ OS:AirTerminal:SingleDuct:VAV:Reheat,
 
 OS:Coil:Heating:Electric,
   {5fb0024b-7b12-40a7-8612-5f462dff4e2a}, ! Handle
-  OS:Coil:Heating:Electric 2,             ! Name
+  VAV Elec Rht Coil,             ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   ,                                       ! Efficiency
   ,                                       ! Nominal Capacity {W}
@@ -689,7 +689,7 @@ OS:Coil:Heating:Electric,
 
 OS:AirTerminal:SingleDuct:VAV:Reheat,
   {cc2e44f3-2b98-4dc8-a19c-f457d3fec8db}, ! Handle
-  AirTerminal With Hot Water Reheat,      ! Name
+  VAV HW Rht,      ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   ,                                       ! Air Inlet Node Name
   Autosize,                               ! Maximum Air Flow Rate {m3/s}
@@ -709,7 +709,7 @@ OS:AirTerminal:SingleDuct:VAV:Reheat,
 
 OS:Coil:Heating:Water,
   {d39dcf38-ea17-465c-8bfa-6020a5f9e8c2}, ! Handle
-  OS:Coil:Heating:Water 1,                ! Name
+  VAV HW Rht Coil,                ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   ,                                       ! U-Factor Times Area Value {W/K}
   ,                                       ! Maximum Water Flow Rate {m3/s}
@@ -727,7 +727,7 @@ OS:Coil:Heating:Water,
 
 OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
   {30e9aca9-a12e-4e4a-a264-c97ec8fd62a2}, ! Handle
-  Parallel PIU Terminal w CAV Fan and Electric Reheat, ! Name
+  Parallel PIU Elec Rht, ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   Autosize,                               ! Maximum Primary Air Flow Rate {m3/s}
   Autosize,                               ! Maximum Secondary Air Flow Rate {m3/s}
@@ -746,7 +746,7 @@ OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
 
 OS:Fan:ConstantVolume,
   {af9e86be-a4b3-47e7-80b3-39b3728ed07a}, ! Handle
-  OS:Fan:ConstantVolume 1,                ! Name
+  Parallel PIU Elec Rht Fan,                ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   ,                                       ! Fan Efficiency
   ,                                       ! Pressure Rise {Pa}
@@ -759,7 +759,7 @@ OS:Fan:ConstantVolume,
 
 OS:Coil:Heating:Electric,
   {c58a15d8-78a8-4e27-b350-e7266fc9d676}, ! Handle
-  OS:Coil:Heating:Electric 3,             ! Name
+  Parallel PIU Elec Rht Coil,             ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   ,                                       ! Efficiency
   ,                                       ! Nominal Capacity {W}
@@ -768,7 +768,7 @@ OS:Coil:Heating:Electric,
 
 OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
   {f2eca4ed-3132-4bfe-bc53-5088dc113393}, !- Handle
-  Parallel PIU Terminal w CAV Fan and Gas Reheat, !- Name
+  Parallel PIU Gas Rht, !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   Autosize,                               !- Maximum Primary Air Flow Rate {m3/s}
   Autosize,                               !- Maximum Secondary Air Flow Rate {m3/s}
@@ -787,7 +787,7 @@ OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
 
 OS:Fan:ConstantVolume,
   {95ce84e5-c2ba-4833-a75d-3c89720f76d4}, !- Handle
-  Parallel PIU Fan,                       !- Name
+  Parallel PIU Gas Rht Fan,                       !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Fan Efficiency
   ,                                       !- Pressure Rise {Pa}
@@ -800,7 +800,7 @@ OS:Fan:ConstantVolume,
 
 OS:Coil:Heating:Gas,
   {8cf0d111-ff4c-435e-9d5e-bfe12c2962d7}, !- Handle
-  Parallel PIU Coil,                      !- Name
+  Parallel PIU Gas Rht Coil,                      !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.8,                                    !- Gas Burner Efficiency
   AutoSize,                               !- Nominal Capacity {W}
@@ -813,7 +813,7 @@ OS:Coil:Heating:Gas,
 
 OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
   {0c5479be-55e2-4a40-a050-be17e603fba8}, !- Handle
-  Parallel PIU Terminal w CAV Fan and Hot Water Reheat, !- Name
+  Parallel PIU HW Rht, !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   Autosize,                               !- Maximum Primary Air Flow Rate {m3/s}
   Autosize,                               !- Maximum Secondary Air Flow Rate {m3/s}
@@ -832,7 +832,7 @@ OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
 
 OS:Fan:ConstantVolume,
   {a638e8d6-0db3-43dd-b160-aaae12a7abbc}, !- Handle
-  Parallel PIU Fan 1,                     !- Name
+  Parallel PIU HW Rht Fan,                     !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Fan Efficiency
   ,                                       !- Pressure Rise {Pa}
@@ -845,7 +845,7 @@ OS:Fan:ConstantVolume,
 
 OS:Coil:Heating:Water,
   {e48c9cdf-2762-4a27-9584-0eefbb889726}, !- Handle
-  Parallel PIU Coil 1,                    !- Name
+  Parallel PIU HW Rht Coil,                    !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- U-Factor Times Area Value {W/K}
   ,                                       !- Maximum Water Flow Rate {m3/s}
@@ -876,7 +876,7 @@ OS:Fan:ConstantVolume,
 
 OS:Coil:Heating:Electric,
   {f5afd62c-fd37-470c-b61a-89f2683ddc8b}, !- Handle
-  Series PIU Coil,                        !- Name
+  Series PIU Elec Rht Coil,                        !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Efficiency
   ,                                       !- Nominal Capacity {W}
@@ -885,7 +885,7 @@ OS:Coil:Heating:Electric,
 
 OS:AirTerminal:SingleDuct:SeriesPIU:Reheat,
   {1c4961f3-614c-4530-854d-18b47804b9f6}, !- Handle
-  Series Fan Powered Terminal,            !- Name
+  Series PIU Elec Rht,            !- Name
   ,                                       !- Availability Schedule Name
   autosize,                               !- Maximum Air Flow Rate {m3/s}
   autosize,                               !- Maximum Primary Air Flow Rate {m3/s}
@@ -903,7 +903,7 @@ OS:AirTerminal:SingleDuct:SeriesPIU:Reheat,
 
 OS:AirLoopHVAC:OutdoorAirSystem,
   {4b8b842c-2628-4074-aaa1-e3636b179cce}, !- Handle
-  Air Loop HVAC Outdoor Air System 1,     !- Name
+  OA System,     !- Name
   {41ecb3ff-c9f2-44b9-834f-09328c2649b6}, !- Controller Name
   ,                                       !- Outdoor Air Equipment List Name
   ,                                       !- Availability Manager List Name
@@ -914,7 +914,7 @@ OS:AirLoopHVAC:OutdoorAirSystem,
 
 OS:Controller:OutdoorAir,
   {41ecb3ff-c9f2-44b9-834f-09328c2649b6}, !- Handle
-  Controller Outdoor Air 1,               !- Name
+  Outdoor Air Controller,               !- Name
   ,                                       !- Relief Air Outlet Node Name
   ,                                       !- Return Air Node Name
   ,                                       !- Mixed Air Node Name
@@ -978,7 +978,7 @@ OS:Connection,
 
 OS:Chiller:Electric:EIR,
   {849d9618-ded0-4983-b57f-090fa2a756c0}, ! Handle
-  OS:Chiller:Electric:EIR 1,              ! Name
+  Chiller Electric EIR,              ! Name
   Autosize,                               ! Reference Capacity {W}
   5.5,                                    ! Reference COP {W/W}
   ,                                       ! Reference Leaving Chilled Water Temperature {C}
@@ -1048,7 +1048,7 @@ OS:Curve:Quadratic,
 
 OS:Boiler:HotWater,
   {7741e24f-1bf9-4cb7-b035-737b8734095c}, ! Handle
-  OS:Boiler:HotWater 1,                   ! Name
+  HW Boiler,                   ! Name
   ,                                       ! Fuel Type
   ,                                       ! Nominal Capacity {W}
   ,                                       ! Nominal Thermal Efficiency
@@ -1087,7 +1087,7 @@ OS:Curve:Biquadratic,
 
 OS:Coil:Cooling:Water,
   {00641ad0-4d06-46e6-9dd9-9f9995c779a5}, ! Handle
-  OS:Coil:Cooling:Water 1,                ! Name
+  CHW Clg Coil,                ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   ,                                       ! Design Water Flow Rate {m3/s}
   ,                                       ! Design Air Flow Rate {m3/s}
@@ -1105,7 +1105,7 @@ OS:Coil:Cooling:Water,
 
 OS:Coil:Heating:Water,
   {32cc80f2-b098-4fa2-96c7-ac7159ed5366}, ! Handle
-  OS:Coil:Heating:Water 2,                ! Name
+  HW Htg Coil,                ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   ,                                       ! U-Factor Times Area Value {W/K}
   ,                                       ! Maximum Water Flow Rate {m3/s}
@@ -1123,7 +1123,7 @@ OS:Coil:Heating:Water,
 
 OS:Pump:VariableSpeed,
   {c04fc7dc-8d89-416a-95ef-55ad62300ac5}, ! Handle
-  OS:Pump:VariableSpeed 1,                ! Name
+  Var Spd Pump,                ! Name
   ,                                       ! Inlet Node Name
   ,                                       ! Outlet Node Name
   ,                                       ! Rated Flow Rate {m3/s}
@@ -1141,7 +1141,7 @@ OS:Pump:VariableSpeed,
 
 OS:Pump:ConstantSpeed,
   {179abade-266d-45a5-a002-0bfe1caeeb23}, !- Handle
-  Pump Constant Speed,                    !- Name
+  Const Spd Pump,                    !- Name
   ,                                       !- Inlet Node Name
   ,                                       !- Outlet Node Name
   autosize,                               !- Rated Flow Rate {m3/s}
@@ -1159,7 +1159,7 @@ OS:Pump:ConstantSpeed,
 
 OS:ZoneHVAC:HighTemperatureRadiant,
   {78b89842-8c8d-46d2-8f30-1322d180980e}, !- Handle
-  High Temperature Radiant,               !- Name
+  High Temp Radiant,               !- Name
   ,                                       !- Availability Schedule Name
   autosize,                               !- Maximum Power Input {W}
   NaturalGas,                             !- Fuel Type
@@ -1198,7 +1198,7 @@ OS:Schedule:Day,
 
 OS:ZoneHVAC:PackagedTerminalHeatPump,
   {b9232216-7c91-4457-9cda-1df2300bb3d4}, ! Handle
-  OS:ZoneHVAC:PackagedTerminalHeatPump 1, ! Name
+  PTHP, ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   ,                                       ! Air Inlet Node Name
   ,                                       ! Air Outlet Node Name
@@ -1224,7 +1224,7 @@ OS:ZoneHVAC:PackagedTerminalHeatPump,
 
 OS:Coil:Heating:DX:SingleSpeed,
   {cff8b2af-5e9b-4b82-9e96-35b6084412ca}, ! Handle
-  OS:Coil:Heating:DX:SingleSpeed 2,       ! Name
+  PTHP 1 Spd DX Htg Coil,       ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   Autosize,                               ! Rated Total Heating Capacity {W}
   5,                                      ! Rated COP {W/W}
@@ -1303,7 +1303,7 @@ OS:Curve:Quadratic,
 
 OS:Coil:Cooling:DX:SingleSpeed,
   {5ad5d300-c7a5-4409-8b51-83efb1bf2a51}, ! Handle
-  OS:Coil:Cooling:DX:SingleSpeed 3,       ! Name
+  PTHP 1 Spd DX Clg Coil,       ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   Autosize,                               ! Rated Total Cooling Capacity {W}
   Autosize,                               ! Rated Sensible Heat Ratio
@@ -1391,7 +1391,7 @@ OS:Curve:Quadratic,
 
 OS:Fan:ConstantVolume,
   {4bbc8798-4a94-470b-a2da-51224a40ea4b}, ! Handle
-  OS:Fan:ConstantVolume 3,                ! Name
+  PTHP CV Fan,                ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   ,                                       ! Fan Efficiency
   ,                                       ! Pressure Rise {Pa}
@@ -1404,7 +1404,7 @@ OS:Fan:ConstantVolume,
 
 OS:Coil:Heating:Electric,
   {b5ca4420-c4b6-4421-a456-8db199fe27e0}, ! Handle
-  OS:Coil:Heating:Electric 5,             ! Name
+  PTHP Elec Htg Backup Coil,             ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   ,                                       ! Efficiency
   ,                                       ! Nominal Capacity {W}
@@ -1413,7 +1413,7 @@ OS:Coil:Heating:Electric,
 
 OS:ZoneHVAC:PackagedTerminalAirConditioner,
   {1be22621-ed22-48ec-96e7-12724604833d}, ! Handle
-  OS:ZoneHVAC:PackagedTerminalAirConditioner 1, ! Name
+  PTAC DX Clg HW Htg, ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   ,                                       ! Air Inlet Node Name
   ,                                       ! Air Outlet Node Name
@@ -1433,7 +1433,7 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
 
 OS:Coil:Cooling:DX:SingleSpeed,
   {9c508114-016d-4f8e-a2d1-7742c37adb80}, ! Handle
-  OS:Coil:Cooling:DX:SingleSpeed 4,       ! Name
+  PTAC 1 Spd DX Clg Coil,       ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   Autosize,                               ! Rated Total Cooling Capacity {W}
   Autosize,                               ! Rated Sensible Heat Ratio
@@ -1521,7 +1521,7 @@ OS:Curve:Quadratic,
 
 OS:Fan:ConstantVolume,
   {ee8dd059-19cf-4a49-9057-a73c2da0df82}, ! Handle
-  OS:Fan:ConstantVolume 4,                ! Name
+  PTAC Fan,                ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   ,                                       ! Fan Efficiency
   ,                                       ! Pressure Rise {Pa}
@@ -1534,7 +1534,7 @@ OS:Fan:ConstantVolume,
 
 OS:Coil:Heating:Water,
   {088c33d6-4a37-474d-9b5f-6dccbb3a0094}, ! Handle
-  OS:Coil:Heating:Water 3,                ! Name
+  PTAC HW Htg Coil,                ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   ,                                       ! U-Factor Times Area Value {W/K}
   ,                                       ! Maximum Water Flow Rate {m3/s}
@@ -1552,27 +1552,27 @@ OS:Coil:Heating:Water,
 
 OS:DistrictHeating,
   {518f05fd-6a27-4cd2-a1f9-b8b6f1396f9c}, ! Handle
-  OS:DistrictHeating 1,                   ! Name
+  District Heating,                   ! Name
   ,                                       ! Hot Water Inlet Node Name
   ,                                       ! Hot Water Outlet Node Name
   1000000;                                ! Nominal Capacity {W}
 
 OS:DistrictCooling,
   {f2c9dc18-ae6c-46e5-adff-e89c4311ab60}, ! Handle
-  OS:DistrictCooling 1,                   ! Name
+  District Cooling,                   ! Name
   ,                                       ! Chilled Water Inlet Node Name
   ,                                       ! Chilled Water Outlet Node Name
   1000000;                                ! Nominal Capacity {W}
 
 OS:Pipe:Adiabatic,
   {b28f49ea-8022-4948-ae82-57814a3a8440}, ! Handle
-  OS:Pipe:Adiabatic 1,                    ! Name
+  Adiabatic Pipe,                    ! Name
   ,                                       ! Inlet Node Name
   ;                                       ! Outlet Node Name
 
 OS:Coil:Cooling:DX:TwoSpeed,
   {54e53f96-6e42-4a2a-ad2c-4cd7ff319949}, ! Handle
-  OS:Coil:Cooling:DX:TwoSpeed 1,          ! Name
+  2 Spd DX Clg Coil,          ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   Autosize,                               ! Rated High Speed Total Cooling Capacity {W}
   Autosize,                               ! Rated High Speed Sensible Heat Ratio
@@ -1690,7 +1690,7 @@ OS:Curve:Biquadratic,
 
 OS:WaterHeater:Mixed,
   {a5780efe-a3d2-4211-a0a1-66f758539f62}, ! Handle
-  OS:WaterHeater:Mixed,                   ! Name
+  Water Heater,                   ! Name
   0.3785,                                 ! Tank Volume {m3}
   {c13bffd8-644e-4f69-871f-7dcafa493644}, ! Setpoint Temperature Schedule Name
   2,                                      ! Deadband Temperature Difference {deltaC}
@@ -1745,7 +1745,7 @@ OS:WaterUse:Connections,
 
 OS:WaterUse:Equipment:Definition,
   {7ee129c6-8b88-4f52-b6ff-7ad101da81fd}, ! Handle
-  Bathroom Sink Definition,               ! Name
+  Water Fixture Definition,               ! Name
   ,                                       ! End-Use Subcategory
   0.0000631,                              ! Peak Flow Rate {m3/s}
   ,                                       !- Target Temperature Schedule Name
@@ -1754,14 +1754,14 @@ OS:WaterUse:Equipment:Definition,
 
 OS:WaterUse:Equipment,
   {bb539061-f901-499d-b11b-a96891973f45}, ! Handle
-  Bathroom Sink,                          ! Name
+  Water Fixture,                          ! Name
   {7ee129c6-8b88-4f52-b6ff-7ad101da81fd}, ! Water Use Equipment Definition Name
   ,                                       !- Space Name
   ;                                       !- Flow Rate Fraction Schedule Name
 
 OS:Fan:ConstantVolume,
   {0834260a-d5f1-4ef1-a261-97274039ae65}, ! Handle
-  Fan Constant Volume 1,                  ! Name
+  Four Pipe Fan Coil CV Fan,                  ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   ,                                       ! Fan Efficiency
   ,                                       ! Pressure Rise {Pa}
@@ -1774,7 +1774,7 @@ OS:Fan:ConstantVolume,
 
 OS:Coil:Cooling:Water,
   {d5b3d5c8-7612-420f-a403-56ee7e9f11cd}, ! Handle
-  Coil Cooling Water 3,                   ! Name
+  Four Pipe Fan Coil CHW Clg Coil,                   ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   ,                                       ! Design Water Flow Rate {m3/s}
   ,                                       ! Design Air Flow Rate {m3/s}
@@ -1792,7 +1792,7 @@ OS:Coil:Cooling:Water,
 
 OS:Coil:Heating:Water,
   {97e3f53d-b342-46bd-abf7-e7b03b221c40}, ! Handle
-  Coil Heating Water 3,                   ! Name
+  Four Pipe Fan Coil HW Htg Coil,                   ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   ,                                       ! U-Factor Times Area Value {W/K}
   ,                                       ! Maximum Water Flow Rate {m3/s}
@@ -1810,7 +1810,7 @@ OS:Coil:Heating:Water,
 
 OS:ZoneHVAC:FourPipeFanCoil,
   {c03721b8-10cc-42a7-81ef-e45c8b4271c1}, ! Handle
-  Zone HVAC Four Pipe Fan Coil 1,         ! Name
+  Four Pipe Fan Coil,         ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   ConstantFanVariableFlow,                ! Capacity Control Method
   autosize,                               ! Maximum Supply Air Flow Rate {m3/s}
@@ -1834,14 +1834,14 @@ OS:ZoneHVAC:FourPipeFanCoil,
 
 OS:ZoneHVAC:Baseboard:Convective:Electric,
   {d3c9c6b9-aab2-4f08-9a97-683c0561bebc}, !- Handle
-  Zone HVAC Baseboard Convective Electric 1, !- Name
+  Elec Baseboard, !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule
   autosize,                               !- Nominal Capacity {W}
   1;                                      !- Efficiency
 
 OS:Coil:Heating:Water:Baseboard,
   {4a34a74c-37f5-42da-b2e0-0526ce10d4c5}, !- Handle
-  Coil Heating Water Baseboard,           !- Name
+  Baseboard HW Htg Coil,           !- Name
   autosize,                               !- U-Factor Times Area Value {W/K}
   autosize,                               !- Maximum Water Flow Rate {m3/s}
   0.001,                                  !- Convergence Tolerance
@@ -1850,13 +1850,13 @@ OS:Coil:Heating:Water:Baseboard,
 
 OS:ZoneHVAC:Baseboard:Convective:Water,
   {1df14922-1b9b-4c69-8d13-fe1a95b35eaa}, !- Handle
-  Convective Baseboard Water,             !- Name
+  HW Baseboard,             !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   {4a34a74c-37f5-42da-b2e0-0526ce10d4c5}; !- Heating Coil Name
 
 OS:Fan:ConstantVolume,
   {d81187b2-ccea-4a08-a9ca-3aabbb4ee2fb}, !- Handle
-  Unit Heater CV Fan,                     !- Name
+  CV Unit Heater Fan,                     !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Fan Efficiency
   ,                                       !- Pressure Rise {Pa}
@@ -1869,7 +1869,7 @@ OS:Fan:ConstantVolume,
 
 OS:Fan:VariableVolume,
   {14f0828b-9d6d-4e07-abbf-ba58c5265285}, !- Handle
-  Unit Heater VAV Fan,                    !- Name
+  VAV Unit Heater Fan,                    !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.6045,                                 !- Fan Efficiency
   1017.592,                               !- Pressure Rise {Pa}
@@ -1890,7 +1890,7 @@ OS:Fan:VariableVolume,
 
 OS:Coil:Heating:Water,
   {e27b9c21-ae7e-4d12-8582-087ea6f3ec72}, !- Handle
-  Unit Heater Hot Water Coil,             !- Name
+  Unit Heater HW Htg Coil,             !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- U-Factor Times Area Value {W/K}
   ,                                       !- Maximum Water Flow Rate {m3/s}
@@ -1908,7 +1908,7 @@ OS:Coil:Heating:Water,
 
 OS:Coil:Heating:Electric,
   {b2bbc7a7-dcb7-4595-9d0f-09593e71c198}, !- Handle
-  Unit Heater Electric Coil,              !- Name
+  Unit Heater Elec Htg Coil,              !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Efficiency
   ,                                       !- Nominal Capacity {W}
@@ -1917,7 +1917,7 @@ OS:Coil:Heating:Electric,
 
 OS:Coil:Heating:Gas,
   {4e44439f-de57-43b5-9822-a38e6c58e5ad}, !- Handle
-  Unit Heater Gas Coil,                   !- Name
+  Unit Heater Gas Htg Coil,                   !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.8,                                    !- Gas Burner Efficiency
   AutoSize,                               !- Nominal Capacity {W}
@@ -1930,7 +1930,7 @@ OS:Coil:Heating:Gas,
 
 OS:ZoneHVAC:UnitHeater,
   {d5102f53-b288-49a6-90bf-94f70658c748}, !- Handle
-  Unit Heater CV - Hot Water,             !- Name
+  CV Unit Heater HW,             !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
@@ -1945,7 +1945,7 @@ OS:ZoneHVAC:UnitHeater,
 
 OS:ZoneHVAC:UnitHeater,
   {dac0a651-55d7-4ab3-a0d8-bbf55e250db4}, !- Handle
-  Unit Heater VAV - Hot Water,            !- Name
+  VAV Unit Heater HW,            !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
@@ -1960,7 +1960,7 @@ OS:ZoneHVAC:UnitHeater,
 
 OS:ZoneHVAC:UnitHeater,
   {2be16d68-176f-4f2d-ae42-7b3f7f00d968}, !- Handle
-  Unit Heater CV - Electric,              !- Name
+  CV Unit Heater Elec,              !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
@@ -1975,7 +1975,7 @@ OS:ZoneHVAC:UnitHeater,
 
 OS:ZoneHVAC:UnitHeater,
   {1685be85-4d6a-4714-a95e-e79bd3f8bef7}, !- Handle
-  Unit Heater VAV - Electric,             !- Name
+  VAV Unit Heater Elec,             !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
@@ -1990,7 +1990,7 @@ OS:ZoneHVAC:UnitHeater,
 
 OS:ZoneHVAC:UnitHeater,
   {724737fe-3547-4ed3-b094-a6f74d1ecdca}, !- Handle
-  Unit Heater CV - Gas,                   !- Name
+  CV Unit Heater Gas,                   !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
@@ -2005,7 +2005,7 @@ OS:ZoneHVAC:UnitHeater,
 
 OS:ZoneHVAC:UnitHeater,
   {46496230-9beb-4d22-8a2f-43ceeb141035}, !- Handle
-  Unit Heater VAV - Gas,                  !- Name
+  VAV Unit Heater Gas,                  !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
@@ -2020,7 +2020,7 @@ OS:ZoneHVAC:UnitHeater,
 
 OS:Fan:OnOff,
   {182c837c-0413-4a6e-8328-7adc0c5d00d6}, !- Handle
-  Fan On Off 1,                           !- Name
+  Wtr-to-Air HP Elec Backup Fan On Off,                           !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.6045,                                 !- Fan Efficiency
   250,                                    !- Pressure Rise {Pa}
@@ -2066,7 +2066,7 @@ OS:Curve:Cubic,
 
 OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
   {d683b8e6-1a67-4e2b-aa32-8a4aa6cedd5d}, !- Handle
-  Coil Heating Water To Air Heat Pump Equation Fit 3, !- Name
+  Wtr-to-Air HP Elec Backup HP Htg Coil, !- Name
   ,                                       !- Water Inlet Node Name
   ,                                       !- Water Outlet Node Name
   ,                                       !- Air Inlet Node Name
@@ -2088,7 +2088,7 @@ OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
 
 OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
   {497dcb6a-5e26-44b9-ad01-3a2cee449abb}, !- Handle
-  Coil Cooling Water To Air Heat Pump Equation Fit 4, !- Name
+  Wtr-to-Air HP Elec Backup HP Clg Coil, !- Name
   ,                                       !- Water Inlet Node Name
   ,                                       !- Water Outlet Node Name
   ,                                       !- Air Inlet Node Name
@@ -2119,7 +2119,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
 
 OS:Fan:OnOff,
   {686ec71a-e2b4-4e6c-bb5a-b8245ecd33e4}, !- Handle
-  Fan On Off 2,                           !- Name
+  Wtr-to-Air HP Gas Backup Fan On Off,                           !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.6045,                                 !- Fan Efficiency
   250,                                    !- Pressure Rise {Pa}
@@ -2134,7 +2134,7 @@ OS:Fan:OnOff,
 
 OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
   {3ad65a6c-58cf-4c1f-937d-359611c4d472}, !- Handle
-  Coil Heating Water To Air Heat Pump Equation Fit 4, !- Name
+  Wtr-to-Air HP Gas Backup HP Htg Coil, !- Name
   ,                                       !- Water Inlet Node Name
   ,                                       !- Water Outlet Node Name
   ,                                       !- Air Inlet Node Name
@@ -2156,7 +2156,7 @@ OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
 
 OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
   {e6f679f1-9fe3-4189-af37-13d8cb88d7d8}, !- Handle
-  Coil Cooling Water To Air Heat Pump Equation Fit 3, !- Name
+  Wtr-to-Air HP Gas Backup HP Clg Coil, !- Name
   ,                                       !- Water Inlet Node Name
   ,                                       !- Water Outlet Node Name
   ,                                       !- Air Inlet Node Name
@@ -2187,7 +2187,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
 
 OS:Fan:OnOff,
   {c947bbf7-a7f6-473b-af51-f5709ab08feb}, !- Handle
-  Fan On Off 3,                           !- Name
+  Wtr-to-Air HP HW Backup Fan On Off,                           !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.6045,                                 !- Fan Efficiency
   250,                                    !- Pressure Rise {Pa}
@@ -2202,7 +2202,7 @@ OS:Fan:OnOff,
 
 OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
   {54669793-36af-4393-aafe-d99188dfc46f}, !- Handle
-  Coil Heating Water To Air Heat Pump Equation Fit 2, !- Name
+  Wtr-to-Air HP HW Backup HP Htg Coil, !- Name
   ,                                       !- Water Inlet Node Name
   ,                                       !- Water Outlet Node Name
   ,                                       !- Air Inlet Node Name
@@ -2224,7 +2224,7 @@ OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
 
 OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
   {7b550b0c-a709-4422-8f21-690b52ad8519}, !- Handle
-  Coil Cooling Water To Air Heat Pump Equation Fit 2, !- Name
+  Wtr-to-Air HP HW Backup HP Clg Coil, !- Name
   ,                                       !- Water Inlet Node Name
   ,                                       !- Water Outlet Node Name
   ,                                       !- Air Inlet Node Name
@@ -2255,7 +2255,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
 
 OS:Coil:Heating:Electric,
   {c29736fa-c1bc-4abc-89e5-9eff83d9426f}, !- Handle
-  Coil Heating Electric 9,                !- Name
+  Wtr-to-Air HP Elec Backup Coil,                !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Efficiency
   ,                                       !- Nominal Capacity {W}
@@ -2264,7 +2264,7 @@ OS:Coil:Heating:Electric,
 
 OS:Coil:Heating:Gas,
   {0a0d302a-f61c-40b7-8482-912889aec901}, !- Handle
-  Coil Heating Gas 1,                     !- Name
+  Wtr-to-Air HP Gas Backup Coil,                     !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.8,                                    !- Gas Burner Efficiency
   AutoSize,                               !- Nominal Capacity {W}
@@ -2277,7 +2277,7 @@ OS:Coil:Heating:Gas,
 
 OS:Coil:Heating:Water,
   {b746d8a5-fbfd-4d6a-a703-0ca20ab0ba53}, !- Handle
-  Coil Heating Water 4,                   !- Name
+  Wtr-to-Air HP HW Backup Coil,                   !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- U-Factor Times Area Value {W/K}
   ,                                       !- Maximum Water Flow Rate {m3/s}
@@ -2295,7 +2295,7 @@ OS:Coil:Heating:Water,
 
 OS:ZoneHVAC:WaterToAirHeatPump,
   {17796048-6e5f-471c-ab75-b4eb73568702}, !- Handle
-  Water To Air HP w Elec Supplemental Coil, !- Name
+  Wtr-to-Air HP Elec Backup, !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
@@ -2323,7 +2323,7 @@ OS:ZoneHVAC:WaterToAirHeatPump,
 
 OS:ZoneHVAC:WaterToAirHeatPump,
   {d00ed249-7171-4de9-a582-91d948e1b81d}, !- Handle
-  Water To Air Heat Pump w Gas Supplemental Coil, !- Name
+  Wtr-to-Air HP Gas Backup, !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
@@ -2351,7 +2351,7 @@ OS:ZoneHVAC:WaterToAirHeatPump,
 
 OS:ZoneHVAC:WaterToAirHeatPump,
   {394ba612-67a4-4f6e-9bac-759be77fd28d}, !- Handle
-  Water to Air Heat Pump w Hot Water Supplemental Coil, !- Name
+  Wtr-to-Air HP HW Backup, !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
@@ -2379,7 +2379,7 @@ OS:ZoneHVAC:WaterToAirHeatPump,
 
 OS:Coil:Heating:DX:SingleSpeed,
   {36ce71b0-4d19-4604-8dc5-5103bd97703e}, ! Handle
-  OS:Coil:Heating:DX:SingleSpeed,         ! Name
+  1 Spd DX Htg Coil,         ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   Autosize,                               ! Rated Total Heating Capacity {W}
   5,                                      ! Rated COP {W/W}
@@ -2458,7 +2458,7 @@ OS:Curve:Quadratic,
 
 OS:HeatExchanger:AirToAir:SensibleAndLatent,
   {648d1052-42c2-4c83-82e9-af6299097461}, !- Handle
-  Heat Exchanger Air To Air Sensible And Latent, !- Name
+  Air-to-Air HX, !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule
   autosize,                               !- Nominal Supply Air Flow Rate {m3/s}
   0.76,                                   !- Sensible Effectiveness at 100% Heating Air Flow {dimensionless}
@@ -2499,7 +2499,7 @@ OS:Schedule:Day,
 
 OS:ZoneHVAC:LowTemperatureRadiant:Electric,
   {2630717b-a04c-4254-8ead-7be8b9f29a65}, !- Handle
-  Low Temperature Radiant Electric,       !- Name
+  Low Temp Radiant Elec,       !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   Ceilings,                               !- Radiant Surface Type
   autosize,                               !- Maximum Electrical Power to Panel {W}
@@ -2569,7 +2569,7 @@ OS:Schedule:Day,
 
 OS:Coil:Heating:LowTemperatureRadiant:ConstantFlow,
   {b663c064-e5c7-4097-b85d-be8e73fec664}, !- Handle
-  Coil Heating Low Temp Rad Const Flow,   !- Name
+  Low Temp Rad Const Flow Htg Coil,   !- Name
   ,                                       !- Heating Water Inlet Node Name
   ,                                       !- Heating Water Outlet Node Name
   {c6f277a7-8ea3-44c3-aaf6-4214a974fd19}, !- Heating High Water Temperature Schedule Name
@@ -2639,7 +2639,7 @@ OS:Schedule:Day,
 
 OS:Coil:Cooling:LowTemperatureRadiant:ConstantFlow,
   {ef54dfa0-4b17-4c66-9fef-582882b6678f}, !- Handle
-  Coil Cooling Low Temp Rad Const Flow,   !- Name
+  Low Temp Rad Const Flow Clg Coil,   !- Name
   ,                                       !- Cooling Water Inlet Node Name
   ,                                       !- Cooling Water Outlet Node Name
   {e8ad3d13-8608-4b2e-916a-38985eb5ac41}, !- Cooling High Water Temperature Schedule Name
@@ -2683,7 +2683,7 @@ OS:Schedule:Day,
 
 OS:Coil:Heating:LowTemperatureRadiant:VariableFlow,
   {0bb8d9e1-257b-4f72-872b-1c8352ebcff5}, !- Handle
-  Coil Heating Low Temperature Rad Var Flow, !- Name
+  Low Temp Rad Var Flow Htg Coil, !- Name
   ,                                       !- Maximum Hot Water Flow {m3/s}
   ,                                       !- Heating Water Inlet Node Name
   ,                                       !- Heating Water Outlet Node Name
@@ -2707,7 +2707,7 @@ OS:Schedule:Day,
 
 OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow,
   {bc6be488-1c8b-43d3-8064-00a09ab21444}, !- Handle
-  Coil Cooling Low Temperature Rad Var Flow, !- Name
+  Low Temp Rad Var Flow Clg Coil, !- Name
   ,                                       !- Maximum Cold Water Flow {m3/s}
   ,                                       !- Cooling Water Inlet Node Name
   ,                                       !- Cooling Water Outlet Node Name
@@ -2727,7 +2727,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
 
 OS:GroundHeatExchanger:Vertical,
   {2a737b1f-3c8b-4532-b605-aaddf5b555d0}, !- Handle
-  Ground Heat Exchanger Vertical 1,       !- Name
+  Vertical Bore Field,       !- Name
   ,                                       !- Inlet Node Name
   ,                                       !- Outlet Node Name
   0.0033,                                 !- Maximum Flow Rate {m3/s}
@@ -2818,7 +2818,7 @@ OS:GroundHeatExchanger:Vertical,
 
 OS:Coil:Cooling:CooledBeam,
   {9409bb35-2087-4798-897c-a6703b5a7669}, !- Handle
-  Coil Cooling Cooled Beam,               !- Name
+  Chilled Beam Coil,               !- Name
   ,                                       !- Chilled Water Inlet Node Name
   ,                                       !- Chilled Water Outlet Node Name
   5.422,                                  !- Coil Surface Area per Coil Length {m2/m}
@@ -2833,7 +2833,7 @@ OS:Coil:Cooling:CooledBeam,
 
 OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
   {3667b348-2052-4711-9cd2-7226dc650e72}, !- Handle
-  Cooled Beam,                            !- Name
+  Chilled Beam,                            !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Cooled Beam Type
   ,                                       !- Supply Air Inlet Node Name
@@ -2863,7 +2863,7 @@ OS:Refrigeration:Condenser:AirCooled,
 
 OS:Refrigeration:Condenser:EvaporativeCooled,
   {5fdbc0e0-d650-469d-8866-8c6d8f6b8b46}, !- Handle
-  Refrigeration Condenser Evaporative Cooled, !- Name
+  Evap Cooled Refrigeration Condenser, !- Name
   43100,                                  !- Rated Effective Total Heat Rejection Rate {W}
   0,                                      !- Rated Subcooling Temperature Difference {deltaC}
   VariableSpeed,                          !- Fan Speed Control Type
@@ -2883,7 +2883,7 @@ OS:Refrigeration:Condenser:EvaporativeCooled,
 
 OS:Refrigeration:Condenser:WaterCooled,
   {257357d5-041a-479c-894c-68cc5cff9e82}, !- Handle
-  Refrigeration Condenser Water Cooled,   !- Name
+  Wtr Cooled Refrigeration Condenser,   !- Name
   58000,                                  !- Rated Effective Total Heat Rejection Rate {W}
   29.4,                                   !- Rated Condensing Temperature {C}
   0,                                      !- Rated Subcooling Temperature Difference {deltaC}
@@ -3046,7 +3046,7 @@ OS:Schedule:Day,
 
 OS:Refrigeration:Case,
   {f2b4154e-97d8-492a-b1d1-1f2e7f9c1d34}, !- Handle
-  Refrigeration Case,                     !- Name
+  Refrigerated Case,                     !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Zone Name
   24,                                     !- Rated Ambient Temperature {C}
@@ -3084,7 +3084,7 @@ OS:Refrigeration:Case,
 
 OS:Curve:Cubic,
   {012a63c6-2590-4f3d-a487-c600bf72ad75}, !- Handle
-  Refrigeration Case Latent Credit Curve, !- Name
+  Refrigerated Case Latent Credit Curve, !- Name
   0.026526281,                            !- Coefficient1 Constant
   0.001078032,                            !- Coefficient2 x
   -6.02558e-05,                           !- Coefficient3 x**2
@@ -3175,7 +3175,7 @@ OS:ModelObjectList,
 
 OS:Refrigeration:Condenser:Cascade,
   {8c1ef62d-e23d-4791-9b59-ed9122d27cde}, !- Handle
-  Cascade Condenser,                      !- Name
+  Cascade Refrigeration Condenser,                      !- Name
   -4,                                     !- Rated Condensing Temperature {C}
   3,                                      !- Rated Approach Temperature Difference {deltaC}
   20000,                                  !- Rated Effective Total Heat Rejection Rate {W}
@@ -3183,13 +3183,13 @@ OS:Refrigeration:Condenser:Cascade,
 
 OS:Refrigeration:Subcooler:Mechanical,
   {95085174-fabf-4659-a947-6ec9fc65c977}, !- Handle
-  Refrigeration Subcooler Mechanical,     !- Name
+  Mechanical Subcooler,     !- Name
   ,                                       !- Capacity-Providing System
   10;                                     !- Outlet Control Temperature {C}
 
 OS:Refrigeration:Subcooler:LiquidSuction,
   {c6cc85c4-8d3e-4814-8b2a-cd8ff1b41ee9}, !- Handle
-  Refrigeration Subcooler Liquid Suction, !- Name
+  Liquid Suction HX, !- Name
   6,                                      !- Liquid Suction Design Subcooling Temperature Difference {deltaC}
   16,                                     !- Design Liquid Inlet Temperature {C}
   0;                                      !- Design Vapor Inlet Temperature {C}
@@ -3211,7 +3211,7 @@ OS:Schedule:Day,
 
 OS:Refrigeration:WalkIn,
   {ee3d06e5-e4a3-4b2d-b500-c9622fffe03c}, !- Handle
-  Refrigeration Walk In,                  !- Name
+  Walk In Cooler,                  !- Name
   ,                                       !- Availability Schedule Name
   4690,                                   !- Rated Coil Cooling Capacity {W}
   -2.22,                                  !- Operating Temperature {C}
@@ -3244,7 +3244,7 @@ OS:ScheduleTypeLimits,
 
 OS:Refrigeration:WalkIn:ZoneBoundary,
   {525dce58-6555-4c3f-a3b6-be7cc870d92a}, !- Handle
-  Refrigeration Walk In Zone Boundary 1,  !- Name
+  Walk In Cooler Zone Boundary 1,  !- Name
   ,                                       !- Zone Name
   43.4,                                   !- Total Insulated Surface Area Facing Zone {m2}
   0.235,                                  !- Insulated Surface U-Value Facing Zone {W/m2-K}
@@ -3260,7 +3260,7 @@ OS:Refrigeration:WalkIn:ZoneBoundary,
 
 OS:CoolingTower:VariableSpeed,
   {2e6faa4b-6a62-40f1-b39f-d0100fe47857}, !- Handle
-  Cooling Tower Variable Speed,           !- Name
+  Var Spd Cooling Tower,           !- Name
   ,                                       !- Water Inlet Node
   ,                                       !- Water Outlet Node
   CoolToolsCrossFlow,                     !- Model Type
@@ -3293,7 +3293,7 @@ OS:CoolingTower:VariableSpeed,
 
 OS:Curve:Cubic,
   {07e95396-18cf-4b45-8c39-d1c6d9b569a4}, !- Handle
-  Cooling Tower Variable Speed 1 Fan Power Ratio Curve, !- Name
+  Var Spd Cooling Tower 1 Fan Power Ratio Curve, !- Name
   -0.0093,                                !- Coefficient1 Constant
   0.0512,                                 !- Coefficient2 x
   -0.0838,                                !- Coefficient3 x**2
@@ -3336,7 +3336,7 @@ OS:CoolingTower:VariableSpeed,
 
 OS:Curve:Cubic,
   {ef3db801-9ea9-468f-8d25-da4759413263}, !- Handle
-  Cooling Tower Variable Speed 2 Fan Power Ratio Curve, !- Name
+  Var Spd Cooling Tower 2 Fan Power Ratio Curve, !- Name
   -0.0093,                                !- Coefficient1 Constant
   0.0512,                                 !- Coefficient2 x
   -0.0838,                                !- Coefficient3 x**2
@@ -3426,7 +3426,7 @@ OS:CoolingTower:VariableSpeed,
 
 OS:Curve:Cubic,
   {e9ae406d-ab3e-4461-8418-7af997698c00}, !- Handle
-  Cooling Tower Variable Speed 3 Fan Power Ratio Curve, !- Name
+  Var Spd Cooling Tower 3 Fan Power Ratio Curve, !- Name
   -0.0093,                                !- Coefficient1 Constant
   0.0512,                                 !- Coefficient2 x
   -0.0838,                                !- Coefficient3 x**2
@@ -3476,7 +3476,7 @@ OS:CoolingTowerPerformance:YorkCalc,
 
 OS:AirConditioner:VariableRefrigerantFlow,
   {8e372bc7-d7e7-4b5a-8a86-1743336eeb58}, !- Handle
-  Air Conditioner Variable Refrigerant Flow, !- Name
+  VRF System, !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule
   autosize,                               !- Rated Total Cooling Capacity {W}
   3.3,                                    !- Rated Cooling COP {W/W}
@@ -3560,7 +3560,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
 
 OS:Curve:Biquadratic,
   {5bd36fea-b2fe-4c07-8aa2-f6a4fb1215a3}, !- Handle
-  Air Conditioner Variable Refrigerant Flow 1 HeatingLengthCorrectionFactor, !- Name
+  VRF System HeatingLengthCorrectionFactor, !- Name
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -3579,7 +3579,7 @@ OS:Curve:Biquadratic,
 
 OS:Curve:Biquadratic,
   {04efa453-3a5a-4c65-9942-ef1013cf64d9}, !- Handle
-  Air Conditioner Variable Refrigerant Flow Heat Recovery Cooling Cap Modifier, !- Name
+  VRF System Heat Recovery Cooling Cap Modifier, !- Name
   0.9,                                    !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -3598,7 +3598,7 @@ OS:Curve:Biquadratic,
 
 OS:Curve:Biquadratic,
   {3319190d-4e8f-470c-bb70-9e727f06659c}, !- Handle
-  Air Conditioner Variable Refrigerant Flow Heat Recovery Cooling Energy Modifier, !- Name
+  VRF System Heat Recovery Cooling Energy Modifier, !- Name
   1.1,                                    !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -3617,7 +3617,7 @@ OS:Curve:Biquadratic,
 
 OS:Curve:Biquadratic,
   {54ee453b-84b5-47d6-8c0e-a2084392d85c}, !- Handle
-  Air Conditioner Variable Refrigerant Flow Heat Recovery Heating Cap Modifier, !- Name
+  VRF System Heat Recovery Heating Cap Modifier, !- Name
   0.9,                                    !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -3636,7 +3636,7 @@ OS:Curve:Biquadratic,
 
 OS:Curve:Biquadratic,
   {e16ba0c4-b38c-4e58-a3fb-6a63836d6fcc}, !- Handle
-  Air Conditioner Variable Refrigerant Flow Heat Recovery Heating Energy Modifier, !- Name
+  VRF System Heat Recovery Heating Energy Modifier, !- Name
   1.1,                                    !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -3655,7 +3655,7 @@ OS:Curve:Biquadratic,
 
 OS:Curve:Biquadratic,
   {2926f90c-053a-445f-9b13-0d558ac66748}, !- Handle
-  Air Conditioner Variable Refrigerant Flow 1 VRFCoolCapFT, !- Name
+  VRF System VRFCoolCapFT, !- Name
   0.576882692,                            !- Coefficient1 Constant
   0.017447952,                            !- Coefficient2 x
   0.000583269,                            !- Coefficient3 x**2
@@ -3674,7 +3674,7 @@ OS:Curve:Biquadratic,
 
 OS:Curve:Cubic,
   {0aa4713f-db13-4220-8a27-6aad3ac5244a}, !- Handle
-  Air Conditioner Variable Refrigerant Flow 1 VRFCoolCapFTBoundary, !- Name
+  VRF System VRFCoolCapFTBoundary, !- Name
   25.73,                                  !- Coefficient1 Constant
   -0.03150043,                            !- Coefficient2 x
   -0.01416595,                            !- Coefficient3 x**2
@@ -3688,7 +3688,7 @@ OS:Curve:Cubic,
 
 OS:Curve:Biquadratic,
   {b1e0b7b3-3344-4e2b-88d3-999116ee2631}, !- Handle
-  Air Conditioner Variable Refrigerant Flow 1 VRFCoolCapFTHi, !- Name
+  VRF System VRFCoolCapFTHi, !- Name
   0.6867358,                              !- Coefficient1 Constant
   0.0207631,                              !- Coefficient2 x
   0.0005447,                              !- Coefficient3 x**2
@@ -3707,7 +3707,7 @@ OS:Curve:Biquadratic,
 
 OS:Curve:Biquadratic,
   {dba051d9-1723-4ee1-89ef-233688219289}, !- Handle
-  Air Conditioner Variable Refrigerant Flow 1 VRFCoolEIRFT, !- Name
+  VRF System VRFCoolEIRFT, !- Name
   0.989010541,                            !- Coefficient1 Constant
   -0.02347967,                            !- Coefficient2 x
   0.000199711,                            !- Coefficient3 x**2
@@ -3726,7 +3726,7 @@ OS:Curve:Biquadratic,
 
 OS:Curve:Cubic,
   {22b89fad-955f-461b-a968-ed8f28e827af}, !- Handle
-  Air Conditioner Variable Refrigerant Flow 1 VRFCoolEIRFTBoundary, !- Name
+  VRF System VRFCoolEIRFTBoundary, !- Name
   25.73473775,                            !- Coefficient1 Constant
   -0.03150043,                            !- Coefficient2 x
   -0.01416595,                            !- Coefficient3 x**2
@@ -3740,7 +3740,7 @@ OS:Curve:Cubic,
 
 OS:Curve:Biquadratic,
   {fb71bd1b-f0d1-456f-bebe-20fe55705faa}, !- Handle
-  Air Conditioner Variable Refrigerant Flow 1 VRFCoolEIRFTHi, !- Name
+  VRF System VRFCoolEIRFTHi, !- Name
   -1.4395110176,                          !- Coefficient1 Constant
   0.1619850459,                           !- Coefficient2 x
   -0.0034911781,                          !- Coefficient3 x**2
@@ -3759,7 +3759,7 @@ OS:Curve:Biquadratic,
 
 OS:Curve:Cubic,
   {a229172a-6b1a-464d-bf6a-4cdb6fab82b4}, !- Handle
-  Air Conditioner Variable Refrigerant Flow 1 CoolingEIRLowPLR, !- Name
+  VRF System CoolingEIRLowPLR, !- Name
   0.4541226192,                           !- Coefficient1 Constant
   -0.1729687081,                          !- Coefficient2 x
   1.0828661347,                           !- Coefficient3 x**2
@@ -3773,7 +3773,7 @@ OS:Curve:Cubic,
 
 OS:Curve:Cubic,
   {0bdd7db2-69e4-41c4-8f8a-8ef53fe9f815}, !- Handle
-  Air Conditioner Variable Refrigerant Flow 1 CoolingEIRHiPLR, !- Name
+  VRF System CoolingEIRHiPLR, !- Name
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -3787,7 +3787,7 @@ OS:Curve:Cubic,
 
 OS:Curve:Cubic,
   {f3fd889e-b137-49c8-9c37-226b61f66f33}, !- Handle
-  Air Conditioner Variable Refrigerant Flow 1 CoolingCombRatio, !- Name
+  VRF System CoolingCombRatio, !- Name
   0.576593263,                            !- Coefficient1 Constant
   0.6349408697,                           !- Coefficient2 x
   -0.3076093963,                          !- Coefficient3 x**2
@@ -3801,7 +3801,7 @@ OS:Curve:Cubic,
 
 OS:Curve:Cubic,
   {14f8f003-46ae-43fe-a743-607c63cd092c}, !- Handle
-  Air Conditioner Variable Refrigerant Flow 1 VRFCPLFFPLR, !- Name
+  VRF System VRFCPLFFPLR, !- Name
   0.85,                                   !- Coefficient1 Constant
   0.15,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -3815,7 +3815,7 @@ OS:Curve:Cubic,
 
 OS:Curve:Biquadratic,
   {f3ee1617-95d7-4e86-8c41-c4054351f32d}, !- Handle
-  Air Conditioner Variable Refrigerant Flow 1 VRFHeatCapFT, !- Name
+  VRF System VRFHeatCapFT, !- Name
   1.012090154,                            !- Coefficient1 Constant
   -0.0012467553,                          !- Coefficient2 x
   -0.0001271847,                          !- Coefficient3 x**2
@@ -3834,7 +3834,7 @@ OS:Curve:Biquadratic,
 
 OS:Curve:Cubic,
   {443ca85b-e6db-48f4-88f7-fb7736da372d}, !- Handle
-  Air Conditioner Variable Refrigerant Flow 1 VRFHeatCapFTBoundary, !- Name
+  VRF System VRFHeatCapFTBoundary, !- Name
   58.577,                                 !- Coefficient1 Constant
   -3.0255,                                !- Coefficient2 x
   0.0193,                                 !- Coefficient3 x**2
@@ -3848,7 +3848,7 @@ OS:Curve:Cubic,
 
 OS:Curve:Biquadratic,
   {7114f15a-b91a-4b48-98c5-91fe3169d763}, !- Handle
-  Air Conditioner Variable Refrigerant Flow 1 VRFHeatCapFTHi, !- Name
+  VRF System VRFHeatCapFTHi, !- Name
   2.5859872368,                           !- Coefficient1 Constant
   -0.0953227101,                          !- Coefficient2 x
   0.0009553288,                           !- Coefficient3 x**2
@@ -3867,7 +3867,7 @@ OS:Curve:Biquadratic,
 
 OS:Curve:Biquadratic,
   {a3076463-2be9-4802-90a7-081d24ce8d8d}, !- Handle
-  Air Conditioner Variable Refrigerant Flow 1 VRFHeatEIRFT, !- Name
+  VRF System VRFHeatEIRFT, !- Name
   0.7224292683,                           !- Coefficient1 Constant
   0.0034566628,                           !- Coefficient2 x
   0.0006507028,                           !- Coefficient3 x**2
@@ -3886,7 +3886,7 @@ OS:Curve:Biquadratic,
 
 OS:Curve:Cubic,
   {2f575dc9-b03e-4064-b231-6e43383e292a}, !- Handle
-  Air Conditioner Variable Refrigerant Flow 1 VRFHeatEIRFTBoundary, !- Name
+  VRF System VRFHeatEIRFTBoundary, !- Name
   58.577,                                 !- Coefficient1 Constant
   -3.0255,                                !- Coefficient2 x
   0.0193,                                 !- Coefficient3 x**2
@@ -3900,7 +3900,7 @@ OS:Curve:Cubic,
 
 OS:Curve:Biquadratic,
   {bba9f395-e337-48f9-852d-b987452dc367}, !- Handle
-  Air Conditioner Variable Refrigerant Flow 1 VRFHeatEIRFTHi, !- Name
+  VRF System VRFHeatEIRFTHi, !- Name
   1.3885703646,                           !- Coefficient1 Constant
   -0.0229771462,                          !- Coefficient2 x
   0.000537274,                            !- Coefficient3 x**2
@@ -3919,7 +3919,7 @@ OS:Curve:Biquadratic,
 
 OS:Curve:Cubic,
   {aa3d41db-cd17-44ef-a3ce-bec6504e8910}, !- Handle
-  Air Conditioner Variable Refrigerant Flow 1 HeatingEIRLowPLR, !- Name
+  VRF System HeatingEIRLowPLR, !- Name
   0.3924742025,                           !- Coefficient1 Constant
   0.076016374,                            !- Coefficient2 x
   0.6983235783,                           !- Coefficient3 x**2
@@ -3933,7 +3933,7 @@ OS:Curve:Cubic,
 
 OS:Curve:Cubic,
   {30fbccd3-f4f0-4bf8-94be-faf7bba3e968}, !- Handle
-  Air Conditioner Variable Refrigerant Flow 1 HeatingEIRHiPLR, !- Name
+  VRF System HeatingEIRHiPLR, !- Name
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -3947,7 +3947,7 @@ OS:Curve:Cubic,
 
 OS:Curve:Cubic,
   {68c0f092-88a2-4ba9-b6b4-4d8f2b091efc}, !- Handle
-  Air Conditioner Variable Refrigerant Flow 1 HeatingCombRatio, !- Name
+  VRF System HeatingCombRatio, !- Name
   0.7667196604,                           !- Coefficient1 Constant
   0.2617302019,                           !- Coefficient2 x
   -0.0159110245,                          !- Coefficient3 x**2
@@ -3961,7 +3961,7 @@ OS:Curve:Cubic,
 
 OS:Curve:Biquadratic,
   {8a603e43-55d3-4244-9b79-d432a9bdcbb1}, !- Handle
-  Air Conditioner Variable Refrigerant Flow 1 CoolingLengthCorrectionFactor, !- Name
+  VRF System CoolingLengthCorrectionFactor, !- Name
   2.0388158625,                           !- Coefficient1 Constant
   -0.0024260645,                          !- Coefficient2 x
   3.5512e-06,                             !- Coefficient3 x**2
@@ -3984,7 +3984,7 @@ OS:ModelObjectList,
 
 OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
   {61b461bb-c165-4bd3-a212-fc1fb1023e9a}, !- Handle
-  Zone HVAC Terminal Unit Variable Refrigerant Flow, !- Name
+  VRF Zone Terminal, !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Terminal Unit Availability schedule
   ,                                       !- Terminal Unit Air Inlet Node
   ,                                       !- Terminal Unit Air Outlet Node
@@ -4021,7 +4021,7 @@ OS:ScheduleTypeLimits,
 
 OS:Coil:Cooling:DX:VariableRefrigerantFlow,
   {8c84c0ac-6832-4444-a64f-9d88308c1b14}, !- Handle
-  Zone HVAC Terminal Unit Variable Refrigerant Flow 1 Cooling Coil, !- Name
+  VRF Zone Terminal Cooling Coil, !- Name
   {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule
   autosize,                               !- Rated Total Cooling Capacity {W}
   autosize,                               !- Rated Sensible Heat Ratio
@@ -4065,7 +4065,7 @@ OS:Curve:Quadratic,
 
 OS:Coil:Heating:DX:VariableRefrigerantFlow,
   {8e3a36fc-1c04-4c13-804d-32e93dec19b3}, !- Handle
-  Zone HVAC Terminal Unit Variable Refrigerant Flow 1 Heating Coil, !- Name
+  VRF Zone Terminal Heating Coil, !- Name
   {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule
   autosize,                               !- Rated Total Heating Capacity {W}
   autosize,                               !- Rated Air Flow Rate {m3/s}
@@ -4108,7 +4108,7 @@ OS:Curve:Quadratic,
 
 OS:Fan:OnOff,
   {de259b99-d14c-4c97-a714-fc200c52027a}, !- Handle
-  Zone HVAC Terminal Unit Variable Refrigerant Flow 1 Fan, !- Name
+  VRF Zone Terminal Fan, !- Name
   {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
   0.6,                                    !- Fan Efficiency
   300,                                    !- Pressure Rise {Pa}
@@ -4150,7 +4150,7 @@ OS:Curve:Cubic,
 
 OS:Fan:ZoneExhaust,
   {2d1f9bb9-ce2d-4f23-8f07-8b93615770b1}, !- Handle
-  Fan Zone Exhaust,                       !- Name
+  Zone Exhaust Fan,                       !- Name
   ,                                       !- Availability Schedule Name
   0.6,                                    !- Fan Efficiency
   0,                                      !- Pressure Rise {Pa}
@@ -4250,7 +4250,7 @@ OS:Curve:Cubic,
 
 OS:Coil:Cooling:DX:SingleSpeed,
   {fff3b049-43aa-408a-9c3a-d5f10c812c03}, !- Handle
-  Coil Cooling DX Single Speed 4,         !- Name
+  1 Spd DX Clg Coil 4,         !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   autosize,                               !- Rated Total Cooling Capacity {W}
   autosize,                               !- Rated Sensible Heat Ratio
@@ -4283,7 +4283,7 @@ OS:Coil:Cooling:DX:SingleSpeed,
 
 OS:Coil:Heating:DX:SingleSpeed,
   {522a9b89-d66a-4241-a4ff-d8a5ef728a02}, !- Handle
-  Coil Heating DX Single Speed 1,         !- Name
+  1 Spd DX Htg Coil 3,         !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   Autosize,                               !- Rated Total Heating Capacity {W}
   5,                                      !- Rated COP {W/W}
@@ -4410,7 +4410,7 @@ OS:Curve:Quadratic,
 
 OS:Coil:Heating:Electric,
   {57df53a7-30bb-453a-941d-18fe5d4b36a0}, !- Handle
-  Coil Heating Electric 4,                !- Name
+  Elec Htg Coil 5,                !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Efficiency
   ,                                       !- Nominal Capacity {W}
@@ -4504,7 +4504,7 @@ OS:Curve:Cubic,
 
 OS:Coil:Cooling:DX:TwoSpeed,
   {bff4c3aa-3268-40f1-a03f-6435e2cc376f}, !- Handle
-  Coil Cooling DX Two Speed 3,            !- Name
+  2 Spd DX Clg Coil 3,            !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   Autosize,                               !- Rated High Speed Total Cooling Capacity {W}
   Autosize,                               !- Rated High Speed Sensible Heat Ratio
@@ -4539,7 +4539,7 @@ OS:Coil:Cooling:DX:TwoSpeed,
 
 OS:Coil:Heating:DX:SingleSpeed,
   {9b5424a5-937b-47f1-a495-f16a1f4e3010}, !- Handle
-  Coil Heating DX Single Speed 2,         !- Name
+  1 Spd DX Htg Coil 4,         !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   Autosize,                               !- Rated Total Heating Capacity {W}
   5,                                      !- Rated COP {W/W}
@@ -4694,7 +4694,7 @@ OS:Curve:Biquadratic,
 
 OS:Coil:Heating:Electric,
   {437d9440-29e7-4af5-9ff9-6c92ef409db9}, !- Handle
-  Coil Heating Electric 3,                !- Name
+  Elec Htg Coil 6,                !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Efficiency
   ,                                       !- Nominal Capacity {W}
@@ -4788,7 +4788,7 @@ OS:Curve:Cubic,
 
 OS:Coil:Cooling:DX:TwoSpeed,
   {bee5a7ad-cf9e-46ea-a08a-6e87c4590a2b}, !- Handle
-  Coil Cooling DX Two Speed 2,            !- Name
+  2 Spd DX Clg Coil 2,            !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   Autosize,                               !- Rated High Speed Total Cooling Capacity {W}
   Autosize,                               !- Rated High Speed Sensible Heat Ratio
@@ -4919,7 +4919,7 @@ OS:Coil:Heating:Gas,
 
 OS:Coil:Heating:Electric,
   {d0e9d3e3-c0cd-4c2e-82b4-a7c64f5801b8}, !- Handle
-  Coil Heating Electric 12,               !- Name
+  Elec Htg Coil 7,               !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Efficiency
   ,                                       !- Nominal Capacity {W}
@@ -5013,7 +5013,7 @@ OS:Curve:Cubic,
 
 OS:Coil:Cooling:DX:TwoSpeed,
   {bda71a80-9dc9-4c30-aa80-11d40bf233ca}, !- Handle
-  Coil Cooling DX Two Speed 1,            !- Name
+  2 Spd DX Clg Coil 5,            !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   Autosize,                               !- Rated High Speed Total Cooling Capacity {W}
   Autosize,                               !- Rated High Speed Sensible Heat Ratio
@@ -5131,7 +5131,7 @@ OS:Curve:Biquadratic,
 
 OS:Coil:Heating:Electric,
   {be648e1c-0822-4f10-b08a-dcb96f541f34}, !- Handle
-  Coil Heating Electric 8,                !- Name
+  Elec Htg Coil 8,                !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Efficiency
   ,                                       !- Nominal Capacity {W}
@@ -5140,7 +5140,7 @@ OS:Coil:Heating:Electric,
 
 OS:Coil:Heating:Electric,
   {85d6c234-b976-4655-8f65-58ed0a4daced}, !- Handle
-  Coil Heating Electric 2,                !- Name
+  Elec Htg Coil 9,                !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Efficiency
   ,                                       !- Nominal Capacity {W}
@@ -5234,7 +5234,7 @@ OS:Curve:Cubic,
 
 OS:Coil:Cooling:DX:SingleSpeed,
   {983b9c20-5a9e-49eb-9770-5c1545cc6b65}, !- Handle
-  Coil Cooling DX Single Speed 2,         !- Name
+  1 Spd DX Clg Coil 5,         !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   autosize,                               !- Rated Total Cooling Capacity {W}
   autosize,                               !- Rated Sensible Heat Ratio
@@ -5322,7 +5322,7 @@ OS:Curve:Quadratic,
 
 OS:Coil:Heating:Electric,
   {ca3b3fed-58b0-4f64-85f9-257f45d033a5}, !- Handle
-  Coil Heating Electric 10,               !- Name
+  Elec Htg Coil 10,               !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Efficiency
   ,                                       !- Nominal Capacity {W}
@@ -5331,7 +5331,7 @@ OS:Coil:Heating:Electric,
 
 OS:Coil:Heating:Electric,
   {869e1094-36fc-47cb-a478-acdc192d049d}, !- Handle
-  Coil Heating Electric 5,                !- Name
+  Elec Htg Coil 11,                !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Efficiency
   ,                                       !- Nominal Capacity {W}
@@ -5425,7 +5425,7 @@ OS:Curve:Cubic,
 
 OS:Coil:Cooling:DX:SingleSpeed,
   {7017ca11-fbaa-49eb-ac8c-6bda560c9d59}, !- Handle
-  Coil Cooling DX Single Speed 1,         !- Name
+  1 Spd DX Clg Coil 6,         !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   autosize,                               !- Rated Total Cooling Capacity {W}
   autosize,                               !- Rated Sensible Heat Ratio
@@ -5526,7 +5526,7 @@ OS:Coil:Heating:Gas,
 
 OS:Coil:Heating:Electric,
   {9d0e8ad8-dd64-48db-b8ed-fc443ea25d88}, !- Handle
-  Coil Heating Electric 7,                !- Name
+  Elec Htg Coil 12,                !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Efficiency
   ,                                       !- Nominal Capacity {W}
@@ -5607,7 +5607,7 @@ OS:Fan:VariableVolume,
 
 OS:Coil:Cooling:Water,
   {0c02083a-d668-4ba4-a8d2-8b99f73f4760}, !- Handle
-  Coil Cooling Water 1,                   !- Name
+  CHW Clg Coil 4,                   !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Design Water Flow Rate {m3/s}
   ,                                       !- Design Air Flow Rate {m3/s}
@@ -5625,7 +5625,7 @@ OS:Coil:Cooling:Water,
 
 OS:Coil:Heating:Water,
   {c2a61eb2-233b-451f-a63d-a7a583a9ac1d}, !- Handle
-  Coil Heating Water 5,                   !- Name
+  HW Htg Coil 6,                   !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- U-Factor Times Area Value {W/K}
   ,                                       !- Maximum Water Flow Rate {m3/s}
@@ -5643,7 +5643,7 @@ OS:Coil:Heating:Water,
 
 OS:Coil:Heating:Water,
   {9d257113-f0f3-4525-989f-2372283f7ced}, !- Handle
-  Coil Heating Water 2,                   !- Name
+  HW Htg Coil 7,                   !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- U-Factor Times Area Value {W/K}
   ,                                       !- Maximum Water Flow Rate {m3/s}
@@ -5725,7 +5725,7 @@ OS:Fan:ConstantVolume,
 
 OS:Coil:Cooling:Water,
   {806192a5-97de-4a2e-bd59-9ce40853770a}, !- Handle
-  Coil Cooling Water 2,                   !- Name
+  CHW Clg Coil 2,                   !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Design Water Flow Rate {m3/s}
   ,                                       !- Design Air Flow Rate {m3/s}
@@ -5743,7 +5743,7 @@ OS:Coil:Cooling:Water,
 
 OS:Coil:Heating:Water,
   {45e57ffa-e9d4-43c4-ad4e-085192e249e1}, !- Handle
-  Coil Heating Water 1,                   !- Name
+  HW Htg Coil 8,                   !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- U-Factor Times Area Value {W/K}
   ,                                       !- Maximum Water Flow Rate {m3/s}
@@ -5761,7 +5761,7 @@ OS:Coil:Heating:Water,
 
 OS:Coil:Heating:Water,
   {f548e6b4-1452-4e34-8cee-61a11e92e8d1}, !- Handle
-  Coil Heating Water 6,                   !- Name
+  HW Htg Coil 9,                   !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- U-Factor Times Area Value {W/K}
   ,                                       !- Maximum Water Flow Rate {m3/s}
@@ -5864,7 +5864,7 @@ OS:Curve:Cubic,
 
 OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
   {3fca92a4-d330-424e-b370-5ad77441d416}, !- Handle
-  Coil Cooling Water To Air Heat Pump Equation Fit 1, !- Name
+  Wtr-to-Air HP Clg Coil 1, !- Name
   ,                                       !- Water Inlet Node Name
   ,                                       !- Water Outlet Node Name
   ,                                       !- Air Inlet Node Name
@@ -5895,7 +5895,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
 
 OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
   {07468aec-7855-4a75-8aec-93bcb433af35}, !- Handle
-  Coil Heating Water To Air Heat Pump Equation Fit 1, !- Name
+  Wtr-to-Air HP Htg Coil 1, !- Name
   ,                                       !- Water Inlet Node Name
   ,                                       !- Water Outlet Node Name
   ,                                       !- Air Inlet Node Name
@@ -5917,7 +5917,7 @@ OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
 
 OS:Coil:Heating:Electric,
   {251f0a6b-debb-4eeb-9f5a-cab558637dcf}, !- Handle
-  Coil Heating Electric 1,                !- Name
+  Elec Htg Coil 13,                !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Efficiency
   ,                                       !- Nominal Capacity {W}
@@ -6011,7 +6011,7 @@ OS:Curve:Cubic,
 
 OS:Coil:Cooling:DX:TwoSpeed,
   {da2c0524-1def-45c1-87d6-7070b22d98ef}, !- Handle
-  Coil Cooling DX Two Speed 4,            !- Name
+  2 Spd DX Clg Coil 4,            !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   Autosize,                               !- Rated High Speed Total Cooling Capacity {W}
   Autosize,                               !- Rated High Speed Sensible Heat Ratio
@@ -6129,7 +6129,7 @@ OS:Curve:Biquadratic,
 
 OS:Coil:Heating:Electric,
   {88f005e0-271a-449a-b091-3f2dc7cf35be}, !- Handle
-  Coil Heating Electric 6,                !- Name
+  Elec Htg Coil 14,                !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Efficiency
   ,                                       !- Nominal Capacity {W}
@@ -6223,7 +6223,7 @@ OS:Curve:Cubic,
 
 OS:Coil:Cooling:DX:SingleSpeed,
   {b51db6e0-72e0-43f9-be35-ab8f087fcbee}, !- Handle
-  Coil Cooling DX Single Speed 3,         !- Name
+  1 Spd DX Clg Coil 7,         !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   autosize,                               !- Rated Total Cooling Capacity {W}
   autosize,                               !- Rated Sensible Heat Ratio
@@ -6311,7 +6311,7 @@ OS:Curve:Quadratic,
 
 OS:Coil:Heating:Electric,
   {cbbc9cac-e14e-4540-ae79-93928dad263a}, !- Handle
-  Coil Heating Electric 11,               !- Name
+  Elec Htg Coil 15,               !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Efficiency
   ,                                       !- Nominal Capacity {W}
@@ -6405,7 +6405,7 @@ OS:Curve:Cubic,
 
 OS:Coil:Heating:Electric,
   {dd47b809-68a7-4234-b52b-deb00b907b3c}, !- Handle
-  Coil Heating Electric 13,               !- Name
+  Elec Htg Coil 16,               !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Efficiency
   ,                                       !- Nominal Capacity {W}
@@ -6512,7 +6512,7 @@ OS:Coil:Heating:Gas,
 
 OS:HeatExchanger:FluidToFluid,
   {fd491069-c3a7-456d-ae6b-203361d31084}, !- Handle
-  Fluid Heat Exchanger,                   !- Name
+  Fluid-to-Fluid HX,                   !- Name
   ,                                       !- Availability Schedule Name
   ,                                       !- Loop Demand Side Inlet Node
   ,                                       !- Loop Demand Side Outlet Node
@@ -6590,7 +6590,7 @@ OS:CoolingTower:TwoSpeed,
 
 OS:Coil:Heating:Water,
   {852ba7c2-6dca-42d0-b8d0-523404c57aa0}, !- Handle
-  Four Pipe Terminal Heating Coil,                   !- Name
+  HW Two Pipe Induction Terminal HW Htg Coil,                   !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- U-Factor Times Area Value {W/K}
   ,                                       !- Maximum Water Flow Rate {m3/s}
@@ -6608,7 +6608,7 @@ OS:Coil:Heating:Water,
 
 OS:AirTerminal:SingleDuct:ConstantVolume:FourPipeInduction,
   {c0451064-fc78-4567-8a3c-f406ceeadc5d}, !- Handle
-  Four Pipe Terminal with Heat, !- Name
+  HW Two Pipe Induction Terminal, !- Name
   ,                                       !- Availability Schedule Name
   autosize,                               !- Maximum Total Air Flow Rate {m3/s}
   ,                                       !- Induction Ratio
@@ -6627,7 +6627,7 @@ OS:AirTerminal:SingleDuct:ConstantVolume:FourPipeInduction,
 
 OS:Coil:Heating:Water,
   {69536627-2765-4ab8-97bb-10df1d28e114}, !- Handle
-  Four Pipe Terminal Heating Coil 2,                   !- Name
+  HW CHW Four Pipe Induction Terminal HW Htg Coil,                   !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- U-Factor Times Area Value {W/K}
   ,                                       !- Maximum Water Flow Rate {m3/s}
@@ -6645,7 +6645,7 @@ OS:Coil:Heating:Water,
 
 OS:Coil:Cooling:Water,
   {bc4929a1-8380-4e9a-8bc3-169aefd8a7ce}, !- Handle
-  Four Pipe Terminal Cooling Coil,                   !- Name
+  HW CHW Four Pipe Induction Terminal CHW Clg Coil,                   !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Design Water Flow Rate {m3/s}
   ,                                       !- Design Air Flow Rate {m3/s}
@@ -6663,7 +6663,7 @@ OS:Coil:Cooling:Water,
 
 OS:AirTerminal:SingleDuct:ConstantVolume:FourPipeInduction,
   {b9341b91-2e32-4c99-a77f-3ddbfea144ee}, !- Handle
-  Four Pipe Terminal with Heat and Cool, !- Name
+  HW CHW Four Pipe Induction Terminal, !- Name
   ,                                       !- Availability Schedule Name
   autosize,                               !- Maximum Total Air Flow Rate {m3/s}
   ,                                       !- Induction Ratio
@@ -6682,7 +6682,7 @@ OS:AirTerminal:SingleDuct:ConstantVolume:FourPipeInduction,
 
 OS:Coil:Heating:Water,
   {cce7c4c5-a5c4-4120-8f0f-cd3314c5ea41}, !- Handle
-  Heat and Cool Terminal Water Coil,                   !- Name
+  Changeover Bypass HW Rht Coil,                   !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- U-Factor Times Area Value {W/K}
   ,                                       !- Maximum Water Flow Rate {m3/s}
@@ -6700,7 +6700,7 @@ OS:Coil:Heating:Water,
 
 OS:AirTerminal:SingleDuct:VAV:HeatAndCool:Reheat,
   {1d368a86-cf5b-4af3-b56c-db741d32c688}, !- Handle
-  Heat and Cool Air Terminal with Hot Water Reheat, !- Name
+  Changeover Bypass HW Rht, !- Name
   ,                                       !- Availability Schedule
   ,                                       !- Damper Air Outlet
   ,                                       !- Air Inlet
@@ -6715,7 +6715,7 @@ OS:AirTerminal:SingleDuct:VAV:HeatAndCool:Reheat,
 
 OS:Coil:Heating:Gas,
   {2f374e48-b008-405b-b67f-c8f6b77ebba4}, !- Handle
-  Heat and Cool Terminal Gas Coil,                     !- Name
+  Changeover Bypass Gas Rht Coil,                     !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.8,                                    !- Gas Burner Efficiency
   AutoSize,                               !- Nominal Capacity {W}
@@ -6728,7 +6728,7 @@ OS:Coil:Heating:Gas,
 
 OS:AirTerminal:SingleDuct:VAV:HeatAndCool:Reheat,
   {2463f3b9-caea-4f6e-829c-94f1a9182562}, !- Handle
-  Heat and Cool Air Terminal with Gas Reheat, !- Name
+  Changeover Bypass Gas Rht, !- Name
   ,                                       !- Availability Schedule
   ,                                       !- Damper Air Outlet
   ,                                       !- Air Inlet
@@ -6743,7 +6743,7 @@ OS:AirTerminal:SingleDuct:VAV:HeatAndCool:Reheat,
 
 OS:Coil:Heating:Electric,
   {37c3bb01-81cd-4547-a1ad-2ec512ae33e2}, !- Handle
-  Heat and Cool Terminal Electric Coil,                !- Name
+  Changeover Bypass Elec Rht Coil,                !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Efficiency
   ,                                       !- Nominal Capacity {W}
@@ -6752,7 +6752,7 @@ OS:Coil:Heating:Electric,
 
 OS:AirTerminal:SingleDuct:VAV:HeatAndCool:Reheat,
   {19760789-0ccd-4e0b-8b83-044afae8e8fc}, !- Handle
-  heat and Cool Air Terminal with Electric Reheat, !- Name
+  Changeover Bypass Elec Rht, !- Name
   ,                                       !- Availability Schedule
   ,                                       !- Damper Air Outlet
   ,                                       !- Air Inlet
@@ -6767,7 +6767,7 @@ OS:AirTerminal:SingleDuct:VAV:HeatAndCool:Reheat,
 
 OS:Coil:Cooling:DX:SingleSpeed,
   {549ef360-0b78-4774-9d03-34115aaff70e}, !- Handle
-  VAVChangeover Cooling Coil,         !- Name
+  VAV Changeover Bypass 1 Spd DX Clg Coil,         !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   autosize,                               !- Rated Total Cooling Capacity {W}
   autosize,                               !- Rated Sensible Heat Ratio
@@ -6855,7 +6855,7 @@ OS:Curve:Quadratic,
 
 OS:Coil:Heating:Gas,
   {7c90b827-b125-4a0b-a905-dc075571540e}, !- Handle
-  VAVChangeover Bypass Heating Coil,                     !- Name
+  VAV Changeover Bypass Gas Htg Coil,                     !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.8,                                    !- Gas Burner Efficiency
   AutoSize,                               !- Nominal Capacity {W}
@@ -6868,7 +6868,7 @@ OS:Coil:Heating:Gas,
 
 OS:Fan:ConstantVolume,
   {5893df9a-65df-4686-bfae-fb4564bef2b9}, !- Handle
-  VAVChangeover Bypass Fan,                  !- Name
+  VAV Changeover Bypass CV Fan,                  !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Fan Efficiency
   ,                                       !- Pressure Rise {Pa}
@@ -6881,7 +6881,7 @@ OS:Fan:ConstantVolume,
 
 OS:AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass,
   {8b3614b6-19a8-496b-ad68-96351a2ab688}, !- Handle
-  Unitary Heat Cool VAVChangeover Bypass, !- Name
+  VAV Changeover Bypass, !- Name
   ,                                       !- Availability Schedule
   autosize,                               !- System Air Flow Rate During Cooling Operation {m3/s}
   autosize,                               !- System Air Flow Rate During Heating Operation {m3/s}
@@ -6907,7 +6907,7 @@ OS:AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass,
 
 OS:SetpointManager:MultiZone:Humidity:Minimum,
   {00bd9f3b-df01-4dae-8a06-befb066e1385}, !- Handle
-  Setpoint Manager Multi Zone Humidity Minimum, !- Name
+  Multi Zone Min Humidity Control, !- Name
   ,                                       !- Minimum Setpoint Humidity Ratio {kgWater/kgDryAir}
   ,                                       !- Maximum Setpoint Humidity Ratio {kgWater/kgDryAir}
   ,                                       !- Setpoint Node or NodeList Name
@@ -6915,7 +6915,7 @@ OS:SetpointManager:MultiZone:Humidity:Minimum,
 
 OS:SetpointManager:MultiZone:MinimumHumidity:Average,
   {03f5dbe8-ebfa-40ea-913a-9bdff30ee3ba}, !- Handle
-  Setpoint Manager Multi Zone Minimum Humidity Average, !- Name
+  Multi Zone Avg Humidity Control, !- Name
   ,                                       !- Minimum Setpoint Humidity Ratio {kgWater/kgDryAir}
   ,                                       !- Maximum Setpoint Humidity Ratio {kgWater/kgDryAir}
   ,                                       !- Setpoint Node or NodeList Name
