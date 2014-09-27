@@ -235,7 +235,8 @@ std::string getReportRequestMeasureArgument(const std::vector<runmanager::WorkIt
 
       pastEnergyPlus = true;
 
-    } if (pastEnergyPlus && workItem.type == openstudio::runmanager::JobType::UserScript){
+    } 
+    if (pastEnergyPlus && workItem.type == openstudio::runmanager::JobType::UserScript){
 
       openstudio::runmanager::RubyJobBuilder rjb(workItem);
 
@@ -265,6 +266,13 @@ std::string getReportRequestMeasureArgument(const std::vector<runmanager::WorkIt
       //requiredFileMap[toQString(requiredFile.second)] = toQString(requiredFile.first);
       //requiredFileList << requiredFileMap;
 
+      // DLM: most measures have the measure mapped to both required file user_script.rb and measure.rb
+      // if have both, use measure.rb
+      if (istringEqual(toString(requiredFile.second), "user_script.rb")){
+        if (!measureHash.contains("measure")){
+          measureHash["measure"] = toQString(requiredFile.first);
+        }
+      }
       if (istringEqual(toString(requiredFile.second), "measure.rb")){
         measureHash["measure"] = toQString(requiredFile.first);
       }
