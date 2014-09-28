@@ -138,7 +138,7 @@ macro(AddPCH TARGET_NAME)
           if("${extension}" STREQUAL ".cpp" OR "${extension}" STREQUAL ".cxx")
             message(STATUS "Setting /Yc flag on: ${p}")
             set_source_files_properties("${f}"
-              PROPERTIES COMPILE_FLAGS "/Ycutilities/pch/PCH.hpp"
+              PROPERTIES COMPILE_FLAGS "/Ycutilities/pch/PCH.hpp /FIutilities/pch/PCH.hpp"
             )
 
             break()
