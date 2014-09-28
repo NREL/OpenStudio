@@ -31,7 +31,12 @@ template<typename Container>
 void writeEnumFast(std::ostream &t_os, const std::string &t_name, const Container &t_values)
 {
   t_os <<
-  "class " << t_name << ": public EnumBase<" << t_name << "> {" << std::endl <<
+  "#ifdef SWIG " << std::endl <<
+  "  class " << t_name << ";" << std::endl <<
+  "  %template("<<t_name<<"Base) ::EnumBase<" << t_name << ">;" << std::endl <<
+  "  ENUM_CONVERSION(" << t_name << "); " << std::endl <<
+  "#endif" << std::endl <<
+  "class " << t_name << ": public ::EnumBase<" << t_name << "> {" << std::endl <<
   " public: " << std::endl <<
   "  enum domain" << std::endl <<
   "  {" << std::endl;
