@@ -682,7 +682,8 @@ namespace gbxml {
       }
     }
 
-    // todo: translate "interiorShadeType", "exteriorShadeType", "windowTypeIdRef", and other properties of the opening
+    // todo: translate "interiorShadeType", "exteriorShadeType", "windowTypeIdRef", and other properties of the opening
+
 
     return result;
   }

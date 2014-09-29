@@ -75,7 +75,7 @@ EditRubyMeasureView::EditRubyMeasureView(bool applyMeasureNow)
   descriptionTextEdit = new QTextEdit();
   descriptionTextEdit->setFixedHeight(70);
   descriptionTextEdit->setAcceptRichText(false);
-  descriptionTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  descriptionTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
   descriptionTextEdit->setTabChangesFocus(true);
   m_mainVLayout->addWidget(descriptionTextEdit);
 
@@ -83,9 +83,14 @@ EditRubyMeasureView::EditRubyMeasureView(bool applyMeasureNow)
   modelerDescriptionTitleLabel->setObjectName("H2");
   m_mainVLayout->addWidget(modelerDescriptionTitleLabel);
 
-  modelerDescriptionLabel = new QLabel();
-  modelerDescriptionLabel->setWordWrap(true);
-  m_mainVLayout->addWidget(modelerDescriptionLabel);
+  modelerDescriptionTextEdit = new QTextEdit();
+  modelerDescriptionTextEdit->setStyleSheet("background: #E6E6E6;");
+  modelerDescriptionTextEdit->setFixedHeight(70);
+  modelerDescriptionTextEdit->setAcceptRichText(false);
+  modelerDescriptionTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+  modelerDescriptionTextEdit->setTabChangesFocus(true);
+  modelerDescriptionTextEdit->setReadOnly(true);
+  m_mainVLayout->addWidget(modelerDescriptionTextEdit);
 
   auto line2 = new QFrame();
   line2->setFrameShape(QFrame::HLine);
@@ -192,7 +197,7 @@ void DoubleInputView::setName(const std::string& name, const boost::optional<std
     text += QString::fromStdString(" (" + units.get() + ")");
   }
   if (description){
-    text += QString::fromStdString("<br/><span style=\"font-size: small;\">" + description.get() + "</span>");
+    text += QString::fromStdString("<div style=\"font-size:small;margin-top:2px;\">" + description.get() + "</div>");
   }
 
   nameLabel->setText(text);
@@ -239,7 +244,7 @@ void ChoiceInputView::setName(const std::string& name, const boost::optional<std
     text += QString::fromStdString(" (" + units.get() + ")");
   }
   if (description){
-    text += QString::fromStdString("<br/><span style=\"font-size: small;\">" + description.get() + "</span>");
+    text += QString::fromStdString("<div style=\"font-size:small;margin-top:2px;\">" + description.get() + "</div>");
   }
 
   nameLabel->setText(text);
@@ -286,7 +291,7 @@ void BoolInputView::setName(const std::string& name, const boost::optional<std::
     text += QString::fromStdString(" (" + units.get() + ")");
   }
   if (description){
-    text += QString::fromStdString("<br/><span style=\"font-size: small;\">" + description.get() + "</span>");
+    text += QString::fromStdString("<div style=\"font-size:small;margin-top:2px;\">" + description.get() + "</div>");
   }
 
   checkBox->setText(text);
@@ -327,7 +332,7 @@ void IntegerInputView::setName(const std::string& name, const boost::optional<st
     text += QString::fromStdString(" (" + units.get() + ")");
   }
   if (description){
-    text += QString::fromStdString("<br/><span style=\"font-size: small;\">" + description.get() + "</span>");
+    text += QString::fromStdString("<div style=\"font-size:small;margin-top:2px;\">" + description.get() + "</div>");
   }
 
   nameLabel->setText(text);
@@ -374,7 +379,7 @@ void StringInputView::setName(const std::string& name, const boost::optional<std
     text += QString::fromStdString(" (" + units.get() + ")");
   }
   if (description){
-    text += QString::fromStdString("<br/><span style=\"font-size: small;\">" + description.get() + "</span>");
+    text += QString::fromStdString("<div style=\"font-size:small;margin-top:2px;\">" + description.get() + "</div>");
   }
 
   nameLabel->setText(text);

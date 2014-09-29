@@ -23,6 +23,8 @@
 #include "AvailabilityManagerScheduled_Impl.hpp"
 #include "AirToAirComponent.hpp"
 #include "AirToAirComponent_Impl.hpp"
+#include "WaterToAirComponent.hpp"
+#include "WaterToAirComponent_Impl.hpp"
 #include "ControllerOutdoorAir.hpp"
 #include "ControllerOutdoorAir_Impl.hpp"
 #include "Node.hpp"
@@ -302,6 +304,11 @@ namespace detail {
         modelObjects.insert(modelObjects.begin(),*comp);
         modelObject = comp->primaryAirInletModelObject();
       }
+      else if( boost::optional<WaterToAirComponent> comp = modelObject->optionalCast<WaterToAirComponent>() )
+      {
+        modelObjects.insert(modelObjects.begin(),*comp);
+        modelObject = comp->airInletModelObject();
+      }
       else
       {
         break;
@@ -337,6 +344,11 @@ namespace detail {
       {
         modelObjects.push_back(*comp);
         modelObject = comp->secondaryAirOutletModelObject();
+      }
+      else if( boost::optional<WaterToAirComponent> comp = modelObject->optionalCast<WaterToAirComponent>() )
+      {
+        modelObjects.push_back(*comp);
+        modelObject = comp->airOutletModelObject();
       }
       else
       {

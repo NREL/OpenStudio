@@ -163,7 +163,7 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
 
   std::vector<Attribute> attributes;
 
-  QList<QListWidgetItem *> items =	m_intendedSoftwareToolListWidget->findItems(".*", Qt::MatchRegExp);
+  QList<QListWidgetItem *> items = m_intendedSoftwareToolListWidget->findItems(".*", Qt::MatchRegExp);
   for (QListWidgetItem * item : items){
     if (item->checkState() == Qt::Checked){
       std::string intendedSoftwareTool = toString(item->text());

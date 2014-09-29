@@ -21,15 +21,15 @@
 #define MODEL_ZONEHVACCOMPONENT_HPP
 
 #include "ModelAPI.hpp"
-#include "ParentObject.hpp"
+#include "HVACComponent.hpp"
 
 namespace openstudio {
 
 namespace model {
 
 class ThermalZone;
-
 class Node;
+class AirLoopHVAC;
 
 namespace detail {
 
@@ -39,24 +39,24 @@ class ZoneHVACComponent_Impl;
 
 /** ZoneHVACComponent is the base class for HVAC related objects that exclusively condition a single zone.
  */
-class MODEL_API ZoneHVACComponent : public ParentObject
+class MODEL_API ZoneHVACComponent : public HVACComponent
 {
   public:
   virtual ~ZoneHVACComponent() {}
 
   /** Returns the inlet port.  For a ZoneHVACComponent this port is typically connected
    *  to a zone exhaust node. **/
-  unsigned inletPort();
+  unsigned inletPort() const;
 
   /** Returns the optional node connected to the inletPort(). **/
-  boost::optional<Node> inletNode();
+  boost::optional<Node> inletNode() const;
 
   /** Returns the outlet port. For a ZoneHVACComponent this port is typically connected
    *  to a zone air inlet node **/
-  unsigned outletPort();
+  unsigned outletPort() const;
 
   /** Returns the optional node connected to the outletPort(). **/
-  boost::optional<Node> outletNode();
+  boost::optional<Node> outletNode() const;
 
   /** Returns the optional ThermalZone that this ZoneHVACComponent is attached to
    **/
@@ -70,8 +70,21 @@ class MODEL_API ZoneHVACComponent : public ParentObject
 
   /** Detaches this ZoneHVACComponent from the associated ThermalZone.
    *  If there is no attached ThermalZone there is no effect.
+   *  If the ThermalZone is attached via an AirLoopHVAC object (as a result of addToNode()),
+   *  then this method will reverse the effects of addToNode.
    **/
   void removeFromThermalZone();
+
+  /** Adds this ZoneHVACComponent to a node on an AirLoopHVAC object.
+   *  The node must be located between a ThermalZone and a AirTerminalSingleDuctInletSideMixer object.
+   *  This is used to feed an AirLoopHVAC structure (such as a DOAS, or any built up system) into a ZoneHVACComponent.
+   *  If the ZoneHVACComponent object is already attached to a thermalZone() then it will first be detached using removeFromThermalZone().
+   **/
+  bool addToNode(Node & node);
+
+  /** Returns the AirLoopHVAC attached to this ZoneHVACComponent.
+   *  The AirLoopHVAC object would have been attached via ::addToNode */
+  boost::optional<AirLoopHVAC> airLoopHVAC() const;
 
   protected:
 

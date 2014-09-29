@@ -25,6 +25,7 @@
 #include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/FileLogSink.hpp"
 #include "../utilities/core/Logger.hpp"
+#include "../utilities/core/String.hpp"
 #include "../utilities/idf/Workspace_Impl.hpp"
 
 #include <QApplication>
@@ -90,6 +91,9 @@ int main(int argc, char *argv[])
     QSharedPointer<openstudio::ruleset::RubyUserScriptInfoGetter> infoGetter(
         new openstudio::ruleset::EmbeddedRubyUserScriptInfoGetter<openstudio::detail::RubyInterpreter>(rubyInterpreter));
 
+
+    // Make the run path the default plugin search location
+    QCoreApplication::addLibraryPath(openstudio::toQString(openstudio::getApplicationRunDirectory()));
 
     openstudio::pat::PatApp app(argc, argv, infoGetter);
     openstudio::Application::instance().setApplication(&app);

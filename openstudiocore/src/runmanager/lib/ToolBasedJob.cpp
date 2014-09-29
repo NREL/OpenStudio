@@ -625,6 +625,11 @@ namespace detail {
     return retval;
   }
 
+  std::vector<std::pair<openstudio::path, openstudio::path> > ToolBasedJob::getRequiredFilePaths()
+  {
+    return acquireRequiredFiles(complete_required_files());
+  }
+
   void ToolBasedJob::startTool(const std::string &t_toolName)
   {
     LOG(Info, "Starting Tool: " << t_toolName);
@@ -634,12 +639,17 @@ namespace detail {
     openstudio::path outpath = outdir();
 
     QWriteLocker l(&m_mutex);
-  std::vector<std::pair<openstudio::path, openstudio::path> > requiredFiles = acquireRequiredFiles(complete_required_files());
+    std::vector<std::pair<openstudio::path, openstudio::path> > requiredFiles = acquireRequiredFiles(complete_required_files());
   //m_copiedRequiredFiles.insert(requiredFiles.begin(), requiredFiles.end());
     std::shared_ptr<Process> process = m_process_creator->createProcess(ti,
         requiredFiles, m_parameters[t_toolName],
         outpath, std::vector<openstudio::path>(m_expectedOutputFiles.begin(), m_expectedOutputFiles.end()), "\n\n",
         getBasePath());
+
+    for (const auto &path : requiredFiles)
+    {
+      LOG(Debug, "Acquired required file: " << openstudio::toString(path.first) << " -> " << openstudio::toString(path.second));
+    }
 
     if (m_currentprocess)
     {

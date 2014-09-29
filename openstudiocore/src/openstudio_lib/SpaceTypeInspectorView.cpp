@@ -58,6 +58,8 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(bool isIP,
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), this, SLOT(toggleUnits(bool)));
   OS_ASSERT(isConnected);
 
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), spaceTypesGridView, SIGNAL(toggleUnitsClicked(bool)));
+  OS_ASSERT(isConnected);
 }
 
 void SpaceTypeInspectorView::onClearSelection()

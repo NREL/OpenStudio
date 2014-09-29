@@ -33,6 +33,7 @@
 #include <QPushButton>
 #include <QString>
 #include <QRegExp>
+//#include <QWebInspector>
 
 #include "../runmanager/lib/FileInfo.hpp"
 #include "../runmanager/lib/JobStatusWidget.hpp"

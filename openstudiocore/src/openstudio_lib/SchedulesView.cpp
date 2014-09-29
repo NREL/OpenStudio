@@ -1518,7 +1518,7 @@ void ScheduleDayEditor::paintEvent ( QPaintEvent * event )
 
   double time = prevSnapTime + timeSnapLength;
 
-  if( abs(startTimeSeconds - prevSnapTime) < 0.00001 )
+  if( std::fabs(startTimeSeconds - prevSnapTime) < 0.00001 )
   {
     time = startTimeSeconds;
   }
@@ -1956,7 +1956,7 @@ void VCalendarSegmentItem::updateLength()
   
   double prevY = previousCalendarItem->pos().y() + previousCalendarItem->boundingRect().height() / 2.0;
 
-  double length = abs(nextY - prevY);
+  double length = std::fabs(nextY - prevY);
 
   if( prevY < nextY )
   {

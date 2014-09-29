@@ -316,7 +316,16 @@ if(APPLE)
   endif()
 endif()
 
-find_package(Ruby REQUIRED)
+find_package(Ruby 2)
+
+if (NOT RUBY_FOUND)
+  find_path(RUBY_CONFIG_INCLUDE_DIR
+    NAMES ruby/config.h  config.h
+    HINTS
+    /usr/include/x86_64-linux-gnu/ruby-2.0.0
+    )
+  find_package(Ruby 2.0 REQUIRED)
+endif()
 
 set(RUBY_MODULE_DIR "Ruby")
 
@@ -593,6 +602,7 @@ find_package(Qt5WebKit REQUIRED)
 find_package(Qt5WebKitWidgets REQUIRED)
 #find_package(Qt5WinExtras)
 find_package(Qt5Concurrent REQUIRED)
+find_package(Qt5PrintSupport REQUIRED)
 mark_as_advanced(
   Qt5Concurrent_DIR
   Qt5Core_DIR
@@ -627,6 +637,7 @@ include_directories(${Qt5WebKit_INCLUDE_DIRS})
 include_directories(${Qt5WebKitWidgets_INCLUDE_DIRS})
 #include_directories(${Qt5WinExtras_INCLUDE_DIRS})
 include_directories(${Qt5Concurrent_INCLUDE_DIRS})
+include_directories(${Qt5PrintSupport_INCLUDE_DIRS})
 
 #include_directories is supposed to be a set, however there are tons of Qt duplicate includes
 get_directory_property(dupdirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} INCLUDE_DIRECTORIES)
@@ -642,6 +653,7 @@ list(APPEND QT_LIBS ${Qt5WebKit_LIBRARIES})
 list(APPEND QT_LIBS ${Qt5WebKitWidgets_LIBRARIES})
 #list(APPEND QT_LIBS ${Qt5WinExtras_LIBRARIES})
 list(APPEND QT_LIBS ${Qt5Concurrent_LIBRARIES})
+list(APPEND QT_LIBS ${Qt5PrintSupport_LIBRARIES})
 
 
 ###############################################################################
@@ -918,7 +930,7 @@ install(FILES "${CMAKE_SOURCE_DIR}/resources/resultsviewer/SmallOffice/SmallOffi
 
 
 # Install additional Documents, such as release notes
-install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_4_0_20140620.pdf" DESTINATION .)
+install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_5_0_20140926.pdf" DESTINATION .)
 
 ###############################################################################
 

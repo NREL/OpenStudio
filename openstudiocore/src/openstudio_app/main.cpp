@@ -28,6 +28,7 @@
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../ruleset/OSArgument.hpp"
 #include "../utilities/core/Logger.hpp"
+#include "../utilities/core/String.hpp"
 #include "../utilities/idf/Workspace_Impl.hpp"
 
 #include <QAbstractButton>
@@ -94,6 +95,9 @@ int main(int argc, char *argv[])
     // Initialize the argument getter
     QSharedPointer<openstudio::ruleset::RubyUserScriptInfoGetter> infoGetter(
       new openstudio::ruleset::EmbeddedRubyUserScriptInfoGetter<openstudio::detail::RubyInterpreter>(rubyInterpreter));
+
+    // Make the run path the default plugin search location
+    QCoreApplication::addLibraryPath(openstudio::toQString(openstudio::getApplicationRunDirectory()));
 
     openstudio::OpenStudioApp app(argc, argv, infoGetter);
     openstudio::Application::instance().setApplication(&app);

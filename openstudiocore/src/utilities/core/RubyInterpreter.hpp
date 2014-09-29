@@ -597,7 +597,7 @@ namespace openstudio
         int m_argc;
         char** m_argv;
 
-        void addIncludePath(std::vector<std::string>& includePaths, const openstudio::path& includePath)
+        static void addIncludePath(std::vector<std::string>& includePaths, const openstudio::path& includePath)
         {
           includePaths.push_back("-I");
           includePaths.push_back(toString(includePath));
@@ -611,56 +611,56 @@ namespace openstudio
 
 
           // set load paths
-          std::vector<std::string> includePaths;
+          std::vector<std::string> rubyArgs;
           openstudio::path rubypath = openstudio::getOpenStudioEmbeddedRubyPath();
 
-          addIncludePath(includePaths, t_moduleSearchPath);
-          addIncludePath(includePaths, t_rubyIncludePath);
+          rubyArgs.emplace_back("OpenStudio");
+          rubyArgs.emplace_back("-EUTF-8");
+
+          addIncludePath(rubyArgs, t_moduleSearchPath);
+          addIncludePath(rubyArgs, t_rubyIncludePath);
 
           if (!rubypath.empty())
           {
 #if defined(WIN32) 
 #if (defined(_M_X64) || defined(__amd64__))
-            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0"));
-            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/x64-msvcr100"));
-            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/site_ruby"));
-            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0"));
-            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/x64-msvcr100"));
-            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/vendor_ruby"));
-            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/2.0.0"));
-            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/2.0.0/x64-mswin64_10"));
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0"));
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/x64-msvcr100"));
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/site_ruby"));
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0"));
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/x64-msvcr100"));
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/vendor_ruby"));
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/2.0.0"));
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/2.0.0/x64-mswin64_10"));
 #else
-            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0"));
-            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/i386-mingw32"));
-            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/site_ruby"));
-            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0"));
-            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/i386-mingw32"));
-            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/vendor_ruby"));
-            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/2.0.0"));
-            addIncludePath(includePaths, rubypath / openstudio::toPath("lib/ruby/2.0.0/i386-mingw32"));
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0"));
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/i386-mingw32"));
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/site_ruby"));
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0"));
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/i386-mingw32"));
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/vendor_ruby"));
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/2.0.0"));
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/2.0.0/i386-mingw32"));
 #endif
 #endif
           }
 
-          std::string scriptName("OpenStudio");
-          std::string encoding("-EUTF-8");
+          // and now give the interpreter something to parse, so that it doesn't sit
+          // waiting on stdin from us
+          rubyArgs.emplace_back("-e");
+          rubyArgs.emplace_back("");
 
-          // initialize Ruby options as if coming from command line on advice from Bugra Barin at SketchUp
-          int numIncludePaths = (int)includePaths.size();
-          m_argc = numIncludePaths + 2;
+
+          m_argc = static_cast<int>(rubyArgs.size());
           m_argv = new char*[m_argc];
 
-          // script name
-          m_argv[0] = new char[scriptName.size() + 1]; 
-          strcpy(m_argv[0], scriptName.c_str());
-          // encoding
-          m_argv[1] = new char[encoding.size() + 1];
-          strcpy(m_argv[1], encoding.c_str());
-          // include paths
-          for (int i = 0; i < numIncludePaths; ++i){
-            m_argv[i + 2] = new char[includePaths[i].size() + 1];
-            strcpy(m_argv[i + 2], includePaths[i].c_str());
-          }          
+          for (int i = 0; i < m_argc; ++i){
+            m_argv[i] = new char[rubyArgs[i].size() + 1];
+            strcpy(m_argv[i], rubyArgs[i].c_str());
+          }
+
+          // the return value of ruby_options is the parsed node of our "script"
+          // from the -e "" we passed in. This could be used to actually parse / eval something if we wanted
           ruby_options(m_argc, m_argv);
 
           // load the modules. If an error occurs, an exception will be thrown explaining the problem
