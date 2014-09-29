@@ -220,6 +220,10 @@ void OSDoubleEdit2::unbind() {
 }
 
 void OSDoubleEdit2::onEditingFinished() {
+
+  QString text = this->text();
+  if (text.isEmpty() || m_text == text) return;
+
   if (m_modelObject) {
     std::string str = this->text().toStdString();
     boost::regex autore("[aA][uU][tT][oO]");
@@ -253,12 +257,16 @@ void OSDoubleEdit2::onEditingFinished() {
         double value = boost::lexical_cast<double>(str);
         setPrecision(str);
         if (m_set) {
+          QString text = this->text();
+          if (text.isEmpty() || m_text == text) return;
           bool result = (*m_set)(value);
           if (!result){
             //restore
             refreshTextAndLabel();
           }
         }else if (m_setVoidReturn){
+          QString text = this->text();
+          if (text.isEmpty() || m_text == text) return;
           (*m_setVoidReturn)(value);
         }
       }
@@ -287,6 +295,11 @@ void OSDoubleEdit2::onModelObjectRemove(Handle handle) {
 }
 
 void OSDoubleEdit2::refreshTextAndLabel() {
+
+  QString text = this->text();
+
+  if (m_text == text) return;
+
   if (m_modelObject) {
     QString textValue;
     ModelObject modelObject = m_modelObject.get();
@@ -334,7 +347,15 @@ void OSDoubleEdit2::refreshTextAndLabel() {
       ss.str("");
     }
 
-    this->setText(textValue);
+    if (!textValue.isEmpty() && m_text != textValue){
+      m_text = textValue;
+      this->blockSignals(true);
+      this->setText(m_text);
+      this->blockSignals(false);
+    }
+    else {
+      return;
+    }
 
     if (m_isDefaulted) {
       if ((*m_isDefaulted)()) {

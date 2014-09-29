@@ -580,7 +580,6 @@ void OSDropZone2::refresh()
   m_text.clear();
   setFixedWidth(75);
 
-
   boost::optional<model::ModelObject> modelObject;
 
   if (m_item)
