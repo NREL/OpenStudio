@@ -1348,7 +1348,8 @@ private:
   void setDefaults();
 
   int m_nr;  // schedule number (IX); in order from 1 to _ndsch
-  int m_npts;  // number of data points (I2)
+  // Not used
+  //int m_npts;  // number of data points (I2)
   int m_shape;  // 0 = rectangular; 1 = trapezoidal (I2)
   int m_utyp;  // type of units (I2) {W}
   int m_ucnv;  // units conversion (I2) {W}
@@ -1435,7 +1436,8 @@ private:
   void setDefaults();
 
   int m_nr;  // profile number (IX); in order from 1 to _nwpf
-  int m_npts;  // number of data points (I2)
+  // Not used
+  //int m_npts;  // number of data points (I2)
   int m_type;  // 1 = linear; 2 = cubic spline; 3 = trigonometric (I2)
   std::string m_name;  // schedule name (CS) {W}
   std::string m_desc;  // profile description (CS) {W} may be blank

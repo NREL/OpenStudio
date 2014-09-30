@@ -27,15 +27,14 @@
 
 #include <QApplication>
 
-#ifdef _WIN32
-static const char *logfilepath = "./resultsviewer.log";
-#else
-static const char *logfilepath = "/var/log/resultsviewer.log";
-#endif
-
 int main(int argc, char *argv[])
 {
 #if _DEBUG || (__GNUC__ && !NDEBUG)
+#ifdef _WIN32
+  const char *logfilepath = "./resultsviewer.log";
+#else
+  const char *logfilepath = "/var/log/resultsviewer.log";
+#endif
   openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
   openstudio::FileLogSink fileLog(openstudio::toPath(logfilepath));
   fileLog.setLogLevel(Debug);

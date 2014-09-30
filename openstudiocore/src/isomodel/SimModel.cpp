@@ -1674,9 +1674,9 @@ Qneed_ht_yr = sum(v_Qneed_ht);
     //% compute the cooling gain utilization factor eta_g_cl
     Vector v_eta_g_CL(12);
     for(size_t i = 0;i<v_eta_g_CL.size();i++){
+#ifdef DEBUG_ISO_MODEL_SIMULATION
       double numer = (1.0-std::pow(v_gamma_H_cl[i],a_H));
       //double denom = (1.0-std::pow(v_gamma_H_cl[i],(a_H+1.0)));
-#ifdef DEBUG_ISO_MODEL_SIMULATION
       LOG(Trace, numer << " = 1.0 - " << v_gamma_H_cl[i] << "^" << a_H);
       LOG(Trace, numer << " = 1.0 - " << v_gamma_H_cl[i] << "^" << (a_H+1.0));
 #endif
