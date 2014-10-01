@@ -122,10 +122,10 @@ if(MSVC)
     message(FATAL_ERROR "Visual Studio earlier than VS2013 is not supported")
   elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.0.21005.1")
     # VS2013
-    message(WARNING "Update 3 for Visual Studio 2013 is strongly recommended")
+    message(SEND_ERROR "Update 3 for Visual Studio 2013 is required")
   elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.30501")
     # VS2013 Update 2:
-    message(WARNING "Update 3 for Visual Studio 2013 is strongly recommended")
+    message(SEND_ERROR "Update 3 for Visual Studio 2013 is required")
   elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.30723")
     # VS2013 Update 3: no-op
   endif()
