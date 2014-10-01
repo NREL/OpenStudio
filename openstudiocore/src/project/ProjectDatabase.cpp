@@ -1359,6 +1359,10 @@ namespace detail {
     //   ((workspaceFileReferenceRecordId)(INTEGER)(19))
     // );
 
+    // DLM: the following columns were added in 1.4.2, they will be created here
+    //((units)(TEXT)(20))
+    //((modelDependent)(BOOLEAN)(21))
+
     LOG(Info,"Renaming and restructuring UserScriptArgumentRecords, now OSArgumentRecords.");
     createTable<OSArgumentRecord>();
 
@@ -1378,9 +1382,9 @@ namespace detail {
         " (id, handle, name, displayName, description, timestampCreate, timestampLast, " +
         "uuidLast, rubyPerturbationRecordId, rubyContinuousVariableRecordId, " +
         "argumentType, required, argumentValue, defaultArgumentValue, domainType, " +
-        "domainValues, choices, choiceDisplayNames, isRead, extension) " +
+        "domainValues, choices, choiceDisplayNames, isRead, extension, units, modelDependent) " +
         "VALUES (?, ?, ?, ?, ?, ?, ?, " +
-                "?, ?, ?, " +
+                "?, ?, ?, ?, ?, " +
                 "?, ?, ?, ?, ?, " +
                 "?, ?, ?, ?, ?)"));
 
@@ -1388,7 +1392,7 @@ namespace detail {
     QVariantList ids, handles, names, displayNames, descriptions, timestampCreates, timestampLasts;
     QVariantList uuidLasts, rubyPerturbationRecordIds, rubyContinuousVariableRecordIds;
     QVariantList argumentTypes, requireds, argumentValues, defaultArgumentValues, domainTypes;
-    QVariantList domains, choices, choiceDisplayNames, isReads, extensions;
+    QVariantList domains, choices, choiceDisplayNames, isReads, extensions, units, modelDependents;
     while (query.next()) {
       QVariant value;
 
@@ -1437,6 +1441,10 @@ namespace detail {
       choiceDisplayNames << QVariant(QString(""));
       isReads << query.value(15);
       extensions << query.value(16);
+
+      // DLM: new fields added in 1.4.2
+      units << QVariant(QString(""));
+      modelDependents << false;
     }
     argAddQuery.addBindValue(ids);
     argAddQuery.addBindValue(handles);
@@ -1460,7 +1468,11 @@ namespace detail {
     argAddQuery.addBindValue(choices);
     argAddQuery.addBindValue(choiceDisplayNames);
     argAddQuery.addBindValue(isReads);
-    argAddQuery.addBindValue(extensions);
+    argAddQuery.addBindValue(extensions); 
+    
+    // DLM: new fields added in 1.4.2
+    argAddQuery.addBindValue(units);
+    argAddQuery.addBindValue(modelDependents);
 
     test = argAddQuery.execBatch();
     OS_ASSERT(test);
@@ -2577,39 +2589,45 @@ namespace detail {
   }
 
   void ProjectDatabase_Impl::update_1_4_1_to_1_4_2(const VersionString& startVersion) {
-    bool didStartTransaction = startTransaction();
-    OS_ASSERT(didStartTransaction);
 
-    // add units and modelDependent columns to OSArgumentRecord 
-    LOG(Info, "Adding units and modelDependent columns to " << OSArgumentRecord::databaseTableName() << ".");
+    // the update_0_10_0_to_0_10_1 method would have added this table with all columns
+    // do not run this update if createTable has previously been called for OSArgumentRecord
+    if (startVersion > VersionString("0.10.0")) {
 
-    ProjectDatabase database(this->shared_from_this());
-    QSqlQuery query(*(database.qSqlDatabase()));
+      bool didStartTransaction = startTransaction();
+      OS_ASSERT(didStartTransaction);
 
-    OSArgumentRecordColumns unitsColumn("units");
-    query.prepare(QString::fromStdString(
-      "ALTER TABLE " + OSArgumentRecord::databaseTableName() + " ADD COLUMN " +
-      unitsColumn.valueName() + " " + unitsColumn.valueDescription()));
-    assertExec(query);
-    query.clear();
+      // add units and modelDependent columns to OSArgumentRecord 
+      LOG(Info, "Adding units and modelDependent columns to " << OSArgumentRecord::databaseTableName() << ".");
 
-    OSArgumentRecordColumns modelDependentColumn("modelDependent");
-    query.prepare(QString::fromStdString(
-      "ALTER TABLE " + OSArgumentRecord::databaseTableName() + " ADD COLUMN " +
-      modelDependentColumn.valueName() + " " + modelDependentColumn.valueDescription()));
-    assertExec(query);
-    query.clear();
+      ProjectDatabase database(this->shared_from_this());
+      QSqlQuery query(*(database.qSqlDatabase()));
 
-    query.prepare(toQString("UPDATE " + OSArgumentRecord::databaseTableName() +
-      " SET units=:units, modelDependent=:modelDependent"));
-    query.bindValue(":units", QVariant(QVariant::String));
-    query.bindValue(":modelDependent", false);
-    assertExec(query);
-    query.clear();
+      OSArgumentRecordColumns unitsColumn("units");
+      query.prepare(QString::fromStdString(
+        "ALTER TABLE " + OSArgumentRecord::databaseTableName() + " ADD COLUMN " +
+        unitsColumn.valueName() + " " + unitsColumn.valueDescription()));
+      assertExec(query);
+      query.clear();
 
-    save();
-    bool test = this->commitTransaction();
-    OS_ASSERT(test);
+      OSArgumentRecordColumns modelDependentColumn("modelDependent");
+      query.prepare(QString::fromStdString(
+        "ALTER TABLE " + OSArgumentRecord::databaseTableName() + " ADD COLUMN " +
+        modelDependentColumn.valueName() + " " + modelDependentColumn.valueDescription()));
+      assertExec(query);
+      query.clear();
+
+      query.prepare(toQString("UPDATE " + OSArgumentRecord::databaseTableName() +
+        " SET units=:units, modelDependent=:modelDependent"));
+      query.bindValue(":units", QVariant(QVariant::String));
+      query.bindValue(":modelDependent", false);
+      assertExec(query);
+      query.clear();
+
+      save();
+      bool test = this->commitTransaction();
+      OS_ASSERT(test);
+    }
   }
 
   void ProjectDatabase_Impl::setProjectDatabaseRecord(const ProjectDatabaseRecord& projectDatabaseRecord)
