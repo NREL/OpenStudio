@@ -809,7 +809,7 @@ ExternalProject_Add(OpenStudioCore
     -DQt5WebKitWidgets_DIR:STRING=${Qt5WebKitWidgets_DIR}
     #-DQt5WinExtras_DIR:STRING=${Qt5WinExtras_DIR}
     -DQt5Concurrent_DIR:STRING=${Qt5Concurrent_DIR}
-    -DQt5PrintSupport_DIR:STRING=${Qt5PrintSuppport_DIR}
+    -DQt5PrintSupport_DIR:STRING=${Qt5PrintSupport_DIR}
     -DSWIG_EXECUTABLE:STRING=${SWIG_EXECUTABLE}
     -DRUBY_EXECUTABLE:STRING=${RUBY_EXECUTABLE}
     -DNODE_BIN_DIR:STRING=${NODE_BIN_DIR}
