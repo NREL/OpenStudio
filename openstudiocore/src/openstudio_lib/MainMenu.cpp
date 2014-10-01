@@ -129,10 +129,12 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   QMenu * unitsMenu = m_preferencesMenu->addMenu(tr("Units"));
 
   m_displaySIUnitsAction = new QAction(tr("Metric (&SI)"),this);
+  m_displaySIUnitsAction->setCheckable(true);
   unitsMenu->addAction(m_displaySIUnitsAction);
   connect(m_displaySIUnitsAction, &QAction::triggered, this, &MainMenu::displaySIUnitsClicked);
 
   m_displayIPUnitsAction = new QAction(tr("English (&I-P)"),this);
+  m_displayIPUnitsAction->setCheckable(true);
   unitsMenu->addAction(m_displayIPUnitsAction);
   connect(m_displayIPUnitsAction, &QAction::triggered, this, &MainMenu::displayIPUnitsClicked);
 
@@ -200,15 +202,15 @@ MainMenu::~MainMenu()
 
 void MainMenu::displaySIUnitsClicked()
 {
-  m_displaySIUnitsAction->setIcon(QIcon(":/images/check.png"));
-  m_displayIPUnitsAction->setIcon(QIcon());
+  m_displaySIUnitsAction->setChecked(true);
+  m_displayIPUnitsAction->setChecked(false);
   emit toggleUnitsClicked(false);
 }
 
 void MainMenu::displayIPUnitsClicked()
 {
-  m_displayIPUnitsAction->setIcon(QIcon(":/images/check.png"));
-  m_displaySIUnitsAction->setIcon(QIcon());
+  m_displayIPUnitsAction->setChecked(true);
+  m_displaySIUnitsAction->setChecked(false);
   emit toggleUnitsClicked(true);
 }
 

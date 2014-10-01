@@ -84,49 +84,49 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACHighTemperatureRa
   {
     idfObject.setString(ZoneHVAC_HighTemperatureRadiantFields::MaximumPowerInput,"AutoSize");
   }
-  else if( value = modelObject.maximumPowerInput() )
+  else if( (value = modelObject.maximumPowerInput()) )
   {
     idfObject.setDouble(ZoneHVAC_HighTemperatureRadiantFields::MaximumPowerInput,value.get());
   } 
 
   //FuelType
-  if( s = modelObject.fuelType() )
+  if( (s = modelObject.fuelType()) )
   {
     idfObject.setString(ZoneHVAC_HighTemperatureRadiantFields::FuelType,s.get());
   }
 
   //CombustionEfficiency
-  if( value = modelObject.combustionEfficiency() )
+  if( (value = modelObject.combustionEfficiency()) )
   {
     idfObject.setDouble(ZoneHVAC_HighTemperatureRadiantFields::CombustionEfficiency,value.get());
   }
 
   //FractionofInputConvertedtoRadiantEnergy
-  if( value = modelObject.fractionofInputConvertedtoRadiantEnergy() )
+  if( (value = modelObject.fractionofInputConvertedtoRadiantEnergy()) )
   {
     idfObject.setDouble(ZoneHVAC_HighTemperatureRadiantFields::FractionofInputConvertedtoRadiantEnergy,value.get());
   }
 
   //FractionofInputConvertedtoLatentEnergy
-  if( value = modelObject.fractionofInputConvertedtoLatentEnergy() )
+  if( (value = modelObject.fractionofInputConvertedtoLatentEnergy()) )
   {
     idfObject.setDouble(ZoneHVAC_HighTemperatureRadiantFields::FractionofInputConvertedtoLatentEnergy,value.get());
   }
 
   //FractionofInputthatIsLost
-  if( value = modelObject.fractionofInputthatIsLost() )
+  if( (value = modelObject.fractionofInputthatIsLost()) )
   {
     idfObject.setDouble(ZoneHVAC_HighTemperatureRadiantFields::FractionofInputthatIsLost,value.get());
   }
 
   //TemperatureControlType
-  if( s = modelObject.temperatureControlType() )
+  if( (s = modelObject.temperatureControlType()) )
   {
     idfObject.setString(ZoneHVAC_HighTemperatureRadiantFields::TemperatureControlType,s.get());
   }
   
   //HeatingThrottlingRange
-  if( value = modelObject.heatingThrottlingRange() )
+  if( (value = modelObject.heatingThrottlingRange()) )
   {
     idfObject.setDouble(ZoneHVAC_HighTemperatureRadiantFields::HeatingThrottlingRange,value.get());
   }
@@ -142,7 +142,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACHighTemperatureRa
 
   //FractionofRadiantEnergyIncidentonPeople
   double fractionofRadiantEnergyIncidentonPeople = 0.04;
-  if( value = modelObject.fractionofRadiantEnergyIncidentonPeople() )
+  if( (value = modelObject.fractionofRadiantEnergyIncidentonPeople()) )
   {
     idfObject.setDouble(ZoneHVAC_HighTemperatureRadiantFields::FractionofRadiantEnergyIncidentonPeople,value.get());
     fractionofRadiantEnergyIncidentonPeople = value.get();

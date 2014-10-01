@@ -6,6 +6,8 @@
   #include <utilities/core/Enum.hpp>
 %}
 
+%include <utilities/core/EnumBase.hpp>
+
 #if defined(SWIGRUBY)
 %define ENUM_CONVERSION(_name) 
 %init %{
@@ -43,6 +45,5 @@
   };  \
   ENUM_CONVERSION(_name);
   
-#define OPENSTUDIO_ENUM7(_name, ...) OPENSTUDIO_ENUM(_name, __VA_ARGS__)
 
 #endif // UTILITIES_CORE_ENUM_I

@@ -90,12 +90,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctVAVH
   if( modelObject.isMaximumAirFlowRateAutosized() ) {
     idfObject.setString(AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheatFields::MaximumAirFlowRate,"AutoSize");
   }
-  else if( value = modelObject.maximumAirFlowRate() ) {
+  else if( (value = modelObject.maximumAirFlowRate()) ) {
     idfObject.setDouble(AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheatFields::MaximumAirFlowRate,value.get());
   }
 
   // ZoneMinimumAirFlowFraction
-  if( value = modelObject.zoneMinimumAirFlowFraction() ) {
+  if( (value = modelObject.zoneMinimumAirFlowFraction()) ) {
     idfObject.setDouble(AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheatFields::ZoneMinimumAirFlowFraction,value.get());
   }
 

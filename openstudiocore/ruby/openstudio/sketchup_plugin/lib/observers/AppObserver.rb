@@ -61,9 +61,7 @@ module OpenStudio
     def onQuit
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       
-      Plugin.model_manager.destroy
-      
-      Plugin.stop_event_processing
+      Plugin.model_manager.shutdown
     end
     
     

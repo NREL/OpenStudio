@@ -102,7 +102,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
   boost::optional<IdfObject> _heatingCoil;
   {
     auto heatingCoil = modelObject.heatingCoil();
-    if( _heatingCoil = translateAndMapModelObject(heatingCoil) ) {
+    if( (_heatingCoil = translateAndMapModelObject(heatingCoil)) ) {
       idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::HeatingCoilObjectType,_heatingCoil->iddObject().name());
       idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::HeatingCoilName,_heatingCoil->name().get());
     }
@@ -134,7 +134,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
   // Cooling Coil Name
   boost::optional<IdfObject> _coolingCoil;
   if( auto coolingCoil = modelObject.coolingCoil() ) {
-    if( _coolingCoil = translateAndMapModelObject(coolingCoil.get()) ) {
+    if( (_coolingCoil = translateAndMapModelObject(coolingCoil.get())) ) {
       idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::CoolingCoilObjectType,_coolingCoil->iddObject().name());
       idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::CoolingCoilName,_coolingCoil->name().get());
     }

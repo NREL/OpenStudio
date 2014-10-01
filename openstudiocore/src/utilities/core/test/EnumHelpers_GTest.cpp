@@ -34,14 +34,6 @@ namespace enums {
     ((SIXTH)) );
 
 
-  OPENSTUDIO_ENUM7(Test7Enum,
-     ((first)(first)(1)),
-     ((second)),
-     ((third)),
-     ((fourth)),
-     ((fifth)),
-     ((sixth)),
-     ((seventh)(bob)) );
 }
 } // openstudio
 

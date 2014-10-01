@@ -337,7 +337,7 @@ void ModelTest::checkChildren(const QModelIndex &parent, int currentDepth)
             }*/
 
             // Check that we can get back our real parent.
-            QModelIndex p = model->parent(index);
+            //QModelIndex p = model->parent(index);
             //qDebug() << "child:" << index;
             //qDebug() << p;
             //qDebug() << parent;

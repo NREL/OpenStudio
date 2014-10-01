@@ -30,6 +30,11 @@ macro(GCCAddPCHTarget ARCH)
     PROPERTIES COMPILE_FLAGS "-x c++-header"
   )
 
+
+  set_property(SOURCE ${PCH_SOURCES} APPEND PROPERTY COMPILE_DEFINITIONS_RELEASE QT_NO_DEBUG)
+  set_property(SOURCE ${PCH_SOURCES} APPEND PROPERTY COMPILE_DEFINITIONS_RELWITHDEBINFO QT_NO_DEBUG)
+  set_property(SOURCE ${PCH_SOURCES} APPEND PROPERTY COMPILE_DEFINITIONS_MINSIZEREL QT_NO_DEBUG)
+
   add_custom_command(OUTPUT ${PCH_OUTPUT}
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/pchlib${ARCHNAME}.dir/${arch}/PCH.cpp.o ${PCH_OUTPUT}
     DEPENDS pchlib${ARCHNAME}
@@ -133,7 +138,7 @@ macro(AddPCH TARGET_NAME)
           if("${extension}" STREQUAL ".cpp" OR "${extension}" STREQUAL ".cxx")
             message(STATUS "Setting /Yc flag on: ${p}")
             set_source_files_properties("${f}"
-              PROPERTIES COMPILE_FLAGS "/Ycutilities/pch/PCH.hpp"
+              PROPERTIES COMPILE_FLAGS "/Ycutilities/pch/PCH.hpp /FIutilities/pch/PCH.hpp"
             )
 
             break()

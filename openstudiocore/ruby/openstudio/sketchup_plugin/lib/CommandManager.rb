@@ -129,7 +129,7 @@ module OpenStudio
         
         elsif extension != '.osm'
         
-          path = OpenStudio::Path.new(path).replace_extension(OpenStudio::Path.new("osm").string).to_s
+          path = OpenStudio::Path.new(path).replace_extension("osm").to_s
           new_name = OpenStudio::toString(OpenStudio::Path.new(path).filename)
         
           result = UI.messagebox("File name must have .osm extension. Do you want to rename your file to #{new_name}?",MB_YESNO)
@@ -422,7 +422,7 @@ module OpenStudio
         
         elsif extension != '.osm'
         
-          path = OpenStudio::Path.new(path).replace_extension(OpenStudio::Path.new("osm").string).to_s
+          path = OpenStudio::Path.new(path).replace_extension("osm").to_s
           new_name = OpenStudio::toString(OpenStudio::Path.new(path).filename)
         
           result = UI.messagebox("File name must have .osm extension. Do you want to rename your file to #{new_name}?",MB_YESNO)
@@ -478,7 +478,7 @@ module OpenStudio
 
         elsif extension != '.idf'
 
-          path = OpenStudio::Path.new(path).replace_extension(OpenStudio::Path.new("idf").string).to_s
+          path = OpenStudio::Path.new(path).replace_extension("idf").to_s
           new_name = OpenStudio::toString(OpenStudio::Path.new(path).filename)
 
           result = UI.messagebox("File name must have .idf extension. Do you want to rename your file to #{new_name}?",MB_YESNO)
@@ -540,7 +540,7 @@ module OpenStudio
 
         elsif extension != '.idf'
 
-          path = OpenStudio::Path.new(path).replace_extension(OpenStudio::Path.new("idf").string).to_s
+          path = OpenStudio::Path.new(path).replace_extension("idf").to_s
           new_name = OpenStudio::toString(OpenStudio::Path.new(path).filename)
 
           result = UI.messagebox("File name must have .idf extension. Do you want to rename your file to #{new_name}?",MB_YESNO)
@@ -602,7 +602,7 @@ module OpenStudio
 
         elsif extension != '.xml'
 
-          path = OpenStudio::Path.new(path).replace_extension(OpenStudio::Path.new("xml").string).to_s
+          path = OpenStudio::Path.new(path).replace_extension("xml").to_s
           new_name = OpenStudio::toString(OpenStudio::Path.new(path).filename)
 
           result = UI.messagebox("File name must have .xml extension. Do you want to rename your file to #{new_name}?",MB_YESNO)
@@ -664,7 +664,7 @@ module OpenStudio
 
         elsif extension != '.xml'
 
-          path = OpenStudio::Path.new(path).replace_extension(OpenStudio::Path.new("xml").string).to_s
+          path = OpenStudio::Path.new(path).replace_extension("xml").to_s
           new_name = OpenStudio::toString(OpenStudio::Path.new(path).filename)
 
           result = UI.messagebox("File name must have .xml extension. Do you want to rename your file to #{new_name}?",MB_YESNO)
