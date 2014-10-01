@@ -54,7 +54,8 @@ module OpenStudio
       
       @model_interfaces.clear
     end
-     def inspect
+    
+    def inspect
       return(to_s)
     end
     
