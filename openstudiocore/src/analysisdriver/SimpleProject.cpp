@@ -498,9 +498,8 @@ namespace detail {
           if (wi.type == JobType(JobType::UserScript)
               && wi.jobkeyname == "pat-report-request-job")
           {
-            // we thought we were looking for ModelToIdf, but found
-            // the radiance script instead. That's OK, it means this is a project
-            // that uses radiance for its daylighting calculations
+            // we thought we were looking for EnergyPlusPreProcess, but found
+            // this script instead. That's OK, 
             // continue to the next job in the loop
             continue;
           }
