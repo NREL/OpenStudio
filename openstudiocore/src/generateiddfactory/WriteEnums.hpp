@@ -32,10 +32,8 @@ void writeEnumFast(std::ostream &t_os, const std::string &t_name, const Containe
 {
   t_os <<
   "#ifdef SWIG " << std::endl <<
-  "  class " << t_name << ";" << std::endl <<
-  "  %template("<<t_name<<"Base) ::EnumBase<" << t_name << ">;" << std::endl <<
-  "  ENUM_CONVERSION(" << t_name << "); " << std::endl <<
-  "#endif" << std::endl <<
+  "  OPENSTUDIO_ENUM(" << t_name << ", )" << std::endl <<
+  "#else" << std::endl <<
   "class " << t_name << ": public ::EnumBase<" << t_name << "> {" << std::endl <<
   " public: " << std::endl <<
   "  enum domain" << std::endl <<
@@ -112,7 +110,8 @@ void writeEnumFast(std::ostream &t_os, const std::string &t_name, const Containe
   "    return os << e.valueName() << \"(\" << e.value() << \")\";" << std::endl <<
   "  }" << std::endl <<
  
-  "  typedef boost::optional<" << t_name << "> Optional" << t_name << " ;" << std::endl;
+  "  typedef boost::optional<" << t_name << "> Optional" << t_name << " ;" << std::endl <<
+  "#endif";
 }
 
 template<typename Container>
