@@ -133,7 +133,9 @@ namespace runmanager {
 
     if (!t_ruby.empty())
     {
-      tools.append(makeTools(ToolType::Ruby, t_ruby, ToolFinder::parseToolVersion(t_ruby)));
+      ToolVersion tv(ToolFinder::parseToolVersion(t_ruby));
+      if (tv.empty()) tv = ToolVersion(2,0);
+      tools.append(makeTools(ToolType::Ruby, t_ruby, tv));
     }
 
     if (!t_dakota.empty())
@@ -408,7 +410,7 @@ namespace runmanager {
   }
 
 
-  openstudio::runmanager::ToolInfo ConfigOptions::toRubyToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus)
+  openstudio::runmanager::ToolInfo ConfigOptions::toRubyToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &ruby)
   {
 #ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
@@ -416,10 +418,37 @@ namespace runmanager {
     static const char exeext[] = "";
 #endif
 
+#ifdef Q_OS_LINUX
+    // Also note that this code might ultimately cause us problems in the future, but should
+    // be pretty robust for now
+    std::string filename = "ruby";
+
+    ToolVersion tv(ruby.first);
+
+    if (tv.getMajor())
+    {
+      filename += boost::lexical_cast<std::string>(*tv.getMajor());
+
+      if (tv.getMinor())
+      {
+        filename += "." + boost::lexical_cast<std::string>(*tv.getMinor());
+      } else {
+        filename += ".0";
+      }
+
+      // note that the extra '.' is required to keep the change_extension tool
+      // from erasing the .<minorver>
+      filename += ".";
+    }
+#else
+    static const char filename[] = "ruby";
+#endif
+
+
     return openstudio::runmanager::ToolInfo(
         "ruby",
-        eplus.first,
-        change_extension(eplus.second.binaryDir / toPath("ruby"), exeext),
+        ruby.first,
+        change_extension(ruby.second.binaryDir / toPath(filename), exeext),
         boost::regex(".*"));
   }
 

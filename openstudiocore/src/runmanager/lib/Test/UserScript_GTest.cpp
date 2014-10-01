@@ -520,9 +520,9 @@ TEST_F(RunManagerTestFixture, BCLMeasureRubyScriptEPWPathUnmerged)
   boost::optional<BCLMeasure> measure = BCLMeasure::load(dir);
   ASSERT_TRUE(measure);
 
-  openstudio::runmanager::RunManager rm(openstudio::tempDir() / openstudio::toPath("BCLMeasureRubyScriptEPWPath.db"), true, true);
+  openstudio::runmanager::RunManager rm(openstudio::tempDir() / openstudio::toPath("BCLMeasureRubyScriptEPWPathUnmerged.db"), true, true);
   openstudio::runmanager::Workflow wf;
-  openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("BCLMeasureRubyScriptEPWPath");
+  openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("BCLMeasureRubyScriptEPWPathUnmerged");
 
   openstudio::runmanager::RubyJobBuilder rubyjobbuilder(*measure, std::vector<openstudio::ruleset::OSArgument>());
   rubyjobbuilder.setIncludeDir(getOpenStudioRubyIncludePath());
