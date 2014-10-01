@@ -126,12 +126,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctVAVH
   // MaximumAirFlowRate
   if( modelObject.isMaximumAirFlowRateAutosized() ) {
     idfObject.setString(AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::MaximumAirFlowRate,"AutoSize");
-  } else if ( value = modelObject.maximumAirFlowRate() ) {
+  } else if( (value = modelObject.maximumAirFlowRate()) ) {
     idfObject.setDouble(AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::MaximumAirFlowRate,value.get());
   }
 
   // ZoneMinimumAirFlowFraction
-  if( value = modelObject.zoneMinimumAirFlowFraction() ) {
+  if( (value = modelObject.zoneMinimumAirFlowFraction()) ) {
     idfObject.setDouble(AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::ZoneMinimumAirFlowFraction,value.get());
   }
 
@@ -153,12 +153,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctVAVH
   // MaximumHotWaterorSteamFlowRate
   if( modelObject.isMaximumHotWaterorSteamFlowRateAutosized() ) {
     idfObject.setString(AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::MaximumHotWaterorSteamFlowRate,"AutoSize");
-  } else if( value = modelObject.maximumHotWaterorSteamFlowRate() ) {
+  } else if( (value = modelObject.maximumHotWaterorSteamFlowRate()) ) {
     idfObject.setDouble(AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::MaximumHotWaterorSteamFlowRate,value.get());
   }
 
   // MinimumHotWaterorSteamFlowRate
-  if( value = modelObject.minimumHotWaterorSteamFlowRate() ) {
+  if( (value = modelObject.minimumHotWaterorSteamFlowRate()) ) {
     idfObject.setDouble(AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::MinimumHotWaterorSteamFlowRate,value.get());
   }
 
@@ -168,12 +168,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctVAVH
   }
 
   // ConvergenceTolerance
-  if( value = modelObject.convergenceTolerance() ) {
+  if( (value = modelObject.convergenceTolerance()) ) {
     idfObject.setDouble(AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::ConvergenceTolerance,value.get());
   }
 
   // MaximumReheatAirTemperature
-  if( value = modelObject.maximumReheatAirTemperature() ) {
+  if( (value = modelObject.maximumReheatAirTemperature()) ) {
     idfObject.setDouble(AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::MaximumReheatAirTemperature,value.get());
   }
 

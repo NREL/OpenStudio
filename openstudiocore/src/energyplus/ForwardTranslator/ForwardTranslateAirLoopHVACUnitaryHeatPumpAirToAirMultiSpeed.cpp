@@ -100,7 +100,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
   }
 
   // MinimumOutdoorDryBulbTemperatureforCompressorOperation
-  if( value = modelObject.minimumOutdoorDryBulbTemperatureforCompressorOperation() ) {
+  if( (value = modelObject.minimumOutdoorDryBulbTemperatureforCompressorOperation()) ) {
     idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,value.get());
   }
 
@@ -178,32 +178,32 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
   // MaximumSupplyAirTemperaturefromSupplementalHeater
   if( modelObject.isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized() ) {
     idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::MaximumSupplyAirTemperaturefromSupplementalHeater,"AutoSize");
-  } else if( value = modelObject.maximumSupplyAirTemperaturefromSupplementalHeater() ) {
+  } else if( (value = modelObject.maximumSupplyAirTemperaturefromSupplementalHeater()) ) {
     idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::MaximumSupplyAirTemperaturefromSupplementalHeater,value.get());
   }
   
   // MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation
-  if( value = modelObject.maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() ) {
+  if( (value = modelObject.maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation()) ) {
     idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation,value.get());
   } 
 
   // AuxiliaryOnCycleElectricPower
-  if( value = modelObject.auxiliaryOnCycleElectricPower() ) {
+  if( (value = modelObject.auxiliaryOnCycleElectricPower()) ) {
     idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::AuxiliaryOnCycleElectricPower,value.get());
   }
 
   // AuxiliaryOffCycleElectricPower
-  if( value = modelObject.auxiliaryOffCycleElectricPower() ) {
+  if( (value = modelObject.auxiliaryOffCycleElectricPower()) ) {
     idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::AuxiliaryOffCycleElectricPower,value.get());
   }
 
   // DesignHeatRecoveryWaterFlowRate
-  if( value = modelObject.designHeatRecoveryWaterFlowRate() ) {
+  if( (value = modelObject.designHeatRecoveryWaterFlowRate()) ) {
     idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::DesignHeatRecoveryWaterFlowRate,value.get());
   }
 
   // MaximumTemperatureforHeatRecovery
-  if( value = modelObject.maximumTemperatureforHeatRecovery() ) {
+  if( (value = modelObject.maximumTemperatureforHeatRecovery()) ) {
     idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::MaximumTemperatureforHeatRecovery,value.get());
   }
 
@@ -214,73 +214,73 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
   // SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded
   if( modelObject.isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() ) {
     idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded,"AutoSize");
-  } else if( value = modelObject.supplyAirFlowRateWhenNoCoolingorHeatingisNeeded() ) {
+  } else if( (value = modelObject.supplyAirFlowRateWhenNoCoolingorHeatingisNeeded()) ) {
     idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded,value.get());
   }
 
   // NumberofSpeedsforHeating
-  if( num = modelObject.numberofSpeedsforHeating() ) {
+  if( (num = modelObject.numberofSpeedsforHeating()) ) {
     idfObject.setInt(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::NumberofSpeedsforHeating,num.get());
   }
 
   // NumberofSpeedsforCooling
-  if( num = modelObject.numberofSpeedsforCooling() ) {
+  if( (num = modelObject.numberofSpeedsforCooling()) ) {
     idfObject.setInt(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::NumberofSpeedsforCooling,num.get());
   }
 
   // Speed1SupplyAirFlowRateDuringHeatingOperation
   if( modelObject.isSpeed1SupplyAirFlowRateDuringHeatingOperationAutosized() ) {
     idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed1SupplyAirFlowRateDuringHeatingOperation,"AutoSize");
-  } else if( value = modelObject.speed1SupplyAirFlowRateDuringHeatingOperation() ) {
+  } else if( (value = modelObject.speed1SupplyAirFlowRateDuringHeatingOperation()) ) {
     idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed1SupplyAirFlowRateDuringHeatingOperation,value.get());
   }
 
   // Speed2SupplyAirFlowRateDuringHeatingOperation
   if( modelObject.isSpeed2SupplyAirFlowRateDuringHeatingOperationAutosized() ) {
     idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed2SupplyAirFlowRateDuringHeatingOperation,"AutoSize");
-  } else if( value = modelObject.speed2SupplyAirFlowRateDuringHeatingOperation() ) {
+  } else if( (value = modelObject.speed2SupplyAirFlowRateDuringHeatingOperation()) ) {
     idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed2SupplyAirFlowRateDuringHeatingOperation,value.get());
   }
 
   // Speed3SupplyAirFlowRateDuringHeatingOperation
   if( modelObject.isSpeed3SupplyAirFlowRateDuringHeatingOperationAutosized() ) {
     idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed3SupplyAirFlowRateDuringHeatingOperation,"AutoSize");
-  } else if( value = modelObject.speed3SupplyAirFlowRateDuringHeatingOperation() ) {
+  } else if( (value = modelObject.speed3SupplyAirFlowRateDuringHeatingOperation()) ) {
     idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed3SupplyAirFlowRateDuringHeatingOperation,value.get());
   }
 
   // Speed4SupplyAirFlowRateDuringHeatingOperation
   if( modelObject.isSpeed4SupplyAirFlowRateDuringHeatingOperationAutosized() ) {
     idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed4SupplyAirFlowRateDuringHeatingOperation,"AutoSize");
-  } else if( value = modelObject.speed4SupplyAirFlowRateDuringHeatingOperation() ) {
+  } else if( (value = modelObject.speed4SupplyAirFlowRateDuringHeatingOperation()) ) {
     idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed4SupplyAirFlowRateDuringHeatingOperation,value.get());
   }
 
   // Speed1SupplyAirFlowRateDuringCoolingOperation
   if( modelObject.isSpeed1SupplyAirFlowRateDuringCoolingOperationAutosized() ) {
     idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed1SupplyAirFlowRateDuringCoolingOperation,"AutoSize");
-  } else if( value = modelObject.speed1SupplyAirFlowRateDuringCoolingOperation() ) {
+  } else if( (value = modelObject.speed1SupplyAirFlowRateDuringCoolingOperation()) ) {
     idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed1SupplyAirFlowRateDuringCoolingOperation,value.get());
   }
 
   // Speed2SupplyAirFlowRateDuringCoolingOperation
   if( modelObject.isSpeed2SupplyAirFlowRateDuringCoolingOperationAutosized() ) {
     idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed2SupplyAirFlowRateDuringCoolingOperation,"AutoSize");
-  } else if( value = modelObject.speed2SupplyAirFlowRateDuringCoolingOperation() ) {
+  } else if( (value = modelObject.speed2SupplyAirFlowRateDuringCoolingOperation()) ) {
     idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed2SupplyAirFlowRateDuringCoolingOperation,value.get());
   }
 
   // Speed3SupplyAirFlowRateDuringCoolingOperation
   if( modelObject.isSpeed3SupplyAirFlowRateDuringCoolingOperationAutosized() ) {
     idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed3SupplyAirFlowRateDuringCoolingOperation,"AutoSize");
-  } else if( value = modelObject.speed3SupplyAirFlowRateDuringCoolingOperation() ) {
+  } else if( (value = modelObject.speed3SupplyAirFlowRateDuringCoolingOperation()) ) {
     idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed3SupplyAirFlowRateDuringCoolingOperation,value.get());
   }
 
   // Speed4SupplyAirFlowRateDuringCoolingOperation
   if( modelObject.isSpeed4SupplyAirFlowRateDuringCoolingOperationAutosized() ) {
     idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed4SupplyAirFlowRateDuringCoolingOperation,"AutoSize");
-  } else if( value = modelObject.speed4SupplyAirFlowRateDuringCoolingOperation() ) {
+  } else if( (value = modelObject.speed4SupplyAirFlowRateDuringCoolingOperation()) ) {
     idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed4SupplyAirFlowRateDuringCoolingOperation,value.get());
   }
 
@@ -319,7 +319,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
     suppCoilOutletNodeName = airOutletNodeName;
   }
 
-  if(  _fan ) {
+  if( _fan ) {
     if( _fan->iddObject().type() == IddObjectType::Fan_ConstantVolume ) {
       _fan->setString(Fan_ConstantVolumeFields::AirInletNodeName,fanInletNodeName);
       _fan->setString(Fan_ConstantVolumeFields::AirOutletNodeName,fanOutletNodeName);
