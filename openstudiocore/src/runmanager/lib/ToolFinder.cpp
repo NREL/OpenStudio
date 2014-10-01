@@ -72,6 +72,17 @@ namespace runmanager {
   {
     QSharedPointer<ToolVersion> toolver;
 
+    boost::regex rubyreg(".*ruby([0-9]+)\\.([0-9]+).*");
+
+    boost::smatch rubyresults;
+    if (boost::regex_match(openstudio::toString(t_path), rubyresults, rubyreg))
+    {
+      int major = atoi(rubyresults[1].str().c_str());
+      int minor = atoi(rubyresults[2].str().c_str());
+      LOG(Debug, "Tool version parsed from ruby binary name: " << openstudio::toString(t_path) << " ver: " << major << "." << minor);
+      return ToolVersion(major,minor);
+    }
+
     for (const auto & path : t_path)
     {
       std::string pathstr = openstudio::toString(path);
