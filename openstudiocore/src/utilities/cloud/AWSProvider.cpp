@@ -585,7 +585,7 @@ namespace openstudio{
     }
 
     std::string AWSProvider_Impl::defaultWorkerInstanceType() {
-      return "cc2.8xlarge";
+      return "c3.4xlarge";
     }
 
     std::vector<unsigned> AWSProvider_Impl::serverProcessorCounts() {
@@ -742,8 +742,19 @@ namespace openstudio{
         //info.push_back(awsComputerInformation);
 
         awsComputerInformation.instanceType = "cc2.8xlarge";
-        awsComputerInformation.prettyName = "Cluster Compute Eight Extra Large";
-        awsComputerInformation.processorCount = 16; // Hyperthreading disabled
+        awsComputerInformation.prettyName = "Previous Generation: Compute Optimized 8x Large";
+        awsComputerInformation.processorCount = 16; // Hyperthreading enabled
+        info.push_back(awsComputerInformation);
+
+
+        awsComputerInformation.instanceType = "c3.4xlarge";
+        awsComputerInformation.prettyName = "Compute Optimized 4x Large";
+        awsComputerInformation.processorCount = 16; // Hyperthreading enabled
+        info.push_back(awsComputerInformation);
+
+        awsComputerInformation.instanceType = "c3.8xlarge";
+        awsComputerInformation.prettyName = "Cluster Compute 8x Large";
+        awsComputerInformation.processorCount = 32; // Hyperthreading enabled
         info.push_back(awsComputerInformation);
       }
       return info;

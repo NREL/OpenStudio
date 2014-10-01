@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # AWS Worker Bootstrap File
+# File used to configure worker nodes on AWS
 
 # Change Host File Entries
 ENTRY="SERVER_IP SERVER_HOSTNAME SERVER_ALIAS"
@@ -8,7 +9,7 @@ FILE=/etc/hosts
 if grep -q "$ENTRY" $FILE; then
   echo "entry already exists"
 else
-  sudo sh -c "echo $ENTRY >> /etc/hosts"
+  sh -c "echo $ENTRY >> /etc/hosts"
 fi
 
 # copy all the setup scripts to the appropriate home directory
@@ -16,23 +17,52 @@ cp /data/launch-instance/setup* /home/ubuntu/
 chmod 775 /home/ubuntu/setup*
 chown ubuntu:ubuntu /home/ubuntu/setup*
 
-# Force the generation of OpenStudio on the EBS mount and copy worker files
-sudo rm -rf /mnt/openstudio
-sudo mkdir -p /mnt/openstudio
-sudo chmod -R 777 /mnt/openstudio
+## Worker Data Configuration -- On Vagrant this is a separate file
+
+# Force the generation of various directories that are in the EBS mnt
+rm -rf /mnt/openstudio
+mkdir -p /mnt/openstudio
+chown -R ubuntu:www-data /mnt/openstudio
+chmod -R 775 /mnt/openstudio
+
+# save application files into the right directory
 cp -rf /data/worker-nodes/* /mnt/openstudio/
 
-# Unzip the worker files (including Mongoid models) and set permissions one last time
-# Note that the 777 is redundant but needed until we actually deploy ACL
+# install workflow dependencies
+su - ubuntu -c 'cd /mnt/openstudio && rm -f'
+rm -f /mnt/openstudio/Gemfile.lock
+cd /mnt/openstudio && bundle update
+su - ubuntu -c 'cd /mnt/openstudio && bundle update'
+
+# copy over the models needed for mongo
+cd /mnt/openstudio/rails-models && unzip -o rails-models.zip -d models
+# Support the old  extraction as well - keep until we start using the new images
 cd /mnt/openstudio/rails-models && unzip -o rails-models.zip
-sudo chmod -R 777 /mnt/openstudio
+
+# rerun the permissions after unzipping the files
+chown -R ubuntu:www-data /mnt/openstudio
+find /mnt/openstudio -type d -print0 | xargs -0 chmod 775
+find /mnt/openstudio -type f -print0 | xargs -0 chmod 664
+
+## End Worker Data Configuration
 
 #turn off hyperthreading
-for cpunum in $(
-  cat /sys/devices/system/cpu/cpu*/topology/thread_siblings_list | 
-  cut -s -d, -f2- | tr ',' '\n' | sort -un); do
-    echo 0 > /sys/devices/system/cpu/cpu$cpunum/online
-done
+# NL: do not turn off hyperthreading, rather, just limit the number of cores and see if it
+# makes a difference.
+#for cpunum in $(
+#  cat /sys/devices/system/cpu/cpu*/topology/thread_siblings_list |
+#  cut -s -d, -f2- | tr ',' '\n' | sort -un); do
+#    echo 0 > /sys/devices/system/cpu/cpu$cpunum/online
+#done
+
+# -- Old settings that may still be needed on the old images --
+# Set permissions on rails apps folders
+#sudo chmod -R 777 /mnt/openstudio
+#sudo chmod -R 777 /mnt/openstudio
+# -- End old settings 
+
 
 #file flag the user_data has completed
 cat /dev/null > /home/ubuntu/user_data_done
+
+
