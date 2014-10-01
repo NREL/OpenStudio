@@ -18,6 +18,7 @@
 **********************************************************************/
 
 #include "GenerateIddFactory.hpp"
+#include "WriteEnums.hpp"
 
 #include <iostream>
 #include <iomanip>
@@ -278,6 +279,7 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
   std::cout << "IddFactory files initialized." << std::endl << std::endl;
 }
 
+
 void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
                       GenerateIddFactoryOutFiles& outFiles) {
 
@@ -309,7 +311,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
     << " *  call is:" << std::endl
     << " *" << std::endl
     << " *  \\code" << std::endl
-    << tempSS.str()
+//    << tempSS.str()
     << " *  \\endcode" << std::endl
     << " *" << std::endl
     << " *  UserCustom \\link openstudio::IddFile IddFiles\\endlink are loaded directly from disk, and" << std::endl 
@@ -320,29 +322,19 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
     << tempSS.str();
   tempSS.str("");
 
-  // write IddObjectType enum. is very large, so split into 7 groups.
-  unsigned groupSize = static_cast<unsigned>(std::ceil(static_cast<double>(numObjects)/7.0));
-  unsigned n = 2; // number of objects written so far--will start with Catchall and UserCustom
-  tempSS
-    << "OPENSTUDIO_ENUM7( IddObjectType," << std::endl
-    << "  ((Catchall))" << std::endl
-    << "  ((UserCustom))" << std::endl;
+  std::vector<std::pair<std::string, std::string>> objtypes{ {"Catchall", ""}, {"UserCustom", ""} };
+
   // loop through each IDD file
   for (const IddFileFactoryData& idd : iddFiles) {
     // write out an IddObjectType enum value for each object in the IDD file
     for (const StringPair& objectName : idd.objectNames()) {
-      // splits the enum values into seven groups
-      if (n % groupSize == 0) {
-        tempSS << "  ," << std::endl;
-      }
-      // writes the enum value (name and description)
-      tempSS
-        << "  ((" << objectName.first << ")(" << objectName.second << "))" << std::endl;
-      ++n;
+      objtypes.emplace_back(objectName.first, objectName.second);
     }
   }
-  tempSS
-    << "  ((CommentOnly)) );" << std::endl;
+
+  objtypes.emplace_back("CommentOnly", "");
+  writeEnumFast(tempSS, "IddObjectType", objtypes);
+
   outFiles.iddEnumsHxx.tempFile
     << std::endl
     << "/** \\class IddObjectType" << std::endl
@@ -360,7 +352,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
     << " *  actual macro call is:" << std::endl
     << " *" << std::endl
     << " *  \\code" << std::endl
-    << tempSS.str()
+//    << tempSS.str()
     << " *  \\endcode */" << std::endl
     << tempSS.str()
     << std::endl

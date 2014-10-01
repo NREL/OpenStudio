@@ -578,7 +578,7 @@
 // in a known shared place.
 #include <utilities/SWIGRubyRuntime.hxx>
 
-#include <ruby/encoding.h>
+//#include <ruby/encoding.h>
 
 #include "Path.hpp"
 

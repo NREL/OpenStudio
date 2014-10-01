@@ -18,6 +18,7 @@
 **********************************************************************/
 
 #include "IddFileFactoryData.hpp"
+#include "WriteEnums.hpp"
 
 #include "../utilities/idd/IddRegex.hpp"
 
@@ -239,11 +240,11 @@ void IddFileFactoryData::parseFile(const path& outPath,
             << "namespace openstudio {";
 
           if (!fieldNames.empty()) {
-            tempSS << "OPENSTUDIO_ENUM( " << objectName.first << "Fields," << std::endl;
+            std::list<std::pair<std::string, std::string>> fieldNamePairs;
             for (const std::string& name : fieldNames) {
-              tempSS << "  ((" << m_convertName(name) << ")(" << name << "))" << std::endl;
+              fieldNamePairs.emplace_back(m_convertName(name), name);
             }
-            tempSS << ");";
+            writeEnumFast(tempSS, objectName.first + "Fields", fieldNamePairs);
 
             fieldEnumHxx.tempFile
               << std::endl
@@ -256,19 +257,20 @@ void IddFileFactoryData::parseFile(const path& outPath,
               << " *  call is:" << std::endl
               << " *" << std::endl
               << " *  \\code" << std::endl
-              << tempSS.str() << std::endl
+//              << tempSS.str() << std::endl
               << " *  \\endcode */" << std::endl
               << tempSS.str() << std::endl;
 
             tempSS.str("");
           }
-        
+
           if (!extensibleFieldNames.empty()) {
-            tempSS << "OPENSTUDIO_ENUM( " << objectName.first << "ExtensibleFields," << std::endl;
+            std::list<std::pair<std::string, std::string>> extensibleFieldNamePairs;
             for (const std::string& name : extensibleFieldNames) {
-              tempSS << "  ((" << m_convertName(name) << ")(" << name << "))" << std::endl;
+              extensibleFieldNamePairs.emplace_back(m_convertName(name), name);
             }
-            tempSS << ");";
+            writeEnumFast(tempSS, objectName.first + "ExtensibleFields", extensibleFieldNamePairs);
+
             fieldEnumHxx.tempFile
               << std::endl
               << "/** \\class " << objectName.first << "ExtensibleFields" << std::endl
@@ -281,7 +283,7 @@ void IddFileFactoryData::parseFile(const path& outPath,
               << " *  call is:" << std::endl
               << " *" << std::endl
               << " *  \\code" << std::endl
-              << tempSS.str() << std::endl
+//              << tempSS.str() << std::endl
               << " *  \\endcode */" << std::endl 
               << tempSS.str() << std::endl;
 

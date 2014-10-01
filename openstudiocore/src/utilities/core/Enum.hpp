@@ -30,205 +30,7 @@
 #include <boost/algorithm/string/case_conv.hpp>
 #include <stdexcept>
 
-/** Base class for OPENSTUDIO_ENUMs. Comparison operators use the underlying (integer) value. */
-template<typename Enum>
-  class EnumBase : public ::StaticInitializer<Enum>
-  {
-    public:
-      /** Default constructor. EnumBase default constructor never actually called; OPENSTUDIO_ENUM-
-       *  generated classes have default constructors that set the value to the first item in the
-       *  enumerated list. */
-      EnumBase()
-      {
-        assert(!"This constructor should never get called");
-      }
-
-      /** Construct from t_value. Throws std::runtime_error if t_value is not in the domain. */
-      EnumBase(int t_value)
-        : m_value(lookupValue(t_value))
-      {
-      }
-
-      /** Construct from t_value. Throws std::runtime_error if t_value does not match a name or 
-       *  a description (case insensitive). */
-      EnumBase(const std::string &t_value)
-        : m_value(lookupValue(t_value))
-      {
-      }
-
-      /** Returns the name associated with t_value, if it exists. Otherwise, throws 
-       *  std::runtime_error. */
-      static std::string valueName(int t_value) 
-      { 
-        const std::map<int, std::string> &m = getNames();
-        auto itr = m.find(t_value);
-        if (itr == m.end()) 
-        { 
-          throw std::runtime_error("Invalid domain"); 
-        } 
-        return itr->second;
-      } 
-
-      /** Returns the description associated with t_value, if it exists. Otherwise, throws 
-       *  std::runtime_error. */
-      static std::string valueDescription(int t_value) 
-      {
-        const std::map<int, std::string> &m = getDescriptions();
-        auto itr = m.find(t_value);
-        if (itr == m.end()) 
-        { 
-          return valueName(t_value); 
-        } 
-        return itr->second;
-      } 
-
-      /** Returns the set of all values in this enum's domain. */
-      static const std::set<int> &getValues() 
-      { 
-        static std::set<int> values(buildValues()); 
-        return values; 
-      } 
-
-      /** Returns this instance's current value (as an integer). */
-      int value() const 
-      {  
-        return m_value;
-      } 
-
-      /** Returns the name associated with this instance's current value. */
-      std::string valueName() const 
-      { 
-        return valueName(m_value); 
-      }
-
-      /** Returns the description associated with this instance's current value. */
-      std::string valueDescription() const 
-      { 
-        return valueDescription(m_value); 
-      } 
-
-      /** Set this instance's value to t_value. Throws std::runtime_error if 
-       *  t_value is not in the domain. */
-      void setValue(int t_value)
-      {
-        m_value = lookupValue(t_value);
-      }
-
-      bool operator==(const Enum& other) const { return (m_value==other.m_value);} 
-      bool operator!=(const Enum& other) const { return (m_value!=other.m_value);} 
-      bool operator>(const Enum& other) const { return (m_value>other.m_value);} 
-      bool operator>=(const Enum& other) const { return (m_value>=other.m_value);} 
-      bool operator<(const Enum& other) const { return (m_value<other.m_value);} 
-      bool operator<=(const Enum& other) const { return (m_value<=other.m_value);} 
-
-      static void initialize() 
-      { 
-        getValues(); 
-        getLookupMap(); 
-        getNames();
-        getDescriptions();
-      } 
-
-      /** Returns the (integer) value associated with t_name, as determined by case-insensitive
-       *  comparison to the enumerated names and descriptions. */
-      int lookupValue(std::string t_name) 
-      { 
-        boost::algorithm::to_upper(t_name); 
-        const std::map<std::string, int> &names = getLookupMap(); 
-        auto itr = names.find(t_name); 
-        if (itr != names.end()) 
-        { 
-          return itr->second; 
-        } 
-        throw std::runtime_error("Unknown Value"); 
-      } 
-
-      /** Returns t_value if it is in the domain. Otherwise throws std::runtime_error. */
-      int lookupValue(int t_value) 
-      { 
-        const std::set<int> &values = getValues(); 
-        if (values.count(t_value) != 0) 
-        { 
-          return t_value; 
-        } else { 
-          throw std::runtime_error("Unknown value"); 
-        } 
-      } 
-
-      static const std::map<std::string, int> &getLookupMap() 
-      { 
-        static const std::map<std::string, int> m = buildLookupMap(); 
-        return m; 
-      } 
-
-      static const std::map<int, std::string> &getNames()
-      {
-        static const std::map<int, std::string> names = buildStrings(false);
-        return names;
-      }
-
-      static const std::map<int, std::string> &getDescriptions()
-      {
-        static const std::map<int, std::string> descriptions = buildStrings(true);
-        return descriptions;
-      }
-
-    protected:
-      int m_value;
-
-    private:
-
-      static std::map<int, std::string> buildStrings(bool d)
-      {
-        std::vector<std::pair<std::string, int> > strings = Enum::buildStringVec(d);
-        std::map<int, std::string> m;
-        for (std::vector<std::pair<std::string, int> >::const_iterator itr = strings.begin();
-            itr != strings.end();
-            ++itr)
-        {
-          m[itr->second] = itr->first;
-        }
-
-        return m;
-      }
-
-      static std::map<std::string, int> buildLookupMap() 
-      { 
-        std::map<std::string, int> retval;
-
-        const std::map<int, std::string> &m = getNames();
-        const std::map<int, std::string> &d = getDescriptions();
-
-        for (const auto & name : m)
-        {
-          retval[boost::algorithm::to_upper_copy(name.second)] = name.first;
-        }
-
-        for (const auto & description : d)
-        {
-          retval[boost::algorithm::to_upper_copy(description.second)] = description.first;
-        }
-
-        return retval;
-      } 
-
-      static std::set<int> buildValues()
-      {
-        const std::map<int, std::string> &names = getNames();
-
-        std::set<int> retvals;
-
-        for (const auto & name : names)
-        {
-          retvals.insert(name.first);
-        }
-
-        return retvals;
-      }
-
-  };
-
-
+#include "EnumBase.hpp"
 
 /**
  * Helper macro used by OPENSTUDIO_ENUM_BUILD_ARRAY_PART to build the description portion of the array
@@ -305,18 +107,12 @@ template<typename Enum>
  *  due to compiler limitations for how long a macro parameter may be and our use
  *  of extremely long enumerations. See OPENSTUDIO_ENUM comments for detailed usage.
  */
-#define OPENSTUDIO_ENUM7(_enum_name, _vals, _vals2, _vals3, _vals4, _vals5, _vals6, _vals7) \
-class _enum_name : public EnumBase<_enum_name> \
+#define OPENSTUDIO_ENUM(_enum_name, _vals) \
+class _enum_name : public ::EnumBase<_enum_name> \
   { \
   public: \
     enum domain { \
        BOOST_PP_SEQ_FOR_EACH(OPENSTUDIO_ENUM_DOMAIN_ELEM, _enum_name, _vals) \
-       BOOST_PP_SEQ_FOR_EACH(OPENSTUDIO_ENUM_DOMAIN_ELEM, _enum_name, _vals2) \
-       BOOST_PP_SEQ_FOR_EACH(OPENSTUDIO_ENUM_DOMAIN_ELEM, _enum_name, _vals3) \
-       BOOST_PP_SEQ_FOR_EACH(OPENSTUDIO_ENUM_DOMAIN_ELEM, _enum_name, _vals4) \
-       BOOST_PP_SEQ_FOR_EACH(OPENSTUDIO_ENUM_DOMAIN_ELEM, _enum_name, _vals5) \
-       BOOST_PP_SEQ_FOR_EACH(OPENSTUDIO_ENUM_DOMAIN_ELEM, _enum_name, _vals6) \
-       BOOST_PP_SEQ_FOR_EACH(OPENSTUDIO_ENUM_DOMAIN_ELEM, _enum_name, _vals7) \
     }; \
     \
     _enum_name() \
@@ -350,12 +146,6 @@ class _enum_name : public EnumBase<_enum_name> \
       }; \
       const evalue a[] = { \
       BOOST_PP_SEQ_FOR_EACH(OPENSTUDIO_ENUM_BUILD_ARRAY, _enum_name, _vals) \
-      BOOST_PP_SEQ_FOR_EACH(OPENSTUDIO_ENUM_BUILD_ARRAY, _enum_name, _vals2) \
-      BOOST_PP_SEQ_FOR_EACH(OPENSTUDIO_ENUM_BUILD_ARRAY, _enum_name, _vals3) \
-      BOOST_PP_SEQ_FOR_EACH(OPENSTUDIO_ENUM_BUILD_ARRAY, _enum_name, _vals4) \
-      BOOST_PP_SEQ_FOR_EACH(OPENSTUDIO_ENUM_BUILD_ARRAY, _enum_name, _vals5) \
-      BOOST_PP_SEQ_FOR_EACH(OPENSTUDIO_ENUM_BUILD_ARRAY, _enum_name, _vals6) \
-      BOOST_PP_SEQ_FOR_EACH(OPENSTUDIO_ENUM_BUILD_ARRAY, _enum_name, _vals7) \
         {0,0,0} }; \
       \
       VecType v; \
@@ -532,13 +322,9 @@ class _enum_name : public EnumBase<_enum_name> \
  * typedef boost::optional<MyEnumerationComplex> OptionalMyEnumerationComplex;
  * \endcode
  * 
- * If the number of elements you want to pass to OPENSTUDIO_ENUM becomes too long (The compiler will let you know)
- * use OPENSTUDIO_ENUM7 instead, which takes 7 sets of elements, allowing for extremely large enumerations.
- *
  * The implementation of OPENSTUDIO_ENUM is heavily dependent on the Boost Preprocessor library.
  * \sa http://www.boost.org/doc/libs/1_40_0/libs/preprocessor/doc/index.html
  */
-#define OPENSTUDIO_ENUM(_enum_name, _vals) OPENSTUDIO_ENUM7(_enum_name, _vals, , , , , , )
 
 
 

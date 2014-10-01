@@ -43,7 +43,16 @@ module OpenStudio
       @model_interfaces.each { |model_interface| model_interface.detach_openstudio_model }
       
       @model_interfaces.clear
+    end
+    
+    def shutdown 
+      Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       
+      Plugin.dialog_manager.close_all
+      
+      @model_interfaces.each { |model_interface| model_interface.shutdown_openstudio_model }
+      
+      @model_interfaces.clear
     end
     
     def inspect

@@ -529,7 +529,7 @@ bool TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int r
     //FIX THIS why is position unused? LER
     //int position = rowList.at(0).row();
     int rows = rowList.size();
-    QModelIndex sourceParent = rowList.at(0).parent();
+    //QModelIndex sourceParent = rowList.at(0).parent();
 
     TreeItem * parentItem = getItem(parent);
 

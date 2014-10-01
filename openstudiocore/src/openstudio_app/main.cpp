@@ -37,9 +37,6 @@
 
 #ifdef _WIN32
 #include <Windows.h>
-static const char *logfilepath = "./openstudio.log";
-#else
-static const char *logfilepath = "/var/log/openstudio.log";
 #endif
 
 #define WSAAPI
@@ -58,6 +55,11 @@ int main(int argc, char *argv[])
 
 
 #if _DEBUG || (__GNUC__ && !NDEBUG)
+#ifdef _WIN32
+  const char *logfilepath = "./openstudio.log";
+#else
+  const char *logfilepath = "/var/log/openstudio.log";
+#endif
   openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
   openstudio::FileLogSink fileLog(openstudio::toPath(logfilepath));
   fileLog.setLogLevel(Debug);

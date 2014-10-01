@@ -75,7 +75,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingGasMultiStage(
   }
 
   // ParasiticGasLoad
-  if( value = modelObject.parasiticGasLoad() ) {
+  if( (value = modelObject.parasiticGasLoad()) ) {
     idfObject.setDouble(Coil_Heating_Gas_MultiStageFields::ParasiticGasLoad,value.get());
   }
 
@@ -89,19 +89,19 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingGasMultiStage(
     auto eg = idfObject.pushExtensibleGroup();
 
     // Stage1GasBurnerEfficiency
-    if( value = stage.gasBurnerEfficiency() ) {
+    if( (value = stage.gasBurnerEfficiency()) ) {
       eg.setDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageGasBurnerEfficiency,value.get());
     }
 
     // Stage1NominalCapacity
     if( stage.isNominalCapacityAutosized() ) {
       eg.setString(Coil_Heating_Gas_MultiStageExtensibleFields::StageNominalCapacity,"AutoSize");
-    } else if( value = stage.nominalCapacity() ) {
+    } else if( (value = stage.nominalCapacity()) ) {
       eg.setDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageNominalCapacity,value.get());
     }
 
     // Stage1ParasiticElectricLoad
-    if( value = stage.parasiticElectricLoad() ) {
+    if( (value = stage.parasiticElectricLoad()) ) {
       eg.setDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageParasiticElectricLoad,value.get());
     }
   }

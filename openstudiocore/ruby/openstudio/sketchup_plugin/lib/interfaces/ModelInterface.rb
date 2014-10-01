@@ -993,6 +993,14 @@ module OpenStudio
       
       Plugin.log(OpenStudio::Trace, "leaving #{current_method_name}")
     end
+
+    def shutdown_openstudio_model    
+      Plugin.log(OpenStudio::Trace, "#{current_method_name}")
+       
+      # delete the temp dir
+      OpenStudio::Openstudiolib::removeModelTempDir(@model_temp_dir)
+    end    
+
     
     def detach_openstudio_model    
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
