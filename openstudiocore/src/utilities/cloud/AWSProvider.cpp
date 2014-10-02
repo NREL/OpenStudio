@@ -726,12 +726,6 @@ namespace openstudio{
         //awsComputerInformation.processorCount = 1;
         //info.push_back(awsComputerInformation);
 
-        awsComputerInformation.instanceType = "cc2.8xlarge";
-        awsComputerInformation.prettyName = "Previous Generation: Compute Optimized 8x Large";
-        awsComputerInformation.processorCount = 32; // Hyperthreading enabled
-        info.push_back(awsComputerInformation);
-
-
         awsComputerInformation.instanceType = "c3.4xlarge";
         awsComputerInformation.prettyName = "Compute Optimized 4x Large";
         awsComputerInformation.processorCount = 16; // Hyperthreading enabled
@@ -1769,7 +1763,7 @@ namespace openstudio{
       QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
       if (!err.error) {
         if (!json.object().contains("error")) {
-          m_awsSession.setTimestamp(json.object()["timestamp"].toString().toStdString());
+          m_awsSession.setTimestamp(QString::number(json.object().value("timestamp").toInt()).toStdString());
           m_awsSession.setPrivateKey(json.object()["private_key"].toString().toStdString());
           m_awsSession.setServerUrl(Url(json.object()["server"].toObject()["ip"].toString()));
           m_awsSession.setServerId(json.object()["server"].toObject()["id"].toString().toStdString());

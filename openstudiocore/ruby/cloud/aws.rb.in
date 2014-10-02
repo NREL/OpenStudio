@@ -181,11 +181,7 @@ if (!defined?(@server_image_id) || !defined?(@worker_image_id))
     version = result.has_key?(OPENSTUDIO_VERSION) ? OPENSTUDIO_VERSION : 'default'
 
     @server_image_id = result[version]['server']
-    if ARGV.length >= 6 && @params['instance_type'] == 'cc2.8xlarge'
-      @worker_image_id = result[version]['cc2worker']
-    else
-      @worker_image_id = result[version]['worker']
-    end
+    @worker_image_id = result[version]['worker']
   else
     error(resp.code, 'Unable to download AMI IDs')
   end
@@ -202,7 +198,6 @@ def find_processors(instance)
       'm3.large' => 2,
       'm3.xlarge' => 4,
       'm3.2xlarge' => 8,
-      'cc2.8xlarge' => 32,
       'c3.large' => 2,
       'c3.xlarge' => 4,
       'c3.2xlarge' => 8,
