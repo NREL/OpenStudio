@@ -54,7 +54,7 @@ namespace detail {
 }
 
 /** The AirflowElement object is the base class of all airflow elements. */
-class CONTAM_API AirflowElement
+class AIRFLOW_API AirflowElement
 {
 public:
   /** The Type enumeration is used to identify the various airflow element types. */
@@ -93,7 +93,7 @@ public:
 };
 
 /** The PlrOrj object is an airflow element representing an orifice. */
-class CONTAM_API PlrOrf : public AirflowElement
+class AIRFLOW_API PlrOrf : public AirflowElement
 {
 public:
   /** @name Constructors and Destructors */
@@ -215,7 +215,7 @@ private:
 };
 
 /** The PlrLeak object is the base class of the leakage area airflow elements. */
-class CONTAM_API PlrLeak : public AirflowElement
+class AIRFLOW_API PlrLeak : public AirflowElement
 {
 public:
   /** @name Constructors and Destructors */
@@ -350,7 +350,7 @@ private:
 };
 
 /** The PlrLeak1 object is an airflow element representing a leakage area on a per-item basis. */
-class CONTAM_API PlrLeak1 : public PlrLeak
+class AIRFLOW_API PlrLeak1 : public PlrLeak
 {
 public:
   /** @name Constructors and Destructors */
@@ -381,7 +381,7 @@ public:
 };
 
 /** The PlrLeak2 object is an airflow element representing a leakage area on a per-unit-length basis. */
-class CONTAM_API PlrLeak2 : public PlrLeak
+class AIRFLOW_API PlrLeak2 : public PlrLeak
 {
 public:
   /** @name Constructors and Destructors */
@@ -412,7 +412,7 @@ public:
 };
 
 /** The PlrLeak3 object is an airflow element representing a leakage area on a per-unit-area basis. */
-class CONTAM_API PlrLeak3 : public PlrLeak
+class AIRFLOW_API PlrLeak3 : public PlrLeak
 {
 public:
   /** @name Constructors and Destructors */
@@ -443,7 +443,7 @@ public:
 };
 
 /** The PlrConn object is an airflow element representing a ASCOS connection. */
-class CONTAM_API PlrConn : public AirflowElement
+class AIRFLOW_API PlrConn : public AirflowElement
 {
 public:
   /** @name Constructors and Destructors */
@@ -549,7 +549,7 @@ private:
 };
 
 /** The PlrGeneral object is the base class for general power law elements. */
-class CONTAM_API PlrGeneral : public AirflowElement
+class AIRFLOW_API PlrGeneral : public AirflowElement
 {
 public:
   /** @name Constructors and Destructors */
@@ -637,7 +637,7 @@ private:
 };
 
 /** The PlrQcn object is an airflow element representing volume flow rate power law leakage. */
-class CONTAM_API PlrQcn : public PlrGeneral
+class AIRFLOW_API PlrQcn : public PlrGeneral
 {
 public:
   /** @name Constructors and Destructors */
@@ -666,7 +666,7 @@ public:
 };
 
 /** The PlrQcn object is an airflow element representing mass flow rate power law leakage. */
-class CONTAM_API PlrFcn : public PlrGeneral
+class AIRFLOW_API PlrFcn : public PlrGeneral
 {
 public:
   /** @name Constructors and Destructors */
@@ -695,7 +695,7 @@ public:
 };
 
 /** The PlrTest1 object is an airflow element representing 1-point test data power law leakage. */
-class CONTAM_API PlrTest1 : public AirflowElement
+class AIRFLOW_API PlrTest1 : public AirflowElement
 {
 public:
   /** @name Constructors and Destructors */
@@ -805,7 +805,7 @@ private:
 };
 
 /** The PlrTest2 object is an airflow element representing 2-point test data power law leakage. */
-class CONTAM_API PlrTest2 : public AirflowElement
+class AIRFLOW_API PlrTest2 : public AirflowElement
 {
 public:
   /** @name Constructors and Destructors */
@@ -935,7 +935,7 @@ private:
 };
 
 /** The PlrCrack object is an airflow element representing power law leakage through a crack. */
-class CONTAM_API PlrCrack : public AirflowElement
+class AIRFLOW_API PlrCrack : public AirflowElement
 {
 public:
   /** @name Constructors and Destructors */
@@ -1045,7 +1045,7 @@ private:
 };
 
 /** The PlrStair object is an airflow element representing level-to-level power law leakage in stairwells. */
-class CONTAM_API PlrStair : public AirflowElement
+class AIRFLOW_API PlrStair : public AirflowElement
 {
 public:
   /** @name Constructors and Destructors */
@@ -1165,7 +1165,7 @@ private:
 };
 
 /** The PlrShaft object is an airflow element representing level-to-level power law leakage in shafts. */
-class CONTAM_API PlrShaft : public AirflowElement
+class AIRFLOW_API PlrShaft : public AirflowElement
 {
 public:
   /** @name Constructors and Destructors */
@@ -1296,7 +1296,7 @@ private:
 };
 
 /** The PlrBackDamper object is the base class of backdraft damper airflow elements. */
-class CONTAM_API PlrBackDamper : public AirflowElement
+class AIRFLOW_API PlrBackDamper : public AirflowElement
 {
 public:
   /** @name Constructors and Destructors */
@@ -1394,7 +1394,7 @@ private:
 };
 
 /** The PlrBdq object is a backdraft damper airflow element in volumetric flow form. */
-class CONTAM_API PlrBdq : public PlrBackDamper
+class AIRFLOW_API PlrBdq : public PlrBackDamper
 {
 public:
   /** @name Constructors and Destructors */
@@ -1422,7 +1422,7 @@ public:
 };
 
 /** The PlrBdf object is a backdraft damper airflow element in mass flow form. */
-class CONTAM_API PlrBdf : public PlrBackDamper
+class AIRFLOW_API PlrBdf : public PlrBackDamper
 {
 public:
   /** @name Constructors and Destructors */
@@ -1450,7 +1450,7 @@ public:
 };
 
 /** The QfrGeneral object is the base class for general quadratic airflow elements. */
-class CONTAM_API QfrGeneral : public AirflowElement
+class AIRFLOW_API QfrGeneral : public AirflowElement
 {
 public:
   /** @name Constructors and Destructors */
@@ -1530,7 +1530,7 @@ private:
 };
 
 /** The QfrQab object is an airflow element representing volume flow rate quadratic leakage. */
-class CONTAM_API QfrQab : public QfrGeneral
+class AIRFLOW_API QfrQab : public QfrGeneral
 {
 public:
   /** @name Constructors and Destructors */
@@ -1559,7 +1559,7 @@ public:
 };
 
 /** The QfrFab object is an airflow element representing mass flow rate quadratic leakage. */
-class CONTAM_API QfrFab : public QfrGeneral
+class AIRFLOW_API QfrFab : public QfrGeneral
 {
 public:
   /** @name Constructors and Destructors */
@@ -1588,7 +1588,7 @@ public:
 };
 
 /** The QfrCrack object is an airflow element representing quadratic leakage through a crack. */
-class CONTAM_API QfrCrack : public AirflowElement
+class AIRFLOW_API QfrCrack : public AirflowElement
 {
 public:
   /** @name Constructors and Destructors */
@@ -1704,7 +1704,7 @@ private:
 };
 
 /** The QfrTest2 object is an airflow element representing 2-point test data quadratic leakage. */
-class CONTAM_API QfrTest2 : public AirflowElement
+class AIRFLOW_API QfrTest2 : public AirflowElement
 {
 public:
   /** @name Constructors and Destructors */
@@ -1826,7 +1826,7 @@ private:
 };
 
 /** The AfeDor object is an airflow element representing 2-way flow through a single opening. */
-class CONTAM_API AfeDor : public AirflowElement
+class AIRFLOW_API AfeDor : public AirflowElement
 {
 public:
   /** @name Constructors and Destructors */
@@ -1950,7 +1950,7 @@ private:
 };
 
 /** The DrPl2 object is an airflow element representing 2-way flow through an opening using two power law models. */
-class CONTAM_API DrPl2 : public AirflowElement
+class AIRFLOW_API DrPl2 : public AirflowElement
 {
 public:
   /** @name Constructors and Destructors */
@@ -2070,7 +2070,7 @@ private:
 };
 
 /** The AfeFlow object is the base class of constant flow rate airflow elements. */
-class CONTAM_API AfeFlow : public AirflowElement
+class AIRFLOW_API AfeFlow : public AirflowElement
 {
 public:
   /** @name Constructors and Destructors */
@@ -2148,7 +2148,7 @@ private:
 };
 
 /** The AfeCmf object is an airflow element representing constant mass flow rate. */
-class CONTAM_API AfeCmf : public AfeFlow
+class AIRFLOW_API AfeCmf : public AfeFlow
 {
 public:
   /** @name Constructors and Destructors */
@@ -2176,7 +2176,7 @@ public:
 };
 
 /** The AfeCvf object is an airflow element representing constant volume flow rate. */
-class CONTAM_API AfeCvf : public AfeFlow
+class AIRFLOW_API AfeCvf : public AfeFlow
 {
 public:
   /** @name Constructors and Destructors */
@@ -2204,7 +2204,7 @@ public:
 };
 
 /** The AfeFan object is an airflow element representing a fan with performance data. */
-class CONTAM_API AfeFan : public AirflowElement
+class AIRFLOW_API AfeFan : public AirflowElement
 {
 public:
   /** @name Constructors and Destructors */
@@ -2338,7 +2338,7 @@ private:
 };
 
 /** The AfeCvf object is the base class of airflow element representing cubic spline leakage. */
-class CONTAM_API AfeCsf : public AirflowElement
+class AIRFLOW_API AfeCsf : public AirflowElement
 {
 public:
   /** @name Constructors and Destructors */
@@ -2414,7 +2414,7 @@ private:
 };
 
 /** The AfeFsp object is an airflow element representing cubic spline leakage with mass flow rate as a function of pressure drop. */
-class CONTAM_API AfeFsp : public AfeCsf
+class AIRFLOW_API AfeFsp : public AfeCsf
 {
 public:
   /** @name Constructors and Destructors */
@@ -2442,7 +2442,7 @@ public:
 };
 
 /** The AfeQsp object is an airflow element representing cubic spline leakage with volume flow rate as a function of pressure drop. */
-class CONTAM_API AfeQsp : public AfeCsf
+class AIRFLOW_API AfeQsp : public AfeCsf
 {
 public:
   /** @name Constructors and Destructors */
@@ -2470,7 +2470,7 @@ public:
 };
 
 /** The AfePsf object is an airflow element representing cubic spline leakage with pressure drop as a function of mass flow rate. */
-class CONTAM_API AfePsf : public AfeCsf
+class AIRFLOW_API AfePsf : public AfeCsf
 {
 public:
   /** @name Constructors and Destructors */
@@ -2498,7 +2498,7 @@ public:
 };
 
 /** The AfePsq object is an airflow element representing cubic spline leakage with pressure drop as a function of volume flow rate. */
-class CONTAM_API AfePsq : public AfeCsf
+class AIRFLOW_API AfePsq : public AfeCsf
 {
 public:
   /** @name Constructors and Destructors */
@@ -2526,7 +2526,7 @@ public:
 };
 
 /** The AfeSup object is an airflow element that combines multiple elements into a single element. */
-class CONTAM_API AfeSup : public AirflowElement
+class AIRFLOW_API AfeSup : public AirflowElement
 {
 public:
   /** @name Constructors and Destructors */

@@ -154,7 +154,7 @@ set(project_directories
   energyplus
   radiance
   gbxml
-  contam
+  airflow
   isomodel
   osversion
   ruleset
@@ -881,7 +881,7 @@ set(all_lib_targets
   openstudio_isomodel
   openstudio_lib
   openstudio_sdd
-  openstudio_contam
+  openstudio_airflow
   ${QTWINMIGRATE_EXPORT}
   zkexpat
   zkqwt

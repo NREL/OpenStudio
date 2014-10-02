@@ -41,7 +41,7 @@ namespace detail {
 }
 
 /** The Zone object stores the data that describes an airflow zone. */
-class CONTAM_API Zone
+class AIRFLOW_API Zone
 {
 public:
   /** @name Constructors and Destructors */
@@ -258,7 +258,7 @@ private:
 
 /** The Species object contains descriptive information about contaminants in
 *  a CONTAM model. */
-class CONTAM_API Species
+class AIRFLOW_API Species
 {
 public:
   /** @name Constructors and Destructors */
@@ -391,7 +391,7 @@ private:
 /** Ahs is a class that represents CONTAM's simple air handling system. These
 *  objects should be constructed after all paths have been added to the
 *  model. */
-class CONTAM_API Ahs
+class AIRFLOW_API Ahs
 {
 public:
   /** @name Constructors and Destructors */
@@ -468,7 +468,7 @@ private:
 };
 
 /** The AirflowPath object stores one flow linkage in the airflow network. */
-class CONTAM_API AirflowPath
+class AIRFLOW_API AirflowPath
 {
 public:
   /** @name Constructors and Destructors */
@@ -692,7 +692,7 @@ private:
 
 /** The RunControl object stores most of the information related to how CONTAM solves the airflow network
 *  problem. */
-class CONTAM_API RunControl
+class AIRFLOW_API RunControl
 {
 public:
   /** @name Constructors and Destructors */
@@ -1235,7 +1235,7 @@ private:
 
 /** Level objects contain information about the levels that make up a CONTAM
 *  model. */
-class CONTAM_API Level
+class AIRFLOW_API Level
 {
 public:
   /** @name Constructors and Destructors */
@@ -1314,7 +1314,7 @@ private:
 };
 
 /** The DaySchedule object contains schedule data for a single day. */
-class CONTAM_API DaySchedule
+class AIRFLOW_API DaySchedule
 {
 public:
   /** @name Constructors and Destructors */
@@ -1389,7 +1389,7 @@ private:
 
 /** The WeekSchedule object represents a complete week with 12 possible day
 *  schedules. */
-class CONTAM_API WeekSchedule
+class AIRFLOW_API WeekSchedule
 {
 public:
   /** @name Constructors and Destructors */
@@ -1461,7 +1461,7 @@ private:
 
 /** WindPressureProfile objects store pressure coefficient as a function of
 *  angle from north. */
-class CONTAM_API WindPressureProfile
+class AIRFLOW_API WindPressureProfile
 {
 public:    
   /** @name Constructors and Destructors */
@@ -1527,7 +1527,7 @@ private:
 };
 
 /** The ControlNode object is the base class of all control node elements. */
-class CONTAM_API ControlNode
+class AIRFLOW_API ControlNode
 {
 public:
   /** The Type enumeration is used to identify the various control node types. */
@@ -1582,7 +1582,7 @@ public:
 };
 
 /** The CdvDat object is the base class of the file control nodes. */
-class CONTAM_API CdvDat : public ControlNode
+class AIRFLOW_API CdvDat : public ControlNode
 {
 public:
   /** @name Constructors and Destructors */
@@ -1670,7 +1670,7 @@ private:
 };
 
 /** The CvfDat object represents a continuous value datas file control node. */
-class CONTAM_API CvfDat : public CdvDat
+class AIRFLOW_API CvfDat : public CdvDat
 {
 public:
   /** @name Constructors and Destructors */
@@ -1695,7 +1695,7 @@ public:
 };
 
 /** The DvfDat object represents a discrete values data file control node. */
-class CONTAM_API DvfDat : public CdvDat
+class AIRFLOW_API DvfDat : public CdvDat
 {
 public:
   /** @name Constructors and Destructors */

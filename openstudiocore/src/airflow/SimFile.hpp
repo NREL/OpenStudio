@@ -32,7 +32,7 @@
 namespace openstudio {
 namespace contam {
 
-class CONTAM_API SimFile {
+class AIRFLOW_API SimFile {
 public:
   explicit SimFile(openstudio::path path);
 

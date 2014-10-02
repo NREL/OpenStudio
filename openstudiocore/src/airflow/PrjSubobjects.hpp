@@ -34,7 +34,7 @@ namespace detail {
 }
 
 /** WeatherData objects contain the simplified weather data associated with a CONTAM model. */
-class CONTAM_API WeatherData
+class AIRFLOW_API WeatherData
 {
 public:
   /** @name Constructors and Destructors */
@@ -136,7 +136,7 @@ private:
 /** The Icon object contains basic information about sketchpad icons. This object
 *  is not strictly necessary for creating CONTAM models, but is needed to read
 *  models created in ContamW. */
-class CONTAM_API Icon
+class AIRFLOW_API Icon
 {
 public:
   /** @name Constructors and Destructors */
@@ -207,7 +207,7 @@ private:
 
 /** FanDataPoint is an object for defining fan characteristics. It contains a single
 *  pressure and flow rate data point. */
-class CONTAM_API FanDataPoint
+class AIRFLOW_API FanDataPoint
 {
 public:
   /** @name Constructors */
@@ -276,7 +276,7 @@ private:
 
 /** The XyDataPoint object is used by a number of the airflow element objects to
 *  store data specific to the element. */
-class CONTAM_API XyDataPoint
+class AIRFLOW_API XyDataPoint
 {
 public:
   /** @name Constructors */
@@ -324,7 +324,7 @@ private:
 
 /** The AirflowSubelementData object stores specific details for an
 *  airflow element that is part of a super element. */
-class CONTAM_API AirflowSubelementData
+class AIRFLOW_API AirflowSubelementData
 {
 public:
   /** @name Constructors */
@@ -376,7 +376,7 @@ private:
 /** The PressureCoefficientPoint object contains a single wind pressure coefficient
 *  data point. The azimuthal angle is stored in degrees from north with the
 *  corresponding pressure coefficient. */
-class CONTAM_API PressureCoefficientPoint
+class AIRFLOW_API PressureCoefficientPoint
 {
 public:
   /** @name Constructors */
@@ -424,7 +424,7 @@ private:
 
 /** SchedulePoint stores the time (in hh:mm:ss format) and control value for
 *  a day schedule data point. */
-class CONTAM_API SchedulePoint
+class AIRFLOW_API SchedulePoint
 {
 public:
   /** @name Constructors */

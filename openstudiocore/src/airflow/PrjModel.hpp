@@ -52,7 +52,7 @@ namespace detail {
 *  modifications to the model should be made with care.
 *
 */
-class CONTAM_API IndexModel
+class AIRFLOW_API IndexModel
 {
 public:
   /** @name Constructors and Destructors */
