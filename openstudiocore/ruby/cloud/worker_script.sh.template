@@ -1,7 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 
 # AWS Worker Bootstrap File
 # File used to configure worker nodes on AWS
+
+# Unlock the user account
+sudo passwd -u ubuntu
 
 # Change Host File Entries
 ENTRY="SERVER_IP SERVER_HOSTNAME SERVER_ALIAS"
@@ -24,6 +27,7 @@ rm -rf /mnt/openstudio
 mkdir -p /mnt/openstudio
 chown -R ubuntu:www-data /mnt/openstudio
 chmod -R 775 /mnt/openstudio
+
 
 # save application files into the right directory
 cp -rf /data/worker-nodes/* /mnt/openstudio/
