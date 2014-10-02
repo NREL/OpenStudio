@@ -22,7 +22,6 @@
 #include "../openstudio_lib/OSItem.hpp"
 #include "../openstudio_lib/ModelObjectItem.hpp"
 
-
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
 
@@ -32,6 +31,12 @@
 
 #include <QMouseEvent>
 #include <QString>
+
+#ifdef NDEBUG
+#define TIMEOUT_INTERVAL 500
+#else
+#define TIMEOUT_INTERVAL 2000
+#endif
 
 namespace openstudio {
 
@@ -90,13 +95,22 @@ void OSLineEdit2::bind(model::ModelObject& modelObject,
 void OSLineEdit2::completeBind() {
   setEnabled(true);
 
+  if (!m_set && !m_setOptionalStringReturn)
+  {
+    setReadOnly(true);
+  }
+
   connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSLineEdit2::onModelObjectChange);
 
   connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSLineEdit2::onModelObjectRemove);
 
   connect(this, &OSLineEdit2::editingFinished, this, &OSLineEdit2::onEditingFinished);
 
-  onModelObjectChange();
+  m_timer.setSingleShot(true);
+  connect(&m_timer, &QTimer::timeout, this, &OSLineEdit2::emitItemClicked);
+
+  onModelObjectChangeInternal(true);
+
 }
 
 void OSLineEdit2::unbind()
@@ -117,15 +131,37 @@ void OSLineEdit2::unbind()
 
 void OSLineEdit2::onEditingFinished() {
   if(m_modelObject && m_set) {
-    bool result = (*m_set)(this->text().toStdString());
-    if (!result){
-      //restore
-      onModelObjectChange();
+    if (m_text != this->text().toStdString()) {
+      m_text = this->text().toStdString();
+      bool result = (*m_set)(m_text);
+      if (!result){
+        //restore
+        onModelObjectChange();
+      }
+      else {
+        adjustWidth();
+      }
     }
   }
 }
 
-void OSLineEdit2::onModelObjectChange() {
+void OSLineEdit2::adjustWidth()
+{
+  if (m_modelObject) {
+    // Adjust the width to accommodate the text
+    QFont myFont;
+    QFontMetrics fm(myFont);
+    auto width = fm.width(toQString(m_text));
+    setFixedWidth(width + 10);
+  }
+}
+
+void OSLineEdit2::onModelObjectChange()
+{
+  onModelObjectChangeInternal(false);
+}
+
+void OSLineEdit2::onModelObjectChangeInternal(bool startingup) {
   if( m_modelObject ) {
     OptionalString value;
     if (m_get) {
@@ -144,9 +180,33 @@ void OSLineEdit2::onModelObjectChange() {
     std::string text;
     if (value) {
       text = *value;
+      if (m_text != text) {
+        m_text = text;
+        setText(QString::fromStdString(m_text));
+        adjustWidth();
+        if (!startingup) m_timer.start(TIMEOUT_INTERVAL);
+      }
     }
-    setText(QString::fromStdString(text));
   }
+}
+
+void OSLineEdit2::emitItemClicked()
+{
+  // This m_item code is only relevant if we are building in
+  // the context of openstudio_lib
+#ifdef openstudio_lib_EXPORTS
+  if (!m_item && m_modelObject) {
+    m_item = OSItem::makeItem(modelObjectToItemId(*m_modelObject, false));
+    OS_ASSERT(m_item);
+    m_item->setParent(this);
+    connect(m_item, &OSItem::itemRemoveClicked, this, &OSLineEdit2::onItemRemoveClicked);
+  }
+
+  if (m_item){
+    // Tell EditView to display this object
+    emit itemClicked(m_item);
+  }
+#endif
 }
 
 void OSLineEdit2::onModelObjectRemove(Handle handle)
@@ -159,18 +219,15 @@ void OSLineEdit2::mouseReleaseEvent(QMouseEvent * event)
   if (event->button() == Qt::LeftButton){
     event->accept();
 
-// This m_item code is only relevant if we are building in
-// the context of openstudio_lib
-#ifdef openstudio_lib_EXPORTS
-    if (!m_item && m_modelObject) {
-      m_item = OSItem::makeItem(modelObjectToItemId(*m_modelObject, false));
-    }
-#endif
+    m_timer.start(TIMEOUT_INTERVAL);
+  }
+}
 
-    if (m_item) {
-      // Tell EditView to display this object
-      emit itemClicked(m_item);
-    }
+void OSLineEdit2::onItemRemoveClicked()
+{
+  if (m_reset)
+  {
+    (*m_reset)();
   }
 }
 

@@ -113,7 +113,7 @@ std::vector<IdfObject> ZoneHVACBaseboardConvectiveWater_Impl::remove()
     }
     return result;
   }
-  unsigned ZoneHVACBaseboardConvectiveWater_Impl::inletPort()
+  unsigned ZoneHVACBaseboardConvectiveWater_Impl::inletPort() const
   {
     return 0; // this object has no inlet or outlet node
   }
@@ -127,7 +127,7 @@ std::vector<IdfObject> ZoneHVACBaseboardConvectiveWater_Impl::remove()
     return result;
   }
 
-  unsigned ZoneHVACBaseboardConvectiveWater_Impl::outletPort()
+  unsigned ZoneHVACBaseboardConvectiveWater_Impl::outletPort() const
   {
     return 0; // this object has no inlet or outlet node
   }

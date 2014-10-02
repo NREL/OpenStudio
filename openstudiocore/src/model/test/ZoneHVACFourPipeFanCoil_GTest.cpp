@@ -24,6 +24,8 @@
 #include "../Model.hpp"
 #include "../FanConstantVolume.hpp"
 #include "../FanConstantVolume_Impl.hpp"
+#include "../AirTerminalSingleDuctInletSideMixer.hpp"
+#include "../AirTerminalSingleDuctInletSideMixer_Impl.hpp"
 #include "../CoilCoolingWater.hpp"
 #include "../CoilCoolingWater_Impl.hpp"
 #include "../CoilHeatingWater.hpp"
@@ -346,4 +348,61 @@ TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_addToThermalZone) {
   EXPECT_TRUE(coolingCoil.containingZoneHVACComponent());
   EXPECT_TRUE(heatingCoil.containingZoneHVACComponent());
 }
+
+TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_AddRemoveAirLoopHVAC)
+{
+  model::Model m; 
+  model::Schedule availabilitySchedule = m.alwaysOnDiscreteSchedule();
+  model::FanConstantVolume fan(m,availabilitySchedule);
+  model::CoilHeatingWater heatingCoil(m,availabilitySchedule);
+  CoilCoolingWater coolingCoil(m,availabilitySchedule);
+  
+  model::ZoneHVACFourPipeFanCoil fpfc( m,
+                                       availabilitySchedule, 
+                                       fan,
+                                       heatingCoil,
+                                       coolingCoil );
+
+  AirLoopHVAC airLoop(m);
+  ThermalZone thermalZone(m);
+  AirTerminalSingleDuctInletSideMixer terminal(m);
+  EXPECT_TRUE(airLoop.addBranchForZone(thermalZone, terminal));
+  ASSERT_EQ(9u, airLoop.demandComponents().size());
+  ASSERT_FALSE(terminal.secondaryAirInletNode());
+
+  boost::optional<ModelObject> outletModelObject = terminal.outletModelObject();
+  ASSERT_TRUE(outletModelObject);
+  boost::optional<Node> outletNode = outletModelObject->optionalCast<Node>();
+  ASSERT_TRUE(outletNode);
+
+  ASSERT_TRUE(fpfc.addToNode(outletNode.get()));
+  ASSERT_EQ(11u, airLoop.demandComponents().size());
+  ASSERT_TRUE(fpfc.airLoopHVAC());
+  ASSERT_TRUE(fpfc.thermalZone());
+  ASSERT_TRUE(terminal.secondaryAirInletNode());
+  ASSERT_EQ(thermalZone,fpfc.thermalZone().get());
+  ASSERT_EQ(2u,thermalZone.equipment().size());
+  ASSERT_EQ(airLoop,fpfc.airLoopHVAC().get());
+
+  fpfc.removeFromThermalZone();
+  ASSERT_FALSE(fpfc.airLoopHVAC());
+  ASSERT_FALSE(fpfc.thermalZone());
+  ASSERT_EQ(1u,thermalZone.equipment().size());
+  ASSERT_EQ(9u, airLoop.demandComponents().size());
+
+  // Demonstrate that when you remove the terminal,
+  // the ZoneHVAC stays attached to the zone.
+  outletModelObject = terminal.outletModelObject();
+  ASSERT_TRUE(outletModelObject);
+  outletNode = outletModelObject->optionalCast<Node>();
+  ASSERT_TRUE(outletNode);
+  ASSERT_TRUE(fpfc.addToNode(outletNode.get()));
+  ASSERT_EQ(11u, airLoop.demandComponents().size());
+  terminal.remove();
+
+  ASSERT_EQ(7u, airLoop.demandComponents().size());
+  ASSERT_EQ(thermalZone,fpfc.thermalZone().get());
+  ASSERT_EQ(1u,thermalZone.equipment().size());
+}
+
 

@@ -29,9 +29,13 @@
 #include "OSQuantityEdit.hpp"
 #include "OSUnsignedEdit.hpp"
 
+#include "../openstudio_lib/HorizontalTabWidget.hpp"
+#include "../openstudio_lib/MainRightColumnController.hpp"
 #include "../openstudio_lib/ModelObjectInspectorView.hpp"
 #include "../openstudio_lib/ModelObjectItem.hpp"
 #include "../openstudio_lib/ModelSubTabView.hpp"
+#include "../openstudio_lib/OSAppBase.hpp"
+#include "../openstudio_lib/OSDocument.hpp"
 #include "../openstudio_lib/OSDropZone.hpp"
 #include "../openstudio_lib/OSItemSelector.hpp"
 #include "../openstudio_lib/RenderingColorWidget.hpp"
@@ -86,9 +90,6 @@ OSGridController::OSGridController(bool isIP,
   bool isConnected = false;
   isConnected = connect(m_cellBtnGrp, SIGNAL(buttonClicked(int)), this, SLOT(cellChecked(int)));
   OS_ASSERT(isConnected);
-
-  connect(model.getImpl<openstudio::model::detail::Model_Impl>().get(), &openstudio::model::detail::Model_Impl::onChange, this, &openstudio::OSGridController::requestRefreshGrid);
-
 }
 
 OSGridController::~OSGridController()
@@ -301,7 +302,14 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
     loadName->bind(t_mo,
                    OptionalStringGetter(std::bind(&LoadNameConcept::get,loadNameConcept.data(),t_mo,true)),
                    // If the concept is read only, pass an empty optional
-                   loadNameConcept->readOnly() ? boost::none : boost::optional<StringSetter>(std::bind(&LoadNameConcept::set,loadNameConcept.data(),t_mo,std::placeholders::_1)));
+                   loadNameConcept->readOnly() ? boost::none : boost::optional<StringSetter>(std::bind(&LoadNameConcept::set,loadNameConcept.data(),t_mo,std::placeholders::_1)),
+                   boost::optional<NoFailAction>(std::bind(&LoadNameConcept::reset, loadNameConcept.data(), t_mo)));
+
+    isConnected = connect(loadName, SIGNAL(itemClicked(OSItem*)), gridView(), SIGNAL(dropZoneItemClicked(OSItem*)));
+    OS_ASSERT(isConnected);
+
+    isConnected = connect(loadName, SIGNAL(itemClicked(OSItem*)), this, SLOT(onDropZoneItemClicked(OSItem*)));
+    OS_ASSERT(isConnected);
 
     widget = loadName;
 
@@ -312,7 +320,8 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
     nameLineEdit->bind(t_mo,
                        OptionalStringGetter(std::bind(&NameLineEditConcept::get,nameLineEditConcept.data(),t_mo,true)),
                        // If the concept is read only, pass an empty optional
-                       nameLineEditConcept->readOnly() ? boost::none : boost::optional<StringSetter>(std::bind(&NameLineEditConcept::set,nameLineEditConcept.data(),t_mo,std::placeholders::_1)));
+                       nameLineEditConcept->readOnly() ? boost::none : boost::optional<StringSetter>(std::bind(&NameLineEditConcept::set,nameLineEditConcept.data(),t_mo,std::placeholders::_1)),
+                       boost::optional<NoFailAction>(std::bind(&NameLineEditConcept::reset, nameLineEditConcept.data(), t_mo)));
 
     isConnected = connect(nameLineEdit, SIGNAL(itemClicked(OSItem*)), gridView(), SIGNAL(dropZoneItemClicked(OSItem*)));
     OS_ASSERT(isConnected);
@@ -499,7 +508,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
   OS_ASSERT(static_cast<int>(m_baseConcepts.size()) > column);
 
   auto layout = new QVBoxLayout();
-  const int widgetHeight = 43;
+  const int widgetHeight = 35;
   int numWidgets = 0;
   // start with a default sane value
   QSize recommendedSize(100, 20);
@@ -507,9 +516,11 @@ QWidget * OSGridController::widgetAt(int row, int column)
   auto addWidget = [&](QWidget *t_widget)
   {
     auto expand=[](QSize &t_s, const QSize &t_newS) {
-      if (t_newS.height() < 400 && t_newS.width() < 400)
+      if (t_newS.height() < 400 && t_newS.width() < 600)
       {
         t_s = t_s.expandedTo(t_newS);
+      } else if (t_newS.height() < 400) {
+        t_s = t_s.expandedTo(QSize(std::min(t_newS.width(), 600), 0));
       }
     };
 
@@ -607,7 +618,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
   if(row == 0){
     wrapper->setMinimumSize(QSize(recommendedSize.width(),recommendedSize.height()));
   } else {
-    wrapper->setMinimumSize(QSize(recommendedSize.width() + 10,widgetHeight * numWidgets + 10));
+    wrapper->setMinimumSize(QSize(recommendedSize.width() + 10,widgetHeight * numWidgets ));
   }
   wrapper->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
@@ -617,7 +628,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
   if(row == 0){
     layout->setContentsMargins(0,0,0,0);
   } else {
-    layout->setContentsMargins(5,5,5,5);
+    layout->setContentsMargins(5,0,5,0);
   }
   wrapper->setLayout(layout);
 
@@ -679,7 +690,7 @@ QWidget * OSGridController::cell(int rowIndex, int columnIndex)
 {
   QWidget * widget = nullptr;
 
-  QLayoutItem * child = gridView()->m_gridLayout->itemAtPosition(rowIndex, columnIndex);
+  QLayoutItem * child = gridView()->itemAtPosition(rowIndex, columnIndex);
   if (child) {
     widget = child->widget();
   }
@@ -733,6 +744,12 @@ void OSGridController::selectRow(int rowIndex, bool select)
     button->blockSignals(false);
     button->setStyleSheet(cellStyle(rowIndex, columnIndex++, select));
   }
+
+  OSItem * item = nullptr;
+  OSAppBase::instance()->currentDocument()->mainRightColumnController()->inspectModelObjectByItem(item, true);
+  qApp->processEvents();
+  OSAppBase::instance()->currentDocument()->mainRightColumnController()->mainRightColumnView()->setCurrentId(MainRightColumnController::LIBRARY);
+  qApp->processEvents();
 }
 
 void OSGridController::horizontalHeaderChecked(int index)
@@ -885,6 +902,16 @@ OSItem * OSGridController::getSelectedItemFromModelSubTabView()
   item = modelSubTabView->itemSelector()->selectedItem();
 
   return item;
+}
+
+void OSGridController::connectToModel()
+{
+  connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(), &openstudio::model::detail::Model_Impl::onChange, this, &openstudio::OSGridController::requestRefreshGrid);
+}
+
+void OSGridController::disconnectFromModel()
+{
+  disconnect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get());
 }
 
 void OSGridController::onSelectionCleared()

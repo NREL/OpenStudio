@@ -35,7 +35,7 @@ namespace detail {
   ThermostatSetpointDualSetpoint_Impl::ThermostatSetpointDualSetpoint_Impl(const IdfObject& idfObject,
                                                                            Model_Impl* model, 
                                                                            bool keepHandle):
-    ModelObject_Impl(idfObject,model,keepHandle)
+    Thermostat_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == ThermostatSetpointDualSetpoint::iddObjectType());
   }
@@ -43,7 +43,7 @@ namespace detail {
   ThermostatSetpointDualSetpoint_Impl::ThermostatSetpointDualSetpoint_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                            Model_Impl* model,
                                                                            bool keepHandle):
-    ModelObject_Impl(other,model,keepHandle)
+    Thermostat_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == ThermostatSetpointDualSetpoint::iddObjectType());
   }
@@ -52,7 +52,7 @@ namespace detail {
   ThermostatSetpointDualSetpoint_Impl::ThermostatSetpointDualSetpoint_Impl(const ThermostatSetpointDualSetpoint_Impl& other,
                                                                            Model_Impl* model,
                                                                            bool keepHandle):
-    ModelObject_Impl(other,model,keepHandle)
+    Thermostat_Impl(other,model,keepHandle)
   {}
 
   // Get all output variable names that could be associated with this object.
@@ -174,13 +174,13 @@ namespace detail {
 } // detail
 
 ThermostatSetpointDualSetpoint::ThermostatSetpointDualSetpoint( const Model& model ):
-  ModelObject(ThermostatSetpointDualSetpoint::iddObjectType(),model)
+  Thermostat(ThermostatSetpointDualSetpoint::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ThermostatSetpointDualSetpoint_Impl>());
 }
 
 ThermostatSetpointDualSetpoint::ThermostatSetpointDualSetpoint(std::shared_ptr<detail::ThermostatSetpointDualSetpoint_Impl> impl):
-  ModelObject(impl)
+  Thermostat(impl)
 {}
 
 IddObjectType ThermostatSetpointDualSetpoint::iddObjectType()

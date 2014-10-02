@@ -446,6 +446,8 @@ set(${target_name}_SRC
   ../shared_gui_components/SyncMeasuresDialog.hpp
   ../shared_gui_components/SyncMeasuresDialogCentralWidget.cpp
   ../shared_gui_components/SyncMeasuresDialogCentralWidget.hpp
+  ../shared_gui_components/TextEditDialog.cpp
+  ../shared_gui_components/TextEditDialog.hpp 
   ../shared_gui_components/TIDItemModel.cpp
   ../shared_gui_components/TIDItemModel.hpp
   ../shared_gui_components/VariableList.cpp
@@ -673,6 +675,7 @@ set(${target_name}_moc
   ../shared_gui_components/PageNavigator.hpp
   ../shared_gui_components/SyncMeasuresDialog.hpp
   ../shared_gui_components/SyncMeasuresDialogCentralWidget.hpp
+  ../shared_gui_components/TextEditDialog.hpp 
   ../shared_gui_components/TIDItemModel.hpp
   ../shared_gui_components/VariableList.hpp
   ../shared_gui_components/VariableView.hpp

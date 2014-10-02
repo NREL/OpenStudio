@@ -20,16 +20,20 @@
 #ifndef SHAREDGUICOMPONENTS_OSGRIDVIEW_HPP
 #define SHAREDGUICOMPONENTS_OSGRIDVIEW_HPP
 
-#include <QWidget>
 #include <QTimer>
+#include <QWidget>
 
 #include "../openstudio_lib/OSItem.hpp"
 
 #include "../model/ModelObject.hpp"
 
 class QGridLayout;
+class QHideEvent;
+class QVBoxLayout;
 class QLabel;
+class QShowEvent;
 class QString;
+class QLayoutItem;
 
 namespace openstudio{
 
@@ -53,11 +57,18 @@ public:
 
   virtual ~OSGridView() {};
 
-  QGridLayout * m_gridLayout;
+  // return the QLayoutItem at a particular partition, accounting for multiple grid layouts
+  QLayoutItem * itemAtPosition(int row, int column);
 
   OSDropZone * m_dropZone;
 
   virtual ModelSubTabView * modelSubTabView();
+
+protected:
+
+  virtual void hideEvent(QHideEvent * event);
+
+  virtual void showEvent(QShowEvent * event);
 
 signals:
 
@@ -114,7 +125,21 @@ private:
     RefreshGrid
   };
 
+  // construct a grid layout to our specs
+  QGridLayout *makeGridLayout();
+
+  // Add a widget, adding a new layout if necessary
+  void addWidget(QWidget *w, int row, int column);
+
+  void normalizeColumnWidths();
+
   void setGridController(OSGridController * gridController);
+
+  static const int ROWS_PER_LAYOUT = 100;
+
+  QVBoxLayout * m_contentLayout;
+
+  std::vector<QGridLayout *> m_gridLayouts;
 
   OSCollapsibleView * m_CollapsibleView;
 

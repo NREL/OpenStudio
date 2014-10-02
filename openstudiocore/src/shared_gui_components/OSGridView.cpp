@@ -31,15 +31,18 @@
 #include "../model/Model_Impl.hpp"
 #include "../model/ModelObject_Impl.hpp"
 
+#include "../utilities/core/Application.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/idd/IddObject.hpp"
 
 #include <QApplication>
 #include <QBoxLayout>
 #include <QButtonGroup>
+#include <QHideEvent>
 #include <QLabel>
 #include <QPushButton>
 #include <QScrollArea>
+#include <QShowEvent>
 #include <QStackedWidget>
 
 #ifdef Q_OS_MAC
@@ -54,29 +57,34 @@
 
 namespace openstudio {
 
+QGridLayout *OSGridView::makeGridLayout()
+{
+  auto gridLayout = new QGridLayout();
+  gridLayout->setSpacing(0);
+  gridLayout->setContentsMargins(0,0,0,0);
+  //gridLayout->setSizeConstraint(QLayout::SetMinimumSize);
+  gridLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+  return gridLayout;
+}
+
 OSGridView::OSGridView(OSGridController * gridController,
   const QString & headerText,
   const QString & dropZoneText,
   bool useHeader,
   QWidget * parent)
   : QWidget(parent),
-    m_gridLayout(nullptr),
     m_dropZone(nullptr),
+    m_contentLayout(nullptr),
     m_CollapsibleView(nullptr),
     m_gridController(gridController)
 {
-  m_gridLayout = new QGridLayout();
-  m_gridLayout->setSpacing(0);
-  m_gridLayout->setContentsMargins(0,0,0,0);
-  //m_gridLayout->setSizeConstraint(QLayout::SetMinimumSize);
-  m_gridLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
   auto buttonGroup = new QButtonGroup();
   connect(buttonGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &OSGridView::selectCategory);
 
   auto buttonLayout = new QHBoxLayout();
   buttonLayout->setSpacing(3);
-  buttonLayout->setContentsMargins(0,0,0,0);
+  buttonLayout->setContentsMargins(0,0,0,10);
   buttonLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
   auto vectorController = new GridViewDropZoneVectorController();
@@ -120,7 +128,7 @@ OSGridView::OSGridView(OSGridController * gridController,
   if (useHeader) {
     auto header = new DarkGradientHeader();
     header->label->setText(headerText); 
-    auto collabsibleView = new OSCollapsibleView(this);
+    auto collabsibleView = new OSCollapsibleView(true);
     collabsibleView->setHeader(header);
     collabsibleView->setContent(widget);
     collabsibleView->setExpanded(true); 
@@ -129,16 +137,16 @@ OSGridView::OSGridView(OSGridController * gridController,
     layout->addWidget(widget);
   }
 
-  setGridController(m_gridController);
 
-  QVBoxLayout * m_contentLayout = nullptr;
   m_contentLayout = new QVBoxLayout();
   m_contentLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-  m_contentLayout->setSpacing(10);
+  m_contentLayout->setSpacing(0);
   m_contentLayout->setContentsMargins(0,10,0,0);
   widget->setLayout(m_contentLayout);
   m_contentLayout->addLayout(buttonLayout);
-  m_contentLayout->addLayout(m_gridLayout);
+
+
+  setGridController(m_gridController);
 
   setContentsMargins(5,5,5,5);
 
@@ -152,6 +160,11 @@ OSGridView::OSGridView(OSGridController * gridController,
 
   m_timer.setSingleShot(true);
   connect(&m_timer, &QTimer::timeout, this, &OSGridView::doRefresh);
+
+  if (this->isVisible()) {
+    m_gridController->connectToModel();
+    refreshAll();
+  }
 }
 
 void OSGridView::setGridController(OSGridController * gridController)
@@ -173,8 +186,6 @@ void OSGridView::setGridController(OSGridController * gridController)
 
   isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), m_gridController, SLOT(onItemSelected(OSItem *)));
   OS_ASSERT(isConnected);
-
-  refreshAll();
 }
 
 void OSGridView::refreshCell(int row, int column)
@@ -194,9 +205,17 @@ void OSGridView::refreshRow(int row)
   }
 }
 
+QLayoutItem * OSGridView::itemAtPosition(int row, int column)
+{
+  auto layoutnum = row / ROWS_PER_LAYOUT;
+  auto relativerow = row % ROWS_PER_LAYOUT;
+
+  return m_gridLayouts.at(layoutnum)->itemAtPosition(relativerow, column);
+}
+
 void OSGridView::removeWidget(int row, int column)
 {
-  QLayoutItem * item = m_gridLayout->itemAtPosition(row,column);
+  QLayoutItem * item = itemAtPosition(row,column);
 
   OS_ASSERT(item);
 
@@ -211,16 +230,19 @@ void OSGridView::removeWidget(int row, int column)
 
 void OSGridView::deleteAll()
 {
-  QLayoutItem * child;
-  while((child = m_gridLayout->takeAt(0)) != nullptr)
+  for (auto layout : m_gridLayouts)
   {
-    QWidget * widget = child->widget();
+    QLayoutItem * child;
+    while((child = layout->takeAt(0)) != nullptr)
+    {
+      QWidget * widget = child->widget();
 
-    OS_ASSERT(widget);
+      OS_ASSERT(widget);
 
-    delete widget;
+      delete widget;
 
-    delete child;
+      delete child;
+    }
   }
 }
 
@@ -329,7 +351,7 @@ void OSGridView::refreshAll()
   // fill and justify correctly.  It appeared to be the most simple solution.
   auto widget = new QWidget();
   //widget->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
-  m_gridLayout->addWidget(widget,0,m_gridController->columnCount());
+  addWidget(widget, 0, m_gridController->columnCount());
 
   // Get selected item
   auto selectedItem = m_gridController->getSelectedItemFromModelSubTabView();
@@ -342,9 +364,37 @@ void OSGridView::refreshAll()
     m_gridController->m_oldIndex = newIndex;
   }
 
+  normalizeColumnWidths();
+
   // If the index is valid, call slot
   if (m_gridController->m_oldIndex > -1){
     QTimer::singleShot(0, this, SLOT(doRowSelect()));
+  }
+}
+
+void OSGridView::normalizeColumnWidths()
+{
+
+  std::vector<int> colmins(m_gridController->columnCount(), 0);
+
+  for( int i = 0; i < m_gridController->rowCount(); i++ )
+  {
+    for( int j = 0; j < m_gridController->columnCount(); j++ )
+    {
+      const auto *w = itemAtPosition(i, j)->widget();
+      OS_ASSERT(w);
+      colmins[j] = std::max(colmins[j], w->minimumWidth());
+    }
+  }
+
+  for(int i = 0; i < m_gridController->rowCount(); i += ROWS_PER_LAYOUT)
+  {
+    for( int j = 0; j < m_gridController->columnCount(); j++ )
+    {
+      auto *w = itemAtPosition(i, j)->widget();
+      OS_ASSERT(w);
+      w->setMinimumWidth(colmins[j]);
+    }
   }
 }
 
@@ -362,28 +412,40 @@ void OSGridView::addWidget(int row, int column)
 
   QWidget * widget = m_gridController->widgetAt(row,column);
 
-  OS_ASSERT(m_gridLayout);
+  addWidget(widget, row, column);
+}
 
-  m_gridLayout->addWidget(widget,row,column);
+void OSGridView::addWidget(QWidget *w, int row, int column)
+{
+  unsigned layoutindex = row / ROWS_PER_LAYOUT;
+  auto relativerow = row % ROWS_PER_LAYOUT;
+
+  if (layoutindex >= m_gridLayouts.size())
+  {
+    auto grid = makeGridLayout();
+    OS_ASSERT(grid);
+
+    m_gridLayouts.push_back(grid);
+    OS_ASSERT(m_contentLayout);
+    m_contentLayout->addLayout(grid);
+  }
+
+  m_gridLayouts[layoutindex]->addWidget(w, relativerow, column);
 }
 
 void OSGridView::setHorizontalHeader(std::vector<QWidget *> widgets)
 {
-  OS_ASSERT(m_gridLayout);
-
   int column = 0;
   for (QWidget * widget : widgets) {
-    m_gridLayout->addWidget(widget,0,column++);
+    addWidget(widget,0,column++);
   }
 }
 
 void OSGridView::setHorizontalHeader(std::vector<QString> names)
 {
-  OS_ASSERT(m_gridLayout);
-
   int column = 0;
   for (const QString& name : names) {
-    m_gridLayout->addWidget(new QLabel(name),0,column++);
+    addWidget(new QLabel(name),0,column++);
   }
 }
 
@@ -426,6 +488,21 @@ void OSGridView::onSelectionCleared()
 
 void OSGridView::onDropZoneItemClicked(OSItem* item)
 {
+}
+
+void OSGridView::hideEvent(QHideEvent * event)
+{
+  m_gridController->disconnectFromModel();
+
+  QWidget::hideEvent(event);
+}
+
+void OSGridView::showEvent(QShowEvent * event)
+{
+  m_gridController->connectToModel();
+  refreshAll();
+
+  QWidget::showEvent(event);
 }
 
 } // openstudio

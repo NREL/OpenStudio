@@ -2485,7 +2485,7 @@ namespace detail {
   {
     QMutexLocker lock(&m_mutex);
     const ConfigOptions config = getConfigOptions();
-    bool paused = m_paused;
+    //bool paused = m_paused;
 
     m_waitCondition.wakeAll();
   }

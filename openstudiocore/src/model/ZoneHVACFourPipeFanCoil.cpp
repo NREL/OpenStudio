@@ -151,12 +151,12 @@ namespace detail {
     return result;
   }
 
-  unsigned ZoneHVACFourPipeFanCoil_Impl::inletPort()
+  unsigned ZoneHVACFourPipeFanCoil_Impl::inletPort() const
   {
     return OS_ZoneHVAC_FourPipeFanCoilFields::AirInletNodeName;
   }
 
-  unsigned ZoneHVACFourPipeFanCoil_Impl::outletPort()
+  unsigned ZoneHVACFourPipeFanCoil_Impl::outletPort() const
   {
     return OS_ZoneHVAC_FourPipeFanCoilFields::AirOutletNodeName;
   }

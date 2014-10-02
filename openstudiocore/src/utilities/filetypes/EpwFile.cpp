@@ -208,6 +208,24 @@ std::string EpwDataPoint::units(EpwDataField field)
   std::string string;
   switch(field.value())
   {
+  case EpwDataField::Year:
+    //string = "None";
+    break;
+  case EpwDataField::Month:
+    //string = "None";
+    break;
+  case EpwDataField::Day:
+    //string = "None";
+    break;
+  case EpwDataField::Hour:
+    //string = "None";
+    break;
+  case EpwDataField::Minute:
+    //string = "None";
+    break;
+  case EpwDataField::DataSourceandUncertaintyFlags:
+    //string = "None";
+    break;
   case EpwDataField::DryBulbTemperature:
     string = "C";
     break;

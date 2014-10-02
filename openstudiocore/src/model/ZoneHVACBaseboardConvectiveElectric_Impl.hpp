@@ -116,9 +116,9 @@ namespace detail {
     /** @name Other */
     //@{
 
-    unsigned inletPort();
+    unsigned inletPort() const;
 
-    unsigned outletPort();
+    unsigned outletPort() const;
   
     boost::optional<ThermalZone> thermalZone();
 

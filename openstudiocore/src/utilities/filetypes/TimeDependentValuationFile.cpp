@@ -315,7 +315,7 @@ unsigned TimeDependentValuationFile::numColumns() const {
 }
 
 UnitSystem TimeDependentValuationFile::system() const {
-  bool foundASystem(false);
+  //bool foundASystem(false);
   UnitSystem result;
   /*
   // energy costs

@@ -342,18 +342,20 @@ public:
   void addNameLineEditColumn(QString headingLabel,
                              const std::function<boost::optional<std::string> (DataSourceType *, bool)>  &getter,
                              const std::function<boost::optional<std::string> (DataSourceType *, const std::string &)> &setter,
+                             const boost::optional<std::function<void (DataSourceType *)>> &resetter = boost::none,
                              const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<NameLineEditConcept>(new NameLineEditConceptImpl<DataSourceType>(headingLabel,getter,setter)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<NameLineEditConcept>(new NameLineEditConceptImpl<DataSourceType>(headingLabel,getter,setter,resetter)), t_source));
   }
 
   template<typename DataSourceType>
   void addLoadNameColumn(QString headingLabel,
     const std::function<boost::optional<std::string>(DataSourceType *, bool)>  &getter,
     const std::function<boost::optional<std::string>(DataSourceType *, const std::string &)> &setter,
+    const boost::optional<std::function<void(DataSourceType *)>> &resetter = boost::none,
     const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<LoadNameConcept>(new LoadNameConceptImpl<DataSourceType>(headingLabel, getter, setter)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<LoadNameConcept>(new LoadNameConceptImpl<DataSourceType>(headingLabel, getter, setter, resetter)), t_source));
   }
 
   template<typename ValueType, typename DataSourceType>
@@ -455,6 +457,10 @@ public:
 
   // Call this function on a model update
   virtual void refreshModelObjects() = 0;
+
+  void connectToModel();
+
+  void disconnectFromModel();
 
 protected:
 

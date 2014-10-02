@@ -32,7 +32,6 @@
 #endif
 
 #include <iostream>
-#include <QPluginLoader>
 
 namespace openstudio{
 
@@ -68,25 +67,30 @@ QCoreApplication* ApplicationSingleton::application(bool gui)
       QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar, true);
       QCoreApplication::setAttribute(Qt::AA_MacPluginApplication, true);
 
-      static char *argv[] = {nullptr};
-      static int argc = sizeof(argv) / sizeof(char*) - 1;
-      m_qApplication = new QApplication(argc, argv, gui);
- 
-#if defined(Q_OS_MAC)
-      openstudio::path p = getApplicationRunDirectory().parent_path().parent_path().parent_path() / toPath("Ruby/openstudio");
-      QCoreApplication::addLibraryPath(QString::fromStdString(toString(p)));
-#endif
-
-#if defined(Q_OS_WIN)
-      openstudio::path p = getApplicationRunDirectory().parent_path() / toPath("Ruby/openstudio");
-      QCoreApplication::addLibraryPath(QString::fromStdString(toString(p)));
-#endif
-
-      // Add this path for gem case
+      // Add this path for gem case (possibly deprecated)
       QCoreApplication::addLibraryPath(toQString(getApplicationRunDirectory() / toPath("plugins")));
 
-      // And for any other random cases
+      // And for any other random cases (possibly deprecated, applies to super-built Qt on Linux)
       QCoreApplication::addLibraryPath(toQString(getApplicationRunDirectory().parent_path() / toPath("share/openstudio-" + openStudioVersion() + "/qtplugins")));
+
+      // Make the run path the backup plugin search location
+      QCoreApplication::addLibraryPath(toQString(getApplicationRunDirectory()));
+
+      // Make the ruby path the default plugin search location
+#if defined(Q_OS_MAC)
+      openstudio::path p = getApplicationRunDirectory().parent_path().parent_path().parent_path() / toPath("Ruby/openstudio");
+      QCoreApplication::addLibraryPath(toQString(p));
+#elif defined(Q_OS_WIN)
+      openstudio::path p = getApplicationRunDirectory().parent_path() / toPath("Ruby/openstudio");
+      QCoreApplication::addLibraryPath(toQString(p));
+#endif
+
+      static char *argv[] = {nullptr};
+      static int argc = sizeof(argv) / sizeof(char*) - 1;
+
+      // Load the qpa plugin (If SketchUp is loading the OpenStudio plugin, the SketchUp run path will be added to the end of libraryPaths)
+      m_qApplication = new QApplication(argc, argv, gui);
+
       dynamic_cast<QApplication*>(m_qApplication)->setQuitOnLastWindowClosed(false);
       defaultInstance = true;
 

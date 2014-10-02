@@ -1015,7 +1015,7 @@ class ModelClassGenerator < SubProjectClassGenerator
 
         elsif /optional/.match(field.privateClassSetterType)
         
-          raise "Schedule setters should not take optionals." if field.isSchedule?
+          #raise "Schedule setters should not take optionals." if field.isSchedule?
         
           result << "    bool result(false);\n"
           result << "    if (" << field.setterArgumentName << ") {\n"

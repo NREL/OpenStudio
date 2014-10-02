@@ -167,7 +167,9 @@ if(APPLE OR WIN32)
     get_target_property(PRINT_PLUGIN Qt5::QWindowsPrinterSupportPlugin LOCATION)
   elseif(APPLE)
     get_target_property(QPA_PLUGIN Qt5::QCocoaIntegrationPlugin LOCATION)
-    get_target_property(PRINT_PLUGIN Qt5::QCocoaPrinterSupportPlugin LOCATION)
+    # Qt does not create a mac print module in CMake, so we have to do this manually
+    get_filename_component(QPA_PATH ${QPA_PLUGIN} DIRECTORY)
+    set(PRINT_PLUGIN "${QPA_PATH}/../printsupport/libcocoaprintersupport.dylib")
   endif()
 
   install(PROGRAMS "${QPA_PLUGIN}"
