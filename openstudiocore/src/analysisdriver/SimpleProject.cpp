@@ -2563,24 +2563,6 @@ boost::optional<SimpleProject> openPATProject(const openstudio::path& projectDir
       save = true;
     }
 
-    // check for swap variable, try to add if not present
-    if (!result->getReportRequestWorkflowStep()) {
-      LOG_FREE(Info, "openPATProject", "PAT Project doesn't contain report request workflow step");
-      bool ok = result->insertReportRequestWorkflowStep();
-      if (!ok) {
-        LOG_FREE(Error, "openPATProject", "Unable to insert report request workflow step");
-        result.reset();
-        return result;
-      }
-      save = true;
-    }
-
-    if (!result->isPATProject()) {
-      LOG_FREE(Error, "openPATProject", "Project is not a pat project");
-      result.reset();
-      return result;
-    }
-
     // fix up workflow as needed
     Problem problem = result->analysis().problem();
     OptionalInt index = problem.getWorkflowStepIndexByJobType(JobType::ModelToIdf);
@@ -2607,6 +2589,36 @@ boost::optional<SimpleProject> openPATProject(const openstudio::path& projectDir
     if (!index) {
       problem.push(WorkItem(JobType(JobType::OpenStudioPostProcess)));
       save = true;
+    }
+
+    // check for report request step, try to add if not present
+    if (!result->getReportRequestWorkflowStep()) {
+      LOG_FREE(Info, "openPATProject", "PAT Project doesn't contain report request workflow step");
+      bool ok = result->insertReportRequestWorkflowStep();
+      if (!ok) {
+        LOG_FREE(Error, "openPATProject", "Unable to insert report request workflow step");
+        result.reset();
+        return result;
+      }
+      save = true;
+    }
+
+    // check for standard report step, try to add if not present
+    if (!result->getStandardReportWorkflowStep()) {
+      LOG_FREE(Info, "openPATProject", "PAT Project doesn't contain standard report workflow step");
+      bool ok = result->insertStandardReportWorkflowStep();
+      if (!ok) {
+        LOG_FREE(Error, "openPATProject", "Unable to insert standard report workflow step");
+        result.reset();
+        return result;
+      }
+      save = true;
+    }
+
+    if (!result->isPATProject()) {
+      LOG_FREE(Error, "openPATProject", "Project is not a pat project");
+      result.reset();
+      return result;
     }
 
     if (result->analysis().resultsAreInvalid()) {
