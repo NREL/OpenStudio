@@ -353,11 +353,8 @@ TEST_F(RunManagerTestFixture, WorkItemPersist)
     openstudio::runmanager::Workflow workflow;
     workflow.addJob(workItem);
 
-    openstudio::runmanager::Job job = workflow.create(openstudio::tempDir() / openstudio::toPath("WorkItemPersist"));
+    kit.persistWorkflow(workflow);
 
-    kit.enqueue(job, true);
-
-    EXPECT_EQ(1u, kit.getJobs().size());
     EXPECT_EQ(1u, kit.loadWorkflows().size());
 
     std::vector<openstudio::runmanager::WorkItem> workItems = workflow.toWorkItems();
@@ -369,15 +366,20 @@ TEST_F(RunManagerTestFixture, WorkItemPersist)
   {
     openstudio::runmanager::RunManager kit(db, false, true);
 
-    std::vector<openstudio::runmanager::Job> jobs = kit.getJobs();
-    ASSERT_EQ(1u, jobs.size());
-
     std::vector<openstudio::runmanager::Workflow> workflows = kit.loadWorkflows();
     ASSERT_EQ(1u, workflows.size());
+
+    openstudio::runmanager::Job job = workflows[0].create(openstudio::tempDir() / openstudio::toPath("WorkItemPersist"));
 
     std::vector<openstudio::runmanager::WorkItem> workItems = workflows[0].toWorkItems();
     ASSERT_EQ(1u, workItems.size());
     EXPECT_EQ("my-job", workItems[0].jobkeyname);
+
+    // and now we reverse engineer a new workflow from the job that was created from the workflow
+    openstudio::runmanager::Workflow rebuiltwf(job);
+    std::vector<openstudio::runmanager::WorkItem> rebuiltwi = rebuiltwf.toWorkItems();
+    ASSERT_EQ(1u, rebuiltwi.size());
+    EXPECT_EQ("my-job", rebuiltwi[0].jobkeyname);
   }
   
 }
