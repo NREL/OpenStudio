@@ -585,7 +585,7 @@ namespace openstudio{
     }
 
     std::string AWSProvider_Impl::defaultWorkerInstanceType() {
-      return "cc2.8xlarge";
+      return "c3.4xlarge";
     }
 
     std::vector<unsigned> AWSProvider_Impl::serverProcessorCounts() {
@@ -687,16 +687,6 @@ namespace openstudio{
         //awsComputerInformation.processorCount = 1;
         //info.push_back(awsComputerInformation);
 
-        //awsComputerInformation.instanceType = "m1.large";
-        //awsComputerInformation.prettyName = "M1 Large";
-        //awsComputerInformation.processorCount = 2;
-        //info.push_back(awsComputerInformation);
-
-        //awsComputerInformation.instanceType = "m1.xlarge";
-        //awsComputerInformation.prettyName = "M1 Extra Large";
-        //awsComputerInformation.processorCount = 4;
-        //info.push_back(awsComputerInformation);
-
         awsComputerInformation.instanceType = "m2.xlarge";
         awsComputerInformation.prettyName = "M2 Extra Large";
         awsComputerInformation.processorCount = 2;
@@ -714,12 +704,12 @@ namespace openstudio{
 
         //awsComputerInformation.instanceType = "m3.xlarge";
         //awsComputerInformation.prettyName = "M3 Extra Large";
-        //awsComputerInformation.processorCount = 2; // Hyperthreading disabled
+        //awsComputerInformation.processorCount = 4; // Hyperthreading enabled
         //info.push_back(awsComputerInformation);
 
         //awsComputerInformation.instanceType = "m3.2xlarge";
         //awsComputerInformation.prettyName = "M3 Double Extra Large";
-        //awsComputerInformation.processorCount = 4; // Hyperthreading disabled
+        //awsComputerInformation.processorCount = 8; // Hyperthreading enabled
         //info.push_back(awsComputerInformation);
       }
       return info;
@@ -736,14 +726,20 @@ namespace openstudio{
         //awsComputerInformation.processorCount = 1;
         //info.push_back(awsComputerInformation);
 
-        //awsComputerInformation.instanceType = "c1.xlarge";
-        //awsComputerInformation.prettyName = "High-CPU Extra Large";
-        //awsComputerInformation.processorCount = 8;
-        //info.push_back(awsComputerInformation);
-
         awsComputerInformation.instanceType = "cc2.8xlarge";
-        awsComputerInformation.prettyName = "Cluster Compute Eight Extra Large";
-        awsComputerInformation.processorCount = 16; // Hyperthreading disabled
+        awsComputerInformation.prettyName = "Previous Generation: Compute Optimized 8x Large";
+        awsComputerInformation.processorCount = 32; // Hyperthreading enabled
+        info.push_back(awsComputerInformation);
+
+
+        awsComputerInformation.instanceType = "c3.4xlarge";
+        awsComputerInformation.prettyName = "Compute Optimized 4x Large";
+        awsComputerInformation.processorCount = 16; // Hyperthreading enabled
+        info.push_back(awsComputerInformation);
+
+        awsComputerInformation.instanceType = "c3.8xlarge";
+        awsComputerInformation.prettyName = "Cluster Compute 8x Large";
+        awsComputerInformation.processorCount = 32; // Hyperthreading enabled
         info.push_back(awsComputerInformation);
       }
       return info;

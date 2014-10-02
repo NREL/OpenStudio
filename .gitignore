@@ -1,4 +1,5 @@
 .idea
+.ruby-version
 /build/
 /build_debug/
 /build-debug/
