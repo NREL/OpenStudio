@@ -658,7 +658,7 @@ TEST_F(RunManagerTestFixture, RelocateDaylightSimPath)
   ASSERT_EQ(openstudio::toPath(wi2.files.files().at(0).requiredFiles.at(0).first.toLocalFile()), getOpenStudioRubyScriptsPath() / openstudio::toPath("openstudio/radiance/ModelToRad.rb"));
 
   ASSERT_TRUE(boost::filesystem::exists(wi2.files.files().at(0).fullPath));
-  ASSERT_EQ(wi2.jobkeyname, "testjobkeyname");
+  ASSERT_EQ("testjobkeyname", wi2.jobkeyname);
   std::vector<std::pair<QUrl, openstudio::path> > requiredFiles = wi2.files.files().at(0).requiredFiles;
 
   ASSERT_EQ(requiredFiles.size(), 4u);
