@@ -80,7 +80,11 @@ namespace openstudio {
   void OSCheckBox3::onModelObjectChange()
   {
     if (m_modelObject) {
-      this->setChecked((*m_get)());
+      if ((*m_get)() != this->isChecked()) {
+        this->blockSignals(true);
+        this->setChecked((*m_get)());
+        this->blockSignals(false);
+      }
     }
   }
 

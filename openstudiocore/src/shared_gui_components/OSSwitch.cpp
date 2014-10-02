@@ -76,14 +76,20 @@ void OSSwitch2::unbind()
 void OSSwitch2::onClicked(bool checked)
 {
   if(m_modelObject && m_set) {
-    (*m_set)(checked);
+    if ((*m_get)() != checked) {
+      (*m_set)(checked);
+    }
   }
 }
 
 void OSSwitch2::onModelObjectChange()
 {
   if( m_modelObject ) {
-    this->setChecked((*m_get)());
+    if ((*m_get)() != this->isChecked()) {
+      this->blockSignals(true);
+      this->setChecked((*m_get)());
+      this->blockSignals(false);
+    }
   }
 }
 

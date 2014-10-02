@@ -100,7 +100,7 @@ namespace openstudio {
     }
 
     if (!m_renderingColor){
-      // app->processEvents not suficiant; must use singleShot
+      // app->processEvents not sufficient; must use singleShot
       // to prevent race condition stack overflow
       QTimer::singleShot(0, this, SLOT(getRenderingColor()));
     }
@@ -155,8 +155,8 @@ namespace openstudio {
         OS_ASSERT(false);
       }
 
-      isConnected = connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(refresh()));
-      OS_ASSERT(isConnected);
+      //isConnected = connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(refresh()));
+      //OS_ASSERT(isConnected);
 
       refresh();
     }
@@ -164,7 +164,9 @@ namespace openstudio {
 
   void RenderingColorWidget2::unbind()
   {
+    this->blockSignals(true);
     clear();
+    this->blockSignals(false);
 
     this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
 
@@ -194,7 +196,9 @@ namespace openstudio {
 
   void RenderingColorWidget2::refresh()
   {
+    this->blockSignals(true);
     clear();
+    this->blockSignals(false);
 
     if (m_renderingColor){
 
@@ -230,7 +234,7 @@ namespace openstudio {
 
       QColor color = QColorDialog::getColor(initialColor, this, "Choose Rendering Color", QColorDialog::ShowAlphaChannel);
 
-      if (color.isValid()){
+      if (color.isValid() && color != initialColor){
         m_renderingColor->setRenderingRedValue(color.red());
         m_renderingColor->setRenderingGreenValue(color.green());
         m_renderingColor->setRenderingBlueValue(color.blue());

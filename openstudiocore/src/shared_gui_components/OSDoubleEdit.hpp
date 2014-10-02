@@ -28,6 +28,7 @@
 #include "../utilities/core/Logger.hpp"
 
 #include <QLineEdit>
+#include <QString>
 
 namespace openstudio {
 
@@ -127,6 +128,7 @@ class OSDoubleEdit2: public QLineEdit {
 
   bool m_isScientific;
   boost::optional<int> m_precision;
+  QString m_text = "UNINITIALIZED";
 
   void refreshTextAndLabel();
 

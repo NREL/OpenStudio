@@ -182,7 +182,9 @@ void OSLineEdit2::onModelObjectChangeInternal(bool startingup) {
       text = *value;
       if (m_text != text) {
         m_text = text;
-        setText(QString::fromStdString(m_text));
+        this->blockSignals(true);
+        this->setText(QString::fromStdString(m_text));
+        this->blockSignals(false);
         adjustWidth();
         if (!startingup) m_timer.start(TIMEOUT_INTERVAL);
       }
