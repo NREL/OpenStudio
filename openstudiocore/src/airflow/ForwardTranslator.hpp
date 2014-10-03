@@ -20,7 +20,7 @@
 #ifndef CONTAM_FORWARDTRANSLATOR_HPP
 #define CONTAM_FORWARDTRANSLATOR_HPP
 
-#include "ContamAPI.hpp"
+#include "AirflowAPI.hpp"
 
 #include "PrjModel.hpp"
 

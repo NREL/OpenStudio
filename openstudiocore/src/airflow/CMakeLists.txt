@@ -1,7 +1,7 @@
 set(target_name openstudio_airflow)
 
 set(${target_name}_src
-  ContamAPI.hpp
+  AirflowAPI.hpp
   ForwardTranslator.hpp
   ForwardTranslator.cpp
   PrjReader.hpp
@@ -27,6 +27,8 @@ set(${target_name}_src
   PrjAirflowElements.cpp
   PrjAirflowElementsImpl.hpp
   PrjAirflowElementsImpl.cpp
+  SurfaceNetworkBuilder.hpp
+  SurfaceNetworkBuilder.cpp
 )
 
 # resource files
@@ -44,7 +46,7 @@ set(${target_name}_test_src
 )
 
 set(${target_name}_swig_src
-  Contam.i
+  Airflow.i
 )
 
 # Someone should make sure these are all really needed
@@ -83,4 +85,4 @@ if(BUILD_TESTING)
   add_dependencies(${target_name}_tests openstudio_airflow_resources)
 endif()
 
-MAKE_SWIG_TARGET(OpenStudioAirflow Airflow "${CMAKE_CURRENT_SOURCE_DIR}/Contam.i" "${${target_name}_swig_src}" ${target_name} OpenStudioEnergyPlus)
+MAKE_SWIG_TARGET(OpenStudioAirflow Airflow "${CMAKE_CURRENT_SOURCE_DIR}/Airflow.i" "${${target_name}_swig_src}" ${target_name} OpenStudioEnergyPlus)

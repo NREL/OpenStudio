@@ -25,7 +25,7 @@
 #include <string>
 #include <vector>
 
-#include "ContamAPI.hpp"
+#include "AirflowAPI.hpp"
 
 namespace openstudio {
 namespace contam {

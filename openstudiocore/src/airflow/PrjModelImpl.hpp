@@ -28,7 +28,7 @@
 #include "../utilities/core/Path.hpp"
 #include "../utilities/data/TimeSeries.hpp"
 
-#include "ContamAPI.hpp"
+#include "AirflowAPI.hpp"
 
 namespace openstudio {
 namespace contam {
