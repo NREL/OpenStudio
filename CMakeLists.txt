@@ -369,7 +369,7 @@ else()
 endif()
 
 
-find_package(SWIG 2.0.10)
+find_package(SWIG 3.0.0)
 mark_as_advanced(
   SWIG_DIR
   SWIG_EXECUTABLE
