@@ -63,7 +63,7 @@ module OpenStudio
       if skp_model.nil?
         skp_model = Sketchup.active_model
       end
-      result = @model_interfaces.find { |mi| mi.skp_model == skp_model }
+      result = @model_interfaces.find { |mi| mi.skp_model_guid == skp_model.guid }
       return result
     end
 
@@ -115,7 +115,7 @@ module OpenStudio
     def new_from_example_model(skp_model)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       
-      @model_interfaces.reject! {|mi| mi.skp_model == skp_model}
+      @model_interfaces.reject! {|mi| mi.skp_model_guid == skp_model.guid}
       purge_invalid_model_interfaces
       GC.start
       
@@ -183,7 +183,7 @@ module OpenStudio
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
 
       @model_interfaces.each do |mi| 
-        if (mi.skp_model == skp_model)
+        if (mi.skp_model_guid == skp_model.guid)
           delete_model_interface(mi)
         end
       end        
