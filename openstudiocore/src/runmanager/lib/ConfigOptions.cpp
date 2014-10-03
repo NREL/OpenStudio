@@ -32,6 +32,7 @@
 #include <QSettings>
 
 #include <boost/filesystem.hpp>
+#include <boost/lexical_cast.hpp>
 #include <boost/thread.hpp>
 
 #ifdef Q_OS_WIN
