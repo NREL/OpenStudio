@@ -105,13 +105,15 @@ TEST_F(BCLFixture, BCLMeasure)
     MeasureType::ReportingMeasure, "Description", "Modeler Description") );
   ASSERT_TRUE(measure2);
   ASSERT_TRUE(exists(dir2));
-  EXPECT_EQ("Another Measure", measure2->name());
+  EXPECT_EQ("another_measure", measure2->name());
+  EXPECT_EQ("Another Measure", measure2->displayName());
+  EXPECT_EQ("AnotherMeasure", measure2->className());
   EXPECT_TRUE(measure2->primaryRubyScriptPath());
 
   measure2 = BCLMeasure::load(dir2);
   ASSERT_TRUE(measure2);
   EXPECT_FALSE(measure2->checkForUpdatesFiles());
-  EXPECT_FALSE(measure2->checkForUpdatesXML());
+  EXPECT_TRUE(measure2->checkForUpdatesXML());
   ASSERT_TRUE(measure2->primaryRubyScriptPath());
 }
 
