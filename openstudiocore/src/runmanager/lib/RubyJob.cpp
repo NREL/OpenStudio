@@ -395,7 +395,7 @@ namespace detail {
           if (istringEqual(".epw", toString(p.second.extension())))
           {
 
-            LOG(Info, "Found EpwFile in list of required files '" << toString(p.second.filename()) << "' prefered over previous relative location of: " << (lastEpwFilePath?toString(lastEpwFilePath->filename()):std::string("null")));
+            LOG(Info, "Found EpwFile in list of required files '" << toString(p.second.filename()) << "' preferred over previous relative location of: " << (lastEpwFilePath?toString(lastEpwFilePath->filename()):std::string("null")));
 
             lastEpwFilePath = p.second;
             break;

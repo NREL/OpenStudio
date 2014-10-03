@@ -70,7 +70,7 @@ module OpenStudio
     def find_energyplus(major_version, minor_version, build_version = '.*')
 
       # version matches either internal or official releases
-      version = "#{major_version}-#{minor_version}-0[-]?#{build_version}"
+      version = "#{major_version}[-\.]#{minor_version}[-\.]0[-\.]?#{build_version}"
 
       # default search paths by system
       potential_paths = []

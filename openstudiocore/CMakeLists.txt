@@ -387,7 +387,7 @@ endif()
 
 
 
-find_package(SWIG 2.0.10 REQUIRED)
+find_package(SWIG 3.0.0 REQUIRED)
 mark_as_advanced(
   SWIG_DIR
   SWIG_EXECUTABLE
@@ -453,8 +453,8 @@ if(BUILD_DOCUMENTATION)
   configure_file(${CMAKE_SOURCE_DIR}/doc/index.html ${CMAKE_BINARY_DIR}/doc/index.html COPYONLY)
 
   set(doxygen_directories ${project_directories})
-  # Add the idd files to the documentation list as a separate entry
-  list(APPEND doxygen_directories utilities/idd)
+  # Add the idd files to the documentation list as a separate entry, along with shared_gui_components
+  list(APPEND doxygen_directories utilities/idd shared_gui_components)
 
   # Remove directories we don't want documentation generated for
   list(REMOVE_ITEM doxygen_directories generateiddfactory)
