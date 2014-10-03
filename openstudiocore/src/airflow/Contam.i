@@ -1,5 +1,5 @@
-#ifndef CONTAM_I
-#define CONTAM_I
+#ifndef AIRFLOW_I
+#define AIRFLOW_I
 
 #ifdef SWIGPYTHON
 %module openstudiocontam
@@ -39,4 +39,4 @@
 //%include <airflow/ReverseTranslator.hpp>
 %include <airflow/ForwardTranslator.hpp>
 
-#endif //CONTAM_I 
+#endif //AIRFLOW_I 
