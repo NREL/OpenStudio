@@ -43,29 +43,22 @@ class MainWindow : public QMainWindow
   MainWindow(bool isPlugin, QWidget *parent = 0);
   virtual ~MainWindow() {}
 
-  void addVerticalTab( QWidget * widget,
-                       int id,
-                       QString toolTip,
-                       const QString & selectedImagePath,
-                       const QString & unSelectedImagePath );
+  void addVerticalTabButton(int id,
+    QString toolTip,
+    const QString & selectedImagePath,
+    const QString & unSelectedImagePath);
 
-  void deleteAllVerticalTabs();
+  void setView(MainTabView * view, int id);
+
+  MainTabView * view() const;
 
   void setMainRightColumnView(QWidget * widget);
-
-  //void addHorizontalTab( QWidget * widget,
-  //                       int id,
-  //                       const QString & label );
 
   void selectVerticalTab(int id);
 
   void selectVerticalTabByIndex(int index);
 
-  MainTabView* verticalTabByIndex(int index);
-
   int verticalTabIndex();
-
-  //void selectHorizontalTab(int id);
 
   void closeSidebar();
 
@@ -178,4 +171,3 @@ class MainWindow : public QMainWindow
 } // openstudio
 
 #endif // OPENSTUDIO_MAINWINDOW_HPP
-

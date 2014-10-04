@@ -21,11 +21,14 @@
 #define OPENSTUDIO_OSDOCUMENT_HPP
 
 #include "OpenStudioAPI.hpp"
+
 #include "../shared_gui_components/OSQObjectController.hpp"
 
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
+
 #include "../ruleset/RubyUserScriptArgumentGetter.hpp"
+
 #include "../analysisdriver/SimpleProject.hpp"
 
 #include <QObject>
@@ -138,7 +141,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   // Sets the hvac component library associated with this document.
   void setHVACComponentLibrary(const openstudio::model::Model& model);
 
-  // Returns a compined component library with hvac components
+  // Returns a compiled component library with hvac components
   openstudio::model::Model combinedComponentLibrary() const;
 
   // Returns true if OSItemId's source is the model
@@ -287,12 +290,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void inspectModelObject(model::OptionalModelObject &, bool readOnly);
 
-  //void showFirstTab();
-
   void showStartTabAndStartSubTab();
 
-  //void showTab(int tabIndex);
- 
   void initializeModel();
 
   void toggleUnits(bool displayIP);
@@ -326,6 +325,10 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   // Attempts to make the model's weather file have a fully qualified path
   bool setFullWeatherFilePath();
+
+  void createTab(int verticalId);
+
+  void createTabButtons();
 
   openstudio::model::Model m_model;
 
@@ -394,9 +397,10 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   int m_startTabIndex;
   int m_startSubTabIndex;
+
+  std::vector<int> m_subTabIds;
 };
 
 } // openstudio
 
 #endif // OPENSTUDIO_OSDOCUMENT_HPP
-
