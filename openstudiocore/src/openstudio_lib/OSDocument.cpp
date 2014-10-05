@@ -435,6 +435,8 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
 
   m_model = model;
 
+  connect(m_model.getImpl<model::detail::Model_Impl>().get(), &model::detail::Model_Impl::onChange, this, &OSDocument::markAsModified);
+
   std::shared_ptr<OSDocument> currentDocument = app->currentDocument();
   if (currentDocument && saveCurrentTabs){
     m_startTabIndex = app->currentDocument()->verticalTabIndex();
@@ -804,26 +806,14 @@ void OSDocument::createTab(int verticalId)
       break;
  
     case RUN_SIMULATION:
-    case RESULTS_SUMMARY:  
-      // Run & Results
+      // Run
 
       m_runTabController = std::shared_ptr<RunTabController>( new RunTabController(m_model, openstudio::toPath(m_savePath), openstudio::toPath(m_modelTempDir), m_simpleProject->runManager())); 
       m_mainWindow->setView(m_runTabController->mainContentWidget(),RUN_SIMULATION );
 
-      m_resultsTabController = std::shared_ptr<ResultsTabController>( new ResultsTabController() );
-      m_mainWindow->setView(m_resultsTabController->mainContentWidget(),RESULTS_SUMMARY );
-
       connect(m_runTabController.get(), &RunTabController::useRadianceStateChanged, this, &OSDocument::markAsModified);
 
       connect(m_runTabController.get(), &RunTabController::resultsGenerated, this, &OSDocument::runComplete);
-
-      m_resultsTabController->searchForExistingResults(openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources") / openstudio::toPath("run"));
-
-      connect(m_runTabController.get(), &RunTabController::resultsGenerated, m_resultsTabController.get(), &ResultsTabController::resultsGenerated);
-
-      connect(this, &OSDocument::toggleUnitsClicked, m_resultsTabController.get(), &ResultsTabController::onUnitSystemChange);
-
-      connect(this, &OSDocument::treeChanged, static_cast<ResultsTabView *>(m_resultsTabController->mainContentWidget()), &ResultsTabView::treeChanged);
 
       connect(m_runTabController.get(), &RunTabController::toolsUpdated, this, &OSDocument::markAsModified);
 
@@ -833,15 +823,29 @@ void OSDocument::createTab(int verticalId)
 
       connect(m_runTabController.get(), &RunTabController::toolsUpdated, m_runTabController.get(), &RunTabController::updateToolsWarnings);
 
-      connect(m_model.getImpl<model::detail::Model_Impl>().get(), &model::detail::Model_Impl::onChange,this, &OSDocument::markAsModified);
-
       connect(m_runTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForRunSimulationSubTab);
 
       connect(m_runTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
 
+      break;
+
+    case RESULTS_SUMMARY:  
+      // Results
+
+      m_resultsTabController = std::shared_ptr<ResultsTabController>( new ResultsTabController() );
+      m_mainWindow->setView(m_resultsTabController->mainContentWidget(),RESULTS_SUMMARY );
+
+      m_resultsTabController->searchForExistingResults(openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources") / openstudio::toPath("run"));
+
+      connect(this, &OSDocument::toggleUnitsClicked, m_resultsTabController.get(), &ResultsTabController::onUnitSystemChange);
+
+      connect(this, &OSDocument::treeChanged, static_cast<ResultsTabView *>(m_resultsTabController->mainContentWidget()), &ResultsTabView::treeChanged);
+
       connect(m_resultsTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForResultsSummarySubTab);
 
       connect(m_resultsTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
+
+      //connect(m_runTabController.get(), &RunTabController::resultsGenerated, m_resultsTabController.get(), &ResultsTabController::resultsGenerated); TODO alternative required
 
       break;
 
@@ -850,10 +854,6 @@ void OSDocument::createTab(int verticalId)
       OS_ASSERT(false);
       break;
   }
-}
-
-runmanager::RunManager OSDocument::runManager() {
-  return m_runTabController->runManager();
 }
 
 void OSDocument::markAsModified()

@@ -116,9 +116,6 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   // This will close all current windows, make sure to call app->setQuitOnLastWindowClosed(false) before calling this
   void setModel(const model::Model& model, bool modified, bool saveCurrentTabs);
 
-  // Returns the RunManager for this document.
-  runmanager::RunManager runManager();
-
   // Returns true if the document has unsaved changes.
   bool modified() const;
 
