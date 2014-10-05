@@ -306,6 +306,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void updateWindowFilePath();
 
+  void updateSubTabSelected(int id);
+
  private:
 
   enum fileType{
@@ -398,7 +400,9 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   int m_startTabIndex;
   int m_startSubTabIndex;
 
+  int m_verticalId;
   std::vector<int> m_subTabIds;
+
 };
 
 } // openstudio

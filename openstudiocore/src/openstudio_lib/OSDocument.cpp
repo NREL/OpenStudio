@@ -315,6 +315,11 @@ OSDocument::OSDocument( openstudio::model::Model library,
   bool isConnected = analysis.connect(SIGNAL(changed(ChangeType)), this, SLOT(markAsModified()));
   OS_ASSERT(isConnected);
 
+  m_verticalId = 0;
+  m_subTabIds = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+  // Make sure that the vector is the same size as the number of tabs
+  OS_ASSERT(m_subTabIds.size() == static_cast<unsigned>(RESULTS_SUMMARY + 1));
+
   // set the model, this will create widgets
   setModel(*model, modifiedOnLoad, false);
 
@@ -377,15 +382,6 @@ OSDocument::~OSDocument()
   
 void OSDocument::showStartTabAndStartSubTab()
 {
-  //TODO this must be rewritten @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-  //m_mainWindow->selectVerticalTabByIndex(m_startTabIndex);
-
-  //MainTabView* mainTabView = m_mainWindow->verticalTabByIndex(m_startTabIndex);
-  //if (mainTabView){
-  //  mainTabView->selectSubTabByIndex(m_startSubTabIndex);
-  //}
-
   m_mainWindow->show();
 }
 
@@ -454,10 +450,6 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
 
   // Main Vertical Tabs
 
-  m_subTabIds = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-  // Make sure that the vector is the same size as the number of tabs
-  OS_ASSERT(m_subTabIds.size() == static_cast<unsigned>(RESULTS_SUMMARY + 1));
-
   if (modified){
     QTimer::singleShot(0, this, SLOT(markAsModified()));
   }
@@ -469,7 +461,7 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
   this->setFullWeatherFilePath();
 
   createTabButtons();
-  createTab(0);
+  createTab(m_verticalId);
 
   QTimer::singleShot(0, this, SLOT(initializeModel()));
 
@@ -583,6 +575,8 @@ void OSDocument::createTabButtons()
 
 void OSDocument::createTab(int verticalId)
 {
+  m_verticalId = verticalId;
+
   bool isIP = m_mainWindow->displayIP();
 
   switch (verticalId)
@@ -592,6 +586,10 @@ void OSDocument::createTab(int verticalId)
 
       m_locationTabController = std::shared_ptr<LocationTabController>( new LocationTabController(m_model, m_modelTempDir) );
       m_mainWindow->setView(m_locationTabController->mainContentWidget(),SITE );
+
+      connect(m_locationTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForSiteSubTab);
+
+      connect(m_locationTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
 
       break;
 
@@ -606,6 +604,10 @@ void OSDocument::createTab(int verticalId)
       connect(m_schedulesTabController.get(), &SchedulesTabController::downloadComponentsClicked, this, &OSDocument::downloadComponentsClicked);
 
       connect(m_schedulesTabController.get(), &SchedulesTabController::openLibDlgClicked, this, &OSDocument::openLibDlgClicked);
+
+      connect(m_schedulesTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForSchedulesSubTab);
+
+      connect(m_schedulesTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
     
       break;
 
@@ -620,7 +622,11 @@ void OSDocument::createTab(int verticalId)
       connect(m_constructionsTabController.get(), &ConstructionsTabController::downloadComponentsClicked, this, &OSDocument::downloadComponentsClicked);
 
       connect(m_constructionsTabController.get(), &ConstructionsTabController::openLibDlgClicked, this, &OSDocument::openLibDlgClicked);
-    
+
+      connect(m_constructionsTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForConstructionsSubTab);
+
+      connect(m_constructionsTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
+
       break;
 
     case LOADS:
@@ -634,7 +640,11 @@ void OSDocument::createTab(int verticalId)
       connect(m_loadsTabController.get(), &LoadsTabController::downloadComponentsClicked, this, &OSDocument::downloadComponentsClicked);
 
       connect(m_loadsTabController.get(), &LoadsTabController::openLibDlgClicked, this, &OSDocument::openLibDlgClicked);
-    
+
+      connect(m_loadsTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForLoadsSubTab);
+
+      connect(m_loadsTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
+
       break;
 
     case SPACE_TYPES:
@@ -653,6 +663,10 @@ void OSDocument::createTab(int verticalId)
 
       connect(m_mainRightColumnController.get(), &MainRightColumnController::itemRemoveClicked, m_spaceTypesTabController.get(), &SpaceTypesTabController::itemRemoveClicked);
     
+      connect(m_spaceTypesTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForSpaceTypesSubTab);
+
+      connect(m_spaceTypesTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
+
       break;
 
     case BUILDING_STORIES:
@@ -664,7 +678,11 @@ void OSDocument::createTab(int verticalId)
       connect(m_buildingStoriesTabController.get(), &BuildingStoriesTabController::downloadComponentsClicked, this, &OSDocument::downloadComponentsClicked);
 
       connect(m_buildingStoriesTabController.get(), &BuildingStoriesTabController::openLibDlgClicked, this, &OSDocument::openLibDlgClicked);
-    
+
+      connect(m_buildingStoriesTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForBuildingStoriesSubTab);
+
+      connect(m_buildingStoriesTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
+
       break;
 
     case FACILITY:
@@ -682,7 +700,11 @@ void OSDocument::createTab(int verticalId)
       connect(m_facilityTabController.get(), &FacilityTabController::downloadComponentsClicked, this, &OSDocument::downloadComponentsClicked);
 
       connect(m_facilityTabController.get(), &FacilityTabController::openLibDlgClicked, this, &OSDocument::openLibDlgClicked);
-    
+
+      connect(m_facilityTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForFacilitySubTab);
+
+      connect(m_facilityTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
+
       break;
 
     case THERMAL_ZONES:
@@ -697,6 +719,10 @@ void OSDocument::createTab(int verticalId)
 
       connect(this, &OSDocument::toggleUnitsClicked, m_thermalZonesTabController.get(), &ThermalZonesTabController::toggleUnitsClicked);
     
+      connect(m_thermalZonesTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForThermalZonesSubTab);
+
+      connect(m_thermalZonesTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
+
       break;
 
     case HVAC_SYSTEMS:
@@ -708,7 +734,11 @@ void OSDocument::createTab(int verticalId)
       connect(this, &OSDocument::toggleUnitsClicked, m_hvacSystemsTabController.get(), &HVACSystemsTabController::toggleUnitsClicked);
 
       connect(m_hvacSystemsTabController.get(), &HVACSystemsTabController::modelObjectSelected, this, &OSDocument::inspectModelObject);
-    
+
+      connect(m_hvacSystemsTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForHVACSystemsSubTab);
+
+      connect(m_hvacSystemsTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
+
       break;
 
     case BUILDING_SUMMARY:
@@ -733,6 +763,10 @@ void OSDocument::createTab(int verticalId)
       m_variablesTabController = std::shared_ptr<VariablesTabController>( new VariablesTabController(m_model) );
       m_mainWindow->setView(m_variablesTabController->mainContentWidget(),OUTPUT_VARIABLES );
     
+      connect(m_variablesTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForOutputVariablesSubTab);
+
+      connect(m_variablesTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
+
       break;
 
     case SIMULATION_SETTINGS:
@@ -743,6 +777,10 @@ void OSDocument::createTab(int verticalId)
 
       connect(this, &OSDocument::toggleUnitsClicked, m_simSettingsTabController.get(), &SimSettingsTabController::toggleUnitsClicked);
     
+      connect(m_simSettingsTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForSimulationSettingsSubTab);
+
+      connect(m_simSettingsTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
+
       break;
 
     case RUBY_SCRIPTS:
@@ -750,6 +788,10 @@ void OSDocument::createTab(int verticalId)
 
       m_scriptsTabController = std::shared_ptr<ScriptsTabController>( new ScriptsTabController() );
       m_mainWindow->setView(m_scriptsTabController->mainContentWidget(),RUBY_SCRIPTS );
+
+      connect(m_scriptsTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForScriptsSubTab);
+
+      connect(m_scriptsTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
 
       //connect(m_scriptsTabController->scriptFolderListView(), SIGNAL(scriptListChanged()), this, SLOT(markAsModified()));
 
@@ -762,22 +804,18 @@ void OSDocument::createTab(int verticalId)
       break;
  
     case RUN_SIMULATION:
-      // Run
+    case RESULTS_SUMMARY:  
+      // Run & Results
 
       m_runTabController = std::shared_ptr<RunTabController>( new RunTabController(m_model, openstudio::toPath(m_savePath), openstudio::toPath(m_modelTempDir), m_simpleProject->runManager())); 
       m_mainWindow->setView(m_runTabController->mainContentWidget(),RUN_SIMULATION );
 
+      m_resultsTabController = std::shared_ptr<ResultsTabController>( new ResultsTabController() );
+      m_mainWindow->setView(m_resultsTabController->mainContentWidget(),RESULTS_SUMMARY );
+
       connect(m_runTabController.get(), &RunTabController::useRadianceStateChanged, this, &OSDocument::markAsModified);
 
       connect(m_runTabController.get(), &RunTabController::resultsGenerated, this, &OSDocument::runComplete);
-    
-      break;
-
-    case RESULTS_SUMMARY:
-      // Results
-
-      m_resultsTabController = std::shared_ptr<ResultsTabController>( new ResultsTabController() );
-      m_mainWindow->setView(m_resultsTabController->mainContentWidget(),RESULTS_SUMMARY );
 
       m_resultsTabController->searchForExistingResults(openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources") / openstudio::toPath("run"));
 
@@ -795,8 +833,16 @@ void OSDocument::createTab(int verticalId)
 
       connect(m_runTabController.get(), &RunTabController::toolsUpdated, m_runTabController.get(), &RunTabController::updateToolsWarnings);
 
-      connect(m_model.getImpl<model::detail::Model_Impl>().get(), &model::detail::Model_Impl::onChange,this, &OSDocument::markAsModified); 
-    
+      connect(m_model.getImpl<model::detail::Model_Impl>().get(), &model::detail::Model_Impl::onChange,this, &OSDocument::markAsModified);
+
+      connect(m_runTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForRunSimulationSubTab);
+
+      connect(m_runTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
+
+      connect(m_resultsTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForResultsSummarySubTab);
+
+      connect(m_resultsTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
+
       break;
 
     default:
@@ -909,16 +955,11 @@ void OSDocument::onVerticalTabSelected(int verticalId)
      m_mainRightColumnController->hideMyModelTab(false);
   }
 
-  //m_mainWindow->deleteAllVerticalTabs();
-//  m_mainWindow->deleteCurrentVerticalTab();
-
   createTab(m_mainTabId);
 
   m_subTabId = m_subTabIds.at(m_mainTabId);
 
-  // TODO from above...
-  //connect(m_locationTabController->mainContentWidget(), &MainTabView::tabSelected,
-  //  m_mainRightColumnController.get(), &MainRightColumnController::configureForSiteSubTab);
+  m_mainWindow->view()->selectSubTabByIndex(m_subTabId);
 
   switch( m_mainTabId )
   {
@@ -1434,6 +1475,11 @@ void OSDocument::updateWindowFilePath()
   }else{
     m_mainWindow->setWindowFilePath(m_savePath);
   }
+}
+
+void OSDocument::updateSubTabSelected(int id)
+{
+  m_subTabIds.at(m_verticalId) = id;
 }
 
 void OSDocument::openBclDlg()
