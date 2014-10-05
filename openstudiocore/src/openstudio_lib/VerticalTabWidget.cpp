@@ -25,15 +25,11 @@
 
 #include "../utilities/core/Assert.hpp"
 
-#include <QHBoxLayout>
-#include <QKeySequence>
-#include <QPixmap>
+#include <QBoxLayout>
 #include <QPushButton>
-#include <QShortcut>
-#include <QStackedWidget>
-#include <QVBoxLayout>
 
 #include <algorithm>
+
 #include <vector>
 
 namespace openstudio {
