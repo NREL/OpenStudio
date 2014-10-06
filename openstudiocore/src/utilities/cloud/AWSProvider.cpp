@@ -526,6 +526,8 @@ namespace openstudio{
       if (applicationIsRunningFromBuildDirectory())
       {
         m_script = getApplicationBuildDirectory() / openstudio::toPath("ruby/cloud/aws.rb");
+        //m_script = getOpenStudioAWSRubyPath() / openstudio::toPath("lib/ruby/gems/2.0.0/gems/openstudio-aws-0.2.2/lib/openstudio/lib/os-aws.rb");
+        //m_script = m_script.make_preferred();
       } else {
 #ifdef Q_OS_LINUX
         m_script = getApplicationInstallDirectory() / openstudio::toPath("share/openstudio-" + openStudioVersion() + "/Ruby/cloud/aws.rb");
@@ -583,7 +585,7 @@ namespace openstudio{
     }
 
     std::string AWSProvider_Impl::defaultWorkerInstanceType() {
-      return "cc2.8xlarge";
+      return "c3.4xlarge";
     }
 
     std::vector<unsigned> AWSProvider_Impl::serverProcessorCounts() {
@@ -685,16 +687,6 @@ namespace openstudio{
         //awsComputerInformation.processorCount = 1;
         //info.push_back(awsComputerInformation);
 
-        //awsComputerInformation.instanceType = "m1.large";
-        //awsComputerInformation.prettyName = "M1 Large";
-        //awsComputerInformation.processorCount = 2;
-        //info.push_back(awsComputerInformation);
-
-        //awsComputerInformation.instanceType = "m1.xlarge";
-        //awsComputerInformation.prettyName = "M1 Extra Large";
-        //awsComputerInformation.processorCount = 4;
-        //info.push_back(awsComputerInformation);
-
         awsComputerInformation.instanceType = "m2.xlarge";
         awsComputerInformation.prettyName = "M2 Extra Large";
         awsComputerInformation.processorCount = 2;
@@ -712,12 +704,12 @@ namespace openstudio{
 
         //awsComputerInformation.instanceType = "m3.xlarge";
         //awsComputerInformation.prettyName = "M3 Extra Large";
-        //awsComputerInformation.processorCount = 2; // Hyperthreading disabled
+        //awsComputerInformation.processorCount = 4; // Hyperthreading enabled
         //info.push_back(awsComputerInformation);
 
         //awsComputerInformation.instanceType = "m3.2xlarge";
         //awsComputerInformation.prettyName = "M3 Double Extra Large";
-        //awsComputerInformation.processorCount = 4; // Hyperthreading disabled
+        //awsComputerInformation.processorCount = 8; // Hyperthreading enabled
         //info.push_back(awsComputerInformation);
       }
       return info;
@@ -734,14 +726,14 @@ namespace openstudio{
         //awsComputerInformation.processorCount = 1;
         //info.push_back(awsComputerInformation);
 
-        //awsComputerInformation.instanceType = "c1.xlarge";
-        //awsComputerInformation.prettyName = "High-CPU Extra Large";
-        //awsComputerInformation.processorCount = 8;
-        //info.push_back(awsComputerInformation);
+        awsComputerInformation.instanceType = "c3.4xlarge";
+        awsComputerInformation.prettyName = "Compute Optimized 4x Large";
+        awsComputerInformation.processorCount = 16; // Hyperthreading enabled
+        info.push_back(awsComputerInformation);
 
-        awsComputerInformation.instanceType = "cc2.8xlarge";
-        awsComputerInformation.prettyName = "Cluster Compute Eight Extra Large";
-        awsComputerInformation.processorCount = 16; // Hyperthreading disabled
+        awsComputerInformation.instanceType = "c3.8xlarge";
+        awsComputerInformation.prettyName = "Cluster Compute 8x Large";
+        awsComputerInformation.processorCount = 32; // Hyperthreading enabled
         info.push_back(awsComputerInformation);
       }
       return info;
@@ -1542,6 +1534,7 @@ namespace openstudio{
       
       QJsonObject options;
       options["instance_type"] = QJsonValue(toQString(m_awsSettings.serverInstanceType()));
+      options["openstudio_version"] = QJsonValue(toQString(openStudioVersion()));
       args << QString(QJsonDocument(options).toJson(QJsonDocument::Compact));
       
       p->start(toQString(m_ruby), args);
@@ -1570,6 +1563,7 @@ namespace openstudio{
         options["private_key"] = QJsonValue(m_privateKey.fileName());
         m_privateKey.close();
       }
+      options["openstudio_version"] = QJsonValue(toQString(openStudioVersion()));
       args << QString(QJsonDocument(options).toJson(QJsonDocument::Compact));
       
       p->start(toQString(m_ruby), args);
@@ -1769,7 +1763,7 @@ namespace openstudio{
       QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
       if (!err.error) {
         if (!json.object().contains("error")) {
-          m_awsSession.setTimestamp(json.object()["timestamp"].toString().toStdString());
+          m_awsSession.setTimestamp(QString::number(json.object().value("timestamp").toInt()).toStdString());
           m_awsSession.setPrivateKey(json.object()["private_key"].toString().toStdString());
           m_awsSession.setServerUrl(Url(json.object()["server"].toObject()["ip"].toString()));
           m_awsSession.setServerId(json.object()["server"].toObject()["id"].toString().toStdString());

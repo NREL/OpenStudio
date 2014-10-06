@@ -520,9 +520,9 @@ TEST_F(RunManagerTestFixture, BCLMeasureRubyScriptEPWPathUnmerged)
   boost::optional<BCLMeasure> measure = BCLMeasure::load(dir);
   ASSERT_TRUE(measure);
 
-  openstudio::runmanager::RunManager rm(openstudio::tempDir() / openstudio::toPath("BCLMeasureRubyScriptEPWPath.db"), true, true);
+  openstudio::runmanager::RunManager rm(openstudio::tempDir() / openstudio::toPath("BCLMeasureRubyScriptEPWPathUnmerged.db"), true, true);
   openstudio::runmanager::Workflow wf;
-  openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("BCLMeasureRubyScriptEPWPath");
+  openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("BCLMeasureRubyScriptEPWPathUnmerged");
 
   openstudio::runmanager::RubyJobBuilder rubyjobbuilder(*measure, std::vector<openstudio::ruleset::OSArgument>());
   rubyjobbuilder.setIncludeDir(getOpenStudioRubyIncludePath());
@@ -658,7 +658,7 @@ TEST_F(RunManagerTestFixture, RelocateDaylightSimPath)
   ASSERT_EQ(openstudio::toPath(wi2.files.files().at(0).requiredFiles.at(0).first.toLocalFile()), getOpenStudioRubyScriptsPath() / openstudio::toPath("openstudio/radiance/ModelToRad.rb"));
 
   ASSERT_TRUE(boost::filesystem::exists(wi2.files.files().at(0).fullPath));
-  ASSERT_EQ(wi2.jobkeyname, "testjobkeyname");
+  ASSERT_EQ("testjobkeyname", wi2.jobkeyname);
   std::vector<std::pair<QUrl, openstudio::path> > requiredFiles = wi2.files.files().at(0).requiredFiles;
 
   ASSERT_EQ(requiredFiles.size(), 4u);

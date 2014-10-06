@@ -29,6 +29,7 @@
 
 #include <QLineEdit>
 #include <QLabel>
+#include <QString>
 
 namespace openstudio {
 
@@ -105,6 +106,7 @@ class OSQuantityEdit2: public QWidget {
 
   QLineEdit* m_lineEdit;
   QLabel* m_units;
+  QString m_text = "UNINITIALIZED";
 
   bool m_isIP;
   std::string m_modelUnits;

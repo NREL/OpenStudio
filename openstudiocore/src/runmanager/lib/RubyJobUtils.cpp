@@ -86,7 +86,7 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
     } else if (toString(m_script.filename()) == "DaylightCalculations.rb") {
       const std::string jobkeyname = t_workItem.jobkeyname;
       RubyJobBuilder rjb(t_workItem);
-      LOG(Info, "Attempting to rebuild radiance job");
+      LOG(Info, "Attempting to rebuild radiance job (" << t_workItem.jobkeyname << ")");
 
       setScriptFile(getOpenStudioRubyScriptsPath() / toPath("openstudio/radiance/DaylightCalculations.rb"));
 
@@ -161,10 +161,10 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
 
       WorkItem rebuiltRadianceJob = Workflow::radianceDaylightCalculations(getOpenStudioRubyIncludePath(), radianceLocation);
       rebuiltRadianceJob.jobkeyname = jobkeyname;
-      m_jobkeyname = jobkeyname;
 
       LOG(Info, "Initializing from rebuiltRadianceJob.params, JSON Source: " << rebuiltRadianceJob.toJSON());
       initializeFromParams(rebuiltRadianceJob.params, t_originalBasePath, t_newBasePath);
+      m_jobkeyname = jobkeyname;
       LOG(Info, "setting ruby include dir: " << openstudio::toString(getOpenStudioRubyIncludePath()));
       clearIncludeDir();
       setIncludeDir(getOpenStudioRubyIncludePath());
@@ -376,12 +376,17 @@ void RubyJobBuilder::initializeFromParams(const JobParams &t_params,
     }
   } catch (const std::exception &) {}
 
+
   if (t_params.has("workflowjobkey"))
   {
+    LOG(Trace, "jobkeyname " << m_jobkeyname);
+
     if (!t_params.get("workflowjobkey").children.empty())
     {
       m_jobkeyname = t_params.get("workflowjobkey").children[0].value;
     }
+
+    LOG(Trace, "jobkeyname " << m_jobkeyname);
   }
 
 }

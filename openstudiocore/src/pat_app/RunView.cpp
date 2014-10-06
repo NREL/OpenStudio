@@ -416,7 +416,12 @@ void RunStatusView::setStatus(const CloudStatus & cloudStatus, analysisdriver::A
   cloudOffButton->hide();
   cloudStoppingButton->hide();
   cloudLostConnectionButton->hide();
-  if( cloudStatus == CLOUD_STOPPED ){
+
+  // TEMPORARY CLOUD DISABLE
+  cloudOnButton->show();
+  cloudOnButton->setEnabled(false);
+  cloudOnButton->setToolTip("PAT cloud functionality is temporarily disabled and will be resolved in a future release");
+  /*if( cloudStatus == CLOUD_STOPPED ){
     cloudOnButton->show();
     // don't allow turn on cloud while running, starting, or stopping analysis
     if ((analysisStatus == analysisdriver::AnalysisStatus::Running) || 
@@ -442,7 +447,7 @@ void RunStatusView::setStatus(const CloudStatus & cloudStatus, analysisdriver::A
     cloudStoppingButton->show();
   }else if( cloudStatus == CLOUD_ERROR ){
     cloudLostConnectionButton->show();
-  }
+  }*/
 
 }
 

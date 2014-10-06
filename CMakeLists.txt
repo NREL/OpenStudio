@@ -122,10 +122,10 @@ if(MSVC)
     message(FATAL_ERROR "Visual Studio earlier than VS2013 is not supported")
   elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.0.21005.1")
     # VS2013
-    message(WARNING "Update 3 for Visual Studio 2013 is strongly recommended")
+    message(SEND_ERROR "Update 3 for Visual Studio 2013 is required")
   elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.30501")
     # VS2013 Update 2:
-    message(WARNING "Update 3 for Visual Studio 2013 is strongly recommended")
+    message(SEND_ERROR "Update 3 for Visual Studio 2013 is required")
   elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.30723")
     # VS2013 Update 3: no-op
   endif()
@@ -369,7 +369,7 @@ else()
 endif()
 
 
-find_package(SWIG 2.0.10)
+find_package(SWIG 3.0.0)
 mark_as_advanced(
   SWIG_DIR
   SWIG_EXECUTABLE
@@ -809,7 +809,7 @@ ExternalProject_Add(OpenStudioCore
     -DQt5WebKitWidgets_DIR:STRING=${Qt5WebKitWidgets_DIR}
     #-DQt5WinExtras_DIR:STRING=${Qt5WinExtras_DIR}
     -DQt5Concurrent_DIR:STRING=${Qt5Concurrent_DIR}
-    -DQt5PrintSupport_DIR:STRING=${Qt5PrintSuppport_DIR}
+    -DQt5PrintSupport_DIR:STRING=${Qt5PrintSupport_DIR}
     -DSWIG_EXECUTABLE:STRING=${SWIG_EXECUTABLE}
     -DRUBY_EXECUTABLE:STRING=${RUBY_EXECUTABLE}
     -DNODE_BIN_DIR:STRING=${NODE_BIN_DIR}

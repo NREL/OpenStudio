@@ -387,7 +387,7 @@ endif()
 
 
 
-find_package(SWIG 2.0.10 REQUIRED)
+find_package(SWIG 3.0.0 REQUIRED)
 mark_as_advanced(
   SWIG_DIR
   SWIG_EXECUTABLE
@@ -453,8 +453,8 @@ if(BUILD_DOCUMENTATION)
   configure_file(${CMAKE_SOURCE_DIR}/doc/index.html ${CMAKE_BINARY_DIR}/doc/index.html COPYONLY)
 
   set(doxygen_directories ${project_directories})
-  # Add the idd files to the documentation list as a separate entry
-  list(APPEND doxygen_directories utilities/idd)
+  # Add the idd files to the documentation list as a separate entry, along with shared_gui_components
+  list(APPEND doxygen_directories utilities/idd shared_gui_components)
 
   # Remove directories we don't want documentation generated for
   list(REMOVE_ITEM doxygen_directories generateiddfactory)
@@ -738,7 +738,11 @@ file(DOWNLOAD ${AWS_RUBY_URL} "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}${AWS_RUBY_EX
 execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}")
 execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}${AWS_RUBY_EXTENSION}" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
 execute_process(COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_HOME_DIRECTORY}/ruby/aws-sdk-patches/connection_pool.rb" "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}/lib/ruby/gems/2.0.0/gems/aws-sdk-1.31.3/lib/aws/core/http")
-install(DIRECTORY "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}" DESTINATION "${AWS_RUBY_DESTINATION}")
+install(
+  DIRECTORY "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}"
+  DESTINATION "${AWS_RUBY_DESTINATION}"
+  USE_SOURCE_PERMISSIONS
+  )
 
 # end ruby aws-sdk info
 

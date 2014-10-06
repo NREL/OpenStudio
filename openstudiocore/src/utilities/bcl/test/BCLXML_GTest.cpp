@@ -96,7 +96,7 @@ TEST_F(BCLFixture, BCLXML_New)
   ASSERT_EQ(3u, bclXML.attributes().size());
   EXPECT_EQ("attribute", bclXML.attributes()[0].name());
   EXPECT_EQ("attribute", bclXML.attributes()[1].name());
-  EXPECT_EQ("another attribute", bclXML.attributes()[1].name());
+  EXPECT_EQ("another attribute", bclXML.attributes()[2].name());
   EXPECT_EQ(2u, bclXML.getAttributes("attribute").size());
   EXPECT_EQ(1u, bclXML.getAttributes("another attribute").size());
   EXPECT_NE(versionId, bclXML.versionId());

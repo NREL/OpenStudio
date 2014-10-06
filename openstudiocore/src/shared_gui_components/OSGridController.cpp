@@ -745,11 +745,11 @@ void OSGridController::selectRow(int rowIndex, bool select)
     button->setStyleSheet(cellStyle(rowIndex, columnIndex++, select));
   }
 
-  OSItem * item = nullptr;
-  OSAppBase::instance()->currentDocument()->mainRightColumnController()->inspectModelObjectByItem(item, true);
-  qApp->processEvents();
-  OSAppBase::instance()->currentDocument()->mainRightColumnController()->mainRightColumnView()->setCurrentId(MainRightColumnController::LIBRARY);
-  qApp->processEvents();
+  //OSItem * item = nullptr; // TODO reevaluate
+  //OSAppBase::instance()->currentDocument()->mainRightColumnController()->inspectModelObjectByItem(item, true);
+  //qApp->processEvents();
+  //OSAppBase::instance()->currentDocument()->mainRightColumnController()->mainRightColumnView()->setCurrentId(MainRightColumnController::LIBRARY);
+  //qApp->processEvents();
 }
 
 void OSGridController::horizontalHeaderChecked(int index)

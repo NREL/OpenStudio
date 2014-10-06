@@ -1097,7 +1097,16 @@ namespace detail {
 
       static std::string fixupPath(const std::string &t_path, const openstudio::path &t_basePath)
       {
-        return openstudio::toString(fixupPath(openstudio::toPath(t_path), t_basePath));
+        const openstudio::path orig = openstudio::toPath(t_path);
+        const openstudio::path fixedUp = fixupPath(orig, t_basePath);
+
+        if (orig == fixedUp)
+        {
+          // don't let boost mess with us in the string/path converions
+          return t_path;
+        } else {
+          return openstudio::toString(t_path);
+        }
       }
 
       static openstudio::path fixupPath(const openstudio::path &t_path, const openstudio::path &t_basePath)

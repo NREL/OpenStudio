@@ -181,48 +181,49 @@ if (!defined?(@server_image_id) || !defined?(@worker_image_id))
     version = result.has_key?(OPENSTUDIO_VERSION) ? OPENSTUDIO_VERSION : 'default'
 
     @server_image_id = result[version]['server']
-    if ARGV.length >= 6 && @params['instance_type'] == 'cc2.8xlarge'
-      @worker_image_id = result[version]['cc2worker']
-    else
-      @worker_image_id = result[version]['worker']
-    end
+    @worker_image_id = result[version]['worker']
   else
     error(resp.code, 'Unable to download AMI IDs')
   end
 end
 
 def create_struct(instance, procs)
-  instance_struct = Struct.new(:instance, :id, :ip, :dns, :procs)
-  return instance_struct.new(instance, instance.instance_id, instance.ip_address, instance.dns_name, procs)
+  instance_struct = Struct.new(:instance, :id, :ip, :dns, :procs, :availability_zone)
+  return instance_struct.new(instance, instance.instance_id, instance.ip_address, instance.dns_name, procs, instance.availability_zone)
 end
 
 def find_processors(instance)
+  lookup = {
+      'm3.medium' => 1,
+      'm3.large' => 2,
+      'm3.xlarge' => 4,
+      'm3.2xlarge' => 8,
+      'c3.large' => 2,
+      'c3.xlarge' => 4,
+      'c3.2xlarge' => 8,
+      'c3.4xlarge' => 16,
+      'c3.8xlarge' => 32,
+      'r3.large' => 2,
+      'r3.xlarge' => 4,
+      'r3.2xlarge' => 8,
+      'r3.4xlarge' => 16,
+      'r3.8xlarge' => 32,
+      't1.micro' => 1,
+      'm1.small' => 1,
+      'm2.xlarge' => 2,
+      'm2.2xlarge' => 4,
+      'm2.4xlarge' => 8,
+    }
+
   processors = 1
-  case instance
-    when 'cc2.8xlarge'
-      processors = 16
-    when 'c1.xlarge'
-      processors = 8
-    when 'm2.4xlarge'
-      processors = 8
-    when 'm2.2xlarge'
-      processors = 4
-    when 'm2.xlarge'
-      processors = 2
-    when 'm1.xlarge'
-      processors = 4
-    when 'm1.large'
-      processors = 2
-    when 'm3.xlarge'
-      processors = 2
-    when 'm3.2xlarge'
-      processors = 4
+  if lookup.key?(instance)
+    processors = lookup[instance]
+  else
+    error(-1, "Could not find the number of processors for #{instance}")
   end
 
   return processors
 end
-
-
 
 def launch_server
   user_data = File.read(File.expand_path(File.dirname(__FILE__))+'/server_script.sh')
@@ -256,7 +257,8 @@ def launch_workers(num, server_ip)
                                    :key_pair => @key_pair,
                                    :security_groups => @group,
                                    :user_data => user_data,
-                                   :instance_type => @worker_instance_type)
+                                   :instance_type => @worker_instance_type,
+                                   :availability_zone => @server.availability_zone)
     worker.add_tag('Name', :value => "OpenStudio-Worker V#{OPENSTUDIO_VERSION}")
     instances.push(worker)
   end
@@ -488,9 +490,10 @@ begin
                  :id => @server.id,
                  :ip => 'http://' + @server.ip,
                  :dns => @server.dns,
-                 :procs => @server.procs
+                 :procs => @server.procs,
+                 :availability_zone => @server.availability_zone
              }}.to_json)
-      @logger.info("server info #{({:timestamp => @timestamp, :private_key => @private_key, :server => {:id => @server.id, :ip => @server.ip, :dns => @server.dns, :procs => @server.procs}}.to_json)}")
+      @logger.info("server info #{({:timestamp => @timestamp, :private_key => @private_key, :server => {:id => @server.id, :ip => @server.ip, :dns => @server.dns, :procs => @server.procs, :availability_zone => @server.availability_zone}}.to_json)}")
     when 'launch_workers'
       if ARGV.length < 6
         error(-1, 'Invalid number of args')

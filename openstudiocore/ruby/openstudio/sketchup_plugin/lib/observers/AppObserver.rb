@@ -33,9 +33,10 @@ module OpenStudio
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       
       if Plugin.model_manager.model_interface and
-         Plugin.model_manager.model_interface.skp_model == model
+         Plugin.model_manager.model_interface.skp_model_guid == model.guid
 
         # same model, no-op
+        Plugin.log(OpenStudio::Trace, "New model is the same as current model")
       else
 
         Plugin.model_manager.new_from_skp_model(model)
