@@ -469,14 +469,14 @@ if(BUILD_DOCUMENTATION)
     set(DOXY_TAGFILES "")
 
     # Specific settings
-    if(${D} MATCHES "utilities/idd")
+    if(${D} STREQUAL "utilities/idd")
       # We want to build the idd documentation separately because of the generated files
       set(DOXY_ADDITIONAL_DIR "\"${CMAKE_BINARY_DIR}/src/${D}\"")
-    elseif(${D} MATCHES "utilities")
+    elseif(${D} STREQUAL "utilities")
       # Exclude the idd directory when building the utilities documentation
       set(DOXY_EXCLUDE_DIR "\"${CMAKE_SOURCE_DIR}/src/utilities/idd\"")
       set(DOXY_TAGFILES "utilities_idd/utilities_idd.tag=../../utilities_idd/html")
-    elseif(${D} MATCHES "model")
+    elseif(${D} STREQUAL "model")
       set(DOXY_TAGFILES "utilities_idd/utilities_idd.tag=../../utilities_idd/html utilities/utilities.tag=../../utilities/html")
     endif()
     configure_file(${CMAKE_SOURCE_DIR}/Doxyfile.in ${CMAKE_BINARY_DIR}/doc/${DOC_NAME}.cfg)
