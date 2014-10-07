@@ -387,7 +387,7 @@ endif()
 
 
 
-find_package(SWIG 2.0.10 REQUIRED)
+find_package(SWIG 3.0.0 REQUIRED)
 mark_as_advanced(
   SWIG_DIR
   SWIG_EXECUTABLE
@@ -453,8 +453,8 @@ if(BUILD_DOCUMENTATION)
   configure_file(${CMAKE_SOURCE_DIR}/doc/index.html ${CMAKE_BINARY_DIR}/doc/index.html COPYONLY)
 
   set(doxygen_directories ${project_directories})
-  # Add the idd files to the documentation list as a separate entry
-  list(APPEND doxygen_directories utilities/idd)
+  # Add the idd files to the documentation list as a separate entry, along with shared_gui_components
+  list(APPEND doxygen_directories utilities/idd shared_gui_components)
 
   # Remove directories we don't want documentation generated for
   list(REMOVE_ITEM doxygen_directories generateiddfactory)
@@ -469,14 +469,14 @@ if(BUILD_DOCUMENTATION)
     set(DOXY_TAGFILES "")
 
     # Specific settings
-    if(${D} MATCHES "utilities/idd")
+    if(${D} STREQUAL "utilities/idd")
       # We want to build the idd documentation separately because of the generated files
       set(DOXY_ADDITIONAL_DIR "\"${CMAKE_BINARY_DIR}/src/${D}\"")
-    elseif(${D} MATCHES "utilities")
+    elseif(${D} STREQUAL "utilities")
       # Exclude the idd directory when building the utilities documentation
       set(DOXY_EXCLUDE_DIR "\"${CMAKE_SOURCE_DIR}/src/utilities/idd\"")
       set(DOXY_TAGFILES "utilities_idd/utilities_idd.tag=../../utilities_idd/html")
-    elseif(${D} MATCHES "model")
+    elseif(${D} STREQUAL "model")
       set(DOXY_TAGFILES "utilities_idd/utilities_idd.tag=../../utilities_idd/html utilities/utilities.tag=../../utilities/html")
     endif()
     configure_file(${CMAKE_SOURCE_DIR}/Doxyfile.in ${CMAKE_BINARY_DIR}/doc/${DOC_NAME}.cfg)

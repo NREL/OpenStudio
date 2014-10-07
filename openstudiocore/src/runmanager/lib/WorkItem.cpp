@@ -310,7 +310,11 @@ std::string getReportRequestMeasureArgument(const std::vector<runmanager::WorkIt
     //}
     //measureHash["arguments"] = argList;
 
-    measureList << measureHash;
+    if (measureHash.contains("measure")){
+      measureList << measureHash;
+    } else{
+      LOG_FREE(Debug, "openstudio.runmanager.getReportRequestMeasureArgument", "RubyJobBuilder does not include measure")
+    }
   }
 
   QJsonDocument document = QJsonDocument::fromVariant(measureList);

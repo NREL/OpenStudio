@@ -88,7 +88,18 @@ module OpenStudio
       end
     end
 
-
+    def onPostSaveModel(model)
+      
+      Plugin.log(OpenStudio::Trace, "#{current_method_name}, @enabled = #{@enabled}")
+      
+      return if not @enabled
+      
+      if model && model_interface = model.model_interface
+        model_interface.skp_model_guid = model.guid
+      end
+      
+    end
+    
     # unknown if this is called
     def onDeleteModel(model)
       

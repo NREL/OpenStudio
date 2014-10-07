@@ -1564,8 +1564,9 @@ namespace openstudio{
     void OSServer_Impl::logUploadProgress(qint64 bytesSent, qint64 bytesTotal) {
       if (bytesTotal == -1) {
         LOG(Debug,"Unknown number of bytes in upload.");
-      }
-      else {
+      } else if (bytesTotal == 0) {
+          LOG(Debug, "0 bytes in upload.");
+      } else {
         double percentComplete = 100.0 * (double(bytesSent)/double(bytesTotal));
         LOG(Debug,"Upload is " << percentComplete << "% complete, " << bytesSent << " of " << bytesTotal << " bytes.");
       }
