@@ -81,7 +81,7 @@ option(BUILD_RUBY_GEM "Build Ruby Gem" OFF)
 
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  add_definitions(-fcolor-diagnostics -Qunused-arguments)
+  add_definitions(-fno-color-diagnostics -Qunused-arguments)
 endif()
 
 # Enable runtime checking features
