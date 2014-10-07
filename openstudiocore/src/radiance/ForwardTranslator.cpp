@@ -1604,13 +1604,17 @@ namespace radiance {
         LOG(Error, "Cannot open file '" << toString(materials_dcfilename) << "' for writing");
       }
 
+
       // write complete scene
       openstudio::path modelfilename = t_radDir / openstudio::toPath("model.rad");
       OFSTREAM modelfile(modelfilename);
+
       if (modelfile.is_open()){
         t_outfiles.push_back(modelfilename);
 
-        for (const auto & filename : m_radSceneFiles)
+        std::set<openstudio::path> uniquePaths(m_radSceneFiles.begin(), m_radSceneFiles.end());
+
+        for (const auto & filename : uniquePaths)
         {
           modelfile << "!xform ./" << openstudio::toString(openstudio::relativePath(filename, t_radDir)) << std::endl;
         }
