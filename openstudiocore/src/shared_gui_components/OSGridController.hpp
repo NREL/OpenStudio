@@ -64,12 +64,14 @@ class OSGridView;
 ///
 /// Essentially, by using this class you are creating a stack of widgets in the grid cell:
 ///
+/// \code
 /// <widget for t_sourceFunc item 1>
 /// <widget for t_sourceFunc item 2>
 /// ...
 /// <widget for t_sourceFunc item N>
 /// <widget for t_dropZoneConcept (see notes below)>
 /// <space holder widget if enabled>
+/// \endcode
 class DataSource
 {
   public:
@@ -80,7 +82,7 @@ class DataSource
     ///
     /// \param[in] t_sourceFunc Takes an Input object (practically speaking, a ModelObject derivation) and returns a vector 
     ///                         of items (probably some derived class from ModelObject)
-    /// \param[in] t_wantsPlaceHolder Informs the system to add a placeholder gap at the bottom of the list when it is 
+    /// \param[in] t_wantsPlaceholder Informs the system to add a placeholder gap at the bottom of the list when it is 
     ///                         rendering the list of widgets. This is to help non-dropzone enabled stacks of widgets
     ///                         line up with those stacks that do contain dropzones
     /// \param[in] t_dropZoneConcept The `BaseConcept` you want displayed at the bottom of the list of widgets.

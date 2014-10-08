@@ -1,7 +1,7 @@
 namespace openstudio {
 /** \mainpage OpenStudio RunManager
  *
- * The RunManager library provides a set of tools for queing and processing of work units called Jobs.
+ * The RunManager library provides a set of tools for queuing and processing of work units called Jobs.
  * Jobs are either tasks that run an external process such as EnergyPlus or an internal process such as
  * ModelToIdf which converts an OSM file to an IDF file.
  *  
@@ -21,7 +21,7 @@ namespace openstudio {
  * <hr>
  * \section RunManagerExecution Job Execution
  *
- * The RunManager processes its jobs asyncronously. The developer using the RunManager library may choose to set up
+ * The RunManager processes its jobs asynchronously. The developer using the RunManager library may choose to set up
  * the jobs to execute, perform some other tasks, then wait for the jobs to complete. A RunManager object
  * manages its queue via database file, which you will see referenced in the examples below
  *
@@ -142,7 +142,7 @@ namespace openstudio {
  * openstudio::runmanager::Tools provides a mechanism for collecting and passing around 
  * openstudio::runmanager::ToolInfo objects. ToolInfo objects contain information about tools 
  * (xmlpreprocessor, ruby, energyplus, radiance, plus their respective subtools). While ToolInfo objects
- * can be created by hand, it's much more convienient to use one of the provided tool finders.
+ * can be created by hand, it's much more convenient to use one of the provided tool finders.
  *
  * \code
  * ConfigOptions co;
