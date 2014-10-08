@@ -276,6 +276,12 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void updateSubTabSelected(int id);
 
+  public slots:
+
+  void enableTabsAfterRun();
+
+  void disableTabsDuringRun();
+
  private:
 
   enum fileType{
@@ -343,6 +349,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   int m_verticalId;
   std::vector<int> m_subTabIds;
 
+  bool m_enableTabsAfterRun = true;
 };
 
 } // openstudio

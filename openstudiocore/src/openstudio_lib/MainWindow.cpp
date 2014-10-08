@@ -180,9 +180,10 @@ void MainWindow::dropEvent(QDropEvent * event)
 void MainWindow::addVerticalTabButton(int id,
   QString toolTip,
   const QString & selectedImagePath,
-  const QString & unSelectedImagePath)
+  const QString & unSelectedImagePath,
+  const QString & disabledImagePath)
 {
-  m_verticalTabWidget->addTabButton(id, toolTip, selectedImagePath, unSelectedImagePath);
+  m_verticalTabWidget->addTabButton(id, toolTip, selectedImagePath, unSelectedImagePath, disabledImagePath);
 }
 
 void MainWindow::setView(MainTabView * view, int id)

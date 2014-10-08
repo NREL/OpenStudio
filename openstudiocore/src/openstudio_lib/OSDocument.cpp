@@ -54,6 +54,7 @@
 #include "SummaryTabView.hpp"
 #include "ThermalZonesTabController.hpp"
 #include "VariablesTabController.hpp"
+#include "VerticalTabWidget.hpp"
 #include "YearSettingsWidget.hpp"
 
 #include "../shared_gui_components/BuildingComponentDialog.hpp"
@@ -479,57 +480,66 @@ void OSDocument::createTabButtons()
   m_mainWindow->addVerticalTabButton(SITE,
     "Site",
     ":images/on_location_tab.png",
-    ":images/off_location_tab.png");
+    ":images/off_location_tab.png",
+    ":images/disabled_location_tab.png");
 
   // Schedules
   m_mainWindow->addVerticalTabButton(SCHEDULES,
     "Schedules",
     ":images/on_schedules_tab.png",
-    ":images/off_schedules_tab.png");
+    ":images/off_schedules_tab.png",
+    ":images/disabled_schedules_tab.png");
 
   // Constructions
   m_mainWindow->addVerticalTabButton(CONSTRUCTIONS,
     "Constructions",
     ":images/on_constructions_tab.png",
-    ":images/off_constructions_tab.png");
+    ":images/off_constructions_tab.png",
+    ":images/disabled_constructions_tab.png");
 
   // Loads
   m_mainWindow->addVerticalTabButton(LOADS,
     "Loads",
     ":images/on_loads_tab.png",
-    ":images/off_loads_tab.png");
+    ":images/off_loads_tab.png",
+    ":images/disabled_loads_tab.png");
 
   // Space Types
 
   m_mainWindow->addVerticalTabButton(SPACE_TYPES,
     "Space Types",
     ":images/on_space_types_tab.png",
-    ":images/off_space_types_tab.png");
+    ":images/off_space_types_tab.png",
+    ":images/disabled_space_types_tab.png");
 
   // Building Stories
 
   m_mainWindow->addVerticalTabButton(BUILDING_STORIES,
     "Building Stories",
     ":images/on_building_stories_tab.png",
-    ":images/off_building_stories_tab.png");
+    ":images/off_building_stories_tab.png",
+    ":images/disabled_building_stories_tab.png");
 
   // Facility
   m_mainWindow->addVerticalTabButton(FACILITY,
     "Facility",
     ":images/on_building_tab.png",
-    ":images/off_building_tab.png");
+    ":images/off_building_tab.png",
+    ":images/disabled_building_tab.png");
 
   // Thermal Zones 
   m_mainWindow->addVerticalTabButton(THERMAL_ZONES,
     "Thermal Zones",
     ":images/on_thermal_zone_tab.png",
-    ":images/off_thermal_zone_tab.png");
+    ":images/off_thermal_zone_tab.png",
+    ":images/disabled_thermal_zone_tab.png");
 
   // HVAC Systems
   m_mainWindow->addVerticalTabButton(HVAC_SYSTEMS,
     "HVAC Systems",
     ":images/on_hvac_tab.png",
-    ":images/off_hvac_tab.png");
+    ":images/off_hvac_tab.png",
+    ":images/disabled_hvac_tab.png");
     
   //******************************************************************************************************
   //
@@ -546,31 +556,36 @@ void OSDocument::createTabButtons()
   m_mainWindow->addVerticalTabButton(OUTPUT_VARIABLES,
     "Output Variables",
     ":images/on_var_tab.png",
-    ":images/off_var_tab.png");
+    ":images/off_var_tab.png",
+    ":images/disabled_var_tab.png");
 
   // Sim Settings
   m_mainWindow->addVerticalTabButton(SIMULATION_SETTINGS,
     "Simulation Settings",
     ":images/on_sim_settings_tab.png",
-    ":images/off_sim_settings_tab.png");
+    ":images/off_sim_settings_tab.png",
+    ":images/disabled_sim_settings_tab.png");
 
   // Scripts
   m_mainWindow->addVerticalTabButton(RUBY_SCRIPTS,
     "Measures",
     ":images/on_scripts_tab.png",
-    ":images/off_scripts_tab.png");
+    ":images/off_scripts_tab.png",
+    ":images/disabled_scripts_tab.png");
 
   // Run
   m_mainWindow->addVerticalTabButton(RUN_SIMULATION,
     "Run Simulation",
     ":images/on_run_tab.png",
-    ":images/off_run_tab.png");
+    ":images/off_run_tab.png",
+    ":images/disabled_run_tab.png");
 
   // Results
   m_mainWindow->addVerticalTabButton(RESULTS_SUMMARY,
     "Results Summary",
     ":images/on_results_tab.png",
-    ":images/off_results_tab.png");
+    ":images/off_results_tab.png",
+    ":images/disabled_results_tab.png");
 }
 
 void OSDocument::createTab(int verticalId)
@@ -843,8 +858,6 @@ void OSDocument::createTab(int verticalId)
 
       connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
 
-      //connect(m_runTabController.get(), &RunTabController::resultsGenerated, m_resultsTabController.get(), &ResultsTabController::resultsGenerated); TODO alternative required
-
       break;
 
     default:
@@ -871,6 +884,63 @@ void OSDocument::markAsUnmodified()
   m_mainWindow->setWindowModified(false);
 
   m_mainWindow->enableRevertToSavedAction(false);
+}
+
+void OSDocument::disableTabsDuringRun()
+{
+  if (m_enableTabsAfterRun == false) {
+    return; // Already in correct state, no work to be done
+  }
+  else {
+    m_enableTabsAfterRun = false;
+  }
+
+  m_mainWindow->verticalTabWidget()->enableTabButton(SITE, m_enableTabsAfterRun);
+  m_mainWindow->verticalTabWidget()->enableTabButton(SCHEDULES, m_enableTabsAfterRun);
+  m_mainWindow->verticalTabWidget()->enableTabButton(CONSTRUCTIONS, m_enableTabsAfterRun);
+  m_mainWindow->verticalTabWidget()->enableTabButton(LOADS, m_enableTabsAfterRun);
+  m_mainWindow->verticalTabWidget()->enableTabButton(SPACE_TYPES, m_enableTabsAfterRun);
+  m_mainWindow->verticalTabWidget()->enableTabButton(BUILDING_STORIES, m_enableTabsAfterRun);
+  m_mainWindow->verticalTabWidget()->enableTabButton(FACILITY, m_enableTabsAfterRun);
+  m_mainWindow->verticalTabWidget()->enableTabButton(THERMAL_ZONES, m_enableTabsAfterRun);
+  m_mainWindow->verticalTabWidget()->enableTabButton(HVAC_SYSTEMS, m_enableTabsAfterRun);
+  //m_mainWindow->verticalTabWidget()->enableTabButton(BUILDING_SUMMARY, m_enableTabsAfterRun); No Summary tab available
+  m_mainWindow->verticalTabWidget()->enableTabButton(OUTPUT_VARIABLES, m_enableTabsAfterRun);
+  m_mainWindow->verticalTabWidget()->enableTabButton(SIMULATION_SETTINGS, m_enableTabsAfterRun);
+  m_mainWindow->verticalTabWidget()->enableTabButton(RUBY_SCRIPTS, m_enableTabsAfterRun);
+  //m_mainWindow->verticalTabWidget()->enableTabButton(RUN_SIMULATION, m_enableTabsAfterRun); Run tab aways active
+  m_mainWindow->verticalTabWidget()->enableTabButton(RESULTS_SUMMARY, m_enableTabsAfterRun);
+
+  m_mainWindow->verticalTabWidget()->refreshTabButtons();
+}
+
+void OSDocument::enableTabsAfterRun()
+{
+
+  if (m_enableTabsAfterRun == true) {
+    return; // Already in correct state, no work to be done
+  }
+  else {
+    m_enableTabsAfterRun = true;
+  }
+
+  m_mainWindow->verticalTabWidget()->enableTabButton(SITE, m_enableTabsAfterRun);
+  m_mainWindow->verticalTabWidget()->enableTabButton(SCHEDULES, m_enableTabsAfterRun);
+  m_mainWindow->verticalTabWidget()->enableTabButton(CONSTRUCTIONS, m_enableTabsAfterRun);
+  m_mainWindow->verticalTabWidget()->enableTabButton(LOADS, m_enableTabsAfterRun);
+  m_mainWindow->verticalTabWidget()->enableTabButton(SPACE_TYPES, m_enableTabsAfterRun);
+  m_mainWindow->verticalTabWidget()->enableTabButton(BUILDING_STORIES, m_enableTabsAfterRun);
+  m_mainWindow->verticalTabWidget()->enableTabButton(FACILITY, m_enableTabsAfterRun);
+  m_mainWindow->verticalTabWidget()->enableTabButton(THERMAL_ZONES, m_enableTabsAfterRun);
+  m_mainWindow->verticalTabWidget()->enableTabButton(HVAC_SYSTEMS, m_enableTabsAfterRun);
+  //m_mainWindow->verticalTabWidget()->enableTabButton(BUILDING_SUMMARY, m_enableTabsAfterRun); No Summary tab available
+  m_mainWindow->verticalTabWidget()->enableTabButton(OUTPUT_VARIABLES, m_enableTabsAfterRun);
+  m_mainWindow->verticalTabWidget()->enableTabButton(SIMULATION_SETTINGS, m_enableTabsAfterRun);
+  m_mainWindow->verticalTabWidget()->enableTabButton(RUBY_SCRIPTS, m_enableTabsAfterRun);
+  //m_mainWindow->verticalTabWidget()->enableTabButton(RUN_SIMULATION, m_enableTabsAfterRun); Run tab aways active
+  m_mainWindow->verticalTabWidget()->enableTabButton(RESULTS_SUMMARY, m_enableTabsAfterRun);
+
+  m_mainWindow->verticalTabWidget()->refreshTabButtons();
 }
 
 void OSDocument::runComplete()

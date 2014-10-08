@@ -45,7 +45,12 @@ class VerticalTabWidget : public QWidget
   void addTabButton(int id,
                     QString toolTip,
                     const QString & selectedImagePath,
-                    const QString & unSelectedImagePath);
+                    const QString & unSelectedImagePath,
+                    const QString & disabledImagePath);
+
+  void enableTabButton(int id, bool enable);
+
+  void refreshTabButtons();
 
   void setView(MainTabView * view, int id);
 
@@ -76,6 +81,8 @@ class VerticalTabWidget : public QWidget
   std::vector<QString> m_selectedPixmaps;
 
   std::vector<QString> m_unSelectedPixmaps;
+
+  std::vector<QString> m_disabledPixmaps;
 
   std::vector<QPushButton *> m_tabButtons; 
 

@@ -65,7 +65,8 @@ VerticalTabWidget::VerticalTabWidget(QWidget * parent)
 void VerticalTabWidget::addTabButton(int id,
   QString toolTip,
   const QString & selectedImagePath,
-  const QString & unSelectedImagePath)
+  const QString & unSelectedImagePath,
+  const QString & disabledImagePath)
 {
   QPushButton * button = new QPushButton(m_tabBar);
 
@@ -80,6 +81,8 @@ void VerticalTabWidget::addTabButton(int id,
   m_selectedPixmaps.push_back(selectedImagePath);
 
   m_unSelectedPixmaps.push_back(unSelectedImagePath);
+
+  m_disabledPixmaps.push_back(disabledImagePath);
 
   m_ids.push_back(id);
 }
@@ -132,6 +135,11 @@ int VerticalTabWidget::getIndex(int id)
   return index;
 }
 
+void VerticalTabWidget::refreshTabButtons()
+{
+  setCurrentIndex(currentIndex);
+}
+
 void VerticalTabWidget::setCurrentIndex(int index)
 {
   int yPos = 25;
@@ -144,7 +152,7 @@ void VerticalTabWidget::setCurrentIndex(int index)
 
     yPos = yPos + button->height();
 
-    QString imagePath = m_unSelectedPixmaps[i]; 
+    QString imagePath;
 
     QString style;
 
@@ -169,13 +177,27 @@ void VerticalTabWidget::setCurrentIndex(int index)
     }
     else
     {
-      style.append("QPushButton { background-image: url(\"");
-      style.append(imagePath);
-      style.append("\"); border: none; background-color: red; background-repeat: 0; }");
+      if (button->isEnabled()){
+        imagePath = m_unSelectedPixmaps[i];
+        style.append("QPushButton { background-image: url(\"");
+        style.append(imagePath);
+        style.append("\"); border: none; background-color: red; background-repeat: 0; }");
+      }
+      else {
+        imagePath = m_disabledPixmaps[i];
+        style.append("QPushButton { background-image: url(\"");
+        style.append(imagePath);
+        style.append("\"); border: none; background-color: red; background-repeat: 0; }");
+      }
 
       button->setStyleSheet(style); 
     }
   }
+}
+
+void VerticalTabWidget::enableTabButton(int id, bool enable)
+{
+  m_tabButtons.at(getIndex(id))->setEnabled(enable);
 }
 
 int VerticalTabWidget::verticalTabIndex()

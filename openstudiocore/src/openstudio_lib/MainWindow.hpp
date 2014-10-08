@@ -46,7 +46,8 @@ class MainWindow : public QMainWindow
   void addVerticalTabButton(int id,
     QString toolTip,
     const QString & selectedImagePath,
-    const QString & unSelectedImagePath);
+    const QString & unSelectedImagePath,
+    const QString & disabledImagePath);
 
   void setView(MainTabView * view, int id);
 
@@ -69,6 +70,8 @@ class MainWindow : public QMainWindow
   void enableRevertToSavedAction(bool enable);
 
   QString lastPath() const;
+
+  VerticalTabWidget * verticalTabWidget() { return m_verticalTabWidget; }
 
   signals:
 
