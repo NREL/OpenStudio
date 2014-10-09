@@ -49,16 +49,9 @@ class IGWidget : public QWidget
 {
   public:
   
-  IGWidget( QWidget * parent = nullptr )
-    : QWidget(parent)
-  {
-    setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Preferred);
-  }
+  IGWidget(QWidget * parent = nullptr);
 
-  QSize sizeHint() const 
-  {
-    return QSize(200,QWidget::sizeHint().height());
-  }
+  QSize sizeHint() const;
 };
 
 class IGComboBox : public QComboBox

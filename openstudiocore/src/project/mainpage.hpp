@@ -3,14 +3,14 @@ namespace project {
 
 /** \mainpage OpenStudio Project
  *
- *  \section quick_links Quick Links
+ *  \section quick_links_project Quick Links
  *
  *  \li ProjectDatabase
  *  \li Record
  *  \li ObjectRecord
  *  \li JoinRecord
  *
- *  \section intro_sec Introduction
+ *  \section introduction_project Introduction
  *
  *  The OpenStudio ProjectDatabase stores energy simulation project data for projects with less than
  *  10,000 models. In addition, the ProjectDatabase is a basic serialization format for a number of

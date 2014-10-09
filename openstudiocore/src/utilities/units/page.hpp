@@ -5,7 +5,7 @@ namespace openstudio {
  *  It supports IP units, Btus, etc., in addition to SI units. Construction, arithmetic operations,
  *  and unit conversions are supported in C++ and in the SWIG bindings.
  *
- * \section quick_links Quick Links
+ * \section quick_links_units Quick Links
  *
  *  \li Quantity
  *  \li SIQuantity

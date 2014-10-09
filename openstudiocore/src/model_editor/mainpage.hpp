@@ -2,7 +2,7 @@
  *
  *  The OpenStudio Editor graphically exposes the OpenStudio Building Model.
  *
- *  \section introduction Introduction
+ *  \section introduction_modeleditor Introduction
  *
  *  The ModelEditor provides a comprehensive GUI for model definition,
  *  model object browsing, simulation management, simulation verifications,
