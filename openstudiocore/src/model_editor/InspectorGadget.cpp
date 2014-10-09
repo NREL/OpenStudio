@@ -79,7 +79,7 @@ IGWidget::IGWidget(QWidget* parent):
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
 }
 
-IGWidget::QSize sizeHint() const
+QSize IGWidget::sizeHint() const
 {
   return QSize(200, QWidget::sizeHint().height());
 }
