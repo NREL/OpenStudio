@@ -1,11 +1,12 @@
 <!DOCTYPE RCC><RCC version="1.0">
   <qresource>
-    <file>images/add.png</file>
     <file>images/add-small.png</file>
+    <file>images/add.png</file>
     <file>images/add_disabled.png</file>
     <file>images/add_off.png</file>
     <file>images/add_over.png</file>
     <file>images/add_press.png</file>
+    <file>images/air_cooled.png</file>
     <file>images/air_loop_icon.png</file>
     <file>images/air_terminal_inlet_mixer.png</file>
     <file>images/arrow.png</file>
@@ -16,11 +17,15 @@
     <file>images/bug.png</file>
     <file>images/cancel_simulation_button.png</file>
     <file>images/cav_reheat.png</file>
+    <file>images/chilled_beam.png</file>
     <file>images/chiller_air.png</file>
-    <file>images/chilled_beam.png</file>    
+    <file>images/coilcoolingchilledbeam.png</file>
+    <file>images/coilcoolinglowtemprad_constflow.png</file>
+    <file>images/coilcoolinglowtemprad_varflow.png</file>
     <file>images/coilheatinglowtemprad_constflow.png</file>
-    <file>images/coilheatinglowtemprad_varflow.png</file>    
+    <file>images/coilheatinglowtemprad_varflow.png</file>
     <file>images/coilheatingwater_baseboard.png</file>
+    <file>images/coil_ht_dx_singlespeed.png</file>
     <file>images/combo_box_arrows.png</file>
     <file>images/combo_box_arrows_gray.png</file>
     <file>images/coming_soon_building_summary.png</file>
@@ -30,18 +35,16 @@
     <file>images/components_icon_off.png</file>
     <file>images/components_icon_pressed.png</file>
     <file>images/compressor.png</file>
+    <file>images/condenser_cascade.png</file>
     <file>images/condensor.png</file>
     <file>images/contextual_arrow.png</file>
     <file>images/contextual_arrow_up.png</file>
     <file>images/controller_icon_off.png</file>
     <file>images/controller_icon_on.png</file>
-    <file>images/coilcoolingchilledbeam.png</file>
-    <file>images/cool_coil.png</file>
-    <file>images/coilcoolinglowtemprad_constflow.png</file>   
-    <file>images/coilcoolinglowtemprad_varflow.png</file>      
     <file>images/cooling_tower.png</file>
     <file>images/cooling_tower_2speed.png</file>
     <file>images/cooling_tower_variable.png</file>
+    <file>images/cool_coil.png</file>
     <file>images/dehumidify_schedule_icon.png</file>
     <file>images/delete-icon.png</file>
     <file>images/delete.png</file>
@@ -51,43 +54,61 @@
     <file>images/delete_press.png</file>
     <file>images/direct-air.png</file>
     <file>images/directEvap.png</file>
-    <file>images/indirectEvap.png</file>
-    <file>images/divider_dots.png</file>
+    <file>images/disabled_building_stories_tab.png</file>
+    <file>images/disabled_building_tab.png</file>
+    <file>images/disabled_constructions_tab.png</file>
+    <file>images/disabled_hvac_tab.png</file>
+    <file>images/disabled_loads_tab.png</file>
+    <file>images/disabled_location_tab.png</file>
+    <file>images/disabled_results_tab.png</file>
+    <file>images/disabled_run_tab.png</file>
+    <file>images/disabled_schedules_tab.png</file>
+    <file>images/disabled_scripts_tab.png</file>
+    <file>images/disabled_sim_settings_tab.png</file>
+    <file>images/disabled_space_types_tab.png</file>
+    <file>images/disabled_thermal_zone_tab.png</file>
+    <file>images/disabled_var_tab.png</file>
+    <file>images/display_case.png</file>
     <file>images/districtcooling.png</file>
     <file>images/districtheating.png</file>
-    <file>images/display_case.png</file>
+    <file>images/divider_dots.png</file>
     <file>images/duplicate_disabled.png</file>
     <file>images/duplicate_off.png</file>
     <file>images/duplicate_over.png</file>
     <file>images/duplicate_press.png</file>
-    <file>images/dxcoolingcoil_singlespeed.png</file>
     <file>images/dxcoolingcoil_2speed.png</file>
+    <file>images/dxcoolingcoil_singlespeed.png</file>
     <file>images/dx_cooling_multispeed.png</file>
     <file>images/electric_furnace.png</file>
     <file>images/electric_humidifier.png</file>
+    <file>images/evap_cooled.png</file>
     <file>images/evap_fluid_cooler.png</file>
     <file>images/fan_constant.png</file>
-    <file>images/fan_on_off.png</file>   
-    <file>images/fan_zoneexhaust.png</file>   
+    <file>images/fan_on_off.png</file>
+    <file>images/fan_variable.png</file>
+    <file>images/fan_zoneexhaust.png</file>
     <file>images/fast_forward.png</file>
     <file>images/fast_reverse.png</file>
     <file>images/fire.png</file>
     <file>images/fluid_hx.png</file>
     <file>images/forward.png</file>
-    <file>images/four_pipe_fan_coil.png</file>    
-    <file>images/furnace.png</file>    
+    <file>images/four_pipe_fan_coil.png</file>
+    <file>images/furnace.png</file>
     <file>images/furnace_multi_stage.png</file>
     <file>images/ground_heat_exchanger_vertical.png</file>
     <file>images/header-backgnd-1px-wide.png</file>
+    <file>images/heat_coil-uht.png</file>
     <file>images/heat_coil.png</file>
     <file>images/heat_pump3.png</file>
     <file>images/heat_transfer_outdoorair.png</file>
+    <file>images/hightempradiant.png</file>
     <file>images/humidify_schedule_icon.png</file>
     <file>images/humidistat.png</file>
     <file>images/hvac-icon.png</file>
     <file>images/icon_scripts.png</file>
     <file>images/image_header.png</file>
     <file>images/import_file.png</file>
+    <file>images/indirectEvap.png</file>
     <file>images/lilBug.png</file>
     <file>images/link_icon_off.png</file>
     <file>images/link_icon_on.png</file>
@@ -95,9 +116,8 @@
     <file>images/loop_button_over.png</file>
     <file>images/loop_button_press.png</file>
     <file>images/loop_name_icon.png</file>
-    <file>images/hightempradiant.png</file>   
-    <file>images/lowtempradiant_constflow.png</file>   
-    <file>images/lowtempradiant_varflow.png</file>       
+    <file>images/lowtempradiant_constflow.png</file>
+    <file>images/lowtempradiant_varflow.png</file>
     <file>images/mechanical-sub-cooler.png</file>
     <file>images/mixer.png</file>
     <file>images/OAMixer.png</file>
@@ -132,19 +152,18 @@
     <file>images/on_thermal_zone_tab.png</file>
     <file>images/on_var_tab.png</file>
     <file>images/open_file.png</file>
+    <file>images/osm-icon-open.png</file>
     <file>images/os_16.png</file>
     <file>images/os_32.png</file>
     <file>images/os_48.png</file>
     <file>images/os_64.png</file>
     <file>images/os_128.png</file>
     <file>images/os_256.png</file>
-    <file>images/osm-icon-open.png</file>
     <file>images/parallel_fan_terminal.png</file>
-    <file>images/series_fan_terminal.png</file>
     <file>images/pipe.png</file>
     <file>images/plant_loop_icon.png</file>
-    <file>images/plenum_on.png</file>
     <file>images/plenum_off.png</file>
+    <file>images/plenum_on.png</file>
     <file>images/properties_icon_off.png</file>
     <file>images/properties_icon_on.png</file>
     <file>images/pump_constant.png</file>
@@ -158,30 +177,31 @@
     <file>images/rotating_arrow.png</file>
     <file>images/run_simulation_button.png</file>
     <file>images/searchbox_magnifyingglass.png</file>
+    <file>images/series_fan_terminal.png</file>
+    <file>images/setpoint_dual.png</file>
     <file>images/setpoint_follow_outdoorair.png</file>
     <file>images/setpoint_follow_outdoorair_right.png</file>
-    <file>images/setpoint_scheduled.png</file>
-    <file>images/setpoint_scheduled_right.png</file>
     <file>images/setpoint_mixed.png</file>
     <file>images/setpoint_mixed_right.png</file>
-    <file>images/setpoint_outdoorair.png</file>
-    <file>images/setpoint_outdoorair_right.png</file>
-    <file>images/setpoint_singlezone.png</file>
-    <file>images/setpoint_singlezone_right.png</file>
-    <file>images/setpoint_warmest.png</file>
-    <file>images/setpoint_warmest_right.png</file>
-    <file>images/setpoint_dual.png</file>
-    <file>images/setpoint_pretreat.png</file>
     <file>images/setpoint_multi_zone_humidity_ave.png</file>
     <file>images/setpoint_multi_zone_humidity_ave_right.png</file>
     <file>images/setpoint_multi_zone_humidity_min.png</file>
     <file>images/setpoint_multi_zone_humidity_min_right.png</file>
+    <file>images/setpoint_outdoorair.png</file>
+    <file>images/setpoint_outdoorair_right.png</file>
+    <file>images/setpoint_pretreat.png</file>
+    <file>images/setpoint_scheduled.png</file>
+    <file>images/setpoint_scheduled_right.png</file>
+    <file>images/setpoint_singlezone.png</file>
+    <file>images/setpoint_singlezone_right.png</file>
     <file>images/setpoint_single_zone_humidity_min.png</file>
     <file>images/setpoint_single_zone_humidity_min_right.png</file>
-    <file>images/single_ducts_constant_vol_4pipe.png</file>
+    <file>images/setpoint_warmest.png</file>
+    <file>images/setpoint_warmest_right.png</file>
     <file>images/sewer_alone.png</file>
     <file>images/sewer_over.png</file>
     <file>images/sewer_press.png</file>
+    <file>images/single_ducts_constant_vol_4pipe.png</file>
     <file>images/sink.png</file>
     <file>images/sizing.png</file>
     <file>images/slhx.png</file>
@@ -206,26 +226,26 @@
     <file>images/toggle_off_over.png</file>
     <file>images/toggle_on.png</file>
     <file>images/toggle_on_over.png</file>
-    <file>images/fan_variable.png</file>
-    <file>images/utility_calibration_warning.png</file>
     <file>images/unitary_system.png</file>
-    <file>images/vav_noreheat.png</file>
+    <file>images/utility_calibration_warning.png</file>
     <file>images/vav-reheat.png</file>
+    <file>images/vav_noreheat.png</file>
     <file>images/vrf_outdoor.png</file>
-    <file>images/vrf_unit.png</file>
     <file>images/vrf_transfer.png</file>
+    <file>images/vrf_unit.png</file>
     <file>images/v_divider_dots.png</file>
-    <file>images/walkin_case.png</file>    
-    <file>images/wahpDXCC.png</file>    
+    <file>images/wahpDXCC.png</file>
     <file>images/wahpDXHC.png</file>
+    <file>images/walkin_case.png</file>
     <file>images/walkin_right_tab_off.png</file>
     <file>images/walkin_right_tab_on.png</file>
+    <file>images/watertoairHP.png</file>
     <file>images/water_connection.png</file>
+    <file>images/water_cooled.png</file>
     <file>images/water_heater.png</file>
     <file>images/water_main_alone.png</file>
     <file>images/water_main_alone_over.png</file>
     <file>images/water_main_alone_press.png</file>
-    <file>images/watertoairHP.png</file>
     <file>images/wizard.png</file>
     <file>images/zone.png</file>
     <file>images/zonehvac_low_temperature_radiant_electric.png</file>
@@ -237,15 +257,10 @@
     <file>images/zoom-out-over.png</file>
     <file>images/zoom-out-press.png</file>
     <file>images/zoom-out.png</file>
-    <file>library/OpenStudioPolicy.xml</file>
-    <file>openstudiolib.qss</file>
-    <file>images/heat_coil-uht.png</file>
-    <file>images/coil_ht_dx_singlespeed.png</file>
-    <file>images/air_cooled.png</file>
-    <file>images/condenser_cascade.png</file>
-    <file>images/evap_cooled.png</file>
-    <file>images/water_cooled.png</file>
 
+    <file>library/OpenStudioPolicy.xml</file>
+
+    <file>openstudiolib.qss</file>
 
     <file>images/mini_icons/mini_compressor.png</file>
     <file>images/mini_icons/mini_condensor.png</file>

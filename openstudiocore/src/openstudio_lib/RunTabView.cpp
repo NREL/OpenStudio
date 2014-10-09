@@ -68,6 +68,7 @@
 #include <QStackedWidget>
 #include <QStyleOption>
 #include <QSysInfo>
+#include <QTimer>
 #include <QToolButton>
 #include <QVBoxLayout>
 
@@ -304,12 +305,13 @@ void RunView::runFinished(const openstudio::path &t_sqlFile, const openstudio::p
     m_statusLabel->setText("Canceled");
   }
 
+  std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
+
   // DLM: should we attach the sql file to the model here?
   // DLM: if model is re-opened with results they will not be added here, better to do this on results tab
   //if (exists(t_sqlFile)){
   //  SqlFile sqlFile(t_sqlFile);
   //  if (sqlFile.connectionOpen()){
-  //    std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
   //    osdocument->model().setSqlFile(sqlFile);
   //  }
   //}
@@ -322,6 +324,7 @@ void RunView::runFinished(const openstudio::path &t_sqlFile, const openstudio::p
   runManager().setPaused(true);
 
   m_playButton->setChecked(false);
+  osdocument->enableTabsAfterRun();
 }
 
 void RunView::treeChanged(const openstudio::UUID &t_uuid)
@@ -438,9 +441,10 @@ void RunView::playButtonClicked(bool t_checked)
           openstudio::toQString("EnergyPlus " + epver.toString() + " could not be located, simulation aborted."),
           QMessageBox::Ok);
       m_playButton->setChecked(false);
+      osdocument->enableTabsAfterRun();
       return;
     }
-    
+
     if (co.getTools().getAllByName("ruby").tools().size() == 0)
     {
       QMessageBox::information(this,
@@ -448,6 +452,7 @@ void RunView::playButtonClicked(bool t_checked)
           "Ruby could not be located, simulation aborted.",
           QMessageBox::Ok);
       m_playButton->setChecked(false);
+      osdocument->enableTabsAfterRun();
       return;
     }
 
@@ -465,15 +470,24 @@ void RunView::playButtonClicked(bool t_checked)
     m_canceling = false;
     m_outputWindow->clear();
 
-    bool requireCalibrationReports = (osdocument->model().getConcreteModelObjects<model::UtilityBill>().size() > 0);
-
     // reset the model's sqlFile
     osdocument->model().resetSqlFile();
 
+    // Tell OSDoc that great things are happening
+    osdocument->disableTabsDuringRun();
+
     // we are starting the simulations
-    openstudio::runmanager::RunManager rm = runManager();
-    startRunManager(rm, m_modelPath, m_tempFolder, m_radianceButton->isChecked(), requireCalibrationReports, this);
+    QTimer::singleShot(0, this, SLOT(requestStartRunManager()));
   }
+}
+
+void RunView::requestStartRunManager()
+{
+  // we are starting the simulations
+  std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
+  bool requireCalibrationReports = (osdocument->model().getConcreteModelObjects<model::UtilityBill>().size() > 0);
+  openstudio::runmanager::RunManager rm = runManager();
+  startRunManager(rm, m_modelPath, m_tempFolder, m_radianceButton->isChecked(), requireCalibrationReports, this);
 }
 
 openstudio::runmanager::RunManager RunView::runManager()

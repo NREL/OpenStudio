@@ -21,13 +21,16 @@
 #define OPENSTUDIO_VERTICALTABWIDGET_HPP
 
 #include <QWidget>
-#include <vector>
 
-class QStackedWidget;
+#include <vector>
 
 class QPushButton;
 
 namespace openstudio {
+
+class MainTabView;
+
+class OSViewSwitcher;
 
 class VerticalTabWidget : public QWidget
 {
@@ -39,17 +42,21 @@ class VerticalTabWidget : public QWidget
 
   virtual ~VerticalTabWidget() {}
 
-  void addTab( QWidget * widget,
-               int id,
-               QString toolTip,
-               const QString & selectedImagePath,
-               const QString & unSelectedImagePath );
+  void addTabButton(int id,
+                    QString toolTip,
+                    const QString & selectedImagePath,
+                    const QString & unSelectedImagePath,
+                    const QString & disabledImagePath);
 
-  void deleteAllTabs();
+  void enableTabButton(int id, bool enable);
+
+  void refreshTabButtons();
+
+  void setView(MainTabView * view, int id);
+
+  MainTabView * view() const;
 
   int verticalTabIndex();
-
-  QWidget* verticalTabWidgetByIndex(int index);
 
   signals:
 
@@ -57,15 +64,7 @@ class VerticalTabWidget : public QWidget
 
   public slots:
 
-  void setCurrentId(int id);
-
   void setCurrentIndex(int index);
-
-  void setCurrentWidget(QWidget * widget);
-
-  void nextTab();
-
-  void previousTab();
 
   private slots:
 
@@ -73,7 +72,9 @@ class VerticalTabWidget : public QWidget
 
   private:
 
-  QStackedWidget * m_pageStack;
+  int getIndex(int id);
+
+  OSViewSwitcher * m_viewSwitcher = nullptr;
 
   QWidget * m_tabBar;
 
@@ -81,14 +82,15 @@ class VerticalTabWidget : public QWidget
 
   std::vector<QString> m_unSelectedPixmaps;
 
+  std::vector<QString> m_disabledPixmaps;
+
   std::vector<QPushButton *> m_tabButtons; 
 
   std::vector<int> m_ids;
 
-  int currentIndex;
+  int currentIndex = -1;
 };
 
 } // namespace openstudio
 
 #endif // OPENSTUDIO_VERTICALTABWIDGET_HPP
-
