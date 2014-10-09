@@ -45,7 +45,7 @@ class QVBoxLayout;
 
 class ComboHighlightBridge;
 
-class IGWidget : public QWidget
+class MODELEDITOR_API IGWidget : public QWidget
 {
   public:
   
