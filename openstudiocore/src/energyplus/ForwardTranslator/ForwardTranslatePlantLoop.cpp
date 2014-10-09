@@ -527,7 +527,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
           {
             flowRate = optionalFlowRate.get();
           }
-          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,0.0,true,COOLING));
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,COOLING));
         }
         else
         {
@@ -549,7 +549,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
           {
             flowRate = optionalFlowRate.get();
           }
-          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,0.0,true,COOLING));
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,COOLING));
         }
         else
         {
@@ -557,28 +557,28 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
         }
         break;
       }
-	  case openstudio::IddObjectType::OS_CoolingTower_TwoSpeed:
-	  {
-		  sizeAsCondenserSystem = true;
-		  if (boost::optional<Node> outletNode = isSetpointComponent(plantLoop, supplyComponent))
-		  {
-			  CoolingTowerTwoSpeed tower = supplyComponent.cast<CoolingTowerTwoSpeed>();
-			  if (tower.isDesignWaterFlowRateAutosized())
-			  {
-				  autosize = true;
-			  }
-			  else if (boost::optional<double> optionalFlowRate = tower.designWaterFlowRate())
-			  {
-				  flowRate = optionalFlowRate.get();
-			  }
-			  setpointComponents.push_back(SetpointComponentInfo(supplyComponent, *outletNode, 0.0, true, COOLING));
-		  }
-		  else
-		  {
-			  coolingComponents.push_back(supplyComponent);
-		  }
-		  break;
-	  }
+      case openstudio::IddObjectType::OS_CoolingTower_TwoSpeed:
+      {
+        sizeAsCondenserSystem = true;
+        if (boost::optional<Node> outletNode = isSetpointComponent(plantLoop, supplyComponent))
+        {
+          CoolingTowerTwoSpeed tower = supplyComponent.cast<CoolingTowerTwoSpeed>();
+          if (tower.isDesignWaterFlowRateAutosized())
+          {
+            autosize = true;
+          }
+          else if (boost::optional<double> optionalFlowRate = tower.designWaterFlowRate())
+          {
+            flowRate = optionalFlowRate.get();
+          }
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,COOLING));
+        }
+        else
+        {
+          coolingComponents.push_back(supplyComponent);
+        }
+        break;
+      }
       case openstudio::IddObjectType::OS_GroundHeatExchanger_Vertical :
       {
         sizeAsCondenserSystem = true;
