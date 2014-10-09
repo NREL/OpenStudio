@@ -94,7 +94,6 @@ public slots:
 
   void requestRefreshRow(int row);
 
-
 private slots:
 
   void refreshCell(int row, int column);
