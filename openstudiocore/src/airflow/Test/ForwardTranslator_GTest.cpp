@@ -26,7 +26,10 @@
 #include "../../model/Building.hpp"
 #include "../../model/Building_Impl.hpp"
 #include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
 #include "../../model/SpaceType.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/SubSurface.hpp"
 #include "../../model/DesignSpecificationOutdoorAir.hpp"
 #include "../../model/BuildingStory.hpp"
 #include "../../utilities/geometry/Point3d.hpp"
@@ -43,206 +46,40 @@
 #include "../../osversion/VersionTranslator.hpp"
 #include "../../utilities/idf/Handle.hpp"
 
+#include "DemoModel.hpp"
+
 #include <resources.hxx>
 
 #include <sstream>
 
-using namespace openstudio;
-
-boost::optional<openstudio::model::Model> buildDemoModel(openstudio::model::Model model)
+TEST_F(AirflowFixture, ForwardTranslator_exampleModel)
 {
-  // set outdoor air specifications
-  openstudio::model::Building building = model.getUniqueModelObject<openstudio::model::Building>();
-  boost::optional<openstudio::model::SpaceType> spaceType = building.spaceType();
-  if(!spaceType)
-  {
-    return boost::optional<openstudio::model::Model>();
-  }
-  boost::optional<openstudio::model::DesignSpecificationOutdoorAir> oa = spaceType->designSpecificationOutdoorAir();
-  if(!oa)
-  {
-    return boost::optional<openstudio::model::Model>();
-  }
+  openstudio::model::Model model = openstudio::model::exampleModel();
 
-  if(!oa->setOutdoorAirMethod("Sum"))
-  {
-    return boost::optional<openstudio::model::Model>();
-  }
-  if(!oa->setOutdoorAirFlowperPerson(0.0))
-  {
-    return boost::optional<openstudio::model::Model>();
-  }
-  if(!oa->setOutdoorAirFlowperFloorArea(0.00508)) // 1 cfm/ft^2 = 0.00508 m/s
-  {
-    return boost::optional<openstudio::model::Model>();
-  }
-  if(!oa->setOutdoorAirFlowRate(0.0))
-  {
-    return boost::optional<openstudio::model::Model>();
-  }
-  if(!oa->setOutdoorAirFlowAirChangesperHour(0.0))
-  {
-    return boost::optional<openstudio::model::Model>();
-  }
+  openstudio::path p = openstudio::toPath("exampleModel.prj");
 
-  double floorHeight = 3.0;
-
-  openstudio::model::BuildingStory story1(model);
-  story1.setName("Story 1");
-  story1.setNominalZCoordinate(0.0);
-  story1.setNominalFloortoFloorHeight(floorHeight);
-
-  std::vector<openstudio::Point3d> points;
-  points.push_back(openstudio::Point3d(0,0,0));
-  points.push_back(openstudio::Point3d(0,17,0));
-  points.push_back(openstudio::Point3d(8,17,0));
-  points.push_back(openstudio::Point3d(8,10,0));
-  points.push_back(openstudio::Point3d(8,0,0));
-
-  boost::optional<openstudio::model::Space> library = openstudio::model::Space::fromFloorPrint(points, floorHeight, model);
-  if(!library)
-  {
-    return boost::optional<openstudio::model::Model>();
-  }
-  library->setName("Library");
-
-  points.clear();
-  points.push_back(openstudio::Point3d(8,10,0));
-  points.push_back(openstudio::Point3d(8,17,0));
-  points.push_back(openstudio::Point3d(18,17,0));
-  points.push_back(openstudio::Point3d(18,10,0));
-  points.push_back(openstudio::Point3d(11,10,0));
-
-  boost::optional<openstudio::model::Space> office2 = openstudio::model::Space::fromFloorPrint(points, floorHeight, model);
-  if(!office2)
-  {
-    return boost::optional<openstudio::model::Model>();
-  }
-  office2->setName("Office 2");
-
-  points.clear();
-  points.push_back(openstudio::Point3d(8,0,0));
-  points.push_back(openstudio::Point3d(8,10,0));
-  points.push_back(openstudio::Point3d(11,10,0));
-  points.push_back(openstudio::Point3d(11,0,0));
-
-  boost::optional<openstudio::model::Space> hallway = openstudio::model::Space::fromFloorPrint(points, floorHeight, model);
-  if(!hallway)
-  {
-    return boost::optional<openstudio::model::Model>();
-  }
-  hallway->setName("Hallway");
-
-  points.clear();
-  points.push_back(openstudio::Point3d(11,0,0));
-  points.push_back(openstudio::Point3d(11,10,0));
-  points.push_back(openstudio::Point3d(18,10,0));
-  points.push_back(openstudio::Point3d(18,0,0));
-
-  boost::optional<openstudio::model::Space> office1 = openstudio::model::Space::fromFloorPrint(points, floorHeight, model);
-  if(!office1)
-  {
-    return boost::optional<openstudio::model::Model>();
-  }
-  office1->setName("Office 1");
-
-  library->matchSurfaces(*office2);
-  library->matchSurfaces(*hallway);
-  hallway->matchSurfaces(*office1);
-  hallway->matchSurfaces(*office2);
-  office1->matchSurfaces(*office2);
-
-  // find thermostat
-  boost::optional<openstudio::model::ThermostatSetpointDualSetpoint> thermostat;
-  for (openstudio::model::ThermostatSetpointDualSetpoint t :
-    model.getModelObjects<openstudio::model::ThermostatSetpointDualSetpoint>())
-  {
-    thermostat = t;
-    break;
-  }
-  if(!thermostat)
-  {
-    return boost::optional<openstudio::model::Model>();
-  }
-  
-  // create  thermal zones
-  openstudio::model::ThermalZone libraryZone(model);
-  openstudio::model::SizingZone librarySizing(model, libraryZone);
-  libraryZone.setName("Library Zone");
-  libraryZone.setThermostatSetpointDualSetpoint(*thermostat);
-  library->setThermalZone(libraryZone);
-  library->setBuildingStory(story1);
-
-  openstudio::model::ThermalZone hallwayZone(model);
-  //model::SizingZone hallwaySizing(model, hallwayZone);
-  hallwayZone.setName("Hallway Zone");
-  //hallwayZone.setThermostatSetpointDualSetpoint(*thermostat);
-  hallway->setThermalZone(hallwayZone);
-  hallway->setBuildingStory(story1);
-
-  openstudio::model::ThermalZone office1Zone(model);
-  openstudio::model::SizingZone office1Sizing(model, office1Zone);
-  office1Zone.setName("Office 1 Zone");
-  office1Zone.setThermostatSetpointDualSetpoint(*thermostat);
-  office1->setThermalZone(office1Zone);
-  office1->setBuildingStory(story1);
-
-  openstudio::model::ThermalZone office2Zone(model);
-  openstudio::model::SizingZone office2Sizing(model, office2Zone);
-  office2Zone.setName("Office 2 Zone");
-  office2Zone.setThermostatSetpointDualSetpoint(*thermostat);
-  office2->setThermalZone(office2Zone);
-  office2->setBuildingStory(story1);
-
-  // add the air system
-  openstudio::model::Loop loop = openstudio::model::addSystemType3(model);
-  openstudio::model::AirLoopHVAC airLoop = loop.cast<openstudio::model::AirLoopHVAC>();
-  airLoop.addBranchForZone(libraryZone);
-  airLoop.addBranchForZone(office1Zone);
-  airLoop.addBranchForZone(office2Zone);
-
-  boost::optional<openstudio::model::SetpointManagerSingleZoneReheat> setpointManager;
-  for (openstudio::model::SetpointManagerSingleZoneReheat t : 
-    model.getModelObjects<openstudio::model::SetpointManagerSingleZoneReheat>())
-  {
-    setpointManager = t;
-    break;
-  }
-  if(!setpointManager)
-  {
-    return boost::optional<openstudio::model::Model>();
-  }
-  setpointManager->setControlZone(libraryZone);
-
-  return boost::optional<openstudio::model::Model>(model);
-}
-
-TEST_F(ContamFixture, ForwardTranslator_exampleModel)
-{
-  model::Model model = model::exampleModel();
-
-  path p = toPath("exampleModel.prj");
-
-  bool test = contam::ForwardTranslator::modelToPrj(model, p);
-
-  //bool test = contam::ForwardTranslator::modelToContam(model, p, m);
+  bool test = openstudio::contam::ForwardTranslator::modelToPrj(model, p);
 
   EXPECT_TRUE(test);
 }
 
-TEST_F(ContamFixture, ForwardTranslator_DemoModel_2012)
+TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2012)
 {
   openstudio::path modelPath = (resourcesPath() / openstudio::toPath("contam") / openstudio::toPath("CONTAMTemplate.osm"));
-  osversion::VersionTranslator vt;
-  boost::optional<model::Model> optionalModel = vt.loadModel(modelPath);
+  openstudio::osversion::VersionTranslator vt;
+  boost::optional<openstudio::model::Model> optionalModel = vt.loadModel(modelPath);
   ASSERT_TRUE(optionalModel);
-  model::Model model = optionalModel.get();
+  openstudio::model::Model model = optionalModel.get();
 
-  boost::optional<model::Model> demoModel = buildDemoModel(model);
+  boost::optional<openstudio::model::Model> demoModel = buildDemoModel(model);
+
+  // Write out the model
+  openstudio::path outPath("CONTAMDemo2012.osm");
+  EXPECT_TRUE(demoModel->save(outPath, true));
 
   ASSERT_TRUE(demoModel);
 
-  contam::ForwardTranslator translator;
+  openstudio::contam::ForwardTranslator translator;
 
   boost::optional<openstudio::contam::IndexModel> prjModel = translator.translateModel(demoModel.get());
 
@@ -252,14 +89,10 @@ TEST_F(ContamFixture, ForwardTranslator_DemoModel_2012)
   EXPECT_EQ(6,prjModel->zones().size());
   int systemZoneCount=0;
   int interiorZoneCount=0;
-  for (const contam::Zone& zone : prjModel->zones())
-  {
-    if(zone.system())
-    {
+  for(const openstudio::contam::Zone& zone : prjModel->zones()) {
+    if(zone.system()) {
       systemZoneCount++;
-    }
-    else if(zone.variablePressure() && zone.variableContaminants())
-    {
+    } else if(zone.variablePressure() && zone.variableContaminants()) {
       interiorZoneCount++;
     }
   }
@@ -273,30 +106,18 @@ TEST_F(ContamFixture, ForwardTranslator_DemoModel_2012)
   int outsideAirPathCount=0;
   int recirculationPathCount=0;
   int plainPathCount=0;
-  for (contam::AirflowPath afp : prjModel->airflowPaths())
-  {
-    if(afp.system())
-    {
+  for(openstudio::contam::AirflowPath afp : prjModel->airflowPaths()) {
+    if(afp.system()) {
       systemPathCount++;
-    }
-    else if(afp.windPressure())
-    {
+    } else if(afp.windPressure()) {
       windPressurePathCount++;
-    }
-    else if(afp.exhaust())
-    {
+    } else if(afp.exhaust()) {
       exhaustPathCount++;
-    }
-    else if(afp.outsideAir())
-    {
+    } else if(afp.outsideAir()) {
       outsideAirPathCount++;
-    }
-    else if(afp.recirculation())
-    {
+    } else if(afp.recirculation()) {
       recirculationPathCount++;
-    }
-    else
-    {
+    } else {
       plainPathCount++;
     }
   }
@@ -316,14 +137,13 @@ TEST_F(ContamFixture, ForwardTranslator_DemoModel_2012)
   exteriorWallCount["Office 2 Zone"] = 3;
   exteriorWallCount["Hallway Zone"] = 2;
 
-  std::map <Handle, int> zoneMap = translator.zoneMap();
+  std::map <openstudio::Handle, int> zoneMap = translator.zoneMap();
   EXPECT_EQ(4,zoneMap.size());
 
   std::vector<std::vector<int> > exteriorFlowPaths = prjModel->zoneExteriorFlowPaths();
   EXPECT_EQ(6,exteriorFlowPaths.size());
 
-  for (const model::ThermalZone& thermalZone : model.getConcreteModelObjects<model::ThermalZone>())
-  {
+  for(const openstudio::model::ThermalZone& thermalZone : model.getConcreteModelObjects<openstudio::model::ThermalZone>()) {
     ASSERT_TRUE(zoneNames.contains(thermalZone.name().get()));
     unsigned zoneNumber = zoneMap[thermalZone.handle()];
     ASSERT_TRUE(zoneNumber > 0);
@@ -337,4 +157,26 @@ TEST_F(ContamFixture, ForwardTranslator_DemoModel_2012)
   EXPECT_TRUE(prjModel->setDef_T("297.15"));
   EXPECT_FALSE(prjModel->setDef_T("twoninetysevenpointonefive"));
   EXPECT_EQ(297.15,prjModel->def_T());
+}
+
+TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2012_Doors)
+{
+  openstudio::path modelPath = (resourcesPath() / openstudio::toPath("contam") / openstudio::toPath("CONTAMTemplate.osm"));
+  openstudio::osversion::VersionTranslator vt;
+  boost::optional<openstudio::model::Model> optionalModel = vt.loadModel(modelPath);
+  ASSERT_TRUE(optionalModel);
+  openstudio::model::Model model = optionalModel.get();
+
+  boost::optional<openstudio::model::Model> demoModel = buildDemoModel(model);
+
+  ASSERT_TRUE(demoModel);
+
+  demoModel = addDemoModelDoors(demoModel.get());
+
+  ASSERT_TRUE(demoModel);
+
+  // Write out the model
+  openstudio::path outPath("CONTAMDemo2012Doors.osm");
+  EXPECT_TRUE(demoModel->save(outPath, true));
+
 }

@@ -23,8 +23,9 @@
 #include "AirflowAPI.hpp"
 
 #include "PrjModel.hpp"
+#include "SurfaceNetworkBuilder.hpp"
 
-#include "../model/Model.hpp"
+//#include "../model/Model.hpp"
 #include "../utilities/idf/Handle.hpp"
 #include "../utilities/core/Path.hpp"
 #include "../utilities/core/Optional.hpp"
@@ -36,6 +37,13 @@
 
 namespace openstudio{
 class ProgressBar;
+namespace model {
+class Model;
+class Space;
+class ThermalZone;
+class SubSurface;
+class Surface;
+}
 
 namespace contam{
 
@@ -88,7 +96,7 @@ private:
  *  overall leakage rate and individual components are not directly represented.
  *
  */
-class AIRFLOW_API ForwardTranslator
+class AIRFLOW_API ForwardTranslator : public airflow::SurfaceNetworkBuilder
 {
 public:
   /** @name Constructors and Destructors */
@@ -164,6 +172,15 @@ public:
 
   //@}
 
+protected:
+  virtual bool linkExteriorSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface);
+  virtual bool linkExteriorSubSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface, openstudio::model::SubSurface subSurface);
+  virtual bool linkInteriorSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface,
+    openstudio::model::Surface adjacentSurface, openstudio::model::Space adjacentSpace, openstudio::model::ThermalZone adjacentZone);
+  virtual bool linkInteriorSubSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface, openstudio::model::SubSurface subSurface,
+    openstudio::model::SubSurface adjacentSubSurface, openstudio::model::Surface adjacentSurface, openstudio::model::Space adjacentSpace, openstudio::model::ThermalZone adjacentZone);
+
+
 private:
   // Do the work to set up the leakage paths
   bool applyExteriorFlowRate(contam::IndexModel prjModel);
@@ -181,6 +198,8 @@ private:
   int tableLookup(std::map<Handle,int> map, Handle handle, const char *name);
   std::string reverseLookup(QMap<std::string,int> map, int nr, const char *name);
   Handle reverseLookup(QMap<Handle,int> map, int nr, const char *name);
+
+  contam::IndexModel m_prjModel;
 
   // Maps - will be populated after a call of translateModel
   // All map to the CONTAM index (1,2,...,nElement)
@@ -202,8 +221,6 @@ private:
   double m_returnSupplyRatio;
   bool m_ratioOverride;
   bool m_translateHVAC;
-
-  ProgressBar* m_progressBar;
 
   StringStreamLogSink m_logSink;
 

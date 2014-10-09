@@ -115,7 +115,7 @@ private:
   ProgressBar* m_progressBar;
   StringStreamLogSink m_logSink;
 
-  REGISTER_LOGGER("openstudio.model.SurfaceNetworkBuilder");
+  REGISTER_LOGGER("openstudio.airflow.SurfaceNetworkBuilder");
 };
 
 } // airflow

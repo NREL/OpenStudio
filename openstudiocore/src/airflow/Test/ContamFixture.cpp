@@ -21,18 +21,18 @@
 
 #include <resources.hxx>
 
-void ContamFixture::SetUp() {}
+void AirflowFixture::SetUp() {}
 
-void ContamFixture::TearDown() {}
+void AirflowFixture::TearDown() {}
 
-void ContamFixture::SetUpTestCase() {
+void AirflowFixture::SetUpTestCase() {
   // set up logging
   openstudio::Logger::instance().standardOutLogger().disable();
-  logFile = std::shared_ptr<openstudio::FileLogSink>(new openstudio::FileLogSink(openstudio::toPath("./ContamFixture.log")));
+  logFile = std::shared_ptr<openstudio::FileLogSink>(new openstudio::FileLogSink(openstudio::toPath("./AirflowFixture.log")));
 }
 
-void ContamFixture::TearDownTestCase() {
+void AirflowFixture::TearDownTestCase() {
   logFile->disable();
 }
 
-std::shared_ptr<openstudio::FileLogSink> ContamFixture::logFile;
+std::shared_ptr<openstudio::FileLogSink> AirflowFixture::logFile;

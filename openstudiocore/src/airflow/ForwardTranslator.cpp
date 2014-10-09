@@ -31,6 +31,8 @@
 #include "../model/Space_Impl.hpp"
 #include "../model/Surface.hpp"
 #include "../model/Surface_Impl.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/SubSurface_Impl.hpp"
 #include "../model/AirLoopHVAC.hpp"
 #include "../model/AirLoopHVAC_Impl.hpp"
 #include "../model/Node.hpp"
@@ -170,7 +172,7 @@ void ForwardTranslator::clear()
   m_startDateTime = boost::optional<DateTime>();
   m_endDateTime = boost::optional<DateTime>();
   m_translateHVAC = true;
-  m_progressBar = nullptr;
+  //m_progressBar = nullptr;
 }
 
 int ForwardTranslator::tableLookup(QMap<std::string,int> map, std::string str, const char *name)
@@ -433,28 +435,21 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
   m_logSink.setThreadId(QThread::currentThread());
   m_logSink.resetStringStream();
 
-  contam::IndexModel prjModel;
-  prjModel.read(std::string(":/templates/template.prj"));
-  if(!prjModel.valid())
-  {
-    return boost::optional<contam::IndexModel>();
+  m_prjModel.read(std::string(":/templates/template.prj"));
+  if (!m_prjModel.valid()) {
+    return boost::none;
   }
   // The template is a legal PRJ file, so it has one level. Not for long.
-  prjModel.setLevels(std::vector<Level>());
+  m_prjModel.setLevels(std::vector<Level>());
 
   // Do some setup work
-  if(m_leakageDescriptor)
-  {
-    if(!applyAirtightnessLevel(prjModel))
-    {
+  if(m_leakageDescriptor) {
+    if(!applyAirtightnessLevel(m_prjModel)) {
       LOG(Error,"Application of airtightness level failed.");
       return boost::optional<contam::IndexModel>();
     }
-  }
-  else
-  {
-    if(!applyExteriorFlowRate(prjModel))
-    {
+  } else {
+    if(!applyExteriorFlowRate(m_prjModel)) {
       LOG(Error,"Application of exterior flow rate failed.");
       return boost::optional<contam::IndexModel>();
     }
@@ -465,63 +460,55 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
   // Set top-level model info
   boost::optional<model::Building> building = model.getOptionalUniqueModelObject<model::Building>();
   QString modelDescr = QString("Automatically generated OpenStudio model");
-  if(building)
-  {
+  if(building) {
     boost::optional<std::string> name = building->name();
-    if(name)
+    if (name) {
       modelDescr = QString("Automatically generated from \"%1\" OpenStudio model").arg(openstudio::toQString(name.get()));
+    }
   }
-  prjModel.setDesc(modelDescr.toStdString());
+  m_prjModel.setDesc(modelDescr.toStdString());
   // Set the simulation length to match the length of the E+ simulation
   boost::optional<openstudio::model::RunPeriod> rp = model.runPeriod();
-  if(rp)
-  {
+  if(rp) {
     bool goodDates = true;
     std::string startString,endString;
-    try
-    {
+    try {
       openstudio::Date start(rp->getBeginMonth(),rp->getBeginDayOfMonth());
       startString = start.monthOfYear().valueName() + QString().sprintf("%02d",start.dayOfMonth()).toStdString();
       openstudio::Date end(rp->getEndMonth(),rp->getEndDayOfMonth());
       endString = end.monthOfYear().valueName() + QString().sprintf("%02d",end.dayOfMonth()).toStdString();
       m_startDateTime = boost::optional<DateTime>(DateTime(start,Time(0)));
       m_endDateTime = boost::optional<DateTime>(DateTime(end,Time(0,24)));
-    }
-    catch(...)
-    {
+    } catch(...) {
       goodDates = false;
       LOG(Error,"Failed to get usable start of end date from run period object, defaulting to steady state")
     }
-    if(goodDates)
-    {
+    if(goodDates) {
       // Turn on transient simulation
-      prjModel.rc().setSim_af(1);
+      m_prjModel.rc().setSim_af(1);
       // Set start date
-      prjModel.rc().setDate_0(startString);
-      prjModel.rc().setTime_0("00:00:00");
+      m_prjModel.rc().setDate_0(startString);
+      m_prjModel.rc().setTime_0("00:00:00");
       // Set start date
-      prjModel.rc().setDate_1(endString);
-      prjModel.rc().setTime_1("24:00:00");
+      m_prjModel.rc().setDate_1(endString);
+      m_prjModel.rc().setTime_1("24:00:00");
     }
   }
   // Get stories
   std::vector<openstudio::model::BuildingStory> stories = model.getConcreteModelObjects<openstudio::model::BuildingStory>();
-  // It appears that we will need for each story to have an elevation
-  for (const openstudio::model::BuildingStory& buildingStory : stories)
-  {
+  // We will need each story to have an elevation
+  for (const openstudio::model::BuildingStory& buildingStory : stories) {
     boost::optional<double> elevation = buildingStory.nominalZCoordinate();
-    if(!elevation)
-    {
+    if(!elevation) {
       LOG(Error, "Story '" << buildingStory.name().get() << "' has no elevation, translation aborted");
-      return boost::optional<contam::IndexModel>();
+      return boost::none;
     }
   }
   // Sort the stories by elevation
   std::sort(stories.begin(),stories.end(),compareElevation);
   nr=1;
   double totalHeight = 0;
-  for (const openstudio::model::BuildingStory& buildingStory : stories)
-  {
+  for (const openstudio::model::BuildingStory& buildingStory : stories) {
     openstudio::contam::Level level;
     level.setName(QString("<%1>").arg(nr).toStdString());
     m_levelMap[buildingStory.handle()] = nr;
@@ -531,32 +518,24 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
     level.setNr(nr);
     level.setRefht(QString("%1").arg(z).toStdString());
     level.setDelht(QString("%1").arg(ht).toStdString());
-    prjModel.addLevel(level);
+    m_prjModel.addLevel(level);
     nr++;
-    if (m_progressBar)
-    {
-      m_progressBar->setValue(m_progressBar->value() + 1);
-    }
+    //if (m_progressBar) {
+    //  m_progressBar->setValue(m_progressBar->value() + 1);
+    //}
   }
-  prjModel.setWind_H(QString().sprintf("%g",totalHeight).toStdString());
+  m_prjModel.setWind_H(QString().sprintf("%g",totalHeight).toStdString());
   // Check for levels - translation can't proceed without levels
-  if(prjModel.levels().size() == 0)
-  {
+  if(m_prjModel.levels().size() == 0) {
     LOG(Error, "Failed to find building stories in model, translation aborted");
     return boost::optional<contam::IndexModel>();
   }
   // Translate each thermal zone and generate a lookup table by name.
   std::vector<model::ThermalZone> thermalZones = model.getConcreteModelObjects<model::ThermalZone>();
-  if (m_progressBar)
-  {
-    m_progressBar->setWindowTitle(openstudio::toString("Translating Zones"));
-    m_progressBar->setMinimum(0);
-    m_progressBar->setMaximum(thermalZones.size());
-    m_progressBar->setValue(0);
-  }
+  initProgress(thermalZones.size(), "Translating Zones");
+ 
   nr=0;
-  for (model::ThermalZone thermalZone : thermalZones)
-  {
+  for (model::ThermalZone thermalZone : thermalZones) {
     nr++;
     openstudio::contam::Zone zone;
     m_zoneMap[thermalZone.handle()] = nr;
@@ -565,25 +544,18 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
     zone.setName(QString("Zone_%1").arg(nr).toStdString());
     boost::optional<double> volume = thermalZone.volume();
     QString volString("0.0");
-    if(volume)
-    {
+    if(volume) {
       volString = QString("%1").arg(*volume);
-    }
-    else
-    {
+    } else {
       // Since it seems this is a pretty common thing, no warning unless we can't get a value
       // LOG(Warn, "Zone '" << name.toStdString() << "' has zero volume, trying to sum space volumes");
       double vol=0.0;
-      for (openstudio::model::Space space : thermalZone.spaces())
-      {
+      for (openstudio::model::Space space : thermalZone.spaces()) {
         vol += space.volume();
       }
-      if(vol == 0.0)
-      {
+      if(vol == 0.0) {
         LOG(Warn, "Failed to compute volume for Zone '" << thermalZone.name().get() << "'");
-      }
-      else
-      {
+      } else {
         volString = QString("%1").arg(vol);
       }
     }
@@ -594,44 +566,33 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
     // where a zone is on more than one level. There are ugly workarounds - will need to
     // think about
     int levelNr = 0;
-    for (openstudio::model::Space space : thermalZone.spaces())
-    {
+    for (openstudio::model::Space space : thermalZone.spaces()) {
       boost::optional<openstudio::model::BuildingStory> story = space.buildingStory();
-      if(story)
-      {
+      if(story) {
         levelNr = tableLookup(m_levelMap,(*story).handle(),"levelMap");
         break;
       }
     }
-    if(levelNr)
-    {
+    if(levelNr) {
       zone.setPl(levelNr);
-    }
-    else
-    {
+    } else {
       LOG(Error, "Unable to set level for zone '" << thermalZone.name().get() << "', translation aborted");
       return boost::optional<contam::IndexModel>();
     }
     // set T0
     zone.setT0(QString("293.15").toStdString());
-    prjModel.addZone(zone);
-    if (m_progressBar)
-    {
-      m_progressBar->setValue(m_progressBar->value() + 1);
-    }
+    m_prjModel.addZone(zone);
+    progress();
   }
 
   // Create paths and generate a lookup table by name
   std::vector<openstudio::model::Surface> surfaces = model.getConcreteModelObjects<openstudio::model::Surface>();
-  if (m_progressBar)
-  {
-    m_progressBar->setWindowTitle(openstudio::toString("Translating Surfaces"));
-    m_progressBar->setMinimum(0);
-    m_progressBar->setMaximum(surfaces.size());
-    m_progressBar->setValue(0);
-  }
+  initProgress(surfaces.size(), "Translating Surfaces");
+
   nr = 0;
   // Loop over surfaces and generate paths
+  build(model);
+  /*
   QList <openstudio::Handle>used;
   double wind_H = prjModel.wind_H();
   for (model::Surface surface : surfaces)
@@ -757,28 +718,18 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
       m_progressBar->setValue(m_progressBar->value() + 1);
     }
   }
+  */
 
-  if(m_translateHVAC)
-  {
+  if(m_translateHVAC) {
     // Generate air handling systems
     std::vector<openstudio::model::AirLoopHVAC> systems = model.getConcreteModelObjects<openstudio::model::AirLoopHVAC>();
-    if (m_progressBar)
-    {
-      m_progressBar->setWindowTitle(openstudio::toString("Translating AirLoops"));
-      m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(systems.size());
-      m_progressBar->setValue(0);
-    }
+    initProgress(systems.size(), "Translating AirLoops");
+
     nr = 0;
-    for (openstudio::model::AirLoopHVAC airloop : systems)
-    {
+    for (openstudio::model::AirLoopHVAC airloop : systems) {
       // Skip loops with no zones attached
-      if(!airloop.thermalZones().size())
-      {
-        if (m_progressBar)
-        {
-          m_progressBar->setValue(m_progressBar->value() + 1);
-        }
+      if(!airloop.thermalZones().size()) {
+        progress();
         continue;
       }
       openstudio::contam::Ahs ahs;
@@ -787,7 +738,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
       ahs.setName(QString("AHS_%1").arg(nr).toStdString());
       // Create supply and return zones
       openstudio::contam::Zone rz;
-      rz.setNr(prjModel.zones().size()+1);
+      rz.setNr(m_prjModel.zones().size()+1);
       rz.setPl(1);
       rz.setT0(QString("293.15").toStdString());
       rz.setSystem(true);
@@ -806,15 +757,14 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
       ahs.setZone_r(rz.nr());
       ahs.setZone_s(sz.nr());
       // Add them to the zone list
-      prjModel.addZone(rz);
-      prjModel.addZone(sz);
+      m_prjModel.addZone(rz);
+      m_prjModel.addZone(sz);
       // Now hook the served zones up to the supply and return zones
-      for (openstudio::model::ThermalZone thermalZone : airloop.thermalZones())
-      {
+      for (openstudio::model::ThermalZone thermalZone : airloop.thermalZones()) {
         int zoneNr = tableLookup(m_zoneMap,thermalZone.handle(),"zoneMap");
         // Supply path
         openstudio::contam::AirflowPath sp;
-        sp.setNr(prjModel.airflowPaths().size()+1);
+        sp.setNr(m_prjModel.airflowPaths().size()+1);
         sp.setPld(1);
         sp.setPzn(ahs.zone_s());
         sp.setPzm(zoneNr);
@@ -831,35 +781,26 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
         rp.setSystem(true);
         m_pathMap[(thermalZone.name().get()+" return")] = rp.nr();
         // Add the paths to the path list
-        prjModel.addAirflowPath(sp);
-        prjModel.addAirflowPath(rp);
+        m_prjModel.addAirflowPath(sp);
+        m_prjModel.addAirflowPath(rp);
       }
-      prjModel.addAhs(ahs);
-      if (m_progressBar)
-      {
-        m_progressBar->setValue(m_progressBar->value() + 1);
-      }
+      m_prjModel.addAhs(ahs);
+      progress();
     }
 
-    if (m_progressBar)
-    {
-      m_progressBar->setWindowTitle(openstudio::toString("Connecting AHS to zones"));
-      m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(prjModel.ahs().size());
-      m_progressBar->setValue(0);
-    }
+    initProgress(m_prjModel.ahs().size(),"Connecting AHS to zones");
     // Now loop back through the AHS list and connect the supply and return zones together
-    for(unsigned int i=0;i<prjModel.ahs().size();i++)
+    for(unsigned int i=0;i<m_prjModel.ahs().size();i++)
     {
       std::string loopName = QString("AHS_%1").arg(i+1).toStdString();
       // Recirculation path
       openstudio::contam::AirflowPath recirc;
-      recirc.setNr(prjModel.airflowPaths().size()+1);
+      recirc.setNr(m_prjModel.airflowPaths().size()+1);
       recirc.setPld(1);
       // Set the OA fraction schedule here
       //recirc.ps = ?
-      recirc.setPzn(prjModel.ahs()[i].zone_r());
-      recirc.setPzm(prjModel.ahs()[i].zone_s());
+      recirc.setPzn(m_prjModel.ahs()[i].zone_r());
+      recirc.setPzm(m_prjModel.ahs()[i].zone_s());
       recirc.setRecirculation(true);
       m_pathMap[loopName + " recirculation"] = recirc.nr();
       // Outside air path
@@ -867,29 +808,26 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
       oa.setNr(recirc.nr()+1);
       oa.setPld(1);
       oa.setPzn(-1);
-      oa.setPzm(prjModel.ahs()[i].zone_s());
+      oa.setPzm(m_prjModel.ahs()[i].zone_s());
       oa.setOutsideAir(true);
       m_pathMap[loopName + " oa"] = oa.nr();
       // Exhaust path;
       openstudio::contam::AirflowPath exhaust;
       exhaust.setNr(oa.nr()+1);
       exhaust.setPld(1);
-      exhaust.setPzn(prjModel.ahs()[i].zone_r());
+      exhaust.setPzn(m_prjModel.ahs()[i].zone_r());
       exhaust.setPzm(-1);
       exhaust.setExhaust(true);
       m_pathMap[loopName + " exhaust"] = exhaust.nr();
       // Add the paths to the path list
-      prjModel.addAirflowPath(recirc);
-      prjModel.addAirflowPath(oa); 
-      prjModel.addAirflowPath(exhaust);
+      m_prjModel.addAirflowPath(recirc);
+      m_prjModel.addAirflowPath(oa);
+      m_prjModel.addAirflowPath(exhaust);
       // Store the nrs in the ahs
-      prjModel.ahs()[i].setPath_r(recirc.nr());
-      prjModel.ahs()[i].setPath_s(oa.nr());
-      prjModel.ahs()[i].setPath_x(exhaust.nr());
-      if (m_progressBar)
-      {
-        m_progressBar->setValue(m_progressBar->value() + 1);
-      }
+      m_prjModel.ahs()[i].setPath_r(recirc.nr());
+      m_prjModel.ahs()[i].setPath_s(oa.nr());
+      m_prjModel.ahs()[i].setPath_x(exhaust.nr());
+      progress();
     }
 
     // The rest of this isn't hooked into the progress bar yet, will need to do that at some point
@@ -897,28 +835,23 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
     // Try to use E+ results to set temperatures and flow rates. The supply and return flow paths are in the path
     // lookup table under the names thermalZone.name + supply|return (see above)
     boost::optional<openstudio::SqlFile> sqlFile = model.sqlFile();
-    if(sqlFile)
-    {
+    if(sqlFile) {
       std::vector<std::string> available = sqlFile->availableTimeSeries();
       //for (std::string var : available)
       //{
       //  std::cout << '\t' << var << std::endl;
       //}
       std::string envPeriod; 
-      for (std::string t : sqlFile->availableEnvPeriods())
-      {
+      for (std::string t : sqlFile->availableEnvPeriods()) {
         envPeriod = t; // should only ever be one
         break;
       }
       // bool setTime=false;
-      if(std::find(available.begin(), available.end(), "Zone Mean Air Temperature")!=available.end())
-      {
+      if(std::find(available.begin(), available.end(), "Zone Mean Air Temperature")!=available.end()) {
         // Loop through and get a time series for each zone we can find
-        for (model::ThermalZone thermalZone : model.getConcreteModelObjects<model::ThermalZone>())
-        {
+        for (model::ThermalZone thermalZone : model.getConcreteModelObjects<model::ThermalZone>()) {
           boost::optional<std::string> name = thermalZone.name();
-          if(!name)
-          {
+          if(!name) {
             LOG(Warn,"Zone " << openstudio::toString(thermalZone.handle()) << " has no name and will have constant temperature");
             continue;
           }
@@ -926,8 +859,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
           keyValue = boost::regex_replace(keyValue, boost::regex("([a-z])"),"\\u$1");
           boost::optional<TimeSeries> timeSeries = sqlFile->timeSeries(envPeriod, "Hourly", 
             "Zone Mean Air Temperature", keyValue);
-          if(timeSeries)
-          {
+          if(timeSeries) {
             int nr =  m_zoneMap[thermalZone.handle()];
             // std::cout << "Found time series for zone " << name.get() << ", CONTAM index " << nr << std::endl;
             // Create a control node
@@ -937,48 +869,38 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
             CvfDat ctrl;
             ctrl.setName(controlName);
             ctrl.setValuename(valueName);
-            prjModel.addControlNode(ctrl);
+            m_prjModel.addControlNode(ctrl);
             // Connect to the zone
-            prjModel.zones()[nr-1].setPc(ctrl.nr());
-          }
-          else
-          {
+            m_prjModel.zones()[nr - 1].setPc(ctrl.nr());
+          } else {
             LOG(Warn,"Zone '" << name.get() << "' has no Zone Mean Air Temperature time series");
           }
         }
-      }
-      else
-      {
+      } else {
         LOG(Warn, "Activate \"Zone Mean Air Temperature\" output to set zone temperature controls.");
       }
-      if(std::find(available.begin(), available.end(), "System Node MassFlowRate")!=available.end())
-      {
+      if(std::find(available.begin(), available.end(), "System Node MassFlowRate")!=available.end()) {
         LOG(Warn, "Zone equipment not yet accounted for.");
         // get sizing results, get flow rate schedules for each zone's inlet, return, and exhaust nodes
         // This should be moved to inside the contam translator
-        for (model::ThermalZone thermalZone : model.getConcreteModelObjects<model::ThermalZone>())
-        {
+        for (model::ThermalZone thermalZone : model.getConcreteModelObjects<model::ThermalZone>()) {
           // todo: this does not include OA from zone equipment (PTAC, PTHP, etc) or exhaust fans
 
           boost::optional<model::Node> supplyAirNode;
           boost::optional<model::ModelObject> supplyAirModelObject = thermalZone.inletPortList().airLoopHVACModelObject();
-          if (supplyAirModelObject)
-          {
+          if (supplyAirModelObject) {
             supplyAirNode = supplyAirModelObject->optionalCast<model::Node>();
           }
-          if (supplyAirNode)
-          {
+          if (supplyAirNode) {
             std::string keyValue = supplyAirNode->name().get();
             keyValue = boost::regex_replace(keyValue, boost::regex("([a-z])"),"\\u$1");
             boost::optional<TimeSeries> timeSeries = sqlFile->timeSeries(envPeriod, "Hourly",
               "System Node MassFlowRate", keyValue);
-            if (timeSeries)
-            {
+            if (timeSeries) {
               //std::cout << "Found time series for supply to zone " << thermalZone.name().get() << std::endl;
               nr = m_pathMap.value(thermalZone.name().get()+" supply",0);
               // There really should not be a case of missing number here, but it is better to be safe
-              if(!nr)
-              {
+              if(!nr) {
                 LOG(Error,"Supply node for zone '" << thermalZone.name().get() << "' has no associated CONTAM path");
                 continue;
               }
@@ -989,17 +911,15 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
               CvfDat ctrl;
               ctrl.setName(controlName);
               ctrl.setValuename(valueName);
-              prjModel.addControlNode(ctrl);
+              m_prjModel.addControlNode(ctrl);
               // Connect to the path
-              prjModel.airflowPaths()[nr-1].setPc(ctrl.nr());
-              if(m_ratioOverride) // This assumes that there *is* a return, which could be wrong? maybe?
-              {
+              m_prjModel.airflowPaths()[nr-1].setPc(ctrl.nr());
+              if(m_ratioOverride) { // This assumes that there *is* a return, which could be wrong? maybe?
                 // Create a new time series
                 TimeSeries returnSeries = (*timeSeries)*m_returnSupplyRatio;
                 nr = m_pathMap.value(thermalZone.name().get()+" return",0);
                 // There really should not be a case of missing number here, but it is better to be safe
-                if(!nr)
-                {
+                if(!nr) {
                   LOG(Error,"Failed to find return path for zone '" << thermalZone.name().get() << "'");
                   continue;
                 }
@@ -1010,34 +930,29 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
                 CvfDat ctrl;
                 ctrl.setName(controlName);
                 ctrl.setValuename(valueName);
-                prjModel.addControlNode(ctrl);
+                m_prjModel.addControlNode(ctrl);
                 // Connect to the path
-                prjModel.airflowPaths()[nr-1].setPc(ctrl.nr());
+                m_prjModel.airflowPaths()[nr-1].setPc(ctrl.nr());
               }
             }
           }
 
-          if(!m_ratioOverride)
-          {
+          if(!m_ratioOverride) {
             boost::optional<model::Node> returnAirNode;
             boost::optional<model::ModelObject> returnAirModelObject = thermalZone.returnAirModelObject();
-            if (returnAirModelObject)
-            {
+            if (returnAirModelObject) {
               returnAirNode = returnAirModelObject->optionalCast<model::Node>();
             }
-            if (returnAirNode)
-            {
+            if (returnAirNode) {
               std::string keyValue = returnAirNode->name().get();
               keyValue = boost::regex_replace(keyValue, boost::regex("([a-z])"),"\\u$1");
               boost::optional<TimeSeries> timeSeries = sqlFile->timeSeries(envPeriod, "Hourly", 
                 "System Node MassFlowRate", keyValue);
-              if (timeSeries)
-              {
+              if (timeSeries) {
                 //std::cout << "Found time series for return from zone " << thermalZone.name().get() << std::endl;
                 nr = m_pathMap.value(thermalZone.name().get()+" return",0);
                 // There really should not be a case of missing number here, but it is better to be safe
-                if(!nr)
-                {
+                if(!nr) {
                   LOG(Error,"Return node for zone '" << thermalZone.name().get() << "' has no associated CONTAM path");
                   continue;
                 }
@@ -1048,56 +963,44 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
                 CvfDat ctrl;
                 ctrl.setName(controlName);
                 ctrl.setValuename(valueName);
-                prjModel.addControlNode(ctrl);
+                m_prjModel.addControlNode(ctrl);
                 // Connect to the path
-                prjModel.airflowPaths()[nr-1].setPc(ctrl.nr());
+                m_prjModel.airflowPaths()[nr - 1].setPc(ctrl.nr());
               }
             }
           }
         }
-      }
-      else
-      {
+      } else {
         LOG(Warn, "Activate \"System Node MassFlowRate\" output to set zone supply/return flows.");
       }
-    }
-    else
-    {
+    } else {
       LOG(Warn, "Simulation results not available, using 1 scfm/ft^2 to set supply flows");
       // Use the 1 scfm/ft^2 approximation with 90% return
-      for (openstudio::model::ThermalZone thermalZone :
-        model.getConcreteModelObjects<openstudio::model::ThermalZone>())
-      {
+      for (openstudio::model::ThermalZone thermalZone : model.getConcreteModelObjects<openstudio::model::ThermalZone>()) {
         double area=0.0;
-        for (openstudio::model::Space space : thermalZone.spaces())
-        {
+        for (openstudio::model::Space space : thermalZone.spaces()) {
           area += space.floorArea();
         }
-        if(area == 0.0)
-        {
+        if(area == 0.0) {
           LOG(Warn, "Failed to compute floor area for Zone '" << thermalZone.name().get() << "'");
-        }
-        else
-        {
+        } else {
           double flowRate = area*0.00508*1.2041;  // Assume 1 scfm/ft^2 as an approximation
           std::string supplyName = thermalZone.name().get() + " supply";
           std::string returnName = thermalZone.name().get() + " return";
           int supplyNr = m_pathMap.value(supplyName,0);
-          if(supplyNr)
-          {
-            prjModel.airflowPaths()[supplyNr-1].setFahs(QString().sprintf("%g",flowRate).toStdString());
+          if(supplyNr) {
+            m_prjModel.airflowPaths()[supplyNr - 1].setFahs(QString().sprintf("%g", flowRate).toStdString());
           }
           int returnNr = m_pathMap.value(returnName,0);
-          if(returnNr)
-          {
-            prjModel.airflowPaths()[returnNr-1].setFahs(QString().sprintf("%g",m_returnSupplyRatio*flowRate).toStdString());
+          if(returnNr) {
+            m_prjModel.airflowPaths()[returnNr - 1].setFahs(QString().sprintf("%g", m_returnSupplyRatio*flowRate).toStdString());
           }
         }
       }
     }
   }
 
-  return boost::optional<contam::IndexModel>(prjModel);
+  return boost::optional<contam::IndexModel>(m_prjModel);
 
   // these are probably useful, will have to ask Kyle
   // Kyle, should these functions be const?
@@ -1180,6 +1083,104 @@ bool ForwardTranslator::writeCvFile(openstudio::path filepath)
     return m_cvf.write(filepath);
   }
   return false;
+}
+
+bool ForwardTranslator::linkExteriorSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface)
+{
+  contam::AirflowPath path;
+  // Use the lookup table to get the zone info
+  int zoneNr;
+  if (!(zoneNr = tableLookup(m_zoneMap, zone.handle(), "zoneMap"))) {
+    // Maybe this needs a warning?
+    return false;
+  }
+  contam::Zone airflowZone = m_prjModel.zones()[zoneNr - 1];
+  // Get the surface area - will need to do more work here later if large openings are present
+  double area = surface.grossArea();
+  std::string type = surface.surfaceType();
+  double averageZ = 0;
+  double numVertices = surface.vertices().size();
+  for(const Point3d& point : surface.vertices()) {
+    averageZ += point.z();
+  }
+  // Now set the path info
+  path.setRelHt(averageZ / numVertices - m_prjModel.levels()[airflowZone.pl() - 1].refht());
+  path.setPld(airflowZone.pl());
+  path.setMult(area);
+  // Make an exterior flow path
+  path.setPzn(airflowZone.nr());
+  path.setPzm(-1);
+  // Set the wind-related stuff here
+  path.setWazm(openstudio::radToDeg(surface.azimuth()));
+  path.setWindPressure(true);
+  path.setWPmod(openstudio::wind::pressureModifier(openstudio::wind::Default, m_prjModel.wind_H()));
+  path.setPw(4); // Assume standard template
+  // Set flow element
+  if (type == "RoofCeiling") {
+    path.setPe(m_afeMap["roof"]);
+    path.setPw(5); // Assume standard template
+  }
+  else {
+    path.setPe(m_afeMap["exterior"]);
+  }
+  m_prjModel.addAirflowPath(path);
+  m_surfaceMap[surface.handle()] = path.nr();
+  return true;
+}
+
+bool ForwardTranslator::linkInteriorSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface,
+  openstudio::model::Surface adjacentSurface, openstudio::model::Space adjacentSpace, openstudio::model::ThermalZone adjacentZone)
+{
+  contam::AirflowPath path;
+  // Use the lookup table to get the zone info
+  int zoneNr;
+  if (!(zoneNr = tableLookup(m_zoneMap, zone.handle(), "zoneMap"))) {
+    // Maybe this needs a warning?
+    return false;
+  }
+  contam::Zone airflowZone = m_prjModel.zones()[zoneNr - 1];
+  // Get the surface area - will need to do more work here later if large openings are present
+  double area = surface.grossArea();
+  std::string type = surface.surfaceType();
+  double averageZ = 0;
+  double numVertices = surface.vertices().size();
+  for(const Point3d& point : surface.vertices()) {
+    averageZ += point.z();
+  }
+  // Now set the path info
+  path.setRelHt(averageZ / numVertices - m_prjModel.levels()[airflowZone.pl() - 1].refht());
+  path.setPld(airflowZone.pl());
+  path.setMult(area);
+
+  // Make an interior flow path
+  path.setPzn(airflowZone.nr());
+  path.setPzm(m_zoneMap[adjacentZone.handle()]);
+  // Set flow element
+  if (type == "Floor" || type == "RoofCeiling") {
+    path.setPe(m_afeMap["floor"]);
+  }
+  else {
+    path.setPe(m_afeMap["interior"]);
+  }
+  m_prjModel.addAirflowPath(path);
+  m_surfaceMap[surface.handle()] = path.nr();
+
+  return true;
+}
+
+bool ForwardTranslator::linkExteriorSubSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface,
+  openstudio::model::SubSurface subSurface)
+{
+  // Not doing this yet
+  return true;
+}
+
+bool ForwardTranslator::linkInteriorSubSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface,
+  openstudio::model::SubSurface subSurface, openstudio::model::SubSurface adjacentSubSurface, openstudio::model::Surface adjacentSurface, openstudio::model::Space adjacentSpace,
+  openstudio::model::ThermalZone adjacentZone)
+{
+  // Not doing this yet
+  return true;
 }
 
 std::vector<LogMessage> ForwardTranslator::warnings() const
