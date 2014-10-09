@@ -72,6 +72,8 @@
 #include "../../utilities/idf/WorkspaceObject.hpp"
 #include "../../utilities/idf/ValidityReport.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 #include <boost/algorithm/string/case_conv.hpp>
 
 using namespace openstudio::model;

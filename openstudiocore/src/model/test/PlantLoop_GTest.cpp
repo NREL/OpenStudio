@@ -38,6 +38,8 @@
 #include "../ScheduleCompact.hpp"
 #include "../LifeCycleCost.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 using namespace openstudio::model;
 
 TEST_F(ModelFixture,PlantLoop_PlantLoop)

@@ -50,6 +50,7 @@
 #include <utilities/idd/OS_Lights_FieldEnums.hxx>
 #include <utilities/idd/OS_SizingPeriod_DesignDay_FieldEnums.hxx>
 #include <utilities/idd/OS_ComponentData_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../../utilities/core/PathHelpers.hpp"
 

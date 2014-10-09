@@ -21,8 +21,9 @@
 #include "../../model/DesignDay.hpp"
 #include "../../model/ScheduleDay.hpp"
 #include "../../model/ScheduleDay_Impl.hpp"
-#include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddEnums.hpp>
 #include <utilities/idd/SizingPeriod_DesignDay_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 

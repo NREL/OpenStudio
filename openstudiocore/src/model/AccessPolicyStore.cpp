@@ -63,7 +63,7 @@ namespace openstudio
 
     AccessParser::AccessParser():
       m_curPolicy(nullptr),
-      m_curType(IddObjectType::Catchall)
+      m_curType("Catchall")
     {
     }
 

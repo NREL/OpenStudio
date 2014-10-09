@@ -25,6 +25,8 @@
 
 #include "../utilities/core/Logger.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 namespace openstudio {
 
 ScheduleSetsController::ScheduleSetsController(const model::Model& model)

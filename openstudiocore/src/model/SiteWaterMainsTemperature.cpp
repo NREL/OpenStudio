@@ -31,7 +31,9 @@
 
 #include "../utilities/idd/IddKey.hpp"
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_Site_WaterMainsTemperature_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

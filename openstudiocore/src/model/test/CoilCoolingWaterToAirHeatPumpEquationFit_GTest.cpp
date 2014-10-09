@@ -28,6 +28,8 @@
 #include "../CoilCoolingWaterToAirHeatPumpEquationFit.hpp"
 #include "../CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 #include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;

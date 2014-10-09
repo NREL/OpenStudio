@@ -28,6 +28,7 @@
 #include "../../model/Schedule_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/Fan_ZoneExhaust_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hpp>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

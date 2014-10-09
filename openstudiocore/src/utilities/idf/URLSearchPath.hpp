@@ -21,7 +21,7 @@
 #define UTILITIES_IDF_URLSEARCHPATH_HPP
 
 #include "../core/Path.hpp"
-#include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddEnums.hpp>
 #include <boost/optional.hpp>
 #include <QUrl>
 

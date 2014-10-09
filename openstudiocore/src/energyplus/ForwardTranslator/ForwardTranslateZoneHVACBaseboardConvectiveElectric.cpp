@@ -32,6 +32,7 @@
 #include "../../model/StraightComponent.hpp"
 #include "../../model/StraightComponent_Impl.hpp"
 #include <utilities/idd/ZoneHVAC_Baseboard_Convective_Electric_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hpp>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 

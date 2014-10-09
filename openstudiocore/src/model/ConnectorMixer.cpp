@@ -23,6 +23,7 @@
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include <utilities/idd/OS_Connector_Mixer_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
 

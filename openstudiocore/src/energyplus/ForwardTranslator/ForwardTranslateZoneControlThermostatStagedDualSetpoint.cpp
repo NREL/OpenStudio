@@ -28,6 +28,7 @@
 #include <utilities/idd/ZoneControl_Thermostat_StagedDualSetpoint_FieldEnums.hxx>
 #include <utilities/idd/ThermostatSetpoint_DualSetpoint_FieldEnums.hxx>
 #include <utilities/idd/ZoneControl_Thermostat_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 

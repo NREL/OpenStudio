@@ -23,7 +23,7 @@
 #include "../../model/Meter_Impl.hpp"
 
 #include <utilities/idd/Output_Meter_Cumulative_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddEnums.hpp>
 
 using namespace openstudio::model;
 

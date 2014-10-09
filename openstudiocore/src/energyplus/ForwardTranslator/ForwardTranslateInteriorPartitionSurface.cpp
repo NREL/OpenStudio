@@ -30,6 +30,7 @@
 #include "../../model/DaylightingDeviceShelf.hpp"
 
 #include <utilities/idd/InternalMass_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hpp>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 

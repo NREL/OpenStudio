@@ -23,6 +23,7 @@
 #include "ParentObject.hpp"
 
 #include <utilities/idd/OS_Version_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

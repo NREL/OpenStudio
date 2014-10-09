@@ -44,6 +44,7 @@
 #include "../../model/StandardOpaqueMaterial_Impl.hpp"
 
 #include <utilities/idd/InternalMass_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include <resources.hxx>
 

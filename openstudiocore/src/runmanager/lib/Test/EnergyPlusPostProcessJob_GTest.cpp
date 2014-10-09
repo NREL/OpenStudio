@@ -38,6 +38,7 @@
 #include <boost/filesystem/path.hpp>
 
 #include <QDir>
+#include <utilities/idd/IddEnums.hxx>
 
 using openstudio::Attribute;
 using openstudio::IdfFile;

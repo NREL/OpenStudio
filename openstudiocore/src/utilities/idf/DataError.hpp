@@ -25,9 +25,9 @@
 #include "ValidityEnums.hpp"
 #include "Handle.hpp"
 
-#include <utilities/idd/IddEnums.hxx>
-
 #include "../core/Logger.hpp"
+
+#include <utilities/idd/IddEnums.hpp>
 
 #include <boost/optional.hpp>
 

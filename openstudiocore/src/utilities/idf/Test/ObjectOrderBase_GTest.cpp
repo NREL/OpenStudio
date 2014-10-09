@@ -21,6 +21,7 @@
 #include "IdfFixture.hpp"
 
 #include "../ObjectOrderBase.hpp"
+#include <utilities/idd/IddEnums.hxx>
 
 using openstudio::ObjectOrderBase;
 using openstudio::IddObjectTypeVector;

@@ -25,7 +25,6 @@
 #include "../../model/Schedule_Impl.hpp"
 
 #include <utilities/idd/ThermostatSetpoint_DualSetpoint_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 

@@ -26,6 +26,7 @@
 #include "ScheduleTypeLimits_Impl.hpp"
 
 #include <utilities/idd/OS_Schedule_FixedInterval_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/time/DateTime.hpp"
 #include "../utilities/data/TimeSeries.hpp"

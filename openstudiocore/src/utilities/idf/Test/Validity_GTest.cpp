@@ -23,6 +23,7 @@
 #include "../WorkspaceObject.hpp"
 
 #include "../ValidityReport.hpp"
+#include <utilities/idd/IddEnums.hxx>
 
 #include <iostream>
 #include <sstream>

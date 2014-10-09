@@ -42,6 +42,7 @@
 #include "AirLoopHVACZoneMixer_Impl.hpp"
 
 #include <utilities/idd/OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInduction_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

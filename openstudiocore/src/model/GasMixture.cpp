@@ -23,7 +23,9 @@
 #include "../utilities/idf/ValidityReport.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_WindowMaterial_GasMixture_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/math/FloatCompare.hpp"
 

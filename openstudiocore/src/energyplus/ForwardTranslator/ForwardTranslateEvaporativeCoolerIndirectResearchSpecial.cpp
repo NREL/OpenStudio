@@ -27,6 +27,7 @@
 #include <utilities/idf/Workspace.hpp>
 #include <utilities/core/Logger.hpp>
 #include <utilities/idd/EvaporativeCooler_Indirect_ResearchSpecial_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 

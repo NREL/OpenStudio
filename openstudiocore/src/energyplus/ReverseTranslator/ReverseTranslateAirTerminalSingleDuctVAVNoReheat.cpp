@@ -25,6 +25,7 @@
 #include "../../model/DesignSpecificationOutdoorAir.hpp"
 #include "../../model/DesignSpecificationOutdoorAir_Impl.hpp"
 #include <utilities/idd/AirTerminal_SingleDuct_VAV_NoReheat_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hpp>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

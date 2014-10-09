@@ -18,6 +18,8 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
+#include <utilities/idd/IddEnums.hpp>
+#include <utilities/idd/IddEnums.hxx>
 #include "IdfFixture.hpp"
 #include "../WorkspaceObject.hpp"
 #include "../WorkspaceObjectOrder.hpp"

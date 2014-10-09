@@ -42,7 +42,10 @@
 
 
 #include <utilities/idd/IddFactory.hxx>
+
+
 #include <utilities/idd/OS_ZoneHVAC_WaterToAirHeatPump_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/units/Unit.hpp"
 

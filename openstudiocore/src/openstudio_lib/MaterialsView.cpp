@@ -40,6 +40,8 @@
 
 #include "../utilities/core/Assert.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 #include <QStackedWidget>
 
 namespace openstudio {

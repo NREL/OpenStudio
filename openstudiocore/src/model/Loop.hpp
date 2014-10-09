@@ -122,19 +122,19 @@ class MODEL_API Loop : public ParentObject {
    */
   virtual std::vector<ModelObject> supplyComponents( std::vector<HVACComponent> inletComps,
                                                      std::vector<HVACComponent> outletComps,
-                                                     openstudio::IddObjectType type = IddObjectType::Catchall );
+                                                     openstudio::IddObjectType type = openstudio::IddObjectType("Catchall") );
 
   /** Returns all of the supply side hvac equipment between
    * inletComp and outletComp.  If type is given then the results will
    * be limited to the given IddObjectType.  Only one inlet and outlet node
    * can be given.
    */
-  virtual std::vector<ModelObject> supplyComponents(HVACComponent inletComp, HVACComponent outletComp, openstudio::IddObjectType type = IddObjectType::Catchall);
+  virtual std::vector<ModelObject> supplyComponents(HVACComponent inletComp, HVACComponent outletComp, openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
   /** Returns all of the supply side HVAC equipment within the air loop.
    * If type is given then the results will be limited to the given IddObjectType.
    */
-  virtual std::vector<ModelObject> supplyComponents(openstudio::IddObjectType type = IddObjectType::Catchall);
+  virtual std::vector<ModelObject> supplyComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
   /** Returns all of the demand side hvac equipment between
    * inletComps and outletComps.  If type is given then the results will
@@ -143,7 +143,7 @@ class MODEL_API Loop : public ParentObject {
    */
   virtual std::vector<ModelObject> demandComponents( std::vector<HVACComponent> inletComps,
                                                      std::vector<HVACComponent> outletComps,
-                                                     openstudio::IddObjectType type = IddObjectType::Catchall );
+                                                     openstudio::IddObjectType type = openstudio::IddObjectType("Catchall") );
 
   /** Returns all of the demand side hvac equipment between
    * inletComp and outletComp.  If type is given then the results will
@@ -152,18 +152,18 @@ class MODEL_API Loop : public ParentObject {
    */
   virtual std::vector<ModelObject> demandComponents(HVACComponent inletComp,
                                                     HVACComponent outletComp,
-                                                    openstudio::IddObjectType type = IddObjectType::Catchall);
+                                                    openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
   /** Returns all of the demand side HVAC equipment within the air loop.
    * If type is given then the results will be limited to the given IddObjectType.
    */
-  virtual std::vector<ModelObject> demandComponents(openstudio::IddObjectType type = IddObjectType::Catchall);
+  virtual std::vector<ModelObject> demandComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
   /** Returns all of the HVAC equipment within the air loop including both
    * the supply and demand sides of the loop.
    * If type is given then the results will be limited to the given IddObjectType.
    */
-  virtual std::vector<ModelObject> components(openstudio::IddObjectType type = IddObjectType::Catchall);
+  virtual std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
   /** Returns supplyComponents() or demandComponents(), depending on if the inlet and
    *  outlet component arugments are on the supply or demand side.
@@ -171,7 +171,7 @@ class MODEL_API Loop : public ParentObject {
    */
   std::vector<ModelObject> components(HVACComponent inletComp,
                                       HVACComponent outletComp,
-                                      openstudio::IddObjectType type = IddObjectType::Catchall);
+                                      openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
   /** Returns an optional ModelObject with the given handle.
    * If the handle is not within the Loop then the optional will be false

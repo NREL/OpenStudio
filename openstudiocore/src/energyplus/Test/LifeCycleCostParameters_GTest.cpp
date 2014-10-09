@@ -28,6 +28,7 @@
 #include "../../model/LifeCycleCostParameters_Impl.hpp"
 
 #include <utilities/idd/LifeCycleCost_Parameters_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include <resources.hxx>
 

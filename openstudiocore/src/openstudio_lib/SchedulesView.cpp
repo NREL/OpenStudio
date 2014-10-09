@@ -66,6 +66,8 @@
 #include <algorithm>
 #include <iterator>
 
+#include <utilities/idd/IddEnums.hxx>
+
 #define UPPER_LIMIT 1.0
 #define LOWER_LIMIT 0.0
 

@@ -22,7 +22,9 @@
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_Controller_WaterCoil_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {

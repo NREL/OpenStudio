@@ -29,6 +29,7 @@
 #include "Node_Impl.hpp"
 #include "Model.hpp"
 #include <utilities/idd/OS_Coil_Heating_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"

@@ -25,6 +25,7 @@
 #include "../../model/Schedule.hpp"
 
 #include <utilities/idd/Exterior_Lights_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../../utilities/core/Assert.hpp"
 

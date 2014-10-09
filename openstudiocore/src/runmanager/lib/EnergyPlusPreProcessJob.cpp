@@ -45,6 +45,8 @@
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/sql/SqlFile.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 #include <QDir>
 #include <QDateTime>
 

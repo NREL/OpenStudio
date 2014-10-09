@@ -32,6 +32,7 @@
 #include "AirLoopHVACOutdoorAirSystem.hpp"
 #include "PlantLoop.hpp"
 #include <utilities/idd/OS_SetpointManager_MixedAir_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
 

@@ -21,6 +21,7 @@
 #include "../../model/OutsideSurfaceConvectionAlgorithm.hpp"
 #include "../../model/OutsideSurfaceConvectionAlgorithm_Impl.hpp"
 #include <utilities/idd/SurfaceConvectionAlgorithm_Outside_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hpp>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

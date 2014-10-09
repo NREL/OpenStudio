@@ -30,6 +30,7 @@
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 #include <utilities/idd/Sizing_Zone_FieldEnums.hxx>
 #include <utilities/idd/DesignSpecification_ZoneAirDistribution_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hpp>
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../../utilities/core/Assert.hpp"

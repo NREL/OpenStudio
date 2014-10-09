@@ -35,6 +35,7 @@
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include <utilities/idd/OS_AirTerminal_SingleDuct_Uncontrolled_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {

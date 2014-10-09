@@ -22,6 +22,7 @@
 #include "../../model/InfraredTransparentMaterial.hpp"
 
 #include <utilities/idd/Material_InfraredTransparent_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hpp>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

@@ -26,6 +26,7 @@
 #include "../../model/Schedule.hpp"
 #include "../../model/LifeCycleCost.hpp"
 #include <utilities/idd/Lights_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 

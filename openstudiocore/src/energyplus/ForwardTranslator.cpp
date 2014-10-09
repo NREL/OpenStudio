@@ -58,6 +58,7 @@
 #include <utilities/idd/ProgramControl_FieldEnums.hxx>
 #include <utilities/idd/LifeCycleCost_NonrecurringCost_FieldEnums.hxx>
 
+#include <utilities/idd/IddEnums.hpp>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 #include "../utilities/plot/ProgressBar.hpp"

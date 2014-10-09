@@ -27,6 +27,7 @@
 #include <utilities/idd/Output_Meter_Cumulative_FieldEnums.hxx>
 #include <utilities/idd/Output_Meter_MeterFileOnly_FieldEnums.hxx>
 #include <utilities/idd/Output_Meter_Cumulative_MeterFileOnly_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hpp>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

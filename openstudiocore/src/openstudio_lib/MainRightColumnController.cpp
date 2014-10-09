@@ -45,6 +45,7 @@
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/OSViewSwitcher.hpp"
 
+#include <utilities/idd/IddEnums.hpp>
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"

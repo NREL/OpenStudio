@@ -25,6 +25,7 @@
 #include "YearDescription_Impl.hpp"
 
 #include <utilities/idd/OS_RunPeriodControl_SpecialDays_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/time/Date.hpp"
 #include "../utilities/core/Assert.hpp"

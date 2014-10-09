@@ -25,6 +25,7 @@
 #include "ModelExtensibleGroup.hpp"
 
 #include <utilities/idd/OS_Construction_WindowDataFile_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

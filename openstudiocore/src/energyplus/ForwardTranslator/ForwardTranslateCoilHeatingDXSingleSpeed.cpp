@@ -31,6 +31,7 @@
 #include "../../model/CurveQuadratic_Impl.hpp"
 #include <utilities/idd/Coil_Heating_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/CoilSystem_Heating_DX_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hpp>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 

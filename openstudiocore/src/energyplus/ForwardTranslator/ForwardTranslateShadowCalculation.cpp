@@ -19,8 +19,9 @@
 
 #include "../ForwardTranslator.hpp"
 #include "../../model/ShadowCalculation.hpp"
-#include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/ShadowCalculation_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hpp>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 

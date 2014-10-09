@@ -181,7 +181,7 @@ class MODEL_API AirLoopHVAC : public Loop
   /** Returns all of the components on the outdoor air system including the mixer itself.
    *  If type is given then the results will be limited to the given IddObjectType.
    */
-  std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = IddObjectType::Catchall);
+  std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
   /** Adds a new component to the air loop.  In most cases the newObj will be added immediately after the
    * targetObj.  The notable exceptions are when the targetObj is either a supply outlet node or a

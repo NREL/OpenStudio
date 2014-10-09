@@ -29,6 +29,7 @@
 #include "../RefrigerationCase_Impl.hpp"
 #include "../RefrigerationDefrostCycleParameters.hpp"
 #include "../RefrigerationDefrostCycleParameters_Impl.hpp"
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;
 using namespace openstudio::model;

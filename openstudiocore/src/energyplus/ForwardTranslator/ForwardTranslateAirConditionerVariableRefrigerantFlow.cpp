@@ -41,6 +41,7 @@
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/AirConditioner_VariableRefrigerantFlow_FieldEnums.hxx>
 #include <utilities/idd/ZoneTerminalUnitList_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hpp>
 #include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 

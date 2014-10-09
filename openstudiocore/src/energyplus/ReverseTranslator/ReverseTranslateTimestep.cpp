@@ -22,6 +22,7 @@
 #include "../../model/Timestep_Impl.hpp"
 #include <utilities/idd/Timestep_FieldEnums.hxx>
 #include <utilities/idd/OS_Timestep_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hpp>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

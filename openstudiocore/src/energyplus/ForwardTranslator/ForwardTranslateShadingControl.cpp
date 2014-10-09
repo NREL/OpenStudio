@@ -25,6 +25,7 @@
 #include "../../model/Schedule.hpp"
 
 #include <utilities/idd/WindowProperty_ShadingControl_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hpp>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

@@ -23,6 +23,8 @@
 #include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_ModelObjectList_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
+
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/idf/WorkspaceExtensibleGroup.hpp"

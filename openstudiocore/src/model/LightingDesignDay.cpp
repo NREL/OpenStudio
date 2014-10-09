@@ -26,7 +26,9 @@
 #include "Site_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_LightingDesignDay_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/time/DateTime.hpp"
 #include "../utilities/core/Assert.hpp"

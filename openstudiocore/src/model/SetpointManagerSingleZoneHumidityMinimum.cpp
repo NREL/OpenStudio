@@ -28,7 +28,9 @@
 #include "AirLoopHVAC.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_SetpointManager_SingleZone_Humidity_Minimum_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

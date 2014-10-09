@@ -28,6 +28,7 @@
 #include "InteriorPartitionSurface_Impl.hpp"
 
 #include <utilities/idd/OS_InteriorPartitionSurfaceGroup_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/Vector3d.hpp"

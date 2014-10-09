@@ -23,6 +23,7 @@
 #include "ExtensibleIndex.hpp"
 #include "IddRegex.hpp"
 #include <utilities/idd/IddFactory.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "IddKey.hpp"
 #include "CommentRegex.hpp"
 

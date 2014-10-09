@@ -37,6 +37,8 @@
 #include "../shared_gui_components/OSSwitch.hpp"
 #include "../shared_gui_components/OSComboBox.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 namespace openstudio {
 
   VariableListItem::VariableListItem(const std::string &t_name, 

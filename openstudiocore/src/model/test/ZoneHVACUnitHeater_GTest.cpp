@@ -36,6 +36,8 @@
 #include "../../utilities/units/Unit.hpp"
 #include "../LifeCycleCost.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 using namespace openstudio;
 using namespace openstudio::model;
 

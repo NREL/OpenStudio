@@ -23,6 +23,7 @@
 #include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_UtilityCost_Ratchet_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

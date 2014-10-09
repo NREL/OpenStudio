@@ -28,7 +28,7 @@
 #include "../OutputVariable_Impl.hpp"
 #include "../Model_Impl.hpp"
 
-#include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddEnums.hpp>
 #include "../../utilities/idf/ValidityReport.hpp"
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/data/TimeSeries.hpp"

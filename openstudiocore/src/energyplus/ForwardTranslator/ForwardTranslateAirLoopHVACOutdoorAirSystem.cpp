@@ -44,6 +44,7 @@
 #include <utilities/idd/AvailabilityManager_Scheduled_FieldEnums.hxx>
 #include <utilities/idd/Controller_OutdoorAir_FieldEnums.hxx>
 #include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hpp>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 

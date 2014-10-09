@@ -26,6 +26,7 @@
 #include "SimulationControl_Impl.hpp"
 
 #include <utilities/idd/OS_Sizing_Parameters_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/units/Unit.hpp"
 

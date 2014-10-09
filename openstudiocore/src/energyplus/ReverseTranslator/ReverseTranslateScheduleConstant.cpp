@@ -24,6 +24,7 @@
 
 #include <utilities/idd/Schedule_Constant_FieldEnums.hxx>
 #include <utilities/idd/OS_Schedule_Constant_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hpp>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

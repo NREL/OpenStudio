@@ -32,6 +32,7 @@
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../utilities/sql/SqlFile.hpp"
 #include <utilities/idd/OS_TimeDependentValuation_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/PathHelpers.hpp"

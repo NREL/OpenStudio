@@ -21,6 +21,7 @@
 #include "OutputControlReportingTolerances_Impl.hpp"
 
 #include <utilities/idd/OS_OutputControl_ReportingTolerances_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/units/Unit.hpp"
 

@@ -38,6 +38,7 @@
 #include <boost/filesystem/path.hpp>
 
 #include <resources.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;
 

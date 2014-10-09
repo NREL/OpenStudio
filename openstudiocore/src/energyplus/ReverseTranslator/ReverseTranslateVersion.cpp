@@ -23,7 +23,6 @@
 #include "../../model/Version_Impl.hpp"
 
 #include <utilities/idd/Version_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 

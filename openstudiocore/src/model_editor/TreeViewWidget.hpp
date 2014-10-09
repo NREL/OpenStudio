@@ -40,7 +40,7 @@ public:
   TreeViewWidget(openstudio::model::Model& model, QWidget *parent = nullptr);
   TreeViewWidget(QWidget *parent = nullptr);
   virtual ~TreeViewWidget();
-  virtual void addObjects(openstudio::IddObjectType type = openstudio::IddObjectType::UserCustom);
+  virtual void addObjects(openstudio::IddObjectType type = openstudio::IddObjectType("UserCustom"));
   virtual void loadModel();
   virtual void removeObjects();
   virtual void copyObjects();

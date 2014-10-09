@@ -27,6 +27,7 @@
 #include "ZoneHVACBaseboardConvectiveWater_Impl.hpp"
 
 #include <utilities/idd/OS_Coil_Heating_Water_Baseboard_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/units/Unit.hpp"
 

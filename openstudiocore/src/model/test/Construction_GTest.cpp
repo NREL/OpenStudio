@@ -62,6 +62,7 @@
 #include <utilities/idd/OS_Construction_FieldEnums.hxx>
 #include <utilities/idd/OS_Material_FieldEnums.hxx>
 #include <utilities/idd/OS_Material_AirGap_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;
 using namespace openstudio::model;

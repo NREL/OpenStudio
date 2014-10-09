@@ -34,6 +34,7 @@
 #include <model/PortList.hpp>
 #include <model/PortList_Impl.hpp>
 #include <utilities/idd/OS_AirTerminal_SingleDuct_InletSideMixer_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include <utilities/core/Assert.hpp>
 
 namespace openstudio {

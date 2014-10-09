@@ -23,6 +23,7 @@
 #include "../../model/Schedule.hpp"
 
 #include <utilities/idd/Refrigeration_Condenser_WaterCooled_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hpp>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 

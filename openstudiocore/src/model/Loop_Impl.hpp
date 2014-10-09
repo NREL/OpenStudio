@@ -71,21 +71,21 @@ namespace detail {
 
     virtual std::vector<ModelObject> supplyComponents( HVACComponent inletComp,
                                                        HVACComponent outletComp,
-                                                       openstudio::IddObjectType type = IddObjectType::Catchall) const;
+                                                       openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
     virtual std::vector<ModelObject> demandComponents( HVACComponent inletComp,
                                                        HVACComponent outletComp,
-                                                       openstudio::IddObjectType type = IddObjectType::Catchall);
+                                                       openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
-    virtual std::vector<ModelObject> supplyComponents(openstudio::IddObjectType type=IddObjectType::Catchall) const;
+    virtual std::vector<ModelObject> supplyComponents(openstudio::IddObjectType type=openstudio::IddObjectType("Catchall")) const;
 
-    virtual std::vector<ModelObject> demandComponents(openstudio::IddObjectType type=IddObjectType::Catchall);
+    virtual std::vector<ModelObject> demandComponents(openstudio::IddObjectType type=openstudio::IddObjectType("Catchall"));
 
-    virtual std::vector<ModelObject> components(openstudio::IddObjectType type = IddObjectType::Catchall);
+    virtual std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
     std::vector<ModelObject> components(HVACComponent inletComp,
                                         HVACComponent outletComp,
-                                        openstudio::IddObjectType type = IddObjectType::Catchall);
+                                        openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
     virtual boost::optional<ModelObject> component(openstudio::Handle handle);
 

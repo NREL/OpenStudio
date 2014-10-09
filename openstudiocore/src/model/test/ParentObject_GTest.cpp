@@ -43,6 +43,7 @@
 #include "../../energyplus/ReverseTranslator.hpp"
 
 //#include <utilities/idd/IddFieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 using namespace openstudio;

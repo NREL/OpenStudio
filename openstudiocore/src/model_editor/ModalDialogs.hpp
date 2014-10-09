@@ -24,7 +24,7 @@
 
 #include "../model/Model.hpp"
 
-#include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddEnums.hpp>
 #include "../utilities/core/UUID.hpp"
 
 #include <QDialog>

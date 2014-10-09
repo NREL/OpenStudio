@@ -50,7 +50,7 @@ public:
   ViewWidget(QWidget *parent = nullptr);
   ViewWidget(openstudio::model::Model model, QWidget *parent = nullptr);
   virtual ~ViewWidget();
-  virtual void addObjects(openstudio::IddObjectType type = openstudio::IddObjectType::UserCustom) = 0;
+  virtual void addObjects(openstudio::IddObjectType type = openstudio::IddObjectType("UserCustom")) = 0;
   virtual void loadModel() = 0;
   virtual void removeObjects() = 0;
   virtual void copyObjects() = 0;

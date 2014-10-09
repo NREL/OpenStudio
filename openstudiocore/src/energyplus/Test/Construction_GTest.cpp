@@ -47,6 +47,7 @@
 #include <utilities/idd/Construction_FieldEnums.hxx>
 #include <utilities/idd/WindowMaterial_Glazing_FieldEnums.hxx>
 #include <utilities/idd/WindowMaterial_Gas_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include <resources.hxx>
 

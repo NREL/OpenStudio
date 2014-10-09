@@ -68,7 +68,9 @@
 #include "../../model/SetpointManager.hpp"
 #include "../../model/LifeCycleCost.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include <utilities/idd/IddEnums.hpp>
 #include <utilities/idd/IddEnums.hxx>
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/PlantLoop_FieldEnums.hxx>
 #include <utilities/idd/BranchList_FieldEnums.hxx>

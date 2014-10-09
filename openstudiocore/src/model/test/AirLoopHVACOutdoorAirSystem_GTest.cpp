@@ -29,6 +29,7 @@
 #include "../Schedule.hpp"
 #include "../Node.hpp"
 #include "../AirLoopHVAC.hpp"
+#include <utilities/idd/IddEnums.hpp>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

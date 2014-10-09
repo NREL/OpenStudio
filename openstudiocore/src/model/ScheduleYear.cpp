@@ -30,6 +30,7 @@
 #include "ModelExtensibleGroup.hpp"
 
 #include <utilities/idd/OS_Schedule_Year_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/time/Date.hpp"

@@ -24,7 +24,7 @@
 #include "../../model/Space_Impl.hpp"
 #include "../../model/LifeCycleCost.hpp"
 
-#include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddEnums.hpp>
 #include <utilities/idd/IddFactory.hxx>
 
 using namespace openstudio::model;

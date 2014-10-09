@@ -25,6 +25,7 @@
 #include "ThermalZone_Impl.hpp"
 #include "Model.hpp"
 #include <utilities/idd/OS_ZoneHVAC_EquipmentList_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 

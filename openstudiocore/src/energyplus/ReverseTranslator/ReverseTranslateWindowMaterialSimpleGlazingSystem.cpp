@@ -23,7 +23,6 @@
 #include "../../model/SimpleGlazing_Impl.hpp"
 
 #include <utilities/idd/WindowMaterial_SimpleGlazingSystem_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 

@@ -21,6 +21,7 @@
 #include "LuminaireDefinition_Impl.hpp"
 
 #include <utilities/idd/OS_Luminaire_Definition_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/math/FloatCompare.hpp"
 

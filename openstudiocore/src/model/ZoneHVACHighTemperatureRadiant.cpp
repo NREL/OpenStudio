@@ -32,7 +32,9 @@
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeRegistry.hpp>
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_ZoneHVAC_HighTemperatureRadiant_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include <utilities/units/Unit.hpp>
 #include <utilities/core/Assert.hpp>
 

@@ -21,6 +21,7 @@
 #include "../../model/HumidifierSteamElectric.hpp"
 #include "../../model/Schedule.hpp"
 #include <utilities/idd/Humidifier_Steam_Electric_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hpp>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

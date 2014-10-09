@@ -31,6 +31,8 @@
 #include "../../idf/IdfObject.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Building_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hpp>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;
 

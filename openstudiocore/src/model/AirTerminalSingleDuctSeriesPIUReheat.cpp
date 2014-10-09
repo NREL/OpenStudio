@@ -40,6 +40,8 @@
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 #include <utilities/idd/OS_AirTerminal_SingleDuct_SeriesPIU_Reheat_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
+
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
 

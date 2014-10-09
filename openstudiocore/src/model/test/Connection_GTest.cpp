@@ -35,6 +35,7 @@
 #include <utilities/idd/OS_AirLoopHVAC_ZoneSplitter_FieldEnums.hxx>
 #include <utilities/idd/OS_AirTerminal_SingleDuct_Uncontrolled_FieldEnums.hxx>
 #include <utilities/idd/OS_AirLoopHVAC_ZoneMixer_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;
 using namespace openstudio::model;

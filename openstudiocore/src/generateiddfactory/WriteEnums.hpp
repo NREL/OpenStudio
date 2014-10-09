@@ -28,40 +28,39 @@
 namespace openstudio {
 
 template<typename Container>
-void writeEnumFast(std::ostream &t_os, const std::string &t_name, const Container &t_values)
+void writeDomain(std::ostream &t_os, const std::string &t_name, const Container &t_values, bool in_class)
 {
-  t_os <<
-  "#ifdef SWIG " << std::endl <<
-  "  OPENSTUDIO_ENUM(" << t_name << ", )" << std::endl <<
-  "#else" << std::endl <<
-  "class " << t_name << ": public ::EnumBase<" << t_name << "> {" << std::endl <<
-  " public: " << std::endl <<
-  "  enum domain" << std::endl <<
+  if (in_class)
+  {
+    t_os << 
+      "  enum domain " << std::endl;
+  } else {
+    t_os << 
+      "  enum " << t_name << "::domain : int" << std::endl;
+  }
+
+  t_os << 
   "  {" << std::endl;
 
   for (const auto &val : t_values)
   {
     t_os << val.first << ", ";
   }
-
   t_os <<
-  "  };" << std::endl <<
-  "  " << t_name << "()" << std::endl <<
-  "   : EnumBase<" << t_name << ">(" << t_values.front().first << ") {} " << std::endl <<
-  "  " << t_name << "(const std::string &t_name) " << std::endl <<
-  "   : EnumBase<" << t_name << ">(t_name) {} " << std::endl <<
-  "  " << t_name << "(int t_value) " << std::endl <<
-  "   : EnumBase<" << t_name << ">(t_value) {} " << std::endl <<
-  "  static std::string enumName() " << std::endl <<
-  "  { return \"" << t_name << "\"; }" << std::endl <<
-  "  domain value() const { return static_cast<domain>(EnumBase<" << t_name << ">::value()); }" << std::endl <<
- 
-  "   private:" << std::endl <<
-  "    friend class EnumBase<" << t_name << ">;" << std::endl <<
-  "    typedef std::pair<std::string, int> PT;" << std::endl <<
-  "    typedef std::vector<PT> VecType;" << std::endl <<
-  "  " << std::endl <<
-  "    static VecType buildStringVec(bool isd)" << std::endl <<
+  "  };" << std::endl;
+}
+
+template<typename Container>
+void writeBuildStringVec(std::ostream &t_os, const std::string &t_name, const Container &t_values, bool in_class)
+{
+  if (in_class)
+  {
+    t_os << "    static VecType buildStringVec(bool isd)" << std::endl;
+  } else {
+    t_os << "    " << t_name << "::VecType " << t_name << "::buildStringVec(bool isd)" << std::endl;
+  }
+
+  t_os << 
   "    {" << std::endl <<
   "      struct evalue" << std::endl <<
   "      {" << std::endl <<
@@ -96,7 +95,42 @@ void writeEnumFast(std::ostream &t_os, const std::string &t_name, const Containe
   "        ++i;" << std::endl <<
   "      }" << std::endl <<
   "      return v;" << std::endl <<
-  "    }" << std::endl <<
+  "    }" << std::endl;
+}
+
+
+template<typename Container>
+void writeEnumFast(std::ostream &t_os, const std::string &t_name, const Container &t_values)
+{
+  t_os <<
+  "#ifdef SWIG " << std::endl <<
+  "  OPENSTUDIO_ENUM(" << t_name << ", )" << std::endl <<
+  "#else" << std::endl <<
+  "class " << t_name << ": public ::EnumBase<" << t_name << "> {" << std::endl <<
+  " public: " << std::endl;
+
+  writeDomain(t_os, t_name, t_values, true);
+
+  t_os <<
+  "  " << t_name << "()" << std::endl <<
+  "   : EnumBase<" << t_name << ">(" << t_values.front().first << ") {} " << std::endl <<
+  "  " << t_name << "(const std::string &t_name) " << std::endl <<
+  "   : EnumBase<" << t_name << ">(t_name) {} " << std::endl <<
+  "  " << t_name << "(int t_value) " << std::endl <<
+  "   : EnumBase<" << t_name << ">(t_value) {} " << std::endl <<
+  "  static std::string enumName() " << std::endl <<
+  "  { return \"" << t_name << "\"; }" << std::endl <<
+  "  domain value() const { return static_cast<domain>(EnumBase<" << t_name << ">::value()); }" << std::endl <<
+ 
+  "   private:" << std::endl <<
+  "    friend class EnumBase<" << t_name << ">;" << std::endl <<
+  "    typedef std::pair<std::string, int> PT;" << std::endl <<
+  "    typedef std::vector<PT> VecType;" << std::endl;
+
+  writeBuildStringVec(t_os, t_name, t_values, true);
+
+  t_os <<
+  "  " << std::endl <<
 //  "    friend class boost::serialization::access;" << std::endl <<
  
 //  "    template<class Archive> void serialize(Archive & ar, const unsigned int version)" << std::endl <<

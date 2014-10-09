@@ -25,6 +25,7 @@
 #include "URLSearchPath.hpp"
 #include "ValidityReport.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
 #include "../plot/ProgressBar.hpp"

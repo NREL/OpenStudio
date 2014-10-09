@@ -21,6 +21,7 @@
 #include "CurveFunctionalPressureDrop_Impl.hpp"
 
 #include <utilities/idd/OS_Curve_Functional_PressureDrop_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

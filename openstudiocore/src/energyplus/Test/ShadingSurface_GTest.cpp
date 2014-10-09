@@ -36,6 +36,7 @@
 #include <utilities/idd/Shading_Site_Detailed_FieldEnums.hxx>
 #include <utilities/idd/Shading_Building_Detailed_FieldEnums.hxx>
 #include <utilities/idd/Shading_Zone_Detailed_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include <resources.hxx>
 

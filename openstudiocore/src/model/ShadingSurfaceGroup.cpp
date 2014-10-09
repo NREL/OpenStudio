@@ -36,7 +36,9 @@
 #include "SubSurface_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_ShadingSurfaceGroup_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/Vector3d.hpp"
