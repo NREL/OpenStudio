@@ -37,7 +37,8 @@ namespace openstudio{
 
 ApplicationSingleton::ApplicationSingleton()
   : m_qApplication(nullptr),
-    m_sketchUpWidget(nullptr)
+    m_sketchUpWidget(nullptr),
+    m_defaultInstance(false)
 {}
 
 ApplicationSingleton::~ApplicationSingleton()
@@ -57,10 +58,10 @@ QCoreApplication* ApplicationSingleton::application(bool gui)
 {
   if (!m_qApplication){
 
-    if (QApplication::instance())
+    if (QCoreApplication::instance())
     {
 
-      m_qApplication = QApplication::instance();
+      m_qApplication = QCoreApplication::instance();
 
     } else {
 
@@ -89,41 +90,46 @@ QCoreApplication* ApplicationSingleton::application(bool gui)
       static int argc = sizeof(argv) / sizeof(char*) - 1;
 
       // Load the qpa plugin (If SketchUp is loading the OpenStudio plugin, the SketchUp run path will be added to the end of libraryPaths)
-      m_qApplication = new QApplication(argc, argv, gui);
+      if (gui){
+        m_qApplication = new QApplication(argc, argv);
+        dynamic_cast<QApplication*>(m_qApplication)->setQuitOnLastWindowClosed(false);
+      }else{
+        m_qApplication = new QCoreApplication(argc, argv);
+      }
 
-      dynamic_cast<QApplication*>(m_qApplication)->setQuitOnLastWindowClosed(false);
-      defaultInstance = true;
+      
+      m_defaultInstance = true;
 
       // check if we are in a SketchUp process
       #if _WIN32 || _MSC_VER
+        if (gui){
+          DWORD pId = GetCurrentProcessId();
+          //HMODULE hModule = GetModuleHandle(NULL); // same as hInstance
+          LPTSTR className = new TCHAR[255];
+          LPTSTR typeName = new TCHAR[255];
+          HWND h = GetTopWindow(0);
+          while (h)
+          {
+            DWORD pId2;
+            GetWindowThreadProcessId(h, &pId2);
 
-        DWORD pId = GetCurrentProcessId();
-        //HMODULE hModule = GetModuleHandle(NULL); // same as hInstance
-        LPTSTR className = new TCHAR[255];
-        LPTSTR typeName = new TCHAR[255];
-        HWND h = GetTopWindow(0);
-        while ( h )
-        {
-          DWORD pId2;
-          GetWindowThreadProcessId(h, &pId2);
-          
-          if ( pId == pId2 ){
+            if (pId == pId2){
 
-            GetClassName(h, className, 255);
-            GetWindowText(h, typeName, 255);
+              GetClassName(h, className, 255);
+              GetWindowText(h, typeName, 255);
 
-            if (boost::regex_match(toString(typeName), boost::regex(".*- SketchUp.*"))){
-              m_sketchUpWidget = new QWinWidget(h);
-              break;
+              if (boost::regex_match(toString(typeName), boost::regex(".*- SketchUp.*"))){
+                m_sketchUpWidget = new QWinWidget(h);
+                break;
+              }
             }
+
+            h = GetNextWindow(h, GW_HWNDNEXT);
           }
-           
-          h = GetNextWindow(h , GW_HWNDNEXT);
+
+          delete[] className;
+          delete[] typeName;
         }
-
-        delete[] className; 
-        delete[] typeName; 
-
       #endif
 
     }
@@ -132,7 +138,7 @@ QCoreApplication* ApplicationSingleton::application(bool gui)
   return m_qApplication;
 }
 
-/// set the QApplication, this should be done before calling qApplication(), no op if it has already been set
+/// set the QApplication, this should be done before calling application(), no op if it has already been set
 bool ApplicationSingleton::setApplication(QCoreApplication* qApplication)
 {
   if (!m_qApplication){
@@ -181,7 +187,7 @@ void ApplicationSingleton::removeSetting(const std::string& key)
 
 bool ApplicationSingleton::isDefaultInstance()
 {
-  return defaultInstance;
+  return m_defaultInstance;
 }
 
 boost::optional<bool> ApplicationSingleton::getSettingValueAsBool(const std::string& key)
