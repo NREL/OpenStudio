@@ -514,6 +514,8 @@ protected:
 
   std::vector<model::ModelObject> m_modelObjects;
 
+  IddObjectType m_iddObjectType;
+
 private:
 
   friend class OSGridView;
@@ -583,6 +585,9 @@ private slots:
 
   void onDropZoneItemClicked(OSItem* item);
 
+  void onRemoveWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
+
+  void onAddWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
 };
 
 class HorizontalHeaderWidget : public QWidget
@@ -611,4 +616,3 @@ class GridViewDropZoneVectorController : public OSVectorController
 } // openstudio
 
 #endif // SHAREDGUICOMPONENTS_OSGRIDCONTROLLER_HPP
-

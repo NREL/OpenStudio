@@ -906,7 +906,17 @@ OSItem * OSGridController::getSelectedItemFromModelSubTabView()
 
 void OSGridController::connectToModel()
 {
-  connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(), &openstudio::model::detail::Model_Impl::onChange, this, &openstudio::OSGridController::requestRefreshGrid);
+  //connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(), &openstudio::model::detail::Model_Impl::onChange, this, &openstudio::OSGridController::requestRefreshGrid);
+
+  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
+    this,
+    &OSGridController::onAddWorkspaceObject);
+
+  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
+    this,
+    &OSGridController::onRemoveWorkspaceObject);
 }
 
 void OSGridController::disconnectFromModel()
@@ -921,6 +931,40 @@ void OSGridController::onSelectionCleared()
 
 void OSGridController::onDropZoneItemClicked(OSItem* item)
 {
+}
+
+void OSGridController::onRemoveWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
+{
+  m_iddObjectType = IddObjectType::OS_SpaceType;
+  //m_iddObjectType = IddObjectType::OS_ThermalZone;
+  //m_iddObjectType = IddObjectType::OS_Refrigeration_WalkIn;
+  //m_iddObjectType = IddObjectType::OS_Refrigeration_Case;
+
+  // Update model list
+  if (m_iddObjectType == iddObjectType) {
+
+    std::vector<model::ModelObject>::iterator it;
+
+    it = std::find(m_modelObjects.begin(), m_modelObjects.end(), object.cast<model::ModelObject>());
+    if (it != m_modelObjects.end()) {
+      int index = std::distance(m_modelObjects.begin(), it);
+      OS_ASSERT(index >= 0);
+      m_modelObjects.erase(m_modelObjects.begin() + index);
+
+      // Update row
+      gridView()->removeRow(index);
+    }
+
+  }
+}
+
+void OSGridController::onAddWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
+{
+  // Update model list
+  m_modelObjects.push_back(object.cast<model::ModelObject>());
+
+  // Update row
+  gridView()->addRow(rowCount());
 }
 
 HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)
@@ -939,4 +983,3 @@ HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidge
 }
 
 } // openstudio
-
