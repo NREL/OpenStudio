@@ -837,7 +837,7 @@ bool Economics::getIRR( const std::vector<double>& cashFlows, double& guess  )
 
   success = recursiveNewtonCalc(cashFlows,guess,count);
 
-  if(guess > 1) return success = false;
+  if(guess > 1) return false;
 
   return success;
 }
@@ -858,8 +858,8 @@ bool Economics::recursiveNewtonCalc( const std::vector<double>& cashFlows, doubl
   }
 
   if(fabs(polynomialSum) <= MAX_ERR){
-    return success = true;
-  };
+    return true;
+  }
 
   double derivativeSum = 0;
   for (unsigned i=0; i<cashFlows.size(); i++){
