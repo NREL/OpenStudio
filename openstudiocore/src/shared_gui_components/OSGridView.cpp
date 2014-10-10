@@ -331,44 +331,41 @@ void OSGridView::refreshAll()
   m_refreshRequests.clear();
   deleteAll();
 
-  if( m_gridController )
+  if (m_gridController)
   {
     m_gridController->refreshModelObjects();
 
-    for( int i = 0; i < m_gridController->rowCount(); i++ )
+    for (int i = 0; i < m_gridController->rowCount(); i++)
     {
-      if (i > 0)
+      for (int j = 0; j < m_gridController->columnCount(); j++)
       {
-        //connect(m_gridController->modelObject(i).getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, std::bind(&OSGridView::refreshRow, this, i));
-      }
-      for( int j = 0; j < m_gridController->columnCount(); j++ )
-      {
-        addWidget(i,j);
+        addWidget(i, j);
       }
     }
-  }
-  // NOTE This was added to make dissimilar widget types in a given column to
-  // fill and justify correctly.  It appeared to be the most simple solution.
-  auto widget = new QWidget();
-  //widget->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
-  addWidget(widget, 0, m_gridController->columnCount());
 
-  // Get selected item
-  auto selectedItem = m_gridController->getSelectedItemFromModelSubTabView();
-  if (!selectedItem) return;
+    // NOTE This was added to make dissimilar widget types in a given column to
+    // fill and justify correctly.  It appeared to be the most simple solution.
+    auto widget = new QWidget();
+    //widget->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
+    addWidget(widget, 0, m_gridController->columnCount());
 
-  // Get new index
-  int newIndex;
-  if (m_gridController->getRowIndexByItem(selectedItem, newIndex)) {
-    // Update the old index
-    m_gridController->m_oldIndex = newIndex;
-  }
+    // Get selected item
+    auto selectedItem = m_gridController->getSelectedItemFromModelSubTabView();
+    if (!selectedItem) return;
 
-  normalizeColumnWidths();
+    // Get new index
+    int newIndex;
+    if (m_gridController->getRowIndexByItem(selectedItem, newIndex)) {
+      // Update the old index
+      m_gridController->m_oldIndex = newIndex;
+    }
 
-  // If the index is valid, call slot
-  if (m_gridController->m_oldIndex > -1){
-    QTimer::singleShot(0, this, SLOT(doRowSelect()));
+    normalizeColumnWidths();
+
+    // If the index is valid, call slot
+    if (m_gridController->m_oldIndex > -1){
+      QTimer::singleShot(0, this, SLOT(doRowSelect()));
+    }
   }
 }
 
