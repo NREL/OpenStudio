@@ -19,17 +19,17 @@
 
 #include "VerticalTabWidget.hpp"
 
+#include "MainTabView.hpp"
+
+#include "../shared_gui_components/OSViewSwitcher.hpp"
+
 #include "../utilities/core/Assert.hpp"
 
-#include <QHBoxLayout>
-#include <QKeySequence>
-#include <QPixmap>
+#include <QBoxLayout>
 #include <QPushButton>
-#include <QShortcut>
-#include <QStackedWidget>
-#include <QVBoxLayout>
 
 #include <algorithm>
+
 #include <vector>
 
 namespace openstudio {
@@ -55,71 +55,51 @@ VerticalTabWidget::VerticalTabWidget(QWidget * parent)
 
   layout()->addWidget(m_tabBar);
 
-  m_pageStack = new QStackedWidget();
+  m_viewSwitcher = new OSViewSwitcher();
 
-  m_pageStack->setContentsMargins(0,0,0,0);
+  m_viewSwitcher->setContentsMargins(0,0,0,0);
 
-  layout()->addWidget(m_pageStack);
-
-  currentIndex = -1;
-
-  QShortcut* nextTabShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Tab), this);
-  connect(nextTabShortcut, &QShortcut::activated, this, &VerticalTabWidget::nextTab);
-
-  QShortcut* previousTabShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Tab), this);
-  connect(previousTabShortcut, &QShortcut::activated, this, &VerticalTabWidget::previousTab);
+  layout()->addWidget(m_viewSwitcher);
 }
 
-void VerticalTabWidget::addTab( QWidget * widget,
-                                int id,
-                                QString toolTip,
-                                const QString & selectedImagePath,
-                                const QString & unSelectedImagePath )
+void VerticalTabWidget::addTabButton(int id,
+  QString toolTip,
+  const QString & selectedImagePath,
+  const QString & unSelectedImagePath,
+  const QString & disabledImagePath)
 {
   QPushButton * button = new QPushButton(m_tabBar);
 
-  button->setFixedSize(QSize(39,42));
+  button->setFixedSize(QSize(39, 42));
 
   button->setToolTip(toolTip);
 
   m_tabButtons.push_back(button);
 
   connect(button, &QPushButton::clicked, this, &VerticalTabWidget::select);
-  m_pageStack->addWidget(widget);
 
-  m_selectedPixmaps.push_back(selectedImagePath); 
+  m_selectedPixmaps.push_back(selectedImagePath);
 
   m_unSelectedPixmaps.push_back(unSelectedImagePath);
 
-  m_ids.push_back(id);
+  m_disabledPixmaps.push_back(disabledImagePath);
 
-  setCurrentIndex(0);
+  m_ids.push_back(id);
 }
 
-void VerticalTabWidget::deleteAllTabs()
+void VerticalTabWidget::setView(MainTabView * view, int id)
 {
-  for (QPushButton * button : m_tabButtons){
-    delete button;
-    button = 0;
-  }
-  m_tabButtons.clear();
+  m_viewSwitcher->setView(view);
 
-  QWidget * widget = 0;
-  for(int i = m_pageStack->count() - 1; i >= 0; --i){
-    widget = m_pageStack->widget(i);
-    m_pageStack->removeWidget(widget);
-    delete widget;
-    widget = 0;
-  }
+  setCurrentIndex(getIndex(id));
+}
 
-  m_selectedPixmaps.clear();
+MainTabView * VerticalTabWidget::view() const
+{
+  MainTabView * view = qobject_cast<MainTabView *>(m_viewSwitcher->view());
+  OS_ASSERT(view);
 
-  m_unSelectedPixmaps.clear();
-
-  m_ids.clear();
-
-  currentIndex = -1;
-
+  return view;
 }
 
 void VerticalTabWidget::select()
@@ -130,14 +110,10 @@ void VerticalTabWidget::select()
 
   for( std::vector<QPushButton*>::iterator  it = m_tabButtons.begin();
        it < m_tabButtons.end();
-       ++it )
-  {
-    if( *it == button )
-    {
+       ++it ) {
+    if( *it == button ){
       break;
-    }
-    else
-    {
+    } else {
       index++;
     }
   } 
@@ -145,16 +121,23 @@ void VerticalTabWidget::select()
   setCurrentIndex(index);
 }
 
-void VerticalTabWidget::setCurrentId(int id)
+int VerticalTabWidget::getIndex(int id)
 {
+  int index = -1;
   std::vector<int>::iterator it;
 
   it = std::find(m_ids.begin(),m_ids.end(),id);
 
-  if( it != m_ids.end() )
-  {
-    setCurrentIndex(*it);
+  if( it != m_ids.end() ){
+    index = it - m_ids.begin();
   }
+  OS_ASSERT(index >= 0);
+  return index;
+}
+
+void VerticalTabWidget::refreshTabButtons()
+{
+  setCurrentIndex(currentIndex);
 }
 
 void VerticalTabWidget::setCurrentIndex(int index)
@@ -169,7 +152,7 @@ void VerticalTabWidget::setCurrentIndex(int index)
 
     yPos = yPos + button->height();
 
-    QString imagePath = m_unSelectedPixmaps[i]; 
+    QString imagePath;
 
     QString style;
 
@@ -187,66 +170,39 @@ void VerticalTabWidget::setCurrentIndex(int index)
 
         button->setStyleSheet(style); 
 
-        m_pageStack->setCurrentIndex(index);
+        currentIndex = index;
 
         emit tabSelected(m_ids[index]);
       }
     }
     else
     {
-      style.append("QPushButton { background-image: url(\"");
-      style.append(imagePath);
-      style.append("\"); border: none; background-color: red; background-repeat: 0; }");
+      if (button->isEnabled()){
+        imagePath = m_unSelectedPixmaps[i];
+        style.append("QPushButton { background-image: url(\"");
+        style.append(imagePath);
+        style.append("\"); border: none; background-color: red; background-repeat: 0; }");
+      }
+      else {
+        imagePath = m_disabledPixmaps[i];
+        style.append("QPushButton { background-image: url(\"");
+        style.append(imagePath);
+        style.append("\"); border: none; background-color: red; background-repeat: 0; }");
+      }
 
       button->setStyleSheet(style); 
     }
   }
 }
 
+void VerticalTabWidget::enableTabButton(int id, bool enable)
+{
+  m_tabButtons.at(getIndex(id))->setEnabled(enable);
+}
+
 int VerticalTabWidget::verticalTabIndex()
 {
-  return m_pageStack->currentIndex();
-}
-
-QWidget* VerticalTabWidget::verticalTabWidgetByIndex(int index)
-{
-  return m_pageStack->widget(index);
-}
-
-void VerticalTabWidget::setCurrentWidget(QWidget * widget)
-{
-  int i = m_pageStack->indexOf(widget);
-
-  setCurrentIndex(i);
-}
-
-void VerticalTabWidget::nextTab()
-{
-  int size = m_pageStack->count(),
-      nextIndex = (currentIndex + 1) % size;
-  for(int i = 0; i < size; i++)
-  {
-    if (!m_pageStack->widget(nextIndex)->isEnabled()){
-      nextIndex = (nextIndex + 1) % size;
-    }else{
-      setCurrentIndex(nextIndex);
-    }
-  }
-}
-
-void VerticalTabWidget::previousTab()
-{
-  int size = m_pageStack->count(),
-      previousIndex = (((currentIndex < 0 ? -1 : currentIndex - 1) % size) + size) % size;
-  for(int i = 0; i < size; i++)
-  {
-    if (!m_pageStack->widget(previousIndex)->isEnabled()){
-      previousIndex = (((previousIndex - 1) % size) + size) % size;
-    }else{
-      setCurrentIndex(previousIndex);
-    }
-  }
+  return currentIndex;
 }
 
 } // namespace openstudio
-

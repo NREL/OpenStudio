@@ -156,7 +156,7 @@ namespace detail {
       bool ok = glazings[i].setThickness(value);
       if (!ok) {
         // rollback previous values
-        for (int j = i-1; j <= 0; --j) {
+        for (int j = i-1; j >= 0; --j) {
           glazings[j].setThickness(rollbackValues[j]);
         }
         return false;
