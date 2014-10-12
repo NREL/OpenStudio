@@ -25,7 +25,7 @@
 #include <map>
 
 namespace openstudio {
-class IddObjectType;
+struct IddObjectType;
 class TIDItem;
 
 class TIDItemModel : public QAbstractItemModel

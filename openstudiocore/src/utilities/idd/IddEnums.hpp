@@ -44,7 +44,7 @@ namespace openstudio {
 #ifdef SWIG 
   OPENSTUDIO_ENUM(IddFileType, )
 #else
-class UTILITIES_API IddFileType: public ::EnumBase<IddFileType> {
+struct UTILITIES_API IddFileType: public ::EnumBase<IddFileType> {
  public: 
   enum domain : int;
 
@@ -102,7 +102,7 @@ typedef boost::optional<std::set<IddFileType> > OptionalIddFileTypeSet;
 #ifdef SWIG 
   OPENSTUDIO_ENUM(IddObjectType, )
 #else
-class UTILITIES_API IddObjectType: public ::EnumBase<IddObjectType> {
+struct UTILITIES_API IddObjectType: public ::EnumBase<IddObjectType> {
  public: 
   enum domain : int;
 
