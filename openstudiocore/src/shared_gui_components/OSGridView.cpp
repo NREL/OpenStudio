@@ -195,6 +195,26 @@ void OSGridView::refreshCell(int row, int column)
   addWidget(row,column);
 }
 
+void OSGridView::addRow(int row)
+{
+  std::cout << " ADD ROW CALLED " << row << std::endl;
+
+  for (int j = 0; j < m_gridController->columnCount(); j++)
+  {
+    addWidget(row, j);
+  }
+}
+
+void OSGridView::removeRow(int row)
+{
+  std::cout << " DELETE ROW CALLED " << row << std::endl;
+
+  for (int j = 0; j < m_gridController->columnCount(); j++)
+  {
+    removeWidget(row, j);
+  }
+}
+
 void OSGridView::refreshRow(int row)
 {
   std::cout << " REFRESH ROW CALLED " << row << std::endl;

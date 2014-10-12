@@ -64,6 +64,10 @@ public:
 
   virtual ModelSubTabView * modelSubTabView();
 
+  void addRow(int row);
+
+  void removeRow(int row);
+
 protected:
 
   virtual void hideEvent(QHideEvent * event);
