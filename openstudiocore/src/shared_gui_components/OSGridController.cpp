@@ -964,7 +964,7 @@ void OSGridController::onAddWorkspaceObject(const WorkspaceObject& object, const
   m_modelObjects.push_back(object.cast<model::ModelObject>());
 
   // Update row
-  gridView()->addRow(rowCount());
+  gridView()->addRow(rowCount()-1);
 }
 
 HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)
