@@ -18,7 +18,7 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include "ContamFixture.hpp"
+#include "AirflowFixture.hpp"
 
 #include "../ForwardTranslator.hpp"
 
@@ -71,7 +71,7 @@ TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2012)
   ASSERT_TRUE(optionalModel);
   openstudio::model::Model model = optionalModel.get();
 
-  boost::optional<openstudio::model::Model> demoModel = buildDemoModel(model);
+  boost::optional<openstudio::model::Model> demoModel = buildDemoModel2012(model);
 
   // Write out the model
   openstudio::path outPath("CONTAMDemo2012.osm");
@@ -159,7 +159,7 @@ TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2012)
   EXPECT_EQ(297.15,prjModel->def_T());
 }
 
-TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2012_Doors)
+TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2014)
 {
   openstudio::path modelPath = (resourcesPath() / openstudio::toPath("contam") / openstudio::toPath("CONTAMTemplate.osm"));
   openstudio::osversion::VersionTranslator vt;
@@ -167,16 +167,12 @@ TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2012_Doors)
   ASSERT_TRUE(optionalModel);
   openstudio::model::Model model = optionalModel.get();
 
-  boost::optional<openstudio::model::Model> demoModel = buildDemoModel(model);
-
-  ASSERT_TRUE(demoModel);
-
-  demoModel = addDemoModelDoors(demoModel.get());
+  boost::optional<openstudio::model::Model> demoModel = buildDemoModel2014(model);
 
   ASSERT_TRUE(demoModel);
 
   // Write out the model
-  openstudio::path outPath("CONTAMDemo2012Doors.osm");
+  openstudio::path outPath("CONTAMDemo2014.osm");
   EXPECT_TRUE(demoModel->save(outPath, true));
 
 }

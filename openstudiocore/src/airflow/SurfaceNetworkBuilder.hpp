@@ -42,9 +42,10 @@ namespace airflow {
 
 /** SurfaceNetworkBuilder objects walk the OpenStudio model as a network of surfaces.
  *
- *  ForwardTranslator translates an OpenStudio energy model into a CONTAM
- *  airflow model using a streamlined approach. Each wall is assigned an
- *  overall leakage rate and individual components are not directly represented.
+ *  The SurfaceNetworkBuilder object walks the OpenStudio model as a network of surface,
+ *  calling a different function once for each pair of interior surfaces or subsurfaces and
+ *  once for each exterior surface or subsurface. The intended usage is to subclass for a
+ *  specific application.
  *
  */
 class AIRFLOW_API SurfaceNetworkBuilder

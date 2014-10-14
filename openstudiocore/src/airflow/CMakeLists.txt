@@ -40,8 +40,8 @@ set(${target_name}_qrc
 qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
 
 set(${target_name}_test_src
-  Test/ContamFixture.hpp
-  Test/ContamFixture.cpp
+  Test/AirflowFixture.hpp
+  Test/AirflowFixture.cpp
   Test/ForwardTranslator_GTest.cpp
   Test/SurfaceNetworkBuilder_GTest.cpp
   Test/DemoModel.hpp
