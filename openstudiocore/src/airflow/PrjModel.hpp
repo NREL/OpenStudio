@@ -333,13 +333,17 @@ public:
   std::vector <Species> species() const;
   /** Sets the model species vector. */
   void setSpecies(const std::vector<Species> species);
+  /** Add a species to the model. */
+  void addSpecies(Species &species);
+  /** Remove a species from the model. */
+  bool removeSpecies(const Species &species);
 
   /** Returns a vector of the levels in the model. */
   std::vector <Level> levels() const;
   /** Sets the model level vector. */
   void setLevels(const std::vector<Level> levels);
   /** Add a level to the model. */
-  void addLevel(Level level);
+  void addLevel(Level &level);
 
   /** Returns a vector of the day schedules in the model. */
   std::vector <DaySchedule> daySchedules() const;

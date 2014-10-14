@@ -29,6 +29,24 @@ Zone::Zone()
   m_impl = std::shared_ptr<detail::ZoneImpl>(new detail::ZoneImpl());
 }
 
+Zone::Zone(unsigned flags, std::string Vol, std::string T0, std::string name)
+{
+  m_impl = std::shared_ptr<detail::ZoneImpl>(new detail::ZoneImpl);
+  m_impl->setFlags(flags);
+  m_impl->setVol(Vol);
+  m_impl->setT0(T0);
+  m_impl->setName(name);
+}
+
+Zone::Zone(unsigned flags, double Vol, double T0, std::string name)
+{
+  m_impl = std::shared_ptr<detail::ZoneImpl>(new detail::ZoneImpl);
+  m_impl->setFlags(flags);
+  m_impl->setVol(Vol);
+  m_impl->setT0(T0);
+  m_impl->setName(name);
+}
+
 Zone::Zone(int nr,unsigned int flags,int ps,int pc,int pk,int pl,std::string relHt,std::string Vol,std::string T0,std::string P0,
   std::string name,int color,int u_Ht,int u_V,int u_T,int u_P,int cdaxis,int cfd,std::string cfdname,std::string X1,
   std::string Y1,std::string H1,std::string X2,std::string Y2,std::string H2,std::string celldx,std::string axialD,int u_aD,int u_L)
@@ -492,6 +510,26 @@ Species::Species()
   m_impl = std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl);
 }
 
+Species::Species(std::string molwt, std::string Dm, std::string ccdef, std::string Cp, std::string name, std::string desc)
+{
+  m_impl = std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl);
+  m_impl->setMolwt(molwt);
+  m_impl->setDm(Dm);
+  m_impl->setCcdef(ccdef);
+  m_impl->setName(name);
+  m_impl->setDesc(desc);
+}
+
+Species::Species(double molwt, double Dm, double ccdef, double Cp, std::string name, std::string desc)
+{
+  m_impl = std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl);
+  m_impl->setMolwt(molwt);
+  m_impl->setDm(Dm);
+  m_impl->setCcdef(ccdef);
+  m_impl->setName(name);
+  m_impl->setDesc(desc);
+}
+
 Species::Species(int nr,int sflag,int ntflag,std::string molwt,std::string mdiam,std::string edens,std::string decay,std::string Dm,
   std::string ccdef,std::string Cp,int ucc,int umd,int ued,int udm,int ucp,std::string name,std::string desc)
 {
@@ -546,22 +584,22 @@ void Species::setNr(const int nr)
   m_impl->setNr(nr);
 }
 
-int Species::sflag() const
+bool Species::sflag() const
 {
   return m_impl->sflag();
 }
 
-void Species::setSflag(const int sflag)
+void Species::setSflag(const bool sflag)
 {
   m_impl->setSflag(sflag);
 }
 
-int Species::ntflag() const
+bool Species::ntflag() const
 {
   return m_impl->ntflag();
 }
 
-void Species::setNtflag(const int ntflag)
+void Species::setNtflag(const bool ntflag)
 {
   m_impl->setNtflag(ntflag);
 }
@@ -866,6 +904,68 @@ void Ahs::setDesc(const std::string &desc)
 AirflowPath::AirflowPath()
 {
   m_impl = std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl);
+}
+
+AirflowPath::AirflowPath(int flags, int pzn, int pe, int pw, int pld, std::string relHt, std::string mult, std::string wPset,
+  std::string wPmod, std::string wazm, unsigned int icon)
+{
+  m_impl = std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl);
+  m_impl->setFlags(flags);
+  m_impl->setPzn(pzn);
+  m_impl->setPzm(-1);
+  m_impl->setPe(pe);
+  m_impl->setPw(pw);
+  m_impl->setPld(pld);
+  m_impl->setRelHt(relHt);
+  m_impl->setMult(mult);
+  m_impl->setWPset(wPset);
+  m_impl->setWPmod(wPmod);
+  m_impl->setWazm(wazm);
+  m_impl->setIcon(icon);
+}
+
+AirflowPath::AirflowPath(int flags, int pzn, int pe, int pw, int pld, double relHt, double mult, double wPset,
+  double wPmod, double wazm, unsigned int icon)
+{
+  m_impl = std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl);
+  m_impl->setFlags(flags);
+  m_impl->setPzn(pzn);
+  m_impl->setPzm(-1);
+  m_impl->setPe(pe);
+  m_impl->setPw(pw);
+  m_impl->setPld(pld);
+  m_impl->setRelHt(relHt);
+  m_impl->setMult(mult);
+  m_impl->setWPset(wPset);
+  m_impl->setWPmod(wPmod);
+  m_impl->setWazm(wazm);
+  m_impl->setIcon(icon);
+}
+
+AirflowPath::AirflowPath(int flags, int pzn, int pzm, int pe, int pld, std::string relHt, std::string mult, unsigned int icon)
+{
+  m_impl = std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl);
+  m_impl->setFlags(flags);
+  m_impl->setPzn(pzn);
+  m_impl->setPzm(pzm);
+  m_impl->setPe(pe);
+  m_impl->setPld(pld);
+  m_impl->setRelHt(relHt);
+  m_impl->setMult(mult);
+  m_impl->setIcon(icon);
+}
+
+AirflowPath::AirflowPath(int flags, int pzn, int pzm, int pe, int pld, double relHt, double mult, unsigned int icon)
+{
+  m_impl = std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl);
+  m_impl->setFlags(flags);
+  m_impl->setPzn(pzn);
+  m_impl->setPzm(pzm);
+  m_impl->setPe(pe);
+  m_impl->setPld(pld);
+  m_impl->setRelHt(relHt);
+  m_impl->setMult(mult);
+  m_impl->setIcon(icon);
 }
 
 AirflowPath::AirflowPath(int nr,int flags,int pzn,int pzm,int pe,int pf,int pw,int pa,int ps,int pc,int pld,std::string X,
@@ -2602,6 +2702,20 @@ void RunControl::setCfd_dtcmo(const int cfd_dtcmo)
 Level::Level()
 {
   m_impl = std::shared_ptr<detail::LevelImpl>(new detail::LevelImpl);
+}
+
+Level::Level(double delht, std::string name)
+{
+  m_impl = std::shared_ptr<detail::LevelImpl>(new detail::LevelImpl);
+  m_impl->setDelht(delht);
+  m_impl->setName(name);
+}
+
+Level::Level(std::string delht, std::string name)
+{
+  m_impl = std::shared_ptr<detail::LevelImpl>(new detail::LevelImpl);
+  m_impl->setDelht(delht);
+  m_impl->setName(name);
 }
 
 Level::Level(int nr,double refht,double delht,int u_rfht,int u_dlht,std::string name,std::vector<Icon> icons)

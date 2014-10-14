@@ -23,34 +23,19 @@
 #include "../SurfaceNetworkBuilder.hpp"
 
 #include "../../model/Model.hpp"
-#include "../../model/Building.hpp"
-#include "../../model/Building_Impl.hpp"
 #include "../../model/Space.hpp"
 #include "../../model/Space_Impl.hpp"
 #include "../../model/SpaceType.hpp"
 #include "../../model/Surface.hpp"
 #include "../../model/SubSurface.hpp"
-#include "../../model/DesignSpecificationOutdoorAir.hpp"
-#include "../../model/BuildingStory.hpp"
-#include "../../utilities/geometry/Point3d.hpp"
-#include "../../model/ThermostatSetpointDualSetpoint.hpp"
-#include "../../model/ThermostatSetpointDualSetpoint_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
-#include "../../model/SizingZone.hpp"
-#include "../../model/AirLoopHVAC.hpp"
-#include "../../model/AirLoopHVAC_Impl.hpp"
-#include "../../model/HVACTemplates.hpp"
-#include "../../model/SetpointManagerSingleZoneReheat.hpp"
-#include "../../model/SetpointManagerSingleZoneReheat_Impl.hpp"
 #include "../../osversion/VersionTranslator.hpp"
 #include "../../utilities/idf/Handle.hpp"
 
 #include "DemoModel.hpp"
 
 #include <resources.hxx>
-
-#include <sstream>
 
 class SurfaceCounter : public openstudio::airflow::SurfaceNetworkBuilder
 {

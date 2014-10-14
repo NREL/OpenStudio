@@ -50,6 +50,10 @@ public:
   /** Create a new object with default values. */
   Zone();
   /** Create a new object. */
+  Zone(unsigned flags, std::string Vol, std::string T0, std::string name);
+  /** Create a new object. */
+  Zone(unsigned flags, double Vol, double T0, std::string name);
+  /** Create a new object. */
   Zone(int nr,unsigned int flags,int ps,int pc,int pk,int pl,std::string relHt,std::string Vol,std::string T0,std::string P0,
     std::string name,int color,int u_Ht,int u_V,int u_T,int u_P,int cdaxis,int cfd,std::string cfdname,std::string X1,
     std::string Y1,std::string H1,std::string X2,std::string Y2,std::string H2,std::string celldx,std::string axialD,int u_aD,int u_L);
@@ -266,6 +270,10 @@ public:
 
   /** Create a new object with default values. */
   Species();
+  /** Create a new gaseous species object. */
+  Species(std::string molwt, std::string Dm, std::string ccdef, std::string Cp, std::string name, std::string desc);
+  /** Create a new gaseous species object. */
+  Species(double molwt, double Dm, double ccdef, double Cp, std::string name, std::string desc);
   /** Create a new object. */
   Species(int nr,int sflag,int ntflag,std::string molwt,std::string mdiam,std::string edens,std::string decay,std::string Dm,
     std::string ccdef,std::string Cp,int uc,int umd,int ued,int udm,int ucp,std::string name,std::string desc);
@@ -305,14 +313,14 @@ public:
   int nr() const;
   /** Sets the species number. This should only be done with care. */
   void setNr(const int nr);
-  /** Returns the simulation flag: 1 = simulated, 0 = unsimulated species. */
-  int sflag() const;
-  /** Sets the simulation flag: 1 = simulated, 0 = unsimulated species. */
-  void setSflag(const int sflag);
-  /** Returns the non-trace contaminant flag: 1 = non-trace, 0 = trace species. */
-  int ntflag() const;
-  /** Sets the non-trace contaminant flag: 1 = non-trace, 0 = trace species. */
-  void setNtflag(const int ntflag);
+  /** Returns the simulation flag: true = simulated, false = unsimulated species. */
+  bool sflag() const;
+  /** Sets the simulation flag: true = simulated, false = unsimulated species. */
+  void setSflag(const bool sflag);
+  /** Returns the non-trace contaminant flag: true = non-trace, false = trace species. */
+  bool ntflag() const;
+  /** Sets the non-trace contaminant flag: true = non-trace, false = trace species. */
+  void setNtflag(const bool ntflag);
   /** Returns the molar mass [kg/kmol] for gas contaminants. */
   double molwt() const;
   /** Sets the molar mass [kg/kmol] for gas contaminants. */
@@ -476,6 +484,16 @@ public:
 
   /** Create a new object with default values. */
   AirflowPath();
+  /** Create a new (exterior wall type) object. */
+  AirflowPath(int flags, int pzn, int pe, int pw, int pld, std::string relHt, std::string mult, std::string wPset, 
+    std::string wPmod, std::string wazm, unsigned int icon);
+  /** Create a new (exterior wall type) object. */
+  AirflowPath(int flags, int pzn, int pe, int pw, int pld, double relHt, double mult, double wPset,
+    double wPmod, double wazm, unsigned int icon);
+  /** Create a new (interior wall type) object. */
+  AirflowPath(int flags, int pzn, int pzm, int pe, int pld, std::string relHt, std::string mult, unsigned int icon);
+  /** Create a new (interior wall type) object. */
+  AirflowPath(int flags, int pzn, int pzm, int pe, int pld, double relHt, double mult, unsigned int icon);
   /** Create a new object. */
   AirflowPath(int nr,int flags,int pzn,int pzm,int pe,int pf,int pw,int pa,int ps,int pc,int pld,std::string X,std::string Y,
     std::string relHt,std::string mult,std::string wPset,std::string wPmod,std::string wazm,std::string Fahs,std::string Xmax,std::string Xmin,
@@ -1243,6 +1261,10 @@ public:
 
   /** Create a new object with default values. */
   Level();
+  /** Create a new object. */
+  Level(double delht, std::string name);
+  /** Create a new object. */
+  Level(std::string delht, std::string name);
   /** Create a new object. */
   Level(int nr,double refht,double delht,int u_rfht,int u_dlht,std::string name,std::vector<Icon> icons);
   /** Create a new object. */

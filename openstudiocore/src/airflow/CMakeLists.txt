@@ -46,6 +46,7 @@ set(${target_name}_test_src
   Test/SurfaceNetworkBuilder_GTest.cpp
   Test/DemoModel.hpp
   Test/DemoModel.cpp
+  Test/ContamModel_GTest.cpp
 )
 
 set(${target_name}_swig_src

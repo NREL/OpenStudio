@@ -286,10 +286,11 @@ public:
   RunControl rc() const;
   void setRc(const RunControl rc);
 
-  std::vector<int> contaminants() const;
+  std::vector<int> contaminants();
   std::vector <Species> species() const;
   void setSpecies(const std::vector<Species> &species);
   void addSpecies(Species &species);
+  bool removeSpecies(const Species &species);
 
   std::vector <Level> levels() const;
   void setLevels(const std::vector<Level> &levels);
@@ -384,12 +385,12 @@ public:
 
 private:
   void setDefaults();
-  void rebuildContaminants();
   void readZoneIc(Reader &input);
   std::string writeZoneIc(int start=0);
   template <class T> std::string writeSectionVector(std::vector<T> vector, std::string label=std::string(), int start=0);
   template <class T> std::string writeSectionVector(QVector<QSharedPointer<T> > vector, std::string label=std::string(), int start=0);
   template <class T> std::string writeArray(std::vector<T> vector, std::string label=std::string(), int start=0);
+  template <class T> void renumberVector(std::vector<T> &vector);
 
   bool m_valid;
 
@@ -447,7 +448,7 @@ private:
   int m_u_a;  // units for elevation (I2)
 
   RunControl m_rc;
-  std::vector<int> m_contaminants;
+  //std::vector<int> m_contaminants;
   std::vector<Species> m_species;
   std::vector<Level> m_levels;
   std::vector<DaySchedule> m_daySchedules;
@@ -518,6 +519,15 @@ template <class T> std::string IndexModelImpl::writeArray(std::vector<T> vector,
     string += ' ' + openstudio::toString(vector[i]);
   }
   return string +'\n';
+}
+
+template <class T> void IndexModelImpl::renumberVector(std::vector<T> &vector)
+{
+  int nr = 1;
+  for(T &t : vector) {
+    t.setNr(nr);
+    nr++;
+  }
 }
 
 } // detail
