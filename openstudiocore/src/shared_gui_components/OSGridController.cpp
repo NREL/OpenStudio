@@ -65,6 +65,7 @@ OSGridController::OSGridController()
 
 OSGridController::OSGridController(bool isIP,
                                    const QString & headerText,
+                                   IddObjectType iddObjectType,
                                    model::Model model,
                                    std::vector<model::ModelObject> modelObjects)
   : QObject(),
@@ -80,7 +81,8 @@ OSGridController::OSGridController(bool isIP,
     m_isIP(isIP),
     m_modelObjects(modelObjects),
     m_horizontalHeaderBtnGrp(nullptr),
-    m_headerText(headerText)
+    m_headerText(headerText),
+    m_iddObjectType(iddObjectType)
 {
   loadQSettings();
 
@@ -935,16 +937,9 @@ void OSGridController::onDropZoneItemClicked(OSItem* item)
 
 void OSGridController::onRemoveWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
-  m_iddObjectType = IddObjectType::OS_SpaceType;
-  //m_iddObjectType = IddObjectType::OS_ThermalZone;
-  //m_iddObjectType = IddObjectType::OS_Refrigeration_WalkIn;
-  //m_iddObjectType = IddObjectType::OS_Refrigeration_Case;
-
-  // Update model list
   if (m_iddObjectType == iddObjectType) {
-
+    // Update model list
     std::vector<model::ModelObject>::iterator it;
-
     it = std::find(m_modelObjects.begin(), m_modelObjects.end(), object.cast<model::ModelObject>());
     if (it != m_modelObjects.end()) {
       int index = std::distance(m_modelObjects.begin(), it);
@@ -954,17 +949,19 @@ void OSGridController::onRemoveWorkspaceObject(const WorkspaceObject& object, co
       // Update row
       gridView()->removeRow(index);
     }
-
   }
 }
 
 void OSGridController::onAddWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
-  // Update model list
-  m_modelObjects.push_back(object.cast<model::ModelObject>());
+  if (m_iddObjectType == iddObjectType) {
+    // Update model list
+    //m_modelObjects.push_back(object.cast<model::ModelObject>()); TODO delete / replace
+    refreshModelObjects();
 
-  // Update row
-  gridView()->addRow(rowCount()-1);
+    // Update row
+    gridView()->addRow(rowCount()-1);
+  }
 }
 
 HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)
