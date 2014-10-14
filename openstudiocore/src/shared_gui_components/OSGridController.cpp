@@ -947,7 +947,7 @@ void OSGridController::onRemoveWorkspaceObject(const WorkspaceObject& object, co
       m_modelObjects.erase(m_modelObjects.begin() + index);
 
       // Update row
-      gridView()->removeRow(index);
+      gridView()->requestRemoveRow(rowIndexFromModelIndex(index));
     }
   }
 }
@@ -960,7 +960,7 @@ void OSGridController::onAddWorkspaceObject(const WorkspaceObject& object, const
     refreshModelObjects();
 
     // Update row
-    gridView()->addRow(rowCount()-1);
+    gridView()->requestAddRow(rowCount()-1);
   }
 }
 
