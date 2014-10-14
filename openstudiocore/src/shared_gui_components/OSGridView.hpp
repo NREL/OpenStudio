@@ -64,9 +64,9 @@ public:
 
   virtual ModelSubTabView * modelSubTabView();
 
-  void addRow(int row);
+  void requestRemoveRow(int row);
 
-  void removeRow(int row);
+  void requestAddRow(int row);
 
 protected:
 
@@ -122,10 +122,13 @@ private slots:
 
 private:
 
-  enum RefreshType
+  enum QueueType
   {
-    RefreshAll,
-    RefreshGrid
+    AddRow,
+    RemoveRow,
+    RefreshRow,
+    RefreshGrid,
+    RefreshAll
   };
 
   // construct a grid layout to our specs
@@ -138,6 +141,10 @@ private:
 
   void setGridController(OSGridController * gridController);
 
+  void addRow(int row);
+
+  void removeRow(int row);
+
   static const int ROWS_PER_LAYOUT = 100;
 
   QVBoxLayout * m_contentLayout;
@@ -148,7 +155,7 @@ private:
 
   OSGridController * m_gridController;
 
-  std::vector<RefreshType> m_refreshRequests;
+  std::vector<QueueType> m_queueRequests;
 
   QTimer m_timer;
 };
