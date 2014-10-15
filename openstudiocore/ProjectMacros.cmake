@@ -140,7 +140,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   foreach(i ${I_FILES})
     get_source_file_property(p "${i}" LOCATION)
     get_filename_component(extension "${p}" EXT)
-    if("${extension}" MATCHES "\\..xx")
+    if("${extension}" MATCHES "\\..xx" OR "{P}" MATCHES "ui_.*\\.h")
       list(APPEND GeneratedHeaders "${p}")
     else()
       list(APPEND RequiredHeaders "${p}")
@@ -271,6 +271,12 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     DEPENDS ${this_depends}
   )
 
+  if(MAXIMIZE_CPU_USAGE)
+    add_custom_target(${swig_target}_swig
+      SOURCES "${SWIG_WRAPPER}"
+      )
+    add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
+  endif()
 
   add_library(
     ${swig_target}
@@ -453,6 +459,14 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       DEPENDS ${this_depends}
     )
 
+    if(MAXIMIZE_CPU_USAGE)
+      add_custom_target(${swig_target}_swig
+        SOURCES "${SWIG_WRAPPER}"
+        )
+      add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
+    endif()
+
+
     add_library(
       ${swig_target}
       MODULE
@@ -569,7 +583,14 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
               "${SWIG_DEFINES}" ${SWIG_COMMON} ${KEY_I_FILE}
       DEPENDS ${this_depends}
 
-    )
+      )
+
+    if(MAXIMIZE_CPU_USAGE)
+      add_custom_target(${swig_target}_swig
+        SOURCES "${SWIG_WRAPPER}"
+        )
+      add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
+    endif()
 
     add_library(
       ${swig_target}
@@ -655,6 +676,14 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       DEPENDS ${this_depends}
 
     )
+
+    if(MAXIMIZE_CPU_USAGE)
+      add_custom_target(${swig_target}_swig
+        SOURCES "${SWIG_WRAPPER}"
+        )
+      add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
+    endif()
+
 
     include_directories("${JAVA_INCLUDE_PATH}" "${JAVA_INCLUDE_PATH2}")
 
@@ -773,6 +802,14 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     else()
       include_directories(${V8_INCLUDE_DIR})
     endif()
+
+    if(MAXIMIZE_CPU_USAGE)
+      add_custom_target(${swig_target}_swig
+        SOURCES "${SWIG_WRAPPER}"
+        )
+      add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
+    endif()
+
 
     add_library(
       ${swig_target}
