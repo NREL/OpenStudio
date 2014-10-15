@@ -91,7 +91,7 @@ TEST_F(RunManagerTestFixture, OSResultLoading_Success)
 {
   openstudio::runmanager::RunManager rm;
   openstudio::runmanager::Workflow wf;
-  openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("OSResultLoadingTest");
+  openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("OSResultLoadingTestSuccess");
   openstudio::path rubyscriptfile = resourcesPath() / openstudio::toPath("runmanager/create_os_result_success.rb");
 
   openstudio::runmanager::RubyJobBuilder rubyjobbuilder;
