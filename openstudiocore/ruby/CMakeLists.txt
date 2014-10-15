@@ -46,7 +46,7 @@ foreach(f ${RUBY_TEST_SRC})
           "${RUBY_EXECUTABLE}" -I"${RUBY_RUBY_LIB_DIR}" -I. "openstudio_test.rb" "--name=test_${TEST_NAME}"
         )
       endif()
-      set_tests_properties("RubyTest-${FILE_NAME}-${TEST_NAME}" PROPERTIES DEPENDS "${ALL_RUBY_BINDING_TARGETS}" ruby_cpp ResultsViewer_resources)
+      set_tests_properties("RubyTest-${FILE_NAME}-${TEST_NAME}" PROPERTIES DEPENDS "${ALL_RUBY_BINDING_TARGETS}" ruby_cpp ResultsViewer_resources TIMEOUT 660)
     endif()
   endforeach()
 endforeach()
