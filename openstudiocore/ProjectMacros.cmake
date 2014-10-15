@@ -126,7 +126,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
     # If it's a header file ("*.h*") add it to the list of headers
     if("${extension}" MATCHES "\\.h.*")
-      if("${extension}" MATCHES "\\..xx")
+      if("${extension}" MATCHES "\\..xx" OR "${p}" MATCHES "ui_.*\\.h")
         list(APPEND GeneratedHeaders "${p}")
       else()
         list(APPEND RequiredHeaders "${p}")
@@ -140,7 +140,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   foreach(i ${I_FILES})
     get_source_file_property(p "${i}" LOCATION)
     get_filename_component(extension "${p}" EXT)
-    if("${extension}" MATCHES "\\..xx" OR "{P}" MATCHES "ui_.*\\.h")
+    if("${extension}" MATCHES "\\..xx")
       list(APPEND GeneratedHeaders "${p}")
     else()
       list(APPEND RequiredHeaders "${p}")
