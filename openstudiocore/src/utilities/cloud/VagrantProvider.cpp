@@ -1222,7 +1222,7 @@ namespace openstudio{
     {
 #ifdef _WINDOWS
       args << "/C";
-      args << "vagrant.bat";
+      args << "vagrant";
 #else
       args << "vagrant";
 #endif
