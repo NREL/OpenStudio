@@ -583,7 +583,7 @@ void MainRightColumnController::configureForLoadsSubTab(int subTabID)
 void MainRightColumnController::configureForSpaceTypesSubTab(int subTabID)
 {
   // no sub tabs
-  OS_ASSERT(subTabID == -1);
+  OS_ASSERT(subTabID == 0);
 
   setEditView(nullptr);
 
@@ -665,7 +665,7 @@ void MainRightColumnController::configureForSpaceTypesSubTab(int subTabID)
 void MainRightColumnController::configureForBuildingStoriesSubTab(int subTabID)
 {
   // no sub tabs
-  OS_ASSERT(subTabID == -1);
+  OS_ASSERT(subTabID == 0);
 
   setEditView(nullptr);
 
@@ -715,7 +715,7 @@ void MainRightColumnController::configureForBuildingStoriesSubTab(int subTabID)
 void MainRightColumnController::configureForFacilitySubTab(int subTabID)
 {
   // no sub tabs
-  OS_ASSERT(subTabID == -1);
+  OS_ASSERT(subTabID == 0);
 
   setEditView(nullptr);
 

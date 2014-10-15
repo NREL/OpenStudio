@@ -18,6 +18,7 @@
  **********************************************************************/
 
 #include "MainWindow.hpp"
+
 #include "HorizontalTabWidget.hpp"
 #include "LibraryTabWidget.hpp"
 #include "LoopLibraryDialog.hpp"
@@ -25,9 +26,9 @@
 #include "MainTabView.hpp"
 #include "VerticalTabWidget.hpp"
 
-#include "../utilities/core/Assert.hpp"
-
 #include "../shared_gui_components/NetworkProxyDialog.hpp"
+
+#include "../utilities/core/Assert.hpp"
 
 #include <QAction>
 #include <QApplication>
@@ -39,6 +40,7 @@
 #include <QGraphicsView>
 #include <QListWidget>
 #include <QMenuBar>
+#include <QMessageBox>
 #include <QMimeData>
 #include <QScrollArea>
 #include <QSettings>
@@ -49,7 +51,6 @@
 #include <QUrl>
 #include <QVBoxLayout>
 #include <QWidget>
-#include <QMessageBox>
 
 namespace openstudio {
 
@@ -176,30 +177,29 @@ void MainWindow::dropEvent(QDropEvent * event)
   }
 }
 
-void MainWindow::addVerticalTab( QWidget * widget,
-                                 int id,
-                                 QString toolTip,
-                                 const QString & selectedImagePath,
-                                 const QString & unSelectedImagePath )
+void MainWindow::addVerticalTabButton(int id,
+  QString toolTip,
+  const QString & selectedImagePath,
+  const QString & unSelectedImagePath,
+  const QString & disabledImagePath)
 {
-  m_verticalTabWidget->addTab(widget,id,toolTip,selectedImagePath,unSelectedImagePath);
+  m_verticalTabWidget->addTabButton(id, toolTip, selectedImagePath, unSelectedImagePath, disabledImagePath);
 }
 
-void MainWindow::deleteAllVerticalTabs()
+void MainWindow::setView(MainTabView * view, int id)
 {
-  m_verticalTabWidget->deleteAllTabs();
+  m_verticalTabWidget->setView(view, id);
 }
 
-//void MainWindow::addHorizontalTab( QWidget * widget,
-//                                   int id,
-//                                   const QString & label )
-//{
-//  m_horizontalTabWidget->addTab(widget,id,label);
-//}
+MainTabView * MainWindow::view() const
+{
+  return m_verticalTabWidget->view();
+}
 
 void MainWindow::selectVerticalTab(int id)
 {
-  m_verticalTabWidget->setCurrentId(id);
+  // TODO new call
+  //m_verticalTabWidget->setCurrentId(id);
 }
 
 void MainWindow::selectVerticalTabByIndex(int index)
@@ -207,21 +207,10 @@ void MainWindow::selectVerticalTabByIndex(int index)
   m_verticalTabWidget->setCurrentIndex(index);
 }
 
-MainTabView* MainWindow::verticalTabByIndex(int index)
-{
-  MainTabView* mainTabView = qobject_cast<MainTabView *>(m_verticalTabWidget->verticalTabWidgetByIndex(index));
-  return mainTabView;
-}
-
 int MainWindow::verticalTabIndex()
 {
   return m_verticalTabWidget->verticalTabIndex();
 }
-
-//void MainWindow::selectHorizontalTab(int id)
-//{
-//  m_horizontalTabWidget->setCurrentId(id);
-//}
 
 void MainWindow::closeSidebar()
 {
@@ -335,6 +324,4 @@ void MainWindow::loadProxySettings()
   }
 }
 
-
 } // openstudio
-

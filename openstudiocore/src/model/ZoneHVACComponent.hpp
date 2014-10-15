@@ -83,7 +83,7 @@ class MODEL_API ZoneHVACComponent : public HVACComponent
   bool addToNode(Node & node);
 
   /** Returns the AirLoopHVAC attached to this ZoneHVACComponent.
-   *  The AirLoopHVAC object would have been attached via ::addToNode */
+   *  The AirLoopHVAC object would have been attached via addToNode */
   boost::optional<AirLoopHVAC> airLoopHVAC() const;
 
   protected:

@@ -930,21 +930,35 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
         oaController.controllerMechanicalVentilation().setName(nameElement.text().toStdString() + " Mech Vent Controller");
       }
 
-      // MaxOARat
-      QDomElement maxOARatElement = airSystemOACtrlElement.firstChildElement("MaxOARat");
-      bool ok;
-      double maxOARat = maxOARatElement.text().toDouble(&ok);
-      if( ok && maxOARat > 0.0 && maxOARat <= 1.0 )
+      // MinOAFracSchRef
+      QDomElement minOAFracSchRefElement = airSystemOACtrlElement.firstChildElement("MinOAFracSchRef");
+      if( boost::optional<model::Schedule> schedule = 
+          model.getModelObjectByName<model::Schedule>(minOAFracSchRefElement.text().toStdString()) )
       {
-        model::ScheduleRuleset maxOARatSchedule(model);
-        maxOARatSchedule.setName(oaController.name().get() + " Max OA Schedule");
-        model::ScheduleDay scheduleDay = maxOARatSchedule.defaultDaySchedule();
-        scheduleDay.addValue(Time(1.0),maxOARat);
-        oaController.setMaximumFractionofOutdoorAirSchedule(maxOARatSchedule);
+        oaController.setMinimumFractionofOutdoorAirSchedule(schedule.get());
+      }
+      
+      // MaxOAFracSchRef
+      QDomElement maxOAFracSchRefElement = airSystemOACtrlElement.firstChildElement("MaxOAFracSchRef");
+      if( boost::optional<model::Schedule> schedule = 
+          model.getModelObjectByName<model::Schedule>(maxOAFracSchRefElement.text().toStdString()) ) {
+        oaController.setMaximumFractionofOutdoorAirSchedule(schedule.get());
+      } else {
+        // MaxOARat
+        QDomElement maxOARatElement = airSystemOACtrlElement.firstChildElement("MaxOARat");
+        bool ok;
+        double maxOARat = maxOARatElement.text().toDouble(&ok);
+        if( ok && maxOARat > 0.0 && maxOARat <= 1.0 )
+        {
+          model::ScheduleRuleset maxOARatSchedule(model);
+          maxOARatSchedule.setName(oaController.name().get() + " Max OA Schedule");
+          model::ScheduleDay scheduleDay = maxOARatSchedule.defaultDaySchedule();
+          scheduleDay.addValue(Time(1.0),maxOARat);
+          oaController.setMaximumFractionofOutdoorAirSchedule(maxOARatSchedule);
+        }
       }
 
       // OASchMthd 
-
       QDomElement oaSchMthdElement = airSystemOACtrlElement.firstChildElement("OASchMthd");
       if( istringEqual(oaSchMthdElement.text().toStdString(),"Constant") )
       {
@@ -1666,12 +1680,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
         }
       }
 
-      QDomElement capTotRtdSimElement = heatingCoilElement.firstChildElement("CapTotRtdSim");
-      value = capTotRtdSimElement.text().toDouble(&ok);
-      if( ok )
+      if( ! autosize() )
       {
-        value = unitToUnit(value,"Btu/h","W").get();
-        coil.setRatedHeatingCapacity(value);
+        QDomElement capTotRtdSimElement = heatingCoilElement.firstChildElement("CapTotGrossRtdSim");
+        value = capTotRtdSimElement.text().toDouble(&ok);
+        if( ok )
+        {
+          value = unitToUnit(value,"Btu/h","W").get();
+          coil.setRatedHeatingCapacity(value);
+        }
       }
 
       QDomElement htPumpCOPElement = heatingCoilElement.firstChildElement("HtPumpCOP");
@@ -2005,7 +2022,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
       QDomElement znSysTypeElement = parentElement.firstChildElement("Type");
 
       if( znSysTypeElement.text().compare("FPFC",Qt::CaseInsensitive) == 0 || 
-          znSysTypeElement.text().compare("PTHP",Qt::CaseInsensitive) == 0 )
+          znSysTypeElement.text().compare("PTHP",Qt::CaseInsensitive) == 0 ||
+          znSysTypeElement.text().compare("WSHP",Qt::CaseInsensitive) == 0 )
       {
         model::Schedule schedule = alwaysOnSchedule(model);
 
@@ -2455,16 +2473,19 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
         if( ok )
         {
           value = unitToUnit(value,"gal/min","m^3/s").get();
-          coil.setRatedAirFlowRate(value);
+          coil.setRatedWaterFlowRate(value);
         }
       }
 
-      QDomElement capTotGrossRtdSimElement = coolingCoilElement.firstChildElement("CapTotGrossRtdSim");
-      value = capTotGrossRtdSimElement.text().toDouble(&ok);
-      if( ok )
+      if( ! autosize() )
       {
-        value = unitToUnit(value,"Btu/h","W").get();
-        coil.setRatedTotalCoolingCapacity(value);
+        QDomElement capTotGrossRtdSimElement = coolingCoilElement.firstChildElement("CapTotGrossRtdSim");
+        value = capTotGrossRtdSimElement.text().toDouble(&ok);
+        if( ok )
+        {
+          value = unitToUnit(value,"Btu/h","W").get();
+          coil.setRatedTotalCoolingCapacity(value);
+        }
       }
 
       if( ! autosize() )
@@ -3759,8 +3780,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
       terminal.setZoneMinimumAirFlowInputMethod("Scheduled");
       terminal.setMinimumAirFlowFractionSchedule(minAirFracSch.get());
     }
-
-    if( primaryAirFlowMin )
+    else if( primaryAirFlowMin )
     {
       terminal.setZoneMinimumAirFlowInputMethod("FixedFlowRate");
       terminal.setFixedMinimumAirFlowRate(primaryAirFlowMin.get());
@@ -3814,8 +3834,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
       terminal.setZoneMinimumAirFlowMethod("Scheduled");
       terminal.setMinimumAirFlowFractionSchedule(minAirFracSch.get());
     }
-
-    if( primaryAirFlowMin )
+    else if( primaryAirFlowMin )
     {
       terminal.setZoneMinimumAirFlowMethod("FixedFlowRate");
       terminal.setFixedMinimumAirFlowRate(primaryAirFlowMin.get());
@@ -5791,32 +5810,128 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
 
     result = ptac;
   }
-  else if( istringEqual(type,"PTHP") )
+  else if( istringEqual(type,"WSHP") )
   {
     boost::optional<openstudio::model::ModelObject> mo;
-
     QDomElement htPumpSuppTempElement;
-
     QDomElement htPumpCprsrLockoutTempElement;
 
     // Fan
-    
     QDomElement fanElement = element.firstChildElement("Fan"); 
-
     mo = translateFan(fanElement,doc,model);    
-
     OS_ASSERT(mo);
-
     model::HVACComponent fan = mo->cast<model::HVACComponent>();
  
     // Heating Coil
-
     boost::optional<model::HVACComponent> heatingCoil;
-
     boost::optional<model::HVACComponent> suppHeatingCoil;
-
     QDomNodeList heatingCoilElements = element.elementsByTagName("CoilHtg"); 
+    for(int i = 0; i < heatingCoilElements.count(); i++)
+    {
+      QDomElement heatingCoilElement = heatingCoilElements.at(i).toElement();
+      QDomElement typeElement = heatingCoilElement.firstChildElement("Type");
+      mo = translateCoilHeating(heatingCoilElement,doc,model);
+      OS_ASSERT(mo);
 
+      if(istringEqual(typeElement.text().toStdString(),"HeatPump"))
+      {
+        heatingCoil = mo->cast<model::HVACComponent>();
+        htPumpSuppTempElement = heatingCoilElement.firstChildElement("HtPumpSuppTemp");
+        htPumpCprsrLockoutTempElement = heatingCoilElement.firstChildElement("HtPumpCprsrLockoutTemp");
+      }
+      else
+      {
+        suppHeatingCoil = mo->cast<model::HVACComponent>();
+      }
+
+      if( i > 1 )
+      {
+        LOG(Warn,name << " has unused heating coils defined.");
+      }
+    }
+
+    // Cooling Coil
+    QDomElement coolingCoilElement = element.firstChildElement("CoilClg");
+    mo = translateCoilCooling(coolingCoilElement,doc,model);
+    OS_ASSERT(mo);
+    model::HVACComponent coolingCoil = mo->cast<model::HVACComponent>();
+
+    boost::optional<model::ZoneHVACWaterToAirHeatPump> wshp;
+
+    // Validate that everything we need is provided
+    OS_ASSERT(heatingCoil);
+    OS_ASSERT(heatingCoil->optionalCast<model::CoilHeatingWaterToAirHeatPumpEquationFit>());
+    OS_ASSERT(coolingCoil.optionalCast<model::CoilCoolingWaterToAirHeatPumpEquationFit>());
+
+    // Default Supplemental Heating Coil if one is not provided
+    if( ! suppHeatingCoil )
+    {
+      model::Schedule alwaysOnDiscreteSchedule = model.alwaysOnDiscreteSchedule();
+      suppHeatingCoil = model::CoilHeatingElectric(model,alwaysOnDiscreteSchedule);
+      LOG(Warn,name << " creating a default supplementary heating coil");
+    }
+
+    wshp = model::ZoneHVACWaterToAirHeatPump(model,
+                                             schedule.get(),
+                                             fan,
+                                             heatingCoil.get(),
+                                             coolingCoil,
+                                             suppHeatingCoil.get());
+    result = wshp;
+
+    // Name
+    wshp->setName(name);
+
+    if( flowCap )
+    {
+      wshp->setSupplyAirFlowRateDuringCoolingOperation(flowCap.get());
+      wshp->setSupplyAirFlowRateDuringHeatingOperation(flowCap.get());
+      wshp->setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(flowCap.get());
+    }
+
+    wshp->setMaximumCyclingRate(2.5);
+    wshp->setHeatPumpTimeConstant(60.0);
+    wshp->setFractionofOnCyclePowerUse(0.01);
+
+    QDomElement htPumpFanDelayElement = element.firstChildElement("HtPumpFanDelay");
+    value = htPumpFanDelayElement.text().toDouble(&ok);
+    if( ok )
+    {
+      wshp->setHeatPumpFanDelayTime(value);
+    }
+    else
+    {
+      wshp->setHeatPumpFanDelayTime(60.0);
+    }
+
+    if( htgDsgnSupAirTemp )
+    {
+      wshp->setMaximumSupplyAirTemperaturefromSupplementalHeater(htgDsgnSupAirTemp.get());
+    }
+
+    value = htPumpSuppTempElement.text().toDouble(&ok);
+    if( ok )
+    {
+      value = unitToUnit(value,"F","C").get();
+      wshp->setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(value);
+    }
+  }
+  else if( istringEqual(type,"PTHP") )
+  {
+    boost::optional<openstudio::model::ModelObject> mo;
+    QDomElement htPumpSuppTempElement;
+    QDomElement htPumpCprsrLockoutTempElement;
+
+    // Fan
+    QDomElement fanElement = element.firstChildElement("Fan"); 
+    mo = translateFan(fanElement,doc,model);    
+    OS_ASSERT(mo);
+    model::HVACComponent fan = mo->cast<model::HVACComponent>();
+ 
+    // Heating Coil
+    boost::optional<model::HVACComponent> heatingCoil;
+    boost::optional<model::HVACComponent> suppHeatingCoil;
+    QDomNodeList heatingCoilElements = element.elementsByTagName("CoilHtg"); 
     for(int i = 0; i < heatingCoilElements.count(); i++)
     {
       QDomElement heatingCoilElement = heatingCoilElements.at(i).toElement();
@@ -5847,28 +5962,19 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     }
 
     // Cooling Coil
-
     QDomElement coolingCoilElement = element.firstChildElement("CoilClg");
-
     mo = translateCoilCooling(coolingCoilElement,doc,model);
-
     OS_ASSERT(mo);
-
     model::HVACComponent coolingCoil = mo->cast<model::HVACComponent>();
 
     // Default Supplemental Heating Coil if one is not provided
-    
     if( ! suppHeatingCoil )
     {
       model::Schedule alwaysOnDiscreteSchedule = model.alwaysOnDiscreteSchedule();
-
       suppHeatingCoil = model::CoilHeatingElectric(model,alwaysOnDiscreteSchedule);
-
       LOG(Warn,name << " creating a default supplementary heating coil");
     }
 
-    // Default Heating Coil if one is not provided
-    
     if( ! heatingCoil )
     {
       model::Schedule alwaysOnDiscreteSchedule = model.alwaysOnDiscreteSchedule();
@@ -5925,120 +6031,52 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     boost::optional<model::ZoneHVACPackagedTerminalHeatPump> pthp;
     boost::optional<model::ZoneHVACWaterToAirHeatPump> wshp;
 
-    if( heatingCoil->optionalCast<model::CoilHeatingWaterToAirHeatPumpEquationFit>() )
+    pthp = model::ZoneHVACPackagedTerminalHeatPump(model,
+                                                   schedule.get(),
+                                                   fan,
+                                                   heatingCoil.get(),
+                                                   coolingCoil,
+                                                   suppHeatingCoil.get());
+    result = pthp;
+
+    if( flowCap )
     {
-      if( coolingCoil.optionalCast<model::CoilCoolingWaterToAirHeatPumpEquationFit>() )
-      {
-        wshp = model::ZoneHVACWaterToAirHeatPump(model,
-                                                 schedule.get(),
-                                                 fan,
-                                                 heatingCoil.get(),
-                                                 coolingCoil,
-                                                 suppHeatingCoil.get());
-        result = wshp;
-      }
-      else
-      {
-        LOG(Error,name << " heating and cooling coil must both be water to air heat pump coils");
-        coolingCoil.remove();
-        heatingCoil->remove();
-        fan.remove();
-      }
-    }
-    else
-    {
-      pthp = model::ZoneHVACPackagedTerminalHeatPump(model,
-                                                     schedule.get(),
-                                                     fan,
-                                                     heatingCoil.get(),
-                                                     coolingCoil,
-                                                     suppHeatingCoil.get());
-      result = pthp;
+      pthp->setSupplyAirFlowRateDuringCoolingOperation(flowCap.get());
+      pthp->setSupplyAirFlowRateDuringHeatingOperation(flowCap.get());
+      pthp->setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(flowCap.get());
     }
 
-    if( pthp )
+    // Name
+    pthp->setName(name);
+
+    // HtPumpSuppTemp
+    value = htPumpSuppTempElement.text().toDouble(&ok);
+    if( ok )
     {
-      if( flowCap )
-      {
-        pthp->setSupplyAirFlowRateDuringCoolingOperation(flowCap.get());
-        pthp->setSupplyAirFlowRateDuringHeatingOperation(flowCap.get());
-        pthp->setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(flowCap.get());
-      }
+      value = unitToUnit(value,"F","C").get();
+      pthp->setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(value);
+    }
 
-      // Name
-      pthp->setName(name);
-
-      // HtPumpSuppTemp
-      value = htPumpSuppTempElement.text().toDouble(&ok);
-      if( ok )
-      {
-        value = unitToUnit(value,"F","C").get();
-        pthp->setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(value);
-      }
-
-      // HtPumpCprsrLockoutTemp
-      value = htPumpCprsrLockoutTempElement.text().toDouble(&ok);
-      if( ok )
-      {
-        value = unitToUnit(value,"F","C").get();
-        pthp->setMinimumOutdoorDryBulbTemperatureforCompressorOperation(value);
-      }
+    // HtPumpCprsrLockoutTemp
+    value = htPumpCprsrLockoutTempElement.text().toDouble(&ok);
+    if( ok )
+    {
+      value = unitToUnit(value,"F","C").get();
+      pthp->setMinimumOutdoorDryBulbTemperatureforCompressorOperation(value);
+    }
   
-      // FanCtrl
-      QDomElement fanCtrlElement = element.firstChildElement("FanCtrl"); 
-      if( istringEqual(fanCtrlElement.text().toStdString(),"Continuous") )
-      {
-        model::Schedule schedule = model.alwaysOnDiscreteSchedule();
-        pthp->setSupplyAirFanOperatingModeSchedule(schedule);
-      }
-
-      // htgDsgnSupAirTemp
-      if( htgDsgnSupAirTemp )
-      {
-        pthp->setMaximumSupplyAirTemperaturefromSupplementalHeater(htgDsgnSupAirTemp.get());
-      }
-    }
-    else if( wshp )
+    // FanCtrl
+    QDomElement fanCtrlElement = element.firstChildElement("FanCtrl"); 
+    if( istringEqual(fanCtrlElement.text().toStdString(),"Continuous") )
     {
-      // Name
-      wshp->setName(name);
+      model::Schedule schedule = model.alwaysOnDiscreteSchedule();
+      pthp->setSupplyAirFanOperatingModeSchedule(schedule);
+    }
 
-      wshp->setSupplyAirFlowRateDuringCoolingOperation(flowCap.get());
-      wshp->setSupplyAirFlowRateDuringHeatingOperation(flowCap.get());
-      wshp->setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(flowCap.get());
-
-      wshp->setMaximumCyclingRate(2.5);
-      wshp->setHeatPumpTimeConstant(60.0);
-      wshp->setFractionofOnCyclePowerUse(0.01);
-
-      QDomElement htPumpFanDelayElement = element.firstChildElement("HtPumpFanDelay");
-      value = htPumpFanDelayElement.text().toDouble(&ok);
-      if( ok )
-      {
-        wshp->setHeatPumpFanDelayTime(value);
-      }
-      else
-      {
-        wshp->setHeatPumpFanDelayTime(60.0);
-      }
-
-      if( htgDsgnSupAirTemp )
-      {
-        wshp->setMaximumSupplyAirTemperaturefromSupplementalHeater(htgDsgnSupAirTemp.get());
-      }
-
-      value = htPumpSuppTempElement.text().toDouble(&ok);
-      if( ok )
-      {
-        value = unitToUnit(value,"F","C").get();
-        wshp->setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(value);
-      }
-
-      // Not yet supported by OS
-      //QDomElement htPumpWtrFlowCtrlElement = element.firstChildElement("HtPumpWtrFlowCtrl");
-      //if( ! htPumpWtrFlowCtrlElement.isNull() )
-      //{
-      //}
+    // htgDsgnSupAirTemp
+    if( htgDsgnSupAirTemp )
+    {
+      pthp->setMaximumSupplyAirTemperaturefromSupplementalHeater(htgDsgnSupAirTemp.get());
     }
   }
   else if( istringEqual(type,"Baseboard") )

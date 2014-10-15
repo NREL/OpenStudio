@@ -119,7 +119,7 @@ openstudio::OptionalTimeSeries TreeView::timeseriesFromTreeItem(QTreeWidgetItem*
 {
   openstudio::OptionalTimeSeries ts;
   std::string keyValue="", variableName="", envPeriod="", filename="", reportFreq="";
-  QTreeWidgetItem *fileItem; //ETH@20100412 Darwin warning that this may be used uninitialized
+  QTreeWidgetItem *fileItem = nullptr;
   while (treeItem) {
     switch (treeItem->type()) {
       case ddtKeyValue:
@@ -142,10 +142,12 @@ openstudio::OptionalTimeSeries TreeView::timeseriesFromTreeItem(QTreeWidgetItem*
     treeItem = treeItem->parent();
   }
 
-  filename = openstudio::toString(filenameFromTopLevelItem(fileItem));
-  openstudio::path p = openstudio::toPath(filename);
-  openstudio::SqlFile sqlFile(p);
-  ts = sqlFile.timeSeries(envPeriod, reportFreq, variableName, keyValue);
+  if (fileItem) {
+    filename = openstudio::toString(filenameFromTopLevelItem(fileItem));
+    openstudio::path p = openstudio::toPath(filename);
+    openstudio::SqlFile sqlFile(p);
+    ts = sqlFile.timeSeries(envPeriod, reportFreq, variableName, keyValue);
+  }
 
   return ts;
 }

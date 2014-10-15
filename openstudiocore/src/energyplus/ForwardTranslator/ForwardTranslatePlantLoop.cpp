@@ -68,9 +68,7 @@
 #include "../../model/SetpointManager.hpp"
 #include "../../model/LifeCycleCost.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
-#include <utilities/idd/IddEnums.hpp>
 #include <utilities/idd/IddEnums.hxx>
-
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/PlantLoop_FieldEnums.hxx>
 #include <utilities/idd/BranchList_FieldEnums.hxx>
@@ -88,7 +86,6 @@
 #include <utilities/idd/Sizing_Plant_FieldEnums.hxx>
 #include <utilities/idd/AirTerminal_SingleDuct_ConstantVolume_CooledBeam_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_AirDistributionUnit_FieldEnums.hxx>
-
 #include "../../utilities/core/Assert.hpp"
 
 using namespace openstudio::model;
@@ -529,7 +526,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
           {
             flowRate = optionalFlowRate.get();
           }
-          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,0.0,true,COOLING));
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,COOLING));
         }
         else
         {
@@ -551,7 +548,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
           {
             flowRate = optionalFlowRate.get();
           }
-          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,0.0,true,COOLING));
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,COOLING));
         }
         else
         {
@@ -559,28 +556,28 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
         }
         break;
       }
-	  case openstudio::IddObjectType::OS_CoolingTower_TwoSpeed:
-	  {
-		  sizeAsCondenserSystem = true;
-		  if (boost::optional<Node> outletNode = isSetpointComponent(plantLoop, supplyComponent))
-		  {
-			  CoolingTowerTwoSpeed tower = supplyComponent.cast<CoolingTowerTwoSpeed>();
-			  if (tower.isDesignWaterFlowRateAutosized())
-			  {
-				  autosize = true;
-			  }
-			  else if (boost::optional<double> optionalFlowRate = tower.designWaterFlowRate())
-			  {
-				  flowRate = optionalFlowRate.get();
-			  }
-			  setpointComponents.push_back(SetpointComponentInfo(supplyComponent, *outletNode, 0.0, true, COOLING));
-		  }
-		  else
-		  {
-			  coolingComponents.push_back(supplyComponent);
-		  }
-		  break;
-	  }
+      case openstudio::IddObjectType::OS_CoolingTower_TwoSpeed:
+      {
+        sizeAsCondenserSystem = true;
+        if (boost::optional<Node> outletNode = isSetpointComponent(plantLoop, supplyComponent))
+        {
+          CoolingTowerTwoSpeed tower = supplyComponent.cast<CoolingTowerTwoSpeed>();
+          if (tower.isDesignWaterFlowRateAutosized())
+          {
+            autosize = true;
+          }
+          else if (boost::optional<double> optionalFlowRate = tower.designWaterFlowRate())
+          {
+            flowRate = optionalFlowRate.get();
+          }
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,COOLING));
+        }
+        else
+        {
+          coolingComponents.push_back(supplyComponent);
+        }
+        break;
+      }
       case openstudio::IddObjectType::OS_GroundHeatExchanger_Vertical :
       {
         sizeAsCondenserSystem = true;

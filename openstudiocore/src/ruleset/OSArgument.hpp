@@ -34,7 +34,7 @@ namespace openstudio {
 namespace ruleset {
 
 /** \class OSArgumentType
- *  \brief Listing of OSArgument data types. Quantity type is \deprecated.
+ *  \brief Listing of OSArgument data types. Quantity type is deprecated.
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
  *  macro call is:
  *  \code
