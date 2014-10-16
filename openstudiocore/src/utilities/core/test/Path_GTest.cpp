@@ -205,7 +205,7 @@ TEST_F(CoreFixture, Path_WindowsPathOnUnix)
   EXPECT_TRUE(file.has_stem());
   EXPECT_EQ("measure", openstudio::toString(file.stem()));
   EXPECT_TRUE(file.has_extension());
-  EXPECT_EQ("rb", openstudio::toString(file.extension()));
+  EXPECT_EQ(".rb", openstudio::toString(file.extension()));
   EXPECT_TRUE(file.is_absolute());
   EXPECT_FALSE(file.is_relative());
 
@@ -226,7 +226,7 @@ TEST_F(CoreFixture, Path_WindowsPathOnUnix)
   EXPECT_TRUE(file.has_stem());
   EXPECT_EQ("measure", openstudio::toString(file.stem()));
   EXPECT_TRUE(file.has_extension());
-  EXPECT_EQ("rb", openstudio::toString(file.extension()));
+  EXPECT_EQ(".rb", openstudio::toString(file.extension()));
   EXPECT_TRUE(file.is_absolute());
   EXPECT_FALSE(file.is_relative());
 }
