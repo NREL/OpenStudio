@@ -1,0 +1,737 @@
+{
+    "analysis": {
+        "data_points_are_invalid": false,
+        "display_name": "Simple Project Analysis",
+        "name": "Simple Project Analysis",
+        "num_measure_groups": 2,
+        "num_ruby_continuous_variables": 0,
+        "openstudio_version": "1.5.1",
+        "problem": {
+            "display_name": "Simple Project Problem",
+            "name": "Simple Project Problem",
+            "problem_type": "Problem",
+            "uuid": "c1a432a8-110a-4952-bcc9-722bbc9bc6c0",
+            "version_uuid": "8ec1785b-0ab1-497d-be99-e2678dd485ec",
+            "workflow": [
+                {
+                    "display_name": "Alternative Model",
+                    "measures": [
+                        {
+                            "is_selected": true,
+                            "measure_group_index": 0,
+                            "measure_type": "NullMeasure",
+                            "uuid": "fa2df066-cbb3-4210-b6d2-68092373a7a2",
+                            "version_uuid": "2e188abf-5d18-4623-8c72-b90af2abce62"
+                        }
+                    ],
+                    "name": "Alternative Model",
+                    "uuid": "0fa1ea72-26ca-4d5f-8db4-3e709515c48b",
+                    "version_uuid": "64b6756a-9cc4-4ea5-b705-d8cadd542fcd",
+                    "workflow_index": 0,
+                    "workflow_step_type": "MeasureGroup"
+                },
+                {
+                    "display_name": "Rotate Building Group",
+                    "measures": [
+                        {
+                            "is_selected": true,
+                            "measure_group_index": 0,
+                            "measure_type": "NullMeasure",
+                            "uuid": "eddd41e3-94b0-4596-9054-6ab22b6f2317",
+                            "version_uuid": "c776c316-9671-4d5b-a6e1-b049469e651d"
+                        },
+                        {
+                            "arguments": [
+                                {
+                                    "argument_index": 0,
+                                    "default_value": 90,
+                                    "display_name": "Number of Degrees to Rotate Building (positive value is clockwise).",
+                                    "domain_type": "Interval",
+                                    "model_dependent": false,
+                                    "name": "relative_building_rotation",
+                                    "required": true,
+                                    "type": "Double",
+                                    "uuid": "9bcca038-cad1-47e1-870a-a86c6c52cb2d",
+                                    "value": 0,
+                                    "version_uuid": "a187c33c-f71e-423c-babb-0b57b313601c"
+                                }
+                            ],
+                            "bcl_measure_directory": "E:/test/CloudTest/scripts/aeb20d61-b773-4d20-a2ef-fe948cdc2858",
+                            "bcl_measure_uuid": "a5be6c96-4ecc-47fa-8d32-f4216ebc2e7d",
+                            "bcl_measure_version_uuid": "939da70b-cbe6-466b-9fff-a2f0d501d585",
+                            "description": "Rotate your building relative to its current orientation. This will not rotate site shading objects.",
+                            "display_name": "Rotate Building Alternative",
+                            "input_file_type": "OSM",
+                            "is_selected": true,
+                            "is_user_script": false,
+                            "measure_group_index": 1,
+                            "measure_type": "RubyMeasure",
+                            "name": "Rotate Building Alternative",
+                            "output_file_type": "OSM",
+                            "uuid": "1d677ab5-4dde-4c38-ace5-54cfa3fd8579",
+                            "version_uuid": "ece9f711-41fe-48c3-8e2b-7faf10eed357"
+                        },
+                        {
+                            "arguments": [
+                                {
+                                    "argument_index": 0,
+                                    "default_value": 90,
+                                    "display_name": "Number of Degrees to Rotate Building (positive value is clockwise).",
+                                    "domain_type": "Interval",
+                                    "model_dependent": false,
+                                    "name": "relative_building_rotation",
+                                    "required": true,
+                                    "type": "Double",
+                                    "uuid": "69e8fa74-8872-4d31-819c-d6f7b0611e85",
+                                    "value": 0,
+                                    "version_uuid": "e476c526-4357-4058-b3ba-a8c6421a7f8b"
+                                }
+                            ],
+                            "bcl_measure_directory": "E:/test/CloudTest/scripts/aeb20d61-b773-4d20-a2ef-fe948cdc2858",
+                            "bcl_measure_uuid": "a5be6c96-4ecc-47fa-8d32-f4216ebc2e7d",
+                            "bcl_measure_version_uuid": "939da70b-cbe6-466b-9fff-a2f0d501d585",
+                            "description": "Rotate your building relative to its current orientation. This will not rotate site shading objects.",
+                            "display_name": "Rotate Building Alternative 1",
+                            "input_file_type": "OSM",
+                            "is_selected": true,
+                            "is_user_script": false,
+                            "measure_group_index": 2,
+                            "measure_type": "RubyMeasure",
+                            "name": "Rotate Building Alternative 1",
+                            "output_file_type": "OSM",
+                            "uuid": "db4dc08c-cd4e-4247-86fa-77dd345eb804",
+                            "version_uuid": "fdd63d43-9ee3-4dbb-8bae-47fe16caa9f2"
+                        },
+                        {
+                            "arguments": [
+                                {
+                                    "argument_index": 0,
+                                    "default_value": 90,
+                                    "display_name": "Number of Degrees to Rotate Building (positive value is clockwise).",
+                                    "domain_type": "Interval",
+                                    "model_dependent": false,
+                                    "name": "relative_building_rotation",
+                                    "required": true,
+                                    "type": "Double",
+                                    "uuid": "96ab9522-eabc-40a2-859e-01d2ba8e53c6",
+                                    "value": 0,
+                                    "version_uuid": "97d2c38d-a33b-4fe9-b924-b60451c4177f"
+                                }
+                            ],
+                            "bcl_measure_directory": "E:/test/CloudTest/scripts/aeb20d61-b773-4d20-a2ef-fe948cdc2858",
+                            "bcl_measure_uuid": "a5be6c96-4ecc-47fa-8d32-f4216ebc2e7d",
+                            "bcl_measure_version_uuid": "939da70b-cbe6-466b-9fff-a2f0d501d585",
+                            "description": "Rotate your building relative to its current orientation. This will not rotate site shading objects.",
+                            "display_name": "Rotate Building Alternative 2",
+                            "input_file_type": "OSM",
+                            "is_selected": true,
+                            "is_user_script": false,
+                            "measure_group_index": 3,
+                            "measure_type": "RubyMeasure",
+                            "name": "Rotate Building Alternative 2",
+                            "output_file_type": "OSM",
+                            "uuid": "bc6e57c4-52c3-47a0-b859-93f2cc6bd348",
+                            "version_uuid": "ef6a6f71-cadb-4924-a045-7632876e834b"
+                        }
+                    ],
+                    "name": "Rotate Building Group",
+                    "uuid": "cace2a91-8d9d-4203-9539-95f5acd3b778",
+                    "version_uuid": "d8030b69-4b09-49c1-995b-050b5b3cf7ab",
+                    "workflow_index": 1,
+                    "workflow_step_type": "MeasureGroup"
+                },
+                {
+                    "params": [
+                        {
+                            "param": {
+                                "children": [
+                                    {
+                                        "param": {
+                                            "value": ""
+                                        },
+                                        "param_index": 0
+                                    }
+                                ],
+                                "value": "workflowjobkey"
+                            },
+                            "param_index": 0
+                        },
+                        {
+                            "param": {
+                                "children": [
+                                    {
+                                        "param": {
+                                            "value": "b15321e5c2117d1479b4b83fd12f070d"
+                                        },
+                                        "param_index": 0
+                                    }
+                                ],
+                                "value": "workflowkey"
+                            },
+                            "param_index": 1
+                        }
+                    ],
+                    "type": "ModelToIdf",
+                    "workflow_index": 2,
+                    "workflow_step_type": "WorkItem"
+                },
+                {
+                    "params": [
+                        {
+                            "param": {
+                                "children": [
+                                    {
+                                        "param": {
+                                            "value": ""
+                                        },
+                                        "param_index": 0
+                                    }
+                                ],
+                                "value": "workflowjobkey"
+                            },
+                            "param_index": 0
+                        }
+                    ],
+                    "type": "ExpandObjects",
+                    "workflow_index": 3,
+                    "workflow_step_type": "WorkItem"
+                },
+                {
+                    "files": [
+                        {
+                            "exists": true,
+                            "file_name": "UserScriptAdapter.rb",
+                            "full_path": "E:/openstudio2/openstudiocore/ruby/openstudio/runmanager/rubyscripts/UserScriptAdapter.rb",
+                            "key": "rb",
+                            "last_modified": "20141008T145815",
+                            "required_files": [
+                                {
+                                    "path": "user_script.rb",
+                                    "url": "file:///E:/test/CloudTest/scripts/ReportRequest/measure.rb"
+                                }
+                            ]
+                        }
+                    ],
+                    "jobkeyname": "pat-report-request-job",
+                    "params": [
+                        {
+                            "param": {
+                                "value": "ruby_scriptparameters"
+                            },
+                            "param_index": 0
+                        },
+                        {
+                            "param": {
+                                "children": [
+                                    {
+                                        "param": {
+                                            "children": [
+                                                {
+                                                    "param": {
+                                                        "children": [
+                                                            {
+                                                                "param": {
+                                                                    "children": [
+                                                                        {
+                                                                            "param": {
+                                                                                "value": "in.idf"
+                                                                            },
+                                                                            "param_index": 0
+                                                                        }
+                                                                    ],
+                                                                    "value": ".*\\.idf"
+                                                                },
+                                                                "param_index": 0
+                                                            }
+                                                        ],
+                                                        "value": "All"
+                                                    },
+                                                    "param_index": 0
+                                                }
+                                            ],
+                                            "value": "Last"
+                                        },
+                                        "param_index": 0
+                                    }
+                                ],
+                                "value": "ruby_inputfiles"
+                            },
+                            "param_index": 1
+                        },
+                        {
+                            "param": {
+                                "value": "ruby_toolparameters"
+                            },
+                            "param_index": 2
+                        },
+                        {
+                            "param": {
+                                "children": [
+                                    {
+                                        "param": {
+                                            "children": [
+                                                {
+                                                    "param": {
+                                                        "children": [
+                                                            {
+                                                                "param": {
+                                                                    "value": ""
+                                                                },
+                                                                "param_index": 0
+                                                            }
+                                                        ],
+                                                        "value": "idf"
+                                                    },
+                                                    "param_index": 0
+                                                }
+                                            ],
+                                            "value": "idf"
+                                        },
+                                        "param_index": 0
+                                    }
+                                ],
+                                "value": "ruby_copyrequired"
+                            },
+                            "param_index": 3
+                        },
+                        {
+                            "param": {
+                                "children": [
+                                    {
+                                        "param": {
+                                            "children": [
+                                                {
+                                                    "param": {
+                                                        "value": "user_script.rb"
+                                                    },
+                                                    "param_index": 0
+                                                }
+                                            ],
+                                            "value": "E:/test/CloudTest/scripts/ReportRequest/measure.rb"
+                                        },
+                                        "param_index": 0
+                                    },
+                                    {
+                                        "param": {
+                                            "children": [
+                                                {
+                                                    "param": {
+                                                        "value": "measure.rb"
+                                                    },
+                                                    "param_index": 0
+                                                }
+                                            ],
+                                            "value": "E:/test/CloudTest/scripts/ReportRequest/measure.rb"
+                                        },
+                                        "param_index": 1
+                                    }
+                                ],
+                                "value": "ruby_requiredfiles"
+                            },
+                            "param_index": 4
+                        },
+                        {
+                            "param": {
+                                "children": [
+                                    {
+                                        "param": {
+                                            "value": "true"
+                                        },
+                                        "param_index": 0
+                                    }
+                                ],
+                                "value": "ruby_isuserscriptjob"
+                            },
+                            "param_index": 5
+                        },
+                        {
+                            "param": {
+                                "children": [
+                                    {
+                                        "param": {
+                                            "value": "E:/openstudio2/openstudiocore/ruby/openstudio/runmanager/rubyscripts/UserScriptAdapter.rb"
+                                        },
+                                        "param_index": 0
+                                    }
+                                ],
+                                "value": "ruby_scriptfile"
+                            },
+                            "param_index": 6
+                        },
+                        {
+                            "param": {
+                                "children": [
+                                    {
+                                        "param": {
+                                            "children": [
+                                                {
+                                                    "param": {
+                                                        "value": "{060ee477-b04c-4a1b-8788-312d796ad132}"
+                                                    },
+                                                    "param_index": 0
+                                                }
+                                            ],
+                                            "value": "bcl_measure_uuid"
+                                        },
+                                        "param_index": 0
+                                    }
+                                ],
+                                "value": "ruby_bclmeasureparameters"
+                            },
+                            "param_index": 7
+                        },
+                        {
+                            "param": {
+                                "children": [
+                                    {
+                                        "param": {
+                                            "value": "pat-report-request-job"
+                                        },
+                                        "param_index": 0
+                                    }
+                                ],
+                                "value": "workflowjobkey"
+                            },
+                            "param_index": 8
+                        }
+                    ],
+                    "type": "UserScript",
+                    "workflow_index": 4,
+                    "workflow_step_type": "WorkItem"
+                },
+                {
+                    "params": [
+                        {
+                            "param": {
+                                "children": [
+                                    {
+                                        "param": {
+                                            "value": ""
+                                        },
+                                        "param_index": 0
+                                    }
+                                ],
+                                "value": "workflowjobkey"
+                            },
+                            "param_index": 0
+                        }
+                    ],
+                    "type": "EnergyPlusPreProcess",
+                    "workflow_index": 5,
+                    "workflow_step_type": "WorkItem"
+                },
+                {
+                    "params": [
+                        {
+                            "param": {
+                                "children": [
+                                    {
+                                        "param": {
+                                            "value": ""
+                                        },
+                                        "param_index": 0
+                                    }
+                                ],
+                                "value": "workflowjobkey"
+                            },
+                            "param_index": 0
+                        }
+                    ],
+                    "type": "EnergyPlus",
+                    "workflow_index": 6,
+                    "workflow_step_type": "WorkItem"
+                },
+                {
+                    "files": [
+                        {
+                            "exists": true,
+                            "file_name": "UserScriptAdapter.rb",
+                            "full_path": "E:/openstudio2/openstudiocore/ruby/openstudio/runmanager/rubyscripts/UserScriptAdapter.rb",
+                            "key": "rb",
+                            "last_modified": "20141008T145815",
+                            "required_files": [
+                                {
+                                    "path": "user_script.rb",
+                                    "url": "file:///E:/test/CloudTest/scripts/StandardReports/measure.rb"
+                                },
+                                {
+                                    "path": "resources/report.html.in",
+                                    "url": "file:///E:/test/CloudTest/scripts/StandardReports/resources/report.html.in"
+                                }
+                            ]
+                        }
+                    ],
+                    "params": [
+                        {
+                            "param": {
+                                "value": "ruby_scriptparameters"
+                            },
+                            "param_index": 0
+                        },
+                        {
+                            "param": {
+                                "children": [
+                                    {
+                                        "param": {
+                                            "children": [
+                                                {
+                                                    "param": {
+                                                        "children": [
+                                                            {
+                                                                "param": {
+                                                                    "children": [
+                                                                        {
+                                                                            "param": {
+                                                                                "value": "in.idf"
+                                                                            },
+                                                                            "param_index": 0
+                                                                        }
+                                                                    ],
+                                                                    "value": ".*\\.idf"
+                                                                },
+                                                                "param_index": 0
+                                                            }
+                                                        ],
+                                                        "value": "All"
+                                                    },
+                                                    "param_index": 0
+                                                }
+                                            ],
+                                            "value": "Last"
+                                        },
+                                        "param_index": 0
+                                    },
+                                    {
+                                        "param": {
+                                            "children": [
+                                                {
+                                                    "param": {
+                                                        "children": [
+                                                            {
+                                                                "param": {
+                                                                    "children": [
+                                                                        {
+                                                                            "param": {
+                                                                                "value": "in.osm"
+                                                                            },
+                                                                            "param_index": 0
+                                                                        }
+                                                                    ],
+                                                                    "value": ".*\\.osm"
+                                                                },
+                                                                "param_index": 0
+                                                            }
+                                                        ],
+                                                        "value": "All"
+                                                    },
+                                                    "param_index": 0
+                                                }
+                                            ],
+                                            "value": "Last"
+                                        },
+                                        "param_index": 1
+                                    }
+                                ],
+                                "value": "ruby_inputfiles"
+                            },
+                            "param_index": 1
+                        },
+                        {
+                            "param": {
+                                "children": [
+                                    {
+                                        "param": {
+                                            "value": "-I"
+                                        },
+                                        "param_index": 0
+                                    },
+                                    {
+                                        "param": {
+                                            "value": "E:/openstudio2/build/OpenStudioCore-prefix/src/OpenStudioCore-build/ruby/Debug"
+                                        },
+                                        "param_index": 1
+                                    }
+                                ],
+                                "value": "ruby_toolparameters"
+                            },
+                            "param_index": 2
+                        },
+                        {
+                            "param": {
+                                "value": "ruby_copyrequired"
+                            },
+                            "param_index": 3
+                        },
+                        {
+                            "param": {
+                                "children": [
+                                    {
+                                        "param": {
+                                            "children": [
+                                                {
+                                                    "param": {
+                                                        "value": "user_script.rb"
+                                                    },
+                                                    "param_index": 0
+                                                }
+                                            ],
+                                            "value": "E:/test/CloudTest/scripts/StandardReports/measure.rb"
+                                        },
+                                        "param_index": 0
+                                    },
+                                    {
+                                        "param": {
+                                            "children": [
+                                                {
+                                                    "param": {
+                                                        "value": "resources/report.html.in"
+                                                    },
+                                                    "param_index": 0
+                                                }
+                                            ],
+                                            "value": "E:/test/CloudTest/scripts/StandardReports/resources/report.html.in"
+                                        },
+                                        "param_index": 1
+                                    },
+                                    {
+                                        "param": {
+                                            "children": [
+                                                {
+                                                    "param": {
+                                                        "value": "measure.rb"
+                                                    },
+                                                    "param_index": 0
+                                                }
+                                            ],
+                                            "value": "E:/test/CloudTest/scripts/StandardReports/measure.rb"
+                                        },
+                                        "param_index": 2
+                                    }
+                                ],
+                                "value": "ruby_requiredfiles"
+                            },
+                            "param_index": 4
+                        },
+                        {
+                            "param": {
+                                "children": [
+                                    {
+                                        "param": {
+                                            "value": "true"
+                                        },
+                                        "param_index": 0
+                                    }
+                                ],
+                                "value": "ruby_isuserscriptjob"
+                            },
+                            "param_index": 5
+                        },
+                        {
+                            "param": {
+                                "children": [
+                                    {
+                                        "param": {
+                                            "value": "E:/openstudio2/openstudiocore/ruby/openstudio/runmanager/rubyscripts/UserScriptAdapter.rb"
+                                        },
+                                        "param_index": 0
+                                    }
+                                ],
+                                "value": "ruby_scriptfile"
+                            },
+                            "param_index": 6
+                        },
+                        {
+                            "param": {
+                                "children": [
+                                    {
+                                        "param": {
+                                            "children": [
+                                                {
+                                                    "param": {
+                                                        "value": "{fc337100-8634-404e-8966-01243d292a79}"
+                                                    },
+                                                    "param_index": 0
+                                                }
+                                            ],
+                                            "value": "bcl_measure_uuid"
+                                        },
+                                        "param_index": 0
+                                    }
+                                ],
+                                "value": "ruby_bclmeasureparameters"
+                            },
+                            "param_index": 7
+                        },
+                        {
+                            "param": {
+                                "children": [
+                                    {
+                                        "param": {
+                                            "value": ""
+                                        },
+                                        "param_index": 0
+                                    }
+                                ],
+                                "value": "workflowjobkey"
+                            },
+                            "param_index": 8
+                        }
+                    ],
+                    "type": "UserScript",
+                    "workflow_index": 7,
+                    "workflow_step_type": "WorkItem"
+                },
+                {
+                    "params": [
+                        {
+                            "param": {
+                                "children": [
+                                    {
+                                        "param": {
+                                            "value": ""
+                                        },
+                                        "param_index": 0
+                                    }
+                                ],
+                                "value": "workflowjobkey"
+                            },
+                            "param_index": 0
+                        }
+                    ],
+                    "type": "OpenStudioPostProcess",
+                    "workflow_index": 8,
+                    "workflow_step_type": "WorkItem"
+                }
+            ]
+        },
+        "project_dir": "E:/test/CloudTest",
+        "results_are_invalid": false,
+        "seed": {
+            "checksum_create": "EBD1DD6D",
+            "checksum_last": "EBD1DD6D",
+            "display_name": "example.osm",
+            "file_type": "OSM",
+            "name": "E:/test/CloudTest/seed/example.osm",
+            "path": "E:/test/CloudTest/seed/example.osm",
+            "timestamp_create": "20141013T160551",
+            "timestamp_last": "20141013T160551",
+            "uuid": "64be1846-0883-4dde-b99f-6275a2d695ce",
+            "version_uuid": "00ce3610-6b62-4fc9-9f12-bb12b2b542b7"
+        },
+        "uuid": "55a8dc7e-7c72-4572-817e-227880224137",
+        "version_uuid": "35edc9cc-7f7f-46f3-81e3-89f516784060",
+        "weather_file": {
+            "checksum_create": "C254B53F",
+            "checksum_last": "C254B53F",
+            "display_name": "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw",
+            "file_type": "EPW",
+            "name": "E:/test/CloudTest/seed/example/files/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw",
+            "path": "E:/test/CloudTest/seed/example/files/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw",
+            "timestamp_create": "20141013T160551",
+            "timestamp_last": "20141013T160551",
+            "uuid": "73f7f8c5-f379-48d5-8833-0f1a3180840d",
+            "version_uuid": "3c6ea95e-aa54-4a69-93ee-567cd6533f86"
+        }
+    },
+    "openstudio_version": "1.5.1"
+}

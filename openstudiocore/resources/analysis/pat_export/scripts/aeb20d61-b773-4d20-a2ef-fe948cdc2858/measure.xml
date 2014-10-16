@@ -1,0 +1,72 @@
+<measure>
+  <schema_version>3.0</schema_version>
+  <name>rotate_building</name>
+  <uid>a5be6c96-4ecc-47fa-8d32-f4216ebc2e7d</uid>
+  <version_id>939da70b-cbe6-466b-9fff-a2f0d501d585</version_id>
+  <xml_checksum>49BEF039</xml_checksum>
+  <class_name>RotateBuilding</class_name>
+  <display_name>Rotate Building</display_name>
+  <description>Rotate your building relative to its current orientation. This will not rotate site shading objects.</description>
+  <modeler_description>Get the North Axis field for the  OS:Building object and adjusted it based on the user specified value. If the starting value is 20 degrees and the user value is 5 degrees, then the resulting value is 25 degrees.</modeler_description>
+  <arguments>
+    <argument>
+      <name>relative_building_rotation</name>
+      <display_name>Number of Degrees to Rotate Building (positive value is clockwise).</display_name>
+      <type>Double</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>90</default_value>
+    </argument>
+  </arguments>
+  <provenances/>
+  <tags>
+    <tag>Envelope.Form</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ModelMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Function</name>
+      <value>Measure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Requires EnergyPlus Results</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+    <attribute>
+      <name>Uses SketchUp API</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <filename>RotateBuilding_TestModel_01.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>550314F1</checksum>
+    </file>
+    <file>
+      <filename>RotateBuilding_Test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>01BFBBC7</checksum>
+    </file>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>1.3.0</identifier>
+        <min_compatible>1.3.0</min_compatible>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>C0BBCFAD</checksum>
+    </file>
+  </files>
+</measure>
