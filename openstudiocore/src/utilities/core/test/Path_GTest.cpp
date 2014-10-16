@@ -25,7 +25,7 @@
 #include "CoreFixture.hpp"
 #include "../Path.hpp"
 #include "../PathHelpers.hpp"
-#include "../UrlHelpers.hpp"
+#include "../URLHelpers.hpp"
 
 using openstudio::path;
 using openstudio::toPath;
