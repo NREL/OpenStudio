@@ -31,7 +31,7 @@
 #include <utilities/idd/Refrigeration_SecondarySystem_FieldEnums.hxx>
 #include <utilities/idd/Refrigeration_CaseAndWalkInList_FieldEnums.hxx>
 #include <utilities/idd/FluidProperties_Name_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hpp>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 

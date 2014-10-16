@@ -21,7 +21,7 @@
 #include "IddFixture.hpp"
 #include "../IddObject.hpp"
 #include <utilities/idd/IddFactory.hxx>
-#include <utilities/idd/IddEnums.hpp>
+#include "../IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include "../ExtensibleIndex.hpp"
 #include "../../core/Containers.hpp"

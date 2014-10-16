@@ -28,7 +28,7 @@
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
-#include <utilities/idd/IddEnums.hpp>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;

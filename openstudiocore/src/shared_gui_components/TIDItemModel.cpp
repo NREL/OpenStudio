@@ -19,7 +19,7 @@
 
 #include "TIDItemModel.hpp"
 #include "../utilities/core/Compare.hpp"
-#include <utilities/idd/IddEnums.hpp>
+#include "../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 namespace openstudio {

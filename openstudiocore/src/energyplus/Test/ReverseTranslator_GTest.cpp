@@ -61,7 +61,7 @@
 #include "../../utilities/sql/SqlFile.hpp"
 #include "../../utilities/idf/IdfFile.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
-#include <utilities/idd/IddEnums.hpp>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/Version_FieldEnums.hxx>
 #include <utilities/idd/Lights_FieldEnums.hxx>

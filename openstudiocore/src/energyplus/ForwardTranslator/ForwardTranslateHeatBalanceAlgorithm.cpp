@@ -19,7 +19,7 @@
 
 #include "../ForwardTranslator.hpp"
 #include "../../model/HeatBalanceAlgorithm.hpp"
-#include <utilities/idd/IddEnums.hpp>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/HeatBalanceAlgorithm_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 

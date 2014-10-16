@@ -21,7 +21,7 @@
 #include "../../model/Model.hpp"
 #include "../../model/OutputControlReportingTolerances.hpp"
 #include <utilities/idd/OutputControl_ReportingTolerances_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hpp>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 

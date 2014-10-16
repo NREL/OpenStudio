@@ -25,7 +25,7 @@
 
 #include "../utilities/idf/WorkspaceObject.hpp"
 
-#include <utilities/idd/IddEnums.hpp>
+#include "../utilities/idd/IddEnums.hpp"
 
 #include "../utilities/core/Logger.hpp"
 

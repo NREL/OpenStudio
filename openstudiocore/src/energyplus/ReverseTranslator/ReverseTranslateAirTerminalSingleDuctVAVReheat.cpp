@@ -25,7 +25,7 @@
 #include "../../model/CoilHeatingGas.hpp"
 #include "../../model/CoilHeatingGas_Impl.hpp"
 #include <utilities/idd/AirTerminal_SingleDuct_VAV_Reheat_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hpp>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

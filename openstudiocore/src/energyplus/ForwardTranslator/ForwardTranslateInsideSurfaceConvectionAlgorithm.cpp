@@ -20,7 +20,7 @@
 #include "../ForwardTranslator.hpp"
 #include "../../model/InsideSurfaceConvectionAlgorithm.hpp"
 #include <utilities/idd/SurfaceConvectionAlgorithm_Inside_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hpp>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

@@ -27,7 +27,7 @@
 
 #include "../core/Logger.hpp"
 
-#include <utilities/idd/IddEnums.hpp>
+#include "../idd/IddEnums.hpp"
 
 #include <boost/optional.hpp>
 

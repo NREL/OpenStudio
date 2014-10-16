@@ -38,7 +38,7 @@
 #include <utilities/idd/Sizing_Zone_FieldEnums.hxx>
 #include <utilities/idd/DesignSpecification_ZoneAirDistribution_FieldEnums.hxx>
 #include <utilities/idd/Controller_MechanicalVentilation_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hpp>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"

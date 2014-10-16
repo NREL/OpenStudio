@@ -25,7 +25,7 @@
 #include "../../model/ThermalZone.hpp"
 #include "../../model/RefrigerationAirChiller.hpp"
 #include "../../model/RefrigerationAirChiller_Impl.hpp"
-#include <utilities/idd/IddEnums.hpp>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/ZoneHVAC_EquipmentList_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_RefrigerationChillerSet_FieldEnums.hxx>

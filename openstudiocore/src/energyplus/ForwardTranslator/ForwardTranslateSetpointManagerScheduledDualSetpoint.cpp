@@ -22,7 +22,7 @@
 #include "../../model/Node.hpp"
 #include "../../model/Schedule.hpp"
 #include <utilities/idd/SetpointManager_Scheduled_DualSetpoint_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hpp>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

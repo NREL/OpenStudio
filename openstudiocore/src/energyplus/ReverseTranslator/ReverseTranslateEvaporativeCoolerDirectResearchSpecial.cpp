@@ -23,7 +23,7 @@
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
 #include <utilities/idd/EvaporativeCooler_Direct_ResearchSpecial_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hpp>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

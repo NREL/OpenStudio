@@ -38,7 +38,7 @@
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/ZoneHVAC_HighTemperatureRadiant_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/idd/IddEnums.hpp>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
 using namespace openstudio::model;

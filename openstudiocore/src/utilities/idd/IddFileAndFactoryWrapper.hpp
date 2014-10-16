@@ -22,7 +22,7 @@
 
 #include "../UtilitiesAPI.hpp"
 #include "IddFile.hpp"
-#include <utilities/idd/IddEnums.hpp>
+#include "IddEnums.hpp"
 
 namespace openstudio {
 

@@ -21,7 +21,7 @@
 #include "IddFile_Impl.hpp"
 
 #include "IddRegex.hpp"
-#include <utilities/idd/IddEnums.hpp>
+#include "IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../core/PathHelpers.hpp"

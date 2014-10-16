@@ -26,7 +26,7 @@
 #include "../../model/Model_Impl.hpp"
 
 #include "../../utilities/bcl/BCLMeasure.hpp"
-#include <utilities/idd/IddEnums.hpp>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 #include <vector>

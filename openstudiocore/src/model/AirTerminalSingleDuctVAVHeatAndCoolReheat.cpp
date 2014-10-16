@@ -17,28 +17,28 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/AirTerminalSingleDuctVAVHeatAndCoolReheat.hpp>
-#include <model/AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/PortList.hpp>
-#include <model/PortList_Impl.hpp>
-#include <model/Mixer.hpp>
-#include <model/Mixer_Impl.hpp>
-#include <model/Splitter.hpp>
-#include <model/Splitter_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
+#include "AirTerminalSingleDuctVAVHeatAndCoolReheat.hpp"
+#include "AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "PortList.hpp"
+#include "PortList_Impl.hpp"
+#include "Mixer.hpp"
+#include "Mixer_Impl.hpp"
+#include "Splitter.hpp"
+#include "Splitter_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 #include <utilities/idd/OS_AirTerminal_SingleDuct_VAV_HeatAndCool_Reheat_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

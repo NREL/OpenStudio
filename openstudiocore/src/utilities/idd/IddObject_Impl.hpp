@@ -28,7 +28,7 @@
 #include "../core/Logger.hpp"
 #include "../core/Containers.hpp"
 
-#include <utilities/idd/IddEnums.hpp>
+#include "IddEnums.hpp"
 
 #include <string>
 #include <ostream>

@@ -69,7 +69,7 @@
 #include "../../utilities/idf/WorkspaceWatcher.hpp"
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
-#include <utilities/idd/IddEnums.hpp>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/OS_Surface_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 

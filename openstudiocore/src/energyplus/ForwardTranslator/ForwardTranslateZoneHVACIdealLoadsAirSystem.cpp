@@ -34,7 +34,7 @@
 #include "../../model/DesignSpecificationOutdoorAir_Impl.hpp"
 
 #include <utilities/idd/ZoneHVAC_IdealLoadsAirSystem_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hpp>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 

@@ -24,7 +24,7 @@
 
 #include <utilities/idd/ConvergenceLimits_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/idd/IddEnums.hpp>
+#include "../../utilities/idd/IddEnums.hpp"
 
 #include "../../utilities/core/Assert.hpp"
 #include "../../utilities/core/Optional.hpp"

@@ -22,7 +22,7 @@
 #include "../ProjectDatabase.hpp"
 
 #include "../../utilities/core/Path.hpp"
-#include <utilities/idd/IddEnums.hpp>
+#include "../../utilities/idd/IddEnums.hpp"
 
 using openstudio::Logger;
 using openstudio::FileLogSink;

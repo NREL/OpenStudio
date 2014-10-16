@@ -21,7 +21,7 @@
 #include "../../model/ControllerOutdoorAir.hpp"
 #include "../../model/ControllerOutdoorAir_Impl.hpp"
 #include <utilities/idd/Controller_OutdoorAir_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hpp>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

@@ -20,10 +20,10 @@
 #ifndef OPENSTUDIO_SPACETYPESGRIDVIEW_H
 #define OPENSTUDIO_SPACETYPESGRIDVIEW_H
 
-#include <shared_gui_components/OSGridController.hpp>
-#include <openstudio_lib/OSItem.hpp>
+#include "../shared_gui_components/OSGridController.hpp"
+#include "OSItem.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
 #include <QWidget>
 

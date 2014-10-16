@@ -23,7 +23,7 @@
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
 #include <utilities/idd/SetpointManager_MixedAir_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hpp>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

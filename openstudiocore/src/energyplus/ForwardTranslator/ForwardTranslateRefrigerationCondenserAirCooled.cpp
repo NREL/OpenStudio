@@ -24,7 +24,7 @@
 #include "../../model/ThermalZone.hpp"
 
 #include <utilities/idd/Refrigeration_Condenser_AirCooled_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hpp>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 

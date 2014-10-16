@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_TEXTEDITDIALOG_H
 #define OPENSTUDIO_TEXTEDITDIALOG_H
 
-#include <shared_gui_components/OSDialog.hpp>
+#include "OSDialog.hpp"
 
 class QTextEdit;
 

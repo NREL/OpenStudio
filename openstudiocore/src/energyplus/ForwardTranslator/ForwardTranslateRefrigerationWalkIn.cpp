@@ -28,7 +28,7 @@
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/Refrigeration_WalkIn_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hpp>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 

@@ -25,7 +25,7 @@
 #include "../../model/ShadingSurfaceGroup.hpp"
 
 #include <utilities/idd/Site_Location_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hpp>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
