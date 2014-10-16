@@ -21,6 +21,8 @@
 #include "Path.hpp"
 #include "String.hpp"
 
+#include <QRegularExpression>
+
 namespace openstudio {
   
 QUrl completeURL(const QUrl &t_source, const std::vector<QUrl> &t_searchPaths, bool throwOnFailure)
@@ -76,6 +78,33 @@ std::string toString(const QUrl& url) {
   // MSVS warning C4717: recursive on all control paths
   const QByteArray& qb = url.toString().toUtf8();
   return std::string(qb.data());
+}
+
+openstudio::path getOriginalPath(const Url& url)
+{
+  boost::optional<openstudio::path> result = getOptionalOriginalPath(url);
+  if (!result){
+    throw std::runtime_error("Unable to convert url to path");
+  }
+  return result.get();
+}
+
+boost::optional<openstudio::path> getOptionalOriginalPath(const Url& url)
+{
+  boost::optional<openstudio::path> result;
+  if (url.scheme() == "file" || url.scheme().isEmpty()){
+    QString localFile = url.toLocalFile();
+
+    // test for root slash added to windows paths, "/E:/test/CloudTest/scripts/StandardReports/measure.rb" 
+    const QRegularExpression regexp("^\\/([a-zA-Z]:\\/.*)");
+    QRegularExpressionMatch match = regexp.match(localFile);
+    if (match.hasMatch()){
+      localFile = match.captured(1);
+    }
+
+    result = toPath(localFile);
+  }
+  return result;
 }
 
 } // openstudio

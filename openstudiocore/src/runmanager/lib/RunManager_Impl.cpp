@@ -1205,7 +1205,7 @@ namespace detail {
               QUrl url = requiredFile.first;
               if (requiredFile.first.scheme() == "file")
               {
-                openstudio::path p = fixupPath(openstudio::toPath(url.toLocalFile()), t_basePath);
+                openstudio::path p = fixupPath(openstudio::getOriginalPath(url), t_basePath);
                 url = QUrl::fromLocalFile(openstudio::toQString(p));
               }
 
