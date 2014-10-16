@@ -773,9 +773,14 @@ if(BUILD_V8)
 endif()
 
 
+if(MSVC)
+  SET(PARALLEL_BUILD "-- /maxcpucount")
+endif()
+
 ExternalProject_Add(OSCore
   DEPENDS ${OpenStudioCore_DEPENDS}
   SOURCE_DIR ${CMAKE_SOURCE_DIR}/openstudiocore
+  BUILD_COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build" --config $(Configuration) #{PARALLEL_BUILD}
   CMAKE_CACHE_ARGS
     -DGTEST_LIB_DIR:PATH=${GTEST_LIB_DIR}
     -DGTEST_INCLUDE_DIR:PATH=${GTEST_INCLUDE_DIR}
