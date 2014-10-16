@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_APP_TEST_OPENSTUDIOAPPFIXTURE_HPP
-#define OPENSTUDIO_APP_TEST_OPENSTUDIOAPPFIXTURE_HPP
+#ifndef OPENSTUDIO_TEST_OPENSTUDIOAPPFIXTURE_HPP
+#define OPENSTUDIO_TEST_OPENSTUDIOAPPFIXTURE_HPP
 
 #include <gtest/gtest.h>
 
@@ -43,4 +43,4 @@ class OpenStudioAppFixture : public ::testing::Test {
   static boost::optional<openstudio::FileLogSink> logFile;
 };
 
-#endif // OPENSTUDIO_APP_TEST_OPENSTUDIOAPPFIXTURE_HPP
+#endif // OPENSTUDIO_TEST_OPENSTUDIOAPPFIXTURE_HPP

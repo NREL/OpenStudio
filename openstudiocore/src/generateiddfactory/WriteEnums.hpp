@@ -16,8 +16,8 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#ifndef OPENSTUDIO_CORE_WRITEENUMS_HPP
-#define OPENSTUDIO_CORE_WRITEENUMS_HPP
+#ifndef GENERATEIDDFACTORY_WRITEENUMS_HPP
+#define GENERATEIDDFACTORY_WRITEENUMS_HPP
 
 #include <iostream>
 #include <iomanip>
@@ -180,4 +180,4 @@ void writeEnum(std::ostream &t_os, const std::string &t_name, const Container &t
 
 } // openstudio
 
-#endif
+#endif // GENERATEIDDFACTORY_WRITEENUMS_HPP
