@@ -25,6 +25,7 @@
 #include "CoreFixture.hpp"
 #include "../Path.hpp"
 #include "../PathHelpers.hpp"
+#include "../Url.hpp"
 
 using openstudio::path;
 using openstudio::toPath;
@@ -184,3 +185,21 @@ TEST_F(CoreFixture, Path_MakeParentFolder)
   EXPECT_EQ(static_cast<unsigned>(3),boost::filesystem::remove_all(tmp.parent_path().parent_path().parent_path()));
 }
 
+
+TEST_F(CoreFixture, Path_FromUrl)
+{
+  // mimics code in ToolBasedJob::acquireRequiredFiles
+  // want to make sure we do not end up with "/E:/test/CloudTest/scripts/StandardReports/measure.rb" 
+  openstudio::Url url("file:///E:/test/CloudTest/scripts/StandardReports/measure.rb");
+  openstudio::path file = openstudio::toPath(url.toLocalFile());
+  std::string str = openstudio::toString(file);
+  EXPECT_EQ("E:/test/CloudTest/scripts/StandardReports/measure.rb", str);
+}
+
+TEST_F(CoreFixture, Path_FromUrl2)
+{
+  openstudio::Url url = openstudio::Url::fromLocalFile("E:/test/CloudTest/scripts/StandardReports/measure.rb");
+  openstudio::path file = openstudio::toPath(url.toLocalFile());
+  std::string str = openstudio::toString(file);
+  EXPECT_EQ("E:/test/CloudTest/scripts/StandardReports/measure.rb", str);
+}
