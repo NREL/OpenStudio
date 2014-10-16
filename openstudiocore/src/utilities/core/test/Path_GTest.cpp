@@ -185,6 +185,17 @@ TEST_F(CoreFixture, Path_MakeParentFolder)
   EXPECT_EQ(static_cast<unsigned>(3),boost::filesystem::remove_all(tmp.parent_path().parent_path().parent_path()));
 }
 
+TEST_F(CoreFixture, Path_WindowsPathOnUnix)
+{
+  // want to make sure we do not end up with "/E:/test/CloudTest/scripts/StandardReports/measure.rb" 
+  openstudio::path file = openstudio::toPath("E:/test/CloudTest/scripts/StandardReports/measure.rb");
+  std::string str = openstudio::toString(file);
+  EXPECT_EQ("E:/test/CloudTest/scripts/StandardReports/measure.rb", str);
+
+  file = openstudio::toPath("E:\\test\\CloudTest\\scripts\\StandardReports\\measure.rb");
+  str = openstudio::toString(file);
+  EXPECT_EQ("E:/test/CloudTest/scripts/StandardReports/measure.rb", str);
+}
 
 TEST_F(CoreFixture, OriginalPath_FromUrl)
 {
