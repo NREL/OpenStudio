@@ -21,6 +21,7 @@
 #include "Configuration.hpp"
 #include "../../utilities/core/Application.hpp"
 #include "../../utilities/core/PathHelpers.hpp"
+#include "../../utilities/core/URLHelpers.hpp"
 #include "../../utilities/core/ApplicationPathHelpers.hpp"
 #include <runmanager/lib/runmanagerdatabase.hxx>
 #include "JobFactory.hpp"
