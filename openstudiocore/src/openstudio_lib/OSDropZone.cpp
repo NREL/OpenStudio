@@ -659,7 +659,6 @@ void OSDropZone2::dropEvent(QDropEvent *event)
     m_item->setParent(this);
 
     OS_ASSERT(modelObject);
-    m_modelObject = modelObject;
 
     connect(m_item, &OSItem::itemRemoveClicked, this, &OSDropZone2::onItemRemoveClicked);
 
