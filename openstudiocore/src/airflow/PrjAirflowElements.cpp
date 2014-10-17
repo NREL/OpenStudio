@@ -779,6 +779,16 @@ PlrLeak2::PlrLeak2(int nr,int icon,std::string name,std::string desc,std::string
                    : PlrLeak(nr,icon,name,desc,lam,turb,expt,coef,pres,area1,area2,area3,u_A1,u_A2,u_A3,u_dP)
 {}
 
+PlrLeak2::PlrLeak2(int icon, std::string name, std::string desc, double lam, double turb, double expt, double coef,
+  double pres, double area2)
+  : PlrLeak(0, icon, name, desc, lam, turb, expt, coef, pres, 0.0, area2, 0.0, 0, 0, 0, 0)
+{}
+
+PlrLeak2::PlrLeak2(int icon, std::string name, std::string desc, std::string lam, std::string turb, std::string expt, std::string coef,
+  std::string pres, std::string area2)
+  : PlrLeak(0, icon, name, desc, lam, turb, expt, coef, pres, "0.0", area2, "0.0", 0, 0, 0, 0)
+{}
+
 PlrLeak2::~PlrLeak2()
 {}
 
@@ -1181,6 +1191,16 @@ PlrTest1::PlrTest1(int nr,int icon,std::string name,std::string desc,std::string
                    std::string Flow,int u_P,int u_F)
 {
   m_impl = std::shared_ptr<detail::PlrTest1Impl>(new detail::PlrTest1Impl(nr,icon,name,desc,lam,turb,expt,dP,Flow,u_P,u_F));
+}
+
+PlrTest1::PlrTest1(int icon, std::string name, std::string desc, double lam, double turb, double expt, double dP,
+  double Flow) : PlrTest1(0, icon, name, desc, lam, turb, expt, dP, Flow, 0, 0)
+{
+}
+
+PlrTest1::PlrTest1(int icon, std::string name, std::string desc, std::string lam, std::string turb, std::string expt, std::string dP,
+  std::string Flow) : PlrTest1(0, icon, name, desc, lam, turb, expt, dP, Flow, 0, 0)
+{
 }
 
 PlrTest1::PlrTest1(const PlrTest1 &other) : m_impl(other.m_impl)

@@ -99,6 +99,7 @@ private:
 class AIRFLOW_API ForwardTranslator : public airflow::SurfaceNetworkBuilder
 {
 public:
+  enum class TranslationType {SurfacesOnly, SubSurfacesOnly, AllSurfaces};
   /** @name Constructors and Destructors */
   //@{
   /** Construct a new, empty translator. */

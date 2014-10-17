@@ -397,6 +397,12 @@ public:
   /** Create a new object. */
   PlrLeak2(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,std::string coef,
     std::string pres,std::string area1,std::string area2,std::string area3,int u_A1,int u_A2,int u_A3,int u_dP);
+  /** Create a new object. */
+  PlrLeak2(int icon, std::string name, std::string desc, double lam, double turb, double expt, double coef,
+    double pres, double area2);
+  /** Create a new object. */
+  PlrLeak2(int icon, std::string name, std::string desc, std::string lam, std::string turb, std::string expt, std::string coef,
+    std::string pres, std::string area2);
   //** Create a new object from another object. */
   //PlrLeak(const PlrLeak &other);
   /** Destroy the object. */
@@ -711,6 +717,10 @@ public:
   /** Create a new object. */
   PlrTest1(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,std::string dP,std::string Flow,
     int u_P,int u_F);
+  /** Create a new object. */
+  PlrTest1(int icon, std::string name, std::string desc, double lam, double turb, double expt, double dP, double Flow);
+  /** Create a new object. */
+  PlrTest1(int icon, std::string name, std::string desc, std::string lam, std::string turb, std::string expt, std::string dP, std::string Flow);
   /** Create a new object from another object. */
   PlrTest1(const PlrTest1 &other);
   /** Destroy the object. */

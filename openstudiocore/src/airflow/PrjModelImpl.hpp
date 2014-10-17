@@ -311,6 +311,31 @@ public:
 
   std::vector<PlrTest1> getPlrTest1();
 
+  /*
+  template <class T> std::vector<T> getAirflowElements()
+  {
+    std::vector<T> afe;
+    for(QSharedPointer<AirflowElement> afe : m_airflowElements) {
+      if(m_airflowElements[i]->dataType() == "plr_leak2")
+      {
+        afe.push_back(*(m_airflowElements[i].dynamicCast<PlrLeak2>().data()));
+      }
+    }
+    return afe;
+
+
+    auto copy = new T;
+    *copy = element;
+    AirflowElement *pointer = dynamic_cast<T*>(copy);
+    if(pointer)
+    {
+      copy->setNr(m_airflowElements.size()+1);
+      m_airflowElements.push_back(QSharedPointer<AirflowElement>(pointer));
+      return true;
+    }
+    return false;
+  }*/
+
   template <class T> bool addAirflowElement(T element)
   {
     auto copy = new T;
@@ -318,7 +343,7 @@ public:
     AirflowElement *pointer = dynamic_cast<AirflowElement*>(copy);
     if(pointer)
     {
-      copy->setNr(m_airflowElements.size()+1);
+      copy->setNr(m_airflowElements.size() + 1);
       m_airflowElements.push_back(QSharedPointer<AirflowElement>(pointer));
       return true;
     }

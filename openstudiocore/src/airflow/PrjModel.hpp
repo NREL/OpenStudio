@@ -364,6 +364,8 @@ public:
   std::vector<PlrTest1> getPlrTest1() const;
   /** Add a PlrTest1 airflow element to the model. */
   bool addAirflowElement(PlrTest1 element);
+  /** Add a PlrLeak2 airflow element to the model. */
+  bool addAirflowElement(PlrLeak2 element);
   /** Return the element number of the named airflow element */
   int airflowElementNrByName(std::string name) const;
   /** Replace an airflow element with a PlrTest1 airflow element */

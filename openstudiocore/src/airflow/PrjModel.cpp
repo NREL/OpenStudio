@@ -759,6 +759,11 @@ bool IndexModel::addAirflowElement(PlrTest1 element)
   return m_impl->addAirflowElement(element);
 }
 
+bool IndexModel::addAirflowElement(PlrLeak2 element)
+{
+  return m_impl->addAirflowElement(element);
+}
+
 int IndexModel::airflowElementNrByName(std::string name) const
 {
   return m_impl->airflowElementNrByName(name);
