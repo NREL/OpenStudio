@@ -175,4 +175,13 @@ TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2014)
   openstudio::path outPath("CONTAMDemo2014.osm");
   EXPECT_TRUE(demoModel->save(outPath, true));
 
+  openstudio::contam::PlrLeak2 window(OPNG, "WNOO6C_CMX", "Operable window, Building C, maximum (from C&IMisc.lb3)",
+    "4.98716e-008", "0.00039745", "0.65", "1", "4", "0.000346");
+
+  openstudio::contam::ForwardTranslator translator;
+
+  boost::optional<openstudio::contam::IndexModel> prjModel = translator.translateModel(demoModel.get());
+
+  ASSERT_TRUE(prjModel);
+
 }

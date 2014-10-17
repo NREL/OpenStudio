@@ -1151,59 +1151,6 @@ void IndexModelImpl::setWindPressureProfiles(const std::vector<WindPressureProfi
   m_windPressureProfiles = windPressureProfiles;
 }
 
-std::vector<PlrLeak1> IndexModelImpl::getPlrLeak1()
-{
-  std::vector<PlrLeak1> afe;
-  for(int i=0;i<m_airflowElements.size();i++)
-  {
-    if(m_airflowElements[i]->dataType() == "plr_leak1")
-    {
-      afe.push_back(*(m_airflowElements[i].dynamicCast<PlrLeak1>().data()));
-    }
-  }
-  return afe;
-}
-
-std::vector<PlrLeak2> IndexModelImpl::getPlrLeak2()
-{
-  std::vector<PlrLeak2> afe;
-  for(int i=0;i<m_airflowElements.size();i++)
-  {
-    if(m_airflowElements[i]->dataType() == "plr_leak2")
-    {
-      afe.push_back(*(m_airflowElements[i].dynamicCast<PlrLeak2>().data()));
-    }
-  }
-  return afe;
-}
-
-std::vector<PlrTest1> IndexModelImpl::getPlrTest1()
-{
-  std::vector<PlrTest1> afe;
-  for(int i=0;i<m_airflowElements.size();i++)
-  {
-    if(m_airflowElements[i]->dataType() == "plr_test1")
-    {
-      afe.push_back(*(m_airflowElements[i].dynamicCast<PlrTest1>().data()));
-    }
-  }
-  return afe;
-}
-
-std::vector<CvfDat> IndexModelImpl::getCvfDat()
-{
-  std::vector<CvfDat> ctrl;
-  for(int i=0;i<m_controlNodes.size();i++)
-  {
-    QSharedPointer<CvfDat> cast = m_controlNodes[i].dynamicCast<CvfDat>();
-    if(!cast.isNull())
-    {
-      ctrl.push_back(*(cast.data()));
-    }
-  }
-  return ctrl;
-}
-
 std::vector<Ahs> IndexModelImpl::ahs() const
 {
   return m_ahs;

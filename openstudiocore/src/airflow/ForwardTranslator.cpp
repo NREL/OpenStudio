@@ -172,7 +172,6 @@ void ForwardTranslator::clear()
   m_startDateTime = boost::optional<DateTime>();
   m_endDateTime = boost::optional<DateTime>();
   m_translateHVAC = true;
-  //m_progressBar = nullptr;
 }
 
 int ForwardTranslator::tableLookup(QMap<std::string,int> map, std::string str, const char *name)

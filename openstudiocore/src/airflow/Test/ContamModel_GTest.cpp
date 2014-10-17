@@ -27,22 +27,23 @@
 TEST_F(AirflowFixture, ContamModel_AirflowElements) {
   openstudio::contam::IndexModel model;
   EXPECT_EQ(0, model.getPlrTest1().size());
-  openstudio::contam::PlrTest1 afe0(0, OPNG, "external", "This is the average leakage element for exterior walls",
-    "6.13696e-008", "0.000499082", "0.65", "75", "0.00906345", 0, 4);
-  openstudio::contam::PlrTest1 afe1(0, OPNG, "internal", "This is the average leakage element for interior walls",
-    1.47921e-007, 0.000998165, 0.65, 75, 0.0181269, 0, 4);
-  openstudio::contam::PlrLeak2 afe2(OPNG, "wnoo6c_cmx", "Operable window, Building C, maximum (from C&IMisc.lb3)",
+  openstudio::contam::PlrTest1 afe0(OPNG, "external", "This is the average leakage element for exterior walls",
+    "6.13696e-008", "0.000499082", "0.65", "75", "0.00906345");
+  openstudio::contam::PlrTest1 afe1(OPNG, "internal", "This is the average leakage element for interior walls",
+    1.47921e-007, 0.000998165, 0.65, 75, 0.0181269);
+  openstudio::contam::PlrLeak2 afe2(OPNG, "WNOO6C_CMX", "Operable window, Building C, maximum (from C&IMisc.lb3)",
     "4.98716e-008", "0.00039745", "0.65", "1", "4", "0.000346");
   model.addAirflowElement(afe0);
   model.addAirflowElement(afe1);
   model.addAirflowElement(afe2);
   ASSERT_EQ(2, model.getPlrTest1().size());
+  ASSERT_EQ(1, model.getPlrLeak2().size());
   EXPECT_EQ(1, afe0.nr());
   EXPECT_EQ(2, afe1.nr());
   EXPECT_EQ(3, afe2.nr());
   EXPECT_EQ(afe0, model.getPlrTest1()[0]);
   EXPECT_EQ(afe1, model.getPlrTest1()[1]);
-  //EXPECT_EQ(afe2, model.getPlrLeak2()[0]);
+  EXPECT_EQ(afe2, model.getPlrLeak2()[0]);
 }
 
 // Verify that the species/contaminant stuff works

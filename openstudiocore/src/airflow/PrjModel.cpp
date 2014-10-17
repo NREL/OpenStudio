@@ -751,7 +751,17 @@ void IndexModel::setWindPressureProfiles(const std::vector<WindPressureProfile> 
 
 std::vector<PlrTest1> IndexModel::getPlrTest1() const
 {
-  return m_impl->getPlrTest1();
+  return m_impl->getAirflowElements<PlrTest1>();
+}
+
+std::vector<PlrTest2> IndexModel::getPlrTest2() const
+{
+  return m_impl->getAirflowElements<PlrTest2>();
+}
+
+std::vector<PlrLeak2> IndexModel::getPlrLeak2() const
+{
+  return m_impl->getAirflowElements<PlrLeak2>();
 }
 
 bool IndexModel::addAirflowElement(PlrTest1 element)
@@ -776,7 +786,7 @@ bool IndexModel::replaceAirflowElement(int nr, PlrTest1 element)
 
 std::vector<CvfDat> IndexModel::getCvfDat() const
 {
-  return m_impl->getCvfDat();
+  return m_impl->getControlNodes<CvfDat>();
 }
 
 bool IndexModel::addControlNode(CvfDat element, bool sequence)

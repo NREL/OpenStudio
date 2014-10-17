@@ -362,6 +362,10 @@ public:
 
   /** Returns a vector of all PlrTest1 airflow elements in the model. */
   std::vector<PlrTest1> getPlrTest1() const;
+  /** Returns a vector of all PlrTest2 airflow elements in the model. */
+  std::vector<PlrTest2> getPlrTest2() const;
+  /** Returns a vector of all PlrLeak2 airflow elements in the model. */
+  std::vector<PlrLeak2> getPlrLeak2() const;
   /** Add a PlrTest1 airflow element to the model. */
   bool addAirflowElement(PlrTest1 element);
   /** Add a PlrLeak2 airflow element to the model. */

@@ -62,7 +62,8 @@ public:
   //    template <class T, template <class T> class V> V<T> readSectionVector(STRING name);
   //    template <class T> QVector<T> readSectionQVector(STRING name=STRING_INIT);
   //    template <class T> std::vector<T> readSectionStdVector(STRING name=STRING_INIT);
-  template <class T> QVector<QSharedPointer<T> > readElementVector(std::string name=std::string());
+  template <class T> std::vector<std::shared_ptr<T> > readElementVector(std::string name = std::string());
+  template <class T> QVector<QSharedPointer<T> > readElementQVector(std::string name=std::string());
 
   template <class T> T read();
   template <class T> T readNumber();
@@ -175,11 +176,26 @@ template <class T> std::vector<T> Reader::readSectionVector(std::string name)
 //    return vector;
 //}
 
-template <class T> QVector<QSharedPointer<T> > Reader::readElementVector(std::string name)
+template <class T> std::vector<std::shared_ptr<T> > Reader::readElementVector(std::string name)
+{
+  int n = readInt();
+  std::vector<std::shared_ptr<T> > vector;
+  for(int i=0;i<n;i++) {
+    vector.push_back(std::shared_ptr<T>(T::readElement(*this)));
+  }
+  if(name.empty()) {
+    read999("Failed to find section termination");
+  } else {
+    read999("Failed to find " + name + " section termination");
+  }
+  return vector;
+}
+
+template <class T> QVector<QSharedPointer<T> > Reader::readElementQVector(std::string name)
 {
   int n = readInt();
   QVector<QSharedPointer<T> > vector(n);
-  for(int i=0;i<n;i++)
+  for(int i = 0; i<n; i++)
   {
     // No reset in 4.8
     QSharedPointer<T> element(T::readElement(*this));
@@ -189,7 +205,7 @@ template <class T> QVector<QSharedPointer<T> > Reader::readElementVector(std::st
   if(name.empty())
     read999("Failed to find section termination");
   else
-    read999("Failed to find "+name+" section termination");
+    read999("Failed to find " + name + " section termination");
   return vector;
 }
 

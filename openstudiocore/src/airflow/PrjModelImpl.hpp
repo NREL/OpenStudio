@@ -305,46 +305,28 @@ public:
   std::vector <WindPressureProfile> windPressureProfiles() const;
   void setWindPressureProfiles(const std::vector<WindPressureProfile> &windPressureProfiles);
 
-  std::vector<PlrLeak1> getPlrLeak1();
-
-  std::vector<PlrLeak2> getPlrLeak2();
-
-  std::vector<PlrTest1> getPlrTest1();
-
-  /*
   template <class T> std::vector<T> getAirflowElements()
   {
     std::vector<T> afe;
-    for(QSharedPointer<AirflowElement> afe : m_airflowElements) {
-      if(m_airflowElements[i]->dataType() == "plr_leak2")
-      {
-        afe.push_back(*(m_airflowElements[i].dynamicCast<PlrLeak2>().data()));
+    for(std::shared_ptr<AirflowElement> el : m_airflowElements) {
+      if(el.get()){
+        T* derived = dynamic_cast<T*>(el.get());
+        if(derived) {
+          afe.push_back(*derived);
+        }
       }
     }
     return afe;
-
-
-    auto copy = new T;
-    *copy = element;
-    AirflowElement *pointer = dynamic_cast<T*>(copy);
-    if(pointer)
-    {
-      copy->setNr(m_airflowElements.size()+1);
-      m_airflowElements.push_back(QSharedPointer<AirflowElement>(pointer));
-      return true;
-    }
-    return false;
-  }*/
+  }
 
   template <class T> bool addAirflowElement(T element)
   {
     auto copy = new T;
     *copy = element;
     AirflowElement *pointer = dynamic_cast<AirflowElement*>(copy);
-    if(pointer)
-    {
+    if(pointer) {
       copy->setNr(m_airflowElements.size() + 1);
-      m_airflowElements.push_back(QSharedPointer<AirflowElement>(pointer));
+      m_airflowElements.push_back(std::shared_ptr<AirflowElement>(pointer));
       return true;
     }
     return false;
@@ -362,28 +344,38 @@ public:
       if(pointer)
       {
         copy->setNr(nr);
-        m_airflowElements.replace(nr-1,QSharedPointer<AirflowElement>(pointer));
+        //m_airflowElements.replace(nr - 1, std::shared_ptr<AirflowElement>(pointer));
         return true;
       }
     }
     return false;
   }
 
-  std::vector<CvfDat> getCvfDat();
+  template <class T> std::vector<T> getControlNodes()
+  {
+    std::vector<T> nodes;
+    for(std::shared_ptr<ControlNode> el : m_controlNodes) {
+      if(el.get()){
+        T* derived = dynamic_cast<T*>(el.get());
+        if(derived) {
+          nodes.push_back(*derived);
+        }
+      }
+    }
+    return nodes;
+  }
 
   template <class T> bool addControlNode(T element, bool sequence=true)
   {
     auto copy = new T;
     *copy = element;
     ControlNode *pointer = dynamic_cast<ControlNode*>(copy);
-    if(pointer)
-    {
+    if(pointer) {
       copy->setNr(m_controlNodes.size()+1);
-      if(sequence)
-      {
+      if(sequence) {
         copy->setSeqnr(copy->nr());
       }
-      m_controlNodes.push_back(QSharedPointer<ControlNode>(pointer));
+      m_controlNodes.push_back(std::shared_ptr<ControlNode>(pointer));
       return true;
     }
     return false;
@@ -413,6 +405,7 @@ private:
   void readZoneIc(Reader &input);
   std::string writeZoneIc(int start=0);
   template <class T> std::string writeSectionVector(std::vector<T> vector, std::string label=std::string(), int start=0);
+  template <class T> std::string writeSectionVector(std::vector<std::shared_ptr<T> > vector, std::string label = std::string(), int start = 0);
   template <class T> std::string writeSectionVector(QVector<QSharedPointer<T> > vector, std::string label=std::string(), int start=0);
   template <class T> std::string writeArray(std::vector<T> vector, std::string label=std::string(), int start=0);
   template <class T> void renumberVector(std::vector<T> &vector);
@@ -479,8 +472,8 @@ private:
   std::vector<DaySchedule> m_daySchedules;
   std::vector<WeekSchedule> m_weekSchedules;
   std::vector<WindPressureProfile> m_windPressureProfiles;
-  QVector<QSharedPointer<AirflowElement> > m_airflowElements;
-  QVector<QSharedPointer<ControlNode> > m_controlNodes;
+  std::vector<std::shared_ptr<AirflowElement> > m_airflowElements;
+  std::vector<std::shared_ptr<ControlNode> > m_controlNodes;
   std::vector<Ahs> m_ahs;
   std::vector<Zone> m_zones;
   std::vector<AirflowPath> m_paths;
@@ -501,6 +494,25 @@ template <class T> std::string IndexModelImpl::writeSectionVector(std::vector<T>
   for(unsigned int i=start;i<vector.size();i++)
   {
     string += vector[i].write();
+  }
+  string += "-999\n";
+  return string;
+}
+
+template <class T> std::string IndexModelImpl::writeSectionVector(std::vector<std::shared_ptr<T> > vector, std::string label, int start)
+{
+  std::string string;
+  int number = vector.size() - start;
+  if(label.empty())
+  {
+    string += openstudio::toString(number) + '\n';
+  } else
+  {
+    string += openstudio::toString(number) + " ! " + label + '\n';
+  }
+  for(unsigned int i = start; i<vector.size(); i++)
+  {
+    string += vector[i]->write();
   }
   string += "-999\n";
   return string;
