@@ -66,6 +66,7 @@ namespace detail {
         LOG(Debug, "PROCESS EXITED");
         ++m_exitedCount;
         setProcessState(QProcess::NotRunning);
+        LOG(Trace, "Process state set to NotRunning");
         if (m_exitedCount > 2)
         {
           m_exitedCount = -1;
@@ -108,15 +109,20 @@ namespace detail {
 
     connect(&m_process, &MyQProcess::readyReadStandardOutput, this, &LocalProcess::processReadyReadStandardOutput);
     connect(&m_process, &MyQProcess::started, this, &LocalProcess::processStarted);
-    /*
+    
     connect(&m_process, &MyQProcess::stateChanged, this, &LocalProcess::processStateChanged);
-*/
+
 
     LOG(Debug, "Setting working directory: " << toString(m_outdir));
     m_process.setWorkingDirectory(openstudio::toQString(m_outdir));
 
 
     directoryChanged(openstudio::toQString(m_outdir));
+  }
+
+  void LocalProcess::processStateChanged(QProcess::ProcessState s)
+  {
+    LOG(Trace, "New Process State: " << s);
   }
 
   std::set<openstudio::path> LocalProcess::copyRequiredFiles(const ToolInfo &t_tool, const std::vector<std::pair<openstudio::path, openstudio::path> > &t_requiredFiles, 
@@ -342,6 +348,7 @@ namespace detail {
 
   void LocalProcess::directoryChanged(const QString &str)
   {
+    LOG(Trace, "directoryChanged: " << toString(str));
     FileSet fs = dirFiles(openstudio::toQString(m_outdir));
 
     std::vector<FileSet::value_type> diff;
@@ -357,6 +364,7 @@ namespace detail {
 
     std::for_each(diff.begin(), diff.end(), std::bind(&LocalProcess::emitUpdatedFileInfo, this, std::placeholders::_1));
 
+    // DLM: Try commenting out the following line at some point if the logging doesn't tell us anything new
     m_process.checkProcessStatus();
   }
 
@@ -509,6 +517,7 @@ namespace detail {
 
   void LocalProcess::processFinished(int t_exitCode, QProcess::ExitStatus t_exitStatus)
   {
+    LOG(Debug, "processFinished: " << t_exitCode << " " << t_exitStatus);
     m_fileCheckTimer.stop();
 
     directoryChanged(openstudio::toQString(m_outdir));
@@ -525,6 +534,7 @@ namespace detail {
 
     emit finished(t_exitCode, t_exitStatus);
     emitStatusChanged(AdvancedStatus(AdvancedStatusEnum::Idle));
+    LOG(Trace, "processFinished: exiting");
   }
 
   void LocalProcess::processReadyReadStandardError()

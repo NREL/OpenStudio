@@ -155,6 +155,9 @@ namespace detail {
 
       /// connected to QProcess::started
       void processStarted();
+      
+      /// connected to QProcess::stateChanged
+      void processStateChanged(QProcess::ProcessState s);
 
       /// connected to QFilesystemWatcher::directoryChanged
       void directoryChanged(const QString& d);
