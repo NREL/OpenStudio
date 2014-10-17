@@ -22,6 +22,7 @@
 #include "../../model/Curve.hpp"
 #include "../../model/Schedule.hpp"
 #include <utilities/idd/Coil_Heating_Gas_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 

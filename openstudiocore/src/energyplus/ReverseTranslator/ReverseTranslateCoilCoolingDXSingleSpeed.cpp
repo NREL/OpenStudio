@@ -27,7 +27,6 @@
 #include "../../model/Curve_Impl.hpp"
 
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 

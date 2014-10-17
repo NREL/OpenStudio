@@ -28,6 +28,7 @@
 #include "../../utilities/data/TimeSeries.hpp"
 
 #include <utilities/idd/OS_ComponentCost_Adjustments_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/core/Optional.hpp"
 #include <boost/algorithm/string/case_conv.hpp>

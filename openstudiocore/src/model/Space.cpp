@@ -101,6 +101,7 @@
 #include <utilities/idd/OS_Space_FieldEnums.hxx>
 #include <utilities/idd/OS_Surface_FieldEnums.hxx>
 #include <utilities/idd/OS_SubSurface_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/geometry/Geometry.hpp"
 #include "../utilities/geometry/Transformation.hpp"

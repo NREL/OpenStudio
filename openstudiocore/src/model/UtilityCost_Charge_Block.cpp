@@ -24,6 +24,7 @@
 
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/OS_UtilityCost_Charge_Block_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

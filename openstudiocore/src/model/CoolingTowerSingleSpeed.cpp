@@ -26,7 +26,9 @@
 #include "PlantLoop.hpp"
 #include "PlantLoop_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_CoolingTower_SingleSpeed_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
 

@@ -32,6 +32,7 @@
 #include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/OS_ZoneAirContaminantBalance_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

@@ -36,6 +36,8 @@
 #include "AirTerminalSingleDuctUncontrolled.hpp"
 #include "AirTerminalSingleDuctUncontrolled_Impl.hpp"
 #include <utilities/idd/OS_AirLoopHVAC_SupplyPlenum_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
+
 
 namespace openstudio {
 namespace model {

@@ -19,10 +19,10 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/SetpointManagerSingleZoneHumidityMinimum.hpp>
-#include <model/SetpointManagerSingleZoneHumidityMinimum_Impl.hpp>
+#include "../SetpointManagerSingleZoneHumidityMinimum.hpp"
+#include "../SetpointManagerSingleZoneHumidityMinimum_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

@@ -34,6 +34,8 @@
 #include <QScrollArea>
 #include <sstream>
 
+#include <utilities/idd/IddEnums.hxx>
+
 namespace openstudio {
 
 

@@ -41,7 +41,9 @@
 #include "ZoneHVACLowTempRadiantConstFlow_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/units/Unit.hpp"
 

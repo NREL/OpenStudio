@@ -46,6 +46,7 @@
 #include "../utilities/idf/WorkspaceObjectOrder.hpp"
 
 #include <model_editor/treemodel.h>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

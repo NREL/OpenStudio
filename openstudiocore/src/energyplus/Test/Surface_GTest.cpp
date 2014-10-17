@@ -42,6 +42,7 @@
 #include "../../model/Building_Impl.hpp"
 
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include <resources.hxx>
 

@@ -51,7 +51,9 @@
 #include "Model_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_LifeCycleCost_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include <boost/algorithm/string.hpp>
 

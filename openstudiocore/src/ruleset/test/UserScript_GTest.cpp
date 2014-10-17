@@ -32,6 +32,7 @@
 #include "../../model/LightsDefinition.hpp"
 #include "../../model/LightsDefinition_Impl.hpp"
 
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../../utilities/core/Finder.hpp"

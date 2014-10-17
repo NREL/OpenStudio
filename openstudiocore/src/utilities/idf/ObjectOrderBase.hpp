@@ -22,7 +22,7 @@
 
 #include "../UtilitiesAPI.hpp"
 
-#include <utilities/idd/IddEnums.hxx>
+#include "../idd/IddEnums.hpp"
 
 #include "../core/Logger.hpp"
 #include "../core/Optional.hpp"

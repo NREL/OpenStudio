@@ -21,11 +21,14 @@
 #define OPENSTUDIO_OSDOCUMENT_HPP
 
 #include "OpenStudioAPI.hpp"
+
 #include "../shared_gui_components/OSQObjectController.hpp"
 
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
+
 #include "../ruleset/RubyUserScriptArgumentGetter.hpp"
+
 #include "../analysisdriver/SimpleProject.hpp"
 
 #include <QObject>
@@ -40,14 +43,9 @@ namespace openstudio {
 namespace runmanager {
   class RunManager;
 }
+class MainTabController;
 
 class MainRightColumnController;
-
-class HVACSystemsTabController;
-
-class ThermalZonesTabController;
-
-class SchedulesTabController;
 
 class InspectorController;
 
@@ -55,31 +53,7 @@ class MainWindow;
 
 class LibraryTabWidget;
 
-class LocationTabController;
-
-class ConstructionsTabController;
-
-class LoadsTabController;
-
-class SpaceTypesTabController;
-
-class FacilityTabController;
-
-class SummaryTabController;
-
-class VariablesTabController;
-
-class SimSettingsTabController;
-
-class ScriptsTabController;
-
 class ScriptFolderListView;
-
-class RunTabController;
-
-class ResultsTabController;
-
-class BuildingStoriesTabController;
 
 class OSItemId;
 
@@ -113,9 +87,6 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   // This will close all current windows, make sure to call app->setQuitOnLastWindowClosed(false) before calling this
   void setModel(const model::Model& model, bool modified, bool saveCurrentTabs);
 
-  // Returns the RunManager for this document.
-  runmanager::RunManager runManager();
-
   // Returns true if the document has unsaved changes.
   bool modified() const;
 
@@ -138,7 +109,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   // Sets the hvac component library associated with this document.
   void setHVACComponentLibrary(const openstudio::model::Model& model);
 
-  // Returns a compined component library with hvac components
+  // Returns a compiled component library with hvac components
   openstudio::model::Model combinedComponentLibrary() const;
 
   // Returns true if OSItemId's source is the model
@@ -287,12 +258,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void inspectModelObject(model::OptionalModelObject &, bool readOnly);
 
-  //void showFirstTab();
-
   void showStartTabAndStartSubTab();
 
-  //void showTab(int tabIndex);
- 
   void initializeModel();
 
   void toggleUnits(bool displayIP);
@@ -306,6 +273,14 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   void changeBclLogin();
 
   void updateWindowFilePath();
+
+  void updateSubTabSelected(int id);
+
+  public slots:
+
+  void enableTabsAfterRun();
+
+  void disableTabsDuringRun();
 
  private:
 
@@ -326,6 +301,10 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   // Attempts to make the model's weather file have a fully qualified path
   bool setFullWeatherFilePath();
+
+  void createTab(int verticalId);
+
+  void createTabButtons();
 
   openstudio::model::Model m_model;
 
@@ -349,37 +328,9 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   //std::shared_ptr<OSConsoleWidget> m_consoleWidget;
 
-  std::shared_ptr<HVACSystemsTabController> m_hvacSystemsTabController;
-
-  std::shared_ptr<ThermalZonesTabController> m_thermalZonesTabController;
-
-  std::shared_ptr<SchedulesTabController> m_schedulesTabController;
+  std::shared_ptr<MainTabController> m_mainTabController;
 
   std::shared_ptr<InspectorController> m_inspectorController;
-
-  std::shared_ptr<LocationTabController> m_locationTabController;
-
-  std::shared_ptr<ConstructionsTabController> m_constructionsTabController;
-
-  std::shared_ptr<LoadsTabController> m_loadsTabController;
-
-  std::shared_ptr<SpaceTypesTabController> m_spaceTypesTabController;
-
-  std::shared_ptr<FacilityTabController> m_facilityTabController;
-
-  std::shared_ptr<SummaryTabController> m_summaryTabController;
-
-  std::shared_ptr<VariablesTabController> m_variablesTabController;
-
-  std::shared_ptr<SimSettingsTabController> m_simSettingsTabController;
-
-  std::shared_ptr<ScriptsTabController> m_scriptsTabController;
-
-  std::shared_ptr<RunTabController> m_runTabController;
-
-  std::shared_ptr<ResultsTabController> m_resultsTabController;
-
-  std::shared_ptr<BuildingStoriesTabController> m_buildingStoriesTabController;
 
   std::shared_ptr<MainRightColumnController> m_mainRightColumnController;
 
@@ -394,9 +345,13 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   int m_startTabIndex;
   int m_startSubTabIndex;
+
+  int m_verticalId;
+  std::vector<int> m_subTabIds;
+
+  bool m_enableTabsAfterRun = true;
 };
 
 } // openstudio
 
 #endif // OPENSTUDIO_OSDOCUMENT_HPP
-

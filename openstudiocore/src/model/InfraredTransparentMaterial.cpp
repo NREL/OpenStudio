@@ -21,6 +21,7 @@
 #include "InfraredTransparentMaterial_Impl.hpp"
 
 #include <utilities/idd/OS_Material_InfraredTransparent_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

@@ -25,6 +25,7 @@
 #include "../../core/Optional.hpp"
 
 #include <resources.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace std;
 using namespace boost;

@@ -27,6 +27,7 @@
 #include "LifeCycleCost.hpp"
 
 #include <utilities/idd/OS_InternalMass_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

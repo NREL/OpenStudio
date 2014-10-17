@@ -23,7 +23,6 @@
 #include "../../model/CurveQuadraticLinear_Impl.hpp"
 
 #include <utilities/idd/Curve_QuadraticLinear_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 

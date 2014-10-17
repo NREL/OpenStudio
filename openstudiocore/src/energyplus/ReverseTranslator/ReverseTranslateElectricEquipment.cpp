@@ -31,6 +31,7 @@
 #include "../../model/Schedule_Impl.hpp"
 
 #include <utilities/idd/ElectricEquipment_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../../utilities/core/Assert.hpp"

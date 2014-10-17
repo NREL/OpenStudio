@@ -28,7 +28,9 @@
 #include "Model.hpp"
 
 #include <utilities/idd/OS_StandardsInformation_Construction_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
+
 
 #include "../utilities/core/Assert.hpp"
 

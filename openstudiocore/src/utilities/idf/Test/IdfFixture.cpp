@@ -18,6 +18,7 @@
 **********************************************************************/
 
 #include "IdfFixture.hpp"
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../../time/Time.hpp"
 

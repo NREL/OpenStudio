@@ -30,6 +30,7 @@
 #include "../idd/IddKey.hpp"
 #include "../idd/ExtensibleIndex.hpp"
 #include <utilities/idd/IddFactory.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../idd/IddField.hpp"
 #include "../idd/IddRegex.hpp"
 #include "../idd/CommentRegex.hpp"

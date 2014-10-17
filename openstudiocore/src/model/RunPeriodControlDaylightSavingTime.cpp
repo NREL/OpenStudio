@@ -25,6 +25,7 @@
 #include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_RunPeriodControl_DaylightSavingTime_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/time/Date.hpp"
 #include "../utilities/core/Assert.hpp"

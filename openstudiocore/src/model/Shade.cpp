@@ -21,6 +21,7 @@
 #include "Shade_Impl.hpp"
 
 #include <utilities/idd/OS_WindowMaterial_Shade_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/units/Unit.hpp"
 

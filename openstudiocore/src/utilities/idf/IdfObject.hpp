@@ -37,7 +37,7 @@ namespace openstudio{
  
 // forward declarations
 class IddObject;
-class IddObjectType;
+struct IddObjectType;
 class IdfExtensibleGroup;
 class ValidityReport;
 class DataError;

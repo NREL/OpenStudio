@@ -33,6 +33,7 @@
 
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/WaterUse_Equipment_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 using namespace openstudio::model;

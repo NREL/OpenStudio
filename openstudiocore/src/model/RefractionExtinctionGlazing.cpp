@@ -21,6 +21,7 @@
 #include "RefractionExtinctionGlazing_Impl.hpp"
 
 #include <utilities/idd/OS_WindowMaterial_Glazing_RefractionExtinctionMethod_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/units/Unit.hpp"
 

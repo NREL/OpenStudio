@@ -31,7 +31,9 @@
 #include "LifeCycleCost.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_SpaceInfiltration_EffectiveLeakageArea_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

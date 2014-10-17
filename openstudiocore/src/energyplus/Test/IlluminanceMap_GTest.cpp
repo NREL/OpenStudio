@@ -32,6 +32,7 @@
 #include "../../model/ThermalZone_Impl.hpp"
 
 #include <utilities/idd/Output_IlluminanceMap_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include <resources.hxx>
 

@@ -53,6 +53,7 @@
 #include <utilities/idd/ComponentCost_LineItem_FieldEnums.hxx>
 #include <utilities/idd/LifeCycleCost_NonrecurringCost_FieldEnums.hxx>
 #include <utilities/idd/LifeCycleCost_RecurringCosts_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include <resources.hxx>
 

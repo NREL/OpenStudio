@@ -24,7 +24,9 @@
 #include "ConstructionBase_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_InternalMass_Definition_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/math/FloatCompare.hpp"
 

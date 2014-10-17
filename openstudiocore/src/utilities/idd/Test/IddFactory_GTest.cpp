@@ -21,6 +21,7 @@
 
 #include "IddFixture.hpp"
 #include <utilities/idd/IddFactory.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../IddFieldProperties.hpp"
 #include "../IddKey.hpp"
 

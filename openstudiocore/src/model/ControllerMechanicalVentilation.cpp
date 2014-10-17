@@ -28,7 +28,9 @@
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_Controller_MechanicalVentilation_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {

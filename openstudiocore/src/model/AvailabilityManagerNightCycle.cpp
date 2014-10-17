@@ -26,7 +26,9 @@
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_AvailabilityManager_NightCycle_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
 

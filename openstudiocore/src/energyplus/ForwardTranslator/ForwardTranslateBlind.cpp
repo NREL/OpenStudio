@@ -23,6 +23,7 @@
 #include <utilities/idd/OS_WindowMaterial_Blind_FieldEnums.hxx>
 
 #include <utilities/idd/WindowMaterial_Blind_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

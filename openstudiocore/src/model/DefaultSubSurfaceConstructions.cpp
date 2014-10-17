@@ -26,6 +26,7 @@
 #include "ConstructionBase_Impl.hpp"
 
 #include <utilities/idd/OS_DefaultSubSurfaceConstructions_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

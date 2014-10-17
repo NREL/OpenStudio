@@ -21,6 +21,7 @@
 #include "DistrictHeating_Impl.hpp"
 
 #include <utilities/idd/OS_DistrictHeating_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/units/OSOptionalQuantity.hpp"
 #include "../utilities/core/Assert.hpp"

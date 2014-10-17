@@ -24,6 +24,8 @@
 #include "../RefrigerationCondenserCascade.hpp"
 #include "../RefrigerationCondenserCascade_Impl.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 using namespace openstudio;
 using namespace openstudio::model;
 

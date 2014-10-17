@@ -21,6 +21,7 @@
 #include "IddFixture.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/Controller_OutdoorAir_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../IddField.hpp"
 #include "../IddKey.hpp"
 

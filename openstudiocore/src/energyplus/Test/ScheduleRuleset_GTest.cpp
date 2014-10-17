@@ -33,6 +33,7 @@
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/Schedule_Year_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include <sstream>
 

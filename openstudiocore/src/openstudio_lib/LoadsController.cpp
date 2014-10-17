@@ -48,6 +48,8 @@
 
 #include "../utilities/core/Logger.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 namespace openstudio {
 
 LoadsController::LoadsController(bool isIP, const model::Model& model)

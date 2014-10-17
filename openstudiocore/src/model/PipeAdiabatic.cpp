@@ -25,6 +25,7 @@
 #include "AirLoopHVAC_Impl.hpp"
 #include "Model.hpp"
 #include <utilities/idd/OS_Pipe_Adiabatic_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
 

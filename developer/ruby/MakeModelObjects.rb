@@ -88,9 +88,9 @@ objects << ["OS:ThermalZone", "ThermalZone", "HVACComponent"]
 
 includePath = nil
 if /mswin/.match(RUBY_PLATFORM)
-  includePath = "../../build/OpenStudioCore-prefix/src/OpenStudioCore-build/ruby/Release"
+  includePath = "../../build/OSCore-prefix/src/OSCore-build/ruby/Release"
 else
-  includePath = "../../build/OpenStudioCore-prefix/src/OpenStudioCore-build/ruby"
+  includePath = "../../build/OSCore-prefix/src/OSCore-build/ruby"
 end
 
 failed_objects = []

@@ -22,6 +22,7 @@
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include <utilities/idd/OS_WaterUse_Equipment_Definition_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/units/OSOptionalQuantity.hpp"
 #include "../utilities/core/Assert.hpp"

@@ -119,7 +119,7 @@ class MODEL_API PlantLoop : public Loop {
    */
   std::vector<ModelObject> demandComponents(std::vector<HVACComponent> inletComps,
                                             std::vector<HVACComponent> outletComps,
-                                            openstudio::IddObjectType type = IddObjectType::Catchall);
+                                            openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
   /** Returns all of the demand side hvac equipment between
    * inletComp and outletComp.  If type is given then the results will
@@ -128,18 +128,18 @@ class MODEL_API PlantLoop : public Loop {
    */
   std::vector<ModelObject> demandComponents(HVACComponent inletComp,
                                             HVACComponent outletComp,
-                                            openstudio::IddObjectType type = IddObjectType::Catchall);
+                                            openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
   /** Returns all of the demand side HVAC equipment within the air loop.
    * If type is given then the results will be limited to the given IddObjectType.
    */
-  std::vector<ModelObject> demandComponents(openstudio::IddObjectType type = IddObjectType::Catchall);
+  std::vector<ModelObject> demandComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
   /** Returns all of the HVAC equipment within the air loop including both
    * the supply and demand sides of the loop.
    * If type is given then the results will be limited to the given IddObjectType.
    */
-  //std::vector<ModelObject> components(openstudio::IddObjectType type = IddObjectType::Catchall);
+  //std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
   /** Returns an optional ModelObject with the given handle.
    * If the handle is not within the PlantLoop then the optional will be false

@@ -30,6 +30,7 @@
 #include "../../model/Curve.hpp"
 #include "../../model/Curve_Impl.hpp"
 #include <utilities/idd/Coil_Heating_Gas_MultiStage_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"

@@ -21,6 +21,7 @@
 #include "IdfRegex.hpp"
 #include "../idd/CommentRegex.hpp"
 #include <utilities/idd/IddFactory.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../core/Assert.hpp"
 #include "../core/PathHelpers.hpp"
@@ -78,7 +79,7 @@ unsigned ImfFile::numSections() const {
 
 OptionalImfFile ImfFile::load(std::istream& is,IddFileType iddFileType) {
   OptionalImfFile result;
-  ImfFile temp;
+  ImfFile temp{IddFileType::EnergyPlus};
   temp.m_iddFileAndFactoryWrapper.setIddFile(iddFileType);
   bool success = temp.m_load(is);
   if (success) { result = temp; }
@@ -87,7 +88,7 @@ OptionalImfFile ImfFile::load(std::istream& is,IddFileType iddFileType) {
 
 OptionalImfFile ImfFile::load(std::istream& is,const IddFile& iddFile) {
   OptionalImfFile result;
-  ImfFile temp;
+  ImfFile temp{IddFileType::EnergyPlus};
   temp.m_iddFileAndFactoryWrapper.setIddFile(iddFile);
   bool success = temp.m_load(is);
   if (success) { result = temp; }

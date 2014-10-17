@@ -28,6 +28,8 @@
 #include "IdfExtensibleGroup.hpp"
 #include "ValidityReport.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 #include "../idd/IddObjectProperties.hpp"
 #include "../idd/IddFieldProperties.hpp"
 

@@ -23,7 +23,6 @@
 #include "../../model/AirLoopHVAC.hpp"
 #include "../../model/AirLoopHVAC_Impl.hpp"
 #include <utilities/idd/Sizing_System_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 

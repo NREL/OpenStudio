@@ -22,7 +22,9 @@
 
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_Table_MultiVariableLookup_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/units/Unit.hpp"
 

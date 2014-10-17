@@ -21,6 +21,7 @@
 #include "LightingSimulationControl_Impl.hpp"
 
 #include <utilities/idd/OS_LightingSimulationControl_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

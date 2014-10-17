@@ -42,6 +42,7 @@
 #include <utilities/idd/BranchList_FieldEnums.hxx>
 #include <utilities/idd/Branch_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_EquipmentConnections_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 

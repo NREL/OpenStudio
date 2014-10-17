@@ -36,7 +36,9 @@
 #include "CurveQuartic_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_Pump_VariableSpeed_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {

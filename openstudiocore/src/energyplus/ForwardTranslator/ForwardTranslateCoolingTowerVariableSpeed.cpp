@@ -30,6 +30,7 @@
 #include "../../utilities/idf/WorkspaceObjectOrder.hpp"
 #include "../../utilities/core/Logger.hpp"
 #include <utilities/idd/CoolingTower_VariableSpeed_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 

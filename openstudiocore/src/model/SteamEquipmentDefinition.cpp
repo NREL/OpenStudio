@@ -21,7 +21,9 @@
 #include "SteamEquipmentDefinition_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_SteamEquipment_Definition_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

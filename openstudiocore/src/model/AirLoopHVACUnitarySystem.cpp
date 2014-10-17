@@ -35,7 +35,9 @@
 #include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/units/Unit.hpp"
 

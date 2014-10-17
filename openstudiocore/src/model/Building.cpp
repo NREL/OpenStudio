@@ -46,8 +46,11 @@
 #include "Surface_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_Building_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_ThermalZone_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/math/FloatCompare.hpp"
 #include "../utilities/data/DataEnums.hpp"

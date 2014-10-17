@@ -42,7 +42,7 @@ public:
   ClassViewWidget(QWidget *parent = nullptr);
   virtual ~ClassViewWidget();
   void loadWorkspace(const openstudio::Workspace& workspace);
-  virtual void addObjects(openstudio::IddObjectType type = openstudio::IddObjectType::UserCustom);
+  virtual void addObjects(openstudio::IddObjectType type = openstudio::IddObjectType("UserCustom"));
   virtual void loadModel();
   virtual void removeObjects();
   virtual void copyObjects();

@@ -8,6 +8,14 @@ set(CMAKE_VERSION_PATCH 1)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
+
+if(NOT GIT_FOUND)
+  find_program(GIT_EXECUTABLE git HINTS "$ENV{LOCALAPPDATA}/Programs/git/bin")
+  if (NOT GIT_EXECUTABLE_NOTFOUND)
+    set(GIT_FOUND TRUE)
+  endif()
+endif()
+
 if(GIT_FOUND)
   execute_process(COMMAND "${GIT_EXECUTABLE}" "rev-parse" "--short=10" "HEAD"
                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
@@ -77,6 +85,8 @@ option(BUILD_PACKAGE "Build package" OFF)
 # This is a convenience for Visual Studio users
 option(ENABLE_TEST_RUNNER_TARGETS "Create test runner targets" OFF)
 
+set(MAXIMIZE_CPU_USAGE OFF CACHE BOOL "Attempt to fully load the CPU during builds")
+mark_as_advanced(MAXIMIZE_CPU_USAGE)
 
 # Build with OpenSSL support
 set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Connections")
@@ -134,6 +144,7 @@ if(MSVC)
   set(BUILD_WITH_MULTIPLE_PROCESSES ON CACHE BOOL "/MP compiler flag for full processor utilization")
   mark_as_advanced(BUILD_WITH_MULTIPLE_PROCESSES)
 endif()
+
 
 # Apple Sanity Check
 if(APPLE)
@@ -672,6 +683,7 @@ ExternalProject_Add(GoogleTest
   -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
 )
 
+
 set(GTEST_INCLUDE_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest/include)
 set(GTEST_LIB_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest-build)
 
@@ -731,7 +743,7 @@ if(BUILD_QT)
 endif()
 
 
-set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build)
+set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)
 
 # Set up the dependencies for OpenStudioCore
 set(OpenStudioCore_DEPENDS GoogleTest)
@@ -761,9 +773,16 @@ if(BUILD_V8)
 endif()
 
 
-ExternalProject_Add(OpenStudioCore
+if(MSVC)
+  set(OS_BUILD_COMMAND BUILD_COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build" --config $(Configuration) -- /maxcpucount)
+else()
+  set(OS_BUILD_COMMAND "")
+endif()
+
+ExternalProject_Add(OSCore
   DEPENDS ${OpenStudioCore_DEPENDS}
   SOURCE_DIR ${CMAKE_SOURCE_DIR}/openstudiocore
+  ${OS_BUILD_COMMAND}
   CMAKE_CACHE_ARGS
     -DGTEST_LIB_DIR:PATH=${GTEST_LIB_DIR}
     -DGTEST_INCLUDE_DIR:PATH=${GTEST_INCLUDE_DIR}
@@ -823,6 +842,7 @@ ExternalProject_Add(OpenStudioCore
     -DRADIANCE_LOCATION:PATH=${RADIANCE_LOCATION}
     -DOPENSSL_ROOT_DIR:PATH=${OPENSSL_ROOT_DIR}
     -DPATCH_EXE:PATH=${PATCH_EXE}
+    -DMAXIMIZE_CPU_USAGE:BOOL=${MAXIMIZE_CPU_USAGE}
     INSTALL_COMMAND ""
 )
 
@@ -830,66 +850,66 @@ if(BUILD_QT AND MSVC)
   file(GLOB dlls ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/bin/*.dll)
   foreach(dll ${dlls})
     get_filename_component(filename "${dll}" NAME_WE)
-    ExternalProject_Add_Step(OpenStudioCore "Install${filename}ReleaseDLL"
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Release"
+    ExternalProject_Add_Step(OSCore "Install${filename}ReleaseDLL"
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Release"
       DEPENDERS configure
     )
-    ExternalProject_Add_Step(OpenStudioCore "Install${filename}DebugDLL"
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug"
+    ExternalProject_Add_Step(OSCore "Install${filename}DebugDLL"
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Debug"
       DEPENDERS configure
     )
-    ExternalProject_Add_Step(OpenStudioCore "Install${filename}RelWithDebInfoDLL"
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/RelWithDebInfo"
+    ExternalProject_Add_Step(OSCore "Install${filename}RelWithDebInfoDLL"
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/RelWithDebInfo"
       DEPENDERS configure
     )
-    ExternalProject_Add_Step(OpenStudioCore "Install${filename}MinSizeRelDLL"
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/MinSizeRel"
+    ExternalProject_Add_Step(OSCore "Install${filename}MinSizeRelDLL"
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/MinSizeRel"
       DEPENDERS configure
     )
   endforeach()
 endif()
 
 if(MSVC)
-  ExternalProject_Add_Step(OpenStudioCore MakeRubyReleaseFolder
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Release
+  ExternalProject_Add_Step(OSCore MakeRubyReleaseFolder
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Release
     DEPENDERS configure
   )
-  ExternalProject_Add_Step(OpenStudioCore MakeRubyDebugFolder
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug
+  ExternalProject_Add_Step(OSCore MakeRubyDebugFolder
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Debug
     DEPENDERS configure
   )
-  ExternalProject_Add_Step(OpenStudioCore MakeRubyRelWithDebInfoFolder
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/RelWithDebInfo
+  ExternalProject_Add_Step(OSCore MakeRubyRelWithDebInfoFolder
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/RelWithDebInfo
     DEPENDERS configure
   )
-  ExternalProject_Add_Step(OpenStudioCore MakeRubyMinSizeRelFolder
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/MinSizeRel
+  ExternalProject_Add_Step(OSCore MakeRubyMinSizeRelFolder
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/MinSizeRel
     DEPENDERS configure
   )
 
 
-  ExternalProject_Add_Step(OpenStudioCore MakeRubyReleaseDLL
-    COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Release/${RUBY_DLL}"
+  ExternalProject_Add_Step(OSCore MakeRubyReleaseDLL
+    COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Release/${RUBY_DLL}"
     DEPENDERS configure
   )
-  ExternalProject_Add_Step(OpenStudioCore MakeRubyDebugDLL
-    COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug/${RUBY_DLL}"
+  ExternalProject_Add_Step(OSCore MakeRubyDebugDLL
+    COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Debug/${RUBY_DLL}"
     DEPENDERS configure
   )
-  ExternalProject_Add_Step(OpenStudioCore MakeRubyRelWithDebInfoDLL
-    COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/RelWithDebInfo/${RUBY_DLL}"
+  ExternalProject_Add_Step(OSCore MakeRubyRelWithDebInfoDLL
+    COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/RelWithDebInfo/${RUBY_DLL}"
     DEPENDERS configure
   )
-  ExternalProject_Add_Step(OpenStudioCore MakeRubyMinSizeRelDLL
-    COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/MinSizeRel/${RUBY_DLL}"
+  ExternalProject_Add_Step(OSCore MakeRubyMinSizeRelDLL
+    COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/MinSizeRel/${RUBY_DLL}"
     DEPENDERS configure
   )
 
 endif()
 
 
-set(OPENSTUDIOCORE_BUILD_DIR ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build)
-set(OPENSTUDIOCORE_LIB_DIR ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products)
+set(OPENSTUDIOCORE_BUILD_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)
+set(OPENSTUDIOCORE_LIB_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products)
 set(OPENSTUDIOCORE_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/openstudiocore/src)
 set(OPENSTUDIOCORE_ROOT_DIR ${CMAKE_SOURCE_DIR}/openstudiocore/)
 

@@ -21,7 +21,9 @@
 #include "GasEquipmentDefinition_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_GasEquipment_Definition_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/math/FloatCompare.hpp"
 

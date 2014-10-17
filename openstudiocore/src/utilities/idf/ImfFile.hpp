@@ -53,7 +53,7 @@ class UTILITIES_API ImfFile
   //@{
 
   /// default constructor
-  ImfFile(IddFileType iddFileType=IddFileType::EnergyPlus);
+  ImfFile(IddFileType iddFileType = IddFileType("EnergyPlus"));
 
   //@}
   /** @name Getters */

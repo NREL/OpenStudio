@@ -26,6 +26,7 @@
 
 #include <utilities/idd/LifeCycleCost_NonrecurringCost_FieldEnums.hxx>
 #include <utilities/idd/LifeCycleCost_RecurringCosts_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

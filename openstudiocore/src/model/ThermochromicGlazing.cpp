@@ -22,6 +22,7 @@
 #include "ModelExtensibleGroup.hpp"
 
 #include <utilities/idd/OS_WindowMaterial_GlazingGroup_Thermochromic_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/math/FloatCompare.hpp"
@@ -156,7 +157,7 @@ namespace detail {
       bool ok = glazings[i].setThickness(value);
       if (!ok) {
         // rollback previous values
-        for (int j = i-1; j <= 0; --j) {
+        for (int j = i-1; j >= 0; --j) {
           glazings[j].setThickness(rollbackValues[j]);
         }
         return false;

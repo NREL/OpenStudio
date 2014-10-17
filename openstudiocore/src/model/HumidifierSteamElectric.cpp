@@ -26,6 +26,7 @@
 #include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/OS_Humidifier_Steam_Electric_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

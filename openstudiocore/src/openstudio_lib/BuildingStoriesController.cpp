@@ -27,6 +27,8 @@
 
 #include "../utilities/core/Assert.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 namespace openstudio {
 
 BuildingStoriesController::BuildingStoriesController(const model::Model& model)

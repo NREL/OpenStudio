@@ -26,6 +26,7 @@
 #include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_ZoneCapacitanceMultiplier_ResearchSpecial_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/units/Unit.hpp"
 

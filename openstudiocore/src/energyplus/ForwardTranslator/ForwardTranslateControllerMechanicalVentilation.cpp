@@ -40,6 +40,7 @@
 #include "../../utilities/idf/WorkspaceObjectOrder.hpp"
 #include "../../utilities/core/Logger.hpp"
 #include <utilities/idd/Controller_MechanicalVentilation_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 

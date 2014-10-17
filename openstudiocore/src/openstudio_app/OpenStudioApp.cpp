@@ -106,6 +106,7 @@
 #include <QWidget>
 
 #include <OpenStudio.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 

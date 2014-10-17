@@ -76,6 +76,7 @@
 #include "../utilities/core/ZipFile.hpp"
 
 #include <OpenStudio.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include <boost/filesystem.hpp>
 

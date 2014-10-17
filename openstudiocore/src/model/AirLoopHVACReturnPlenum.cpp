@@ -36,6 +36,8 @@
 #include "PortList.hpp"
 #include "PortList_Impl.hpp"
 #include <utilities/idd/OS_AirLoopHVAC_ReturnPlenum_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
+
 
 namespace openstudio {
 namespace model {

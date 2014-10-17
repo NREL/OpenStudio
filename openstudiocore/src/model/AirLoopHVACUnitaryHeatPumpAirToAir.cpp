@@ -44,7 +44,9 @@
 #include "Node_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

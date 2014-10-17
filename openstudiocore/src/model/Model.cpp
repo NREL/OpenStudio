@@ -33,8 +33,9 @@
 
 #include "../utilities/idf/IdfFile.hpp"
 
-#include <utilities/idd/IddEnums.hxx>
+#include "../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/OS_Version_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include <utilities/idf/Workspace_Impl.hpp> // needed for serialization
 #include "../utilities/idd/IddObject_Impl.hpp"
 #include "../utilities/idd/IddField_Impl.hpp"

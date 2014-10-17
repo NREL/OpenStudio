@@ -30,6 +30,7 @@
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include "ModelExtensibleGroup.hpp"
 #include <utilities/idd/OS_LightingSimulationZone_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

@@ -89,6 +89,10 @@
 #include "../utilities/idd/OS_SpaceType_FieldEnums.hxx"
 #include "../utilities/idd/OS_Space_FieldEnums.hxx"
 
+#include "../utilities/idd/IddEnums.hpp"
+#include <utilities/idd/IddEnums.hxx>
+
+
 #include <QFrame>
 #include <QGridLayout>
 #include <QHBoxLayout>

@@ -73,6 +73,17 @@ using std::vector;
 const char* InspectorGadget::s_indexSlotName="indexSlot";
 //const char* FIELDS_MATCH = "fields match";
 
+IGWidget::IGWidget(QWidget* parent):
+  QWidget(parent)
+{
+  setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
+}
+
+QSize IGWidget::sizeHint() const
+{
+  return QSize(200, QWidget::sizeHint().height());
+}
+
 InspectorGadget::InspectorGadget(QWidget* parent, int indent,ComboHighlightBridge* bridge):
   QWidget(parent),
   m_layout(nullptr),

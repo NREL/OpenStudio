@@ -65,7 +65,8 @@
 #include "ScheduleYear_Impl.hpp"
 #include "SetpointManagerSingleZoneReheat.hpp"
 #include "SetpointManagerSingleZoneReheat_Impl.hpp"
-#include <utilities/idd/IddEnums.hxx>
+#include "../utilities/idd/IddEnums.hpp"
+
 #include <utilities/idd/OS_AirLoopHVAC_FieldEnums.hxx>
 #include <utilities/idd/OS_AirLoopHVAC_ZoneMixer_FieldEnums.hxx>
 #include <utilities/idd/OS_AirLoopHVAC_OutdoorAirSystem_FieldEnums.hxx>
@@ -75,6 +76,7 @@
 #include <utilities/idd/OS_AvailabilityManagerAssignmentList_FieldEnums.hxx>
 #include <utilities/idd/OS_AirLoopHVAC_ControllerList_FieldEnums.hxx>
 #include <utilities/idd/OS_Controller_OutdoorAir_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
 

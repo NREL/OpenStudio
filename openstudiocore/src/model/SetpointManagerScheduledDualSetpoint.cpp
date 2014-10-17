@@ -29,7 +29,9 @@
 #include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_SetpointManager_Scheduled_DualSetpoint_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

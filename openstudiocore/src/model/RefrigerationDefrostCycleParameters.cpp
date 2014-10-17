@@ -21,6 +21,7 @@
 #include "RefrigerationDefrostCycleParameters_Impl.hpp"
 
 #include <utilities/idd/OS_Refrigeration_DefrostCycleParameters_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/time/Time.hpp"
 

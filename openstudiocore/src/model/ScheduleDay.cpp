@@ -34,6 +34,7 @@
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/OS_Schedule_Day_FieldEnums.hxx>
 #include <utilities/idd/OS_Schedule_Rule_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/units/OSQuantityVector.hpp"
 

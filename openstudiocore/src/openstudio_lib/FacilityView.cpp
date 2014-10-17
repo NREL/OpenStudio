@@ -41,6 +41,7 @@
 #include "../model/ThermalZone_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include <utilities/idd/IddEnums.hxx>
 
 #include <QVBoxLayout>
 #include <QLabel>

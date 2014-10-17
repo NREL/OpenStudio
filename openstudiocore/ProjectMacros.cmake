@@ -16,6 +16,7 @@ macro(ADD_GOOGLE_TESTS executable)
         foreach(hit ${found_tests})
           string(REGEX REPLACE ".*\\(([A-Za-z_0-9]+)[, ]*([A-Za-z_0-9]+)\\).*" "\\1.\\2" test_name ${hit})
           add_test(${test_name} "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${executable}" --gtest_filter=${test_name})
+          set_tests_properties(${test_name} PROPERTIES TIMEOUT 660)
         endforeach()
       endif()
     endif()
@@ -125,7 +126,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
     # If it's a header file ("*.h*") add it to the list of headers
     if("${extension}" MATCHES "\\.h.*")
-      if("${extension}" MATCHES "\\..xx")
+      if("${extension}" MATCHES "\\..xx" OR "${p}" MATCHES "ui_.*\\.h")
         list(APPEND GeneratedHeaders "${p}")
       else()
         list(APPEND RequiredHeaders "${p}")
@@ -270,6 +271,12 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     DEPENDS ${this_depends}
   )
 
+  if(MAXIMIZE_CPU_USAGE)
+    add_custom_target(${swig_target}_swig
+      SOURCES "${SWIG_WRAPPER}"
+      )
+    add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
+  endif()
 
   add_library(
     ${swig_target}
@@ -452,6 +459,14 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       DEPENDS ${this_depends}
     )
 
+    if(MAXIMIZE_CPU_USAGE)
+      add_custom_target(${swig_target}_swig
+        SOURCES "${SWIG_WRAPPER}"
+        )
+      add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
+    endif()
+
+
     add_library(
       ${swig_target}
       MODULE
@@ -568,7 +583,14 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
               "${SWIG_DEFINES}" ${SWIG_COMMON} ${KEY_I_FILE}
       DEPENDS ${this_depends}
 
-    )
+      )
+
+    if(MAXIMIZE_CPU_USAGE)
+      add_custom_target(${swig_target}_swig
+        SOURCES "${SWIG_WRAPPER}"
+        )
+      add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
+    endif()
 
     add_library(
       ${swig_target}
@@ -654,6 +676,14 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       DEPENDS ${this_depends}
 
     )
+
+    if(MAXIMIZE_CPU_USAGE)
+      add_custom_target(${swig_target}_swig
+        SOURCES "${SWIG_WRAPPER}"
+        )
+      add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
+    endif()
+
 
     include_directories("${JAVA_INCLUDE_PATH}" "${JAVA_INCLUDE_PATH2}")
 
@@ -772,6 +802,14 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     else()
       include_directories(${V8_INCLUDE_DIR})
     endif()
+
+    if(MAXIMIZE_CPU_USAGE)
+      add_custom_target(${swig_target}_swig
+        SOURCES "${SWIG_WRAPPER}"
+        )
+      add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
+    endif()
+
 
     add_library(
       ${swig_target}

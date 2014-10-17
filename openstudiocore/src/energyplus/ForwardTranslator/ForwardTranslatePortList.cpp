@@ -23,6 +23,7 @@
 #include "../../model/Node_Impl.hpp"
 #include "../../model/PortList.hpp"
 #include "../../model/PortList_Impl.hpp"
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/NodeList_FieldEnums.hxx>
 

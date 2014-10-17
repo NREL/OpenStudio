@@ -22,7 +22,9 @@
 #include "attributes.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_ElectricEquipment_Definition_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/math/FloatCompare.hpp"
 

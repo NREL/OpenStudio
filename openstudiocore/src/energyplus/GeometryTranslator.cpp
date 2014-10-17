@@ -31,6 +31,7 @@
 #include "../utilities/core/Optional.hpp"
 #include "../utilities/core/Containers.hpp"
 
+#include "../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/GlobalGeometryRules_FieldEnums.hxx>
 #include <utilities/idd/Building_FieldEnums.hxx>

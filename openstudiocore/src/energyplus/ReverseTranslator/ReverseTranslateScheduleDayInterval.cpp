@@ -28,6 +28,7 @@
 
 #include <utilities/idd/Schedule_Day_Interval_FieldEnums.hxx>
 #include <utilities/idd/OS_Schedule_Day_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/core/Exception.hpp"
 

@@ -20,6 +20,7 @@
 #include <gtest/gtest.h>
 #include "IddFixture.hpp"
 #include <utilities/idd/IddFactory.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../IddField.hpp"
 #include "../IddFieldProperties.hpp"
 #include "../IddKey.hpp"

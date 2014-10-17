@@ -94,9 +94,9 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   boost::optional<Node> mixedAirNode() const;
 
-  std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = IddObjectType::Catchall);
+  std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
-  std::vector<ModelObject> components(openstudio::IddObjectType type = IddObjectType::Catchall);
+  std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
   void addAirLoopComp(ModelObject targetObj, ModelObject newComp);
 

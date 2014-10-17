@@ -48,6 +48,9 @@
 #include "../utilities/units/QuantityConverter.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
+
 #include <QFile>
 #include <QDomDocument>
 #include <QDomElement>

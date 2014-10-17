@@ -102,6 +102,7 @@
 #include <utilities/idd/OS_SpaceInfiltration_DesignFlowRate_FieldEnums.hxx>
 #include <utilities/idd/OS_SpaceInfiltration_EffectiveLeakageArea_FieldEnums.hxx>
 #include <utilities/idd/OS_DesignSpecification_OutdoorAir_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"

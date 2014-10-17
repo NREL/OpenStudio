@@ -21,7 +21,9 @@
 #include "CurveRectangularHyperbola2_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_Curve_RectangularHyperbola2_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

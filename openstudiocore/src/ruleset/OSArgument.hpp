@@ -23,7 +23,7 @@
 #include "RulesetAPI.hpp"
 
 #include "../utilities/idf/Workspace.hpp"
-#include <utilities/idd/IddEnums.hxx>
+#include "../utilities/idd/IddEnums.hpp"
 #include "../utilities/core/Path.hpp"
 #include "../utilities/core/Enum.hpp"
 #include "../utilities/core/Logger.hpp"
@@ -34,7 +34,7 @@ namespace openstudio {
 namespace ruleset {
 
 /** \class OSArgumentType
- *  \brief Listing of OSArgument data types. Quantity type is \deprecated.
+ *  \brief Listing of OSArgument data types. Quantity type is deprecated.
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
  *  macro call is:
  *  \code

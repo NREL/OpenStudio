@@ -22,8 +22,10 @@
 #include "../../model/RunPeriodControlDaylightSavingTime.hpp"
 #include "../../model/RunPeriodControlDaylightSavingTime_Impl.hpp"
 #include <utilities/idd/OS_RunPeriodControl_DaylightSavingTime_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include <utilities/idd/RunPeriodControl_DaylightSavingTime_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

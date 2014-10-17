@@ -22,6 +22,7 @@
 #include "../../model/YearDescription.hpp"
 #include "../../model/YearDescription_Impl.hpp"
 #include <utilities/idd/RunPeriod_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/time/Date.hpp"
 
 using namespace openstudio::model;

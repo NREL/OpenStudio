@@ -20,6 +20,7 @@
 #include "../ForwardTranslator.hpp"
 #include "../../model/AirLoopHVACZoneMixer.hpp"
 #include <utilities/idd/AirLoopHVAC_ZoneMixer_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 

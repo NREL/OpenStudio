@@ -17,24 +17,25 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/AirTerminalSingleDuctInletSideMixer.hpp>
-#include <model/AirTerminalSingleDuctInletSideMixer_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/ZoneHVACComponent.hpp>
-#include <model/ZoneHVACComponent_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Splitter.hpp>
-#include <model/Splitter_Impl.hpp>
-#include <model/Mixer.hpp>
-#include <model/Mixer_Impl.hpp>
-#include <model/PortList.hpp>
-#include <model/PortList_Impl.hpp>
+#include "AirTerminalSingleDuctInletSideMixer.hpp"
+#include "AirTerminalSingleDuctInletSideMixer_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "ZoneHVACComponent.hpp"
+#include "ZoneHVACComponent_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "Splitter.hpp"
+#include "Splitter_Impl.hpp"
+#include "Mixer.hpp"
+#include "Mixer_Impl.hpp"
+#include "PortList.hpp"
+#include "PortList_Impl.hpp"
 #include <utilities/idd/OS_AirTerminal_SingleDuct_InletSideMixer_FieldEnums.hxx>
-#include <utilities/core/Assert.hpp>
+#include <utilities/idd/IddEnums.hxx>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

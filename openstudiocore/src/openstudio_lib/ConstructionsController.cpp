@@ -35,6 +35,7 @@
 #include "../model/WindowDataFile.hpp"
 
 #include "../utilities/core/Logger.hpp"
+#include <utilities/idd/IddEnums.hxx>
 
 namespace openstudio {
 

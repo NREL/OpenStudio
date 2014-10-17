@@ -47,6 +47,8 @@
 #include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/core/Compare.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 #include "ModelExplorer.hpp"
 
 using namespace openstudio::model;

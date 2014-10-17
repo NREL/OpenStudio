@@ -26,6 +26,7 @@
 
 #include <utilities/idd/Schedule_Week_Daily_FieldEnums.hxx>
 #include <utilities/idd/OS_Schedule_Week_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

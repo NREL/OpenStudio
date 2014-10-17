@@ -38,6 +38,7 @@
 #include "../../utilities/geometry/EulerAngles.hpp"
 #include "../../utilities/geometry/Transformation.hpp"
 #include <utilities/idd/AirLoopHVAC_ReturnPath_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 

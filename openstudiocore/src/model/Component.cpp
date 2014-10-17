@@ -29,6 +29,8 @@
 #include "../utilities/idf/WorkspaceObject.hpp"
 
 #include <utilities/idd/OS_ComponentData_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
+
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/PathHelpers.hpp"

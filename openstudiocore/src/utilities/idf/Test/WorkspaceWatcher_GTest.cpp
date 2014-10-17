@@ -23,6 +23,7 @@
 #include "../Workspace.hpp"
 #include "../WorkspaceObject.hpp"
 #include "../IdfExtensibleGroup.hpp"
+#include <utilities/idd/IddEnums.hxx>
 
 #include <resources.hxx>
 

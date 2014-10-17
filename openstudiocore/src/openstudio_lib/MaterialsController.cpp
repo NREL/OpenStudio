@@ -41,6 +41,8 @@
 
 #include "../utilities/core/Logger.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 namespace openstudio {
 
 MaterialsController::MaterialsController(bool isIP, const model::Model& model)

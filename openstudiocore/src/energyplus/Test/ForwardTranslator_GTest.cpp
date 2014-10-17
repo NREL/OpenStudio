@@ -61,6 +61,7 @@
 #include <utilities/idd/Lights_FieldEnums.hxx>
 #include <utilities/idd/OS_Schedule_Compact_FieldEnums.hxx>
 #include <utilities/idd/Schedule_Compact_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
 #include <boost/algorithm/string/predicate.hpp>

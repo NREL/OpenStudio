@@ -22,6 +22,7 @@
 #include "../../model/Node.hpp"
 #include "../../model/AirLoopHVAC.hpp"
 #include <utilities/idd/SetpointManager_Warmest_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

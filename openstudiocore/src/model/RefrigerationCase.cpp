@@ -35,7 +35,9 @@
 #include "RefrigerationDefrostCycleParameters_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_Refrigeration_Case_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/time/Time.hpp"
 

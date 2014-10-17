@@ -21,6 +21,7 @@
 #include <boost/regex.hpp>
 #include "../../utilities/idf/IdfFile.hpp"
 #include <boost/lexical_cast.hpp>
+#include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/Version_FieldEnums.hxx>
 #include <utilities/idd/Site_Location_FieldEnums.hxx>
 #include <QFileInfo>

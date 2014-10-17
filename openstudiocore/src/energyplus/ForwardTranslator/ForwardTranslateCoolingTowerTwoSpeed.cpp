@@ -21,6 +21,7 @@
 #include "../../model/CoolingTowerTwoSpeed.hpp"
 #include "../../model/Schedule.hpp"
 #include <utilities/idd/CoolingTower_TwoSpeed_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

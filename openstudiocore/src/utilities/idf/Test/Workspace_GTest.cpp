@@ -30,6 +30,7 @@
 #include "../IdfExtensibleGroup.hpp"
 #include "../WorkspaceExtensibleGroup.hpp"
 
+#include "../../idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/Building_FieldEnums.hxx>

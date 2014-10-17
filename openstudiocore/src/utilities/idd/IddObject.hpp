@@ -35,7 +35,7 @@ namespace openstudio {
 
 // forward declarations
 class ExtensibleIndex;
-class IddObjectType;
+struct IddObjectType;
 
 namespace detail {
   class IddObject_Impl;

@@ -33,6 +33,7 @@
 #include "ModelExtensibleGroup.hpp"
 
 #include <utilities/idd/OS_Schedule_Ruleset_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/time/Date.hpp"

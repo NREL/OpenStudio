@@ -19,6 +19,7 @@
 
 #include <gtest/gtest.h>
 #include "IdfFixture.hpp"
+#include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/Building_FieldEnums.hxx>
 #include <utilities/idd/Zone_FieldEnums.hxx>
 #include <utilities/idd/Lights_FieldEnums.hxx>

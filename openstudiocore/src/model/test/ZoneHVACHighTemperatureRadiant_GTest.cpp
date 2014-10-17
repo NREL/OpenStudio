@@ -18,13 +18,13 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/ZoneHVACHighTemperatureRadiant.hpp>
-#include <model/ZoneHVACHighTemperatureRadiant_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../ZoneHVACHighTemperatureRadiant.hpp"
+#include "../ZoneHVACHighTemperatureRadiant_Impl.hpp"
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

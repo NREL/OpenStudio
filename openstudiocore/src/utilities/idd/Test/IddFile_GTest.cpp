@@ -35,6 +35,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem/fstream.hpp>
 
+#include <utilities/idd/IddEnums.hxx>
 
 #include <algorithm>
 

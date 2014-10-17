@@ -19,10 +19,10 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/ZoneControlThermostatStagedDualSetpoint.hpp>
-#include <model/ZoneControlThermostatStagedDualSetpoint_Impl.hpp>
+#include "../ZoneControlThermostatStagedDualSetpoint.hpp"
+#include "../ZoneControlThermostatStagedDualSetpoint_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

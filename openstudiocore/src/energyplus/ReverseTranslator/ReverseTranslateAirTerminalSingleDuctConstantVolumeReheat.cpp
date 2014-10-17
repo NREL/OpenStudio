@@ -29,6 +29,7 @@
 #include "../../model/CoilHeatingWater.hpp"
 #include "../../model/CoilHeatingWater_Impl.hpp"
 #include <utilities/idd/AirTerminal_SingleDuct_ConstantVolume_Reheat_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

@@ -21,6 +21,7 @@
 #include "../../model/ZoneControlHumidistat.hpp"
 #include "../../model/Schedule.hpp"
 #include <utilities/idd/ZoneControl_Humidistat_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 

@@ -21,7 +21,9 @@
 #include "RadianceParameters_Impl.hpp"
 
 #include <utilities/idd/OS_RadianceParameters_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
+
 
 #include "../utilities/units/Unit.hpp"
 

@@ -86,6 +86,7 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
     << std::endl
     << "#include <utilities/idd/IddObject.hpp>" << std::endl
     << "#include <utilities/idd/IddFile.hpp>" << std::endl
+    << "#include <utilities/idd/IddEnums.hpp>" << std::endl
     << "#include <utilities/idd/IddEnums.hxx>" << std::endl
     << std::endl
     << "#include <utilities/core/Singleton.hpp>" << std::endl
@@ -237,6 +238,7 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
   // start IddFactory.cxx
   outFiles.iddFactoryCxx.tempFile
     << "#include <utilities/idd/IddFactory.hxx>" << std::endl
+    << "#include <utilities/idd/IddEnums.hxx>" << std::endl
     << "#include <utilities/idd/IddRegex.hpp>" << std::endl
     << std::endl
     << "#include <utilities/core/Assert.hpp>" << std::endl
@@ -267,6 +269,7 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
   for (std::shared_ptr<IddFactoryOutFile>& cxxFile : outFiles.iddFactoryIddFileCxxs) {
     cxxFile->tempFile
       << "#include <utilities/idd/IddFactory.hxx>" << std::endl
+      << "#include <utilities/idd/IddEnums.hxx>" << std::endl
       << std::endl
       << "#include <utilities/core/Assert.hpp>" << std::endl
       << "#include <utilities/core/Compare.hpp>" << std::endl
@@ -283,42 +286,19 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
 void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
                       GenerateIddFactoryOutFiles& outFiles) {
 
-  // calculate total number of objects for purpose of splitting up IddObjectType OPENSTUDIO_ENUM
-  unsigned numObjects = 3; // Catchall, UserCustom, CommentOnly
+
+  std::vector<std::pair<std::string, std::string>> filetypes{ {"UserCustom", ""}, {"WholeFactory", ""} };
   for (const IddFileFactoryData& idd : iddFiles) {
-    numObjects += idd.objectNames().size();
+    filetypes.emplace_back(idd.fileName(), "");
   }
+
 
   std::stringstream tempSS;
+  writeDomain(tempSS, "IddFileType", filetypes, false);
 
-  // complete and close IddEnums.hxx
-  tempSS
-    << "OPENSTUDIO_ENUM( IddFileType," << std::endl
-    << "  ((UserCustom))" << std::endl
-    << "  ((WholeFactory))";
-  for (const IddFileFactoryData& idd : iddFiles) {
-    tempSS
-      << std::endl
-      << "  ((" << idd.fileName() << "))";
-  }
-  tempSS << " );" << std::endl;
   outFiles.iddEnumsHxx.tempFile
     << std::endl
-    << "/** \\class IddFileType" << std::endl
-    << " *  \\brief Enumeration of the types of \\link openstudio::IddFile IddFile\\endlink available" << std::endl
-    << " *  through OpenStudio." << std::endl
-    << " *  \\details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro" << std::endl
-    << " *  call is:" << std::endl
-    << " *" << std::endl
-    << " *  \\code" << std::endl
-//    << tempSS.str()
-    << " *  \\endcode" << std::endl
-    << " *" << std::endl
-    << " *  UserCustom \\link openstudio::IddFile IddFiles\\endlink are loaded directly from disk, and" << std::endl 
-    << " *  typically correspond to old or under-development versions of EnergyPlus or OpenStudio. The" << std::endl
-    << " *  rest of the enumeration values designate subsets of the \\link openstudio::IddFactorySingleton" << std::endl
-    << " *  IddFactory\\endlink (the current versions of the EnergyPlus and OpenStudio IDDs, and all" << std::endl
-    << " *  objects in the factory). */" << std::endl
+    << "/** \\class IddFileType */" << std::endl
     << tempSS.str();
   tempSS.str("");
 
@@ -333,44 +313,14 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
   }
 
   objtypes.emplace_back("CommentOnly", "");
-  writeEnumFast(tempSS, "IddObjectType", objtypes);
+  writeDomain(tempSS, "IddObjectType", objtypes, false);
 
   outFiles.iddEnumsHxx.tempFile
     << std::endl
-    << "/** \\class IddObjectType" << std::endl
-    << " *  \\brief Enumeration of the \\link openstudio::IddObject IddObject\\endlink types available" << std::endl
-    << " *  through the \\link openstudio::IddFactorySingleton IddFactory\\endlink. " << std::endl
-    << " *  \\details Catchall is the default constructed \\link openstudio::IddObject IddObject\\endlink" << std::endl
-    << " *  type. UserCustom is the default type for \\link openstudio::IddObject IddObjects\\endlink" << std::endl
-    << " *  constructed by \\link openstudio::IddObject::load IddObject::load\\endlink. UserCustom objects" << std::endl
-    << " *  must be referenced by name through an \\link openstudio::IddFile IddFile\\endlink or \\link" << std::endl
-    << " *  openstudio::IddFileAndFactoryWrapper IddFileAndFactoryWrapper\\endlink. They cannot be" << std::endl
-    << " *  accessed through the \\link openstudio::IddFactorySingleton IddFactory\\endlink (by name or" << std::endl
-    << " *  type). CommentOnly is a convenience object for capturing standalone comments in IDFs. All other" << std::endl
-    << " *  types are derived from the IDD files used to create \\link openstudio::IddFactorySingleton" << std::endl
-    << " *  IddFactory\\endlink. See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The" << std::endl
-    << " *  actual macro call is:" << std::endl
-    << " *" << std::endl
-    << " *  \\code" << std::endl
-//    << tempSS.str()
-    << " *  \\endcode */" << std::endl
+    << "/** \\class IddObjectType */" << std::endl
     << tempSS.str()
     << std::endl
-    << "/** \\relates IddObjectType */" << std::endl
-    << "typedef std::vector<IddObjectType> IddObjectTypeVector;" << std::endl
-    << "/** \\relates IddObjectType */" << std::endl
-    << "typedef std::set<IddObjectType> IddObjectTypeSet;" << std::endl
-    << std::endl
-    << "/** \\relates IddObjectType */" << std::endl
-    << "typedef boost::optional<std::vector<IddObjectType> > OptionalIddObjectTypeVector;" << std::endl
-    << "/** \\relates IddObjectType */" << std::endl
-    << "typedef boost::optional<std::set<IddObjectType> > OptionalIddObjectTypeSet;" << std::endl
-    << std::endl
-    << "} // openstudio" << std::endl
-    << std::endl
-    << "Q_DECLARE_METATYPE(openstudio::IddFileType)" << std::endl
-    << "Q_DECLARE_METATYPE(openstudio::IddObjectType)" << std::endl
-    << std::endl
+    << "}\n"
     << "#endif // UTILITIES_IDD_IDDENUMS_HXX" << std::endl;
   tempSS.str("");
   
@@ -869,6 +819,10 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
     << std::endl
     << "  return false;" << std::endl
     << "}" << std::endl;
+
+  // Implementation for IddObjectType and IddFileType
+  writeBuildStringVec(outFiles.iddFactoryCxx.tempFile, "IddObjectType", objtypes, false);
+  writeBuildStringVec(outFiles.iddFactoryCxx.tempFile, "IddFileType", filetypes, false);
 
   // close out file
   outFiles.iddFactoryCxx.tempFile

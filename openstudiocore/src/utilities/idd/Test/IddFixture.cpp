@@ -18,6 +18,7 @@
 **********************************************************************/
 
 #include "IddFixture.hpp"
+#include <utilities/idd/IddEnums.hxx>
 
 using openstudio::FileLogSink;
 using openstudio::toPath;
