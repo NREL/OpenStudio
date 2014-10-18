@@ -53,6 +53,7 @@ namespace detail {
 
     private:
       int m_exitedCount;
+      int m_postExitCheckCount;
   };
 
   /**

@@ -47,7 +47,7 @@ namespace openstudio {
 namespace runmanager {
 namespace detail {
   MyQProcess::MyQProcess()
-    : m_exitedCount(0)
+    : m_exitedCount(0), m_postExitCheckCount(0)
   {
   }
 
@@ -73,7 +73,16 @@ namespace detail {
           emit zombied(error());
         }
       }
+    } else if (m_exitedCount > 0) {
+      LOG(Trace, "Process finished, but checkProcessStatus() still running " << qpid << " " << atEnd() << " " << state());
+      ++m_postExitCheckCount;
+      if (m_postExitCheckCount > 2)
+      {
+        LOG(Info, "Not zombied and not running, tried to manually clean up pid with no luck. Treating as if Zombied");
+        emit zombied(error());
+      }
     }
+     
 
 #endif
   }
