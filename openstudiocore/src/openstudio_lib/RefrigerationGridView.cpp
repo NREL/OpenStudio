@@ -41,8 +41,9 @@
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
 
-#include <utilities/idd/Refrigeration_Case_FieldEnums.hxx>
-#include <utilities/idd/Refrigeration_WalkIn_FieldEnums.hxx>
+#include "../utilities/idd/IddEnums.hxx"
+#include "../utilities/idd/Refrigeration_Case_FieldEnums.hxx"
+#include "../utilities/idd/Refrigeration_WalkIn_FieldEnums.hxx"
 
 #include <QBoxLayout>
 #include <QCheckBox>

@@ -47,7 +47,7 @@
 #include "../model/ZoneHVACComponent.hpp"
 #include "../model/ZoneHVACComponent_Impl.hpp"
 
-
+#include "../utilities/idd/IddEnums.hxx"
 #include "../utilities/idd/OS_ThermalZone_FieldEnums.hxx"
 
 #include <QBoxLayout>
