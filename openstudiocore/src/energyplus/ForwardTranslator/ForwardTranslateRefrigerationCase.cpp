@@ -27,6 +27,7 @@
 #include "../../utilities/time/Time.hpp"
 
 #include <utilities/idd/Refrigeration_Case_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 

@@ -24,6 +24,7 @@
 #include "../model/DefaultConstructionSet_Impl.hpp"
 
 #include "../utilities/core/Logger.hpp"
+#include <utilities/idd/IddEnums.hxx>
 
 namespace openstudio {
 

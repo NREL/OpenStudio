@@ -21,7 +21,9 @@
 #include "ScheduleTypeLimits_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_ScheduleTypeLimits_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/units/QuantityConverter.hpp"
 #include "../utilities/units/Unit.hpp"

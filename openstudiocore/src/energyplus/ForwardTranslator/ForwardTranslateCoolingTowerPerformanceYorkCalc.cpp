@@ -26,6 +26,7 @@
 #include "../../utilities/idf/WorkspaceObjectOrder.hpp"
 #include "../../utilities/core/Logger.hpp"
 #include <utilities/idd/CoolingTowerPerformance_YorkCalc_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 

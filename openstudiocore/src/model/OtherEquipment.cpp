@@ -33,6 +33,7 @@
 #include "LifeCycleCost.hpp"
 
 #include <utilities/idd/OS_OtherEquipment_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

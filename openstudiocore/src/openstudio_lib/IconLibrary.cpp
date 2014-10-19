@@ -18,6 +18,7 @@
  **********************************************************************/
 
 #include "IconLibrary.hpp"
+#include "../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using std::map;

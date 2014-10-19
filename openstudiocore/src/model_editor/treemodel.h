@@ -77,7 +77,7 @@ public:
   int columnCount(const QModelIndex &parent = QModelIndex()) const;
   bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
   bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole);
-  bool addRows(const QModelIndexList rowList, openstudio::IddObjectType type = openstudio::IddObjectType::UserCustom);
+  bool addRows(const QModelIndexList rowList, openstudio::IddObjectType type = openstudio::IddObjectType("UserCustom"));
   bool removeRows(const QModelIndexList rowList, std::vector<openstudio::Handle>& handles);
   bool pasteRows(const QModelIndex& parentRow,   std::vector<openstudio::model::ModelObject>& modelObjectsToPaste);
   Qt::DropActions supportedDropActions() const;

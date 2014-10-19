@@ -24,6 +24,8 @@
 #include "../RefrigerationSubcoolerLiquidSuction.hpp"
 #include "../RefrigerationSubcoolerLiquidSuction_Impl.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 using namespace openstudio;
 using namespace openstudio::model;
 

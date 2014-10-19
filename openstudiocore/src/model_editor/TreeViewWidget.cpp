@@ -32,6 +32,7 @@
 #include "TreeViewWidget.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 

@@ -24,7 +24,7 @@
 #include "../../model/InteriorPartitionSurfaceGroup_Impl.hpp"
 #include "../../model/InteriorPartitionSurface.hpp"
 
-#include <utilities/idd/IddEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
 using namespace openstudio::model;

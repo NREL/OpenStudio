@@ -24,6 +24,7 @@
 #include "Model.hpp"
 
 #include <utilities/idd/OS_Schedule_Week_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

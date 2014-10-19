@@ -26,6 +26,7 @@
 #include "../../time/Time.hpp"
 
 #include <resources.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include <boost/filesystem/fstream.hpp>
 

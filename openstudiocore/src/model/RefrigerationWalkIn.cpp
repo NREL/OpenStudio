@@ -36,7 +36,9 @@
 #include "../utilities/idf/WorkspaceObject.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_Refrigeration_WalkIn_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/time/Time.hpp"

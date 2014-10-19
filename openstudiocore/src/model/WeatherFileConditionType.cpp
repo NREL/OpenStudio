@@ -24,6 +24,8 @@
 
 #include "../utilities/core/Assert.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 namespace openstudio {
 namespace model  {
 

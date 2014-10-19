@@ -22,6 +22,7 @@
 #include "ModelExtensibleGroup.hpp"
 
 #include <utilities/idd/OS_WindowMaterial_GlazingGroup_Thermochromic_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/math/FloatCompare.hpp"

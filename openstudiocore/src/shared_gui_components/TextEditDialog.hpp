@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_TEXTEDITDIALOG_H
-#define OPENSTUDIO_TEXTEDITDIALOG_H
+#ifndef SHAREDGUICOMPONENTS_TEXTEDITDIALOG_HPP
+#define SHAREDGUICOMPONENTS_TEXTEDITDIALOG_HPP
 
-#include <shared_gui_components/OSDialog.hpp>
+#include "OSDialog.hpp"
 
 class QTextEdit;
 
@@ -56,4 +56,4 @@ private:
 
 } // openstudio
 
-#endif // OPENSTUDIO_TEXTEDITDIALOG_H
+#endif // SHAREDGUICOMPONENTS_TEXTEDITDIALOG_HPP

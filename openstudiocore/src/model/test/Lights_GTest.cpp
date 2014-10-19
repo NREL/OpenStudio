@@ -37,6 +37,7 @@
 #include "../../utilities/geometry/Point3d.hpp"
 
 #include <utilities/idd/OS_Lights_Definition_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;
 using namespace openstudio::model;

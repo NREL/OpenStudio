@@ -38,6 +38,7 @@
 #include "PortList_Impl.hpp"
 #include "Model.hpp"
 #include <utilities/idd/OS_Node_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {

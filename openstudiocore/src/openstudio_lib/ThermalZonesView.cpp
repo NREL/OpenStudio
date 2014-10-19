@@ -28,6 +28,8 @@
 #include <QTimer>
 #include <QVBoxLayout>
 
+#include <utilities/idd/IddEnums.hxx>
+
 namespace openstudio {
 
 ThermalZonesView::ThermalZonesView(bool isIP,

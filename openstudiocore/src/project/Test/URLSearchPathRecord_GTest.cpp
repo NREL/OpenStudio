@@ -27,6 +27,7 @@
 #include "../../utilities/idf/URLSearchPath.hpp"
 
 #include <resources.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;
 using namespace openstudio::project;

@@ -19,6 +19,7 @@
 
 #include "IddFileAndFactoryWrapper.hpp"
 #include <utilities/idd/IddFactory.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../core/Assert.hpp"
 #include "../core/Containers.hpp"

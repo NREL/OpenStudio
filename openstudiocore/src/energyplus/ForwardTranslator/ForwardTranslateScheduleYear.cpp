@@ -36,6 +36,7 @@
 #include "../../utilities/core/Assert.hpp"
 
 #include <utilities/idd/Schedule_Year_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 

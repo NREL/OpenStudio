@@ -31,6 +31,7 @@
 #include <utilities/idd/OS_DaylightingDevice_Shelf_FieldEnums.hxx>
 
 #include <utilities/idd/DaylightingDevice_Shelf_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/geometry/Point3d.hpp"
 #include "../../utilities/geometry/Transformation.hpp"

@@ -27,6 +27,7 @@
 #include "../../utilities/idf/WorkspaceWatcher.hpp"
 
 #include <utilities/idd/OS_Rendering_Color_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;
 using namespace openstudio::model;

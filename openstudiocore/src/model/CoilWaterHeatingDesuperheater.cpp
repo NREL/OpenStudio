@@ -38,6 +38,7 @@
 #include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/OS_Coil_WaterHeating_Desuperheater_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/units/Unit.hpp"
 

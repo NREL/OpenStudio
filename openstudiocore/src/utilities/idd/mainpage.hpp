@@ -10,7 +10,7 @@ namespace openstudio {
  * \details OpenStudio provides parsing of and programmatic access to Input Data Dictionary (IDD) files,
  * objects, and fields through the OpenStudio utilities library (in the openstudio namespace). IDD files 
  * of central importance to OpenStudio are wrapped into the \link IddFactorySingleton IddFactory \endlink, 
- * and used to generate IddFileType, IddObjectType, and field-level enumeration classes (see IddEnums.hxx 
+ * and used to generate IddFileType, IddObjectType, and field-level enumeration classes (see IddEnums.hpp 
  * and IddFieldEnums.hxx).
  *
  * \section quick_links_idd Quick Links

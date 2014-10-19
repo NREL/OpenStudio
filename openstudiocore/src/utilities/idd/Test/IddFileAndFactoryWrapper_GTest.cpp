@@ -20,6 +20,7 @@
 #include <gtest/gtest.h>
 #include "IddFixture.hpp"
 #include "../IddFileAndFactoryWrapper.hpp"
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;
 

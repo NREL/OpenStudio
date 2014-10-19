@@ -44,6 +44,7 @@
 #include "ShadingSurfaceGroup_Impl.hpp"
 
 #include <utilities/idd/OS_DefaultConstructionSet_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

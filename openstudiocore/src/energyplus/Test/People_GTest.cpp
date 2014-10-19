@@ -32,6 +32,7 @@
 #include "../../model/PeopleDefinition_Impl.hpp"
 
 #include <utilities/idd/People_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include <resources.hxx>
 

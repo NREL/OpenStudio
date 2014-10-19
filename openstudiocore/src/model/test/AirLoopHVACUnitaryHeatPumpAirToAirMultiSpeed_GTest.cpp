@@ -19,10 +19,10 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.hpp>
-#include <model/AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp>
+#include "../AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.hpp"
+#include "../AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

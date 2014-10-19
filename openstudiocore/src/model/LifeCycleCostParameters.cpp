@@ -23,7 +23,9 @@
 #include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_LifeCycleCost_Parameters_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
+
 #include "../utilities/time/Date.hpp"
 
 #include "../utilities/core/Assert.hpp"

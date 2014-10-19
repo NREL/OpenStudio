@@ -25,6 +25,7 @@
 #include "../IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/Lights_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 
 #include <resources.hxx>

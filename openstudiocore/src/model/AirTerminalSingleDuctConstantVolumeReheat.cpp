@@ -42,6 +42,7 @@
 #include "Model.hpp"
 
 #include <utilities/idd/OS_AirTerminal_SingleDuct_ConstantVolume_Reheat_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Compare.hpp"

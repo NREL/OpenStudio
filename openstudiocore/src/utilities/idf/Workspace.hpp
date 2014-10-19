@@ -36,9 +36,9 @@ namespace openstudio {
 
 // forward declarations
 class IddFile;
-class IddFileType;
+struct IddFileType;
 class IddObject;
-class IddObjectType;
+struct IddObjectType;
 class IdfFile;
 class IdfObject;
 class WorkspaceObject;

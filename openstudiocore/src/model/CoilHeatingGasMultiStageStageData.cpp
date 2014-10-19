@@ -20,6 +20,7 @@
 #include "CoilHeatingGasMultiStageStageData.hpp"
 #include "CoilHeatingGasMultiStageStageData_Impl.hpp"
 #include <utilities/idd/OS_Coil_Heating_Gas_MultiStage_StageData_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
 

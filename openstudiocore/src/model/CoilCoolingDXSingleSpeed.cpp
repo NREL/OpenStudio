@@ -45,6 +45,7 @@
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "Model.hpp"
 #include <utilities/idd/OS_Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/units/Quantity.hpp"

@@ -49,6 +49,8 @@
 #include "../utilities/idf/IdfFile.hpp"
 #include "../utilities/core/Assert.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 #include <boost/smart_ptr.hpp>
 
 #include <QBoxLayout>

@@ -21,6 +21,8 @@
 #include "AirGap_Impl.hpp"
 
 #include <utilities/idd/OS_Material_AirGap_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
+
 
 #include "../utilities/units/Unit.hpp"
 

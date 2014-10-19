@@ -26,6 +26,7 @@
 #include "Site_Impl.hpp"
 
 #include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/filetypes/EpwFile.hpp"
 #include "../utilities/core/Assert.hpp"

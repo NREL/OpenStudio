@@ -42,6 +42,7 @@
 #include <utilities/idd/Building_FieldEnums.hxx>
 #include <utilities/idd/Site_Location_FieldEnums.hxx>
 #include <utilities/idd/SimulationControl_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include <resources.hxx>
 

@@ -40,7 +40,7 @@
 
 #include "../../ruleset/OSArgument.hpp"
 
-#include <utilities/idd/IddEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 
 #include "../../utilities/data/Attribute.hpp"
 #include "../../utilities/data/Tag.hpp"

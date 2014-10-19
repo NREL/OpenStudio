@@ -23,7 +23,6 @@
 #include "../../model/CurveBicubic_Impl.hpp"
 
 #include <utilities/idd/Curve_Bicubic_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 

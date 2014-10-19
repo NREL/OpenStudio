@@ -25,6 +25,7 @@
 #include "../../utilities/core/Assert.hpp"
 
 #include <utilities/idd/Curve_Triquadratic_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 using namespace std;

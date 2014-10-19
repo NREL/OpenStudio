@@ -25,6 +25,7 @@
 
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/OS_ComponentData_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

@@ -31,6 +31,7 @@
 #include "../../utilities/data/TimeSeries.hpp"
 #include "../../utilities/core/Compare.hpp"
 #include <utilities/idd/OS_Meter_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include <QThreadPool>
 

@@ -10,7 +10,6 @@
   #include <utilities/idd/IddFile.hpp>
   #include <utilities/idd/IddFactory.hxx>
   #include <utilities/idd/IddFileAndFactoryWrapper.hpp>
-  #include <utilities/idd/IddEnums.hxx>
   #include <utilities/idd/ExtensibleIndex.hpp>
   #include <utilities/idd/IddObjectProperties.hpp>
   #include <utilities/idd/Comments.hpp>
@@ -60,7 +59,7 @@
 %ignore print(std::ostream&, bool) const;
 
 // include the headers into the swig interface directly
-%include <utilities/idd/IddEnums.hxx>
+%include <utilities/idd/IddEnums.hpp>
 
 #if defined(SWIGCSHARP) || defined(SWIGJAVA)
   %{

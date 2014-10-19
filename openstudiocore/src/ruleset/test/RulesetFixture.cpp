@@ -23,7 +23,7 @@
 #include "../../utilities/core/Path.hpp"
 #include "../utilities/core/ApplicationPathHelpers.hpp"
 
-#include <utilities/idd/IddEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 
 #include <boost/filesystem.hpp>
 

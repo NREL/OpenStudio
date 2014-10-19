@@ -28,6 +28,7 @@
 
 #include "../utilities/core/Assert.hpp"
 #include <utilities/idd/OS_Construction_InternalSource_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 namespace openstudio {
 namespace model {

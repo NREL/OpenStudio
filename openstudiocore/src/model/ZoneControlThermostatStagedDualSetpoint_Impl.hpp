@@ -20,8 +20,8 @@
 #ifndef MODEL_ZONECONTROLTHERMOSTATSTAGEDDUALSETPOINT_IMPL_HPP
 #define MODEL_ZONECONTROLTHERMOSTATSTAGEDDUALSETPOINT_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Thermostat_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "Thermostat_Impl.hpp"
 
 namespace openstudio {
 namespace model {

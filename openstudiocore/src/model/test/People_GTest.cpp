@@ -37,6 +37,8 @@
 #include "../../utilities/units/SIUnit.hpp"
 #include "../../utilities/units/BTUUnit.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 using namespace openstudio;
 using namespace openstudio::model;
 

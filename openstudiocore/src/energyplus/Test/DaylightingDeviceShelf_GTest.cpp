@@ -43,6 +43,7 @@
 
 #include "../../utilities/geometry/Point3d.hpp"
 #include <utilities/idd/DaylightingDevice_Shelf_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::energyplus;
 using namespace openstudio::model;

@@ -25,6 +25,7 @@
 #include "Model_Impl.hpp"
 #include "../utilities/core/Assert.hpp"
 #include <utilities/idd/OS_ConvergenceLimits_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 namespace openstudio {
 namespace model {

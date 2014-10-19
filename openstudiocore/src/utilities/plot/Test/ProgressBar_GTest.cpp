@@ -24,6 +24,7 @@
 #include "../../idf/Workspace.hpp"
 #include "../../idf/WorkspaceObject.hpp"
 #include "../../idf/IdfObject.hpp"
+#include "../../idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;

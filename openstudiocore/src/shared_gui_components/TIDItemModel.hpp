@@ -23,10 +23,9 @@
 #include <QAbstractItemModel>
 #include <QDomDocument>
 #include <map>
-#include <utilities/idd/IddEnums.hxx>
 
 namespace openstudio {
-
+struct IddObjectType;
 class TIDItem;
 
 class TIDItemModel : public QAbstractItemModel

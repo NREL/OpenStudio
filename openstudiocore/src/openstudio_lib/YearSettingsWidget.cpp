@@ -40,6 +40,8 @@
 #include <QDateEdit>
 #include <QTimer>
 
+#include <utilities/idd/IddEnums.hxx>
+
 namespace openstudio {
 
 const int YearSettingsWidget::FIRSTYEAR = 1900;

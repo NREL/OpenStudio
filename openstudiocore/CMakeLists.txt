@@ -6,6 +6,7 @@ cmake_policy(SET CMP0020 NEW)
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.0")
   cmake_policy(SET CMP0042 NEW)
 endif()
+
 ###############################################################################
 # Project version information
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number") # git sha
@@ -77,6 +78,11 @@ option(BUILD_R "Build R package" OFF)
 
 # Build Ruby gem
 option(BUILD_RUBY_GEM "Build Ruby Gem" OFF)
+
+
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  add_definitions(-Qunused-arguments)
+endif()
 
 # Enable runtime checking features
 if(CMAKE_COMPILER_IS_GNUCC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -822,6 +828,9 @@ if(BUILD_V8_BINDINGS)
   add_custom_target(ALL_V8_BINDINGS)
   add_dependencies(ALL_V8_BINDINGS ${ALL_V8_BINDING_TARGETS})
 endif()
+
+set(MAXIMIZE_CPU_USAGE OFF CACHE BOOL "Attempt to fully load the CPU during builds")
+mark_as_advanced(MAXIMIZE_CPU_USAGE)
 
 
 ###############################################################################

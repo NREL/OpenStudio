@@ -49,7 +49,9 @@
 #include "ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_SimulationControl_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/sql/SqlFile.hpp"
 #include "../utilities/core/Assert.hpp"

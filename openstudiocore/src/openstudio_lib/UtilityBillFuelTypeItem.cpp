@@ -28,6 +28,8 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 #include <iostream>
 
 namespace openstudio {

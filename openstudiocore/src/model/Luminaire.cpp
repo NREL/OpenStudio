@@ -33,6 +33,7 @@
 #include "LifeCycleCost.hpp"
 
 #include <utilities/idd/OS_Luminaire_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/geometry/Point3d.hpp"
 #include "../utilities/geometry/Vector3d.hpp"

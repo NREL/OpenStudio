@@ -59,7 +59,7 @@ class UTILITIES_API IdfFile {
 
   /** Default constructor with optional IddFileType argument (default is IddFileType::OpenStudio).
    *  Initializes the file by adding a version IdfObject. */
-  IdfFile(IddFileType iddFileType=IddFileType::OpenStudio);
+  IdfFile(IddFileType iddFileType = IddFileType("OpenStudio"));
 
   /** Construct from iddFile. Typically, iddFile is of IddFileType::UserCustom, that is, loaded
    *  from disk. Legacy OpenStudio IDD files back through Version 0.7.0 are available through the

@@ -7,8 +7,8 @@ project(${target_name})
 # OpenStudio
 
 set(OPENSTUDIO_BUILD_DIR "" CACHE PATH "Build or install directory for OpenStudio build to link against")
-set(OPENSTUDIOCORE_BUILD_DIR "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build")
-include("${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/OpenStudioCoreConfig.cmake")
+set(OPENSTUDIOCORE_BUILD_DIR "${OPENSTUDIO_BUILD_DIR}/OSCore-prefix/src/OSCore-build")
+include("${OPENSTUDIO_BUILD_DIR}/OSCore-prefix/src/OSCore-build/OpenStudioCoreConfig.cmake")
 include_directories(${OpenStudioCore_INCLUDE_DIRS})
 
 # copy dlls at configuration time
@@ -18,9 +18,9 @@ if(MSVC)
   file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/RelWithDebInfo")
   list(APPEND CMAKE_LIBRARY_PATH ${OPENSTUDIO_LIB_DIR})
 
-  file(GLOB DEBUG_DLLS "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug/*.dll")
-  file(GLOB RELEASE_DLLS "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Release/*.dll")
-  file(GLOB RELDBG_DLLS "${OPENSTUDIO_BUILD_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/RelWithDebInfo/*.dll")
+  file(GLOB DEBUG_DLLS "${OPENSTUDIO_BUILD_DIR}/OSCore-prefix/src/OSCore-build/Products/Debug/*.dll")
+  file(GLOB RELEASE_DLLS "${OPENSTUDIO_BUILD_DIR}/OSCore-prefix/src/OSCore-build/Products/Release/*.dll")
+  file(GLOB RELDBG_DLLS "${OPENSTUDIO_BUILD_DIR}/OSCore-prefix/src/OSCore-build/Products/RelWithDebInfo/*.dll")
 
   list(APPEND ALL_DLLS ${DEBUG_DLLS})
   list(APPEND ALL_DLLS ${RELEASE_DLLS})

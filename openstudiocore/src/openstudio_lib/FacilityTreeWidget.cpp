@@ -58,6 +58,8 @@
 #include <QHeaderView>
 #include <QComboBox>
 
+#include <utilities/idd/IddEnums.hxx>
+
 #include <iostream>
 
 namespace openstudio {

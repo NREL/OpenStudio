@@ -36,6 +36,8 @@
 #include "../../utilities/data/Attribute.hpp"
 #include "../../utilities/core/Containers.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 using namespace openstudio;
 using namespace openstudio::model;
 

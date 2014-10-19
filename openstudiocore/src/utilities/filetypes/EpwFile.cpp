@@ -19,6 +19,7 @@
 
 #include "EpwFile.hpp"
 #include "../idf/IdfObject.hpp"
+#include "../idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include "../core/Checksum.hpp"
 #include "../core/Assert.hpp"

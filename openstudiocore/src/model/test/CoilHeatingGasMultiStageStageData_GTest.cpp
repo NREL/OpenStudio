@@ -19,10 +19,10 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/CoilHeatingGasMultiStageStageData.hpp>
-#include <model/CoilHeatingGasMultiStageStageData_Impl.hpp>
+#include "../CoilHeatingGasMultiStageStageData.hpp"
+#include "../CoilHeatingGasMultiStageStageData_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

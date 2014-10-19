@@ -23,7 +23,7 @@
 #include "RulesetAPI.hpp"
 
 #include "../utilities/idf/Workspace.hpp"
-#include <utilities/idd/IddEnums.hxx>
+#include "../utilities/idd/IddEnums.hpp"
 #include "../utilities/core/Path.hpp"
 #include "../utilities/core/Enum.hpp"
 #include "../utilities/core/Logger.hpp"

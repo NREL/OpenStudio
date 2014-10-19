@@ -25,6 +25,7 @@
 #include "../WorkspaceExtensibleGroup.hpp"
 #include "../Workspace.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/Construction_FieldEnums.hxx>
 

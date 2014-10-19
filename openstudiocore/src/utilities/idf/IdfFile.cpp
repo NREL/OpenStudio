@@ -27,6 +27,7 @@
 #include <utilities/idd/IddFile_Impl.hpp> // needed for serialization
 #include "../idd/IddRegex.hpp"
 #include <utilities/idd/IddFactory.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../idd/CommentRegex.hpp"
 #include "../idd/Comments.hpp"
 

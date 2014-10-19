@@ -34,6 +34,7 @@
 
 #include "../../../utilities/idf/IdfFile.hpp"
 #include "../../../utilities/idf/IdfObject.hpp"
+#include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/RunPeriod_FieldEnums.hxx>
 
 #include "../../../energyplus/ReverseTranslator.hpp"

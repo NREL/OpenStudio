@@ -28,7 +28,7 @@
 
 namespace openstudio {
 
-class IddObjectType;
+struct IddObjectType;
 
 namespace detail {
 

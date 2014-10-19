@@ -38,6 +38,7 @@
 #include "../model/ModelExtensibleGroup.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../utilities/idf/ValidityReport.hpp"
 #include "../utilities/core/PathHelpers.hpp"

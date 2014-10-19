@@ -27,6 +27,7 @@
 
 #include <utilities/idd/LifeCycleCost_Parameters_FieldEnums.hxx>
 #include <utilities/idd/LifeCycleCost_UsePriceEscalation_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../../utilities/core/Assert.hpp"

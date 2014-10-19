@@ -27,6 +27,7 @@
 #include <utilities/idd/AirLoopHVAC_OutdoorAirSystem_FieldEnums.hxx>
 #include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
 #include <utilities/idd/EvaporativeCooler_Direct_ResearchSpecial_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

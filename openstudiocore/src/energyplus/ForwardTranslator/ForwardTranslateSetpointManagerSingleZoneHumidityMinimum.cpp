@@ -24,6 +24,7 @@
 #include "../../model/Node_Impl.hpp"
 #include "../../model/PortList.hpp"
 #include <utilities/idd/SetpointManager_SingleZone_Humidity_Minimum_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

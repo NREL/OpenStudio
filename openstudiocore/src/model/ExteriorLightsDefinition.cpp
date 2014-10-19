@@ -21,6 +21,7 @@
 #include "ExteriorLightsDefinition_Impl.hpp"
 
 #include <utilities/idd/OS_Exterior_Lights_Definition_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 

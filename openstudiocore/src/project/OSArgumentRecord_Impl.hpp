@@ -25,7 +25,7 @@
 
 #include "../ruleset/OSArgument.hpp"
 
-#include <utilities/idd/IddEnums.hxx>
+#include "../utilities/idd/IddEnums.hpp"
 
 namespace openstudio {
 namespace project {

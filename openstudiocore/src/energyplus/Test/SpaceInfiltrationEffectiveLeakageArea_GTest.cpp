@@ -34,6 +34,7 @@
 #include <utilities/idd/ZoneInfiltration_EffectiveLeakageArea_FieldEnums.hxx>
 #include <utilities/idd/Zone_FieldEnums.hxx>
 #include <utilities/idd/ZoneList_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::energyplus;
 using namespace openstudio::model;

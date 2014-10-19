@@ -24,6 +24,7 @@
 #include "../IdfExtensibleGroup.hpp"
 #include "../IdfRegex.hpp"
 #include <utilities/idd/IddFactory.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../../idd/IddRegex.hpp"
 #include "../../idd/Comments.hpp"
 #include "../../core/Optional.hpp"

@@ -86,7 +86,6 @@
 #include <utilities/idd/Sizing_Plant_FieldEnums.hxx>
 #include <utilities/idd/AirTerminal_SingleDuct_ConstantVolume_CooledBeam_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_AirDistributionUnit_FieldEnums.hxx>
-
 #include "../../utilities/core/Assert.hpp"
 
 using namespace openstudio::model;

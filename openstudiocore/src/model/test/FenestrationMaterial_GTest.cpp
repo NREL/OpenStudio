@@ -54,6 +54,7 @@
 #include <utilities/idd/OS_WindowMaterial_Shade_FieldEnums.hxx>
 #include <utilities/idd/OS_WindowMaterial_SimpleGlazingSystem_FieldEnums.hxx>
 #include <utilities/idd/OS_WindowMaterial_Glazing_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;
 using namespace openstudio::model;

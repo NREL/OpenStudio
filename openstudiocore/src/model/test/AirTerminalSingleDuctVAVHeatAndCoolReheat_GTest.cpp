@@ -18,17 +18,17 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/AirTerminalSingleDuctVAVHeatAndCoolReheat.hpp>
-#include <model/AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/CoilHeatingGas.hpp>
-#include <model/CoilHeatingGas_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../AirTerminalSingleDuctVAVHeatAndCoolReheat.hpp"
+#include "../AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl.hpp"
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
+#include "../CoilHeatingGas.hpp"
+#include "../CoilHeatingGas_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

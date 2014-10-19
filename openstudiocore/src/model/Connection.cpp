@@ -27,6 +27,7 @@
 #include "../utilities/core/UUID.hpp"
 
 #include <utilities/idd/OS_Connection_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 namespace openstudio {
 namespace model {

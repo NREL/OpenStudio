@@ -23,7 +23,6 @@
 #include "../../model/Gas_Impl.hpp"
 
 #include <utilities/idd/WindowMaterial_Gas_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 

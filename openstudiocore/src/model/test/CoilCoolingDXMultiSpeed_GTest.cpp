@@ -18,15 +18,15 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/CoilCoolingDXMultiSpeed.hpp>
-#include <model/CoilCoolingDXMultiSpeed_Impl.hpp>
-#include <model/CoilCoolingDXMultiSpeedStageData.hpp>
-#include <model/CoilCoolingDXMultiSpeedStageData_Impl.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveBiquadratic_Impl.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/CurveQuadratic_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../CoilCoolingDXMultiSpeed.hpp"
+#include "../CoilCoolingDXMultiSpeed_Impl.hpp"
+#include "../CoilCoolingDXMultiSpeedStageData.hpp"
+#include "../CoilCoolingDXMultiSpeedStageData_Impl.hpp"
+#include "../CurveBiquadratic.hpp"
+#include "../CurveBiquadratic_Impl.hpp"
+#include "../CurveQuadratic.hpp"
+#include "../CurveQuadratic_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

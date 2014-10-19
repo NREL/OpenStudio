@@ -21,6 +21,7 @@
 #include "CoolingTowerPerformanceCoolTools_Impl.hpp"
 
 #include <utilities/idd/OS_CoolingTowerPerformance_CoolTools_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/units/Unit.hpp"
 
