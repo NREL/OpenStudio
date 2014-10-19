@@ -120,6 +120,8 @@ private slots:
 
   void doRowSelect();
 
+  void selectRowDeterminedByModelSubTabView();
+
 private:
 
   enum QueueType
@@ -158,6 +160,10 @@ private:
   std::vector<QueueType> m_queueRequests;
 
   QTimer m_timer;
+
+  int m_rowToAdd = -1;
+
+  int m_rowToRemove = -1;
 };
 
 } // openstudio

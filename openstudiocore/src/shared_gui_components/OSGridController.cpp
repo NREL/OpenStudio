@@ -596,7 +596,6 @@ QWidget * OSGridController::widgetAt(int row, int column)
         addWidget(makeWidget(mo, dataSource->source().dropZoneConcept()));
       }
 
-
       // right here you probably want some kind of container that's smart enough to know how to grow
       // and shrink as the contained items change. But I don't know enough about the model
       // to know how you'd want to do that. For now we make a fixed list that's got a VBoxLayout
@@ -861,26 +860,39 @@ bool OSGridController::getRowIndexByItem(OSItem * item, int & rowIndex)
     }
   }
 
-  // No success, let's try the parent (BTW, doesn't work, but concept is valid)
-  // (This is an attempt to handle SpaceTypesGridView making renderingColor objects
-  //  which trigger a model::onChange signal whose OSItem cannot be digested,
-  //  because we are working with SpaceType. One could use a filter to check the OSItem's
-  //  modelObject type and verify it equals that held by the OSGridController)
-  //  //if (!success) {
-  //  rowIndex = -1;
-  //  for (auto modelObject : m_modelObjects){
-  //    rowIndex++;
-  //    if (auto parent = modelObject.parent())
-  //    {
-  //      OSItemId itemId = modelObjectToItemId(*parent, false);
-  //      if (item->itemId() == itemId){
-  //        success = true;
-  //        break;
-  //      }
-  //    }
-  //  }
-  //
-  //}
+  if (!success) {
+    // At this point, none of the itemIds exactly matched,
+    // let's try to match a subset.
+    rowIndex = -1;
+
+    QString handle(""), handle2("");
+    QStringList strings = item->itemId().otherData().split(",");
+    if (strings.size() > 2){
+      QString temp = strings[2];
+      QStringList strings = temp.split(";");
+      if (strings.size() > 0){
+        handle = strings[0];
+      }
+    }
+
+    for (auto modelObject : m_modelObjects){
+      rowIndex++;
+      OSItemId itemId = modelObjectToItemId(modelObject, false);
+      QStringList strings = itemId.otherData().split(",");
+      if (strings.size() > 2){
+        QString temp = strings[2];
+        QStringList strings = temp.split(";");
+        if (strings.size() > 0){
+          handle2 = strings[0];
+        }
+      }
+
+      if (handle == handle2){
+        success = true;
+        break;
+      }
+    }
+  }
 
   if (success) {
     // We found the model index and must convert it to the row index
@@ -908,8 +920,6 @@ OSItem * OSGridController::getSelectedItemFromModelSubTabView()
 
 void OSGridController::connectToModel()
 {
-  //connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(), &openstudio::model::detail::Model_Impl::onChange, this, &openstudio::OSGridController::requestRefreshGrid);
-
   connect(m_model.getImpl<model::detail::Model_Impl>().get(),
     static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
     this,
@@ -928,7 +938,7 @@ void OSGridController::disconnectFromModel()
 
 void OSGridController::onSelectionCleared()
 {
-  gridView()->requestRefreshAll();
+  //gridView()->requestRefreshAll(); TODO still needed???
 }
 
 void OSGridController::onDropZoneItemClicked(OSItem* item)
@@ -937,7 +947,7 @@ void OSGridController::onDropZoneItemClicked(OSItem* item)
 
 void OSGridController::onRemoveWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
-  if (m_iddObjectType == iddObjectType) {
+  //if (m_iddObjectType == iddObjectType) { TODO uncomment
     // Update model list
     std::vector<model::ModelObject>::iterator it;
     it = std::find(m_modelObjects.begin(), m_modelObjects.end(), object.cast<model::ModelObject>());
@@ -949,19 +959,19 @@ void OSGridController::onRemoveWorkspaceObject(const WorkspaceObject& object, co
       // Update row
       gridView()->requestRemoveRow(rowIndexFromModelIndex(index));
     }
-  }
+  //}
 }
 
 void OSGridController::onAddWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
-  if (m_iddObjectType == iddObjectType) {
+  //if (m_iddObjectType == iddObjectType) { TODO uncomment, currently used to update views with extensible dropzones, which need to issue their own signal to refresh
     // Update model list
-    //m_modelObjects.push_back(object.cast<model::ModelObject>()); TODO delete / replace
+    // m_modelObjects.push_back(object.cast<model::ModelObject>());
     refreshModelObjects();
 
     // Update row
     gridView()->requestAddRow(rowCount()-1);
-  }
+  //}
 }
 
 HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)

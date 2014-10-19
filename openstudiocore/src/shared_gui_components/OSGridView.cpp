@@ -78,7 +78,6 @@ OSGridView::OSGridView(OSGridController * gridController,
     m_CollapsibleView(nullptr),
     m_gridController(gridController)
 {
-
   auto buttonGroup = new QButtonGroup();
   connect(buttonGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &OSGridView::selectCategory);
 
@@ -137,14 +136,12 @@ OSGridView::OSGridView(OSGridController * gridController,
     layout->addWidget(widget);
   }
 
-
   m_contentLayout = new QVBoxLayout();
   m_contentLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
   m_contentLayout->setSpacing(0);
   m_contentLayout->setContentsMargins(0,10,0,0);
   widget->setLayout(m_contentLayout);
   m_contentLayout->addLayout(buttonLayout);
-
 
   setGridController(m_gridController);
 
@@ -189,6 +186,7 @@ void OSGridView::setGridController(OSGridController * gridController)
 
 void OSGridView::refreshCell(int row, int column)
 {
+  // removeWidget may not be safe this contexts
   OS_ASSERT(false); // TODO
 
   removeWidget(row,column);
@@ -198,11 +196,12 @@ void OSGridView::refreshCell(int row, int column)
 
 void OSGridView::requestAddRow(int row)
 {
-
   std::cout << "REQUEST ADDROW CALLED " << std::endl;
   setEnabled(false);
 
   m_timer.start();
+
+  m_rowToAdd = row;
 
   m_queueRequests.emplace_back(AddRow);
 }
@@ -213,6 +212,8 @@ void OSGridView::requestRemoveRow(int row)
   setEnabled(false);
 
   m_timer.start();
+
+  m_rowToRemove = row;
 
   m_queueRequests.emplace_back(RemoveRow);
 }
@@ -225,6 +226,8 @@ void OSGridView::addRow(int row)
   {
     addWidget(row, j);
   }
+
+  selectRowDeterminedByModelSubTabView();
 }
 
 void OSGridView::removeRow(int row)
@@ -235,6 +238,8 @@ void OSGridView::removeRow(int row)
   {
     removeWidget(row, j);
   }
+
+  selectRowDeterminedByModelSubTabView();
 }
 
 void OSGridView::refreshRow(int row)
@@ -353,7 +358,6 @@ void OSGridView::requestRefreshRow(int t_row)
 
   m_timer.start();
 
-  // TODO to do increase resolution here
   m_queueRequests.emplace_back(RefreshRow);
 }
 
@@ -382,23 +386,24 @@ void OSGridView::doRefresh()
 
   m_queueRequests.clear();
 
-  if (has_refresh_all) {
-    refreshAll();
-  }
-  else if (has_refresh_grid) {
-    refreshGrid(); // This now causes a crash
-  }
-  else if (has_add_row) {
-    addRow(1);
-  }
-  else if (has_remove_row) {
-    removeRow(1);
-  }
-  else {
-    // Should never get here
-    OS_ASSERT(false);
-  }
+  //if (has_refresh_all) {
+  //  refreshAll();
+  //}
+  //else if (has_refresh_grid) {
+  //  refreshGrid(); // This now causes a crash
+  //}
+  //else if (has_add_row) {
+  //  addRow(m_rowToAdd);
+  //}
+  //else if (has_remove_row) {
+  //  removeRow(m_rowToRemove);
+  //}
+  //else {
+  //  // Should never get here
+  //  OS_ASSERT(false);
+  //}
 
+  refreshAll(); // TODO remove this and uncomment the block above for finer granularity refreshes
   setEnabled(true);
 }
 
@@ -420,36 +425,34 @@ void OSGridView::refreshAll()
       }
     }
 
-    // TODO the code immediately below no longer appears to be needed
-    // NOTE This was added to make dissimilar widget types in a given column to
-    // fill and justify correctly.  It appeared to be the most simple solution.
-    //auto widget = new QWidget();
-    //widget->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
-    //addWidget(widget, 0, m_gridController->columnCount());
-
-    // Get selected item
-    auto selectedItem = m_gridController->getSelectedItemFromModelSubTabView();
-    if (!selectedItem) return;
-
-    // Get new index
-    int newIndex;
-    if (m_gridController->getRowIndexByItem(selectedItem, newIndex)) {
-      // Update the old index
-      m_gridController->m_oldIndex = newIndex;
-    }
-
     normalizeColumnWidths();
 
-    // If the index is valid, call slot
-    if (m_gridController->m_oldIndex > -1){
-      QTimer::singleShot(0, this, SLOT(doRowSelect()));
-    }
+    QTimer::singleShot(0, this, SLOT(selectRowDeterminedByModelSubTabView()));
+
+  }
+}
+
+void OSGridView::selectRowDeterminedByModelSubTabView()
+{
+  // Get selected item
+  auto selectedItem = m_gridController->getSelectedItemFromModelSubTabView();
+  if (!selectedItem) return;
+
+  // Get new index
+  int newIndex;
+  if (m_gridController->getRowIndexByItem(selectedItem, newIndex)) {
+    // Update the old index
+    m_gridController->m_oldIndex = newIndex;
+  }
+
+  // If the index is valid, call slot
+  if (m_gridController->m_oldIndex > -1){
+    QTimer::singleShot(0, this, SLOT(doRowSelect()));
   }
 }
 
 void OSGridView::normalizeColumnWidths()
 {
-
   std::vector<int> colmins(m_gridController->columnCount(), 0);
 
   for( int i = 0; i < m_gridController->rowCount(); i++ )
