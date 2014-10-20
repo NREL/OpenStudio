@@ -488,21 +488,9 @@ void OSGridView::addWidget(int row, int column)
 {
   OS_ASSERT(m_gridController);
 
-  auto layoutnum = row / ROWS_PER_LAYOUT;
-
-  unsigned count, count2;
-
-  if (!m_gridLayouts.empty()) {
-    count = m_gridLayouts.at(layoutnum)->count();
-  }
-
   QWidget * widget = m_gridController->widgetAt(row,column);
 
   addWidget(widget, row, column);
-
-  if (!m_gridLayouts.empty()) {
-    count2 = m_gridLayouts.at(layoutnum)->count();
-  }
 }
 
 void OSGridView::addWidget(QWidget *w, int row, int column)
