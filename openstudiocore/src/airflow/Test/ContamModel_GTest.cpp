@@ -53,7 +53,7 @@ TEST_F(AirflowFixture, ContamModel_Species) {
   EXPECT_EQ(0, model.contaminants().size());
   // Make some species
   openstudio::contam::Species CO2(44.01, 2.0e-5, 6.0795e-4, 0.0, "CO2", "Carbon Dioxide");
-  openstudio::contam::Species SF6(146.06, 2.0e-5, 0.0, 0.0, "SF6", "Sulfur Hexafluoride");
+  openstudio::contam::Species SF6("146.06", "2.0e-5", "0.0", "0.0", "SF6", "Sulfur Hexafluoride");
   // Add them
   model.addSpecies(CO2);
   model.addSpecies(SF6);
@@ -83,4 +83,50 @@ TEST_F(AirflowFixture, ContamModel_Species) {
   ASSERT_FALSE(model.removeSpecies(SF6));
 }
 
+// Verify level creation and addition
+TEST_F(AirflowFixture, ContamModel_Levels) {
+  openstudio::contam::IndexModel model;
+  EXPECT_EQ(0, model.levels().size());
+  openstudio::contam::Level level0(3.0, "Level_0");
+  openstudio::contam::Level level1(3.5, "Level_1");
+  openstudio::contam::Level level2(3.0, "Level_2");
 
+  model.addLevel(level0);
+  model.addLevel(level1);
+  model.addLevel(level2);
+
+  ASSERT_EQ(3, model.levels().size());
+  EXPECT_EQ(0.0, model.levels()[0].refht());
+  EXPECT_EQ(level0, model.levels()[0]);
+  EXPECT_EQ(3.0, model.levels()[1].refht());
+  EXPECT_EQ(level1, model.levels()[1]);
+  EXPECT_EQ(6.5, model.levels()[2].refht());
+  EXPECT_EQ(level2, model.levels()[2]);
+}
+
+// Verify zone creation and addition
+TEST_F(AirflowFixture, ContamModel_Zones) {
+  openstudio::contam::IndexModel model;
+  EXPECT_EQ(0, model.zones().size());
+
+  openstudio::contam::Zone zone0((unsigned)openstudio::contam::ZoneFlags::VAR_P | (unsigned)openstudio::contam::ZoneFlags::VAR_C,
+    "300","298.15","Zone_0");
+  openstudio::contam::Zone zone1((unsigned)openstudio::contam::ZoneFlags::VAR_P, 400, 293.15, "Zone_1");
+  openstudio::contam::Zone zone2((unsigned)openstudio::contam::ZoneFlags::SYS_N, 100, 293.15, "Zone_2");
+
+  EXPECT_TRUE(zone0.variableContaminants());
+  EXPECT_TRUE(zone0.variablePressure());
+
+  EXPECT_FALSE(zone1.variableContaminants());
+  EXPECT_TRUE(zone1.variablePressure());
+  EXPECT_TRUE(zone2.system());
+
+  model.addZone(zone0);
+  model.addZone(zone1);
+  model.addZone(zone2);
+
+  ASSERT_EQ(3, model.zones().size());
+  EXPECT_EQ(zone0, model.zones()[0]);
+  EXPECT_EQ(zone1, model.zones()[1]);
+  EXPECT_EQ(zone2, model.zones()[2]);
+}

@@ -141,35 +141,43 @@
 #define EXP_2     253  /* FD 375 exponent 2 */
 #define SUB_2     254  /* FE 376 subscript 2 */
 
-enum PathFlags {
-    WIND=0x0001, // Path is subject to wind pressure
-    WPC_P=0x0002, // Path uses WPC file pressure
-    WPC_C=0x0004, // Path uses WPC file contaminants
-    WPC_F=0x0006, // Path uses WPC pressure or contaminants
-    AHS_S=0x0008, // Path is a system (supply or return) flow path
-    AHS_R=0x0010, // Path is a recirculation flow path
-    AHS_O=0x0020, // Path is an outside air flow path
-    AHS_X=0x0040, // Path is an exhaust flow path
-    AHS_P=0x0078, // Path is any AHS path
-    LIM_P=0x0080, // Path is pressure limited
-    LIM_F=0x0100, // Path is flow limited
-    FAN_F=0x0200}; // Path is a constant flow fan element
+namespace openstudio {
+namespace contam {
 
-enum ZoneFlags {
-    // Zone flag bit 1; variable pressure
-    VAR_P=0x0001,NVAR_P=0xFFFE,
-    // Zone flag bit 2; variable contaminants
-    VAR_C=0x0002,NVAR_C=0xFFFD,
-    // Zone flag bit 3; variable temperature
-    VAR_T=0x0004,NVAR_T=0xFFFB,
-    // Zone flag bit 4; system zone: to avoid zone volume check
-    SYS_N=0x0008,NSYS_N=0xFFF7,
-    // Zone flag bit 5; un|conditioned space: to compute air change rate
-    UNCZN =0x0010 , // flags | UNCZN to indicate unconditioned zone
-    SETCZN=0xFFEF, // flags & SETCZN to indicate conditioned zone
-    // Zone flag bit 6; CFD zone
-    CFDZN =0x0020, // flags | CFDZN to set CFD zone / flags & CFDZN to test for CFD zone
-    NCFDZN=0xFFDF,   // flags & NCFDZN to unset CFD zone
-    FLAG_N=0x003F};   // all zone flag bits, used in PrjRead()
+enum class PathFlags : unsigned {
+  WIND = 0x0001, // Path is subject to wind pressure
+  WPC_P = 0x0002, // Path uses WPC file pressure
+  WPC_C = 0x0004, // Path uses WPC file contaminants
+  WPC_F = 0x0006, // Path uses WPC pressure or contaminants
+  AHS_S = 0x0008, // Path is a system (supply or return) flow path
+  AHS_R = 0x0010, // Path is a recirculation flow path
+  AHS_O = 0x0020, // Path is an outside air flow path
+  AHS_X = 0x0040, // Path is an exhaust flow path
+  AHS_P = 0x0078, // Path is any AHS path
+  LIM_P = 0x0080, // Path is pressure limited
+  LIM_F = 0x0100, // Path is flow limited
+  FAN_F = 0x0200
+}; // Path is a constant flow fan element
+
+enum class ZoneFlags : unsigned {
+  // Zone flag bit 1; variable pressure
+  VAR_P = 0x0001, NVAR_P = 0xFFFE,
+  // Zone flag bit 2; variable contaminants
+  VAR_C = 0x0002, NVAR_C = 0xFFFD,
+  // Zone flag bit 3; variable temperature
+  VAR_T = 0x0004, NVAR_T = 0xFFFB,
+  // Zone flag bit 4; system zone: to avoid zone volume check
+  SYS_N = 0x0008, NSYS_N = 0xFFF7,
+  // Zone flag bit 5; un|conditioned space: to compute air change rate
+  UNCZN = 0x0010, // flags | UNCZN to indicate unconditioned zone
+  SETCZN = 0xFFEF, // flags & SETCZN to indicate conditioned zone
+  // Zone flag bit 6; CFD zone
+  CFDZN = 0x0020, // flags | CFDZN to set CFD zone / flags & CFDZN to test for CFD zone
+  NCFDZN = 0xFFDF,   // flags & NCFDZN to unset CFD zone
+  FLAG_N = 0x003F
+};   // all zone flag bits, used in PrjRead()
+
+}
+}
 
 #endif // CONTAM_PRJDEFINES_HPP
