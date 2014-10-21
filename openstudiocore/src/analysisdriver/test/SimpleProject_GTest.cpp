@@ -490,6 +490,8 @@ TEST_F(AnalysisDriverFixture, SimpleProject_ZipFileForCloud) {
     openstudio::analysis::AnalysisSerializationOptions options(remoteAnalysisPath);
     analysis.saveJSON(remoteDir / toPath("formulation_final.json"), options, true);
 
+    // DLM: now compare formulation_final.json with formulation.json, make sure there are no traces of 
+    // loadResult.projectDir in formulation_final.json
   }
 
   // make sure temp files have been removed

@@ -257,7 +257,7 @@ TEST_F(CoreFixture, Path_WindowsPathOnUnix)
   EXPECT_FALSE(file.has_parent_path());
   EXPECT_EQ("", openstudio::toString(file.parent_path())); 
   EXPECT_TRUE(file.has_stem());
-  EXPECT_EQ("E:\\test\\CloudTest\\scripts\\StandardReports\\measure.rb", openstudio::toString(file.stem())); 
+  EXPECT_EQ("E:\\test\\CloudTest\\scripts\\StandardReports\\measure", openstudio::toString(file.stem())); 
   EXPECT_FALSE(file.is_absolute());
   EXPECT_TRUE(file.is_relative());
 #endif
