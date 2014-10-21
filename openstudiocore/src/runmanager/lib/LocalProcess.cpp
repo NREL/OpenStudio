@@ -47,7 +47,7 @@ namespace openstudio {
 namespace runmanager {
 namespace detail {
   MyQProcess::MyQProcess()
-    : m_exitedCount(0)
+    : m_exitedCount(0), m_postExitCheckCount(0)
   {
   }
 
@@ -73,7 +73,17 @@ namespace detail {
           emit zombied(error());
         }
       }
+    } else if (m_exitedCount > 0 && m_postExitCheckCount != -1) {
+      LOG(Trace, "Process finished, but checkProcessStatus() still running " << qpid << " " << atEnd() << " " << state());
+      ++m_postExitCheckCount;
+      if (m_postExitCheckCount > 2)
+      {
+        LOG(Info, "Not zombied and not running, tried to manually clean up pid with no luck. Treating as if Zombied");
+        m_postExitCheckCount = -1;
+        emit zombied(error());
+      }
     }
+     
 
 #endif
   }
@@ -364,7 +374,6 @@ namespace detail {
 
     std::for_each(diff.begin(), diff.end(), std::bind(&LocalProcess::emitUpdatedFileInfo, this, std::placeholders::_1));
 
-    // DLM: Try commenting out the following line at some point if the logging doesn't tell us anything new
     m_process.checkProcessStatus();
   }
 
