@@ -692,6 +692,7 @@ namespace openstudio{
 
       QJsonObject obj;
       obj["analysis_action"] = QJsonValue(QString("start"));
+      obj["run_data_point_filename"] = QJsonValue(QString("pat_workflow"));
       
       QByteArray json = QJsonDocument(obj).toJson(QJsonDocument::Compact);
 
