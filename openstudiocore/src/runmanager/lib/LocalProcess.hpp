@@ -38,6 +38,9 @@ namespace openstudio {
 namespace runmanager {
 namespace detail {
 
+  // We are subclassing QProcess to deal with the case where a parent or embedded context, such as
+  // node.js, intercepts child signals before they are handled by QProcessManager.
+  // http://stackoverflow.com/questions/7113506/qprocess-becomes-defunct-and-unable-to-start-again/7122340#7122340
   class MyQProcess : public QProcess
   {
     Q_OBJECT;

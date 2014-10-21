@@ -26,6 +26,12 @@
 
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
+#include "../model/RunPeriod.hpp"
+#include "../model/RunPeriod_Impl.hpp"
+#include "../model/WeatherFile.hpp"
+#include "../model/WeatherFile_Impl.hpp"
+#include "../model/YearDescription.hpp"
+#include "../model/YearDescription_Impl.hpp"
 
 #include <QLabel>
 #include <QStackedWidget>
@@ -43,7 +49,7 @@ LocationTabController::LocationTabController(const model::Model & model,
   mainContentWidget()->addSubTab("Life Cycle Costs",lifeCycleCostsView,LIFE_CYCLE_COSTS);
 
   QLabel * label;
-    
+
   label = new QLabel();
   label->setPixmap(QPixmap(":/images/utility_calibration_warning.png"));
   label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -56,10 +62,23 @@ LocationTabController::LocationTabController(const model::Model & model,
 
   mainContentWidget()->addSubTab("Utility Bills",m_utilityBillsStackedWidget,UTILITY_BILLS);
 
-  m_utilityBillsStackedWidget->setCurrentIndex(m_warningWidgetIndex);
-
-  connect(static_cast<UtilityBillsInspectorView *>(m_utilityBillsController->subTabView()->inspectorView()), &UtilityBillsInspectorView::showSubTabView,
-          this, &LocationTabController::showSubTabView);
+  // Determine if the utility bill sub-tab is shown
+  boost::optional<model::YearDescription> yearDescription = model.yearDescription();
+  if (yearDescription){
+    boost::optional<int> calendarYear = yearDescription.get().calendarYear();
+    if (calendarYear){
+      boost::optional<model::WeatherFile> weatherFile = model.weatherFile();
+      if (weatherFile){
+        boost::optional<model::RunPeriod> runPeriod = model.getOptionalUniqueModelObject<model::RunPeriod>();
+        if (runPeriod.is_initialized()){
+          m_utilityBillsStackedWidget->setCurrentIndex(m_visibleWidgetIndex);
+        }
+        else {
+          m_utilityBillsStackedWidget->setCurrentIndex(m_warningWidgetIndex);
+        }
+      }
+    }
+  }
 
   // Hack code to remove when tab active
   label = new QLabel();
