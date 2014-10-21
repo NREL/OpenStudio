@@ -247,6 +247,8 @@ if(MSVC AND MSVC_IS_EXPRESS)
 endif()
 
 
+# Smart find qt location, looking for 64bit when appropriate
+# and prefering opengl installations
 if(MSVC)
   if(CMAKE_CL_64)
     set(COMPILER_ARCH_TAG "_64")
@@ -260,11 +262,42 @@ if(MSVC)
     set(COMPILER_VER_TAG "2014")
   endif()
 
-  set(QT_HINT_DIR "c:/Qt/5.3/msvc${COMPILER_VER_TAG}${COMPILER_ARCH_TAG}" "c:/Qt/5.4/msvc${COMPILER_VER_TAG}${COMPILER_ARCH_TAG}")
+  file(GLOB_RECURSE QMAKE_LOCATIONS "c:/Qt/qmake.exe")
+
+  message("Qt Locations: ${QMAKE_LOCATIONS}")
+
+  if(QMAKE_LOCATIONS MATCHES ".*msvc${COMPILER_VER_TAG}${COMPILER_ARCH_TAG}_opengl.*")
+    set(HAS_OPENGL_INSTALL TRUE)
+    set(OPENGL_TAG "_opengl")
+  else()
+    set(HAS_OPENGL_INSTALL FALSE)
+    set(OPENGL_TAG "")
+  endif()
+
+  set(QT_HINT_DIR "")
+  foreach(LOC ${QMAKE_LOCATIONS})
+    if(LOC MATCHES ".*msvc${COMPILER_VER_TAG}${COMPILER_ARCH_TAG}${OPENGL_TAG}/")
+      get_filename_component(PDIR "${LOC}" DIRECTORY)
+      get_filename_component(GPDIR "${PDIR}" DIRECTORY)
+      if(HAS_OPENGL_INSTALL)
+        if(GPDIR MATCHES ".*opengl.*")
+	  list(APPEND QT_HINT_DIR "${GPDIR}")
+	endif()
+      else()
+	list(APPEND QT_HINT_DIR "${GPDIR}")
+      endif()
+    endif()
+  endforeach()
+
+  # we want sort, this will do both a lexigraphical sort of the version numbers, putting the newest last and picking the 
+  # longest (aka opengl) last. Then we sort it in reverse to prefer the highest version numbers with opengl
+  list(SORT QT_HINT_DIR)
+  list(REVERSE QT_HINT_DIR)
 else()
   set(QT_HINT_DIR "")
 endif()
 
+message("Qt Hint Dirs: ${QT_HINT_DIR}")
 
 
 find_package(Qt5Widgets HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Widgets
