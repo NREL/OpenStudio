@@ -246,15 +246,36 @@ if(MSVC AND MSVC_IS_EXPRESS)
   endif()
 endif()
 
-find_package(Qt5Widgets) #Qt5Core, Qt5Gui, Qt5Widgets
-find_package(Qt5Sql) #Qt5Core, Qt5Sql
-find_package(Qt5Network) #Qt5Core, Qt5Network
-find_package(Qt5Xml) #Qt5Core, Qt5Xml
-find_package(Qt5WebKit) #Qt5Core, Qt5Gui, Qt5Network, Qt5WebKit
-find_package(Qt5WebKitWidgets) #Qt5Core, Qt5Gui, Qt5Network, Qt5WebKit, Qt5WebKitWidgets, Qt5Widgets
-#find_package(Qt5WinExtras) #Qt5Core, Qt5Gui, Qt5WinExtras
-find_package(Qt5Concurrent) #Qt5Core, Qt5Concurrent
-find_package(Qt5PrintSupport) #Qt5Core, Qt5Gui, Qt5PrintSupport, Qt5Widgets
+
+if(MSVC)
+  if(CMAKE_CL_64)
+    set(COMPILER_ARCH_TAG "_64")
+  else()
+    set(COMPILER_ARCH_TAG "")
+  endif()
+
+  if (MSVC_VERSION STREQUAL "1800")
+    set(COMPILER_VER_TAG "2013")
+  else()
+    set(COMPILER_VER_TAG "2014")
+  endif()
+
+  set(QT_HINT_DIR "c:/Qt/5.3/msvc${COMPILER_VER_TAG}${COMPILER_ARCH_TAG}" "c:/Qt/5.4/msvc${COMPILER_VER_TAG}${COMPILER_ARCH_TAG}")
+else()
+  set(QT_HINT_DIR "")
+endif()
+
+
+
+find_package(Qt5Widgets HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Widgets
+find_package(Qt5Sql HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Sql
+find_package(Qt5Network HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Network
+find_package(Qt5Xml HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Xml
+find_package(Qt5WebKit HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Network, Qt5WebKit
+find_package(Qt5WebKitWidgets HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Network, Qt5WebKit, Qt5WebKitWidgets, Qt5Widgets
+#find_package(Qt5WinExtras HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5WinExtras
+find_package(Qt5Concurrent HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Concurrent
+find_package(Qt5PrintSupport HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5PrintSupport, Qt5Widgets
 mark_as_advanced(
   Qt5Concurrent_DIR
   Qt5Core_DIR
