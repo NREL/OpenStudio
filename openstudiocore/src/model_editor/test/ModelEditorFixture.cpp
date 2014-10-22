@@ -23,7 +23,7 @@
 #include "../../utilities/core/Path.hpp"
 
 void ModelEditorFixture::SetUp() {
-  openstudio::Application::instance().application(false);
+  openstudio::Application::instance().application(true);
 }
 
 void ModelEditorFixture::TearDown() {}
