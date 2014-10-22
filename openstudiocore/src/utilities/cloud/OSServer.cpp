@@ -1505,7 +1505,17 @@ namespace openstudio{
         QJsonDocument json = QJsonDocument::fromJson(m_networkReply->readAll(), &err);
 
         if (!err.error) {
-          m_lastDataPointJSON = QString(m_networkReply->readAll()).toStdString();
+          // DLM: the PAT style datapoint json is underneath results: {pat_data_point:{
+          if (json.object().contains("results")){
+            QJsonValue results = json.object().value("results");
+            if (results.isObject() && results.toObject().contains("pat_data_point")){
+              QJsonValue pat_data_point = results.toObject().value("pat_data_point");
+              QByteArray pat_json_byte_array = QJsonDocument(pat_data_point.toObject()).toJson(QJsonDocument::Compact);
+              QString pat_json(pat_json_byte_array);
+              m_lastDataPointJSON = pat_json.toStdString();
+              success = true;
+            }
+          }
         }
       }else{
         logNetworkError(m_networkReply->error());
@@ -1531,7 +1541,7 @@ namespace openstudio{
           m_lastDownloadDataPointSuccess = true;
           success = true;
           file.close();
-        }
+        } 
         
       }else{
         logNetworkError(m_networkReply->error());
@@ -1644,6 +1654,12 @@ namespace openstudio{
         case QNetworkReply::TemporaryNetworkFailureError:
           ss << "TemporaryNetworkFailureError";
           break;
+        case QNetworkReply::NetworkSessionFailedError:
+          ss << "NetworkSessionFailedError";
+          break;
+        case QNetworkReply::BackgroundRequestNotAllowedError:
+          ss << "BackgroundRequestNotAllowedError";
+          break;
         case QNetworkReply::ProxyConnectionRefusedError:
           ss << "ProxyConnectionRefusedError";
           break;
@@ -1674,6 +1690,21 @@ namespace openstudio{
         case QNetworkReply::ContentReSendError:
           ss << "ContentReSendError";
           break;
+        case QNetworkReply::ContentConflictError:
+          ss << "ContentConflictError";
+          break;
+        case QNetworkReply::ContentGoneError:
+          ss << "ContentGoneError";
+          break;
+        case QNetworkReply::InternalServerError:
+          ss << "InternalServerError";
+          break;    
+        case QNetworkReply::OperationNotImplementedError:
+          ss << "OperationNotImplementedError";
+          break;
+        case QNetworkReply::ServiceUnavailableError:
+          ss << "ServiceUnavailableError";
+          break;
         case QNetworkReply::ProtocolUnknownError:
           ss << "ProtocolUnknownError";
           break;
@@ -1691,6 +1722,9 @@ namespace openstudio{
           break;
         case QNetworkReply::ProtocolFailure:
           ss << "ProtocolFailure";
+          break;
+        case QNetworkReply::UnknownServerError:
+          ss << "UnknownServerError";
           break;
         default:
           ss << "Unknown";
