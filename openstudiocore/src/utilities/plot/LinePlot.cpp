@@ -218,7 +218,7 @@ LinePlot::LinePlot(QWidget* parent /*= 0*/, Qt::WindowFlags flags /*= 0*/) : Plo
 
 LinePlot::Ptr LinePlot::create(QWidget* parent, Qt::WindowFlags flags)
 {
-  Application::instance().application();
+  Application::instance().application(true);
   return LinePlot::Ptr(new LinePlot(parent, flags));
 }
 

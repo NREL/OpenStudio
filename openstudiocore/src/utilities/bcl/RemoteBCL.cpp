@@ -72,7 +72,7 @@ namespace openstudio{
     m_apiVersion("2.0")
   {
     // make sure application is initialized
-    openstudio::Application::instance().application(true);
+    openstudio::Application::instance().application(false);
 
     m_prodAuthKey = LocalBCL::instance().prodAuthKey();
     m_devAuthKey = LocalBCL::instance().devAuthKey();

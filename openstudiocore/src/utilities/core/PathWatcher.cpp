@@ -36,7 +36,7 @@ namespace openstudio {
     m_checksum(openstudio::checksum(p)), m_path(p), m_msec(msec)
   {
     // make sure a QApplication exists
-    openstudio::Application::instance().application();
+    openstudio::Application::instance().application(false);
     openstudio::Application::instance().processEvents();
 
     if (m_isDirectory){

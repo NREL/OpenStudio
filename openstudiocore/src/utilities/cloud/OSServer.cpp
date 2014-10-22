@@ -64,7 +64,7 @@ namespace openstudio{
         m_warnings()
     {
       //Make sure a QApplication exists
-      openstudio::Application::instance().application();
+      openstudio::Application::instance().application(false);
 
       if (m_url.scheme().isEmpty()){
         QString urlString = m_url.toString();

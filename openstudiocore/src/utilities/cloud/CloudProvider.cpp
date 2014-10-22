@@ -135,7 +135,7 @@ namespace openstudio{
       : QObject()
     {
       //Make sure a QApplication exists
-      openstudio::Application::instance().application();
+      openstudio::Application::instance().application(false);
     }
 
     CloudProvider_Impl::~CloudProvider_Impl()

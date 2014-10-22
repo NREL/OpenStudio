@@ -23,7 +23,7 @@
 #include "../../utilities/core/Path.hpp"
 
 void OpenStudioLibFixture::SetUp() {
-  openstudio::Application::instance().application();
+  openstudio::Application::instance().application(false);
 }
 
 void OpenStudioLibFixture::TearDown() {}

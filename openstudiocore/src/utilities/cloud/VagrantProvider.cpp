@@ -399,7 +399,7 @@ namespace openstudio{
         m_lastTerminateCompleted(false)
     {
       //Make sure a QApplication exists
-      openstudio::Application::instance().application();
+      openstudio::Application::instance().application(false);
     }
 
     VagrantProvider_Impl::~VagrantProvider_Impl()

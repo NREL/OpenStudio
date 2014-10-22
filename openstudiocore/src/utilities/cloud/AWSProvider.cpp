@@ -510,7 +510,7 @@ namespace openstudio{
         m_lastTotalInstances(0)
     {
       //Make sure a QApplication exists
-      openstudio::Application::instance().application();
+      openstudio::Application::instance().application(false);
 
       m_ruby = getOpenStudioAWSRubyPath();
       
