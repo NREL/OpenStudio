@@ -249,6 +249,7 @@ void OSQuantityEdit2::onEditingFinished() {
         }else{
           units = m_siUnits;
         }
+        m_unitsStr = units;
 
         boost::optional<double> modelValue = convert(value, units, m_modelUnits);
         OS_ASSERT(modelValue);
@@ -293,7 +294,16 @@ void OSQuantityEdit2::refreshTextAndLabel() {
 
   QString text = m_lineEdit->text();
 
-  if (m_text == text) return;
+  std::string units;
+  if (m_isIP){
+    units = m_ipUnits;
+  }else{
+    units = m_siUnits;
+  }
+
+  if (m_text == text && m_unitsStr == units) return;
+
+  m_unitsStr = units;
 
   if (m_modelObject) {
     QString textValue;
@@ -309,12 +319,7 @@ void OSQuantityEdit2::refreshTextAndLabel() {
       m_units->setStyleSheet("color:grey");
     }
 
-    std::string units;
-    if (m_isIP){
-      units = m_ipUnits;
-    }else{
-      units = m_siUnits;
-    }
+
 
     boost::optional<double> value;
 
