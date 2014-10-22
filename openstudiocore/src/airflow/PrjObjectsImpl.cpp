@@ -640,40 +640,40 @@ void ZoneImpl::setU_L(const int u_L)
 void ZoneImpl::setVariablePressure(bool b)
 {
   if(b)
-    m_flags |= (unsigned)ZoneFlags::VAR_P;
+    m_flags |= ZoneFlags::VAR_P;
   else
-    m_flags &= (unsigned)ZoneFlags::NVAR_P;
+    m_flags &= ZoneFlags::NVAR_P;
 }
 
 bool ZoneImpl::variablePressure() const
 {
-  return m_flags & (unsigned)ZoneFlags::VAR_P;
+  return m_flags & ZoneFlags::VAR_P;
 }
 
 void ZoneImpl::setVariableContaminants(bool b)
 {
   if(b)
-    m_flags |= (unsigned)ZoneFlags::VAR_C;
+    m_flags |= ZoneFlags::VAR_C;
   else
-    m_flags &= (unsigned)ZoneFlags::NVAR_C;
+    m_flags &= ZoneFlags::NVAR_C;
 }
 
 bool ZoneImpl::variableContaminants() const
 {
-  return m_flags & (unsigned)ZoneFlags::VAR_C;
+  return m_flags & ZoneFlags::VAR_C;
 }
 
 void ZoneImpl::setSystem(bool b)
 {
   if(b)
-    m_flags |= (unsigned)ZoneFlags::SYS_N;
+    m_flags |= ZoneFlags::SYS_N;
   else
-    m_flags &= (unsigned)ZoneFlags::NSYS_N;
+    m_flags &= ZoneFlags::NSYS_N;
 }
 
 bool ZoneImpl::system() const
 {
-  return m_flags & (unsigned)ZoneFlags::SYS_N;
+  return m_flags & ZoneFlags::SYS_N;
 }
 
 double ZoneImpl::ic(const int i) const
@@ -1858,67 +1858,67 @@ void AirflowPathImpl::setCfd_capp(const int cfd_capp)
 void AirflowPathImpl::setWindPressure(bool b)
 {
   if(b)
-    m_flags |= (unsigned)PathFlags::WIND;
+    m_flags |= PathFlags::WIND;
   else
     m_flags &= 0xFFFE;
 }
 
 bool AirflowPathImpl::windPressure()
 {
-  return m_flags & (unsigned)PathFlags::WIND;
+  return m_flags & PathFlags::WIND;
 }
 
 void AirflowPathImpl::setSystem(bool b)
 {
   if(b)
-    m_flags |= (unsigned)PathFlags::AHS_S;
+    m_flags |= PathFlags::AHS_S;
   else
     m_flags &= 0xFFF7;
 }
 
 bool AirflowPathImpl::system()
 {
-  return m_flags & (unsigned)PathFlags::AHS_S;
+  return m_flags & PathFlags::AHS_S;
 }
 
 void AirflowPathImpl::setExhaust(bool b)
 {
   if(b)
-    m_flags |= (unsigned)PathFlags::AHS_X;
+    m_flags |= PathFlags::AHS_X;
   else
     m_flags &= 0xFFBF;
 }
 
 bool AirflowPathImpl::exhaust()
 {
-  return m_flags & (unsigned)PathFlags::AHS_X;
+  return m_flags & PathFlags::AHS_X;
 }
 
 
 void AirflowPathImpl::setRecirculation(bool b)
 {
   if(b)
-    m_flags |= (unsigned)PathFlags::AHS_R;
+    m_flags |= PathFlags::AHS_R;
   else
     m_flags &= 0xFFEF;
 }
 
 bool AirflowPathImpl::recirculation()
 {
-  return m_flags & (unsigned)PathFlags::AHS_R;
+  return m_flags & PathFlags::AHS_R;
 }
 
 void AirflowPathImpl::setOutsideAir(bool b)
 {
   if(b)
-    m_flags |= (unsigned)PathFlags::AHS_O;
+    m_flags |= PathFlags::AHS_O;
   else
     m_flags &= 0xFFDF;
 }
 
 bool AirflowPathImpl::outsideAir()
 {
-  return m_flags & (unsigned)PathFlags::AHS_O;
+  return m_flags & PathFlags::AHS_O;
 }
 
 void RunControlImpl::setDefaults()

@@ -109,10 +109,10 @@ TEST_F(AirflowFixture, ContamModel_Zones) {
   openstudio::contam::IndexModel model;
   EXPECT_EQ(0, model.zones().size());
 
-  openstudio::contam::Zone zone0((unsigned)openstudio::contam::ZoneFlags::VAR_P | (unsigned)openstudio::contam::ZoneFlags::VAR_C,
+  openstudio::contam::Zone zone0(openstudio::contam::ZoneFlags::VAR_P | openstudio::contam::ZoneFlags::VAR_C,
     "300","298.15","Zone_0");
-  openstudio::contam::Zone zone1((unsigned)openstudio::contam::ZoneFlags::VAR_P, 400, 293.15, "Zone_1");
-  openstudio::contam::Zone zone2((unsigned)openstudio::contam::ZoneFlags::SYS_N, 100, 293.15, "Zone_2");
+  openstudio::contam::Zone zone1(openstudio::contam::ZoneFlags::VAR_P, 400, 293.15, "Zone_1");
+  openstudio::contam::Zone zone2(openstudio::contam::ZoneFlags::SYS_N, 100, 293.15, "Zone_2");
 
   EXPECT_TRUE(zone0.variableContaminants());
   EXPECT_TRUE(zone0.variablePressure());

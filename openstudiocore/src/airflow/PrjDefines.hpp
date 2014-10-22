@@ -144,7 +144,7 @@
 namespace openstudio {
 namespace contam {
 
-enum class PathFlags : unsigned {
+enum PathFlags {
   WIND = 0x0001, // Path is subject to wind pressure
   WPC_P = 0x0002, // Path uses WPC file pressure
   WPC_C = 0x0004, // Path uses WPC file contaminants
@@ -159,7 +159,7 @@ enum class PathFlags : unsigned {
   FAN_F = 0x0200
 }; // Path is a constant flow fan element
 
-enum class ZoneFlags : unsigned {
+enum ZoneFlags {
   // Zone flag bit 1; variable pressure
   VAR_P = 0x0001, NVAR_P = 0xFFFE,
   // Zone flag bit 2; variable contaminants
