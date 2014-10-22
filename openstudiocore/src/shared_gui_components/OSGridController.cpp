@@ -331,15 +331,6 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
                        nameLineEditConcept->readOnly() ? boost::none : boost::optional<StringSetter>(std::bind(&NameLineEditConcept::set,nameLineEditConcept.data(),t_mo,std::placeholders::_1)),
                        boost::optional<NoFailAction>(std::bind(&NameLineEditConcept::reset, nameLineEditConcept.data(), t_mo)));
 
-    isConnected = connect(nameLineEdit, SIGNAL(itemClicked(OSItem*)), gridView(), SIGNAL(dropZoneItemClicked(OSItem*)));
-    OS_ASSERT(isConnected);
-
-    isConnected = connect(nameLineEdit, SIGNAL(itemClicked(OSItem*)), this, SLOT(onDropZoneItemClicked(OSItem*)));
-    OS_ASSERT(isConnected);
-
-    isConnected = connect(nameLineEdit, SIGNAL(objectRemoved(boost::optional<model::ParentObject>)), this, SLOT(onObjectRemoved(boost::optional<model::ParentObject>)));
-    OS_ASSERT(isConnected);
-
     widget = nameLineEdit;
 
   } else if(QSharedPointer<QuantityEditConcept<double> > quantityEditConcept = t_baseConcept.dynamicCast<QuantityEditConcept<double> >()) {
