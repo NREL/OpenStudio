@@ -295,6 +295,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
                    boost::optional<NoFailAction>(std::bind(&ValueEditConcept<std::string>::reset,lineEditConcept.data(),t_mo)),
                    boost::optional<BasicQuery>(std::bind(&ValueEditConcept<std::string>::isDefaulted,lineEditConcept.data(),t_mo)));
 
+    isConnected = connect(lineEdit, SIGNAL(objectRemoved(boost::optional<model::ParentObject>)), this, SLOT(onObjectRemoved(boost::optional<model::ParentObject>)));
+    OS_ASSERT(isConnected);
+
     widget = lineEdit;
 
   } else if(QSharedPointer<LoadNameConcept> loadNameConcept = t_baseConcept.dynamicCast<LoadNameConcept>()) {
@@ -313,6 +316,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
     isConnected = connect(loadName, SIGNAL(itemClicked(OSItem*)), this, SLOT(onDropZoneItemClicked(OSItem*)));
     OS_ASSERT(isConnected);
 
+    isConnected = connect(loadName, SIGNAL(objectRemoved(boost::optional<model::ParentObject>)), this, SLOT(onObjectRemoved(boost::optional<model::ParentObject>)));
+    OS_ASSERT(isConnected);
+
     widget = loadName;
 
   } else if(QSharedPointer<NameLineEditConcept> nameLineEditConcept = t_baseConcept.dynamicCast<NameLineEditConcept>()) {
@@ -329,6 +335,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
     OS_ASSERT(isConnected);
 
     isConnected = connect(nameLineEdit, SIGNAL(itemClicked(OSItem*)), this, SLOT(onDropZoneItemClicked(OSItem*)));
+    OS_ASSERT(isConnected);
+
+    isConnected = connect(nameLineEdit, SIGNAL(objectRemoved(boost::optional<model::ParentObject>)), this, SLOT(onObjectRemoved(boost::optional<model::ParentObject>)));
     OS_ASSERT(isConnected);
 
     widget = nameLineEdit;
@@ -439,6 +448,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
     OS_ASSERT(isConnected);
 
     isConnected = connect(dropZone, SIGNAL(itemClicked(OSItem*)), this, SLOT(onDropZoneItemClicked(OSItem*)));
+    OS_ASSERT(isConnected);
+
+    isConnected = connect(dropZone, SIGNAL(objectRemoved(boost::optional<model::ParentObject>)), this, SLOT(onObjectRemoved(boost::optional<model::ParentObject>)));
     OS_ASSERT(isConnected);
 
     widget = dropZone;
@@ -972,6 +984,18 @@ void OSGridController::onAddWorkspaceObject(const WorkspaceObject& object, const
     // Update row
     gridView()->requestAddRow(rowCount()-1);
   //}
+}
+
+void OSGridController::onObjectRemoved(boost::optional<model::ParentObject> parent)
+{
+  if (parent) {
+    // We have a parent we can search for in our current list of modelObjects and just delete that 1 row
+    this->requestRefreshGrid(); // TODO replace this with a by-row refresh only
+  }
+  else {
+    // We don't know which row needs to be redrawn, so we have to do the whole grid
+    this->requestRefreshGrid();
+  }
 }
 
 HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)

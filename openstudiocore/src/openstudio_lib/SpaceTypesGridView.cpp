@@ -546,9 +546,9 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           if (boost::optional<model::People> p = l->optionalCast<model::People>())
           {
             p->resetActivityLevelSchedule();
+          } else {
+            //OS_ASSERT(false); TODO
           }
-
-          OS_ASSERT(false);
         }
       );
 
@@ -663,7 +663,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
             la->resetSchedule();
           }
 
-          OS_ASSERT(false);
+          //OS_ASSERT(false); TODO
         }
       );
 

@@ -715,6 +715,12 @@ void OSDropZone2::onItemRemoveClicked()
 {
   if (m_reset)
   {
+    boost::optional<model::ModelObject> modelObject = (*m_get)();
+    boost::optional<model::ParentObject> parent = boost::none;
+    if (modelObject) {
+     parent = modelObject->parent();  
+    }
+    emit objectRemoved(parent);
     (*m_reset)();
   }
 }

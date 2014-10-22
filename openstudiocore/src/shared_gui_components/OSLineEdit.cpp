@@ -229,6 +229,11 @@ void OSLineEdit2::onItemRemoveClicked()
 {
   if (m_reset)
   {
+    boost::optional<model::ParentObject> parent = boost::none;
+    if (m_modelObject) {
+      parent = m_modelObject->parent();
+    }
+    emit objectRemoved(parent);
     (*m_reset)();
   }
 }

@@ -67,6 +67,8 @@ signals:
 
   void itemClicked(OSItem* item);
 
+  void objectRemoved(boost::optional<model::ParentObject> parent);
+
 protected:
 
   void paintEvent ( QPaintEvent * event );

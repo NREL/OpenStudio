@@ -71,6 +71,8 @@ signals:
 
   void itemClicked(OSItem* item);
 
+  void objectRemoved(boost::optional<model::ParentObject> parent);
+
  private slots:
 
   void onEditingFinished();

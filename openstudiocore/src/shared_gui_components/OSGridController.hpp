@@ -584,6 +584,9 @@ private slots:
   void onRemoveWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
 
   void onAddWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
+
+  void onObjectRemoved(boost::optional<model::ParentObject> parent);
+
 };
 
 class HorizontalHeaderWidget : public QWidget
