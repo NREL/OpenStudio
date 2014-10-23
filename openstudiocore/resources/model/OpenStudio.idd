@@ -5323,7 +5323,6 @@ OS:SpaceInfiltration:EffectiveLeakageArea,
        \units m2
        \ip-units in2
        \note "AL" in Equation
-       \note units are cm2 (square centimeters)
        \minimum> 0
        \type real
        \required-field
