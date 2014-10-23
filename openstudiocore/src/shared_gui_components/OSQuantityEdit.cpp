@@ -241,7 +241,7 @@ void OSQuantityEdit2::onEditingFinished() {
     else {
       try {
         double value = boost::lexical_cast<double>(str);
-        setPrecision(str); 
+        setPrecision(str);
 
         std::string units;
         if (m_isIP){
@@ -268,7 +268,7 @@ void OSQuantityEdit2::onEditingFinished() {
           (*m_setVoidReturn)(*modelValue);
         }
       }
-      catch (...) 
+      catch (...)
       {
         // restore
         refreshTextAndLabel();
@@ -319,8 +319,6 @@ void OSQuantityEdit2::refreshTextAndLabel() {
       m_units->setStyleSheet("color:grey");
     }
 
-
-
     boost::optional<double> value;
 
     if (m_get){
@@ -362,8 +360,9 @@ void OSQuantityEdit2::refreshTextAndLabel() {
       m_units->setStyleSheet("color:grey");
     }
 
-    if (!textValue.isEmpty() && m_text != textValue){
+    if ( (!textValue.isEmpty() && m_text != textValue) || m_unitsStr != units){
       m_text = textValue;
+      m_unitsStr = units;
       m_lineEdit->blockSignals(true);
       m_lineEdit->setText(textValue);
       m_lineEdit->blockSignals(false);
@@ -476,9 +475,9 @@ void OSQuantityEdit::bind(model::ModelObject& modelObject,
   if (m_isAutocalculatedProperty) {
     OS_ASSERT(std::find(anb,ane,*m_isAutocalculatedProperty) != ane);
   }
-  
+
   setEnabled(true);
-  
+
   connect(m_lineEdit, &QLineEdit::editingFinished, this, &OSQuantityEdit::onEditingFinished);
 
   connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSQuantityEdit::onModelObjectChange);
