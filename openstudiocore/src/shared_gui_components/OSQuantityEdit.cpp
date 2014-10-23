@@ -303,8 +303,6 @@ void OSQuantityEdit2::refreshTextAndLabel() {
 
   if (m_text == text && m_unitsStr == units) return;
 
-  m_unitsStr = units;
-
   if (m_modelObject) {
     QString textValue;
     std::stringstream ss;
