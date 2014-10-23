@@ -96,7 +96,7 @@ if(WIN32 OR APPLE)
     set(QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/sqldrivers/${QSQLITE_PLUGIN_NAME};\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/platforms/${QPA_PLUGIN_NAME}")
 
     foreach(QTPLUGIN ${QTPLUGINS})
-      set(Prereq_Dirs)
+      set(Prereq_Dirs "${QT_LIBRARY_DIR}")
 
       install(CODE "
         include(GetPrerequisites)

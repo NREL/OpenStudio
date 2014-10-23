@@ -665,6 +665,14 @@ list(APPEND QT_LIBS ${Qt5WebKitWidgets_LIBRARIES})
 list(APPEND QT_LIBS ${Qt5Concurrent_LIBRARIES})
 list(APPEND QT_LIBS ${Qt5PrintSupport_LIBRARIES})
 
+### recreating QT_LIBRARY_DIR for qt5
+if(WIN32 AND TARGET Qt5::Core)
+  get_property(_Qt5_Core_LOCATION TARGET Qt5::Core PROPERTY LOCATION)
+  get_filename_component(QT_LIBRARY_DIR "${_Qt5_Core_LOCATION}" PATH)
+else()
+  set(QT_LIBRARY_DIR "")
+endif()
+
 
 ###############################################################################
 # qtwinmigrate
