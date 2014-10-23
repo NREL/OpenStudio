@@ -1629,105 +1629,105 @@ namespace openstudio{
     {
       std::stringstream ss; 
       ss << "Network error '";
-      switch(error){
-        case QNetworkReply::NoError:
-          ss << "NoError";
-          break;
-        case QNetworkReply::ConnectionRefusedError:
-          ss << "ConnectionRefusedError";
-          break;
-        case QNetworkReply::RemoteHostClosedError:
-          ss << "RemoteHostClosedError";
-          break;
-        case QNetworkReply::HostNotFoundError:
-          ss << "HostNotFoundError";
-          break;
-        case QNetworkReply::TimeoutError:
-          ss << "TimeoutError";
-          break;
-        case QNetworkReply::OperationCanceledError:
-          ss << "OperationCanceledError";
-          break;
-        case QNetworkReply::SslHandshakeFailedError:
-          ss << "SslHandshakeFailedError";
-          break;
-        case QNetworkReply::TemporaryNetworkFailureError:
-          ss << "TemporaryNetworkFailureError";
-          break;
-        case QNetworkReply::NetworkSessionFailedError:
-          ss << "NetworkSessionFailedError";
-          break;
-        case QNetworkReply::BackgroundRequestNotAllowedError:
-          ss << "BackgroundRequestNotAllowedError";
-          break;
-        case QNetworkReply::ProxyConnectionRefusedError:
-          ss << "ProxyConnectionRefusedError";
-          break;
-        case QNetworkReply::ProxyConnectionClosedError:
-          ss << "ProxyConnectionClosedError";
-          break;
-        case QNetworkReply::ProxyNotFoundError:
-          ss << "ProxyNotFoundError";
-          break;
-        case QNetworkReply::ProxyTimeoutError:
-          ss << "ProxyTimeoutError";
-          break;
-        case QNetworkReply::ProxyAuthenticationRequiredError:
-          ss << "ProxyAuthenticationRequiredError";
-          break;
-        case QNetworkReply::ContentAccessDenied:
-          ss << "ContentAccessDenied";
-          break;
-        case QNetworkReply::ContentOperationNotPermittedError:
-          ss << "ContentOperationNotPermittedError";
-          break;
-        case QNetworkReply::ContentNotFoundError:
-          ss << "ContentNotFoundError";
-          break;
-        case QNetworkReply::AuthenticationRequiredError:
-          ss << "AuthenticationRequiredError";
-          break;
-        case QNetworkReply::ContentReSendError:
-          ss << "ContentReSendError";
-          break;
-        case QNetworkReply::ContentConflictError:
-          ss << "ContentConflictError";
-          break;
+      switch (error) {
+      case QNetworkReply::NoError:
+        ss << "NoError";
+        break;
+      case QNetworkReply::ConnectionRefusedError:
+        ss << "ConnectionRefusedError";
+        break;
+      case QNetworkReply::RemoteHostClosedError:
+        ss << "RemoteHostClosedError";
+        break;
+      case QNetworkReply::HostNotFoundError:
+        ss << "HostNotFoundError";
+        break;
+      case QNetworkReply::TimeoutError:
+        ss << "TimeoutError";
+        break;
+      case QNetworkReply::OperationCanceledError:
+        ss << "OperationCanceledError";
+        break;
+      case QNetworkReply::SslHandshakeFailedError:
+        ss << "SslHandshakeFailedError";
+        break;
+      case QNetworkReply::TemporaryNetworkFailureError:
+        ss << "TemporaryNetworkFailureError";
+        break;
+      case QNetworkReply::NetworkSessionFailedError:
+        ss << "NetworkSessionFailedError";
+        break;
+      case QNetworkReply::BackgroundRequestNotAllowedError:
+        ss << "BackgroundRequestNotAllowedError";
+        break;
+      case QNetworkReply::ProxyConnectionRefusedError:
+        ss << "ProxyConnectionRefusedError";
+        break;
+      case QNetworkReply::ProxyConnectionClosedError:
+        ss << "ProxyConnectionClosedError";
+        break;
+      case QNetworkReply::ProxyNotFoundError:
+        ss << "ProxyNotFoundError";
+        break;
+      case QNetworkReply::ProxyTimeoutError:
+        ss << "ProxyTimeoutError";
+        break;
+      case QNetworkReply::ProxyAuthenticationRequiredError:
+        ss << "ProxyAuthenticationRequiredError";
+        break;
+      case QNetworkReply::ContentAccessDenied:
+        ss << "ContentAccessDenied";
+        break;
+      case QNetworkReply::ContentOperationNotPermittedError:
+        ss << "ContentOperationNotPermittedError";
+        break;
+      case QNetworkReply::ContentNotFoundError:
+        ss << "ContentNotFoundError";
+        break;
+      case QNetworkReply::AuthenticationRequiredError:
+        ss << "AuthenticationRequiredError";
+        break;
+      case QNetworkReply::ContentReSendError:
+        ss << "ContentReSendError";
+        break;
+        /*case QNetworkReply::ContentConflictError:
+        ss << "ContentConflictError";
+        break;
         case QNetworkReply::ContentGoneError:
-          ss << "ContentGoneError";
-          break;
+        ss << "ContentGoneError";
+        break;
         case QNetworkReply::InternalServerError:
-          ss << "InternalServerError";
-          break;    
+        ss << "InternalServerError";
+        break;
         case QNetworkReply::OperationNotImplementedError:
-          ss << "OperationNotImplementedError";
-          break;
+        ss << "OperationNotImplementedError";
+        break;
         case QNetworkReply::ServiceUnavailableError:
-          ss << "ServiceUnavailableError";
-          break;
-        case QNetworkReply::ProtocolUnknownError:
-          ss << "ProtocolUnknownError";
-          break;
-        case QNetworkReply::ProtocolInvalidOperationError:
-          ss << "ProtocolInvalidOperationError";
-          break;
-        case QNetworkReply::UnknownNetworkError:
-          ss << "UnknownNetworkError";
-          break;
-        case QNetworkReply::UnknownProxyError:
-          ss << "UnknownProxyError";
-          break;
-        case QNetworkReply::UnknownContentError:
-          ss << "UnknownContentError";
-          break;
-        case QNetworkReply::ProtocolFailure:
-          ss << "ProtocolFailure";
-          break;
-        case QNetworkReply::UnknownServerError:
-          ss << "UnknownServerError";
-          break;
-        default:
-          ss << "Unknown";
+        ss << "ServiceUnavailableError";
+        break;*/
+      case QNetworkReply::ProtocolUnknownError:
+        ss << "ProtocolUnknownError";
+        break;
+      case QNetworkReply::ProtocolInvalidOperationError:
+        ss << "ProtocolInvalidOperationError";
+        break;
+      case QNetworkReply::UnknownNetworkError:
+        ss << "UnknownNetworkError";
+        break;
+      case QNetworkReply::UnknownProxyError:
+        ss << "UnknownProxyError";
+        break;
+      case QNetworkReply::UnknownContentError:
+        ss << "UnknownContentError";
+        break;
+      case QNetworkReply::ProtocolFailure:
+        ss << "ProtocolFailure";
+        break;
+        /*case QNetworkReply::UnknownServerError:
+        ss << "UnknownServerError";
+        break;*/
+      default:
+        ss << "Unknown";
       }
       ss<< "' occurred";
 
