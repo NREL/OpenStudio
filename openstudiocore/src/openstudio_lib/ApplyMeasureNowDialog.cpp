@@ -184,7 +184,7 @@ void ApplyMeasureNowDialog::createWidgets()
 
   m_jobPath = new QLabel();
   m_jobPath->setTextInteractionFlags(Qt::TextSelectableByMouse);
-  #if _NDEBUG
+  #if !(_DEBUG || (__GNUC__ && !NDEBUG))
     m_jobPath->hide();
   #endif
 

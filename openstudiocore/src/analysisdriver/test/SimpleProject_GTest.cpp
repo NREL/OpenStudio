@@ -253,8 +253,9 @@ TEST_F(AnalysisDriverFixture,SimpleProject_UpdateMeasure) {
   Problem problem = project.analysis().problem();
 
   // insert a measure into the project, extract and register its arguments
-  openstudio::path measuresDir = resourcesPath() / toPath("/utilities/BCL/Measures");
+  openstudio::path measuresDir = resourcesPath() / toPath("/utilities/BCL/Measures/v2");
   openstudio::path dir = measuresDir / toPath("SetWindowToWallRatioByFacade");
+  ASSERT_TRUE(BCLMeasure::load(dir));
   BCLMeasure measure = BCLMeasure::load(dir).get();
   BCLMeasure projectMeasure = project.insertMeasure(measure);
   OSArgumentVector args = argumentGetter->getArguments(projectMeasure,
@@ -326,8 +327,9 @@ TEST_F(AnalysisDriverFixture,SimpleProject_NonPATToPATProject) {
   {
     // create project with one discrete variable
     SimpleProject project = getCleanSimpleProject("SimpleProject_NonPATToPATProject");
-    openstudio::path measuresDir = resourcesPath() / toPath("/utilities/BCL/Measures");
+    openstudio::path measuresDir = resourcesPath() / toPath("/utilities/BCL/Measures/v2");
     openstudio::path dir = measuresDir / toPath("SetWindowToWallRatioByFacade");
+    ASSERT_TRUE(BCLMeasure::load(dir));
     BCLMeasure measure = BCLMeasure::load(dir).get();
     RubyMeasure rmeasure(measure);
     project.analysis().problem().push(MeasureGroup("My Variable",MeasureVector(1u,rmeasure)));
