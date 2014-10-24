@@ -5320,10 +5320,9 @@ OS:SpaceInfiltration:EffectiveLeakageArea,
        \type object-list
        \object-list ScheduleNames
   N1 , \field Effective Air Leakage Area
-       \units cm2
-     \ip-units in2
+       \units m2
+       \ip-units in2
        \note "AL" in Equation
-       \note units are cm2 (square centimeters)
        \minimum> 0
        \type real
        \required-field
