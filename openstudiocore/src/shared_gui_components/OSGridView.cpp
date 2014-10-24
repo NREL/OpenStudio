@@ -78,7 +78,6 @@ OSGridView::OSGridView(OSGridController * gridController,
     m_CollapsibleView(nullptr),
     m_gridController(gridController)
 {
-
   auto buttonGroup = new QButtonGroup();
   connect(buttonGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &OSGridView::selectCategory);
 
@@ -137,14 +136,12 @@ OSGridView::OSGridView(OSGridController * gridController,
     layout->addWidget(widget);
   }
 
-
   m_contentLayout = new QVBoxLayout();
   m_contentLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
   m_contentLayout->setSpacing(0);
   m_contentLayout->setContentsMargins(0,10,0,0);
   widget->setLayout(m_contentLayout);
   m_contentLayout->addLayout(buttonLayout);
-
 
   setGridController(m_gridController);
 
@@ -180,7 +177,6 @@ void OSGridView::setGridController(OSGridController * gridController)
 
   bool isConnected = false;
 
-
   isConnected = connect(m_gridController, SIGNAL(gridRowSelected(OSItem *)), this, SIGNAL(gridRowSelected(OSItem *)));
   OS_ASSERT(isConnected);
 
@@ -190,9 +186,60 @@ void OSGridView::setGridController(OSGridController * gridController)
 
 void OSGridView::refreshCell(int row, int column)
 {
+  // removeWidget may not be safe this contexts
+  OS_ASSERT(false); // TODO
+
   removeWidget(row,column);
 
   addWidget(row,column);
+}
+
+void OSGridView::requestAddRow(int row)
+{
+  std::cout << "REQUEST ADDROW CALLED " << std::endl;
+  setEnabled(false);
+
+  m_timer.start();
+
+  m_rowToAdd = row;
+
+  m_queueRequests.emplace_back(AddRow);
+}
+
+void OSGridView::requestRemoveRow(int row)
+{
+  std::cout << "REQUEST REMOVEROW CALLED " << std::endl;
+  setEnabled(false);
+
+  m_timer.start();
+
+  m_rowToRemove = row;
+
+  m_queueRequests.emplace_back(RemoveRow);
+}
+
+void OSGridView::addRow(int row)
+{
+  std::cout << " ADD ROW CALLED " << row << std::endl;
+
+  for (int j = 0; j < m_gridController->columnCount(); j++)
+  {
+    addWidget(row, j);
+  }
+
+  selectRowDeterminedByModelSubTabView();
+}
+
+void OSGridView::removeRow(int row)
+{
+  std::cout << " DELETE ROW CALLED " << row << std::endl;
+
+  for (int j = 0; j < m_gridController->columnCount(); j++)
+  {
+    removeWidget(row, j);
+  }
+
+  selectRowDeterminedByModelSubTabView();
 }
 
 void OSGridView::refreshRow(int row)
@@ -215,13 +262,33 @@ QLayoutItem * OSGridView::itemAtPosition(int row, int column)
 
 void OSGridView::removeWidget(int row, int column)
 {
-  QLayoutItem * item = itemAtPosition(row,column);
+  auto layoutnum = row / ROWS_PER_LAYOUT;
+  auto relativerow = row % ROWS_PER_LAYOUT;
 
-  OS_ASSERT(item);
+  auto index = m_gridController->columnCount() * relativerow; // this assumes that you are always deleting from the zero index column
+
+  auto count = m_gridLayouts.at(layoutnum)->count();
+ 
+  QLayoutItem * item = m_gridLayouts.at(layoutnum)->itemAtPosition(relativerow, column);
+
+  if (!item) return;
+
+  QLayoutItem * item2 = m_gridLayouts.at(layoutnum)->takeAt(index);
+
+  OS_ASSERT(item2);
+
+  if (item == item2){
+    QString("Good");
+  }
+  else {
+    QString("Bad");
+  }
 
   QWidget * widget = item->widget();
 
-  OS_ASSERT(widget);
+  if (!widget) return;
+
+  auto indexOfWidget = m_gridLayouts.at(layoutnum)->indexOf(widget);
 
   delete widget;
 
@@ -252,6 +319,8 @@ void OSGridView::refreshGrid()
 
   if( m_gridController )
   {
+    m_gridController->refreshModelObjects();
+
     for( int i = 1; i < m_gridController->rowCount(); i++ )
     {
       for( int j = 0; j < m_gridController->columnCount(); j++ )
@@ -269,7 +338,7 @@ void OSGridView::requestRefreshAll()
 
   m_timer.start();
 
-  m_refreshRequests.emplace_back(RefreshAll);
+  m_queueRequests.emplace_back(RefreshAll);
 }
 
 void OSGridView::requestRefreshGrid()
@@ -279,7 +348,7 @@ void OSGridView::requestRefreshGrid()
 
   m_timer.start();
 
-  m_refreshRequests.emplace_back(RefreshGrid);
+  m_queueRequests.emplace_back(RefreshGrid);
 }
 
 void OSGridView::requestRefreshRow(int t_row)
@@ -289,70 +358,82 @@ void OSGridView::requestRefreshRow(int t_row)
 
   m_timer.start();
 
-  // TODO to do increase resolution here
-  m_refreshRequests.emplace_back(RefreshGrid);
+  m_queueRequests.emplace_back(RefreshRow);
 }
 
 void OSGridView::doRefresh()
 {
-  std::cout << " DO REFRESH CALLED " << m_refreshRequests.size() << std::endl;
+  std::cout << " DO REFRESH CALLED " << m_queueRequests.size() << std::endl;
 
-  if (m_refreshRequests.empty())
+  if (m_queueRequests.empty())
   {
     setEnabled(true);
     return;
   }
 
-//  bool has_refresh_grid = false;
+  bool has_add_row = false;
+  bool has_remove_row = false;
+  bool has_refresh_grid = false;
   bool has_refresh_all = false;
 
-  for (const auto &r : m_refreshRequests)
+  for (const auto &r : m_queueRequests)
   {
-//    if (r == RefreshGrid) has_refresh_grid = true;
+    if (r == AddRow) has_add_row = true;
+    if (r == RemoveRow) has_remove_row = true;
+    if (r == RefreshGrid) has_refresh_grid = true;
     if (r == RefreshAll) has_refresh_all = true;
   }
 
-  m_refreshRequests.clear();
+  m_queueRequests.clear();
 
-  if (true)
-  //if (has_refresh_all)
-  {
-    refreshAll();
-  } else {
-    refreshGrid(); // This now causes a crash
-  }
+  //if (has_refresh_all) {
+  //  refreshAll();
+  //}
+  //else if (has_refresh_grid) {
+  //  refreshGrid(); // This now causes a crash
+  //}
+  //else if (has_add_row) {
+  //  addRow(m_rowToAdd);
+  //}
+  //else if (has_remove_row) {
+  //  removeRow(m_rowToRemove);
+  //}
+  //else {
+  //  // Should never get here
+  //  OS_ASSERT(false);
+  //}
 
+  refreshAll(); // TODO remove this and uncomment the block above for finer granularity refreshes
   setEnabled(true);
 }
 
 void OSGridView::refreshAll()
 {
   std::cout << " REFRESHALL CALLED " << std::endl;
-  m_refreshRequests.clear();
+  m_queueRequests.clear();
   deleteAll();
 
-  if( m_gridController )
+  if (m_gridController)
   {
     m_gridController->refreshModelObjects();
 
-    for( int i = 0; i < m_gridController->rowCount(); i++ )
+    for (int i = 0; i < m_gridController->rowCount(); i++)
     {
-      if (i > 0)
+      for (int j = 0; j < m_gridController->columnCount(); j++)
       {
-        //connect(m_gridController->modelObject(i).getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, std::bind(&OSGridView::refreshRow, this, i));
-      }
-      for( int j = 0; j < m_gridController->columnCount(); j++ )
-      {
-        addWidget(i,j);
+        addWidget(i, j);
       }
     }
-  }
-  // NOTE This was added to make dissimilar widget types in a given column to
-  // fill and justify correctly.  It appeared to be the most simple solution.
-  auto widget = new QWidget();
-  //widget->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
-  addWidget(widget, 0, m_gridController->columnCount());
 
+    normalizeColumnWidths();
+
+    QTimer::singleShot(0, this, SLOT(selectRowDeterminedByModelSubTabView()));
+
+  }
+}
+
+void OSGridView::selectRowDeterminedByModelSubTabView()
+{
   // Get selected item
   auto selectedItem = m_gridController->getSelectedItemFromModelSubTabView();
   if (!selectedItem) return;
@@ -364,8 +445,6 @@ void OSGridView::refreshAll()
     m_gridController->m_oldIndex = newIndex;
   }
 
-  normalizeColumnWidths();
-
   // If the index is valid, call slot
   if (m_gridController->m_oldIndex > -1){
     QTimer::singleShot(0, this, SLOT(doRowSelect()));
@@ -374,7 +453,6 @@ void OSGridView::refreshAll()
 
 void OSGridView::normalizeColumnWidths()
 {
-
   std::vector<int> colmins(m_gridController->columnCount(), 0);
 
   for( int i = 0; i < m_gridController->rowCount(); i++ )

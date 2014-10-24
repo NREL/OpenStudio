@@ -65,6 +65,7 @@ OSGridController::OSGridController()
 
 OSGridController::OSGridController(bool isIP,
                                    const QString & headerText,
+                                   IddObjectType iddObjectType,
                                    model::Model model,
                                    std::vector<model::ModelObject> modelObjects)
   : QObject(),
@@ -80,7 +81,8 @@ OSGridController::OSGridController(bool isIP,
     m_isIP(isIP),
     m_modelObjects(modelObjects),
     m_horizontalHeaderBtnGrp(nullptr),
-    m_headerText(headerText)
+    m_headerText(headerText),
+    m_iddObjectType(iddObjectType)
 {
   loadQSettings();
 
@@ -293,6 +295,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
                    boost::optional<NoFailAction>(std::bind(&ValueEditConcept<std::string>::reset,lineEditConcept.data(),t_mo)),
                    boost::optional<BasicQuery>(std::bind(&ValueEditConcept<std::string>::isDefaulted,lineEditConcept.data(),t_mo)));
 
+    isConnected = connect(lineEdit, SIGNAL(objectRemoved(boost::optional<model::ParentObject>)), this, SLOT(onObjectRemoved(boost::optional<model::ParentObject>)));
+    OS_ASSERT(isConnected);
+
     widget = lineEdit;
 
   } else if(QSharedPointer<LoadNameConcept> loadNameConcept = t_baseConcept.dynamicCast<LoadNameConcept>()) {
@@ -311,6 +316,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
     isConnected = connect(loadName, SIGNAL(itemClicked(OSItem*)), this, SLOT(onDropZoneItemClicked(OSItem*)));
     OS_ASSERT(isConnected);
 
+    isConnected = connect(loadName, SIGNAL(objectRemoved(boost::optional<model::ParentObject>)), this, SLOT(onObjectRemoved(boost::optional<model::ParentObject>)));
+    OS_ASSERT(isConnected);
+
     widget = loadName;
 
   } else if(QSharedPointer<NameLineEditConcept> nameLineEditConcept = t_baseConcept.dynamicCast<NameLineEditConcept>()) {
@@ -327,6 +335,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
     OS_ASSERT(isConnected);
 
     isConnected = connect(nameLineEdit, SIGNAL(itemClicked(OSItem*)), this, SLOT(onDropZoneItemClicked(OSItem*)));
+    OS_ASSERT(isConnected);
+
+    isConnected = connect(nameLineEdit, SIGNAL(objectRemoved(boost::optional<model::ParentObject>)), this, SLOT(onObjectRemoved(boost::optional<model::ParentObject>)));
     OS_ASSERT(isConnected);
 
     widget = nameLineEdit;
@@ -437,6 +448,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
     OS_ASSERT(isConnected);
 
     isConnected = connect(dropZone, SIGNAL(itemClicked(OSItem*)), this, SLOT(onDropZoneItemClicked(OSItem*)));
+    OS_ASSERT(isConnected);
+
+    isConnected = connect(dropZone, SIGNAL(objectRemoved(boost::optional<model::ParentObject>)), this, SLOT(onObjectRemoved(boost::optional<model::ParentObject>)));
     OS_ASSERT(isConnected);
 
     widget = dropZone;
@@ -593,7 +607,6 @@ QWidget * OSGridController::widgetAt(int row, int column)
         // this should also be working and doing what you want
         addWidget(makeWidget(mo, dataSource->source().dropZoneConcept()));
       }
-
 
       // right here you probably want some kind of container that's smart enough to know how to grow
       // and shrink as the contained items change. But I don't know enough about the model
@@ -859,26 +872,39 @@ bool OSGridController::getRowIndexByItem(OSItem * item, int & rowIndex)
     }
   }
 
-  // No success, let's try the parent (BTW, doesn't work, but concept is valid)
-  // (This is an attempt to handle SpaceTypesGridView making renderingColor objects
-  //  which trigger a model::onChange signal whose OSItem cannot be digested,
-  //  because we are working with SpaceType. One could use a filter to check the OSItem's
-  //  modelObject type and verify it equals that held by the OSGridController)
-  //  //if (!success) {
-  //  rowIndex = -1;
-  //  for (auto modelObject : m_modelObjects){
-  //    rowIndex++;
-  //    if (auto parent = modelObject.parent())
-  //    {
-  //      OSItemId itemId = modelObjectToItemId(*parent, false);
-  //      if (item->itemId() == itemId){
-  //        success = true;
-  //        break;
-  //      }
-  //    }
-  //  }
-  //
-  //}
+  if (!success) {
+    // At this point, none of the itemIds exactly matched,
+    // let's try to match a subset.
+    rowIndex = -1;
+
+    QString handle(""), handle2("");
+    QStringList strings = item->itemId().otherData().split(",");
+    if (strings.size() > 2){
+      QString temp = strings[2];
+      QStringList strings = temp.split(";");
+      if (strings.size() > 0){
+        handle = strings[0];
+      }
+    }
+
+    for (auto modelObject : m_modelObjects){
+      rowIndex++;
+      OSItemId itemId = modelObjectToItemId(modelObject, false);
+      QStringList strings = itemId.otherData().split(",");
+      if (strings.size() > 2){
+        QString temp = strings[2];
+        QStringList strings = temp.split(";");
+        if (strings.size() > 0){
+          handle2 = strings[0];
+        }
+      }
+
+      if (handle == handle2){
+        success = true;
+        break;
+      }
+    }
+  }
 
   if (success) {
     // We found the model index and must convert it to the row index
@@ -906,7 +932,15 @@ OSItem * OSGridController::getSelectedItemFromModelSubTabView()
 
 void OSGridController::connectToModel()
 {
-  connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(), &openstudio::model::detail::Model_Impl::onChange, this, &openstudio::OSGridController::requestRefreshGrid);
+  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
+    this,
+    &OSGridController::onAddWorkspaceObject);
+
+  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
+    static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
+    this,
+    &OSGridController::onRemoveWorkspaceObject);
 }
 
 void OSGridController::disconnectFromModel()
@@ -916,11 +950,52 @@ void OSGridController::disconnectFromModel()
 
 void OSGridController::onSelectionCleared()
 {
-  gridView()->requestRefreshAll();
+  //gridView()->requestRefreshAll(); TODO still needed???
 }
 
 void OSGridController::onDropZoneItemClicked(OSItem* item)
 {
+}
+
+void OSGridController::onRemoveWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
+{
+  //if (m_iddObjectType == iddObjectType) { TODO uncomment
+    // Update model list
+    std::vector<model::ModelObject>::iterator it;
+    it = std::find(m_modelObjects.begin(), m_modelObjects.end(), object.cast<model::ModelObject>());
+    if (it != m_modelObjects.end()) {
+      int index = std::distance(m_modelObjects.begin(), it);
+      OS_ASSERT(index >= 0);
+      m_modelObjects.erase(m_modelObjects.begin() + index);
+
+      // Update row
+      gridView()->requestRemoveRow(rowIndexFromModelIndex(index));
+    }
+  //}
+}
+
+void OSGridController::onAddWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
+{
+  //if (m_iddObjectType == iddObjectType) { TODO uncomment, currently used to update views with extensible dropzones, which need to issue their own signal to refresh
+    // Update model list
+    // m_modelObjects.push_back(object.cast<model::ModelObject>());
+    refreshModelObjects();
+
+    // Update row
+    gridView()->requestAddRow(rowCount()-1);
+  //}
+}
+
+void OSGridController::onObjectRemoved(boost::optional<model::ParentObject> parent)
+{
+  if (parent) {
+    // We have a parent we can search for in our current list of modelObjects and just delete that 1 row
+    this->requestRefreshGrid(); // TODO replace this with a by-row refresh only
+  }
+  else {
+    // We don't know which row needs to be redrawn, so we have to do the whole grid
+    this->requestRefreshGrid();
+  }
 }
 
 HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)
@@ -939,4 +1014,3 @@ HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidge
 }
 
 } // openstudio
-

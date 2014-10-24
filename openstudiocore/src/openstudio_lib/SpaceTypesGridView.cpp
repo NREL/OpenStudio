@@ -91,6 +91,7 @@
 #include "../model/SteamEquipmentDefinition_Impl.hpp"
 #include "../model/SteamEquipment_Impl.hpp"
 
+#include "../utilities/idd/IddEnums.hxx"
 #include "../utilities/idd/OS_SpaceType_FieldEnums.hxx"
 
 #include <QBoxLayout>
@@ -148,7 +149,7 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
   std::vector<model::SpaceType> spaceTypes = model.getModelObjects<model::SpaceType>();
   std::vector<model::ModelObject> spaceTypeModelObjects = subsetCastVector<model::ModelObject>(spaceTypes);
 
-  SpaceTypesGridController * spaceTypesGridController  = new SpaceTypesGridController(m_isIP, "Space Types", model, spaceTypeModelObjects);
+  SpaceTypesGridController * spaceTypesGridController = new SpaceTypesGridController(m_isIP, "Space Types", IddObjectType::OS_SpaceType, model, spaceTypeModelObjects);
   OSGridView * gridView = new OSGridView(spaceTypesGridController, "Space Types", "Drop\nZone", false, parent);
 
   bool isConnected = false;
@@ -185,9 +186,10 @@ void SpaceTypesGridView::onDropZoneItemClicked(OSItem* item)
 
 SpaceTypesGridController::SpaceTypesGridController(bool isIP,
   const QString & headerText,
+  IddObjectType iddObjectType,
   model::Model model,
   std::vector<model::ModelObject> modelObjects) :
-  OSGridController(isIP, headerText, model, modelObjects)
+  OSGridController(isIP, headerText, iddObjectType, model, modelObjects)
 {
   setCategoriesAndFields();
 }
@@ -544,9 +546,9 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           if (boost::optional<model::People> p = l->optionalCast<model::People>())
           {
             p->resetActivityLevelSchedule();
+          } else {
+            //OS_ASSERT(false); TODO
           }
-
-          OS_ASSERT(false);
         }
       );
 
@@ -661,7 +663,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
             la->resetSchedule();
           }
 
-          OS_ASSERT(false);
+          //OS_ASSERT(false); TODO
         }
       );
 

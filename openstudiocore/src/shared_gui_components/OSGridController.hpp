@@ -169,6 +169,7 @@ public:
   // in the model that is iddObjectType
   OSGridController(bool isIP,
     const QString & headerText,
+    IddObjectType iddObjectType,
     model::Model model,
     std::vector<model::ModelObject> modelObjects);
 
@@ -186,7 +187,6 @@ public:
     }
   }
 
-
   template<typename DataSourceType>
   void addCheckBoxColumn(QString headingLabel,
                          std::function<bool (DataSourceType *)>  t_getter,
@@ -195,7 +195,6 @@ public:
   {
     m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<CheckBoxConcept>(new CheckBoxConceptImpl<DataSourceType>(headingLabel,t_getter,t_setter)), t_source));
   }
-
 
   template<typename ChoiceType, typename DataSourceType>
   void addComboBoxColumn(QString headingLabel,
@@ -239,10 +238,6 @@ public:
           editable);
   }
 
-
-
-
-
   template<typename ChoiceType, typename DataSourceType>
   void addComboBoxColumn(QString headingLabel,
                          std::function<std::string (const ChoiceType &)> toString,
@@ -262,7 +257,6 @@ public:
                                                                   reset,
                                                                   isDefaulted)), t_source));
   }
-
 
   template<typename ChoiceType, typename DataSourceType>
   void addComboBoxColumn(QString headingLabel,
@@ -516,6 +510,8 @@ protected:
 
   std::vector<model::ModelObject> m_modelObjects;
 
+  IddObjectType m_iddObjectType;
+
 private:
 
   friend class OSGridView;
@@ -585,6 +581,12 @@ private slots:
 
   void onDropZoneItemClicked(OSItem* item);
 
+  void onRemoveWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
+
+  void onAddWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
+
+  void onObjectRemoved(boost::optional<model::ParentObject> parent);
+
 };
 
 class HorizontalHeaderWidget : public QWidget
@@ -613,4 +615,3 @@ class GridViewDropZoneVectorController : public OSVectorController
 } // openstudio
 
 #endif // SHAREDGUICOMPONENTS_OSGRIDCONTROLLER_HPP
-

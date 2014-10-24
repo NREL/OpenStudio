@@ -47,7 +47,7 @@
 #include "../model/ZoneHVACComponent.hpp"
 #include "../model/ZoneHVACComponent_Impl.hpp"
 
-
+#include "../utilities/idd/IddEnums.hxx"
 #include "../utilities/idd/OS_ThermalZone_FieldEnums.hxx"
 
 #include <QBoxLayout>
@@ -118,7 +118,7 @@ ThermalZonesGridView::ThermalZonesGridView(bool isIP, const model::Model & model
   std::vector<model::ThermalZone> thermalZones = model.getModelObjects<model::ThermalZone>();
   std::vector<model::ModelObject> thermalZoneModelObjects = subsetCastVector<model::ModelObject>(thermalZones);
 
-  ThermalZonesGridController * thermalZonesGridController  = new ThermalZonesGridController(m_isIP, "Thermal Zones", model, thermalZoneModelObjects);
+  ThermalZonesGridController * thermalZonesGridController = new ThermalZonesGridController(m_isIP, "Thermal Zones", IddObjectType::OS_ThermalZone, model, thermalZoneModelObjects);
   OSGridView * gridView = new OSGridView(thermalZonesGridController, "Thermal Zones", "Drop\nZone", false, parent);
 
   bool isConnected = false;
@@ -153,9 +153,10 @@ ThermalZonesGridView::ThermalZonesGridView(bool isIP, const model::Model & model
 
 ThermalZonesGridController::ThermalZonesGridController(bool isIP,
   const QString & headerText,
+  IddObjectType iddObjectType,
   model::Model model,
   std::vector<model::ModelObject> modelObjects) :
-  OSGridController(isIP, headerText, model, modelObjects)
+  OSGridController(isIP, headerText, iddObjectType, model, modelObjects)
 {
   setCategoriesAndFields();
 }

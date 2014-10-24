@@ -41,8 +41,9 @@
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
 
-#include <utilities/idd/Refrigeration_Case_FieldEnums.hxx>
-#include <utilities/idd/Refrigeration_WalkIn_FieldEnums.hxx>
+#include "../utilities/idd/IddEnums.hxx"
+#include "../utilities/idd/Refrigeration_Case_FieldEnums.hxx"
+#include "../utilities/idd/Refrigeration_WalkIn_FieldEnums.hxx"
 
 #include <QBoxLayout>
 #include <QCheckBox>
@@ -165,7 +166,7 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
   std::vector<model::RefrigerationCase> refrigerationCases = model.getModelObjects<model::RefrigerationCase>();
   std::vector<model::ModelObject> caseModelObjects = subsetCastVector<model::ModelObject>(refrigerationCases);
 
-  RefrigerationCaseGridController * refrigerationCaseGridController  = new RefrigerationCaseGridController(m_isIP, "Display Cases", model, caseModelObjects);
+  RefrigerationCaseGridController * refrigerationCaseGridController  = new RefrigerationCaseGridController(m_isIP, "Display Cases", IddObjectType::OS_Refrigeration_Case, model, caseModelObjects);
   OSGridView * caseGridView = new OSGridView(refrigerationCaseGridController, "Display Cases", "Drop\nCase", true, parent);
 
   bool isConnected = false;
@@ -178,7 +179,7 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
   std::vector<model::RefrigerationWalkIn> refrigerationWalkIns = model.getModelObjects<model::RefrigerationWalkIn>();
   std::vector<model::ModelObject> walkInModelObjects = subsetCastVector<model::ModelObject>(refrigerationWalkIns);
 
-  RefrigerationWalkInGridController * refrigerationWalkInGridController  = new RefrigerationWalkInGridController(m_isIP, "Walk Ins", model, walkInModelObjects);
+  RefrigerationWalkInGridController * refrigerationWalkInGridController = new RefrigerationWalkInGridController(m_isIP, "Walk Ins", IddObjectType::OS_Refrigeration_WalkIn, model, walkInModelObjects);
   OSGridView * walkInView = new OSGridView(refrigerationWalkInGridController, "Walk Ins", "Drop\nWalk In", true, parent);
 
   isConnected = connect(walkInView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
@@ -202,9 +203,10 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
 
 RefrigerationCaseGridController::RefrigerationCaseGridController(bool isIP,
   const QString & headerText,
+  IddObjectType iddObjectType,
   model::Model model,
   std::vector<model::ModelObject> modelObjects) :
-  OSGridController(isIP, headerText, model, modelObjects)
+  OSGridController(isIP, headerText, iddObjectType, model, modelObjects)
 {
   setCategoriesAndFields();
 }
@@ -650,9 +652,10 @@ void RefrigerationCaseGridController::onComboBoxIndexChanged(int index)
 
 RefrigerationWalkInGridController::RefrigerationWalkInGridController(bool isIP,
   const QString & headerText,
+  IddObjectType iddObjectType,
   model::Model model,
   std::vector<model::ModelObject> modelObjects) :
-  OSGridController(isIP, headerText, model, modelObjects)
+  OSGridController(isIP, headerText, iddObjectType, model, modelObjects)
 {
   setCategoriesAndFields();
 }

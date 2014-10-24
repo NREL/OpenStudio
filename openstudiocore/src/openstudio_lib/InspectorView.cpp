@@ -968,12 +968,14 @@ void ThermalZoneInspectorView::update()
   boost::optional<model::ThermalZone> t_zone = m_modelObject->optionalCast<model::ThermalZone>();
   OS_ASSERT(t_zone);
   boost::optional<model::AirLoopHVAC> t_airLoopHVAC = t_zone->airLoopHVAC();
-  if (!t_airLoopHVAC) { return; }
-  OS_ASSERT(t_airLoopHVAC);
+  if ((! t_airLoopHVAC) || (t_airLoopHVAC->handle().isNull())) { return; }
 
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
   std::shared_ptr<MainRightColumnController> mrc = doc->mainRightColumnController(); 
   SystemItem * systemItem = mrc->systemItem(t_airLoopHVAC->handle());
+  // if there is t_airLoopHVAC but no systemItem then we are probably showing this view from the grid.
+  // Don't do that.  But in just in case, return gracefully.  
+  if( ! systemItem ) { return; } 
 
   QPointF supplyPoints[4] = {
     QPointF(25,25),
