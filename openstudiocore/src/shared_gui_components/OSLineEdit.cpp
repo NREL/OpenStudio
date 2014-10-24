@@ -32,7 +32,7 @@
 #include <QMouseEvent>
 #include <QString>
 
-#ifdef NDEBUG
+#if !(_DEBUG || (__GNUC__ && !NDEBUG))
 #define TIMEOUT_INTERVAL 500
 #else
 #define TIMEOUT_INTERVAL 2000

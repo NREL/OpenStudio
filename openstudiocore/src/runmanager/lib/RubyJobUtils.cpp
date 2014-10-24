@@ -28,6 +28,7 @@
 #include "../../utilities/core/ApplicationPathHelpers.hpp"
 #include "../../utilities/core/Compare.hpp"
 #include "../../utilities/core/PathHelpers.hpp"
+#include "../../utilities/core/URLHelpers.hpp"
 #include "../../utilities/bcl/BCLMeasure.hpp"
 
 #include <boost/filesystem.hpp>
@@ -184,7 +185,7 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
         itr != requiredFiles.end();
         ++itr)
     {
-      openstudio::path source = toPath(itr->first.toLocalFile());
+      openstudio::path source = openstudio::getOriginalPath(itr->first);
       openstudio::path temp = relocatePath(source, t_originalBasePath, t_newBasePath);
       if (!temp.empty()) {
         source = temp;

@@ -25,6 +25,7 @@
 #include "../Problem.hpp"
 #include "../Variable.hpp"
 #include "../DataPoint.hpp"
+#include "../DataPoint_Impl.hpp"
 #include "../Measure.hpp"
 #include "../MeasureGroup.hpp"
 #include "../MeasureGroup_Impl.hpp"
@@ -38,15 +39,18 @@
 #include "../WorkflowStep.hpp"
 
 #include "../../runmanager/lib/Workflow.hpp"
+#include "../../runmanager/lib/RunManager.hpp"
 
 #include "../../ruleset/OSArgument.hpp"
 
 #include "../../utilities/core/Containers.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
 #include "../../utilities/bcl/BCLMeasure.hpp"
 #include "../../utilities/data/Tag.hpp"
 
 #include <resources.hxx>
 #include <OpenStudio.hxx>
+#include <runmanager/Test/ToolBin.hxx>
 
 using namespace openstudio;
 using namespace openstudio::analysis;
@@ -520,4 +524,72 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_Analysis2_NoSimulate_Roundtrip
     LOG(Debug,"Copy JSON: " << std::endl << jsonCopy);
   }
   EXPECT_EQ(0u,formulationCopy.dataPoints().size());
+}
+
+TEST_F(AnalysisFixture, PatExportRun)
+{
+  openstudio::path patdir = resourcesPath() / openstudio::toPath("analysis") / openstudio::toPath("pat_export");
+  openstudio::path forumlation = patdir / openstudio::toPath("formulation.json");
+  openstudio::path data_point = patdir / openstudio::toPath("data_point_469b52c3-4aae-4cdd-b580-5c9494eefa11") / openstudio::toPath("data_point.json");;
+
+  openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("PatExportRun");
+  if (exists(outdir)){
+    removeDirectory(outdir);
+  }
+  create_directory(outdir);
+  ASSERT_TRUE(exists(outdir));
+
+  FileLogSink logFile(outdir / toPath("openstudio.log"));
+  logFile.setLogLevel(Debug);
+
+  // load the analysis formulation
+  openstudio::analysis::AnalysisJSONLoadResult loadResult = openstudio::analysis::loadJSON(forumlation);
+  ASSERT_TRUE(loadResult.analysisObject);
+  ASSERT_TRUE(loadResult.analysisObject.get().optionalCast<openstudio::analysis::Analysis>());
+
+  openstudio::analysis::Analysis analysis = loadResult.analysisObject.get().optionalCast<openstudio::analysis::Analysis>().get();
+
+  analysis.updateInputPathData(loadResult.projectDir, patdir);
+
+  // save updated formulation for reference only
+  openstudio::path forumlation_final = outdir / openstudio::toPath("formulation_final.json");
+  openstudio::analysis::AnalysisSerializationOptions options(patdir);
+  analysis.saveJSON(forumlation_final, options, true);
+
+  // load data point to run
+  loadResult = openstudio::analysis::loadJSON(data_point);
+  ASSERT_TRUE(loadResult.analysisObject);
+  ASSERT_TRUE(loadResult.analysisObject.get().optionalCast<openstudio::analysis::DataPoint>());
+
+  openstudio::analysis::DataPoint dataPoint = loadResult.analysisObject.get().optionalCast<openstudio::analysis::DataPoint>().get();
+
+
+  openstudio::path db = outdir / openstudio::toPath("run.db");
+  openstudio::runmanager::RunManager kit(db, true, false, false);
+
+  openstudio::runmanager::Workflow workflow = analysis.problem().createWorkflow(dataPoint, rubyOpenStudioDir());
+  openstudio::runmanager::JobParams params;
+  params.append("cleanoutfiles", "standard");
+  workflow.add(params);
+
+
+  // Build list of tools
+  openstudio::runmanager::Tools tools
+    = openstudio::runmanager::ConfigOptions::makeTools(energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(),
+    rubyExePath().parent_path(), openstudio::path());
+  workflow.add(tools);
+
+  ASSERT_TRUE(analysis.weatherFile());
+
+  openstudio::runmanager::Job job = workflow.create(outdir, analysis.seed().path(), analysis.weatherFile().get().path(), std::vector<openstudio::URLSearchPath>());
+  openstudio::runmanager::JobFactory::optimizeJobTree(job);
+  analysis.setDataPointRunInformation(dataPoint, job, std::vector<openstudio::path>());
+
+  kit.enqueue(job, false);
+
+  kit.waitForFinished();
+
+  analysis.problem().updateDataPoint(dataPoint, job);
+
+  EXPECT_FALSE(dataPoint.failed());
 }

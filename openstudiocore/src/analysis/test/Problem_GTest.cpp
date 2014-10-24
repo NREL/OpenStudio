@@ -386,8 +386,9 @@ TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_ExistingMeasureGroup) {
 
 TEST_F(AnalysisFixture, Problem_UpdateMeasure_MeasureGroups) {
   // open up example measure
-  openstudio::path measuresPath = resourcesPath() / toPath("/utilities/BCL/Measures");
+  openstudio::path measuresPath = resourcesPath() / toPath("/utilities/BCL/Measures/v2");
   openstudio::path dir = measuresPath / toPath("SetWindowToWallRatioByFacade");
+  ASSERT_TRUE(BCLMeasure::load(dir));
   BCLMeasure measure1 = BCLMeasure::load(dir).get();
   openstudio::path tempDir1 = measuresPath / toPath(toString(createUUID()));
   openstudio::path tempDir2 = measuresPath / toPath(toString(createUUID()));

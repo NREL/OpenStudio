@@ -25,6 +25,7 @@
 #include "../AnalysisRunOptions.hpp"
 
 #include "../../analysis/Analysis.hpp"
+#include "../../analysis/Analysis_Impl.hpp"
 #include "../../analysis/Problem.hpp"
 #include "../../analysis/Algorithm.hpp"
 #include "../../analysis/DataPoint.hpp"
@@ -252,8 +253,9 @@ TEST_F(AnalysisDriverFixture,SimpleProject_UpdateMeasure) {
   Problem problem = project.analysis().problem();
 
   // insert a measure into the project, extract and register its arguments
-  openstudio::path measuresDir = resourcesPath() / toPath("/utilities/BCL/Measures");
+  openstudio::path measuresDir = resourcesPath() / toPath("/utilities/BCL/Measures/v2");
   openstudio::path dir = measuresDir / toPath("SetWindowToWallRatioByFacade");
+  ASSERT_TRUE(BCLMeasure::load(dir));
   BCLMeasure measure = BCLMeasure::load(dir).get();
   BCLMeasure projectMeasure = project.insertMeasure(measure);
   OSArgumentVector args = argumentGetter->getArguments(projectMeasure,
@@ -325,8 +327,9 @@ TEST_F(AnalysisDriverFixture,SimpleProject_NonPATToPATProject) {
   {
     // create project with one discrete variable
     SimpleProject project = getCleanSimpleProject("SimpleProject_NonPATToPATProject");
-    openstudio::path measuresDir = resourcesPath() / toPath("/utilities/BCL/Measures");
+    openstudio::path measuresDir = resourcesPath() / toPath("/utilities/BCL/Measures/v2");
     openstudio::path dir = measuresDir / toPath("SetWindowToWallRatioByFacade");
+    ASSERT_TRUE(BCLMeasure::load(dir));
     BCLMeasure measure = BCLMeasure::load(dir).get();
     RubyMeasure rmeasure(measure);
     project.analysis().problem().push(MeasureGroup("My Variable",MeasureVector(1u,rmeasure)));
@@ -434,9 +437,15 @@ TEST_F(AnalysisDriverFixture, SimpleProject_ZipFileForCloud) {
 
   {
     // get project
-    SimpleProject project = getCleanSimpleProject("ProjectToZip");
-    Problem problem = retrieveProblem(AnalysisDriverFixtureProblem::BuggyBCLMeasure,true,true);
-    project.analysis().setProblem(problem);
+    //SimpleProject project = getCleanSimpleProject("ProjectToZip");
+    //Problem problem = retrieveProblem(AnalysisDriverFixtureProblem::BuggyBCLMeasure, true, true);
+    //project.analysis().setProblem(problem);
+
+    SimpleProject project = getCleanPATProject("ProjectToZip");
+
+
+
+
     Model model = model::exampleModel();
     openstudio::path weatherFilePath = energyPlusWeatherDataPath() / toPath("USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw");
     EpwFile weatherFile(weatherFilePath);
@@ -447,6 +456,12 @@ TEST_F(AnalysisDriverFixture, SimpleProject_ZipFileForCloud) {
     FileReference seedModel(p);
     std::pair<bool,std::vector<BCLMeasure> > result = project.setSeed(seedModel);
     EXPECT_TRUE(result.first);
+    project.seedModel();
+    project.seedIdf();
+    if (!project.getStandardReportWorkflowStep()) {
+      project.insertStandardReportWorkflowStep();
+    }
+    project.save();
     project.makeSelfContained();
 
     // create zip
@@ -462,9 +477,23 @@ TEST_F(AnalysisDriverFixture, SimpleProject_ZipFileForCloud) {
     boost::filesystem::copy_file(tempZipFilePath,zipFilePath);
     UnzipFile unzip(zipFilePath);
     unzip.extractAllFiles(remoteDir);
-    EXPECT_TRUE(boost::filesystem::exists(remoteDir / toPath("formulation.json")));
-    EXPECT_TRUE(boost::filesystem::exists(remoteDir / toPath("seed")));
-    EXPECT_TRUE(boost::filesystem::exists(remoteDir / toPath("seed/example/files")));
+    ASSERT_TRUE(boost::filesystem::exists(remoteDir / toPath("formulation.json")));
+    ASSERT_TRUE(boost::filesystem::exists(remoteDir / toPath("seed")));
+    ASSERT_TRUE(boost::filesystem::exists(remoteDir / toPath("seed/example/files")));
+
+    // mimic what happens on server
+    openstudio::analysis::AnalysisJSONLoadResult loadResult = openstudio::analysis::loadJSON(remoteDir / toPath("formulation.json"));
+    ASSERT_TRUE(loadResult.analysisObject);
+    ASSERT_TRUE(loadResult.analysisObject->optionalCast<openstudio::analysis::Analysis>());
+    openstudio::analysis::Analysis analysis = loadResult.analysisObject->optionalCast<openstudio::analysis::Analysis>().get();
+    openstudio::path remoteAnalysisPath = toPath("/mnt/openstudio/analysis/");
+    analysis.updateInputPathData(loadResult.projectDir, remoteAnalysisPath);
+
+    openstudio::analysis::AnalysisSerializationOptions options(remoteAnalysisPath);
+    analysis.saveJSON(remoteDir / toPath("formulation_final.json"), options, true);
+
+    // DLM: now compare formulation_final.json with formulation.json, make sure there are no traces of 
+    // loadResult.projectDir in formulation_final.json
   }
 
   // make sure temp files have been removed

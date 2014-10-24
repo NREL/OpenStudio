@@ -64,7 +64,7 @@ namespace openstudio{
         m_warnings()
     {
       //Make sure a QApplication exists
-      openstudio::Application::instance().application();
+      openstudio::Application::instance().application(false);
 
       if (m_url.scheme().isEmpty()){
         QString urlString = m_url.toString();
@@ -692,6 +692,7 @@ namespace openstudio{
 
       QJsonObject obj;
       obj["analysis_action"] = QJsonValue(QString("start"));
+      obj["run_data_point_filename"] = QJsonValue(QString("pat_workflow"));
       
       QByteArray json = QJsonDocument(obj).toJson(QJsonDocument::Compact);
 
@@ -1504,7 +1505,17 @@ namespace openstudio{
         QJsonDocument json = QJsonDocument::fromJson(m_networkReply->readAll(), &err);
 
         if (!err.error) {
-          m_lastDataPointJSON = QString(m_networkReply->readAll()).toStdString();
+          // DLM: the PAT style datapoint json is underneath results: {pat_data_point:{
+          if (json.object().contains("results")){
+            QJsonValue results = json.object().value("results");
+            if (results.isObject() && results.toObject().contains("pat_data_point")){
+              QJsonValue pat_data_point = results.toObject().value("pat_data_point");
+              QByteArray pat_json_byte_array = QJsonDocument(pat_data_point.toObject()).toJson(QJsonDocument::Compact);
+              QString pat_json(pat_json_byte_array);
+              m_lastDataPointJSON = pat_json.toStdString();
+              success = true;
+            }
+          }
         }
       }else{
         logNetworkError(m_networkReply->error());
@@ -1530,7 +1541,7 @@ namespace openstudio{
           m_lastDownloadDataPointSuccess = true;
           success = true;
           file.close();
-        }
+        } 
         
       }else{
         logNetworkError(m_networkReply->error());
@@ -1618,81 +1629,105 @@ namespace openstudio{
     {
       std::stringstream ss; 
       ss << "Network error '";
-      switch(error){
-        case QNetworkReply::NoError:
-          ss << "NoError";
-          break;
-        case QNetworkReply::ConnectionRefusedError:
-          ss << "ConnectionRefusedError";
-          break;
-        case QNetworkReply::RemoteHostClosedError:
-          ss << "RemoteHostClosedError";
-          break;
-        case QNetworkReply::HostNotFoundError:
-          ss << "HostNotFoundError";
-          break;
-        case QNetworkReply::TimeoutError:
-          ss << "TimeoutError";
-          break;
-        case QNetworkReply::OperationCanceledError:
-          ss << "OperationCanceledError";
-          break;
-        case QNetworkReply::SslHandshakeFailedError:
-          ss << "SslHandshakeFailedError";
-          break;
-        case QNetworkReply::TemporaryNetworkFailureError:
-          ss << "TemporaryNetworkFailureError";
-          break;
-        case QNetworkReply::ProxyConnectionRefusedError:
-          ss << "ProxyConnectionRefusedError";
-          break;
-        case QNetworkReply::ProxyConnectionClosedError:
-          ss << "ProxyConnectionClosedError";
-          break;
-        case QNetworkReply::ProxyNotFoundError:
-          ss << "ProxyNotFoundError";
-          break;
-        case QNetworkReply::ProxyTimeoutError:
-          ss << "ProxyTimeoutError";
-          break;
-        case QNetworkReply::ProxyAuthenticationRequiredError:
-          ss << "ProxyAuthenticationRequiredError";
-          break;
-        case QNetworkReply::ContentAccessDenied:
-          ss << "ContentAccessDenied";
-          break;
-        case QNetworkReply::ContentOperationNotPermittedError:
-          ss << "ContentOperationNotPermittedError";
-          break;
-        case QNetworkReply::ContentNotFoundError:
-          ss << "ContentNotFoundError";
-          break;
-        case QNetworkReply::AuthenticationRequiredError:
-          ss << "AuthenticationRequiredError";
-          break;
-        case QNetworkReply::ContentReSendError:
-          ss << "ContentReSendError";
-          break;
-        case QNetworkReply::ProtocolUnknownError:
-          ss << "ProtocolUnknownError";
-          break;
-        case QNetworkReply::ProtocolInvalidOperationError:
-          ss << "ProtocolInvalidOperationError";
-          break;
-        case QNetworkReply::UnknownNetworkError:
-          ss << "UnknownNetworkError";
-          break;
-        case QNetworkReply::UnknownProxyError:
-          ss << "UnknownProxyError";
-          break;
-        case QNetworkReply::UnknownContentError:
-          ss << "UnknownContentError";
-          break;
-        case QNetworkReply::ProtocolFailure:
-          ss << "ProtocolFailure";
-          break;
-        default:
-          ss << "Unknown";
+      switch (error) {
+      case QNetworkReply::NoError:
+        ss << "NoError";
+        break;
+      case QNetworkReply::ConnectionRefusedError:
+        ss << "ConnectionRefusedError";
+        break;
+      case QNetworkReply::RemoteHostClosedError:
+        ss << "RemoteHostClosedError";
+        break;
+      case QNetworkReply::HostNotFoundError:
+        ss << "HostNotFoundError";
+        break;
+      case QNetworkReply::TimeoutError:
+        ss << "TimeoutError";
+        break;
+      case QNetworkReply::OperationCanceledError:
+        ss << "OperationCanceledError";
+        break;
+      case QNetworkReply::SslHandshakeFailedError:
+        ss << "SslHandshakeFailedError";
+        break;
+      case QNetworkReply::TemporaryNetworkFailureError:
+        ss << "TemporaryNetworkFailureError";
+        break;
+      case QNetworkReply::NetworkSessionFailedError:
+        ss << "NetworkSessionFailedError";
+        break;
+      case QNetworkReply::BackgroundRequestNotAllowedError:
+        ss << "BackgroundRequestNotAllowedError";
+        break;
+      case QNetworkReply::ProxyConnectionRefusedError:
+        ss << "ProxyConnectionRefusedError";
+        break;
+      case QNetworkReply::ProxyConnectionClosedError:
+        ss << "ProxyConnectionClosedError";
+        break;
+      case QNetworkReply::ProxyNotFoundError:
+        ss << "ProxyNotFoundError";
+        break;
+      case QNetworkReply::ProxyTimeoutError:
+        ss << "ProxyTimeoutError";
+        break;
+      case QNetworkReply::ProxyAuthenticationRequiredError:
+        ss << "ProxyAuthenticationRequiredError";
+        break;
+      case QNetworkReply::ContentAccessDenied:
+        ss << "ContentAccessDenied";
+        break;
+      case QNetworkReply::ContentOperationNotPermittedError:
+        ss << "ContentOperationNotPermittedError";
+        break;
+      case QNetworkReply::ContentNotFoundError:
+        ss << "ContentNotFoundError";
+        break;
+      case QNetworkReply::AuthenticationRequiredError:
+        ss << "AuthenticationRequiredError";
+        break;
+      case QNetworkReply::ContentReSendError:
+        ss << "ContentReSendError";
+        break;
+        /*case QNetworkReply::ContentConflictError:
+        ss << "ContentConflictError";
+        break;
+        case QNetworkReply::ContentGoneError:
+        ss << "ContentGoneError";
+        break;
+        case QNetworkReply::InternalServerError:
+        ss << "InternalServerError";
+        break;
+        case QNetworkReply::OperationNotImplementedError:
+        ss << "OperationNotImplementedError";
+        break;
+        case QNetworkReply::ServiceUnavailableError:
+        ss << "ServiceUnavailableError";
+        break;*/
+      case QNetworkReply::ProtocolUnknownError:
+        ss << "ProtocolUnknownError";
+        break;
+      case QNetworkReply::ProtocolInvalidOperationError:
+        ss << "ProtocolInvalidOperationError";
+        break;
+      case QNetworkReply::UnknownNetworkError:
+        ss << "UnknownNetworkError";
+        break;
+      case QNetworkReply::UnknownProxyError:
+        ss << "UnknownProxyError";
+        break;
+      case QNetworkReply::UnknownContentError:
+        ss << "UnknownContentError";
+        break;
+      case QNetworkReply::ProtocolFailure:
+        ss << "ProtocolFailure";
+        break;
+        /*case QNetworkReply::UnknownServerError:
+        ss << "UnknownServerError";
+        break;*/
+      default:
+        ss << "Unknown";
       }
       ss<< "' occurred";
 

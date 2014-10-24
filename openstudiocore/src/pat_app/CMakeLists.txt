@@ -222,8 +222,6 @@ qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
 configure_file(AboutBox.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/AboutBox.hpp")
 
 # configure vagrant
-set(VAGRANT_SERVER_PATH "" CACHE PATH "Pat to vagrant openstudio server")
-set(VAGRANT_WORKER_PATH "" CACHE PATH "Pat to vagrant openstudio worker")
 configure_file(VagrantConfiguration.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/VagrantConfiguration.hxx")
 
 if(WIN32)

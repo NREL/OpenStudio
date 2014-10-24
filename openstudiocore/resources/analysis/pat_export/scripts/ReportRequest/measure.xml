@@ -1,0 +1,71 @@
+<measure>
+  <schema_version>3.0</schema_version>
+  <name>report_request</name>
+  <uid>060ee477-b04c-4a1b-8788-312d796ad132</uid>
+  <version_id>80296393-7098-41b3-a12d-42604dbf2f8f</version_id>
+  <xml_checksum>2CF2EA46</xml_checksum>
+  <class_name>ReportRequest</class_name>
+  <display_name>Report Request</display_name>
+  <description>Requests EnergyPlus output reports based on downstream reporting measures.</description>
+  <modeler_description></modeler_description>
+  <arguments>
+    <argument>
+      <name>measures_json</name>
+      <display_name>measures_json</display_name>
+      <type>String</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+    </argument>
+  </arguments>
+  <provenances/>
+  <tags>
+    <tag>Reporting.QAQC</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Type</name>
+      <value>EnergyPlusMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Intended Software Tool</name>
+      <value>OpenStudio Application</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Intended Software Tool</name>
+      <value>Parametric Analysis Tool</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Intended Use Case</name>
+      <value>Automatic Report Generation</value>
+      <datatype>string</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <filename>report_request_test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>898B4852</checksum>
+    </file>
+    <file>
+      <filename>example.json</filename>
+      <filetype>json</filetype>
+      <usage_type>test</usage_type>
+      <checksum>D88DBC57</checksum>
+    </file>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>1.4.2</identifier>
+        <min_compatible>1.4.2</min_compatible>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>C45035B3</checksum>
+    </file>
+  </files>
+</measure>
