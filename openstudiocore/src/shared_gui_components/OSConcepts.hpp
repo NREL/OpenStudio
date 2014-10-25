@@ -991,8 +991,10 @@ class NameLineEditConcept : public BaseConcept
 {
   public:
 
-  NameLineEditConcept(QString t_headingLabel)
-    : BaseConcept(t_headingLabel)
+  NameLineEditConcept(QString t_headingLabel,
+    bool isInspectable)
+    : BaseConcept(t_headingLabel),
+    m_isInspectable(isInspectable)
   {
   }
 
@@ -1002,6 +1004,12 @@ class NameLineEditConcept : public BaseConcept
   virtual boost::optional<std::string> set(const ConceptProxy & obj, const std::string &) = 0;
   virtual void reset(const ConceptProxy & obj) = 0;
   virtual bool readOnly() const = 0;
+  bool isInspectable() { return m_isInspectable; }
+
+  private:
+
+  bool m_isInspectable;
+
 };
 
 template<typename DataSourceType>
@@ -1010,10 +1018,12 @@ class NameLineEditConceptImpl : public NameLineEditConcept
   public:
 
   NameLineEditConceptImpl(QString t_headingLabel,
+    bool isInspectable,
     std::function<boost::optional<std::string> (DataSourceType *, bool)>  t_getter,
     std::function<boost::optional<std::string> (DataSourceType *, const std::string &)> t_setter,
     boost::optional<std::function<void(DataSourceType*)> > t_reset = boost::none)
-    : NameLineEditConcept(t_headingLabel),
+    : NameLineEditConcept(t_headingLabel,
+      isInspectable),
       m_getter(t_getter),
       m_setter(t_setter),
       m_reset(t_reset)
