@@ -442,8 +442,29 @@ endif()
 if(BUILD_PYTHON_BINDINGS)
   # need python
   find_package(PythonLibs 2.7 REQUIRED)
+  find_package(PythonInterp 2.7 REQUIRED)
   include_directories(SYSTEM ${PYTHON_INCLUDE_DIRS})
   set(ALL_PYTHON_BINDING_TARGETS "") # global list
+
+  # PYTHONPATH=~/openstudio/build/OSCore-prefix/src/OSCore-build/Products/python/ python testpath.py
+
+  add_test(NAME "PythonSanityCheck" 
+    COMMAND "${CMAKE_COMMAND}" -E chdir "${CMAKE_SOURCE_DIR}/python"
+    "${PYTHON_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/python/testpath.py"
+    )
+
+  if (MSVC)
+    set_property(TEST PythonSanityCheck
+      PROPERTY ENVIRONMENT
+      "PYTHONPATH=${CMAKE_BINARY_DIR}/Products/python/$<CONFIGURATION>"
+      )
+  else()
+    set_property(TEST PythonSanityCheck
+      PROPERTY ENVIRONMENT
+      "PYTHONPATH=${CMAKE_BINARY_DIR}/Products/python"
+      )
+  endif()
+
 endif()
 
 # Doxygen

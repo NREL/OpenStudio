@@ -9,7 +9,6 @@ from openstudioutilitiesgeometry import *
 from openstudioutilitiessql import *
 from openstudioutilitiesbcl import *
 from openstudioutilitiesunits import *
-from openstudioutilitiesdocument import *
 from openstudioutilitiesidd import *
 from openstudioutilitiesidf import *
 from openstudioutilitiesfiletypes import *
@@ -25,14 +24,11 @@ import openstudiogbxml as gbxml
 
 import openstudioosversion as osversion
 
-import openstudiorulesengine as rulesengine
 import openstudioruleset as ruleset
 import openstudiorunmanager as runmanager
-import openstudiostandardsinterface as standardsinterface
 import openstudioproject as project
 import openstudioanalysisdriver as analysisdriver
 import openstudiomodeleditor as modeleditor
 import openstudioanalysis as analysis
 import openstudiolib as lib
-import openstudioplugin as plugin
 
