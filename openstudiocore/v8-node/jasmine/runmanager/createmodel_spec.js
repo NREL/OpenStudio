@@ -1165,13 +1165,21 @@ describe("Model", function() {
     var radiancetools = co.getTools().getAllByName("rad").tools();
 
 
-
+/*
     workflow.addStandardWorkflow(
         new openstudio.path(), // we aren't using scripts
         co.getTools().getAllByName("ruby").tools().size() > 0, // was ruby found?
         openstudio.getOpenStudioRubyIncludePath(), // where are the standard ruby scripts located?
         true, // use radiance for daylight calculations - set this to false for faster simulations
         radiancetools.get(radiancetools.size()-1).localBinPath.parent_path()); // this should throw if radiance was not found
+*/
+
+    workflow.addStandardWorkflow(
+        new openstudio.path(), // we aren't using scripts
+        co.getTools().getAllByName("ruby").tools().size() > 0, // was ruby found?
+        openstudio.getOpenStudioRubyIncludePath(), // where are the standard ruby scripts located?
+        false,
+        new openstudio.path()); 
 
     workflow.add(co.getTools());
 

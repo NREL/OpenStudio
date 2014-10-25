@@ -142,8 +142,6 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       "${LIBRARY_SEARCH_DIRECTORY}"
   )
 
-  message("Prereq_Dirs ${Prereq_Dirs}")
-
 
   # Now, append all of the .i* files provided to the macro to the
   # list of required headers.
