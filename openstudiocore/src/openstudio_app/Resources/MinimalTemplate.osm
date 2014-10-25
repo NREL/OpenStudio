@@ -7201,3 +7201,11 @@ OS:Construction,
   ,                                       !- Surface Rendering Name
   {8ea9f6e6-0bb1-424a-a9d5-8fb8da2c8afe}; !- Layer 1
 
+OS:SpaceInfiltration:EffectiveLeakageArea,
+  {b8ecfe71-8180-493c-b311-1e1572ddd753}, !- Handle
+  Space Infiltration Effective Leakage Area, !- Name
+  ,                                       !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  0.01,                                   !- Effective Air Leakage Area {m2}
+  0.00015,                                !- Stack Coefficient
+  0.0001;                                 !- Wind Coefficient
