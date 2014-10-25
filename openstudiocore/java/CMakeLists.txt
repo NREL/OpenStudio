@@ -10,6 +10,13 @@
     set(OPENSTUDIO_JAVA_JAR "${JAVA_LIBRARY_OUTPUT_DIRECTORY}/OpenStudio.jar")
   endif()
 
+  if(MSVC)
+    set(OPENSTUDIO_JAVA_BIN_DIR "${JAVA_LIBRARY_OUTPUT_DIRECTORY}/$(ConfigurationName)")
+  else()
+    set(OPENSTUDIO_JAVA_BIN_DIR "${JAVA_LIBRARY_OUTPUT_DIRECTORY}")
+  endif()
+
+
   file(TO_NATIVE_PATH "${OPENSTUDIO_JAVA_JAR}" OPENSTUDIO_NATIVE_JAVA_JAR)
 
 
@@ -69,6 +76,36 @@
     install(FILES "${JAVA_LIBRARY_OUTPUT_DIRECTORY}/OpenStudio.jar" DESTINATION lib/openstudio-${OPENSTUDIO_VERSION}/java)
   endif()
 
+  #  jason@ubuntu12:~/OpenStudio-main/openstudiocore/java$ /usr/lib/jvm/java-1.7.0-openjdk-amd64/bin/javac TestOpenStudio.java -classpath ~/openstudio-main-build/OSCore-prefix/src/OSCore-build/Products/java/OpenStudio.jar
+  #  jason@ubuntu12:~/OpenStudio-main/openstudiocore/java$ LD_LIBRARY_PATH=~/openstudio-main-build/OSCore-prefix/src/OSCore-build/Products/java /usr/lib/jvm/java-1.7.0-openjdk-amd64/bin/java -classpath ~/openstudio-main-build/OSCore-prefix/src/OSCore-build/Products/java/OpenStudio.jar:.  TestOpenStudio
+
+  add_custom_command(
+    OUTPUT "${CMAKE_BINARY_DIR}/TestOpenStudio.class"
+    COMMAND "${Java_JAVAC_EXECUTABLE}" -d "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}/java/TestOpenStudio.java" -classpath "${OPENSTUDIO_JAVA_JAR}"
+    )
+
+
+  add_custom_target(java_tests ALL
+    DEPENDS "${CMAKE_BINARY_DIR}/TestOpenStudio.class"
+   )
+
+  add_test(NAME "JavaSanityCheck" 
+    COMMAND "${Java_JAVA_EXECUTABLE}"  "-Djava.library.path=${OPENSTUDIO_JAVA_BIN_DIR}" -classpath "${OPENSTUDIO_JAVA_JAR}:${CMAKE_BINARY_DIR}" TestOpenStudio
+    )
+
+  #  if (MSVC)
+  #  set_property(TEST PythonSanityCheck
+  #    PROPERTY ENVIRONMENT
+  #    "PYTHONPATH=${CMAKE_BINARY_DIR}/Products/python/$<CONFIGURATION>"
+  #    )
+  #else()
+  #  set_property(TEST PythonSanityCheck
+  #    PROPERTY ENVIRONMENT
+  #    "PYTHONPATH=${CMAKE_BINARY_DIR}/Products/python"
+  #    )
+  #endif()
+
+  #
   # run all the unit tests
   # if(BUILD_TESTING OR BUILD_SIMPLE_TESTING)
 
