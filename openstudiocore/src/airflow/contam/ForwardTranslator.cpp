@@ -18,7 +18,7 @@
  **********************************************************************/
 
 #include "ForwardTranslator.hpp"
-#include "WindPressure.hpp"
+#include "../WindPressure.hpp"
 
 #include "../model/Model.hpp"
 #include "../model/Building.hpp"

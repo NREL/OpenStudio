@@ -20,8 +20,8 @@
 #include <gtest/gtest.h>
 #include "AirflowFixture.hpp"
 
-#include "../PrjModel.hpp"
-#include "../PrjAirflowElements.hpp"
+#include "../contam/PrjModel.hpp"
+#include "../contam/PrjAirflowElements.hpp"
 
 // Test adding airflow elements
 TEST_F(AirflowFixture, ContamModel_AirflowElements) {

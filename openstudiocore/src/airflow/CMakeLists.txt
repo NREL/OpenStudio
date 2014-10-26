@@ -2,31 +2,31 @@ set(target_name openstudio_airflow)
 
 set(${target_name}_src
   AirflowAPI.hpp
-  ForwardTranslator.hpp
-  ForwardTranslator.cpp
-  PrjReader.hpp
-  PrjReader.cpp
-  SimFile.hpp
-  SimFile.cpp
+  contam/ForwardTranslator.hpp
+  contam/ForwardTranslator.cpp
+  contam/PrjReader.hpp
+  contam/PrjReader.cpp
+  contam/SimFile.hpp
+  contam/SimFile.cpp
   WindPressure.hpp
   WindPressure.cpp
-  PrjDefines.hpp
-  PrjModel.hpp
-  PrjModel.cpp
-  PrjModelImpl.hpp
-  PrjModelImpl.cpp
-  PrjObjects.hpp
-  PrjObjects.cpp
-  PrjObjectsImpl.hpp
-  PrjObjectsImpl.cpp
-  PrjSubobjects.hpp
-  PrjSubobjects.cpp
-  PrjSubobjectsImpl.hpp
-  PrjSubobjectsImpl.cpp
-  PrjAirflowElements.hpp
-  PrjAirflowElements.cpp
-  PrjAirflowElementsImpl.hpp
-  PrjAirflowElementsImpl.cpp
+  contam/PrjDefines.hpp
+  contam/PrjModel.hpp
+  contam/PrjModel.cpp
+  contam/PrjModelImpl.hpp
+  contam/PrjModelImpl.cpp
+  contam/PrjObjects.hpp
+  contam/PrjObjects.cpp
+  contam/PrjObjectsImpl.hpp
+  contam/PrjObjectsImpl.cpp
+  contam/PrjSubobjects.hpp
+  contam/PrjSubobjects.cpp
+  contam/PrjSubobjectsImpl.hpp
+  contam/PrjSubobjectsImpl.cpp
+  contam/PrjAirflowElements.hpp
+  contam/PrjAirflowElements.cpp
+  contam/PrjAirflowElementsImpl.hpp
+  contam/PrjAirflowElementsImpl.cpp
   SurfaceNetworkBuilder.hpp
   SurfaceNetworkBuilder.cpp
 )

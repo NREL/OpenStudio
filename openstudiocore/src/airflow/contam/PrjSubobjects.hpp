@@ -22,7 +22,7 @@
 
 #include "PrjDefines.hpp"
 #include "PrjReader.hpp"
-#include "AirflowAPI.hpp"
+#include "../AirflowAPI.hpp"
 
 namespace openstudio {
 namespace contam {

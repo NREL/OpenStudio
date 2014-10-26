@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef CONTAM_PRJMODEL_HPP
-#define CONTAM_PRJMODEL_HPP
+#ifndef CONTAM_PRJMODELIMPL_HPP
+#define CONTAM_PRJMODELIMPL_HPP
 
 #include "PrjDefines.hpp"
 #include "PrjReader.hpp"
@@ -28,63 +28,26 @@
 #include "../utilities/core/Path.hpp"
 #include "../utilities/data/TimeSeries.hpp"
 
-#include "AirflowAPI.hpp"
+#include "../AirflowAPI.hpp"
 
 namespace openstudio {
 namespace contam {
 
 class SimFile;
-namespace detail {
-  class IndexModelImpl;
-}
 
-/** IndexModel is primarily a container for CONTAM airflow model data.
-*
-*  IndexModel contains CONTAM airflow model elements and has several methods 
-*  to produce the PRJ file. The PRJ file is a positional text file and is
-*  the primary way in which data is provided to the ContamX solver. The 
-*  format is documented here: 
-*
-*  www.bfrl.nist.gov/IAQanalysis/CONTAM/manual/Content/html/PRJ/PRJ_PRJ_Sections.htm
-*
-*  Note that the representation in this object is not very sophisticated. In
-*  particular, links between many items are based upon array indices, so
-*  modifications to the model should be made with care.
-*
-*/
-class AIRFLOW_API IndexModel
+namespace detail {
+
+class IndexModelImpl
 {
 public:
-  /** @name Constructors and Destructors */
-  //@{
-
-  /** Creates a new, empty PRJ model. */
-  IndexModel();
-  /** Creates a new PRJ model from input file at specified path. */
-  explicit IndexModel(openstudio::path path);
-  /** Creates a new PRJ model from named input file. */
-  explicit IndexModel(std::string filename);
-  /** Creates a new PRJ model from an input object. */
-  explicit IndexModel(Reader &input);
-  /** Creates a new PRJ model from another PRJ model. */
-  IndexModel(const IndexModel &other);
-  /** Destroy the model. */
-  ~IndexModel();
-
-  //@}
-  /** @name Operators */
-  //@{
-
-  /** Copy operator */
-  IndexModel& operator=(const IndexModel &other);
-  /** Equality operator */
-  bool operator==(const IndexModel &other) const;
-  /** Inequality operator */
-  bool operator!=(const IndexModel &other) const;
-
-  //@}
-  /** @name Getters and Setters */
-  //@{
+  IndexModelImpl();
+  explicit IndexModelImpl(openstudio::path path);
+  explicit IndexModelImpl(std::string filename);
+  explicit IndexModelImpl(Reader &input);
+  bool read(openstudio::path path);
+  bool read(std::string filename);
+  bool read(Reader &input);
+  std::string toString();
 
   /** Returns the program name, should be "ContamW". */
   std::string programName() const;
@@ -155,8 +118,7 @@ public:
   /** Sets the velocity profile exponent for wind. */
   bool setWind_a(const double wind_a);
   /** Sets the velocity profile exponent for wind. */
-  bool setWind_a(const std::string &wind_a);
-  /** Returns the cell scaling factor. */
+  bool setWind_a(const std::string &wind_a);/** Returns the cell scaling factor. */
   double scale() const;
   /** Sets the cell scaling factor. */
   bool setScale(const double scale);
@@ -321,120 +283,292 @@ public:
   /** Sets the display units for elevation. */
   void setU_a(const int u_a);
 
-  /** Returns the model run control object. */
   RunControl rc() const;
-  /** Sets the model run control object. */
   void setRc(const RunControl rc);
 
-  /** Returns a vector of CONTAM indices of all the active species in the model. */
-  std::vector<int> contaminants() const;
-
-  /** Returns a vector of the species in the model. */
+  std::vector<int> contaminants();
   std::vector <Species> species() const;
-  /** Sets the model species vector. */
-  void setSpecies(const std::vector<Species> species);
-  /** Add a species to the model. */
+  void setSpecies(const std::vector<Species> &species);
   void addSpecies(Species &species);
-  /** Remove a species from the model. */
   bool removeSpecies(const Species &species);
 
-  /** Returns a vector of the levels in the model. */
   std::vector <Level> levels() const;
-  /** Sets the model level vector. */
-  void setLevels(const std::vector<Level> levels);
-  /** Add a level to the model. */
+  void setLevels(const std::vector<Level> &levels);
   void addLevel(Level &level);
 
-  /** Returns a vector of the day schedules in the model. */
   std::vector <DaySchedule> daySchedules() const;
-  /** Sets the model day schedule vector. */
-  void setDaySchedules(const std::vector<DaySchedule> daySchedules);
+  void setDaySchedules(const std::vector<DaySchedule> &daySchedules);
 
-  /** Returns a vector of the week schedules in the model. */
   std::vector <WeekSchedule> weekSchedules() const;
-  /** Sets the model week schedule vector. */
-  void setWeekSchedules(const std::vector<WeekSchedule> weekSchedules);
+  void setWeekSchedules(const std::vector<WeekSchedule> &weekSchedules);
 
-  /** Returns a vector of the wind pressure profiles in the model. */
   std::vector <WindPressureProfile> windPressureProfiles() const;
-  /** Sets the model wind pressure profiles vector. */
-  void setWindPressureProfiles(const std::vector<WindPressureProfile> windPressureProfiles);
+  void setWindPressureProfiles(const std::vector<WindPressureProfile> &windPressureProfiles);
 
-  /** Returns a vector of all PlrTest1 airflow elements in the model. */
-  std::vector<PlrTest1> getPlrTest1() const;
-  /** Returns a vector of all PlrTest2 airflow elements in the model. */
-  std::vector<PlrTest2> getPlrTest2() const;
-  /** Returns a vector of all PlrLeak2 airflow elements in the model. */
-  std::vector<PlrLeak2> getPlrLeak2() const;
-  /** Add a PlrTest1 airflow element to the model. */
-  bool addAirflowElement(PlrTest1 element);
-  /** Add a PlrLeak2 airflow element to the model. */
-  bool addAirflowElement(PlrLeak2 element);
-  /** Return the element number of the named airflow element */
+  template <class T> std::vector<T> getAirflowElements()
+  {
+    std::vector<T> afe;
+    for(std::shared_ptr<AirflowElement> el : m_airflowElements) {
+      if(el.get()){
+        T* derived = dynamic_cast<T*>(el.get());
+        if(derived) {
+          afe.push_back(*derived);
+        }
+      }
+    }
+    return afe;
+  }
+
+  template <class T> bool addAirflowElement(T element)
+  {
+    auto copy = new T;
+    *copy = element;
+    AirflowElement *pointer = dynamic_cast<AirflowElement*>(copy);
+    if(pointer) {
+      copy->setNr(m_airflowElements.size() + 1);
+      m_airflowElements.push_back(std::shared_ptr<AirflowElement>(pointer));
+      return true;
+    }
+    return false;
+  }
+
   int airflowElementNrByName(std::string name) const;
-  /** Replace an airflow element with a PlrTest1 airflow element */
-  bool replaceAirflowElement(int nr, PlrTest1 element);
 
-  /** Returns a vector of all CvfDat control node in the model. */
-  std::vector<CvfDat> getCvfDat() const;
-  /** Add an CvfDat airflow element to the model. */
-  bool addControlNode(CvfDat element, bool sequence=true);
+  template <class T> bool replaceAirflowElement(int nr, T element)
+  {
+    if(nr>0 && nr<=m_airflowElements.size())
+    {
+      auto copy = new T;
+      *copy = element;
+      AirflowElement *pointer = dynamic_cast<AirflowElement*>(copy);
+      if(pointer)
+      {
+        copy->setNr(nr);
+        //m_airflowElements.replace(nr - 1, std::shared_ptr<AirflowElement>(pointer));
+        return true;
+      }
+    }
+    return false;
+  }
 
-  /** Returns a vector of all simple air handling systems in the model. */
+  template <class T> std::vector<T> getControlNodes()
+  {
+    std::vector<T> nodes;
+    for(std::shared_ptr<ControlNode> el : m_controlNodes) {
+      if(el.get()){
+        T* derived = dynamic_cast<T*>(el.get());
+        if(derived) {
+          nodes.push_back(*derived);
+        }
+      }
+    }
+    return nodes;
+  }
+
+  template <class T> bool addControlNode(T element, bool sequence=true)
+  {
+    auto copy = new T;
+    *copy = element;
+    ControlNode *pointer = dynamic_cast<ControlNode*>(copy);
+    if(pointer) {
+      copy->setNr(m_controlNodes.size()+1);
+      if(sequence) {
+        copy->setSeqnr(copy->nr());
+      }
+      m_controlNodes.push_back(std::shared_ptr<ControlNode>(pointer));
+      return true;
+    }
+    return false;
+  }
+
   std::vector <Ahs> ahs() const;
-  /** Sets the model simple air handling systems vector. */
-  void setAhs(const std::vector<Ahs> ahs);
-  /** Add a simple air handling system to the model. */
-  void addAhs(Ahs ahs);
+  void setAhs(const std::vector<Ahs> &ahs);
+  void addAhs(Ahs &ahs);
 
-  /** Returns a vector of all airflow zones in the model. */
   std::vector<Zone> zones() const;
-  /** Sets the model airflow zones vector. */
-  void setZones(const std::vector<Zone> zones);
-  /** Add an airflow zone to the model. */
-  void addZone(Zone zone);
+  void setZones(const std::vector<Zone> &zones);
+  void addZone(Zone &zone);
 
-  /** Returns a vector of all airflow paths in the model. */
   std::vector<AirflowPath> airflowPaths() const;
-  /** Sets the model airflow paths vector. */
-  void setAirflowPaths(const std::vector<AirflowPath> paths);
-  /** Add an airflow path to the model. */
-  void addAirflowPath(AirflowPath path);
+  void setAirflowPaths(const std::vector<AirflowPath> &paths);
+  void addAirflowPath(AirflowPath &path);
 
-  /** Returns false if the model is not a legitimate PRJ model. */
   bool valid() const;
 
-  //@}
-  /** @name Input and Output */
-  //@{
-
-  /** Creates a new PRJ model from input file at specified path. */
-  bool read(openstudio::path path);
-  /** Creates a new PRJ model from named input file. */
-  bool read(std::string filename);
-  /** Creates a new PRJ model from an input object. */
-  bool read(Reader &input);
-
-  /** Write the model in PRJ format to a string. */
-  std::string toString();
-
-  //@}
-  /** @name Other Functions */
-  //@{
-
-  /** Return a vector of vectors of the CONTAM indices of all plot paths to the exterior of each zone. */
   std::vector<std::vector<int> > zoneExteriorFlowPaths();
-  /** Compute the infiltration on a per zone basis from simulation results. */
   std::vector<TimeSeries> zoneInfiltration(SimFile *sim);
-  /** Compute the infiltration on a per path basis from simulation results. */
   std::vector<TimeSeries> pathInfiltration(std::vector<int> pathNrs, SimFile *sim);
-  //@}
+
 
 private:
-  std::shared_ptr<detail::IndexModelImpl> m_impl;
+  void setDefaults();
+  void readZoneIc(Reader &input);
+  std::string writeZoneIc(int start=0);
+  template <class T> std::string writeSectionVector(std::vector<T> vector, std::string label=std::string(), int start=0);
+  template <class T> std::string writeSectionVector(std::vector<std::shared_ptr<T> > vector, std::string label = std::string(), int start = 0);
+  template <class T> std::string writeSectionVector(QVector<QSharedPointer<T> > vector, std::string label=std::string(), int start=0);
+  template <class T> std::string writeArray(std::vector<T> vector, std::string label=std::string(), int start=0);
+  template <class T> void renumberVector(std::vector<T> &vector);
+
+  bool m_valid;
+
+  std::map<std::string,std::string> m_unsupported;
+
+  std::string m_programName; // program name "ContamW" (I1)
+  std::string m_programVersion; // program version "3.1" (I1)
+  int m_echo; // (0/1) echo input files to the log file (I2)
+  std::string m_desc; // project description (I1) {W}
+  int m_skheight;  // total SketchPad height [cells] (I2) {W}
+  int m_skwidth;  // total SketchPad width [cells] (I2) {W}
+  int m_def_units;  // default units: 0 = SI, 1 = US (I2) {W}
+  int m_def_flows;  // default flows: 0 = mass, 1 = volume (I2) {W}
+  PRJFLOAT m_def_T;  // default temperature for zones [K] (R4) {W}
+  int m_udefT;  // units for temperature (I2) {W}
+  PRJFLOAT m_rel_N;  // angle to true north [degrees] (R4) {W}
+  PRJFLOAT m_wind_H;  // elevation for reference wind speed [m] (R4) {W}
+  int m_uwH;  // units for _wind_H (I2) {W}
+  PRJFLOAT m_wind_Ao;  // local terrain constant (R4) {W}
+  PRJFLOAT m_wind_a;  // velocity profile exponent (R4) {W}
+  PRJFLOAT m_scale;  // cell scaling factor (R4)
+  int m_uScale;  // units of scaling factor: 0 = m, 1 = ft (I2)
+  int m_orgRow;  // row of origin (I2)
+  int m_orgCol;  // column of origin (I2)
+  int m_invYaxis;  // 0 = positive above origin, 1 = negative above origin (I2)
+  int m_showGeom;  // 0/1 = show pseudo-geometry info in status bar (I2)
+  WeatherData m_ssWeather;  // weather data for steady-state simulation (WeatherData)
+  WeatherData m_wptWeather;  // weather data the wind pressure test (WeatherData)
+  std::string m_WTHpath;  // full name of weather file (CS)
+  std::string m_CTMpath;  // full name of contaminant file (CS)
+  std::string m_CVFpath;  // full name of continuous values file (CS)
+  std::string m_DVFpath;  // full name of discrete values file (CS)
+  std::string m_WPCfile;  // full name of WPC file (CS)
+  std::string m_EWCfile;  // full name of EWC data source file (CS) {W}
+  std::string m_WPCdesc;  // WPC description (CS) {W}
+  PRJFLOAT m_X0;  // X-value of ContamW origin in EWC coordinates [m] (R4) {W}
+  PRJFLOAT m_Y0;  // Y-value of ContamW origin in EWC coordinates [m] (R4) {W}
+  PRJFLOAT m_Z0;  // Z-value of ContamW origin in EWC coordinates [m] (R4) {W}
+  PRJFLOAT m_angle;  // Rotation of ContamW relative to EWC coordinates (R4) {W}
+  int m_u_XYZ;  // units of coordinates (I2) {W}
+  PRJFLOAT m_epsPath;  // tolerance for matching path locations [-] (R4) {W}
+  PRJFLOAT m_epsSpcs;  // tolerance for matching species [-] (R4) {W}
+  std::string m_tShift;  // time shift of EWC data {W} [s] (hh:mm:ss) {W}
+  std::string m_dStart;  // date WPC data starts (mm/dd) {W}
+  std::string m_dEnd;  // date WPC data ends (mm/dd) {W}
+  int m_useWPCwp;  // if true, use WPC file wind pressures (I2)
+  int m_useWPCmf;  // if true, use WPC file mass fractions (I2)
+  int m_wpctrig;  // 0/1 = trigger airflow calculation by WPC data (I2)
+  PRJFLOAT m_latd;  // latitude (degrees: north +, south -) (R4)
+  PRJFLOAT m_lgtd;  // longitude (degrees: east +, west -) (R4)
+  PRJFLOAT m_Tznr;  // time zone (Greenwich = 0, Eastern = -5, etc.) (R4)
+  PRJFLOAT m_altd;  // elevation above sea level [m] (R4)
+  PRJFLOAT m_Tgrnd;  // ground temperature [K] (R4)
+  int m_utg;  // units for ground temperatures (I2)
+  int m_u_a;  // units for elevation (I2)
+
+  RunControl m_rc;
+  //std::vector<int> m_contaminants;
+  std::vector<Species> m_species;
+  std::vector<Level> m_levels;
+  std::vector<DaySchedule> m_daySchedules;
+  std::vector<WeekSchedule> m_weekSchedules;
+  std::vector<WindPressureProfile> m_windPressureProfiles;
+  std::vector<std::shared_ptr<AirflowElement> > m_airflowElements;
+  std::vector<std::shared_ptr<ControlNode> > m_controlNodes;
+  std::vector<Ahs> m_ahs;
+  std::vector<Zone> m_zones;
+  std::vector<AirflowPath> m_paths;
 };
 
+template <class T> std::string IndexModelImpl::writeSectionVector(std::vector<T> vector, std::string label, int start)
+{
+  std::string string;
+  int number = vector.size()-start;
+  if(label.empty())
+  {
+    string += openstudio::toString(number) + '\n';
+  }
+  else
+  {
+    string += openstudio::toString(number) + " ! " + label + '\n';
+  }
+  for(unsigned int i=start;i<vector.size();i++)
+  {
+    string += vector[i].write();
+  }
+  string += "-999\n";
+  return string;
+}
+
+template <class T> std::string IndexModelImpl::writeSectionVector(std::vector<std::shared_ptr<T> > vector, std::string label, int start)
+{
+  std::string string;
+  int number = vector.size() - start;
+  if(label.empty())
+  {
+    string += openstudio::toString(number) + '\n';
+  } else
+  {
+    string += openstudio::toString(number) + " ! " + label + '\n';
+  }
+  for(unsigned int i = start; i<vector.size(); i++)
+  {
+    string += vector[i]->write();
+  }
+  string += "-999\n";
+  return string;
+}
+
+template <class T> std::string IndexModelImpl::writeSectionVector(QVector<QSharedPointer<T> > vector,
+  std::string label, int start)
+{
+  std::string string;
+  int number = vector.size()-start;
+  if(label.empty())
+  {
+    string += openstudio::toString(number) + '\n';
+  }
+  else
+  {
+    string += openstudio::toString(number) + " ! " + label + '\n';
+  }
+  for(int i=start;i<vector.size();i++)
+  {
+    string += vector[i]->write();
+  }
+  string += "-999\n";
+  return string;
+}
+
+template <class T> std::string IndexModelImpl::writeArray(std::vector<T> vector, std::string label, int start)
+{
+  std::string string;
+  int number = vector.size()-start;
+  if(label.empty())
+  {
+    string += openstudio::toString(number) + '\n';
+  }
+  else
+  {
+    string += openstudio::toString(number) + " ! " + label + '\n';
+  }
+  for(unsigned int i=start;i<vector.size();i++)
+  {
+    string += ' ' + openstudio::toString(vector[i]);
+  }
+  return string +'\n';
+}
+
+template <class T> void IndexModelImpl::renumberVector(std::vector<T> &vector)
+{
+  int nr = 1;
+  for(T &t : vector) {
+    t.setNr(nr);
+    nr++;
+  }
+}
+
+} // detail
 } // contam
 } // openstudio
 
-#endif // CONTAM_PRJMODEL_HPP
+#endif // CONTAM_PRJMODELIMPL_HPP

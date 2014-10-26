@@ -20,10 +20,10 @@
 #ifndef CONTAM_FORWARDTRANSLATOR_HPP
 #define CONTAM_FORWARDTRANSLATOR_HPP
 
-#include "AirflowAPI.hpp"
+#include "../AirflowAPI.hpp"
 
 #include "PrjModel.hpp"
-#include "SurfaceNetworkBuilder.hpp"
+#include "../SurfaceNetworkBuilder.hpp"
 
 //#include "../model/Model.hpp"
 #include "../utilities/idf/Handle.hpp"

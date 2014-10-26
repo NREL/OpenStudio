@@ -20,7 +20,7 @@
 #include <gtest/gtest.h>
 #include "AirflowFixture.hpp"
 
-#include "../ForwardTranslator.hpp"
+#include "../contam/ForwardTranslator.hpp"
 
 #include "../../model/Model.hpp"
 #include "../../model/Building.hpp"

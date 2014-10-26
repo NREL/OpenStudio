@@ -16,7 +16,7 @@
 
 %{
   //#include <airflow/ReverseTranslator.hpp>
-  #include <airflow/ForwardTranslator.hpp>
+  #include <airflow/contam/ForwardTranslator.hpp>
   using namespace openstudio::contam;
   using namespace openstudio;
   
@@ -32,11 +32,11 @@
 %rename(ContamForwardTranslator) openstudio::contam::ForwardTranslator;
 // #endif
 
-%include <airflow/PrjSubobjects.hpp>
-%include <airflow/PrjObjects.hpp>
-%include <airflow/PrjAirflowElements.hpp>
-%include <airflow/PrjModel.hpp>
+%include <airflow/contam/PrjSubobjects.hpp>
+%include <airflow/contam/PrjObjects.hpp>
+%include <airflow/contam/PrjAirflowElements.hpp>
+%include <airflow/contam/PrjModel.hpp>
 //%include <airflow/ReverseTranslator.hpp>
-%include <airflow/ForwardTranslator.hpp>
+%include <airflow/contam/ForwardTranslator.hpp>
 
 #endif //AIRFLOW_I 
