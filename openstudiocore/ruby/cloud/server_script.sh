@@ -24,6 +24,7 @@ chown ubuntu:ubuntu /home/ubuntu/setup*
 # stop the various services that use mongo
 service delayed_job stop
 service apache2 stop
+service mongodb stop
 service mongod stop
 
 # remove mongo db & add it back
@@ -31,6 +32,8 @@ mkdir -p /mnt/mongodb/data
 chown mongodb:nogroup /mnt/mongodb/data
 rm -rf /var/lib/mongodb
 
+# restart mongo - old images has mongodb as the service. New ones use mongod
+service mongodb start
 service mongod start
 
 # delay the continuation because mongo is a forked process and when it initializes
@@ -81,8 +84,6 @@ su - ubuntu -c 'cd /mnt/openstudio && bundle update'
 
 # copy over the models needed for mongo
 cd /mnt/openstudio/rails-models && unzip -o rails-models.zip -d models
-# Support the old  extraction as well - keep until we start using the new images
-cd /mnt/openstudio/rails-models && unzip -o rails-models.zip
 
 # rerun the permissions after unzipping the files
 chown -R ubuntu:www-data /mnt/openstudio
@@ -97,13 +98,5 @@ service Rserve restart
 # restart delayed jobs
 service delayed_job start
 
-# -- Old settings that may still be needed on the old images --
-# Set permissions on rails apps folders
-#sudo chmod 777 /var/www/rails/openstudio/public
-#sudo chmod -R 777 /mnt/openstudio
-# -- End old settings
-
 #file flag the user_data has completed
 cat /dev/null > /home/ubuntu/user_data_done
-
-
