@@ -8,5 +8,10 @@
 %include <std_shared_ptr.i>
 %include <boost_shared_ptr.i>
 
+%begin %{
+#ifdef _MSC_VER
+#define HAVE_ROUND
+#endif
+%}
 
 #endif
