@@ -65,13 +65,6 @@ public:
   bool build(model::Model & model);
 
   //@}
-  /** @name Surface-Finding Functions */
-  //@{
-
-  static std::vector<model::Surface> getInteriorZoneSurfaces(model::Model & model);
-  static std::vector<model::Surface> getExteriorZoneSurfaces(model::Model & model);
-
-  //@}
   /** @name Getters and Setters */
   //@{
 

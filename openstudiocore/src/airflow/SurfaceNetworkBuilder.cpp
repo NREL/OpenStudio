@@ -44,84 +44,6 @@ SurfaceNetworkBuilder::SurfaceNetworkBuilder(ProgressBar *progressBar) : m_progr
   m_progressBar = 0;
 }
 
-std::vector<model::Surface> SurfaceNetworkBuilder::getInteriorZoneSurfaces(model::Model & model)
-{
-  QVector<Handle> used;
-  std::vector<model::Surface> found;
-  for (model::Surface surface : model.getConcreteModelObjects<model::Surface>())
-  {
-    std::string bc = surface.outsideBoundaryCondition();
-    if(!used.contains(surface.handle()) && bc == "Surface")
-    {
-      // Get the associated thermal zone
-      boost::optional<openstudio::model::Space> space = surface.space();
-      if(!space)
-      {
-        LOG(Warn, "Unattached surface '" << openstudio::toString(surface.handle()) << "'");
-        continue;
-      }
-      boost::optional<model::ThermalZone> thermalZone = space->thermalZone();
-      if(!thermalZone)
-      {
-        LOG(Warn, "Unzoned space '" << openstudio::toString(space->handle()) << "'");
-        continue;
-      }
-      boost::optional<model::Surface> adjacentSurface = surface.adjacentSurface();
-      if(!adjacentSurface)
-      {
-        LOG(Error, "Unable to find adjacent surface for surface '" << openstudio::toString(surface.handle()) << "'");
-        continue;
-      }
-      boost::optional<model::Space> adjacentSpace = adjacentSurface->space();
-      if(!adjacentSpace)
-      {
-        LOG(Error, "Unattached adjacent surface '" << openstudio::toString(adjacentSurface->handle()) << "'");
-        continue;
-      }
-      boost::optional<model::ThermalZone> adjacentZone = adjacentSpace->thermalZone();
-      if(!thermalZone)
-      {
-        LOG(Warn, "Unzoned adjacent space '" << openstudio::toString(adjacentSpace->handle()) << "'");
-        continue;
-      }
-      // Ok, now we a surface, a space, a zone, an adjacent surface, an adjacent space, and an adjacent zone. Finally.
-      used.push_back(adjacentSurface->handle());
-      if(thermalZone != adjacentZone)
-      {
-        found.push_back(surface);
-      }
-    }
-  }
-  return found;
-}
-
-std::vector<model::Surface> SurfaceNetworkBuilder::getExteriorZoneSurfaces(model::Model & model)
-{
-  std::vector<model::Surface> found;
-  for(model::Surface surface : model.getConcreteModelObjects<model::Surface>())
-  {
-    std::string bc = surface.outsideBoundaryCondition();
-    if(bc == "Outdoors")
-    {
-      // Get the associated thermal zone
-      boost::optional<model::Space> space = surface.space();
-      if(!space)
-      {
-        LOG(Warn, "Unattached surface '" << openstudio::toString(surface.handle()) << "'");
-        continue;
-      }
-      boost::optional<model::ThermalZone> thermalZone = space->thermalZone();
-      if(!thermalZone)
-      {
-        LOG(Warn, "Unzoned space '" << openstudio::toString(space->handle()) << "'");
-        continue;
-      }
-      found.push_back(surface);
-    }
-  }
-  return found;
-}
-
 void SurfaceNetworkBuilder::progress()
 {
   if (m_progressBar) {
@@ -142,7 +64,6 @@ void SurfaceNetworkBuilder::initProgress(int max, std::string label)
 bool SurfaceNetworkBuilder::linkExteriorSurface(model::ThermalZone zone, model::Space space, model::Surface surface)
 {
   LOG(Info, "Surface '" << surface.name().get() << "' connects zone '" << zone.name().get() << "' to the ambient");
-  std::cout << "Surface '" << surface.name().get() << "' connects zone '" << zone.name().get() << "' to the ambient" << std::endl;
   return true;
 }
 
@@ -151,15 +72,12 @@ bool SurfaceNetworkBuilder::linkInteriorSurface(model::ThermalZone zone, model::
 {
   LOG(Info, "Surfaces '" << surface.name().get() << "' and '" << adjacentSurface.name().get() << "' connect zone '"
     << zone.name().get() << "' to zone '" << adjacentZone.name().get() << "'");
-  std::cout << "Surfaces '" << surface.name().get() << "' and '" << adjacentSurface.name().get() << "' connect zone '"
-    << zone.name().get() << "' to zone '" << adjacentZone.name().get() << "'" << std::endl;
   return true;
 }
 
 bool SurfaceNetworkBuilder::linkExteriorSubSurface(model::ThermalZone zone, model::Space space, model::Surface surface, model::SubSurface subSurface)
 {
   LOG(Info, "Subsurface '" << subSurface.name().get() << "' connects zone '" << zone.name().get() << "' to the ambient");
-  std::cout << "Subsurface '" << subSurface.name().get() << "' connects zone '" << zone.name().get() << "' to the ambient" << std::endl;
   return true;
 }
 
@@ -168,8 +86,6 @@ bool SurfaceNetworkBuilder::linkInteriorSubSurface(model::ThermalZone zone, mode
 {
   LOG(Info, "Subsurfaces '" << subSurface.name().get() << "' and '" << adjacentSubSurface.name().get() << "' connect zone '"
     << zone.name().get() << "' to zone '" << adjacentZone.name().get() << "'");
-  std::cout << "Subsurfaces '" << subSurface.name().get() << "' and '" << adjacentSubSurface.name().get() << "' connect zone '"
-    << zone.name().get() << "' to zone '" << adjacentZone.name().get() << "'"  << std::endl;
   return true;
 }
 
@@ -186,26 +102,22 @@ bool SurfaceNetworkBuilder::build(model::Model &model)
 
   initProgress(surfaces.size(),"Processing surfaces for network creation");
 
-  for (model::Surface surface : surfaces)
-  {
+  for (model::Surface surface : surfaces) {
     if(!first) {
       progress();
     }
     first=false;
     std::string bc = surface.outsideBoundaryCondition();
-    if(bc == "Outdoors")
-    {
+    if(bc == "Outdoors") {
       // Get the associated thermal zone
       boost::optional<openstudio::model::Space> space = surface.space();
-      if(!space)
-      {
+      if(!space) {
         LOG(Warn, "Unattached surface '" << openstudio::toString(surface.handle()) << "'");
         nowarnings = false;
         continue;
       }
       boost::optional<openstudio::model::ThermalZone> thermalZone = space->thermalZone();
-      if(!thermalZone)
-      {
+      if(!thermalZone) {
         LOG(Warn, "Unzoned space '" << openstudio::toString(space->handle()) << "'");
         nowarnings = false;
         continue;
@@ -218,36 +130,31 @@ bool SurfaceNetworkBuilder::build(model::Model &model)
     } else if(!used.contains(surface.handle()) && bc == "Surface") {
       // Get the associated thermal zone
       boost::optional<openstudio::model::Space> space = surface.space();
-      if(!space)
-      {
+      if(!space) {
         LOG(Warn, "Unattached surface '" << openstudio::toString(surface.handle()) << "'");
         nowarnings = false;
         continue;
       }
       boost::optional<openstudio::model::ThermalZone> thermalZone = space->thermalZone();
-      if(!thermalZone)
-      {
+      if(!thermalZone) {
         LOG(Warn, "Unzoned space '" << openstudio::toString(space->handle()) << "'");
         nowarnings = false;
         continue;
       }
       boost::optional<openstudio::model::Surface> adjacentSurface = surface.adjacentSurface();
-      if(!adjacentSurface)
-      {
+      if(!adjacentSurface) {
         LOG(Error, "Unable to find adjacent surface for surface '" << openstudio::toString(surface.handle()) << "'");
         nowarnings = false;
         continue;
       }
       boost::optional<openstudio::model::Space> adjacentSpace = adjacentSurface->space();
-      if(!adjacentSpace)
-      {
+      if(!adjacentSpace) {
         LOG(Error, "Unattached adjacent surface '" << openstudio::toString(adjacentSurface->handle()) << "'");
         nowarnings = false;
         continue;
       }
       boost::optional<openstudio::model::ThermalZone> adjacentZone = adjacentSpace->thermalZone();
-      if(!thermalZone)
-      {
+      if(!thermalZone) {
         LOG(Warn, "Unzoned adjacent space '" << openstudio::toString(adjacentSpace->handle()) << "'");
         nowarnings = false;
         continue;
@@ -303,10 +210,8 @@ std::vector<LogMessage> SurfaceNetworkBuilder::warnings() const
 {
   std::vector<LogMessage> result;
 
-  for(LogMessage logMessage : m_logSink.logMessages())
-  {
-    if (logMessage.logLevel() == Warn)
-    {
+  for(LogMessage logMessage : m_logSink.logMessages()) {
+    if (logMessage.logLevel() == Warn) {
       result.push_back(logMessage);
     }
   }
@@ -318,10 +223,8 @@ std::vector<LogMessage> SurfaceNetworkBuilder::errors() const
 {
   std::vector<LogMessage> result;
 
-  for(LogMessage logMessage : m_logSink.logMessages())
-  {
-    if (logMessage.logLevel() > Warn)
-    {
+  for(LogMessage logMessage : m_logSink.logMessages()) {
+    if (logMessage.logLevel() > Warn) {
       result.push_back(logMessage);
     }
   }
