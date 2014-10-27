@@ -28,20 +28,17 @@ mkdir -p /mnt/openstudio
 chown -R ubuntu:www-data /mnt/openstudio
 chmod -R 775 /mnt/openstudio
 
-
 # save application files into the right directory
 cp -rf /data/worker-nodes/* /mnt/openstudio/
 
 # install workflow dependencies
-su - ubuntu -c 'cd /mnt/openstudio && rm -f'
 rm -f /mnt/openstudio/Gemfile.lock
-cd /mnt/openstudio && bundle update
-su - ubuntu -c 'cd /mnt/openstudio && bundle update'
+su - ubuntu -c 'cd /mnt/openstudio && bundle'
+# also install as root for now
+cd /mnt/openstudio && bundle
 
 # copy over the models needed for mongo
 cd /mnt/openstudio/rails-models && unzip -o rails-models.zip -d models
-# Support the old  extraction as well - keep until we start using the new images
-cd /mnt/openstudio/rails-models && unzip -o rails-models.zip
 
 # rerun the permissions after unzipping the files
 chown -R ubuntu:www-data /mnt/openstudio
@@ -59,14 +56,5 @@ find /mnt/openstudio -type f -print0 | xargs -0 chmod 664
 #    echo 0 > /sys/devices/system/cpu/cpu$cpunum/online
 #done
 
-# -- Old settings that may still be needed on the old images --
-# Set permissions on rails apps folders
-#sudo chmod -R 777 /mnt/openstudio
-#sudo chmod -R 777 /mnt/openstudio
-# -- End old settings 
-
-
 #file flag the user_data has completed
 cat /dev/null > /home/ubuntu/user_data_done
-
-
