@@ -170,7 +170,7 @@ namespace openstudio{
       if (overwriteExisting || settings.value("accessKey").isNull()){
         settings.setValue("accessKey", toQString(m_accessKey));
       }
-      
+
       QFile file(QDir::homePath() + "/.ssh/aws");
       if (overwriteExisting || !file.exists()) {
         if (QDir::home().exists(".ssh") || QDir::home().mkdir(".ssh")) {
@@ -221,7 +221,7 @@ namespace openstudio{
       }
       return false;
     }
-    
+
     std::string AWSSettings_Impl::secretKey() const {
       return m_secretKey;
     }
@@ -407,7 +407,7 @@ namespace openstudio{
         onChange();
       }
     }
-    
+
     std::string AWSSession_Impl::privateKey() const {
       return m_privateKey;
     }
@@ -513,7 +513,7 @@ namespace openstudio{
       openstudio::Application::instance().application(false);
 
       m_ruby = getOpenStudioAWSRubyPath();
-      
+
 #if defined(Q_OS_WIN)
       m_ruby /= toPath("bin/ruby.exe");
 #else
@@ -570,7 +570,7 @@ namespace openstudio{
     }
 
     std::string AWSProvider_Impl::defaultServerInstanceType() {
-      return "m2.xlarge";
+      return "m3.xlarge";
     }
 
     std::vector<std::string> AWSProvider_Impl::workerInstanceTypes() {
@@ -682,35 +682,20 @@ namespace openstudio{
         AWSComputerInformation awsComputerInformation;
 
         // micro is currently insufficient to run server
-        //awsComputerInformation.instanceType = "t1.micro";
+        //awsComputerInformation.instanceType = "t2.micro";
         //awsComputerInformation.prettyName = "Micro";
         //awsComputerInformation.processorCount = 1;
         //info.push_back(awsComputerInformation);
 
-        awsComputerInformation.instanceType = "m2.xlarge";
-        awsComputerInformation.prettyName = "M2 Extra Large";
-        awsComputerInformation.processorCount = 2;
-        info.push_back(awsComputerInformation);
-
-        awsComputerInformation.instanceType = "m2.2xlarge";
-        awsComputerInformation.prettyName = "High-Memory Double Extra Large";
+        awsComputerInformation.instanceType = "m3.xlarge";
+        awsComputerInformation.prettyName = "Extra Large - 80GB Storage";
         awsComputerInformation.processorCount = 4;
         info.push_back(awsComputerInformation);
 
-        awsComputerInformation.instanceType = "m2.4xlarge";
-        awsComputerInformation.prettyName = "High-Memory Quadruple Extra Large";
+        awsComputerInformation.instanceType = "m3.2xlarge";
+        awsComputerInformation.prettyName = "Double Extra Large - 160GB Storage";
         awsComputerInformation.processorCount = 8;
         info.push_back(awsComputerInformation);
-
-        //awsComputerInformation.instanceType = "m3.xlarge";
-        //awsComputerInformation.prettyName = "M3 Extra Large";
-        //awsComputerInformation.processorCount = 4; // Hyperthreading enabled
-        //info.push_back(awsComputerInformation);
-
-        //awsComputerInformation.instanceType = "m3.2xlarge";
-        //awsComputerInformation.prettyName = "M3 Double Extra Large";
-        //awsComputerInformation.processorCount = 8; // Hyperthreading enabled
-        //info.push_back(awsComputerInformation);
       }
       return info;
     }
@@ -721,7 +706,7 @@ namespace openstudio{
         AWSComputerInformation awsComputerInformation;
 
         // micro is currently insufficient to run worker
-        //awsComputerInformation.instanceType = "t1.micro";
+        //awsComputerInformation.instanceType = "t2.micro";
         //awsComputerInformation.prettyName = "Micro";
         //awsComputerInformation.processorCount = 1;
         //info.push_back(awsComputerInformation);
@@ -1274,7 +1259,7 @@ namespace openstudio{
       emit CloudProvider_Impl::terminating();
 
       m_stopInstancesProcess = makeStopInstancesProcess();
-            
+
       return true;
     }
 
@@ -1341,7 +1326,7 @@ namespace openstudio{
     std::string AWSProvider_Impl::cloudProviderType() {
       return "AWSProvider";
     }
-     
+
     void AWSProvider_Impl::clearErrorsAndWarnings() const
     {
       m_errors.clear();
@@ -1472,12 +1457,12 @@ namespace openstudio{
       addProcessArguments(args);
       args << QString("EC2");
       args << QString("describe_availability_zones");
-      
+
       p->start(toQString(m_ruby), args);
 
       return p;
     }
-    
+
     QProcess *AWSProvider_Impl::makeCheckServiceProcess() const
     {
       auto p = new QProcess();
@@ -1486,7 +1471,7 @@ namespace openstudio{
       addProcessArguments(args);
       args << QString("EC2");
       args << QString("describe_availability_zones");
-      
+
       p->start(toQString(m_ruby), args);
 
       return p;
@@ -1500,7 +1485,7 @@ namespace openstudio{
       addProcessArguments(args);
       args << QString("EC2");
       args << QString("describe_availability_zones");
-      
+
       p->start(toQString(m_ruby), args);
 
       return p;
@@ -1514,7 +1499,7 @@ namespace openstudio{
       addProcessArguments(args);
       args << QString("EC2");
       args << QString("total_instances");
-      
+
       p->start(toQString(m_ruby), args);
 
       return p;
@@ -1531,12 +1516,12 @@ namespace openstudio{
       addProcessArguments(args);
       args << QString("EC2");
       args << QString("launch_server");
-      
+
       QJsonObject options;
       options["instance_type"] = QJsonValue(toQString(m_awsSettings.serverInstanceType()));
       options["openstudio_version"] = QJsonValue(toQString(openStudioVersion()));
       args << QString(QJsonDocument(options).toJson(QJsonDocument::Compact));
-      
+
       p->start(toQString(m_ruby), args);
 
       return p;
@@ -1550,7 +1535,7 @@ namespace openstudio{
       addProcessArguments(args);
       args << QString("EC2");
       args << QString("launch_workers");
-      
+
       QJsonObject options;
       options["instance_type"] = QJsonValue(toQString(m_awsSettings.workerInstanceType()));
       options["num"] = QJsonValue(static_cast<int>(m_awsSettings.numWorkers()));
@@ -1565,7 +1550,7 @@ namespace openstudio{
       }
       options["openstudio_version"] = QJsonValue(toQString(openStudioVersion()));
       args << QString(QJsonDocument(options).toJson(QJsonDocument::Compact));
-      
+
       p->start(toQString(m_ruby), args);
 
       return p;
@@ -1580,11 +1565,11 @@ namespace openstudio{
       addProcessArguments(args);
       args << QString("EC2");
       args << QString("instance_status");
-      
+
       QJsonObject options;
       options["instance_id"] = QJsonValue(toQString(m_awsSession.serverId()));
       args << QString(QJsonDocument(options).toJson(QJsonDocument::Compact));
-      
+
       p->start(toQString(m_ruby), args);
 
       return p;
@@ -1599,7 +1584,7 @@ namespace openstudio{
       addProcessArguments(args);
       args << QString("EC2");
       args << QString("instance_status");
-      
+
       p->start(toQString(m_ruby), args);
 
       return p;
@@ -1613,7 +1598,7 @@ namespace openstudio{
       addProcessArguments(args);
       args << QString("EC2");
       args << QString("terminate_session");
-      
+
       QJsonObject options;
       QStringList workerIds;
       for (const std::string& workerId : m_awsSession.workerIds()) {
@@ -1621,9 +1606,9 @@ namespace openstudio{
       }
       options["server_id"] = QJsonValue(toQString(m_awsSession.serverId()));
       options["worker_ids"] = QJsonValue::fromVariant(workerIds);
-      
+
       args << QString(QJsonDocument(options).toJson(QJsonDocument::Compact));
-      
+
       p->start(toQString(m_ruby), args);
 
       return p;
@@ -1637,7 +1622,7 @@ namespace openstudio{
       addProcessArguments(args);
       args << QString("EC2");
       args << QString("termination_status");
-      
+
       QJsonObject options;
       QStringList workerIds;
       for (const std::string& workerId : m_awsSession.workerIds()) {
@@ -1645,9 +1630,9 @@ namespace openstudio{
       }
       options["server_id"] = QJsonValue(toQString(m_awsSession.serverId()));
       options["worker_ids"] = QJsonValue::fromVariant(workerIds);
-      
+
       args << QString(QJsonDocument(options).toJson(QJsonDocument::Compact));
-      
+
       p->start(toQString(m_ruby), args);
 
       return p;
@@ -1662,7 +1647,7 @@ namespace openstudio{
       addProcessArguments(args);
       args << QString("CloudWatch");
       args << QString("estimated_charges");
-      
+
       p->start(toQString(m_ruby), args);
 
       return p;
@@ -1677,7 +1662,7 @@ namespace openstudio{
       addProcessArguments(args);
       args << QString("EC2");
       args << QString("total_instances");
-      
+
       p->start(toQString(m_ruby), args);
 
       return p;
@@ -1689,7 +1674,7 @@ namespace openstudio{
         logError("ServiceAvailable process failed to return output");
         return false;
       }
-      
+
       QJsonParseError err;
       QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
       if (!err.error) {
@@ -1700,7 +1685,7 @@ namespace openstudio{
       } else {
         logError("Error parsing serviceAvailable JSON: " + toString(err.errorString()));
       }
-      
+
       return false;
     }
 
@@ -1710,7 +1695,7 @@ namespace openstudio{
         logError("ValidateCredentials process failed to return output");
         return false;
       }
-      
+
       QJsonParseError err;
       QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
       if (!err.error) {
@@ -1725,7 +1710,7 @@ namespace openstudio{
       } else {
         logError("Error parsing validateCredentials JSON: " + toString(err.errorString()));
       }
-      
+
       return false;
     }
 
@@ -1735,7 +1720,7 @@ namespace openstudio{
         logError("ResourcesAvailableToStart process failed to return output");
         return false;
       }
-      
+
       QJsonParseError err;
       QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
       if (!err.error) {
@@ -1744,11 +1729,11 @@ namespace openstudio{
           if (m_awsSettings.numWorkers() + 1 + m_lastTotalInstances <= 20) return true;
         } else {
           logError(json.object()["error"].toObject()["message"].toString().toStdString());
-        } 
+        }
       } else {
         logError("Error parsing resourcesAvailableToStart JSON: " + toString(err.errorString()));
       }
-      
+
       return false;
     }
 
@@ -1758,7 +1743,7 @@ namespace openstudio{
         logError("ServerStarted process failed to return output");
         return false;
       }
-      
+
       QJsonParseError err;
       QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
       if (!err.error) {
@@ -1774,11 +1759,11 @@ namespace openstudio{
           return true;
         } else {
           logError(json.object()["error"].toObject()["message"].toString().toStdString());
-        } 
+        }
       } else {
         logError("Error parsing serverStarted JSON: " + toString(err.errorString()));
       }
-      
+
       return false;
     }
 
@@ -1789,7 +1774,7 @@ namespace openstudio{
         logError("WorkerStarted process failed to return output");
         return false;
       }
-      
+
       QJsonParseError err;
       QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
       if (!err.error) {
@@ -1805,15 +1790,15 @@ namespace openstudio{
           m_awsSession.setNumWorkerProcessors(numWorkerProcessors);
 
           emit CloudProvider_Impl::allWorkersStarted();
-          
+
           return true;
         } else {
           logError(json.object()["error"].toObject()["message"].toString().toStdString());
-        } 
+        }
       } else {
         logError("Error parsing workerStarted JSON: " + toString(err.errorString()));
       }
-      
+
       return false;
     }
 
@@ -1823,7 +1808,7 @@ namespace openstudio{
         logError("CheckServerRunning process failed to return output");
         return false;
       }
-      
+
       QJsonParseError err;
       QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
       if (!err.error) {
@@ -1837,7 +1822,7 @@ namespace openstudio{
       } else {
         logError("Error parsing checkServerRunning JSON: " + toString(err.errorString()));
       }
-      
+
       return false;
     }
 
@@ -1847,7 +1832,7 @@ namespace openstudio{
         logError("CheckWorkerRunning process failed to return output");
         return false;
       }
-      
+
       QJsonParseError err;
       QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
       if (!err.error) {
@@ -1867,11 +1852,11 @@ namespace openstudio{
           logError(output.toStdString());
         } else {
           logError(json.object()["error"].toObject()["message"].toString().toStdString());
-        } 
+        }
       } else {
         logError("Error parsing checkWorkerRunning JSON: " + toString(err.errorString()));
       }
-      
+
       return false;
     }
 
@@ -1881,7 +1866,7 @@ namespace openstudio{
         logError("InstancesStopped process failed to return output");
         return false;
       }
-      
+
       QJsonParseError err;
       QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
       if (!err.error) {
@@ -1889,15 +1874,15 @@ namespace openstudio{
           m_lastTerminateCompleted = true;
 
           emit CloudProvider_Impl::terminated();
-          
+
           return true;
         } else {
           logError(json.object()["error"].toObject()["message"].toString().toStdString());
-        } 
+        }
       } else {
         logError("Error parsing instancesStopped JSON: " + toString(err.errorString()));
       }
-      
+
       return false;
     }
 
@@ -1907,23 +1892,23 @@ namespace openstudio{
         logError("CheckTerminated process failed to return output");
         return false;
       }
-      
+
       QJsonParseError err;
       QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
       if (!err.error) {
         if (!json.object().contains("error")) {
           if (json.object()["all_instances_terminated"].toBool()) {
             emit CloudProvider_Impl::terminated();
-            
+
             return true;
           }
         } else {
           logError(json.object()["error"].toObject()["message"].toString().toStdString());
-        } 
+        }
       } else {
         logError("Error parsing checkTerminated JSON: " + toString(err.errorString()));
       }
-      
+
       return false;
     }
 
@@ -1933,7 +1918,7 @@ namespace openstudio{
         logError("CheckEstimatedCharges process failed to return output");
         return 0.0;
       }
-      
+
       QJsonParseError err;
       QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
       if (!err.error) {
@@ -1948,11 +1933,11 @@ namespace openstudio{
           } else {
             logError(message.toStdString());
           }
-        } 
+        }
       } else {
         logError("Error parsing checkEstimatedCharges JSON: " + toString(err.errorString()));
       }
-      
+
       return 0.0;
     }
 
@@ -1962,7 +1947,7 @@ namespace openstudio{
         logError("CheckTotalInstances process failed to return output");
         return 0;
       }
-      
+
       QJsonParseError err;
       QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
       if (!err.error) {
@@ -1977,11 +1962,11 @@ namespace openstudio{
           } else {
             logError(json.object()["error"].toObject()["message"].toString().toStdString());
           }
-        } 
+        }
       } else {
         logError("Error parsing checkTotalInstances JSON: " + toString(err.errorString()));
       }
-      
+
       return 0;
     }
 
@@ -2008,7 +1993,7 @@ namespace openstudio{
       m_lastResourcesAvailableToStart = parseResourcesAvailableToStartResults(handleProcessCompleted(m_checkResourcesProcess));
       m_checkResourcesProcess = nullptr;
     }
-    
+
     void AWSProvider_Impl::onServerStarted(int, QProcess::ExitStatus)
     {
       m_serverStarted = parseServerStartedResults(handleProcessCompleted(m_startServerProcess));
@@ -2047,13 +2032,13 @@ namespace openstudio{
       m_lastServerRunning = parseCheckServerRunningResults(handleProcessCompleted(m_checkServerRunningProcess));
       m_checkServerRunningProcess = nullptr;
     }
-    
+
     void AWSProvider_Impl::onCheckWorkerRunningComplete(int, QProcess::ExitStatus)
     {
       m_lastWorkerRunning = parseCheckWorkerRunningResults(handleProcessCompleted(m_checkWorkerRunningProcess));
       m_checkWorkerRunningProcess = nullptr;
     }
-    
+
     void AWSProvider_Impl::onInstancesStopped(int, QProcess::ExitStatus)
     {
       m_instancesStopped = parseInstancesStoppedResults(handleProcessCompleted(m_stopInstancesProcess));
@@ -2087,7 +2072,7 @@ namespace openstudio{
       }
       return true;
     }
-    
+
     bool AWSProvider_Impl::authenticated() const {
       if (!m_awsSettings.validAccessKey()) {
         logError("Invalid Access Key");
@@ -2275,7 +2260,7 @@ namespace openstudio{
   }
 
   std::string AWSSession::serverId() const {
-    return getImpl<detail::AWSSession_Impl>()->serverId(); 
+    return getImpl<detail::AWSSession_Impl>()->serverId();
   }
 
   void AWSSession::setServerId(const std::string& serverId) {
@@ -2321,7 +2306,7 @@ namespace openstudio{
   void AWSSession::setTimestamp(const std::string& timestamp) {
     getImpl<detail::AWSSession_Impl>()->setTimestamp(timestamp);
   }
-  
+
   std::string AWSSession::region() const {
     return getImpl<detail::AWSSession_Impl>()->region();
   }
@@ -2345,7 +2330,7 @@ namespace openstudio{
   void AWSSession::setWorkerInstanceType(const std::string& instanceType) {
     getImpl<detail::AWSSession_Impl>()->setWorkerInstanceType(instanceType);
   }
-  
+
   unsigned AWSSession::numWorkers() const {
     return getImpl<detail::AWSSession_Impl>()->workerUrls().size();
   }
@@ -2369,7 +2354,7 @@ namespace openstudio{
   {
     OS_ASSERT(getImpl<detail::AWSProvider_Impl>());
   }
-  
+
   std::vector<std::string> AWSProvider::availableRegions() {
     return detail::AWSProvider_Impl::availableRegions();
   }

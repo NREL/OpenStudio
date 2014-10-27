@@ -80,7 +80,7 @@ def get_proxy_user_escaped()
   if user
     user = CGI.escape(user)
   end
-  
+
   return user
 end
 
@@ -93,22 +93,22 @@ def get_proxy_pass_escaped()
   if pass
     pass = CGI.escape(pass)
   end
-  
+
   return pass
 end
 
 def get_proxy_user_info_escaped()
   user = get_proxy_user_escaped()
   pass = get_proxy_pass_escaped()
-  
+
   if user && pass && !pass.empty?
     return "#{user}:#{pass}"
   end
-  
-  if user 
+
+  if user
     return user
   end
-  
+
   return nil
 end
 
@@ -138,7 +138,7 @@ def get_proxy_uri()
   else
     return nil
   end
-end  
+end
 
 def get_proxy()
   if get_proxy_host()
@@ -196,6 +196,7 @@ def find_processors(instance)
   lookup = {
       'm3.medium' => 1,
       'm3.large' => 2,
+      'm3.large' => 2, # not recommended because it only has 32 GB storage
       'm3.xlarge' => 4,
       'm3.2xlarge' => 8,
       'c3.large' => 2,
@@ -208,11 +209,12 @@ def find_processors(instance)
       'r3.2xlarge' => 8,
       'r3.4xlarge' => 16,
       'r3.8xlarge' => 32,
-      't1.micro' => 1,
-      'm1.small' => 1,
-      'm2.xlarge' => 2,
-      'm2.2xlarge' => 4,
-      'm2.4xlarge' => 8,
+      't1.micro' => 1, # deprecated
+      't2.micro' => 1
+      'm1.small' => 1, # deprecated
+      'm2.xlarge' => 2, # deprecated
+      'm2.2xlarge' => 4, # deprecated
+      'm2.4xlarge' => 8, # deprecated
     }
 
   processors = 1
@@ -530,7 +532,7 @@ begin
       wait_command(@server.ip, '[ -e /home/ubuntu/user_data_done ] && echo "true"')
       @logger.info("worker user_data")
       @workers.each { |worker| wait_command(worker.ip, '[ -e /home/ubuntu/user_data_done ] && echo "true"') }
-      #wait_command(@workers.first.ip, "[ -e /home/ubuntu/user_data_done ] && echo 'true'") 
+      #wait_command(@workers.first.ip, "[ -e /home/ubuntu/user_data_done ] && echo 'true'")
 
 
       ips = "master|#{@server.ip}|#{@server.dns}|#{@server.procs}|ubuntu|ubuntu\n"
