@@ -210,11 +210,11 @@ def find_processors(instance)
       'r3.4xlarge' => 16,
       'r3.8xlarge' => 32,
       't1.micro' => 1, # deprecated
-      't2.micro' => 1
+      't2.micro' => 1,
       'm1.small' => 1, # deprecated
       'm2.xlarge' => 2, # deprecated
       'm2.2xlarge' => 4, # deprecated
-      'm2.4xlarge' => 8, # deprecated
+      'm2.4xlarge' => 8 # deprecated
     }
 
   processors = 1
