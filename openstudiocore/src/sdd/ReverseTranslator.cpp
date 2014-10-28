@@ -951,6 +951,10 @@ namespace sdd {
             var = model::OutputVariable("System Node Mass Flow Rate",*result);
             var.setReportingFrequency(interval);
             var.setKeyValue(returnAirNode->name().get());
+
+            var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(returnAirNode->name().get());
           }
 
           std::vector<model::ModelObject> objects = it->inletPortList().modelObjects();
@@ -965,6 +969,10 @@ namespace sdd {
             var = model::OutputVariable("System Node Mass Flow Rate",*result);
             var.setReportingFrequency(interval);
             var.setKeyValue(inletIt->name().get());
+
+            var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(inletIt->name().get());
           }
 
           objects = it->exhaustPortList().modelObjects();
@@ -977,6 +985,10 @@ namespace sdd {
             var.setKeyValue(exhIt->name().get());
 
             var = model::OutputVariable("System Node Mass Flow Rate",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(exhIt->name().get());
+
+            var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
             var.setReportingFrequency(interval);
             var.setKeyValue(exhIt->name().get());
           }
@@ -1055,11 +1067,19 @@ namespace sdd {
           var.setReportingFrequency(interval);
           var.setKeyValue(airloop.supplyOutletNode().name().get());
 
+          var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(airloop.supplyOutletNode().name().get());
+
           var = model::OutputVariable("System Node Temperature",*result);
           var.setReportingFrequency(interval);
           var.setKeyValue(airloop.demandInletNode().name().get());
 
           var = model::OutputVariable("System Node Mass Flow Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(airloop.demandInletNode().name().get());
+
+          var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
           var.setReportingFrequency(interval);
           var.setKeyValue(airloop.demandInletNode().name().get());
 
@@ -1070,6 +1090,10 @@ namespace sdd {
             var.setKeyValue(node->name().get());
 
             var = model::OutputVariable("System Node Mass Flow Rate",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(node->name().get());
+
+            var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
             var.setReportingFrequency(interval);
             var.setKeyValue(node->name().get());
           }
@@ -1085,6 +1109,10 @@ namespace sdd {
               var = model::OutputVariable("System Node Mass Flow Rate",*result);
               var.setReportingFrequency(interval);
               var.setKeyValue(node->name().get());
+
+              var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+              var.setReportingFrequency(interval);
+              var.setKeyValue(node->name().get());
             }
 
             if( boost::optional<model::Node> node = oaSystem->outboardOANode() )
@@ -1094,6 +1122,10 @@ namespace sdd {
               var.setKeyValue(node->name().get());
 
               var = model::OutputVariable("System Node Mass Flow Rate",*result);
+              var.setReportingFrequency(interval);
+              var.setKeyValue(node->name().get());
+
+              var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
               var.setReportingFrequency(interval);
               var.setKeyValue(node->name().get());
             }
