@@ -56,7 +56,7 @@ public:
   /** Construct a new object. */
   explicit SurfaceNetworkBuilder(ProgressBar *progressBar=0);
   /** Destroy the translator.*/
-  ~SurfaceNetworkBuilder(){}
+  virtual ~SurfaceNetworkBuilder(){}
 
   //@}
   /** @name Network Construction Functions */
