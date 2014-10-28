@@ -80,8 +80,7 @@ cp -rf /data/worker-nodes/* /mnt/openstudio/
 rm -f /mnt/openstudio/Gemfile.lock
 su - ubuntu -c 'cd /mnt/openstudio && bundle'
 # also install as root for now
-cd /mnt/openstudio && bundle
-
+cd /mnt/openstudio && /opt/rbenv/shims/bundle
 
 # copy over the models needed for mongo
 cd /mnt/openstudio/rails-models && unzip -o rails-models.zip -d models
