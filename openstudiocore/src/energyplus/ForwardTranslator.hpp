@@ -189,6 +189,7 @@ class SetpointManagerScheduledDualSetpoint;
 class SetpointManagerSingleZoneHumidityMinimum;
 class SetpointManagerSingleZoneReheat;
 class SetpointManagerWarmest;
+class SetpointManagerWarmestTemperatureFlow;
 class ShadowCalculation;
 class Shade;
 class SimulationControl;
@@ -649,6 +650,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateSetpointManagerSingleZoneReheat( model::SetpointManagerSingleZoneReheat & modelObject);
 
   boost::optional<IdfObject> translateSetpointManagerWarmest( model::SetpointManagerWarmest & modelObject);
+
+  boost::optional<IdfObject> translateSetpointManagerWarmestTemperatureFlow( model::SetpointManagerWarmestTemperatureFlow & modelObject);
 
   boost::optional<IdfObject> translateShade( model::Shade & modelObject );
 

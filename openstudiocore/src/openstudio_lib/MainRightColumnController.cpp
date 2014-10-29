@@ -916,6 +916,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_OutdoorAirReset,"Setpoint Manager Outdoor Air Reset");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_OutdoorAirPretreat,"Setpoint Manager Outdoor Air Pretreat");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_Warmest,"Setpoint Manager Warmest");
+  libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_WarmestTemperatureFlow,"Setpoint Manager Warmest Temp and Flow");
   libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_WalkIn,"Refrigeration Walkin");
   libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_System,"Refrigeration System");
   libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Subcooler_Mechanical,"Refrigeration Subcooler Mechanical");

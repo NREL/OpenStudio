@@ -284,6 +284,8 @@ IconLibrary::IconLibrary()
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_Scheduled).value()] = new QPixmap(":images/mini_icons/setpoint_scheduled.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_Scheduled_DualSetpoint).value()] = new QPixmap(":images/mini_icons/setpoint_dual.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_SingleZone_Reheat).value()] = new QPixmap(":images/mini_icons/setpoint_singlezone.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_Warmest).value()] = new QPixmap(":images/mini_icons/setpoint_warmest.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_WarmestTemperatureFlow).value()] = new QPixmap(":images/mini_icons/setpoint_warmest_tempflow.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow).value()] = new QPixmap(":images/mini_icons/mini_vrf_unit.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric).value()] = new QPixmap(":images/mini_icons/baseboard_electric.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Water).value()] = new QPixmap(":images/mini_icons/baseboard_water.png");

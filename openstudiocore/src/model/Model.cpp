@@ -393,6 +393,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneHumidityMinimum);
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneReheat);
     REGISTER_CONSTRUCTOR(SetpointManagerWarmest);
+    REGISTER_CONSTRUCTOR(SetpointManagerWarmestTemperatureFlow);
     REGISTER_CONSTRUCTOR(Shade);
     REGISTER_CONSTRUCTOR(ShadingControl);
     REGISTER_CONSTRUCTOR(ShadingSurface);
@@ -705,6 +706,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneHumidityMinimum);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneReheat);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerWarmest);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerWarmestTemperatureFlow);
     REGISTER_COPYCONSTRUCTORS(Shade);
     REGISTER_COPYCONSTRUCTORS(ShadingControl);
     REGISTER_COPYCONSTRUCTORS(ShadingSurface);
