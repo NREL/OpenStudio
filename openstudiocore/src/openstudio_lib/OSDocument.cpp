@@ -432,7 +432,8 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
   m_mainWindow->setVisible(false);
   openstudio::OSAppBase * app = OSAppBase::instance();
   app->waitDialog()->setVisible(true);
-  app->processEvents();
+
+  for (int i = 5; Application::instance().processEvents() && i != 0; --i) { }
 
   m_model = model;
 
