@@ -42,8 +42,6 @@ public:
 
   void setText(const QString & text);
 
-  QSize sizeHint() const;
-
 private:
 
   virtual void createWidgets();

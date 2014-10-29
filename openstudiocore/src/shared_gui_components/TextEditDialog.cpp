@@ -21,9 +21,9 @@
 
 #include <QBoxLayout>
 #include <QPushButton>
+#include <QScrollArea>
 #include <QSizePolicy>
 #include <QTextEdit>
-#include <QBoxLayout>
 
 namespace openstudio {
 
@@ -50,11 +50,6 @@ QString TextEditDialog::text()
 void TextEditDialog::setText(const QString & text)
 {
   m_textEdit->setText(text);
-}
-
-QSize TextEditDialog::sizeHint() const
-{
-  return QSize(500,100);
 }
 
 void TextEditDialog::createWidgets()
