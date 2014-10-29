@@ -820,7 +820,7 @@ void InspectorGadget::layoutComboBox( QVBoxLayout* layout,
   QComboBox* combo = new IGComboBox(parent);
   combo->setSizeAdjustPolicy( QComboBox::AdjustToContentsOnFirstShow );
 
-  if( prop.objectLists.size() )
+  if (prop.objectLists.size() && m_workspaceObj && !m_workspaceObj->handle().isNull())
   {
     Workspace workspace = m_workspaceObj->workspace();
     std::vector<std::string> names;
