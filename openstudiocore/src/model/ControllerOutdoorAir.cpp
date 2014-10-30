@@ -677,7 +677,7 @@ ControllerOutdoorAir::ControllerOutdoorAir(const Model& model)
   setString(OS_Controller_OutdoorAirFields::HumidistatControlZoneName,"");
   setString(OS_Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio,"");
   setString(OS_Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio,"");
-  setHeatRecoveryBypassControlType("BypassWhenOAFlowGreaterThanMinimum");
+  setHeatRecoveryBypassControlType("BypassWhenWithinEconomizerLimits");
 
   ControllerMechanicalVentilation controllerMechanicalVentilation(model);
   setControllerMechanicalVentilation(controllerMechanicalVentilation);
