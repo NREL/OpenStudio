@@ -1,0 +1,48 @@
+
+OS:Version,
+  {c27615d0-c876-4cb5-bc20-0b36204cbe9c}, !- Handle
+  1.5.1;                                  !- Version Identifier
+
+OS:Construction,
+  {ab2a7018-60c7-4c28-a409-634156804ace}, !- Handle
+  Interior Floor,                         !- Name
+  ,                                       !- Surface Rendering Name
+  {873c95ec-d533-41d7-a8d4-7a4ce38cb96e}, !- Layer 1
+  {7a07fdf7-b7d9-48db-af90-d6e07d711e7a}, !- Layer 2
+  {7efb01cc-71de-4030-9bb8-05f24399a758}; !- Layer 3
+
+OS:Material,
+  {873c95ec-d533-41d7-a8d4-7a4ce38cb96e}, !- Handle
+  F16 Acoustic tile,                      !- Name
+  MediumSmooth,                           !- Roughness
+  0.0191,                                 !- Thickness {m}
+  0.06,                                   !- Conductivity {W/m-K}
+  368,                                    !- Density {kg/m3}
+  590;                                    !- Specific Heat {J/kg-K}
+
+OS:Material:AirGap,
+  {7a07fdf7-b7d9-48db-af90-d6e07d711e7a}, !- Handle
+  F05 Ceiling air space resistance,       !- Name
+  0.18;                                   !- Thermal Resistance {m2-K/W}
+
+OS:Material,
+  {7efb01cc-71de-4030-9bb8-05f24399a758}, !- Handle
+  M11 100mm lightweight concrete,         !- Name
+  MediumRough,                            !- Roughness
+  0.1016,                                 !- Thickness {m}
+  0.53,                                   !- Conductivity {W/m-K}
+  1280,                                   !- Density {kg/m3}
+  840;                                    !- Specific Heat {J/kg-K}
+
+OS:ComponentData,
+  {386f5991-a807-49bc-91e2-01e09a3e1c66}, !- Handle
+  Component Data 1,                       !- Name
+  {a76091a2-052e-4a32-80ea-96811efb09ce}, !- UUID
+  {49d675df-ac1f-42f3-9ba3-a35bb923c93c}, !- Version UUID
+  1414686566,                             !- Creation Timestamp
+  1414686566,                             !- Version Timestamp
+  {ab2a7018-60c7-4c28-a409-634156804ace}, !- Name of Object 1
+  {873c95ec-d533-41d7-a8d4-7a4ce38cb96e}, !- Name of Object 2
+  {7a07fdf7-b7d9-48db-af90-d6e07d711e7a}, !- Name of Object 3
+  {7efb01cc-71de-4030-9bb8-05f24399a758}; !- Name of Object 4
+
