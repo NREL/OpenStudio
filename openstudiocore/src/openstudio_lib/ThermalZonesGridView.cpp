@@ -620,7 +620,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
 
     }else if(field == NAME){
       addNameLineEditColumn(QString(NAME),
-                            true,
+                            false,
                             CastNullAdapter<model::ThermalZone>(&model::ThermalZone::name),
                             CastNullAdapter<model::ThermalZone>(&model::ThermalZone::setName),
                             boost::optional<std::function<void (model::ThermalZone *)>>());
