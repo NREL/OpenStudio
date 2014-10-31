@@ -1226,7 +1226,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       spm.setMinimumTurndownRatio(value);
     }
   }
-  else if( istringEqual(clgCtrlElement.text().toStdString(),"Warmest") )
+  else if( istringEqual(clgCtrlElement.text().toStdString(),"WarmestReset") )
   {
     model::SetpointManagerWarmest spm(model);
     deckSPM = spm;
