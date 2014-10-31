@@ -5,6 +5,9 @@ project(OpenStudioCore)
 cmake_policy(SET CMP0020 NEW)
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.0")
   cmake_policy(SET CMP0042 NEW)
+  if(NOT ${CMAKE_VERSION} VERSION_LESS "3.1")
+    cmake_policy(SET CMP0054 NEW)
+  endif()
 endif()
 
 ###############################################################################
