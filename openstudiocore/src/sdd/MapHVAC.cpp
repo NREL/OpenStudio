@@ -5713,6 +5713,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     waterHeaterMixed.setPartLoadFactorCurve(hirfPLRCrv.get());
   }
 
+  // FuelSrc
+  auto fuelSrcElement = element.firstChildElement("FuelSrc");
+  waterHeaterMixed.setHeaterFuelType(fuelSrcElement.text().toStdString());
+
+  // OffCycleFuelSrc
+  auto offCycleFuelSrcElement = element.firstChildElement("OffCycleFuelSrc");
+  waterHeaterMixed.setOffCycleParasiticFuelType(offCycleFuelSrcElement.text().toStdString());
+
+  // OnCycleFuelSrc
+  auto onCycleFuelSrcElement = element.firstChildElement("OnCycleFuelSrc");
+  waterHeaterMixed.setOnCycleParasiticFuelType(onCycleFuelSrcElement.text().toStdString());
+
   return waterHeaterMixed;
 }
 
