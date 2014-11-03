@@ -636,6 +636,12 @@ void MeasureManager::duplicateSelectedMeasure()
   {
     boost::optional<BCLMeasure> bclMeasure = this->getMeasure(item->uuid());
     if (bclMeasure){
+
+      // check for updates in case measure being copied has changed
+      if (checkForUpdates(*bclMeasure)){
+        bclMeasure->save();
+      }
+
       // open modal dialog
       //QSharedPointer<BCLMeasureDialog> dialog(new BCLMeasureDialog(*bclMeasure, this->mainWindow));
       QSharedPointer<BCLMeasureDialog> dialog(new BCLMeasureDialog(*bclMeasure));
