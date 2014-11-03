@@ -72,6 +72,8 @@ InspectorController::InspectorController()
   auto isConnected = connect(m_inspectorView, SIGNAL(removeButtonClicked(bool)), this, SIGNAL(removeButtonClicked(bool)));
   OS_ASSERT(isConnected);
 
+  connect(m_inspectorView, &InspectorView::workspaceObjectRemoved, this, &InspectorController::workspaceObjectRemoved);
+
   connect(m_inspectorView, &InspectorView::addZoneClicked, this, &InspectorController::addBranchForZone);
 
   connect(this, &InspectorController::toggleUnitsClicked, m_inspectorView, &InspectorView::toggleUnitsClicked);
@@ -277,7 +279,7 @@ void InspectorController::removeFromLoop(model::Loop & loop, boost::optional<mod
   }
 }
 
-void InspectorController:: toggleUnits(bool displayIP)
+void InspectorController::toggleUnits(bool displayIP)
 {
 }
 
