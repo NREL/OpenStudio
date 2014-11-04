@@ -720,8 +720,17 @@ namespace openstudio{
 
         QTextStream docIn(&file);
         fileString = docIn.readAll();
-        fileString.replace(toQString(oldMeasureType.valueName()), toQString(newMeasureType.valueName()));
-        fileString.replace(toQString(oldClassName), toQString(newClassName));
+
+        if (oldMeasureType != newMeasureType){
+          fileString.replace(toQString(oldMeasureType.valueName()), toQString(newMeasureType.valueName()));
+        }
+
+        if (!oldClassName.empty() && !newClassName.empty() && oldClassName != newClassName){
+          // DLM: might also want to check that oldClassName is greater than 3 characters long?
+          // should we be doing a more selective replace (like require leading space and trailing space, ., or :)?
+          fileString.replace(toQString(oldClassName), toQString(newClassName));
+        }
+
         fileString.replace(QRegularExpression("^(\\s+)def name(.*?)end", opts), nameFunction);
         fileString.replace(QRegularExpression("^(\\s+)def description(.*?)end", opts), descriptionFunction);
         fileString.replace(QRegularExpression("^(\\s+)def modeler_description(.*?)end", opts), modelerDescriptionFunction);
@@ -755,7 +764,9 @@ namespace openstudio{
 
         QString oldPath = toQString(fileRef.path());
         QString newPath = oldPath;
-        newPath.replace(toQString(oldLowerClassName), toQString(newLowerClassName));
+        if (!oldLowerClassName.empty() && !newLowerClassName.empty() && oldLowerClassName != newLowerClassName){
+          newPath.replace(toQString(oldLowerClassName), toQString(newLowerClassName));
+        }
 
         if (QFile::exists(newPath)) {
           // somehow this file already exists, don't clobber it
@@ -765,14 +776,17 @@ namespace openstudio{
           QFile::remove(oldPath);
         }
         
-
         QString fileString;
         QFile file(newPath);
         if (file.open(QFile::ReadOnly)){
 
           QTextStream docIn(&file);
           fileString = docIn.readAll();
-          fileString.replace(toQString(oldClassName), toQString(newClassName));
+          if (!oldClassName.empty() && !newClassName.empty() && oldClassName != newClassName){
+            // DLM: might also want to check that oldClassName is greater than 3 characters long?
+            // should we be doing a more selective replace (like require leading space and trailing space, ., or :)?
+            fileString.replace(toQString(oldClassName), toQString(newClassName));
+          }
           file.close();
 
           if (file.open(QIODevice::WriteOnly)){
