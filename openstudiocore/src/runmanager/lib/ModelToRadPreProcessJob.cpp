@@ -34,8 +34,6 @@
 #include "../../model/Building_Impl.hpp"
 #include "../../model/Facility.hpp"
 #include "../../model/Facility_Impl.hpp"
-#include "../../model/TimeDependentValuation.hpp"
-#include "../../model/TimeDependentValuation_Impl.hpp"
 #include "../../model/Timestep.hpp"
 #include "../../model/Timestep_Impl.hpp"
 #include "../../model/ThermalZone.hpp"

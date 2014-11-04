@@ -38,7 +38,6 @@
 
 #include "../../utilities/bcl/RemoteBCL.hpp"
 #include "../../utilities/bcl/LocalBCL.hpp"
-#include "../../utilities/bcl/OnDemandGenerator.hpp"
 #include "../../utilities/bcl/BCLComponent.hpp"
 
 #include "../../utilities/idf/IdfObject.hpp"
@@ -503,35 +502,4 @@ TEST_F(OSVersionFixture,KeepHandles) {
   workspaceObjects = model->getObjectsByName("OS:Surface 1");
   ASSERT_EQ(1u, workspaceObjects.size());
   EXPECT_TRUE(idfObjects[0].handle() == workspaceObjects[0].handle());
-}
-
-TEST_F(OSVersionFixture,OnDemandComponent) {
-  RemoteBCL remoteBCL;
-  bool ok = remoteBCL.downloadOnDemandGenerator("bb8aa6a0-6a25-012f-9521-00ff10704b07");
-  EXPECT_TRUE(ok);
-  boost::optional<OnDemandGenerator> oGenerator = remoteBCL.waitForOnDemandGenerator();
-  ASSERT_TRUE(oGenerator);
-  OnDemandGenerator generator = *oGenerator;
-
-  generator.setArgumentValue("NREL_reference_building_vintage","ASHRAE_90.1-2004");
-  generator.setArgumentValue("Climate_zone","ClimateZone 1-8");
-  generator.setArgumentValue("NREL_reference_building_primary_space_type","SmallOffice");
-  generator.setArgumentValue("NREL_reference_building_secondary_space_type","WholeBuilding");
-
-  boost::optional<BCLComponent> oBCLComponent = LocalBCL::instance().getOnDemandComponent(generator);
-  if (!oBCLComponent) {
-    oBCLComponent = remoteBCL.getOnDemandComponent(generator);
-  }
-  ASSERT_TRUE(oBCLComponent);
-  BCLComponent bclComponent = *oBCLComponent;
-
-  StringVector fileStrs = bclComponent.files("osc");
-  ASSERT_FALSE(fileStrs.empty());
-  openstudio::path oscPath = toPath(fileStrs[0]);
-
-  VersionTranslator translator;
-  OptionalComponent oComponent = translator.loadComponent(oscPath);
-  ASSERT_TRUE(oComponent);
-  Component component = *oComponent;
-  EXPECT_EQ(IddObjectType("OS:SpaceType"),component.primaryObject().iddObjectType());
 }

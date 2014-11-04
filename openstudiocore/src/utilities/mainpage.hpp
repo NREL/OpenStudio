@@ -34,8 +34,7 @@ namespace openstudio {
  *
  *  Classes for pushing and pulling \link BCLComponent BCLComponents\endlink and \link BCLMeasure 
  *  BCLMeasures\endlink from the \link RemoteBCL online\endlink Building Component Library (BCL) 
- *  and a \link LocalBCL local\endlink BCL. Includes support for \link OnDemandGenerator 
- *  OnDemandGenerators\endlink. For using components in OpenStudio format (.osc), please see 
+ *  and a \link LocalBCL local\endlink BCL. For using components in OpenStudio format (.osc), please see 
  *  model::Component and osversion::VersionTranslator. Infrastructure for using measures is 
  *  available in the ruleset (ruleset::UserScript, ruleset::OSArgument, ruleset::OSRunner, 
  *  ruleset::RubyUserScriptArgumentGetter), runmanager (runmanager::RubyJobBuilder), and analysis
@@ -66,7 +65,6 @@ namespace openstudio {
  *  Classes representing file types commonly used in building energy simulation. 
  *
  *  \li EpwFile
- *  \li TimeDependentValuationFile
  *
  *  \section geometry_sec Geometry
  *

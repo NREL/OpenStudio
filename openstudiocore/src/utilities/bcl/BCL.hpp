@@ -35,8 +35,6 @@ class QNetworkReply;
 
 namespace openstudio{
 
-  class OnDemandGenerator;
-
   /// This gives information about items from a BCL facet from a meta search result.
   /// A facet is an optional search filter which may be applied to narrow down search results.
   class UTILITIES_API BCLFacet {
@@ -241,10 +239,6 @@ namespace openstudio{
 
     /// Get the measure by uid
     virtual boost::optional<BCLMeasure> getMeasure(const std::string& uid, const std::string& versionId = "") const = 0;
-
-    /// Searches the library for an on demand generated component matching this generator.
-    /// This generator should have values for all arguments set.
-    virtual boost::optional<BCLComponent> getOnDemandComponent(const OnDemandGenerator& generator) const = 0;
 
     //@}
   private:

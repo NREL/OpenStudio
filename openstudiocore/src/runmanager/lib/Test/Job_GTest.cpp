@@ -32,7 +32,6 @@
 #include "../../../utilities/idf/Workspace.hpp"
 #include "../../../utilities/idf/WorkspaceObject.hpp"
 
-#include <utilities/idd/OS_TimeDependentValuation_FieldEnums.hxx>
 #include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
 
 #include <boost/filesystem/path.hpp>
@@ -47,10 +46,6 @@ TEST_F(RunManagerTestFixture, URLTestRelative)
   openstudio::path osm = resourcesPath() / openstudio::toPath("runmanager") / openstudio::toPath("UrlTestRelative.osm");
   openstudio::path weatherdir = resourcesPath() / openstudio::toPath("runmanager"); 
   openstudio::model::Model m = openstudio::model::exampleModel();
-
-  openstudio::IdfObject schedule(openstudio::IddObjectType::OS_TimeDependentValuation);
-  schedule.setString(OS_TimeDependentValuationFields::Url, "./ScheduleFile.csv");
-  m.addObject(schedule);
 
   m.save(osm, true);
 
@@ -143,11 +138,6 @@ TEST_F(RunManagerTestFixture, URLTestAbsolute)
   openstudio::path osm = resourcesPath() / openstudio::toPath("runmanager") / openstudio::toPath("UrlTestAbsolute.osm");
   openstudio::path weatherdir = resourcesPath() / openstudio::toPath("runmanager"); 
   openstudio::model::Model m = openstudio::model::exampleModel();
-
-  openstudio::IdfObject schedule(openstudio::IddObjectType::OS_TimeDependentValuation);
-  schedule.setString(OS_TimeDependentValuationFields::Url,
-                     openstudio::toString(resourcesPath() / openstudio::toPath("runmanager") / openstudio::toPath("ScheduleFile.csv")) );
-  m.addObject(schedule);
 
   m.save(osm, true);
 

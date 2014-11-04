@@ -102,8 +102,6 @@ set(data_src
 set(filetypes_src
   filetypes/EpwFile.hpp
   filetypes/EpwFile.cpp
-  filetypes/TimeDependentValuationFile.hpp
-  filetypes/TimeDependentValuationFile.cpp
 )
 
 set(geometry_src
@@ -174,8 +172,6 @@ set(bcl_src
   bcl/BCLXML.cpp
   bcl/LocalBCL.hpp
   bcl/LocalBCL.cpp
-  bcl/OnDemandGenerator.hpp
-  bcl/OnDemandGenerator.cpp
   bcl/RemoteBCL.hpp
   bcl/RemoteBCL.cpp
 )
@@ -391,7 +387,6 @@ set(${target_name}_test_src
   data/Test/Vector_GTest.cpp
   economics/test/Economics_GTest.cpp
   filetypes/test/EpwFile_GTest.cpp
-  filetypes/test/TimeDependentValuationFile_GTest.cpp
   geometry/Test/BoundingBox_GTest.cpp
   geometry/Test/GeometryFixture.hpp
   geometry/Test/GeometryFixture.cpp
@@ -437,7 +432,6 @@ set(${target_name}_test_src
   bcl/test/BCLComponent_GTest.cpp
   bcl/test/BCLFileReference_GTest.cpp
   bcl/test/BCLMeasure_GTest.cpp
-  bcl/test/OnDemandGenerator_GTest.cpp
 )
 
 set(${target_name}_swig_src

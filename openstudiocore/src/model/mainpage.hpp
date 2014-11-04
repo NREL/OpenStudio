@@ -160,7 +160,7 @@ namespace model {
  *  utilities documentation), which provides a basic interface to the EnergyPlus SQLite output. Once
  *  the basic connection to an output file is established, intuitive interfaces to specific pieces of
  *  output data are provided at the object level. For instance, see Facility, ThermalZone,
- *  TimeDependentValuation, and \ref modelobjectOutputDataAccessMethods.
+ *  and \ref modelobjectOutputDataAccessMethods.
  *
  *  \subsection underlying_data Foundation: Data Model
  *
@@ -407,7 +407,7 @@ namespace model {
  *  \subsubsection urlFields URL Fields
  *
  *  The OpenStudio IDD introduces the '\\type url' field to help with locating files other than the
- *  OSM on which a simulation depends. (See WeatherFile and TimeDependentValuation, for instance.)
+ *  OSM on which a simulation depends. (See WeatherFile for instance.)
  *  RunManager provides functionality to normalize url fields at job creation time.  RunManager
  *  looks for the file across all URLSearchPaths (see utilities documentation) passed in to the
  *  job creation. In this process, if the referenced file can be found, RunManager ensures that the
@@ -647,7 +647,6 @@ namespace model {
  *          </ul>
  *        <li> LightingDesignDay (ModelObject)
  *        <li> SkyTemperature (ModelObject) – wraps 'OS:WeatherProperty:SkyTemperature'
- *        <li> TimeDependentValuation (ModelObject, unique)
  *        <li> SiteGroundReflectance (ModelObject, unique)
  *        <li> SiteGroundTemperatureBuildingSurface (ModelObject, unique)
  *        <li> SiteWaterMainsTemperature (ModelObject, unique)

@@ -143,36 +143,6 @@ class MODEL_API Facility : public ParentObject {
   /// Attribute name: annualWaterTotalCost
   boost::optional<double> annualWaterTotalCost() const;
 
-  /// Returns the time dependent valuation for all energy use in joules. 
-  /// Requires EnergyPlus simulation output and TimeDependentValuation input object to calculate.
-  /// Attribute name: totalEnergyTimeDependentValuation
-  boost::optional<double> totalEnergyTimeDependentValuation() const;
-
-  /// Returns the time dependent valuation for all energy use in dollars. 
-  /// Requires EnergyPlus simulation output and TimeDependentValuation input object to calculate.
-  /// Attribute name: totalCostTimeDependentValuation
-  boost::optional<double> totalCostTimeDependentValuation() const;
-
-  /// Returns the time dependent valuation for electricity use in joules. 
-  /// Requires EnergyPlus simulation output and TimeDependentValuation input object to calculate.
-  /// Attribute name: electricityEnergyTimeDependentValuation
-  boost::optional<double> electricityEnergyTimeDependentValuation() const;
-
-  /// Returns the time dependent valuation for electricity use in dollars. 
-  /// Requires EnergyPlus simulation output and TimeDependentValuation input object to calculate.
-  /// Attribute name: electricityCostTimeDependentValuation
-  boost::optional<double> electricityCostTimeDependentValuation() const;
-
-  /// Returns the time dependent valuation for fossil fuel use in joules. 
-  /// Requires EnergyPlus simulation output and TimeDependentValuation input object to calculate.
-  /// Attribute name: fossilFuelEnergyTimeDependentValuation
-  boost::optional<double> fossilFuelEnergyTimeDependentValuation() const;
-
-  /// Returns the time dependent valuation for fossil fuel use in dollars. 
-  /// Requires EnergyPlus simulation output and TimeDependentValuation input object to calculate.
-  /// Attribute name: fossilFuelCostTimeDependentValuation
-  boost::optional<double> fossilFuelCostTimeDependentValuation() const;
-
   /// Returns the total capital cost associated with the building in dollars by summing all costs from all 
   /// ComponentCost_LineItem objects.  Requires EnergyPlus simulation output and LifeCycleCost_Parameters input object to calculate.
   /// \todo: only ComponentCost_LineItem of line item type "Construction" are currently handled
