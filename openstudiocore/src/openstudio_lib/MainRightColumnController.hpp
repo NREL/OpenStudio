@@ -161,6 +161,8 @@ class MainRightColumnController : public OSQObjectController
   void emitItemRemoveClicked(OSItem *);
 
   void onRemoveButtonClicked(bool checked);
+
+  void onWorkspaceObjectRemoved();
 };
 
 } // openstudio
