@@ -42,7 +42,7 @@ def detect_errors
         msg += "This error may cause unpredictable behavior in the plugin--continue this session with caution!  "
         msg += "It would probably be a good idea to exit SketchUp and start again.\n\n"
 
-        msg += "For help, please visit <http://openstudio.nrel.gov>, "
+        msg += "For help, please visit <https://www.openstudio.net>, "
         msg += "browse the list of known issues in the bug tracker, or post a new bug report.\n\n"
 
         msg += "When reporting a bug, please include the error message and backtrace below (scroll down):\n\n"

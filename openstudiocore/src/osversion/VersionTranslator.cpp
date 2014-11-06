@@ -391,14 +391,14 @@ void VersionTranslator::initializeMap(std::istream& is) {
         // if currentVersion is farther ahead, log error and return nothing
         LOG(Error,"Version extracted from file '" << currentVersion.str()
             << "' is not supported by OpenStudio Version " << openStudioVersion()
-            << ". Please check http://openstudio.nrel.gov for updates.");
+            << ". Please check https://www.openstudio.net for updates.");
         return;
       }
     }else{
       // log error and return nothing
       LOG(Error,"Version extracted from file '" << currentVersion.str()
           << "' is newer than current OpenStudio Version " << openStudioVersion()
-          << ". Please check http://openstudio.nrel.gov for updates.");
+          << ". Please check https://www.openstudio.net for updates.");
       return;
     }
   }

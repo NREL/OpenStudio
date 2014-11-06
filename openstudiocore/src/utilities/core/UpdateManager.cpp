@@ -123,7 +123,7 @@ namespace openstudio{
 
   std::string UpdateManager::updateUrl() const
   {
-    return std::string("http://openstudio.nrel.gov/update.html?app=") + appName() + std::string("&version=") + openStudioVersion();
+    return std::string("https://www.openstudio.net/update.html?app=") + appName() + std::string("&version=") + openStudioVersion();
   }
 
   void UpdateManager::replyFinished(QNetworkReply* reply)

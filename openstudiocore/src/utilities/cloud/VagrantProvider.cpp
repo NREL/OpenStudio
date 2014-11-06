@@ -706,7 +706,7 @@ namespace openstudio{
 
       m_lastInternetAvailable = false;
 
-      QUrl url("http://openstudio.nrel.gov"); // todo: url?
+      QUrl url("https://www.openstudio.net"); // todo: url?
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
