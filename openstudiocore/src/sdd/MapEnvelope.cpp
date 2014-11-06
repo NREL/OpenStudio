@@ -92,11 +92,14 @@ namespace sdd {
       bool wasFastNaming = model.fastNaming();
       model.setFastNaming(false);
 
+      unsigned n = materials.size();
       construction.ensureUniqueLayers();
+      materials = construction.layers(); // DLM: get materials again in case new ones were cloned
+
+      OS_ASSERT(n == materials.size());
  
       model.setFastNaming(wasFastNaming);
 
-      unsigned n = materials.size();
 
       if (n > 0){
 
@@ -151,33 +154,36 @@ namespace sdd {
           }
         }
 
-        if (materials[n-1].optionalCast<model::StandardOpaqueMaterial>()){
-          model::StandardOpaqueMaterial intMaterial = materials[n-1].cast<model::StandardOpaqueMaterial>();
-      
-          if (!intThrmlAbsElement.isNull()){
-            intMaterial.setThermalAbsorptance(intThrmlAbsElement.text().toDouble());
-          }
+        // DLM: if only one layer use properties from exterior material
+        if (n > 1){
+          if (materials[n - 1].optionalCast<model::StandardOpaqueMaterial>()){
+            model::StandardOpaqueMaterial intMaterial = materials[n - 1].cast<model::StandardOpaqueMaterial>();
 
-          if (!intSolAbsElement.isNull()){
-            intMaterial.setSolarAbsorptance(intSolAbsElement.text().toDouble());
-          }
-            
-          if (!intVisAbsElement.isNull()){
-            intMaterial.setVisibleAbsorptance(intVisAbsElement.text().toDouble());
-          }
-        }else if (materials[n-1].optionalCast<model::MasslessOpaqueMaterial>()){
-          model::MasslessOpaqueMaterial intMaterial = materials[n-1].cast<model::MasslessOpaqueMaterial>();
-          
-          if (!intThrmlAbsElement.isNull()){
-            intMaterial.setThermalAbsorptance(intThrmlAbsElement.text().toDouble());
-          }
+            if (!intThrmlAbsElement.isNull()){
+              intMaterial.setThermalAbsorptance(intThrmlAbsElement.text().toDouble());
+            }
 
-          if (!intSolAbsElement.isNull()){
-            intMaterial.setSolarAbsorptance(intSolAbsElement.text().toDouble());
-          }
-            
-          if (!intVisAbsElement.isNull()){
-            intMaterial.setVisibleAbsorptance(intVisAbsElement.text().toDouble());
+            if (!intSolAbsElement.isNull()){
+              intMaterial.setSolarAbsorptance(intSolAbsElement.text().toDouble());
+            }
+
+            if (!intVisAbsElement.isNull()){
+              intMaterial.setVisibleAbsorptance(intVisAbsElement.text().toDouble());
+            }
+          } else if (materials[n - 1].optionalCast<model::MasslessOpaqueMaterial>()){
+            model::MasslessOpaqueMaterial intMaterial = materials[n - 1].cast<model::MasslessOpaqueMaterial>();
+
+            if (!intThrmlAbsElement.isNull()){
+              intMaterial.setThermalAbsorptance(intThrmlAbsElement.text().toDouble());
+            }
+
+            if (!intSolAbsElement.isNull()){
+              intMaterial.setSolarAbsorptance(intSolAbsElement.text().toDouble());
+            }
+
+            if (!intVisAbsElement.isNull()){
+              intMaterial.setVisibleAbsorptance(intVisAbsElement.text().toDouble());
+            }
           }
         }
       }
