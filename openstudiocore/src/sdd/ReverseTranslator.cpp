@@ -120,7 +120,7 @@ namespace sdd {
   }
 
   ReverseTranslator::ReverseTranslator( bool masterAutosize )
-    : m_autosize(true),
+    : m_isInputXML(false), m_autosize(true),
       m_masterAutosize(masterAutosize)
   {
     m_logSink.setLogLevel(Warn);
@@ -149,11 +149,19 @@ namespace sdd {
       QFile file(toQString(path));
       if (file.open(QFile::ReadOnly)){
         QDomDocument doc;
-        doc.setContent(&file);
+        bool ok = doc.setContent(&file);
         file.close();
 
-        result = this->convert(doc);
+        if (ok) {
+          result = this->convert(doc);
+        } else{
+          LOG(Error, "Could not open file '" << toString(path) << "'");
+        }
+      } else {
+        LOG(Error, "Could not open file '" << toString(path) << "'");
       }
+    } else {
+      LOG(Error, "File '" << toString(path) << "' does not exist");
     }
 
     return result;
@@ -203,7 +211,18 @@ namespace sdd {
     QDomElement projectElement = element.firstChildElement("Proj");
     if (projectElement.isNull()){
       LOG(Error, "Could not find required element 'Proj'");
+      return boost::none;
     }else{
+
+      // check if this is a simulation xml or input xml
+      QDomElement simFlagElement = projectElement.firstChildElement("SimFlag");
+      if (simFlagElement.isNull()){
+        m_isInputXML = true;
+        LOG(Error, "Import of Input SDD XML type is not currently supported");
+        return boost::none;
+      } else {
+        m_isInputXML = false;
+      }
 
       result = openstudio::model::Model();
       result->setFastNaming(true);
