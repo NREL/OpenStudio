@@ -104,8 +104,7 @@ bool IndexModelImpl::read(std::string filename)
   m_valid = false;
   if (fp.open(QFile::ReadOnly))
   {
-    QTextStream stream(&fp);
-    Reader input(&stream);
+    Reader input(&fp);
     read(input);
 
   }
