@@ -145,11 +145,16 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
   openstudio::path measureDir = userMeasuresDir / toPath(folderName);
 
   // prompt user ???
-  int i = 1;
-  while (boost::filesystem::exists(measureDir)){
-    folderName = toQString(className).append(" ").append(QString::number(i)).append("/");
-    measureDir = userMeasuresDir / toPath(folderName);
-    ++i;
+  if (boost::filesystem::exists(measureDir)){
+    int i = 1;
+    while (boost::filesystem::exists(measureDir)){
+      folderName = toQString(lowerClassName).append(" ").append(QString::number(i)).append("/");
+      measureDir = userMeasuresDir / toPath(folderName);
+      ++i;
+    }
+    // DLM: do we want to alter the class name to indicate this copy?
+    //className = className + toString(QString::number(i));
+    //lowerClassName = lowerClassName + toString(QString::number(i));
   }
 
   QStringList taxonomyParts;

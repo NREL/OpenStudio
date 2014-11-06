@@ -166,7 +166,7 @@ class MeasureManager : public QObject
     void updateBCLMeasures(analysisdriver::SimpleProject &t_project);
 
     /// Checks a BCL measure for updates, returns true if updated
-    bool checkForUpdates(BCLMeasure& measure);
+    bool checkForUpdates(BCLMeasure& measure, bool force=false);
 
     /// Downloads updated versions of all BCL measures
     void downloadBCLMeasures();

@@ -820,7 +820,7 @@ void InspectorGadget::layoutComboBox( QVBoxLayout* layout,
   QComboBox* combo = new IGComboBox(parent);
   combo->setSizeAdjustPolicy( QComboBox::AdjustToContentsOnFirstShow );
 
-  if( prop.objectLists.size() )
+  if (prop.objectLists.size() && m_workspaceObj && !m_workspaceObj->handle().isNull())
   {
     Workspace workspace = m_workspaceObj->workspace();
     std::vector<std::string> names;
@@ -1205,7 +1205,7 @@ void InspectorGadget::onWorkspaceObjectChanged()
 
 void InspectorGadget::onTimeout()
 {
-  if (m_workspaceObjectChanged){
+  if (m_workspaceObjectChanged && m_workspaceObj && !m_workspaceObj->handle().isNull()){
     if (m_workspaceObj){
       rebuild(false);
     }
@@ -1228,7 +1228,9 @@ void InspectorGadget::connectWorkspaceObjectSignals() const
     if (impl){
       connect(impl, &openstudio::detail::WorkspaceObject_Impl::onChange, this, &InspectorGadget::onWorkspaceObjectChanged);
 
-      connect(impl, &openstudio::detail::WorkspaceObject_Impl::onRemoveFromWorkspace, this, &InspectorGadget::onWorkspaceObjectRemoved);
+      connect(impl, &openstudio::detail::WorkspaceObject_Impl::onRemoveFromWorkspace, this, &InspectorGadget::workspaceObjectRemoved);
+
+      connect(this, &InspectorGadget::workspaceObjectRemoved, this, &InspectorGadget::onWorkspaceObjectRemoved);
     }
   }
 }

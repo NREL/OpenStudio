@@ -77,7 +77,7 @@ class InspectorView : public QWidget
   void toggleUnitsClicked(bool displayIP);
   void itemRemoveClicked(OSItem *);
   void removeButtonClicked(bool);
-
+  void workspaceObjectRemoved();
 
   void moveBranchForZoneSupplySelected(model::ThermalZone & zone, const Handle & newPlenumHandle);
   void moveBranchForZoneReturnSelected(model::ThermalZone & zone, const Handle & newPlenumHandle);
@@ -87,7 +87,6 @@ class InspectorView : public QWidget
   public slots:
 
   void layoutModelObject( model::OptionalModelObject &, bool readOnly, bool displayIP );
-
   virtual void toggleUnits(bool displayIP);
 
   private:
@@ -121,7 +120,9 @@ class BaseInspectorView : public QWidget
   void toggleUnitsClicked(bool displayIP); 
 
   void removeButtonClicked(bool);
-  
+
+  void workspaceObjectRemoved();
+
   private:
 
   QVBoxLayout * m_vLayout;
@@ -150,7 +151,6 @@ class GenericInspectorView : public BaseInspectorView
   signals:
 
   void removeButtonClicked(bool);
-
 };
 
 class SplitterMixerInspectorView : public BaseInspectorView

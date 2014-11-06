@@ -23,10 +23,10 @@
 #include "LibraryTabWidget.hpp"
 #include "LoopChooserView.hpp"
 #include "MainRightColumnController.hpp"
+#include "ModelObjectItem.hpp"
 #include "OSAppBase.hpp"
 #include "OSItem.hpp"
 #include "OSDocument.hpp"
-#include "ModelObjectItem.hpp"
 #include "ZoneChooserView.hpp"
 
 #include "../model/AirLoopHVACReturnPlenum.hpp"
@@ -567,6 +567,7 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
   {
     m_currentView->show();
     connect(m_currentView, &BaseInspectorView::removeButtonClicked, this, &InspectorView::removeButtonClicked);
+    connect(m_currentView, &BaseInspectorView::workspaceObjectRemoved, this, &InspectorView::workspaceObjectRemoved);
   }
 
   if( QWidget * _parentWidget = parentWidget() )
@@ -643,6 +644,7 @@ GenericInspectorView::GenericInspectorView( QWidget * parent )
   m_inspectorGadget = new InspectorGadget();
 
   connect(this, &GenericInspectorView::toggleUnitsClicked, m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(m_inspectorGadget, &InspectorGadget::workspaceObjectRemoved, this, &BaseInspectorView::workspaceObjectRemoved);
 
   m_libraryTabWidget->addTab( m_inspectorGadget,"","");
                               //":images/components_icon_pressed.png",
@@ -778,6 +780,8 @@ RefrigerationWalkinInspectorView::RefrigerationWalkinInspectorView(QWidget * par
 {
   m_walkinInspectorGadget = new InspectorGadget();
   connect(this, &RefrigerationWalkinInspectorView::toggleUnitsClicked, m_walkinInspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(m_walkinInspectorGadget, &InspectorGadget::workspaceObjectRemoved, this, &BaseInspectorView::workspaceObjectRemoved);
+
   m_libraryTabWidget->addTab( m_walkinInspectorGadget,
                               ":images/properties_icon_on.png",
                               ":images/properties_icon_off.png" );
@@ -827,6 +831,7 @@ void RefrigerationWalkinInspectorView::layoutModelObject( model::ModelObject & m
   {
     InspectorGadget * inspector = new InspectorGadget();
     connect(this, &RefrigerationWalkinInspectorView::toggleUnitsClicked, inspector, &InspectorGadget::toggleUnitsClicked);
+    connect(inspector, &InspectorGadget::workspaceObjectRemoved, this, &BaseInspectorView::workspaceObjectRemoved);
     if( displayIP )
     {
       inspector->setUnitSystem(InspectorGadget::IP);
@@ -844,6 +849,7 @@ ThermalZoneInspectorView::ThermalZoneInspectorView(QWidget * parent)
 {
   m_inspectorGadget = new InspectorGadget();
   connect(this, &ThermalZoneInspectorView::toggleUnitsClicked, m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(m_inspectorGadget, &InspectorGadget::workspaceObjectRemoved, this, &BaseInspectorView::workspaceObjectRemoved);
   m_libraryTabWidget->addTab( m_inspectorGadget,
                               ":images/properties_icon_on.png",
                               ":images/properties_icon_off.png" );
@@ -1112,9 +1118,11 @@ WaterToAirInspectorView::WaterToAirInspectorView( QWidget * parent )
 {
   m_inspectorGadget = new InspectorGadget();
   connect(this, &WaterToAirInspectorView::toggleUnitsClicked, m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(m_inspectorGadget, &InspectorGadget::workspaceObjectRemoved, this, &BaseInspectorView::workspaceObjectRemoved);
 
   m_coilControllerInspectorGadget = new InspectorGadget();
   connect(this, &WaterToAirInspectorView::toggleUnitsClicked, m_coilControllerInspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(m_coilControllerInspectorGadget, &InspectorGadget::workspaceObjectRemoved, this, &BaseInspectorView::workspaceObjectRemoved);
 
   m_loopChooserView = new LoopChooserView();
 
@@ -1221,6 +1229,7 @@ AirTerminalInspectorView::AirTerminalInspectorView( QWidget * parent )
 {
   m_inspectorGadget = new InspectorGadget();
   connect(this, &AirTerminalInspectorView::toggleUnitsClicked, m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(m_inspectorGadget, &InspectorGadget::workspaceObjectRemoved, this, &BaseInspectorView::workspaceObjectRemoved);
 
   m_loopChooserView = new LoopChooserView();
 
@@ -1321,6 +1330,7 @@ AirTerminalSingleDuctConstantVolumeCooledBeamInspectorView::AirTerminalSingleDuc
 {
   m_inspectorGadget = new InspectorGadget();
   connect(this, &AirTerminalSingleDuctConstantVolumeCooledBeamInspectorView::toggleUnitsClicked, m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(m_inspectorGadget, &InspectorGadget::workspaceObjectRemoved, this, &BaseInspectorView::workspaceObjectRemoved);
 
   m_coolingLoopChooserView = new LoopChooserView();
 
@@ -1385,6 +1395,7 @@ ZoneHVACBaseboardConvectiveWaterInspectorView::ZoneHVACBaseboardConvectiveWaterI
 {
   m_inspectorGadget = new InspectorGadget();
   connect(this, &ZoneHVACBaseboardConvectiveWaterInspectorView::toggleUnitsClicked, m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(m_inspectorGadget, &InspectorGadget::workspaceObjectRemoved, this, &BaseInspectorView::workspaceObjectRemoved);
 
   m_heatingLoopChooserView = new LoopChooserView();
 
@@ -1447,6 +1458,7 @@ ZoneHVACFourPipeFanCoilInspectorView::ZoneHVACFourPipeFanCoilInspectorView( QWid
 {
   m_inspectorGadget = new InspectorGadget();
   connect(this, &ZoneHVACFourPipeFanCoilInspectorView::toggleUnitsClicked, m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(m_inspectorGadget, &InspectorGadget::workspaceObjectRemoved, this, &BaseInspectorView::workspaceObjectRemoved);
 
   m_heatingLoopChooserView = new LoopChooserView();
 
@@ -1545,8 +1557,8 @@ ZoneHVACLowTempRadiantConstFlowInspectorView::ZoneHVACLowTempRadiantConstFlowIns
   : BaseInspectorView(parent)
 {
   m_inspectorGadget = new InspectorGadget();
-  connect(this, &ZoneHVACLowTempRadiantConstFlowInspectorView::toggleUnitsClicked,
-          m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(this, &ZoneHVACLowTempRadiantConstFlowInspectorView::toggleUnitsClicked, m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(m_inspectorGadget, &InspectorGadget::workspaceObjectRemoved, this, &BaseInspectorView::workspaceObjectRemoved);
 
   m_heatingLoopChooserView = new LoopChooserView();
   m_coolingLoopChooserView = new LoopChooserView();
@@ -1648,8 +1660,8 @@ ZoneHVACLowTempRadiantVarFlowInspectorView::ZoneHVACLowTempRadiantVarFlowInspect
   : BaseInspectorView(parent)
 {
   m_inspectorGadget = new InspectorGadget();
-  connect(this, &ZoneHVACLowTempRadiantVarFlowInspectorView::toggleUnitsClicked,
-          m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(this, &ZoneHVACLowTempRadiantVarFlowInspectorView::toggleUnitsClicked, m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(m_inspectorGadget, &InspectorGadget::workspaceObjectRemoved, this, &BaseInspectorView::workspaceObjectRemoved);
 
   m_heatingLoopChooserView = new LoopChooserView();
   m_coolingLoopChooserView = new LoopChooserView();
@@ -1750,8 +1762,8 @@ ZoneHVACWaterToAirHeatPumpInspectorView::ZoneHVACWaterToAirHeatPumpInspectorView
   : BaseInspectorView(parent)
 {
   m_inspectorGadget = new InspectorGadget();
-  connect(this, &ZoneHVACWaterToAirHeatPumpInspectorView::toggleUnitsClicked,
-          m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(this, &ZoneHVACWaterToAirHeatPumpInspectorView::toggleUnitsClicked, m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(m_inspectorGadget, &InspectorGadget::workspaceObjectRemoved, this, &BaseInspectorView::workspaceObjectRemoved);
 
   m_heatingLoopChooserView = new LoopChooserView();
 
@@ -1881,8 +1893,8 @@ ZoneHVACPackagedTerminalAirConditionerInspectorView::ZoneHVACPackagedTerminalAir
   : BaseInspectorView(parent)
 {
   m_inspectorGadget = new InspectorGadget();
-  connect(this, &ZoneHVACPackagedTerminalAirConditionerInspectorView::toggleUnitsClicked,
-          m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(this, &ZoneHVACPackagedTerminalAirConditionerInspectorView::toggleUnitsClicked, m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(m_inspectorGadget, &InspectorGadget::workspaceObjectRemoved, this, &BaseInspectorView::workspaceObjectRemoved);
 
   m_loopChooserView = new LoopChooserView();
 
@@ -1952,8 +1964,8 @@ ZoneHVACUnitHeaterInspectorView::ZoneHVACUnitHeaterInspectorView( QWidget * pare
 {
   m_inspectorGadget = new InspectorGadget();
 
-  connect(this, &ZoneHVACUnitHeaterInspectorView::toggleUnitsClicked,
-          m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(this, &ZoneHVACUnitHeaterInspectorView::toggleUnitsClicked, m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(m_inspectorGadget, &InspectorGadget::workspaceObjectRemoved, this, &BaseInspectorView::workspaceObjectRemoved);
 
   m_heatingLoopChooserView = new LoopChooserView();
 
@@ -2024,8 +2036,8 @@ AirLoopHVACUnitarySystemInspectorView::AirLoopHVACUnitarySystemInspectorView( QW
 {
   m_inspectorGadget = new InspectorGadget();
 
-  connect(this, &AirLoopHVACUnitarySystemInspectorView::toggleUnitsClicked,
-          m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(this, &AirLoopHVACUnitarySystemInspectorView::toggleUnitsClicked, m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(m_inspectorGadget, &InspectorGadget::workspaceObjectRemoved, this, &BaseInspectorView::workspaceObjectRemoved);
   
   m_heatingLoopChooserView = new LoopChooserView();
   m_coolingLoopChooserView = new LoopChooserView();
@@ -2146,8 +2158,8 @@ AirTerminalSingleDuctConstantVolumeFourPipeInductionInspectorView::AirTerminalSi
 {
   m_inspectorGadget = new InspectorGadget();
 
-  connect(this, &AirTerminalSingleDuctConstantVolumeFourPipeInductionInspectorView::toggleUnitsClicked,
-          m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(this, &AirTerminalSingleDuctConstantVolumeFourPipeInductionInspectorView::toggleUnitsClicked, m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(m_inspectorGadget, &InspectorGadget::workspaceObjectRemoved, this, &BaseInspectorView::workspaceObjectRemoved);
   
   m_heatingLoopChooserView = new LoopChooserView();
   m_coolingLoopChooserView = new LoopChooserView();

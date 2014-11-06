@@ -312,8 +312,6 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           }
           );
 
-
-
       std::function<std::vector<boost::optional<model::ModelObject>>(const model::SpaceType &)> allLoadsWithActivityLevelSchedules(
           [allLoads](const model::SpaceType &t_spaceType) {
             std::vector<boost::optional<model::ModelObject>> retval;
@@ -327,8 +325,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
             return retval;
           }
           );
-
-
+          
       std::function<std::vector<boost::optional<model::ModelObject>>(const model::SpaceType &)> allDefinitions(
           [allLoadInstances](const model::SpaceType &t_spaceType) {
             std::vector<boost::optional<model::ModelObject>> definitions;
@@ -390,6 +387,13 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         [allLoads](model::ModelObject *t_modelObject) {
           double retval = 0;
 
+          boost::optional<model::InternalMass> im = t_modelObject->optionalCast<model::InternalMass>();
+          if (im)
+          {
+            retval = im->multiplier();
+            return retval;
+          }
+
           boost::optional<model::People> p = t_modelObject->optionalCast<model::People>();
           if (p)
           {
@@ -446,13 +450,6 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
             return retval;
           }
 
-          boost::optional<model::InternalMass> im = t_modelObject->optionalCast<model::InternalMass>();
-          if (im)
-          {
-            retval = im->multiplier();
-            return retval;
-          }
-
           // Should never get here
           OS_ASSERT(false);
           return retval;
@@ -461,6 +458,13 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
 
       std::function<void(model::ModelObject *, double)> setMultiplier(
         [](model::ModelObject *t_modelObject, double multiplier) {
+          boost::optional<model::InternalMass> im = t_modelObject->optionalCast<model::InternalMass>();
+          if (im)
+          {
+            im->setMultiplier(multiplier);
+            return;
+          }
+
           boost::optional<model::People> p = t_modelObject->optionalCast<model::People>();
           if (p)
           {
@@ -517,13 +521,6 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
             return;
           }
 
-          boost::optional<model::InternalMass> im = t_modelObject->optionalCast<model::InternalMass>();
-          if (im)
-          {
-            im->setMultiplier(multiplier);
-            return;
-          }
-
           // Should never get here
           OS_ASSERT(false);
         }
@@ -535,7 +532,6 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           {
             return p->setActivityLevelSchedule(t_s);
           }
-
 
           OS_ASSERT(false);
           return false;
@@ -664,7 +660,14 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
             la->resetSchedule();
           }
 
-          //OS_ASSERT(false); TODO
+          if (boost::optional<model::InternalMass> im = l->optionalCast<model::InternalMass>())
+          {
+            // Note: InternalMass does not have a schedule
+          }
+          else
+          {
+            OS_ASSERT(false);
+          }
         }
       );
 
@@ -683,6 +686,12 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
 
       std::function<boost::optional<model::Schedule> (model::ModelObject *)> schedule(
           [](model::ModelObject *l) {
+            if (boost::optional<model::InternalMass> im = l->optionalCast<model::InternalMass>())
+            {
+              // Note: InternalMass does not have a schedule
+              return boost::optional<model::Schedule>();
+            }
+
             if (boost::optional<model::People> p = l->optionalCast<model::People>())
             {
               return p->numberofPeopleSchedule();
@@ -731,12 +740,6 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
             if (boost::optional<model::SpaceInfiltrationEffectiveLeakageArea> la = l->optionalCast<model::SpaceInfiltrationEffectiveLeakageArea>())
             {
               return la->schedule();
-            }
-
-            if (boost::optional<model::InternalMass> im = l->optionalCast<model::InternalMass>())
-            {
-              // Note: InternalMass does not have a schedule
-              return boost::optional<model::Schedule>();
             }
 
             // should be impossible to get here
@@ -830,6 +833,13 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
 
         std::function<bool (model::SpaceType *, const model::SpaceLoadDefinition &)> setter(
           [](model::SpaceType *t_spaceType, const model::SpaceLoadDefinition &t_definition) {
+            boost::optional<model::InternalMassDefinition> im = t_definition.optionalCast<model::InternalMassDefinition>();
+            if (im)
+            {
+              model::InternalMass(*im).setParent(*t_spaceType);
+              return true;
+            }
+
             boost::optional<model::PeopleDefinition> p = t_definition.optionalCast<model::PeopleDefinition>();
             if (p)
             {
@@ -1053,8 +1063,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           t_spaceType->resetStandardsSpaceType();
           t_spaceType->resetStandardsBuildingType();
         });
-
-
+      
       addComboBoxColumn(QString(STANDARDSBUILDINGTYPE),
           toString,
           choices,
@@ -1176,4 +1185,3 @@ void SpaceTypesGridController::onComboBoxIndexChanged(int index)
 }
 
 } // openstudio
-

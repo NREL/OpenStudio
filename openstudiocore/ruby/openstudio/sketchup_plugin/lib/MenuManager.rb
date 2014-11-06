@@ -402,8 +402,8 @@ module OpenStudio
       }
 
       @render_by_boundary_cmd = UI::Command.new("Render By Boundary") { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderByBoundary }
-      @render_by_boundary_cmd.small_icon = Plugin.dir + "/lib/resources/icons/render_boundry_16.png"
-      @render_by_boundary_cmd.large_icon = Plugin.dir + "/lib/resources/icons/render_boundry.png"
+      @render_by_boundary_cmd.small_icon = Plugin.dir + "/lib/resources/icons/render_boundary_16.png"
+      @render_by_boundary_cmd.large_icon = Plugin.dir + "/lib/resources/icons/render_boundary.png"
       @render_by_boundary_cmd.tooltip = "Render By Boundary Condition"
       @render_by_boundary_cmd.status_bar_text = "Render objects by boundary condition"
       @render_by_boundary_cmd.set_validation_proc {

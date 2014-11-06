@@ -24,6 +24,8 @@
 #include "../model/AirGap.hpp"
 #include "../model/AirWallMaterial.hpp"
 #include "../model/Blind.hpp"
+#include "../model/Component.hpp"
+#include "../model/Component_Impl.hpp"
 #include "../model/InfraredTransparentMaterial.hpp"
 #include "../model/MasslessOpaqueMaterial.hpp"
 #include "../model/Material.hpp"
@@ -137,6 +139,14 @@ void MaterialsController::onDrop(const OSItemId& itemId)
     if(modelObject->optionalCast<model::Material>()){
       if (this->fromComponentLibrary(itemId)){
         modelObject = modelObject->clone(this->model());
+      }
+    }
+  }
+  else{
+    boost::optional<model::Component> component = this->getComponent(itemId);
+    if (component){
+      if (component->primaryObject().optionalCast<model::ModelObject>()){
+        this->model().insertComponent(*component);
       }
     }
   }

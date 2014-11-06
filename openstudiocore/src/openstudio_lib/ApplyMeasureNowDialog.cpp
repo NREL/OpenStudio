@@ -832,6 +832,7 @@ void ApplyMeasureNowDialog::showAdvancedOutput()
     QMessageBox::information(this, QString("Advanced Output"), QString("No advanced output."));
   }else{
     m_advancedOutputDialog->setText(m_advancedOutput);
+    m_advancedOutputDialog->setSizeHint(QSize(this->geometry().width(), this->geometry().height()));
     m_advancedOutputDialog->exec();
     m_advancedOutputDialog->raise();
   }

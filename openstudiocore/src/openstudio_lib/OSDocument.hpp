@@ -339,8 +339,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   QString m_savePath;
   QString m_modelTempDir;
 
-  int m_mainTabId;
-  int m_subTabId;
+  int m_mainTabId = 0;
+  int m_subTabId = 0;
   bool m_isPlugin;
 
   int m_startTabIndex;
@@ -350,6 +350,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   std::vector<int> m_subTabIds;
 
   bool m_enableTabsAfterRun = true;
+
+  bool m_tabButtonsCreated = false;
 };
 
 } // openstudio

@@ -1517,6 +1517,11 @@ namespace openstudio{
             }
           }
         }
+
+        if (!success){
+          // some sort of error occurred, potentially the response json does not have pat_data_point in it
+          // how to handle this so pat doesn't get stuck?
+        }
       }else{
         logNetworkError(m_networkReply->error());
       }

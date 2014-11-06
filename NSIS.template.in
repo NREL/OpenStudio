@@ -785,7 +785,7 @@ Section "-Core installation"
   ${EndIf}
 
   IntCmp $sketchupFound 0 +1 suFound suFound 
-    MessageBox MB_OK "Unable to locate your SketchUp 2014 installation.  SketchUp is freely available at http://www.sketchup.com/ and is required to use the OpenStudio SketchUp Plug-in.  If you wish to use the OpenStudio SketchUp Plug-in please download and install SketchUp now, the OpenStudio Google SketchUp Plug-in will launch automatically when you start SketchUp."
+    MessageBox MB_OK "Unable to locate your SketchUp 2014 installation.  SketchUp Make is freely available for personal and educational use at http://www.sketchup.com/, and SketchUp Pro is available for professional work.  If you wish to use the OpenStudio SketchUp Plug-in please download and install SketchUp 2014 now; the OpenStudio SketchUp Plug-in will launch automatically when you start SketchUp."
   suFound:
   Pop $0
   SetOutPath $0

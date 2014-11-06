@@ -1106,7 +1106,7 @@ namespace detail {
           // don't let boost mess with us in the string/path converions
           return t_path;
         } else {
-          return openstudio::toString(t_path);
+          return openstudio::toString(fixedUp);
         }
       }
 

@@ -432,7 +432,8 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
   m_mainWindow->setVisible(false);
   openstudio::OSAppBase * app = OSAppBase::instance();
   app->waitDialog()->setVisible(true);
-  app->processEvents();
+
+  for (int i = 5; Application::instance().processEvents() && i != 0; --i) { }
 
   m_model = model;
 
@@ -463,7 +464,10 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
   // DLM: this might work to reload weather file if changed?
   this->setFullWeatherFilePath();
 
-  createTabButtons();
+  if (!m_tabButtonsCreated) {
+    m_tabButtonsCreated = true;
+    createTabButtons();
+  }
   createTab(m_verticalId);
 
   QTimer::singleShot(0, this, SLOT(initializeModel()));
