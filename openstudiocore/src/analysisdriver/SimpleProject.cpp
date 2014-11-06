@@ -1827,7 +1827,7 @@ namespace detail {
     if (modelVersion.get() > VersionString(openStudioVersion())) {
       LOG(Error,"Version '" << modelVersion.get().str() << "' extracted from file '"
           << toString(modelPath) << "' is not supported by OpenStudio Version "
-          << openStudioVersion() << ". Please check http://openstudio.nrel.gov for updates.");
+          << openStudioVersion() << ". Please check https://www.openstudio.net for updates.");
     }
 
     return false;

@@ -1567,7 +1567,7 @@ void OSDocument::openBclDlg()
     while(!LocalBCL::instance().setProdAuthKey(authKey)){
       QMessageBox dlg(m_mainWindow);
       dlg.setWindowTitle(tr("Online BCL"));
-      dlg.setText("The BCL auth key is invalid, and Online BCL data will not be available.  To learn how to obtain a valid BCL auth key, click <a href='http://openstudio.nrel.gov/using-building-component-library-bcl-key-openstudio'>here</a>.");
+      dlg.setText("The BCL auth key is invalid, and Online BCL data will not be available.  To learn how to obtain a valid BCL auth key, click <a href='http://nrel.github.io/OpenStudio-user-documentation/getting_started/getting_started/'>here</a>.");
       dlg.setTextFormat(Qt::RichText);
       dlg.addButton(QMessageBox::Cancel);
       dlg.addButton(QMessageBox::Retry);
@@ -1638,7 +1638,7 @@ void OSDocument::openMeasuresBclDlg()
     while(!LocalBCL::instance().setProdAuthKey(authKey)){
       QMessageBox dlg(m_mainWindow);
       dlg.setWindowTitle(tr("Online BCL"));
-      dlg.setText("The BCL auth key is invalid, and Online BCL data will not be available.  To learn how to obtain a valid BCL auth key, click <a href='http://openstudio.nrel.gov/using-building-component-library-bcl-key-openstudio'>here</a>.");
+      dlg.setText("The BCL auth key is invalid, and Online BCL data will not be available.  To learn how to obtain a valid BCL auth key, click <a href='http://nrel.github.io/OpenStudio-user-documentation/getting_started/getting_started/'>here</a>.");
       dlg.setTextFormat(Qt::RichText);
       dlg.addButton(QMessageBox::Cancel);
       dlg.addButton(QMessageBox::Retry);

@@ -1,7 +1,7 @@
 <measure>
   <name>Reduce Ventilation By Percentage</name>
   <uid>cecf490d-7146-4055-85c7-a7901b9a7dc0</uid>
-  <version_id>26d6a210-eacf-446c-a33f-c36f9a00faf8</version_id>
+  <version_id>cb972184-b692-4511-bd99-21d1264a3a48</version_id>
   <description>This measure will reduce space ventilation rates by the requested percentage. A cost per square foot of building area can be added to the model.</description>
   <modeler_description>This can be run across a space type or the entire building. Costs will be associated with the building. If design specification outdoor air objects are removed at a later date, the costs will remain.</modeler_description>
   <provenances/>
@@ -29,7 +29,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>C783FA18</checksum>
+      <checksum>75D5DA9F</checksum>
     </file>
   </files>
 </measure>
