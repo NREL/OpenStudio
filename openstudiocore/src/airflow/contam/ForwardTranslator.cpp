@@ -591,133 +591,6 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
   nr = 0;
   // Loop over surfaces and generate paths
   build(model);
-  /*
-  QList <openstudio::Handle>used;
-  double wind_H = prjModel.wind_H();
-  for (model::Surface surface : surfaces)
-  {
-    contam::AirflowPath path;
-    std::string bc = surface.outsideBoundaryCondition();
-    if(!used.contains(surface.handle()) && bc != "Ground")
-    {
-      // Get the associated thermal zone
-      boost::optional<openstudio::model::Space> space = surface.space();
-      if(!space)
-      {
-        LOG(Warn, "Unattached surface '" << surface.name().get() << "'");
-        if (m_progressBar)
-        {
-          m_progressBar->setValue(m_progressBar->value() + 1);
-        }
-        continue;
-      }
-      boost::optional<openstudio::model::ThermalZone> thermalZone = space->thermalZone();
-      if(!thermalZone)
-      {
-        LOG(Warn, "Unattached space '" << space->name().get() << "'");
-        if (m_progressBar)
-        {
-          m_progressBar->setValue(m_progressBar->value() + 1);
-        }
-        continue;
-      }
-      // Use the lookup table to get the zone info
-      int zoneNr;
-      if(!(zoneNr=tableLookup(m_zoneMap,thermalZone->handle(),"zoneMap")))
-      {
-        // Maybe this needs a warning?
-        if (m_progressBar)
-        {
-          m_progressBar->setValue(m_progressBar->value() + 1);
-        }
-        continue;
-      }
-      contam::Zone zone = prjModel.zones()[zoneNr-1];
-      // Get the surface area - will need to do more work here later if large openings are present
-      double area = surface.grossArea();
-      std::string type = surface.surfaceType();
-      double averageZ = 0;
-      double numVertices = surface.vertices().size();
-      for (const Point3d& point : surface.vertices())
-      {
-        averageZ += point.z();
-      }
-      // Now set the path info
-      path.setRelHt(averageZ/numVertices - prjModel.levels()[zone.pl()-1].refht());
-      path.setPld(zone.pl());
-      path.setMult(area);
-      // Now for the type specific info
-      if(bc == "Outdoors")
-      {
-        // Make an exterior flow path
-        path.setPzn(zone.nr());
-        path.setPzm(-1);
-        // Set the wind-related stuff here
-        path.setWazm(openstudio::radToDeg(surface.azimuth()));
-        path.setWindPressure(true);
-        path.setWPmod(openstudio::wind::pressureModifier(openstudio::wind::Default,wind_H));
-        path.setPw(4); // Assume standard template
-        // Set flow element
-        if(type == "RoofCeiling")
-        {
-          path.setPe(m_afeMap["roof"]);
-          path.setPw(5); // Assume standard template
-        }
-        else
-        {
-          path.setPe(m_afeMap["exterior"]);
-        }
-        path.setNr(++nr);
-        m_surfaceMap[surface.handle()] = path.nr();
-        prjModel.addAirflowPath(path);
-      }
-      else if (bc == "Surface")
-      {
-        boost::optional<openstudio::model::Surface> adjacentSurface = surface.adjacentSurface();
-        if(!adjacentSurface)
-        {
-          LOG(Error, "Unable to find adjacent surface for surface '" << surface.name().get() << "'");
-          return boost::optional<contam::IndexModel>();
-        }
-        boost::optional<openstudio::model::Space> adjacentSpace = adjacentSurface->space();
-        if(!adjacentSpace)
-        {
-          LOG(Error, "Unattached adjacent surface '" << adjacentSurface->name().get() << "'");
-          return boost::optional<contam::IndexModel>();
-        }
-        boost::optional<openstudio::model::ThermalZone> adjacentZone = adjacentSpace->thermalZone();
-        if(!adjacentZone)
-        {
-          LOG(Error, "Unattached adjacent space '" << adjacentSpace->name().get() << "'");
-          return boost::optional<contam::IndexModel>();
-        }
-        if(adjacentZone.get() != thermalZone.get()) // I don't really like doing this
-        {
-          // Make an interior flow path
-          path.setPzn(zone.nr());
-          path.setPzm (m_zoneMap[adjacentZone->handle()]);
-          // Set flow element
-          if(type == "Floor" || type == "RoofCeiling")
-          {
-            path.setPe(m_afeMap["floor"]);
-          }
-          else
-          {
-            path.setPe(m_afeMap["interior"]);
-          }
-          path.setNr(++nr);
-          m_surfaceMap[surface.handle()] = path.nr();
-          prjModel.addAirflowPath(path);
-          used << adjacentSurface->handle();
-        }
-      }
-    }
-    if (m_progressBar)
-    {
-      m_progressBar->setValue(m_progressBar->value() + 1);
-    }
-  }
-  */
 
   if(m_translateHVAC) {
     // Generate air handling systems
@@ -1139,7 +1012,7 @@ bool ForwardTranslator::linkInteriorSurface(openstudio::model::ThermalZone zone,
   }
   contam::Zone airflowZone = m_prjModel.zones()[zoneNr - 1];
   // Get the surface area - will need to do more work here later if large openings are present
-  double area = surface.grossArea();
+  double area = 0.5*(surface.grossArea() + adjacentSurface.grossArea());
   std::string type = surface.surfaceType();
   double averageZ = 0;
   double numVertices = surface.vertices().size();

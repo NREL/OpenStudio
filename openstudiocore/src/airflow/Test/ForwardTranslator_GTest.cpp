@@ -51,6 +51,7 @@
 #include <resources.hxx>
 
 #include <sstream>
+#include <QVector>
 
 TEST_F(AirflowFixture, ForwardTranslator_exampleModel)
 {
@@ -99,6 +100,10 @@ TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2012)
   EXPECT_EQ(2,systemZoneCount);
   EXPECT_EQ(4,interiorZoneCount);
   // 26 Paths
+  QVector<double> interiorMult, exteriorRoofMult, exteriorWallMult;
+  interiorMult << 9 << 21 << 30;
+  exteriorRoofMult << 30 << 70 << 136;
+  exteriorWallMult << 9 << 21 << 24 << 30 << 51;
   EXPECT_EQ(26,prjModel->airflowPaths().size());
   int exhaustPathCount=0;
   int systemPathCount=0;
@@ -110,6 +115,12 @@ TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2012)
     if(afp.system()) {
       systemPathCount++;
     } else if(afp.windPressure()) {
+      // This should be an exterior flow path
+      if(afp.pe() == 5) {
+        EXPECT_TRUE(exteriorWallMult.contains(afp.mult()));
+      } else {
+        EXPECT_TRUE(exteriorRoofMult.contains(afp.mult()));
+      }
       windPressurePathCount++;
     } else if(afp.exhaust()) {
       exhaustPathCount++;
@@ -118,6 +129,8 @@ TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2012)
     } else if(afp.recirculation()) {
       recirculationPathCount++;
     } else {
+      // This is an interior flow path
+      EXPECT_TRUE(interiorMult.contains(afp.mult()));
       plainPathCount++;
     }
   }
