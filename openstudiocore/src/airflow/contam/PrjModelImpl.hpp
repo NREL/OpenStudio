@@ -336,13 +336,11 @@ public:
 
   template <class T> bool replaceAirflowElement(int nr, T element)
   {
-    if(nr>0 && nr<=m_airflowElements.size())
-    {
+    if(nr>0 && (unsigned)nr<=m_airflowElements.size()) {
       auto copy = new T;
       *copy = element;
       AirflowElement *pointer = dynamic_cast<AirflowElement*>(copy);
-      if(pointer)
-      {
+      if(pointer) {
         copy->setNr(nr);
         //m_airflowElements.replace(nr - 1, std::shared_ptr<AirflowElement>(pointer));
         return true;

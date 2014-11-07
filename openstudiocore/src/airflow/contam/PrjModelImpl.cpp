@@ -1247,7 +1247,7 @@ std::string IndexModelImpl::writeZoneIc(int start)
   if(nctm) {
     for(unsigned i=start;i<m_zones.size();i++) {
       string += ANY_TO_STR(i+offset);
-      for(unsigned j=0;j<ncontaminants;j++) {
+      for(unsigned j=0;j<(unsigned)ncontaminants;j++) {
         string += ' ' + ANY_TO_STR(m_zones[i].ic(j));
       }
       string += '\n';
@@ -1258,7 +1258,7 @@ std::string IndexModelImpl::writeZoneIc(int start)
 
 int IndexModelImpl::airflowElementNrByName(std::string name) const
 {
-  for(int i=0;i<m_airflowElements.size();i++) {
+  for(unsigned i=0;i<m_airflowElements.size();i++) {
     if(m_airflowElements[i]->name() == name) {
       return m_airflowElements[i]->nr();
     }
