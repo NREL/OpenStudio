@@ -15949,6 +15949,43 @@ OS:SetpointManager:Warmest,
        \required-field
        \object-list Node
 
+OS:SetpointManager:WarmestTemperatureFlow,
+       \min-fields 1
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference SetpointManagers
+  A3 , \field Control Variable
+       \required-field
+       \type choice
+       \key Temperature
+  N1 , \field Minimum Setpoint Temperature
+       \required-field
+       \units C
+       \type real
+       \minimum> 0.0
+  N2 , \field Maximum Setpoint Temperature
+       \required-field
+       \units C
+       \type real
+       \minimum> 0.0
+  A4 , \field Strategy
+       \required-field
+       \type choice
+       \key TemperatureFirst
+       \key FlowFirst
+  A5 , \field Setpoint Node or NodeList Name
+       \type object-list
+       \required-field
+       \object-list Node
+  N3 ; \field Minimum Turndown Ratio
+       \required-field
+       \units dimensionless
+       \type real
+       \minimum> 0.0
+
 OS:Sizing:Plant,
   \min-fields 5
   A1, \field Handle
