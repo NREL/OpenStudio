@@ -20,7 +20,7 @@
 #ifndef CONTAM_PRJREADER_HPP
 #define CONTAM_PRJREADER_HPP
 
-#include <QTextStream>
+#include <QFile>
 #include <QStringList>
 #include <QVector>
 #include <QSharedPointer>
@@ -34,8 +34,8 @@ namespace contam {
 class Reader
 {
 public:
-  explicit Reader(QTextStream *stream);
-  explicit Reader(QString string, int starting=0);
+  explicit Reader(QFile *file);
+  explicit Reader(QString *string, int starting=0);
   ~Reader();
 
   float readFloat();
@@ -73,10 +73,9 @@ private:
   std::string readStdString();
   QString readLineQString();
 
-  QTextStream *stream;
+  QTextStream m_stream;
   int m_lineNumber;
-  bool allocated;
-  QStringList entries;
+  QStringList m_entries;
 
   REGISTER_LOGGER("openstudio.contam.Reader");
 };

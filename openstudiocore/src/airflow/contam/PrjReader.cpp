@@ -26,21 +26,18 @@
 namespace openstudio {
 namespace contam {
 
-Reader::Reader(QTextStream *stream):stream(stream),m_lineNumber(0),allocated(false)
+Reader::Reader(QFile *file) : m_lineNumber(0)
 {
+  m_stream.setDevice(file);
 }
 
-Reader::Reader(QString string, int starting):m_lineNumber(starting),allocated(true)
+Reader::Reader(QString *string, int starting) : m_lineNumber(starting)
 {
-  stream = new QTextStream(&string);
+  m_stream.setString(string);
 }
 
 Reader::~Reader()
 {
-  if(allocated) {
-    delete stream;
-  }
-  allocated = false;
 }
 
 float Reader::readFloat()
@@ -72,8 +69,8 @@ double Reader::readDouble()
 QString Reader::readQString()
 {
   while(1) {
-    while(this->entries.size() == 0) {
-      QString input = stream->readLine();
+    while(m_entries.size() == 0) {
+      QString input = m_stream.readLine();
       LOG(Debug, "Line read: " << input.toStdString());
       if(input.isNull()) {
         QString mesg=QString("Failed to read input at line %1").arg(m_lineNumber);
@@ -81,7 +78,7 @@ QString Reader::readQString()
       }
       m_lineNumber++;
       while(input[0]=='!') {
-        input = stream->readLine();
+        input = m_stream.readLine();
         LOG(Debug, "Line read: " << input.toStdString());
         if(input.isNull()) {
           QString mesg=QString("Failed to read input at line %1").arg(m_lineNumber);
@@ -89,11 +86,11 @@ QString Reader::readQString()
         }
         m_lineNumber++;
       }
-      entries = input.split(" ",QString::SkipEmptyParts);
+      m_entries = input.split(" ",QString::SkipEmptyParts);
     }
-    QString out = entries.takeFirst();
+    QString out = m_entries.takeFirst();
     if(out[0] == '!') {
-      entries.clear();
+      m_entries.clear();
     } else {
       LOG(Debug, "String return: " << out.toStdString());
       return out;
@@ -143,10 +140,10 @@ std::string Reader::readLine()
 QString Reader::readLineQString()
 {
   /* Dump any other input */
-  if(entries.size()) {
-    entries.clear();
+  if(m_entries.size()) {
+    m_entries.clear();
   }
-  QString input = stream->readLine();
+  QString input = m_stream.readLine();
   LOG(Debug, "Line read: " << input.toStdString());
   if(input.isNull()) {
     QString mesg=QString("Failed to read input at line %1").arg(m_lineNumber);
@@ -154,7 +151,7 @@ QString Reader::readLineQString()
   }
   m_lineNumber++;
   while(input[0]=='!') {
-    input = stream->readLine();
+    input = m_stream.readLine();
     LOG(Debug, "Line read: " << input.toStdString());
     if(input.isNull()) {
       QString mesg=QString("Failed to read input at line %1").arg(m_lineNumber);
@@ -201,7 +198,7 @@ std::string Reader::readSection()
 {
   QString section;
   while(1) {
-    QString input = stream->readLine();
+    QString input = m_stream.readLine();
     if(input.isNull()) {
       QString mesg = QString("Failed to read input at line %1").arg(m_lineNumber);
       LOG_AND_THROW(mesg.toStdString());
