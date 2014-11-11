@@ -117,6 +117,7 @@
 
 // LOADS
 #define LOADNAME "Load Name"
+#define SELECTED "All"
 #define MULTIPLIER "Multiplier"
 #define DEFINITION "Definition"
 #define SCHEDULE "Schedule"
@@ -137,7 +138,7 @@ struct ModelObjectNameSorter{
 
 SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QWidget * parent)
   : QWidget(parent),
-  m_isIP(isIP)
+    m_isIP(isIP)
 {
   QVBoxLayout * layout = 0;
 
@@ -189,7 +190,8 @@ SpaceTypesGridController::SpaceTypesGridController(bool isIP,
   IddObjectType iddObjectType,
   model::Model model,
   std::vector<model::ModelObject> modelObjects) :
-  OSGridController(isIP, headerText, iddObjectType, model, modelObjects)
+  OSGridController(isIP, headerText, iddObjectType, model, modelObjects),
+  m_selectedObjects(std::make_shared<std::set<model::ModelObject>>())
 {
   setCategoriesAndFields();
 }
@@ -211,6 +213,7 @@ void SpaceTypesGridController::setCategoriesAndFields()
 
   {
     std::vector<QString> fields;
+    fields.push_back(SELECTED);
     fields.push_back(LOADNAME);
     fields.push_back(MULTIPLIER);
     fields.push_back(DEFINITION);
@@ -250,7 +253,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         getter,
         setter);
 
-    } else if (field == LOADNAME || field == MULTIPLIER || field == DEFINITION || field == SCHEDULE || field == ACTIVITYSCHEDULE) {
+    } else if (field == LOADNAME || field == MULTIPLIER || field == DEFINITION || field == SCHEDULE || field == ACTIVITYSCHEDULE || field == SELECTED) {
       // Create a lambda function that collates all of the loads in a space type 
       // and returns them as an std::vector
       std::function<std::vector<model::ModelObject> (const model::SpaceType &)> allLoads(
@@ -813,7 +816,15 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         );
 
       }
-
+      else if (field == SELECTED) {
+        addSelectColumn(QString(SELECTED),
+            m_selectedObjects,
+            DataSource(
+              allLoads,
+              true
+              )
+            );
+      }
       else if (field == MULTIPLIER) {
 
         addValueEditColumn(QString(MULTIPLIER),

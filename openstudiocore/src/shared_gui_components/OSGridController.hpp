@@ -188,6 +188,29 @@ public:
   }
 
   template<typename DataSourceType>
+  void addSelectColumn(QString headingLabel,
+                       const std::shared_ptr<std::set<DataSourceType>> &t_selectedObjects,
+                       const boost::optional<DataSource> &t_source)
+  {
+    auto getter = std::function<bool (DataSourceType *)>([t_selectedObjects](DataSourceType *t_obj) -> bool {
+      assert(t_obj);
+      return t_selectedObjects->count(*t_obj) != 0;
+    });
+
+    auto setter = std::function<void (DataSourceType *, bool)>([t_selectedObjects](DataSourceType *t_obj, bool t_set) {
+      assert(t_obj);
+      if (t_set) {
+        t_selectedObjects->insert(*t_obj);
+      } else {
+        t_selectedObjects->erase(*t_obj);
+      }
+    });
+
+    addCheckBoxColumn(headingLabel, getter, setter, t_source);
+  }
+
+
+  template<typename DataSourceType>
   void addCheckBoxColumn(QString headingLabel,
                          std::function<bool (DataSourceType *)>  t_getter,
                          std::function<void (DataSourceType *, bool)> t_setter,
