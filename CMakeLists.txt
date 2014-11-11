@@ -403,11 +403,10 @@ if(NOT WIN32)
 
   find_package(Ruby 2.0)
 
-  if (NOT RUBY_FOUND)
-  find_path(RUBY_CONFIG_INCLUDE_DIR
-    NAMES ruby/config.h  config.h
-    HINTS
-    /usr/include/x86_64-linux-gnu/ruby-2.0.0
+  if(NOT RUBY_FOUND)
+    find_path(RUBY_CONFIG_INCLUDE_DIR
+      NAMES ruby/config.h config.h
+      HINTS /usr/include/x86_64-linux-gnu/ruby-2.0.0
     )
     find_package(Ruby 2.0)
   endif()
