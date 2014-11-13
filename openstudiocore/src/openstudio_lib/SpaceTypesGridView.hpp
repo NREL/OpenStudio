@@ -96,8 +96,6 @@ public slots:
 
   virtual void onComboBoxIndexChanged(int index);
 
-private:
-  std::shared_ptr<std::set<model::ModelObject>> m_selectedObjects;
 
 };
 

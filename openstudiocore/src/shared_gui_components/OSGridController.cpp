@@ -58,8 +58,118 @@ namespace openstudio {
 
 const std::vector<QColor> OSGridController::m_colors = SchedulesView::initializeColors();
 
+
+ObjectSelector::ObjectSelector(OSGridController *t_grid)
+  : m_grid(t_grid)
+{
+
+}
+
+void ObjectSelector::addWidget(const boost::optional<model::ModelObject> &t_obj, QWidget *t_widget, int row, int column,
+    const boost::optional<int> &t_subrow)
+{
+  WidgetLoc l(t_widget, row, column, t_subrow);
+  connect(t_widget, &QObject::destroyed, this, &ObjectSelector::widgetDestroyed);
+
+  m_widgetMap.insert(std::make_pair(t_obj, l));
+
+  if (t_obj) {
+    updateWidgets(*t_obj);
+  }
+
+}
+
+void ObjectSelector::widgetDestroyed(QObject *t_obj)
+{
+  auto itr = m_widgetMap.begin();
+
+  while (itr != m_widgetMap.end())
+  {
+    if (itr->second.widget == t_obj) {
+      itr = m_widgetMap.erase(itr);
+    } else {
+      ++itr;
+    }
+  }
+}
+
+bool ObjectSelector::getObjectSelection(const model::ModelObject &t_obj) const
+{
+  return m_selectedObjects.count(t_obj) != 0;
+}
+
+void ObjectSelector::setObjectSelection(const model::ModelObject &t_obj, bool t_selected)
+{
+  auto changed = false;
+  if (t_selected)
+  {
+    changed = m_selectedObjects.insert(t_obj).second;
+  } else {
+    changed = m_selectedObjects.erase(t_obj) != 0;
+  }
+
+  if (changed)
+  {
+    updateWidgets(t_obj);
+  }
+}
+
+std::set<model::ModelObject> ObjectSelector::getSelectedObjects() const
+{
+  return m_selectedObjects;
+}
+
+bool ObjectSelector::contains(const WidgetLoc &t_inner, const WidgetLoc &t_outer)
+{
+  return (t_inner.row == t_outer.row 
+      && (!t_outer.subrow 
+          || (t_inner.subrow && t_outer.subrow
+              && *t_inner.subrow == *t_outer.subrow)));
+}
+
+bool ObjectSelector::selected(const WidgetLoc &t_loc) const
+{
+  for (const auto &mo : m_selectedObjects)
+  {
+    auto range = m_widgetMap.equal_range(mo);
+    for (auto itr = range.first; itr != range.second; ++itr)
+    {
+      if (contains(t_loc, itr->second))
+      {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+void ObjectSelector::updateWidgets(const model::ModelObject &t_obj)
+{
+  const auto itr = m_widgetMap.find(boost::optional<model::ModelObject>(t_obj));
+  if (itr != m_widgetMap.end())
+  {
+    for (auto &widget : m_widgetMap)
+    {
+      updateWidget(widget.second, itr->second);
+    }
+  }
+}
+
+void ObjectSelector::updateWidget(WidgetLoc &t_toUpdate, const WidgetLoc &t_loc)
+{
+  if (contains(t_toUpdate, t_loc))
+  {
+    t_toUpdate.widget->setStyleSheet(m_grid->cellStyle(t_toUpdate.row, t_toUpdate.column, selected(t_toUpdate)));
+  }
+}
+
+
+
+
 OSGridController::OSGridController()
-  : QObject()
+  : QObject(),
+  m_objectSelector(std::make_shared<ObjectSelector>(this))
 {
 }
 
@@ -80,9 +190,10 @@ OSGridController::OSGridController(bool isIP,
     m_model(model),
     m_isIP(isIP),
     m_modelObjects(modelObjects),
+    m_iddObjectType(iddObjectType),
     m_horizontalHeaderBtnGrp(nullptr),
     m_headerText(headerText),
-    m_iddObjectType(iddObjectType)
+    m_objectSelector(std::make_shared<ObjectSelector>(this))
 {
   loadQSettings();
 
@@ -155,6 +266,7 @@ std::vector<std::pair<QString,std::vector<QString> > > OSGridController::categor
 
 void OSGridController::categorySelected(int index)
 {
+  m_objectSelector->clear();
   m_currentCategoryIndex = index;
 
   m_currentCategory = m_categoriesAndFields.at(index).first;
@@ -512,6 +624,20 @@ QString OSGridController::cellStyle(int rowIndex, int columnIndex, bool isSelect
   style.append("                        border-bottom: 1px solid black;");
   style.append("}");
 
+
+  style.append("QWidget#InnerCell { border: none;");
+  style.append("                        background-color: " + cellColor + ";");
+//  if (rowIndex == 0){
+//    style.append("                      border-top: 1px solid black;");
+//  }
+//  if (columnIndex == 0){
+//    style.append("                      border-left: 1px solid black;");
+//  }
+//  style.append("                        border-right: 1px solid black;");
+//  style.append("                        border-bottom: 1px solid black;");
+  style.append("}");
+
+
   return style;
 }
 
@@ -531,8 +657,9 @@ QWidget * OSGridController::widgetAt(int row, int column)
   int numWidgets = 0;
   // start with a default sane value
   QSize recommendedSize(100, 20);
+  bool hasSubRows = false;
 
-  auto addWidget = [&](QWidget *t_widget)
+  auto addWidget = [&](QWidget *t_widget, const boost::optional<model::ModelObject> &t_obj)
   {
     auto expand=[](QSize &t_s, const QSize &t_newS) {
       if (t_newS.height() < 400 && t_newS.width() < 600)
@@ -553,11 +680,18 @@ QWidget * OSGridController::widgetAt(int row, int column)
     l->setSpacing(0);
     l->setContentsMargins(0,0,0,0);
     l->addWidget(t_widget, 0, Qt::AlignVCenter | Qt::AlignLeft);
+    layout->setSizeConstraint(QLayout::SetMinAndMaxSize);
     holder->setLayout(l);
     layout->addWidget(holder, 0, Qt::AlignVCenter | Qt::AlignLeft);
-    ++numWidgets;
+    holder->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    t_widget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
-    //std::cout << " Width: " << recommendedSize.width() << " height " << recommendedSize.height() << std::endl;
+    if (t_obj)
+    {
+      holder->setObjectName("InnerCell");
+      m_objectSelector->addWidget(t_obj, holder, row, column, hasSubRows?numWidgets:boost::optional<int>());
+    }
+    ++numWidgets;
     expand(recommendedSize, t_widget->size());
   };
 
@@ -567,7 +701,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
       // Each concept should have its own column
       OS_ASSERT(m_horizontalHeader.size() == m_baseConcepts.size());
     }
-    addWidget(m_horizontalHeader.at(column));
+    addWidget(m_horizontalHeader.at(column), boost::optional<model::ModelObject>());
   } else {
 
     model::ModelObject mo = m_modelObjects[modelObjectRow];
@@ -577,6 +711,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
     QSharedPointer<BaseConcept> baseConcept = m_baseConcepts[column];
 
     if (QSharedPointer<DataSourceAdapter> dataSource = baseConcept.dynamicCast<DataSourceAdapter>()) {
+      hasSubRows = true;
       // here we magically create a multi-row column of any type that was constructed
       //
       // The details need to be fleshed out. The ideas all work, and it's rendering as expected,
@@ -584,16 +719,13 @@ QWidget * OSGridController::widgetAt(int row, int column)
       // The spacing around the list is a little awkward. The padding might need to be set to 0
       // all the way around.
 
-
-      // we have a data source that provides multiple rows.
-      // This should be working and doing what you want
       for (auto &item : dataSource->source().items(mo))
       {
         if (item)
         {
-          addWidget(makeWidget(item->cast<model::ModelObject>(), dataSource->innerConcept()));
+          addWidget(makeWidget(item->cast<model::ModelObject>(), dataSource->innerConcept()), item->cast<model::ModelObject>());
         } else {
-          addWidget(new QWidget());
+          addWidget(new QWidget(), boost::optional<model::ModelObject>());
         }
       }
 
@@ -601,8 +733,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
       {
         // use this space to put in a blank placeholder of some kind to make sure the 
         // widget is evenly laid out relative to its friends in the adjacent columns
-        // Fix this.
-        addWidget(new QWidget());
+        addWidget(new QWidget(), mo);
       }
 
       if (dataSource->source().dropZoneConcept())
@@ -610,7 +741,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
         // it makes sense to me that the drop zone would need a reference to the parent containing object
         // not an object the rest in the list was derived from
         // this should also be working and doing what you want
-        addWidget(makeWidget(mo, dataSource->source().dropZoneConcept()));
+        addWidget(makeWidget(mo, dataSource->source().dropZoneConcept()), mo);
       }
 
       // right here you probably want some kind of container that's smart enough to know how to grow
@@ -622,7 +753,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
       // This case is exactly what it used to do before the DataSource idea was added.
 
       // just the one
-      addWidget(makeWidget(mo, baseConcept));
+      addWidget(makeWidget(mo, baseConcept), mo);
     }
   }
 
@@ -642,6 +773,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
   wrapper->setStyleSheet(this->cellStyle(row,column,false));
 
+  layout->setSizeConstraint(QLayout::SetMinAndMaxSize);
   layout->setSpacing(0);
   if(row == 0){
     layout->setContentsMargins(0,0,0,0);
@@ -750,7 +882,7 @@ std::vector<QWidget *> OSGridController::row(int rowIndex)
 
 void OSGridController::selectRow(int rowIndex, bool select)
 {
-  int columnIndex = 0;
+//  int columnIndex = 0;
   std::vector<QWidget *> row = this->row(rowIndex);
   for (auto widget : row){
     auto button = qobject_cast<QPushButton *>(widget);
@@ -760,7 +892,7 @@ void OSGridController::selectRow(int rowIndex, bool select)
     button->blockSignals(true);
     button->setChecked(select);
     button->blockSignals(false);
-    button->setStyleSheet(cellStyle(rowIndex, columnIndex++, select));
+//    button->setStyleSheet(cellStyle(rowIndex, columnIndex++, select));
   }
 
   //OSItem * item = nullptr; // TODO reevaluate

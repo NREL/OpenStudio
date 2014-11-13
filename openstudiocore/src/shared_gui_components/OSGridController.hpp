@@ -154,6 +154,56 @@ class DataSourceAdapter : public BaseConcept
     QSharedPointer<BaseConcept> m_inner;
 };
 
+class OSGridController;
+
+class ObjectSelector : public QObject
+{
+  Q_OBJECT;
+
+  struct WidgetLoc
+  {
+    WidgetLoc(QWidget *t_widget, int t_row, int t_column, boost::optional<int> t_subrow)
+      : widget(t_widget), row(t_row), column(t_column), subrow(std::move(t_subrow))
+    {
+    }
+
+    QWidget *widget;
+    int row;
+    int column;
+    boost::optional<int> subrow;
+  };
+
+  public:
+    ObjectSelector(OSGridController *t_grid);
+
+    void addWidget(const boost::optional<model::ModelObject> &t_obj, QWidget *t_widget, int row, int column, const boost::optional<int> &subrow);
+    void setObjectSelection(const model::ModelObject &t_obj, bool t_selected);
+    bool getObjectSelection(const model::ModelObject &t_obj) const;
+    std::set<model::ModelObject> getSelectedObjects() const;
+
+    void clear()
+    {
+      m_widgetMap.clear();
+      m_selectedObjects.clear();
+    }
+
+  private slots:
+    void widgetDestroyed(QObject *t_obj);
+
+  private:
+    void updateWidgets(const model::ModelObject &t_obj);
+    void updateWidget(WidgetLoc &t_widget, const WidgetLoc &t_loc);
+    static bool contains(const WidgetLoc &t_inner, const WidgetLoc &t_outer);
+    bool selected(const WidgetLoc &t_loc) const;
+
+    OSGridController *m_grid;
+    std::multimap<boost::optional<model::ModelObject>, WidgetLoc> m_widgetMap;
+    std::set<model::ModelObject> m_selectedObjects;
+};
+
+
+
+
 
 class OSGridController : public QObject
 {
@@ -187,23 +237,18 @@ public:
     }
   }
 
-  template<typename DataSourceType>
   void addSelectColumn(QString headingLabel,
-                       const std::shared_ptr<std::set<DataSourceType>> &t_selectedObjects,
-                       const boost::optional<DataSource> &t_source)
+                       const boost::optional<DataSource> &t_source = boost::none)
   {
-    auto getter = std::function<bool (DataSourceType *)>([t_selectedObjects](DataSourceType *t_obj) -> bool {
+    auto objectSelector = m_objectSelector;
+    auto getter = std::function<bool (model::ModelObject *)>([objectSelector](model::ModelObject *t_obj) -> bool {
       assert(t_obj);
-      return t_selectedObjects->count(*t_obj) != 0;
+      return objectSelector->getObjectSelection(*t_obj);
     });
 
-    auto setter = std::function<void (DataSourceType *, bool)>([t_selectedObjects](DataSourceType *t_obj, bool t_set) {
+    auto setter = std::function<void (model::ModelObject *, bool)>([objectSelector](model::ModelObject *t_obj, bool t_set) {
       assert(t_obj);
-      if (t_set) {
-        t_selectedObjects->insert(*t_obj);
-      } else {
-        t_selectedObjects->erase(*t_obj);
-      }
+      objectSelector->setObjectSelection(*t_obj, t_set);
     });
 
     addCheckBoxColumn(headingLabel, getter, setter, t_source);
@@ -482,6 +527,8 @@ public:
 
   void disconnectFromModel();
 
+  std::shared_ptr<ObjectSelector> getObjectSelector() const { return m_objectSelector; }
+
 protected:
 
   // This function determines the category for
@@ -498,7 +545,7 @@ protected:
   virtual void addColumns(std::vector<QString> & fields) = 0;
 
   // Call this function to get the color for the cell color
-  virtual QString getColor(const model:: ModelObject & modelObject) = 0;
+  virtual QString getColor(const model::ModelObject & modelObject) = 0;
 
   // This function sets the column header caption
   virtual void setHorizontalHeader();
@@ -539,6 +586,7 @@ protected:
 private:
 
   friend class OSGridView;
+  friend class ObjectSelector;
 
   QWidget * makeWidget(model::ModelObject t_mo, const QSharedPointer<BaseConcept> &t_baseConcept);
 
@@ -565,6 +613,8 @@ private:
   QButtonGroup * m_cellBtnGrp;
 
   int m_oldIndex = -1;
+
+  std::shared_ptr<ObjectSelector> m_objectSelector;
 
 signals:
 
