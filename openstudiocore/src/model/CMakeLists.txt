@@ -718,6 +718,9 @@ set(${target_name}_src
   SetpointManagerWarmest.hpp
   SetpointManagerWarmest_Impl.hpp
   SetpointManagerWarmest.cpp
+  SetpointManagerWarmestTemperatureFlow.hpp
+  SetpointManagerWarmestTemperatureFlow_Impl.hpp
+  SetpointManagerWarmestTemperatureFlow.cpp
   Shade.hpp
   Shade_Impl.hpp
   Shade.cpp

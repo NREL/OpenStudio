@@ -158,7 +158,7 @@ elsif new_plugin
   
   ext = SketchupExtension.new($OPENSTUDIO_SKETCHUPPLUGIN_NAME, "OpenStudio/Startup.rb")
   ext.name = $OPENSTUDIO_SKETCHUPPLUGIN_NAME
-  ext.description = "Adds building energy modeling capabilities by coupling SketchUp to the OpenStudio suite of tools.  \r\n\r\nVisit openstudio.nrel.gov for more information."
+  ext.description = "Adds building energy modeling capabilities by coupling SketchUp to the OpenStudio suite of tools.  \r\n\r\nVisit openstudio.net for more information."
   ext.version = new_version
   ext.creator = "National Renewable Energy Laboratory"
   ext.copyright = "2008-2014, Alliance for Sustainable Energy"

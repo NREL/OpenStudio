@@ -37,7 +37,7 @@ TEST_F(ProjectFixture, URLSearchPathRecord)
   ProjectDatabase database = getCleanDatabase("URLSearchPathRecord");
 
   URLSearchPath localSearchPath(toPath("./local/"), URLSearchPath::ToCurrentWorkingDir, IddObjectType::OS_WeatherFile);
-  URLSearchPath remoteSearchPath(QUrl("http://openstudio.nrel.gov"), URLSearchPath::ToInputFile);
+  URLSearchPath remoteSearchPath(QUrl("https://www.openstudio.net"), URLSearchPath::ToInputFile);
 
   URLSearchPathRecord localSearchPathRecord(localSearchPath, database);
   URLSearchPathRecord remoteSearchPathRecord(remoteSearchPath, database);
