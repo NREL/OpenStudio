@@ -143,6 +143,21 @@ bool ObjectSelector::selected(const WidgetLoc &t_loc) const
 
   return false;
 }
+/*
+bool hasSubRows(t_obj)
+{
+  const auto itr = m_widgetMap.find(boost::optional<model::ModelObject>(t_obj));
+
+  if (itr != m_widgetMap.end())
+  {
+    return itr->second.subrow;
+  } else {
+    return false;
+  }
+}
+*/
+
+
 
 void ObjectSelector::updateWidgets(const model::ModelObject &t_obj)
 {
@@ -151,16 +166,29 @@ void ObjectSelector::updateWidgets(const model::ModelObject &t_obj)
   {
     for (auto &widget : m_widgetMap)
     {
-      updateWidget(widget.second, itr->second);
+      auto loc = widget.second;
+      loc.subrow.reset();
+      bool allSubRowsSelected = selected(loc);
+      std::cout << itr->second.row << " " << itr->second.column << " " << (itr->second.subrow?*itr->second.subrow:-1) << '\n';
+      updateWidget(widget.second, itr->second, allSubRowsSelected);
     }
   }
 }
 
-void ObjectSelector::updateWidget(WidgetLoc &t_toUpdate, const WidgetLoc &t_loc)
+void ObjectSelector::updateWidget(WidgetLoc &t_toUpdate, const WidgetLoc &t_loc, bool t_allSubRowsSelected)
 {
   if (contains(t_toUpdate, t_loc))
   {
-    t_toUpdate.widget->setStyleSheet(m_grid->cellStyle(t_toUpdate.row, t_toUpdate.column, selected(t_toUpdate)));
+    auto parentLoc = t_toUpdate.parent();
+    bool parentSelected = selected(parentLoc);
+    parentLoc.widget->setStyleSheet(m_grid->cellStyle(t_toUpdate.row, t_toUpdate.column, parentSelected, true));
+
+    if (t_toUpdate.subrow)
+    {
+      t_toUpdate.widget->setStyleSheet(m_grid->cellStyle(t_toUpdate.row, t_toUpdate.column, parentSelected || selected(t_toUpdate), true));
+    }
+
+
   }
 }
 
@@ -595,7 +623,7 @@ OSGridView * OSGridController::gridView(){
   return gridView;
 }
 
-QString OSGridController::cellStyle(int rowIndex, int columnIndex, bool isSelected)
+QString OSGridController::cellStyle(int rowIndex, int columnIndex, bool isSelected, bool isSubRow)
 {
   QString cellColor;
   if (isSelected) {
@@ -624,19 +652,19 @@ QString OSGridController::cellStyle(int rowIndex, int columnIndex, bool isSelect
   style.append("                        border-bottom: 1px solid black;");
   style.append("}");
 
-
-  style.append("QWidget#InnerCell { border: none;");
-  style.append("                        background-color: " + cellColor + ";");
-//  if (rowIndex == 0){
-//    style.append("                      border-top: 1px solid black;");
-//  }
-//  if (columnIndex == 0){
-//    style.append("                      border-left: 1px solid black;");
-//  }
-//  style.append("                        border-right: 1px solid black;");
-//  style.append("                        border-bottom: 1px solid black;");
-  style.append("}");
-
+  if (isSubRow) {
+    style.append("QWidget#InnerCell { border: 1px solid blue;");
+    style.append("                        background-color: " + cellColor + ";");
+    //  if (rowIndex == 0){
+    //    style.append("                      border-top: 1px solid black;");
+    //  }
+    //  if (columnIndex == 0){
+    //    style.append("                      border-left: 1px solid black;");
+    //  }
+    //  style.append("                        border-right: 1px solid black;");
+    //  style.append("                        border-bottom: 1px solid black;");
+    style.append("}");
+  }
 
   return style;
 }
@@ -658,6 +686,33 @@ QWidget * OSGridController::widgetAt(int row, int column)
   // start with a default sane value
   QSize recommendedSize(100, 20);
   bool hasSubRows = false;
+
+  // wrapper
+  auto wrapper = new QPushButton();
+  if (modelObjectRow >= 0 && column == 0){
+    auto size = m_cellBtnGrp->buttons().size();
+    m_cellBtnGrp->addButton(wrapper, size);
+  }
+
+  wrapper->setObjectName("TableCell");
+  if(row == 0){
+    wrapper->setMinimumSize(QSize(recommendedSize.width(),recommendedSize.height()));
+  } else {
+    wrapper->setMinimumSize(QSize(recommendedSize.width() + 10,widgetHeight * numWidgets ));
+  }
+  wrapper->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+  wrapper->setStyleSheet(this->cellStyle(row,column,false, true));
+
+  layout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+  layout->setSpacing(0);
+  if(row == 0){
+    layout->setContentsMargins(0,0,0,0);
+  } else {
+    layout->setContentsMargins(5,0,5,0);
+  }
+  wrapper->setLayout(layout);
+  // end wrapper
 
   auto addWidget = [&](QWidget *t_widget, const boost::optional<model::ModelObject> &t_obj)
   {
@@ -686,11 +741,11 @@ QWidget * OSGridController::widgetAt(int row, int column)
     holder->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     t_widget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
-    if (t_obj)
-    {
+    if (hasSubRows) {
       holder->setObjectName("InnerCell");
-      m_objectSelector->addWidget(t_obj, holder, row, column, hasSubRows?numWidgets:boost::optional<int>());
     }
+    m_objectSelector->addWidget(t_obj, holder, row, column, hasSubRows?numWidgets:boost::optional<int>());
+
     ++numWidgets;
     expand(recommendedSize, t_widget->size());
   };
@@ -701,7 +756,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
       // Each concept should have its own column
       OS_ASSERT(m_horizontalHeader.size() == m_baseConcepts.size());
     }
-    addWidget(m_horizontalHeader.at(column), boost::optional<model::ModelObject>());
+    addWidget(m_horizontalHeader.at(column), boost::none);
   } else {
 
     model::ModelObject mo = m_modelObjects[modelObjectRow];
@@ -725,7 +780,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
         {
           addWidget(makeWidget(item->cast<model::ModelObject>(), dataSource->innerConcept()), item->cast<model::ModelObject>());
         } else {
-          addWidget(new QWidget(), boost::optional<model::ModelObject>());
+          addWidget(new QWidget(), boost::none);
         }
       }
 
@@ -733,7 +788,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
       {
         // use this space to put in a blank placeholder of some kind to make sure the 
         // widget is evenly laid out relative to its friends in the adjacent columns
-        addWidget(new QWidget(), mo);
+        addWidget(new QWidget(), boost::none);
       }
 
       if (dataSource->source().dropZoneConcept())
@@ -741,7 +796,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
         // it makes sense to me that the drop zone would need a reference to the parent containing object
         // not an object the rest in the list was derived from
         // this should also be working and doing what you want
-        addWidget(makeWidget(mo, dataSource->source().dropZoneConcept()), mo);
+        addWidget(makeWidget(mo, dataSource->source().dropZoneConcept()), boost::none);
       }
 
       // right here you probably want some kind of container that's smart enough to know how to grow
@@ -757,30 +812,6 @@ QWidget * OSGridController::widgetAt(int row, int column)
     }
   }
 
-  auto wrapper = new QPushButton();
-  if (modelObjectRow >= 0 && column == 0){
-    auto size = m_cellBtnGrp->buttons().size();
-    m_cellBtnGrp->addButton(wrapper, size);
-  }
-
-  wrapper->setObjectName("TableCell");
-  if(row == 0){
-    wrapper->setMinimumSize(QSize(recommendedSize.width(),recommendedSize.height()));
-  } else {
-    wrapper->setMinimumSize(QSize(recommendedSize.width() + 10,widgetHeight * numWidgets ));
-  }
-  wrapper->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
-  wrapper->setStyleSheet(this->cellStyle(row,column,false));
-
-  layout->setSizeConstraint(QLayout::SetMinAndMaxSize);
-  layout->setSpacing(0);
-  if(row == 0){
-    layout->setContentsMargins(0,0,0,0);
-  } else {
-    layout->setContentsMargins(5,0,5,0);
-  }
-  wrapper->setLayout(layout);
 
   return wrapper;
 }

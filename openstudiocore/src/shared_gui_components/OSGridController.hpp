@@ -167,6 +167,18 @@ class ObjectSelector : public QObject
     {
     }
 
+    WidgetLoc parent()
+    {
+      WidgetLoc p(*this);
+      if (widget->parentWidget())
+      {
+        p.widget = widget->parentWidget();
+      }
+
+      p.subrow.reset();
+      return p;
+    }
+
     QWidget *widget;
     int row;
     int column;
@@ -192,7 +204,7 @@ class ObjectSelector : public QObject
 
   private:
     void updateWidgets(const model::ModelObject &t_obj);
-    void updateWidget(WidgetLoc &t_widget, const WidgetLoc &t_loc);
+    void updateWidget(WidgetLoc &t_widget, const WidgetLoc &t_loc, bool hasSubRows);
     static bool contains(const WidgetLoc &t_inner, const WidgetLoc &t_outer);
     bool selected(const WidgetLoc &t_loc) const;
 
@@ -596,7 +608,7 @@ private:
 
   void setCustomCategoryAndFields();
 
-  QString cellStyle(int rowIndex, int columnIndex, bool isSelected);
+  QString cellStyle(int rowIndex, int columnIndex, bool isSelected, bool isSubRow);
 
   OSGridView * gridView();
 
