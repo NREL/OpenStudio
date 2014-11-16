@@ -204,6 +204,7 @@ class ObjectSelector : public QObject
 
   private:
     void updateWidgets(const model::ModelObject &t_obj);
+    void updateWidgets(const int t_row, const boost::optional<int> &t_subrow, bool t_selected);
     void updateWidget(WidgetLoc &t_widget, const WidgetLoc &t_loc, bool hasSubRows);
     static bool contains(const WidgetLoc &t_inner, const WidgetLoc &t_outer);
     bool selected(const WidgetLoc &t_loc) const;

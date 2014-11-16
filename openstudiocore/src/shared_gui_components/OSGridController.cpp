@@ -73,10 +73,33 @@ void ObjectSelector::addWidget(const boost::optional<model::ModelObject> &t_obj,
 
   m_widgetMap.insert(std::make_pair(t_obj, l));
 
-  if (t_obj) {
-    updateWidgets(*t_obj);
-  }
+//  if (t_obj) {
+//    updateWidgets(*t_obj);
+//  } else {
+    boost::optional<int> subRowToUpdate = t_subrow;
 
+    bool rowSelected = false;
+    for (auto &widget : m_widgetMap)
+    {
+      if (widget.first
+          && widget.second.row == row
+          && (!widget.second.subrow || (widget.second.subrow == t_subrow)))
+      {
+        if (m_selectedObjects.count(*widget.first) != 0)
+        {
+          if (!widget.second.subrow) {
+            subRowToUpdate.reset();
+          }
+          rowSelected = true;
+          break;
+        }
+      }
+    }
+
+    if (rowSelected) {
+      updateWidgets(row, subRowToUpdate, rowSelected);
+    }
+//  }
 }
 
 void ObjectSelector::widgetDestroyed(QObject *t_obj)
@@ -158,40 +181,53 @@ bool hasSubRows(t_obj)
 */
 
 
+void ObjectSelector::updateWidgets(const int t_row, const boost::optional<int> &t_subrow, bool t_objectSelected)
+{
+  std::cout << "UpdateWidgets: " << t_row << " " << (t_subrow?*t_subrow:-1) << " " << t_objectSelected << '\n';
+  std::set<std::pair<QWidget *,int>> widgetsToUpdate;
+  bool isSubRow = t_subrow;
+
+  for (auto &widgetLoc : m_widgetMap)
+  {
+    if (widgetLoc.second.row == t_row
+        && (!t_subrow
+            || (t_subrow == widgetLoc.second.subrow)))
+    {
+      if (!isSubRow)
+      {
+        widgetsToUpdate.insert(std::make_pair(widgetLoc.second.widget->parentWidget(), widgetLoc.second.column));
+      } else {
+        widgetsToUpdate.insert(std::make_pair(widgetLoc.second.widget, widgetLoc.second.column));
+        widgetLoc.second.widget->setStyleSheet("");
+      }
+    }
+  }
+
+  for (auto &widget : widgetsToUpdate)
+  {
+    std::cout << " setting stylesheet " << widget.first << ": " << t_row << "," << widget.second << " " <<  t_objectSelected << " " << isSubRow << '\n';
+    widget.first->setStyleSheet(m_grid->cellStyle(t_row, widget.second, t_objectSelected, isSubRow));
+  }
+
+}
 
 void ObjectSelector::updateWidgets(const model::ModelObject &t_obj)
 {
-  const auto itr = m_widgetMap.find(boost::optional<model::ModelObject>(t_obj));
-  if (itr != m_widgetMap.end())
+  bool objectSelected = m_selectedObjects.count(t_obj) != 0;
+  auto range = m_widgetMap.equal_range(boost::optional<model::ModelObject>(t_obj));
+
+  assert(range.first != range.second);
+
+  auto row = std::make_tuple(range.first->second.row, range.first->second.subrow);
+  ++range.first;
+  while (range.first != range.second)
   {
-    for (auto &widget : m_widgetMap)
-    {
-      auto loc = widget.second;
-      loc.subrow.reset();
-      bool allSubRowsSelected = selected(loc);
-      std::cout << itr->second.row << " " << itr->second.column << " " << (itr->second.subrow?*itr->second.subrow:-1) << '\n';
-      updateWidget(widget.second, itr->second, allSubRowsSelected);
-    }
+    assert(row == std::make_tuple(range.first->second.row, range.first->second.subrow));
+    ++range.first;
   }
+
+  updateWidgets(std::get<0>(row), std::get<1>(row), objectSelected);
 }
-
-void ObjectSelector::updateWidget(WidgetLoc &t_toUpdate, const WidgetLoc &t_loc, bool t_allSubRowsSelected)
-{
-  if (contains(t_toUpdate, t_loc))
-  {
-    auto parentLoc = t_toUpdate.parent();
-    bool parentSelected = selected(parentLoc);
-    parentLoc.widget->setStyleSheet(m_grid->cellStyle(t_toUpdate.row, t_toUpdate.column, parentSelected, true));
-
-    if (t_toUpdate.subrow)
-    {
-      t_toUpdate.widget->setStyleSheet(m_grid->cellStyle(t_toUpdate.row, t_toUpdate.column, parentSelected || selected(t_toUpdate), true));
-    }
-
-
-  }
-}
-
 
 
 
@@ -640,19 +676,22 @@ QString OSGridController::cellStyle(int rowIndex, int columnIndex, bool isSelect
   }
 
   QString style;
-  style.append("QPushButton#TableCell { border: none;");
-  style.append("                        background-color: " + cellColor + ";");
-  if (rowIndex == 0){
-    style.append("                      border-top: 1px solid black;");
-  }
-  if (columnIndex == 0){
-    style.append("                      border-left: 1px solid black;");
-  }
-  style.append("                        border-right: 1px solid black;");
-  style.append("                        border-bottom: 1px solid black;");
-  style.append("}");
+//  if (!isSubRow)
+//  {
+    style.append("QPushButton#TableCell { border: none;");
+    style.append("                        background-color: " + cellColor + ";");
+    if (rowIndex == 0){
+      style.append("                      border-top: 1px solid black;");
+    }
+    if (columnIndex == 0){
+      style.append("                      border-left: 1px solid black;");
+    }
+    style.append("                        border-right: 1px solid black;");
+    style.append("                        border-bottom: 1px solid black;");
+    style.append("}");
+//  }
 
-  if (isSubRow) {
+//  if (isSubRow) {
     style.append("QWidget#InnerCell { border: 1px solid blue;");
     style.append("                        background-color: " + cellColor + ";");
     //  if (rowIndex == 0){
@@ -664,7 +703,7 @@ QString OSGridController::cellStyle(int rowIndex, int columnIndex, bool isSelect
     //  style.append("                        border-right: 1px solid black;");
     //  style.append("                        border-bottom: 1px solid black;");
     style.append("}");
-  }
+//  }
 
   return style;
 }
@@ -702,7 +741,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
   }
   wrapper->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-  wrapper->setStyleSheet(this->cellStyle(row,column,false, true));
+  wrapper->setStyleSheet(this->cellStyle(row,column, false, true));
 
   layout->setSizeConstraint(QLayout::SetMinAndMaxSize);
   layout->setSpacing(0);
