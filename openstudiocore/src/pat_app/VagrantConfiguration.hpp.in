@@ -25,10 +25,6 @@
 namespace openstudio {
 namespace pat {
 
-inline openstudio::path vagrantServerPath() { return toPath("${VAGRANT_SERVER_PATH}"); }
-
-inline openstudio::path vagrantWorkerPath() { return toPath("${VAGRANT_WORKER_PATH}"); }
-
 inline bool showVagrant() { 
   return ( (strcmp("${SHOW_VAGRANT}","ON") == 0) || 
            (strcmp("${SHOW_VAGRANT}","true") == 0) ); 

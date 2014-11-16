@@ -440,16 +440,29 @@ namespace runmanager {
       // note that the extra '.' is required to keep the change_extension tool
       // from erasing the .<minorver>
       filename += ".";
+      
     }
+
+    openstudio::path toolPath = change_extension(ruby.second.binaryDir / toPath(filename), exeext);
+
+    if (!exists(toolPath)){
+      // DLM: check if 2.0 is in the ruby.second.binaryDir?
+      // for rbenv this is /usr/local/rbenv/versions/2.0.0-p481/bin/
+      filename = "ruby";
+      toolPath = change_extension(ruby.second.binaryDir / toPath(filename), exeext);
+    }
+
 #else
     static const char filename[] = "ruby";
+
+    openstudio::path toolPath = change_extension(ruby.second.binaryDir / toPath(filename), exeext);
 #endif
 
 
     return openstudio::runmanager::ToolInfo(
         "ruby",
         ruby.first,
-        change_extension(ruby.second.binaryDir / toPath(filename), exeext),
+        toolPath,
         boost::regex(".*"));
   }
 

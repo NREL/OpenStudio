@@ -107,6 +107,7 @@ class OSQuantityEdit2: public QWidget {
   QLineEdit* m_lineEdit;
   QLabel* m_units;
   QString m_text = "UNINITIALIZED";
+  std::string m_unitsStr = "";
 
   bool m_isIP;
   std::string m_modelUnits;

@@ -41,7 +41,7 @@ AnalysisDriverWatcher::AnalysisDriverWatcher(const AnalysisDriver& analysisDrive
 {
   LOG(Debug,"Constructing AnalysisDriverWatcher.");
   // make sure a QApplication exists
-  openstudio::Application::instance().application();
+  openstudio::Application::instance().application(false);
 
   // connect signals and slots
   bool ok;

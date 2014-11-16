@@ -107,6 +107,8 @@ namespace runmanager {
       void statusChanged(const openstudio::runmanager::AdvancedStatus &s);
 
     private:
+      REGISTER_LOGGER("openstudio.runmanager.Process");
+
 
       /// The status of the Process. Defaults to "Idle"
       openstudio::runmanager::AdvancedStatus m_status;

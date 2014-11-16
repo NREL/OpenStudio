@@ -68,6 +68,7 @@ public:
 
   ThermalZonesGridController(bool isIP,
     const QString & headerText,
+    IddObjectType iddObjectType,
     model::Model model,
     std::vector<model::ModelObject> modelObjects);
 
@@ -86,6 +87,7 @@ protected:
   virtual QString getColor(const model::ModelObject & modelObject);
 
 public slots:
+
   REGISTER_LOGGER("openstudio.ThermalZonesGridController");
 
   virtual void onItemDropped(const OSItemId& itemId);

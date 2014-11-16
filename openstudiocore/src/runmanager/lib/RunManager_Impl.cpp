@@ -21,6 +21,7 @@
 #include "Configuration.hpp"
 #include "../../utilities/core/Application.hpp"
 #include "../../utilities/core/PathHelpers.hpp"
+#include "../../utilities/core/URLHelpers.hpp"
 #include "../../utilities/core/ApplicationPathHelpers.hpp"
 #include <runmanager/lib/runmanagerdatabase.hxx>
 #include "JobFactory.hpp"
@@ -1105,7 +1106,7 @@ namespace detail {
           // don't let boost mess with us in the string/path converions
           return t_path;
         } else {
-          return openstudio::toString(t_path);
+          return openstudio::toString(fixedUp);
         }
       }
 
@@ -1205,7 +1206,7 @@ namespace detail {
               QUrl url = requiredFile.first;
               if (requiredFile.first.scheme() == "file")
               {
-                openstudio::path p = fixupPath(openstudio::toPath(url.toLocalFile()), t_basePath);
+                openstudio::path p = fixupPath(openstudio::getOriginalPath(url), t_basePath);
                 url = QUrl::fromLocalFile(openstudio::toQString(p));
               }
 

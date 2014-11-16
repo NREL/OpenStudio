@@ -53,6 +53,7 @@
 #define PORT_WIDTH 30
 #define TEXT_WIDTH 350
 #define TEXT_HEIGHT 390
+#define WARNING_HEIGHT 250
 
 using namespace openstudio::pat;
 
@@ -825,7 +826,7 @@ void AmazonProviderWidget::createLoginWidget()
   QLabel * label = nullptr;
 
   // LEFT LOGIN PAGE
-  
+
   label = new QLabel;
   label->setOpenExternalLinks(true);
   label->setText("To create an account go to <a href=\"http://aws.amazon.com\">aws.amazon.com</a>");
@@ -840,7 +841,7 @@ void AmazonProviderWidget::createLoginWidget()
   m_accessKeyLineEdit->setMinimumWidth(KEY_WIDTH);
   m_accessKeyLineEdit->setMaxLength(20);
   m_leftLoginLayout->addWidget(m_accessKeyLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
-  
+
   label = new QLabel;
   label->setObjectName("H2");
   label->setText("Secret Key");
@@ -852,7 +853,7 @@ void AmazonProviderWidget::createLoginWidget()
   m_secretKeyLineEdit->setMaxLength(40);
   m_leftLoginLayout->addWidget(m_secretKeyLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
 
-  m_leftLoginLayout->addSpacing(30);
+  m_leftLoginLayout->addSpacing(20);
 
   label = new QLabel;
   label->setFixedWidth(TEXT_WIDTH);
@@ -861,7 +862,19 @@ void AmazonProviderWidget::createLoginWidget()
   label->setOpenExternalLinks(true);
   label->setText("<FONT COLOR = RED>PAT cloud support with Amazon EC2 is a new feature, and is still under active development to improve interprocess reliability and performance. The user assumes all responsibility for orphaned EC2 processes, and it is strongly recommended that you monitor EC2 cloud usage at <a href=\"http://aws.amazon.com\">aws.amazon.com</a> to avoid any unwanted charges.");
   label->setAlignment(Qt::AlignTop);
-  m_leftLoginLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
+  auto scrollArea = new QScrollArea();
+  scrollArea->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+  scrollArea->setFixedWidth(TEXT_WIDTH + 25);
+  scrollArea->setMinimumHeight(WARNING_HEIGHT);
+  scrollArea->setStyleSheet("background-color:transparent;");
+  scrollArea->setWidget(label);
+  scrollArea->setWidgetResizable(true);
+  scrollArea->setAlignment(Qt::AlignTop);
+  scrollArea->setFrameShape(QFrame::NoFrame);
+  m_leftLoginLayout->addWidget(scrollArea);
+
+  m_leftLoginLayout->addSpacing(32);
 
   m_leftLoginLayout->addStretch();
 

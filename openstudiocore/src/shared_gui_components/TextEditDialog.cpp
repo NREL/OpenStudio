@@ -21,9 +21,9 @@
 
 #include <QBoxLayout>
 #include <QPushButton>
+#include <QScrollArea>
 #include <QSizePolicy>
 #include <QTextEdit>
-#include <QBoxLayout>
 
 namespace openstudio {
 
@@ -52,11 +52,6 @@ void TextEditDialog::setText(const QString & text)
   m_textEdit->setText(text);
 }
 
-QSize TextEditDialog::sizeHint() const
-{
-  return QSize(500,100);
-}
-
 void TextEditDialog::createWidgets()
 {
   m_textEdit = new QTextEdit(m_windowMessage);
@@ -73,7 +68,7 @@ void TextEditDialog::createWidgets()
 
   #ifdef Q_OS_MAC
     setWindowFlags(Qt::FramelessWindowHint);
-  #elif defined(Q_OS_WIN32)
+  #elif defined(Q_OS_WIN)
     setWindowFlags(Qt::WindowCloseButtonHint);
   #endif
 

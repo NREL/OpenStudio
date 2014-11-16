@@ -89,7 +89,7 @@ namespace openstudio{
     /// QWidget wrapper around SketchUp window
     QWidget* m_sketchUpWidget;
 
-    bool defaultInstance;
+    bool m_defaultInstance;
 
   };
 

@@ -42,7 +42,7 @@ ExportSpreadsheet::~ExportSpreadsheet()
 bool ExportSpreadsheet::exportSpreadsheet(const analysisdriver::SimpleProject& project)
 {
   //Make sure a QApplication exists
-  openstudio::Application::instance().application();
+  openstudio::Application::instance().application(false);
 
   //get the project's directory
   openstudio::path projectPath = project.projectDir();

@@ -32,7 +32,7 @@
 #include <QMouseEvent>
 #include <QString>
 
-#ifdef NDEBUG
+#if !(_DEBUG || (__GNUC__ && !NDEBUG))
 #define TIMEOUT_INTERVAL 500
 #else
 #define TIMEOUT_INTERVAL 2000
@@ -229,6 +229,11 @@ void OSLineEdit2::onItemRemoveClicked()
 {
   if (m_reset)
   {
+    boost::optional<model::ParentObject> parent = boost::none;
+    if (m_modelObject) {
+      parent = m_modelObject->parent();
+    }
+    emit objectRemoved(parent);
     (*m_reset)();
   }
 }

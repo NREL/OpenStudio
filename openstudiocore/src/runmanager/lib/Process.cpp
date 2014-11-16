@@ -36,6 +36,7 @@ namespace runmanager {
   {
     if (status != m_status)
     {
+      LOG(Trace, "New Process State: " << status.description());
       m_status = status;
       emit statusChanged(m_status);
     }

@@ -5,6 +5,9 @@ project(OpenStudioCore)
 cmake_policy(SET CMP0020 NEW)
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.0")
   cmake_policy(SET CMP0042 NEW)
+  if(NOT ${CMAKE_VERSION} VERSION_LESS "3.1")
+    cmake_policy(SET CMP0054 NEW)
+  endif()
 endif()
 
 ###############################################################################
@@ -160,7 +163,7 @@ set(project_directories
   energyplus
   radiance
   gbxml
-  contam
+  airflow
   isomodel
   osversion
   ruleset
@@ -311,25 +314,14 @@ mark_as_advanced(
 # Ruby
 find_program(RUBY_EXECUTABLE NAMES ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH)
 
-if(APPLE)
-  if(CMAKE_OSX_SYSROOT MATCHES ".*10\\.8.*")
-    # set RUBYLIB environment variable so find_package can find the right Ruby libraries
-    get_filename_component(RUBY_EXECUTABLE_DIR ${RUBY_EXECUTABLE} PATH)
-    set(ENV{RUBYLIB} "${RUBY_EXECUTABLE_DIR}/../lib/ruby/2.0.0/universal-darwin12.5.0/:${RUBY_EXECUTABLE_DIR}/../lib/ruby/2.0.0/" )
-    set(RUBY_INCLUDE_DIR "${RUBY_EXECUTABLE_DIR}/../include/ruby-2.0.0/" CACHE PATH "The Ruby include dir" FORCE)
-    set(RUBY_CONFIG_INCLUDE_DIR "${RUBY_EXECUTABLE_DIR}/../include/ruby-2.0.0/universal-darwin12.5.0/" CACHE PATH "The Ruby config include dir" FORCE)
-    set(RUBY_LIBRARY "${RUBY_EXECUTABLE_DIR}/../lib/libruby.2.0.0.dylib" CACHE PATH "The Ruby library" FORCE)
-  endif()
-endif()
-
 find_package(Ruby 2)
 
-if (NOT RUBY_FOUND)
+if(NOT RUBY_FOUND)
   find_path(RUBY_CONFIG_INCLUDE_DIR
-    NAMES ruby/config.h  config.h
+    NAMES ruby/config.h config.h
     HINTS
     /usr/include/x86_64-linux-gnu/ruby-2.0.0
-    )
+  )
   find_package(Ruby 2.0 REQUIRED)
 endif()
 
@@ -723,47 +715,31 @@ include_directories("${CMAKE_BINARY_DIR}/src/")
 add_subdirectory(resources)
 
 
-# Set up embedded ruby for use with 'aws-sdk'
+# Set up embedded ruby for Unix use with 'aws-sdk'
 
-if(WIN32)
-  set(AWS_RUBY_PATH ruby-2.0.0-aws-win32)
-  set(AWS_RUBY_DESTINATION ".")
-  set(AWS_RUBY_EXTENSION ".zip")
+if(UNIX)
+  if(APPLE)
+    set(AWS_RUBY_PATH ruby-2.0.0-aws-Darwin)
+    set(AWS_RUBY_DESTINATION ".")
+    set(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p594-aws-Darwin.tar.bz2)
+    set(AWS_RUBY_CHECKSUM f73fe011d09d6b82901288e83fe45bbf)
 
-  set(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-win32.zip)
-  set(AWS_RUBY_CHECKSUM 1f6e4348099b26e92909db62dcd3b173)
-elseif(APPLE)
-  set(AWS_RUBY_PATH ruby-2.0.0-aws-Darwin)
-  set(AWS_RUBY_DESTINATION ".")
+  elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+    set(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-x86_64)
+    set(AWS_RUBY_DESTINATION "lib/openstudio-${OPENSTUDIO_VERSION}")
+    set(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p594-aws-Linux-x86_64.tar.bz2)
+    set(AWS_RUBY_CHECKSUM d3cdb36ba3dbe167461d94633c4b3ba7)
+  endif()
 
-  set(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-Darwin.tar.bz2)
-  set(AWS_RUBY_CHECKSUM 75963f2c6996af47a3ad69ac84d3d120)
-  set(AWS_RUBY_EXTENSION ".tar.bz2")
-elseif(UNIX AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
-  set(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-x86_64)
-  set(AWS_RUBY_DESTINATION "lib/openstudio-${OPENSTUDIO_VERSION}")
-
-  set(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-Linux-x86_64.tar.bz2)
-  set(AWS_RUBY_CHECKSUM 74d3a8ab4e1e3fb44c308f2aaa8e5732)
-  set(AWS_RUBY_EXTENSION ".tar.bz2")
-elseif(UNIX)
-  set(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-i686)
-  set(AWS_RUBY_DESTINATION "lib/openstudio-${OPENSTUDIO_VERSION}")
-
-  set(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-Linux-i686.tar.bz2)
-  set(AWS_RUBY_CHECKSUM e51ce64b3e03ed3a66f1f7e0a22b5b7e)
-  set(AWS_RUBY_EXTENSION ".tar.bz2")
-endif()
-
-file(DOWNLOAD ${AWS_RUBY_URL} "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}${AWS_RUBY_EXTENSION}" TIMEOUT 120 INACTIVITY_TIMEOUT 120)
-execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}")
-execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}${AWS_RUBY_EXTENSION}" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-execute_process(COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_HOME_DIRECTORY}/ruby/aws-sdk-patches/connection_pool.rb" "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}/lib/ruby/gems/2.0.0/gems/aws-sdk-1.31.3/lib/aws/core/http")
-install(
-  DIRECTORY "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}"
-  DESTINATION "${AWS_RUBY_DESTINATION}"
-  USE_SOURCE_PERMISSIONS
+  file(DOWNLOAD ${AWS_RUBY_URL} "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}.tar.bz2" TIMEOUT 120 INACTIVITY_TIMEOUT 120)
+  execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}")
+  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}.tar.bz2" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  install(
+    DIRECTORY "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}"
+    DESTINATION "${AWS_RUBY_DESTINATION}"
+    USE_SOURCE_PERMISSIONS
   )
+endif()
 
 # end ruby aws-sdk info
 
@@ -938,7 +914,7 @@ set(all_lib_targets
   openstudio_isomodel
   openstudio_lib
   openstudio_sdd
-  openstudio_contam
+  openstudio_airflow
   ${QTWINMIGRATE_EXPORT}
   zkexpat
   zkqwt

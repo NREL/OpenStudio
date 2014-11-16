@@ -54,6 +54,9 @@ void OSLoadNamePixmapLineEdit::createWidgets()
   bool isConnected = connect(m_lineEdit, SIGNAL(itemClicked(OSItem*)), this, SIGNAL(itemClicked(OSItem*)));
   OS_ASSERT(isConnected);
 
+  isConnected = connect(m_lineEdit, SIGNAL(objectRemoved(boost::optional<model::ParentObject>)), this, SIGNAL(objectRemoved(boost::optional<model::ParentObject>)));
+  OS_ASSERT(isConnected);
+
   auto layout = new QHBoxLayout();
   layout->setContentsMargins(0,0,0,0);
   layout->addWidget(m_label);

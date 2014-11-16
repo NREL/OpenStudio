@@ -175,15 +175,15 @@ void OSDialog::paintEvent(QPaintEvent *event)
   }
 }
 
-//void OSDialog::setSizeHint(const QSize & sizeHint)
-//{
-//  m_sizeHint = sizeHint;
-//}
+void OSDialog::setSizeHint(const QSize & sizeHint)
+{
+  m_sizeHint = sizeHint;
+}
 
-//QSize OSDialog::sizeHint() const
-//{
-//  return m_sizeHint;
-//}
+QSize OSDialog::sizeHint() const
+{
+  return m_sizeHint;
+}
 
 QMargins OSDialog::layoutContentsMargins() const
 {

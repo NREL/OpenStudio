@@ -576,10 +576,6 @@ OSDropZone2::OSDropZone2()
 
 void OSDropZone2::refresh()
 {
-  //disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
-  m_text.clear();
-  setFixedWidth(75);
-
   boost::optional<model::ModelObject> modelObject;
 
   if (m_item)
@@ -590,7 +586,13 @@ void OSDropZone2::refresh()
   }
 
   if (modelObject) {
-    m_text = QString::fromStdString(modelObject->name().get());
+    QString temp = QString::fromStdString(modelObject->name().get());
+    if (m_text == temp){
+      return;
+    }
+    else {
+      m_text = temp;
+    }
 
     // Adjust the width to accommodate the text
     QFont myFont;
@@ -656,7 +658,11 @@ void OSDropZone2::dropEvent(QDropEvent *event)
     m_item = OSItem::makeItem(itemId, OSItemType::ListItem);
     m_item->setParent(this);
 
+    OS_ASSERT(modelObject);
+
     connect(m_item, &OSItem::itemRemoveClicked, this, &OSDropZone2::onItemRemoveClicked);
+
+    connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSDropZone2::refresh);
 
     // Tell EditView to display this object
     //emit itemClicked(m_item); TODO For now, don't display on drop
@@ -709,6 +715,12 @@ void OSDropZone2::onItemRemoveClicked()
 {
   if (m_reset)
   {
+    boost::optional<model::ModelObject> modelObject = (*m_get)();
+    boost::optional<model::ParentObject> parent = boost::none;
+    if (modelObject) {
+     parent = modelObject->parent();  
+    }
+    emit objectRemoved(parent);
     (*m_reset)();
   }
 }

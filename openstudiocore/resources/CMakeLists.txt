@@ -319,6 +319,12 @@ set(osversion_resources_src
   osversion/1_5_0/OpenStudio.idd
   osversion/1_5_0/example.osm
   osversion/1_5_0/example.osc
+  osversion/1_5_1/OpenStudio.idd
+  osversion/1_5_1/example.osm
+  osversion/1_5_1/example.osc
+  osversion/1_5_2/OpenStudio.idd
+  osversion/1_5_2/example.osm
+  osversion/1_5_2/example.osc
   osversion/unknown.osc
 )
 
@@ -663,6 +669,19 @@ set(analysis_resources_src
   analysis/version/data_point_1-0-4.json
   analysis/version/analysis_1-1-1.json
   analysis/version/data_point_1-1-1.json  
+  analysis/pat_export/formulation.json
+  analysis/pat_export/seed/example.osm
+  analysis/pat_export/seed/example/files/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw
+  analysis/pat_export/scripts/aeb20d61-b773-4d20-a2ef-fe948cdc2858/measure.rb
+  analysis/pat_export/scripts/aeb20d61-b773-4d20-a2ef-fe948cdc2858/measure.xml
+  analysis/pat_export/scripts/ReportRequest/measure.rb
+  analysis/pat_export/scripts/ReportRequest/measure.xml  
+  analysis/pat_export/scripts/StandardReports/measure.rb
+  analysis/pat_export/scripts/StandardReports/measure.xml    
+  analysis/pat_export/scripts/StandardReports/resources/report.html.in
+  analysis/pat_export/data_point_469b52c3-4aae-4cdd-b580-5c9494eefa11/data_point.json
+  analysis/pat_export/data_point_d85b5ffa-b8f0-4bc1-b8af-da6df0da4267/data_point.json
+  analysis/pat_export/data_point_df7ceb48-88a7-44c3-86ac-bd3227d2b1e1/data_point.json
 )
 
 # update the resources
@@ -702,17 +721,17 @@ CREATE_SRC_GROUPS("${isomodel_resources_src}")
 # clear runs, calls to RUN_ENERGYPLUS will populate this
 set(ENERGYPLUS_OUTPUTS "")
 
-set(contam_resources_src
+set(airflow_resources_src
   contam/CONTAMTemplate.osm
 )
 
 # update the resources
-UPDATE_RESOURCES("${contam_resources_src}")
+UPDATE_RESOURCES("${airflow_resources_src}")
 
 # add target
-add_custom_target(openstudio_contam_resources
-  DEPENDS ${contam_resources_src} ${ENERGYPLUS_OUTPUTS}
-  SOURCES ${contam_resources_src}
+add_custom_target(openstudio_airflow_resources
+  DEPENDS ${airflow_resources_src} ${ENERGYPLUS_OUTPUTS}
+  SOURCES ${airflow_resources_src}
 )
 
-CREATE_SRC_GROUPS("${contam_resources_src}")
+CREATE_SRC_GROUPS("${airflow_resources_src}")

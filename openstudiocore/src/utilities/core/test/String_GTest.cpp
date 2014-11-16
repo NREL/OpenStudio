@@ -234,6 +234,19 @@ TEST(String, UnderscoreCase) {
   EXPECT_EQ("hello_world",toUnderscoreCase("hello_world"));
   EXPECT_EQ("hello_world",toUnderscoreCase("hello  World"));
   EXPECT_EQ("hello_world",toUnderscoreCase("Hello World"));
+
+  EXPECT_EQ("headline_cnn_news", toUnderscoreCase("headline cnn news"));
+  EXPECT_EQ("headline_cnn_news", toUnderscoreCase("HEADLINE CNN NEWS"));
+  EXPECT_EQ("headline_cnn_news", toUnderscoreCase("Headline CNN News"));
+  EXPECT_EQ("headline_cnn_news", toUnderscoreCase("HeadlineCNNNews"));
+  EXPECT_EQ("headline_cnn_news", toUnderscoreCase("Headline_CNN_News"));
+  EXPECT_EQ("headline_cnn_news", toUnderscoreCase("Headline-CNN-News"));
+
+  EXPECT_EQ("allcaps", toUnderscoreCase("ALLCAPS"));
+
+  EXPECT_EQ("n_packages", toUnderscoreCase("nPackages"));
+
+  EXPECT_EQ("ashrae_9012007_hvac_system_5_packaged_va_vwithwithhotwaterreheat", toUnderscoreCase("ASHRAE9012007HVACSystem5PackagedVAVwithwithhotwaterreheat"));
 }
 
 TEST(String,NeatStrings) {

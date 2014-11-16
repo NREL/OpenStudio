@@ -1,0 +1,14 @@
+--- a/qtbase/src/widgets/styles/qmacstyle_mac.mm	2014-09-11 04:48:01.000000000 -0600
++++ b/qtbase/src/widgets/styles/qmacstyle_mac.mm	2014-10-17 00:57:27.000000000 -0600
+@@ -3667,9 +3667,9 @@ void QMacStyle::drawControl(ControlEleme
+ 
+                 NSBezierPath *pushButtonFocusRingPath;
+                 if (bdi.kind == kThemeBevelButton)
+-                    pushButtonFocusRingPath = [NSBezierPath bezierPathWithRect:focusRect];
++                    pushButtonFocusRingPath = [NSBezierPath bezierPathWithRect:NSRectFromCGRect(focusRect)];
+                 else
+-                    pushButtonFocusRingPath = [NSBezierPath bezierPathWithRoundedRect:focusRect xRadius:4 yRadius:4];
++                    pushButtonFocusRingPath = [NSBezierPath bezierPathWithRoundedRect:NSRectFromCGRect(focusRect) xRadius:4 yRadius:4];
+                 qt_drawFocusRingOnPath(cg, pushButtonFocusRingPath);
+             }
+ 

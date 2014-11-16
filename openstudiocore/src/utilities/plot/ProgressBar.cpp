@@ -30,7 +30,7 @@ namespace openstudio{
     : m_percentage(0.0)
   {
     // make sure a QApplication exists
-    openstudio::Application::instance().application();
+    openstudio::Application::instance().application(true);
 
     // create a QProgressBar
     m_impl = std::shared_ptr<QProgressBar>(new QProgressBar(parent));
@@ -48,7 +48,7 @@ namespace openstudio{
     : m_percentage(0.0)
   {
     // make sure a QApplication exists
-    openstudio::Application::instance().application();
+    openstudio::Application::instance().application(true);
 
     // create a QProgressBar
     m_impl = std::shared_ptr<QProgressBar>(new QProgressBar(parent));

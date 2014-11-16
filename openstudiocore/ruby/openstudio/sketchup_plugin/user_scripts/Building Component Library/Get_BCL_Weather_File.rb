@@ -66,7 +66,7 @@ class GetBCLWeatherFile < OpenStudio::Ruleset::ModelUserScript
       end
       
       if not good_key 
-        runner.registerError("BCL authentication required for first time use, follow instructions at openstudio.nrel.gov/using-building-component-library-bcl-key-openstudio to get your auth key.")
+        runner.registerError("BCL authentication required for first time use, follow instructions at http://nrel.github.io/OpenStudio-user-documentation/getting_started/getting_started/ to get your auth key.")
         return false
       end
     end

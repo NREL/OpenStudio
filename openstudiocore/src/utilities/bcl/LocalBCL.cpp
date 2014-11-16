@@ -53,7 +53,7 @@ namespace openstudio{
     dbVersion("1.3")
   {
     //Make sure a QApplication exists
-    openstudio::Application::instance().application();
+    openstudio::Application::instance().application(false);
 
     QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE", m_libraryPath+m_dbName);
     database.setDatabaseName(m_libraryPath+m_dbName);
@@ -779,7 +779,7 @@ namespace openstudio{
   bool LocalBCL::prodAuthKeyUserPrompt(QWidget* parent)
   {
     // make sure application is initialized
-    Application::instance().application(true);
+    Application::instance().application(false);
 
     QInputDialog inputDlg(parent);
     inputDlg.setInputMode(QInputDialog::TextInput);
@@ -810,7 +810,7 @@ namespace openstudio{
   bool LocalBCL::devAuthKeyUserPrompt(QWidget* parent)
   {
     // make sure application is initialized
-    openstudio::Application::instance().application(true);
+    openstudio::Application::instance().application(false);
 
     QInputDialog inputDlg(parent);
     inputDlg.setInputMode(QInputDialog::TextInput);

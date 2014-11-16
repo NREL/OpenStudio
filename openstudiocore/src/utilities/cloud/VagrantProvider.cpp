@@ -399,7 +399,7 @@ namespace openstudio{
         m_lastTerminateCompleted(false)
     {
       //Make sure a QApplication exists
-      openstudio::Application::instance().application();
+      openstudio::Application::instance().application(false);
     }
 
     VagrantProvider_Impl::~VagrantProvider_Impl()
@@ -706,7 +706,7 @@ namespace openstudio{
 
       m_lastInternetAvailable = false;
 
-      QUrl url("http://openstudio.nrel.gov"); // todo: url?
+      QUrl url("https://www.openstudio.net"); // todo: url?
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
@@ -1222,7 +1222,7 @@ namespace openstudio{
     {
 #ifdef _WINDOWS
       args << "/C";
-      args << "vagrant.bat";
+      args << "vagrant";
 #else
       args << "vagrant";
 #endif
