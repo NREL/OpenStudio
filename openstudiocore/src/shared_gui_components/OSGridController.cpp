@@ -719,7 +719,8 @@ QWidget * OSGridController::widgetAt(int row, int column)
   OS_ASSERT(static_cast<int>(m_modelObjects.size()) > modelObjectRow);
   OS_ASSERT(static_cast<int>(m_baseConcepts.size()) > column);
 
-  auto layout = new QVBoxLayout();
+//  auto layout = new QVBoxLayout();
+  auto layout = new QGridLayout();
   const int widgetHeight = 35;
   int numWidgets = 0;
   // start with a default sane value
@@ -734,25 +735,21 @@ QWidget * OSGridController::widgetAt(int row, int column)
   }
 
   wrapper->setObjectName("TableCell");
-  if(row == 0){
-    wrapper->setMinimumSize(QSize(recommendedSize.width(),recommendedSize.height()));
-  } else {
-    wrapper->setMinimumSize(QSize(recommendedSize.width() + 10,widgetHeight * numWidgets ));
-  }
-  wrapper->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
   wrapper->setStyleSheet(this->cellStyle(row,column, false, true));
 
-  layout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+//  layout->setSizeConstraint(QLayout::SetNoConstraint);
   layout->setSpacing(0);
-  if(row == 0){
+//  if(row == 0){
     layout->setContentsMargins(0,0,0,0);
-  } else {
-    layout->setContentsMargins(5,0,5,0);
-  }
+    wrapper->setContentsMargins(0,0,0,0);
+//  } else {
+//    layout->setContentsMargins(5,0,5,0);
+//  }
   wrapper->setLayout(layout);
   // end wrapper
 
+  std::vector<QWidget *> holders;
   auto addWidget = [&](QWidget *t_widget, const boost::optional<model::ModelObject> &t_obj)
   {
     auto expand=[](QSize &t_s, const QSize &t_newS) {
@@ -772,17 +769,25 @@ QWidget * OSGridController::widgetAt(int row, int column)
     holder->setMinimumHeight(widgetHeight);
     auto l = new QVBoxLayout();
     l->setSpacing(0);
-    l->setContentsMargins(0,0,0,0);
+//    l->setContentsMargins(0,0,0,0);
+    if(row == 0){
+      l->setContentsMargins(0,0,0,0);
+    } else {
+      l->setContentsMargins(5,0,5,0);
+    }
     l->addWidget(t_widget, 0, Qt::AlignVCenter | Qt::AlignLeft);
-    layout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+ //   layout->setSizeConstraint(QLayout::SetMinAndMaxSize);
     holder->setLayout(l);
-    layout->addWidget(holder, 0, Qt::AlignVCenter | Qt::AlignLeft);
-    holder->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-    t_widget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    holder->setContentsMargins(0,0,0,0);
+//    layout->addWidget(holder, 0, Qt::AlignVCenter | Qt::AlignLeft);
+    layout->addWidget(holder, numWidgets, 0, 0); //Qt::AlignVCenter | Qt::AlignLeft);
+//    holder->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+//    t_widget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
     if (hasSubRows) {
       holder->setObjectName("InnerCell");
     }
+    holders.push_back(holder);
     m_objectSelector->addWidget(t_obj, holder, row, column, hasSubRows?numWidgets:boost::optional<int>());
 
     ++numWidgets;
@@ -851,6 +856,16 @@ QWidget * OSGridController::widgetAt(int row, int column)
     }
   }
 
+  if(row == 0){
+    wrapper->setMinimumSize(QSize(recommendedSize.width(),recommendedSize.height()));
+  } else {
+    wrapper->setMinimumSize(QSize(recommendedSize.width() + 10,widgetHeight * numWidgets ));
+//    for (auto &holder : holders)
+//    {
+//      holder->setMinimumWidth(recommendedSize.width());
+//    }
+  }
+  wrapper->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
   return wrapper;
 }
