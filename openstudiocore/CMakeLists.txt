@@ -433,9 +433,12 @@ endif()
 
 if(BUILD_PYTHON_BINDINGS)
   # need python
+  find_package(PythonInterp 2.7 REQUIRED)
   find_package(PythonLibs 2.7 REQUIRED)
   include_directories(SYSTEM ${PYTHON_INCLUDE_DIRS})
   set(ALL_PYTHON_BINDING_TARGETS "") # global list
+
+
 endif()
 
 # Doxygen
@@ -657,6 +660,14 @@ list(APPEND QT_LIBS ${Qt5WebKitWidgets_LIBRARIES})
 list(APPEND QT_LIBS ${Qt5Concurrent_LIBRARIES})
 list(APPEND QT_LIBS ${Qt5PrintSupport_LIBRARIES})
 
+### recreating QT_LIBRARY_DIR for qt5
+if(WIN32 AND TARGET Qt5::Core)
+  get_property(_Qt5_Core_LOCATION TARGET Qt5::Core PROPERTY LOCATION)
+  get_filename_component(QT_LIBRARY_DIR "${_Qt5_Core_LOCATION}" PATH)
+else()
+  set(QT_LIBRARY_DIR "")
+endif()
+
 
 ###############################################################################
 # qtwinmigrate
@@ -786,6 +797,39 @@ add_dependencies(ALL_RUBY_BINDINGS ${ALL_RUBY_BINDING_TARGETS})
 if(BUILD_PYTHON_BINDINGS)
   add_custom_target(ALL_PYTHON_BINDINGS)
   add_dependencies(ALL_PYTHON_BINDINGS ${ALL_PYTHON_BINDING_TARGETS})
+
+    # PYTHONPATH=~/openstudio/build/OSCore-prefix/src/OSCore-build/Products/python/ python testpath.py
+
+  
+  add_test(NAME "PythonSanityCheck" 
+    COMMAND "${PYTHON_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/python/testpath.py"
+	WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/Products/python"
+    )
+	
+  if (MSVC)
+    file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}" NATIVE_BINARY_DIR)
+    add_custom_command(
+	  OUTPUT "${CMAKE_BINARY_DIR}/python_copied.stamp"
+	  COMMAND ${CMAKE_COMMAND} -E touch "${CMAKE_BINARY_DIR}/python_copied.stamp"
+      COMMAND cmd /C del "${NATIVE_BINARY_DIR}\\Products\\python\\$<CONFIGURATION>\\*.py"
+      COMMAND cmd /C copy "${NATIVE_BINARY_DIR}\\Products\\python\\*.py" "${NATIVE_BINARY_DIR}\\Products\\python\\$<CONFIGURATION>"
+	  DEPENDS ALL_PYTHON_BINDINGS
+    )
+
+    add_custom_target(PYTHON_SDK ALL
+	  DEPENDS "${CMAKE_BINARY_DIR}/python_copied.stamp")
+
+    set_property(TEST PythonSanityCheck
+      PROPERTY ENVIRONMENT
+      "PYTHONPATH=${CMAKE_BINARY_DIR}/Products/python/$<CONFIGURATION>"  
+      )
+  else()
+    set_property(TEST PythonSanityCheck
+      PROPERTY ENVIRONMENT
+      "PYTHONPATH=${CMAKE_BINARY_DIR}/Products/python"
+      )
+  endif()
+
 endif()
 
 
