@@ -2,7 +2,7 @@
 #define AIRFLOW_I
 
 #ifdef SWIGPYTHON
-%module openstudiocontam
+%module openstudioairflow
 #endif
 
 
