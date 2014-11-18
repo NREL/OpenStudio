@@ -35,6 +35,8 @@ namespace openstudio {
 class OSDropZone;
 class OSLineEdit;
 class OSComboBox;
+class OSComboBox2;
+class OSIntegerEdit2;
 class OSQuantityEdit;
 
 
@@ -144,6 +146,10 @@ class BuildingInspectorView : public ModelObjectInspectorView
     BuildingDefaultScheduleSetVectorController* m_defaultScheduleSetVectorController;
     OSDropZone* m_defaultScheduleSetDropZone;
     OSQuantityEdit* m_northAxisEdit;
+    OSIntegerEdit2* m_numberLivingUnits;
+    OSIntegerEdit2* m_numberStories;
+    OSIntegerEdit2* m_numberAboveGroundStories;
+    OSComboBox2* m_relocatable;
     //OSQuantityEdit* m_floorToFloorHeightEdit;
     bool m_isIP;
 

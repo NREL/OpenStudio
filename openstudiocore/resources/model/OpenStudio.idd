@@ -4313,11 +4313,18 @@ OS:Building,
   N4, \field Standards Number of Above Ground Stories
        \type integer
        \minimum 0
-  A7; \field Standards Building Type
+  A7, \field Standards Building Type
        \type alpha
        \note This is a freeform field used to identify the building type for standards.
        \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
        \note More information can be found at https://github.com/NREL/openstudio-standards.
+  N5, \field Standards Number of Living Units
+       \type integer
+       \minimum 0
+  A8; \field Relocatable
+       \type choice
+       \key True
+       \key False
 
 OS:DaylightingDevice:Shelf,
        \min-fields 1
