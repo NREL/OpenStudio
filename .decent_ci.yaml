@@ -7,7 +7,6 @@ notification_recipients:
 aging_pull_requests_notification: true
 
 extra_tests_branches :
-  - develop
   - master
   - 81237966_EnableRegressions
 
