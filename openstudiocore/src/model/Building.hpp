@@ -93,7 +93,7 @@ class MODEL_API Building : public ParentObject {
 
   boost::optional<std::string> relocatable() const;
 
-  std::vector<std::string> Building::suggestedRelocatables() const;
+  std::vector<std::string> suggestedRelocatables() const;
 
   //@}
   /** @name Setters */
