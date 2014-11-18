@@ -181,6 +181,12 @@ namespace detail {
     return value;
   }
 
+  boost::optional<int> Building_Impl::standardsNumberOfLivingUnits() const
+  {
+    boost::optional<int> value = getInt(OS_BuildingFields::StandardsNumberofLivingUnits, false);
+    return value;
+  }
+
   boost::optional<std::string> Building_Impl::standardsBuildingType() const
   {
     return getString(OS_BuildingFields::StandardsBuildingType, false, true);
@@ -232,6 +238,21 @@ namespace detail {
     return result;
   }
 
+  boost::optional<std::string> Building_Impl::relocatable() const
+  {
+    return getString(OS_BuildingFields::Relocatable, false, true);
+  }
+
+  std::vector<std::string> Building_Impl::suggestedRelocatables() const
+  {
+    std::vector<std::string> result;
+
+    result.push_back("True");
+    result.push_back("False");
+
+    return result;
+  }
+
   void Building_Impl::setNorthAxis(double northAxis) {
     bool result = setDouble(OS_BuildingFields::NorthAxis, northAxis);
     OS_ASSERT(result);
@@ -276,6 +297,18 @@ namespace detail {
     OS_ASSERT(test);
   }
 
+  bool Building_Impl::setStandardsNumberOfLivingUnits(int value)
+  {
+    bool test = setInt(OS_BuildingFields::StandardsNumberofLivingUnits, value);
+    return test;
+  }
+
+  void Building_Impl::resetStandardsNumberOfLivingUnits()
+  {
+    bool test = setString(OS_BuildingFields::StandardsNumberofLivingUnits, "");
+    OS_ASSERT(test);
+  }
+
   bool Building_Impl::setStandardsBuildingType(const std::string& standardsBuildingType)
   {
     bool result = setString(OS_BuildingFields::StandardsBuildingType, standardsBuildingType);
@@ -286,6 +319,19 @@ namespace detail {
   void Building_Impl::resetStandardsBuildingType()
   {
     bool test = setString(OS_BuildingFields::StandardsBuildingType, "");
+    OS_ASSERT(test);
+  }
+
+  bool Building_Impl::setRelocatable(const std::string& relocatable)
+  {
+    bool result = setString(OS_BuildingFields::Relocatable, relocatable);
+    OS_ASSERT(result);
+    return result;
+  }
+
+  void Building_Impl::resetRelocatable()
+  {
+    bool test = setString(OS_BuildingFields::Relocatable, "");
     OS_ASSERT(test);
   }
 
@@ -880,12 +926,24 @@ boost::optional<int> Building::standardsNumberOfAboveGroundStories() const{
   return getImpl<detail::Building_Impl>()->standardsNumberOfAboveGroundStories();
 }
 
+boost::optional<int> Building::standardsNumberOfLivingUnits() const{
+  return getImpl<detail::Building_Impl>()->standardsNumberOfLivingUnits();
+}
+
 boost::optional<std::string> Building::standardsBuildingType() const{
   return getImpl<detail::Building_Impl>()->standardsBuildingType();
 }
 
 std::vector<std::string> Building::suggestedStandardsBuildingTypes() const{
   return getImpl<detail::Building_Impl>()->suggestedStandardsBuildingTypes();
+}
+
+boost::optional<std::string> Building::relocatable() const{
+  return getImpl<detail::Building_Impl>()->relocatable();
+}
+
+std::vector<std::string> Building::suggestedRelocatables() const{
+  return getImpl<detail::Building_Impl>()->suggestedRelocatables();
 }
 
 void Building::setNorthAxis(double northAxis) {
@@ -920,12 +978,28 @@ void Building::resetStandardsNumberOfAboveGroundStories(){
   getImpl<detail::Building_Impl>()->resetStandardsNumberOfAboveGroundStories();
 }
 
+bool Building::setStandardsNumberOfLivingUnits(int value){
+  return getImpl<detail::Building_Impl>()->setStandardsNumberOfLivingUnits(value);
+}
+
+void Building::resetStandardsNumberOfLivingUnits(){
+  getImpl<detail::Building_Impl>()->resetStandardsNumberOfLivingUnits();
+}
+
 bool Building::setStandardsBuildingType(const std::string& standardsBuildingType){
   return getImpl<detail::Building_Impl>()->setStandardsBuildingType(standardsBuildingType);
 }
 
 void Building::resetStandardsBuildingType(){
   getImpl<detail::Building_Impl>()->resetStandardsBuildingType();
+}
+
+bool Building::setRelocatable(const std::string& relocatable){
+  return getImpl<detail::Building_Impl>()->setRelocatable(relocatable);
+}
+
+void Building::resetRelocatable(){
+  getImpl<detail::Building_Impl>()->resetRelocatable();
 }
 
 boost::optional<SpaceType> Building::spaceType() const

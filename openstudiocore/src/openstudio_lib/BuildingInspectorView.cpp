@@ -18,25 +18,28 @@
 **********************************************************************/
 
 #include "BuildingInspectorView.hpp"
+
+#include "../shared_gui_components/OSComboBox.hpp"
+#include "../shared_gui_components/OSIntegerEdit.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
-#include "OSVectorController.hpp"
-#include "../shared_gui_components/OSComboBox.hpp"
-#include "OSDropZone.hpp"
+
 #include "ModelObjectItem.hpp"
+#include "OSDropZone.hpp"
+#include "OSVectorController.hpp"
 
 #include "../model/Building.hpp"
 #include "../model/Building_Impl.hpp"
-#include "../model/SpaceType.hpp"
-#include "../model/SpaceType_Impl.hpp"
+#include "../model/Component.hpp"
+#include "../model/ComponentData.hpp"
+#include "../model/ComponentData_Impl.hpp"
+#include "../model/Component_Impl.hpp"
 #include "../model/DefaultConstructionSet.hpp"
 #include "../model/DefaultConstructionSet_Impl.hpp"
 #include "../model/DefaultScheduleSet.hpp"
 #include "../model/DefaultScheduleSet_Impl.hpp"
-#include "../model/Component.hpp"
-#include "../model/Component_Impl.hpp"
-#include "../model/ComponentData.hpp"
-#include "../model/ComponentData_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
 
 #include <utilities/idd/OS_Building_FieldEnums.hxx>
 #include "../utilities/core/Assert.hpp"
@@ -382,6 +385,74 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
 
   ++row;
 
+  // Standards Number of Living Units
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Standards Number of Living Units: ");
+  label->setStyleSheet("QLabel { font: bold; }");
+  vLayout->addWidget(label);
+
+  m_numberLivingUnits = new OSIntegerEdit2();
+  vLayout->addWidget(m_numberLivingUnits);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout, row, 0);
+  mainGridLayout->setRowMinimumHeight(row, 30);
+
+  // Relocatable 
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Relocatable: ");
+  label->setStyleSheet("QLabel { font: bold; }");
+  vLayout->addWidget(label);
+
+  m_relocatable = new OSComboBox2();
+  vLayout->addWidget(m_relocatable);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout, row, 1);
+  mainGridLayout->setRowMinimumHeight(row, 30);
+
+  ++row;
+
+  // Standards Number of Stories
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Standards Number of Stories: ");
+  label->setStyleSheet("QLabel { font: bold; }");
+  vLayout->addWidget(label);
+
+  m_numberStories = new OSIntegerEdit2();
+  vLayout->addWidget(m_numberStories);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout, row, 0);
+  mainGridLayout->setRowMinimumHeight(row, 30);
+
+  // Standards Number of Above Ground Stories
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Standards Number of Above Ground Stories: ");
+  label->setStyleSheet("QLabel { font: bold; }");
+  vLayout->addWidget(label);
+
+  m_numberAboveGroundStories = new OSIntegerEdit2();
+  vLayout->addWidget(m_numberAboveGroundStories);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout, row, 1);
+  mainGridLayout->setRowMinimumHeight(row, 30);
+
+  ++row;
+
   // widths and heights 
 
   mainGridLayout->setColumnMinimumWidth(0, 80);
@@ -457,6 +528,32 @@ void BuildingInspectorView::attach(openstudio::model::Building& building)
 
   m_northAxisEdit->bind(building, "northAxis", m_isIP, std::string("isNorthAxisDefaulted"));
 
+  m_numberLivingUnits->bind(
+    building,
+    OptionalIntGetter(std::bind(&model::Building::standardsNumberOfLivingUnits, building)),
+    boost::optional<IntSetter>(std::bind(&model::Building::setStandardsNumberOfLivingUnits, building, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Building::resetStandardsNumberOfLivingUnits, building)));
+
+  m_numberStories->bind(
+    building,
+    OptionalIntGetter(std::bind(&model::Building::standardsNumberOfStories, building)),
+    boost::optional<IntSetter>(std::bind(&model::Building::setStandardsNumberOfStories, building, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Building::resetStandardsNumberOfStories, building)));
+
+  m_numberAboveGroundStories->bind(
+    building,
+    OptionalIntGetter(std::bind(&model::Building::standardsNumberOfAboveGroundStories, building)),
+    boost::optional<IntSetter>(std::bind(&model::Building::setStandardsNumberOfAboveGroundStories, building, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Building::resetStandardsNumberOfAboveGroundStories, building)));
+
+  //m_relocatable->bind<std::string>(
+  //  building,
+  //  static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+  //  &openstudio::model::Building::suggestedRelocatables,
+  //  std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::Building::relocatable, building)),
+  //  std::bind(&openstudio::model::Building::setRelocatable, building, std::placeholders::_1),
+  //  NoFailAction(std::bind(&model::Building::resetRelocatable, building)));
+
   //m_floorToFloorHeightEdit->bind(building, "nominalFloortoFloorHeight", m_isIP, std::string("isNominalFloortoFloorHeightDefaulted"));
 
   this->stackedWidget()->setCurrentIndex(1);
@@ -477,6 +574,11 @@ void BuildingInspectorView::detach()
   m_defaultConstructionSetVectorController->detach();
   m_defaultScheduleSetVectorController->detach();
   m_northAxisEdit->unbind();
+
+  m_numberLivingUnits->unbind();
+  m_numberStories->unbind();
+  m_numberAboveGroundStories->unbind();
+  m_relocatable->unbind();
   //m_floorToFloorHeightEdit->unbind();
 }
 
