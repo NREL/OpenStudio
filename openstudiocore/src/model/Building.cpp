@@ -187,6 +187,22 @@ namespace detail {
     return value;
   }
 
+  double Building_Impl::nominalFloortoCeilingHeight() const {
+    boost::optional<double> value = getDouble(OS_BuildingFields::NominalFloortoCeilingHeight, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  Quantity Building_Impl::getNominalFloortoCeilingHeight(bool returnIP) const {
+    OSOptionalQuantity value = getQuantity(OS_BuildingFields::NominalFloortoCeilingHeight, true, returnIP);
+    OS_ASSERT(value.isSet());
+    return value.get();
+  }
+
+  bool Building_Impl::isNominalFloortoCeilingHeightDefaulted() const {
+    return isEmpty(OS_BuildingFields::NominalFloortoCeilingHeight);
+  }
+
   boost::optional<std::string> Building_Impl::standardsBuildingType() const
   {
     return getString(OS_BuildingFields::StandardsBuildingType, false, true);
@@ -195,7 +211,7 @@ namespace detail {
   std::vector<std::string> Building_Impl::suggestedStandardsBuildingTypes() const
   {
     std::vector<std::string> result;
-  
+
     boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
 
     // DLM: temp code, eventually get from StandardsLibrary
@@ -307,6 +323,20 @@ namespace detail {
   {
     bool test = setString(OS_BuildingFields::StandardsNumberofLivingUnits, "");
     OS_ASSERT(test);
+  }
+  
+  bool Building_Impl::setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight) {
+    bool result = setDouble(OS_BuildingFields::NominalFloortoCeilingHeight, nominalFloortoCeilingHeight);
+    return result;
+  }
+
+  bool Building_Impl::setNominalFloortoCeilingHeight(const Quantity& nominalFloortoCeilingHeight) {
+    return setQuantity(OS_BuildingFields::NominalFloortoCeilingHeight, nominalFloortoCeilingHeight);
+  }
+
+  void Building_Impl::resetNominalFloortoCeilingHeight() {
+    bool result = setString(OS_BuildingFields::NominalFloortoCeilingHeight, "");
+    OS_ASSERT(result);
   }
 
   bool Building_Impl::setStandardsBuildingType(const std::string& standardsBuildingType)
@@ -930,6 +960,18 @@ boost::optional<int> Building::standardsNumberOfLivingUnits() const{
   return getImpl<detail::Building_Impl>()->standardsNumberOfLivingUnits();
 }
 
+double Building::nominalFloortoCeilingHeight() const {
+  return getImpl<detail::Building_Impl>()->nominalFloortoCeilingHeight();
+}
+
+Quantity Building::getNominalFloortoCeilingHeight(bool returnIP) const {
+  return getImpl<detail::Building_Impl>()->getNominalFloortoCeilingHeight(returnIP);
+}
+
+bool Building::isNominalFloortoCeilingHeightDefaulted() const {
+  return getImpl<detail::Building_Impl>()->isNominalFloortoCeilingHeightDefaulted();
+}
+
 boost::optional<std::string> Building::standardsBuildingType() const{
   return getImpl<detail::Building_Impl>()->standardsBuildingType();
 }
@@ -984,6 +1026,18 @@ bool Building::setStandardsNumberOfLivingUnits(int value){
 
 void Building::resetStandardsNumberOfLivingUnits(){
   getImpl<detail::Building_Impl>()->resetStandardsNumberOfLivingUnits();
+}
+
+bool Building::setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight) {
+  return getImpl<detail::Building_Impl>()->setNominalFloortoCeilingHeight(nominalFloortoCeilingHeight);
+}
+
+bool Building::setNominalFloortoCeilingHeight(const Quantity& nominalFloortoCeilingHeight) {
+  return getImpl<detail::Building_Impl>()->setNominalFloortoCeilingHeight(nominalFloortoCeilingHeight);
+}
+
+void Building::resetNominalFloortoCeilingHeight() {
+  getImpl<detail::Building_Impl>()->resetNominalFloortoCeilingHeight();
 }
 
 bool Building::setStandardsBuildingType(const std::string& standardsBuildingType){

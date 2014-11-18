@@ -82,6 +82,10 @@ class MODEL_API Building : public ParentObject {
 
   boost::optional<int> standardsNumberOfLivingUnits() const;
 
+  double nominalFloortoCeilingHeight() const;
+  Quantity getNominalFloortoCeilingHeight(bool returnIP = false) const;
+  bool isNominalFloortoCeilingHeightDefaulted() const;
+
   /// Returns the standards building type. This is a freeform field used to identify the building type for standards.
   /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
   /// More information can be found at https://github.com/NREL/openstudio-standards.
@@ -115,6 +119,10 @@ class MODEL_API Building : public ParentObject {
 
   bool setStandardsNumberOfLivingUnits(int value);
   void resetStandardsNumberOfLivingUnits();
+
+  bool setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight);
+  bool setNominalFloortoCeilingHeight(const Quantity& nominalFloortoCeilingHeight);
+  void resetNominalFloortoCeilingHeight(); 
 
   /// Sets the standards building type. This is a freeform field used to identify the building type for standards.
   /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
