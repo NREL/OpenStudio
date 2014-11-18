@@ -546,13 +546,13 @@ void BuildingInspectorView::attach(openstudio::model::Building& building)
     boost::optional<IntSetter>(std::bind(&model::Building::setStandardsNumberOfAboveGroundStories, building, std::placeholders::_1)),
     boost::optional<NoFailAction>(std::bind(&model::Building::resetStandardsNumberOfAboveGroundStories, building)));
 
-  //m_relocatable->bind<std::string>(
-  //  building,
-  //  static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
-  //  &openstudio::model::Building::suggestedRelocatables,
-  //  std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::Building::relocatable, building)),
-  //  std::bind(&openstudio::model::Building::setRelocatable, building, std::placeholders::_1),
-  //  NoFailAction(std::bind(&model::Building::resetRelocatable, building)));
+  m_relocatable->bind<std::string>(
+    building,
+    static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+    std::bind(&model::Building::suggestedRelocatables, building),
+    OptionalStringGetter(std::bind(&model::Building::relocatable, building)),
+    std::bind(&openstudio::model::Building::setRelocatable, building, std::placeholders::_1),
+    NoFailAction(std::bind(&model::Building::resetRelocatable, building)));
 
   //m_floorToFloorHeightEdit->bind(building, "nominalFloortoFloorHeight", m_isIP, std::string("isNominalFloortoFloorHeightDefaulted"));
 
