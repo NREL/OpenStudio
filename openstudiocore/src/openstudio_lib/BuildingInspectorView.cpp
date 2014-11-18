@@ -292,9 +292,76 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   mainGridLayout->addLayout(vLayout,row,0);
   mainGridLayout->setRowMinimumHeight(row, 30);
 
-  // DLM: should we put "Standards Number of Stories", "Standards Number of Above Ground Stories", 
-  // or "Nominal Floor to Floor Height" in measure tags?  We could undeprecate "Building Sector Type" and put
+  // DLM: We could undeprecate "Building Sector Type" and put
   // it here too?
+
+  ++row;
+
+  // Standards Number of Living Units
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Standards Number of Living Units: ");
+  label->setStyleSheet("QLabel { font: bold; }");
+  vLayout->addWidget(label);
+
+  m_numberLivingUnits = new OSIntegerEdit2();
+  vLayout->addWidget(m_numberLivingUnits);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout, row, 0);
+  mainGridLayout->setRowMinimumHeight(row, 30);
+
+  // Relocatable 
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Relocatable: ");
+  label->setStyleSheet("QLabel { font: bold; }");
+  vLayout->addWidget(label);
+
+  m_relocatable = new OSComboBox2();
+  vLayout->addWidget(m_relocatable);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout, row, 1);
+  mainGridLayout->setRowMinimumHeight(row, 30);
+
+  ++row;
+
+  // Standards Number of Stories
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Standards Number of Stories: ");
+  label->setStyleSheet("QLabel { font: bold; }");
+  vLayout->addWidget(label);
+
+  m_numberStories = new OSIntegerEdit2();
+  vLayout->addWidget(m_numberStories);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout, row, 0);
+  mainGridLayout->setRowMinimumHeight(row, 30);
+
+  // Standards Number of Above Ground Stories
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Standards Number of Above Ground Stories: ");
+  label->setStyleSheet("QLabel { font: bold; }");
+  vLayout->addWidget(label);
+
+  m_numberAboveGroundStories = new OSIntegerEdit2();
+  vLayout->addWidget(m_numberAboveGroundStories);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout, row, 1);
+  mainGridLayout->setRowMinimumHeight(row, 30);
 
   ++row;
 
@@ -381,74 +448,6 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   vLayout->addStretch();
 
   mainGridLayout->addLayout(vLayout,row,1);
-  mainGridLayout->setRowMinimumHeight(row, 30);
-
-  ++row;
-
-  // Standards Number of Living Units
-  vLayout = new QVBoxLayout();
-
-  label = new QLabel();
-  label->setText("Standards Number of Living Units: ");
-  label->setStyleSheet("QLabel { font: bold; }");
-  vLayout->addWidget(label);
-
-  m_numberLivingUnits = new OSIntegerEdit2();
-  vLayout->addWidget(m_numberLivingUnits);
-
-  vLayout->addStretch();
-
-  mainGridLayout->addLayout(vLayout, row, 0);
-  mainGridLayout->setRowMinimumHeight(row, 30);
-
-  // Relocatable 
-  vLayout = new QVBoxLayout();
-
-  label = new QLabel();
-  label->setText("Relocatable: ");
-  label->setStyleSheet("QLabel { font: bold; }");
-  vLayout->addWidget(label);
-
-  m_relocatable = new OSComboBox2();
-  vLayout->addWidget(m_relocatable);
-
-  vLayout->addStretch();
-
-  mainGridLayout->addLayout(vLayout, row, 1);
-  mainGridLayout->setRowMinimumHeight(row, 30);
-
-  ++row;
-
-  // Standards Number of Stories
-  vLayout = new QVBoxLayout();
-
-  label = new QLabel();
-  label->setText("Standards Number of Stories: ");
-  label->setStyleSheet("QLabel { font: bold; }");
-  vLayout->addWidget(label);
-
-  m_numberStories = new OSIntegerEdit2();
-  vLayout->addWidget(m_numberStories);
-
-  vLayout->addStretch();
-
-  mainGridLayout->addLayout(vLayout, row, 0);
-  mainGridLayout->setRowMinimumHeight(row, 30);
-
-  // Standards Number of Above Ground Stories
-  vLayout = new QVBoxLayout();
-
-  label = new QLabel();
-  label->setText("Standards Number of Above Ground Stories: ");
-  label->setStyleSheet("QLabel { font: bold; }");
-  vLayout->addWidget(label);
-
-  m_numberAboveGroundStories = new OSIntegerEdit2();
-  vLayout->addWidget(m_numberAboveGroundStories);
-
-  vLayout->addStretch();
-
-  mainGridLayout->addLayout(vLayout, row, 1);
   mainGridLayout->setRowMinimumHeight(row, 30);
 
   ++row;
