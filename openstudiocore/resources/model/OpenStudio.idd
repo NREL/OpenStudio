@@ -3088,32 +3088,52 @@ OS:StandardsInformation:Material,
        \object-list MaterialNames
   A3, \field Material Standard
        \note This is a freeform field used to identify the standard which specifies this material.
-  A4, \field Standard Category
+  A4, \field Material Standard Source
+       \note This is a freeform field used to identify the table or section in the standard which specifies this material.       
+  A5, \field Standards Category
        \note This is a freeform field used to identify the category of this material, e.g. 'Plastering Materials' or 'Roofing'.
        \note More information can be found at https://github.com/NREL/openstudio-standards.
        \type alpha
-  A5, \field Standard Identifier
+  A6, \field Standards Identifier
        \note This is a freeform field used to identify the id of this material within a standard.
        \note More information can be found at https://github.com/NREL/openstudio-standards.
        \type alpha
-  A6, \field Framing Material
+  A7, \field Framing Material
        \note Type of framing material in a composite material layer.
        \type choice
        \key Wood
        \key Metal
-  A7, \field Framing Configuration
+  A8, \field Framing Configuration
        \note Framing configuration of a composite material layer, e.g. 'Wall 16 inch on center'.
-       \type alpha
-  A8, \field Nominal Framing Size
-       \note Nominal size of the framing members in a composite material layer, e.g. '2x4'.
-       \type alpha
+       \type choice
+       \key Wall 16 inch on center
+       \key Wall 24 inch on center
+       \key Wall AWS 24 inch on center
+       \key Wall AWS 48 inch on center 
+       \key Floor 16 inch on center
+       \key Floor 24 inch on center       
+       \key Roof 16 inch on center
+       \key Roof 24 inch on center       
+       \key Roof 48 inch on center                
+  A9, \field Nominal Framing Depth
+       \note Nominal depth of framing members in a composite material layer.
+       \type real
+       \units mm
+       \ip-units in
+       \minimum> 0
+  A10,\field Nominal Framing Width
+       \note Nominal width of framing members in a composite material layer.
+       \type real
+       \units mm
+       \ip-units in
+       \minimum> 0       
   N1, \field Nominal Cavity Insulation R-Value
        \note Nominal cavity insulation of a composite material layer.
        \type real
        \units m-K/W
        \ip-units hr-ft2-R/Btu-in
        \minimum> 0
-  A9; \field Exposed to Exterior Environment
+  A11;\field Exposed to Exterior Environment
        \note Is this material designed to be directly exposed to the exterior environment.
        \type choice
        \key Yes
@@ -3323,7 +3343,10 @@ OS:StandardsInformation:Construction,
   A7, \field Construction Standard
        \note This is a freeform field used to identify the standard which specifies this construction.
        \type alpha
-  A8, \field Fenestration Type
+  A8, \field Construction Standard Source
+       \note This is a freeform field used to identify the table or section of the standard which specifies this construction.
+       \type alpha       
+  A9, \field Fenestration Type
        \note Specific type of fenestration that this construction represents.
        \type choice
        \key Fixed Window
@@ -3336,13 +3359,13 @@ OS:StandardsInformation:Construction,
        \key Plastic Skylight without Curb
        \key Swinging Door
        \key Non-Swinging Door
-  A9, \field Fenestration Assembly Context
+  A10,\field Fenestration Assembly Context
        \note Where is this fenestration assembled.
        \type choice
        \key Manufactured
        \key Field Fabricated
        \key Site Built
-  A10,\field Fenestration Number of Panes
+  A11,\field Fenestration Number of Panes
        \note Number of panes for this fenestration construction.
        \note BCL taxonomy term 'Construction Assembly.Fenestration.Window.Number of Panes'
        \type choice
@@ -3351,19 +3374,19 @@ OS:StandardsInformation:Construction,
        \key Triple Pane
        \key Quadruple Pane
        \key Glass Block
-  A11,\field Fenestration Frame Type
+  A12,\field Fenestration Frame Type
        \note Type of framing for this fenestration construction.
        \type choice
        \key Metal Framing
        \key Metal Framing with Thermal Break
        \key Non-Metal Framing
-  A12,\field Fenestration Divider Type
+  A13,\field Fenestration Divider Type
        \note Type of divider for this fenestration construction.
        \type choice
        \key True Divided Lite 
        \key Between Panes < 7/16"
        \key Between Panes >= 7/16"
-  A13,\field Fenestration Tint
+  A14,\field Fenestration Tint
        \note Tint of this fenestration construction.
        \note BCL taxonomy term 'Construction Assembly.Fenestration.Window.Tint'
        \type choice
@@ -3373,7 +3396,7 @@ OS:StandardsInformation:Construction,
        \key Green
        \key Blue
        \key Tinted
-  A14;\field Fenestration Low Emissivity Coating
+  A15;\field Fenestration Low Emissivity Coating
        \note Does this fenestration construction include a low-e coating.
        \type choice
        \key True
