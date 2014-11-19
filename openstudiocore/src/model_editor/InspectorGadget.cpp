@@ -269,7 +269,7 @@ void InspectorGadget::clear(bool recursive)
   }
 
   // This line is commented out to prevent a crash when displaying the Inspector Gadget
-  // within SketchUp 2014.  We have no idea why this works or what repercussions it may cause
+  // within SketchUp 2015.  We have no idea why this works or what repercussions it may cause
   //m_workspaceObj.reset();
 }
 

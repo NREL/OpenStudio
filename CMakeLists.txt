@@ -248,15 +248,66 @@ if(MSVC AND MSVC_IS_EXPRESS)
   endif()
 endif()
 
-find_package(Qt5Widgets) #Qt5Core, Qt5Gui, Qt5Widgets
-find_package(Qt5Sql) #Qt5Core, Qt5Sql
-find_package(Qt5Network) #Qt5Core, Qt5Network
-find_package(Qt5Xml) #Qt5Core, Qt5Xml
-find_package(Qt5WebKit) #Qt5Core, Qt5Gui, Qt5Network, Qt5WebKit
-find_package(Qt5WebKitWidgets) #Qt5Core, Qt5Gui, Qt5Network, Qt5WebKit, Qt5WebKitWidgets, Qt5Widgets
-#find_package(Qt5WinExtras) #Qt5Core, Qt5Gui, Qt5WinExtras
-find_package(Qt5Concurrent) #Qt5Core, Qt5Concurrent
-find_package(Qt5PrintSupport) #Qt5Core, Qt5Gui, Qt5PrintSupport, Qt5Widgets
+
+# Smart find qt location, looking for 64bit when appropriate
+# and prefering opengl installations
+if(MSVC)
+  if(CMAKE_CL_64)
+    set(COMPILER_ARCH_TAG "_64")
+  else()
+    set(COMPILER_ARCH_TAG "")
+  endif()
+
+  if (MSVC_VERSION STREQUAL "1800")
+    set(COMPILER_VER_TAG "2013")
+  else()
+    set(COMPILER_VER_TAG "2014")
+  endif()
+
+  file(GLOB_RECURSE QMAKE_LOCATIONS "c:/Qt/qmake.exe")
+
+  message("Qt Locations: ${QMAKE_LOCATIONS}")
+
+  if(QMAKE_LOCATIONS MATCHES ".*msvc${COMPILER_VER_TAG}${COMPILER_ARCH_TAG}_opengl.*")
+    set(HAS_OPENGL_INSTALL TRUE)
+    set(OPENGL_TAG "_opengl")
+  else()
+    set(HAS_OPENGL_INSTALL FALSE)
+    set(OPENGL_TAG "")
+  endif()
+
+  set(QT_HINT_DIR "")
+  foreach(LOC ${QMAKE_LOCATIONS})
+    if(LOC MATCHES ".*msvc${COMPILER_VER_TAG}${COMPILER_ARCH_TAG}${OPENGL_TAG}/")
+      get_filename_component(PDIR "${LOC}" DIRECTORY)
+      get_filename_component(GPDIR "${PDIR}" DIRECTORY)
+      if(HAS_OPENGL_INSTALL)
+        if(GPDIR MATCHES ".*opengl.*")
+	  list(APPEND QT_HINT_DIR "${GPDIR}")
+	endif()
+      else()
+	list(APPEND QT_HINT_DIR "${GPDIR}")
+      endif()
+    endif()
+  endforeach()
+
+  # we want sort, this will do both a lexigraphical sort of the version numbers, putting the newest last and picking the 
+  # longest (aka opengl) last. Then we sort it in reverse to prefer the highest version numbers with opengl
+  list(SORT QT_HINT_DIR)
+  list(REVERSE QT_HINT_DIR)
+else()
+  set(QT_HINT_DIR "")
+endif()
+
+find_package(Qt5Widgets HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Widgets
+find_package(Qt5Sql HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Sql
+find_package(Qt5Network HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Network
+find_package(Qt5Xml HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Xml
+find_package(Qt5WebKit HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Network, Qt5WebKit
+find_package(Qt5WebKitWidgets HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Network, Qt5WebKit, Qt5WebKitWidgets, Qt5Widgets
+#find_package(Qt5WinExtras HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5WinExtras
+find_package(Qt5Concurrent HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Concurrent
+find_package(Qt5PrintSupport HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5PrintSupport, Qt5Widgets
 mark_as_advanced(
   Qt5Concurrent_DIR
   Qt5Core_DIR
@@ -403,11 +454,10 @@ if(NOT WIN32)
 
   find_package(Ruby 2.0)
 
-  if (NOT RUBY_FOUND)
-  find_path(RUBY_CONFIG_INCLUDE_DIR
-    NAMES ruby/config.h  config.h
-    HINTS
-    /usr/include/x86_64-linux-gnu/ruby-2.0.0
+  if(NOT RUBY_FOUND)
+    find_path(RUBY_CONFIG_INCLUDE_DIR
+      NAMES ruby/config.h config.h
+      HINTS /usr/include/x86_64-linux-gnu/ruby-2.0.0
     )
     find_package(Ruby 2.0)
   endif()

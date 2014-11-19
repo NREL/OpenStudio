@@ -15,7 +15,5 @@ jason@ubuntu12:~/OpenStudio-main/openstudiocore/java$ LD_LIBRARY_PATH=~/openstud
 
 Notes and caveats:
 
- * Only linux is tested at this point, but any Unix and Windows are expected to work (possibly with path finding issues on Windows)
- * The java libraries are not yet being packaged. Some time will need to be spend investigating the best place to install the bindings
  * The Java SWIG module is probably the least refined I have used yet. The namespacing is not handled well. It has all of the caveats of the C# bindings, and then some.
 

@@ -418,7 +418,7 @@ module OpenStudio
 
     # Create and set default preferences for any that might not be in the Registry already.
     # For example, the first time the plugin is run, or the first time a new version (with new preferences) is run.
-    # Stores values in the Registry at:  HKEY_CURRENT_USER\Software\SketchUp\SketchUp 2014\OpenStudio
+    # Stores values in the Registry at:  HKEY_CURRENT_USER\Software\SketchUp\SketchUp 2015\OpenStudio
     def load_default_preferences
       default_hash = default_preferences
       for key in default_hash.keys
