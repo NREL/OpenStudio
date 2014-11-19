@@ -571,25 +571,21 @@ void BuildingInspectorView::attach(openstudio::model::Building& building)
     OptionalStringGetter(std::bind(&model::Building::relocatable, building)),
     std::bind(&openstudio::model::Building::setRelocatable, building, std::placeholders::_1),
     NoFailAction(std::bind(&model::Building::resetRelocatable, building)));
-
+  
   m_floorToCeilingHeight->bind(
     m_isIP,
     *m_building,
-    DoubleGetter(std::bind(&model::Building::nominalFloortoCeilingHeight, m_building.get_ptr()))
-  );
-
-  // TODO MSVS 2013 finds the arg list below ambiguous, yet can digest the abbreviated one above
-  //m_floorToCeilingHeight->bind(
-  //  m_isIP,
-  //  *m_building,
-  //  DoubleGetter(std::bind(&model::Building::nominalFloortoCeilingHeight, m_building.get_ptr())),
-  //  boost::optional<DoubleSetter>(std::bind(&model::Building::setNominalFloortoCeilingHeight, m_building.get_ptr(), std::placeholders::_1)),
-  //  boost::optional<NoFailAction>(std::bind(&model::Building::resetNominalFloortoCeilingHeight, m_building.get_ptr())),
-  //  boost::optional<NoFailAction>(),
-  //  boost::optional<NoFailAction>(),
-  //  boost::optional<BasicQuery>(),
-  //  boost::optional<BasicQuery>(),
-  //  boost::optional<BasicQuery>());
+    DoubleGetter(std::bind(&model::Building::nominalFloortoCeilingHeight, m_building.get_ptr())),
+    //                                                   <return type (function pointer) (argument)> Note: use "::" when calling a member function, use only "*" when calling a static or free function
+    //boost::optional<DoubleSetter>(std::bind(static_cast<bool (model::Building::*)(double)>(&model::Building::setNominalFloortoCeilingHeight), m_building.get_ptr(), std::placeholders::_1)),
+    // Evan note: the line above and the line below accomplish the same thing, although the lambda function below is now preferred as it is considered more readable and perhaps slightly faster
+    boost::optional<DoubleSetter>([this](double d) { return m_building->setNominalFloortoCeilingHeight(d); }),
+    boost::optional<NoFailAction>(std::bind(&model::Building::resetNominalFloortoCeilingHeight, m_building.get_ptr())),
+    boost::optional<NoFailAction>(),
+    boost::optional<NoFailAction>(),
+    boost::optional<BasicQuery>(),
+    boost::optional<BasicQuery>(),
+    boost::optional<BasicQuery>());
 
   this->stackedWidget()->setCurrentIndex(1);
 }

@@ -345,22 +345,6 @@ BuildingStoryInspectorView::BuildingStoryInspectorView(bool isIP, const openstud
 
   ++row;
 
-  // Nominal Floor to Floor Height
-  vLayout = new QVBoxLayout();
-
-  label = new QLabel();
-  label->setText("Nominal Floor to Floor Height: ");
-  label->setObjectName("StandardsInfo");
-  vLayout->addWidget(label);
-
-  m_floorToFloorHeight = new OSQuantityEdit2("m", "m", "ft", m_isIP);
-  vLayout->addWidget(m_floorToFloorHeight);
-
-  vLayout->addStretch();
-
-  mainGridLayout->addLayout(vLayout, row, 0);
-  mainGridLayout->setRowMinimumHeight(row, 30);
-
   // Nominal Floor to Ceiling Height 
   vLayout = new QVBoxLayout();
 
@@ -368,7 +352,7 @@ BuildingStoryInspectorView::BuildingStoryInspectorView(bool isIP, const openstud
   label->setText("Nominal Floor to Ceiling Height: ");
   label->setObjectName("StandardsInfo");
   vLayout->addWidget(label);
-  
+
   m_floorToCeilingHeight = new OSQuantityEdit2("m", "m", "ft", m_isIP);
   connect(this, &BuildingStoryInspectorView::toggleUnitsClicked, m_zCoordinate, &OSQuantityEdit2::onUnitSystemChange);
   vLayout->addWidget(m_floorToCeilingHeight);
@@ -384,6 +368,22 @@ BuildingStoryInspectorView::BuildingStoryInspectorView(bool isIP, const openstud
   line->setFrameShape(QFrame::HLine);
   line->setFrameShadow(QFrame::Sunken);
   mainGridLayout->addWidget(line, row, 0, 1, 2);
+
+  // Nominal Floor to Floor Height
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Nominal Floor to Floor Height: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_floorToFloorHeight = new OSQuantityEdit2("m", "m", "ft", m_isIP);
+  vLayout->addWidget(m_floorToFloorHeight);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout, row, 0);
+  mainGridLayout->setRowMinimumHeight(row, 30);
 
   ++row;
 
@@ -484,9 +484,42 @@ void BuildingStoryInspectorView::attach(openstudio::model::BuildingStory& buildi
   } 
   m_renderingColorWidget->attach(*renderingColor);
 
-  //m_zCoordinate
-  //m_floorToFloorHeight
-  //m_floorToCeilingHeight
+  m_zCoordinate->bind(
+    m_isIP,
+    buildingStory,
+    OptionalDoubleGetter(std::bind(&model::BuildingStory::nominalZCoordinate, buildingStory)),
+    // Evan note: "auto bs" required as a copy because the passed in buildingStory object became const in the lambda function
+    DoubleSetterVoidReturn([buildingStory](double d) { auto bs = buildingStory; bs.setNominalZCoordinate(d); }),
+    boost::optional<NoFailAction>(std::bind(&model::BuildingStory::resetNominalZCoordinate, buildingStory)),
+    boost::optional<NoFailAction>(),
+    boost::optional<NoFailAction>(),
+    boost::optional<BasicQuery>(),
+    boost::optional<BasicQuery>(),
+    boost::optional<BasicQuery>());
+
+  m_floorToFloorHeight->bind(
+    m_isIP,
+    buildingStory,
+    DoubleGetter(std::bind(&model::BuildingStory::nominalFloortoFloorHeight, buildingStory)),
+    boost::optional<DoubleSetter>([buildingStory](double d) { auto bs = buildingStory; return bs.setNominalFloortoFloorHeight(d); }),
+    boost::optional<NoFailAction>(std::bind(&model::BuildingStory::resetNominalFloortoFloorHeight, buildingStory)),
+    boost::optional<NoFailAction>(),
+    boost::optional<NoFailAction>(),
+    boost::optional<BasicQuery>(),
+    boost::optional<BasicQuery>(),
+    boost::optional<BasicQuery>());
+
+  m_floorToCeilingHeight->bind(
+    m_isIP,
+    buildingStory,
+    DoubleGetter(std::bind(&model::BuildingStory::nominalFloortoCeilingHeight, buildingStory)),
+    boost::optional<DoubleSetter>([buildingStory](double d) { auto bs = buildingStory; return bs.setNominalFloortoCeilingHeight(d); }),
+    boost::optional<NoFailAction>(std::bind(&model::BuildingStory::resetNominalFloortoCeilingHeight, buildingStory)),
+    boost::optional<NoFailAction>(),
+    boost::optional<NoFailAction>(),
+    boost::optional<BasicQuery>(),
+    boost::optional<BasicQuery>(),
+    boost::optional<BasicQuery>());
 
   //m_spacesVectorController->attach(buildingStory);
   //m_spacesVectorController->reportItems();
