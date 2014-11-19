@@ -470,8 +470,6 @@ void BuildingStoryInspectorView::onUpdate()
 void BuildingStoryInspectorView::attach(openstudio::model::BuildingStory& buildingStory)
 {
   m_nameEdit->bind(buildingStory, "name");
-  //m_floorHeightEdit->bind(buildingStory, "nominalZCoordinate", m_isIP);
-  //m_floorToFloorHeightEdit->bind(buildingStory, "nominalFloortoFloorHeight", m_isIP, std::string("isNominalFloortoFloorHeightDefaulted"));
 
   m_defaultConstructionSetVectorController->attach(buildingStory);
   m_defaultConstructionSetVectorController->reportItems();
@@ -485,6 +483,10 @@ void BuildingStoryInspectorView::attach(openstudio::model::BuildingStory& buildi
     buildingStory.setRenderingColor(*renderingColor);
   } 
   m_renderingColorWidget->attach(*renderingColor);
+
+  //m_zCoordinate
+  //m_floorToFloorHeight
+  //m_floorToCeilingHeight
 
   //m_spacesVectorController->attach(buildingStory);
   //m_spacesVectorController->reportItems();
@@ -505,6 +507,10 @@ void BuildingStoryInspectorView::detach()
   m_defaultScheduleSetVectorController->detach();
 
   m_renderingColorWidget->detach();
+
+  m_zCoordinate->unbind();
+  m_floorToFloorHeight->unbind();
+  m_floorToCeilingHeight->unbind();
 
   //m_spacesVectorController->detach();
 }

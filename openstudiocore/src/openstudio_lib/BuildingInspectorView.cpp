@@ -572,8 +572,24 @@ void BuildingInspectorView::attach(openstudio::model::Building& building)
     std::bind(&openstudio::model::Building::setRelocatable, building, std::placeholders::_1),
     NoFailAction(std::bind(&model::Building::resetRelocatable, building)));
 
+  m_floorToCeilingHeight->bind(
+    m_isIP,
+    *m_building,
+    DoubleGetter(std::bind(&model::Building::nominalFloortoCeilingHeight, m_building.get_ptr()))
+  );
 
-//  m_floorToCeilingHeight
+  // TODO MSVS 2013 finds the arg list below ambiguous, yet can digest the abbreviated one above
+  //m_floorToCeilingHeight->bind(
+  //  m_isIP,
+  //  *m_building,
+  //  DoubleGetter(std::bind(&model::Building::nominalFloortoCeilingHeight, m_building.get_ptr())),
+  //  boost::optional<DoubleSetter>(std::bind(&model::Building::setNominalFloortoCeilingHeight, m_building.get_ptr(), std::placeholders::_1)),
+  //  boost::optional<NoFailAction>(std::bind(&model::Building::resetNominalFloortoCeilingHeight, m_building.get_ptr())),
+  //  boost::optional<NoFailAction>(),
+  //  boost::optional<NoFailAction>(),
+  //  boost::optional<BasicQuery>(),
+  //  boost::optional<BasicQuery>(),
+  //  boost::optional<BasicQuery>());
 
   this->stackedWidget()->setCurrentIndex(1);
 }
