@@ -3088,56 +3088,20 @@ OS:StandardsInformation:Material,
        \object-list MaterialNames
   A3, \field Material Standard
        \note This is a freeform field used to identify the standard which specifies this material.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+       \type alpha
   A4, \field Material Standard Source
-       \note This is a freeform field used to identify the table or section in the standard which specifies this material.       
+       \note This is a freeform field used to identify the table or section in the standard which specifies this material.    
+       \note More information can be found at https://github.com/NREL/openstudio-standards.     
+       \type alpha       
   A5, \field Standards Category
        \note This is a freeform field used to identify the category of this material, e.g. 'Plastering Materials' or 'Roofing'.
        \note More information can be found at https://github.com/NREL/openstudio-standards.
        \type alpha
-  A6, \field Standards Identifier
+  A6; \field Standards Identifier
        \note This is a freeform field used to identify the id of this material within a standard.
        \note More information can be found at https://github.com/NREL/openstudio-standards.
        \type alpha
-  A7, \field Framing Material
-       \note Type of framing material in a composite material layer.
-       \type choice
-       \key Wood
-       \key Metal
-  A8, \field Framing Configuration
-       \note Framing configuration of a composite material layer, e.g. 'Wall 16 inch on center'.
-       \type choice
-       \key Wall 16 inch on center
-       \key Wall 24 inch on center
-       \key Wall AWS 24 inch on center
-       \key Wall AWS 48 inch on center 
-       \key Floor 16 inch on center
-       \key Floor 24 inch on center       
-       \key Roof 16 inch on center
-       \key Roof 24 inch on center       
-       \key Roof 48 inch on center                
-  A9, \field Nominal Framing Depth
-       \note Nominal depth of framing members in a composite material layer.
-       \type real
-       \units mm
-       \ip-units in
-       \minimum> 0
-  A10,\field Nominal Framing Width
-       \note Nominal width of framing members in a composite material layer.
-       \type real
-       \units mm
-       \ip-units in
-       \minimum> 0       
-  N1, \field Nominal Cavity Insulation R-Value
-       \note Nominal cavity insulation of a composite material layer.
-       \type real
-       \units m-K/W
-       \ip-units hr-ft2-R/Btu-in
-       \minimum> 0
-  A11;\field Exposed to Exterior Environment
-       \note Is this material designed to be directly exposed to the exterior environment.
-       \type choice
-       \key Yes
-       \key No
        
 \group OpenStudio Constructions
 
@@ -3396,7 +3360,14 @@ OS:StandardsInformation:Construction,
        \key Green
        \key Blue
        \key Tinted
-  A15;\field Fenestration Low Emissivity Coating
+  A15,\field Fenestration Gas Fill
+       \note Type of gas used between panes of this fenestration construction.
+       \note BCL taxonomy term 'Construction Assembly.Fenestration.Window.Gas Fill'
+       \type choice
+       \key Air
+       \key Argon
+       \key Krypton
+  A16;\field Fenestration Low Emissivity Coating
        \note Does this fenestration construction include a low-e coating.
        \type choice
        \key True
