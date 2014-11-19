@@ -25,20 +25,20 @@
 
 #include "../model/Building.hpp"
 
-class QLabel;
-class QPushButton;
 class QColor;
 class QComboBox;
+class QLabel;
+class QPushButton;
 
 namespace openstudio {
 
-class OSDropZone;
-class OSLineEdit;
-class OSComboBox;
 class OSComboBox2;
+class OSComboBox;
+class OSDropZone;
 class OSIntegerEdit2;
+class OSLineEdit;
+class OSQuantityEdit2;
 class OSQuantityEdit;
-
 
 class BuildingSpaceTypeVectorController : public ModelObjectVectorController
 {
@@ -150,7 +150,7 @@ class BuildingInspectorView : public ModelObjectInspectorView
     OSIntegerEdit2* m_numberStories;
     OSIntegerEdit2* m_numberAboveGroundStories;
     OSComboBox2* m_relocatable;
-    //OSQuantityEdit* m_floorToFloorHeightEdit;
+    OSQuantityEdit2 * m_floorToCeilingHeight = nullptr;
     bool m_isIP;
 
   public slots:

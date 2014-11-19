@@ -259,8 +259,7 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
 
   ++row;
 
-  // building type 
-
+  // Measure Tags
   QFrame * line;
   line = new QFrame();
   line->setFrameShape(QFrame::HLine);
@@ -276,6 +275,7 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
 
   ++row;
 
+  // Standards Building Type
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
@@ -289,7 +289,26 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   m_standardsBuildingTypeComboBox->setFixedWidth(OSItem::ITEM_WIDTH);
   vLayout->addWidget(m_standardsBuildingTypeComboBox);
 
-  mainGridLayout->addLayout(vLayout,row,0);
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout, row, 0);
+  mainGridLayout->setRowMinimumHeight(row, 30);
+
+  // Nominal Floor to Ceiling Height
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Nominal Floor to Ceiling Height: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_floorToCeilingHeight = new OSQuantityEdit2("m", "m", "ft", m_isIP);
+  connect(this, &BuildingInspectorView::toggleUnitsClicked, m_floorToCeilingHeight, &OSQuantityEdit2::onUnitSystemChange);
+  vLayout->addWidget(m_floorToCeilingHeight);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout,row,1);
   mainGridLayout->setRowMinimumHeight(row, 30);
 
   // DLM: We could undeprecate "Building Sector Type" and put
@@ -302,7 +321,7 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
 
   label = new QLabel();
   label->setText("Standards Number of Living Units: ");
-  label->setStyleSheet("QLabel { font: bold; }");
+  label->setObjectName("StandardsInfo");
   vLayout->addWidget(label);
 
   m_numberLivingUnits = new OSIntegerEdit2();
@@ -318,7 +337,7 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
 
   label = new QLabel();
   label->setText("Relocatable: ");
-  label->setStyleSheet("QLabel { font: bold; }");
+  label->setObjectName("StandardsInfo");
   vLayout->addWidget(label);
 
   m_relocatable = new OSComboBox2();
@@ -336,7 +355,7 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
 
   label = new QLabel();
   label->setText("Standards Number of Stories: ");
-  label->setStyleSheet("QLabel { font: bold; }");
+  label->setObjectName("StandardsInfo");
   vLayout->addWidget(label);
 
   m_numberStories = new OSIntegerEdit2();
@@ -352,7 +371,7 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
 
   label = new QLabel();
   label->setText("Standards Number of Above Ground Stories: ");
-  label->setStyleSheet("QLabel { font: bold; }");
+  label->setObjectName("StandardsInfo");
   vLayout->addWidget(label);
 
   m_numberAboveGroundStories = new OSIntegerEdit2();
@@ -553,7 +572,8 @@ void BuildingInspectorView::attach(openstudio::model::Building& building)
     std::bind(&openstudio::model::Building::setRelocatable, building, std::placeholders::_1),
     NoFailAction(std::bind(&model::Building::resetRelocatable, building)));
 
-  //m_floorToFloorHeightEdit->bind(building, "nominalFloortoFloorHeight", m_isIP, std::string("isNominalFloortoFloorHeightDefaulted"));
+
+//  m_floorToCeilingHeight
 
   this->stackedWidget()->setCurrentIndex(1);
 }
@@ -578,7 +598,7 @@ void BuildingInspectorView::detach()
   m_numberStories->unbind();
   m_numberAboveGroundStories->unbind();
   m_relocatable->unbind();
-  //m_floorToFloorHeightEdit->unbind();
+  m_floorToCeilingHeight->unbind();
 }
 
 void BuildingInspectorView::populateStandardsBuildingTypes()

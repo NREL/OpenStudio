@@ -18,20 +18,22 @@
 **********************************************************************/
 
 #include "BuildingStoryInspectorView.hpp"
+
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
-#include "OSDropZone.hpp"
+
 #include "ModelObjectItem.hpp"
+#include "OSDropZone.hpp"
 #include "RenderingColorWidget.hpp"
 
-#include "../model/Model.hpp"
-#include "../model/Model_Impl.hpp"
 #include "../model/BuildingStory_Impl.hpp"
-#include "../model/RenderingColor.hpp"
 #include "../model/DefaultConstructionSet.hpp"
 #include "../model/DefaultConstructionSet_Impl.hpp"
 #include "../model/DefaultScheduleSet.hpp"
 #include "../model/DefaultScheduleSet_Impl.hpp"
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/RenderingColor.hpp"
 #include "../model/Space.hpp"
 #include "../model/Space_Impl.hpp"
 
@@ -39,11 +41,10 @@
 #include <utilities/idd/OS_Space_FieldEnums.hxx>
 #include "../utilities/core/Assert.hpp"
 
-#include <QVBoxLayout>
-#include <QHBoxLayout>
+#include <QBoxLayout>
+#include <QGridLayout>
 #include <QLabel>
 #include <QPushButton>
-#include <QGridLayout>
 #include <QScrollArea>
 #include <QStackedWidget>
 
@@ -272,8 +273,9 @@ void BuildingStoryUnassignedSpacesVectorController::onObjectRemoved(const openst
 
 // BuildingStoryInspectorView
 
-BuildingStoryInspectorView::BuildingStoryInspectorView(const openstudio::model::Model& model, QWidget * parent )
-  : ModelObjectInspectorView(model, true, parent)
+BuildingStoryInspectorView::BuildingStoryInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
+  : ModelObjectInspectorView(model, true, parent),
+  m_isIP(isIP)
 {
   QWidget* hiddenWidget = new QWidget();
   this->stackedWidget()->insertWidget(0, hiddenWidget);
@@ -299,36 +301,91 @@ BuildingStoryInspectorView::BuildingStoryInspectorView(const openstudio::model::
   m_nameEdit = new OSLineEdit();
   vLayout->addWidget(m_nameEdit);
 
-  mainGridLayout->addLayout(vLayout,0,0,1,2, Qt::AlignTop);
+  int row = 0;
 
-  // floor height and floor to floor height
-  //vLayout = new QVBoxLayout();
+  mainGridLayout->addLayout(vLayout, row, 0, 1, 2, Qt::AlignTop);
 
-  //label = new QLabel();
-  //label->setText("Floor Height: ");
-  //label->setStyleSheet("QLabel { font: bold; }");
-  //vLayout->addWidget(label);
+  ++row;
 
-  //m_floorHeightEdit = new OSQuantityEdit(m_isIP);
-  //isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), , SLOT(onUnitSystemChange(bool)));
-  //OS_ASSERT(isConnected);
-  //vLayout->addWidget(m_floorHeightEdit);
+  // Measure Tags
+  QFrame * line;
+  line = new QFrame();
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  mainGridLayout->addWidget(line, row, 0, 1, 2);
 
-  //mainGridLayout->addLayout(vLayout,1,0, Qt::AlignTop|Qt::AlignLeft);
+  ++row;
 
-  //vLayout = new QVBoxLayout();
+  label = new QLabel();
+  label->setText("Measure Tags (Optional):");
+  label->setObjectName("H2");
+  mainGridLayout->addWidget(label, row, 0);
 
-  //label = new QLabel();
-  //label->setText("Floor To Floor Height: ");
-  //label->setStyleSheet("QLabel { font: bold; }");
-  //vLayout->addWidget(label);
+  ++row;
 
-  //m_floorToFloorHeightEdit = new OSQuantityEdit(m_isIP);
-  //isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), , SLOT(onUnitSystemChange(bool)));
-  //OS_ASSERT(isConnected);
-  //vLayout->addWidget(m_floorToFloorHeightEdit);
+  vLayout = new QVBoxLayout();
 
-  //mainGridLayout->addLayout(vLayout,1,1, Qt::AlignTop|Qt::AlignLeft);
+  // Building Story Nominal Z Coordinate
+  label = new QLabel();
+  label->setText("Building Story Nominal Z Coordinate: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_zCoordinate = new OSQuantityEdit2("m", "m", "ft", m_isIP);
+  connect(this, &BuildingStoryInspectorView::toggleUnitsClicked, m_zCoordinate, &OSQuantityEdit2::onUnitSystemChange);
+  vLayout->addWidget(m_zCoordinate);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout, row, 0);
+  mainGridLayout->setRowMinimumHeight(row, 30);
+
+  // DLM: We could undeprecate "Building Sector Type" and put
+  // it here too?
+
+  ++row;
+
+  // Nominal Floor to Floor Height
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Nominal Floor to Floor Height: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_floorToFloorHeight = new OSQuantityEdit2("m", "m", "ft", m_isIP);
+  vLayout->addWidget(m_floorToFloorHeight);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout, row, 0);
+  mainGridLayout->setRowMinimumHeight(row, 30);
+
+  // Nominal Floor to Ceiling Height 
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Nominal Floor to Ceiling Height: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+  
+  m_floorToCeilingHeight = new OSQuantityEdit2("m", "m", "ft", m_isIP);
+  connect(this, &BuildingStoryInspectorView::toggleUnitsClicked, m_zCoordinate, &OSQuantityEdit2::onUnitSystemChange);
+  vLayout->addWidget(m_floorToCeilingHeight);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout, row, 1);
+  mainGridLayout->setRowMinimumHeight(row, 30);
+
+  ++row;
+
+  line = new QFrame();
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  mainGridLayout->addWidget(line, row, 0, 1, 2);
+
+  ++row;
 
   // default construction and schedule sets
   vLayout = new QVBoxLayout();
@@ -346,7 +403,7 @@ BuildingStoryInspectorView::BuildingStoryInspectorView(const openstudio::model::
   m_defaultConstructionSetDropZone->setItemsAcceptDrops(true);
   vLayout->addWidget(m_defaultConstructionSetDropZone);
 
-  mainGridLayout->addLayout(vLayout,1,0);
+  mainGridLayout->addLayout(vLayout,row,0);
 
   vLayout = new QVBoxLayout();
 
@@ -363,11 +420,15 @@ BuildingStoryInspectorView::BuildingStoryInspectorView(const openstudio::model::
   m_defaultScheduleSetDropZone->setItemsAcceptDrops(true);
   vLayout->addWidget(m_defaultScheduleSetDropZone);
 
-  mainGridLayout->addLayout(vLayout,1,1);
+  mainGridLayout->addLayout(vLayout,row,1);
+
+  ++row;
 
   // rendering color
   m_renderingColorWidget = new RenderingColorWidget();
-  mainGridLayout->addWidget(m_renderingColorWidget,2,0,1,2, Qt::AlignTop|Qt::AlignLeft);
+  mainGridLayout->addWidget(m_renderingColorWidget, row, 0, 1, 2, Qt::AlignTop | Qt::AlignLeft);
+
+  //++row;
 
   // spaces
   //vLayout = new QVBoxLayout();
@@ -381,15 +442,12 @@ BuildingStoryInspectorView::BuildingStoryInspectorView(const openstudio::model::
   //m_spacesDropZone = new OSDropZone(m_spacesVectorController);
   //vLayout->addWidget(m_spacesDropZone);
 
-  //mainGridLayout->addLayout(vLayout,4,0,1,2);
+  //mainGridLayout->addLayout(vLayout,row,0,1,2);
 
-  mainGridLayout->setColumnMinimumWidth(0, 100);
-  mainGridLayout->setColumnMinimumWidth(1, 100);
-  mainGridLayout->setColumnStretch(2,1);
-  mainGridLayout->setRowMinimumHeight(0, 30);
-  mainGridLayout->setRowMinimumHeight(1, 30);
-  mainGridLayout->setRowMinimumHeight(2, 30);
-  mainGridLayout->setRowStretch(3,1);
+  mainGridLayout->setColumnMinimumWidth(0, 80);
+  mainGridLayout->setColumnMinimumWidth(1, 80);
+  mainGridLayout->setColumnStretch(2, 1);
+  mainGridLayout->setRowStretch(row, 1);
 }
 
 void BuildingStoryInspectorView::onClearSelection()
