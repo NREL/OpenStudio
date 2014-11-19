@@ -318,9 +318,11 @@ namespace detail {
 } // detail
 
 BuildingStory::BuildingStory(const Model& model)
-  : ModelObject(BuildingStory::iddObjectType(),model)
+  : ModelObject(BuildingStory::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::BuildingStory_Impl>());
+
+  setNominalFloortoCeilingHeight(nominalFloortoFloorHeight()); // TODO replace with smart default, when available
 }
 
 IddObjectType BuildingStory::iddObjectType() {

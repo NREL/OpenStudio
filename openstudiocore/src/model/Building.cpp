@@ -1241,10 +1241,11 @@ Building::Building(std::shared_ptr<detail::Building_Impl> impl)
 
 Building::Building(Model& model)
   : ParentObject(Building::iddObjectType(),model)
-{}
+{
+  setNominalFloortoCeilingHeight(0); // TODO replace with smart default, when available
+}
 
 /// @endcond
-
 
 } // model
 } // openstudio
