@@ -292,7 +292,7 @@ namespace openstudio{
 
 
       insertSimulation << "insert into simulations (SimulationIndex, EnergyPlusVersion, TimeStamp, NumTimestepsPerHour, Completed, CompletedSuccessfully) values ("
-        << nextSimulationIndex << ", 'EnergyPlus, VERSION 8.1, (OpenStudio) YMD=" << timeStamp.str() << "', '" << timeStamp.str() << "', 6, 1, 1);";
+        << nextSimulationIndex << ", 'EnergyPlus, VERSION 8.2, (OpenStudio) YMD=" << timeStamp.str() << "', '" << timeStamp.str() << "', 6, 1, 1);";
 
       execAndThrowOnError(insertSimulation.str());
 
@@ -443,15 +443,15 @@ namespace openstudio{
       int code = -1;
       if (m_db) {
         sqlite3_stmt* sqlStmtPtr;
-        sqlite3_prepare_v2(m_db,"SELECT * FROM Simulations WHERE EnergyPlusVersion LIKE '%7.0%' OR EnergyPlusVersion LIKE '%7.1%' OR EnergyPlusVersion LIKE '%7.2%' OR EnergyPlusVersion LIKE '%8.0%' OR EnergyPlusVersion LIKE '%8.1%'",-1,&sqlStmtPtr,nullptr);
+        sqlite3_prepare_v2(m_db,"SELECT * FROM Simulations WHERE EnergyPlusVersion LIKE '%7.0%' OR EnergyPlusVersion LIKE '%7.1%' OR EnergyPlusVersion LIKE '%7.2%' OR EnergyPlusVersion LIKE '%8.0%' OR EnergyPlusVersion LIKE '%8.1%' OR EnergyPlusVersion LIKE '%8.2%'",-1,&sqlStmtPtr,nullptr);
         code = sqlite3_step(sqlStmtPtr);
         sqlite3_finalize(sqlStmtPtr);
         m_supportedVersion = true;
 
         // use this code block to try to support EnergyPlus versions before they are released
         if (code != SQLITE_ROW){
-          LOG(Warn, "Trying unsupported EnergyPlus version 8.2");
-          sqlite3_prepare_v2(m_db,"SELECT * FROM Simulations WHERE EnergyPlusVersion LIKE '%8.2%'",-1,&sqlStmtPtr,nullptr);
+          LOG(Warn, "Trying unsupported EnergyPlus version 8.3");
+          sqlite3_prepare_v2(m_db,"SELECT * FROM Simulations WHERE EnergyPlusVersion LIKE '%8.3%'",-1,&sqlStmtPtr,nullptr);
           code = sqlite3_step(sqlStmtPtr);
           sqlite3_finalize(sqlStmtPtr);
           m_supportedVersion = false;

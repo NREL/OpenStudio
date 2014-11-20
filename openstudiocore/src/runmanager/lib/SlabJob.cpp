@@ -70,8 +70,8 @@ namespace detail {
     Files f = allInputFiles();
     getFiles(f);
 
-    // start at default EnergyPlus version of 8.1
-    ToolVersion tv(8,1); 
+    // start at default EnergyPlus version of 8.2
+    ToolVersion tv(8,2); 
 
     if (m_expandedidf){
       if (boost::filesystem::exists(m_expandedidf->fullPath))

@@ -112,8 +112,8 @@ namespace detail {
     JobParams p = params();
     getFiles(f, p);
 
-    // start at default EnergyPlus version of 8.1
-    ToolVersion tv(8,1); 
+    // start at default EnergyPlus version of 8.2
+    ToolVersion tv(8,2); 
     if (m_idf){
       if (boost::filesystem::exists(m_idf->fullPath))
       {

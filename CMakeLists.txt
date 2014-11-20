@@ -40,7 +40,7 @@ if(PATCH_EXE_NOTFOUND)
 endif()
 
 # EnergyPlus Idd version
-set(ENERGYPLUS_VERSION "8.1" CACHE INTERNAL "EnergyPlus Version")
+set(ENERGYPLUS_VERSION "8.2" CACHE INTERNAL "EnergyPlus Version")
 
 option(NIGHTLY_BUILD "Use configurations for Nightly Build" OFF)
 
