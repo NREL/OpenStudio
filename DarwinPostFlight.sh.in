@@ -15,14 +15,14 @@ chmod 755 "$config_file"
 chown $USER "$config_file"
 
 
-#---------- Install plugin for SketchUp 2014 ----------
-# Check for the SketchUp 14 Application Support directory
-SU14_support_dir="/Library/Application Support/SketchUp 2014"
-mkdir -p "$SU14_support_dir/SketchUp/Plugins/OpenStudio"
+#---------- Install plugin for SketchUp 2015 ----------
+# Check for the SketchUp 15 Application Support directory
+SU15_support_dir="/Library/Application Support/SketchUp 2015"
+mkdir -p "$SU15_support_dir/SketchUp/Plugins/OpenStudio"
 # copy the plugin into the directory
-cp "$ruby_install_dir/Plugins/OpenStudio.rb" "$SU14_support_dir/SketchUp/Plugins/OpenStudio.rb"
-cp "$ruby_install_dir/Plugins/OpenStudio/Startup.rb" "$SU14_support_dir/SketchUp/Plugins/OpenStudio/Startup.rb"
-cp "$config_file" "$SU14_support_dir/SketchUp/Plugins/OpenStudio/OpenStudio-config.rb"
+cp "$ruby_install_dir/Plugins/OpenStudio.rb" "$SU15_support_dir/SketchUp/Plugins/OpenStudio.rb"
+cp "$ruby_install_dir/Plugins/OpenStudio/Startup.rb" "$SU15_support_dir/SketchUp/Plugins/OpenStudio/Startup.rb"
+cp "$config_file" "$SU15_support_dir/SketchUp/Plugins/OpenStudio/OpenStudio-config.rb"
 
 
 #---------- Installation Directory Icon ----------

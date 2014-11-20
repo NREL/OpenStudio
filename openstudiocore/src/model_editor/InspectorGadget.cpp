@@ -269,7 +269,7 @@ void InspectorGadget::clear(bool recursive)
   }
 
   // This line is commented out to prevent a crash when displaying the Inspector Gadget
-  // within SketchUp 2014.  We have no idea why this works or what repercussions it may cause
+  // within SketchUp 2015.  We have no idea why this works or what repercussions it may cause
   //m_workspaceObj.reset();
 }
 
@@ -1205,7 +1205,7 @@ void InspectorGadget::onWorkspaceObjectChanged()
 
 void InspectorGadget::onTimeout()
 {
-  if (m_workspaceObjectChanged){
+  if (m_workspaceObjectChanged && m_workspaceObj && !m_workspaceObj->handle().isNull()){
     if (m_workspaceObj){
       rebuild(false);
     }
@@ -1228,7 +1228,9 @@ void InspectorGadget::connectWorkspaceObjectSignals() const
     if (impl){
       connect(impl, &openstudio::detail::WorkspaceObject_Impl::onChange, this, &InspectorGadget::onWorkspaceObjectChanged);
 
-      connect(impl, &openstudio::detail::WorkspaceObject_Impl::onRemoveFromWorkspace, this, &InspectorGadget::onWorkspaceObjectRemoved);
+      connect(impl, &openstudio::detail::WorkspaceObject_Impl::onRemoveFromWorkspace, this, &InspectorGadget::workspaceObjectRemoved);
+
+      connect(this, &InspectorGadget::workspaceObjectRemoved, this, &InspectorGadget::onWorkspaceObjectRemoved);
     }
   }
 }

@@ -314,6 +314,9 @@ std::string EpwDataPoint::units(EpwDataField field)
   case EpwDataField::LiquidPrecipitationQuantity:
     string = "hr";
     break;
+  default:
+    //string = "None";
+    break;
   }
   return string;
 }

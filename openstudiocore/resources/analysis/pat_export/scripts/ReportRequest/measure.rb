@@ -1,5 +1,5 @@
 # see the URL below for information on how to write OpenStudio measures
-# http://openstudio.nrel.gov/openstudio-measure-writing-guide
+# https://www.openstudio.net/openstudio-measure-writing-guide
 
 require 'openstudio'
 require 'json'

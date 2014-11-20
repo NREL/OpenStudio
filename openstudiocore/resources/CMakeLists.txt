@@ -322,6 +322,12 @@ set(osversion_resources_src
   osversion/1_5_1/OpenStudio.idd
   osversion/1_5_1/example.osm
   osversion/1_5_1/example.osc
+  osversion/1_5_2/OpenStudio.idd
+  osversion/1_5_2/example.osm
+  osversion/1_5_2/example.osc
+  osversion/1_5_3/OpenStudio.idd
+  osversion/1_5_3/example.osm
+  osversion/1_5_3/example.osc
   osversion/unknown.osc
 )
 
@@ -718,17 +724,17 @@ CREATE_SRC_GROUPS("${isomodel_resources_src}")
 # clear runs, calls to RUN_ENERGYPLUS will populate this
 set(ENERGYPLUS_OUTPUTS "")
 
-set(contam_resources_src
+set(airflow_resources_src
   contam/CONTAMTemplate.osm
 )
 
 # update the resources
-UPDATE_RESOURCES("${contam_resources_src}")
+UPDATE_RESOURCES("${airflow_resources_src}")
 
 # add target
-add_custom_target(openstudio_contam_resources
-  DEPENDS ${contam_resources_src} ${ENERGYPLUS_OUTPUTS}
-  SOURCES ${contam_resources_src}
+add_custom_target(openstudio_airflow_resources
+  DEPENDS ${airflow_resources_src} ${ENERGYPLUS_OUTPUTS}
+  SOURCES ${airflow_resources_src}
 )
 
-CREATE_SRC_GROUPS("${contam_resources_src}")
+CREATE_SRC_GROUPS("${airflow_resources_src}")

@@ -52,7 +52,7 @@ class SetupBCLKey < OpenStudio::Ruleset::UtilityUserScript
     
     good_key = OpenStudio::LocalBCL::instance().setProdAuthKey(authKey)
     if not good_key 
-      runner.registerError("BCL authentication failed, follow instructions at openstudio.nrel.gov/using-building-component-library-bcl-key-openstudio to get your auth key.")
+      runner.registerError("BCL authentication failed, follow instructions at http://nrel.github.io/OpenStudio-user-documentation/getting_started/getting_started/#installation-instructions to get your auth key.")
       return false
     end
   end

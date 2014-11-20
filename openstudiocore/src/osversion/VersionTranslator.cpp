@@ -160,6 +160,8 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.4.3"));
   m_startVersions.push_back(VersionString("1.5.0"));
   m_startVersions.push_back(VersionString("1.5.1"));
+  m_startVersions.push_back(VersionString("1.5.2"));
+  m_startVersions.push_back(VersionString("1.5.3"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -391,14 +393,14 @@ void VersionTranslator::initializeMap(std::istream& is) {
         // if currentVersion is farther ahead, log error and return nothing
         LOG(Error,"Version extracted from file '" << currentVersion.str()
             << "' is not supported by OpenStudio Version " << openStudioVersion()
-            << ". Please check http://openstudio.nrel.gov for updates.");
+            << ". Please check https://www.openstudio.net for updates.");
         return;
       }
     }else{
       // log error and return nothing
       LOG(Error,"Version extracted from file '" << currentVersion.str()
           << "' is newer than current OpenStudio Version " << openStudioVersion()
-          << ". Please check http://openstudio.nrel.gov for updates.");
+          << ". Please check https://www.openstudio.net for updates.");
       return;
     }
   }

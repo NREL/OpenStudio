@@ -45,9 +45,9 @@ public:
 
   virtual ~OSDialog() {}
 
-  //QSize sizeHint() const;
+  QSize sizeHint() const;
 
-  //void setSizeHint(const QSize & sizeHint);
+  void setSizeHint(const QSize & sizeHint);
 
   QMargins layoutContentsMargins() const;
 

@@ -400,12 +400,12 @@ void MeasureManager::updateBCLMeasures(analysisdriver::SimpleProject &t_project)
   updateMeasures(t_project, toUpdate);
 }
 
-bool MeasureManager::checkForUpdates(BCLMeasure& measure)
+bool MeasureManager::checkForUpdates(BCLMeasure& measure, bool force)
 {
   // first check files for updates
   bool result = measure.checkForUpdatesFiles();
-  if (result){
-    // if files updated, try to load the ruby measure
+  if (result || force){
+    // if files updated or being forced to, try to load the ruby measure
     try{
       ruleset::RubyUserScriptInfo info = m_infoGetter->getInfo(measure);
       info.update(measure);
@@ -636,6 +636,11 @@ void MeasureManager::duplicateSelectedMeasure()
   {
     boost::optional<BCLMeasure> bclMeasure = this->getMeasure(item->uuid());
     if (bclMeasure){
+
+      // check for updates in case measure being copied has changed
+      // do not save bclMeasure 
+      checkForUpdates(*bclMeasure, true);
+
       // open modal dialog
       //QSharedPointer<BCLMeasureDialog> dialog(new BCLMeasureDialog(*bclMeasure, this->mainWindow));
       QSharedPointer<BCLMeasureDialog> dialog(new BCLMeasureDialog(*bclMeasure));

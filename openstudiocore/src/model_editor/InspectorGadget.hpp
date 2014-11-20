@@ -240,6 +240,8 @@ public slots:
    */
   void dirty();
 
+  void workspaceObjectRemoved();
+
 protected slots:
 
   void onWorkspaceObjectChanged();

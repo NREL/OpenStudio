@@ -8,7 +8,7 @@
 #' @aliases OpenStudio
 #' @docType package
 #' @title Imports OpenStudio data into R.
-#' @author The OpenStudio Development Team \link{http://openstudio.nrel.gov}
+#' @author The OpenStudio Development Team \link{https://www.openstudio.net}
 #' @seealso \code{\link{OpenStudioAnalysis}}
 #' @rdname OpenStudio-package
 NA

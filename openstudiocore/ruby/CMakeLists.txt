@@ -19,6 +19,15 @@ file(GLOB_RECURSE RUBY_SRC "openstudio/*.rb" "cloud/*.template" "cloud/*.sh")
 # find all tests
 file(GLOB_RECURSE RUBY_TEST_SRC "openstudio/*_Test.rb")
 
+# Set up new path to find Qt libraries
+if (MSVC)
+  file(TO_NATIVE_PATH "${QT_LIBRARY_DIR}" QT_LIB_PATH)
+  set(NEWPATH "${QT_LIB_PATH};$ENV{PATH}")
+else()
+  set(NEWPATH $ENV{PATH})
+endif()
+
+
 # add a test for each unit test
 set(RUBY_TEST_REQUIRES "#include test files")
 foreach(f ${RUBY_TEST_SRC})
@@ -37,16 +46,16 @@ foreach(f ${RUBY_TEST_SRC})
       if(MSVC)
         add_test(NAME "RubyTest-${FILE_NAME}-${TEST_NAME}"
           COMMAND "${CMAKE_COMMAND}" -E chdir "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIGURATION>"
-          "$<TARGET_FILE:ruby_cpp>" -I "${RUBY_RUBY_LIB_DIR}" -I "${RUBY_RUBY_LIB_DIR}/i386-mingw32" -I. "openstudio_test.rb" "--name=test_${TEST_NAME}"
+          "${RUBY_EXECUTABLE}" -I "${RUBY_RUBY_LIB_DIR}" -I "${RUBY_RUBY_LIB_DIR}/i386-mingw32" -I. "openstudio_test.rb" "--name=test_${TEST_NAME}"
         )
       else()
-        # $<CONFIGURATION> may resolve to 'Release' on Mac or Linux but directory will not exist
         add_test(NAME "RubyTest-${FILE_NAME}-${TEST_NAME}"
           COMMAND "${CMAKE_COMMAND}" -E chdir "${CMAKE_CURRENT_BINARY_DIR}"
           "${RUBY_EXECUTABLE}" -I"${RUBY_RUBY_LIB_DIR}" -I. "openstudio_test.rb" "--name=test_${TEST_NAME}"
         )
       endif()
-      set_tests_properties("RubyTest-${FILE_NAME}-${TEST_NAME}" PROPERTIES DEPENDS "${ALL_RUBY_BINDING_TARGETS}" ruby_cpp ResultsViewer_resources TIMEOUT 660)
+
+      set_tests_properties("RubyTest-${FILE_NAME}-${TEST_NAME}" PROPERTIES DEPENDS "${ALL_RUBY_BINDING_TARGETS}" ruby_cpp ResultsViewer_resources TIMEOUT 660 ENVIRONMENT "PATH=${NEWPATH}")
     endif()
   endforeach()
 endforeach()
@@ -96,7 +105,7 @@ if(WIN32 OR APPLE)
     set(QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/sqldrivers/${QSQLITE_PLUGIN_NAME};\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/platforms/${QPA_PLUGIN_NAME}")
 
     foreach(QTPLUGIN ${QTPLUGINS})
-      set(Prereq_Dirs)
+      set(Prereq_Dirs "${QT_LIBRARY_DIR}")
 
       install(CODE "
         include(GetPrerequisites)
