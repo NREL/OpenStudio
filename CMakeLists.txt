@@ -256,7 +256,7 @@ if(MSVC)
 
   file(GLOB_RECURSE QMAKE_LOCATIONS "C:/Qt/qmake.exe")
 
-  message(STATUS, "Qt Locations: ${QMAKE_LOCATIONS}")
+  message(STATUS "Qt Locations: ${QMAKE_LOCATIONS}")
 
   if(QMAKE_LOCATIONS MATCHES ".*msvc${COMPILER_VER_TAG}${COMPILER_ARCH_TAG}_opengl.*")
     set(HAS_OPENGL_INSTALL TRUE)
