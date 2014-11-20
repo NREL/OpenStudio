@@ -808,6 +808,9 @@ set(${target_name}_src
   StandardsInformationConstruction.hpp
   StandardsInformationConstruction_Impl.hpp
   StandardsInformationConstruction.cpp
+  StandardsInformationMaterial.hpp
+  StandardsInformationMaterial_Impl.hpp
+  StandardsInformationMaterial.cpp
   SteamEquipment.hpp
   SteamEquipment_Impl.hpp
   SteamEquipment.cpp
