@@ -46,6 +46,15 @@ TEST_F(RunManagerTestFixture, URLTestRelative)
   openstudio::path osm = resourcesPath() / openstudio::toPath("runmanager") / openstudio::toPath("UrlTestRelative.osm");
   openstudio::path weatherdir = resourcesPath() / openstudio::toPath("runmanager"); 
   openstudio::model::Model m = openstudio::model::exampleModel();
+  
+  // add weather file
+  openstudio::path epw = weatherdir / openstudio::toPath("USA_CO_Golden-NREL.724666_TMY3.epw");;
+  ASSERT_TRUE(exists(epw));
+  openstudio::EpwFile epwFile(epw);
+  boost::optional<openstudio::model::WeatherFile> weatherFile = openstudio::model::WeatherFile::setWeatherFile(m, epwFile);
+  ASSERT_TRUE(weatherFile);
+
+  EXPECT_EQ(m.objectsWithURLFields(), 1u);
 
   m.save(osm, true);
 
@@ -139,6 +148,15 @@ TEST_F(RunManagerTestFixture, URLTestAbsolute)
   openstudio::path weatherdir = resourcesPath() / openstudio::toPath("runmanager"); 
   openstudio::model::Model m = openstudio::model::exampleModel();
 
+  // add weather file
+  openstudio::path epw = weatherdir / openstudio::toPath("USA_CO_Golden-NREL.724666_TMY3.epw");;
+  ASSERT_TRUE(exists(epw));
+  openstudio::EpwFile epwFile(epw);
+  boost::optional<openstudio::model::WeatherFile> weatherFile = openstudio::model::WeatherFile::setWeatherFile(m, epwFile);
+  ASSERT_TRUE(weatherFile);
+
+  EXPECT_EQ(m.objectsWithURLFields(), 1u);
+
   m.save(osm, true);
 
   openstudio::runmanager::FileInfo fi(osm, "osm");
@@ -155,7 +173,7 @@ TEST_F(RunManagerTestFixture, URLTestAbsolute)
       openstudio::runmanager::JobParams(),
       f);
 
-  ASSERT_GE(j.inputFiles().size(), 1u);
+  ASSERT_GE(j.inputFiles().size(), 2u);
 
   // Grab the original file added by the user
   openstudio::runmanager::FileInfo origfile = j.inputFiles().at(0);

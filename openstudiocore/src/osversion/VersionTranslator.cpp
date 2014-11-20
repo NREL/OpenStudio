@@ -2351,6 +2351,30 @@ std::string VersionTranslator::update_1_3_4_to_1_3_5(const IdfFile& idf_1_3_4, c
   return ss.str();
 }
 
+std::string VersionTranslator::update_1_5_3_to_1_5_4(const IdfFile& idf_1_5_3, const IddFileAndFactoryWrapper& idd_1_5_4)
+{
+  std::stringstream ss;
+
+  ss << idf_1_5_3.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_5_4.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_1_5_3.objects()) {
+    if (object.iddObject().name() == "OS:TimeDependentValuation")
+    {
+      // put the object in the untranslated list
+      m_untranslated.push_back(object);
+    } else {
+      ss << object;
+
+    }
+  }
+
+  return ss.str();
+}
+
 } // osversion
 } // openstudio
 
