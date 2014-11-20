@@ -54,7 +54,7 @@ TEST_F(RunManagerTestFixture, URLTestRelative)
   boost::optional<openstudio::model::WeatherFile> weatherFile = openstudio::model::WeatherFile::setWeatherFile(m, epwFile);
   ASSERT_TRUE(weatherFile);
 
-  EXPECT_EQ(m.objectsWithURLFields(), 1u);
+  EXPECT_EQ(m.objectsWithURLFields().size(), 1u);
 
   m.save(osm, true);
 
@@ -155,7 +155,7 @@ TEST_F(RunManagerTestFixture, URLTestAbsolute)
   boost::optional<openstudio::model::WeatherFile> weatherFile = openstudio::model::WeatherFile::setWeatherFile(m, epwFile);
   ASSERT_TRUE(weatherFile);
 
-  EXPECT_EQ(m.objectsWithURLFields(), 1u);
+  EXPECT_EQ(m.objectsWithURLFields().size(), 1u);
 
   m.save(osm, true);
 
