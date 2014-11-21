@@ -4,7 +4,7 @@ project(OpenStudio)
 
 set(CMAKE_VERSION_MAJOR 1)
 set(CMAKE_VERSION_MINOR 5)
-set(CMAKE_VERSION_PATCH 3)
+set(CMAKE_VERSION_PATCH 4)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
@@ -135,12 +135,14 @@ if(MSVC)
     message(FATAL_ERROR "Visual Studio earlier than VS2013 is not supported")
   elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.0.21005.1")
     # VS2013
-    message(SEND_ERROR "Update 3 for Visual Studio 2013 is required")
+    message(SEND_ERROR "Update 4 for Visual Studio 2013 is required")
   elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.30501")
     # VS2013 Update 2:
-    message(SEND_ERROR "Update 3 for Visual Studio 2013 is required")
+    message(SEND_ERROR "Update 4 for Visual Studio 2013 is required")
   elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.30723")
-    # VS2013 Update 3: no-op
+    message(WARNING "Update 4 for Visual Studio 2013 is strongly recommended")
+  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.31101")
+    # VS2013 Update 4: no-op
   endif()
 
   # Build with Multiple Processes
@@ -233,27 +235,15 @@ if(BUILD_RUBY_GEM)
 endif()
 
 if(MSVC)
-  # need to know if using the Express edition of Visual Studio, devenv is split into multiple programs
-  option(MSVC_IS_EXPRESS "using the Express editions of Visual Studio, must install both C++ and C# versions" FALSE)
-
   mark_as_advanced(CMAKE_CONFIGURATION_TYPES)
 endif()
 
 # Use PCH
 option(USE_PCH "Use precompiled headers" OFF)
 
-if(MSVC AND MSVC_IS_EXPRESS)
-  if(CMAKE_CL_64)
-    list(APPEND CMAKE_LIBRARY_PATH "C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x64/")
-  else()
-    list(APPEND CMAKE_LIBRARY_PATH "C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x86/")
-    list(APPEND CMAKE_LIBRARY_PATH "C:/Program Files/Windows Kits/8.0/Lib/win8/um/x86/")
-  endif()
-endif()
-
 
 # Smart find qt location, looking for 64bit when appropriate
-# and prefering opengl installations
+# and preferring opengl installations
 if(MSVC)
   if(CMAKE_CL_64)
     set(COMPILER_ARCH_TAG "_64")
@@ -267,9 +257,9 @@ if(MSVC)
     set(COMPILER_VER_TAG "2014")
   endif()
 
-  file(GLOB_RECURSE QMAKE_LOCATIONS "c:/Qt/qmake.exe")
+  file(GLOB_RECURSE QMAKE_LOCATIONS "C:/Qt/qmake.exe")
 
-  message("Qt Locations: ${QMAKE_LOCATIONS}")
+  message(STATUS "Qt Locations: ${QMAKE_LOCATIONS}")
 
   if(QMAKE_LOCATIONS MATCHES ".*msvc${COMPILER_VER_TAG}${COMPILER_ARCH_TAG}_opengl.*")
     set(HAS_OPENGL_INSTALL TRUE)
@@ -294,7 +284,7 @@ if(MSVC)
     endif()
   endforeach()
 
-  # we want sort, this will do both a lexigraphical sort of the version numbers, putting the newest last and picking the 
+  # we want sort, this will do both a lexicographical sort of the version numbers, putting the newest last and picking the 
   # longest (aka opengl) last. Then we sort it in reverse to prefer the highest version numbers with opengl
   list(SORT QT_HINT_DIR)
   list(REVERSE QT_HINT_DIR)
@@ -798,7 +788,6 @@ ExternalProject_Add(OSCore
     -DBUILD_WITH_OPENSSL:BOOL=${BUILD_WITH_OPENSSL}
     -DBUILD_RUBY_GEM:BOOL=${BUILD_RUBY_GEM}
     -DBUILD_RUBY_GEM_WITH_LIBS:BOOL=${BUILD_RUBY_GEM_WITH_LIBS}
-    -DMSVC_IS_EXPRESS:BOOL=${MSVC_IS_EXPRESS}
     -DUSE_PCH:BOOL=${USE_PCH}
     -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
     -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}

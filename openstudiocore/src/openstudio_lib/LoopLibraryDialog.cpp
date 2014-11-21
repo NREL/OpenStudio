@@ -36,7 +36,7 @@ LoopLibraryDialog::LoopLibraryDialog(QWidget * parent)
   setFixedSize(280,584);
 
   setWindowTitle("Add HVAC System");
-  setWindowFlags(Qt::WindowFlags(Qt::Dialog | Qt::WindowTitleHint));
+  setWindowFlags(Qt::WindowFlags(Qt::Dialog | Qt::WindowTitleHint | Qt::WindowCloseButtonHint));
 
   QVBoxLayout * mainVLayout = new QVBoxLayout();
   mainVLayout->setContentsMargins(0,0,0,0);

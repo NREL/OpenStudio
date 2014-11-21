@@ -590,15 +590,6 @@ add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
 #--------------------------------------------------------------------------------
 # Qt
 
-if(MSVC AND MSVC_IS_EXPRESS)
-  if(CMAKE_CL_64)
-    list(APPEND CMAKE_LIBRARY_PATH "C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x64/")
-  else()
-    list(APPEND CMAKE_LIBRARY_PATH "C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x86/")
-    list(APPEND CMAKE_LIBRARY_PATH "C:/Program Files/Windows Kits/8.0/Lib/win8/um/x86/")
-  endif()
-endif()
-
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Sql REQUIRED)
 find_package(Qt5Network REQUIRED)
@@ -722,13 +713,13 @@ if(UNIX)
     set(AWS_RUBY_PATH ruby-2.0.0-aws-Darwin)
     set(AWS_RUBY_DESTINATION ".")
     set(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p594-aws-Darwin.tar.bz2)
-    set(AWS_RUBY_CHECKSUM f73fe011d09d6b82901288e83fe45bbf)
+    set(AWS_RUBY_CHECKSUM 580550e0f6027820b4dfb12a186f6fcc)
 
   elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
     set(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-x86_64)
     set(AWS_RUBY_DESTINATION "lib/openstudio-${OPENSTUDIO_VERSION}")
     set(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p594-aws-Linux-x86_64.tar.bz2)
-    set(AWS_RUBY_CHECKSUM d3cdb36ba3dbe167461d94633c4b3ba7)
+    set(AWS_RUBY_CHECKSUM c1b0fa5588b71d94ba557f32b73b9af1)
   endif()
 
   file(DOWNLOAD ${AWS_RUBY_URL} "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}.tar.bz2" TIMEOUT 120 INACTIVITY_TIMEOUT 120)
