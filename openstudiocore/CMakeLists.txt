@@ -742,7 +742,6 @@ endforeach()
 add_dependencies(ResultsViewer ResultsViewer_resources)
 
 # ruby, after loading projects
-add_subdirectory(src/ruby_cpp)
 add_subdirectory(ruby)
 
 if(UNIX AND NOT APPLE)
@@ -925,7 +924,6 @@ set(all_exe_targets
   GenerateIddFactory
   gbXMLToIdf
   OpenStudio
-  ruby_cpp
   litesql-gen
   ResultsViewer
   Pat
