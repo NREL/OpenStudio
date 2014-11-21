@@ -20436,6 +20436,7 @@ Sizing:System,
       \note Sensible and VentilationRequirement are the only available options
       \note Sensible uses the zone design air flow rates
       \note VentilationRequirement uses the system ventilation requirement
+      \required-field
       \type choice
       \key Sensible
       \key VentilationRequirement
@@ -20493,10 +20494,12 @@ Sizing:System,
       \key No
       \default No
   N9, \field Central Cooling Design Supply Air Humidity Ratio
+      \required-field
       \type real
       \default 0.008
       \units kgWater/kgDryAir
  N10, \field Central Heating Design Supply Air Humidity Ratio
+      \required-field
       \type real
       \default 0.008
       \units kgWater/kgDryAir
@@ -20516,11 +20519,6 @@ Sizing:System,
       \units m3/s
       \minimum 0
       \default 0
-  A7, \field Heating Design Air Flow Method
-      \type choice
-      \key Flow/System
-      \key DesignDay
-      \default DesignDay
  N12, \field Supply Air Flow Rate Per Floor Area During Cooling Operation
       \type real
       \units m3/s-m2
@@ -20569,7 +20567,7 @@ Sizing:System,
       \note Enter the supply air volume flow rate as a fraction of the heating supply air flow rate.
       \note Required field when Supply air Flow Rate Method during heating operation is 
       \note FractionOfAutosizedHeatingAirflow.
- N18, \field Fraction of Autosized Design Cooling Supply Air Flow Rate
+ N18, \field Fraction of Autosized Design Heating Supply Air Flow Rate 2
       \type real
       \minimum 0.0
       \note Enter the supply air volume flow rate as a fraction of the cooling supply air flow rate.

@@ -163,8 +163,9 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitHeater(
   }
 
   // Field: Fan Control Type
+  // Maps to "Supply Air Fan Operation During No Heating" in 8.2.0 and above.
 
-   idfObject.setString(ZoneHVAC_UnitHeaterFields::FanControlType,modelObject.fanControlType());
+  idfObject.setString(ZoneHVAC_UnitHeaterFields::SupplyAirFanOperationDuringNoHeating,modelObject.fanControlType());
 
    // Field: Heating Coil Object Type
 

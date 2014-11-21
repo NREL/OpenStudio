@@ -63,11 +63,11 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACBaseboardConvecti
 
   if( modelObject.isNominalCapacityAutosized() )
   {
-    idfObject.setString(ZoneHVAC_Baseboard_Convective_ElectricFields::NominalCapacity,"Autosize");
+    idfObject.setString(ZoneHVAC_Baseboard_Convective_ElectricFields::HeatingDesignCapacity,"Autosize");
   }
   else if( (value = modelObject.nominalCapacity()) )
   {
-    idfObject.setDouble(ZoneHVAC_Baseboard_Convective_ElectricFields::NominalCapacity,value.get());
+    idfObject.setDouble(ZoneHVAC_Baseboard_Convective_ElectricFields::HeatingDesignCapacity,value.get());
   }
 
   // Efficiency
