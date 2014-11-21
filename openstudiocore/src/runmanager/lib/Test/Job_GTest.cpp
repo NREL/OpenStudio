@@ -54,6 +54,8 @@ TEST_F(RunManagerTestFixture, URLTestRelative)
   boost::optional<openstudio::model::WeatherFile> weatherFile = openstudio::model::WeatherFile::setWeatherFile(m, epwFile);
   ASSERT_TRUE(weatherFile);
 
+  weatherFile->setString(OS_WeatherFileFields::Url, "./USA_CO_Golden-NREL.724666_TMY3.epw");
+
   EXPECT_EQ(m.objectsWithURLFields().size(), 1u);
 
   m.save(osm, true);
@@ -102,12 +104,12 @@ TEST_F(RunManagerTestFixture, URLTestRelative)
   // Verify that said required file is what we expect. The "from" location is the path of the file, the "to" location is a shortened
   // relative path. The relative path is expected because the file will be copied/linked/transfered into place when it is required
   // during job execution.
-  EXPECT_TRUE(requiredfiles[0].first == QUrl::fromLocalFile(openstudio::toQString(resourcesPath()/openstudio::toPath("runmanager")/openstudio::toPath("ScheduleFile.csv"))));
+  EXPECT_TRUE(requiredfiles[0].first == QUrl::fromLocalFile(openstudio::toQString(resourcesPath()/openstudio::toPath("runmanager")/openstudio::toPath("USA_CO_Golden-NREL.724666_TMY3.epw"))));
 
   // Using this version for now
   EXPECT_TRUE(requiredfiles[0].second == openstudio::toPath(requiredfiles[0].first.toLocalFile()));
   //  This version is more accurate for when we go back to relative urls in the osm file
-  //  EXPECT_TRUE(requiredfiles[0].second == openstudio::toPath("ScheduleFile.csv"));
+  //  EXPECT_TRUE(requiredfiles[0].second == openstudio::toPath("USA_CO_Golden-NREL.724666_TMY3.epw"));
 
 
   // Now, load the idf which was created in the previous step
@@ -131,8 +133,8 @@ TEST_F(RunManagerTestFixture, URLTestRelative)
       // Verify that the idf contains the one URL we expect it to, and that it's been updated to match the required file spec
       urlfound = true;
       //Using this version while we are configured to fixup the URLs to be absolute
-      EXPECT_TRUE(url == QUrl::fromLocalFile(openstudio::toQString(resourcesPath()/openstudio::toPath("runmanager")/openstudio::toPath("ScheduleFile.csv"))));
-      //  EXPECT_EQ(openstudio::toString(url->toString()), "file:ScheduleFile.csv");
+      EXPECT_TRUE(url == QUrl::fromLocalFile(openstudio::toQString(resourcesPath()/openstudio::toPath("runmanager")/openstudio::toPath("USA_CO_Golden-NREL.724666_TMY3.epw"))));
+      //  EXPECT_EQ(openstudio::toString(url->toString()), "file:USA_CO_Golden-NREL.724666_TMY3.epw");
       break;
     }
   }
@@ -154,6 +156,9 @@ TEST_F(RunManagerTestFixture, URLTestAbsolute)
   openstudio::EpwFile epwFile(epw);
   boost::optional<openstudio::model::WeatherFile> weatherFile = openstudio::model::WeatherFile::setWeatherFile(m, epwFile);
   ASSERT_TRUE(weatherFile);
+
+  weatherFile->setString(OS_WeatherFileFields::Url, openstudio::toString(resourcesPath() / openstudio::toPath("runmanager") / openstudio::toPath("USA_CO_Golden-NREL.724666_TMY3.epw")));
+
 
   EXPECT_EQ(m.objectsWithURLFields().size(), 1u);
 
@@ -198,14 +203,14 @@ TEST_F(RunManagerTestFixture, URLTestAbsolute)
   // Verify that said required file is what we expect. The "from" location is the path of the file, the "to" location is a shortened
   // relative path. The relative path is expected because the file will be copied/linked/transfered into place when it is required
   // during job execution.
-  QUrl rhs = QUrl::fromLocalFile(openstudio::toQString(resourcesPath()/openstudio::toPath("runmanager")/openstudio::toPath("ScheduleFile.csv")));
+  QUrl rhs = QUrl::fromLocalFile(openstudio::toQString(resourcesPath()/openstudio::toPath("runmanager")/openstudio::toPath("USA_CO_Golden-NREL.724666_TMY3.epw")));
   //std::string first = openstudio::toString(requiredfiles[0].first.toString());
   //std::string second = openstudio::toString(rhs.toString());
   EXPECT_TRUE(requiredfiles[0].first == rhs);
   // Using this version for now
   EXPECT_TRUE(requiredfiles[0].second == openstudio::toPath(requiredfiles[0].first.toLocalFile()));
 //  This version is more accurate for when we go back to relative urls in the osm file
-//  EXPECT_TRUE(requiredfiles[0].second == openstudio::toPath("ScheduleFile.csv"));
+//  EXPECT_TRUE(requiredfiles[0].second == openstudio::toPath("USA_CO_Golden-NREL.724666_TMY3.epw"));
 
   // Now, load the idf which was created in the previous step
   openstudio::OptionalIdfFile idf = openstudio::IdfFile::load(updatedfile.fullPath);
@@ -228,8 +233,97 @@ TEST_F(RunManagerTestFixture, URLTestAbsolute)
       // Verify that the idf contains the one URL we expect it to, and that it's been updated to match the required file spec
       urlfound = true;
       //Using this version while we are configured to fixup the URLs to be absolute
-      EXPECT_TRUE(url == QUrl::fromLocalFile(openstudio::toQString(resourcesPath()/openstudio::toPath("runmanager")/openstudio::toPath("ScheduleFile.csv"))));
-      //  EXPECT_EQ(openstudio::toString(url->toString()), "file:ScheduleFile.csv");
+      EXPECT_TRUE(url == QUrl::fromLocalFile(openstudio::toQString(resourcesPath()/openstudio::toPath("runmanager")/openstudio::toPath("USA_CO_Golden-NREL.724666_TMY3.epw"))));
+      //  EXPECT_EQ(openstudio::toString(url->toString()), "file:USA_CO_Golden-NREL.724666_TMY3.epw");
+      break;
+    }
+  }
+
+  EXPECT_TRUE(urlfound);
+
+}
+
+TEST_F(RunManagerTestFixture, URLTestFileScheme)
+{
+  openstudio::path osm = resourcesPath() / openstudio::toPath("runmanager") / openstudio::toPath("UrlTestRelative.osm");
+  openstudio::path weatherdir = resourcesPath() / openstudio::toPath("runmanager");
+  openstudio::model::Model m = openstudio::model::exampleModel();
+
+  // add weather file
+  openstudio::path epw = weatherdir / openstudio::toPath("USA_CO_Golden-NREL.724666_TMY3.epw");;
+  ASSERT_TRUE(exists(epw));
+  openstudio::EpwFile epwFile(epw);
+  boost::optional<openstudio::model::WeatherFile> weatherFile = openstudio::model::WeatherFile::setWeatherFile(m, epwFile);
+  ASSERT_TRUE(weatherFile);
+
+  EXPECT_EQ(m.objectsWithURLFields().size(), 1u);
+
+  m.save(osm, true);
+
+  openstudio::runmanager::FileInfo fi(osm, "osm");
+
+  ASSERT_TRUE(fi.exists);
+  openstudio::runmanager::Files f;
+  f.append(fi);
+
+  // Create a search path for searching relative to the input file
+  std::vector<openstudio::URLSearchPath> searchpaths;
+  searchpaths.push_back(openstudio::URLSearchPath(openstudio::toPath("."), openstudio::URLSearchPath::ToInputFile));
+
+  // Create a job that uses an osm file that contains a url
+  openstudio::runmanager::Job j = openstudio::runmanager::JobFactory::createJob(
+    openstudio::runmanager::JobType::Null,
+    openstudio::runmanager::Tools(),
+    openstudio::runmanager::JobParams(),
+    f,
+    searchpaths
+    );
+
+  ASSERT_EQ(j.inputFiles().size(), 1u);
+
+  // Grab the original file added by the user
+  openstudio::runmanager::FileInfo origfile = j.inputFiles().at(0);
+
+  // Grab the FileInfo that was actually added to the job (it should have been updated by the factory)
+  openstudio::runmanager::FileInfo updatedfile = j.inputFiles().at(0);
+
+  // not updated because using file scheme
+  EXPECT_TRUE(origfile == updatedfile);
+
+  // Verify that the new file was created, that it exists and that it resides at a different location
+  // than the original file.
+  EXPECT_TRUE(updatedfile.exists);
+  EXPECT_EQ(openstudio::toString(updatedfile.fullPath), openstudio::toString(fi.fullPath));
+  EXPECT_EQ(updatedfile.filename, fi.filename);
+
+  // Verify that the new FileInfo object does not have a required file attached to it
+  std::vector<std::pair<QUrl, openstudio::path> > requiredfiles = updatedfile.requiredFiles;
+
+  EXPECT_EQ(0, requiredfiles.size());
+  
+  // Now, load the idf which was created in the previous step
+  openstudio::OptionalIdfFile idf = openstudio::IdfFile::load(updatedfile.fullPath);
+
+  ASSERT_TRUE(idf);
+  openstudio::Workspace ws(*idf);
+  std::vector<openstudio::WorkspaceObject> urlobjects = ws.objectsWithURLFields();
+
+  ASSERT_EQ(1u, urlobjects.size());
+  openstudio::WorkspaceObject wso = urlobjects.at(0);
+  const unsigned int numfields = wso.numFields();
+
+  bool urlfound = false;
+  for (unsigned int i = 0; i < numfields; ++i)
+  {
+    boost::optional<QUrl> url = wso.getURL(i);
+
+    if (url)
+    {
+      // Verify that the idf contains the one URL we expect it to, and that it's been updated to match the required file spec
+      urlfound = true;
+      //Using this version while we are configured to fixup the URLs to be absolute
+      EXPECT_TRUE(url == QUrl::fromLocalFile(openstudio::toQString(resourcesPath() / openstudio::toPath("runmanager") / openstudio::toPath("USA_CO_Golden-NREL.724666_TMY3.epw"))));
+      //  EXPECT_EQ(openstudio::toString(url->toString()), "file:USA_CO_Golden-NREL.724666_TMY3.epw");
       break;
     }
   }
