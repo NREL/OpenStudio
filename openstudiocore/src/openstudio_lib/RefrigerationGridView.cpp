@@ -55,6 +55,8 @@
 // These defines provide a common area for field display names
 // used on column headers, and other grid widgets
 
+#define SELECTED "All"
+
 // Display Case Fields
 #define ANTISWEATHEATERCONTROLTYPE "Anti Sweat Heater Control Type"
 #define AVAILABILITYSCHEDULE "Availability Schedule" // TODO this has not yet been implemented
@@ -283,10 +285,10 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
 
 }
 
-void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
+void RefrigerationCaseGridController::addColumns(const QString &/*category*/, std::vector<QString> & fields)
 {
   // always show name column
-  fields.insert(fields.begin(), NAME);
+  fields.insert(fields.begin(), {NAME, SELECTED});
 
   m_baseConcepts.clear();
 
@@ -299,6 +301,8 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
                             m_isIP,
                             NullAdapter(&model::RefrigerationCase::ratedAmbientTemperature),
                             NullAdapter(&model::RefrigerationCase::setRatedAmbientTemperature));
+    }else if(field == SELECTED){
+      addSelectColumn(QString(SELECTED));
     }else if(field == RATEDAMBIENTRELATIVEHUMIDITY){
       addValueEditColumn(QString(RATEDAMBIENTRELATIVEHUMIDITY),
                          NullAdapter(&model::RefrigerationCase::ratedAmbientRelativeHumidity),
@@ -749,10 +753,10 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
 
 }
 
-void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields)
+void RefrigerationWalkInGridController::addColumns(const QString &/*category*/, std::vector<QString> & fields)
 {
   // always show name column
-  fields.insert(fields.begin(), NAME);
+  fields.insert(fields.begin(), {NAME, SELECTED});
 
   m_baseConcepts.clear();
 
@@ -766,6 +770,8 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
             CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setDefrostType),
             boost::optional<std::function<void(model::RefrigerationWalkIn *)> >(),
             boost::optional<DataSource>());
+    }else if(field == SELECTED){
+      addSelectColumn(QString(SELECTED));
     }else if(field == DEFROSTCONTROLTYPE){
       addComboBoxColumn<std::string,model::RefrigerationWalkIn>(
             QString(DEFROSTCONTROLTYPE),

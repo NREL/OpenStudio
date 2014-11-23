@@ -62,6 +62,7 @@
 // used on column headers, and other grid widgets
 
 #define NAME "Name"
+#define SELECTED "All"
 
 //HVAC SYSTEMS
 #define IDEALAIRLOADS "Turn On\nIdeal\nAir Loads"
@@ -212,10 +213,10 @@ void ThermalZonesGridController::setCategoriesAndFields()
 
 }
 
-void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
+void ThermalZonesGridController::addColumns(const QString &/*category*/, std::vector<QString> & fields)
 {
   // always show name column
-  fields.insert(fields.begin(), NAME);
+  fields.insert(fields.begin(), {NAME, SELECTED});
 
   m_baseConcepts.clear();
 
@@ -224,7 +225,8 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
       addCheckBoxColumn(QString(IDEALAIRLOADS),
                         NullAdapter(&model::ThermalZone::useIdealAirLoads),
                         NullAdapter(&model::ThermalZone::setUseIdealAirLoads));
-
+    }else if(field == SELECTED){
+      addSelectColumn(QString(SELECTED));
     }else if(field == ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE){
       addQuantityEditColumn(QString(ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE),
                             QString("C"),

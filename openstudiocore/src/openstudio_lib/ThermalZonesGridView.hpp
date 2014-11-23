@@ -80,7 +80,7 @@ protected:
 
   virtual void setCategoriesAndFields();
 
-  virtual void addColumns(std::vector<QString> & fields);
+  virtual void addColumns(const QString &t_category, std::vector<QString> & fields);
 
   virtual void checkSelectedFields();
 

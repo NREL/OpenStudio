@@ -555,7 +555,7 @@ protected:
   // a dynamic, user-preference column.
   // This function will be called from the slot
   // connected to the QButtonGroup signal
-  virtual void addColumns(std::vector<QString> & fields) = 0;
+  virtual void addColumns(const QString &category, std::vector<QString> & fields) = 0;
 
   // Call this function to get the color for the cell color
   virtual QString getColor(const model::ModelObject & modelObject) = 0;

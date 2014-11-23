@@ -106,9 +106,9 @@
 // used on column headers, and other grid widgets
 
 #define NAME "Space Type Name"
+#define SELECTED "All"
 
 // GENERAL
-#define GENERALSELECTED "All2"
 #define RENDERINGCOLOR "Rendering\nColor"
 #define DEFAULTCONSTRUCTIONSET "Default Construction Set"
 #define DEFAULTSCHEDULESET "Default Schedule Set"
@@ -117,7 +117,6 @@
 #define SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS "Space Infiltration Effective Leakage Areas"
 
 // LOADS
-#define LOADSELECTED "All"
 #define LOADNAME "Load Name"
 #define MULTIPLIER "Multiplier"
 #define DEFINITION "Definition"
@@ -201,7 +200,6 @@ void SpaceTypesGridController::setCategoriesAndFields()
 
   {
     std::vector<QString> fields;
-    fields.push_back(GENERALSELECTED);
     fields.push_back(RENDERINGCOLOR);
     fields.push_back(DEFAULTCONSTRUCTIONSET);
     fields.push_back(DEFAULTSCHEDULESET);
@@ -214,7 +212,6 @@ void SpaceTypesGridController::setCategoriesAndFields()
 
   {
     std::vector<QString> fields;
-    fields.push_back(LOADSELECTED);
     fields.push_back(LOADNAME);
     fields.push_back(MULTIPLIER);
     fields.push_back(DEFINITION);
@@ -236,10 +233,10 @@ void SpaceTypesGridController::setCategoriesAndFields()
 
 }
 
-void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
+void SpaceTypesGridController::addColumns(const QString &category, std::vector<QString> & fields)
 {
-  // always show name column
-  fields.insert(fields.begin(), NAME);
+  // always show name and selected columns
+  fields.insert(fields.begin(), {NAME, SELECTED});
 
   m_baseConcepts.clear();
 
@@ -254,15 +251,9 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         getter,
         setter);
 
-    } else if (field == GENERALSELECTED) {
-      addSelectColumn(QString(GENERALSELECTED) /*,
-          DataSource(
-            allLoads,
-            true
-            )*/
-          );
-
-    } else if (field == LOADNAME || field == MULTIPLIER || field == DEFINITION || field == SCHEDULE || field == ACTIVITYSCHEDULE || field == LOADSELECTED) {
+    } else if (field == SELECTED && category != "Loads") {
+      addSelectColumn(QString(SELECTED));
+    } else if (field == LOADNAME || field == MULTIPLIER || field == DEFINITION || field == SCHEDULE || field == ACTIVITYSCHEDULE || field == SELECTED) {
       // Create a lambda function that collates all of the loads in a space type 
       // and returns them as an std::vector
       std::function<std::vector<model::ModelObject> (const model::SpaceType &)> allLoads(
@@ -825,8 +816,8 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         );
 
       }
-      else if (field == LOADSELECTED) {
-        addSelectColumn(QString(LOADSELECTED),
+      else if (field == SELECTED) {
+        addSelectColumn(QString(SELECTED),
             DataSource(
               allLoads,
               true
