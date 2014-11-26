@@ -83,7 +83,6 @@ class MODEL_API Building : public ParentObject {
   boost::optional<int> standardsNumberOfLivingUnits() const;
 
   double nominalFloortoCeilingHeight() const;
-  Quantity getNominalFloortoCeilingHeight(bool returnIP = false) const;
   bool isNominalFloortoCeilingHeightDefaulted() const;
 
   /// Returns the standards building type. This is a freeform field used to identify the building type for standards.
@@ -121,7 +120,6 @@ class MODEL_API Building : public ParentObject {
   void resetStandardsNumberOfLivingUnits();
 
   bool setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight);
-  bool setNominalFloortoCeilingHeight(const Quantity& nominalFloortoCeilingHeight);
   void resetNominalFloortoCeilingHeight(); 
 
   /// Sets the standards building type. This is a freeform field used to identify the building type for standards.

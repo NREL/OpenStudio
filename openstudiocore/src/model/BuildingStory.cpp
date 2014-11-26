@@ -106,12 +106,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity BuildingStory_Impl::getNominalFloortoCeilingHeight(bool returnIP) const {
-    OSOptionalQuantity value = getQuantity(OS_BuildingStoryFields::NominalFloortoCeilingHeight, true, returnIP);
-    OS_ASSERT(value.isSet());
-    return value.get();
-  }
-
   bool BuildingStory_Impl::isNominalFloortoCeilingHeightDefaulted() const {
     return isEmpty(OS_BuildingStoryFields::NominalFloortoCeilingHeight);
   }
@@ -163,10 +157,6 @@ namespace detail {
   bool BuildingStory_Impl::setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight) {
     bool result = setDouble(OS_BuildingStoryFields::NominalFloortoCeilingHeight, nominalFloortoCeilingHeight);
     return result;
-  }
-
-  bool BuildingStory_Impl::setNominalFloortoCeilingHeight(const Quantity& nominalFloortoCeilingHeight) {
-    return setQuantity(OS_BuildingStoryFields::NominalFloortoCeilingHeight, nominalFloortoCeilingHeight);
   }
 
   void BuildingStory_Impl::resetNominalFloortoCeilingHeight() {
@@ -354,10 +344,6 @@ double BuildingStory::nominalFloortoCeilingHeight() const {
   return getImpl<detail::BuildingStory_Impl>()->nominalFloortoCeilingHeight();
 }
 
-Quantity BuildingStory::getNominalFloortoCeilingHeight(bool returnIP) const {
-  return getImpl<detail::BuildingStory_Impl>()->getNominalFloortoCeilingHeight(returnIP);
-}
-
 bool BuildingStory::isNominalFloortoCeilingHeightDefaulted() const {
   return getImpl<detail::BuildingStory_Impl>()->isNominalFloortoCeilingHeightDefaulted();
 }
@@ -391,10 +377,6 @@ void BuildingStory::resetNominalFloortoFloorHeight() {
 }
 
 bool BuildingStory::setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight) {
-  return getImpl<detail::BuildingStory_Impl>()->setNominalFloortoCeilingHeight(nominalFloortoCeilingHeight);
-}
-
-bool BuildingStory::setNominalFloortoCeilingHeight(const Quantity& nominalFloortoCeilingHeight) {
   return getImpl<detail::BuildingStory_Impl>()->setNominalFloortoCeilingHeight(nominalFloortoCeilingHeight);
 }
 

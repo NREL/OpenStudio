@@ -89,7 +89,6 @@ namespace detail {
     bool isNominalFloortoFloorHeightDefaulted() const;
 
     double nominalFloortoCeilingHeight() const;
-    Quantity getNominalFloortoCeilingHeight(bool returnIP = false) const;
     bool isNominalFloortoCeilingHeightDefaulted() const;
 
     //@}
@@ -111,7 +110,6 @@ namespace detail {
     void resetNominalFloortoFloorHeight();
 
     bool setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight);
-    bool setNominalFloortoCeilingHeight(const Quantity& nominalFloortoCeilingHeight);
     void resetNominalFloortoCeilingHeight();
 
     //@}

@@ -131,7 +131,6 @@ namespace detail {
     boost::optional<int> standardsNumberOfLivingUnits() const;
 
     double nominalFloortoCeilingHeight() const;
-    Quantity getNominalFloortoCeilingHeight(bool returnIP = false) const;
     bool isNominalFloortoCeilingHeightDefaulted() const;
 
     boost::optional<std::string> standardsBuildingType() const;
@@ -164,7 +163,6 @@ namespace detail {
     void resetStandardsNumberOfLivingUnits();
 
     bool setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight);
-    bool setNominalFloortoCeilingHeight(const Quantity& nominalFloortoCeilingHeight);
     void resetNominalFloortoCeilingHeight();
 
     bool setStandardsBuildingType(const std::string& standardsBuildingType);

@@ -193,12 +193,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity Building_Impl::getNominalFloortoCeilingHeight(bool returnIP) const {
-    OSOptionalQuantity value = getQuantity(OS_BuildingFields::NominalFloortoCeilingHeight, true, returnIP);
-    OS_ASSERT(value.isSet());
-    return value.get();
-  }
-
   bool Building_Impl::isNominalFloortoCeilingHeightDefaulted() const {
     return isEmpty(OS_BuildingFields::NominalFloortoCeilingHeight);
   }
@@ -328,10 +322,6 @@ namespace detail {
   bool Building_Impl::setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight) {
     bool result = setDouble(OS_BuildingFields::NominalFloortoCeilingHeight, nominalFloortoCeilingHeight);
     return result;
-  }
-
-  bool Building_Impl::setNominalFloortoCeilingHeight(const Quantity& nominalFloortoCeilingHeight) {
-    return setQuantity(OS_BuildingFields::NominalFloortoCeilingHeight, nominalFloortoCeilingHeight);
   }
 
   void Building_Impl::resetNominalFloortoCeilingHeight() {
@@ -964,10 +954,6 @@ double Building::nominalFloortoCeilingHeight() const {
   return getImpl<detail::Building_Impl>()->nominalFloortoCeilingHeight();
 }
 
-Quantity Building::getNominalFloortoCeilingHeight(bool returnIP) const {
-  return getImpl<detail::Building_Impl>()->getNominalFloortoCeilingHeight(returnIP);
-}
-
 bool Building::isNominalFloortoCeilingHeightDefaulted() const {
   return getImpl<detail::Building_Impl>()->isNominalFloortoCeilingHeightDefaulted();
 }
@@ -1029,10 +1015,6 @@ void Building::resetStandardsNumberOfLivingUnits(){
 }
 
 bool Building::setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight) {
-  return getImpl<detail::Building_Impl>()->setNominalFloortoCeilingHeight(nominalFloortoCeilingHeight);
-}
-
-bool Building::setNominalFloortoCeilingHeight(const Quantity& nominalFloortoCeilingHeight) {
   return getImpl<detail::Building_Impl>()->setNominalFloortoCeilingHeight(nominalFloortoCeilingHeight);
 }
 

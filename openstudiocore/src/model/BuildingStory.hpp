@@ -69,7 +69,6 @@ class MODEL_API BuildingStory : public ModelObject {
   bool isNominalFloortoFloorHeightDefaulted() const;
 
   double nominalFloortoCeilingHeight() const;
-  Quantity getNominalFloortoCeilingHeight(bool returnIP = false) const;
   bool isNominalFloortoCeilingHeightDefaulted() const;
 
   //@}
@@ -91,7 +90,6 @@ class MODEL_API BuildingStory : public ModelObject {
   void resetNominalFloortoFloorHeight();
 
   bool setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight);
-  bool setNominalFloortoCeilingHeight(const Quantity& nominalFloortoCeilingHeight);
   void resetNominalFloortoCeilingHeight();
 
   //@}
