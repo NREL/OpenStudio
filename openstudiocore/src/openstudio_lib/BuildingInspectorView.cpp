@@ -565,19 +565,11 @@ void BuildingInspectorView::attach(openstudio::model::Building& building)
     boost::optional<IntSetter>(std::bind(&model::Building::setStandardsNumberOfAboveGroundStories, building, std::placeholders::_1)),
     boost::optional<NoFailAction>(std::bind(&model::Building::resetStandardsNumberOfAboveGroundStories, building)));
 
-  //m_relocatable->bind<std::string>(
-  //  building,
-  //  static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
-  //  std::bind(&model::Building::suggestedRelocatables, building),
-  //  OptionalStringGetter(std::bind(&model::Building::relocatable, building)),
-  //  std::bind(&openstudio::model::Building::setRelocatable, building, std::placeholders::_1));
-
-
   m_relocatable->bind(
     building,
     std::bind(&model::Building::relocatable, building),
     boost::optional<BoolSetter>(std::bind(&model::Building::setRelocatable, building, std::placeholders::_1)),
-    boost::optional<NoFailAction>(std::bind(&model::Building::resetRelocatable, building)),
+    boost::optional<NoFailAction>(),
     boost::optional<BasicQuery>(std::bind(&model::Building::isRelocatableDefaulted, building))
   );
 

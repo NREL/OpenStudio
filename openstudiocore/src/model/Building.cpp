@@ -351,12 +351,6 @@ namespace detail {
     return result;
   }
 
-  void Building_Impl::resetRelocatable()
-  {
-    bool test = setString(OS_BuildingFields::Relocatable, "");
-    OS_ASSERT(test);
-  }
-
   boost::optional<SpaceType> Building_Impl::spaceType() const
   {
     return getObject<ModelObject>().getModelObjectTarget<SpaceType>(OS_BuildingFields::SpaceTypeName);
@@ -1034,10 +1028,6 @@ void Building::resetStandardsBuildingType(){
 
 void Building::setRelocatable(bool isRelocatable){
   getImpl<detail::Building_Impl>()->setRelocatable(isRelocatable); 
-}
-
-void Building::resetRelocatable(){
-  getImpl<detail::Building_Impl>()->resetRelocatable();
 }
 
 boost::optional<SpaceType> Building::spaceType() const

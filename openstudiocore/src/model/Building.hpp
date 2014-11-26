@@ -130,8 +130,6 @@ class MODEL_API Building : public ParentObject {
 
   void setRelocatable(bool isRelocatable);
 
-  void resetRelocatable();
-
   //@}
   /** @name Other */
   //@{

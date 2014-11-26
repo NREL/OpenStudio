@@ -170,8 +170,6 @@ namespace detail {
 
     bool setRelocatable(bool isRelocatable);
 
-    void resetRelocatable();
-
     //@}
 
     boost::optional<SpaceType> spaceType() const;
