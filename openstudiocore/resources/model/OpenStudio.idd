@@ -1279,50 +1279,6 @@ OS:SizingPeriod:WeatherFileDays,
        \key Yes
        \key No
 
-OS:TimeDependentValuation,
-       \unique-object
-       \url-object
-       \extensible:3
-       \min-fields 8
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2, \field Name
-       \type alpha
-       \required-field
-  A3, \field Url
-       \type url
-       \required-field
-       \retaincase
-  A5, \field Checksum
-       \type alpha
-  A6, \field Active Building Sector
-       \type choice
-       \default Commercial
-       \key Commercial
-       \key Residential
-  A7, \field Available Fuel Type
-       \type choice
-       \required-field
-       \begin-extensible
-       \key Electricity
-       \key NaturalGas
-       \key Gasoline
-       \key Diesel
-       \key FuelOil_1
-       \key FuelOil_2
-       \key Propane
-       \key Water
-       \key Steam
-       \key DistrictCooling
-       \key DistrictHeating
-  N1, \field Commercial Column Index For Fuel Type
-       \type integer
-       \minimum 0
-  N2; \field Residential Column Index For Fuel Type
-       \type integer
-       \minimum 0
-
 OS:UtilityCost:Charge:Block,
        \extensible:2
        \min-fields 1

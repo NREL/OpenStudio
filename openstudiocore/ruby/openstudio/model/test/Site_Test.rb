@@ -43,10 +43,6 @@ class Site_Test < MiniTest::Unit::TestCase
     numSiteChildren = numSiteChildren + 1
     assert_equal(numSiteChildren,site.children.size)
     
-    timeDependentValuation = model.getTimeDependentValuation
-    numSiteChildren = numSiteChildren + 1
-    assert_equal(numSiteChildren,site.children.size)
-    
     weatherFile = model.getWeatherFile
     numSiteChildren = numSiteChildren + 1
     assert_equal(numSiteChildren,site.children.size)

@@ -40,8 +40,6 @@
 #include "../../../utilities/bcl/BCLMeasure.hpp"
 #include "../../../utilities/core/ApplicationPathHelpers.hpp"
 
-
-#include <utilities/idd/OS_TimeDependentValuation_FieldEnums.hxx>
 #include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
 
 #include <boost/filesystem/path.hpp>

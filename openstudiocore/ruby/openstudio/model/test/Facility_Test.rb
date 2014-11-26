@@ -34,11 +34,6 @@ class Facility_Test < MiniTest::Unit::TestCase
     assert(facility.getAttribute("totalSiteEnergy").empty?)
     assert((not facility.isSettableAttribute("endUses")))
     assert(facility.getAttribute("endUses").empty?)
-    assert(facility.totalEnergyTimeDependentValuation.empty?)
-    assert((not facility.isSettableAttribute("totalEnergyTimeDependentValuation")))
-    assert(facility.isOptionalAttribute("totalEnergyTimeDependentValuation"))
-    assert(facility.getAttribute("totalEnergyTimeDependentValuation").empty?)    
-  
   end
 
 end 

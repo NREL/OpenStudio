@@ -83,12 +83,10 @@ set(runmanager_resources_src
   runmanager/jsonworkflowtest/inputs/measures/reduce_ventilation_by_percentage/measure.rb
   runmanager/jsonworkflowtest/inputs/measures/reduce_ventilation_by_percentage/measure.xml
   runmanager/killtree.sh
-  runmanager/ScheduleFile.csv
   runmanager/SimpleModel.osm
   runmanager/test.ies
   runmanager/test.rb
   runmanager/test.xml
-  runmanager/UrlTest.osm.in
   runmanager/USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw
   runmanager/USA_CO_Golden-NREL.724666_TMY3.epw
   runmanager/USA_FL_Tampa.Intl.AP.722110_TMY3.epw

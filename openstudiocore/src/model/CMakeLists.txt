@@ -844,9 +844,6 @@ set(${target_name}_src
   ZoneControlThermostatStagedDualSetpoint.hpp
   ZoneControlThermostatStagedDualSetpoint_Impl.hpp
   ZoneControlThermostatStagedDualSetpoint.cpp
-  TimeDependentValuation.hpp
-  TimeDependentValuation_Impl.hpp
-  TimeDependentValuation.cpp
   Timestep.hpp
   Timestep_Impl.hpp
   Timestep.cpp
@@ -1147,7 +1144,6 @@ set(${target_name}_moc
   Surface_Impl.hpp
   ThermalZone_Impl.hpp
   ThermostatSetpointDualSetpoint_Impl.hpp
-  TimeDependentValuation_Impl.hpp
   Timestep_Impl.hpp
   WaterHeaterMixed_Impl.hpp
   WaterUseConnections_Impl.hpp
@@ -1384,7 +1380,6 @@ set(${target_name}_test_src
   test/Surface_GTest.cpp
   test/TableMultiVariableLookup_GTest.cpp
   test/ThermalZone_GTest.cpp
-  test/TimeDependentValuation_GTest.cpp
   test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp
   test/WaterUseConnections_GTest.cpp

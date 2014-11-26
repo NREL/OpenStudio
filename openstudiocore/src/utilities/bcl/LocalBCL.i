@@ -6,7 +6,6 @@
   #include <utilities/bcl/BCLComponent.hpp>
   #include <utilities/bcl/BCLFileReference.hpp>
   #include <utilities/bcl/BCLMeasure.hpp>
-  #include <utilities/bcl/OnDemandGenerator.hpp>
   #include <utilities/bcl/LocalBCL.hpp>
   #include <utilities/bcl/RemoteBCL.hpp>
   #include <utilities/core/PathWatcher.hpp>
@@ -68,22 +67,6 @@
 %template(OptionalBCLMeasure) boost::optional<openstudio::BCLMeasure>;
 %template(BCLMeasureVector) std::vector<openstudio::BCLMeasure>;
 
-%ignore std::vector<openstudio::OnDemandGeneratorValueRestriction>::vector(size_type);
-%ignore std::vector<openstudio::OnDemandGeneratorValueRestriction>::resize(size_type);
-%template(OptionalOnDemandGeneratorValueRestriction) boost::optional<openstudio::OnDemandGeneratorValueRestriction>;
-%template(OnDemandGeneratorValueRestrictionVector) std::vector<openstudio::OnDemandGeneratorValueRestriction>;
-
-%ignore std::vector<openstudio::OnDemandGeneratorArgument>::vector(size_type);
-%ignore std::vector<openstudio::OnDemandGeneratorArgument>::resize(size_type);
-%template(OptionalOnDemandGeneratorArgument) boost::optional<openstudio::OnDemandGeneratorArgument>;
-%template(OnDemandGeneratorArgumentVector) std::vector<openstudio::OnDemandGeneratorArgument>;
-
-%ignore std::vector<openstudio::OnDemandGenerator>::vector(size_type);
-%ignore std::vector<openstudio::OnDemandGenerator>::resize(size_type);
-%template(OptionalOnDemandGenerator) boost::optional<openstudio::OnDemandGenerator>;
-%template(OnDemandGeneratorVector) std::vector<openstudio::OnDemandGenerator>;
-
-%include <utilities/bcl/OnDemandGenerator.hpp>
 %include <utilities/bcl/BCLFileReference.hpp>
 %include <utilities/bcl/BCLComponent.hpp>
 %include <utilities/bcl/BCLMeasure.hpp>

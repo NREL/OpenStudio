@@ -54,13 +54,6 @@ namespace detail {
     Q_PROPERTY(boost::optional<double> annualDistrictHeatingTotalCost READ annualDistrictHeatingTotalCost STORED false);
     Q_PROPERTY(boost::optional<double> annualWaterTotalCost READ annualWaterTotalCost STORED false);
 
-    Q_PROPERTY(boost::optional<double> totalEnergyTimeDependentValuation READ totalEnergyTimeDependentValuation STORED false);
-    Q_PROPERTY(boost::optional<double> totalCostTimeDependentValuation READ totalCostTimeDependentValuation STORED false);
-    Q_PROPERTY(boost::optional<double> electricityEnergyTimeDependentValuation READ electricityEnergyTimeDependentValuation STORED false);
-    Q_PROPERTY(boost::optional<double> electricityCostTimeDependentValuation READ electricityCostTimeDependentValuation STORED false);
-    Q_PROPERTY(boost::optional<double> fossilFuelEnergyTimeDependentValuation READ fossilFuelEnergyTimeDependentValuation STORED false);
-    Q_PROPERTY(boost::optional<double> fossilFuelCostTimeDependentValuation READ fossilFuelCostTimeDependentValuation STORED false);
-
     Q_PROPERTY(boost::optional<double> economicsCapitalCost READ economicsCapitalCost STORED false);
     Q_PROPERTY(boost::optional<double> economicsEnergyCost READ economicsEnergyCost STORED false);
     Q_PROPERTY(boost::optional<double> economicsTLCC READ economicsTLCC STORED false);
@@ -254,13 +247,6 @@ namespace detail {
     boost::optional<double> annualDistrictCoolingTotalCost() const;
     boost::optional<double> annualDistrictHeatingTotalCost() const;
     boost::optional<double> annualWaterTotalCost() const;
-
-    boost::optional<double> totalEnergyTimeDependentValuation() const;
-    boost::optional<double> totalCostTimeDependentValuation() const;
-    boost::optional<double> electricityEnergyTimeDependentValuation() const;
-    boost::optional<double> electricityCostTimeDependentValuation() const;
-    boost::optional<double> fossilFuelEnergyTimeDependentValuation() const;
-    boost::optional<double> fossilFuelCostTimeDependentValuation() const;
 
     boost::optional<double> economicsCapitalCost() const;
     boost::optional<double> economicsEnergyCost() const;
