@@ -342,6 +342,7 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   vLayout->addWidget(label);
 
   m_relocatable = new OSSwitch2();
+  m_relocatable->makeTrueFalse();
   vLayout->addWidget(m_relocatable);
 
   vLayout->addStretch();

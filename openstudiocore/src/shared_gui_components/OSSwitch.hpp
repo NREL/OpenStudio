@@ -35,6 +35,11 @@ class OSSwitch2 : public QPushButton {
 
   virtual ~OSSwitch2() {}
 
+  // Note: default
+  void makeOnOff();
+
+  void makeTrueFalse();
+
   void bind(model::ModelObject & modelObject,
             BoolGetter get,
             boost::optional<BoolSetter> set=boost::none,
