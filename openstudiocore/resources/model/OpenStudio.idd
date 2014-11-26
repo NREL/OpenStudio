@@ -4327,6 +4327,7 @@ OS:Building,
        \minimum 0
   A8, \field Relocatable
        \type choice
+       \default False
        \key True
        \key False
   N6; \field Nominal Floor to Ceiling Height
