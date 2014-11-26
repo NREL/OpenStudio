@@ -248,19 +248,15 @@ namespace detail {
     return result;
   }
 
-  boost::optional<std::string> Building_Impl::relocatable() const
+  bool Building_Impl::relocatable() const
   {
-    return getString(OS_BuildingFields::Relocatable, false, true);
+    boost::optional<std::string> value = getString(OS_BuildingFields::Relocatable, true, true);
+    OS_ASSERT(value);
+    return openstudio::istringEqual(value.get(), "True");
   }
-
-  std::vector<std::string> Building_Impl::suggestedRelocatables() const
-  {
-    std::vector<std::string> result;
-
-    result.push_back("True");
-    result.push_back("False");
-
-    return result;
+  
+  bool Building_Impl::isRelocatableDefaulted() const {
+    return isEmpty(OS_BuildingFields::Relocatable);
   }
 
   void Building_Impl::setNorthAxis(double northAxis) {
@@ -342,9 +338,15 @@ namespace detail {
     OS_ASSERT(test);
   }
 
-  bool Building_Impl::setRelocatable(const std::string& relocatable)
+  bool Building_Impl::setRelocatable(bool relocatable)
   {
-    bool result = setString(OS_BuildingFields::Relocatable, relocatable);
+    bool result = false;
+    if (relocatable) {
+      result = setString(OS_BuildingFields::Relocatable, "True");
+    }
+    else {
+      result = setString(OS_BuildingFields::Relocatable, "False");
+    }
     OS_ASSERT(result);
     return result;
   }
@@ -966,12 +968,12 @@ std::vector<std::string> Building::suggestedStandardsBuildingTypes() const{
   return getImpl<detail::Building_Impl>()->suggestedStandardsBuildingTypes();
 }
 
-boost::optional<std::string> Building::relocatable() const{
+bool Building::relocatable() const{
   return getImpl<detail::Building_Impl>()->relocatable();
 }
 
-std::vector<std::string> Building::suggestedRelocatables() const{
-  return getImpl<detail::Building_Impl>()->suggestedRelocatables();
+bool Building::isRelocatableDefaulted() const {
+  return getImpl<detail::Building_Impl>()->isRelocatableDefaulted();
 }
 
 void Building::setNorthAxis(double northAxis) {
@@ -1030,8 +1032,8 @@ void Building::resetStandardsBuildingType(){
   getImpl<detail::Building_Impl>()->resetStandardsBuildingType();
 }
 
-bool Building::setRelocatable(const std::string& relocatable){
-  return getImpl<detail::Building_Impl>()->setRelocatable(relocatable);
+void Building::setRelocatable(bool isRelocatable){
+  getImpl<detail::Building_Impl>()->setRelocatable(isRelocatable); 
 }
 
 void Building::resetRelocatable(){

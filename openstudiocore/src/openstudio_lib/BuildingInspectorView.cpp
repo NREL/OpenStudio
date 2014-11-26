@@ -23,6 +23,7 @@
 #include "../shared_gui_components/OSIntegerEdit.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
+#include "../shared_gui_components/OSSwitch.hpp"
 
 #include "ModelObjectItem.hpp"
 #include "OSDropZone.hpp"
@@ -340,7 +341,7 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   label->setObjectName("StandardsInfo");
   vLayout->addWidget(label);
 
-  m_relocatable = new OSComboBox2();
+  m_relocatable = new OSSwitch2();
   vLayout->addWidget(m_relocatable);
 
   vLayout->addStretch();
@@ -564,14 +565,22 @@ void BuildingInspectorView::attach(openstudio::model::Building& building)
     boost::optional<IntSetter>(std::bind(&model::Building::setStandardsNumberOfAboveGroundStories, building, std::placeholders::_1)),
     boost::optional<NoFailAction>(std::bind(&model::Building::resetStandardsNumberOfAboveGroundStories, building)));
 
-  m_relocatable->bind<std::string>(
+  //m_relocatable->bind<std::string>(
+  //  building,
+  //  static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+  //  std::bind(&model::Building::suggestedRelocatables, building),
+  //  OptionalStringGetter(std::bind(&model::Building::relocatable, building)),
+  //  std::bind(&openstudio::model::Building::setRelocatable, building, std::placeholders::_1));
+
+
+  m_relocatable->bind(
     building,
-    static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
-    std::bind(&model::Building::suggestedRelocatables, building),
-    OptionalStringGetter(std::bind(&model::Building::relocatable, building)),
-    std::bind(&openstudio::model::Building::setRelocatable, building, std::placeholders::_1),
-    NoFailAction(std::bind(&model::Building::resetRelocatable, building)));
-  
+    std::bind(&model::Building::relocatable, building),
+    boost::optional<BoolSetter>(std::bind(&model::Building::setRelocatable, building, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Building::resetRelocatable, building)),
+    boost::optional<BasicQuery>(std::bind(&model::Building::isRelocatableDefaulted, building))
+  );
+
   m_floorToCeilingHeight->bind(
     m_isIP,
     *m_building,

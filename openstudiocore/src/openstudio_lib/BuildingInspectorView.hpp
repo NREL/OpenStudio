@@ -32,13 +32,13 @@ class QPushButton;
 
 namespace openstudio {
 
-class OSComboBox2;
 class OSComboBox;
 class OSDropZone;
 class OSIntegerEdit2;
 class OSLineEdit;
 class OSQuantityEdit2;
 class OSQuantityEdit;
+class OSSwitch2;
 
 class BuildingSpaceTypeVectorController : public ModelObjectVectorController
 {
@@ -149,7 +149,7 @@ class BuildingInspectorView : public ModelObjectInspectorView
     OSIntegerEdit2* m_numberLivingUnits;
     OSIntegerEdit2* m_numberStories;
     OSIntegerEdit2* m_numberAboveGroundStories;
-    OSComboBox2* m_relocatable;
+    OSSwitch2* m_relocatable;
     OSQuantityEdit2 * m_floorToCeilingHeight = nullptr;
     bool m_isIP;
 

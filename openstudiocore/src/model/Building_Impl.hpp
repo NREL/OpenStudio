@@ -137,9 +137,9 @@ namespace detail {
 
     std::vector<std::string> suggestedStandardsBuildingTypes() const;
 
-    boost::optional<std::string> relocatable() const;
+    bool relocatable() const;
 
-    std::vector<std::string> suggestedRelocatables() const;
+    bool isRelocatableDefaulted() const;
 
     //@}
     /** @name Setters */
@@ -168,7 +168,8 @@ namespace detail {
     bool setStandardsBuildingType(const std::string& standardsBuildingType);
     void resetStandardsBuildingType();
 
-    bool setRelocatable(const std::string& relocatable);
+    bool setRelocatable(bool isRelocatable);
+
     void resetRelocatable();
 
     //@}
