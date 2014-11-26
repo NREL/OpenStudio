@@ -359,15 +359,8 @@ BuildingStoryInspectorView::BuildingStoryInspectorView(bool isIP, const openstud
 
   vLayout->addStretch();
 
-  mainGridLayout->addLayout(vLayout, row, 1);
+  mainGridLayout->addLayout(vLayout, row, 0);
   mainGridLayout->setRowMinimumHeight(row, 30);
-
-  ++row;
-
-  line = new QFrame();
-  line->setFrameShape(QFrame::HLine);
-  line->setFrameShadow(QFrame::Sunken);
-  mainGridLayout->addWidget(line, row, 0, 1, 2);
 
   // Nominal Floor to Floor Height
   vLayout = new QVBoxLayout();
@@ -382,8 +375,15 @@ BuildingStoryInspectorView::BuildingStoryInspectorView(bool isIP, const openstud
 
   vLayout->addStretch();
 
-  mainGridLayout->addLayout(vLayout, row, 0);
+  mainGridLayout->addLayout(vLayout, row, 1);
   mainGridLayout->setRowMinimumHeight(row, 30);
+
+  ++row;
+
+  line = new QFrame();
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  mainGridLayout->addWidget(line, row, 0, 1, 2);
 
   ++row;
 
