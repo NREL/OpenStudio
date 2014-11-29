@@ -68,6 +68,9 @@ namespace openstudio{
       /// set the regular expression to match log channels
       void setChannelRegex(const boost::regex& filter);
 
+      /// set the regular expression to match log channels
+      void setChannelRegex(const std::string& filter);
+
       /// reset the regular expression to match log channels
       void resetChannelRegex();
 

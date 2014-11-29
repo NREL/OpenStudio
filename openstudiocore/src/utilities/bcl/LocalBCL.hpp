@@ -32,8 +32,6 @@ class QWidget;
 
 namespace openstudio{
 
-  class OnDemandGenerator;
-
   /// \todo This class is currently a singleton implemented with a first use static
   ///       this may cause problems with threading in the future and should be moved 
   ///       into some other singleton implementation. ONE OPTION would be to 
@@ -78,10 +76,6 @@ namespace openstudio{
 
     /// Get the measure by uid
     virtual boost::optional<BCLMeasure> getMeasure(const std::string& uid, const std::string& versionId = "") const;
-
-    /// Searches the library for an on demand generated component matching this generator.
-    /// This generator should have values for all arguments set.
-    virtual boost::optional<BCLComponent> getOnDemandComponent(const OnDemandGenerator& generator) const;
 
     /// Get all components
     std::vector<BCLComponent> components() const;

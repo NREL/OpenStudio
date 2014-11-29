@@ -28,7 +28,6 @@ namespace model {
 
 // forward declarations
 class ClimateZones;
-class TimeDependentValuation;
 class WeatherFile;
 class SiteGroundReflectance;
 class SiteGroundTemperatureBuildingSurface;
@@ -149,9 +148,6 @@ namespace detail {
 
     /** Unique ClimateZones object parented by Site. */
     boost::optional<ClimateZones> climateZones() const;
-
-    /** Unique TimeDependentValuation object parented by Site. */
-    boost::optional<TimeDependentValuation> timeDependentValuation() const;
 
     /** ShadingSurfaceGroup objects of type Site. */
     std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
