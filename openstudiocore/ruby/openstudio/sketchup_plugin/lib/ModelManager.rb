@@ -95,8 +95,8 @@ module OpenStudio
       
       if (openstudio_path && !openstudio_path.empty?) || (openstudio_entities.size > 0)
       
-        message = "Removing previously linked OpenStudio content from SketchUp Model."
-        message += "\nOpen OpenStudio model at '#{openstudio_path}' to restore content."
+        message = "Removing previously linked OpenStudio content."
+        message += "\n\nOpen OpenStudio model at '#{openstudio_path}' to restore content."
         UI.messagebox(message, MB_OK)
       
         # remove all OpenStudio content so user is not confused
