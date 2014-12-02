@@ -92,7 +92,7 @@ FacilityInspectorView::FacilityInspectorView(bool isIP,
   index = this->stackedWidget()->addWidget(buildingInspectorView);
   m_inspectorIndexMap[IddObjectType::OS_Building] = index;
 
-  BuildingStoryInspectorView* buildingStoryInspectorView = new BuildingStoryInspectorView(model, parent);
+  BuildingStoryInspectorView* buildingStoryInspectorView = new BuildingStoryInspectorView(isIP, model, parent);
   connect(this, &FacilityInspectorView::toggleUnitsClicked, buildingStoryInspectorView, &BuildingStoryInspectorView::toggleUnitsClicked);
   connect(buildingStoryInspectorView, &BuildingStoryInspectorView::dropZoneItemClicked, this, &FacilityInspectorView::dropZoneItemClicked);
   index = this->stackedWidget()->addWidget(buildingStoryInspectorView);

@@ -79,14 +79,17 @@ namespace detail {
     //@{
 
     boost::optional<double> nominalZCoordinate() const;
-    
+
     OSOptionalQuantity getNominalZCoordinate(bool returnIP=false) const;   
 
     double nominalFloortoFloorHeight() const;
-    
+
     Quantity getNominalFloortoFloorHeight(bool returnIP=false) const;
 
     bool isNominalFloortoFloorHeightDefaulted() const;
+
+    double nominalFloortoCeilingHeight() const;
+    bool isNominalFloortoCeilingHeightDefaulted() const;
 
     //@}
     /** @name Setters */
@@ -101,10 +104,13 @@ namespace detail {
     void resetNominalZCoordinate();
 
     bool setNominalFloortoFloorHeight(double nominalFloortoFloorHeight);
-    
+
     bool setNominalFloortoFloorHeight(const Quantity& nominalFloortoFloorHeight);    
 
     void resetNominalFloortoFloorHeight();
+
+    bool setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight);
+    void resetNominalFloortoCeilingHeight();
 
     //@}
 

@@ -1816,9 +1816,13 @@ OS:BuildingStory,
   A4, \field Default Schedule Set Name
        \type object-list
        \object-list DefaultScheduleSetNames
-  A5; \field Group Rendering Name
+  A5, \field Group Rendering Name
        \type object-list
        \object-list GroupRenderingNames
+  N3; \field Nominal Floor to Ceiling Height
+       \type real
+       \units m
+       \minimum> 0
 
 OS:DefaultConstructionSet,
        \min-fields 11
@@ -4313,11 +4317,23 @@ OS:Building,
   N4, \field Standards Number of Above Ground Stories
        \type integer
        \minimum 0
-  A7; \field Standards Building Type
+  A7, \field Standards Building Type
        \type alpha
        \note This is a freeform field used to identify the building type for standards.
        \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
        \note More information can be found at https://github.com/NREL/openstudio-standards.
+  N5, \field Standards Number of Living Units
+       \type integer
+       \minimum 0
+  A8, \field Relocatable
+       \type choice
+       \default False
+       \key True
+       \key False
+  N6; \field Nominal Floor to Ceiling Height
+       \type real
+       \units m
+       \minimum> 0
 
 OS:DaylightingDevice:Shelf,
        \min-fields 1
@@ -9126,7 +9142,7 @@ OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
        \type object-list
        \object-list ConnectionNames
   A7, \field Cooling Coil Name
-							\note  Needs to match the cooled beam cooling coil object CoolingCoilCooledBeam
+       \note  Needs to match the cooled beam cooling coil object CoolingCoilCooledBeam
        \type object-list
        \required-field
        \object-list CoolingCoilCooledBeam
@@ -9263,7 +9279,7 @@ OS:AirTerminal:SingleDuct:VAV:NoReheat,
        \note be computed based on the current number of occupants in the zone.
        \note At no time will the supply air flow rate exceed the value for Maximum Air Flow Rate.
        \note If this field is blank, then the terminal unit will not be controlled for outdoor air flow.
-	   
+
 OS:AirTerminal:SingleDuct:VAV:Reheat,
        \min-fields 1
   A1, \field Handle
@@ -10891,8 +10907,8 @@ OS:GroundHeatExchanger:Vertical,
         \type real
 
 OS:Coil:Cooling:CooledBeam,
-						 \min-fields 13
-		A1, \field Handle
+      \min-fields 13
+  A1, \field Handle
        \type handle
        \required-field
   A2, \field Name
@@ -16630,7 +16646,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:Electric,
         \units W
         \minimum 0
         \autosizable
-				\default autosize
+        \default autosize
         \ip-units W
    A5 , \field Temperature Control Type
         \note Temperature used to control unit
@@ -16648,7 +16664,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:Electric,
    A6 ; \field Heating Setpoint Temperature Schedule Name
         \type object-list
         \object-list ScheduleNames
-	
+
 OS:ZoneHVAC:IdealLoadsAirSystem,
        \min-fields 26
   A1 , \field Handle

@@ -80,6 +80,11 @@ class MODEL_API Building : public ParentObject {
 
   boost::optional<int> standardsNumberOfAboveGroundStories() const;
 
+  boost::optional<int> standardsNumberOfLivingUnits() const;
+
+  double nominalFloortoCeilingHeight() const;
+  bool isNominalFloortoCeilingHeightDefaulted() const;
+
   /// Returns the standards building type. This is a freeform field used to identify the building type for standards.
   /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
   /// More information can be found at https://github.com/NREL/openstudio-standards.
@@ -88,6 +93,10 @@ class MODEL_API Building : public ParentObject {
   /// If standardsBuildingType is empty, returns a list of suggestions.  If standardsBuildingType is not empty,
   /// returns standardsBuildingType.
   std::vector<std::string> suggestedStandardsBuildingTypes() const;
+
+  bool relocatable() const;
+
+  bool isRelocatableDefaulted() const;
 
   //@}
   /** @name Setters */
@@ -107,11 +116,19 @@ class MODEL_API Building : public ParentObject {
   bool setStandardsNumberOfAboveGroundStories(int value);
   void resetStandardsNumberOfAboveGroundStories();
 
+  bool setStandardsNumberOfLivingUnits(int value);
+  void resetStandardsNumberOfLivingUnits();
+
+  bool setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight);
+  void resetNominalFloortoCeilingHeight(); 
+
   /// Sets the standards building type. This is a freeform field used to identify the building type for standards.
   /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
   /// More information can be found at https://github.com/NREL/openstudio-standards.
   bool setStandardsBuildingType(const std::string& standardsBuildingType);
   void resetStandardsBuildingType();
+
+  void setRelocatable(bool isRelocatable);
 
   //@}
   /** @name Other */

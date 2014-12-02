@@ -226,6 +226,10 @@
     <file>images/toggle_off_over.png</file>
     <file>images/toggle_on.png</file>
     <file>images/toggle_on_over.png</file>
+    <file>images/toggle_false.png</file>
+    <file>images/toggle_false_over.png</file>
+    <file>images/toggle_true.png</file>
+    <file>images/toggle_true_over.png</file>
     <file>images/unitary_system.png</file>
     <file>images/utility_calibration_warning.png</file>
     <file>images/vav-reheat.png</file>

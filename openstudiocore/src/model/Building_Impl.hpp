@@ -128,9 +128,18 @@ namespace detail {
 
     boost::optional<int> standardsNumberOfAboveGroundStories() const;
 
+    boost::optional<int> standardsNumberOfLivingUnits() const;
+
+    double nominalFloortoCeilingHeight() const;
+    bool isNominalFloortoCeilingHeightDefaulted() const;
+
     boost::optional<std::string> standardsBuildingType() const;
 
     std::vector<std::string> suggestedStandardsBuildingTypes() const;
+
+    bool relocatable() const;
+
+    bool isRelocatableDefaulted() const;
 
     //@}
     /** @name Setters */
@@ -150,8 +159,16 @@ namespace detail {
     bool setStandardsNumberOfAboveGroundStories(int value);
     void resetStandardsNumberOfAboveGroundStories();
 
+    bool setStandardsNumberOfLivingUnits(int value);
+    void resetStandardsNumberOfLivingUnits();
+
+    bool setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight);
+    void resetNominalFloortoCeilingHeight();
+
     bool setStandardsBuildingType(const std::string& standardsBuildingType);
     void resetStandardsBuildingType();
+
+    bool setRelocatable(bool isRelocatable);
 
     //@}
 
