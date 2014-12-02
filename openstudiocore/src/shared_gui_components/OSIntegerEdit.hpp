@@ -29,6 +29,7 @@
 
 #include <QLineEdit>
 #include <QString>
+#include <QValidator>
 
 namespace openstudio {
 
@@ -40,6 +41,8 @@ class OSIntegerEdit2: public QLineEdit {
   OSIntegerEdit2(QWidget * parent = nullptr);
 
   virtual ~OSIntegerEdit2() {}
+
+  QIntValidator * intValidator() { return m_intValidator; }
 
   void bind(model::ModelObject& modelObject,
             IntGetter get,
@@ -107,6 +110,7 @@ class OSIntegerEdit2: public QLineEdit {
   bool m_isScientific;
   boost::optional<int> m_precision;
   QString m_text = "UNINITIALIZED";
+  QIntValidator * m_intValidator = nullptr;
 
   void refreshTextAndLabel();
 
@@ -125,6 +129,8 @@ class OSIntegerEdit: public QLineEdit {
   OSIntegerEdit(QWidget * parent = nullptr);
 
   virtual ~OSIntegerEdit() {}
+
+  QIntValidator * intValidator() { return m_intValidator; }
 
   void bind(model::ModelObject& modelObject,
             const char* property,
@@ -151,6 +157,7 @@ class OSIntegerEdit: public QLineEdit {
 
   bool m_isScientific;
   boost::optional<int> m_precision;
+  QIntValidator * m_intValidator = nullptr;
 
   void refreshTextAndLabel();
 

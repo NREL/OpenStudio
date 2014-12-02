@@ -48,7 +48,6 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QGridLayout>
-#include <QIntValidator>
 #include <QLabel>
 #include <QPushButton>
 #include <QColorDialog>
@@ -326,11 +325,7 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   label->setObjectName("StandardsInfo");
   vLayout->addWidget(label);
 
-  QIntValidator * validator = nullptr;
-
   m_numberLivingUnits = new OSIntegerEdit2();
-  validator = new QIntValidator(this);
-  m_numberLivingUnits->setValidator(validator);
   vLayout->addWidget(m_numberLivingUnits);
 
   vLayout->addStretch();
@@ -366,8 +361,6 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   vLayout->addWidget(label);
 
   m_numberStories = new OSIntegerEdit2();
-  validator = new QIntValidator(this);
-  m_numberStories->setValidator(validator);
   vLayout->addWidget(m_numberStories);
 
   vLayout->addStretch();
@@ -384,8 +377,6 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   vLayout->addWidget(label);
 
   m_numberAboveGroundStories = new OSIntegerEdit2();
-  validator = new QIntValidator(this);
-  m_numberAboveGroundStories->setValidator(validator);
   vLayout->addWidget(m_numberAboveGroundStories);
 
   vLayout->addStretch();
