@@ -22,9 +22,6 @@
 
 #include "ModelObject_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
-
 namespace openstudio {
 namespace model {
 
@@ -42,12 +39,8 @@ namespace detail {
     Q_OBJECT;
     
     Q_PROPERTY(boost::optional<double> nominalZCoordinate READ nominalZCoordinate WRITE setNominalZCoordinate RESET resetNominalZCoordinate);
-    Q_PROPERTY(openstudio::OSOptionalQuantity nominalZCoordinate_SI READ nominalZCoordinate_SI WRITE setNominalZCoordinate RESET resetNominalZCoordinate);
-    Q_PROPERTY(openstudio::OSOptionalQuantity nominalZCoordinate_IP READ nominalZCoordinate_IP WRITE setNominalZCoordinate RESET resetNominalZCoordinate);
     
     Q_PROPERTY(double nominalFloortoFloorHeight READ nominalFloortoFloorHeight WRITE setNominalFloortoFloorHeight RESET resetNominalFloortoFloorHeight);
-    Q_PROPERTY(openstudio::Quantity nominalFloortoFloorHeight_SI READ nominalFloortoFloorHeight_SI WRITE setNominalFloortoFloorHeight RESET resetNominalFloortoFloorHeight);
-    Q_PROPERTY(openstudio::Quantity nominalFloortoFloorHeight_IP READ nominalFloortoFloorHeight_IP WRITE setNominalFloortoFloorHeight RESET resetNominalFloortoFloorHeight);
     Q_PROPERTY(bool isNominalFloortoFloorHeightDefaulted READ isNominalFloortoFloorHeightDefaulted);
 
     Q_PROPERTY(boost::optional<openstudio::model::ModelObject> defaultConstructionSet READ defaultConstructionSetAsModelObject WRITE setDefaultConstructionSetAsModelObject RESET resetDefaultConstructionSet);
@@ -80,11 +73,7 @@ namespace detail {
 
     boost::optional<double> nominalZCoordinate() const;
 
-    OSOptionalQuantity getNominalZCoordinate(bool returnIP=false) const;   
-
     double nominalFloortoFloorHeight() const;
-
-    Quantity getNominalFloortoFloorHeight(bool returnIP=false) const;
 
     bool isNominalFloortoFloorHeightDefaulted() const;
 
@@ -97,15 +86,11 @@ namespace detail {
 
     void setNominalZCoordinate(boost::optional<double> nominalZCoordinate);
 
-    bool setNominalZCoordinate(const OSOptionalQuantity& nominalZCoordinate);
-
     void setNominalZCoordinate(double nominalZCoordinate);
 
     void resetNominalZCoordinate();
 
     bool setNominalFloortoFloorHeight(double nominalFloortoFloorHeight);
-
-    bool setNominalFloortoFloorHeight(const Quantity& nominalFloortoFloorHeight);    
 
     void resetNominalFloortoFloorHeight();
 
@@ -147,11 +132,6 @@ namespace detail {
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.BuildingStory");
-
-    openstudio::OSOptionalQuantity nominalZCoordinate_SI() const;
-    openstudio::OSOptionalQuantity nominalZCoordinate_IP() const;
-    openstudio::Quantity nominalFloortoFloorHeight_SI() const;
-    openstudio::Quantity nominalFloortoFloorHeight_IP() const;
 
     boost::optional<ModelObject> defaultConstructionSetAsModelObject() const;
     boost::optional<ModelObject> defaultScheduleSetAsModelObject() const;

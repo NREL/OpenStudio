@@ -78,11 +78,6 @@ namespace detail {
   boost::optional<double> BuildingStory_Impl::nominalZCoordinate() const {
     return getDouble(OS_BuildingStoryFields::NominalZCoordinate,true);
   }
-  
-  OSOptionalQuantity BuildingStory_Impl::getNominalZCoordinate(bool returnIP) const {
-    OSOptionalQuantity value = getQuantity(OS_BuildingStoryFields::NominalZCoordinate,true,returnIP);
-    return value;
-  }
 
   double BuildingStory_Impl::nominalFloortoFloorHeight() const {
     boost::optional<double> value = getDouble(OS_BuildingStoryFields::NominalFloortoFloorHeight,true);
@@ -90,12 +85,6 @@ namespace detail {
     return value.get();
   }
   
-  Quantity BuildingStory_Impl::getNominalFloortoFloorHeight(bool returnIP) const {
-    OSOptionalQuantity value = getQuantity(OS_BuildingStoryFields::NominalFloortoFloorHeight,true,returnIP);
-    OS_ASSERT(value.isSet());
-    return value.get();
-  }
-
   bool BuildingStory_Impl::isNominalFloortoFloorHeightDefaulted() const {
     return isEmpty(OS_BuildingStoryFields::NominalFloortoFloorHeight);
   }
@@ -125,16 +114,6 @@ namespace detail {
     OS_ASSERT(result);
   }
   
-  bool BuildingStory_Impl::setNominalZCoordinate(const OSOptionalQuantity& nominalZCoordinate) {
-    bool result;
-    if (nominalZCoordinate.isSet()) {
-      result = setQuantity(OS_BuildingStoryFields::NominalZCoordinate,nominalZCoordinate.get());
-    } else {
-      result = setString(OS_BuildingStoryFields::NominalZCoordinate, "");
-    }
-    return result;
-  }
-
   void BuildingStory_Impl::resetNominalZCoordinate() {
     bool result = setString(OS_BuildingStoryFields::NominalZCoordinate, "");
     OS_ASSERT(result);
@@ -143,10 +122,6 @@ namespace detail {
   bool BuildingStory_Impl::setNominalFloortoFloorHeight(double nominalFloortoFloorHeight) {
     bool result = setDouble(OS_BuildingStoryFields::NominalFloortoFloorHeight, nominalFloortoFloorHeight);
     return result;
-  }
-
-  bool BuildingStory_Impl::setNominalFloortoFloorHeight(const Quantity& nominalFloortoFloorHeight) {
-    return setQuantity(OS_BuildingStoryFields::NominalFloortoFloorHeight,nominalFloortoFloorHeight);
   }
 
   void BuildingStory_Impl::resetNominalFloortoFloorHeight() {
@@ -215,22 +190,6 @@ namespace detail {
         Space::iddObjectType());
   }
   
-  openstudio::OSOptionalQuantity BuildingStory_Impl::nominalZCoordinate_SI() const {
-    return getNominalZCoordinate(false);
-  }
-
-  openstudio::OSOptionalQuantity BuildingStory_Impl::nominalZCoordinate_IP() const {
-    return getNominalZCoordinate(true);
-  }
-
-  openstudio::Quantity BuildingStory_Impl::nominalFloortoFloorHeight_SI() const {
-    return getNominalFloortoFloorHeight(false);
-  }
-
-  openstudio::Quantity BuildingStory_Impl::nominalFloortoFloorHeight_IP() const {
-    return getNominalFloortoFloorHeight(true);
-  }  
-
   boost::optional<ModelObject> BuildingStory_Impl::defaultConstructionSetAsModelObject() const {
     OptionalModelObject result;
     OptionalDefaultConstructionSet object = defaultConstructionSet();
@@ -324,16 +283,8 @@ boost::optional<double> BuildingStory::nominalZCoordinate() const {
   return getImpl<detail::BuildingStory_Impl>()->nominalZCoordinate();
 }
 
-OSOptionalQuantity BuildingStory::getNominalZCoordinate(bool returnIP) const {
-  return getImpl<detail::BuildingStory_Impl>()->getNominalZCoordinate(returnIP);
-}
-
 double BuildingStory::nominalFloortoFloorHeight() const {
   return getImpl<detail::BuildingStory_Impl>()->nominalFloortoFloorHeight();
-}
-
-Quantity BuildingStory::getNominalFloortoFloorHeight(bool returnIP) const {
-  return getImpl<detail::BuildingStory_Impl>()->getNominalFloortoFloorHeight(returnIP);
 }
 
 bool BuildingStory::isNominalFloortoFloorHeightDefaulted() const {
@@ -356,19 +307,11 @@ void BuildingStory::setNominalZCoordinate(double nominalZCoordinate) {
   getImpl<detail::BuildingStory_Impl>()->setNominalZCoordinate(nominalZCoordinate);
 }
 
-bool BuildingStory::setNominalZCoordinate(const Quantity& nominalZCoordinate) {
-  return getImpl<detail::BuildingStory_Impl>()->setNominalZCoordinate(nominalZCoordinate);
-}
-
 void BuildingStory::resetNominalZCoordinate() {
   getImpl<detail::BuildingStory_Impl>()->resetNominalZCoordinate();
 }
 
 bool BuildingStory::setNominalFloortoFloorHeight(double nominalFloortoFloorHeight) {
-  return getImpl<detail::BuildingStory_Impl>()->setNominalFloortoFloorHeight(nominalFloortoFloorHeight);
-}
-
-bool BuildingStory::setNominalFloortoFloorHeight(const Quantity& nominalFloortoFloorHeight) {
   return getImpl<detail::BuildingStory_Impl>()->setNominalFloortoFloorHeight(nominalFloortoFloorHeight);
 }
 

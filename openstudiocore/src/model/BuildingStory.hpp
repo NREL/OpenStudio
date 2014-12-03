@@ -25,8 +25,6 @@
 
 namespace openstudio {  
 
-class OSOptionalQuantity;
-
 namespace model {
 
 class SpaceType;
@@ -60,11 +58,7 @@ class MODEL_API BuildingStory : public ModelObject {
 
   boost::optional<double> nominalZCoordinate() const;
 
-  OSOptionalQuantity getNominalZCoordinate(bool returnIP=false) const;
-
   double nominalFloortoFloorHeight() const;
-
-  Quantity getNominalFloortoFloorHeight(bool returnIP=false) const;
 
   bool isNominalFloortoFloorHeightDefaulted() const;
 
@@ -79,13 +73,9 @@ class MODEL_API BuildingStory : public ModelObject {
 
   void setNominalZCoordinate(double nominalZCoordinate);
 
-  bool setNominalZCoordinate(const Quantity& nominalZCoordinate);
-
   void resetNominalZCoordinate();
 
   bool setNominalFloortoFloorHeight(double nominalFloortoFloorHeight);
-
-  bool setNominalFloortoFloorHeight(const Quantity& nominalFloortoFloorHeight);
 
   void resetNominalFloortoFloorHeight();
 
