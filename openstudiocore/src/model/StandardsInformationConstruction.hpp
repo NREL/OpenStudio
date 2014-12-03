@@ -52,6 +52,20 @@ class MODEL_API StandardsInformationConstruction : public ModelObject {
 
   static std::vector<std::string> standardPerturbableLayerTypeValues();
 
+  static std::vector<std::string> fenestrationTypeValues();
+
+  static std::vector<std::string> fenestrationAssemblyContextValues();
+
+  static std::vector<std::string> fenestrationNumberofPanesValues();
+
+  static std::vector<std::string> fenestrationFrameTypeValues();
+
+  static std::vector<std::string> fenestrationDividerTypeValues();
+
+  static std::vector<std::string> fenestrationTintValues();
+
+  static std::vector<std::string> fenestrationGasFillValues();
+
   static std::vector<std::string> intendedSurfaceTypeValues();
 
   static IddObjectType iddObjectType();
@@ -81,6 +95,30 @@ class MODEL_API StandardsInformationConstruction : public ModelObject {
 
   /** Return a description of the perturbableLayer(), for instance, 'Insulation'.*/
   boost::optional<std::string> perturbableLayerType() const;
+
+  bool isPerturbableLayerTypeDefaulted() const;
+
+  boost::optional<std::string> otherPerturbableLayerType() const;
+
+  boost::optional<std::string> constructionStandard() const;
+
+  boost::optional<std::string> constructionStandardSource() const;
+
+  boost::optional<std::string> fenestrationType() const;
+
+  boost::optional<std::string> fenestrationAssemblyContext() const;
+
+  boost::optional<std::string> fenestrationNumberofPanes() const;
+
+  boost::optional<std::string> fenestrationFrameType() const;
+
+  boost::optional<std::string> fenestrationDividerType() const;
+
+  boost::optional<std::string> fenestrationTint() const;
+
+  boost::optional<std::string> fenestrationGasFill() const;
+
+  boost::optional<bool> fenestrationLowEmissivityCoating() const;
 
   //@}
   /** @name Setters */
@@ -121,6 +159,50 @@ class MODEL_API StandardsInformationConstruction : public ModelObject {
   void setPerturbableLayerType(const std::string& type);
   void resetPerturbableLayerType();
 
+  void setOtherPerturbableLayerType(std::string otherPerturbableLayerType);
+
+  void resetOtherPerturbableLayerType();
+
+  void setConstructionStandard(std::string constructionStandard);
+
+  void resetConstructionStandard();
+
+  void setConstructionStandardSource(std::string constructionStandardSource);
+
+  void resetConstructionStandardSource();
+
+  bool setFenestrationType(std::string fenestrationType);
+
+  void resetFenestrationType();
+
+  bool setFenestrationAssemblyContext(std::string fenestrationAssemblyContext);
+
+  void resetFenestrationAssemblyContext();
+
+  bool setFenestrationNumberofPanes(std::string fenestrationNumberofPanes);
+
+  void resetFenestrationNumberofPanes();
+
+  bool setFenestrationFrameType(std::string fenestrationFrameType);
+
+  void resetFenestrationFrameType();
+
+  bool setFenestrationDividerType(std::string fenestrationDividerType);
+
+  void resetFenestrationDividerType();
+
+  bool setFenestrationTint(std::string fenestrationTint);
+
+  void resetFenestrationTint();
+
+  bool setFenestrationGasFill(std::string fenestrationGasFill);
+
+  void resetFenestrationGasFill();
+
+  void setFenestrationLowEmissivityCoating(bool fenestrationLowEmissivityCoating);
+
+  void resetFenestrationLowEmissivityCoating();
+
   //@}
  protected:
   /// @cond
@@ -152,3 +234,4 @@ typedef std::vector<StandardsInformationConstruction> StandardsInformationConstr
 } // openstudio 
 
 #endif // MODEL_STANDARDSINFORMATIONCONSTRUCTION_HPP
+

@@ -80,7 +80,7 @@ namespace detail {
     boost::optional<std::string> standardsConstructionType = this->standardsConstructionType();
 
     // todo: pull from standards JSON file, for now just hard code here
-    // note: didn't add DemsingCeiling choices here. Thinking Intended Surafce Types should instead be DemisingCeiling
+    // note: didn't add DemsingCeiling choices here. Thinking Intended Surface Types should instead be DemisingCeiling
     if (intendedSurfaceType){
       if (istringEqual(*intendedSurfaceType, "ExteriorFloor")){
         result.push_back("Mass");
@@ -225,6 +225,58 @@ namespace detail {
     return result; 
   }
 
+  bool StandardsInformationConstruction_Impl::isPerturbableLayerTypeDefaulted() const {
+    return isEmpty(OS_StandardsInformation_ConstructionFields::PerturbableLayerType);
+  }
+
+  boost::optional<std::string> StandardsInformationConstruction_Impl::otherPerturbableLayerType() const {
+    return getString(OS_StandardsInformation_ConstructionFields::OtherPerturbableLayerType,true);
+  }
+
+  boost::optional<std::string> StandardsInformationConstruction_Impl::constructionStandard() const {
+    return getString(OS_StandardsInformation_ConstructionFields::ConstructionStandard,true);
+  }
+
+  boost::optional<std::string> StandardsInformationConstruction_Impl::constructionStandardSource() const {
+    return getString(OS_StandardsInformation_ConstructionFields::ConstructionStandardSource,true);
+  }
+
+  boost::optional<std::string> StandardsInformationConstruction_Impl::fenestrationType() const {
+    return getString(OS_StandardsInformation_ConstructionFields::FenestrationType,true);
+  }
+
+  boost::optional<std::string> StandardsInformationConstruction_Impl::fenestrationAssemblyContext() const {
+    return getString(OS_StandardsInformation_ConstructionFields::FenestrationAssemblyContext,true);
+  }
+
+  boost::optional<std::string> StandardsInformationConstruction_Impl::fenestrationNumberofPanes() const {
+    return getString(OS_StandardsInformation_ConstructionFields::FenestrationNumberofPanes,true);
+  }
+
+  boost::optional<std::string> StandardsInformationConstruction_Impl::fenestrationFrameType() const {
+    return getString(OS_StandardsInformation_ConstructionFields::FenestrationFrameType,true);
+  }
+
+  boost::optional<std::string> StandardsInformationConstruction_Impl::fenestrationDividerType() const {
+    return getString(OS_StandardsInformation_ConstructionFields::FenestrationDividerType,true);
+  }
+
+  boost::optional<std::string> StandardsInformationConstruction_Impl::fenestrationTint() const {
+    return getString(OS_StandardsInformation_ConstructionFields::FenestrationTint,true);
+  }
+
+  boost::optional<std::string> StandardsInformationConstruction_Impl::fenestrationGasFill() const {
+    return getString(OS_StandardsInformation_ConstructionFields::FenestrationGasFill,true);
+  }
+
+  boost::optional<bool> StandardsInformationConstruction_Impl::fenestrationLowEmissivityCoating() const {
+    boost::optional<bool> result;
+    boost::optional<std::string> value = getString(OS_StandardsInformation_ConstructionFields::FenestrationLowEmissivityCoating,true);
+    if (value){
+      result = openstudio::istringEqual(value.get(), "True");
+    }
+    return result;  }
+
   boost::optional<ParentObject> StandardsInformationConstruction_Impl::parent() const {
     OptionalConstructionBase candidate = construction();
     if (candidate) { return candidate->cast<ParentObject>(); }
@@ -346,6 +398,193 @@ namespace detail {
     ok = setString(OS_StandardsInformation_ConstructionFields::OtherPerturbableLayerType,"");
     OS_ASSERT(ok);
   }
+
+  void StandardsInformationConstruction_Impl::setOtherPerturbableLayerType(boost::optional<std::string> otherPerturbableLayerType) {
+    bool result(false);
+    if (otherPerturbableLayerType) {
+      result = setString(OS_StandardsInformation_ConstructionFields::OtherPerturbableLayerType, otherPerturbableLayerType.get());
+    }
+    else {
+      resetOtherPerturbableLayerType();
+      result = true;
+    }
+    OS_ASSERT(result);
+  }
+
+  void StandardsInformationConstruction_Impl::resetOtherPerturbableLayerType() {
+    bool result = setString(OS_StandardsInformation_ConstructionFields::OtherPerturbableLayerType, "");
+    OS_ASSERT(result);
+  }
+
+  void StandardsInformationConstruction_Impl::setConstructionStandard(boost::optional<std::string> constructionStandard) {
+    bool result(false);
+    if (constructionStandard) {
+      result = setString(OS_StandardsInformation_ConstructionFields::ConstructionStandard, constructionStandard.get());
+    }
+    else {
+      resetConstructionStandard();
+      result = true;
+    }
+    OS_ASSERT(result);
+  }
+
+  void StandardsInformationConstruction_Impl::resetConstructionStandard() {
+    bool result = setString(OS_StandardsInformation_ConstructionFields::ConstructionStandard, "");
+    OS_ASSERT(result);
+  }
+
+  void StandardsInformationConstruction_Impl::setConstructionStandardSource(boost::optional<std::string> constructionStandardSource) {
+    bool result(false);
+    if (constructionStandardSource) {
+      result = setString(OS_StandardsInformation_ConstructionFields::ConstructionStandardSource, constructionStandardSource.get());
+    }
+    else {
+      resetConstructionStandardSource();
+      result = true;
+    }
+    OS_ASSERT(result);
+  }
+
+  void StandardsInformationConstruction_Impl::resetConstructionStandardSource() {
+    bool result = setString(OS_StandardsInformation_ConstructionFields::ConstructionStandardSource, "");
+    OS_ASSERT(result);
+  }
+
+  bool StandardsInformationConstruction_Impl::setFenestrationType(boost::optional<std::string> fenestrationType) {
+    bool result(false);
+    if (fenestrationType) {
+      result = setString(OS_StandardsInformation_ConstructionFields::FenestrationType, fenestrationType.get());
+    }
+    else {
+      resetFenestrationType();
+      result = true;
+    }
+    return result;
+  }
+
+  void StandardsInformationConstruction_Impl::resetFenestrationType() {
+    bool result = setString(OS_StandardsInformation_ConstructionFields::FenestrationType, "");
+    OS_ASSERT(result);
+  }
+
+  bool StandardsInformationConstruction_Impl::setFenestrationAssemblyContext(boost::optional<std::string> fenestrationAssemblyContext) {
+    bool result(false);
+    if (fenestrationAssemblyContext) {
+      result = setString(OS_StandardsInformation_ConstructionFields::FenestrationAssemblyContext, fenestrationAssemblyContext.get());
+    }
+    else {
+      resetFenestrationAssemblyContext();
+      result = true;
+    }
+    return result;
+  }
+
+  void StandardsInformationConstruction_Impl::resetFenestrationAssemblyContext() {
+    bool result = setString(OS_StandardsInformation_ConstructionFields::FenestrationAssemblyContext, "");
+    OS_ASSERT(result);
+  }
+
+  bool StandardsInformationConstruction_Impl::setFenestrationNumberofPanes(boost::optional<std::string> fenestrationNumberofPanes) {
+    bool result(false);
+    if (fenestrationNumberofPanes) {
+      result = setString(OS_StandardsInformation_ConstructionFields::FenestrationNumberofPanes, fenestrationNumberofPanes.get());
+    }
+    else {
+      resetFenestrationNumberofPanes();
+      result = true;
+    }
+    return result;
+  }
+
+  void StandardsInformationConstruction_Impl::resetFenestrationNumberofPanes() {
+    bool result = setString(OS_StandardsInformation_ConstructionFields::FenestrationNumberofPanes, "");
+    OS_ASSERT(result);
+  }
+
+  bool StandardsInformationConstruction_Impl::setFenestrationFrameType(boost::optional<std::string> fenestrationFrameType) {
+    bool result(false);
+    if (fenestrationFrameType) {
+      result = setString(OS_StandardsInformation_ConstructionFields::FenestrationFrameType, fenestrationFrameType.get());
+    }
+    else {
+      resetFenestrationFrameType();
+      result = true;
+    }
+    return result;
+  }
+
+  void StandardsInformationConstruction_Impl::resetFenestrationFrameType() {
+    bool result = setString(OS_StandardsInformation_ConstructionFields::FenestrationFrameType, "");
+    OS_ASSERT(result);
+  }
+
+  bool StandardsInformationConstruction_Impl::setFenestrationDividerType(boost::optional<std::string> fenestrationDividerType) {
+    bool result(false);
+    if (fenestrationDividerType) {
+      result = setString(OS_StandardsInformation_ConstructionFields::FenestrationDividerType, fenestrationDividerType.get());
+    }
+    else {
+      resetFenestrationDividerType();
+      result = true;
+    }
+    return result;
+  }
+
+  void StandardsInformationConstruction_Impl::resetFenestrationDividerType() {
+    bool result = setString(OS_StandardsInformation_ConstructionFields::FenestrationDividerType, "");
+    OS_ASSERT(result);
+  }
+
+  bool StandardsInformationConstruction_Impl::setFenestrationTint(boost::optional<std::string> fenestrationTint) {
+    bool result(false);
+    if (fenestrationTint) {
+      result = setString(OS_StandardsInformation_ConstructionFields::FenestrationTint, fenestrationTint.get());
+    }
+    else {
+      resetFenestrationTint();
+      result = true;
+    }
+    return result;
+  }
+
+  void StandardsInformationConstruction_Impl::resetFenestrationTint() {
+    bool result = setString(OS_StandardsInformation_ConstructionFields::FenestrationTint, "");
+    OS_ASSERT(result);
+  }
+
+  bool StandardsInformationConstruction_Impl::setFenestrationGasFill(boost::optional<std::string> fenestrationGasFill) {
+    bool result(false);
+    if (fenestrationGasFill) {
+      result = setString(OS_StandardsInformation_ConstructionFields::FenestrationGasFill, fenestrationGasFill.get());
+    }
+    else {
+      resetFenestrationGasFill();
+      result = true;
+    }
+    return result;
+  }
+
+  void StandardsInformationConstruction_Impl::resetFenestrationGasFill() {
+    bool result = setString(OS_StandardsInformation_ConstructionFields::FenestrationGasFill, "");
+    OS_ASSERT(result);
+  }
+
+  void StandardsInformationConstruction_Impl::setFenestrationLowEmissivityCoating(boost::optional<bool> fenestrationLowEmissivityCoating) {
+    if (fenestrationLowEmissivityCoating) {
+      if (fenestrationLowEmissivityCoating.get()) {
+        //setBooleanFieldValue(OS_StandardsInformation_ConstructionFields::FenestrationLowEmissivityCoating, "True"); // TODO invalid call???
+      }
+      else {
+        //setBooleanFieldValue(OS_StandardsInformation_ConstructionFields::FenestrationLowEmissivityCoating, "False"); TODO invalid call???
+      }
+    }
+  }
+
+  void StandardsInformationConstruction_Impl::resetFenestrationLowEmissivityCoating() {
+    bool result = setString(OS_StandardsInformation_ConstructionFields::FenestrationLowEmissivityCoating, "");
+    OS_ASSERT(result);
+  }
+
 } // detail
 
 StandardsInformationConstruction::StandardsInformationConstruction(
@@ -371,6 +610,41 @@ std::vector<std::string> StandardsInformationConstruction::standardPerturbableLa
 std::vector<std::string> StandardsInformationConstruction::intendedSurfaceTypeValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_StandardsInformation_ConstructionFields::IntendedSurfaceType);
+}
+
+std::vector<std::string> StandardsInformationConstruction::fenestrationTypeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_StandardsInformation_ConstructionFields::FenestrationType);
+}
+
+std::vector<std::string> StandardsInformationConstruction::fenestrationAssemblyContextValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_StandardsInformation_ConstructionFields::FenestrationAssemblyContext);
+}
+
+std::vector<std::string> StandardsInformationConstruction::fenestrationNumberofPanesValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_StandardsInformation_ConstructionFields::FenestrationNumberofPanes);
+}
+
+std::vector<std::string> StandardsInformationConstruction::fenestrationFrameTypeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_StandardsInformation_ConstructionFields::FenestrationFrameType);
+}
+
+std::vector<std::string> StandardsInformationConstruction::fenestrationDividerTypeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_StandardsInformation_ConstructionFields::FenestrationDividerType);
+}
+
+std::vector<std::string> StandardsInformationConstruction::fenestrationTintValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_StandardsInformation_ConstructionFields::FenestrationTint);
+}
+
+std::vector<std::string> StandardsInformationConstruction::fenestrationGasFillValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_StandardsInformation_ConstructionFields::FenestrationGasFill);
 }
 
 IddObjectType StandardsInformationConstruction::iddObjectType() {
@@ -402,6 +676,54 @@ boost::optional<std::string> StandardsInformationConstruction::perturbableLayerT
   return getImpl<detail::StandardsInformationConstruction_Impl>()->perturbableLayerType();
 }
 
+bool StandardsInformationConstruction::isPerturbableLayerTypeDefaulted() const {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->isPerturbableLayerTypeDefaulted();
+}
+
+boost::optional<std::string> StandardsInformationConstruction::otherPerturbableLayerType() const {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->otherPerturbableLayerType();
+}
+
+boost::optional<std::string> StandardsInformationConstruction::constructionStandard() const {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->constructionStandard();
+}
+
+boost::optional<std::string> StandardsInformationConstruction::constructionStandardSource() const {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->constructionStandardSource();
+}
+
+boost::optional<std::string> StandardsInformationConstruction::fenestrationType() const {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->fenestrationType();
+}
+
+boost::optional<std::string> StandardsInformationConstruction::fenestrationAssemblyContext() const {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->fenestrationAssemblyContext();
+}
+
+boost::optional<std::string> StandardsInformationConstruction::fenestrationNumberofPanes() const {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->fenestrationNumberofPanes();
+}
+
+boost::optional<std::string> StandardsInformationConstruction::fenestrationFrameType() const {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->fenestrationFrameType();
+}
+
+boost::optional<std::string> StandardsInformationConstruction::fenestrationDividerType() const {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->fenestrationDividerType();
+}
+
+boost::optional<std::string> StandardsInformationConstruction::fenestrationTint() const {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->fenestrationTint();
+}
+
+boost::optional<std::string> StandardsInformationConstruction::fenestrationGasFill() const {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->fenestrationGasFill();
+}
+
+boost::optional<bool> StandardsInformationConstruction::fenestrationLowEmissivityCoating() const {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->fenestrationLowEmissivityCoating();
+}
+
 bool StandardsInformationConstruction::setIntendedSurfaceType(const std::string& type) {
   return getImpl<detail::StandardsInformationConstruction_Impl>()->setIntendedSurfaceType(type);
 }
@@ -411,11 +733,11 @@ void StandardsInformationConstruction::resetIntendedSurfaceType() {
 }
 
 void StandardsInformationConstruction::setStandardsConstructionType(const std::string& type) {
-  return getImpl<detail::StandardsInformationConstruction_Impl>()->setStandardsConstructionType(type);
+  getImpl<detail::StandardsInformationConstruction_Impl>()->setStandardsConstructionType(type);
 }
 
 void StandardsInformationConstruction::resetStandardsConstructionType() {
-  return getImpl<detail::StandardsInformationConstruction_Impl>()->resetStandardsConstructionType();
+  getImpl<detail::StandardsInformationConstruction_Impl>()->resetStandardsConstructionType();
 }
 
 bool StandardsInformationConstruction::setPerturbableLayer(unsigned layerIndex) {
@@ -438,6 +760,94 @@ void StandardsInformationConstruction::resetPerturbableLayerType() {
   getImpl<detail::StandardsInformationConstruction_Impl>()->resetPerturbableLayerType();
 }
 
+void StandardsInformationConstruction::setOtherPerturbableLayerType(std::string otherPerturbableLayerType) {
+  getImpl<detail::StandardsInformationConstruction_Impl>()->setOtherPerturbableLayerType(otherPerturbableLayerType);
+}
+
+void StandardsInformationConstruction::resetOtherPerturbableLayerType() {
+  getImpl<detail::StandardsInformationConstruction_Impl>()->resetOtherPerturbableLayerType();
+}
+
+void StandardsInformationConstruction::setConstructionStandard(std::string constructionStandard) {
+  getImpl<detail::StandardsInformationConstruction_Impl>()->setConstructionStandard(constructionStandard);
+}
+
+void StandardsInformationConstruction::resetConstructionStandard() {
+  getImpl<detail::StandardsInformationConstruction_Impl>()->resetConstructionStandard();
+}
+
+void StandardsInformationConstruction::setConstructionStandardSource(std::string constructionStandardSource) {
+  getImpl<detail::StandardsInformationConstruction_Impl>()->setConstructionStandardSource(constructionStandardSource);
+}
+
+void StandardsInformationConstruction::resetConstructionStandardSource() {
+  getImpl<detail::StandardsInformationConstruction_Impl>()->resetConstructionStandardSource();
+}
+
+bool StandardsInformationConstruction::setFenestrationType(std::string fenestrationType) {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->setFenestrationType(fenestrationType);
+}
+
+void StandardsInformationConstruction::resetFenestrationType() {
+  getImpl<detail::StandardsInformationConstruction_Impl>()->resetFenestrationType();
+}
+
+bool StandardsInformationConstruction::setFenestrationAssemblyContext(std::string fenestrationAssemblyContext) {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->setFenestrationAssemblyContext(fenestrationAssemblyContext);
+}
+
+void StandardsInformationConstruction::resetFenestrationAssemblyContext() {
+  getImpl<detail::StandardsInformationConstruction_Impl>()->resetFenestrationAssemblyContext();
+}
+
+bool StandardsInformationConstruction::setFenestrationNumberofPanes(std::string fenestrationNumberofPanes) {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->setFenestrationNumberofPanes(fenestrationNumberofPanes);
+}
+
+void StandardsInformationConstruction::resetFenestrationNumberofPanes() {
+  getImpl<detail::StandardsInformationConstruction_Impl>()->resetFenestrationNumberofPanes();
+}
+
+bool StandardsInformationConstruction::setFenestrationFrameType(std::string fenestrationFrameType) {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->setFenestrationFrameType(fenestrationFrameType);
+}
+
+void StandardsInformationConstruction::resetFenestrationFrameType() {
+  getImpl<detail::StandardsInformationConstruction_Impl>()->resetFenestrationFrameType();
+}
+
+bool StandardsInformationConstruction::setFenestrationDividerType(std::string fenestrationDividerType) {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->setFenestrationDividerType(fenestrationDividerType);
+}
+
+void StandardsInformationConstruction::resetFenestrationDividerType() {
+  getImpl<detail::StandardsInformationConstruction_Impl>()->resetFenestrationDividerType();
+}
+
+bool StandardsInformationConstruction::setFenestrationTint(std::string fenestrationTint) {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->setFenestrationTint(fenestrationTint);
+}
+
+void StandardsInformationConstruction::resetFenestrationTint() {
+  getImpl<detail::StandardsInformationConstruction_Impl>()->resetFenestrationTint();
+}
+
+bool StandardsInformationConstruction::setFenestrationGasFill(std::string fenestrationGasFill) {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->setFenestrationGasFill(fenestrationGasFill);
+}
+
+void StandardsInformationConstruction::resetFenestrationGasFill() {
+  getImpl<detail::StandardsInformationConstruction_Impl>()->resetFenestrationGasFill();
+}
+
+void StandardsInformationConstruction::setFenestrationLowEmissivityCoating(bool fenestrationLowEmissivityCoating) {
+  getImpl<detail::StandardsInformationConstruction_Impl>()->setFenestrationLowEmissivityCoating(fenestrationLowEmissivityCoating);
+}
+
+void StandardsInformationConstruction::resetFenestrationLowEmissivityCoating() {
+  getImpl<detail::StandardsInformationConstruction_Impl>()->resetFenestrationLowEmissivityCoating();
+}
+
 /// @cond
 StandardsInformationConstruction::StandardsInformationConstruction(
     std::shared_ptr<detail::StandardsInformationConstruction_Impl> impl)
@@ -447,3 +857,4 @@ StandardsInformationConstruction::StandardsInformationConstruction(
 
 } // model
 } // openstudio
+

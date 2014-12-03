@@ -185,10 +185,8 @@ StandardsInformationMaterial::StandardsInformationMaterial(const Model& model)
 }
 
 IddObjectType StandardsInformationMaterial::iddObjectType() {
-  //                                  OS_StandardsInformation_Material
-  return IddObjectType(0l);
+  return IddObjectType(0l); // TODO
   //return IddObjectType(IddObjectType::OS_StandardsInformation_Material);
-
 }
 
 Material StandardsInformationMaterial::material() const {
