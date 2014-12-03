@@ -151,6 +151,7 @@ class BuildingInspectorView : public ModelObjectInspectorView
     OSIntegerEdit2* m_numberAboveGroundStories;
     OSSwitch2* m_relocatable;
     OSQuantityEdit2 * m_floorToCeilingHeight = nullptr;
+    OSQuantityEdit2 * m_floorToFloorHeight = nullptr;
     bool m_isIP;
 
   public slots:

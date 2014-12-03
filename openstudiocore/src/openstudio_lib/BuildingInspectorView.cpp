@@ -295,46 +295,6 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   mainGridLayout->addLayout(vLayout, row, 0);
   mainGridLayout->setRowMinimumHeight(row, 30);
 
-  // Nominal Floor to Ceiling Height
-  vLayout = new QVBoxLayout();
-
-  label = new QLabel();
-  label->setText("Nominal Floor to Ceiling Height: ");
-  label->setObjectName("StandardsInfo");
-  vLayout->addWidget(label);
-
-  m_floorToCeilingHeight = new OSQuantityEdit2("m", "m", "ft", m_isIP);
-  m_floorToCeilingHeight->doubleValidator()->setBottom(0);
-  connect(this, &BuildingInspectorView::toggleUnitsClicked, m_floorToCeilingHeight, &OSQuantityEdit2::onUnitSystemChange);
-  vLayout->addWidget(m_floorToCeilingHeight);
-
-  vLayout->addStretch();
-
-  mainGridLayout->addLayout(vLayout,row,1);
-  mainGridLayout->setRowMinimumHeight(row, 30);
-
-  // DLM: We could undeprecate "Building Sector Type" and put
-  // it here too?
-
-  ++row;
-
-  // Standards Number of Living Units
-  vLayout = new QVBoxLayout();
-
-  label = new QLabel();
-  label->setText("Standards Number of Living Units: ");
-  label->setObjectName("StandardsInfo");
-  vLayout->addWidget(label);
-
-  m_numberLivingUnits = new OSIntegerEdit2();
-  m_numberLivingUnits->intValidator()->setBottom(0);
-  vLayout->addWidget(m_numberLivingUnits);
-
-  vLayout->addStretch();
-
-  mainGridLayout->addLayout(vLayout, row, 0);
-  mainGridLayout->setRowMinimumHeight(row, 30);
-
   // Relocatable 
   vLayout = new QVBoxLayout();
 
@@ -351,6 +311,47 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
 
   mainGridLayout->addLayout(vLayout, row, 1);
   mainGridLayout->setRowMinimumHeight(row, 30);
+
+  ++row;
+
+  // Nominal Floor to Ceiling Height
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Nominal Floor to Ceiling Height: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_floorToCeilingHeight = new OSQuantityEdit2("m", "m", "ft", m_isIP);
+  m_floorToCeilingHeight->doubleValidator()->setBottom(0);
+  connect(this, &BuildingInspectorView::toggleUnitsClicked, m_floorToCeilingHeight, &OSQuantityEdit2::onUnitSystemChange);
+  vLayout->addWidget(m_floorToCeilingHeight);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout,row,0);
+  mainGridLayout->setRowMinimumHeight(row, 30);
+
+  // Nominal Floor to Floor Height
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Nominal Floor to Floor Height: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_floorToFloorHeight = new OSQuantityEdit2("m", "m", "ft", m_isIP);
+  m_floorToFloorHeight->doubleValidator()->setBottom(0);
+  connect(this, &BuildingInspectorView::toggleUnitsClicked, m_floorToFloorHeight, &OSQuantityEdit2::onUnitSystemChange);
+  vLayout->addWidget(m_floorToFloorHeight);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout, row, 1);
+  mainGridLayout->setRowMinimumHeight(row, 30);
+
+  // DLM: We could undeprecate "Building Sector Type" and put
+  // it here too?
 
   ++row;
 
@@ -386,6 +387,25 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   vLayout->addStretch();
 
   mainGridLayout->addLayout(vLayout, row, 1);
+  mainGridLayout->setRowMinimumHeight(row, 30);
+
+  ++row;
+
+  // Standards Number of Living Units
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Standards Number of Living Units: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_numberLivingUnits = new OSIntegerEdit2();
+  m_numberLivingUnits->intValidator()->setBottom(0);
+  vLayout->addWidget(m_numberLivingUnits);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout, row, 0);
   mainGridLayout->setRowMinimumHeight(row, 30);
 
   ++row;
@@ -587,6 +607,18 @@ void BuildingInspectorView::attach(openstudio::model::Building& building)
     // Evan note: the line above and the line below accomplish the same thing, although the lambda function below is now preferred as it is considered more readable and perhaps slightly faster
     boost::optional<DoubleSetter>([this](double d) { return m_building->setNominalFloortoCeilingHeight(d); }),
     boost::optional<NoFailAction>([this]() { return m_building->resetNominalFloortoCeilingHeight(); }),
+    boost::optional<NoFailAction>(),
+    boost::optional<NoFailAction>(),
+    boost::optional<BasicQuery>(),
+    boost::optional<BasicQuery>(),
+    boost::optional<BasicQuery>());
+
+  m_floorToFloorHeight->bind(
+    m_isIP,
+    *m_building,
+    OptionalDoubleGetter([this]() {return m_building->nominalFloortoFloorHeight(); }),
+    boost::optional<DoubleSetter>([this](double d) { return m_building->setNominalFloortoFloorHeight(d); }),
+    boost::optional<NoFailAction>([this]() { return m_building->resetNominalFloortoFloorHeight(); }),
     boost::optional<NoFailAction>(),
     boost::optional<NoFailAction>(),
     boost::optional<BasicQuery>(),
