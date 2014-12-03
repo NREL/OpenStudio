@@ -45,13 +45,14 @@ TEST_F(ModelFixture,BuildingStory_NominalZCoordinate) {
 
 TEST_F(ModelFixture,BuildingStory_NominalFloortoFloorHeight) {
   Model model;
-  // TODO: Check constructor.
-  BuildingStory buildingStory(model);
 
-  // TODO: Check that value is appropriate (within bounds)
+  BuildingStory buildingStory(model);
+  EXPECT_FALSE(buildingStory.nominalFloortoFloorHeight());
+
   double value(1.0);
   EXPECT_TRUE(buildingStory.setNominalFloortoFloorHeight(value));
-  double result = buildingStory.nominalFloortoFloorHeight();
-  EXPECT_NEAR(value, result, 1.0E-8);
+  boost::optional<double> result = buildingStory.nominalFloortoFloorHeight();
+  ASSERT_TRUE(result);
+  EXPECT_NEAR(value, *result, 1.0E-8);
 }
 

@@ -159,15 +159,11 @@ namespace detail {
     return isEmpty(OS_BuildingFields::NorthAxis);
   }
 
-  double Building_Impl::nominalFloortoFloorHeight() const {
+  boost::optional<double> Building_Impl::nominalFloortoFloorHeight() const {
     boost::optional<double> value = getDouble(OS_BuildingFields::NominalFloortoFloorHeight,true);
-    OS_ASSERT(value);
-    return value.get();
+    return value;
   }
 
-  bool Building_Impl::isNominalFloortoFloorHeightDefaulted() const {
-    return isEmpty(OS_BuildingFields::NominalFloortoFloorHeight);
-  }
 
   boost::optional<int> Building_Impl::standardsNumberOfStories() const
   {
@@ -187,14 +183,9 @@ namespace detail {
     return value;
   }
 
-  double Building_Impl::nominalFloortoCeilingHeight() const {
+  boost::optional<double> Building_Impl::nominalFloortoCeilingHeight() const {
     boost::optional<double> value = getDouble(OS_BuildingFields::NominalFloortoCeilingHeight, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool Building_Impl::isNominalFloortoCeilingHeightDefaulted() const {
-    return isEmpty(OS_BuildingFields::NominalFloortoCeilingHeight);
+    return value;
   }
 
   boost::optional<std::string> Building_Impl::standardsBuildingType() const
@@ -349,6 +340,12 @@ namespace detail {
     }
     OS_ASSERT(result);
     return result;
+  }
+
+  void Building_Impl::resetRelocatable()
+  {
+    bool result = setString(OS_BuildingFields::Relocatable, "");
+    OS_ASSERT(result);
   }
 
   boost::optional<SpaceType> Building_Impl::spaceType() const
@@ -926,12 +923,8 @@ bool Building::isNorthAxisDefaulted() const {
   return getImpl<detail::Building_Impl>()->isNorthAxisDefaulted();
 }
 
-double Building::nominalFloortoFloorHeight() const {
+boost::optional<double> Building::nominalFloortoFloorHeight() const {
   return getImpl<detail::Building_Impl>()->nominalFloortoFloorHeight();
-}
-
-bool Building::isNominalFloortoFloorHeightDefaulted() const {
-  return getImpl<detail::Building_Impl>()->isNominalFloortoFloorHeightDefaulted();
 }
 
 boost::optional<int> Building::standardsNumberOfStories() const{
@@ -946,12 +939,8 @@ boost::optional<int> Building::standardsNumberOfLivingUnits() const{
   return getImpl<detail::Building_Impl>()->standardsNumberOfLivingUnits();
 }
 
-double Building::nominalFloortoCeilingHeight() const {
+boost::optional<double> Building::nominalFloortoCeilingHeight() const {
   return getImpl<detail::Building_Impl>()->nominalFloortoCeilingHeight();
-}
-
-bool Building::isNominalFloortoCeilingHeightDefaulted() const {
-  return getImpl<detail::Building_Impl>()->isNominalFloortoCeilingHeightDefaulted();
 }
 
 boost::optional<std::string> Building::standardsBuildingType() const{
@@ -1028,6 +1017,10 @@ void Building::resetStandardsBuildingType(){
 
 void Building::setRelocatable(bool isRelocatable){
   getImpl<detail::Building_Impl>()->setRelocatable(isRelocatable); 
+}
+
+void Building::resetRelocatable(){
+  getImpl<detail::Building_Impl>()->resetRelocatable();
 }
 
 boost::optional<SpaceType> Building::spaceType() const
@@ -1215,9 +1208,7 @@ Building::Building(std::shared_ptr<detail::Building_Impl> impl)
 
 Building::Building(Model& model)
   : ParentObject(Building::iddObjectType(),model)
-{
-  setNominalFloortoCeilingHeight(3); // TODO replace with smart default, when available
-}
+{}
 
 /// @endcond
 

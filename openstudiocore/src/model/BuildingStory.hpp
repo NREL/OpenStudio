@@ -58,25 +58,18 @@ class MODEL_API BuildingStory : public ModelObject {
 
   boost::optional<double> nominalZCoordinate() const;
 
-  double nominalFloortoFloorHeight() const;
+  boost::optional<double> nominalFloortoFloorHeight() const;
 
-  bool isNominalFloortoFloorHeightDefaulted() const;
-
-  double nominalFloortoCeilingHeight() const;
-  bool isNominalFloortoCeilingHeightDefaulted() const;
+  boost::optional<double> nominalFloortoCeilingHeight() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  void setNominalZCoordinate(boost::optional<double> nominalZCoordinate);
-
   void setNominalZCoordinate(double nominalZCoordinate);
-
   void resetNominalZCoordinate();
 
   bool setNominalFloortoFloorHeight(double nominalFloortoFloorHeight);
-
   void resetNominalFloortoFloorHeight();
 
   bool setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight);

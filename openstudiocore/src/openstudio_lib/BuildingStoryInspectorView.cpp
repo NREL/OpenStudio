@@ -492,7 +492,7 @@ void BuildingStoryInspectorView::attach(openstudio::model::BuildingStory& buildi
     OptionalDoubleGetter(std::bind(&model::BuildingStory::nominalZCoordinate, buildingStory)),
     // Evan note: "auto bs" required as a copy because the passed in buildingStory object became const in the lambda function
     DoubleSetterVoidReturn([buildingStory](double d) { auto bs = buildingStory; bs.setNominalZCoordinate(d); }),
-    boost::optional<NoFailAction>(std::bind(&model::BuildingStory::resetNominalZCoordinate, buildingStory)),
+    boost::optional<NoFailAction>([buildingStory]() { auto bs = buildingStory; bs.resetNominalZCoordinate(); }),
     boost::optional<NoFailAction>(),
     boost::optional<NoFailAction>(),
     boost::optional<BasicQuery>(),
@@ -502,9 +502,9 @@ void BuildingStoryInspectorView::attach(openstudio::model::BuildingStory& buildi
   m_floorToFloorHeight->bind(
     m_isIP,
     buildingStory,
-    DoubleGetter(std::bind(&model::BuildingStory::nominalFloortoFloorHeight, buildingStory)),
+    OptionalDoubleGetter([buildingStory]() { return buildingStory.nominalFloortoFloorHeight(); }),
     boost::optional<DoubleSetter>([buildingStory](double d) { auto bs = buildingStory; return bs.setNominalFloortoFloorHeight(d); }),
-    boost::optional<NoFailAction>(std::bind(&model::BuildingStory::resetNominalFloortoFloorHeight, buildingStory)),
+    boost::optional<NoFailAction>([buildingStory]() { auto bs = buildingStory; bs.resetNominalFloortoFloorHeight(); }),
     boost::optional<NoFailAction>(),
     boost::optional<NoFailAction>(),
     boost::optional<BasicQuery>(),
@@ -514,9 +514,9 @@ void BuildingStoryInspectorView::attach(openstudio::model::BuildingStory& buildi
   m_floorToCeilingHeight->bind(
     m_isIP,
     buildingStory,
-    DoubleGetter(std::bind(&model::BuildingStory::nominalFloortoCeilingHeight, buildingStory)),
+    OptionalDoubleGetter([buildingStory]() { return buildingStory.nominalFloortoCeilingHeight(); }),
     boost::optional<DoubleSetter>([buildingStory](double d) { auto bs = buildingStory; return bs.setNominalFloortoCeilingHeight(d); }),
-    boost::optional<NoFailAction>(std::bind(&model::BuildingStory::resetNominalFloortoCeilingHeight, buildingStory)),
+    boost::optional<NoFailAction>([buildingStory]() { auto bs = buildingStory; bs.resetNominalFloortoCeilingHeight(); }),
     boost::optional<NoFailAction>(),
     boost::optional<NoFailAction>(),
     boost::optional<BasicQuery>(),

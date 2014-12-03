@@ -69,12 +69,9 @@ class MODEL_API Building : public ParentObject {
   //@{
 
   double northAxis() const;
-
   bool isNorthAxisDefaulted() const;
 
-  double nominalFloortoFloorHeight() const;
-
-  bool isNominalFloortoFloorHeightDefaulted() const;
+  boost::optional<double> nominalFloortoFloorHeight() const;
 
   boost::optional<int> standardsNumberOfStories() const;
 
@@ -82,8 +79,7 @@ class MODEL_API Building : public ParentObject {
 
   boost::optional<int> standardsNumberOfLivingUnits() const;
 
-  double nominalFloortoCeilingHeight() const;
-  bool isNominalFloortoCeilingHeightDefaulted() const;
+  boost::optional<double> nominalFloortoCeilingHeight() const;
 
   /// Returns the standards building type. This is a freeform field used to identify the building type for standards.
   /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
@@ -95,7 +91,6 @@ class MODEL_API Building : public ParentObject {
   std::vector<std::string> suggestedStandardsBuildingTypes() const;
 
   bool relocatable() const;
-
   bool isRelocatableDefaulted() const;
 
   //@}
@@ -103,11 +98,9 @@ class MODEL_API Building : public ParentObject {
   //@{
 
   void setNorthAxis(double northAxis);
-
   void resetNorthAxis();
 
   bool setNominalFloortoFloorHeight(double nominalFloortoFloorHeight);
-
   void resetNominalFloortoFloorHeight();
 
   bool setStandardsNumberOfStories(int value);
@@ -129,6 +122,8 @@ class MODEL_API Building : public ParentObject {
   void resetStandardsBuildingType();
 
   void setRelocatable(bool isRelocatable);
+  void resetRelocatable();
+
 
   //@}
   /** @name Other */

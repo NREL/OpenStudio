@@ -79,34 +79,14 @@ namespace detail {
     return getDouble(OS_BuildingStoryFields::NominalZCoordinate,true);
   }
 
-  double BuildingStory_Impl::nominalFloortoFloorHeight() const {
+  boost::optional<double> BuildingStory_Impl::nominalFloortoFloorHeight() const {
     boost::optional<double> value = getDouble(OS_BuildingStoryFields::NominalFloortoFloorHeight,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-  
-  bool BuildingStory_Impl::isNominalFloortoFloorHeightDefaulted() const {
-    return isEmpty(OS_BuildingStoryFields::NominalFloortoFloorHeight);
+    return value;
   }
 
-  double BuildingStory_Impl::nominalFloortoCeilingHeight() const {
+  boost::optional<double> BuildingStory_Impl::nominalFloortoCeilingHeight() const {
     boost::optional<double> value = getDouble(OS_BuildingStoryFields::NominalFloortoCeilingHeight, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool BuildingStory_Impl::isNominalFloortoCeilingHeightDefaulted() const {
-    return isEmpty(OS_BuildingStoryFields::NominalFloortoCeilingHeight);
-  }
-
-  void BuildingStory_Impl::setNominalZCoordinate(boost::optional<double> nominalZCoordinate) {
-    bool result = false;
-    if (nominalZCoordinate) {
-      result = setDouble(OS_BuildingStoryFields::NominalZCoordinate, nominalZCoordinate.get());
-    } else {
-      result = setString(OS_BuildingStoryFields::NominalZCoordinate, "");
-    }
-    OS_ASSERT(result);
+    return value;
   }
 
   void BuildingStory_Impl::setNominalZCoordinate(double nominalZCoordinate) {
@@ -270,8 +250,6 @@ BuildingStory::BuildingStory(const Model& model)
   : ModelObject(BuildingStory::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::BuildingStory_Impl>());
-
-  setNominalFloortoCeilingHeight(nominalFloortoFloorHeight()); // TODO replace with smart default, when available
 }
 
 IddObjectType BuildingStory::iddObjectType() {
@@ -283,24 +261,12 @@ boost::optional<double> BuildingStory::nominalZCoordinate() const {
   return getImpl<detail::BuildingStory_Impl>()->nominalZCoordinate();
 }
 
-double BuildingStory::nominalFloortoFloorHeight() const {
+boost::optional<double> BuildingStory::nominalFloortoFloorHeight() const {
   return getImpl<detail::BuildingStory_Impl>()->nominalFloortoFloorHeight();
 }
 
-bool BuildingStory::isNominalFloortoFloorHeightDefaulted() const {
-  return getImpl<detail::BuildingStory_Impl>()->isNominalFloortoFloorHeightDefaulted();
-}
-
-double BuildingStory::nominalFloortoCeilingHeight() const {
+boost::optional<double> BuildingStory::nominalFloortoCeilingHeight() const {
   return getImpl<detail::BuildingStory_Impl>()->nominalFloortoCeilingHeight();
-}
-
-bool BuildingStory::isNominalFloortoCeilingHeightDefaulted() const {
-  return getImpl<detail::BuildingStory_Impl>()->isNominalFloortoCeilingHeightDefaulted();
-}
-
-void BuildingStory::setNominalZCoordinate(boost::optional<double> nominalZCoordinate) {
-  getImpl<detail::BuildingStory_Impl>()->setNominalZCoordinate(nominalZCoordinate);
 }
 
 void BuildingStory::setNominalZCoordinate(double nominalZCoordinate) {

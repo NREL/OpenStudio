@@ -1809,7 +1809,6 @@ OS:BuildingStory,
        \type real
        \units m
        \minimum> 0
-       \default 3.0
   A3, \field Default Construction Set Name
        \type object-list
        \object-list DefaultConstructionSetNames
@@ -4301,7 +4300,6 @@ OS:Building,
        \type real
        \units m
        \minimum> 0
-       \default 3.0
   A4, \field Space Type Name
        \type object-list
        \object-list SpaceTypeNames

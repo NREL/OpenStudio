@@ -38,11 +38,6 @@ namespace detail {
   class MODEL_API BuildingStory_Impl : public ModelObject_Impl {
     Q_OBJECT;
     
-    Q_PROPERTY(boost::optional<double> nominalZCoordinate READ nominalZCoordinate WRITE setNominalZCoordinate RESET resetNominalZCoordinate);
-    
-    Q_PROPERTY(double nominalFloortoFloorHeight READ nominalFloortoFloorHeight WRITE setNominalFloortoFloorHeight RESET resetNominalFloortoFloorHeight);
-    Q_PROPERTY(bool isNominalFloortoFloorHeightDefaulted READ isNominalFloortoFloorHeightDefaulted);
-
     Q_PROPERTY(boost::optional<openstudio::model::ModelObject> defaultConstructionSet READ defaultConstructionSetAsModelObject WRITE setDefaultConstructionSetAsModelObject RESET resetDefaultConstructionSet);
     Q_PROPERTY(boost::optional<openstudio::model::ModelObject> defaultScheduleSet READ defaultScheduleSetAsModelObject WRITE setDefaultScheduleSetAsModelObject RESET resetDefaultScheduleSet);
     Q_PROPERTY(boost::optional<openstudio::model::ModelObject> renderingColor READ renderingColorAsModelObject WRITE setRenderingColorAsModelObject RESET resetRenderingColor);
@@ -73,25 +68,18 @@ namespace detail {
 
     boost::optional<double> nominalZCoordinate() const;
 
-    double nominalFloortoFloorHeight() const;
+    boost::optional<double> nominalFloortoFloorHeight() const;
 
-    bool isNominalFloortoFloorHeightDefaulted() const;
-
-    double nominalFloortoCeilingHeight() const;
-    bool isNominalFloortoCeilingHeightDefaulted() const;
+    boost::optional<double> nominalFloortoCeilingHeight() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    void setNominalZCoordinate(boost::optional<double> nominalZCoordinate);
-
     void setNominalZCoordinate(double nominalZCoordinate);
-
     void resetNominalZCoordinate();
 
     bool setNominalFloortoFloorHeight(double nominalFloortoFloorHeight);
-
     void resetNominalFloortoFloorHeight();
 
     bool setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight);

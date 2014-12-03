@@ -525,7 +525,9 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
     openstudio::contam::Level level;
     level.setName(QString("<%1>").arg(nr).toStdString());
     m_levelMap[buildingStory.handle()] = nr;
-    double ht = buildingStory.nominalFloortoFloorHeight();
+    // DLM: I am modifying this based on how nominalZCoordinate is handled below
+    // However, this looks really dangerous and bad
+    double ht = buildingStory.nominalFloortoFloorHeight().get();
     totalHeight += ht;
     double z = buildingStory.nominalZCoordinate().get();
     level.setNr(nr);
