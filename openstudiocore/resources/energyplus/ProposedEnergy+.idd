@@ -1,4 +1,5 @@
-!IDD_Version 8.1.0.009
+!IDD_Version 8.2.0
+!IDD_BUILD e53a815bb2
 ! **************************************************************************
 ! This file is the Input Data Dictionary (IDD) for EnergyPlus.
 ! The IDD defines the syntax and data model for each type of input "Object."
