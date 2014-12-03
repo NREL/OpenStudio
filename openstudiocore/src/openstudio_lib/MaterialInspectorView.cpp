@@ -19,6 +19,8 @@
 
 #include "MaterialInspectorView.hpp"
 
+#include "OSItem.hpp"
+
 #include "../shared_gui_components/OSComboBox.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
@@ -62,23 +64,107 @@ void MaterialInspectorView::createLayout()
   mainGridLayout->setSpacing(14);
   visibleWidget->setLayout(mainGridLayout);
 
+  QVBoxLayout* vLayout = new QVBoxLayout();
+
   unsigned row = 0;
-  unsigned col = 0;
 
   // Name
+  vLayout = new QVBoxLayout();
 
   QLabel * label = new QLabel("Name: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  vLayout->addWidget(label);
 
   m_nameEdit = new OSLineEdit();
   mainGridLayout->addWidget(m_nameEdit,row++,0,1,3);
 
+  // Measure Tags
+  QFrame * line;
+  line = new QFrame();
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  mainGridLayout->addWidget(line, row++, 0, 1, 3);
+
+  label = new QLabel();
+  label->setText("Measure Tags (Optional):");
+  label->setObjectName("H2");
+  mainGridLayout->addWidget(label, row++, 0);
+
+  // Standard
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Standard: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_standard = new OSComboBox();
+  m_standard->setEditable(true);
+  m_standard->setDuplicatesEnabled(false);
+  m_standard->setFixedWidth(OSItem::ITEM_WIDTH);
+  vLayout->addWidget(m_standard);
+
+  mainGridLayout->addLayout(vLayout, row, 0);
+
+  // Standard Source
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Standard Source: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_standardSource = new OSComboBox();
+  m_standardSource->setEditable(true);
+  m_standardSource->setDuplicatesEnabled(false);
+  m_standardSource->setFixedWidth(OSItem::ITEM_WIDTH);
+  vLayout->addWidget(m_standardSource);
+
+  mainGridLayout->addLayout(vLayout, row++, 1);
+
+  // Standards Category
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Standards Category: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_standardsCategory = new OSComboBox();
+  m_standardsCategory->setEditable(true);
+  m_standardsCategory->setDuplicatesEnabled(false);
+  m_standardsCategory->setFixedWidth(OSItem::ITEM_WIDTH);
+  vLayout->addWidget(m_standardsCategory);
+
+  mainGridLayout->addLayout(vLayout, row, 0);
+
+  // Standards Identifier
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Standards Identifier: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_standardsIdentifier = new OSComboBox();
+  m_standardsIdentifier->setEditable(true);
+  m_standardsIdentifier->setDuplicatesEnabled(false);
+  m_standardsIdentifier->setFixedWidth(OSItem::ITEM_WIDTH);
+  vLayout->addWidget(m_standardsIdentifier);
+
+  mainGridLayout->addLayout(vLayout, row++, 1);
+
+  line = new QFrame();
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  mainGridLayout->addWidget(line, row++, 0, 1, 3);
+
   // Roughness
+  vLayout = new QVBoxLayout();
 
   label = new QLabel("Roughness: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  vLayout->addWidget(label);
 
   m_roughness = new OSComboBox();
   m_roughness->addItem("Very Rough");
@@ -87,77 +173,100 @@ void MaterialInspectorView::createLayout()
   m_roughness->addItem("Medium Smooth");
   m_roughness->addItem("Smooth");
   m_roughness->addItem("Very Smooth");
-  mainGridLayout->addWidget(m_roughness,row++,0,1,3);
+  vLayout->addWidget(m_roughness);
+
+  mainGridLayout->addLayout(vLayout, row, 0);
 
   // Thickness
+  vLayout = new QVBoxLayout();
 
   label = new QLabel("Thickness: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  vLayout->addWidget(label);
 
   m_thickness = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialInspectorView::toggleUnitsClicked, m_thickness, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_thickness,row++,0,1,3);
+  vLayout->addWidget(m_thickness);
+
+  mainGridLayout->addLayout(vLayout, row++, 1);
 
   // Conductivity
+  vLayout = new QVBoxLayout();
 
   label = new QLabel("Conductivity: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  vLayout->addWidget(label);
 
   m_conductivity = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialInspectorView::toggleUnitsClicked, m_conductivity, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_conductivity,row++,0,1,3);
+  vLayout->addWidget(m_conductivity);
+
+  mainGridLayout->addLayout(vLayout, row, 0);
 
   // Density
+  vLayout = new QVBoxLayout();
 
   label = new QLabel("Density: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  vLayout->addWidget(label);
 
   m_density = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialInspectorView::toggleUnitsClicked, m_density, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_density,row++,0,1,3);
+  vLayout->addWidget(m_density);
+
+  mainGridLayout->addLayout(vLayout, row++, 1);
 
   // Specific Heat
+  vLayout = new QVBoxLayout();
 
   label = new QLabel("Specific Heat: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  vLayout->addWidget(label);
 
   m_specificHeat = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialInspectorView::toggleUnitsClicked, m_specificHeat, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_specificHeat,row++,0,1,3);
+  vLayout->addWidget(m_specificHeat);
+
+  mainGridLayout->addLayout(vLayout, row, 0);
 
   // Thermal Absorptance
+  vLayout = new QVBoxLayout();
 
   label = new QLabel("Thermal Absorptance: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  vLayout->addWidget(label);
 
   m_thermalAbsorptance = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialInspectorView::toggleUnitsClicked, m_thermalAbsorptance, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_thermalAbsorptance,row++,0,1,3);
+  vLayout->addWidget(m_thermalAbsorptance);
+
+  mainGridLayout->addLayout(vLayout, row++, 1);
 
   // Solar Absorptance
+  vLayout = new QVBoxLayout();
 
   label = new QLabel("Solar Absorptance: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  vLayout->addWidget(label);
 
   m_solarAbsorptance = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialInspectorView::toggleUnitsClicked, m_solarAbsorptance, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_solarAbsorptance,row++,0,1,3);
+  vLayout->addWidget(m_solarAbsorptance);
+
+  mainGridLayout->addLayout(vLayout, row, 0);
 
   // Visible Absorptance
+  vLayout = new QVBoxLayout();
 
   label = new QLabel("Visible Absorptance: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  vLayout->addWidget(label);
 
   m_visibleAbsorptance = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialInspectorView::toggleUnitsClicked, m_visibleAbsorptance, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_visibleAbsorptance,row++,0,1,3);
+  vLayout->addWidget(m_visibleAbsorptance);
+
+  mainGridLayout->addLayout(vLayout, row++, 1);
 
   // Stretch
 

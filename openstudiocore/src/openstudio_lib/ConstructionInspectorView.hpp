@@ -86,6 +86,10 @@ class ConstructionInspectorView : public ModelObjectInspectorView
 
     OSComboBox2 * m_intendedSurfaceType;
 
+    OSComboBox2 * m_standard = nullptr;
+
+    OSComboBox2 * m_standardSource = nullptr;
+
     QComboBox * m_standardsConstructionType;
 
     boost::optional<openstudio::model::StandardsInformationConstruction> m_standardsInformation;

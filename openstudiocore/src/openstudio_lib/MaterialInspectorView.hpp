@@ -66,6 +66,14 @@ class MaterialInspectorView : public ModelObjectInspectorView
 
     OSComboBox * m_roughness;
 
+    OSComboBox * m_standard = nullptr;
+
+    OSComboBox * m_standardSource = nullptr;
+
+    OSComboBox * m_standardsCategory = nullptr;
+    
+    OSComboBox * m_standardsIdentifier = nullptr;
+    
     OSLineEdit * m_nameEdit;
 
     OSQuantityEdit * m_thickness;

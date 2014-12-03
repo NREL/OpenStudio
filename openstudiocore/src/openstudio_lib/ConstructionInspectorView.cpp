@@ -24,23 +24,24 @@
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 #include "OSDropZone.hpp"
+
 #include "../shared_gui_components/OSComboBox.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 
 #include "../model/Construction.hpp"
 #include "../model/Construction_Impl.hpp"
-#include "../model/StandardsInformationConstruction.hpp"
 #include "../model/Material.hpp"
 #include "../model/Material_Impl.hpp"
+#include "../model/StandardsInformationConstruction.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include <utilities/idd/OS_Construction_FieldEnums.hxx>
 
+#include <QComboBox>
 #include <QGridLayout>
 #include <QLabel>
 #include <QMessageBox>
 #include <QStackedWidget>
-#include <QComboBox>
 
 namespace openstudio {
 
@@ -66,6 +67,7 @@ void ConstructionInspectorView::createLayout()
   visibleWidget->setLayout(mainGridLayout);
 
   int row = 0;
+  QVBoxLayout * vLayout = nullptr;
 
   // Name
 
@@ -80,7 +82,7 @@ void ConstructionInspectorView::createLayout()
 
   ++row;
 
-  // Standards
+  // Measure Tags
   QFrame * line;
   line = new QFrame();
   line->setFrameShape(QFrame::HLine);
@@ -96,7 +98,42 @@ void ConstructionInspectorView::createLayout()
 
   ++row;
 
-  QVBoxLayout* vLayout = new QVBoxLayout();
+  // Standard
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Standard: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_standard = new OSComboBox2();
+  m_standard->setEditable(true);
+  m_standard->setDuplicatesEnabled(false);
+  m_standard->setFixedWidth(OSItem::ITEM_WIDTH);
+  vLayout->addWidget(m_standard);
+
+  mainGridLayout->addLayout(vLayout, row, 0);
+
+  // Standard Source
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Standard Source: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_standardSource = new OSComboBox2();
+  m_standardSource->setEditable(true);
+  m_standardSource->setDuplicatesEnabled(false);
+  m_standardSource->setFixedWidth(OSItem::ITEM_WIDTH);
+  vLayout->addWidget(m_standardSource);
+
+  mainGridLayout->addLayout(vLayout, row, 1);
+
+  ++row;
+
+  // Intended Surface Type
+  vLayout = new QVBoxLayout();
 
   label = new QLabel();
   label->setText("Intended Surface Type: ");
@@ -109,6 +146,7 @@ void ConstructionInspectorView::createLayout()
 
   mainGridLayout->addLayout(vLayout,row,0);
 
+  // Standards Construction Type
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
