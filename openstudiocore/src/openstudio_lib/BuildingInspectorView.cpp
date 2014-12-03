@@ -304,6 +304,7 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   vLayout->addWidget(label);
 
   m_floorToCeilingHeight = new OSQuantityEdit2("m", "m", "ft", m_isIP);
+  m_floorToCeilingHeight->doubleValidator()->setBottom(0);
   connect(this, &BuildingInspectorView::toggleUnitsClicked, m_floorToCeilingHeight, &OSQuantityEdit2::onUnitSystemChange);
   vLayout->addWidget(m_floorToCeilingHeight);
 
@@ -326,6 +327,7 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   vLayout->addWidget(label);
 
   m_numberLivingUnits = new OSIntegerEdit2();
+  m_numberLivingUnits->intValidator()->setBottom(0);
   vLayout->addWidget(m_numberLivingUnits);
 
   vLayout->addStretch();
@@ -361,6 +363,7 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   vLayout->addWidget(label);
 
   m_numberStories = new OSIntegerEdit2();
+  m_numberStories->intValidator()->setBottom(0);
   vLayout->addWidget(m_numberStories);
 
   vLayout->addStretch();
@@ -377,6 +380,7 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   vLayout->addWidget(label);
 
   m_numberAboveGroundStories = new OSIntegerEdit2();
+  m_numberAboveGroundStories->intValidator()->setBottom(0);
   vLayout->addWidget(m_numberAboveGroundStories);
 
   vLayout->addStretch();

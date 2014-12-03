@@ -354,6 +354,7 @@ BuildingStoryInspectorView::BuildingStoryInspectorView(bool isIP, const openstud
   vLayout->addWidget(label);
 
   m_floorToCeilingHeight = new OSQuantityEdit2("m", "m", "ft", m_isIP);
+  m_floorToCeilingHeight->doubleValidator()->setBottom(0);
   connect(this, &BuildingStoryInspectorView::toggleUnitsClicked, m_zCoordinate, &OSQuantityEdit2::onUnitSystemChange);
   vLayout->addWidget(m_floorToCeilingHeight);
 
@@ -371,6 +372,7 @@ BuildingStoryInspectorView::BuildingStoryInspectorView(bool isIP, const openstud
   vLayout->addWidget(label);
 
   m_floorToFloorHeight = new OSQuantityEdit2("m", "m", "ft", m_isIP);
+  m_floorToFloorHeight->doubleValidator()->setBottom(0);
   vLayout->addWidget(m_floorToFloorHeight);
 
   vLayout->addStretch();
