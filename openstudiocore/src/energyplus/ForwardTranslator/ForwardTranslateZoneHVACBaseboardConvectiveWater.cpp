@@ -69,6 +69,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACBaseboardConvecti
   if (coilOptionalHeatBBConvWater){
     CoilHeatingWaterBaseboard coilHeatBBConvWater = *coilOptionalHeatBBConvWater;
 
+    // Heating Design Capacity Method - introduced in 8.2.0 and not yet supported in OS
+    idfObject.setString(ZoneHVAC_Baseboard_Convective_WaterFields::HeatingDesignCapacityMethod,"HeatingDesignCapacity");
+
+    // Heating Design Capacity - introduced in 8.2.0 and not yet supported in OS
+    idfObject.setString(ZoneHVAC_Baseboard_Convective_WaterFields::HeatingDesignCapacity,"Autosize");
+
     // Inlet Node Name 
     temp = coilHeatBBConvWater.inletModelObject();
     if(temp)
