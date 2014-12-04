@@ -329,4 +329,14 @@ bool isEmptyDirectory(const path& dirName)
   return dir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot).empty();
 }
 
+bool isNetworkPath(const path& p)
+{
+  return false;
+}
+
+bool isNetworkPathAvailable(const path& p)
+{
+  return false;
+}
+
 } // openstudio
