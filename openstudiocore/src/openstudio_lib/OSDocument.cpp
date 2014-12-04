@@ -1525,13 +1525,27 @@ void OSDocument::openMeasuresDlg()
 void OSDocument::openChangeMeasuresDirDlg()
 {
   openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
- 
-  QString dirName = QFileDialog::getExistingDirectory( this->mainWindow(),
-                                                       tr("Select My Measures Directory"),
-                                                       toQString(userMeasuresDir));
- 
+
+  QString dirName("");
+
+  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+    QString dirName = QFileDialog::getExistingDirectory(this->mainWindow(),
+      tr("Select My Measures Directory"));
+  }
+  else {
+    QString dirName = QFileDialog::getExistingDirectory(this->mainWindow(),
+      tr("Select My Measures Directory"),
+      toQString(userMeasuresDir));
+  }
+
+  userMeasuresDir = toPath(dirName);
+
+  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+    QMessageBox::information(this->mainWindow(), "Network Connection Problem", "Unable to use new directory.\nYour User Measures Directory appears to be a network directory and is not currently available.\nYou can change your specified User Measures Directory using Preferences->Change My Measures Directory.", QMessageBox::Ok);
+    return;
+  }
+
   if(dirName.length() > 0){
-    userMeasuresDir = toPath(dirName);
     if (BCLMeasure::setUserMeasuresDir(userMeasuresDir)){
       OSAppBase::instance()->measureManager().updateMeasuresLists();
     }

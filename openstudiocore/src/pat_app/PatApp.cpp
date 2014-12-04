@@ -37,6 +37,7 @@
 #include "RunTabController.hpp"
 #include "RunView.hpp"
 #include "StartupView.hpp"
+
 #include <pat_app/VagrantConfiguration.hxx>
 
 #include "../shared_gui_components/BCLMeasureDialog.hpp"
@@ -236,11 +237,18 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
 
   mainWindow->show();
 
-  if (!QDir().exists(toQString(BCLMeasure::userMeasuresDir()))){
-    BCLMeasure::setUserMeasuresDir(BCLMeasure::userMeasuresDir());
-  }
+  openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
 
-  m_measureManager.updateMeasuresLists();
+  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+    QMessageBox::information(this->mainWindow, "Network Connection Problem", "Unable to update Measures list.\nYour User Measures Directory appears to be a network directory and is not currently available.\nYou can change your specified User Measures Directory using Preferences->Change My Measures Directory.", QMessageBox::Ok);
+  }
+  else {
+    if (!QDir().exists(toQString(userMeasuresDir))) {
+      BCLMeasure::setUserMeasuresDir(userMeasuresDir);
+    }
+
+    m_measureManager.updateMeasuresLists();
+  }
 
   if (!fileName.isEmpty()){
     if (openFile(fileName)){
@@ -1184,12 +1192,26 @@ void PatApp::changeUserMeasuresDir()
 {
   openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
 
-  QString dirName = QFileDialog::getExistingDirectory( mainWindow,
-                                                       tr("Select My Measures Directory"),
-                                                       toQString(userMeasuresDir));
+  QString dirName("");
+
+  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+    QString dirName = QFileDialog::getExistingDirectory(mainWindow,
+      tr("Select My Measures Directory"));
+  }
+  else {
+    QString dirName = QFileDialog::getExistingDirectory(mainWindow,
+      tr("Select My Measures Directory"),
+      toQString(userMeasuresDir));
+  }
+
+  userMeasuresDir = toPath(dirName);
+
+  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+    QMessageBox::information(this->mainWindow, "Network Connection Problem", "Unable to use new directory.\nYour User Measures Directory appears to be a network directory and is not currently available.\nYou can change your specified User Measures Directory using Preferences->Change My Measures Directory.", QMessageBox::Ok);
+    return;
+  }
 
   if(dirName.length() > 0){
-    userMeasuresDir = toPath(dirName);
     if (BCLMeasure::setUserMeasuresDir(userMeasuresDir)){
       emit userMeasuresDirChanged();
     }
@@ -1394,7 +1416,7 @@ void PatApp::attachProject(boost::optional<analysisdriver::SimpleProject> projec
 
     openstudio::analysis::Analysis analysis = m_project->analysis();
 
-    // connect signals from the the analysis to this
+    // connect signals from the analysis to this
     bool isConnected = analysis.connect(SIGNAL(changed(ChangeType)), this, SLOT(markAsModified()));
     OS_ASSERT(isConnected);
 
