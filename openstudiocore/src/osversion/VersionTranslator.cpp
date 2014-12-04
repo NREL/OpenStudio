@@ -91,7 +91,8 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.0.3")] = &VersionTranslator::update_1_0_2_to_1_0_3;
   m_updateMethods[VersionString("1.2.3")] = &VersionTranslator::update_1_2_2_to_1_2_3;
   m_updateMethods[VersionString("1.3.5")] = &VersionTranslator::update_1_3_4_to_1_3_5;
-  m_updateMethods[VersionString("1.5.1")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.5.4")] = &VersionTranslator::update_1_5_3_to_1_5_4;
+  //m_updateMethods[VersionString("1.5.4")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -158,6 +159,9 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.4.2"));
   m_startVersions.push_back(VersionString("1.4.3"));
   m_startVersions.push_back(VersionString("1.5.0"));
+  m_startVersions.push_back(VersionString("1.5.1"));
+  m_startVersions.push_back(VersionString("1.5.2"));
+  m_startVersions.push_back(VersionString("1.5.3"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -389,14 +393,14 @@ void VersionTranslator::initializeMap(std::istream& is) {
         // if currentVersion is farther ahead, log error and return nothing
         LOG(Error,"Version extracted from file '" << currentVersion.str()
             << "' is not supported by OpenStudio Version " << openStudioVersion()
-            << ". Please check http://openstudio.nrel.gov for updates.");
+            << ". Please check https://www.openstudio.net for updates.");
         return;
       }
     }else{
       // log error and return nothing
       LOG(Error,"Version extracted from file '" << currentVersion.str()
           << "' is newer than current OpenStudio Version " << openStudioVersion()
-          << ". Please check http://openstudio.nrel.gov for updates.");
+          << ". Please check https://www.openstudio.net for updates.");
       return;
     }
   }
@@ -2342,6 +2346,30 @@ std::string VersionTranslator::update_1_3_4_to_1_3_5(const IdfFile& idf_1_3_4, c
 
     } else {
 
+      ss << object;
+
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_5_3_to_1_5_4(const IdfFile& idf_1_5_3, const IddFileAndFactoryWrapper& idd_1_5_4)
+{
+  std::stringstream ss;
+
+  ss << idf_1_5_3.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_5_4.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_1_5_3.objects()) {
+    if (object.iddObject().name() == "OS:TimeDependentValuation")
+    {
+      // put the object in the untranslated list
+      m_untranslated.push_back(object);
+    } else {
       ss << object;
 
     }

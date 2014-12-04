@@ -28,7 +28,6 @@ public class TestOpenStudio
     System.loadLibrary("OpenStudioUtilitiesCloud_java");
     System.loadLibrary("OpenStudioUtilitiesCore_java");
     System.loadLibrary("OpenStudioUtilitiesData_java");
-    System.loadLibrary("OpenStudioUtilitiesDocument_java");
     System.loadLibrary("OpenStudioUtilitiesEconomics_java");
     System.loadLibrary("OpenStudioUtilitiesFileTypes_java");
     System.loadLibrary("OpenStudioUtilitiesGeometry_java");

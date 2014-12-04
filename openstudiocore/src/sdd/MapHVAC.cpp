@@ -82,6 +82,7 @@
 #include "../model/SetpointManagerSingleZoneReheat_Impl.hpp"
 #include "../model/SetpointManagerScheduled.hpp"
 #include "../model/SetpointManagerWarmest.hpp"
+#include "../model/SetpointManagerWarmestTemperatureFlow.hpp"
 #include "../model/SetpointManagerOutdoorAirReset.hpp"
 #include "../model/ThermalZone.hpp"
 #include "../model/ThermalZone_Impl.hpp"
@@ -1065,6 +1066,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       {
         oaController.resetEconomizerMinimumLimitDryBulbTemperature();
       }
+
+      // TODO Remove this in the future, but for now play it safe and use legacy OpenStudio default.
+      if( (typeElement.text().compare("SZVAVAC",Qt::CaseInsensitive) == 0) ||
+          (typeElement.text().compare("SZVAVHP",Qt::CaseInsensitive) ==0) ) {
+        oaController.setHeatRecoveryBypassControlType("BypassWhenOAFlowGreaterThanMinimum");
+      }
       
       oaSystem = newOASystem;
     }
@@ -1171,32 +1178,76 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       spm.setMinimumSupplyAirTemperature(clgDsgnSupAirTemp);
     }
   }
-  else if( istringEqual(clgCtrlElement.text().toStdString(),"WarmestResetFlowFirst") ||
-           istringEqual(clgCtrlElement.text().toStdString(),"WarmestReset") )
+  else if( istringEqual(clgCtrlElement.text().toStdString(),"WarmestResetFlowFirst") )
   {
-    if( istringEqual(clgCtrlElement.text().toStdString(),"WarmestReset") )
-    {
-      LOG(Warn,nameElement.text().toStdString() << " defines WarmestReset control option, but this option is not yet supported");
-    }
-
-    model::SetpointManagerWarmest spm(model);
-
+    model::SetpointManagerWarmestTemperatureFlow spm(model);
+    spm.setStrategy("FlowFirst");
     deckSPM = spm;
-
     spm.addToNode(supplyOutletNode);
 
     QDomElement clRstSupHiElement = airSystemElement.firstChildElement("ClRstSupHi");
     value = clRstSupHiElement.text().toDouble(&ok);
-    if( ok )
-    {
+    if( ok ) {
       value = unitToUnit(value,"F","C").get();
       spm.setMaximumSetpointTemperature(value);
     }
 
     QDomElement clRstSupLowElement = airSystemElement.firstChildElement("ClRstSupLow");
     value = clRstSupLowElement.text().toDouble(&ok);
-    if( ok )
-    {
+    if( ok ) {
+      value = unitToUnit(value,"F","C").get();
+      spm.setMinimumSetpointTemperature(value);
+    }
+
+    auto dsgnAirFlowMinElement = airSystemElement.firstChildElement("DsgnAirFlowMin");
+    value = dsgnAirFlowMinElement.text().toDouble(&ok);
+    if( ok ) {
+      spm.setMinimumTurndownRatio(value);
+    }
+  }
+  else if( istringEqual(clgCtrlElement.text().toStdString(),"WarmestResetTemperatureFirst") )
+  {
+    model::SetpointManagerWarmestTemperatureFlow spm(model);
+    spm.setStrategy("TemperatureFirst");
+    deckSPM = spm;
+    spm.addToNode(supplyOutletNode);
+
+    QDomElement clRstSupHiElement = airSystemElement.firstChildElement("ClRstSupHi");
+    value = clRstSupHiElement.text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"F","C").get();
+      spm.setMaximumSetpointTemperature(value);
+    }
+
+    QDomElement clRstSupLowElement = airSystemElement.firstChildElement("ClRstSupLow");
+    value = clRstSupLowElement.text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"F","C").get();
+      spm.setMinimumSetpointTemperature(value);
+    }
+
+    auto dsgnAirFlowMinElement = airSystemElement.firstChildElement("DsgnAirFlowMin");
+    value = dsgnAirFlowMinElement.text().toDouble(&ok);
+    if( ok ) {
+      spm.setMinimumTurndownRatio(value);
+    }
+  }
+  else if( istringEqual(clgCtrlElement.text().toStdString(),"WarmestReset") )
+  {
+    model::SetpointManagerWarmest spm(model);
+    deckSPM = spm;
+    spm.addToNode(supplyOutletNode);
+
+    QDomElement clRstSupHiElement = airSystemElement.firstChildElement("ClRstSupHi");
+    value = clRstSupHiElement.text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"F","C").get();
+      spm.setMaximumSetpointTemperature(value);
+    }
+
+    QDomElement clRstSupLowElement = airSystemElement.firstChildElement("ClRstSupLow");
+    value = clRstSupLowElement.text().toDouble(&ok);
+    if( ok ) {
       value = unitToUnit(value,"F","C").get();
       spm.setMinimumSetpointTemperature(value);
     }
@@ -5667,6 +5718,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
   {
     waterHeaterMixed.setPartLoadFactorCurve(hirfPLRCrv.get());
   }
+
+  // FuelSrc
+  auto fuelSrcElement = element.firstChildElement("FuelSrc");
+  waterHeaterMixed.setHeaterFuelType(fuelSrcElement.text().toStdString());
+
+  // OffCycleFuelSrc
+  auto offCycleFuelSrcElement = element.firstChildElement("OffCycleFuelSrc");
+  waterHeaterMixed.setOffCycleParasiticFuelType(offCycleFuelSrcElement.text().toStdString());
+
+  // OnCycleFuelSrc
+  auto onCycleFuelSrcElement = element.firstChildElement("OnCycleFuelSrc");
+  waterHeaterMixed.setOnCycleParasiticFuelType(onCycleFuelSrcElement.text().toStdString());
 
   return waterHeaterMixed;
 }

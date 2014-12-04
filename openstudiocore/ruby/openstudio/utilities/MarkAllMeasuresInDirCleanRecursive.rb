@@ -54,7 +54,23 @@ Dir.glob("#{dir}/**/") do |measure_dir|
       puts "Directory #{measure_dir} is not a measure"
     else
       measure = measure.get
-      measure.checkForUpdates
+      
+      # update file checksums
+      measure.checkForUpdatesFiles
+      
+      # try to load the ruby measure
+      begin
+        info = OpenStudio::Ruleset.getInfo(measure)
+        info.update(measure)
+      rescue Exception => e  
+        # failed to get info, put error into the measure's xml
+        info = OpenStudio::Ruleset::RubyUserScriptInfo.new(e.message)
+        info.update(measure)
+      end
+
+      # check for xml updates
+      measure.checkForUpdatesXML
+      
       measure.save
     end
   end

@@ -208,6 +208,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
                    BoolGetter(std::bind(&CheckBoxConcept::get,checkBoxConcept.data(),t_mo)),
                                        boost::optional<BoolSetter>(std::bind(&CheckBoxConcept::set, checkBoxConcept.data(), t_mo, std::placeholders::_1)));
 
+    isConnected = connect(checkBox, SIGNAL(stateChanged(int)), gridView(), SLOT(requestRefreshGrid())); // TODO this is not the most efficient, by single row would be better
+    OS_ASSERT(isConnected);
+
     widget = checkBox;
 
   } else if(QSharedPointer<ComboBoxConcept> comboBoxConcept = t_baseConcept.dynamicCast<ComboBoxConcept>()) {

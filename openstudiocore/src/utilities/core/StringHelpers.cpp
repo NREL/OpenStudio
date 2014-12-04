@@ -50,8 +50,19 @@ std::string toLowerCamelCase(const std::string& s) {
 }
 
 std::string toUnderscoreCase(const std::string& s) {
-  std::string result = toLowerCamelCase(s);
-  result = boost::regex_replace(result,boost::regex("(.)([A-Z])"),"$1_\\l$2");
+  // DLM: previous implementation
+  //std::string result = toLowerCamelCase(s);
+  //result = boost::regex_replace(result,boost::regex("(.)([A-Z])"),"$1_\\l$2");
+
+  //http://stackoverflow.com/questions/1509915/converting-camel-case-to-underscore-case-in-ruby
+  std::string result = boost::regex_replace(s, boost::regex("[^a-zA-Z0-9]"), " ");
+  result = boost::regex_replace(result, boost::regex("([\\-]+)"), "_");
+  result = boost::regex_replace(result, boost::regex("([\\s]+)"), "_");
+  result = boost::regex_replace(result, boost::regex("([A-Za-z])([0-9])"), "$1_$2");
+  result = boost::regex_replace(result, boost::regex("([0-9]+)([A-Za-z])"), "$1_$2");
+  result = boost::regex_replace(result, boost::regex("([A-Z]+)([A-Z][a-z])"), "$1_$2");
+  result = boost::regex_replace(result, boost::regex("([a-z])([A-Z])"), "$1_$2");
+  result = boost::regex_replace(result, boost::regex("([A-Z])"), "\\l$1");
   return result;
 }
 

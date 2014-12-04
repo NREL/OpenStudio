@@ -393,6 +393,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneHumidityMinimum);
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneReheat);
     REGISTER_CONSTRUCTOR(SetpointManagerWarmest);
+    REGISTER_CONSTRUCTOR(SetpointManagerWarmestTemperatureFlow);
     REGISTER_CONSTRUCTOR(Shade);
     REGISTER_CONSTRUCTOR(ShadingControl);
     REGISTER_CONSTRUCTOR(ShadingSurface);
@@ -424,7 +425,6 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ThermochromicGlazing);
     REGISTER_CONSTRUCTOR(ThermostatSetpointDualSetpoint);
     REGISTER_CONSTRUCTOR(ThermalZone);
-    REGISTER_CONSTRUCTOR(TimeDependentValuation);
     REGISTER_CONSTRUCTOR(Timestep);
     REGISTER_CONSTRUCTOR(UtilityBill);
     REGISTER_CONSTRUCTOR(UtilityCost_Charge_Block);
@@ -705,6 +705,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneHumidityMinimum);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneReheat);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerWarmest);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerWarmestTemperatureFlow);
     REGISTER_COPYCONSTRUCTORS(Shade);
     REGISTER_COPYCONSTRUCTORS(ShadingControl);
     REGISTER_COPYCONSTRUCTORS(ShadingSurface);
@@ -736,7 +737,6 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ThermochromicGlazing);
     REGISTER_COPYCONSTRUCTORS(ThermostatSetpointDualSetpoint);
     REGISTER_COPYCONSTRUCTORS(ThermalZone);
-    REGISTER_COPYCONSTRUCTORS(TimeDependentValuation);
     REGISTER_COPYCONSTRUCTORS(Timestep);
     REGISTER_COPYCONSTRUCTORS(UtilityBill);
     REGISTER_COPYCONSTRUCTORS(UtilityCost_Charge_Block);
