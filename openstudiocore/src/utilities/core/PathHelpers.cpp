@@ -25,6 +25,10 @@
 #include <QFile>
 #include <QFileInfo>
 
+#ifdef Q_OS_WIN
+#include <Windows.h>
+#endif
+
 namespace openstudio {
 
 std::string modelFileExtension() {
@@ -331,11 +335,55 @@ bool isEmptyDirectory(const path& dirName)
 
 bool isNetworkPath(const path& p)
 {
+  if (!p.is_absolute()){
+    return false;
+  }
+
+#ifdef Q_OS_WIN
+  std::string pstring = toString(p);
+  if (GetDriveType(pstring.c_str()) == DRIVE_REMOTE){
+    return true;
+  }
+#endif
+
   return false;
 }
 
 bool isNetworkPathAvailable(const path& p)
 {
+  if (!isNetworkPath(p)){
+    return false;
+  }
+
+#ifdef Q_OS_WIN
+  QString qstring = toQString(p);
+  qstring.replace("/", "").replace("\\", "");
+  std::string pstring = toString(qstring);
+
+  TCHAR szDeviceName[MAX_PATH];
+  DWORD dwResult, cchBuff = sizeof(szDeviceName);
+
+  // Call the WNetGetConnection function.
+  //
+  dwResult = WNetGetConnection(pstring.c_str(),
+                               szDeviceName,
+                               &cchBuff);
+
+  switch (dwResult)
+  {
+  case NO_ERROR:
+    return true;
+    break;
+  case ERROR_NOT_CONNECTED:
+    break;
+  case ERROR_CONNECTION_UNAVAIL:
+    break;
+  default:
+    ;
+  }
+
+#endif
+
   return false;
 }
 

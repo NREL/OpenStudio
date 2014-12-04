@@ -90,10 +90,14 @@ UTILITIES_API bool copyDirectory(const path& source,
 /** Determines if a directory is empty, returns false if directory does not exist, not subject to MAX_PATH */
 UTILITIES_API bool isEmptyDirectory(const path& dirName);
 
-/** Determines if a path is on a network drive.  Only implemented for Windows currently. */
+/** Determines if a path is on a network drive.  
+  * Returns false if path is not absolute.
+  * Currently only implemented for Windows, returns false on other platforms. */
 UTILITIES_API bool isNetworkPath(const path& p);
 
-/** Determines if a path is on a network drive and if that network resources is available.  Only implemented for Windows currently. */
+/** Determines if a path is on a network drive and if that network resources is available.  
+  * Returns false if path is not absolute or if path is not a network path.
+  * Currently only implemented for Windows, returns false on other platforms. */
 UTILITIES_API bool isNetworkPathAvailable(const path& p);
 
 } // openstudio
