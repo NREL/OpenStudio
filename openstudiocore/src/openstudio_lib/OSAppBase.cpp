@@ -33,6 +33,7 @@
 #include "../analysisdriver/SimpleProject.hpp"
 
 #include "../utilities/bcl/LocalBCL.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
 #include <QDir>
 #include <QMessageBox>
@@ -42,12 +43,18 @@ namespace openstudio {
 OSAppBase::OSAppBase( int & argc, char ** argv, const QSharedPointer<MeasureManager> &t_measureManager )
   : QApplication(argc, argv), m_measureManager(t_measureManager)
 {
-  LOG(Debug, "Measures dir: " << openstudio::toString(BCLMeasure::userMeasuresDir()));
-  if (!QDir().exists(toQString(BCLMeasure::userMeasuresDir()))){
-    BCLMeasure::setUserMeasuresDir(BCLMeasure::userMeasuresDir());
-  }
+  openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
 
-  m_measureManager->updateMeasuresLists();
+  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+    QMessageBox::information(this->mainWidget(), "Network Connection Problem", "Unable to update Measures list.\nYour User Measures Directory appears to be a network directory and is not currently available.\nYou can change your specified User Measures Directory using Preferences->Change My Measures Directory.", QMessageBox::Ok);
+  }
+  else {
+    LOG(Debug, "Measures dir: " << openstudio::toString(userMeasuresDir));
+    if (!QDir().exists(toQString(userMeasuresDir))){
+      BCLMeasure::setUserMeasuresDir(userMeasuresDir);
+    }
+    m_measureManager->updateMeasuresLists();
+  }
 
   m_waitDialog = boost::shared_ptr<WaitDialog>(new WaitDialog("Loading Model","Loading Model"));
 }
