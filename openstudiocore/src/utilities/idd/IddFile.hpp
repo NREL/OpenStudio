@@ -63,6 +63,9 @@ class UTILITIES_API IddFile {
   /** Returns the file version (as specified in the header). */
   std::string version() const;
 
+  /** Returns the file build (as specified in the header). */
+  std::string build() const;
+
   /** Returns the file header. */
   std::string header() const;
 
@@ -123,6 +126,9 @@ class UTILITIES_API IddFile {
 
   /// set version
   void setVersion(const std::string& version);
+
+  /// set build
+  void setBuild(const std::string& build);
 
   /// set header
   void setHeader(const std::string& header);

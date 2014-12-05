@@ -50,6 +50,10 @@ namespace detail {
     return m_version;
   }
 
+  std::string IddFile_Impl::build() const {
+    return m_build;
+  }
+
   std::string IddFile_Impl::header() const {
     return m_header;
   }
@@ -267,6 +271,11 @@ namespace detail {
 
         // empty line
         continue;
+      }else if (boost::regex_search(line, matches, iddRegex::build())) {
+        m_build = std::string(matches[1].first,matches[1].second);
+        // this line belongs to the header
+        header << line << std::endl;
+
       }else if (boost::regex_match(line, iddRegex::commentOnlyLine())){
 
         if (!headerClosed){
@@ -386,6 +395,10 @@ std::string IddFile::version() const
   return m_impl->version();
 }
 
+std::string IddFile::build() const
+{
+  return m_impl->build();
+}
 std::string IddFile::header() const
 {
   return m_impl->header();

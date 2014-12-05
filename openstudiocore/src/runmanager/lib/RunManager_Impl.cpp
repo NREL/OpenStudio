@@ -1009,6 +1009,7 @@ namespace detail {
           boost::optional<int> major;
           boost::optional<int> minor;
           boost::optional<int> build;
+          boost::optional<std::string> hash;
 
           if (tool.majorVersion >= 0)
           {
@@ -1025,7 +1026,12 @@ namespace detail {
             build = tool.buildVersion;
           }
 
-          ToolVersion tv(major,minor,build);
+          if (tool.buildTag != "")
+          {
+            hash = tool.buildTag;
+          }
+
+          ToolVersion tv(major,minor,build,hash);
 
           std::string regexstr = tool.outFileFilter;
 
@@ -1089,6 +1095,13 @@ namespace detail {
             j.buildVersion = *toolInfo.version.getBuild();
           } else {
             j.buildVersion = -1;
+          }
+
+          if (toolInfo.version.getTag())
+          {
+            j.buildTag = *toolInfo.version.getTag();
+          } else {
+            j.buildTag = "";
           }
 
 
@@ -1313,6 +1326,7 @@ namespace detail {
           boost::optional<int> major;
           boost::optional<int> minor;
           boost::optional<int> build;
+          boost::optional<std::string> tag;
 
           if (toolLocations.majorVer > -1)
           {
@@ -1329,7 +1343,12 @@ namespace detail {
             build = toolLocations.buildVer;
           }
 
-          co.setToolLocation(ToolVersion(major, minor, build),
+          if (toolLocations.buildTag != "")
+          {
+            tag = toolLocations.buildTag;
+          }
+
+          co.setToolLocation(ToolVersion(major, minor, build, tag),
               ToolLocationInfo(ToolType(toolLocations.toolType), toPath(toolLocations.path)));
         }
 
@@ -1356,6 +1375,7 @@ namespace detail {
           v.majorVer = toolLocationInfo.first.getMajor()?toolLocationInfo.first.getMajor().get():-1;
           v.minorVer = toolLocationInfo.first.getMinor()?toolLocationInfo.first.getMinor().get():-1;
           v.buildVer = toolLocationInfo.first.getBuild()?toolLocationInfo.first.getBuild().get():-1;
+          v.buildTag = toolLocationInfo.first.getTag()?toolLocationInfo.first.getTag().get():"";
           v.update();
         }
 
