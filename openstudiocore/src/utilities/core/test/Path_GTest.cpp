@@ -35,6 +35,7 @@ using openstudio::setFileExtension;
 using openstudio::makeParentFolder;
 using openstudio::relativePath;
 using openstudio::printPathInformation;
+using openstudio::windowsDriveLetter;
 using openstudio::isNetworkPath;
 using openstudio::isNetworkPathAvailable;
 
@@ -285,27 +286,71 @@ TEST_F(CoreFixture, OriginalPath_FromUrl2)
   EXPECT_EQ("E:/test/CloudTest/scripts/StandardReports/measure.rb", str);
 }
 
+TEST_F(CoreFixture, WindowsDriveLetter)
+{
+  boost::optional<std::string> test;
+
+  test = windowsDriveLetter(toPath("C:"));
+  ASSERT_TRUE(test);
+  EXPECT_EQ("C", *test);
+
+  test = windowsDriveLetter(toPath("C:\\"));
+  ASSERT_TRUE(test);
+  EXPECT_EQ("C", *test);
+
+  test = windowsDriveLetter(toPath("C:\\test\\file"));
+  ASSERT_TRUE(test);
+  EXPECT_EQ("C", *test);
+
+  test = windowsDriveLetter(toPath("C:/"));
+  ASSERT_TRUE(test);
+  EXPECT_EQ("C", *test);
+
+  test = windowsDriveLetter(toPath("C:/test/file"));
+  ASSERT_TRUE(test);
+  EXPECT_EQ("C", *test);
+
+  test = windowsDriveLetter(toPath("/"));
+  EXPECT_FALSE(test);
+
+  test = windowsDriveLetter(toPath("/test/file"));
+  EXPECT_FALSE(test);
+
+  test = windowsDriveLetter(toPath("./"));
+  EXPECT_FALSE(test);
+
+  test = windowsDriveLetter(toPath("./test/file"));
+  EXPECT_FALSE(test);
+
+}
+
 TEST_F(CoreFixture, IsNetworkPath)
 {
   openstudio::path path;
 
 #ifdef _WINDOWS
-  path = "C:/";
+  path = toPath("C:/");
 #else
-  path = "/";
+  path = toPath("/");
 #endif
-
   EXPECT_TRUE(path.is_absolute());
   EXPECT_FALSE(isNetworkPath(path));
   EXPECT_FALSE(isNetworkPathAvailable(path));
 
-  path = "./test";
+  path = toPath("./test");
   EXPECT_FALSE(path.is_absolute());
   EXPECT_FALSE(isNetworkPath(path));
   EXPECT_FALSE(isNetworkPathAvailable(path));
 
+  path = toPath("\\\\server\\folder");
+  EXPECT_TRUE(path.is_absolute());
+  EXPECT_TRUE(isNetworkPath(path));
+  EXPECT_FALSE(isNetworkPathAvailable(path));
+
   // DLM: below you can use for manual testing, don't check in
   // on windows you can type 'net use' to see network drives and their status
+  // to add a test drive: net use x: \\server\folder
+  // to remove a test drive: net use x: /Delete
   /*
   path = "X:/";
   EXPECT_TRUE(path.is_absolute());
