@@ -45,16 +45,19 @@ OSAppBase::OSAppBase( int & argc, char ** argv, const QSharedPointer<MeasureMana
 {
   openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
 
+  auto updateUserMeasures = true;
   if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
-    QMessageBox::information(this->mainWidget(), "Network Connection Problem", "Unable to update Measures list.\nYour User Measures Directory appears to be a network directory and is not currently available.\nYou can change your specified User Measures Directory using Preferences->Change My Measures Directory.", QMessageBox::Ok);
+    QMessageBox::information(this->mainWidget(), "Cannot Update User Measures", "Your My Measures Directory appears to be on a network drive that is not currently available.\nYou can change your specified My Measures Directory using 'Preferences->Change My Measures Directory'.", QMessageBox::Ok);
+    updateUserMeasures = false;
   }
   else {
     LOG(Debug, "Measures dir: " << openstudio::toString(userMeasuresDir));
     if (!QDir().exists(toQString(userMeasuresDir))){
       BCLMeasure::setUserMeasuresDir(userMeasuresDir);
     }
-    m_measureManager->updateMeasuresLists();
   }
+
+  m_measureManager->updateMeasuresLists(updateUserMeasures);
 
   m_waitDialog = boost::shared_ptr<WaitDialog>(new WaitDialog("Loading Model","Loading Model"));
 }

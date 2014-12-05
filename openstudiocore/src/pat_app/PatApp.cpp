@@ -239,16 +239,18 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
 
   openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
 
+  auto updateUserMeasures = true;
   if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
     QMessageBox::information(this->mainWindow, "Network Connection Problem", "Unable to update Measures list.\nYour User Measures Directory appears to be a network directory and is not currently available.\nYou can change your specified User Measures Directory using Preferences->Change My Measures Directory.", QMessageBox::Ok);
+    updateUserMeasures = false;
   }
   else {
     if (!QDir().exists(toQString(userMeasuresDir))) {
       BCLMeasure::setUserMeasuresDir(userMeasuresDir);
     }
-
-    m_measureManager.updateMeasuresLists();
   }
+    
+  m_measureManager.updateMeasuresLists(updateUserMeasures);
 
   if (!fileName.isEmpty()){
     if (openFile(fileName)){
@@ -1195,11 +1197,11 @@ void PatApp::changeUserMeasuresDir()
   QString dirName("");
 
   if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
-    QString dirName = QFileDialog::getExistingDirectory(mainWindow,
+    dirName = QFileDialog::getExistingDirectory(mainWindow,
       tr("Select My Measures Directory"));
   }
   else {
-    QString dirName = QFileDialog::getExistingDirectory(mainWindow,
+    dirName = QFileDialog::getExistingDirectory(mainWindow,
       tr("Select My Measures Directory"),
       toQString(userMeasuresDir));
   }
@@ -1207,11 +1209,11 @@ void PatApp::changeUserMeasuresDir()
   userMeasuresDir = toPath(dirName);
 
   if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
-    QMessageBox::information(this->mainWindow, "Network Connection Problem", "Unable to use new directory.\nYour User Measures Directory appears to be a network directory and is not currently available.\nYou can change your specified User Measures Directory using Preferences->Change My Measures Directory.", QMessageBox::Ok);
+    QMessageBox::information(this->mainWidget(), "Cannot Update User Measures", "Your My Measures Directory appears to be on a network drive that is not currently available.\nYou can change your specified My Measures Directory using 'Preferences->Change My Measures Directory'.", QMessageBox::Ok);
     return;
   }
-
-  if(dirName.length() > 0){
+  
+  if(!userMeasuresDir.empty()){
     if (BCLMeasure::setUserMeasuresDir(userMeasuresDir)){
       emit userMeasuresDirChanged();
     }

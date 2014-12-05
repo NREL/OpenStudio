@@ -17,8 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include "LocalLibraryController.hpp"
+#include "MeasureManager.hpp"
+
 #include "BaseApp.hpp"
+#include "BCLMeasureDialog.hpp"
+#include "LocalLibraryController.hpp"
+#include "ProcessEventsProgressBar.hpp"
 
 #include "BuildingComponentDialog.hpp"
 #include "OSDialog.hpp"
@@ -61,18 +65,12 @@
 #include <QRadioButton>
 #include <QProgressDialog>
 
-#include "MeasureManager.hpp"
-#include "BCLMeasureDialog.hpp"
-#include "ProcessEventsProgressBar.hpp"
-
 namespace openstudio {
-
 
 MeasureManager::MeasureManager(const QSharedPointer<ruleset::RubyUserScriptInfoGetter> &t_infoGetter, BaseApp *t_app)
   : m_app(t_app), m_infoGetter(t_infoGetter)
 {
 }
-
 
 std::pair<bool,std::string> MeasureManager::updateMeasure(analysisdriver::SimpleProject &t_project, 
                                                           const BCLMeasure &t_measure)
@@ -522,7 +520,7 @@ std::vector<BCLMeasure> MeasureManager::myMeasures() const
   return result;
 }
 
-void MeasureManager::updateMeasuresLists()
+void MeasureManager::updateMeasuresLists(bool updateUserMeasures)
 {
   m_patApplicationMeasures.clear();
   m_myMeasures.clear();
@@ -544,35 +542,37 @@ void MeasureManager::updateMeasuresLists()
     }
   }
 
-  std::vector<BCLMeasure> userMeasures = BCLMeasure::userMeasures();
-  for( auto & measure : userMeasures )
-  {
-    if (checkForUpdates(measure)){
-      measure.save();
-    }
+  if (updateUserMeasures) {
+   std::vector<BCLMeasure> userMeasures = BCLMeasure::userMeasures();
+    for( auto & measure : userMeasures )
+    {
+      if (checkForUpdates(measure)){
+        measure.save();
+      }
 
-    bool updateUUID = false;
-    if (m_myMeasures.find(measure.uuid()) != m_myMeasures.end()){
-      updateUUID = true;
-    }
-    if (m_bclMeasures.find(measure.uuid()) != m_bclMeasures.end()){
-      updateUUID = true;
-    }
-    if (m_patApplicationMeasures.find(measure.uuid()) != m_patApplicationMeasures.end()){
-      updateUUID = true;
-    }
+      bool updateUUID = false;
+      if (m_myMeasures.find(measure.uuid()) != m_myMeasures.end()){
+        updateUUID = true;
+      }
+      if (m_bclMeasures.find(measure.uuid()) != m_bclMeasures.end()){
+        updateUUID = true;
+      }
+      if (m_patApplicationMeasures.find(measure.uuid()) != m_patApplicationMeasures.end()){
+        updateUUID = true;
+      }
 
-    if (updateUUID){
-      // duplicate measure detected, manual copy and paste likely cause
-      // assign measure a new UUID here and save
-      measure.changeUID();
-      measure.incrementVersionId();
-      measure.save();
-    }
+      if (updateUUID){
+        // duplicate measure detected, manual copy and paste likely cause
+        // assign measure a new UUID here and save
+        measure.changeUID();
+        measure.incrementVersionId();
+        measure.save();
+      }
 
-    m_myMeasures.insert(std::pair<UUID,BCLMeasure>(measure.uuid(),measure));
+      m_myMeasures.insert(std::pair<UUID,BCLMeasure>(measure.uuid(),measure));
+    }
   }
-
+ 
   std::vector<BCLMeasure> localBCLMeasures = BCLMeasure::localBCLMeasures();
   for( auto & measure : localBCLMeasures )
   {
@@ -595,8 +595,6 @@ void MeasureManager::updateMeasuresLists()
     m_libraryController->reset();
   }
 }
-
-
 
 void MeasureManager::addMeasure()
 {

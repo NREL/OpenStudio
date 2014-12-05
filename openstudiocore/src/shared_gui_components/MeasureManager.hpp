@@ -140,7 +140,7 @@ class MeasureManager : public QObject
   public slots:
     /// Update the UI display for all measures. Does recompute the measure's XML.
     /// Does not update the measures in the project at all
-    void updateMeasuresLists();
+  void updateMeasuresLists(bool updateUserMeasures = true);
 
     /// For all measures in the "patApplicationMeasures" list which have changed relative to the version
     /// in the project, update the project to the new version

@@ -152,7 +152,7 @@ void LocalLibraryController::showMyMeasuresFolder()
   openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
 
   if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
-    QMessageBox::information(QApplication::activeWindow(), "Network Connection Problem", "Unable to show My Measures folder.\nYour User Measures Directory appears to be a network directory and is not currently available.\nYou can change your specified User Measures Directory using Preferences->Change My Measures Directory.", QMessageBox::Ok);
+    QMessageBox::information(QApplication::activeWindow(), "Cannot Open Directory", "Your My Measures Directory appears to be on a network drive that is not currently available.\nYou can change your specified My Measures Directory using 'Preferences->Change My Measures Directory'.", QMessageBox::Ok);
   }
   else {
     QString path = QDir::toNativeSeparators(toQString(userMeasuresDir));
@@ -698,7 +698,6 @@ void LibraryListController::createItems()
   openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
 
   if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
-    QMessageBox::information(QApplication::activeWindow(), "Network Connection Problem", "Unable to create Measure library list.\nYour User Measures Directory appears to be a network directory and is not currently available.\nYou can change your specified User Measures Directory using Preferences->Change My Measures Directory.", QMessageBox::Ok);
     return;
   }
 

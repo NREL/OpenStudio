@@ -126,7 +126,7 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
   openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
 
   if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
-    QMessageBox::information(this, "Network Connection Problem", "Unable to create measure.\nYour User Measures Directory appears to be a network directory and is not currently available.\nYou can change the specified directory using Preferences->Change My Measures Directory.", QMessageBox::Ok);
+    QMessageBox::information(this, "Cannot Create Measure", "Your My Measures Directory appears to be on a network drive that is not currently available.\nYou can change your specified My Measures Directory using 'Preferences->Change My Measures Directory'.", QMessageBox::Ok);
     return boost::optional<openstudio::BCLMeasure>();
   }
 
