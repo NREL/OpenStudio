@@ -87,6 +87,10 @@ option(BUILD_R "Build R package" OFF)
 # Build Ruby gem
 option(BUILD_RUBY_GEM "Build Ruby Gem" OFF)
 
+option(PACKAGE_RADIANCE "Package Radiance" OFF)
+
+option(PACKAGE_ENERGYPLUS "Package EnergyPlus" OFF)
+
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   add_definitions(-Qunused-arguments)
@@ -999,19 +1003,30 @@ endif()
 
 
 
-if(PACKAGE_RADIANCE_AND_ENERGYPLUS)
-  set(ENERGYPLUS_LOCATION "" CACHE PATH "Location of EnergyPlus to Package")
+if(PACKAGE_RADIANCE)
   set(RADIANCE_LOCATION "" CACHE PATH "Location of Radiance to Package")
 
-  file(COPY "${ENERGYPLUS_LOCATION}" DESTINATION "${CMAKE_BINARY_DIR}/EnergyPlus/")
   file(COPY "${RADIANCE_LOCATION}" DESTINATION "${CMAKE_BINARY_DIR}/Radiance/")
 
   if(APPLE)
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/EnergyPlus/" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
     install(DIRECTORY "${CMAKE_BINARY_DIR}/Radiance/" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
   else()
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/EnergyPlus/" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
     install(DIRECTORY "${CMAKE_BINARY_DIR}/Radiance/" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
   endif()
-
 endif()
+
+if(PACKAGE_ENERGYPLUS)
+  set(ENERGYPLUS_LOCATION "" CACHE PATH "Location of EnergyPlus to Package")
+
+  file(COPY "${ENERGYPLUS_LOCATION}" DESTINATION "${CMAKE_BINARY_DIR}/EnergyPlus/")
+
+  if(APPLE)
+    install(DIRECTORY "${CMAKE_BINARY_DIR}/EnergyPlus/" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+  else()
+    install(DIRECTORY "${CMAKE_BINARY_DIR}/EnergyPlus/" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
+  endif()
+endif()
+
+
+
+

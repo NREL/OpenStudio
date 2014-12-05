@@ -393,9 +393,8 @@ namespace runmanager {
             || openstudio::toPath("/mnt") == curPath
             || openstudio::toPath("/Volumes") == curPath
             || subPathMatch(curPath, boost::regex("lib.*", boost::regex::perl))
-            || subPathMatch(curPath, boost::regex("share", boost::regex::perl))
             || openstudio::toPath("C:/Windows") == curPath
-            || (subPathMatch(curPath, boost::regex("share", boost::regex::perl)) && !subPathMatch(curPath, boost::regex("openstudio", boost::regex::perl)))
+            || (subPathMatch(curPath, boost::regex("share", boost::regex::perl)) && !subPathMatch(curPath, boost::regex("openstudio.*", boost::regex::perl)))
             || openstudio::toPath("C:/Windows") == curPath
             || openstudio::toPath("C:/DAYSIM") == curPath
             || openstudio::toPath("C:/$Recycle.Bin") == curPath
@@ -404,7 +403,6 @@ namespace runmanager {
           {
             // don't scan it if it matches these things
           } else {
-
             // Otherwise queue for scanning
             if (t_searchedPaths[curPath] > 1)
             {
