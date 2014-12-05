@@ -19,8 +19,12 @@ set(OPENSTUDIO_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VE
 set(OPENSTUDIO_LONG_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}.${CMAKE_VERSION_BUILD}")
 
 # EnergyPlus Idd version
-set(ENERGYPLUS_VERSION "8.2.0" CACHE INTERNAL "EnergyPlus Version")
-set(ENERGYPLUS_BUILD_SHA "b2c1235bf6" CACHE INTERNAL "EnergyPlus Build SHA")
+set(ENERGYPLUS_VERSION_MAJOR 8 CACHE STRING "EnergyPlus Version Major")
+set(ENERGYPLUS_VERSION_MINOR 2 CACHE STRING "EnergyPlus Version Minor")
+set(ENERGYPLUS_VERSION_PATCH 0 CACHE STRING "EnergyPlus Version Patch")
+set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}" CACHE INTERNAL "EnergyPlus Version")
+# Build SHA is not required to have a value, but if it does OpenStudio will require this build.
+set(ENERGYPLUS_BUILD_SHA "b2c1235bf6" CACHE STRING "EnergyPlus Build SHA")
 
 # configure file with version information
 configure_file(${CMAKE_SOURCE_DIR}/OpenStudio.in ${CMAKE_BINARY_DIR}/src/OpenStudio.hxx)

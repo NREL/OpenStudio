@@ -26,6 +26,7 @@
 #include "FileInfo.hpp"
 #include "JobOutputCleanup.hpp"
 #include "WeatherFileFinder.hpp"
+#include "OpenStudio.hxx"
 
 #include "../../utilities/time/DateTime.hpp"
 #include "../../utilities/idf/IdfFile.hpp"
@@ -71,7 +72,7 @@ namespace detail {
     getFiles(f);
 
     // start at default EnergyPlus version of 8.2
-    ToolVersion tv(8,2); 
+    ToolVersion tv(energyPlusVersionMajor(),energyPlusVersionMinor()); 
 
     if (m_expandedidf){
       if (boost::filesystem::exists(m_expandedidf->fullPath))
