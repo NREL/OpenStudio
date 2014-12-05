@@ -113,7 +113,7 @@ namespace detail {
     JobParams p = params();
     getFiles(f, p);
 
-    // start at default EnergyPlus version of 8.2
+    // Start at the currently configured minor version.
     ToolVersion tv(energyPlusVersionMajor(),energyPlusVersionMinor()); 
     if (m_idf){
       if (boost::filesystem::exists(m_idf->fullPath))

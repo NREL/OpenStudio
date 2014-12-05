@@ -22,9 +22,10 @@ set(OPENSTUDIO_LONG_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMA
 set(ENERGYPLUS_VERSION_MAJOR 8 CACHE STRING "EnergyPlus Version Major")
 set(ENERGYPLUS_VERSION_MINOR 2 CACHE STRING "EnergyPlus Version Minor")
 set(ENERGYPLUS_VERSION_PATCH 0 CACHE STRING "EnergyPlus Version Patch")
-set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}" CACHE INTERNAL "EnergyPlus Version")
+set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
 set(ENERGYPLUS_BUILD_SHA "b2c1235bf6" CACHE STRING "EnergyPlus Build SHA")
+mark_as_advanced(ENERGYPLUS_VERSION_MAJOR ENERGYPLUS_VERSION_MINOR ENERGYPLUS_VERSION_PATCH ENERGYPLUS_BUILD_SHA)
 
 # configure file with version information
 configure_file(${CMAKE_SOURCE_DIR}/OpenStudio.in ${CMAKE_BINARY_DIR}/src/OpenStudio.hxx)
@@ -87,9 +88,10 @@ option(BUILD_R "Build R package" OFF)
 # Build Ruby gem
 option(BUILD_RUBY_GEM "Build Ruby Gem" OFF)
 
-option(PACKAGE_RADIANCE "Package Radiance" OFF)
-
-option(PACKAGE_ENERGYPLUS "Package EnergyPlus" OFF)
+if( BUILD_PACKAGE )
+  option(PACKAGE_RADIANCE "Package Radiance" OFF)
+  option(PACKAGE_ENERGYPLUS "Package EnergyPlus" ON)
+endif()
 
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -1000,30 +1002,23 @@ if(NOT UNIX)
   endif()
 endif()
 
-
-
-
 if(PACKAGE_RADIANCE)
   set(RADIANCE_LOCATION "" CACHE PATH "Location of Radiance to Package")
 
-  file(COPY "${RADIANCE_LOCATION}" DESTINATION "${CMAKE_BINARY_DIR}/Radiance/")
-
   if(APPLE)
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/Radiance/" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+    install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
   else()
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/Radiance/" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
+    install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
   endif()
 endif()
 
 if(PACKAGE_ENERGYPLUS)
-  set(ENERGYPLUS_LOCATION "" CACHE PATH "Location of EnergyPlus to Package")
-
-  file(COPY "${ENERGYPLUS_LOCATION}" DESTINATION "${CMAKE_BINARY_DIR}/EnergyPlus/")
+  get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" PATH)
 
   if(APPLE)
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/EnergyPlus/" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+    install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
   else()
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/EnergyPlus/" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
+    install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
   endif()
 endif()
 

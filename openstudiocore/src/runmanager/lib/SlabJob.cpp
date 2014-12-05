@@ -71,7 +71,7 @@ namespace detail {
     Files f = allInputFiles();
     getFiles(f);
 
-    // start at default EnergyPlus version of 8.2
+    // Start at the currently configured minor version.
     ToolVersion tv(energyPlusVersionMajor(),energyPlusVersionMinor()); 
 
     if (m_expandedidf){
