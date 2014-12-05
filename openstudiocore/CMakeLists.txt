@@ -19,7 +19,8 @@ set(OPENSTUDIO_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VE
 set(OPENSTUDIO_LONG_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}.${CMAKE_VERSION_BUILD}")
 
 # EnergyPlus Idd version
-set(ENERGYPLUS_VERSION "8.2" CACHE INTERNAL "EnergyPlus Version")
+set(ENERGYPLUS_VERSION "8.2.0" CACHE INTERNAL "EnergyPlus Version")
+set(ENERGYPLUS_BUILD_SHA "b2c1235bf6" CACHE INTERNAL "EnergyPlus Build SHA")
 
 # configure file with version information
 configure_file(${CMAKE_SOURCE_DIR}/OpenStudio.in ${CMAKE_BINARY_DIR}/src/OpenStudio.hxx)
@@ -301,15 +302,7 @@ endif()
 # Dependencies
 
 # EnergyPlus
-find_package(EnergyPlus "${ENERGYPLUS_VERSION}")
-if(NOT ${EnergyPlus_FOUND})
-  message(FATAL_ERROR "EnergyPlus ${ENERGYPLUS_VERSION} could not be found")
-endif()
-mark_as_advanced(
-  ENERGYPLUS_EXE
-  ENERGYPLUS_IDD
-  ENERGYPLUS_WEATHER_DIR
-)
+find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
 
 # Ruby
 find_program(RUBY_EXECUTABLE NAMES ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH)
