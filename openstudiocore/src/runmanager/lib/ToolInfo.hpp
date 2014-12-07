@@ -43,6 +43,8 @@ namespace runmanager {
 
       ToolVersion(int t_major, int t_minor, int t_build);
 
+      ToolVersion(int t_major, int t_minor, int t_build, std::string t_tag);
+
       ToolVersion(boost::optional<int> t_major, boost::optional<int> t_minor, boost::optional<int> t_build, boost::optional<std::string> t_tag);
 
       /// \returns true if no part of the ToolVersion info is set

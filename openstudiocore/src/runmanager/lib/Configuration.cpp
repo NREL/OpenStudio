@@ -379,7 +379,7 @@ namespace runmanager {
             tag),
           ToolLocationInfo(
             toString(m_model.item(i, 0)->text()),
-            toPath(m_model.item(i,4)->text()))
+            toPath(m_model.item(i,5)->text()))
           );
     }
 

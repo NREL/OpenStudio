@@ -42,6 +42,11 @@ namespace runmanager {
   {
   }
 
+  ToolVersion::ToolVersion(int t_major, int t_minor, int t_build, std::string t_tag)
+    : m_major(t_major), m_minor(t_minor), m_build(t_build), m_tag(std::move(t_tag))
+  {
+  }
+
   ToolVersion::ToolVersion(boost::optional<int> t_major, boost::optional<int> t_minor, boost::optional<int> t_build,
       boost::optional<std::string> t_tag)
     : m_major(std::move(t_major)), m_minor(std::move(t_minor)), m_build(std::move(t_build)), m_tag(std::move(t_tag))

@@ -1009,7 +1009,7 @@ namespace detail {
           boost::optional<int> major;
           boost::optional<int> minor;
           boost::optional<int> build;
-          boost::optional<std::string> hash;
+          boost::optional<std::string> tag;
 
           if (tool.majorVersion >= 0)
           {
@@ -1028,10 +1028,10 @@ namespace detail {
 
           if (tool.buildTag != "")
           {
-            hash = tool.buildTag;
+            tag = tool.buildTag;
           }
 
-          ToolVersion tv(major,minor,build,hash);
+          ToolVersion tv(major,minor,build,tag);
 
           std::string regexstr = tool.outFileFilter;
 
@@ -1405,13 +1405,13 @@ namespace detail {
         try {
           RunManagerDB::MetaData md = litesql::select<RunManagerDB::MetaData>(db).one();
           int version = md.version;
-          if (version > 3)
+          if (version > 4)
           {
             throw std::runtime_error("Unsupported RunManagerDB version");
           }
         } catch (const litesql::NotFound &) {
           RunManagerDB::MetaData md = RunManagerDB::MetaData(db);
-          md.version = 3;
+          md.version = 4;
           md.openStudioVersion = openStudioVersion();
           md.originalPath = openstudio::toString(t_path);
           md.update();

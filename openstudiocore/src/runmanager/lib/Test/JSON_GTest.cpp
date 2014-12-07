@@ -62,7 +62,7 @@ TEST_F(RunManagerTestFixture, JSON_jobTest)
 TEST_F(RunManagerTestFixture, JSON_workItem)
 {
   Tools tools;
-  tools.tools().push_back(ToolInfo("tool", ToolVersion(1,5,6), 
+  tools.tools().push_back(ToolInfo("tool", ToolVersion(1,5,6, "TAG"), 
         openstudio::toPath("path1"),
         boost::regex(".*")
         ));
