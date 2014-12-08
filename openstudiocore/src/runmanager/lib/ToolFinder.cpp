@@ -105,7 +105,7 @@ namespace runmanager {
       } 
     }
 
-    if (!toolver) 
+    if (!toolver || !toolver->getTag())
     {
       openstudio::path iddpath = t_path.parent_path() / openstudio::toPath("Energy+.idd");
 
@@ -119,6 +119,7 @@ namespace runmanager {
           std::string version = f->version();
           LOG(Debug, "Version string is: " << version);
           boost::regex reg("([0-9]+)\\.([0-9]+)\\.([0-9]+)(\\.[0-9]+)?.*");
+          std::string tag = f->build();
 
           boost::smatch results;
           if (boost::regex_match(version, results, reg))
@@ -127,7 +128,7 @@ namespace runmanager {
             int minor = atoi(results[2].str().c_str());
             int build = atoi(results[3].str().c_str());
 
-            toolver = QSharedPointer<ToolVersion>(new ToolVersion(major,minor, build));
+            toolver = QSharedPointer<ToolVersion>(new ToolVersion(major,minor,build,tag.empty()?(boost::optional<std::string>()):(boost::optional<std::string>(tag))));
           }
         }
       }
