@@ -22910,32 +22910,6 @@ ZoneHVAC:Baseboard:RadiantConvective:Water,
        \minimum> 0.0
        \units kg/s
        \default 0.063
-  N3,  \field Rated Capacity
-       \note Users must multiply the actual finned length published in the literature.
-       \note Rated Capacity is for an inlet air dry-bulb temperature of 18.0C, the Rated Water Mass Flow Rate
-       \note of 0.063kg/s or 0.252kg/s, and the Rated Average Water Temperature between 32.2C and 115.6C.
-       \autosizable
-       \type real
-       \units W
-       \default autosize
-  N4,  \field Maximum Water Flow Rate
-       \required-field
-       \autosizable
-       \type real
-       \units m3/s
-  N5,  \field Convergence Tolerance
-       \type real
-       \minimum> 0.0
-       \default 0.001
-  N6,  \field Fraction Radiant
-       \required-field
-       \type real
-       \minimum 0
-       \maximum 1
-  N7,  \field Fraction of Radiant Energy Incident on People
-       \type real
-       \minimum 0
-       \maximum 1
   A5,  \field Heating Design Capacity Method
        \required-field
        \type choice
@@ -23019,30 +22993,6 @@ ZoneHVAC:Baseboard:RadiantConvective:Steam,
   A4,  \field Outlet Node Name
        \required-field
        \type node
-  N1,  \field Degree of SubCooling
-       \type real
-       \minimum 1.0
-       \default 5.0
-       \units C
-  N2,  \field Maximum Steam Flow Rate
-       \required-field
-       \type real
-       \autosizable
-       \minimum> 0.0
-       \units m3/s
-  N3,  \field Convergence Tolerance
-       \type real
-       \minimum> 0.0
-       \default 0.001
-  N4,  \field Fraction Radiant
-       \required-field
-       \type real
-       \minimum 0
-       \maximum 1
-  N5,  \field Fraction of Radiant Energy Incident on People
-       \type real
-       \minimum 0
-       \maximum 1
   A5 , \field Heating Design Capacity Method
        \required-field
        \type choice
@@ -23106,7 +23056,7 @@ ZoneHVAC:Baseboard:RadiantConvective:Steam,
        \note Radiant energy may be distributed to specific surfaces
        \type object-list
        \object-list AllHeatTranSurfNames
-  N7;  \field Fraction of Radiant Energy to Surface 1
+  N9;  \field Fraction of Radiant Energy to Surface 1
        \type real
        \minimum 0
        \maximum 1
@@ -23123,24 +23073,6 @@ ZoneHVAC:Baseboard:RadiantConvective:Electric,
        \note If this field is blank, the system is always available.
        \type object-list
        \object-list ScheduleNames
-  N1 , \field Nominal Capacity
-       \required-field
-       \units W
-       \autosizable
-       \ip-units W
-  N2 , \field Efficiency
-       \maximum 1.0
-       \minimum> 0.0
-       \default 1.0
-  N3,  \field Fraction Radiant
-       \required-field
-       \type real
-       \minimum 0
-       \maximum 1
-  N4,  \field Fraction of Radiant Energy Incident on People
-       \type real
-       \minimum 0
-       \maximum 1
   A3 , \field Heating Design Capacity Method
        \required-field
        \type choice
