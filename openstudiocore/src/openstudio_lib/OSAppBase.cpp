@@ -37,6 +37,7 @@
 
 #include <QDir>
 #include <QMessageBox>
+#include <QTimer>
 
 namespace openstudio {
 
@@ -47,7 +48,7 @@ OSAppBase::OSAppBase( int & argc, char ** argv, const QSharedPointer<MeasureMana
 
   auto updateUserMeasures = true;
   if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
-    QMessageBox::information(this->mainWidget(), "Cannot Update User Measures", "Your My Measures Directory appears to be on a network drive that is not currently available.\nYou can change your specified My Measures Directory using 'Preferences->Change My Measures Directory'.", QMessageBox::Ok);
+    QTimer::singleShot(0, this, SLOT(showMeasureUpdateDlg()));
     updateUserMeasures = false;
   }
   else {
@@ -71,6 +72,10 @@ OSAppBase * OSAppBase::instance()
   return qobject_cast<OSAppBase *>(QApplication::instance());
 }
 
+void OSAppBase::showMeasureUpdateDlg()
+{
+  QMessageBox::information(this->mainWidget(), "Cannot Update User Measures", "Your My Measures Directory appears to be on a network drive that is not currently available.\nYou can change your specified My Measures Directory using 'Preferences->Change My Measures Directory'.", QMessageBox::Ok);
+}
 
 boost::optional<openstudio::analysisdriver::SimpleProject> OSAppBase::project()
 {
