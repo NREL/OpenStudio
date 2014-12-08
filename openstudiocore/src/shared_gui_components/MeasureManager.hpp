@@ -140,7 +140,7 @@ class MeasureManager : public QObject
   public slots:
     /// Update the UI display for all measures. Does recompute the measure's XML.
     /// Does not update the measures in the project at all
-  void updateMeasuresLists(bool updateUserMeasures = true);
+    void updateMeasuresLists();
 
     /// For all measures in the "patApplicationMeasures" list which have changed relative to the version
     /// in the project, update the project to the new version
@@ -180,6 +180,8 @@ class MeasureManager : public QObject
 
   private:
     REGISTER_LOGGER("openstudio.MeasureManager");
+
+    void updateMeasuresLists(bool updateUserMeasures);
 
     BaseApp *m_app;
     std::map<UUID,BCLMeasure> m_patApplicationMeasures;

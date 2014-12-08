@@ -46,6 +46,7 @@
 
 #include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/core/RubyException.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/bcl/RemoteBCL.hpp"
@@ -518,6 +519,18 @@ std::vector<BCLMeasure> MeasureManager::myMeasures() const
   }
 
   return result;
+}
+
+void MeasureManager::updateMeasuresLists()
+{
+  openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
+
+  auto updateUserMeasures = true;
+  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+    updateUserMeasures = false;
+  }
+
+  updateMeasuresLists(updateUserMeasures);
 }
 
 void MeasureManager::updateMeasuresLists(bool updateUserMeasures)

@@ -113,7 +113,9 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
     m_cloudDialog(nullptr),
     m_measureManager(t_infoGetter, this)
 {
-  connect(this, &PatApp::userMeasuresDirChanged, &m_measureManager, &MeasureManager::updateMeasuresLists);
+  bool isConnected = false;
+  isConnected = connect(this, SIGNAL(userMeasuresDirChanged()), &m_measureManager, SLOT(updateMeasuresLists()));
+  OS_ASSERT(isConnected);
 
   setOrganizationName("NREL");
   setOrganizationDomain("nrel.gov");
@@ -239,10 +241,8 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
 
   openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
 
-  auto updateUserMeasures = true;
   if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
     QMessageBox::information(this->mainWindow, "Network Connection Problem", "Unable to update Measures list.\nYour User Measures Directory appears to be a network directory and is not currently available.\nYou can change your specified User Measures Directory using Preferences->Change My Measures Directory.", QMessageBox::Ok);
-    updateUserMeasures = false;
   }
   else {
     if (!QDir().exists(toQString(userMeasuresDir))) {
@@ -250,7 +250,7 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
     }
   }
     
-  m_measureManager.updateMeasuresLists(updateUserMeasures);
+  m_measureManager.updateMeasuresLists();
 
   if (!fileName.isEmpty()){
     if (openFile(fileName)){

@@ -46,10 +46,8 @@ OSAppBase::OSAppBase( int & argc, char ** argv, const QSharedPointer<MeasureMana
 {
   openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
 
-  auto updateUserMeasures = true;
   if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
     QTimer::singleShot(0, this, SLOT(showMeasureUpdateDlg()));
-    updateUserMeasures = false;
   }
   else {
     LOG(Debug, "Measures dir: " << openstudio::toString(userMeasuresDir));
@@ -58,7 +56,7 @@ OSAppBase::OSAppBase( int & argc, char ** argv, const QSharedPointer<MeasureMana
     }
   }
 
-  m_measureManager->updateMeasuresLists(updateUserMeasures);
+  m_measureManager->updateMeasuresLists();
 
   m_waitDialog = boost::shared_ptr<WaitDialog>(new WaitDialog("Loading Model","Loading Model"));
 }
