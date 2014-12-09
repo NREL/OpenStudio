@@ -21,7 +21,7 @@ inline int energyPlusVersionMinor()
   return ${ENERGYPLUS_VERSION_MINOR};
 }
 
-inline int energyPlusVersionPATCH()
+inline int energyPlusVersionPatch()
 {
   return ${ENERGYPLUS_VERSION_PATCH};
 }
