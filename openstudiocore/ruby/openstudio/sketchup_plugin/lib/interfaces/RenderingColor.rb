@@ -170,14 +170,9 @@ module OpenStudio
         had_observers = remove_observers
 
         name_changed = false
-        version_parts = Sketchup.version.split('.')
         begin
-          # Material.name= is not included until M1 release of SU 8
-          if version_parts[0].to_i >= 8 and
-            (version_parts[1].to_i >= 1 or version_parts[2].to_i >= 4811)
-              @entity.name = @model_object.name.get
-              name_changed = true
-          end
+          @entity.name = @model_object.name.get
+          name_changed = true
         rescue 
         end
         

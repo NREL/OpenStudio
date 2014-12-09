@@ -232,6 +232,7 @@ module OpenStudio
               msg += "BACKTRACE:\n"
               $exception.backtrace.each { |stack_call| msg += stack_call + "\n" }
               
+              SKETCHUP_CONSOLE.show
               Plugin.log(OpenStudio::Error, msg)
               puts msg
             end
