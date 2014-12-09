@@ -20,20 +20,17 @@
 #ifndef MODEL_STANDARDSINFORMATIONMATERIAL_HPP
 #define MODEL_STANDARDSINFORMATIONMATERIAL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Material;
 
 namespace detail {
-
   class StandardsInformationMaterial_Impl;
-
-} // detail
+}
 
 /** StandardsInformationMaterial is a ModelObject that wraps the OpenStudio IDD object 'OS:StandardsInformation:Material'. */
 class MODEL_API StandardsInformationMaterial : public ModelObject {
@@ -52,38 +49,36 @@ class MODEL_API StandardsInformationMaterial : public ModelObject {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Material.
   Material material() const;
 
   boost::optional<std::string> materialStandard() const;
+  std::vector<std::string> suggestedMaterialStandard() const;
 
   boost::optional<std::string> materialStandardSource() const;
+  std::vector<std::string> suggestedMaterialStandardSource() const;
 
   boost::optional<std::string> standardsCategory() const;
+  std::vector<std::string> suggestedStandardsCategory() const;
 
   boost::optional<std::string> standardsIdentifier() const;
+  std::vector<std::string> suggestedStandardsIdentifier() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Material.
   bool setMaterial(const Material& material);
 
   void setMaterialStandard(std::string materialStandard);
-
   void resetMaterialStandard();
 
   void setMaterialStandardSource(std::string materialStandardSource);
-
   void resetMaterialStandardSource();
 
   void setStandardsCategory(std::string standardsCategory);
-
   void resetStandardsCategory();
 
   void setStandardsIdentifier(std::string standardsIdentifier);
-
   void resetStandardsIdentifier();
 
   //@}

@@ -28,67 +28,137 @@
 
 #include <utilities/core/Assert.hpp>
 
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonParseError>
+
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  StandardsInformationMaterial_Impl::StandardsInformationMaterial_Impl(const IdfObject& idfObject,
-                                                                       Model_Impl* model,
-                                                                       bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == StandardsInformationMaterial::iddObjectType());
-  }
-
-  StandardsInformationMaterial_Impl::StandardsInformationMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                       Model_Impl* model,
-                                                                       bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == StandardsInformationMaterial::iddObjectType());
-  }
-
-  StandardsInformationMaterial_Impl::StandardsInformationMaterial_Impl(const StandardsInformationMaterial_Impl& other,
-                                                                       Model_Impl* model,
-                                                                       bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& StandardsInformationMaterial_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result;
-    if (result.empty()){
+    StandardsInformationMaterial_Impl::StandardsInformationMaterial_Impl(const IdfObject& idfObject,
+      Model_Impl* model,
+      bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle)
+    {
+      OS_ASSERT(idfObject.iddObject().type() == StandardsInformationMaterial::iddObjectType());
     }
-    return result;
-  }
 
-  IddObjectType StandardsInformationMaterial_Impl::iddObjectType() const {
-    return StandardsInformationMaterial::iddObjectType();
-  }
-
-  Material StandardsInformationMaterial_Impl::material() const {
-    boost::optional<Material> value = optionalMaterial();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Material attached.");
+    StandardsInformationMaterial_Impl::StandardsInformationMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+      Model_Impl* model,
+      bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle)
+    {
+      OS_ASSERT(other.iddObject().type() == StandardsInformationMaterial::iddObjectType());
     }
-    return value.get();
+
+    StandardsInformationMaterial_Impl::StandardsInformationMaterial_Impl(const StandardsInformationMaterial_Impl& other,
+      Model_Impl* model,
+      bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle)
+    {}
+
+    void StandardsInformationMaterial_Impl::parseStandardsMap() const
+    {
+      if (m_standardsMap.empty()){
+        QFile file(":/resources/standards/OpenStudio_Standards.json");
+        if (file.open(QFile::ReadOnly)) {
+          QJsonParseError parseError;
+          QJsonDocument jsonDoc = QJsonDocument::fromJson(file.readAll(), &parseError);
+          file.close();
+          if (QJsonParseError::NoError == parseError.error) {
+            m_standardsMap = jsonDoc.object().toVariantMap();
+          }
+        }
+      }
+    }
+
+    const std::vector<std::string>& StandardsInformationMaterial_Impl::outputVariableNames() const
+    {
+      static std::vector<std::string> result;
+      if (result.empty()){
+      }
+      return result;
+    }
+
+    IddObjectType StandardsInformationMaterial_Impl::iddObjectType() const {
+      return StandardsInformationMaterial::iddObjectType();
+    }
+
+    Material StandardsInformationMaterial_Impl::material() const {
+      boost::optional<Material> value = optionalMaterial();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Material attached.");
+      }
+      return value.get();
+    }
+
+    boost::optional<std::string> StandardsInformationMaterial_Impl::materialStandard() const {
+      return getString(OS_StandardsInformation_MaterialFields::MaterialStandard, true);
+    }
+
+    std::vector<std::string> StandardsInformationMaterial_Impl::suggestedMaterialStandard() const {
+      std::vector<std::string> results;
+
+      boost::optional<std::string> materialStandard = this->materialStandard();
+
+      // include values from json
+      parseStandardsMap();
+
+      QMap<QString, QVariant> templates = m_standardsMap["materials"].toMap();
+      for (QString template_name : templates.uniqueKeys()) {
+        QMap<QString, QVariant> material_types = templates[template_name].toMap();
+        for (QString material_type_name : material_types.uniqueKeys()) {
+          results.push_back(toString(material_type_name));
+        }
+      }
+
+      return results;
+    }
+
+    // include values from model
+    // TODO
+
   }
 
-  boost::optional<std::string> StandardsInformationMaterial_Impl::materialStandard() const {
-    return getString(OS_StandardsInformation_MaterialFields::MaterialStandard,true);
-  }
+
 
   boost::optional<std::string> StandardsInformationMaterial_Impl::materialStandardSource() const {
     return getString(OS_StandardsInformation_MaterialFields::MaterialStandardSource,true);
+  }
+
+  std::vector<std::string> StandardsInformationMaterial_Impl::suggestedMaterialStandardSource() const {
+    std::vector<std::string> results;
+
+    boost::optional<std::string> materialStandardSource = this->materialStandardSource();
+
+    return results;
   }
 
   boost::optional<std::string> StandardsInformationMaterial_Impl::standardsCategory() const {
     return getString(OS_StandardsInformation_MaterialFields::StandardsCategory,true);
   }
 
+  std::vector<std::string> StandardsInformationMaterial_Impl::suggestedStandardsCategory() const {
+    std::vector<std::string> results;
+
+    boost::optional<std::string> standardsCategory = this->standardsCategory();
+
+    return results;
+  }
+
   boost::optional<std::string> StandardsInformationMaterial_Impl::standardsIdentifier() const {
     return getString(OS_StandardsInformation_MaterialFields::StandardsIdentifier,true);
+  }
+
+  std::vector<std::string> StandardsInformationMaterial_Impl::suggestedStandardsIdentifier() const {
+    std::vector<std::string> results;
+
+    boost::optional<std::string> standardsIdentifier = this->standardsIdentifier();
+
+    return results;
   }
 
   bool StandardsInformationMaterial_Impl::setMaterial(const Material& material) {
@@ -197,16 +267,32 @@ boost::optional<std::string> StandardsInformationMaterial::materialStandard() co
   return getImpl<detail::StandardsInformationMaterial_Impl>()->materialStandard();
 }
 
+std::vector<std::string> StandardsInformationMaterial::suggestedMaterialStandard() const {
+  return getImpl<detail::StandardsInformationMaterial_Impl>()->suggestedMaterialStandard();
+}
+
 boost::optional<std::string> StandardsInformationMaterial::materialStandardSource() const {
   return getImpl<detail::StandardsInformationMaterial_Impl>()->materialStandardSource();
+}
+
+std::vector<std::string> StandardsInformationMaterial::suggestedMaterialStandardSource() const {
+  return getImpl<detail::StandardsInformationMaterial_Impl>()->suggestedMaterialStandardSource();
 }
 
 boost::optional<std::string> StandardsInformationMaterial::standardsCategory() const {
   return getImpl<detail::StandardsInformationMaterial_Impl>()->standardsCategory();
 }
 
+std::vector<std::string> StandardsInformationMaterial::suggestedStandardsCategory() const {
+  return getImpl<detail::StandardsInformationMaterial_Impl>()->suggestedStandardsCategory();
+}
+
 boost::optional<std::string> StandardsInformationMaterial::standardsIdentifier() const {
   return getImpl<detail::StandardsInformationMaterial_Impl>()->standardsIdentifier();
+}
+
+std::vector<std::string> StandardsInformationMaterial::suggestedStandardsIdentifier() const {
+  return getImpl<detail::StandardsInformationMaterial_Impl>()->suggestedStandardsIdentifier();
 }
 
 bool StandardsInformationMaterial::setMaterial(const Material& material) {

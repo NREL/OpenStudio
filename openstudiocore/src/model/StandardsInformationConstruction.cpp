@@ -19,6 +19,7 @@
 
 #include "StandardsInformationConstruction.hpp"
 #include "StandardsInformationConstruction_Impl.hpp"
+
 #include "ConstructionBase.hpp"
 #include "ConstructionBase_Impl.hpp"
 #include "LayeredConstruction.hpp"
@@ -30,7 +31,6 @@
 #include <utilities/idd/OS_StandardsInformation_Construction_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
-
 
 #include "../utilities/core/Assert.hpp"
 

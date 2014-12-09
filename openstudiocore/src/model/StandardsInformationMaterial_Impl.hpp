@@ -20,13 +20,11 @@
 #ifndef MODEL_STANDARDSINFORMATIONMATERIAL_IMPL_HPP
 #define MODEL_STANDARDSINFORMATIONMATERIAL_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include "ModelObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Material;
 
 namespace detail {
@@ -63,38 +61,37 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Material.
     Material material() const;
 
     boost::optional<std::string> materialStandard() const;
+    std::vector<std::string> suggestedMaterialStandard() const;
 
     boost::optional<std::string> materialStandardSource() const;
+    std::vector<std::string> suggestedMaterialStandardSource() const;
 
     boost::optional<std::string> standardsCategory() const;
+    std::vector<std::string> suggestedStandardsCategory() const;
 
     boost::optional<std::string> standardsIdentifier() const;
+    std::vector<std::string> suggestedStandardsIdentifier() const;
+
 
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Material.
     bool setMaterial(const Material& material);
 
     void setMaterialStandard(boost::optional<std::string> materialStandard);
-
     void resetMaterialStandard();
 
     void setMaterialStandardSource(boost::optional<std::string> materialStandardSource);
-
     void resetMaterialStandardSource();
 
     void setStandardsCategory(boost::optional<std::string> standardsCategory);
-
     void resetStandardsCategory();
 
     void setStandardsIdentifier(boost::optional<std::string> standardsIdentifier);
-
     void resetStandardsIdentifier();
 
     //@}
@@ -111,6 +108,9 @@ namespace detail {
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
     boost::optional<Material> optionalMaterial() const;
+
+    void parseStandardsMap() const;
+    static QMap<QString, QVariant> m_standardsMap;
   };
 
 } // detail
