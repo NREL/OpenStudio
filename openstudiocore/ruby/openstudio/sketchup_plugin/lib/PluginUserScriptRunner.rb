@@ -349,7 +349,7 @@ module OpenStudio
       was_canceled = true
     
       # open ruby console to show any errors
-      #Sketchup.send_action("showRubyPanel:")
+      #SKETCHUP_CONSOLE.show
 
       arguments = nil
       if user_script.is_a?(OpenStudio::Ruleset::ModelUserScript)

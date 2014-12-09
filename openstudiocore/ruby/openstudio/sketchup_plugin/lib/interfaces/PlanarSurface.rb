@@ -193,7 +193,7 @@ module OpenStudio
         
       begin
         @entity = containing_entity.entities.add_face(new_points)
-      rescue RuntimeError, ArgumentError, TypeError, Exception => error
+      rescue StandardError => error
         error_msg  = "containing_entity.entities.add_face failed: #{error.message} (#{error.class})"
         puts error_msg
         Plugin.log(OpenStudio::Error, error_msg)

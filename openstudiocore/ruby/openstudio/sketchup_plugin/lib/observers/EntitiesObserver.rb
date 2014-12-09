@@ -57,7 +57,10 @@ module OpenStudio
       
       return if not @enabled
       
-      @drawing_interface.on_change_entity
+      proc = Proc.new {
+        @drawing_interface.on_change_entity
+      }
+      Plugin.add_event( proc )
     end
 
     #def onElementRemoved(entities, entity_id)
