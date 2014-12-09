@@ -23,6 +23,7 @@
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 #include "ScriptFolderListView.hpp"
+#include <OpenStudio.hxx>
 
 #include "../model/DaylightingControl.hpp"
 #include "../model/DaylightingControl_Impl.hpp"
@@ -231,8 +232,8 @@ void RunView::getRadiancePreRunWarningsAndErrors(std::vector<std::string> & warn
 void RunView::locateEnergyPlus()
 {
   openstudio::runmanager::ConfigOptions co(true);
-  ToolVersion epversion = getRequiredEnergyPlusVersion();
-  energyplus_not_installed = co.getTools().getAllByName("energyplus").getAllByVersion(epversion).tools().size() == 0;
+  openstudio::runmanager::ToolVersion epversion = getRequiredEnergyPlusVersion();
+  bool energyplus_not_installed = co.getTools().getAllByName("energyplus").getAllByVersion(epversion).tools().size() == 0;
   
   if (energyplus_not_installed){
     m_toolWarningLabel->show();
@@ -387,9 +388,9 @@ openstudio::runmanager::ToolVersion RunView::getRequiredEnergyPlusVersion()
 {
   std::string sha = energyPlusBuildSHA();
   if( ! sha.empty() ) {
-    return openstudio::runmanager::ToolVersion tv(energyPlusVersionMajor(),energyPlusVersionMinor,energyPlusVersionPatch(),sha());
+    return openstudio::runmanager::ToolVersion(energyPlusVersionMajor(),energyPlusVersionMinor(),energyPlusVersionPatch(),sha);
   } else {
-    return openstudio::runmanager::ToolVersion tv(energyPlusVersionMajor(),energyPlusVersionMinor,energyPlusVersionPatch());
+    return openstudio::runmanager::ToolVersion(energyPlusVersionMajor(),energyPlusVersionMinor(),energyPlusVersionPatch());
   }
 }
 
