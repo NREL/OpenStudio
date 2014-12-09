@@ -114,7 +114,7 @@ namespace detail {
     getFiles(f, p);
 
     // Start at the currently configured minor version.
-    ToolVersion tv(energyPlusVersionMajor(),energyPlusVersionMinor()); 
+    ToolVersion tv(energyPlusVersionMajor(),energyPlusVersionMinor(),energyPlusVersionPatch(),energyPlusBuildSHA()); 
     if (m_idf){
       if (boost::filesystem::exists(m_idf->fullPath))
       {

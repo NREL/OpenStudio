@@ -231,14 +231,8 @@ void RunView::getRadiancePreRunWarningsAndErrors(std::vector<std::string> & warn
 void RunView::locateEnergyPlus()
 {
   openstudio::runmanager::ConfigOptions co(true);
-  boost::optional<int> major = getRequiredEnergyPlusVersion().getMajor();
-  boost::optional<int> minor = getRequiredEnergyPlusVersion().getMinor();
-  bool energyplus_not_installed;
-  if (major && minor){
-    energyplus_not_installed = co.getTools().getAllByName("energyplus").getAllByVersion(openstudio::runmanager::ToolVersion(*major,*minor)).tools().size() == 0;
-  } else {
-    energyplus_not_installed = co.getTools().getAllByName("energyplus").getAllByVersion(openstudio::runmanager::ToolVersion(8,2)).tools().size() == 0;
-  }
+  ToolVersion epversion = getRequiredEnergyPlusVersion();
+  energyplus_not_installed = co.getTools().getAllByName("energyplus").getAllByVersion(epversion).tools().size() == 0;
   
   if (energyplus_not_installed){
     m_toolWarningLabel->show();
@@ -391,7 +385,12 @@ void RunView::treeChanged(const openstudio::UUID &t_uuid)
 
 openstudio::runmanager::ToolVersion RunView::getRequiredEnergyPlusVersion()
 {
-  return openstudio::runmanager::ToolVersion::fromString(ENERGYPLUS_VERSION);
+  std::string sha = energyPlusBuildSHA();
+  if( ! sha.empty() ) {
+    return openstudio::runmanager::ToolVersion tv(energyPlusVersionMajor(),energyPlusVersionMinor,energyPlusVersionPatch(),sha());
+  } else {
+    return openstudio::runmanager::ToolVersion tv(energyPlusVersionMajor(),energyPlusVersionMinor,energyPlusVersionPatch());
+  }
 }
 
 void RunView::playButtonClicked(bool t_checked)
