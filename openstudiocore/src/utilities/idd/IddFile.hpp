@@ -120,6 +120,12 @@ class UTILITIES_API IddFile {
    *  extension is provided will use 'idd'. */
   bool save(const openstudio::path& p, bool overwrite=false);
 
+  /** Returns the version and build from the given Idd. 
+   *
+   *  \throws an exeption with a meaningful error message if something goes wrong
+   */
+  static std::pair<std::string, std::string> parseVersionBuild(const openstudio::path &p);
+
   //@}
  protected:
   friend class IddFactorySingleton;

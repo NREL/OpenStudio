@@ -111,25 +111,26 @@ namespace runmanager {
 
       if (safeExists(iddpath))
       {
-        boost::optional<openstudio::IddFile> f = openstudio::IddFile::load(iddpath);
         LOG(Debug, "Unable to parse version of EnergyPlus from folder name, using idd version: " << openstudio::toString(iddpath));
 
-        if (f)
-        {
-          std::string version = f->version();
+        try {
+          const auto versionbuild = openstudio::IddFile::parseVersionBuild(iddpath);
+          const auto version = versionbuild.first;
           LOG(Debug, "Version string is: " << version);
-          boost::regex reg("([0-9]+)\\.([0-9]+)\\.([0-9]+)(\\.[0-9]+)?.*");
-          std::string tag = f->build();
+          const boost::regex reg("([0-9]+)\\.([0-9]+)\\.([0-9]+)(\\.[0-9]+)?.*");
+          const auto tag = versionbuild.second;
 
           boost::smatch results;
           if (boost::regex_match(version, results, reg))
           {
-            int major = atoi(results[1].str().c_str());
-            int minor = atoi(results[2].str().c_str());
-            int build = atoi(results[3].str().c_str());
+            const auto major = atoi(results[1].str().c_str());
+            const auto minor = atoi(results[2].str().c_str());
+            const auto build = atoi(results[3].str().c_str());
 
             toolver = QSharedPointer<ToolVersion>(new ToolVersion(major,minor,build,tag.empty()?(boost::optional<std::string>()):(boost::optional<std::string>(tag))));
           }
+        } catch (const std::exception &e) {
+          LOG(Warn, "Unable to get version number from Idd: " << e.what());
         }
       }
     }

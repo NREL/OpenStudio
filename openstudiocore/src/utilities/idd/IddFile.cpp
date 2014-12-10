@@ -195,6 +195,7 @@ namespace detail {
 
   }
 
+
   std::ostream& IddFile_Impl::print(std::ostream& os) const
   {
     os << m_header << std::endl;
@@ -467,6 +468,35 @@ OptionalIddFile IddFile::load(const openstudio::path& p) {
 std::ostream& IddFile::print(std::ostream& os) const
 {
   return m_impl->print(os);
+}
+
+std::pair<std::string, std::string> IddFile::parseVersionBuild(const openstudio::path &p)
+{
+  std::ifstream ifs(openstudio::toString(p));
+
+  if (!ifs.good()) { throw std::runtime_error("Unable to open file for reading: " + openstudio::toString(p)); }
+
+  ifs.seekg(0, std::ios_base::end);
+  const auto end = ifs.tellg();
+  ifs.seekg(0, std::ios_base::beg);
+
+  const auto length_to_read = std::min(std::streampos(10000), end);
+
+  std::vector<char> data(length_to_read);
+  ifs.read(data.data(), length_to_read);
+  const std::string strdata(data.cbegin(), data.cend());
+
+  std::string build;
+  boost::smatch matches;
+  if (boost::regex_search(strdata, matches, iddRegex::build())) {
+    build = std::string(matches[1].first,matches[1].second);
+  }
+
+  if (boost::regex_search(strdata, matches, iddRegex::version())) {
+    return std::make_pair(std::string(matches[1].first,matches[1].second), build);
+  } else {
+    throw std::runtime_error("Unable to parse version, Idd appears to be back: " + openstudio::toString(p));
+  }
 }
 
 bool IddFile::save(const openstudio::path& p, bool overwrite) {
