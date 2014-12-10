@@ -495,11 +495,16 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
   }
   // Get stories
   std::vector<openstudio::model::BuildingStory> stories = model.getConcreteModelObjects<openstudio::model::BuildingStory>();
-  // We will need each story to have an elevation
+  // We will need each story to have an elevation and a floor-to-floor height.
   for (const openstudio::model::BuildingStory& buildingStory : stories) {
     boost::optional<double> elevation = buildingStory.nominalZCoordinate();
     if(!elevation) {
       LOG(Error, "Story '" << buildingStory.name().get() << "' has no elevation, translation aborted");
+      return boost::none;
+    }
+    boost::optional<double> optHt = buildingStory.nominalFloortoFloorHeight();
+    if(!optHt) {
+      LOG(Error, "Story '" << buildingStory.name().get() << "' has no nominal floor-to-floor height, translation aborted");
       return boost::none;
     }
   }
@@ -511,7 +516,6 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
     openstudio::contam::Level level;
     level.setName(QString("<%1>").arg(nr).toStdString());
     m_levelMap[buildingStory.handle()] = nr;
-    // DLM: the code below is very suspect, we should not rely on these fields being set
     double ht = buildingStory.nominalFloortoFloorHeight().get();
     totalHeight += ht;
     double z = buildingStory.nominalZCoordinate().get();
