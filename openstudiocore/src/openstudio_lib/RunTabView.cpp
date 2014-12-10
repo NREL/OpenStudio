@@ -403,12 +403,11 @@ void RunView::treeChanged(const openstudio::UUID &t_uuid)
 openstudio::runmanager::ToolVersion RunView::getRequiredEnergyPlusVersion()
 {
   std::string sha = energyPlusBuildSHA();
-  //if( ! sha.empty() ) {
-  //  return openstudio::runmanager::ToolVersion(energyPlusVersionMajor(),energyPlusVersionMinor(),energyPlusVersionPatch(),sha);
-  //} else {
-  //  return openstudio::runmanager::ToolVersion(energyPlusVersionMajor(),energyPlusVersionMinor(),energyPlusVersionPatch());
-  //}
-  return openstudio::runmanager::ToolVersion(energyPlusVersionMajor(),energyPlusVersionMinor(),energyPlusVersionPatch());
+  if( ! sha.empty() ) {
+    return openstudio::runmanager::ToolVersion(energyPlusVersionMajor(),energyPlusVersionMinor(),energyPlusVersionPatch(),sha);
+  } else {
+    return openstudio::runmanager::ToolVersion(energyPlusVersionMajor(),energyPlusVersionMinor(),energyPlusVersionPatch());
+  }
 }
 
 void RunView::playButtonClicked(bool t_checked)
