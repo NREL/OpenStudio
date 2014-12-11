@@ -22,6 +22,8 @@
 
 #include "ModelObjectInspectorView.hpp"
 
+class QComboBox;
+
 namespace openstudio {
 
 namespace model {
@@ -66,13 +68,13 @@ class MaterialInspectorView : public ModelObjectInspectorView
 
     OSComboBox * m_roughness;
 
-    OSComboBox * m_standard = nullptr;
+    QComboBox * m_standard = nullptr;
 
-    OSComboBox * m_standardSource = nullptr;
+    QComboBox * m_standardSource = nullptr;
 
-    OSComboBox * m_standardsCategory = nullptr;
+    QComboBox * m_standardsCategory = nullptr;
     
-    OSComboBox * m_standardsIdentifier = nullptr;
+    QComboBox * m_standardsIdentifier = nullptr;
     
     OSLineEdit * m_nameEdit;
 

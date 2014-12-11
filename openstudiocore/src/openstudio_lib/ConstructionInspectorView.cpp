@@ -106,7 +106,7 @@ void ConstructionInspectorView::createLayout()
   label->setObjectName("StandardsInfo");
   vLayout->addWidget(label);
 
-  m_standard = new OSComboBox2();
+  m_standard = new QComboBox();
   m_standard->setEditable(true);
   m_standard->setDuplicatesEnabled(false);
   m_standard->setFixedWidth(OSItem::ITEM_WIDTH);
@@ -122,7 +122,7 @@ void ConstructionInspectorView::createLayout()
   label->setObjectName("StandardsInfo");
   vLayout->addWidget(label);
 
-  m_standardSource = new OSComboBox2();
+  m_standardSource = new QComboBox();
   m_standardSource->setEditable(true);
   m_standardSource->setDuplicatesEnabled(false);
   m_standardSource->setFixedWidth(OSItem::ITEM_WIDTH);

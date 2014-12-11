@@ -98,7 +98,7 @@ void MaterialInspectorView::createLayout()
   label->setObjectName("StandardsInfo");
   vLayout->addWidget(label);
 
-  m_standard = new OSComboBox();
+  m_standard = new QComboBox();
   m_standard->setEditable(true);
   m_standard->setDuplicatesEnabled(false);
   m_standard->setFixedWidth(OSItem::ITEM_WIDTH);
@@ -114,7 +114,7 @@ void MaterialInspectorView::createLayout()
   label->setObjectName("StandardsInfo");
   vLayout->addWidget(label);
 
-  m_standardSource = new OSComboBox();
+  m_standardSource = new QComboBox();
   m_standardSource->setEditable(true);
   m_standardSource->setDuplicatesEnabled(false);
   m_standardSource->setFixedWidth(OSItem::ITEM_WIDTH);
@@ -130,7 +130,7 @@ void MaterialInspectorView::createLayout()
   label->setObjectName("StandardsInfo");
   vLayout->addWidget(label);
 
-  m_standardsCategory = new OSComboBox();
+  m_standardsCategory = new QComboBox();
   m_standardsCategory->setEditable(true);
   m_standardsCategory->setDuplicatesEnabled(false);
   m_standardsCategory->setFixedWidth(OSItem::ITEM_WIDTH);
@@ -146,7 +146,7 @@ void MaterialInspectorView::createLayout()
   label->setObjectName("StandardsInfo");
   vLayout->addWidget(label);
 
-  m_standardsIdentifier = new OSComboBox();
+  m_standardsIdentifier = new QComboBox();
   m_standardsIdentifier->setEditable(true);
   m_standardsIdentifier->setDuplicatesEnabled(false);
   m_standardsIdentifier->setFixedWidth(OSItem::ITEM_WIDTH);
