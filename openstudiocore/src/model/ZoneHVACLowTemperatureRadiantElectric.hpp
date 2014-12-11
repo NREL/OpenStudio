@@ -66,6 +66,7 @@ class MODEL_API ZoneHVACLowTemperatureRadiantElectric : public ZoneHVACComponent
 
   std::vector<Surface> surfaces() const;
 
+  /** In EnergyPlus 8.2.0 and above this property maps to the EnergyPlus field "Heating Design Capacity" **/
   boost::optional<double> maximumElectricalPowertoPanel() const;
 
   bool isMaximumElectricalPowertoPanelDefaulted() const;

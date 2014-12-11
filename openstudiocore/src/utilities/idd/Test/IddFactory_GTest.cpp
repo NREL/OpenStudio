@@ -51,7 +51,6 @@ TEST_F(IddFixture,IddFactory_Version_Header) {
   // EnergyPlus always has major, minor, patch and build
   VersionString epVersion(IddFactory::instance().getVersion(IddFileType::EnergyPlus));
   EXPECT_TRUE(epVersion.patch());
-  EXPECT_TRUE(epVersion.build());
   EXPECT_EQ(VersionString(energyPlusVersion()),epVersion);
   EXPECT_FALSE(epVersion.fidelityEqual(VersionString(energyPlusVersion())));
 

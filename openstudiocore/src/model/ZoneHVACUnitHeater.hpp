@@ -69,6 +69,7 @@ class MODEL_API ZoneHVACUnitHeater : public ZoneHVACComponent
 
   bool isMaximumSupplyAirFlowRateAutosized() const;
 
+  /** In EnergyPlus 8.2.0 and above this property maps to the EnergyPlus field "Supply Air Fan Operation During No Heating" **/
   std::string fanControlType() const;
 
   HVACComponent heatingCoil() const;

@@ -37,6 +37,10 @@ namespace iddRegex{
   /// matches[1], version identifier
   UTILITIES_API const boost::regex &version();
 
+  /// Search for IDD build in line
+  /// matches[1], build identifier
+  UTILITIES_API const boost::regex &build();
+
   /// Search for IDD header, each line must start with '!', no preceding whitespace
   /// matches[1], header
   UTILITIES_API const boost::regex &header();
@@ -229,6 +233,7 @@ namespace iddRegex{
         commentOnlyObjectName();
         commentOnlyObjectText();
         version();
+        build();
         header();
         commentOnlyLine();
         contentAndCommentLine();
