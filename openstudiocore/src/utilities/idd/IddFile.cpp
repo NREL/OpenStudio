@@ -495,7 +495,7 @@ std::pair<VersionString, std::string> IddFile::parseVersionBuild(const openstudi
   }
 
   if (boost::regex_search(strdata, matches, iddRegex::version())) {
-    std::make_pair(VersionString(std::string(matches[1].first, matches[1].second)), build);
+    return std::make_pair(VersionString(std::string(matches[1].first, matches[1].second)), build);
   } 
 
   throw std::runtime_error("Unable to parse version from IDD: " + openstudio::toString(p));
