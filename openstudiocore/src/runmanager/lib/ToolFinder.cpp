@@ -88,6 +88,7 @@ namespace runmanager {
       std::string pathstr = openstudio::toString(path);
       LOG(Debug, "Parsing tool version number from string: " << pathstr);
 
+      // DLM: this could be replaced by VersionString as well
       boost::regex reg(".*?V?([0-9]+)[\\.-]([0-9]+)[\\.-]?([0-9]*)([\\.-][0-9]+)?.*");
 
       boost::smatch results;
@@ -116,19 +117,10 @@ namespace runmanager {
         try {
           const auto versionbuild = openstudio::IddFile::parseVersionBuild(iddpath);
           const auto version = versionbuild.first;
-          LOG(Debug, "Version string is: " << version);
-          const boost::regex reg("([0-9]+)\\.([0-9]+)\\.([0-9]+)(\\.[0-9]+)?.*");
+          LOG(Debug, "Version string is: " << version.str());
           const auto tag = versionbuild.second;
 
-          boost::smatch results;
-          if (boost::regex_match(version, results, reg))
-          {
-            const auto major = atoi(results[1].str().c_str());
-            const auto minor = atoi(results[2].str().c_str());
-            const auto build = atoi(results[3].str().c_str());
-
-            toolver = QSharedPointer<ToolVersion>(new ToolVersion(major,minor,build,tag.empty()?(boost::optional<std::string>()):(boost::optional<std::string>(tag))));
-          }
+          toolver = QSharedPointer<ToolVersion>(new ToolVersion(version.major(), version.minor(), version.patch(), tag.empty() ? (boost::optional<std::string>()) : (boost::optional<std::string>(tag))));
         } catch (const std::exception &e) {
           LOG(Warn, "Unable to get version number from Idd: " << e.what());
         }

@@ -39,6 +39,8 @@ namespace detail{
   class IddFile_Impl;
 } // detail
 
+class VersionString;
+
 /** IddFile provides parsing and printing of text files in Input Data Definition (IDD) format. 
  *  IDD is a schema definition format defined by the EnergyPlus team, adopted with slight 
  *  modifications for the OpenStudio project. IddFile is a shared object. */
@@ -120,11 +122,11 @@ class UTILITIES_API IddFile {
    *  extension is provided will use 'idd'. */
   bool save(const openstudio::path& p, bool overwrite=false);
 
-  /** Returns the version and build from the given Idd. 
+  /** Returns the version and build SHA from the given Idd. If build SHA is not present .second will be empty.
    *
-   *  \throws an exeption with a meaningful error message if something goes wrong
+   *  \throws an exception with a meaningful error message if something goes wrong
    */
-  static std::pair<std::string, std::string> parseVersionBuild(const openstudio::path &p);
+  static std::pair<VersionString, std::string> parseVersionBuild(const openstudio::path &p);
 
   //@}
  protected:
