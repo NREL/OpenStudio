@@ -199,19 +199,24 @@ class ObjectSelector : public QObject
       m_selectedObjects.clear();
     }
 
+    void setObjectFilter(const std::function<bool (const model::ModelObject &)> &t_filter);
+    void resetObjectFilter();
+
   private slots:
     void widgetDestroyed(QObject *t_obj);
 
   private:
     void updateWidgets(const model::ModelObject &t_obj);
-    void updateWidgets(const int t_row, const boost::optional<int> &t_subrow, bool t_selected);
+    void updateWidgets(const int t_row, const boost::optional<int> &t_subrow, bool t_selected, bool t_visible);
     void updateWidget(WidgetLoc &t_widget, const WidgetLoc &t_loc, bool hasSubRows);
     static bool contains(const WidgetLoc &t_inner, const WidgetLoc &t_outer);
     bool selected(const WidgetLoc &t_loc) const;
+    static std::function<bool (const model::ModelObject &)> getDefaultFilter();
 
     OSGridController *m_grid;
     std::multimap<boost::optional<model::ModelObject>, WidgetLoc> m_widgetMap;
     std::set<model::ModelObject> m_selectedObjects;
+    std::function<bool (const model::ModelObject &)> m_objectFilter;
 };
 
 

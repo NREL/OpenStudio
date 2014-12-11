@@ -60,7 +60,7 @@ const std::vector<QColor> OSGridController::m_colors = SchedulesView::initialize
 
 
 ObjectSelector::ObjectSelector(OSGridController *t_grid)
-  : m_grid(t_grid)
+  : m_grid(t_grid), m_objectFilter(getDefaultFilter())
 {
 
 }
@@ -95,10 +95,27 @@ void ObjectSelector::addWidget(const boost::optional<model::ModelObject> &t_obj,
     }
   }
 
+  auto visible = true;
+
+  // is this (sub)row visible?
+  for (auto &widget : m_widgetMap)
+  {
+    if (widget.first
+        && widget.second.row == row
+        && (!widget.second.subrow || (widget.second.subrow == t_subrow)))
+    {
+      if (!m_objectFilter(*widget.first)) {
+        // an object in this (sub)row is not visible, therefore I am not visible
+        visible = false;
+        break;
+      }
+    }
+  }
+
   // we found something selected that overlaps (row or subrow) with the added widget
   // so let's go ahead and perform an update
-  if (rowSelected) {
-    updateWidgets(row, subRowToUpdate, rowSelected);
+  if (rowSelected || !visible) {
+    updateWidgets(row, subRowToUpdate, rowSelected, visible);
   }
 }
 
@@ -139,11 +156,33 @@ void ObjectSelector::setObjectSelection(const model::ModelObject &t_obj, bool t_
 
 std::set<model::ModelObject> ObjectSelector::getSelectedObjects() const
 {
+  std::set<model::ModelObject> returned;
+
+  std::copy_if(m_selectedObjects.begin(), m_selectedObjects.end(),
+      std::inserter(returned, returned.begin()),
+      m_objectFilter);
+
   return m_selectedObjects;
 }
 
+void ObjectSelector::setObjectFilter(const std::function<bool (const model::ModelObject &)> &t_filter)
+{
+  m_objectFilter = t_filter;
+}
 
-void ObjectSelector::updateWidgets(const int t_row, const boost::optional<int> &t_subrow, bool t_objectSelected)
+void ObjectSelector::resetObjectFilter()
+{
+  m_objectFilter = getDefaultFilter();
+}
+
+std::function<bool (const model::ModelObject &)> ObjectSelector::getDefaultFilter()
+{
+  return [](const model::ModelObject &) { return true; };
+}
+
+
+
+void ObjectSelector::updateWidgets(const int t_row, const boost::optional<int> &t_subrow, bool t_objectSelected, bool t_objectVisible)
 {
   std::set<std::pair<QWidget *,int>> widgetsToUpdate;
   bool isSubRow = t_subrow;
@@ -168,6 +207,7 @@ void ObjectSelector::updateWidgets(const int t_row, const boost::optional<int> &
   // loop over list of determined widgets
   for (auto &widget : widgetsToUpdate)
   {
+    widget.first->setVisible(t_objectVisible);
     widget.first->setStyleSheet(m_grid->cellStyle(t_row, widget.second, t_objectSelected, isSubRow));
   }
 
@@ -175,7 +215,7 @@ void ObjectSelector::updateWidgets(const int t_row, const boost::optional<int> &
 
 void ObjectSelector::updateWidgets(const model::ModelObject &t_obj)
 {
-  bool objectSelected = m_selectedObjects.count(t_obj) != 0;
+
   auto range = m_widgetMap.equal_range(boost::optional<model::ModelObject>(t_obj));
 
   assert(range.first != range.second);
@@ -193,7 +233,10 @@ void ObjectSelector::updateWidgets(const model::ModelObject &t_obj)
   }
 #endif
 
-  updateWidgets(std::get<0>(row), std::get<1>(row), objectSelected);
+  const auto objectSelected = m_selectedObjects.count(t_obj) != 0;
+  const auto objectVisible = m_objectFilter(t_obj);
+
+  updateWidgets(std::get<0>(row), std::get<1>(row), objectSelected, objectVisible);
 }
 
 
