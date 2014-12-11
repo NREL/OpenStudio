@@ -140,18 +140,26 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
   : QWidget(parent),
     m_isIP(isIP)
 {
-  QVBoxLayout * layout = 0;
-
-  layout = new QVBoxLayout();
+  auto layout = new QVBoxLayout();
   layout->setSpacing(0);
   layout->setContentsMargins(0,0,0,0);
   setLayout(layout);
 
-  std::vector<model::SpaceType> spaceTypes = model.getModelObjects<model::SpaceType>();
-  std::vector<model::ModelObject> spaceTypeModelObjects = subsetCastVector<model::ModelObject>(spaceTypes);
 
-  SpaceTypesGridController * spaceTypesGridController = new SpaceTypesGridController(m_isIP, "Space Types", IddObjectType::OS_SpaceType, model, spaceTypeModelObjects);
-  OSGridView * gridView = new OSGridView(spaceTypesGridController, "Space Types", "Drop\nZone", false, parent);
+  auto spaceTypes = model.getModelObjects<model::SpaceType>();
+  auto spaceTypeModelObjects = subsetCastVector<model::ModelObject>(spaceTypes);
+
+  auto spaceTypesGridController = new SpaceTypesGridController(m_isIP, "Space Types", IddObjectType::OS_SpaceType, model, spaceTypeModelObjects);
+  auto gridView = new OSGridView(spaceTypesGridController, "Space Types", "Drop\nZone", false, parent);
+
+  layout->addWidget([this, spaceTypesGridController](){ 
+      auto checkbox = new QCheckBox("Lights only filter");
+      connect(checkbox, &QCheckBox::stateChanged, [this, spaceTypesGridController](int state) { 
+                                                     this->filterStateChanged(spaceTypesGridController, state);
+                                                  } 
+             );
+      return checkbox;
+    }());
 
   bool isConnected = false;
 
@@ -178,8 +186,33 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
   OS_ASSERT(isConnected);
 
   std::vector<model::SpaceType> spaceType = model.getModelObjects<model::SpaceType>(); // NOTE for horizontal system lists
-
 }
+
+
+void SpaceTypesGridView::filterStateChanged(const SpaceTypesGridController *controller, const int newState) const
+{
+  LOG(Debug, "Lights only filter state changed: " << newState);
+
+  auto objectSelector = controller->getObjectSelector();
+  if (newState == 0)
+  {
+    objectSelector->resetObjectFilter();
+  } else {
+    objectSelector->setObjectFilter(
+        [](const model::ModelObject &obj)->bool {
+          try {
+            obj.cast<model::SpaceLoadInstance>();
+            // This is a spaceloadinstance, so we want to see if it matches our filter
+            return static_cast<bool>(obj.optionalCast<model::Lights>());
+          } catch (...) {
+            return true; // this isn't a space load instance, so don't apply filtering
+          }
+        }
+     );
+  }
+}
+
+
 
 void SpaceTypesGridView::onDropZoneItemClicked(OSItem* item)
 {

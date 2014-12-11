@@ -30,6 +30,8 @@
 namespace openstudio{
 
 class ModelSubTabView;
+class SpaceTypesGridController;
+
 
 class SpaceTypesGridView : public QWidget
 {
@@ -60,6 +62,10 @@ signals:
 private slots:
 
   void onDropZoneItemClicked(OSItem* item);
+  void filterStateChanged(const SpaceTypesGridController *controller, const int newState) const;
+
+private:
+  REGISTER_LOGGER("openstudio.CalibrationBillingPeriod");
 
 };
 
