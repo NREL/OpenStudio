@@ -5,3 +5,4 @@ compilers:
     package_command: make package_deb
   - name: cppcheck
     compiler_extra_flags: --enable=warning  --suppress="*:*zlib*" --suppress="*:*sqlite*" --suppress="cppcheckError:*" --inline-suppr --suppress="syntaxError:*"
+

@@ -86,6 +86,9 @@ option(BUILD_TESTING "Build testing targets" OFF)
 # Requires: EnergyPlus
 option(BUILD_PACKAGE "Build package" OFF)
 
+# Build regressions
+option(BUILD_REGRESSIONS "Build regressions" OFF)
+
 # Build test runner targets.
 # This is a convenience for Visual Studio users
 option(ENABLE_TEST_RUNNER_TARGETS "Create test runner targets" OFF)
@@ -887,3 +890,24 @@ if(BUILD_PACKAGE)
   include(OpenStudioCPack.cmake)
 endif()
 ###############################################################################
+
+
+if (BUILD_REGRESSIONS)
+  ExternalProject_Add(Regressions
+    DEPENDS OSCore
+    GIT_REPOSITORY git://github.com/NREL/OpenStudio-resources
+    GIT_TAG develop
+    CMAKE_CACHE_ARGS
+      -DOPENSTUDIO_BUILD_DIR:PATH=${CMAKE_BINARY_DIR}
+      -DQt5Widgets_DIR:STRING=${Qt5Widgets_DIR}
+      -DQt5Sql_DIR:STRING=${Qt5Sql_DIR}
+      -DQt5Network_DIR:STRING=${Qt5Network_DIR}
+      -DQt5Xml_DIR:STRING=${Qt5Xml_DIR}
+      -DQt5WebKit_DIR:STRING=${Qt5WebKit_DIR}
+      -DQt5WebKitWidgets_DIR:STRING=${Qt5WebKitWidgets_DIR}
+      #-DQt5WinExtras_DIR:STRING=${Qt5WinExtras_DIR}
+      -DQt5Concurrent_DIR:STRING=${Qt5Concurrent_DIR}
+      -DQt5PrintSupport_DIR:STRING=${Qt5PrintSupport_DIR}
+    INSTALL_COMMAND ""
+    )
+endif()
