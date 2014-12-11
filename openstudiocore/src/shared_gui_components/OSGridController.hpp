@@ -206,6 +206,7 @@ class ObjectSelector : public QObject
     void widgetDestroyed(QObject *t_obj);
 
   private:
+    void updateWidgets();
     void updateWidgets(const model::ModelObject &t_obj);
     void updateWidgets(const int t_row, const boost::optional<int> &t_subrow, bool t_selected, bool t_visible);
     void updateWidget(WidgetLoc &t_widget, const WidgetLoc &t_loc, bool hasSubRows);

@@ -168,11 +168,13 @@ std::set<model::ModelObject> ObjectSelector::getSelectedObjects() const
 void ObjectSelector::setObjectFilter(const std::function<bool (const model::ModelObject &)> &t_filter)
 {
   m_objectFilter = t_filter;
+  updateWidgets();
 }
 
 void ObjectSelector::resetObjectFilter()
 {
   m_objectFilter = getDefaultFilter();
+  updateWidgets();
 }
 
 std::function<bool (const model::ModelObject &)> ObjectSelector::getDefaultFilter()
@@ -210,7 +212,22 @@ void ObjectSelector::updateWidgets(const int t_row, const boost::optional<int> &
     widget.first->setVisible(t_objectVisible);
     widget.first->setStyleSheet(m_grid->cellStyle(t_row, widget.second, t_objectSelected, isSubRow));
   }
+}
 
+void ObjectSelector::updateWidgets()
+{
+  std::set<model::ModelObject> objs;
+  for (const auto &obj : m_widgetMap)
+  {
+    if (obj.first) {
+      objs.insert(*obj.first);
+    }
+  }
+
+  for (const auto &obj : objs)
+  {
+    updateWidgets(obj);
+  }
 }
 
 void ObjectSelector::updateWidgets(const model::ModelObject &t_obj)
