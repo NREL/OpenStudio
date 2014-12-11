@@ -83,11 +83,11 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACHighTemperatureRa
   //MaximumPowerInput
   if( modelObject.isMaximumPowerInputAutosized() )
   {
-    idfObject.setString(ZoneHVAC_HighTemperatureRadiantFields::MaximumPowerInput,"AutoSize");
+    idfObject.setString(ZoneHVAC_HighTemperatureRadiantFields::HeatingDesignCapacity,"AutoSize");
   }
   else if( (value = modelObject.maximumPowerInput()) )
   {
-    idfObject.setDouble(ZoneHVAC_HighTemperatureRadiantFields::MaximumPowerInput,value.get());
+    idfObject.setDouble(ZoneHVAC_HighTemperatureRadiantFields::HeatingDesignCapacity,value.get());
   } 
 
   //FuelType

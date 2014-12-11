@@ -50,6 +50,9 @@ namespace detail{
     /// get version
     std::string version() const;
 
+    /// get build
+    std::string build() const;
+
     /// get header
     std::string header() const;
 
@@ -112,6 +115,9 @@ namespace detail{
 
     /// Version string required to be at top of any IddFile.
     std::string m_version;
+
+    /// Build string which might be at the top of an IddFile
+    std::string m_build;
 
     /// The first comment block in an IddFile is its header.
     std::string m_header;
