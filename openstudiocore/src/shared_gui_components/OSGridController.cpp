@@ -66,7 +66,7 @@ ObjectSelector::ObjectSelector(OSGridController *t_grid)
 }
 
 void ObjectSelector::addWidget(const boost::optional<model::ModelObject> &t_obj, QWidget *t_widget, int row, int column,
-    const boost::optional<int> &t_subrow)
+    const boost::optional<int> &t_subrow, const bool t_selector)
 {
   WidgetLoc l(t_widget, row, column, t_subrow);
   connect(t_widget, &QObject::destroyed, this, &ObjectSelector::widgetDestroyed);
@@ -116,6 +116,11 @@ void ObjectSelector::addWidget(const boost::optional<model::ModelObject> &t_obj,
   // so let's go ahead and perform an update
   if (rowSelected || !visible) {
     updateWidgets(row, subRowToUpdate, rowSelected, visible);
+  }
+
+  if (t_selector && t_obj)
+  {
+    m_selectorObjects.insert(*t_obj);
   }
 }
 
@@ -216,15 +221,7 @@ void ObjectSelector::updateWidgets(const int t_row, const boost::optional<int> &
 
 void ObjectSelector::updateWidgets()
 {
-  std::set<model::ModelObject> objs;
-  for (const auto &obj : m_widgetMap)
-  {
-    if (obj.first) {
-      objs.insert(*obj.first);
-    }
-  }
-
-  for (const auto &obj : objs)
+  for (const auto &obj : m_selectorObjects)
   {
     updateWidgets(obj);
   }
@@ -772,7 +769,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
   // end wrapper
 
   std::vector<QWidget *> holders;
-  auto addWidget = [&](QWidget *t_widget, const boost::optional<model::ModelObject> &t_obj)
+  auto addWidget = [&](QWidget *t_widget, const boost::optional<model::ModelObject> &t_obj, const bool t_selector)
   {
     auto expand=[](QSize &t_s, const QSize &t_newS) {
       if (t_newS.height() < 400 && t_newS.width() < 600)
@@ -805,7 +802,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
       holder->setObjectName("InnerCell");
     }
     holders.push_back(holder);
-    m_objectSelector->addWidget(t_obj, holder, row, column, hasSubRows?numWidgets:boost::optional<int>());
+    m_objectSelector->addWidget(t_obj, holder, row, column, hasSubRows?numWidgets:boost::optional<int>(), t_selector);
 
     ++numWidgets;
     expand(recommendedSize, t_widget->size());
@@ -817,7 +814,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
       // Each concept should have its own column
       OS_ASSERT(m_horizontalHeader.size() == m_baseConcepts.size());
     }
-    addWidget(m_horizontalHeader.at(column), boost::none);
+    addWidget(m_horizontalHeader.at(column), boost::none, false);
   } else {
 
     model::ModelObject mo = m_modelObjects[modelObjectRow];
@@ -839,9 +836,10 @@ QWidget * OSGridController::widgetAt(int row, int column)
       {
         if (item)
         {
-          addWidget(makeWidget(item->cast<model::ModelObject>(), dataSource->innerConcept()), item->cast<model::ModelObject>());
+          addWidget(makeWidget(item->cast<model::ModelObject>(), dataSource->innerConcept()), item->cast<model::ModelObject>(), 
+              baseConcept->isSelector() || dataSource->innerConcept()->isSelector());
         } else {
-          addWidget(new QWidget(), boost::none);
+          addWidget(new QWidget(), boost::none, false);
         }
       }
 
@@ -849,7 +847,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
       {
         // use this space to put in a blank placeholder of some kind to make sure the 
         // widget is evenly laid out relative to its friends in the adjacent columns
-        addWidget(new QWidget(), boost::none);
+        addWidget(new QWidget(), boost::none, false);
       }
 
       if (dataSource->source().dropZoneConcept())
@@ -857,7 +855,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
         // it makes sense to me that the drop zone would need a reference to the parent containing object
         // not an object the rest in the list was derived from
         // this should also be working and doing what you want
-        addWidget(makeWidget(mo, dataSource->source().dropZoneConcept()), boost::none);
+        addWidget(makeWidget(mo, dataSource->source().dropZoneConcept()), boost::none, false);
       }
 
       // right here you probably want some kind of container that's smart enough to know how to grow
@@ -869,7 +867,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
       // This case is exactly what it used to do before the DataSource idea was added.
 
       // just the one
-      addWidget(makeWidget(mo, baseConcept), mo);
+      addWidget(makeWidget(mo, baseConcept), mo, baseConcept->isSelector());
     }
   }
 
@@ -884,9 +882,8 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
   if(row == 0){
     wrapper->setMinimumSize(QSize(recommendedSize.width(),recommendedSize.height()));
-  } else {
-//    wrapper->setMinimumSize(QSize(recommendedSize.width() + 10,widgetHeight * numWidgets ));
   }
+
   wrapper->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
   if (hasSubRows) {

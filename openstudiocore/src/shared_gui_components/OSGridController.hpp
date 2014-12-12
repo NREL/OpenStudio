@@ -188,7 +188,8 @@ class ObjectSelector : public QObject
   public:
     ObjectSelector(OSGridController *t_grid);
 
-    void addWidget(const boost::optional<model::ModelObject> &t_obj, QWidget *t_widget, int row, int column, const boost::optional<int> &subrow);
+    void addWidget(const boost::optional<model::ModelObject> &t_obj, QWidget *t_widget, int row, int column, 
+        const boost::optional<int> &subrow, bool t_selector);
     void setObjectSelection(const model::ModelObject &t_obj, bool t_selected);
     bool getObjectSelection(const model::ModelObject &t_obj) const;
     std::set<model::ModelObject> getSelectedObjects() const;
@@ -217,6 +218,7 @@ class ObjectSelector : public QObject
     OSGridController *m_grid;
     std::multimap<boost::optional<model::ModelObject>, WidgetLoc> m_widgetMap;
     std::set<model::ModelObject> m_selectedObjects;
+    std::set<model::ModelObject> m_selectorObjects;
     std::function<bool (const model::ModelObject &)> m_objectFilter;
 };
 
@@ -271,6 +273,7 @@ public:
     });
 
     addCheckBoxColumn(headingLabel, getter, setter, t_source);
+    m_baseConcepts.back()->setIsSelector(true);
   }
 
 

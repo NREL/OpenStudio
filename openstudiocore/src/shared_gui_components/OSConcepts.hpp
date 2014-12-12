@@ -273,8 +273,18 @@ class BaseConcept
   virtual ~BaseConcept() {}
 
   BaseConcept(QString t_headingLabel)
-    : m_headingLabel(t_headingLabel)
+    : m_headingLabel(t_headingLabel), m_selector(false)
   {
+  }
+
+  bool isSelector() const
+  {
+    return m_selector;
+  }
+
+  void setIsSelector(const bool t_selector)
+  {
+    m_selector = t_selector;
   }
 
   QString headingLabel() const { return m_headingLabel; }
@@ -282,6 +292,7 @@ class BaseConcept
   private:
 
   QString m_headingLabel;
+  bool m_selector;
 
 };
 
