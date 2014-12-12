@@ -48,140 +48,35 @@ namespace openstudio {
 // ConstructionInspectorView
 
 ConstructionInspectorView::ConstructionInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-  : ModelObjectInspectorView(model, true, parent),
-    m_constructionDZ(nullptr),
-    m_nameEdit(nullptr),
-    m_isIP(isIP)
+  : ConstructionBaseInspectorView(isIP, model, parent),
+    m_constructionDZ(nullptr)
 {
   createLayout();
+  showFenestration();
+  disableFenestration();
 }
 
 void ConstructionInspectorView::createLayout()
 {
-  QWidget* visibleWidget = new QWidget();
-  this->stackedWidget()->addWidget(visibleWidget);
+  ConstructionBaseInspectorView::createLayout();
 
-  QGridLayout* mainGridLayout = new QGridLayout();
-  mainGridLayout->setContentsMargins(7,7,7,7);
-  mainGridLayout->setSpacing(14);
-  visibleWidget->setLayout(mainGridLayout);
+  int row = m_mainGridLayout->rowCount();
 
-  int row = 0;
   QVBoxLayout * vLayout = nullptr;
 
-  // Name
-
-  QLabel* label = new QLabel("Name: ");
-  label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row,0);
-
-  ++row;
-
-  m_nameEdit = new OSLineEdit();
-  mainGridLayout->addWidget(m_nameEdit,row,0,1,3);
-
-  ++row;
-
-  // Measure Tags
-  QFrame * line;
-  line = new QFrame();
-  line->setFrameShape(QFrame::HLine);
-  line->setFrameShadow(QFrame::Sunken);
-  mainGridLayout->addWidget(line,row,0,1,3);
-
-  ++row;
-
-  label = new QLabel();
-  label->setText("Measure Tags (Optional):");
-  label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row,0);
-
-  ++row;
-
-  // Standard
-  vLayout = new QVBoxLayout();
-
-  label = new QLabel();
-  label->setText("Standard: ");
-  label->setObjectName("StandardsInfo");
-  vLayout->addWidget(label);
-
-  m_standard = new QComboBox();
-  m_standard->setEditable(true);
-  m_standard->setDuplicatesEnabled(false);
-  m_standard->setFixedWidth(OSItem::ITEM_WIDTH);
-  vLayout->addWidget(m_standard);
-
-  mainGridLayout->addLayout(vLayout, row, 0);
-
-  // Standard Source
-  vLayout = new QVBoxLayout();
-
-  label = new QLabel();
-  label->setText("Standard Source: ");
-  label->setObjectName("StandardsInfo");
-  vLayout->addWidget(label);
-
-  m_standardSource = new QComboBox();
-  m_standardSource->setEditable(true);
-  m_standardSource->setDuplicatesEnabled(false);
-  m_standardSource->setFixedWidth(OSItem::ITEM_WIDTH);
-  vLayout->addWidget(m_standardSource);
-
-  mainGridLayout->addLayout(vLayout, row, 1);
-
-  ++row;
-
-  // Intended Surface Type
-  vLayout = new QVBoxLayout();
-
-  label = new QLabel();
-  label->setText("Intended Surface Type: ");
-  label->setObjectName("StandardsInfo");
-  vLayout->addWidget(label);
-
-  m_intendedSurfaceType = new OSComboBox2();
-  m_intendedSurfaceType->setFixedWidth(OSItem::ITEM_WIDTH);
-  vLayout->addWidget(m_intendedSurfaceType);
-
-  mainGridLayout->addLayout(vLayout,row,0);
-
-  // Standards Construction Type
-  vLayout = new QVBoxLayout();
-
-  label = new QLabel();
-  label->setText("Standards Construction Type: ");
-  label->setObjectName("StandardsInfo");
-  vLayout->addWidget(label);
-
-  m_standardsConstructionType = new QComboBox();
-  m_standardsConstructionType->setEditable(true);
-  m_standardsConstructionType->setDuplicatesEnabled(false);
-  m_standardsConstructionType->setFixedWidth(OSItem::ITEM_WIDTH);
-  vLayout->addWidget(m_standardsConstructionType);
-
-  mainGridLayout->addLayout(vLayout,row,1);
-
-  ++row;
-
-  line = new QFrame();
-  line->setFrameShape(QFrame::HLine);
-  line->setFrameShadow(QFrame::Sunken);
-  mainGridLayout->addWidget(line,row,0,1,3);
-
-  ++row;
+  QLabel * label = nullptr;
 
   // Layer
 
   label = new QLabel("Layer: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row,0);
+  m_mainGridLayout->addWidget(label,row,0);
 
   ++row;
 
   label = new QLabel("Outside");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row,0);
+  m_mainGridLayout->addWidget(label,row,0);
 
   ++row;
 
@@ -191,21 +86,21 @@ void ConstructionInspectorView::createLayout()
   m_constructionDZ->setMaxItems(12);
   m_constructionDZ->setItemsAcceptDrops(true);
   m_constructionDZ->setFixedSize(QSize(OSItem::ITEM_WIDTH + 20,600));
-  mainGridLayout->addWidget(m_constructionDZ,row,0);
+  m_mainGridLayout->addWidget(m_constructionDZ,row,0);
 
   ++row;
 
   label = new QLabel("Inside");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row,0);
+  m_mainGridLayout->addWidget(label,row,0);
 
   ++row;
 
   // Stretch
 
-  mainGridLayout->setRowStretch(row,100);
+  m_mainGridLayout->setRowStretch(row,100);
 
-  mainGridLayout->setColumnStretch(100,100);
+  m_mainGridLayout->setColumnStretch(100,100);
 }
 
 void ConstructionInspectorView::onClearSelection()
@@ -219,12 +114,12 @@ void ConstructionInspectorView::onSelectModelObject(const openstudio::model::Mod
   detach();
   model::Construction construction = modelObject.cast<model::Construction>();
   attach(construction);
-  refresh();
+  //refresh();
 }
 
 void ConstructionInspectorView::onUpdate()
 {
-  refresh();
+  //refresh();
 }
 
 void ConstructionInspectorView::standardsConstructionTypeChanged(const QString & text)
@@ -319,15 +214,6 @@ void ConstructionInspectorView::detach()
 
   disconnect(m_standardsConstructionType, 0, this, 0);
   m_standardsConstructionType->setEnabled(false);
-}
-
-void ConstructionInspectorView::refresh()
-{
-}
-
-void ConstructionInspectorView::toggleUnits(bool displayIP)
-{
-  m_isIP = displayIP;
 }
 
 } // openstudio
