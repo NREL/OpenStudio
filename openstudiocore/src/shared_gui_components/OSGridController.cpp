@@ -704,7 +704,7 @@ QString OSGridController::cellStyle(int rowIndex, int columnIndex, bool isSelect
   }
 
   QString style;
-  style.append("QPushButton#TableCell { border: none;");
+  style.append("QWidget#TableCell { border: none;");
   style.append("                        background-color: " + cellColor + ";");
   if (rowIndex == 0){
     style.append("                      border-top: 1px solid black;");
@@ -756,11 +756,11 @@ QWidget * OSGridController::widgetAt(int row, int column)
   bool hasSubRows = false;
 
   // wrapper
-  auto wrapper = new QPushButton();
-  if (modelObjectRow >= 0 && column == 0){
-    auto size = m_cellBtnGrp->buttons().size();
-    m_cellBtnGrp->addButton(wrapper, size);
-  }
+  auto wrapper = new QWidget();
+//  if (modelObjectRow >= 0 && column == 0){
+//    auto size = m_cellBtnGrp->buttons().size();
+//    m_cellBtnGrp->addButton(wrapper, size);
+//  }
 
   wrapper->setObjectName("TableCell");
 
@@ -873,10 +873,19 @@ QWidget * OSGridController::widgetAt(int row, int column)
     }
   }
 
+  for (auto &holder : holders)
+  {
+    if(row == 0){
+      holder->setMinimumSize(QSize(recommendedSize.width(),recommendedSize.height()));
+    } else {
+      holder->setMinimumSize(QSize(recommendedSize.width() + 10,widgetHeight));
+    }
+  }
+
   if(row == 0){
     wrapper->setMinimumSize(QSize(recommendedSize.width(),recommendedSize.height()));
   } else {
-    wrapper->setMinimumSize(QSize(recommendedSize.width() + 10,widgetHeight * numWidgets ));
+//    wrapper->setMinimumSize(QSize(recommendedSize.width() + 10,widgetHeight * numWidgets ));
   }
   wrapper->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
