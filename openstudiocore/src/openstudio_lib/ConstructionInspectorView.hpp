@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_CONSTRUCTIONINSPECTORVIEW_HPP
 #define OPENSTUDIO_CONSTRUCTIONINSPECTORVIEW_HPP
 
-#include "ModelObjectInspectorView.hpp"
+#include "ConstructionBaseInspectorView.hpp"
 
 #include "../model/StandardsInformationConstruction.hpp"
 
@@ -42,7 +42,7 @@ class OSLineEdit;
 
 class OSComboBox2;
 
-class ConstructionInspectorView : public ModelObjectInspectorView
+class ConstructionInspectorView : public ConstructionBaseInspectorView
 {
   Q_OBJECT
 
@@ -81,20 +81,6 @@ class ConstructionInspectorView : public ModelObjectInspectorView
     OSDropZone * m_constructionDZ;
 
     ConstructionObjectVectorController * m_constructionVC;
-
-    OSLineEdit * m_nameEdit;
-
-    OSComboBox2 * m_intendedSurfaceType;
-
-    QComboBox * m_standardsConstructionType;
-
-    boost::optional<openstudio::model::StandardsInformationConstruction> m_standardsInformation;
-
-    bool m_isIP;
-
-  public slots:
-
-    void toggleUnits(bool displayIP);
 };
 
 } // openstudio

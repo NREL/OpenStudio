@@ -20,7 +20,9 @@
 #ifndef OPENSTUDIO_MATERIALINSPECTORVIEW_HPP
 #define OPENSTUDIO_MATERIALINSPECTORVIEW_HPP
 
-#include "ModelObjectInspectorView.hpp"
+#include "MaterialBaseInspectorView.hpp"
+
+class QComboBox;
 
 namespace openstudio {
 
@@ -36,7 +38,7 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
-class MaterialInspectorView : public ModelObjectInspectorView
+class MaterialInspectorView : public MaterialBaseInspectorView
 {
   Q_OBJECT
 
@@ -65,9 +67,7 @@ class MaterialInspectorView : public ModelObjectInspectorView
     void refresh();
 
     OSComboBox * m_roughness;
-
-    OSLineEdit * m_nameEdit;
-
+    
     OSQuantityEdit * m_thickness;
 
     OSQuantityEdit * m_conductivity;
@@ -81,12 +81,6 @@ class MaterialInspectorView : public ModelObjectInspectorView
     OSQuantityEdit * m_solarAbsorptance;
 
     OSQuantityEdit * m_visibleAbsorptance;
-
-    bool m_isIP;
-
-  public slots:
-
-    void toggleUnits(bool displayIP);
 };
 
 } // openstudio
