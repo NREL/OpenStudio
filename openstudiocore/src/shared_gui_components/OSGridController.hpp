@@ -198,8 +198,11 @@ class ObjectSelector : public QObject
     {
       m_widgetMap.clear();
       m_selectedObjects.clear();
+      m_selectorObjects.clear();
+      m_objectFilter=getDefaultFilter();
     }
 
+    void objectRemoved(const openstudio::model::ModelObject &t_obj);
     void setObjectFilter(const std::function<bool (const model::ModelObject &)> &t_filter);
     void resetObjectFilter();
 

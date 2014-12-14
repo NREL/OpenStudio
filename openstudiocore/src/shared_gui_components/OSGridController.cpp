@@ -124,6 +124,16 @@ void ObjectSelector::addWidget(const boost::optional<model::ModelObject> &t_obj,
   }
 }
 
+void ObjectSelector::objectRemoved(const openstudio::model::ModelObject &t_obj)
+{
+  std::cout << " Object removed\n";
+
+  m_selectedObjects.erase(t_obj);
+  m_selectorObjects.erase(t_obj);
+  m_widgetMap.erase(boost::optional<model::ModelObject>(t_obj));
+
+}
+
 void ObjectSelector::widgetDestroyed(QObject *t_obj)
 {
   auto itr = m_widgetMap.begin();
@@ -1204,6 +1214,8 @@ void OSGridController::onDropZoneItemClicked(OSItem* item)
 
 void OSGridController::onRemoveWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
+  m_objectSelector->objectRemoved(object.cast<model::ModelObject>());
+
   //if (m_iddObjectType == iddObjectType) { TODO uncomment
     // Update model list
     std::vector<model::ModelObject>::iterator it;

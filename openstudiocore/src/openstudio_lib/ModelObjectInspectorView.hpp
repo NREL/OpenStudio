@@ -50,6 +50,8 @@ class ModelObjectInspectorView : public OSInspectorView
 
     virtual ~ModelObjectInspectorView() {}
 
+    virtual std::vector<model::ModelObject> selectedObjects() const;
+
   signals:
 
     void toggleUnitsClicked(bool displayIP);
@@ -63,6 +65,7 @@ class ModelObjectInspectorView : public OSInspectorView
     void gridRowSelected(OSItem * item);
 
     void dropZoneItemClicked(OSItem* item);
+
 
   public slots:
 

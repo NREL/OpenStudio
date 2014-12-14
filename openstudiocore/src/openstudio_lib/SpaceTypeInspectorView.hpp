@@ -24,6 +24,8 @@
 
 namespace openstudio {
 
+class SpaceTypesGridView;
+
 class SpaceTypeInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
@@ -33,6 +35,8 @@ class SpaceTypeInspectorView : public ModelObjectInspectorView
     SpaceTypeInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = 0 );
 
     virtual ~SpaceTypeInspectorView() {}
+
+    std::vector<model::ModelObject> selectedObjects() const;
 
   protected:
 
@@ -47,6 +51,7 @@ class SpaceTypeInspectorView : public ModelObjectInspectorView
     void refresh();
 
     bool m_isIP;
+    SpaceTypesGridView *m_gridView;
 
   public slots:
 

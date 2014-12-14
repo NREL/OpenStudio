@@ -43,9 +43,13 @@ public:
 
   virtual ~SpaceTypesGridView() {}
 
+  virtual std::vector<model::ModelObject> selectedObjects() const;
+
 private:
 
   bool m_isIP;
+  SpaceTypesGridController *m_gridController;
+
 
 signals:
 
@@ -62,7 +66,7 @@ signals:
 private slots:
 
   void onDropZoneItemClicked(OSItem* item);
-  void filterStateChanged(const SpaceTypesGridController *controller, const int newState) const;
+  void filterStateChanged(const int newState) const;
 
 private:
   REGISTER_LOGGER("openstudio.CalibrationBillingPeriod");

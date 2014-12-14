@@ -151,13 +151,11 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
 
   auto spaceTypesGridController = new SpaceTypesGridController(m_isIP, "Space Types", IddObjectType::OS_SpaceType, model, spaceTypeModelObjects);
   auto gridView = new OSGridView(spaceTypesGridController, "Space Types", "Drop\nZone", false, parent);
+  m_gridController = spaceTypesGridController;
 
-  layout->addWidget([this, spaceTypesGridController](){ 
+  layout->addWidget([this](){ 
       auto checkbox = new QCheckBox("Lights only filter");
-      connect(checkbox, &QCheckBox::stateChanged, [this, spaceTypesGridController](int state) { 
-                                                     this->filterStateChanged(spaceTypesGridController, state);
-                                                  } 
-             );
+      connect(checkbox, &QCheckBox::stateChanged, this, &SpaceTypesGridView::filterStateChanged);
       return checkbox;
     }());
 
@@ -189,11 +187,11 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
 }
 
 
-void SpaceTypesGridView::filterStateChanged(const SpaceTypesGridController *controller, const int newState) const
+void SpaceTypesGridView::filterStateChanged(const int newState) const
 {
   LOG(Debug, "Lights only filter state changed: " << newState);
 
-  auto objectSelector = controller->getObjectSelector();
+  auto objectSelector = m_gridController->getObjectSelector();
   if (newState == 0)
   {
     objectSelector->resetObjectFilter();
@@ -212,7 +210,12 @@ void SpaceTypesGridView::filterStateChanged(const SpaceTypesGridController *cont
   }
 }
 
+std::vector<model::ModelObject> SpaceTypesGridView::selectedObjects() const
+{
+  const auto os = m_gridController->getObjectSelector()->getSelectedObjects();
 
+  return std::vector<model::ModelObject>(os.cbegin(), os.cend());
+}
 
 void SpaceTypesGridView::onDropZoneItemClicked(OSItem* item)
 {

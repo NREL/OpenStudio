@@ -74,12 +74,26 @@ boost::optional<model::Component> ModelSubTabController::getComponent(const OSIt
 
 void ModelSubTabController::onRemoveItem(OSItem* item)
 {
-  ModelObjectItem* modelObjectItem = qobject_cast<ModelObjectItem*>(item);
-  OS_ASSERT(modelObjectItem);
-  model::ModelObject modelObject = modelObjectItem->modelObject();
-  if (!modelObject.handle().isNull()){
-    onRemoveObject(modelObject);
+  // get selected items
+  auto modelSubTabView = qobject_cast<ModelSubTabView *>(subTabView());
+  auto modelObjectInspectorView = modelSubTabView->modelObjectInspectorView();
+  auto selectedObjects = modelObjectInspectorView->selectedObjects();
+
+  if (selectedObjects.empty())
+  {
+    ModelObjectItem* modelObjectItem = qobject_cast<ModelObjectItem*>(item);
+    OS_ASSERT(modelObjectItem);
+    model::ModelObject modelObject = modelObjectItem->modelObject();
+    if (!modelObject.handle().isNull()){
+      onRemoveObject(modelObject);
+    }
+  } else {
+    for (auto &obj : selectedObjects)
+    {
+      onRemoveObject(obj);
+    }
   }
+
 }
 
 void ModelSubTabController::onReplaceItem(OSItem* item, const OSItemId& replacementItemId)
