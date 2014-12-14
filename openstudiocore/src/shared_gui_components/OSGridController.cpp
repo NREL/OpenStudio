@@ -131,8 +131,15 @@ void ObjectSelector::objectRemoved(const openstudio::model::ModelObject &t_obj)
   m_selectedObjects.erase(t_obj);
   m_selectorObjects.erase(t_obj);
   m_widgetMap.erase(boost::optional<model::ModelObject>(t_obj));
-
 }
+
+bool ObjectSelector::containsObject(const openstudio::model::ModelObject &t_obj) const
+{
+  return m_selectedObjects.count(t_obj) != 0
+      || m_selectorObjects.count(t_obj) != 0
+      || m_widgetMap.count(boost::optional<model::ModelObject>(t_obj));
+}
+
 
 void ObjectSelector::widgetDestroyed(QObject *t_obj)
 {
@@ -1212,9 +1219,17 @@ void OSGridController::onDropZoneItemClicked(OSItem* item)
 {
 }
 
+
 void OSGridController::onRemoveWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
-  m_objectSelector->objectRemoved(object.cast<model::ModelObject>());
+  auto modelObject = object.cast<model::ModelObject>();
+  auto weHaveObject = false;
+
+  if (m_objectSelector->containsObject(modelObject))
+  {
+    m_objectSelector->objectRemoved(object.cast<model::ModelObject>());
+    weHaveObject = true;
+  }
 
   //if (m_iddObjectType == iddObjectType) { TODO uncomment
     // Update model list
@@ -1227,6 +1242,10 @@ void OSGridController::onRemoveWorkspaceObject(const WorkspaceObject& object, co
 
       // Update row
       gridView()->requestRemoveRow(rowIndexFromModelIndex(index));
+    } else if (weHaveObject) {
+      // we know we are tracking this object, but it's not one of the row-major ones...
+      // must be a subrow... for now, not ideal, but let's queue a refresh of the grid
+      requestRefreshGrid();
     }
   //}
 }
