@@ -184,7 +184,7 @@ std::set<model::ModelObject> ObjectSelector::getSelectedObjects() const
       std::inserter(returned, returned.begin()),
       m_objectFilter);
 
-  return m_selectedObjects;
+  return returned;
 }
 
 void ObjectSelector::setObjectFilter(const std::function<bool (const model::ModelObject &)> &t_filter)
