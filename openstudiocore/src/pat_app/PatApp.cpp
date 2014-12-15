@@ -113,9 +113,7 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
     m_cloudDialog(nullptr),
     m_measureManager(t_infoGetter, this)
 {
-  bool isConnected = false;
-  isConnected = connect(this, SIGNAL(userMeasuresDirChanged()), &m_measureManager, SLOT(updateMeasuresLists()));
-  OS_ASSERT(isConnected);
+  connect(this, &PatApp::userMeasuresDirChanged, &m_measureManager, static_cast<void (MeasureManager::*)(void)>(&MeasureManager::updateMeasuresLists));
 
   setOrganizationName("NREL");
   setOrganizationDomain("nrel.gov");
