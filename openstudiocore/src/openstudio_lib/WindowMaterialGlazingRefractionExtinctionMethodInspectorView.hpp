@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_WINDOWMATERIALGLAZINGREFRACTIONEXTINCTIONMETHODINSPECTORVIEW_HPP
 #define OPENSTUDIO_WINDOWMATERIALGLAZINGREFRACTIONEXTINCTIONMETHODINSPECTORVIEW_HPP
 
-#include "ModelObjectInspectorView.hpp"
+#include "MaterialBaseInspectorView.hpp"
 
 namespace openstudio {
 
@@ -36,7 +36,7 @@ class OSSwitch;
 
 class OSQuantityEdit;
 
-class WindowMaterialGlazingRefractionExtinctionMethodInspectorView : public ModelObjectInspectorView
+class WindowMaterialGlazingRefractionExtinctionMethodInspectorView : public MaterialBaseInspectorView
 {
   Q_OBJECT
 
@@ -66,8 +66,6 @@ class WindowMaterialGlazingRefractionExtinctionMethodInspectorView : public Mode
 
     OSSwitch * m_solarDiffusing;
 
-    OSLineEdit * m_nameEdit;
-
     OSQuantityEdit * m_thickness;
 
     OSQuantityEdit * m_solarIndexOfRefraction;
@@ -85,12 +83,6 @@ class WindowMaterialGlazingRefractionExtinctionMethodInspectorView : public Mode
     OSQuantityEdit * m_conductivity;
 
     OSQuantityEdit * m_dirtCorrectionFactorForSolarAndVisibleTransmittance;
-
-    bool m_isIP;
-
-  public slots:
-
-    void toggleUnits(bool displayIP);
 };
 
 } // openstudio

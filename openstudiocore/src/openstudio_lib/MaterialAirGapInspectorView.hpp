@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_MATERIALAIRGAPINSPECTORVIEW_HPP
 #define OPENSTUDIO_MATERIALAIRGAPINSPECTORVIEW_HPP
 
-#include "ModelObjectInspectorView.hpp"
+#include "MaterialBaseInspectorView.hpp"
 
 namespace openstudio {
 
@@ -34,7 +34,7 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
-class MaterialAirGapInspectorView : public ModelObjectInspectorView
+class MaterialAirGapInspectorView : public MaterialBaseInspectorView
 {
   Q_OBJECT
 
@@ -62,15 +62,7 @@ class MaterialAirGapInspectorView : public ModelObjectInspectorView
 
     void refresh();
 
-    OSLineEdit * m_nameEdit;
-
     OSQuantityEdit * m_thermalResistance;
-
-    bool m_isIP;
-
-  public slots:
-
-    void toggleUnits(bool displayIP);
 };
 
 } // openstudio

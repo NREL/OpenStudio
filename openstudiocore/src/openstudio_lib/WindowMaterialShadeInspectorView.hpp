@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_WINDOWMATERIALSHADEINSPECTORVIEW_HPP
 #define OPENSTUDIO_WINDOWMATERIALSHADEINSPECTORVIEW_HPP
 
-#include "ModelObjectInspectorView.hpp"
+#include "MaterialBaseInspectorView.hpp"
 
 namespace openstudio {
 
@@ -34,7 +34,7 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
-class WindowMaterialShadeInspectorView : public ModelObjectInspectorView
+class WindowMaterialShadeInspectorView : public MaterialBaseInspectorView
 {
   Q_OBJECT
 
@@ -61,8 +61,6 @@ class WindowMaterialShadeInspectorView : public ModelObjectInspectorView
     void detach();
 
     void refresh();
-
-    OSLineEdit * m_nameEdit;
 
     OSQuantityEdit * m_solarTransmittance;
 
@@ -91,12 +89,6 @@ class WindowMaterialShadeInspectorView : public ModelObjectInspectorView
     OSQuantityEdit * m_rightSideOpeningMultiplier;
 
     OSQuantityEdit * m_airflowPermeability;
-
-    bool m_isIP;
-
-  public slots:
-
-    void toggleUnits(bool displayIP);
 };
 
 } // openstudio

@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_WINDOWMATERIALGLAZINGGROUPTHERMOCHROMICINSPECTORVIEW_HPP
 #define OPENSTUDIO_WINDOWMATERIALGLAZINGGROUPTHERMOCHROMICINSPECTORVIEW_HPP
 
-#include "ModelObjectInspectorView.hpp"
+#include "MaterialBaseInspectorView.hpp"
 
 namespace openstudio {
 
@@ -36,7 +36,7 @@ class OSQuantityEdit;
 
 class OSQuantityEdit2;
 
-class WindowMaterialGlazingGroupThermochromicInspectorView : public ModelObjectInspectorView
+class WindowMaterialGlazingGroupThermochromicInspectorView : public MaterialBaseInspectorView
 {
   Q_OBJECT
 
@@ -64,17 +64,9 @@ class WindowMaterialGlazingGroupThermochromicInspectorView : public ModelObjectI
 
     void refresh();
 
-    OSLineEdit * m_nameEdit;
-
     OSQuantityEdit2 * m_opticalDataTemperature;
 
     OSLineEdit * m_windowMaterialGlazingName;
-
-    bool m_isIP;
-
-  public slots:
-
-    void toggleUnits(bool displayIP);
 };
 
 } // openstudio

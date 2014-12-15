@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_MATERIALROOFVEGETATIONINSPECTORVIEW_HPP
 #define OPENSTUDIO_MATERIALROOFVEGETATIONINSPECTORVIEW_HPP
 
-#include "ModelObjectInspectorView.hpp"
+#include "MaterialBaseInspectorView.hpp"
 
 namespace openstudio {
 
@@ -36,7 +36,7 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
-class MaterialRoofVegetationInspectorView : public ModelObjectInspectorView
+class MaterialRoofVegetationInspectorView : public MaterialBaseInspectorView
 {
   Q_OBJECT
 
@@ -65,8 +65,6 @@ class MaterialRoofVegetationInspectorView : public ModelObjectInspectorView
     void refresh();
 
     OSComboBox * m_roughness;
-
-    OSLineEdit * m_nameEdit;
 
     OSLineEdit * m_soilLayerName;
 
@@ -101,12 +99,6 @@ class MaterialRoofVegetationInspectorView : public ModelObjectInspectorView
     OSQuantityEdit * m_initialVolumetricMoistureContentOfTheSoilLayer;
 
     OSQuantityEdit * m_solarAbsorptance;
-
-    bool m_isIP;
-
-  public slots:
-
-    void toggleUnits(bool displayIP);
 };
 
 } // openstudio

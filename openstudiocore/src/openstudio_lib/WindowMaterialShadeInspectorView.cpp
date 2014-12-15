@@ -36,8 +36,7 @@ namespace openstudio {
 // WindowMaterialShadeInspectorView
 
 WindowMaterialShadeInspectorView::WindowMaterialShadeInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-  : ModelObjectInspectorView(model, true, parent),
-    m_nameEdit(nullptr),
+  : MaterialBaseInspectorView(isIP, model, parent),
     m_solarTransmittance(nullptr),
     m_solarReflectance(nullptr),
     m_visibleTransmittance(nullptr),
@@ -51,179 +50,167 @@ WindowMaterialShadeInspectorView::WindowMaterialShadeInspectorView(bool isIP, co
     m_bottomOpeningMultiplier(nullptr),
     m_leftSideOpeningMultiplier(nullptr),
     m_rightSideOpeningMultiplier(nullptr),
-    m_airflowPermeability(nullptr),
-    m_isIP(isIP)
+    m_airflowPermeability(nullptr)
 {
   createLayout();
 }
 
 void WindowMaterialShadeInspectorView::createLayout()
 {
-  QWidget* visibleWidget = new QWidget();
-  this->stackedWidget()->addWidget(visibleWidget);
+  MaterialBaseInspectorView::createLayout(); // call parent implementation
 
-  QGridLayout* mainGridLayout = new QGridLayout();
-  mainGridLayout->setContentsMargins(7,7,7,7);
-  mainGridLayout->setSpacing(14);
-  visibleWidget->setLayout(mainGridLayout);
+  QVBoxLayout * vLayout = nullptr;
 
-  unsigned row = 0;
-  unsigned col = 0;
+  QLabel * label = nullptr;
 
-  // Name
+  unsigned row = m_mainGridLayout->rowCount();
 
-  QLabel * label = new QLabel("Name: ");
-  label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
-
-  m_nameEdit = new OSLineEdit();
-  mainGridLayout->addWidget(m_nameEdit,row++,0,1,3);
 
   // Solar Transmittance
 
   label = new QLabel("Solar Transmittance: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_solarTransmittance = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialShadeInspectorView::toggleUnitsClicked, m_solarTransmittance, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_solarTransmittance,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_solarTransmittance,row++,0,1,3);
 
   // Solar Reflectance
 
   label = new QLabel("Solar Reflectance: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_solarReflectance = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialShadeInspectorView::toggleUnitsClicked, m_solarReflectance, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_solarReflectance,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_solarReflectance,row++,0,1,3);
 
   // Visible Transmittance
 
   label = new QLabel("Visible Transmittance: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_visibleTransmittance = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialShadeInspectorView::toggleUnitsClicked, m_visibleTransmittance, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_visibleTransmittance,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_visibleTransmittance,row++,0,1,3);
 
   // Visible Reflectance
 
   label = new QLabel("Visible Reflectance: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_visibleReflectance = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialShadeInspectorView::toggleUnitsClicked, m_visibleReflectance, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_visibleReflectance,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_visibleReflectance,row++,0,1,3);
 
   // Thermal Hemispherical Emissivity
 
   label = new QLabel("Thermal Hemispherical Emissivity: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_thermalHemisphericalEmissivity = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialShadeInspectorView::toggleUnitsClicked, m_thermalHemisphericalEmissivity, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_thermalHemisphericalEmissivity,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_thermalHemisphericalEmissivity,row++,0,1,3);
 
   // Thermal Transmittance
 
   label = new QLabel("Thermal Transmittance: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_thermalTransmittance = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialShadeInspectorView::toggleUnitsClicked, m_thermalTransmittance, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_thermalTransmittance,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_thermalTransmittance,row++,0,1,3);
 
   // Thickness
 
   label = new QLabel("Thickness: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_thickness = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialShadeInspectorView::toggleUnitsClicked, m_thickness, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_thickness,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_thickness,row++,0,1,3);
 
   // Conductivity
 
   label = new QLabel("Conductivity: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_conductivity = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialShadeInspectorView::toggleUnitsClicked, m_conductivity, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_conductivity,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_conductivity,row++,0,1,3);
 
   // Shade To Glass Distance
 
   label = new QLabel("Shade To Glass Distance: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_shadeToGlassDistance = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialShadeInspectorView::toggleUnitsClicked, m_shadeToGlassDistance, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_shadeToGlassDistance,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_shadeToGlassDistance,row++,0,1,3);
 
   // Top Opening Multiplier
 
   label = new QLabel("Top Opening Multiplier: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_topOpeningMultiplier = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialShadeInspectorView::toggleUnitsClicked, m_topOpeningMultiplier, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_topOpeningMultiplier,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_topOpeningMultiplier,row++,0,1,3);
 
   // Bottom Opening Multiplier
 
   label = new QLabel("Bottom Opening Multiplier: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_bottomOpeningMultiplier = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialShadeInspectorView::toggleUnitsClicked, m_bottomOpeningMultiplier, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_bottomOpeningMultiplier,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_bottomOpeningMultiplier,row++,0,1,3);
 
   // Left-Side Opening Multiplier
 
   label = new QLabel("Left-Side Opening Multiplier: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_leftSideOpeningMultiplier = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialShadeInspectorView::toggleUnitsClicked, m_leftSideOpeningMultiplier, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_leftSideOpeningMultiplier,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_leftSideOpeningMultiplier,row++,0,1,3);
 
   // Right-Side Opening Multiplier
 
   label = new QLabel("Right-Side Opening Multiplier: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_rightSideOpeningMultiplier = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialShadeInspectorView::toggleUnitsClicked, m_rightSideOpeningMultiplier, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_rightSideOpeningMultiplier,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_rightSideOpeningMultiplier,row++,0,1,3);
 
   // Airflow Permeability
 
   label = new QLabel("Airflow Permeability: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_airflowPermeability = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialShadeInspectorView::toggleUnitsClicked, m_airflowPermeability, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_airflowPermeability,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_airflowPermeability,row++,0,1,3);
 
   // Stretch
 
-  mainGridLayout->setRowStretch(100,100);
+  m_mainGridLayout->setRowStretch(100,100);
 
-  mainGridLayout->setColumnStretch(100,100);
+  m_mainGridLayout->setColumnStretch(100,100);
 }
 
 void WindowMaterialShadeInspectorView::onClearSelection()
@@ -289,11 +276,6 @@ void WindowMaterialShadeInspectorView::detach()
 
 void WindowMaterialShadeInspectorView::refresh()
 {
-}
-
-void WindowMaterialShadeInspectorView::toggleUnits(bool displayIP)
-{
-  m_isIP = displayIP;
 }
 
 } // openstudio

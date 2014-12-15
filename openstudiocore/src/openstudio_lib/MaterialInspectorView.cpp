@@ -55,7 +55,6 @@ void MaterialInspectorView::createLayout()
 
   unsigned row = m_mainGridLayout->rowCount();
 
-
   // Roughness
   vLayout = new QVBoxLayout();
 
@@ -193,7 +192,7 @@ void MaterialInspectorView::onUpdate()
 
 void MaterialInspectorView::attach(openstudio::model::Material & standardOpaqueMaterial)
 {
-  m_nameEdit->bind(standardOpaqueMaterial, "name");
+  m_nameEdit->bind(standardOpaqueMaterial, "name"); // TODO
 
   m_roughness->bind(standardOpaqueMaterial,"roughness");
 

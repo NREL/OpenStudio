@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_WINDOWMATERIALGLAZINGINSPECTORVIEW_HPP
 #define OPENSTUDIO_WINDOWMATERIALGLAZINGINSPECTORVIEW_HPP
 
-#include "ModelObjectInspectorView.hpp"
+#include "MaterialBaseInspectorView.hpp"
 
 namespace openstudio {
 
@@ -38,7 +38,7 @@ class OSQuantityEdit;
 
 class OSSwitch;
 
-class WindowMaterialGlazingInspectorView : public ModelObjectInspectorView
+class WindowMaterialGlazingInspectorView : public MaterialBaseInspectorView
 {
   Q_OBJECT
 
@@ -70,8 +70,6 @@ class WindowMaterialGlazingInspectorView : public ModelObjectInspectorView
 
     OSSwitch * m_solarDiffusing;
 
-    OSLineEdit * m_nameEdit;
-
     OSLineEdit * m_windowGlassSpectralDataSetName;
 
     OSQuantityEdit * m_thickness;
@@ -97,12 +95,6 @@ class WindowMaterialGlazingInspectorView : public ModelObjectInspectorView
     OSQuantityEdit * m_conductivity;
 
     OSQuantityEdit * m_dirtCorrectionFactorForSolarAndVisibleTransmittance;
-
-    bool m_isIP;
-
-  public slots:
-
-    void toggleUnits(bool displayIP);
 };
 
 } // openstudio

@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_WINDOWMATERIALSCREENINSPECTORVIEW_HPP
 #define OPENSTUDIO_WINDOWMATERIALSCREENINSPECTORVIEW_HPP
 
-#include "ModelObjectInspectorView.hpp"
+#include "MaterialBaseInspectorView.hpp"
 
 namespace openstudio {
 
@@ -36,7 +36,7 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
-class WindowMaterialScreenInspectorView : public ModelObjectInspectorView
+class WindowMaterialScreenInspectorView : public MaterialBaseInspectorView
 {
   Q_OBJECT
 
@@ -68,8 +68,6 @@ class WindowMaterialScreenInspectorView : public ModelObjectInspectorView
 
     OSComboBox * m_angleOfResolutionForScreenTransmittanceOutputMap;
 
-    OSLineEdit * m_nameEdit;
-
     OSQuantityEdit * m_diffuseSolarReflectance;
 
     OSQuantityEdit * m_diffuseVisibleReflectance;
@@ -91,12 +89,6 @@ class WindowMaterialScreenInspectorView : public ModelObjectInspectorView
     OSQuantityEdit * m_leftSideOpeningMultiplier;
 
     OSQuantityEdit * m_rightSideOpeningMultiplier;
-
-    bool m_isIP;
-
-  public slots:
-
-    void toggleUnits(bool displayIP);
 };
 
 } // openstudio

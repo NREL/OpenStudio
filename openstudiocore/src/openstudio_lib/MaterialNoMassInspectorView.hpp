@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_MATERIALNOMASSINSPECTORVIEW_HPP
 #define OPENSTUDIO_MATERIALNOMASSINSPECTORVIEW_HPP
 
-#include "ModelObjectInspectorView.hpp"
+#include "MaterialBaseInspectorView.hpp"
 
 namespace openstudio {
 
@@ -36,7 +36,7 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
-class MaterialNoMassInspectorView : public ModelObjectInspectorView
+class MaterialNoMassInspectorView : public MaterialBaseInspectorView
 {
   Q_OBJECT
 
@@ -66,8 +66,6 @@ class MaterialNoMassInspectorView : public ModelObjectInspectorView
 
     OSComboBox * m_roughness;
 
-    OSLineEdit * m_nameEdit;
-
     OSQuantityEdit * m_thermalResistance;
 
     OSQuantityEdit * m_thermalAbsorptance;
@@ -75,12 +73,6 @@ class MaterialNoMassInspectorView : public ModelObjectInspectorView
     OSQuantityEdit * m_solarAbsorptance;
 
     OSQuantityEdit * m_visibleAbsorptance;
-
-    bool m_isIP;
-
-  public slots:
-
-    void toggleUnits(bool displayIP);
 };
 
 } // openstudio

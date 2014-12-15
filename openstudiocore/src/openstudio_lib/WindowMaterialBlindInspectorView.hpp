@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_WINDOWMATERIALBLINDINSPECTORVIEW_HPP
 #define OPENSTUDIO_WINDOWMATERIALBLINDINSPECTORVIEW_HPP
 
-#include "ModelObjectInspectorView.hpp"
+#include "MaterialBaseInspectorView.hpp"
 
 namespace openstudio {
 
@@ -36,7 +36,7 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
-class WindowMaterialBlindInspectorView : public ModelObjectInspectorView
+class WindowMaterialBlindInspectorView : public MaterialBaseInspectorView
 {
   Q_OBJECT
 
@@ -65,8 +65,6 @@ class WindowMaterialBlindInspectorView : public ModelObjectInspectorView
     void refresh();
 
     OSComboBox * m_slatOrientation;
-
-    OSLineEdit * m_nameEdit;
 
     OSQuantityEdit * m_slatWidth;
 
@@ -121,12 +119,6 @@ class WindowMaterialBlindInspectorView : public ModelObjectInspectorView
     OSQuantityEdit * m_minimumSlatAngle;
 
     OSQuantityEdit * m_maximumSlatAngle;
-
-    bool m_isIP;
-
-  public slots:
-
-    void toggleUnits(bool displayIP);
 };
 
 } // openstudio

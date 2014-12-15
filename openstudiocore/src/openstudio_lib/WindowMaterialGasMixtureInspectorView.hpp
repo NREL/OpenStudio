@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_WINDOWMATERIALGASMIXTUREINSPECTORVIEW_HPP
 #define OPENSTUDIO_WINDOWMATERIALGASMIXTUREINSPECTORVIEW_HPP
 
-#include "ModelObjectInspectorView.hpp"
+#include "MaterialBaseInspectorView.hpp"
 
 namespace openstudio {
 
@@ -38,7 +38,7 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
-class WindowMaterialGasMixtureInspectorView : public ModelObjectInspectorView
+class WindowMaterialGasMixtureInspectorView : public MaterialBaseInspectorView
 {
   Q_OBJECT
 
@@ -71,8 +71,6 @@ class WindowMaterialGasMixtureInspectorView : public ModelObjectInspectorView
     OSComboBox * m_gas3Type;
     OSComboBox * m_gas4Type;
 
-    OSLineEdit * m_nameEdit;
-
     OSLineEdit * m_2AEdit;
 
     OSLineEdit * m_3AEdit;
@@ -90,12 +88,6 @@ class WindowMaterialGasMixtureInspectorView : public ModelObjectInspectorView
     OSQuantityEdit * m_gas3Fraction;
 
     OSQuantityEdit * m_gas4Fraction;
-
-    bool m_isIP;
-
-  public slots:
-
-    void toggleUnits(bool displayIP);
 };
 
 } // openstudio

@@ -36,73 +36,59 @@ namespace openstudio {
 // WindowMaterialSimpleGlazingSystemInspectorView
 
 WindowMaterialSimpleGlazingSystemInspectorView::WindowMaterialSimpleGlazingSystemInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-  : ModelObjectInspectorView(model, true, parent),
-    m_nameEdit(nullptr),
+  : MaterialBaseInspectorView(isIP, model, parent),
     m_uFactor(nullptr),
     m_solarHeatGainCoefficient(nullptr),
-    m_visibleTransmittance(nullptr),
-    m_isIP(isIP)
+    m_visibleTransmittance(nullptr)
 {
   createLayout();
 }
 
 void WindowMaterialSimpleGlazingSystemInspectorView::createLayout()
 {
-  QWidget* visibleWidget = new QWidget();
-  this->stackedWidget()->addWidget(visibleWidget);
+  MaterialBaseInspectorView::createLayout(); // call parent implementation
 
-  QGridLayout* mainGridLayout = new QGridLayout();
-  mainGridLayout->setContentsMargins(7,7,7,7);
-  mainGridLayout->setSpacing(14);
-  visibleWidget->setLayout(mainGridLayout);
+  QVBoxLayout * vLayout = nullptr;
 
-  unsigned row = 0;
-  unsigned col = 0;
+  QLabel * label = nullptr;
 
-  // Name
-
-  QLabel * label = new QLabel("Name: ");
-  label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
-
-  m_nameEdit = new OSLineEdit();
-  mainGridLayout->addWidget(m_nameEdit,row++,0,1,3);
+  unsigned row = m_mainGridLayout->rowCount();
 
   // U-Factor
 
   label = new QLabel("U-Factor: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_uFactor = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialSimpleGlazingSystemInspectorView::toggleUnitsClicked, m_uFactor, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_uFactor,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_uFactor,row++,0,1,3);
 
   // Solar Heat Gain Coefficient
 
   label = new QLabel("Solar Heat Gain Coefficient: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_solarHeatGainCoefficient = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialSimpleGlazingSystemInspectorView::toggleUnitsClicked, m_solarHeatGainCoefficient, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_solarHeatGainCoefficient,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_solarHeatGainCoefficient,row++,0,1,3);
 
-    // Visible Transmittance
+  // Visible Transmittance
 
   label = new QLabel("Visible Transmittance: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_visibleTransmittance = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialSimpleGlazingSystemInspectorView::toggleUnitsClicked, m_visibleTransmittance, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_visibleTransmittance,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_visibleTransmittance,row++,0,1,3);
 
   // Stretch
 
-  mainGridLayout->setRowStretch(100,100);
+  m_mainGridLayout->setRowStretch(100,100);
 
-  mainGridLayout->setColumnStretch(100,100);
+  m_mainGridLayout->setColumnStretch(100,100);
 }
 
 void WindowMaterialSimpleGlazingSystemInspectorView::onClearSelection()
@@ -146,11 +132,6 @@ void WindowMaterialSimpleGlazingSystemInspectorView::detach()
 
 void WindowMaterialSimpleGlazingSystemInspectorView::refresh()
 {
-}
-
-void WindowMaterialSimpleGlazingSystemInspectorView::toggleUnits(bool displayIP)
-{
-  m_isIP = displayIP;
 }
 
 } // openstudio

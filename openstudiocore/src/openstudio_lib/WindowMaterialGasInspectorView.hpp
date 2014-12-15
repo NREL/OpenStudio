@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_WINDOWMATERIALGASINSPECTORVIEW_HPP
 #define OPENSTUDIO_WINDOWMATERIALGASINSPECTORVIEW_HPP
 
-#include "ModelObjectInspectorView.hpp"
+#include "MaterialBaseInspectorView.hpp"
 
 namespace openstudio {
 
@@ -36,7 +36,7 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
-class WindowMaterialGasInspectorView : public ModelObjectInspectorView
+class WindowMaterialGasInspectorView : public MaterialBaseInspectorView
 {
   Q_OBJECT
 
@@ -66,8 +66,6 @@ class WindowMaterialGasInspectorView : public ModelObjectInspectorView
 
     OSComboBox * m_gasType;
 
-    OSLineEdit * m_nameEdit;
-
     OSQuantityEdit * m_thickness;
 
     OSQuantityEdit * m_conductivityCoefficientA;
@@ -83,12 +81,6 @@ class WindowMaterialGasInspectorView : public ModelObjectInspectorView
     OSQuantityEdit * m_specificHeatCoefficientB;
 
     OSQuantityEdit * m_molecularWeight;
-
-    bool m_isIP;
-
-  public slots:
-
-    void toggleUnits(bool displayIP);
 };
 
 } // openstudio

@@ -37,10 +37,9 @@ namespace openstudio {
 // WindowMaterialScreenInspectorView
 
 WindowMaterialScreenInspectorView::WindowMaterialScreenInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-  : ModelObjectInspectorView(model, true, parent),
+  : MaterialBaseInspectorView(isIP, model, parent),
     m_reflectedBeamTransmittanceAccountingMethod(nullptr),
     m_angleOfResolutionForScreenTransmittanceOutputMap(nullptr),
-    m_nameEdit(nullptr),
     m_diffuseSolarReflectance(nullptr),
     m_diffuseVisibleReflectance(nullptr),
     m_thermalHemisphericalEmissivity(nullptr),
@@ -51,161 +50,148 @@ WindowMaterialScreenInspectorView::WindowMaterialScreenInspectorView(bool isIP, 
     m_topOpeningMultiplier(nullptr),
     m_bottomOpeningMultiplier(nullptr),
     m_leftSideOpeningMultiplier(nullptr),
-    m_rightSideOpeningMultiplier(nullptr),
-    m_isIP(isIP)
+    m_rightSideOpeningMultiplier(nullptr)
 {
   createLayout();
 }
 
 void WindowMaterialScreenInspectorView::createLayout()
 {
-  QWidget* visibleWidget = new QWidget();
-  this->stackedWidget()->addWidget(visibleWidget);
+  MaterialBaseInspectorView::createLayout(); // call parent implementation
 
-  QGridLayout* mainGridLayout = new QGridLayout();
-  mainGridLayout->setContentsMargins(7,7,7,7);
-  mainGridLayout->setSpacing(14);
-  visibleWidget->setLayout(mainGridLayout);
+  QVBoxLayout * vLayout = nullptr;
 
-  unsigned row = 0;
-  unsigned col = 0;
+  QLabel * label = nullptr;
 
-  // Name
-
-  QLabel * label = new QLabel("Name: ");
-  label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
-
-  m_nameEdit = new OSLineEdit();
-  mainGridLayout->addWidget(m_nameEdit,row++,0,1,3);
+  unsigned row = m_mainGridLayout->rowCount();
 
   //// Reflected Beam Transmittance Accounting Method
 
   label = new QLabel("Reflected Beam Transmittance Accounting Method: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_reflectedBeamTransmittanceAccountingMethod = new OSComboBox();
   m_reflectedBeamTransmittanceAccountingMethod->addItem("Do Not Model");
   m_reflectedBeamTransmittanceAccountingMethod->addItem("Model As Direct Beam");
   m_reflectedBeamTransmittanceAccountingMethod->addItem("Model As Diffuse");
-  mainGridLayout->addWidget(m_reflectedBeamTransmittanceAccountingMethod,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_reflectedBeamTransmittanceAccountingMethod,row++,0,1,3);
 
   // Diffuse Solar Reflectance
 
   label = new QLabel("Diffuse Solar Reflectance: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_diffuseSolarReflectance = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_diffuseSolarReflectance, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_diffuseSolarReflectance,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_diffuseSolarReflectance,row++,0,1,3);
 
   // Diffuse Visible Reflectance
 
   label = new QLabel("Diffuse Visible Reflectance: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_diffuseVisibleReflectance = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_diffuseVisibleReflectance, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_diffuseVisibleReflectance,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_diffuseVisibleReflectance,row++,0,1,3);
 
   // Thermal Hemispherical Emissivity
 
   label = new QLabel("Thermal Hemispherical Emissivity: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_thermalHemisphericalEmissivity = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_thermalHemisphericalEmissivity, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_thermalHemisphericalEmissivity,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_thermalHemisphericalEmissivity,row++,0,1,3);
 
   // Conductivity
 
   label = new QLabel("Conductivity: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_conductivity = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_conductivity, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_conductivity,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_conductivity,row++,0,1,3);
 
   // Screen Material Spacing
 
   label = new QLabel("Screen Material Spacing: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_screenMaterialSpacing = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_screenMaterialSpacing, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_screenMaterialSpacing,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_screenMaterialSpacing,row++,0,1,3);
 
   // Screen Material Diameter
 
   label = new QLabel("Screen Material Diameter: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_screenMaterialDiameter = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_screenMaterialDiameter, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_screenMaterialDiameter,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_screenMaterialDiameter,row++,0,1,3);
 
   // Screen To Glass Distance
 
   label = new QLabel("Screen To Glass Distance: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_screenToGlassDistance = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_screenToGlassDistance, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_screenToGlassDistance,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_screenToGlassDistance,row++,0,1,3);
 
   // Top Opening Multiplier
 
   label = new QLabel("Top Opening Multiplier: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_topOpeningMultiplier = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_topOpeningMultiplier, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_topOpeningMultiplier,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_topOpeningMultiplier,row++,0,1,3);
 
   // Bottom Opening Multiplier
 
   label = new QLabel("Bottom Opening Multiplier: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_bottomOpeningMultiplier = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_bottomOpeningMultiplier, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_bottomOpeningMultiplier,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_bottomOpeningMultiplier,row++,0,1,3);
 
   // Left Side Opening Multiplier
 
   label = new QLabel("Left Side Opening Multiplier: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_leftSideOpeningMultiplier = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_leftSideOpeningMultiplier, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_leftSideOpeningMultiplier,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_leftSideOpeningMultiplier,row++,0,1,3);
 
   // Right Side Opening Multiplier
 
   label = new QLabel("Right Side Opening Multiplier: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_rightSideOpeningMultiplier = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialScreenInspectorView::toggleUnitsClicked, m_rightSideOpeningMultiplier, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_rightSideOpeningMultiplier,row++,0,1,3);  
+  m_mainGridLayout->addWidget(m_rightSideOpeningMultiplier,row++,0,1,3);  
 
   // Angle Of Resolution For Screen Transmittance Output Map
 
   label = new QLabel("Angle Of Resolution For Screen Transmittance Output Map: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  m_mainGridLayout->addWidget(label,row++,0);
 
   m_angleOfResolutionForScreenTransmittanceOutputMap = new OSComboBox();
   m_angleOfResolutionForScreenTransmittanceOutputMap->addItem("0"); // TODO needs OS to bind to model
@@ -213,13 +199,13 @@ void WindowMaterialScreenInspectorView::createLayout()
   m_angleOfResolutionForScreenTransmittanceOutputMap->addItem("3");
   m_angleOfResolutionForScreenTransmittanceOutputMap->addItem("4");
   m_angleOfResolutionForScreenTransmittanceOutputMap->addItem("5");
-  mainGridLayout->addWidget(m_angleOfResolutionForScreenTransmittanceOutputMap,row++,0,1,3);
+  m_mainGridLayout->addWidget(m_angleOfResolutionForScreenTransmittanceOutputMap,row++,0,1,3);
 
   // Stretch
 
-  mainGridLayout->setRowStretch(100,100);
+  m_mainGridLayout->setRowStretch(100,100);
 
-  mainGridLayout->setColumnStretch(100,100);
+  m_mainGridLayout->setColumnStretch(100,100);
 }
 
 void WindowMaterialScreenInspectorView::onClearSelection()
@@ -285,11 +271,6 @@ void WindowMaterialScreenInspectorView::detach()
 
 void WindowMaterialScreenInspectorView::refresh()
 {
-}
-
-void WindowMaterialScreenInspectorView::toggleUnits(bool displayIP)
-{
-  m_isIP = displayIP;
 }
 
 } // openstudio
