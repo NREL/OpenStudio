@@ -64,10 +64,35 @@ boost::optional<IdfObject> ForwardTranslator::translateControllerMechanicalVenti
   }
 
   // Availability Schedule
-  Schedule availabilitySchedule = modelObject.availabilitySchedule();
-  boost::optional<IdfObject> availabilityScheduleIdf = translateAndMapModelObject(availabilitySchedule);
-  if( availabilityScheduleIdf )
-  {
+  // If there is a ControllerOutdoorAir::minimumOutdoorAirSchedule 
+  // then use that for the ControllerMechanicalVentilation::availabilitySchedule
+  // Note that this scheme will not support fractions (schedule values above 0) because anything greater than 0 will
+  // make the mechanical ventilation controller avaiable and thus taking precedence.
+  bool useAvailabiltySchedule = true;
+
+  // Find the associated oa controller
+  auto oaControllers = modelObject.model().getConcreteModelObjects<ControllerOutdoorAir>();
+  auto predicate = [&] (const ControllerOutdoorAir & oaController) {
+    auto mechanicalVentilationController = oaController.controllerMechanicalVentilation();
+    if( mechanicalVentilationController.handle() == modelObject.handle() ) {
+      return true;
+    }
+    return false;
+  };
+  auto oaController = std::find_if(oaControllers.begin(),oaControllers.end(),predicate);
+  if( oaController != oaControllers.end() ) {
+    if( auto minOASchedule = oaController->minimumOutdoorAirSchedule() ) {
+      auto _schedule = translateAndMapModelObject(minOASchedule.get());
+      OS_ASSERT(_schedule);
+      idfObject.setString(Controller_MechanicalVentilationFields::AvailabilityScheduleName,_schedule->name().get());
+      useAvailabiltySchedule = false;
+    }
+  }
+
+  if( useAvailabiltySchedule ) {
+    Schedule availabilitySchedule = modelObject.availabilitySchedule();
+    boost::optional<IdfObject> availabilityScheduleIdf = translateAndMapModelObject(availabilitySchedule);
+    OS_ASSERT(availabilityScheduleIdf);
     idfObject.setString(openstudio::Controller_MechanicalVentilationFields::AvailabilityScheduleName,availabilityScheduleIdf->name().get());
   }
 
