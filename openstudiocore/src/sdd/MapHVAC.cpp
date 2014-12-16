@@ -2018,6 +2018,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
     return result;
   }
 
+  //AvailSchRef
+  QDomElement availSchRefElement = fanElement.firstChildElement("AvailSchRef");
+  std::string availSchRef = escapeName(availSchRefElement.text());
+  auto availSch = model.getModelObjectByName<model::Schedule>(availSchRef);
+
   // FanControlMethod
   QDomElement fanControlMethodElement = fanElement.firstChildElement("CtrlMthd");
 
@@ -2081,6 +2086,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
         model::FanOnOff fan(model,schedule);
 
         fan.setName(nameElement.text().toStdString());
+
+        if( availSch ) {
+          fan.setAvailabilitySchedule(availSch.get());
+        }
 
         // TotEff
         boost::optional<double> totEff;
@@ -2156,6 +2165,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
 
       fan.setName(nameElement.text().toStdString());
 
+      if( availSch ) {
+        fan.setAvailabilitySchedule(availSch.get());
+      }
+
       // TotEff
       boost::optional<double> totEff;
       value = totEffElement.text().toDouble(&ok);
@@ -2217,6 +2230,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
     model::FanVariableVolume fan(model,schedule);
 
     fan.setName(nameElement.text().toStdString());
+
+    if( availSch ) {
+      fan.setAvailabilitySchedule(availSch.get());
+    }
 
     // TotEff
     boost::optional<double> totEff;
