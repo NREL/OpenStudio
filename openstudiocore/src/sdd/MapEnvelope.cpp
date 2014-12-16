@@ -495,29 +495,30 @@ namespace sdd {
       nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
       // specification method
+      // DLM: is this deprecated?
       QDomElement specMthdElement = doc.createElement("SpecMthd");
       result.appendChild(specMthdElement);
       specMthdElement.appendChild(doc.createTextNode("Layers"));
 
       // SDD:
-      // CompatibleSurfType - required
+      // CompatibleSurfType - required, in progress
       // ExtSolAbs - optional, done
       // ExtThrmlAbs - optional, done
       // ExtVisAbs - optional, done
       // IntSolAbs - optional, done
       // IntThrmlAbs - optional, done
       // IntVisAbs - optional, done
-      // SlabType - optional
-      // SlabInsOrientation - optional
-      // SlabInsThrmlR - optional
-      // FieldAppliedCoating - optional
-      // CRRCInitialRefl - optional
-      // CRRCAgedRefl - optional
-      // CRRCInitialEmittance - optional
-      // CRRCAgedEmittance - optional
-      // CRRCInitialSRI - optional
-      // CRRCAgedSRI - optional
-      // CRRCProdID - optional
+      // SlabType - optional, need to add
+      // SlabInsOrientation - optional, need to add
+      // SlabInsThrmlR - optional, need to add
+      // FieldAppliedCoating - optional, need to add
+      // CRRCInitialRefl - optional, need to add
+      // CRRCAgedRefl - optional, need to add
+      // CRRCInitialEmittance - optional, need to add
+      // CRRCAgedEmittance - optional, need to add
+      // CRRCInitialSRI - optional, need to add
+      // CRRCAgedSRI - optional, need to add
+      // CRRCProdID - optional, need to add
 
       unsigned n = layers.size();
       if (n > 0){
@@ -618,6 +619,7 @@ namespace sdd {
       m_translatedObjects[construction.handle()] = result;
 
     }else if (constructionBase.optionalCast<model::FFactorGroundFloorConstruction>()){
+      // DLM: I think this is out of date
       model::FFactorGroundFloorConstruction construction =  constructionBase.cast<model::FFactorGroundFloorConstruction>();
 
       result = doc.createElement("ConsAssm");
@@ -654,6 +656,7 @@ namespace sdd {
       m_translatedObjects[construction.handle()] = result;
 
     }else if (constructionBase.optionalCast<model::CFactorUndergroundWallConstruction>()){
+      // DLM: I think this is out of date
       model::CFactorUndergroundWallConstruction construction =  constructionBase.cast<model::CFactorUndergroundWallConstruction>();
 
       result = doc.createElement("ConsAssm");
@@ -715,10 +718,10 @@ namespace sdd {
       nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
       // SDD:
-      // Type - required
-      // CertificationMthd - required
+      // Type - required, need to add
+      // CertificationMthd - required, need to add
       // UFactor - optional, done
-      // Open - optional
+      // Open - optional, in progress
 
       // can only get UFactor for special cases
       bool foundUFactor = false;
@@ -775,25 +778,25 @@ namespace sdd {
       nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
       // SDD:
-      // FenType - required
-      // FenProdType - optional
-      // AssmContext - required
-      // CertificationMthd - required
-      // SkyltGlz - optional
-      // SkyltCurb - optional
-      // OperableWinConfiguration - optional
-      // GreenhouseGardenWin - optional
-      // FenFrm - optional
-      // FenPanes - optional
-      // GlzTint - optional
-      // WinDivider - optional
-      // Diffusing - optional
-      // SHGC - optional
-      // SHGCCOG - optional
-      // UFactor - optional
-      // UFactorCOG - optional
-      // VT - optional
-      // VTCOG - optional
+      // FenType - required, in progress
+      // FenProdType - optional, in progress
+      // AssmContext - required, need to add
+      // CertificationMthd - required, need to add
+      // SkyltGlz - optional, in progress
+      // SkyltCurb - optional, in progress
+      // OperableWinConfiguration - optional, in progress
+      // GreenhouseGardenWin - optional, need to add
+      // FenFrm - optional, in progress
+      // FenPanes - optional, in progress
+      // GlzTint - optional, in progress
+      // WinDivider - optional, in progress
+      // Diffusing - optional, in progress
+      // SHGC - optional, in progress
+      // SHGCCOG - optional, in progress
+      // UFactor - optional, in progress
+      // UFactorCOG - optional, in progress
+      // VT - optional, in progress
+      // VTCOG - optional, in progress
 
       // can only get SHGC, TVis, UFactor for special cases
       bool foundUFactor = false;
@@ -875,20 +878,20 @@ namespace sdd {
       nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
       // SDD:
-      // CodeCat - compulsory
-      // CodeItem - compulsory
-      // FrmMat - optional
-      // FrmConfig - optional
-      // FrmDepth
-      // CavityIns
-      // CavityInsOpt
-      // CompositeMatNotes
-      // HeaderIns
-      // CMUWt
-      // CMUFill
-      // SpandrelPanelIns
-      // ICCESRptNum
-      // InsOutsdWtrprfMemb
+      // CodeCat - compulsory, in progress
+      // CodeItem - compulsory, in progress
+      // FrmMat - optional, in progress
+      // FrmConfig - optional, in progress
+      // FrmDepth, in progress
+      // CavityIns, in progress
+      // CavityInsOpt, in progress
+      // CompositeMatNotes, need to add?
+      // HeaderIns, need to add?
+      // CMUWt, need to add?
+      // CMUFill, need to add?
+      // SpandrelPanelIns, need to add?
+      // ICCESRptNum, need to add?
+      // InsOutsdWtrprfMemb, need to add?
 
       // DLM: set in construction
       // roughness

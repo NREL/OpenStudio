@@ -1496,44 +1496,40 @@ namespace sdd {
     nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
     // SDD:
-    // FuncClassMthd - optional
-    // RelocPubSchoolBldg - optional
-    // WholeBldgModeled - required
+    // FuncClassMthd - optional, ignore 
+    // RelocPubSchoolBldg - optional, do this when we do space types
+    // WholeBldgModeled - required, need to add
     // BldgAz - required, done
-    // TotStoryCnt - required
-    // TotStoryCntNew - optional
-    // TotStoryCntExisting - optional
-    // TotStoryCntAltered - optional
-    // AboveGrdStoryCnt - required
-    // AboveGrdStoryCntNew - optional
-    // AboveGrdStoryCntExisting  - optional
-    // AboveGrdStoryCntAltered - optional
-    // LivingUnitCnt - defaulted 
-    // LivingUnitCntNew - optional
-    // LivingUnitCntExisting - optional
-    // LivingUnitCntAltered - optional
-    // TotFlrArea - defaulted
-    // NonResFlrArea - defaulted
-    // ResFlrArea - defaulted
-    // TotCondVol - defaulted
-    // PlantClgCap - defaulted
-    // PlantHtgCap - defaulted
-    // CoilClgCap - defaulted
-    // CoilHtgCap - defaulted
-
-    double buildingAzimuth = fixAngle(building.northAxis());
-    double northAngle = 360.0 - buildingAzimuth;
-
-    // DLM: is this deprecated?
-    // north angle
-    QDomElement northAngleElement = doc.createElement("NAng");
-    result.appendChild(northAngleElement);
-    northAngleElement.appendChild(doc.createTextNode(QString::number(northAngle)));
+    // TotStoryCnt - required, in progress
+    // TotStoryCntNew - optional, need to add?
+    // TotStoryCntExisting - optional, need to add?
+    // TotStoryCntAltered - optional, need to add?
+    // AboveGrdStoryCnt - required, in progress
+    // AboveGrdStoryCntNew - optional, need to add?
+    // AboveGrdStoryCntExisting  - optional, need to add?
+    // AboveGrdStoryCntAltered - optional, need to add?
+    // LivingUnitCnt - defaulted, in progress
+    // LivingUnitCntNew - optional, need to add?
+    // LivingUnitCntExisting - optional, need to add?
+    // LivingUnitCntAltered - optional, need to add?
+    // TotFlrArea - defaulted, ignore 
+    // NonResFlrArea - defaulted, ignore 
+    // ResFlrArea - defaulted, ignore 
+    // TotCondVol - defaulted, ignore 
+    // PlantClgCap - defaulted, ignore
+    // PlantHtgCap - defaulted, ignore
+    // CoilClgCap - defaulted, ignore
+    // CoilHtgCap - defaulted, ignore
 
     // building azimuth
+    double buildingAzimuth = fixAngle(building.northAxis());
     QDomElement buildingAzimuthElement = doc.createElement("BldgAz");
     result.appendChild(buildingAzimuthElement);
     buildingAzimuthElement.appendChild(doc.createTextNode(QString::number(buildingAzimuth)));
+
+    // TotStoryCnt - required, Standards Number of Stories
+    // AboveGrdStoryCnt - required, Standards Number of Above Ground Stories
+    // LivingUnitCnt - defaulted, Standards Number of Living Units
 
     // translate storys
     std::vector<model::BuildingStory> buildingStories = building.model().getConcreteModelObjects<model::BuildingStory>();
@@ -1625,6 +1621,7 @@ namespace sdd {
 
     if (spacesWithoutZone.size() > 0){
       // DLM: desired workflow is to assign thermal zones in cbecc
+      // DLM: Kyle, we will have to think about if we want to warn about this or not
       //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
       //spacesWithoutZone.pop_back();
       //LOG(Warn, "Model contains spaces which are not assigned to a thermal zone, these have not been translated:" << spacesWithoutZone);
@@ -1698,10 +1695,10 @@ namespace sdd {
     nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
     // SDD:
-    // Mult - defaulted
-    // Z - only for simple geometry
-    // FlrToFlrHgt - only for simple geometry
-    // FlrToCeilingHgt - only for simple geometry
+    // Mult - defaulted, ignore (OS doesn't have this)
+    // Z - only for simple geometry, ignore
+    // FlrToFlrHgt - only for simple geometry, ignore
+    // FlrToCeilingHgt - only for simple geometry, ignore
 
     // translate spaces
     std::vector<model::Space> spaces = buildingStory.spaces();
@@ -1732,126 +1729,126 @@ namespace sdd {
     nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
     // SDD:
-    // Status - required
-    // CondgType - required
-    // SupPlenumSpcRef - optional
-    // RetPlenumSpcRef - optional
-    // ThrmlZnRef - required
-    // Area - only for simple geometry, done
-    // FlrArea - optional
-    // FlrZ - optional
-    // FlrToCeilingHgt - optional
-    // Vol - required, done
-    // SpcFuncDefaultsRef - optional
-    // SpcFunc - compulsory
-    // FuncSchGrp - optional
-    // OccDens - optional
-    // OccSensHtRt - optional
-    // OccLatHtRt - optional
-    // OccSchRef - optional
-    // InfMthd - defaulted
-    // DsgnInfRt - defaulted
-    // InfSchRef - defaulted
-    // InfModelCoefA - required
-    // InfModelCoefB - required
-    // InfModelCoefC - required
-    // InfModelCoefD - required
-    // EnvStatus - optional
-    // LtgStatus - optional
-    // IntLtgSpecMthd - required
-    // IntLPDReg - optional
-    // IntLtgRegSchRef - optional
-    // IntLtgRegHtGnSpcFrac - optional
-    // IntLtgRegHtGnRadFrac - optional
-    // IntLPDNonReg - optional
-    // IntLtgNonRegSchRef - optional
-    // IntLtgNonRegHtGnSpcFrac - optional
-    // IntLtgNonRegHtGnRadFrac - optional
-    // SkylitDayltgInstalledLtgPwr - optional
-    // PriSideDayltgInstalledLtgPwr - optional
-    // SecSideDayltgInstalledLtgPwr - optional
-    // Skylit100PctControlled - optional
-    // PriSide100PctControlled - optional
-    // SecSide100PctControlled - optional
-    // SkylitDayltgRefPtCoord - optional
-    // SkylitDayltgCtrlLtgPwr - optional
-    // SkylitDayltgCtrlLtgFrac - optional
-    // SkylitDayltgIllumSetpt - optional
-    // PriSideDayltgRefPtCoord - optional
-    // PriSideDayltgCtrlLtgPwr - optional
-    // PriSideDayltgCtrlLtgFrac - optional
-    // PriSideDayltgIllumSetpt - optional
-    // SecSideDayltgRefPtCoord - optional
-    // SecSideDayltgCtrlLtgPwr - optional
-    // SecSideDayltgCtrlLtgFrac - optional
-    // SecSideDayltgIllumSetpt - optional
-    // DayltgCtrlType - optional
-    // MinDimLtgFrac - optional
-    // MinDimPwrFrac - optional
-    // NumOfCtrlSteps - optional
-    // GlrAz - optional
-    // MaxGlrIdx - optional
-    // SkyltReqExcpt - optional
-    // SkyltReqExcptArea - optional
-    // SkyltReqExcptFrac - optional
-    // RecptPwrDens - defaulted
-    // RecptSchRef - defaulted
-    // RecptRadFrac - defaulted
-    // RecptLatFrac - defaulted
-    // RecptLostFrac - defaulted
-    // GasEqpPwrDens - defaulted
-    // GasEqpSchRef - defaulted
-    // GasEqpRadFrac - defaulted
-    // GasEqpLatFrac - defaulted
-    // GasEqpLostFrac - defaulted
-    // ProcElecPwrDens - optional
-    // ProcElecSchRef - optional
-    // ProcElecRadFrac - optional
-    // ProcElecLatFrac - optional
-    // ProcElecLostFrac - optional
-    // ProcGasPwrDens - optional
-    // ProcGasSchRef - optional
-    // ProcGasRadFrac - optional
-    // ProcGasLatFrac - optional
-    // ProcGasLostFrac - optional
-    // CommRfrgEPD - defaulted
-    // CommRfrgEqpSchRef - defaulted
-    // CommRfrgRadFrac - defaulted
-    // CommRfrgLatFrac - defaulted
-    // CommRfrgLostFrac - defaulted
-    // ElevCnt - optional
-    // ElevPwr - optional
-    // ElevSchRef - defaulted
-    // ElevRadFrac - optional
-    // ElevLatFrac - optional
-    // ElevLostFrac - optional
-    // EscalCnt - optional
-    // EscalPwr - optional
-    // EscalSchRef - defaulted
-    // EscalRadFrac - optional
-    // EscalLatFrac - optional
-    // EscalLostFrac - optional
-    // SHWFluidSegRef - optional
-    // RecircDHWSysRef - optional
-    // HotWtrHtgRt - defaulted
-    // RecircHotWtrHtgRt - optional
-    // HotWtrHtgSchRef - optional
-    // VentPerPerson - defaulted
-    // VentPerArea - defaulted
-    // VentACH - optional
-    // VentPerSpc - optional
-    // ExhPerArea - optional
-    // ExhACH - optional
-    // ExhPerSpc - optional
-    // KitExhHoodLen - optional
-    // KitExhHoodStyle - optional
-    // KitExhHoodDuty - optional
-    // KitExhHoodFlow - optional
-    // LabExhRtType - optional
-    // IntLPDPrescrip - optional
-    // IsPlenumRet - optional
-    // HighRiseResInt - optional
-    // HighRiseResCondFlrArea - optional
+    // Status - required, need to add
+    // CondgType - required, in progress
+    // SupPlenumSpcRef - optional, in progress
+    // RetPlenumSpcRef - optional, in progress
+    // ThrmlZnRef - required, done
+    // Area - only for simple geometry, done, can we remove?
+    // FlrArea - optional, do we need this?
+    // FlrZ - optional, do we need this?
+    // FlrToCeilingHgt - optional, do we need this?
+    // Vol - required, done, can we remove?
+    // SpcFuncDefaultsRef - optional, do with space types
+    // SpcFunc - compulsory, do with space types
+    // FuncSchGrp - optional, do with space types
+    // OccDens - optional, do with space types
+    // OccSensHtRt - optional, do with space types
+    // OccLatHtRt - optional, do with space types
+    // OccSchRef - optional, do with space types
+    // InfMthd - defaulted, do with space types
+    // DsgnInfRt - defaulted, do with space types
+    // InfSchRef - defaulted, do with space types
+    // InfModelCoefA - required, do with space types
+    // InfModelCoefB - required, do with space types
+    // InfModelCoefC - required, do with space types
+    // InfModelCoefD - required, do with space types
+    // EnvStatus - optional, do with space types
+    // LtgStatus - optional, do with space types
+    // IntLtgSpecMthd - required, do with space types
+    // IntLPDReg - optional, do with space types
+    // IntLtgRegSchRef - optional, do with space types
+    // IntLtgRegHtGnSpcFrac - optional, do with space types
+    // IntLtgRegHtGnRadFrac - optional, do with space types
+    // IntLPDNonReg - optional, do with space types
+    // IntLtgNonRegSchRef - optional, do with space types
+    // IntLtgNonRegHtGnSpcFrac - optional, do with space types
+    // IntLtgNonRegHtGnRadFrac - optional, do with space types
+    // SkylitDayltgInstalledLtgPwr - optional, do we need this?
+    // PriSideDayltgInstalledLtgPwr - optional, do we need this?
+    // SecSideDayltgInstalledLtgPwr - optional, do we need this?
+    // Skylit100PctControlled - optional, do we need this?
+    // PriSide100PctControlled - optional, do we need this?
+    // SecSide100PctControlled - optional, do we need this?
+    // SkylitDayltgRefPtCoord - optional, do we need this?
+    // SkylitDayltgCtrlLtgPwr - optional, do we need this?
+    // SkylitDayltgCtrlLtgFrac - optional, do we need this?
+    // SkylitDayltgIllumSetpt - optional, do we need this?
+    // PriSideDayltgRefPtCoord - optional, do we need this?
+    // PriSideDayltgCtrlLtgPwr - optional, do we need this?
+    // PriSideDayltgCtrlLtgFrac - optional, do we need this?
+    // PriSideDayltgIllumSetpt - optional, do we need this?
+    // SecSideDayltgRefPtCoord - optional, do we need this?
+    // SecSideDayltgCtrlLtgPwr - optional, do we need this?
+    // SecSideDayltgCtrlLtgFrac - optional, do we need this?
+    // SecSideDayltgIllumSetpt - optional, do we need this?
+    // DayltgCtrlType - optional, do we need this?
+    // MinDimLtgFrac - optional, do we need this?
+    // MinDimPwrFrac - optional, do we need this?
+    // NumOfCtrlSteps - optional, do we need this?
+    // GlrAz - optional, do we need this?
+    // MaxGlrIdx - optional, do we need this?
+    // SkyltReqExcpt - optional, do we need this?
+    // SkyltReqExcptArea - optional, do we need this?
+    // SkyltReqExcptFrac - optional, do we need this?
+    // RecptPwrDens - defaulted, do with space types
+    // RecptSchRef - defaulted, do with space types
+    // RecptRadFrac - defaulted, do with space types
+    // RecptLatFrac - defaulted, do with space types
+    // RecptLostFrac - defaulted, do with space types
+    // GasEqpPwrDens - defaulted, do with space types
+    // GasEqpSchRef - defaulted, do with space types
+    // GasEqpRadFrac - defaulted, do with space types
+    // GasEqpLatFrac - defaulted, do with space types
+    // GasEqpLostFrac - defaulted, do with space types
+    // ProcElecPwrDens - optional, do with space types
+    // ProcElecSchRef - optional, do with space types
+    // ProcElecRadFrac - optional, do with space types
+    // ProcElecLatFrac - optional, do with space types
+    // ProcElecLostFrac - optional, do with space types
+    // ProcGasPwrDens - optional, do with space types
+    // ProcGasSchRef - optional, do with space types
+    // ProcGasRadFrac - optional, do with space types
+    // ProcGasLatFrac - optional, do with space types
+    // ProcGasLostFrac - optional, do with space types
+    // CommRfrgEPD - defaulted, do with space types
+    // CommRfrgEqpSchRef - defaulted, do with space types
+    // CommRfrgRadFrac - defaulted, do with space types
+    // CommRfrgLatFrac - defaulted, do with space types
+    // CommRfrgLostFrac - defaulted, do with space types
+    // ElevCnt - optional, do with space types
+    // ElevPwr - optional, do with space types
+    // ElevSchRef - defaulted, do with space types
+    // ElevRadFrac - optional, do with space types
+    // ElevLatFrac - optional, do with space types
+    // ElevLostFrac - optional, do with space types
+    // EscalCnt - optional, do with space types
+    // EscalPwr - optional, do with space types
+    // EscalSchRef - defaulted, do with space types
+    // EscalRadFrac - optional, do with space types
+    // EscalLatFrac - optional, do with space types
+    // EscalLostFrac - optional, do with space types
+    // SHWFluidSegRef - optional, do with space types
+    // RecircDHWSysRef - optional, do with space types
+    // HotWtrHtgRt - defaulted, do with space types
+    // RecircHotWtrHtgRt - optional, do with space types
+    // HotWtrHtgSchRef - optional, do with space types
+    // VentPerPerson - defaulted, do with space types
+    // VentPerArea - defaulted, do with space types
+    // VentACH - optional, do with space types
+    // VentPerSpc - optional, do with space types
+    // ExhPerArea - optional, do we need this?
+    // ExhACH - optional, do we need this?
+    // ExhPerSpc - optional, do we need this?
+    // KitExhHoodLen - optional, do we need this?
+    // KitExhHoodStyle - optional, do we need this?
+    // KitExhHoodDuty - optional, do we need this?
+    // KitExhHoodFlow - optional, do we need this?
+    // LabExhRtType - optional, do we need this?
+    // IntLPDPrescrip - optional, do we need this?
+    // IsPlenumRet - optional, do we need this?
+    // HighRiseResInt - optional, do we need this?
+    // HighRiseResCondFlrArea - optional, do we need this?
 
 
     // volume
@@ -1929,6 +1926,11 @@ namespace sdd {
       QDomElement thermalZoneElement = doc.createElement("ThrmlZnRef");
       result.appendChild(thermalZoneElement);
       thermalZoneElement.appendChild(doc.createTextNode(escapeName(thermalZoneName)));
+
+      // CondgType - required
+      // SupPlenumSpcRef - optional
+      // RetPlenumSpcRef - optional
+      // ThrmlZnRef - required
     }
 
     // translate space shading
@@ -2040,29 +2042,29 @@ namespace sdd {
     nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
     // SDD:
-    // Status - required (ExtFlr, ExtWall, IntWall, Roof, UndgrFlr, UndgrWall)
-    // ConsAssmRef - optional (Ceiling, ExtFlr, ExtWall, IntFlr, IntWall, Roof, UndgrFlr, UndgrWall)
-    // AdjacentSpcRef - optional (Ceiling, IntFlr, IntWall)
-    // Area - simplified geometry only (Ceiling, ExtFlr, ExtWall, IntFlr, IntWall, Roof, UndgrFlr, UndgrWall)
-    // Hgt - optional (UndgrWall)
-    // PerimExposed - optional (UndgrFlr)
-    // DisplayPerim - optional (ExtWall)
-    // Az - simplified geometry only (ExtWall, Roof)
-    // Tilt - simplified geometry only (Roof)
-    // ExtSolAbs - required (Ceiling, ExtFlr, ExtWall, IntWall)
-    // ExtThrmlAbs - required (Ceiling, ExtFlr, ExtWall, IntWall)
-    // ExtVisAbs - required (Ceiling, ExtFlr, ExtWall, IntWall)
-    // IntSolAbs - optional (Ceiling, ExtFlr, ExtWall, IntFlr, IntWall, Roof, UndgrFlr, UndgrWall)
-    // IntThrmlAbs - optional (Ceiling, ExtFlr, ExtWall, IntFlr, IntWall, Roof, UndgrFlr, UndgrWall)
-    // IntVisAbs - optional (Ceiling, ExtFlr, ExtWall, IntFlr, IntWall, Roof, UndgrFlr, UndgrWall)
-    // FieldAppliedCoating - optional (Roof)
-    // CRRCInitialRefl - optional (Roof)
-    // CRRCAgedRefl - optional (Roof)
-    // CRRCInitialEmittance - optional (Roof))
-    // CRRCAgedEmittance - optional (Roof)
-    // CRRCInitialSRI - optional (Roof)
-    // CRRCAgedSRI - optional (Roof)
-    // CRRCProdID - optional (Roof)
+    // Status - required (ExtFlr, ExtWall, IntWall, Roof, UndgrFlr, UndgrWall), need to add
+    // ConsAssmRef - optional (Ceiling, ExtFlr, ExtWall, IntFlr, IntWall, Roof, UndgrFlr, UndgrWall), done
+    // AdjacentSpcRef - optional (Ceiling, IntFlr, IntWall), done
+    // Area - simplified geometry only (Ceiling, ExtFlr, ExtWall, IntFlr, IntWall, Roof, UndgrFlr, UndgrWall), ignore
+    // Hgt - optional (UndgrWall), done, requires unique CFactor construction per surface
+    // PerimExposed - optional (UndgrFlr), done requires unique FFactor construction per surface
+    // DisplayPerim - optional (ExtWall), need to add?
+    // Az - simplified geometry only (ExtWall, Roof), ignore
+    // Tilt - simplified geometry only (Roof), ignore
+    // ExtSolAbs - required (Ceiling, ExtFlr, ExtWall, IntWall), ignore, do at construction level
+    // ExtThrmlAbs - required (Ceiling, ExtFlr, ExtWall, IntWall), ignore, do at construction level
+    // ExtVisAbs - required (Ceiling, ExtFlr, ExtWall, IntWall), ignore, do at construction level
+    // IntSolAbs - optional (Ceiling, ExtFlr, ExtWall, IntFlr, IntWall, Roof, UndgrFlr, UndgrWall), ignore, do at construction level
+    // IntThrmlAbs - optional (Ceiling, ExtFlr, ExtWall, IntFlr, IntWall, Roof, UndgrFlr, UndgrWall), ignore, do at construction level
+    // IntVisAbs - optional (Ceiling, ExtFlr, ExtWall, IntFlr, IntWall, Roof, UndgrFlr, UndgrWall), ignore, do at construction level
+    // FieldAppliedCoating - optional (Roof), ignore, do at construction level
+    // CRRCInitialRefl - optional (Roof), ignore, do at construction level
+    // CRRCAgedRefl - optional (Roof), ignore, do at construction level
+    // CRRCInitialEmittance - optional (Roof)), ignore, do at construction level
+    // CRRCAgedEmittance - optional (Roof), ignore, do at construction level
+    // CRRCInitialSRI - optional (Roof), ignore, do at construction level
+    // CRRCAgedSRI - optional (Roof), ignore, do at construction level
+    // CRRCProdID - optional (Roof), ignore, do at construction level
 
     // adjacent surface
     boost::optional<model::Surface> adjacentSurface = surface.adjacentSurface();
@@ -2261,11 +2263,11 @@ namespace sdd {
     nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
     // SDD:
-    // Status - required (Win, Skylt, Dr)
-    // FenConsRef - optional (Win, Skylt)
-    // DrConsRef - optional (Dr)
-    // Oper - optional (Dr)
-    // Area - simple geometry only (Win, Skylt, Dr)
+    // Status - required (Win, Skylt, Dr), need to add
+    // FenConsRef - optional (Win, Skylt), done
+    // DrConsRef - optional (Dr), done
+    // Oper - optional (Dr), in progress
+    // Area - simple geometry only (Win, Skylt, Dr), ignore
 
     // construction
     boost::optional<model::ConstructionBase> construction = subSurface.construction();
@@ -2372,10 +2374,10 @@ namespace sdd {
     nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
     // SDD:
-    // Status - required 
-    // TransSchRef - optional
-    // SolRefl - optional
-    // VisRefl - optional
+    // Status - required, need to add
+    // TransSchRef - optional, in progress
+    // SolRefl - optional, done
+    // VisRefl - optional, done
 
     // schedule
     boost::optional<model::Schedule> transmittanceSchedule = shadingSurface.transmittanceSchedule();
