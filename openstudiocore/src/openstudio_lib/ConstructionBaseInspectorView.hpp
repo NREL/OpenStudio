@@ -28,6 +28,8 @@ class QComboBox;
 
 class QGridLayout;
 
+class QLabel;
+
 namespace openstudio {
 
 namespace model {
@@ -36,9 +38,9 @@ namespace model {
 
 }
 
-class ConstructionObjectVectorController;
+//class ConstructionObjectVectorController;
 
-class OSDropZone;
+//class OSDropZone;
 
 class OSLineEdit;
 
@@ -90,7 +92,9 @@ class ConstructionBaseInspectorView : public ModelObjectInspectorView
 
     QComboBox * m_fenestration = nullptr;
 
-    QComboBox * m_standardsConstructionType;
+    QComboBox * m_standardsConstructionType = nullptr;
+
+    QLabel * m_fenestrationLabel = nullptr;
 
     boost::optional<openstudio::model::StandardsInformationConstruction> m_standardsInformation;
 

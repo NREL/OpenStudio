@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_CONSTRUCTIONCFACTORUNDERGROUNDWALLINSPECTORVIEW_HPP
 #define OPENSTUDIO_CONSTRUCTIONCFACTORUNDERGROUNDWALLINSPECTORVIEW_HPP
 
-#include "ModelObjectInspectorView.hpp"
+#include "ConstructionBaseInspectorView.hpp"
 #include "ModelObjectVectorController.hpp"
 
 #include "../model/StandardsInformationConstruction.hpp"
@@ -41,7 +41,7 @@ class OSQuantityEdit;
 
 class OSComboBox2;
 
-class ConstructionCfactorUndergroundWallInspectorView : public ModelObjectInspectorView
+class ConstructionCfactorUndergroundWallInspectorView : public ConstructionBaseInspectorView
 {
   Q_OBJECT
 
@@ -77,23 +77,9 @@ class ConstructionCfactorUndergroundWallInspectorView : public ModelObjectInspec
 
     void refresh();
 
-    OSLineEdit * m_nameEdit;
-
-    OSComboBox2 * m_intendedSurfaceType;
-
-    QComboBox * m_standardsConstructionType;
-
     OSQuantityEdit * m_cfactorEdit;
 
     OSQuantityEdit * m_heightEdit;
-
-    boost::optional<openstudio::model::StandardsInformationConstruction> m_standardsInformation;
-
-    bool m_isIP;
-
-  public slots:
-
-    void toggleUnits(bool displayIP);
 };
 
 } // openstudio

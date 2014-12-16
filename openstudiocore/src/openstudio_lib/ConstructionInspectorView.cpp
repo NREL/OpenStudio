@@ -62,8 +62,6 @@ void ConstructionInspectorView::createLayout()
 
   int row = m_mainGridLayout->rowCount();
 
-  QVBoxLayout * vLayout = nullptr;
-
   QLabel * label = nullptr;
 
   // Layer
@@ -105,7 +103,7 @@ void ConstructionInspectorView::createLayout()
 
 void ConstructionInspectorView::onClearSelection()
 {
-  ModelObjectInspectorView::onClearSelection(); // call parent implementation
+  ConstructionBaseInspectorView::onClearSelection(); // call parent implementation
   detach();
 }
 
@@ -114,12 +112,12 @@ void ConstructionInspectorView::onSelectModelObject(const openstudio::model::Mod
   detach();
   model::Construction construction = modelObject.cast<model::Construction>();
   attach(construction);
-  //refresh();
+  refresh();
 }
 
 void ConstructionInspectorView::onUpdate()
 {
-  //refresh();
+  refresh();
 }
 
 void ConstructionInspectorView::standardsConstructionTypeChanged(const QString & text)
@@ -149,7 +147,6 @@ void ConstructionInspectorView::editStandardsConstructionType(const QString & te
 
 void ConstructionInspectorView::populateStandardsConstructionType()
 {
-
   disconnect(m_standardsConstructionType, 0, this, 0);
 
   m_standardsConstructionType->clear();
@@ -214,6 +211,10 @@ void ConstructionInspectorView::detach()
 
   disconnect(m_standardsConstructionType, 0, this, 0);
   m_standardsConstructionType->setEnabled(false);
+}
+
+void ConstructionInspectorView::refresh()
+{
 }
 
 } // openstudio

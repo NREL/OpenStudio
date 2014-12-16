@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_CONSTRUCTIONFFACTORGROUNDFLOORINSPECTORVIEW_HPP
 #define OPENSTUDIO_CONSTRUCTIONFFACTORGROUNDFLOORINSPECTORVIEW_HPP
 
-#include "ModelObjectInspectorView.hpp"
+#include "ConstructionBaseInspectorView.hpp"
 #include "ModelObjectVectorController.hpp"
 
 #include "../model/StandardsInformationConstruction.hpp"
@@ -41,7 +41,7 @@ class OSQuantityEdit;
 
 class OSComboBox2;
 
-class ConstructionFfactorGroundFloorInspectorView : public ModelObjectInspectorView
+class ConstructionFfactorGroundFloorInspectorView : public ConstructionBaseInspectorView
 {
   Q_OBJECT
 
@@ -77,25 +77,11 @@ class ConstructionFfactorGroundFloorInspectorView : public ModelObjectInspectorV
 
     void refresh();
 
-    OSLineEdit * m_nameEdit;
-
-    OSComboBox2 * m_intendedSurfaceType;
-
-    QComboBox * m_standardsConstructionType;
-
     OSQuantityEdit * m_ffactorEdit;
 
     OSQuantityEdit * m_areaEdit;
 
     OSQuantityEdit * m_perimeterExposedEdit;
-
-    boost::optional<openstudio::model::StandardsInformationConstruction> m_standardsInformation;
-
-    bool m_isIP;
-
-  public slots:
-
-    void toggleUnits(bool displayIP);
 };
 
 } // openstudio
