@@ -136,6 +136,7 @@ namespace detail {
     bool addToNode(Node & node);
     std::vector<ModelObject> children() const;
     ModelObject clone(Model model) const;
+    void setFanAvailabilitySchedule(Schedule & schedule);
 
     // This is a non publlic method to draw recirculation air from a plenum
     // Use carefully.  Removing (or moving) plenum will leave model in invalid state

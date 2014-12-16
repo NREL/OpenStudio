@@ -31,6 +31,8 @@
 #include "../FanConstantVolume_Impl.hpp"
 #include "../CoilHeatingElectric.hpp"
 #include "../CoilHeatingElectric_Impl.hpp"
+#include "../ScheduleRuleset.hpp"
+#include "../ScheduleRuleset_Impl.hpp"
 #include "../Model.hpp"
 #include "../Model_Impl.hpp"
 
@@ -85,6 +87,42 @@ TEST_F(ModelFixture,AirTerminalSingleDuctSeriesPIUReheat)
 
     EXPECT_NE(terminalClone.reheatCoil(),terminal.reheatCoil());
     EXPECT_NE(terminalClone.fan(),terminal.fan());
+  }
+
+  // test that setAvailabilitySchedule also set PIU fan schedule
+  {
+    Model m; 
+    Schedule schedule = m.alwaysOnDiscreteSchedule();
+    FanConstantVolume fan(m,schedule);
+    CoilHeatingElectric coil(m,schedule);
+    AirTerminalSingleDuctSeriesPIUReheat terminal(m,fan,coil);
+
+    AirLoopHVAC airLoopHVAC(m);
+    airLoopHVAC.addBranchForHVACComponent(terminal);
+
+    ScheduleRuleset hvacSchedule(m);
+    airLoopHVAC.setAvailabilitySchedule(hvacSchedule);
+
+    auto fanSchedule = fan.availabilitySchedule();
+    ASSERT_EQ(hvacSchedule.handle(),fanSchedule.handle()); 
+  }
+
+  // test that addToNode (by proxy addBranchForHVACComponent) sets the fan schedule to match system availabilitySchedule
+  {
+    Model m; 
+    Schedule schedule = m.alwaysOnDiscreteSchedule();
+    FanConstantVolume fan(m,schedule);
+    CoilHeatingElectric coil(m,schedule);
+    AirTerminalSingleDuctSeriesPIUReheat terminal(m,fan,coil);
+
+    AirLoopHVAC airLoopHVAC(m);
+
+    ScheduleRuleset hvacSchedule(m);
+    airLoopHVAC.setAvailabilitySchedule(hvacSchedule);
+
+    airLoopHVAC.addBranchForHVACComponent(terminal);
+    auto fanSchedule = fan.availabilitySchedule();
+    ASSERT_EQ(hvacSchedule.handle(),fanSchedule.handle()); 
   }
 }
 

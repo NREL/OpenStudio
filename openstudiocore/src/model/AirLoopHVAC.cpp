@@ -23,6 +23,16 @@
 #include "AirLoopHVACSupplyPlenum_Impl.hpp"
 #include "AirLoopHVACReturnPlenum.hpp"
 #include "AirLoopHVACReturnPlenum_Impl.hpp"
+#include "AirTerminalSingleDuctSeriesPIUReheat.hpp"
+#include "AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp"
+#include "AirTerminalSingleDuctParallelPIUReheat.hpp"
+#include "AirTerminalSingleDuctParallelPIUReheat_Impl.hpp"
+#include "FanConstantVolume.hpp"
+#include "FanConstantVolume_Impl.hpp"
+#include "FanVariableVolume.hpp"
+#include "FanVariableVolume_Impl.hpp"
+#include "FanOnOff.hpp"
+#include "FanOnOff_Impl.hpp"
 #include "SizingSystem.hpp"
 #include "SizingSystem_Impl.hpp"
 #include "Node.hpp"
@@ -883,6 +893,16 @@ namespace detail {
   void AirLoopHVAC_Impl::setAvailabilitySchedule(Schedule & schedule)
   {
     availabilityManagerAssignmentList().availabilityManagerScheduled().setSchedule(schedule);
+
+    auto seriesPIUs = subsetCastVector<AirTerminalSingleDuctSeriesPIUReheat>(demandComponents(AirTerminalSingleDuctSeriesPIUReheat::iddObjectType()));
+    for( auto & piu : seriesPIUs ) {
+      piu.getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->setFanAvailabilitySchedule(schedule);
+    }
+
+    auto parallelPIUs = subsetCastVector<AirTerminalSingleDuctParallelPIUReheat>(demandComponents(AirTerminalSingleDuctParallelPIUReheat::iddObjectType()));
+    for( auto & piu : parallelPIUs ) {
+      piu.getImpl<detail::AirTerminalSingleDuctParallelPIUReheat_Impl>()->setFanAvailabilitySchedule(schedule);
+    }
   }
   
   bool AirLoopHVAC_Impl::setNightCycleControlType(std::string controlType)
