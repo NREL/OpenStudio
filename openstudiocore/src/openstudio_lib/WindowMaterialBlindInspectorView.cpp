@@ -72,10 +72,6 @@ WindowMaterialBlindInspectorView::WindowMaterialBlindInspectorView(bool isIP, co
 
 void WindowMaterialBlindInspectorView::createLayout()
 {
-  MaterialBaseInspectorView::createLayout(); // call parent implementation
-
-  QVBoxLayout * vLayout = nullptr;
-
   QLabel * label = nullptr;
 
   unsigned row = m_mainGridLayout->rowCount();

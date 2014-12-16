@@ -43,10 +43,6 @@ MaterialAirWallInspectorView::MaterialAirWallInspectorView(bool isIP, const open
 
 void MaterialAirWallInspectorView::createLayout()
 {
-  MaterialBaseInspectorView::createLayout(); // call parent implementation
-
-  QVBoxLayout * vLayout = nullptr;
-
   QLabel * label = nullptr;
 
   unsigned row = m_mainGridLayout->rowCount();

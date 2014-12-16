@@ -57,15 +57,10 @@ WindowMaterialShadeInspectorView::WindowMaterialShadeInspectorView(bool isIP, co
 
 void WindowMaterialShadeInspectorView::createLayout()
 {
-  MaterialBaseInspectorView::createLayout(); // call parent implementation
-
-  QVBoxLayout * vLayout = nullptr;
-
   QLabel * label = nullptr;
 
   unsigned row = m_mainGridLayout->rowCount();
-
-
+  
   // Solar Transmittance
 
   label = new QLabel("Solar Transmittance: ");

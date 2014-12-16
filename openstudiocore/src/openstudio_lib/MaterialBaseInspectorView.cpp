@@ -24,8 +24,8 @@
 #include "../shared_gui_components/OSComboBox.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 
-#include "../model/StandardOpaqueMaterial.hpp"
-#include "../model/StandardOpaqueMaterial_Impl.hpp"
+#include "../model/Material.hpp"
+#include "../model/Material_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -163,8 +163,6 @@ void MaterialBaseInspectorView::onClearSelection()
 void MaterialBaseInspectorView::onSelectModelObject(const openstudio::model::ModelObject& modelObject)
 {
   detach();
-  model::StandardOpaqueMaterial standardOpaqueMaterial = modelObject.cast<model::StandardOpaqueMaterial>();
-  attach(standardOpaqueMaterial);
   refresh();
 }
 
@@ -173,9 +171,9 @@ void MaterialBaseInspectorView::onUpdate()
   refresh();
 }
 
-void MaterialBaseInspectorView::attach(openstudio::model::Material & standardOpaqueMaterial)
+void MaterialBaseInspectorView::attach(openstudio::model::Material & material)
 {
-  m_nameEdit->bind(standardOpaqueMaterial,"name");
+  m_nameEdit->bind(material, "name");
 
   this->stackedWidget()->setCurrentIndex(1);
 }

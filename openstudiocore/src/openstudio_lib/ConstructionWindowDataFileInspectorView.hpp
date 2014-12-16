@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_CONSTRUCTIONWINDOWDATAFILEINSPECTORVIEW_HPP
 #define OPENSTUDIO_CONSTRUCTIONWINDOWDATAFILEINSPECTORVIEW_HPP
 
-#include "ModelObjectInspectorView.hpp"
+#include "ConstructionBaseInspectorView.hpp"
 #include "ModelObjectVectorController.hpp"
 
 namespace openstudio {
@@ -33,7 +33,7 @@ namespace model {
 
 class OSLineEdit;
 
-class ConstructionWindowDataFileInspectorView : public ModelObjectInspectorView
+class ConstructionWindowDataFileInspectorView : public ConstructionBaseInspectorView
 {
   Q_OBJECT
 
@@ -60,15 +60,7 @@ class ConstructionWindowDataFileInspectorView : public ModelObjectInspectorView
 
     void refresh();
 
-    OSLineEdit * m_nameEdit;
-
     OSLineEdit * m_urlEdit;
-
-    bool m_isIP;
-
-  public slots:
-
-    void toggleUnits(bool displayIP);
 };
 
 } // openstudio

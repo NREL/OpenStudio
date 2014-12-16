@@ -35,47 +35,34 @@ namespace openstudio {
 // ConstructionVC
 
 ConstructionWindowDataFileInspectorView::ConstructionWindowDataFileInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-  : ModelObjectInspectorView(model, true, parent),
-    m_nameEdit(nullptr),
-    m_urlEdit(nullptr),
-    m_isIP(isIP)
+  : ConstructionBaseInspectorView(isIP, model, parent),
+    m_urlEdit(nullptr)
 {
   createLayout();
 }
 
 void ConstructionWindowDataFileInspectorView::createLayout()
 {
-  QWidget* visibleWidget = new QWidget();
-  this->stackedWidget()->addWidget(visibleWidget);
+  ConstructionBaseInspectorView::createLayout();
 
-  QGridLayout* mainGridLayout = new QGridLayout();
-  mainGridLayout->setContentsMargins(7,7,7,7);
-  mainGridLayout->setSpacing(14);
-  visibleWidget->setLayout(mainGridLayout);
+  int row = m_mainGridLayout->rowCount();
 
-  // Name
-
-  QLabel* label = new QLabel("Name: ");
-  label->setObjectName("H2");
-  mainGridLayout->addWidget(label,0,0);
-
-  m_nameEdit = new OSLineEdit();
-  mainGridLayout->addWidget(m_nameEdit,1,0,1,3);
+  QLabel * label = nullptr;
 
   // URL
 
   label = new QLabel("URL: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,2,0);
+  m_mainGridLayout->addWidget(label,2,0);
 
   m_urlEdit = new OSLineEdit();
-  mainGridLayout->addWidget(m_urlEdit,3,0,1,3);
+  m_mainGridLayout->addWidget(m_urlEdit,3,0,1,3);
 
   // Stretch
 
-  mainGridLayout->setRowStretch(100,100);
+  m_mainGridLayout->setRowStretch(100,100);
 
-  mainGridLayout->setColumnStretch(100,100);
+  m_mainGridLayout->setColumnStretch(100,100);
 }
 
 void ConstructionWindowDataFileInspectorView::onClearSelection()
@@ -115,11 +102,6 @@ void ConstructionWindowDataFileInspectorView::detach()
 
 void ConstructionWindowDataFileInspectorView::refresh()
 {
-}
-
-void ConstructionWindowDataFileInspectorView::toggleUnits(bool displayIP)
-{
-  m_isIP = displayIP;
 }
 
 } // openstudio

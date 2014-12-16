@@ -168,10 +168,11 @@ void ConstructionBaseInspectorView::createLayout()
   // Fenestrations
   vLayout = new QVBoxLayout();
 
-  label = new QLabel();
-  label->setText("Fenestrations: ");
-  label->setObjectName("StandardsInfo");
-  vLayout->addWidget(label);
+  m_fenestrationLabel = new QLabel();
+  m_fenestrationLabel->setText("Fenestrations: ");
+  m_fenestrationLabel->setObjectName("StandardsInfo");
+  m_fenestrationLabel->hide();
+  vLayout->addWidget(m_fenestrationLabel);
 
   m_fenestration = new QComboBox();
   m_fenestration->setEditable(true);
@@ -195,11 +196,13 @@ void ConstructionBaseInspectorView::createLayout()
 
 void ConstructionBaseInspectorView::showFenestration()
 {
+  m_fenestrationLabel->show();
   m_fenestration->show();
 }
 
 void ConstructionBaseInspectorView::hideFenestration()
 {
+  m_fenestrationLabel->hide();
   m_fenestration->hide();
 }
 
@@ -259,7 +262,6 @@ void ConstructionBaseInspectorView::editStandardsConstructionType(const QString 
 
 void ConstructionBaseInspectorView::populateStandardsConstructionType()
 {
-
   disconnect(m_standardsConstructionType, 0, this, 0);
 
   m_standardsConstructionType->clear();

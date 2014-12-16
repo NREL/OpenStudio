@@ -18,6 +18,7 @@
 **********************************************************************/
 
 #include "ConstructionFfactorGroundFloorInspectorView.hpp"
+
 #include "OSItem.hpp"
 
 #include "../shared_gui_components/OSLineEdit.hpp"
@@ -37,105 +38,33 @@
 namespace openstudio {
 
 ConstructionFfactorGroundFloorInspectorView::ConstructionFfactorGroundFloorInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-  : ModelObjectInspectorView(model, true, parent),
-    m_nameEdit(nullptr),
+  : ConstructionBaseInspectorView(isIP, model, parent),
     m_ffactorEdit(nullptr),
     m_areaEdit(nullptr),
-    m_perimeterExposedEdit(nullptr),
-    m_isIP(isIP)
+    m_perimeterExposedEdit(nullptr)
 {
   createLayout();
 }
 
 void ConstructionFfactorGroundFloorInspectorView::createLayout()
 {
-  QWidget* visibleWidget = new QWidget();
-  this->stackedWidget()->addWidget(visibleWidget);
+  ConstructionBaseInspectorView::createLayout();
 
-  QGridLayout* mainGridLayout = new QGridLayout();
-  mainGridLayout->setContentsMargins(7,7,7,7);
-  mainGridLayout->setSpacing(14);
-  visibleWidget->setLayout(mainGridLayout);
+  int row = m_mainGridLayout->rowCount();
 
-  int row = 0;
-
-  // Name
-
-  QLabel* label = new QLabel("Name: ");
-  label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row,0);
-
-  ++row;
-
-  m_nameEdit = new OSLineEdit();
-  mainGridLayout->addWidget(m_nameEdit,row,0,1,3);
-
-  ++row;
-
-  // Standards
-  QFrame * line;
-  line = new QFrame();
-  line->setFrameShape(QFrame::HLine);
-  line->setFrameShadow(QFrame::Sunken);
-  mainGridLayout->addWidget(line,row,0,1,3);
-
-  ++row;
-
-  label = new QLabel();
-  label->setText("Measure Tags (Optional):");
-  label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row,0);
-
-  ++row;
-
-  QVBoxLayout* vLayout = new QVBoxLayout();
-
-  label = new QLabel();
-  label->setText("Intended Surface Type: ");
-  label->setObjectName("StandardsInfo");
-  vLayout->addWidget(label);
-
-  m_intendedSurfaceType = new OSComboBox2();
-  m_intendedSurfaceType->setFixedWidth(OSItem::ITEM_WIDTH);
-  vLayout->addWidget(m_intendedSurfaceType);
-
-  mainGridLayout->addLayout(vLayout,row,0);
-
-  vLayout = new QVBoxLayout();
-
-  label = new QLabel();
-  label->setText("Standards Construction Type: ");
-  label->setObjectName("StandardsInfo");
-  vLayout->addWidget(label);
-
-  m_standardsConstructionType = new QComboBox();
-  m_standardsConstructionType->setEditable(true);
-  m_standardsConstructionType->setDuplicatesEnabled(false);
-  m_standardsConstructionType->setFixedWidth(OSItem::ITEM_WIDTH);
-  vLayout->addWidget(m_standardsConstructionType);
-
-  mainGridLayout->addLayout(vLayout,row,1);
-
-  ++row;
-
-  line = new QFrame();
-  line->setFrameShape(QFrame::HLine);
-  line->setFrameShadow(QFrame::Sunken);
-  mainGridLayout->addWidget(line,row,0,1,3);
-
-  ++row;
+  QLabel * label = nullptr;
 
   // F-Factor
 
   label = new QLabel("F-Factor: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row,0);
+  m_mainGridLayout->addWidget(label,row,0);
 
   ++row;
 
   m_ffactorEdit = new OSQuantityEdit(m_isIP);
   connect(this, &ConstructionFfactorGroundFloorInspectorView::toggleUnitsClicked, m_ffactorEdit, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_ffactorEdit,row,0);
+  m_mainGridLayout->addWidget(m_ffactorEdit,row,0);
 
   ++row;
 
@@ -143,13 +72,13 @@ void ConstructionFfactorGroundFloorInspectorView::createLayout()
 
   label = new QLabel("Area: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row,0);
+  m_mainGridLayout->addWidget(label,row,0);
 
   ++row;
 
   m_areaEdit = new OSQuantityEdit(m_isIP);
   connect(this, &ConstructionFfactorGroundFloorInspectorView::toggleUnitsClicked, m_areaEdit, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_areaEdit,row,0);
+  m_mainGridLayout->addWidget(m_areaEdit,row,0);
 
   ++row;
 
@@ -157,26 +86,26 @@ void ConstructionFfactorGroundFloorInspectorView::createLayout()
 
   label = new QLabel("Perimeter Exposed: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row,0);
+  m_mainGridLayout->addWidget(label,row,0);
 
   ++row;
 
   m_perimeterExposedEdit = new OSQuantityEdit(m_isIP);
   connect(this, &ConstructionFfactorGroundFloorInspectorView::toggleUnitsClicked, m_perimeterExposedEdit, &OSQuantityEdit::onUnitSystemChange);
-  mainGridLayout->addWidget(m_perimeterExposedEdit,row,0);
+  m_mainGridLayout->addWidget(m_perimeterExposedEdit,row,0);
 
   ++row;
 
   // Stretch
 
-  mainGridLayout->setRowStretch(row,100);
+  m_mainGridLayout->setRowStretch(row,100);
 
-  mainGridLayout->setColumnStretch(100,100);
+  m_mainGridLayout->setColumnStretch(100,100);
 }
 
 void ConstructionFfactorGroundFloorInspectorView::onClearSelection()
 {
-  ModelObjectInspectorView::onClearSelection(); // call parent implementation
+  ConstructionBaseInspectorView::onClearSelection(); // call parent implementation
   detach();
 }
 
@@ -220,7 +149,6 @@ void ConstructionFfactorGroundFloorInspectorView::editStandardsConstructionType(
 
 void ConstructionFfactorGroundFloorInspectorView::populateStandardsConstructionType()
 {
-
   disconnect(m_standardsConstructionType, 0, this, 0);
 
   m_standardsConstructionType->clear();
@@ -293,11 +221,6 @@ void ConstructionFfactorGroundFloorInspectorView::detach()
 
 void ConstructionFfactorGroundFloorInspectorView::refresh()
 {
-}
-
-void ConstructionFfactorGroundFloorInspectorView::toggleUnits(bool displayIP)
-{
-  m_isIP = displayIP;
 }
 
 } // openstudio

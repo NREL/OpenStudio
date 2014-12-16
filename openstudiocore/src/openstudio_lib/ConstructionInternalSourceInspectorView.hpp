@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_CONSTRUCTIONINTERNALSOURCEINSPECTORVIEW_HPP
 #define OPENSTUDIO_CONSTRUCTIONINTERNALSOURCEINSPECTORVIEW_HPP
 
-#include "ModelObjectInspectorView.hpp"
+#include "ConstructionBaseInspectorView.hpp"
 
 #include "../model/StandardsInformationConstruction.hpp"
 
@@ -46,7 +46,7 @@ class OSQuantityEdit;
 
 class OSComboBox2;
 
-class ConstructionInternalSourceInspectorView : public ModelObjectInspectorView
+class ConstructionInternalSourceInspectorView : public ConstructionBaseInspectorView
 {
   Q_OBJECT
 
@@ -86,14 +86,6 @@ class ConstructionInternalSourceInspectorView : public ModelObjectInspectorView
 
     ConstructionObjectVectorController * m_constructionVC;
 
-    OSLineEdit * m_nameEdit;
-
-    OSComboBox2 * m_intendedSurfaceType;
-
-    QComboBox * m_standardsConstructionType;
-
-    boost::optional<openstudio::model::StandardsInformationConstruction> m_standardsInformation;
-
     OSIntegerEdit * m_sourcePresentAfterLayerNumberEdit;
 
     OSIntegerEdit * m_temperatureCalculationRequestedAfterLayerNumberEdit;
@@ -101,12 +93,6 @@ class ConstructionInternalSourceInspectorView : public ModelObjectInspectorView
     OSIntegerEdit * m_dimensionsForTheCTFCalculationEdit;
 
     OSQuantityEdit * m_tubeSpacingEdit;
-
-    bool m_isIP;
-
-  public slots:
-
-    void toggleUnits(bool displayIP);
 };
 
 } // openstudio
