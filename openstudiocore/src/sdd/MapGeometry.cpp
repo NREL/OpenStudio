@@ -1495,9 +1495,36 @@ namespace sdd {
     result.appendChild(nameElement);
     nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
+    // SDD:
+    // FuncClassMthd - optional
+    // RelocPubSchoolBldg - optional
+    // WholeBldgModeled - required
+    // BldgAz - required, done
+    // TotStoryCnt - required
+    // TotStoryCntNew - optional
+    // TotStoryCntExisting - optional
+    // TotStoryCntAltered - optional
+    // AboveGrdStoryCnt - required
+    // AboveGrdStoryCntNew - optional
+    // AboveGrdStoryCntExisting  - optional
+    // AboveGrdStoryCntAltered - optional
+    // LivingUnitCnt - defaulted 
+    // LivingUnitCntNew - optional
+    // LivingUnitCntExisting - optional
+    // LivingUnitCntAltered - optional
+    // TotFlrArea - defaulted
+    // NonResFlrArea - defaulted
+    // ResFlrArea - defaulted
+    // TotCondVol - defaulted
+    // PlantClgCap - defaulted
+    // PlantHtgCap - defaulted
+    // CoilClgCap - defaulted
+    // CoilHtgCap - defaulted
+
     double buildingAzimuth = fixAngle(building.northAxis());
     double northAngle = 360.0 - buildingAzimuth;
 
+    // DLM: is this deprecated?
     // north angle
     QDomElement northAngleElement = doc.createElement("NAng");
     result.appendChild(northAngleElement);
@@ -1670,6 +1697,12 @@ namespace sdd {
     result.appendChild(nameElement);
     nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
+    // SDD:
+    // Mult - defaulted
+    // Z - only for simple geometry
+    // FlrToFlrHgt - only for simple geometry
+    // FlrToCeilingHgt - only for simple geometry
+
     // translate spaces
     std::vector<model::Space> spaces = buildingStory.spaces();
     std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
@@ -1698,6 +1731,129 @@ namespace sdd {
     result.appendChild(nameElement);
     nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
+    // SDD:
+    // Status - required
+    // CondgType - required
+    // SupPlenumSpcRef - optional
+    // RetPlenumSpcRef - optional
+    // ThrmlZnRef - required
+    // Area - only for simple geometry, done
+    // FlrArea - optional
+    // FlrZ - optional
+    // FlrToCeilingHgt - optional
+    // Vol - required, done
+    // SpcFuncDefaultsRef - optional
+    // SpcFunc - compulsory
+    // FuncSchGrp - optional
+    // OccDens - optional
+    // OccSensHtRt - optional
+    // OccLatHtRt - optional
+    // OccSchRef - optional
+    // InfMthd - defaulted
+    // DsgnInfRt - defaulted
+    // InfSchRef - defaulted
+    // InfModelCoefA - required
+    // InfModelCoefB - required
+    // InfModelCoefC - required
+    // InfModelCoefD - required
+    // EnvStatus - optional
+    // LtgStatus - optional
+    // IntLtgSpecMthd - required
+    // IntLPDReg - optional
+    // IntLtgRegSchRef - optional
+    // IntLtgRegHtGnSpcFrac - optional
+    // IntLtgRegHtGnRadFrac - optional
+    // IntLPDNonReg - optional
+    // IntLtgNonRegSchRef - optional
+    // IntLtgNonRegHtGnSpcFrac - optional
+    // IntLtgNonRegHtGnRadFrac - optional
+    // SkylitDayltgInstalledLtgPwr - optional
+    // PriSideDayltgInstalledLtgPwr - optional
+    // SecSideDayltgInstalledLtgPwr - optional
+    // Skylit100PctControlled - optional
+    // PriSide100PctControlled - optional
+    // SecSide100PctControlled - optional
+    // SkylitDayltgRefPtCoord - optional
+    // SkylitDayltgCtrlLtgPwr - optional
+    // SkylitDayltgCtrlLtgFrac - optional
+    // SkylitDayltgIllumSetpt - optional
+    // PriSideDayltgRefPtCoord - optional
+    // PriSideDayltgCtrlLtgPwr - optional
+    // PriSideDayltgCtrlLtgFrac - optional
+    // PriSideDayltgIllumSetpt - optional
+    // SecSideDayltgRefPtCoord - optional
+    // SecSideDayltgCtrlLtgPwr - optional
+    // SecSideDayltgCtrlLtgFrac - optional
+    // SecSideDayltgIllumSetpt - optional
+    // DayltgCtrlType - optional
+    // MinDimLtgFrac - optional
+    // MinDimPwrFrac - optional
+    // NumOfCtrlSteps - optional
+    // GlrAz - optional
+    // MaxGlrIdx - optional
+    // SkyltReqExcpt - optional
+    // SkyltReqExcptArea - optional
+    // SkyltReqExcptFrac - optional
+    // RecptPwrDens - defaulted
+    // RecptSchRef - defaulted
+    // RecptRadFrac - defaulted
+    // RecptLatFrac - defaulted
+    // RecptLostFrac - defaulted
+    // GasEqpPwrDens - defaulted
+    // GasEqpSchRef - defaulted
+    // GasEqpRadFrac - defaulted
+    // GasEqpLatFrac - defaulted
+    // GasEqpLostFrac - defaulted
+    // ProcElecPwrDens - optional
+    // ProcElecSchRef - optional
+    // ProcElecRadFrac - optional
+    // ProcElecLatFrac - optional
+    // ProcElecLostFrac - optional
+    // ProcGasPwrDens - optional
+    // ProcGasSchRef - optional
+    // ProcGasRadFrac - optional
+    // ProcGasLatFrac - optional
+    // ProcGasLostFrac - optional
+    // CommRfrgEPD - defaulted
+    // CommRfrgEqpSchRef - defaulted
+    // CommRfrgRadFrac - defaulted
+    // CommRfrgLatFrac - defaulted
+    // CommRfrgLostFrac - defaulted
+    // ElevCnt - optional
+    // ElevPwr - optional
+    // ElevSchRef - defaulted
+    // ElevRadFrac - optional
+    // ElevLatFrac - optional
+    // ElevLostFrac - optional
+    // EscalCnt - optional
+    // EscalPwr - optional
+    // EscalSchRef - defaulted
+    // EscalRadFrac - optional
+    // EscalLatFrac - optional
+    // EscalLostFrac - optional
+    // SHWFluidSegRef - optional
+    // RecircDHWSysRef - optional
+    // HotWtrHtgRt - defaulted
+    // RecircHotWtrHtgRt - optional
+    // HotWtrHtgSchRef - optional
+    // VentPerPerson - defaulted
+    // VentPerArea - defaulted
+    // VentACH - optional
+    // VentPerSpc - optional
+    // ExhPerArea - optional
+    // ExhACH - optional
+    // ExhPerSpc - optional
+    // KitExhHoodLen - optional
+    // KitExhHoodStyle - optional
+    // KitExhHoodDuty - optional
+    // KitExhHoodFlow - optional
+    // LabExhRtType - optional
+    // IntLPDPrescrip - optional
+    // IsPlenumRet - optional
+    // HighRiseResInt - optional
+    // HighRiseResCondFlrArea - optional
+
+
     // volume
     double volume = space.volume();
     Quantity volumeSI(volume, SIUnit(SIExpnt(0,3,0)));
@@ -1713,7 +1869,7 @@ namespace sdd {
       LOG(Warn, "Space '" << name << "' has zero volume.");
     }
 
-    // floorArea
+    // area
     double floorArea = space.floorArea();
     Quantity floorAreaSI(floorArea, SIUnit(SIExpnt(0,2,0)));
     OptionalQuantity floorAreaIP = QuantityConverter::instance().convert(floorAreaSI, ipSys);
@@ -1882,6 +2038,31 @@ namespace sdd {
     QDomElement nameElement = doc.createElement("Name");
     result->appendChild(nameElement);
     nameElement.appendChild(doc.createTextNode(escapeName(name)));
+
+    // SDD:
+    // Status - required (ExtFlr, ExtWall, IntWall, Roof, UndgrFlr, UndgrWall)
+    // ConsAssmRef - optional (Ceiling, ExtFlr, ExtWall, IntFlr, IntWall, Roof, UndgrFlr, UndgrWall)
+    // AdjacentSpcRef - optional (Ceiling, IntFlr, IntWall)
+    // Area - simplified geometry only (Ceiling, ExtFlr, ExtWall, IntFlr, IntWall, Roof, UndgrFlr, UndgrWall)
+    // Hgt - optional (UndgrWall)
+    // PerimExposed - optional (UndgrFlr)
+    // DisplayPerim - optional (ExtWall)
+    // Az - simplified geometry only (ExtWall, Roof)
+    // Tilt - simplified geometry only (Roof)
+    // ExtSolAbs - required (Ceiling, ExtFlr, ExtWall, IntWall)
+    // ExtThrmlAbs - required (Ceiling, ExtFlr, ExtWall, IntWall)
+    // ExtVisAbs - required (Ceiling, ExtFlr, ExtWall, IntWall)
+    // IntSolAbs - optional (Ceiling, ExtFlr, ExtWall, IntFlr, IntWall, Roof, UndgrFlr, UndgrWall)
+    // IntThrmlAbs - optional (Ceiling, ExtFlr, ExtWall, IntFlr, IntWall, Roof, UndgrFlr, UndgrWall)
+    // IntVisAbs - optional (Ceiling, ExtFlr, ExtWall, IntFlr, IntWall, Roof, UndgrFlr, UndgrWall)
+    // FieldAppliedCoating - optional (Roof)
+    // CRRCInitialRefl - optional (Roof)
+    // CRRCAgedRefl - optional (Roof)
+    // CRRCInitialEmittance - optional (Roof))
+    // CRRCAgedEmittance - optional (Roof)
+    // CRRCInitialSRI - optional (Roof)
+    // CRRCAgedSRI - optional (Roof)
+    // CRRCProdID - optional (Roof)
 
     // adjacent surface
     boost::optional<model::Surface> adjacentSurface = surface.adjacentSurface();
@@ -2079,6 +2260,13 @@ namespace sdd {
     result->appendChild(nameElement);
     nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
+    // SDD:
+    // Status - required (Win, Skylt, Dr)
+    // FenConsRef - optional (Win, Skylt)
+    // DrConsRef - optional (Dr)
+    // Oper - optional (Dr)
+    // Area - simple geometry only (Win, Skylt, Dr)
+
     // construction
     boost::optional<model::ConstructionBase> construction = subSurface.construction();
     if (construction){
@@ -2182,6 +2370,12 @@ namespace sdd {
     QDomElement nameElement = doc.createElement("Name");
     result->appendChild(nameElement);
     nameElement.appendChild(doc.createTextNode(escapeName(name)));
+
+    // SDD:
+    // Status - required 
+    // TransSchRef - optional
+    // SolRefl - optional
+    // VisRefl - optional
 
     // schedule
     boost::optional<model::Schedule> transmittanceSchedule = shadingSurface.transmittanceSchedule();

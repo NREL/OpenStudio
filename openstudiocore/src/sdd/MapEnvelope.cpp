@@ -499,6 +499,26 @@ namespace sdd {
       result.appendChild(specMthdElement);
       specMthdElement.appendChild(doc.createTextNode("Layers"));
 
+      // SDD:
+      // CompatibleSurfType - required
+      // ExtSolAbs - optional, done
+      // ExtThrmlAbs - optional, done
+      // ExtVisAbs - optional, done
+      // IntSolAbs - optional, done
+      // IntThrmlAbs - optional, done
+      // IntVisAbs - optional, done
+      // SlabType - optional
+      // SlabInsOrientation - optional
+      // SlabInsThrmlR - optional
+      // FieldAppliedCoating - optional
+      // CRRCInitialRefl - optional
+      // CRRCAgedRefl - optional
+      // CRRCInitialEmittance - optional
+      // CRRCAgedEmittance - optional
+      // CRRCInitialSRI - optional
+      // CRRCAgedSRI - optional
+      // CRRCProdID - optional
+
       unsigned n = layers.size();
       if (n > 0){
 
@@ -694,6 +714,12 @@ namespace sdd {
       result->appendChild(nameElement);
       nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
+      // SDD:
+      // Type - required
+      // CertificationMthd - required
+      // UFactor - optional, done
+      // Open - optional
+
       // can only get UFactor for special cases
       bool foundUFactor = false;
 
@@ -747,6 +773,27 @@ namespace sdd {
       QDomElement nameElement = doc.createElement("Name");
       result->appendChild(nameElement);
       nameElement.appendChild(doc.createTextNode(escapeName(name)));
+
+      // SDD:
+      // FenType - required
+      // FenProdType - optional
+      // AssmContext - required
+      // CertificationMthd - required
+      // SkyltGlz - optional
+      // SkyltCurb - optional
+      // OperableWinConfiguration - optional
+      // GreenhouseGardenWin - optional
+      // FenFrm - optional
+      // FenPanes - optional
+      // GlzTint - optional
+      // WinDivider - optional
+      // Diffusing - optional
+      // SHGC - optional
+      // SHGCCOG - optional
+      // UFactor - optional
+      // UFactorCOG - optional
+      // VT - optional
+      // VTCOG - optional
 
       // can only get SHGC, TVis, UFactor for special cases
       bool foundUFactor = false;
@@ -827,6 +874,22 @@ namespace sdd {
       result->appendChild(nameElement);
       nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
+      // SDD:
+      // CodeCat - compulsory
+      // CodeItem - compulsory
+      // FrmMat - optional
+      // FrmConfig - optional
+      // FrmDepth
+      // CavityIns
+      // CavityInsOpt
+      // CompositeMatNotes
+      // HeaderIns
+      // CMUWt
+      // CMUFill
+      // SpandrelPanelIns
+      // ICCESRptNum
+      // InsOutsdWtrprfMemb
+
       // DLM: set in construction
       // roughness
       //std::string roughness = standardOpaqueMaterial.roughness();
@@ -862,6 +925,7 @@ namespace sdd {
       //}
 
       // thickness
+      // DLM: is this deprecated?
       // os units = m, sdd units = in
       double thickness = standardOpaqueMaterial.thickness();
       Quantity thicknessSI(thickness, SIUnit(SIExpnt(0,1,0)));
@@ -874,6 +938,7 @@ namespace sdd {
       thicknessElement.appendChild(doc.createTextNode(QString::number(thicknessInches)));
 
       // conductivity
+      // DLM: is this deprecated?
       // os units = W/m-K, sdd units = Btu/(hr*ft*F)
       double conductivity = standardOpaqueMaterial.thermalConductivity();
       Quantity conductivitySI(conductivity, WhUnit(WhExpnt(1,0,-1,-1)));
@@ -885,6 +950,7 @@ namespace sdd {
       conductivityElement.appendChild(doc.createTextNode(QString::number(conductivityIP->value())));
 
       // density
+      // DLM: is this deprecated?
       // os units = kg/m3, sdd units = lb/ft^3
       double density = standardOpaqueMaterial.density();
       Quantity densitySI(density, SIUnit(SIExpnt(1,-3,0)));
@@ -896,6 +962,7 @@ namespace sdd {
       densityElement.appendChild(doc.createTextNode(QString::number(densityIP->value())));
 
       // specificHeat
+      // DLM: is this deprecated?
       // os units = J/kg-K, sdd units = Btu/(lb*F)
       double specificHeat = standardOpaqueMaterial.specificHeat();
       Quantity specificHeatSI(specificHeat, SIUnit(SIExpnt(0,2,-2,-1)));
@@ -952,6 +1019,7 @@ namespace sdd {
       //}
 
       // thermalResistance
+      // DLM: is this deprecated?
       // os units = m2-K/W, sdd units = hr*ft2*degF/Btu
       double thermalResistance = masslessOpaqueMaterial.thermalResistance();
       Quantity rValueWh(thermalResistance, WhUnit(WhExpnt(-1,0,2,1)));
@@ -973,6 +1041,7 @@ namespace sdd {
       nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
       // thermalResistance
+      // DLM: is this deprecated?
       // os units = m2-K/W, sdd units = hr*ft2*degF/Btu
       double thermalResistance = airGap.thermalResistance();
       Quantity rValueWh(thermalResistance, WhUnit(WhExpnt(-1,0,2,1)));
