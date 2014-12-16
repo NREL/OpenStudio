@@ -47,8 +47,6 @@ namespace openstudio {
 
 void MaterialInspectorView::createLayout()
 {
-  MaterialBaseInspectorView::createLayout(); // call parent implementation
-
   QVBoxLayout * vLayout = nullptr;
 
   QLabel * label = nullptr;

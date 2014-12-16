@@ -55,10 +55,6 @@ WindowMaterialGasMixtureInspectorView::WindowMaterialGasMixtureInspectorView(boo
 
 void WindowMaterialGasMixtureInspectorView::createLayout()
 {
-  MaterialBaseInspectorView::createLayout(); // call parent implementation
-
-  QVBoxLayout * vLayout = nullptr;
-
   QLabel * label = nullptr;
 
   unsigned row = m_mainGridLayout->rowCount();
