@@ -529,7 +529,7 @@ namespace sdd {
           intSolarAbsorptance = intMaterial.solarAbsorptance();
           intThermalAbsorptance = intMaterial.thermalAbsorptance();
           intVisibleAbsorptance = intMaterial.visibleAbsorptance();
-        }else if (layers[0].optionalCast<model::MasslessOpaqueMaterial>()){
+        }else if (layers[n-1].optionalCast<model::MasslessOpaqueMaterial>()){
           model::MasslessOpaqueMaterial intMaterial = layers[n-1].cast<model::MasslessOpaqueMaterial>();
           intSolarAbsorptance = intMaterial.solarAbsorptance();
           intThermalAbsorptance = intMaterial.thermalAbsorptance();
