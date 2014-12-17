@@ -43,8 +43,6 @@ ConstructionWindowDataFileInspectorView::ConstructionWindowDataFileInspectorView
 
 void ConstructionWindowDataFileInspectorView::createLayout()
 {
-  ConstructionBaseInspectorView::createLayout();
-
   int row = m_mainGridLayout->rowCount();
 
   QLabel * label = nullptr;
@@ -67,7 +65,8 @@ void ConstructionWindowDataFileInspectorView::createLayout()
 
 void ConstructionWindowDataFileInspectorView::onClearSelection()
 {
-  ModelObjectInspectorView::onClearSelection(); // call parent implementation
+  ConstructionBaseInspectorView::onClearSelection(); // call parent implementation
+
   detach();
 }
 
@@ -76,11 +75,6 @@ void ConstructionWindowDataFileInspectorView::onSelectModelObject(const openstud
   detach();
   model::WindowDataFile windowDataFile = modelObject.cast<model::WindowDataFile>();
   attach(windowDataFile);
-  refresh();
-}
-
-void ConstructionWindowDataFileInspectorView::onUpdate()
-{
   refresh();
 }
 
@@ -94,14 +88,9 @@ void ConstructionWindowDataFileInspectorView::attach(openstudio::model::WindowDa
 
 void ConstructionWindowDataFileInspectorView::detach()
 {
-  this->stackedWidget()->setCurrentIndex(0);
+  ConstructionBaseInspectorView::detach(); // call parent implementation
 
-  m_nameEdit->unbind();
   m_urlEdit->unbind();
-}
-
-void ConstructionWindowDataFileInspectorView::refresh()
-{
 }
 
 } // openstudio

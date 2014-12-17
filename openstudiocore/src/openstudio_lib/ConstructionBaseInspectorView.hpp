@@ -38,10 +38,6 @@ namespace model {
 
 }
 
-//class ConstructionObjectVectorController;
-
-//class OSDropZone;
-
 class OSLineEdit;
 
 class OSComboBox2;
@@ -60,13 +56,11 @@ class ConstructionBaseInspectorView : public ModelObjectInspectorView
 
     virtual void onClearSelection();
 
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) = 0;
 
     virtual void onUpdate();
 
     void createLayout();
-
-    void attach(openstudio::model::Construction & construction);
 
     void detach();
 

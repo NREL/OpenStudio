@@ -58,13 +58,7 @@ class ConstructionInspectorView : public ConstructionBaseInspectorView
 
     virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
 
-    virtual void onUpdate();
-
   protected slots:
-
-    void standardsConstructionTypeChanged(const QString& text);
-
-    void editStandardsConstructionType(const QString& text);
 
     void populateStandardsConstructionType();
 
@@ -75,8 +69,6 @@ class ConstructionInspectorView : public ConstructionBaseInspectorView
     void attach(openstudio::model::Construction & construction);
 
     void detach();
-
-    void refresh();
 
     OSDropZone * m_constructionDZ;
 

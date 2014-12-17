@@ -49,16 +49,13 @@ class ConstructionWindowDataFileInspectorView : public ConstructionBaseInspector
 
     virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
 
-    virtual void onUpdate();
-
   private:
+
     void createLayout();
 
     void attach(openstudio::model::WindowDataFile & windowDataFile);
 
     void detach();
-
-    void refresh();
 
     OSLineEdit * m_urlEdit;
 };

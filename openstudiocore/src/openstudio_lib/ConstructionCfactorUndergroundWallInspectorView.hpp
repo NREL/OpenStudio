@@ -57,13 +57,7 @@ class ConstructionCfactorUndergroundWallInspectorView : public ConstructionBaseI
 
     virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
 
-    virtual void onUpdate();
-
   protected slots:
-
-    void standardsConstructionTypeChanged(const QString& text);
-
-    void editStandardsConstructionType(const QString& text);
 
     void populateStandardsConstructionType();
 
@@ -74,8 +68,6 @@ class ConstructionCfactorUndergroundWallInspectorView : public ConstructionBaseI
     void attach(openstudio::model::CFactorUndergroundWallConstruction & cFactorUndergroundWallConstruction);
 
     void detach();
-
-    void refresh();
 
     OSQuantityEdit * m_cfactorEdit;
 
