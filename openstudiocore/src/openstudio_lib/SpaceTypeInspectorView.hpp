@@ -36,7 +36,8 @@ class SpaceTypeInspectorView : public ModelObjectInspectorView
 
     virtual ~SpaceTypeInspectorView() {}
 
-    std::vector<model::ModelObject> selectedObjects() const;
+    virtual bool supportsMultipleObjectSelection() const { return true; }
+    virtual std::vector<model::ModelObject> selectedObjects() const;
 
   protected:
 
