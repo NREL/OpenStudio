@@ -59,8 +59,6 @@ ConstructionInternalSourceInspectorView::ConstructionInternalSourceInspectorView
 
 void ConstructionInternalSourceInspectorView::createLayout()
 {
-  ConstructionBaseInspectorView::createLayout();
-
   int row = m_mainGridLayout->rowCount();
 
   QLabel * label = nullptr;
@@ -158,6 +156,7 @@ void ConstructionInternalSourceInspectorView::createLayout()
 void ConstructionInternalSourceInspectorView::onClearSelection()
 {
   ConstructionBaseInspectorView::onClearSelection(); // call parent implementation
+
   detach();
 }
 
@@ -169,55 +168,9 @@ void ConstructionInternalSourceInspectorView::onSelectModelObject(const openstud
   refresh();
 }
 
-void ConstructionInternalSourceInspectorView::onUpdate()
-{
-  refresh();
-}
-
-void ConstructionInternalSourceInspectorView::standardsConstructionTypeChanged(const QString & text)
-{
-  if (m_standardsInformation){
-    std::string standardsConstructionType = toString(text);
-    if (standardsConstructionType.empty()){
-      m_standardsInformation->resetStandardsConstructionType();
-    }else{
-      m_standardsInformation->setStandardsConstructionType(standardsConstructionType);
-    }
-    populateStandardsConstructionType();
-  }
-}
-
-void ConstructionInternalSourceInspectorView::editStandardsConstructionType(const QString & text)
-{
-  if (m_standardsInformation){
-    std::string standardsConstructionType = toString(text);
-    if (standardsConstructionType.empty()){
-      m_standardsInformation->resetStandardsConstructionType();
-    }else{
-      m_standardsInformation->setStandardsConstructionType(standardsConstructionType);
-    }
-  }
-}
-
 void ConstructionInternalSourceInspectorView::populateStandardsConstructionType()
 {
-  disconnect(m_standardsConstructionType, 0, this, 0);
-
-  m_standardsConstructionType->clear();
-  if (m_standardsInformation){
-    m_standardsConstructionType->addItem("");
-    std::vector<std::string> suggestedStandardsConstructionTypes = m_standardsInformation->suggestedStandardsConstructionTypes();
-    for (const std::string& standardsConstructionType : suggestedStandardsConstructionTypes) {
-      m_standardsConstructionType->addItem(toQString(standardsConstructionType));
-    }
-    boost::optional<std::string> standardsConstructionType = m_standardsInformation->standardsConstructionType();
-    if (standardsConstructionType){
-      OS_ASSERT(!suggestedStandardsConstructionTypes.empty());
-      m_standardsConstructionType->setCurrentIndex(1);
-    }else{
-      m_standardsConstructionType->setCurrentIndex(0);
-    }
-  }
+  ConstructionBaseInspectorView::populateStandardsConstructionType(); // call parent implementation
 
   connect(m_standardsConstructionType, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &ConstructionInternalSourceInspectorView::standardsConstructionTypeChanged);
   connect(m_standardsConstructionType, &QComboBox::editTextChanged, this, &ConstructionInternalSourceInspectorView::editStandardsConstructionType);
@@ -256,29 +209,14 @@ void ConstructionInternalSourceInspectorView::attach(openstudio::model::Construc
 
 void ConstructionInternalSourceInspectorView::detach()
 {
-  this->stackedWidget()->setCurrentIndex(0);
+  ConstructionBaseInspectorView::detach(); // call parent implementation
 
   m_constructionVC->detach();
 
-  m_nameEdit->unbind();
   m_sourcePresentAfterLayerNumberEdit->unbind();
   m_temperatureCalculationRequestedAfterLayerNumberEdit->unbind();
   m_dimensionsForTheCTFCalculationEdit->unbind();
   m_tubeSpacingEdit->unbind();
-
-  if (m_standardsInformation){
-    disconnect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), 0, this, 0);
-    m_standardsInformation.reset();
-  }
-
-  m_intendedSurfaceType->unbind();
-
-  disconnect(m_standardsConstructionType, 0, this, 0);
-  m_standardsConstructionType->setEnabled(false);
-}
-
-void ConstructionInternalSourceInspectorView::refresh()
-{
 }
 
 } // openstudio

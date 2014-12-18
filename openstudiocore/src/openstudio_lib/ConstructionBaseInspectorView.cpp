@@ -19,28 +19,20 @@
 
 #include "ConstructionBaseInspectorView.hpp"
 
-#include "ConstructionObjectVectorController.hpp"
-#include "ModelObjectItem.hpp"
-#include "OSAppBase.hpp"
-#include "OSDocument.hpp"
-#include "OSDropZone.hpp"
+#include "OSItem.hpp"
 
 #include "../shared_gui_components/OSComboBox.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 
 #include "../model/Construction.hpp"
 #include "../model/Construction_Impl.hpp"
-#include "../model/StandardsInformationConstruction.hpp"
-#include "../model/Material.hpp"
-#include "../model/Material_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
-#include <utilities/idd/OS_Construction_FieldEnums.hxx>
 
 #include <QComboBox>
 #include <QGridLayout>
 #include <QLabel>
-#include <QMessageBox>
+
 #include <QStackedWidget>
 
 namespace openstudio {
@@ -219,15 +211,6 @@ void ConstructionBaseInspectorView::disableFenestration()
 void ConstructionBaseInspectorView::onClearSelection()
 {
   ModelObjectInspectorView::onClearSelection(); // call parent implementation
-  detach();
-}
-
-void ConstructionBaseInspectorView::onSelectModelObject(const openstudio::model::ModelObject& modelObject)
-{
-  detach();
-  model::Construction construction = modelObject.cast<model::Construction>();
-  attach(construction);
-  refresh();
 }
 
 void ConstructionBaseInspectorView::onUpdate()
@@ -279,31 +262,6 @@ void ConstructionBaseInspectorView::populateStandardsConstructionType()
       m_standardsConstructionType->setCurrentIndex(0);
     }
   }
-
-  connect(m_standardsConstructionType, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &ConstructionBaseInspectorView::standardsConstructionTypeChanged);
-  connect(m_standardsConstructionType, &QComboBox::editTextChanged, this, &ConstructionBaseInspectorView::editStandardsConstructionType);
-}
-
-void ConstructionBaseInspectorView::attach(openstudio::model::Construction & construction)
-{
-  m_nameEdit->bind(construction,"name");
-
-  m_standardsInformation = construction.standardsInformation();
-
-  m_intendedSurfaceType->bind<std::string>(
-      *m_standardsInformation,
-      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-      std::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceTypeValues),
-      std::function<boost::optional<std::string> ()>(std::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceType,m_standardsInformation.get_ptr())),
-      std::bind(&openstudio::model::StandardsInformationConstruction::setIntendedSurfaceType,m_standardsInformation.get_ptr(),std::placeholders::_1),
-      NoFailAction(std::bind(&model::StandardsInformationConstruction::resetIntendedSurfaceType,m_standardsInformation.get_ptr())));
-
-  connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &ConstructionBaseInspectorView::populateStandardsConstructionType);
-
-  m_standardsConstructionType->setEnabled(true);
-  populateStandardsConstructionType();
-
-  this->stackedWidget()->setCurrentIndex(1);
 }
 
 void ConstructionBaseInspectorView::detach()

@@ -57,13 +57,7 @@ class ConstructionFfactorGroundFloorInspectorView : public ConstructionBaseInspe
 
     virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
 
-    virtual void onUpdate();
-
   protected slots:
-
-    void standardsConstructionTypeChanged(const QString& text);
-
-    void editStandardsConstructionType(const QString& text);
 
     void populateStandardsConstructionType();
 
@@ -74,8 +68,6 @@ class ConstructionFfactorGroundFloorInspectorView : public ConstructionBaseInspe
     void attach(openstudio::model::FFactorGroundFloorConstruction & fFactorGroundFloorConstruction);
 
     void detach();
-
-    void refresh();
 
     OSQuantityEdit * m_ffactorEdit;
 
