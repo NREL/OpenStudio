@@ -190,7 +190,7 @@ namespace detail {
       clearExtensibleGroups();
       for (const Material& material : materials) {
         OS_ASSERT(material.model() == model());
-        ModelExtensibleGroup group = pushExtensibleGroup(StringVector()).cast<ModelExtensibleGroup>();
+        ModelExtensibleGroup group = pushExtensibleGroup(StringVector(), false).cast<ModelExtensibleGroup>();
         OS_ASSERT(!group.empty());
         bool ok = group.setPointer(0,material.handle());
         OS_ASSERT(ok);
@@ -205,7 +205,7 @@ namespace detail {
 
     OS_ASSERT(modelPartitionMaterial.model() == model());
     clearExtensibleGroups();
-    ModelExtensibleGroup group = pushExtensibleGroup(StringVector()).cast<ModelExtensibleGroup>();
+    ModelExtensibleGroup group = pushExtensibleGroup(StringVector(), false).cast<ModelExtensibleGroup>();
     OS_ASSERT(!group.empty());
     bool ok = group.setPointer(0,modelPartitionMaterial.handle());
     OS_ASSERT(ok);
