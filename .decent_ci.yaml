@@ -6,4 +6,9 @@ notification_recipients:
   - lgentile
 aging_pull_requests_notification: true
 
+extra_tests_branches :
+  - master
+  - 81237966_EnableRegressions
 
+extra_tests_cmake_extra_flags : -DBUILD_REGRESSIONS:BOOL=ON
+extra_tests_test_dir : Regressions-prefix/src/Regressions-build

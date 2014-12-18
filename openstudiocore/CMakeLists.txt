@@ -752,7 +752,6 @@ endforeach()
 add_dependencies(ResultsViewer ResultsViewer_resources)
 
 # ruby, after loading projects
-add_subdirectory(src/ruby_cpp)
 add_subdirectory(ruby)
 
 if(UNIX AND NOT APPLE)
@@ -935,7 +934,6 @@ set(all_exe_targets
   GenerateIddFactory
   gbXMLToIdf
   OpenStudio
-  ruby_cpp
   litesql-gen
   ResultsViewer
   Pat
@@ -1024,6 +1022,8 @@ if(PACKAGE_ENERGYPLUS)
 
   if(APPLE)
     install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+  elseif(MSVC)
+    install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
   else()
     install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
   endif()

@@ -55,7 +55,7 @@ foreach(f ${RUBY_TEST_SRC})
         )
       endif()
 
-      set_tests_properties("RubyTest-${FILE_NAME}-${TEST_NAME}" PROPERTIES DEPENDS "${ALL_RUBY_BINDING_TARGETS}" ruby_cpp ResultsViewer_resources TIMEOUT 660 ENVIRONMENT "PATH=${NEWPATH}")
+      set_tests_properties("RubyTest-${FILE_NAME}-${TEST_NAME}" PROPERTIES TIMEOUT 660 ENVIRONMENT "PATH=${NEWPATH}")
     endif()
   endforeach()
 endforeach()
@@ -223,12 +223,12 @@ if(ENABLE_TEST_RUNNER_TARGETS)
   if(MSVC)
     add_custom_target(ruby_run_tests
       ${CMAKE_COMMAND} -E chdir "${RUBY_RUN_DIR}" "${RUBY_EXECUTABLE}" -I "${RUBY_RUBY_LIB_DIR}" -I "${RUBY_RUBY_LIB_DIR}/i386-mingw32" -I. "openstudio_test.rb"
-      DEPENDS ${ALL_RUBY_BINDING_TARGETS} ruby_cpp ResultsViewer_resources openstudio_energyplus_resources
+      DEPENDS ${ALL_RUBY_BINDING_TARGETS} ResultsViewer_resources openstudio_energyplus_resources
     )  
   else()
     add_custom_target(ruby_run_tests
       ${CMAKE_COMMAND} -E chdir "${RUBY_RUN_DIR}" "${RUBY_EXECUTABLE}" -I "${RUBY_RUBY_LIB_DIR}" -I. "openstudio_test.rb"
-      DEPENDS ${ALL_RUBY_BINDING_TARGETS} ruby_cpp ResultsViewer_resources openstudio_energyplus_resources
+      DEPENDS ${ALL_RUBY_BINDING_TARGETS} ResultsViewer_resources openstudio_energyplus_resources
     )  
   endif()
 endif()
