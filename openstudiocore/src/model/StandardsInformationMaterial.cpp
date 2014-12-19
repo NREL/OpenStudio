@@ -25,6 +25,7 @@
 #include "Material_Impl.hpp"
 
 #include <utilities/idd/OS_StandardsInformation_Material_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 
@@ -207,8 +208,7 @@ StandardsInformationMaterial::StandardsInformationMaterial(const Material& mater
 }
 
 IddObjectType StandardsInformationMaterial::iddObjectType() {
-  return IddObjectType(0l); // TODO
-  //return IddObjectType(IddObjectType::OS_StandardsInformation_Material);
+  return IddObjectType(IddObjectType::OS_StandardsInformation_Material);
 }
 
 Material StandardsInformationMaterial::material() const {
