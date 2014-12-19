@@ -257,4 +257,7 @@ TEST_F(ModelFixture, OpaqueMaterial_StandardsInformationMaterial)
   EXPECT_EQ("Bldg Board and Siding", info.standardsCategory().get());
 
   EXPECT_FALSE(info.suggestedStandardsIdentifiers().empty());
+
+  material.remove();
+  EXPECT_EQ(0, model.getModelObjects<StandardsInformationMaterial>().size());
 }

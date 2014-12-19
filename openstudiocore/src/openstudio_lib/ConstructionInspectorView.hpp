@@ -20,18 +20,15 @@
 #ifndef OPENSTUDIO_CONSTRUCTIONINSPECTORVIEW_HPP
 #define OPENSTUDIO_CONSTRUCTIONINSPECTORVIEW_HPP
 
-#include "StandardsInformationConstructionWidget.hpp"
-
-#include "../model/StandardsInformationConstruction.hpp"
+#include "ModelObjectInspectorView.hpp"
 
 class QComboBox;
 
 namespace openstudio {
 
 namespace model {
-
  class Construction;
-
+ class ConstructionBase;
 }
 
 class ConstructionObjectVectorController;
@@ -42,7 +39,9 @@ class OSLineEdit;
 
 class OSComboBox2;
 
-class ConstructionInspectorView : public ConstructionBaseInspectorView
+class StandardsInformationConstructionWidget;
+
+class ConstructionInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
 
@@ -58,9 +57,7 @@ class ConstructionInspectorView : public ConstructionBaseInspectorView
 
     virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
 
-  protected slots:
-
-    void populateStandardsConstructionType();
+    virtual void onUpdate();
 
   private:
 
@@ -69,6 +66,12 @@ class ConstructionInspectorView : public ConstructionBaseInspectorView
     void attach(openstudio::model::Construction & construction);
 
     void detach();
+
+    bool m_isIP;
+
+    OSLineEdit * m_nameEdit;
+
+    StandardsInformationConstructionWidget * m_standardsInformationWidget;
 
     OSDropZone * m_constructionDZ;
 

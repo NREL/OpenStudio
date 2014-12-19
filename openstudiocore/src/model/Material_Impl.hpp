@@ -65,6 +65,9 @@ namespace detail {
     /** @name Getters */
     //@{
 
+    // return any children objects in the hierarchy
+    virtual std::vector<ModelObject> children() const;
+
     /** Get the thickness of the material. For some materials, 0.0 is always returned. */
     virtual double thickness() const;
 

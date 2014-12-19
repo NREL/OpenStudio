@@ -20,9 +20,10 @@
 #ifndef OPENSTUDIO_CONSTRUCTIONBASEINSPECTORVIEW_HPP
 #define OPENSTUDIO_CONSTRUCTIONBASEINSPECTORVIEW_HPP
 
-#include "ModelObjectInspectorView.hpp"
-
+#include "../model/ConstructionBase.hpp"
 #include "../model/StandardsInformationConstruction.hpp"
+
+#include <QWidget>
 
 class QComboBox;
 
@@ -34,7 +35,7 @@ namespace openstudio {
 
 namespace model {
 
- class Construction;
+ class ConstructionBase;
 
 }
 
@@ -42,29 +43,21 @@ class OSLineEdit;
 
 class OSComboBox2;
 
-class ConstructionBaseInspectorView : public ModelObjectInspectorView
+class StandardsInformationConstructionWidget : public QWidget
 {
   Q_OBJECT
 
   public:
 
-    ConstructionBaseInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = 0);
+    StandardsInformationConstructionWidget(bool isIP, QWidget * parent = 0);
 
-    virtual ~ConstructionBaseInspectorView() {}
+    virtual ~StandardsInformationConstructionWidget() {}
 
-  protected:
-
-    virtual void onClearSelection();
-
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) = 0;
-
-    virtual void onUpdate();
-
-    void createLayout();
+    void attach(openstudio::model::ConstructionBase & construction);
 
     void detach();
 
-    void refresh();
+    void addToLayout(QGridLayout* mainGridLayout, int& row);
 
     void showFenestration();
 
@@ -74,27 +67,11 @@ class ConstructionBaseInspectorView : public ModelObjectInspectorView
 
     void disableFenestration();
 
-    QGridLayout * m_mainGridLayout = nullptr;
+  public slots:
 
-    OSLineEdit * m_nameEdit;
+    void toggleUnits(bool displayIP);
 
-    OSComboBox2 * m_intendedSurfaceType;
-
-    QComboBox * m_standard = nullptr;
-
-    QComboBox * m_standardSource = nullptr;
-
-    QComboBox * m_fenestration = nullptr;
-
-    QComboBox * m_standardsConstructionType = nullptr;
-
-    QLabel * m_fenestrationLabel = nullptr;
-
-    boost::optional<openstudio::model::StandardsInformationConstruction> m_standardsInformation;
-
-    bool m_isIP;
-
-  protected slots:
+  private slots:
 
     void standardsConstructionTypeChanged(const QString& text);
 
@@ -102,9 +79,26 @@ class ConstructionBaseInspectorView : public ModelObjectInspectorView
 
     void populateStandardsConstructionType();
 
-  public slots:
+  private:
 
-    void toggleUnits(bool displayIP);
+    OSComboBox2 * m_intendedSurfaceType;
+
+    QComboBox * m_standard;
+
+    QComboBox * m_standardSource;
+
+    QComboBox * m_fenestration;
+
+    QComboBox * m_standardsConstructionType;
+
+    QLabel * m_fenestrationLabel;
+
+    bool m_isIP;
+
+    boost::optional<openstudio::model::ConstructionBase> m_construction;
+
+    boost::optional<openstudio::model::StandardsInformationConstruction> m_standardsInformation;
+
 };
 
 } // openstudio

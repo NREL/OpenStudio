@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_CONSTRUCTIONFFACTORGROUNDFLOORINSPECTORVIEW_HPP
 #define OPENSTUDIO_CONSTRUCTIONFFACTORGROUNDFLOORINSPECTORVIEW_HPP
 
-#include "StandardsInformationConstructionWidget.hpp"
+#include "ModelObjectInspectorView.hpp"
 #include "ModelObjectVectorController.hpp"
 
 #include "../model/StandardsInformationConstruction.hpp"
@@ -41,7 +41,7 @@ class OSQuantityEdit;
 
 class OSComboBox2;
 
-class ConstructionFfactorGroundFloorInspectorView : public ConstructionBaseInspectorView
+class ConstructionFfactorGroundFloorInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
 
@@ -57,9 +57,7 @@ class ConstructionFfactorGroundFloorInspectorView : public ConstructionBaseInspe
 
     virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
 
-  protected slots:
-
-    void populateStandardsConstructionType();
+    virtual void onUpdate();
 
   private:
 
@@ -68,6 +66,10 @@ class ConstructionFfactorGroundFloorInspectorView : public ConstructionBaseInspe
     void attach(openstudio::model::FFactorGroundFloorConstruction & fFactorGroundFloorConstruction);
 
     void detach();
+
+    bool m_isIP;
+
+    OSLineEdit * m_nameEdit;
 
     OSQuantityEdit * m_ffactorEdit;
 

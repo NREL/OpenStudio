@@ -729,4 +729,7 @@ TEST_F(ModelFixture, Construction_StandardsInformationConstruction)
   EXPECT_EQ("CEC Title24-2013", info.constructionStandard().get());
  // EXPECT_FALSE(info.suggestedConstructionStandardSources().empty());
 
+  construction.remove();
+  EXPECT_EQ(0, model.getModelObjects<StandardsInformationConstruction>().size());
+
 }

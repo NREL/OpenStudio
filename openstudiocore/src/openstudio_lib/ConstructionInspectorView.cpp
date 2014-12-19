@@ -19,6 +19,7 @@
 
 #include "ConstructionInspectorView.hpp"
 
+#include "StandardsInformationConstructionWidget.hpp"
 #include "ConstructionObjectVectorController.hpp"
 #include "ModelObjectItem.hpp"
 #include "OSAppBase.hpp"
@@ -48,31 +49,63 @@ namespace openstudio {
 // ConstructionInspectorView
 
 ConstructionInspectorView::ConstructionInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-  : ConstructionBaseInspectorView(isIP, model, parent),
-    m_constructionDZ(nullptr)
+  : ModelObjectInspectorView(model, parent),
+    m_isIP(isIP),
+    m_nameEdit(nullptr),
+    m_standardsInformationWidget(nullptr),
+    m_constructionDZ(nullptr),
+    m_constructionVC(nullptr)
 {
   createLayout();
-  showFenestration();
-  disableFenestration();
 }
 
 void ConstructionInspectorView::createLayout()
 {
-  int row = m_mainGridLayout->rowCount();
+  QWidget* visibleWidget = new QWidget();
+  this->stackedWidget()->addWidget(visibleWidget);
+
+  QGridLayout* mainGridLayout = new QGridLayout();
+  mainGridLayout->setContentsMargins(7, 7, 7, 7);
+  mainGridLayout->setSpacing(14);
+  visibleWidget->setLayout(mainGridLayout);
+
+  int row = mainGridLayout->rowCount();
 
   QLabel * label = nullptr;
+
+  // Name
+
+  label = new QLabel("Name: ");
+  label->setObjectName("H2");
+  mainGridLayout->addWidget(label, row, 0);
+
+  ++row;
+
+  m_nameEdit = new OSLineEdit();
+  mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
+
+  ++row;
+
+  // Standards Information
+
+  m_standardsInformationWidget = new StandardsInformationConstructionWidget(m_isIP);
+  m_standardsInformationWidget->addToLayout(mainGridLayout, row);
+  m_standardsInformationWidget->showFenestration();
+  m_standardsInformationWidget->disableFenestration();
+  
+  ++row;
 
   // Layer
 
   label = new QLabel("Layer: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row,0);
+  mainGridLayout->addWidget(label, row, 0);
 
   ++row;
 
   label = new QLabel("Outside");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row,0);
+  mainGridLayout->addWidget(label, row, 0);
 
   ++row;
 
@@ -82,28 +115,28 @@ void ConstructionInspectorView::createLayout()
   m_constructionDZ->setMaxItems(12);
   m_constructionDZ->setItemsAcceptDrops(true);
   m_constructionDZ->setFixedSize(QSize(OSItem::ITEM_WIDTH + 20,600));
-  m_mainGridLayout->addWidget(m_constructionDZ,row,0);
+  mainGridLayout->addWidget(m_constructionDZ, row, 0);
 
   ++row;
 
   label = new QLabel("Inside");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row,0);
+  mainGridLayout->addWidget(label, row, 0);
 
   ++row;
 
   // Stretch
 
-  m_mainGridLayout->setRowStretch(row,100);
+  mainGridLayout->setRowStretch(row, 100);
 
-  m_mainGridLayout->setColumnStretch(100,100);
+  mainGridLayout->setColumnStretch(100, 100);
 }
 
 void ConstructionInspectorView::onClearSelection()
 {
-  ConstructionBaseInspectorView::onClearSelection(); // call parent implementation
-
   detach();
+
+  this->stackedWidget()->setCurrentIndex(0);
 }
 
 void ConstructionInspectorView::onSelectModelObject(const openstudio::model::ModelObject& modelObject)
@@ -111,15 +144,12 @@ void ConstructionInspectorView::onSelectModelObject(const openstudio::model::Mod
   detach();
   model::Construction construction = modelObject.cast<model::Construction>();
   attach(construction);
-  refresh();
+
+  this->stackedWidget()->setCurrentIndex(1);
 }
 
-void ConstructionInspectorView::populateStandardsConstructionType()
+void ConstructionInspectorView::onUpdate()
 {
-  ConstructionBaseInspectorView::populateStandardsConstructionType(); // call parent implementation
-
-  connect(m_standardsConstructionType, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &ConstructionInspectorView::standardsConstructionTypeChanged);
-  connect(m_standardsConstructionType, &QComboBox::editTextChanged, this, &ConstructionInspectorView::editStandardsConstructionType);
 }
 
 void ConstructionInspectorView::attach(openstudio::model::Construction & construction)
@@ -129,28 +159,12 @@ void ConstructionInspectorView::attach(openstudio::model::Construction & constru
   m_constructionVC->attach(construction);
   m_constructionVC->reportItems();
 
-  m_standardsInformation = construction.standardsInformation();
-
-  m_intendedSurfaceType->bind<std::string>(
-      *m_standardsInformation,
-      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-      std::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceTypeValues),
-      std::function<boost::optional<std::string> ()>(std::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceType,m_standardsInformation.get_ptr())),
-      std::bind(&openstudio::model::StandardsInformationConstruction::setIntendedSurfaceType,m_standardsInformation.get_ptr(),std::placeholders::_1),
-      NoFailAction(std::bind(&model::StandardsInformationConstruction::resetIntendedSurfaceType,m_standardsInformation.get_ptr())));
-
-  connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &ConstructionInspectorView::populateStandardsConstructionType);
-
-  m_standardsConstructionType->setEnabled(true);
-  populateStandardsConstructionType();
-
-  this->stackedWidget()->setCurrentIndex(1);
+  m_standardsInformationWidget->attach(construction);
 }
 
 void ConstructionInspectorView::detach()
 {
-  ConstructionBaseInspectorView::detach(); // call parent implementation
-
+  m_standardsInformationWidget->detach();
   m_constructionVC->detach();
 }
 

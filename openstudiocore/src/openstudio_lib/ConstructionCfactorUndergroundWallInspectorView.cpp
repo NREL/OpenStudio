@@ -38,7 +38,9 @@
 namespace openstudio {
 
 ConstructionCfactorUndergroundWallInspectorView::ConstructionCfactorUndergroundWallInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-  : ConstructionBaseInspectorView(isIP, model, parent),
+  : ModelObjectInspectorView(model, parent),
+    m_isIP(isIP),
+    m_nameEdit(nullptr),
     m_cfactorEdit(nullptr),
     m_heightEdit(nullptr)
 {
@@ -47,7 +49,15 @@ ConstructionCfactorUndergroundWallInspectorView::ConstructionCfactorUndergroundW
 
 void ConstructionCfactorUndergroundWallInspectorView::createLayout()
 {
-  int row = m_mainGridLayout->rowCount();
+  QWidget* visibleWidget = new QWidget();
+  this->stackedWidget()->addWidget(visibleWidget);
+
+  QGridLayout* mainGridLayout = new QGridLayout();
+  mainGridLayout->setContentsMargins(7, 7, 7, 7);
+  mainGridLayout->setSpacing(14);
+  visibleWidget->setLayout(mainGridLayout);
+
+  int row = mainGridLayout->rowCount();
 
   QLabel * label = nullptr;
 
@@ -55,13 +65,13 @@ void ConstructionCfactorUndergroundWallInspectorView::createLayout()
 
   label = new QLabel("C-Factor: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row,0);
+  mainGridLayout->addWidget(label, row, 0);
 
   ++row;
 
   m_cfactorEdit = new OSQuantityEdit(m_isIP);
   connect(this, &ConstructionCfactorUndergroundWallInspectorView::toggleUnitsClicked, m_cfactorEdit, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_cfactorEdit,row,0);
+  mainGridLayout->addWidget(m_cfactorEdit, row, 0);
 
   ++row;
 
@@ -69,44 +79,42 @@ void ConstructionCfactorUndergroundWallInspectorView::createLayout()
 
   label = new QLabel("Height: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row,0);
+  mainGridLayout->addWidget(label, row, 0);
 
   ++row;
 
   m_heightEdit = new OSQuantityEdit(m_isIP);
   connect(this, &ConstructionCfactorUndergroundWallInspectorView::toggleUnitsClicked, m_heightEdit, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_heightEdit,row,0);
+  mainGridLayout->addWidget(m_heightEdit, row, 0);
 
   ++row;
 
   // Stretch
 
-  m_mainGridLayout->setRowStretch(row,100);
+  mainGridLayout->setRowStretch(row, 100);
 
-  m_mainGridLayout->setColumnStretch(100,100);
+  mainGridLayout->setColumnStretch(100, 100);
 }
 
 void ConstructionCfactorUndergroundWallInspectorView::onClearSelection()
 {
-  ConstructionBaseInspectorView::onClearSelection(); // call parent implementation
-
   detach();
+
+  this->stackedWidget()->setCurrentIndex(0);
 }
 
 void ConstructionCfactorUndergroundWallInspectorView::onSelectModelObject(const openstudio::model::ModelObject& modelObject)
 {
   detach();
-  model::CFactorUndergroundWallConstruction cFactorUndergroundWallConstruction = modelObject.cast<model::CFactorUndergroundWallConstruction>();
-  attach(cFactorUndergroundWallConstruction);
-  refresh();
+  model::CFactorUndergroundWallConstruction construction = modelObject.cast<model::CFactorUndergroundWallConstruction>();
+  attach(construction);
+
+
+  this->stackedWidget()->setCurrentIndex(1);
 }
 
-void ConstructionCfactorUndergroundWallInspectorView::populateStandardsConstructionType()
+void ConstructionCfactorUndergroundWallInspectorView::onUpdate()
 {
-  ConstructionBaseInspectorView::populateStandardsConstructionType(); // call parent implementation
-
-  connect(m_standardsConstructionType, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &ConstructionCfactorUndergroundWallInspectorView::standardsConstructionTypeChanged);
-  connect(m_standardsConstructionType, &QComboBox::editTextChanged, this, &ConstructionCfactorUndergroundWallInspectorView::editStandardsConstructionType);
 }
 
 void ConstructionCfactorUndergroundWallInspectorView::attach(openstudio::model::CFactorUndergroundWallConstruction & cFactorUndergroundWallConstruction)
@@ -114,7 +122,7 @@ void ConstructionCfactorUndergroundWallInspectorView::attach(openstudio::model::
   m_nameEdit->bind(cFactorUndergroundWallConstruction,"name");
   m_cfactorEdit->bind(cFactorUndergroundWallConstruction,"cFactor",m_isIP);
   m_heightEdit->bind(cFactorUndergroundWallConstruction,"height",m_isIP);
-
+  /*
   m_standardsInformation = cFactorUndergroundWallConstruction.standardsInformation();
   if (!m_standardsInformation->intendedSurfaceType()){
     m_standardsInformation->setIntendedSurfaceType("GroundContactWall");
@@ -132,14 +140,12 @@ void ConstructionCfactorUndergroundWallInspectorView::attach(openstudio::model::
 
   m_standardsConstructionType->setEnabled(true);
   populateStandardsConstructionType();
-
-  this->stackedWidget()->setCurrentIndex(1);
+  */
+  
 }
 
 void ConstructionCfactorUndergroundWallInspectorView::detach()
 {
-  ConstructionBaseInspectorView::detach(); // call parent implementation
-
   m_cfactorEdit->unbind();
   m_heightEdit->unbind();
 }

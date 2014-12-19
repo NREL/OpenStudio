@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_CONSTRUCTIONCFACTORUNDERGROUNDWALLINSPECTORVIEW_HPP
 #define OPENSTUDIO_CONSTRUCTIONCFACTORUNDERGROUNDWALLINSPECTORVIEW_HPP
 
-#include "StandardsInformationConstructionWidget.hpp"
+#include "ModelObjectInspectorView.hpp"
 #include "ModelObjectVectorController.hpp"
 
 #include "../model/StandardsInformationConstruction.hpp"
@@ -41,7 +41,7 @@ class OSQuantityEdit;
 
 class OSComboBox2;
 
-class ConstructionCfactorUndergroundWallInspectorView : public ConstructionBaseInspectorView
+class ConstructionCfactorUndergroundWallInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
 
@@ -57,9 +57,7 @@ class ConstructionCfactorUndergroundWallInspectorView : public ConstructionBaseI
 
     virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
 
-  protected slots:
-
-    void populateStandardsConstructionType();
+    virtual void onUpdate();
 
   private:
 
@@ -69,6 +67,10 @@ class ConstructionCfactorUndergroundWallInspectorView : public ConstructionBaseI
 
     void detach();
 
+    bool m_isIP;
+
+    OSLineEdit * m_nameEdit; 
+      
     OSQuantityEdit * m_cfactorEdit;
 
     OSQuantityEdit * m_heightEdit;

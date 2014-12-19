@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_CONSTRUCTIONINTERNALSOURCEINSPECTORVIEW_HPP
 #define OPENSTUDIO_CONSTRUCTIONINTERNALSOURCEINSPECTORVIEW_HPP
 
-#include "StandardsInformationConstructionWidget.hpp"
+#include "ModelObjectInspectorView.hpp"
 
 #include "../model/StandardsInformationConstruction.hpp"
 
@@ -46,7 +46,7 @@ class OSQuantityEdit;
 
 class OSComboBox2;
 
-class ConstructionInternalSourceInspectorView : public ConstructionBaseInspectorView
+class ConstructionInternalSourceInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
 
@@ -62,9 +62,7 @@ class ConstructionInternalSourceInspectorView : public ConstructionBaseInspector
 
     virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
 
-  protected slots:
-
-    void populateStandardsConstructionType();
+    virtual void onUpdate();
 
   private:
 
@@ -73,6 +71,10 @@ class ConstructionInternalSourceInspectorView : public ConstructionBaseInspector
     void attach(openstudio::model::ConstructionWithInternalSource & constructionWithInternalSource);
 
     void detach();
+
+    bool m_isIP;
+
+    OSLineEdit * m_nameEdit;
 
     OSDropZone * m_constructionDZ;
 

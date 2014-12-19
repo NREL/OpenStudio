@@ -24,9 +24,6 @@
 #include "../shared_gui_components/OSComboBox.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 
-#include "../model/Construction.hpp"
-#include "../model/Construction_Impl.hpp"
-
 #include "../utilities/core/Assert.hpp"
 
 #include <QComboBox>
@@ -39,55 +36,39 @@ namespace openstudio {
 
 // ConstructionBaseInspectorView
 
-ConstructionBaseInspectorView::ConstructionBaseInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-  : ModelObjectInspectorView(model, true, parent),
-    m_nameEdit(nullptr),
-    m_isIP(isIP)
+  StandardsInformationConstructionWidget::StandardsInformationConstructionWidget(bool isIP, QWidget * parent)
+  : QWidget(parent),
+    m_intendedSurfaceType(nullptr),
+    m_standard(nullptr),
+    m_standardSource(nullptr),
+    m_fenestration(nullptr),
+    m_standardsConstructionType(nullptr),
+    m_fenestrationLabel(nullptr),
+    m_isIP(isIP),
+    m_construction(boost::none),
+    m_standardsInformation(boost::none)
 {
-  createLayout();
 }
 
-void ConstructionBaseInspectorView::createLayout()
+void StandardsInformationConstructionWidget::addToLayout(QGridLayout* mainGridLayout, int& row)
 {
-  QWidget* visibleWidget = new QWidget();
-  this->stackedWidget()->addWidget(visibleWidget);
-
-  m_mainGridLayout  = new QGridLayout();
-  m_mainGridLayout->setContentsMargins(7, 7, 7, 7);
-  m_mainGridLayout->setSpacing(14);
-  visibleWidget->setLayout(m_mainGridLayout);
-
   QVBoxLayout * vLayout = nullptr;
 
   QLabel * label = nullptr;
-
-  unsigned row = 0;
-
-  // Name
-  label = new QLabel("Name: ");
-  label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label, row, 0);
-
-  ++row;
-
-  m_nameEdit = new OSLineEdit();
-  m_mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
-
-  ++row;
 
   // Measure Tags
   QFrame * line;
   line = new QFrame();
   line->setFrameShape(QFrame::HLine);
   line->setFrameShadow(QFrame::Sunken);
-  m_mainGridLayout->addWidget(line, row, 0, 1, 3);
+  mainGridLayout->addWidget(line, row, 0, 1, 3);
 
   ++row;
 
   label = new QLabel();
   label->setText("Measure Tags (Optional):");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label, row, 0);
+  mainGridLayout->addWidget(label, row, 0);
 
   ++row;
 
@@ -105,7 +86,7 @@ void ConstructionBaseInspectorView::createLayout()
   m_standard->setFixedWidth(OSItem::ITEM_WIDTH);
   vLayout->addWidget(m_standard);
 
-  m_mainGridLayout->addLayout(vLayout, row, 0);
+  mainGridLayout->addLayout(vLayout, row, 0);
 
   // Standard Source
   vLayout = new QVBoxLayout();
@@ -121,7 +102,7 @@ void ConstructionBaseInspectorView::createLayout()
   m_standardSource->setFixedWidth(OSItem::ITEM_WIDTH);
   vLayout->addWidget(m_standardSource);
 
-  m_mainGridLayout->addLayout(vLayout, row, 1);
+  mainGridLayout->addLayout(vLayout, row, 1);
 
   ++row;
 
@@ -137,7 +118,7 @@ void ConstructionBaseInspectorView::createLayout()
   m_intendedSurfaceType->setFixedWidth(OSItem::ITEM_WIDTH);
   vLayout->addWidget(m_intendedSurfaceType);
 
-  m_mainGridLayout->addLayout(vLayout, row, 0);
+  mainGridLayout->addLayout(vLayout, row, 0);
 
   // Standards Construction Type
   vLayout = new QVBoxLayout();
@@ -153,7 +134,7 @@ void ConstructionBaseInspectorView::createLayout()
   m_standardsConstructionType->setFixedWidth(OSItem::ITEM_WIDTH);
   vLayout->addWidget(m_standardsConstructionType);
 
-  m_mainGridLayout->addLayout(vLayout, row, 1);
+  mainGridLayout->addLayout(vLayout, row, 1);
 
   ++row;
 
@@ -173,52 +154,96 @@ void ConstructionBaseInspectorView::createLayout()
   m_fenestration->hide();
   vLayout->addWidget(m_fenestration);
 
-  m_mainGridLayout->addLayout(vLayout, row, 0);
+  mainGridLayout->addLayout(vLayout, row, 0);
 
   ++row;
 
   line = new QFrame();
   line->setFrameShape(QFrame::HLine);
   line->setFrameShadow(QFrame::Sunken);
-  m_mainGridLayout->addWidget(line, row, 0, 1, 3);
+  mainGridLayout->addWidget(line, row, 0, 1, 3);
 
   ++row;
 
 }
 
-void ConstructionBaseInspectorView::showFenestration()
+void StandardsInformationConstructionWidget::showFenestration()
 {
   m_fenestrationLabel->show();
   m_fenestration->show();
 }
 
-void ConstructionBaseInspectorView::hideFenestration()
+void StandardsInformationConstructionWidget::hideFenestration()
 {
   m_fenestrationLabel->hide();
   m_fenestration->hide();
 }
 
-void ConstructionBaseInspectorView::enableFenestration()
+void StandardsInformationConstructionWidget::enableFenestration()
 {
   m_fenestration->setEnabled(true);
 }
 
-void ConstructionBaseInspectorView::disableFenestration()
+void StandardsInformationConstructionWidget::disableFenestration()
 {
   m_fenestration->setEnabled(false);
 }
 
-void ConstructionBaseInspectorView::onClearSelection()
+void StandardsInformationConstructionWidget::toggleUnits(bool displayIP)
 {
-  ModelObjectInspectorView::onClearSelection(); // call parent implementation
+  m_isIP = displayIP;
 }
 
-void ConstructionBaseInspectorView::onUpdate()
+void StandardsInformationConstructionWidget::attach(openstudio::model::ConstructionBase & construction)
 {
-  refresh();
+  detach();
+
+  m_construction = construction;
+  m_standardsInformation = construction.standardsInformation();
+
+  m_intendedSurfaceType->bind<std::string>(
+    *m_standardsInformation,
+    static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+    std::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceTypeValues),
+    std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceType, m_standardsInformation.get_ptr())),
+    std::bind(&openstudio::model::StandardsInformationConstruction::setIntendedSurfaceType, m_standardsInformation.get_ptr(), std::placeholders::_1),
+    NoFailAction(std::bind(&model::StandardsInformationConstruction::resetIntendedSurfaceType, m_standardsInformation.get_ptr())));
+  
+  connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &openstudio::StandardsInformationConstructionWidget::populateStandardsConstructionType);
 }
 
-void ConstructionBaseInspectorView::standardsConstructionTypeChanged(const QString & text)
+void StandardsInformationConstructionWidget::detach()
+{
+  m_construction.reset(); 
+
+  if (m_standardsInformation){
+    disconnect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), 0, this, 0);
+    m_standardsInformation.reset();
+  }
+
+  m_intendedSurfaceType->unbind();
+
+  m_standardsConstructionType->setEnabled(false);
+}
+
+
+/*
+m_intendedSurfaceType->bind<std::string>(
+*m_standardsInformation,
+static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+std::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceTypeValues),
+std::function<boost::optional<std::string> ()>(std::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceType,m_standardsInformation.get_ptr())),
+std::bind(&openstudio::model::StandardsInformationConstruction::setIntendedSurfaceType,m_standardsInformation.get_ptr(),std::placeholders::_1),
+NoFailAction(std::bind(&model::StandardsInformationConstruction::resetIntendedSurfaceType,m_standardsInformation.get_ptr())));
+
+connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &populateStandardsConstructionType);
+
+m_standardsConstructionType->setEnabled(true);
+populateStandardsConstructionType();
+*/
+
+
+void StandardsInformationConstructionWidget::standardsConstructionTypeChanged(const QString & text)
 {
   if (m_standardsInformation){
     std::string standardsConstructionType = toString(text);
@@ -231,7 +256,7 @@ void ConstructionBaseInspectorView::standardsConstructionTypeChanged(const QStri
   }
 }
 
-void ConstructionBaseInspectorView::editStandardsConstructionType(const QString & text)
+void StandardsInformationConstructionWidget::editStandardsConstructionType(const QString & text)
 {
   if (m_standardsInformation){
     std::string standardsConstructionType = toString(text);
@@ -243,7 +268,7 @@ void ConstructionBaseInspectorView::editStandardsConstructionType(const QString 
   }
 }
 
-void ConstructionBaseInspectorView::populateStandardsConstructionType()
+void StandardsInformationConstructionWidget::populateStandardsConstructionType()
 {
   disconnect(m_standardsConstructionType, 0, this, 0);
 
@@ -264,30 +289,8 @@ void ConstructionBaseInspectorView::populateStandardsConstructionType()
   }
 }
 
-void ConstructionBaseInspectorView::detach()
-{
-  this->stackedWidget()->setCurrentIndex(0);
 
-  m_nameEdit->unbind();
 
-  if (m_standardsInformation){
-    disconnect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), 0, this, 0);
-    m_standardsInformation.reset();
-  }
 
-  m_intendedSurfaceType->unbind();
-
-  disconnect(m_standardsConstructionType, 0, this, 0);
-  m_standardsConstructionType->setEnabled(false);
-}
-
-void ConstructionBaseInspectorView::refresh()
-{
-}
-
-void ConstructionBaseInspectorView::toggleUnits(bool displayIP)
-{
-  m_isIP = displayIP;
-}
 
 } // openstudio

@@ -43,6 +43,13 @@ namespace detail {
     : ResourceObject_Impl(other, model, keepHandle)
   {}
 
+  std::vector<ModelObject> Material_Impl::children() const
+  {
+    std::vector<ModelObject> results(castVector<ModelObject>(getObject<Material>().getModelObjectSources<StandardsInformationMaterial>()));
+
+    return results;
+  }
+
   double Material_Impl::thickness() const { return 0.0; }
 
   boost::optional<double> Material_Impl::interiorVisibleAbsorptance() const { return boost::none; }

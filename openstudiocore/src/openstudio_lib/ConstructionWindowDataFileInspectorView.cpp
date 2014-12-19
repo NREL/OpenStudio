@@ -35,7 +35,9 @@ namespace openstudio {
 // ConstructionVC
 
 ConstructionWindowDataFileInspectorView::ConstructionWindowDataFileInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-  : ConstructionBaseInspectorView(isIP, model, parent),
+  : ModelObjectInspectorView(model, parent),
+    m_isIP(isIP),
+    m_nameEdit(nullptr),
     m_urlEdit(nullptr)
 {
   createLayout();
@@ -43,7 +45,15 @@ ConstructionWindowDataFileInspectorView::ConstructionWindowDataFileInspectorView
 
 void ConstructionWindowDataFileInspectorView::createLayout()
 {
-  int row = m_mainGridLayout->rowCount();
+  QWidget* visibleWidget = new QWidget();
+  this->stackedWidget()->addWidget(visibleWidget);
+
+  QGridLayout* mainGridLayout = new QGridLayout();
+  mainGridLayout->setContentsMargins(7, 7, 7, 7);
+  mainGridLayout->setSpacing(14);
+  visibleWidget->setLayout(mainGridLayout);
+
+  int row = mainGridLayout->rowCount();
 
   QLabel * label = nullptr;
 
@@ -51,23 +61,23 @@ void ConstructionWindowDataFileInspectorView::createLayout()
 
   label = new QLabel("URL: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,2,0);
+  mainGridLayout->addWidget(label, 2, 0);
 
   m_urlEdit = new OSLineEdit();
-  m_mainGridLayout->addWidget(m_urlEdit,3,0,1,3);
+  mainGridLayout->addWidget(m_urlEdit, 3, 0, 1, 3);
 
   // Stretch
 
-  m_mainGridLayout->setRowStretch(100,100);
+  mainGridLayout->setRowStretch(100, 100);
 
-  m_mainGridLayout->setColumnStretch(100,100);
+  mainGridLayout->setColumnStretch(100, 100);
 }
 
 void ConstructionWindowDataFileInspectorView::onClearSelection()
 {
-  ConstructionBaseInspectorView::onClearSelection(); // call parent implementation
-
   detach();
+
+  this->stackedWidget()->setCurrentIndex(0);
 }
 
 void ConstructionWindowDataFileInspectorView::onSelectModelObject(const openstudio::model::ModelObject& modelObject)
@@ -75,21 +85,22 @@ void ConstructionWindowDataFileInspectorView::onSelectModelObject(const openstud
   detach();
   model::WindowDataFile windowDataFile = modelObject.cast<model::WindowDataFile>();
   attach(windowDataFile);
-  refresh();
+
+  this->stackedWidget()->setCurrentIndex(1);
+}
+
+void ConstructionWindowDataFileInspectorView::onUpdate()
+{
 }
 
 void ConstructionWindowDataFileInspectorView::attach(openstudio::model::WindowDataFile & windowDataFile)
 {
   m_nameEdit->bind(windowDataFile,"name");
   m_urlEdit->bind(windowDataFile,"url");
-
-  this->stackedWidget()->setCurrentIndex(1);
 }
 
 void ConstructionWindowDataFileInspectorView::detach()
 {
-  ConstructionBaseInspectorView::detach(); // call parent implementation
-
   m_urlEdit->unbind();
 }
 

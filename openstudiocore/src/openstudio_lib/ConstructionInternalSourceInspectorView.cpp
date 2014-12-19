@@ -47,7 +47,9 @@ namespace openstudio {
 // ConstructionInternalSourceInspectorView
 
 ConstructionInternalSourceInspectorView::ConstructionInternalSourceInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-  : ConstructionBaseInspectorView(isIP, model, parent),
+  : ModelObjectInspectorView(model, parent),
+    m_isIP(isIP),
+    m_nameEdit(nullptr),
     m_constructionDZ(nullptr),
     m_sourcePresentAfterLayerNumberEdit(nullptr),
     m_temperatureCalculationRequestedAfterLayerNumberEdit(nullptr),
@@ -59,7 +61,15 @@ ConstructionInternalSourceInspectorView::ConstructionInternalSourceInspectorView
 
 void ConstructionInternalSourceInspectorView::createLayout()
 {
-  int row = m_mainGridLayout->rowCount();
+  QWidget* visibleWidget = new QWidget();
+  this->stackedWidget()->addWidget(visibleWidget);
+
+  QGridLayout* mainGridLayout = new QGridLayout();
+  mainGridLayout->setContentsMargins(7, 7, 7, 7);
+  mainGridLayout->setSpacing(14);
+  visibleWidget->setLayout(mainGridLayout);
+
+  int row = mainGridLayout->rowCount();
 
   QLabel * label = nullptr;
 
@@ -67,13 +77,13 @@ void ConstructionInternalSourceInspectorView::createLayout()
 
   label = new QLabel("Layer: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row,0);
+  mainGridLayout->addWidget(label, row, 0);
 
   ++row;
 
   label = new QLabel("Outside");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row,0);
+  mainGridLayout->addWidget(label, row, 0);
 
   ++row;
 
@@ -83,13 +93,13 @@ void ConstructionInternalSourceInspectorView::createLayout()
   m_constructionDZ->setMaxItems(16);
   m_constructionDZ->setItemsAcceptDrops(true);
   m_constructionDZ->setFixedSize(QSize(OSItem::ITEM_WIDTH + 20,600));
-  m_mainGridLayout->addWidget(m_constructionDZ,row,0);
+  mainGridLayout->addWidget(m_constructionDZ, row, 0);
 
   ++row;
 
   label = new QLabel("Inside");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row,0);
+  mainGridLayout->addWidget(label, row, 0);
 
   ++row;
 
@@ -97,12 +107,12 @@ void ConstructionInternalSourceInspectorView::createLayout()
 
   label = new QLabel("Source Present After Layer: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row,0);
+  mainGridLayout->addWidget(label, row, 0);
 
   ++row;
 
   m_sourcePresentAfterLayerNumberEdit = new OSIntegerEdit();
-  m_mainGridLayout->addWidget(m_sourcePresentAfterLayerNumberEdit,row,0);
+  mainGridLayout->addWidget(m_sourcePresentAfterLayerNumberEdit, row, 0);
 
   ++row;
 
@@ -110,12 +120,12 @@ void ConstructionInternalSourceInspectorView::createLayout()
 
   label = new QLabel("Temperature Calculation Requested After Layer Number: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row,0,1,3);
+  mainGridLayout->addWidget(label, row, 0, 1, 3);
 
   ++row;
 
   m_temperatureCalculationRequestedAfterLayerNumberEdit = new OSIntegerEdit();
-  m_mainGridLayout->addWidget(m_temperatureCalculationRequestedAfterLayerNumberEdit,row,0);
+  mainGridLayout->addWidget(m_temperatureCalculationRequestedAfterLayerNumberEdit, row, 0);
 
   ++row;
 
@@ -123,12 +133,12 @@ void ConstructionInternalSourceInspectorView::createLayout()
 
   label = new QLabel("Dimensions for the CTF Calculation: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row,0,1,3);
+  mainGridLayout->addWidget(label, row, 0, 1, 3);
 
   ++row;
 
   m_dimensionsForTheCTFCalculationEdit = new OSIntegerEdit();
-  m_mainGridLayout->addWidget(m_dimensionsForTheCTFCalculationEdit,row,0);
+  mainGridLayout->addWidget(m_dimensionsForTheCTFCalculationEdit, row, 0);
 
   ++row;
 
@@ -136,28 +146,28 @@ void ConstructionInternalSourceInspectorView::createLayout()
 
   label = new QLabel("Tube Spacing: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row,0);
+  mainGridLayout->addWidget(label, row, 0);
 
   ++row;
 
   m_tubeSpacingEdit = new OSQuantityEdit(m_isIP);
   connect(this, &ConstructionInternalSourceInspectorView::toggleUnitsClicked, m_tubeSpacingEdit, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_tubeSpacingEdit,row,0);
+  mainGridLayout->addWidget(m_tubeSpacingEdit, row, 0);
 
   ++row;
 
   // Stretch
 
-  m_mainGridLayout->setRowStretch(row,100);
+  mainGridLayout->setRowStretch(row, 100);
 
-  m_mainGridLayout->setColumnStretch(100,100);
+  mainGridLayout->setColumnStretch(100, 100);
 }
 
 void ConstructionInternalSourceInspectorView::onClearSelection()
 {
-  ConstructionBaseInspectorView::onClearSelection(); // call parent implementation
-
   detach();
+
+  this->stackedWidget()->setCurrentIndex(0);
 }
 
 void ConstructionInternalSourceInspectorView::onSelectModelObject(const openstudio::model::ModelObject& modelObject)
@@ -165,15 +175,12 @@ void ConstructionInternalSourceInspectorView::onSelectModelObject(const openstud
   detach();
   model::ConstructionWithInternalSource constructionWithInternalSource = modelObject.cast<model::ConstructionWithInternalSource>();
   attach(constructionWithInternalSource);
-  refresh();
+
+  this->stackedWidget()->setCurrentIndex(1);
 }
 
-void ConstructionInternalSourceInspectorView::populateStandardsConstructionType()
+void ConstructionInternalSourceInspectorView::onUpdate()
 {
-  ConstructionBaseInspectorView::populateStandardsConstructionType(); // call parent implementation
-
-  connect(m_standardsConstructionType, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &ConstructionInternalSourceInspectorView::standardsConstructionTypeChanged);
-  connect(m_standardsConstructionType, &QComboBox::editTextChanged, this, &ConstructionInternalSourceInspectorView::editStandardsConstructionType);
 }
 
 void ConstructionInternalSourceInspectorView::attach(openstudio::model::ConstructionWithInternalSource & constructionWithInternalSource)
@@ -188,7 +195,7 @@ void ConstructionInternalSourceInspectorView::attach(openstudio::model::Construc
 
   m_constructionVC->attach(constructionWithInternalSource);
   m_constructionVC->reportItems();
-
+  /*
   m_standardsInformation = constructionWithInternalSource.standardsInformation();
 
   m_intendedSurfaceType->bind<std::string>(
@@ -203,14 +210,11 @@ void ConstructionInternalSourceInspectorView::attach(openstudio::model::Construc
 
   m_standardsConstructionType->setEnabled(true);
   populateStandardsConstructionType();
-
-  this->stackedWidget()->setCurrentIndex(1);
+*/
 }
 
 void ConstructionInternalSourceInspectorView::detach()
 {
-  ConstructionBaseInspectorView::detach(); // call parent implementation
-
   m_constructionVC->detach();
 
   m_sourcePresentAfterLayerNumberEdit->unbind();
