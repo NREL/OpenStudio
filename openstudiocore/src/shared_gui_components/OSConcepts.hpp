@@ -25,14 +25,17 @@
 #include "../model/ModelObject.hpp"
 
 #include <boost/any.hpp>
+#include <QSharedPointer>
+#include <QWidget>
 
 namespace openstudio {
 
 class Heading
 {
   public:
-    explicit Heading(const QString &t_headingLabel, const bool t_showColumnCheckbox = true)
-      : m_label(t_headingLabel), m_showColumnCheckbox(t_showColumnCheckbox)
+    explicit Heading(const QString &t_headingLabel, const bool t_showColumnCheckbox = true,
+        const QSharedPointer<QWidget> &t_widget = QSharedPointer<QWidget>())
+      : m_label(t_headingLabel), m_showColumnCheckbox(t_showColumnCheckbox), m_widget(t_widget)
     {
     }
 
@@ -46,9 +49,15 @@ class Heading
       return m_showColumnCheckbox;
     }
 
+    QSharedPointer<QWidget> widget() const
+    {
+      return m_widget;
+    }
+
   private:
     QString m_label;
     bool m_showColumnCheckbox;
+    QSharedPointer<QWidget> m_widget;
 };
 
 template<typename DataType, typename RetType>

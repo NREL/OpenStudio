@@ -834,12 +834,14 @@ QWidget * OSGridController::widgetAt(int row, int column)
     addWidget(m_horizontalHeader.at(column), boost::none, false);
     QSharedPointer<BaseConcept> baseConcept = m_baseConcepts[column];
     const Heading &heading = baseConcept->heading();
+    HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(column));
+    OS_ASSERT(horizontalHeaderWidget);
     if (!heading.showCheckbox())
     {
-      HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(column));
-      OS_ASSERT(horizontalHeaderWidget);
       horizontalHeaderWidget->m_checkBox->hide();
     }
+
+    horizontalHeaderWidget->addWidget(heading.widget());
   } else {
 
     model::ModelObject mo = m_modelObjects[modelObjectRow];
@@ -1311,9 +1313,11 @@ HorizontalHeaderWidget::~HorizontalHeaderWidget()
 
 void HorizontalHeaderWidget::addWidget(const QSharedPointer<QWidget> &t_widget)
 {
-  m_addedWidgets.push_back(t_widget);
-  layout()->addWidget(t_widget.data());
-  t_widget->setVisible(true);
+  if (!t_widget.isNull()) {
+    m_addedWidgets.push_back(t_widget);
+    layout()->addWidget(t_widget.data());
+    t_widget->setVisible(true);
+  }
 }
 
 } // openstudio
