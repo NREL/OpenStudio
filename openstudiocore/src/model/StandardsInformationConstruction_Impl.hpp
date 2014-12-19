@@ -75,7 +75,11 @@ namespace detail {
 
     boost::optional<std::string> otherPerturbableLayerType() const;
 
+    std::vector<std::string> suggestedConstructionStandards() const;
+
     boost::optional<std::string> constructionStandard() const;
+
+    std::vector<std::string> suggestedConstructionStandardSources() const;
 
     boost::optional<std::string> constructionStandardSource() const;
 
@@ -129,47 +133,47 @@ namespace detail {
 
     void resetPerturbableLayerType();
 
-    void setOtherPerturbableLayerType(boost::optional<std::string> otherPerturbableLayerType);
+    void setOtherPerturbableLayerType(const std::string& otherPerturbableLayerType);
 
     void resetOtherPerturbableLayerType();
 
-    void setConstructionStandard(boost::optional<std::string> constructionStandard);
+    void setConstructionStandard(const std::string& constructionStandard);
 
     void resetConstructionStandard();
 
-    void setConstructionStandardSource(boost::optional<std::string> constructionStandardSource);
+    void setConstructionStandardSource(const std::string& constructionStandardSource);
 
     void resetConstructionStandardSource();
 
-    bool setFenestrationType(boost::optional<std::string> fenestrationType);
+    bool setFenestrationType(const std::string& fenestrationType);
 
     void resetFenestrationType();
 
-    bool setFenestrationAssemblyContext(boost::optional<std::string> fenestrationAssemblyContext);
+    bool setFenestrationAssemblyContext(const std::string& fenestrationAssemblyContext);
 
     void resetFenestrationAssemblyContext();
 
-    bool setFenestrationNumberofPanes(boost::optional<std::string> fenestrationNumberofPanes);
+    bool setFenestrationNumberofPanes(const std::string& fenestrationNumberofPanes);
 
     void resetFenestrationNumberofPanes();
 
-    bool setFenestrationFrameType(boost::optional<std::string> fenestrationFrameType);
+    bool setFenestrationFrameType(const std::string& fenestrationFrameType);
 
     void resetFenestrationFrameType();
 
-    bool setFenestrationDividerType(boost::optional<std::string> fenestrationDividerType);
+    bool setFenestrationDividerType(const std::string& fenestrationDividerType);
 
     void resetFenestrationDividerType();
 
-    bool setFenestrationTint(boost::optional<std::string> fenestrationTint);
+    bool setFenestrationTint(const std::string& fenestrationTint);
 
     void resetFenestrationTint();
 
-    bool setFenestrationGasFill(boost::optional<std::string> fenestrationGasFill);
+    bool setFenestrationGasFill(const std::string& fenestrationGasFill);
 
     void resetFenestrationGasFill();
 
-    void setFenestrationLowEmissivityCoating(boost::optional<bool> fenestrationLowEmissivityCoating);
+    void setFenestrationLowEmissivityCoating(bool fenestrationLowEmissivityCoating);
 
     void resetFenestrationLowEmissivityCoating();
 

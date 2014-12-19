@@ -30,6 +30,7 @@ class Material;
 
 namespace detail {
   class StandardsInformationMaterial_Impl;
+  class Material_Impl;
 }
 
 /** StandardsInformationMaterial is a ModelObject that wraps the OpenStudio IDD object 'OS:StandardsInformation:Material'. */
@@ -37,8 +38,6 @@ class MODEL_API StandardsInformationMaterial : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
-
-  explicit StandardsInformationMaterial(const Model& model);
 
   virtual ~StandardsInformationMaterial() {}
 
@@ -52,33 +51,31 @@ class MODEL_API StandardsInformationMaterial : public ModelObject {
   Material material() const;
 
   boost::optional<std::string> materialStandard() const;
-  std::vector<std::string> suggestedMaterialStandard() const;
+  std::vector<std::string> suggestedMaterialStandards() const;
 
   boost::optional<std::string> materialStandardSource() const;
-  std::vector<std::string> suggestedMaterialStandardSource() const;
+  std::vector<std::string> suggestedMaterialStandardSources() const;
 
   boost::optional<std::string> standardsCategory() const;
-  std::vector<std::string> suggestedStandardsCategory() const;
+  std::vector<std::string> suggestedStandardsCategories() const;
 
   boost::optional<std::string> standardsIdentifier() const;
-  std::vector<std::string> suggestedStandardsIdentifier() const;
+  std::vector<std::string> suggestedStandardsIdentifiers() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  bool setMaterial(const Material& material);
-
-  void setMaterialStandard(std::string materialStandard);
+  void setMaterialStandard(const std::string& materialStandard);
   void resetMaterialStandard();
 
-  void setMaterialStandardSource(std::string materialStandardSource);
+  void setMaterialStandardSource(const std::string& materialStandardSource);
   void resetMaterialStandardSource();
 
-  void setStandardsCategory(std::string standardsCategory);
+  void setStandardsCategory(const std::string& standardsCategory);
   void resetStandardsCategory();
 
-  void setStandardsIdentifier(std::string standardsIdentifier);
+  void setStandardsIdentifier(const std::string& standardsIdentifier);
   void resetStandardsIdentifier();
 
   //@}
@@ -90,12 +87,16 @@ class MODEL_API StandardsInformationMaterial : public ModelObject {
   /// @cond
   typedef detail::StandardsInformationMaterial_Impl ImplType;
 
+  explicit StandardsInformationMaterial(const Material& material);
+
   explicit StandardsInformationMaterial(std::shared_ptr<detail::StandardsInformationMaterial_Impl> impl);
 
   friend class detail::StandardsInformationMaterial_Impl;
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
+  friend class openstudio::model::Material;
+  friend class openstudio::model::detail::Material_Impl;
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.StandardsInformationMaterial");

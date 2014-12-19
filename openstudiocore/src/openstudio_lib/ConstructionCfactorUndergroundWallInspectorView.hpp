@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_CONSTRUCTIONCFACTORUNDERGROUNDWALLINSPECTORVIEW_HPP
 #define OPENSTUDIO_CONSTRUCTIONCFACTORUNDERGROUNDWALLINSPECTORVIEW_HPP
 
-#include "ConstructionBaseInspectorView.hpp"
+#include "StandardsInformationConstructionWidget.hpp"
 #include "ModelObjectVectorController.hpp"
 
 #include "../model/StandardsInformationConstruction.hpp"

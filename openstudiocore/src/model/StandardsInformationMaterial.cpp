@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/StandardsInformationMaterial.hpp>
-#include <model/StandardsInformationMaterial_Impl.hpp>
+#include "StandardsInformationMaterial.hpp"
+#include "StandardsInformationMaterial_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include <model/Material.hpp>
-#include <model/Material_Impl.hpp>
+#include "Model.hpp"
+#include "Material.hpp"
+#include "Material_Impl.hpp"
 
 #include <utilities/idd/OS_StandardsInformation_Material_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QFile>
 #include <QJsonDocument>
@@ -90,18 +90,17 @@ namespace detail {
   }
 
   Material StandardsInformationMaterial_Impl::material() const {
-    boost::optional<Material> value = optionalMaterial();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Material attached.");
-    }
-    return value.get();
+    boost::optional<Material> result = getObject<StandardsInformationMaterial>().getModelObjectTarget<Material>(
+      OS_StandardsInformation_MaterialFields::MaterialName);
+    OS_ASSERT(result);
+    return result.get();
   }
 
   boost::optional<std::string> StandardsInformationMaterial_Impl::materialStandard() const {
     return getString(OS_StandardsInformation_MaterialFields::MaterialStandard, true);
   }
 
-  std::vector<std::string> StandardsInformationMaterial_Impl::suggestedMaterialStandard() const {
+  std::vector<std::string> StandardsInformationMaterial_Impl::suggestedMaterialStandards() const {
     std::vector<std::string> results;
 
     boost::optional<std::string> materialStandard = this->materialStandard();
@@ -124,7 +123,7 @@ namespace detail {
     return getString(OS_StandardsInformation_MaterialFields::MaterialStandardSource,true);
   }
 
-  std::vector<std::string> StandardsInformationMaterial_Impl::suggestedMaterialStandardSource() const {
+  std::vector<std::string> StandardsInformationMaterial_Impl::suggestedMaterialStandardSources() const {
     std::vector<std::string> results;
 
     boost::optional<std::string> materialStandardSource = this->materialStandardSource();
@@ -136,7 +135,7 @@ namespace detail {
     return getString(OS_StandardsInformation_MaterialFields::StandardsCategory,true);
   }
 
-  std::vector<std::string> StandardsInformationMaterial_Impl::suggestedStandardsCategory() const {
+  std::vector<std::string> StandardsInformationMaterial_Impl::suggestedStandardsCategories() const {
     std::vector<std::string> results;
 
     boost::optional<std::string> standardsCategory = this->standardsCategory();
@@ -148,7 +147,7 @@ namespace detail {
     return getString(OS_StandardsInformation_MaterialFields::StandardsIdentifier,true);
   }
 
-  std::vector<std::string> StandardsInformationMaterial_Impl::suggestedStandardsIdentifier() const {
+  std::vector<std::string> StandardsInformationMaterial_Impl::suggestedStandardsIdentifiers() const {
     std::vector<std::string> results;
 
     boost::optional<std::string> standardsIdentifier = this->standardsIdentifier();
@@ -156,20 +155,8 @@ namespace detail {
     return results;
   }
 
-  bool StandardsInformationMaterial_Impl::setMaterial(const Material& material) {
-    bool result = setPointer(OS_StandardsInformation_MaterialFields::MaterialName, material.handle());
-    return result;
-  }
-
-  void StandardsInformationMaterial_Impl::setMaterialStandard(boost::optional<std::string> materialStandard) {
-    bool result(false);
-    if (materialStandard) {
-      result = setString(OS_StandardsInformation_MaterialFields::MaterialStandard, materialStandard.get());
-    }
-    else {
-      resetMaterialStandard();
-      result = true;
-    }
+  void StandardsInformationMaterial_Impl::setMaterialStandard(const std::string& materialStandard) {
+    bool result = setString(OS_StandardsInformation_MaterialFields::MaterialStandard, materialStandard);
     OS_ASSERT(result);
   }
 
@@ -178,15 +165,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void StandardsInformationMaterial_Impl::setMaterialStandardSource(boost::optional<std::string> materialStandardSource) {
-    bool result(false);
-    if (materialStandardSource) {
-      result = setString(OS_StandardsInformation_MaterialFields::MaterialStandardSource, materialStandardSource.get());
-    }
-    else {
-      resetMaterialStandardSource();
-      result = true;
-    }
+  void StandardsInformationMaterial_Impl::setMaterialStandardSource(const std::string& materialStandardSource) {
+    bool result = setString(OS_StandardsInformation_MaterialFields::MaterialStandardSource, materialStandardSource);
     OS_ASSERT(result);
   }
 
@@ -195,15 +175,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void StandardsInformationMaterial_Impl::setStandardsCategory(boost::optional<std::string> standardsCategory) {
-    bool result(false);
-    if (standardsCategory) {
-      result = setString(OS_StandardsInformation_MaterialFields::StandardsCategory, standardsCategory.get());
-    }
-    else {
-      resetStandardsCategory();
-      result = true;
-    }
+  void StandardsInformationMaterial_Impl::setStandardsCategory(const std::string& standardsCategory) {
+    bool result = setString(OS_StandardsInformation_MaterialFields::StandardsCategory, standardsCategory);
     OS_ASSERT(result);
   }
 
@@ -212,15 +185,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void StandardsInformationMaterial_Impl::setStandardsIdentifier(boost::optional<std::string> standardsIdentifier) {
-    bool result(false);
-    if (standardsIdentifier) {
-      result = setString(OS_StandardsInformation_MaterialFields::StandardsIdentifier, standardsIdentifier.get());
-    }
-    else {
-      resetStandardsIdentifier();
-      result = true;
-    }
+  void StandardsInformationMaterial_Impl::setStandardsIdentifier(const std::string& standardsIdentifier) {
+    bool result = setString(OS_StandardsInformation_MaterialFields::StandardsIdentifier, standardsIdentifier);
     OS_ASSERT(result);
   }
 
@@ -229,23 +195,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  boost::optional<Material> StandardsInformationMaterial_Impl::optionalMaterial() const {
-    return getObject<ModelObject>().getModelObjectTarget<Material>(OS_StandardsInformation_MaterialFields::MaterialName);
-  }
 
 } // detail
 
-StandardsInformationMaterial::StandardsInformationMaterial(const Model& model)
-  : ModelObject(StandardsInformationMaterial::iddObjectType(),model)
+StandardsInformationMaterial::StandardsInformationMaterial(const Material& material)
+  : ModelObject(StandardsInformationMaterial::iddObjectType(), material.model())
 {
   OS_ASSERT(getImpl<detail::StandardsInformationMaterial_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_StandardsInformation_MaterialFields::MaterialName
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
-  // ok = setMaterial();
+  bool ok = setPointer(OS_StandardsInformation_MaterialFields::MaterialName, material.handle());
   OS_ASSERT(ok);
 }
 
@@ -262,39 +219,35 @@ boost::optional<std::string> StandardsInformationMaterial::materialStandard() co
   return getImpl<detail::StandardsInformationMaterial_Impl>()->materialStandard();
 }
 
-std::vector<std::string> StandardsInformationMaterial::suggestedMaterialStandard() const {
-  return getImpl<detail::StandardsInformationMaterial_Impl>()->suggestedMaterialStandard();
+std::vector<std::string> StandardsInformationMaterial::suggestedMaterialStandards() const {
+  return getImpl<detail::StandardsInformationMaterial_Impl>()->suggestedMaterialStandards();
 }
 
 boost::optional<std::string> StandardsInformationMaterial::materialStandardSource() const {
   return getImpl<detail::StandardsInformationMaterial_Impl>()->materialStandardSource();
 }
 
-std::vector<std::string> StandardsInformationMaterial::suggestedMaterialStandardSource() const {
-  return getImpl<detail::StandardsInformationMaterial_Impl>()->suggestedMaterialStandardSource();
+std::vector<std::string> StandardsInformationMaterial::suggestedMaterialStandardSources() const {
+  return getImpl<detail::StandardsInformationMaterial_Impl>()->suggestedMaterialStandardSources();
 }
 
 boost::optional<std::string> StandardsInformationMaterial::standardsCategory() const {
   return getImpl<detail::StandardsInformationMaterial_Impl>()->standardsCategory();
 }
 
-std::vector<std::string> StandardsInformationMaterial::suggestedStandardsCategory() const {
-  return getImpl<detail::StandardsInformationMaterial_Impl>()->suggestedStandardsCategory();
+std::vector<std::string> StandardsInformationMaterial::suggestedStandardsCategories() const {
+  return getImpl<detail::StandardsInformationMaterial_Impl>()->suggestedStandardsCategories();
 }
 
 boost::optional<std::string> StandardsInformationMaterial::standardsIdentifier() const {
   return getImpl<detail::StandardsInformationMaterial_Impl>()->standardsIdentifier();
 }
 
-std::vector<std::string> StandardsInformationMaterial::suggestedStandardsIdentifier() const {
-  return getImpl<detail::StandardsInformationMaterial_Impl>()->suggestedStandardsIdentifier();
+std::vector<std::string> StandardsInformationMaterial::suggestedStandardsIdentifiers() const {
+  return getImpl<detail::StandardsInformationMaterial_Impl>()->suggestedStandardsIdentifiers();
 }
 
-bool StandardsInformationMaterial::setMaterial(const Material& material) {
-  return getImpl<detail::StandardsInformationMaterial_Impl>()->setMaterial(material);
-}
-
-void StandardsInformationMaterial::setMaterialStandard(std::string materialStandard) {
+void StandardsInformationMaterial::setMaterialStandard(const std::string& materialStandard) {
   getImpl<detail::StandardsInformationMaterial_Impl>()->setMaterialStandard(materialStandard);
 }
 
@@ -302,7 +255,7 @@ void StandardsInformationMaterial::resetMaterialStandard() {
   getImpl<detail::StandardsInformationMaterial_Impl>()->resetMaterialStandard();
 }
 
-void StandardsInformationMaterial::setMaterialStandardSource(std::string materialStandardSource) {
+void StandardsInformationMaterial::setMaterialStandardSource(const std::string& materialStandardSource) {
   getImpl<detail::StandardsInformationMaterial_Impl>()->setMaterialStandardSource(materialStandardSource);
 }
 
@@ -310,7 +263,7 @@ void StandardsInformationMaterial::resetMaterialStandardSource() {
   getImpl<detail::StandardsInformationMaterial_Impl>()->resetMaterialStandardSource();
 }
 
-void StandardsInformationMaterial::setStandardsCategory(std::string standardsCategory) {
+void StandardsInformationMaterial::setStandardsCategory(const std::string& standardsCategory) {
   getImpl<detail::StandardsInformationMaterial_Impl>()->setStandardsCategory(standardsCategory);
 }
 
@@ -318,7 +271,7 @@ void StandardsInformationMaterial::resetStandardsCategory() {
   getImpl<detail::StandardsInformationMaterial_Impl>()->resetStandardsCategory();
 }
 
-void StandardsInformationMaterial::setStandardsIdentifier(std::string standardsIdentifier) {
+void StandardsInformationMaterial::setStandardsIdentifier(const std::string& standardsIdentifier) {
   getImpl<detail::StandardsInformationMaterial_Impl>()->setStandardsIdentifier(standardsIdentifier);
 }
 

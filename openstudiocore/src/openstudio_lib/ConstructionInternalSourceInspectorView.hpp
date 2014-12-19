@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_CONSTRUCTIONINTERNALSOURCEINSPECTORVIEW_HPP
 #define OPENSTUDIO_CONSTRUCTIONINTERNALSOURCEINSPECTORVIEW_HPP
 
-#include "ConstructionBaseInspectorView.hpp"
+#include "StandardsInformationConstructionWidget.hpp"
 
 #include "../model/StandardsInformationConstruction.hpp"
 

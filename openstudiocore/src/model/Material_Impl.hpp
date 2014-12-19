@@ -30,6 +30,7 @@ namespace model {
 
 // forward declaration
 class Material;
+class StandardsInformationMaterial;
 
 namespace detail {
 
@@ -72,6 +73,8 @@ namespace detail {
     virtual boost::optional<double> interiorVisibleAbsorptance() const;
 
     virtual boost::optional<double> exteriorVisibleAbsorptance() const;
+
+    StandardsInformationMaterial standardsInformation() const;
 
     //@}
     /** @name Setters */

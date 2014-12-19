@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_CONSTRUCTIONWINDOWDATAFILEINSPECTORVIEW_HPP
 #define OPENSTUDIO_CONSTRUCTIONWINDOWDATAFILEINSPECTORVIEW_HPP
 
-#include "ConstructionBaseInspectorView.hpp"
+#include "StandardsInformationConstructionWidget.hpp"
 #include "ModelObjectVectorController.hpp"
 
 namespace openstudio {

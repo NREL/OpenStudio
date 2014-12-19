@@ -19,6 +19,8 @@
 
 #include "Material.hpp"
 #include "Material_Impl.hpp"
+#include "StandardsInformationMaterial.hpp"
+#include "StandardsInformationMaterial_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -49,6 +51,21 @@ namespace detail {
 
   bool Material_Impl::setThickness(double value) { return false; }
 
+  StandardsInformationMaterial Material_Impl::standardsInformation() const
+  {
+    StandardsInformationMaterialVector candidates = getObject<Material>().getModelObjectSources<StandardsInformationMaterial>();
+    if (candidates.size() > 1) {
+      for (unsigned i = 1, n = candidates.size(); i < n; ++i) {
+        candidates[i].remove();
+      }
+      LOG(Warn, "Removed extraneous StandardsInformationMaterial objects pointing to "
+          << briefDescription() << ".");
+    }
+    if (candidates.size() == 1) { return candidates[0]; }
+    return StandardsInformationMaterial(getObject<Material>());
+  }
+
+
 } // detail
 
 Material::Material(IddObjectType type,const Model& model)
@@ -75,6 +92,11 @@ boost::optional<double> Material::exteriorVisibleAbsorptance() const {
 
 bool Material::setThickness(double value) {
   return getImpl<detail::Material_Impl>()->setThickness(value);
+}
+
+StandardsInformationMaterial Material::standardsInformation() const
+{
+  return getImpl<detail::Material_Impl>()->standardsInformation();
 }
 
 /// @cond

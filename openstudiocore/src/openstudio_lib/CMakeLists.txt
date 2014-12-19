@@ -35,8 +35,6 @@ set(${target_name}_SRC
   ConstructionCfactorUndergroundWallInspectorView.hpp
   ConstructionFfactorGroundFloorInspectorView.cpp
   ConstructionFfactorGroundFloorInspectorView.hpp
-  ConstructionBaseInspectorView.cpp
-  ConstructionBaseInspectorView.hpp
   ConstructionInspectorView.cpp
   ConstructionInspectorView.hpp
   ConstructionInternalSourceInspectorView.cpp
@@ -292,6 +290,8 @@ set(${target_name}_SRC
   SpaceTypesView.hpp
   StandardOpaqueMaterialInspectorView.cpp
   StandardOpaqueMaterialInspectorView.hpp
+  StandardsInformationConstructionWidget.cpp
+  StandardsInformationConstructionWidget.hpp
   SteamEquipmentInspectorView.cpp
   SteamEquipmentInspectorView.hpp
   SubSurfaceInspectorView.cpp
@@ -479,7 +479,6 @@ set(${target_name}_moc
   CollapsibleInspector.hpp
   ConstructionCfactorUndergroundWallInspectorView.hpp
   ConstructionFfactorGroundFloorInspectorView.hpp
-  ConstructionBaseInspectorView.hpp
   ConstructionInspectorView.hpp
   ConstructionInternalSourceInspectorView.hpp
   ConstructionObjectVectorController.hpp
@@ -605,6 +604,7 @@ set(${target_name}_moc
   SpaceTypesTabView.hpp
   SpaceTypesView.hpp
   StandardOpaqueMaterialInspectorView.hpp
+  StandardsInformationConstructionWidget.hpp
   SteamEquipmentInspectorView.hpp
   SubSurfaceInspectorView.hpp
   SubTabController.hpp
