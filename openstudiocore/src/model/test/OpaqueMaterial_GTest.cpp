@@ -248,7 +248,7 @@ TEST_F(ModelFixture, OpaqueMaterial_StandardsInformationMaterial)
   EXPECT_FALSE(info.standardsCategory());
   EXPECT_FALSE(info.suggestedStandardsCategories().empty());
   EXPECT_FALSE(info.standardsIdentifier());
-  EXPECT_TRUE(info.suggestedStandardsCategories().empty());
+  EXPECT_TRUE(info.suggestedStandardsIdentifiers().empty());
 
   test = info.suggestedStandardsCategories();
   EXPECT_NE(test.end(), std::find(test.begin(), test.end(), "Bldg Board and Siding"));
@@ -256,5 +256,5 @@ TEST_F(ModelFixture, OpaqueMaterial_StandardsInformationMaterial)
   ASSERT_TRUE(info.standardsCategory());
   EXPECT_EQ("Bldg Board and Siding", info.standardsCategory().get());
 
-  EXPECT_FALSE(info.suggestedStandardsCategories().empty());
+  EXPECT_FALSE(info.suggestedStandardsIdentifiers().empty());
 }

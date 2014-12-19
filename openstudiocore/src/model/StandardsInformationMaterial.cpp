@@ -102,22 +102,56 @@ namespace detail {
   }
 
   std::vector<std::string> StandardsInformationMaterial_Impl::suggestedMaterialStandards() const {
-    std::vector<std::string> results;
+    std::vector<std::string> result;
 
     boost::optional<std::string> materialStandard = this->materialStandard();
 
     // include values from json
     parseStandardsMap();
 
-    QMap<QString, QVariant> templates = m_standardsMap["materials"].toMap();
-    for (QString template_name : templates.uniqueKeys()) {
-      QMap<QString, QVariant> material_types = templates[template_name].toMap();
-      for (QString material_type_name : material_types.uniqueKeys()) {
-        results.push_back(toString(material_type_name));
+    QMap<QString, QVariant> materials = m_standardsMap["materials"].toMap();
+    for (QString material_name : materials.uniqueKeys()) {
+      QMap<QString, QVariant> material = materials[material_name].toMap();
+      QString tmp = material["material_standard"].toString();
+      if (!tmp.isEmpty()){
+        result.push_back(toString(tmp));
       }
     }
 
-    return results;
+    // include values from model
+    for (const StandardsInformationMaterial& other : this->model().getConcreteModelObjects<StandardsInformationMaterial>()){
+      if (other.handle() == this->handle()){
+        continue;
+      }
+
+      boost::optional<std::string> otherMaterialStandard = other.materialStandard();
+      if (otherMaterialStandard){
+        result.push_back(*otherMaterialStandard);
+      }
+    }
+
+    // remove current
+    IstringFind finder;
+    if (materialStandard){
+      finder.addTarget(*materialStandard);
+    }
+    auto it = std::remove_if(result.begin(), result.end(), finder);
+    result.resize(std::distance(result.begin(), it));
+
+    // sort
+    std::sort(result.begin(), result.end(), IstringCompare());
+
+    // make unique
+    // DLM: have to sort before calling unique, unique only works on consecutive elements
+    it = std::unique(result.begin(), result.end(), IstringEqual());
+    result.resize(std::distance(result.begin(), it));
+
+    // add current to front
+    if (materialStandard){
+      result.insert(result.begin(), *materialStandard);
+    }
+
+    return result;
   }
 
   boost::optional<std::string> StandardsInformationMaterial_Impl::materialStandardSource() const {
@@ -125,11 +159,75 @@ namespace detail {
   }
 
   std::vector<std::string> StandardsInformationMaterial_Impl::suggestedMaterialStandardSources() const {
-    std::vector<std::string> results;
+    std::vector<std::string> result;
+
+    boost::optional<std::string> materialStandard = this->materialStandard();
+    if (!materialStandard){
+      return result;
+    }
 
     boost::optional<std::string> materialStandardSource = this->materialStandardSource();
 
-    return results;
+    // include values from json
+    parseStandardsMap();
+
+    QMap<QString, QVariant> materials = m_standardsMap["materials"].toMap();
+    for (QString material_name : materials.uniqueKeys()) {
+      QMap<QString, QVariant> material = materials[material_name].toMap();
+
+      QString tmp = material["material_standard"].toString();
+      if (toString(tmp) != *materialStandard){
+        continue;
+      }
+
+      tmp = material["material_standard_source"].toString();
+      if (!tmp.isEmpty()){
+        result.push_back(toString(tmp));
+      }
+    }
+
+    // include values from model
+    for (const StandardsInformationMaterial& other : this->model().getConcreteModelObjects<StandardsInformationMaterial>()){
+      if (other.handle() == this->handle()){
+        continue;
+      }
+
+      boost::optional<std::string> otherMaterialStandard = other.materialStandard();
+
+      if (!otherMaterialStandard){
+        continue;
+      } else if (*materialStandard != *otherMaterialStandard){
+        continue;
+      }
+
+      boost::optional<std::string> otherMaterialStandardSource = other.materialStandardSource();
+      if (otherMaterialStandardSource){
+        result.push_back(*otherMaterialStandardSource);
+      }
+    }
+
+    // remove current
+    IstringFind finder;
+    if (materialStandardSource){
+      finder.addTarget(*materialStandardSource);
+    }
+    auto it = std::remove_if(result.begin(), result.end(), finder);
+    result.resize(std::distance(result.begin(), it));
+
+    // sort
+    std::sort(result.begin(), result.end(), IstringCompare());
+
+    // make unique
+    // DLM: have to sort before calling unique, unique only works on consecutive elements
+    it = std::unique(result.begin(), result.end(), IstringEqual());
+    result.resize(std::distance(result.begin(), it));
+
+    // add current to front
+    if (materialStandardSource){
+      result.insert(result.begin(), *materialStandardSource);
+    }
+
+    return result;
   }
 
   boost::optional<std::string> StandardsInformationMaterial_Impl::standardsCategory() const {
@@ -137,11 +235,75 @@ namespace detail {
   }
 
   std::vector<std::string> StandardsInformationMaterial_Impl::suggestedStandardsCategories() const {
-    std::vector<std::string> results;
+    std::vector<std::string> result;
+
+    boost::optional<std::string> materialStandard = this->materialStandard();
 
     boost::optional<std::string> standardsCategory = this->standardsCategory();
 
-    return results;
+    // include values from json
+    parseStandardsMap();
+
+    QMap<QString, QVariant> materials = m_standardsMap["materials"].toMap();
+    for (QString material_name : materials.uniqueKeys()) {
+      QMap<QString, QVariant> material = materials[material_name].toMap();
+
+      if (materialStandard){
+        QString tmp = material["material_standard"].toString();
+        if (toString(tmp) != *materialStandard){
+          continue;
+        }
+      }
+
+      QString tmp = material["code_category"].toString();
+      if (!tmp.isEmpty()){
+        result.push_back(toString(tmp));
+      }
+    }
+
+    // include values from model
+    for (const StandardsInformationMaterial& other : this->model().getConcreteModelObjects<StandardsInformationMaterial>()){
+      if (other.handle() == this->handle()){
+        continue;
+      }
+
+      boost::optional<std::string> otherMaterialStandard = other.materialStandard();
+      if (materialStandard && otherMaterialStandard){
+        if (*materialStandard != otherMaterialStandard){
+          continue;
+        }
+      } else if (materialStandard || otherMaterialStandard){
+        continue;
+      }
+
+      boost::optional<std::string> otherStandardsCategory = other.standardsCategory();
+      if (otherStandardsCategory){
+        result.push_back(*otherStandardsCategory);
+      }
+    }
+
+    // remove current 
+    IstringFind finder;
+    if (standardsCategory){
+      finder.addTarget(*standardsCategory);
+    }
+    auto it = std::remove_if(result.begin(), result.end(), finder);
+    result.resize(std::distance(result.begin(), it));
+
+    // sort
+    std::sort(result.begin(), result.end(), IstringCompare());
+
+    // make unique
+    // DLM: have to sort before calling unique, unique only works on consecutive elements
+    it = std::unique(result.begin(), result.end(), IstringEqual());
+    result.resize(std::distance(result.begin(), it));
+
+    // add current to front
+    if (standardsCategory){
+      result.insert(result.begin(), *standardsCategory);
+    }
+
+    return result;
   }
 
   boost::optional<std::string> StandardsInformationMaterial_Impl::standardsIdentifier() const {
@@ -149,11 +311,91 @@ namespace detail {
   }
 
   std::vector<std::string> StandardsInformationMaterial_Impl::suggestedStandardsIdentifiers() const {
-    std::vector<std::string> results;
+    std::vector<std::string> result;
 
+    boost::optional<std::string> materialStandard = this->materialStandard();
+    boost::optional<std::string> standardsCategory = this->standardsCategory();
     boost::optional<std::string> standardsIdentifier = this->standardsIdentifier();
 
-    return results;
+    if (!standardsCategory){
+      return result;
+    }
+
+    // include values from json
+    parseStandardsMap();
+
+    QMap<QString, QVariant> materials = m_standardsMap["materials"].toMap();
+    for (QString material_name : materials.uniqueKeys()) {
+      QMap<QString, QVariant> material = materials[material_name].toMap();
+
+      if (materialStandard){
+        QString tmp = material["material_standard"].toString();
+        if (toString(tmp) != *materialStandard){
+          continue;
+        }
+      }
+
+      QString tmp = material["code_category"].toString();
+      if (toString(tmp) != *standardsCategory){
+        continue;
+      }
+
+      tmp = material["code_identifier"].toString();
+      if (!tmp.isEmpty()){
+        result.push_back(toString(tmp));
+      }
+    }
+
+    // include values from model
+    for (const StandardsInformationMaterial& other : this->model().getConcreteModelObjects<StandardsInformationMaterial>()){
+      if (other.handle() == this->handle()){
+        continue;
+      }
+
+      boost::optional<std::string> otherMaterialStandard = other.materialStandard();
+      if (materialStandard && otherMaterialStandard){
+        if (*materialStandard != otherMaterialStandard){
+          continue;
+        }
+      } else if (materialStandard || otherMaterialStandard){
+        continue;
+      }
+
+      boost::optional<std::string> otherStandardsCategory = other.standardsCategory();
+      if (!otherStandardsCategory){
+        continue;
+      } else if (*standardsCategory != *otherStandardsCategory){
+        continue;
+      }
+
+      boost::optional<std::string> otherStandardsIdentifier = other.standardsIdentifier();
+      if (otherStandardsIdentifier){
+        result.push_back(*otherStandardsIdentifier);
+      }
+    }
+
+    // remove current
+    IstringFind finder;
+    if (standardsIdentifier){
+      finder.addTarget(*standardsIdentifier);
+    }
+    auto it = std::remove_if(result.begin(), result.end(), finder);
+    result.resize(std::distance(result.begin(), it));
+
+    // sort
+    std::sort(result.begin(), result.end(), IstringCompare());
+
+    // make unique
+    // DLM: have to sort before calling unique, unique only works on consecutive elements
+    it = std::unique(result.begin(), result.end(), IstringEqual());
+    result.resize(std::distance(result.begin(), it));
+
+    // add current to front
+    if (standardsIdentifier){
+      result.insert(result.begin(), *standardsIdentifier);
+    }
+
+    return result;
   }
 
   void StandardsInformationMaterial_Impl::setMaterialStandard(const std::string& materialStandard) {
