@@ -28,6 +28,22 @@
 
 namespace openstudio {
 
+class Heading
+{
+  public:
+    explicit Heading(const QString &t_headingLabel)
+      : m_label(t_headingLabel)
+    {
+    }
+
+    QString label() const
+    {
+      return m_label;
+    }
+
+  private:
+    QString m_label;
+};
 
 template<typename DataType, typename RetType>
 std::function<RetType(DataType *)> NullAdapter(RetType(DataType::*t_func)() )
@@ -272,8 +288,8 @@ class BaseConcept
 
   virtual ~BaseConcept() {}
 
-  BaseConcept(QString t_headingLabel)
-    : m_headingLabel(t_headingLabel), m_selector(false)
+  BaseConcept(const Heading &t_heading)
+    : m_heading(t_heading), m_selector(false)
   {
   }
 
@@ -287,11 +303,11 @@ class BaseConcept
     m_selector = t_selector;
   }
 
-  QString headingLabel() const { return m_headingLabel; }
+  const Heading &heading() const { return m_heading; }
 
   private:
 
-  QString m_headingLabel;
+  Heading m_heading;
   bool m_selector;
 
 };
@@ -304,8 +320,8 @@ class CheckBoxConcept : public BaseConcept
 {
   public:
 
-  CheckBoxConcept(QString t_headingLabel)
-    : BaseConcept(t_headingLabel)
+  CheckBoxConcept(const Heading &t_heading)
+    : BaseConcept(t_heading)
   {
   }
 
@@ -320,10 +336,10 @@ class CheckBoxConceptImpl : public CheckBoxConcept
 {
   public:
 
-  CheckBoxConceptImpl(QString t_headingLabel,
+  CheckBoxConceptImpl(const Heading &t_heading,
     std::function<bool (DataSourceType *)> t_getter,
     std::function<void (DataSourceType *, bool)> t_setter)
-    : CheckBoxConcept(t_headingLabel),
+    : CheckBoxConcept(t_heading),
       m_getter(t_getter),
       m_setter(t_setter)
   {
@@ -607,8 +623,8 @@ class ComboBoxConcept : public BaseConcept
 {
   public:
 
-  ComboBoxConcept(QString t_headingLabel)
-    : BaseConcept(t_headingLabel)
+  ComboBoxConcept(const Heading &t_heading)
+    : BaseConcept(t_heading)
   {
   }
 
@@ -624,14 +640,14 @@ class ComboBoxRequiredChoiceImpl : public ComboBoxConcept
   public:
 
   ComboBoxRequiredChoiceImpl(
-    QString t_headingLabel,
+    const Heading &t_heading,
     std::function<std::string (ChoiceType)> t_toString,
     std::function<std::vector<ChoiceType> (DataSourceType*)> t_choices,
     std::function<ChoiceType (DataSourceType*)>  t_getter,
     std::function<bool (DataSourceType*, ChoiceType)> t_setter,
     boost::optional<std::function<void (DataSourceType*)> > t_reset = boost::none,
     boost::optional<std::function<bool (DataSourceType*)> > t_defaulted = boost::none)
-    : ComboBoxConcept(t_headingLabel),
+    : ComboBoxConcept(t_heading),
       m_toString(t_toString),
       m_choices(t_choices),
       m_getter(t_getter),
@@ -675,14 +691,14 @@ class ComboBoxOptionalChoiceImpl : public ComboBoxConcept
   public:
 
   ComboBoxOptionalChoiceImpl(
-    QString t_headingLabel,
+    const Heading &t_heading,
     std::function<std::string (ChoiceType)> t_toString,
     std::function<std::vector<ChoiceType> (DataSourceType *)> t_choices,
     std::function<boost::optional<ChoiceType> (DataSourceType*)>  t_getter,
     std::function<bool (DataSourceType*, ChoiceType)> t_setter,
     boost::optional<std::function<void (DataSourceType*)> > t_reset=boost::none,
     bool t_editable = false)
-    : ComboBoxConcept(t_headingLabel),
+    : ComboBoxConcept(t_heading),
       m_toString(t_toString),
       m_choices(t_choices),
       m_getter(t_getter),
@@ -730,8 +746,8 @@ class ValueEditConcept : public BaseConcept
 {
   public:
 
-  ValueEditConcept(QString t_headingLabel)
-    : BaseConcept(t_headingLabel)
+  ValueEditConcept(const Heading &t_heading)
+    : BaseConcept(t_heading)
   {
   }
 
@@ -748,13 +764,13 @@ class ValueEditConceptImpl : public ValueEditConcept<ValueType>
 {
   public:
 
-  ValueEditConceptImpl(QString t_headingLabel,
+  ValueEditConceptImpl(const Heading &t_heading,
     std::function<ValueType (DataSourceType *)>  t_getter,
     std::function<bool (DataSourceType *, ValueType)> t_setter,
     boost::optional<std::function<void (DataSourceType *)>> t_reset,
     boost::optional<std::function<bool (DataSourceType *)>> t_isDefaulted
     )
-    : ValueEditConcept<ValueType>(t_headingLabel),
+    : ValueEditConcept<ValueType>(t_heading),
       m_getter(t_getter),
       m_setter(t_setter),
       m_reset(t_reset),
@@ -812,8 +828,8 @@ class OptionalValueEditConcept : public BaseConcept
 {
   public:
 
-   OptionalValueEditConcept(QString t_headingLabel)
-     : BaseConcept(t_headingLabel)
+   OptionalValueEditConcept(const Heading &t_heading)
+     : BaseConcept(t_heading)
   {
   }
 
@@ -828,10 +844,10 @@ class OptionalValueEditConceptImpl : public OptionalValueEditConcept<ValueType>
 {
   public:
 
-  OptionalValueEditConceptImpl(QString t_headingLabel,
+  OptionalValueEditConceptImpl(const Heading &t_heading,
     std::function<boost::optional<ValueType> (DataSourceType *)>  t_getter,
     std::function<bool (DataSourceType *, ValueType)> t_setter)
-    : OptionalValueEditConcept<ValueType>(t_headingLabel),
+    : OptionalValueEditConcept<ValueType>(t_heading),
       m_getter(t_getter),
       m_setter(t_setter)
   {
@@ -866,8 +882,8 @@ class ValueEditVoidReturnConcept : public BaseConcept
 {
   public:
 
-   ValueEditVoidReturnConcept(QString t_headingLabel)
-     : BaseConcept(t_headingLabel)
+   ValueEditVoidReturnConcept(const Heading &t_heading)
+     : BaseConcept(t_heading)
   {
   }
 
@@ -884,12 +900,12 @@ class ValueEditVoidReturnConceptImpl : public ValueEditVoidReturnConcept<ValueTy
 {
   public:
 
-  ValueEditVoidReturnConceptImpl(QString t_headingLabel,
+  ValueEditVoidReturnConceptImpl(const Heading &t_heading,
     std::function<ValueType (DataSourceType *)>  t_getter,
     std::function<void (DataSourceType *, ValueType)> t_setter,
     boost::optional<std::function<void (DataSourceType *)>> t_reset,
     boost::optional<std::function<bool (DataSourceType *)>> t_isDefaulted)
-    : ValueEditVoidReturnConcept<ValueType>(t_headingLabel),
+    : ValueEditVoidReturnConcept<ValueType>(t_heading),
       m_getter(t_getter),
       m_setter(t_setter),
       m_reset(t_reset),
@@ -949,8 +965,8 @@ class OptionalValueEditVoidReturnConcept : public BaseConcept
 {
   public:
 
-  OptionalValueEditVoidReturnConcept(QString t_headingLabel)
-    : BaseConcept(t_headingLabel)
+  OptionalValueEditVoidReturnConcept(const Heading &t_heading)
+    : BaseConcept(t_heading)
   {
   }
 
@@ -965,10 +981,10 @@ class OptionalValueEditVoidReturnConceptImpl : public OptionalValueEditVoidRetur
 {
   public:
 
-  OptionalValueEditVoidReturnConceptImpl(QString t_headingLabel,
+  OptionalValueEditVoidReturnConceptImpl(const Heading &t_heading,
     std::function<boost::optional<ValueType> (DataSourceType *)>  t_getter,
     std::function<void (DataSourceType *, ValueType)> t_setter)
-    : OptionalValueEditVoidReturnConcept<ValueType>(t_headingLabel),
+    : OptionalValueEditVoidReturnConcept<ValueType>(t_heading),
       m_getter(t_getter),
       m_setter(t_setter)
   {
@@ -1002,9 +1018,9 @@ class NameLineEditConcept : public BaseConcept
 {
   public:
 
-  NameLineEditConcept(QString t_headingLabel,
+  NameLineEditConcept(const Heading &t_heading,
     bool isInspectable)
-    : BaseConcept(t_headingLabel),
+    : BaseConcept(t_heading),
     m_isInspectable(isInspectable)
   {
   }
@@ -1028,12 +1044,12 @@ class NameLineEditConceptImpl : public NameLineEditConcept
 {
   public:
 
-  NameLineEditConceptImpl(QString t_headingLabel,
+  NameLineEditConceptImpl(const Heading &t_heading,
     bool isInspectable,
     std::function<boost::optional<std::string> (DataSourceType *, bool)>  t_getter,
     std::function<boost::optional<std::string> (DataSourceType *, const std::string &)> t_setter,
     boost::optional<std::function<void(DataSourceType*)> > t_reset = boost::none)
-    : NameLineEditConcept(t_headingLabel,
+    : NameLineEditConcept(t_heading,
       isInspectable),
       m_getter(t_getter),
       m_setter(t_setter),
@@ -1089,8 +1105,8 @@ class LoadNameConcept : public BaseConcept
 {
 public:
 
-  LoadNameConcept(QString t_headingLabel)
-    : BaseConcept(t_headingLabel)
+  LoadNameConcept(const Heading &t_heading)
+    : BaseConcept(t_heading)
   {
   }
 
@@ -1107,11 +1123,11 @@ class LoadNameConceptImpl : public LoadNameConcept
 {
 public:
 
-  LoadNameConceptImpl(QString t_headingLabel,
+  LoadNameConceptImpl(const Heading &t_heading,
     std::function<boost::optional<std::string>(DataSourceType *, bool)>  t_getter,
     std::function<boost::optional<std::string>(DataSourceType *, const std::string &)> t_setter,
     boost::optional<std::function<void(DataSourceType*)> > t_reset = boost::none)
-    : LoadNameConcept(t_headingLabel),
+    : LoadNameConcept(t_heading),
     m_getter(t_getter),
     m_setter(t_setter),
     m_reset(t_reset)
@@ -1168,8 +1184,8 @@ class QuantityEditConcept : public BaseConcept
 {
   public:
 
-  QuantityEditConcept(QString t_headingLabel, QString t_modelUnits, QString t_siUnits, QString t_ipUnits, bool t_isIP)
-    : BaseConcept(t_headingLabel),
+  QuantityEditConcept(const Heading &t_heading, QString t_modelUnits, QString t_siUnits, QString t_ipUnits, bool t_isIP)
+    : BaseConcept(t_heading),
       m_modelUnits(t_modelUnits),
       m_siUnits(t_siUnits),
       m_ipUnits(t_ipUnits),
@@ -1202,7 +1218,7 @@ class QuantityEditConceptImpl : public QuantityEditConcept<ValueType>
 {
   public:
 
-  QuantityEditConceptImpl(QString t_headingLabel,
+  QuantityEditConceptImpl(const Heading &t_heading,
     QString t_modelUnits,
     QString t_siUnits,
     QString t_ipUnits,
@@ -1211,7 +1227,7 @@ class QuantityEditConceptImpl : public QuantityEditConcept<ValueType>
     std::function<bool (DataSourceType *, ValueType)> t_setter,
     boost::optional<std::function<void (DataSourceType *)>> t_reset,
     boost::optional<std::function<bool (DataSourceType *)>> t_isDefaulted)
-    : QuantityEditConcept<ValueType>(t_headingLabel,
+    : QuantityEditConcept<ValueType>(t_heading,
       t_modelUnits,
       t_siUnits,
       t_ipUnits,
@@ -1276,8 +1292,8 @@ class OptionalQuantityEditConcept : public BaseConcept
 {
   public:
 
-  OptionalQuantityEditConcept(QString t_headingLabel, QString t_modelUnits, QString t_siUnits, QString t_ipUnits, bool t_isIP)
-    : BaseConcept(t_headingLabel),
+  OptionalQuantityEditConcept(const Heading &t_heading, QString t_modelUnits, QString t_siUnits, QString t_ipUnits, bool t_isIP)
+    : BaseConcept(t_heading),
       m_modelUnits(t_modelUnits),
       m_siUnits(t_siUnits),
       m_ipUnits(t_ipUnits),
@@ -1308,14 +1324,14 @@ class OptionalQuantityEditConceptImpl : public OptionalQuantityEditConcept<Value
 {
   public:
 
-  OptionalQuantityEditConceptImpl(QString t_headingLabel,
+  OptionalQuantityEditConceptImpl(const Heading &t_heading,
     QString t_modelUnits,
     QString t_siUnits,
     QString t_ipUnits,
     bool t_isIP,
     std::function<boost::optional<ValueType> (DataSourceType *)>  t_getter,
     std::function<bool (DataSourceType *, ValueType)> t_setter)
-    : OptionalQuantityEditConcept<ValueType>(t_headingLabel,
+    : OptionalQuantityEditConcept<ValueType>(t_heading,
       t_modelUnits,
       t_siUnits,
       t_ipUnits,
@@ -1354,8 +1370,8 @@ class QuantityEditVoidReturnConcept : public BaseConcept
 {
   public:
 
-  QuantityEditVoidReturnConcept(QString t_headingLabel, QString t_modelUnits, QString t_siUnits, QString t_ipUnits, bool t_isIP)
-    : BaseConcept(t_headingLabel),
+  QuantityEditVoidReturnConcept(const Heading &t_heading, QString t_modelUnits, QString t_siUnits, QString t_ipUnits, bool t_isIP)
+    : BaseConcept(t_heading),
       m_modelUnits(t_modelUnits),
       m_siUnits(t_siUnits),
       m_ipUnits(t_ipUnits),
@@ -1388,7 +1404,7 @@ class QuantityEditVoidReturnConceptImpl : public QuantityEditVoidReturnConcept<V
 {
   public:
 
-  QuantityEditVoidReturnConceptImpl(QString t_headingLabel,
+  QuantityEditVoidReturnConceptImpl(const Heading &t_heading,
     QString t_modelUnits,
     QString t_siUnits,
     QString t_ipUnits,
@@ -1398,7 +1414,7 @@ class QuantityEditVoidReturnConceptImpl : public QuantityEditVoidReturnConcept<V
     boost::optional<std::function<void (DataSourceType *)>> t_reset,
     boost::optional<std::function<bool (DataSourceType *)>> t_isDefaulted
     )
-    : QuantityEditVoidReturnConcept<ValueType>(t_headingLabel,
+    : QuantityEditVoidReturnConcept<ValueType>(t_heading,
       t_modelUnits,
       t_siUnits,
       t_ipUnits,
@@ -1462,8 +1478,8 @@ class OptionalQuantityEditVoidReturnConcept : public BaseConcept
 {
   public:
 
-  OptionalQuantityEditVoidReturnConcept(QString t_headingLabel, QString t_modelUnits, QString t_siUnits, QString t_ipUnits, bool t_isIP)
-    : BaseConcept(t_headingLabel),
+  OptionalQuantityEditVoidReturnConcept(const Heading &t_heading, QString t_modelUnits, QString t_siUnits, QString t_ipUnits, bool t_isIP)
+    : BaseConcept(t_heading),
       m_modelUnits(t_modelUnits),
       m_siUnits(t_siUnits),
       m_ipUnits(t_ipUnits),
@@ -1494,14 +1510,14 @@ class OptionalQuantityEditVoidReturnConceptImpl : public OptionalQuantityEditVoi
 {
   public:
 
-  OptionalQuantityEditVoidReturnConceptImpl(QString t_headingLabel,
+  OptionalQuantityEditVoidReturnConceptImpl(const Heading &t_heading,
     QString t_modelUnits,
     QString t_siUnits,
     QString t_ipUnits,
     bool t_isIP,
     std::function<boost::optional<ValueType> (DataSourceType *)>  t_getter,
     std::function<void (DataSourceType *, ValueType)> t_setter)
-    : OptionalQuantityEditVoidReturnConcept<ValueType>(t_headingLabel,
+    : OptionalQuantityEditVoidReturnConcept<ValueType>(t_heading,
       t_modelUnits,
       t_siUnits,
       t_ipUnits,
@@ -1538,8 +1554,8 @@ class DropZoneConcept : public BaseConcept
 {
   public:
 
-  DropZoneConcept(QString t_headingLabel)
-    : BaseConcept(t_headingLabel)
+  DropZoneConcept(const Heading &t_heading)
+    : BaseConcept(t_heading)
   {
   }
 
@@ -1555,11 +1571,11 @@ class DropZoneConceptImpl : public DropZoneConcept
 {
   public:
 
-  DropZoneConceptImpl(QString t_headingLabel,
+  DropZoneConceptImpl(const Heading &t_heading,
     std::function<boost::optional<ValueType> (DataSourceType *)>  t_getter,
     std::function<bool(DataSourceType *, const ValueType &)> t_setter,
     boost::optional<std::function<void(DataSourceType*)> > t_reset = boost::none)
-    : DropZoneConcept(t_headingLabel),
+    : DropZoneConcept(t_heading),
       m_getter(t_getter),
       m_setter(t_setter),
       m_reset(t_reset)
@@ -1634,8 +1650,8 @@ class RenderingColorConcept : public BaseConcept
 {
 public:
 
-  RenderingColorConcept(QString t_headingLabel)
-    : BaseConcept(t_headingLabel)
+  RenderingColorConcept(const Heading &t_heading)
+    : BaseConcept(t_heading)
   {
   }
 
@@ -1650,10 +1666,10 @@ class RenderingColorConceptImpl : public RenderingColorConcept
 {
 public:
 
-  RenderingColorConceptImpl(QString t_headingLabel,
+  RenderingColorConceptImpl(const Heading &t_heading,
     std::function<boost::optional<ValueType>(DataSourceType *)>  t_getter,
     std::function<bool(DataSourceType *, const ValueType &)> t_setter)
-    : RenderingColorConcept(t_headingLabel),
+    : RenderingColorConcept(t_heading),
     m_getter(t_getter),
     m_setter(t_setter)
   {

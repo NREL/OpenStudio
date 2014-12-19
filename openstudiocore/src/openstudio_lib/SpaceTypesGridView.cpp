@@ -282,13 +282,13 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
       auto getter = CastNullAdapter<model::SpaceType>(&model::SpaceType::name);
       auto setter = CastNullAdapter<model::SpaceType>(&model::SpaceType::setName);
 
-      addNameLineEditColumn(QString(NAME),
+      addNameLineEditColumn(Heading(QString(NAME)),
         false,
         getter,
         setter);
 
     } else if (field == SELECTED && category != "Loads") {
-      addSelectColumn(QString(SELECTED));
+      addSelectColumn(Heading(QString(SELECTED)));
     } else if (field == LOADNAME || field == MULTIPLIER || field == DEFINITION || field == SCHEDULE || field == ACTIVITYSCHEDULE || field == SELECTED) {
       // Create a lambda function that collates all of the loads in a space type 
       // and returns them as an std::vector
@@ -834,7 +834,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
         // The final argument to DataSource tells the system that we want an additional widget to be displayed
         // at the bottom of each list. In this case, it's a dropZone. Any type of BaseConcept would work.
 
-        addLoadNameColumn(QString(LOADNAME),
+        addLoadNameColumn(Heading(QString(LOADNAME)),
           CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::name),
           CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::setName),
           boost::optional<std::function<void(model::SpaceLoad *)>>(
@@ -853,7 +853,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
 
       }
       else if (field == SELECTED) {
-        addSelectColumn(QString(SELECTED),
+        addSelectColumn(Heading(QString(SELECTED)),
             DataSource(
               allLoads,
               true
@@ -862,7 +862,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
       }
       else if (field == MULTIPLIER) {
 
-        addValueEditColumn(QString(MULTIPLIER),
+        addValueEditColumn(Heading(QString(MULTIPLIER)),
           multiplier,
           setMultiplier,
           boost::optional<std::function<void (model::ModelObject *)>>(),
@@ -946,7 +946,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
           }
         );
 
-        addNameLineEditColumn(QString(DEFINITION),
+        addNameLineEditColumn(Heading(QString(DEFINITION)),
           true,
           CastNullAdapter<model::SpaceLoadDefinition>(&model::SpaceLoadDefinition::name),
           CastNullAdapter<model::SpaceLoadDefinition>(&model::SpaceLoadDefinition::setName),
@@ -954,14 +954,14 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
           DataSource(
             allDefinitions,
             false ,
-            QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::SpaceLoadDefinition, model::SpaceType>(DEFINITION,
+            QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::SpaceLoadDefinition, model::SpaceType>(Heading(DEFINITION),
                 getter, setter))
           )
           );
 
       } else if (field == SCHEDULE) {
 
-        addDropZoneColumn(QString(SCHEDULE),
+        addDropZoneColumn(Heading(QString(SCHEDULE)),
           schedule,
           setSchedule,
           resetSchedule,
@@ -973,7 +973,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
 
       } else if (field == ACTIVITYSCHEDULE) {
 
-        addDropZoneColumn(QString(SCHEDULE),
+        addDropZoneColumn(Heading(QString(SCHEDULE)),
           activityLevelSchedule,
           setActivityLevelSchedule,
           resetActivityLevelSchedule,
@@ -986,25 +986,25 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
       }
 
     } else if (field == DEFAULTCONSTRUCTIONSET){
-      addDropZoneColumn(QString(DEFAULTCONSTRUCTIONSET),
+      addDropZoneColumn(Heading(QString(DEFAULTCONSTRUCTIONSET)),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::defaultConstructionSet),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::setDefaultConstructionSet),
         boost::optional<std::function<void(model::SpaceType*)>>(CastNullAdapter<model::SpaceType>(&model::SpaceType::resetDefaultConstructionSet)));
 
     } else if (field == DEFAULTSCHEDULESET){
-      addDropZoneColumn(QString(DEFAULTSCHEDULESET),
+      addDropZoneColumn(Heading(QString(DEFAULTSCHEDULESET)),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::defaultScheduleSet),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::setDefaultScheduleSet),
         boost::optional<std::function<void(model::SpaceType*)>>(CastNullAdapter<model::SpaceType>(&model::SpaceType::resetDefaultScheduleSet)));
 
     } else if (field == DESIGNSPECIFICATIONOUTDOORAIR){
-      addDropZoneColumn(QString(DESIGNSPECIFICATIONOUTDOORAIR),
+      addDropZoneColumn(Heading(QString(DESIGNSPECIFICATIONOUTDOORAIR)),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::designSpecificationOutdoorAir),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::setDesignSpecificationOutdoorAir),
         boost::optional<std::function<void(model::SpaceType*)>>(CastNullAdapter<model::SpaceType>(&model::SpaceType::resetDesignSpecificationOutdoorAir)));
 
     } else if (field == RENDERINGCOLOR){
-      addRenderingColorColumn(QString(RENDERINGCOLOR),
+      addRenderingColorColumn(Heading(QString(RENDERINGCOLOR)),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::renderingColor),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::setRenderingColor));    
 
@@ -1023,7 +1023,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
         }
       );
 
-      addNameLineEditColumn(QString(SPACEINFILTRATIONDESIGNFLOWRATES),
+      addNameLineEditColumn(Heading(QString(SPACEINFILTRATIONDESIGNFLOWRATES)),
         true,
         CastNullAdapter<model::SpaceInfiltrationDesignFlowRate>(&model::SpaceInfiltrationDesignFlowRate::name),
         CastNullAdapter<model::SpaceInfiltrationDesignFlowRate>(&model::SpaceInfiltrationDesignFlowRate::setName),
@@ -1038,7 +1038,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
         DataSource(
           flowRates,
           false, 
-          QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::SpaceInfiltrationDesignFlowRate, model::SpaceType>(SPACEINFILTRATIONDESIGNFLOWRATES,
+          QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::SpaceInfiltrationDesignFlowRate, model::SpaceType>(Heading(SPACEINFILTRATIONDESIGNFLOWRATES),
              getter, setter))
         )
       );
@@ -1058,7 +1058,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
         }
       );
 
-      addNameLineEditColumn(QString(SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS),
+      addNameLineEditColumn(Heading(QString(SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS)),
         true,
         CastNullAdapter<model::SpaceInfiltrationEffectiveLeakageArea>(&model::SpaceInfiltrationEffectiveLeakageArea::name),
         CastNullAdapter<model::SpaceInfiltrationEffectiveLeakageArea>(&model::SpaceInfiltrationEffectiveLeakageArea::setName),
@@ -1073,7 +1073,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
         DataSource(
         leakageAreas,
         false,
-        QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::SpaceInfiltrationEffectiveLeakageArea, model::SpaceType>(SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS,
+        QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::SpaceInfiltrationEffectiveLeakageArea, model::SpaceType>(Heading(SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS),
         getter, setter))
         )
         );
@@ -1110,7 +1110,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
           t_spaceType->resetStandardsBuildingType();
         });
       
-      addComboBoxColumn(QString(STANDARDSBUILDINGTYPE),
+      addComboBoxColumn(Heading(QString(STANDARDSBUILDINGTYPE)),
           toString,
           choices,
           getter,
@@ -1149,7 +1149,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
           }
         );
 
-      addComboBoxColumn(QString(STANDARDSSPACETYPE),
+      addComboBoxColumn(Heading(QString(STANDARDSSPACETYPE)),
           toString,
           choices,
           getter,

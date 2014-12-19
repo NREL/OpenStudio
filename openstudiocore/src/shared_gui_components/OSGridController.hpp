@@ -135,7 +135,7 @@ class DataSourceAdapter : public BaseConcept
 {
   public:
     DataSourceAdapter(DataSource t_source, QSharedPointer<BaseConcept> t_inner)
-      : BaseConcept(t_inner->headingLabel()), m_source(t_source), m_inner(t_inner)
+      : BaseConcept(t_inner->heading()), m_source(t_source), m_inner(t_inner)
     {
     }
 
@@ -262,7 +262,7 @@ public:
     }
   }
 
-  void addSelectColumn(QString headingLabel,
+  void addSelectColumn(const Heading &heading,
                        const boost::optional<DataSource> &t_source = boost::none)
   {
     auto objectSelector = m_objectSelector;
@@ -276,22 +276,22 @@ public:
       objectSelector->setObjectSelection(*t_obj, t_set);
     });
 
-    addCheckBoxColumn(headingLabel, getter, setter, t_source);
+    addCheckBoxColumn(heading, getter, setter, t_source);
     m_baseConcepts.back()->setIsSelector(true);
   }
 
 
   template<typename DataSourceType>
-  void addCheckBoxColumn(QString headingLabel,
+  void addCheckBoxColumn(const Heading &heading,
                          std::function<bool (DataSourceType *)>  t_getter,
                          std::function<void (DataSourceType *, bool)> t_setter,
                          const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<CheckBoxConcept>(new CheckBoxConceptImpl<DataSourceType>(headingLabel,t_getter,t_setter)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<CheckBoxConcept>(new CheckBoxConceptImpl<DataSourceType>(heading,t_getter,t_setter)), t_source));
   }
 
   template<typename ChoiceType, typename DataSourceType>
-  void addComboBoxColumn(QString headingLabel,
+  void addComboBoxColumn(const Heading &heading,
                          std::function<std::string (const ChoiceType &)> toString,
                          std::function<std::vector<ChoiceType> ()> choices,
                          std::function<ChoiceType (DataSourceType*)> getter,
@@ -301,7 +301,7 @@ public:
                          const boost::optional<DataSource> &t_source = boost::none)
   {
     addComboBoxColumn<ChoiceType, DataSourceType>(
-        headingLabel,
+        heading,
         toString,
         std::function<std::vector<ChoiceType> (DataSourceType*)>([choices](DataSourceType*) { return choices(); }),
         getter,
@@ -312,7 +312,7 @@ public:
   }
 
   template<typename ChoiceType, typename DataSourceType>
-  void addComboBoxColumn(QString headingLabel,
+  void addComboBoxColumn(const Heading &heading,
                          std::function<std::string (const ChoiceType &)> toString,
                          std::function<std::vector<ChoiceType> ()> choices,
                          std::function<boost::optional<ChoiceType> (DataSourceType*)> getter,
@@ -322,7 +322,7 @@ public:
                          bool editable = true)
   {
     addComboBoxColumn<ChoiceType, DataSourceType>(
-          headingLabel,
+          heading,
           toString,
           std::function<std::vector<ChoiceType> (DataSourceType*)>([choices](DataSourceType*) { return choices(); }),
           getter,
@@ -333,7 +333,7 @@ public:
   }
 
   template<typename ChoiceType, typename DataSourceType>
-  void addComboBoxColumn(QString headingLabel,
+  void addComboBoxColumn(const Heading &heading,
                          std::function<std::string (const ChoiceType &)> toString,
                          std::function<std::vector<ChoiceType> (DataSourceType *)> choices,
                          std::function<ChoiceType (DataSourceType*)> getter,
@@ -343,7 +343,7 @@ public:
                          const boost::optional<DataSource> &t_source = boost::none)
   {
     m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<ComboBoxConcept>(
-        new ComboBoxRequiredChoiceImpl<ChoiceType,DataSourceType>(headingLabel,
+        new ComboBoxRequiredChoiceImpl<ChoiceType,DataSourceType>(heading,
                                                                   toString,
                                                                   choices,
                                                                   getter,
@@ -353,7 +353,7 @@ public:
   }
 
   template<typename ChoiceType, typename DataSourceType>
-  void addComboBoxColumn(QString headingLabel,
+  void addComboBoxColumn(const Heading &heading,
                          std::function<std::string (const ChoiceType &)> toString,
                          std::function<std::vector<ChoiceType> (DataSourceType *)> choices,
                          std::function<ChoiceType (DataSourceType*)> getter,
@@ -361,7 +361,7 @@ public:
                          const boost::optional<DataSource> &t_source = boost::none)
   {
     m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<ComboBoxConcept>(
-        new ComboBoxRequiredChoiceImpl<ChoiceType,DataSourceType>(headingLabel,
+        new ComboBoxRequiredChoiceImpl<ChoiceType,DataSourceType>(heading,
                                                                   toString,
                                                                   choices,
                                                                   getter,
@@ -369,7 +369,7 @@ public:
   }
 
   template<typename ChoiceType, typename DataSourceType>
-  void addComboBoxColumn(QString headingLabel,
+  void addComboBoxColumn(const Heading &heading,
                          std::function<std::string (const ChoiceType &)> toString,
                          std::function<std::vector<ChoiceType> (DataSourceType *)> choices,
                          std::function<boost::optional<ChoiceType> (DataSourceType*)> getter,
@@ -379,7 +379,7 @@ public:
                          bool editable = false)
   {
     m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<ComboBoxConcept>(
-      new ComboBoxOptionalChoiceImpl<ChoiceType,DataSourceType>(headingLabel,
+      new ComboBoxOptionalChoiceImpl<ChoiceType,DataSourceType>(heading,
                                                                 toString,
                                                                 choices,
                                                                 getter,
@@ -389,68 +389,68 @@ public:
   }
 
   template<typename ValueType, typename DataSourceType>
-  void addValueEditColumn(QString headingLabel,
+  void addValueEditColumn(const Heading &heading,
                           std::function<ValueType (DataSourceType *)>  getter,
                           std::function<bool (DataSourceType *, ValueType)> setter,
                           const boost::optional<std::function<void (DataSourceType *)>> reset = boost::none,
                           const boost::optional<std::function<bool (DataSourceType *)>> isDefaulted = boost::none,
                           const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<ValueEditConcept<ValueType> >(new ValueEditConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter, reset, isDefaulted)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<ValueEditConcept<ValueType> >(new ValueEditConceptImpl<ValueType, DataSourceType>(heading,getter,setter, reset, isDefaulted)), t_source));
   }
 
   template<typename ValueType, typename DataSourceType>
-  void addValueEditColumn(QString headingLabel,
+  void addValueEditColumn(const Heading &heading,
                           std::function<boost::optional<ValueType> (DataSourceType *)>  getter,
                           std::function<bool (DataSourceType *, ValueType)> setter,
                           const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<OptionalValueEditConcept<ValueType> >(new OptionalValueEditConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<OptionalValueEditConcept<ValueType> >(new OptionalValueEditConceptImpl<ValueType, DataSourceType>(heading,getter,setter)), t_source));
   }
 
   template<typename ValueType, typename DataSourceType>
-  void addValueEditColumn(QString headingLabel,
+  void addValueEditColumn(const Heading &heading,
                           std::function<ValueType (DataSourceType *)>  getter,
                           std::function<void (DataSourceType *, ValueType)> setter,
                           const boost::optional<std::function<void (DataSourceType *)>> reset = boost::none,
                           const boost::optional<std::function<bool (DataSourceType *)>> isDefaulted = boost::none,
                           const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<ValueEditVoidReturnConcept<ValueType> >(new ValueEditVoidReturnConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter, reset, isDefaulted)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<ValueEditVoidReturnConcept<ValueType> >(new ValueEditVoidReturnConceptImpl<ValueType, DataSourceType>(heading,getter,setter, reset, isDefaulted)), t_source));
   }
 
   template<typename ValueType, typename DataSourceType>
-  void addValueEditColumn(QString headingLabel,
+  void addValueEditColumn(const Heading &heading,
                           std::function<boost::optional<ValueType> (DataSourceType *)>  getter,
                           std::function<void (DataSourceType *, double)> setter,
                           const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<OptionalValueEditVoidReturnConcept<ValueType> >(new OptionalValueEditVoidReturnConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<OptionalValueEditVoidReturnConcept<ValueType> >(new OptionalValueEditVoidReturnConceptImpl<ValueType, DataSourceType>(heading,getter,setter)), t_source));
   }
 
   template<typename DataSourceType>
-  void addNameLineEditColumn(QString headingLabel,
+  void addNameLineEditColumn(const Heading &heading,
                              bool isInspectable,
                              const std::function<boost::optional<std::string> (DataSourceType *, bool)>  &getter,
                              const std::function<boost::optional<std::string> (DataSourceType *, const std::string &)> &setter,
                              const boost::optional<std::function<void (DataSourceType *)>> &resetter = boost::none,
                              const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<NameLineEditConcept>(new NameLineEditConceptImpl<DataSourceType>(headingLabel, isInspectable, getter, setter, resetter)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<NameLineEditConcept>(new NameLineEditConceptImpl<DataSourceType>(heading, isInspectable, getter, setter, resetter)), t_source));
   }
 
   template<typename DataSourceType>
-  void addLoadNameColumn(QString headingLabel,
+  void addLoadNameColumn(const Heading &heading,
     const std::function<boost::optional<std::string>(DataSourceType *, bool)>  &getter,
     const std::function<boost::optional<std::string>(DataSourceType *, const std::string &)> &setter,
     const boost::optional<std::function<void(DataSourceType *)>> &resetter = boost::none,
     const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<LoadNameConcept>(new LoadNameConceptImpl<DataSourceType>(headingLabel, getter, setter, resetter)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<LoadNameConcept>(new LoadNameConceptImpl<DataSourceType>(heading, getter, setter, resetter)), t_source));
   }
 
   template<typename ValueType, typename DataSourceType>
-  void addQuantityEditColumn(QString headingLabel,
+  void addQuantityEditColumn(const Heading &heading,
                              QString modelUnits,
                              QString siUnits,
                              QString ipUnits,
@@ -461,11 +461,11 @@ public:
                              const boost::optional<std::function<bool (DataSourceType *)>> isDefaulted = boost::none,
                              const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<QuantityEditConcept<ValueType> >(new QuantityEditConceptImpl<ValueType, DataSourceType>(headingLabel, modelUnits, siUnits, ipUnits, isIP, getter, setter, reset, isDefaulted)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<QuantityEditConcept<ValueType> >(new QuantityEditConceptImpl<ValueType, DataSourceType>(heading, modelUnits, siUnits, ipUnits, isIP, getter, setter, reset, isDefaulted)), t_source));
   }
 
   template<typename ValueType, typename DataSourceType>
-  void addQuantityEditColumn(QString headingLabel,
+  void addQuantityEditColumn(const Heading &heading,
                              QString modelUnits,
                              QString siUnits,
                              QString ipUnits,
@@ -474,11 +474,11 @@ public:
                              std::function<bool (DataSourceType *, ValueType)> setter,
                              const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<OptionalQuantityEditConcept<ValueType> >(new OptionalQuantityEditConceptImpl<ValueType, DataSourceType>(headingLabel, modelUnits, siUnits, ipUnits, isIP, getter, setter)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<OptionalQuantityEditConcept<ValueType> >(new OptionalQuantityEditConceptImpl<ValueType, DataSourceType>(heading, modelUnits, siUnits, ipUnits, isIP, getter, setter)), t_source));
   }
 
   template<typename ValueType, typename DataSourceType>
-  void addQuantityEditColumn(QString headingLabel,
+  void addQuantityEditColumn(const Heading &heading,
                              QString modelUnits,
                              QString siUnits,
                              QString ipUnits,
@@ -489,11 +489,11 @@ public:
                              const boost::optional<std::function<bool (DataSourceType *)>> isDefaulted = boost::none,
                              const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<QuantityEditVoidReturnConcept<ValueType> >(new QuantityEditVoidReturnConceptImpl<ValueType, DataSourceType>(headingLabel, modelUnits, siUnits, ipUnits, isIP, getter, setter, reset, isDefaulted)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<QuantityEditVoidReturnConcept<ValueType> >(new QuantityEditVoidReturnConceptImpl<ValueType, DataSourceType>(heading, modelUnits, siUnits, ipUnits, isIP, getter, setter, reset, isDefaulted)), t_source));
   }
 
   template<typename ValueType, typename DataSourceType>
-  void addQuantityEditColumn(QString headingLabel,
+  void addQuantityEditColumn(const Heading &heading,
                              QString modelUnits,
                              QString siUnits,
                              QString ipUnits,
@@ -502,26 +502,26 @@ public:
                              std::function<void (DataSourceType *, ValueType)> setter,
                              const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<OptionalQuantityEditVoidReturnConcept<ValueType> >(new OptionalQuantityEditVoidReturnConceptImpl<ValueType, DataSourceType>(headingLabel, modelUnits, siUnits, ipUnits, isIP, getter, setter)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<OptionalQuantityEditVoidReturnConcept<ValueType> >(new OptionalQuantityEditVoidReturnConceptImpl<ValueType, DataSourceType>(heading, modelUnits, siUnits, ipUnits, isIP, getter, setter)), t_source));
   }
 
   template<typename ValueType, typename DataSourceType>
-  void addDropZoneColumn(QString headingLabel,
+  void addDropZoneColumn(const Heading &heading,
                          std::function<boost::optional<ValueType> (DataSourceType *)>  getter,
                          std::function<bool (DataSourceType *, const ValueType &)> setter,
                          boost::optional<std::function<void(DataSourceType*)> > reset = boost::none,
                          const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter,reset)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(heading,getter,setter,reset)), t_source));
   }
 
   template<typename ValueType, typename DataSourceType>
-  void addRenderingColorColumn(QString headingLabel,
+  void addRenderingColorColumn(const Heading &heading,
     std::function<boost::optional<ValueType>(DataSourceType *)>  getter,
     std::function<bool(DataSourceType *, const ValueType &)> setter,
     const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(QSharedPointer<RenderingColorConcept>(new RenderingColorConceptImpl<ValueType, DataSourceType>(headingLabel, getter, setter)));
+    m_baseConcepts.push_back(QSharedPointer<RenderingColorConcept>(new RenderingColorConceptImpl<ValueType, DataSourceType>(heading, getter, setter)));
   }
 
   std::vector<QString> categories();
