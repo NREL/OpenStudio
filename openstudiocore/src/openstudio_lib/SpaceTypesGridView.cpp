@@ -153,12 +153,6 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
   auto gridView = new OSGridView(spaceTypesGridController, "Space Types", "Drop\nZone", false, parent);
   m_gridController = spaceTypesGridController;
 
-  layout->addWidget([this](){ 
-      auto checkbox = new QCheckBox("Lights only filter");
-      connect(checkbox, &QCheckBox::stateChanged, this, &SpaceTypesGridView::filterStateChanged);
-      return checkbox;
-    }());
-
   bool isConnected = false;
 
   isConnected = connect(gridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
@@ -186,29 +180,6 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
   std::vector<model::SpaceType> spaceType = model.getModelObjects<model::SpaceType>(); // NOTE for horizontal system lists
 }
 
-
-void SpaceTypesGridView::filterStateChanged(const int newState) const
-{
-  LOG(Debug, "Lights only filter state changed: " << newState);
-
-  auto objectSelector = m_gridController->getObjectSelector();
-  if (newState == 0)
-  {
-    objectSelector->resetObjectFilter();
-  } else {
-    objectSelector->setObjectFilter(
-        [](const model::ModelObject &obj)->bool {
-          try {
-            obj.cast<model::SpaceLoadInstance>();
-            // This is a spaceloadinstance, so we want to see if it matches our filter
-            return static_cast<bool>(obj.optionalCast<model::Lights>());
-          } catch (...) {
-            return true; // this isn't a space load instance, so don't apply filtering
-          }
-        }
-     );
-  }
-}
 
 std::vector<model::ModelObject> SpaceTypesGridView::selectedObjects() const
 {
@@ -268,6 +239,30 @@ void SpaceTypesGridController::setCategoriesAndFields()
   OSGridController::setCategoriesAndFields();
 
 }
+
+void SpaceTypesGridController::filterStateChanged(const int newState) const
+{
+  LOG(Debug, "Lights only filter state changed: " << newState);
+
+  auto objectSelector = getObjectSelector();
+  if (newState == 0)
+  {
+    objectSelector->resetObjectFilter();
+  } else {
+    objectSelector->setObjectFilter(
+        [](const model::ModelObject &obj)->bool {
+          try {
+            obj.cast<model::SpaceLoadInstance>();
+            // This is a spaceloadinstance, so we want to see if it matches our filter
+            return static_cast<bool>(obj.optionalCast<model::Lights>());
+          } catch (...) {
+            return true; // this isn't a space load instance, so don't apply filtering
+          }
+        }
+     );
+  }
+}
+
 
 void SpaceTypesGridController::addColumns(const QString &category, std::vector<QString> & fields)
 {
@@ -946,7 +941,10 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
           }
         );
 
-        addNameLineEditColumn(Heading(QString(DEFINITION)),
+        auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox("Lights only filter"));
+        connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpaceTypesGridController::filterStateChanged);
+
+        addNameLineEditColumn(Heading(QString(DEFINITION), true, checkbox),
           true,
           CastNullAdapter<model::SpaceLoadDefinition>(&model::SpaceLoadDefinition::name),
           CastNullAdapter<model::SpaceLoadDefinition>(&model::SpaceLoadDefinition::setName),

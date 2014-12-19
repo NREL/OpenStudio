@@ -66,10 +66,9 @@ signals:
 private slots:
 
   void onDropZoneItemClicked(OSItem* item);
-  void filterStateChanged(const int newState) const;
 
 private:
-  REGISTER_LOGGER("openstudio.CalibrationBillingPeriod");
+  REGISTER_LOGGER("openstudio.SpaceTypesGridView");
 
 };
 
@@ -106,6 +105,11 @@ public slots:
 
   virtual void onComboBoxIndexChanged(int index);
 
+private slots:
+  void filterStateChanged(const int newState) const;
+
+private:
+  REGISTER_LOGGER("openstudio.SpaceTypesGridController");
 
 };
 
