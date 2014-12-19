@@ -207,13 +207,13 @@ std::function<bool (const model::ModelObject &)> ObjectSelector::getDefaultFilte
 void ObjectSelector::selectAll()
 {
   m_selectedObjects = m_selectorObjects;
-  updateWidgets();
+  m_grid->requestRefreshGrid();
 }
 
 void ObjectSelector::clearSelection()
 {
   m_selectedObjects.clear();
-  updateWidgets();
+  m_grid->requestRefreshGrid();
 }
 
 void ObjectSelector::updateWidgets(const int t_row, const boost::optional<int> &t_subrow, bool t_objectSelected, bool t_objectVisible)
