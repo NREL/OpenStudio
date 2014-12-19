@@ -107,6 +107,7 @@ public slots:
 
 private slots:
   void filterStateChanged(const int newState) const;
+  void selectAllStateChanged(const int newState) const;
 
 private:
   REGISTER_LOGGER("openstudio.SpaceTypesGridController");

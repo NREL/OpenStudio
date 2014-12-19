@@ -240,6 +240,19 @@ void SpaceTypesGridController::setCategoriesAndFields()
 
 }
 
+void SpaceTypesGridController::selectAllStateChanged(const int newState) const
+{
+  LOG(Debug, "Select all state changed: " << newState);
+
+  auto objectSelector = getObjectSelector();
+  if (newState == 0)
+  {
+    objectSelector->clearSelection();
+  } else {
+    objectSelector->selectAll();
+  }
+}
+
 void SpaceTypesGridController::filterStateChanged(const int newState) const
 {
   LOG(Debug, "Lights only filter state changed: " << newState);
@@ -848,7 +861,10 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
 
       }
       else if (field == SELECTED) {
-        addSelectColumn(Heading(QString(SELECTED), false),
+        auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
+        connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpaceTypesGridController::selectAllStateChanged);
+
+        addSelectColumn(Heading(QString(SELECTED), false, checkbox),
             DataSource(
               allLoads,
               true

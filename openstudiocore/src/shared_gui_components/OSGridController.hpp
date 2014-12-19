@@ -206,6 +206,8 @@ class ObjectSelector : public QObject
     void setObjectFilter(const std::function<bool (const model::ModelObject &)> &t_filter);
     void resetObjectFilter();
     bool containsObject(const openstudio::model::ModelObject &t_obj) const;
+    void selectAll();
+    void clearSelection();
 
   private slots:
     void widgetDestroyed(QObject *t_obj);
