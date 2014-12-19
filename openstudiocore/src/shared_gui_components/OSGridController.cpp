@@ -1284,17 +1284,36 @@ void OSGridController::onObjectRemoved(boost::optional<model::ParentObject> pare
 
 HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)
   : QWidget(parent),
-  m_label(new QLabel(fieldName)),
-  m_checkBox(new QCheckBox())
+    m_label(new QLabel(fieldName)),
+    m_checkBox(new QCheckBox())
 {
+  auto vlayout = new QVBoxLayout();
   auto layout = new QHBoxLayout();
-  setLayout(layout);
+  setLayout(vlayout);
+  vlayout->addLayout(layout);
 
   m_label->setWordWrap(true);
   m_label->setAlignment(Qt::AlignCenter);
   layout->addWidget(m_label);
 
   layout->addWidget(m_checkBox);
+}
+
+HorizontalHeaderWidget::~HorizontalHeaderWidget()
+{
+  for (auto &widget : m_addedWidgets)
+  {
+    layout()->removeWidget(widget.data());
+    widget->setParent(nullptr);
+    widget->setVisible(false);
+  }
+}
+
+void HorizontalHeaderWidget::addWidget(const QSharedPointer<QWidget> &t_widget)
+{
+  m_addedWidgets.push_back(t_widget);
+  layout()->addWidget(t_widget.data());
+  t_widget->setVisible(true);
 }
 
 } // openstudio

@@ -697,11 +697,14 @@ public:
 
   HorizontalHeaderWidget(const QString & fieldName, QWidget * parent = nullptr);
 
-  virtual ~HorizontalHeaderWidget() {}
+  virtual ~HorizontalHeaderWidget();
+  void addWidget(const QSharedPointer<QWidget> &t_widget);
 
   QLabel * m_label;
 
   QCheckBox * m_checkBox;
+
+  std::vector<QSharedPointer<QWidget>> m_addedWidgets;
 
 };
 
