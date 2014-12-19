@@ -35,7 +35,7 @@ class ImportSpaces < OpenStudio::Ruleset::ModelUserScript
     result << import_path
     
     begin
-      Sketchup.send_action("showRubyPanel:")
+      SKETCHUP_CONSOLE.show
     rescue => e
     end
     
