@@ -832,6 +832,14 @@ QWidget * OSGridController::widgetAt(int row, int column)
       OS_ASSERT(m_horizontalHeader.size() == m_baseConcepts.size());
     }
     addWidget(m_horizontalHeader.at(column), boost::none, false);
+    QSharedPointer<BaseConcept> baseConcept = m_baseConcepts[column];
+    const Heading &heading = baseConcept->heading();
+    if (!heading.showCheckbox())
+    {
+      HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(column));
+      OS_ASSERT(horizontalHeaderWidget);
+      horizontalHeaderWidget->m_checkBox->hide();
+    }
   } else {
 
     model::ModelObject mo = m_modelObjects[modelObjectRow];

@@ -226,7 +226,7 @@ void ThermalZonesGridController::addColumns(const QString &/*category*/, std::ve
                         NullAdapter(&model::ThermalZone::useIdealAirLoads),
                         NullAdapter(&model::ThermalZone::setUseIdealAirLoads));
     }else if(field == SELECTED){
-      addSelectColumn(Heading(QString(SELECTED)));
+      addSelectColumn(Heading(QString(SELECTED), false));
     }else if(field == ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE){
       addQuantityEditColumn(Heading(QString(ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE)),
                             QString("C"),
@@ -621,7 +621,7 @@ void ThermalZonesGridController::addColumns(const QString &/*category*/, std::ve
         );
 
     }else if(field == NAME){
-      addNameLineEditColumn(Heading(QString(NAME)),
+      addNameLineEditColumn(Heading(QString(NAME), false),
                             false,
                             CastNullAdapter<model::ThermalZone>(&model::ThermalZone::name),
                             CastNullAdapter<model::ThermalZone>(&model::ThermalZone::setName),
@@ -683,12 +683,6 @@ QString ThermalZonesGridController::getColor(const model:: ModelObject & modelOb
 void ThermalZonesGridController::checkSelectedFields()
 {
   if(!this->m_hasHorizontalHeader) return;
-
-  // Don't show the name column check box
-  // From above in addColumns, we know that NAME is the first entry
-  HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(0));
-  OS_ASSERT(horizontalHeaderWidget);
-  horizontalHeaderWidget->m_checkBox->hide();
 
   OSGridController::checkSelectedFields();
 }

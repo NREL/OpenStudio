@@ -302,7 +302,7 @@ void RefrigerationCaseGridController::addColumns(const QString &/*category*/, st
                             NullAdapter(&model::RefrigerationCase::ratedAmbientTemperature),
                             NullAdapter(&model::RefrigerationCase::setRatedAmbientTemperature));
     }else if(field == SELECTED){
-      addSelectColumn(Heading(QString(SELECTED)));
+      addSelectColumn(Heading(QString(SELECTED), false));
     }else if(field == RATEDAMBIENTRELATIVEHUMIDITY){
       addValueEditColumn(Heading(QString(RATEDAMBIENTRELATIVEHUMIDITY)),
                          NullAdapter(&model::RefrigerationCase::ratedAmbientRelativeHumidity),
@@ -566,7 +566,7 @@ void RefrigerationCaseGridController::addColumns(const QString &/*category*/, st
     }else if(field == DEFROSTENERGYCORRECTIONCURVE){
       //boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const; TODO
     }else if(field == NAME){
-      addNameLineEditColumn(Heading(QString(NAME)),
+      addNameLineEditColumn(Heading(QString(NAME), false),
                             false,
                             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::name),
                             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setName));
@@ -771,7 +771,7 @@ void RefrigerationWalkInGridController::addColumns(const QString &/*category*/, 
             boost::optional<std::function<void(model::RefrigerationWalkIn *)> >(),
             boost::optional<DataSource>());
     }else if(field == SELECTED){
-      addSelectColumn(Heading(QString(SELECTED)));
+      addSelectColumn(Heading(QString(SELECTED), false));
     }else if(field == DEFROSTCONTROLTYPE){
       addComboBoxColumn<std::string,model::RefrigerationWalkIn>(
             Heading(QString(DEFROSTCONTROLTYPE)),
@@ -953,7 +953,7 @@ void RefrigerationWalkInGridController::addColumns(const QString &/*category*/, 
     }else if(field == ZONEBOUNDARIES){
       //std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries() const; TODO
     }else if(field == NAME){
-      addNameLineEditColumn(Heading(QString(NAME)),
+      addNameLineEditColumn(Heading(QString(NAME), false),
                             false,
                             CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::name),
                             CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setName));
@@ -1096,12 +1096,6 @@ QString RefrigerationWalkInGridController::getColor(const model:: ModelObject & 
 void RefrigerationWalkInGridController::checkSelectedFields()
 {
   if(!this->m_hasHorizontalHeader) return;
-
-  // Don't show the name column check box
-  // From above in addColumns, we know that NAME is the first entry
-  HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(0));
-  OS_ASSERT(horizontalHeaderWidget);
-  horizontalHeaderWidget->m_checkBox->hide();
 
   OSGridController::checkSelectedFields();
 }

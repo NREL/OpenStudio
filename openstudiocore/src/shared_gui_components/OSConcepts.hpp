@@ -31,8 +31,8 @@ namespace openstudio {
 class Heading
 {
   public:
-    explicit Heading(const QString &t_headingLabel)
-      : m_label(t_headingLabel)
+    explicit Heading(const QString &t_headingLabel, const bool t_showColumnCheckbox = true)
+      : m_label(t_headingLabel), m_showColumnCheckbox(t_showColumnCheckbox)
     {
     }
 
@@ -41,8 +41,14 @@ class Heading
       return m_label;
     }
 
+    bool showCheckbox() const
+    {
+      return m_showColumnCheckbox;
+    }
+
   private:
     QString m_label;
+    bool m_showColumnCheckbox;
 };
 
 template<typename DataType, typename RetType>
