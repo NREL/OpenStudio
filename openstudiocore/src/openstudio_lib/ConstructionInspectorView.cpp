@@ -62,7 +62,7 @@ ConstructionInspectorView::ConstructionInspectorView(bool isIP, const openstudio
 void ConstructionInspectorView::createLayout()
 {
   QWidget* hiddenWidget = new QWidget();
-  this->stackedWidget()->insertWidget(0, hiddenWidget);
+  this->stackedWidget()->addWidget(hiddenWidget);
 
   QWidget* visibleWidget = new QWidget();
   this->stackedWidget()->addWidget(visibleWidget);

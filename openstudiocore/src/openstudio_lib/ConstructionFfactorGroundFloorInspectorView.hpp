@@ -23,8 +23,6 @@
 #include "ModelObjectInspectorView.hpp"
 #include "ModelObjectVectorController.hpp"
 
-#include "../model/StandardsInformationConstruction.hpp"
-
 class QComboBox;
 
 namespace openstudio {
@@ -40,6 +38,8 @@ class OSLineEdit;
 class OSQuantityEdit;
 
 class OSComboBox2;
+
+class StandardsInformationConstructionWidget;
 
 class ConstructionFfactorGroundFloorInspectorView : public ModelObjectInspectorView
 {
@@ -70,6 +70,8 @@ class ConstructionFfactorGroundFloorInspectorView : public ModelObjectInspectorV
     bool m_isIP;
 
     OSLineEdit * m_nameEdit;
+
+    StandardsInformationConstructionWidget * m_standardsInformationWidget;
 
     OSQuantityEdit * m_ffactorEdit;
 

@@ -18,7 +18,7 @@
 **********************************************************************/
 
 #include "ConstructionFfactorGroundFloorInspectorView.hpp"
-
+#include "StandardsInformationConstructionWidget.hpp"
 #include "OSItem.hpp"
 
 #include "../shared_gui_components/OSLineEdit.hpp"
@@ -38,9 +38,10 @@
 namespace openstudio {
 
 ConstructionFfactorGroundFloorInspectorView::ConstructionFfactorGroundFloorInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-  : ModelObjectInspectorView(model, parent),
+  : ModelObjectInspectorView(model, true, parent),
     m_isIP(isIP),
     m_nameEdit(nullptr),
+    m_standardsInformationWidget(nullptr),
     m_ffactorEdit(nullptr),
     m_areaEdit(nullptr),
     m_perimeterExposedEdit(nullptr)
@@ -50,6 +51,9 @@ ConstructionFfactorGroundFloorInspectorView::ConstructionFfactorGroundFloorInspe
 
 void ConstructionFfactorGroundFloorInspectorView::createLayout()
 {
+  QWidget* hiddenWidget = new QWidget();
+  this->stackedWidget()->addWidget(hiddenWidget);
+
   QWidget* visibleWidget = new QWidget();
   this->stackedWidget()->addWidget(visibleWidget);
 
@@ -61,6 +65,28 @@ void ConstructionFfactorGroundFloorInspectorView::createLayout()
   int row = mainGridLayout->rowCount();
 
   QLabel * label = nullptr;
+
+  // Name
+
+  label = new QLabel("Name: ");
+  label->setObjectName("H2");
+  mainGridLayout->addWidget(label, row, 0);
+
+  ++row;
+
+  m_nameEdit = new OSLineEdit();
+  mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
+
+  ++row;
+
+  // Standards Information
+
+  m_standardsInformationWidget = new StandardsInformationConstructionWidget(m_isIP);
+  m_standardsInformationWidget->addToLayout(mainGridLayout, row);
+  m_standardsInformationWidget->hideFenestration();
+  m_standardsInformationWidget->disableFenestration();
+
+  ++row;
 
   // F-Factor
 
@@ -137,25 +163,8 @@ void ConstructionFfactorGroundFloorInspectorView::attach(openstudio::model::FFac
   m_ffactorEdit->bind(fFactorGroundFloorConstruction,"fFactor",m_isIP);
   m_areaEdit->bind(fFactorGroundFloorConstruction,"area",m_isIP);
   m_perimeterExposedEdit->bind(fFactorGroundFloorConstruction,"perimeterExposed",m_isIP);
-  /*
-  m_standardsInformation = fFactorGroundFloorConstruction.standardsInformation();
-  if (!m_standardsInformation->intendedSurfaceType()){
-    m_standardsInformation->setIntendedSurfaceType("GroundContactFloor");
-  }
-
-  m_intendedSurfaceType->bind<std::string>(
-      *m_standardsInformation,
-      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-      std::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceTypeValues),
-      std::function<boost::optional<std::string> ()>(std::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceType,m_standardsInformation.get_ptr())),
-      std::bind(&openstudio::model::StandardsInformationConstruction::setIntendedSurfaceType,m_standardsInformation.get_ptr(),std::placeholders::_1),
-      NoFailAction(std::bind(&model::StandardsInformationConstruction::resetIntendedSurfaceType,m_standardsInformation.get_ptr())));
-
-  connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &ConstructionFfactorGroundFloorInspectorView::populateStandardsConstructionType);
-
-  m_standardsConstructionType->setEnabled(true);
-  populateStandardsConstructionType();
-  */
+  
+  m_standardsInformationWidget->attach(fFactorGroundFloorConstruction);
 }
 
 void ConstructionFfactorGroundFloorInspectorView::detach()
@@ -163,6 +172,8 @@ void ConstructionFfactorGroundFloorInspectorView::detach()
   m_ffactorEdit->unbind();
   m_areaEdit->unbind();
   m_perimeterExposedEdit->unbind();
+
+  m_standardsInformationWidget->detach();
 }
 
 } // openstudio
