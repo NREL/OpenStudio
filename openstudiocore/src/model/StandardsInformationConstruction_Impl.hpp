@@ -97,7 +97,7 @@ namespace detail {
 
     boost::optional<std::string> fenestrationGasFill() const;
 
-    boost::optional<bool> fenestrationLowEmissivityCoating() const;
+    bool fenestrationLowEmissivityCoating() const;
 
     // return the parent object in the hierarchy
     virtual boost::optional<ParentObject> parent() const;

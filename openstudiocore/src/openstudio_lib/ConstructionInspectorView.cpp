@@ -49,7 +49,7 @@ namespace openstudio {
 // ConstructionInspectorView
 
 ConstructionInspectorView::ConstructionInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-  : ModelObjectInspectorView(model, parent),
+  : ModelObjectInspectorView(model, true, parent),
     m_isIP(isIP),
     m_nameEdit(nullptr),
     m_standardsInformationWidget(nullptr),
@@ -61,6 +61,9 @@ ConstructionInspectorView::ConstructionInspectorView(bool isIP, const openstudio
 
 void ConstructionInspectorView::createLayout()
 {
+  QWidget* hiddenWidget = new QWidget();
+  this->stackedWidget()->insertWidget(0, hiddenWidget);
+
   QWidget* visibleWidget = new QWidget();
   this->stackedWidget()->addWidget(visibleWidget);
 
@@ -150,6 +153,18 @@ void ConstructionInspectorView::onSelectModelObject(const openstudio::model::Mod
 
 void ConstructionInspectorView::onUpdate()
 {
+  m_constructionVC->reportItems();
+
+  boost::optional<model::ModelObject> modelObject = this->modelObject();
+  if (modelObject){
+    if (modelObject->cast<model::ConstructionBase>().isFenestration()){
+      m_standardsInformationWidget->enableFenestration();
+    } else {
+      m_standardsInformationWidget->disableFenestration();
+    }
+  } else {
+    m_standardsInformationWidget->disableFenestration();
+  }
 }
 
 void ConstructionInspectorView::attach(openstudio::model::Construction & construction)

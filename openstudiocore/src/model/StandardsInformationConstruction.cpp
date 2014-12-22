@@ -176,16 +176,17 @@ namespace detail {
     IstringFind finder;
     if (standardsConstructionType){
       finder.addTarget(*standardsConstructionType);
+
+      auto it = std::remove_if(result.begin(), result.end(), finder);
+      result.resize(std::distance(result.begin(), it));
     }
-    auto it = std::remove_if(result.begin(), result.end(), finder); 
-    result.resize( std::distance(result.begin(),it) ); 
 
     // sort
     std::sort(result.begin(), result.end(), IstringCompare());
 
     // make unique
     // DLM: have to sort before calling unique, unique only works on consecutive elements
-    it = std::unique(result.begin(), result.end(), IstringEqual()); 
+    auto it = std::unique(result.begin(), result.end(), IstringEqual()); 
     result.resize( std::distance(result.begin(),it) ); 
 
     // add current to front
@@ -234,14 +235,66 @@ namespace detail {
   }
 
   std::vector<std::string> StandardsInformationConstruction_Impl::suggestedConstructionStandards() const {
-    // todo: pull from standards JSON file, for now just hard code here
+
     std::vector<std::string> result;
+
+    boost::optional<std::string> constructionStandard = this->constructionStandard();
+
+    // include values from json
+    //parseStandardsMap();
+
+    //QMap<QString, QVariant> materials = m_standardsMap["materials"].toMap();
+    //for (QString material_name : materials.uniqueKeys()) {
+    //  QMap<QString, QVariant> material = materials[material_name].toMap();
+    //  QString tmp = material["material_standard"].toString();
+    //  if (!tmp.isEmpty()){
+    //    result.push_back(toString(tmp));
+    //  }
+    //}
+
+    // todo: pull from standards JSON file, for now just hard code here
     result.push_back("CEC Title24-2013");
+
+    // include values from model
+    for (const StandardsInformationConstruction& other : this->model().getConcreteModelObjects<StandardsInformationConstruction>()){
+      if (other.handle() == this->handle()){
+        continue;
+      }
+
+      boost::optional<std::string> otherConstructionStandard = other.constructionStandard();
+      if (otherConstructionStandard){
+        result.push_back(*otherConstructionStandard);
+      }
+    }
+
+    // remove current
+    IstringFind finder;
+    if (constructionStandard){
+      finder.addTarget(*constructionStandard);
+
+      auto it = std::remove_if(result.begin(), result.end(), finder);
+      result.resize(std::distance(result.begin(), it));
+    }
+
+    // sort
+    std::sort(result.begin(), result.end(), IstringCompare());
+
+    // make unique
+    // DLM: have to sort before calling unique, unique only works on consecutive elements
+    auto it = std::unique(result.begin(), result.end(), IstringEqual());
+    result.resize(std::distance(result.begin(), it));
+
+    // add current to front
+    if (constructionStandard){
+      result.insert(result.begin(), *constructionStandard);
+    }
+
     return result;
+
   }
 
   boost::optional<std::string> StandardsInformationConstruction_Impl::constructionStandard() const {
-    return getString(OS_StandardsInformation_ConstructionFields::ConstructionStandard,true);
+    return getString(OS_StandardsInformation_ConstructionFields::ConstructionStandard,true,true);
   }
 
   std::vector<std::string> StandardsInformationConstruction_Impl::suggestedConstructionStandardSources() const {
@@ -250,14 +303,17 @@ namespace detail {
     boost::optional<std::string> constructionStandard = this->constructionStandard();
     boost::optional<std::string> constructionStandardSource = this->constructionStandardSource();
 
-    // todo: pull from standards JSON file, for now just hard code here
-    // note: didn't add DemsingCeiling choices here. Thinking Intended Surface Types should instead be DemisingCeiling
-    if (constructionStandard){
-      if (istringEqual(*constructionStandard, "CEC Title24 - 2013")){
-        //result.push_back("Mass");
-        //result.push_back("SteelFramed");
-        //result.push_back("WoodFramed");
+    if (!constructionStandard){
+      if (constructionStandardSource){
+        result.push_back(*constructionStandardSource);
       }
+      return result;
+    }
+
+    
+    // todo: pull from standards JSON file, for now just hard code here
+    if (istringEqual(*constructionStandard, "CEC Title24-2013")){
+      //result.push_back("NA6");
     }
 
     // include values from model
@@ -267,16 +323,10 @@ namespace detail {
         continue;
       }
 
-      boost::optional<std::string> constructionStandard = other.constructionStandard();
-      if (constructionStandard && constructionStandard){
-        // need to be the same
-        if (constructionStandard.get() != constructionStandard.get()){
-          continue;
-        }
-      } else if (!constructionStandard && !constructionStandard){
-        // both empty
-      } else{
-        // different
+      boost::optional<std::string> otherConstructionStandard = other.constructionStandard();
+      if (!otherConstructionStandard){
+        continue;
+      } else if (*constructionStandard != *otherConstructionStandard){
         continue;
       }
 
@@ -290,16 +340,17 @@ namespace detail {
     IstringFind finder;
     if (constructionStandardSource){
       finder.addTarget(*constructionStandardSource);
+
+      auto it = std::remove_if(result.begin(), result.end(), finder);
+      result.resize(std::distance(result.begin(), it));
     }
-    auto it = std::remove_if(result.begin(), result.end(), finder);
-    result.resize(std::distance(result.begin(), it));
 
     // sort
     std::sort(result.begin(), result.end(), IstringCompare());
 
     // make unique
     // DLM: have to sort before calling unique, unique only works on consecutive elements
-    it = std::unique(result.begin(), result.end(), IstringEqual());
+    auto it = std::unique(result.begin(), result.end(), IstringEqual());
     result.resize(std::distance(result.begin(), it));
 
     // add current to front
@@ -311,44 +362,45 @@ namespace detail {
   }
 
   boost::optional<std::string> StandardsInformationConstruction_Impl::constructionStandardSource() const {
-    return getString(OS_StandardsInformation_ConstructionFields::ConstructionStandardSource,true);
+    return getString(OS_StandardsInformation_ConstructionFields::ConstructionStandardSource,true,true);
   }
 
   boost::optional<std::string> StandardsInformationConstruction_Impl::fenestrationType() const {
-    return getString(OS_StandardsInformation_ConstructionFields::FenestrationType,true);
+    return getString(OS_StandardsInformation_ConstructionFields::FenestrationType,true,true);
   }
 
   boost::optional<std::string> StandardsInformationConstruction_Impl::fenestrationAssemblyContext() const {
-    return getString(OS_StandardsInformation_ConstructionFields::FenestrationAssemblyContext,true);
+    return getString(OS_StandardsInformation_ConstructionFields::FenestrationAssemblyContext,true,true);
   }
 
   boost::optional<std::string> StandardsInformationConstruction_Impl::fenestrationNumberofPanes() const {
-    return getString(OS_StandardsInformation_ConstructionFields::FenestrationNumberofPanes,true);
+    return getString(OS_StandardsInformation_ConstructionFields::FenestrationNumberofPanes,true,true);
   }
 
   boost::optional<std::string> StandardsInformationConstruction_Impl::fenestrationFrameType() const {
-    return getString(OS_StandardsInformation_ConstructionFields::FenestrationFrameType,true);
+    return getString(OS_StandardsInformation_ConstructionFields::FenestrationFrameType,true,true);
   }
 
   boost::optional<std::string> StandardsInformationConstruction_Impl::fenestrationDividerType() const {
-    return getString(OS_StandardsInformation_ConstructionFields::FenestrationDividerType,true);
+    return getString(OS_StandardsInformation_ConstructionFields::FenestrationDividerType,true,true);
   }
 
   boost::optional<std::string> StandardsInformationConstruction_Impl::fenestrationTint() const {
-    return getString(OS_StandardsInformation_ConstructionFields::FenestrationTint,true);
+    return getString(OS_StandardsInformation_ConstructionFields::FenestrationTint,true,true);
   }
 
   boost::optional<std::string> StandardsInformationConstruction_Impl::fenestrationGasFill() const {
-    return getString(OS_StandardsInformation_ConstructionFields::FenestrationGasFill,true);
+    return getString(OS_StandardsInformation_ConstructionFields::FenestrationGasFill,true,true);
   }
 
-  boost::optional<bool> StandardsInformationConstruction_Impl::fenestrationLowEmissivityCoating() const {
-    boost::optional<bool> result;
+  bool StandardsInformationConstruction_Impl::fenestrationLowEmissivityCoating() const {
+    bool result = false;
     boost::optional<std::string> value = getString(OS_StandardsInformation_ConstructionFields::FenestrationLowEmissivityCoating,true);
     if (value){
       result = openstudio::istringEqual(value.get(), "True");
     }
-    return result;  }
+    return result;  
+  }
 
   boost::optional<ParentObject> StandardsInformationConstruction_Impl::parent() const {
     OptionalConstructionBase candidate = construction();
@@ -730,7 +782,7 @@ boost::optional<std::string> StandardsInformationConstruction::fenestrationGasFi
   return getImpl<detail::StandardsInformationConstruction_Impl>()->fenestrationGasFill();
 }
 
-boost::optional<bool> StandardsInformationConstruction::fenestrationLowEmissivityCoating() const {
+bool StandardsInformationConstruction::fenestrationLowEmissivityCoating() const {
   return getImpl<detail::StandardsInformationConstruction_Impl>()->fenestrationLowEmissivityCoating();
 }
 

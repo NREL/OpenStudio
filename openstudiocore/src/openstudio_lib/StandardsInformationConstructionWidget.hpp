@@ -73,25 +73,30 @@ class StandardsInformationConstructionWidget : public QWidget
 
   private slots:
 
+    void standardChanged(const QString& text);
+    void populateStandards();
+
+    void standardSourceChanged(const QString& text);
+    void populateStandardSources();
+
+    void intendedSurfaceTypeChanged(const QString& text);
+
     void standardsConstructionTypeChanged(const QString& text);
-
-    void editStandardsConstructionType(const QString& text);
-
     void populateStandardsConstructionType();
 
   private:
-
-    OSComboBox2 * m_intendedSurfaceType;
 
     QComboBox * m_standard;
 
     QComboBox * m_standardSource;
 
-    QComboBox * m_fenestration;
+    OSComboBox2 * m_intendedSurfaceType;
 
     QComboBox * m_standardsConstructionType;
 
     QLabel * m_fenestrationLabel;
+
+    QComboBox * m_fenestration;
 
     bool m_isIP;
 

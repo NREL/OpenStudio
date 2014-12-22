@@ -38,12 +38,12 @@ namespace openstudio {
 
   StandardsInformationConstructionWidget::StandardsInformationConstructionWidget(bool isIP, QWidget * parent)
   : QWidget(parent),
-    m_intendedSurfaceType(nullptr),
     m_standard(nullptr),
     m_standardSource(nullptr),
-    m_fenestration(nullptr),
+    m_intendedSurfaceType(nullptr),
     m_standardsConstructionType(nullptr),
     m_fenestrationLabel(nullptr),
+    m_fenestration(nullptr),
     m_isIP(isIP),
     m_construction(boost::none),
     m_standardsInformation(boost::none)
@@ -52,6 +52,8 @@ namespace openstudio {
 
 void StandardsInformationConstructionWidget::addToLayout(QGridLayout* mainGridLayout, int& row)
 {
+  bool test;
+
   QVBoxLayout * vLayout = nullptr;
 
   QLabel * label = nullptr;
@@ -88,6 +90,11 @@ void StandardsInformationConstructionWidget::addToLayout(QGridLayout* mainGridLa
 
   mainGridLayout->addLayout(vLayout, row, 0);
 
+  //test = connect(m_standard, &QComboBox::editTextChanged, this, &openstudio::StandardsInformationConstructionWidget::standardChanged);
+  //OS_ASSERT(test); 
+  test = connect(m_standard, &QComboBox::currentTextChanged, this, &openstudio::StandardsInformationConstructionWidget::standardChanged);
+  OS_ASSERT(test);
+
   // Standard Source
   vLayout = new QVBoxLayout();
 
@@ -103,6 +110,11 @@ void StandardsInformationConstructionWidget::addToLayout(QGridLayout* mainGridLa
   vLayout->addWidget(m_standardSource);
 
   mainGridLayout->addLayout(vLayout, row, 1);
+
+  //test = connect(m_standardSource, &QComboBox::editTextChanged, this, &openstudio::StandardsInformationConstructionWidget::standardSourceChanged);
+  //OS_ASSERT(test);
+  test = connect(m_standardSource, &QComboBox::currentTextChanged, this, &openstudio::StandardsInformationConstructionWidget::standardSourceChanged);
+  OS_ASSERT(test);
 
   ++row;
 
@@ -120,6 +132,9 @@ void StandardsInformationConstructionWidget::addToLayout(QGridLayout* mainGridLa
 
   mainGridLayout->addLayout(vLayout, row, 0);
 
+  test = connect(m_intendedSurfaceType, &QComboBox::currentTextChanged, this, &openstudio::StandardsInformationConstructionWidget::intendedSurfaceTypeChanged);
+  OS_ASSERT(test);
+
   // Standards Construction Type
   vLayout = new QVBoxLayout();
 
@@ -135,6 +150,11 @@ void StandardsInformationConstructionWidget::addToLayout(QGridLayout* mainGridLa
   vLayout->addWidget(m_standardsConstructionType);
 
   mainGridLayout->addLayout(vLayout, row, 1);
+
+  //test = connect(m_standardsConstructionType, &QComboBox::editTextChanged, this, &openstudio::StandardsInformationConstructionWidget::standardsConstructionTypeChanged);
+  //OS_ASSERT(test);
+  test = connect(m_standardsConstructionType, &QComboBox::currentTextChanged, this, &openstudio::StandardsInformationConstructionWidget::standardsConstructionTypeChanged);
+  OS_ASSERT(test);
 
   ++row;
 
@@ -201,6 +221,10 @@ void StandardsInformationConstructionWidget::attach(openstudio::model::Construct
   m_construction = construction;
   m_standardsInformation = construction.standardsInformation();
 
+  m_standard->setEnabled(true);
+
+  m_standardSource->setEnabled(true);
+
   m_intendedSurfaceType->bind<std::string>(
     *m_standardsInformation,
     static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
@@ -208,8 +232,12 @@ void StandardsInformationConstructionWidget::attach(openstudio::model::Construct
     std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceType, m_standardsInformation.get_ptr())),
     std::bind(&openstudio::model::StandardsInformationConstruction::setIntendedSurfaceType, m_standardsInformation.get_ptr(), std::placeholders::_1),
     NoFailAction(std::bind(&model::StandardsInformationConstruction::resetIntendedSurfaceType, m_standardsInformation.get_ptr())));
-  
-  connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &openstudio::StandardsInformationConstructionWidget::populateStandardsConstructionType);
+
+  m_standardsConstructionType->setEnabled(true);
+
+  populateStandards();
+  populateStandardSources();
+  populateStandardsConstructionType();
 }
 
 void StandardsInformationConstructionWidget::detach()
@@ -221,27 +249,92 @@ void StandardsInformationConstructionWidget::detach()
     m_standardsInformation.reset();
   }
 
+  m_standard->setEnabled(false);
+
+  m_standardSource->setEnabled(false);
+
   m_intendedSurfaceType->unbind();
 
   m_standardsConstructionType->setEnabled(false);
 }
 
+void StandardsInformationConstructionWidget::standardChanged(const QString& text)
+{
+  if (m_standardsInformation){
+    std::string standard = toString(text);
+    if (standard.empty()){
+      m_standardsInformation->resetConstructionStandard();
+    } else{
+      m_standardsInformation->setConstructionStandard(standard);
+    }
+    populateStandards();
+    populateStandardSources();
+  }
+}
 
-/*
-m_intendedSurfaceType->bind<std::string>(
-*m_standardsInformation,
-static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-std::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceTypeValues),
-std::function<boost::optional<std::string> ()>(std::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceType,m_standardsInformation.get_ptr())),
-std::bind(&openstudio::model::StandardsInformationConstruction::setIntendedSurfaceType,m_standardsInformation.get_ptr(),std::placeholders::_1),
-NoFailAction(std::bind(&model::StandardsInformationConstruction::resetIntendedSurfaceType,m_standardsInformation.get_ptr())));
+void StandardsInformationConstructionWidget::populateStandards()
+{
+  m_standard->blockSignals(true);
 
-connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &populateStandardsConstructionType);
+  m_standard->clear();
+  if (m_standardsInformation){
+    m_standard->addItem("");
+    std::vector<std::string> suggestedConstructionStandards = m_standardsInformation->suggestedConstructionStandards();
+    for (const std::string& suggestedConstructionStandard : suggestedConstructionStandards) {
+      m_standard->addItem(toQString(suggestedConstructionStandard));
+    }
+    boost::optional<std::string> constructionStandard = m_standardsInformation->constructionStandard();
+    if (constructionStandard){
+      OS_ASSERT(!suggestedConstructionStandards.empty());
+      m_standard->setCurrentIndex(1);
+    } else{
+      m_standard->setCurrentIndex(0);
+    }
+  }
 
-m_standardsConstructionType->setEnabled(true);
-populateStandardsConstructionType();
-*/
+  m_standard->blockSignals(false);
+}
 
+void StandardsInformationConstructionWidget::standardSourceChanged(const QString& text)
+{
+  if (m_standardsInformation){
+    std::string standardSource = toString(text);
+    if (standardSource.empty()){
+      m_standardsInformation->resetConstructionStandardSource();
+    } else{
+      m_standardsInformation->setConstructionStandardSource(standardSource);
+    }
+    populateStandardSources();
+  }
+}
+
+void StandardsInformationConstructionWidget::populateStandardSources()
+{
+  m_standardSource->blockSignals(true);
+
+  m_standardSource->clear();
+  if (m_standardsInformation){
+    m_standardSource->addItem("");
+    std::vector<std::string> suggestedConstructionStandardSources = m_standardsInformation->suggestedConstructionStandardSources();
+    for (const std::string& suggestedConstructionStandardSource : suggestedConstructionStandardSources) {
+      m_standardSource->addItem(toQString(suggestedConstructionStandardSource));
+    }
+    boost::optional<std::string> constructionStandardSource = m_standardsInformation->constructionStandardSource();
+    if (constructionStandardSource){
+      OS_ASSERT(!suggestedConstructionStandardSources.empty());
+      m_standardSource->setCurrentIndex(1);
+    } else{
+      m_standardSource->setCurrentIndex(0);
+    }
+  }
+
+  m_standardSource->blockSignals(false);
+}
+
+void StandardsInformationConstructionWidget::intendedSurfaceTypeChanged(const QString& text)
+{
+  populateStandardsConstructionType();
+}
 
 void StandardsInformationConstructionWidget::standardsConstructionTypeChanged(const QString & text)
 {
@@ -252,25 +345,13 @@ void StandardsInformationConstructionWidget::standardsConstructionTypeChanged(co
     }else{
       m_standardsInformation->setStandardsConstructionType(standardsConstructionType);
     }
-    populateStandardsConstructionType();
-  }
-}
-
-void StandardsInformationConstructionWidget::editStandardsConstructionType(const QString & text)
-{
-  if (m_standardsInformation){
-    std::string standardsConstructionType = toString(text);
-    if (standardsConstructionType.empty()){
-      m_standardsInformation->resetStandardsConstructionType();
-    }else{
-      m_standardsInformation->setStandardsConstructionType(standardsConstructionType);
-    }
+    
   }
 }
 
 void StandardsInformationConstructionWidget::populateStandardsConstructionType()
 {
-  disconnect(m_standardsConstructionType, 0, this, 0);
+  m_standardsConstructionType->blockSignals(true);
 
   m_standardsConstructionType->clear();
   if (m_standardsInformation){
@@ -287,6 +368,8 @@ void StandardsInformationConstructionWidget::populateStandardsConstructionType()
       m_standardsConstructionType->setCurrentIndex(0);
     }
   }
+
+  m_standardsConstructionType->blockSignals(false);
 }
 
 

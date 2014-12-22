@@ -134,7 +134,7 @@ class MODEL_API StandardsInformationConstruction : public ModelObject {
   boost::optional<std::string> fenestrationGasFill() const;
 
   /** Does this fenestration construction include a low-e coating. */
-  boost::optional<bool> fenestrationLowEmissivityCoating() const;
+  bool fenestrationLowEmissivityCoating() const;
 
   //@}
   /** @name Setters */

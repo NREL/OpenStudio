@@ -134,16 +134,17 @@ namespace detail {
     IstringFind finder;
     if (materialStandard){
       finder.addTarget(*materialStandard);
+
+      auto it = std::remove_if(result.begin(), result.end(), finder);
+      result.resize(std::distance(result.begin(), it));
     }
-    auto it = std::remove_if(result.begin(), result.end(), finder);
-    result.resize(std::distance(result.begin(), it));
 
     // sort
     std::sort(result.begin(), result.end(), IstringCompare());
 
     // make unique
     // DLM: have to sort before calling unique, unique only works on consecutive elements
-    it = std::unique(result.begin(), result.end(), IstringEqual());
+    auto it = std::unique(result.begin(), result.end(), IstringEqual());
     result.resize(std::distance(result.begin(), it));
 
     // add current to front
@@ -162,11 +163,14 @@ namespace detail {
     std::vector<std::string> result;
 
     boost::optional<std::string> materialStandard = this->materialStandard();
+    boost::optional<std::string> materialStandardSource = this->materialStandardSource();
+
     if (!materialStandard){
+      if (materialStandardSource){
+        result.push_back(*materialStandardSource);
+      }
       return result;
     }
-
-    boost::optional<std::string> materialStandardSource = this->materialStandardSource();
 
     // include values from json
     parseStandardsMap();
@@ -210,16 +214,17 @@ namespace detail {
     IstringFind finder;
     if (materialStandardSource){
       finder.addTarget(*materialStandardSource);
+
+      auto it = std::remove_if(result.begin(), result.end(), finder);
+      result.resize(std::distance(result.begin(), it));
     }
-    auto it = std::remove_if(result.begin(), result.end(), finder);
-    result.resize(std::distance(result.begin(), it));
 
     // sort
     std::sort(result.begin(), result.end(), IstringCompare());
 
     // make unique
     // DLM: have to sort before calling unique, unique only works on consecutive elements
-    it = std::unique(result.begin(), result.end(), IstringEqual());
+    auto it = std::unique(result.begin(), result.end(), IstringEqual());
     result.resize(std::distance(result.begin(), it));
 
     // add current to front
@@ -286,16 +291,17 @@ namespace detail {
     IstringFind finder;
     if (standardsCategory){
       finder.addTarget(*standardsCategory);
+
+      auto it = std::remove_if(result.begin(), result.end(), finder);
+      result.resize(std::distance(result.begin(), it));
     }
-    auto it = std::remove_if(result.begin(), result.end(), finder);
-    result.resize(std::distance(result.begin(), it));
 
     // sort
     std::sort(result.begin(), result.end(), IstringCompare());
 
     // make unique
     // DLM: have to sort before calling unique, unique only works on consecutive elements
-    it = std::unique(result.begin(), result.end(), IstringEqual());
+    auto it = std::unique(result.begin(), result.end(), IstringEqual());
     result.resize(std::distance(result.begin(), it));
 
     // add current to front
@@ -318,6 +324,9 @@ namespace detail {
     boost::optional<std::string> standardsIdentifier = this->standardsIdentifier();
 
     if (!standardsCategory){
+      if (standardsIdentifier){
+        result.push_back(*standardsIdentifier);
+      }
       return result;
     }
 
@@ -378,16 +387,17 @@ namespace detail {
     IstringFind finder;
     if (standardsIdentifier){
       finder.addTarget(*standardsIdentifier);
+
+      auto it = std::remove_if(result.begin(), result.end(), finder);
+      result.resize(std::distance(result.begin(), it));
     }
-    auto it = std::remove_if(result.begin(), result.end(), finder);
-    result.resize(std::distance(result.begin(), it));
 
     // sort
     std::sort(result.begin(), result.end(), IstringCompare());
 
     // make unique
     // DLM: have to sort before calling unique, unique only works on consecutive elements
-    it = std::unique(result.begin(), result.end(), IstringEqual());
+    auto it = std::unique(result.begin(), result.end(), IstringEqual());
     result.resize(std::distance(result.begin(), it));
 
     // add current to front
