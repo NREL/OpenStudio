@@ -19,6 +19,8 @@
 
 #include "MaterialNoMassInspectorView.hpp"
 
+#include "StandardsInformationMaterialWidget.hpp"
+
 #include "../shared_gui_components/OSComboBox.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
@@ -37,25 +39,50 @@ namespace openstudio {
 // MaterialNoMassInspectorView
 
 MaterialNoMassInspectorView::MaterialNoMassInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-  : MaterialBaseInspectorView(isIP, model, parent),
-    m_roughness(nullptr),
-    m_thermalResistance(nullptr),
-    m_thermalAbsorptance(nullptr),
-    m_solarAbsorptance(nullptr),
-    m_visibleAbsorptance(nullptr)
+  : ModelObjectInspectorView(model, true, parent)
 {
   createLayout();
 }
 
 void MaterialNoMassInspectorView::createLayout()
 {
+  QWidget* visibleWidget = new QWidget();
+  this->stackedWidget()->addWidget(visibleWidget);
+
+  QGridLayout* mainGridLayout = new QGridLayout();
+  mainGridLayout->setContentsMargins(7, 7, 7, 7);
+  mainGridLayout->setSpacing(14);
+  visibleWidget->setLayout(mainGridLayout);
+
+  int row = mainGridLayout->rowCount();
+
   QLabel * label = nullptr;
 
-  unsigned row = m_mainGridLayout->rowCount();
+  // Name
+
+  label = new QLabel("Name: ");
+  label->setObjectName("H2");
+  mainGridLayout->addWidget(label, row, 0);
+
+  ++row;
+
+  m_nameEdit = new OSLineEdit();
+  mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
+
+  ++row;
+
+  // Standards Information
+
+  m_standardsInformationWidget = new StandardsInformationMaterialWidget(m_isIP);
+  m_standardsInformationWidget->addToLayout(mainGridLayout, row);
+
+  ++row;
+
+  // Roughness
 
   label = new QLabel("Roughness: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_roughness = new OSComboBox();
   m_roughness->addItem("Very Rough");
@@ -64,53 +91,53 @@ void MaterialNoMassInspectorView::createLayout()
   m_roughness->addItem("Medium Smooth");
   m_roughness->addItem("Smooth");
   m_roughness->addItem("Very Smooth");
-  m_mainGridLayout->addWidget(m_roughness,row++,0,1,3);
+  mainGridLayout->addWidget(m_roughness,row++,0,1,3);
 
   // Thermal Resistance
 
   label = new QLabel("Thermal Resistance: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_thermalResistance = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialNoMassInspectorView::toggleUnitsClicked, m_thermalResistance, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_thermalResistance,row++,0,1,3);
+  mainGridLayout->addWidget(m_thermalResistance,row++,0,1,3);
 
   // Thermal Absorptance
 
   label = new QLabel("Thermal Absorptance: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_thermalAbsorptance = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialNoMassInspectorView::toggleUnitsClicked, m_thermalAbsorptance, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_thermalAbsorptance,row++,0,1,3);
+  mainGridLayout->addWidget(m_thermalAbsorptance,row++,0,1,3);
 
   // Solar Absorptance
 
   label = new QLabel("Solar Absorptance: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_solarAbsorptance = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialNoMassInspectorView::toggleUnitsClicked, m_solarAbsorptance, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_solarAbsorptance,row++,0,1,3);
+  mainGridLayout->addWidget(m_solarAbsorptance,row++,0,1,3);
 
   // Visible Absorptance
 
   label = new QLabel("Visible Absorptance: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_visibleAbsorptance = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialNoMassInspectorView::toggleUnitsClicked, m_visibleAbsorptance, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_visibleAbsorptance,row++,0,1,3);
+  mainGridLayout->addWidget(m_visibleAbsorptance,row++,0,1,3);
 
   // Stretch
 
-  m_mainGridLayout->setRowStretch(100,100);
+  mainGridLayout->setRowStretch(100,100);
 
-  m_mainGridLayout->setColumnStretch(100,100);
+  mainGridLayout->setColumnStretch(100,100);
 }
 
 void MaterialNoMassInspectorView::onClearSelection()

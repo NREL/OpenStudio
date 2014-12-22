@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_WINDOWMATERIALGLAZINGREFRACTIONEXTINCTIONMETHODINSPECTORVIEW_HPP
 #define OPENSTUDIO_WINDOWMATERIALGLAZINGREFRACTIONEXTINCTIONMETHODINSPECTORVIEW_HPP
 
-#include "MaterialBaseInspectorView.hpp"
+#include "ModelObjectInspectorView.hpp"
 
 namespace openstudio {
 
@@ -36,7 +36,9 @@ class OSSwitch;
 
 class OSQuantityEdit;
 
-class WindowMaterialGlazingRefractionExtinctionMethodInspectorView : public MaterialBaseInspectorView
+class StandardsInformationMaterialWidget;
+
+class WindowMaterialGlazingRefractionExtinctionMethodInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
 
@@ -64,25 +66,32 @@ class WindowMaterialGlazingRefractionExtinctionMethodInspectorView : public Mate
 
     void refresh();
 
-    OSSwitch * m_solarDiffusing;
+    bool m_isIP;
 
-    OSQuantityEdit * m_thickness;
+    OSLineEdit * m_nameEdit = nullptr;
 
-    OSQuantityEdit * m_solarIndexOfRefraction;
+    OSSwitch * m_solarDiffusing = nullptr;
 
-    OSQuantityEdit * m_solarExtinctionCoefficient;
+    OSQuantityEdit * m_thickness = nullptr;
 
-    OSQuantityEdit * m_visibleIndexOfRefraction;
+    OSQuantityEdit * m_solarIndexOfRefraction = nullptr;
 
-    OSQuantityEdit * m_visibleExtinctionCoefficient;
+    OSQuantityEdit * m_solarExtinctionCoefficient = nullptr;
 
-    OSQuantityEdit * m_infraredTransmittanceAtNormalIncidence;
+    OSQuantityEdit * m_visibleIndexOfRefraction = nullptr;
 
-    OSQuantityEdit * m_infraredHemisphericalEmissivity;
+    OSQuantityEdit * m_visibleExtinctionCoefficient = nullptr;
 
-    OSQuantityEdit * m_conductivity;
+    OSQuantityEdit * m_infraredTransmittanceAtNormalIncidence = nullptr;
 
-    OSQuantityEdit * m_dirtCorrectionFactorForSolarAndVisibleTransmittance;
+    OSQuantityEdit * m_infraredHemisphericalEmissivity = nullptr;
+
+    OSQuantityEdit * m_conductivity = nullptr;
+
+    OSQuantityEdit * m_dirtCorrectionFactorForSolarAndVisibleTransmittance = nullptr;
+
+    StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
+
 };
 
 } // openstudio

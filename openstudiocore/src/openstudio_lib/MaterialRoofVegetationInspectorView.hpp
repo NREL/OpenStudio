@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_MATERIALROOFVEGETATIONINSPECTORVIEW_HPP
 #define OPENSTUDIO_MATERIALROOFVEGETATIONINSPECTORVIEW_HPP
 
-#include "MaterialBaseInspectorView.hpp"
+#include "ModelObjectInspectorView.hpp"
 
 namespace openstudio {
 
@@ -36,7 +36,9 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
-class MaterialRoofVegetationInspectorView : public MaterialBaseInspectorView
+class StandardsInformationMaterialWidget;
+
+class MaterialRoofVegetationInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
 
@@ -64,41 +66,48 @@ class MaterialRoofVegetationInspectorView : public MaterialBaseInspectorView
 
     void refresh();
 
-    OSComboBox * m_roughness;
+    bool m_isIP;
 
-    OSLineEdit * m_soilLayerName;
+    OSLineEdit * m_nameEdit = nullptr;
 
-    OSLineEdit * m_moistureDiffusionCalculationMethod;
+    OSComboBox * m_roughness = nullptr;
 
-    OSQuantityEdit * m_heightOfPlants;
+    OSLineEdit * m_soilLayerName = nullptr;
 
-    OSQuantityEdit * m_leafAreaIndex;
+    OSLineEdit * m_moistureDiffusionCalculationMethod = nullptr;
 
-    OSQuantityEdit * m_leafReflectivity;
+    OSQuantityEdit * m_heightOfPlants = nullptr;
 
-    OSQuantityEdit * m_leafEmissivity;
+    OSQuantityEdit * m_leafAreaIndex = nullptr;
 
-    OSQuantityEdit * m_minimumStomatalResistance;
+    OSQuantityEdit * m_leafReflectivity = nullptr;
 
-    OSQuantityEdit * m_thickness;
+    OSQuantityEdit * m_leafEmissivity = nullptr;
 
-    OSQuantityEdit * m_conductivityOfDrySoil;
+    OSQuantityEdit * m_minimumStomatalResistance = nullptr;
 
-    OSQuantityEdit * m_densityOfDrySoil;
+    OSQuantityEdit * m_thickness = nullptr;
 
-    OSQuantityEdit * m_specificHeatOfDrySoil;
+    OSQuantityEdit * m_conductivityOfDrySoil = nullptr;
 
-    OSQuantityEdit * m_thermalAbsorptance;
+    OSQuantityEdit * m_densityOfDrySoil = nullptr;
 
-    OSQuantityEdit * m_visibleAbsorptance;
+    OSQuantityEdit * m_specificHeatOfDrySoil = nullptr;
 
-    OSQuantityEdit * m_saturationVolumetricMoistureContentOfTheSoilLayer;
+    OSQuantityEdit * m_thermalAbsorptance = nullptr;
 
-    OSQuantityEdit * m_residualVolumetricMoistureContentOfTheSoilLayer;
+    OSQuantityEdit * m_visibleAbsorptance = nullptr;
 
-    OSQuantityEdit * m_initialVolumetricMoistureContentOfTheSoilLayer;
+    OSQuantityEdit * m_saturationVolumetricMoistureContentOfTheSoilLayer = nullptr;
 
-    OSQuantityEdit * m_solarAbsorptance;
+    OSQuantityEdit * m_residualVolumetricMoistureContentOfTheSoilLayer = nullptr;
+
+    OSQuantityEdit * m_initialVolumetricMoistureContentOfTheSoilLayer = nullptr;
+
+    OSQuantityEdit * m_solarAbsorptance = nullptr;
+
+    StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
+
 };
 
 } // openstudio

@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_WINDOWMATERIALSHADEINSPECTORVIEW_HPP
 #define OPENSTUDIO_WINDOWMATERIALSHADEINSPECTORVIEW_HPP
 
-#include "MaterialBaseInspectorView.hpp"
+#include "ModelObjectInspectorView.hpp"
 
 namespace openstudio {
 
@@ -34,7 +34,9 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
-class WindowMaterialShadeInspectorView : public MaterialBaseInspectorView
+class StandardsInformationMaterialWidget;
+
+class WindowMaterialShadeInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
 
@@ -62,33 +64,40 @@ class WindowMaterialShadeInspectorView : public MaterialBaseInspectorView
 
     void refresh();
 
-    OSQuantityEdit * m_solarTransmittance;
+    bool m_isIP;
 
-    OSQuantityEdit * m_solarReflectance;
+    OSLineEdit * m_nameEdit = nullptr;
 
-    OSQuantityEdit * m_visibleTransmittance;
+    OSQuantityEdit * m_solarTransmittance = nullptr;
 
-    OSQuantityEdit * m_visibleReflectance;
+    OSQuantityEdit * m_solarReflectance = nullptr;
 
-    OSQuantityEdit * m_thermalHemisphericalEmissivity;
+    OSQuantityEdit * m_visibleTransmittance = nullptr;
 
-    OSQuantityEdit * m_thermalTransmittance;
+    OSQuantityEdit * m_visibleReflectance = nullptr;
 
-    OSQuantityEdit * m_thickness;
+    OSQuantityEdit * m_thermalHemisphericalEmissivity = nullptr;
 
-    OSQuantityEdit * m_conductivity;
+    OSQuantityEdit * m_thermalTransmittance = nullptr;
 
-    OSQuantityEdit * m_shadeToGlassDistance;
+    OSQuantityEdit * m_thickness = nullptr;
 
-    OSQuantityEdit * m_topOpeningMultiplier;
+    OSQuantityEdit * m_conductivity = nullptr;
 
-    OSQuantityEdit * m_bottomOpeningMultiplier;
+    OSQuantityEdit * m_shadeToGlassDistance = nullptr;
 
-    OSQuantityEdit * m_leftSideOpeningMultiplier;
+    OSQuantityEdit * m_topOpeningMultiplier = nullptr;
 
-    OSQuantityEdit * m_rightSideOpeningMultiplier;
+    OSQuantityEdit * m_bottomOpeningMultiplier = nullptr;
 
-    OSQuantityEdit * m_airflowPermeability;
+    OSQuantityEdit * m_leftSideOpeningMultiplier = nullptr;
+
+    OSQuantityEdit * m_rightSideOpeningMultiplier = nullptr;
+
+    OSQuantityEdit * m_airflowPermeability = nullptr;
+
+    StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
+
 };
 
 } // openstudio

@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_MATERIALINSPECTORVIEW_HPP
 #define OPENSTUDIO_MATERIALINSPECTORVIEW_HPP
 
-#include "MaterialBaseInspectorView.hpp"
+#include "ModelObjectInspectorView.hpp"
 
 class QComboBox;
 
@@ -38,7 +38,9 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
-class MaterialInspectorView : public MaterialBaseInspectorView
+class StandardsInformationMaterialWidget;
+
+class MaterialInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
 
@@ -65,22 +67,29 @@ class MaterialInspectorView : public MaterialBaseInspectorView
     void detach();
 
     void refresh();
-
-    OSComboBox * m_roughness;
     
-    OSQuantityEdit * m_thickness;
+    bool m_isIP;
 
-    OSQuantityEdit * m_conductivity;
+    OSLineEdit * m_nameEdit = nullptr;
 
-    OSQuantityEdit * m_density;
+    OSComboBox * m_roughness = nullptr;
+    
+    OSQuantityEdit * m_thickness = nullptr;
 
-    OSQuantityEdit * m_specificHeat;
+    OSQuantityEdit * m_conductivity = nullptr;
 
-    OSQuantityEdit * m_thermalAbsorptance;
+    OSQuantityEdit * m_density = nullptr;
 
-    OSQuantityEdit * m_solarAbsorptance;
+    OSQuantityEdit * m_specificHeat = nullptr;
 
-    OSQuantityEdit * m_visibleAbsorptance;
+    OSQuantityEdit * m_thermalAbsorptance = nullptr;
+
+    OSQuantityEdit * m_solarAbsorptance = nullptr;
+
+    OSQuantityEdit * m_visibleAbsorptance = nullptr;
+
+    StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
+
 };
 
 } // openstudio

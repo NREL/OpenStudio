@@ -19,6 +19,8 @@
 
 #include "WindowMaterialGlazingRefractionExtinctionMethodInspectorView.hpp"
 
+#include "StandardsInformationMaterialWidget.hpp"
+
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
 #include "../shared_gui_components/OSSwitch.hpp"
@@ -37,131 +39,150 @@ namespace openstudio {
 // WindowMaterialGlazingRefractionExtinctionMethodInspectorView
 
 WindowMaterialGlazingRefractionExtinctionMethodInspectorView::WindowMaterialGlazingRefractionExtinctionMethodInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-  : MaterialBaseInspectorView(isIP, model, parent),
-    m_solarDiffusing(nullptr),
-    m_thickness(nullptr),
-    m_solarIndexOfRefraction(nullptr),
-    m_solarExtinctionCoefficient(nullptr),
-    m_visibleIndexOfRefraction(nullptr),
-    m_visibleExtinctionCoefficient(nullptr),
-    m_infraredTransmittanceAtNormalIncidence(nullptr),
-    m_infraredHemisphericalEmissivity(nullptr),
-    m_conductivity(nullptr),
-    m_dirtCorrectionFactorForSolarAndVisibleTransmittance(nullptr)
+  : ModelObjectInspectorView(model, true, parent),
+    m_isIP(isIP)
 {
   createLayout();
 }
 
 void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout()
 {
+  QWidget* visibleWidget = new QWidget();
+  this->stackedWidget()->addWidget(visibleWidget);
+
+  QGridLayout* mainGridLayout = new QGridLayout();
+  mainGridLayout->setContentsMargins(7, 7, 7, 7);
+  mainGridLayout->setSpacing(14);
+  visibleWidget->setLayout(mainGridLayout);
+
+  int row = mainGridLayout->rowCount();
+
   QLabel * label = nullptr;
 
-  unsigned row = m_mainGridLayout->rowCount();
+  // Name
+
+  label = new QLabel("Name: ");
+  label->setObjectName("H2");
+  mainGridLayout->addWidget(label, row, 0);
+
+  ++row;
+
+  m_nameEdit = new OSLineEdit();
+  mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
+
+  ++row;
+
+  // Standards Information
+
+  m_standardsInformationWidget = new StandardsInformationMaterialWidget(m_isIP);
+  m_standardsInformationWidget->addToLayout(mainGridLayout, row);
+
+  ++row;
 
   // Thickness
 
   label = new QLabel("Thickness: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_thickness = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_thickness, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_thickness,row++,0,1,3);
+  mainGridLayout->addWidget(m_thickness,row++,0,1,3);
 
   // Solar Index Of Refraction
 
   label = new QLabel("Solar Index Of Refraction: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_solarIndexOfRefraction = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_solarIndexOfRefraction, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_solarIndexOfRefraction,row++,0,1,3);
+  mainGridLayout->addWidget(m_solarIndexOfRefraction,row++,0,1,3);
 
   // Solar Extinction Coefficient
 
   label = new QLabel("Solar Extinction Coefficient: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_solarExtinctionCoefficient = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_solarExtinctionCoefficient, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_solarExtinctionCoefficient,row++,0,1,3);
+  mainGridLayout->addWidget(m_solarExtinctionCoefficient,row++,0,1,3);
 
   // Visible Index of Refraction
 
   label = new QLabel("Visible Index of Refraction: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_visibleIndexOfRefraction = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_visibleIndexOfRefraction, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_visibleIndexOfRefraction,row++,0,1,3);
+  mainGridLayout->addWidget(m_visibleIndexOfRefraction,row++,0,1,3);
 
   // Visible Extinction Coefficient
 
   label = new QLabel("Visible Extinction Coefficient: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_visibleExtinctionCoefficient = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_visibleExtinctionCoefficient, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_visibleExtinctionCoefficient,row++,0,1,3);
+  mainGridLayout->addWidget(m_visibleExtinctionCoefficient,row++,0,1,3);
 
   // Infrared Transmittance At Normal Incidence
 
   label = new QLabel("Infrared Transmittance At Normal Incidence: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_infraredTransmittanceAtNormalIncidence = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_infraredTransmittanceAtNormalIncidence, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_infraredTransmittanceAtNormalIncidence,row++,0,1,3);
+  mainGridLayout->addWidget(m_infraredTransmittanceAtNormalIncidence,row++,0,1,3);
 
   // Infrared Hemispherical Emissivity
 
   label = new QLabel("Infrared Hemispherical Emissivity: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_infraredHemisphericalEmissivity = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_infraredHemisphericalEmissivity, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_infraredHemisphericalEmissivity,row++,0,1,3);
+  mainGridLayout->addWidget(m_infraredHemisphericalEmissivity,row++,0,1,3);
 
   // Conductivity
 
   label = new QLabel("Conductivity: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_conductivity = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_conductivity, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_conductivity,row++,0,1,3);
+  mainGridLayout->addWidget(m_conductivity,row++,0,1,3);
 
   // Dirt Correction Factor For Solar And Visible Transmittance
 
   label = new QLabel("Dirt Correction Factor For Solar And Visible Transmittance: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_dirtCorrectionFactorForSolarAndVisibleTransmittance = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialGlazingRefractionExtinctionMethodInspectorView::toggleUnitsClicked, m_dirtCorrectionFactorForSolarAndVisibleTransmittance, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_dirtCorrectionFactorForSolarAndVisibleTransmittance,row++,0,1,3);
+  mainGridLayout->addWidget(m_dirtCorrectionFactorForSolarAndVisibleTransmittance,row++,0,1,3);
 
   // Solar Diffusing
 
   label = new QLabel("Solar Diffusing: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_solarDiffusing = new OSSwitch();
-  m_mainGridLayout->addWidget(m_solarDiffusing,row++,0,1,3);
+  mainGridLayout->addWidget(m_solarDiffusing,row++,0,1,3);
 
   // Stretch
 
-  m_mainGridLayout->setRowStretch(100,100);
+  mainGridLayout->setRowStretch(100,100);
 
-  m_mainGridLayout->setColumnStretch(100,100);
+  mainGridLayout->setColumnStretch(100,100);
 }
 
 void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::onClearSelection()
