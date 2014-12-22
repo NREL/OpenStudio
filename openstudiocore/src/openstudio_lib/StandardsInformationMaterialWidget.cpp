@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include "MaterialBaseInspectorView.hpp"
+#include "StandardsInformationMaterialWidget.hpp"
 
 #include "OSItem.hpp"
 
@@ -35,54 +35,31 @@
 
 namespace openstudio {
 
-// MaterialBaseInspectorView
+// StandardsInformationMaterialWidget
 
-MaterialBaseInspectorView::MaterialBaseInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-  : ModelObjectInspectorView(model, true, parent),
+StandardsInformationMaterialWidget::StandardsInformationMaterialWidget(bool isIP, QWidget * parent)
+  : QWidget(parent),
     m_isIP(isIP)
 {
-  createLayout();
 }
 
-void MaterialBaseInspectorView::createLayout()
+void StandardsInformationMaterialWidget::addToLayout(QGridLayout * mainGridLayout, int & row)
 {
-  QWidget* visibleWidget = new QWidget();
-  this->stackedWidget()->addWidget(visibleWidget);
-
-  m_mainGridLayout  = new QGridLayout();
-  m_mainGridLayout->setContentsMargins(7, 7, 7, 7);
-  m_mainGridLayout->setSpacing(14);
-  visibleWidget->setLayout(m_mainGridLayout);
-
   QVBoxLayout * vLayout = nullptr;
 
   QLabel * label = nullptr;
-
-  unsigned row = 0;
-
-  // Name
-  vLayout = new QVBoxLayout();
-
-  label = new QLabel("Name: ");
-  label->setObjectName("H2");
-  vLayout->addWidget(label);
-
-  m_nameEdit = new OSLineEdit();
-  vLayout->addWidget(m_nameEdit);
-
-  m_mainGridLayout->addLayout(vLayout, row++, 0, 1, 3);
 
   // Measure Tags
   QFrame * line;
   line = new QFrame();
   line->setFrameShape(QFrame::HLine);
   line->setFrameShadow(QFrame::Sunken);
-  m_mainGridLayout->addWidget(line, row++, 0, 1, 3);
+  mainGridLayout->addWidget(line, row++, 0, 1, 3);
 
   label = new QLabel();
   label->setText("Measure Tags (Optional):");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label, row++, 0);
+  mainGridLayout->addWidget(label, row++, 0);
 
   // Standard
   vLayout = new QVBoxLayout();
@@ -98,7 +75,7 @@ void MaterialBaseInspectorView::createLayout()
   m_standard->setFixedWidth(OSItem::ITEM_WIDTH);
   vLayout->addWidget(m_standard);
 
-  m_mainGridLayout->addLayout(vLayout, row, 0);
+  mainGridLayout->addLayout(vLayout, row, 0);
 
   // Standard Source
   vLayout = new QVBoxLayout();
@@ -114,7 +91,7 @@ void MaterialBaseInspectorView::createLayout()
   m_standardSource->setFixedWidth(OSItem::ITEM_WIDTH);
   vLayout->addWidget(m_standardSource);
 
-  m_mainGridLayout->addLayout(vLayout, row++, 1);
+  mainGridLayout->addLayout(vLayout, row++, 1);
 
   // Standards Category
   vLayout = new QVBoxLayout();
@@ -130,7 +107,7 @@ void MaterialBaseInspectorView::createLayout()
   m_standardsCategory->setFixedWidth(OSItem::ITEM_WIDTH);
   vLayout->addWidget(m_standardsCategory);
 
-  m_mainGridLayout->addLayout(vLayout, row, 0);
+  mainGridLayout->addLayout(vLayout, row, 0);
 
   // Standards Identifier
   vLayout = new QVBoxLayout();
@@ -146,50 +123,67 @@ void MaterialBaseInspectorView::createLayout()
   m_standardsIdentifier->setFixedWidth(OSItem::ITEM_WIDTH);
   vLayout->addWidget(m_standardsIdentifier);
 
-  m_mainGridLayout->addLayout(vLayout, row++, 1);
+  mainGridLayout->addLayout(vLayout, row++, 1);
 
   line = new QFrame();
   line->setFrameShape(QFrame::HLine);
   line->setFrameShadow(QFrame::Sunken);
-  m_mainGridLayout->addWidget(line, row++, 0, 1, 3);  
+  mainGridLayout->addWidget(line, row++, 0, 1, 3);  
 }
 
-void MaterialBaseInspectorView::onClearSelection()
-{
-  ModelObjectInspectorView::onClearSelection(); // call parent implementation
-  detach();
-}
-
-void MaterialBaseInspectorView::onSelectModelObject(const openstudio::model::ModelObject& modelObject)
+void StandardsInformationMaterialWidget::attach(openstudio::model::Material & material)
 {
   detach();
-  refresh();
+
+  m_material = material;
+  m_standardsInformation = material.standardsInformation();
+
+  connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &openstudio::StandardsInformationMaterialWidget::populateMaterialStandard);
 }
 
-void MaterialBaseInspectorView::onUpdate()
+void StandardsInformationMaterialWidget::detach()
 {
-  refresh();
+  m_material.reset();
+
+  if (m_standardsInformation){
+    disconnect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), 0, this, 0);
+    m_standardsInformation.reset();
+  }
 }
 
-void MaterialBaseInspectorView::attach(openstudio::model::Material & material)
+void StandardsInformationMaterialWidget::materialStandardChanged(const QString & text)
 {
-  m_nameEdit->bind(material, "name");
-
-  this->stackedWidget()->setCurrentIndex(1);
+  if (m_standardsInformation){
+    std::string materialStandard = toString(text);
+    if (materialStandard.empty()){
+      m_standardsInformation->resetMaterialStandard();
+    }
+    else{
+      m_standardsInformation->setMaterialStandard(materialStandard);
+    }
+    populateMaterialStandard();
+  }
 }
 
-void MaterialBaseInspectorView::detach()
+void StandardsInformationMaterialWidget::editMaterialStandard(const QString & text)
 {
-  this->stackedWidget()->setCurrentIndex(0);
-
-  m_nameEdit->unbind();
+  if (m_standardsInformation){
+    std::string materialStandard = toString(text);
+    if (materialStandard.empty()){
+      m_standardsInformation->resetMaterialStandard();
+    }
+    else{
+      m_standardsInformation->setMaterialStandard(materialStandard);
+    }
+  }
 }
 
-void MaterialBaseInspectorView::refresh()
+void StandardsInformationMaterialWidget::populateMaterialStandard()
 {
+  // TODO
 }
 
-void MaterialBaseInspectorView::toggleUnits(bool displayIP)
+void StandardsInformationMaterialWidget::toggleUnits(bool displayIP)
 {
   m_isIP = displayIP;
 }

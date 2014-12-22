@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_WINDOWMATERIALSCREENINSPECTORVIEW_HPP
 #define OPENSTUDIO_WINDOWMATERIALSCREENINSPECTORVIEW_HPP
 
-#include "MaterialBaseInspectorView.hpp"
+#include "ModelObjectInspectorView.hpp"
 
 namespace openstudio {
 
@@ -36,7 +36,9 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
-class WindowMaterialScreenInspectorView : public MaterialBaseInspectorView
+class StandardsInformationMaterialWidget;
+
+class WindowMaterialScreenInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
 
@@ -64,31 +66,38 @@ class WindowMaterialScreenInspectorView : public MaterialBaseInspectorView
 
     void refresh();
 
-    OSComboBox * m_reflectedBeamTransmittanceAccountingMethod;
+    bool m_isIP;
 
-    OSComboBox * m_angleOfResolutionForScreenTransmittanceOutputMap;
+    OSLineEdit * m_nameEdit = nullptr;
 
-    OSQuantityEdit * m_diffuseSolarReflectance;
+    OSComboBox * m_reflectedBeamTransmittanceAccountingMethod = nullptr;
 
-    OSQuantityEdit * m_diffuseVisibleReflectance;
+    OSComboBox * m_angleOfResolutionForScreenTransmittanceOutputMap = nullptr;
 
-    OSQuantityEdit * m_thermalHemisphericalEmissivity;
+    OSQuantityEdit * m_diffuseSolarReflectance = nullptr;
 
-    OSQuantityEdit * m_conductivity;
+    OSQuantityEdit * m_diffuseVisibleReflectance = nullptr;
 
-    OSQuantityEdit * m_screenMaterialSpacing;
+    OSQuantityEdit * m_thermalHemisphericalEmissivity = nullptr;
 
-    OSQuantityEdit * m_screenMaterialDiameter;
+    OSQuantityEdit * m_conductivity = nullptr;
 
-    OSQuantityEdit * m_screenToGlassDistance;
+    OSQuantityEdit * m_screenMaterialSpacing = nullptr;
 
-    OSQuantityEdit * m_topOpeningMultiplier;
+    OSQuantityEdit * m_screenMaterialDiameter = nullptr;
 
-    OSQuantityEdit * m_bottomOpeningMultiplier;
+    OSQuantityEdit * m_screenToGlassDistance = nullptr;
 
-    OSQuantityEdit * m_leftSideOpeningMultiplier;
+    OSQuantityEdit * m_topOpeningMultiplier = nullptr;
 
-    OSQuantityEdit * m_rightSideOpeningMultiplier;
+    OSQuantityEdit * m_bottomOpeningMultiplier = nullptr;
+
+    OSQuantityEdit * m_leftSideOpeningMultiplier = nullptr;
+
+    OSQuantityEdit * m_rightSideOpeningMultiplier = nullptr;
+
+    StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
+
 };
 
 } // openstudio

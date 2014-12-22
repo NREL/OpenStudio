@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_MATERIALINFRAREDTRANSPARENTINSPECTORVIEW_HPP
 #define OPENSTUDIO_MATERIALINFRAREDTRANSPARENTINSPECTORVIEW_HPP
 
-#include "MaterialBaseInspectorView.hpp"
+#include "ModelObjectInspectorView.hpp"
 
 namespace openstudio {
 
@@ -34,7 +34,9 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
-class MaterialInfraredTransparentInspectorView : public MaterialBaseInspectorView
+class StandardsInformationMaterialWidget;
+
+class MaterialInfraredTransparentInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
 
@@ -61,6 +63,13 @@ class MaterialInfraredTransparentInspectorView : public MaterialBaseInspectorVie
     void detach();
 
     void refresh();
+
+    bool m_isIP;
+
+    OSLineEdit * m_nameEdit = nullptr;
+
+    StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
+
 };
 
 } // openstudio

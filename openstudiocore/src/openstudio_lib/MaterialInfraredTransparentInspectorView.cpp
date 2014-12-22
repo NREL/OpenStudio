@@ -19,6 +19,8 @@
 
 #include "MaterialInfraredTransparentInspectorView.hpp"
 
+#include "StandardsInformationMaterialWidget.hpp"
+
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
 
@@ -36,22 +38,51 @@ namespace openstudio {
 // MaterialInfraredTransparentInspectorView
 
 MaterialInfraredTransparentInspectorView::MaterialInfraredTransparentInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-  : MaterialBaseInspectorView(isIP, model, parent)
+  : ModelObjectInspectorView(model, true, parent),
+  m_isIP(isIP)
 {
   createLayout();
 }
 
 void MaterialInfraredTransparentInspectorView::createLayout()
 {
+  QWidget* visibleWidget = new QWidget();
+  this->stackedWidget()->addWidget(visibleWidget);
+
+  QGridLayout* mainGridLayout = new QGridLayout();
+  mainGridLayout->setContentsMargins(7, 7, 7, 7);
+  mainGridLayout->setSpacing(14);
+  visibleWidget->setLayout(mainGridLayout);
+
+  int row = mainGridLayout->rowCount();
+
   QLabel * label = nullptr;
 
-  unsigned row = m_mainGridLayout->rowCount();
+  // Name
+
+  label = new QLabel("Name: ");
+  label->setObjectName("H2");
+  mainGridLayout->addWidget(label, row, 0);
+
+  ++row;
+
+  m_nameEdit = new OSLineEdit();
+  mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
+
+  ++row;
+
+  // Standards Information
+
+  m_standardsInformationWidget = new StandardsInformationMaterialWidget(m_isIP);
+  m_standardsInformationWidget->addToLayout(mainGridLayout, row);
+
+  ++row;
 
   // Stretch
 
-  m_mainGridLayout->setRowStretch(100,100);
+  mainGridLayout->setRowStretch(100,100);
 
-  m_mainGridLayout->setColumnStretch(100,100);
+  mainGridLayout->setColumnStretch(100,100);
 }
 
 void MaterialInfraredTransparentInspectorView::onClearSelection()

@@ -19,6 +19,8 @@
 
 #include "MaterialInspectorView.hpp"
 
+#include "StandardsInformationMaterialWidget.hpp"
+
 #include "OSItem.hpp"
 
 #include "../shared_gui_components/OSComboBox.hpp"
@@ -40,18 +42,47 @@ namespace openstudio {
 // MaterialInspectorView
 
   MaterialInspectorView::MaterialInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-  : MaterialBaseInspectorView(isIP, model, parent)
+  : ModelObjectInspectorView(model, true, parent),
+  m_isIP(isIP)
 {
   createLayout();
 }
 
 void MaterialInspectorView::createLayout()
 {
-  QVBoxLayout * vLayout = nullptr;
+  QWidget* visibleWidget = new QWidget();
+  this->stackedWidget()->addWidget(visibleWidget);
+
+  QGridLayout* mainGridLayout = new QGridLayout();
+  mainGridLayout->setContentsMargins(7, 7, 7, 7);
+  mainGridLayout->setSpacing(14);
+  visibleWidget->setLayout(mainGridLayout);
+
+  int row = mainGridLayout->rowCount();
 
   QLabel * label = nullptr;
 
-  unsigned row = m_mainGridLayout->rowCount();
+  // Name
+
+  label = new QLabel("Name: ");
+  label->setObjectName("H2");
+  mainGridLayout->addWidget(label, row, 0);
+
+  ++row;
+
+  m_nameEdit = new OSLineEdit();
+  mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
+
+  ++row;
+
+  // Standards Information
+
+  m_standardsInformationWidget = new StandardsInformationMaterialWidget(m_isIP);
+  m_standardsInformationWidget->addToLayout(mainGridLayout, row);
+
+  ++row;
+
+  QVBoxLayout * vLayout = nullptr;
 
   // Roughness
   vLayout = new QVBoxLayout();
@@ -69,7 +100,7 @@ void MaterialInspectorView::createLayout()
   m_roughness->addItem("Very Smooth");
   vLayout->addWidget(m_roughness);
 
-  m_mainGridLayout->addLayout(vLayout, row, 0);
+  mainGridLayout->addLayout(vLayout, row, 0);
 
   // Thickness
   vLayout = new QVBoxLayout();
@@ -82,7 +113,7 @@ void MaterialInspectorView::createLayout()
   connect(this, &MaterialInspectorView::toggleUnitsClicked, m_thickness, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_thickness);
 
-  m_mainGridLayout->addLayout(vLayout, row++, 1);
+  mainGridLayout->addLayout(vLayout, row++, 1);
 
   // Conductivity
   vLayout = new QVBoxLayout();
@@ -95,7 +126,7 @@ void MaterialInspectorView::createLayout()
   connect(this, &MaterialInspectorView::toggleUnitsClicked, m_conductivity, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_conductivity);
 
-  m_mainGridLayout->addLayout(vLayout, row, 0);
+  mainGridLayout->addLayout(vLayout, row, 0);
 
   // Density
   vLayout = new QVBoxLayout();
@@ -108,7 +139,7 @@ void MaterialInspectorView::createLayout()
   connect(this, &MaterialInspectorView::toggleUnitsClicked, m_density, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_density);
 
-  m_mainGridLayout->addLayout(vLayout, row++, 1);
+  mainGridLayout->addLayout(vLayout, row++, 1);
 
   // Specific Heat
   vLayout = new QVBoxLayout();
@@ -121,7 +152,7 @@ void MaterialInspectorView::createLayout()
   connect(this, &MaterialInspectorView::toggleUnitsClicked, m_specificHeat, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_specificHeat);
 
-  m_mainGridLayout->addLayout(vLayout, row, 0);
+  mainGridLayout->addLayout(vLayout, row, 0);
 
   // Thermal Absorptance
   vLayout = new QVBoxLayout();
@@ -134,7 +165,7 @@ void MaterialInspectorView::createLayout()
   connect(this, &MaterialInspectorView::toggleUnitsClicked, m_thermalAbsorptance, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_thermalAbsorptance);
 
-  m_mainGridLayout->addLayout(vLayout, row++, 1);
+  mainGridLayout->addLayout(vLayout, row++, 1);
 
   // Solar Absorptance
   vLayout = new QVBoxLayout();
@@ -147,7 +178,7 @@ void MaterialInspectorView::createLayout()
   connect(this, &MaterialInspectorView::toggleUnitsClicked, m_solarAbsorptance, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_solarAbsorptance);
 
-  m_mainGridLayout->addLayout(vLayout, row, 0);
+  mainGridLayout->addLayout(vLayout, row, 0);
 
   // Visible Absorptance
   vLayout = new QVBoxLayout();
@@ -160,13 +191,13 @@ void MaterialInspectorView::createLayout()
   connect(this, &MaterialInspectorView::toggleUnitsClicked, m_visibleAbsorptance, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_visibleAbsorptance);
 
-  m_mainGridLayout->addLayout(vLayout, row++, 1);
+  mainGridLayout->addLayout(vLayout, row++, 1);
 
   // Stretch
 
-  m_mainGridLayout->setRowStretch(100,100);
+  mainGridLayout->setRowStretch(100,100);
 
-  m_mainGridLayout->setColumnStretch(100,100);
+  mainGridLayout->setColumnStretch(100,100);
 }
 
 void MaterialInspectorView::onClearSelection()

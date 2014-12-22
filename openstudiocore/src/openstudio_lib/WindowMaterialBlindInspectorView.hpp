@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_WINDOWMATERIALBLINDINSPECTORVIEW_HPP
 #define OPENSTUDIO_WINDOWMATERIALBLINDINSPECTORVIEW_HPP
 
-#include "MaterialBaseInspectorView.hpp"
+#include "ModelObjectInspectorView.hpp"
 
 namespace openstudio {
 
@@ -36,7 +36,9 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
-class WindowMaterialBlindInspectorView : public MaterialBaseInspectorView
+class StandardsInformationMaterialWidget;
+
+class WindowMaterialBlindInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
 
@@ -64,61 +66,68 @@ class WindowMaterialBlindInspectorView : public MaterialBaseInspectorView
 
     void refresh();
 
-    OSComboBox * m_slatOrientation;
+    bool m_isIP;
 
-    OSQuantityEdit * m_slatWidth;
+    OSLineEdit * m_nameEdit = nullptr;
 
-    OSQuantityEdit * m_slatSeparation;
+    OSComboBox * m_slatOrientation = nullptr;
 
-    OSQuantityEdit * m_slatThickness;
+    OSQuantityEdit * m_slatWidth = nullptr;
 
-    OSQuantityEdit * m_slatAngle;
+    OSQuantityEdit * m_slatSeparation = nullptr;
 
-    OSQuantityEdit * m_slatConductivity;
+    OSQuantityEdit * m_slatThickness = nullptr;
 
-    OSQuantityEdit * m_slatBeamSolarTransmittance;
+    OSQuantityEdit * m_slatAngle = nullptr;
 
-    OSQuantityEdit * m_frontSideSlatBeamSolarReflectance;
+    OSQuantityEdit * m_slatConductivity = nullptr;
 
-    OSQuantityEdit * m_backSideSlatBeamSolarReflectance;
+    OSQuantityEdit * m_slatBeamSolarTransmittance = nullptr;
 
-    OSQuantityEdit * m_slatDiffuseSolarTransmittance;
+    OSQuantityEdit * m_frontSideSlatBeamSolarReflectance = nullptr;
 
-    OSQuantityEdit * m_frontSideSlatDiffuseSolarReflectance;
+    OSQuantityEdit * m_backSideSlatBeamSolarReflectance = nullptr;
 
-    OSQuantityEdit * m_backSideSlatDiffuseSolarReflectance;
+    OSQuantityEdit * m_slatDiffuseSolarTransmittance = nullptr;
 
-    OSQuantityEdit * m_slatBeamVisibleTransmittance;
+    OSQuantityEdit * m_frontSideSlatDiffuseSolarReflectance = nullptr;
 
-    OSQuantityEdit * m_frontSideSlatBeamVisibleReflectance;
+    OSQuantityEdit * m_backSideSlatDiffuseSolarReflectance = nullptr;
 
-    OSQuantityEdit * m_backSideSlatBeamVisibleReflectance;
+    OSQuantityEdit * m_slatBeamVisibleTransmittance = nullptr;
 
-    OSQuantityEdit * m_slatDiffuseVisibleTransmittance;
+    OSQuantityEdit * m_frontSideSlatBeamVisibleReflectance = nullptr;
 
-    OSQuantityEdit * m_frontSideSlatDiffuseVisibleReflectance;
+    OSQuantityEdit * m_backSideSlatBeamVisibleReflectance = nullptr;
 
-    OSQuantityEdit * m_backSideSlatDiffuseVisibleReflectance;
+    OSQuantityEdit * m_slatDiffuseVisibleTransmittance = nullptr;
 
-    OSQuantityEdit * m_slatInfraredHemisphericalTransmittance;
+    OSQuantityEdit * m_frontSideSlatDiffuseVisibleReflectance = nullptr;
 
-    OSQuantityEdit * m_frontSideSlatInfraredHemisphericalEmissivity;
+    OSQuantityEdit * m_backSideSlatDiffuseVisibleReflectance = nullptr;
 
-    OSQuantityEdit * m_backSideSlatInfraredHemisphericalEmissivity;
+    OSQuantityEdit * m_slatInfraredHemisphericalTransmittance = nullptr;
 
-    OSQuantityEdit * m_blindToGlassDistance;
+    OSQuantityEdit * m_frontSideSlatInfraredHemisphericalEmissivity = nullptr;
 
-    OSQuantityEdit * m_blindTopOpeningMultiplier;
+    OSQuantityEdit * m_backSideSlatInfraredHemisphericalEmissivity = nullptr;
 
-    OSQuantityEdit * m_blindBottomOpeningMultiplier;
+    OSQuantityEdit * m_blindToGlassDistance = nullptr;
 
-    OSQuantityEdit * m_blindLeftSideOpeningMultiplier;
+    OSQuantityEdit * m_blindTopOpeningMultiplier = nullptr;
 
-    OSQuantityEdit * m_blindRightSideOpeningMultiplier;
+    OSQuantityEdit * m_blindBottomOpeningMultiplier = nullptr;
 
-    OSQuantityEdit * m_minimumSlatAngle;
+    OSQuantityEdit * m_blindLeftSideOpeningMultiplier = nullptr;
 
-    OSQuantityEdit * m_maximumSlatAngle;
+    OSQuantityEdit * m_blindRightSideOpeningMultiplier = nullptr;
+
+    OSQuantityEdit * m_minimumSlatAngle = nullptr;
+
+    OSQuantityEdit * m_maximumSlatAngle = nullptr;
+
+    StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
+
 };
 
 } // openstudio

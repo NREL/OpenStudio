@@ -17,10 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_MATERIALBASEINSPECTORVIEW_HPP
-#define OPENSTUDIO_MATERIALBASEINSPECTORVIEW_HPP
+#ifndef OPENSTUDIO_STANDARDSINFORMATIONMATERIALWIDGET_HPP
+#define OPENSTUDIO_STANDARDSINFORMATIONMATERIALWIDGET_HPP
 
-#include "ModelObjectInspectorView.hpp"
+#include "../model/Material.hpp"
+
+#include "../model/StandardsInformationMaterial.hpp"
+
+#include <QWidget>
 
 class QComboBox;
 
@@ -38,35 +42,23 @@ class OSComboBox;
 
 class OSLineEdit;
 
-class MaterialBaseInspectorView : public ModelObjectInspectorView
+class StandardsInformationMaterialWidget : public QWidget
 {
   Q_OBJECT
 
   public:
 
-    MaterialBaseInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = 0);
+    StandardsInformationMaterialWidget(bool isIP, QWidget * parent = 0);
 
-    virtual ~MaterialBaseInspectorView() {}
-
-  protected:
-
-    virtual void onClearSelection();
-
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
-
-    virtual void onUpdate();
-
-    void createLayout();
+    virtual ~StandardsInformationMaterialWidget() {}
 
     void attach(openstudio::model::Material & material);
 
     void detach();
 
-    void refresh();
+    void addToLayout(QGridLayout * mainGridLayout, int & row);
 
-    QGridLayout * m_mainGridLayout = nullptr;
-
-    OSLineEdit * m_nameEdit = nullptr;
+  private:
     
     QComboBox * m_standard = nullptr;
 
@@ -78,12 +70,25 @@ class MaterialBaseInspectorView : public ModelObjectInspectorView
 
     bool m_isIP;
 
+    boost::optional<openstudio::model::Material> m_material;
+
+    boost::optional<openstudio::model::StandardsInformationMaterial> m_standardsInformation;
+
   public slots:
 
     void toggleUnits(bool displayIP);
+
+  private slots:
+
+    void materialStandardChanged(const QString& text);
+
+    void editMaterialStandard(const QString& text);
+
+    void populateMaterialStandard();
+
 };
 
 } // openstudio
 
-#endif // OPENSTUDIO_MATERIALBASEINSPECTORVIEW_HPP
+#endif // OPENSTUDIO_STANDARDSINFORMATIONMATERIALWIDGET_HPP
 

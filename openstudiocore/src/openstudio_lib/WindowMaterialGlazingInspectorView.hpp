@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_WINDOWMATERIALGLAZINGINSPECTORVIEW_HPP
 #define OPENSTUDIO_WINDOWMATERIALGLAZINGINSPECTORVIEW_HPP
 
-#include "MaterialBaseInspectorView.hpp"
+#include "ModelObjectInspectorView.hpp"
 
 namespace openstudio {
 
@@ -38,7 +38,9 @@ class OSQuantityEdit;
 
 class OSSwitch;
 
-class WindowMaterialGlazingInspectorView : public MaterialBaseInspectorView
+class StandardsInformationMaterialWidget;
+
+class WindowMaterialGlazingInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
 
@@ -66,35 +68,42 @@ class WindowMaterialGlazingInspectorView : public MaterialBaseInspectorView
 
     void refresh();
 
-    OSComboBox * m_opticalDataType;
+    bool m_isIP;
 
-    OSSwitch * m_solarDiffusing;
+    OSLineEdit * m_nameEdit = nullptr;
 
-    OSLineEdit * m_windowGlassSpectralDataSetName;
+    OSComboBox * m_opticalDataType = nullptr;
 
-    OSQuantityEdit * m_thickness;
+    OSSwitch * m_solarDiffusing = nullptr;
 
-    OSQuantityEdit * m_solarTransmittanceAtNormalIncidence;
+    OSLineEdit * m_windowGlassSpectralDataSetName = nullptr;
 
-    OSQuantityEdit * m_frontSideSolarReflectanceAtNormalIncidence;
+    OSQuantityEdit * m_thickness = nullptr;
 
-    OSQuantityEdit * m_backSideSolarReflectanceAtNormalIncidence;
+    OSQuantityEdit * m_solarTransmittanceAtNormalIncidence = nullptr;
 
-    OSQuantityEdit * m_visibleTransmittanceAtNormalIncidence;
+    OSQuantityEdit * m_frontSideSolarReflectanceAtNormalIncidence = nullptr;
 
-    OSQuantityEdit * m_frontSideVisibleReflectanceAtNormalIncidence;
+    OSQuantityEdit * m_backSideSolarReflectanceAtNormalIncidence = nullptr;
 
-    OSQuantityEdit * m_backSideVisibleReflectanceAtNormalIncidence;
+    OSQuantityEdit * m_visibleTransmittanceAtNormalIncidence = nullptr;
 
-    OSQuantityEdit * m_infraredTransmittanceAtNormalIncidence;
+    OSQuantityEdit * m_frontSideVisibleReflectanceAtNormalIncidence = nullptr;
 
-    OSQuantityEdit * m_frontSideInfraredHemisphericalEmissivity;
+    OSQuantityEdit * m_backSideVisibleReflectanceAtNormalIncidence = nullptr;
 
-    OSQuantityEdit * m_backSideInfraredHemisphericalEmissivity;
+    OSQuantityEdit * m_infraredTransmittanceAtNormalIncidence = nullptr;
 
-    OSQuantityEdit * m_conductivity;
+    OSQuantityEdit * m_frontSideInfraredHemisphericalEmissivity = nullptr;
 
-    OSQuantityEdit * m_dirtCorrectionFactorForSolarAndVisibleTransmittance;
+    OSQuantityEdit * m_backSideInfraredHemisphericalEmissivity = nullptr;
+
+    OSQuantityEdit * m_conductivity = nullptr;
+
+    OSQuantityEdit * m_dirtCorrectionFactorForSolarAndVisibleTransmittance = nullptr;
+
+    StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
+
 };
 
 } // openstudio

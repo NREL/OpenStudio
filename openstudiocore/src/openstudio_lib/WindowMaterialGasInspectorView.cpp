@@ -19,6 +19,8 @@
 
 #include "WindowMaterialGasInspectorView.hpp"
 
+#include "StandardsInformationMaterialWidget.hpp"
+
 #include "../shared_gui_components/OSComboBox.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
@@ -37,31 +39,51 @@ namespace openstudio {
 // WindowMaterialGasInspectorView
 
 WindowMaterialGasInspectorView::WindowMaterialGasInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-  : MaterialBaseInspectorView(isIP, model, parent),
-    m_gasType(nullptr),
-    m_thickness(nullptr),
-    m_conductivityCoefficientA(nullptr),
-    m_conductivityCoefficientB(nullptr),
-    m_viscosityCoefficientA(nullptr),
-    m_viscosityCoefficientB(nullptr),
-    m_specificHeatCoefficientA(nullptr),
-    m_specificHeatCoefficientB(nullptr),
-    m_molecularWeight(nullptr)
+  : ModelObjectInspectorView(model, true, parent),
+    m_isIP(isIP)
 {
   createLayout();
 }
 
 void WindowMaterialGasInspectorView::createLayout()
 {
+  QWidget* visibleWidget = new QWidget();
+  this->stackedWidget()->addWidget(visibleWidget);
+
+  QGridLayout* mainGridLayout = new QGridLayout();
+  mainGridLayout->setContentsMargins(7, 7, 7, 7);
+  mainGridLayout->setSpacing(14);
+  visibleWidget->setLayout(mainGridLayout);
+
+  int row = mainGridLayout->rowCount();
+
   QLabel * label = nullptr;
 
-  unsigned row = m_mainGridLayout->rowCount();
+  // Name
+
+  label = new QLabel("Name: ");
+  label->setObjectName("H2");
+  mainGridLayout->addWidget(label, row, 0);
+
+  ++row;
+
+  m_nameEdit = new OSLineEdit();
+  mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
+
+  ++row;
+
+  // Standards Information
+
+  m_standardsInformationWidget = new StandardsInformationMaterialWidget(m_isIP);
+  m_standardsInformationWidget->addToLayout(mainGridLayout, row);
+
+  ++row;
 
   // Gas Type
 
   label = new QLabel("Gas Type: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_gasType = new OSComboBox();
   m_gasType->addItem("Air");
@@ -69,93 +91,93 @@ void WindowMaterialGasInspectorView::createLayout()
   m_gasType->addItem("Krypton");
   m_gasType->addItem("Xenon");
   m_gasType->addItem("Custom");
-  m_mainGridLayout->addWidget(m_gasType,row++,0,1,3);
+  mainGridLayout->addWidget(m_gasType,row++,0,1,3);
 
   // Thickness
 
   label = new QLabel("Thickness: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_thickness = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialGasInspectorView::toggleUnitsClicked, m_thickness, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_thickness,row++,0,1,3);
+  mainGridLayout->addWidget(m_thickness,row++,0,1,3);
 
   // Conductivity Coefficient A
 
   label = new QLabel("Conductivity Coefficient A: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_conductivityCoefficientA = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialGasInspectorView::toggleUnitsClicked, m_conductivityCoefficientA, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_conductivityCoefficientA,row++,0,1,3);
+  mainGridLayout->addWidget(m_conductivityCoefficientA,row++,0,1,3);
 
   // Conductivity Coefficient B
 
   label = new QLabel("Conductivity Coefficient B: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_conductivityCoefficientB = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialGasInspectorView::toggleUnitsClicked, m_conductivityCoefficientB, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_conductivityCoefficientB,row++,0,1,3);
+  mainGridLayout->addWidget(m_conductivityCoefficientB,row++,0,1,3);
 
   // Viscosity Coefficient A
 
   label = new QLabel("Viscosity Coefficient A: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_viscosityCoefficientA = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialGasInspectorView::toggleUnitsClicked, m_viscosityCoefficientA, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_viscosityCoefficientA,row++,0,1,3);
+  mainGridLayout->addWidget(m_viscosityCoefficientA,row++,0,1,3);
 
   // Viscosity Coefficient B
 
   label = new QLabel("Viscosity Coefficient B: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_viscosityCoefficientB = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialGasInspectorView::toggleUnitsClicked, m_viscosityCoefficientB, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_viscosityCoefficientB,row++,0,1,3);
+  mainGridLayout->addWidget(m_viscosityCoefficientB,row++,0,1,3);
 
   // Specific Heat Coefficient A
 
   label = new QLabel("Specific Heat Coefficient A: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_specificHeatCoefficientA = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialGasInspectorView::toggleUnitsClicked, m_specificHeatCoefficientA, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_specificHeatCoefficientA,row++,0,1,3);
+  mainGridLayout->addWidget(m_specificHeatCoefficientA,row++,0,1,3);
 
   // Specific Heat Coefficient B
 
   label = new QLabel("Specific Heat Coefficient B: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_specificHeatCoefficientB = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialGasInspectorView::toggleUnitsClicked, m_specificHeatCoefficientB, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_specificHeatCoefficientB,row++,0,1,3);
+  mainGridLayout->addWidget(m_specificHeatCoefficientB,row++,0,1,3);
 
   // Molecular Weight
 
   label = new QLabel("Molecular Weight: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_molecularWeight = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialGasInspectorView::toggleUnitsClicked, m_molecularWeight, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_molecularWeight,row++,0,1,3);
+  mainGridLayout->addWidget(m_molecularWeight,row++,0,1,3);
 
   // Stretch
 
-  m_mainGridLayout->setRowStretch(100,100);
+  mainGridLayout->setRowStretch(100,100);
 
-  m_mainGridLayout->setColumnStretch(100,100);
+  mainGridLayout->setColumnStretch(100,100);
 }
 
 void WindowMaterialGasInspectorView::onClearSelection()

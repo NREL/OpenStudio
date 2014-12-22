@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_WINDOWMATERIALSIMPLEGLAZINGSYSTEMINSPECTORVIEW_HPP
 #define OPENSTUDIO_WINDOWMATERIALSIMPLEGLAZINGSYSTEMINSPECTORVIEW_HPP
 
-#include "MaterialBaseInspectorView.hpp"
+#include "ModelObjectInspectorView.hpp"
 
 namespace openstudio {
 
@@ -34,7 +34,9 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
-class WindowMaterialSimpleGlazingSystemInspectorView : public MaterialBaseInspectorView
+class StandardsInformationMaterialWidget;
+
+class WindowMaterialSimpleGlazingSystemInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
 
@@ -62,11 +64,18 @@ class WindowMaterialSimpleGlazingSystemInspectorView : public MaterialBaseInspec
 
     void refresh();
 
-    OSQuantityEdit * m_uFactor;
+    bool m_isIP;
 
-    OSQuantityEdit * m_solarHeatGainCoefficient;
+    OSLineEdit * m_nameEdit = nullptr;
 
-    OSQuantityEdit * m_visibleTransmittance;
+    OSQuantityEdit * m_uFactor = nullptr;
+
+    OSQuantityEdit * m_solarHeatGainCoefficient = nullptr;
+
+    OSQuantityEdit * m_visibleTransmittance = nullptr;
+
+    StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
+
 };
 
 } // openstudio

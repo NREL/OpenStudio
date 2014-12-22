@@ -19,6 +19,8 @@
 
 #include "MaterialRoofVegetationInspectorView.hpp"
 
+#include "StandardsInformationMaterialWidget.hpp"
+
 #include "../shared_gui_components/OSComboBox.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
@@ -37,99 +39,109 @@ namespace openstudio {
 // MaterialRoofVegetationInspectorView
 
 MaterialRoofVegetationInspectorView::MaterialRoofVegetationInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-  : MaterialBaseInspectorView(isIP, model, parent),
-    m_roughness(nullptr),
-    m_soilLayerName(nullptr),
-    m_moistureDiffusionCalculationMethod(nullptr),
-    m_heightOfPlants(nullptr),
-    m_leafAreaIndex(nullptr),
-    m_leafReflectivity(nullptr),
-    m_leafEmissivity(nullptr),
-    m_minimumStomatalResistance(nullptr),
-    m_thickness(nullptr),
-    m_conductivityOfDrySoil(nullptr),
-    m_densityOfDrySoil(nullptr),
-    m_specificHeatOfDrySoil(nullptr),
-    m_thermalAbsorptance(nullptr),
-    m_visibleAbsorptance(nullptr),
-    m_saturationVolumetricMoistureContentOfTheSoilLayer(nullptr),
-    m_residualVolumetricMoistureContentOfTheSoilLayer(nullptr),
-    m_initialVolumetricMoistureContentOfTheSoilLayer(nullptr),
-    m_solarAbsorptance(nullptr)
+  : ModelObjectInspectorView(model, true, parent)
 {
   createLayout();
 }
 
 void MaterialRoofVegetationInspectorView::createLayout()
 {
+  QWidget* visibleWidget = new QWidget();
+  this->stackedWidget()->addWidget(visibleWidget);
+
+  QGridLayout* mainGridLayout = new QGridLayout();
+  mainGridLayout->setContentsMargins(7, 7, 7, 7);
+  mainGridLayout->setSpacing(14);
+  visibleWidget->setLayout(mainGridLayout);
+
+  int row = mainGridLayout->rowCount();
+
   QLabel * label = nullptr;
 
-  unsigned row = m_mainGridLayout->rowCount();
+  // Name
+
+  label = new QLabel("Name: ");
+  label->setObjectName("H2");
+  mainGridLayout->addWidget(label, row, 0);
+
+  ++row;
+
+  m_nameEdit = new OSLineEdit();
+  mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
+
+  ++row;
+
+  // Standards Information
+
+  m_standardsInformationWidget = new StandardsInformationMaterialWidget(m_isIP);
+  m_standardsInformationWidget->addToLayout(mainGridLayout, row);
+
+  ++row;
 
   // Height Of Plants
 
   label = new QLabel("Height Of Plants: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_heightOfPlants = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_heightOfPlants, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_heightOfPlants,row++,0,1,3);
+  mainGridLayout->addWidget(m_heightOfPlants,row++,0,1,3);
 
   // Leaf Area Index
 
   label = new QLabel("Leaf Area Index: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_leafAreaIndex = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_leafAreaIndex, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_leafAreaIndex,row++,0,1,3);
+  mainGridLayout->addWidget(m_leafAreaIndex,row++,0,1,3);
 
   // Leaf Reflectivity
 
   label = new QLabel("Leaf Reflectivity: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_leafReflectivity = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_leafReflectivity, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_leafReflectivity,row++,0,1,3);
+  mainGridLayout->addWidget(m_leafReflectivity,row++,0,1,3);
 
   // Leaf Emissivity
 
   label = new QLabel("Leaf Emissivity: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_leafEmissivity = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_leafEmissivity, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_leafEmissivity,row++,0,1,3);
+  mainGridLayout->addWidget(m_leafEmissivity,row++,0,1,3);
 
   // Minimum Stomatal Resistance
 
   label = new QLabel("Minimum Stomatal Resistance: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_minimumStomatalResistance = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_minimumStomatalResistance, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_minimumStomatalResistance,row++,0,1,3);
+  mainGridLayout->addWidget(m_minimumStomatalResistance,row++,0,1,3);
 
   // Soil Layer Name
 
   label = new QLabel("Soil Layer Name: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_soilLayerName = new OSLineEdit();
-  m_mainGridLayout->addWidget(m_soilLayerName,row++,0,1,3);
+  mainGridLayout->addWidget(m_soilLayerName,row++,0,1,3);
 
  // Roughness
 
   label = new QLabel("Roughness: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_roughness = new OSComboBox();
   m_roughness->addItem("Very Rough");
@@ -138,122 +150,122 @@ void MaterialRoofVegetationInspectorView::createLayout()
   m_roughness->addItem("Medium Smooth");
   m_roughness->addItem("Smooth");
   m_roughness->addItem("Very Smooth");
-  m_mainGridLayout->addWidget(m_roughness,row++,0,1,3);
+  mainGridLayout->addWidget(m_roughness,row++,0,1,3);
 
   // Thickness
 
   label = new QLabel("Thickness: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_thickness = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_thickness, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_thickness,row++,0,1,3);
+  mainGridLayout->addWidget(m_thickness,row++,0,1,3);
 
   // Conductivity Of Dry Soil
 
   label = new QLabel("Conductivity Of Dry Soil: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_conductivityOfDrySoil = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_conductivityOfDrySoil, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_conductivityOfDrySoil,row++,0,1,3);
+  mainGridLayout->addWidget(m_conductivityOfDrySoil,row++,0,1,3);
 
   // Density Of Dry Soil
 
   label = new QLabel("Density Of Dry Soil: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_densityOfDrySoil = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_densityOfDrySoil, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_densityOfDrySoil,row++,0,1,3);
+  mainGridLayout->addWidget(m_densityOfDrySoil,row++,0,1,3);
 
   // Specific Heat Of Dry Soil
 
   label = new QLabel("Specific Heat Of Dry Soil: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_specificHeatOfDrySoil = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_specificHeatOfDrySoil, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_specificHeatOfDrySoil,row++,0,1,3);
+  mainGridLayout->addWidget(m_specificHeatOfDrySoil,row++,0,1,3);
 
   // Thermal Absorptance
 
   label = new QLabel("Thermal Absorptance: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_thermalAbsorptance = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_thermalAbsorptance, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_thermalAbsorptance,row++,0,1,3);
+  mainGridLayout->addWidget(m_thermalAbsorptance,row++,0,1,3);
 
   // Solar Absorptance
 
   label = new QLabel("Solar Absorptance: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_solarAbsorptance = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_solarAbsorptance, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_solarAbsorptance,row++,0,1,3);
+  mainGridLayout->addWidget(m_solarAbsorptance,row++,0,1,3);
 
   // Visible Absorptance
 
   label = new QLabel("Visible Absorptance: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_visibleAbsorptance = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_visibleAbsorptance, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_visibleAbsorptance,row++,0,1,3);
+  mainGridLayout->addWidget(m_visibleAbsorptance,row++,0,1,3);
 
   // Saturation Volumetric Moisture Content Of The Soil Layer
 
   label = new QLabel("Saturation Volumetric Moisture Content Of The Soil Layer: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_saturationVolumetricMoistureContentOfTheSoilLayer = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_saturationVolumetricMoistureContentOfTheSoilLayer, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_saturationVolumetricMoistureContentOfTheSoilLayer,row++,0,1,3);
+  mainGridLayout->addWidget(m_saturationVolumetricMoistureContentOfTheSoilLayer,row++,0,1,3);
 
   // Residual Volumetric Moisture Content Of The Soil Layer
 
   label = new QLabel("Residual Volumetric Moisture Content Of The Soil Layer: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_residualVolumetricMoistureContentOfTheSoilLayer = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_residualVolumetricMoistureContentOfTheSoilLayer, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_residualVolumetricMoistureContentOfTheSoilLayer,row++,0,1,3);
+  mainGridLayout->addWidget(m_residualVolumetricMoistureContentOfTheSoilLayer,row++,0,1,3);
 
   // Initial Volumetric Moisture Content Of The Soil Layer
 
   label = new QLabel("Initial Volumetric Moisture Content Of The Soil Layer: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_initialVolumetricMoistureContentOfTheSoilLayer = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialRoofVegetationInspectorView::toggleUnitsClicked, m_initialVolumetricMoistureContentOfTheSoilLayer, &OSQuantityEdit::onUnitSystemChange);
-  m_mainGridLayout->addWidget(m_initialVolumetricMoistureContentOfTheSoilLayer,row++,0,1,3);
+  mainGridLayout->addWidget(m_initialVolumetricMoistureContentOfTheSoilLayer,row++,0,1,3);
 
   // Moisture Diffusion Calculation Method
 
   label = new QLabel("Moisture Diffusion Calculation Method: ");
   label->setObjectName("H2");
-  m_mainGridLayout->addWidget(label,row++,0);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_moistureDiffusionCalculationMethod = new OSLineEdit();
-  m_mainGridLayout->addWidget(m_moistureDiffusionCalculationMethod,row++,0,1,3);
+  mainGridLayout->addWidget(m_moistureDiffusionCalculationMethod,row++,0,1,3);
 
   // Stretch
 
-  m_mainGridLayout->setRowStretch(100,100);
+  mainGridLayout->setRowStretch(100,100);
 
-  m_mainGridLayout->setColumnStretch(100,100);
+  mainGridLayout->setColumnStretch(100,100);
 }
 
 void MaterialRoofVegetationInspectorView::onClearSelection()

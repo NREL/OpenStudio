@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_WINDOWMATERIALGASINSPECTORVIEW_HPP
 #define OPENSTUDIO_WINDOWMATERIALGASINSPECTORVIEW_HPP
 
-#include "MaterialBaseInspectorView.hpp"
+#include "ModelObjectInspectorView.hpp"
 
 namespace openstudio {
 
@@ -36,7 +36,9 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
-class WindowMaterialGasInspectorView : public MaterialBaseInspectorView
+class StandardsInformationMaterialWidget;
+
+class WindowMaterialGasInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
 
@@ -64,23 +66,30 @@ class WindowMaterialGasInspectorView : public MaterialBaseInspectorView
 
     void refresh();
 
-    OSComboBox * m_gasType;
+    bool m_isIP;
 
-    OSQuantityEdit * m_thickness;
+    OSLineEdit * m_nameEdit = nullptr;
 
-    OSQuantityEdit * m_conductivityCoefficientA;
+    OSComboBox * m_gasType = nullptr;
 
-    OSQuantityEdit * m_conductivityCoefficientB;
+    OSQuantityEdit * m_thickness = nullptr;
 
-    OSQuantityEdit * m_viscosityCoefficientA;
+    OSQuantityEdit * m_conductivityCoefficientA = nullptr;
 
-    OSQuantityEdit * m_viscosityCoefficientB;
+    OSQuantityEdit * m_conductivityCoefficientB = nullptr;
 
-    OSQuantityEdit * m_specificHeatCoefficientA;
+    OSQuantityEdit * m_viscosityCoefficientA = nullptr;
 
-    OSQuantityEdit * m_specificHeatCoefficientB;
+    OSQuantityEdit * m_viscosityCoefficientB = nullptr;
 
-    OSQuantityEdit * m_molecularWeight;
+    OSQuantityEdit * m_specificHeatCoefficientA = nullptr;
+
+    OSQuantityEdit * m_specificHeatCoefficientB = nullptr;
+
+    OSQuantityEdit * m_molecularWeight = nullptr;
+
+    StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
+
 };
 
 } // openstudio

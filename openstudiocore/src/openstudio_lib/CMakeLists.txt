@@ -149,8 +149,6 @@ set(${target_name}_SRC
   MaterialAirWallInspectorView.hpp
   MaterialInfraredTransparentInspectorView.cpp
   MaterialInfraredTransparentInspectorView.hpp
-  MaterialBaseInspectorView.cpp
-  MaterialBaseInspectorView.hpp
   MaterialInspectorView.cpp
   MaterialInspectorView.hpp
   MaterialNoMassInspectorView.cpp
@@ -292,6 +290,8 @@ set(${target_name}_SRC
   StandardOpaqueMaterialInspectorView.hpp
   StandardsInformationConstructionWidget.cpp
   StandardsInformationConstructionWidget.hpp
+  StandardsInformationMaterialWidget.cpp
+  StandardsInformationMaterialWidget.hpp
   SteamEquipmentInspectorView.cpp
   SteamEquipmentInspectorView.hpp
   SubSurfaceInspectorView.cpp
@@ -534,7 +534,6 @@ set(${target_name}_moc
   MaterialAirGapInspectorView.hpp
   MaterialAirWallInspectorView.hpp
   MaterialInfraredTransparentInspectorView.hpp
-  MaterialBaseInspectorView.hpp
   MaterialInspectorView.hpp
   MaterialNoMassInspectorView.hpp
   MaterialRoofVegetationInspectorView.hpp
@@ -605,6 +604,7 @@ set(${target_name}_moc
   SpaceTypesView.hpp
   StandardOpaqueMaterialInspectorView.hpp
   StandardsInformationConstructionWidget.hpp
+  StandardsInformationMaterialWidget.hpp
   SteamEquipmentInspectorView.hpp
   SubSurfaceInspectorView.hpp
   SubTabController.hpp
