@@ -43,6 +43,8 @@ class OSLineEdit;
 
 class OSComboBox2;
 
+class OSSwitch2;
+
 class StandardsInformationConstructionWidget : public QWidget
 {
   Q_OBJECT
@@ -94,9 +96,21 @@ class StandardsInformationConstructionWidget : public QWidget
 
     QComboBox * m_standardsConstructionType;
 
-    QLabel * m_fenestrationLabel;
+    OSComboBox2 * m_fenestrationType;
 
-    QComboBox * m_fenestration;
+    OSComboBox2 * m_fenestrationAssemblyContext;
+
+    OSComboBox2 * m_fenestrationNumberOfPanes;
+
+    OSComboBox2 * m_fenestrationFrameType;
+
+    OSComboBox2 * m_fenestrationDividerType;
+
+    OSComboBox2 * m_fenestrationTint;
+
+    OSComboBox2 * m_fenestrationGasFill;
+
+    OSSwitch2 * m_fenestrationLowEmissivityCoating;
 
     bool m_isIP;
 

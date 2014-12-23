@@ -693,7 +693,7 @@ TEST_F(ModelFixture, Construction_StandardsInformationConstruction)
   EXPECT_FALSE(StandardsInformationConstruction::standardPerturbableLayerTypeValues().empty());
   EXPECT_FALSE(StandardsInformationConstruction::fenestrationTypeValues().empty());
   EXPECT_FALSE(StandardsInformationConstruction::fenestrationAssemblyContextValues().empty());
-  EXPECT_FALSE(StandardsInformationConstruction::fenestrationNumberofPanesValues().empty());
+  EXPECT_FALSE(StandardsInformationConstruction::fenestrationNumberOfPanesValues().empty());
   EXPECT_FALSE(StandardsInformationConstruction::fenestrationFrameTypeValues().empty());
   EXPECT_FALSE(StandardsInformationConstruction::fenestrationDividerTypeValues().empty());
   EXPECT_FALSE(StandardsInformationConstruction::fenestrationTintValues().empty());

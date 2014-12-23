@@ -87,7 +87,7 @@ namespace detail {
 
     boost::optional<std::string> fenestrationAssemblyContext() const;
 
-    boost::optional<std::string> fenestrationNumberofPanes() const;
+    boost::optional<std::string> fenestrationNumberOfPanes() const;
 
     boost::optional<std::string> fenestrationFrameType() const;
 
@@ -153,9 +153,9 @@ namespace detail {
 
     void resetFenestrationAssemblyContext();
 
-    bool setFenestrationNumberofPanes(const std::string& fenestrationNumberofPanes);
+    bool setFenestrationNumberOfPanes(const std::string& fenestrationNumberOfPanes);
 
-    void resetFenestrationNumberofPanes();
+    void resetFenestrationNumberOfPanes();
 
     bool setFenestrationFrameType(const std::string& fenestrationFrameType);
 

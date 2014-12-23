@@ -23,6 +23,7 @@
 
 #include "../shared_gui_components/OSComboBox.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
+#include "../shared_gui_components/OSSwitch.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -42,8 +43,14 @@ namespace openstudio {
     m_standardSource(nullptr),
     m_intendedSurfaceType(nullptr),
     m_standardsConstructionType(nullptr),
-    m_fenestrationLabel(nullptr),
-    m_fenestration(nullptr),
+    m_fenestrationType(nullptr),
+    m_fenestrationAssemblyContext(nullptr),
+    m_fenestrationNumberOfPanes(nullptr),
+    m_fenestrationFrameType(nullptr),
+    m_fenestrationDividerType(nullptr),
+    m_fenestrationTint(nullptr),
+    m_fenestrationGasFill(nullptr),
+    m_fenestrationLowEmissivityCoating(nullptr),
     m_isIP(isIP),
     m_construction(boost::none),
     m_standardsInformation(boost::none)
@@ -158,16 +165,16 @@ void StandardsInformationConstructionWidget::addToLayout(QGridLayout* mainGridLa
 
   ++row;
 
-  // Fenestrations
+  // Fenestration Fields
   vLayout = new QVBoxLayout();
 
-  m_fenestrationLabel = new QLabel();
+  QLabel* m_fenestrationLabel = new QLabel();
   m_fenestrationLabel->setText("Fenestrations: ");
   m_fenestrationLabel->setObjectName("StandardsInfo");
   m_fenestrationLabel->hide();
   vLayout->addWidget(m_fenestrationLabel);
 
-  m_fenestration = new QComboBox();
+  QComboBox* m_fenestration = new QComboBox();
   m_fenestration->setEditable(true);
   m_fenestration->setDuplicatesEnabled(false);
   m_fenestration->setFixedWidth(OSItem::ITEM_WIDTH);
@@ -178,35 +185,251 @@ void StandardsInformationConstructionWidget::addToLayout(QGridLayout* mainGridLa
 
   ++row;
 
+  // Fenestration Type
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Fenestration Type: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_fenestrationType = new OSComboBox2();
+  m_fenestrationType->setFixedWidth(OSItem::ITEM_WIDTH);
+  vLayout->addWidget(m_fenestrationType);
+
+  mainGridLayout->addLayout(vLayout, row, 0);
+
+  // Fenestration Assembly Context
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Fenestration Assembly Context: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_fenestrationAssemblyContext = new OSComboBox2();
+  m_fenestrationAssemblyContext->setFixedWidth(OSItem::ITEM_WIDTH);
+  vLayout->addWidget(m_fenestrationAssemblyContext);
+
+  mainGridLayout->addLayout(vLayout, row, 1);
+
+  ++row;
+
+  // Fenestration Number of Panes
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Fenestration Number of Panes: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_fenestrationNumberOfPanes = new OSComboBox2();
+  m_fenestrationNumberOfPanes->setFixedWidth(OSItem::ITEM_WIDTH);
+  vLayout->addWidget(m_fenestrationNumberOfPanes);
+
+  mainGridLayout->addLayout(vLayout, row, 0);
+
+  // Fenestration Frame Type
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Fenestration Frame Type: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_fenestrationFrameType = new OSComboBox2();
+  m_fenestrationFrameType->setFixedWidth(OSItem::ITEM_WIDTH);
+  vLayout->addWidget(m_fenestrationFrameType);
+
+  mainGridLayout->addLayout(vLayout, row, 1);
+
+  ++row;
+
+  // Fenestration Divider Type
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Fenestration Divider Type: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_fenestrationDividerType = new OSComboBox2();
+  m_fenestrationDividerType->setFixedWidth(OSItem::ITEM_WIDTH);
+  vLayout->addWidget(m_fenestrationDividerType);
+
+  mainGridLayout->addLayout(vLayout, row, 0);
+
+  // Fenestration Tint
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Fenestration Tint: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_fenestrationTint = new OSComboBox2();
+  m_fenestrationTint->setFixedWidth(OSItem::ITEM_WIDTH);
+  vLayout->addWidget(m_fenestrationTint);
+
+  mainGridLayout->addLayout(vLayout, row, 1);
+
+  ++row;
+
+  // Fenestration Gas Fill
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Fenestration Gas Fill: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_fenestrationGasFill = new OSComboBox2();
+  m_fenestrationGasFill->setFixedWidth(OSItem::ITEM_WIDTH);
+  vLayout->addWidget(m_fenestrationGasFill);
+
+  mainGridLayout->addLayout(vLayout, row, 0);
+
+  // Fenestration Gas Fill
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Fenestration Low Emissivity Coating: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_fenestrationLowEmissivityCoating = new OSSwitch2();
+  vLayout->addWidget(m_fenestrationLowEmissivityCoating);
+
+  mainGridLayout->addLayout(vLayout, row, 1);
+
+  ++row;
+
+  // Border
   line = new QFrame();
   line->setFrameShape(QFrame::HLine);
   line->setFrameShadow(QFrame::Sunken);
   mainGridLayout->addWidget(line, row, 0, 1, 3);
 
   ++row;
-
 }
 
 void StandardsInformationConstructionWidget::showFenestration()
 {
-  m_fenestrationLabel->show();
-  m_fenestration->show();
+  m_fenestrationType->show();
+  m_fenestrationAssemblyContext->show();
+  m_fenestrationNumberOfPanes->show();
+  m_fenestrationFrameType->show();
+  m_fenestrationDividerType->show();
+  m_fenestrationTint->show();
+  m_fenestrationGasFill->show();
+  m_fenestrationLowEmissivityCoating->show();
 }
 
 void StandardsInformationConstructionWidget::hideFenestration()
 {
-  m_fenestrationLabel->hide();
-  m_fenestration->hide();
+  m_fenestrationType->hide();
+  m_fenestrationAssemblyContext->hide();
+  m_fenestrationNumberOfPanes->hide();
+  m_fenestrationFrameType->hide();
+  m_fenestrationDividerType->hide();
+  m_fenestrationTint->hide();
+  m_fenestrationGasFill->hide();
+  m_fenestrationLowEmissivityCoating->hide();
 }
 
 void StandardsInformationConstructionWidget::enableFenestration()
 {
-  m_fenestration->setEnabled(true);
+  m_fenestrationType->setEnabled(true);
+  m_fenestrationAssemblyContext->setEnabled(true);
+  m_fenestrationNumberOfPanes->setEnabled(true);
+  m_fenestrationFrameType->setEnabled(true);
+  m_fenestrationDividerType->setEnabled(true);
+  m_fenestrationTint->setEnabled(true);
+  m_fenestrationGasFill->setEnabled(true);
+  m_fenestrationLowEmissivityCoating->setEnabled(true);
+
+  m_fenestrationType->bind<std::string>(
+    *m_standardsInformation,
+    static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+    std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationTypeValues),
+    std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationType, m_standardsInformation.get_ptr())),
+    std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationType, m_standardsInformation.get_ptr(), std::placeholders::_1),
+    NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationType, m_standardsInformation.get_ptr())));
+
+  m_fenestrationAssemblyContext->bind<std::string>(
+    *m_standardsInformation,
+    static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+    std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationAssemblyContextValues),
+    std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationAssemblyContext, m_standardsInformation.get_ptr())),
+    std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationAssemblyContext, m_standardsInformation.get_ptr(), std::placeholders::_1),
+    NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationAssemblyContext, m_standardsInformation.get_ptr())));
+
+  m_fenestrationNumberOfPanes->bind<std::string>(
+    *m_standardsInformation,
+    static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+    std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationNumberOfPanesValues),
+    std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationNumberOfPanes, m_standardsInformation.get_ptr())),
+    std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationNumberOfPanes, m_standardsInformation.get_ptr(), std::placeholders::_1),
+    NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationNumberOfPanes, m_standardsInformation.get_ptr())));
+
+  m_fenestrationFrameType->bind<std::string>(
+    *m_standardsInformation,
+    static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+    std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationFrameTypeValues),
+    std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationFrameType, m_standardsInformation.get_ptr())),
+    std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationFrameType, m_standardsInformation.get_ptr(), std::placeholders::_1),
+    NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationFrameType, m_standardsInformation.get_ptr())));
+
+  m_fenestrationDividerType->bind<std::string>(
+    *m_standardsInformation,
+    static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+    std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationDividerTypeValues),
+    std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationDividerType, m_standardsInformation.get_ptr())),
+    std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationDividerType, m_standardsInformation.get_ptr(), std::placeholders::_1),
+    NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationDividerType, m_standardsInformation.get_ptr())));
+
+  m_fenestrationTint->bind<std::string>(
+    *m_standardsInformation,
+    static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+    std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationTintValues),
+    std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationTint, m_standardsInformation.get_ptr())),
+    std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationTint, m_standardsInformation.get_ptr(), std::placeholders::_1),
+    NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationTint, m_standardsInformation.get_ptr())));
+
+  m_fenestrationGasFill->bind<std::string>(
+    *m_standardsInformation,
+    static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+    std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationGasFillValues),
+    std::function<boost::optional<std::string>()>(std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationGasFill, m_standardsInformation.get_ptr())),
+    std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationGasFill, m_standardsInformation.get_ptr(), std::placeholders::_1),
+    NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationGasFill, m_standardsInformation.get_ptr())));
+
+  m_fenestrationLowEmissivityCoating->bind(
+   *m_standardsInformation,
+    std::bind(&openstudio::model::StandardsInformationConstruction::fenestrationLowEmissivityCoating, m_standardsInformation.get_ptr()),
+    BoolSetter(std::bind(&openstudio::model::StandardsInformationConstruction::setFenestrationLowEmissivityCoating, m_standardsInformation.get_ptr(), std::placeholders::_1)),
+    NoFailAction(std::bind(&model::StandardsInformationConstruction::resetFenestrationLowEmissivityCoating, m_standardsInformation.get_ptr())));
 }
 
 void StandardsInformationConstructionWidget::disableFenestration()
 {
-  m_fenestration->setEnabled(false);
+  m_fenestrationType->setEnabled(false);
+  m_fenestrationAssemblyContext->setEnabled(false);
+  m_fenestrationNumberOfPanes->setEnabled(false);
+  m_fenestrationFrameType->setEnabled(false);
+  m_fenestrationDividerType->setEnabled(false);
+  m_fenestrationTint->setEnabled(false);
+  m_fenestrationGasFill->setEnabled(false);
+  m_fenestrationLowEmissivityCoating->setEnabled(false);
+
+  m_fenestrationType->unbind();
+  m_fenestrationAssemblyContext->unbind();
+  m_fenestrationNumberOfPanes->unbind();
+  m_fenestrationFrameType->unbind();
+  m_fenestrationDividerType->unbind();
+  m_fenestrationTint->unbind();
+  m_fenestrationGasFill->unbind();
+  m_fenestrationLowEmissivityCoating->unbind();
 }
 
 void StandardsInformationConstructionWidget::toggleUnits(bool displayIP)
@@ -235,6 +458,13 @@ void StandardsInformationConstructionWidget::attach(openstudio::model::Construct
 
   m_standardsConstructionType->setEnabled(true);
 
+  // do not bind fenestration fields here, that is done in enableFenestration
+  if (construction.isFenestration()){
+    enableFenestration();
+  } else {
+    disableFenestration();
+  }
+
   populateStandards();
   populateStandardSources();
   populateStandardsConstructionType();
@@ -256,6 +486,8 @@ void StandardsInformationConstructionWidget::detach()
   m_intendedSurfaceType->unbind();
 
   m_standardsConstructionType->setEnabled(false);
+
+  disableFenestration();
 }
 
 void StandardsInformationConstructionWidget::standardChanged(const QString& text)

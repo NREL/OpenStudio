@@ -373,7 +373,7 @@ namespace detail {
     return getString(OS_StandardsInformation_ConstructionFields::FenestrationAssemblyContext,true,true);
   }
 
-  boost::optional<std::string> StandardsInformationConstruction_Impl::fenestrationNumberofPanes() const {
+  boost::optional<std::string> StandardsInformationConstruction_Impl::fenestrationNumberOfPanes() const {
     return getString(OS_StandardsInformation_ConstructionFields::FenestrationNumberofPanes,true,true);
   }
 
@@ -574,12 +574,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool StandardsInformationConstruction_Impl::setFenestrationNumberofPanes(const std::string& fenestrationNumberofPanes) {
-    bool result = setString(OS_StandardsInformation_ConstructionFields::FenestrationNumberofPanes, fenestrationNumberofPanes);
+  bool StandardsInformationConstruction_Impl::setFenestrationNumberOfPanes(const std::string& fenestrationNumberOfPanes) {
+    bool result = setString(OS_StandardsInformation_ConstructionFields::FenestrationNumberofPanes, fenestrationNumberOfPanes);
     return result;
   }
 
-  void StandardsInformationConstruction_Impl::resetFenestrationNumberofPanes() {
+  void StandardsInformationConstruction_Impl::resetFenestrationNumberOfPanes() {
     bool result = setString(OS_StandardsInformation_ConstructionFields::FenestrationNumberofPanes, "");
     OS_ASSERT(result);
   }
@@ -676,7 +676,7 @@ std::vector<std::string> StandardsInformationConstruction::fenestrationAssemblyC
                         OS_StandardsInformation_ConstructionFields::FenestrationAssemblyContext);
 }
 
-std::vector<std::string> StandardsInformationConstruction::fenestrationNumberofPanesValues() {
+std::vector<std::string> StandardsInformationConstruction::fenestrationNumberOfPanesValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_StandardsInformation_ConstructionFields::FenestrationNumberofPanes);
 }
@@ -762,8 +762,8 @@ boost::optional<std::string> StandardsInformationConstruction::fenestrationAssem
   return getImpl<detail::StandardsInformationConstruction_Impl>()->fenestrationAssemblyContext();
 }
 
-boost::optional<std::string> StandardsInformationConstruction::fenestrationNumberofPanes() const {
-  return getImpl<detail::StandardsInformationConstruction_Impl>()->fenestrationNumberofPanes();
+boost::optional<std::string> StandardsInformationConstruction::fenestrationNumberOfPanes() const {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->fenestrationNumberOfPanes();
 }
 
 boost::optional<std::string> StandardsInformationConstruction::fenestrationFrameType() const {
@@ -862,12 +862,12 @@ void StandardsInformationConstruction::resetFenestrationAssemblyContext() {
   getImpl<detail::StandardsInformationConstruction_Impl>()->resetFenestrationAssemblyContext();
 }
 
-bool StandardsInformationConstruction::setFenestrationNumberofPanes(const std::string& fenestrationNumberofPanes) {
-  return getImpl<detail::StandardsInformationConstruction_Impl>()->setFenestrationNumberofPanes(fenestrationNumberofPanes);
+bool StandardsInformationConstruction::setFenestrationNumberOfPanes(const std::string& fenestrationNumberOfPanes) {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->setFenestrationNumberOfPanes(fenestrationNumberOfPanes);
 }
 
-void StandardsInformationConstruction::resetFenestrationNumberofPanes() {
-  getImpl<detail::StandardsInformationConstruction_Impl>()->resetFenestrationNumberofPanes();
+void StandardsInformationConstruction::resetFenestrationNumberOfPanes() {
+  getImpl<detail::StandardsInformationConstruction_Impl>()->resetFenestrationNumberOfPanes();
 }
 
 bool StandardsInformationConstruction::setFenestrationFrameType(const std::string& fenestrationFrameType) {

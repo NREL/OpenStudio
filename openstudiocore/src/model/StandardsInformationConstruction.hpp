@@ -56,7 +56,7 @@ class MODEL_API StandardsInformationConstruction : public ModelObject {
 
   static std::vector<std::string> fenestrationAssemblyContextValues();
 
-  static std::vector<std::string> fenestrationNumberofPanesValues();
+  static std::vector<std::string> fenestrationNumberOfPanesValues();
 
   static std::vector<std::string> fenestrationFrameTypeValues();
 
@@ -119,7 +119,7 @@ class MODEL_API StandardsInformationConstruction : public ModelObject {
   boost::optional<std::string> fenestrationAssemblyContext() const;
 
   /** Number of panes for this fenestration construction. */
-  boost::optional<std::string> fenestrationNumberofPanes() const;
+  boost::optional<std::string> fenestrationNumberOfPanes() const;
 
   /** Type of framing for this fenestration construction. */
   boost::optional<std::string> fenestrationFrameType() const;
@@ -194,9 +194,9 @@ class MODEL_API StandardsInformationConstruction : public ModelObject {
 
   void resetFenestrationAssemblyContext();
 
-  bool setFenestrationNumberofPanes(const std::string& fenestrationNumberofPanes);
+  bool setFenestrationNumberOfPanes(const std::string& fenestrationNumberofPanes);
 
-  void resetFenestrationNumberofPanes();
+  void resetFenestrationNumberOfPanes();
 
   bool setFenestrationFrameType(const std::string& fenestrationFrameType);
 
