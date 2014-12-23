@@ -3054,13 +3054,33 @@ OS:StandardsInformation:Material,
        \note More information can be found at https://github.com/NREL/openstudio-standards.     
        \type alpha       
   A5, \field Standards Category
-       \note This is a freeform field used to identify the category of this material, e.g. 'Plastering Materials' or 'Roofing'.
+       \note This is a freeform field used to identify the category of this material, e.g. 'Plastering Materials' 'Composite', or 'Roofing'.
        \note More information can be found at https://github.com/NREL/openstudio-standards.
        \type alpha
-  A6; \field Standards Identifier
+  A6, \field Standards Identifier
        \note This is a freeform field used to identify the id of this material within a standard.
        \note More information can be found at https://github.com/NREL/openstudio-standards.
        \type alpha
+  A7, \field Composite Framing Material
+       \note This is a freeform field used to identify the framing material for a composite layer.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+       \type alpha
+  A8, \field Composite Framing Configuration
+       \note This is a freeform field used to identify the framing configuration for a composite layer.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+       \type alpha
+  A9, \field Composite Framing Depth
+       \note This is a freeform field used to identify the framing depth for a composite layer.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+       \type alpha
+  A10, \field Composite Framing Size
+       \note This is a freeform field used to identify the framing size for a composite layer.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+       \type alpha
+  A11; \field Composite Cavity Insulation
+       \note This is a freeform field used to identify the cavity insulation for a composite layer.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+       \type alpha 
        
 \group OpenStudio Constructions
 
