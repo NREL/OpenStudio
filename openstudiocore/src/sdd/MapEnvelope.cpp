@@ -31,6 +31,8 @@
 #include "../model/AirGap_Impl.hpp"
 #include "../model/StandardOpaqueMaterial.hpp"
 #include "../model/StandardOpaqueMaterial_Impl.hpp"
+#include "../model/ConstructionWithInternalSource.hpp"
+#include "../model/ConstructionWithInternalSource_Impl.hpp"
 #include "../model/FFactorGroundFloorConstruction.hpp"
 #include "../model/FFactorGroundFloorConstruction_Impl.hpp"
 #include "../model/CFactorUndergroundWallConstruction.hpp"
@@ -41,6 +43,10 @@
 #include "../model/ModelPartitionMaterial_Impl.hpp"
 #include "../model/SimpleGlazing.hpp"
 #include "../model/SimpleGlazing_Impl.hpp"
+#include "../model/StandardsInformationConstruction.hpp"
+#include "../model/StandardsInformationConstruction_Impl.hpp"
+#include "../model/StandardsInformationMaterial.hpp"
+#include "../model/StandardsInformationMaterial_Impl.hpp"
 
 #include "../utilities/units/QuantityConverter.hpp"
 #include "../utilities/units/IPUnit.hpp"
@@ -474,8 +480,18 @@ namespace sdd {
   {
     QDomElement result;
     
-    if (constructionBase.optionalCast<model::Construction>()){
-      model::Construction construction = constructionBase.cast<model::Construction>();
+    if (constructionBase.optionalCast<model::LayeredConstruction>()){
+      model::LayeredConstruction construction = constructionBase.cast<model::LayeredConstruction>();
+      model::StandardsInformationConstruction info = constructionBase.standardsInformation();
+
+      bool heated = false;
+      if (construction.optionalCast<model::Construction>()){
+        heated = false;
+      } else if (construction.optionalCast<model::ConstructionWithInternalSource>()){
+        heated = true;
+      } else {
+        return boost::none;
+      }
 
       // check if any layer has not been translated, constructions using simple glazing material will
       // be skipped here because the simple glazing material is not recorded as mapped
@@ -501,24 +517,56 @@ namespace sdd {
       specMthdElement.appendChild(doc.createTextNode("Layers"));
 
       // SDD:
-      // CompatibleSurfType - required, in progress
+      // CompatibleSurfType - required, done
       // ExtSolAbs - optional, done
       // ExtThrmlAbs - optional, done
       // ExtVisAbs - optional, done
       // IntSolAbs - optional, done
       // IntThrmlAbs - optional, done
       // IntVisAbs - optional, done
-      // SlabType - optional, need to add
-      // SlabInsOrientation - optional, need to add
-      // SlabInsThrmlR - optional, need to add
-      // FieldAppliedCoating - optional, need to add
-      // CRRCInitialRefl - optional, need to add
-      // CRRCAgedRefl - optional, need to add
-      // CRRCInitialEmittance - optional, need to add
-      // CRRCAgedEmittance - optional, need to add
-      // CRRCInitialSRI - optional, need to add
-      // CRRCAgedSRI - optional, need to add
-      // CRRCProdID - optional, need to add
+      // SlabType - optional, skipping until we better handle slabs
+      // SlabInsOrientation - optional, skipping until we better handle slabs
+      // SlabInsThrmlR - optional, skipping until we better handle slabs
+      // FieldAppliedCoating - optional, skipping
+      // CRRCInitialRefl - optional, skipping
+      // CRRCAgedRefl - optional, skipping
+      // CRRCInitialEmittance - optional, skipping
+      // CRRCAgedEmittance - optional, skipping
+      // CRRCInitialSRI - optional, skipping
+      // CRRCAgedSRI - optional, skipping
+      // CRRCProdID - optional, skipping
+
+      boost::optional<std::string> compatibleSurfType;
+      boost::optional<std::string> intendedSurfaceType = info.intendedSurfaceType();
+      if (intendedSurfaceType){
+        if (istringEqual("ExteriorWall", *intendedSurfaceType)){
+          compatibleSurfType = "ExteriorWall";
+        } else if (istringEqual("AtticRoof", *intendedSurfaceType) ||
+                   istringEqual("ExteriorRoof", *intendedSurfaceType)){
+          compatibleSurfType = "Roof";
+        } else if (istringEqual("ExteriorFloor", *intendedSurfaceType)){
+          compatibleSurfType = "ExteriorFloor";
+        } else if (istringEqual("GroundContactWall", *intendedSurfaceType)){
+          compatibleSurfType = "UndergroundWall";
+        } else if (istringEqual("GroundContactFloor", *intendedSurfaceType)){
+          compatibleSurfType = "UndergroundFloor";
+        } else if (istringEqual("InteriorWall", *intendedSurfaceType)){
+          compatibleSurfType = "InteriorWall";
+        } else if (istringEqual("InteriorCeiling", *intendedSurfaceType)){
+          compatibleSurfType = "Ceiling";
+        } else if (istringEqual("InteriorFloor", *intendedSurfaceType)){
+          compatibleSurfType = "InteriorFloor";
+        } else{
+          // DLM: warn?
+        }
+      }
+      if (compatibleSurfType){
+        QDomElement compatibleSurfTypeElement = doc.createElement("CompatibleSurfType");
+        result.appendChild(compatibleSurfTypeElement);
+        compatibleSurfTypeElement.appendChild(doc.createTextNode(toQString(*compatibleSurfType)));
+      } else{
+        // DLM: warn?
+      }
 
       unsigned n = layers.size();
       if (n > 0){
@@ -708,6 +756,7 @@ namespace sdd {
 
     if (constructionBase.optionalCast<model::Construction>()){
       model::Construction construction = constructionBase.cast<model::Construction>();
+      model::StandardsInformationConstruction info = constructionBase.standardsInformation();
 
       result = doc.createElement("DrCons");
       
@@ -719,38 +768,70 @@ namespace sdd {
 
       // SDD:
       // Type - required, need to add
-      // CertificationMthd - required, need to add
+      // CertificationMthd - required, defaulted to NFRC unless performance value not found
       // UFactor - optional, done
-      // Open - optional, in progress
+      // Open - optional, done
+
+      boost::optional<std::string> type;
+      boost::optional<std::string> certificationMthd = "NFRCRated";
+      boost::optional<double> uFactor;
+      boost::optional<std::string> open;
 
       // can only get UFactor for special cases
-      bool foundUFactor = false;
-
       std::vector<model::Material> layers = construction.layers();
       if (layers.size() == 1){
         if (layers[0].optionalCast<model::MasslessOpaqueMaterial>()){
 
           model::MasslessOpaqueMaterial material = layers[0].cast<model::MasslessOpaqueMaterial>();
 
-          // UFactor
           // os units = W/m2-K, sdd units = Btu/(hr*f2t*F)
-          double uFactor = material.thermalConductance();
-          Quantity uFactorSI(uFactor, WhUnit(WhExpnt(1,0,-2,-1)));
+          Quantity uFactorSI(material.thermalConductance(), WhUnit(WhExpnt(1, 0, -2, -1)));
           OptionalQuantity uFactorIP = QuantityConverter::instance().convert(uFactorSI, btuSys);
           OS_ASSERT(uFactorIP);
           OS_ASSERT(uFactorIP->units() == BTUUnit(BTUExpnt(1,-2,-1,-1)));
-          QDomElement uFactorElement = doc.createElement("UFactor");
-          result->appendChild(uFactorElement);
-          uFactorElement.appendChild(doc.createTextNode(QString::number(uFactorIP->value())));
-
-          foundUFactor = true;
+          uFactor = uFactorIP->value();
         }
       }
 
-      //if (!foundUFactor){
-      //  //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
-      //  //LOG(Error, "Could not calculate UFactor for DrCons '" << name << "'");
-      //}
+      if (uFactor){
+        if (type){
+          certificationMthd = "CECDefaultPerformance";
+        }
+      }
+
+      boost::optional<std::string> fenestrationType = info.fenestrationType();
+      if (fenestrationType){
+        if (istringEqual("Swinging Door", *fenestrationType)){
+          open = "Swinging";
+        } else if (istringEqual("Non-Swinging Door", *fenestrationType)){
+          open = "NonSwinging";
+        }
+      }
+
+      // write the xml
+      if (type){
+        QDomElement typeElement = doc.createElement("Type");
+        result->appendChild(typeElement);
+        typeElement.appendChild(doc.createTextNode(toQString(*type)));
+      }
+      if (certificationMthd){
+        QDomElement certificationMthdElement = doc.createElement("CertificationMthd");
+        result->appendChild(certificationMthdElement);
+        certificationMthdElement.appendChild(doc.createTextNode(toQString(*certificationMthd)));
+      }
+      if (uFactor){
+        QDomElement uFactorElement = doc.createElement("UFactor");
+        result->appendChild(uFactorElement);
+        uFactorElement.appendChild(doc.createTextNode(QString::number(*uFactor)));
+      } else{
+        //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
+        //LOG(Error, "Could not calculate UFactor for DrCons '" << name << "'");
+      }
+      if (open){
+        QDomElement openElement = doc.createElement("Open");
+        result->appendChild(openElement);
+        openElement.appendChild(doc.createTextNode(toQString(*open)));
+      }
 
       // mark the construction as translated, not the material
       m_translatedObjects[construction.handle()] = result.get();
@@ -768,6 +849,7 @@ namespace sdd {
 
     if (constructionBase.optionalCast<model::Construction>()){
       model::Construction construction = constructionBase.cast<model::Construction>();
+      model::StandardsInformationConstruction info = constructionBase.standardsInformation();
 
       result = doc.createElement("FenCons");
       
@@ -778,74 +860,264 @@ namespace sdd {
       nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
       // SDD:
-      // FenType - required, in progress
-      // FenProdType - optional, in progress
-      // AssmContext - required, need to add
-      // CertificationMthd - required, need to add
-      // SkyltGlz - optional, in progress
-      // SkyltCurb - optional, in progress
-      // OperableWinConfiguration - optional, in progress
-      // GreenhouseGardenWin - optional, need to add
-      // FenFrm - optional, in progress
-      // FenPanes - optional, in progress
-      // GlzTint - optional, in progress
-      // WinDivider - optional, in progress
-      // Diffusing - optional, in progress
-      // SHGC - optional, in progress
-      // SHGCCOG - optional, in progress
-      // UFactor - optional, in progress
-      // UFactorCOG - optional, in progress
-      // VT - optional, in progress
-      // VTCOG - optional, in progress
+      // FenType - required, done
+      // FenProdType - optional, done
+      // AssmContext - required, done
+      // CertificationMthd - required, defaulted to NFRCRated unless field fabricated or missing performance data, might be incorrect?
+      // SkyltGlz - optional, done
+      // SkyltCurb - optional, done
+      // OperableWinConfiguration - optional, skipping
+      // GreenhouseGardenWin - optional, skipping
+      // FenFrm - optional, done
+      // FenPanes - optional, done
+      // GlzTint - optional, done
+      // WinDivider - optional, done
+      // Diffusing - optional, skipping
+      // SHGC - optional, done
+      // SHGCCOG - optional, not supported
+      // UFactor - optional, done
+      // UFactorCOG - optional, not supported
+      // VT - optional, done
+      // VTCOG - optional, not supported
+
+      
+      boost::optional<std::string> fenestrationType = info.fenestrationType();
+      boost::optional<std::string> fenType;
+      boost::optional<std::string> fenProdType;
+      boost::optional<std::string> skyltGlz;
+      boost::optional<std::string> skyltCurb;
+      boost::optional<std::string> operableWinConfiguration;
+      boost::optional<std::string> glzTint;
+      if (fenestrationType){
+        if (istringEqual("Glass Skylight with Curb", *fenestrationType)){
+          fenType = "Skylight";
+          skyltGlz = "Glass";
+          skyltCurb = "CurbMounted";
+        } else if (istringEqual("Plastic Skylight with Curb", *fenestrationType)){
+          fenType = "Skylight";
+          skyltGlz = "Plastic";
+          skyltCurb = "CurbMounted";
+        } else if (istringEqual("Glass Skylight without Curb", *fenestrationType)){
+          fenType = "Skylight";
+          skyltGlz = "Glass";
+          skyltCurb = "DeckMounted";
+        } else if (istringEqual("Plastic Skylight without Curb", *fenestrationType)){
+          fenType = "Skylight";
+          skyltGlz = "Plastic";
+          skyltCurb = "DeckMounted";
+        } else{
+          fenType = "VerticalFenestration";
+
+          if (istringEqual("Fixed Window", *fenestrationType)){
+            fenProdType = "FixedWindow";
+          } else if (istringEqual("Operable Window", *fenestrationType)){
+            fenProdType = "OperableWindow";
+            
+            // DLM: todo set operableWinConfiguration
+            //operableWinConfiguration = "CasementAwning" or "Sliding"
+          } else if (istringEqual("Curtain Wall", *fenestrationType)){
+            fenProdType = "CurtainWall";
+          } else if (istringEqual("Glazed Door", *fenestrationType)){
+            fenProdType = "GlazedDoor";
+          } else {
+            // 'Swinging Door' or 'Non-Swinging Door'
+            // These should have been grouped with door constructions, potentially warn
+          }
+
+          boost::optional<std::string> fenestrationTint = info.fenestrationTint();
+          if (fenestrationTint){
+            if (istringEqual("Clear", *fenestrationTint)){
+              glzTint = "Clear";
+            } else{
+              glzTint = "Tinted";
+            }
+          }
+
+        }
+      }
+
+      boost::optional<std::string> assmContext;
+      boost::optional<std::string> certificationMthd = "NFRCRated"; // default
+      boost::optional<std::string> fenestrationAssemblyContext = info.fenestrationAssemblyContext();
+      if (fenestrationAssemblyContext){
+        if (istringEqual("Manufactured", *fenestrationAssemblyContext)){
+          assmContext = "Manufactured";
+        } else if (istringEqual("Field Fabricated", *fenestrationAssemblyContext)){
+          assmContext = "FieldFabricated";
+          certificationMthd = "CECDefaultPerformance"; // right?
+        } else if (istringEqual("Site Built", *fenestrationAssemblyContext)){
+          assmContext = "SiteBuilt";
+        }
+      }
+      
+      boost::optional<std::string> greenhouseGardenWin;
+
+      boost::optional<std::string> fenFrm;
+      boost::optional<std::string> fenestrationFrameType = info.fenestrationFrameType();
+      if (fenestrationFrameType){
+        if (istringEqual("Metal Framing", *fenestrationFrameType)){
+          fenFrm = "MetalFraming";
+        } else if (istringEqual("Metal Framing with Thermal Break", *fenestrationFrameType)){
+          fenFrm = "MetalFramingWithThermalBreak";
+        } else if (istringEqual("Non-Metal Framing", *fenestrationFrameType)){
+          fenFrm = "NonMetalFraming";
+        }
+      }
+
+      boost::optional<std::string> fenPanes;
+      boost::optional<std::string> fenestrationNumberOfPanes = info.fenestrationNumberOfPanes();
+      if (fenestrationNumberOfPanes){
+        if (istringEqual("Single Pane", *fenestrationNumberOfPanes)){
+          fenPanes = "SinglePane";
+        } else if (istringEqual("Double Pane", *fenestrationNumberOfPanes)){
+          fenPanes = "DoublePane";
+        } else if (istringEqual("Triple Pane", *fenestrationNumberOfPanes)){
+          fenPanes = "DoublePane";
+        } else if (istringEqual("Quadruple Pane", *fenestrationNumberOfPanes)){
+          fenPanes = "DoublePane";
+        } else if (istringEqual("Glass Block", *fenestrationNumberOfPanes)){
+          fenPanes = "GlassBlock";
+        }
+      }
+
+      boost::optional<std::string> winDivider;
+      boost::optional<std::string> fenestrationDividerType = info.fenestrationDividerType();
+      if (fenestrationDividerType){
+        if (istringEqual("True Divided Lite", *fenestrationDividerType)){
+          winDivider = "TrueDividedLite";
+        } else if (istringEqual("Between Panes < 7/16\"", *fenestrationDividerType)){
+          winDivider = "DividerBtwnPanesLessThan7_16in";
+        } else if (istringEqual("Between Panes >= 7/16\"", *fenestrationDividerType)){
+          winDivider = "DividerBtwnPanesGreaterThanOrEqualTo7_16in";
+        }
+      }
+
+      boost::optional<std::string> diffusing;
+
+      boost::optional<double> shgc;
+      boost::optional<double> uFactor;
+      boost::optional<double> vt;
 
       // can only get SHGC, TVis, UFactor for special cases
-      bool foundUFactor = false;
-      bool foundVT = false;
-
       std::vector<model::Material> layers = construction.layers();
       if (layers.size() == 1){
         if (layers[0].optionalCast<model::SimpleGlazing>()){
 
           model::SimpleGlazing simpleGlazing = layers[0].cast<model::SimpleGlazing>();
           
-          // SHGC
-          double shgc = simpleGlazing.solarHeatGainCoefficient();
-          QDomElement shgcElement = doc.createElement("SHGC"); 
-          result->appendChild(shgcElement);
-          shgcElement.appendChild(doc.createTextNode(QString::number(shgc)));
+          shgc = simpleGlazing.solarHeatGainCoefficient();
 
-          // UFactor
           // os units = W/m2-K, sdd units = Btu/(hr*f2t*F)
-          double uFactor = simpleGlazing.uFactor();
-          Quantity uFactorSI(uFactor, WhUnit(WhExpnt(1,0,-2,-1)));
+          Quantity uFactorSI(simpleGlazing.uFactor(), WhUnit(WhExpnt(1, 0, -2, -1)));
           OptionalQuantity uFactorIP = QuantityConverter::instance().convert(uFactorSI, btuSys);
           OS_ASSERT(uFactorIP);
           OS_ASSERT(uFactorIP->units() == BTUUnit(BTUExpnt(1,-2,-1,-1)));
-          QDomElement uFactorElement = doc.createElement("UFactor");
-          result->appendChild(uFactorElement);
-          uFactorElement.appendChild(doc.createTextNode(QString::number(uFactorIP->value())));
+          uFactor = uFactorIP->value();
 
-          foundUFactor = true;
-
-          // VT
-          boost::optional<double> vt = simpleGlazing.visibleTransmittance();
-          if (vt){
-            QDomElement vtElement = doc.createElement("VT"); 
-            result->appendChild(vtElement);
-            vtElement.appendChild(doc.createTextNode(QString::number(*vt)));
-
-            foundVT = true;
-          }
+          vt = simpleGlazing.visibleTransmittance();
         }
       }
 
-      //if (!foundUFactor){
-      //  //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
-      //  //LOG(Error, "Could not calculate SHGC, UFactor, or VT for FenCons '" << name << "'");
-      //}else if (!foundVT){
-      //  //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
-      //  LOG(Error, "Could not calculate VT for FenCons '" << name << "'");
-      //}
+      // if performance is not known use defaults if possible
+      if (!shgc || !uFactor || !vt){
+        if (fenFrm && fenPanes){
+          certificationMthd = "CECDefaultPerformance";
+        }
+      }
+
+      // write to XML
+      if (fenType){
+        QDomElement fenTypeElement = doc.createElement("FenType");
+        result->appendChild(fenTypeElement);
+        fenTypeElement.appendChild(doc.createTextNode(toQString(*fenType)));
+      }
+      if (fenProdType){
+        QDomElement fenProdTypeElement = doc.createElement("FenProdType");
+        result->appendChild(fenProdTypeElement);
+        fenProdTypeElement.appendChild(doc.createTextNode(toQString(*fenProdType)));
+      }
+      if (assmContext){
+        QDomElement assmContextElement = doc.createElement("AssmContext");
+        result->appendChild(assmContextElement);
+        assmContextElement.appendChild(doc.createTextNode(toQString(*assmContext)));
+      }
+      if (certificationMthd){
+        QDomElement certificationMthdElement = doc.createElement("CertificationMthd");
+        result->appendChild(certificationMthdElement);
+        certificationMthdElement.appendChild(doc.createTextNode(toQString(*certificationMthd)));
+      }
+      if (skyltGlz){
+        QDomElement skyltGlzElement = doc.createElement("SkyltGlz");
+        result->appendChild(skyltGlzElement);
+        skyltGlzElement.appendChild(doc.createTextNode(toQString(*skyltGlz)));
+      }
+      if (skyltCurb){
+        QDomElement skyltCurbElement = doc.createElement("SkyltCurb");
+        result->appendChild(skyltCurbElement);
+        skyltCurbElement.appendChild(doc.createTextNode(toQString(*skyltCurb)));
+      }
+      if (operableWinConfiguration){
+        QDomElement operableWinConfigurationElement = doc.createElement("OperableWinConfiguration");
+        result->appendChild(operableWinConfigurationElement);
+        operableWinConfigurationElement.appendChild(doc.createTextNode(toQString(*operableWinConfiguration)));
+      }
+      if (greenhouseGardenWin){
+        QDomElement greenhouseGardenWinElement = doc.createElement("GreenhouseGardenWin");
+        result->appendChild(greenhouseGardenWinElement);
+        greenhouseGardenWinElement.appendChild(doc.createTextNode(toQString(*greenhouseGardenWin)));
+      }
+      if (fenFrm){
+        QDomElement fenFrmElement = doc.createElement("FenFrm");
+        result->appendChild(fenFrmElement);
+        fenFrmElement.appendChild(doc.createTextNode(toQString(*fenFrm)));
+      }
+      if (fenPanes){
+        QDomElement fenPanesElement = doc.createElement("FenPanes");
+        result->appendChild(fenPanesElement);
+        fenPanesElement.appendChild(doc.createTextNode(toQString(*fenPanes)));
+      }
+      if (glzTint){
+        QDomElement glzTintElement = doc.createElement("GlzTint");
+        result->appendChild(glzTintElement);
+        glzTintElement.appendChild(doc.createTextNode(toQString(*glzTint)));
+      }
+      if (winDivider){
+        QDomElement winDividerElement = doc.createElement("WinDivider");
+        result->appendChild(winDividerElement);
+        winDividerElement.appendChild(doc.createTextNode(toQString(*winDivider)));
+      }
+      if (diffusing){
+        QDomElement diffusingElement = doc.createElement("Diffusing");
+        result->appendChild(diffusingElement);
+        diffusingElement.appendChild(doc.createTextNode(toQString(*diffusing)));
+      }
+      
+      
+
+      if (shgc){
+        QDomElement shgcElement = doc.createElement("SHGC");
+        result->appendChild(shgcElement);
+        shgcElement.appendChild(doc.createTextNode(QString::number(*shgc)));
+      } else{
+        //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
+        //LOG(Error, "Could not calculate SHGC for FenCons '" << name << "'");
+      }
+      if (uFactor){
+        QDomElement uFactorElement = doc.createElement("UFactor");
+        result->appendChild(uFactorElement);
+        uFactorElement.appendChild(doc.createTextNode(QString::number(*uFactor)));
+      } else{
+        //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
+        //LOG(Error, "Could not calculate UFactor for FenCons '" << name << "'");
+      }
+      if (vt){
+        QDomElement vtElement = doc.createElement("VT");
+        result->appendChild(vtElement);
+        vtElement.appendChild(doc.createTextNode(QString::number(*vt)));
+      } else{
+        //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
+        //LOG(Error, "Could not calculate VT for FenCons '" << name << "'");
+      }
 
       // mark the construction as translated, not the material
       m_translatedObjects[construction.handle()] = result.get();
@@ -882,16 +1154,16 @@ namespace sdd {
       // CodeItem - compulsory, in progress
       // FrmMat - optional, in progress
       // FrmConfig - optional, in progress
-      // FrmDepth, in progress
-      // CavityIns, in progress
-      // CavityInsOpt, in progress
-      // CompositeMatNotes, need to add?
-      // HeaderIns, need to add?
-      // CMUWt, need to add?
-      // CMUFill, need to add?
-      // SpandrelPanelIns, need to add?
-      // ICCESRptNum, need to add?
-      // InsOutsdWtrprfMemb, need to add?
+      // FrmDepth - optional, in progress
+      // CavityIns - optional, in progress
+      // CavityInsOpt - optional, in progress
+      // CompositeMatNotes - optional, need to add?
+      // HeaderIns - optional, need to add?
+      // CMUWt - optional, need to add?
+      // CMUFill - optional, need to add?
+      // SpandrelPanelIns - optional, need to add?
+      // ICCESRptNum - optional, need to add?
+      // InsOutsdWtrprfMemb - optional, need to add?
 
       // DLM: set in construction
       // roughness
