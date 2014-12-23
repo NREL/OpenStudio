@@ -66,11 +66,11 @@ namespace detail {
   }
 
   boost::optional<std::string> StandardsInformationConstruction_Impl::intendedSurfaceType() const {
-    return getString(OS_StandardsInformation_ConstructionFields::IntendedSurfaceType,false,true);
+    return getString(OS_StandardsInformation_ConstructionFields::IntendedSurfaceType,true,true);
   }
 
   boost::optional<std::string> StandardsInformationConstruction_Impl::standardsConstructionType() const {
-    return getString(OS_StandardsInformation_ConstructionFields::StandardsConstructionType,false,true);
+    return getString(OS_StandardsInformation_ConstructionFields::StandardsConstructionType,true,true);
   }
 
   std::vector<std::string> StandardsInformationConstruction_Impl::suggestedStandardsConstructionTypes() const {
@@ -215,11 +215,11 @@ namespace detail {
 
   std::string StandardsInformationConstruction_Impl::perturbableLayerType() const {
     std::string result;
-    OptionalString choiceValue = getString(OS_StandardsInformation_ConstructionFields::PerturbableLayerType,true);
+    OptionalString choiceValue = getString(OS_StandardsInformation_ConstructionFields::PerturbableLayerType,true,true);
     OS_ASSERT(choiceValue);
     if (istringEqual("Not Applicable",*choiceValue)) { return result; }
     if (istringEqual("Other",*choiceValue)) {
-      OptionalString otherValue = getString(OS_StandardsInformation_ConstructionFields::OtherPerturbableLayerType);
+      OptionalString otherValue = getString(OS_StandardsInformation_ConstructionFields::OtherPerturbableLayerType,true,true);
       if (otherValue) { result = *otherValue; }
     }
     else { result = *choiceValue; }
@@ -231,7 +231,7 @@ namespace detail {
   }
 
   boost::optional<std::string> StandardsInformationConstruction_Impl::otherPerturbableLayerType() const {
-    return getString(OS_StandardsInformation_ConstructionFields::OtherPerturbableLayerType,true);
+    return getString(OS_StandardsInformation_ConstructionFields::OtherPerturbableLayerType,true,true);
   }
 
   std::vector<std::string> StandardsInformationConstruction_Impl::suggestedConstructionStandards() const {
@@ -395,7 +395,7 @@ namespace detail {
 
   bool StandardsInformationConstruction_Impl::fenestrationLowEmissivityCoating() const {
     bool result = false;
-    boost::optional<std::string> value = getString(OS_StandardsInformation_ConstructionFields::FenestrationLowEmissivityCoating,true);
+    boost::optional<std::string> value = getString(OS_StandardsInformation_ConstructionFields::FenestrationLowEmissivityCoating,true,true);
     if (value){
       result = openstudio::istringEqual(value.get(), "True");
     }

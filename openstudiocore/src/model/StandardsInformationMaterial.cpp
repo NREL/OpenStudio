@@ -98,7 +98,7 @@ namespace detail {
   }
 
   boost::optional<std::string> StandardsInformationMaterial_Impl::materialStandard() const {
-    return getString(OS_StandardsInformation_MaterialFields::MaterialStandard, true);
+    return getString(OS_StandardsInformation_MaterialFields::MaterialStandard, true, true);
   }
 
   std::vector<std::string> StandardsInformationMaterial_Impl::suggestedMaterialStandards() const {
@@ -156,7 +156,7 @@ namespace detail {
   }
 
   boost::optional<std::string> StandardsInformationMaterial_Impl::materialStandardSource() const {
-    return getString(OS_StandardsInformation_MaterialFields::MaterialStandardSource,true);
+    return getString(OS_StandardsInformation_MaterialFields::MaterialStandardSource, true, true);
   }
 
   std::vector<std::string> StandardsInformationMaterial_Impl::suggestedMaterialStandardSources() const {
@@ -236,7 +236,7 @@ namespace detail {
   }
 
   boost::optional<std::string> StandardsInformationMaterial_Impl::standardsCategory() const {
-    return getString(OS_StandardsInformation_MaterialFields::StandardsCategory,true);
+    return getString(OS_StandardsInformation_MaterialFields::StandardsCategory, true, true);
   }
 
   std::vector<std::string> StandardsInformationMaterial_Impl::suggestedStandardsCategories() const {
@@ -313,7 +313,7 @@ namespace detail {
   }
 
   boost::optional<std::string> StandardsInformationMaterial_Impl::standardsIdentifier() const {
-    return getString(OS_StandardsInformation_MaterialFields::StandardsIdentifier,true);
+    return getString(OS_StandardsInformation_MaterialFields::StandardsIdentifier, true ,true);
   }
 
   std::vector<std::string> StandardsInformationMaterial_Impl::suggestedStandardsIdentifiers() const {
@@ -408,6 +408,81 @@ namespace detail {
     return result;
   }
 
+  boost::optional<std::string> StandardsInformationMaterial_Impl::compositeFramingMaterial() const
+  {
+    return getString(OS_StandardsInformation_MaterialFields::CompositeFramingMaterial, true, true);
+  }
+
+  std::vector<std::string> StandardsInformationMaterial_Impl::suggestedCompositeFramingMaterials() const
+  {
+    std::vector<std::string> result;
+    boost::optional<std::string> tmp = compositeFramingMaterial();
+    if (tmp){
+      result.push_back(*tmp);
+    }
+    return result;
+  }
+
+  boost::optional<std::string> StandardsInformationMaterial_Impl::compositeFramingConfiguration() const
+  {
+    return getString(OS_StandardsInformation_MaterialFields::CompositeFramingConfiguration, true, true);
+  }
+
+  std::vector<std::string> StandardsInformationMaterial_Impl::suggestedCompositeFramingConfigurations() const
+  {
+    std::vector<std::string> result;
+    boost::optional<std::string> tmp = compositeFramingConfiguration();
+    if (tmp){
+      result.push_back(*tmp);
+    }
+    return result;
+  }
+
+  boost::optional<std::string> StandardsInformationMaterial_Impl::compositeFramingDepth() const
+  {
+    return getString(OS_StandardsInformation_MaterialFields::CompositeFramingDepth, true, true);
+  }
+
+  std::vector<std::string> StandardsInformationMaterial_Impl::suggestedCompositeFramingDepths() const
+  {
+    std::vector<std::string> result;
+    boost::optional<std::string> tmp = compositeFramingDepth();
+    if (tmp){
+      result.push_back(*tmp);
+    }
+    return result;
+  }
+
+  boost::optional<std::string> StandardsInformationMaterial_Impl::compositeFramingSize() const
+  {
+    return getString(OS_StandardsInformation_MaterialFields::CompositeFramingSize, true, true);
+  }
+
+  std::vector<std::string> StandardsInformationMaterial_Impl::suggestedCompositeFramingSizes() const
+  {
+    std::vector<std::string> result;
+    boost::optional<std::string> tmp = compositeFramingSize();
+    if (tmp){
+      result.push_back(*tmp);
+    }
+    return result;
+  }
+
+  boost::optional<std::string> StandardsInformationMaterial_Impl::compositeCavityInsulation() const
+  {
+    return getString(OS_StandardsInformation_MaterialFields::CompositeCavityInsulation, true, true);
+  }
+
+  std::vector<std::string> StandardsInformationMaterial_Impl::suggestedCompositeCavityInsulations() const
+  {
+    std::vector<std::string> result;
+    boost::optional<std::string> tmp = compositeCavityInsulation();
+    if (tmp){
+      result.push_back(*tmp);
+    }
+    return result;
+  }
+
   void StandardsInformationMaterial_Impl::setMaterialStandard(const std::string& materialStandard) {
     bool result = setString(OS_StandardsInformation_MaterialFields::MaterialStandard, materialStandard);
     OS_ASSERT(result);
@@ -448,6 +523,65 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  void StandardsInformationMaterial_Impl::setCompositeFramingMaterial(const std::string& compositeFramingMaterial)
+  {
+    bool result = setString(OS_StandardsInformation_MaterialFields::CompositeFramingMaterial, compositeFramingMaterial);
+    OS_ASSERT(result);
+  }
+
+  void StandardsInformationMaterial_Impl::resetCompositeFramingMaterial()
+  {
+    bool result = setString(OS_StandardsInformation_MaterialFields::CompositeFramingMaterial, "");
+    OS_ASSERT(result);
+  }
+
+  void StandardsInformationMaterial_Impl::setCompositeFramingConfiguration(const std::string& compositeFramingConfiguration)
+  {
+    bool result = setString(OS_StandardsInformation_MaterialFields::CompositeFramingConfiguration, compositeFramingConfiguration);
+    OS_ASSERT(result);
+  }
+
+  void StandardsInformationMaterial_Impl::resetCompositeFramingConfiguration()
+  {    
+    bool result = setString(OS_StandardsInformation_MaterialFields::CompositeFramingConfiguration, "");
+    OS_ASSERT(result);
+  }
+
+  void StandardsInformationMaterial_Impl::setCompositeFramingDepth(const std::string& compositeFramingDepth)
+  {
+    bool result = setString(OS_StandardsInformation_MaterialFields::CompositeFramingDepth, compositeFramingDepth);
+    OS_ASSERT(result);
+  }
+
+  void StandardsInformationMaterial_Impl::resetCompositeFramingDepth()
+  {
+    bool result = setString(OS_StandardsInformation_MaterialFields::CompositeFramingDepth, "");
+    OS_ASSERT(result);
+  }
+
+  void StandardsInformationMaterial_Impl::setCompositeFramingSize(const std::string& compositeFramingSize)
+  {
+    bool result = setString(OS_StandardsInformation_MaterialFields::CompositeFramingSize, compositeFramingSize);
+    OS_ASSERT(result);
+  }
+
+  void StandardsInformationMaterial_Impl::resetCompositeFramingSize()
+  {
+    bool result = setString(OS_StandardsInformation_MaterialFields::CompositeFramingSize, "");
+    OS_ASSERT(result);
+  }
+
+  void StandardsInformationMaterial_Impl::setCompositeCavityInsulation(const std::string& compositeFramingInsulation)
+  {
+    bool result = setString(OS_StandardsInformation_MaterialFields::CompositeCavityInsulation, compositeFramingInsulation);
+    OS_ASSERT(result);
+  }
+
+  void StandardsInformationMaterial_Impl::resetCompositeCavityInsulation()
+  {
+    bool result = setString(OS_StandardsInformation_MaterialFields::CompositeCavityInsulation, "");
+    OS_ASSERT(result);
+  }
 
 } // detail
 
@@ -499,6 +633,56 @@ std::vector<std::string> StandardsInformationMaterial::suggestedStandardsIdentif
   return getImpl<detail::StandardsInformationMaterial_Impl>()->suggestedStandardsIdentifiers();
 }
 
+boost::optional<std::string> StandardsInformationMaterial::compositeFramingMaterial() const
+{
+  return getImpl<detail::StandardsInformationMaterial_Impl>()->compositeFramingMaterial();
+}
+
+std::vector<std::string> StandardsInformationMaterial::suggestedCompositeFramingMaterials() const
+{
+  return getImpl<detail::StandardsInformationMaterial_Impl>()->suggestedCompositeFramingMaterials();
+}
+
+boost::optional<std::string> StandardsInformationMaterial::compositeFramingConfiguration() const
+{
+  return getImpl<detail::StandardsInformationMaterial_Impl>()->compositeFramingConfiguration();
+}
+
+std::vector<std::string> StandardsInformationMaterial::suggestedCompositeFramingConfigurations() const
+{
+  return getImpl<detail::StandardsInformationMaterial_Impl>()->suggestedCompositeFramingConfigurations();
+}
+
+boost::optional<std::string> StandardsInformationMaterial::compositeFramingDepth() const
+{
+  return getImpl<detail::StandardsInformationMaterial_Impl>()->compositeFramingDepth();
+}
+
+std::vector<std::string> StandardsInformationMaterial::suggestedCompositeFramingDepths() const
+{
+  return getImpl<detail::StandardsInformationMaterial_Impl>()->suggestedCompositeFramingDepths();
+}
+
+boost::optional<std::string> StandardsInformationMaterial::compositeFramingSize() const
+{
+  return getImpl<detail::StandardsInformationMaterial_Impl>()->compositeFramingSize();
+}
+
+std::vector<std::string> StandardsInformationMaterial::suggestedCompositeFramingSizes() const
+{
+  return getImpl<detail::StandardsInformationMaterial_Impl>()->suggestedCompositeFramingSizes();
+}
+
+boost::optional<std::string> StandardsInformationMaterial::compositeCavityInsulation() const
+{
+  return getImpl<detail::StandardsInformationMaterial_Impl>()->compositeCavityInsulation();
+}
+
+std::vector<std::string> StandardsInformationMaterial::suggestedCompositeCavityInsulations() const
+{
+  return getImpl<detail::StandardsInformationMaterial_Impl>()->suggestedCompositeCavityInsulations();
+}
+
 void StandardsInformationMaterial::setMaterialStandard(const std::string& materialStandard) {
   getImpl<detail::StandardsInformationMaterial_Impl>()->setMaterialStandard(materialStandard);
 }
@@ -529,6 +713,56 @@ void StandardsInformationMaterial::setStandardsIdentifier(const std::string& sta
 
 void StandardsInformationMaterial::resetStandardsIdentifier() {
   getImpl<detail::StandardsInformationMaterial_Impl>()->resetStandardsIdentifier();
+}
+
+void StandardsInformationMaterial::setCompositeFramingMaterial(const std::string& compositeFramingMaterial)
+{
+  getImpl<detail::StandardsInformationMaterial_Impl>()->setCompositeFramingMaterial(compositeFramingMaterial);
+}
+
+void StandardsInformationMaterial::resetCompositeFramingMaterial()
+{
+  getImpl<detail::StandardsInformationMaterial_Impl>()->resetCompositeFramingMaterial();
+}
+
+void StandardsInformationMaterial::setCompositeFramingConfiguration(const std::string& compositeFramingConfiguration)
+{
+  getImpl<detail::StandardsInformationMaterial_Impl>()->setCompositeFramingConfiguration(compositeFramingConfiguration);
+}
+
+void StandardsInformationMaterial::resetCompositeFramingConfiguration()
+{
+  getImpl<detail::StandardsInformationMaterial_Impl>()->resetCompositeFramingConfiguration();
+}
+
+void StandardsInformationMaterial::setCompositeFramingDepth(const std::string& compositeFramingDepth)
+{
+  getImpl<detail::StandardsInformationMaterial_Impl>()->setCompositeFramingDepth(compositeFramingDepth);
+}
+
+void StandardsInformationMaterial::resetCompositeFramingDepth()
+{
+  getImpl<detail::StandardsInformationMaterial_Impl>()->resetCompositeFramingDepth();
+}
+
+void StandardsInformationMaterial::setCompositeFramingSize(const std::string& compositeFramingSize)
+{
+  getImpl<detail::StandardsInformationMaterial_Impl>()->setCompositeFramingSize(compositeFramingSize);
+}
+
+void StandardsInformationMaterial::resetCompositeFramingSize()
+{
+  getImpl<detail::StandardsInformationMaterial_Impl>()->resetCompositeFramingSize();
+}
+
+void StandardsInformationMaterial::setCompositeCavityInsulation(const std::string& compositeCavityInsulation)
+{
+  getImpl<detail::StandardsInformationMaterial_Impl>()->setCompositeCavityInsulation(compositeCavityInsulation);
+}
+
+void StandardsInformationMaterial::resetCompositeCavityInsulation()
+{
+  getImpl<detail::StandardsInformationMaterial_Impl>()->resetCompositeCavityInsulation();
 }
 
 /// @cond

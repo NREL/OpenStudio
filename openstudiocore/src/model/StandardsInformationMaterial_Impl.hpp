@@ -75,6 +75,20 @@ namespace detail {
     boost::optional<std::string> standardsIdentifier() const;
     std::vector<std::string> suggestedStandardsIdentifiers() const;
 
+    boost::optional<std::string> compositeFramingMaterial() const;
+    std::vector<std::string> suggestedCompositeFramingMaterials() const;
+
+    boost::optional<std::string> compositeFramingConfiguration() const;
+    std::vector<std::string> suggestedCompositeFramingConfigurations() const;
+
+    boost::optional<std::string> compositeFramingDepth() const;
+    std::vector<std::string> suggestedCompositeFramingDepths() const;
+
+    boost::optional<std::string> compositeFramingSize() const;
+    std::vector<std::string> suggestedCompositeFramingSizes() const;
+
+    boost::optional<std::string> compositeCavityInsulation() const;
+    std::vector<std::string> suggestedCompositeCavityInsulations() const;
 
     //@}
     /** @name Setters */
@@ -91,6 +105,21 @@ namespace detail {
 
     void setStandardsIdentifier(const std::string& standardsIdentifier);
     void resetStandardsIdentifier();
+
+    void setCompositeFramingMaterial(const std::string& compositeFramingMaterial);
+    void resetCompositeFramingMaterial();
+
+    void setCompositeFramingConfiguration(const std::string& compositeFramingConfiguration);
+    void resetCompositeFramingConfiguration();
+
+    void setCompositeFramingDepth(const std::string& compositeFramingDepth);
+    void resetCompositeFramingDepth();
+
+    void setCompositeFramingSize(const std::string& compositeFramingSize);
+    void resetCompositeFramingSize();
+
+    void setCompositeCavityInsulation(const std::string& compositeCavityInsulation);
+    void resetCompositeCavityInsulation();
 
     //@}
     /** @name Other */
