@@ -767,8 +767,8 @@ namespace sdd {
       nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
       // SDD:
-      // Type - required, need to add
-      // CertificationMthd - required, defaulted to NFRC unless performance value not found
+      // Type - required, skipping
+      // CertificationMthd - required, defaulted to NFRC unless missing performance data
       // UFactor - optional, done
       // Open - optional, done
 
@@ -793,10 +793,8 @@ namespace sdd {
         }
       }
 
-      if (uFactor){
-        if (type){
-          certificationMthd = "CECDefaultPerformance";
-        }
+      if (!uFactor){
+        certificationMthd.reset();
       }
 
       boost::optional<std::string> fenestrationType = info.fenestrationType();
@@ -1152,18 +1150,18 @@ namespace sdd {
       // SDD:
       // CodeCat - compulsory, in progress
       // CodeItem - compulsory, in progress
-      // FrmMat - optional, in progress
-      // FrmConfig - optional, in progress
-      // FrmDepth - optional, in progress
-      // CavityIns - optional, in progress
-      // CavityInsOpt - optional, in progress
-      // CompositeMatNotes - optional, need to add?
-      // HeaderIns - optional, need to add?
-      // CMUWt - optional, need to add?
-      // CMUFill - optional, need to add?
-      // SpandrelPanelIns - optional, need to add?
-      // ICCESRptNum - optional, need to add?
-      // InsOutsdWtrprfMemb - optional, need to add?
+      // FrmMat - optional, need to add
+      // FrmConfig - optional, need to add
+      // FrmDepth - optional, need to add
+      // CavityIns - optional, need to add
+      // CavityInsOpt - optional, need to add
+      // CompositeMatNotes - optional, skipping
+      // HeaderIns - optional, skipping
+      // CMUWt - optional, skipping
+      // CMUFill - optional, skipping
+      // SpandrelPanelIns - optional, skipping
+      // ICCESRptNum - optional, skipping
+      // InsOutsdWtrprfMemb - optional, skipping
 
       // DLM: set in construction
       // roughness
