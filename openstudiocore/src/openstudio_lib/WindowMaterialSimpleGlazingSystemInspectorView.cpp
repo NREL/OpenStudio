@@ -141,6 +141,8 @@ void WindowMaterialSimpleGlazingSystemInspectorView::attach(openstudio::model::S
   m_solarHeatGainCoefficient->bind(simpleGlazing,"solarHeatGainCoefficient",m_isIP);
   m_visibleTransmittance->bind(simpleGlazing,"visibleTransmittance",m_isIP);
 
+  m_standardsInformationWidget->attach(simpleGlazing);
+
   this->stackedWidget()->setCurrentIndex(1);
 }
 
@@ -152,6 +154,8 @@ void WindowMaterialSimpleGlazingSystemInspectorView::detach()
   m_uFactor->unbind();
   m_solarHeatGainCoefficient->unbind();
   m_visibleTransmittance->unbind();
+
+  m_standardsInformationWidget->detach();
 }
 
 void WindowMaterialSimpleGlazingSystemInspectorView::refresh()

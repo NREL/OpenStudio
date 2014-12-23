@@ -80,11 +80,17 @@ class StandardsInformationMaterialWidget : public QWidget
 
   private slots:
 
-    void materialStandardChanged(const QString& text);
+    void standardChanged(const QString& text);
+    void populateStandards();
 
-    void editMaterialStandard(const QString& text);
+    void standardSourceChanged(const QString& text);
+    void populateStandardSources();
 
-    void populateMaterialStandard();
+    void standardsCategoryChanged(const QString& text);
+    void populateStandardsCategories();
+
+    void standardsIdentifierChanged(const QString& text);
+    void populateStandardsIdentifier();
 
 };
 

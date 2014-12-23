@@ -137,6 +137,8 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::attach(openstudio::mo
 
   m_windowMaterialGlazingName->bind(thermochromicGlazing,"windowMaterialGlazingName");
 
+  m_standardsInformationWidget->attach(thermochromicGlazing);
+
   this->stackedWidget()->setCurrentIndex(1);
 }
 
@@ -147,6 +149,8 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::detach()
   m_nameEdit->unbind();
   m_opticalDataTemperature->unbind();
   m_windowMaterialGlazingName->unbind();
+
+  m_standardsInformationWidget->detach();
 }
 
 void WindowMaterialGlazingGroupThermochromicInspectorView::refresh()

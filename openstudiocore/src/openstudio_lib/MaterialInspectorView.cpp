@@ -233,6 +233,8 @@ void MaterialInspectorView::attach(openstudio::model::Material & standardOpaqueM
   m_solarAbsorptance->bind(standardOpaqueMaterial,"solarAbsorptance",m_isIP); // Fractional, no units
   m_visibleAbsorptance->bind(standardOpaqueMaterial,"visibleAbsorptance",m_isIP); // Fractional, no units
 
+  m_standardsInformationWidget->attach(standardOpaqueMaterial);
+
   this->stackedWidget()->setCurrentIndex(1);
 }
 
@@ -251,6 +253,8 @@ void MaterialInspectorView::detach()
   m_thermalAbsorptance->unbind();
   m_solarAbsorptance->unbind();
   m_visibleAbsorptance->unbind();
+
+  m_standardsInformationWidget->detach();
 }
 
 void MaterialInspectorView::refresh()

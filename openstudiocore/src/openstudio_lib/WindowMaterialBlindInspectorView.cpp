@@ -419,6 +419,8 @@ void WindowMaterialBlindInspectorView::attach(openstudio::model::Blind & materia
   m_minimumSlatAngle->bind(material,"minimumSlatAngle",m_isIP);
   m_maximumSlatAngle->bind(material,"maximumSlatAngle",m_isIP);
 
+  m_standardsInformationWidget->attach(material);
+
   this->stackedWidget()->setCurrentIndex(1);
 }
 
@@ -456,6 +458,8 @@ void WindowMaterialBlindInspectorView::detach()
   m_blindRightSideOpeningMultiplier->unbind();
   m_minimumSlatAngle->unbind();
   m_maximumSlatAngle->unbind();
+
+  m_standardsInformationWidget->detach();
 }
 
 void WindowMaterialBlindInspectorView::refresh()

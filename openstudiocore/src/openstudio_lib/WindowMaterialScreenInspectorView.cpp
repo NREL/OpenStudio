@@ -259,6 +259,8 @@ void WindowMaterialScreenInspectorView::attach(openstudio::model::Screen & scree
   m_leftSideOpeningMultiplier->bind(screen,"leftSideOpeningMultiplier",m_isIP);
   m_rightSideOpeningMultiplier->bind(screen,"rightSideOpeningMultiplier",m_isIP);
 
+  m_standardsInformationWidget->attach(screen);
+
   this->stackedWidget()->setCurrentIndex(1);
 }
 
@@ -281,6 +283,8 @@ void WindowMaterialScreenInspectorView::detach()
   m_bottomOpeningMultiplier->unbind();
   m_leftSideOpeningMultiplier->unbind();
   m_rightSideOpeningMultiplier->unbind();
+
+  m_standardsInformationWidget->detach();
 }
 
 void WindowMaterialScreenInspectorView::refresh()

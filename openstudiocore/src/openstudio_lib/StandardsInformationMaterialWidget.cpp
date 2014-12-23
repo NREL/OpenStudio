@@ -49,6 +49,8 @@ void StandardsInformationMaterialWidget::addToLayout(QGridLayout * mainGridLayou
 
   QLabel * label = nullptr;
 
+  bool isConnected = false;
+
   // Measure Tags
   QFrame * line;
   line = new QFrame();
@@ -77,6 +79,9 @@ void StandardsInformationMaterialWidget::addToLayout(QGridLayout * mainGridLayou
 
   mainGridLayout->addLayout(vLayout, row, 0);
 
+  isConnected = connect(m_standard, &QComboBox::currentTextChanged, this, &openstudio::StandardsInformationMaterialWidget::standardChanged);
+  OS_ASSERT(isConnected);
+
   // Standard Source
   vLayout = new QVBoxLayout();
 
@@ -92,6 +97,9 @@ void StandardsInformationMaterialWidget::addToLayout(QGridLayout * mainGridLayou
   vLayout->addWidget(m_standardSource);
 
   mainGridLayout->addLayout(vLayout, row++, 1);
+
+  isConnected = connect(m_standardSource, &QComboBox::currentTextChanged, this, &openstudio::StandardsInformationMaterialWidget::standardSourceChanged);
+  OS_ASSERT(isConnected);
 
   // Standards Category
   vLayout = new QVBoxLayout();
@@ -109,6 +117,9 @@ void StandardsInformationMaterialWidget::addToLayout(QGridLayout * mainGridLayou
 
   mainGridLayout->addLayout(vLayout, row, 0);
 
+  isConnected = connect(m_standardsCategory, &QComboBox::currentTextChanged, this, &openstudio::StandardsInformationMaterialWidget::standardsCategoryChanged);
+  OS_ASSERT(isConnected);
+
   // Standards Identifier
   vLayout = new QVBoxLayout();
 
@@ -125,6 +136,9 @@ void StandardsInformationMaterialWidget::addToLayout(QGridLayout * mainGridLayou
 
   mainGridLayout->addLayout(vLayout, row++, 1);
 
+  isConnected = connect(m_standardsIdentifier, &QComboBox::currentTextChanged, this, &openstudio::StandardsInformationMaterialWidget::standardsIdentifierChanged);
+  OS_ASSERT(isConnected);
+
   line = new QFrame();
   line->setFrameShape(QFrame::HLine);
   line->setFrameShadow(QFrame::Sunken);
@@ -137,50 +151,195 @@ void StandardsInformationMaterialWidget::attach(openstudio::model::Material & ma
 
   m_material = material;
   m_standardsInformation = material.standardsInformation();
+  
+//  connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &openstudio::StandardsInformationMaterialWidget::populateMaterialStandard);
+  
+  m_standard->setEnabled(true);
 
-  connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &openstudio::StandardsInformationMaterialWidget::populateMaterialStandard);
+  m_standardSource->setEnabled(true);
+
+  m_standardsCategory->setEnabled(true);
+
+  m_standardsIdentifier->setEnabled(true);
+
+  populateStandards();
+  populateStandardSources();
+  populateStandardsCategories();
+  populateStandardsIdentifier();
+
 }
 
 void StandardsInformationMaterialWidget::detach()
 {
   m_material.reset();
 
-  if (m_standardsInformation){
+  if (m_standardsInformation){ // TODO
     disconnect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), 0, this, 0);
     m_standardsInformation.reset();
   }
+
+  m_standard->setEnabled(false);
+
+  m_standardSource->setEnabled(false);
+
+  m_standardsCategory->setEnabled(false);
+
+  m_standardsIdentifier->setEnabled(false);
+
 }
 
-void StandardsInformationMaterialWidget::materialStandardChanged(const QString & text)
+void StandardsInformationMaterialWidget::standardChanged(const QString& text)
 {
   if (m_standardsInformation){
-    std::string materialStandard = toString(text);
-    if (materialStandard.empty()){
+    std::string str = toString(text);
+    if (str.empty()){
       m_standardsInformation->resetMaterialStandard();
     }
     else{
-      m_standardsInformation->setMaterialStandard(materialStandard);
+      m_standardsInformation->setMaterialStandard(str);
     }
-    populateMaterialStandard();
+    populateStandards();
+    populateStandardSources();
   }
 }
 
-void StandardsInformationMaterialWidget::editMaterialStandard(const QString & text)
+void StandardsInformationMaterialWidget::populateStandards()
 {
+  m_standard->blockSignals(true);
+
+  m_standard->clear();
   if (m_standardsInformation){
-    std::string materialStandard = toString(text);
-    if (materialStandard.empty()){
-      m_standardsInformation->resetMaterialStandard();
+    m_standard->addItem("");
+    std::vector<std::string> suggestedMaterialStandards = m_standardsInformation->suggestedMaterialStandards();
+    for (const std::string& suggestedMaterialStandard : suggestedMaterialStandards) {
+      m_standard->addItem(toQString(suggestedMaterialStandard));
+    }
+    boost::optional<std::string> materialStandard = m_standardsInformation->materialStandard();
+    if (materialStandard){
+      OS_ASSERT(!suggestedMaterialStandards.empty());
+      m_standard->setCurrentIndex(1);
     }
     else{
-      m_standardsInformation->setMaterialStandard(materialStandard);
+      m_standard->setCurrentIndex(0);
     }
+  }
+
+  m_standard->blockSignals(false);
+}
+
+void StandardsInformationMaterialWidget::standardSourceChanged(const QString& text)
+{
+  if (m_standardsInformation){
+    std::string str = toString(text);
+    if (str.empty()){
+      m_standardsInformation->resetMaterialStandardSource();
+    }
+    else{
+      m_standardsInformation->setMaterialStandardSource(str);
+    }
+    populateStandardSources();
   }
 }
 
-void StandardsInformationMaterialWidget::populateMaterialStandard()
+void StandardsInformationMaterialWidget::populateStandardSources()
 {
-  // TODO
+  m_standardSource->blockSignals(true);
+
+  m_standardSource->clear();
+  if (m_standardsInformation){
+    m_standardSource->addItem("");
+    std::vector<std::string> suggestedMaterialStandardSources = m_standardsInformation->suggestedMaterialStandardSources();
+    for (const std::string& suggestedMaterialStandardSource : suggestedMaterialStandardSources) {
+      m_standardSource->addItem(toQString(suggestedMaterialStandardSource));
+    }
+    boost::optional<std::string> materialStandardSource = m_standardsInformation->materialStandardSource();
+    if (materialStandardSource){
+      OS_ASSERT(!suggestedMaterialStandardSources.empty());
+      m_standardSource->setCurrentIndex(1);
+    }
+    else{
+      m_standardSource->setCurrentIndex(0);
+    }
+  }
+
+  m_standardSource->blockSignals(false);
+}
+
+void StandardsInformationMaterialWidget::standardsCategoryChanged(const QString& text)
+{
+  if (m_standardsInformation){
+    std::string str = toString(text);
+    if (str.empty()){
+      m_standardsInformation->resetStandardsCategory();
+    }
+    else{
+      m_standardsInformation->setStandardsCategory(str);
+    }
+    populateStandardsCategories();
+    populateStandardsIdentifier();
+  }
+}
+
+void StandardsInformationMaterialWidget::populateStandardsCategories()
+{
+  m_standardsCategory->blockSignals(true);
+
+  m_standardsCategory->clear();
+  if (m_standardsInformation){
+    m_standardsCategory->addItem("");
+    std::vector<std::string> suggestedStandardsCategories = m_standardsInformation->suggestedStandardsCategories();
+    for (const std::string& suggestedStandardsCategory : suggestedStandardsCategories) {
+      m_standardsCategory->addItem(toQString(suggestedStandardsCategory));
+    }
+    boost::optional<std::string> standardsCategory = m_standardsInformation->standardsCategory();
+    if (standardsCategory){
+      OS_ASSERT(!suggestedStandardsCategories.empty());
+      m_standardsCategory->setCurrentIndex(1);
+    }
+    else{
+      m_standardsCategory->setCurrentIndex(0);
+    }
+  }
+
+  m_standardsCategory->blockSignals(false);
+}
+
+void StandardsInformationMaterialWidget::standardsIdentifierChanged(const QString& text)
+{
+  if (m_standardsInformation){
+    std::string str = toString(text);
+    if (str.empty()){
+      m_standardsInformation->resetStandardsIdentifier();
+    }
+    else{
+      m_standardsInformation->setStandardsIdentifier(str);
+    }
+    populateStandardsIdentifier();
+  }
+}
+
+void StandardsInformationMaterialWidget::populateStandardsIdentifier()
+{
+  m_standardsIdentifier->blockSignals(true);
+
+  m_standardsIdentifier->clear();
+  if (m_standardsInformation){
+    m_standardsIdentifier->addItem("");
+    std::vector<std::string> suggestedStandardsIdentifiers = m_standardsInformation->suggestedStandardsIdentifiers();
+    for (const std::string& suggestedStandardsIdentifier : suggestedStandardsIdentifiers) {
+      m_standardsIdentifier->addItem(toQString(suggestedStandardsIdentifier));
+    }
+    boost::optional<std::string> standardsIdentifier = m_standardsInformation->standardsIdentifier();
+    if (standardsIdentifier){
+      OS_ASSERT(!suggestedStandardsIdentifiers.empty());
+      m_standardsIdentifier->setCurrentIndex(1);
+    }
+    else{
+      m_standardsIdentifier->setCurrentIndex(0);
+    }
+  }
+
+  m_standardsIdentifier->blockSignals(false);
 }
 
 void StandardsInformationMaterialWidget::toggleUnits(bool displayIP)

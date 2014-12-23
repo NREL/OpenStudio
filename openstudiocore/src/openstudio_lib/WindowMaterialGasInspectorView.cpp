@@ -213,6 +213,8 @@ void WindowMaterialGasInspectorView::attach(openstudio::model::Gas & gas)
   m_specificHeatCoefficientB->bind(gas,"specificHeatCoefficientB",m_isIP);
   m_molecularWeight->bind(gas,"molecularWeight",m_isIP);
 
+  m_standardsInformationWidget->attach(gas);
+
   this->stackedWidget()->setCurrentIndex(1);
 }
 
@@ -231,6 +233,8 @@ void WindowMaterialGasInspectorView::detach()
   m_specificHeatCoefficientA->unbind();
   m_specificHeatCoefficientB->unbind();
   m_molecularWeight->unbind();
+
+  m_standardsInformationWidget->detach();
 }
 
 void WindowMaterialGasInspectorView::refresh()

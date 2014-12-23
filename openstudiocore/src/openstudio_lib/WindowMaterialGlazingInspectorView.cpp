@@ -275,6 +275,8 @@ void WindowMaterialGlazingInspectorView::attach(openstudio::model::Glazing & gla
   m_conductivity->bind(glazing,"conductivity",m_isIP);
   m_dirtCorrectionFactorForSolarAndVisibleTransmittance->bind(glazing,"dirtCorrectionFactorforSolarandVisibleTransmittance",m_isIP);
 
+  m_standardsInformationWidget->attach(glazing);
+
   this->stackedWidget()->setCurrentIndex(1);
 }
 
@@ -299,6 +301,8 @@ void WindowMaterialGlazingInspectorView::detach()
   m_backSideInfraredHemisphericalEmissivity->unbind();
   m_conductivity->unbind();
   m_dirtCorrectionFactorForSolarAndVisibleTransmittance->unbind();
+
+  m_standardsInformationWidget->detach();
 }
 
 void WindowMaterialGlazingInspectorView::refresh()

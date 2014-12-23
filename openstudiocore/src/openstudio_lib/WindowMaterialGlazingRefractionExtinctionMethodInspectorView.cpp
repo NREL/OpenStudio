@@ -219,6 +219,8 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::attach(openst
   m_visibleExtinctionCoefficient->bind(refractionExtinctionGlazing,"visibleExtinctionCoefficient",m_isIP);
   m_visibleIndexOfRefraction->bind(refractionExtinctionGlazing,"visibleIndexofRefraction",m_isIP);
 
+  m_standardsInformationWidget->attach(refractionExtinctionGlazing);
+
   this->stackedWidget()->setCurrentIndex(1);
 }
 
@@ -238,6 +240,8 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::detach()
   m_infraredHemisphericalEmissivity->unbind();
   m_conductivity->unbind();
   m_dirtCorrectionFactorForSolarAndVisibleTransmittance->unbind();
+
+  m_standardsInformationWidget->detach();
 }
 
 void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::refresh()

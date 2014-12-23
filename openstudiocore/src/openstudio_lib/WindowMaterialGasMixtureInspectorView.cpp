@@ -242,6 +242,8 @@ void WindowMaterialGasMixtureInspectorView::attach(openstudio::model::GasMixture
   m_gas3Fraction->bind(gasMixture,"gas3Fraction",m_isIP);
   m_gas4Fraction->bind(gasMixture,"gas4Fraction",m_isIP);
 
+  m_standardsInformationWidget->attach(gasMixture);
+
   this->stackedWidget()->setCurrentIndex(1);
 }
 
@@ -262,6 +264,8 @@ void WindowMaterialGasMixtureInspectorView::detach()
   m_gas2Fraction->unbind();
   m_gas3Fraction->unbind();
   m_gas4Fraction->unbind();
+
+  m_standardsInformationWidget->detach();
 }
 
 void WindowMaterialGasMixtureInspectorView::refresh()

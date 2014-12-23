@@ -120,6 +120,8 @@ void MaterialAirGapInspectorView::attach(openstudio::model::AirGap & airGap)
   m_nameEdit->bind(airGap,"name");
   m_thermalResistance->bind(airGap,"thermalResistance",m_isIP);
 
+  m_standardsInformationWidget->attach(airGap);
+
   this->stackedWidget()->setCurrentIndex(1);
 }
 
@@ -129,6 +131,8 @@ void MaterialAirGapInspectorView::detach()
 
   m_nameEdit->unbind();
   m_thermalResistance->unbind();
+
+  m_standardsInformationWidget->detach();
 }
 
 void MaterialAirGapInspectorView::refresh()

@@ -310,6 +310,8 @@ void MaterialRoofVegetationInspectorView::attach(openstudio::model::RoofVegetati
   m_initialVolumetricMoistureContentOfTheSoilLayer->bind(roofVegetation,"initialVolumetricMoistureContentoftheSoilLayer",m_isIP);
   m_solarAbsorptance->bind(roofVegetation,"solarAbsorptance",m_isIP);
 
+  m_standardsInformationWidget->attach(roofVegetation);
+
   this->stackedWidget()->setCurrentIndex(1);
 }
 
@@ -337,6 +339,8 @@ void MaterialRoofVegetationInspectorView::detach()
   m_residualVolumetricMoistureContentOfTheSoilLayer->unbind();
   m_initialVolumetricMoistureContentOfTheSoilLayer->unbind();
   m_solarAbsorptance->unbind();
+
+  m_standardsInformationWidget->detach();
 }
 
 void MaterialRoofVegetationInspectorView::refresh()

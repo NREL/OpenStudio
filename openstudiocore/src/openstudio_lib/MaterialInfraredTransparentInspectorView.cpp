@@ -108,6 +108,8 @@ void MaterialInfraredTransparentInspectorView::attach(openstudio::model::Infrare
 {
   m_nameEdit->bind(infraredTransparentMaterial,"name");
 
+  m_standardsInformationWidget->attach(infraredTransparentMaterial);
+
   this->stackedWidget()->setCurrentIndex(1);
 }
 
@@ -116,6 +118,8 @@ void MaterialInfraredTransparentInspectorView::detach()
   this->stackedWidget()->setCurrentIndex(0);
 
   m_nameEdit->unbind();
+
+  m_standardsInformationWidget->detach();
 }
 
 void MaterialInfraredTransparentInspectorView::refresh()

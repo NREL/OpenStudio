@@ -108,6 +108,8 @@ void MaterialAirWallInspectorView::attach(openstudio::model::AirWallMaterial & a
 {
   m_nameEdit->bind(airWallMaterial,"name");
 
+  m_standardsInformationWidget->attach(airWallMaterial);
+
   this->stackedWidget()->setCurrentIndex(1);
 }
 
@@ -116,6 +118,8 @@ void MaterialAirWallInspectorView::detach()
   this->stackedWidget()->setCurrentIndex(0);
 
   m_nameEdit->unbind();
+
+  m_standardsInformationWidget->detach();
 }
 
 void MaterialAirWallInspectorView::refresh()

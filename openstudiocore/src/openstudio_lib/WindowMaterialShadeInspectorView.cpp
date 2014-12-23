@@ -262,6 +262,8 @@ void WindowMaterialShadeInspectorView::attach(openstudio::model::Shade & shade)
   m_rightSideOpeningMultiplier->bind(shade,"rightSideOpeningMultiplier",m_isIP);
   m_airflowPermeability->bind(shade,"airflowPermeability",m_isIP);
 
+  m_standardsInformationWidget->attach(shade);
+
   this->stackedWidget()->setCurrentIndex(1);
 }
 
@@ -284,6 +286,8 @@ void WindowMaterialShadeInspectorView::detach()
   m_leftSideOpeningMultiplier->unbind();
   m_rightSideOpeningMultiplier->unbind();
   m_airflowPermeability->unbind();
+
+  m_standardsInformationWidget->detach();
 }
 
 void WindowMaterialShadeInspectorView::refresh()

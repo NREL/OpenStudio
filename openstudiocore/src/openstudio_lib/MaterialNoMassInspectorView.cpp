@@ -169,6 +169,8 @@ void MaterialNoMassInspectorView::attach(openstudio::model::MasslessOpaqueMateri
   m_solarAbsorptance->bind(masslessOpaqueMaterial,"solarAbsorptance",m_isIP);
   m_visibleAbsorptance->bind(masslessOpaqueMaterial,"visibleAbsorptance",m_isIP);
 
+  m_standardsInformationWidget->attach(masslessOpaqueMaterial);
+
   this->stackedWidget()->setCurrentIndex(1);
 }
 
@@ -184,6 +186,8 @@ void MaterialNoMassInspectorView::detach()
   m_thermalAbsorptance->unbind();
   m_solarAbsorptance->unbind();
   m_visibleAbsorptance->unbind();
+
+  m_standardsInformationWidget->detach();
 }
 
 void MaterialNoMassInspectorView::refresh()
