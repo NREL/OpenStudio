@@ -48,6 +48,9 @@ WindowMaterialGlazingInspectorView::WindowMaterialGlazingInspectorView(bool isIP
 
 void WindowMaterialGlazingInspectorView::createLayout()
 {
+  QWidget* hiddenWidget = new QWidget();
+  this->stackedWidget()->addWidget(hiddenWidget);
+
   QWidget* visibleWidget = new QWidget();
   this->stackedWidget()->addWidget(visibleWidget);
 

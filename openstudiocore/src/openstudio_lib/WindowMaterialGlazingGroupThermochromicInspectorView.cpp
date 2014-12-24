@@ -46,6 +46,9 @@ WindowMaterialGlazingGroupThermochromicInspectorView::WindowMaterialGlazingGroup
 
 void WindowMaterialGlazingGroupThermochromicInspectorView::createLayout()
 {
+  QWidget* hiddenWidget = new QWidget();
+  this->stackedWidget()->addWidget(hiddenWidget);
+
   QWidget* visibleWidget = new QWidget();
   this->stackedWidget()->addWidget(visibleWidget);
 

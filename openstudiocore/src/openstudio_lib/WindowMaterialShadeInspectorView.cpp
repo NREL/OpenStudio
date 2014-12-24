@@ -46,6 +46,9 @@ WindowMaterialShadeInspectorView::WindowMaterialShadeInspectorView(bool isIP, co
 
 void WindowMaterialShadeInspectorView::createLayout()
 {
+  QWidget* hiddenWidget = new QWidget();
+  this->stackedWidget()->addWidget(hiddenWidget);
+
   QWidget* visibleWidget = new QWidget();
   this->stackedWidget()->addWidget(visibleWidget);
 
