@@ -1298,6 +1298,7 @@ set(${target_name}_test_src
   test/Lights_GTest.cpp
   test/Luminaire_GTest.cpp
   test/MasslessOpaqueMaterial_GTest.cpp
+  test/Material_GTest.cpp
   test/Meter_GTest.cpp
   test/ModelFixture.cpp
   test/ModelFixture.hpp

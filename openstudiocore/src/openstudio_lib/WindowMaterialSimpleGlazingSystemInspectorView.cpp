@@ -46,6 +46,9 @@ WindowMaterialSimpleGlazingSystemInspectorView::WindowMaterialSimpleGlazingSyste
 
 void WindowMaterialSimpleGlazingSystemInspectorView::createLayout()
 {
+  QWidget* hiddenWidget = new QWidget();
+  this->stackedWidget()->addWidget(hiddenWidget);
+
   QWidget* visibleWidget = new QWidget();
   this->stackedWidget()->addWidget(visibleWidget);
 

@@ -151,9 +151,7 @@ void StandardsInformationMaterialWidget::attach(openstudio::model::Material & ma
 
   m_material = material;
   m_standardsInformation = material.standardsInformation();
-  
-//  connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &openstudio::StandardsInformationMaterialWidget::populateMaterialStandard);
-  
+
   m_standard->setEnabled(true);
 
   m_standardSource->setEnabled(true);
