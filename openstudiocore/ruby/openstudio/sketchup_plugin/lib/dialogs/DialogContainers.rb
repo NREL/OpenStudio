@@ -74,10 +74,7 @@ module OpenStudio
 
       @web_dialog = UI::WebDialog.new(title, scrollable, "OpenStudio " + title, width, height, left, top, resizable)
 
-      if (Plugin.platform == Platform_Mac and Sketchup.version.to_i > 6)
-        # SU7 allows annoying navigation buttons to be hidden
-        @web_dialog.navigation_buttons_enabled = false
-      end
+      @web_dialog.navigation_buttons_enabled = false
     end
 
 

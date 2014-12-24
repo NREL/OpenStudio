@@ -6,7 +6,7 @@ buildType = "Debug"
 
 symbols = Hash.new
 
-excludes = [/boost-log/, /expat/, /gtest/, /libssh/, /litesql/, /qwt/, /ruby_cpp/, /sqlite/]
+excludes = [/boost-log/, /expat/, /gtest/, /libssh/, /litesql/, /qwt/, /sqlite/]
 
 Dir.glob("**/#{buildType}/*.obj").each do |file|
 

@@ -59,6 +59,7 @@ class MODEL_API ZoneHVACHighTemperatureRadiant : public ZoneHVACComponent {
 
   boost::optional<Schedule> availabilitySchedule() const;
 
+  /** In EnergyPlus 8.2.0 and above this property maps to the EnergyPlus field "Heating Design Capacity" **/
   boost::optional<double> maximumPowerInput() const;
 
   bool isMaximumPowerInputAutosized() const;

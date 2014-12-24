@@ -45,7 +45,7 @@ class DiagnosticScript < OpenStudio::Ruleset::UtilityUserScript
     result << remove_warnings
 
     begin
-      Sketchup.send_action("showRubyPanel:")
+      SKETCHUP_CONSOLE.show
     rescue => e
     end
 

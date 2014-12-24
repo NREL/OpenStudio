@@ -36,7 +36,7 @@ class ExportSpaces < OpenStudio::Ruleset::ModelUserScript
     result << save_path
     
     begin
-      Sketchup.send_action("showRubyPanel:")
+      SKETCHUP_CONSOLE.show
     rescue => e
     end
     

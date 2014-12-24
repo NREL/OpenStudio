@@ -41,6 +41,13 @@ namespace iddRegex{
     return result; 
   }
 
+  /// Search for IDD build in line
+  /// matches[1], build identifier
+  const boost::regex &build(){
+    const static boost::regex result("^!IDD_BUILD (\\S+)");
+    return result; 
+  }
+
   /// Search for IDD header, each line must start with '!', no preceding whitespace
   /// matches[1], header
   const boost::regex &header(){

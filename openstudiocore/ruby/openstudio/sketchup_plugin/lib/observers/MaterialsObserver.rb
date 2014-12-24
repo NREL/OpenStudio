@@ -53,9 +53,12 @@ module OpenStudio
       
       return if not @enabled
       
-      if material.drawing_interface
-        material.drawing_interface.update_model_object
-      end
+      proc = Proc.new {
+        if material.drawing_interface
+          material.drawing_interface.update_model_object
+        end
+      }
+      Plugin.add_event( proc )
     end
 
     #def onMaterialRefChange(materials, material)

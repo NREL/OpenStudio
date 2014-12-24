@@ -19,7 +19,20 @@ set(OPENSTUDIO_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VE
 set(OPENSTUDIO_LONG_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}.${CMAKE_VERSION_BUILD}")
 
 # EnergyPlus Idd version
-set(ENERGYPLUS_VERSION "8.1" CACHE INTERNAL "EnergyPlus Version")
+if( NOT ENERGYPLUS_VERSION_MAJOR )
+  set(ENERGYPLUS_VERSION_MAJOR 8)
+endif()
+if( NOT ENERGYPLUS_VERSION_MINOR )
+  set(ENERGYPLUS_VERSION_MINOR 2)
+endif()
+if( NOT ENERGYPLUS_VERSION_PATCH )
+  set(ENERGYPLUS_VERSION_PATCH 0)
+endif()
+set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
+# Build SHA is not required to have a value, but if it does OpenStudio will require this build.
+if( NOT ENERGYPLUS_BUILD_SHA )
+  set(ENERGYPLUS_BUILD_SHA "8397c2e30b")
+endif()
 
 # configure file with version information
 configure_file(${CMAKE_SOURCE_DIR}/OpenStudio.in ${CMAKE_BINARY_DIR}/src/OpenStudio.hxx)
@@ -81,6 +94,11 @@ option(BUILD_R "Build R package" OFF)
 
 # Build Ruby gem
 option(BUILD_RUBY_GEM "Build Ruby Gem" OFF)
+
+if( BUILD_PACKAGE )
+  option(PACKAGE_RADIANCE "Package Radiance" OFF)
+  option(PACKAGE_ENERGYPLUS "Package EnergyPlus" ON)
+endif()
 
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -301,15 +319,7 @@ endif()
 # Dependencies
 
 # EnergyPlus
-find_package(EnergyPlus "${ENERGYPLUS_VERSION}")
-if(NOT ${EnergyPlus_FOUND})
-  message(FATAL_ERROR "EnergyPlus ${ENERGYPLUS_VERSION} could not be found")
-endif()
-mark_as_advanced(
-  ENERGYPLUS_EXE
-  ENERGYPLUS_IDD
-  ENERGYPLUS_WEATHER_DIR
-)
+find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
 
 # Ruby
 find_program(RUBY_EXECUTABLE NAMES ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH)
@@ -742,7 +752,6 @@ endforeach()
 add_dependencies(ResultsViewer ResultsViewer_resources)
 
 # ruby, after loading projects
-add_subdirectory(src/ruby_cpp)
 add_subdirectory(ruby)
 
 if(UNIX AND NOT APPLE)
@@ -925,7 +934,6 @@ set(all_exe_targets
   GenerateIddFactory
   gbXMLToIdf
   OpenStudio
-  ruby_cpp
   litesql-gen
   ResultsViewer
   Pat
@@ -999,22 +1007,28 @@ if(NOT UNIX)
   endif()
 endif()
 
-
-
-
-if(PACKAGE_RADIANCE_AND_ENERGYPLUS)
-  set(ENERGYPLUS_LOCATION "" CACHE PATH "Location of EnergyPlus to Package")
+if(PACKAGE_RADIANCE)
   set(RADIANCE_LOCATION "" CACHE PATH "Location of Radiance to Package")
 
-  file(COPY "${ENERGYPLUS_LOCATION}" DESTINATION "${CMAKE_BINARY_DIR}/EnergyPlus/")
-  file(COPY "${RADIANCE_LOCATION}" DESTINATION "${CMAKE_BINARY_DIR}/Radiance/")
+  if(APPLE)
+    install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+  else()
+    install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
+  endif()
+endif()
+
+if(PACKAGE_ENERGYPLUS)
+  get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" PATH)
 
   if(APPLE)
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/EnergyPlus/" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/Radiance/" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+    install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+  elseif(MSVC)
+    install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
   else()
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/EnergyPlus/" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/Radiance/" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
+    install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
   endif()
-
 endif()
+
+
+
+
