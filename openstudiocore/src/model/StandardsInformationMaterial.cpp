@@ -78,6 +78,16 @@ namespace detail {
     }
   }
 
+  boost::optional<ParentObject> StandardsInformationMaterial_Impl::parent() const
+  {
+    return material();
+  }
+
+  bool StandardsInformationMaterial_Impl::setParent(ParentObject& newParent)
+  {
+    return setPointer(OS_StandardsInformation_MaterialFields::MaterialName, newParent.handle());
+  }
+
   const std::vector<std::string>& StandardsInformationMaterial_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;

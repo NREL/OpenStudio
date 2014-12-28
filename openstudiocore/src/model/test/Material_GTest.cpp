@@ -28,6 +28,8 @@
 #include "../Material_Impl.hpp"
 #include "../StandardOpaqueMaterial.hpp"
 #include "../StandardOpaqueMaterial_Impl.hpp"
+#include "../StandardsInformationMaterial.hpp"
+#include "../StandardsInformationMaterial_Impl.hpp"
 
 #include "../../utilities/geometry/Point3d.hpp"
 #include "../../utilities/idf/IdfFile.hpp"
@@ -49,9 +51,79 @@ TEST_F(ModelFixture, Material)
   MaterialVector materials = model.getModelObjects<Material>();
   ASSERT_EQ(static_cast<unsigned>(1), materials.size());
 
+  StandardsInformationMaterialVector materialInformations = model.getModelObjects<StandardsInformationMaterial>();
+  ASSERT_EQ(static_cast<unsigned>(0), materialInformations.size());
+
+  {
+    Model testModel;
+
+    exterior.clone(testModel);
+
+    materials = model.getModelObjects<Material>();
+    ASSERT_EQ(static_cast<unsigned>(1), materials.size());
+
+    materialInformations = model.getModelObjects<StandardsInformationMaterial>();
+    ASSERT_EQ(static_cast<unsigned>(0), materialInformations.size());
+
+    materials = testModel.getModelObjects<Material>();
+    ASSERT_EQ(static_cast<unsigned>(1), materials.size());
+
+    materialInformations = testModel.getModelObjects<StandardsInformationMaterial>();
+    ASSERT_EQ(static_cast<unsigned>(0), materialInformations.size());
+  }
+
+  StandardsInformationMaterial info = exterior.standardsInformation();
+  /*
+  {
+    Model testModel;
+
+    exterior.clone(testModel);
+
+    std::stringstream ss;
+    ss << testModel << std::endl;
+    std::string test = ss.str();
+
+    materials = model.getModelObjects<Material>();
+    ASSERT_EQ(static_cast<unsigned>(1), materials.size());
+
+    materialInformations = model.getModelObjects<StandardsInformationMaterial>();
+    ASSERT_EQ(static_cast<unsigned>(1), materialInformations.size());
+
+    materials = testModel.getModelObjects<Material>();
+    ASSERT_EQ(static_cast<unsigned>(1), materials.size());
+
+    materialInformations = testModel.getModelObjects<StandardsInformationMaterial>();
+    ASSERT_EQ(static_cast<unsigned>(1), materialInformations.size());
+  }
+  */
+  {
+    Model testModel;
+
+    info.clone(testModel);
+
+    std::stringstream ss;
+    ss << testModel << std::endl;
+    std::string test = ss.str();
+
+    materials = model.getModelObjects<Material>();
+    ASSERT_EQ(static_cast<unsigned>(1), materials.size());
+
+    materialInformations = model.getModelObjects<StandardsInformationMaterial>();
+    ASSERT_EQ(static_cast<unsigned>(1), materialInformations.size());
+
+    materials = testModel.getModelObjects<Material>();
+    ASSERT_EQ(static_cast<unsigned>(0), materials.size());
+
+    materialInformations = testModel.getModelObjects<StandardsInformationMaterial>();
+    ASSERT_EQ(static_cast<unsigned>(1), materialInformations.size());
+  }
+
   StandardOpaqueMaterial exteriorClone = exterior.clone().cast<StandardOpaqueMaterial>();
 
   materials = model.getModelObjects<Material>();
   ASSERT_EQ(static_cast<unsigned>(2), materials.size());
+
+  materialInformations = model.getModelObjects<StandardsInformationMaterial>();
+  ASSERT_EQ(static_cast<unsigned>(2), materialInformations.size());
 
 }

@@ -53,6 +53,10 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
+    virtual boost::optional<ParentObject> parent() const;
+
+    virtual bool setParent(ParentObject& newParent);
+
     virtual const std::vector<std::string>& outputVariableNames() const;
 
     virtual IddObjectType iddObjectType() const;
