@@ -520,8 +520,8 @@ void StandardsInformationMaterialWidget::populateCompositeFramingMaterial()
     for (const std::string& suggestedCompositeFramingMaterial : suggestedCompositeFramingMaterials) {
       m_compositeFramingMaterial->addItem(toQString(suggestedCompositeFramingMaterial));
     }
-    boost::optional<std::string> standardsIdentifier = m_standardsInformation->standardsIdentifier();
-    if (standardsIdentifier){
+    boost::optional<std::string> compositeFramingMaterial = m_standardsInformation->compositeFramingMaterial();
+    if (compositeFramingMaterial){
       OS_ASSERT(!suggestedCompositeFramingMaterials.empty());
       m_compositeFramingMaterial->setCurrentIndex(1);
     }
@@ -558,8 +558,8 @@ void StandardsInformationMaterialWidget::populateCompositeFramingConfiguration()
     for (const std::string& suggestedCompositeFramingConfiguration : suggestedCompositeFramingConfigurations) {
       m_compositeFramingConfiguration->addItem(toQString(suggestedCompositeFramingConfiguration));
     }
-    boost::optional<std::string> standardsIdentifier = m_standardsInformation->standardsIdentifier();
-    if (standardsIdentifier){
+    boost::optional<std::string> compositeFramingConfiguration = m_standardsInformation->compositeFramingConfiguration();
+    if (compositeFramingConfiguration){
       OS_ASSERT(!suggestedCompositeFramingConfigurations.empty());
       m_compositeFramingConfiguration->setCurrentIndex(1);
     }
@@ -596,8 +596,8 @@ void StandardsInformationMaterialWidget::populateCompositeFramingDepth()
     for (const std::string& suggestedCompositeFramingDepth : suggestedCompositeFramingDepths) {
       m_compositeFramingDepth->addItem(toQString(suggestedCompositeFramingDepth));
     }
-    boost::optional<std::string> standardsIdentifier = m_standardsInformation->standardsIdentifier();
-    if (standardsIdentifier){
+    boost::optional<std::string> compositeFramingDepth = m_standardsInformation->compositeFramingDepth();
+    if (compositeFramingDepth){
       OS_ASSERT(!suggestedCompositeFramingDepths.empty());
       m_compositeFramingDepth->setCurrentIndex(1);
     }
@@ -634,8 +634,8 @@ void StandardsInformationMaterialWidget::populateCompositeFramingSize()
     for (const std::string& suggestedCompositeFramingSize : suggestedCompositeFramingSizes) {
       m_compositeFramingSize->addItem(toQString(suggestedCompositeFramingSize));
     }
-    boost::optional<std::string> standardsIdentifier = m_standardsInformation->standardsIdentifier();
-    if (standardsIdentifier){
+    boost::optional<std::string> compositeFramingSize = m_standardsInformation->compositeFramingSize();
+    if (compositeFramingSize){
       OS_ASSERT(!suggestedCompositeFramingSizes.empty());
       m_compositeFramingSize->setCurrentIndex(1);
     }
@@ -672,8 +672,8 @@ void StandardsInformationMaterialWidget::populateCompositeCavityInsulation()
     for (const std::string& suggestedCompositeCavityInsulation : suggestedCompositeCavityInsulations) {
       m_compositeCavityInsulation->addItem(toQString(suggestedCompositeCavityInsulation));
     }
-    boost::optional<std::string> standardsIdentifier = m_standardsInformation->standardsIdentifier();
-    if (standardsIdentifier){
+    boost::optional<std::string> compositeCavityInsulation = m_standardsInformation->compositeCavityInsulation();
+    if (compositeCavityInsulation){
       OS_ASSERT(!suggestedCompositeCavityInsulations.empty());
       m_compositeCavityInsulation->setCurrentIndex(1);
     }
