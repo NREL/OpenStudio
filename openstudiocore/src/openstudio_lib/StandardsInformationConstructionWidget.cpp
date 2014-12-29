@@ -165,33 +165,13 @@ void StandardsInformationConstructionWidget::addToLayout(QGridLayout* mainGridLa
 
   ++row;
 
-  // Fenestration Fields
-  vLayout = new QVBoxLayout();
-
-  QLabel* m_fenestrationLabel = new QLabel();
-  m_fenestrationLabel->setText("Fenestrations: ");
-  m_fenestrationLabel->setObjectName("StandardsInfo");
-  m_fenestrationLabel->hide();
-  vLayout->addWidget(m_fenestrationLabel);
-
-  QComboBox* m_fenestration = new QComboBox();
-  m_fenestration->setEditable(true);
-  m_fenestration->setDuplicatesEnabled(false);
-  m_fenestration->setFixedWidth(OSItem::ITEM_WIDTH);
-  m_fenestration->hide();
-  vLayout->addWidget(m_fenestration);
-
-  mainGridLayout->addLayout(vLayout, row, 0);
-
-  ++row;
-
   // Fenestration Type
   vLayout = new QVBoxLayout();
 
-  label = new QLabel();
-  label->setText("Fenestration Type: ");
-  label->setObjectName("StandardsInfo");
-  vLayout->addWidget(label);
+  m_fenestrationTypeLabel = new QLabel();
+  m_fenestrationTypeLabel->setText("Fenestration Type: ");
+  m_fenestrationTypeLabel->setObjectName("StandardsInfo");
+  vLayout->addWidget(m_fenestrationTypeLabel);
 
   m_fenestrationType = new OSComboBox2();
   m_fenestrationType->setFixedWidth(OSItem::ITEM_WIDTH);
@@ -202,10 +182,10 @@ void StandardsInformationConstructionWidget::addToLayout(QGridLayout* mainGridLa
   // Fenestration Assembly Context
   vLayout = new QVBoxLayout();
 
-  label = new QLabel();
-  label->setText("Fenestration Assembly Context: ");
-  label->setObjectName("StandardsInfo");
-  vLayout->addWidget(label);
+  m_fenestrationAssemblyContextLabel = new QLabel();
+  m_fenestrationAssemblyContextLabel->setText("Fenestration Assembly Context: ");
+  m_fenestrationAssemblyContextLabel->setObjectName("StandardsInfo");
+  vLayout->addWidget(m_fenestrationAssemblyContextLabel);
 
   m_fenestrationAssemblyContext = new OSComboBox2();
   m_fenestrationAssemblyContext->setFixedWidth(OSItem::ITEM_WIDTH);
@@ -218,10 +198,10 @@ void StandardsInformationConstructionWidget::addToLayout(QGridLayout* mainGridLa
   // Fenestration Number of Panes
   vLayout = new QVBoxLayout();
 
-  label = new QLabel();
-  label->setText("Fenestration Number of Panes: ");
-  label->setObjectName("StandardsInfo");
-  vLayout->addWidget(label);
+  m_fenestrationNumberOfPanesLabel = new QLabel();
+  m_fenestrationNumberOfPanesLabel->setText("Fenestration Number of Panes: ");
+  m_fenestrationNumberOfPanesLabel->setObjectName("StandardsInfo");
+  vLayout->addWidget(m_fenestrationNumberOfPanesLabel);
 
   m_fenestrationNumberOfPanes = new OSComboBox2();
   m_fenestrationNumberOfPanes->setFixedWidth(OSItem::ITEM_WIDTH);
@@ -232,10 +212,10 @@ void StandardsInformationConstructionWidget::addToLayout(QGridLayout* mainGridLa
   // Fenestration Frame Type
   vLayout = new QVBoxLayout();
 
-  label = new QLabel();
-  label->setText("Fenestration Frame Type: ");
-  label->setObjectName("StandardsInfo");
-  vLayout->addWidget(label);
+  m_fenestrationFrameTypeLabel = new QLabel();
+  m_fenestrationFrameTypeLabel->setText("Fenestration Frame Type: ");
+  m_fenestrationFrameTypeLabel->setObjectName("StandardsInfo");
+  vLayout->addWidget(m_fenestrationFrameTypeLabel);
 
   m_fenestrationFrameType = new OSComboBox2();
   m_fenestrationFrameType->setFixedWidth(OSItem::ITEM_WIDTH);
@@ -248,10 +228,10 @@ void StandardsInformationConstructionWidget::addToLayout(QGridLayout* mainGridLa
   // Fenestration Divider Type
   vLayout = new QVBoxLayout();
 
-  label = new QLabel();
-  label->setText("Fenestration Divider Type: ");
-  label->setObjectName("StandardsInfo");
-  vLayout->addWidget(label);
+  m_fenestrationDividerTypeLabel = new QLabel();
+  m_fenestrationDividerTypeLabel->setText("Fenestration Divider Type: ");
+  m_fenestrationDividerTypeLabel->setObjectName("StandardsInfo");
+  vLayout->addWidget(m_fenestrationDividerTypeLabel);
 
   m_fenestrationDividerType = new OSComboBox2();
   m_fenestrationDividerType->setFixedWidth(OSItem::ITEM_WIDTH);
@@ -262,10 +242,10 @@ void StandardsInformationConstructionWidget::addToLayout(QGridLayout* mainGridLa
   // Fenestration Tint
   vLayout = new QVBoxLayout();
 
-  label = new QLabel();
-  label->setText("Fenestration Tint: ");
-  label->setObjectName("StandardsInfo");
-  vLayout->addWidget(label);
+  m_fenestrationTintLabel = new QLabel();
+  m_fenestrationTintLabel->setText("Fenestration Tint: ");
+  m_fenestrationTintLabel->setObjectName("StandardsInfo");
+  vLayout->addWidget(m_fenestrationTintLabel);
 
   m_fenestrationTint = new OSComboBox2();
   m_fenestrationTint->setFixedWidth(OSItem::ITEM_WIDTH);
@@ -273,15 +253,15 @@ void StandardsInformationConstructionWidget::addToLayout(QGridLayout* mainGridLa
 
   mainGridLayout->addLayout(vLayout, row, 1);
 
-  ++row;
+  ++row;    
 
   // Fenestration Gas Fill
   vLayout = new QVBoxLayout();
 
-  label = new QLabel();
-  label->setText("Fenestration Gas Fill: ");
-  label->setObjectName("StandardsInfo");
-  vLayout->addWidget(label);
+    m_fenestrationGasFillLabel = new QLabel();
+    m_fenestrationGasFillLabel->setText("Fenestration Gas Fill: ");
+  m_fenestrationGasFillLabel->setObjectName("StandardsInfo");
+  vLayout->addWidget(m_fenestrationGasFillLabel);
 
   m_fenestrationGasFill = new OSComboBox2();
   m_fenestrationGasFill->setFixedWidth(OSItem::ITEM_WIDTH);
@@ -292,10 +272,10 @@ void StandardsInformationConstructionWidget::addToLayout(QGridLayout* mainGridLa
   // Fenestration Gas Fill
   vLayout = new QVBoxLayout();
 
-  label = new QLabel();
-  label->setText("Fenestration Low Emissivity Coating: ");
-  label->setObjectName("StandardsInfo");
-  vLayout->addWidget(label);
+  m_fenestrationLowEmissivityCoatingLabel = new QLabel();
+  m_fenestrationLowEmissivityCoatingLabel->setText("Fenestration Low Emissivity Coating: ");
+  m_fenestrationLowEmissivityCoatingLabel->setObjectName("StandardsInfo");
+  vLayout->addWidget(m_fenestrationLowEmissivityCoatingLabel);
 
   m_fenestrationLowEmissivityCoating = new OSSwitch2();
   vLayout->addWidget(m_fenestrationLowEmissivityCoating);
@@ -323,6 +303,15 @@ void StandardsInformationConstructionWidget::showFenestration()
   m_fenestrationTint->show();
   m_fenestrationGasFill->show();
   m_fenestrationLowEmissivityCoating->show();
+
+  m_fenestrationTypeLabel->show();
+  m_fenestrationAssemblyContextLabel->show();
+  m_fenestrationNumberOfPanesLabel->show();
+  m_fenestrationFrameTypeLabel->show();
+  m_fenestrationDividerTypeLabel->show();
+  m_fenestrationTintLabel->show();
+  m_fenestrationGasFillLabel->show();
+  m_fenestrationLowEmissivityCoatingLabel->show();
 }
 
 void StandardsInformationConstructionWidget::hideFenestration()
@@ -335,6 +324,15 @@ void StandardsInformationConstructionWidget::hideFenestration()
   m_fenestrationTint->hide();
   m_fenestrationGasFill->hide();
   m_fenestrationLowEmissivityCoating->hide();
+
+  m_fenestrationTypeLabel->hide();
+  m_fenestrationAssemblyContextLabel->hide();
+  m_fenestrationNumberOfPanesLabel->hide();
+  m_fenestrationFrameTypeLabel->hide();
+  m_fenestrationDividerTypeLabel->hide();
+  m_fenestrationTintLabel->hide();
+  m_fenestrationGasFillLabel->hide();
+  m_fenestrationLowEmissivityCoatingLabel->hide();
 }
 
 void StandardsInformationConstructionWidget::enableFenestration()

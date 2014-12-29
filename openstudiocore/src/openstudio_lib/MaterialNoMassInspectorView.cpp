@@ -78,6 +78,7 @@ void MaterialNoMassInspectorView::createLayout()
 
   m_standardsInformationWidget = new StandardsInformationMaterialWidget(m_isIP);
   m_standardsInformationWidget->addToLayout(mainGridLayout, row);
+  m_standardsInformationWidget->showComposite();
 
   ++row;
 

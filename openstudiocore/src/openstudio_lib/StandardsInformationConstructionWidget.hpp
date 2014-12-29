@@ -97,20 +97,28 @@ class StandardsInformationConstructionWidget : public QWidget
     QComboBox * m_standardsConstructionType;
 
     OSComboBox2 * m_fenestrationType;
+    QLabel * m_fenestrationTypeLabel = nullptr;
 
     OSComboBox2 * m_fenestrationAssemblyContext;
+    QLabel * m_fenestrationAssemblyContextLabel = nullptr;
 
     OSComboBox2 * m_fenestrationNumberOfPanes;
+    QLabel * m_fenestrationNumberOfPanesLabel = nullptr;
 
     OSComboBox2 * m_fenestrationFrameType;
+    QLabel * m_fenestrationFrameTypeLabel = nullptr;
 
     OSComboBox2 * m_fenestrationDividerType;
+    QLabel * m_fenestrationDividerTypeLabel = nullptr;
 
     OSComboBox2 * m_fenestrationTint;
+    QLabel * m_fenestrationTintLabel = nullptr;
 
     OSComboBox2 * m_fenestrationGasFill;
+    QLabel * m_fenestrationGasFillLabel = nullptr;
 
     OSSwitch2 * m_fenestrationLowEmissivityCoating;
+    QLabel * m_fenestrationLowEmissivityCoatingLabel = nullptr;
 
     bool m_isIP;
 

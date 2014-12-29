@@ -30,6 +30,8 @@ class QComboBox;
 
 class QGridLayout;
 
+class QLabel;
+
 namespace openstudio {
 
 namespace model {
@@ -58,6 +60,14 @@ class StandardsInformationMaterialWidget : public QWidget
 
     void addToLayout(QGridLayout * mainGridLayout, int & row);
 
+    void showComposite();
+
+    void hideComposite();
+
+    void enableComposite();
+
+    void disablComposite();
+
   private:
     
     QComboBox * m_standard = nullptr;
@@ -67,6 +77,21 @@ class StandardsInformationMaterialWidget : public QWidget
     QComboBox * m_standardsCategory = nullptr;
 
     QComboBox * m_standardsIdentifier = nullptr;
+
+    QComboBox * m_compositeFramingMaterial = nullptr;
+    QLabel * m_compositeFramingMaterialLabel = nullptr;
+
+    QComboBox * m_compositeFramingConfiguration = nullptr;
+    QLabel * m_compositeFramingConfigurationLabel = nullptr;
+
+    QComboBox * m_compositeFramingDepth = nullptr;
+    QLabel * m_compositeFramingDepthLabel = nullptr;
+
+    QComboBox * m_compositeFramingSize = nullptr;
+    QLabel * m_compositeFramingSizeLabel = nullptr;
+
+    QComboBox * m_compositeCavityInsulation = nullptr;
+    QLabel * m_compositeCavityInsulationLabel = nullptr;
 
     bool m_isIP;
 
@@ -92,6 +117,20 @@ class StandardsInformationMaterialWidget : public QWidget
     void standardsIdentifierChanged(const QString& text);
     void populateStandardsIdentifier();
 
+    void compositeFramingMaterialChanged(const QString& text);
+    void populateCompositeFramingMaterial();
+
+    void compositeFramingConfigurationChanged(const QString& text);
+    void populateCompositeFramingConfiguration();
+
+    void compositeFramingDepthChanged(const QString& text);
+    void populateCompositeFramingDepth();
+
+    void compositeFramingSizeChanged(const QString& text);
+    void populateCompositeFramingSize();
+
+    void compositeCavityInsulationChanged(const QString& text);
+    void populateCompositeCavityInsulation();
 };
 
 } // openstudio

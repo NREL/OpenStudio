@@ -139,10 +139,107 @@ void StandardsInformationMaterialWidget::addToLayout(QGridLayout * mainGridLayou
   isConnected = connect(m_standardsIdentifier, &QComboBox::currentTextChanged, this, &openstudio::StandardsInformationMaterialWidget::standardsIdentifierChanged);
   OS_ASSERT(isConnected);
 
+  // Composite Framing Material
+  vLayout = new QVBoxLayout();
+
+  m_compositeFramingMaterialLabel = new QLabel();
+  m_compositeFramingMaterialLabel->setText("Composite Framing Material: ");
+  m_compositeFramingMaterialLabel->setObjectName("StandardsInfo");
+  vLayout->addWidget(m_compositeFramingMaterialLabel);
+
+  m_compositeFramingMaterial = new QComboBox();
+  m_compositeFramingMaterial->setEditable(true);
+  m_compositeFramingMaterial->setDuplicatesEnabled(false);
+  m_compositeFramingMaterial->setFixedWidth(OSItem::ITEM_WIDTH);
+  vLayout->addWidget(m_compositeFramingMaterial);
+
+  mainGridLayout->addLayout(vLayout, row, 0);
+
+  isConnected = connect(m_compositeFramingMaterial, &QComboBox::currentTextChanged, this, &openstudio::StandardsInformationMaterialWidget::compositeFramingMaterialChanged);
+  OS_ASSERT(isConnected);
+
+  // Composite Framing Configuration
+  vLayout = new QVBoxLayout();
+
+  m_compositeFramingConfigurationLabel = new QLabel();
+  m_compositeFramingConfigurationLabel->setText("Composite Framing Configuration: ");
+  m_compositeFramingConfigurationLabel->setObjectName("StandardsInfo");
+  vLayout->addWidget(m_compositeFramingConfigurationLabel);
+
+  m_compositeFramingConfiguration = new QComboBox();
+  m_compositeFramingConfiguration->setEditable(true);
+  m_compositeFramingConfiguration->setDuplicatesEnabled(false);
+  m_compositeFramingConfiguration->setFixedWidth(OSItem::ITEM_WIDTH);
+  vLayout->addWidget(m_compositeFramingConfiguration);
+
+  mainGridLayout->addLayout(vLayout, row++, 1);
+
+  isConnected = connect(m_compositeFramingConfiguration, &QComboBox::currentTextChanged, this, &openstudio::StandardsInformationMaterialWidget::compositeFramingConfigurationChanged);
+  OS_ASSERT(isConnected);
+
+  // Composite Framing Depth
+  vLayout = new QVBoxLayout();
+
+  m_compositeFramingDepthLabel = new QLabel();
+  m_compositeFramingDepthLabel->setText("Composite Framing Depth: ");
+  m_compositeFramingDepthLabel->setObjectName("StandardsInfo");
+  vLayout->addWidget(m_compositeFramingDepthLabel);
+
+  m_compositeFramingDepth = new QComboBox();
+  m_compositeFramingDepth->setEditable(true);
+  m_compositeFramingDepth->setDuplicatesEnabled(false);
+  m_compositeFramingDepth->setFixedWidth(OSItem::ITEM_WIDTH);
+  vLayout->addWidget(m_compositeFramingDepth);
+
+  mainGridLayout->addLayout(vLayout, row, 0);
+
+  isConnected = connect(m_compositeFramingDepth, &QComboBox::currentTextChanged, this, &openstudio::StandardsInformationMaterialWidget::compositeFramingDepthChanged);
+  OS_ASSERT(isConnected);
+
+  // Composite Framing Size
+  vLayout = new QVBoxLayout();
+
+  m_compositeFramingSizeLabel = new QLabel();
+  m_compositeFramingSizeLabel->setText("Composite Framing Size: ");
+  m_compositeFramingSizeLabel->setObjectName("StandardsInfo");
+  vLayout->addWidget(m_compositeFramingSizeLabel);
+
+  m_compositeFramingSize = new QComboBox();
+  m_compositeFramingSize->setEditable(true);
+  m_compositeFramingSize->setDuplicatesEnabled(false);
+  m_compositeFramingSize->setFixedWidth(OSItem::ITEM_WIDTH);
+  vLayout->addWidget(m_compositeFramingSize);
+
+  mainGridLayout->addLayout(vLayout, row++, 1);
+
+  isConnected = connect(m_compositeFramingSize, &QComboBox::currentTextChanged, this, &openstudio::StandardsInformationMaterialWidget::compositeFramingSizeChanged);
+  OS_ASSERT(isConnected);
+  
+  // Composite Cavity Insulation
+  vLayout = new QVBoxLayout();
+
+  m_compositeCavityInsulationLabel = new QLabel();
+  m_compositeCavityInsulationLabel->setText("Composite Cavity Insulation: ");
+  m_compositeCavityInsulationLabel->setObjectName("StandardsInfo");
+  vLayout->addWidget(m_compositeCavityInsulationLabel);
+
+  m_compositeCavityInsulation = new QComboBox();
+  m_compositeCavityInsulation->setEditable(true);
+  m_compositeCavityInsulation->setDuplicatesEnabled(false);
+  m_compositeCavityInsulation->setFixedWidth(OSItem::ITEM_WIDTH);
+  vLayout->addWidget(m_compositeCavityInsulation);
+
+  mainGridLayout->addLayout(vLayout, row++, 0);
+
+  isConnected = connect(m_compositeCavityInsulation, &QComboBox::currentTextChanged, this, &openstudio::StandardsInformationMaterialWidget::compositeCavityInsulationChanged);
+  OS_ASSERT(isConnected);
+
   line = new QFrame();
   line->setFrameShape(QFrame::HLine);
   line->setFrameShadow(QFrame::Sunken);
   mainGridLayout->addWidget(line, row++, 0, 1, 3);  
+
+  hideComposite();
 }
 
 void StandardsInformationMaterialWidget::attach(openstudio::model::Material & material)
@@ -164,6 +261,11 @@ void StandardsInformationMaterialWidget::attach(openstudio::model::Material & ma
   populateStandardSources();
   populateStandardsCategories();
   populateStandardsIdentifier();
+  populateCompositeFramingMaterial();
+  populateCompositeFramingConfiguration();
+  populateCompositeFramingDepth();
+  populateCompositeFramingSize();
+  populateCompositeCavityInsulation();
 
 }
 
@@ -186,6 +288,54 @@ void StandardsInformationMaterialWidget::detach()
 
 }
 
+void StandardsInformationMaterialWidget::showComposite()
+{
+  m_compositeFramingMaterial->show();
+  m_compositeFramingConfiguration->show();
+  m_compositeFramingDepth->show();
+  m_compositeFramingSize->show();
+  m_compositeCavityInsulation->show();
+
+  m_compositeFramingMaterialLabel->show();
+  m_compositeFramingConfigurationLabel->show();
+  m_compositeFramingDepthLabel->show();
+  m_compositeFramingSizeLabel->show();
+  m_compositeCavityInsulationLabel->show();
+}
+
+void StandardsInformationMaterialWidget::hideComposite()
+{
+  m_compositeFramingMaterial->hide();
+  m_compositeFramingConfiguration->hide();
+  m_compositeFramingDepth->hide();
+  m_compositeFramingSize->hide();
+  m_compositeCavityInsulation->hide();
+
+  m_compositeFramingMaterialLabel->hide();
+  m_compositeFramingConfigurationLabel->hide();
+  m_compositeFramingDepthLabel->hide();
+  m_compositeFramingSizeLabel->hide();
+  m_compositeCavityInsulationLabel->hide();
+}
+
+void StandardsInformationMaterialWidget::enableComposite()
+{
+  m_compositeFramingMaterial->setEnabled(true);
+  m_compositeFramingConfiguration->setEnabled(true);
+  m_compositeFramingDepth->setEnabled(true);
+  m_compositeFramingSize->setEnabled(true);
+  m_compositeCavityInsulation->setEnabled(true);
+}
+
+void StandardsInformationMaterialWidget::disablComposite()
+{
+  m_compositeFramingMaterial->setEnabled(false);
+  m_compositeFramingConfiguration->setEnabled(false);
+  m_compositeFramingDepth->setEnabled(false);
+  m_compositeFramingSize->setEnabled(false);
+  m_compositeCavityInsulation->setEnabled(false);
+}
+
 void StandardsInformationMaterialWidget::standardChanged(const QString& text)
 {
   if (m_standardsInformation){
@@ -198,6 +348,11 @@ void StandardsInformationMaterialWidget::standardChanged(const QString& text)
     }
     populateStandards();
     populateStandardSources();
+    populateCompositeFramingMaterial();
+    populateCompositeFramingConfiguration();
+    populateCompositeFramingDepth();
+    populateCompositeFramingSize();
+    populateCompositeCavityInsulation();
   }
 }
 
@@ -338,6 +493,196 @@ void StandardsInformationMaterialWidget::populateStandardsIdentifier()
   }
 
   m_standardsIdentifier->blockSignals(false);
+}
+
+void StandardsInformationMaterialWidget::compositeFramingMaterialChanged(const QString& text)
+{
+  if (m_standardsInformation){
+    std::string str = toString(text);
+    if (str.empty()){
+      m_standardsInformation->resetCompositeFramingMaterial();
+    }
+    else{
+      m_standardsInformation->setCompositeFramingMaterial(str);
+    }
+    populateCompositeFramingMaterial();
+  }
+}
+
+void StandardsInformationMaterialWidget::populateCompositeFramingMaterial()
+{
+  m_compositeFramingMaterial->blockSignals(true);
+
+  m_compositeFramingMaterial->clear();
+  if (m_standardsInformation){
+    m_compositeFramingMaterial->addItem("");
+    std::vector<std::string> suggestedCompositeFramingMaterials = m_standardsInformation->suggestedCompositeFramingMaterials();
+    for (const std::string& suggestedCompositeFramingMaterial : suggestedCompositeFramingMaterials) {
+      m_compositeFramingMaterial->addItem(toQString(suggestedCompositeFramingMaterial));
+    }
+    boost::optional<std::string> standardsIdentifier = m_standardsInformation->standardsIdentifier();
+    if (standardsIdentifier){
+      OS_ASSERT(!suggestedCompositeFramingMaterials.empty());
+      m_compositeFramingMaterial->setCurrentIndex(1);
+    }
+    else{
+      m_compositeFramingMaterial->setCurrentIndex(0);
+    }
+  }
+
+  m_compositeFramingMaterial->blockSignals(false);
+}
+
+void StandardsInformationMaterialWidget::compositeFramingConfigurationChanged(const QString& text)
+{
+  if (m_standardsInformation){
+    std::string str = toString(text);
+    if (str.empty()){
+      m_standardsInformation->resetCompositeFramingConfiguration();
+    }
+    else{
+      m_standardsInformation->setCompositeFramingConfiguration(str);
+    }
+    populateCompositeFramingConfiguration();
+  }
+}
+
+void StandardsInformationMaterialWidget::populateCompositeFramingConfiguration()
+{
+  m_compositeFramingConfiguration->blockSignals(true);
+
+  m_compositeFramingConfiguration->clear();
+  if (m_standardsInformation){
+    m_compositeFramingConfiguration->addItem("");
+    std::vector<std::string> suggestedCompositeFramingConfigurations = m_standardsInformation->suggestedCompositeFramingConfigurations();
+    for (const std::string& suggestedCompositeFramingConfiguration : suggestedCompositeFramingConfigurations) {
+      m_compositeFramingConfiguration->addItem(toQString(suggestedCompositeFramingConfiguration));
+    }
+    boost::optional<std::string> standardsIdentifier = m_standardsInformation->standardsIdentifier();
+    if (standardsIdentifier){
+      OS_ASSERT(!suggestedCompositeFramingConfigurations.empty());
+      m_compositeFramingConfiguration->setCurrentIndex(1);
+    }
+    else{
+      m_compositeFramingConfiguration->setCurrentIndex(0);
+    }
+  }
+
+  m_compositeFramingConfiguration->blockSignals(false);
+}
+
+void StandardsInformationMaterialWidget::compositeFramingDepthChanged(const QString& text)
+{
+  if (m_standardsInformation){
+    std::string str = toString(text);
+    if (str.empty()){
+      m_standardsInformation->resetCompositeFramingDepth();
+    }
+    else{
+      m_standardsInformation->setCompositeFramingDepth(str);
+    }
+    populateCompositeFramingDepth();
+  }
+}
+
+void StandardsInformationMaterialWidget::populateCompositeFramingDepth()
+{
+  m_compositeFramingDepth->blockSignals(true);
+
+  m_compositeFramingDepth->clear();
+  if (m_standardsInformation){
+    m_compositeFramingDepth->addItem("");
+    std::vector<std::string> suggestedCompositeFramingDepths = m_standardsInformation->suggestedCompositeFramingDepths();
+    for (const std::string& suggestedCompositeFramingDepth : suggestedCompositeFramingDepths) {
+      m_compositeFramingDepth->addItem(toQString(suggestedCompositeFramingDepth));
+    }
+    boost::optional<std::string> standardsIdentifier = m_standardsInformation->standardsIdentifier();
+    if (standardsIdentifier){
+      OS_ASSERT(!suggestedCompositeFramingDepths.empty());
+      m_compositeFramingDepth->setCurrentIndex(1);
+    }
+    else{
+      m_compositeFramingDepth->setCurrentIndex(0);
+    }
+  }
+
+  m_compositeFramingDepth->blockSignals(false);
+}
+
+void StandardsInformationMaterialWidget::compositeFramingSizeChanged(const QString& text)
+{
+  if (m_standardsInformation){
+    std::string str = toString(text);
+    if (str.empty()){
+      m_standardsInformation->resetCompositeFramingSize();
+    }
+    else{
+      m_standardsInformation->setCompositeFramingSize(str);
+    }
+    populateCompositeFramingSize();
+  }
+}
+
+void StandardsInformationMaterialWidget::populateCompositeFramingSize()
+{
+  m_compositeFramingSize->blockSignals(true);
+
+  m_compositeFramingSize->clear();
+  if (m_standardsInformation){
+    m_compositeFramingSize->addItem("");
+    std::vector<std::string> suggestedCompositeFramingSizes = m_standardsInformation->suggestedCompositeFramingSizes();
+    for (const std::string& suggestedCompositeFramingSize : suggestedCompositeFramingSizes) {
+      m_compositeFramingSize->addItem(toQString(suggestedCompositeFramingSize));
+    }
+    boost::optional<std::string> standardsIdentifier = m_standardsInformation->standardsIdentifier();
+    if (standardsIdentifier){
+      OS_ASSERT(!suggestedCompositeFramingSizes.empty());
+      m_compositeFramingSize->setCurrentIndex(1);
+    }
+    else{
+      m_compositeFramingSize->setCurrentIndex(0);
+    }
+  }
+
+  m_compositeFramingSize->blockSignals(false);
+}
+
+void StandardsInformationMaterialWidget::compositeCavityInsulationChanged(const QString& text)
+{
+  if (m_standardsInformation){
+    std::string str = toString(text);
+    if (str.empty()){
+      m_standardsInformation->resetCompositeCavityInsulation();
+    }
+    else{
+      m_standardsInformation->setCompositeCavityInsulation(str);
+    }
+    populateCompositeCavityInsulation();
+  }
+}
+
+void StandardsInformationMaterialWidget::populateCompositeCavityInsulation()
+{
+  m_compositeCavityInsulation->blockSignals(true);
+
+  m_compositeCavityInsulation->clear();
+  if (m_standardsInformation){
+    m_compositeCavityInsulation->addItem("");
+    std::vector<std::string> suggestedCompositeCavityInsulations = m_standardsInformation->suggestedCompositeCavityInsulations();
+    for (const std::string& suggestedCompositeCavityInsulation : suggestedCompositeCavityInsulations) {
+      m_compositeCavityInsulation->addItem(toQString(suggestedCompositeCavityInsulation));
+    }
+    boost::optional<std::string> standardsIdentifier = m_standardsInformation->standardsIdentifier();
+    if (standardsIdentifier){
+      OS_ASSERT(!suggestedCompositeCavityInsulations.empty());
+      m_compositeCavityInsulation->setCurrentIndex(1);
+    }
+    else{
+      m_compositeCavityInsulation->setCurrentIndex(0);
+    }
+  }
+
+  m_compositeCavityInsulation->blockSignals(false);
 }
 
 void StandardsInformationMaterialWidget::toggleUnits(bool displayIP)
