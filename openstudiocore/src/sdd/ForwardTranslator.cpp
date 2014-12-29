@@ -43,6 +43,10 @@
 #include "../model/ShadingSurface_Impl.hpp"
 #include "../model/ShadingSurfaceGroup.hpp"
 #include "../model/ShadingSurfaceGroup_Impl.hpp"
+#include "../model/AvailabilityManagerAssignmentList.hpp"
+#include "../model/CoilHeatingGasMultiStageStageData.hpp"
+#include "../model/Connection.hpp"
+#include "../model/CoolingTowerPerformanceCoolTools.hpp"
 
 #include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/core/Assert.hpp"
@@ -51,6 +55,8 @@
 #include <QDomDocument>
 #include <QDomElement>
 #include <QThread>
+
+#include <algorithm>
 
 namespace openstudio {
 namespace sdd {
@@ -69,6 +75,9 @@ namespace sdd {
   bool ForwardTranslator::modelToSDD(const openstudio::model::Model& model, const openstudio::path& path, ProgressBar* progressBar)
   {
     m_progressBar = progressBar;
+    m_translatedObjects.clear();
+    m_ignoreTypes.clear();
+    m_ignoreObjects.clear();
 
     m_logSink.setThreadId(QThread::currentThread());
 
@@ -80,6 +89,7 @@ namespace sdd {
     modelCopy.purgeUnusedResourceObjects();
 
     boost::optional<QDomDocument> doc = this->translateModel(modelCopy);
+    logUntranslatedObjects(modelCopy);
     if (!doc){
       return false;
     }
@@ -340,7 +350,29 @@ namespace sdd {
       }
     }
 
+    m_ignoreTypes.push_back(model::AvailabilityManagerAssignmentList::iddObjectType());
+    m_ignoreTypes.push_back(model::CoilHeatingGasMultiStageStageData::iddObjectType());
+    m_ignoreTypes.push_back(model::Connection::iddObjectType());
+    m_ignoreTypes.push_back(model::CoolingTowerPerformanceCoolTools::iddObjectType());
+
     return doc;
+  }
+
+  void ForwardTranslator::logUntranslatedObjects(const model::Model& model)
+  {
+    auto allModelObjects = model.modelObjects();
+    for(const auto & mo : allModelObjects) {
+      // If mo is not in m_translatedObjects
+      if(m_translatedObjects.find(mo.handle()) == m_translatedObjects.end()) {
+        // If mo.iddObjectType is not int the m_ignoreTypes list
+        if(std::find(m_ignoreTypes.begin(),m_ignoreTypes.end(),mo.iddObjectType()) == m_ignoreTypes.end()) {
+          // If mo is not in the m_ignoreObjects list
+          if(std::find(m_ignoreObjects.begin(),m_ignoreObjects.end(),mo.handle()) == m_ignoreObjects.end()) {
+            LOG(Error,mo.briefDescription() << " was not translated.");
+          } 
+        }
+      }
+    }
   }
 
 } // sdd
