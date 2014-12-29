@@ -73,15 +73,12 @@ TEST_F(ModelFixture, Material)
   }
 
   StandardsInformationMaterial info = exterior.standardsInformation();
-  /*
+
   {
     Model testModel;
 
     exterior.clone(testModel);
 
-    std::stringstream ss;
-    ss << testModel << std::endl;
-    std::string test = ss.str();
 
     materials = model.getModelObjects<Material>();
     ASSERT_EQ(static_cast<unsigned>(1), materials.size());
@@ -95,15 +92,11 @@ TEST_F(ModelFixture, Material)
     materialInformations = testModel.getModelObjects<StandardsInformationMaterial>();
     ASSERT_EQ(static_cast<unsigned>(1), materialInformations.size());
   }
-  */
+
   {
     Model testModel;
 
     info.clone(testModel);
-
-    std::stringstream ss;
-    ss << testModel << std::endl;
-    std::string test = ss.str();
 
     materials = model.getModelObjects<Material>();
     ASSERT_EQ(static_cast<unsigned>(1), materials.size());

@@ -426,10 +426,74 @@ namespace detail {
   std::vector<std::string> StandardsInformationMaterial_Impl::suggestedCompositeFramingMaterials() const
   {
     std::vector<std::string> result;
-    boost::optional<std::string> tmp = compositeFramingMaterial();
-    if (tmp){
-      result.push_back(*tmp);
+
+    boost::optional<std::string> materialStandard = this->materialStandard();
+
+    boost::optional<std::string> compositeFramingMaterial = this->compositeFramingMaterial();
+
+    // include values from json
+    parseStandardsMap();
+
+    QMap<QString, QVariant> materials = m_standardsMap["materials"].toMap();
+    for (QString material_name : materials.uniqueKeys()) {
+      QMap<QString, QVariant> material = materials[material_name].toMap();
+
+      if (materialStandard){
+        QString tmp = material["material_standard"].toString();
+        if (toString(tmp) != *materialStandard){
+          continue;
+        }
+      }
+
+      QString tmp = material["framing_material"].toString();
+      if (!tmp.isEmpty()){
+        result.push_back(toString(tmp));
+      }
     }
+
+    // include values from model
+    for (const StandardsInformationMaterial& other : this->model().getConcreteModelObjects<StandardsInformationMaterial>()){
+      if (other.handle() == this->handle()){
+        continue;
+      }
+
+      boost::optional<std::string> otherMaterialStandard = other.materialStandard();
+      if (materialStandard && otherMaterialStandard){
+        if (*materialStandard != otherMaterialStandard){
+          continue;
+        }
+      } else if (materialStandard || otherMaterialStandard){
+        continue;
+      }
+
+      boost::optional<std::string> otherCompositeFramingMaterial = other.compositeFramingMaterial();
+      if (otherCompositeFramingMaterial){
+        result.push_back(*otherCompositeFramingMaterial);
+      }
+    }
+
+    // remove current 
+    IstringFind finder;
+    if (compositeFramingMaterial){
+      finder.addTarget(*compositeFramingMaterial);
+
+      auto it = std::remove_if(result.begin(), result.end(), finder);
+      result.resize(std::distance(result.begin(), it));
+    }
+
+    // sort
+    std::sort(result.begin(), result.end(), IstringCompare());
+
+    // make unique
+    // DLM: have to sort before calling unique, unique only works on consecutive elements
+    auto it = std::unique(result.begin(), result.end(), IstringEqual());
+    result.resize(std::distance(result.begin(), it));
+
+    // add current to front
+    if (compositeFramingMaterial){
+      result.insert(result.begin(), *compositeFramingMaterial);
+    }
+
     return result;
   }
 
@@ -441,10 +505,74 @@ namespace detail {
   std::vector<std::string> StandardsInformationMaterial_Impl::suggestedCompositeFramingConfigurations() const
   {
     std::vector<std::string> result;
-    boost::optional<std::string> tmp = compositeFramingConfiguration();
-    if (tmp){
-      result.push_back(*tmp);
+
+    boost::optional<std::string> materialStandard = this->materialStandard();
+
+    boost::optional<std::string> compositeFramingConfiguration = this->compositeFramingConfiguration();
+
+    // include values from json
+    parseStandardsMap();
+
+    QMap<QString, QVariant> materials = m_standardsMap["materials"].toMap();
+    for (QString material_name : materials.uniqueKeys()) {
+      QMap<QString, QVariant> material = materials[material_name].toMap();
+
+      if (materialStandard){
+        QString tmp = material["material_standard"].toString();
+        if (toString(tmp) != *materialStandard){
+          continue;
+        }
+      }
+
+      QString tmp = material["framing_configuration"].toString();
+      if (!tmp.isEmpty()){
+        result.push_back(toString(tmp));
+      }
     }
+
+    // include values from model
+    for (const StandardsInformationMaterial& other : this->model().getConcreteModelObjects<StandardsInformationMaterial>()){
+      if (other.handle() == this->handle()){
+        continue;
+      }
+
+      boost::optional<std::string> otherMaterialStandard = other.materialStandard();
+      if (materialStandard && otherMaterialStandard){
+        if (*materialStandard != otherMaterialStandard){
+          continue;
+        }
+      } else if (materialStandard || otherMaterialStandard){
+        continue;
+      }
+
+      boost::optional<std::string> otherCompositeFramingConfiguration = other.compositeFramingConfiguration();
+      if (otherCompositeFramingConfiguration){
+        result.push_back(*otherCompositeFramingConfiguration);
+      }
+    }
+
+    // remove current 
+    IstringFind finder;
+    if (compositeFramingConfiguration){
+      finder.addTarget(*compositeFramingConfiguration);
+
+      auto it = std::remove_if(result.begin(), result.end(), finder);
+      result.resize(std::distance(result.begin(), it));
+    }
+
+    // sort
+    std::sort(result.begin(), result.end(), IstringCompare());
+
+    // make unique
+    // DLM: have to sort before calling unique, unique only works on consecutive elements
+    auto it = std::unique(result.begin(), result.end(), IstringEqual());
+    result.resize(std::distance(result.begin(), it));
+
+    // add current to front
+    if (compositeFramingConfiguration){
+      result.insert(result.begin(), *compositeFramingConfiguration);
+    }
+
     return result;
   }
 
@@ -456,10 +584,74 @@ namespace detail {
   std::vector<std::string> StandardsInformationMaterial_Impl::suggestedCompositeFramingDepths() const
   {
     std::vector<std::string> result;
-    boost::optional<std::string> tmp = compositeFramingDepth();
-    if (tmp){
-      result.push_back(*tmp);
+
+    boost::optional<std::string> materialStandard = this->materialStandard();
+
+    boost::optional<std::string> compositeFramingDepth = this->compositeFramingDepth();
+
+    // include values from json
+    parseStandardsMap();
+
+    QMap<QString, QVariant> materials = m_standardsMap["materials"].toMap();
+    for (QString material_name : materials.uniqueKeys()) {
+      QMap<QString, QVariant> material = materials[material_name].toMap();
+
+      if (materialStandard){
+        QString tmp = material["material_standard"].toString();
+        if (toString(tmp) != *materialStandard){
+          continue;
+        }
+      }
+
+      QString tmp = material["framing_depth"].toString();
+      if (!tmp.isEmpty()){
+        result.push_back(toString(tmp));
+      }
     }
+
+    // include values from model
+    for (const StandardsInformationMaterial& other : this->model().getConcreteModelObjects<StandardsInformationMaterial>()){
+      if (other.handle() == this->handle()){
+        continue;
+      }
+
+      boost::optional<std::string> otherMaterialStandard = other.materialStandard();
+      if (materialStandard && otherMaterialStandard){
+        if (*materialStandard != otherMaterialStandard){
+          continue;
+        }
+      } else if (materialStandard || otherMaterialStandard){
+        continue;
+      }
+
+      boost::optional<std::string> otherCompositeFramingDepth = other.compositeFramingDepth();
+      if (otherCompositeFramingDepth){
+        result.push_back(*otherCompositeFramingDepth);
+      }
+    }
+
+    // remove current 
+    IstringFind finder;
+    if (compositeFramingDepth){
+      finder.addTarget(*compositeFramingDepth);
+
+      auto it = std::remove_if(result.begin(), result.end(), finder);
+      result.resize(std::distance(result.begin(), it));
+    }
+
+    // sort
+    std::sort(result.begin(), result.end(), IstringCompare());
+
+    // make unique
+    // DLM: have to sort before calling unique, unique only works on consecutive elements
+    auto it = std::unique(result.begin(), result.end(), IstringEqual());
+    result.resize(std::distance(result.begin(), it));
+
+    // add current to front
+    if (compositeFramingDepth){
+      result.insert(result.begin(), *compositeFramingDepth);
+    }
+
     return result;
   }
 
@@ -471,10 +663,74 @@ namespace detail {
   std::vector<std::string> StandardsInformationMaterial_Impl::suggestedCompositeFramingSizes() const
   {
     std::vector<std::string> result;
-    boost::optional<std::string> tmp = compositeFramingSize();
-    if (tmp){
-      result.push_back(*tmp);
+
+    boost::optional<std::string> materialStandard = this->materialStandard();
+
+    boost::optional<std::string> compositeFramingSize = this->compositeFramingSize();
+
+    // include values from json
+    parseStandardsMap();
+
+    QMap<QString, QVariant> materials = m_standardsMap["materials"].toMap();
+    for (QString material_name : materials.uniqueKeys()) {
+      QMap<QString, QVariant> material = materials[material_name].toMap();
+
+      if (materialStandard){
+        QString tmp = material["material_standard"].toString();
+        if (toString(tmp) != *materialStandard){
+          continue;
+        }
+      }
+
+      QString tmp = material["framing_size"].toString();
+      if (!tmp.isEmpty()){
+        result.push_back(toString(tmp));
+      }
     }
+
+    // include values from model
+    for (const StandardsInformationMaterial& other : this->model().getConcreteModelObjects<StandardsInformationMaterial>()){
+      if (other.handle() == this->handle()){
+        continue;
+      }
+
+      boost::optional<std::string> otherMaterialStandard = other.materialStandard();
+      if (materialStandard && otherMaterialStandard){
+        if (*materialStandard != otherMaterialStandard){
+          continue;
+        }
+      } else if (materialStandard || otherMaterialStandard){
+        continue;
+      }
+
+      boost::optional<std::string> otherCompositeFramingSize = other.compositeFramingSize();
+      if (otherCompositeFramingSize){
+        result.push_back(*otherCompositeFramingSize);
+      }
+    }
+
+    // remove current 
+    IstringFind finder;
+    if (compositeFramingSize){
+      finder.addTarget(*compositeFramingSize);
+
+      auto it = std::remove_if(result.begin(), result.end(), finder);
+      result.resize(std::distance(result.begin(), it));
+    }
+
+    // sort
+    std::sort(result.begin(), result.end(), IstringCompare());
+
+    // make unique
+    // DLM: have to sort before calling unique, unique only works on consecutive elements
+    auto it = std::unique(result.begin(), result.end(), IstringEqual());
+    result.resize(std::distance(result.begin(), it));
+
+    // add current to front
+    if (compositeFramingSize){
+      result.insert(result.begin(), *compositeFramingSize);
+    }
+
     return result;
   }
 
@@ -486,10 +742,74 @@ namespace detail {
   std::vector<std::string> StandardsInformationMaterial_Impl::suggestedCompositeCavityInsulations() const
   {
     std::vector<std::string> result;
-    boost::optional<std::string> tmp = compositeCavityInsulation();
-    if (tmp){
-      result.push_back(*tmp);
+
+    boost::optional<std::string> materialStandard = this->materialStandard();
+
+    boost::optional<std::string> compositeCavityInsulation = this->compositeCavityInsulation();
+
+    // include values from json
+    parseStandardsMap();
+
+    QMap<QString, QVariant> materials = m_standardsMap["materials"].toMap();
+    for (QString material_name : materials.uniqueKeys()) {
+      QMap<QString, QVariant> material = materials[material_name].toMap();
+
+      if (materialStandard){
+        QString tmp = material["material_standard"].toString();
+        if (toString(tmp) != *materialStandard){
+          continue;
+        }
+      }
+
+      QString tmp = material["cavity_insulation"].toString();
+      if (!tmp.isEmpty()){
+        result.push_back(toString(tmp));
+      }
     }
+
+    // include values from model
+    for (const StandardsInformationMaterial& other : this->model().getConcreteModelObjects<StandardsInformationMaterial>()){
+      if (other.handle() == this->handle()){
+        continue;
+      }
+
+      boost::optional<std::string> otherMaterialStandard = other.materialStandard();
+      if (materialStandard && otherMaterialStandard){
+        if (*materialStandard != otherMaterialStandard){
+          continue;
+        }
+      } else if (materialStandard || otherMaterialStandard){
+        continue;
+      }
+
+      boost::optional<std::string> otherCompositeCavityInsulation = other.compositeCavityInsulation();
+      if (otherCompositeCavityInsulation){
+        result.push_back(*otherCompositeCavityInsulation);
+      }
+    }
+
+    // remove current 
+    IstringFind finder;
+    if (compositeCavityInsulation){
+      finder.addTarget(*compositeCavityInsulation);
+
+      auto it = std::remove_if(result.begin(), result.end(), finder);
+      result.resize(std::distance(result.begin(), it));
+    }
+
+    // sort
+    std::sort(result.begin(), result.end(), IstringCompare());
+
+    // make unique
+    // DLM: have to sort before calling unique, unique only works on consecutive elements
+    auto it = std::unique(result.begin(), result.end(), IstringEqual());
+    result.resize(std::distance(result.begin(), it));
+
+    // add current to front
+    if (compositeCavityInsulation){
+      result.insert(result.begin(), *compositeCavityInsulation);
+    }
+
     return result;
   }
 
