@@ -107,13 +107,13 @@ class MODEL_API Loop : public ParentObject {
  public:
   virtual ~Loop() {};
 
-  virtual Node supplyInletNode();
+  virtual Node supplyInletNode() const;
 
-  virtual Node supplyOutletNode();
+  virtual Node supplyOutletNode() const;
 
-  virtual Node demandInletNode();
+  virtual Node demandInletNode() const;
 
-  virtual Node demandOutletNode();
+  virtual Node demandOutletNode() const;
 
   /** Returns all of the supply side hvac equipment between
    * inletComps and outletComps.  If type is given then the results will

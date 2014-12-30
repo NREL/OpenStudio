@@ -79,28 +79,28 @@ class MODEL_API AirLoopHVAC : public Loop
 
 
   /** Returns the supply inlet node. */
-  Node supplyInletNode();
+  Node supplyInletNode() const;
 
   /** Returns the supply outlet nodes.
    * Currently only one supply outlet node is supported, but EnergyPlus allows
    * up to two for dual duct systems.
    */
-  std::vector<Node> supplyOutletNodes();
+  std::vector<Node> supplyOutletNodes() const;
 
   /** Returns the first supply outlet Node. */
-  Node supplyOutletNode();
+  Node supplyOutletNode() const;
 
   /** Returns the demand inlet nodes.
    * Currently only one demand inlet node is supported, but EnergyPlus allows
    * up to two for dual duct systems.
    */
-  std::vector<Node> demandInletNodes();
+  std::vector<Node> demandInletNodes() const;
 
   /** Returns the first demand inlet Node. */
-  Node demandInletNode();
+  Node demandInletNode() const;
 
   /** Returns the demand outlet node */
-  Node demandOutletNode();
+  Node demandOutletNode() const;
 
   /** Returns the outdoor air node.  This is the outermost node from which
    * outdoor air is introduced into the air loop.  This node only exists if there

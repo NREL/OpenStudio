@@ -980,22 +980,22 @@ AirLoopHVAC::AirLoopHVAC(std::shared_ptr<detail::AirLoopHVAC_Impl> impl)
   : Loop(impl)
 {}
 
-Node AirLoopHVAC::supplyInletNode()
+Node AirLoopHVAC::supplyInletNode() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->supplyInletNode();
 }
 
-std::vector<Node> AirLoopHVAC::supplyOutletNodes()
+std::vector<Node> AirLoopHVAC::supplyOutletNodes() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->supplyOutletNodes();
 }
 
-std::vector<Node> AirLoopHVAC::demandInletNodes()
+std::vector<Node> AirLoopHVAC::demandInletNodes() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->demandInletNodes();
 }
 
-Node AirLoopHVAC::demandOutletNode()
+Node AirLoopHVAC::demandOutletNode() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->demandOutletNode();
 }
@@ -1107,12 +1107,12 @@ boost::optional<Node> AirLoopHVAC::supplyMixerOutletNode() {
   LOG_AND_THROW("Not implemented.");
 }
 
-Node AirLoopHVAC::supplyOutletNode()
+Node AirLoopHVAC::supplyOutletNode() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->supplyOutletNode();
 }
 
-Node AirLoopHVAC::demandInletNode()
+Node AirLoopHVAC::demandInletNode() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->demandInletNode();
 }

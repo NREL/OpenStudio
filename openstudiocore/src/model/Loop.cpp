@@ -482,22 +482,22 @@ boost::optional<ModelObject> Loop::supplyComponent(openstudio::Handle handle)
   return getImpl<detail::Loop_Impl>()->supplyComponent( handle );
 }
 
-Node Loop::supplyInletNode()
+Node Loop::supplyInletNode() const
 {
   return getImpl<detail::Loop_Impl>()->supplyInletNode();
 }
 
-Node Loop::supplyOutletNode()
+Node Loop::supplyOutletNode() const
 {
   return getImpl<detail::Loop_Impl>()->supplyOutletNode();
 }
 
-Node Loop::demandInletNode()
+Node Loop::demandInletNode() const
 {
   return getImpl<detail::Loop_Impl>()->demandInletNode();
 }
 
-Node Loop::demandOutletNode()
+Node Loop::demandOutletNode() const
 {
   return getImpl<detail::Loop_Impl>()->demandOutletNode();
 }
