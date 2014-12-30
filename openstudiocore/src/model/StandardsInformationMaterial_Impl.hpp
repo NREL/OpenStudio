@@ -75,6 +75,7 @@ namespace detail {
 
     boost::optional<std::string> standardsCategory() const;
     std::vector<std::string> suggestedStandardsCategories() const;
+    bool isCompositeMaterial() const;
 
     boost::optional<std::string> standardsIdentifier() const;
     std::vector<std::string> suggestedStandardsIdentifiers() const;

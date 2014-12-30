@@ -66,7 +66,7 @@ class StandardsInformationMaterialWidget : public QWidget
 
     void enableComposite();
 
-    void disablComposite();
+    void disableComposite();
 
   private:
     
@@ -99,9 +99,14 @@ class StandardsInformationMaterialWidget : public QWidget
 
     boost::optional<openstudio::model::StandardsInformationMaterial> m_standardsInformation;
 
+    void requestPopulateFields();
+    bool m_populateFieldsRequested;
+
   public slots:
 
     void toggleUnits(bool displayIP);
+
+    void populateFields();
 
   private slots:
 
