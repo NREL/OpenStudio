@@ -794,7 +794,7 @@ namespace detail {
     }
   }
 
-  std::vector<ThermalZone> AirLoopHVAC_Impl::thermalZones()
+  std::vector<ThermalZone> AirLoopHVAC_Impl::thermalZones() const
   {
     std::vector<ModelObject> objects = demandComponents(IddObjectType::OS_ThermalZone);
     //std::vector<ModelObject> v = this->demandComponents( IddObjectType::OS_AirLoopHVAC_ZoneSplitter );
@@ -1147,7 +1147,7 @@ SizingSystem AirLoopHVAC::sizingSystem() const
   return getImpl<detail::AirLoopHVAC_Impl>()->sizingSystem();
 }
 
-std::vector<ThermalZone> AirLoopHVAC::thermalZones()
+std::vector<ThermalZone> AirLoopHVAC::thermalZones() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->thermalZones();
 }

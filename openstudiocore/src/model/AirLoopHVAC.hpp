@@ -223,7 +223,7 @@ class MODEL_API AirLoopHVAC : public Loop
   SizingSystem sizingSystem() const;
 
   /** Returns the ThermalZone objects attached to this air loop. **/
-  std::vector<ThermalZone> thermalZones();
+  std::vector<ThermalZone> thermalZones() const;
 
   /** Returns the availability schedule when this system is allowed to run. **/
   Schedule availabilitySchedule() const;

@@ -150,7 +150,7 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   SizingSystem sizingSystem() const;
 
-  std::vector<ThermalZone> thermalZones();
+  std::vector<ThermalZone> thermalZones() const;
 
   std::vector<ModelObject> children() const;
 
