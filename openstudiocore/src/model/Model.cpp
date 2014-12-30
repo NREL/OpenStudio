@@ -19,36 +19,38 @@
 
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+
 #include "Component.hpp"
 #include "ComponentWatcher_Impl.hpp"
+#include "Connection.hpp"
 #include "ModelObject.hpp"
 #include "ModelObject_Impl.hpp"
 #include "ResourceObject.hpp"
 #include "ResourceObject_Impl.hpp"
-#include "Connection.hpp"
 
 // central list of all concrete ModelObject header files (_Impl and non-_Impl)
 // needed here for ::createObject
 #include "ConcreteModelObjects.hpp"
 
-#include "../utilities/idf/IdfFile.hpp"
-
-#include "../utilities/idd/IddEnums.hpp"
-#include <utilities/idd/OS_Version_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/idf/Workspace_Impl.hpp> // needed for serialization
-#include "../utilities/idd/IddObject_Impl.hpp"
-#include "../utilities/idd/IddField_Impl.hpp"
-#include "../utilities/idd/IddFile_Impl.hpp"
-
-#include "../utilities/plot/ProgressBar.hpp"
-
-#include "../utilities/math/FloatCompare.hpp"
-
-#include "../utilities/sql/SqlFile.hpp"
+#include <utilities/idd/OS_Version_FieldEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/PathHelpers.hpp"
+
+#include "../utilities/idd/IddEnums.hpp"
+#include "../utilities/idd/IddObject_Impl.hpp"
+#include "../utilities/idd/IddField_Impl.hpp"
+#include "../utilities/idd/IddFile_Impl.hpp"
+#include "../utilities/idf/Workspace_Impl.hpp" // needed for serialization
+
+#include "../utilities/idf/IdfFile.hpp"
+
+#include "../utilities/math/FloatCompare.hpp"
+
+#include "../utilities/plot/ProgressBar.hpp"
+
+#include "../utilities/sql/SqlFile.hpp"
 
 #include <boost/regex.hpp>
 
@@ -417,6 +419,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(StandardGlazing);
     REGISTER_CONSTRUCTOR(StandardOpaqueMaterial);
     REGISTER_CONSTRUCTOR(StandardsInformationConstruction);
+    REGISTER_CONSTRUCTOR(StandardsInformationMaterial);
     REGISTER_CONSTRUCTOR(SteamEquipment);
     REGISTER_CONSTRUCTOR(SteamEquipmentDefinition);
     REGISTER_CONSTRUCTOR(SubSurface);
@@ -729,6 +732,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(StandardGlazing);
     REGISTER_COPYCONSTRUCTORS(StandardOpaqueMaterial);
     REGISTER_COPYCONSTRUCTORS(StandardsInformationConstruction);
+    REGISTER_COPYCONSTRUCTORS(StandardsInformationMaterial);
     REGISTER_COPYCONSTRUCTORS(SteamEquipment);
     REGISTER_COPYCONSTRUCTORS(SteamEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(SubSurface);

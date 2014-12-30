@@ -61,9 +61,9 @@ TEST_F(ModelFixture, Building)
   EXPECT_EQ(0, building.northAxis());
   EXPECT_FALSE(building.getDouble(2));
   EXPECT_TRUE(building.isNorthAxisDefaulted());
-  EXPECT_EQ(3, building.nominalFloortoFloorHeight());
+  EXPECT_FALSE(building.nominalFloortoFloorHeight());
   EXPECT_FALSE(building.getDouble(3));
-  EXPECT_TRUE(building.isNominalFloortoFloorHeightDefaulted());
+
 
   OptionalString buildingName = building.name();
   ASSERT_TRUE(buildingName);
