@@ -181,6 +181,8 @@ class MeasureManager : public QObject
   private:
     REGISTER_LOGGER("openstudio.MeasureManager");
 
+    void updateMeasuresLists(bool updateUserMeasures);
+
     BaseApp *m_app;
     std::map<UUID,BCLMeasure> m_patApplicationMeasures;
     std::map<UUID,BCLMeasure> m_myMeasures;

@@ -218,6 +218,7 @@ set(${target_name}_depends
 
 if(WIN32)
   list(APPEND ${target_name}_depends qtwinmigrate)
+  list(APPEND ${target_name}_depends mpr)
 endif()
 
 # moc files

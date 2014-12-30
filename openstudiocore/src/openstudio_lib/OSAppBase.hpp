@@ -71,6 +71,8 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
 
     virtual void reloadFile(const QString& fileToLoad, bool modified, bool saveCurrentTabs) = 0;
 
+    void showMeasureUpdateDlg();
+
   private:
 
   REGISTER_LOGGER("openstudio.OSAppBase");
