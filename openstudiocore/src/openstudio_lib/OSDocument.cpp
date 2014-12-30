@@ -693,7 +693,7 @@ void OSDocument::createTab(int verticalId)
     case BUILDING_STORIES:
       // Building Stories
 
-      m_mainTabController = std::shared_ptr<MainTabController>(new BuildingStoriesTabController(m_model));
+      m_mainTabController = std::shared_ptr<MainTabController>(new BuildingStoriesTabController(isIP, m_model));
       m_mainWindow->setView(m_mainTabController->mainContentWidget(), BUILDING_STORIES);
   
       connect(m_mainTabController.get(), &BuildingStoriesTabController::downloadComponentsClicked, this, &OSDocument::downloadComponentsClicked);

@@ -811,6 +811,9 @@ set(${target_name}_src
   StandardsInformationConstruction.hpp
   StandardsInformationConstruction_Impl.hpp
   StandardsInformationConstruction.cpp
+  StandardsInformationMaterial.hpp
+  StandardsInformationMaterial_Impl.hpp
+  StandardsInformationMaterial.cpp
   SteamEquipment.hpp
   SteamEquipment_Impl.hpp
   SteamEquipment.cpp
@@ -1295,6 +1298,7 @@ set(${target_name}_test_src
   test/Lights_GTest.cpp
   test/Luminaire_GTest.cpp
   test/MasslessOpaqueMaterial_GTest.cpp
+  test/Material_GTest.cpp
   test/Meter_GTest.cpp
   test/ModelFixture.cpp
   test/ModelFixture.hpp
