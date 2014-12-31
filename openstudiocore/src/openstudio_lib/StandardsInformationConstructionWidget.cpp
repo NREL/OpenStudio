@@ -37,27 +37,8 @@ namespace openstudio {
 
 // ConstructionBaseInspectorView
 
-  StandardsInformationConstructionWidget::StandardsInformationConstructionWidget(bool isIP, QWidget * parent)
-  : QWidget(parent),
-    m_standard(nullptr),
-    m_standardSource(nullptr),
-    m_intendedSurfaceType(nullptr),
-    m_standardsConstructionType(nullptr),
-    m_fenestrationType(nullptr),
-    m_fenestrationAssemblyContext(nullptr),
-    m_fenestrationNumberOfPanes(nullptr),
-    m_fenestrationFrameType(nullptr),
-    m_fenestrationDividerType(nullptr),
-    m_fenestrationTint(nullptr),
-    m_fenestrationGasFill(nullptr),
-    m_fenestrationLowEmissivityCoating(nullptr),
-    m_isIP(isIP),
-    m_construction(boost::none),
-    m_standardsInformation(boost::none)
-{
-}
-
-void StandardsInformationConstructionWidget::addToLayout(QGridLayout* mainGridLayout, int& row)
+StandardsInformationConstructionWidget::StandardsInformationConstructionWidget(bool isIP, QGridLayout* mainGridLayout, int& row)
+  : QWidget(mainGridLayout->parentWidget())
 {
   bool test;
 
@@ -292,6 +273,9 @@ void StandardsInformationConstructionWidget::addToLayout(QGridLayout* mainGridLa
 
   ++row;
 }
+
+StandardsInformationConstructionWidget::~StandardsInformationConstructionWidget()
+{}
 
 void StandardsInformationConstructionWidget::showFenestration()
 {

@@ -51,15 +51,13 @@ class StandardsInformationConstructionWidget : public QWidget
 
   public:
 
-    StandardsInformationConstructionWidget(bool isIP, QWidget * parent = 0);
+    StandardsInformationConstructionWidget(bool isIP, QGridLayout* mainGridLayout, int& row);
 
-    virtual ~StandardsInformationConstructionWidget() {}
+    virtual ~StandardsInformationConstructionWidget();
 
     void attach(openstudio::model::ConstructionBase & construction);
 
     void detach();
-
-    void addToLayout(QGridLayout* mainGridLayout, int& row);
 
     void showFenestration();
 
@@ -88,39 +86,39 @@ class StandardsInformationConstructionWidget : public QWidget
 
   private:
 
-    QComboBox * m_standard;
+    QComboBox * m_standard = nullptr;
 
-    QComboBox * m_standardSource;
+    QComboBox * m_standardSource = nullptr;
 
-    OSComboBox2 * m_intendedSurfaceType;
+    OSComboBox2 * m_intendedSurfaceType = nullptr;
 
-    QComboBox * m_standardsConstructionType;
+    QComboBox * m_standardsConstructionType = nullptr;
 
-    OSComboBox2 * m_fenestrationType;
+    OSComboBox2 * m_fenestrationType = nullptr;
     QLabel * m_fenestrationTypeLabel = nullptr;
 
-    OSComboBox2 * m_fenestrationAssemblyContext;
+    OSComboBox2 * m_fenestrationAssemblyContext = nullptr;
     QLabel * m_fenestrationAssemblyContextLabel = nullptr;
 
-    OSComboBox2 * m_fenestrationNumberOfPanes;
+    OSComboBox2 * m_fenestrationNumberOfPanes = nullptr;
     QLabel * m_fenestrationNumberOfPanesLabel = nullptr;
 
-    OSComboBox2 * m_fenestrationFrameType;
+    OSComboBox2 * m_fenestrationFrameType = nullptr;
     QLabel * m_fenestrationFrameTypeLabel = nullptr;
 
-    OSComboBox2 * m_fenestrationDividerType;
+    OSComboBox2 * m_fenestrationDividerType = nullptr;
     QLabel * m_fenestrationDividerTypeLabel = nullptr;
 
-    OSComboBox2 * m_fenestrationTint;
+    OSComboBox2 * m_fenestrationTint = nullptr;
     QLabel * m_fenestrationTintLabel = nullptr;
 
-    OSComboBox2 * m_fenestrationGasFill;
+    OSComboBox2 * m_fenestrationGasFill = nullptr;
     QLabel * m_fenestrationGasFillLabel = nullptr;
 
-    OSSwitch2 * m_fenestrationLowEmissivityCoating;
+    OSSwitch2 * m_fenestrationLowEmissivityCoating = nullptr;
     QLabel * m_fenestrationLowEmissivityCoatingLabel = nullptr;
 
-    bool m_isIP;
+    bool m_isIP = false;
 
     boost::optional<openstudio::model::ConstructionBase> m_construction;
 

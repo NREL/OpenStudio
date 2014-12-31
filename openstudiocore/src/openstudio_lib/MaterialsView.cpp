@@ -57,6 +57,7 @@ MaterialsView::MaterialsView(bool isIP,
   false,
   parent)
 {
+  // ModelObjectTypeListView will call reportItems for each IddObjectType, this results in inspector being build for each IddObjecType then thrown away
   connect(this, &MaterialsView::toggleUnitsClicked, modelObjectInspectorView(), &ModelObjectInspectorView::toggleUnitsClicked);
 }
 
