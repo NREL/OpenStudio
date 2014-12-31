@@ -78,8 +78,7 @@ void WindowMaterialGlazingInspectorView::createLayout()
 
   // Standards Information
 
-  m_standardsInformationWidget = new StandardsInformationMaterialWidget(m_isIP);
-  m_standardsInformationWidget->addToLayout(mainGridLayout, row);
+  m_standardsInformationWidget = new StandardsInformationMaterialWidget(m_isIP, mainGridLayout, row);
 
   ++row;
 

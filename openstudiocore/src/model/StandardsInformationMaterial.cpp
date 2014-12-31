@@ -321,6 +321,25 @@ namespace detail {
 
     return result;
   }
+  
+  bool StandardsInformationMaterial_Impl::isCompositeMaterial() const
+  {
+    boost::optional<std::string> standardsCategory = this->standardsCategory();
+    if (standardsCategory){
+      if (istringEqual("Composite", *standardsCategory) ||
+          istringEqual("Metal Framed Wall", *standardsCategory) ||
+          istringEqual("Metal Framed Floor", *standardsCategory) ||
+          istringEqual("Metal Building Roof", *standardsCategory) ||
+          istringEqual("Wood Framed Wall", *standardsCategory) ||
+          istringEqual("Wood Framed Floor", *standardsCategory) ||
+          istringEqual("Wood Framed Attic Floor", *standardsCategory) ||
+          istringEqual("Wood Framed Rafter Roof", *standardsCategory)){
+        return true;
+      }
+    }
+
+    return false;
+  }
 
   boost::optional<std::string> StandardsInformationMaterial_Impl::standardsIdentifier() const {
     return getString(OS_StandardsInformation_MaterialFields::StandardsIdentifier, true ,true);
@@ -429,6 +448,8 @@ namespace detail {
 
     boost::optional<std::string> materialStandard = this->materialStandard();
 
+    boost::optional<std::string> standardsCategory = this->standardsCategory();
+
     boost::optional<std::string> compositeFramingMaterial = this->compositeFramingMaterial();
 
     // include values from json
@@ -441,6 +462,13 @@ namespace detail {
       if (materialStandard){
         QString tmp = material["material_standard"].toString();
         if (toString(tmp) != *materialStandard){
+          continue;
+        }
+      }
+
+      if (standardsCategory){
+        QString tmp = material["code_category"].toString();
+        if (toString(tmp) != *standardsCategory){
           continue;
         }
       }
@@ -463,6 +491,15 @@ namespace detail {
           continue;
         }
       } else if (materialStandard || otherMaterialStandard){
+        continue;
+      }
+
+      boost::optional<std::string> otherStandardsCategory = other.standardsCategory();
+      if (standardsCategory && otherStandardsCategory){
+        if (*standardsCategory != otherStandardsCategory){
+          continue;
+        }
+      } else if (standardsCategory || otherStandardsCategory){
         continue;
       }
 
@@ -508,6 +545,8 @@ namespace detail {
 
     boost::optional<std::string> materialStandard = this->materialStandard();
 
+    boost::optional<std::string> standardsCategory = this->standardsCategory();
+
     boost::optional<std::string> compositeFramingConfiguration = this->compositeFramingConfiguration();
 
     // include values from json
@@ -520,6 +559,13 @@ namespace detail {
       if (materialStandard){
         QString tmp = material["material_standard"].toString();
         if (toString(tmp) != *materialStandard){
+          continue;
+        }
+      }
+
+      if (standardsCategory){
+        QString tmp = material["code_category"].toString();
+        if (toString(tmp) != *standardsCategory){
           continue;
         }
       }
@@ -542,6 +588,15 @@ namespace detail {
           continue;
         }
       } else if (materialStandard || otherMaterialStandard){
+        continue;
+      }
+
+      boost::optional<std::string> otherStandardsCategory = other.standardsCategory();
+      if (standardsCategory && otherStandardsCategory){
+        if (*standardsCategory != otherStandardsCategory){
+          continue;
+        }
+      } else if (standardsCategory || otherStandardsCategory){
         continue;
       }
 
@@ -587,6 +642,8 @@ namespace detail {
 
     boost::optional<std::string> materialStandard = this->materialStandard();
 
+    boost::optional<std::string> standardsCategory = this->standardsCategory();
+
     boost::optional<std::string> compositeFramingDepth = this->compositeFramingDepth();
 
     // include values from json
@@ -599,6 +656,13 @@ namespace detail {
       if (materialStandard){
         QString tmp = material["material_standard"].toString();
         if (toString(tmp) != *materialStandard){
+          continue;
+        }
+      }
+
+      if (standardsCategory){
+        QString tmp = material["code_category"].toString();
+        if (toString(tmp) != *standardsCategory){
           continue;
         }
       }
@@ -621,6 +685,15 @@ namespace detail {
           continue;
         }
       } else if (materialStandard || otherMaterialStandard){
+        continue;
+      }
+
+      boost::optional<std::string> otherStandardsCategory = other.standardsCategory();
+      if (standardsCategory && otherStandardsCategory){
+        if (*standardsCategory != otherStandardsCategory){
+          continue;
+        }
+      } else if (standardsCategory || otherStandardsCategory){
         continue;
       }
 
@@ -666,6 +739,8 @@ namespace detail {
 
     boost::optional<std::string> materialStandard = this->materialStandard();
 
+    boost::optional<std::string> standardsCategory = this->standardsCategory();
+
     boost::optional<std::string> compositeFramingSize = this->compositeFramingSize();
 
     // include values from json
@@ -678,6 +753,13 @@ namespace detail {
       if (materialStandard){
         QString tmp = material["material_standard"].toString();
         if (toString(tmp) != *materialStandard){
+          continue;
+        }
+      }
+
+      if (standardsCategory){
+        QString tmp = material["code_category"].toString();
+        if (toString(tmp) != *standardsCategory){
           continue;
         }
       }
@@ -700,6 +782,15 @@ namespace detail {
           continue;
         }
       } else if (materialStandard || otherMaterialStandard){
+        continue;
+      }
+
+      boost::optional<std::string> otherStandardsCategory = other.standardsCategory();
+      if (standardsCategory && otherStandardsCategory){
+        if (*standardsCategory != otherStandardsCategory){
+          continue;
+        }
+      } else if (standardsCategory || otherStandardsCategory){
         continue;
       }
 
@@ -745,6 +836,8 @@ namespace detail {
 
     boost::optional<std::string> materialStandard = this->materialStandard();
 
+    boost::optional<std::string> standardsCategory = this->standardsCategory();
+
     boost::optional<std::string> compositeCavityInsulation = this->compositeCavityInsulation();
 
     // include values from json
@@ -757,6 +850,13 @@ namespace detail {
       if (materialStandard){
         QString tmp = material["material_standard"].toString();
         if (toString(tmp) != *materialStandard){
+          continue;
+        }
+      }
+
+      if (standardsCategory){
+        QString tmp = material["code_category"].toString();
+        if (toString(tmp) != *standardsCategory){
           continue;
         }
       }
@@ -779,6 +879,15 @@ namespace detail {
           continue;
         }
       } else if (materialStandard || otherMaterialStandard){
+        continue;
+      }
+
+      boost::optional<std::string> otherStandardsCategory = other.standardsCategory();
+      if (standardsCategory && otherStandardsCategory){
+        if (*standardsCategory != otherStandardsCategory){
+          continue;
+        }
+      } else if (standardsCategory || otherStandardsCategory){
         continue;
       }
 
@@ -836,6 +945,14 @@ namespace detail {
   void StandardsInformationMaterial_Impl::setStandardsCategory(const std::string& standardsCategory) {
     bool result = setString(OS_StandardsInformation_MaterialFields::StandardsCategory, standardsCategory);
     OS_ASSERT(result);
+
+    if (!isCompositeMaterial()){
+      resetCompositeFramingMaterial();
+      resetCompositeFramingConfiguration();
+      resetCompositeFramingDepth();
+      resetCompositeFramingSize();
+      resetCompositeCavityInsulation();
+    }
   }
 
   void StandardsInformationMaterial_Impl::resetStandardsCategory() {
@@ -953,6 +1070,10 @@ boost::optional<std::string> StandardsInformationMaterial::standardsCategory() c
 
 std::vector<std::string> StandardsInformationMaterial::suggestedStandardsCategories() const {
   return getImpl<detail::StandardsInformationMaterial_Impl>()->suggestedStandardsCategories();
+}
+
+bool StandardsInformationMaterial::isCompositeMaterial() const {
+  return getImpl<detail::StandardsInformationMaterial_Impl>()->isCompositeMaterial();
 }
 
 boost::optional<std::string> StandardsInformationMaterial::standardsIdentifier() const {
