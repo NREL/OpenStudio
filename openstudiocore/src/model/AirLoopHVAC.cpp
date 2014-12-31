@@ -794,7 +794,7 @@ namespace detail {
     }
   }
 
-  std::vector<ThermalZone> AirLoopHVAC_Impl::thermalZones()
+  std::vector<ThermalZone> AirLoopHVAC_Impl::thermalZones() const
   {
     std::vector<ModelObject> objects = demandComponents(IddObjectType::OS_ThermalZone);
     //std::vector<ModelObject> v = this->demandComponents( IddObjectType::OS_AirLoopHVAC_ZoneSplitter );
@@ -980,22 +980,22 @@ AirLoopHVAC::AirLoopHVAC(std::shared_ptr<detail::AirLoopHVAC_Impl> impl)
   : Loop(impl)
 {}
 
-Node AirLoopHVAC::supplyInletNode()
+Node AirLoopHVAC::supplyInletNode() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->supplyInletNode();
 }
 
-std::vector<Node> AirLoopHVAC::supplyOutletNodes()
+std::vector<Node> AirLoopHVAC::supplyOutletNodes() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->supplyOutletNodes();
 }
 
-std::vector<Node> AirLoopHVAC::demandInletNodes()
+std::vector<Node> AirLoopHVAC::demandInletNodes() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->demandInletNodes();
 }
 
-Node AirLoopHVAC::demandOutletNode()
+Node AirLoopHVAC::demandOutletNode() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->demandOutletNode();
 }
@@ -1107,12 +1107,12 @@ boost::optional<Node> AirLoopHVAC::supplyMixerOutletNode() {
   LOG_AND_THROW("Not implemented.");
 }
 
-Node AirLoopHVAC::supplyOutletNode()
+Node AirLoopHVAC::supplyOutletNode() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->supplyOutletNode();
 }
 
-Node AirLoopHVAC::demandInletNode()
+Node AirLoopHVAC::demandInletNode() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->demandInletNode();
 }
@@ -1147,7 +1147,7 @@ SizingSystem AirLoopHVAC::sizingSystem() const
   return getImpl<detail::AirLoopHVAC_Impl>()->sizingSystem();
 }
 
-std::vector<ThermalZone> AirLoopHVAC::thermalZones()
+std::vector<ThermalZone> AirLoopHVAC::thermalZones() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->thermalZones();
 }

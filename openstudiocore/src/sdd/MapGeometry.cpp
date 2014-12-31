@@ -77,6 +77,8 @@
 #include "../model/WaterUseEquipmentDefinition.hpp"
 #include "../model/WaterUseEquipmentDefinition_Impl.hpp"
 #include "../model/ThermostatSetpointDualSetpoint.hpp"
+#include "../model/AirLoopHVAC.hpp"
+#include "../model/AirLoopHVAC_Impl.hpp"
 
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/Geometry.hpp"
@@ -1673,6 +1675,28 @@ namespace sdd {
       boost::optional<QDomElement> thermalZoneElement = translateThermalZone(thermalZone, doc);
       if (thermalZoneElement){
         result.appendChild(*thermalZoneElement);
+      }
+
+      if (m_progressBar){
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
+
+    // translate AirLoopHVAC systems
+    auto airLoops = building.model().getConcreteModelObjects<model::AirLoopHVAC>();
+    std::sort(airLoops.begin(),airLoops.end(),WorkspaceObjectNameLess());
+
+    if (m_progressBar) {
+      m_progressBar->setWindowTitle(toString("Translating AirLoopHVAC Systems"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum(airLoops.size());
+      m_progressBar->setValue(0);
+    }
+
+    for (const auto & airLoop : airLoops) {
+      auto airLoopElement = translateAirLoopHVAC(airLoop,doc);
+      if (airLoopElement) {
+        result.appendChild(*airLoopElement);
       }
 
       if (m_progressBar){

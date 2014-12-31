@@ -41,6 +41,7 @@
 #include "../model/CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp"
 #include "../model/CoilCoolingDXSingleSpeed.hpp"
 #include "../model/CoilCoolingDXTwoSpeed.hpp"
+#include "../model/CoilCoolingDXMultiSpeed.hpp"
 #include "../model/CoilHeatingGas.hpp"
 #include "../model/CoilHeatingElectric.hpp"
 #include "../model/CoilHeatingDXSingleSpeed.hpp"
@@ -6766,6 +6767,138 @@ QDomElement ReverseTranslator::findAirSysElement(const QString & airSysName,cons
   }
 
   return QDomElement();
+}
+
+boost::optional<QDomElement> ForwardTranslator::translateAirLoopHVAC(const model::AirLoopHVAC& airLoop, QDomDocument& doc)
+{
+  auto result = doc.createElement("AirSys");
+  m_translatedObjects[airLoop.handle()] = result;
+  
+  // Name
+  auto name = airLoop.name().get();
+  auto nameElement = doc.createElement("Name");
+  result.appendChild(nameElement);
+  nameElement.appendChild(doc.createTextNode(escapeName(name)));
+  
+  // Type
+  // 1:  "PVAV"
+  // 2:  "VAV"
+  // 3:  "SZAC"
+  // 4:  "SZHP"
+  // 5:  "SZVAVAC"
+  // 6:  "SZVAVHP"
+  // 7:  "HV"
+  // 8:  "Exhaust" - TODO figure out how to identify this one
+  
+  const std::string PVAV = "PVAV";
+  const std::string VAV = "VAV";
+  const std::string SZAC = "SZAC";
+  const std::string SZHP = "SZHP";
+  const std::string SZVAVAC = "SZVAVAC";
+  const std::string SZVAVHP = "SZVAVHP";
+  const std::string HV = "HV";
+  const std::string EXHAUST = "EXHAUST";
+
+  std::string type;
+
+  auto variableFans = airLoop.supplyComponents(model::FanVariableVolume::iddObjectType());
+  auto coilHeatingDXSingleSpeeds = airLoop.supplyComponents(model::CoilHeatingDXSingleSpeed::iddObjectType());
+  auto coilCoolingDXSingleSpeeds = airLoop.supplyComponents(model::CoilCoolingDXSingleSpeed::iddObjectType());
+  auto coilCoolingDXTwoSpeeds = airLoop.supplyComponents(model::CoilCoolingDXTwoSpeed::iddObjectType());
+  auto coilCoolingDXMultiSpeeds = airLoop.supplyComponents(model::CoilCoolingDXMultiSpeed::iddObjectType());
+  auto coilCoolingWaters = airLoop.supplyComponents(model::CoilCoolingWater::iddObjectType());
+  auto zones = airLoop.thermalZones();
+  auto spms = airLoop.supplyOutletNode().setpointManagers();
+  auto singleZoneReheats = subsetCastVector<model::SetpointManagerSingleZoneReheat>(spms);
+
+  if( coilCoolingDXTwoSpeeds.empty() &&
+    coilCoolingDXSingleSpeeds.empty() &&
+    coilCoolingDXMultiSpeeds.empty() &&
+    coilCoolingWaters.empty() )
+  {
+    type = HV;
+  } else {
+    if( ! variableFans.empty() ) { // Variable speed fan
+      if( ! singleZoneReheats.empty() ) { // Single zone reheat SPM
+        if( ! coilHeatingDXSingleSpeeds.empty() ) { // DX Heating (Heat pump)
+          type = SZVAVHP;
+        } else { // Not DX Heating (No heat pump)
+          type = SZVAVAC;
+        }
+      } else { // Anything besides single zone reheat
+        if( ! coilCoolingWaters.empty() ) { // Chilled water coil
+          type = VAV;
+        } else { // No chilled water coil
+          type = PVAV;
+        }
+      }
+    } else { // Not variable speed fan
+      if( ! singleZoneReheats.empty() ) { // Single zone reheat SPM
+        if( ! coilHeatingDXSingleSpeeds.empty() ) { // DX Heating (Heat pump)
+          type = SZHP;
+        } else { // Not DX Heating (No heat pump)
+          type = SZAC;
+        }
+      } else {
+        LOG(Warn,airLoop.briefDescription() << " does not directly map to an air system type. Assuming VAV even though there is no variable speed fan.")
+        type = VAV;
+      }
+    }
+  }
+
+  OS_ASSERT( ! type.empty() );
+
+  auto typeElement = doc.createElement("Type");
+  result.appendChild(typeElement);
+  typeElement.appendChild(doc.createTextNode(escapeName(type)));
+
+  // TODO
+  // SubType
+  // 1:  "SinglePackage"
+  // 2:  "SplitSystem"
+  // 3:  "CRAC"
+  // 4:  "CRAH"
+
+  // NightCycleFanCtrl
+  auto nightCycleFanCtrlElement = doc.createElement("NightCycleFanCtrl");
+  result.appendChild(nightCycleFanCtrlElement);
+
+  // OpenStudio string to represent night cycle control method
+  auto osNightCycleFanCtrl = airLoop.nightCycleControlType();
+  // Convert to SDD string
+  std::string nightCycleFanCtrl;
+  if( istringEqual(osNightCycleFanCtrl,"CycleOnAny") ) {
+    nightCycleFanCtrl = "CycleOnCallAnyZone";
+  } else if( istringEqual(osNightCycleFanCtrl,"CycleOnAnyZoneFansOnly") ) {
+    nightCycleFanCtrl = "CycleZoneFansOnly";
+  } else {
+    nightCycleFanCtrl = "StaysOff";
+  }
+
+  nightCycleFanCtrlElement.appendChild(doc.createTextNode(escapeName(nightCycleFanCtrl)));
+
+  // Cnt
+  auto cntElement = doc.createElement("Cnt");
+  result.appendChild(cntElement);
+  cntElement.appendChild(doc.createTextNode("1"));
+
+  // FanPos
+  QString fanPos;
+  auto node = airLoop.supplyOutletNode();
+  auto inletComp = node.inletModelObject();
+  OS_ASSERT(inletComp);
+  if( inletComp->optionalCast<model::FanConstantVolume>() || inletComp->optionalCast<model::FanVariableVolume>() )
+    fanPos = "DrawThrough"; 
+  else
+    fanPos = "BlowThrough";
+  auto fanPosElement = doc.createElement("FanPos");
+  result.appendChild(fanPosElement);
+  fanPosElement.appendChild(doc.createTextNode(fanPos));
+
+  // TODO
+  // ClgCtrl 
+  
+  return result;
 }
 
 } // sdd
