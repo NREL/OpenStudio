@@ -38,14 +38,8 @@ namespace openstudio {
 
 // StandardsInformationMaterialWidget
 
-StandardsInformationMaterialWidget::StandardsInformationMaterialWidget(bool isIP, QWidget * parent)
-  : QWidget(parent),
-    m_isIP(isIP),
-    m_populateFieldsRequested(false)
-{
-}
-
-void StandardsInformationMaterialWidget::addToLayout(QGridLayout * mainGridLayout, int & row)
+StandardsInformationMaterialWidget::StandardsInformationMaterialWidget(bool isIP, QGridLayout * mainGridLayout, int & row)
+  : QWidget(mainGridLayout->parentWidget())
 {
   QVBoxLayout * vLayout = nullptr;
 
@@ -216,7 +210,7 @@ void StandardsInformationMaterialWidget::addToLayout(QGridLayout * mainGridLayou
 
   isConnected = connect(m_compositeFramingSize, &QComboBox::currentTextChanged, this, &openstudio::StandardsInformationMaterialWidget::compositeFramingSizeChanged);
   OS_ASSERT(isConnected);
-  
+
   // Composite Cavity Insulation
   vLayout = new QVBoxLayout();
 
@@ -239,9 +233,13 @@ void StandardsInformationMaterialWidget::addToLayout(QGridLayout * mainGridLayou
   line = new QFrame();
   line->setFrameShape(QFrame::HLine);
   line->setFrameShadow(QFrame::Sunken);
-  mainGridLayout->addWidget(line, row++, 0, 1, 3);  
+  mainGridLayout->addWidget(line, row++, 0, 1, 3);
 
   hideComposite();
+}
+
+StandardsInformationMaterialWidget::~StandardsInformationMaterialWidget()
+{
 }
 
 void StandardsInformationMaterialWidget::attach(openstudio::model::Material & material)
@@ -272,7 +270,8 @@ void StandardsInformationMaterialWidget::detach()
 {
   m_material.reset();
 
-  if (m_standardsInformation){ // TODO
+  if (m_standardsInformation){ 
+    // DLM: this was never attached to anything
     disconnect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), 0, this, 0);
     m_standardsInformation.reset();
   }
@@ -338,9 +337,12 @@ void StandardsInformationMaterialWidget::disableComposite()
 
 void StandardsInformationMaterialWidget::requestPopulateFields()
 {
+  this;
+
   if (!m_populateFieldsRequested){
     m_populateFieldsRequested = true;
 
+    //populateFields();
     QTimer::singleShot(0, this, SLOT(populateFields()));
     //QTimer::singleShot(0, this, &openstudio::StandardsInformationMaterialWidget::populateFields); // Qt 5.4 only
   }
@@ -348,6 +350,8 @@ void StandardsInformationMaterialWidget::requestPopulateFields()
 
 void StandardsInformationMaterialWidget::populateFields()
 {
+  this;
+
   m_populateFieldsRequested = false;
 
   populateStandards();

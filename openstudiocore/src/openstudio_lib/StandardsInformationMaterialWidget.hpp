@@ -50,15 +50,13 @@ class StandardsInformationMaterialWidget : public QWidget
 
   public:
 
-    StandardsInformationMaterialWidget(bool isIP, QWidget * parent = 0);
+    StandardsInformationMaterialWidget(bool isIP, QGridLayout * mainGridLayout, int & row);
 
-    virtual ~StandardsInformationMaterialWidget() {}
+    virtual ~StandardsInformationMaterialWidget();
 
     void attach(openstudio::model::Material & material);
 
     void detach();
-
-    void addToLayout(QGridLayout * mainGridLayout, int & row);
 
     void showComposite();
 
@@ -93,14 +91,15 @@ class StandardsInformationMaterialWidget : public QWidget
     QComboBox * m_compositeCavityInsulation = nullptr;
     QLabel * m_compositeCavityInsulationLabel = nullptr;
 
-    bool m_isIP;
+    bool m_isIP = false;
 
     boost::optional<openstudio::model::Material> m_material;
 
     boost::optional<openstudio::model::StandardsInformationMaterial> m_standardsInformation;
 
+    bool m_populateFieldsRequested = false;
+
     void requestPopulateFields();
-    bool m_populateFieldsRequested;
 
   public slots:
 
