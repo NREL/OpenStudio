@@ -42,6 +42,9 @@ namespace detail {
 
 } // detail
 
+//helper method to do unit conversions;
+boost::optional<double> unitToUnit(const double& val, const std::string& ipUnitString, const std::string& siUnitString);
+
 /** \class UnitSystem
  *  \brief Unit systems supported by OpenStudio's runtime units utility.
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp.

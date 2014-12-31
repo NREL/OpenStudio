@@ -19,6 +19,8 @@
 
 #include "Unit.hpp"
 #include "Unit_Impl.hpp"
+#include "Quantity.hpp"
+#include "QuantityConverter.hpp"
 
 #include "ScaleFactory.hpp"
 #include "QuantityRegex.hpp"
@@ -704,6 +706,30 @@ Unit operator/(const Unit& lUnit,const Unit& rUnit) {
 Unit pow(const Unit& rUnit,int expNum,int expDenom) {
   Unit result = rUnit.clone();
   return result.pow(expNum,expDenom);
+}
+
+boost::optional<double> unitToUnit(const double& val, const std::string& fstUnitString, const std::string& secUnitString)
+{
+  //create the units from the strings
+  boost::optional<Unit> fstUnit = UnitFactory::instance().createUnit(fstUnitString);
+  boost::optional<Unit> secUnit = UnitFactory::instance().createUnit(secUnitString);
+
+  //make sure both unit strings were valid
+  if (fstUnit && secUnit) {
+
+    //make the IP quantity
+    Quantity ipQuant = Quantity(val, *fstUnit);
+
+    //convert the IP quantity from IP to SI
+    boost::optional<Quantity> siQuant = QuantityConverter::instance().convert(ipQuant, *secUnit);
+  
+    //if the conversion 
+    if (siQuant) {
+      return siQuant->value();
+    }
+  }
+
+  return boost::none;
 }
 
 } // openstudio

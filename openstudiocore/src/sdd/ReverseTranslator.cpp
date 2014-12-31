@@ -1548,31 +1548,31 @@ boost::optional<model::PlantLoop> ReverseTranslator::serviceHotWaterLoopForSuppl
   return result;
 }
 
-//TODO probably should be in OS proper
-//helper method to do unit conversions;
-boost::optional<double> ReverseTranslator::unitToUnit(const double& val, const std::string& fstUnitString, const std::string& secUnitString)
-{
-  //create the units from the strings
-  boost::optional<Unit> fstUnit = UnitFactory::instance().createUnit(fstUnitString);
-  boost::optional<Unit> secUnit = UnitFactory::instance().createUnit(secUnitString);
-
-  //make sure both unit strings were valid
-  if (fstUnit && secUnit) {
-
-    //make the IP quantity
-    Quantity ipQuant = Quantity(val, *fstUnit);
-
-    //convert the IP quantity from IP to SI
-    boost::optional<Quantity> siQuant = QuantityConverter::instance().convert(ipQuant, *secUnit);
-  
-    //if the conversion 
-    if (siQuant) {
-      return siQuant->value();
-    }
-  }
-
-  return boost::none;
-}
+////TODO probably should be in OS proper
+////helper method to do unit conversions;
+//boost::optional<double> ReverseTranslator::unitToUnit(const double& val, const std::string& fstUnitString, const std::string& secUnitString)
+//{
+//  //create the units from the strings
+//  boost::optional<Unit> fstUnit = UnitFactory::instance().createUnit(fstUnitString);
+//  boost::optional<Unit> secUnit = UnitFactory::instance().createUnit(secUnitString);
+//
+//  //make sure both unit strings were valid
+//  if (fstUnit && secUnit) {
+//
+//    //make the IP quantity
+//    Quantity ipQuant = Quantity(val, *fstUnit);
+//
+//    //convert the IP quantity from IP to SI
+//    boost::optional<Quantity> siQuant = QuantityConverter::instance().convert(ipQuant, *secUnit);
+//  
+//    //if the conversion 
+//    if (siQuant) {
+//      return siQuant->value();
+//    }
+//  }
+//
+//  return boost::none;
+//}
 
 
 bool ReverseTranslator::autosize() const
