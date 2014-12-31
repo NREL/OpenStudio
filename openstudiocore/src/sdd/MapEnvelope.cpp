@@ -773,7 +773,7 @@ namespace sdd {
       // Open - optional, done
 
       boost::optional<std::string> type;
-      boost::optional<std::string> certificationMthd = "NFRCRated";
+      boost::optional<std::string> certificationMthd = std::string("NFRCRated");
       boost::optional<double> uFactor;
       boost::optional<std::string> open;
 
@@ -935,7 +935,7 @@ namespace sdd {
       }
 
       boost::optional<std::string> assmContext;
-      boost::optional<std::string> certificationMthd = "NFRCRated"; // default
+      boost::optional<std::string> certificationMthd = std::string("NFRCRated"); // default
       boost::optional<std::string> fenestrationAssemblyContext = info.fenestrationAssemblyContext();
       if (fenestrationAssemblyContext){
         if (istringEqual("Manufactured", *fenestrationAssemblyContext)){
