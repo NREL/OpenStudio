@@ -78,13 +78,21 @@
 #include "../model/CoolingTowerVariableSpeed.hpp"
 #include "../model/CoolingTowerVariableSpeed_Impl.hpp"
 #include "../model/SetpointManagerFollowOutdoorAirTemperature.hpp"
+#include "../model/SetpointManagerFollowOutdoorAirTemperature_Impl.hpp"
 #include "../model/SetpointManagerMixedAir.hpp"
+#include "../model/SetpointManagerMixedAir_Impl.hpp"
 #include "../model/SetpointManagerSingleZoneReheat.hpp"
 #include "../model/SetpointManagerSingleZoneReheat_Impl.hpp"
 #include "../model/SetpointManagerScheduled.hpp"
+#include "../model/SetpointManagerScheduled_Impl.hpp"
+#include "../model/SetpointManagerScheduledDualSetpoint.hpp"
+#include "../model/SetpointManagerScheduledDualSetpoint_Impl.hpp"
 #include "../model/SetpointManagerWarmest.hpp"
+#include "../model/SetpointManagerWarmest_Impl.hpp"
 #include "../model/SetpointManagerWarmestTemperatureFlow.hpp"
+#include "../model/SetpointManagerWarmestTemperatureFlow_Impl.hpp"
 #include "../model/SetpointManagerOutdoorAirReset.hpp"
+#include "../model/SetpointManagerOutdoorAirReset_Impl.hpp"
 #include "../model/ThermalZone.hpp"
 #include "../model/ThermalZone_Impl.hpp"
 #include "../model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp"
@@ -96,6 +104,7 @@
 #include "../model/AirTerminalSingleDuctSeriesPIUReheat.hpp"
 #include "../model/AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp"
 #include "../model/ThermostatSetpointDualSetpoint.hpp"
+#include "../model/ThermostatSetpointDualSetpoint_Impl.hpp"
 #include "../model/Schedule.hpp"
 #include "../model/Schedule_Impl.hpp"
 #include "../model/FanVariableVolume.hpp"
@@ -6773,6 +6782,18 @@ boost::optional<QDomElement> ForwardTranslator::translateAirLoopHVAC(const model
 {
   auto result = doc.createElement("AirSys");
   m_translatedObjects[airLoop.handle()] = result;
+
+  // Gather info about the system makeup
+  auto variableFans = airLoop.supplyComponents(model::FanVariableVolume::iddObjectType());
+  auto coilHeatingDXSingleSpeeds = airLoop.supplyComponents(model::CoilHeatingDXSingleSpeed::iddObjectType());
+  auto coilCoolingDXSingleSpeeds = airLoop.supplyComponents(model::CoilCoolingDXSingleSpeed::iddObjectType());
+  auto coilCoolingDXTwoSpeeds = airLoop.supplyComponents(model::CoilCoolingDXTwoSpeed::iddObjectType());
+  auto coilCoolingDXMultiSpeeds = airLoop.supplyComponents(model::CoilCoolingDXMultiSpeed::iddObjectType());
+  auto coilCoolingWaters = airLoop.supplyComponents(model::CoilCoolingWater::iddObjectType());
+  auto zones = airLoop.thermalZones();
+  auto supplyOutletNode = airLoop.supplyOutletNode();
+  auto spms = supplyOutletNode.setpointManagers();
+  auto singleZoneReheats = subsetCastVector<model::SetpointManagerSingleZoneReheat>(spms);
   
   // Name
   auto name = airLoop.name().get();
@@ -6800,16 +6821,6 @@ boost::optional<QDomElement> ForwardTranslator::translateAirLoopHVAC(const model
   const std::string EXHAUST = "EXHAUST";
 
   std::string type;
-
-  auto variableFans = airLoop.supplyComponents(model::FanVariableVolume::iddObjectType());
-  auto coilHeatingDXSingleSpeeds = airLoop.supplyComponents(model::CoilHeatingDXSingleSpeed::iddObjectType());
-  auto coilCoolingDXSingleSpeeds = airLoop.supplyComponents(model::CoilCoolingDXSingleSpeed::iddObjectType());
-  auto coilCoolingDXTwoSpeeds = airLoop.supplyComponents(model::CoilCoolingDXTwoSpeed::iddObjectType());
-  auto coilCoolingDXMultiSpeeds = airLoop.supplyComponents(model::CoilCoolingDXMultiSpeed::iddObjectType());
-  auto coilCoolingWaters = airLoop.supplyComponents(model::CoilCoolingWater::iddObjectType());
-  auto zones = airLoop.thermalZones();
-  auto spms = airLoop.supplyOutletNode().setpointManagers();
-  auto singleZoneReheats = subsetCastVector<model::SetpointManagerSingleZoneReheat>(spms);
 
   if( coilCoolingDXTwoSpeeds.empty() &&
     coilCoolingDXSingleSpeeds.empty() &&
@@ -6884,8 +6895,7 @@ boost::optional<QDomElement> ForwardTranslator::translateAirLoopHVAC(const model
 
   // FanPos
   QString fanPos;
-  auto node = airLoop.supplyOutletNode();
-  auto inletComp = node.inletModelObject();
+  auto inletComp = supplyOutletNode.inletModelObject();
   OS_ASSERT(inletComp);
   if( inletComp->optionalCast<model::FanConstantVolume>() || inletComp->optionalCast<model::FanVariableVolume>() )
     fanPos = "DrawThrough"; 
@@ -6895,9 +6905,115 @@ boost::optional<QDomElement> ForwardTranslator::translateAirLoopHVAC(const model
   result.appendChild(fanPosElement);
   fanPosElement.appendChild(doc.createTextNode(fanPos));
 
-  // TODO
   // ClgCtrl 
-  
+  for( const auto & spm : spms ) {
+    if( istringEqual(spm.controlVariable(),"Temperature") ) {
+      if( auto tempSPM = spm.optionalCast<model::SetpointManagerFollowOutdoorAirTemperature>() ) {
+        // SetpointManagerFollowOutdoorAirTemperature is not supported by CBECC so it is converted to oa reset.
+        LOG(Warn,tempSPM->briefDescription() << " is translated to ClgCtrl type OutsideAirReset in CBECC.");
+        auto clgCtrlElement = doc.createElement("ClgCtrl");
+        result.appendChild(clgCtrlElement);
+        clgCtrlElement.appendChild(doc.createTextNode("OutsideAirReset"));
+ 
+        auto clRstSupHiElement = doc.createElement("ClRstSupHi");
+        result.appendChild(clRstSupHiElement);
+        clRstSupHiElement.appendChild(doc.createTextNode("100"));
+ 
+        auto clRstSupLowElement = doc.createElement("ClRstSupLow");
+        result.appendChild(clRstSupLowElement);
+        clRstSupLowElement.appendChild(doc.createTextNode("0"));
+
+        auto clRstOutdrHiElement = doc.createElement("ClRstOutdrHi");
+        result.appendChild(clRstOutdrHiElement);
+        clRstOutdrHiElement.appendChild(doc.createTextNode("100"));
+
+        auto clRstOutdrLowElement = doc.createElement("ClRstOutdrLow");
+        result.appendChild(clRstOutdrLowElement);
+        clRstOutdrLowElement.appendChild(doc.createTextNode("0"));
+      } else if( auto tempSPM = spm.optionalCast<model::SetpointManagerOutdoorAirReset>() ) {
+        auto clgCtrlElement = doc.createElement("ClgCtrl");
+        result.appendChild(clgCtrlElement);
+        clgCtrlElement.appendChild(doc.createTextNode("OutsideAirReset"));
+ 
+        auto clRstSupHiElement = doc.createElement("ClRstSupHi");
+        result.appendChild(clRstSupHiElement);
+        auto clRstSupHi = unitToUnit(tempSPM->setpointatOutdoorHighTemperature(),"C","F").get();
+        clRstSupHiElement.appendChild(doc.createTextNode(QString::number(clRstSupHi)));
+ 
+        auto clRstSupLowElement = doc.createElement("ClRstSupLow");
+        result.appendChild(clRstSupLowElement);
+        auto clRstSupLow = unitToUnit(tempSPM->setpointatOutdoorLowTemperature(),"C","F").get();
+        clRstSupLowElement.appendChild(doc.createTextNode(QString::number(clRstSupLow)));
+
+        auto clRstOutdrHiElement = doc.createElement("ClRstOutdrHi");
+        result.appendChild(clRstOutdrHiElement);
+        auto clRstOutdrHi = unitToUnit(tempSPM->outdoorHighTemperature(),"C","F").get();
+        clRstOutdrHiElement.appendChild(doc.createTextNode(QString::number(clRstOutdrHi)));
+
+        auto clRstOutdrLowElement = doc.createElement("ClRstOutdrLow");
+        result.appendChild(clRstOutdrLowElement);
+        auto clRstOutdrLow = unitToUnit(tempSPM->outdoorHighTemperature(),"C","F").get();
+        clRstOutdrLowElement.appendChild(doc.createTextNode(QString::number(clRstOutdrLow)));
+      } else if( auto tempSPM = spm.optionalCast<model::SetpointManagerScheduled>() ) {
+        auto clgCtrlElement = doc.createElement("ClgCtrl");
+        result.appendChild(clgCtrlElement);
+        clgCtrlElement.appendChild(doc.createTextNode("Scheduled"));
+
+        auto clgSetPtSchRefElement = doc.createElement("ClgSetptSchRef");
+        result.appendChild(clgSetPtSchRefElement);
+        const auto & schedule = tempSPM->schedule();
+        clgSetPtSchRefElement.appendChild(doc.createTextNode(escapeName(schedule.name().get())));
+      } else if( auto tempSPM = spm.optionalCast<model::SetpointManagerScheduledDualSetpoint>() ) {
+        LOG(Error,tempSPM->briefDescription() << " is not supported by CBECC.");
+      } else if( auto tempSPM = spm.optionalCast<model::SetpointManagerSingleZoneReheat>() ) {
+        auto clgCtrlElement = doc.createElement("ClgCtrl");
+        result.appendChild(clgCtrlElement);
+        clgCtrlElement.appendChild(doc.createTextNode("NoSATControl"));
+      } else if( auto tempSPM = spm.optionalCast<model::SetpointManagerWarmestTemperatureFlow>() ) {
+        auto clgCtrlElement = doc.createElement("ClgCtrl");
+        result.appendChild(clgCtrlElement);
+        if( istringEqual(tempSPM->strategy(),"FlowFirst") ) {
+          clgCtrlElement.appendChild(doc.createTextNode("WarmestResetFlowFirst"));
+        } else {
+          clgCtrlElement.appendChild(doc.createTextNode("WarmestResetTemperatureFirst"));
+        }
+
+        auto clRstSupHiElement = doc.createElement("ClRstSupHi");
+        result.appendChild(clRstSupHiElement);
+        auto clRstSupHi = unitToUnit(tempSPM->maximumSetpointTemperature(),"C","F").get();
+        clRstSupHiElement.appendChild(doc.createTextNode(QString::number(clRstSupHi)));
+
+        auto clRstSupLowElement = doc.createElement("ClRstSupLow");
+        result.appendChild(clRstSupLowElement);
+        auto clRstSupLow = unitToUnit(tempSPM->maximumSetpointTemperature(),"C","F").get();
+        clRstSupLowElement.appendChild(doc.createTextNode(QString::number(clRstSupLow)));
+
+        auto dsgnAirFlowMinElement = doc.createElement("DsgnAirFlowMin");
+        result.appendChild(dsgnAirFlowMinElement);
+        auto dsgnAirFlowMin = tempSPM->minimumTurndownRatio();
+        dsgnAirFlowMinElement.appendChild(doc.createTextNode(QString::number(dsgnAirFlowMin)));
+      } else if( auto tempSPM = spm.optionalCast<model::SetpointManagerWarmest>() ) {
+        auto clgCtrlElement = doc.createElement("ClgCtrl");
+        result.appendChild(clgCtrlElement);
+        clgCtrlElement.appendChild(doc.createTextNode("WarmestReset"));
+
+        auto clRstSupHiElement = doc.createElement("ClRstSupHi");
+        result.appendChild(clRstSupHiElement);
+        auto clRstSupHi = unitToUnit(tempSPM->maximumSetpointTemperature(),"C","F").get();
+        clRstSupHiElement.appendChild(doc.createTextNode(QString::number(clRstSupHi)));
+
+        auto clRstSupLowElement = doc.createElement("ClRstSupLow");
+        result.appendChild(clRstSupLowElement);
+        auto clRstSupLow = unitToUnit(tempSPM->maximumSetpointTemperature(),"C","F").get();
+        clRstSupLowElement.appendChild(doc.createTextNode(QString::number(clRstSupLow)));
+      }
+
+      break;
+    }
+  }
+    
+
+
   return result;
 }
 
