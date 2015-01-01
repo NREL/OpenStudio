@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef CONTAM_PRJREADER_HPP
-#define CONTAM_PRJREADER_HPP
+#ifndef AIRFLOW_CONTAM_PRJREADER_HPP
+#define AIRFLOW_CONTAM_PRJREADER_HPP
 
 #include <QFile>
 #include <QStringList>
@@ -211,4 +211,4 @@ template <class T> QVector<QSharedPointer<T> > Reader::readElementQVector(std::s
 } // contam
 } // openstudio
 
-#endif // CONTAM_PRJREADER_HPP
+#endif // AIRFLOW_CONTAM_PRJREADER_HPP

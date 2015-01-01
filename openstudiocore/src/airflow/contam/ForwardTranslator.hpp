@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef CONTAM_FORWARDTRANSLATOR_HPP
-#define CONTAM_FORWARDTRANSLATOR_HPP
+#ifndef AIRFLOW_CONTAM_FORWARDTRANSLATOR_HPP
+#define AIRFLOW_CONTAM_FORWARDTRANSLATOR_HPP
 
 #include "../AirflowAPI.hpp"
 
@@ -231,4 +231,4 @@ private:
 } // contam
 } // openstudio
 
-#endif // CONTAM_FORWARDTRANSLATOR_HPP
+#endif // AIRFLOW_CONTAM_FORWARDTRANSLATOR_HPP

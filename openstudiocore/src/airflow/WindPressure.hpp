@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef CONTAM_WINDPRESSURE_HPP
-#define CONTAM_WINDPRESSURE_HPP
+#ifndef AIRFLOW_WINDPRESSURE_HPP
+#define AIRFLOW_WINDPRESSURE_HPP
 
 #if _WIN32 || _MSC_VER
 #define WIND_API __declspec(dllexport)
@@ -41,4 +41,4 @@ double WIND_API pressureModifier(ShelterClass shelter, double H, double Href=10.
 } // wind
 } // openstudio
 
-#endif // CONTAM_WINDPRESSURE_HPP
+#endif // AIRFLOW_WINDPRESSURE_HPP

@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef CONTAM_PRJDEFINES_HPP
-#define CONTAM_PRJDEFINES_HPP
+#ifndef AIRFLOW_CONTAM_PRJDEFINES_HPP
+#define AIRFLOW_CONTAM_PRJDEFINES_HPP
 
 #define PRJFLOAT QString
 #define STR_TO_FLOAT(a) QString::fromStdString(a)
@@ -180,4 +180,4 @@ enum ZoneFlags {
 }
 }
 
-#endif // CONTAM_PRJDEFINES_HPP
+#endif // AIRFLOW_CONTAM_PRJDEFINES_HPP

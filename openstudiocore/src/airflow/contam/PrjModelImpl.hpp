@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef CONTAM_PRJMODELIMPL_HPP
-#define CONTAM_PRJMODELIMPL_HPP
+#ifndef AIRFLOW_CONTAM_PRJMODELIMPL_HPP
+#define AIRFLOW_CONTAM_PRJMODELIMPL_HPP
 
 #include "PrjDefines.hpp"
 #include "PrjReader.hpp"
@@ -569,4 +569,4 @@ template <class T> void IndexModelImpl::renumberVector(std::vector<T> &vector)
 } // contam
 } // openstudio
 
-#endif // CONTAM_PRJMODELIMPL_HPP
+#endif // AIRFLOW_CONTAM_PRJMODELIMPL_HPP

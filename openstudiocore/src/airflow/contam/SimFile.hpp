@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef CONTAM_SIMFILE_HPP
-#define CONTAM_SIMFILE_HPP
+#ifndef AIRFLOW_CONTAM_SIMFILE_HPP
+#define AIRFLOW_CONTAM_SIMFILE_HPP
 
 #include "PrjDefines.hpp"
 
@@ -110,4 +110,4 @@ private:
 } // contam
 } // openstudio
 
-#endif // CONTAM_SIMFILE_HPP
+#endif // AIRFLOW_CONTAM_SIMFILE_HPP
