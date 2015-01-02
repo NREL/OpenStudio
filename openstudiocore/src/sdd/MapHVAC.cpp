@@ -6939,22 +6939,22 @@ boost::optional<QDomElement> ForwardTranslator::translateAirLoopHVAC(const model
  
         auto clRstSupHiElement = doc.createElement("ClRstSupHi");
         result.appendChild(clRstSupHiElement);
-        auto clRstSupHi = unitToUnit(tempSPM->setpointatOutdoorHighTemperature(),"C","F").get();
+        auto clRstSupHi = convert(tempSPM->setpointatOutdoorHighTemperature(),"C","F").get();
         clRstSupHiElement.appendChild(doc.createTextNode(QString::number(clRstSupHi)));
  
         auto clRstSupLowElement = doc.createElement("ClRstSupLow");
         result.appendChild(clRstSupLowElement);
-        auto clRstSupLow = unitToUnit(tempSPM->setpointatOutdoorLowTemperature(),"C","F").get();
+        auto clRstSupLow = convert(tempSPM->setpointatOutdoorLowTemperature(),"C","F").get();
         clRstSupLowElement.appendChild(doc.createTextNode(QString::number(clRstSupLow)));
 
         auto clRstOutdrHiElement = doc.createElement("ClRstOutdrHi");
         result.appendChild(clRstOutdrHiElement);
-        auto clRstOutdrHi = unitToUnit(tempSPM->outdoorHighTemperature(),"C","F").get();
+        auto clRstOutdrHi = convert(tempSPM->outdoorHighTemperature(),"C","F").get();
         clRstOutdrHiElement.appendChild(doc.createTextNode(QString::number(clRstOutdrHi)));
 
         auto clRstOutdrLowElement = doc.createElement("ClRstOutdrLow");
         result.appendChild(clRstOutdrLowElement);
-        auto clRstOutdrLow = unitToUnit(tempSPM->outdoorHighTemperature(),"C","F").get();
+        auto clRstOutdrLow = convert(tempSPM->outdoorHighTemperature(),"C","F").get();
         clRstOutdrLowElement.appendChild(doc.createTextNode(QString::number(clRstOutdrLow)));
 
         m_translatedObjects[tempSPM->handle()] = clgCtrlElement;
@@ -6988,12 +6988,12 @@ boost::optional<QDomElement> ForwardTranslator::translateAirLoopHVAC(const model
 
         auto clRstSupHiElement = doc.createElement("ClRstSupHi");
         result.appendChild(clRstSupHiElement);
-        auto clRstSupHi = unitToUnit(tempSPM->maximumSetpointTemperature(),"C","F").get();
+        auto clRstSupHi = convert(tempSPM->maximumSetpointTemperature(),"C","F").get();
         clRstSupHiElement.appendChild(doc.createTextNode(QString::number(clRstSupHi)));
 
         auto clRstSupLowElement = doc.createElement("ClRstSupLow");
         result.appendChild(clRstSupLowElement);
-        auto clRstSupLow = unitToUnit(tempSPM->maximumSetpointTemperature(),"C","F").get();
+        auto clRstSupLow = convert(tempSPM->maximumSetpointTemperature(),"C","F").get();
         clRstSupLowElement.appendChild(doc.createTextNode(QString::number(clRstSupLow)));
 
         auto dsgnAirFlowMinElement = doc.createElement("DsgnAirFlowMin");
@@ -7009,12 +7009,12 @@ boost::optional<QDomElement> ForwardTranslator::translateAirLoopHVAC(const model
 
         auto clRstSupHiElement = doc.createElement("ClRstSupHi");
         result.appendChild(clRstSupHiElement);
-        auto clRstSupHi = unitToUnit(tempSPM->maximumSetpointTemperature(),"C","F").get();
+        auto clRstSupHi = convert(tempSPM->maximumSetpointTemperature(),"C","F").get();
         clRstSupHiElement.appendChild(doc.createTextNode(QString::number(clRstSupHi)));
 
         auto clRstSupLowElement = doc.createElement("ClRstSupLow");
         result.appendChild(clRstSupLowElement);
-        auto clRstSupLow = unitToUnit(tempSPM->maximumSetpointTemperature(),"C","F").get();
+        auto clRstSupLow = convert(tempSPM->maximumSetpointTemperature(),"C","F").get();
         clRstSupLowElement.appendChild(doc.createTextNode(QString::number(clRstSupLow)));
 
         m_translatedObjects[tempSPM->handle()] = clgCtrlElement;
