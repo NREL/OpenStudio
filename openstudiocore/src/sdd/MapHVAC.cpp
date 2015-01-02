@@ -6930,6 +6930,8 @@ boost::optional<QDomElement> ForwardTranslator::translateAirLoopHVAC(const model
         auto clRstOutdrLowElement = doc.createElement("ClRstOutdrLow");
         result.appendChild(clRstOutdrLowElement);
         clRstOutdrLowElement.appendChild(doc.createTextNode("0"));
+
+        m_translatedObjects[tempSPM->handle()] = clgCtrlElement;
       } else if( auto tempSPM = spm.optionalCast<model::SetpointManagerOutdoorAirReset>() ) {
         auto clgCtrlElement = doc.createElement("ClgCtrl");
         result.appendChild(clgCtrlElement);
@@ -6954,6 +6956,8 @@ boost::optional<QDomElement> ForwardTranslator::translateAirLoopHVAC(const model
         result.appendChild(clRstOutdrLowElement);
         auto clRstOutdrLow = unitToUnit(tempSPM->outdoorHighTemperature(),"C","F").get();
         clRstOutdrLowElement.appendChild(doc.createTextNode(QString::number(clRstOutdrLow)));
+
+        m_translatedObjects[tempSPM->handle()] = clgCtrlElement;
       } else if( auto tempSPM = spm.optionalCast<model::SetpointManagerScheduled>() ) {
         auto clgCtrlElement = doc.createElement("ClgCtrl");
         result.appendChild(clgCtrlElement);
@@ -6963,12 +6967,16 @@ boost::optional<QDomElement> ForwardTranslator::translateAirLoopHVAC(const model
         result.appendChild(clgSetPtSchRefElement);
         const auto & schedule = tempSPM->schedule();
         clgSetPtSchRefElement.appendChild(doc.createTextNode(escapeName(schedule.name().get())));
+
+        m_translatedObjects[tempSPM->handle()] = clgCtrlElement;
       } else if( auto tempSPM = spm.optionalCast<model::SetpointManagerScheduledDualSetpoint>() ) {
         LOG(Error,tempSPM->briefDescription() << " is not supported by CBECC.");
       } else if( auto tempSPM = spm.optionalCast<model::SetpointManagerSingleZoneReheat>() ) {
         auto clgCtrlElement = doc.createElement("ClgCtrl");
         result.appendChild(clgCtrlElement);
         clgCtrlElement.appendChild(doc.createTextNode("NoSATControl"));
+
+        m_translatedObjects[tempSPM->handle()] = clgCtrlElement;
       } else if( auto tempSPM = spm.optionalCast<model::SetpointManagerWarmestTemperatureFlow>() ) {
         auto clgCtrlElement = doc.createElement("ClgCtrl");
         result.appendChild(clgCtrlElement);
@@ -6992,6 +7000,8 @@ boost::optional<QDomElement> ForwardTranslator::translateAirLoopHVAC(const model
         result.appendChild(dsgnAirFlowMinElement);
         auto dsgnAirFlowMin = tempSPM->minimumTurndownRatio();
         dsgnAirFlowMinElement.appendChild(doc.createTextNode(QString::number(dsgnAirFlowMin)));
+
+        m_translatedObjects[tempSPM->handle()] = clgCtrlElement;
       } else if( auto tempSPM = spm.optionalCast<model::SetpointManagerWarmest>() ) {
         auto clgCtrlElement = doc.createElement("ClgCtrl");
         result.appendChild(clgCtrlElement);
@@ -7006,6 +7016,8 @@ boost::optional<QDomElement> ForwardTranslator::translateAirLoopHVAC(const model
         result.appendChild(clRstSupLowElement);
         auto clRstSupLow = unitToUnit(tempSPM->maximumSetpointTemperature(),"C","F").get();
         clRstSupLowElement.appendChild(doc.createTextNode(QString::number(clRstSupLow)));
+
+        m_translatedObjects[tempSPM->handle()] = clgCtrlElement;
       }
 
       break;
