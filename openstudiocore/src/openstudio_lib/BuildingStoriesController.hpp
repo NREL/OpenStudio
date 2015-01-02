@@ -30,7 +30,7 @@ class BuildingStoriesController : public ModelSubTabController
 
   public:
 
-    BuildingStoriesController(const model::Model & model);
+    BuildingStoriesController(bool isIP, const model::Model & model);
 
     virtual ~BuildingStoriesController() {}
 

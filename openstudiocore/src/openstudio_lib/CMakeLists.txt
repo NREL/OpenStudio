@@ -288,6 +288,10 @@ set(${target_name}_SRC
   SpaceTypesView.hpp
   StandardOpaqueMaterialInspectorView.cpp
   StandardOpaqueMaterialInspectorView.hpp
+  StandardsInformationConstructionWidget.cpp
+  StandardsInformationConstructionWidget.hpp
+  StandardsInformationMaterialWidget.cpp
+  StandardsInformationMaterialWidget.hpp
   SteamEquipmentInspectorView.cpp
   SteamEquipmentInspectorView.hpp
   SubSurfaceInspectorView.cpp
@@ -599,6 +603,8 @@ set(${target_name}_moc
   SpaceTypesTabView.hpp
   SpaceTypesView.hpp
   StandardOpaqueMaterialInspectorView.hpp
+  StandardsInformationConstructionWidget.hpp
+  StandardsInformationMaterialWidget.hpp
   SteamEquipmentInspectorView.hpp
   SubSurfaceInspectorView.hpp
   SubTabController.hpp

@@ -19,6 +19,8 @@
 
 #include "Unit.hpp"
 #include "Unit_Impl.hpp"
+#include "Quantity.hpp"
+#include "QuantityConverter.hpp"
 
 #include "ScaleFactory.hpp"
 #include "QuantityRegex.hpp"

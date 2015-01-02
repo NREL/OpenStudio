@@ -32,6 +32,7 @@
 #include "../../model/SubSurface.hpp"
 #include "../../model/DesignSpecificationOutdoorAir.hpp"
 #include "../../model/BuildingStory.hpp"
+#include "../../model/BuildingStory_Impl.hpp"
 #include "../../utilities/geometry/Point3d.hpp"
 #include "../../model/ThermostatSetpointDualSetpoint.hpp"
 #include "../../model/ThermostatSetpointDualSetpoint_Impl.hpp"
@@ -170,6 +171,40 @@ TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2012)
   EXPECT_TRUE(prjModel->setDef_T("297.15"));
   EXPECT_FALSE(prjModel->setDef_T("twoninetysevenpointonefive"));
   EXPECT_EQ(297.15,prjModel->def_T());
+}
+
+TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2012_BadStories)
+{
+  openstudio::path modelPath = (resourcesPath() / openstudio::toPath("contam") / openstudio::toPath("CONTAMTemplate.osm"));
+  openstudio::osversion::VersionTranslator vt;
+  boost::optional<openstudio::model::Model> optionalModel = vt.loadModel(modelPath);
+  ASSERT_TRUE(optionalModel);
+  openstudio::model::Model model = optionalModel.get();
+
+  boost::optional<openstudio::model::Model> demoModel = buildDemoModel2012(model);
+
+  ASSERT_TRUE(demoModel);
+
+  auto stories = demoModel.get().getConcreteModelObjects<openstudio::model::BuildingStory>();
+
+  EXPECT_EQ(1, stories.size());
+
+  stories[0].resetNominalZCoordinate();
+
+  openstudio::contam::ForwardTranslator translator;
+  boost::optional<openstudio::contam::IndexModel> prjModel = translator.translateModel(demoModel.get());
+  EXPECT_FALSE(prjModel);
+
+  stories[0].setNominalZCoordinate(0.0);
+  stories[0].resetNominalZCoordinate();
+
+  prjModel = translator.translateModel(demoModel.get());
+  EXPECT_FALSE(prjModel);
+
+  stories[0].remove();
+  prjModel = translator.translateModel(demoModel.get());
+  EXPECT_FALSE(prjModel);
+
 }
 
 TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2014)

@@ -35,9 +35,19 @@ OSSwitch2::OSSwitch2( QWidget * parent )
   setFlat(true);
   setFixedSize(63,21);
 
-  setObjectName("OnOffSliderButton");
+  makeOnOff();
 
   this->setCheckable(true);
+}
+
+void OSSwitch2::makeOnOff()
+{
+  setObjectName("OnOffSliderButton");
+}
+
+void OSSwitch2::makeTrueFalse()
+{
+  setObjectName("TrueFalseSliderButton");
 }
 
 void OSSwitch2::bind(model::ModelObject & modelObject,

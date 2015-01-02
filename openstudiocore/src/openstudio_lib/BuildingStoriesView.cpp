@@ -18,6 +18,7 @@
 **********************************************************************/
 
 #include "BuildingStoriesView.hpp"
+
 #include "BuildingStoryInspectorView.hpp"
 #include "ModelObjectListView.hpp"
 
@@ -39,10 +40,10 @@
 namespace openstudio {
 
 
-BuildingStoriesView::BuildingStoriesView(const openstudio::model::Model& model, 
+BuildingStoriesView::BuildingStoriesView(bool isIP, const openstudio::model::Model& model, 
                                          QWidget * parent)
   : ModelSubTabView(new ModelObjectListView(IddObjectType::OS_BuildingStory, model, true, parent),
-               new BuildingStoryInspectorView(model, parent),
+               new BuildingStoryInspectorView(isIP, model, parent),
                false,
                parent)
 {

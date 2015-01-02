@@ -32,7 +32,7 @@ class BuildingStoriesTabController : public MainTabController
 
   public:
 
-    BuildingStoriesTabController(const openstudio::model::Model& model);
+    BuildingStoriesTabController(bool isIP, const openstudio::model::Model& model);
 
     virtual ~BuildingStoriesTabController() {}
 

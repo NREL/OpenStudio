@@ -388,6 +388,8 @@ bool isNetworkPathAvailable(const path& p)
 
 #ifdef Q_OS_WIN
 
+  std::string fullyQualifiedName;
+
   // if we get a drive letter, use WNetGetConnection
   boost::optional<std::string> wdl = windowsDriveLetter(p);
   if (wdl){
@@ -396,51 +398,50 @@ bool isNetworkPathAvailable(const path& p)
     TCHAR szDeviceName[MAX_PATH];
     DWORD dwResult, cchBuff = sizeof(szDeviceName);
     dwResult = WNetGetConnection(pstring.c_str(), szDeviceName, &cchBuff);
-    if (dwResult == NO_ERROR){
-      return true;
-    }
-    return false;
-
-  } else {
-
-    // otherwise we have a fully qualified resource name, e.g. \\server\file
-    // use WNetGetResourceInformation to check status
-
-    std::string pstring = p.string(); // toString(p) converts backslashes to slashes
-    OS_ASSERT(!pstring.empty());
-
-    DWORD dwBufferSize = sizeof(NETRESOURCE);
-    LPBYTE lpBuffer;                  // buffer
-    NETRESOURCE nr;
-    LPTSTR pszSystem = NULL;          // variable-length strings
-
-    // Set the block of memory to zero; then initialize
-    // the NETRESOURCE structure. 
-    ZeroMemory(&nr, sizeof(nr));
-
-    nr.dwScope = RESOURCE_GLOBALNET;
-    nr.dwType = RESOURCETYPE_ANY;
-    nr.lpRemoteName = &pstring[0];
-
-    // First call the WNetGetResourceInformation function with 
-    // memory allocated to hold only a NETRESOURCE structure. This 
-    // method can succeed if all the NETRESOURCE pointers are NULL.
-    // If the call fails because the buffer is too small, allocate
-    // a larger buffer.
-    lpBuffer = (LPBYTE)malloc(dwBufferSize);
-    if (lpBuffer == NULL){
+    if (dwResult != NO_ERROR){
       return false;
     }
 
-    DWORD dwResult = WNetGetResourceInformation(&nr, lpBuffer, &dwBufferSize, &pszSystem);
-    if (dwResult == NO_ERROR){
-      free(lpBuffer);
-      return true;
-    }
+    fullyQualifiedName = szDeviceName;
+  } else{
 
-    free(lpBuffer);
+    // otherwise we have a fully qualified resource name, e.g. \\server\file
+    fullyQualifiedName = p.string(); // toString(p) converts backslashes to slashes
+  }
+
+  // use WNetGetResourceInformation to check status
+  OS_ASSERT(!fullyQualifiedName.empty());
+
+  DWORD dwBufferSize = sizeof(NETRESOURCE);
+  LPBYTE lpBuffer;                  // buffer
+  NETRESOURCE nr;
+  LPTSTR pszSystem = NULL;          // variable-length strings
+
+  // Set the block of memory to zero; then initialize
+  // the NETRESOURCE structure. 
+  ZeroMemory(&nr, sizeof(nr));
+
+  nr.dwScope = RESOURCE_GLOBALNET;
+  nr.dwType = RESOURCETYPE_ANY;
+  nr.lpRemoteName = &fullyQualifiedName[0];
+
+  // First call the WNetGetResourceInformation function with 
+  // memory allocated to hold only a NETRESOURCE structure. This 
+  // method can succeed if all the NETRESOURCE pointers are NULL.
+  // If the call fails because the buffer is too small, allocate
+  // a larger buffer.
+  lpBuffer = (LPBYTE)malloc(dwBufferSize);
+  if (lpBuffer == NULL){
     return false;
   }
+
+  DWORD dwResult = WNetGetResourceInformation(&nr, lpBuffer, &dwBufferSize, &pszSystem);
+  if (dwResult == NO_ERROR){
+    free(lpBuffer);
+    return true;
+  }
+
+  free(lpBuffer);
 
 #endif
 

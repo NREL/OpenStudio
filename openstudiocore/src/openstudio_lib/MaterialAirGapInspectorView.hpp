@@ -34,6 +34,8 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
+class StandardsInformationMaterialWidget;
+
 class MaterialAirGapInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
@@ -62,15 +64,14 @@ class MaterialAirGapInspectorView : public ModelObjectInspectorView
 
     void refresh();
 
-    OSLineEdit * m_nameEdit;
-
-    OSQuantityEdit * m_thermalResistance;
-
     bool m_isIP;
 
-  public slots:
+    OSLineEdit * m_nameEdit = nullptr;
 
-    void toggleUnits(bool displayIP);
+    OSQuantityEdit * m_thermalResistance = nullptr;
+
+    StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
+
 };
 
 } // openstudio

@@ -36,6 +36,8 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
+class StandardsInformationMaterialWidget;
+
 class MaterialNoMassInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
@@ -64,23 +66,22 @@ class MaterialNoMassInspectorView : public ModelObjectInspectorView
 
     void refresh();
 
-    OSComboBox * m_roughness;
-
-    OSLineEdit * m_nameEdit;
-
-    OSQuantityEdit * m_thermalResistance;
-
-    OSQuantityEdit * m_thermalAbsorptance;
-
-    OSQuantityEdit * m_solarAbsorptance;
-
-    OSQuantityEdit * m_visibleAbsorptance;
-
     bool m_isIP;
 
-  public slots:
+    OSLineEdit * m_nameEdit = nullptr;  
 
-    void toggleUnits(bool displayIP);
+    OSComboBox * m_roughness = nullptr;
+        
+    OSQuantityEdit * m_thermalResistance = nullptr;
+
+    OSQuantityEdit * m_thermalAbsorptance = nullptr;
+
+    OSQuantityEdit * m_solarAbsorptance = nullptr;
+
+    OSQuantityEdit * m_visibleAbsorptance = nullptr;
+
+    StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
+
 };
 
 } // openstudio

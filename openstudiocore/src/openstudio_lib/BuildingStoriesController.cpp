@@ -18,6 +18,7 @@
 **********************************************************************/
 
 #include "BuildingStoriesController.hpp"
+
 #include "BuildingStoriesView.hpp"
 
 #include "../model/Model.hpp"
@@ -31,8 +32,8 @@
 
 namespace openstudio {
 
-BuildingStoriesController::BuildingStoriesController(const model::Model& model)
-  : ModelSubTabController(new BuildingStoriesView(model), model)
+BuildingStoriesController::BuildingStoriesController(bool isIP, const model::Model& model)
+  : ModelSubTabController(new BuildingStoriesView(isIP, model), model)
 {
 }
 

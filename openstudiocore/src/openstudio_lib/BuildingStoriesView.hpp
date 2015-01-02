@@ -37,7 +37,8 @@ class BuildingStoriesView : public ModelSubTabView
 
   public:
 
-    BuildingStoriesView(const openstudio::model::Model& model, 
+    BuildingStoriesView(bool isIP,
+                        const openstudio::model::Model& model, 
                         QWidget * parent = 0);
     virtual ~BuildingStoriesView() {}
 

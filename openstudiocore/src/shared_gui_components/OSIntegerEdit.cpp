@@ -27,6 +27,8 @@
 
 #include <iomanip>
 
+#include <QIntValidator>
+
 using openstudio::model::ModelObject;
 
 namespace openstudio {
@@ -37,6 +39,9 @@ OSIntegerEdit2::OSIntegerEdit2( QWidget * parent )
   this->setFixedWidth(90);
   this->setAcceptDrops(false);
   setEnabled(false);
+
+  m_intValidator = new QIntValidator();
+  this->setValidator(m_intValidator);
 }
 
 void OSIntegerEdit2::bind(model::ModelObject& modelObject,
@@ -342,6 +347,9 @@ OSIntegerEdit::OSIntegerEdit( QWidget * parent )
   this->setFixedWidth(90);
   this->setAcceptDrops(false);
   setEnabled(false);
+
+  m_intValidator = new QIntValidator();
+  this->setValidator(m_intValidator);
 }
 
 void OSIntegerEdit::bind(model::ModelObject& modelObject,

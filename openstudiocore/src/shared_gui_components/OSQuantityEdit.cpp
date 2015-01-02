@@ -29,8 +29,8 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/StringHelpers.hpp"
 
-#include <QVBoxLayout>
-#include <QHBoxLayout>
+#include <QBoxLayout>
+#include <QDoubleValidator>
 
 #include <iomanip>
 
@@ -63,6 +63,9 @@ OSQuantityEdit2::OSQuantityEdit2(const std::string& modelUnits, const std::strin
   hLayout->setContentsMargins(0,0,0,0);
   hLayout->addWidget(m_lineEdit);
   hLayout->addWidget(m_units);
+
+  m_doubleValidator = new QDoubleValidator();
+  m_lineEdit->setValidator(m_doubleValidator);
 
   m_lineEdit->setFixedWidth(90);
 
@@ -434,6 +437,9 @@ OSQuantityEdit::OSQuantityEdit(bool isIP, QWidget * parent)
   hLayout->setContentsMargins(0,0,0,0);
   hLayout->addWidget(m_lineEdit);
   hLayout->addWidget(m_units);
+
+  m_doubleValidator = new QDoubleValidator();
+  m_lineEdit->setValidator(m_doubleValidator);
 
   m_lineEdit->setFixedWidth(90);
 

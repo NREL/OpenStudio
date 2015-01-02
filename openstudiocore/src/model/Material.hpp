@@ -26,6 +26,8 @@
 namespace openstudio {
 namespace model {
 
+  class StandardsInformationMaterial;
+
 namespace detail{
   class Material_Impl;
 }
@@ -66,6 +68,9 @@ class MODEL_API Material : public ResourceObject {
    *  Attribute Name: 'exteriorVisibleAbsorptance' */
   boost::optional<double> exteriorVisibleAbsorptance() const;
 
+  /** Returns this materials's standards information, constructing a new object if necessary. */
+  StandardsInformationMaterial standardsInformation() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -82,6 +87,7 @@ class MODEL_API Material : public ResourceObject {
 
   friend class Model;
   friend class openstudio::IdfObject;
+  friend class openstudio::detail::IdfObject_Impl;
   friend class detail::Material_Impl;
 
   Material(IddObjectType type,const Model& model);
