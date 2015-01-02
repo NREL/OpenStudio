@@ -134,6 +134,11 @@ if(CMAKE_COMPILER_IS_GNUCC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
 endif()
 
+if(UNIX AND NOT APPLE AND BUILD_TESTING)
+  # Enable libgtest linking
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lpthread")
+endif()
+
 
 if(BUILD_RUBY_GEM)
   find_program(GEM NAMES gem)
