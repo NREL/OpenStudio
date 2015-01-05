@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef CONTAM_PRJOBJECTS_HPP
-#define CONTAM_PRJOBJECTS_HPP
+#ifndef AIRFLOW_CONTAM_PRJOBJECTS_HPP
+#define AIRFLOW_CONTAM_PRJOBJECTS_HPP
 
 #include "PrjDefines.hpp"
 #include "PrjObjectsImpl.hpp"

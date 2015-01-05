@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -40,8 +40,6 @@
 #include "../model/Site_Impl.hpp"
 #include "../model/WeatherFile.hpp"
 #include "../model/WeatherFile_Impl.hpp"
-#include "../model/TimeDependentValuation.hpp"
-#include "../model/TimeDependentValuation_Impl.hpp"
 #include "../model/Construction.hpp"
 #include "../model/SimpleGlazing.hpp"
 #include "../model/StandardOpaqueMaterial.hpp"

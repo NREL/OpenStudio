@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -54,6 +54,8 @@ class MODEL_API ZoneHVACBaseboardConvectiveElectric : public ZoneHVACComponent {
 
   bool setAvailabilitySchedule(Schedule& schedule);
 
+  /** In EnergyPlus 8.2.0 and up, this property maps to the EnergyPLus field "Heating Design Capacity"
+  **/
   boost::optional<double> nominalCapacity() const;
 
   OSOptionalQuantity getNominalCapacity(bool returnIP=false) const;

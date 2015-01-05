@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -28,6 +28,8 @@
 #include "../RoofVegetation_Impl.hpp"
 #include "../StandardOpaqueMaterial.hpp"
 #include "../StandardOpaqueMaterial_Impl.hpp"
+#include "../StandardsInformationMaterial.hpp"
+#include "../StandardsInformationMaterial_Impl.hpp"
 #include "../Model_Impl.hpp"
 
 #include "../../energyplus/ReverseTranslator.hpp"
@@ -213,23 +215,49 @@ TEST_F(ModelFixture, OpaqueMaterial_StandardOpaqueMaterial_Constructors)
   EXPECT_TRUE(material.iddObject().type() == IddObjectType::OS_Material);
 }
 
-TEST_F(ModelFixture, OpaqueMaterial_StandardOpaqueMaterial_Attributes)
+TEST_F(ModelFixture, OpaqueMaterial_StandardsInformationMaterial)
 {
   // construct
   Model model;
+
   StandardOpaqueMaterial material(model);
+  EXPECT_EQ(0, model.getModelObjects<StandardsInformationMaterial>().size());
 
-  // thickness attribute equivalent to thickness field
-  //TODO: fix this, thickness should return an optional rather than throw here
-  //ASSERT_TRUE(material.getAttribute("thickness"));
-  //Attribute materialThickness = material.getAttribute("thickness").get();
-  //EXPECT_TRUE(materialThickness.valueType() == AttributeValueType::Double);
+  StandardsInformationMaterial tmp = material.standardsInformation();
+  EXPECT_EQ(1u, model.getModelObjects<StandardsInformationMaterial>().size());
 
+  StandardsInformationMaterial info = material.standardsInformation();
+  EXPECT_EQ(1u, model.getModelObjects<StandardsInformationMaterial>().size());
+  EXPECT_EQ(toString(info.handle()), toString(tmp.handle()));
 
-  // should be settable
-  EXPECT_TRUE(material.setAttribute("thickness", 0.01));
+  std::vector<std::string> test;
 
-  ASSERT_TRUE(material.getAttribute("thickness"));
-  Attribute materialThickness = material.getAttribute("thickness").get();
-  EXPECT_TRUE(materialThickness.valueType() == AttributeValueType::Double);
+  EXPECT_FALSE(info.materialStandard());
+  EXPECT_FALSE(info.suggestedMaterialStandards().empty());
+  EXPECT_FALSE(info.materialStandardSource());
+  EXPECT_TRUE(info.suggestedMaterialStandardSources().empty());
+
+  test = info.suggestedMaterialStandards();
+  EXPECT_NE(test.end(), std::find(test.begin(), test.end(), "CEC Title24-2013"));
+  info.setMaterialStandard("CEC Title24-2013");
+  ASSERT_TRUE(info.materialStandard());
+  EXPECT_EQ("CEC Title24-2013", info.materialStandard().get());
+
+  //EXPECT_FALSE(info.suggestedMaterialStandardSources().emtpy());
+
+  EXPECT_FALSE(info.standardsCategory());
+  EXPECT_FALSE(info.suggestedStandardsCategories().empty());
+  EXPECT_FALSE(info.standardsIdentifier());
+  EXPECT_TRUE(info.suggestedStandardsIdentifiers().empty());
+
+  test = info.suggestedStandardsCategories();
+  EXPECT_NE(test.end(), std::find(test.begin(), test.end(), "Bldg Board and Siding"));
+  info.setStandardsCategory("Bldg Board and Siding");
+  ASSERT_TRUE(info.standardsCategory());
+  EXPECT_EQ("Bldg Board and Siding", info.standardsCategory().get());
+
+  EXPECT_FALSE(info.suggestedStandardsIdentifiers().empty());
+
+  material.remove();
+  EXPECT_EQ(0, model.getModelObjects<StandardsInformationMaterial>().size());
 }

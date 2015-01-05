@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -263,10 +263,13 @@ TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
   std::stringstream text;
   text << "ZoneHVAC:HighTemperatureRadiant," << std::endl
        << "  MyRadiantSystem," << std::endl
-       << "  ," << std::endl // availability schedule
-       << "  ," << std::endl     // zone 
-       << "  autosize," << std::endl
-       << "  Electric;";
+       << "  MyHVACSchedule," << std::endl
+       << "  MyCoreZone," << std::endl
+       << "  HeatingDesignCapacity," << std::endl
+       << "  Autosize," << std::endl
+       << "  ," << std::endl
+       << "  ," << std::endl
+       << "  Electricity;";
   OptionalIdfObject oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
   IdfObject idfObject = *oObj;
@@ -275,7 +278,7 @@ TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
   OptionalWorkspaceObject tObject = scratch.getObject(w1->handle ());
   ASSERT_TRUE(tObject);
   WorkspaceObject object = *tObject;
-  EXPECT_EQ(static_cast<unsigned>(5),object.numFields());
+  EXPECT_EQ(static_cast<unsigned>(8),object.numFields());
 
   // create schedule object to point to from non-extensible field
   text.str("");
@@ -291,23 +294,23 @@ TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
   ASSERT_TRUE(idfObject.iddObject().type() == IddObjectType::Schedule_Compact);
   OptionalWorkspaceObject w2 = scratch.addObject(idfObject);
   ASSERT_TRUE(w2);
-  EXPECT_TRUE(object.setPointer(11,w2->handle ()));
-  EXPECT_EQ(12u,object.numFields());
-  tObject = object.getTarget(11);
+  EXPECT_TRUE(object.setPointer(14,w2->handle ()));
+  EXPECT_EQ(15u,object.numFields());
+  tObject = object.getTarget(14);
   ASSERT_TRUE(tObject);
   EXPECT_TRUE(tObject->handle() == w2->handle());
 
   // hidden pushing for setting extensible string pointer
-  EXPECT_TRUE(object.setString(13,*(tObject->name()))); // should only work at strictness none
-  tObject = object.getTarget(13);
+  EXPECT_TRUE(object.setString(16,*(tObject->name()))); // should only work at strictness none
+  tObject = object.getTarget(16);
   ASSERT_TRUE(tObject);
   EXPECT_TRUE(tObject->handle() == w2->handle());
-  EXPECT_EQ(15u,object.numFields());
+  EXPECT_EQ(18u,object.numFields());
 
   // hidden pushing for setting extensible double
-  EXPECT_TRUE(object.setDouble(16,0.5));
-  EXPECT_EQ(17u,object.numFields());
-  OptionalDouble dValue = object.getDouble(16);
+  EXPECT_TRUE(object.setDouble(19,0.5));
+  EXPECT_EQ(20u,object.numFields());
+  OptionalDouble dValue = object.getDouble(19);
   ASSERT_TRUE(dValue);
   EXPECT_NEAR(0.5,*dValue,tol);
   
@@ -316,9 +319,12 @@ TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
   text.str("");
   text << "ZoneHVAC:HighTemperatureRadiant," << std::endl
        << "  MyRadiantSystem," << std::endl
-       << "  ," << std::endl // availability schedule
-       << "  ," << std::endl     // zone 
-       << "  autosize," << std::endl
+       << "  MyHVACSchedule," << std::endl
+       << "  MyCoreZone," << std::endl
+       << "  HeatingDesignCapacity," << std::endl
+       << "  Autosize," << std::endl
+       << "  ," << std::endl
+       << "  ," << std::endl
        << "  Electricity;";
   oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
@@ -330,32 +336,32 @@ TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
   object = *tObject;
 
   // hidden pushing for setting nonextensible double
-  EXPECT_FALSE(object.setDouble(6,1.5));
-  EXPECT_EQ(5u,object.numFields());
-  EXPECT_TRUE(object.setDouble(6,0.6));
-  EXPECT_EQ(7u,object.numFields());
-
-  // hidden pushing for setting nonextensible string
-  EXPECT_FALSE(object.setString(9,"bad key"));
-  EXPECT_EQ(7u,object.numFields());
-  EXPECT_TRUE(object.setString(9,"MeanAirTemperature"));
+  EXPECT_FALSE(object.setDouble(9,1.5));
+  EXPECT_EQ(8u,object.numFields());
+  EXPECT_TRUE(object.setDouble(9,0.6));
   EXPECT_EQ(10u,object.numFields());
 
+  // hidden pushing for setting nonextensible string
+  EXPECT_FALSE(object.setString(12,"bad key"));
+  EXPECT_EQ(10u,object.numFields());
+  EXPECT_TRUE(object.setString(12,"MeanAirTemperature"));
+  EXPECT_EQ(13u,object.numFields());
+
   // hidden pushing for setting nonextensible pointer
-  EXPECT_TRUE(object.setString(11,""));
-  EXPECT_EQ(12u,object.numFields());
+  EXPECT_TRUE(object.setString(14,""));
+  EXPECT_EQ(15u,object.numFields());
 
   // hidden pushing for setting extensible string pointer
-  EXPECT_FALSE(object.setString(13,"MySurface"));
-  EXPECT_EQ(12u,object.numFields());
-  EXPECT_TRUE(object.setString(13,""));
+  EXPECT_FALSE(object.setString(16,"MySurface"));
   EXPECT_EQ(15u,object.numFields());
+  EXPECT_TRUE(object.setString(16,""));
+  EXPECT_EQ(18u,object.numFields());
 
   // hidden pushing for setting extensible double
-  EXPECT_FALSE(object.setDouble(18,-1.5));
-  EXPECT_EQ(15u,object.numFields());
-  EXPECT_TRUE(object.setDouble(16,0.5));
-  EXPECT_EQ(17u,object.numFields());
+  EXPECT_FALSE(object.setDouble(21,-1.5));
+  EXPECT_EQ(18u,object.numFields());
+  EXPECT_TRUE(object.setDouble(19,0.5));
+  EXPECT_EQ(20u,object.numFields());
 }
 
 TEST_F(IdfFixture,WorkspaceObject_ClearGroups) {

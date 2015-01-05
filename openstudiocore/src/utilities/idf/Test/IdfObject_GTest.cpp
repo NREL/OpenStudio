@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -580,36 +580,39 @@ TEST_F(IdfFixture, IdfObject_FieldSettingWithHiddenPushes) {
        << "  MyRadiantSystem," << std::endl
        << "  MyHVACSchedule," << std::endl
        << "  MyCoreZone," << std::endl
-       << "  autosize," << std::endl
-       << "  Electric;";
+       << "  HeatingDesignCapacity," << std::endl
+       << "  Autosize," << std::endl
+       << "  ," << std::endl
+       << "  ," << std::endl
+       << "  Electricity;";
   OptionalIdfObject oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
   IdfObject object = *oObj;
-  EXPECT_EQ(static_cast<unsigned>(5),object.numFields());
+  EXPECT_EQ(8u,object.numFields());
   // hidden pushing for setting nonextensible string
 
   // hidden pushing for setting nonextensible double
 
   // hidden pushing for setting extensible string
-  bool result = object.setString(13,"MyCoreZoneSurface1");
+  bool result = object.setString(16,"MyCoreZoneSurface1");
   EXPECT_TRUE(result);
   // adds an extra field to keep groups together
-  EXPECT_EQ(static_cast<unsigned>(15),object.numFields());
-  OptionalString sValue = object.getString(13);
+  EXPECT_EQ(18u,object.numFields());
+  OptionalString sValue = object.getString(16);
   ASSERT_TRUE(sValue);
   EXPECT_EQ("MyCoreZoneSurface1",*sValue);
-  sValue = object.getString(14);
+  sValue = object.getString(17);
   ASSERT_TRUE(sValue);
   EXPECT_EQ("",*sValue);
 
   // hidden pushing for setting extensible double
-  result = object.setDouble(18,0.01);
+  result = object.setDouble(21,0.01);
   EXPECT_TRUE(result);
-  EXPECT_EQ(static_cast<unsigned>(19),object.numFields());
-  OptionalDouble dValue = object.getDouble(18);
+  EXPECT_EQ(static_cast<unsigned>(22),object.numFields());
+  OptionalDouble dValue = object.getDouble(21);
   ASSERT_TRUE(dValue);
   EXPECT_NEAR(0.01,*dValue,tol);
-  dValue = object.getDouble(16);
+  dValue = object.getDouble(19);
   EXPECT_FALSE(dValue);
 
   // SHOULD NOT BE VALID

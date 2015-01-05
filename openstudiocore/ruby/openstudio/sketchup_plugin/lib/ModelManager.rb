@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -88,27 +88,24 @@ module OpenStudio
     def new_from_skp_model(skp_model)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       
-      if openstudio_path = skp_model.openstudio_path
-        # if path is good open a new model to clear out possibly outdated geometry
-        # try to open referenced file
-        result = open_openstudio(openstudio_path, skp_model)
-        # moved this into end of if statement so only shows if path is valid and file opens
-        if result
-          UI.messagebox("The following linked OpenStudio Model was successfully loaded. (#{openstudio_path})")
-        else
-          result = UI.messagebox("SketchUp model points to #{openstudio_path} which cannot be opened, would you like to browse for the file", MB_YESNO)
-          if result == 6 # YES
-            if not Plugin.command_manager.open_openstudio
-              # not sure when this would get triggered
-              new_from_path(skp_model, Plugin.minimal_template_path)
-            end
-          else
-            new_from_path(skp_model, Plugin.minimal_template_path)
-          end
-        end
-      else
-        new_from_path(skp_model, Plugin.minimal_template_path)
+      # DLM: previously, we tried to find the linked OSM, open it, and reattach it
+      
+      openstudio_path = skp_model.openstudio_path
+      openstudio_entities = skp_model.openstudio_entities
+      
+      if (openstudio_path && !openstudio_path.empty?) || (openstudio_entities.size > 0)
+      
+        message = "Removing previously linked OpenStudio content."
+        message += "\n\nOpen OpenStudio model at '#{openstudio_path}' to restore content."
+        UI.messagebox(message, MB_OK)
+      
+        # remove all OpenStudio content so user is not confused
+        skp_model.start_operation("Remove all OpenStudio Content", true)
+        skp_model.delete_openstudio_entities
+        skp_model.commit_operation
       end
+
+      new_from_path(skp_model, Plugin.minimal_template_path)
     end    
     
     # this method cannot fail

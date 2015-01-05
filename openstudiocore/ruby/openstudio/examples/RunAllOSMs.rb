@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -53,7 +53,7 @@ OpenStudio::remove(runManagerDBPath) if (OpenStudio::exists(runManagerDBPath))
 runManager = OpenStudio::Runmanager::RunManager.new(runManagerDBPath,true)
 
 # find energyplus
-ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
+ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,2)
 ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
 
 tools = OpenStudio::Runmanager::ConfigOptions::makeTools(ep_path.parent_path(),

@@ -15,7 +15,7 @@ macro(ADD_GOOGLE_TESTS executable)
   endif()
 
   foreach(source ${ARGN})
-    if(NOT "${source}" MATCHES "/moc_.*cpp")
+    if(NOT "${source}" MATCHES "/moc_.*cxx")
       string(REGEX MATCH .*cpp source "${source}")
       if(source)
         file(READ "${source}" contents)

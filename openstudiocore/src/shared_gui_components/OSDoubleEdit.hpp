@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -29,6 +29,7 @@
 
 #include <QLineEdit>
 #include <QString>
+#include <QValidator>
 
 namespace openstudio {
 
@@ -41,6 +42,8 @@ class OSDoubleEdit2: public QLineEdit {
   OSDoubleEdit2(QWidget * parent = nullptr);
 
   virtual ~OSDoubleEdit2() {}
+
+  QDoubleValidator * doubleValidator() { return m_doubleValidator; }
 
   void bind(model::ModelObject& modelObject,
             DoubleGetter get,
@@ -129,6 +132,7 @@ class OSDoubleEdit2: public QLineEdit {
   bool m_isScientific;
   boost::optional<int> m_precision;
   QString m_text = "UNINITIALIZED";
+  QDoubleValidator * m_doubleValidator;
 
   void refreshTextAndLabel();
 
@@ -149,6 +153,8 @@ class OSDoubleEdit: public QLineEdit {
   OSDoubleEdit(QWidget * parent = nullptr);
 
   virtual ~OSDoubleEdit() {}
+
+  QDoubleValidator * doubleValidator() { return m_doubleValidator; }
 
   void bind(model::ModelObject& modelObject,
             const char* property,
@@ -175,6 +181,7 @@ class OSDoubleEdit: public QLineEdit {
 
   bool m_isScientific;
   boost::optional<int> m_precision;
+  QDoubleValidator * m_doubleValidator;
 
   void refreshTextAndLabel();
 

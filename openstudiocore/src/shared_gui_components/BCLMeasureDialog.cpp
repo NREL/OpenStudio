@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -21,18 +21,19 @@
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/StringHelpers.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
+#include <QBoxLayout>
+#include <QComboBox>
+#include <QGroupBox>
 #include <QLabel>
 #include <QLineEdit>
-#include <QTextEdit>
-#include <QComboBox>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
+#include <QListWidget>
+#include <QListWidgetItem>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QRadioButton>
-#include <QGroupBox>
-#include <QListWidgetItem>
-#include <QListWidget>
+#include <QTextEdit>
 
 namespace openstudio {
   
@@ -122,6 +123,13 @@ QSize BCLMeasureDialog::sizeHint() const
 
 boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
 {
+  openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
+
+  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+    QMessageBox::information(this, "Cannot Create Measure", "Your My Measures Directory appears to be on a network drive that is not currently available.\nYou can change your specified My Measures Directory using 'Preferences->Change My Measures Directory'.", QMessageBox::Ok);
+    return boost::optional<openstudio::BCLMeasure>();
+  }
+
   std::string name = toString(m_nameLineEdit->text());
   std::string className = BCLMeasure::makeClassName(name);
   std::string lowerClassName = toUnderscoreCase(className);
@@ -140,7 +148,6 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
     measureType = MeasureType::ReportingMeasure;
   }
 
-  openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
   QString folderName = toQString(lowerClassName).append("/");
   openstudio::path measureDir = userMeasuresDir / toPath(folderName);
 

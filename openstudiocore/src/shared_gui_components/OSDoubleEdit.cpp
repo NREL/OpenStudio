@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -25,6 +25,8 @@
 #include "../utilities/core/Containers.hpp"
 #include "../utilities/data/Attribute.hpp"
 
+#include <QDoubleValidator>
+
 #include <iomanip>
 
 using openstudio::model::ModelObject;
@@ -37,6 +39,9 @@ OSDoubleEdit2::OSDoubleEdit2( QWidget * parent )
   this->setFixedWidth(90);
   this->setAcceptDrops(false);
   setEnabled(false);
+
+  m_doubleValidator = new QDoubleValidator();
+  this->setValidator(m_doubleValidator);
 }
 
 void OSDoubleEdit2::bind(model::ModelObject& modelObject,
@@ -408,6 +413,9 @@ OSDoubleEdit::OSDoubleEdit( QWidget * parent )
   this->setFixedWidth(90);
   this->setAcceptDrops(false);
   setEnabled(false);
+
+  m_doubleValidator = new QDoubleValidator();
+  this->setValidator(m_doubleValidator);
 }
 
 void OSDoubleEdit::bind(model::ModelObject& modelObject,

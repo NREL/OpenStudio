@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -163,8 +163,13 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitHeater(
   }
 
   // Field: Fan Control Type
+  // Maps to "Supply Air Fan Operation During No Heating" in 8.2.0 and above.
 
-   idfObject.setString(ZoneHVAC_UnitHeaterFields::FanControlType,modelObject.fanControlType());
+  if( istringEqual(modelObject.fanControlType(),"ONOFF") ) {
+    idfObject.setString(ZoneHVAC_UnitHeaterFields::SupplyAirFanOperationDuringNoHeating,"No");
+  } else {
+    idfObject.setString(ZoneHVAC_UnitHeaterFields::SupplyAirFanOperationDuringNoHeating,"Yes");
+  }
 
    // Field: Heating Coil Object Type
 

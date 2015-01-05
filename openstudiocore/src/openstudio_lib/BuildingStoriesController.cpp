@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -18,6 +18,7 @@
 **********************************************************************/
 
 #include "BuildingStoriesController.hpp"
+
 #include "BuildingStoriesView.hpp"
 
 #include "../model/Model.hpp"
@@ -31,8 +32,8 @@
 
 namespace openstudio {
 
-BuildingStoriesController::BuildingStoriesController(const model::Model& model)
-  : ModelSubTabController(new BuildingStoriesView(model), model)
+BuildingStoriesController::BuildingStoriesController(bool isIP, const model::Model& model)
+  : ModelSubTabController(new BuildingStoriesView(isIP, model), model)
 {
 }
 

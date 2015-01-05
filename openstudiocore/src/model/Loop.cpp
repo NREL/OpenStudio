@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -142,7 +142,7 @@ namespace detail {
     return this->demandComponent(handle);
   }
 
-  boost::optional<ModelObject> Loop_Impl::demandComponent(openstudio::Handle handle)
+  boost::optional<ModelObject> Loop_Impl::demandComponent(openstudio::Handle handle) const
   {
     Node inletComp = this->demandInletNode();
     Node outletComp = this->demandOutletNode();
@@ -185,7 +185,7 @@ namespace detail {
   std::vector<ModelObject> Loop_Impl::demandComponents(std::vector<HVACComponent> inletComps, 
       std::vector<HVACComponent> outletComps,
       openstudio::IddObjectType type
-    )
+    ) const
   {
     return std::vector<ModelObject>();
   }
@@ -282,7 +282,7 @@ namespace detail {
 
   std::vector<ModelObject> Loop_Impl::demandComponents( HVACComponent inletComp,
                                                         HVACComponent outletComp,
-                                                        openstudio::IddObjectType type )
+                                                        openstudio::IddObjectType type ) const
   {
     std::vector<HVACComponent> visited;
     visited.push_back(inletComp);
@@ -320,7 +320,7 @@ namespace detail {
                              type );
   }
 
-  std::vector<ModelObject> Loop_Impl::demandComponents(openstudio::IddObjectType type)
+  std::vector<ModelObject> Loop_Impl::demandComponents(openstudio::IddObjectType type) const
   {
     return demandComponents( demandInletNode(),
                              demandOutletNode(),
@@ -425,19 +425,19 @@ boost::optional<ModelObject> Loop::component(openstudio::Handle handle)
 std::vector<ModelObject> Loop::supplyComponents(std::vector<HVACComponent> inletComps, 
     std::vector<HVACComponent> outletComps,
     openstudio::IddObjectType type
-  )
+  ) const
 {
   return getImpl<detail::Loop_Impl>()->supplyComponents( inletComps, outletComps, type);
 }
 
 std::vector<ModelObject> Loop::supplyComponents(HVACComponent inletComp, 
                                                 HVACComponent outletComp, 
-                                                openstudio::IddObjectType type)
+                                                openstudio::IddObjectType type) const
 {
   return getImpl<detail::Loop_Impl>()->supplyComponents( inletComp, outletComp, type);
 }
   
-std::vector<ModelObject> Loop::supplyComponents(openstudio::IddObjectType type)
+std::vector<ModelObject> Loop::supplyComponents(openstudio::IddObjectType type) const
 {
   return getImpl<detail::Loop_Impl>()->supplyComponents(type);
 }
@@ -445,19 +445,19 @@ std::vector<ModelObject> Loop::supplyComponents(openstudio::IddObjectType type)
 std::vector<ModelObject> Loop::demandComponents(std::vector<HVACComponent> inletComps, 
     std::vector<HVACComponent> outletComps,
     openstudio::IddObjectType type
-  )
+  ) const
 {
   return getImpl<detail::Loop_Impl>()->demandComponents( inletComps, outletComps, type);
 }
 
 std::vector<ModelObject> Loop::demandComponents( HVACComponent inletComp, 
                                                  HVACComponent outletComp, 
-                                                 openstudio::IddObjectType type )
+                                                 openstudio::IddObjectType type ) const
 {
   return getImpl<detail::Loop_Impl>()->demandComponents( inletComp, outletComp, type);
 }
   
-std::vector<ModelObject> Loop::demandComponents(openstudio::IddObjectType type)
+std::vector<ModelObject> Loop::demandComponents(openstudio::IddObjectType type) const
 {
   return getImpl<detail::Loop_Impl>()->demandComponents(type);
 }
@@ -472,7 +472,7 @@ std::vector<ModelObject> Loop::children() const
   return getImpl<detail::Loop_Impl>()->children();
 }
 
-boost::optional<ModelObject> Loop::demandComponent(openstudio::Handle handle)
+boost::optional<ModelObject> Loop::demandComponent(openstudio::Handle handle) const
 {
   return getImpl<detail::Loop_Impl>()->demandComponent( handle );
 }
@@ -482,22 +482,22 @@ boost::optional<ModelObject> Loop::supplyComponent(openstudio::Handle handle)
   return getImpl<detail::Loop_Impl>()->supplyComponent( handle );
 }
 
-Node Loop::supplyInletNode()
+Node Loop::supplyInletNode() const
 {
   return getImpl<detail::Loop_Impl>()->supplyInletNode();
 }
 
-Node Loop::supplyOutletNode()
+Node Loop::supplyOutletNode() const
 {
   return getImpl<detail::Loop_Impl>()->supplyOutletNode();
 }
 
-Node Loop::demandInletNode()
+Node Loop::demandInletNode() const
 {
   return getImpl<detail::Loop_Impl>()->demandInletNode();
 }
 
-Node Loop::demandOutletNode()
+Node Loop::demandOutletNode() const
 {
   return getImpl<detail::Loop_Impl>()->demandOutletNode();
 }

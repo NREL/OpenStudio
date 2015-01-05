@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -19,6 +19,8 @@
 
 #include "MaterialNoMassInspectorView.hpp"
 
+#include "StandardsInformationMaterialWidget.hpp"
+
 #include "../shared_gui_components/OSComboBox.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
@@ -37,45 +39,53 @@ namespace openstudio {
 // MaterialNoMassInspectorView
 
 MaterialNoMassInspectorView::MaterialNoMassInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-  : ModelObjectInspectorView(model, true, parent),
-    m_roughness(nullptr),
-    m_nameEdit(nullptr),
-    m_thermalResistance(nullptr),
-    m_thermalAbsorptance(nullptr),
-    m_solarAbsorptance(nullptr),
-    m_visibleAbsorptance(nullptr),
-    m_isIP(isIP)
+  : ModelObjectInspectorView(model, true, parent)
 {
   createLayout();
 }
 
 void MaterialNoMassInspectorView::createLayout()
 {
+  QWidget* hiddenWidget = new QWidget();
+  this->stackedWidget()->addWidget(hiddenWidget);
+
   QWidget* visibleWidget = new QWidget();
   this->stackedWidget()->addWidget(visibleWidget);
 
   QGridLayout* mainGridLayout = new QGridLayout();
-  mainGridLayout->setContentsMargins(7,7,7,7);
+  mainGridLayout->setContentsMargins(7, 7, 7, 7);
   mainGridLayout->setSpacing(14);
   visibleWidget->setLayout(mainGridLayout);
 
-  unsigned row = 0;
-  unsigned col = 0;
+  int row = mainGridLayout->rowCount();
+
+  QLabel * label = nullptr;
 
   // Name
 
-  QLabel * label = new QLabel("Name: ");
+  label = new QLabel("Name: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  mainGridLayout->addWidget(label, row, 0);
+
+  ++row;
 
   m_nameEdit = new OSLineEdit();
-  mainGridLayout->addWidget(m_nameEdit,row++,0,1,3);
+  mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
+
+  ++row;
+
+  // Standards Information
+
+  m_standardsInformationWidget = new StandardsInformationMaterialWidget(m_isIP, mainGridLayout, row);
+  m_standardsInformationWidget->showComposite();
+
+  ++row;
 
   // Roughness
 
   label = new QLabel("Roughness: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_roughness = new OSComboBox();
   m_roughness->addItem("Very Rough");
@@ -90,7 +100,7 @@ void MaterialNoMassInspectorView::createLayout()
 
   label = new QLabel("Thermal Resistance: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_thermalResistance = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialNoMassInspectorView::toggleUnitsClicked, m_thermalResistance, &OSQuantityEdit::onUnitSystemChange);
@@ -100,7 +110,7 @@ void MaterialNoMassInspectorView::createLayout()
 
   label = new QLabel("Thermal Absorptance: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_thermalAbsorptance = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialNoMassInspectorView::toggleUnitsClicked, m_thermalAbsorptance, &OSQuantityEdit::onUnitSystemChange);
@@ -110,7 +120,7 @@ void MaterialNoMassInspectorView::createLayout()
 
   label = new QLabel("Solar Absorptance: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_solarAbsorptance = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialNoMassInspectorView::toggleUnitsClicked, m_solarAbsorptance, &OSQuantityEdit::onUnitSystemChange);
@@ -120,7 +130,7 @@ void MaterialNoMassInspectorView::createLayout()
 
   label = new QLabel("Visible Absorptance: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_visibleAbsorptance = new OSQuantityEdit(m_isIP);
   connect(this, &MaterialNoMassInspectorView::toggleUnitsClicked, m_visibleAbsorptance, &OSQuantityEdit::onUnitSystemChange);
@@ -162,6 +172,8 @@ void MaterialNoMassInspectorView::attach(openstudio::model::MasslessOpaqueMateri
   m_solarAbsorptance->bind(masslessOpaqueMaterial,"solarAbsorptance",m_isIP);
   m_visibleAbsorptance->bind(masslessOpaqueMaterial,"visibleAbsorptance",m_isIP);
 
+  m_standardsInformationWidget->attach(masslessOpaqueMaterial);
+
   this->stackedWidget()->setCurrentIndex(1);
 }
 
@@ -177,15 +189,12 @@ void MaterialNoMassInspectorView::detach()
   m_thermalAbsorptance->unbind();
   m_solarAbsorptance->unbind();
   m_visibleAbsorptance->unbind();
+
+  m_standardsInformationWidget->detach();
 }
 
 void MaterialNoMassInspectorView::refresh()
 {
-}
-
-void MaterialNoMassInspectorView::toggleUnits(bool displayIP)
-{
-  m_isIP = displayIP;
 }
 
 } // openstudio

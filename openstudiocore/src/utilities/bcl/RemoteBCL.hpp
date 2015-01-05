@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -21,7 +21,6 @@
 #define UTILITIES_BCL_REMOTEBCL_HPP
 
 #include "BCL.hpp"
-#include "OnDemandGenerator.hpp"
 #include "../core/Path.hpp"
 
 #include <QDomDocument>
@@ -76,10 +75,6 @@ namespace openstudio{
     /// Get the measure by uid
     virtual boost::optional<BCLMeasure> getMeasure(const std::string& uid, const std::string& versionId = "") const;
     
-    /// Searches the library for an on demand generated component matching this generator.
-    /// This generator should have values for all arguments set.
-    virtual boost::optional<BCLComponent> getOnDemandComponent(const OnDemandGenerator& generator) const;
-
     /// Perform a meta search on the library to identify number and types of results available.
     /// The total number of search results available can be used in the search method which requires a page number.
     boost::optional<BCLMetaSearchResult> metaSearchComponentLibrary(const std::string& searchTerm,
@@ -126,9 +121,6 @@ namespace openstudio{
 
     /// Returns the last downloaded measure if there is one
     boost::optional<BCLMeasure> lastMeasureDownload() const;
-
-    /// Returns the last on demand generator if there is one
-    boost::optional<OnDemandGenerator> lastOnDemandGenerator() const;
 
     /// Returns the last meta search result if there is one
     boost::optional<BCLMetaSearchResult> lastMetaSearch() const;
@@ -185,10 +177,6 @@ namespace openstudio{
 
     /// Wait number of milliseconds for download to complete
     /// Returns the download if it completed in the allowable time
-    boost::optional<OnDemandGenerator> waitForOnDemandGenerator(int msec = 50000) const;
-
-    /// Wait number of milliseconds for download to complete
-    /// Returns the download if it completed in the allowable time
     boost::optional<BCLMetaSearchResult> waitForMetaSearch(int msec = 50000) const;
 
     /// Wait number of milliseconds for download to complete
@@ -207,12 +195,6 @@ namespace openstudio{
     /// Starts downloading an individual measure by uid, if successful this will start a download
     bool downloadMeasure(const std::string& uid);
 
-    /// Starts downloading an on demand generator definition, if successful this will start a download
-    bool downloadOnDemandGenerator(const std::string& uid);
-
-    /// Call an on demand generator, if successful this will start a download
-    bool callOnDemandGenerator(const OnDemandGenerator& generator);
-
     /// Start a meta search, if successful this will start a download
     bool startComponentLibraryMetaSearch(const std::string& searchTerm, const std::string& componentType, const std::string& filterType);
     bool startComponentLibraryMetaSearch(const std::string& searchTerm, const unsigned componentTypeTID, const std::string& filterType);
@@ -230,9 +212,6 @@ namespace openstudio{
     /// Emitted when a measure download completes
     void measureDownloaded(const std::string& uid, const boost::optional<BCLMeasure>& measure) const;
 
-    /// Emitted when an on demand generator request completes
-    void onDemandGeneratorRecieved(const std::string& uid, const boost::optional<OnDemandGenerator>& onDemandGenerator) const;
-
     /// Emitted when a meta search request completes
     void metaSearchCompleted(const boost::optional<BCLMetaSearchResult>& metaSearchResult) const;
 
@@ -244,8 +223,6 @@ namespace openstudio{
     void downloadData();
 
     void onDownloadComplete(QNetworkReply* reply);
-
-    void onOnDemandGeneratorResponseComplete(QNetworkReply* reply);
 
     void onMetaSearchResponseComplete(QNetworkReply* reply);
 
@@ -269,8 +246,6 @@ namespace openstudio{
     bool waitForLock(int msec) const;
 
     boost::optional<RemoteQueryResponse> processReply(QNetworkReply* reply);
-
-    boost::optional<OnDemandGenerator> processOnDemandGeneratorResponse(const RemoteQueryResponse& remoteQueryResponse) const;
 
     boost::optional<BCLMetaSearchResult> processMetaSearchResponse(const RemoteQueryResponse& remoteQueryResponse) const;
 
@@ -297,8 +272,6 @@ namespace openstudio{
     boost::optional<BCLComponent> m_lastComponentDownload;
 
     boost::optional<BCLMeasure> m_lastMeasureDownload;
-
-    boost::optional<OnDemandGenerator> m_lastOnDemandGenerator;
 
     boost::optional<BCLMetaSearchResult> m_lastMetaSearch;
 

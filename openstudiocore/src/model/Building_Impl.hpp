@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -52,11 +52,6 @@ namespace detail {
     Q_PROPERTY(openstudio::Quantity northAxis_SI READ northAxis_SI WRITE setNorthAxis RESET resetNorthAxis);
     Q_PROPERTY(openstudio::Quantity northAxis_IP READ northAxis_IP WRITE setNorthAxis RESET resetNorthAxis);
     Q_PROPERTY(bool isNorthAxisDefaulted READ isNorthAxisDefaulted);
-
-    Q_PROPERTY(double nominalFloortoFloorHeight READ nominalFloortoFloorHeight WRITE setNominalFloortoFloorHeight RESET resetNominalFloortoFloorHeight);
-    Q_PROPERTY(openstudio::Quantity nominalFloortoFloorHeight_SI READ nominalFloortoFloorHeight_SI WRITE setNominalFloortoFloorHeight RESET resetNominalFloortoFloorHeight);
-    Q_PROPERTY(openstudio::Quantity nominalFloortoFloorHeight_IP READ nominalFloortoFloorHeight_IP WRITE setNominalFloortoFloorHeight RESET resetNominalFloortoFloorHeight);
-    Q_PROPERTY(bool isNominalFloortoFloorHeightDefaulted READ isNominalFloortoFloorHeightDefaulted);
 
     Q_PROPERTY(double floorArea READ floorArea);
     Q_PROPERTY(boost::optional<double> conditionedFloorArea READ conditionedFloorArea);
@@ -117,20 +112,24 @@ namespace detail {
     //@{
 
     double northAxis() const;
-
     bool isNorthAxisDefaulted() const;
 
-    double nominalFloortoFloorHeight() const;
-
-    bool isNominalFloortoFloorHeightDefaulted() const;
+    boost::optional<double> nominalFloortoFloorHeight() const;
 
     boost::optional<int> standardsNumberOfStories() const;
 
     boost::optional<int> standardsNumberOfAboveGroundStories() const;
 
+    boost::optional<int> standardsNumberOfLivingUnits() const;
+
+    boost::optional<double> nominalFloortoCeilingHeight() const;
+
     boost::optional<std::string> standardsBuildingType() const;
 
     std::vector<std::string> suggestedStandardsBuildingTypes() const;
+
+    bool relocatable() const;
+    bool isRelocatableDefaulted() const;
 
     //@}
     /** @name Setters */
@@ -150,8 +149,17 @@ namespace detail {
     bool setStandardsNumberOfAboveGroundStories(int value);
     void resetStandardsNumberOfAboveGroundStories();
 
+    bool setStandardsNumberOfLivingUnits(int value);
+    void resetStandardsNumberOfLivingUnits();
+
+    bool setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight);
+    void resetNominalFloortoCeilingHeight();
+
     bool setStandardsBuildingType(const std::string& standardsBuildingType);
     void resetStandardsBuildingType();
+
+    bool setRelocatable(bool isRelocatable);
+    void resetRelocatable();
 
     //@}
 

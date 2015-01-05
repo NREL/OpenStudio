@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -38,8 +38,6 @@
 #include "PlanarSurface_Impl.hpp"
 #include "Site.hpp"
 #include "Site_Impl.hpp"
-#include "TimeDependentValuation.hpp"
-#include "TimeDependentValuation_Impl.hpp"
 #include "UtilityBill.hpp"
 #include "UtilityBill_Impl.hpp"
 
@@ -289,83 +287,6 @@ namespace detail {
   boost::optional<double> Facility_Impl::annualWaterTotalCost() const
   {
     return annualTotalCost(FuelType::Water);
-  }
-
-  boost::optional<double> Facility_Impl::totalEnergyTimeDependentValuation() const {
-    OptionalDouble result;
-    OptionalTimeDependentValuation oTDV = model().getOptionalUniqueModelObject<TimeDependentValuation>();
-    if (oTDV) {
-      TimeDependentValuation tdv = *oTDV;
-      result = tdv.energyTimeDependentValuation();
-    }
-    else {
-      LOG(Debug,"Cannot return totalEnergyTimeDependentValuation because there is no TimeDependentValuation object in model.");
-    }
-    return result;
-  }
-
-  boost::optional<double> Facility_Impl::totalCostTimeDependentValuation() const {
-    OptionalDouble result;
-    OptionalTimeDependentValuation oTDV = model().getOptionalUniqueModelObject<TimeDependentValuation>();
-    if (oTDV) {
-      TimeDependentValuation tdv = *oTDV;
-      result = tdv.costTimeDependentValuation();
-    }
-    return result;
-  }
-
-  boost::optional<double> Facility_Impl::electricityEnergyTimeDependentValuation() const {
-    OptionalDouble result;
-    OptionalTimeDependentValuation oTDV = model().getOptionalUniqueModelObject<TimeDependentValuation>();
-    if (oTDV) {
-      TimeDependentValuation tdv = *oTDV;
-      result = tdv.getEnergyTimeDependentValuation(FuelType(FuelType::Electricity));
-    }
-    return result;
-  }
-
-  boost::optional<double> Facility_Impl::electricityCostTimeDependentValuation() const {
-    OptionalDouble result;
-    OptionalTimeDependentValuation oTDV = model().getOptionalUniqueModelObject<TimeDependentValuation>();
-    if (oTDV) {
-      TimeDependentValuation tdv = *oTDV;
-      result = tdv.getCostTimeDependentValuation(FuelType(FuelType::Electricity));
-    }
-    return result;
-  }
-
-  boost::optional<double> Facility_Impl::fossilFuelEnergyTimeDependentValuation() const {
-    OptionalDouble result;
-    OptionalTimeDependentValuation oTDV = model().getOptionalUniqueModelObject<TimeDependentValuation>();
-    if (oTDV) {
-      TimeDependentValuation tdv = *oTDV;
-      FuelTypeVector fts = Facility::fossilFuels();
-      for (const FuelType& ft : fts) {
-        OptionalDouble candidate = tdv.getEnergyTimeDependentValuation(ft);
-        if (candidate) {
-          if (result) { result = (*result + *candidate); }
-          else { result = candidate; }
-        }
-      }
-    }
-    return result;
-  }
-
-  boost::optional<double> Facility_Impl::fossilFuelCostTimeDependentValuation() const {
-    OptionalDouble result;
-    OptionalTimeDependentValuation oTDV = model().getOptionalUniqueModelObject<TimeDependentValuation>();
-    if (oTDV) {
-      TimeDependentValuation tdv = *oTDV;
-      FuelTypeVector fts = Facility::fossilFuels();
-      for (const FuelType& ft : fts) {
-        OptionalDouble candidate = tdv.getCostTimeDependentValuation(ft);
-        if (candidate) {
-          if (result) { result = (*result + *candidate); }
-          else { result = candidate; }
-        }
-      }
-    }
-    return result;
   }
 
   OptionalDouble Facility_Impl::economicsCapitalCost() const
@@ -1665,25 +1586,6 @@ OptionalDouble Facility::annualDistrictHeatingTotalCost() const
 OptionalDouble Facility::annualWaterTotalCost() const
 {
   return getImpl<detail::Facility_Impl>()->annualWaterTotalCost();
-}
-
-boost::optional<double> Facility::totalEnergyTimeDependentValuation() const {
-  return getImpl<detail::Facility_Impl>()->totalEnergyTimeDependentValuation();
-}
-boost::optional<double> Facility::totalCostTimeDependentValuation() const {
-  return getImpl<detail::Facility_Impl>()->totalCostTimeDependentValuation();
-}
-boost::optional<double> Facility::electricityEnergyTimeDependentValuation() const {
-  return getImpl<detail::Facility_Impl>()->electricityEnergyTimeDependentValuation();
-}
-boost::optional<double> Facility::electricityCostTimeDependentValuation() const {
-  return getImpl<detail::Facility_Impl>()->electricityCostTimeDependentValuation();
-}
-boost::optional<double> Facility::fossilFuelEnergyTimeDependentValuation() const {
-  return getImpl<detail::Facility_Impl>()->fossilFuelEnergyTimeDependentValuation();
-}
-boost::optional<double> Facility::fossilFuelCostTimeDependentValuation() const {
-  return getImpl<detail::Facility_Impl>()->fossilFuelCostTimeDependentValuation();
 }
 
 OptionalDouble Facility::economicsCapitalCost() const

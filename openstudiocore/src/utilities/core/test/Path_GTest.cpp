@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -35,6 +35,9 @@ using openstudio::setFileExtension;
 using openstudio::makeParentFolder;
 using openstudio::relativePath;
 using openstudio::printPathInformation;
+using openstudio::windowsDriveLetter;
+using openstudio::isNetworkPath;
+using openstudio::isNetworkPathAvailable;
 
 void logBeforeAndAfterPathInformation(const std::string& functionName,
                                       const path& before,const path& after) {
@@ -281,4 +284,92 @@ TEST_F(CoreFixture, OriginalPath_FromUrl2)
   openstudio::path file = openstudio::getOriginalPath(url);
   std::string str = openstudio::toString(file);
   EXPECT_EQ("E:/test/CloudTest/scripts/StandardReports/measure.rb", str);
+}
+
+TEST_F(CoreFixture, WindowsDriveLetter)
+{
+  boost::optional<std::string> test;
+
+  test = windowsDriveLetter(toPath("C:"));
+  ASSERT_TRUE(test);
+  EXPECT_EQ("C", *test);
+
+  test = windowsDriveLetter(toPath("C:\\"));
+  ASSERT_TRUE(test);
+  EXPECT_EQ("C", *test);
+
+  test = windowsDriveLetter(toPath("C:\\test\\file"));
+  ASSERT_TRUE(test);
+  EXPECT_EQ("C", *test);
+
+  test = windowsDriveLetter(toPath("C:/"));
+  ASSERT_TRUE(test);
+  EXPECT_EQ("C", *test);
+
+  test = windowsDriveLetter(toPath("C:/test/file"));
+  ASSERT_TRUE(test);
+  EXPECT_EQ("C", *test);
+
+  test = windowsDriveLetter(toPath("/"));
+  EXPECT_FALSE(test);
+
+  test = windowsDriveLetter(toPath("/test/file"));
+  EXPECT_FALSE(test);
+
+  test = windowsDriveLetter(toPath("./"));
+  EXPECT_FALSE(test);
+
+  test = windowsDriveLetter(toPath("./test/file"));
+  EXPECT_FALSE(test);
+
+}
+
+TEST_F(CoreFixture, IsNetworkPath)
+{
+  openstudio::path path;
+
+#ifdef _WINDOWS
+  path = toPath("C:/");
+#else
+  path = toPath("/");
+#endif
+  EXPECT_TRUE(path.is_absolute());
+  EXPECT_FALSE(isNetworkPath(path));
+  EXPECT_FALSE(isNetworkPathAvailable(path));
+
+  path = toPath("./test");
+  EXPECT_FALSE(path.is_absolute());
+  EXPECT_FALSE(isNetworkPath(path));
+  EXPECT_FALSE(isNetworkPathAvailable(path));
+
+  path = toPath("\\\\server\\folder");
+  EXPECT_TRUE(path.is_absolute());
+  EXPECT_TRUE(isNetworkPath(path));
+  EXPECT_FALSE(isNetworkPathAvailable(path));
+
+  // DLM: below you can use for manual testing, don't check in
+  // on windows you can type 'net use' to see network drives and their status
+  // to add a test drive: net use x: \\server\folder
+  // to remove a test drive: net use x: /Delete
+  /*
+  path = "X:/";
+  EXPECT_TRUE(path.is_absolute());
+  EXPECT_FALSE(isNetworkPath(path));
+  EXPECT_FALSE(isNetworkPathAvailable(path));
+
+  path = "U:/";
+  EXPECT_TRUE(path.is_absolute());
+  EXPECT_TRUE(isNetworkPath(path));
+  EXPECT_TRUE(isNetworkPathAvailable(path));
+
+  path = "Y:/";
+  EXPECT_TRUE(path.is_absolute());
+  EXPECT_TRUE(isNetworkPath(path));
+  EXPECT_TRUE(isNetworkPathAvailable(path));
+
+  path = "Z:/";
+  EXPECT_TRUE(path.is_absolute());
+  EXPECT_FALSE(isNetworkPath(path));
+  EXPECT_FALSE(isNetworkPathAvailable(path));
+  */
 }

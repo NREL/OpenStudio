@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -107,13 +107,13 @@ class MODEL_API Loop : public ParentObject {
  public:
   virtual ~Loop() {};
 
-  virtual Node supplyInletNode();
+  virtual Node supplyInletNode() const;
 
-  virtual Node supplyOutletNode();
+  virtual Node supplyOutletNode() const;
 
-  virtual Node demandInletNode();
+  virtual Node demandInletNode() const;
 
-  virtual Node demandOutletNode();
+  virtual Node demandOutletNode() const;
 
   /** Returns all of the supply side hvac equipment between
    * inletComps and outletComps.  If type is given then the results will
@@ -122,19 +122,19 @@ class MODEL_API Loop : public ParentObject {
    */
   virtual std::vector<ModelObject> supplyComponents( std::vector<HVACComponent> inletComps,
                                                      std::vector<HVACComponent> outletComps,
-                                                     openstudio::IddObjectType type = openstudio::IddObjectType("Catchall") );
+                                                     openstudio::IddObjectType type = openstudio::IddObjectType("Catchall") ) const;
 
   /** Returns all of the supply side hvac equipment between
    * inletComp and outletComp.  If type is given then the results will
    * be limited to the given IddObjectType.  Only one inlet and outlet node
    * can be given.
    */
-  virtual std::vector<ModelObject> supplyComponents(HVACComponent inletComp, HVACComponent outletComp, openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+  virtual std::vector<ModelObject> supplyComponents(HVACComponent inletComp, HVACComponent outletComp, openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
   /** Returns all of the supply side HVAC equipment within the air loop.
    * If type is given then the results will be limited to the given IddObjectType.
    */
-  virtual std::vector<ModelObject> supplyComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+  virtual std::vector<ModelObject> supplyComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
   /** Returns all of the demand side hvac equipment between
    * inletComps and outletComps.  If type is given then the results will
@@ -143,7 +143,7 @@ class MODEL_API Loop : public ParentObject {
    */
   virtual std::vector<ModelObject> demandComponents( std::vector<HVACComponent> inletComps,
                                                      std::vector<HVACComponent> outletComps,
-                                                     openstudio::IddObjectType type = openstudio::IddObjectType("Catchall") );
+                                                     openstudio::IddObjectType type = openstudio::IddObjectType("Catchall") ) const;
 
   /** Returns all of the demand side hvac equipment between
    * inletComp and outletComp.  If type is given then the results will
@@ -152,12 +152,12 @@ class MODEL_API Loop : public ParentObject {
    */
   virtual std::vector<ModelObject> demandComponents(HVACComponent inletComp,
                                                     HVACComponent outletComp,
-                                                    openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+                                                    openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
   /** Returns all of the demand side HVAC equipment within the air loop.
    * If type is given then the results will be limited to the given IddObjectType.
    */
-  virtual std::vector<ModelObject> demandComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+  virtual std::vector<ModelObject> demandComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
   /** Returns all of the HVAC equipment within the air loop including both
    * the supply and demand sides of the loop.
@@ -181,7 +181,7 @@ class MODEL_API Loop : public ParentObject {
   /** Returns an optional ModelObject with the given handle.
    * If the handle is not within demand side of the Loop then the optional will be false
    */
-  virtual boost::optional<ModelObject> demandComponent(openstudio::Handle handle);
+  virtual boost::optional<ModelObject> demandComponent(openstudio::Handle handle) const;
 
   /** Returns an optional ModelObject with the given handle.
    * If the handle is not within supply side of the Loop then the optional will be false

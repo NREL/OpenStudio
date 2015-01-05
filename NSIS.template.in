@@ -39,7 +39,7 @@
   VIProductVersion "@CPACK_PACKAGE_VERSION@.0"
   VIAddVersionKey ProductName "@CPACK_PACKAGE_INSTALL_DIRECTORY@"
   VIAddVersionKey CompanyName "NREL"
-  VIAddVersionKey LegalCopyright "Copyright (c) 2014 National Renewable Energy Laboratory"
+  VIAddVersionKey LegalCopyright "Copyright (c) 2015 National Renewable Energy Laboratory"
   VIAddVersionKey FileDescription "@CPACK_PACKAGE_INSTALL_DIRECTORY@"
   VIAddVersionKey FileVersion "@CPACK_PACKAGE_VERSION@"
   VIAddVersionKey ProductVersion "@CPACK_PACKAGE_VERSION@"

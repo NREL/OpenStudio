@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -693,7 +693,7 @@ void OSDocument::createTab(int verticalId)
     case BUILDING_STORIES:
       // Building Stories
 
-      m_mainTabController = std::shared_ptr<MainTabController>(new BuildingStoriesTabController(m_model));
+      m_mainTabController = std::shared_ptr<MainTabController>(new BuildingStoriesTabController(isIP, m_model));
       m_mainWindow->setView(m_mainTabController->mainContentWidget(), BUILDING_STORIES);
   
       connect(m_mainTabController.get(), &BuildingStoriesTabController::downloadComponentsClicked, this, &OSDocument::downloadComponentsClicked);
@@ -1525,13 +1525,27 @@ void OSDocument::openMeasuresDlg()
 void OSDocument::openChangeMeasuresDirDlg()
 {
   openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
- 
-  QString dirName = QFileDialog::getExistingDirectory( this->mainWindow(),
-                                                       tr("Select My Measures Directory"),
-                                                       toQString(userMeasuresDir));
- 
-  if(dirName.length() > 0){
-    userMeasuresDir = toPath(dirName);
+
+  QString dirName("");
+
+  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+    dirName = QFileDialog::getExistingDirectory(this->mainWindow(),
+      tr("Select My Measures Directory"));
+  }
+  else {
+    dirName = QFileDialog::getExistingDirectory(this->mainWindow(),
+      tr("Select My Measures Directory"),
+      toQString(userMeasuresDir));
+  }
+
+  userMeasuresDir = toPath(dirName);
+
+  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+    QMessageBox::information(this->mainWindow(), "Invalid Directory", "The My Measures Directory you chose appears to be on a network drive that is not currently available.\nYou can change your specified My Measures Directory using 'Preferences->Change My Measures Directory'.", QMessageBox::Ok);
+    return;
+  }
+
+  if(!userMeasuresDir.empty()){
     if (BCLMeasure::setUserMeasuresDir(userMeasuresDir)){
       OSAppBase::instance()->measureManager().updateMeasuresLists();
     }

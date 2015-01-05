@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -30,6 +30,7 @@
 #include <QLineEdit>
 #include <QLabel>
 #include <QString>
+#include <QValidator>
 
 namespace openstudio {
 
@@ -43,6 +44,8 @@ class OSQuantityEdit2: public QWidget {
                   const std::string& ipUnits, bool isIP, QWidget * parent = nullptr);
 
   virtual ~OSQuantityEdit2() {}
+
+  QDoubleValidator * doubleValidator() { return m_doubleValidator; }
 
   void bind(bool isIP,
             model::ModelObject& modelObject,
@@ -108,6 +111,7 @@ class OSQuantityEdit2: public QWidget {
   QLabel* m_units;
   QString m_text = "UNINITIALIZED";
   std::string m_unitsStr = "";
+  QDoubleValidator * m_doubleValidator;
 
   bool m_isIP;
   std::string m_modelUnits;
@@ -154,6 +158,8 @@ class OSQuantityEdit: public QWidget {
 
   virtual ~OSQuantityEdit() {}
 
+  QDoubleValidator * doubleValidator() { return m_doubleValidator; }
+
   void bind(model::ModelObject& modelObject,
             const char* property,
             bool isIP,
@@ -189,6 +195,7 @@ class OSQuantityEdit: public QWidget {
 
   bool m_isScientific;
   boost::optional<int> m_precision;
+  QDoubleValidator * m_doubleValidator;
 
   std::string propertyWithSystem() const;
 

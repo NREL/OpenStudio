@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -24,6 +24,7 @@ module OpenStudio
   module EnergyPlus
   
     # return the build version from a file path
+    # This function does not provide meaningful information for versions starting at 8.2.0
     def build_version(f)
       version = 0 # was nil
       if match_data = /(\d+)-(\d+)-(\d+)-(\d+)/.match(f)
@@ -31,6 +32,9 @@ module OpenStudio
       elsif match_data = /(\d+-\d+-\d+)/.match(f)
         # register each release version
         case match_data[1].to_s
+          when "8-2-0"
+            # 8.2.0 uses 10 digit build SHAs which can be find in the exe output, and the idd file.
+            version = 0
           when "8-1-0"
             version = 9
           when "8-0-0"
@@ -70,7 +74,14 @@ module OpenStudio
     def find_energyplus(major_version, minor_version, build_version = '.*')
 
       # version matches either internal or official releases
-      version = "#{major_version}[-\.]#{minor_version}[-\.]0[-\.]?#{build_version}"
+      # prior to version 8.2.0 we assume the least signficant version number (third digit) is 0
+      # 8.2.0 and beyond we cannot assume that
+      version = ''
+      if (major_version) < 8 or (major_version == 8 and minor_version < 2)
+        version = "#{major_version}[-\\.]#{minor_version}[-\\.]0[-\\.]?#{build_version}"
+      else
+       version = "#{major_version}[-\\.]#{minor_version}[-\\.]\\d+"
+      end
 
       # default search paths by system
       potential_paths = []
@@ -123,6 +134,19 @@ module OpenStudio
           else
             #puts "E+.idd not found"
             next # not found
+          end
+
+          # if we are at or above 8.2 check build number from idd file
+          if major_version >= 8 and minor_version >= 2
+            build = 'xxxxxxxxxx'
+            File.open result[:energyplus_idd] do |f|
+              f.gets # skip past the first line which has version major.minor.patch build bumber
+              build_line = f.gets # get the build number from the second line
+              build = /!IDD_BUILD ([\d\w]{10})/.match(build_line)[1]
+            end
+            if not build.match build_version
+              next
+            end
           end
 
           # check for WeatherData

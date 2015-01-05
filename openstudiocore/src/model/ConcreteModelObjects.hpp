@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -252,6 +252,7 @@
 #include "StandardGlazing.hpp"
 #include "StandardOpaqueMaterial.hpp"
 #include "StandardsInformationConstruction.hpp"
+#include "StandardsInformationMaterial.hpp"
 #include "SteamEquipment.hpp"
 #include "SteamEquipmentDefinition.hpp"
 #include "SubSurface.hpp"
@@ -260,7 +261,6 @@
 #include "ThermalZone.hpp"
 #include "ThermostatSetpointDualSetpoint.hpp"
 #include "ThermochromicGlazing.hpp"
-#include "TimeDependentValuation.hpp"
 #include "Timestep.hpp"
 #include "UtilityBill.hpp"
 #include "UtilityCost_Charge_Block.hpp"
@@ -533,6 +533,7 @@
 #include "StandardGlazing_Impl.hpp"
 #include "StandardOpaqueMaterial_Impl.hpp"
 #include "StandardsInformationConstruction_Impl.hpp"
+#include "StandardsInformationMaterial_Impl.hpp"
 #include "SteamEquipment_Impl.hpp"
 #include "SteamEquipmentDefinition_Impl.hpp"
 #include "SubSurface_Impl.hpp"
@@ -541,7 +542,6 @@
 #include "ThermalZone_Impl.hpp"
 #include "ThermochromicGlazing_Impl.hpp"
 #include "ThermostatSetpointDualSetpoint_Impl.hpp"
-#include "TimeDependentValuation_Impl.hpp"
 #include "Timestep_Impl.hpp"
 #include "UtilityBill_Impl.hpp"
 #include "UtilityCost_Charge_Block_Impl.hpp"

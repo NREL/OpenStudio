@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -132,13 +132,14 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTemperatureRad
   m_idfObjects.push_back(_surfaceGroup);
 
   // Field Maximum Electrical Power to Panel
+  // Maps to HeatingDesignCapacity in 8.2.0 and above
   if( modelObject.isMaximumElectricalPowertoPanelAutosized() )
   {
-    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ElectricFields::MaximumElectricalPowertoPanel,"Autosize");
+    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ElectricFields::HeatingDesignCapacity,"Autosize");
   }
   else if( (value = modelObject.maximumElectricalPowertoPanel()) )
   {
-    idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ElectricFields::MaximumElectricalPowertoPanel,value.get());
+    idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ElectricFields::HeatingDesignCapacity,value.get());
   }
 
   // Field Temperature Control Type

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -58,7 +58,7 @@ TEST_F(IddFixture, IddFile)
   boost::filesystem::ifstream inFile(iddPath); ASSERT_TRUE(inFile?true:false);
   OptionalIddFile loadedIddFile = IddFile::load(inFile);
   ASSERT_TRUE(loadedIddFile); inFile.close();
-  EXPECT_EQ("8.1.0.009",loadedIddFile->version());
+  EXPECT_EQ("8.2.0",loadedIddFile->version());
   EXPECT_EQ(epIddFile.objects().size(),loadedIddFile->objects().size());
   if (epIddFile.objects().size() != loadedIddFile->objects().size()) {
     // get sets of IddObjectType

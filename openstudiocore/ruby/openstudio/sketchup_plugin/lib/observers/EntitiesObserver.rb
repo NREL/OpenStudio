@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -57,7 +57,10 @@ module OpenStudio
       
       return if not @enabled
       
-      @drawing_interface.on_change_entity
+      proc = Proc.new {
+        @drawing_interface.on_change_entity
+      }
+      Plugin.add_event( proc )
     end
 
     #def onElementRemoved(entities, entity_id)

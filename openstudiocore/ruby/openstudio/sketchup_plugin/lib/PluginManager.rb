@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -190,6 +190,9 @@ module OpenStudio
       #  puts "Sketchup.active_model is now #{@last_model}, #{Sketchup.active_model.object_id}, #{Sketchup.active_model.guid}"
       #end
       
+      error = false
+      error_msg = ""
+      
       # loop over each model_interface and delete if no longer valid
       @model_manager.model_interfaces.each do |model_interface|
         if not model_interface.skp_model.valid?
@@ -214,30 +217,31 @@ module OpenStudio
             # this may add events to the Plugin event_queue
             proc.call
             
-          rescue Exception => e
-            $exception = $!
-            # Most of this code is duplicated in ErrorObserver.detect_errors.
-            backtrace = $exception.backtrace
-            # NOTE:  There is a difference in backtrace with different versions of the Ruby Interpreter.
-            #        V 1.8.0 returns ["file path:line"] for a file or ["(eval):#"] for Ruby Console command line.
-            #        V 1.8.6 returns ["file path:line","(eval):#"] for a file or ["(eval):#"] for Ruby Console command line.
-            path_line = backtrace[0].split(':')
-            if (path_line.length > 1)
-              path = path_line[0] + ':' + path_line[1]  # Colon here is to handle C: in the path
-              msg = "\nException in Proc!\n"
-              msg += proc.to_s + "\n"
-              msg += "ERROR:\n"
-              msg += $exception.class.to_s + "\n"
-              msg += $exception.message + "\n"
-              msg += "BACKTRACE:\n"
-              $exception.backtrace.each { |stack_call| msg += stack_call + "\n" }
+          rescue StandardError => e
+            error = true
+            error_msg = e.message
+            backtrace = e.backtrace
+            
+            if !backtrace.empty?
+            
+              path_line = backtrace[0].split(':')
+              if (RUBY_PLATFORM =~ /mswin/ || RUBY_PLATFORM =~ /mingw/)
+                if (path_line.length > 1)
+                  path = path_line[0] + ':' + path_line[1]  # Colon here is to handle C: in the path
+                end
+              end
               
-              Plugin.log(OpenStudio::Error, msg)
-              puts msg
+              error_msg = "ERROR:\n"
+              error_msg += e.class.to_s + "\n"
+              error_msg += e.message + "\n"
+              error_msg += "BACKTRACE:\n"
+              backtrace.each { |stack_call| error_msg += stack_call + "\n" }
             end
             
-          ensure
-          
+            SKETCHUP_CONSOLE.show
+            Plugin.log(OpenStudio::Error, error_msg)
+            puts error_msg
+            
           end
         end
         
@@ -248,6 +252,12 @@ module OpenStudio
         if model_interface.paint_requested
           model_interface.paint_now
         end
+      end
+      
+      if error
+        msg  = "An error occurred in the OpenStudio SketchUp plug-in.\n\n"
+        msg += "It advised that you save a backup of your current OpenStudio model and restart SketchUp."
+        UI.messagebox(msg)
       end
 
     end
@@ -275,13 +285,6 @@ module OpenStudio
       end
       
       return result
-    end
-    
-    def do_bug
-      # For testing ErrorHandler
-      $test = false
-      a = nil
-      b = a + 3
     end
 
     def inspect
@@ -429,7 +432,7 @@ module OpenStudio
     end
 
     def energyplus_version
-      return('8.1.0')
+      return('8.2.0')
     end
     
     def minimal_template_path
@@ -491,7 +494,7 @@ module OpenStudio
   if $OPENSTUDIO_SKETCHUPPLUGIN_DEVELOPER_MENU
     # Show the Ruby Console at startup so we can
     # see any programming errors we may make.
-    Sketchup.send_action("showRubyPanel:")
+    SKETCHUP_CONSOLE.show
   end
   
   # will not get new model on start up

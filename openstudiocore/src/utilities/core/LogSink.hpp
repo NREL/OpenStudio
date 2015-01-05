@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -65,6 +65,9 @@ namespace openstudio{
 
     /// set the regular expression to match log channels
     void setChannelRegex(const boost::regex& filter);
+
+    /// set the regular expression to match log channels
+    void setChannelRegex(const std::string& filter);
 
     /// reset the regular expression to match log channels
     void resetChannelRegex();

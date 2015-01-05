@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -23,6 +23,8 @@
 
 #include "../MasslessOpaqueMaterial.hpp"
 #include "../MasslessOpaqueMaterial_Impl.hpp"
+#include "../StandardsInformationMaterial.hpp"
+#include "../StandardsInformationMaterial_Impl.hpp"
 
 #include "../../utilities/units/Quantity.hpp"
 #include "../../utilities/units/Unit.hpp"
@@ -96,5 +98,39 @@ TEST_F(ModelFixture,MasslessOpaqueMaterial_VisibleAbsorptance_Quantity) {
   Quantity q = masslessOpaqueMaterial.getVisibleAbsorptance(true);
   EXPECT_NEAR(value,q.value(),1.0E-8);
   EXPECT_EQ(units.standardString(),q.units().standardString());
+}
+
+TEST_F(ModelFixture, MasslessOpaqueMaterial_StandardsInformation) 
+{
+  Model model;
+
+  MasslessOpaqueMaterial masslessOpaqueMaterial(model);
+  StandardsInformationMaterial info = masslessOpaqueMaterial.standardsInformation();
+
+  EXPECT_LT(0u, info.suggestedCompositeFramingMaterials().size());
+  EXPECT_LT(0u, info.suggestedCompositeFramingConfigurations().size());
+  EXPECT_LT(0u, info.suggestedCompositeFramingDepths().size());
+  EXPECT_LT(0u, info.suggestedCompositeFramingSizes().size());
+  EXPECT_LT(0u, info.suggestedCompositeCavityInsulations().size());
+
+  info.setMaterialStandard("CEC Title24-2013");
+  ASSERT_TRUE(info.materialStandard());
+  EXPECT_EQ("CEC Title24-2013", info.materialStandard().get());
+
+  EXPECT_LT(0u, info.suggestedCompositeFramingMaterials().size());
+  EXPECT_LT(0u, info.suggestedCompositeFramingConfigurations().size());
+  EXPECT_LT(0u, info.suggestedCompositeFramingDepths().size());
+  EXPECT_LT(0u, info.suggestedCompositeFramingSizes().size());
+  EXPECT_LT(0u, info.suggestedCompositeCavityInsulations().size());
+
+  info.setMaterialStandard("Non-Existent Standard");
+  ASSERT_TRUE(info.materialStandard());
+  EXPECT_EQ("Non-Existent Standard", info.materialStandard().get());
+
+  EXPECT_EQ(0u, info.suggestedCompositeFramingMaterials().size());
+  EXPECT_EQ(0u, info.suggestedCompositeFramingConfigurations().size());
+  EXPECT_EQ(0u, info.suggestedCompositeFramingDepths().size());
+  EXPECT_EQ(0u, info.suggestedCompositeFramingSizes().size());
+  EXPECT_EQ(0u, info.suggestedCompositeCavityInsulations().size());
 }
 

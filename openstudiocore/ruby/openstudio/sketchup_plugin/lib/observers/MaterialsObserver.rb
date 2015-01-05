@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -53,9 +53,12 @@ module OpenStudio
       
       return if not @enabled
       
-      if material.drawing_interface
-        material.drawing_interface.update_model_object
-      end
+      proc = Proc.new {
+        if material.drawing_interface
+          material.drawing_interface.update_model_object
+        end
+      }
+      Plugin.add_event( proc )
     end
 
     #def onMaterialRefChange(materials, material)

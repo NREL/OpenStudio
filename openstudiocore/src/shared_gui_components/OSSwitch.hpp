@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -34,6 +34,11 @@ class OSSwitch2 : public QPushButton {
   OSSwitch2(QWidget * parent = nullptr);
 
   virtual ~OSSwitch2() {}
+
+  // Note: default
+  void makeOnOff();
+
+  void makeTrueFalse();
 
   void bind(model::ModelObject & modelObject,
             BoolGetter get,

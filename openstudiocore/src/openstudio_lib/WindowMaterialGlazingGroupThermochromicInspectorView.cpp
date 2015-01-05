@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -19,6 +19,8 @@
 
 #include "WindowMaterialGlazingGroupThermochromicInspectorView.hpp"
 
+#include "StandardsInformationMaterialWidget.hpp"
+
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
 
@@ -37,9 +39,6 @@ namespace openstudio {
 
 WindowMaterialGlazingGroupThermochromicInspectorView::WindowMaterialGlazingGroupThermochromicInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
   : ModelObjectInspectorView(model, true, parent),
-    m_nameEdit(nullptr),
-    m_opticalDataTemperature(nullptr),
-    m_windowMaterialGlazingName(nullptr),
     m_isIP(isIP)
 {
   createLayout();
@@ -47,31 +46,45 @@ WindowMaterialGlazingGroupThermochromicInspectorView::WindowMaterialGlazingGroup
 
 void WindowMaterialGlazingGroupThermochromicInspectorView::createLayout()
 {
+  QWidget* hiddenWidget = new QWidget();
+  this->stackedWidget()->addWidget(hiddenWidget);
+
   QWidget* visibleWidget = new QWidget();
   this->stackedWidget()->addWidget(visibleWidget);
 
   QGridLayout* mainGridLayout = new QGridLayout();
-  mainGridLayout->setContentsMargins(7,7,7,7);
+  mainGridLayout->setContentsMargins(7, 7, 7, 7);
   mainGridLayout->setSpacing(14);
   visibleWidget->setLayout(mainGridLayout);
 
-  unsigned row = 0;
-  unsigned col = 0;
+  int row = mainGridLayout->rowCount();
+
+  QLabel * label = nullptr;
 
   // Name
 
-  QLabel * label = new QLabel("Name: ");
+  label = new QLabel("Name: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  mainGridLayout->addWidget(label, row, 0);
+
+  ++row;
 
   m_nameEdit = new OSLineEdit();
-  mainGridLayout->addWidget(m_nameEdit,row++,0,1,3);
+  mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
+
+  ++row;
+
+  // Standards Information
+
+  m_standardsInformationWidget = new StandardsInformationMaterialWidget(m_isIP, mainGridLayout, row);
+
+  ++row;
 
   // Optical Data Temperature
 
   label = new QLabel("Optical Data Temperature: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  mainGridLayout->addWidget(label,row++,0);
   label->hide();
 
   m_opticalDataTemperature = new OSQuantityEdit2("C", "C", "F", m_isIP);
@@ -83,7 +96,7 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::createLayout()
 
   label = new QLabel("Window ThermochromicGlazing Glazing Name: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_windowMaterialGlazingName = new OSLineEdit();
   mainGridLayout->addWidget(m_windowMaterialGlazingName,row++,0,1,3);
@@ -126,6 +139,8 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::attach(openstudio::mo
 
   m_windowMaterialGlazingName->bind(thermochromicGlazing,"windowMaterialGlazingName");
 
+  m_standardsInformationWidget->attach(thermochromicGlazing);
+
   this->stackedWidget()->setCurrentIndex(1);
 }
 
@@ -136,15 +151,12 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::detach()
   m_nameEdit->unbind();
   m_opticalDataTemperature->unbind();
   m_windowMaterialGlazingName->unbind();
+
+  m_standardsInformationWidget->detach();
 }
 
 void WindowMaterialGlazingGroupThermochromicInspectorView::refresh()
 {
-}
-
-void WindowMaterialGlazingGroupThermochromicInspectorView::toggleUnits(bool displayIP)
-{
-  m_isIP = displayIP;
 }
 
 } // openstudio

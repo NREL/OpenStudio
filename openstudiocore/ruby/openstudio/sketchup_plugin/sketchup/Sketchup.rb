@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -109,6 +109,20 @@ class Sketchup::Model
     OpenStudio::Plugin.log(OpenStudio::Trace, "#{current_method_name}")
     
     set_attribute('OpenStudio', 'ModelInterface', object.object_id.to_s)
+  end
+  
+  def openstudio_entities
+    result = []
+    entities.each {|e| result << e if e.model_object_handle }
+    return result
+  end
+  
+  def delete_openstudio_entities
+    # DLM: for some reason there is no delete_attribute for SketchUp::Model
+    # delete_attribute('OpenStudio') # deletes entire attribute dictionary
+    set_attribute('OpenStudio', 'OpenStudioPath', nil)
+    set_attribute('OpenStudio', 'ModelInterface', nil)
+    entities.erase_entities(openstudio_entities)
   end
   
 end

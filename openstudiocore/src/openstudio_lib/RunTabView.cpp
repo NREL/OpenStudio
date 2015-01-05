@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -23,6 +23,7 @@
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 #include "ScriptFolderListView.hpp"
+#include <OpenStudio.hxx>
 
 #include "../model/DaylightingControl.hpp"
 #include "../model/DaylightingControl_Impl.hpp"
@@ -200,7 +201,23 @@ RunView::RunView(const model::Model & model,
     m_energyPlusButton->setChecked(true);
   }
 
-  m_toolWarningLabel = new QLabel(openstudio::toQString("<b>Notice:</b> EnergyPlus " + getRequiredEnergyPlusVersion().toString() + " is required and not yet located.  Run File->Scan For Tools to locate."));
+  openstudio::runmanager::ToolVersion epversion = getRequiredEnergyPlusVersion();
+  if( auto tag = epversion.getTag() ) {
+    m_toolWarningLabel = new QLabel(openstudio::toQString("<b>Notice:</b> EnergyPlus " + 
+      std::to_string(epversion.getMajor().get()) + "." +
+      std::to_string(epversion.getMinor().get()) + "." +
+      std::to_string(epversion.getBuild().get()) + " Build \"" +
+      tag.get() + "\""
+      " is required and not yet located."
+      "  Run Preferences -> Scan For Tools to locate."));
+  } else {
+    m_toolWarningLabel = new QLabel(openstudio::toQString("<b>Notice:</b> EnergyPlus " + 
+      std::to_string(epversion.getMajor().get()) + "." +
+      std::to_string(epversion.getMinor().get()) + "." +
+      std::to_string(epversion.getBuild().get()) +
+      " is required and not yet located."
+      "  Run Preferences -> Scan For Tools to locate."));
+  }
   m_toolWarningLabel->hide();
 
   mainLayout->addWidget(m_toolWarningLabel, 2, 1);
@@ -231,14 +248,8 @@ void RunView::getRadiancePreRunWarningsAndErrors(std::vector<std::string> & warn
 void RunView::locateEnergyPlus()
 {
   openstudio::runmanager::ConfigOptions co(true);
-  boost::optional<int> major = getRequiredEnergyPlusVersion().getMajor();
-  boost::optional<int> minor = getRequiredEnergyPlusVersion().getMinor();
-  bool energyplus_not_installed;
-  if (major && minor){
-    energyplus_not_installed = co.getTools().getAllByName("energyplus").getAllByVersion(openstudio::runmanager::ToolVersion(*major,*minor)).tools().size() == 0;
-  } else {
-    energyplus_not_installed = co.getTools().getAllByName("energyplus").getAllByVersion(openstudio::runmanager::ToolVersion(8,1)).tools().size() == 0;
-  }
+  openstudio::runmanager::ToolVersion epversion = getRequiredEnergyPlusVersion();
+  bool energyplus_not_installed = co.getTools().getAllByName("energyplus").getAllByVersion(epversion).tools().size() == 0;
   
   if (energyplus_not_installed){
     m_toolWarningLabel->show();
@@ -391,7 +402,12 @@ void RunView::treeChanged(const openstudio::UUID &t_uuid)
 
 openstudio::runmanager::ToolVersion RunView::getRequiredEnergyPlusVersion()
 {
-  return openstudio::runmanager::ToolVersion::fromString(ENERGYPLUS_VERSION);
+  std::string sha = energyPlusBuildSHA();
+  if( ! sha.empty() ) {
+    return openstudio::runmanager::ToolVersion(energyPlusVersionMajor(),energyPlusVersionMinor(),energyPlusVersionPatch(),sha);
+  } else {
+    return openstudio::runmanager::ToolVersion(energyPlusVersionMajor(),energyPlusVersionMinor(),energyPlusVersionPatch());
+  }
 }
 
 void RunView::playButtonClicked(bool t_checked)
@@ -436,10 +452,25 @@ void RunView::playButtonClicked(bool t_checked)
     openstudio::runmanager::ToolVersion epver = getRequiredEnergyPlusVersion();
     if (co.getTools().getAllByName("energyplus").getAllByVersion(epver).tools().size() == 0)
     {
-      QMessageBox::information(this, 
-          "Missing EnergyPlus",
-          openstudio::toQString("EnergyPlus " + epver.toString() + " could not be located, simulation aborted."),
-          QMessageBox::Ok);
+      if( auto tag = epver.getTag() ) {
+        QMessageBox::information(this, 
+            "Missing EnergyPlus",
+            QString::fromStdString("EnergyPlus " +
+            std::to_string(epver.getMajor().get()) + "." +
+            std::to_string(epver.getMinor().get()) + "." +
+            std::to_string(epver.getBuild().get()) + " Build \"" +
+            tag.get() + "\" could not be located, simulation aborted."),
+            QMessageBox::Ok);
+      } else {
+        QMessageBox::information(this, 
+            "Missing EnergyPlus",
+            QString::fromStdString("EnergyPlus " +
+            std::to_string(epver.getMajor().get()) + "." +
+            std::to_string(epver.getMinor().get()) + "." +
+            std::to_string(epver.getBuild().get()) + 
+            " could not be located, simulation aborted."),
+            QMessageBox::Ok);
+      }
       m_playButton->setChecked(false);
       osdocument->enableTabsAfterRun();
       return;

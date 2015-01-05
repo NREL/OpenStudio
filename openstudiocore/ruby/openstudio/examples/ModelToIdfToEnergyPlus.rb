@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software you can redistribute it and/or
@@ -41,7 +41,7 @@ require 'openstudio/energyplus/find_energyplus'
 osm_path = OpenStudio::Path.new(ARGV[0])
 
 # find energyplus
-ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
+ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,2)
 ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
 idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
 ep_dir = File.dirname(ep_path.to_s)

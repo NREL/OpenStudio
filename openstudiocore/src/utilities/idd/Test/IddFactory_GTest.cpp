@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -51,7 +51,6 @@ TEST_F(IddFixture,IddFactory_Version_Header) {
   // EnergyPlus always has major, minor, patch and build
   VersionString epVersion(IddFactory::instance().getVersion(IddFileType::EnergyPlus));
   EXPECT_TRUE(epVersion.patch());
-  EXPECT_TRUE(epVersion.build());
   EXPECT_EQ(VersionString(energyPlusVersion()),epVersion);
   EXPECT_FALSE(epVersion.fidelityEqual(VersionString(energyPlusVersion())));
 

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -37,7 +37,7 @@
 
 using namespace openstudio;
 
-TEST_F(BCLFixture, LocalBCLTest)
+TEST_F(BCLFixture, LocalBCL_AuthKey)
 {
   EXPECT_TRUE(LocalBCL::instance().setProdAuthKey(defaultProdAuthKey));
   EXPECT_EQ(defaultProdAuthKey, LocalBCL::instance().prodAuthKey());

@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -37,7 +37,6 @@ require("openstudio/sketchup_plugin/lib/tools/NewGlareSensorTool")
 require("openstudio/sketchup_plugin/lib/tools/NewIlluminanceMapTool")
 require("openstudio/sketchup_plugin/lib/tools/NewLuminaireTool")
 require("openstudio/sketchup_plugin/lib/tools/NewSpaceTool")
-require("openstudio/sketchup_plugin/lib/observers/ErrorObserver")  # This is hopefully only a temporary location
 
 module OpenStudio
 
@@ -121,9 +120,6 @@ module OpenStudio
       @new_cmd.tooltip = "New OpenStudio Model"
       @new_cmd.status_bar_text = "Create a new OpenStudio model"
       @new_cmd.set_validation_proc { 
-        
-        # kludge to run error checking for ruby script errors in the plugin, only need this in one validation proc
-        detect_errors
 
         result = MF_GRAYED
         if model_manager = Plugin.model_manager

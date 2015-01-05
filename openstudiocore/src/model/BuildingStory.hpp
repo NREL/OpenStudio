@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -24,8 +24,6 @@
 #include "ModelObject.hpp"
 
 namespace openstudio {  
-
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -59,32 +57,23 @@ class MODEL_API BuildingStory : public ModelObject {
   //@{
 
   boost::optional<double> nominalZCoordinate() const;
-  
-  OSOptionalQuantity getNominalZCoordinate(bool returnIP=false) const;
 
-  double nominalFloortoFloorHeight() const;
-  
-  Quantity getNominalFloortoFloorHeight(bool returnIP=false) const;
+  boost::optional<double> nominalFloortoFloorHeight() const;
 
-  bool isNominalFloortoFloorHeightDefaulted() const;
+  boost::optional<double> nominalFloortoCeilingHeight() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  void setNominalZCoordinate(boost::optional<double> nominalZCoordinate);
-
   void setNominalZCoordinate(double nominalZCoordinate);
-  
-  bool setNominalZCoordinate(const Quantity& nominalZCoordinate);
-
   void resetNominalZCoordinate();
 
   bool setNominalFloortoFloorHeight(double nominalFloortoFloorHeight);
-  
-  bool setNominalFloortoFloorHeight(const Quantity& nominalFloortoFloorHeight);
-
   void resetNominalFloortoFloorHeight();
+
+  bool setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight);
+  void resetNominalFloortoCeilingHeight();
 
   //@}
 

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -62,7 +62,7 @@ TEST_F(RunManagerTestFixture, JSON_jobTest)
 TEST_F(RunManagerTestFixture, JSON_workItem)
 {
   Tools tools;
-  tools.tools().push_back(ToolInfo("tool", ToolVersion(1,5,6), 
+  tools.tools().push_back(ToolInfo("tool", ToolVersion(1,5,6, "TAG"), 
         openstudio::toPath("path1"),
         boost::regex(".*")
         ));

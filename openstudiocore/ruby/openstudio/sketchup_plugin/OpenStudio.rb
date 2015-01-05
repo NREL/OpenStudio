@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -149,7 +149,7 @@ if load_old_plugin and old_plugin
   ext.description = "Adds building energy modeling capabilities by coupling SketchUp to the EnergyPlus simulation engine.  \r\n\r\nVisit www.energyplus.gov for more information."
   ext.version = old_version
   ext.creator = "National Renewable Energy Laboratory"
-  ext.copyright = "2008-2014, Alliance for Sustainable Energy"
+  ext.copyright = "2008-2015, Alliance for Sustainable Energy"
 
   # 'true' automatically loads the extension the first time it is registered, e.g., after install
   Sketchup.register_extension(ext, true)
@@ -161,7 +161,7 @@ elsif new_plugin
   ext.description = "Adds building energy modeling capabilities by coupling SketchUp to the OpenStudio suite of tools.  \r\n\r\nVisit openstudio.net for more information."
   ext.version = new_version
   ext.creator = "National Renewable Energy Laboratory"
-  ext.copyright = "2008-2014, Alliance for Sustainable Energy"
+  ext.copyright = "2008-2015, Alliance for Sustainable Energy"
 
   # 'true' automatically loads the extension the first time it is registered, e.g., after install
   Sketchup.register_extension(ext, true)

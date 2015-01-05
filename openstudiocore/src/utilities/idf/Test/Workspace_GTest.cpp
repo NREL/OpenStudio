@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -43,8 +43,8 @@
 #include <utilities/idd/Wall_Adiabatic_FieldEnums.hxx>
 #include <utilities/idd/Window_FieldEnums.hxx>
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
-#include <utilities/idd/OS_TimeDependentValuation_FieldEnums.hxx>
 #include <utilities/idd/Sizing_Zone_FieldEnums.hxx>
+#include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
 #include "../WorkspaceWatcher.hpp"
 #include "IdfTestQObjects.hpp"
 
@@ -1410,80 +1410,82 @@ TEST_F(IdfFixture,Workspace_AddAndInsertWorkspaceObjects) {
 }
 
 TEST_F(IdfFixture,Workspace_LocateURLs) {
+  // DLM: replace with OS_WeatherFileFields
+
   // create workspace with single TDV object in it
   Workspace ws;
-  OptionalWorkspaceObject owo = ws.addObject(IdfObject(IddObjectType::OS_TimeDependentValuation));
+  OptionalWorkspaceObject owo = ws.addObject(IdfObject(IddObjectType::OS_WeatherFile));
   ASSERT_TRUE(owo);
-  WorkspaceObject tdv = *owo;
+  WorkspaceObject epw = *owo;
 
   // set the url to be the absolute path on disk (to resources in build directory)
-  openstudio::path absoluteTdvFilePath = resourcesPath()/toPath("utilities/Filetypes/TDV_2008_kBtu_CZ13.csv");
-  EXPECT_TRUE(tdv.setString(OS_TimeDependentValuationFields::Url,toString(absoluteTdvFilePath)));
+  openstudio::path absoluteEpwFilePath = resourcesPath()/toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
+  EXPECT_TRUE(epw.setString(OS_WeatherFileFields::Url, toString(absoluteEpwFilePath)));
   // check that setter worked as expected, and demonstrate getting field back out
-  ASSERT_TRUE(tdv.getString(OS_TimeDependentValuationFields::Url));
-  EXPECT_EQ(toString(absoluteTdvFilePath),tdv.getString(OS_TimeDependentValuationFields::Url).get());
+  ASSERT_TRUE(epw.getString(OS_WeatherFileFields::Url));
+  EXPECT_EQ(toString(absoluteEpwFilePath), epw.getString(OS_WeatherFileFields::Url).get());
 
   // test making path relative
   //
   std::vector<std::pair<QUrl, openstudio::path> > located = ws.locateUrls(std::vector<URLSearchPath>(), true, openstudio::path());
 
-  EXPECT_EQ(tdv.getString(OS_TimeDependentValuationFields::Url).get(), "file:TDV_2008_kBtu_CZ13.csv");
+  EXPECT_EQ(epw.getString(OS_WeatherFileFields::Url).get(), "file:USA_CO_Golden-NREL.724666_TMY3.epw");
   ASSERT_EQ(located.size(), 1u);
   std::string a = located[0].first.toString().toStdString();
-  std::string b = QUrl::fromLocalFile(openstudio::toQString(absoluteTdvFilePath)).toString().toStdString();
-  EXPECT_TRUE(located[0].first == QUrl::fromLocalFile(openstudio::toQString(absoluteTdvFilePath)));
-  EXPECT_EQ(located[0].second, openstudio::toPath("TDV_2008_kBtu_CZ13.csv"));
+  std::string b = QUrl::fromLocalFile(openstudio::toQString(absoluteEpwFilePath)).toString().toStdString();
+  EXPECT_TRUE(located[0].first == QUrl::fromLocalFile(openstudio::toQString(absoluteEpwFilePath)));
+  EXPECT_EQ(located[0].second, openstudio::toPath("USA_CO_Golden-NREL.724666_TMY3.epw"));
 
 
   // test making path absolute again, by searching with an absolute search path
   std::vector<URLSearchPath> searchpaths;
-  searchpaths.push_back(URLSearchPath(QUrl::fromLocalFile(toQString(absoluteTdvFilePath.parent_path()))));
+  searchpaths.push_back(URLSearchPath(QUrl::fromLocalFile(toQString(absoluteEpwFilePath.parent_path()))));
   located = ws.locateUrls(searchpaths, false, openstudio::path());
 
-  EXPECT_EQ(tdv.getString(OS_TimeDependentValuationFields::Url).get(),
-      toString(QUrl::fromLocalFile(openstudio::toQString(absoluteTdvFilePath)).toString()));
+  EXPECT_EQ(epw.getString(OS_WeatherFileFields::Url).get(),
+            toString(QUrl::fromLocalFile(openstudio::toQString(absoluteEpwFilePath)).toString()));
   ASSERT_EQ(located.size(), 1u);
-  EXPECT_TRUE(located[0].first == QUrl::fromLocalFile(openstudio::toQString(absoluteTdvFilePath)));
-  EXPECT_EQ(located[0].second, absoluteTdvFilePath);
+  EXPECT_TRUE(located[0].first == QUrl::fromLocalFile(openstudio::toQString(absoluteEpwFilePath)));
+  EXPECT_EQ(located[0].second, absoluteEpwFilePath);
 
   // Make the path relative again
   ws.locateUrls(std::vector<URLSearchPath>(), true, openstudio::path());
-  EXPECT_EQ(tdv.getString(OS_TimeDependentValuationFields::Url).get(), "file:TDV_2008_kBtu_CZ13.csv");
+  EXPECT_EQ(epw.getString(OS_WeatherFileFields::Url).get(), "file:USA_CO_Golden-NREL.724666_TMY3.epw");
 
   // test making path absolute again, this time, let's find it relative to a made-up location of the osm
   searchpaths.clear();
   searchpaths.push_back(URLSearchPath(QUrl::fromLocalFile("utilities/Filetypes/"), URLSearchPath::ToInputFile));
   located = ws.locateUrls(searchpaths, false, resourcesPath() / toPath("madeuposm.osm")); // give the search algo a relative place to start from
 
-  EXPECT_EQ(tdv.getString(OS_TimeDependentValuationFields::Url).get(),
-      toString(QUrl::fromLocalFile(openstudio::toQString(absoluteTdvFilePath)).toString()));
+  EXPECT_EQ(epw.getString(OS_WeatherFileFields::Url).get(),
+            toString(QUrl::fromLocalFile(openstudio::toQString(absoluteEpwFilePath)).toString()));
   ASSERT_EQ(located.size(), 1u);
-  EXPECT_TRUE(located[0].first == QUrl::fromLocalFile(openstudio::toQString(absoluteTdvFilePath)));
-  EXPECT_EQ(located[0].second, absoluteTdvFilePath);
+  EXPECT_TRUE(located[0].first == QUrl::fromLocalFile(openstudio::toQString(absoluteEpwFilePath)));
+  EXPECT_EQ(located[0].second, absoluteEpwFilePath);
 
   // Make the path relative again
   ws.locateUrls(std::vector<URLSearchPath>(), true, openstudio::path());
-  EXPECT_EQ(tdv.getString(OS_TimeDependentValuationFields::Url).get(), "file:TDV_2008_kBtu_CZ13.csv");
+  EXPECT_EQ(epw.getString(OS_WeatherFileFields::Url).get(), "file:USA_CO_Golden-NREL.724666_TMY3.epw");
 
   // This time we want to fail, by providing it with a search that should work, but we give it the wrong object type
   searchpaths.clear();
   searchpaths.push_back(URLSearchPath(QUrl::fromLocalFile("utilities/Filetypes"), URLSearchPath::ToInputFile,
         IddObjectType::OS_Version));
   located = ws.locateUrls(searchpaths, false, resourcesPath() / toPath("madeuposm.osm")); // give the search algo a relative place to start from
-  EXPECT_EQ(tdv.getString(OS_TimeDependentValuationFields::Url).get(), "file:TDV_2008_kBtu_CZ13.csv");
+  EXPECT_EQ(epw.getString(OS_WeatherFileFields::Url).get(), "file:USA_CO_Golden-NREL.724666_TMY3.epw");
   ASSERT_EQ(located.size(), 0u);
 
   // And finally, provide the correct field type for the search path, find it
   searchpaths.clear();
   searchpaths.push_back(URLSearchPath(QUrl::fromLocalFile("utilities/Filetypes"), URLSearchPath::ToInputFile,
-        IddObjectType::OS_TimeDependentValuation));
+        IddObjectType::OS_WeatherFile));
   located = ws.locateUrls(searchpaths, false, resourcesPath() / toPath("madeuposm.osm")); // give the search algo a relative place to start from
 
-  EXPECT_EQ(tdv.getString(OS_TimeDependentValuationFields::Url).get(),
-      toString(QUrl::fromLocalFile(openstudio::toQString(absoluteTdvFilePath)).toString()));
+  EXPECT_EQ(epw.getString(OS_WeatherFileFields::Url).get(),
+            toString(QUrl::fromLocalFile(openstudio::toQString(absoluteEpwFilePath)).toString()));
   ASSERT_EQ(located.size(), 1u);
-  EXPECT_TRUE(located[0].first == QUrl::fromLocalFile(openstudio::toQString(absoluteTdvFilePath)));
-  EXPECT_EQ(located[0].second, absoluteTdvFilePath);
+  EXPECT_TRUE(located[0].first == QUrl::fromLocalFile(openstudio::toQString(absoluteEpwFilePath)));
+  EXPECT_EQ(located[0].second, absoluteEpwFilePath);
 
 }
 
