@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -47,6 +47,8 @@ signals:
 
   void toggleUnitsClicked(bool displayIP);
 
+  void dropZoneItemClicked(OSItem* item);
+
 };
 
 class RefrigerationCaseGridController : public OSGridController
@@ -58,6 +60,7 @@ public:
 
   RefrigerationCaseGridController(bool isIP,
     const QString & headerText,
+    IddObjectType iddObjectType,
     model::Model model,
     std::vector<model::ModelObject> modelObjects);
 
@@ -92,6 +95,7 @@ public:
 
   RefrigerationWalkInGridController(bool isIP,
     const QString & headerText,
+    IddObjectType iddObjectType,
     model::Model model,
     std::vector<model::ModelObject> modelObjects);
 

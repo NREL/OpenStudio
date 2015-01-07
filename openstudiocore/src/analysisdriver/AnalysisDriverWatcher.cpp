@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ AnalysisDriverWatcher::AnalysisDriverWatcher(const AnalysisDriver& analysisDrive
 {
   LOG(Debug,"Constructing AnalysisDriverWatcher.");
   // make sure a QApplication exists
-  openstudio::Application::instance().application();
+  openstudio::Application::instance().application(false);
 
   // connect signals and slots
   bool ok;

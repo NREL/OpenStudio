@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -416,6 +416,11 @@ void RunStatusView::setStatus(const CloudStatus & cloudStatus, analysisdriver::A
   cloudOffButton->hide();
   cloudStoppingButton->hide();
   cloudLostConnectionButton->hide();
+
+  // TEMPORARY CLOUD DISABLE
+  //cloudOnButton->show();
+  //cloudOnButton->setEnabled(false);
+  //cloudOnButton->setToolTip("PAT cloud functionality is temporarily disabled and will be resolved in a future release");
   if( cloudStatus == CLOUD_STOPPED ){
     cloudOnButton->show();
     // don't allow turn on cloud while running, starting, or stopping analysis
@@ -1195,7 +1200,7 @@ void DataPointJobItemView::update()
   m_updateRequested = false;
 
   if (m_workflowStepJob.measure) {
-    dataPointJobHeaderView->setName(m_workflowStepJob.measure->name());
+    dataPointJobHeaderView->setName(m_workflowStepJob.measure->displayName());
   }
   else {
     OS_ASSERT(m_workflowStepJob.step.isWorkItem());
@@ -1209,7 +1214,7 @@ void DataPointJobItemView::update()
         boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
         OS_ASSERT(project);
         if (OptionalBCLMeasure measure = project->getMeasureByUUID(*measureUUID)) {
-          dataPointJobHeaderView->setName(measure->name());
+          dataPointJobHeaderView->setName(measure->displayName());
           nameSet = true;
         }
       }

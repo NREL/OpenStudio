@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -32,6 +32,7 @@
 #include "../../model/LightsDefinition.hpp"
 #include "../../model/LightsDefinition_Impl.hpp"
 
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../../utilities/core/Finder.hpp"
@@ -497,7 +498,8 @@ TEST_F(RulesetFixture, UserScript_TestModelUserScript2) {
   // lights_definition_num_instances
   it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionNumInstancesFinder);
   ASSERT_FALSE(it == loadedAttributes.end());
-  EXPECT_TRUE(it->valueType() == AttributeValueType::Integer);
+  //EXPECT_TRUE(it->valueType() == AttributeValueType::Integer); // JSON does not distinguish between int and float
+  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
   // lights_definition_floor_area
   it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionFloorAreaFinder);
   ASSERT_FALSE(it == loadedAttributes.end());
@@ -551,7 +553,8 @@ TEST_F(RulesetFixture, UserScript_TestModelUserScript2) {
   // lights_definition_num_instances
   it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionNumInstancesFinder);
   ASSERT_FALSE(it == loadedAttributes.end());
-  EXPECT_TRUE(it->valueType() == AttributeValueType::Integer);
+  //EXPECT_TRUE(it->valueType() == AttributeValueType::Integer); // JSON does not distinguish between int and float
+  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
   // lights_definition_floor_area
   it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionFloorAreaFinder);
   ASSERT_FALSE(it == loadedAttributes.end());

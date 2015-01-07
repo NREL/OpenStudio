@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
 
 #include "EpwFile.hpp"
 #include "../idf/IdfObject.hpp"
+#include "../idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include "../core/Checksum.hpp"
 #include "../core/Assert.hpp"
@@ -208,6 +209,24 @@ std::string EpwDataPoint::units(EpwDataField field)
   std::string string;
   switch(field.value())
   {
+  case EpwDataField::Year:
+    //string = "None";
+    break;
+  case EpwDataField::Month:
+    //string = "None";
+    break;
+  case EpwDataField::Day:
+    //string = "None";
+    break;
+  case EpwDataField::Hour:
+    //string = "None";
+    break;
+  case EpwDataField::Minute:
+    //string = "None";
+    break;
+  case EpwDataField::DataSourceandUncertaintyFlags:
+    //string = "None";
+    break;
   case EpwDataField::DryBulbTemperature:
     string = "C";
     break;
@@ -294,6 +313,9 @@ std::string EpwDataPoint::units(EpwDataField field)
     break;
   case EpwDataField::LiquidPrecipitationQuantity:
     string = "hr";
+    break;
+  default:
+    //string = "None";
     break;
   }
   return string;

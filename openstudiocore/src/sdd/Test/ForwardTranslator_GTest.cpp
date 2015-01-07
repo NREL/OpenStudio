@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -72,6 +72,7 @@ TEST_F(SDDFixture, ForwardTranslator_exampleModel)
     }
   }
 
+  // write out the input xml
   path p = resourcesPath() / openstudio::toPath("sdd/exampleModel.xml");
 
   ForwardTranslator forwardTranslator;
@@ -79,14 +80,15 @@ TEST_F(SDDFixture, ForwardTranslator_exampleModel)
 
   EXPECT_TRUE(test);
 
-  ReverseTranslator reverseTranslator;
-  boost::optional<Model> model2 = reverseTranslator.loadModel(p);
+  // we do not currently support loading input xml
+  //ReverseTranslator reverseTranslator;
+  //boost::optional<Model> model2 = reverseTranslator.loadModel(p);
 
-  ASSERT_TRUE(model2);
+  //ASSERT_TRUE(model2);
 
-  path p1 = resourcesPath() / openstudio::toPath("sdd/exampleModel.osm");
-  model.save(p1, true);
+  //path p1 = resourcesPath() / openstudio::toPath("sdd/exampleModel.osm");
+  //model.save(p1, true);
 
-  path p2 = resourcesPath() / openstudio::toPath("sdd/exampleModel2.osm");
-  model2->save(p2, true);
+  //path p2 = resourcesPath() / openstudio::toPath("sdd/exampleModel2.osm");
+  //model2->save(p2, true);
 }

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -72,12 +72,16 @@ signals:
 
     void openLibDlgClicked();
 
-  private slots:
-
-    void selectItem(OSItem* item);
+  public slots:
 
     void removeItem(OSItem* item);
 
+  protected slots:
+
+    void selectItem(OSItem* item);
+
+  private slots:
+  
     void replaceItem(OSItem* item, const OSItemId& replacementItemId);
 
     void clearSelection();

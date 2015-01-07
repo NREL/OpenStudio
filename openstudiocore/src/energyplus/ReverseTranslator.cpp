@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -26,6 +26,7 @@
 #include "../utilities/idf/IdfFile.hpp"
 #include "../utilities/idf/WorkspaceObject.hpp"
 #include "../utilities/idf/ValidityReport.hpp"
+#include "../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
@@ -458,7 +459,9 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     }
   case openstudio::IddObjectType::DesignSpecification_OutdoorAir :
     {
-      modelObject = translateDesignSpecificationOutdoorAir(workspaceObject);
+      // Call this directly because we don't want to translate all of them
+      // only those that are connected to the SizingZone object
+      //modelObject = translateDesignSpecificationOutdoorAir(workspaceObject);
       break;
     }
   case openstudio::IddObjectType::ElectricEquipment :

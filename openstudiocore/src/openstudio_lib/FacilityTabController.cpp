@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@
 #include "FacilityTabController.hpp"
 #include "FacilityTabView.hpp"
 #include "FacilityController.hpp"
+#include "OSItem.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -31,6 +32,8 @@ FacilityTabController::FacilityTabController(bool isIP, const model::Model& mode
   m_facilityController = std::shared_ptr<FacilityController>(new FacilityController(isIP, model));
 
   connect(m_facilityController.get(), &FacilityController::modelObjectSelected, this, &FacilityTabController::modelObjectSelected);
+
+  connect(m_facilityController.get(), &FacilityController::dropZoneItemSelected, this, &FacilityTabController::dropZoneItemSelected);
 
   connect(this, &FacilityTabController::toggleUnitsClicked, m_facilityController.get(), &FacilityController::toggleUnitsClicked);
 

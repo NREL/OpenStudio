@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -24,6 +24,8 @@
 #include "../model/AirGap.hpp"
 #include "../model/AirWallMaterial.hpp"
 #include "../model/Blind.hpp"
+#include "../model/Component.hpp"
+#include "../model/Component_Impl.hpp"
 #include "../model/InfraredTransparentMaterial.hpp"
 #include "../model/MasslessOpaqueMaterial.hpp"
 #include "../model/Material.hpp"
@@ -40,6 +42,8 @@
 #include "../model/ThermochromicGlazing.hpp"
 
 #include "../utilities/core/Logger.hpp"
+
+#include <utilities/idd/IddEnums.hxx>
 
 namespace openstudio {
 
@@ -135,6 +139,14 @@ void MaterialsController::onDrop(const OSItemId& itemId)
     if(modelObject->optionalCast<model::Material>()){
       if (this->fromComponentLibrary(itemId)){
         modelObject = modelObject->clone(this->model());
+      }
+    }
+  }
+  else{
+    boost::optional<model::Component> component = this->getComponent(itemId);
+    if (component){
+      if (component->primaryObject().optionalCast<model::ModelObject>()){
+        this->model().insertComponent(*component);
       }
     }
   }

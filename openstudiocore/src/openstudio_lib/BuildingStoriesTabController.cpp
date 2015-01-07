@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -18,8 +18,9 @@
 **********************************************************************/
 
 #include "BuildingStoriesTabController.hpp"
-#include "BuildingStoriesTabView.hpp"
+
 #include "BuildingStoriesController.hpp"
+#include "BuildingStoriesTabView.hpp"
 
 #include "../model/Model.hpp"
 
@@ -27,10 +28,10 @@
 
 namespace openstudio {
 
-BuildingStoriesTabController::BuildingStoriesTabController(const model::Model& model)
+BuildingStoriesTabController::BuildingStoriesTabController(bool isIP, const model::Model& model)
   : MainTabController(new BuildingStoriesTabView())
 {
-  m_buildingStoriesController = std::shared_ptr<BuildingStoriesController>(new BuildingStoriesController(model));
+  m_buildingStoriesController = std::shared_ptr<BuildingStoriesController>(new BuildingStoriesController(isIP, model));
   this->mainContentWidget()->addTabWidget(m_buildingStoriesController->subTabView());
 
   connect(m_buildingStoriesController.get(), &BuildingStoriesController::downloadComponentsClicked, this, &BuildingStoriesTabController::downloadComponentsClicked);

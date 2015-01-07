@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -22,6 +22,8 @@
 
 #include "ModelObjectInspectorView.hpp"
 
+class QComboBox;
+
 namespace openstudio {
 
 namespace model {
@@ -35,6 +37,8 @@ class OSComboBox;
 class OSLineEdit;
 
 class OSQuantityEdit;
+
+class StandardsInformationMaterialWidget;
 
 class MaterialInspectorView : public ModelObjectInspectorView
 {
@@ -63,30 +67,29 @@ class MaterialInspectorView : public ModelObjectInspectorView
     void detach();
 
     void refresh();
-
-    OSComboBox * m_roughness;
-
-    OSLineEdit * m_nameEdit;
-
-    OSQuantityEdit * m_thickness;
-
-    OSQuantityEdit * m_conductivity;
-
-    OSQuantityEdit * m_density;
-
-    OSQuantityEdit * m_specificHeat;
-
-    OSQuantityEdit * m_thermalAbsorptance;
-
-    OSQuantityEdit * m_solarAbsorptance;
-
-    OSQuantityEdit * m_visibleAbsorptance;
-
+    
     bool m_isIP;
 
-  public slots:
+    OSLineEdit * m_nameEdit = nullptr;
 
-    void toggleUnits(bool displayIP);
+    OSComboBox * m_roughness = nullptr;
+    
+    OSQuantityEdit * m_thickness = nullptr;
+
+    OSQuantityEdit * m_conductivity = nullptr;
+
+    OSQuantityEdit * m_density = nullptr;
+
+    OSQuantityEdit * m_specificHeat = nullptr;
+
+    OSQuantityEdit * m_thermalAbsorptance = nullptr;
+
+    OSQuantityEdit * m_solarAbsorptance = nullptr;
+
+    OSQuantityEdit * m_visibleAbsorptance = nullptr;
+
+    StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
+
 };
 
 } // openstudio

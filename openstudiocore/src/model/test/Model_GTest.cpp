@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -72,6 +72,8 @@
 #include "../../utilities/idf/WorkspaceObject.hpp"
 #include "../../utilities/idf/ValidityReport.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 #include <boost/algorithm/string/case_conv.hpp>
 
 using namespace openstudio::model;
@@ -122,7 +124,7 @@ void checkObject(ModelObject object){
 
     // TODO: DLM@20101102: in general this should be true but this is failing in case of asking for
     // electric lighting power from a zone that does not have lights, should the model object
-    // be capable of providing all the potentional output variables and the currently available variables
+    // be capable of providing all the potential output variables and the currently available variables
     // separately????
     //EXPECT_TRUE(data);
     if (!data) {

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -39,9 +39,17 @@ class LibraryTabWidget : public QWidget
 
   virtual ~LibraryTabWidget() {}
 
+  void showRemoveButton();
+ 
+  void hideRemoveButton();
+
   void addTab( QWidget * widget,
                const QString & selectedImagePath,
                const QString & unSelectedImagePath );
+
+  signals:
+
+  void removeButtonClicked(bool);
 
   public slots:
 
@@ -67,6 +75,7 @@ class LibraryTabWidget : public QWidget
 
   std::vector<QPushButton *> m_tabButtons; 
 
+  QPushButton * m_removeButton = nullptr;
 };
 
 } // namespace openstudio

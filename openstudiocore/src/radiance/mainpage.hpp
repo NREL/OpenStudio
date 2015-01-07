@@ -1,6 +1,6 @@
 /** \mainpage OpenStudio Radiance Translator
 *
-* \section intro_sec Introduction
+* \section introduction_radiance Introduction
 *
 * The Radiance Translator translates a Building Model to Radiance specific formats and imports results
 * from Radiance back into the OpenStudio SQLite database schema.

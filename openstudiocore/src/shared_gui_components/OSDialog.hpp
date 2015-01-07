@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -45,9 +45,9 @@ public:
 
   virtual ~OSDialog() {}
 
-  //QSize sizeHint() const;
+  QSize sizeHint() const;
 
-  //void setSizeHint(const QSize & sizeHint);
+  void setSizeHint(const QSize & sizeHint);
 
   QMargins layoutContentsMargins() const;
 

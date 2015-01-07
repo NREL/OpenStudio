@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/core/Path.hpp"
 #include "../utilities/core/UUID.hpp"
-#include "../ruleset/RubyUserScriptArgumentGetter.hpp"
+#include "../ruleset/RubyUserScriptInfoGetter.hpp"
 #include <vector>
 #include <map>
 #include <QSharedPointer>
@@ -89,8 +89,8 @@ class MeasureManager : public QObject
   Q_OBJECT;
 
   public:
-    // Constructor taking a RubyUserScriptArgumentGetter
-    MeasureManager(const QSharedPointer<ruleset::RubyUserScriptArgumentGetter> &t_argumentGetter, BaseApp *t_app);
+    // Constructor taking a RubyUserScriptInfoGetter
+    MeasureManager(const QSharedPointer<ruleset::RubyUserScriptInfoGetter> &t_infoGetter, BaseApp *t_app);
 
     virtual ~MeasureManager() {}
 
@@ -135,11 +135,11 @@ class MeasureManager : public QObject
 
     bool isMeasureSelected();
 
-    QSharedPointer<ruleset::RubyUserScriptArgumentGetter> argumentGetter() const;
+    QSharedPointer<ruleset::RubyUserScriptInfoGetter> infoGetter() const;
 
   public slots:
-    /// Update the UI display for all measures. Does not re-get the arguments nor
-    /// update the measures in the project at all
+    /// Update the UI display for all measures. Does recompute the measure's XML.
+    /// Does not update the measures in the project at all
     void updateMeasuresLists();
 
     /// For all measures in the "patApplicationMeasures" list which have changed relative to the version
@@ -165,6 +165,9 @@ class MeasureManager : public QObject
     /// Does not ask for user approval
     void updateBCLMeasures(analysisdriver::SimpleProject &t_project);
 
+    /// Checks a BCL measure for updates, returns true if updated
+    bool checkForUpdates(BCLMeasure& measure, bool force=false);
+
     /// Downloads updated versions of all BCL measures
     void downloadBCLMeasures();
 
@@ -178,11 +181,13 @@ class MeasureManager : public QObject
   private:
     REGISTER_LOGGER("openstudio.MeasureManager");
 
+    void updateMeasuresLists(bool updateUserMeasures);
+
     BaseApp *m_app;
     std::map<UUID,BCLMeasure> m_patApplicationMeasures;
     std::map<UUID,BCLMeasure> m_myMeasures;
     std::map<UUID,BCLMeasure> m_bclMeasures;
-    QSharedPointer<ruleset::RubyUserScriptArgumentGetter> m_argumentGetter;
+    QSharedPointer<ruleset::RubyUserScriptInfoGetter> m_infoGetter;
     QSharedPointer<LocalLibraryController> m_libraryController;
 };
 

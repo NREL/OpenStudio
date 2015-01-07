@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -22,13 +22,17 @@
 
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
+
 #include <boost/smart_ptr.hpp>
+
 #include <QObject>
 
 namespace openstudio {
 
-namespace model {
+class OSItem;
 
+namespace model {
+  
 class ThermalZone;
 
 class Loop;
@@ -57,6 +61,12 @@ class InspectorController : public QObject
   
   void toggleUnitsClicked(bool displayIP);
 
+  void itemRemoveClicked(OSItem *);
+
+  void removeButtonClicked(bool);
+
+  void workspaceObjectRemoved();
+  
   public slots:
 
   void layoutModelObject( model::OptionalModelObject &, bool readOnly );

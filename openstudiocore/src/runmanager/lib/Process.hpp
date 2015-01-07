@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -107,6 +107,8 @@ namespace runmanager {
       void statusChanged(const openstudio::runmanager::AdvancedStatus &s);
 
     private:
+      REGISTER_LOGGER("openstudio.runmanager.Process");
+
 
       /// The status of the Process. Defaults to "Idle"
       openstudio::runmanager::AdvancedStatus m_status;

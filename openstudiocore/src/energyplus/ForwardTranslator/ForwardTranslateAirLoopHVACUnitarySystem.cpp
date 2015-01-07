@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -41,6 +41,7 @@
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/Fan_VariableVolume_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -59,11 +60,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   IdfObject unitarySystem = createRegisterAndNameIdfObject(openstudio::IddObjectType::AirLoopHVAC_UnitarySystem, modelObject);
 
   // Control Type
-  unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::ControlType,"Load");
-  // s = modelObject.controlType();
-  // if (s) {
-  //   unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::ControlType,s.get());
-  // }
+  //unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::ControlType,"Load");
+  s = modelObject.getImpl<model::detail::AirLoopHVACUnitarySystem_Impl>()->controlType();
+  if (s) {
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::ControlType,s.get());
+  }
 
   // Controlling Zone or Thermostat Location
   if( boost::optional<ThermalZone> controllingZoneorThermostatLocation = modelObject.controllingZoneorThermostatLocation() )

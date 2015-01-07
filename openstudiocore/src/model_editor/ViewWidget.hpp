@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -50,7 +50,7 @@ public:
   ViewWidget(QWidget *parent = nullptr);
   ViewWidget(openstudio::model::Model model, QWidget *parent = nullptr);
   virtual ~ViewWidget();
-  virtual void addObjects(openstudio::IddObjectType type = openstudio::IddObjectType::UserCustom) = 0;
+  virtual void addObjects(openstudio::IddObjectType type = openstudio::IddObjectType("UserCustom")) = 0;
   virtual void loadModel() = 0;
   virtual void removeObjects() = 0;
   virtual void copyObjects() = 0;

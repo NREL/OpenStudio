@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ namespace openstudio {
     m_checksum(openstudio::checksum(p)), m_path(p), m_msec(msec)
   {
     // make sure a QApplication exists
-    openstudio::Application::instance().application();
+    openstudio::Application::instance().application(false);
     openstudio::Application::instance().processEvents();
 
     if (m_isDirectory){

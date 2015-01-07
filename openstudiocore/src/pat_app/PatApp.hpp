@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -64,7 +64,7 @@ namespace osversion {
 }
 
 namespace ruleset {
-  class RubyUserScriptArgumentGetter;
+  class RubyUserScriptInfoGetter;
 }
 
 namespace analysisdriver {
@@ -96,7 +96,7 @@ class PatApp : public QApplication, public BaseApp
 
  public:
 
-  PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUserScriptArgumentGetter> &t_argumentGetter );
+  PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUserScriptInfoGetter> &t_infoGetter );
 
   virtual ~PatApp();
 

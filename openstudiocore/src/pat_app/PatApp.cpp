@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -37,6 +37,7 @@
 #include "RunTabController.hpp"
 #include "RunView.hpp"
 #include "StartupView.hpp"
+
 #include <pat_app/VagrantConfiguration.hxx>
 
 #include "../shared_gui_components/BCLMeasureDialog.hpp"
@@ -106,13 +107,13 @@ namespace openstudio {
 
 namespace pat {
 
-PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUserScriptArgumentGetter> &t_argumentGetter )
+PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUserScriptInfoGetter> &t_infoGetter )
   : QApplication(argc, argv),
     m_onlineBclDialog(nullptr),
     m_cloudDialog(nullptr),
-    m_measureManager(t_argumentGetter, this)
+    m_measureManager(t_infoGetter, this)
 {
-  connect(this, &PatApp::userMeasuresDirChanged, &m_measureManager, &MeasureManager::updateMeasuresLists);
+  connect(this, &PatApp::userMeasuresDirChanged, &m_measureManager, static_cast<void (MeasureManager::*)(void)>(&MeasureManager::updateMeasuresLists));
 
   setOrganizationName("NREL");
   setOrganizationDomain("nrel.gov");
@@ -236,10 +237,17 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
 
   mainWindow->show();
 
-  if (!QDir().exists(toQString(BCLMeasure::userMeasuresDir()))){
-    BCLMeasure::setUserMeasuresDir(BCLMeasure::userMeasuresDir());
-  }
+  openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
 
+  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+    QMessageBox::information(this->mainWindow, "Network Connection Problem", "Unable to update Measures list.\nYour User Measures Directory appears to be a network directory and is not currently available.\nYou can change your specified User Measures Directory using Preferences->Change My Measures Directory.", QMessageBox::Ok);
+  }
+  else {
+    if (!QDir().exists(toQString(userMeasuresDir))) {
+      BCLMeasure::setUserMeasuresDir(userMeasuresDir);
+    }
+  }
+    
   m_measureManager.updateMeasuresLists();
 
   if (!fileName.isEmpty()){
@@ -572,7 +580,7 @@ void PatApp::openBclDlg()
     while(!LocalBCL::instance().setProdAuthKey(authKey)){
       QMessageBox dlg(mainWindow);
       dlg.setWindowTitle(tr("Online BCL"));
-      dlg.setText("The BCL auth key is invalid, and Online BCL data will not be available.  To learn how to obtain a valid BCL auth key, click <a href='http://openstudio.nrel.gov/using-building-component-library-bcl-key-openstudio'>here</a>.");
+      dlg.setText("The BCL auth key is invalid, and Online BCL data will not be available.  To learn how to obtain a valid BCL auth key, click <a href='http://nrel.github.io/OpenStudio-user-documentation/getting_started/getting_started/'>here</a>.");
       dlg.setTextFormat(Qt::RichText);
       dlg.addButton(QMessageBox::Cancel);
       dlg.addButton(QMessageBox::Retry);
@@ -663,7 +671,7 @@ void PatApp::on_closeMonitorUseDlg()
 
 void PatApp::showHelp()
 {
-  QDesktopServices::openUrl(QUrl("http://openstudio.nrel.gov/parametric-analysis-tool-getting-started"));
+  QDesktopServices::openUrl(QUrl("http://nrel.github.io/OpenStudio-user-documentation/comparative_analysis/parametric_studies/"));
 }
 
 void PatApp::showAbout()
@@ -1184,12 +1192,26 @@ void PatApp::changeUserMeasuresDir()
 {
   openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
 
-  QString dirName = QFileDialog::getExistingDirectory( mainWindow,
-                                                       tr("Select My Measures Directory"),
-                                                       toQString(userMeasuresDir));
+  QString dirName("");
 
-  if(dirName.length() > 0){
-    userMeasuresDir = toPath(dirName);
+  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+    dirName = QFileDialog::getExistingDirectory(mainWindow,
+      tr("Select My Measures Directory"));
+  }
+  else {
+    dirName = QFileDialog::getExistingDirectory(mainWindow,
+      tr("Select My Measures Directory"),
+      toQString(userMeasuresDir));
+  }
+
+  userMeasuresDir = toPath(dirName);
+
+  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+    QMessageBox::information(this->mainWidget(), "Cannot Update User Measures", "Your My Measures Directory appears to be on a network drive that is not currently available.\nYou can change your specified My Measures Directory using 'Preferences->Change My Measures Directory'.", QMessageBox::Ok);
+    return;
+  }
+  
+  if(!userMeasuresDir.empty()){
     if (BCLMeasure::setUserMeasuresDir(userMeasuresDir)){
       emit userMeasuresDirChanged();
     }
@@ -1394,7 +1416,7 @@ void PatApp::attachProject(boost::optional<analysisdriver::SimpleProject> projec
 
     openstudio::analysis::Analysis analysis = m_project->analysis();
 
-    // connect signals from the the analysis to this
+    // connect signals from the analysis to this
     bool isConnected = analysis.connect(SIGNAL(changed(ChangeType)), this, SLOT(markAsModified()));
     OS_ASSERT(isConnected);
 

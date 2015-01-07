@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -30,6 +30,7 @@
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 #include <utilities/idd/Sizing_Zone_FieldEnums.hxx>
 #include <utilities/idd/DesignSpecification_ZoneAirDistribution_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../../utilities/core/Assert.hpp"
@@ -140,7 +141,7 @@ OptionalModelObject ReverseTranslator::translateSizingZone( const WorkspaceObjec
 
     target = workspaceObject.getTarget(Sizing_ZoneFields::DesignSpecificationOutdoorAirObjectName);
     if (target){
-      OptionalModelObject mo = translateAndMapWorkspaceObject(*target);
+      OptionalModelObject mo = translateDesignSpecificationOutdoorAir(*target);
       if (mo){
         if (mo->optionalCast<DesignSpecificationOutdoorAir>()){
           std::vector<Space> spaces = thermalZone.spaces();
@@ -249,7 +250,7 @@ OptionalModelObject ReverseTranslator::translateSizingZone( const WorkspaceObjec
     //DesignSpecification_ZoneAirDistribution
 
     boost::optional<WorkspaceObject> _designSpecification 
-        = workspaceObject.getTarget(Sizing_ZoneFields::DesignSpecificationOutdoorAirObjectName);
+        = workspaceObject.getTarget(Sizing_ZoneFields::DesignSpecificationZoneAirDistributionObjectName);
 
     if( _designSpecification )
     {

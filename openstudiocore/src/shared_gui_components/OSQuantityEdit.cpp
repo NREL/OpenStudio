@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -29,8 +29,8 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/StringHelpers.hpp"
 
-#include <QVBoxLayout>
-#include <QHBoxLayout>
+#include <QBoxLayout>
+#include <QDoubleValidator>
 
 #include <iomanip>
 
@@ -63,6 +63,9 @@ OSQuantityEdit2::OSQuantityEdit2(const std::string& modelUnits, const std::strin
   hLayout->setContentsMargins(0,0,0,0);
   hLayout->addWidget(m_lineEdit);
   hLayout->addWidget(m_units);
+
+  m_doubleValidator = new QDoubleValidator();
+  m_lineEdit->setValidator(m_doubleValidator);
 
   m_lineEdit->setFixedWidth(90);
 
@@ -206,6 +209,10 @@ void OSQuantityEdit2::unbind() {
 }
 
 void OSQuantityEdit2::onEditingFinished() {
+
+  QString text = m_lineEdit->text();
+  if (text.isEmpty() || m_text == text) return;
+
   if (m_modelObject) {
     std::string str = m_lineEdit->text().toStdString();
     boost::regex autore("[aA][uU][tT][oO]");
@@ -237,7 +244,7 @@ void OSQuantityEdit2::onEditingFinished() {
     else {
       try {
         double value = boost::lexical_cast<double>(str);
-        setPrecision(str); 
+        setPrecision(str);
 
         std::string units;
         if (m_isIP){
@@ -245,21 +252,26 @@ void OSQuantityEdit2::onEditingFinished() {
         }else{
           units = m_siUnits;
         }
-        
+        m_unitsStr = units;
+
         boost::optional<double> modelValue = convert(value, units, m_modelUnits);
         OS_ASSERT(modelValue);
 
         if (m_set) {
+          QString text = m_lineEdit->text();
+          if (text.isEmpty() || m_text == text) return;
           bool result = (*m_set)(*modelValue);
           if (!result){
             // restore
             refreshTextAndLabel();
           }
         } else if (m_setVoidReturn){
+          QString text = m_lineEdit->text();
+          if (text.isEmpty() || m_text == text) return;
           (*m_setVoidReturn)(*modelValue);
         }
       }
-      catch (...) 
+      catch (...)
       {
         // restore
         refreshTextAndLabel();
@@ -267,21 +279,33 @@ void OSQuantityEdit2::onEditingFinished() {
     }
   }
 }
-  
+
 void OSQuantityEdit2::onModelObjectChange() {
   refreshTextAndLabel();
 }
-  
+
 void OSQuantityEdit2::onUnitSystemChange(bool isIP) {
   m_isIP = isIP;
   refreshTextAndLabel();
 }
-  
+
 void OSQuantityEdit2::onModelObjectRemove(Handle handle) {
   unbind();
 }
 
 void OSQuantityEdit2::refreshTextAndLabel() {
+
+  QString text = m_lineEdit->text();
+
+  std::string units;
+  if (m_isIP){
+    units = m_ipUnits;
+  }else{
+    units = m_siUnits;
+  }
+
+  if (m_text == text && m_unitsStr == units) return;
+
   if (m_modelObject) {
     QString textValue;
     std::stringstream ss;
@@ -296,15 +320,8 @@ void OSQuantityEdit2::refreshTextAndLabel() {
       m_units->setStyleSheet("color:grey");
     }
 
-    std::string units;
-    if (m_isIP){
-      units = m_ipUnits;
-    }else{
-      units = m_siUnits;
-    }
-
     boost::optional<double> value;
-    
+
     if (m_get){
       value = (*m_get)();
     }else if (m_optionalGet){
@@ -344,11 +361,22 @@ void OSQuantityEdit2::refreshTextAndLabel() {
       m_units->setStyleSheet("color:grey");
     }
 
-    m_lineEdit->setText(textValue);
+    if ( (!textValue.isEmpty() && m_text != textValue) || m_unitsStr != units){
+      m_text = textValue;
+      m_unitsStr = units;
+      m_lineEdit->blockSignals(true);
+      m_lineEdit->setText(textValue);
+      m_lineEdit->blockSignals(false);
+    }
+    else {
+      return;
+    }
+
     ss << units;
+    m_units->blockSignals(true);
     m_units->setTextFormat(Qt::RichText);
     m_units->setText(toQString(formatUnitString(ss.str(),DocumentFormat::XHTML)));
-
+    m_units->blockSignals(false);
     if (m_isDefaulted) {
       if ((*m_isDefaulted)()) {
         m_lineEdit->setStyleSheet("color:green");
@@ -410,6 +438,9 @@ OSQuantityEdit::OSQuantityEdit(bool isIP, QWidget * parent)
   hLayout->addWidget(m_lineEdit);
   hLayout->addWidget(m_units);
 
+  m_doubleValidator = new QDoubleValidator();
+  m_lineEdit->setValidator(m_doubleValidator);
+
   m_lineEdit->setFixedWidth(90);
 
   setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Preferred);
@@ -448,9 +479,9 @@ void OSQuantityEdit::bind(model::ModelObject& modelObject,
   if (m_isAutocalculatedProperty) {
     OS_ASSERT(std::find(anb,ane,*m_isAutocalculatedProperty) != ane);
   }
-  
+
   setEnabled(true);
-  
+
   connect(m_lineEdit, &QLineEdit::editingFinished, this, &OSQuantityEdit::onEditingFinished);
 
   connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSQuantityEdit::onModelObjectChange);
@@ -515,16 +546,16 @@ void OSQuantityEdit::onEditingFinished() {
     }
   }
 }
-  
+
 void OSQuantityEdit::onModelObjectChange() {
   refreshTextAndLabel();
 }
-  
+
 void OSQuantityEdit::onUnitSystemChange(bool isIP) {
   m_isIP = isIP;
   refreshTextAndLabel();
 }
-  
+
 void OSQuantityEdit::onModelObjectRemove(Handle handle) {
   m_modelObject.reset();
   m_property = "";
@@ -575,7 +606,7 @@ void OSQuantityEdit::refreshTextAndLabel() {
         ss << std::fixed;
       }
       if (m_precision) {
-        
+
         // check if precision is too small to display value
         int precision = *m_precision;
         double minValue = std::pow(10.0, -precision);

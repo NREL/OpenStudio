@@ -16,6 +16,8 @@ set(${target_name}_src
   ReportingUserScript.hpp
   RubyUserScriptArgumentGetter.cpp
   RubyUserScriptArgumentGetter.hpp
+  RubyUserScriptInfoGetter.cpp
+  RubyUserScriptInfoGetter.hpp
   RulesetAPI.hpp
   TranslationUserScript.cpp
   TranslationUserScript.hpp
@@ -25,8 +27,8 @@ set(${target_name}_src
   UtilityUserScript.hpp
   WorkspaceUserScript.cpp
   WorkspaceUserScript.hpp
-  RubyUserScriptArgumentGetter.cpp
   EmbeddedRubyUserScriptArgumentGetter.hpp
+  EmbeddedRubyUserScriptInfoGetter.hpp
 )
 
 set(${target_name}_test_src
@@ -102,8 +104,7 @@ if(BUILD_TESTING)
   
   if(APPLE)
     # the following script will change the bindings to prefer the version of libruby included with SketchUp to the system library, preventing loading two different copies of libruby
-    get_property(target_location TARGET "${target_name}_tests" PROPERTY LOCATION)
-    add_custom_command(TARGET ${target_name} POST_BUILD COMMAND ${RUBY_EXECUTABLE} "${CMAKE_SOURCE_DIR}/SketchUpInstallName.rb" "${target_location}")
+    add_custom_command(TARGET ${target_name}_tests POST_BUILD COMMAND ${RUBY_EXECUTABLE} "${CMAKE_SOURCE_DIR}/SketchUpInstallName.rb" "$<TARGET_FILE:${target_name}_tests>")
   endif() 
 endif()
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
 #include <boost/regex.hpp>
 #include "../../utilities/idf/IdfFile.hpp"
 #include <boost/lexical_cast.hpp>
+#include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/Version_FieldEnums.hxx>
 #include <utilities/idd/Site_Location_FieldEnums.hxx>
 #include <QFileInfo>

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -42,7 +42,10 @@
 
 
 #include <utilities/idd/IddFactory.hxx>
+
+
 #include <utilities/idd/OS_ZoneHVAC_WaterToAirHeatPump_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/units/Unit.hpp"
 
@@ -176,12 +179,12 @@ namespace detail {
     return result;
   }
 
-  unsigned ZoneHVACWaterToAirHeatPump_Impl::inletPort()
+  unsigned ZoneHVACWaterToAirHeatPump_Impl::inletPort() const
   {
     return OS_ZoneHVAC_WaterToAirHeatPumpFields::AirInletNodeName;
   }
 
-  unsigned ZoneHVACWaterToAirHeatPump_Impl::outletPort()
+  unsigned ZoneHVACWaterToAirHeatPump_Impl::outletPort() const
   {
     return OS_ZoneHVAC_WaterToAirHeatPumpFields::AirOutletNodeName;
   }

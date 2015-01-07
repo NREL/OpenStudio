@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -26,7 +26,13 @@
 
 #include <QLineEdit>
 
+#include <QTimer>
+
+class QMouseEvent;
+
 namespace openstudio {
+
+class OSItem;
 
 class OSLineEdit2 : public QLineEdit {
   Q_OBJECT
@@ -57,6 +63,16 @@ class OSLineEdit2 : public QLineEdit {
 
   void unbind();
 
+protected:
+
+  void mouseReleaseEvent(QMouseEvent* event);
+
+signals:
+
+  void itemClicked(OSItem* item);
+
+  void objectRemoved(boost::optional<model::ParentObject> parent);
+
  private slots:
 
   void onEditingFinished();
@@ -65,7 +81,15 @@ class OSLineEdit2 : public QLineEdit {
 
   void onModelObjectRemove(Handle handle);
 
+  void onItemRemoveClicked();
+
+  void emitItemClicked();
+
  private:
+
+  void onModelObjectChangeInternal(bool startingup);
+  void completeBind();
+  void adjustWidth();
 
   boost::optional<model::ModelObject> m_modelObject;
   boost::optional<StringGetter> m_get;
@@ -76,7 +100,11 @@ class OSLineEdit2 : public QLineEdit {
   boost::optional<NoFailAction> m_reset;
   boost::optional<BasicQuery> m_isDefaulted;
 
-  void completeBind();
+  OSItem * m_item = nullptr;
+
+  std::string m_text = "";
+
+  QTimer m_timer;
 };
 
 class OSLineEdit : public QLineEdit

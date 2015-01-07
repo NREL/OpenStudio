@@ -67,7 +67,7 @@
   <ItemGroup>
     <Reference Include="OpenStudio, Version=0.6.2.0, Culture=neutral, PublicKeyToken=e86b6217592bda30, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\openstudio-trunk-build\OpenStudioCore-prefix\src\OpenStudioCore-build\Products\csharp\Debug\OpenStudio.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\openstudio-trunk-build\OSCore-prefix\src\OSCore-build\Products\csharp\Debug\OpenStudio.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">

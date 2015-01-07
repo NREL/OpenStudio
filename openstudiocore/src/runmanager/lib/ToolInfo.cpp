@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -42,8 +42,14 @@ namespace runmanager {
   {
   }
 
-  ToolVersion::ToolVersion(boost::optional<int> t_major, boost::optional<int> t_minor, boost::optional<int> t_build)
-    : m_major(t_major), m_minor(t_minor), m_build(t_build)
+  ToolVersion::ToolVersion(int t_major, int t_minor, int t_build, std::string t_tag)
+    : m_major(t_major), m_minor(t_minor), m_build(t_build), m_tag(std::move(t_tag))
+  {
+  }
+
+  ToolVersion::ToolVersion(boost::optional<int> t_major, boost::optional<int> t_minor, boost::optional<int> t_build,
+      boost::optional<std::string> t_tag)
+    : m_major(std::move(t_major)), m_minor(std::move(t_minor)), m_build(std::move(t_build)), m_tag(std::move(t_tag))
   {
   }
 
@@ -63,32 +69,38 @@ namespace runmanager {
     boost::optional<int> major;
     boost::optional<int> minor;
     boost::optional<int> build;
+    boost::optional<std::string> tag;
 
     std::vector<std::string> parts;
     boost::split(parts, t_val, boost::is_any_of("."), boost::algorithm::token_compress_on);
 
-    if (parts.size() > 0)
+    if (parts.size() > 0 && parts[0] != "-")
     {
       major = atoi(parts[0].c_str());
     }
 
-    if (parts.size() > 1)
+    if (parts.size() > 1 && parts[1] != "-")
     {
       minor = atoi(parts[1].c_str());
     }
 
-    if (parts.size() > 2)
+    if (parts.size() > 2 && parts[2] != "-")
     {
       build = atoi(parts[2].c_str());
     }
 
-    return ToolVersion(major, minor, build);
+    if (parts.size() > 3 && parts[3] != "-")
+    {
+      tag = parts[3];
+    }
+
+    return ToolVersion(major, minor, build, tag);
   }
 
   std::string ToolVersion::toString() const
   {
     std::stringstream ss;
-    
+
     if (m_major)
     {
       ss << *m_major;
@@ -114,46 +126,44 @@ namespace runmanager {
       ss << "-";
     }
 
+    ss << ".";
+
+    if (m_tag)
+    {
+      ss << *m_tag;
+    } else {
+      ss << "-";
+    }
+
     return ss.str();
   }
 
   bool ToolVersion::operator==(const ToolVersion &rhs) const
   {
-    return optional_equal(m_major, rhs.m_major)
-      && optional_equal(m_minor, rhs.m_minor)
-      && optional_equal(m_build, rhs.m_build);
+    return m_major == rhs.m_major
+      && m_minor == rhs.m_minor
+      && m_build == rhs.m_build
+      && m_tag == rhs.m_tag;
   }
 
   bool ToolVersion::operator<(const ToolVersion &rhs) const
   {
-    return optional_less_than(m_major, rhs.m_major)
-      || (optional_equal(m_major, rhs.m_major) && optional_less_than(m_minor, rhs.m_minor))
-      || (optional_equal(m_major, rhs.m_major) && optional_equal(m_minor, rhs.m_minor) 
-          && optional_less_than(m_build, rhs.m_build));
+    return m_major < rhs.m_major
+      || (m_major == rhs.m_major && m_minor < rhs.m_minor)
+      || (m_major == rhs.m_major && m_minor == rhs.m_minor && m_build < rhs.m_build)
+      || (m_major == rhs.m_major && m_minor == rhs.m_minor && m_build == rhs.m_build && m_tag < rhs.m_tag);
   }
 
   bool ToolVersion::matches(const ToolVersion &requirements) const
   {
     // Updated: if the version number of the Tools is not known - call it a match
     // The most specific version that matches any *set* value will be found first
-    return (optional_equal(m_major, requirements.m_major) || !requirements.m_major || !m_major)
-      && (optional_equal(m_minor, requirements.m_minor) || !requirements.m_minor || !m_minor)
-      && (optional_equal(m_build, requirements.m_build) || !requirements.m_build || !m_build);
-  }
-
-  bool ToolVersion::optional_equal(const boost::optional<int> &lhs, const boost::optional<int> &rhs)
-  {
-    if (lhs && rhs) return lhs.get() == rhs.get();
-    if (!lhs && !rhs) return true;
-    return false;
-  }
-
-  bool ToolVersion::optional_less_than(const boost::optional<int> &lhs, const boost::optional<int> &rhs)
-  {
-    if (!lhs && rhs) return true;
-    if (lhs && !rhs) return false;
-    if (lhs && rhs) return lhs.get() < rhs.get();
-    return false;
+    //
+    // Tag, if specified, must be an exact match
+    return (m_major == requirements.m_major || !requirements.m_major || !m_major)
+        && (m_minor == requirements.m_minor || !requirements.m_minor || !m_minor)
+        && (m_build == requirements.m_build || !requirements.m_build || !m_build)
+        && (m_tag  == requirements.m_tag  || !requirements.m_tag);
   }
 
   boost::optional<int> ToolVersion::getMajor() const
@@ -170,6 +180,12 @@ namespace runmanager {
   {
     return m_build;
   }
+
+  boost::optional<std::string> ToolVersion::getTag() const
+  {
+    return m_tag;
+  }
+
 
   ToolInfo Tools::getLastByName(const std::string &t_name) const
   {

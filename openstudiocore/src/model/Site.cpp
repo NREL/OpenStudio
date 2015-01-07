@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -40,8 +40,6 @@
 #include "SkyTemperature_Impl.hpp"
 #include "SizingPeriod.hpp"
 #include "SizingPeriod_Impl.hpp"
-#include "TimeDependentValuation.hpp"
-#include "TimeDependentValuation_Impl.hpp"
 #include "WeatherFile.hpp"
 #include "WeatherFile_Impl.hpp"
 #include "WeatherFileConditionType.hpp"
@@ -56,7 +54,9 @@
 #include "SiteGroundTemperatureBuildingSurface_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_Site_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 
@@ -126,10 +126,6 @@ namespace detail {
     LightingDesignDayVector lightingDesignDays = model().getConcreteModelObjects<LightingDesignDay>();
     result.insert(result.end(),lightingDesignDays.begin(),lightingDesignDays.end());
 
-    // time dependent valuation
-    OptionalTimeDependentValuation tdv = this->timeDependentValuation();
-    if (tdv) { result.push_back(*tdv); }
-
     // some SkyTemperatures are children (those that do not explicitly point to something else)
     SkyTemperatureVector skyTemperatures = model().getConcreteModelObjects<SkyTemperature>();
     ParentObject siteAsParent = getObject<ParentObject>();
@@ -151,7 +147,6 @@ namespace detail {
     result.push_back(ClimateZones::iddObjectType());
     result.push_back(DesignDay::iddObjectType());
     result.push_back(SkyTemperature::iddObjectType());
-    result.push_back(TimeDependentValuation::iddObjectType());
     result.push_back(WeatherFile::iddObjectType());
     result.push_back(WeatherFileConditionType::iddObjectType());
     result.push_back(WeatherFileDays::iddObjectType());
@@ -292,10 +287,6 @@ namespace detail {
 
   boost::optional<ClimateZones> Site_Impl::climateZones() const {
     return this->model().getOptionalUniqueModelObject<ClimateZones>();
-  }
-
-  boost::optional<TimeDependentValuation> Site_Impl::timeDependentValuation() const {
-    return this->model().getOptionalUniqueModelObject<TimeDependentValuation>();
   }
 
   ShadingSurfaceGroupVector Site_Impl::shadingSurfaceGroups() const
@@ -456,10 +447,6 @@ boost::optional<SiteWaterMainsTemperature> Site::siteWaterMainsTemperature() con
 
 boost::optional<ClimateZones> Site::climateZones() const {
   return getImpl<detail::Site_Impl>()->climateZones();
-}
-
-boost::optional<TimeDependentValuation> Site::timeDependentValuation() const {
-  return getImpl<detail::Site_Impl>()->timeDependentValuation();
 }
 
 ShadingSurfaceGroupVector Site::shadingSurfaceGroups() const

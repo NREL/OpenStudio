@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -44,7 +44,7 @@ namespace openstudio
 
   TEST(UpdateManager, ExpandedTest)
   {
-    std::string url = "http://openstudio.nrel.gov/updateGTest.html?app=GTest&version=0.0.0";
+    std::string url = "https://www.openstudio.net/updateGTest.html?app=GTest&version=0.0.0";
     UpdateManager manager("GTest", url);
     EXPECT_EQ("GTest", manager.appName());
     while (!manager.finished()){
@@ -56,7 +56,7 @@ namespace openstudio
     EXPECT_FALSE(manager.newMinorRelease());
     EXPECT_FALSE(manager.newPatchRelease());
     EXPECT_EQ("99.99.99.99", manager.mostRecentVersion());
-    EXPECT_EQ("http://openstudio.nrel.gov/downloads/99", manager.mostRecentDownloadUrl());
+    EXPECT_EQ("https://www.openstudio.net/downloads/99", manager.mostRecentDownloadUrl());
     ASSERT_EQ(static_cast<unsigned>(2), manager.updateMessages().size());
   }
 }

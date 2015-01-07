@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -73,7 +73,9 @@ private:
   QString m_versionId;
   QString m_description;
   QString m_fidelityLevel;
+  boost::optional<std::string> m_error;
   std::vector<Attribute> m_attributes;
+  std::vector<BCLMeasureArgument> m_arguments;
   std::vector<BCLFile> m_files;
   std::vector<BCLFileReference> m_fileReferences;
   std::vector<BCLProvenance> m_provenances;

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -32,6 +32,7 @@
 #include <QSettings>
 
 #include <boost/filesystem.hpp>
+#include <boost/lexical_cast.hpp>
 #include <boost/thread.hpp>
 
 #ifdef Q_OS_WIN
@@ -133,7 +134,9 @@ namespace runmanager {
 
     if (!t_ruby.empty())
     {
-      tools.append(makeTools(ToolType::Ruby, t_ruby, ToolFinder::parseToolVersion(t_ruby)));
+      ToolVersion tv(ToolFinder::parseToolVersion(t_ruby));
+      if (tv.empty()) tv = ToolVersion(2,0);
+      tools.append(makeTools(ToolType::Ruby, t_ruby, tv));
     }
 
     if (!t_dakota.empty())
@@ -408,7 +411,7 @@ namespace runmanager {
   }
 
 
-  openstudio::runmanager::ToolInfo ConfigOptions::toRubyToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus)
+  openstudio::runmanager::ToolInfo ConfigOptions::toRubyToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &ruby)
   {
 #ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
@@ -416,10 +419,50 @@ namespace runmanager {
     static const char exeext[] = "";
 #endif
 
+#ifdef Q_OS_LINUX
+    // Also note that this code might ultimately cause us problems in the future, but should
+    // be pretty robust for now
+    std::string filename = "ruby";
+
+    ToolVersion tv(ruby.first);
+
+    if (tv.getMajor())
+    {
+      filename += boost::lexical_cast<std::string>(*tv.getMajor());
+
+      if (tv.getMinor())
+      {
+        filename += "." + boost::lexical_cast<std::string>(*tv.getMinor());
+      } else {
+        filename += ".0";
+      }
+
+      // note that the extra '.' is required to keep the change_extension tool
+      // from erasing the .<minorver>
+      filename += ".";
+      
+    }
+
+    openstudio::path toolPath = change_extension(ruby.second.binaryDir / toPath(filename), exeext);
+
+    if (!exists(toolPath)){
+      // DLM: check if 2.0 is in the ruby.second.binaryDir?
+      // for rbenv this is /usr/local/rbenv/versions/2.0.0-p481/bin/
+      filename = "ruby";
+      toolPath = change_extension(ruby.second.binaryDir / toPath(filename), exeext);
+    }
+
+#else
+    static const char filename[] = "ruby";
+
+    openstudio::path toolPath = change_extension(ruby.second.binaryDir / toPath(filename), exeext);
+#endif
+
+
     return openstudio::runmanager::ToolInfo(
         "ruby",
-        eplus.first,
-        change_extension(eplus.second.binaryDir / toPath("ruby"), exeext),
+        ruby.first,
+        toolPath,
         boost::regex(".*"));
   }
 
@@ -731,11 +774,13 @@ namespace runmanager {
         QVariant vmajor = settings.value("major");
         QVariant vminor = settings.value("minor");
         QVariant vbuild = settings.value("build");
+        QVariant vtag = settings.value("tag");
 
         openstudio::runmanager::ToolVersion tv(
             vmajor.isValid()?vmajor.toInt():boost::optional<int>(),
             vminor.isValid()?vminor.toInt():boost::optional<int>(),
-            vbuild.isValid()?vbuild.toInt():boost::optional<int>()
+            vbuild.isValid()?vbuild.toInt():boost::optional<int>(),
+            vtag.isValid()?openstudio::toString(vtag.toString()):boost::optional<std::string>()
             );
 
         openstudio::runmanager::ToolLocationInfo tli(
@@ -749,7 +794,7 @@ namespace runmanager {
       }
     }
 
-    settings.endArray();  
+    settings.endArray();
 
 
     return tools;
@@ -782,10 +827,12 @@ namespace runmanager {
       QVariant vmajor;
       QVariant vminor;
       QVariant vbuild;
+      QVariant vtag;
 
       boost::optional<int> major = t_tools[i].first.getMajor();
       boost::optional<int> minor = t_tools[i].first.getMinor();
       boost::optional<int> build = t_tools[i].first.getBuild();
+      boost::optional<std::string> tag = t_tools[i].first.getTag();
 
       if (major)
       {
@@ -802,9 +849,16 @@ namespace runmanager {
         vbuild = *build;
       }
 
+      if (tag)
+      {
+        vtag = openstudio::toQString(*tag);
+      }
+
+
       settings.setValue("major", vmajor);
       settings.setValue("minor", vminor);
       settings.setValue("build", vbuild);
+      settings.setValue("tag", vtag);
 
       settings.setValue("toolType", openstudio::toQString(t_tools[i].second.toolType.valueName()));
       settings.setValue("binaryDir", openstudio::toQString(t_tools[i].second.binaryDir));
@@ -829,7 +883,7 @@ namespace runmanager {
       m_toolLocations 
         = std::set<std::pair<openstudio::runmanager::ToolVersion, openstudio::runmanager::ToolLocationInfo> >(mergedtools.begin(), mergedtools.end());
     }
-    
+
     if (t_onlyIfZeroTools)
     {
       if (getToolLocations().size() == 0) {

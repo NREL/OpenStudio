@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -23,6 +23,7 @@
 #include "RulesetAPI.hpp"
 
 #include "../utilities/core/Optional.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 #include <vector>
 #include <string>
@@ -45,10 +46,11 @@ class OSArgument;
  *  src/ruleset/test/EmbeddedRuby_GTest.cpp for this use case. If your application is written in 
  *  Ruby, this functionality is available through non-member helper function 
  *  OpenStudio::Ruleset::getArguments(BCLMeasure), see 
- *  ruby/openstudio/ruleset/test/RubyUserScriptArgumentGetter_Test.rb for an example. */
+ *  ruby/openstudio/ruleset/test/RubyUserScriptArgumentGetter_Test.rb for an example. 
+ *  \deprecated in preference to RubyUserScriptInfoGetter */
 class RULESET_API RubyUserScriptArgumentGetter {
  public:
-  virtual ~RubyUserScriptArgumentGetter() {}
+  virtual ~RubyUserScriptArgumentGetter();
 
   virtual std::vector<OSArgument> getArguments(const BCLMeasure& measure)=0;
 

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -51,6 +51,9 @@ ModelObjectInspectorView::ModelObjectInspectorView(const openstudio::model::Mode
     m_model(model)
 {
   connect(this, &ModelObjectInspectorView::toggleUnitsClicked, this, &ModelObjectInspectorView::toggleUnits);
+
+  auto isConnected = connect(this, SIGNAL(dropZoneItemClicked(OSItem*)), this, SLOT(onDropZoneItemClicked(OSItem*)));
+  OS_ASSERT(isConnected);
 }
 
 void ModelObjectInspectorView::selectModelObject(const openstudio::model::ModelObject& modelObject)
@@ -88,6 +91,10 @@ boost::optional<openstudio::model::ModelObject> ModelObjectInspectorView::modelO
 }
 
 void ModelObjectInspectorView::toggleUnits(bool displayIP)
+{
+}
+
+void ModelObjectInspectorView::onDropZoneItemClicked(OSItem* item)
 {
 }
 

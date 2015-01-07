@@ -13,19 +13,19 @@ set(utilities_resources_src
   "utilities/BCL/Components/philadelphia pa [724086 TMY2-13739]/component.xml"
   "utilities/BCL/Components/philadelphia pa [724086 TMY2-13739]/files/USA_PA_Philadelphia_TMY2.epw"
   "utilities/BCL/Components/philadelphia pa [724086 TMY2-13739]/images/noimage_100px.png"
-  utilities/BCL/Measures/SetWindowToWallRatioByFacade/measure.xml
-  utilities/BCL/Measures/SetWindowToWallRatioByFacade/measure.rb
-  utilities/BCL/Measures/SetWindowToWallRatioByFacade/tests/EnvelopeAndLoadTestModel_01.osm
-  utilities/BCL/Measures/SetWindowToWallRatioByFacade/tests/EnvelopeAndLoadTestModel_02_RotatedSpaceAndBuilding.osm
-  utilities/BCL/Measures/SetWindowToWallRatioByFacade/tests/ReverseTranslatedModel.osm
-  utilities/BCL/Measures/SetWindowToWallRatioByFacade/tests/SetWindowToWallRatioByFacade_Test.rb
-  utilities/BCL/Measures/SetWindowToWallRatioByFacade/tests/test.osm
-  utilities/BCL/Measures/TestCreateWarningMsgs/measure.rb
-  utilities/BCL/Measures/TestCreateWarningMsgs/measure.xml
-  utilities/BCL/Measures/TestFlagAsNotApplicable/measure.rb
-  utilities/BCL/Measures/TestFlagAsNotApplicable/measure.xml
-  utilities/BCL/Measures/TestMissingARequiredArgWithNoDefault/measure.rb
-  utilities/BCL/Measures/TestMissingARequiredArgWithNoDefault/measure.xml
+  utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/measure.xml
+  utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/measure.rb
+  utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/EnvelopeAndLoadTestModel_01.osm
+  utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/EnvelopeAndLoadTestModel_02_RotatedSpaceAndBuilding.osm
+  utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/ReverseTranslatedModel.osm
+  utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/SetWindowToWallRatioByFacade_Test.rb
+  utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/test.osm
+  utilities/BCL/Measures/v2/TestCreateWarningMsgs/measure.rb
+  utilities/BCL/Measures/v2/TestCreateWarningMsgs/measure.xml
+  utilities/BCL/Measures/v2/TestFlagAsNotApplicable/measure.rb
+  utilities/BCL/Measures/v2/TestFlagAsNotApplicable/measure.xml
+  utilities/BCL/Measures/v2/TestMissingARequiredArgWithNoDefault/measure.rb
+  utilities/BCL/Measures/v2/TestMissingARequiredArgWithNoDefault/measure.xml
   utilities/Checksum/Checksum.txt
   utilities/Checksum/Checksum2.txt
   utilities/Filetypes/CHN_Guangdong.Shaoguan.590820_CSWD.epw
@@ -66,6 +66,8 @@ set(runmanager_resources_src
   runmanager/databasev1.db
   runmanager/DummyMeasure/measure.rb
   runmanager/DummyMeasure/measure.xml
+  runmanager/DummyMeasureEPW/measure.rb
+  runmanager/DummyMeasureEPW/measure.xml
   runmanager/in.file
   runmanager/jsonworkflowtest/small_seed.json
   runmanager/jsonworkflowtest/inputs/measures/adjust_thermostat_setpoints_by_degrees/measure.rb
@@ -81,12 +83,10 @@ set(runmanager_resources_src
   runmanager/jsonworkflowtest/inputs/measures/reduce_ventilation_by_percentage/measure.rb
   runmanager/jsonworkflowtest/inputs/measures/reduce_ventilation_by_percentage/measure.xml
   runmanager/killtree.sh
-  runmanager/ScheduleFile.csv
   runmanager/SimpleModel.osm
   runmanager/test.ies
   runmanager/test.rb
   runmanager/test.xml
-  runmanager/UrlTest.osm.in
   runmanager/USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw
   runmanager/USA_CO_Golden-NREL.724666_TMY3.epw
   runmanager/USA_FL_Tampa.Intl.AP.722110_TMY3.epw
@@ -308,6 +308,30 @@ set(osversion_resources_src
   osversion/1_4_1/OpenStudio.idd
   osversion/1_4_1/example.osm
   osversion/1_4_1/example.osc
+  osversion/1_4_2/OpenStudio.idd
+  osversion/1_4_2/example.osm
+  osversion/1_4_2/example.osc
+  osversion/1_4_3/OpenStudio.idd
+  osversion/1_4_3/example.osm
+  osversion/1_4_3/example.osc
+  osversion/1_5_0/OpenStudio.idd
+  osversion/1_5_0/example.osm
+  osversion/1_5_0/example.osc
+  osversion/1_5_1/OpenStudio.idd
+  osversion/1_5_1/example.osm
+  osversion/1_5_1/example.osc
+  osversion/1_5_2/OpenStudio.idd
+  osversion/1_5_2/example.osm
+  osversion/1_5_2/example.osc
+  osversion/1_5_3/OpenStudio.idd
+  osversion/1_5_3/example.osm
+  osversion/1_5_3/example.osc
+  osversion/1_5_4/OpenStudio.idd
+  osversion/1_5_4/example.osm
+  osversion/1_5_4/example.osc
+  osversion/1_5_5/OpenStudio.idd
+  osversion/1_5_5/example.osm
+  osversion/1_5_5/example.osc
   osversion/unknown.osc
 )
 
@@ -652,6 +676,19 @@ set(analysis_resources_src
   analysis/version/data_point_1-0-4.json
   analysis/version/analysis_1-1-1.json
   analysis/version/data_point_1-1-1.json  
+  analysis/pat_export/formulation.json
+  analysis/pat_export/seed/example.osm
+  analysis/pat_export/seed/example/files/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw
+  analysis/pat_export/scripts/aeb20d61-b773-4d20-a2ef-fe948cdc2858/measure.rb
+  analysis/pat_export/scripts/aeb20d61-b773-4d20-a2ef-fe948cdc2858/measure.xml
+  analysis/pat_export/scripts/ReportRequest/measure.rb
+  analysis/pat_export/scripts/ReportRequest/measure.xml  
+  analysis/pat_export/scripts/StandardReports/measure.rb
+  analysis/pat_export/scripts/StandardReports/measure.xml    
+  analysis/pat_export/scripts/StandardReports/resources/report.html.in
+  analysis/pat_export/data_point_469b52c3-4aae-4cdd-b580-5c9494eefa11/data_point.json
+  analysis/pat_export/data_point_d85b5ffa-b8f0-4bc1-b8af-da6df0da4267/data_point.json
+  analysis/pat_export/data_point_df7ceb48-88a7-44c3-86ac-bd3227d2b1e1/data_point.json
 )
 
 # update the resources
@@ -691,17 +728,17 @@ CREATE_SRC_GROUPS("${isomodel_resources_src}")
 # clear runs, calls to RUN_ENERGYPLUS will populate this
 set(ENERGYPLUS_OUTPUTS "")
 
-set(contam_resources_src
+set(airflow_resources_src
   contam/CONTAMTemplate.osm
 )
 
 # update the resources
-UPDATE_RESOURCES("${contam_resources_src}")
+UPDATE_RESOURCES("${airflow_resources_src}")
 
 # add target
-add_custom_target(openstudio_contam_resources
-  DEPENDS ${contam_resources_src} ${ENERGYPLUS_OUTPUTS}
-  SOURCES ${contam_resources_src}
+add_custom_target(openstudio_airflow_resources
+  DEPENDS ${airflow_resources_src} ${ENERGYPLUS_OUTPUTS}
+  SOURCES ${airflow_resources_src}
 )
 
-CREATE_SRC_GROUPS("${contam_resources_src}")
+CREATE_SRC_GROUPS("${airflow_resources_src}")

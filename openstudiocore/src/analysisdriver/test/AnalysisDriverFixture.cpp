@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -86,6 +86,17 @@ void AnalysisDriverFixture::SetUp() {}
 void AnalysisDriverFixture::TearDown() {}
 
 void AnalysisDriverFixture::SetUpTestCase() {
+  const char *argv[] = {"executable"};
+  char **argvpnc = const_cast<char **>(argv);
+
+  int argc = 1;
+  ruby_sysinit(&argc, &argvpnc);
+
+  {
+    RUBY_INIT_STACK;
+    ruby_init();
+  }
+
   // set up logging
   logFile = FileLogSink(toPath("./AnalysisDriverFixture.log"));
   logFile->setLogLevel(Debug); // SimpleProjects get set to same log level
@@ -235,8 +246,9 @@ openstudio::project::ProjectDatabase AnalysisDriverFixture::getDatabase(
   std::string dirName = openstudio::toUpperCamelCase(projectDatabaseName);
   openstudio::path workingDir = toPath("AnalysisDriverFixtureData") / toPath(dirName);
   path projectPath = workingDir / toPath(projectDatabaseName + ".osp");
-  project::ProjectDatabase database = project::ProjectDatabase::open(projectPath).get();
-  return database;
+  boost::optional<project::ProjectDatabase> database = project::ProjectDatabase::open(projectPath);
+  OS_ASSERT(database);
+  return database.get();
 }
 
 openstudio::analysisdriver::SimpleProject AnalysisDriverFixture::getCleanSimpleProject(
@@ -262,7 +274,9 @@ openstudio::analysisdriver::SimpleProject AnalysisDriverFixture::getCleanSimpleP
   }
 
   LOG(Debug,"Creating SimpleProject in directory " << toString(workingDir) << ".");
-  return SimpleProject::create(workingDir,options).get();
+  boost::optional<openstudio::analysisdriver::SimpleProject> result = SimpleProject::create(workingDir, options);
+  OS_ASSERT(result);
+  return result.get();
 }
 
 openstudio::analysisdriver::SimpleProject AnalysisDriverFixture::getCleanPATProject(
@@ -288,7 +302,9 @@ openstudio::analysisdriver::SimpleProject AnalysisDriverFixture::getCleanPATProj
   }
 
   LOG(Debug,"Creating PAT SimpleProject in directory " << toString(workingDir) << ".");
-  return createPATProject(workingDir,options).get();
+  boost::optional<openstudio::analysisdriver::SimpleProject> result = createPATProject(workingDir, options);
+  OS_ASSERT(result);
+  return result.get();
 }
 
 /** Returns an already existing SimpleProject for testing. */
@@ -303,7 +319,9 @@ openstudio::analysisdriver::SimpleProject AnalysisDriverFixture::getSimpleProjec
   if (boost::optional<LogLevel> logLevel = logFile->logLevel()) {
     options.setLogLevel(*logLevel);
   }
-  return SimpleProject::open(workingDir,options).get();
+  boost::optional<openstudio::analysisdriver::SimpleProject> result = SimpleProject::open(workingDir, options);
+  OS_ASSERT(result);
+  return result.get();
 }
 
 openstudio::analysisdriver::SimpleProject AnalysisDriverFixture::getPATProject(
@@ -317,7 +335,9 @@ openstudio::analysisdriver::SimpleProject AnalysisDriverFixture::getPATProject(
   if (boost::optional<LogLevel> logLevel = logFile->logLevel()) {
     options.setLogLevel(*logLevel);
   }
-  return openPATProject(workingDir,options).get();
+  boost::optional<openstudio::analysisdriver::SimpleProject> result = openPATProject(workingDir, options);
+  OS_ASSERT(result);
+  return result.get();
 }
 
 openstudio::analysisdriver::AnalysisRunOptions AnalysisDriverFixture::standardRunOptions(
@@ -964,25 +984,25 @@ openstudio::analysis::Problem AnalysisDriverFixture::createSimpleHistogramBinUQP
 openstudio::analysis::Problem AnalysisDriverFixture::createBuggyBCLMeasureProblem() {
   Problem problem("Buggy BCLMeasure Problem");
 
-  BCLMeasure measure = BCLMeasure::load(resourcesPath() / toPath("utilities/BCL/Measures/TestFlagAsNotApplicable")).get();
+  BCLMeasure measure = BCLMeasure::load(resourcesPath() / toPath("utilities/BCL/Measures/v2/TestFlagAsNotApplicable")).get();
   RubyMeasure rpert(measure);
   ruleset::OSArgument arg = ruleset::OSArgument::makeBoolArgument("applicable", true);
   arg.setValue(false);
   rpert.setArgument(arg);
   problem.push(MeasureGroup("NA Transformation",MeasureVector(1u,rpert)));
 
-  measure = BCLMeasure::load(resourcesPath() / toPath("utilities/BCL/Measures/TestCreateWarningMsgs")).get();
+  measure = BCLMeasure::load(resourcesPath() / toPath("utilities/BCL/Measures/v2/TestCreateWarningMsgs")).get();
   runmanager::RubyJobBuilder rjb(measure);
   rjb.setIncludeDir(toPath(rubyOpenStudioDir()));
   runmanager::WorkItem workItem = rjb.toWorkItem();
   problem.push(workItem);
 
-  measure = BCLMeasure::load(resourcesPath() / toPath("utilities/BCL/Measures/TestMissingARequiredArgWithNoDefault")).get();
+  measure = BCLMeasure::load(resourcesPath() / toPath("utilities/BCL/Measures/v2/TestMissingARequiredArgWithNoDefault")).get();
   rpert = RubyMeasure(measure);
   problem.push(MeasureGroup("Missing Argument",MeasureVector(1u,rpert)));
 
   // should never get to here b/c previous variable should fail
-  measure = BCLMeasure::load(resourcesPath() / toPath("utilities/BCL/Measures/TestFlagAsNotApplicable")).get();
+  measure = BCLMeasure::load(resourcesPath() / toPath("utilities/BCL/Measures/v2/TestFlagAsNotApplicable")).get();
   rjb = runmanager::RubyJobBuilder(measure);
   rjb.setIncludeDir(toPath(rubyOpenStudioDir()));
   workItem = rjb.toWorkItem();

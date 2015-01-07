@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -24,6 +24,8 @@
 #include <QComboBox>
 #include <QAbstractButton>
 #include <QLabel>
+
+#include <boost/optional.hpp>
 
 class QLineEdit;
 class QTextEdit;
@@ -61,7 +63,7 @@ class EditRubyMeasureView : public QWidget
 
   QTextEdit * descriptionTextEdit;
 
-  QLabel * modelerDescriptionLabel;
+  QTextEdit * modelerDescriptionTextEdit;
 
   void addInputView(QWidget * widget);
 
@@ -98,14 +100,18 @@ class DoubleInputView : public InputView
 
   DoubleInputView();
   virtual ~DoubleInputView() {}
-
+  
   QLineEdit * lineEdit;
-
-  QLabel * nameLabel; 
+  
+  void setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description);
 
   void setIncomplete(bool incomplete);
 
   void setDisplayValue(const QVariant & value);
+
+  private:
+
+  QLabel * nameLabel;
 };
 
 class ChoiceInputView : public InputView
@@ -119,11 +125,15 @@ class ChoiceInputView : public InputView
 
   QComboBox * comboBox;
 
-  QLabel * nameLabel;
+  void setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description);
 
   void setIncomplete(bool incomplete);
 
   void setDisplayValue(const QVariant & value);
+
+  private:
+
+  QLabel * nameLabel;
 };
 
 class BoolInputView : public InputView
@@ -136,6 +146,8 @@ class BoolInputView : public InputView
   virtual ~BoolInputView() {}
 
   InputCheckBox * checkBox;
+
+  void setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description);
 
   void setIncomplete(bool incomplete);
 
@@ -153,11 +165,15 @@ class IntegerInputView : public InputView
 
   QLineEdit * lineEdit;
 
-  QLabel * nameLabel; 
+  void setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description);
 
   void setIncomplete(bool incomplete);
 
   void setDisplayValue(const QVariant & value);
+
+  private:
+
+  QLabel * nameLabel;
 };
 
 class StringInputView : public InputView
@@ -171,11 +187,15 @@ class StringInputView : public InputView
 
   QLineEdit * lineEdit;
 
-  QLabel * nameLabel; 
+  void setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description);
 
   void setIncomplete(bool incomplete);
 
   void setDisplayValue(const QVariant & value);
+
+  private:
+
+  QLabel * nameLabel;
 };
 
 class InputComboBox : public QComboBox

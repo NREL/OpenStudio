@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -65,6 +65,8 @@ OPENSTUDIO_ENUM(OSArgumentRecordColumns,
   ((choiceDisplayNames)(TEXT)(17))
   ((isRead)(BOOLEAN)(18))
   ((extension)(TEXT)(19))
+  ((units)(TEXT)(20))
+  ((modelDependent)(BOOLEAN)(21))
 );
  *  \endcode */
 OPENSTUDIO_ENUM(OSArgumentRecordColumns,
@@ -88,6 +90,8 @@ OPENSTUDIO_ENUM(OSArgumentRecordColumns,
   ((choiceDisplayNames)(TEXT)(17))
   ((isRead)(BOOLEAN)(18))
   ((extension)(TEXT)(19))
+  ((units)(TEXT)(20))
+  ((modelDependent)(BOOLEAN)(21))
 );
 
 /** OSArgumentRecord is a ObjectRecord. */

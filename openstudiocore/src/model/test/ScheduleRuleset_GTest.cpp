@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -406,6 +406,191 @@ TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex4)
   EXPECT_EQ(3,scheduleRule1.ruleIndex());
 }
 
+TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex5)
+{
+  Model model;
+  ScheduleRuleset schedule(model);
+
+  ScheduleRule scheduleRule1(schedule);
+  ScheduleRule scheduleRule2(schedule);
+
+  std::vector<ScheduleRule> rules = schedule.scheduleRules();
+  ASSERT_EQ(2u, rules.size());
+  
+  EXPECT_EQ(scheduleRule2.handle(), rules[0].handle());
+  EXPECT_EQ(scheduleRule1.handle(), rules[1].handle());
+  EXPECT_EQ(1, scheduleRule1.ruleIndex());
+  EXPECT_EQ(0, scheduleRule2.ruleIndex());
+
+  ScheduleRule scheduleRule3(schedule);
+  ScheduleRule scheduleRule4(schedule);
+
+  rules = schedule.scheduleRules();
+  ASSERT_EQ(4u, rules.size());
+
+  EXPECT_EQ(scheduleRule4.handle(), rules[0].handle());
+  EXPECT_EQ(scheduleRule3.handle(), rules[1].handle());
+  EXPECT_EQ(scheduleRule2.handle(), rules[2].handle());
+  EXPECT_EQ(scheduleRule1.handle(), rules[3].handle());
+  EXPECT_EQ(3, scheduleRule1.ruleIndex());
+  EXPECT_EQ(2, scheduleRule2.ruleIndex());
+  EXPECT_EQ(1, scheduleRule3.ruleIndex());
+  EXPECT_EQ(0, scheduleRule4.ruleIndex());
+
+  // Move scheduleRule3 to index 0
+  schedule.setScheduleRuleIndex(scheduleRule3, 0);
+
+  rules = schedule.scheduleRules();
+  ASSERT_EQ(4u, rules.size());
+
+  EXPECT_EQ(scheduleRule3.handle(), rules[0].handle());
+  EXPECT_EQ(scheduleRule4.handle(), rules[1].handle());
+  EXPECT_EQ(scheduleRule2.handle(), rules[2].handle());
+  EXPECT_EQ(scheduleRule1.handle(), rules[3].handle());
+  EXPECT_EQ(3, scheduleRule1.ruleIndex());
+  EXPECT_EQ(2, scheduleRule2.ruleIndex());
+  EXPECT_EQ(0, scheduleRule3.ruleIndex());
+  EXPECT_EQ(1, scheduleRule4.ruleIndex());
+
+  // Move scheduleRule4 to index 1
+  schedule.setScheduleRuleIndex(scheduleRule4, 1);
+
+  rules = schedule.scheduleRules();
+  ASSERT_EQ(4u, rules.size());
+
+  EXPECT_EQ(scheduleRule3.handle(), rules[0].handle());
+  EXPECT_EQ(scheduleRule4.handle(), rules[1].handle());
+  EXPECT_EQ(scheduleRule2.handle(), rules[2].handle());
+  EXPECT_EQ(scheduleRule1.handle(), rules[3].handle());
+  EXPECT_EQ(3, scheduleRule1.ruleIndex());
+  EXPECT_EQ(2, scheduleRule2.ruleIndex());
+  EXPECT_EQ(0, scheduleRule3.ruleIndex());
+  EXPECT_EQ(1, scheduleRule4.ruleIndex());
+}
+
+TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex6)
+{
+  Model model;
+  ScheduleRuleset schedule(model);
+
+  ScheduleRule scheduleRule3(schedule);
+  ScheduleRule scheduleRule4(schedule);
+
+  std::vector<ScheduleRule> rules = schedule.scheduleRules();
+  ASSERT_EQ(2u, rules.size());
+
+  EXPECT_EQ(scheduleRule4.handle(), rules[0].handle());
+  EXPECT_EQ(scheduleRule3.handle(), rules[1].handle());
+  EXPECT_EQ(1, scheduleRule3.ruleIndex());
+  EXPECT_EQ(0, scheduleRule4.ruleIndex());
+
+  ScheduleRule scheduleRule1(schedule);
+  ScheduleRule scheduleRule2(schedule);
+
+  rules = schedule.scheduleRules();
+  ASSERT_EQ(4u, rules.size());
+
+  EXPECT_EQ(scheduleRule2.handle(), rules[0].handle());
+  EXPECT_EQ(scheduleRule1.handle(), rules[1].handle());
+  EXPECT_EQ(scheduleRule4.handle(), rules[2].handle());
+  EXPECT_EQ(scheduleRule3.handle(), rules[3].handle());
+  EXPECT_EQ(1, scheduleRule1.ruleIndex());
+  EXPECT_EQ(0, scheduleRule2.ruleIndex());
+  EXPECT_EQ(3, scheduleRule3.ruleIndex());
+  EXPECT_EQ(2, scheduleRule4.ruleIndex());
+
+  // Move scheduleRule3 to index 0
+  schedule.setScheduleRuleIndex(scheduleRule3, 0);
+
+  rules = schedule.scheduleRules();
+  ASSERT_EQ(4u, rules.size());
+
+  EXPECT_EQ(scheduleRule3.handle(), rules[0].handle());
+  EXPECT_EQ(scheduleRule2.handle(), rules[1].handle());
+  EXPECT_EQ(scheduleRule1.handle(), rules[2].handle());
+  EXPECT_EQ(scheduleRule4.handle(), rules[3].handle());
+  EXPECT_EQ(2, scheduleRule1.ruleIndex());
+  EXPECT_EQ(1, scheduleRule2.ruleIndex());
+  EXPECT_EQ(0, scheduleRule3.ruleIndex());
+  EXPECT_EQ(3, scheduleRule4.ruleIndex());
+
+  // Move scheduleRule4 to index 1
+  schedule.setScheduleRuleIndex(scheduleRule4, 1);
+
+  rules = schedule.scheduleRules();
+  ASSERT_EQ(4u, rules.size());
+
+  EXPECT_EQ(scheduleRule3.handle(), rules[0].handle());
+  EXPECT_EQ(scheduleRule4.handle(), rules[1].handle());
+  EXPECT_EQ(scheduleRule2.handle(), rules[2].handle());
+  EXPECT_EQ(scheduleRule1.handle(), rules[3].handle());
+  EXPECT_EQ(3, scheduleRule1.ruleIndex());
+  EXPECT_EQ(2, scheduleRule2.ruleIndex());
+  EXPECT_EQ(0, scheduleRule3.ruleIndex());
+  EXPECT_EQ(1, scheduleRule4.ruleIndex());
+}
+
+TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex7)
+{
+  Model model;
+  ScheduleRuleset schedule(model);
+
+  ScheduleRule scheduleRule3(schedule);
+  ScheduleRule scheduleRule4(schedule);
+
+  std::vector<ScheduleRule> rules = schedule.scheduleRules();
+  ASSERT_EQ(2u, rules.size());
+
+  EXPECT_EQ(scheduleRule4.handle(), rules[0].handle());
+  EXPECT_EQ(scheduleRule3.handle(), rules[1].handle());
+  EXPECT_EQ(1, scheduleRule3.ruleIndex());
+  EXPECT_EQ(0, scheduleRule4.ruleIndex());
+
+  ScheduleRule scheduleRule1(schedule);
+  ScheduleRule scheduleRule2(schedule);
+
+  rules = schedule.scheduleRules();
+  ASSERT_EQ(4u, rules.size());
+
+  EXPECT_EQ(scheduleRule2.handle(), rules[0].handle());
+  EXPECT_EQ(scheduleRule1.handle(), rules[1].handle());
+  EXPECT_EQ(scheduleRule4.handle(), rules[2].handle());
+  EXPECT_EQ(scheduleRule3.handle(), rules[3].handle());
+  EXPECT_EQ(1, scheduleRule1.ruleIndex());
+  EXPECT_EQ(0, scheduleRule2.ruleIndex());
+  EXPECT_EQ(3, scheduleRule3.ruleIndex());
+  EXPECT_EQ(2, scheduleRule4.ruleIndex());
+
+  // Move scheduleRule4 to index 0
+  schedule.setScheduleRuleIndex(scheduleRule4, 0);
+
+  rules = schedule.scheduleRules();
+  ASSERT_EQ(4u, rules.size());
+
+  EXPECT_EQ(scheduleRule4.handle(), rules[0].handle());
+  EXPECT_EQ(scheduleRule2.handle(), rules[1].handle());
+  EXPECT_EQ(scheduleRule1.handle(), rules[2].handle());
+  EXPECT_EQ(scheduleRule3.handle(), rules[3].handle());
+  EXPECT_EQ(2, scheduleRule1.ruleIndex());
+  EXPECT_EQ(1, scheduleRule2.ruleIndex());
+  EXPECT_EQ(3, scheduleRule3.ruleIndex());
+  EXPECT_EQ(0, scheduleRule4.ruleIndex());
+
+  // Move scheduleRule3 to index 0
+  schedule.setScheduleRuleIndex(scheduleRule3, 0);
+
+  rules = schedule.scheduleRules();
+  ASSERT_EQ(4u, rules.size());
+
+  EXPECT_EQ(scheduleRule3.handle(), rules[0].handle());
+  EXPECT_EQ(scheduleRule4.handle(), rules[1].handle());
+  EXPECT_EQ(scheduleRule2.handle(), rules[2].handle());
+  EXPECT_EQ(scheduleRule1.handle(), rules[3].handle());
+  EXPECT_EQ(3, scheduleRule1.ruleIndex());
+  EXPECT_EQ(2, scheduleRule2.ruleIndex());
+  EXPECT_EQ(0, scheduleRule3.ruleIndex());
+  EXPECT_EQ(1, scheduleRule4.ruleIndex());
+}
 
 TEST_F(ModelFixture, ScheduleRuleset_Clone)
 {

@@ -36,8 +36,8 @@ set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/CPack.Description.tx
 set(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_CURRENT_SOURCE_DIR}/CPack.Welcome.txt")
 
 set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "OpenStudio\n ${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-thread1.55.0, libboost-system1.55.0, libboost-regex1.55.0, libboost-filesystem1.55.0, libboost-date-time1.55.0, libboost-program-options1.55.0, libboost-log1.55.0, libqt5sql5, libqt5network5, libqt5sql5-sqlite, libqt5gui5, libqt5xml5, libqt5webkit5, libruby2.0, ruby2.0")
-set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "http://openstudio.nrel.gov")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-thread1.55.0, libboost-system1.55.0, libboost-regex1.55.0, libboost-filesystem1.55.0, libboost-date-time1.55.0, libboost-program-options1.55.0, libboost-log1.55.0, libqt5sql5, libqt5network5, libqt5sql5-sqlite, libqt5gui5, libqt5xml5, libqt5webkit5, libqt5concurrent5, libqt5location5, libqt5printsupport5, libruby2.0, ruby2.0")
+set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://www.openstudio.net")
 set(CPACK_DEBIAN_PACKAGE_SECTION "science")
 set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/CMake/debian/postinst")
 
@@ -56,8 +56,8 @@ else()
   set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/openstudiocore/icons/os.ico")
   configure_file("${CMAKE_SOURCE_DIR}/openstudiocore/icons/nsis.bmp" "${CMAKE_BINARY_DIR}/nsis.bmp" COPYONLY)
   set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\OpenStudio.exe")
-  set(CPACK_NSIS_URL_INFO_ABOUT "http://openstudio.nrel.gov/")
-  set(CPACK_NSIS_HELP_LINK "http://openstudio.nrel.gov/forum")
+  set(CPACK_NSIS_URL_INFO_ABOUT "https://www.openstudio.net/")
+  set(CPACK_NSIS_HELP_LINK "https://www.openstudio.net/forum")
   # Registry keys
   set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
     WriteRegStr HKLM 'Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\App Paths\\\\OpenStudio.exe' '' '$INSTDIR\\\\bin\\\\OpenStudio.exe'
@@ -129,7 +129,7 @@ if(CPACK_BINARY_DEB)
   )
 endif()
 
-set(CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/;Required;ALL;/")
+set(CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/;Required;ALL;/")
 
 if(BUILD_SIMXML)
   list(APPEND CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_BINARY_DIR}/SimXml-prefix/src/SimXml-build/;Required;ALL;/")

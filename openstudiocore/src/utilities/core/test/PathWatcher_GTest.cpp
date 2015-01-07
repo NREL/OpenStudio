@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -89,7 +89,7 @@ struct TestFileRemover : public QThread{
 
 TEST_F(CoreFixture, PathWatcher_File)
 {
-  Application::instance().application();
+  Application::instance().application(false);
 
   openstudio::path path = toPath("./PathWatcher_File");
   TestFileWriter w1(path, "test 1"); w1.start(); 
@@ -139,7 +139,7 @@ TEST_F(CoreFixture, PathWatcher_File)
 
 TEST_F(CoreFixture, PathWatcher_Dir)
 {
-  Application::instance().application();
+  Application::instance().application(false);
 
   openstudio::path path = toPath("./");
   ASSERT_TRUE(boost::filesystem::exists(path));

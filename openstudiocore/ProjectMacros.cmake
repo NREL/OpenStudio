@@ -7,8 +7,15 @@ endif()
 
 # Add google tests macro
 macro(ADD_GOOGLE_TESTS executable)
+  if (MSVC)
+    file(TO_NATIVE_PATH "${QT_LIBRARY_DIR}" QT_LIB_PATH)
+    set(NEWPATH "${QT_LIB_PATH};$ENV{PATH}")
+  else()
+    set(NEWPATH $ENV{PATH})
+  endif()
+
   foreach(source ${ARGN})
-    if(NOT "${source}" MATCHES "/moc_.*cpp")
+    if(NOT "${source}" MATCHES "/moc_.*cxx")
       string(REGEX MATCH .*cpp source "${source}")
       if(source)
         file(READ "${source}" contents)
@@ -16,6 +23,7 @@ macro(ADD_GOOGLE_TESTS executable)
         foreach(hit ${found_tests})
           string(REGEX REPLACE ".*\\(([A-Za-z_0-9]+)[, ]*([A-Za-z_0-9]+)\\).*" "\\1.\\2" test_name ${hit})
           add_test(${test_name} "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${executable}" --gtest_filter=${test_name})
+          set_tests_properties(${test_name} PROPERTIES TIMEOUT 660 ENVIRONMENT "PATH=${NEWPATH}")
         endforeach()
       endif()
     endif()
@@ -125,13 +133,21 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
     # If it's a header file ("*.h*") add it to the list of headers
     if("${extension}" MATCHES "\\.h.*")
-      if("${extension}" MATCHES "\\..xx")
+      if("${extension}" MATCHES "\\..xx" OR "${p}" MATCHES "ui_.*\\.h")
         list(APPEND GeneratedHeaders "${p}")
       else()
         list(APPEND RequiredHeaders "${p}")
       endif()
     endif()
   endforeach()
+
+  set(Prereq_Dirs
+      "${QT_LIBRARY_DIR}"
+      "${CMAKE_BINARY_DIR}/Products/"
+      "${CMAKE_BINARY_DIR}/Products/Release"
+      "${CMAKE_BINARY_DIR}/Products/Debug"
+      "${LIBRARY_SEARCH_DIRECTORY}"
+  )
 
 
   # Now, append all of the .i* files provided to the macro to the
@@ -270,6 +286,12 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     DEPENDS ${this_depends}
   )
 
+  if(MAXIMIZE_CPU_USAGE)
+    add_custom_target(${swig_target}_swig
+      SOURCES "${SWIG_WRAPPER}"
+      )
+    add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
+  endif()
 
   add_library(
     ${swig_target}
@@ -348,11 +370,6 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   if(WIN32 OR APPLE)
     install(TARGETS ${swig_target} DESTINATION Ruby/openstudio/)
 
-    set(Prereq_Dirs
-      "${CMAKE_BINARY_DIR}/Products/"
-      "${CMAKE_BINARY_DIR}/Products/Release"
-      "${CMAKE_BINARY_DIR}/Products/Debug"
-    )
 
     install(CODE "
       #message(\"INSTALLING SWIG_TARGET: ${swig_target}  with NAME = ${_NAME}\")
@@ -370,7 +387,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
         if(APPLE AND PREREQ MATCHES \".*libruby.*\")  
           # skip updating references to libruby, we do not install this with the bindings
         else()   
-          gp_resolve_item(\"\" \${PREREQ} \"\" \"${LIBRARY_SEARCH_DIRECTORY}\" resolved_item_var)
+          gp_resolve_item(\"\" \${PREREQ} \"\" \"${Prereq_Dirs}\" resolved_item_var)
           execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\")
   
           get_filename_component(PREREQNAME \${resolved_item_var} NAME)
@@ -407,7 +424,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     #")
   endif()
 
-  execute_process(COMMAND ${CMAKE_COMMAND} -E copy "${resolved_item_var}" "${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/")
+  execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\")
 
   # add this target to a "global" variable so ruby tests can require these
   list(APPEND ALL_RUBY_BINDING_TARGETS "${swig_target}")
@@ -452,6 +469,14 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       DEPENDS ${this_depends}
     )
 
+    if(MAXIMIZE_CPU_USAGE)
+      add_custom_target(${swig_target}_swig
+        SOURCES "${SWIG_WRAPPER}"
+        )
+      add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
+    endif()
+
+
     add_library(
       ${swig_target}
       MODULE
@@ -487,11 +512,6 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     if(WIN32 OR APPLE)
       install(TARGETS ${swig_target} DESTINATION Python/openstudio/)
 
-      set(Prereq_Dirs
-        "${CMAKE_BINARY_DIR}/Products/"
-        "${CMAKE_BINARY_DIR}/Products/Release"
-        "${CMAKE_BINARY_DIR}/Products/Debug"
-      )
 
       install(CODE "
         include(GetPrerequisites)
@@ -502,7 +522,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
         endif()
 
         foreach(PREREQ IN LISTS PREREQUISITES)
-          gp_resolve_item( \"\" \${PREREQ} \"\" \"${LIBRARY_SEARCH_DIRECTORY}\" resolved_item_var)
+          gp_resolve_item( \"\" \${PREREQ} \"\" \"${Prereq_Dirs}\" resolved_item_var)
          execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/\")
 
          get_filename_component(PREREQNAME \${resolved_item_var} NAME)
@@ -568,7 +588,14 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
               "${SWIG_DEFINES}" ${SWIG_COMMON} ${KEY_I_FILE}
       DEPENDS ${this_depends}
 
-    )
+      )
+
+    if(MAXIMIZE_CPU_USAGE)
+      add_custom_target(${swig_target}_swig
+        SOURCES "${SWIG_WRAPPER}"
+        )
+      add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
+    endif()
 
     add_library(
       ${swig_target}
@@ -599,14 +626,14 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
       install(CODE "
         include(GetPrerequisites)
-        get_prerequisites(\${CMAKE_INSTALL_PREFIX}/CSharp/openstudio/openstudio_${NAME}_csharp.dll PREREQUISITES 1 1 \"\" \"${CMAKE_BINARY_DIR}/Products/\")
+        get_prerequisites(\${CMAKE_INSTALL_PREFIX}/CSharp/openstudio/openstudio_${NAME}_csharp.dll PREREQUISITES 1 1 \"\" \"${Prereq_Dirs}\")
 
         if(WIN32)
           list(REVERSE PREREQUISITES)
         endif()
 
         foreach(PREREQ IN LISTS PREREQUISITES)
-          gp_resolve_item(\"\" \${PREREQ} \"\" \"${LIBRARY_SEARCH_DIRECTORY}\" resolved_item_var)
+          gp_resolve_item(\"\" \${PREREQ} \"\" \"${Prereq_Dirs}\" resolved_item_var)
           execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/CSharp/openstudio/\")
 
           get_filename_component(PREREQNAME \${resolved_item_var} NAME)
@@ -655,6 +682,14 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
     )
 
+    if(MAXIMIZE_CPU_USAGE)
+      add_custom_target(${swig_target}_swig
+        SOURCES "${SWIG_WRAPPER}"
+        )
+      add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
+    endif()
+
+
     include_directories("${JAVA_INCLUDE_PATH}" "${JAVA_INCLUDE_PATH2}")
 
     add_library(
@@ -696,14 +731,14 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
       install(CODE "
         include(GetPrerequisites)
-        get_prerequisites(\${CMAKE_INSTALL_PREFIX}/Java/openstudio/${final_name} PREREQUISITES 1 1 \"\" \"${CMAKE_BINARY_DIR}/Products/\")
+        get_prerequisites(\${CMAKE_INSTALL_PREFIX}/Java/openstudio/${final_name} PREREQUISITES 1 1 \"\" \"${Prereq_Dirs}\")
 
         if(WIN32)
           list(REVERSE PREREQUISITES)
         endif()
 
         foreach(PREREQ IN LISTS PREREQUISITES)
-          gp_resolve_item(\"\" \${PREREQ} \"\" \"${LIBRARY_SEARCH_DIRECTORY}\" resolved_item_var)
+          gp_resolve_item(\"\" \${PREREQ} \"\" \"${Prereq_Dirs}\" resolved_item_var)
           execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Java/openstudio/\")
 
           get_filename_component(PREREQNAME \${resolved_item_var} NAME)
@@ -773,6 +808,14 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       include_directories(${V8_INCLUDE_DIR})
     endif()
 
+    if(MAXIMIZE_CPU_USAGE)
+      add_custom_target(${swig_target}_swig
+        SOURCES "${SWIG_WRAPPER}"
+        )
+      add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
+    endif()
+
+
     add_library(
       ${swig_target}
       MODULE
@@ -815,12 +858,6 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     if(WIN32 OR APPLE)
       install(TARGETS ${swig_target} DESTINATION "${V8_TYPE}/openstudio/")
 
-      set(Prereq_Dirs
-        "${CMAKE_BINARY_DIR}/Products/"
-        "${CMAKE_BINARY_DIR}/Products/Release"
-        "${CMAKE_BINARY_DIR}/Products/Debug"
-      )
-
       install(CODE "
         #message(\"INSTALLING SWIG_TARGET: ${swig_target}  with NAME = ${_NAME}\")
         include(GetPrerequisites)
@@ -833,7 +870,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
         endif()
 
         foreach(PREREQ IN LISTS PREREQUISITES)
-          gp_resolve_item(\"\" \${PREREQ} \"\" \"${LIBRARY_SEARCH_DIRECTORY}\" resolved_item_var)
+          gp_resolve_item(\"\" \${PREREQ} \"\" \"${Prereq_Dirs}\" resolved_item_var)
           #message(\"prereq = ${PREREQ}  resolved = ${resolved_item_var} \")
           execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/${V8_TYPE}/openstudio/\")
 
@@ -869,31 +906,6 @@ macro(ADD_DEPENDENCIES_FOR_TARGET target)
   get_target_property(target_path ${target} LOCATION_DEBUG)
   list(APPEND DEPENDENCY_TARGETS ${target_path})
   set(DEPENDENCY_TARGETS "${DEPENDENCY_TARGETS}" PARENT_SCOPE)
-endmacro()
-
-# install target dependencies
-# this will actually install the dependencies of the marked targets
-# this is called after all targets have been defined.  Dependencies are
-# found for all targets and the duplicates are removed so to not try to
-# install twice.
-macro(INSTALL_RUNTIME_DPENDENCIES targets)
-  set(install_code "
-    include(GetPrerequisites)
-    foreach(target \"${targets}\")
-      get_prerequisites( \"\${target}\" DEPENDS 1 0 \"\" \"\")
-      foreach(DEPEND \${DEPENDS})
-        set(DEPEND_FULL_PATH \"DEPEND_FULL_PATH-NOTFOUND\")
-        find_program(DEPEND_FULL_PATH \"\${DEPEND}\")
-        list(APPEND DEPEND_FULL_PATHS \"\${DEPEND_FULL_PATH}\")
-      endforeach()
-    endforeach()
-    list(REMOVE_DUPLICATES DEPEND_FULL_PATHS)
-    file(INSTALL DESTINATION \"\${CMAKE_INSTALL_PREFIX}/bin\"
-      TYPE EXECUTABLE
-      FILES \${DEPEND_FULL_PATHS}
-    )
-  ")
-  install(CODE "${install_code}")
 endmacro()
 
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -19,6 +19,8 @@
 
 #include "FanConstantVolume.hpp"
 #include "FanConstantVolume_Impl.hpp"
+#include "FanVariableVolume.hpp"
+#include "FanVariableVolume_Impl.hpp"
 #include "AirLoopHVAC.hpp"
 #include "AirLoopHVAC_Impl.hpp"
 #include "ZoneHVACComponent.hpp"
@@ -37,6 +39,8 @@
 #include "AirTerminalSingleDuctParallelPIUReheat_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
+#include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
+#include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "SetpointManagerMixedAir.hpp"
@@ -46,6 +50,7 @@
 #include "Schedule_Impl.hpp"
 #include "Model.hpp"
 #include <utilities/idd/OS_Fan_ConstantVolume_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/units/Quantity.hpp"
@@ -191,15 +196,19 @@ namespace detail {
   {
     if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
     {
-      if( airLoop->supplyComponent(node.handle()) )
+      boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = airLoop->airLoopHVACOutdoorAirSystem();
+      if( airLoop->supplyComponent(node.handle()) || (oaSystem && oaSystem->component(node.handle())) )
       {
-        std::vector<ModelObject> allFans;
-        std::vector<ModelObject> constantFans = airLoop->supplyComponents(IddObjectType::OS_Fan_ConstantVolume);
-        std::vector<ModelObject> variableFans = airLoop->supplyComponents(IddObjectType::OS_Fan_VariableVolume);
-        allFans = constantFans;
-        allFans.insert(allFans.begin(),variableFans.begin(),variableFans.end());
+        unsigned fanCount = airLoop->supplyComponents(IddObjectType::OS_Fan_ConstantVolume).size();
+        fanCount += airLoop->supplyComponents(IddObjectType::OS_Fan_VariableVolume).size();
 
-        if( allFans.size() > 1 )
+        if( oaSystem )
+        {
+          fanCount += subsetCastVector<FanConstantVolume>(oaSystem->components()).size();
+          fanCount += subsetCastVector<FanVariableVolume>(oaSystem->components()).size();
+        }
+
+        if( fanCount > 1 )
         {
           return false;
         }
@@ -259,6 +268,20 @@ namespace detail {
         if( fan->handle() == this->handle() )
         {
           return airLoopHVACUnitarySystem;
+        }
+      }
+    }
+
+    // AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass
+    std::vector<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass> bypassSystems = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>();
+
+    for( const auto & bypassSystem : bypassSystems )
+    {
+      if( boost::optional<HVACComponent> fan = bypassSystem.supplyAirFan() )
+      {
+        if( fan->handle() == this->handle() )
+        {
+          return bypassSystem;
         }
       }
     }

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -25,11 +25,14 @@
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
 
+#include "../utilities/core/Deprecated.hpp"
+
 namespace openstudio {
 namespace ruleset {
 
   /** Should only be instantiated in C++ Applications. For an example of how to use this, see
-   *  src/ruleset/test/EmbeddedRuby_GTest.cpp. */
+   *  src/ruleset/test/EmbeddedRuby_GTest.cpp. 
+   *  \deprecated in preference to EmbeddedRubyUserScriptInfoGetter */  
   template<typename RubyInterpreterType>
   class EmbeddedRubyUserScriptArgumentGetter : public RubyUserScriptArgumentGetter {
    public:

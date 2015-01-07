@@ -12,9 +12,8 @@ namespace openstudio {
  *  sub-components. Programmers (C++, Ruby and C#) new to OpenStudio should start by looking at
  *  the items in \ref core_sec, \ref idd_sec, and \ref idf_sec. \ref bcl_sec, \ref data_sec, 
  *  \ref filetypes_sec, \ref sql_sec, \ref time_sec, and \ref units_sec are also quite 
- *  fundamental. For automatically generating tables and reports, see \ref document_sec. The 
- *  code in \ref plot_sec is to be deprecated in favor of plots generated with the JavaScript
- *  charting library D3.
+ *  fundamental. The code in \ref plot_sec is to be deprecated in favor of plots generated with
+ *  the JavaScript charting library D3.
  *
  *  The C++ standard template library (STL) and some boost libraries are used throughout 
  *  OpenStudio. Please familiarize yourself with std::vector, std::set, and iterators in the STL 
@@ -35,8 +34,7 @@ namespace openstudio {
  *
  *  Classes for pushing and pulling \link BCLComponent BCLComponents\endlink and \link BCLMeasure 
  *  BCLMeasures\endlink from the \link RemoteBCL online\endlink Building Component Library (BCL) 
- *  and a \link LocalBCL local\endlink BCL. Includes support for \link OnDemandGenerator 
- *  OnDemandGenerators\endlink. For using components in OpenStudio format (.osc), please see 
+ *  and a \link LocalBCL local\endlink BCL. For using components in OpenStudio format (.osc), please see 
  *  model::Component and osversion::VersionTranslator. Infrastructure for using measures is 
  *  available in the ruleset (ruleset::UserScript, ruleset::OSArgument, ruleset::OSRunner, 
  *  ruleset::RubyUserScriptArgumentGetter), runmanager (runmanager::RubyJobBuilder), and analysis
@@ -62,21 +60,11 @@ namespace openstudio {
  *  class is used widely throughout OpenStudio. EndUses, Tag, and the enumeration classes in 
  *  DataEnums.hpp are also of interest.
  *
- *  \section document_sec Document
- *
- *  Generic Document and supporting classes. \link Document Documents\endlink and \link 
- *  DocumentElement DocumentElements\endlink can be output in HTML and LaTeX format. Tables
- *  import from and export to csv; export to JSON; store data in the appropriate boolean, numeric
- *  , or string format; and provides cross-document platform printing and formatting functionality.
- *  \link Document Documents\endlink are essentially vectors of \link SectionHeading
- *  SectionHeadings\endlink, Text, and \link Table Tables\endlink.
- *
  *  \section filetypes_sec Filetypes
  *
  *  Classes representing file types commonly used in building energy simulation. 
  *
  *  \li EpwFile
- *  \li TimeDependentValuationFile
  *
  *  \section geometry_sec Geometry
  *

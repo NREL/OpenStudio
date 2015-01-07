@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -20,37 +20,40 @@
 #ifndef OPENSTUDIO_INSPECTORVIEW_HPP
 #define OPENSTUDIO_INSPECTORVIEW_HPP
 
-#include <QWidget>
 #include <QDialog>
-#include "../model/ModelObject.hpp"
-#include "../model/WaterToAirComponent.hpp"
-#include "../model/WaterToAirComponent_Impl.hpp"
-#include "../model/StraightComponent.hpp"
-#include "../model/StraightComponent_Impl.hpp"
+#include <QWidget>
+
 #include "../model/HVACComponent.hpp"
 #include "../model/HVACComponent_Impl.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/StraightComponent.hpp"
+#include "../model/StraightComponent_Impl.hpp"
+#include "../model/WaterToAirComponent.hpp"
+#include "../model/WaterToAirComponent_Impl.hpp"
 
 class InspectorGadget;
-class QStackedWidget;
-class QVBoxLayout;
-class QTimer;
+
 class QComboBox;
 class QPushButton;
+class QStackedWidget;
+class QTimer;
 class QToolButton;
+class QVBoxLayout;
 
 namespace openstudio {
 
 namespace model {
 
-class ThermalZone;
 class Loop;
+class ThermalZone;
 
 }
 
-class ZoneChooserView;
 class BaseInspectorView;
 class LibraryTabWidget;
 class LoopChooserView;
+class ZoneChooserView;
+class OSItem;
 
 class InspectorView : public QWidget
 {
@@ -63,6 +66,8 @@ class InspectorView : public QWidget
 
   void update();
 
+  BaseInspectorView * currentView() { return m_currentView; }
+
   signals:
 
   void addZoneClicked(model::ThermalZone &);
@@ -70,6 +75,9 @@ class InspectorView : public QWidget
   void addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
   void removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
   void toggleUnitsClicked(bool displayIP);
+  void itemRemoveClicked(OSItem *);
+  void removeButtonClicked(bool);
+  void workspaceObjectRemoved();
 
   void moveBranchForZoneSupplySelected(model::ThermalZone & zone, const Handle & newPlenumHandle);
   void moveBranchForZoneReturnSelected(model::ThermalZone & zone, const Handle & newPlenumHandle);
@@ -79,16 +87,14 @@ class InspectorView : public QWidget
   public slots:
 
   void layoutModelObject( model::OptionalModelObject &, bool readOnly, bool displayIP );
-
   virtual void toggleUnits(bool displayIP);
-
-  protected:
 
   private:
 
   QVBoxLayout * m_vLayout;
   BaseInspectorView * m_currentView;
   QStackedWidget * m_stackedWidget;
+  boost::optional<model::ModelObject> m_modelObject;
 };
 
 class BaseInspectorView : public QWidget
@@ -107,13 +113,15 @@ class BaseInspectorView : public QWidget
 
   virtual void update() {}
 
+  LibraryTabWidget * m_libraryTabWidget;
+
   signals:
 
   void toggleUnitsClicked(bool displayIP); 
 
-  protected:
+  void removeButtonClicked(bool);
 
-  LibraryTabWidget * m_libraryTabWidget;
+  void workspaceObjectRemoved();
 
   private:
 
@@ -139,6 +147,10 @@ class GenericInspectorView : public BaseInspectorView
   private:
 
   InspectorGadget * m_inspectorGadget;
+
+  signals:
+
+  void removeButtonClicked(bool);
 };
 
 class SplitterMixerInspectorView : public BaseInspectorView
@@ -372,6 +384,19 @@ class AirTerminalSingleDuctVAVReheatInspectorView : public AirTerminalInspectorV
   void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP);
 };
 
+class AirTerminalSingleDuctVAVHeatAndCoolReheatInspectorView : public AirTerminalInspectorView
+{
+  Q_OBJECT;
+
+  public:
+
+  AirTerminalSingleDuctVAVHeatAndCoolReheatInspectorView(QWidget * parent = 0);
+
+  virtual ~AirTerminalSingleDuctVAVHeatAndCoolReheatInspectorView() {}
+
+  void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP);
+};
+
 class ZoneHVACPackagedTerminalAirConditionerInspectorView : public BaseInspectorView
 {
   Q_OBJECT;
@@ -596,6 +621,35 @@ class AirLoopHVACUnitarySystemInspectorView : public BaseInspectorView
   LoopChooserView * m_heatingLoopChooserView;
   LoopChooserView * m_coolingLoopChooserView;
   LoopChooserView * m_secondaryLoopChooserView;
+
+};
+
+class AirTerminalSingleDuctConstantVolumeFourPipeInductionInspectorView : public BaseInspectorView
+{
+  Q_OBJECT;
+
+  public:
+
+  AirTerminalSingleDuctConstantVolumeFourPipeInductionInspectorView(QWidget * parent = 0);
+
+  virtual ~AirTerminalSingleDuctConstantVolumeFourPipeInductionInspectorView() {}
+
+  void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP );
+
+  signals:
+
+  void addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
+
+  void removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
+
+  private:
+
+  boost::optional<model::ModelObject> m_modelObject;
+
+  InspectorGadget * m_inspectorGadget;
+
+  LoopChooserView * m_heatingLoopChooserView;
+  LoopChooserView * m_coolingLoopChooserView;
 
 };
 

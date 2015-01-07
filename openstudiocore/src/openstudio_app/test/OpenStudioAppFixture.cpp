@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 #include "../../utilities/core/Path.hpp"
 
 void OpenStudioAppFixture::SetUp() {
-  openstudio::Application::instance().application();
+  openstudio::Application::instance().application(false);
 }
 
 void OpenStudioAppFixture::TearDown() {}

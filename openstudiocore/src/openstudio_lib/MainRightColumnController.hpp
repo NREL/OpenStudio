@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -32,11 +32,12 @@ class QStackedWidget;
 
 namespace openstudio {
 
+class EditController;
 class HorizontalTabWidget;
 class InspectorController;
 class LocalLibraryController;
-class EditController;
 class SystemItem;
+class OSItem;
 
 class MainRightColumnController : public OSQObjectController
 {
@@ -73,6 +74,8 @@ class MainRightColumnController : public OSQObjectController
   
   void toggleUnitsClicked(bool displayIP);
 
+  void itemRemoveClicked(OSItem *);
+
   public slots:
 
   void configureForSiteSubTab(int subTabID);
@@ -107,6 +110,8 @@ class MainRightColumnController : public OSQObjectController
 
   void inspectModelObject(model::OptionalModelObject & modelObject, bool readOnly);
 
+  void inspectModelObjectByItem(OSItem * item, bool readOnly);
+
   void toggleUnits(bool displayIP);
 
   void chooseEditTab();
@@ -116,6 +121,7 @@ class MainRightColumnController : public OSQObjectController
   QSharedPointer<EditController> measuresEditController();
 
   private:
+
   REGISTER_LOGGER("openstudio.openstudio_lib.MainRightColumnController");
 
   void setMyModelView(QWidget * widget);
@@ -145,6 +151,18 @@ class MainRightColumnController : public OSQObjectController
   QSharedPointer<EditController> m_measureEditController;
 
   bool m_myModelTabIsHidden;
+
+  OSItem * m_item = nullptr;
+
+  private slots:
+
+  void onItemRemoveClicked(OSItem *);
+
+  void emitItemRemoveClicked(OSItem *);
+
+  void onRemoveButtonClicked(bool checked);
+
+  void onWorkspaceObjectRemoved();
 };
 
 } // openstudio

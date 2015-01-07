@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -34,6 +34,7 @@ namespace openstudio {
 class OSDropZone;
 class OSLineEdit;
 class OSQuantityEdit;
+class OSQuantityEdit2;
 class RenderingColorWidget;
 
 class BuildingStoryDefaultConstructionSetVectorController : public ModelObjectVectorController
@@ -130,7 +131,7 @@ class BuildingStoryInspectorView : public ModelObjectInspectorView
 
   public:
 
-    BuildingStoryInspectorView(const openstudio::model::Model& model, QWidget * parent = 0 );
+    BuildingStoryInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = 0);
     
     virtual ~BuildingStoryInspectorView() {}
 
@@ -149,13 +150,15 @@ class BuildingStoryInspectorView : public ModelObjectInspectorView
     void detach();
 
     OSLineEdit* m_nameEdit;
-    //OSQuantityEdit* m_floorHeightEdit;
-    //OSQuantityEdit* m_floorToFloorHeightEdit;
+    OSQuantityEdit2 * m_zCoordinate = nullptr;
+    OSQuantityEdit2 * m_floorToFloorHeight = nullptr;
+    OSQuantityEdit2 * m_floorToCeilingHeight = nullptr;
     BuildingStoryDefaultConstructionSetVectorController* m_defaultConstructionSetVectorController;
     OSDropZone* m_defaultConstructionSetDropZone;
     BuildingStoryDefaultScheduleSetVectorController* m_defaultScheduleSetVectorController;
     OSDropZone* m_defaultScheduleSetDropZone;
     RenderingColorWidget* m_renderingColorWidget;
+    bool m_isIP;
     //BuildingStorySpacesVectorController* m_spacesVectorController;
     //OSDropZone* m_spacesDropZone;
 

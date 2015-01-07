@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -27,6 +27,7 @@ namespace openstudio {
 namespace model {
 
 class ThermalZone;
+class PortList;
 
 namespace detail {
 
@@ -60,6 +61,8 @@ namespace detail {
     void resetThermalZone();
 
     unsigned outletPort();
+
+    PortList inducedAirOutletPortList();
 
     unsigned inletPort(unsigned branchIndex);
 

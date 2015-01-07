@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -43,6 +43,12 @@
 #include "../../model/CoolingTowerVariableSpeed_Impl.hpp"
 #include "../../model/CoolingTowerSingleSpeed.hpp"
 #include "../../model/CoolingTowerSingleSpeed_Impl.hpp"
+#include "../../model/CoolingTowerTwoSpeed.hpp"
+#include "../../model/CoolingTowerTwoSpeed_Impl.hpp"
+#include "../../model/GroundHeatExchangerVertical.hpp"
+#include "../../model/GroundHeatExchangerVertical_Impl.hpp"
+#include "../../model/HeatExchangerFluidToFluid.hpp"
+#include "../../model/HeatExchangerFluidToFluid_Impl.hpp"
 #include "../../model/WaterToAirComponent.hpp"
 #include "../../model/WaterToAirComponent_Impl.hpp"
 #include "../../model/WaterToWaterComponent.hpp"
@@ -84,7 +90,6 @@
 #include <utilities/idd/Sizing_Plant_FieldEnums.hxx>
 #include <utilities/idd/AirTerminal_SingleDuct_ConstantVolume_CooledBeam_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_AirDistributionUnit_FieldEnums.hxx>
-
 #include "../../utilities/core/Assert.hpp"
 
 using namespace openstudio::model;
@@ -525,7 +530,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
           {
             flowRate = optionalFlowRate.get();
           }
-          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,0.0,true,COOLING));
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,COOLING));
         }
         else
         {
@@ -547,7 +552,29 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
           {
             flowRate = optionalFlowRate.get();
           }
-          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,0.0,true,COOLING));
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,COOLING));
+        }
+        else
+        {
+          coolingComponents.push_back(supplyComponent);
+        }
+        break;
+      }
+      case openstudio::IddObjectType::OS_CoolingTower_TwoSpeed:
+      {
+        sizeAsCondenserSystem = true;
+        if (boost::optional<Node> outletNode = isSetpointComponent(plantLoop, supplyComponent))
+        {
+          CoolingTowerTwoSpeed tower = supplyComponent.cast<CoolingTowerTwoSpeed>();
+          if (tower.isDesignWaterFlowRateAutosized())
+          {
+            autosize = true;
+          }
+          else if (boost::optional<double> optionalFlowRate = tower.designWaterFlowRate())
+          {
+            flowRate = optionalFlowRate.get();
+          }
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,COOLING));
         }
         else
         {
@@ -558,7 +585,41 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       case openstudio::IddObjectType::OS_GroundHeatExchanger_Vertical :
       {
         sizeAsCondenserSystem = true;
-        uncontrolledComponents.push_back(supplyComponent);
+        if (boost::optional<Node> outletNode = isSetpointComponent(plantLoop, supplyComponent))
+        {
+          GroundHeatExchangerVertical hx = supplyComponent.cast<GroundHeatExchangerVertical>();
+          if (boost::optional<double> optionalFlowRate = hx.maximumFlowRate())
+          {
+            flowRate = optionalFlowRate.get();
+          }
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,BOTH));
+        }
+        else
+        {
+          uncontrolledComponents.push_back(supplyComponent);
+        }
+        break;
+      }
+      case openstudio::IddObjectType::OS_HeatExchanger_FluidToFluid :
+      {
+        sizeAsCondenserSystem = true;
+        if (boost::optional<Node> outletNode = isSetpointComponent(plantLoop, supplyComponent))
+        {
+          auto hx = supplyComponent.cast<HeatExchangerFluidToFluid>();
+          if (hx.isLoopSupplySideDesignFlowRateAutosized())
+          {
+            autosize = true;
+          }
+          else if (boost::optional<double> optionalFlowRate = hx.loopSupplySideDesignFlowRate())
+          {
+            flowRate = optionalFlowRate.get();
+          }
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,BOTH));
+        }
+        else
+        {
+          uncontrolledComponents.push_back(supplyComponent);
+        }
         break;
       }
       default:
@@ -1301,7 +1362,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
           eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::OperationType,"Cooling");
           break;
         default :
-          eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::OperationType,"Both");
+          eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::OperationType,"Dual");
           break;
       }
     }

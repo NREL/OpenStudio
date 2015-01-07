@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
 
 #include "SqlFile_Impl.hpp"
 #include "SqlFileTimeSeriesQuery.hpp"
+#include "OpenStudio.hxx"
 
 #include "../core/String.hpp"
 #include "../time/Calendar.hpp"
@@ -52,14 +53,20 @@ namespace openstudio{
     SqlFile_Impl::SqlFile_Impl(const openstudio::path& path)
       : m_path(path), m_connectionOpen(false), m_supportedVersion(false)
     {
+      if (boost::filesystem::exists(m_path)){
+        m_path = boost::filesystem::canonical(m_path);
+      }
       reopen();
     }
 
     SqlFile_Impl::SqlFile_Impl(const openstudio::path &t_path, const openstudio::EpwFile &t_epwFile, const openstudio::DateTime &t_simulationTime,
         const openstudio::Calendar &t_calendar)
-      : m_path(t_path), m_sqliteFilename(toString(m_path))
+      : m_path(t_path)
     {
-      m_sqliteFilename = toString(m_path);
+      if (boost::filesystem::exists(m_path)){
+        m_path = boost::filesystem::canonical(m_path);
+      }
+      m_sqliteFilename = toString(m_path.make_preferred().native());
       std::string fileName = m_sqliteFilename;
 
       bool initschema = false;
@@ -286,7 +293,7 @@ namespace openstudio{
 
 
       insertSimulation << "insert into simulations (SimulationIndex, EnergyPlusVersion, TimeStamp, NumTimestepsPerHour, Completed, CompletedSuccessfully) values ("
-        << nextSimulationIndex << ", 'EnergyPlus, VERSION 8.1, (OpenStudio) YMD=" << timeStamp.str() << "', '" << timeStamp.str() << "', 6, 1, 1);";
+        << nextSimulationIndex << ", 'EnergyPlus, VERSION " << energyPlusVersionMajor() << "." << energyPlusVersionMinor() << ", (OpenStudio) YMD=" << timeStamp.str() << "', '" << timeStamp.str() << "', 6, 1, 1);";
 
       execAndThrowOnError(insertSimulation.str());
 
@@ -391,7 +398,7 @@ namespace openstudio{
       bool result = true;
       try{
         close();
-        init(m_path);
+        init();
       }catch(const std::exception&e){
         LOG(Error, "Exception while opening database at '" << toString(m_path) 
             << "': " << e.what());
@@ -400,9 +407,9 @@ namespace openstudio{
       return result;
     }
 
-    void SqlFile_Impl::init(const openstudio::path& path)
+    void SqlFile_Impl::init()
     {
-      m_sqliteFilename = toString(m_path);
+      m_sqliteFilename = toString(m_path.make_preferred().native());
       std::string fileName = m_sqliteFilename;
 
       int code = sqlite3_open_v2(fileName.c_str(), &m_db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_EXCLUSIVE, nullptr);
@@ -437,28 +444,22 @@ namespace openstudio{
       int code = -1;
       if (m_db) {
         sqlite3_stmt* sqlStmtPtr;
-        sqlite3_prepare_v2(m_db,"SELECT * FROM Simulations WHERE EnergyPlusVersion LIKE '%7.0%' OR EnergyPlusVersion LIKE '%7.1%' OR EnergyPlusVersion LIKE '%7.2%' OR EnergyPlusVersion LIKE '%8.0%' OR EnergyPlusVersion LIKE '%8.1%'",-1,&sqlStmtPtr,nullptr);
+        sqlite3_prepare_v2(m_db,"SELECT EnergyPlusVersion FROM Simulations",-1,&sqlStmtPtr,nullptr);
         code = sqlite3_step(sqlStmtPtr);
+        if(code == SQLITE_ROW) {
+          boost::regex version_regex("\\d\\.\\d\\.\\d");
+          std::string version_line = columnText(sqlite3_column_text(sqlStmtPtr,0));
+          boost::smatch version_match;
+          boost::regex_search(version_line,version_match,version_regex);
+          VersionString version(version_match[0].str());
+          if( version >= VersionString(7,0) && version <= VersionString(energyPlusVersionMajor(),energyPlusVersionMinor()) ) {
+            m_supportedVersion = true;
+          } else {
+            m_supportedVersion = false;
+            LOG(Warn, "Using unsupported EnergyPlus version " << version.str());
+          }
+        }
         sqlite3_finalize(sqlStmtPtr);
-        m_supportedVersion = true;
-
-        // use this code block to try to support EnergyPlus versions before they are released
-        if (code != SQLITE_ROW){
-          LOG(Warn, "Trying unsupported EnergyPlus version 8.2");
-          sqlite3_prepare_v2(m_db,"SELECT * FROM Simulations WHERE EnergyPlusVersion LIKE '%8.2%'",-1,&sqlStmtPtr,nullptr);
-          code = sqlite3_step(sqlStmtPtr);
-          sqlite3_finalize(sqlStmtPtr);
-          m_supportedVersion = false;
-        }
-
-        // use this code block to try to support EnergyPlus versions before they are released
-        if (code != SQLITE_ROW){
-          LOG(Warn, "Trying unsupported EnergyPlus version 6.0");
-          sqlite3_prepare_v2(m_db,"SELECT * FROM Simulations WHERE EnergyPlusVersion LIKE '%6.0%'",-1,&sqlStmtPtr,nullptr);
-          code = sqlite3_step(sqlStmtPtr);
-          sqlite3_finalize(sqlStmtPtr);
-          m_supportedVersion = false;
-        }
       }
       return (code == SQLITE_ROW);
     }

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -76,6 +76,7 @@
 #include "../utilities/core/ZipFile.hpp"
 
 #include <OpenStudio.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include <boost/filesystem.hpp>
 
@@ -99,6 +100,7 @@ namespace detail {
     : m_projectDir(completeAndNormalize(projectDir)),
       m_analysisDriver(analysisDriver),
       m_alternativeModelMeasureUUID(BCLMeasure::alternativeModelMeasure().uuid()),
+      m_reportRequestMeasureUUID(BCLMeasure::reportRequestMeasure().uuid()),
       m_standardReportMeasureUUID(BCLMeasure::standardReportMeasure().uuid()),
       m_calibrationReportMeasureUUID(BCLMeasure::calibrationReportMeasure().uuid()),
       m_analysis(analysis),   
@@ -429,6 +431,12 @@ namespace detail {
       return false;
     }
 
+    // has to have report request measure
+    if (!getReportRequestWorkflowStep()) {
+      LOG(Trace, "project does not contain report request workflow step");
+      return false;
+    }
+
     // be wiggly about standard reports
     unsigned numReportWorkItems(0u);
     if (getStandardReportWorkflowStep()) {
@@ -480,6 +488,19 @@ namespace detail {
             // we thought we were looking for ModelToIdf, but found
             // the radiance script instead. That's OK, it means this is a project
             // that uses radiance for its daylighting calculations
+            // continue to the next job in the loop
+            continue;
+          }
+        }
+
+        if (nextWorkItemType.get() == JobType(JobType::EnergyPlusPreProcess))
+        {
+          WorkItem wi = step.workItem();
+          if (wi.type == JobType(JobType::UserScript)
+              && wi.jobkeyname == "pat-report-request-job")
+          {
+            // we thought we were looking for EnergyPlusPreProcess, but found
+            // this script instead. That's OK, 
             // continue to the next job in the loop
             continue;
           }
@@ -574,6 +595,45 @@ namespace detail {
         }
       }
     }
+    return result;
+  }
+
+  boost::optional<analysis::WorkflowStep> SimpleProject_Impl::getReportRequestWorkflowStep() const {
+    OptionalWorkflowStep result;
+    Problem problem = analysis().problem();
+
+    WorkflowStepVector workflow = problem.workflow();
+    OptionalInt start = problem.getWorkflowStepIndexByJobType(JobType::UserScript);
+    if (start) {
+      for (unsigned i = *start, n = workflow.size(); i < n; ++i) {
+        WorkflowStep step = workflow[i];
+        if (!step.isWorkItem()) {
+          continue;
+        }
+        WorkItem workItem = step.workItem();
+        if (workItem.type != JobType::UserScript) {
+          continue;
+        }
+        try {
+          JobParam params = workItem.params.get("ruby_bclmeasureparameters");
+          for (std::vector<JobParam>::const_iterator it = params.children.begin(),
+               itEnd = params.children.end(); it != itEnd; ++it)
+          {
+            if (it->value == "bcl_measure_uuid") {
+              if (openstudio::toUUID(it->children.at(0).value) == m_reportRequestMeasureUUID) {
+                OS_ASSERT(workItem.jobkeyname == "pat-report-request-job");
+                result = step;
+                break;
+              }
+            }
+          }
+        } catch (...) {}
+        if (result) {
+          break;
+        }
+      }
+    }
+
     return result;
   }
 
@@ -1385,6 +1445,56 @@ namespace detail {
     return true;
   }
 
+  bool SimpleProject_Impl::insertReportRequestWorkflowStep() {
+    if (getReportRequestWorkflowStep()) {
+      // nothing to do
+      return true;
+    }
+
+    bool dataPointsOk = !analysis().dataPointsAreInvalid();
+
+    Problem problem = analysis().problem();
+    OptionalInt index = problem.getWorkflowStepIndexByJobType(JobType::EnergyPlusPreProcess);
+    if (!index) {
+      return false;
+    }
+
+    std::vector<BCLMeasure> patMeasures = BCLMeasure::patApplicationMeasures();
+    std::vector<BCLMeasure>::const_iterator it = std::find_if(
+      patMeasures.begin(),
+      patMeasures.end(),
+      std::bind(uuidEquals<BCLMeasure, openstudio::UUID>, std::placeholders::_1, m_reportRequestMeasureUUID));
+    OS_ASSERT(it != patMeasures.end());
+    BCLMeasure bclMeasure = insertMeasure(*it);
+
+    runmanager::RubyJobBuilder rubyJobBuilder(bclMeasure);
+
+    rubyJobBuilder.addInputFile(openstudio::runmanager::FileSelection("last"),
+                                openstudio::runmanager::FileSource("All"),
+                                ".*\\.idf",
+                                "in.idf");
+    rubyJobBuilder.addInputFile(openstudio::runmanager::FileSelection("last"),
+                                openstudio::runmanager::FileSource("All"),
+                                ".*\\.osm",
+                                "in.osm");
+    // be able to access OpenStudio Ruby bindings
+    rubyJobBuilder.setIncludeDir(getOpenStudioRubyIncludePath());
+    runmanager::WorkItem workItem = rubyJobBuilder.toWorkItem();
+    workItem.jobkeyname = "pat-report-request-job";
+
+    bool ok = problem.insert(*index, WorkflowStep(workItem));
+
+    if (!ok) {
+      return false;
+    }
+
+    // changing work items does not invalidate data points
+    if (dataPointsOk) {
+      OS_ASSERT(!analysis().dataPointsAreInvalid());
+    }
+    return true;
+  }
+
   bool SimpleProject_Impl::insertStandardReportWorkflowStep() {
     if (getStandardReportWorkflowStep()) {
       // nothing to do
@@ -1717,7 +1827,7 @@ namespace detail {
     if (modelVersion.get() > VersionString(openStudioVersion())) {
       LOG(Error,"Version '" << modelVersion.get().str() << "' extracted from file '"
           << toString(modelPath) << "' is not supported by OpenStudio Version "
-          << openStudioVersion() << ". Please check http://openstudio.nrel.gov for updates.");
+          << openStudioVersion() << ". Please check https://www.openstudio.net for updates.");
     }
 
     return false;
@@ -2285,6 +2395,10 @@ boost::optional<analysis::MeasureGroup> SimpleProject::getAlternativeModelVariab
   return getImpl()->getAlternativeModelVariable();
 }
 
+boost::optional<analysis::WorkflowStep> SimpleProject::getReportRequestWorkflowStep() const {
+  return getImpl()->getReportRequestWorkflowStep();
+}
+
 boost::optional<analysis::WorkflowStep> SimpleProject::getStandardReportWorkflowStep() const {
   return getImpl()->getStandardReportWorkflowStep();
 }
@@ -2372,6 +2486,10 @@ bool SimpleProject::insertAlternativeModelVariable() {
   return getImpl()->insertAlternativeModelVariable();
 }
 
+bool SimpleProject::insertReportRequestWorkflowStep() {
+  return getImpl()->insertReportRequestWorkflowStep();
+}
+
 bool SimpleProject::insertStandardReportWorkflowStep() {
   return getImpl()->insertStandardReportWorkflowStep();
 }
@@ -2420,6 +2538,7 @@ boost::optional<SimpleProject> createPATProject(const openstudio::path& projectD
     problem.push(WorkItem(JobType::EnergyPlus));
     problem.push(WorkItem(JobType::OpenStudioPostProcess));
 
+    result->insertReportRequestWorkflowStep();
     result->insertStandardReportWorkflowStep();
     OS_ASSERT(!result->shouldIncludeCalibrationReports());
   }
@@ -2443,12 +2562,6 @@ boost::optional<SimpleProject> openPATProject(const openstudio::path& projectDir
         return result;
       }
       save = true;
-    }
-
-    if (!result->isPATProject()) {
-      LOG_FREE(Error, "openPATProject", "Project is not a pat project");
-      result.reset();
-      return result;
     }
 
     // fix up workflow as needed
@@ -2477,6 +2590,36 @@ boost::optional<SimpleProject> openPATProject(const openstudio::path& projectDir
     if (!index) {
       problem.push(WorkItem(JobType(JobType::OpenStudioPostProcess)));
       save = true;
+    }
+
+    // check for report request step, try to add if not present
+    if (!result->getReportRequestWorkflowStep()) {
+      LOG_FREE(Info, "openPATProject", "PAT Project doesn't contain report request workflow step");
+      bool ok = result->insertReportRequestWorkflowStep();
+      if (!ok) {
+        LOG_FREE(Error, "openPATProject", "Unable to insert report request workflow step");
+        result.reset();
+        return result;
+      }
+      save = true;
+    }
+
+    // check for standard report step, try to add if not present
+    if (!result->getStandardReportWorkflowStep()) {
+      LOG_FREE(Info, "openPATProject", "PAT Project doesn't contain standard report workflow step");
+      bool ok = result->insertStandardReportWorkflowStep();
+      if (!ok) {
+        LOG_FREE(Error, "openPATProject", "Unable to insert standard report workflow step");
+        result.reset();
+        return result;
+      }
+      save = true;
+    }
+
+    if (!result->isPATProject()) {
+      LOG_FREE(Error, "openPATProject", "Project is not a pat project");
+      result.reset();
+      return result;
     }
 
     if (result->analysis().resultsAreInvalid()) {

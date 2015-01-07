@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 
 #include "../shared_gui_components/BaseApp.hpp"
 
-#include "../ruleset/RubyUserScriptArgumentGetter.hpp"
+#include "../ruleset/RubyUserScriptInfoGetter.hpp"
 
 #include "OpenStudioAPI.hpp"
 #include "../utilities/core/Logger.hpp"
@@ -70,6 +70,8 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
   public slots:
 
     virtual void reloadFile(const QString& fileToLoad, bool modified, bool saveCurrentTabs) = 0;
+
+    void showMeasureUpdateDlg();
 
   private:
 

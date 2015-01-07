@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -33,9 +33,10 @@ module OpenStudio
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       
       if Plugin.model_manager.model_interface and
-         Plugin.model_manager.model_interface.skp_model == model
+         Plugin.model_manager.model_interface.skp_model_guid == model.guid
 
         # same model, no-op
+        Plugin.log(OpenStudio::Trace, "New model is the same as current model")
       else
 
         Plugin.model_manager.new_from_skp_model(model)
@@ -61,9 +62,7 @@ module OpenStudio
     def onQuit
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       
-      Plugin.model_manager.destroy
-      
-      Plugin.stop_event_processing
+      Plugin.model_manager.shutdown
     end
     
     

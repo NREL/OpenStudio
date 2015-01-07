@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -69,6 +69,7 @@
 #include <utilities/idd/Branch_FieldEnums.hxx>
 #include <utilities/idd/Schedule_Compact_FieldEnums.hxx>
 #include <utilities/idd/Sizing_System_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 #include "../../utilities/core/Containers.hpp"
@@ -115,17 +116,21 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   {
     // Note if we don't have a fan this is going to be a problem for EnergyPlus,
     // but at this point it will be allowed in OS
-    upperNodes = subsetCastVector<Node>(supplyComponents);
+    lowerNodes = subsetCastVector<Node>(supplyComponents);
     // We should at least have a supply inlet and outlet node
-    OS_ASSERT(upperNodes.size() >= 2);
-    upperNodes.erase(upperNodes.begin());
-    upperNodes.erase(upperNodes.end() - 1);
+    OS_ASSERT(lowerNodes.size() >= 2);
+    lowerNodes.erase(lowerNodes.begin());
+    lowerNodes.erase(lowerNodes.end() - 1);
   }
+
+  auto isTemperatureControl = [] ( SetpointManager & spm ) -> bool {
+    return istringEqual("Temperature",spm.controlVariable());
+  };
 
   for( auto & upperNode : upperNodes )
   {
     std::vector<SetpointManager> _setpointManagers = upperNode.setpointManagers();
-    if( _setpointManagers.empty() ) {
+    if( std::find_if(_setpointManagers.begin(),_setpointManagers.end(),isTemperatureControl) == _setpointManagers.end() ) {
       SetpointManagerMixedAir spm(t_model);
       spm.addToNode(upperNode);
     }
@@ -137,7 +142,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
     for( auto & lowerNode : lowerNodes )
     {
       std::vector<SetpointManager> _setpointManagers = lowerNode.setpointManagers();
-      if( _setpointManagers.empty() ) {
+      if( std::find_if(_setpointManagers.begin(),_setpointManagers.end(),isTemperatureControl) == _setpointManagers.end() ) {
         for( auto _setpointManager : _supplyOutletSetpointManagers )
         {
           SetpointManager spmClone = _setpointManager.clone(t_model).cast<SetpointManager>();
@@ -158,7 +163,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
         if( oaNode != outboardOANode.get() )
         {
           std::vector<SetpointManager> _setpointManagers = oaNode.setpointManagers();
-          if( _setpointManagers.empty() ) {
+          if( std::find_if(_setpointManagers.begin(),_setpointManagers.end(),isTemperatureControl) == _setpointManagers.end() ) {
             SetpointManagerMixedAir spm(t_model);
             spm.addToNode(oaNode);
           }
@@ -316,11 +321,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
 
   // Branch List Name
   IdfObject branchList(openstudio::IddObjectType::BranchList);
-  branchList.createName();
+  branchList.setName(airLoopHVACName + " Supply Branches");
   m_idfObjects.push_back(branchList);
 
   IdfObject branch(openstudio::IddObjectType::Branch);
-  branch.createName();
+  branch.setName( airLoopHVACName + " Supply Branch");
   m_idfObjects.push_back(branch);
 
   branchList.setString(1,branch.name().get());

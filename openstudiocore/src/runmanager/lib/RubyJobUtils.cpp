@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -28,6 +28,7 @@
 #include "../../utilities/core/ApplicationPathHelpers.hpp"
 #include "../../utilities/core/Compare.hpp"
 #include "../../utilities/core/PathHelpers.hpp"
+#include "../../utilities/core/URLHelpers.hpp"
 #include "../../utilities/bcl/BCLMeasure.hpp"
 
 #include <boost/filesystem.hpp>
@@ -41,7 +42,7 @@ RubyJobBuilder::RubyJobBuilder(bool t_userScriptJob)
 {}
 
 RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem)
-  : m_userScriptJob(false)
+  : m_userScriptJob(false), m_jobkeyname(t_workItem.jobkeyname)
 {
   try {
     FileInfo fi = t_workItem.files.getLastByKey("rb");
@@ -86,7 +87,7 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
     } else if (toString(m_script.filename()) == "DaylightCalculations.rb") {
       const std::string jobkeyname = t_workItem.jobkeyname;
       RubyJobBuilder rjb(t_workItem);
-      LOG(Info, "Attempting to rebuild radiance job");
+      LOG(Info, "Attempting to rebuild radiance job (" << t_workItem.jobkeyname << ")");
 
       setScriptFile(getOpenStudioRubyScriptsPath() / toPath("openstudio/radiance/DaylightCalculations.rb"));
 
@@ -161,10 +162,10 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
 
       WorkItem rebuiltRadianceJob = Workflow::radianceDaylightCalculations(getOpenStudioRubyIncludePath(), radianceLocation);
       rebuiltRadianceJob.jobkeyname = jobkeyname;
-      m_jobkeyname = jobkeyname;
 
       LOG(Info, "Initializing from rebuiltRadianceJob.params, JSON Source: " << rebuiltRadianceJob.toJSON());
       initializeFromParams(rebuiltRadianceJob.params, t_originalBasePath, t_newBasePath);
+      m_jobkeyname = jobkeyname;
       LOG(Info, "setting ruby include dir: " << openstudio::toString(getOpenStudioRubyIncludePath()));
       clearIncludeDir();
       setIncludeDir(getOpenStudioRubyIncludePath());
@@ -184,7 +185,7 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
         itr != requiredFiles.end();
         ++itr)
     {
-      openstudio::path source = toPath(itr->first.toLocalFile());
+      openstudio::path source = openstudio::getOriginalPath(itr->first);
       openstudio::path temp = relocatePath(source, t_originalBasePath, t_newBasePath);
       if (!temp.empty()) {
         source = temp;
@@ -375,6 +376,20 @@ void RubyJobBuilder::initializeFromParams(const JobParams &t_params,
       }
     }
   } catch (const std::exception &) {}
+
+
+  if (t_params.has("workflowjobkey"))
+  {
+    LOG(Trace, "jobkeyname " << m_jobkeyname);
+
+    if (!t_params.get("workflowjobkey").children.empty())
+    {
+      m_jobkeyname = t_params.get("workflowjobkey").children[0].value;
+    }
+
+    LOG(Trace, "jobkeyname " << m_jobkeyname);
+  }
+
 }
 
 
@@ -756,9 +771,15 @@ JobParams RubyJobBuilder::toJobParams(const std::vector<ruleset::OSArgument> &t_
     param.append("versionUUID", openstudio::toString(arg.versionUUID()));
     param.append("name", arg.name());
     param.append("displayName", arg.displayName());
+    if (arg.description()){
+      param.append("description", arg.description().get());
+    }
     param.append("type", arg.type().valueName());
+    if (arg.units()){
+      param.append("units", arg.units().get());
+    }
     param.append("required", boolToString(arg.required()));
-
+    param.append("modelDependent", boolToString(arg.modelDependent()));
     if (arg.hasValue())
     {
       if (arg.type() == openstudio::ruleset::OSArgumentType::Path && !t_basePath.empty())
@@ -874,9 +895,28 @@ std::vector<ruleset::OSArgument> RubyJobBuilder::toOSArguments(const JobParams &
       std::string name = arg.get("name").children.at(0).value;
       std::string displayName = arg.get("displayName").children.at(0).value;
 
+      boost::optional<std::string> description;
+      try{
+        description = arg.get("displayName").children.at(0).value;
+      } catch (...) {}
+
+
       LOG(Debug, "Setting OSArgumentType " << arg.get("type").children.at(0).value);
       openstudio::ruleset::OSArgumentType type(arg.get("type").children.at(0).value);
+
+      boost::optional<std::string> units;
+      try{
+        units = arg.get("units").children.at(0).value;
+      } catch (...) {}
+
       bool required = stringToBool(arg.get("required").children.at(0).value);
+
+      bool modelDependent = false;
+      try{
+        // DLM: added in 1.4.2
+        modelDependent = stringToBool(arg.get("modelDependent").children.at(0).value);
+      } catch (...) {}
+      
       boost::optional<std::string> value;
       try {
         if (type == openstudio::ruleset::OSArgumentType::Path && !t_basePath.empty())
@@ -927,8 +967,11 @@ std::vector<ruleset::OSArgument> RubyJobBuilder::toOSArguments(const JobParams &
               versionUUID,
               name,
               displayName,
+              description,
               type,
+              units,
               required,
+              modelDependent,
               value,
               defaultValue,
               domainType,

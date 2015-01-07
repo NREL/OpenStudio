@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -47,7 +47,7 @@ TEST_F(AnalysisFixture, DDACEAlgorithmOptions) {
 
   // problem with three variables
   VariableVector variables;
-  BCLMeasure bclMeasure(resourcesPath() / toPath("utilities/BCL/Measures/SetWindowToWallRatioByFacade"));
+  BCLMeasure bclMeasure(resourcesPath() / toPath("utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade"));
   RubyMeasure measure(bclMeasure);
   variables.push_back(RubyContinuousVariable("Var 1",OSArgument::makeDoubleArgument("wwr1"),measure));
   variables.push_back(RubyContinuousVariable("Var 2",OSArgument::makeDoubleArgument("wwr2"),measure));
@@ -124,7 +124,7 @@ TEST_F(AnalysisFixture, DDACEAlgorithmOptions) {
 TEST_F(AnalysisFixture,DDACEAlgorithm_CompatibleProblemType) {
   // continuous problem with five variables
   VariableVector variables;
-  BCLMeasure bclMeasure(resourcesPath() / toPath("utilities/BCL/Measures/SetWindowToWallRatioByFacade"));
+  BCLMeasure bclMeasure(resourcesPath() / toPath("utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade"));
   RubyMeasure measure(bclMeasure);
   variables.push_back(RubyContinuousVariable("Var 1",OSArgument::makeDoubleArgument("wwr1"),measure));
   variables.push_back(RubyContinuousVariable("Var 2",OSArgument::makeDoubleArgument("wwr2"),measure));

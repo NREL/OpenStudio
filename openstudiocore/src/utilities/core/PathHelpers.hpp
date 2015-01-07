@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -89,6 +89,19 @@ UTILITIES_API bool copyDirectory(const path& source,
 
 /** Determines if a directory is empty, returns false if directory does not exist, not subject to MAX_PATH */
 UTILITIES_API bool isEmptyDirectory(const path& dirName);
+
+/** Returns the drive letter, e.g. if path is "C:\temp" returns "C".*/
+UTILITIES_API boost::optional<std::string> windowsDriveLetter(const path& p);
+
+/** Determines if a path is on a network drive.  
+  * Returns false if path is not absolute.
+  * Currently only implemented for Windows, returns false on other platforms. */
+UTILITIES_API bool isNetworkPath(const path& p);
+
+/** Determines if a path is on a network drive and if that network resources is available.  
+  * Returns false if path is not absolute or if path is not a network path.
+  * Currently only implemented for Windows, returns false on other platforms. */
+UTILITIES_API bool isNetworkPathAvailable(const path& p);
 
 } // openstudio
 

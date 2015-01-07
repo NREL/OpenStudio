@@ -1,9 +1,9 @@
 
 #see the URL below for information on how to write OpenStudio measures
-# http://openstudio.nrel.gov/openstudio-measure-writing-guide
+# http://nrel.github.io/OpenStudio-user-documentation/measures/measure_writing_guide/
 
-#see the URL below for access to C++ documentation on model objects (click on "model" in the main window to view model objects)
-# http://openstudio.nrel.gov/sites/openstudio.nrel.gov/files/nv_data/cpp_documentation_it/model/html/namespaces.html
+#see the URL below for access to C++ documentation on model objects
+# https://s3.amazonaws.com/openstudio-sdk-documentation/cpp/OpenStudio-1.5.0-doc/model/html/classes.html
 
 
 ######################################################################

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ WorkspaceWatcher::WorkspaceWatcher(const Workspace& work)
   : m_enabled(true), m_dirty(false), m_objectAdded(false), m_objectRemoved(false)
 {
   // make sure a QApplication exists
-  openstudio::Application::instance().application();
+  openstudio::Application::instance().application(false);
 
   detail::Workspace_ImplPtr wsImpl = work.getImpl<detail::Workspace_Impl>();
   connect(wsImpl.get(), &detail::Workspace_Impl::onChange, this, &WorkspaceWatcher::change);

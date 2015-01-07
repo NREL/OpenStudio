@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -30,6 +30,7 @@ namespace model {
 
 // forward declaration
 class Material;
+class StandardsInformationMaterial;
 
 namespace detail {
 
@@ -64,6 +65,9 @@ namespace detail {
     /** @name Getters */
     //@{
 
+    // return any children objects in the hierarchy
+    virtual std::vector<ModelObject> children() const;
+
     /** Get the thickness of the material. For some materials, 0.0 is always returned. */
     virtual double thickness() const;
 
@@ -72,6 +76,8 @@ namespace detail {
     virtual boost::optional<double> interiorVisibleAbsorptance() const;
 
     virtual boost::optional<double> exteriorVisibleAbsorptance() const;
+
+    StandardsInformationMaterial standardsInformation() const;
 
     //@}
     /** @name Setters */

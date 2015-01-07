@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 #ifndef MODEL_THERMOSTATSETPOINTDUALSETPOINT_IMPL_HPP
 #define MODEL_THERMOSTATSETPOINTDUALSETPOINT_IMPL_HPP
 
-#include "ModelObject_Impl.hpp"
+#include "Thermostat_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -27,7 +27,7 @@ namespace model {
 class Schedule;
 
 namespace detail {
-  class MODEL_API ThermostatSetpointDualSetpoint_Impl : public ModelObject_Impl {
+  class MODEL_API ThermostatSetpointDualSetpoint_Impl : public Thermostat_Impl {
     Q_OBJECT;
 
     Q_PROPERTY(boost::optional<openstudio::model::ModelObject> heatingSetpointTemperatureSchedule READ heatingSetpointTemperatureScheduleAsModelObject WRITE setHeatingSetpointTemperatureScheduleAsModelObject RESET resetHeatingSetpointTemperatureSchedule);

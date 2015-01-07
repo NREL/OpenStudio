@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -705,10 +705,10 @@ v_wall_R_sc=ones(size(1,9))*n_R_sc_ext; %vertical wall external convective surfa
 v_win_hr=5*v_wall_emiss; %window external radiative heat xfer coeff.
 
 % effective collecting area of opaque building elements, A_sol EN ISO 13790 11.3.4
-% A_sol = ?_S,c � R_se � U_c � A_c
+% A_sol = ?_S,c × R_se × U_c × A_c
 % A_sol = effective solar collecting area
 % ?_S,c = dimensionless solar absorption coefficient
-% R_se = external surface heat rsistance determined via ISO 6946 in m2*K/W
+% R_se = external surface heat resistance determined via ISO 6946 in m2*K/W
 % U_c = thermal transmittance of opaque part determined via ISO 6946 W/m2K
 % A_c = projected area of opaque part in m2
 
@@ -780,7 +780,7 @@ for I=1:12
 end
 
 % compute opaque area thermal radiation to the sky from EN ISO 13790 11.3.5
-% ?_r,k = Rse�Uc�Ac�hr�??er (46)
+% ?_r,k = Rse×Uc×Ac×hr×??er (46)
 % ?_r,k = thermal radiation to sky in W
 % R_se = external heat resistance as defined above m2K/W
 % U_c = U value of element as defined above W/m2K
@@ -1674,9 +1674,9 @@ Qneed_ht_yr = sum(v_Qneed_ht);
     //% compute the cooling gain utilization factor eta_g_cl
     Vector v_eta_g_CL(12);
     for(size_t i = 0;i<v_eta_g_CL.size();i++){
+#ifdef DEBUG_ISO_MODEL_SIMULATION
       double numer = (1.0-std::pow(v_gamma_H_cl[i],a_H));
       //double denom = (1.0-std::pow(v_gamma_H_cl[i],(a_H+1.0)));
-#ifdef DEBUG_ISO_MODEL_SIMULATION
       LOG(Trace, numer << " = 1.0 - " << v_gamma_H_cl[i] << "^" << a_H);
       LOG(Trace, numer << " = 1.0 - " << v_gamma_H_cl[i] << "^" << (a_H+1.0));
 #endif

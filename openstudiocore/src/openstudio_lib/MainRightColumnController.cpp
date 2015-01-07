@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -19,37 +19,40 @@
 
 #include "MainRightColumnController.hpp"
 
+#include "BuildingStoryInspectorView.hpp"
+#include "ConstructionsTabController.hpp"
 #include "HorizontalTabWidget.hpp"
-#include "ModelObjectTypeListView.hpp"
 #include "InspectorController.hpp"
 #include "InspectorView.hpp"
-#include "OSDocument.hpp"
-#include "OSAppBase.hpp"
+#include "LibraryTabWidget.hpp"
 #include "LocationTabController.hpp"
-#include "SchedulesTabController.hpp"
-#include "BuildingStoryInspectorView.hpp"
-#include "SpaceTypeInspectorView.hpp"
-#include "ThermalZonesView.hpp"
-#include "OSItem.hpp"
-#include "OSItemList.hpp"
+#include "ModelObjectTypeListView.hpp"
+#include "OSAppBase.hpp"
 #include "OSCollapsibleItem.hpp"
 #include "OSCollapsibleItemHeader.hpp"
+#include "OSDocument.hpp"
+#include "OSItem.hpp"
+#include "OSItemList.hpp"
+#include "SchedulesTabController.hpp"
 #include "ScriptFolderListView.hpp"
-#include "ConstructionsTabController.hpp"
+#include "SpaceTypeInspectorView.hpp"
+#include "ThermalZonesView.hpp"
 
-#include "../shared_gui_components/MeasureManager.hpp"
+#include "../shared_gui_components/EditController.hpp"
+#include "../shared_gui_components/EditView.hpp"
 #include "../shared_gui_components/LocalLibraryController.hpp"
 #include "../shared_gui_components/LocalLibraryView.hpp"
-#include "../shared_gui_components/EditView.hpp"
-#include "../shared_gui_components/EditController.hpp"
+#include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/OSViewSwitcher.hpp"
 
+#include "../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 
 #include <QStackedWidget>
 #include <QLayout>
+#include <QTimer>
 
 namespace openstudio {
 
@@ -89,6 +92,21 @@ MainRightColumnController::MainRightColumnController(const model::Model & model,
   // Inspector, we're keeping it around to be able to follow the units toggled
   m_inspectorController = std::shared_ptr<InspectorController>( new InspectorController() );
   connect(this, &MainRightColumnController::toggleUnitsClicked, m_inspectorController.get(), &InspectorController::toggleUnitsClicked);
+  connect(m_inspectorController.get(), &InspectorController::removeButtonClicked, this, &MainRightColumnController::onRemoveButtonClicked);
+  connect(m_inspectorController.get(), &InspectorController::workspaceObjectRemoved, this, &MainRightColumnController::onWorkspaceObjectRemoved);
+
+  auto isConnected = connect(m_inspectorController.get(), SIGNAL(itemRemoveClicked(OSItem *)), this, SLOT(onItemRemoveClicked(OSItem *)));
+  OS_ASSERT(isConnected);
+}
+
+void MainRightColumnController::onItemRemoveClicked(OSItem *)
+{
+  setEditView(nullptr);
+}
+
+void MainRightColumnController::emitItemRemoveClicked(OSItem * item)
+{
+  emit itemRemoveClicked(item);
 }
 
 void MainRightColumnController::registerSystemItem(const Handle & systemHandle, SystemItem * systemItem)
@@ -113,7 +131,7 @@ SystemItem * MainRightColumnController::systemItem(const Handle & systemHandle) 
     return it->second;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 void MainRightColumnController::inspectModelObject(model::OptionalModelObject & modelObject, bool readOnly)
@@ -128,6 +146,49 @@ void MainRightColumnController::inspectModelObject(model::OptionalModelObject & 
   {
     m_inspectorController->layoutModelObject(modelObject, readOnly);
   }
+  m_inspectorController->inspectorView()->currentView()->m_libraryTabWidget->hideRemoveButton();
+}
+
+void MainRightColumnController::inspectModelObjectByItem(OSItem * item, bool readOnly)
+{
+  m_item = item;
+  if (m_item)
+  {
+    boost::optional<model::ModelObject> modelObject;
+    std::shared_ptr<OSDocument> currentDocument = OSAppBase::instance()->currentDocument();
+    if (currentDocument){
+      modelObject = currentDocument->getModelObject(item->itemId());
+    }
+
+    if (modelObject)
+    {
+      m_horizontalTabWidget->setCurrentId(EDIT);
+      setEditView(m_inspectorController->inspectorView());
+      m_inspectorController->layoutModelObject(modelObject, readOnly);
+    }
+    else
+    {
+      m_inspectorController->layoutModelObject(modelObject, readOnly);
+    }
+
+    m_inspectorController->inspectorView()->currentView()->m_libraryTabWidget->showRemoveButton();
+  }
+  //else {
+  //  setEditView(nullptr); // TODO reevaluate
+  //}
+}
+
+void MainRightColumnController::onRemoveButtonClicked(bool checked)
+{
+  if (m_item) {
+    m_item->onRemoveClicked();
+    setEditView(nullptr);
+  }
+}
+
+void MainRightColumnController::onWorkspaceObjectRemoved()
+{
+  setEditView(nullptr);
 }
 
 HorizontalTabWidget * MainRightColumnController::mainRightColumnView() const
@@ -202,9 +263,9 @@ void MainRightColumnController::configureForSiteSubTab(int subTabID)
 {
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
-  setLibraryView(NULL);
-  setMyModelView(NULL);
-  setEditView(NULL);
+  setLibraryView(nullptr);
+  setMyModelView(nullptr);
+  setEditView(nullptr);
 
   doc->openSidebar();
   //doc->closeSidebar();
@@ -214,9 +275,9 @@ void MainRightColumnController::configureForSchedulesSubTab(int subTabID)
 {
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
-  setLibraryView(NULL);
-  setMyModelView(NULL);
-  setEditView(NULL);
+  setLibraryView(nullptr);
+  setMyModelView(nullptr);
+  setEditView(nullptr);
 
   switch( subTabID )
   {
@@ -305,9 +366,9 @@ void MainRightColumnController::configureForConstructionsSubTab(int subTabID)
 {
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
-  setLibraryView(NULL);
-  setMyModelView(NULL);
-  setEditView(NULL);
+  setLibraryView(nullptr);
+  setMyModelView(nullptr);
+  setEditView(nullptr);
 
   switch( subTabID )
   {
@@ -468,7 +529,7 @@ void MainRightColumnController::configureForLoadsSubTab(int subTabID)
   model::Model lib = doc->componentLibrary();
 
 
-  setEditView(NULL);
+  setEditView(nullptr);
 
   // my model
 
@@ -508,6 +569,7 @@ void MainRightColumnController::configureForLoadsSubTab(int subTabID)
   myLibraryList->addModelObjectType(IddObjectType::OS_OtherEquipment_Definition, "Other Equipment Definitions");
   myLibraryList->addModelObjectType(IddObjectType::OS_SteamEquipment_Definition, "Steam Equipment Definitions");
   myLibraryList->addModelObjectType(IddObjectType::OS_HotWaterEquipment_Definition, "Hot Water Equipment Definitions");
+  myLibraryList->addModelObjectType(IddObjectType::OS_WaterUse_Equipment_Definition, "Water Use Equipment Definitions");
   myLibraryList->addModelObjectType(IddObjectType::OS_GasEquipment_Definition, "Gas Equipment Definitions");
   myLibraryList->addModelObjectType(IddObjectType::OS_ElectricEquipment_Definition, "Electric Equipment Definitions");
   myLibraryList->addModelObjectType(IddObjectType::OS_Luminaire_Definition, "Luminaire Definitions");
@@ -527,9 +589,9 @@ void MainRightColumnController::configureForLoadsSubTab(int subTabID)
 void MainRightColumnController::configureForSpaceTypesSubTab(int subTabID)
 {
   // no sub tabs
-  OS_ASSERT(subTabID == -1);
+  OS_ASSERT(subTabID == 0);
 
-  setEditView(NULL);
+  setEditView(nullptr);
 
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
@@ -550,6 +612,7 @@ void MainRightColumnController::configureForSpaceTypesSubTab(int subTabID)
   myModelList->addModelObjectType(IddObjectType::OS_OtherEquipment_Definition, "Other Equipment Definitions");
   myModelList->addModelObjectType(IddObjectType::OS_SteamEquipment_Definition, "Steam Equipment Definitions");
   myModelList->addModelObjectType(IddObjectType::OS_HotWaterEquipment_Definition, "Hot Water Equipment Definitions");
+  myModelList->addModelObjectType(IddObjectType::OS_WaterUse_Equipment_Definition, "Water Use Equipment Definitions");
   myModelList->addModelObjectType(IddObjectType::OS_GasEquipment_Definition, "Gas Equipment Definitions");
   myModelList->addModelObjectType(IddObjectType::OS_ElectricEquipment_Definition, "Electric Equipment Definitions");
   myModelList->addModelObjectType(IddObjectType::OS_Luminaire_Definition, "Luminaire Definitions");
@@ -590,6 +653,7 @@ void MainRightColumnController::configureForSpaceTypesSubTab(int subTabID)
   myLibraryList->addModelObjectType(IddObjectType::OS_OtherEquipment_Definition, "Other Equipment Definitions");
   myLibraryList->addModelObjectType(IddObjectType::OS_SteamEquipment_Definition, "Steam Equipment Definitions");
   myLibraryList->addModelObjectType(IddObjectType::OS_HotWaterEquipment_Definition, "Hot Water Equipment Definitions");
+  myLibraryList->addModelObjectType(IddObjectType::OS_WaterUse_Equipment_Definition, "Water Use Equipment Definitions");
   myLibraryList->addModelObjectType(IddObjectType::OS_GasEquipment_Definition, "Gas Equipment Definitions");
   myLibraryList->addModelObjectType(IddObjectType::OS_ElectricEquipment_Definition, "Electric Equipment Definitions");
   myLibraryList->addModelObjectType(IddObjectType::OS_Luminaire_Definition, "Luminaire Definitions");
@@ -609,9 +673,9 @@ void MainRightColumnController::configureForSpaceTypesSubTab(int subTabID)
 void MainRightColumnController::configureForBuildingStoriesSubTab(int subTabID)
 {
   // no sub tabs
-  OS_ASSERT(subTabID == -1);
+  OS_ASSERT(subTabID == 0);
 
-  setEditView(NULL);
+  setEditView(nullptr);
 
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
@@ -659,9 +723,9 @@ void MainRightColumnController::configureForBuildingStoriesSubTab(int subTabID)
 void MainRightColumnController::configureForFacilitySubTab(int subTabID)
 {
   // no sub tabs
-  OS_ASSERT(subTabID == -1);
+  OS_ASSERT(subTabID == 0);
 
-  setEditView(NULL);
+  setEditView(nullptr);
 
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
@@ -688,6 +752,7 @@ void MainRightColumnController::configureForFacilitySubTab(int subTabID)
   myModelList->addModelObjectType(IddObjectType::OS_OtherEquipment_Definition, "Other Equipment Definitions");
   myModelList->addModelObjectType(IddObjectType::OS_SteamEquipment_Definition, "Steam Equipment Definitions");
   myModelList->addModelObjectType(IddObjectType::OS_HotWaterEquipment_Definition, "Hot Water Equipment Definitions");
+  myModelList->addModelObjectType(IddObjectType::OS_WaterUse_Equipment_Definition, "Water Use Equipment Definitions");
   myModelList->addModelObjectType(IddObjectType::OS_GasEquipment_Definition, "Gas Equipment Definitions");
   myModelList->addModelObjectType(IddObjectType::OS_ElectricEquipment_Definition, "Electric Equipment Definitions");
   myModelList->addModelObjectType(IddObjectType::OS_Luminaire_Definition, "Luminaire Definitions");
@@ -712,7 +777,6 @@ void MainRightColumnController::configureForFacilitySubTab(int subTabID)
   myLibraryList->setItemsType(OSItemType::LibraryItem);
   myLibraryList->setShowFilterLayout(true);
   
-  myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_FourPipeFanCoil,"Four Pipe Fan Coil");
   myLibraryList->addModelObjectType(IddObjectType::OS_Fan_ZoneExhaust,"Fan Zone Exhaust");
   myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump,"PTHP");
   myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner,"PTAC");
@@ -720,6 +784,7 @@ void MainRightColumnController::configureForFacilitySubTab(int subTabID)
   myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow,"Low Temp Radiant Constant Flow");
   myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow,"Low Temp Radiant Variable Flow");  
   myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric,"Low Temp Radiant Electric");
+  myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_HighTemperatureRadiant,"High Temp Radiant");
   myLibraryList->addModelObjectType(IddObjectType::OS_Construction_WindowDataFile, "Window Data File Constructions");
   myLibraryList->addModelObjectType(IddObjectType::OS_Construction_FfactorGroundFloor, "F-factor Ground Floor Constructions");
   myLibraryList->addModelObjectType(IddObjectType::OS_Construction_CfactorUndergroundWall, "C-factor Underground Wall Constructions");
@@ -734,6 +799,7 @@ void MainRightColumnController::configureForFacilitySubTab(int subTabID)
   myLibraryList->addModelObjectType(IddObjectType::OS_OtherEquipment_Definition, "Other Equipment Definitions");
   myLibraryList->addModelObjectType(IddObjectType::OS_SteamEquipment_Definition, "Steam Equipment Definitions");
   myLibraryList->addModelObjectType(IddObjectType::OS_HotWaterEquipment_Definition, "Hot Water Equipment Definitions");
+  myLibraryList->addModelObjectType(IddObjectType::OS_WaterUse_Equipment_Definition, "Water Use Equipment Definitions");
   myLibraryList->addModelObjectType(IddObjectType::OS_GasEquipment_Definition, "Gas Equipment Definitions");
   myLibraryList->addModelObjectType(IddObjectType::OS_ElectricEquipment_Definition, "Electric Equipment Definitions");
   myLibraryList->addModelObjectType(IddObjectType::OS_Luminaire_Definition, "Luminaire Definitions");
@@ -758,9 +824,9 @@ void MainRightColumnController::configureForThermalZonesSubTab(int subTabID)
 
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
-  setLibraryView(NULL);
-  setMyModelView(NULL);
-  setEditView(NULL);
+  setLibraryView(nullptr);
+  setMyModelView(nullptr);
+  setEditView(nullptr);
 
   // My Model
 
@@ -794,6 +860,7 @@ void MainRightColumnController::configureForThermalZonesSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow,"Low Temp Radiant Constant Flow");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow,"Low Temp Radiant Variable Flow");  
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric,"Low Temp Radiant Electric");
+  libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_HighTemperatureRadiant,"High Temp Radiant");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_UnitHeater,"Unit Heater");
   libraryWidget->addModelObjectType(IddObjectType::OS_Schedule_Compact,"Compact Schedules");
   libraryWidget->addModelObjectType(IddObjectType::OS_Schedule_Ruleset,"Schedule Rulesets");
@@ -810,9 +877,9 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
 
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
-  setLibraryView(NULL);
-  setMyModelView(NULL);
-  setEditView(NULL);
+  setLibraryView(nullptr);
+  setMyModelView(nullptr);
+  setEditView(nullptr);
 
   // my model
   ModelObjectTypeListView* myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
@@ -821,6 +888,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   myModelList->setItemsType(OSItemType::LibraryItem);
   myModelList->setShowFilterLayout(true);
   
+  myModelList->addModelObjectType(IddObjectType::OS_ZoneHVAC_FourPipeFanCoil,"Four Pipe Fan Coil");
   myModelList->addModelObjectType(IddObjectType::OS_WaterUse_Equipment_Definition,"Water Use Equipment Definition");  
   myModelList->addModelObjectType(IddObjectType::OS_WaterUse_Connections,"Water Use Connections");  
   myModelList->addModelObjectType(IddObjectType::OS_ThermalZone,"Thermal Zone");  
@@ -831,6 +899,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   myModelList->addModelObjectType(IddObjectType::OS_Coil_Cooling_Water,"Coil Cooling Water");
   myModelList->addModelObjectType(IddObjectType::OS_Chiller_Electric_EIR,"Chiller Electric EIR");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset,"Schedules");
+
 
   setMyModelView(myModelList);
 
@@ -850,11 +919,14 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_SingleZone_Reheat,"Setpoint Manager Single Zone Reheat");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_Scheduled,"Setpoint Manager Scheduled");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_Scheduled_DualSetpoint,"Setpoint Manager Scheduled Dual Setpoint");
+  libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_MultiZone_MinimumHumidity_Average,"SetpointManager MultiZone MinimumHumidity Average");
+  libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_MultiZone_Humidity_Minimum,"SetpointManager MultiZone Humidity Minimum");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_MixedAir,"Setpoint Manager Mixed Air");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_FollowOutdoorAirTemperature,"Setpoint Manager Follow Outdoor Air Temperature");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_OutdoorAirReset,"Setpoint Manager Outdoor Air Reset");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_OutdoorAirPretreat,"Setpoint Manager Outdoor Air Pretreat");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_Warmest,"Setpoint Manager Warmest");
+  libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_WarmestTemperatureFlow,"Setpoint Manager Warmest Temp and Flow");
   libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_WalkIn,"Refrigeration Walkin");
   libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_System,"Refrigeration System");
   libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Subcooler_Mechanical,"Refrigeration Subcooler Mechanical");
@@ -868,6 +940,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_Pump_ConstantSpeed,"Pump Constant Speed");
   libraryWidget->addModelObjectType(IddObjectType::OS_Pump_VariableSpeed,"Pump Variable Speed");
   libraryWidget->addModelObjectType(IddObjectType::OS_Pipe_Adiabatic, "Pipes");
+  libraryWidget->addModelObjectType(IddObjectType::OS_Humidifier_Steam_Electric,"Humidifier Steam Electric");
   libraryWidget->addModelObjectType(IddObjectType::OS_HeatExchanger_FluidToFluid,"Heat Exchanger Fluid To Fluid");
   libraryWidget->addModelObjectType(IddObjectType::OS_HeatExchanger_AirToAir_SensibleAndLatent,"Heat Exchanger Air To Air Sensible and Latent");
   libraryWidget->addModelObjectType(IddObjectType::OS_Fan_VariableVolume,"Fan Variable Volume");
@@ -878,6 +951,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_DistrictCooling,"District Cooling");
   libraryWidget->addModelObjectType(IddObjectType::OS_DistrictHeating,"District Heating");
   libraryWidget->addModelObjectType(IddObjectType::OS_GroundHeatExchanger_Vertical, "Vertical Ground Heat Exchanger");
+  libraryWidget->addModelObjectType(IddObjectType::OS_CoolingTower_TwoSpeed, "Cooling Tower Two Speed");
   libraryWidget->addModelObjectType(IddObjectType::OS_CoolingTower_SingleSpeed, "Cooling Tower Single Speed");
   libraryWidget->addModelObjectType(IddObjectType::OS_CoolingTower_VariableSpeed, "Cooling Tower Variable Speed");
   libraryWidget->addModelObjectType(IddObjectType::OS_Chiller_Electric_EIR,"Chiller Electric EIR");
@@ -891,15 +965,21 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_Coil_Cooling_DX_SingleSpeed,"Coil Cooling DX SingleSpeed");
   libraryWidget->addModelObjectType(IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit,"Coil Cooling Water To Air HP");
   libraryWidget->addModelObjectType(IddObjectType::OS_Boiler_HotWater,"Boiler Hot Water");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInduction, "Air Terminal Four Pipe Induction");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam, "Air Terminal Chilled Beam");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_Reheat,"AirTerminal Single Duct Constant Volume Reheat");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_VAV_Reheat,"AirTerminal Single Duct VAV Reheat");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_ParallelPIU_Reheat,"AirTerminal Single Duct Parallel PIU Reheat");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_SeriesPIU_Reheat,"AirTerminal Single Duct Series PIU Reheat");
+  libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_FourPipeFanCoil,"Four Pipe Fan Coil");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_InletSideMixer,"AirTerminal Inlet Side Mixer");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_VAV_HeatAndCool_Reheat,"AirTerminal Heat and Cool Reheat");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheat,"AirTerminal Heat and Cool No Reheat");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_Uncontrolled,"AirTerminal Single Duct Uncontrolled");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem,"AirLoopHVAC Outdoor Air System");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_VAV_NoReheat,"AirTerminal Single Duct VAV NoReheat");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirLoopHVAC_UnitarySystem, "AirLoopHVAC Unitary System");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass, "AirLoopHVAC Unitary VAV Changeover Bypass");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirConditioner_VariableRefrigerantFlow,"VRF System");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow,"VRF Terminal");
 
@@ -914,9 +994,9 @@ void MainRightColumnController::configureForBuildingSummarySubTab(int subTabID)
 {
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
-  setLibraryView(NULL);
-  setMyModelView(NULL);
-  setEditView(NULL);
+  setLibraryView(nullptr);
+  setMyModelView(nullptr);
+  setEditView(nullptr);
 
   //doc->openSidebar();
   doc->closeSidebar();
@@ -926,9 +1006,9 @@ void MainRightColumnController::configureForOutputVariablesSubTab(int subTabID)
 {
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
-  setLibraryView(NULL);
-  setMyModelView(NULL);
-  setEditView(NULL);
+  setLibraryView(nullptr);
+  setMyModelView(nullptr);
+  setEditView(nullptr);
 
   //doc->openSidebar();
   doc->closeSidebar();
@@ -938,9 +1018,9 @@ void MainRightColumnController::configureForSimulationSettingsSubTab(int subTabI
 {
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
-  setLibraryView(NULL);
-  setMyModelView(NULL);
-  setEditView(NULL);
+  setLibraryView(nullptr);
+  setMyModelView(nullptr);
+  setEditView(nullptr);
 
   //doc->openSidebar();
   doc->closeSidebar();
@@ -951,7 +1031,7 @@ void MainRightColumnController::configureForScriptsSubTab(int subTabID)
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   setLibraryView(m_measureLibraryController->localLibraryView.data());
-  setMyModelView(NULL);
+  setMyModelView(nullptr);
   setEditView(m_measureEditController->editView.data());
 
   doc->openSidebar();
@@ -961,9 +1041,9 @@ void MainRightColumnController::configureForRunSimulationSubTab(int subTabID)
 {
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
-  setLibraryView(NULL);
-  setMyModelView(NULL);
-  setEditView(NULL);
+  setLibraryView(nullptr);
+  setMyModelView(nullptr);
+  setEditView(nullptr);
 
   //doc->openSidebar();
   doc->closeSidebar();
@@ -973,9 +1053,9 @@ void MainRightColumnController::configureForResultsSummarySubTab(int subTabID)
 {
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
-  setLibraryView(NULL);
-  setMyModelView(NULL);
-  setEditView(NULL);
+  setLibraryView(nullptr);
+  setMyModelView(nullptr);
+  setEditView(nullptr);
 
   //doc->openSidebar();
   doc->closeSidebar();

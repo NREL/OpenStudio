@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -39,6 +39,8 @@ namespace detail{
   class IddFile_Impl;
 } // detail
 
+class VersionString;
+
 /** IddFile provides parsing and printing of text files in Input Data Definition (IDD) format. 
  *  IDD is a schema definition format defined by the EnergyPlus team, adopted with slight 
  *  modifications for the OpenStudio project. IddFile is a shared object. */
@@ -62,6 +64,9 @@ class UTILITIES_API IddFile {
 
   /** Returns the file version (as specified in the header). */
   std::string version() const;
+
+  /** Returns the file build (as specified in the header). */
+  std::string build() const;
 
   /** Returns the file header. */
   std::string header() const;
@@ -117,12 +122,21 @@ class UTILITIES_API IddFile {
    *  extension is provided will use 'idd'. */
   bool save(const openstudio::path& p, bool overwrite=false);
 
+  /** Returns the version and build SHA from the given Idd. If build SHA is not present .second will be empty.
+   *
+   *  \throws an exception with a meaningful error message if something goes wrong
+   */
+  static std::pair<VersionString, std::string> parseVersionBuild(const openstudio::path &p);
+
   //@}
  protected:
   friend class IddFactorySingleton;
 
   /// set version
   void setVersion(const std::string& version);
+
+  /// set build
+  void setBuild(const std::string& build);
 
   /// set header
   void setHeader(const std::string& header);

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -34,6 +34,8 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
+class StandardsInformationMaterialWidget;
+
 class WindowMaterialShadeInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
@@ -62,41 +64,40 @@ class WindowMaterialShadeInspectorView : public ModelObjectInspectorView
 
     void refresh();
 
-    OSLineEdit * m_nameEdit;
-
-    OSQuantityEdit * m_solarTransmittance;
-
-    OSQuantityEdit * m_solarReflectance;
-
-    OSQuantityEdit * m_visibleTransmittance;
-
-    OSQuantityEdit * m_visibleReflectance;
-
-    OSQuantityEdit * m_thermalHemisphericalEmissivity;
-
-    OSQuantityEdit * m_thermalTransmittance;
-
-    OSQuantityEdit * m_thickness;
-
-    OSQuantityEdit * m_conductivity;
-
-    OSQuantityEdit * m_shadeToGlassDistance;
-
-    OSQuantityEdit * m_topOpeningMultiplier;
-
-    OSQuantityEdit * m_bottomOpeningMultiplier;
-
-    OSQuantityEdit * m_leftSideOpeningMultiplier;
-
-    OSQuantityEdit * m_rightSideOpeningMultiplier;
-
-    OSQuantityEdit * m_airflowPermeability;
-
     bool m_isIP;
 
-  public slots:
+    OSLineEdit * m_nameEdit = nullptr;
 
-    void toggleUnits(bool displayIP);
+    OSQuantityEdit * m_solarTransmittance = nullptr;
+
+    OSQuantityEdit * m_solarReflectance = nullptr;
+
+    OSQuantityEdit * m_visibleTransmittance = nullptr;
+
+    OSQuantityEdit * m_visibleReflectance = nullptr;
+
+    OSQuantityEdit * m_thermalHemisphericalEmissivity = nullptr;
+
+    OSQuantityEdit * m_thermalTransmittance = nullptr;
+
+    OSQuantityEdit * m_thickness = nullptr;
+
+    OSQuantityEdit * m_conductivity = nullptr;
+
+    OSQuantityEdit * m_shadeToGlassDistance = nullptr;
+
+    OSQuantityEdit * m_topOpeningMultiplier = nullptr;
+
+    OSQuantityEdit * m_bottomOpeningMultiplier = nullptr;
+
+    OSQuantityEdit * m_leftSideOpeningMultiplier = nullptr;
+
+    OSQuantityEdit * m_rightSideOpeningMultiplier = nullptr;
+
+    OSQuantityEdit * m_airflowPermeability = nullptr;
+
+    StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
+
 };
 
 } // openstudio

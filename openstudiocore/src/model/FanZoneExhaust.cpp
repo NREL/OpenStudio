@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -34,7 +34,9 @@
 #include "Schedule_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_Fan_ZoneExhaust_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/units/Unit.hpp"
 
@@ -185,12 +187,12 @@ namespace detail {
     return getDouble(OS_Fan_ZoneExhaustFields::MaximumFlowRate,true);
   }
 
-  unsigned FanZoneExhaust_Impl::inletPort()
+  unsigned FanZoneExhaust_Impl::inletPort() const
   {
     return OS_Fan_ZoneExhaustFields::AirInletNodeName;
   }
 
-  unsigned FanZoneExhaust_Impl::outletPort()
+  unsigned FanZoneExhaust_Impl::outletPort() const
   {
     return OS_Fan_ZoneExhaustFields::AirOutletNodeName;
   }

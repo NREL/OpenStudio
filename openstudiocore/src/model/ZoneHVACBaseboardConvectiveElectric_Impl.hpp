@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -116,9 +116,9 @@ namespace detail {
     /** @name Other */
     //@{
 
-    unsigned inletPort();
+    unsigned inletPort() const;
 
-    unsigned outletPort();
+    unsigned outletPort() const;
   
     boost::optional<ThermalZone> thermalZone();
 

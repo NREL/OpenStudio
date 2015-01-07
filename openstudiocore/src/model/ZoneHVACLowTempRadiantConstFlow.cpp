@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -41,7 +41,9 @@
 #include "ZoneHVACLowTempRadiantConstFlow_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/units/Unit.hpp"
 
@@ -150,12 +152,12 @@ namespace detail {
     return result;
   }
 
-  unsigned ZoneHVACLowTempRadiantConstFlow_Impl::inletPort()
+  unsigned ZoneHVACLowTempRadiantConstFlow_Impl::inletPort() const
   {
     return 0;
   }
 
-  unsigned ZoneHVACLowTempRadiantConstFlow_Impl::outletPort()
+  unsigned ZoneHVACLowTempRadiantConstFlow_Impl::outletPort() const
   {
     return 0;
   }

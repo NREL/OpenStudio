@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -65,6 +65,8 @@
 #include "PortList_Impl.hpp"
 #include "AirLoopHVAC.hpp"
 #include "AirLoopHVAC_Impl.hpp"
+#include "Thermostat.hpp"
+#include "Thermostat_Impl.hpp"
 #include "ThermostatSetpointDualSetpoint.hpp"
 #include "ThermostatSetpointDualSetpoint_Impl.hpp"
 #include "ZoneControlHumidistat.hpp"
@@ -83,7 +85,9 @@
 #include "SetpointManagerSingleZoneReheat_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_ThermalZone_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/Geometry.hpp"
@@ -154,6 +158,7 @@ namespace detail {
   {
     std::vector<IddObjectType> result;
     result.push_back(IddObjectType::OS_ThermostatSetpoint_DualSetpoint);
+    result.push_back(IddObjectType::OS_ZoneControl_Thermostat_StagedDualSetpoint);
     return result;
   }
 
@@ -961,12 +966,34 @@ namespace detail {
 
   bool ThermalZone_Impl::setThermostatSetpointDualSetpoint(const ThermostatSetpointDualSetpoint & thermostat)
   {
+    resetThermostat();
     return setPointer(OS_ThermalZoneFields::ThermostatName, thermostat.handle());
   }
 
   void ThermalZone_Impl::resetThermostatSetpointDualSetpoint()
   {
     if( boost::optional<ThermostatSetpointDualSetpoint> thermostat = this->thermostatSetpointDualSetpoint() )
+    {
+      thermostat->remove();
+    }
+
+    setString(OS_ThermalZoneFields::ThermostatName, "");
+  }
+
+  boost::optional<Thermostat> ThermalZone_Impl::thermostat() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<Thermostat>(OS_ThermalZoneFields::ThermostatName);
+  }
+
+  bool ThermalZone_Impl::setThermostat(const Thermostat & thermostat)
+  {
+    resetThermostat();
+    return setPointer(OS_ThermalZoneFields::ThermostatName, thermostat.handle());
+  }
+
+  void ThermalZone_Impl::resetThermostat()
+  {
+    if( boost::optional<Thermostat> thermostat = this->thermostat() )
     {
       thermostat->remove();
     }
@@ -2532,6 +2559,21 @@ bool ThermalZone::setThermostatSetpointDualSetpoint(const ThermostatSetpointDual
 void ThermalZone::resetThermostatSetpointDualSetpoint()
 {
   getImpl<detail::ThermalZone_Impl>()->resetThermostatSetpointDualSetpoint();
+}
+
+boost::optional<Thermostat> ThermalZone::thermostat() const
+{
+  return getImpl<detail::ThermalZone_Impl>()->thermostat();
+}
+
+bool ThermalZone::setThermostat(const Thermostat & thermostat)
+{
+  return getImpl<detail::ThermalZone_Impl>()->setThermostat(thermostat);
+}
+
+void ThermalZone::resetThermostat()
+{
+  getImpl<detail::ThermalZone_Impl>()->resetThermostat();
 }
 
 boost::optional<ZoneControlHumidistat> ThermalZone::zoneControlHumidistat() const

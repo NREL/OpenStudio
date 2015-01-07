@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -36,6 +36,7 @@ namespace runmanager {
   {
     if (status != m_status)
     {
+      LOG(Trace, "New Process State: " << status.description());
       m_status = status;
       emit statusChanged(m_status);
     }

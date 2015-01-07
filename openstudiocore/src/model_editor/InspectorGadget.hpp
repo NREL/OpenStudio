@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -19,17 +19,21 @@
 #ifndef MODELEDITOR_INSPECTORGADGET_HPP
 #define MODELEDITOR_INSPECTORGADGET_HPP
 
-#include <QWidget>
 #include <QComboBox>
 #include <QEvent>
+#include <QWidget>
+
 #include "../model/AccessPolicyStore.hpp"
 #include "../model/ModelObject.hpp"
+
 #include "ModelEditorAPI.hpp"
+
 #include "../utilities/idd/IddField.hpp"
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/Workspace_Impl.hpp"
 #include "../utilities/idf/WorkspaceObject.hpp"
 #include "../utilities/idf/WorkspaceObject_Impl.hpp"
+
 #include <string>
 
 class QDoubleSpinBox;
@@ -41,20 +45,13 @@ class QVBoxLayout;
 
 class ComboHighlightBridge;
 
-class IGWidget : public QWidget
+class MODELEDITOR_API IGWidget : public QWidget
 {
   public:
   
-  IGWidget( QWidget * parent = nullptr )
-    : QWidget(parent)
-  {
-    setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Preferred);
-  }
+  IGWidget(QWidget * parent = nullptr);
 
-  QSize sizeHint() const 
-  {
-    return QSize(200,QWidget::sizeHint().height());
-  }
+  QSize sizeHint() const;
 };
 
 class IGComboBox : public QComboBox
@@ -217,6 +214,7 @@ public slots:
   void setPrec();
 
   void addExtensible();
+
   void removeExtensible();
   /*!
    * Create all fields in the IDD. IDFObjects can be instantiated with some
@@ -230,6 +228,7 @@ public slots:
   void setRecursive( bool recursive);
 
  signals:
+
   void nameChanged(QString);
 
   void toggleUnitsClicked(bool);
@@ -240,6 +239,8 @@ public slots:
    *
    */
   void dirty();
+
+  void workspaceObjectRemoved();
 
 protected slots:
 
@@ -373,9 +374,9 @@ protected:
 
   void disconnectWorkspaceObjectSignals() const;
 
-  private:
+private:
 
-    void connectSignalsAndSlots();
+  void connectSignalsAndSlots();
 };
 
 #endif // MODELEDITOR_INSPECTORGADGET_HPP

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -34,6 +34,8 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
+class StandardsInformationMaterialWidget;
+
 class WindowMaterialSimpleGlazingSystemInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
@@ -62,19 +64,18 @@ class WindowMaterialSimpleGlazingSystemInspectorView : public ModelObjectInspect
 
     void refresh();
 
-    OSLineEdit * m_nameEdit;
-
-    OSQuantityEdit * m_uFactor;
-
-    OSQuantityEdit * m_solarHeatGainCoefficient;
-
-    OSQuantityEdit * m_visibleTransmittance;
-
     bool m_isIP;
 
-  public slots:
+    OSLineEdit * m_nameEdit = nullptr;
 
-    void toggleUnits(bool displayIP);
+    OSQuantityEdit * m_uFactor = nullptr;
+
+    OSQuantityEdit * m_solarHeatGainCoefficient = nullptr;
+
+    OSQuantityEdit * m_visibleTransmittance = nullptr;
+
+    StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
+
 };
 
 } // openstudio

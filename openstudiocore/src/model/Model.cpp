@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -19,35 +19,38 @@
 
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+
 #include "Component.hpp"
 #include "ComponentWatcher_Impl.hpp"
+#include "Connection.hpp"
 #include "ModelObject.hpp"
 #include "ModelObject_Impl.hpp"
 #include "ResourceObject.hpp"
 #include "ResourceObject_Impl.hpp"
-#include "Connection.hpp"
 
 // central list of all concrete ModelObject header files (_Impl and non-_Impl)
 // needed here for ::createObject
 #include "ConcreteModelObjects.hpp"
 
-#include "../utilities/idf/IdfFile.hpp"
-
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Version_FieldEnums.hxx>
-#include <utilities/idf/Workspace_Impl.hpp> // needed for serialization
-#include "../utilities/idd/IddObject_Impl.hpp"
-#include "../utilities/idd/IddField_Impl.hpp"
-#include "../utilities/idd/IddFile_Impl.hpp"
-
-#include "../utilities/plot/ProgressBar.hpp"
-
-#include "../utilities/math/FloatCompare.hpp"
-
-#include "../utilities/sql/SqlFile.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/PathHelpers.hpp"
+
+#include "../utilities/idd/IddEnums.hpp"
+#include "../utilities/idd/IddObject_Impl.hpp"
+#include "../utilities/idd/IddField_Impl.hpp"
+#include "../utilities/idd/IddFile_Impl.hpp"
+#include "../utilities/idf/Workspace_Impl.hpp" // needed for serialization
+
+#include "../utilities/idf/IdfFile.hpp"
+
+#include "../utilities/math/FloatCompare.hpp"
+
+#include "../utilities/plot/ProgressBar.hpp"
+
+#include "../utilities/sql/SqlFile.hpp"
 
 #include <boost/regex.hpp>
 
@@ -189,6 +192,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(EvaporativeFluidCoolerSingleSpeed);
     REGISTER_CONSTRUCTOR(AirGap);
     REGISTER_CONSTRUCTOR(AirLoopHVAC);
+    REGISTER_CONSTRUCTOR(AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass);
+    REGISTER_CONSTRUCTOR(AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed);
     REGISTER_CONSTRUCTOR(AirLoopHVACUnitaryHeatPumpAirToAir);
     REGISTER_CONSTRUCTOR(AirLoopHVACOutdoorAirSystem);
     REGISTER_CONSTRUCTOR(AirLoopHVACReturnPlenum);
@@ -196,13 +201,17 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(AirLoopHVACUnitarySystem);
     REGISTER_CONSTRUCTOR(AirLoopHVACZoneMixer);
     REGISTER_CONSTRUCTOR(AirLoopHVACZoneSplitter);
+    REGISTER_CONSTRUCTOR(AirTerminalSingleDuctInletSideMixer);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeCooledBeam);
+    REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeFourPipeInduction);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeReheat);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctParallelPIUReheat);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctSeriesPIUReheat);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctUncontrolled);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctVAVReheat);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctVAVNoReheat);
+    REGISTER_CONSTRUCTOR(AirTerminalSingleDuctVAVHeatAndCoolNoReheat);
+    REGISTER_CONSTRUCTOR(AirTerminalSingleDuctVAVHeatAndCoolReheat);
     REGISTER_CONSTRUCTOR(AirWallMaterial);
     REGISTER_CONSTRUCTOR(AvailabilityManagerAssignmentList);
     REGISTER_CONSTRUCTOR(AvailabilityManagerNightCycle);
@@ -216,6 +225,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ChillerElectricEIR);
     REGISTER_CONSTRUCTOR(ClimateZones);
     REGISTER_CONSTRUCTOR(CoilCoolingCooledBeam);
+    REGISTER_CONSTRUCTOR(CoilCoolingDXMultiSpeed);
+    REGISTER_CONSTRUCTOR(CoilCoolingDXMultiSpeedStageData);
     REGISTER_CONSTRUCTOR(CoilCoolingDXSingleSpeed);
     REGISTER_CONSTRUCTOR(CoilCoolingDXTwoSpeed);
     REGISTER_CONSTRUCTOR(CoilCoolingDXVariableRefrigerantFlow);
@@ -228,6 +239,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(CoilHeatingDXVariableRefrigerantFlow);
     REGISTER_CONSTRUCTOR(CoilHeatingElectric);
     REGISTER_CONSTRUCTOR(CoilHeatingGas);
+    REGISTER_CONSTRUCTOR(CoilHeatingGasMultiStage);
+    REGISTER_CONSTRUCTOR(CoilHeatingGasMultiStageStageData);
     REGISTER_CONSTRUCTOR(CoilHeatingLowTempRadiantConstFlow);
     REGISTER_CONSTRUCTOR(CoilHeatingLowTempRadiantVarFlow);
     REGISTER_CONSTRUCTOR(CoilHeatingWater);
@@ -248,6 +261,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(CoolingTowerPerformanceCoolTools);
     REGISTER_CONSTRUCTOR(CoolingTowerPerformanceYorkCalc);
     REGISTER_CONSTRUCTOR(CoolingTowerSingleSpeed);
+    REGISTER_CONSTRUCTOR(CoolingTowerTwoSpeed);
     REGISTER_CONSTRUCTOR(CoolingTowerVariableSpeed);
     REGISTER_CONSTRUCTOR(CurrencyType);
     REGISTER_CONSTRUCTOR(CurveBicubic);
@@ -301,6 +315,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(HeatExchangerFluidToFluid);
     REGISTER_CONSTRUCTOR(HotWaterEquipment);
     REGISTER_CONSTRUCTOR(HotWaterEquipmentDefinition);
+    REGISTER_CONSTRUCTOR(HumidifierSteamElectric);
     REGISTER_CONSTRUCTOR(IlluminanceMap);
     REGISTER_CONSTRUCTOR(InfraredTransparentMaterial);
     REGISTER_CONSTRUCTOR(InsideSurfaceConvectionAlgorithm);
@@ -371,12 +386,16 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(Screen);
     REGISTER_CONSTRUCTOR(SetpointManagerFollowOutdoorAirTemperature);
     REGISTER_CONSTRUCTOR(SetpointManagerMixedAir);
+    REGISTER_CONSTRUCTOR(SetpointManagerMultiZoneHumidityMinimum);
+    REGISTER_CONSTRUCTOR(SetpointManagerMultiZoneMinimumHumidityAverage);
     REGISTER_CONSTRUCTOR(SetpointManagerOutdoorAirPretreat);
     REGISTER_CONSTRUCTOR(SetpointManagerOutdoorAirReset);
     REGISTER_CONSTRUCTOR(SetpointManagerScheduled);
     REGISTER_CONSTRUCTOR(SetpointManagerScheduledDualSetpoint);
+    REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneHumidityMinimum);
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneReheat);
     REGISTER_CONSTRUCTOR(SetpointManagerWarmest);
+    REGISTER_CONSTRUCTOR(SetpointManagerWarmestTemperatureFlow);
     REGISTER_CONSTRUCTOR(Shade);
     REGISTER_CONSTRUCTOR(ShadingControl);
     REGISTER_CONSTRUCTOR(ShadingSurface);
@@ -400,6 +419,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(StandardGlazing);
     REGISTER_CONSTRUCTOR(StandardOpaqueMaterial);
     REGISTER_CONSTRUCTOR(StandardsInformationConstruction);
+    REGISTER_CONSTRUCTOR(StandardsInformationMaterial);
     REGISTER_CONSTRUCTOR(SteamEquipment);
     REGISTER_CONSTRUCTOR(SteamEquipmentDefinition);
     REGISTER_CONSTRUCTOR(SubSurface);
@@ -408,7 +428,6 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ThermochromicGlazing);
     REGISTER_CONSTRUCTOR(ThermostatSetpointDualSetpoint);
     REGISTER_CONSTRUCTOR(ThermalZone);
-    REGISTER_CONSTRUCTOR(TimeDependentValuation);
     REGISTER_CONSTRUCTOR(Timestep);
     REGISTER_CONSTRUCTOR(UtilityBill);
     REGISTER_CONSTRUCTOR(UtilityCost_Charge_Block);
@@ -432,11 +451,13 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ZoneAirHeatBalanceAlgorithm);
     REGISTER_CONSTRUCTOR(ZoneCapacitanceMultiplierResearchSpecial);
     REGISTER_CONSTRUCTOR(ZoneControlHumidistat);
+    REGISTER_CONSTRUCTOR(ZoneControlThermostatStagedDualSetpoint);
     REGISTER_CONSTRUCTOR(ZoneHVACEquipmentList);
     REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveElectric);  
     REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveWater);  
     REGISTER_CONSTRUCTOR(ZoneHVACIdealLoadsAirSystem);
     REGISTER_CONSTRUCTOR(ZoneHVACFourPipeFanCoil);
+    REGISTER_CONSTRUCTOR(ZoneHVACHighTemperatureRadiant);
     REGISTER_CONSTRUCTOR(ZoneHVACLowTemperatureRadiantElectric);
     REGISTER_CONSTRUCTOR(ZoneHVACLowTempRadiantConstFlow);
     REGISTER_CONSTRUCTOR(ZoneHVACLowTempRadiantVarFlow);
@@ -484,20 +505,26 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(EvaporativeFluidCoolerSingleSpeed);
     REGISTER_COPYCONSTRUCTORS(AirGap);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVAC);
+    REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitaryHeatPumpAirToAir);
+    REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACOutdoorAirSystem);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACReturnPlenum);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACSupplyPlenum);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitarySystem);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACZoneMixer);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACZoneSplitter);
+    REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctInletSideMixer);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeCooledBeam);
+    REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeFourPipeInduction);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeReheat);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctParallelPIUReheat);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctSeriesPIUReheat);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctUncontrolled);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctVAVReheat);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctVAVNoReheat);
+    REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctVAVHeatAndCoolNoReheat);
+    REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctVAVHeatAndCoolReheat);
     REGISTER_COPYCONSTRUCTORS(AirWallMaterial);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerAssignmentList);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerNightCycle);
@@ -511,6 +538,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ClimateZones);
     REGISTER_COPYCONSTRUCTORS(ChillerElectricEIR);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingCooledBeam);
+    REGISTER_COPYCONSTRUCTORS(CoilCoolingDXMultiSpeed);
+    REGISTER_COPYCONSTRUCTORS(CoilCoolingDXMultiSpeedStageData);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXSingleSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXTwoSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXVariableRefrigerantFlow);
@@ -523,6 +552,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXVariableRefrigerantFlow);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingElectric);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingGas);
+    REGISTER_COPYCONSTRUCTORS(CoilHeatingGasMultiStage);
+    REGISTER_COPYCONSTRUCTORS(CoilHeatingGasMultiStageStageData);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingLowTempRadiantConstFlow);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingLowTempRadiantVarFlow);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingWater);
@@ -543,6 +574,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(CoolingTowerPerformanceCoolTools);
     REGISTER_COPYCONSTRUCTORS(CoolingTowerPerformanceYorkCalc);
     REGISTER_COPYCONSTRUCTORS(CoolingTowerSingleSpeed);
+    REGISTER_COPYCONSTRUCTORS(CoolingTowerTwoSpeed);
     REGISTER_COPYCONSTRUCTORS(CoolingTowerVariableSpeed);
     REGISTER_COPYCONSTRUCTORS(CurrencyType);
     REGISTER_COPYCONSTRUCTORS(CurveBicubic);
@@ -596,6 +628,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(HeatExchangerFluidToFluid);
     REGISTER_COPYCONSTRUCTORS(HotWaterEquipment);
     REGISTER_COPYCONSTRUCTORS(HotWaterEquipmentDefinition);
+    REGISTER_COPYCONSTRUCTORS(HumidifierSteamElectric);
     REGISTER_COPYCONSTRUCTORS(InfraredTransparentMaterial);
     REGISTER_COPYCONSTRUCTORS(InsideSurfaceConvectionAlgorithm);
     REGISTER_COPYCONSTRUCTORS(InteriorPartitionSurface);
@@ -666,12 +699,16 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(Screen);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerFollowOutdoorAirTemperature);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerMixedAir);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerMultiZoneHumidityMinimum);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerMultiZoneMinimumHumidityAverage);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerOutdoorAirPretreat);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerOutdoorAirReset);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerScheduled);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerScheduledDualSetpoint);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneHumidityMinimum);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneReheat);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerWarmest);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerWarmestTemperatureFlow);
     REGISTER_COPYCONSTRUCTORS(Shade);
     REGISTER_COPYCONSTRUCTORS(ShadingControl);
     REGISTER_COPYCONSTRUCTORS(ShadingSurface);
@@ -695,6 +732,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(StandardGlazing);
     REGISTER_COPYCONSTRUCTORS(StandardOpaqueMaterial);
     REGISTER_COPYCONSTRUCTORS(StandardsInformationConstruction);
+    REGISTER_COPYCONSTRUCTORS(StandardsInformationMaterial);
     REGISTER_COPYCONSTRUCTORS(SteamEquipment);
     REGISTER_COPYCONSTRUCTORS(SteamEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(SubSurface);
@@ -703,7 +741,6 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ThermochromicGlazing);
     REGISTER_COPYCONSTRUCTORS(ThermostatSetpointDualSetpoint);
     REGISTER_COPYCONSTRUCTORS(ThermalZone);
-    REGISTER_COPYCONSTRUCTORS(TimeDependentValuation);
     REGISTER_COPYCONSTRUCTORS(Timestep);
     REGISTER_COPYCONSTRUCTORS(UtilityBill);
     REGISTER_COPYCONSTRUCTORS(UtilityCost_Charge_Block);
@@ -727,11 +764,13 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ZoneAirHeatBalanceAlgorithm);
     REGISTER_COPYCONSTRUCTORS(ZoneCapacitanceMultiplierResearchSpecial);
     REGISTER_COPYCONSTRUCTORS(ZoneControlHumidistat);
+    REGISTER_COPYCONSTRUCTORS(ZoneControlThermostatStagedDualSetpoint);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACEquipmentList);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardConvectiveElectric);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardConvectiveWater);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACIdealLoadsAirSystem);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACFourPipeFanCoil);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACHighTemperatureRadiant);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACLowTemperatureRadiantElectric);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACLowTempRadiantConstFlow);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACLowTempRadiantVarFlow);

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -18,10 +18,18 @@
  **********************************************************************/
 
 #include "../ForwardTranslator.hpp"
+#include "../../model/AirToAirComponent.hpp"
+#include "../../model/AirToAirComponent_Impl.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "../../model/ControllerOutdoorAir.hpp"
 #include "../../model/ControllerOutdoorAir_Impl.hpp"
+#include "../../model/ControllerWaterCoil.hpp"
+#include "../../model/ControllerWaterCoil_Impl.hpp"
+#include "../../model/CoilCoolingWater.hpp"
+#include "../../model/CoilCoolingWater_Impl.hpp"
+#include "../../model/CoilHeatingWater.hpp"
+#include "../../model/CoilHeatingWater_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
 #include "../../model/Schedule.hpp"
@@ -36,6 +44,7 @@
 #include <utilities/idd/AvailabilityManager_Scheduled_FieldEnums.hxx>
 #include <utilities/idd/Controller_OutdoorAir_FieldEnums.hxx>
 #include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -60,49 +69,53 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
  
 
   // Controller List
-  IdfObject controllerListIdf(IddObjectType::AirLoopHVAC_ControllerList);
-  controllerListIdf.setName(name + " Controller List");
-  controllerListIdf.clearExtensibleGroups();
-
-  m_idfObjects.push_back(controllerListIdf);
+  IdfObject _controllerList(IddObjectType::AirLoopHVAC_ControllerList);
+  _controllerList.setName(name + " Controller List");
+  _controllerList.clearExtensibleGroups();
+  m_idfObjects.push_back(_controllerList);
 
   ControllerOutdoorAir controllerOutdoorAir = modelObject.getControllerOutdoorAir();
-  boost::optional<IdfObject> temp = translateAndMapModelObject(controllerOutdoorAir);
+  boost::optional<IdfObject> _controllerOutdoorAir = translateAndMapModelObject(controllerOutdoorAir);
+  OS_ASSERT(_controllerOutdoorAir);
 
-  s = controllerListIdf.name();
-  if(s)
-  {
-    idfObject.setString(openstudio::AirLoopHVAC_OutdoorAirSystemFields::ControllerListName,*s);
-  }
+  idfObject.setString(openstudio::AirLoopHVAC_OutdoorAirSystemFields::ControllerListName,_controllerList.name().get());
 
-  s = temp->iddObject().name();
-  StringVector groupFields(2u);
-  bool addGroup(false);
-  if(s)
-  {
-    groupFields[0] = *s;
-    addGroup = true;
-  }
+  IdfExtensibleGroup eg = _controllerList.pushExtensibleGroup();
+  eg.setString(AirLoopHVAC_ControllerListExtensibleFields::ControllerObjectType,_controllerOutdoorAir->iddObject().name());
+  eg.setString(AirLoopHVAC_ControllerListExtensibleFields::ControllerName,_controllerOutdoorAir->name().get());
 
-  s = temp->name();
-  if(s)
-  {
-    groupFields[1] = *s;
-    addGroup = true;
-  }
+  std::vector<ModelObject> controllers;
+  auto components = modelObject.components();
+  for( const auto & component : components ) {
+    boost::optional<ControllerWaterCoil> controller;
 
-  if (addGroup) {
-    IdfExtensibleGroup eg = controllerListIdf.pushExtensibleGroup(groupFields);
-    OS_ASSERT(!eg.empty());
+    if( auto coil = component.optionalCast<CoilCoolingWater>() ) {
+      controller = coil->controllerWaterCoil();
+    } else if ( auto coil = component.optionalCast<CoilHeatingWater>() ) {
+      controller = coil->controllerWaterCoil();
+    }
+
+    if( controller ) {
+      controllers.push_back(controller.get());
+    }
+  } 
+  
+  for( auto & controller: controllers ) {
+    auto _controller = translateAndMapModelObject(controller);
+    if( _controller ) {
+      IdfExtensibleGroup eg = _controllerList.pushExtensibleGroup();
+      eg.setString(AirLoopHVAC_ControllerListExtensibleFields::ControllerObjectType,_controller->iddObject().name());
+      eg.setString(AirLoopHVAC_ControllerListExtensibleFields::ControllerName,_controller->name().get());
+    }
   }
 
   // Field: Availability Manager List Name //////////////////////////////////
   IdfObject availabilityManagerListIdf(IddObjectType::AvailabilityManagerAssignmentList);
-  availabilityManagerListIdf.setName(name + " Availability Manager");
+  availabilityManagerListIdf.setName(name + " Availability Manager List");
   m_idfObjects.push_back(availabilityManagerListIdf);
 
   IdfObject availabilityManagerScheduledIdf = IdfObject(openstudio::IddObjectType::AvailabilityManager_Scheduled);
-  availabilityManagerScheduledIdf.createName();
+  availabilityManagerScheduledIdf.setName(name + " Availability Manager");
   m_idfObjects.push_back(availabilityManagerScheduledIdf);
 
   Schedule alwaysOn = modelObject.model().alwaysOnDiscreteSchedule();
@@ -168,23 +181,38 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
   s = outdoorAirMixerIdf.name();
   equipmentListIdf.setString(2,*s);
 
-  ModelObjectVector oaModelObjects = modelObject.oaComponents();
-  ModelObjectVector::iterator oaIt;
   unsigned i = 3;
-  for( oaIt = oaModelObjects.begin();
+  ModelObjectVector oaModelObjects = modelObject.oaComponents();
+  for( ModelObjectVector::iterator oaIt = oaModelObjects.begin();
        oaIt != oaModelObjects.end();
        ++oaIt )
   {
     if( ! oaIt->optionalCast<Node>() )
     {
-      s = stripOS2(oaIt->iddObject().name());
-      if(s)
-        equipmentListIdf.setString(i,*s);
-      i++;
-      s = oaIt->name();
-      if(s)
-        equipmentListIdf.setString(i,*s);
-      i++;
+      if( boost::optional<IdfObject> idfObject = translateAndMapModelObject(*oaIt) )
+      {
+        equipmentListIdf.setString(i,idfObject->iddObject().name());
+        i++;
+        equipmentListIdf.setString(i,idfObject->name().get());
+        i++;
+      }
+    }
+  }
+
+  ModelObjectVector reliefModelObjects = modelObject.reliefComponents();
+  for( ModelObjectVector::iterator reliefIt = reliefModelObjects.begin();
+       reliefIt != reliefModelObjects.end();
+       ++reliefIt )
+  {
+    if( (! reliefIt->optionalCast<Node>()) && (! reliefIt->optionalCast<AirToAirComponent>()) )
+    {
+      if( boost::optional<IdfObject> idfObject = translateAndMapModelObject(*reliefIt) )
+      {
+        equipmentListIdf.setString(i,idfObject->iddObject().name());
+        i++;
+        equipmentListIdf.setString(i,idfObject->name().get());
+        i++;
+      }
     }
   }
 
@@ -192,13 +220,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
   if(s)
   {
     idfObject.setString(openstudio::AirLoopHVAC_OutdoorAirSystemFields::OutdoorAirEquipmentListName,*s);
-  }
-
-  for( oaIt = oaModelObjects.begin();
-       oaIt != oaModelObjects.end();
-       ++oaIt )
-  {
-    translateAndMapModelObject(*oaIt);
   }
 
   return boost::optional<IdfObject>(idfObject);

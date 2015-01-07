@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -129,7 +129,7 @@ class OSItem : public QWidget
     void itemRemoveClicked(OSItem *);
     void itemReplacementDropped(OSItem * currentItem, const OSItemId& replacementItemId);
 
-  private slots:
+  public slots:
     void onRemoveClicked();
 
   protected:

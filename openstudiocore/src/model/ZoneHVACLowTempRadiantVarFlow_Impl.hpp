@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -72,9 +72,9 @@ namespace detail {
     
     virtual std::vector<ModelObject> children() const;
 
-    virtual unsigned inletPort();
+    virtual unsigned inletPort() const;
 
-    virtual unsigned outletPort();
+    virtual unsigned outletPort() const;
 
     //@}
     /** @name Getters */

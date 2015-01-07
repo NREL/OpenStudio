@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -233,7 +233,7 @@ QWidget * VariableItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     auto variableItemView = new VariableItemView(); 
 
-    variableItemView->variableHeaderView->setText(variableItem->name());
+    variableItemView->variableHeaderView->setText(variableItem->displayName());
     variableItemView->variableContentView->setListController(measureListController);
     variableItemView->variableContentView->setDelegate(measureItemDelegate);
 
@@ -251,9 +251,9 @@ QWidget * MeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     // Name
 
-    measureItemView->label->setText(measureItem->name());
+    measureItemView->label->setText(measureItem->displayName());
 
-    connect(measureItem.data(), &measuretab::MeasureItem::nameChanged, measureItemView->label, &QLabel::setText);
+    connect(measureItem.data(), &measuretab::MeasureItem::displayNameChanged, measureItemView->label, &QLabel::setText);
 
     // Selection
 
@@ -581,7 +581,7 @@ DesignAltItem::DesignAltItem(const analysis::DataPoint & dataPoint, bool isBasel
 
 QString DesignAltItem::name() const
 {
-  return QString::fromStdString(m_dataPoint.name());
+  return QString::fromStdString(m_dataPoint.displayName());
 }
 
 QString DesignAltItem::description() const
@@ -712,7 +712,7 @@ PerturbationItem::PerturbationItem(const analysis::Measure & measure)
 
 QString PerturbationItem::name() const
 {
-  return openstudio::toQString(m_measure.name());
+  return openstudio::toQString(m_measure.displayName());
 }
 
 bool PerturbationItem::isFixedMeasureItem() const

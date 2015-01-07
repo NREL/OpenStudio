@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -63,10 +63,6 @@ module OpenStudio
           
     end
      
-    # SketchUp 8 onPreSaveModel does not seem to be working, still need to save OpenStudio model to disk first
-    # in order to persist openstudio_path to save skp file
-    # onPreSaveModel seems to work on SU8 but doesnt fuction at all on SU 7
-    # We can ingnore SU7 behavior or add a verstion test to use onSaveModel vs. onPreSaveModel if SU7
     def onPreSaveModel(model)
       
       Plugin.log(OpenStudio::Trace, "#{current_method_name}, @enabled = #{@enabled}")
@@ -76,19 +72,18 @@ module OpenStudio
       Plugin.command_manager.save_openstudio  
     end
 
-    # added onSaveModel only if pre SU 8. In this method still need to save SKP after OSM to persist opestudio_path to save skp file.
-    def onSaveModel(model)
+    def onPostSaveModel(model)
       
       Plugin.log(OpenStudio::Trace, "#{current_method_name}, @enabled = #{@enabled}")
       
       return if not @enabled
       
-      if Sketchup.version.to_i < 8
-        Plugin.command_manager.save_openstudio
+      if model && model_interface = model.model_interface
+        model_interface.skp_model_guid = model.guid
       end
+      
     end
-
-
+    
     # unknown if this is called
     def onDeleteModel(model)
       

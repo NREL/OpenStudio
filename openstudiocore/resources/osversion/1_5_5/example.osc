@@ -1,0 +1,25 @@
+
+OS:Version,
+  {c96e3e47-cfce-49a5-9dda-ae432d900cf7}, !- Handle
+  1.5.5;                                  !- Version Identifier
+
+OS:Construction,
+  {5be79ea8-7fd9-4ff0-b614-29fe49db9435}, !- Handle
+  Air Wall,                               !- Name
+  ,                                       !- Surface Rendering Name
+  {56bd617e-5bf3-448d-8a08-7ecd5e34bef1}; !- Layer 1
+
+OS:Material:AirWall,
+  {56bd617e-5bf3-448d-8a08-7ecd5e34bef1}, !- Handle
+  Air Wall Material;                      !- Name
+
+OS:ComponentData,
+  {640caa96-04b4-4dcf-8d5b-74637e94c4cb}, !- Handle
+  Component Data 1,                       !- Name
+  {fcae0514-2edb-4adf-8c92-d4314dc11ea6}, !- UUID
+  {d7d67e80-e685-42a0-92f7-40e0925dc37d}, !- Version UUID
+  1420219935,                             !- Creation Timestamp
+  1420219935,                             !- Version Timestamp
+  {5be79ea8-7fd9-4ff0-b614-29fe49db9435}, !- Name of Object 1
+  {56bd617e-5bf3-448d-8a08-7ecd5e34bef1}; !- Name of Object 2
+

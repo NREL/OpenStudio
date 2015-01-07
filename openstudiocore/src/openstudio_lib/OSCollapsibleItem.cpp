@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -45,7 +45,7 @@ OSCollapsibleItem::OSCollapsibleItem(OSCollapsibleItemHeader * collapsibleItemHe
   : QWidget(parent),
     m_collapsibleItemHeader(collapsibleItemHeader),
     m_itemList(itemList),
-    m_mainLayout(NULL),
+    m_mainLayout(nullptr),
     m_showFilterLayout(false)
 {
   OS_ASSERT(m_collapsibleItemHeader);

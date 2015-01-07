@@ -19,6 +19,15 @@ file(GLOB_RECURSE RUBY_SRC "openstudio/*.rb" "cloud/*.template" "cloud/*.sh")
 # find all tests
 file(GLOB_RECURSE RUBY_TEST_SRC "openstudio/*_Test.rb")
 
+# Set up new path to find Qt libraries
+if (MSVC)
+  file(TO_NATIVE_PATH "${QT_LIBRARY_DIR}" QT_LIB_PATH)
+  set(NEWPATH "${QT_LIB_PATH};$ENV{PATH}")
+else()
+  set(NEWPATH $ENV{PATH})
+endif()
+
+
 # add a test for each unit test
 set(RUBY_TEST_REQUIRES "#include test files")
 foreach(f ${RUBY_TEST_SRC})
@@ -37,16 +46,16 @@ foreach(f ${RUBY_TEST_SRC})
       if(MSVC)
         add_test(NAME "RubyTest-${FILE_NAME}-${TEST_NAME}"
           COMMAND "${CMAKE_COMMAND}" -E chdir "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIGURATION>"
-          "$<TARGET_FILE:ruby_cpp>" -I "${RUBY_RUBY_LIB_DIR}" -I "${RUBY_RUBY_LIB_DIR}/i386-mingw32" -I. "openstudio_test.rb" "--name=test_${TEST_NAME}"
+          "${RUBY_EXECUTABLE}" -I "${RUBY_RUBY_LIB_DIR}" -I "${RUBY_RUBY_LIB_DIR}/i386-mingw32" -I. "openstudio_test.rb" "--name=test_${TEST_NAME}"
         )
       else()
-        # $<CONFIGURATION> may resolve to 'Release' on Mac or Linux but directory will not exist
         add_test(NAME "RubyTest-${FILE_NAME}-${TEST_NAME}"
           COMMAND "${CMAKE_COMMAND}" -E chdir "${CMAKE_CURRENT_BINARY_DIR}"
           "${RUBY_EXECUTABLE}" -I"${RUBY_RUBY_LIB_DIR}" -I. "openstudio_test.rb" "--name=test_${TEST_NAME}"
         )
       endif()
-      set_tests_properties("RubyTest-${FILE_NAME}-${TEST_NAME}" PROPERTIES DEPENDS "${ALL_RUBY_BINDING_TARGETS}" ruby_cpp ResultsViewer_resources)
+
+      set_tests_properties("RubyTest-${FILE_NAME}-${TEST_NAME}" PROPERTIES TIMEOUT 660 ENVIRONMENT "PATH=${NEWPATH}")
     endif()
   endforeach()
 endforeach()
@@ -81,30 +90,37 @@ if(WIN32 OR APPLE)
   get_filename_component(QSQLITE_PLUGIN_NAME "${QT_QSQLITE_PLUGIN}" NAME)
 
   if(WIN32)
-    get_target_property(QT_WINDOWS_PLUGIN Qt5::QWindowsIntegrationPlugin LOCATION)
-
-    install(PROGRAMS "${QT_WINDOWS_PLUGIN}"
-            DESTINATION "Ruby/openstudio/platforms/" 
-    )
+    get_target_property(QPA_PLUGIN Qt5::QWindowsIntegrationPlugin LOCATION)
+  elseif(APPLE)
+    get_target_property(QPA_PLUGIN Qt5::QCocoaIntegrationPlugin LOCATION)
   endif()
 
+  install(PROGRAMS "${QPA_PLUGIN}"
+          DESTINATION "Ruby/openstudio/platforms/" 
+  )
+
+  get_filename_component(QPA_PLUGIN_NAME "${QPA_PLUGIN}" NAME)
+
   if(APPLE)
-    set(QTPLUGIN "\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/sqldrivers/${QSQLITE_PLUGIN_NAME}")
+    set(QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/sqldrivers/${QSQLITE_PLUGIN_NAME};\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/platforms/${QPA_PLUGIN_NAME}")
 
-    set(Prereq_Dirs)
+    foreach(QTPLUGIN ${QTPLUGINS})
+      set(Prereq_Dirs "${QT_LIBRARY_DIR}")
 
-    install(CODE "
-      include(GetPrerequisites)
-      get_prerequisites(\"${QTPLUGIN}\" PREREQUISITES 1 0 \"\" \"${Prereq_Dirs}\")
+      install(CODE "
+        include(GetPrerequisites)
+        get_prerequisites(\"${QTPLUGIN}\" PREREQUISITES 1 0 \"\" \"${Prereq_Dirs}\")
 
-      foreach(PREREQ IN LISTS PREREQUISITES)
-        gp_resolve_item(\"\" \${PREREQ} \"\" \"${LIBRARY_SEARCH_DIRECTORY}\" resolved_item_var)
+        foreach(PREREQ IN LISTS PREREQUISITES)
+          gp_resolve_item(\"\" \${PREREQ} \"\" \"${LIBRARY_SEARCH_DIRECTORY}\" resolved_item_var)
 
-        get_filename_component(PREREQNAME \${resolved_item_var} NAME)
+          get_filename_component(PREREQNAME \${resolved_item_var} NAME)
 
-        execute_process(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/../\${PREREQNAME}\" \"${QTPLUGIN}\")
-      endforeach()
-    ")
+          execute_process(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/../\${PREREQNAME}\" \"${QTPLUGIN}\")
+        endforeach()
+      ")
+    endforeach()
+
   endif()
 endif()
 
@@ -207,12 +223,12 @@ if(ENABLE_TEST_RUNNER_TARGETS)
   if(MSVC)
     add_custom_target(ruby_run_tests
       ${CMAKE_COMMAND} -E chdir "${RUBY_RUN_DIR}" "${RUBY_EXECUTABLE}" -I "${RUBY_RUBY_LIB_DIR}" -I "${RUBY_RUBY_LIB_DIR}/i386-mingw32" -I. "openstudio_test.rb"
-      DEPENDS ${ALL_RUBY_BINDING_TARGETS} ruby_cpp ResultsViewer_resources openstudio_energyplus_resources
+      DEPENDS ${ALL_RUBY_BINDING_TARGETS} ResultsViewer_resources openstudio_energyplus_resources
     )  
   else()
     add_custom_target(ruby_run_tests
       ${CMAKE_COMMAND} -E chdir "${RUBY_RUN_DIR}" "${RUBY_EXECUTABLE}" -I "${RUBY_RUBY_LIB_DIR}" -I. "openstudio_test.rb"
-      DEPENDS ${ALL_RUBY_BINDING_TARGETS} ruby_cpp ResultsViewer_resources openstudio_energyplus_resources
+      DEPENDS ${ALL_RUBY_BINDING_TARGETS} ResultsViewer_resources openstudio_energyplus_resources
     )  
   endif()
 endif()

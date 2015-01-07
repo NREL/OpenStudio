@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -28,7 +28,6 @@ namespace model {
 
 // forward declarations
 class ClimateZones;
-class TimeDependentValuation;
 class WeatherFile;
 class SiteGroundReflectance;
 class SiteGroundTemperatureBuildingSurface;
@@ -122,9 +121,6 @@ class MODEL_API Site : public ParentObject {
     
   /** Unique ClimateZones object parented by Site. */
   boost::optional<ClimateZones> climateZones() const;
-
-  /** Unique TimeDependentValuation object parented by Site. */
-  boost::optional<TimeDependentValuation> timeDependentValuation() const;
 
   /** ShadingSurfaceGroup objects of type Site. */
   std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;

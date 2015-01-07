@@ -10,10 +10,10 @@ namespace openstudio {
  * \details OpenStudio provides parsing of and programmatic access to Input Data Dictionary (IDD) files,
  * objects, and fields through the OpenStudio utilities library (in the openstudio namespace). IDD files 
  * of central importance to OpenStudio are wrapped into the \link IddFactorySingleton IddFactory \endlink, 
- * and used to generate IddFileType, IddObjectType, and field-level enumeration classes (see IddEnums.hxx 
+ * and used to generate IddFileType, IddObjectType, and field-level enumeration classes (see IddEnums.hpp 
  * and IddFieldEnums.hxx).
  *
- * \section quick_links Quick Links
+ * \section quick_links_idd Quick Links
  *
  * Base classes and enums
  *
@@ -34,7 +34,7 @@ namespace openstudio {
  * \li IddFieldEnums.hxx
  * \li IddFileAndFactoryWrapper
  *
- * \section background Background
+ * \section background_idd Background
  *
  * OpenStudio consists of middleware and end-user tools for building energy analysis. As such, it
  * needs to be able to model buildings at varying levels of detail, and to communicate with
@@ -47,7 +47,7 @@ namespace openstudio {
  * EnergyPlus operates off of text input files written in its own Input Data File (IDF) format.
  * IDF files are similar to XML files in that they are intended to conform to a data schema
  * written using similar syntax. For XML, the schema format is XSD; for IDF, the schema format
- * is IDD. Although idiocyncratic, IDD and IDF have the advantages of being native to EnergyPlus
+ * is IDD. Although idiosyncratic, IDD and IDF have the advantages of being native to EnergyPlus
  * and more compact than XSD and XML.
  *
  * For each release of EnergyPlus, valid IDF files are defined by the Energy+.idd file shipped
@@ -67,7 +67,7 @@ namespace openstudio {
  * OpenStudio.idd should also be loaded from disk using the
  * \link IddFactorySingleton IddFactory\endlink, to avoid duplicate parsing effort.)
  *
- * \section parsing File and Object Parsing
+ * \section parsing_idd File and Object Parsing
  *
  * Objects of type IddObject and IddFile are typically constructed by parsing IDD text using the 
  * methods IddFile::load and IddObject::load. File, object, and field-level slash codes such as
@@ -106,7 +106,7 @@ namespace openstudio {
  * through the IddFile, \link IddFactorySingleton IddFactory \endlink, IddFileAndFactoryWrapper, 
  * IdfFile, and Workspace classes. 
  *
- * \section usage Programmatic Access
+ * \section usage_idd Programmatic Access
  *
  * After parsing an IddFile, file-level information such as
  *
@@ -116,7 +116,7 @@ namespace openstudio {
  * \endcode
  *
  * can be accessed, as can its objects. Individual objects can be retrieved by name. Vectors of
- * all objects, or of objects satifying certain cardinality requirements can also be retrieved.
+ * all objects, or of objects satisfying certain cardinality requirements can also be retrieved.
  *
  * \code
  * boost::optional<IddObject> optionalBuildingIdd = IddFile::getObject("Building");
@@ -159,7 +159,7 @@ namespace openstudio {
  * the two representations using IddObject::numFields and IddObjectProperties::numExtensible.
  * All field and group indices use the C/C++ convention of labeling the first element with index 0.
  *
- * \section factory Energy+.idd and OpenStudio.idd
+ * \section factory_idd Energy+.idd and OpenStudio.idd
  *
  * Two particular IddFiles, the current Energy+.idd and OpenStudio.idd, are central to OpenStudio,
  * and so the utilities/idd sub-project provides convenience functionality to support their 
@@ -187,7 +187,7 @@ namespace openstudio {
  * openstudio::IdfFile and openstudio::Workspace can be used with either an explicit IddFile, or with
  * an implicit IDD that is specified by filtering the IddFactory with an IddFileType (typically 
  * IddFileType::EnergyPlus or IddFileType::OpenStudio). Instead of each of those classes handling the 
- * possibility of using a custom IDD or an IddFactory IDD on their own, this interchangability is 
+ * possibility of using a custom IDD or an IddFactory IDD on their own, this interchangeability is 
  * embodied in the IddFileAndFactoryWrapper, which explicitly provides a common API to these two 
  * in-memory instantiations of IDD.
  *

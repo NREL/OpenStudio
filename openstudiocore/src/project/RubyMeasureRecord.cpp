@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -160,7 +160,7 @@ namespace detail {
     ProjectDatabase database = projectDatabase();
     QSqlQuery query(*(database.qSqlDatabase()));
     query.prepare(toQString("SELECT * FROM " + OSArgumentRecord::databaseTableName() +
-                            " WHERE rubyPerturbationRecordId=:rubyPerturbationId"));
+                            " WHERE rubyPerturbationRecordId=:rubyPerturbationRecordId"));
     query.bindValue(":rubyPerturbationRecordId",id());
     assertExec(query);
     while (query.next()) {

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -146,7 +146,9 @@ TEST_F(RunManagerTestFixture, ParallelEnergyPlusJobTest)
   EXPECT_GT(paralleltime, 0);
   EXPECT_GT(originaltime, 0);
 
+#if !(_DEBUG || (__GNUC__ && !NDEBUG))
   EXPECT_LT(paralleltime, originaltime);
+#endif
 
   LOG(Debug, "Paralleltime " << paralleltime << " originaltime " << originaltime);
 

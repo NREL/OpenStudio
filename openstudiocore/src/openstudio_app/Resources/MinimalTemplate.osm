@@ -1,7 +1,7 @@
 
 OS:Version,
-  {cb2b87ed-692b-4c09-96bf-35b012a0233e}, !- Handle
-  1.4.0;                                  !- Version Identifier
+  {a6840897-0549-4070-bc64-7b7dbbc994c2}, !- Handle
+  1.5.0;                                  !- Version Identifier
 
 OS:SpaceType,
   {d83c9d8c-b4ea-4352-92bc-43a5e8551039}, !- Handle
@@ -7201,3 +7201,11 @@ OS:Construction,
   ,                                       !- Surface Rendering Name
   {8ea9f6e6-0bb1-424a-a9d5-8fb8da2c8afe}; !- Layer 1
 
+OS:SpaceInfiltration:EffectiveLeakageArea,
+  {b8ecfe71-8180-493c-b311-1e1572ddd753}, !- Handle
+  Space Infiltration Effective Leakage Area, !- Name
+  ,                                       !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  0.01,                                   !- Effective Air Leakage Area {m2}
+  0.00015,                                !- Stack Coefficient
+  0.0001;                                 !- Wind Coefficient

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -136,6 +136,10 @@ namespace detail {
     bool addToNode(Node & node);
     std::vector<ModelObject> children() const;
     ModelObject clone(Model model) const;
+
+    // This is a non publlic method to draw recirculation air from a plenum
+    // Use carefully.  Removing (or moving) plenum will leave model in invalid state
+    bool setInducedAirPlenumZone(ThermalZone & thermalZone);
 
     //@}
    protected:

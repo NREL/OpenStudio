@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -36,6 +36,8 @@ class OSSwitch;
 
 class OSQuantityEdit;
 
+class StandardsInformationMaterialWidget;
+
 class WindowMaterialGlazingRefractionExtinctionMethodInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
@@ -64,33 +66,32 @@ class WindowMaterialGlazingRefractionExtinctionMethodInspectorView : public Mode
 
     void refresh();
 
-    OSSwitch * m_solarDiffusing;
-
-    OSLineEdit * m_nameEdit;
-
-    OSQuantityEdit * m_thickness;
-
-    OSQuantityEdit * m_solarIndexOfRefraction;
-
-    OSQuantityEdit * m_solarExtinctionCoefficient;
-
-    OSQuantityEdit * m_visibleIndexOfRefraction;
-
-    OSQuantityEdit * m_visibleExtinctionCoefficient;
-
-    OSQuantityEdit * m_infraredTransmittanceAtNormalIncidence;
-
-    OSQuantityEdit * m_infraredHemisphericalEmissivity;
-
-    OSQuantityEdit * m_conductivity;
-
-    OSQuantityEdit * m_dirtCorrectionFactorForSolarAndVisibleTransmittance;
-
     bool m_isIP;
 
-  public slots:
+    OSLineEdit * m_nameEdit = nullptr;
 
-    void toggleUnits(bool displayIP);
+    OSSwitch * m_solarDiffusing = nullptr;
+
+    OSQuantityEdit * m_thickness = nullptr;
+
+    OSQuantityEdit * m_solarIndexOfRefraction = nullptr;
+
+    OSQuantityEdit * m_solarExtinctionCoefficient = nullptr;
+
+    OSQuantityEdit * m_visibleIndexOfRefraction = nullptr;
+
+    OSQuantityEdit * m_visibleExtinctionCoefficient = nullptr;
+
+    OSQuantityEdit * m_infraredTransmittanceAtNormalIncidence = nullptr;
+
+    OSQuantityEdit * m_infraredHemisphericalEmissivity = nullptr;
+
+    OSQuantityEdit * m_conductivity = nullptr;
+
+    OSQuantityEdit * m_dirtCorrectionFactorForSolarAndVisibleTransmittance = nullptr;
+
+    StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
+
 };
 
 } // openstudio

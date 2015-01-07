@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -330,6 +330,7 @@ namespace detail {
     ss.str("");
     query.bindValue(":analysisRecordId",id());
     for (int i = 0, n = discretePerturbationRecordIds.size(); i < n; ++i) {
+      ss.str("");
       ss << ":rightId" << i;
       query.bindValue(toQString(ss.str()),discretePerturbationRecordIds[i]);
     }

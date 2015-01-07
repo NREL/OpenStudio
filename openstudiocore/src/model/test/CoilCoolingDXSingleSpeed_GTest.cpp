@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -148,9 +148,9 @@ TEST_F(ModelFixture,CoilCoolingDXSingleSpeed_addToNode) {
   CoilCoolingDXSingleSpeed testObject3(m, s, c1_2, c2_2, c3_2, c4_2, c5_2);
 
   if( boost::optional<Node> reliefNode = outdoorAirSystem.outboardReliefNode() ) {
-    EXPECT_FALSE(testObject3.addToNode(*reliefNode));
+    EXPECT_TRUE(testObject3.addToNode(*reliefNode));
     EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
-    EXPECT_EQ( (unsigned)1, outdoorAirSystem.reliefComponents().size() );
+    EXPECT_EQ( (unsigned)3, outdoorAirSystem.reliefComponents().size() );
   }
 
   // tests and checks to figure out clone bug

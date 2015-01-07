@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -272,7 +272,7 @@ TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_NewMeasureGroup) {
 
   // expected behavior for then adding first measure
   // test with BCLMeasure first. verify with RubyMeasure.
-  openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/SetWindowToWallRatioByFacade");
+  openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade");
   BCLMeasure bclMeasure = BCLMeasure::load(dir).get();
   EXPECT_EQ(FileReferenceType(FileReferenceType::OSM),bclMeasure.inputFileType());
   EXPECT_EQ(FileReferenceType(FileReferenceType::OSM),bclMeasure.outputFileType());
@@ -345,7 +345,7 @@ TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_ExistingMeasureGroup) {
   Problem problem("Problem",variables,workflow);
 
   // create measure to be pushed onto a variable
-  openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/SetWindowToWallRatioByFacade");
+  openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade");
   BCLMeasure bclMeasure = BCLMeasure::load(dir).get();
   EXPECT_EQ(FileReferenceType(FileReferenceType::OSM),bclMeasure.inputFileType());
   EXPECT_EQ(FileReferenceType(FileReferenceType::OSM),bclMeasure.outputFileType());
@@ -386,8 +386,9 @@ TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_ExistingMeasureGroup) {
 
 TEST_F(AnalysisFixture, Problem_UpdateMeasure_MeasureGroups) {
   // open up example measure
-  openstudio::path measuresPath = resourcesPath() / toPath("/utilities/BCL/Measures");
+  openstudio::path measuresPath = resourcesPath() / toPath("/utilities/BCL/Measures/v2");
   openstudio::path dir = measuresPath / toPath("SetWindowToWallRatioByFacade");
+  ASSERT_TRUE(BCLMeasure::load(dir));
   BCLMeasure measure1 = BCLMeasure::load(dir).get();
   openstudio::path tempDir1 = measuresPath / toPath(toString(createUUID()));
   openstudio::path tempDir2 = measuresPath / toPath(toString(createUUID()));

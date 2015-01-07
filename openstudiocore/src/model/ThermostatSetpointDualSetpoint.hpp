@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 #ifndef MODEL_THERMOSTATSETPOINTDUALSETPOINT_HPP
 #define MODEL_THERMOSTATSETPOINTDUALSETPOINT_HPP
 
-#include "ModelObject.hpp"
+#include "Thermostat.hpp"
 
 namespace openstudio {
 namespace model {
@@ -33,7 +33,7 @@ class Schedule;
 
 /** ThermostatSetpointDualSetpoint is a ModelObject that wraps the OpenStudio IDD object
  *  'OS:ThermostatSetpoint:DualSetpoint'. */
-class MODEL_API ThermostatSetpointDualSetpoint : public ModelObject {
+class MODEL_API ThermostatSetpointDualSetpoint : public Thermostat {
  public:
   /** @name Constructors and Destructors */
   //@{

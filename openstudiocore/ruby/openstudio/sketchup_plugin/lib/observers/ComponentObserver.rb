@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -53,7 +53,10 @@ module OpenStudio
       # EntityObserver.onChangeEntity mistriggers right before EntityObserver.onEraseEntity, referencing a non-existant entity.
       # EntityObserver.onEraseEntity reference a non-existant entity.
 
-      @drawing_interface.on_change_entity
+      proc = Proc.new {
+        @drawing_interface.on_change_entity
+      }
+      Plugin.add_event( proc )
     end
 
     def onEraseEntity(entity)
@@ -66,7 +69,10 @@ module OpenStudio
       # EntityObserver.onChangeEntity mistriggers right before EntityObserver.onEraseEntity, referencing a non-existant entity.
       # EntityObserver.onEraseEntity reference a non-existant entity.
       
-      @drawing_interface.on_erase_entity
+      proc = Proc.new {
+        @drawing_interface.on_erase_entity
+      }
+      Plugin.add_event( proc )      
     end
 
   end

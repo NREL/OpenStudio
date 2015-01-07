@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -37,7 +37,8 @@ class BuildingStoriesView : public ModelSubTabView
 
   public:
 
-    BuildingStoriesView(const openstudio::model::Model& model, 
+    BuildingStoriesView(bool isIP,
+                        const openstudio::model::Model& model, 
                         QWidget * parent = 0);
     virtual ~BuildingStoriesView() {}
 

@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -1015,7 +1015,7 @@ class ModelClassGenerator < SubProjectClassGenerator
 
         elsif /optional/.match(field.privateClassSetterType)
         
-          raise "Schedule setters should not take optionals." if field.isSchedule?
+          #raise "Schedule setters should not take optionals." if field.isSchedule?
         
           result << "    bool result(false);\n"
           result << "    if (" << field.setterArgumentName << ") {\n"

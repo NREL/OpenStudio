@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -130,7 +130,7 @@ InteriorPartitionSurfaceInspectorView::InteriorPartitionSurfaceInspectorView(boo
   label->setStyleSheet("QLabel { font: bold; }");
   vLayout->addWidget(label);
 
-  m_surfaceAreaEdit = new OSQuantityEdit(this);
+  m_surfaceAreaEdit = new OSQuantityEdit(false);
   connect(this, &InteriorPartitionSurfaceInspectorView::toggleUnitsClicked, m_surfaceAreaEdit, &OSQuantityEdit::onUnitSystemChange);
   vLayout->addWidget(m_surfaceAreaEdit);
 

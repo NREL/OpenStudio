@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -94,9 +94,9 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   boost::optional<Node> mixedAirNode() const;
 
-  std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = IddObjectType::Catchall);
+  std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
-  std::vector<ModelObject> components(openstudio::IddObjectType type = IddObjectType::Catchall);
+  std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
   void addAirLoopComp(ModelObject targetObj, ModelObject newComp);
 
@@ -150,7 +150,7 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   SizingSystem sizingSystem() const;
 
-  std::vector<ThermalZone> thermalZones();
+  std::vector<ThermalZone> thermalZones() const;
 
   std::vector<ModelObject> children() const;
 

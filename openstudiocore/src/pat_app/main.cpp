@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@
 #include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/FileLogSink.hpp"
 #include "../utilities/core/Logger.hpp"
+#include "../utilities/core/String.hpp"
 #include "../utilities/idf/Workspace_Impl.hpp"
 
 #include <QApplication>
@@ -32,15 +33,12 @@
 
 #ifdef _WIN32
 #include <windows.h>
-static const char *logfilepath = "./openstudio_pat.log";
-#else
-static const char *logfilepath = "/var/log/openstudio_pat.log";
 #endif
 
 #define WSAAPI
 #include "../utilities/core/Path.hpp"
 #include "../utilities/core/RubyInterpreter.hpp"
-#include "../ruleset/EmbeddedRubyUserScriptArgumentGetter.hpp"
+#include "../ruleset/EmbeddedRubyUserScriptInfoGetter.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -52,6 +50,11 @@ int main(int argc, char *argv[])
   }
 
 #if _DEBUG || (__GNUC__ && !NDEBUG)
+#ifdef _WIN32
+  const char *logfilepath = "./openstudio_pat.log";
+#else
+  const char *logfilepath = "/var/log/openstudio_pat.log";
+#endif
   openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
   openstudio::FileLogSink fileLog(openstudio::toPath(logfilepath));
   fileLog.setLogLevel(Debug);
@@ -87,11 +90,14 @@ int main(int argc, char *argv[])
           modules));
 
     // Initialize the argument getter
-    QSharedPointer<openstudio::ruleset::RubyUserScriptArgumentGetter> argumentGetter(
-        new openstudio::ruleset::EmbeddedRubyUserScriptArgumentGetter<openstudio::detail::RubyInterpreter>(rubyInterpreter));
+    QSharedPointer<openstudio::ruleset::RubyUserScriptInfoGetter> infoGetter(
+        new openstudio::ruleset::EmbeddedRubyUserScriptInfoGetter<openstudio::detail::RubyInterpreter>(rubyInterpreter));
 
 
-    openstudio::pat::PatApp app(argc, argv, argumentGetter);
+    // Make the run path the default plugin search location
+    QCoreApplication::addLibraryPath(openstudio::toQString(openstudio::getApplicationRunDirectory()));
+
+    openstudio::pat::PatApp app(argc, argv, infoGetter);
     openstudio::Application::instance().setApplication(&app);
 
     try {

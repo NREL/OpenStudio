@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -40,10 +40,6 @@ class Site_Test < MiniTest::Unit::TestCase
     assert_equal(numSiteChildren,site.children.size)
     
     skyTemperature = OpenStudio::Model::SkyTemperature.new(model)
-    numSiteChildren = numSiteChildren + 1
-    assert_equal(numSiteChildren,site.children.size)
-    
-    timeDependentValuation = model.getTimeDependentValuation
     numSiteChildren = numSiteChildren + 1
     assert_equal(numSiteChildren,site.children.size)
     

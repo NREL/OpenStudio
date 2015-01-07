@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -35,6 +35,7 @@ class DaylightingControl;
 class IlluminanceMap;
 class RenderingColor;
 class ThermostatSetpointDualSetpoint;
+class Thermostat;
 class ZoneControlHumidistat;
 class SizingZone;
 class PortList;
@@ -91,6 +92,8 @@ class MODEL_API ThermalZone : public HVACComponent {
   boost::optional<std::string> zoneOutsideConvectionAlgorithm() const;
 
   std::string zoneConditioningEquipmentListName() const;
+
+  boost::optional<Thermostat> thermostat() const;
 
   boost::optional<ThermostatSetpointDualSetpoint> thermostatSetpointDualSetpoint() const;
 
@@ -152,9 +155,15 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   void setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName);
 
+  /** \deprecated */
   bool setThermostatSetpointDualSetpoint(const ThermostatSetpointDualSetpoint & thermostat);
 
+  /** \deprecated */
   void resetThermostatSetpointDualSetpoint();
+
+  bool setThermostat(const Thermostat & thermostat);
+
+  void resetThermostat();
 
   bool setZoneControlHumidistat(const ZoneControlHumidistat & humidistat);
 
@@ -359,7 +368,7 @@ class MODEL_API ThermalZone : public HVACComponent {
   /** Return all equipment.  Order is determined by heating priority */
   std::vector<ModelObject> equipmentInHeatingOrder();
 
-  /** Return all equipment.  Order is determined by coooling priority */
+  /** Return all equipment.  Order is determined by cooling priority */
   std::vector<ModelObject> equipmentInCoolingOrder();
 
   /** Return true if the ThermalZone is attached to 
@@ -367,7 +376,7 @@ class MODEL_API ThermalZone : public HVACComponent {
   */
   bool isPlenum() const;
 
-  /** Retrun true if the ThermalZone is unconditioned and available to be used as a plenum
+  /** Return true if the ThermalZone is unconditioned and available to be used as a plenum
   *   This means the zone is not attached to an AirLoopHVAC structure as a conditioned zone
   *   and there is no zone equipment.
   */

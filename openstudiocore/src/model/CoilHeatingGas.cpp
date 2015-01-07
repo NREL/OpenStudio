@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -30,6 +30,10 @@
 #include "ZoneHVACWaterToAirHeatPump_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
+#include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "CurveCubic.hpp"
@@ -41,6 +45,7 @@
 #include "AirLoopHVAC.hpp"
 #include "AirLoopHVAC_Impl.hpp"
 #include <utilities/idd/OS_Coil_Heating_Gas_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/units/Quantity.hpp"
@@ -183,6 +188,20 @@ namespace detail{
       }
     }
 
+    // AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass
+    std::vector<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass> bypassSystems = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>();
+
+    for( const auto & bypassSystem : bypassSystems )
+    {
+      if( boost::optional<HVACComponent> heatingCoil = bypassSystem.heatingCoil() )
+      {
+        if( heatingCoil->handle() == this->handle() )
+        {
+          return bypassSystem;
+        }
+      }
+    }
+
     // AirTerminalSingleDuctVAVReheat
 
     std::vector<AirTerminalSingleDuctVAVReheat> airTerminalSingleDuctVAVReheatObjects;
@@ -230,6 +249,22 @@ namespace detail{
         if( supplementalHeatingCoil->handle() == this->handle() )
         {
           return airLoopHVACUnitaryHeatPumpAirToAir;
+        }
+      }
+    }
+
+    // AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed
+    {
+      auto systems = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
+
+      for( const auto & system : systems ) {
+        auto heatingCoil = system.heatingCoil();
+        if( heatingCoil.handle() == this->handle() ) {
+          return system;
+        }
+        auto supHeatingCoil = system.supplementalHeatingCoil();
+        if( supHeatingCoil.handle() == this->handle() ) {
+          return system;
         }
       }
     }

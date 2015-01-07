@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -43,7 +43,16 @@ module OpenStudio
       @model_interfaces.each { |model_interface| model_interface.detach_openstudio_model }
       
       @model_interfaces.clear
+    end
+    
+    def shutdown 
+      Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       
+      Plugin.dialog_manager.close_all
+      
+      @model_interfaces.each { |model_interface| model_interface.shutdown_openstudio_model }
+      
+      @model_interfaces.clear
     end
     
     def inspect
@@ -54,7 +63,7 @@ module OpenStudio
       if skp_model.nil?
         skp_model = Sketchup.active_model
       end
-      result = @model_interfaces.find { |mi| mi.skp_model == skp_model }
+      result = @model_interfaces.find { |mi| (mi.skp_model == skp_model) }
       return result
     end
 
@@ -79,34 +88,31 @@ module OpenStudio
     def new_from_skp_model(skp_model)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       
-      if openstudio_path = skp_model.openstudio_path
-        # if path is good open a new model to clear out possibly outdated geometry
-        # try to open referenced file
-        result = open_openstudio(openstudio_path, skp_model)
-        # moved this into end of if statement so only shows if path is valid and file opens
-        if result
-          UI.messagebox("The following linked OpenStudio Model was successfully loaded. (#{openstudio_path})")
-        else
-          result = UI.messagebox("SketchUp model points to #{openstudio_path} which cannot be opened, would you like to browse for the file", MB_YESNO)
-          if result == 6 # YES
-            if not Plugin.command_manager.open_openstudio
-              # not sure when this would get triggered
-              new_from_template(skp_model)
-            end
-          else
-            new_from_template(skp_model)
-          end
-        end
-      else
-        new_from_template(skp_model)
+      # DLM: previously, we tried to find the linked OSM, open it, and reattach it
+      
+      openstudio_path = skp_model.openstudio_path
+      openstudio_entities = skp_model.openstudio_entities
+      
+      if (openstudio_path && !openstudio_path.empty?) || (openstudio_entities.size > 0)
+      
+        message = "Removing previously linked OpenStudio content."
+        message += "\n\nOpen OpenStudio model at '#{openstudio_path}' to restore content."
+        UI.messagebox(message, MB_OK)
+      
+        # remove all OpenStudio content so user is not confused
+        skp_model.start_operation("Remove all OpenStudio Content", true)
+        skp_model.delete_openstudio_entities
+        skp_model.commit_operation
       end
+
+      new_from_path(skp_model, Plugin.minimal_template_path)
     end    
     
     # this method cannot fail
     def new_from_example_model(skp_model)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       
-      @model_interfaces.reject! {|mi| mi.skp_model == skp_model}
+      @model_interfaces.reject! {|mi| (mi.skp_model == skp_model) }
       purge_invalid_model_interfaces
       GC.start
       
@@ -116,40 +122,35 @@ module OpenStudio
 
     end
     
-    # this method cannot fail
-    def new_from_template(skp_model)
+    # this method cannot fail, if path cannot be loaded then will fall back on Plugin.minimal_template_path
+    def new_from_path(skp_model, path)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
 
       success = false
-      path = Plugin.default_template_path
       
       if not path.nil? and not path.empty?
         @dont_zoom = true
         success = open_openstudio(path, skp_model, false, false)
-        Plugin.log(OpenStudio::Debug, "new_from_template: #{path}, #{success}")
+        Plugin.log(OpenStudio::Debug, "new_from_path: #{path}, #{success}")
         @dont_zoom = false
       end
 
       if not success
-        
-        # default template path is bad, erase it here
-        #UI.messagebox("Default template path #{path} is not valid, it will be reset")
-        Plugin.write_pref("Default Template Path", Plugin.minimal_template_path)
-              
+        # user path is bad, reset to minimal template
         path = Plugin.minimal_template_path
         @dont_zoom = true
         success = open_openstudio(path, skp_model, false, false)
-        Plugin.log(OpenStudio::Debug, "new_from_template: #{path}, #{success}")
+        Plugin.log(OpenStudio::Debug, "new_from_path: #{path}, #{success}")
         @dont_zoom = false
       end
       
       if not success
         
-        # minimal template path is bad, erase it here
+        # minimal template path is bad
         UI.messagebox("Minimal template path #{path} is not valid, your OpenStudio installation has been corrupted, please reinstall.")
         
-        Plugin.log(OpenStudio::Fatal, "new_from_template: failed to load openstudio model from template at #{path}")
-        raise "new_from_template: failed to load openstudio model from template at #{path}"
+        Plugin.log(OpenStudio::Fatal, "new_from_path: failed to load openstudio model from template at #{path}")
+        raise "new_from_path: failed to load openstudio model from template at #{path}"
       end
     end
 

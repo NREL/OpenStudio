@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ using namespace openstudio::model;
 using namespace openstudio::isomodel;
 using namespace openstudio;
 
-TEST_F(ISOModelFixture, ForwardTranslator)
+TEST_F(ISOModelFixture, DISABLED_ForwardTranslator)
 {
   Model model = exampleModel();
 
@@ -45,10 +45,7 @@ TEST_F(ISOModelFixture, ForwardTranslator)
   SimModel simModel = userModel.toSimModel();
   ISOResults results = simModel.simulate();
 
-
-
   std::vector<EndUseFuelType> fuelTypes = EndUses::fuelTypes();
-
 
   double gas = 0;
   double elec = 0;

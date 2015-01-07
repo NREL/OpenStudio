@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -40,6 +40,8 @@
 #include <QDateEdit>
 #include <QTimer>
 
+#include <utilities/idd/IddEnums.hxx>
+
 namespace openstudio {
 
 const int YearSettingsWidget::FIRSTYEAR = 1900;
@@ -47,7 +49,7 @@ const int YearSettingsWidget::LASTYEAR = 2100;
 
 YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * parent)
   : QWidget(parent),
-    m_dstOnOffButton(NULL),
+    m_dstOnOffButton(nullptr),
     m_model(model),
     m_dirty(false)
 {

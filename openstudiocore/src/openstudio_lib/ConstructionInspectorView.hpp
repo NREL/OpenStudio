@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -22,16 +22,13 @@
 
 #include "ModelObjectInspectorView.hpp"
 
-#include "../model/StandardsInformationConstruction.hpp"
-
 class QComboBox;
 
 namespace openstudio {
 
 namespace model {
-
  class Construction;
-
+ class ConstructionBase;
 }
 
 class ConstructionObjectVectorController;
@@ -41,6 +38,8 @@ class OSDropZone;
 class OSLineEdit;
 
 class OSComboBox2;
+
+class StandardsInformationConstructionWidget;
 
 class ConstructionInspectorView : public ModelObjectInspectorView
 {
@@ -60,14 +59,6 @@ class ConstructionInspectorView : public ModelObjectInspectorView
 
     virtual void onUpdate();
 
-  protected slots:
-
-    void standardsConstructionTypeChanged(const QString& text);
-
-    void editStandardsConstructionType(const QString& text);
-
-    void populateStandardsConstructionType();
-
   private:
 
     void createLayout();
@@ -76,25 +67,15 @@ class ConstructionInspectorView : public ModelObjectInspectorView
 
     void detach();
 
-    void refresh();
+    bool m_isIP;
+
+    OSLineEdit * m_nameEdit;
+
+    StandardsInformationConstructionWidget * m_standardsInformationWidget;
 
     OSDropZone * m_constructionDZ;
 
     ConstructionObjectVectorController * m_constructionVC;
-
-    OSLineEdit * m_nameEdit;
-
-    OSComboBox2 * m_intendedSurfaceType;
-
-    QComboBox * m_standardsConstructionType;
-
-    boost::optional<openstudio::model::StandardsInformationConstruction> m_standardsInformation;
-
-    bool m_isIP;
-
-  public slots:
-
-    void toggleUnits(bool displayIP);
 };
 
 } // openstudio

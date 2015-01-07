@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,6 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
+#include "FanConstantVolume.hpp"
+#include "FanConstantVolume_Impl.hpp"
 #include "FanVariableVolume.hpp"
 #include "FanVariableVolume_Impl.hpp"
 #include "AirLoopHVAC.hpp"
@@ -36,7 +38,9 @@
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "SetpointManagerMixedAir.hpp"
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_Fan_VariableVolume_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
@@ -641,15 +645,19 @@ namespace detail {
   {
     if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
     {
-      if( airLoop->supplyComponent(node.handle()) )
+      boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = airLoop->airLoopHVACOutdoorAirSystem();
+      if( airLoop->supplyComponent(node.handle()) || (oaSystem && oaSystem->component(node.handle())) )
       {
-        std::vector<ModelObject> allFans;
-        std::vector<ModelObject> constantFans = airLoop->supplyComponents(IddObjectType::OS_Fan_ConstantVolume);
-        std::vector<ModelObject> variableFans = airLoop->supplyComponents(IddObjectType::OS_Fan_VariableVolume);
-        allFans = constantFans;
-        allFans.insert(allFans.begin(),variableFans.begin(),variableFans.end());
+        unsigned fanCount = airLoop->supplyComponents(IddObjectType::OS_Fan_ConstantVolume).size();
+        fanCount += airLoop->supplyComponents(IddObjectType::OS_Fan_VariableVolume).size();
 
-        if( allFans.size() > 1 )
+        if( oaSystem )
+        {
+          fanCount += subsetCastVector<FanConstantVolume>(oaSystem->components()).size();
+          fanCount += subsetCastVector<FanVariableVolume>(oaSystem->components()).size();
+        }
+
+        if( fanCount > 1 )
         {
           return false;
         }

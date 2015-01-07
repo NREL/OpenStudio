@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -31,10 +31,14 @@
 
 #include "../utilities/core/Assert.hpp"
 
+#include "../utilities/idd/IddEnums.hpp"
+#include <utilities/idd/IddEnums.hxx>
+
 namespace openstudio {
 
-SpaceTypesController::SpaceTypesController(const model::Model& model)
-  : ModelSubTabController(new SpaceTypesView(model), model)
+  SpaceTypesController::SpaceTypesController(bool isIP,
+    const model::Model& model)
+    : ModelSubTabController(new SpaceTypesView(isIP, model), model)
 {
 }
 

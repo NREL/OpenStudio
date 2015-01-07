@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@
 #include <gtest/gtest.h>
 #include "IddFixture.hpp"
 #include "../IddFileAndFactoryWrapper.hpp"
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;
 

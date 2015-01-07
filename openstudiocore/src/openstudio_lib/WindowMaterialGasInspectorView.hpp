@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -36,6 +36,8 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
+class StandardsInformationMaterialWidget;
+
 class WindowMaterialGasInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
@@ -64,31 +66,30 @@ class WindowMaterialGasInspectorView : public ModelObjectInspectorView
 
     void refresh();
 
-    OSComboBox * m_gasType;
-
-    OSLineEdit * m_nameEdit;
-
-    OSQuantityEdit * m_thickness;
-
-    OSQuantityEdit * m_conductivityCoefficientA;
-
-    OSQuantityEdit * m_conductivityCoefficientB;
-
-    OSQuantityEdit * m_viscosityCoefficientA;
-
-    OSQuantityEdit * m_viscosityCoefficientB;
-
-    OSQuantityEdit * m_specificHeatCoefficientA;
-
-    OSQuantityEdit * m_specificHeatCoefficientB;
-
-    OSQuantityEdit * m_molecularWeight;
-
     bool m_isIP;
 
-  public slots:
+    OSLineEdit * m_nameEdit = nullptr;
 
-    void toggleUnits(bool displayIP);
+    OSComboBox * m_gasType = nullptr;
+
+    OSQuantityEdit * m_thickness = nullptr;
+
+    OSQuantityEdit * m_conductivityCoefficientA = nullptr;
+
+    OSQuantityEdit * m_conductivityCoefficientB = nullptr;
+
+    OSQuantityEdit * m_viscosityCoefficientA = nullptr;
+
+    OSQuantityEdit * m_viscosityCoefficientB = nullptr;
+
+    OSQuantityEdit * m_specificHeatCoefficientA = nullptr;
+
+    OSQuantityEdit * m_specificHeatCoefficientB = nullptr;
+
+    OSQuantityEdit * m_molecularWeight = nullptr;
+
+    StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
+
 };
 
 } // openstudio

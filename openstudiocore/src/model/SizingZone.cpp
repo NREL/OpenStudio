@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -22,7 +22,9 @@
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_Sizing_Zone_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
 
@@ -68,7 +70,7 @@ namespace detail {
   ThermalZone SizingZone_Impl::thermalZone() const {
     boost::optional<ThermalZone> value = optionalThermalZone();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Zoneor Zone List attached.");
+      LOG_AND_THROW(briefDescription() << " does not have an Zone or Zone List attached.");
     }
     return value.get();
   }
@@ -456,7 +458,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool SizingZone_Impl::setCoolingDesignAirFlowMethod(std::string coolingDesignAirFlowMethod) {
+  bool SizingZone_Impl::setCoolingDesignAirFlowMethod(const std::string &coolingDesignAirFlowMethod) {
     bool result = setString(OS_Sizing_ZoneFields::CoolingDesignAirFlowMethod, coolingDesignAirFlowMethod);
     return result;
   }
@@ -1091,7 +1093,7 @@ void SizingZone::resetZoneCoolingSizingFactor() {
   getImpl<detail::SizingZone_Impl>()->resetZoneCoolingSizingFactor();
 }
 
-bool SizingZone::setCoolingDesignAirFlowMethod(std::string coolingDesignAirFlowMethod) {
+bool SizingZone::setCoolingDesignAirFlowMethod(const std::string &coolingDesignAirFlowMethod) {
   return getImpl<detail::SizingZone_Impl>()->setCoolingDesignAirFlowMethod(coolingDesignAirFlowMethod);
 }
 

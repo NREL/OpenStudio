@@ -278,6 +278,8 @@ set(${target_name}_SRC
   SpaceTypeInspectorView.hpp
   SpaceTypesController.cpp
   SpaceTypesController.hpp
+  SpaceTypesGridView.cpp
+  SpaceTypesGridView.hpp
   SpaceTypesTabController.cpp
   SpaceTypesTabController.hpp
   SpaceTypesTabView.cpp
@@ -286,6 +288,10 @@ set(${target_name}_SRC
   SpaceTypesView.hpp
   StandardOpaqueMaterialInspectorView.cpp
   StandardOpaqueMaterialInspectorView.hpp
+  StandardsInformationConstructionWidget.cpp
+  StandardsInformationConstructionWidget.hpp
+  StandardsInformationMaterialWidget.cpp
+  StandardsInformationMaterialWidget.hpp
   SteamEquipmentInspectorView.cpp
   SteamEquipmentInspectorView.hpp
   SubSurfaceInspectorView.cpp
@@ -302,6 +308,8 @@ set(${target_name}_SRC
   SurfaceInspectorView.hpp
   ThermalZonesController.cpp
   ThermalZonesController.hpp
+  ThermalZonesGridView.cpp
+  ThermalZonesGridView.hpp
   ThermalZonesTabController.cpp
   ThermalZonesTabController.hpp
   ThermalZonesTabView.cpp
@@ -422,6 +430,8 @@ set(${target_name}_SRC
   ../shared_gui_components/OSListController.hpp
   ../shared_gui_components/OSListView.cpp
   ../shared_gui_components/OSListView.hpp
+  ../shared_gui_components/OSLoadNamePixmapLineEdit.cpp
+  ../shared_gui_components/OSLoadNamePixmapLineEdit.hpp  
   ../shared_gui_components/OSQObjectController.cpp
   ../shared_gui_components/OSQObjectController.hpp
   ../shared_gui_components/OSQuantityEdit.cpp
@@ -440,6 +450,8 @@ set(${target_name}_SRC
   ../shared_gui_components/SyncMeasuresDialog.hpp
   ../shared_gui_components/SyncMeasuresDialogCentralWidget.cpp
   ../shared_gui_components/SyncMeasuresDialogCentralWidget.hpp
+  ../shared_gui_components/TextEditDialog.cpp
+  ../shared_gui_components/TextEditDialog.hpp 
   ../shared_gui_components/TIDItemModel.cpp
   ../shared_gui_components/TIDItemModel.hpp
   ../shared_gui_components/VariableList.cpp
@@ -586,10 +598,13 @@ set(${target_name}_moc
   SpaceLoadInstancesWidget.hpp
   SpaceTypeInspectorView.hpp
   SpaceTypesController.hpp
+  SpaceTypesGridView.hpp
   SpaceTypesTabController.hpp
   SpaceTypesTabView.hpp
   SpaceTypesView.hpp
   StandardOpaqueMaterialInspectorView.hpp
+  StandardsInformationConstructionWidget.hpp
+  StandardsInformationMaterialWidget.hpp
   SteamEquipmentInspectorView.hpp
   SubSurfaceInspectorView.hpp
   SubTabController.hpp
@@ -598,6 +613,7 @@ set(${target_name}_moc
   SummaryTabView.hpp
   SurfaceInspectorView.hpp
   ThermalZonesController.hpp
+  ThermalZonesGridView.hpp
   ThermalZonesTabController.hpp
   ThermalZonesTabView.hpp
   ThermalZonesView.hpp
@@ -656,6 +672,7 @@ set(${target_name}_moc
   ../shared_gui_components/OSLineEdit.hpp
   ../shared_gui_components/OSListController.hpp
   ../shared_gui_components/OSListView.hpp
+  ../shared_gui_components/OSLoadNamePixmapLineEdit.hpp  
   ../shared_gui_components/OSQObjectController.hpp
   ../shared_gui_components/OSQuantityEdit.hpp
   ../shared_gui_components/OSSwitch.hpp
@@ -664,6 +681,7 @@ set(${target_name}_moc
   ../shared_gui_components/PageNavigator.hpp
   ../shared_gui_components/SyncMeasuresDialog.hpp
   ../shared_gui_components/SyncMeasuresDialogCentralWidget.hpp
+  ../shared_gui_components/TextEditDialog.hpp 
   ../shared_gui_components/TIDItemModel.hpp
   ../shared_gui_components/VariableList.hpp
   ../shared_gui_components/VariableView.hpp

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -123,7 +123,7 @@ namespace openstudio{
 
   std::string UpdateManager::updateUrl() const
   {
-    return std::string("http://openstudio.nrel.gov/update.html?app=") + appName() + std::string("&version=") + openStudioVersion();
+    return std::string("https://www.openstudio.net/update.html?app=") + appName() + std::string("&version=") + openStudioVersion();
   }
 
   void UpdateManager::replyFinished(QNetworkReply* reply)

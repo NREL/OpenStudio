@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -28,8 +28,6 @@
 #include "../DesignDay_Impl.hpp"
 #include "../SkyTemperature.hpp"
 #include "../SkyTemperature_Impl.hpp"
-#include "../TimeDependentValuation.hpp"
-#include "../TimeDependentValuation_Impl.hpp"
 #include "../WeatherFile.hpp"
 #include "../WeatherFile_Impl.hpp"
 #include "../WeatherFileConditionType.hpp"
@@ -55,12 +53,6 @@ void testSiteObjectInRealFile(Model& model,bool childrenExpected) {
 
   SkyTemperature skyTemperature(model);
   EXPECT_EQ(++numSiteChildren,site.children().size());
-
-  OptionalTimeDependentValuation otdv = model.getOptionalUniqueModelObject<TimeDependentValuation>();
-  if (!otdv) {
-    TimeDependentValuation tdv = model.getUniqueModelObject<TimeDependentValuation>();
-    EXPECT_EQ(++numSiteChildren,site.children().size());
-  }
 
   OptionalWeatherFile owf = model.getOptionalUniqueModelObject<WeatherFile>();
   if (!owf) {

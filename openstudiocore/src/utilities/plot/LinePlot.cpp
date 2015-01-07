@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -218,7 +218,7 @@ LinePlot::LinePlot(QWidget* parent /*= 0*/, Qt::WindowFlags flags /*= 0*/) : Plo
 
 LinePlot::Ptr LinePlot::create(QWidget* parent, Qt::WindowFlags flags)
 {
-  Application::instance().application();
+  Application::instance().application(true);
   return LinePlot::Ptr(new LinePlot(parent, flags));
 }
 

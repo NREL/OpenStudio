@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -99,17 +99,17 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   //std::vector<ModelObject> supplyComponents(HVACComponent inletComp,
   //                                          HVACComponent outletComp,
-  //                                          openstudio::IddObjectType type = IddObjectType::Catchall);
+  //                                          openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
   std::vector<ModelObject> demandComponents(HVACComponent inletComp,
                                             HVACComponent outletComp,
-                                            openstudio::IddObjectType type = IddObjectType::Catchall);
+                                            openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
-  //std::vector<ModelObject> supplyComponents(openstudio::IddObjectType type=IddObjectType::Catchall);
+  //std::vector<ModelObject> supplyComponents(openstudio::IddObjectType type=openstudio::IddObjectType("Catchall"));
 
-  std::vector<ModelObject> demandComponents(openstudio::IddObjectType type=IddObjectType::Catchall);
+  std::vector<ModelObject> demandComponents(openstudio::IddObjectType type=openstudio::IddObjectType("Catchall"));
 
-  //std::vector<ModelObject> components(openstudio::IddObjectType type = IddObjectType::Catchall);
+  //std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
   boost::optional<ModelObject> component(openstudio::Handle handle);
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -58,6 +58,12 @@ TEST_F(ModelFixture,EvaporativeCoolerIndirectResearchSpecial)
     EXPECT_FALSE(idec.addToNode(demandInletNode));
 
     EXPECT_EQ(3u,airLoopHVAC.supplyComponents().size());
+
+    Node node(m);
+    EXPECT_TRUE(idec.getImpl<model::detail::EvaporativeCoolerIndirectResearchSpecial_Impl>()->setReliefAirInletNode(node));
+
+    ASSERT_TRUE(idec.getImpl<model::detail::EvaporativeCoolerIndirectResearchSpecial_Impl>()->reliefAirInletNode());
+    EXPECT_EQ(node,idec.getImpl<model::detail::EvaporativeCoolerIndirectResearchSpecial_Impl>()->reliefAirInletNode().get());
   }
 
   {

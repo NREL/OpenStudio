@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -29,6 +29,7 @@ class QTextEdit;
 class QLabel;
 class QComboBox;
 class QRadioButton;
+class QListWidget;
 
 namespace openstudio{
 
@@ -71,7 +72,8 @@ class BCLMeasureDialog : public OSDialog
     QComboBox* m_measureTypeComboBox;
     QComboBox* m_taxonomyFirstLevelComboBox;
     QComboBox* m_taxonomySecondLevelComboBox;
-    QRadioButton* m_usesSketchUpAPI;
+    QListWidget* m_intendedSoftwareToolListWidget;
+    QListWidget* m_intendedUseCaseListWidget;
 
     boost::optional<BCLMeasure> m_bclMeasureToCopy;
 };

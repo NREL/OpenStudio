@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -60,9 +60,9 @@ namespace openstudio {
 
 SchedulesTabController::SchedulesTabController(bool isIP, const model::Model & model)
   : MainTabController(new SchedulesTabView(model)),
-    m_yearSettingsWidget(NULL),
+    m_yearSettingsWidget(nullptr),
     m_model(model),
-    m_scheduleDialog(NULL),
+    m_scheduleDialog(nullptr),
     m_isIP(isIP)
 {
   m_yearDescription = m_model.getUniqueModelObject<model::YearDescription>();

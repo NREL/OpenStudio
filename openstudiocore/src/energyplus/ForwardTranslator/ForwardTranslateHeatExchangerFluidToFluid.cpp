@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -27,6 +27,7 @@
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/core/Logger.hpp"
 #include <utilities/idd/HeatExchanger_FluidToFluid_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 
@@ -53,10 +54,12 @@ boost::optional<IdfObject> ForwardTranslator::translateHeatExchangerFluidToFluid
   }
 
   // AvailabilityScheduleName
-  boost::optional<Schedule> sched = modelObject.availabilitySchedule();
-  if( (idfo = translateAndMapModelObject(sched.get())) )
+  if( boost::optional<Schedule> sched = modelObject.availabilitySchedule() )
   {
-    idfObject.setString(HeatExchanger_FluidToFluidFields::AvailabilityScheduleName,idfo->name().get());
+    if( (idfo = translateAndMapModelObject(sched.get())) )
+    {
+      idfObject.setString(HeatExchanger_FluidToFluidFields::AvailabilityScheduleName,idfo->name().get());
+    }
   }
 
   // LoopDemandSideInletNode

@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -73,10 +73,10 @@ class InteriorPartitionSurface_Test < MiniTest::Unit::TestCase
     spaceClone = model.getSpace(clone.handle())
     assert((not spaceClone.empty?))
     assert_equal(1, spaceClone.get.children().size())
-    assert_not_equal(group.handle(), spaceClone.get.children()[0].handle())
+    assert(group.handle().to_s != spaceClone.get.children()[0].handle().to_s)
     assert((not spaceClone.get.children()[0].to_ParentObject().empty?()))
     assert_equal(1, spaceClone.get.children()[0].to_ParentObject().get().children().size())
-    assert_not_equal(surface.handle(), spaceClone.get.children()[0].to_ParentObject().get().children()[0].handle());
+    assert(surface.handle().to_s != spaceClone.get.children()[0].to_ParentObject().get().children()[0].handle().to_s)
   end
 
 end

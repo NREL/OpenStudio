@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -28,6 +28,7 @@
 #include "../../utilities/data/TimeSeries.hpp"
 
 #include <utilities/idd/OS_ComponentCost_Adjustments_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/core/Optional.hpp"
 #include <boost/algorithm/string/case_conv.hpp>

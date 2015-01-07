@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -39,7 +39,6 @@ module OpenStudio
     def add_callbacks
       super
       @container.web_dialog.add_action_callback("on_browse_text_editor") { browse_text_editor }
-      @container.web_dialog.add_action_callback("on_browse_template") { browse_template }
       @container.web_dialog.add_action_callback("on_browse_exe") { browse_exe }
     end
 
@@ -64,13 +63,6 @@ module OpenStudio
         @hash['TEXT_EDITOR_PATH'] = path
         update
       end
-    end
-
-    def browse_template
-      puts "browse_template"
-      Plugin.command_manager.select_default_template
-      @hash['DEFAULT_TEMPLATE_PATH'] = Plugin.read_pref("Default Template Path")
-      update
     end
 
     def browse_exe

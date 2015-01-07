@@ -30,6 +30,11 @@ macro(GCCAddPCHTarget ARCH)
     PROPERTIES COMPILE_FLAGS "-x c++-header"
   )
 
+
+  set_property(SOURCE ${PCH_SOURCES} APPEND PROPERTY COMPILE_DEFINITIONS_RELEASE QT_NO_DEBUG)
+  set_property(SOURCE ${PCH_SOURCES} APPEND PROPERTY COMPILE_DEFINITIONS_RELWITHDEBINFO QT_NO_DEBUG)
+  set_property(SOURCE ${PCH_SOURCES} APPEND PROPERTY COMPILE_DEFINITIONS_MINSIZEREL QT_NO_DEBUG)
+
   add_custom_command(OUTPUT ${PCH_OUTPUT}
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/pchlib${ARCHNAME}.dir/${arch}/PCH.cpp.o ${PCH_OUTPUT}
     DEPENDS pchlib${ARCHNAME}
@@ -41,7 +46,7 @@ macro(GCCAddPCHTarget ARCH)
 endmacro()
 
 if(USE_PCH)
-  if(CMAKE_COMPILER_IS_GNUCXX)
+  if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     if(CMAKE_OSX_ARCHITECTURES)
       foreach(arch ${CMAKE_OSX_ARCHITECTURES})
         GCCConfigurePCHFile(${arch})
@@ -53,7 +58,7 @@ if(USE_PCH)
     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/PCH.hpp.msvc.in" "${CMAKE_CURRENT_BINARY_DIR}/PCH.hpp")
   endif()
 
-  if(CMAKE_COMPILER_IS_GNUCXX)
+  if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     if(CMAKE_OSX_ARCHITECTURES)
       foreach(arch ${CMAKE_OSX_ARCHITECTURES})
         GCCAddPCHTarget(${arch})
@@ -67,8 +72,22 @@ endif()
 macro(AddPCH TARGET_NAME)
   if(USE_PCH)
     get_target_property(target_files ${TARGET_NAME} SOURCES)
+    if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
-    if(CMAKE_COMPILER_IS_GNUCXX)
+      if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+        get_target_property(target_type ${TARGET_NAME} TYPE)
+
+        if(target_type STREQUAL "EXECUTABLE")
+          # The point of this if block is to not add PCH to executables when compiling on Clang
+          # to avoid an error with PIE vs PIR compiler flags
+          set(add_pch_include FALSE)
+        else()
+          set(add_pch_include TRUE)
+        endif()
+      else()
+        set(add_pch_include TRUE)
+      endif()
+
       if(CMAKE_OSX_ARCHITECTURES)
         set(PROPSTRING "")
         foreach(arch ${CMAKE_OSX_ARCHITECTURES})
@@ -79,10 +98,12 @@ macro(AddPCH TARGET_NAME)
           PROPERTIES COMPILE_FLAGS "${PROPSTRING}"
         )
       else()
-        set_target_properties(${TARGET_NAME}
-          PROPERTIES COMPILE_FLAGS "-include ${CMAKE_BINARY_DIR}/src/utilities/pch/PCH.hpp"
-        )
-        add_dependencies(${TARGET_NAME} BUILD_PCH)
+        if (add_pch_include)
+          set_target_properties(${TARGET_NAME}
+            PROPERTIES COMPILE_FLAGS "-include ${CMAKE_BINARY_DIR}/src/utilities/pch/PCH.hpp"
+            )
+          add_dependencies(${TARGET_NAME} BUILD_PCH)
+        endif()
       endif()
     elseif(MSVC)
 
@@ -117,7 +138,7 @@ macro(AddPCH TARGET_NAME)
           if("${extension}" STREQUAL ".cpp" OR "${extension}" STREQUAL ".cxx")
             message(STATUS "Setting /Yc flag on: ${p}")
             set_source_files_properties("${f}"
-              PROPERTIES COMPILE_FLAGS "/Ycutilities/pch/PCH.hpp"
+              PROPERTIES COMPILE_FLAGS "/Ycutilities/pch/PCH.hpp /FIutilities/pch/PCH.hpp"
             )
 
             break()

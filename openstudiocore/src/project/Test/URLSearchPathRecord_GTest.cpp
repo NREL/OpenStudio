@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -27,6 +27,7 @@
 #include "../../utilities/idf/URLSearchPath.hpp"
 
 #include <resources.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;
 using namespace openstudio::project;
@@ -36,7 +37,7 @@ TEST_F(ProjectFixture, URLSearchPathRecord)
   ProjectDatabase database = getCleanDatabase("URLSearchPathRecord");
 
   URLSearchPath localSearchPath(toPath("./local/"), URLSearchPath::ToCurrentWorkingDir, IddObjectType::OS_WeatherFile);
-  URLSearchPath remoteSearchPath(QUrl("http://openstudio.nrel.gov"), URLSearchPath::ToInputFile);
+  URLSearchPath remoteSearchPath(QUrl("https://www.openstudio.net"), URLSearchPath::ToInputFile);
 
   URLSearchPathRecord localSearchPathRecord(localSearchPath, database);
   URLSearchPathRecord remoteSearchPathRecord(remoteSearchPath, database);

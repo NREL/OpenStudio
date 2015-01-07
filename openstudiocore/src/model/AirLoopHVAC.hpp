@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -79,28 +79,28 @@ class MODEL_API AirLoopHVAC : public Loop
 
 
   /** Returns the supply inlet node. */
-  Node supplyInletNode();
+  Node supplyInletNode() const;
 
   /** Returns the supply outlet nodes.
    * Currently only one supply outlet node is supported, but EnergyPlus allows
    * up to two for dual duct systems.
    */
-  std::vector<Node> supplyOutletNodes();
+  std::vector<Node> supplyOutletNodes() const;
 
   /** Returns the first supply outlet Node. */
-  Node supplyOutletNode();
+  Node supplyOutletNode() const;
 
   /** Returns the demand inlet nodes.
    * Currently only one demand inlet node is supported, but EnergyPlus allows
    * up to two for dual duct systems.
    */
-  std::vector<Node> demandInletNodes();
+  std::vector<Node> demandInletNodes() const;
 
   /** Returns the first demand inlet Node. */
-  Node demandInletNode();
+  Node demandInletNode() const;
 
   /** Returns the demand outlet node */
-  Node demandOutletNode();
+  Node demandOutletNode() const;
 
   /** Returns the outdoor air node.  This is the outermost node from which
    * outdoor air is introduced into the air loop.  This node only exists if there
@@ -134,14 +134,14 @@ class MODEL_API AirLoopHVAC : public Loop
 
   /** Returns the supply side splitter inlet node.  If the system is a dual duct
    * or has a return air bypass then it will have a supply side splitter.
-   * Currently these air loop topologies are not suppported so this method
+   * Currently these air loop topologies are not supported so this method
    * will always return a false optional.
    */
   boost::optional<Node> supplySplitterInletNode();
 
   /** Returns the supply side splitter outlet nodes.  If the system is a dual duct
    * or has a return air bypass then it will have a supply side splitter.
-   * Currently these air loop topologies are not suppported so this method
+   * Currently these air loop topologies are not supported so this method
    * will always return a false optional.
    */
   std::vector<Node> supplySplitterOutletNodes();
@@ -181,9 +181,9 @@ class MODEL_API AirLoopHVAC : public Loop
   /** Returns all of the components on the outdoor air system including the mixer itself.
    *  If type is given then the results will be limited to the given IddObjectType.
    */
-  std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = IddObjectType::Catchall);
+  std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
-  /** Adds a new component to the air loop.  In most cases the newObj will be added immediatly after the
+  /** Adds a new component to the air loop.  In most cases the newObj will be added immediately after the
    * targetObj.  The notable exceptions are when the targetObj is either a supply outlet node or a
    * demand outlet node.  This interface is deprecated in favor of HVACComponent::addToNode.
    */
@@ -223,7 +223,7 @@ class MODEL_API AirLoopHVAC : public Loop
   SizingSystem sizingSystem() const;
 
   /** Returns the ThermalZone objects attached to this air loop. **/
-  std::vector<ThermalZone> thermalZones();
+  std::vector<ThermalZone> thermalZones() const;
 
   /** Returns the availability schedule when this system is allowed to run. **/
   Schedule availabilitySchedule() const;

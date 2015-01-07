@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -36,6 +36,7 @@
 
 
 #include <utilities/idd/OS_ZoneHVAC_Baseboard_Convective_Water_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 
@@ -113,7 +114,7 @@ std::vector<IdfObject> ZoneHVACBaseboardConvectiveWater_Impl::remove()
     }
     return result;
   }
-  unsigned ZoneHVACBaseboardConvectiveWater_Impl::inletPort()
+  unsigned ZoneHVACBaseboardConvectiveWater_Impl::inletPort() const
   {
     return 0; // this object has no inlet or outlet node
   }
@@ -127,7 +128,7 @@ std::vector<IdfObject> ZoneHVACBaseboardConvectiveWater_Impl::remove()
     return result;
   }
 
-  unsigned ZoneHVACBaseboardConvectiveWater_Impl::outletPort()
+  unsigned ZoneHVACBaseboardConvectiveWater_Impl::outletPort() const
   {
     return 0; // this object has no inlet or outlet node
   }

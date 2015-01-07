@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -23,6 +23,75 @@
 #include <QString>
 
 namespace openstudio {
+
+  OSCheckBox3::OSCheckBox3(QWidget * parent)
+    : QCheckBox(parent)
+  {
+    this->setCheckable(true);
+
+    setEnabled(false);
+  }
+
+  void OSCheckBox3::bind(model::ModelObject & modelObject,
+    BoolGetter get,
+    boost::optional<BoolSetter> set,
+    boost::optional<NoFailAction> reset,
+    boost::optional<BasicQuery> isDefaulted)
+  {
+    m_modelObject = modelObject;
+    m_get = get;
+    m_set = set;
+    m_reset = reset;
+    m_isDefaulted = isDefaulted;
+
+    setEnabled(true);
+
+    connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSCheckBox3::onModelObjectChange);
+
+    connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSCheckBox3::onModelObjectRemove);
+
+    connect(this, &OSCheckBox3::toggled, this, &OSCheckBox3::onToggled);
+    bool checked = (*m_get)();
+
+    this->setChecked(checked);
+  }
+
+  void OSCheckBox3::unbind()
+  {
+    if (m_modelObject){
+      this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
+      m_get.reset();
+      m_set.reset();
+      m_reset.reset();
+      m_isDefaulted.reset();
+      setEnabled(false);
+    }
+  }
+
+  void OSCheckBox3::onToggled(bool checked)
+  {
+    if (m_modelObject && m_set) {
+      if ((*m_get)() != checked) {
+        (*m_set)(checked);
+      }
+    }
+  }
+
+  void OSCheckBox3::onModelObjectChange()
+  {
+    if (m_modelObject) {
+      if ((*m_get)() != this->isChecked()) {
+        this->blockSignals(true);
+        this->setChecked((*m_get)());
+        this->blockSignals(false);
+      }
+    }
+  }
+
+  void OSCheckBox3::onModelObjectRemove(Handle handle)
+  {
+    unbind();
+  }
 
 OSCheckBox2::OSCheckBox2( QWidget * parent )
   : QPushButton(parent)
@@ -74,7 +143,9 @@ void OSCheckBox2::unbind()
 void OSCheckBox2::onToggled(bool checked)
 {
   if(m_modelObject && m_set) {
-    (*m_set)(checked);
+    if ((*m_get)() != checked) {
+      (*m_set)(checked);
+    }
   }
 }
 

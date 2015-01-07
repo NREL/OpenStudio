@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -17,13 +17,35 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 #include "InspectorGadget.hpp"
-#include "IGLineEdit.hpp"
-#include "IGSpinBoxes.hpp"
-#include "BridgeClasses.hpp"
-#include "IGPrecisionDialog.hpp"
 
-#include <iostream>
+#include "BridgeClasses.hpp"
+#include "IGLineEdit.hpp"
+#include "IGPrecisionDialog.hpp"
+#include "IGSpinBoxes.hpp"
+
+#include "../model/Model.hpp"
+#include "../model/ParentObject.hpp"
+#include "../model/ParentObject_Impl.hpp"
+
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/StringHelpers.hpp"
+
+#include "../utilities/idd/IddField.hpp"
+#include "../utilities/idd/IddFieldProperties.hpp"
+#include "../utilities/idd/IddKey.hpp"
+#include "../utilities/idd/IddObject.hpp"
+#include "../utilities/idd/IddObjectProperties.hpp"
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
+
+#include "../utilities/units/OSOptionalQuantity.hpp"
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/QuantityConverter.hpp"
+
+#include <boost/numeric/conversion/cast.hpp>
+
 #include <float.h>
+#include <iostream>
 #include <limits.h>
 #include <vector>
 
@@ -38,29 +60,8 @@
 #include <QPushButton>
 #include <QRadioButton>
 #include <QScrollArea>
-#include <QVBoxLayout>
 #include <QTimer>
-
-#include <boost/numeric/conversion/cast.hpp>  
-
-#include "../model/Model.hpp"
-#include "../model/ParentObject.hpp"
-#include "../model/ParentObject_Impl.hpp"
-
-#include "../utilities/idf/IdfExtensibleGroup.hpp"
-
-#include "../utilities/idd/IddObject.hpp"
-#include "../utilities/idd/IddField.hpp"
-#include "../utilities/idd/IddFieldProperties.hpp"
-#include "../utilities/idd/IddObjectProperties.hpp"
-#include "../utilities/idd/IddKey.hpp"
-
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
-#include "../utilities/units/QuantityConverter.hpp"
-#include "../utilities/core/Assert.hpp"
-#include "../utilities/core/Compare.hpp"
-#include "../utilities/core/StringHelpers.hpp"
+#include <QVBoxLayout>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -71,6 +72,17 @@ using std::vector;
 
 const char* InspectorGadget::s_indexSlotName="indexSlot";
 //const char* FIELDS_MATCH = "fields match";
+
+IGWidget::IGWidget(QWidget* parent):
+  QWidget(parent)
+{
+  setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
+}
+
+QSize IGWidget::sizeHint() const
+{
+  return QSize(200, QWidget::sizeHint().height());
+}
 
 InspectorGadget::InspectorGadget(QWidget* parent, int indent,ComboHighlightBridge* bridge):
   QWidget(parent),
@@ -257,7 +269,7 @@ void InspectorGadget::clear(bool recursive)
   }
 
   // This line is commented out to prevent a crash when displaying the Inspector Gadget
-  // within SketchUp 2014.  We have no idea why this works or what repercussions it may cause
+  // within SketchUp 2015.  We have no idea why this works or what repercussions it may cause
   //m_workspaceObj.reset();
 }
 
@@ -528,15 +540,17 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
   hbox->setSpacing(0);
   hbox->setMargin(0);
 
-  if( level == AccessPolicy::LOCKED )
-  {
-    string stripped(val);
-    //stripchar(stripped,'_');
+  if( level == AccessPolicy::LOCKED ) 
+  { 
+    string stripped(val); 
+    //stripchar(stripped,'_'); 
     QLabel* label = new QLabel( QString(stripped.c_str()), parent  );
     label->setObjectName("IGHeader");
-    // Qt::Alignment a = Qt::AlignHCenter;
-    hbox->addWidget( label );
     label->setStyleSheet("font : bold");
+    // Qt::Alignment a = Qt::AlignHCenter;
+    hbox->addWidget(label);
+
+    hbox->addStretch();
   }
   else
   {
@@ -806,7 +820,7 @@ void InspectorGadget::layoutComboBox( QVBoxLayout* layout,
   QComboBox* combo = new IGComboBox(parent);
   combo->setSizeAdjustPolicy( QComboBox::AdjustToContentsOnFirstShow );
 
-  if( prop.objectLists.size() )
+  if (prop.objectLists.size() && m_workspaceObj && !m_workspaceObj->handle().isNull())
   {
     Workspace workspace = m_workspaceObj->workspace();
     std::vector<std::string> names;
@@ -1191,7 +1205,7 @@ void InspectorGadget::onWorkspaceObjectChanged()
 
 void InspectorGadget::onTimeout()
 {
-  if (m_workspaceObjectChanged){
+  if (m_workspaceObjectChanged && m_workspaceObj && !m_workspaceObj->handle().isNull()){
     if (m_workspaceObj){
       rebuild(false);
     }
@@ -1214,7 +1228,9 @@ void InspectorGadget::connectWorkspaceObjectSignals() const
     if (impl){
       connect(impl, &openstudio::detail::WorkspaceObject_Impl::onChange, this, &InspectorGadget::onWorkspaceObjectChanged);
 
-      connect(impl, &openstudio::detail::WorkspaceObject_Impl::onRemoveFromWorkspace, this, &InspectorGadget::onWorkspaceObjectRemoved);
+      connect(impl, &openstudio::detail::WorkspaceObject_Impl::onRemoveFromWorkspace, this, &InspectorGadget::workspaceObjectRemoved);
+
+      connect(this, &InspectorGadget::workspaceObjectRemoved, this, &InspectorGadget::onWorkspaceObjectRemoved);
     }
   }
 }

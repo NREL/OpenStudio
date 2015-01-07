@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@
 #include "URLSearchPath.hpp"
 #include "ValidityReport.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
 #include "../plot/ProgressBar.hpp"
@@ -2424,7 +2425,14 @@ namespace detail {
             {
               origpath = toPath(url->toLocalFile());
             } else {
-              origpath = toPath(url->toString());
+              // DLM: When using QUrl constructor from a string as in getURL, QUrl will assume the 
+              // drive letter in any file path is a scheme and automatically convert the scheme to lower case
+              boost::optional<std::string> rawString = workspaceObject.getString(i);
+              if (rawString && istringEqual(*rawString, url->toString().toStdString())){
+                origpath = toPath(*rawString);
+              } else {
+                origpath = toPath(url->toString());
+              }
             }
 
             if (!origpath.is_complete())
