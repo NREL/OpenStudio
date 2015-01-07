@@ -1136,6 +1136,8 @@ namespace sdd {
 
     boost::optional<QDomElement> result;
 
+    model::StandardsInformationConstruction info = material.standardsInformation();
+
     if (material.optionalCast<model::StandardOpaqueMaterial>()){
       model::StandardOpaqueMaterial standardOpaqueMaterial = material.cast<model::StandardOpaqueMaterial>();
       result = doc.createElement("Mat");
@@ -1150,16 +1152,16 @@ namespace sdd {
       // SDD:
       // CodeCat - compulsory, in progress
       // CodeItem - compulsory, in progress
-      // FrmMat - optional, need to add
-      // FrmConfig - optional, need to add
-      // FrmDepth - optional, need to add
-      // CavityIns - optional, need to add
-      // CavityInsOpt - optional, need to add
+      // FrmMat - optional, in progress
+      // FrmConfig - optional, in progress
+      // FrmDepth - optional, in progress
+      // CavityIns - optional, in progress
+      // CavityInsOpt - optional, in progress
       // CompositeMatNotes - optional, skipping
-      // HeaderIns - optional, skipping
-      // CMUWt - optional, skipping
-      // CMUFill - optional, skipping
-      // SpandrelPanelIns - optional, skipping
+      // HeaderIns - optional, not used
+      // CMUWt - optional, not used
+      // CMUFill - optional, not used
+      // SpandrelPanelIns - optional, not used
       // ICCESRptNum - optional, skipping
       // InsOutsdWtrprfMemb - optional, skipping
 
@@ -1197,54 +1199,55 @@ namespace sdd {
       //  visibleAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*visibleAbsorptance)));
       //}
 
+      // DLM: not input
       // thickness
-      // DLM: is this deprecated?
       // os units = m, sdd units = in
-      double thickness = standardOpaqueMaterial.thickness();
-      Quantity thicknessSI(thickness, SIUnit(SIExpnt(0,1,0)));
-      OptionalQuantity thicknessIP = QuantityConverter::instance().convert(thicknessSI, ipSys);
-      OS_ASSERT(thicknessIP);
-      OS_ASSERT(thicknessIP->units() == IPUnit(IPExpnt(0,1,0)));
-      double thicknessInches = thicknessIP->value() * 12.0;
-      QDomElement thicknessElement = doc.createElement("Thkns");
-      result->appendChild(thicknessElement);
-      thicknessElement.appendChild(doc.createTextNode(QString::number(thicknessInches)));
+      //double thickness = standardOpaqueMaterial.thickness();
+      //Quantity thicknessSI(thickness, SIUnit(SIExpnt(0,1,0)));
+      //OptionalQuantity thicknessIP = QuantityConverter::instance().convert(thicknessSI, ipSys);
+      //OS_ASSERT(thicknessIP);
+      //OS_ASSERT(thicknessIP->units() == IPUnit(IPExpnt(0,1,0)));
+      //double thicknessInches = thicknessIP->value() * 12.0;
+      //QDomElement thicknessElement = doc.createElement("Thkns");
+      //result->appendChild(thicknessElement);
+      //thicknessElement.appendChild(doc.createTextNode(QString::number(thicknessInches)));
 
+      // DLM: not input
       // conductivity
       // DLM: is this deprecated?
       // os units = W/m-K, sdd units = Btu/(hr*ft*F)
-      double conductivity = standardOpaqueMaterial.thermalConductivity();
-      Quantity conductivitySI(conductivity, WhUnit(WhExpnt(1,0,-1,-1)));
-      OptionalQuantity conductivityIP = QuantityConverter::instance().convert(conductivitySI, btuSys);
-      OS_ASSERT(conductivityIP);
-      OS_ASSERT(conductivityIP->units() == BTUUnit(BTUExpnt(1,-1,-1,-1)));
-      QDomElement conductivityElement = doc.createElement("ThrmlCndct");
-      result->appendChild(conductivityElement);
-      conductivityElement.appendChild(doc.createTextNode(QString::number(conductivityIP->value())));
+      //double conductivity = standardOpaqueMaterial.thermalConductivity();
+      //Quantity conductivitySI(conductivity, WhUnit(WhExpnt(1,0,-1,-1)));
+      //OptionalQuantity conductivityIP = QuantityConverter::instance().convert(conductivitySI, btuSys);
+      //OS_ASSERT(conductivityIP);
+      //OS_ASSERT(conductivityIP->units() == BTUUnit(BTUExpnt(1,-1,-1,-1)));
+      //QDomElement conductivityElement = doc.createElement("ThrmlCndct");
+      //result->appendChild(conductivityElement);
+      //conductivityElement.appendChild(doc.createTextNode(QString::number(conductivityIP->value())));
 
+      // DLM: not input
       // density
-      // DLM: is this deprecated?
       // os units = kg/m3, sdd units = lb/ft^3
-      double density = standardOpaqueMaterial.density();
-      Quantity densitySI(density, SIUnit(SIExpnt(1,-3,0)));
-      OptionalQuantity densityIP = QuantityConverter::instance().convert(densitySI, ipSys);
-      OS_ASSERT(densityIP);
-      OS_ASSERT(densityIP->units() == IPUnit(IPExpnt(1,-3,0)));
-      QDomElement densityElement = doc.createElement("Dens");
-      result->appendChild(densityElement);
-      densityElement.appendChild(doc.createTextNode(QString::number(densityIP->value())));
+      //double density = standardOpaqueMaterial.density();
+      //Quantity densitySI(density, SIUnit(SIExpnt(1,-3,0)));
+      //OptionalQuantity densityIP = QuantityConverter::instance().convert(densitySI, ipSys);
+      //OS_ASSERT(densityIP);
+      //OS_ASSERT(densityIP->units() == IPUnit(IPExpnt(1,-3,0)));
+      //QDomElement densityElement = doc.createElement("Dens");
+      //result->appendChild(densityElement);
+      //densityElement.appendChild(doc.createTextNode(QString::number(densityIP->value())));
 
+      // DLM: not input
       // specificHeat
-      // DLM: is this deprecated?
       // os units = J/kg-K, sdd units = Btu/(lb*F)
-      double specificHeat = standardOpaqueMaterial.specificHeat();
-      Quantity specificHeatSI(specificHeat, SIUnit(SIExpnt(0,2,-2,-1)));
-      OptionalQuantity specificHeatIP = QuantityConverter::instance().convert(specificHeatSI, BTUUnit(BTUExpnt(1,0,0,-1))*IPUnit(IPExpnt(-1)));
-      OS_ASSERT(specificHeatIP);
-      OS_ASSERT(specificHeatIP->units() == BTUUnit(BTUExpnt(1,0,0,-1))*IPUnit(IPExpnt(-1)));
-      QDomElement specificHeatElement = doc.createElement("SpecHt");
-      result->appendChild(specificHeatElement);
-      specificHeatElement.appendChild(doc.createTextNode(QString::number(specificHeatIP->value())));
+      //double specificHeat = standardOpaqueMaterial.specificHeat();
+      //Quantity specificHeatSI(specificHeat, SIUnit(SIExpnt(0,2,-2,-1)));
+      //OptionalQuantity specificHeatIP = QuantityConverter::instance().convert(specificHeatSI, BTUUnit(BTUExpnt(1,0,0,-1))*IPUnit(IPExpnt(-1)));
+      //OS_ASSERT(specificHeatIP);
+      //OS_ASSERT(specificHeatIP->units() == BTUUnit(BTUExpnt(1,0,0,-1))*IPUnit(IPExpnt(-1)));
+      //QDomElement specificHeatElement = doc.createElement("SpecHt");
+      //result->appendChild(specificHeatElement);
+      //specificHeatElement.appendChild(doc.createTextNode(QString::number(specificHeatIP->value())));
 
     }else if (material.optionalCast<model::MasslessOpaqueMaterial>()){
       model::MasslessOpaqueMaterial masslessOpaqueMaterial = material.cast<model::MasslessOpaqueMaterial>();
@@ -1291,17 +1294,18 @@ namespace sdd {
       //  visibleAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*visibleAbsorptance)));
       //}
 
+      // DLM: not input
       // thermalResistance
-      // DLM: is this deprecated?
       // os units = m2-K/W, sdd units = hr*ft2*degF/Btu
-      double thermalResistance = masslessOpaqueMaterial.thermalResistance();
-      Quantity rValueWh(thermalResistance, WhUnit(WhExpnt(-1,0,2,1)));
-      OptionalQuantity rValueIP = QuantityConverter::instance().convert(rValueWh, btuSys);
-      OS_ASSERT(rValueIP);
-      OS_ASSERT(rValueIP->units() ==  BTUUnit(BTUExpnt(-1,2,1,1)));
-      QDomElement rValueElement = doc.createElement("RVal");
-      result->appendChild(rValueElement);
-      rValueElement.appendChild(doc.createTextNode(QString::number(rValueIP->value())));
+      //double thermalResistance = masslessOpaqueMaterial.thermalResistance();
+      //Quantity rValueWh(thermalResistance, WhUnit(WhExpnt(-1,0,2,1)));
+      //OptionalQuantity rValueIP = QuantityConverter::instance().convert(rValueWh, btuSys);
+      //OS_ASSERT(rValueIP);
+      //OS_ASSERT(rValueIP->units() ==  BTUUnit(BTUExpnt(-1,2,1,1)));
+      //QDomElement rValueElement = doc.createElement("RVal");
+      //result->appendChild(rValueElement);
+      //rValueElement.appendChild(doc.createTextNode(QString::number(rValueIP->value())));
+
     }else if (material.optionalCast<model::AirGap>()){
       model::AirGap airGap = material.cast<model::AirGap>();
       result = doc.createElement("Mat");
@@ -1313,16 +1317,16 @@ namespace sdd {
       result->appendChild(nameElement);
       nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
+      // DLM: not input
       // thermalResistance
-      // DLM: is this deprecated?
       // os units = m2-K/W, sdd units = hr*ft2*degF/Btu
-      double thermalResistance = airGap.thermalResistance();
-      Quantity rValueWh(thermalResistance, WhUnit(WhExpnt(-1,0,2,1)));
-      OptionalQuantity rValueIP = QuantityConverter::instance().convert(rValueWh, btuSys);
-      OS_ASSERT(rValueIP);
-      OS_ASSERT(rValueIP->units() ==  BTUUnit(BTUExpnt(-1,2,1,1)));
-      QDomElement rValueElement = doc.createElement("RVal");
-      result->appendChild(rValueElement);
+      //double thermalResistance = airGap.thermalResistance();
+      //Quantity rValueWh(thermalResistance, WhUnit(WhExpnt(-1,0,2,1)));
+      //OptionalQuantity rValueIP = QuantityConverter::instance().convert(rValueWh, btuSys);
+      //OS_ASSERT(rValueIP);
+      //OS_ASSERT(rValueIP->units() ==  BTUUnit(BTUExpnt(-1,2,1,1)));
+      //QDomElement rValueElement = doc.createElement("RVal");
+      //result->appendChild(rValueElement);
     }
 
     return result;
