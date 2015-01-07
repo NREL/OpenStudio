@@ -44,6 +44,15 @@ if(APPLE)
   set(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2015 National Renewable Energy Laboratory")
 endif()
 
+# compiler id for about boxes
+if(MSVC)
+  set(ABOUT_COMPILER "${CMAKE_GENERATOR}")
+elseif(APPLE)
+  set(ABOUT_COMPILER "${CMAKE_CXX_COMPILER_ID} ${CMAKE_OSX_ARCHITECTURES} - OSX ${CMAKE_OSX_DEPLOYMENT_TARGET}")
+else()
+  set(ABOUT_COMPILER "${CMAKE_CXX_COMPILER_ID}")
+endif()
+
 ###############################################################################
 
 ###############################################################################
