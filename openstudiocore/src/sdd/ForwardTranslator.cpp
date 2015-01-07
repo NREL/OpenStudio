@@ -27,6 +27,8 @@
 #include "../model/Material_Impl.hpp"
 #include "../model/ConstructionBase.hpp"
 #include "../model/ConstructionBase_Impl.hpp"
+#include "../model/ClimateZones.hpp"
+#include "../model/ClimateZones_Impl.hpp"
 #include "../model/Site.hpp"
 #include "../model/Site_Impl.hpp"
 #include "../model/Facility.hpp"
@@ -157,20 +159,38 @@ namespace sdd {
     // set ruleset, where should this data come from?
     QDomElement rulesetFilenameElement = doc.createElement("RulesetFilename");
     sddElement.appendChild(rulesetFilenameElement);
-    rulesetFilenameElement.setAttribute("file", "unknown");
+    rulesetFilenameElement.setAttribute("file", "CEC 2013 NonRes.bin"); // DLM: only allow one value for now
 
     // set project, where should this data come from?
     QDomElement projectElement = doc.createElement("Proj");
     sddElement.appendChild(projectElement);
 
+    // DLM: what name to use here?
     QDomElement projectNameElement = doc.createElement("Name");
     projectElement.appendChild(projectNameElement);
-    projectNameElement.appendChild( doc.createTextNode( "unknown"));
+    projectNameElement.appendChild(doc.createTextNode("unknown"));
 
     // site data
-    QDomElement projectClimateZoneElement = doc.createElement("CliZn");
-    projectElement.appendChild(projectClimateZoneElement);
-    projectClimateZoneElement.appendChild( doc.createTextNode( "unknown"));
+    boost::optional<model::ClimateZones> climateZones = model.getOptionalUniqueModelObject<model::ClimateZones>();
+    if (climateZones){
+      // todo: check document year
+      std::vector<model::ClimateZone> zones = climateZones->getClimateZones("CEC");
+      if (zones.size() > 0 && !zones[0].value().empty()){
+
+        bool isNumber;
+        QString value = toQString(zones[0].value());
+        value.toInt(&isNumber);
+        if (isNumber){
+          value = QString("ClimateZone") + value;
+        }
+
+        QDomElement projectClimateZoneElement = doc.createElement("CliZn");
+        projectElement.appendChild(projectClimateZoneElement);
+        projectClimateZoneElement.appendChild(doc.createTextNode(value));
+
+        m_translatedObjects[climateZones.handle()] = projectClimateZoneElement;
+      }
+    }
 
     // set lat, lon, elev
     // DLM: do not translate forward,  Issue 242: Forward Translator - Remove Proj:Lat/Lon/Elevation translation
@@ -192,6 +212,8 @@ namespace sdd {
       QDomElement elevationElement = doc.createElement("Elevation");
       projectElement.appendChild(elevationElement);
       elevationElement.appendChild( doc.createTextNode(QString::number(elevationIP)));
+
+      m_translatedObjects[site.handle()] = latElement;
     }
     */
 
@@ -214,7 +236,7 @@ namespace sdd {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Materials"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(materials.size());
+      m_progressBar->setMaximum((int)materials.size());
       m_progressBar->setValue(0);
     }
 
@@ -238,7 +260,7 @@ namespace sdd {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Constructions"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(3*constructions.size()); // three loops below
+      m_progressBar->setMaximum(3*((int)constructions.size())); // three loops below
       m_progressBar->setValue(0);
     }
 
@@ -319,7 +341,7 @@ namespace sdd {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Site Shading"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(shadingSurfaceGroups.size()); 
+      m_progressBar->setMaximum((int)shadingSurfaceGroups.size()); 
       m_progressBar->setValue(0);
     }
 
