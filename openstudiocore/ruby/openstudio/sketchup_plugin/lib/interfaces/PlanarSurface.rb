@@ -156,13 +156,18 @@ module OpenStudio
       # parent is the containing entity except for sub surfaces
       
       if (@parent.nil?)
-        # Create a new space just for this surface.
-        Plugin.log(OpenStudio::Warn, "Creating containing SurfaceGroup for PlanarSurface #{@model_object.name}")
-        
-        @parent = @container_class.new
-        @parent.create_model_object
-        @parent.draw_entity
-        @parent.add_child(self)  # Would be nice to not have to call this
+      #  # Create a new group just for this surface.
+      #  Plugin.log(OpenStudio::Warn, "Creating containing SurfaceGroup for PlanarSurface #{@model_object.name}")
+      #  
+      #  @parent = @container_class.new
+      #  @parent.create_model_object
+      #  @model_object.setParent(@parent.model_object)
+      #  @parent.draw_entity
+      #  @parent.add_child(self)  # Would be nice to not have to call this
+      
+        # how did this happen?
+        Plugin.log(OpenStudio::Error, "Parent #{@parent} is nil, cannot create entity for #{@model_object.name}")
+        return nil
       end
       
       if @parent.deleted?
