@@ -214,7 +214,7 @@ namespace sdd {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Materials"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(materials.size());
+      m_progressBar->setMaximum((int)materials.size());
       m_progressBar->setValue(0);
     }
 
@@ -238,7 +238,7 @@ namespace sdd {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Constructions"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(3*constructions.size()); // three loops below
+      m_progressBar->setMaximum(3 * ((int)constructions.size())); // three loops below
       m_progressBar->setValue(0);
     }
 
@@ -319,7 +319,7 @@ namespace sdd {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Site Shading"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(shadingSurfaceGroups.size()); 
+      m_progressBar->setMaximum((int)shadingSurfaceGroups.size());
       m_progressBar->setValue(0);
     }
 

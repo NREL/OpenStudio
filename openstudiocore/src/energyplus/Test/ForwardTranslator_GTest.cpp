@@ -283,7 +283,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateScheduleCompact) {
   ASSERT_TRUE(scheduleCompactIdf.name());
   EXPECT_EQ(scheduleCompact.name().get(),scheduleCompactIdf.name().get());
 
-  for( unsigned i = OS_Schedule_CompactFields::getValues().size(); i < scheduleCompact.numFields(); i++ )
+  for( size_t i = OS_Schedule_CompactFields::getValues().size(); i < scheduleCompact.numFields(); i++ )
   {
     boost::optional<std::string> s1 = scheduleCompactIdf.getString(i-1);
     boost::optional<std::string> s2 = scheduleCompact.getString(i);
@@ -538,7 +538,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_MultiThreadedLogMessages) {
   Space space(model); // not in thermal zone will generate a warning
 
   // run in current thread
-  unsigned numWarnings = 0;
+  size_t numWarnings = 0;
   {
     ForwardTranslator translator;
     boost::optional<Workspace> workspace = translator.translateModel(model);
