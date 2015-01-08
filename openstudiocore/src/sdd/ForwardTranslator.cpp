@@ -188,7 +188,7 @@ namespace sdd {
         projectElement.appendChild(projectClimateZoneElement);
         projectClimateZoneElement.appendChild(doc.createTextNode(value));
 
-        m_translatedObjects[climateZones.handle()] = projectClimateZoneElement;
+        m_translatedObjects[climateZones->handle()] = projectClimateZoneElement;
       }
     }
 
