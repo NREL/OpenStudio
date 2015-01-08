@@ -215,14 +215,14 @@ namespace sdd {
 
     // remove unused CFactor constructions
     for (model::CFactorUndergroundWallConstruction cFactorConstruction : model.getConcreteModelObjects<model::CFactorUndergroundWallConstruction>()){
-      if (cFactorConstruction.directUseCount() == 0){
+      if (cFactorConstruction.directUseCount(true) == 0){
         cFactorConstruction.remove();
       }
     }
 
     // remove unused FFactor constructions
     for (model::FFactorGroundFloorConstruction fFactorConstruction : model.getConcreteModelObjects<model::FFactorGroundFloorConstruction>()){
-      if (fFactorConstruction.directUseCount() == 0){
+      if (fFactorConstruction.directUseCount(true) == 0){
         fFactorConstruction.remove();
       }
     }
