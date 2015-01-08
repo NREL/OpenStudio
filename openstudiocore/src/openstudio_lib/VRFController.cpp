@@ -312,7 +312,7 @@ QSharedPointer<OSListItem> VRFSystemListController::itemAt(int i)
 
 int VRFSystemListController::count()
 {
-  return systems().size() + 1;
+  return (int)(systems().size() + 1);
 }
 
 int VRFSystemListController::systemIndex(const model::AirConditionerVariableRefrigerantFlow & system) const
@@ -377,7 +377,7 @@ void VRFSystemListController::removeSystem(model::AirConditionerVariableRefriger
     QMessageBox message(m_vrfController->vrfView());
     
     QString text;
-    int size = terminals.size();
+    int size = (int)terminals.size();
     if( size == 1 )
     {
       text.append("There is ");

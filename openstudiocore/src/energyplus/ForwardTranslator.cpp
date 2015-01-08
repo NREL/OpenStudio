@@ -1869,7 +1869,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     m_map.insert(make_pair(modelObject.handle(),retVal.get()));
 
     if (m_progressBar){
-      m_progressBar->setValue(m_map.size());
+      m_progressBar->setValue((int)m_map.size());
     }
   }
 

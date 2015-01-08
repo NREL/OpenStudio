@@ -285,8 +285,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateScheduleCompact) {
 
   for( size_t i = OS_Schedule_CompactFields::getValues().size(); i < scheduleCompact.numFields(); i++ )
   {
-    boost::optional<std::string> s1 = scheduleCompactIdf.getString(i-1);
-    boost::optional<std::string> s2 = scheduleCompact.getString(i);
+    boost::optional<std::string> s1 = scheduleCompactIdf.getString((int)i-1);
+    boost::optional<std::string> s2 = scheduleCompact.getString((int)i);
 
     ASSERT_TRUE(s1);
     ASSERT_TRUE(s2);
