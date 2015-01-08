@@ -41,6 +41,7 @@ class QButtonGroup;
 class QCheckBox;
 class QColor;
 class QLabel;
+class QPushButton;
 
 namespace openstudio {
 
@@ -530,7 +531,7 @@ public:
 
   std::vector<std::pair<QString,std::vector<QString> > > categoriesAndFields();
 
-  void categorySelected(int index);
+  virtual void categorySelected(int index);
 
   virtual int rowCount() const;
 
@@ -638,7 +639,9 @@ private:
 
   QString m_headerText;
 
-  QButtonGroup * m_cellBtnGrp;
+  QButtonGroup * m_cellCheckBoxBtnGrp;
+
+  QButtonGroup * m_cellPushButtonBoxBtnGrp = nullptr;
 
   int m_oldIndex = -1;
 
@@ -702,9 +705,13 @@ public:
   virtual ~HorizontalHeaderWidget();
   void addWidget(const QSharedPointer<QWidget> &t_widget);
 
-  QLabel * m_label;
+  void toggleButtonText();
 
-  QCheckBox * m_checkBox;
+  QLabel * m_label = nullptr;
+
+  QCheckBox * m_checkBox = nullptr;
+
+  QPushButton * m_pushButton = nullptr;
 
   std::vector<QSharedPointer<QWidget>> m_addedWidgets;
 

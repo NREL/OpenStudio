@@ -51,6 +51,7 @@
 #include <QButtonGroup>
 #include <QCheckBox>
 #include <QColor>
+#include <QPushButton>
 #include <QSettings>
 #include <QWidget>
 
@@ -312,11 +313,17 @@ OSGridController::OSGridController(bool isIP,
 {
   loadQSettings();
 
-  m_cellBtnGrp = new QButtonGroup();
-  m_cellBtnGrp->setExclusive(false);
+  m_cellCheckBoxBtnGrp = new QButtonGroup();
+  m_cellCheckBoxBtnGrp->setExclusive(false);
 
   bool isConnected = false;
-  isConnected = connect(m_cellBtnGrp, SIGNAL(buttonClicked(int)), this, SLOT(cellChecked(int)));
+  isConnected = connect(m_cellCheckBoxBtnGrp, SIGNAL(buttonClicked(int)), this, SLOT(cellChecked(int)));
+  OS_ASSERT(isConnected);
+
+  m_cellPushButtonBoxBtnGrp = new QButtonGroup();
+  m_cellPushButtonBoxBtnGrp->setExclusive(false);
+
+  isConnected = connect(m_cellPushButtonBoxBtnGrp, SIGNAL(buttonClicked(int)), this, SLOT(cellChecked(int)));
   OS_ASSERT(isConnected);
 }
 
@@ -1092,7 +1099,7 @@ void OSGridController::cellChecked(int index)
   if (tableRowIndex == m_oldIndex) {
     // Note: 1 row must always be checked
     QAbstractButton * button = nullptr;
-    button = m_cellBtnGrp->button(index);
+    button = m_cellCheckBoxBtnGrp->button(index);
     OS_ASSERT(button);
     button->blockSignals(true);
     button->setChecked(true);
@@ -1296,19 +1303,25 @@ void OSGridController::onObjectRemoved(boost::optional<model::ParentObject> pare
 
 HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)
   : QWidget(parent),
-    m_label(new QLabel(fieldName)),
-    m_checkBox(new QCheckBox())
+  m_label(new QLabel(fieldName)),
+  m_checkBox(new QCheckBox()),
+  m_pushButton(new QPushButton())
 {
-  auto vlayout = new QVBoxLayout();
+  auto mainLayout = new QVBoxLayout();
+  setLayout(mainLayout);
+
   auto layout = new QHBoxLayout();
-  setLayout(vlayout);
-  vlayout->addLayout(layout);
 
   m_label->setWordWrap(true);
   m_label->setAlignment(Qt::AlignCenter);
   layout->addWidget(m_label);
 
   layout->addWidget(m_checkBox);
+
+  mainLayout->addLayout(layout);
+
+  m_pushButton->setText("Apply to Selected");
+  mainLayout->addWidget(m_pushButton, Qt::AlignBottom);
 }
 
 HorizontalHeaderWidget::~HorizontalHeaderWidget()
@@ -1327,6 +1340,15 @@ void HorizontalHeaderWidget::addWidget(const QSharedPointer<QWidget> &t_widget)
     m_addedWidgets.push_back(t_widget);
     layout()->addWidget(t_widget.data());
     t_widget->setVisible(true);
+  }
+}
+
+void HorizontalHeaderWidget::toggleButtonText()
+{
+  if (m_pushButton->text() == "Clear Selected") {
+    m_pushButton->setText("Apply to Selected");
+  } else {
+    m_pushButton->setText("Clear Selected");
   }
 }
 
