@@ -162,7 +162,7 @@ void SchedulesTabController::purgeUnusedScheduleRulesets()
        it != schedules.end();
        ++it )
   {
-    if( it->directUseCount() == 0 )
+    if( it->directUseCount(true) == 0 )
     {
       it->remove();
     }

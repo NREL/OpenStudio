@@ -1028,7 +1028,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     IdfObjectVector removedObjects;
     for (ResourceObject& resource : resources) {
       // test for initialized first in case earlier .remove() got this one already
-      if ((resource.initialized()) && (resource.nonResourceObjectUseCount() == 0)) {
+      if ((resource.initialized()) && (resource.nonResourceObjectUseCount(true) == 0)) {
         IdfObjectVector thisCallRemoved = resource.remove();
         removedObjects.insert(removedObjects.end(),thisCallRemoved.begin(),thisCallRemoved.end());
       }
@@ -1042,7 +1042,7 @@ if (_className::iddObjectType() == typeToCreate) { \
       boost::optional<ResourceObject> resource = workspaceObject.optionalCast<ResourceObject>();
       if (resource){
         // test for initialized first in case earlier .remove() got this one already
-        if ((resource->initialized()) && (resource->directUseCount() == 0)) {
+        if ((resource->initialized()) && (resource->directUseCount(true) == 0)) {
           IdfObjectVector thisCallRemoved = resource->remove();
           removedObjects.insert(removedObjects.end(),thisCallRemoved.begin(),thisCallRemoved.end());
         }
