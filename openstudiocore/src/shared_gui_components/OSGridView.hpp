@@ -68,6 +68,8 @@ public:
 
   void requestAddRow(int row);
 
+  QVBoxLayout * m_contentLayout;
+
 protected:
 
   virtual void hideEvent(QHideEvent * event);
@@ -134,7 +136,7 @@ private:
   };
 
   // construct a grid layout to our specs
-  QGridLayout *makeGridLayout();
+  QGridLayout * makeGridLayout();
 
   // Add a widget, adding a new layout if necessary
   void addWidget(QWidget *w, int row, int column);
@@ -148,8 +150,6 @@ private:
   void removeRow(int row);
 
   static const int ROWS_PER_LAYOUT = 100;
-
-  QVBoxLayout * m_contentLayout;
 
   std::vector<QGridLayout *> m_gridLayouts;
 

@@ -96,7 +96,9 @@
 
 #include <QBoxLayout>
 #include <QCheckBox>
+#include <QComboBox>
 #include <QLabel>
+#include <QPushButton>
 #include <QScrollArea>
 #include <QStackedWidget>
 #include <QSettings>
@@ -127,6 +129,18 @@
 #define STANDARDSBUILDINGTYPE "Standards Building Type\n(Optional)"
 #define STANDARDSSPACETYPE "Standards Space Type\n(Optional)"
 
+// LOAD TYPES
+#define SHOWALLLOADS "Show all loads"
+#define INTERNALMASS "Internal Mass"
+#define PEOPLE "People"
+#define LIGHTS "Lights"
+#define LUMINAIRE "Luminaire"
+#define ELECTRICEQUIPMENT "Electric Equipment"
+#define GASEQUIPMENT "Gas Equipment"
+#define HOTWATEREQUIPMENT "Hot Water Equipment"
+#define STEAMEQUIPMENT "Steam Equipment"
+#define OTHEREQUIPMENT "Other Equipment"
+
 namespace openstudio {
 
 struct ModelObjectNameSorter{
@@ -140,20 +154,139 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
   : QWidget(parent),
     m_isIP(isIP)
 {
-  auto layout = new QVBoxLayout();
-  layout->setSpacing(0);
-  layout->setContentsMargins(0,0,0,0);
-  setLayout(layout);
-
+  auto mainLayout = new QVBoxLayout();
+  mainLayout->setSpacing(0);
+  mainLayout->setContentsMargins(0, 0, 0, 0);
+  setLayout(mainLayout);
 
   auto spaceTypes = model.getModelObjects<model::SpaceType>();
   auto spaceTypeModelObjects = subsetCastVector<model::ModelObject>(spaceTypes);
 
   auto spaceTypesGridController = new SpaceTypesGridController(m_isIP, "Space Types", IddObjectType::OS_SpaceType, model, spaceTypeModelObjects);
   auto gridView = new OSGridView(spaceTypesGridController, "Space Types", "Drop\nZone", false, parent);
-  m_gridController = spaceTypesGridController;
+
+  // Load Filter
+
+  QLabel * label = nullptr;
+
+  QFrame * line = nullptr;
+
+  QVBoxLayout * layout = nullptr;
 
   bool isConnected = false;
+  
+  auto filterGridLayout = new QGridLayout();
+  filterGridLayout->setContentsMargins(7, 4, 0, 8);
+  filterGridLayout->setSpacing(5);
+
+  line = new QFrame();
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  gridView->m_contentLayout->addWidget(line);
+
+  label = new QLabel();
+  label->setText("Filter:");
+  label->setObjectName("H2");
+  filterGridLayout->addWidget(label, filterGridLayout->rowCount(), 0, Qt::AlignTop | Qt::AlignLeft);
+
+  layout = new QVBoxLayout();
+
+  m_filterLabel = new QLabel();
+  m_filterLabel->setText("Load Type");
+  m_filterLabel->setObjectName("H3");
+  layout->addWidget(m_filterLabel, Qt::AlignTop | Qt::AlignLeft);
+
+  m_filters = new QComboBox();
+  m_filters->setFixedWidth(OSItem::ITEM_WIDTH);
+
+  {
+    m_filters->addItem(SHOWALLLOADS);
+  }
+
+  {
+    const QPixmap * pixMap = new QPixmap(":images/mini_icons/internal_mass.png");
+    OS_ASSERT(pixMap);
+    m_filters->addItem(*pixMap, INTERNALMASS);
+  }
+
+  {
+    const QPixmap * pixMap = new QPixmap(":images/mini_icons/people.png");
+    OS_ASSERT(pixMap);
+    m_filters->addItem(*pixMap, PEOPLE);
+  }
+
+  {
+    const QPixmap * pixMap = new QPixmap(":images/mini_icons/lights.png");
+    OS_ASSERT(pixMap);
+    m_filters->addItem(*pixMap, LIGHTS);
+  }
+
+  {
+    const QPixmap * pixMap = new QPixmap(":images/mini_icons/luminaire.png");
+    OS_ASSERT(pixMap);
+    m_filters->addItem(*pixMap, LUMINAIRE);
+  }
+
+  {
+    const QPixmap * pixMap = new QPixmap(":images/mini_icons/electric_equipment.png");
+    OS_ASSERT(pixMap);
+    m_filters->addItem(*pixMap, ELECTRICEQUIPMENT);
+  }
+
+  {
+    const QPixmap * pixMap = new QPixmap(":images/mini_icons/gas_equipment.png");
+    OS_ASSERT(pixMap);
+    m_filters->addItem(*pixMap, GASEQUIPMENT);
+  }
+
+  {
+    const QPixmap * pixMap = new QPixmap(":images/mini_icons/steam_equipment.png");
+    OS_ASSERT(pixMap);
+    m_filters->addItem(*pixMap, HOTWATEREQUIPMENT);
+  }
+
+  {
+    const QPixmap * pixMap = new QPixmap(":images/mini_icons/steam_equipment.png");
+    OS_ASSERT(pixMap);
+    m_filters->addItem(*pixMap, STEAMEQUIPMENT);
+  }
+
+  {
+    const QPixmap * pixMap = new QPixmap(":images/mini_icons/other_equipment.png");
+    OS_ASSERT(pixMap);
+    m_filters->addItem(*pixMap, OTHEREQUIPMENT);
+  }
+
+  disableFilter();
+  layout->addWidget(m_filters, Qt::AlignTop | Qt::AlignLeft);
+
+  layout->addStretch();
+
+  filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, 1);
+
+  filterGridLayout->setRowStretch(filterGridLayout->rowCount(), 100);
+  filterGridLayout->setColumnStretch(filterGridLayout->columnCount(), 100);
+
+  gridView->m_contentLayout->addLayout(filterGridLayout);
+
+  line = new QFrame();
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  gridView->m_contentLayout->addWidget(line);
+
+  gridView->m_contentLayout->addSpacing(7);
+
+  mainLayout->addWidget(gridView, 0, Qt::AlignTop);
+
+  mainLayout->addStretch(1);
+
+  // GridController
+
+  m_gridController = spaceTypesGridController;
+  
+  OS_ASSERT(m_gridController);
+  isConnected = connect(m_filters, &QComboBox::currentTextChanged, m_gridController, &openstudio::SpaceTypesGridController::filterChanged);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(gridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
@@ -167,10 +300,6 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
   isConnected = connect(gridView, SIGNAL(gridRowSelected(OSItem*)), this, SIGNAL(gridRowSelected(OSItem*)));
   OS_ASSERT(isConnected);
 
-  layout->addWidget(gridView,0,Qt::AlignTop);
-
-  layout->addStretch(1);
-
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), spaceTypesGridController, SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
 
@@ -180,12 +309,23 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
   std::vector<model::SpaceType> spaceType = model.getModelObjects<model::SpaceType>(); // NOTE for horizontal system lists
 }
 
-
 std::vector<model::ModelObject> SpaceTypesGridView::selectedObjects() const
 {
   const auto os = m_gridController->getObjectSelector()->getSelectedObjects();
 
   return std::vector<model::ModelObject>(os.cbegin(), os.cend());
+}
+
+void SpaceTypesGridView::enableFilter()
+{
+  m_filterLabel->setEnabled(true);
+  m_filters->setEnabled(true);
+}
+
+void SpaceTypesGridView::disableFilter()
+{
+  m_filterLabel->setEnabled(false);
+  m_filters->setEnabled(false);
 }
 
 void SpaceTypesGridView::onDropZoneItemClicked(OSItem* item)
@@ -253,29 +393,97 @@ void SpaceTypesGridController::selectAllStateChanged(const int newState) const
   }
 }
 
-void SpaceTypesGridController::filterStateChanged(const int newState) const
+void SpaceTypesGridController::filterChanged(const QString & text)
 {
-  LOG(Debug, "Lights only filter state changed: " << newState);
+  LOG(Debug, "Load filter changed: " << text);
 
   auto objectSelector = getObjectSelector();
-  if (newState == 0)
+  if (text == SHOWALLLOADS)
   {
     objectSelector->resetObjectFilter();
-  } else {
+  }
+  else {
     objectSelector->setObjectFilter(
-        [](const model::ModelObject &obj)->bool {
-          try {
-            obj.cast<model::SpaceLoadInstance>();
-            // This is a spaceloadinstance, so we want to see if it matches our filter
-            return static_cast<bool>(obj.optionalCast<model::Lights>());
-          } catch (...) {
-            return true; // this isn't a space load instance, so don't apply filtering
-          }
+      [text](const model::ModelObject &obj)->bool {
+      try {
+        obj.cast<model::SpaceLoadInstance>();
+        // This is a spaceloadinstance, so we want to see if it matches our filter
+
+        if (text == INTERNALMASS)
+        {
+          return static_cast<bool>(obj.optionalCast<model::InternalMass>());
         }
-     );
+        else if (text == PEOPLE)
+        {
+          return static_cast<bool>(obj.optionalCast<model::People>());
+        }
+        else if (text == LIGHTS)
+        {
+          return static_cast<bool>(obj.optionalCast<model::Lights>());
+        }
+        else if (text == LUMINAIRE)
+        {
+          return static_cast<bool>(obj.optionalCast<model::Luminaire>());
+        }
+        else if (text == ELECTRICEQUIPMENT)
+        {
+          return static_cast<bool>(obj.optionalCast<model::ElectricEquipment>());
+        }
+        else if (text == GASEQUIPMENT)
+        {
+          return static_cast<bool>(obj.optionalCast<model::GasEquipment>());
+        }
+        else if (text == HOTWATEREQUIPMENT)
+        {
+          return static_cast<bool>(obj.optionalCast<model::HotWaterEquipment>());
+        }
+        else if (text == STEAMEQUIPMENT)
+        {
+          return static_cast<bool>(obj.optionalCast<model::SteamEquipment>());
+        }
+        else if (text == OTHEREQUIPMENT)
+        {
+          return static_cast<bool>(obj.optionalCast<model::OtherEquipment>());
+        }
+        else
+        {
+          // Should never get here
+          OS_ASSERT(false);
+          return false;
+        }
+      }
+      catch (...) {
+        return true; // this isn't a space load instance, so don't apply filtering
+      }
+    }
+    );
   }
 }
 
+SpaceTypesGridView * SpaceTypesGridController::spaceTypesGridView()
+{
+  auto gridView = qobject_cast<OSGridView *>(this->parent());
+  OS_ASSERT(gridView);
+
+  auto spaceTypesGridView = qobject_cast<SpaceTypesGridView *>(gridView->parent());
+
+  return spaceTypesGridView;
+}
+
+void SpaceTypesGridController::categorySelected(int index)
+{
+  if (spaceTypesGridView()) {
+    // Only show filter when viewing loads tab
+    if (index == 1) {
+      spaceTypesGridView()->enableFilter();
+    }
+    else {
+      spaceTypesGridView()->disableFilter();
+    }
+  }
+
+  OSGridController::categorySelected(index);
+}
 
 void SpaceTypesGridController::addColumns(const QString &category, std::vector<QString> & fields)
 {
@@ -957,10 +1165,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
           }
         );
 
-        auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox("Lights only filter"));
-        connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpaceTypesGridController::filterStateChanged);
-
-        addNameLineEditColumn(Heading(QString(DEFINITION), true, checkbox),
+        addNameLineEditColumn(Heading(QString(DEFINITION), true),
           true,
           CastNullAdapter<model::SpaceLoadDefinition>(&model::SpaceLoadDefinition::name),
           CastNullAdapter<model::SpaceLoadDefinition>(&model::SpaceLoadDefinition::setName),
@@ -1212,6 +1417,19 @@ QString SpaceTypesGridController::getColor(const model:: ModelObject & modelObje
 void SpaceTypesGridController::checkSelectedFields()
 {
   if(!this->m_hasHorizontalHeader) return;
+
+  // Don't show the name column check box
+  // From above in addColumns, we know that NAME is the first entry
+  HorizontalHeaderWidget * horizontalHeaderWidget = nullptr;
+  
+  horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(0));
+  OS_ASSERT(horizontalHeaderWidget);
+  horizontalHeaderWidget->m_checkBox->hide();
+  horizontalHeaderWidget->m_pushButton->hide();
+
+  horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(1));
+  OS_ASSERT(horizontalHeaderWidget);
+  horizontalHeaderWidget->m_pushButton->hide();
 
   OSGridController::checkSelectedFields();
 }
