@@ -361,7 +361,10 @@ module OpenStudio
       #  result
       #}
       
-      @render_by_class_cmd = UI::Command.new("Render By Surface Type") { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderByClass }
+      @render_by_class_cmd = UI::Command.new("Render By Surface Type") { 
+        proc = Proc.new { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderByClass }
+        Plugin.add_event( proc )
+      }
       @render_by_class_cmd.small_icon = Plugin.dir + "/lib/resources/icons/render_surface_class_16.png"
       @render_by_class_cmd.large_icon = Plugin.dir + "/lib/resources/icons/render_surface_class.png"
       @render_by_class_cmd.tooltip = "Render By SurfaceType"
@@ -378,7 +381,10 @@ module OpenStudio
         result
       }
 
-      @render_by_data_value_cmd = UI::Command.new("Render By Data Value") { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderByDataValue }
+      @render_by_data_value_cmd = UI::Command.new("Render By Data Value") { 
+        proc = Proc.new { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderByDataValue }
+        Plugin.add_event( proc )
+      }
       @render_by_data_value_cmd.small_icon = Plugin.dir + "/lib/resources/icons/render_data_16.png"
       @render_by_data_value_cmd.large_icon = Plugin.dir + "/lib/resources/icons/render_data.png"
       @render_by_data_value_cmd.tooltip = "Render By Data Value"
@@ -395,7 +401,10 @@ module OpenStudio
         result
       }
 
-      @render_by_boundary_cmd = UI::Command.new("Render By Boundary") { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderByBoundary }
+      @render_by_boundary_cmd = UI::Command.new("Render By Boundary") { 
+        proc = Proc.new { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderByBoundary }
+        Plugin.add_event( proc )
+      }
       @render_by_boundary_cmd.small_icon = Plugin.dir + "/lib/resources/icons/render_boundary_16.png"
       @render_by_boundary_cmd.large_icon = Plugin.dir + "/lib/resources/icons/render_boundary.png"
       @render_by_boundary_cmd.tooltip = "Render By Boundary Condition"
@@ -412,7 +421,10 @@ module OpenStudio
         result
       }
 
-      @render_by_layer_cmd = UI::Command.new("Render By Layer")  { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderByLayer }
+      @render_by_layer_cmd = UI::Command.new("Render By Layer") { 
+        proc = Proc.new { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderByLayer }
+        Plugin.add_event( proc )
+      }
       #@render_by_layer_cmd.small_icon = Plugin.dir + "/lib/resources/icons/DisplayColorByLayer-16x16.png"
       #@render_by_layer_cmd.large_icon = Plugin.dir + "/lib/resources/icons/DisplayColorByLayer-24x24.png"
       @render_by_layer_cmd.tooltip = "Render By Layer"
@@ -429,7 +441,10 @@ module OpenStudio
         result
       }
       
-      @render_by_surface_normal_cmd = UI::Command.new("Render By Surface Normal")  { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderBySurfaceNormal }
+      @render_by_surface_normal_cmd = UI::Command.new("Render By Surface Normal") { 
+        proc = Proc.new { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderBySurfaceNormal }
+        Plugin.add_event( proc )
+      }
       #@render_by_surface_normal_cmd.small_icon = Plugin.dir + "/lib/resources/icons/RenderMode5-16x16.png"
       #@render_by_surface_normal_cmd.large_icon = Plugin.dir + "/lib/resources/icons/RenderMode5-24x24.png"
       @render_by_surface_normal_cmd.tooltip = "Render By Surface Normal"
@@ -446,7 +461,10 @@ module OpenStudio
         result
       }
       
-      @render_by_construction_cmd = UI::Command.new("Render By Construction")  { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderByConstruction }
+      @render_by_construction_cmd = UI::Command.new("Render By Construction") { 
+        proc = Proc.new { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderByConstruction }
+        Plugin.add_event( proc )
+      }
       @render_by_construction_cmd.small_icon = Plugin.dir + "/lib/resources/icons/render_construction_16.png"
       @render_by_construction_cmd.large_icon = Plugin.dir + "/lib/resources/icons/render_construction.png"
       @render_by_construction_cmd.tooltip = "Render By Construction"
@@ -463,7 +481,10 @@ module OpenStudio
         result
       }
       
-      @render_by_space_type_cmd = UI::Command.new("Render By Space Type")  { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderBySpaceType }
+      @render_by_space_type_cmd = UI::Command.new("Render By Space Type") { 
+        proc = Proc.new { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderBySpaceType }
+        Plugin.add_event( proc )
+      }
       @render_by_space_type_cmd.small_icon = Plugin.dir + "/lib/resources/icons/render_space_type_16.png"
       @render_by_space_type_cmd.large_icon = Plugin.dir + "/lib/resources/icons/render_space_type.png"
       @render_by_space_type_cmd.tooltip = "Render By Space Type"
@@ -480,7 +501,10 @@ module OpenStudio
         result
       }
             
-      @render_by_thermal_zone_cmd = UI::Command.new("Render By Thermal Zone")  { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderByThermalZone }
+      @render_by_thermal_zone_cmd = UI::Command.new("Render By Thermal Zone") { 
+        proc = Proc.new { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderByThermalZone }
+        Plugin.add_event( proc )
+      }
       @render_by_thermal_zone_cmd.small_icon = Plugin.dir + "/lib/resources/icons/render_therm_zone_16.png"
       @render_by_thermal_zone_cmd.large_icon = Plugin.dir + "/lib/resources/icons/render_therm_zone.png"
       @render_by_thermal_zone_cmd.tooltip = "Render By Thermal Zone"
@@ -497,7 +521,10 @@ module OpenStudio
         result
       }
       
-      @render_by_building_story_cmd = UI::Command.new("Render By Building Story")  { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderByBuildingStory }
+      @render_by_building_story_cmd = UI::Command.new("Render By Building Story") { 
+        proc = Proc.new { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderByBuildingStory }
+        Plugin.add_event( proc )
+      }
       @render_by_building_story_cmd.small_icon = Plugin.dir + "/lib/resources/icons/render_story_16.png"
       @render_by_building_story_cmd.large_icon = Plugin.dir + "/lib/resources/icons/render_story.png"
       @render_by_building_story_cmd.tooltip = "Render By Building Story"
