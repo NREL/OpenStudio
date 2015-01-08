@@ -286,13 +286,14 @@ module OpenStudio
       return @render_defaults
     end
     
-    def render_defaults=(render_defaults)
-      #Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
-      @render_defaults = render_defaults
-      
-      @model_interface.request_paint
-    end
+    # DLM: can we remove this?
+    #def render_defaults=(render_defaults)
+    #  #Plugin.log(OpenStudio::Trace, "#{current_method_name}")
+    #  
+    #  @render_defaults = render_defaults
+    #  
+    #  @model_interface.request_paint
+    #end
     
     def rendering_mode
       #Plugin.log(OpenStudio::Trace, "#{current_method_name}")
@@ -303,48 +304,53 @@ module OpenStudio
     def rendering_mode=(rendering_mode)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
 
-      if rendering_mode == RenderByConstruction or rendering_mode == RenderBySpaceType
-        if @rendering_mode == rendering_mode
-          # toggle render defaults
-          @render_defaults = (not @render_defaults)
-        else
-          # set render defaults back to true
-          @render_defaults = true
+      proc = Proc.new {
+      
+        if rendering_mode == RenderByConstruction or rendering_mode == RenderBySpaceType
+          if @rendering_mode == rendering_mode
+            # toggle render defaults
+            @render_defaults = (not @render_defaults)
+          else
+            # set render defaults back to true
+            @render_defaults = true
+          end
         end
-      end
-      
-      @rendering_mode = rendering_mode
+        
+        @rendering_mode = rendering_mode
 
-      rendering_options = @model_interface.skp_model.rendering_options
+        rendering_options = @model_interface.skp_model.rendering_options
+        
+        if @rendering_mode == RenderWaiting
+          rendering_options["FaceFrontColor"] = "white"
+          rendering_options["FaceBackColor"] = "white"
+          rendering_options["RenderMode"] = 0  # wire frame
+          rendering_options["DisplayColorByLayer"] = false
+        elsif @rendering_mode == RenderBySurfaceNormal
+          rendering_options["FaceFrontColor"] = "white"
+          rendering_options["FaceBackColor"] = "red"
+          rendering_options["RenderMode"] = 5  # render by front/back
+          rendering_options["DisplayColorByLayer"] = false
+        elsif @rendering_mode == RenderByLayer
+          rendering_options["FaceFrontColor"] = "white"
+          rendering_options["FaceBackColor"] = Sketchup::Color.new(171, 176, 204, 255) # Sketchup default
+          rendering_options["RenderMode"] = 2 # render by material
+          rendering_options["DisplayColorByLayer"] = true
+        else
+          rendering_options["FaceFrontColor"] = "white"
+          rendering_options["FaceBackColor"] = Sketchup::Color.new(171, 176, 204, 255) # Sketchup default
+          rendering_options["RenderMode"] = 2 # render by material
+          rendering_options["DisplayColorByLayer"] = false
+        end
+        
+        dialog_manager = Plugin.dialog_manager
+        if dialog_manager
+          dialog_manager.selection_changed
+        end
+        
+        @model_interface.request_paint
+      }
       
-      if @rendering_mode == RenderWaiting
-        rendering_options["FaceFrontColor"] = "white"
-        rendering_options["FaceBackColor"] = "white"
-        rendering_options["RenderMode"] = 0  # wire frame
-        rendering_options["DisplayColorByLayer"] = false
-      elsif @rendering_mode == RenderBySurfaceNormal
-        rendering_options["FaceFrontColor"] = "white"
-        rendering_options["FaceBackColor"] = "red"
-        rendering_options["RenderMode"] = 5  # render by front/back
-        rendering_options["DisplayColorByLayer"] = false
-      elsif @rendering_mode == RenderByLayer
-        rendering_options["FaceFrontColor"] = "white"
-        rendering_options["FaceBackColor"] = Sketchup::Color.new(171, 176, 204, 255) # Sketchup default
-        rendering_options["RenderMode"] = 2 # render by material
-        rendering_options["DisplayColorByLayer"] = true
-      else
-        rendering_options["FaceFrontColor"] = "white"
-        rendering_options["FaceBackColor"] = Sketchup::Color.new(171, 176, 204, 255) # Sketchup default
-        rendering_options["RenderMode"] = 2 # render by material
-        rendering_options["DisplayColorByLayer"] = false
-      end
-      
-      dialog_manager = Plugin.dialog_manager
-      if dialog_manager
-        dialog_manager.selection_changed
-      end
-      
-      @model_interface.request_paint
+      Plugin.add_event( proc )
      
     end
 

@@ -336,30 +336,30 @@ module OpenStudio
       @show_errors_cmd.status_bar_text = "Show errors and warnings"
       @show_errors_cmd.set_validation_proc { enable_if_model_interface }
       
-      @render_defaults_cmd = UI::Command.new("Render Default Values") {
-        Plugin.model_manager.model_interface.materials_interface.render_defaults = (not Plugin.model_manager.model_interface.materials_interface.render_defaults) }
-      #@render_defaults_cmd.small_icon = Plugin.dir + "/lib/resources/icons/tbRenderTransparentSmall.png"
-      #@render_defaults_cmd.large_icon = Plugin.dir + "/lib/resources/icons/tbRenderTransparentLarge.png"
-      @render_defaults_cmd.tooltip = "Render Default Values"
-      @render_defaults_cmd.status_bar_text = "Render default values"
-      @render_defaults_cmd.set_validation_proc {
-        result = MF_GRAYED
-        if model_manager = Plugin.model_manager
-          if model_interface = model_manager.model_interface
-            rendering_mode = model_interface.materials_interface.rendering_mode 
-            if rendering_mode == RenderByConstruction
-              if (model_interface.materials_interface.render_defaults)
-                result = MF_CHECKED
-              else
-                result = MF_UNCHECKED
-              end
-            else
-              result = MF_GRAYED
-            end
-          end
-        end
-        result
-      }
+      #@render_defaults_cmd = UI::Command.new("Render Default Values") {
+      #  Plugin.model_manager.model_interface.materials_interface.render_defaults = (not Plugin.model_manager.model_interface.materials_interface.render_defaults) }
+      ##@render_defaults_cmd.small_icon = Plugin.dir + "/lib/resources/icons/tbRenderTransparentSmall.png"
+      ##@render_defaults_cmd.large_icon = Plugin.dir + "/lib/resources/icons/tbRenderTransparentLarge.png"
+      #@render_defaults_cmd.tooltip = "Render Default Values"
+      #@render_defaults_cmd.status_bar_text = "Render default values"
+      #@render_defaults_cmd.set_validation_proc {
+      #  result = MF_GRAYED
+      #  if model_manager = Plugin.model_manager
+      #    if model_interface = model_manager.model_interface
+      #      rendering_mode = model_interface.materials_interface.rendering_mode 
+      #      if rendering_mode == RenderByConstruction
+      #        if (model_interface.materials_interface.render_defaults)
+      #          result = MF_CHECKED
+      #        else
+      #          result = MF_UNCHECKED
+      #        end
+      #      else
+      #        result = MF_GRAYED
+      #      end
+      #    end
+      #  end
+      #  result
+      #}
       
       @render_by_class_cmd = UI::Command.new("Render By Surface Type") { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderByClass }
       @render_by_class_cmd.small_icon = Plugin.dir + "/lib/resources/icons/render_surface_class_16.png"
