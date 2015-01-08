@@ -875,6 +875,30 @@ FanVariableVolume::FanVariableVolume(const Model& model, Schedule & schedule)
   setFanPowerCoefficient5(0.0);
 }
 
+FanVariableVolume::FanVariableVolume(const Model& model)
+  : StraightComponent(FanVariableVolume::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::FanVariableVolume_Impl>());
+
+  auto schedule = model.alwaysOnDiscreteSchedule();
+  bool ok = setAvailabilitySchedule(schedule);
+
+  setEndUseSubcategory("");
+  setFanEfficiency(0.6045);
+  setPressureRise(1017.592);
+  autosizeMaximumFlowRate();
+  setFanPowerMinimumFlowRateInputMethod("FixedFlowRate");
+  setFanPowerMinimumFlowFraction(0.0);
+  setFanPowerMinimumAirFlowRate(0.0);
+  setMotorEfficiency(0.93);
+  setMotorInAirstreamFraction(1.0);
+  setFanPowerCoefficient1(0.0407598940);
+  setFanPowerCoefficient2(0.08804497);
+  setFanPowerCoefficient3(-0.072926120);
+  setFanPowerCoefficient4(0.9437398230);
+  setFanPowerCoefficient5(0.0);
+}
+
 IddObjectType FanVariableVolume::iddObjectType() {
   IddObjectType result(IddObjectType::OS_Fan_VariableVolume);
   return result;

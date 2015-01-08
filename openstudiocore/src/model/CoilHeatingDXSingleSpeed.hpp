@@ -59,6 +59,8 @@ class MODEL_API CoilHeatingDXSingleSpeed : public StraightComponent {
                                        Curve& partLoadFractionCorrelationCurve
                                      );
 
+  explicit CoilHeatingDXSingleSpeed(const Model& model);
+
   virtual ~CoilHeatingDXSingleSpeed() {}
 
   //@}

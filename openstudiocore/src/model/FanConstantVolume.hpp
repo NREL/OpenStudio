@@ -45,6 +45,8 @@ class MODEL_API FanConstantVolume : public StraightComponent {
    *  model.  The object is fully initialized with all companion objects. */
   FanConstantVolume(const Model& model,Schedule& s);
 
+  FanConstantVolume(const Model& model);
+
   virtual ~FanConstantVolume() {}
 
   //@}
