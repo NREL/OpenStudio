@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -18,6 +18,8 @@
 **********************************************************************/
 
 #include "WindowMaterialGasMixtureInspectorView.hpp"
+
+#include "StandardsInformationMaterialWidget.hpp"
 
 #include "../shared_gui_components/OSComboBox.hpp"
 #include "../shared_gui_components/OSIntegerEdit.hpp"
@@ -39,17 +41,6 @@ namespace openstudio {
 
 WindowMaterialGasMixtureInspectorView::WindowMaterialGasMixtureInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
   : ModelObjectInspectorView(model, true, parent),
-    m_gas1Type(nullptr),
-    m_gas2Type(nullptr),
-    m_gas3Type(nullptr),
-    m_gas4Type(nullptr),
-    m_nameEdit(nullptr),
-    m_thickness(nullptr),
-    m_numberOfGasesInMixture(nullptr),
-    m_gas1Fraction(nullptr),
-    m_gas2Fraction(nullptr),
-    m_gas3Fraction(nullptr),
-    m_gas4Fraction(nullptr),
     m_isIP(isIP)
 {
   createLayout();
@@ -57,31 +48,45 @@ WindowMaterialGasMixtureInspectorView::WindowMaterialGasMixtureInspectorView(boo
 
 void WindowMaterialGasMixtureInspectorView::createLayout()
 {
+  QWidget* hiddenWidget = new QWidget();
+  this->stackedWidget()->addWidget(hiddenWidget);
+
   QWidget* visibleWidget = new QWidget();
   this->stackedWidget()->addWidget(visibleWidget);
 
   QGridLayout* mainGridLayout = new QGridLayout();
-  mainGridLayout->setContentsMargins(7,7,7,7);
+  mainGridLayout->setContentsMargins(7, 7, 7, 7);
   mainGridLayout->setSpacing(14);
   visibleWidget->setLayout(mainGridLayout);
 
-  unsigned row = 0;
-  unsigned col = 0;
+  int row = mainGridLayout->rowCount();
+
+  QLabel * label = nullptr;
 
   // Name
 
-  QLabel * label = new QLabel("Name: ");
+  label = new QLabel("Name: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  mainGridLayout->addWidget(label, row, 0);
+
+  ++row;
 
   m_nameEdit = new OSLineEdit();
-  mainGridLayout->addWidget(m_nameEdit,row++,0,1,3);
+  mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
+
+  ++row;
+
+  // Standards Information
+
+  m_standardsInformationWidget = new StandardsInformationMaterialWidget(m_isIP, mainGridLayout, row);
+
+  ++row;
 
   // Thickness
 
   label = new QLabel("Thickness: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_thickness = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialGasMixtureInspectorView::toggleUnitsClicked, m_thickness, &OSQuantityEdit::onUnitSystemChange);
@@ -91,7 +96,7 @@ void WindowMaterialGasMixtureInspectorView::createLayout()
 
   label = new QLabel("Number Of Gases In Mixture: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_numberOfGasesInMixture = new OSIntegerEdit();
   mainGridLayout->addWidget(m_numberOfGasesInMixture,row++,0,1,3);
@@ -102,7 +107,7 @@ void WindowMaterialGasMixtureInspectorView::createLayout()
 
   label = new QLabel("Gas 1 Fraction: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_gas1Fraction = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialGasMixtureInspectorView::toggleUnitsClicked, m_gas1Fraction, &OSQuantityEdit::onUnitSystemChange);
@@ -112,7 +117,7 @@ void WindowMaterialGasMixtureInspectorView::createLayout()
 
   label = new QLabel("Gas 1 Type: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_gas1Type = new OSComboBox();
   m_gas1Type->addItem("Air");
@@ -128,7 +133,7 @@ void WindowMaterialGasMixtureInspectorView::createLayout()
 
   label = new QLabel("Gas 2 Fraction: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_gas2Fraction = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialGasMixtureInspectorView::toggleUnitsClicked, m_gas2Fraction, &OSQuantityEdit::onUnitSystemChange);
@@ -138,7 +143,7 @@ void WindowMaterialGasMixtureInspectorView::createLayout()
 
   label = new QLabel("Gas 2 Type: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_gas2Type = new OSComboBox();
   m_gas2Type->addItem("Air");
@@ -153,7 +158,7 @@ void WindowMaterialGasMixtureInspectorView::createLayout()
 
   label = new QLabel("Gas 3 Fraction: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_gas3Fraction = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialGasMixtureInspectorView::toggleUnitsClicked, m_gas3Fraction, &OSQuantityEdit::onUnitSystemChange);
@@ -163,7 +168,7 @@ void WindowMaterialGasMixtureInspectorView::createLayout()
 
   label = new QLabel("Gas 3 Type: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_gas3Type = new OSComboBox();
   m_gas3Type->addItem("Air");
@@ -178,7 +183,7 @@ void WindowMaterialGasMixtureInspectorView::createLayout()
 
   label = new QLabel("Gas 4 Fraction: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_gas4Fraction = new OSQuantityEdit(m_isIP);
   connect(this, &WindowMaterialGasMixtureInspectorView::toggleUnitsClicked, m_gas4Fraction, &OSQuantityEdit::onUnitSystemChange);
@@ -188,7 +193,7 @@ void WindowMaterialGasMixtureInspectorView::createLayout()
 
   label = new QLabel("Gas 4 Type: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  mainGridLayout->addWidget(label,row++,0);
 
   m_gas4Type = new OSComboBox();
   m_gas4Type->addItem("Air");
@@ -239,6 +244,8 @@ void WindowMaterialGasMixtureInspectorView::attach(openstudio::model::GasMixture
   m_gas3Fraction->bind(gasMixture,"gas3Fraction",m_isIP);
   m_gas4Fraction->bind(gasMixture,"gas4Fraction",m_isIP);
 
+  m_standardsInformationWidget->attach(gasMixture);
+
   this->stackedWidget()->setCurrentIndex(1);
 }
 
@@ -259,15 +266,12 @@ void WindowMaterialGasMixtureInspectorView::detach()
   m_gas2Fraction->unbind();
   m_gas3Fraction->unbind();
   m_gas4Fraction->unbind();
+
+  m_standardsInformationWidget->detach();
 }
 
 void WindowMaterialGasMixtureInspectorView::refresh()
 {
-}
-
-void WindowMaterialGasMixtureInspectorView::toggleUnits(bool displayIP)
-{
-  m_isIP = displayIP;
 }
 
 } // openstudio

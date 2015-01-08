@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -22,8 +22,6 @@ require("openstudio/sketchup_plugin/lib/GbXMLImporter")
 require("openstudio/sketchup_plugin/lib/SddImporter")
 require("openstudio/sketchup_plugin/lib/OpenStudioImporter")
 require("openstudio/sketchup_plugin/lib/dialogs/PluginInspectorDialog")
-require("openstudio/sketchup_plugin/lib/dialogs/RunSimulationInterface")
-require("openstudio/sketchup_plugin/lib/dialogs/RenderingSettingsInterface")
 require("openstudio/sketchup_plugin/lib/dialogs/ColorScaleInterface")
 require("openstudio/sketchup_plugin/lib/dialogs/AnimationSettingsInterface")
 require("openstudio/sketchup_plugin/lib/dialogs/PreferencesInterface")
@@ -39,7 +37,6 @@ require("openstudio/sketchup_plugin/lib/tools/NewGlareSensorTool")
 require("openstudio/sketchup_plugin/lib/tools/NewIlluminanceMapTool")
 require("openstudio/sketchup_plugin/lib/tools/NewLuminaireTool")
 require("openstudio/sketchup_plugin/lib/tools/NewSpaceTool")
-require("openstudio/sketchup_plugin/lib/observers/ErrorObserver")  # This is hopefully only a temporary location
 
 module OpenStudio
 
@@ -55,7 +52,7 @@ module OpenStudio
     attr_accessor :new_daylighting_cmd, :new_illuminance_cmd, :new_luminaire_cmd, :new_glare_cmd
     attr_accessor :surface_matching_cmd, :loose_geometry_cmd
     attr_accessor :inspector_dialog_cmd, :surface_search_cmd, :info_tool_cmd, :show_errors_cmd
-    attr_accessor :run_cmd, :resultsviewer_cmd, :openstudio_cmd
+    attr_accessor :openstudio_cmd
     attr_accessor :anim_settings_cmd, :rwd_to_start_cmd, :rwd_anim_cmd, :play_anim_cmd, :fwd_anim_cmd, :fwd_to_end_cmd
     attr_accessor :logging_cmd, :start_profile_cmd, :stop_profile_cmd, :mem_profile_cmd
     
@@ -123,9 +120,6 @@ module OpenStudio
       @new_cmd.tooltip = "New OpenStudio Model"
       @new_cmd.status_bar_text = "Create a new OpenStudio model"
       @new_cmd.set_validation_proc { 
-        
-        # kludge to run error checking for ruby script errors in the plugin, only need this in one validation proc
-        detect_errors
 
         result = MF_GRAYED
         if model_manager = Plugin.model_manager
@@ -402,8 +396,8 @@ module OpenStudio
       }
 
       @render_by_boundary_cmd = UI::Command.new("Render By Boundary") { Plugin.model_manager.model_interface.materials_interface.rendering_mode = RenderByBoundary }
-      @render_by_boundary_cmd.small_icon = Plugin.dir + "/lib/resources/icons/render_boundry_16.png"
-      @render_by_boundary_cmd.large_icon = Plugin.dir + "/lib/resources/icons/render_boundry.png"
+      @render_by_boundary_cmd.small_icon = Plugin.dir + "/lib/resources/icons/render_boundary_16.png"
+      @render_by_boundary_cmd.large_icon = Plugin.dir + "/lib/resources/icons/render_boundary.png"
       @render_by_boundary_cmd.tooltip = "Render By Boundary Condition"
       @render_by_boundary_cmd.status_bar_text = "Render objects by boundary condition"
       @render_by_boundary_cmd.set_validation_proc {
@@ -527,20 +521,6 @@ module OpenStudio
       @color_scale_cmd.status_bar_text = "Show color scale window"
       @color_scale_cmd.set_validation_proc { Plugin.dialog_manager.validate(ColorScaleInterface) if (Plugin.dialog_manager) }
 
-      @run_cmd = UI::Command.new("Run Simulation") { Plugin.dialog_manager.show(RunSimulationInterface) }
-      @run_cmd.small_icon = Plugin.dir + "/lib/resources/icons/RunManager-16.png"
-      @run_cmd.large_icon = Plugin.dir + "/lib/resources/icons/RunManager-24.png"
-      @run_cmd.tooltip = "Run Simulation"
-      @run_cmd.status_bar_text = "Run simulation"
-      @run_cmd.set_validation_proc { Plugin.dialog_manager.validate(RunSimulationInterface) if (Plugin.dialog_manager) }
-
-      @resultsviewer_cmd = UI::Command.new("View Results") { Plugin.dialog_manager.show(RenderingSettingsInterface) }
-      @resultsviewer_cmd.small_icon = Plugin.dir + "/lib/resources/icons/ResultsViewer-16.png"
-      @resultsviewer_cmd.large_icon = Plugin.dir + "/lib/resources/icons/ResultsViewer-24.png"
-      @resultsviewer_cmd.tooltip = "View Results"
-      @resultsviewer_cmd.status_bar_text = "View simulation results"
-      @resultsviewer_cmd.set_validation_proc { Plugin.dialog_manager.validate(RenderingSettingsInterface) if (Plugin.dialog_manager) }
-      
       @openstudio_cmd = UI::Command.new("Launch Openstudio") do
         if Plugin.command_manager.save_openstudio
           openstudio_path = Plugin.model_manager.model_interface.openstudio_path
@@ -563,17 +543,17 @@ module OpenStudio
       @openstudio_cmd.status_bar_text = "Launch Openstudio"
       @openstudio_cmd.set_validation_proc { enable_if_model_interface }
       
-      @online_help_cmd = UI::Command.new("Online Help") { UI.openURL("http://openstudio.nrel.gov/google-sketchup-plug-getting-started")  }
+      @online_help_cmd = UI::Command.new("Online Help") { UI.openURL("http://nrel.github.io/OpenStudio-user-documentation/next_steps/sketchup_plugin_interface/")  }
       @online_help_cmd.small_icon = Plugin.dir + "/lib/resources/icons/Help-16.png"
       @online_help_cmd.large_icon = Plugin.dir + "/lib/resources/icons/Help-24.png"
       @online_help_cmd.tooltip = "Online OpenStudio Help"
       @online_help_cmd.status_bar_text = "View the Online OpenStudio Help"
       @online_help_cmd.set_validation_proc { MF_ENABLED } 
       
-      @forum_cmd = UI::Command.new("Forum") { UI.openURL("http://openstudio.nrel.gov/forum") }
+      @forum_cmd = UI::Command.new("Forum") { UI.openURL("https://www.openstudio.net/forum") }
       @forum_cmd.set_validation_proc { MF_ENABLED } 
 
-      @contact_cmd = UI::Command.new("Contact Us") { UI.openURL("http://openstudio.nrel.gov/webmaster") }
+      @contact_cmd = UI::Command.new("Contact Us") { UI.openURL("https://www.openstudio.net/contact") }
       @contact_cmd.set_validation_proc { MF_ENABLED }
 
       # Shortcuts for SketchUp Commands
@@ -778,9 +758,6 @@ module OpenStudio
       
       @plugin_menu.add_separator
       @plugin_menu.add_item(@openstudio_cmd)
-      # turned off run in GUI but left code behind
-      # @plugin_menu.add_item(@run_cmd)
-      # @plugin_menu.add_item(@resultsviewer_cmd)
       
       @plugin_menu.add_separator
       

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,16 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/EvaporativeCoolerIndirectResearchSpecial.hpp>
-#include <model/EvaporativeCoolerIndirectResearchSpecial_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/EvaporativeCoolerIndirectResearchSpecial.hpp"
+#include "../../model/EvaporativeCoolerIndirectResearchSpecial_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/core/Logger.hpp"
 #include <utilities/idd/EvaporativeCooler_Indirect_ResearchSpecial_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 

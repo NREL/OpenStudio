@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -228,6 +228,7 @@
 #include "SetpointManagerSingleZoneHumidityMinimum.hpp"
 #include "SetpointManagerSingleZoneReheat.hpp"
 #include "SetpointManagerWarmest.hpp"
+#include "SetpointManagerWarmestTemperatureFlow.hpp"
 #include "Shade.hpp"
 #include "ShadingControl.hpp"
 #include "ShadingSurface.hpp"
@@ -251,6 +252,7 @@
 #include "StandardGlazing.hpp"
 #include "StandardOpaqueMaterial.hpp"
 #include "StandardsInformationConstruction.hpp"
+#include "StandardsInformationMaterial.hpp"
 #include "SteamEquipment.hpp"
 #include "SteamEquipmentDefinition.hpp"
 #include "SubSurface.hpp"
@@ -259,7 +261,6 @@
 #include "ThermalZone.hpp"
 #include "ThermostatSetpointDualSetpoint.hpp"
 #include "ThermochromicGlazing.hpp"
-#include "TimeDependentValuation.hpp"
 #include "Timestep.hpp"
 #include "UtilityBill.hpp"
 #include "UtilityCost_Charge_Block.hpp"
@@ -508,6 +509,7 @@
 #include "SetpointManagerSingleZoneHumidityMinimum_Impl.hpp"
 #include "SetpointManagerSingleZoneReheat_Impl.hpp"
 #include "SetpointManagerWarmest_Impl.hpp"
+#include "SetpointManagerWarmestTemperatureFlow_Impl.hpp"
 #include "Shade_Impl.hpp"
 #include "ShadingControl_Impl.hpp"
 #include "ShadingSurface_Impl.hpp"
@@ -531,6 +533,7 @@
 #include "StandardGlazing_Impl.hpp"
 #include "StandardOpaqueMaterial_Impl.hpp"
 #include "StandardsInformationConstruction_Impl.hpp"
+#include "StandardsInformationMaterial_Impl.hpp"
 #include "SteamEquipment_Impl.hpp"
 #include "SteamEquipmentDefinition_Impl.hpp"
 #include "SubSurface_Impl.hpp"
@@ -539,7 +542,6 @@
 #include "ThermalZone_Impl.hpp"
 #include "ThermochromicGlazing_Impl.hpp"
 #include "ThermostatSetpointDualSetpoint_Impl.hpp"
-#include "TimeDependentValuation_Impl.hpp"
 #include "Timestep_Impl.hpp"
 #include "UtilityBill_Impl.hpp"
 #include "UtilityCost_Charge_Block_Impl.hpp"

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -36,7 +36,6 @@
 #include "../../../utilities/core/System.hpp"
 #include "../../../utilities/core/Path.hpp"
 
-#include <utilities/idd/OS_TimeDependentValuation_FieldEnums.hxx>
 #include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
 
 #include <boost/filesystem/path.hpp>

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@ IdfObjectWatcher::IdfObjectWatcher(const IdfObject& idfObject)
   : m_enabled(true), m_dirty(false), m_dataChanged(false), m_nameChanged(false)
 {
   // make sure a QApplication exists
-  openstudio::Application::instance().application();
+  openstudio::Application::instance().application(false);
   
   detail::IdfObject_ImplPtr objectImpl = idfObject.getImpl<detail::IdfObject_Impl>();
   connect(objectImpl.get(), &detail::IdfObject_Impl::onChange, this, &IdfObjectWatcher::change);

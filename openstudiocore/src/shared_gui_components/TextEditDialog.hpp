@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_TEXTEDITDIALOG_H
-#define OPENSTUDIO_TEXTEDITDIALOG_H
+#ifndef SHAREDGUICOMPONENTS_TEXTEDITDIALOG_HPP
+#define SHAREDGUICOMPONENTS_TEXTEDITDIALOG_HPP
 
-#include <shared_gui_components/OSDialog.hpp>
+#include "OSDialog.hpp"
 
 class QTextEdit;
 
@@ -42,8 +42,6 @@ public:
 
   void setText(const QString & text);
 
-  QSize sizeHint() const;
-
 private:
 
   virtual void createWidgets();
@@ -56,4 +54,4 @@ private:
 
 } // openstudio
 
-#endif // OPENSTUDIO_TEXTEDITDIALOG_H
+#endif // SHAREDGUICOMPONENTS_TEXTEDITDIALOG_HPP

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -117,6 +117,7 @@ namespace openstudio {
       void treeChanged(const openstudio::UUID &t_uuid);
       void on_radianceWarningsAndErrorsClicked(bool checked);
       void on_radianceGroupClicked(int idx);
+      void requestStartRunManager();
 
     private:
       REGISTER_LOGGER("openstudio::RunView");

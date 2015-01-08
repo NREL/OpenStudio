@@ -1,0 +1,80 @@
+
+OS:Version,
+  {7a48d031-720e-4dce-8fd6-34454c52344f}, !- Handle
+  1.5.2;                                  !- Version Identifier
+
+OS:Construction,
+  {6abb1ff9-756c-4e12-9b65-b066664eaa97}, !- Handle
+  Exterior Wall,                          !- Name
+  ,                                       !- Surface Rendering Name
+  {65ac15cc-1654-4e91-a422-d04bb23c310f}, !- Layer 1
+  {978d8262-17f8-4e63-8191-3a3f46239dba}, !- Layer 2
+  {53e4edf3-dd74-4f1f-8812-1a97e21b6d6f}, !- Layer 3
+  {759a51d8-f5f9-4f27-bc1f-b1ee1d93b4dc}, !- Layer 4
+  {6204a8fb-ca45-481a-b5e8-aae81eeb4b4f}; !- Layer 5
+
+OS:Material,
+  {65ac15cc-1654-4e91-a422-d04bb23c310f}, !- Handle
+  M01 100mm brick,                        !- Name
+  MediumRough,                            !- Roughness
+  0.1016,                                 !- Thickness {m}
+  0.89,                                   !- Conductivity {W/m-K}
+  1920,                                   !- Density {kg/m3}
+  790;                                    !- Specific Heat {J/kg-K}
+
+OS:Material,
+  {978d8262-17f8-4e63-8191-3a3f46239dba}, !- Handle
+  M15 200mm heavyweight concrete,         !- Name
+  MediumRough,                            !- Roughness
+  0.2032,                                 !- Thickness {m}
+  1.95,                                   !- Conductivity {W/m-K}
+  2240,                                   !- Density {kg/m3}
+  900;                                    !- Specific Heat {J/kg-K}
+
+OS:Material,
+  {53e4edf3-dd74-4f1f-8812-1a97e21b6d6f}, !- Handle
+  I02 50mm insulation board,              !- Name
+  MediumRough,                            !- Roughness
+  0.0508,                                 !- Thickness {m}
+  0.03,                                   !- Conductivity {W/m-K}
+  43,                                     !- Density {kg/m3}
+  1210;                                   !- Specific Heat {J/kg-K}
+
+OS:Material:AirGap,
+  {759a51d8-f5f9-4f27-bc1f-b1ee1d93b4dc}, !- Handle
+  F04 Wall air space resistance,          !- Name
+  0.15;                                   !- Thermal Resistance {m2-K/W}
+
+OS:Material,
+  {6204a8fb-ca45-481a-b5e8-aae81eeb4b4f}, !- Handle
+  G01a 19mm gypsum board,                 !- Name
+  MediumSmooth,                           !- Roughness
+  0.019,                                  !- Thickness {m}
+  0.16,                                   !- Conductivity {W/m-K}
+  800,                                    !- Density {kg/m3}
+  1090;                                   !- Specific Heat {J/kg-K}
+
+OS:StandardsInformation:Construction,
+  {28694c26-68b0-49c3-9a9f-ba0e9e8b9112}, !- Handle
+  {6abb1ff9-756c-4e12-9b65-b066664eaa97}, !- Construction Name
+  ,                                       !- Intended Surface Type
+  ,                                       !- Standards Construction Type
+  2,                                      !- Perturbable Layer
+  Insulation,                             !- Perturbable Layer Type
+  ;                                       !- Other Perturbable Layer Type
+
+OS:ComponentData,
+  {1b9b7ad7-7b26-47c2-b457-9fe2ccbae917}, !- Handle
+  Component Data 1,                       !- Name
+  {e0ac6f95-d8e6-4d31-b2b3-8343a98ee1e4}, !- UUID
+  {7968b8eb-c94f-44e0-816d-7955e6b8e895}, !- Version UUID
+  1415135796,                             !- Creation Timestamp
+  1415135796,                             !- Version Timestamp
+  {6abb1ff9-756c-4e12-9b65-b066664eaa97}, !- Name of Object 1
+  {65ac15cc-1654-4e91-a422-d04bb23c310f}, !- Name of Object 2
+  {978d8262-17f8-4e63-8191-3a3f46239dba}, !- Name of Object 3
+  {53e4edf3-dd74-4f1f-8812-1a97e21b6d6f}, !- Name of Object 4
+  {759a51d8-f5f9-4f27-bc1f-b1ee1d93b4dc}, !- Name of Object 5
+  {6204a8fb-ca45-481a-b5e8-aae81eeb4b4f}, !- Name of Object 6
+  {28694c26-68b0-49c3-9a9f-ba0e9e8b9112}; !- Name of Object 7
+

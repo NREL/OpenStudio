@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -71,6 +71,8 @@ InspectorController::InspectorController()
 
   auto isConnected = connect(m_inspectorView, SIGNAL(removeButtonClicked(bool)), this, SIGNAL(removeButtonClicked(bool)));
   OS_ASSERT(isConnected);
+
+  connect(m_inspectorView, &InspectorView::workspaceObjectRemoved, this, &InspectorController::workspaceObjectRemoved);
 
   connect(m_inspectorView, &InspectorView::addZoneClicked, this, &InspectorController::addBranchForZone);
 
@@ -277,7 +279,7 @@ void InspectorController::removeFromLoop(model::Loop & loop, boost::optional<mod
   }
 }
 
-void InspectorController:: toggleUnits(bool displayIP)
+void InspectorController::toggleUnits(bool displayIP)
 {
 }
 

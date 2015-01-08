@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -76,6 +76,7 @@
 #include "../utilities/core/ZipFile.hpp"
 
 #include <OpenStudio.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include <boost/filesystem.hpp>
 
@@ -1826,7 +1827,7 @@ namespace detail {
     if (modelVersion.get() > VersionString(openStudioVersion())) {
       LOG(Error,"Version '" << modelVersion.get().str() << "' extracted from file '"
           << toString(modelPath) << "' is not supported by OpenStudio Version "
-          << openStudioVersion() << ". Please check http://openstudio.nrel.gov for updates.");
+          << openStudioVersion() << ". Please check https://www.openstudio.net for updates.");
     }
 
     return false;

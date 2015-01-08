@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -52,6 +52,9 @@ void OSLoadNamePixmapLineEdit::createWidgets()
   m_lineEdit = new OSLineEdit2();
 
   bool isConnected = connect(m_lineEdit, SIGNAL(itemClicked(OSItem*)), this, SIGNAL(itemClicked(OSItem*)));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(m_lineEdit, SIGNAL(objectRemoved(boost::optional<model::ParentObject>)), this, SIGNAL(objectRemoved(boost::optional<model::ParentObject>)));
   OS_ASSERT(isConnected);
 
   auto layout = new QHBoxLayout();

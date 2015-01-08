@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -24,10 +24,11 @@
 #include "IddObjectProperties.hpp"
 #include "IddFieldProperties.hpp"
 #include "IddField.hpp"
-#include <utilities/idd/IddEnums.hxx>
 
 #include "../core/Logger.hpp"
 #include "../core/Containers.hpp"
+
+#include "IddEnums.hpp"
 
 #include <string>
 #include <ostream>

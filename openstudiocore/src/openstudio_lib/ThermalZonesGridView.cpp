@@ -1,21 +1,21 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
- *  All rights reserved.
- *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
- *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  All rights reserved.
+*
+*  This library is free software; you can redistribute it and/or
+*  modify it under the terms of the GNU Lesser General Public
+*  License as published by the Free Software Foundation; either
+*  version 2.1 of the License, or (at your option) any later version.
+*
+*  This library is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+*  Lesser General Public License for more details.
+*
+*  You should have received a copy of the GNU Lesser General Public
+*  License along with this library; if not, write to the Free Software
+*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+**********************************************************************/
 
 #include "ThermalZonesGridView.hpp"
 
@@ -47,7 +47,7 @@
 #include "../model/ZoneHVACComponent.hpp"
 #include "../model/ZoneHVACComponent_Impl.hpp"
 
-
+#include "../utilities/idd/IddEnums.hxx"
 #include "../utilities/idd/OS_ThermalZone_FieldEnums.hxx"
 
 #include <QBoxLayout>
@@ -118,7 +118,7 @@ ThermalZonesGridView::ThermalZonesGridView(bool isIP, const model::Model & model
   std::vector<model::ThermalZone> thermalZones = model.getModelObjects<model::ThermalZone>();
   std::vector<model::ModelObject> thermalZoneModelObjects = subsetCastVector<model::ModelObject>(thermalZones);
 
-  ThermalZonesGridController * thermalZonesGridController  = new ThermalZonesGridController(m_isIP, "Thermal Zones", model, thermalZoneModelObjects);
+  ThermalZonesGridController * thermalZonesGridController = new ThermalZonesGridController(m_isIP, "Thermal Zones", IddObjectType::OS_ThermalZone, model, thermalZoneModelObjects);
   OSGridView * gridView = new OSGridView(thermalZonesGridController, "Thermal Zones", "Drop\nZone", false, parent);
 
   bool isConnected = false;
@@ -153,9 +153,10 @@ ThermalZonesGridView::ThermalZonesGridView(bool isIP, const model::Model & model
 
 ThermalZonesGridController::ThermalZonesGridController(bool isIP,
   const QString & headerText,
+  IddObjectType iddObjectType,
   model::Model model,
   std::vector<model::ModelObject> modelObjects) :
-  OSGridController(isIP, headerText, model, modelObjects)
+  OSGridController(isIP, headerText, iddObjectType, model, modelObjects)
 {
   setCategoriesAndFields();
 }
@@ -598,6 +599,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
       );
 
       addNameLineEditColumn(QString(ZONEEQUIPMENT),
+        true,
         CastNullAdapter<model::ModelObject>(&model::ModelObject::name),
         CastNullAdapter<model::ModelObject>(&model::ModelObject::setName),
         boost::optional<std::function<void(model::ModelObject *)>>(
@@ -618,6 +620,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
 
     }else if(field == NAME){
       addNameLineEditColumn(QString(NAME),
+                            false,
                             CastNullAdapter<model::ThermalZone>(&model::ThermalZone::name),
                             CastNullAdapter<model::ThermalZone>(&model::ThermalZone::setName),
                             boost::optional<std::function<void (model::ThermalZone *)>>());
@@ -626,6 +629,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
       // Notes: this only requires a static_cast because `name` comes from IdfObject
       // we are passing in an empty std::function for the separate parameter because there's no way to set it
       addNameLineEditColumn(QString(AIRLOOPNAME),
+                            true,
                             ProxyAdapter(static_cast<boost::optional<std::string> (model::AirLoopHVAC::*)(bool) const>(&model::AirLoopHVAC::name), 
                               &model::ThermalZone::airLoopHVAC, boost::optional<std::string>("None")),
                             std::function<boost::optional<std::string>(model::HVACComponent*, const std::string &)>(),

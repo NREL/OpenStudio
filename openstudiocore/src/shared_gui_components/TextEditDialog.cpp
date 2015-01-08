@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -17,13 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <shared_gui_components/TextEditDialog.hpp>
+#include "TextEditDialog.hpp"
 
 #include <QBoxLayout>
 #include <QPushButton>
+#include <QScrollArea>
 #include <QSizePolicy>
 #include <QTextEdit>
-#include <QBoxLayout>
 
 namespace openstudio {
 
@@ -52,11 +52,6 @@ void TextEditDialog::setText(const QString & text)
   m_textEdit->setText(text);
 }
 
-QSize TextEditDialog::sizeHint() const
-{
-  return QSize(500,100);
-}
-
 void TextEditDialog::createWidgets()
 {
   m_textEdit = new QTextEdit(m_windowMessage);
@@ -73,7 +68,7 @@ void TextEditDialog::createWidgets()
 
   #ifdef Q_OS_MAC
     setWindowFlags(Qt::FramelessWindowHint);
-  #elif defined(Q_OS_WIN32)
+  #elif defined(Q_OS_WIN)
     setWindowFlags(Qt::WindowCloseButtonHint);
   #endif
 

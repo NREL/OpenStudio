@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -25,18 +25,20 @@
 
 #include "../model/Building.hpp"
 
-class QLabel;
-class QPushButton;
 class QColor;
 class QComboBox;
+class QLabel;
+class QPushButton;
 
 namespace openstudio {
 
-class OSDropZone;
-class OSLineEdit;
 class OSComboBox;
+class OSDropZone;
+class OSIntegerEdit2;
+class OSLineEdit;
+class OSQuantityEdit2;
 class OSQuantityEdit;
-
+class OSSwitch2;
 
 class BuildingSpaceTypeVectorController : public ModelObjectVectorController
 {
@@ -144,7 +146,12 @@ class BuildingInspectorView : public ModelObjectInspectorView
     BuildingDefaultScheduleSetVectorController* m_defaultScheduleSetVectorController;
     OSDropZone* m_defaultScheduleSetDropZone;
     OSQuantityEdit* m_northAxisEdit;
-    //OSQuantityEdit* m_floorToFloorHeightEdit;
+    OSIntegerEdit2* m_numberLivingUnits;
+    OSIntegerEdit2* m_numberStories;
+    OSIntegerEdit2* m_numberAboveGroundStories;
+    OSSwitch2* m_relocatable;
+    OSQuantityEdit2 * m_floorToCeilingHeight = nullptr;
+    OSQuantityEdit2 * m_floorToFloorHeight = nullptr;
     bool m_isIP;
 
   public slots:

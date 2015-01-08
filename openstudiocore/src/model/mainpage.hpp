@@ -1,20 +1,11 @@
 namespace openstudio {
 namespace model {
 
-// ETH@20110621 - \ref is BROKEN with GENERATE_TREEVIEW = ALL or YES in Doxyfile.in. \ref generates
-// links to main.html#..., but the actual page is index.html. This bug may be Doxygen version-
-// specific. I am using Doxygen 1.7.4. So, may be fixed by using previous version of Doxygen,
-// or by find-replacing main.html/index.html at the end of the _doc targets (CMake hacky-fix).
-// Is also fixed by GENERATE_TREEVIEW to any other option, but then we lose the Class Hierarchy :(.
-
-// ETH@20110622 - This bug is documented at https://bugzilla.gnome.org/show_bug.cgi?id=642289. The
-// suggested workaround doesn't seem to work.
-
 /** \mainpage OpenStudio Model
  *
- *  \section overview_sec Overview
+ *  \section overview_model Overview
  *  
- *  An OpenStudio Model (\ref introduction_sec) represents a single building energy model, 
+ *  An OpenStudio Model (\ref introduction_model) represents a single building energy model, 
  *  either complete (simulatable with EnergyPlus) or partial. It is composed of a collection of 
  *  \link ModelObject ModelObjects \endlink (\ref modelobject), which are polymorphic, that is,
  *  ModelObject is the base class from which more specific object types are derived. Each leaf of 
@@ -157,7 +148,7 @@ namespace model {
  *  \li \link ConcreteModelObjects.hpp Alphabetical List of Concrete ModelObjects \endlink
  *  \li \ref modelobject_hierachy "Concrete ModelObjects in Parent-Child Tree" 
  *
- *  \section introduction_sec What is the Openstudio Model?
+ *  \section introduction_model What is the Openstudio Model?
  *
  *  The OpenStudio Model is a hierarchical, object-oriented model of a partial or complete building
  *  that exists to support annual energy and other simulations and related analyses. Complete
@@ -169,7 +160,7 @@ namespace model {
  *  utilities documentation), which provides a basic interface to the EnergyPlus SQLite output. Once
  *  the basic connection to an output file is established, intuitive interfaces to specific pieces of
  *  output data are provided at the object level. For instance, see Facility, ThermalZone,
- *  TimeDependentValuation, and \ref modelobjectOutputDataAccessMethods.
+ *  and \ref modelobjectOutputDataAccessMethods.
  *
  *  \subsection underlying_data Foundation: Data Model
  *
@@ -416,7 +407,7 @@ namespace model {
  *  \subsubsection urlFields URL Fields
  *
  *  The OpenStudio IDD introduces the '\\type url' field to help with locating files other than the
- *  OSM on which a simulation depends. (See WeatherFile and TimeDependentValuation, for instance.)
+ *  OSM on which a simulation depends. (See WeatherFile for instance.)
  *  RunManager provides functionality to normalize url fields at job creation time.  RunManager
  *  looks for the file across all URLSearchPaths (see utilities documentation) passed in to the
  *  job creation. In this process, if the referenced file can be found, RunManager ensures that the
@@ -656,7 +647,6 @@ namespace model {
  *          </ul>
  *        <li> LightingDesignDay (ModelObject)
  *        <li> SkyTemperature (ModelObject) – wraps 'OS:WeatherProperty:SkyTemperature'
- *        <li> TimeDependentValuation (ModelObject, unique)
  *        <li> SiteGroundReflectance (ModelObject, unique)
  *        <li> SiteGroundTemperatureBuildingSurface (ModelObject, unique)
  *        <li> SiteWaterMainsTemperature (ModelObject, unique)

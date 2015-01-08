@@ -1,4 +1,4 @@
-!IDD_Version 1.5.1
+!IDD_Version 1.5.5
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -1279,50 +1279,6 @@ OS:SizingPeriod:WeatherFileDays,
        \key Yes
        \key No
 
-OS:TimeDependentValuation,
-       \unique-object
-       \url-object
-       \extensible:3
-       \min-fields 8
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2, \field Name
-       \type alpha
-       \required-field
-  A3, \field Url
-       \type url
-       \required-field
-       \retaincase
-  A5, \field Checksum
-       \type alpha
-  A6, \field Active Building Sector
-       \type choice
-       \default Commercial
-       \key Commercial
-       \key Residential
-  A7, \field Available Fuel Type
-       \type choice
-       \required-field
-       \begin-extensible
-       \key Electricity
-       \key NaturalGas
-       \key Gasoline
-       \key Diesel
-       \key FuelOil_1
-       \key FuelOil_2
-       \key Propane
-       \key Water
-       \key Steam
-       \key DistrictCooling
-       \key DistrictHeating
-  N1, \field Commercial Column Index For Fuel Type
-       \type integer
-       \minimum 0
-  N2; \field Residential Column Index For Fuel Type
-       \type integer
-       \minimum 0
-
 OS:UtilityCost:Charge:Block,
        \extensible:2
        \min-fields 1
@@ -1809,16 +1765,19 @@ OS:BuildingStory,
        \type real
        \units m
        \minimum> 0
-       \default 3.0
   A3, \field Default Construction Set Name
        \type object-list
        \object-list DefaultConstructionSetNames
   A4, \field Default Schedule Set Name
        \type object-list
        \object-list DefaultScheduleSetNames
-  A5; \field Group Rendering Name
+  A5, \field Group Rendering Name
        \type object-list
        \object-list GroupRenderingNames
+  N3; \field Nominal Floor to Ceiling Height
+       \type real
+       \units m
+       \minimum> 0
 
 OS:DefaultConstructionSet,
        \min-fields 11
@@ -3076,7 +3035,53 @@ OS:WindowMaterial:SimpleGlazingSystem,
        \type real
        \minimum> 0
        \maximum< 1
-
+       
+OS:StandardsInformation:Material,
+       \min-fields 2
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Material Name
+       \type object-list
+       \required-field
+       \object-list MaterialNames
+  A3, \field Material Standard
+       \note This is a freeform field used to identify the standard which specifies this material.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+       \type alpha
+  A4, \field Material Standard Source
+       \note This is a freeform field used to identify the table or section in the standard which specifies this material.    
+       \note More information can be found at https://github.com/NREL/openstudio-standards.     
+       \type alpha       
+  A5, \field Standards Category
+       \note This is a freeform field used to identify the category of this material, e.g. 'Plastering Materials' 'Composite', or 'Roofing'.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+       \type alpha
+  A6, \field Standards Identifier
+       \note This is a freeform field used to identify the id of this material within a standard.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+       \type alpha
+  A7, \field Composite Framing Material
+       \note This is a freeform field used to identify the framing material for a composite layer.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+       \type alpha
+  A8, \field Composite Framing Configuration
+       \note This is a freeform field used to identify the framing configuration for a composite layer.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+       \type alpha
+  A9, \field Composite Framing Depth
+       \note This is a freeform field used to identify the framing depth for a composite layer.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+       \type alpha
+  A10, \field Composite Framing Size
+       \note This is a freeform field used to identify the framing size for a composite layer.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+       \type alpha
+  A11; \field Composite Cavity Insulation
+       \note This is a freeform field used to identify the cavity insulation for a composite layer.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+       \type alpha 
+       
 \group OpenStudio Constructions
 
 OS:Construction,
@@ -3270,14 +3275,82 @@ OS:StandardsInformation:Construction,
        \note of the layer whose thickness can be adjusted to meet a u-factor
        \note requirement.
        \type integer
-  A6, \field Perturbable Layer Type
+  A5, \field Perturbable Layer Type
        \type choice
        \default Not Applicable
        \key Not Applicable
        \key Insulation
        \key Other
-  A7; \field Other Perturbable Layer Type
+  A6, \field Other Perturbable Layer Type
        \type alpha
+  A7, \field Construction Standard
+       \note This is a freeform field used to identify the standard which specifies this construction.
+       \type alpha
+  A8, \field Construction Standard Source
+       \note This is a freeform field used to identify the table or section of the standard which specifies this construction.
+       \type alpha       
+  A9, \field Fenestration Type
+       \note Specific type of fenestration that this construction represents.
+       \type choice
+       \key Fixed Window
+       \key Operable Window
+       \key Curtain Wall
+       \key Glazed Door
+       \key Glass Skylight with Curb
+       \key Plastic Skylight with Curb
+       \key Glass Skylight without Curb
+       \key Plastic Skylight without Curb
+       \key Swinging Door
+       \key Non-Swinging Door
+  A10,\field Fenestration Assembly Context
+       \note Where is this fenestration assembled.
+       \type choice
+       \key Manufactured
+       \key Field Fabricated
+       \key Site Built
+  A11,\field Fenestration Number of Panes
+       \note Number of panes for this fenestration construction.
+       \note BCL taxonomy term 'Construction Assembly.Fenestration.Window.Number of Panes'
+       \type choice
+       \key Single Pane
+       \key Double Pane
+       \key Triple Pane
+       \key Quadruple Pane
+       \key Glass Block
+  A12,\field Fenestration Frame Type
+       \note Type of framing for this fenestration construction.
+       \type choice
+       \key Metal Framing
+       \key Metal Framing with Thermal Break
+       \key Non-Metal Framing
+  A13,\field Fenestration Divider Type
+       \note Type of divider for this fenestration construction.
+       \type choice
+       \key True Divided Lite 
+       \key Between Panes < 7/16"
+       \key Between Panes >= 7/16"
+  A14,\field Fenestration Tint
+       \note Tint of this fenestration construction.
+       \note BCL taxonomy term 'Construction Assembly.Fenestration.Window.Tint'
+       \type choice
+       \key Clear
+       \key Bronze
+       \key Grey
+       \key Green
+       \key Blue
+       \key Tinted
+  A15,\field Fenestration Gas Fill
+       \note Type of gas used between panes of this fenestration construction.
+       \note BCL taxonomy term 'Construction Assembly.Fenestration.Window.Gas Fill'
+       \type choice
+       \key Air
+       \key Argon
+       \key Krypton
+  A16;\field Fenestration Low Emissivity Coating
+       \note Does this fenestration construction include a low-e coating.
+       \type choice
+       \key True
+       \key False
 
 \group OpenStudio Space Load Definitions
 
@@ -4297,7 +4370,6 @@ OS:Building,
        \type real
        \units m
        \minimum> 0
-       \default 3.0
   A4, \field Space Type Name
        \type object-list
        \object-list SpaceTypeNames
@@ -4313,11 +4385,23 @@ OS:Building,
   N4, \field Standards Number of Above Ground Stories
        \type integer
        \minimum 0
-  A7; \field Standards Building Type
+  A7, \field Standards Building Type
        \type alpha
        \note This is a freeform field used to identify the building type for standards.
        \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
        \note More information can be found at https://github.com/NREL/openstudio-standards.
+  N5, \field Standards Number of Living Units
+       \type integer
+       \minimum 0
+  A8, \field Relocatable
+       \type choice
+       \default False
+       \key True
+       \key False
+  N6; \field Nominal Floor to Ceiling Height
+       \type real
+       \units m
+       \minimum> 0
 
 OS:DaylightingDevice:Shelf,
        \min-fields 1
@@ -5320,10 +5404,9 @@ OS:SpaceInfiltration:EffectiveLeakageArea,
        \type object-list
        \object-list ScheduleNames
   N1 , \field Effective Air Leakage Area
-       \units cm2
-     \ip-units in2
+       \units m2
+       \ip-units in2
        \note "AL" in Equation
-       \note units are cm2 (square centimeters)
        \minimum> 0
        \type real
        \required-field
@@ -9127,7 +9210,7 @@ OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
        \type object-list
        \object-list ConnectionNames
   A7, \field Cooling Coil Name
-							\note  Needs to match the cooled beam cooling coil object CoolingCoilCooledBeam
+       \note  Needs to match the cooled beam cooling coil object CoolingCoilCooledBeam
        \type object-list
        \required-field
        \object-list CoolingCoilCooledBeam
@@ -9264,7 +9347,7 @@ OS:AirTerminal:SingleDuct:VAV:NoReheat,
        \note be computed based on the current number of occupants in the zone.
        \note At no time will the supply air flow rate exceed the value for Maximum Air Flow Rate.
        \note If this field is blank, then the terminal unit will not be controlled for outdoor air flow.
-	   
+
 OS:AirTerminal:SingleDuct:VAV:Reheat,
        \min-fields 1
   A1, \field Handle
@@ -10892,8 +10975,8 @@ OS:GroundHeatExchanger:Vertical,
         \type real
 
 OS:Coil:Cooling:CooledBeam,
-						 \min-fields 13
-		A1, \field Handle
+      \min-fields 13
+  A1, \field Handle
        \type handle
        \required-field
   A2, \field Name
@@ -15950,6 +16033,43 @@ OS:SetpointManager:Warmest,
        \required-field
        \object-list Node
 
+OS:SetpointManager:WarmestTemperatureFlow,
+       \min-fields 1
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference SetpointManagers
+  A3 , \field Control Variable
+       \required-field
+       \type choice
+       \key Temperature
+  N1 , \field Minimum Setpoint Temperature
+       \required-field
+       \units C
+       \type real
+       \minimum> 0.0
+  N2 , \field Maximum Setpoint Temperature
+       \required-field
+       \units C
+       \type real
+       \minimum> 0.0
+  A4 , \field Strategy
+       \required-field
+       \type choice
+       \key TemperatureFirst
+       \key FlowFirst
+  A5 , \field Setpoint Node or NodeList Name
+       \type object-list
+       \required-field
+       \object-list Node
+  N3 ; \field Minimum Turndown Ratio
+       \required-field
+       \units dimensionless
+       \type real
+       \minimum> 0.0
+
 OS:Sizing:Plant,
   \min-fields 5
   A1, \field Handle
@@ -16631,7 +16751,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:Electric,
         \units W
         \minimum 0
         \autosizable
-				\default autosize
+        \default autosize
         \ip-units W
    A5 , \field Temperature Control Type
         \note Temperature used to control unit
@@ -16649,7 +16769,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:Electric,
    A6 ; \field Heating Setpoint Temperature Schedule Name
         \type object-list
         \object-list ScheduleNames
-	
+
 OS:ZoneHVAC:IdealLoadsAirSystem,
        \min-fields 26
   A1 , \field Handle
@@ -18704,4 +18824,5 @@ OS:Output:Variable,
   A6; \field Schedule Name
        \type object-list
        \object-list ScheduleNames
+
 

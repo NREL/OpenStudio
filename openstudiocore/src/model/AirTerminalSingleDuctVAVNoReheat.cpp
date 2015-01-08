@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -28,6 +28,7 @@
 #include "ScheduleTypeRegistry.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
+
 #include "AirLoopHVAC.hpp"
 #include "AirLoopHVAC_Impl.hpp"
 #include "Node.hpp"
@@ -44,6 +45,7 @@
 #include "ThermalZone_Impl.hpp"
 #include "Model.hpp"
 #include <utilities/idd/OS_AirTerminal_SingleDuct_VAV_NoReheat_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 //#include <utilities/units/Unit.hpp>
 //#include <utilities/core/Compare.hpp>
 #include "../utilities/core/Assert.hpp"

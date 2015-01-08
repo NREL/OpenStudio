@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -34,8 +34,6 @@
 #include "../../model/Building_Impl.hpp"
 #include "../../model/Facility.hpp"
 #include "../../model/Facility_Impl.hpp"
-#include "../../model/TimeDependentValuation.hpp"
-#include "../../model/TimeDependentValuation_Impl.hpp"
 #include "../../model/Timestep.hpp"
 #include "../../model/Timestep_Impl.hpp"
 #include "../../model/ThermalZone.hpp"

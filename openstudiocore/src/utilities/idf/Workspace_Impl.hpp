@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -61,8 +61,8 @@ namespace detail {
     //@{
 
     /** Default constructor. Provides access to entire IddFactory, and does not add any objects. */
-    Workspace_Impl(StrictnessLevel level = StrictnessLevel::None,
-                   IddFileType iddFileType = IddFileType::OpenStudio);
+    Workspace_Impl(StrictnessLevel level,
+                   IddFileType iddFileType);
 
     /** Construct from IdfFile. Creates independent IdfObjects, and locks down fields that function
      *  as pointers (\object-list type). Inherits IddFile from idfFile. Aims for StrictnessLevel.

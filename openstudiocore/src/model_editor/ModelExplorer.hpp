@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -59,7 +59,7 @@ namespace modeleditor
     ModelExplorer(QWidget * parent = nullptr);
     virtual ~ModelExplorer();
     void loadFile(const QString &fileName);
-    void addObjects(openstudio::IddObjectType type = openstudio::IddObjectType::UserCustom);
+    void addObjects(openstudio::IddObjectType type = openstudio::IddObjectType("UserCustom"));
     void removeObjects();
     void copyObjects();
     void pasteObjects();

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -42,6 +42,7 @@
 #include <utilities/idd/Building_FieldEnums.hxx>
 #include <utilities/idd/Site_Location_FieldEnums.hxx>
 #include <utilities/idd/SimulationControl_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include <resources.hxx>
 

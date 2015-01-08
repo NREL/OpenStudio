@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -434,13 +434,13 @@ FloodPlot::FloodPlot(const Matrix& m)
 
 FloodPlot::Ptr FloodPlot::create(QWidget* parent, Qt::WindowFlags flags)
 {
-  Application::instance().application();
+  Application::instance().application(true);
   return FloodPlot::Ptr(new FloodPlot(parent, flags));
 }
 
 FloodPlot::Ptr FloodPlot::create(const Matrix& m)
 {
-  Application::instance().application();
+  Application::instance().application(true);
   return FloodPlot::Ptr(new FloodPlot(m));
 }
 

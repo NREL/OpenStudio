@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -52,23 +52,18 @@ class ConstructionWindowDataFileInspectorView : public ModelObjectInspectorView
     virtual void onUpdate();
 
   private:
+
     void createLayout();
 
     void attach(openstudio::model::WindowDataFile & windowDataFile);
 
     void detach();
 
-    void refresh();
+    bool m_isIP;
 
     OSLineEdit * m_nameEdit;
 
     OSLineEdit * m_urlEdit;
-
-    bool m_isIP;
-
-  public slots:
-
-    void toggleUnits(bool displayIP);
 };
 
 } // openstudio

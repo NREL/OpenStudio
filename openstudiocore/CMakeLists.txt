@@ -5,7 +5,11 @@ project(OpenStudioCore)
 cmake_policy(SET CMP0020 NEW)
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.0")
   cmake_policy(SET CMP0042 NEW)
+  if(NOT ${CMAKE_VERSION} VERSION_LESS "3.1")
+    cmake_policy(SET CMP0054 NEW)
+  endif()
 endif()
+
 ###############################################################################
 # Project version information
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number") # git sha
@@ -15,7 +19,20 @@ set(OPENSTUDIO_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VE
 set(OPENSTUDIO_LONG_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}.${CMAKE_VERSION_BUILD}")
 
 # EnergyPlus Idd version
-set(ENERGYPLUS_VERSION "8.1" CACHE INTERNAL "EnergyPlus Version")
+if( NOT ENERGYPLUS_VERSION_MAJOR )
+  set(ENERGYPLUS_VERSION_MAJOR 8)
+endif()
+if( NOT ENERGYPLUS_VERSION_MINOR )
+  set(ENERGYPLUS_VERSION_MINOR 2)
+endif()
+if( NOT ENERGYPLUS_VERSION_PATCH )
+  set(ENERGYPLUS_VERSION_PATCH 0)
+endif()
+set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
+# Build SHA is not required to have a value, but if it does OpenStudio will require this build.
+if( NOT ENERGYPLUS_BUILD_SHA )
+  set(ENERGYPLUS_BUILD_SHA "8397c2e30b")
+endif()
 
 # configure file with version information
 configure_file(${CMAKE_SOURCE_DIR}/OpenStudio.in ${CMAKE_BINARY_DIR}/src/OpenStudio.hxx)
@@ -24,7 +41,7 @@ configure_file(${CMAKE_SOURCE_DIR}/OpenStudio.in ${CMAKE_BINARY_DIR}/src/OpenStu
 if(APPLE)
   set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${OPENSTUDIO_VERSION}")
   set(MACOSX_BUNDLE_BUNDLE_VERSION "${CMAKE_VERSION_BUILD}")
-  set(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2014 National Renewable Energy Laboratory")
+  set(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2015 National Renewable Energy Laboratory")
 endif()
 
 ###############################################################################
@@ -78,6 +95,16 @@ option(BUILD_R "Build R package" OFF)
 # Build Ruby gem
 option(BUILD_RUBY_GEM "Build Ruby Gem" OFF)
 
+if( BUILD_PACKAGE )
+  option(PACKAGE_RADIANCE "Package Radiance" OFF)
+  option(PACKAGE_ENERGYPLUS "Package EnergyPlus" ON)
+endif()
+
+
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  add_definitions(-Qunused-arguments)
+endif()
+
 # Enable runtime checking features
 if(CMAKE_COMPILER_IS_GNUCC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   option(ENABLE_THREAD_SANITIZER "Enable thread sanitizer testing in gcc/clang" OFF)
@@ -105,6 +132,11 @@ if(CMAKE_COMPILER_IS_GNUCC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
   mark_as_advanced(ENABLE_THREAD_SANITIZER ENABLE_ADDRESS_SANITIZER ENABLE_UNDEFINED_SANITIZER)
 
+endif()
+
+if(UNIX AND NOT APPLE AND BUILD_TESTING)
+  # Enable libgtest linking
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lpthread")
 endif()
 
 
@@ -154,7 +186,7 @@ set(project_directories
   energyplus
   radiance
   gbxml
-  contam
+  airflow
   isomodel
   osversion
   ruleset
@@ -292,38 +324,19 @@ endif()
 # Dependencies
 
 # EnergyPlus
-find_package(EnergyPlus "${ENERGYPLUS_VERSION}")
-if(NOT ${EnergyPlus_FOUND})
-  message(FATAL_ERROR "EnergyPlus ${ENERGYPLUS_VERSION} could not be found")
-endif()
-mark_as_advanced(
-  ENERGYPLUS_EXE
-  ENERGYPLUS_IDD
-  ENERGYPLUS_WEATHER_DIR
-)
+find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
 
 # Ruby
 find_program(RUBY_EXECUTABLE NAMES ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH)
 
-if(APPLE)
-  if(CMAKE_OSX_SYSROOT MATCHES ".*10\\.8.*")
-    # set RUBYLIB environment variable so find_package can find the right Ruby libraries
-    get_filename_component(RUBY_EXECUTABLE_DIR ${RUBY_EXECUTABLE} PATH)
-    set(ENV{RUBYLIB} "${RUBY_EXECUTABLE_DIR}/../lib/ruby/2.0.0/universal-darwin12.5.0/:${RUBY_EXECUTABLE_DIR}/../lib/ruby/2.0.0/" )
-    set(RUBY_INCLUDE_DIR "${RUBY_EXECUTABLE_DIR}/../include/ruby-2.0.0/" CACHE PATH "The Ruby include dir" FORCE)
-    set(RUBY_CONFIG_INCLUDE_DIR "${RUBY_EXECUTABLE_DIR}/../include/ruby-2.0.0/universal-darwin12.5.0/" CACHE PATH "The Ruby config include dir" FORCE)
-    set(RUBY_LIBRARY "${RUBY_EXECUTABLE_DIR}/../lib/libruby.2.0.0.dylib" CACHE PATH "The Ruby library" FORCE)
-  endif()
-endif()
-
 find_package(Ruby 2)
 
-if (NOT RUBY_FOUND)
+if(NOT RUBY_FOUND)
   find_path(RUBY_CONFIG_INCLUDE_DIR
-    NAMES ruby/config.h  config.h
+    NAMES ruby/config.h config.h
     HINTS
     /usr/include/x86_64-linux-gnu/ruby-2.0.0
-    )
+  )
   find_package(Ruby 2.0 REQUIRED)
 endif()
 
@@ -435,9 +448,12 @@ endif()
 
 if(BUILD_PYTHON_BINDINGS)
   # need python
+  find_package(PythonInterp 2.7 REQUIRED)
   find_package(PythonLibs 2.7 REQUIRED)
   include_directories(SYSTEM ${PYTHON_INCLUDE_DIRS})
   set(ALL_PYTHON_BINDING_TARGETS "") # global list
+
+
 endif()
 
 # Doxygen
@@ -589,15 +605,6 @@ add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
 #--------------------------------------------------------------------------------
 # Qt
 
-if(MSVC AND MSVC_IS_EXPRESS)
-  if(CMAKE_CL_64)
-    list(APPEND CMAKE_LIBRARY_PATH "C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x64/")
-  else()
-    list(APPEND CMAKE_LIBRARY_PATH "C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x86/")
-    list(APPEND CMAKE_LIBRARY_PATH "C:/Program Files/Windows Kits/8.0/Lib/win8/um/x86/")
-  endif()
-endif()
-
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Sql REQUIRED)
 find_package(Qt5Network REQUIRED)
@@ -659,6 +666,14 @@ list(APPEND QT_LIBS ${Qt5WebKitWidgets_LIBRARIES})
 list(APPEND QT_LIBS ${Qt5Concurrent_LIBRARIES})
 list(APPEND QT_LIBS ${Qt5PrintSupport_LIBRARIES})
 
+### recreating QT_LIBRARY_DIR for qt5
+if(WIN32 AND TARGET Qt5::Core)
+  get_property(_Qt5_Core_LOCATION TARGET Qt5::Core PROPERTY LOCATION)
+  get_filename_component(QT_LIBRARY_DIR "${_Qt5_Core_LOCATION}" PATH)
+else()
+  set(QT_LIBRARY_DIR "")
+endif()
+
 
 ###############################################################################
 # qtwinmigrate
@@ -706,47 +721,31 @@ include_directories("${CMAKE_BINARY_DIR}/src/")
 add_subdirectory(resources)
 
 
-# Set up embedded ruby for use with 'aws-sdk'
+# Set up embedded ruby for Unix use with 'aws-sdk'
 
-if(WIN32)
-  set(AWS_RUBY_PATH ruby-2.0.0-aws-win32)
-  set(AWS_RUBY_DESTINATION ".")
-  set(AWS_RUBY_EXTENSION ".zip")
+if(UNIX)
+  if(APPLE)
+    set(AWS_RUBY_PATH ruby-2.0.0-aws-Darwin)
+    set(AWS_RUBY_DESTINATION ".")
+    set(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p594-aws-Darwin.tar.bz2)
+    set(AWS_RUBY_CHECKSUM 580550e0f6027820b4dfb12a186f6fcc)
 
-  set(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-win32.zip)
-  set(AWS_RUBY_CHECKSUM 1f6e4348099b26e92909db62dcd3b173)
-elseif(APPLE)
-  set(AWS_RUBY_PATH ruby-2.0.0-aws-Darwin)
-  set(AWS_RUBY_DESTINATION ".")
+  elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+    set(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-x86_64)
+    set(AWS_RUBY_DESTINATION "lib/openstudio-${OPENSTUDIO_VERSION}")
+    set(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p594-aws-Linux-x86_64.tar.bz2)
+    set(AWS_RUBY_CHECKSUM c1b0fa5588b71d94ba557f32b73b9af1)
+  endif()
 
-  set(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-Darwin.tar.bz2)
-  set(AWS_RUBY_CHECKSUM 75963f2c6996af47a3ad69ac84d3d120)
-  set(AWS_RUBY_EXTENSION ".tar.bz2")
-elseif(UNIX AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
-  set(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-x86_64)
-  set(AWS_RUBY_DESTINATION "lib/openstudio-${OPENSTUDIO_VERSION}")
-
-  set(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-Linux-x86_64.tar.bz2)
-  set(AWS_RUBY_CHECKSUM 74d3a8ab4e1e3fb44c308f2aaa8e5732)
-  set(AWS_RUBY_EXTENSION ".tar.bz2")
-elseif(UNIX)
-  set(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-i686)
-  set(AWS_RUBY_DESTINATION "lib/openstudio-${OPENSTUDIO_VERSION}")
-
-  set(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-Linux-i686.tar.bz2)
-  set(AWS_RUBY_CHECKSUM e51ce64b3e03ed3a66f1f7e0a22b5b7e)
-  set(AWS_RUBY_EXTENSION ".tar.bz2")
-endif()
-
-file(DOWNLOAD ${AWS_RUBY_URL} "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}${AWS_RUBY_EXTENSION}" TIMEOUT 120 INACTIVITY_TIMEOUT 120)
-execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}")
-execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}${AWS_RUBY_EXTENSION}" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-execute_process(COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_HOME_DIRECTORY}/ruby/aws-sdk-patches/connection_pool.rb" "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}/lib/ruby/gems/2.0.0/gems/aws-sdk-1.31.3/lib/aws/core/http")
-install(
-  DIRECTORY "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}"
-  DESTINATION "${AWS_RUBY_DESTINATION}"
-  USE_SOURCE_PERMISSIONS
+  file(DOWNLOAD ${AWS_RUBY_URL} "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}.tar.bz2" TIMEOUT 120 INACTIVITY_TIMEOUT 120)
+  execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}")
+  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}.tar.bz2" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  install(
+    DIRECTORY "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}"
+    DESTINATION "${AWS_RUBY_DESTINATION}"
+    USE_SOURCE_PERMISSIONS
   )
+endif()
 
 # end ruby aws-sdk info
 
@@ -758,7 +757,6 @@ endforeach()
 add_dependencies(ResultsViewer ResultsViewer_resources)
 
 # ruby, after loading projects
-add_subdirectory(src/ruby_cpp)
 add_subdirectory(ruby)
 
 if(UNIX AND NOT APPLE)
@@ -804,6 +802,39 @@ add_dependencies(ALL_RUBY_BINDINGS ${ALL_RUBY_BINDING_TARGETS})
 if(BUILD_PYTHON_BINDINGS)
   add_custom_target(ALL_PYTHON_BINDINGS)
   add_dependencies(ALL_PYTHON_BINDINGS ${ALL_PYTHON_BINDING_TARGETS})
+
+    # PYTHONPATH=~/openstudio/build/OSCore-prefix/src/OSCore-build/Products/python/ python testpath.py
+
+  
+  add_test(NAME "PythonSanityCheck" 
+    COMMAND "${PYTHON_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/python/testpath.py"
+	WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/Products/python"
+    )
+	
+  if (MSVC)
+    file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}" NATIVE_BINARY_DIR)
+    add_custom_command(
+	  OUTPUT "${CMAKE_BINARY_DIR}/python_copied.stamp"
+	  COMMAND ${CMAKE_COMMAND} -E touch "${CMAKE_BINARY_DIR}/python_copied.stamp"
+      COMMAND cmd /C del "${NATIVE_BINARY_DIR}\\Products\\python\\$<CONFIGURATION>\\*.py"
+      COMMAND cmd /C copy "${NATIVE_BINARY_DIR}\\Products\\python\\*.py" "${NATIVE_BINARY_DIR}\\Products\\python\\$<CONFIGURATION>"
+	  DEPENDS ALL_PYTHON_BINDINGS
+    )
+
+    add_custom_target(PYTHON_SDK ALL
+	  DEPENDS "${CMAKE_BINARY_DIR}/python_copied.stamp")
+
+    set_property(TEST PythonSanityCheck
+      PROPERTY ENVIRONMENT
+      "PYTHONPATH=${CMAKE_BINARY_DIR}/Products/python/$<CONFIGURATION>"  
+      )
+  else()
+    set_property(TEST PythonSanityCheck
+      PROPERTY ENVIRONMENT
+      "PYTHONPATH=${CMAKE_BINARY_DIR}/Products/python"
+      )
+  endif()
+
 endif()
 
 
@@ -822,6 +853,9 @@ if(BUILD_V8_BINDINGS)
   add_custom_target(ALL_V8_BINDINGS)
   add_dependencies(ALL_V8_BINDINGS ${ALL_V8_BINDING_TARGETS})
 endif()
+
+set(MAXIMIZE_CPU_USAGE OFF CACHE BOOL "Attempt to fully load the CPU during builds")
+mark_as_advanced(MAXIMIZE_CPU_USAGE)
 
 
 ###############################################################################
@@ -885,7 +919,7 @@ set(all_lib_targets
   openstudio_isomodel
   openstudio_lib
   openstudio_sdd
-  openstudio_contam
+  openstudio_airflow
   ${QTWINMIGRATE_EXPORT}
   zkexpat
   zkqwt
@@ -905,7 +939,6 @@ set(all_exe_targets
   GenerateIddFactory
   gbXMLToIdf
   OpenStudio
-  ruby_cpp
   litesql-gen
   ResultsViewer
   Pat
@@ -979,22 +1012,28 @@ if(NOT UNIX)
   endif()
 endif()
 
-
-
-
-if(PACKAGE_RADIANCE_AND_ENERGYPLUS)
-  set(ENERGYPLUS_LOCATION "" CACHE PATH "Location of EnergyPlus to Package")
+if(PACKAGE_RADIANCE)
   set(RADIANCE_LOCATION "" CACHE PATH "Location of Radiance to Package")
 
-  file(COPY "${ENERGYPLUS_LOCATION}" DESTINATION "${CMAKE_BINARY_DIR}/EnergyPlus/")
-  file(COPY "${RADIANCE_LOCATION}" DESTINATION "${CMAKE_BINARY_DIR}/Radiance/")
+  if(APPLE)
+    install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+  else()
+    install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
+  endif()
+endif()
+
+if(PACKAGE_ENERGYPLUS)
+  get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" PATH)
 
   if(APPLE)
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/EnergyPlus/" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/Radiance/" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+    install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+  elseif(MSVC)
+    install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
   else()
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/EnergyPlus/" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/Radiance/" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
+    install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
   endif()
-
 endif()
+
+
+
+

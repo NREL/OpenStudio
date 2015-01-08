@@ -6,7 +6,7 @@ namespace openstudio {
  * programmatically handle IDF "pointers", that is, string references to other objects. IDF objects
  * and collections can be validated against their <a href="../../utilities_idd/html/index.html">IDD</a>.
  *
- * \section quick_links Quick Links
+ * \section quick_links_idf Quick Links
  *
  * Idf and Imf (parsing and printing)
  *
@@ -31,7 +31,7 @@ namespace openstudio {
  * \li Workspace::isValid
  * \li Workspace::validityReport
  *
- * \section background Background
+ * \section background_idf Background
  *
  * OpenStudio consists of middleware and end-user tools for building energy analysis. As such, it
  * needs to be able to model buildings at varying levels of detail, and to communicate with
@@ -54,7 +54,7 @@ namespace openstudio {
  * no third-party tools available for programmatic access to IDF and IDD files, as there are for
  * XML and XSD.
  *
- * \section overview Overview
+ * \section overview_idf Overview
  *
  * This document, along with all the documentation associated with files in src/utilities/idf/
  * (most of which should be accessible through links on this page) describes the classes and
@@ -80,7 +80,7 @@ namespace openstudio {
  * whose default StrictnessLevel is Draft. IDF should typically be brought up to 
  * StrictnessLevel::Final prior to simulation.
  *
- * \section parsing Parsing and Printing
+ * \section parsing_idf Parsing and Printing
  *
  * \link IdfFile IdfFiles\endlink, \link ImfFile ImfFiles\endlink, \link IdfObject
  * IdfObjects\endlink, and \link Workspace Workspaces\endlink can all be constructed from text 
@@ -135,7 +135,7 @@ namespace openstudio {
  * assert(objectsInCurrentOrder != objectsInNewOrder);
  * \endcode
  *
- * \li Help finding inconsitencies between your Workspace and its IddFile;
+ * \li Help finding inconsistencies between your Workspace and its IddFile;
  *
  * \code
  * ValidityReport report = workspace.validityReport(StrictnessLevel::Final);

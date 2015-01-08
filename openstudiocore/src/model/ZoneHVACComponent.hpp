@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -83,7 +83,7 @@ class MODEL_API ZoneHVACComponent : public HVACComponent
   bool addToNode(Node & node);
 
   /** Returns the AirLoopHVAC attached to this ZoneHVACComponent.
-   *  The AirLoopHVAC object would have been attached via ::addToNode */
+   *  The AirLoopHVAC object would have been attached via addToNode */
   boost::optional<AirLoopHVAC> airLoopHVAC() const;
 
   protected:

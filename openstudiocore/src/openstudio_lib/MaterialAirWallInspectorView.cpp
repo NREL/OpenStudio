@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -19,6 +19,8 @@
 
 #include "MaterialAirWallInspectorView.hpp"
 
+#include "StandardsInformationMaterialWidget.hpp"
+
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
 
@@ -37,33 +39,46 @@ namespace openstudio {
 
 MaterialAirWallInspectorView::MaterialAirWallInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
   : ModelObjectInspectorView(model, true, parent),
-    m_nameEdit(nullptr),
-    m_isIP(isIP)
+  m_isIP(isIP)
 {
   createLayout();
 }
 
 void MaterialAirWallInspectorView::createLayout()
 {
+  QWidget* hiddenWidget = new QWidget();
+  this->stackedWidget()->addWidget(hiddenWidget);
+
   QWidget* visibleWidget = new QWidget();
   this->stackedWidget()->addWidget(visibleWidget);
 
   QGridLayout* mainGridLayout = new QGridLayout();
-  mainGridLayout->setContentsMargins(7,7,7,7);
+  mainGridLayout->setContentsMargins(7, 7, 7, 7);
   mainGridLayout->setSpacing(14);
   visibleWidget->setLayout(mainGridLayout);
 
-  unsigned row = 0;
-  unsigned col = 0;
+  int row = mainGridLayout->rowCount();
+
+  QLabel * label = nullptr;
 
   // Name
 
-  QLabel * label = new QLabel("Name: ");
+  label = new QLabel("Name: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,row++,col);
+  mainGridLayout->addWidget(label, row, 0);
+
+  ++row;
 
   m_nameEdit = new OSLineEdit();
-  mainGridLayout->addWidget(m_nameEdit,row++,0,1,3);
+  mainGridLayout->addWidget(m_nameEdit, row, 0, 1, 3);
+
+  ++row;
+
+  // Standards Information
+
+  m_standardsInformationWidget = new StandardsInformationMaterialWidget(m_isIP, mainGridLayout, row);
+
+  ++row;
 
   // Stretch
 
@@ -95,6 +110,8 @@ void MaterialAirWallInspectorView::attach(openstudio::model::AirWallMaterial & a
 {
   m_nameEdit->bind(airWallMaterial,"name");
 
+  m_standardsInformationWidget->attach(airWallMaterial);
+
   this->stackedWidget()->setCurrentIndex(1);
 }
 
@@ -103,15 +120,12 @@ void MaterialAirWallInspectorView::detach()
   this->stackedWidget()->setCurrentIndex(0);
 
   m_nameEdit->unbind();
+
+  m_standardsInformationWidget->detach();
 }
 
 void MaterialAirWallInspectorView::refresh()
 {
-}
-
-void MaterialAirWallInspectorView::toggleUnits(bool displayIP)
-{
-  m_isIP = displayIP;
 }
 
 } // openstudio

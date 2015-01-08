@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -172,6 +172,7 @@ namespace runmanager {
     items.push_back("Major");
     items.push_back("Minor");
     items.push_back("Build");
+    items.push_back("Tag");
     items.push_back("Binary Directory");
     m_model.setHorizontalHeaderLabels(items);
 
@@ -245,6 +246,13 @@ namespace runmanager {
     } else {
       row.push_back(new QStandardItem("-"));
     }
+    if (tool.first.getTag())
+    {
+      row.push_back(new QStandardItem(openstudio::toQString(*(tool.first.getTag()))));
+    } else {
+      row.push_back(new QStandardItem(""));
+    }
+
 
     if (!tool.second.binaryDir.empty())
     {
@@ -340,6 +348,7 @@ namespace runmanager {
       boost::optional<int> major;
       boost::optional<int> minor;
       boost::optional<int> build;
+      boost::optional<std::string> tag;
 
       if (m_model.item(i, 1)->text() != "-")
       {
@@ -356,14 +365,21 @@ namespace runmanager {
         build = m_model.item(i, 3)->text().toInt();
       }
 
+      if (m_model.item(i, 4)->text() != "")
+      {
+        tag = openstudio::toString(m_model.item(i, 4)->text());
+      }
+
+
       co.setToolLocation(
           ToolVersion(
             major,
             minor,
-            build),
+            build,
+            tag),
           ToolLocationInfo(
             toString(m_model.item(i, 0)->text()),
-            toPath(m_model.item(i,4)->text()))
+            toPath(m_model.item(i,5)->text()))
           );
     }
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -189,6 +189,7 @@ class SetpointManagerScheduledDualSetpoint;
 class SetpointManagerSingleZoneHumidityMinimum;
 class SetpointManagerSingleZoneReheat;
 class SetpointManagerWarmest;
+class SetpointManagerWarmestTemperatureFlow;
 class ShadowCalculation;
 class Shade;
 class SimulationControl;
@@ -258,7 +259,7 @@ namespace detail
   struct ForwardTranslatorInitializer;
 };
 
-#define ENERGYPLUS_VERSION "8.1"
+#define ENERGYPLUS_VERSION "8.2"
 
 class ENERGYPLUS_API ForwardTranslator {
  public:
@@ -649,6 +650,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateSetpointManagerSingleZoneReheat( model::SetpointManagerSingleZoneReheat & modelObject);
 
   boost::optional<IdfObject> translateSetpointManagerWarmest( model::SetpointManagerWarmest & modelObject);
+
+  boost::optional<IdfObject> translateSetpointManagerWarmestTemperatureFlow( model::SetpointManagerWarmestTemperatureFlow & modelObject);
 
   boost::optional<IdfObject> translateShade( model::Shade & modelObject );
 

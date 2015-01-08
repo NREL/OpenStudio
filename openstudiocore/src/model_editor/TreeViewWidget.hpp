@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -40,7 +40,7 @@ public:
   TreeViewWidget(openstudio::model::Model& model, QWidget *parent = nullptr);
   TreeViewWidget(QWidget *parent = nullptr);
   virtual ~TreeViewWidget();
-  virtual void addObjects(openstudio::IddObjectType type = openstudio::IddObjectType::UserCustom);
+  virtual void addObjects(openstudio::IddObjectType type = openstudio::IddObjectType("UserCustom"));
   virtual void loadModel();
   virtual void removeObjects();
   virtual void copyObjects();

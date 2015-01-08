@@ -39,7 +39,7 @@
   VIProductVersion "@CPACK_PACKAGE_VERSION@.0"
   VIAddVersionKey ProductName "@CPACK_PACKAGE_INSTALL_DIRECTORY@"
   VIAddVersionKey CompanyName "NREL"
-  VIAddVersionKey LegalCopyright "Copyright (c) 2014 National Renewable Energy Laboratory"
+  VIAddVersionKey LegalCopyright "Copyright (c) 2015 National Renewable Energy Laboratory"
   VIAddVersionKey FileDescription "@CPACK_PACKAGE_INSTALL_DIRECTORY@"
   VIAddVersionKey FileVersion "@CPACK_PACKAGE_VERSION@"
   VIAddVersionKey ProductVersion "@CPACK_PACKAGE_VERSION@"
@@ -763,36 +763,73 @@ Section "-Core installation"
   Var /GLOBAL sketchupFound
   StrCpy $sketchupFound "0"
 
-  ${If} ${FileExists} "$INSTDIR\ruby-install\ruby\lib\msvcrt-ruby200.lib"
-    ; Install for SketchUp 2014
-    Var /GLOBAL sketchup14Dir
-    Push $OUTDIR
-    ; Try to install the plugin for SketchUp 14
-    ; check to see if sketchup 14 has been installed
-    ReadRegStr $sketchup14Dir HKLM "Software\SketchUp\SketchUp 2014\InstallLocation" ""
-    ; if SketchUp 14 not installed, install plugin to default SketchUp location
-    ; NOTE StrCmp string1 string2 jump-if-equal jump-if-not-equal (+2 skips 1 line)
-    StrCmp $sketchup14Dir "" su14skipped +1
-    IntOp $sketchupFound $sketchupFound + 1
-    SetOutPath "$APPDATA\SketchUp\SketchUp 2014\SketchUp\Plugins"
-    file /oname=OpenStudio.rb "@CPACK_PACKAGE_FILE_NAME@\Ruby\Plugins\OpenStudio.rb"
-    SetOutPath "$APPDATA\SketchUp\SketchUp 2014\SketchUp\Plugins\OpenStudio"
-    file /oname=Startup.rb "@CPACK_PACKAGE_FILE_NAME@\Ruby\Plugins\OpenStudio\Startup.rb"
-    FileOpen $0 "$APPDATA\SketchUp\SketchUp 2014\SketchUp\Plugins\OpenStudio\OpenStudio-config.rb" w
-    FileWrite $0 "require '$INSTDIR\Ruby\openstudio'$\n"
-    FileClose $0
-    su14skipped:
+  Var /GLOBAL sketchupArchErrorMessage
+  Var /GLOBAL sketchupConfigStatement
+  ${If} ${FileExists} "$INSTDIR\ruby-install\ruby\lib\libmsvcrt-ruby200.dll.a"
+    StrCpy $sketchupArchErrorMessage "32-bit OpenStudio is incompatible with 64-bit SketchUp 2015"
+    StrCpy $sketchupConfigStatement "if RUBY_PLATFORM=='i386-mingw32' then require '$INSTDIR\Ruby\openstudio' else raise LoadError, '$sketchupArchErrorMessage' end$\n"
+  ${Else}
+    StrCpy $sketchupArchErrorMessage "64-bit OpenStudio is incompatible with 32-bit SketchUp 2015"
+    StrCpy $sketchupConfigStatement "if RUBY_PLATFORM=='x64-mingw32' then require '$INSTDIR\Ruby\openstudio' else raise LoadError, '$sketchupArchErrorMessage' end$\n"
   ${EndIf}
 
-  IntCmp $sketchupFound 0 +1 suFound suFound 
-    MessageBox MB_OK "Unable to locate your SketchUp 2014 installation.  SketchUp is freely available at http://www.sketchup.com/ and is required to use the OpenStudio SketchUp Plug-in.  If you wish to use the OpenStudio SketchUp Plug-in please download and install SketchUp now, the OpenStudio Google SketchUp Plug-in will launch automatically when you start SketchUp."
-  suFound:
+  ; Install for SketchUp 2015
+  Var /GLOBAL sketchup15Dir
+  Push $OUTDIR
+
+  ; Look for SketchUp 2015 32-bit
+  ReadRegStr $sketchup15Dir HKLM "Software\SketchUp\SketchUp 2015\InstallLocation" ""
+  StrCmp $sketchup15Dir "" 0 su15found
+  ; Look for SketchUp 2015 64-bit if 32-bit was not found
+  SetRegView 64
+  ReadRegStr $sketchup15Dir HKLM "Software\SketchUp\SketchUp 2015\InstallLocation" ""
+  SetRegView 32
+  StrCmp $sketchup15Dir "" su15done su15found
+
+  su15found:
+  IntOp $sketchupFound $sketchupFound + 1
+  ; SketchUp 2015 32-bit
+  StrCmp $sketchup15Dir "C:\Program Files (x86)\SketchUp\SketchUp 2015\" su15-32 0
+  ; SketchUp 2015 64-bit
+  StrCmp $sketchup15Dir "C:\Program Files\SketchUp\SketchUp 2015\" su15-64 0
+  ; Unknown install location
+  MessageBox MB_OK "Unrecognized SketchUp 2015 install location.  The OpenStudio SketchUp Plug-in will not be installed."
+  Goto su15done
+
+  su15-32:
+  ${If} ${FileExists} "$INSTDIR\ruby-install\ruby\lib\libmsvcrt-ruby200.dll.a"
+    Goto su15install
+  ${Else}
+    MessageBox MB_OK "$sketchupArchErrorMessage.  The OpenStudio SketchUp Plug-in will not be installed."
+    Goto su15done
+  ${EndIf}
+
+  su15-64:
+  ${If} ${FileExists} "$INSTDIR\ruby-install\ruby\lib\libx64-msvcrt-ruby200.dll.a"
+    Goto su15install
+  ${Else}
+    MessageBox MB_OK "$sketchupArchErrorMessage.  The OpenStudio SketchUp Plug-in will not be installed."
+    Goto su15done
+  ${EndIf}
+
+  su15install:
+  SetOutPath "$APPDATA\SketchUp\SketchUp 2015\SketchUp\Plugins"
+  file /oname=OpenStudio.rb "@CPACK_PACKAGE_FILE_NAME@\Ruby\Plugins\OpenStudio.rb"
+  SetOutPath "$APPDATA\SketchUp\SketchUp 2015\SketchUp\Plugins\OpenStudio"
+  file /oname=Startup.rb "@CPACK_PACKAGE_FILE_NAME@\Ruby\Plugins\OpenStudio\Startup.rb"
+  FileOpen $0 "$APPDATA\SketchUp\SketchUp 2015\SketchUp\Plugins\OpenStudio\OpenStudio-config.rb" w
+  FileWrite $0 "$sketchupConfigStatement"
+  FileClose $0
+
+  su15done:
+  IntCmp $sketchupFound 0 0 +2 +2
+  MessageBox MB_OK "Unable to locate your SketchUp 2015 installation.  SketchUp Make is freely available for personal and educational use at http://www.sketchup.com/, and SketchUp Pro is available for professional work.  If you wish to use the OpenStudio SketchUp Plug-in please download and install SketchUp 2015 now; the OpenStudio SketchUp Plug-in will launch automatically when you start SketchUp."
   Pop $0
   SetOutPath $0
 
-  ; Write out extra copy of OpenStudio-config.rb in install path so user can easily manually install plugin  
+  ; Write out extra copy of OpenStudio-config.rb in install path so user can easily manually install plugin
   FileOpen $0 "$INSTDIR\Ruby\Plugins\OpenStudio\OpenStudio-config.rb" w
-  FileWrite $0 "require '$INSTDIR\Ruby\openstudio'$\n"
+  FileWrite $0 "$sketchupConfigStatement"
   FileClose $0
 
 SectionEnd
@@ -1063,13 +1100,13 @@ Function GetInstalledSize
       SectionGetSize $1 $0
       IntOp $GetInstalledSize.total $GetInstalledSize.total + $0
     ${Endif}
- 
+
     ; Error flag is set when an out-of-bound section is referenced
     ${if} ${errors}
       ${break}
     ${Endif}
   ${Next}
- 
+
   ClearErrors
   Pop $1
   Pop $0

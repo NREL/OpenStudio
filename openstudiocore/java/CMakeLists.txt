@@ -1,4 +1,3 @@
-
   set(JAVA_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/java")
 
   file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/java_wrapper/generated_sources")
@@ -10,6 +9,13 @@
   else()
     set(OPENSTUDIO_JAVA_JAR "${JAVA_LIBRARY_OUTPUT_DIRECTORY}/OpenStudio.jar")
   endif()
+
+  if(MSVC)
+    set(OPENSTUDIO_JAVA_BIN_DIR "${JAVA_LIBRARY_OUTPUT_DIRECTORY}/$<CONFIGURATION>")
+  else()
+    set(OPENSTUDIO_JAVA_BIN_DIR "${JAVA_LIBRARY_OUTPUT_DIRECTORY}")
+  endif()
+
 
   file(TO_NATIVE_PATH "${OPENSTUDIO_JAVA_JAR}" OPENSTUDIO_NATIVE_JAVA_JAR)
 
@@ -67,83 +73,31 @@
   elseif(APPLE)
     install(FILES "${JAVA_LIBRARY_OUTPUT_DIRECTORY}/OpenStudio.jar" DESTINATION Java/openstudio/)
   else()
-    install(FILES "${JAVA_LIBRARY_OUTPUT_DIRECTORY}/OpenStudio.jar" DESTINATION lib/openstudio/java)
+    install(FILES "${JAVA_LIBRARY_OUTPUT_DIRECTORY}/OpenStudio.jar" DESTINATION lib/openstudio-${OPENSTUDIO_VERSION}/java)
   endif()
 
-  # run all the unit tests
-  # if(BUILD_TESTING OR BUILD_SIMPLE_TESTING)
+  # Hand run commands we are replicating here
+  
+  #  jason@ubuntu12:~/OpenStudio-main/openstudiocore/java$ /usr/lib/jvm/java-1.7.0-openjdk-amd64/bin/javac TestOpenStudio.java -classpath ~/openstudio-main-build/OSCore-prefix/src/OSCore-build/Products/java/OpenStudio.jar
+  #  jason@ubuntu12:~/OpenStudio-main/openstudiocore/java$ LD_LIBRARY_PATH=~/openstudio-main-build/OSCore-prefix/src/OSCore-build/Products/java /usr/lib/jvm/java-1.7.0-openjdk-amd64/bin/java -classpath ~/openstudio-main-build/OSCore-prefix/src/OSCore-build/Products/java/OpenStudio.jar:.  TestOpenStudio
 
-    # # need to find NUnit
-    # find_program(NUNIT_EXECUTABLE nunit-console.exe
-      # HINTS ENV ProgramFiles
-      # PATH_SUFFIXES "NUnit 2.5.3/bin/net-2.0"
-    # )
+  add_custom_command(
+    OUTPUT "${CMAKE_BINARY_DIR}/TestOpenStudio.class"
+    COMMAND "${Java_JAVAC_EXECUTABLE}" -d "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}/java/TestOpenStudio.java" -classpath "${OPENSTUDIO_JAVA_JAR}"
+    DEPENDS "${OPENSTUDIO_JAVA_JAR}"
+    )
 
-    # if(${NUNIT_EXECUTABLE} STREQUAL "NUNIT_EXECUTABLE-NOTFOUND")
-      # message(SEND_ERROR "NUnit not found, unable to build CSharp tests on windows")
-    # endif()
+  add_custom_target(java_tests ALL
+    DEPENDS "${CMAKE_BINARY_DIR}/TestOpenStudio.class"
+   )
 
-    # # the unit test dll in current configuration mode
-    # set(OPENSTUDIO_CSHARP_TEST_DLL "${CMAKE_SOURCE_DIR}/csharp/test/UnitTests/bin/$(ConfigurationName)/UnitTests.dll")
-    # set(OPENSTUDIO_CSHARP_TEST_INSTALL_DLL "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/$(ConfigurationName)/UnitTests.dll")
-
-    # # build the tests
-    # add_custom_command(
-      # OUTPUT ${OPENSTUDIO_CSHARP_TEST_DLL}
-
-      # COMMAND ${CMAKE_COMMAND} -E copy "${OPENSTUDIO_CSHARP_DLL}" "${CMAKE_SOURCE_DIR}/csharp/test/UnitTests/bin/."
-
-      # COMMAND "${MSVC_BUILD_TOOL}" "${CMAKE_SOURCE_DIR}/csharp/test/UnitTests/UnitTests.csproj" /Build $(ConfigurationName)
-
-      # COMMAND ${CMAKE_COMMAND} -E copy "${OPENSTUDIO_CSHARP_TEST_DLL}" "${OPENSTUDIO_CSHARP_TEST_DLL}"
-      # COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/csharp/test/UnitTests/bin/$(ConfigurationName)/nunit.framework.dll" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/$(ConfigurationName)/nunit.framework.dll"
-
-      # DEPENDS ${OPENSTUDIO_CSHARP_DLL} ${ALL_CSHARP_BINDING_TARGETS}  ${csharp_test_src}
-    # )
-
-    # # build the unit tests, primarily exists so ctest will work after building ALL
-    # add_custom_target(csharp_unit_tests ALL
-      # DEPENDS ${OPENSTUDIO_CSHARP_TEST_DLL}
-      # SOURCES ${csharp_test_src}
-    # )
-
-    # # run the tests
-    # add_custom_target(csharp_run_tests
-      # COMMAND "${NUNIT_EXECUTABLE}" "${OPENSTUDIO_CSHARP_TEST_INSTALL_DLL}" "/nologo"
-      # DEPENDS ${OPENSTUDIO_CSHARP_TEST_DLL}
-    # )
-
-    # # add test to dashboard, could get fancier with this but not yet
-    # # hard to parse C# looking for tests, can call NUnit with '/labels' to get list of tests but don't know how to do that
-    # # at the right time.  Other option is to just state naming convetion (e.g. Test_Func) and parse as in Ruby tests.
-    # add_test(NAME "CSharpTest"
-      # COMMAND "${NUNIT_EXECUTABLE}" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/$<CONFIGURATION>/UnitTests.dll" "/nologo"
-    # )
-
-  # endif()
-
-  # build the package
-  # find_program(INNO_SETUP_EXECUTABLE ISCC.exe
-    # HINTS ENV ProgramFiles
-    # PATH_SUFFIXES "Inno Setup 5"
-  # )
-
-  # if(${INNO_SETUP_EXECUTABLE} STREQUAL "INNO_SETUP_EXECUTABLE-NOTFOUND")
-    # message(SEND_ERROR "Inno Setup compiler not found, unable to build CSharp package on windows")
-  # endif()
-
-  # set(CSHARP_INSTALLER_FILE "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}/OpenStudio_DotNET_SDK-${CSHARP_ASSEMBLY_VERSION}.exe")
-
-  # file(TO_NATIVE_PATH "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}" CSHARP_SDK_OUTPUT_DIR)
-
-  # file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/csharp_wrapper/OpenStudioSDK.iss" CSHARP_SDK_SOURCE)
-
-  # add_custom_target(csharp_sdk_installer
-    # COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/csharp/runSandcastle.bat" "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}/Release/."
-    # COMMAND ${CMAKE_COMMAND} -E chdir "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}/Release/" "runSandcastle.bat"
-    # COMMAND "${INNO_SETUP_EXECUTABLE}" "${CSHARP_SDK_SOURCE}" "/O\"${CSHARP_SDK_OUTPUT_DIR}\""
-    # DEPENDS ${ALL_CSHARP_BINDING_TARGETS} ${OPENSTUDIO_CSHARP_DLL} ${CSHARP_SDK_SOURCE} ${ALL_CPP_DOC_TARGETS}
-    # COMMENT "Making .NET SDK Installer"
-  # )
-
-
+  if (MSVC)
+    add_test(NAME "JavaSanityCheck" 
+      COMMAND "${Java_JAVA_EXECUTABLE}"  -classpath "${CMAKE_BINARY_DIR}/Products/java/$<CONFIGURATION>/OpenStudio.jar;${CMAKE_BINARY_DIR}" TestOpenStudio
+	  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/Products/java/$<CONFIGURATION>" 
+      )
+  else()
+    add_test(NAME "JavaSanityCheck" 
+      COMMAND "${Java_JAVA_EXECUTABLE}"  "-Djava.library.path=${OPENSTUDIO_JAVA_BIN_DIR}" -classpath "${OPENSTUDIO_JAVA_JAR}:${CMAKE_BINARY_DIR}" TestOpenStudio
+      )
+  endif()

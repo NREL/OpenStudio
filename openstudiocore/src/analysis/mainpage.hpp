@@ -3,7 +3,7 @@ namespace analysis {
 
 /** \mainpage OpenStudio Analysis
  *
- *  \section quick_links Quick Links
+ *  \section quick_links_analysis Quick Links
  *
  *  Base classes in alphabetical order:
  *
@@ -30,11 +30,11 @@ namespace analysis {
  *  \li \ref ms - Algorithms for parameter studies and multivariate sampling
  *  \li \ref ms_sa - Algorithms for multivariate sampling with sensitivity analysis capabilities
  *  \li \ref sa_uq - Algorithms for multivariate sampling that account for uncertainty 
- *                   descriptions and have sensivitiy analysis and uncertainty quantification 
+ *                   descriptions and have sensitivity analysis and uncertainty quantification 
  *                   capabilities
  *  \li \ref optimization - Algorithms for design optimization  
  *  
- *  \section overview Overview
+ *  \section overview_analysis Overview
  *
  *  The OpenStudio %Analysis sub-project supports the formulation and solution of energy-efficient 
  *  building design problems. %Analysis works in concert with the entire analysis framework, see 
@@ -65,7 +65,7 @@ namespace analysis {
  *  not yet be interested in conducting simulations; thus we give the user precise control over all
  *  of the \link WorkflowStep WorkflowSteps\endlink.
  * 
- *  The Problem class was designed to be nominally sharable between projects, however, the 
+ *  The Problem class was designed to be nominally shareable between projects, however, the 
  *  practicality of sharing a given formulation will depend on the specifics of how the \link
  *  WorkflowStep WorkflowSteps\endlink are defined.
  *
@@ -88,7 +88,7 @@ namespace analysis {
  *    models (OSM) or EnergyPlus models (IDF). What type of model is loaded as input, and what type 
  *    is serialized as output, must be specified during the construction of a RubyPerturbation, 
  *    either implicitly as part of a BCLMeasure, or explicitly using the FileReferenceType 
- *    enumeration in utilites/core/FileReference.hpp.
+ *    enumeration in utilities/core/FileReference.hpp.
  *  
  *    \subsection continuous_variables Continuous Variables
  *
@@ -164,7 +164,7 @@ namespace analysis {
  *  analysisdriver::AnalysisDriver.
  *
  *  To create a new DataPoint, a value for each of the Problem's variables must be specified using
- *  a std::vector<QVariant>. If the variable is discrete, the QVariant must be convertable to int, 
+ *  a std::vector<QVariant>. If the variable is discrete, the QVariant must be convertible to int, 
  *  and as that integer will be interpreted as an index into DiscreteVariable::perturbations(false), 
  *  it must be >= 0 and < DiscreteVariable::numPerturbations(false). If the variable is continuous,
  *  the QVariant must be convertible to double and should make sense in the context of that 
@@ -285,7 +285,7 @@ namespace analysis {
  *    plot of the objective function values. The minimum curve starts at the baseline point (first 
  *    perturbation specified for each variable), and then moves always in the direction of improving
  *    the other objective function, that is, the objective function that is not minimized first. In 
- *    previous work, an economic objective has been minimized first, while always improving an enery
+ *    previous work, an economic objective has been minimized first, while always improving an energy
  *    use objective, which works well here at NREL since we are not generally interested in cheaper 
  *    buildings that use more energy. This methodology does not work as well when both objectives 
  *    are equally important, such as when cooling energy and heating energy are traded off. However,

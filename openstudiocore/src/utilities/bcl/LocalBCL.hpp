@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -31,8 +31,6 @@ class QSqlDatabase;
 class QWidget;
 
 namespace openstudio{
-
-  class OnDemandGenerator;
 
   /// \todo This class is currently a singleton implemented with a first use static
   ///       this may cause problems with threading in the future and should be moved 
@@ -78,10 +76,6 @@ namespace openstudio{
 
     /// Get the measure by uid
     virtual boost::optional<BCLMeasure> getMeasure(const std::string& uid, const std::string& versionId = "") const;
-
-    /// Searches the library for an on demand generated component matching this generator.
-    /// This generator should have values for all arguments set.
-    virtual boost::optional<BCLComponent> getOnDemandComponent(const OnDemandGenerator& generator) const;
 
     /// Get all components
     std::vector<BCLComponent> components() const;

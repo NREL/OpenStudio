@@ -16,5 +16,5 @@ model = openstudio.model.Model()
 space = openstudio.model.Space(model)
 space.setName("New Space")
 
-for s in model.getSpaces():
+for s in openstudio.model.getSpaces(model):
   print s

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -36,6 +36,14 @@ UTILITIES_API Url toURL(const openstudio::path& p);
 UTILITIES_API Url toURL(const std::string& s);
 
 UTILITIES_API std::string toString(const Url& url);
+
+/// Extracts original path from Url, throws if scheme is not file
+/// Useful for getting Windows style path out when running on Linux
+UTILITIES_API openstudio::path getOriginalPath(const Url& url);
+
+/// Attempts to extract original path from Url
+/// Useful for getting Windows style path out when running on Linux
+UTILITIES_API boost::optional<openstudio::path> getOptionalOriginalPath(const Url& url);
 
 } // openstudio
 

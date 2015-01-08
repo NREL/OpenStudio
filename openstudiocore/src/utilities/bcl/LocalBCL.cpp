@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -20,7 +20,6 @@
 #include "BCLMeasure.hpp"
 #include "LocalBCL.hpp"
 #include "RemoteBCL.hpp"
-#include "OnDemandGenerator.hpp"
 #include "../core/Application.hpp"
 #include "../core/Assert.hpp"
 #include "../data/Attribute.hpp"
@@ -53,7 +52,7 @@ namespace openstudio{
     dbVersion("1.3")
   {
     //Make sure a QApplication exists
-    openstudio::Application::instance().application();
+    openstudio::Application::instance().application(false);
 
     QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE", m_libraryPath+m_dbName);
     database.setDatabaseName(m_libraryPath+m_dbName);
@@ -332,41 +331,6 @@ namespace openstudio{
       }catch(const std::exception&){
       }
     }
-    return boost::none;
-  }
-
-  boost::optional<BCLComponent> LocalBCL::getOnDemandComponent(const OnDemandGenerator& generator) const
-  {
-    if (!generator.checkArgumentValues()){
-      return boost::none;
-    }
-
-    std::vector<std::pair<std::string, std::string> > searchTerms;
-
-    searchTerms.push_back(std::make_pair<std::string, std::string>("OnDemandGenerator UID", generator.uid()));
-    searchTerms.push_back(std::make_pair<std::string, std::string>("OnDemandGenerator VID", generator.versionId()));
-
-    for (const OnDemandGeneratorArgument& argument : generator.activeArguments()) {
-
-      // can't handle other types for now
-      if (argument.dataType() != OnDemandGeneratorArgumentType::String){
-        return boost::none;
-      }
-
-      std::string value = "";
-      boost::optional<std::string> valueAsString = argument.valueAsString();
-      if (valueAsString){
-        value = *valueAsString;
-      }
-      searchTerms.push_back(std::make_pair(argument.name(), value));
-    }
-
-    std::vector<BCLComponent> components = componentAttributeSearch(searchTerms);
-
-    if (!components.empty()){
-      return components[0];
-    }
-
     return boost::none;
   }
 
@@ -779,7 +743,7 @@ namespace openstudio{
   bool LocalBCL::prodAuthKeyUserPrompt(QWidget* parent)
   {
     // make sure application is initialized
-    Application::instance().application(true);
+    Application::instance().application(false);
 
     QInputDialog inputDlg(parent);
     inputDlg.setInputMode(QInputDialog::TextInput);
@@ -810,7 +774,7 @@ namespace openstudio{
   bool LocalBCL::devAuthKeyUserPrompt(QWidget* parent)
   {
     // make sure application is initialized
-    openstudio::Application::instance().application(true);
+    openstudio::Application::instance().application(false);
 
     QInputDialog inputDlg(parent);
     inputDlg.setInputMode(QInputDialog::TextInput);

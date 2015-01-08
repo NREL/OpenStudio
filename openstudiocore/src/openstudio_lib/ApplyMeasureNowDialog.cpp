@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -184,7 +184,7 @@ void ApplyMeasureNowDialog::createWidgets()
 
   m_jobPath = new QLabel();
   m_jobPath->setTextInteractionFlags(Qt::TextSelectableByMouse);
-  #if _NDEBUG
+  #if !(_DEBUG || (__GNUC__ && !NDEBUG))
     m_jobPath->hide();
   #endif
 
@@ -832,6 +832,7 @@ void ApplyMeasureNowDialog::showAdvancedOutput()
     QMessageBox::information(this, QString("Advanced Output"), QString("No advanced output."));
   }else{
     m_advancedOutputDialog->setText(m_advancedOutput);
+    m_advancedOutputDialog->setSizeHint(QSize(this->geometry().width(), this->geometry().height()));
     m_advancedOutputDialog->exec();
     m_advancedOutputDialog->raise();
   }

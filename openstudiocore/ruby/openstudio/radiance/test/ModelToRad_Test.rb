@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ class ModelToRad_Test < MiniTest::Unit::TestCase
     modelPath = OpenStudio::Path.new("#{$OpenStudio_ResourcePath}radiance/test/ExampleModel.osm")
     FileUtils.mkdir_p(modelPath.parent_path.to_s)
     
-    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
+    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,2)
     epwPath = OpenStudio::Path.new(ep_hash[:energyplus_weatherdata].to_s) / OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.epw")
     epwFile = OpenStudio::EpwFile.new(epwPath)
     weatherFile = OpenStudio::Model::WeatherFile::setWeatherFile(modelExample, epwFile)

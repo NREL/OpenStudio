@@ -3,7 +3,7 @@ namespace analysisdriver {
 
 /** \mainpage OpenStudio Analysis Driver
  *
- *  \section quick_links Quick Links
+ *  \section quick_links_analysisdriver Quick Links
  *
  *  \li AnalysisDriver
  *  \li AnalysisRunOptions
@@ -12,7 +12,7 @@ namespace analysisdriver {
  *  of running and storing a single analysis per ProjectDatabase. Also provides BCLMeasure
  *  management features, and is the basis for Parametric Analysis Tool (PAT) projects. 
  *
- *  \section overview Overview
+ *  \section overview_analysisdriver Overview
  *
  *  AnalysisDriver runs analyses (analysis::Analysis objects) using a runmanager::RunManager, 
  *  saving the results to a project::ProjectDatabase for future viewing, query, and retrieval. 
@@ -20,7 +20,7 @@ namespace analysisdriver {
  *  requires a RunManager), and then constructing an AnalysisDriver object. At this point, one
  *  or more analysis::Analysis objects may be run. The Analysis may be constructed just before
  *  constructing the AnalysisDriver, or it may have been constructed previously and saved in 
- *  (and subsequently retrieved from) a ProjectDatabase. Behaviorially, AnalysisDriver:
+ *  (and subsequently retrieved from) a ProjectDatabase. Behaviorally, AnalysisDriver:
  *
  *  \li Uses the RunManager to run DataPoints already in the list Analysis::dataPointsToQueue
  *      first. This list will be non-empty if the user directly calls Analysis::addDataPoint 

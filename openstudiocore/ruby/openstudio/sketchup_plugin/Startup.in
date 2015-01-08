@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -27,12 +27,12 @@ begin
 
   minimum_version = ''
   minimum_version_key = ''
-  if (RUBY_PLATFORM =~ /mswin/)  # Windows
-    minimum_version = '7.0.0000'
-    minimum_version_key = '000700000000'
+  if (RUBY_PLATFORM =~ /mswin/ || RUBY_PLATFORM =~ /mingw/)  # Windows
+    minimum_version = '14.0.0000'
+    minimum_version_key = '001400000000'
   elsif (RUBY_PLATFORM =~ /darwin/)  # Mac OS X
-    minimum_version = '7.0.0000'
-    minimum_version_key = '000700000000'
+    minimum_version = '14.0.0000'
+    minimum_version_key = '001400000000'
   end
 
   installed_version = Sketchup.version

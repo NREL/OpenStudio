@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -65,6 +65,8 @@
 #include <QVBoxLayout>
 #include <algorithm>
 #include <iterator>
+
+#include <utilities/idd/IddEnums.hxx>
 
 #define UPPER_LIMIT 1.0
 #define LOWER_LIMIT 0.0

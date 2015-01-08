@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -36,6 +36,8 @@ class OSQuantityEdit;
 
 class OSQuantityEdit2;
 
+class StandardsInformationMaterialWidget;
+
 class WindowMaterialGlazingGroupThermochromicInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
@@ -64,17 +66,16 @@ class WindowMaterialGlazingGroupThermochromicInspectorView : public ModelObjectI
 
     void refresh();
 
-    OSLineEdit * m_nameEdit;
-
-    OSQuantityEdit2 * m_opticalDataTemperature;
-
-    OSLineEdit * m_windowMaterialGlazingName;
-
     bool m_isIP;
 
-  public slots:
+    OSLineEdit * m_nameEdit = nullptr;
 
-    void toggleUnits(bool displayIP);
+    OSQuantityEdit2 * m_opticalDataTemperature = nullptr;
+
+    OSLineEdit * m_windowMaterialGlazingName = nullptr;
+
+    StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
+
 };
 
 } // openstudio

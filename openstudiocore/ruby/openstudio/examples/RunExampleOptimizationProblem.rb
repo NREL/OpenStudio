@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -87,7 +87,7 @@ rmdbPath = toString(ospPath.stem) + "Run.db"
 rmdbPath = ospPath.parent_path / Path.new(rmdbPath)
 
 # EnergyPlus WeatherData
-ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
+ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,2)
 weatherData_path = Path.new(ep_hash[:energyplus_weatherdata].to_s)
 
 

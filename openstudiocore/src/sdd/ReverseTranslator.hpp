@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -152,6 +152,8 @@ namespace sdd {
 
     //helper method to do unit conversions; probably should be in OS proper
     boost::optional<double> unitToUnit(const double& val, const std::string& ipUnitString, const std::string& siUnitString);
+
+    bool m_isInputXML; 
 
     bool autosize() const;
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -36,6 +36,8 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
+class StandardsInformationMaterialWidget;
+
 class WindowMaterialScreenInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
@@ -64,39 +66,38 @@ class WindowMaterialScreenInspectorView : public ModelObjectInspectorView
 
     void refresh();
 
-    OSComboBox * m_reflectedBeamTransmittanceAccountingMethod;
-
-    OSComboBox * m_angleOfResolutionForScreenTransmittanceOutputMap;
-
-    OSLineEdit * m_nameEdit;
-
-    OSQuantityEdit * m_diffuseSolarReflectance;
-
-    OSQuantityEdit * m_diffuseVisibleReflectance;
-
-    OSQuantityEdit * m_thermalHemisphericalEmissivity;
-
-    OSQuantityEdit * m_conductivity;
-
-    OSQuantityEdit * m_screenMaterialSpacing;
-
-    OSQuantityEdit * m_screenMaterialDiameter;
-
-    OSQuantityEdit * m_screenToGlassDistance;
-
-    OSQuantityEdit * m_topOpeningMultiplier;
-
-    OSQuantityEdit * m_bottomOpeningMultiplier;
-
-    OSQuantityEdit * m_leftSideOpeningMultiplier;
-
-    OSQuantityEdit * m_rightSideOpeningMultiplier;
-
     bool m_isIP;
 
-  public slots:
+    OSLineEdit * m_nameEdit = nullptr;
 
-    void toggleUnits(bool displayIP);
+    OSComboBox * m_reflectedBeamTransmittanceAccountingMethod = nullptr;
+
+    OSComboBox * m_angleOfResolutionForScreenTransmittanceOutputMap = nullptr;
+
+    OSQuantityEdit * m_diffuseSolarReflectance = nullptr;
+
+    OSQuantityEdit * m_diffuseVisibleReflectance = nullptr;
+
+    OSQuantityEdit * m_thermalHemisphericalEmissivity = nullptr;
+
+    OSQuantityEdit * m_conductivity = nullptr;
+
+    OSQuantityEdit * m_screenMaterialSpacing = nullptr;
+
+    OSQuantityEdit * m_screenMaterialDiameter = nullptr;
+
+    OSQuantityEdit * m_screenToGlassDistance = nullptr;
+
+    OSQuantityEdit * m_topOpeningMultiplier = nullptr;
+
+    OSQuantityEdit * m_bottomOpeningMultiplier = nullptr;
+
+    OSQuantityEdit * m_leftSideOpeningMultiplier = nullptr;
+
+    OSQuantityEdit * m_rightSideOpeningMultiplier = nullptr;
+
+    StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
+
 };
 
 } // openstudio

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -64,12 +64,14 @@ class OSGridView;
 ///
 /// Essentially, by using this class you are creating a stack of widgets in the grid cell:
 ///
+/// \code
 /// <widget for t_sourceFunc item 1>
 /// <widget for t_sourceFunc item 2>
 /// ...
 /// <widget for t_sourceFunc item N>
 /// <widget for t_dropZoneConcept (see notes below)>
 /// <space holder widget if enabled>
+/// \endcode
 class DataSource
 {
   public:
@@ -80,7 +82,7 @@ class DataSource
     ///
     /// \param[in] t_sourceFunc Takes an Input object (practically speaking, a ModelObject derivation) and returns a vector 
     ///                         of items (probably some derived class from ModelObject)
-    /// \param[in] t_wantsPlaceHolder Informs the system to add a placeholder gap at the bottom of the list when it is 
+    /// \param[in] t_wantsPlaceholder Informs the system to add a placeholder gap at the bottom of the list when it is 
     ///                         rendering the list of widgets. This is to help non-dropzone enabled stacks of widgets
     ///                         line up with those stacks that do contain dropzones
     /// \param[in] t_dropZoneConcept The `BaseConcept` you want displayed at the bottom of the list of widgets.
@@ -167,6 +169,7 @@ public:
   // in the model that is iddObjectType
   OSGridController(bool isIP,
     const QString & headerText,
+    IddObjectType iddObjectType,
     model::Model model,
     std::vector<model::ModelObject> modelObjects);
 
@@ -184,7 +187,6 @@ public:
     }
   }
 
-
   template<typename DataSourceType>
   void addCheckBoxColumn(QString headingLabel,
                          std::function<bool (DataSourceType *)>  t_getter,
@@ -193,7 +195,6 @@ public:
   {
     m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<CheckBoxConcept>(new CheckBoxConceptImpl<DataSourceType>(headingLabel,t_getter,t_setter)), t_source));
   }
-
 
   template<typename ChoiceType, typename DataSourceType>
   void addComboBoxColumn(QString headingLabel,
@@ -237,10 +238,6 @@ public:
           editable);
   }
 
-
-
-
-
   template<typename ChoiceType, typename DataSourceType>
   void addComboBoxColumn(QString headingLabel,
                          std::function<std::string (const ChoiceType &)> toString,
@@ -260,7 +257,6 @@ public:
                                                                   reset,
                                                                   isDefaulted)), t_source));
   }
-
 
   template<typename ChoiceType, typename DataSourceType>
   void addComboBoxColumn(QString headingLabel,
@@ -340,12 +336,13 @@ public:
 
   template<typename DataSourceType>
   void addNameLineEditColumn(QString headingLabel,
+                             bool isInspectable,
                              const std::function<boost::optional<std::string> (DataSourceType *, bool)>  &getter,
                              const std::function<boost::optional<std::string> (DataSourceType *, const std::string &)> &setter,
                              const boost::optional<std::function<void (DataSourceType *)>> &resetter = boost::none,
                              const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<NameLineEditConcept>(new NameLineEditConceptImpl<DataSourceType>(headingLabel,getter,setter,resetter)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<NameLineEditConcept>(new NameLineEditConceptImpl<DataSourceType>(headingLabel, isInspectable, getter, setter, resetter)), t_source));
   }
 
   template<typename DataSourceType>
@@ -514,6 +511,8 @@ protected:
 
   std::vector<model::ModelObject> m_modelObjects;
 
+  IddObjectType m_iddObjectType;
+
 private:
 
   friend class OSGridView;
@@ -583,6 +582,12 @@ private slots:
 
   void onDropZoneItemClicked(OSItem* item);
 
+  void onRemoveWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
+
+  void onAddWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
+
+  void onObjectRemoved(boost::optional<model::ParentObject> parent);
+
 };
 
 class HorizontalHeaderWidget : public QWidget
@@ -611,4 +616,3 @@ class GridViewDropZoneVectorController : public OSVectorController
 } // openstudio
 
 #endif // SHAREDGUICOMPONENTS_OSGRIDCONTROLLER_HPP
-

@@ -1,6 +1,6 @@
-diff -rupN boost_1_55_0/boost/atomic/detail/cas128strong.hpp boost_1_55_0_patched/boost/atomic/detail/cas128strong.hpp
---- boost_1_55_0/boost/atomic/detail/cas128strong.hpp	2013-07-20 12:01:35.000000000 -0600
-+++ boost_1_55_0_patched/boost/atomic/detail/cas128strong.hpp	2014-07-30 16:00:22.000000000 -0600
+diff --git a/boost/atomic/detail/cas128strong.hpp b/boost/atomic/detail/cas128strong.hpp
+--- a/boost/atomic/detail/cas128strong.hpp
++++ b/boost/atomic/detail/cas128strong.hpp
 @@ -196,15 +196,17 @@ protected:
  
  public:
@@ -32,9 +32,9 @@ diff -rupN boost_1_55_0/boost/atomic/detail/cas128strong.hpp boost_1_55_0_patche
          memcpy(&expected_s, &expected, sizeof(value_type));
          memcpy(&desired_s, &desired, sizeof(value_type));
  
-diff -rupN boost_1_55_0/boost/atomic/detail/gcc-atomic.hpp boost_1_55_0_patched/boost/atomic/detail/gcc-atomic.hpp
---- boost_1_55_0/boost/atomic/detail/gcc-atomic.hpp	2013-07-20 12:01:35.000000000 -0600
-+++ boost_1_55_0_patched/boost/atomic/detail/gcc-atomic.hpp	2014-07-30 16:00:37.000000000 -0600
+diff --git a/boost/atomic/detail/gcc-atomic.hpp b/boost/atomic/detail/gcc-atomic.hpp
+--- a/boost/atomic/detail/gcc-atomic.hpp
++++ b/boost/atomic/detail/gcc-atomic.hpp
 @@ -61,7 +61,7 @@ public:
  
      void clear(memory_order order = memory_order_seq_cst) volatile BOOST_NOEXCEPT
@@ -95,3 +95,44 @@ diff -rupN boost_1_55_0/boost/atomic/detail/gcc-atomic.hpp boost_1_55_0_patched/
          memcpy(&expected_s, &expected, sizeof(value_type));
          memcpy(&desired_s, &desired, sizeof(value_type));
          const bool success = __atomic_compare_exchange_n(&v_, &expected_s, desired_s, true,
+diff --git a/tools/build/v2/tools/darwin.jam b/tools/build/v2/tools/darwin.jam
+--- a/tools/build/v2/tools/darwin.jam
++++ b/tools/build/v2/tools/darwin.jam
+@@ -72,7 +72,7 @@ toolset.inherit-flags darwin : gcc
+ #
+ #   <root>PATH
+ #       Platform root path. The common autodetection will set this to
+-#       "/Developer". And when a command is given it will be set to
++#       "/Applications/Xcode.app/Contents/Developer". And when a command is given it will be set to
+ #       the corresponding "*.platform/Developer" directory.
+ #
+ rule init ( version ? : command * : options * : requirement * )
+@@ -106,7 +106,7 @@ rule init ( version ? : command * : options * : requirement * )
+         bin ?= [ common.get-absolute-tool-path $(command[1]) ] ;
+         if $(bin) = "/usr/bin"
+         {
+-            root ?= /Developer ;
++            root ?= /Applications/Xcode.app/Contents/Developer ;
+         }
+         else
+         {
+@@ -329,9 +329,13 @@ local rule init-sdk ( condition * : root ? : version + : version-feature ? )
+ # Determine the MacOSX SDK versions installed and their locations.
+ local rule init-available-sdk-versions ( condition * : root ? )
+ {
+-    root ?= /Developer ;
+-    local sdks-root = $(root)/SDKs ;
+-    local sdks = [ GLOB $(sdks-root) : MacOSX*.sdk iPhoneOS*.sdk iPhoneSimulator*.sdk ] ;
++    root ?= /Applications/Xcode.app/Contents/Developer ;
++    local platforms = [ GLOB /Applications/Xcode.app/Contents/Developer/Platforms : *.platform ] ;
++    local sdks = ;
++    for local platform in $(platforms)
++    {
++        sdks += [ GLOB $(platform)/Developer/SDKs : *.sdk ] ;
++    }
+     local result ;
+     for local sdk in $(sdks)
+     {
+-- 
+1.9.3 (Apple Git-50)
+

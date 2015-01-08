@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -27,6 +27,9 @@
 #include "OSListView.hpp"
 #include "OSViewSwitcher.hpp"
 
+#include "../openstudio_lib/MainWindow.hpp"
+#include "../openstudio_lib/OSAppBase.hpp"
+#include "../openstudio_lib/OSDocument.hpp"
 #include "../openstudio_lib/OSItem.hpp"
 
 #include "MeasureBadge.hpp"
@@ -34,6 +37,7 @@
 #include "../utilities/bcl/LocalBCL.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -44,6 +48,7 @@
 #include <QDrag>
 #include <QFile>
 #include <QLabel>
+#include <QMessageBox>
 #include <QMimeData>
 #include <QSettings>
 #include <QVariant>
@@ -145,8 +150,14 @@ void LocalLibraryController::showMeasures()
 void LocalLibraryController::showMyMeasuresFolder()
 {
   openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
-  QString path = QDir::toNativeSeparators(toQString(userMeasuresDir));
-  QDesktopServices::openUrl(QUrl("file:///" + path));
+
+  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+    QMessageBox::information(QApplication::activeWindow(), "Cannot Open Directory", "Your My Measures Directory appears to be on a network drive that is not currently available.\nYou can change your specified My Measures Directory using 'Preferences->Change My Measures Directory'.", QMessageBox::Ok);
+  }
+  else {
+    QString path = QDir::toNativeSeparators(toQString(userMeasuresDir));
+    QDesktopServices::openUrl(QUrl("file:///" + path));
+  }
 }
 
 QSharedPointer<LibraryTypeListController> LocalLibraryController::createLibraryListController(const QDomDocument & taxonomy, LocalLibrary::LibrarySource source)
@@ -685,6 +696,11 @@ void LibraryListController::createItems()
 
   // create items
   openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
+
+  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+    return;
+  }
+
   for( const auto & measure : measures )
   {
     if( m_taxonomyTag.compare(QString::fromStdString(measure.taxonomyTag()),Qt::CaseInsensitive) == 0 )

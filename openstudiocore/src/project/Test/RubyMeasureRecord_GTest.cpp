@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -179,8 +179,9 @@ TEST_F(ProjectFixture, RubyMeasureRecord_BCLMeasure) {
   Problem problem("Problem",VariableVector(),runmanager::Workflow());
   MeasureGroup dvar("Variable",MeasureVector());
   problem.push(dvar);
-  openstudio::path measuresPath = resourcesPath() / toPath("/utilities/BCL/Measures");
+  openstudio::path measuresPath = resourcesPath() / toPath("/utilities/BCL/Measures/v2");
   openstudio::path dir = measuresPath / toPath("SetWindowToWallRatioByFacade");
+  ASSERT_TRUE(BCLMeasure::load(dir));
   BCLMeasure measure = BCLMeasure::load(dir).get();
   RubyMeasure rpert(measure);
   dvar.push(rpert);

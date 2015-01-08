@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -38,6 +38,9 @@ namespace openstudio {
 namespace runmanager {
 namespace detail {
 
+  // We are subclassing QProcess to deal with the case where a parent or embedded context, such as
+  // node.js, intercepts child signals before they are handled by QProcessManager.
+  // http://stackoverflow.com/questions/7113506/qprocess-becomes-defunct-and-unable-to-start-again/7122340#7122340
   class MyQProcess : public QProcess
   {
     Q_OBJECT;
@@ -53,6 +56,7 @@ namespace detail {
 
     private:
       int m_exitedCount;
+      int m_postExitCheckCount;
   };
 
   /**
@@ -155,6 +159,9 @@ namespace detail {
 
       /// connected to QProcess::started
       void processStarted();
+      
+      /// connected to QProcess::stateChanged
+      void processStateChanged(QProcess::ProcessState s);
 
       /// connected to QFilesystemWatcher::directoryChanged
       void directoryChanged(const QString& d);

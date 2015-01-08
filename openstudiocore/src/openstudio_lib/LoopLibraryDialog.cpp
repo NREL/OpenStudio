@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ LoopLibraryDialog::LoopLibraryDialog(QWidget * parent)
   setFixedSize(280,584);
 
   setWindowTitle("Add HVAC System");
-  setWindowFlags(Qt::WindowFlags(Qt::Dialog | Qt::WindowTitleHint));
+  setWindowFlags(Qt::WindowFlags(Qt::Dialog | Qt::WindowTitleHint | Qt::WindowCloseButtonHint));
 
   QVBoxLayout * mainVLayout = new QVBoxLayout();
   mainVLayout->setContentsMargins(0,0,0,0);

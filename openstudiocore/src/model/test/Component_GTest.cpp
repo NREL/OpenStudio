@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -50,6 +50,7 @@
 #include <utilities/idd/OS_Lights_FieldEnums.hxx>
 #include <utilities/idd/OS_SizingPeriod_DesignDay_FieldEnums.hxx>
 #include <utilities/idd/OS_ComponentData_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include "../../utilities/core/PathHelpers.hpp"
 

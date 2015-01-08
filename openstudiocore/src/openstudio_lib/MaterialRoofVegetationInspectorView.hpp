@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -36,6 +36,8 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
+class StandardsInformationMaterialWidget;
+
 class MaterialRoofVegetationInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
@@ -64,49 +66,48 @@ class MaterialRoofVegetationInspectorView : public ModelObjectInspectorView
 
     void refresh();
 
-    OSComboBox * m_roughness;
-
-    OSLineEdit * m_nameEdit;
-
-    OSLineEdit * m_soilLayerName;
-
-    OSLineEdit * m_moistureDiffusionCalculationMethod;
-
-    OSQuantityEdit * m_heightOfPlants;
-
-    OSQuantityEdit * m_leafAreaIndex;
-
-    OSQuantityEdit * m_leafReflectivity;
-
-    OSQuantityEdit * m_leafEmissivity;
-
-    OSQuantityEdit * m_minimumStomatalResistance;
-
-    OSQuantityEdit * m_thickness;
-
-    OSQuantityEdit * m_conductivityOfDrySoil;
-
-    OSQuantityEdit * m_densityOfDrySoil;
-
-    OSQuantityEdit * m_specificHeatOfDrySoil;
-
-    OSQuantityEdit * m_thermalAbsorptance;
-
-    OSQuantityEdit * m_visibleAbsorptance;
-
-    OSQuantityEdit * m_saturationVolumetricMoistureContentOfTheSoilLayer;
-
-    OSQuantityEdit * m_residualVolumetricMoistureContentOfTheSoilLayer;
-
-    OSQuantityEdit * m_initialVolumetricMoistureContentOfTheSoilLayer;
-
-    OSQuantityEdit * m_solarAbsorptance;
-
     bool m_isIP;
 
-  public slots:
+    OSLineEdit * m_nameEdit = nullptr;
 
-    void toggleUnits(bool displayIP);
+    OSComboBox * m_roughness = nullptr;
+
+    OSLineEdit * m_soilLayerName = nullptr;
+
+    OSLineEdit * m_moistureDiffusionCalculationMethod = nullptr;
+
+    OSQuantityEdit * m_heightOfPlants = nullptr;
+
+    OSQuantityEdit * m_leafAreaIndex = nullptr;
+
+    OSQuantityEdit * m_leafReflectivity = nullptr;
+
+    OSQuantityEdit * m_leafEmissivity = nullptr;
+
+    OSQuantityEdit * m_minimumStomatalResistance = nullptr;
+
+    OSQuantityEdit * m_thickness = nullptr;
+
+    OSQuantityEdit * m_conductivityOfDrySoil = nullptr;
+
+    OSQuantityEdit * m_densityOfDrySoil = nullptr;
+
+    OSQuantityEdit * m_specificHeatOfDrySoil = nullptr;
+
+    OSQuantityEdit * m_thermalAbsorptance = nullptr;
+
+    OSQuantityEdit * m_visibleAbsorptance = nullptr;
+
+    OSQuantityEdit * m_saturationVolumetricMoistureContentOfTheSoilLayer = nullptr;
+
+    OSQuantityEdit * m_residualVolumetricMoistureContentOfTheSoilLayer = nullptr;
+
+    OSQuantityEdit * m_initialVolumetricMoistureContentOfTheSoilLayer = nullptr;
+
+    OSQuantityEdit * m_solarAbsorptance = nullptr;
+
+    StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
+
 };
 
 } // openstudio

@@ -12,7 +12,7 @@ New CMAKE Build Options added
     compilation uses npm to install jasmine-node
   BUILD_V8 - Checks out and builds V8 as of 3/16/2013 into V8-prefix folder
 
-Generated libraries are in OpenStudioCore-prefix/src/OpenStudioCore-build/Products/v8
+Generated libraries are in OSCore-prefix/src/OSCore-build/Products/v8
 
 Tests exist in two locations. 
   Simple assertions using the Node.js assert library are in openstudiocore/v8-node/test 
@@ -66,7 +66,7 @@ and install them for local use as well.
 If OpenStudio was compiled with testing enabled, the tests can be run two
 different ways:
 
-cd <builddir>/OpenStudioCore-prefix/src/OpenStudioCore-build
+cd <builddir>/OSCore-prefix/src/OSCore-build
 
 
 make test # Runs all tests

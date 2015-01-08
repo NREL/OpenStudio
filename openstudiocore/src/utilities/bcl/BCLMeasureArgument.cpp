@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -101,8 +101,9 @@ namespace openstudio{
                                          m_units(units), m_required(required), m_modelDependent(modelDependent), m_defaultValue(defaultValue),
                                          m_choiceValues(choiceValues), m_choiceDisplayNames(choiceDisplayNames), m_minValue(minValue), m_maxValue(maxValue)
   {
-    if (m_choiceValues.size() != m_choiceDisplayNames.size())
-    {
+    if (!m_choiceValues.empty() && m_choiceDisplayNames.empty()){
+      m_choiceDisplayNames = m_choiceValues;
+    }else if (m_choiceValues.size() != m_choiceDisplayNames.size()){
       throw openstudio::Exception("Sizes of choiceValues and choiceDisplayNames do not match");
     }
   }

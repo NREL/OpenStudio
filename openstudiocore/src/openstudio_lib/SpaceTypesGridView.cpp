@@ -1,21 +1,21 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
- *  All rights reserved.
- *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
- *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  All rights reserved.
+*
+*  This library is free software; you can redistribute it and/or
+*  modify it under the terms of the GNU Lesser General Public
+*  License as published by the Free Software Foundation; either
+*  version 2.1 of the License, or (at your option) any later version.
+*
+*  This library is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+*  Lesser General Public License for more details.
+*
+*  You should have received a copy of the GNU Lesser General Public
+*  License along with this library; if not, write to the Free Software
+*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+**********************************************************************/
 
 #include "SpaceTypesGridView.hpp"
 
@@ -91,6 +91,7 @@
 #include "../model/SteamEquipmentDefinition_Impl.hpp"
 #include "../model/SteamEquipment_Impl.hpp"
 
+#include "../utilities/idd/IddEnums.hxx"
 #include "../utilities/idd/OS_SpaceType_FieldEnums.hxx"
 
 #include <QBoxLayout>
@@ -148,7 +149,7 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
   std::vector<model::SpaceType> spaceTypes = model.getModelObjects<model::SpaceType>();
   std::vector<model::ModelObject> spaceTypeModelObjects = subsetCastVector<model::ModelObject>(spaceTypes);
 
-  SpaceTypesGridController * spaceTypesGridController  = new SpaceTypesGridController(m_isIP, "Space Types", model, spaceTypeModelObjects);
+  SpaceTypesGridController * spaceTypesGridController = new SpaceTypesGridController(m_isIP, "Space Types", IddObjectType::OS_SpaceType, model, spaceTypeModelObjects);
   OSGridView * gridView = new OSGridView(spaceTypesGridController, "Space Types", "Drop\nZone", false, parent);
 
   bool isConnected = false;
@@ -185,9 +186,10 @@ void SpaceTypesGridView::onDropZoneItemClicked(OSItem* item)
 
 SpaceTypesGridController::SpaceTypesGridController(bool isIP,
   const QString & headerText,
+  IddObjectType iddObjectType,
   model::Model model,
   std::vector<model::ModelObject> modelObjects) :
-  OSGridController(isIP, headerText, model, modelObjects)
+  OSGridController(isIP, headerText, iddObjectType, model, modelObjects)
 {
   setCategoriesAndFields();
 }
@@ -244,6 +246,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
       auto setter = CastNullAdapter<model::SpaceType>(&model::SpaceType::setName);
 
       addNameLineEditColumn(QString(NAME),
+        false,
         getter,
         setter);
 
@@ -309,8 +312,6 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           }
           );
 
-
-
       std::function<std::vector<boost::optional<model::ModelObject>>(const model::SpaceType &)> allLoadsWithActivityLevelSchedules(
           [allLoads](const model::SpaceType &t_spaceType) {
             std::vector<boost::optional<model::ModelObject>> retval;
@@ -324,8 +325,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
             return retval;
           }
           );
-
-
+          
       std::function<std::vector<boost::optional<model::ModelObject>>(const model::SpaceType &)> allDefinitions(
           [allLoadInstances](const model::SpaceType &t_spaceType) {
             std::vector<boost::optional<model::ModelObject>> definitions;
@@ -387,6 +387,13 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         [allLoads](model::ModelObject *t_modelObject) {
           double retval = 0;
 
+          boost::optional<model::InternalMass> im = t_modelObject->optionalCast<model::InternalMass>();
+          if (im)
+          {
+            retval = im->multiplier();
+            return retval;
+          }
+
           boost::optional<model::People> p = t_modelObject->optionalCast<model::People>();
           if (p)
           {
@@ -443,13 +450,6 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
             return retval;
           }
 
-          boost::optional<model::InternalMass> im = t_modelObject->optionalCast<model::InternalMass>();
-          if (im)
-          {
-            retval = im->multiplier();
-            return retval;
-          }
-
           // Should never get here
           OS_ASSERT(false);
           return retval;
@@ -458,6 +458,13 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
 
       std::function<void(model::ModelObject *, double)> setMultiplier(
         [](model::ModelObject *t_modelObject, double multiplier) {
+          boost::optional<model::InternalMass> im = t_modelObject->optionalCast<model::InternalMass>();
+          if (im)
+          {
+            im->setMultiplier(multiplier);
+            return;
+          }
+
           boost::optional<model::People> p = t_modelObject->optionalCast<model::People>();
           if (p)
           {
@@ -514,13 +521,6 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
             return;
           }
 
-          boost::optional<model::InternalMass> im = t_modelObject->optionalCast<model::InternalMass>();
-          if (im)
-          {
-            im->setMultiplier(multiplier);
-            return;
-          }
-
           // Should never get here
           OS_ASSERT(false);
         }
@@ -533,7 +533,6 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
             return p->setActivityLevelSchedule(t_s);
           }
 
-
           OS_ASSERT(false);
           return false;
         }
@@ -544,9 +543,9 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           if (boost::optional<model::People> p = l->optionalCast<model::People>())
           {
             p->resetActivityLevelSchedule();
+          } else {
+            //OS_ASSERT(false); TODO
           }
-
-          OS_ASSERT(false);
         }
       );
 
@@ -661,7 +660,14 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
             la->resetSchedule();
           }
 
-          OS_ASSERT(false);
+          if (boost::optional<model::InternalMass> im = l->optionalCast<model::InternalMass>())
+          {
+            // Note: InternalMass does not have a schedule
+          }
+          else
+          {
+            OS_ASSERT(false);
+          }
         }
       );
 
@@ -680,6 +686,12 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
 
       std::function<boost::optional<model::Schedule> (model::ModelObject *)> schedule(
           [](model::ModelObject *l) {
+            if (boost::optional<model::InternalMass> im = l->optionalCast<model::InternalMass>())
+            {
+              // Note: InternalMass does not have a schedule
+              return boost::optional<model::Schedule>();
+            }
+
             if (boost::optional<model::People> p = l->optionalCast<model::People>())
             {
               return p->numberofPeopleSchedule();
@@ -728,12 +740,6 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
             if (boost::optional<model::SpaceInfiltrationEffectiveLeakageArea> la = l->optionalCast<model::SpaceInfiltrationEffectiveLeakageArea>())
             {
               return la->schedule();
-            }
-
-            if (boost::optional<model::InternalMass> im = l->optionalCast<model::InternalMass>())
-            {
-              // Note: InternalMass does not have a schedule
-              return boost::optional<model::Schedule>();
             }
 
             // should be impossible to get here
@@ -827,6 +833,13 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
 
         std::function<bool (model::SpaceType *, const model::SpaceLoadDefinition &)> setter(
           [](model::SpaceType *t_spaceType, const model::SpaceLoadDefinition &t_definition) {
+            boost::optional<model::InternalMassDefinition> im = t_definition.optionalCast<model::InternalMassDefinition>();
+            if (im)
+            {
+              model::InternalMass(*im).setParent(*t_spaceType);
+              return true;
+            }
+
             boost::optional<model::PeopleDefinition> p = t_definition.optionalCast<model::PeopleDefinition>();
             if (p)
             {
@@ -888,6 +901,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         );
 
         addNameLineEditColumn(QString(DEFINITION),
+          true,
           CastNullAdapter<model::SpaceLoadDefinition>(&model::SpaceLoadDefinition::name),
           CastNullAdapter<model::SpaceLoadDefinition>(&model::SpaceLoadDefinition::setName),
           boost::optional<std::function<void (model::SpaceLoadDefinition *)>>(),
@@ -964,6 +978,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
       );
 
       addNameLineEditColumn(QString(SPACEINFILTRATIONDESIGNFLOWRATES),
+        true,
         CastNullAdapter<model::SpaceInfiltrationDesignFlowRate>(&model::SpaceInfiltrationDesignFlowRate::name),
         CastNullAdapter<model::SpaceInfiltrationDesignFlowRate>(&model::SpaceInfiltrationDesignFlowRate::setName),
         boost::optional<std::function<void (model::SpaceInfiltrationDesignFlowRate *)>>(
@@ -998,6 +1013,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
       );
 
       addNameLineEditColumn(QString(SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS),
+        true,
         CastNullAdapter<model::SpaceInfiltrationEffectiveLeakageArea>(&model::SpaceInfiltrationEffectiveLeakageArea::name),
         CastNullAdapter<model::SpaceInfiltrationEffectiveLeakageArea>(&model::SpaceInfiltrationEffectiveLeakageArea::setName),
         boost::optional<std::function<void(model::SpaceInfiltrationEffectiveLeakageArea *)>>(
@@ -1047,8 +1063,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           t_spaceType->resetStandardsSpaceType();
           t_spaceType->resetStandardsBuildingType();
         });
-
-
+      
       addComboBoxColumn(QString(STANDARDSBUILDINGTYPE),
           toString,
           choices,
@@ -1170,4 +1185,3 @@ void SpaceTypesGridController::onComboBoxIndexChanged(int index)
 }
 
 } // openstudio
-

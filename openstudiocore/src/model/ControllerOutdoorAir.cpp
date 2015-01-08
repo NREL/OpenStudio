@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -32,6 +32,7 @@
 #include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_Controller_OutdoorAir_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/units/Quantity.hpp"
@@ -676,7 +677,7 @@ ControllerOutdoorAir::ControllerOutdoorAir(const Model& model)
   setString(OS_Controller_OutdoorAirFields::HumidistatControlZoneName,"");
   setString(OS_Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio,"");
   setString(OS_Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio,"");
-  setHeatRecoveryBypassControlType("BypassWhenOAFlowGreaterThanMinimum");
+  setHeatRecoveryBypassControlType("BypassWhenWithinEconomizerLimits");
 
   ControllerMechanicalVentilation controllerMechanicalVentilation(model);
   setControllerMechanicalVentilation(controllerMechanicalVentilation);
