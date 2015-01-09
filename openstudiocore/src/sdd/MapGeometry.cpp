@@ -2552,11 +2552,11 @@ namespace sdd {
     result.appendChild(typeElement);
     typeElement.appendChild(doc.createTextNode(toQString(type)));
 
-
+    // DLM: Not input
     // Mult
-    QDomElement multElement = doc.createElement("Mult");
-    result.appendChild(multElement);
-    multElement.appendChild(doc.createTextNode(QString::number(thermalZone.multiplier())));
+    //QDomElement multElement = doc.createElement("Mult");
+    //result.appendChild(multElement);
+    //multElement.appendChild(doc.createTextNode(QString::number(thermalZone.multiplier())));
 
     return result;
   }

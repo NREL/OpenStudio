@@ -75,10 +75,15 @@
 #include "../model/CurveSigmoid.hpp"
 #include "../model/CurveTriquadratic.hpp"
 #include "../model/TableMultiVariableLookup.hpp"
+#include "../model/DefaultConstructionSet.hpp"
+#include "../model/DefaultScheduleSet.hpp"
+#include "../model/DefaultSurfaceConstructions.hpp"
+#include "../model/DefaultSubSurfaceConstructions.hpp"
 #include "../model/DesignSpecificationZoneAirDistribution.hpp"
 #include "../model/HeatBalanceAlgorithm.hpp"
 #include "../model/InsideSurfaceConvectionAlgorithm.hpp"
 #include "../model/LifeCycleCost.hpp"
+#include "../model/LifeCycleCostParameters.hpp"
 #include "../model/LightingDesignDay.hpp"
 #include "../model/LightingSimulationControl.hpp"
 #include "../model/Meter.hpp"
@@ -131,6 +136,7 @@
 #include "../model/UtilityBill.hpp"
 #include "../model/Version.hpp"
 #include "../model/WeatherFile.hpp"
+#include "../model/YearDescription.hpp"
 #include "../model/ZoneAirContaminantBalance.hpp"
 #include "../model/ZoneAirHeatBalanceAlgorithm.hpp"
 #include "../model/ZoneCapacitanceMultiplierResearchSpecial.hpp"
@@ -459,17 +465,18 @@ namespace sdd {
     }
 
     m_ignoreTypes.push_back(model::AvailabilityManagerAssignmentList::iddObjectType());
+    m_ignoreTypes.push_back(model::BoilerSteam::iddObjectType());
+    m_ignoreTypes.push_back(model::ClimateZones::iddObjectType()); // might not be translated but it is checked
+    m_ignoreTypes.push_back(model::CoilCoolingDXMultiSpeedStageData::iddObjectType());
     m_ignoreTypes.push_back(model::CoilHeatingGasMultiStageStageData::iddObjectType());
-    m_ignoreTypes.push_back(model::Connection::iddObjectType());
-    m_ignoreTypes.push_back(model::CoolingTowerPerformanceCoolTools::iddObjectType());
-    m_ignoreTypes.push_back(model::RenderingColor::iddObjectType());
-    m_ignoreTypes.push_back(model::ScheduleTypeLimits::iddObjectType());
-    m_ignoreTypes.push_back(model::StandardsInformationConstruction::iddObjectType());
-    m_ignoreTypes.push_back(model::StandardsInformationMaterial::iddObjectType());
-    m_ignoreTypes.push_back(model::PortList::iddObjectType());
+    m_ignoreTypes.push_back(model::ComponentCostAdjustments::iddObjectType());
     m_ignoreTypes.push_back(model::ComponentData::iddObjectType());
+    m_ignoreTypes.push_back(model::Connection::iddObjectType());
+    m_ignoreTypes.push_back(model::ControllerWaterCoil::iddObjectType());
     m_ignoreTypes.push_back(model::ConvergenceLimits::iddObjectType());
+    m_ignoreTypes.push_back(model::CoolingTowerPerformanceCoolTools::iddObjectType());
     m_ignoreTypes.push_back(model::CoolingTowerPerformanceYorkCalc::iddObjectType());
+    m_ignoreTypes.push_back(model::CurrencyType::iddObjectType());
     m_ignoreTypes.push_back(model::CurveBicubic::iddObjectType());
     m_ignoreTypes.push_back(model::CurveBiquadratic::iddObjectType());
     m_ignoreTypes.push_back(model::CurveCubic::iddObjectType());
@@ -487,42 +494,56 @@ namespace sdd {
     m_ignoreTypes.push_back(model::CurveRectangularHyperbola2::iddObjectType());
     m_ignoreTypes.push_back(model::CurveSigmoid::iddObjectType());
     m_ignoreTypes.push_back(model::CurveTriquadratic::iddObjectType());
-    m_ignoreTypes.push_back(model::TableMultiVariableLookup::iddObjectType());
+    m_ignoreTypes.push_back(model::DefaultConstructionSet::iddObjectType());
+    m_ignoreTypes.push_back(model::DesignDay::iddObjectType());
+    m_ignoreTypes.push_back(model::DefaultScheduleSet::iddObjectType());
     m_ignoreTypes.push_back(model::DesignSpecificationZoneAirDistribution::iddObjectType());
+    m_ignoreTypes.push_back(model::DefaultSurfaceConstructions::iddObjectType());
+    m_ignoreTypes.push_back(model::DefaultSubSurfaceConstructions::iddObjectType());
+    m_ignoreTypes.push_back(model::Facility::iddObjectType());
     m_ignoreTypes.push_back(model::HeatBalanceAlgorithm::iddObjectType());
+    m_ignoreTypes.push_back(model::IlluminanceMap::iddObjectType());
     m_ignoreTypes.push_back(model::InsideSurfaceConvectionAlgorithm::iddObjectType());
+    m_ignoreTypes.push_back(model::InternalMass::iddObjectType());
     m_ignoreTypes.push_back(model::LifeCycleCost::iddObjectType());
+    m_ignoreTypes.push_back(model::LifeCycleCostParameters::iddObjectType());
     m_ignoreTypes.push_back(model::LightingDesignDay::iddObjectType());
     m_ignoreTypes.push_back(model::LightingSimulationControl::iddObjectType());
     m_ignoreTypes.push_back(model::Meter::iddObjectType());
     m_ignoreTypes.push_back(model::ModelObjectList::iddObjectType());
+    m_ignoreTypes.push_back(model::Node::iddObjectType());
     m_ignoreTypes.push_back(model::OutputControlReportingTolerances::iddObjectType());
     m_ignoreTypes.push_back(model::OutputVariable::iddObjectType());
     m_ignoreTypes.push_back(model::OutsideSurfaceConvectionAlgorithm::iddObjectType());
-    m_ignoreTypes.push_back(model::CoilCoolingDXMultiSpeedStageData::iddObjectType());
-    m_ignoreTypes.push_back(model::ComponentCostAdjustments::iddObjectType());
-    m_ignoreTypes.push_back(model::CurrencyType::iddObjectType());
-    m_ignoreTypes.push_back(model::Facility::iddObjectType());
-    m_ignoreTypes.push_back(model::ControllerWaterCoil::iddObjectType());
-    m_ignoreTypes.push_back(model::SetpointManagerMixedAir::iddObjectType());
-    m_ignoreTypes.push_back(model::BoilerSteam::iddObjectType());
-    m_ignoreTypes.push_back(model::Node::iddObjectType());
+    m_ignoreTypes.push_back(model::PortList::iddObjectType());
+    m_ignoreTypes.push_back(model::ProgramControl::iddObjectType());
+    m_ignoreTypes.push_back(model::RadianceParameters::iddObjectType());
     m_ignoreTypes.push_back(model::RenderingColor::iddObjectType());
+    m_ignoreTypes.push_back(model::RunPeriod::iddObjectType());
     m_ignoreTypes.push_back(model::ScheduleCompact::iddObjectType());
     m_ignoreTypes.push_back(model::ScheduleConstant::iddObjectType());
-    m_ignoreTypes.push_back(model::ScheduleFixedInterval::iddObjectType());
-    m_ignoreTypes.push_back(model::ScheduleVariableInterval::iddObjectType());
-    m_ignoreTypes.push_back(model::ScheduleRuleset::iddObjectType());
-    m_ignoreTypes.push_back(model::ScheduleYear::iddObjectType());
     m_ignoreTypes.push_back(model::ScheduleDay::iddObjectType());
-    m_ignoreTypes.push_back(model::ScheduleTypeLimits::iddObjectType());
-    m_ignoreTypes.push_back(model::ScheduleWeek::iddObjectType());
-    m_ignoreTypes.push_back(model::RunPeriod::iddObjectType());
+    m_ignoreTypes.push_back(model::ScheduleFixedInterval::iddObjectType());
     m_ignoreTypes.push_back(model::ScheduleRule::iddObjectType());
+    m_ignoreTypes.push_back(model::ScheduleRuleset::iddObjectType());
+    m_ignoreTypes.push_back(model::ScheduleTypeLimits::iddObjectType());
+    m_ignoreTypes.push_back(model::ScheduleVariableInterval::iddObjectType());
+    m_ignoreTypes.push_back(model::ScheduleWeek::iddObjectType());
+    m_ignoreTypes.push_back(model::ScheduleYear::iddObjectType());
+    m_ignoreTypes.push_back(model::SetpointManagerMixedAir::iddObjectType());
+    m_ignoreTypes.push_back(model::ShadowCalculation::iddObjectType());
     m_ignoreTypes.push_back(model::SimulationControl::iddObjectType());
-    m_ignoreTypes.push_back(model::DesignDay::iddObjectType());
-    m_ignoreTypes.push_back(model::WeatherFileConditionType::iddObjectType());
-    m_ignoreTypes.push_back(model::WeatherFileDays::iddObjectType());
+    m_ignoreTypes.push_back(model::Site::iddObjectType()); // might not be translated but it is checked
+    m_ignoreTypes.push_back(model::SiteGroundReflectance::iddObjectType());
+    m_ignoreTypes.push_back(model::SiteGroundTemperatureBuildingSurface::iddObjectType());
+    m_ignoreTypes.push_back(model::SiteWaterMainsTemperature::iddObjectType());
+    m_ignoreTypes.push_back(model::SizingParameters::iddObjectType());
+    m_ignoreTypes.push_back(model::SkyTemperature::iddObjectType());
+    m_ignoreTypes.push_back(model::StandardsInformationConstruction::iddObjectType());
+    m_ignoreTypes.push_back(model::StandardsInformationMaterial::iddObjectType());
+    m_ignoreTypes.push_back(model::TableMultiVariableLookup::iddObjectType());
+    m_ignoreTypes.push_back(model::Timestep::iddObjectType());
+    m_ignoreTypes.push_back(model::UtilityBill::iddObjectType());
     m_ignoreTypes.push_back(model::UtilityCost_Charge_Block::iddObjectType());
     m_ignoreTypes.push_back(model::UtilityCost_Charge_Simple::iddObjectType());
     m_ignoreTypes.push_back(model::UtilityCost_Computation::iddObjectType());
@@ -530,20 +551,11 @@ namespace sdd {
     m_ignoreTypes.push_back(model::UtilityCost_Ratchet::iddObjectType());
     m_ignoreTypes.push_back(model::UtilityCost_Tariff::iddObjectType());
     m_ignoreTypes.push_back(model::UtilityCost_Variable::iddObjectType());
-    m_ignoreTypes.push_back(model::ProgramControl::iddObjectType());
-    m_ignoreTypes.push_back(model::RadianceParameters::iddObjectType());
-    m_ignoreTypes.push_back(model::ShadowCalculation::iddObjectType());
-    m_ignoreTypes.push_back(model::SiteGroundReflectance::iddObjectType());
-    m_ignoreTypes.push_back(model::SiteGroundTemperatureBuildingSurface::iddObjectType());
-    m_ignoreTypes.push_back(model::SiteWaterMainsTemperature::iddObjectType());
-    m_ignoreTypes.push_back(model::SizingParameters::iddObjectType());
-    m_ignoreTypes.push_back(model::SkyTemperature::iddObjectType());
-    m_ignoreTypes.push_back(model::IlluminanceMap::iddObjectType());
-    m_ignoreTypes.push_back(model::InternalMass::iddObjectType());
-    m_ignoreTypes.push_back(model::Timestep::iddObjectType());
-    m_ignoreTypes.push_back(model::UtilityBill::iddObjectType());
     m_ignoreTypes.push_back(model::Version::iddObjectType());
     m_ignoreTypes.push_back(model::WeatherFile::iddObjectType());
+    m_ignoreTypes.push_back(model::WeatherFileConditionType::iddObjectType());
+    m_ignoreTypes.push_back(model::WeatherFileDays::iddObjectType());
+    m_ignoreTypes.push_back(model::YearDescription::iddObjectType());
     m_ignoreTypes.push_back(model::ZoneAirContaminantBalance::iddObjectType());
     m_ignoreTypes.push_back(model::ZoneAirHeatBalanceAlgorithm::iddObjectType());
     m_ignoreTypes.push_back(model::ZoneCapacitanceMultiplierResearchSpecial::iddObjectType());
