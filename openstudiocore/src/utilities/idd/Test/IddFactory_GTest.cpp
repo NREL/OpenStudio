@@ -52,7 +52,7 @@ TEST_F(IddFixture,IddFactory_Version_Header) {
   VersionString epVersion(IddFactory::instance().getVersion(IddFileType::EnergyPlus));
   EXPECT_TRUE(epVersion.patch());
   EXPECT_EQ(VersionString(energyPlusVersion()),epVersion);
-  EXPECT_FALSE(epVersion.fidelityEqual(VersionString(energyPlusVersion())));
+  EXPECT_TRUE(epVersion.fidelityEqual(VersionString(energyPlusVersion())));
 
   EXPECT_NO_THROW(IddFactory::instance().getHeader(IddFileType::OpenStudio));
   EXPECT_NO_THROW(IddFactory::instance().getHeader(IddFileType::EnergyPlus));
