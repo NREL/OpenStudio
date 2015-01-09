@@ -23,7 +23,7 @@ require "#{File.dirname(__FILE__)}/../measure.rb"
 
 require 'test/unit'
 
-class ReplaceModel_Test < Test::Unit::TestCase
+class ReplaceModel_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end
