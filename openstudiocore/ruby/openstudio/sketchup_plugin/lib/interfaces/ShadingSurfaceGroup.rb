@@ -66,7 +66,20 @@ module OpenStudio
       @model_interface.model_watcher.enable if model_watcher_enabled
       super 
     end
-
+    
+    def check_model_object
+      Plugin.log(OpenStudio::Trace, "#{current_method_name}")
+      
+      # Look up the parent drawing interface (might fail if the reference is bad)
+      if (not parent_from_model_object)
+        @model_interface.add_error("Error:  " + @model_object.name.to_s + "\n")
+        @model_interface.add_error("The space referenced by this shading surface group does not exist, it cannot be drawn.\n\n") 
+        return(false)
+      end
+        
+      return(super)
+    end
+    
     # Updates the ModelObject with new information from the SketchUp entity.
     def update_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
@@ -141,7 +154,9 @@ module OpenStudio
 
     def create_entity
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
+      
       super
+      
       update_entity
     end
     

@@ -68,7 +68,20 @@ module OpenStudio
       @model_interface.model_watcher.enable if model_watcher_enabled
       super
     end
-
+    
+    def check_model_object
+      Plugin.log(OpenStudio::Trace, "#{current_method_name}")
+      
+      # Look up the Space drawing interface (might fail if the reference is bad)
+      if (not parent_from_model_object)
+        @model_interface.add_error("Error:  " + @model_object.name.to_s + "\n")
+        @model_interface.add_error("The space referenced by this illuminance map does not exist, it cannot be drawn.\n\n")
+        return false
+      end
+        
+      return(super)
+    end
+    
     # Updates the ModelObject with new information from the SketchUp entity.
     def update_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
@@ -116,12 +129,19 @@ module OpenStudio
     def create_entity     
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
     
-      if (@parent.nil?)        
-        # Create a new space just for this IlluminanceMap.
-        @parent = Space.new
-        @parent.create_model_object
-        @parent.draw_entity
-        @parent.add_child(self)  # Would be nice to not have to call this
+      if (@parent.nil?)     
+      #  # Create a new space just for this IlluminanceMap.
+      #  Plugin.log(OpenStudio::Warn, "Creating containing Space for IlluminanceMap #{@model_object.name}")
+      #  
+      #  @parent = Space.new
+      #  @parent.create_model_object
+      #  @model_object.setParent(@parent.model_object)
+      #  @parent.draw_entity
+      #  @parent.add_child(self)  # Would be nice to not have to call this
+      
+        # how did this happen?
+        Plugin.log(OpenStudio::Error, "Parent #{@parent} is nil, cannot create entity for illuminance map #{@model_object.name}")
+        return nil
       end    
     
       # add the component definition

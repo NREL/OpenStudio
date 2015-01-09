@@ -286,13 +286,14 @@ module OpenStudio
       return @render_defaults
     end
     
-    def render_defaults=(render_defaults)
-      #Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
-      @render_defaults = render_defaults
-      
-      @model_interface.request_paint
-    end
+    # DLM: can we remove this?
+    #def render_defaults=(render_defaults)
+    #  #Plugin.log(OpenStudio::Trace, "#{current_method_name}")
+    #  
+    #  @render_defaults = render_defaults
+    #  
+    #  @model_interface.request_paint
+    #end
     
     def rendering_mode
       #Plugin.log(OpenStudio::Trace, "#{current_method_name}")
@@ -302,7 +303,7 @@ module OpenStudio
 
     def rendering_mode=(rendering_mode)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-
+    
       if rendering_mode == RenderByConstruction or rendering_mode == RenderBySpaceType
         if @rendering_mode == rendering_mode
           # toggle render defaults

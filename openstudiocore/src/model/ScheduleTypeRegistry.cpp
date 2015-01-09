@@ -419,7 +419,7 @@ bool checkOrAssignScheduleTypeLimits(const std::string& className,
         scheduleType,
         model);
     result = schedule.setScheduleTypeLimits(candidate);
-    if (!result && (candidate.directUseCount() == 0)) {
+    if (!result && (candidate.directUseCount(false) == 0)) {
       candidate.remove();
     }
   }

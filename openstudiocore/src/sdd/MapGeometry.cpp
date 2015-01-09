@@ -215,14 +215,14 @@ namespace sdd {
 
     // remove unused CFactor constructions
     for (model::CFactorUndergroundWallConstruction cFactorConstruction : model.getConcreteModelObjects<model::CFactorUndergroundWallConstruction>()){
-      if (cFactorConstruction.directUseCount() == 0){
+      if (cFactorConstruction.directUseCount(true) == 0){
         cFactorConstruction.remove();
       }
     }
 
     // remove unused FFactor constructions
     for (model::FFactorGroundFloorConstruction fFactorConstruction : model.getConcreteModelObjects<model::FFactorGroundFloorConstruction>()){
-      if (fFactorConstruction.directUseCount() == 0){
+      if (fFactorConstruction.directUseCount(true) == 0){
         fFactorConstruction.remove();
       }
     }
@@ -1499,7 +1499,7 @@ namespace sdd {
 
     // SDD:
     // FuncClassMthd - optional, ignore 
-    // RelocPubSchoolBldg - optional, do this when we do space types
+    // RelocPubSchoolBldg - optional, in progress
     // WholeBldgModeled - required, need to add
     // BldgAz - required, done
     // TotStoryCnt - required, in progress
@@ -1540,7 +1540,7 @@ namespace sdd {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Building Stories"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(buildingStories.size());
+      m_progressBar->setMaximum((int)buildingStories.size());
       m_progressBar->setValue(0);
     }
 
@@ -1567,7 +1567,7 @@ namespace sdd {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Building Shading"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(shadingSurfaceGroups.size()); 
+      m_progressBar->setMaximum((int)shadingSurfaceGroups.size()); 
       m_progressBar->setValue(0);
     }
 
@@ -1666,7 +1666,7 @@ namespace sdd {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Thermal Zones"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(thermalZones.size());
+      m_progressBar->setMaximum((int)thermalZones.size());
       m_progressBar->setValue(0);
     }
 
@@ -1689,7 +1689,7 @@ namespace sdd {
     if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating AirLoopHVAC Systems"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(airLoops.size());
+      m_progressBar->setMaximum((int)airLoops.size());
       m_progressBar->setValue(0);
     }
 

@@ -295,6 +295,8 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   mainGridLayout->addLayout(vLayout, row, 0);
   mainGridLayout->setRowMinimumHeight(row, 30);
 
+  /* DLM: disable for now 
+
   // Relocatable 
   vLayout = new QVBoxLayout();
 
@@ -407,6 +409,8 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
 
   mainGridLayout->addLayout(vLayout, row, 0);
   mainGridLayout->setRowMinimumHeight(row, 30);
+
+  */
 
   ++row;
 
@@ -572,6 +576,7 @@ void BuildingInspectorView::attach(openstudio::model::Building& building)
 
   m_northAxisEdit->bind(building, "northAxis", m_isIP, std::string("isNorthAxisDefaulted"));
 
+  /* DLM: disable for now
   m_numberLivingUnits->bind(
     building,
     OptionalIntGetter(std::bind(&model::Building::standardsNumberOfLivingUnits, building)),
@@ -624,7 +629,7 @@ void BuildingInspectorView::attach(openstudio::model::Building& building)
     boost::optional<BasicQuery>(),
     boost::optional<BasicQuery>(),
     boost::optional<BasicQuery>());
-
+    */
   this->stackedWidget()->setCurrentIndex(1);
 }
 
@@ -644,11 +649,13 @@ void BuildingInspectorView::detach()
   m_defaultScheduleSetVectorController->detach();
   m_northAxisEdit->unbind();
 
+  /* DLM: disable for now
   m_numberLivingUnits->unbind();
   m_numberStories->unbind();
   m_numberAboveGroundStories->unbind();
   m_relocatable->unbind();
   m_floorToCeilingHeight->unbind();
+  */
 }
 
 void BuildingInspectorView::populateStandardsBuildingTypes()
