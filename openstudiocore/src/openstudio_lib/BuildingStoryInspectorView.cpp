@@ -307,6 +307,8 @@ BuildingStoryInspectorView::BuildingStoryInspectorView(bool isIP, const openstud
 
   ++row;
 
+  /* DLM: disable for now
+
   // Measure Tags
   QFrame * line;
   line = new QFrame();
@@ -386,9 +388,9 @@ BuildingStoryInspectorView::BuildingStoryInspectorView(bool isIP, const openstud
   line->setFrameShape(QFrame::HLine);
   line->setFrameShadow(QFrame::Sunken);
   mainGridLayout->addWidget(line, row, 0, 1, 2);
-
+  
   ++row;
-
+  */
   // default construction and schedule sets
   vLayout = new QVBoxLayout();
 
@@ -486,6 +488,8 @@ void BuildingStoryInspectorView::attach(openstudio::model::BuildingStory& buildi
   } 
   m_renderingColorWidget->attach(*renderingColor);
 
+  /* DLM: disable for now
+
   m_zCoordinate->bind(
     m_isIP,
     buildingStory,
@@ -522,6 +526,7 @@ void BuildingStoryInspectorView::attach(openstudio::model::BuildingStory& buildi
     boost::optional<BasicQuery>(),
     boost::optional<BasicQuery>(),
     boost::optional<BasicQuery>());
+    */
 
   //m_spacesVectorController->attach(buildingStory);
   //m_spacesVectorController->reportItems();
@@ -543,9 +548,11 @@ void BuildingStoryInspectorView::detach()
 
   m_renderingColorWidget->detach();
 
+  /* DLM: disable for now 
   m_zCoordinate->unbind();
   m_floorToFloorHeight->unbind();
   m_floorToCeilingHeight->unbind();
+  */
 
   //m_spacesVectorController->detach();
 }
