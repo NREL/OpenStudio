@@ -1499,7 +1499,7 @@ namespace sdd {
 
     // SDD:
     // FuncClassMthd - optional, ignore 
-    // RelocPubSchoolBldg - optional, do this when we do space types
+    // RelocPubSchoolBldg - optional, in progress
     // WholeBldgModeled - required, need to add
     // BldgAz - required, done
     // TotStoryCnt - required, in progress
@@ -1567,7 +1567,7 @@ namespace sdd {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Building Shading"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum((int)shadingSurfaceGroups.size());
+      m_progressBar->setMaximum((int)shadingSurfaceGroups.size()); 
       m_progressBar->setValue(0);
     }
 
