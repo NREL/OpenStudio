@@ -654,11 +654,24 @@ void OSDropZone2::dropEvent(QDropEvent *event)
   if((event->proposedAction() == Qt::CopyAction) && m_modelObject && m_set){
 
     OSItemId itemId(event->mimeData());
+
     boost::optional<model::ModelObject> modelObject = OSAppBase::instance()->currentDocument()->getModelObject(itemId);
+    OS_ASSERT(modelObject);
+
+    // If it is not the correct IddObjectType, do not pass go, do not collect $200
+    if (m_iddObjectTypes.size()) {
+      bool success = false;
+      for (auto iddObjectType : m_iddObjectTypes) {
+        if (iddObjectType == modelObject.get().iddObjectType()) {
+            success = true;
+          break;
+        }
+      }
+     if (!success) return;
+    }
+
     m_item = OSItem::makeItem(itemId, OSItemType::ListItem);
     m_item->setParent(this);
-
-    OS_ASSERT(modelObject);
 
     connect(m_item, &OSItem::itemRemoveClicked, this, &OSDropZone2::onItemRemoveClicked);
 
