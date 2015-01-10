@@ -598,6 +598,40 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
       }
       );
 
+      boost::optional<std::vector<IddObjectType> > iddObjectTypes = std::vector<IddObjectType>();
+
+      iddObjectTypes->push_back(IddObjectType::Fan_ZoneExhaust);
+      iddObjectTypes->push_back(IddObjectType::Refrigeration_AirChiller);
+      iddObjectTypes->push_back(IddObjectType::ZoneHVAC_Baseboard_Convective_Electric);
+      iddObjectTypes->push_back(IddObjectType::ZoneHVAC_Baseboard_Convective_Water);
+      iddObjectTypes->push_back(IddObjectType::ZoneHVAC_FourPipeFanCoil);
+      iddObjectTypes->push_back(IddObjectType::ZoneHVAC_HighTemperatureRadiant);
+      iddObjectTypes->push_back(IddObjectType::ZoneHVAC_IdealLoadsAirSystem);
+      iddObjectTypes->push_back(IddObjectType::ZoneHVAC_LowTemperatureRadiant_Electric);
+      iddObjectTypes->push_back(IddObjectType::ZoneHVAC_LowTemperatureRadiant_ConstantFlow);
+      iddObjectTypes->push_back(IddObjectType::ZoneHVAC_LowTemperatureRadiant_VariableFlow);
+      iddObjectTypes->push_back(IddObjectType::ZoneHVAC_PackagedTerminalAirConditioner);
+      iddObjectTypes->push_back(IddObjectType::ZoneHVAC_PackagedTerminalHeatPump);
+      iddObjectTypes->push_back(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
+      iddObjectTypes->push_back(IddObjectType::ZoneHVAC_UnitHeater);
+      iddObjectTypes->push_back(IddObjectType::ZoneHVAC_WaterToAirHeatPump);
+
+      iddObjectTypes->push_back(IddObjectType::OS_Fan_ZoneExhaust);
+      iddObjectTypes->push_back(IddObjectType::OS_Refrigeration_AirChiller);
+      iddObjectTypes->push_back(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric);
+      iddObjectTypes->push_back(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Water);
+      iddObjectTypes->push_back(IddObjectType::OS_ZoneHVAC_FourPipeFanCoil);
+      iddObjectTypes->push_back(IddObjectType::OS_ZoneHVAC_HighTemperatureRadiant);
+      iddObjectTypes->push_back(IddObjectType::OS_ZoneHVAC_IdealLoadsAirSystem);
+      iddObjectTypes->push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
+      iddObjectTypes->push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow);
+      iddObjectTypes->push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow);
+      iddObjectTypes->push_back(IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner);
+      iddObjectTypes->push_back(IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump);
+      iddObjectTypes->push_back(IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
+      iddObjectTypes->push_back(IddObjectType::OS_ZoneHVAC_UnitHeater);
+      iddObjectTypes->push_back(IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump);
+
       addNameLineEditColumn(QString(ZONEEQUIPMENT),
         true,
         CastNullAdapter<model::ModelObject>(&model::ModelObject::name),
@@ -614,7 +648,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
         equipment,
         false,
         QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::ModelObject, model::ThermalZone>(ZONEEQUIPMENT,
-        getter, setter, reset))
+        getter, setter, reset, iddObjectTypes))
         )
         );
 

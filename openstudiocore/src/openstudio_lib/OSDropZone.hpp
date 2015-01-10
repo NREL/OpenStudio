@@ -63,6 +63,8 @@ public:
 
   void unbind();
 
+  std::vector<IddObjectType> m_iddObjectTypes;
+
 signals:
 
   void itemClicked(OSItem* item);
