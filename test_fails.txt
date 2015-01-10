@@ -1,0 +1,7 @@
+2>  	 19 - IddFixture.IddFactory_Version_Header (Failed)
+2>  	282 - Economics.EconomicsTest (Failed)
+2>  	473 - UnitsFixture.IddUnits_DefaultValue (Failed)
+2>  	1899 - RunManagerTestFixture.BCLMeasureRubyScriptEPWPath (Failed)
+2>  	2096 - RubyTest-DaylightSim_Test-DaylightSim_genannual (Failed)
+2>  	2099 - RubyTest-PATMeasures_Test-PATMeasures (Failed)
+2>  	2100 - RubyTest-PATMeasures_Test-NewMeasures (Failed)
