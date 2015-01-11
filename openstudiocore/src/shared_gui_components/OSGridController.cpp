@@ -328,6 +328,8 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
 
     auto nameLineEdit = new OSLineEdit2();
 
+    nameLineEdit->setDeleteObject(nameLineEditConcept->deleteObject());
+
     nameLineEdit->bind(t_mo,
                        OptionalStringGetter(std::bind(&NameLineEditConcept::get,nameLineEditConcept.data(),t_mo,true)),
                        // If the concept is read only, pass an empty optional

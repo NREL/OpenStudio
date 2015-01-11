@@ -672,7 +672,6 @@ void OSDropZone2::dropEvent(QDropEvent *event)
 
     m_item = OSItem::makeItem(itemId, OSItemType::ListItem);
     m_item->setParent(this);
-
     connect(m_item, &OSItem::itemRemoveClicked, this, &OSDropZone2::onItemRemoveClicked);
 
     connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSDropZone2::refresh);
@@ -733,9 +732,12 @@ void OSDropZone2::onItemRemoveClicked()
     if (modelObject) {
      parent = modelObject->parent();  
     }
-    emit objectRemoved(parent);
     (*m_reset)();
-  }
+    if (m_deleteObject) {
+      m_modelObject->remove();
+    }
+    emit objectRemoved(parent);
+ }
 }
 
 } // openstudio

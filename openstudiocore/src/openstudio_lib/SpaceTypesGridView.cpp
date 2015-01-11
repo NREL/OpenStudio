@@ -247,6 +247,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
 
       addNameLineEditColumn(QString(NAME),
         false,
+        false,
         getter,
         setter);
 
@@ -902,6 +903,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
 
         addNameLineEditColumn(QString(DEFINITION),
           true,
+          false,
           CastNullAdapter<model::SpaceLoadDefinition>(&model::SpaceLoadDefinition::name),
           CastNullAdapter<model::SpaceLoadDefinition>(&model::SpaceLoadDefinition::setName),
           boost::optional<std::function<void (model::SpaceLoadDefinition *)>>(),
@@ -977,8 +979,11 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         }
       );
 
+      bool deleteObject = true;
+
       addNameLineEditColumn(QString(SPACEINFILTRATIONDESIGNFLOWRATES),
         true,
+        deleteObject,
         CastNullAdapter<model::SpaceInfiltrationDesignFlowRate>(&model::SpaceInfiltrationDesignFlowRate::name),
         CastNullAdapter<model::SpaceInfiltrationDesignFlowRate>(&model::SpaceInfiltrationDesignFlowRate::setName),
         boost::optional<std::function<void (model::SpaceInfiltrationDesignFlowRate *)>>(
@@ -1012,8 +1017,11 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         }
       );
 
+      bool deleteObject = true;
+
       addNameLineEditColumn(QString(SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS),
         true,
+        deleteObject,
         CastNullAdapter<model::SpaceInfiltrationEffectiveLeakageArea>(&model::SpaceInfiltrationEffectiveLeakageArea::name),
         CastNullAdapter<model::SpaceInfiltrationEffectiveLeakageArea>(&model::SpaceInfiltrationEffectiveLeakageArea::setName),
         boost::optional<std::function<void(model::SpaceInfiltrationEffectiveLeakageArea *)>>(
