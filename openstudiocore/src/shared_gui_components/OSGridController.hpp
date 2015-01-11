@@ -414,12 +414,13 @@ public:
 
   template<typename ValueType, typename DataSourceType>
   void addDropZoneColumn(QString headingLabel,
+                         std::vector<IddObjectType> iddObjectTypes,
                          std::function<boost::optional<ValueType> (DataSourceType *)>  getter,
                          std::function<bool (DataSourceType *, const ValueType &)> setter,
                          boost::optional<std::function<void(DataSourceType*)> > reset = boost::none,
                          const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter,reset)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel, iddObjectTypes, getter, setter, reset)), t_source));
   }
 
   template<typename ValueType, typename DataSourceType>

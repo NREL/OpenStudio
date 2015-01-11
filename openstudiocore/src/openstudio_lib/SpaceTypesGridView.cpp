@@ -911,13 +911,14 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
             allDefinitions,
             false ,
             QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::SpaceLoadDefinition, model::SpaceType>(DEFINITION,
-                getter, setter))
+            std::vector<IddObjectType>(), getter, setter))
           )
           );
 
       } else if (field == SCHEDULE) {
 
         addDropZoneColumn(QString(SCHEDULE),
+          std::vector<IddObjectType>(),
           schedule,
           setSchedule,
           resetSchedule,
@@ -930,6 +931,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
       } else if (field == ACTIVITYSCHEDULE) {
 
         addDropZoneColumn(QString(SCHEDULE),
+          std::vector<IddObjectType>(), 
           activityLevelSchedule,
           setActivityLevelSchedule,
           resetActivityLevelSchedule,
@@ -943,18 +945,21 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
 
     } else if (field == DEFAULTCONSTRUCTIONSET){
       addDropZoneColumn(QString(DEFAULTCONSTRUCTIONSET),
+        std::vector<IddObjectType>(),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::defaultConstructionSet),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::setDefaultConstructionSet),
         boost::optional<std::function<void(model::SpaceType*)>>(CastNullAdapter<model::SpaceType>(&model::SpaceType::resetDefaultConstructionSet)));
 
     } else if (field == DEFAULTSCHEDULESET){
       addDropZoneColumn(QString(DEFAULTSCHEDULESET),
+        std::vector<IddObjectType>(),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::defaultScheduleSet),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::setDefaultScheduleSet),
         boost::optional<std::function<void(model::SpaceType*)>>(CastNullAdapter<model::SpaceType>(&model::SpaceType::resetDefaultScheduleSet)));
 
     } else if (field == DESIGNSPECIFICATIONOUTDOORAIR){
       addDropZoneColumn(QString(DESIGNSPECIFICATIONOUTDOORAIR),
+        std::vector<IddObjectType>(),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::designSpecificationOutdoorAir),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::setDesignSpecificationOutdoorAir),
         boost::optional<std::function<void(model::SpaceType*)>>(CastNullAdapter<model::SpaceType>(&model::SpaceType::resetDesignSpecificationOutdoorAir)));
@@ -998,7 +1003,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           flowRates,
           false, 
           QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::SpaceInfiltrationDesignFlowRate, model::SpaceType>(SPACEINFILTRATIONDESIGNFLOWRATES,
-             getter, setter))
+          std::vector<IddObjectType>(), getter, setter))
         )
       );
 
@@ -1036,7 +1041,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         leakageAreas,
         false,
         QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::SpaceInfiltrationEffectiveLeakageArea, model::SpaceType>(SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS,
-        getter, setter))
+        std::vector<IddObjectType>(), getter, setter))
         )
         );
 

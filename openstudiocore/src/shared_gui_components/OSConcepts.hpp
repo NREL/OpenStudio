@@ -1534,7 +1534,7 @@ class DropZoneConcept : public BaseConcept
   public:
 
     DropZoneConcept(QString t_headingLabel,
-      const boost::optional<std::vector<IddObjectType> > & iddObjectTypes)
+      const std::vector<IddObjectType> & iddObjectTypes)
     : BaseConcept(t_headingLabel),
     m_iddObjectTypes(iddObjectTypes)
   {
@@ -1545,11 +1545,11 @@ class DropZoneConcept : public BaseConcept
   virtual boost::optional<model::ModelObject> get(const ConceptProxy & obj) = 0;
   virtual bool set(const ConceptProxy & obj, const model::ModelObject &) = 0;
   virtual void reset(const ConceptProxy & obj) = 0;
-  boost::optional<std::vector<IddObjectType> > iddObjectTypes() { return m_iddObjectTypes; }
+  std::vector<IddObjectType> iddObjectTypes() { return m_iddObjectTypes; }
 
   private:
 
-  boost::optional<std::vector<IddObjectType> > m_iddObjectTypes;
+  std::vector<IddObjectType> m_iddObjectTypes;
 
 };
 
@@ -1559,10 +1559,10 @@ class DropZoneConceptImpl : public DropZoneConcept
   public:
 
   DropZoneConceptImpl(QString t_headingLabel,
+    const std::vector<IddObjectType> & iddObjectTypes,
     std::function<boost::optional<ValueType> (DataSourceType *)>  t_getter,
     std::function<bool(DataSourceType *, const ValueType &)> t_setter,
-    boost::optional<std::function<void(DataSourceType*)> > t_reset = boost::none,
-    const boost::optional<std::vector<IddObjectType> > &iddObjectTypes = boost::none)
+    boost::optional<std::function<void(DataSourceType*)> > t_reset = boost::none)
     : DropZoneConcept(t_headingLabel,
       iddObjectTypes),
       m_getter(t_getter),
