@@ -648,6 +648,9 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
       if(prop.minBoundType != IddFieldProperties::Unbounded)
       {
         double d = *(prop.minBoundValue);
+        if(prop.minBoundType == IddFieldProperties::ExclusiveBound) {
+          d = d + std::numeric_limits<double>::epsilon();
+        }
         if (m_unitSystem == IP) {
           OptionalQuantity minQ = convert(Quantity(d,u_si),u);
           if (minQ) {
@@ -661,6 +664,9 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
       if(prop.maxBoundType != IddFieldProperties::Unbounded)
       { 
         double d = *(prop.maxBoundValue);
+        if(prop.maxBoundType == IddFieldProperties::ExclusiveBound) {
+          d = d - std::numeric_limits<double>::epsilon();
+        }
         if (m_unitSystem == IP) {
           OptionalQuantity maxQ = convert(Quantity(d,u_si),u);
           if (maxQ) {
