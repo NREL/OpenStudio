@@ -84,7 +84,8 @@ namespace detail {
   Schedule AvailabilityManagerScheduled_Impl::schedule() const {
     boost::optional<Schedule> value = optionalSchedule();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Schedule attached.");
+      LOG(Info,briefDescription() << " does not have an Schedule attached.  Returning always on.");
+      return model().alwaysOnDiscreteSchedule();
     }
     return value.get();
   }
