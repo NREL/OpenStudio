@@ -66,7 +66,7 @@ public:
 
   void unbind();
 
-  std::vector<IddObjectType> m_iddObjectTypes;
+  void setIddObjectTypes(const std::vector<IddObjectType> & iddObjectTypes) { m_iddObjectTypes = iddObjectTypes; }
 
 signals:
 
@@ -95,6 +95,7 @@ private:
   QString m_text;
   OSItem * m_item = nullptr;
   bool m_deleteObject = false;
+  std::vector<IddObjectType> m_iddObjectTypes;
 
 };
 

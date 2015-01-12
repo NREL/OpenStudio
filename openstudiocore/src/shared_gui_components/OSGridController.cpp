@@ -447,7 +447,7 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
     OSDropZone2 * dropZone = new OSDropZone2();
 
     if (dropZoneConcept->iddObjectTypes().size()) {
-      dropZone->m_iddObjectTypes = dropZoneConcept->iddObjectTypes();
+      dropZone->setIddObjectTypes(dropZoneConcept->iddObjectTypes());
     }
 
     dropZone->bind(t_mo,
