@@ -669,7 +669,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
       // Notes: this only requires a static_cast because `name` comes from IdfObject
       // we are passing in an empty std::function for the separate parameter because there's no way to set it
       addNameLineEditColumn(QString(AIRLOOPNAME),
-                            true,
+                            false,
                             false,
                             ProxyAdapter(static_cast<boost::optional<std::string> (model::AirLoopHVAC::*)(bool) const>(&model::AirLoopHVAC::name), 
                               &model::ThermalZone::airLoopHVAC, boost::optional<std::string>("None")),
