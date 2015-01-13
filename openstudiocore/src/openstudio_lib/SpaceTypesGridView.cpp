@@ -504,6 +504,9 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
         setter);
 
     } else if (field == SELECTED && category != "Loads") {
+      auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
+      //connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpaceTypesGridController::selectAllStateChanged);
+
       addSelectColumn(Heading(QString(SELECTED), false, false, checkbox));
     } else if (field == LOADNAME || field == MULTIPLIER || field == DEFINITION || field == SCHEDULE || field == ACTIVITYSCHEDULE || field == SELECTED) {
       // Create a lambda function that collates all of the loads in a space type 

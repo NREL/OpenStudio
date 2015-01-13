@@ -226,6 +226,9 @@ void ThermalZonesGridController::addColumns(const QString &/*category*/, std::ve
                         NullAdapter(&model::ThermalZone::useIdealAirLoads),
                         NullAdapter(&model::ThermalZone::setUseIdealAirLoads));
     }else if(field == SELECTED){
+      auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
+      //connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpaceTypesGridController::selectAllStateChanged);
+
       addSelectColumn(Heading(QString(SELECTED), false, false, checkbox));
     }else if(field == ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE){
       addQuantityEditColumn(Heading(QString(ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE)),
