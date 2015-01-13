@@ -33,9 +33,9 @@ namespace openstudio {
 class Heading
 {
   public:
-    explicit Heading(const QString &t_headingLabel, const bool t_showColumnCheckbox = true,
+    explicit Heading(const QString &t_headingLabel, const bool t_showColumnCheckbox = true, const bool t_showColumnButton = true,
         const QSharedPointer<QWidget> &t_widget = QSharedPointer<QWidget>())
-      : m_label(t_headingLabel), m_showColumnCheckbox(t_showColumnCheckbox), m_widget(t_widget)
+        : m_label(t_headingLabel), m_showColumnCheckbox(t_showColumnCheckbox), m_showColumnButton(t_showColumnButton), m_widget(t_widget)
     {
     }
 
@@ -49,6 +49,11 @@ class Heading
       return m_showColumnCheckbox;
     }
 
+    bool showButton() const
+    {
+      return m_showColumnButton;
+    }
+
     QSharedPointer<QWidget> widget() const
     {
       return m_widget;
@@ -57,6 +62,7 @@ class Heading
   private:
     QString m_label;
     bool m_showColumnCheckbox;
+    bool m_showColumnButton;
     QSharedPointer<QWidget> m_widget;
 };
 

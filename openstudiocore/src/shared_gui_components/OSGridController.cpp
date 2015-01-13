@@ -857,6 +857,10 @@ QWidget * OSGridController::widgetAt(int row, int column)
     {
       horizontalHeaderWidget->m_checkBox->hide();
     }
+    if (!heading.showButton())
+    {
+      horizontalHeaderWidget->m_pushButton->hide();
+    }
 
     horizontalHeaderWidget->addWidget(heading.widget());
   } else {

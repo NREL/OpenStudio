@@ -226,7 +226,7 @@ void ThermalZonesGridController::addColumns(const QString &/*category*/, std::ve
                         NullAdapter(&model::ThermalZone::useIdealAirLoads),
                         NullAdapter(&model::ThermalZone::setUseIdealAirLoads));
     }else if(field == SELECTED){
-      addSelectColumn(Heading(QString(SELECTED), false));
+      addSelectColumn(Heading(QString(SELECTED), false, false, checkbox));
     }else if(field == ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE){
       addQuantityEditColumn(Heading(QString(ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE)),
                             QString("C"),
@@ -621,7 +621,7 @@ void ThermalZonesGridController::addColumns(const QString &/*category*/, std::ve
         );
 
     }else if(field == NAME){
-      addNameLineEditColumn(Heading(QString(NAME), false),
+      addNameLineEditColumn(Heading(QString(NAME), false, false),
                             false,
                             CastNullAdapter<model::ThermalZone>(&model::ThermalZone::name),
                             CastNullAdapter<model::ThermalZone>(&model::ThermalZone::setName),

@@ -498,13 +498,13 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
       auto getter = CastNullAdapter<model::SpaceType>(&model::SpaceType::name);
       auto setter = CastNullAdapter<model::SpaceType>(&model::SpaceType::setName);
 
-      addNameLineEditColumn(Heading(QString(NAME), false),
+      addNameLineEditColumn(Heading(QString(NAME), false, false),
         false,
         getter,
         setter);
 
     } else if (field == SELECTED && category != "Loads") {
-      addSelectColumn(Heading(QString(SELECTED), false));
+      addSelectColumn(Heading(QString(SELECTED), false, false, checkbox));
     } else if (field == LOADNAME || field == MULTIPLIER || field == DEFINITION || field == SCHEDULE || field == ACTIVITYSCHEDULE || field == SELECTED) {
       // Create a lambda function that collates all of the loads in a space type 
       // and returns them as an std::vector
@@ -1072,7 +1072,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
         auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
         connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpaceTypesGridController::selectAllStateChanged);
 
-        addSelectColumn(Heading(QString(SELECTED), false, checkbox),
+        addSelectColumn(Heading(QString(SELECTED), false, false, checkbox),
             DataSource(
               allLoads,
               true
@@ -1417,20 +1417,7 @@ QString SpaceTypesGridController::getColor(const model:: ModelObject & modelObje
 void SpaceTypesGridController::checkSelectedFields()
 {
   if(!this->m_hasHorizontalHeader) return;
-
-  // Don't show the name column check box
-  // From above in addColumns, we know that NAME is the first entry
-  HorizontalHeaderWidget * horizontalHeaderWidget = nullptr;
   
-  horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(0));
-  OS_ASSERT(horizontalHeaderWidget);
-  horizontalHeaderWidget->m_checkBox->hide();
-  horizontalHeaderWidget->m_pushButton->hide();
-
-  horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(1));
-  OS_ASSERT(horizontalHeaderWidget);
-  horizontalHeaderWidget->m_pushButton->hide();
-
   OSGridController::checkSelectedFields();
 }
 
