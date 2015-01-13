@@ -662,8 +662,8 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
         else {
           if(prop.minBoundType == IddFieldProperties::ExclusiveBound) {
             d = d + std::numeric_limits<double>::epsilon();
-            text->setMin( d );
           }
+          text->setMin( d );
         }
       }
       if(prop.maxBoundType != IddFieldProperties::Unbounded)
