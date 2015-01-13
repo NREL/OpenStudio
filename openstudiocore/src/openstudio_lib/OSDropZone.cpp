@@ -672,7 +672,10 @@ void OSDropZone2::dropEvent(QDropEvent *event)
         modelObject = modelObject->clone(m_modelObject->model());
         if (m_set)
         {
-          (*m_set)(modelObject.get());
+          bool success = (*m_set)(modelObject.get());
+          if (!success) {
+            modelObject->remove();
+          }
         }
         refresh();
       }
