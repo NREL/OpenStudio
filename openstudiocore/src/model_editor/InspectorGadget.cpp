@@ -648,32 +648,42 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
       if(prop.minBoundType != IddFieldProperties::Unbounded)
       {
         double d = *(prop.minBoundValue);
-        if(prop.minBoundType == IddFieldProperties::ExclusiveBound) {
-          d = d + std::numeric_limits<double>::epsilon();
-        }
         if (m_unitSystem == IP) {
           OptionalQuantity minQ = convert(Quantity(d,u_si),u);
+          if(prop.minBoundType == IddFieldProperties::ExclusiveBound) {
+            if( minQ ) {
+              minQ->setValue(minQ->value() + std::numeric_limits<double>::epsilon());
+            }
+          }
           if (minQ) {
             text->setMin(minQ->value());
           }
         }
         else {
-          text->setMin( d );
+          if(prop.minBoundType == IddFieldProperties::ExclusiveBound) {
+            d = d + std::numeric_limits<double>::epsilon();
+            text->setMin( d );
+          }
         }
       }
       if(prop.maxBoundType != IddFieldProperties::Unbounded)
       { 
         double d = *(prop.maxBoundValue);
-        if(prop.maxBoundType == IddFieldProperties::ExclusiveBound) {
-          d = d - std::numeric_limits<double>::epsilon();
-        }
         if (m_unitSystem == IP) {
           OptionalQuantity maxQ = convert(Quantity(d,u_si),u);
+          if( maxQ ) {
+            if(prop.maxBoundType == IddFieldProperties::ExclusiveBound) {
+              maxQ->setValue(maxQ->value() - std::numeric_limits<double>::epsilon());
+            }
+          }
           if (maxQ) {
             text->setMax(maxQ->value());
           }
         }
         else {
+          if(prop.maxBoundType == IddFieldProperties::ExclusiveBound) {
+            d = d - std::numeric_limits<double>::epsilon();
+          }
           text->setMax( d );
         }
       }
