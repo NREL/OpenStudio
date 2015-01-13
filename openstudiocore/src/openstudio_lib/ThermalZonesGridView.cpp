@@ -227,6 +227,7 @@ void ThermalZonesGridController::addColumns(const QString &/*category*/, std::ve
                         NullAdapter(&model::ThermalZone::setUseIdealAirLoads));
     }else if(field == SELECTED){
       auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
+      checkbox->setToolTip("Check to select all rows.");
       //connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpaceTypesGridController::selectAllStateChanged);
 
       addSelectColumn(Heading(QString(SELECTED), false, false, checkbox));
@@ -634,7 +635,7 @@ void ThermalZonesGridController::addColumns(const QString &/*category*/, std::ve
       // Notes: this only requires a static_cast because `name` comes from IdfObject
       // we are passing in an empty std::function for the separate parameter because there's no way to set it
       addNameLineEditColumn(Heading(QString(AIRLOOPNAME)),
-                            true,
+                            false,
                             ProxyAdapter(static_cast<boost::optional<std::string> (model::AirLoopHVAC::*)(bool) const>(&model::AirLoopHVAC::name), 
                               &model::ThermalZone::airLoopHVAC, boost::optional<std::string>("None")),
                             std::function<boost::optional<std::string>(model::HVACComponent*, const std::string &)>(),

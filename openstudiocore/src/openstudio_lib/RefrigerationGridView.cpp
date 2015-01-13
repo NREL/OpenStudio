@@ -303,6 +303,7 @@ void RefrigerationCaseGridController::addColumns(const QString &/*category*/, st
                             NullAdapter(&model::RefrigerationCase::setRatedAmbientTemperature));
     }else if(field == SELECTED){
       auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
+      checkbox->setToolTip("Check to select all rows.");
       //connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpaceTypesGridController::selectAllStateChanged);
 
       addSelectColumn(Heading(QString(SELECTED), false, false, checkbox));
@@ -769,6 +770,7 @@ void RefrigerationWalkInGridController::addColumns(const QString &/*category*/, 
             boost::optional<DataSource>());
     }else if(field == SELECTED){
       auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
+      checkbox->setToolTip("Check to select all rows.");
       //connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpaceTypesGridController::selectAllStateChanged);
 
       addSelectColumn(Heading(QString(SELECTED), false, false, checkbox));

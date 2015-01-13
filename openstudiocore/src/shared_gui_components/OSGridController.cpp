@@ -1320,6 +1320,7 @@ HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidge
   m_label->setAlignment(Qt::AlignCenter);
   layout->addWidget(m_label);
 
+  m_checkBox->setToolTip("Check to add this column to the “Custom” field.");
   layout->addWidget(m_checkBox);
 
   mainLayout->addLayout(layout);

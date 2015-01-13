@@ -505,7 +505,8 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
 
     } else if (field == SELECTED && category != "Loads") {
       auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
-      //connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpaceTypesGridController::selectAllStateChanged);
+      checkbox->setToolTip("Check to select all rows.");
+      connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpaceTypesGridController::selectAllStateChanged);
 
       addSelectColumn(Heading(QString(SELECTED), false, false, checkbox));
     } else if (field == LOADNAME || field == MULTIPLIER || field == DEFINITION || field == SCHEDULE || field == ACTIVITYSCHEDULE || field == SELECTED) {
@@ -1073,6 +1074,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
       }
       else if (field == SELECTED) {
         auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
+        checkbox->setToolTip("Select all rows.");
         connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpaceTypesGridController::selectAllStateChanged);
 
         addSelectColumn(Heading(QString(SELECTED), false, false, checkbox),
