@@ -532,6 +532,9 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
         [](model::ThermalZone * z) {
           if (boost::optional<model::ZoneControlHumidistat> thermostat = z->zoneControlHumidistat()) {
             thermostat->resetHumidifyingRelativeHumiditySetpointSchedule();
+            if( ! thermostat->dehumidifyingRelativeHumiditySetpointSchedule() ) {
+              thermostat->remove();
+            }
           }
         }
       );
@@ -571,6 +574,9 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
         [](model::ThermalZone * z) {
           if (boost::optional<model::ZoneControlHumidistat> thermostat = z->zoneControlHumidistat()) {
             thermostat->resetDehumidifyingRelativeHumiditySetpointSchedule();
+            if( ! thermostat->humidifyingRelativeHumiditySetpointSchedule() ) {
+              thermostat->remove();
+            }
           }
         }
       );
