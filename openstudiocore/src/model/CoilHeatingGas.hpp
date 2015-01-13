@@ -58,6 +58,8 @@ class MODEL_API CoilHeatingGas : public StraightComponent {
   explicit CoilHeatingGas(const Model& model,
                           Schedule& schedule);
 
+  explicit CoilHeatingGas(const Model& model);
+
   virtual ~CoilHeatingGas() {}
 
   //@}

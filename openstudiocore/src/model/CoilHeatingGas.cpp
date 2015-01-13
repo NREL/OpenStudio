@@ -456,6 +456,20 @@ CoilHeatingGas::CoilHeatingGas(const Model& model,
   setParasiticGasLoad(0);
 }
 
+CoilHeatingGas::CoilHeatingGas(const Model& model)
+  : StraightComponent(CoilHeatingGas::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::CoilHeatingGas_Impl>());
+
+  auto schedule = model.alwaysOnDiscreteSchedule();
+  setAvailableSchedule(schedule);
+
+  setGasBurnerEfficiency(0.8);
+  setString(openstudio::OS_Coil_Heating_GasFields::NominalCapacity,"AutoSize");
+  setParasiticElectricLoad(0);
+  setParasiticGasLoad(0);
+}
+
 CoilHeatingGas::CoilHeatingGas(std::shared_ptr<detail::CoilHeatingGas_Impl> p)
   : StraightComponent(p)
 {}

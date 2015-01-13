@@ -59,6 +59,8 @@ class MODEL_API CoilCoolingWater : public WaterToAirComponent {
    *  model.  The coil is fully initialized with all companion objects. */
   CoilCoolingWater(const Model& model, Schedule & availableSchedule);
 
+  CoilCoolingWater(const Model& model);
+
   virtual ~CoilCoolingWater() {}
 
   //@}
