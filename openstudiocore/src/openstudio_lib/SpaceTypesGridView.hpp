@@ -119,14 +119,8 @@ public slots:
 
   void filterChanged(const QString & text);
 
-private slots:
-
-  void selectAllStateChanged(const int newState) const;
-
 private:
  
-  REGISTER_LOGGER("openstudio.SpaceTypesGridController");
-
   SpaceTypesGridView * spaceTypesGridView();
 
 };

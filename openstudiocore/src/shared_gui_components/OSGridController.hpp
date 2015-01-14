@@ -612,6 +612,8 @@ protected:
 
   IddObjectType m_iddObjectType;
 
+  REGISTER_LOGGER("openstudio.OSGridController");
+
 private:
 
   friend class OSGridView;
@@ -677,6 +679,8 @@ public slots:
 protected slots:
 
   void reset();
+
+  void selectAllStateChanged(const int newState) const;
 
 private slots:
 

@@ -1305,6 +1305,19 @@ void OSGridController::onObjectRemoved(boost::optional<model::ParentObject> pare
   }
 }
 
+void OSGridController::selectAllStateChanged(const int newState) const
+{
+  LOG(Debug, "Select all state changed: " << newState);
+
+  auto objectSelector = getObjectSelector();
+  if (newState == 0)
+  {
+    objectSelector->clearSelection();
+  } else {
+    objectSelector->selectAll();
+  }
+}
+
 HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)
   : QWidget(parent),
   m_label(new QLabel(fieldName)),

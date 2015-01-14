@@ -380,19 +380,6 @@ void SpaceTypesGridController::setCategoriesAndFields()
 
 }
 
-void SpaceTypesGridController::selectAllStateChanged(const int newState) const
-{
-  LOG(Debug, "Select all state changed: " << newState);
-
-  auto objectSelector = getObjectSelector();
-  if (newState == 0)
-  {
-    objectSelector->clearSelection();
-  } else {
-    objectSelector->selectAll();
-  }
-}
-
 void SpaceTypesGridController::filterChanged(const QString & text)
 {
   LOG(Debug, "Load filter changed: " << text);

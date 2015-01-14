@@ -304,7 +304,7 @@ void RefrigerationCaseGridController::addColumns(const QString &/*category*/, st
     }else if(field == SELECTED){
       auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
       checkbox->setToolTip("Check to select all rows.");
-      //connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpaceTypesGridController::selectAllStateChanged);
+      connect(checkbox.data(), &QCheckBox::stateChanged, this, &RefrigerationCaseGridController::selectAllStateChanged);
 
       addSelectColumn(Heading(QString(SELECTED), false, false, checkbox));
     }else if(field == RATEDAMBIENTRELATIVEHUMIDITY){
@@ -771,7 +771,7 @@ void RefrigerationWalkInGridController::addColumns(const QString &/*category*/, 
     }else if(field == SELECTED){
       auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
       checkbox->setToolTip("Check to select all rows.");
-      //connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpaceTypesGridController::selectAllStateChanged);
+      connect(checkbox.data(), &QCheckBox::stateChanged, this, &RefrigerationWalkInGridController::selectAllStateChanged);
 
       addSelectColumn(Heading(QString(SELECTED), false, false, checkbox));
     }else if(field == DEFROSTCONTROLTYPE){

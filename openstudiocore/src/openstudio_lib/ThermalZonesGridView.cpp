@@ -228,7 +228,7 @@ void ThermalZonesGridController::addColumns(const QString &/*category*/, std::ve
     }else if(field == SELECTED){
       auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
       checkbox->setToolTip("Check to select all rows.");
-      //connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpaceTypesGridController::selectAllStateChanged);
+      connect(checkbox.data(), &QCheckBox::stateChanged, this, &ThermalZonesGridController::selectAllStateChanged);
 
       addSelectColumn(Heading(QString(SELECTED), false, false, checkbox));
     }else if(field == ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE){
