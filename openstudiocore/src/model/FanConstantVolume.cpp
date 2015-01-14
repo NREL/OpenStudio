@@ -464,6 +464,16 @@ FanConstantVolume::FanConstantVolume(const Model& model,
   setEndUseSubcategory("");
 }
 
+FanConstantVolume::FanConstantVolume(const Model& model)
+  : StraightComponent(FanConstantVolume::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::FanConstantVolume_Impl>());
+  setString(openstudio::OS_Fan_ConstantVolumeFields::MaximumFlowRate,"AutoSize");
+  auto s = model.alwaysOnDiscreteSchedule();
+  setAvailabilitySchedule(s);
+  setEndUseSubcategory("");
+}
+
 FanConstantVolume::FanConstantVolume(std::shared_ptr<detail::FanConstantVolume_Impl> p)
   : StraightComponent(p)
 {}

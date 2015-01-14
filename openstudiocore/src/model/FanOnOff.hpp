@@ -51,6 +51,8 @@ class MODEL_API FanOnOff : public StraightComponent {
 
   explicit FanOnOff(const Model& model, Schedule& availabilitySchedule);
 
+  explicit FanOnOff(const Model& model);
+
   virtual ~FanOnOff() {}
 
   //@}

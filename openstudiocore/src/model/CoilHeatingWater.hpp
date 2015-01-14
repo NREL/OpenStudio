@@ -54,6 +54,8 @@ class MODEL_API CoilHeatingWater : public WaterToAirComponent {
 
   CoilHeatingWater(const Model& model, Schedule & availableSchedule);
 
+  CoilHeatingWater(const Model& model);
+
   virtual ~CoilHeatingWater() {}
 
   //@}
