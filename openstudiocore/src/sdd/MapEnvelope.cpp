@@ -605,54 +605,61 @@ namespace sdd {
           intVisibleAbsorptance = intMaterial.visibleAbsorptance();
         }
 
+        // DLM: Not input
         // ext roughness
-        if (!extRoughness.empty()){
-          QDomElement roughnessElement = doc.createElement("ExtRoughness");
-          result.appendChild(roughnessElement);
-          roughnessElement.appendChild(doc.createTextNode(toQString(extRoughness)));
-        }
+        //if (!extRoughness.empty()){
+        //  QDomElement roughnessElement = doc.createElement("ExtRoughness");
+        //  result.appendChild(roughnessElement);
+        //  roughnessElement.appendChild(doc.createTextNode(toQString(extRoughness)));
+        //}
 
+        // DLM: Not input
         // ext solarAbsorptance
-        if (extSolarAbsorptance){
-          QDomElement solarAbsorptanceElement = doc.createElement("ExtSolAbs"); 
-          result.appendChild(solarAbsorptanceElement);
-          solarAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*extSolarAbsorptance)));
-        }
+        //if (extSolarAbsorptance){
+        //  QDomElement solarAbsorptanceElement = doc.createElement("ExtSolAbs"); 
+        //  result.appendChild(solarAbsorptanceElement);
+        //  solarAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*extSolarAbsorptance)));
+        //}
 
+        // DLM: Not input
         // ext thermalAbsorptance
-        if (extThermalAbsorptance){
-          QDomElement thermalAbsorptanceElement = doc.createElement("ExtThrmlAbs");
-          result.appendChild(thermalAbsorptanceElement);
-          thermalAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*extThermalAbsorptance)));
-        }
+        //if (extThermalAbsorptance){
+        //  QDomElement thermalAbsorptanceElement = doc.createElement("ExtThrmlAbs");
+        //  result.appendChild(thermalAbsorptanceElement);
+        //  thermalAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*extThermalAbsorptance)));
+        //}
 
+        // DLM: Not input
         // ext visibleAbsorptance
-        if (extVisibleAbsorptance){
-          QDomElement visibleAbsorptanceElement = doc.createElement("ExtVisAbs");
-          result.appendChild(visibleAbsorptanceElement);
-          visibleAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*extVisibleAbsorptance)));
-        }
+        //if (extVisibleAbsorptance){
+        //  QDomElement visibleAbsorptanceElement = doc.createElement("ExtVisAbs");
+        //  result.appendChild(visibleAbsorptanceElement);
+        //  visibleAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*extVisibleAbsorptance)));
+        //}
 
+        // DLM: Not input
         // int solarAbsorptance
-        if (intSolarAbsorptance){
-          QDomElement solarAbsorptanceElement = doc.createElement("IntSolAbs"); 
-          result.appendChild(solarAbsorptanceElement);
-          solarAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*intSolarAbsorptance)));
-        }
+        //if (intSolarAbsorptance){
+        //  QDomElement solarAbsorptanceElement = doc.createElement("IntSolAbs"); 
+        //  result.appendChild(solarAbsorptanceElement);
+        //  solarAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*intSolarAbsorptance)));
+        //}
 
+        // DLM: Not input
         // int thermalAbsorptance
-        if (intThermalAbsorptance){
-          QDomElement thermalAbsorptanceElement = doc.createElement("IntThrmlAbs");
-          result.appendChild(thermalAbsorptanceElement);
-          thermalAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*intThermalAbsorptance)));
-        }
+        //if (intThermalAbsorptance){
+        //  QDomElement thermalAbsorptanceElement = doc.createElement("IntThrmlAbs");
+        //  result.appendChild(thermalAbsorptanceElement);
+        //  thermalAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*intThermalAbsorptance)));
+        //}
 
+        // DLM: Not input
         // int visibleAbsorptance
-        if (intVisibleAbsorptance){
-          QDomElement visibleAbsorptanceElement = doc.createElement("IntVisAbs");
-          result.appendChild(visibleAbsorptanceElement);
-          visibleAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*intVisibleAbsorptance)));
-        }
+        //if (intVisibleAbsorptance){
+        //  QDomElement visibleAbsorptanceElement = doc.createElement("IntVisAbs");
+        //  result.appendChild(visibleAbsorptanceElement);
+        //  visibleAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*intVisibleAbsorptance)));
+        //}
       }
 
       for (const model::Material& material : layers){
@@ -927,12 +934,11 @@ namespace sdd {
           boost::optional<std::string> fenestrationTint = info.fenestrationTint();
           if (fenestrationTint){
             if (istringEqual("Clear", *fenestrationTint)){
-              glzTint = "Clear";
+              glzTint = "ClearGlazing";
             } else{
-              glzTint = "Tinted";
+              glzTint = "TintedGlazing";
             }
           }
-
         }
       }
 

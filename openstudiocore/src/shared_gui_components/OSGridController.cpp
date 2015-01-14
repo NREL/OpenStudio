@@ -328,6 +328,8 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
 
     auto nameLineEdit = new OSLineEdit2();
 
+    nameLineEdit->setDeleteObject(nameLineEditConcept->deleteObject());
+
     nameLineEdit->bind(t_mo,
                        OptionalStringGetter(std::bind(&NameLineEditConcept::get,nameLineEditConcept.data(),t_mo,true)),
                        // If the concept is read only, pass an empty optional
@@ -443,6 +445,10 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
 
   } else if(QSharedPointer<DropZoneConcept> dropZoneConcept = t_baseConcept.dynamicCast<DropZoneConcept>()) {
     OSDropZone2 * dropZone = new OSDropZone2();
+
+    if (dropZoneConcept->iddObjectTypes().size()) {
+      dropZone->setIddObjectTypes(dropZoneConcept->iddObjectTypes());
+    }
 
     dropZone->bind(t_mo,
       OptionalModelObjectGetter(std::bind(&DropZoneConcept::get,dropZoneConcept.data(),t_mo)),

@@ -54,6 +54,8 @@ class MODEL_API ChillerElectricEIR : public WaterToWaterComponent {
                               const CurveBiquadratic& EItoCORFofT,
                               const CurveQuadratic& EItoCORFofPLR );
 
+  explicit ChillerElectricEIR(const Model& model);
+
   virtual ~ChillerElectricEIR() {}
 
   //@}

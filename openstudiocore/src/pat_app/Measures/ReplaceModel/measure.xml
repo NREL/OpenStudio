@@ -1,9 +1,22 @@
 <measure>
-  <name>Replace OpenStudio Model</name>
+  <schema_version>3.0</schema_version>
+  <name>replace_model</name>
   <uid>d234ecee-c118-44e7-a381-db0a8917d751</uid>
-  <version_id>9eedad4e-c2fa-438a-a40e-bd7706cbabe2</version_id>
+  <version_id>358e5246-dd7a-403a-8824-5567bc0ecc9b</version_id>
+  <xml_checksum>057E8D9D</xml_checksum>
+  <class_name>ReplaceModel</class_name>
+  <display_name>Replace OpenStudio Model</display_name>
   <description></description>
   <modeler_description></modeler_description>
+  <arguments>
+    <argument>
+      <name>alternativeModelPath</name>
+      <display_name>Alternative Model Path</display_name>
+      <type>Path</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+    </argument>
+  </arguments>
   <provenances/>
   <tags>
     <tag>Whole Building.Space Types</tag>
@@ -31,6 +44,7 @@
       <version>
         <software_program>OpenStudio</software_program>
         <identifier>0.10.2</identifier>
+        <min_compatible>0.10.2</min_compatible>
       </version>
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
@@ -41,7 +55,7 @@
       <filename>ReplaceModel_Test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
-      <checksum>AAE6C44F</checksum>
+      <checksum>588891E8</checksum>
     </file>
   </files>
 </measure>

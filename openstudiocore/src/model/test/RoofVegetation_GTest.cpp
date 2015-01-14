@@ -23,6 +23,7 @@
 
 #include "../RoofVegetation.hpp"
 #include "../RoofVegetation_Impl.hpp"
+#include "../StandardsInformationMaterial.hpp"
 
 #include "../../utilities/units/Quantity.hpp"
 #include "../../utilities/units/Unit.hpp"
@@ -347,3 +348,13 @@ TEST_F(ModelFixture,RoofVegetation_InitialVolumetricMoistureContentoftheSoilLaye
   EXPECT_EQ(units.standardString(),q2.units().standardString());
 }
 
+
+
+
+TEST_F(ModelFixture, RoofVegetation_StandardsInformation) {
+  Model model;
+  
+  RoofVegetation roofVegetation(model);
+  StandardsInformationMaterial info = roofVegetation.standardsInformation();
+
+}

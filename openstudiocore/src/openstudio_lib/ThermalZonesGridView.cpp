@@ -459,6 +459,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
       );
 
       addDropZoneColumn(QString(COOLINGTHERMOSTATSCHEDULE),
+        std::vector<IddObjectType>(),
         coolingSchedule,
         setCoolingSchedule,
         resetCoolingSchedule);
@@ -497,6 +498,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
       );
 
       addDropZoneColumn(QString(HEATINGTHERMOSTATSCHEDULE),
+        std::vector<IddObjectType>(),
         heatingSchedule,
         setHeatingSchedule,
         resetHeatingSchedule);
@@ -530,11 +532,15 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
         [](model::ThermalZone * z) {
           if (boost::optional<model::ZoneControlHumidistat> thermostat = z->zoneControlHumidistat()) {
             thermostat->resetHumidifyingRelativeHumiditySetpointSchedule();
+            if( ! thermostat->dehumidifyingRelativeHumiditySetpointSchedule() ) {
+              thermostat->remove();
+            }
           }
         }
       );
 
       addDropZoneColumn(QString(HUMIDIFYINGSETPOINTSCHEDULE),
+        std::vector<IddObjectType>(),
         humidifyingSchedule,
         setHumidifyingSchedule,
         resetHumidifyingSchedule);
@@ -568,11 +574,15 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
         [](model::ThermalZone * z) {
           if (boost::optional<model::ZoneControlHumidistat> thermostat = z->zoneControlHumidistat()) {
             thermostat->resetDehumidifyingRelativeHumiditySetpointSchedule();
+            if( ! thermostat->humidifyingRelativeHumiditySetpointSchedule() ) {
+              thermostat->remove();
+            }
           }
         }
       );
 
       addDropZoneColumn(QString(DEHUMIDIFYINGSETPOINTSCHEDULE),
+        std::vector<IddObjectType>(),
         dehumidifyingSchedule,
         setDehumidifyingSchedule,
         resetDehumidifyingSchedule);
@@ -598,8 +608,43 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
       }
       );
 
+      std::vector<IddObjectType> iddObjectTypes = std::vector<IddObjectType>();
+
+      iddObjectTypes.push_back(IddObjectType::Fan_ZoneExhaust);
+      iddObjectTypes.push_back(IddObjectType::Refrigeration_AirChiller);
+      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_Baseboard_Convective_Electric);
+      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_Baseboard_Convective_Water);
+      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_FourPipeFanCoil);
+      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_HighTemperatureRadiant);
+      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_IdealLoadsAirSystem);
+      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_LowTemperatureRadiant_Electric);
+      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_LowTemperatureRadiant_ConstantFlow);
+      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_LowTemperatureRadiant_VariableFlow);
+      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_PackagedTerminalAirConditioner);
+      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_PackagedTerminalHeatPump);
+      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
+      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_UnitHeater);
+      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_WaterToAirHeatPump);
+
+      iddObjectTypes.push_back(IddObjectType::OS_Fan_ZoneExhaust);
+      iddObjectTypes.push_back(IddObjectType::OS_Refrigeration_AirChiller);
+      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric);
+      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Water);
+      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_FourPipeFanCoil);
+      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_HighTemperatureRadiant);
+      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_IdealLoadsAirSystem);
+      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
+      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow);
+      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow);
+      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner);
+      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump);
+      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
+      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_UnitHeater);
+      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump);
+
       addNameLineEditColumn(QString(ZONEEQUIPMENT),
         true,
+        false,
         CastNullAdapter<model::ModelObject>(&model::ModelObject::name),
         CastNullAdapter<model::ModelObject>(&model::ModelObject::setName),
         boost::optional<std::function<void(model::ModelObject *)>>(
@@ -614,12 +659,13 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
         equipment,
         false,
         QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::ModelObject, model::ThermalZone>(ZONEEQUIPMENT,
-        getter, setter, reset))
+        iddObjectTypes, getter, setter, reset))
         )
         );
 
     }else if(field == NAME){
       addNameLineEditColumn(QString(NAME),
+                            false,
                             false,
                             CastNullAdapter<model::ThermalZone>(&model::ThermalZone::name),
                             CastNullAdapter<model::ThermalZone>(&model::ThermalZone::setName),
@@ -629,7 +675,8 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
       // Notes: this only requires a static_cast because `name` comes from IdfObject
       // we are passing in an empty std::function for the separate parameter because there's no way to set it
       addNameLineEditColumn(QString(AIRLOOPNAME),
-                            true,
+                            false,
+                            false,
                             ProxyAdapter(static_cast<boost::optional<std::string> (model::AirLoopHVAC::*)(bool) const>(&model::AirLoopHVAC::name), 
                               &model::ThermalZone::airLoopHVAC, boost::optional<std::string>("None")),
                             std::function<boost::optional<std::string>(model::HVACComponent*, const std::string &)>(),

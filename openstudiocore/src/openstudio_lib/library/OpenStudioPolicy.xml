@@ -30,6 +30,7 @@
   <POLICY IddObjectType="OS_CoolingTower_SingleSpeed">
     <rule IddField="Water Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Water Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Outdoor Air Inlet Node Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_CoolingTower_TwoSpeed">
     <rule IddField="Water Inlet Node Name" Access="HIDDEN"/>

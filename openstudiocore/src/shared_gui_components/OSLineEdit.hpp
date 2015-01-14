@@ -43,6 +43,9 @@ class OSLineEdit2 : public QLineEdit {
 
   virtual ~OSLineEdit2() {}
 
+  void setDeleteObject(bool deleteObject) { m_deleteObject = deleteObject;  }
+  bool deleteObject() { return m_deleteObject; }
+
   void bind(model::ModelObject& modelObject,
             StringGetter get,
             boost::optional<StringSetter> set=boost::none,
@@ -105,6 +108,8 @@ signals:
   std::string m_text = "";
 
   QTimer m_timer;
+
+  bool m_deleteObject = false;
 };
 
 class OSLineEdit : public QLineEdit

@@ -1,9 +1,14 @@
 <measure>
-  <name>Calibration Reports</name>
+  <schema_version>3.0</schema_version>
+  <name>calibration_reports</name>
   <uid>e6642d40-7366-4647-8724-53a37991d579</uid>
-  <version_id>1ce0c03c-3930-4afd-9de2-f5a346c42cb8</version_id>
+  <version_id>ecb5a75b-a93d-4229-b90a-af11711e738c</version_id>
+  <xml_checksum>2C8A3EEF</xml_checksum>
+  <class_name>CalibrationReports</class_name>
+  <display_name>Calibration Reports</display_name>
   <description>Change me</description>
   <modeler_description>Change me</modeler_description>
+  <arguments/>
   <provenances/>
   <tags>
     <tag>Reporting.QAQC</tag>
@@ -22,12 +27,6 @@
   </attributes>
   <files>
     <file>
-      <filename>CalibrationReports_Test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>3BE1A784</checksum>
-    </file>
-    <file>
       <filename>report.html.in</filename>
       <filetype>in</filetype>
       <usage_type>resource</usage_type>
@@ -38,6 +37,12 @@
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
       <checksum>A930DF8D</checksum>
+    </file>
+    <file>
+      <filename>CalibrationReports_Test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>E2AAA775</checksum>
     </file>
   </files>
 </measure>

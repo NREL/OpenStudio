@@ -486,6 +486,41 @@ namespace detail {
 
 } // detail
 
+FanOnOff::FanOnOff(const Model& model)
+  : StraightComponent(FanOnOff::iddObjectType(),model)
+  {
+    OS_ASSERT(getImpl<detail::FanOnOff_Impl>());
+
+    auto availabilitySchedule = model.alwaysOnDiscreteSchedule();
+    setAvailabilitySchedule(availabilitySchedule);
+
+    bool ok = setFanEfficiency(0.6);
+    OS_ASSERT(ok);
+    setPressureRise(300);
+    autosizeMaximumFlowRate();
+    ok = setMotorEfficiency(0.8);
+    OS_ASSERT(ok);
+    ok = setMotorInAirstreamFraction(1.0);
+    OS_ASSERT(ok);
+
+    CurveExponent fanPowerFtSpeedCurve(model);
+    fanPowerFtSpeedCurve.setName("Fan On Off Power Curve");
+    fanPowerFtSpeedCurve.setCoefficient1Constant(1.0);
+    fanPowerFtSpeedCurve.setCoefficient2Constant(0);
+    fanPowerFtSpeedCurve.setCoefficient3Constant(0);
+    ok = setFanPowerRatioFunctionofSpeedRatioCurve(fanPowerFtSpeedCurve);
+    OS_ASSERT(ok);
+
+    CurveCubic fanEfficiencyFtSpeedCurve(model);
+    fanEfficiencyFtSpeedCurve.setName("Fan On Off Efficiency Curve");
+    fanEfficiencyFtSpeedCurve.setCoefficient1Constant(1.0);
+    fanEfficiencyFtSpeedCurve.setCoefficient2x(0.0);
+    fanEfficiencyFtSpeedCurve.setCoefficient3xPOW2(0.0);
+    fanEfficiencyFtSpeedCurve.setCoefficient4xPOW3(0.0);
+    ok = setFanEfficiencyRatioFunctionofSpeedRatioCurve(fanEfficiencyFtSpeedCurve);
+    OS_ASSERT(ok);
+  }
+
 FanOnOff::FanOnOff(const Model& model, Schedule& availabilitySchedule)
   : StraightComponent(FanOnOff::iddObjectType(),model)
   {

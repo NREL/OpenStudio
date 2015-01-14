@@ -400,16 +400,35 @@ OS:Coil:Cooling:DX:SingleSpeed,
   ;                                       ! Basin Heater Operating Schedule Name
 
 OS:CoolingTower:SingleSpeed,
-  {c555c629-0c49-4248-9bd1-a04e0cf9e2d1}, ! Handle
-  1 Spd Cooling Tower,                    ! Name
-  ,                                       ! Water Inlet Node Name
-  ,                                       ! Water Outlet Node Name
-  Autosize,                               ! Design Water Flow Rate {m3/s}
-  Autosize,                               ! Design Air Flow Rate {m3/s}
-  Autosize,                               ! Fan Power at Design Air Flow Rate {W}
-  Autosize,                               ! U-Factor Times Area Value at Design Air Flow Rate {W/K}
-  Autosize,                               ! Air Flow Rate in Free Convection Regime {m3/s}
-  Autosize;                               ! U-Factor Times Area Value at Free Convection Air Flow Rate {W/K}
+  {b4c8a4f7-5eb1-4262-8227-0f232c5cfc93}, !- Handle
+  1 Spd Cooling Tower,           !- Name
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  autosize,                               !- Design Water Flow Rate {m3/s}
+  autosize,                               !- Design Air Flow Rate {m3/s}
+  autosize,                               !- Fan Power at Design Air Flow Rate {W}
+  autosize,                               !- U-Factor Times Area Value at Design Air Flow Rate {W/K}
+  autosize,                               !- Air Flow Rate in Free Convection Regime {m3/s}
+  autosize,                               !- U-Factor Times Area Value at Free Convection Air Flow Rate {W/K}
+  UFactorTimesAreaAndDesignWaterFlowRate, !- Performance Input Method
+  ,                                       !- Nominal Capacity {W}
+  0,                                      !- Free Convection Capacity {W}
+  0,                                      !- Basin Heater Capacity {W/K}
+  ,                                       !- Basin Heater Setpoint Temperature {C}
+  ,                                       !- Basin Heater Operating Schedule Name
+  LossFactor,                             !- Evaporation Loss Mode
+  0.2,                                    !- Evaporation Loss Factor {percent/K}
+  0.008,                                  !- Drift Loss Percent {percent}
+  ConcentrationRatio,                     !- Blowdown Calculation Mode
+  3,                                      !- Blowdown Concentration Ratio
+  ,                                       !- Blowdown Makeup Water Usage Schedule Name
+  ,                                       !- Outdoor Air Inlet Node Name
+  FanCycling,                             !- Capacity Control
+  1,                                      !- Number of Cells
+  MinimalCell,                            !- Cell Control
+  0.33,                                   !- Cell Minimum  Water Flow Rate Fraction
+  2.5,                                    !- Cell Maximum Water Flow Rate Fraction
+  1;                                      !- Sizing Factor
 
 OS:Curve:Biquadratic,
   {43241c62-f9aa-470c-877b-aed134698156}, ! Handle

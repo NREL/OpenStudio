@@ -2145,7 +2145,7 @@ OS:Material:RoofVegetation,
   A2, \field Name
        \type alpha
        \required-field
-       \reference MaterialName
+       \reference MaterialNames
   N1, \field Height of Plants
        \note The ecoroof module is designed for short plants and shrubs.
        \type real

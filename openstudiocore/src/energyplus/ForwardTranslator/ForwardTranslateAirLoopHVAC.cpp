@@ -96,11 +96,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
 
   if( ! constantVolumeFans.empty() )
   {
-    fan = constantVolumeFans.front();
+    fan = constantVolumeFans.back();
   }
   else if( ! variableVolumeFans.empty() )
   {
-    fan = variableVolumeFans.front();
+    fan = variableVolumeFans.back();
   }
 
   std::vector<Node> upperNodes;

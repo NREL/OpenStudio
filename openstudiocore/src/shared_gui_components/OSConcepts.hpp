@@ -992,9 +992,11 @@ class NameLineEditConcept : public BaseConcept
   public:
 
   NameLineEditConcept(QString t_headingLabel,
-    bool isInspectable)
+    bool isInspectable,
+    bool deleteObject)
     : BaseConcept(t_headingLabel),
-    m_isInspectable(isInspectable)
+    m_isInspectable(isInspectable),
+    m_deleteObject(deleteObject)
   {
   }
 
@@ -1005,10 +1007,12 @@ class NameLineEditConcept : public BaseConcept
   virtual void reset(const ConceptProxy & obj) = 0;
   virtual bool readOnly() const = 0;
   bool isInspectable() { return m_isInspectable; }
+  bool deleteObject() { return m_deleteObject; }
 
   private:
 
   bool m_isInspectable;
+  bool m_deleteObject;
 
 };
 
@@ -1019,11 +1023,13 @@ class NameLineEditConceptImpl : public NameLineEditConcept
 
   NameLineEditConceptImpl(QString t_headingLabel,
     bool isInspectable,
-    std::function<boost::optional<std::string> (DataSourceType *, bool)>  t_getter,
+    bool deleteObject,
+    std::function<boost::optional<std::string>(DataSourceType *, bool)>  t_getter,
     std::function<boost::optional<std::string> (DataSourceType *, const std::string &)> t_setter,
     boost::optional<std::function<void(DataSourceType*)> > t_reset = boost::none)
     : NameLineEditConcept(t_headingLabel,
-      isInspectable),
+      isInspectable,
+      deleteObject),
       m_getter(t_getter),
       m_setter(t_setter),
       m_reset(t_reset)
@@ -1527,8 +1533,10 @@ class DropZoneConcept : public BaseConcept
 {
   public:
 
-  DropZoneConcept(QString t_headingLabel)
-    : BaseConcept(t_headingLabel)
+    DropZoneConcept(QString t_headingLabel,
+      const std::vector<IddObjectType> & iddObjectTypes)
+    : BaseConcept(t_headingLabel),
+    m_iddObjectTypes(iddObjectTypes)
   {
   }
 
@@ -1537,6 +1545,12 @@ class DropZoneConcept : public BaseConcept
   virtual boost::optional<model::ModelObject> get(const ConceptProxy & obj) = 0;
   virtual bool set(const ConceptProxy & obj, const model::ModelObject &) = 0;
   virtual void reset(const ConceptProxy & obj) = 0;
+  std::vector<IddObjectType> iddObjectTypes() { return m_iddObjectTypes; }
+
+  private:
+
+  std::vector<IddObjectType> m_iddObjectTypes;
+
 };
 
 template<typename ValueType, typename DataSourceType>
@@ -1545,10 +1559,12 @@ class DropZoneConceptImpl : public DropZoneConcept
   public:
 
   DropZoneConceptImpl(QString t_headingLabel,
+    const std::vector<IddObjectType> & iddObjectTypes,
     std::function<boost::optional<ValueType> (DataSourceType *)>  t_getter,
     std::function<bool(DataSourceType *, const ValueType &)> t_setter,
     boost::optional<std::function<void(DataSourceType*)> > t_reset = boost::none)
-    : DropZoneConcept(t_headingLabel),
+    : DropZoneConcept(t_headingLabel,
+      iddObjectTypes),
       m_getter(t_getter),
       m_setter(t_setter),
       m_reset(t_reset)

@@ -56,12 +56,17 @@ public:
   OSDropZone2();
   ~OSDropZone2() {}
 
+  void setDeleteObject(bool deleteObject) { m_deleteObject = deleteObject; }
+  bool deleteObject() { return m_deleteObject; }
+
   void bind(model::ModelObject & modelObject,
             OptionalModelObjectGetter get,
             ModelObjectSetter set,
             boost::optional<NoFailAction> reset = boost::none);
 
   void unbind();
+
+  void setIddObjectTypes(const std::vector<IddObjectType> & iddObjectTypes) { m_iddObjectTypes = iddObjectTypes; }
 
 signals:
 
@@ -89,6 +94,8 @@ private:
   boost::optional<model::ModelObject> m_modelObject;
   QString m_text;
   OSItem * m_item = nullptr;
+  bool m_deleteObject = false;
+  std::vector<IddObjectType> m_iddObjectTypes;
 
 };
 
