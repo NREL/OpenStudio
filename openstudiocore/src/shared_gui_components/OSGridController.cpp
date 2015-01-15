@@ -281,7 +281,7 @@ void ObjectSelector::updateWidgets(const model::ModelObject &t_obj)
   updateWidgets(std::get<0>(row), std::get<1>(row), objectSelected, objectVisible);
 }
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 OSGridController::OSGridController()
   : QObject(),
@@ -437,6 +437,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
   if(QSharedPointer<CheckBoxConcept> checkBoxConcept = t_baseConcept.dynamicCast<CheckBoxConcept>()){
 
     auto checkBox = new OSCheckBox3(); // OSCheckBox3 is derived from QCheckBox, whereas OSCheckBox2 is derived from QPushButton
+    if (checkBoxConcept->tooltip().size()) {
+      checkBox->setToolTip(checkBoxConcept->tooltip().c_str());
+    }
 
     checkBox->bind(t_mo,
                    BoolGetter(std::bind(&CheckBoxConcept::get,checkBoxConcept.data(),t_mo)),
@@ -1250,7 +1253,6 @@ void OSGridController::onDropZoneItemClicked(OSItem* item)
 {
 }
 
-
 void OSGridController::onRemoveWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
   auto modelObject = object.cast<model::ModelObject>();
@@ -1333,7 +1335,7 @@ HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidge
   m_label->setAlignment(Qt::AlignCenter);
   layout->addWidget(m_label);
 
-  m_checkBox->setToolTip("Check to add this column to the “Custom” field.");
+  m_checkBox->setToolTip("Check to add this column to \"Custom\"");
   layout->addWidget(m_checkBox);
 
   mainLayout->addLayout(layout);

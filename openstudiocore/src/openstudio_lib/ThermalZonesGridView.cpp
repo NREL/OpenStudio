@@ -223,14 +223,15 @@ void ThermalZonesGridController::addColumns(const QString &/*category*/, std::ve
   Q_FOREACH(QString field, fields){
     if(field == IDEALAIRLOADS){
       addCheckBoxColumn(Heading(QString(IDEALAIRLOADS)),
+                        std::string("Check to enable ideal air loads."),
                         NullAdapter(&model::ThermalZone::useIdealAirLoads),
                         NullAdapter(&model::ThermalZone::setUseIdealAirLoads));
     }else if(field == SELECTED){
       auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
-      checkbox->setToolTip("Check to select all rows.");
+      checkbox->setToolTip("Check to select all rows");
       connect(checkbox.data(), &QCheckBox::stateChanged, this, &ThermalZonesGridController::selectAllStateChanged);
 
-      addSelectColumn(Heading(QString(SELECTED), false, false, checkbox));
+      addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row");
     }else if(field == ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE){
       addQuantityEditColumn(Heading(QString(ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE)),
                             QString("C"),

@@ -492,10 +492,10 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
 
     } else if (field == SELECTED && category != "Loads") {
       auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
-      checkbox->setToolTip("Check to select all rows.");
+      checkbox->setToolTip("Check to select all rows");
       connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpaceTypesGridController::selectAllStateChanged);
 
-      addSelectColumn(Heading(QString(SELECTED), false, false, checkbox));
+      addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row");
     } else if (field == LOADNAME || field == MULTIPLIER || field == DEFINITION || field == SCHEDULE || field == ACTIVITYSCHEDULE || field == SELECTED) {
       // Create a lambda function that collates all of the loads in a space type 
       // and returns them as an std::vector
@@ -1061,10 +1061,10 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
       }
       else if (field == SELECTED) {
         auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
-        checkbox->setToolTip("Select all rows.");
+        checkbox->setToolTip("Select all rows");
         connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpaceTypesGridController::selectAllStateChanged);
 
-        addSelectColumn(Heading(QString(SELECTED), false, false, checkbox),
+        addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row",
             DataSource(
               allLoads,
               true

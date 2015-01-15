@@ -229,10 +229,6 @@ class ObjectSelector : public QObject
     std::function<bool (const model::ModelObject &)> m_objectFilter;
 };
 
-
-
-
-
 class OSGridController : public QObject
 {
   Q_OBJECT
@@ -266,6 +262,7 @@ public:
   }
 
   void addSelectColumn(const Heading &heading,
+                       const std::string & tooltip,
                        const boost::optional<DataSource> &t_source = boost::none)
   {
     auto objectSelector = m_objectSelector;
@@ -279,18 +276,19 @@ public:
       objectSelector->setObjectSelection(*t_obj, t_set);
     });
 
-    addCheckBoxColumn(heading, getter, setter, t_source);
+    addCheckBoxColumn(heading, tooltip, getter, setter, t_source);
     m_baseConcepts.back()->setIsSelector(true);
   }
 
 
   template<typename DataSourceType>
   void addCheckBoxColumn(const Heading &heading,
+                         const std::string & tooltip,
                          std::function<bool (DataSourceType *)>  t_getter,
                          std::function<void (DataSourceType *, bool)> t_setter,
                          const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<CheckBoxConcept>(new CheckBoxConceptImpl<DataSourceType>(heading,t_getter,t_setter)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<CheckBoxConcept>(new CheckBoxConceptImpl<DataSourceType>(heading,tooltip,t_getter,t_setter)), t_source));
   }
 
   template<typename ChoiceType, typename DataSourceType>

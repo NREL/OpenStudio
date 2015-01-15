@@ -303,10 +303,10 @@ void RefrigerationCaseGridController::addColumns(const QString &/*category*/, st
                             NullAdapter(&model::RefrigerationCase::setRatedAmbientTemperature));
     }else if(field == SELECTED){
       auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
-      checkbox->setToolTip("Check to select all rows.");
+      checkbox->setToolTip("Check to select all rows");
       connect(checkbox.data(), &QCheckBox::stateChanged, this, &RefrigerationCaseGridController::selectAllStateChanged);
 
-      addSelectColumn(Heading(QString(SELECTED), false, false, checkbox));
+      addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row");
     }else if(field == RATEDAMBIENTRELATIVEHUMIDITY){
       addValueEditColumn(Heading(QString(RATEDAMBIENTRELATIVEHUMIDITY)),
                          NullAdapter(&model::RefrigerationCase::ratedAmbientRelativeHumidity),
@@ -770,10 +770,10 @@ void RefrigerationWalkInGridController::addColumns(const QString &/*category*/, 
             boost::optional<DataSource>());
     }else if(field == SELECTED){
       auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
-      checkbox->setToolTip("Check to select all rows.");
+      checkbox->setToolTip("Check to select all rows");
       connect(checkbox.data(), &QCheckBox::stateChanged, this, &RefrigerationWalkInGridController::selectAllStateChanged);
 
-      addSelectColumn(Heading(QString(SELECTED), false, false, checkbox));
+      addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row");
     }else if(field == DEFROSTCONTROLTYPE){
       addComboBoxColumn<std::string,model::RefrigerationWalkIn>(
             Heading(QString(DEFROSTCONTROLTYPE)),

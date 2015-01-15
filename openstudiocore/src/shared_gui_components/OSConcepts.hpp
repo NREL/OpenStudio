@@ -339,17 +339,27 @@ class BaseConcept
 
 class CheckBoxConcept : public BaseConcept
 {
-  public:
+public:
 
-  CheckBoxConcept(const Heading &t_heading)
-    : BaseConcept(t_heading)
+  CheckBoxConcept(const Heading &t_heading,
+    const std::string & t_tooltip)
+    : BaseConcept(t_heading),
+    m_tooltip(t_tooltip)
   {
   }
 
   virtual ~CheckBoxConcept() {}
 
+
   virtual bool get(const ConceptProxy & obj) = 0;
   virtual void set(const ConceptProxy & obj, bool) = 0;
+
+  const std::string & tooltip() { return m_tooltip; }
+
+  private:
+
+  std::string m_tooltip;
+
 };
 
 template<typename DataSourceType>
@@ -358,9 +368,10 @@ class CheckBoxConceptImpl : public CheckBoxConcept
   public:
 
   CheckBoxConceptImpl(const Heading &t_heading,
+    const std::string & t_tooltip,
     std::function<bool (DataSourceType *)> t_getter,
     std::function<void (DataSourceType *, bool)> t_setter)
-    : CheckBoxConcept(t_heading),
+    : CheckBoxConcept(t_heading, t_tooltip),
       m_getter(t_getter),
       m_setter(t_setter)
   {
