@@ -186,12 +186,8 @@ void OSGridView::setGridController(OSGridController * gridController)
 
 void OSGridView::refreshCell(int row, int column)
 {
-  // removeWidget may not be safe this contexts
-  OS_ASSERT(false); // TODO
-
-  removeWidget(row,column);
-
-  addWidget(row,column);
+  // Currently this is cruft code
+  OS_ASSERT(false);
 }
 
 void OSGridView::requestAddRow(int row)
@@ -220,6 +216,9 @@ void OSGridView::requestRemoveRow(int row)
 
 void OSGridView::addRow(int row)
 {
+  // Currently this is cruft code
+  OS_ASSERT(false);
+
   std::cout << " ADD ROW CALLED " << row << std::endl;
 
   for (int j = 0; j < m_gridController->columnCount(); j++)
@@ -232,6 +231,9 @@ void OSGridView::addRow(int row)
 
 void OSGridView::removeRow(int row)
 {
+  // Currently this is cruft code
+  OS_ASSERT(false);
+
   std::cout << " DELETE ROW CALLED " << row << std::endl;
 
   for (int j = 0; j < m_gridController->columnCount(); j++)
@@ -244,6 +246,9 @@ void OSGridView::removeRow(int row)
 
 void OSGridView::refreshRow(int row)
 {
+  // Currently this is cruft code
+  OS_ASSERT(false);
+
   std::cout << " REFRESH ROW CALLED " << row << std::endl;
 
   for( int j = 0; j < m_gridController->columnCount(); j++ )
@@ -262,6 +267,9 @@ QLayoutItem * OSGridView::itemAtPosition(int row, int column)
 
 void OSGridView::removeWidget(int row, int column)
 {
+  // Currently this is cruft code
+  OS_ASSERT(false);
+
   auto layoutnum = row / ROWS_PER_LAYOUT;
   auto relativerow = row % ROWS_PER_LAYOUT;
 
@@ -315,6 +323,9 @@ void OSGridView::deleteAll()
 
 void OSGridView::refreshGrid()
 {
+  // Currently this is cruft code
+  OS_ASSERT(false);
+
   std::cout << " REFRESH GRID CALLED " << std::endl;
 
   if( m_gridController )
@@ -353,6 +364,9 @@ void OSGridView::requestRefreshGrid()
 
 void OSGridView::requestRefreshRow(int t_row)
 {
+  // Currently this is cruft code
+  OS_ASSERT(false);
+
   std::cout << "REQUEST REFRESH ROW CALLED " << std::endl;
   setEnabled(false);
 
@@ -513,6 +527,9 @@ void OSGridView::addWidget(QWidget *w, int row, int column)
 
 void OSGridView::setHorizontalHeader(std::vector<QWidget *> widgets)
 {
+  // Currently this is cruft code
+  OS_ASSERT(false);
+
   int column = 0;
   for (QWidget * widget : widgets) {
     addWidget(widget,0,column++);
@@ -521,6 +538,9 @@ void OSGridView::setHorizontalHeader(std::vector<QWidget *> widgets)
 
 void OSGridView::setHorizontalHeader(std::vector<QString> names)
 {
+  // Currently this is cruft code
+  OS_ASSERT(false);
+
   int column = 0;
   for (const QString& name : names) {
     addWidget(new QLabel(name),0,column++);
@@ -566,10 +586,15 @@ void OSGridView::onSelectionCleared()
 
 void OSGridView::onDropZoneItemClicked(OSItem* item)
 {
+  // Currently this is cruft code
+  OS_ASSERT(false);
 }
 
 void OSGridView::hideEvent(QHideEvent * event)
 {
+  // Currently this is cruft code
+  OS_ASSERT(false);
+
   m_gridController->disconnectFromModel();
 
   QWidget::hideEvent(event);

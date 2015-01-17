@@ -1009,6 +1009,9 @@ QWidget * OSGridController::cell(int rowIndex, int columnIndex)
 
 model::ModelObject OSGridController::modelObject(int rowIndex)
 {
+  // Currently this is cruft code
+  OS_ASSERT(false);
+
   if (m_hasHorizontalHeader){
     OS_ASSERT(rowIndex > 0);
     return m_modelObjects.at(rowIndex - 1);
@@ -1087,16 +1090,21 @@ void OSGridController::toggleUnits(bool displayIP)
 
 void OSGridController::onComboBoxIndexChanged(int index)
 {
+  // Currently this is cruft code
+  OS_ASSERT(false);
 }
 
 void OSGridController::reset()
 {
-  // Should never be hit
+  // Currently this is cruft code
   OS_ASSERT(false);
 }
 
 void OSGridController::cellChecked(int index)
 {
+  // Currently this is cruft code
+  OS_ASSERT(false);
+
   int tableRowIndex = index;
   if (m_hasHorizontalHeader){
     // The header is not considered part of the table row count
@@ -1131,6 +1139,8 @@ void OSGridController::cellChecked(int index)
 
 void OSGridController::selectItemId(const OSItemId& itemId)
 {
+  // Currently this is cruft code
+  OS_ASSERT(false);
 }
 
 void OSGridController::onItemSelected(OSItem * item)
@@ -1139,6 +1149,9 @@ void OSGridController::onItemSelected(OSItem * item)
 
 bool OSGridController::selectRowByItem(OSItem * item, bool isSelected)
 {
+  // Currently this is cruft code
+  OS_ASSERT(false);
+
   auto success = false;
   int i = 0;
 
@@ -1241,16 +1254,20 @@ void OSGridController::connectToModel()
 
 void OSGridController::disconnectFromModel()
 {
+  // Currently this is cruft code
+  OS_ASSERT(false);
+
   disconnect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get());
 }
 
 void OSGridController::onSelectionCleared()
 {
-  //gridView()->requestRefreshAll(); TODO still needed???
 }
 
 void OSGridController::onDropZoneItemClicked(OSItem* item)
 {
+  // Currently this is cruft code
+  OS_ASSERT(false);
 }
 
 void OSGridController::onRemoveWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
@@ -1297,6 +1314,9 @@ void OSGridController::onAddWorkspaceObject(const WorkspaceObject& object, const
 
 void OSGridController::onObjectRemoved(boost::optional<model::ParentObject> parent)
 {
+  // Currently this is cruft code
+  OS_ASSERT(false);
+
   if (parent) {
     // We have a parent we can search for in our current list of modelObjects and just delete that 1 row
     this->requestRefreshGrid(); // TODO replace this with a by-row refresh only
