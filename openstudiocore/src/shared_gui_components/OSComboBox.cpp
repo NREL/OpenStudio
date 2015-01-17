@@ -18,15 +18,18 @@
 **********************************************************************/
 
 #include "OSComboBox.hpp"
+
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
+
 #include "../utilities/idf/WorkspaceObject.hpp"
 #include "../utilities/idf/WorkspaceObject_Impl.hpp"
 #include "../utilities/core/Assert.hpp"
-#include <QEvent>
+
 #include <QCompleter>
+#include <QEvent>
 
 namespace openstudio {
 
@@ -164,6 +167,8 @@ void OSObjectListCBDS::onObjectChanged()
 OSComboBox2::OSComboBox2( QWidget * parent, bool editable )
   : QComboBox(parent)
 {
+  this->setFocusPolicy(Qt::ClickFocus); // Qt::NoFocus is default
+
   this->setAcceptDrops(false);
   auto completer = new QCompleter();
   this->setCompleter(completer);
@@ -176,6 +181,22 @@ bool OSComboBox2::event( QEvent * e )
   if( e->type() == QEvent::Wheel )
   {
     return false;
+  }
+  else if (e->type() == Qt::MouseFocusReason)
+  {
+    return QComboBox::event(e);
+  }
+  else if (e->type() == Qt::ActiveWindowFocusReason)
+  {
+    return QComboBox::event(e);
+  }
+  else if (e->type() == QEvent::FocusIn)
+  {
+    return QComboBox::event(e);
+  }
+  else if (e->type() == QEvent::FocusOut)
+  {
+    return QComboBox::event(e);
   }
   else
   {
@@ -389,6 +410,8 @@ void OSComboBox2::completeBind() {
   this->blockSignals(false);
   setEnabled(true);
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 OSComboBox::OSComboBox( QWidget * parent )
   : QComboBox(parent)
