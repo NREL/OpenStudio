@@ -28,6 +28,7 @@
 
 #include <QTimer>
 
+class QFocusEvent;
 class QMouseEvent;
 
 namespace openstudio {
@@ -66,6 +67,10 @@ class OSLineEdit2 : public QLineEdit {
 protected:
 
   void mouseReleaseEvent(QMouseEvent* event);
+
+  virtual void focusInEvent(QFocusEvent * e);
+
+  virtual void focusOutEvent(QFocusEvent * e);
 
 signals:
 

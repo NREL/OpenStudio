@@ -31,6 +31,8 @@
 #include <QString>
 #include <QValidator>
 
+class QFocusEvent;
+
 namespace openstudio {
 
 class OSUnsignedEdit2: public QLineEdit {
@@ -85,6 +87,12 @@ class OSUnsignedEdit2: public QLineEdit {
             boost::optional<BasicQuery> isAutocalculated=boost::none);
 
   void unbind();
+  
+protected:
+
+  virtual void focusInEvent(QFocusEvent * e);
+
+  virtual void focusOutEvent(QFocusEvent * e);
 
  private slots:
 

@@ -35,6 +35,7 @@
 #include <QBoxLayout>
 #include <QDragEnterEvent>
 #include <QDropEvent>
+#include <QFocusEvent>
 #include <QGraphicsSceneDragDropEvent>
 #include <QGraphicsSceneMouseEvent>
 #include <QLabel>
@@ -563,6 +564,8 @@ void OSDropZoneItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
 OSDropZone2::OSDropZone2()
   : QWidget()
 {
+  this->setFocusPolicy(Qt::ClickFocus); // Qt::NoFocus is default
+
   setObjectName("OSDropZone");
 
   QString style("QWidget#OSDropZone {\
@@ -712,6 +715,30 @@ void OSDropZone2::mouseReleaseEvent(QMouseEvent * event)
       emit itemClicked(m_item);
     }
   }
+}
+
+void OSDropZone2::focusInEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason)
+  {
+  }
+  else if (e->reason() == Qt::ActiveWindowFocusReason)
+  {
+  }
+
+  QWidget::focusInEvent(e);
+}
+
+void OSDropZone2::focusOutEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason)
+  {
+  }
+  else if (e->reason() == Qt::ActiveWindowFocusReason)
+  {
+  }
+
+  QWidget::focusOutEvent(e);
 }
 
 void OSDropZone2::onItemRemoveClicked()

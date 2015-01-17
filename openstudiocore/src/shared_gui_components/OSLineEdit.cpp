@@ -29,6 +29,7 @@
 
 #include <boost/optional.hpp>
 
+#include <QFocusEvent>
 #include <QMouseEvent>
 #include <QString>
 
@@ -43,6 +44,8 @@ namespace openstudio {
 OSLineEdit2::OSLineEdit2( QWidget * parent )
   : QLineEdit(parent)
 {
+  this->setFocusPolicy(Qt::ClickFocus); // Qt::NoFocus is default
+
   this->setAcceptDrops(false);
   setEnabled(false);
 }
@@ -237,6 +240,33 @@ void OSLineEdit2::onItemRemoveClicked()
     (*m_reset)();
   }
 }
+
+void OSLineEdit2::focusInEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason)
+  {
+  }
+  else if (e->reason() == Qt::ActiveWindowFocusReason)
+  {
+    int i = 0;
+  }
+
+  QLineEdit::focusInEvent(e);
+}
+
+void OSLineEdit2::focusOutEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason)
+  {
+  }
+  else if (e->reason() == Qt::ActiveWindowFocusReason)
+  {
+  }
+
+  QLineEdit::focusOutEvent(e);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 OSLineEdit::OSLineEdit( QWidget * parent )
   : QLineEdit(parent)

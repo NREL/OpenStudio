@@ -31,6 +31,8 @@
 #include <QString>
 #include <QValidator>
 
+class QFocusEvent;
+
 namespace openstudio {
 
 /** Should only be used for dimensionless real fields. Real fields with units should use
@@ -106,6 +108,12 @@ class OSDoubleEdit2: public QLineEdit {
             boost::optional<BasicQuery> isAutocalculated=boost::none);
 
   void unbind();
+
+ protected:
+
+  virtual void focusInEvent(QFocusEvent * e);
+
+  virtual void focusOutEvent(QFocusEvent * e);
 
  private slots:
 

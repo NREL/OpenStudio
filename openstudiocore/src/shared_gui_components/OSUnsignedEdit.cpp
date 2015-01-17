@@ -27,6 +27,7 @@
 
 #include <iomanip>
 
+#include <QFocusEvent>
 #include <QIntValidator>
 
 using openstudio::model::ModelObject;
@@ -36,6 +37,8 @@ namespace openstudio {
 OSUnsignedEdit2::OSUnsignedEdit2( QWidget * parent )
   : m_isScientific(false)
 {
+  this->setFocusPolicy(Qt::ClickFocus); // Qt::NoFocus is default
+
   this->setFixedWidth(90);
   this->setAcceptDrops(false);
   setEnabled(false);
@@ -340,6 +343,32 @@ void OSUnsignedEdit2::setPrecision(const std::string& str) {
     m_precision.reset();
   }
 }
+
+void OSUnsignedEdit2::focusInEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason)
+  {
+  }
+  else if (e->reason() == Qt::ActiveWindowFocusReason)
+  {
+  }
+
+  QLineEdit::focusInEvent(e);
+}
+
+void OSUnsignedEdit2::focusOutEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason)
+  {
+  }
+  else if (e->reason() == Qt::ActiveWindowFocusReason)
+  {
+  }
+
+  QLineEdit::focusOutEvent(e);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 OSUnsignedEdit::OSUnsignedEdit( QWidget * parent )
   : m_isScientific(false)

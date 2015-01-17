@@ -31,6 +31,7 @@
 
 #include <QBoxLayout>
 #include <QDoubleValidator>
+#include <QFocusEvent>
 
 #include <iomanip>
 
@@ -40,7 +41,7 @@ namespace openstudio {
 
 OSQuantityEdit2::OSQuantityEdit2(const std::string& modelUnits, const std::string& siUnits, 
                                  const std::string& ipUnits, bool isIP, QWidget * parent)
-  : m_lineEdit(new QLineEdit(parent)),
+  : m_lineEdit(new QuantityLineEdit(parent)),
     m_units(new QLabel("",parent)),
     m_isIP(isIP),
     m_modelUnits(modelUnits),
@@ -48,6 +49,7 @@ OSQuantityEdit2::OSQuantityEdit2(const std::string& modelUnits, const std::strin
     m_ipUnits(ipUnits),
     m_isScientific(false)
 {
+
   // do a test conversion to make sure units are ok
   boost::optional<double> test = convert(1.0, modelUnits, ipUnits);
   OS_ASSERT(test);
@@ -56,6 +58,7 @@ OSQuantityEdit2::OSQuantityEdit2(const std::string& modelUnits, const std::strin
 
   this->setAcceptDrops(false);
   m_lineEdit->setAcceptDrops(false);
+  m_lineEdit->setFocusPolicy(Qt::ClickFocus); // Qt::NoFocus is default
   setEnabled(false);
 
   auto hLayout = new QHBoxLayout();
@@ -421,6 +424,40 @@ void OSQuantityEdit2::setPrecision(const std::string& str) {
     m_precision.reset();
   }
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+QuantityLineEdit::QuantityLineEdit(QWidget * parent)
+  : QLineEdit(parent)
+{
+  this->setFocusPolicy(Qt::ClickFocus); // Qt::NoFocus is default
+}
+
+void QuantityLineEdit::focusInEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason)
+  {
+  }
+  else if (e->reason() == Qt::ActiveWindowFocusReason)
+  {
+  }
+
+  QLineEdit::focusInEvent(e);
+}
+
+void QuantityLineEdit::focusOutEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason)
+  {
+  }
+  else if (e->reason() == Qt::ActiveWindowFocusReason)
+  {
+  }
+
+  QLineEdit::focusInEvent(e);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 OSQuantityEdit::OSQuantityEdit(bool isIP, QWidget * parent)
   : m_lineEdit(new QLineEdit(parent)),

@@ -26,6 +26,7 @@
 #include "../utilities/data/Attribute.hpp"
 
 #include <QDoubleValidator>
+#include <QFocusEvent>
 
 #include <iomanip>
 
@@ -36,6 +37,8 @@ namespace openstudio {
 OSDoubleEdit2::OSDoubleEdit2( QWidget * parent )
   : m_isScientific(false)
 {
+  this->setFocusPolicy(Qt::ClickFocus); // Qt::NoFocus is default
+
   this->setFixedWidth(90);
   this->setAcceptDrops(false);
   setEnabled(false);
@@ -406,6 +409,32 @@ void OSDoubleEdit2::setPrecision(const std::string& str) {
     m_precision.reset();
   }
 }
+
+void OSDoubleEdit2::focusInEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason)
+  {
+  }
+  else if (e->reason() == Qt::ActiveWindowFocusReason)
+  {
+  }
+
+  QLineEdit::focusInEvent(e);
+}
+
+void OSDoubleEdit2::focusOutEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason)
+  {
+  }
+  else if (e->reason() == Qt::ActiveWindowFocusReason)
+  {
+  }
+
+  QLineEdit::focusOutEvent(e);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 OSDoubleEdit::OSDoubleEdit( QWidget * parent )
   : m_isScientific(false)

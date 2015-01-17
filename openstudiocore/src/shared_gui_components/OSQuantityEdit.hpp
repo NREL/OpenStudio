@@ -32,9 +32,13 @@
 #include <QString>
 #include <QValidator>
 
+class QFocusEvent;
+
 namespace openstudio {
 
 class Unit;
+
+class QuantityLineEdit;
 
 class OSQuantityEdit2: public QWidget {
   Q_OBJECT
@@ -107,7 +111,7 @@ class OSQuantityEdit2: public QWidget {
 
  private:
 
-  QLineEdit* m_lineEdit;
+  QuantityLineEdit* m_lineEdit;
   QLabel* m_units;
   QString m_text = "UNINITIALIZED";
   std::string m_unitsStr = "";
@@ -146,6 +150,22 @@ class OSQuantityEdit2: public QWidget {
                     boost::optional<BasicQuery> isAutocalculated);
 
   REGISTER_LOGGER("openstudio.OSQuantityEdit");
+};
+
+class QuantityLineEdit : public QLineEdit {
+  Q_OBJECT
+public:
+
+  QuantityLineEdit::QuantityLineEdit(QWidget * parent = nullptr);
+
+  virtual ~QuantityLineEdit() {}
+
+protected:
+
+  virtual void focusInEvent(QFocusEvent * e);
+
+  virtual void focusOutEvent(QFocusEvent * e);
+
 };
 
 /** \deprecated Use OSQuantityEdit2. */

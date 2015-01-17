@@ -1342,6 +1342,7 @@ HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidge
 
   m_pushButton->setText("Apply to Selected");
   m_pushButton->setFixedWidth(100);
+  m_pushButton->setEnabled(false);
   mainLayout->addWidget(m_pushButton, Qt::AlignBottom);
 }
 

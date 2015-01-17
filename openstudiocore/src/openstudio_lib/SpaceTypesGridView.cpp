@@ -1061,7 +1061,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
       }
       else if (field == SELECTED) {
         auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
-        checkbox->setToolTip("Select all rows");
+        checkbox->setToolTip("Check to select all rows");
         connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpaceTypesGridController::selectAllStateChanged);
 
         addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row",

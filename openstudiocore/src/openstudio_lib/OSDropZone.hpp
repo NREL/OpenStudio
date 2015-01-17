@@ -31,12 +31,13 @@
 #include <QMouseEvent>
 #include <QGraphicsItem>
 
+class QBoxLayout;
 class QDropEvent;
 class QDragEnterEvent;
 class QDragLeaveEvent;
-class QBoxLayout;
-class QScrollArea;
+class QFocusEvent;
 class QPushButton;
+class QScrollArea;
 
 namespace openstudio {
 
@@ -73,6 +74,8 @@ protected:
 
   void paintEvent ( QPaintEvent * event );
   void mouseReleaseEvent(QMouseEvent* event);
+  virtual void focusInEvent(QFocusEvent * e);
+  virtual void focusOutEvent(QFocusEvent * e);
 
 private slots:
 
