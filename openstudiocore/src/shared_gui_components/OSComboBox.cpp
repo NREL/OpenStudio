@@ -182,20 +182,18 @@ bool OSComboBox2::event( QEvent * e )
   {
     return false;
   }
-  else if (e->type() == Qt::MouseFocusReason)
-  {
-    return QComboBox::event(e);
-  }
-  else if (e->type() == Qt::ActiveWindowFocusReason)
-  {
-    return QComboBox::event(e);
-  }
   else if (e->type() == QEvent::FocusIn)
   {
+    QString style("QComboBox { background: #ffc627; }");
+    setStyleSheet(style);
+
     return QComboBox::event(e);
   }
   else if (e->type() == QEvent::FocusOut)
   {
+    QString style("QComboBox { background: white; }");
+    setStyleSheet(style);
+
     return QComboBox::event(e);
   }
   else

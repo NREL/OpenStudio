@@ -1250,9 +1250,6 @@ void OSGridController::connectToModel()
 
 void OSGridController::disconnectFromModel()
 {
-  // Currently this is cruft code
-  OS_ASSERT(false);
-
   disconnect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get());
 }
 
