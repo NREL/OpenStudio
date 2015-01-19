@@ -586,15 +586,10 @@ void OSGridView::onSelectionCleared()
 
 void OSGridView::onDropZoneItemClicked(OSItem* item)
 {
-  // Currently this is cruft code
-  OS_ASSERT(false);
 }
 
 void OSGridView::hideEvent(QHideEvent * event)
 {
-  // Currently this is cruft code
-  OS_ASSERT(false);
-
   m_gridController->disconnectFromModel();
 
   QWidget::hideEvent(event);

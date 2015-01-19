@@ -721,6 +721,11 @@ void OSDropZone2::focusInEvent(QFocusEvent * e)
 {
   if (e->reason() == Qt::MouseFocusReason)
   {
+    QString style("QWidget#OSDropZone {\
+                   background: #ffc627;\
+                   border: 2px dashed #808080;\
+                   border-radius: 10px; }");
+    setStyleSheet(style);
   }
   else if (e->reason() == Qt::ActiveWindowFocusReason)
   {
@@ -733,6 +738,11 @@ void OSDropZone2::focusOutEvent(QFocusEvent * e)
 {
   if (e->reason() == Qt::MouseFocusReason)
   {
+    QString style("QWidget#OSDropZone {\
+                   background: #CECECE;\
+                   border: 2px dashed #808080;\
+                   border-radius: 10px; }");
+    setStyleSheet(style);
   }
   else if (e->reason() == Qt::ActiveWindowFocusReason)
   {

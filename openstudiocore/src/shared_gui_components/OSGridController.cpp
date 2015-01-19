@@ -791,10 +791,6 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
   // wrapper
   auto wrapper = new QWidget();
-//  if (modelObjectRow >= 0 && column == 0){
-//    auto size = m_cellBtnGrp->buttons().size();
-//    m_cellBtnGrp->addButton(wrapper, size);
-//  }
 
   wrapper->setObjectName("TableCell");
 
@@ -1266,8 +1262,6 @@ void OSGridController::onSelectionCleared()
 
 void OSGridController::onDropZoneItemClicked(OSItem* item)
 {
-  // Currently this is cruft code
-  OS_ASSERT(false);
 }
 
 void OSGridController::onRemoveWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)

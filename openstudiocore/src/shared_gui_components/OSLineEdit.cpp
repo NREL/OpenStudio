@@ -245,10 +245,11 @@ void OSLineEdit2::focusInEvent(QFocusEvent * e)
 {
   if (e->reason() == Qt::MouseFocusReason)
   {
+    QString style("QLineEdit { background: #ffc627; }");
+    setStyleSheet(style);
   }
   else if (e->reason() == Qt::ActiveWindowFocusReason)
   {
-    int i = 0;
   }
 
   QLineEdit::focusInEvent(e);
@@ -258,6 +259,8 @@ void OSLineEdit2::focusOutEvent(QFocusEvent * e)
 {
   if (e->reason() == Qt::MouseFocusReason)
   {
+    QString style("QLineEdit { background: white; }");
+    setStyleSheet(style);
   }
   else if (e->reason() == Qt::ActiveWindowFocusReason)
   {
