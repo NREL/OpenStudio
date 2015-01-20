@@ -422,6 +422,14 @@ ScheduleDay::ScheduleDay(const Model& model)
   addValue(Time(1,0),0.0);
 }
 
+ScheduleDay::ScheduleDay(const Model& model, double value)
+  : ScheduleBase(ScheduleDay::iddObjectType(), model)
+{
+  OS_ASSERT(getImpl<detail::ScheduleDay_Impl>());
+
+  addValue(Time(1, 0), value);
+}
+
 IddObjectType ScheduleDay::iddObjectType() {
   IddObjectType result(IddObjectType::OS_Schedule_Day);
   return result;

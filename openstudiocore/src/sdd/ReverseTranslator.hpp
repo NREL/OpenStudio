@@ -150,6 +150,9 @@ namespace sdd {
     model::ConstructionBase shadingConstruction(openstudio::model::Model& model, double solRefl, double visRefl);
     std::map<std::pair<double, double>, model::ConstructionBase> m_shadingConstructionMap;
 
+    model::Schedule shadingSchedule(openstudio::model::Model& model, double trans);
+    std::map<double, model::Schedule> m_shadingScheduleMap;
+
     //helper method to do unit conversions; probably should be in OS proper
     boost::optional<double> unitToUnit(const double& val, const std::string& ipUnitString, const std::string& siUnitString);
 

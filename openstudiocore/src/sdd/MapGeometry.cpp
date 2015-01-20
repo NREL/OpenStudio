@@ -66,6 +66,8 @@
 #include "../model/Schedule_Impl.hpp"
 #include "../model/ScheduleConstant.hpp"
 #include "../model/ScheduleConstant_Impl.hpp"
+#include "../model/ScheduleRuleset.hpp"
+#include "../model/ScheduleRuleset_Impl.hpp"
 #include "../model/ScheduleTypeLimits.hpp"
 #include "../model/ScheduleTypeLimits_Impl.hpp"
 #include "../model/PlantLoop.hpp"
@@ -477,9 +479,8 @@ namespace sdd {
           people.setSpace(space);
 
           // activity schedule
-          openstudio::model::ScheduleConstant activitySchedule(model);
+          openstudio::model::ScheduleRuleset activitySchedule(model, totalHeatRateSI);
           activitySchedule.setName(name + " People Activity Level");
-          activitySchedule.setValue(totalHeatRateSI);
 
           //boost::optional<model::ScheduleTypeLimits> scheduleTypeLimits = model.getModelObjectByName<model::ScheduleTypeLimits>("Activity Level");
           //if (!scheduleTypeLimits){
@@ -1425,18 +1426,51 @@ namespace sdd {
       model::ConstructionBase construction = shadingConstruction(model, solRefl, visRefl);
       shadingSurface.setConstruction(construction);
 
-      QDomElement scheduleReferenceElement = element.firstChildElement("TransSchRef");
-      if(!scheduleReferenceElement.isNull()){
-        std::string scheduleName = escapeName(scheduleReferenceElement.text());
-        boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
-        if(schedule){
+      QDomElement transOptionElement = element.firstChildElement("TransOption");
+      if (!transOptionElement.isNull()){
+
+        boost::optional<model::Schedule> schedule;
+        std::string scheduleName;
+
+        // constant transmittance
+        if (transOptionElement.text().compare("Constant", Qt::CaseInsensitive) == 0){
+
+          QDomElement transElement = element.firstChildElement("Trans");
+          if (!transElement.isNull()){
+            schedule = shadingSchedule(model, transElement.text().toDouble());
+            OS_ASSERT(schedule);
+            scheduleName = schedule->name().get();
+          } else {
+            LOG(Error, "Cannot find shading transmittance for shading surface '" << name << "'");
+          }
+
+          // transmittance schedule
+        } else if (transOptionElement.text().compare("Scheduled", Qt::CaseInsensitive) == 0){
+
+          QDomElement scheduleReferenceElement = element.firstChildElement("TransSchRef");
+          if (!scheduleReferenceElement.isNull()){
+            scheduleName = escapeName(scheduleReferenceElement.text());
+            schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
+            if (!schedule){
+              LOG(Error, "Cannot find shading schedule '" << scheduleName << "' for shading surface '" << name << "'");
+            }
+          } else{
+            LOG(Error, "Cannot find shading schedule for shading surface '" << name << "'");
+          }
+
+        } else{
+          LOG(Error, "Unknown TransOption value for shading surface '" << name << "'");
+        }
+
+        if (schedule){
           bool test = shadingSurface.setTransmittanceSchedule(*schedule);
           if (!test){
-            LOG(Error, "Failed to assign schedule '" << scheduleName << "' to shading surface '" << name << "'");
+            LOG(Error, "Failed to assign shading schedule '" << scheduleName << "' to shading surface '" << name << "'");
           }
-        }else{
-          LOG(Error, "Cannot find schedule '" << scheduleName << "'");
+        } else {
+          // DLM: could warn here
         }
+
       }
 
     }else{  
@@ -1482,6 +1516,24 @@ namespace sdd {
 
     m_shadingConstructionMap.insert(std::make_pair(key, construction));
     return construction;
+  }
+
+  model::Schedule ReverseTranslator::shadingSchedule(openstudio::model::Model& model, double trans)
+  {
+    auto it = m_shadingScheduleMap.find(trans);
+    if (it != m_shadingScheduleMap.end()){
+      return it->second;
+    }
+
+    std::string description = boost::lexical_cast<std::string>(trans);
+    std::string scheduleName = "Shading Schedule " + description;
+
+    // create a schedule with these properties
+    model::ScheduleRuleset schedule(model, trans);
+    schedule.setName(scheduleName);
+
+    m_shadingScheduleMap.insert(std::make_pair(trans, schedule));
+    return schedule;
   }
 
   boost::optional<QDomElement> ForwardTranslator::translateBuilding(const openstudio::model::Building& building, QDomDocument& doc)

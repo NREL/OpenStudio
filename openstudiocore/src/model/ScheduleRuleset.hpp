@@ -51,6 +51,10 @@ class MODEL_API ScheduleRuleset : public Schedule {
    *  be the defaultDaySchedule(). */
   explicit ScheduleRuleset(const Model& model);
 
+  /** Constructs a new ScheduleRuleset, constructs a new ScheduleDay with value at all times 
+  *  and assigns it to be the defaultDaySchedule(). */
+  ScheduleRuleset(const Model& model, double value);
+
   virtual ~ScheduleRuleset() {}
 
   //@}
