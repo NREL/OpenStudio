@@ -307,13 +307,18 @@ if(MSVC)
   # be linked against the same runtime
   add_definitions(/wd4251)
   
-  if(NOT CMAKE_CL_64)
-    # treat warnings as errors
-    add_definitions(/WX)
-  else()
-    add_definitions(/bigobj)
-  endif()
+  if(CMAKE_CL_64)
 
+    add_definitions(/bigobj)
+    
+    # ignore conversion from size_t to int for now
+    add_definitions(/wd4267)  
+
+  endif()
+  
+  # treat warnings as errors
+  add_definitions(/WX)
+    
   # ignore warnings about the stl being insecure
   add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS)
 
