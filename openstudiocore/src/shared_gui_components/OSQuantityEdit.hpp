@@ -97,6 +97,10 @@ class OSQuantityEdit2: public QWidget {
 
   void unbind();
 
+ signals:
+
+  void inFocus(bool inFocus, bool hasData);
+
  public slots:
 
   void onUnitSystemChange(bool isIP);
@@ -165,6 +169,10 @@ protected:
   virtual void focusInEvent(QFocusEvent * e);
 
   virtual void focusOutEvent(QFocusEvent * e);
+
+signals:
+
+  void inFocus(bool inFocus, bool hasData);
 
 };
 

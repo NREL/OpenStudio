@@ -94,6 +94,10 @@ protected:
 
   virtual void focusOutEvent(QFocusEvent * e);
 
+ signals:
+
+  void inFocus(bool inFocus, bool hasData);
+
  private slots:
 
   void onEditingFinished();

@@ -164,6 +164,10 @@ class OSComboBox2 : public QComboBox {
 
   bool event( QEvent * e );
 
+ signals:
+
+  void inFocus(bool inFocus, bool hasData);
+
  private slots:
 
   void onModelObjectChanged();

@@ -355,6 +355,9 @@ void OSUnsignedEdit2::focusInEvent(QFocusEvent * e)
   {
   }
 
+  auto hasData = true; // TODO
+  emit inFocus(true, hasData);
+
   QLineEdit::focusInEvent(e);
 }
 
@@ -368,6 +371,8 @@ void OSUnsignedEdit2::focusOutEvent(QFocusEvent * e)
   else if (e->reason() == Qt::ActiveWindowFocusReason)
   {
   }
+
+  emit inFocus(false, false);
 
   QLineEdit::focusOutEvent(e);
 }

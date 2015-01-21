@@ -49,6 +49,7 @@ OSQuantityEdit2::OSQuantityEdit2(const std::string& modelUnits, const std::strin
     m_ipUnits(ipUnits),
     m_isScientific(false)
 {
+  connect(m_lineEdit, &QuantityLineEdit::inFocus, this, &OSQuantityEdit2::inFocus);
 
   // do a test conversion to make sure units are ok
   boost::optional<double> test = convert(1.0, modelUnits, ipUnits);
@@ -444,6 +445,9 @@ void QuantityLineEdit::focusInEvent(QFocusEvent * e)
   {
   }
 
+  auto hasData = true; // TODO
+  emit inFocus(true, hasData);
+
   QLineEdit::focusInEvent(e);
 }
 
@@ -457,6 +461,8 @@ void QuantityLineEdit::focusOutEvent(QFocusEvent * e)
   else if (e->reason() == Qt::ActiveWindowFocusReason)
   {
   }
+
+  emit inFocus(false, false);
 
   QLineEdit::focusInEvent(e);
 }

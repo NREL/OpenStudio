@@ -67,8 +67,8 @@ public:
 signals:
 
   void itemClicked(OSItem* item);
-
   void objectRemoved(boost::optional<model::ParentObject> parent);
+  void inFocus(bool inFocus, bool hasData);
 
 protected:
 

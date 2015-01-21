@@ -187,12 +187,17 @@ bool OSComboBox2::event( QEvent * e )
     QString style("QComboBox { background: #ffc627; }");
     setStyleSheet(style);
 
+    auto hasData = true; // TODO
+    emit inFocus(true, hasData);
+
     return QComboBox::event(e);
   }
   else if (e->type() == QEvent::FocusOut)
   {
     QString style("QComboBox { background: white; }");
     setStyleSheet(style);
+
+    emit inFocus(false, false);
 
     return QComboBox::event(e);
   }

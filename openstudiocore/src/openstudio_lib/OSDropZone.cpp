@@ -731,6 +731,9 @@ void OSDropZone2::focusInEvent(QFocusEvent * e)
   {
   }
 
+  auto hasData = true; // TODO
+  emit inFocus(true, hasData);
+
   QWidget::focusInEvent(e);
 }
 
@@ -747,6 +750,8 @@ void OSDropZone2::focusOutEvent(QFocusEvent * e)
   else if (e->reason() == Qt::ActiveWindowFocusReason)
   {
   }
+
+  emit inFocus(false, false);
 
   QWidget::focusOutEvent(e);
 }

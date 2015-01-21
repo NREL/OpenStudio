@@ -78,6 +78,8 @@ signals:
 
   void objectRemoved(boost::optional<model::ParentObject> parent);
 
+  void inFocus(bool inFocus, bool hasData);
+
  private slots:
 
   void onEditingFinished();

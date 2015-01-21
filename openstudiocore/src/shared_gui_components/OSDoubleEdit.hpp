@@ -109,6 +109,10 @@ class OSDoubleEdit2: public QLineEdit {
 
   void unbind();
 
+ signals:
+
+  void inFocus(bool inFocus, bool hasData);
+
  protected:
 
   virtual void focusInEvent(QFocusEvent * e);
