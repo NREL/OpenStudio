@@ -457,6 +457,11 @@ namespace openstudio{
       return result;
     }
 
+    if (isNetworkPath(dir) && !isNetworkPathAvailable(dir)) {
+      LOG(Debug, "Error Loading measures in unavailable network location: " << openstudio::toString(dir));
+      return result;
+    }
+
     try{
       boost::filesystem::directory_iterator endit; // default construction yields past-the-end
       boost::filesystem::directory_iterator it(dir);
