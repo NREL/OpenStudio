@@ -59,20 +59,35 @@ namespace openstudio {
 
 const std::vector<QColor> OSGridController::m_colors = SchedulesView::initializeColors();
 
+WidgetLocation::WidgetLocation(QWidget *t_widget, int t_row, int t_column, boost::optional<int> t_subrow)
+  : widget(t_widget), row(t_row), column(t_column), subrow(std::move(t_subrow))
+{
+}
+
+WidgetLocation::~WidgetLocation()
+{
+}
+
+void WidgetLocation::onInFocus(bool hasFocus, bool hasData)
+{
+  emit inFocus(hasFocus, hasData, row, column);
+}
 
 ObjectSelector::ObjectSelector(OSGridController *t_grid)
   : m_grid(t_grid), m_objectFilter(getDefaultFilter())
 {
-
 }
 
-void ObjectSelector::addWidget(const boost::optional<model::ModelObject> &t_obj, QWidget *t_widget, int row, int column,
+void ObjectSelector::addWidget(const boost::optional<model::ModelObject> &t_obj, Holder *t_holder, int row, int column,
     const boost::optional<int> &t_subrow, const bool t_selector)
 {
-  WidgetLoc l(t_widget, row, column, t_subrow);
-  connect(t_widget, &QObject::destroyed, this, &ObjectSelector::widgetDestroyed);
+  WidgetLocation * widgetLoc = new WidgetLocation(t_holder, row, column, t_subrow);
 
-  m_widgetMap.insert(std::make_pair(t_obj, l));
+  connect(t_holder, &QObject::destroyed, this, &ObjectSelector::widgetDestroyed);
+  connect(t_holder, &Holder::inFocus, widgetLoc, &WidgetLocation::onInFocus);
+  connect(widgetLoc, &WidgetLocation::inFocus, this, &ObjectSelector::inFocus);
+
+  m_widgetMap.insert(std::make_pair(t_obj, widgetLoc));
 
   boost::optional<int> subRowToUpdate = t_subrow;
 
@@ -81,13 +96,13 @@ void ObjectSelector::addWidget(const boost::optional<model::ModelObject> &t_obj,
   for (auto &widget : m_widgetMap)
   {
     if (widget.first
-        && widget.second.row == row
-        && (!widget.second.subrow || (widget.second.subrow == t_subrow)))
+      && widget.second->row == row
+      && (!widget.second->subrow || (widget.second->subrow == t_subrow)))
     {
       if (m_selectedObjects.count(*widget.first) != 0)
       {
         // we found a selected row, not subrow
-        if (!widget.second.subrow) {
+        if (!widget.second->subrow) {
           subRowToUpdate.reset();
         }
         rowSelected = true;
@@ -102,8 +117,8 @@ void ObjectSelector::addWidget(const boost::optional<model::ModelObject> &t_obj,
   for (auto &widget : m_widgetMap)
   {
     if (widget.first
-        && widget.second.row == row
-        && (!widget.second.subrow || (widget.second.subrow == t_subrow)))
+      && widget.second->row == row
+      && (!widget.second->subrow || (widget.second->subrow == t_subrow)))
     {
       if (!m_objectFilter(*widget.first)) {
         // an object in this (sub)row is not visible, therefore I am not visible
@@ -125,6 +140,14 @@ void ObjectSelector::addWidget(const boost::optional<model::ModelObject> &t_obj,
   }
 }
 
+void ObjectSelector::clear()
+{
+  m_widgetMap.clear(); // TODO delete all QObjects, or set parent
+  m_selectedObjects.clear();
+  m_selectorObjects.clear();
+  m_objectFilter = getDefaultFilter();
+}
+
 void ObjectSelector::objectRemoved(const openstudio::model::ModelObject &t_obj)
 {
   std::cout << " Object removed\n";
@@ -137,10 +160,9 @@ void ObjectSelector::objectRemoved(const openstudio::model::ModelObject &t_obj)
 bool ObjectSelector::containsObject(const openstudio::model::ModelObject &t_obj) const
 {
   return m_selectedObjects.count(t_obj) != 0
-      || m_selectorObjects.count(t_obj) != 0
-      || m_widgetMap.count(boost::optional<model::ModelObject>(t_obj));
+    || m_selectorObjects.count(t_obj) != 0
+    || m_widgetMap.count(boost::optional<model::ModelObject>(t_obj));
 }
-
 
 void ObjectSelector::widgetDestroyed(QObject *t_obj)
 {
@@ -148,7 +170,7 @@ void ObjectSelector::widgetDestroyed(QObject *t_obj)
 
   while (itr != m_widgetMap.end())
   {
-    if (itr->second.widget == t_obj) {
+    if (itr->second->widget == t_obj) {
       itr = m_widgetMap.erase(itr);
     } else {
       ++itr;
@@ -225,16 +247,16 @@ void ObjectSelector::updateWidgets(const int t_row, const boost::optional<int> &
   // determine if we want to update the parent widget or the child widget
   for (auto &widgetLoc : m_widgetMap)
   {
-    if (widgetLoc.second.row == t_row
-        && (!t_subrow
-            || (t_subrow == widgetLoc.second.subrow)))
+    if (widgetLoc.second->row == t_row
+      && (!t_subrow
+      || (t_subrow == widgetLoc.second->subrow)))
     {
       if (!isSubRow)
       {
-        widgetsToUpdate.insert(std::make_pair(widgetLoc.second.widget->parentWidget(), widgetLoc.second.column));
+        widgetsToUpdate.insert(std::make_pair(widgetLoc.second->widget->parentWidget(), widgetLoc.second->column));
       } else {
-        widgetsToUpdate.insert(std::make_pair(widgetLoc.second.widget, widgetLoc.second.column));
-        widgetLoc.second.widget->setStyleSheet("");
+        widgetsToUpdate.insert(std::make_pair(widgetLoc.second->widget, widgetLoc.second->column));
+        widgetLoc.second->widget->setStyleSheet("");
       }
     }
   }
@@ -257,20 +279,19 @@ void ObjectSelector::updateWidgets()
 
 void ObjectSelector::updateWidgets(const model::ModelObject &t_obj)
 {
-
   auto range = m_widgetMap.equal_range(boost::optional<model::ModelObject>(t_obj));
 
   assert(range.first != range.second);
 
   // Find the row that contains this object
-  auto row = std::make_tuple(range.first->second.row, range.first->second.subrow);
+  auto row = std::make_tuple(range.first->second->row, range.first->second->subrow);
 
 #if _DEBUG || (__GNUC__ && !NDEBUG)
   // Sanity check to make sure we don't have the same object in two different rows
   ++range.first;
   while (range.first != range.second)
   {
-    assert(row == std::make_tuple(range.first->second.row, range.first->second.subrow));
+    assert(row == std::make_tuple(range.first->second->row, range.first->second->subrow));
     ++range.first;
   }
 #endif
@@ -325,6 +346,8 @@ OSGridController::OSGridController(bool isIP,
 
   isConnected = connect(m_cellPushButtonBoxBtnGrp, SIGNAL(buttonClicked(int)), this, SLOT(cellChecked(int)));
   OS_ASSERT(isConnected);
+
+  connect(m_objectSelector.get(), &ObjectSelector::inFocus, this, &OSGridController::onInFocus);
 }
 
 OSGridController::~OSGridController()
@@ -801,7 +824,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
   wrapper->setLayout(layout);
   // end wrapper
 
-  std::vector<QWidget *> holders;
+  std::vector<Holder *> holders;
   auto addWidget = [&](QWidget *t_widget, const boost::optional<model::ModelObject> &t_obj, const bool t_selector)
   {
     auto expand=[](QSize &t_s, const QSize &t_newS) {
@@ -817,7 +840,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
     expand(recommendedSize, t_widget->minimumSize());
     expand(recommendedSize, t_widget->minimumSizeHint());
 
-    auto holder = new QWidget();
+    auto holder = new Holder();
     holder->setMinimumHeight(widgetHeight);
     auto l = new QVBoxLayout();
     l->setSpacing(0);
@@ -835,6 +858,29 @@ QWidget * OSGridController::widgetAt(int row, int column)
       holder->setObjectName("InnerCell");
     }
     holders.push_back(holder);
+
+    if (OSComboBox2 * comboBox = qobject_cast<OSComboBox2 *>(t_widget)) {
+      connect(comboBox, &OSComboBox2::inFocus, holder, &Holder::inFocus);
+    }
+    else if (OSDoubleEdit2 * doubleEdit = qobject_cast<OSDoubleEdit2 *>(t_widget)) {
+      connect(doubleEdit, &OSDoubleEdit2::inFocus, holder, &Holder::inFocus);
+    }
+    else if (OSIntegerEdit2 * integerEdit = qobject_cast<OSIntegerEdit2 *>(t_widget)) {
+      connect(integerEdit, &OSIntegerEdit2::inFocus, holder, &Holder::inFocus);
+    } 
+    else if (OSQuantityEdit2 * quantityEdit = qobject_cast<OSQuantityEdit2 *>(t_widget)) {
+      connect(quantityEdit, &OSQuantityEdit2::inFocus, holder, &Holder::inFocus);
+    }
+    else if (OSLineEdit2 * lineEdit = qobject_cast<OSLineEdit2 *>(t_widget)) {
+      connect(lineEdit, &OSLineEdit2::inFocus, holder, &Holder::inFocus);
+    }
+    else if (OSUnsignedEdit2 * unsignedEdit = qobject_cast<OSUnsignedEdit2 *>(t_widget)) {
+      connect(unsignedEdit, &OSUnsignedEdit2::inFocus, holder, &Holder::inFocus);
+    }
+    else if (OSDropZone2 * dropZone = qobject_cast<OSDropZone2 *>(t_widget)) {
+      connect(dropZone, &OSDropZone2::inFocus, holder, &Holder::inFocus);
+    }
+
     m_objectSelector->addWidget(t_obj, holder, row, column, hasSubRows?numWidgets:boost::optional<int>(), t_selector);
 
     ++numWidgets;
@@ -1331,6 +1377,33 @@ void OSGridController::selectAllStateChanged(const int newState) const
   }
 }
 
+void OSGridController::onInFocus(bool inFocus, bool hasData, int row, int column)
+{
+  m_selectedCellLocation = std::make_pair(row, column);
+
+  HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(column));
+  OS_ASSERT(horizontalHeaderWidget);
+
+  horizontalHeaderWidget->m_pushButton->setEnabled(inFocus);
+
+  if (hasData){
+    horizontalHeaderWidget->m_pushButton->setText("Apply to Selected");
+  }
+  else {
+    horizontalHeaderWidget->m_pushButton->setText("Apply to Selected");
+    //horizontalHeaderWidget->m_pushButton->setText("Clear Selected"); TODO
+  }
+}
+
+Holder::Holder(QWidget * parent)
+  : QWidget(parent)
+{
+}
+
+Holder::~Holder()
+{
+}
+
 HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)
   : QWidget(parent),
   m_label(new QLabel(fieldName)),
@@ -1362,8 +1435,8 @@ HorizontalHeaderWidget::~HorizontalHeaderWidget()
   for (auto &widget : m_addedWidgets)
   {
     layout()->removeWidget(widget.data());
-    widget->setParent(nullptr);
     widget->setVisible(false);
+    widget->setParent(nullptr);
   }
 }
 
@@ -1373,15 +1446,6 @@ void HorizontalHeaderWidget::addWidget(const QSharedPointer<QWidget> &t_widget)
     m_addedWidgets.push_back(t_widget);
     layout()->addWidget(t_widget.data());
     t_widget->setVisible(true);
-  }
-}
-
-void HorizontalHeaderWidget::toggleButtonText()
-{
-  if (m_pushButton->text() == "Clear Selected") {
-    m_pushButton->setText("Apply to Selected");
-  } else {
-    m_pushButton->setText("Clear Selected");
   }
 }
 

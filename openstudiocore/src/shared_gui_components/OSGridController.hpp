@@ -48,6 +48,9 @@ namespace openstudio {
 class OSComboBox;
 class OSGridView;
 
+// forward declaration
+class Holder;
+
 /// Provides a Concept with an alternative source of data.
 ///
 /// Generally, Concepts take a ModelObject and display some field of it.
@@ -110,7 +113,6 @@ class DataSource
       };
     }
 
-
     std::vector<boost::optional<ConceptProxy>> items(const ConceptProxy &t_proxy) const
     {
       return m_sourceFunc(t_proxy);
@@ -157,58 +159,53 @@ class DataSourceAdapter : public BaseConcept
 
 class OSGridController;
 
+class WidgetLocation : public QObject
+{
+  Q_OBJECT;
+
+public:
+
+  WidgetLocation(QWidget *t_widget, int t_row, int t_column, boost::optional<int> t_subrow);
+
+  virtual ~WidgetLocation();
+
+  QWidget * widget;
+  int row;
+  int column;
+  boost::optional<int> subrow;
+
+signals:
+
+  void inFocus(bool inFocus, bool hasData, int row, int column);
+
+public slots:
+
+  void onInFocus(bool hasFocus, bool hasData);
+
+};
+
 class ObjectSelector : public QObject
 {
   Q_OBJECT;
 
-  struct WidgetLoc
-  {
-    WidgetLoc(QWidget *t_widget, int t_row, int t_column, boost::optional<int> t_subrow)
-      : widget(t_widget), row(t_row), column(t_column), subrow(std::move(t_subrow))
-    {
-    }
-
-    WidgetLoc parent()
-    {
-      WidgetLoc p(*this);
-      if (widget->parentWidget())
-      {
-        p.widget = widget->parentWidget();
-      }
-
-      p.subrow.reset();
-      return p;
-    }
-
-    QWidget *widget;
-    int row;
-    int column;
-    boost::optional<int> subrow;
-  };
-
   public:
     ObjectSelector(OSGridController *t_grid);
 
-    void addWidget(const boost::optional<model::ModelObject> &t_obj, QWidget *t_widget, int row, int column, 
+    void addWidget(const boost::optional<model::ModelObject> &t_obj, Holder *t_holder, int row, int column, 
         const boost::optional<int> &subrow, bool t_selector);
     void setObjectSelection(const model::ModelObject &t_obj, bool t_selected);
     bool getObjectSelection(const model::ModelObject &t_obj) const;
     std::set<model::ModelObject> getSelectedObjects() const;
-
-    void clear()
-    {
-      m_widgetMap.clear();
-      m_selectedObjects.clear();
-      m_selectorObjects.clear();
-      m_objectFilter=getDefaultFilter();
-    }
-
+    void clear();
     void objectRemoved(const openstudio::model::ModelObject &t_obj);
     void setObjectFilter(const std::function<bool (const model::ModelObject &)> &t_filter);
     void resetObjectFilter();
     bool containsObject(const openstudio::model::ModelObject &t_obj) const;
     void selectAll();
     void clearSelection();
+
+  signals:
+    void inFocus(bool inFocus, bool hasData, int row, int column);
 
   private slots:
     void widgetDestroyed(QObject *t_obj);
@@ -217,13 +214,10 @@ class ObjectSelector : public QObject
     void updateWidgets();
     void updateWidgets(const model::ModelObject &t_obj);
     void updateWidgets(const int t_row, const boost::optional<int> &t_subrow, bool t_selected, bool t_visible);
-    void updateWidget(WidgetLoc &t_widget, const WidgetLoc &t_loc, bool hasSubRows);
-    static bool contains(const WidgetLoc &t_inner, const WidgetLoc &t_outer);
-    bool selected(const WidgetLoc &t_loc) const;
     static std::function<bool (const model::ModelObject &)> getDefaultFilter();
 
     OSGridController *m_grid;
-    std::multimap<boost::optional<model::ModelObject>, WidgetLoc> m_widgetMap;
+    std::multimap<boost::optional<model::ModelObject>, WidgetLocation *> m_widgetMap;
     std::set<model::ModelObject> m_selectedObjects;
     std::set<model::ModelObject> m_selectorObjects;
     std::function<bool (const model::ModelObject &)> m_objectFilter;
@@ -647,6 +641,8 @@ private:
 
   std::shared_ptr<ObjectSelector> m_objectSelector;
 
+  std::pair<int, int> m_selectedCellLocation;
+
 signals:
 
   // Nuclear reset of everything
@@ -674,6 +670,8 @@ public slots:
 
   void requestRefreshGrid();
 
+  void onInFocus(bool inFocus, bool hasData, int row, int column);
+
 protected slots:
 
   void reset();
@@ -696,6 +694,22 @@ private slots:
 
 };
 
+class Holder : public QWidget
+{
+  Q_OBJECT
+
+public:
+
+  Holder(QWidget * parent = nullptr);
+
+  virtual ~Holder();
+
+signals:
+
+  void inFocus(bool inFocus, bool hasData);
+
+};
+
 class HorizontalHeaderWidget : public QWidget
 {
   Q_OBJECT
@@ -706,8 +720,6 @@ public:
 
   virtual ~HorizontalHeaderWidget();
   void addWidget(const QSharedPointer<QWidget> &t_widget);
-
-  void toggleButtonText();
 
   QLabel * m_label = nullptr;
 
