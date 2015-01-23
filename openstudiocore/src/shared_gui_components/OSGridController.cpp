@@ -880,6 +880,9 @@ QWidget * OSGridController::widgetAt(int row, int column)
     else if (OSDropZone2 * dropZone = qobject_cast<OSDropZone2 *>(t_widget)) {
       connect(dropZone, &OSDropZone2::inFocus, holder, &Holder::inFocus);
     }
+    else if (HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(t_widget)) {
+      connect(horizontalHeaderWidget, &HorizontalHeaderWidget::inFocus, holder, &Holder::inFocus);
+    }
 
     m_objectSelector->addWidget(t_obj, holder, row, column, hasSubRows?numWidgets:boost::optional<int>(), t_selector);
 
@@ -1381,9 +1384,17 @@ void OSGridController::onInFocus(bool inFocus, bool hasData, int row, int column
 {
   if (row == 0 && this->m_hasHorizontalHeader) {
     // Do great things
-    int i = 0;
-  }
-  else {
+    auto selectedRow = m_selectedCellLocation.first;
+    auto selectedColumn = m_selectedCellLocation.second;
+    OS_ASSERT(selectedColumn == column);
+
+    m_selectedCellLocation = std::make_pair(row, column);
+
+    std::set<model::ModelObject> selectedObjects = this->m_objectSelector->getSelectedObjects();
+
+    // Don't inadvertently set the chosen object when iteration through the selected rows
+
+  } else {
     m_selectedCellLocation = std::make_pair(row, column);
 
     HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(column));

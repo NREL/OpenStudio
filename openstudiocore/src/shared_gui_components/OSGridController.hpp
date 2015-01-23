@@ -275,7 +275,6 @@ public:
     m_baseConcepts.back()->setIsSelector(true);
   }
 
-
   template<typename DataSourceType>
   void addCheckBoxColumn(const Heading &heading,
                          const std::string & tooltip,
