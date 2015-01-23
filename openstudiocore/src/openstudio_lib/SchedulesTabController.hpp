@@ -80,6 +80,8 @@ class SchedulesTabController : public MainTabController
 
   void addScheduleRuleset();
 
+  void copySelectedSchedule();
+
   void removeSelectedSchedule();
 
   void purgeUnusedScheduleRulesets();

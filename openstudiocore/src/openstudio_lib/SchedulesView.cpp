@@ -131,13 +131,15 @@ SchedulesView::SchedulesView(bool isIP,
   outerLeftVLayout->addStretch();
 
   OSItemSelectorButtons * selectorButtons = new OSItemSelectorButtons(); 
-  selectorButtons->disableCopyButton();
+  selectorButtons->enableCopyButton();
   selectorButtons->enablePurgeButton();
   selectorButtons->enableRemoveButton();
 
   connect(selectorButtons, &OSItemSelectorButtons::itemDropped, this, &SchedulesView::itemDropped);
 
   connect(selectorButtons, &OSItemSelectorButtons::addClicked, this, &SchedulesView::addScheduleClicked);
+
+  connect(selectorButtons, &OSItemSelectorButtons::copyClicked, this, &SchedulesView::copySelectedScheduleClicked);
 
   connect(selectorButtons, &OSItemSelectorButtons::removeClicked, this, &SchedulesView::removeSelectedScheduleClicked);
 

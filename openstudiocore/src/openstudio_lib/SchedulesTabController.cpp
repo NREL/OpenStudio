@@ -87,6 +87,8 @@ SchedulesTabController::SchedulesTabController(bool isIP, const model::Model & m
   connect(m_scheduleSetsController.get(), &ScheduleSetsController::openLibDlgClicked, this, &SchedulesTabController::openLibDlgClicked);
 
   connect(m_schedulesView, &SchedulesView::addScheduleClicked, this, &SchedulesTabController::addScheduleRuleset);
+  
+  connect(m_schedulesView, &SchedulesView::copySelectedScheduleClicked, this, &SchedulesTabController::copySelectedSchedule);
 
   connect(m_schedulesView, &SchedulesView::removeSelectedScheduleClicked, this, &SchedulesTabController::removeSelectedSchedule);
 
@@ -144,6 +146,14 @@ void SchedulesTabController::showScheduleDialog()
     connect(this, &SchedulesTabController::toggleUnitsClicked, m_scheduleDialog, &ScheduleDialog::toggleUnitsClicked);
   }
   m_scheduleDialog->show();
+}
+
+void SchedulesTabController::copySelectedSchedule()
+{
+  if (boost::optional<model::ScheduleRuleset> schedule = m_schedulesView->currentSchedule())
+  {
+    schedule->clone();
+  }
 }
 
 void SchedulesTabController::removeSelectedSchedule()

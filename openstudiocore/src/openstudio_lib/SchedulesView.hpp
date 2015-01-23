@@ -148,6 +148,8 @@ class SchedulesView : public QWidget
 
   void addScheduleClicked();
 
+  void copySelectedScheduleClicked();
+
   void removeSelectedScheduleClicked();
 
   void purgeUnusedScheduleRulesetsClicked();
