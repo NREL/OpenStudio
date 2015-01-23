@@ -33,7 +33,9 @@
 #include <string>
 #include <functional>
 #include <vector>
+
 #include <QObject>
+#include <QPushButton>
 #include <QSharedPointer>
 #include <QWidget>
 
@@ -41,7 +43,6 @@ class QButtonGroup;
 class QCheckBox;
 class QColor;
 class QLabel;
-class QPushButton;
 
 namespace openstudio {
 
@@ -710,6 +711,29 @@ signals:
 
 };
 
+class HorizontalHeaderPushButton : public QPushButton
+{
+  Q_OBJECT
+
+public:
+
+  HorizontalHeaderPushButton(QWidget * parent = nullptr);
+
+  virtual ~HorizontalHeaderPushButton();
+
+
+protected:
+
+  virtual void focusInEvent(QFocusEvent * e);
+
+  virtual void focusOutEvent(QFocusEvent * e);
+
+signals:
+
+  void inFocus(bool inFocus, bool hasData);
+
+};
+
 class HorizontalHeaderWidget : public QWidget
 {
   Q_OBJECT
@@ -725,9 +749,13 @@ public:
 
   QCheckBox * m_checkBox = nullptr;
 
-  QPushButton * m_pushButton = nullptr;
+  HorizontalHeaderPushButton * m_pushButton = nullptr;
 
   std::vector<QSharedPointer<QWidget>> m_addedWidgets;
+
+signals:
+
+  void inFocus(bool inFocus, bool hasData);
 
 };
 

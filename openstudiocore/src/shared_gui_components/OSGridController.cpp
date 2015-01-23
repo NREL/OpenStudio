@@ -1379,20 +1379,57 @@ void OSGridController::selectAllStateChanged(const int newState) const
 
 void OSGridController::onInFocus(bool inFocus, bool hasData, int row, int column)
 {
-  m_selectedCellLocation = std::make_pair(row, column);
-
-  HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(column));
-  OS_ASSERT(horizontalHeaderWidget);
-
-  horizontalHeaderWidget->m_pushButton->setEnabled(inFocus);
-
-  if (hasData){
-    horizontalHeaderWidget->m_pushButton->setText("Apply to Selected");
+  if (row == 0 && this->m_hasHorizontalHeader) {
+    // Do great things
+    int i = 0;
   }
   else {
-    horizontalHeaderWidget->m_pushButton->setText("Apply to Selected");
-    //horizontalHeaderWidget->m_pushButton->setText("Clear Selected"); TODO
+    m_selectedCellLocation = std::make_pair(row, column);
+
+    HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(column));
+    OS_ASSERT(horizontalHeaderWidget);
+
+    horizontalHeaderWidget->m_pushButton->setEnabled(inFocus);
+
+    if (hasData){
+      horizontalHeaderWidget->m_pushButton->setText("Apply to Selected");
+    }
+    else {
+      horizontalHeaderWidget->m_pushButton->setText("Apply to Selected");
+      //horizontalHeaderWidget->m_pushButton->setText("Clear Selected"); TODO
+    }
   }
+}
+
+HorizontalHeaderPushButton::HorizontalHeaderPushButton(QWidget * parent)
+  : QPushButton()
+{
+}
+
+HorizontalHeaderPushButton::~HorizontalHeaderPushButton()
+{
+}
+
+void HorizontalHeaderPushButton::focusInEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason)
+  {
+  }
+
+  emit inFocus(true, true);
+
+  QPushButton::focusInEvent(e);
+}
+
+void HorizontalHeaderPushButton::focusOutEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason)
+  {
+  }
+
+  emit inFocus(false, false);
+
+  QPushButton::focusOutEvent(e);
 }
 
 Holder::Holder(QWidget * parent)
@@ -1408,7 +1445,7 @@ HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidge
   : QWidget(parent),
   m_label(new QLabel(fieldName)),
   m_checkBox(new QCheckBox()),
-  m_pushButton(new QPushButton())
+  m_pushButton(new HorizontalHeaderPushButton())
 {
   auto mainLayout = new QVBoxLayout();
   setLayout(mainLayout);
@@ -1427,6 +1464,8 @@ HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidge
   m_pushButton->setText("Apply to Selected");
   m_pushButton->setFixedWidth(100);
   m_pushButton->setEnabled(false);
+  connect(m_pushButton, &HorizontalHeaderPushButton::inFocus, this, &HorizontalHeaderWidget::inFocus);
+
   mainLayout->addWidget(m_pushButton, Qt::AlignBottom);
 }
 
