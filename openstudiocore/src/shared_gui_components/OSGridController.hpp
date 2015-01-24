@@ -629,6 +629,8 @@ private:
 
   bool getRowIndexByItem(OSItem * item, int & rowIndex);
 
+  void setConceptValue(model::ModelObject t_setterMO, model::ModelObject t_getterMO, const QSharedPointer<BaseConcept> &t_baseConcept);
+
   QButtonGroup * m_horizontalHeaderBtnGrp;
 
   QString m_headerText;
