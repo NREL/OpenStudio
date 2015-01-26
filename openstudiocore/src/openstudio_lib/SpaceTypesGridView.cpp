@@ -1215,7 +1215,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
         boost::optional<std::function<void(model::SpaceType*)>>(CastNullAdapter<model::SpaceType>(&model::SpaceType::resetDesignSpecificationOutdoorAir)));
 
     } else if (field == RENDERINGCOLOR){
-      addRenderingColorColumn(Heading(QString(RENDERINGCOLOR)),
+      addRenderingColorColumn(Heading(QString(RENDERINGCOLOR),true,false),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::renderingColor),
         CastNullAdapter<model::SpaceType>(&model::SpaceType::setRenderingColor));    
 
