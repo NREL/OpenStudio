@@ -1041,7 +1041,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
         // The final argument to DataSource tells the system that we want an additional widget to be displayed
         // at the bottom of each list. In this case, it's a dropZone. Any type of BaseConcept would work.
 
-        addLoadNameColumn(Heading(QString(LOADNAME)),
+        addLoadNameColumn(Heading(QString(LOADNAME),true,false),
           CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::name),
           CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::setName),
           boost::optional<std::function<void(model::SpaceLoad *)>>(
