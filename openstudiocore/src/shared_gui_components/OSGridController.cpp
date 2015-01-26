@@ -733,11 +733,12 @@ void OSGridController::setConceptValue(model::ModelObject t_setterMO, model::Mod
     setter(temp);
   }
   else if (QSharedPointer<ComboBoxConcept> concept = t_baseConcept.dynamicCast<ComboBoxConcept>()) {
-    //auto choiceConcept = concept->choiceConcept(t_mo); TODO wire this too
-    //auto setter = std::bind(&ComboBoxConcept::set, concept.data(), t_setterMO, std::placeholders::_1);
-    //auto getter = std::bind(&ComboBoxConcept::get, concept.data(), t_getterMO);
-    //auto temp = getter();
-    //setter(temp);
+    auto getterChoiceConcept = concept->choiceConcept(t_getterMO);
+    auto setterChoiceConcept = concept->choiceConcept(t_setterMO);
+    auto getter = std::bind(&ChoiceConcept::get, getterChoiceConcept.data());
+    auto setter = std::bind(&ChoiceConcept::set, setterChoiceConcept.data(), std::placeholders::_1);
+    auto temp = getter();
+    setter(temp);
   }
   else if (QSharedPointer<ValueEditConcept<double> > concept = t_baseConcept.dynamicCast<ValueEditConcept<double> >()) {
     auto setter = std::bind(&ValueEditConcept<double>::set, concept.data(), t_setterMO, std::placeholders::_1);
