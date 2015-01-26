@@ -27,6 +27,7 @@
 #include "../model/ScheduleRule_Impl.hpp"
 #include "../model/ScheduleRuleset.hpp"
 #include "../model/ScheduleRuleset_Impl.hpp"
+#include "../model/ScheduleTypeLimits.hpp"
 #include "../model/YearDescription.hpp"
 #include "../model/YearDescription_Impl.hpp"
 
@@ -98,6 +99,8 @@ class OSLineEdit;
 class MonthView;
 
 class ScheduleDayView;
+
+class ScheduleTypeLimitsView;
 
 class OSItemId;
 
@@ -668,13 +671,23 @@ class ScheduleDayView : public QWidget
 
   model::ScheduleDay scheduleDay() const;
 
-  double upperLimit() const;
+  // returns the upper value of the view
+  double upperViewLimit() const;
 
-  void setUpperLimit(double value);
+  // returns the upper schedule type limit
+  boost::optional<double> upperTypeLimit() const;
 
-  double lowerLimit() const;
+  // sets the current maximum value for the schedule
+  void setMaximumScheduleValue(double value);
 
-  void setLowerLimit(double value);
+  // returns the lower value of the view
+  double lowerViewLimit() const;
+
+  // returns the lower schedule type limit
+  boost::optional<double> lowerTypeLimit() const;
+
+  // sets the current minimum value for the schedule
+  void setMinimumScheduleValue(double value);
 
   bool isIP() const;
 
@@ -689,7 +702,14 @@ class ScheduleDayView : public QWidget
   //void endDateTimeChanged(model::ScheduleRule & scheduleRule, const QDateTime & newDate);
 
  public slots:
+
   void onToggleUnitsClicked(bool displayIP);
+
+  // called when value in the spin box changes
+  void onLowerViewLimitChanged(double d);
+
+  // called when value in the spin box changes
+  void onUpperViewLimitChanged(double d);
 
  private slots:
 
@@ -706,10 +726,6 @@ class ScheduleDayView : public QWidget
   void setQuarterHourlyZoom();
 
   void setOneMinuteZoom();
-
-  void onLowerValueChanged(double d);
-
-  void onUpperValueChanged(double d);
 
  private:
 
@@ -731,14 +747,57 @@ class ScheduleDayView : public QWidget
 
   DayScheduleOverview * m_scheduleOverview;
 
-  QDoubleSpinBox * m_upperLimitSpinBox;
-
-  QDoubleSpinBox * m_lowerLimitSpinBox;
+  ScheduleTypeLimitsView * m_scheduleTypeLimitsView;
 
   bool m_dirty;
 
   bool m_isIP;
 
+};
+
+
+class ScheduleTypeLimitsView : public QWidget
+{
+  Q_OBJECT
+
+public:
+  ScheduleTypeLimitsView(bool isIP, 
+                         const boost::optional<model::ScheduleTypeLimits>& scheduleTypeLimits,
+                         ScheduleDayView* scheduleDayView);
+
+  virtual ~ScheduleTypeLimitsView() {}
+
+  double upperViewLimit() const;
+
+  boost::optional<double> upperTypeLimit() const;
+
+  void setMaximumScheduleValue(double value);
+
+  void onUpperViewLimitChanged(double d);
+
+  double lowerViewLimit() const;
+
+  boost::optional<double> lowerTypeLimit() const;
+
+  void setMinimumScheduleValue(double value);
+
+  void onLowerViewLimitChanged(double d);
+
+  void onToggleUnitsClicked(bool displayIP);
+
+private:
+
+  bool m_isIP;
+
+  boost::optional<model::ScheduleTypeLimits> m_scheduleTypeLimits;
+
+  QDoubleSpinBox * m_upperViewLimitSpinBox;
+
+  boost::optional<double> m_upperTypeLimit;
+
+  QDoubleSpinBox * m_lowerViewLimitSpinBox;
+
+  boost::optional<double> m_lowerTypeLimit;
 };
 
 class ScheduleDayEditor : public QWidget
@@ -1024,6 +1083,10 @@ class CalendarSegmentItem : public QGraphicsItem
 
   void setValue(double value);
 
+  bool isOutOfTypeLimits() const;
+
+  void setIsOutOfTypeLimits(bool isOutOfTypeLimits);
+
   double vCenterPos() const;
 
   bool isMouseDown() const;
@@ -1065,6 +1128,8 @@ class CalendarSegmentItem : public QGraphicsItem
   bool m_mouseDown;
 
   double m_endTime;
+
+  bool m_isOutOfTypeLimits;
 
   friend class DaySchedulePlotArea;
 };

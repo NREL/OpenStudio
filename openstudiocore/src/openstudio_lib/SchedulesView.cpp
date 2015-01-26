@@ -923,9 +923,9 @@ DefaultScheduleDayView::DefaultScheduleDayView( bool isIP,
 
   QVBoxLayout * mainVLayout = new QVBoxLayout();
 
-  mainVLayout->setContentsMargins(10,10,10,10);
+  mainVLayout->setContentsMargins(0,10,0,10);
 
-  mainVLayout->setSpacing(0);
+  mainVLayout->setSpacing(10);
 
   mainHLayout->addLayout(mainVLayout,100);
 
@@ -1024,52 +1024,11 @@ ScheduleDayView::ScheduleDayView(bool isIP,
     m_dayScheduleScene(nullptr),
     m_scheduleDayEditor(nullptr),
     m_scheduleOverview(nullptr),
-    m_upperLimitSpinBox(nullptr),
-    m_lowerLimitSpinBox(nullptr),
+    m_scheduleTypeLimitsView(nullptr),
     m_dirty(false),
     m_isIP(isIP)
 {
-  // Note: QDoubleSpinBox are used, rather than OSQuantityEdit
-  // because limits are not connected via Q_PROPERTY. 
-  m_lowerLimitSpinBox = new QDoubleSpinBox();
-  double lowerLimitSpinBoxValue = LOWER_LIMIT;
-  model::OptionalScheduleTypeLimits typeLimits = scheduleDay.scheduleTypeLimits();
-  if (typeLimits) {
-    OSOptionalQuantity lowerLimitQ = typeLimits->getLowerLimitValue(m_isIP);
-    if (lowerLimitQ.isSet()) {
-      lowerLimitSpinBoxValue = lowerLimitQ.get().value();
-    }
-    else {
-      if (OptionalDouble temp = typeLimits->lowerLimitValue()) {
-        lowerLimitSpinBoxValue = *temp;
-      }
-    }
-  }  
-  m_lowerLimitSpinBox->setValue(lowerLimitSpinBoxValue);
-  m_lowerLimitSpinBox->setMinimum(-1E10);
-  connect(m_lowerLimitSpinBox, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
-    this, &ScheduleDayView::onLowerValueChanged);
-
-  m_upperLimitSpinBox = new QDoubleSpinBox();
-  double upperLimitSpinBoxValue = UPPER_LIMIT;
-  if (typeLimits) {
-    OSOptionalQuantity upperLimitQ = typeLimits->getUpperLimitValue(m_isIP);
-    if (upperLimitQ.isSet()) {
-      upperLimitSpinBoxValue = upperLimitQ.get().value();
-    }
-    else {
-      if (OptionalDouble temp = typeLimits->upperLimitValue()) {
-        upperLimitSpinBoxValue = *temp;
-      }
-    }
-  }
-  m_upperLimitSpinBox->setValue(upperLimitSpinBoxValue);
-  m_upperLimitSpinBox->setMaximum(1E10);
-  connect(m_upperLimitSpinBox, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
-    this, &ScheduleDayView::onUpperValueChanged);
-
-  connect(this, &ScheduleDayView::toggleUnitsClicked, this, &ScheduleDayView::onToggleUnitsClicked);
-
+ 
   // Scene
 
   m_dayScheduleScene = new DayScheduleScene(this,m_scheduleDay);
@@ -1080,7 +1039,7 @@ ScheduleDayView::ScheduleDayView(bool isIP,
 
   QVBoxLayout * mainVLayout = new QVBoxLayout();
 
-  mainVLayout->setContentsMargins(0,0,0,0);
+  mainVLayout->setContentsMargins(0,10,0,10);
 
   mainVLayout->setSpacing(10);
 
@@ -1098,7 +1057,9 @@ ScheduleDayView::ScheduleDayView(bool isIP,
 
   QString name;
   boost::optional<model::ScheduleRuleset> currentSchedule = schedulesView->currentSchedule();
+  boost::optional<model::ScheduleTypeLimits> currentScheduleTypeLimits;
   if(currentSchedule){
+    currentScheduleTypeLimits = currentSchedule->scheduleTypeLimits();
     boost::optional<std::string> optionalString = currentSchedule->name();
     if(optionalString){
       name = optionalString->c_str();
@@ -1109,26 +1070,10 @@ ScheduleDayView::ScheduleDayView(bool isIP,
 
   mainVLayout->addWidget(lineEdit);
 
-  // Lower Limit
+  // Schedule Type Limits
 
-  hLayout = new QHBoxLayout();
-  mainVLayout->addLayout(hLayout);
-
-  label = new QLabel("Lower Limit");
-  hLayout->addWidget(label);
-
-  hLayout->addWidget(m_lowerLimitSpinBox);
-
-  hLayout->addSpacing(20);
-
-  // Upper Limit
-
-  label = new QLabel("Upper Limit");
-  hLayout->addWidget(label);
-
-  hLayout->addWidget(m_upperLimitSpinBox);
-
-  hLayout->addStretch();
+  m_scheduleTypeLimitsView = new ScheduleTypeLimitsView(isIP, currentScheduleTypeLimits, this);
+  mainVLayout->addWidget(m_scheduleTypeLimitsView);
 
   // Day Schedule
 
@@ -1203,55 +1148,71 @@ ScheduleDayView::ScheduleDayView(bool isIP,
   overviewLayout->addSpacing(MARGINRIGHT);
 
   mainVLayout->addLayout(overviewLayout);
+
+  connect(this, &ScheduleDayView::toggleUnitsClicked, this, &ScheduleDayView::onToggleUnitsClicked);
 }
 
-double ScheduleDayView::upperLimit() const
+double ScheduleDayView::upperViewLimit() const
 {
-  if(m_upperLimitSpinBox){
-    return m_upperLimitSpinBox->value();
+  if (m_scheduleTypeLimitsView){
+    return m_scheduleTypeLimitsView->upperViewLimit();
   }
-  else{
-    return UPPER_LIMIT;
-  }
+  return UPPER_LIMIT;
 }
 
-void ScheduleDayView::setUpperLimit(double value)
+boost::optional<double> ScheduleDayView::upperTypeLimit() const
 {
-  if(m_upperLimitSpinBox){
-    m_upperLimitSpinBox->setValue(value);
-    m_upperLimitSpinBox->setMinimum(value);
+  if (m_scheduleTypeLimitsView){
+    return m_scheduleTypeLimitsView->upperTypeLimit();
   }
+  return boost::none;
 }
 
-double ScheduleDayView::lowerLimit() const
+void ScheduleDayView::setMaximumScheduleValue(double value)
 {
-  if(m_lowerLimitSpinBox){
-    return m_lowerLimitSpinBox->value();
-  }
-  else{
-    return LOWER_LIMIT;
+  if (m_scheduleTypeLimitsView){
+    m_scheduleTypeLimitsView->setMaximumScheduleValue(value);
   }
 }
 
-void ScheduleDayView::setLowerLimit(double value)
+void ScheduleDayView::onUpperViewLimitChanged(double d)
 {
-  if(m_lowerLimitSpinBox){
-    m_lowerLimitSpinBox->setValue(value);
-    m_lowerLimitSpinBox->setMaximum(value);
+  if (m_scheduleTypeLimitsView){
+    m_scheduleTypeLimitsView->onUpperViewLimitChanged(d);
   }
-}
-
-void ScheduleDayView::onLowerValueChanged(double d)
-{
-  m_upperLimitSpinBox->setMinimum(d);
-  if(scene()){
+  if (scene()){
     scene()->scheduleRefresh();
   }
 }
 
-void ScheduleDayView::onUpperValueChanged(double d)
+double ScheduleDayView::lowerViewLimit() const
 {
-  m_lowerLimitSpinBox->setMaximum(d);
+  if (m_scheduleTypeLimitsView){
+    return m_scheduleTypeLimitsView->lowerViewLimit();
+  }
+  return LOWER_LIMIT;
+}
+
+boost::optional<double> ScheduleDayView::lowerTypeLimit() const
+{
+  if (m_scheduleTypeLimitsView){
+    return m_scheduleTypeLimitsView->lowerTypeLimit();
+  }
+  return boost::none;
+}
+
+void ScheduleDayView::setMinimumScheduleValue(double value)
+{
+  if (m_scheduleTypeLimitsView){
+    m_scheduleTypeLimitsView->setMinimumScheduleValue(value);
+  }
+}
+
+void ScheduleDayView::onLowerViewLimitChanged(double d)
+{
+  if (m_scheduleTypeLimitsView){
+    m_scheduleTypeLimitsView->onLowerViewLimitChanged(d);
+  }
   if(scene()){
     scene()->scheduleRefresh();
   }
@@ -1262,23 +1223,10 @@ bool ScheduleDayView::isIP() const {
 }
 
 void ScheduleDayView::onToggleUnitsClicked(bool displayIP) {
-  model::OptionalScheduleTypeLimits typeLimits = m_scheduleDay.scheduleTypeLimits();
-  if (typeLimits) {
-    Unit oldUnits = typeLimits->getLowerLimitValue(m_isIP).units();
-    Unit newUnits = typeLimits->getLowerLimitValue(displayIP).units();
-    if (oldUnits != newUnits) {
-      Quantity oldLowerLimit(lowerLimit(),oldUnits);
-      OptionalQuantity newLowerLimit = convert(oldLowerLimit,newUnits);
-      if (newLowerLimit) {
-        setLowerLimit(newLowerLimit->value());
-      }
-      Quantity oldUpperLimit(upperLimit(),oldUnits);
-      OptionalQuantity newUpperLimit = convert(oldUpperLimit,newUnits);
-      if (newUpperLimit) {
-        setUpperLimit(newUpperLimit->value());
-      }
-    }
+  if (m_scheduleTypeLimitsView){
+    m_scheduleTypeLimitsView->onToggleUnitsClicked(displayIP);
   }
+
   m_isIP = displayIP;
   if (scene()) {
     scene()->scheduleRefresh();
@@ -1407,6 +1355,192 @@ bool ScheduleDayView::setFocusStartTime(double proposedStartTime)
   m_scheduleDayEditor->update();
 
   return true;
+}
+
+
+ScheduleTypeLimitsView::ScheduleTypeLimitsView(bool isIP, 
+                                               const boost::optional<model::ScheduleTypeLimits>& scheduleTypeLimits,
+                                               ScheduleDayView* scheduleDayView)
+  : m_isIP(isIP),
+    m_scheduleTypeLimits(scheduleTypeLimits),
+    m_upperViewLimitSpinBox(nullptr),
+    m_lowerViewLimitSpinBox(nullptr)
+{
+  QHBoxLayout * mainHLayout = new QHBoxLayout();
+
+  mainHLayout->setContentsMargins(10, 10, 10, 10);
+
+  mainHLayout->setSpacing(10);
+
+  setLayout(mainHLayout);
+
+  QLabel * label = nullptr;
+
+  // Name
+  label = new QLabel("Schedule Type Limits:");
+  mainHLayout->addWidget(label);
+
+  QString name;
+  if (m_scheduleTypeLimits){
+    boost::optional<std::string> optionalString = m_scheduleTypeLimits->name();
+    if (optionalString){
+      name = optionalString->c_str();
+    }
+  }
+  label = new QLabel(name);
+  mainHLayout->addWidget(label);
+
+  // Lower Limit
+
+  // Note: QDoubleSpinBox are used, rather than OSQuantityEdit
+  // because limits are not connected via Q_PROPERTY. 
+  m_lowerViewLimitSpinBox = new QDoubleSpinBox();
+  double lowerViewLimitSpinBoxValue = LOWER_LIMIT;
+  if (m_scheduleTypeLimits) {
+    OSOptionalQuantity lowerLimitQ = m_scheduleTypeLimits->getLowerLimitValue(m_isIP);
+    if (lowerLimitQ.isSet()) {
+      m_lowerTypeLimit = lowerLimitQ.get().value();
+    } else {
+      // DLM: used for dimensionless numbers
+      m_lowerTypeLimit = m_scheduleTypeLimits->lowerLimitValue();
+    }
+    if (m_lowerTypeLimit){
+      lowerViewLimitSpinBoxValue = *m_lowerTypeLimit;
+    }
+  }
+  m_lowerViewLimitSpinBox->setValue(lowerViewLimitSpinBoxValue);
+  m_lowerViewLimitSpinBox->setMinimum(-1E10);
+
+  connect(m_lowerViewLimitSpinBox, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+          scheduleDayView, &ScheduleDayView::onLowerViewLimitChanged);
+
+  label = new QLabel("Lower Limit");
+  mainHLayout->addWidget(label);
+
+  mainHLayout->addWidget(m_lowerViewLimitSpinBox);
+
+  mainHLayout->addSpacing(20);
+
+  // Upper Limit
+
+  m_upperViewLimitSpinBox = new QDoubleSpinBox();
+  double upperViewLimitSpinBoxValue = UPPER_LIMIT;
+  if (m_scheduleTypeLimits) {
+    OSOptionalQuantity upperLimitQ = m_scheduleTypeLimits->getUpperLimitValue(m_isIP);
+    if (upperLimitQ.isSet()) {
+      m_upperTypeLimit = upperLimitQ.get().value();
+    } else {
+      // DLM: used for dimensionless numbers
+      m_upperTypeLimit = m_scheduleTypeLimits->upperLimitValue();
+    }
+    if (m_upperTypeLimit){
+      upperViewLimitSpinBoxValue = *m_upperTypeLimit;
+    }
+  }
+  m_upperViewLimitSpinBox->setValue(upperViewLimitSpinBoxValue);
+  m_upperViewLimitSpinBox->setMaximum(1E10);
+  connect(m_upperViewLimitSpinBox, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+          scheduleDayView, &ScheduleDayView::onUpperViewLimitChanged);
+
+  label = new QLabel("Upper Limit");
+  mainHLayout->addWidget(label);
+
+  mainHLayout->addWidget(m_upperViewLimitSpinBox);
+
+  mainHLayout->addStretch();
+}
+
+double ScheduleTypeLimitsView::upperViewLimit() const
+{
+  OS_ASSERT(m_upperViewLimitSpinBox);
+  return m_upperViewLimitSpinBox->value();
+}
+
+boost::optional<double> ScheduleTypeLimitsView::upperTypeLimit() const
+{
+  return m_upperTypeLimit;
+}
+
+void ScheduleTypeLimitsView::setMaximumScheduleValue(double value)
+{
+  OS_ASSERT(m_upperViewLimitSpinBox);
+  
+  m_upperViewLimitSpinBox->setMinimum(value);
+
+  if (m_upperTypeLimit){
+    if (value > *m_upperTypeLimit){
+      bool result = false;
+    }
+  }
+  
+  // DLM: this might not be required, as setMinimum changes value
+  if (value > m_upperViewLimitSpinBox->value()){
+    m_upperViewLimitSpinBox->setValue(value);
+  }
+}
+
+void ScheduleTypeLimitsView::onUpperViewLimitChanged(double d)
+{
+  OS_ASSERT(m_lowerViewLimitSpinBox);
+  m_lowerViewLimitSpinBox->setMaximum(d); // lower limit can't go above value in upper limit
+}
+
+double ScheduleTypeLimitsView::lowerViewLimit() const
+{
+  OS_ASSERT(m_lowerViewLimitSpinBox);
+  return m_lowerViewLimitSpinBox->value();
+}
+
+boost::optional<double> ScheduleTypeLimitsView::lowerTypeLimit() const
+{
+  return m_lowerTypeLimit;
+}
+
+void ScheduleTypeLimitsView::setMinimumScheduleValue(double value)
+{
+  OS_ASSERT(m_lowerViewLimitSpinBox);
+
+  m_lowerViewLimitSpinBox->setMaximum(value);
+
+  if (m_lowerTypeLimit){
+    if (value < *m_lowerTypeLimit){
+      bool result = false;
+    }
+  }
+
+  // DLM: this might not be required, as setMaximum changes value
+  if (value < m_lowerViewLimitSpinBox->value()){
+    m_lowerViewLimitSpinBox->setValue(value);
+  }
+}
+
+void ScheduleTypeLimitsView::onLowerViewLimitChanged(double d)
+{
+  OS_ASSERT(m_lowerViewLimitSpinBox);
+  m_lowerViewLimitSpinBox->setMinimum(d); // upper limit can't go below value in lower limit
+}
+
+void ScheduleTypeLimitsView::onToggleUnitsClicked(bool displayIP)
+{
+  /*
+  model::OptionalScheduleTypeLimits typeLimits = m_scheduleDay.scheduleTypeLimits();
+  if (typeLimits) {
+    Unit oldUnits = typeLimits->getLowerLimitValue(m_isIP).units();
+    Unit newUnits = typeLimits->getLowerLimitValue(displayIP).units();
+    if (oldUnits != newUnits) {
+      Quantity oldLowerLimit(lowerLimit(), oldUnits);
+      OptionalQuantity newLowerLimit = convert(oldLowerLimit, newUnits);
+      if (newLowerLimit) {
+        setLowerLimit(newLowerLimit->value());
+      }
+      Quantity oldUpperLimit(upperLimit(), oldUnits);
+      OptionalQuantity newUpperLimit = convert(oldUpperLimit, newUnits);
+      if (newUpperLimit) {
+        setUpperLimit(newUpperLimit->value());
+      }
+    }
+  }
+  */
 }
 
 ScheduleDayEditor::ScheduleDayEditor(bool isIP, ScheduleDayView * scheduleDayView, const model::ScheduleDay & scheduleDay) : 
@@ -1572,8 +1706,8 @@ void ScheduleDayEditor::paintEvent ( QPaintEvent * event )
   double ystart = MARGINTOP;
   double yend = height() - MARGINBOTTOM;
 
-  double yStartValue = m_scheduleDayView->upperLimit();
-  double yEndValue = m_scheduleDayView->lowerLimit();
+  double yStartValue = m_scheduleDayView->upperViewLimit();
+  double yEndValue = m_scheduleDayView->lowerViewLimit();
 
   double ySnap = 7.0;
 
@@ -1613,7 +1747,8 @@ CalendarSegmentItem::CalendarSegmentItem( QGraphicsItem * parent )
     m_nextVCalendarItem(nullptr),
     m_isHovering(false),
     m_mouseDown(false),
-    m_endTime(SCENEWIDTH)
+    m_endTime(SCENEWIDTH),
+    m_isOutOfTypeLimits(false)
 {
   setAcceptHoverEvents(true); 
 
@@ -1666,6 +1801,15 @@ void CalendarSegmentItem::setHovering(bool hovering)
   m_isHovering = hovering;
 }
 
+bool CalendarSegmentItem::isOutOfTypeLimits() const
+{
+  return m_isOutOfTypeLimits;
+}
+
+void CalendarSegmentItem::setIsOutOfTypeLimits(bool isOutOfTypeLimits)
+{
+  m_isOutOfTypeLimits = isOutOfTypeLimits;
+}
 
 QRectF CalendarSegmentItem::boundingRect () const
 {
@@ -1701,6 +1845,10 @@ void CalendarSegmentItem::paint( QPainter *painter,
   pen.setWidth(penwidth);
 
   pen.setCapStyle(Qt::FlatCap);
+
+  if (m_isOutOfTypeLimits){
+    pen.setColor(Qt::red);
+  }
 
   painter->setPen(pen);
 
@@ -1817,8 +1965,8 @@ void CalendarSegmentItem::setValue(double value)
 {
   setY(SCENEHEIGHT - (value * SCENEHEIGHT) - (boundingRect().height() / 2.0));
 
-  double upperLimitValue = scene()->scheduleDayView()->upperLimit();
-  double lowerLimitValue = scene()->scheduleDayView()->lowerLimit();
+  double upperLimitValue = scene()->scheduleDayView()->upperViewLimit();
+  double lowerLimitValue = scene()->scheduleDayView()->lowerViewLimit();
 
   float fullscalevalue = lowerLimitValue + value * (upperLimitValue - lowerLimitValue);
 
@@ -2229,7 +2377,7 @@ void DaySchedulePlotArea::mouseDoubleClickEvent(QMouseEvent * event)
       
       event->accept();
 
-      emit dayScheduleSceneChanged(scene(),scene()->scheduleDayView()->lowerLimit(),scene()->scheduleDayView()->upperLimit());
+      emit dayScheduleSceneChanged(scene(),scene()->scheduleDayView()->lowerViewLimit(),scene()->scheduleDayView()->upperViewLimit());
     }
     else if( VCalendarSegmentItem * calendarItem = dynamic_cast<VCalendarSegmentItem *>(item) )
     {
@@ -2237,7 +2385,7 @@ void DaySchedulePlotArea::mouseDoubleClickEvent(QMouseEvent * event)
       
       event->accept();
 
-      emit dayScheduleSceneChanged(scene(),scene()->scheduleDayView()->lowerLimit(),scene()->scheduleDayView()->upperLimit());
+      emit dayScheduleSceneChanged(scene(),scene()->scheduleDayView()->lowerViewLimit(),scene()->scheduleDayView()->upperViewLimit());
     }
   }
 }
@@ -2442,7 +2590,7 @@ void DaySchedulePlotArea::mouseReleaseEvent(QMouseEvent * event)
     }
   }
 
-  emit dayScheduleSceneChanged(scene(),scene()->scheduleDayView()->lowerLimit(),scene()->scheduleDayView()->upperLimit());
+  emit dayScheduleSceneChanged(scene(),scene()->scheduleDayView()->lowerViewLimit(),scene()->scheduleDayView()->upperViewLimit());
 
   m_currentItem = nullptr;
 
@@ -2457,8 +2605,8 @@ void DaySchedulePlotArea::keyPressEvent(QKeyEvent * event)
     {
       ScheduleDayView * scheduleDayView = scene()->scheduleDayView();
 
-      double upperLimit = scheduleDayView->upperLimit();
-      double lowerLimit = scheduleDayView->lowerLimit();
+      double upperLimit = scheduleDayView->upperViewLimit();
+      double lowerLimit = scheduleDayView->lowerViewLimit();
 
       double value = m_keyboardInputValue.toDouble();
 
@@ -2472,7 +2620,7 @@ void DaySchedulePlotArea::keyPressEvent(QKeyEvent * event)
 
       m_currentHoverItem = nullptr;
 
-      emit dayScheduleSceneChanged(scene(),scene()->scheduleDayView()->lowerLimit(),scene()->scheduleDayView()->upperLimit());
+      emit dayScheduleSceneChanged(scene(),scene()->scheduleDayView()->lowerViewLimit(),scene()->scheduleDayView()->upperViewLimit());
     }
     else if( event->key() == Qt::Key_Minus )
     {
@@ -2540,26 +2688,33 @@ void DayScheduleScene::refresh()
       realvalues = m_scheduleDay.values();
     }
 
+    // The upper and lower type limits come from the model ScheduleTypeLimits.
+    boost::optional<double> upperTypeLimit = m_scheduleDayView->upperTypeLimit();
+    boost::optional<double> lowerTypeLimit = m_scheduleDayView->lowerTypeLimit();
+
     // The min and max values of the schedule as it appears on the screen
     double minvalue = * std::min_element(realvalues.begin(),realvalues.end());
     double maxvalue = * std::max_element(realvalues.begin(),realvalues.end());
+    
+    m_scheduleDayView->setMaximumScheduleValue(maxvalue);
+    m_scheduleDayView->setMinimumScheduleValue(minvalue);
 
-    // The upper and lower limit are the limits input from the user input fields.
-    double upperLimit = m_scheduleDayView->upperLimit();
-    double lowerLimit = m_scheduleDayView->lowerLimit();
+    // The upper and lower view limits are based on the view
+    double upperViewLimit = m_scheduleDayView->upperViewLimit();
+    double lowerViewLimit = m_scheduleDayView->lowerViewLimit();
 
-    if( maxvalue > upperLimit )
+    // if maxvalue > upperViewLimit then upperViewLimit will be reset
+    if( maxvalue > upperViewLimit )
     {
-      upperLimit = maxvalue; // + 0.05 * (maxvalue - minvalue);
-      m_scheduleDayView->setUpperLimit(upperLimit);
+      upperViewLimit = maxvalue; // + 0.05 * (maxvalue - minvalue);
     }
 
-    if( minvalue < lowerLimit )
+    // if minvalue < lowerViewLimit then lowerViewLimit will be reset
+    if( minvalue < lowerViewLimit )
     {
-      lowerLimit = minvalue; // - 0.05 * (maxvalue - minvalue);
-      m_scheduleDayView->setLowerLimit(lowerLimit);
+      lowerViewLimit = minvalue; // - 0.05 * (maxvalue - minvalue);
     }
-
+    
     int i  = 0;
     double lastTime = 0.0;
     CalendarSegmentItem * previousSegment = nullptr;
@@ -2568,11 +2723,19 @@ void DayScheduleScene::refresh()
          it < times.end();
          ++it )
     {
-      double scaledValue = (realvalues[i] - lowerLimit) / (upperLimit - lowerLimit);
+      bool isOutOfTypeLimits = false;
+      if (upperTypeLimit && (realvalues[i] > *upperTypeLimit)){
+        isOutOfTypeLimits = true;
+      } else if (lowerTypeLimit && (realvalues[i] < *lowerTypeLimit)){
+        isOutOfTypeLimits = true;
+      }
+
+      double scaledValue = (realvalues[i] - lowerViewLimit) / (upperViewLimit - lowerViewLimit);
 
       CalendarSegmentItem * segment = new CalendarSegmentItem();
       addItem(segment);
       segment->setValue(scaledValue);
+      segment->setIsOutOfTypeLimits(isOutOfTypeLimits);
       segment->setStartTime(lastTime);
       double time = it->totalSeconds();
       segment->setEndTime(time);
