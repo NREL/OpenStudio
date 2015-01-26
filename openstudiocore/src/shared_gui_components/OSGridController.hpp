@@ -625,8 +625,6 @@ private:
 
   OSItem * getSelectedItemFromModelSubTabView();
 
-  bool selectRowByItem(OSItem * item, bool isSelected);
-
   bool getRowIndexByItem(OSItem * item, int & rowIndex);
 
   void setConceptValue(model::ModelObject t_setterMO, model::ModelObject t_getterMO, const QSharedPointer<BaseConcept> &t_baseConcept);
@@ -634,10 +632,6 @@ private:
   QButtonGroup * m_horizontalHeaderBtnGrp;
 
   QString m_headerText;
-
-  QButtonGroup * m_cellCheckBoxBtnGrp;
-
-  QButtonGroup * m_cellPushButtonBoxBtnGrp = nullptr;
 
   int m_oldIndex = -1;
 
@@ -662,8 +656,6 @@ public slots:
 
   virtual void onComboBoxIndexChanged(int index);
 
-  void selectItemId(const OSItemId& itemId);
-
   void onItemSelected(OSItem * item);
 
   void onSelectionCleared();
@@ -676,15 +668,11 @@ public slots:
 
 protected slots:
 
-  void reset();
-
   void selectAllStateChanged(const int newState) const;
 
 private slots:
 
   void horizontalHeaderChecked(int index);
-
-  void cellChecked(int index);
 
   void onDropZoneItemClicked(OSItem* item);
 

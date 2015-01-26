@@ -334,19 +334,6 @@ OSGridController::OSGridController(bool isIP,
 {
   loadQSettings();
 
-  m_cellCheckBoxBtnGrp = new QButtonGroup();
-  m_cellCheckBoxBtnGrp->setExclusive(false);
-
-  bool isConnected = false;
-  isConnected = connect(m_cellCheckBoxBtnGrp, SIGNAL(buttonClicked(int)), this, SLOT(cellChecked(int)));
-  OS_ASSERT(isConnected);
-
-  m_cellPushButtonBoxBtnGrp = new QButtonGroup();
-  m_cellPushButtonBoxBtnGrp->setExclusive(false);
-
-  isConnected = connect(m_cellPushButtonBoxBtnGrp, SIGNAL(buttonClicked(int)), this, SLOT(cellChecked(int)));
-  OS_ASSERT(isConnected);
-
   connect(m_objectSelector.get(), &ObjectSelector::inFocus, this, &OSGridController::onInFocus);
 }
 
@@ -1247,56 +1234,7 @@ void OSGridController::toggleUnits(bool displayIP)
 
 void OSGridController::onComboBoxIndexChanged(int index)
 {
-  // Currently this is cruft code
-  OS_ASSERT(false);
-}
-
-void OSGridController::reset()
-{
-  // Currently this is cruft code
-  OS_ASSERT(false);
-}
-
-void OSGridController::cellChecked(int index)
-{
-  // Currently this is cruft code
-  OS_ASSERT(false);
-
-  int tableRowIndex = index;
-  if (m_hasHorizontalHeader){
-    // The header is not considered part of the table row count
-    tableRowIndex++;
-  }
-
-  if (tableRowIndex == m_oldIndex) {
-    // Note: 1 row must always be checked
-    QAbstractButton * button = nullptr;
-    button = m_cellCheckBoxBtnGrp->button(index);
-    OS_ASSERT(button);
-    button->blockSignals(true);
-    button->setChecked(true);
-    button->blockSignals(false);
-  }
-  else {
-    // Deselect the old row...
-    if (m_oldIndex >= 0) selectRow(m_oldIndex, false);
-
-    // ... select the new...
-    selectRow(tableRowIndex, true);
-
-    // ... tell the world...
-    OSItemId itemId = modelObjectToItemId(modelObject(tableRowIndex), false);
-    OSItem* item = OSItem::makeItem(itemId, OSItemType::ListItem);
-    emit gridRowSelected(item);
-
-    // ... and remember who's selected
-    m_oldIndex = tableRowIndex;
-  }
-}
-
-void OSGridController::selectItemId(const OSItemId& itemId)
-{
-  // Currently this is cruft code
+  // Pure virtual in base class
   OS_ASSERT(false);
 }
 
@@ -1304,25 +1242,22 @@ void OSGridController::onItemSelected(OSItem * item)
 {
 }
 
-bool OSGridController::selectRowByItem(OSItem * item, bool isSelected)
-{
-  // Currently this is cruft code
-  OS_ASSERT(false);
-
-  auto success = false;
-  int i = 0;
-
-  for (auto modelObject : m_modelObjects){
-    OSItemId itemId = modelObjectToItemId(modelObject, false);
-    if (item->itemId() == itemId){
-      selectRow(rowIndexFromModelIndex(i), isSelected);
-      success = true;
-      break;
-    }
-    i++;
-  }
-  return success;
-}
+//bool OSGridController::selectRowByItem(OSItem * item, bool isSelected)
+//{
+//  auto success = false;
+//  int i = 0;
+//
+//  for (auto modelObject : m_modelObjects){
+//    OSItemId itemId = modelObjectToItemId(modelObject, false);
+//    if (item->itemId() == itemId){
+//      selectRow(rowIndexFromModelIndex(i), isSelected);
+//      success = true;
+//      break;
+//    }
+//    i++;
+//  }
+//  return success;
+//}
 
 bool OSGridController::getRowIndexByItem(OSItem * item, int & rowIndex)
 {
@@ -1466,9 +1401,6 @@ void OSGridController::onAddWorkspaceObject(const WorkspaceObject& object, const
 
 void OSGridController::onObjectRemoved(boost::optional<model::ParentObject> parent)
 {
-  // Currently this is cruft code
-  OS_ASSERT(false);
-
   if (parent) {
     // We have a parent we can search for in our current list of modelObjects and just delete that 1 row
     this->requestRefreshGrid(); // TODO replace this with a by-row refresh only

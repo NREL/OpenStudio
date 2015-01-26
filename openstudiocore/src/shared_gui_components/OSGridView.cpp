@@ -184,12 +184,6 @@ void OSGridView::setGridController(OSGridController * gridController)
   OS_ASSERT(isConnected);
 }
 
-void OSGridView::refreshCell(int row, int column)
-{
-  // Currently this is cruft code
-  OS_ASSERT(false);
-}
-
 void OSGridView::requestAddRow(int row)
 {
   std::cout << "REQUEST ADDROW CALLED " << std::endl;
@@ -214,48 +208,13 @@ void OSGridView::requestRemoveRow(int row)
   m_queueRequests.emplace_back(RemoveRow);
 }
 
-void OSGridView::addRow(int row)
-{
-  // Currently this is cruft code
-  OS_ASSERT(false);
-
-  std::cout << " ADD ROW CALLED " << row << std::endl;
-
-  for (int j = 0; j < m_gridController->columnCount(); j++)
-  {
-    addWidget(row, j);
-  }
-
-  selectRowDeterminedByModelSubTabView();
-}
-
-void OSGridView::removeRow(int row)
-{
-  // Currently this is cruft code
-  OS_ASSERT(false);
-
-  std::cout << " DELETE ROW CALLED " << row << std::endl;
-
-  for (int j = 0; j < m_gridController->columnCount(); j++)
-  {
-    removeWidget(row, j);
-  }
-
-  selectRowDeterminedByModelSubTabView();
-}
-
-void OSGridView::refreshRow(int row)
-{
-  // Currently this is cruft code
-  OS_ASSERT(false);
-
-  std::cout << " REFRESH ROW CALLED " << row << std::endl;
-
-  for( int j = 0; j < m_gridController->columnCount(); j++ )
-  {
-    refreshCell(row, j);
-  }
-}
+//void OSGridView::refreshRow(int row)
+//{
+//  for( int j = 0; j < m_gridController->columnCount(); j++ )
+//  {
+//    refreshCell(row, j);
+//  }
+//}
 
 QLayoutItem * OSGridView::itemAtPosition(int row, int column)
 {
@@ -265,43 +224,43 @@ QLayoutItem * OSGridView::itemAtPosition(int row, int column)
   return m_gridLayouts.at(layoutnum)->itemAtPosition(relativerow, column);
 }
 
-void OSGridView::removeWidget(int row, int column)
-{
-  // Currently this is cruft code
-  OS_ASSERT(false);
-
-  auto layoutnum = row / ROWS_PER_LAYOUT;
-  auto relativerow = row % ROWS_PER_LAYOUT;
-
-  auto index = m_gridController->columnCount() * relativerow; // this assumes that you are always deleting from the zero index column
-
-  auto count = m_gridLayouts.at(layoutnum)->count();
- 
-  QLayoutItem * item = m_gridLayouts.at(layoutnum)->itemAtPosition(relativerow, column);
-
-  if (!item) return;
-
-  QLayoutItem * item2 = m_gridLayouts.at(layoutnum)->takeAt(index);
-
-  OS_ASSERT(item2);
-
-  if (item == item2){
-    QString("Good");
-  }
-  else {
-    QString("Bad");
-  }
-
-  QWidget * widget = item->widget();
-
-  if (!widget) return;
-
-  auto indexOfWidget = m_gridLayouts.at(layoutnum)->indexOf(widget);
-
-  delete widget;
-
-  delete item;
-}
+//void OSGridView::removeWidget(int row, int column)
+//{
+//  // Currently this is cruft code
+//  OS_ASSERT(false);
+//
+//  auto layoutnum = row / ROWS_PER_LAYOUT;
+//  auto relativerow = row % ROWS_PER_LAYOUT;
+//
+//  auto index = m_gridController->columnCount() * relativerow; // this assumes that you are always deleting from the zero index column
+//
+//  auto count = m_gridLayouts.at(layoutnum)->count();
+// 
+//  QLayoutItem * item = m_gridLayouts.at(layoutnum)->itemAtPosition(relativerow, column);
+//
+//  if (!item) return;
+//
+//  QLayoutItem * item2 = m_gridLayouts.at(layoutnum)->takeAt(index);
+//
+//  OS_ASSERT(item2);
+//
+//  if (item == item2){
+//    QString("Good");
+//  }
+//  else {
+//    QString("Bad");
+//  }
+//
+//  QWidget * widget = item->widget();
+//
+//  if (!widget) return;
+//
+//  auto indexOfWidget = m_gridLayouts.at(layoutnum)->indexOf(widget);
+//
+//  delete widget;
+//
+//  delete item;
+//}
 
 void OSGridView::deleteAll()
 {
@@ -321,26 +280,21 @@ void OSGridView::deleteAll()
   }
 }
 
-void OSGridView::refreshGrid()
-{
-  // Currently this is cruft code
-  OS_ASSERT(false);
+//void OSGridView::refreshGrid()
+//{
+//  if( m_gridController )
+//  {
+//    m_gridController->refreshModelObjects();
 
-  std::cout << " REFRESH GRID CALLED " << std::endl;
-
-  if( m_gridController )
-  {
-    m_gridController->refreshModelObjects();
-
-    for( int i = 1; i < m_gridController->rowCount(); i++ )
-    {
-      for( int j = 0; j < m_gridController->columnCount(); j++ )
-      {
-        refreshCell(i, j);
-      }
-    }
-  }
-}
+//    for( int i = 1; i < m_gridController->rowCount(); i++ )
+//    {
+//      for( int j = 0; j < m_gridController->columnCount(); j++ )
+//      {
+//        refreshCell(i, j);
+//      }
+//    }
+//  }
+//}
 
 void OSGridView::requestRefreshAll()
 {
@@ -362,18 +316,14 @@ void OSGridView::requestRefreshGrid()
   m_queueRequests.emplace_back(RefreshGrid);
 }
 
-void OSGridView::requestRefreshRow(int t_row)
-{
-  // Currently this is cruft code
-  OS_ASSERT(false);
-
-  std::cout << "REQUEST REFRESH ROW CALLED " << std::endl;
-  setEnabled(false);
-
-  m_timer.start();
-
-  m_queueRequests.emplace_back(RefreshRow);
-}
+//void OSGridView::requestRefreshRow(int t_row)
+//{
+//  setEnabled(false);
+//
+//  m_timer.start();
+//
+//  m_queueRequests.emplace_back(RefreshRow);
+//}
 
 void OSGridView::doRefresh()
 {
@@ -523,28 +473,6 @@ void OSGridView::addWidget(QWidget *w, int row, int column)
   }
 
   m_gridLayouts[layoutindex]->addWidget(w, relativerow, column);
-}
-
-void OSGridView::setHorizontalHeader(std::vector<QWidget *> widgets)
-{
-  // Currently this is cruft code
-  OS_ASSERT(false);
-
-  int column = 0;
-  for (QWidget * widget : widgets) {
-    addWidget(widget,0,column++);
-  }
-}
-
-void OSGridView::setHorizontalHeader(std::vector<QString> names)
-{
-  // Currently this is cruft code
-  OS_ASSERT(false);
-
-  int column = 0;
-  for (const QString& name : names) {
-    addWidget(new QLabel(name),0,column++);
-  }
 }
 
 void OSGridView::selectCategory(int index)
