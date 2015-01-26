@@ -222,7 +222,7 @@ void ThermalZonesGridController::addColumns(const QString &/*category*/, std::ve
 
   Q_FOREACH(QString field, fields){
     if(field == IDEALAIRLOADS){
-      addCheckBoxColumn(Heading(QString(IDEALAIRLOADS)),
+      addCheckBoxColumn(Heading(QString(IDEALAIRLOADS),true,false),
                         std::string("Check to enable ideal air loads."),
                         NullAdapter(&model::ThermalZone::useIdealAirLoads),
                         NullAdapter(&model::ThermalZone::setUseIdealAirLoads));
