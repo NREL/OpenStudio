@@ -726,7 +726,10 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
 
 void OSGridController::setConceptValue(model::ModelObject t_setterMO, model::ModelObject t_getterMO, const QSharedPointer<BaseConcept> &t_baseConcept)
 {
-  if (QSharedPointer<CheckBoxConcept> concept = t_baseConcept.dynamicCast<CheckBoxConcept>()){
+  if (QSharedPointer<BaseConcept> concept = t_baseConcept.dynamicCast<BaseConcept>()){
+    // No setter or getter available
+  }
+  else if (QSharedPointer<CheckBoxConcept> concept = t_baseConcept.dynamicCast<CheckBoxConcept>()){
     auto setter = std::bind(&CheckBoxConcept::set, concept.data(), t_setterMO, std::placeholders::_1);
     auto getter = std::bind(&CheckBoxConcept::get, concept.data(), t_getterMO);
     auto temp = getter();
@@ -778,19 +781,15 @@ void OSGridController::setConceptValue(model::ModelObject t_setterMO, model::Mod
   }
   else if (QSharedPointer<LoadNameConcept> concept = t_baseConcept.dynamicCast<LoadNameConcept>()) {
     auto setter = std::bind(&LoadNameConcept::set, concept.data(), t_setterMO, std::placeholders::_1);
-    auto getter = std::bind(&LoadNameConcept::get, concept.data(), t_getterMO);
-    // TODO not currently handled
-    OS_ASSERT(false);
-    //auto temp = getter();
-    //if (temp) setter(temp.get());
+    auto getter = std::bind(&LoadNameConcept::get, concept.data(), t_getterMO, true); // NOTE EW: Do we always want true?
+    auto temp = getter();
+    if (temp) setter(temp.get());
   }
   else if (QSharedPointer<NameLineEditConcept> concept = t_baseConcept.dynamicCast<NameLineEditConcept>()) {
     auto setter = std::bind(&NameLineEditConcept::set, concept.data(), t_setterMO, std::placeholders::_1);
-    auto getter = std::bind(&NameLineEditConcept::get, concept.data(), t_getterMO);
-    // TODO not currently handled
-    OS_ASSERT(false);
-    //auto temp = getter();
-    //if (temp) setter(temp.get());
+    auto getter = std::bind(&NameLineEditConcept::get, concept.data(), t_getterMO, true); // NOTE EW: Do we always want true?
+    auto temp = getter();
+    if (temp) setter(temp.get());
   }
   else if (QSharedPointer<QuantityEditConcept<double> > concept = t_baseConcept.dynamicCast<QuantityEditConcept<double> >()) {
     auto setter = std::bind(&QuantityEditConcept<double>::set, concept.data(), t_setterMO, std::placeholders::_1);
@@ -836,7 +835,7 @@ void OSGridController::setConceptValue(model::ModelObject t_setterMO, model::Mod
   }
   else {
     // Unknown type
-    //OS_ASSERT(false); TODO uncomment when extensible dropzones are handled
+    OS_ASSERT(false);
   }
 }
 
