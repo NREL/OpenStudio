@@ -103,6 +103,8 @@ class OSComboBox2 : public QComboBox {
 
   virtual ~OSComboBox2() {}
 
+  void enableClickFocus() { this->setFocusPolicy(Qt::ClickFocus); }
+
   // interface for direct bind
   template<typename ChoiceType>
   void bind(model::ModelObject& modelObject,

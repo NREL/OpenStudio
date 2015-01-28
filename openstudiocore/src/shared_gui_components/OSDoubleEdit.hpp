@@ -45,6 +45,8 @@ class OSDoubleEdit2: public QLineEdit {
 
   virtual ~OSDoubleEdit2() {}
 
+  void enableClickFocus() { this->setFocusPolicy(Qt::ClickFocus); }
+
   QDoubleValidator * doubleValidator() { return m_doubleValidator; }
 
   void bind(model::ModelObject& modelObject,

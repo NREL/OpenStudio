@@ -44,6 +44,8 @@ class OSUnsignedEdit2: public QLineEdit {
 
   virtual ~OSUnsignedEdit2() {}
 
+  void enableClickFocus() { this->setFocusPolicy(Qt::ClickFocus); }
+
   QIntValidator * intValidator() { return m_intValidator; }
 
   void bind(model::ModelObject& modelObject,

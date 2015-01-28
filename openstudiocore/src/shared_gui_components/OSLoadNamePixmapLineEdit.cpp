@@ -136,4 +136,9 @@ void OSLoadNamePixmapLineEdit::onModelObjectChange()
   setIcon();
 }
 
+void OSLoadNamePixmapLineEdit::enableClickFocus()
+{
+  m_lineEdit->enableClickFocus();
+}
+
 } // openstudio

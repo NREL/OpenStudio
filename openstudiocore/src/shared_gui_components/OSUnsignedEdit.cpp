@@ -37,8 +37,6 @@ namespace openstudio {
 OSUnsignedEdit2::OSUnsignedEdit2( QWidget * parent )
   : m_isScientific(false)
 {
-  this->setFocusPolicy(Qt::ClickFocus); // Qt::NoFocus is default
-
   this->setFixedWidth(90);
   this->setAcceptDrops(false);
   setEnabled(false);
@@ -350,13 +348,10 @@ void OSUnsignedEdit2::focusInEvent(QFocusEvent * e)
   {
     QString style("QLineEdit { background: #ffc627; }");
     setStyleSheet(style);
-  }
-  else if (e->reason() == Qt::ActiveWindowFocusReason)
-  {
-  }
 
-  auto hasData = true; // TODO
-  emit inFocus(true, hasData);
+    auto hasData = true; // TODO
+    emit inFocus(true, hasData);
+  }
 
   QLineEdit::focusInEvent(e);
 }
@@ -367,12 +362,9 @@ void OSUnsignedEdit2::focusOutEvent(QFocusEvent * e)
   {
     QString style("QLineEdit { background: white; }");
     setStyleSheet(style);
-  }
-  else if (e->reason() == Qt::ActiveWindowFocusReason)
-  {
-  }
 
-  emit inFocus(false, false);
+    emit inFocus(false, false);
+  }
 
   QLineEdit::focusOutEvent(e);
 }

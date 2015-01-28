@@ -167,8 +167,6 @@ void OSObjectListCBDS::onObjectChanged()
 OSComboBox2::OSComboBox2( QWidget * parent, bool editable )
   : QComboBox(parent)
 {
-  this->setFocusPolicy(Qt::ClickFocus); // Qt::NoFocus is default
-
   this->setAcceptDrops(false);
   auto completer = new QCompleter();
   this->setCompleter(completer);
@@ -182,7 +180,7 @@ bool OSComboBox2::event( QEvent * e )
   {
     return false;
   }
-  else if (e->type() == QEvent::FocusIn)
+  else if (e->type() == QEvent::FocusIn && this->focusPolicy() == Qt::ClickFocus)
   {
     QString style("QComboBox { background: #ffc627; }");
     setStyleSheet(style);
@@ -192,7 +190,7 @@ bool OSComboBox2::event( QEvent * e )
 
     return QComboBox::event(e);
   }
-  else if (e->type() == QEvent::FocusOut)
+  else if (e->type() == QEvent::FocusOut && this->focusPolicy() == Qt::ClickFocus)
   {
     QString style("QComboBox { background: white; }");
     setStyleSheet(style);

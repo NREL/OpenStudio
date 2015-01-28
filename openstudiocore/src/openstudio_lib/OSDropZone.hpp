@@ -55,7 +55,10 @@ class OSDropZone2 : public QWidget
 public:
 
   OSDropZone2();
+
   ~OSDropZone2() {}
+
+  void enableClickFocus() { this->setFocusPolicy(Qt::ClickFocus); }
 
   void bind(model::ModelObject & modelObject,
             OptionalModelObjectGetter get,

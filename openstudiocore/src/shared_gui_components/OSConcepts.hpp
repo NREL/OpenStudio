@@ -309,8 +309,8 @@ class BaseConcept
 
   virtual ~BaseConcept() {}
 
-  BaseConcept(const Heading &t_heading)
-    : m_heading(t_heading), m_selector(false)
+  BaseConcept(const Heading &t_heading, bool t_hasClickFocus = false)
+    : m_heading(t_heading), m_selector(false), m_hasClickFocus(t_hasClickFocus)
   {
   }
 
@@ -324,12 +324,18 @@ class BaseConcept
     m_selector = t_selector;
   }
 
+  bool hasClickFocus() const
+  {
+    return m_hasClickFocus;
+  }
+
   const Heading &heading() const { return m_heading; }
 
   private:
 
   Heading m_heading;
   bool m_selector;
+  bool m_hasClickFocus;
 
 };
 
@@ -655,8 +661,8 @@ class ComboBoxConcept : public BaseConcept
 {
   public:
 
-  ComboBoxConcept(const Heading &t_heading)
-    : BaseConcept(t_heading)
+    ComboBoxConcept(const Heading &t_heading, bool t_hasClickFocus = true)
+      : BaseConcept(t_heading, t_hasClickFocus)
   {
   }
 
@@ -778,8 +784,8 @@ class ValueEditConcept : public BaseConcept
 {
   public:
 
-  ValueEditConcept(const Heading &t_heading)
-    : BaseConcept(t_heading)
+    ValueEditConcept(const Heading &t_heading, bool t_hasClickFocus = true)
+      : BaseConcept(t_heading, t_hasClickFocus)
   {
   }
 
@@ -860,8 +866,8 @@ class OptionalValueEditConcept : public BaseConcept
 {
   public:
 
-   OptionalValueEditConcept(const Heading &t_heading)
-     : BaseConcept(t_heading)
+    OptionalValueEditConcept(const Heading &t_heading, bool t_hasClickFocus = true)
+      : BaseConcept(t_heading, t_hasClickFocus)
   {
   }
 
@@ -914,8 +920,8 @@ class ValueEditVoidReturnConcept : public BaseConcept
 {
   public:
 
-   ValueEditVoidReturnConcept(const Heading &t_heading)
-     : BaseConcept(t_heading)
+    ValueEditVoidReturnConcept(const Heading &t_heading, bool t_hasClickFocus = true)
+      : BaseConcept(t_heading, t_hasClickFocus)
   {
   }
 
@@ -997,8 +1003,8 @@ class OptionalValueEditVoidReturnConcept : public BaseConcept
 {
   public:
 
-  OptionalValueEditVoidReturnConcept(const Heading &t_heading)
-    : BaseConcept(t_heading)
+    OptionalValueEditVoidReturnConcept(const Heading &t_heading, bool t_hasClickFocus = true)
+      : BaseConcept(t_heading, t_hasClickFocus)
   {
   }
 
@@ -1050,9 +1056,10 @@ class NameLineEditConcept : public BaseConcept
 {
   public:
 
-  NameLineEditConcept(const Heading &t_heading,
-    bool isInspectable)
-    : BaseConcept(t_heading),
+    NameLineEditConcept(const Heading &t_heading, 
+      bool isInspectable,
+      bool t_hasClickFocus = true)
+      : BaseConcept(t_heading, t_hasClickFocus),
     m_isInspectable(isInspectable)
   {
   }
@@ -1137,8 +1144,8 @@ class LoadNameConcept : public BaseConcept
 {
 public:
 
-  LoadNameConcept(const Heading &t_heading)
-    : BaseConcept(t_heading)
+  LoadNameConcept(const Heading &t_heading, bool t_hasClickFocus = true)
+    : BaseConcept(t_heading, t_hasClickFocus)
   {
   }
 
@@ -1216,8 +1223,8 @@ class QuantityEditConcept : public BaseConcept
 {
   public:
 
-  QuantityEditConcept(const Heading &t_heading, QString t_modelUnits, QString t_siUnits, QString t_ipUnits, bool t_isIP)
-    : BaseConcept(t_heading),
+    QuantityEditConcept(const Heading &t_heading, QString t_modelUnits, QString t_siUnits, QString t_ipUnits, bool t_isIP, bool t_hasClickFocus = true)
+      : BaseConcept(t_heading, t_hasClickFocus),
       m_modelUnits(t_modelUnits),
       m_siUnits(t_siUnits),
       m_ipUnits(t_ipUnits),
@@ -1324,8 +1331,8 @@ class OptionalQuantityEditConcept : public BaseConcept
 {
   public:
 
-  OptionalQuantityEditConcept(const Heading &t_heading, QString t_modelUnits, QString t_siUnits, QString t_ipUnits, bool t_isIP)
-    : BaseConcept(t_heading),
+    OptionalQuantityEditConcept(const Heading &t_heading, QString t_modelUnits, QString t_siUnits, QString t_ipUnits, bool t_isIP, bool t_hasClickFocus = true)
+      : BaseConcept(t_heading, t_hasClickFocus),
       m_modelUnits(t_modelUnits),
       m_siUnits(t_siUnits),
       m_ipUnits(t_ipUnits),
@@ -1402,8 +1409,8 @@ class QuantityEditVoidReturnConcept : public BaseConcept
 {
   public:
 
-  QuantityEditVoidReturnConcept(const Heading &t_heading, QString t_modelUnits, QString t_siUnits, QString t_ipUnits, bool t_isIP)
-    : BaseConcept(t_heading),
+    QuantityEditVoidReturnConcept(const Heading &t_heading, QString t_modelUnits, QString t_siUnits, QString t_ipUnits, bool t_isIP, bool t_hasClickFocus = true)
+      : BaseConcept(t_heading, t_hasClickFocus),
       m_modelUnits(t_modelUnits),
       m_siUnits(t_siUnits),
       m_ipUnits(t_ipUnits),
@@ -1510,8 +1517,8 @@ class OptionalQuantityEditVoidReturnConcept : public BaseConcept
 {
   public:
 
-  OptionalQuantityEditVoidReturnConcept(const Heading &t_heading, QString t_modelUnits, QString t_siUnits, QString t_ipUnits, bool t_isIP)
-    : BaseConcept(t_heading),
+    OptionalQuantityEditVoidReturnConcept(const Heading &t_heading, QString t_modelUnits, QString t_siUnits, QString t_ipUnits, bool t_isIP, bool t_hasClickFocus = true)
+      : BaseConcept(t_heading, t_hasClickFocus),
       m_modelUnits(t_modelUnits),
       m_siUnits(t_siUnits),
       m_ipUnits(t_ipUnits),
@@ -1586,8 +1593,8 @@ class DropZoneConcept : public BaseConcept
 {
   public:
 
-  DropZoneConcept(const Heading &t_heading)
-    : BaseConcept(t_heading)
+    DropZoneConcept(const Heading &t_heading, bool t_hasClickFocus = true)
+      : BaseConcept(t_heading, t_hasClickFocus)
   {
   }
 

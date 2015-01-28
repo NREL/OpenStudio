@@ -49,6 +49,8 @@ class OSQuantityEdit2: public QWidget {
 
   virtual ~OSQuantityEdit2() {}
 
+  void enableClickFocus();
+
   QDoubleValidator * doubleValidator() { return m_doubleValidator; }
 
   void bind(bool isIP,
@@ -164,11 +166,17 @@ public:
 
   virtual ~QuantityLineEdit() {}
 
+  void enableClickFocus() { this->m_hasClickFocus = true; }
+
 protected:
 
   virtual void focusInEvent(QFocusEvent * e);
 
   virtual void focusOutEvent(QFocusEvent * e);
+
+private:
+
+  bool m_hasClickFocus = false;
 
 signals:
 

@@ -59,7 +59,6 @@ OSQuantityEdit2::OSQuantityEdit2(const std::string& modelUnits, const std::strin
 
   this->setAcceptDrops(false);
   m_lineEdit->setAcceptDrops(false);
-  m_lineEdit->setFocusPolicy(Qt::ClickFocus); // Qt::NoFocus is default
   setEnabled(false);
 
   auto hLayout = new QHBoxLayout();
@@ -426,43 +425,41 @@ void OSQuantityEdit2::setPrecision(const std::string& str) {
   }
 }
 
+void OSQuantityEdit2::enableClickFocus()
+{
+  m_lineEdit->enableClickFocus();
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 QuantityLineEdit::QuantityLineEdit(QWidget * parent)
   : QLineEdit(parent)
 {
-  this->setFocusPolicy(Qt::ClickFocus); // Qt::NoFocus is default
 }
 
 void QuantityLineEdit::focusInEvent(QFocusEvent * e)
 {
-  if (e->reason() == Qt::MouseFocusReason)
+  if (e->reason() == Qt::MouseFocusReason && m_hasClickFocus)
   {
     QString style("QLineEdit { background: #ffc627; }");
     setStyleSheet(style);
-  }
-  else if (e->reason() == Qt::ActiveWindowFocusReason)
-  {
-  }
 
-  auto hasData = true; // TODO
-  emit inFocus(true, hasData);
+    auto hasData = true; // TODO
+    emit inFocus(true, hasData);
+  }
 
   QLineEdit::focusInEvent(e);
 }
 
 void QuantityLineEdit::focusOutEvent(QFocusEvent * e)
 {
-  if (e->reason() == Qt::MouseFocusReason)
+  if (e->reason() == Qt::MouseFocusReason && m_hasClickFocus)
   {
     QString style("QLineEdit { background: white; }");
     setStyleSheet(style);
-  }
-  else if (e->reason() == Qt::ActiveWindowFocusReason)
-  {
-  }
 
-  emit inFocus(false, false);
+    emit inFocus(false, false);
+  }
 
   QLineEdit::focusInEvent(e);
 }

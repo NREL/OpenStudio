@@ -465,6 +465,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
     auto choiceConcept = comboBoxConcept->choiceConcept(t_mo);
 
     auto comboBox = new OSComboBox2(nullptr, choiceConcept->editable());
+    if (comboBoxConcept->hasClickFocus()) {
+      comboBox->enableClickFocus();
+    }
 
     comboBox->bind(t_mo, choiceConcept);
 
@@ -476,6 +479,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
   } else if(QSharedPointer<ValueEditConcept<double> > doubleEditConcept = t_baseConcept.dynamicCast<ValueEditConcept<double> >()) {
 
     auto doubleEdit = new OSDoubleEdit2();
+    if (doubleEditConcept->hasClickFocus()) {
+      doubleEdit->enableClickFocus();
+    }
 
     doubleEdit->bind(t_mo,
                      DoubleGetter(std::bind(&ValueEditConcept<double>::get,doubleEditConcept.data(),t_mo)),
@@ -490,6 +496,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
   } else if(QSharedPointer<OptionalValueEditConcept<double> > optionalDoubleEditConcept = t_baseConcept.dynamicCast<OptionalValueEditConcept<double> >()) {
 
     auto optionalDoubleEdit = new OSDoubleEdit2();
+    if (optionalDoubleEditConcept->hasClickFocus()) {
+      optionalDoubleEdit->enableClickFocus();
+    }
 
     optionalDoubleEdit->bind(t_mo,
                              OptionalDoubleGetter(std::bind(&OptionalValueEditConcept<double>::get,optionalDoubleEditConcept.data(),t_mo)),
@@ -500,6 +509,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
   } else if(QSharedPointer<ValueEditVoidReturnConcept<double> > doubleEditVoidReturnConcept = t_baseConcept.dynamicCast<ValueEditVoidReturnConcept<double> >()) {
 
     auto doubleEditVoidReturn = new OSDoubleEdit2();
+    if (doubleEditVoidReturnConcept->hasClickFocus()) {
+      doubleEditVoidReturn->enableClickFocus();
+    }
 
     doubleEditVoidReturn->bind(t_mo,
                                DoubleGetter(std::bind(&ValueEditVoidReturnConcept<double>::get,doubleEditVoidReturnConcept.data(),t_mo)),
@@ -514,6 +526,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
   } else if(QSharedPointer<OptionalValueEditVoidReturnConcept<double> > optionalDoubleEditVoidReturnConcept = t_baseConcept.dynamicCast<OptionalValueEditVoidReturnConcept<double> >()) {
 
     auto optionalDoubleEditVoidReturn = new OSDoubleEdit2();
+    if (optionalDoubleEditVoidReturnConcept->hasClickFocus()) {
+      optionalDoubleEditVoidReturn->enableClickFocus();
+    }
 
     optionalDoubleEditVoidReturn->bind(t_mo,
                                        OptionalDoubleGetter(std::bind(&OptionalValueEditVoidReturnConcept<double>::get,optionalDoubleEditVoidReturnConcept.data(),t_mo)),
@@ -524,6 +539,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
   } else if(QSharedPointer<ValueEditConcept<int> > integerEditConcept = t_baseConcept.dynamicCast<ValueEditConcept<int> >()) {
 
     auto integerEdit = new OSIntegerEdit2();
+    if (integerEditConcept->hasClickFocus()) {
+      integerEdit->enableClickFocus();
+    }
 
     integerEdit->bind(t_mo,
                       IntGetter(std::bind(&ValueEditConcept<int>::get,integerEditConcept.data(),t_mo)),
@@ -538,6 +556,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
   } else if(QSharedPointer<ValueEditConcept<std::string> > lineEditConcept = t_baseConcept.dynamicCast<ValueEditConcept<std::string> >()) {
 
     auto lineEdit = new OSLineEdit2();
+    if (lineEditConcept->hasClickFocus()) {
+      lineEdit->enableClickFocus();
+    }
 
     lineEdit->bind(t_mo,
                    StringGetter(std::bind(&ValueEditConcept<std::string>::get,lineEditConcept.data(),t_mo)),
@@ -553,6 +574,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
   } else if(QSharedPointer<LoadNameConcept> loadNameConcept = t_baseConcept.dynamicCast<LoadNameConcept>()) {
 
     auto loadName = new OSLoadNamePixmapLineEdit();
+    if (loadNameConcept->hasClickFocus()) {
+      loadName->enableClickFocus();
+    }
 
     loadName->bind(t_mo,
                    OptionalStringGetter(std::bind(&LoadNameConcept::get,loadNameConcept.data(),t_mo,true)),
@@ -574,6 +598,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
   } else if(QSharedPointer<NameLineEditConcept> nameLineEditConcept = t_baseConcept.dynamicCast<NameLineEditConcept>()) {
 
     auto nameLineEdit = new OSLineEdit2();
+    if (nameLineEditConcept->hasClickFocus()) {
+      nameLineEdit->enableClickFocus();
+    }
 
     nameLineEdit->bind(t_mo,
                        OptionalStringGetter(std::bind(&NameLineEditConcept::get,nameLineEditConcept.data(),t_mo,true)),
@@ -601,6 +628,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
           quantityEditConcept->siUnits().toStdString().c_str(),
           quantityEditConcept->ipUnits().toStdString().c_str(),
           quantityEditConcept->isIP());
+    if (quantityEditConcept->hasClickFocus()) {
+      quantityEdit->enableClickFocus();
+    }
 
     quantityEdit->bind(m_isIP,
                        t_mo,
@@ -623,6 +653,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
           optionalQuantityEditConcept->siUnits().toStdString().c_str(),
           optionalQuantityEditConcept->ipUnits().toStdString().c_str(),
           optionalQuantityEditConcept->isIP());
+    if (optionalQuantityEditConcept->hasClickFocus()) {
+      optionalQuantityEdit->enableClickFocus();
+    }
 
     optionalQuantityEdit->bind(m_isIP,
                                t_mo,
@@ -641,6 +674,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
           quantityEditVoidReturnConcept->siUnits().toStdString().c_str(),
           quantityEditVoidReturnConcept->ipUnits().toStdString().c_str(),
           quantityEditVoidReturnConcept->isIP());
+    if (quantityEditVoidReturnConcept->hasClickFocus()) {
+      quantityEditVoidReturn->enableClickFocus();
+    }
 
     quantityEditVoidReturn->bind(m_isIP,
                                  t_mo,
@@ -663,6 +699,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
           optionalQuantityEditVoidReturnConcept->siUnits().toStdString().c_str(),
           optionalQuantityEditVoidReturnConcept->ipUnits().toStdString().c_str(),
           optionalQuantityEditVoidReturnConcept->isIP());
+    if (optionalQuantityEditVoidReturnConcept->hasClickFocus()) {
+      optionalQuantityEditVoidReturn->enableClickFocus();
+    }
 
     optionalQuantityEditVoidReturn->bind(m_isIP,
                                          t_mo,
@@ -677,6 +716,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
   } else if(QSharedPointer<ValueEditConcept<unsigned> > unsignedEditConcept = t_baseConcept.dynamicCast<ValueEditConcept<unsigned> >()) {
 
     auto unsignedEdit = new OSUnsignedEdit2();
+    if (unsignedEditConcept->hasClickFocus()) {
+      unsignedEdit->enableClickFocus();
+    }
 
     unsignedEdit->bind(t_mo,
                        UnsignedGetter(std::bind(&ValueEditConcept<unsigned>::get,unsignedEditConcept.data(),t_mo)),
@@ -690,6 +732,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
 
   } else if(QSharedPointer<DropZoneConcept> dropZoneConcept = t_baseConcept.dynamicCast<DropZoneConcept>()) {
     OSDropZone2 * dropZone = new OSDropZone2();
+    if (dropZoneConcept->hasClickFocus()) {
+      dropZone->enableClickFocus();
+    }
 
     dropZone->bind(t_mo,
       OptionalModelObjectGetter(std::bind(&DropZoneConcept::get,dropZoneConcept.data(),t_mo)),
@@ -1477,10 +1522,9 @@ void HorizontalHeaderPushButton::focusInEvent(QFocusEvent * e)
 {
   if (e->reason() == Qt::MouseFocusReason)
   {
+    emit inFocus(true, true); 
   }
-
-  emit inFocus(true, true);
-
+  
   QPushButton::focusInEvent(e);
 }
 
@@ -1488,10 +1532,9 @@ void HorizontalHeaderPushButton::focusOutEvent(QFocusEvent * e)
 {
   if (e->reason() == Qt::MouseFocusReason)
   {
+    emit inFocus(false, false);
   }
-
-  emit inFocus(false, false);
-
+  
   QPushButton::focusOutEvent(e);
 }
 

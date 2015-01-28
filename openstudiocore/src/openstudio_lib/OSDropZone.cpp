@@ -564,8 +564,6 @@ void OSDropZoneItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
 OSDropZone2::OSDropZone2()
   : QWidget()
 {
-  this->setFocusPolicy(Qt::ClickFocus); // Qt::NoFocus is default
-
   setObjectName("OSDropZone");
 
   QString style("QWidget#OSDropZone {\
@@ -726,13 +724,10 @@ void OSDropZone2::focusInEvent(QFocusEvent * e)
                    border: 2px dashed #808080;\
                    border-radius: 10px; }");
     setStyleSheet(style);
-  }
-  else if (e->reason() == Qt::ActiveWindowFocusReason)
-  {
-  }
 
-  auto hasData = true; // TODO
-  emit inFocus(true, hasData);
+    auto hasData = true; // TODO
+    emit inFocus(true, hasData);
+  }
 
   QWidget::focusInEvent(e);
 }
@@ -746,12 +741,9 @@ void OSDropZone2::focusOutEvent(QFocusEvent * e)
                    border: 2px dashed #808080;\
                    border-radius: 10px; }");
     setStyleSheet(style);
-  }
-  else if (e->reason() == Qt::ActiveWindowFocusReason)
-  {
-  }
 
-  emit inFocus(false, false);
+    emit inFocus(false, false);
+  }
 
   QWidget::focusOutEvent(e);
 }
