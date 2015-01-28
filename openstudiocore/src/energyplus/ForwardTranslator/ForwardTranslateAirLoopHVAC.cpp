@@ -55,6 +55,14 @@
 #include "../../model/FanVariableVolume.hpp"
 #include "../../model/FanVariableVolume_Impl.hpp"
 #include "../../model/LifeCycleCost.hpp"
+#include "../../model/AirLoopHVACUnitarySystem.hpp"
+#include "../../model/AirLoopHVACUnitarySystem_Impl.hpp"
+#include "../../model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
+#include "../../model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
+#include "../../model/AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.hpp"
+#include "../../model/AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp"
+#include "../../model/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
+#include "../../model/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/AirLoopHVAC_FieldEnums.hxx>
@@ -89,27 +97,47 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   
   Model t_model = airLoopHVAC.model();
 
-  std::vector<ModelObject> supplyComponents = airLoopHVAC.supplyComponents();
-  boost::optional<HVACComponent> fan;
-  std::vector<FanConstantVolume> constantVolumeFans = subsetCastVector<FanConstantVolume>(supplyComponents);
-  std::vector<FanVariableVolume> variableVolumeFans = subsetCastVector<FanVariableVolume>(supplyComponents);
+  auto fanOrUnitary = airLoopHVAC.supplyFan();
+  auto supplyComponents = airLoopHVAC.supplyComponents();
 
-  if( ! constantVolumeFans.empty() )
-  {
-    fan = constantVolumeFans.back();
+  if( ! fanOrUnitary ) {
+    auto airLoopHVACUnitarySystems = subsetCastVector<AirLoopHVACUnitarySystem>(supplyComponents);
+    if( ! airLoopHVACUnitarySystems.empty() ) {
+      auto unitary = airLoopHVACUnitarySystems.back();
+      if( unitary.supplyFan() ) {
+        fanOrUnitary = unitary;
+      }
+    }
   }
-  else if( ! variableVolumeFans.empty() )
-  {
-    fan = variableVolumeFans.back();
+
+  if( ! fanOrUnitary ) {
+    auto airLoopHVACUnitaryHeatCoolVAVChangeoverBypass = subsetCastVector<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>(supplyComponents);
+    if( ! airLoopHVACUnitaryHeatCoolVAVChangeoverBypass.empty() ) {
+      fanOrUnitary = airLoopHVACUnitaryHeatCoolVAVChangeoverBypass.back();
+    }
+  }
+
+  if( ! fanOrUnitary ) {
+    auto airLoopHVACUnitaryHeatPumpAirToAir = subsetCastVector<AirLoopHVACUnitaryHeatPumpAirToAir>(supplyComponents);
+    if( ! airLoopHVACUnitaryHeatPumpAirToAir.empty() ) {
+      fanOrUnitary = airLoopHVACUnitaryHeatPumpAirToAir.back();
+    }
+  }
+
+  if( ! fanOrUnitary ) {
+    auto airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed = subsetCastVector<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>(supplyComponents);
+    if( ! airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.empty() ) {
+      fanOrUnitary = airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.back();
+    }
   }
 
   std::vector<Node> upperNodes;
   std::vector<Node> lowerNodes;
-  if( fan )
+  if( fanOrUnitary )
   {
-    upperNodes = subsetCastVector<Node>(airLoopHVAC.supplyComponents(airLoopHVAC.supplyInletNode(),fan.get()));
+    upperNodes = subsetCastVector<Node>(airLoopHVAC.supplyComponents(airLoopHVAC.supplyInletNode(),fanOrUnitary.get()));
     upperNodes.erase(upperNodes.begin());
-    lowerNodes = subsetCastVector<Node>(airLoopHVAC.supplyComponents(fan.get(),airLoopHVAC.supplyOutletNode()));
+    lowerNodes = subsetCastVector<Node>(airLoopHVAC.supplyComponents(fanOrUnitary.get(),airLoopHVAC.supplyOutletNode()));
     lowerNodes.erase(lowerNodes.end() - 1);
   }
   else

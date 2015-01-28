@@ -62,6 +62,7 @@
 #include <utilities/idd/Output_SQLite_FieldEnums.hxx>
 #include <utilities/idd/ProgramControl_FieldEnums.hxx>
 #include <utilities/idd/LifeCycleCost_NonrecurringCost_FieldEnums.hxx>
+#include <utilities/idd/SetpointManager_MixedAir_FieldEnums.hxx>
 
 #include "../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -2953,6 +2954,47 @@ boost::optional<IdfObject> ForwardTranslator::createSimpleSchedule(const std::st
   m_idfObjects.push_back(idfObject);
 
   return idfObject;
+}
+
+
+void ForwardTranslator::fixSPMsForUnitarySystem(const model::HVACComponent & unitary,const std::string & fanInletNodeName, const std::string & fanOutletNodeName)
+{
+  if( auto airSystem = unitary.airLoopHVAC() ) {
+    auto supplyComponents = airSystem->supplyComponents(airSystem->supplyInletNode(),unitary);
+    auto oaSystems = subsetCastVector<model::AirLoopHVACOutdoorAirSystem>(supplyComponents);
+    if( ! oaSystems.empty() ) {
+      auto reliefComponents = oaSystems.back().oaComponents();
+      supplyComponents.insert(supplyComponents.end(),reliefComponents.begin(),reliefComponents.end());
+    } 
+    auto upstreamNodes = subsetCastVector<model::Node>(supplyComponents);
+  
+    for( const auto & node : upstreamNodes ) {
+      auto spms = subsetCastVector<model::SetpointManagerMixedAir>(node.setpointManagers());
+      for( auto & spm : spms ) {
+        auto pred = [&spm](IdfObject & idfObject) {
+          if( idfObject.iddObject().type() == IddObjectType::SetpointManager_MixedAir ) {
+            auto idfName = idfObject.name();
+            auto osName = spm.name();
+            if( idfName && osName && (osName.get() == idfName.get()) ) {
+              return true;
+            }
+          }
+          return false;
+        };
+        auto spm_idf = std::find_if(m_idfObjects.begin(),m_idfObjects.end(),pred);
+        if( spm_idf != m_idfObjects.end() ) {
+          auto result = spm_idf->getString(SetpointManager_MixedAirFields::FanInletNodeName);
+          if( ! result || result->empty() ) {
+            spm_idf->setString(SetpointManager_MixedAirFields::FanInletNodeName,fanInletNodeName);
+          }
+          result = spm_idf->getString(SetpointManager_MixedAirFields::FanOutletNodeName);
+          if( ! result || result->empty() ) {
+            spm_idf->setString(SetpointManager_MixedAirFields::FanOutletNodeName,fanOutletNodeName);
+          }
+        }
+      }
+    }
+  }
 }
 
 } // energyplus
