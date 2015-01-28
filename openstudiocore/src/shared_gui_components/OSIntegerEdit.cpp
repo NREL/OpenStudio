@@ -344,7 +344,7 @@ void OSIntegerEdit2::setPrecision(const std::string& str) {
 
 void OSIntegerEdit2::focusInEvent(QFocusEvent * e)
 {
-  if (e->reason() == Qt::MouseFocusReason)
+  if (e->reason() == Qt::MouseFocusReason && m_hasClickFocus)
   {
     QString style("QLineEdit { background: #ffc627; }");
     setStyleSheet(style);
@@ -358,7 +358,7 @@ void OSIntegerEdit2::focusInEvent(QFocusEvent * e)
 
 void OSIntegerEdit2::focusOutEvent(QFocusEvent * e)
 {
-  if (e->reason() == Qt::MouseFocusReason)
+  if (e->reason() == Qt::MouseFocusReason && m_hasClickFocus)
   {
     QString style("QLineEdit { background: white; }");
     setStyleSheet(style);

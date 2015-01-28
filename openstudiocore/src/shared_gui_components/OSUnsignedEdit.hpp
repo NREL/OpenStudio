@@ -44,7 +44,7 @@ class OSUnsignedEdit2: public QLineEdit {
 
   virtual ~OSUnsignedEdit2() {}
 
-  void enableClickFocus() { this->setFocusPolicy(Qt::ClickFocus); }
+  void enableClickFocus() { this->m_hasClickFocus = true; }
 
   QIntValidator * intValidator() { return m_intValidator; }
 
@@ -122,6 +122,7 @@ protected:
   boost::optional<BasicQuery> m_isAutocalculated;
 
   bool m_isScientific;
+  bool m_hasClickFocus = false;
   boost::optional<int> m_precision;
   QString m_text = "UNINITIALIZED";
   QIntValidator * m_intValidator = nullptr;
