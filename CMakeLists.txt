@@ -443,11 +443,6 @@ if(NOT WIN32)
   endif()
 endif()
 
-
-if(WIN32 AND MSVC AND CMAKE_CL_64)
-  message(WARNING "Treat Warnings As Errors is disabled for 64-bit Windows builds")
-endif()
-
 if(APPLE)
   option(BUILD_RUBY "Build Ruby" OFF)
 elseif(UNIX)
