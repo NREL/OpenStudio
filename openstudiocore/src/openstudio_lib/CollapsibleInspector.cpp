@@ -85,22 +85,19 @@ void CollapsibleInspectorHeader::createLayout()
   setCheckable(true);
 
   QHBoxLayout * mainHLayout = new QHBoxLayout();
-  mainHLayout->setContentsMargins(0,0,0,0);
+  mainHLayout->setContentsMargins(10,0,10,0);
   mainHLayout->setSpacing(10);
   setLayout(mainHLayout);
-
-  // Arrow
-  m_arrowLabel = new QLabel();
-  mainHLayout->addWidget(m_arrowLabel);
 
   // Name
   QLabel * textLabel = new QLabel(m_text);
   textLabel->setWordWrap(false);
   textLabel->setObjectName("H2");
-  mainHLayout->addWidget(textLabel);
+  mainHLayout->addWidget(textLabel,0,Qt::AlignLeft);
 
-  // Stretch
-  mainHLayout->addStretch();
+  // Arrow
+  m_arrowLabel = new QLabel();
+  mainHLayout->addWidget(m_arrowLabel, 0, Qt::AlignRight);
 
   connect(this, &CollapsibleInspectorHeader::toggled, this, &CollapsibleInspectorHeader::on_toggled);
 
