@@ -43,6 +43,8 @@ class QDoubleSpinBox;
 
 namespace openstudio {
 
+class Unit;
+
 namespace model {
 
 class Model;
@@ -56,6 +58,8 @@ class VCalendarSegmentItem;
 class DaySchedulePlotArea;
 
 class CalendarSegmentItem;
+
+class ScheduleTypeLimitItem;
 
 class DayScheduleScene;
 
@@ -116,6 +120,11 @@ class ScheduleDayView : public QWidget
   // sets the current minimum value for the schedule
   void setMinimumScheduleValue(double value);
 
+  // gets the current units for the schedule using current is IP
+  boost::optional<Unit> units() const;
+
+  // gets the current units for the schedule 
+  boost::optional<Unit> units(bool displayIP) const;
 
  signals:
 
@@ -186,8 +195,8 @@ class ScheduleLimitsView : public QWidget
 
 public:
   ScheduleLimitsView(bool isIP,
-                         const boost::optional<model::ScheduleTypeLimits>& scheduleTypeLimits,
-                         ScheduleDayView* scheduleDayView);
+                     const boost::optional<model::ScheduleTypeLimits>& scheduleTypeLimits,
+                     ScheduleDayView* scheduleDayView);
 
   virtual ~ScheduleLimitsView() {}
 
@@ -209,7 +218,9 @@ public:
 
   void onToggleUnitsClicked(bool displayIP);
 
-  boost::optional<std::string> units() const;
+  boost::optional<Unit> units() const;
+
+  boost::optional<Unit> units(bool displayIP) const;
 
 private:
 
@@ -246,7 +257,7 @@ class ScheduleDayEditor : public QWidget
 
   void fitInView();
 
-  void toggleUnits(bool displayIP);
+  void toggleUnits(bool isIP);
 
   protected:
 
@@ -262,8 +273,7 @@ class ScheduleDayEditor : public QWidget
 
   private:
 
-  //! Set m_yLabel with units data from m_scheduleDay's scheduleTypeLimits
-  void setLabelText(bool displayIP);
+  void setLabelText(bool isIP);
 
   DaySchedulePlotArea * m_graphicsView;
 
@@ -321,6 +331,10 @@ class DayScheduleScene : public QGraphicsScene
 
   CalendarSegmentItem * m_firstSegment;
 
+  ScheduleTypeLimitItem * m_upperScheduleTypeLimitItem;
+
+  ScheduleTypeLimitItem * m_lowerScheduleTypeLimitItem;
+
   ScheduleDayView * m_scheduleDayView;
 
   model::ScheduleDay m_scheduleDay;
@@ -364,6 +378,10 @@ class DaySchedulePlotArea : public QGraphicsView
 
   void keyPressEvent (QKeyEvent * event);
 
+  private slots:
+
+  void initialize();
+
   private:
 
   ScheduleDayEditor * m_scheduleDayEditor;
@@ -371,6 +389,8 @@ class DaySchedulePlotArea : public QGraphicsView
   QGraphicsItem * m_currentItem;
 
   CalendarSegmentItem * m_currentHoverItem;
+
+  QGraphicsTextItem * m_keyboardInputText;
 
   QString m_keyboardInputValue;
 
@@ -513,6 +533,8 @@ class CalendarSegmentItem : public QGraphicsItem
 
   double vCenterPos() const;
 
+  double hCenterPos() const;
+
   bool isMouseDown() const;
 
   QRectF boundingRect() const;
@@ -554,6 +576,45 @@ class CalendarSegmentItem : public QGraphicsItem
   double m_endTime;
 
   bool m_isOutOfTypeLimits;
+
+  friend class DaySchedulePlotArea;
+};
+
+class ScheduleTypeLimitItem : public QGraphicsItem
+{
+public:
+
+  ScheduleTypeLimitItem(bool isUpperLimit, QGraphicsItem * parent = 0);
+
+  virtual ~ScheduleTypeLimitItem() {}
+
+  DayScheduleScene * scene() const;
+
+  //double startTime() const;
+
+  //double endTime() const;
+
+  //void setStartTime(double time);
+
+  //void setEndTime(double time);
+
+  double value() const;
+
+  void setValue(double value);
+
+  double vCenterPos() const;
+
+  QRectF boundingRect() const;
+
+protected:
+
+  void paint(QPainter *painter,
+             const QStyleOptionGraphicsItem *option,
+             QWidget *widget);
+
+private:
+
+  bool m_isUpperLimit;
 
   friend class DaySchedulePlotArea;
 };

@@ -144,6 +144,7 @@ class SchedulesView : public QWidget
 
     void showWinterScheduleDay(model::ScheduleRuleset schedule);
 
+    // DLM: might remove this
     void showScheduleRuleset(const model::ScheduleRuleset & schedule);
 
     void showEmptyPage();
@@ -192,7 +193,7 @@ class SchedulesView : public QWidget
 
   private slots: 
 
-    void addSchedule( model::ScheduleRuleset & schedule );
+    void addSchedule( model::ScheduleRuleset & schedule);
 
     void addScheduleRule( model::ScheduleRule & scheduleRule );
 
@@ -500,7 +501,6 @@ class ScheduleTabDefault : public QWidget
 // Main view classes
 /******************************************************************************/
 
-
 // View presented when need to make a new profile (either schedule rule or design day)
 class NewProfileView : public QWidget
 {
@@ -533,6 +533,25 @@ class NewProfileView : public QWidget
     model::ScheduleRuleset m_scheduleRuleset;
 
     NewProfileViewType m_type;
+};
+
+
+// View presented only showing schedule name widget
+class ScheduleRulesetNameView : public QWidget
+{
+  Q_OBJECT
+
+public:
+
+  ScheduleRulesetNameView(const model::ScheduleRuleset & scheduleRuleset, SchedulesView * schedulesView);
+
+  virtual ~ScheduleRulesetNameView() {}
+
+private:
+
+  SchedulesView * m_schedulesView;
+
+  model::ScheduleRuleset m_scheduleRuleset;
 };
 
 // View the default day schedule of a schedule ruleset

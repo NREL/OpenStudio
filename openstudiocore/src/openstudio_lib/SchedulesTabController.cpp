@@ -218,12 +218,8 @@ void SchedulesTabController::onDayScheduleSceneChanged( DayScheduleScene * scene
   std::vector<CalendarSegmentItem *> segments = scene->segments();
 
   model::ScheduleDay scheduleDay = scene->scheduleDay();
-  // DLM: look here
-  bool isIP = false;// scene->scheduleDayView()->isIP();
-  OptionalUnit units;
-  if (model::OptionalScheduleTypeLimits typeLimits = scheduleDay.scheduleTypeLimits()) {
-    units = typeLimits->getLowerLimitValue(isIP).units();
-  }
+
+  OptionalUnit units = scene->scheduleDayView()->units();
 
   scheduleDay.clearValues();
 
