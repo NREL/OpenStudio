@@ -1516,10 +1516,13 @@ void DaySchedulePlotArea::initialize()
   scene()->addItem(m_keyboardInputTextItem);
   
   // DLM: I am almost certain this is not the best way to do this
-  QFont font;
+  QFont font("Times");
+  QString family = font.family();
   font.setPointSize(1000);
   font.setStretch(50);
   m_keyboardInputTextItem->setFont(font);
+  
+  //m_keyboardInputTextItem->setStyleSheet("QGraphicsTextItem { font: bold; }");
 
   ///m_keyboardInputText->adjustSize();
 }
@@ -1529,9 +1532,9 @@ void DaySchedulePlotArea::updateKeyboardInputTextItem()
   if (m_currentHoverItem){
 
     if (m_keyboardInputValue.isEmpty()){
-      m_keyboardInputTextItem->setHtml("<center>Enter Value</center>");
+      m_keyboardInputTextItem->setHtml("<center bgcolor=\"#F5F5DC\">Enter Value</center>");
     } else {
-      QString tmp = "<center>" + m_keyboardInputValue + "</center>";
+      QString tmp = "<center bgcolor=\"#F5F5DC\">" + m_keyboardInputValue + "</center>";
       m_keyboardInputTextItem->setHtml(tmp);
     }
 
@@ -1581,6 +1584,9 @@ DayScheduleScene * DaySchedulePlotArea::scene() const
 void DaySchedulePlotArea::mouseDoubleClickEvent(QMouseEvent * event)
 {
   QGraphicsItem * item = segmentAt(event->pos());
+
+  m_keyboardInputValue.clear();
+  m_keyboardInputTextItem->setPlainText("");
 
   if( item )
   {
@@ -1798,6 +1804,9 @@ void DaySchedulePlotArea::mousePressEvent(QMouseEvent * event)
   m_currentHoverItem = nullptr;
 
   QGraphicsItem * item = segmentAt(event->pos());
+
+  m_keyboardInputValue.clear();
+  m_keyboardInputTextItem->setPlainText("");
 
   if( item )
   {
