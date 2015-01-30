@@ -1623,6 +1623,13 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
 
   nameHLayout->addWidget(colorWidget);
 
+  QString priorityString("Priority ");
+  priorityString.append(QString::number(m_scheduleRule.ruleIndex() + 1));
+  QLabel * priorityLabel = new QLabel(priorityString);
+  nameHLayout->addWidget(priorityLabel);
+
+  nameHLayout->addSpacing(10);
+
   m_nameEditField = new OSLineEdit();
   m_nameEditField->bind(m_scheduleRule,"name");
   nameHLayout->addWidget(m_nameEditField);

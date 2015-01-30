@@ -1624,7 +1624,7 @@ void DaySchedulePlotArea::mouseMoveEvent(QMouseEvent * event)
 
       m_keyboardInputText->setPlainText("Enter Value");
       double textX = m_currentHoverItem->hCenterPos() - 2 * LINEWIDTH;
-      double textY = m_currentHoverItem->vCenterPos() - 2 * LINEWIDTH;
+      double textY = m_currentHoverItem->vCenterPos() - 1.5 * LINEWIDTH;
       m_keyboardInputText->setPos(textX, textY);
 
       setFocus();
@@ -1749,7 +1749,7 @@ void DaySchedulePlotArea::mouseMoveEvent(QMouseEvent * event)
 
       m_keyboardInputText->setPlainText("Enter Value");
       double textX = m_currentHoverItem->hCenterPos() - 2 * LINEWIDTH;
-      double textY = m_currentHoverItem->vCenterPos() - 2 * LINEWIDTH;
+      double textY = m_currentHoverItem->vCenterPos() - 1.5 * LINEWIDTH;
       m_keyboardInputText->setPos(textX, textY);
 
       setFocus();
@@ -1856,7 +1856,16 @@ void DaySchedulePlotArea::keyPressEvent(QKeyEvent * event)
       m_keyboardInputValue.append(event->text());
       m_keyboardInputText->setPlainText("-");
       double textX = m_currentHoverItem->hCenterPos() - 2 * LINEWIDTH;
-      double textY = m_currentHoverItem->vCenterPos() - 2 * LINEWIDTH;
+      double textY = m_currentHoverItem->vCenterPos() - 1.5 * LINEWIDTH;
+      m_keyboardInputText->setPos(textX, textY);
+    }
+    else if (event->key() == Qt::Key_Backspace)
+    {
+      m_keyboardInputValue.chop(1);
+
+      m_keyboardInputText->setPlainText(m_keyboardInputValue);
+      double textX = m_currentHoverItem->hCenterPos() - 2 * LINEWIDTH;
+      double textY = m_currentHoverItem->vCenterPos() - 1.5* LINEWIDTH;
       m_keyboardInputText->setPos(textX, textY);
     }
     else if( event->key() == Qt::Key_0 || 
@@ -1875,7 +1884,7 @@ void DaySchedulePlotArea::keyPressEvent(QKeyEvent * event)
       m_keyboardInputValue.append(event->text());
       m_keyboardInputText->setPlainText(m_keyboardInputValue);
       double textX = m_currentHoverItem->hCenterPos() - 2 * LINEWIDTH;
-      double textY = m_currentHoverItem->vCenterPos() - 2 * LINEWIDTH;
+      double textY = m_currentHoverItem->vCenterPos() - 1.5 * LINEWIDTH;
       m_keyboardInputText->setPos(textX, textY);
     }
   }
