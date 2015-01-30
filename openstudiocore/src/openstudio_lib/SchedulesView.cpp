@@ -1869,7 +1869,11 @@ ScheduleRulesetNameWidget::ScheduleRulesetNameWidget(const model::ScheduleRulese
   hLayout->addWidget(lineEdit);
 
   // Schedule Type
-  QString scheduleTypeString("(");
+  label = new QLabel("Schedule Type:");
+  label->setObjectName("H2");
+  hLayout->addWidget(label);
+
+  QString scheduleTypeString("");
   boost::optional<model::ScheduleTypeLimits> scheduleTypeLimits = scheduleRuleset.scheduleTypeLimits();
   if (scheduleTypeLimits){
     //boost::optional<std::string> numericType = scheduleTypeLimits->numericType();
@@ -1877,11 +1881,11 @@ ScheduleRulesetNameWidget::ScheduleRulesetNameWidget(const model::ScheduleRulese
     //  scheduleTypeString.append(toQString(*numericType));
     //}
 
-    scheduleTypeString.append(toQString(scheduleTypeLimits->unitType()));
+    scheduleTypeString.append(toQString(scheduleTypeLimits->name().get()));
   } else {
     scheduleTypeString.append("");
   }
-  scheduleTypeString.append(")");
+  scheduleTypeString.append("");
   label = new QLabel(scheduleTypeString);
   hLayout->addWidget(label);
 
