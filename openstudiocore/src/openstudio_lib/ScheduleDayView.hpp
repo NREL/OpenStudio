@@ -384,13 +384,15 @@ class DaySchedulePlotArea : public QGraphicsView
 
   private:
 
+  void updateKeyboardInputTextItem();
+
   ScheduleDayEditor * m_scheduleDayEditor;
 
   QGraphicsItem * m_currentItem;
 
   CalendarSegmentItem * m_currentHoverItem;
 
-  QGraphicsTextItem * m_keyboardInputText;
+  QGraphicsTextItem * m_keyboardInputTextItem;
 
   QString m_keyboardInputValue;
 

@@ -1502,27 +1502,53 @@ DaySchedulePlotArea::DaySchedulePlotArea(ScheduleDayEditor * scheduleDayEditor)
     m_scheduleDayEditor(scheduleDayEditor),
     m_currentItem(nullptr),
     m_currentHoverItem(nullptr),
-    m_keyboardInputText()
+    m_keyboardInputTextItem(nullptr)
 {
   connect(this, &DaySchedulePlotArea::dayScheduleSceneChanged, m_scheduleDayEditor->scheduleDayView()->schedulesView(), &SchedulesView::dayScheduleSceneChanged);
   setFocusPolicy(Qt::StrongFocus);
 
-  m_keyboardInputText = new QGraphicsTextItem();
+  m_keyboardInputTextItem = new QGraphicsTextItem();
   QTimer::singleShot(0, this, SLOT(initialize()));
 }
 
 void DaySchedulePlotArea::initialize()
 {
-  scene()->addItem(m_keyboardInputText);
+  scene()->addItem(m_keyboardInputTextItem);
   
   // DLM: I am almost certain this is not the best way to do this
   QFont font;
   font.setPointSize(1000);
   font.setStretch(50);
-  m_keyboardInputText->setFont(font);
+  m_keyboardInputTextItem->setFont(font);
 
   ///m_keyboardInputText->adjustSize();
 }
+
+void DaySchedulePlotArea::updateKeyboardInputTextItem()
+{
+  if (m_currentHoverItem){
+
+    if (m_keyboardInputValue.isEmpty()){
+      m_keyboardInputTextItem->setHtml("<center>Enter Value</center>");
+    } else {
+      QString tmp = "<center>" + m_keyboardInputValue + "</center>";
+      m_keyboardInputTextItem->setHtml(tmp);
+    }
+
+    double x = m_currentHoverItem->hCenterPos();
+    double y = m_currentHoverItem->vCenterPos();
+    double width = m_currentHoverItem->boundingRect().width();
+
+    double textX = x - width / 2.0;
+    double textY = y - 1.5 * LINEWIDTH;
+    m_keyboardInputTextItem->setPos(textX, textY);
+    m_keyboardInputTextItem->setTextWidth(width);
+
+  } else{
+    m_keyboardInputTextItem->setPlainText("");
+  }
+}
+
 
 QGraphicsItem * DaySchedulePlotArea::segmentAt(QPoint point) const
 {
@@ -1612,7 +1638,7 @@ void DaySchedulePlotArea::mouseMoveEvent(QMouseEvent * event)
   m_currentHoverItem = nullptr;
 
   m_keyboardInputValue.clear();
-  m_keyboardInputText->setPlainText("");
+  m_keyboardInputTextItem->setPlainText("");
 
   if( m_currentItem )
   {
@@ -1622,10 +1648,7 @@ void DaySchedulePlotArea::mouseMoveEvent(QMouseEvent * event)
 
       m_currentHoverItem = calendarItem;
 
-      m_keyboardInputText->setPlainText("Enter Value");
-      double textX = m_currentHoverItem->hCenterPos() - 2 * LINEWIDTH;
-      double textY = m_currentHoverItem->vCenterPos() - 1.5 * LINEWIDTH;
-      m_keyboardInputText->setPos(textX, textY);
+      updateKeyboardInputTextItem();
 
       setFocus();
 
@@ -1747,10 +1770,7 @@ void DaySchedulePlotArea::mouseMoveEvent(QMouseEvent * event)
 
       m_currentHoverItem = calendarItem;
 
-      m_keyboardInputText->setPlainText("Enter Value");
-      double textX = m_currentHoverItem->hCenterPos() - 2 * LINEWIDTH;
-      double textY = m_currentHoverItem->vCenterPos() - 1.5 * LINEWIDTH;
-      m_keyboardInputText->setPos(textX, textY);
+      updateKeyboardInputTextItem();
 
       setFocus();
 
@@ -1841,7 +1861,7 @@ void DaySchedulePlotArea::keyPressEvent(QKeyEvent * event)
       m_currentHoverItem->setValue(scaledValue);
 
       m_keyboardInputValue.clear();
-      m_keyboardInputText->setPlainText("");
+      m_keyboardInputTextItem->setPlainText("");
 
       m_currentHoverItem->setHovering(false);
 
@@ -1852,21 +1872,13 @@ void DaySchedulePlotArea::keyPressEvent(QKeyEvent * event)
     else if( event->key() == Qt::Key_Minus )
     {
       m_keyboardInputValue.clear();
-
       m_keyboardInputValue.append(event->text());
-      m_keyboardInputText->setPlainText("-");
-      double textX = m_currentHoverItem->hCenterPos() - 2 * LINEWIDTH;
-      double textY = m_currentHoverItem->vCenterPos() - 1.5 * LINEWIDTH;
-      m_keyboardInputText->setPos(textX, textY);
+      updateKeyboardInputTextItem();
     }
     else if (event->key() == Qt::Key_Backspace)
     {
       m_keyboardInputValue.chop(1);
-
-      m_keyboardInputText->setPlainText(m_keyboardInputValue);
-      double textX = m_currentHoverItem->hCenterPos() - 2 * LINEWIDTH;
-      double textY = m_currentHoverItem->vCenterPos() - 1.5* LINEWIDTH;
-      m_keyboardInputText->setPos(textX, textY);
+      updateKeyboardInputTextItem();
     }
     else if( event->key() == Qt::Key_0 || 
              event->key() == Qt::Key_1 ||
@@ -1882,10 +1894,7 @@ void DaySchedulePlotArea::keyPressEvent(QKeyEvent * event)
            )
     {
       m_keyboardInputValue.append(event->text());
-      m_keyboardInputText->setPlainText(m_keyboardInputValue);
-      double textX = m_currentHoverItem->hCenterPos() - 2 * LINEWIDTH;
-      double textY = m_currentHoverItem->vCenterPos() - 1.5 * LINEWIDTH;
-      m_keyboardInputText->setPos(textX, textY);
+      updateKeyboardInputTextItem();
     }
   }
 }
