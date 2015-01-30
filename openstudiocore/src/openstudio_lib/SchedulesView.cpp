@@ -1451,7 +1451,7 @@ DefaultScheduleDayView::DefaultScheduleDayView(bool isIP,
   label->setObjectName("H2");
 
   QHBoxLayout* hLayout = new QHBoxLayout();
-  hLayout->setContentsMargins(10, 0, 0, 0);
+  hLayout->setContentsMargins(60, 0, 0, 10);
   hLayout->addWidget(label);
   mainVLayout->addLayout(hLayout);
 
@@ -1513,7 +1513,7 @@ SizingScheduleDayView::SizingScheduleDayView(bool isIP,
       label->setObjectName("H2");
       
       QHBoxLayout* hLayout = new QHBoxLayout();
-      hLayout->setContentsMargins(10, 0, 0, 0);
+      hLayout->setContentsMargins(60, 0, 0, 10);
       hLayout->addWidget(label);
       mainVLayout->addLayout(hLayout);
 
@@ -1533,7 +1533,7 @@ SizingScheduleDayView::SizingScheduleDayView(bool isIP,
       label->setObjectName("H2");
 
       QHBoxLayout* hLayout = new QHBoxLayout();
-      hLayout->setContentsMargins(10, 0, 0, 0);
+      hLayout->setContentsMargins(60, 0, 0, 10);
       hLayout->addWidget(label);
       mainVLayout->addLayout(hLayout);
 
@@ -1583,7 +1583,7 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
   // Rule Settings
 
   QHBoxLayout * ruleHLayout = new QHBoxLayout();
-  ruleHLayout->setContentsMargins(10,0,0,0);
+  ruleHLayout->setContentsMargins(60,0,0,10);
   ruleHLayout->setSpacing(0);
   mainVLayout->addLayout(ruleHLayout);
 
