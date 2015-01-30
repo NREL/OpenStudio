@@ -1468,18 +1468,21 @@ void DataPointCalibrationView::update()
       boost::optional<double> cvrmse = getCVRMSE(fuelType, m_dataPoint);
 
       auto label = new QLabel();
+      QString text;
       label->setStyleSheet(style);
       label->setFixedWidth(CALIBRATION_LABEL_WIDTH);
       label->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
       if (nmbe){
         if (std::abs(*nmbe) > m_calibrationMaxNMBE){
-          label->setText("<font color=\"red\">" + QString::number(*nmbe, 'f', 2) + "%</font>");
+          text = "<font color=\"red\">" + QString::number(*nmbe, 'f', 2) + "%</font>";
         }else{
-          label->setText(QString::number(*nmbe, 'f', 2) + "%");
+          text = QString::number(*nmbe, 'f', 2) + "%";
         }
       }else{
-        label->setText("--");
+        text = "--";
       }
+      label->setText(text);
+      label->setToolTip(text);
       hLayout->addWidget(label);
 
       label = new QLabel();
@@ -1488,13 +1491,15 @@ void DataPointCalibrationView::update()
       label->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
       if (cvrmse){
         if (*cvrmse > m_calibrationMaxCVRMSE){
-          label->setText("<font color=\"red\">" + QString::number(*cvrmse, 'f', 2) + "%</font>");
+          text = "<font color=\"red\">" + QString::number(*cvrmse, 'f', 2) + "%</font>";
         }else{
-          label->setText(QString::number(*cvrmse, 'f', 2) + "%");
+          text = QString::number(*cvrmse, 'f', 2) + "%";
         }
       }else{
-        label->setText("--");
+        text = "--";
       }
+      label->setText(text);
+      label->setToolTip(text);
       hLayout->addWidget(label);
     }
   }
