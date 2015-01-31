@@ -357,14 +357,14 @@ if pImpl and baseClassName.empty?
   hpp << "\n"
   hpp << "  /** Get the impl pointer */\n"
   hpp << "  template<typename T>\n"
-  hpp << "  boost::shared_ptr<T> getImpl() const {\n"
+  hpp << "  std::shared_ptr<T> getImpl() const {\n"
   hpp << "    return boost::dynamic_pointer_cast<T>(m_impl);\n"
   hpp << "  }\n"
   hpp << "\n"
   hpp << "  /** Cast to type T. Throws std::bad_cast if object is not a T. */\n"
   hpp << "  template<typename T>\n"
   hpp << "  T cast() const {\n"
-  hpp << "    boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();\n"
+  hpp << "    std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();\n"
   hpp << "    if (!impl) {\n"
   hpp << "      throw(std::bad_cast());\n"
   hpp << "    }\n"
@@ -376,7 +376,7 @@ if pImpl and baseClassName.empty?
   hpp << "  template<typename T>\n"
   hpp << "  boost::optional<T> optionalCast() const{\n"
   hpp << "    boost::optional<T> result;\n"
-  hpp << "    boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();\n"
+  hpp << "    std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();\n"
   hpp << "    if (impl){\n"
   hpp << "      result = T(impl);\n"
   hpp << "    }\n"
@@ -435,7 +435,7 @@ if pImpl
   implHpp << "   private:" << "\n"
   
   if baseClassName.empty?
-    hpp << "  boost::shared_ptr<detail::" << className << "_Impl> m_impl;\n\n"
+    hpp << "  std::shared_ptr<detail::" << className << "_Impl> m_impl;\n\n"
   end
 end
 
