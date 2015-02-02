@@ -1313,6 +1313,7 @@ set(${target_name}_test_src
   test/OutputVariable_GTest.cpp
   test/ParentObject_GTest.cpp
   test/People_GTest.cpp
+  test/PeopleDefinition_GTest.cpp
   test/PipeAdiabatic_GTest.cpp
   test/PlanarSurface_GTest.cpp
   test/PlantLoop_GTest.cpp
