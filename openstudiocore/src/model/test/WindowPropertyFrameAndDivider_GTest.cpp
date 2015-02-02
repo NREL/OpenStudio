@@ -22,8 +22,11 @@
 #include "ModelFixture.hpp"
 #include "../WindowPropertyFrameAndDivider.hpp"
 #include "../WindowPropertyFrameAndDivider_Impl.hpp"
+#include "../SubSurface.hpp"
 #include "../Model.hpp"
 #include "../Model_Impl.hpp"
+
+#include "../../utilities/geometry/Point3d.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -34,4 +37,20 @@ TEST_F(ModelFixture, WindowPropertyFrameAndDivider)
   Model model;
   
   WindowPropertyFrameAndDivider frameAndDivider(model);
+
+  std::vector<Point3d> vertices;
+  vertices.push_back(Point3d(0, 0, 1));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(1, 0, 0));
+  vertices.push_back(Point3d(1, 0, 1));
+
+  SubSurface subSurface(vertices, model);
+
+  EXPECT_FALSE(subSurface.windowPropertyFrameAndDivider());
+  EXPECT_TRUE(subSurface.allowWindowPropertyFrameAndDivider());
+  EXPECT_TRUE(subSurface.setWindowPropertyFrameAndDivider(frameAndDivider));
+  ASSERT_TRUE(subSurface.windowPropertyFrameAndDivider());
+
+  subSurface.resetWindowPropertyFrameAndDivider();
+  EXPECT_FALSE(subSurface.windowPropertyFrameAndDivider());
 }
