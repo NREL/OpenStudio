@@ -70,7 +70,7 @@ WidgetLocation::~WidgetLocation()
 
 void WidgetLocation::onInFocus(bool hasFocus, bool hasData)
 {
-  emit inFocus(hasFocus, hasData, row, column);
+  emit inFocus(hasFocus, hasData, row, column, subrow);
 }
 
 ObjectSelector::ObjectSelector(OSGridController *t_grid)
@@ -237,6 +237,21 @@ void ObjectSelector::clearSelection()
 {
   m_selectedObjects.clear();
   m_grid->requestRefreshGrid();
+}
+
+boost::optional<const model::ModelObject &> ObjectSelector::getObject(const int t_row, const boost::optional<int> &t_subrow)
+{
+  boost::optional<const model::ModelObject &> object;
+
+  for (auto &widgetLoc : m_widgetMap)
+  {
+    if (widgetLoc.second->row == t_row && (!t_subrow || t_subrow == widgetLoc.second->subrow))
+    {
+      object = widgetLoc.first;
+      break;
+    }
+  }
+  return object;
 }
 
 void ObjectSelector::updateWidgets(const int t_row, const boost::optional<int> &t_subrow, bool t_objectSelected, bool t_objectVisible)
@@ -771,10 +786,7 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
 
 void OSGridController::setConceptValue(model::ModelObject t_setterMO, model::ModelObject t_getterMO, const QSharedPointer<BaseConcept> &t_baseConcept)
 {
-  if (QSharedPointer<BaseConcept> concept = t_baseConcept.dynamicCast<BaseConcept>()){
-    // No setter or getter available
-  }
-  else if (QSharedPointer<CheckBoxConcept> concept = t_baseConcept.dynamicCast<CheckBoxConcept>()){
+  if (QSharedPointer<CheckBoxConcept> concept = t_baseConcept.dynamicCast<CheckBoxConcept>()){
     auto setter = std::bind(&CheckBoxConcept::set, concept.data(), t_setterMO, std::placeholders::_1);
     auto getter = std::bind(&CheckBoxConcept::get, concept.data(), t_getterMO);
     auto temp = getter();
@@ -1469,35 +1481,53 @@ void OSGridController::selectAllStateChanged(const int newState) const
   }
 }
 
-void OSGridController::onInFocus(bool inFocus, bool hasData, int row, int column)
+void OSGridController::onInFocus(bool inFocus, bool hasData, int row, int column, boost::optional<int> subrow)
 {
   if (row == 0 && this->m_hasHorizontalHeader) {
     // Do great things
-    auto selectedRow = m_selectedCellLocation.first;
-    auto selectedColumn = m_selectedCellLocation.second;
+    auto selectedRow = std::get<0>(m_selectedCellLocation);
+    auto selectedColumn = std::get<1>(m_selectedCellLocation);
+    auto selectedSubrow = std::get<2>(m_selectedCellLocation);
     OS_ASSERT(selectedColumn == column);
 
-    m_selectedCellLocation = std::make_pair(row, column);
+    m_selectedCellLocation = std::make_tuple(row, column, subrow);
 
     std::set<model::ModelObject> selectedObjects = this->m_objectSelector->getSelectedObjects();
 
-    for (auto modelObject : selectedObjects) {
-      // Don't set the chosen object when iterating through the selected objects
-      if (modelObject != this->modelObject(selectedRow)) {
-        setConceptValue(modelObject, this->modelObject(selectedRow), m_baseConcepts[column]);
+    QSharedPointer<DataSourceAdapter> dataSource = m_baseConcepts[column].dynamicCast<DataSourceAdapter>();
+    if (selectedSubrow && dataSource) {
+      // Has sub rows
+      boost::optional<const model::ModelObject &> object = this->m_objectSelector->getObject(selectedRow, selectedSubrow);
+      for (auto modelObject : selectedObjects) {
+        // Don't set the chosen object when iterating through the selected objects
+        if (!object || (object && modelObject != object.get())) {
+          setConceptValue(modelObject, object.get(), dataSource.data()->innerConcept());
+        }
       }
+    }
+    else if (!selectedSubrow) {
+      for (auto modelObject : selectedObjects) {
+        // Don't set the chosen object when iterating through the selected objects
+        if (modelObject != this->modelObject(selectedRow)) {
+          setConceptValue(modelObject, this->modelObject(selectedRow), m_baseConcepts[column]);
+        }
+      }
+    }
+    else {
+      // Should never get here
+      OS_ASSERT(false);
     }
 
     // Now refresh
     gridView()->requestRefreshGrid(); // TODO this is heavy handed; each cell should update itself
 
   } else {
-    m_selectedCellLocation = std::make_pair(row, column);
+    m_selectedCellLocation = std::make_tuple(row, column, subrow);
 
     HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(column));
     OS_ASSERT(horizontalHeaderWidget);
 
-    horizontalHeaderWidget->m_pushButton->setEnabled(inFocus);
+    //horizontalHeaderWidget->m_pushButton->setEnabled(inFocus);
 
     if (hasData){
       horizontalHeaderWidget->m_pushButton->setText("Apply to Selected");
@@ -1569,7 +1599,7 @@ HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidge
 
   m_pushButton->setText("Apply to Selected");
   m_pushButton->setFixedWidth(100);
-  m_pushButton->setEnabled(false);
+  //m_pushButton->setEnabled(false);
   connect(m_pushButton, &HorizontalHeaderPushButton::inFocus, this, &HorizontalHeaderWidget::inFocus);
 
   mainLayout->addWidget(m_pushButton, Qt::AlignBottom);

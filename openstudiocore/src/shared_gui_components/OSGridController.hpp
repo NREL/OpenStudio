@@ -177,7 +177,7 @@ public:
 
 signals:
 
-  void inFocus(bool inFocus, bool hasData, int row, int column);
+  void inFocus(bool inFocus, bool hasData, int row, int column, boost::optional<int> subrow);
 
 public slots:
 
@@ -196,6 +196,7 @@ class ObjectSelector : public QObject
         const boost::optional<int> &subrow, bool t_selector);
     void setObjectSelection(const model::ModelObject &t_obj, bool t_selected);
     bool getObjectSelection(const model::ModelObject &t_obj) const;
+    boost::optional<const model::ModelObject &> getObject(const int t_row, const boost::optional<int> &t_subrow);
     std::set<model::ModelObject> getSelectedObjects() const;
     void clear();
     void objectRemoved(const openstudio::model::ModelObject &t_obj);
@@ -206,7 +207,7 @@ class ObjectSelector : public QObject
     void clearSelection();
 
   signals:
-    void inFocus(bool inFocus, bool hasData, int row, int column);
+    void inFocus(bool inFocus, bool hasData, int row, int column, boost::optional<int> subrow);
 
   private slots:
     void widgetDestroyed(QObject *t_obj);
@@ -637,7 +638,7 @@ private:
 
   std::shared_ptr<ObjectSelector> m_objectSelector;
 
-  std::pair<int, int> m_selectedCellLocation;
+  std::tuple<int, int, boost::optional<int>> m_selectedCellLocation;
 
 signals:
 
@@ -664,7 +665,7 @@ public slots:
 
   void requestRefreshGrid();
 
-  void onInFocus(bool inFocus, bool hasData, int row, int column);
+  void onInFocus(bool inFocus, bool hasData, int row, int column, boost::optional<int> subrow);
 
 protected slots:
 
