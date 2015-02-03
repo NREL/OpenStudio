@@ -200,9 +200,11 @@ end
 if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
   perlpath = ""
   if OpenStudio::applicationIsRunningFromBuildDirectory()
-    perlpath = OpenStudio::getApplicationRunDirectory().parent_path().parent_path() / OpenStudio::Path.new("strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin")
+    perlpath = OpenStudio::getApplicationRunDirectory().parent_path().parent_path() / 
+    OpenStudio::Path.new("strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin")
   else
-    perlpath = OpenStudio::getApplicationRunDirectory().parent_path() / OpenStudio::Path.new("strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin")
+    perlpath = OpenStudio::getApplicationRunDirectory().parent_path() / 
+    OpenStudio::Path.new("strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin")
   end
   puts "Adding path for local perl: " + perlpath.to_s
   ENV["PATH"] = ENV["PATH"] + ";" + perlpath.to_s
@@ -382,7 +384,8 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
       wg=row.split(",")[0]
       next if wg[2].to_i == 0 # skip uncontrolled windows (WG0), use single phase for those.
       puts "computing daylight matrix for window group #{wg}"
-      exec_statement("rfluxmtx -fa -v #{t_outPath}/scene/glazing/#{wg}.rad #{t_outPath}/skies/dc_sky.rad -i model_dc.oct > #{t_outPath}/output/dc/#{wg}.dmx")
+      exec_statement("rfluxmtx -fa -v #{t_outPath}/scene/glazing/#{wg}.rad #{t_outPath}/skies/dc_sky.rad -i model_dc.oct > \
+      #{t_outPath}/output/dc/#{wg}.dmx")
     end
 
     # compute view matrices for controlled windows
@@ -422,12 +425,16 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
 
 end # def(calculateDaylightCoeffecients)
 
+
+# t_cmds is actually the command pushed into "simulations"
+
 def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
 
   puts "#{Time.now.getutc}: Executing simulation"
   
   allValues = []
 
+  # this can be removed since you did this with executeCommand
   t_cmds.each do | command | 
   
     tempIO = IO.popen(command)
@@ -470,6 +477,8 @@ def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_s
     allValues << cmdValues
   end
 
+  # allValues or equicALENET would be read from the ill file
+
   values = []
 
   # this might be slow, but the idea is that we are looping over each window's contributions
@@ -487,6 +496,8 @@ def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_s
   #
   # The result is the summation of each window's vLambda contributions.
 
+	# this is already done, remove
+	#
   # one index per window group simulation
   allValues.size().times do |index|
   
@@ -506,12 +517,15 @@ def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_s
       end
     end
   end
+  
+  # values is [row][hour], presumably row maps to a row in the points files which maps back to some object
 
   puts "#{Time.now.getutc}: writing output"
 
   # now proceed on, as we have all of the contributions we want
   allhours = []
 
+# this chunk is parsing values out to allhours array which is indexed by hour and value is a map with all the space stuff
   8760.times do |hour|
     index = 0;
     splitvalues = Hash.new
@@ -579,7 +593,8 @@ def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_s
   return allhours;
 end
 
-def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, t_site_latitude, t_site_longitude, t_site_stdmeridian, t_outPath, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
+def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, t_site_latitude, t_site_longitude, t_site_stdmeridian, t_outPath, \
+t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
 
   puts "runSimulation called"
 
@@ -591,14 +606,13 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
   perlExtension = ""
   osQuote = "\'"
 
+
   # i can haz gendaymtx vintage? - 2014.07.02 RPG
-  # gendaymtx >= v4.2.b adds header and -h option to suppress
+  # (gendaymtx >= v4.2.b adds header and -h option to suppress)
   genDaymtxHdr = ""
- 
   puts "Determining gendaymtx vintage..."   
   exec_statement("gendaymtx -h -m #{t_options.skyvecDensity} \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" > \"#{t_outPath / OpenStudio::Path.new("daymtx_out.tmp")}\" ")
   puts "ok."
-
   if File.zero?("#{t_outPath / OpenStudio::Path.new("daymtx_out.tmp")}")
     genDaymtxHdr = ""
     if t_options.z == true
@@ -608,9 +622,10 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
   else 
     puts "NOTE: Producing sky matrix headers"
   end
-
   File.delete("#{t_outPath / OpenStudio::Path.new("daymtx_out.tmp")}")
+
   # we now haz =)
+
 
   if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
     perlPrefix = "perl \"C:/Program Files (x86)/Radiance/bin/"
@@ -640,32 +655,36 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
 
     windowMaps = File::open("#{t_outPath}/bsdf/mapping.rad")
     
+    # do annual sim for each window group and state
+    
     windowMaps.each do |row|
       # skip header
       next if row[0] == "#"
       wg = row.split(",")[0]
       # do uncontrolled windows (WG0)
       if wg[2].to_i == 0
-        simulations << "dctimestep #{t_outPath}/output/dc/#{wg}.vmx annual-sky.mtx | rmtxop -fa -t -c 47.4 120 11.6 - > #{t_outPath}/output/ts/#{wg}.ill"
-       
+        #simulations << "dctimestep #{t_outPath}/output/dc/#{wg}.vmx annual-sky.mtx | rmtxop -fa -t -c 47.4 120 11.6 - > #{t_outPath}/output/ts/#{wg}.ill"
+        exec_statement("dctimestep #{t_outPath}/output/dc/#{wg}.vmx annual-sky.mtx | rmtxop -fa -t -c 47.4 120 11.6 - > #{t_outPath}/output/ts/3P/#{wg}.ill") 
+        # no transpose or conversion for now
       end
       next if wg[2].to_i == 0
       # do all controlled window groups
+      
       wgXMLs = row.split(",")[4..-1]
       if wgXMLs.size > 2
         puts "WARN: Window Group #{wg} has #{wgXMLs.size.to_s} BSDFs (2 max supported by OpenStudio application)."
       end
       
       wgXMLs.each_index do |i|
-        simulations << "dctimestep #{t_outPath}/output/dc/#{wg}.vmx #{t_outPath}/bsdf/#{wgXMLs[i].strip} #{t_outPath}/output/dc/#{wg}.dmx \\
-        annual-sky.mtx | rmtxop -fa -t -c 47.4 120 11.6 - > #{t_outPath}/output/ts/#{wg}_#{wgXMLs[i].split[0]}.ill"
+        exec_statement("dctimestep #{t_outPath}/output/dc/#{wg}.vmx #{t_outPath}/bsdf/#{wgXMLs[i].strip} #{t_outPath}/output/dc/#{wg}.dmx \
+        annual-sky.mtx | rmtxop -fa -t -c 47.4 120 11.6 - > #{t_outPath}/output/ts/3P/#{wg}_#{wgXMLs[i].split[0]}.ill")
  
       end
-
+      
     end
     
     # get annual values for window control sensors (note: no transpose, no header)
-    simulations << "dctimestep #{t_outPath}/output/dc/window_controls.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - | getinfo - > #{t_outPath}/output/ts/window_controls.ill"
+    exec_statement("dctimestep #{t_outPath}/output/dc/window_controls.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - | getinfo - > #{t_outPath}/output/ts/window_controls.ill")
 
     # return the bsdf index for window group given by index at this hour
     # this is deprecated
@@ -674,16 +693,29 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
       # TODO remove this bit for shade controls
       return 0
     }
+    
+    puts "Calculated daylight illuminance for all window group states, exiting."
+    
+    # do window group/state merge here, but for now:
+    exit
+    
 
   else
     # 2-phase 
-    simulations << "dctimestep \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" \"#{t_outPath / OpenStudio::Path.new("annual-sky.mtx")}\" "
-
+    # simulations << "dctimestep \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" \"#{t_outPath / OpenStudio::Path.new("annual-sky.mtx")}\" "
+    exec_statement("dctimestep #{t_outPath}/output/dc/merged_space/maps/merged_space.dmx annual-sky.mtx | rmtxop -fa -t -c 47.4 120 11.6 - > #{t_outPath}/output/ts/merged_space.ill")
+    
      # return the bsdf index for window group given by index at this hour
     windowMapping = lambda { |index, hour| return 0 }
   end
 
+  # what format is rawValues in?
+  # rename execSimulation to parseResults, first input should be path to merged_space.ill
+  # windowMapping is not needed for single phase and already handled for three phase so should be removed
+  # what is space_names_to_calculate?
+  #  
   rawValues = execSimulation(simulations, windowMapping, t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
+  #rawValues = execSimulation(simulations, windowMapping, t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
 
   dcVectors = nil
 
@@ -692,7 +724,6 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
 
     puts "envPeriod = '" + envPeriod.to_s + "'"
     diffHorizIllumAll, dirNormIllumAll, diffEfficacyAll, dirNormEfficacyAll, solarAltitudeAll, solarAzimuthAll, diffHorizUnits, dirNormUnits = getTimeSeries(t_sqlFile, envPeriod)
-
 
     # check that we have all timeseries
     if (not diffHorizIllumAll) or (not dirNormIllumAll) or (not diffEfficacyAll) or (not dirNormEfficacyAll) or (not solarAltitudeAll) or (not solarAzimuthAll)
@@ -711,6 +742,7 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
   end
 
   return values, dcVectors;
+  
 end #def
 
 def getTimeSeries(t_sqlFile, t_envPeriod)
@@ -777,7 +809,6 @@ def buildSimulationTimes(t_sqlFile, t_envPeriod, t_options, t_diffHorizIllumAll,
         dateTime = dateTime - OpenStudio::Time.new(0,0,0,1);
       end
 
-
       simulate_this_time = true
       curMonth = "#{dateTime.date.monthOfYear.value}"
       if t_options.simMonth.nil?
@@ -813,12 +844,12 @@ def buildSimulationTimes(t_sqlFile, t_envPeriod, t_options, t_diffHorizIllumAll,
 end
 
 
-def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate, t_radMaps, t_spaceWidths, t_spaceHeights, t_radMapPoints, t_radGlareSensorViews, t_simCores, t_site_latitude, t_site_longitude, t_site_stdmeridian, t_outPath, t_building, t_values, t_dcVectors)
+def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate, t_radMaps, t_spaceWidths, t_spaceHeights, t_radMapPoints, \
+	t_radGlareSensorViews, t_simCores, t_site_latitude, t_site_longitude, t_site_stdmeridian, t_outPath, t_building, t_values, t_dcVectors)
   sqlOutPath = OpenStudio::Path.new("#{Dir.pwd}/output/radout.sql")
   if OpenStudio::exists(sqlOutPath)
     OpenStudio::remove(sqlOutPath)
   end
-
 
   # for each environment period (design days, annual, or arbitrary) you will create a directory for results
   t_sqlFile.availableEnvPeriods.each do |envPeriod|
@@ -833,7 +864,9 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
       exit
     end
 
-    simDateTimes, simTimes, diffHorizIllum, dirNormIllum, diffEfficacy, dirNormEfficacy, solarAltitude, solarAzimuth, firstReportDateTime = buildSimulationTimes(t_sqlFile, envPeriod, t_options, diffHorizIllumAll, dirNormIllumAll, diffEfficacyAll, dirNormEfficacyAll, solarAltitudeAll, solarAzimuthAll)
+		# make timeseries
+    simDateTimes, simTimes, diffHorizIllum, dirNormIllum, diffEfficacy, dirNormEfficacy, solarAltitude, solarAzimuth, firstReportDateTime = \
+    buildSimulationTimes(t_sqlFile, envPeriod, t_options, diffHorizIllumAll, dirNormIllumAll, diffEfficacyAll, dirNormEfficacyAll, solarAltitudeAll, solarAzimuthAll)
 
 
     sqlOutFile = OpenStudio::SqlFile.new(sqlOutPath,
@@ -881,20 +914,21 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
         # these must be declared in the thread otherwise will get overwritten on each loop
         tsDateTime = simTimes[i]
 
-        #changing glare options 20120816 rpg
         if t_options.glare == true
           puts "image based glare analysis temporarily disabled, sorry."
           #  system("gendaylit -ang #{tsSolarAlt} #{tsSolarAzi} -L #{tsDirectNormIllum} #{tsDiffuseHorIllum} \
           #  | #{perlPrefix}genskyvec#{perlExtension} -m 1 | dctimestep \"#{outPath}/output/dc/#{space_name}/views/#{space_name}treg%03d.hdr\" | pfilt -1 -x /2 -y /2 > \
           #  \"#{outPath}/output/dc/#{space_name}/views/#{tsDateTime.gsub(/[: ]/,'_')}.hdr\"")
         end
+
+
         if t_options.x == true
 
           illumValues, illumSensorValues, glareSensorValues = t_values[i][space_name]
 
           timeSeriesIllum[i] = tsDateTime.to_s.gsub(" ",",") + "," + "#{dirNormIllum[i]},#{diffHorizIllum[i]}," + illumSensorValues.join(',') + "," + illumValues.join(',')
 
-          #glare
+          # add glare sensor values
           if t_radGlareSensorViews[space_name]
             if not glareSensorValues.nil?
               timeSeriesGlare[i] = tsDateTime.to_s.gsub(" ",",") + "," + glareSensorValues.join(',')
@@ -1064,7 +1098,6 @@ if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
   catCommand = "type"
   osQuote = "\""
 end
-
 
 modelPath = OpenStudio::Path.new(ARGV[0])
 modelPath = OpenStudio::system_complete(modelPath)
