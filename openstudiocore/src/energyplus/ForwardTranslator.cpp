@@ -1744,6 +1744,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateStandardGlazing(glazing);
       break;
     }
+  case  openstudio::IddObjectType::OS_WindowProperty_FrameAndDivider:
+  {
+    model::WindowPropertyFrameAndDivider frameAndDivider = modelObject.cast<WindowPropertyFrameAndDivider>();
+    retVal = translateWindowPropertyFrameAndDivider(frameAndDivider);
+    break;
+  }
   case openstudio::IddObjectType::OS_ZoneAirContaminantBalance :
     {
       // no-op
@@ -2090,6 +2096,7 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
   iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_Screen);
   iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_Shade);
   iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_SimpleGlazingSystem);
+  iddObjectTypes.push_back(IddObjectType::OS_WindowProperty_FrameAndDivider);
   iddObjectTypes.push_back(IddObjectType::OS_ShadingControl);
 
   iddObjectTypes.push_back(IddObjectType::OS_Construction);
