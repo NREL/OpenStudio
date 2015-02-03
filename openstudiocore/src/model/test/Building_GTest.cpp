@@ -284,3 +284,85 @@ TEST_F(ModelFixture, Building_Cost)
   EXPECT_DOUBLE_EQ(100, cost2->totalCost());
   EXPECT_DOUBLE_EQ(120, cost3->totalCost());
 }
+
+TEST_F(ModelFixture, Building_Clone)
+{
+  // Remember that Building is a unique object
+  // There are basically three scenarios to consider,
+  // cloning into the same model, cloning into a different model that already has a building object, 
+  // and cloning into a different model that doesn't have a building object.
+
+  // Clone into the same model
+  {
+    Model model; 
+
+    auto building = model.getUniqueModelObject<Building>(); 
+    auto buildingClone = building.clone(model);
+
+    // Don't expect cloning into the same model to do anything.
+    // Just return the Building instance
+    EXPECT_EQ(building,buildingClone);
+  }
+
+  // Clone into a different model that already has a Building instance.
+  {
+    Model model;
+    Model library;
+
+    auto modelBuilding = model.getUniqueModelObject<Building>();
+    auto libraryBuilding = library.getUniqueModelObject<Building>();
+
+    EXPECT_NE(modelBuilding,libraryBuilding);
+
+    // Expect to get back the Building instance already contained in the target model
+    // No related types (such as Spaces and ThermalZones are cloned either, because this
+    // potentially borders on merging buildings.  That is cleverness beyond the current Building::clone implementation.
+    // Although the buck could (and perhaps should) be passed to the Space and ThermalZone classes.
+    auto clone = libraryBuilding.clone(model);
+    EXPECT_NE(libraryBuilding,clone);
+    EXPECT_EQ(modelBuilding,clone);
+  }
+
+  // Clone into a different model that does not already have a Building instance.
+  {
+    Model model;
+    Model library;
+
+    auto libraryBuilding = library.getUniqueModelObject<Building>();
+
+    Space space1(library);
+    Space space2(library);
+
+    BuildingStory story(library);
+    space1.setBuildingStory(story);
+    space2.setBuildingStory(story);
+
+    ThermalZone zone(library);
+
+    space1.setThermalZone(zone);
+    space2.setThermalZone(zone);
+
+    EXPECT_EQ(1u,library.getModelObjects<Building>().size());
+    EXPECT_EQ(2u,library.getModelObjects<Space>().size());
+    EXPECT_EQ(1u,library.getModelObjects<ThermalZone>().size());
+    EXPECT_EQ(1u,library.getModelObjects<BuildingStory>().size());
+    EXPECT_EQ(2u,zone.spaces().size());
+
+    auto modelBuilding = libraryBuilding.clone(model).cast<Building>();
+
+    EXPECT_NE(libraryBuilding,modelBuilding);
+
+    EXPECT_EQ(1u,model.getModelObjects<Building>().size());
+    EXPECT_EQ(2u,model.getModelObjects<Space>().size());
+
+    auto zones = model.getModelObjects<ThermalZone>();
+
+    ASSERT_EQ(1u,zones.size());
+    EXPECT_EQ(2u,zones.front().spaces().size());
+
+    auto stories = model.getModelObjects<BuildingStory>();
+    ASSERT_EQ(1u,stories.size());
+    ASSERT_EQ(2u,stories.front().spaces().size());
+  }
+}
+
