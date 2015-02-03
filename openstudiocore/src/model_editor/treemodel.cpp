@@ -38,7 +38,7 @@
 #include "../model/Surface.hpp"
 #include "../model/SubSurface.hpp"
 #include "../model/Space.hpp"
-#include "../model/test/ModelFixture.hpp"
+//#include "../model/test/ModelFixture.hpp"
 #include <model_editor/treeitem.h>
 #include "TreeView.hpp"
 #include "TreeViewWidget.hpp"
