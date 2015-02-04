@@ -74,9 +74,9 @@ namespace detail {
 
     boost::optional<double> frameConductance() const;
 
-    double ratioOfFrameEdgeGlassConductancetoCenterOfGlassConductance() const;
+    double ratioOfFrameEdgeGlassConductanceToCenterOfGlassConductance() const;
 
-    bool isRatioOfFrameEdgeGlassConductancetoCenterOfGlassConductanceDefaulted() const;
+    bool isRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductanceDefaulted() const;
 
     double frameSolarAbsorptance() const;
 
@@ -98,13 +98,13 @@ namespace detail {
 
     bool isDividerWidthDefaulted() const;
 
-    double numberofHorizontalDividers() const;
+    double numberOfHorizontalDividers() const;
 
-    bool isNumberofHorizontalDividersDefaulted() const;
+    bool isNumberOfHorizontalDividersDefaulted() const;
 
-    double numberofVerticalDividers() const;
+    double numberOfVerticalDividers() const;
 
-    bool isNumberofVerticalDividersDefaulted() const;
+    bool isNumberOfVerticalDividersDefaulted() const;
 
     double dividerOutsideProjection() const;
 
@@ -118,9 +118,9 @@ namespace detail {
 
     bool isDividerConductanceDefaulted() const;
 
-    double ratioofDividerEdgeGlassConductancetoCenterOfGlassConductance() const;
+    double ratioOfDividerEdgeGlassConductanceToCenterOfGlassConductance() const;
 
-    bool isRatioofDividerEdgeGlassConductancetoCenterOfGlassConductanceDefaulted() const;
+    bool isRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductanceDefaulted() const;
 
     double dividerSolarAbsorptance() const;
 
@@ -178,9 +178,9 @@ namespace detail {
 
     void resetFrameConductance();
 
-    bool setRatioOfFrameEdgeGlassConductancetoCenterOfGlassConductance(double ratioOfFrameEdgeGlassConductancetoCenterOfGlassConductance);
+    bool setRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductance(double ratioOfFrameEdgeGlassConductanceToCenterOfGlassConductance);
 
-    void resetRatioOfFrameEdgeGlassConductancetoCenterOfGlassConductance();
+    void resetRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductance();
 
     bool setFrameSolarAbsorptance(double frameSolarAbsorptance);
 
@@ -202,13 +202,13 @@ namespace detail {
 
     void resetDividerWidth();
 
-    bool setNumberofHorizontalDividers(double numberofHorizontalDividers);
+    bool setNumberOfHorizontalDividers(double numberOfHorizontalDividers);
 
-    void resetNumberofHorizontalDividers();
+    void resetNumberOfHorizontalDividers();
 
-    bool setNumberofVerticalDividers(double numberofVerticalDividers);
+    bool setNumberOfVerticalDividers(double numberOfVerticalDividers);
 
-    void resetNumberofVerticalDividers();
+    void resetNumberOfVerticalDividers();
 
     bool setDividerOutsideProjection(double dividerOutsideProjection);
 
@@ -222,9 +222,9 @@ namespace detail {
 
     void resetDividerConductance();
 
-    bool setRatioofDividerEdgeGlassConductancetoCenterOfGlassConductance(double ratioofDividerEdgeGlassConductancetoCenterOfGlassConductance);
+    bool setRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductance(double ratioOfDividerEdgeGlassConductanceToCenterOfGlassConductance);
 
-    void resetRatioofDividerEdgeGlassConductancetoCenterOfGlassConductance();
+    void resetRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductance();
 
     bool setDividerSolarAbsorptance(double dividerSolarAbsorptance);
 

@@ -97,7 +97,9 @@ boost::optional<IdfObject> ForwardTranslator::translateSubSurface( model::SubSur
   boost::optional<WindowPropertyFrameAndDivider> frameAndDivider = modelObject.windowPropertyFrameAndDivider();
   openstudio::Vector3d offset(0, 0, 0);
   if (frameAndDivider){
-    offset = -frameAndDivider->outsideRevealDepth() * modelObject.outwardNormal();
+    if (!frameAndDivider->isOutsideRevealDepthDefaulted()){
+      offset = -frameAndDivider->outsideRevealDepth() * modelObject.outwardNormal();
+    }
     idfObject.setString(FenestrationSurface_DetailedFields::FrameandDividerName, frameAndDivider->name().get());
   }
 

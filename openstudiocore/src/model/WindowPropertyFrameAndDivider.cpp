@@ -100,13 +100,13 @@ namespace detail {
     return getDouble(OS_WindowProperty_FrameAndDividerFields::FrameConductance,true);
   }
 
-  double WindowPropertyFrameAndDivider_Impl::ratioOfFrameEdgeGlassConductancetoCenterOfGlassConductance() const {
+  double WindowPropertyFrameAndDivider_Impl::ratioOfFrameEdgeGlassConductanceToCenterOfGlassConductance() const {
     boost::optional<double> value = getDouble(OS_WindowProperty_FrameAndDividerFields::RatioofFrameEdgeGlassConductancetoCenterOfGlassConductance,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool WindowPropertyFrameAndDivider_Impl::isRatioOfFrameEdgeGlassConductancetoCenterOfGlassConductanceDefaulted() const {
+  bool WindowPropertyFrameAndDivider_Impl::isRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductanceDefaulted() const {
     return isEmpty(OS_WindowProperty_FrameAndDividerFields::RatioofFrameEdgeGlassConductancetoCenterOfGlassConductance);
   }
 
@@ -160,23 +160,23 @@ namespace detail {
     return isEmpty(OS_WindowProperty_FrameAndDividerFields::DividerWidth);
   }
 
-  double WindowPropertyFrameAndDivider_Impl::numberofHorizontalDividers() const {
+  double WindowPropertyFrameAndDivider_Impl::numberOfHorizontalDividers() const {
     boost::optional<double> value = getDouble(OS_WindowProperty_FrameAndDividerFields::NumberofHorizontalDividers,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool WindowPropertyFrameAndDivider_Impl::isNumberofHorizontalDividersDefaulted() const {
+  bool WindowPropertyFrameAndDivider_Impl::isNumberOfHorizontalDividersDefaulted() const {
     return isEmpty(OS_WindowProperty_FrameAndDividerFields::NumberofHorizontalDividers);
   }
 
-  double WindowPropertyFrameAndDivider_Impl::numberofVerticalDividers() const {
+  double WindowPropertyFrameAndDivider_Impl::numberOfVerticalDividers() const {
     boost::optional<double> value = getDouble(OS_WindowProperty_FrameAndDividerFields::NumberofVerticalDividers,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool WindowPropertyFrameAndDivider_Impl::isNumberofVerticalDividersDefaulted() const {
+  bool WindowPropertyFrameAndDivider_Impl::isNumberOfVerticalDividersDefaulted() const {
     return isEmpty(OS_WindowProperty_FrameAndDividerFields::NumberofVerticalDividers);
   }
 
@@ -210,13 +210,13 @@ namespace detail {
     return isEmpty(OS_WindowProperty_FrameAndDividerFields::DividerConductance);
   }
 
-  double WindowPropertyFrameAndDivider_Impl::ratioofDividerEdgeGlassConductancetoCenterOfGlassConductance() const {
+  double WindowPropertyFrameAndDivider_Impl::ratioOfDividerEdgeGlassConductanceToCenterOfGlassConductance() const {
     boost::optional<double> value = getDouble(OS_WindowProperty_FrameAndDividerFields::RatioofDividerEdgeGlassConductancetoCenterOfGlassConductance,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool WindowPropertyFrameAndDivider_Impl::isRatioofDividerEdgeGlassConductancetoCenterOfGlassConductanceDefaulted() const {
+  bool WindowPropertyFrameAndDivider_Impl::isRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductanceDefaulted() const {
     return isEmpty(OS_WindowProperty_FrameAndDividerFields::RatioofDividerEdgeGlassConductancetoCenterOfGlassConductance);
   }
 
@@ -357,12 +357,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool WindowPropertyFrameAndDivider_Impl::setRatioOfFrameEdgeGlassConductancetoCenterOfGlassConductance(double ratioOfFrameEdgeGlassConductancetoCenterOfGlassConductance) {
+  bool WindowPropertyFrameAndDivider_Impl::setRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductance(double ratioOfFrameEdgeGlassConductancetoCenterOfGlassConductance) {
     bool result = setDouble(OS_WindowProperty_FrameAndDividerFields::RatioofFrameEdgeGlassConductancetoCenterOfGlassConductance, ratioOfFrameEdgeGlassConductancetoCenterOfGlassConductance);
     return result;
   }
 
-  void WindowPropertyFrameAndDivider_Impl::resetRatioOfFrameEdgeGlassConductancetoCenterOfGlassConductance() {
+  void WindowPropertyFrameAndDivider_Impl::resetRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductance() {
     bool result = setString(OS_WindowProperty_FrameAndDividerFields::RatioofFrameEdgeGlassConductancetoCenterOfGlassConductance, "");
     OS_ASSERT(result);
   }
@@ -417,22 +417,22 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool WindowPropertyFrameAndDivider_Impl::setNumberofHorizontalDividers(double numberofHorizontalDividers) {
+  bool WindowPropertyFrameAndDivider_Impl::setNumberOfHorizontalDividers(double numberofHorizontalDividers) {
     bool result = setDouble(OS_WindowProperty_FrameAndDividerFields::NumberofHorizontalDividers, numberofHorizontalDividers);
     return result;
   }
 
-  void WindowPropertyFrameAndDivider_Impl::resetNumberofHorizontalDividers() {
+  void WindowPropertyFrameAndDivider_Impl::resetNumberOfHorizontalDividers() {
     bool result = setString(OS_WindowProperty_FrameAndDividerFields::NumberofHorizontalDividers, "");
     OS_ASSERT(result);
   }
 
-  bool WindowPropertyFrameAndDivider_Impl::setNumberofVerticalDividers(double numberofVerticalDividers) {
+  bool WindowPropertyFrameAndDivider_Impl::setNumberOfVerticalDividers(double numberofVerticalDividers) {
     bool result = setDouble(OS_WindowProperty_FrameAndDividerFields::NumberofVerticalDividers, numberofVerticalDividers);
     return result;
   }
 
-  void WindowPropertyFrameAndDivider_Impl::resetNumberofVerticalDividers() {
+  void WindowPropertyFrameAndDivider_Impl::resetNumberOfVerticalDividers() {
     bool result = setString(OS_WindowProperty_FrameAndDividerFields::NumberofVerticalDividers, "");
     OS_ASSERT(result);
   }
@@ -467,12 +467,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool WindowPropertyFrameAndDivider_Impl::setRatioofDividerEdgeGlassConductancetoCenterOfGlassConductance(double ratioofDividerEdgeGlassConductancetoCenterOfGlassConductance) {
+  bool WindowPropertyFrameAndDivider_Impl::setRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductance(double ratioofDividerEdgeGlassConductancetoCenterOfGlassConductance) {
     bool result = setDouble(OS_WindowProperty_FrameAndDividerFields::RatioofDividerEdgeGlassConductancetoCenterOfGlassConductance, ratioofDividerEdgeGlassConductancetoCenterOfGlassConductance);
     return result;
   }
 
-  void WindowPropertyFrameAndDivider_Impl::resetRatioofDividerEdgeGlassConductancetoCenterOfGlassConductance() {
+  void WindowPropertyFrameAndDivider_Impl::resetRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductance() {
     bool result = setString(OS_WindowProperty_FrameAndDividerFields::RatioofDividerEdgeGlassConductancetoCenterOfGlassConductance, "");
     OS_ASSERT(result);
   }
@@ -617,12 +617,12 @@ boost::optional<double> WindowPropertyFrameAndDivider::frameConductance() const 
   return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->frameConductance();
 }
 
-double WindowPropertyFrameAndDivider::ratioOfFrameEdgeGlassConductancetoCenterOfGlassConductance() const {
-  return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->ratioOfFrameEdgeGlassConductancetoCenterOfGlassConductance();
+double WindowPropertyFrameAndDivider::ratioOfFrameEdgeGlassConductanceToCenterOfGlassConductance() const {
+  return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->ratioOfFrameEdgeGlassConductanceToCenterOfGlassConductance();
 }
 
-bool WindowPropertyFrameAndDivider::isRatioOfFrameEdgeGlassConductancetoCenterOfGlassConductanceDefaulted() const {
-  return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->isRatioOfFrameEdgeGlassConductancetoCenterOfGlassConductanceDefaulted();
+bool WindowPropertyFrameAndDivider::isRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductanceDefaulted() const {
+  return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->isRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductanceDefaulted();
 }
 
 double WindowPropertyFrameAndDivider::frameSolarAbsorptance() const {
@@ -665,20 +665,20 @@ bool WindowPropertyFrameAndDivider::isDividerWidthDefaulted() const {
   return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->isDividerWidthDefaulted();
 }
 
-double WindowPropertyFrameAndDivider::numberofHorizontalDividers() const {
-  return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->numberofHorizontalDividers();
+double WindowPropertyFrameAndDivider::numberOfHorizontalDividers() const {
+  return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->numberOfHorizontalDividers();
 }
 
-bool WindowPropertyFrameAndDivider::isNumberofHorizontalDividersDefaulted() const {
-  return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->isNumberofHorizontalDividersDefaulted();
+bool WindowPropertyFrameAndDivider::isNumberOfHorizontalDividersDefaulted() const {
+  return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->isNumberOfHorizontalDividersDefaulted();
 }
 
-double WindowPropertyFrameAndDivider::numberofVerticalDividers() const {
-  return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->numberofVerticalDividers();
+double WindowPropertyFrameAndDivider::numberOfVerticalDividers() const {
+  return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->numberOfVerticalDividers();
 }
 
-bool WindowPropertyFrameAndDivider::isNumberofVerticalDividersDefaulted() const {
-  return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->isNumberofVerticalDividersDefaulted();
+bool WindowPropertyFrameAndDivider::isNumberOfVerticalDividersDefaulted() const {
+  return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->isNumberOfVerticalDividersDefaulted();
 }
 
 double WindowPropertyFrameAndDivider::dividerOutsideProjection() const {
@@ -705,12 +705,12 @@ bool WindowPropertyFrameAndDivider::isDividerConductanceDefaulted() const {
   return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->isDividerConductanceDefaulted();
 }
 
-double WindowPropertyFrameAndDivider::ratioofDividerEdgeGlassConductancetoCenterOfGlassConductance() const {
-  return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->ratioofDividerEdgeGlassConductancetoCenterOfGlassConductance();
+double WindowPropertyFrameAndDivider::ratioOfDividerEdgeGlassConductanceToCenterOfGlassConductance() const {
+  return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->ratioOfDividerEdgeGlassConductanceToCenterOfGlassConductance();
 }
 
-bool WindowPropertyFrameAndDivider::isRatioofDividerEdgeGlassConductancetoCenterOfGlassConductanceDefaulted() const {
-  return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->isRatioofDividerEdgeGlassConductancetoCenterOfGlassConductanceDefaulted();
+bool WindowPropertyFrameAndDivider::isRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductanceDefaulted() const {
+  return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->isRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductanceDefaulted();
 }
 
 double WindowPropertyFrameAndDivider::dividerSolarAbsorptance() const {
@@ -817,12 +817,12 @@ void WindowPropertyFrameAndDivider::resetFrameConductance() {
   getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->resetFrameConductance();
 }
 
-bool WindowPropertyFrameAndDivider::setRatioOfFrameEdgeGlassConductancetoCenterOfGlassConductance(double ratioOfFrameEdgeGlassConductancetoCenterOfGlassConductance) {
-  return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->setRatioOfFrameEdgeGlassConductancetoCenterOfGlassConductance(ratioOfFrameEdgeGlassConductancetoCenterOfGlassConductance);
+bool WindowPropertyFrameAndDivider::setRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductance(double ratioOfFrameEdgeGlassConductancetoCenterOfGlassConductance) {
+  return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->setRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductance(ratioOfFrameEdgeGlassConductancetoCenterOfGlassConductance);
 }
 
-void WindowPropertyFrameAndDivider::resetRatioOfFrameEdgeGlassConductancetoCenterOfGlassConductance() {
-  getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->resetRatioOfFrameEdgeGlassConductancetoCenterOfGlassConductance();
+void WindowPropertyFrameAndDivider::resetRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductance() {
+  getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->resetRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductance();
 }
 
 bool WindowPropertyFrameAndDivider::setFrameSolarAbsorptance(double frameSolarAbsorptance) {
@@ -865,20 +865,20 @@ void WindowPropertyFrameAndDivider::resetDividerWidth() {
   getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->resetDividerWidth();
 }
 
-bool WindowPropertyFrameAndDivider::setNumberofHorizontalDividers(double numberofHorizontalDividers) {
-  return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->setNumberofHorizontalDividers(numberofHorizontalDividers);
+bool WindowPropertyFrameAndDivider::setNumberOfHorizontalDividers(double numberofHorizontalDividers) {
+  return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->setNumberOfHorizontalDividers(numberofHorizontalDividers);
 }
 
-void WindowPropertyFrameAndDivider::resetNumberofHorizontalDividers() {
-  getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->resetNumberofHorizontalDividers();
+void WindowPropertyFrameAndDivider::resetNumberOfHorizontalDividers() {
+  getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->resetNumberOfHorizontalDividers();
 }
 
-bool WindowPropertyFrameAndDivider::setNumberofVerticalDividers(double numberofVerticalDividers) {
-  return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->setNumberofVerticalDividers(numberofVerticalDividers);
+bool WindowPropertyFrameAndDivider::setNumberOfVerticalDividers(double numberofVerticalDividers) {
+  return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->setNumberOfVerticalDividers(numberofVerticalDividers);
 }
 
-void WindowPropertyFrameAndDivider::resetNumberofVerticalDividers() {
-  getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->resetNumberofVerticalDividers();
+void WindowPropertyFrameAndDivider::resetNumberOfVerticalDividers() {
+  getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->resetNumberOfVerticalDividers();
 }
 
 bool WindowPropertyFrameAndDivider::setDividerOutsideProjection(double dividerOutsideProjection) {
@@ -905,12 +905,12 @@ void WindowPropertyFrameAndDivider::resetDividerConductance() {
   getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->resetDividerConductance();
 }
 
-bool WindowPropertyFrameAndDivider::setRatioofDividerEdgeGlassConductancetoCenterOfGlassConductance(double ratioofDividerEdgeGlassConductancetoCenterOfGlassConductance) {
-  return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->setRatioofDividerEdgeGlassConductancetoCenterOfGlassConductance(ratioofDividerEdgeGlassConductancetoCenterOfGlassConductance);
+bool WindowPropertyFrameAndDivider::setRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductance(double ratioofDividerEdgeGlassConductancetoCenterOfGlassConductance) {
+  return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->setRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductance(ratioofDividerEdgeGlassConductancetoCenterOfGlassConductance);
 }
 
-void WindowPropertyFrameAndDivider::resetRatioofDividerEdgeGlassConductancetoCenterOfGlassConductance() {
-  getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->resetRatioofDividerEdgeGlassConductancetoCenterOfGlassConductance();
+void WindowPropertyFrameAndDivider::resetRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductance() {
+  getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->resetRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductance();
 }
 
 bool WindowPropertyFrameAndDivider::setDividerSolarAbsorptance(double dividerSolarAbsorptance) {

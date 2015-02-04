@@ -38,83 +38,113 @@ boost::optional<IdfObject> ForwardTranslator::translateWindowPropertyFrameAndDiv
 {
   IdfObject idfObject(IddObjectType::WindowProperty_FrameAndDivider);
   m_idfObjects.push_back(idfObject);
-  /*
-  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
-    translateAndMapModelObject(lifeCycleCost);
-  }
 
-  // Name
-
-  s = modelObject.name();
-  if( s )
-  {
+  boost::optional<std::string> s = modelObject.name();
+  if (s){
     idfObject.setName(*s);
   }
 
-  // EndUseSubcategory
+  if (!modelObject.isFrameWidthDefaulted()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::FrameWidth, modelObject.frameWidth());
+  }
+
+  if (!modelObject.isFrameOutsideProjectionDefaulted()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::FrameOutsideProjection, modelObject.frameOutsideProjection());
+  }
+
+  if (!modelObject.isFrameInsideProjectionDefaulted()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::FrameInsideProjection, modelObject.frameInsideProjection());
+  }
+
+  if (modelObject.frameConductance()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::FrameConductance, modelObject.frameConductance().get());
+  }
+
+  if (!modelObject.isRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductanceDefaulted()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::RatioofFrameEdgeGlassConductancetoCenterOfGlassConductance, modelObject.ratioOfFrameEdgeGlassConductanceToCenterOfGlassConductance());
+  }
+
+  if (!modelObject.isFrameSolarAbsorptanceDefaulted()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::FrameSolarAbsorptance, modelObject.frameSolarAbsorptance());
+  }
+
+  if (!modelObject.isFrameVisibleAbsorptanceDefaulted()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::FrameVisibleAbsorptance, modelObject.frameVisibleAbsorptance());
+  }
+
+  if (!modelObject.isFrameThermalHemisphericalEmissivityDefaulted()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::FrameThermalHemisphericalEmissivity, modelObject.frameThermalHemisphericalEmissivity());
+  }
+
+  if (!modelObject.isDividerTypeDefaulted()){
+    idfObject.setString(WindowProperty_FrameAndDividerFields::DividerType, modelObject.dividerType());
+  }
+
+  if (!modelObject.isDividerWidthDefaulted()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::DividerWidth, modelObject.dividerWidth());
+  }
+
+  if (!modelObject.isNumberOfHorizontalDividersDefaulted()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::NumberofHorizontalDividers, modelObject.numberOfHorizontalDividers());
+  }
+
+  if (!modelObject.isNumberOfVerticalDividersDefaulted()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::NumberofVerticalDividers, modelObject.numberOfVerticalDividers());
+  }
+
+  if (!modelObject.isDividerOutsideProjectionDefaulted()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::DividerOutsideProjection, modelObject.dividerOutsideProjection());
+  }
+
+  if (!modelObject.isDividerInsideProjectionDefaulted()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::DividerInsideProjection, modelObject.dividerInsideProjection());
+  }
+
+  if (!modelObject.isDividerConductanceDefaulted()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::DividerConductance, modelObject.dividerConductance());
+  }
+
+  if (!modelObject.isRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductanceDefaulted()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::RatioofDividerEdgeGlassConductancetoCenterOfGlassConductance, modelObject.ratioOfDividerEdgeGlassConductanceToCenterOfGlassConductance());
+  }
+
+  if (!modelObject.isDividerSolarAbsorptanceDefaulted()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::DividerSolarAbsorptance, modelObject.dividerSolarAbsorptance());
+  }
+
+  if (!modelObject.isDividerVisibleAbsorptanceDefaulted()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::DividerVisibleAbsorptance, modelObject.dividerVisibleAbsorptance());
+  }
+
+  if (!modelObject.isDividerThermalHemisphericalEmissivityDefaulted()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::DividerThermalHemisphericalEmissivity, modelObject.dividerThermalHemisphericalEmissivity());
+  }
+
+  // outsideRevealDepth mapped to surface vertices
+
+  if (!modelObject.isOutsideRevealSolarAbsorptanceDefaulted()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::OutsideRevealSolarAbsorptance, modelObject.outsideRevealSolarAbsorptance());
+  }
+
+  if (!modelObject.isInsideSillDepthDefaulted()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::InsideSillDepth, modelObject.insideSillDepth());
+  }
+
+  if (!modelObject.isInsideSillSolarAbsorptanceDefaulted()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::InsideSillSolarAbsorptance, modelObject.insideSillSolarAbsorptance());
+  }
+
+  if (!modelObject.isInsideRevealDepthDefaulted()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::InsideRevealDepth, modelObject.insideRevealDepth());
+  }
+
+  if (!modelObject.isInsideRevealSolarAbsorptanceDefaulted()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::InsideRevealSolarAbsorptance, modelObject.insideRevealSolarAbsorptance());
+  }
+
+
+
   
-  s = definition.endUseSubcategory(); 
-  if( s )
-  {
-    idfObject.setString(WaterUse_EquipmentFields::EndUseSubcategory,s.get());
-  }
-
-  // PeakFlowRate
-  
-  value = definition.peakFlowRate();
-  if( value )
-  {
-    idfObject.setDouble(WaterUse_EquipmentFields::PeakFlowRate,value.get());
-  }
-
-  // FlowRateFractionScheduleName
-  
-  if( boost::optional<Schedule> s = modelObject.flowRateFractionSchedule() )
-  {
-    translateAndMapModelObject(s.get());
-
-    idfObject.setString(WaterUse_EquipmentFields::FlowRateFractionScheduleName,s->name().get());
-  }
-
-  // TargetTemperatureScheduleName
-  
-  if( boost::optional<Schedule> s = definition.targetTemperatureSchedule() )
-  {
-    translateAndMapModelObject(s.get());
-
-    idfObject.setString(WaterUse_EquipmentFields::TargetTemperatureScheduleName,s->name().get());
-  }
-
-  // ZoneName
-
-  if( boost::optional<Space> space = modelObject.space() )
-  {
-    if( boost::optional<ThermalZone> zone = space->thermalZone() )
-    {
-      translateAndMapModelObject(zone.get());
-
-      idfObject.setString(WaterUse_EquipmentFields::ZoneName,zone->name().get());
-    }
-  }
-
-  // SensibleFractionScheduleName
-  
-  if( boost::optional<Schedule> s = definition.sensibleFractionSchedule() )
-  {
-    translateAndMapModelObject(s.get());
-
-    idfObject.setString(WaterUse_EquipmentFields::SensibleFractionScheduleName,s->name().get());
-  }
-
-  // LatentFractionScheduleName
-  
-  if( boost::optional<Schedule> s = definition.latentFractionSchedule() )
-  {
-    translateAndMapModelObject(s.get());
-
-    idfObject.setString(WaterUse_EquipmentFields::LatentFractionScheduleName,s->name().get());
-  }
-  */
   return idfObject;
 }
 
