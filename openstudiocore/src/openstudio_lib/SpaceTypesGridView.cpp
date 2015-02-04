@@ -1157,7 +1157,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
           }
         );
 
-        addNameLineEditColumn(Heading(QString(DEFINITION), true),
+        addNameLineEditColumn(Heading(QString(DEFINITION), true, false),
           true,
           CastNullAdapter<model::SpaceLoadDefinition>(&model::SpaceLoadDefinition::name),
           CastNullAdapter<model::SpaceLoadDefinition>(&model::SpaceLoadDefinition::setName),
