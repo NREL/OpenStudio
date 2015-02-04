@@ -1,7 +1,7 @@
 
 OS:Version,
-  {9c814371-80d1-49d7-9448-e7ae06d372c9}, !- Handle
-  1.5.3;                                  !- Version Identifier
+  {8ecb3a2a-3017-4ea5-8f32-129ae7434edb}, !- Handle
+  1.6.0;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -401,7 +401,7 @@ OS:Coil:Cooling:DX:SingleSpeed,
 
 OS:CoolingTower:SingleSpeed,
   {b4c8a4f7-5eb1-4262-8227-0f232c5cfc93}, !- Handle
-  1 Spd Cooling Tower,           !- Name
+  1 Spd Cooling Tower,                    !- Name
   ,                                       !- Water Inlet Node Name
   ,                                       !- Water Outlet Node Name
   autosize,                               !- Design Water Flow Rate {m3/s}
