@@ -312,15 +312,37 @@ TEST_F(ModelFixture, Building_Clone)
     auto modelBuilding = model.getUniqueModelObject<Building>();
     auto libraryBuilding = library.getUniqueModelObject<Building>();
 
+    Space space1(library);
+    Space space2(library);
+
+    BuildingStory story(library);
+    space1.setBuildingStory(story);
+    space2.setBuildingStory(story);
+
+    ThermalZone zone(library);
+
+    space1.setThermalZone(zone);
+    space2.setThermalZone(zone);
+
     EXPECT_NE(modelBuilding,libraryBuilding);
 
-    // Expect to get back the Building instance already contained in the target model
-    // No related types (such as Spaces and ThermalZones are cloned either, because this
-    // potentially borders on merging buildings.  That is cleverness beyond the current Building::clone implementation.
-    // Although the buck could (and perhaps should) be passed to the Space and ThermalZone classes.
+    // Expect that the original modelBuilding will be removed and replaced by a clone of the libraryBuilding
     auto clone = libraryBuilding.clone(model);
-    EXPECT_NE(libraryBuilding,clone);
-    EXPECT_EQ(modelBuilding,clone);
+
+    EXPECT_TRUE(modelBuilding.handle().isNull());
+    EXPECT_NE(modelBuilding,clone);
+
+    EXPECT_EQ(1u,model.getModelObjects<Building>().size());
+    EXPECT_EQ(2u,model.getModelObjects<Space>().size());
+
+    auto zones = model.getModelObjects<ThermalZone>();
+
+    ASSERT_EQ(1u,zones.size());
+    EXPECT_EQ(2u,zones.front().spaces().size());
+
+    auto stories = model.getModelObjects<BuildingStory>();
+    ASSERT_EQ(1u,stories.size());
+    ASSERT_EQ(2u,stories.front().spaces().size());
   }
 
   // Clone into a different model that does not already have a Building instance.
