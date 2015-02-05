@@ -6877,3 +6877,523 @@ OS:SetpointManager:MultiZone:MinimumHumidity:Average,
   ,                                       !- Setpoint Node or NodeList Name
   MinimumHumidityRatio;                   !- Control Variable
 
+OS:Fan:ConstantVolume,
+  {49a478a7-2b88-4566-a68c-568f31353af8}, !- Handle
+  Fan Coil with Const Fan Var Fluid Flow - Fan, !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  ,                                       !- Fan Efficiency
+  ,                                       !- Pressure Rise {Pa}
+  AutoSize,                               !- Maximum Flow Rate {m3/s}
+  ,                                       !- Motor Efficiency
+  ,                                       !- Motor In Airstream Fraction
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ;                                       !- End-Use Subcategory
+
+OS:Coil:Heating:Water,
+  {9b16c087-b0de-427f-b746-d411b7e8f182}, !- Handle
+  Fan Coil with Const Fan Var Fluid Flow - Heating Coil, !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  ,                                       !- U-Factor Times Area Value {W/K}
+  ,                                       !- Maximum Water Flow Rate {m3/s}
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Performance Input Method
+  ,                                       !- Rated Capacity {W}
+  ,                                       !- Rated Inlet Water Temperature {C}
+  ,                                       !- Rated Inlet Air Temperature {C}
+  ,                                       !- Rated Outlet Water Temperature {C}
+  ,                                       !- Rated Outlet Air Temperature {C}
+  ;                                       !- Rated Ratio for Air and Water Convection
+
+OS:Coil:Cooling:Water,
+  {2b874e0c-72a8-4be4-a2a8-4286f0d752f3}, !- Handle
+  Fan Coil with Const Fan Var Fluid Flow - Cooling Coil, !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  ,                                       !- Design Water Flow Rate {m3/s}
+  ,                                       !- Design Air Flow Rate {m3/s}
+  ,                                       !- Design Inlet Water Temperature {C}
+  ,                                       !- Design Inlet Air Temperature {C}
+  ,                                       !- Design Outlet Air Temperature {C}
+  ,                                       !- Design Inlet Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Design Outlet Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Type of Analysis
+  ;                                       !- Heat Exchanger Configuration
+
+OS:ZoneHVAC:FourPipeFanCoil,
+  {ea8b26f9-62c5-4716-bf71-8c113894c0b5}, !- Handle
+  Fan Coil with Const Fan Var Fluid Flow, !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  ConstantFanVariableFlow,                !- Capacity Control Method
+  autosize,                               !- Maximum Supply Air Flow Rate {m3/s}
+  ,                                       !- Low Speed Supply Air Flow Ratio
+  ,                                       !- Medium Speed Supply Air Flow Ratio
+  autosize,                               !- Maximum Outdoor Air Flow Rate {m3/s}
+  ,                                       !- Outdoor Air Schedule Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  OutdoorAir:Mixer,                       !- Outdoor Air Mixer Object Type
+  ,                                       !- Outdoor Air Mixer Name
+  {49a478a7-2b88-4566-a68c-568f31353af8}, !- Supply Air Fan Name
+  {2b874e0c-72a8-4be4-a2a8-4286f0d752f3}, !- Cooling Coil Name
+  autosize,                               !- Maximum Cold Water Flow Rate {m3/s}
+  ,                                       !- Minimum Cold Water Flow Rate {m3/s}
+  ,                                       !- Cooling Convergence Tolerance
+  {9b16c087-b0de-427f-b746-d411b7e8f182}, !- Heating Coil Name
+  autosize,                               !- Maximum Hot Water Flow Rate {m3/s}
+  ,                                       !- Minimum Hot Water Flow Rate {m3/s}
+  ;                                       !- Heating Convergence Tolerance
+
+OS:Fan:OnOff,
+  {d5c825bb-4747-40b1-a6cc-c85df16d7718}, !- Handle
+  Fan Coil with Cycling Fan - Fan,        !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  0.6,                                    !- Fan Efficiency
+  300,                                    !- Pressure Rise {Pa}
+  autosize,                               !- Maximum Flow Rate {m3/s}
+  0.8,                                    !- Motor Efficiency
+  1,                                      !- Motor In Airstream Fraction
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {b5fd21e9-2279-40e0-93a0-06eff1e127e2}, !- Fan Power Ratio Function of Speed Ratio Curve Name
+  {0a640239-f3fb-4378-981c-9a2b5e7c4f39}, !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
+  ;                                       !- End-Use Subcategory
+
+OS:Curve:Exponent,
+  {b5fd21e9-2279-40e0-93a0-06eff1e127e2}, !- Handle
+  Fan On Off Power Curve 12,              !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 Constant
+  0,                                      !- Coefficient3 Constant
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1,                                      !- Maximum Value of x {BasedOnField A2}
+  ,                                       !- Minimum Curve Output {BasedOnField A3}
+  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  ,                                       !- Input Unit Type for X
+  ;                                       !- Output Unit Type
+
+OS:Curve:Cubic,
+  {0a640239-f3fb-4378-981c-9a2b5e7c4f39}, !- Handle
+  Fan On Off Efficiency Curve 12,         !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
+
+OS:Coil:Heating:Water,
+  {6ebfa242-93b1-4d90-9ca4-eb5362303729}, !- Handle
+  Fan Coil with Cycling Fan - Heating Coil, !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  ,                                       !- U-Factor Times Area Value {W/K}
+  ,                                       !- Maximum Water Flow Rate {m3/s}
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Performance Input Method
+  ,                                       !- Rated Capacity {W}
+  ,                                       !- Rated Inlet Water Temperature {C}
+  ,                                       !- Rated Inlet Air Temperature {C}
+  ,                                       !- Rated Outlet Water Temperature {C}
+  ,                                       !- Rated Outlet Air Temperature {C}
+  ;                                       !- Rated Ratio for Air and Water Convection
+
+OS:Coil:Cooling:Water,
+  {4ef81f27-6610-4509-bd72-345e9c0f6da3}, !- Handle
+  Fan Coil with Cycling Fan - Cooling Coil, !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  ,                                       !- Design Water Flow Rate {m3/s}
+  ,                                       !- Design Air Flow Rate {m3/s}
+  ,                                       !- Design Inlet Water Temperature {C}
+  ,                                       !- Design Inlet Air Temperature {C}
+  ,                                       !- Design Outlet Air Temperature {C}
+  ,                                       !- Design Inlet Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Design Outlet Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Type of Analysis
+  ;                                       !- Heat Exchanger Configuration
+
+OS:ZoneHVAC:FourPipeFanCoil,
+  {e955a851-f15a-43d0-aceb-d53657b38e22}, !- Handle
+  Fan Coil with Cycling Fan,              !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  CyclingFan,                             !- Capacity Control Method
+  autosize,                               !- Maximum Supply Air Flow Rate {m3/s}
+  ,                                       !- Low Speed Supply Air Flow Ratio
+  ,                                       !- Medium Speed Supply Air Flow Ratio
+  autosize,                               !- Maximum Outdoor Air Flow Rate {m3/s}
+  ,                                       !- Outdoor Air Schedule Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  OutdoorAir:Mixer,                       !- Outdoor Air Mixer Object Type
+  ,                                       !- Outdoor Air Mixer Name
+  {d5c825bb-4747-40b1-a6cc-c85df16d7718}, !- Supply Air Fan Name
+  {4ef81f27-6610-4509-bd72-345e9c0f6da3}, !- Cooling Coil Name
+  autosize,                               !- Maximum Cold Water Flow Rate {m3/s}
+  ,                                       !- Minimum Cold Water Flow Rate {m3/s}
+  ,                                       !- Cooling Convergence Tolerance
+  {6ebfa242-93b1-4d90-9ca4-eb5362303729}, !- Heating Coil Name
+  autosize,                               !- Maximum Hot Water Flow Rate {m3/s}
+  ,                                       !- Minimum Hot Water Flow Rate {m3/s}
+  ;                                       !- Heating Convergence Tolerance
+
+OS:Fan:VariableVolume,
+  {e0cfb885-12c5-4d01-b86f-6514d92205f9}, !- Handle
+  Fan Coil with Var Fan Var Fluid Flow - Fan, !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  0.6045,                                 !- Fan Efficiency
+  1017.592,                               !- Pressure Rise {Pa}
+  Autosize,                               !- Maximum Flow Rate {m3/s}
+  FixedFlowRate,                          !- Fan Power Minimum Flow Rate Input Method
+  0,                                      !- Fan Power Minimum Flow Fraction
+  0,                                      !- Fan Power Minimum Air Flow Rate {m3/s}
+  0.93,                                   !- Motor Efficiency
+  1,                                      !- Motor In Airstream Fraction
+  0.040759894,                            !- Fan Power Coefficient 1
+  0.08804497,                             !- Fan Power Coefficient 2
+  -0.07292612,                            !- Fan Power Coefficient 3
+  0.943739823,                            !- Fan Power Coefficient 4
+  0,                                      !- Fan Power Coefficient 5
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ;                                       !- End-Use Subcategory
+
+OS:Coil:Heating:Water,
+  {36deaf41-e00c-4a4e-a38d-d443cbea27dd}, !- Handle
+  Fan Coil with Var Fan Var Fluid Flow - Heating Coil, !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  ,                                       !- U-Factor Times Area Value {W/K}
+  ,                                       !- Maximum Water Flow Rate {m3/s}
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Performance Input Method
+  ,                                       !- Rated Capacity {W}
+  ,                                       !- Rated Inlet Water Temperature {C}
+  ,                                       !- Rated Inlet Air Temperature {C}
+  ,                                       !- Rated Outlet Water Temperature {C}
+  ,                                       !- Rated Outlet Air Temperature {C}
+  ;                                       !- Rated Ratio for Air and Water Convection
+
+OS:Coil:Cooling:Water,
+  {d0c8bfd3-6158-49ea-bc7f-38e363f7c711}, !- Handle
+  Fan Coil with Var Fan Var Fluid Flow - Cooling Coil, !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  ,                                       !- Design Water Flow Rate {m3/s}
+  ,                                       !- Design Air Flow Rate {m3/s}
+  ,                                       !- Design Inlet Water Temperature {C}
+  ,                                       !- Design Inlet Air Temperature {C}
+  ,                                       !- Design Outlet Air Temperature {C}
+  ,                                       !- Design Inlet Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Design Outlet Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Type of Analysis
+  ;                                       !- Heat Exchanger Configuration
+
+OS:ZoneHVAC:FourPipeFanCoil,
+  {e30b0f20-1761-46c4-8e04-0fd6846856be}, !- Handle
+  Fan Coil with Var Fan Var Fluid Flow,   !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  VariableFanVariableFlow,                !- Capacity Control Method
+  autosize,                               !- Maximum Supply Air Flow Rate {m3/s}
+  ,                                       !- Low Speed Supply Air Flow Ratio
+  ,                                       !- Medium Speed Supply Air Flow Ratio
+  autosize,                               !- Maximum Outdoor Air Flow Rate {m3/s}
+  ,                                       !- Outdoor Air Schedule Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  OutdoorAir:Mixer,                       !- Outdoor Air Mixer Object Type
+  ,                                       !- Outdoor Air Mixer Name
+  {e0cfb885-12c5-4d01-b86f-6514d92205f9}, !- Supply Air Fan Name
+  {d0c8bfd3-6158-49ea-bc7f-38e363f7c711}, !- Cooling Coil Name
+  autosize,                               !- Maximum Cold Water Flow Rate {m3/s}
+  ,                                       !- Minimum Cold Water Flow Rate {m3/s}
+  ,                                       !- Cooling Convergence Tolerance
+  {36deaf41-e00c-4a4e-a38d-d443cbea27dd}, !- Heating Coil Name
+  autosize,                               !- Maximum Hot Water Flow Rate {m3/s}
+  ,                                       !- Minimum Hot Water Flow Rate {m3/s}
+  ;                                       !- Heating Convergence Tolerance
+
+OS:Fan:VariableVolume,
+  {b5c75ce0-7c70-4dac-bacb-0c1a5a1a5dab}, !- Handle
+  Fan Coil with Var Fan Const Fluid Flow - Fan, !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  0.6045,                                 !- Fan Efficiency
+  1017.592,                               !- Pressure Rise {Pa}
+  Autosize,                               !- Maximum Flow Rate {m3/s}
+  FixedFlowRate,                          !- Fan Power Minimum Flow Rate Input Method
+  0,                                      !- Fan Power Minimum Flow Fraction
+  0,                                      !- Fan Power Minimum Air Flow Rate {m3/s}
+  0.93,                                   !- Motor Efficiency
+  1,                                      !- Motor In Airstream Fraction
+  0.040759894,                            !- Fan Power Coefficient 1
+  0.08804497,                             !- Fan Power Coefficient 2
+  -0.07292612,                            !- Fan Power Coefficient 3
+  0.943739823,                            !- Fan Power Coefficient 4
+  0,                                      !- Fan Power Coefficient 5
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ;                                       !- End-Use Subcategory
+
+OS:Coil:Heating:Water,
+  {9d8c2a17-eef1-44d6-a8dd-0e9b74726abe}, !- Handle
+  Fan Coil with Var Fan Const Fluid Flow - Heating Coil, !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  ,                                       !- U-Factor Times Area Value {W/K}
+  ,                                       !- Maximum Water Flow Rate {m3/s}
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Performance Input Method
+  ,                                       !- Rated Capacity {W}
+  ,                                       !- Rated Inlet Water Temperature {C}
+  ,                                       !- Rated Inlet Air Temperature {C}
+  ,                                       !- Rated Outlet Water Temperature {C}
+  ,                                       !- Rated Outlet Air Temperature {C}
+  ;                                       !- Rated Ratio for Air and Water Convection
+
+OS:Coil:Cooling:Water,
+  {f39f97fc-0c4b-4c6a-b491-181bee1d7de3}, !- Handle
+  Fan Coil with Var Fan Const Fluid Flow - Cooling Coil, !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  ,                                       !- Design Water Flow Rate {m3/s}
+  ,                                       !- Design Air Flow Rate {m3/s}
+  ,                                       !- Design Inlet Water Temperature {C}
+  ,                                       !- Design Inlet Air Temperature {C}
+  ,                                       !- Design Outlet Air Temperature {C}
+  ,                                       !- Design Inlet Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Design Outlet Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Type of Analysis
+  ;                                       !- Heat Exchanger Configuration
+
+OS:ZoneHVAC:FourPipeFanCoil,
+  {fbcfbbf5-5a0d-4582-8e83-820ea507ad66}, !- Handle
+  Fan Coil with Var Fan Const Fluid Flow, !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  VariableFanConstantFlow,                !- Capacity Control Method
+  autosize,                               !- Maximum Supply Air Flow Rate {m3/s}
+  ,                                       !- Low Speed Supply Air Flow Ratio
+  ,                                       !- Medium Speed Supply Air Flow Ratio
+  autosize,                               !- Maximum Outdoor Air Flow Rate {m3/s}
+  ,                                       !- Outdoor Air Schedule Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  OutdoorAir:Mixer,                       !- Outdoor Air Mixer Object Type
+  ,                                       !- Outdoor Air Mixer Name
+  {b5c75ce0-7c70-4dac-bacb-0c1a5a1a5dab}, !- Supply Air Fan Name
+  {f39f97fc-0c4b-4c6a-b491-181bee1d7de3}, !- Cooling Coil Name
+  autosize,                               !- Maximum Cold Water Flow Rate {m3/s}
+  ,                                       !- Minimum Cold Water Flow Rate {m3/s}
+  ,                                       !- Cooling Convergence Tolerance
+  {9d8c2a17-eef1-44d6-a8dd-0e9b74726abe}, !- Heating Coil Name
+  autosize,                               !- Maximum Hot Water Flow Rate {m3/s}
+  ,                                       !- Minimum Hot Water Flow Rate {m3/s}
+  ;                                       !- Heating Convergence Tolerance
+
+OS:Schedule:Ruleset,
+  {655b4e90-c058-40c7-aa39-646c84ed55a9}, !- Handle
+  Cycling PTAC Fan Mode Always Zero,      !- Name
+  {57553c0e-9004-4492-814d-5cc751d9a160}, !- Schedule Type Limits Name
+  {0b960b7a-d201-4455-a1b5-064ce93e2f56}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {0b960b7a-d201-4455-a1b5-064ce93e2f56}, !- Handle
+  Cycling PTAC Fan Mode Sch Default,      !- Name
+  {57553c0e-9004-4492-814d-5cc751d9a160}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:Fan:OnOff,
+  {0591f811-25a9-4262-b630-cd4de5473511}, !- Handle
+  Cycling PTAC Fan,                       !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  0.6,                                    !- Fan Efficiency
+  250,                                    !- Pressure Rise {Pa}
+  autosize,                               !- Maximum Flow Rate {m3/s}
+  0.8,                                    !- Motor Efficiency
+  1,                                      !- Motor In Airstream Fraction
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {d5acbc64-65e8-47ee-a341-d9568cb99791}, !- Fan Power Ratio Function of Speed Ratio Curve Name
+  {ac9f00cb-4851-45c1-95f5-db935437cb0e}, !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
+  ;                                       !- End-Use Subcategory
+
+OS:Curve:Exponent,
+  {d5acbc64-65e8-47ee-a341-d9568cb99791}, !- Handle
+  Fan On Off Power Curve 13,              !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 Constant
+  0,                                      !- Coefficient3 Constant
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1,                                      !- Maximum Value of x {BasedOnField A2}
+  ,                                       !- Minimum Curve Output {BasedOnField A3}
+  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  ,                                       !- Input Unit Type for X
+  ;                                       !- Output Unit Type
+
+OS:Curve:Cubic,
+  {ac9f00cb-4851-45c1-95f5-db935437cb0e}, !- Handle
+  Fan On Off Efficiency Curve 13,         !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
+
+OS:Coil:Heating:Water,
+  {603abd52-5b41-4fa9-b6d8-bcf7fcc90cb1}, !- Handle
+  Cycling PTAC HW Htg Coil,               !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  ,                                       !- U-Factor Times Area Value {W/K}
+  ,                                       !- Maximum Water Flow Rate {m3/s}
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Performance Input Method
+  ,                                       !- Rated Capacity {W}
+  ,                                       !- Rated Inlet Water Temperature {C}
+  ,                                       !- Rated Inlet Air Temperature {C}
+  ,                                       !- Rated Outlet Water Temperature {C}
+  ,                                       !- Rated Outlet Air Temperature {C}
+  ;                                       !- Rated Ratio for Air and Water Convection
+
+OS:Coil:Cooling:DX:SingleSpeed,
+  {bcb16a3c-449c-4c78-90ce-9448c7a955bf}, !- Handle
+  Cycling PTAC 1 Spd DX Clg Coil,         !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  autosize,                               !- Rated Total Cooling Capacity {W}
+  autosize,                               !- Rated Sensible Heat Ratio
+  3,                                      !- Rated COP {W/W}
+  autosize,                               !- Rated Air Flow Rate {m3/s}
+  773.3,                                  !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {5d9c97b4-1531-4581-9c3a-c63ce62faa55}, !- Total Cooling Capacity Function of Temperature Curve Name
+  {aca3affe-6f07-4376-9be0-e020e3f440ae}, !- Total Cooling Capacity Function of Flow Fraction Curve Name
+  {089f50c2-c451-4322-b450-f739b184eb8e}, !- Energy Input Ratio Function of Temperature Curve Name
+  {8286caa5-21bc-4283-af24-07b42925170b}, !- Energy Input Ratio Function of Flow Fraction Curve Name
+  {401083ae-2f28-4dd8-b9d2-8903e9ffad32}, !- Part Load Fraction Correlation Curve Name
+  ,                                       !- Nominal Time for Condensate Removal to Begin {s}
+  ,                                       !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+  ,                                       !- Maximum Cycling Rate {cycles/hr}
+  ,                                       !- Latent Capacity Time Constant {s}
+  ,                                       !- Condenser Air Inlet Node Name
+  AirCooled,                              !- Condenser Type
+  0,                                      !- Evaporative Condenser Effectiveness {dimensionless}
+  Autosize,                               !- Evaporative Condenser Air Flow Rate {m3/s}
+  Autosize,                               !- Evaporative Condenser Pump Rated Power Consumption {W}
+  0,                                      !- Crankcase Heater Capacity {W}
+  0,                                      !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  ,                                       !- Supply Water Storage Tank Name
+  ,                                       !- Condensate Collection Water Storage Tank Name
+  0,                                      !- Basin Heater Capacity {W/K}
+  10,                                     !- Basin Heater Setpoint Temperature {C}
+  ;                                       !- Basin Heater Operating Schedule Name
+
+OS:Curve:Biquadratic,
+  {5d9c97b4-1531-4581-9c3a-c63ce62faa55}, !- Handle
+  Curve Biquadratic 25,                   !- Name
+  0.942587793,                            !- Coefficient1 Constant
+  0.009543347,                            !- Coefficient2 x
+  0.00068377,                             !- Coefficient3 x**2
+  -0.011042676,                           !- Coefficient4 y
+  5.249e-06,                              !- Coefficient5 y**2
+  -9.72e-06,                              !- Coefficient6 x*y
+  17,                                     !- Minimum Value of x {BasedOnField A2}
+  22,                                     !- Maximum Value of x {BasedOnField A2}
+  13,                                     !- Minimum Value of y {BasedOnField A3}
+  46;                                     !- Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Quadratic,
+  {aca3affe-6f07-4376-9be0-e020e3f440ae}, !- Handle
+  Curve Quadratic 29,                     !- Name
+  0.8,                                    !- Coefficient1 Constant
+  0.2,                                    !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0.5,                                    !- Minimum Value of x {BasedOnField A2}
+  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Biquadratic,
+  {089f50c2-c451-4322-b450-f739b184eb8e}, !- Handle
+  Curve Biquadratic 26,                   !- Name
+  0.342414409,                            !- Coefficient1 Constant
+  0.034885008,                            !- Coefficient2 x
+  -0.0006237,                             !- Coefficient3 x**2
+  0.004977216,                            !- Coefficient4 y
+  0.000437951,                            !- Coefficient5 y**2
+  -0.000728028,                           !- Coefficient6 x*y
+  17,                                     !- Minimum Value of x {BasedOnField A2}
+  22,                                     !- Maximum Value of x {BasedOnField A2}
+  13,                                     !- Minimum Value of y {BasedOnField A3}
+  46;                                     !- Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Quadratic,
+  {8286caa5-21bc-4283-af24-07b42925170b}, !- Handle
+  Curve Quadratic 30,                     !- Name
+  1.1552,                                 !- Coefficient1 Constant
+  -0.1808,                                !- Coefficient2 x
+  0.0256,                                 !- Coefficient3 x**2
+  0.5,                                    !- Minimum Value of x {BasedOnField A2}
+  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Quadratic,
+  {401083ae-2f28-4dd8-b9d2-8903e9ffad32}, !- Handle
+  Curve Quadratic 31,                     !- Name
+  0.85,                                   !- Coefficient1 Constant
+  0.15,                                   !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
+
+OS:ZoneHVAC:PackagedTerminalAirConditioner,
+  {b2a9eb10-60c4-4f70-a5ee-2bb5652ad3de}, !- Handle
+  Cycling PTAC DX Clg HW Htg,             !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  OutdoorAir:Mixer,                       !- Outdoor Air Mixer Object Type
+  ,                                       !- Outdoor Air Mixer Name
+  Autosize,                               !- Supply Air Flow Rate During Cooling Operation {m3/s}
+  Autosize,                               !- Supply Air Flow Rate During Heating Operation {m3/s}
+  Autosize,                               !- Supply Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+  Autosize,                               !- Outdoor Air Flow Rate During Cooling Operation {m3/s}
+  Autosize,                               !- Outdoor Air Flow Rate During Heating Operation {m3/s}
+  Autosize,                               !- Outdoor Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+  {0591f811-25a9-4262-b630-cd4de5473511}, !- Supply Air Fan Name
+  {603abd52-5b41-4fa9-b6d8-bcf7fcc90cb1}, !- Heating Coil Name
+  {bcb16a3c-449c-4c78-90ce-9448c7a955bf}, !- Cooling Coil Name
+  DrawThrough,                            !- Fan Placement
+  {655b4e90-c058-40c7-aa39-646c84ed55a9}; !- Supply Air Fan Operating Mode Schedule Name
+
+OS:ScheduleTypeLimits,
+  {57553c0e-9004-4492-814d-5cc751d9a160}, !- Handle
+  ControlMode,                            !- Name
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  1,                                      !- Upper Limit Value {BasedOnField A4}
+  Discrete,                               !- Numeric Type
+  ControlMode;                            !- Unit Type
+
