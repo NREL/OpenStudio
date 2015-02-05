@@ -519,13 +519,20 @@ def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_s
   end
   
   # values is [row][hour], presumably row maps to a row in the points files which maps back to some object
+  # read values from file now
+  values = []
+  valuesFile = File.open("#{t_outPath}/output/ts/merged_space.ill")
+  valuesFile.each do |row|
+    
+    values << row.split(" ")
+  end
 
   puts "#{Time.now.getutc}: writing output"
 
   # now proceed on, as we have all of the contributions we want
   allhours = []
 
-# this chunk is parsing values out to allhours array which is indexed by hour and value is a map with all the space stuff
+	# this chunk is parsing values out to allhours array which is indexed by hour and value is a map with all the space stuff
   8760.times do |hour|
     index = 0;
     splitvalues = Hash.new
@@ -664,7 +671,8 @@ t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
       # do uncontrolled windows (WG0)
       if wg[2].to_i == 0
         #simulations << "dctimestep #{t_outPath}/output/dc/#{wg}.vmx annual-sky.mtx | rmtxop -fa -t -c 47.4 120 11.6 - > #{t_outPath}/output/ts/#{wg}.ill"
-        exec_statement("dctimestep #{t_outPath}/output/dc/#{wg}.vmx annual-sky.mtx | rmtxop -fa -t -c 47.4 120 11.6 - > #{t_outPath}/output/ts/3P/#{wg}.ill") 
+        # no transpose, and save the window group files to a subdirectory ("3P")
+        exec_statement("dctimestep #{t_outPath}/output/dc/#{wg}.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > #{t_outPath}/output/ts/#{wg}.ill") 
         # no transpose or conversion for now
       end
       next if wg[2].to_i == 0
@@ -677,7 +685,7 @@ t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
       
       wgXMLs.each_index do |i|
         exec_statement("dctimestep #{t_outPath}/output/dc/#{wg}.vmx #{t_outPath}/bsdf/#{wgXMLs[i].strip} #{t_outPath}/output/dc/#{wg}.dmx \
-        annual-sky.mtx | rmtxop -fa -t -c 47.4 120 11.6 - > #{t_outPath}/output/ts/3P/#{wg}_#{wgXMLs[i].split[0]}.ill")
+        annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > #{t_outPath}/output/ts/#{wg}_#{wgXMLs[i].split[0]}.ill")
  
       end
       
@@ -694,16 +702,105 @@ t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
       return 0
     }
     
-    puts "Calculated daylight illuminance for all window group states, exiting."
+    puts "Calculated daylight illuminance for all window group states; merging results..."
     
-    # do window group/state merge here, but for now:
-    exit
+    # do window group/state merge thing
     
+    windowGroups = File.open("#{t_outPath}/bsdf/mapping.rad")
+		windowGroups.each do |wg|
+
+			next if wg[0] == "#"
+			windowGroup = wg.split(",")[0]
+			next if windowGroup == "WG0"
+
+			wgIllumFiles = Dir.glob("#{t_outPath}/output/ts/#{windowGroup}_*.ill")
+
+			shadeControlSetpoint = wg.split(",")[3].to_f
+
+			puts "generating shade schedule for window group '#{windowGroup}', setpoint: #{shadeControlSetpoint} lux..."  
+
+			# separate header from data; so, so ugly. 
+			header = []
+			ill0 = []
+			ill1 = []
+
+			wgIllum_0 = File.open("#{wgIllumFiles[0]}").each_line do |line|
+				if line.chomp! =~ /^\s?\d/
+					ill0 << "#{line}\n"
+				else 
+					header << "#{line}\n"
+				end
+
+			end
+
+			wgIllum_1 = File.open("#{wgIllumFiles[1]}").each_line do |line|
+				if line.chomp! =~ /^\s?\d/
+					ill1 << "#{line}\n"
+				else 
+					next
+				end
+
+			end
+
+			# get the window control point illuminances (should be headerless file)
+			windowControls = File.open("#{t_outPath}/output/ts/window_controls.ill", "r")
+
+			windowControls.each do |row|
+		
+				data = row.split(" ")
+
+				wgMerge = []
+				wgShadeSched = []
+
+				data.each_index do |i|
+
+					if data[i].to_f < shadeControlSetpoint
+						wgMerge << ill0[i]
+						wgShadeSched << "0\n"
+					else
+						wgMerge << ill1[i]
+						wgShadeSched << "1\n"
+					end
+		
+				end
+
+
+				# you need to file these files, yo.
+				
+				wgIllum = File.open("m_#{windowGroup}.ill", "w")
+				wgShade = File.open("#{windowGroup}.shd", "w")
+				header.each {|head| wgIllum.print "#{head}"}
+				wgMerge.each {|ts| wgIllum.print "#{ts}"}
+				wgShadeSched.each {|sh| wgShade.print "#{sh}"}
+				wgIllum.close
+				wgShade.close
+				FileUtils.rm Dir.glob('*.tmp')
+
+			end
+
+		end
+
+		# make whole-building illuminance file
+
+		# one per window group
+		mergedWindows = Dir.glob("m_*.ill")
+		addFiles = ""
+		mergedWindows.each do |file|
+			addFiles << "+ #{file} "
+		end
+
+		# blend uncontrolled windows with merged-controlled window groups (no transform for inline crap)
+		system("rmtxop -fa #{t_outPath}/output/ts/WG0.ill #{addFiles} | getinfo - > #{t_outPath}/output/ts/merged_space.ill")
+
+  	# window merge end
+  	# 3-phase end   
 
   else
     # 2-phase 
+    # should clean up these file extensions; really there's no daylight matrix in a 2-phase calc. =/
     # simulations << "dctimestep \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" \"#{t_outPath / OpenStudio::Path.new("annual-sky.mtx")}\" "
-    exec_statement("dctimestep #{t_outPath}/output/dc/merged_space/maps/merged_space.dmx annual-sky.mtx | rmtxop -fa -t -c 47.4 120 11.6 - > #{t_outPath}/output/ts/merged_space.ill")
+    # storing the "values" data in a file to support 3-phase workflow, no transpose operation
+    exec_statement("dctimestep #{t_outPath}/output/dc/merged_space/maps/merged_space.dmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - | getinfo - > #{t_outPath}/output/ts/merged_space.ill")
     
      # return the bsdf index for window group given by index at this hour
     windowMapping = lambda { |index, hour| return 0 }
@@ -715,7 +812,6 @@ t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
   # what is space_names_to_calculate?
   #  
   rawValues = execSimulation(simulations, windowMapping, t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
-  #rawValues = execSimulation(simulations, windowMapping, t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
 
   dcVectors = nil
 
