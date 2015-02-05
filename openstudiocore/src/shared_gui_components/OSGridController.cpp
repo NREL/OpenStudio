@@ -1483,6 +1483,7 @@ void OSGridController::selectAllStateChanged(const int newState) const
 
 void OSGridController::onInFocus(bool inFocus, bool hasData, int row, int column, boost::optional<int> subrow)
 {
+  // First thing to do is to check if row is 0, because that means that the apply button was clicked
   if (row == 0 && this->m_hasHorizontalHeader) {
     // Do great things
     auto selectedRow = std::get<0>(m_selectedCellLocation);
