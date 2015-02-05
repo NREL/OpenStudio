@@ -589,8 +589,12 @@ void ThermalZonesGridController::addColumns(const QString &/*category*/, std::ve
       std::function<bool(model::ThermalZone *, const model::ModelObject &)> setter(
       [](model::ThermalZone *t_z, const model::ModelObject &t_mo) {
         try {
+          if (t_mo.cast<model::ZoneHVACComponent>().thermalZone()) {
+            t_mo.cast<model::ZoneHVACComponent>().clone(t_mo.model());
+          }
           return t_mo.cast<model::ZoneHVACComponent>().addToThermalZone(*t_z);
-        } catch (const std::exception &) {
+        }
+        catch (const std::exception &) {
           return false;
         }
       }
