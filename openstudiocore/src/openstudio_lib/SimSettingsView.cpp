@@ -1362,22 +1362,41 @@ void SimSettingsView::attachSurfaceConvectionAlgorithmInside()
 {
   model::InsideSurfaceConvectionAlgorithm mo = m_model.getUniqueModelObject<model::InsideSurfaceConvectionAlgorithm>();
 
-  m_algorithmSurfaceConvectionInside->bind(mo,"algorithmSurfaceConvectionInside");
+  m_algorithmSurfaceConvectionInside->bind<std::string>(
+    mo,
+    static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+    std::bind(model::InsideSurfaceConvectionAlgorithm::validAlgorithmValues),
+    std::function<boost::optional<std::string>()>(std::bind(&model::InsideSurfaceConvectionAlgorithm::algorithm, mo)),
+    std::bind(&model::InsideSurfaceConvectionAlgorithm::setAlgorithm, mo, std::placeholders::_1),
+    NoFailAction(std::bind(&model::InsideSurfaceConvectionAlgorithm::resetAlgorithm, mo)));
 }
 
 void SimSettingsView::attachSurfaceConvectionAlgorithmOutside()
 {
   model::OutsideSurfaceConvectionAlgorithm mo = m_model.getUniqueModelObject<model::OutsideSurfaceConvectionAlgorithm>();
 
-  m_algorithmSurfaceConvectionOutside->bind(mo,"algorithmSurfaceConvectionOutside");
+  m_algorithmSurfaceConvectionOutside->bind<std::string>(
+    mo,
+    static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+    std::bind(model::OutsideSurfaceConvectionAlgorithm::validAlgorithmValues),
+    std::function<boost::optional<std::string>()>(std::bind(&model::OutsideSurfaceConvectionAlgorithm::algorithm, mo)),
+    std::bind(&model::OutsideSurfaceConvectionAlgorithm::setAlgorithm, mo, std::placeholders::_1),
+    NoFailAction(std::bind(&model::OutsideSurfaceConvectionAlgorithm::resetAlgorithm, mo)));
 }
 
 void SimSettingsView::attachHeatBalanceAlgorithm()
 {
   model::HeatBalanceAlgorithm mo = m_model.getUniqueModelObject<model::HeatBalanceAlgorithm>();
 
-  m_algorithmHeatBalance->bind(mo,"algorithmHeatBalance");
-  m_surfaceTemperatureUpperLimit->bind(mo,"surfaceTemperatureUpperLimit",m_isIP);
+  m_algorithmHeatBalance->bind<std::string>(
+    mo,
+    static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+    std::bind(model::HeatBalanceAlgorithm::algorithmValues),
+    std::function<boost::optional<std::string>()>(std::bind(&model::HeatBalanceAlgorithm::algorithm, mo)),
+    std::bind(&model::HeatBalanceAlgorithm::setAlgorithm, mo, std::placeholders::_1),
+    NoFailAction(std::bind(&model::HeatBalanceAlgorithm::resetAlgorithm, mo)));
+
+  m_surfaceTemperatureUpperLimit->bind(mo, "surfaceTemperatureUpperLimit", m_isIP);
   m_minimumSurfaceConvectionHeatTransferCoefficientValue->bind(mo,"minimumSurfaceConvectionHeatTransferCoefficientValue",m_isIP);
   m_maximumSurfaceConvectionHeatTransferCoefficientValue->bind(mo,"maximumSurfaceConvectionHeatTransferCoefficientValue",m_isIP);
 }
@@ -1386,7 +1405,13 @@ void SimSettingsView::attachZoneAirHeatBalanceAlgorithm()
 {
   model::ZoneAirHeatBalanceAlgorithm mo = m_model.getUniqueModelObject<model::ZoneAirHeatBalanceAlgorithm>();
 
-  m_algorithmZoneAirHeatBalance->bind(mo,"algorithmZoneAirHeatBalance");
+  m_algorithmZoneAirHeatBalance->bind<std::string>(
+    mo,
+    static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+    std::bind(model::ZoneAirHeatBalanceAlgorithm::validAlgorithmValues),
+    std::function<boost::optional<std::string>()>(std::bind(&model::ZoneAirHeatBalanceAlgorithm::algorithm, mo)),
+    std::bind(&model::ZoneAirHeatBalanceAlgorithm::setAlgorithm, mo, std::placeholders::_1),
+    NoFailAction(std::bind(&model::ZoneAirHeatBalanceAlgorithm::resetAlgorithm, mo)));
 }
 
 void SimSettingsView::attachZoneAirContaminantBalance()
