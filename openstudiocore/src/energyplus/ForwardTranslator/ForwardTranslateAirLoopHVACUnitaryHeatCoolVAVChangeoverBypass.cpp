@@ -284,6 +284,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatCoo
       _fan->setString(Fan_OnOffFields::AirOutletNodeName,fanOutletNodeName);
     }
 
+    fixSPMsForUnitarySystem(modelObject,fanInletNodeName,fanOutletNodeName);
+
     if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed )
     {
       _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName,coolInletNodeName);
