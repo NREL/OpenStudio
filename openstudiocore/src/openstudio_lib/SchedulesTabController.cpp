@@ -363,6 +363,10 @@ void SchedulesTabController::onItemDropped(const OSItemId& itemId)
 void SchedulesTabController::toggleUnits(bool displayIP)
 {
   m_isIP = displayIP;
+
+  if (m_scheduleDialog){
+    m_scheduleDialog->setIsIP(displayIP);
+  }
 }
 
 double SchedulesTabController::defaultStartingValue(const model::ScheduleDay& scheduleDay) {

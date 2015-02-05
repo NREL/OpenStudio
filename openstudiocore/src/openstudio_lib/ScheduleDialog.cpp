@@ -90,6 +90,13 @@ ScheduleDialog::ScheduleDialog(bool isIP,
   createLayout();
 }
 
+void ScheduleDialog::setIsIP(bool isIP)
+{
+  m_isIP = isIP;
+
+  onCurrentIndexChanged(m_scheduleTypeComboBox->currentIndex());
+}
+
 void ScheduleDialog::createLayout()
 {
   okButton()->setText("Apply");

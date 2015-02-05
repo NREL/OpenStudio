@@ -46,6 +46,8 @@ public:
 
   virtual ~ScheduleDialog() {}
 
+  void setIsIP(bool isIP);
+
 private slots:
   
   void onCurrentIndexChanged(int index);
