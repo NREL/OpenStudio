@@ -109,8 +109,11 @@ void ScheduleDialog::createLayout()
   }
 
   std::vector<model::ScheduleTypeLimits> scheduleTypeLimits;
+
+  // DLM: put all schedule types in the model or just the ones found by the registry
   scheduleTypeLimits = m_model.getConcreteModelObjects<model::ScheduleTypeLimits>();
   //scheduleTypeLimits.insert(scheduleTypeLimits.end(), scheduleTypeLimitsSet.begin(), scheduleTypeLimitsSet.end()); 
+  
   std::sort(scheduleTypeLimits.begin(), scheduleTypeLimits.end(), WorkspaceObjectNameLess());
   OS_ASSERT(!scheduleTypeLimits.empty());
 
@@ -232,13 +235,22 @@ void ScheduleDialog::onCurrentIndexChanged(int index)
   boost::optional<Unit> units = m_scheduleTypeLimits->units(m_isIP);
   QString unitsLabel;
   if (units){
-    unitsLabel.append(" (");
-    if (units->prettyString().empty()){
-      unitsLabel.append(toQString(units->standardString()));
-    } else{
-      unitsLabel.append(toQString(units->prettyString()));
+    QString temp;
+    if (!units->prettyString().empty()){
+      temp = toQString(units->prettyString());
+    } else if (!units->standardString().empty()){
+      temp = toQString(units->standardString());
     }
-    unitsLabel.append(")");
+    
+    if (temp.isEmpty()){
+      unitsLabel.append(" (");
+      unitsLabel.append("unitless");
+      unitsLabel.append(")");
+    } else{
+      unitsLabel.append(" (");
+      unitsLabel.append(temp);
+      unitsLabel.append(")");
+    }
   }
 
   boost::optional<std::string> numericType = m_scheduleTypeLimits->numericType();
