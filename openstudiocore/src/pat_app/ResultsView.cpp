@@ -987,23 +987,7 @@ void DataPointResultsView::update()
   else{
 
     name = m_dataPoint.name().c_str();
-
-    boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
-    if(project){
-      openstudio::analysis::Problem problem = project->analysis().problem();
-      std::vector<QVariant> variableValues = m_dataPoint.variableValues();
-      std::vector<boost::optional<analysis::Measure> > measures = problem.getMeasures(variableValues);
-      for (boost::optional<analysis::Measure> measure : measures) {
-        if (measure){
-          if (!measure->optionalCast<analysis::NullMeasure>()){
-            listOfMeasures += measure->name().c_str();
-            listOfMeasures += '\n';
-          }
-        }
-      }
-    }
-
-    listOfMeasures = listOfMeasures.trimmed();
+    listOfMeasures = getListOfMeasures(m_dataPoint);
 
     netSiteEnergyIntensity = getDifference("Net Site Energy Use Intensity");
     peakElectricDemand = getDifference("Instantaneous Peak Electricity Demand");
@@ -1442,8 +1426,19 @@ void DataPointCalibrationView::update()
   hLayout->setSpacing(0);
   this->setLayout(hLayout);
 
+  QString name;
+  QString listOfMeasures;
   QString style("QLabel {color: black;}");
   QString borderStyle("QLabel {border-right: 1px solid black; color: black;}");
+
+  name = m_dataPoint.name().c_str();
+
+  if (name == "Baseline") {
+    listOfMeasures = name;
+  }
+  else {
+    listOfMeasures = getListOfMeasures(m_dataPoint);
+  }
 
   m_nameLabel = new QLabel();
   m_nameLabel->setWordWrap(true);
@@ -1451,7 +1446,8 @@ void DataPointCalibrationView::update()
   m_nameLabel->setMinimumWidth(NAME_LABEL_WIDTH);
   //m_nameLabel->setFixedWidth(NAME_LABEL_WIDTH);
   m_nameLabel->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
-  m_nameLabel->setText(m_dataPoint.name().c_str());
+  m_nameLabel->setText(name);
+  m_nameLabel->setToolTip(listOfMeasures);
   hLayout->addWidget(m_nameLabel);
   hLayout->setStretchFactor(m_nameLabel, 100);
 
@@ -1550,6 +1546,29 @@ void DataPointCalibrationView::paintEvent(QPaintEvent * e)
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
+QString getListOfMeasures(const openstudio::analysis::DataPoint & dataPoint)
+{
+  QString listOfMeasures;
+
+  boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+  if (project){
+    openstudio::analysis::Problem problem = project->analysis().problem();
+    std::vector<QVariant> variableValues = dataPoint.variableValues();
+    std::vector<boost::optional<analysis::Measure> > measures = problem.getMeasures(variableValues);
+    for (boost::optional<analysis::Measure> measure : measures) {
+      if (measure){
+        if (!measure->optionalCast<analysis::NullMeasure>()){
+          listOfMeasures += measure->name().c_str();
+          listOfMeasures += '\n';
+        }
+      }
+    }
+  }
+
+  listOfMeasures = listOfMeasures.trimmed();
+
+  return listOfMeasures;
+}
 
 } // pat
 
