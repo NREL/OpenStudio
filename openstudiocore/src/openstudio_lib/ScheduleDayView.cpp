@@ -1537,18 +1537,20 @@ DaySchedulePlotArea::DaySchedulePlotArea(ScheduleDayEditor * scheduleDayEditor)
 
 void DaySchedulePlotArea::setKeyboardInputValue(const QString& keyboardInputValue)
 {
+  m_keyboardInputValue = keyboardInputValue;
+
   QString result;
 
   if (m_currentHoverItem){
-    m_keyboardInputValue = keyboardInputValue;
 
     if (m_keyboardInputValue.isEmpty()){
-      result = "Enter Value";
+      result = "Type Value and Press Enter";
     } else {
       result = "Value: " + m_keyboardInputValue;
     }
 
   } else{
+    result = "Mouse Over Segment to see value";
     m_keyboardInputValue.clear();
   }
 
