@@ -61,7 +61,7 @@ class Holder;
 /// but to actually display data on something the ModelObject contains, for example, showing the name
 /// of a SizingZone which is associated with a ThermalZone
 ///
-/// DataSource takes the ProxyAdapter concept one step further, by allowing you to examine an `std::vector`
+/// DataSource takes the ProxyAdapter concept one step further, by allowing you to examine a `std::vector`
 /// of items which are associated with the ModelObject that was passed in. The vector could be a list
 /// of one, if you were so inclined, and all of the interactions with the ModelObject
 /// are abstracted via std::function objects, so the data you display can truly come from anywhere.
@@ -629,6 +629,8 @@ private:
   bool getRowIndexByItem(OSItem * item, int & rowIndex);
 
   void setConceptValue(model::ModelObject t_setterMO, model::ModelObject t_getterMO, const QSharedPointer<BaseConcept> &t_baseConcept);
+
+  void setConceptValue(model::ModelObject t_setterMO, model::ModelObject t_getterMO, const QSharedPointer<BaseConcept> &t_setterBaseConcept, const QSharedPointer<BaseConcept> &t_getterBaseConcept);
 
   QButtonGroup * m_horizontalHeaderBtnGrp;
 

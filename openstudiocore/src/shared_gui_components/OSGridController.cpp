@@ -896,6 +896,26 @@ void OSGridController::setConceptValue(model::ModelObject t_setterMO, model::Mod
   }
 }
 
+void OSGridController::setConceptValue(model::ModelObject t_setterMO, model::ModelObject t_getterMO, const QSharedPointer<BaseConcept> &t_setterBaseConcept, const QSharedPointer<BaseConcept> &t_getterBaseConcept)
+{
+  return; // TODO remove
+
+  if (QSharedPointer<NameLineEditConcept> getterConcept = t_getterBaseConcept.dynamicCast<NameLineEditConcept>()) {
+    if (QSharedPointer<DropZoneConcept> setterConcept = t_setterBaseConcept.dynamicCast<DropZoneConcept>()) {
+      auto getter = std::bind(&NameLineEditConcept::get, getterConcept.data(), t_getterMO, true);
+      auto setter = std::bind(&DropZoneConcept::set, setterConcept.data(), t_setterMO, std::placeholders::_1);
+      auto temp = getter();
+      // Now what, we have a string!?
+      //if (temp) setter(temp.get());
+    }
+  }
+  else {
+    // No other combination is currently in use
+    // Should never get here
+    OS_ASSERT(false);
+  }
+}
+
 OSGridView * OSGridController::gridView(){
   auto gridView = qobject_cast<OSGridView *>(this->parent());
   OS_ASSERT(gridView);
@@ -1497,12 +1517,21 @@ void OSGridController::onInFocus(bool inFocus, bool hasData, int row, int column
 
     QSharedPointer<DataSourceAdapter> dataSource = m_baseConcepts[column].dynamicCast<DataSourceAdapter>();
     if (selectedSubrow && dataSource) {
-      // Has sub rows
+      // Sub rows present, either in a widget, or in a row
+      const DataSource &source = dataSource->source();
+      QSharedPointer<BaseConcept> dropZoneConcept = source.dropZoneConcept();
       boost::optional<const model::ModelObject &> object = this->m_objectSelector->getObject(selectedRow, selectedSubrow);
       for (auto modelObject : selectedObjects) {
         // Don't set the chosen object when iterating through the selected objects
         if (!object || (object && modelObject != object.get())) {
-          setConceptValue(modelObject, object.get(), dataSource.data()->innerConcept());
+          if (dropZoneConcept) {
+            // Widget has sub rows
+            setConceptValue(modelObject, object.get(), dataSource.data()->innerConcept(), dropZoneConcept);
+          }
+          else {
+            // Row has sub rows
+            setConceptValue(modelObject, object.get(), dataSource.data()->innerConcept());
+          }
         }
       }
     }
