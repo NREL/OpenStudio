@@ -447,7 +447,7 @@ bool isNetworkPathAvailable(const path& p)
       if (newptr == nullptr) {
         // whoops we had a memory allocation error and we need to clean things up
         free(lpBuffer);
-        throw std::runtime_error("Memory error while attempting to allocate buffer")
+        throw std::runtime_error("Memory error while attempting to allocate buffer");
       } else {
         lpBuffer = newptr;
       }
