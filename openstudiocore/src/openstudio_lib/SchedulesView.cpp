@@ -1308,7 +1308,7 @@ NewProfileView::NewProfileView(const model::ScheduleRuleset & scheduleRuleset, S
     QLabel * label = new QLabel();
     QString text;
     text.append("The summer design day profile is not set, therefore the default run period profile will be used.");
-    text.append("  To override the default run period profile select one of the following:");
+    text.append("  Create a new profile to override the default run period profile.");
     label->setText(text);
     label->setWordWrap(true);
     mainVLayout->addWidget(label);
@@ -1320,7 +1320,7 @@ NewProfileView::NewProfileView(const model::ScheduleRuleset & scheduleRuleset, S
     QLabel * label = new QLabel();
     QString text;
     text.append("The winter design day profile is not set, therefore the default run period profile will be used.");
-    text.append("  To override the default run period profile select one of the following:");
+    text.append("  Create a new profile to override the default run period profile.");
     label->setText(text);
     label->setWordWrap(true);
     mainVLayout->addWidget(label);
@@ -1347,35 +1347,28 @@ NewProfileView::NewProfileView(const model::ScheduleRuleset & scheduleRuleset, S
   if (m_type == SCHEDULERULE)
   {
     QLabel * selectLabel = new QLabel();
-    selectLabel->setText("Select One of the Following:");
+    selectLabel->setText("Create a new profile.");
     innerVLayout->addWidget(selectLabel);
   }
 
-  QHBoxLayout * newEmptyLayout = new QHBoxLayout();
-  newEmptyLayout->setContentsMargins(0, 0, 0, 0);
-  QRadioButton * newEmptyButton = new QRadioButton();
-  newEmptyButton->setText("Make a New Profile");
-  newEmptyButton->setChecked(true);
-  newEmptyLayout->addWidget(newEmptyButton);
-  innerVLayout->addLayout(newEmptyLayout);
+  QGridLayout * gridLayout = new QGridLayout();
+  gridLayout->setContentsMargins(0, 0, 0, 0);
 
-  //QHBoxLayout * newLayout = new QHBoxLayout();
-  //newLayout->setContentsMargins(0,0,0,0);
-  //QRadioButton * newButton = new QRadioButton();
-  //newLayout->addWidget(newButton);
-  //newButton->setText("Make a New Profile Based on:");
-  //QComboBox * newComboBox = new QComboBox();
-  //newLayout->addWidget(newComboBox);
-  //innerVLayout->addLayout(newLayout);
+  QLabel * label = new QLabel("Make a New Profile Based on:");
+  gridLayout->addWidget(label, 0, 0);
 
-  QHBoxLayout * addLayout = new QHBoxLayout();
-  addLayout->addStretch();
-  addLayout->setContentsMargins(0, 0, 0, 0);
+  m_scheduleRuleComboBox = new QComboBox();
+  populateComboBox(scheduleRuleset);
+  gridLayout->addWidget(m_scheduleRuleComboBox, 0, 1);
+
   QPushButton * addButton = new QPushButton();
   addButton->setText("Add");
   addButton->setObjectName("StandardBlueButton");
-  addLayout->addWidget(addButton);
-  innerVLayout->addLayout(addLayout);
+  gridLayout->addWidget(addButton, 1, 1);
+
+  gridLayout->setColumnStretch(2, 100);
+  innerVLayout->addLayout(gridLayout);
+
   connect(addButton, &QPushButton::clicked, this, &NewProfileView::onAddClicked);
   connect(this, &NewProfileView::addRuleClicked, schedulesView, &SchedulesView::addRuleClicked);
   connect(this, &NewProfileView::addSummerProfileClicked, schedulesView, &SchedulesView::addSummerProfileClicked);
@@ -1388,17 +1381,43 @@ NewProfileView::NewProfileView(const model::ScheduleRuleset & scheduleRuleset, S
 
 void NewProfileView::onAddClicked()
 {
+  int currentIndex = m_scheduleRuleComboBox->currentIndex();
+  UUID handle = m_scheduleRuleComboBox->itemData(currentIndex).toUuid();
+
   switch (m_type)
   {
   case SUMMER:
-    emit addSummerProfileClicked(m_scheduleRuleset);
+    emit addSummerProfileClicked(m_scheduleRuleset, handle);
     break;
   case WINTER:
-    emit addWinterProfileClicked(m_scheduleRuleset);
+    emit addWinterProfileClicked(m_scheduleRuleset, handle);
     break;
   default:
-    emit addRuleClicked(m_scheduleRuleset);
+    emit addRuleClicked(m_scheduleRuleset, handle);
   }
+}
+
+void NewProfileView::populateComboBox(const model::ScheduleRuleset & scheduleRuleset)
+{
+  
+
+  m_scheduleRuleComboBox->addItem("<New Profile>", UUID());
+
+  m_scheduleRuleComboBox->addItem("Default Day Schedule", scheduleRuleset.defaultDaySchedule().handle());
+
+  if (!scheduleRuleset.isSummerDesignDayScheduleDefaulted()){
+    m_scheduleRuleComboBox->addItem("Summer Design Day Schedule", scheduleRuleset.summerDesignDaySchedule().handle());
+  }
+
+  if (!scheduleRuleset.isWinterDesignDayScheduleDefaulted()){
+    m_scheduleRuleComboBox->addItem("Winter Design Day Schedule", scheduleRuleset.winterDesignDaySchedule().handle());
+  }
+
+  for (const auto& rule : scheduleRuleset.scheduleRules()){
+    m_scheduleRuleComboBox->addItem(toQString(rule.name().get()), rule.daySchedule().handle());
+  }
+
+  m_scheduleRuleComboBox->setCurrentIndex(0);
 }
 
 /******************************************************************************/

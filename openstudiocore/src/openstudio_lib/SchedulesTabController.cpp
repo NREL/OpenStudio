@@ -180,35 +180,70 @@ void SchedulesTabController::purgeUnusedScheduleRulesets()
   }
 }
 
-void SchedulesTabController::addRule(model::ScheduleRuleset & scheduleRuleset)
+void SchedulesTabController::addRule(model::ScheduleRuleset & scheduleRuleset, UUID scheduleDayHandle)
 {
-  model::ScheduleRule rule(scheduleRuleset);
-
-  rule.daySchedule().addValue(Time(1,0),defaultStartingValue(rule.daySchedule()));
+  boost::optional<model::ScheduleRule> rule;
+  if (!scheduleDayHandle.isNull()){
+    boost::optional<model::ScheduleDay> scheduleDayToCopy = scheduleRuleset.model().getModelObject<model::ScheduleDay>(scheduleDayHandle);
+    if (scheduleDayToCopy){
+      rule = model::ScheduleRule(scheduleRuleset, scheduleDayToCopy->clone().cast<model::ScheduleDay>());
+    }
+  }
+  if (!rule){
+    rule = model::ScheduleRule(scheduleRuleset);
+    rule->daySchedule().addValue(Time(1, 0), defaultStartingValue(rule->daySchedule()));
+  }
+  OS_ASSERT(rule);
 }
 
-void SchedulesTabController::addSummerProfile(model::ScheduleRuleset & scheduleRuleset)
+void SchedulesTabController::addSummerProfile(model::ScheduleRuleset & scheduleRuleset, UUID scheduleDayHandle)
 {
-  model::ScheduleDay scheduleDay(scheduleRuleset.model());
+  boost::optional<model::ScheduleDay> scheduleDay;
+  if (!scheduleDayHandle.isNull()){
+    boost::optional<model::ScheduleDay> scheduleDayToCopy = scheduleRuleset.model().getModelObject<model::ScheduleDay>(scheduleDayHandle);
+    if (scheduleDayToCopy){
+      scheduleDay = scheduleDayToCopy->clone().cast<model::ScheduleDay>();
+    }
+  }
+  if (!scheduleDay){
+    scheduleDay = model::ScheduleDay(scheduleRuleset.model());
+    boost::optional<model::ScheduleTypeLimits> limits = scheduleRuleset.scheduleTypeLimits();
+    if (limits) {
+      scheduleDay->setScheduleTypeLimits(*limits);
+    }
+    scheduleDay->addValue(Time(1, 0), defaultStartingValue(*scheduleDay));
+  }
+  OS_ASSERT(scheduleDay);
 
-  scheduleDay.addValue(Time(1,0),defaultStartingValue(scheduleDay));
+  scheduleRuleset.setSummerDesignDaySchedule(*scheduleDay);
 
-  scheduleRuleset.setSummerDesignDaySchedule(scheduleDay);
-
-  scheduleDay.remove();
+  scheduleDay->remove();
 
   m_schedulesView->showSummerScheduleDay(scheduleRuleset);
 }
 
-void SchedulesTabController::addWinterProfile(model::ScheduleRuleset & scheduleRuleset)
+void SchedulesTabController::addWinterProfile(model::ScheduleRuleset & scheduleRuleset, UUID scheduleDayHandle)
 {
-  model::ScheduleDay scheduleDay(scheduleRuleset.model());
+  boost::optional<model::ScheduleDay> scheduleDay;
+  if (!scheduleDayHandle.isNull()){
+    boost::optional<model::ScheduleDay> scheduleDayToCopy = scheduleRuleset.model().getModelObject<model::ScheduleDay>(scheduleDayHandle);
+    if (scheduleDayToCopy){
+      scheduleDay = scheduleDayToCopy->clone().cast<model::ScheduleDay>();
+    }
+  }
+  if (!scheduleDay){
+    scheduleDay = model::ScheduleDay(scheduleRuleset.model());
+    boost::optional<model::ScheduleTypeLimits> limits = scheduleRuleset.scheduleTypeLimits();
+    if (limits) {
+      scheduleDay->setScheduleTypeLimits(*limits);
+    }
+    scheduleDay->addValue(Time(1, 0), defaultStartingValue(*scheduleDay));
+  }
+  OS_ASSERT(scheduleDay);
 
-  scheduleDay.addValue(Time(1,0),defaultStartingValue(scheduleDay));
+  scheduleRuleset.setWinterDesignDaySchedule(*scheduleDay);
 
-  scheduleRuleset.setWinterDesignDaySchedule(scheduleDay);
-
-  scheduleDay.remove();
+  scheduleDay->remove();
 
   m_schedulesView->showWinterScheduleDay(scheduleRuleset);
 }

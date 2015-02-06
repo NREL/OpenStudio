@@ -167,11 +167,11 @@ class SchedulesView : public QWidget
 
     void removeScheduleRuleClicked(model::ScheduleRule & scheduleRule);
 
-    void addRuleClicked(model::ScheduleRuleset & scheduleRuleset);
+    void addRuleClicked(model::ScheduleRuleset & scheduleRuleset, UUID dayScheduleHandle);
 
-    void addSummerProfileClicked(model::ScheduleRuleset & scheduleRuleset);
+    void addSummerProfileClicked(model::ScheduleRuleset & scheduleRuleset, UUID dayScheduleHandle);
 
-    void addWinterProfileClicked(model::ScheduleRuleset & scheduleRuleset);
+    void addWinterProfileClicked(model::ScheduleRuleset & scheduleRuleset, UUID dayScheduleHandle);
 
     void dayScheduleSceneChanged( DayScheduleScene * scene, double lowerValue, double upperValue );
 
@@ -516,11 +516,11 @@ class NewProfileView : public QWidget
 
   signals:
 
-    void addRuleClicked(model::ScheduleRuleset & scheduleRuleset);
+    void addRuleClicked(model::ScheduleRuleset & scheduleRuleset, UUID dayScheduleHandle);
 
-    void addSummerProfileClicked(model::ScheduleRuleset & scheduleRuleset);
+    void addSummerProfileClicked(model::ScheduleRuleset & scheduleRuleset, UUID dayScheduleHandle);
 
-    void addWinterProfileClicked(model::ScheduleRuleset & scheduleRuleset);
+    void addWinterProfileClicked(model::ScheduleRuleset & scheduleRuleset, UUID dayScheduleHandle);
 
   private slots: 
 
@@ -528,11 +528,15 @@ class NewProfileView : public QWidget
 
   private:
 
+    void populateComboBox(const model::ScheduleRuleset & scheduleRuleset);
+
     SchedulesView * m_schedulesView;
 
     model::ScheduleRuleset m_scheduleRuleset;
 
     NewProfileViewType m_type;
+
+    QComboBox* m_scheduleRuleComboBox;
 };
 
 
