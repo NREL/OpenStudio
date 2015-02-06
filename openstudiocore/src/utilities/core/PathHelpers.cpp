@@ -442,8 +442,18 @@ bool isNetworkPathAvailable(const path& p)
       free(lpBuffer);
       return true;
     } else if (dwResult == ERROR_MORE_DATA){
-      lpBuffer = (LPBYTE)realloc(lpBuffer, dwBufferSize);
+
+      auto newptr = (LPBYTE)realloc(lpBuffer, dwBufferSize);
+      if (newptr == nullptr) {
+        // whoops we had a memory allocation error and we need to clean things up
+        free(lpBuffer);
+        throw std::runtime_error("Memory error while attempting to allocate buffer")
+      } else {
+        lpBuffer = newptr;
+      }
+
       moreData = true;
+
     } else {
       moreData = false;
     }
