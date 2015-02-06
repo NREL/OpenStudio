@@ -1018,7 +1018,7 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
         end
 
 
-        if t_options.x == true
+        #if t_options.x == true
 
           illumValues, illumSensorValues, glareSensorValues = t_values[i][space_name]
 
@@ -1064,7 +1064,7 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
           if n != 0
             meanIlluminanceMap[i] = sumIllumMap / n.to_f
           end
-        end
+        #end
 
       end
 
