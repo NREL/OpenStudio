@@ -1552,19 +1552,28 @@ void OSGridController::onInFocus(bool inFocus, bool hasData, int row, int column
     gridView()->requestRefreshGrid(); // TODO this is heavy handed; each cell should update itself
 
   } else {
+    if (std::get<1>(m_selectedCellLocation) != column) {
+      // The user clicked another column, disable the old column's apply button
+      HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(std::get<1>(m_selectedCellLocation)));
+      OS_ASSERT(horizontalHeaderWidget);
+      horizontalHeaderWidget->m_pushButton->setEnabled(false);
+    }
+
     m_selectedCellLocation = std::make_tuple(row, column, subrow);
 
-    HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(column));
-    OS_ASSERT(horizontalHeaderWidget);
+    if (inFocus) {
+      HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(column));
+      OS_ASSERT(horizontalHeaderWidget);
 
-    //horizontalHeaderWidget->m_pushButton->setEnabled(inFocus);
+      horizontalHeaderWidget->m_pushButton->setEnabled(true);
 
-    if (hasData){
-      horizontalHeaderWidget->m_pushButton->setText("Apply to Selected");
-    }
-    else {
-      horizontalHeaderWidget->m_pushButton->setText("Apply to Selected");
-      //horizontalHeaderWidget->m_pushButton->setText("Clear Selected"); TODO
+      if (hasData){
+        horizontalHeaderWidget->m_pushButton->setText("Apply to Selected");
+      }
+      else {
+        horizontalHeaderWidget->m_pushButton->setText("Apply to Selected");
+        //horizontalHeaderWidget->m_pushButton->setText("Clear Selected"); TODO
+      }
     }
   }
 }
@@ -1629,7 +1638,7 @@ HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidge
 
   m_pushButton->setText("Apply to Selected");
   m_pushButton->setFixedWidth(100);
-  //m_pushButton->setEnabled(false);
+  m_pushButton->setEnabled(false);
   connect(m_pushButton, &HorizontalHeaderPushButton::inFocus, this, &HorizontalHeaderWidget::inFocus);
 
   mainLayout->addWidget(m_pushButton, Qt::AlignBottom);
