@@ -790,7 +790,7 @@ t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
 		end
 
 		# blend uncontrolled windows with merged-controlled window groups (no transform for inline crap)
-		system("rmtxop -fa #{t_outPath}/output/ts/WG0.ill #{addFiles} | getinfo - > #{t_outPath}/output/ts/merged_space.ill")
+		system("rmtxop -fa #{t_outPath}/output/ts/WG0.ill #{addFiles} -t | getinfo - > #{t_outPath}/output/ts/merged_space.ill")
 
   	# window merge end
   	# 3-phase end   
