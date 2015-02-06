@@ -259,6 +259,8 @@ class ScheduleDayEditor : public QWidget
 
   void toggleUnits(bool isIP);
 
+  void updateKeyboardInputValue(const QString& keyboardInputValue);
+
   protected:
 
   void mouseDoubleClickEvent(QMouseEvent * event);
@@ -284,6 +286,8 @@ class ScheduleDayEditor : public QWidget
   bool m_dirty;
 
   QLabel * m_yLabel;
+
+  QLabel * m_keyboardInputValue;
 
 };
 
@@ -366,6 +370,8 @@ class DaySchedulePlotArea : public QGraphicsView
 
   void dayScheduleSceneChanged( DayScheduleScene * scene, double lowerValue, double upperValue );
 
+  void keyboardInputValueChanged( QString keyboardInputValue );
+
   protected:
 
   void mouseDoubleClickEvent(QMouseEvent * event);
@@ -378,21 +384,15 @@ class DaySchedulePlotArea : public QGraphicsView
 
   void keyPressEvent (QKeyEvent * event);
 
-  private slots:
-
-  void initialize();
-
   private:
 
-  void updateKeyboardInputTextItem();
+  void setKeyboardInputValue(const QString& keyboardInputValue);
 
   ScheduleDayEditor * m_scheduleDayEditor;
 
   QGraphicsItem * m_currentItem;
 
   CalendarSegmentItem * m_currentHoverItem;
-
-  QGraphicsTextItem * m_keyboardInputTextItem;
 
   QString m_keyboardInputValue;
 

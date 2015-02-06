@@ -73,7 +73,7 @@ namespace openstudio {
 
 static const double UPPER_LIMIT = 1.0;
 static const double LOWER_LIMIT = 0.0;
-static const double MARGINTOP = 10;
+static const double MARGINTOP = 20;
 static const double MARGINBOTTOM = 30;
 static const double MARGINLEFT = 60;
 static const double MARGINRIGHT = 20;
@@ -629,6 +629,8 @@ ScheduleDayEditor::ScheduleDayEditor(bool isIP, ScheduleDayView * scheduleDayVie
   m_yLabel = new QLabel(this);
   setLabelText(isIP);
 
+  m_keyboardInputValue = new QLabel(this);
+
   setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
 
   //connect(m_scheduleDay.scheduleTypeLimits()->getImpl<model::detail::ScheduleTypeLimits_Impl>().get(),
@@ -667,8 +669,6 @@ void ScheduleDayEditor::resizeEvent ( QResizeEvent * event )
   m_graphicsView->resize(event->size().width() - MARGINLEFT - MARGINRIGHT, event->size().height() - MARGINTOP - MARGINBOTTOM);
 
   int buttonHeight = 140; // Can't ask for button height until it is first rendered
-
-  m_yLabel->move(0, MARGINTOP + m_graphicsView->size().height() / 2 - buttonHeight / 2.0);
 
   fitInView();
 
@@ -792,6 +792,9 @@ void ScheduleDayEditor::paintEvent ( QPaintEvent * event )
 
     yValue = yValue - yValueStride;
   }
+
+  m_yLabel->move(0, MARGINTOP + 0.5*ySnap*yStride - 5.0);
+
 }
 
 // ***** SLOTS *****
@@ -799,6 +802,28 @@ void ScheduleDayEditor::paintEvent ( QPaintEvent * event )
 void ScheduleDayEditor::toggleUnits(bool isIP)
 {
   setLabelText(isIP);
+}
+
+void ScheduleDayEditor::updateKeyboardInputValue(const QString& keyboardInputValue)
+{
+  if (keyboardInputValue != m_keyboardInputValue->text()){
+    m_keyboardInputValue->setText(keyboardInputValue);
+    if (keyboardInputValue.isEmpty()){
+      m_keyboardInputValue->setStyleSheet("");
+    } else{
+      m_keyboardInputValue->setStyleSheet("QLabel { background-color : yellow; }");
+    }
+
+    // Draw keyboard text
+    QRectF r1 = m_keyboardInputValue->rect();
+    m_keyboardInputValue->adjustSize();
+    QRectF r2 = m_keyboardInputValue->rect();
+    m_keyboardInputValue->move(width() - MARGINRIGHT - m_keyboardInputValue->width() - 5, 0);
+    m_keyboardInputValue->update();
+
+    this->update();
+  }
+  
 }
 
 CalendarSegmentItem::CalendarSegmentItem( QGraphicsItem * parent )
@@ -1501,55 +1526,33 @@ DaySchedulePlotArea::DaySchedulePlotArea(ScheduleDayEditor * scheduleDayEditor)
   : QGraphicsView(scheduleDayEditor),
     m_scheduleDayEditor(scheduleDayEditor),
     m_currentItem(nullptr),
-    m_currentHoverItem(nullptr),
-    m_keyboardInputTextItem(nullptr)
+    m_currentHoverItem(nullptr)
 {
   connect(this, &DaySchedulePlotArea::dayScheduleSceneChanged, m_scheduleDayEditor->scheduleDayView()->schedulesView(), &SchedulesView::dayScheduleSceneChanged);
   setFocusPolicy(Qt::StrongFocus);
 
-  m_keyboardInputTextItem = new QGraphicsTextItem();
-  QTimer::singleShot(0, this, SLOT(initialize()));
+  connect(this, &DaySchedulePlotArea::keyboardInputValueChanged, m_scheduleDayEditor, &ScheduleDayEditor::updateKeyboardInputValue);
+  setFocusPolicy(Qt::StrongFocus);
 }
 
-void DaySchedulePlotArea::initialize()
+void DaySchedulePlotArea::setKeyboardInputValue(const QString& keyboardInputValue)
 {
-  scene()->addItem(m_keyboardInputTextItem);
-  
-  // DLM: I am almost certain this is not the best way to do this
-  QFont font("Times");
-  QString family = font.family();
-  font.setPointSize(1000);
-  font.setStretch(50);
-  m_keyboardInputTextItem->setFont(font);
-  
-  //m_keyboardInputTextItem->setStyleSheet("QGraphicsTextItem { font: bold; }");
+  QString result;
 
-  ///m_keyboardInputText->adjustSize();
-}
-
-void DaySchedulePlotArea::updateKeyboardInputTextItem()
-{
   if (m_currentHoverItem){
+    m_keyboardInputValue = keyboardInputValue;
 
     if (m_keyboardInputValue.isEmpty()){
-      m_keyboardInputTextItem->setHtml("<center bgcolor=\"#F5F5DC\">Enter Value</center>");
+      result = "Enter Value";
     } else {
-      QString tmp = "<center bgcolor=\"#F5F5DC\">" + m_keyboardInputValue + "</center>";
-      m_keyboardInputTextItem->setHtml(tmp);
+      result = "Value: " + m_keyboardInputValue;
     }
 
-    double x = m_currentHoverItem->hCenterPos();
-    double y = m_currentHoverItem->vCenterPos();
-    double width = m_currentHoverItem->boundingRect().width();
-
-    double textX = x - width / 2.0;
-    double textY = y - 1.5 * LINEWIDTH;
-    m_keyboardInputTextItem->setPos(textX, textY);
-    m_keyboardInputTextItem->setTextWidth(width);
-
   } else{
-    m_keyboardInputTextItem->setPlainText("");
+    m_keyboardInputValue.clear();
   }
+
+  emit keyboardInputValueChanged(result);
 }
 
 
@@ -1585,8 +1588,7 @@ void DaySchedulePlotArea::mouseDoubleClickEvent(QMouseEvent * event)
 {
   QGraphicsItem * item = segmentAt(event->pos());
 
-  m_keyboardInputValue.clear();
-  m_keyboardInputTextItem->setPlainText("");
+  setKeyboardInputValue("");
 
   if( item )
   {
@@ -1643,8 +1645,7 @@ void DaySchedulePlotArea::mouseMoveEvent(QMouseEvent * event)
 
   m_currentHoverItem = nullptr;
 
-  m_keyboardInputValue.clear();
-  m_keyboardInputTextItem->setPlainText("");
+  setKeyboardInputValue("");
 
   if( m_currentItem )
   {
@@ -1654,7 +1655,7 @@ void DaySchedulePlotArea::mouseMoveEvent(QMouseEvent * event)
 
       m_currentHoverItem = calendarItem;
 
-      updateKeyboardInputTextItem();
+      setKeyboardInputValue("");
 
       setFocus();
 
@@ -1776,7 +1777,7 @@ void DaySchedulePlotArea::mouseMoveEvent(QMouseEvent * event)
 
       m_currentHoverItem = calendarItem;
 
-      updateKeyboardInputTextItem();
+      setKeyboardInputValue("");
 
       setFocus();
 
@@ -1805,8 +1806,7 @@ void DaySchedulePlotArea::mousePressEvent(QMouseEvent * event)
 
   QGraphicsItem * item = segmentAt(event->pos());
 
-  m_keyboardInputValue.clear();
-  m_keyboardInputTextItem->setPlainText("");
+  setKeyboardInputValue("");
 
   if( item )
   {
@@ -1869,8 +1869,7 @@ void DaySchedulePlotArea::keyPressEvent(QKeyEvent * event)
 
       m_currentHoverItem->setValue(scaledValue);
 
-      m_keyboardInputValue.clear();
-      m_keyboardInputTextItem->setPlainText("");
+      setKeyboardInputValue("");
 
       m_currentHoverItem->setHovering(false);
 
@@ -1880,14 +1879,13 @@ void DaySchedulePlotArea::keyPressEvent(QKeyEvent * event)
     }
     else if( event->key() == Qt::Key_Minus )
     {
-      m_keyboardInputValue.clear();
-      m_keyboardInputValue.append(event->text());
-      updateKeyboardInputTextItem();
+      setKeyboardInputValue(event->text());
     }
     else if (event->key() == Qt::Key_Backspace)
     {
-      m_keyboardInputValue.chop(1);
-      updateKeyboardInputTextItem();
+      QString tmp = m_keyboardInputValue;
+      tmp.chop(1);
+      setKeyboardInputValue(tmp);
     }
     else if( event->key() == Qt::Key_0 || 
              event->key() == Qt::Key_1 ||
@@ -1898,12 +1896,20 @@ void DaySchedulePlotArea::keyPressEvent(QKeyEvent * event)
              event->key() == Qt::Key_6 ||
              event->key() == Qt::Key_7 ||
              event->key() == Qt::Key_8 ||
-             event->key() == Qt::Key_9 ||
-             event->key() == Qt::Key_Period
+             event->key() == Qt::Key_9 
            )
     {
-      m_keyboardInputValue.append(event->text());
-      updateKeyboardInputTextItem();
+      QString tmp = m_keyboardInputValue;
+      tmp.append(event->text());
+      setKeyboardInputValue(tmp);
+    }
+    else if (event->key() == Qt::Key_Period)
+    {
+      if (!m_keyboardInputValue.contains(".")){
+        QString tmp = m_keyboardInputValue;
+        tmp.append(event->text());
+        setKeyboardInputValue(tmp);
+      }
     }
   }
 }
