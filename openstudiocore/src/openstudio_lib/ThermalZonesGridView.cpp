@@ -618,10 +618,18 @@ void ThermalZonesGridController::addColumns(const QString &/*category*/, std::ve
         boost::optional<std::function<void(model::ModelObject *)>>(
         std::function<void(model::ModelObject *)>(
         [](model::ModelObject *t_mo)
-            {
+          {
             t_mo->remove();
-            }
-          )
+          }
+        )
+        ),
+        boost::optional<std::function<openstudio::Handle(model::ModelObject *)>>(
+        std::function<openstudio::Handle(model::ModelObject *)>(
+        [](model::ModelObject *t_mo)
+          {
+            return t_mo->handle();
+          }
+        )
         ),
         DataSource(
         equipment,

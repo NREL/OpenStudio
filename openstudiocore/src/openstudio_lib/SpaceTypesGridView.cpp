@@ -1161,7 +1161,8 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
           true,
           CastNullAdapter<model::SpaceLoadDefinition>(&model::SpaceLoadDefinition::name),
           CastNullAdapter<model::SpaceLoadDefinition>(&model::SpaceLoadDefinition::setName),
-          boost::optional<std::function<void (model::SpaceLoadDefinition *)>>(),
+          boost::optional<std::function<void(model::SpaceLoadDefinition *)>>(),
+          boost::optional<std::function<openstudio::Handle(model::SpaceLoadDefinition *)>>(),
           DataSource(
             allDefinitions,
             false ,
@@ -1246,6 +1247,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
             }
           )
         ),
+        boost::optional<std::function<openstudio::Handle(model::SpaceInfiltrationDesignFlowRate *)>>(),
         DataSource(
           flowRates,
           false, 
@@ -1281,6 +1283,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
             }
           )
         ),
+        boost::optional<std::function<openstudio::Handle(model::SpaceInfiltrationEffectiveLeakageArea *)>>(),
         DataSource(
         leakageAreas,
         false,

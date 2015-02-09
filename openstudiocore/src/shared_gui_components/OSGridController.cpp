@@ -898,15 +898,18 @@ void OSGridController::setConceptValue(model::ModelObject t_setterMO, model::Mod
 
 void OSGridController::setConceptValue(model::ModelObject t_setterMO, model::ModelObject t_getterMO, const QSharedPointer<BaseConcept> &t_setterBaseConcept, const QSharedPointer<BaseConcept> &t_getterBaseConcept)
 {
-  return; // TODO remove
+  QSharedPointer<NameLineEditConcept> getterConcept = t_getterBaseConcept.dynamicCast<NameLineEditConcept>();
+  QSharedPointer<DropZoneConcept> setterConcept = t_setterBaseConcept.dynamicCast<DropZoneConcept>();
 
   if (QSharedPointer<NameLineEditConcept> getterConcept = t_getterBaseConcept.dynamicCast<NameLineEditConcept>()) {
     if (QSharedPointer<DropZoneConcept> setterConcept = t_setterBaseConcept.dynamicCast<DropZoneConcept>()) {
-      auto getter = std::bind(&NameLineEditConcept::get, getterConcept.data(), t_getterMO, true);
+      auto handleConcept = std::bind(&NameLineEditConcept::handle, getterConcept.data(), t_getterMO);
+      auto handle = handleConcept();
+      OS_ASSERT(handle);
+      auto mo = m_model.getModelObject<model::ModelObject>(handle.get());
+      OS_ASSERT(mo);
       auto setter = std::bind(&DropZoneConcept::set, setterConcept.data(), t_setterMO, std::placeholders::_1);
-      auto temp = getter();
-      // Now what, we have a string!?
-      //if (temp) setter(temp.get());
+      setter(mo.get());
     }
   }
   else {
