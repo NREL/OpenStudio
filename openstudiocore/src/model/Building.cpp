@@ -141,10 +141,14 @@ namespace detail {
       //}
 
       // Clone Building and child objects.
+
+      // This call clones only the building and it's resources
       result = ModelObject_Impl::clone(t_model).cast<Building>();
 
-      // DLM: why did the ParentObject::clone not work?  I think this might be the bug behind 
-      // https://unmethours.com/question/2858/measure-writing-import-dependent-objects/?comment=2896#comment-2896
+      // DLM: why did the ParentObject::clone not work?  
+      // DLM: ParentObject::clone only preserves links between child and parent objects, it does not preserve links between levels of the hierarchy
+      // we could potentially add ThermalZone as a resource of Space (or vice versa or both) but I am not sure what the implications of that are
+
       // Clone children since we are not relying on the implementation provided by ParentObject::clone
 
       // Meter instances
