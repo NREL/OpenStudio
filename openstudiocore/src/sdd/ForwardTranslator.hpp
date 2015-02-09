@@ -53,6 +53,7 @@ namespace model {
   class SubSurface;
   class ShadingSurface;
   class AirLoopHVAC;
+  class FanConstantVolume;
 }
 
 namespace sdd {
@@ -100,6 +101,7 @@ namespace sdd {
     boost::optional<QDomElement> translateShadingSurface(const openstudio::model::ShadingSurface& shadingSurface, const openstudio::Transformation& transformation, QDomDocument& doc);
     boost::optional<QDomElement> translateThermalZone(const openstudio::model::ThermalZone& thermalZone, QDomDocument& doc);
     boost::optional<QDomElement> translateAirLoopHVAC(const openstudio::model::AirLoopHVAC& airLoop, QDomDocument& doc);
+    boost::optional<QDomElement> translateFanConstantVolume(const openstudio::model::FanConstantVolume& fan, QDomElement & airLoopHVACElement, QDomDocument& doc);
 
     std::map<openstudio::Handle, QDomElement> m_translatedObjects;
 
@@ -119,6 +121,8 @@ namespace sdd {
     StringStreamLogSink m_logSink;
 
     ProgressBar* m_progressBar;
+
+    bool m_autoHardSize;
 
     REGISTER_LOGGER("openstudio.sdd.ForwardTranslator");
   };

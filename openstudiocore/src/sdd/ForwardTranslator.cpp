@@ -156,6 +156,7 @@ namespace openstudio {
 namespace sdd {
 
   ForwardTranslator::ForwardTranslator()
+    : m_autoHardSize(false)
   {
     m_logSink.setLogLevel(Warn);
     m_logSink.setChannelRegex(boost::regex("openstudio\\.sdd\\.ForwardTranslator"));
