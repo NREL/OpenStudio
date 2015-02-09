@@ -128,16 +128,23 @@ namespace detail {
       // Clone attempted into same Model - return the existing instance
       result = getObject<ModelObject>().cast<Building>();
     } else {
-      auto buildings = t_model.getModelObjects<Building>();
 
-      if( ! buildings.empty() ) {
-        // If Destination model already has a building then first remove it
-        buildings.front().remove();
+      auto otherBuilding = t_model.building();
+      if (otherBuilding){
+        otherBuilding->remove();
       }
+
+      //auto buildings = t_model.getModelObjects<Building>();
+      //if( ! buildings.empty() ) {
+      //  // If Destination model already has a building then first remove it
+      //  buildings.front().remove();
+      //}
 
       // Clone Building and child objects.
       result = ModelObject_Impl::clone(t_model).cast<Building>();
 
+      // DLM: why did the ParentObject::clone not work?  I think this might be the bug behind 
+      // https://unmethours.com/question/2858/measure-writing-import-dependent-objects/?comment=2896#comment-2896
       // Clone children since we are not relying on the implementation provided by ParentObject::clone
 
       // Meter instances
