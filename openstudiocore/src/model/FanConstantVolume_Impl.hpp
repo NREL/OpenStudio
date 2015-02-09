@@ -90,31 +90,31 @@ namespace detail {
     bool setAvailabilitySchedule(Schedule& s);
 
     // Get FanEfficiency
-    double fanEfficiency();
+    double fanEfficiency() const;
 
     // Set fanEfficiency
     void setFanEfficiency(double val);
 
     // Get PressureRise
-    double pressureRise();
+    double pressureRise() const;
 
     // Set PressureRise
     void setPressureRise(double val);
 
     // Get MotorEfficiency
-    double motorEfficiency();
+    double motorEfficiency() const;
 
     // Set MotorEfficiency
     void setMotorEfficiency(double val);
 
     // Get MotorInAirstreamFraction
-    double motorInAirstreamFraction();
+    double motorInAirstreamFraction() const;
 
     // Set MotorInAirstreamFraction
     void setMotorInAirstreamFraction(double val);
 
     // Get EndUseSubcategory
-    std::string endUseSubcategory();
+    std::string endUseSubcategory() const;
 
     // Set EndUseSubcategory
     void setEndUseSubcategory(std::string val);
