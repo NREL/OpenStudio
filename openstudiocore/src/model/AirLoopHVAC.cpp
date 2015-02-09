@@ -939,6 +939,68 @@ namespace detail {
     return result;
   }
 
+  boost::optional<HVACComponent> lastFan(const std::vector<ModelObject> & comps)
+  {
+    boost::optional<HVACComponent> result;
+
+    auto constantVolumeFans = subsetCastVector<FanConstantVolume>(comps);
+    if( ! constantVolumeFans.empty() ) {
+      result = constantVolumeFans.back();      
+    } else {
+      auto variableVolumeFans = subsetCastVector<FanVariableVolume>(comps);
+      if( ! variableVolumeFans.empty() ) {
+        result = variableVolumeFans.back();
+      }
+    }
+
+    return result;
+  }
+
+  boost::optional<HVACComponent> AirLoopHVAC_Impl::supplyFan() const
+  {
+    boost::optional<HVACComponent> result;
+
+    boost::optional<HVACComponent> start = supplyInletNode();
+    if( auto oaSystem = airLoopHVACOutdoorAirSystem() ) {
+      start = oaSystem.get();
+    }
+    OS_ASSERT(start);
+    auto end = supplyOutletNode();
+
+    auto t_supplyComponents = supplyComponents(start.get(),end);
+    result = lastFan(t_supplyComponents);
+
+    return result;
+  }
+
+  boost::optional<HVACComponent> AirLoopHVAC_Impl::returnFan() const
+  {
+    boost::optional<HVACComponent> result;
+
+    auto start = supplyInletNode();
+    auto end = airLoopHVACOutdoorAirSystem();
+
+    if( end ) {
+      auto t_supplyComponents = supplyComponents(start,end.get());
+      result = lastFan(t_supplyComponents);
+    }
+
+    return result;
+  }
+
+  boost::optional<HVACComponent> AirLoopHVAC_Impl::reliefFan() const
+  {
+    boost::optional<HVACComponent> result;
+
+    if( auto oaSystem = airLoopHVACOutdoorAirSystem() )
+    {
+      auto t_reliefComponents = oaSystem->reliefComponents();
+      result = lastFan(t_reliefComponents);
+    }
+
+    return result;
+  }
+
 } // detail
 
 AirLoopHVAC::AirLoopHVAC(Model& model)
@@ -1218,6 +1280,21 @@ bool AirLoopHVAC::setNightCycleControlType(std::string controlType)
 std::string AirLoopHVAC::nightCycleControlType() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->nightCycleControlType();
+}
+
+boost::optional<HVACComponent> AirLoopHVAC::supplyFan() const
+{
+  return getImpl<detail::AirLoopHVAC_Impl>()->supplyFan();
+}
+
+boost::optional<HVACComponent> AirLoopHVAC::returnFan() const
+{
+  return getImpl<detail::AirLoopHVAC_Impl>()->returnFan();
+}
+
+boost::optional<HVACComponent> AirLoopHVAC::reliefFan() const
+{
+  return getImpl<detail::AirLoopHVAC_Impl>()->reliefFan();
 }
 
 } // model

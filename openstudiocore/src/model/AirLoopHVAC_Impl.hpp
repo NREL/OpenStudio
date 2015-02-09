@@ -124,6 +124,12 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   Mixer demandMixer();
 
+  boost::optional<HVACComponent> supplyFan() const;
+
+  boost::optional<HVACComponent> returnFan() const;
+
+  boost::optional<HVACComponent> reliefFan() const;
+
   bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
   bool addBranchForZone(ThermalZone & thermalZone, StraightComponent & airTerminal);

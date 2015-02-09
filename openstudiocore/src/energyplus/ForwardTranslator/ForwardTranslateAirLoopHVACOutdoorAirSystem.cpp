@@ -187,15 +187,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
        oaIt != oaModelObjects.end();
        ++oaIt )
   {
-    if( ! oaIt->optionalCast<Node>() )
+    if( boost::optional<IdfObject> idfObject = translateAndMapModelObject(*oaIt) )
     {
-      if( boost::optional<IdfObject> idfObject = translateAndMapModelObject(*oaIt) )
-      {
-        equipmentListIdf.setString(i,idfObject->iddObject().name());
-        i++;
-        equipmentListIdf.setString(i,idfObject->name().get());
-        i++;
-      }
+      equipmentListIdf.setString(i,idfObject->iddObject().name());
+      i++;
+      equipmentListIdf.setString(i,idfObject->name().get());
+      i++;
     }
   }
 
@@ -204,15 +201,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
        reliefIt != reliefModelObjects.end();
        ++reliefIt )
   {
-    if( (! reliefIt->optionalCast<Node>()) && (! reliefIt->optionalCast<AirToAirComponent>()) )
+    if( boost::optional<IdfObject> idfObject = translateAndMapModelObject(*reliefIt) )
     {
-      if( boost::optional<IdfObject> idfObject = translateAndMapModelObject(*reliefIt) )
-      {
-        equipmentListIdf.setString(i,idfObject->iddObject().name());
-        i++;
-        equipmentListIdf.setString(i,idfObject->name().get());
-        i++;
-      }
+      equipmentListIdf.setString(i,idfObject->iddObject().name());
+      i++;
+      equipmentListIdf.setString(i,idfObject->name().get());
+      i++;
     }
   }
 

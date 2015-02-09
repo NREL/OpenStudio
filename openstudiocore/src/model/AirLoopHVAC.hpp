@@ -195,6 +195,21 @@ class MODEL_API AirLoopHVAC : public Loop
    */
   boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
 
+  /** Returns the fan in the mixed air stream (after outdoor air system) of the air system.
+   *  If there is no outdoor air system or there are multiple fans in the mixed air stream, 
+   *  then the fan closest to the supply outlet node will be returned.
+   */
+  boost::optional<HVACComponent> supplyFan() const;
+
+  /** Returns the fan in the return air stream (before the outdoor air system.
+   *  If there is no outdoor air system then this method will return false.
+   *  If there are multiple fans, then return the fan nearest the oa system.
+   */
+  boost::optional<HVACComponent> returnFan() const;
+
+  /** Returns the most outboard fan on the relief air stream of the outdoor air system */
+  boost::optional<HVACComponent> reliefFan() const;
+
   /** Adds a new branch on the demand side of the air loop for a zone labeled zoneLabel
    * and returns true if the operation was successful. The method will return false if the Zone
    * is already connected to an air loop.

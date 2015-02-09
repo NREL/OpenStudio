@@ -110,6 +110,11 @@ namespace detail {
     return isEmpty(OS_ScheduleTypeLimitsFields::UnitType);
   }
 
+  boost::optional<Unit> ScheduleTypeLimits_Impl::units(bool returnIP) const
+  {
+    return ScheduleTypeLimits::units(unitType(), returnIP);
+  }
+
   void ScheduleTypeLimits_Impl::setLowerLimitValue(boost::optional<double> lowerLimitValue) {
     bool result = false;
     if (lowerLimitValue) {
@@ -485,6 +490,10 @@ std::string ScheduleTypeLimits::unitType() const {
 
 bool ScheduleTypeLimits::isUnitTypeDefaulted() const {
   return getImpl<detail::ScheduleTypeLimits_Impl>()->isUnitTypeDefaulted();
+}
+
+boost::optional<Unit> ScheduleTypeLimits::units(bool returnIP) const {
+  return getImpl<detail::ScheduleTypeLimits_Impl>()->units(returnIP);
 }
 
 void ScheduleTypeLimits::setLowerLimitValue(double lowerLimitValue) {

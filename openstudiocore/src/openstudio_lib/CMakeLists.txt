@@ -232,6 +232,8 @@ set(${target_name}_SRC
   RunTabController.hpp
   RunTabView.cpp
   RunTabView.hpp
+  ScheduleDayView.cpp
+  ScheduleDayView.hpp  
   ScheduleDialog.cpp
   ScheduleDialog.hpp
   ScheduleSetInspectorView.cpp
@@ -575,6 +577,7 @@ set(${target_name}_moc
   ResultsTabView.hpp
   RunTabController.hpp
   RunTabView.hpp
+  ScheduleDayView.hpp
   ScheduleDialog.hpp
   ScheduleSetInspectorView.hpp
   ScheduleSetsController.hpp
