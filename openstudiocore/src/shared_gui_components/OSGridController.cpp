@@ -898,9 +898,6 @@ void OSGridController::setConceptValue(model::ModelObject t_setterMO, model::Mod
 
 void OSGridController::setConceptValue(model::ModelObject t_setterMO, model::ModelObject t_getterMO, const QSharedPointer<BaseConcept> &t_setterBaseConcept, const QSharedPointer<BaseConcept> &t_getterBaseConcept)
 {
-  QSharedPointer<NameLineEditConcept> getterConcept = t_getterBaseConcept.dynamicCast<NameLineEditConcept>();
-  QSharedPointer<DropZoneConcept> setterConcept = t_setterBaseConcept.dynamicCast<DropZoneConcept>();
-
   if (QSharedPointer<NameLineEditConcept> getterConcept = t_getterBaseConcept.dynamicCast<NameLineEditConcept>()) {
     if (QSharedPointer<DropZoneConcept> setterConcept = t_setterBaseConcept.dynamicCast<DropZoneConcept>()) {
       auto handleConcept = std::bind(&NameLineEditConcept::handle, getterConcept.data(), t_getterMO);
@@ -1529,7 +1526,7 @@ void OSGridController::onInFocus(bool inFocus, bool hasData, int row, int column
         if (!object || (object && modelObject != object.get())) {
           if (dropZoneConcept) {
             // Widget has sub rows
-            setConceptValue(modelObject, object.get(), dataSource.data()->innerConcept(), dropZoneConcept);
+            setConceptValue(modelObject, object.get(),dropZoneConcept, dataSource.data()->innerConcept());
           }
           else {
             // Row has sub rows

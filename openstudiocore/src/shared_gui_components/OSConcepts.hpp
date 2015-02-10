@@ -1132,7 +1132,7 @@ class NameLineEditConceptImpl : public NameLineEditConcept
     if (m_handle)
     {
       DataSourceType obj = t_obj.cast<DataSourceType>();
-      //h = (*m_handle)(&obj);
+      h = (*m_handle)(&obj);
     }
     return h;
   }
