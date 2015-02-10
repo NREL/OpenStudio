@@ -461,6 +461,10 @@ class RequiredChoiceConceptImpl : public ChoiceConcept {
   virtual std::string get() {
     ChoiceType typedValue = m_getter();
     std::string result = m_toString(typedValue);
+    if (!m_choicesMap.size()) {
+      // Oops, we forgot to update the choices
+      this->choices();
+    }
     OS_ASSERT(m_choicesMap.find(result) != m_choicesMap.end());
     return result;
   }
@@ -565,6 +569,10 @@ class OptionalChoiceConceptImpl : public ChoiceConcept {
     if (typedValue.is_initialized()) {
       result = m_toString(typedValue.get());
       if (!result.empty()) {
+        if (!m_choicesMap.size()) {
+          // Oops, we forgot to update the choices
+          this->choices();
+        }
         OS_ASSERT(m_choicesMap.find(result) != m_choicesMap.end());
       }
     }
