@@ -418,7 +418,15 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
     # compute view matrices for controlled windows
 		# use fine params (vmx)
     rtrace_args = "#{t_options.vmx}" 
-    wgInput = Dir.glob("#{t_outPath}/scene/glazing/WG*.rad")[1..-1]
+
+		wgInput = []
+    # this won't work if no WG0
+    # wgInput = Dir.glob("#{t_outPath}/scene/glazing/WG*.rad")[1..-1]
+    Dir.glob("#{t_outPath}/scene/glazing/WG*.rad") {|file|
+      next if file == "#{t_outPath}/scene/glazing/WG0.rad"
+      wgInput << file
+		}
+    
     puts "#{Time.now.getutc}: computing view matri(ces) for controlled windows"
     exec_statement("#{t_catCommand} #{t_outPath}/materials/materials_vmx.rad #{wgInput.join(" ")} > receivers_vmx.rad")
     exec_statement("oconv #{t_outPath}/materials/materials.rad #{t_outPath}/scene/*.rad > model_vmx.oct")
