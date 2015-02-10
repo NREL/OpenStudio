@@ -420,10 +420,10 @@ mark_as_advanced(
   SWIG_VERSION
 )
 
-# Currently MacOS and/or V8 require special builds
-# as of 2014-06-04. This should be re-checked after swig > 3.0.2 is released.
+# Currently MacOS (with swig < 3.0.3) and V8 require special builds
+# as of 2015-02-05. This should be re-checked after swig > 3.0.5 is released.
 # 64-bit MSVC also requires BUILD_SWIG
-if(SWIG_FOUND AND NOT BUILD_V8_BINDINGS AND NOT APPLE AND NOT (WIN32 AND MSVC AND CMAKE_CL_64))
+if(SWIG_FOUND AND NOT BUILD_V8_BINDINGS AND NOT (APPLE AND ${SWIG_VERSION} VERSION_LESS "3.0.3") AND NOT (WIN32 AND MSVC AND CMAKE_CL_64))
   option(BUILD_SWIG "Build SWIG" OFF)
 else()
   option(BUILD_SWIG "Build SWIG" ON)
