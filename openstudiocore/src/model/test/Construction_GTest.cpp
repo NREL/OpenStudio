@@ -340,30 +340,56 @@ TEST_F(ModelFixture, Construction_AddObjects) {
 
 TEST_F(ModelFixture, Construction_Clone)
 {
-  Model model;
+  Model library;
 
   // Create some materials
-  StandardOpaqueMaterial exterior(model);
-  AirGap air(model);
-  StandardOpaqueMaterial interior(model);
+  StandardOpaqueMaterial exterior(library);
+  AirGap air(library);
+  StandardOpaqueMaterial interior(library);
 
   OpaqueMaterialVector layers;
   layers.push_back(exterior);
   layers.push_back(air);
   layers.push_back(interior);
 
-  EXPECT_EQ(static_cast<unsigned>(3), model.getModelObjects<Material>().size());
+  EXPECT_EQ(static_cast<unsigned>(3), library.getModelObjects<Material>().size());
 
   Construction construction(layers);
   ASSERT_EQ(static_cast<unsigned>(3), construction.layers().size());
 
-  ModelObject clone = construction.clone(model);
+  // Clone into same model
+  ModelObject clone = construction.clone(library);
 
-  EXPECT_EQ(static_cast<unsigned>(3), model.getModelObjects<Material>().size());
+  // Material ResourceObject instances are shared resources so they have not been cloned
+  EXPECT_EQ(static_cast<unsigned>(3), library.getModelObjects<Material>().size());
 
+  // New handle for cloned construction
   EXPECT_FALSE(clone.handle() == construction.handle());
   ASSERT_TRUE(clone.optionalCast<Construction>());
+
   ASSERT_EQ(static_cast<unsigned>(3), clone.cast<Construction>().layers().size());
+
+  // Clone into a differnt model
+  Model model;
+
+  auto clone2 = construction.clone(model).cast<Construction>();
+  EXPECT_EQ(static_cast<unsigned>(3), model.getModelObjects<Material>().size());
+
+  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<Construction>().size());
+
+  // Make sure materials are still hooked up
+  ASSERT_EQ(static_cast<unsigned>(3), clone2.cast<Construction>().layers().size());
+
+  // Clone again
+  auto clone3 = construction.clone(model).cast<Construction>();
+  EXPECT_EQ(static_cast<unsigned>(3), model.getModelObjects<Material>().size());
+
+  EXPECT_EQ(static_cast<unsigned>(2), model.getModelObjects<Construction>().size());
+
+  // Make sure materials are still hooked up
+  ASSERT_EQ(static_cast<unsigned>(3), clone3.cast<Construction>().layers().size());
+
+  EXPECT_FALSE(clone2.handle() == clone3.handle());
 }
 
 TEST_F(ModelFixture, DuplicateMaterialName)

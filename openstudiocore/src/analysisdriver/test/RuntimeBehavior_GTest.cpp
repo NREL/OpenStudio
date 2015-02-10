@@ -72,7 +72,7 @@ TEST_F(AnalysisDriverFixture,RuntimeBehavior_StopCustomAnalysis) {
   Problem problem = retrieveProblem("UserScriptContinuous",true,false);
 
   // DEFINE SEED
-  Model model = model::exampleModel();
+  Model model = fastExampleModel();
   openstudio::path p = toPath("./example.osm");
   model.save(p,true);
   FileReference seedModel(p);

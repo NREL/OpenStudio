@@ -74,7 +74,7 @@ TEST_F(AnalysisDriverFixture, DesignOfExperiments_MeshAnalysis) {
   analysis.setProblem(problem);
 
   // SET SEED
-  Model model = model::exampleModel();
+  Model model = fastExampleModel();
   openstudio::path p = toPath("./example.osm");
   model.save(p,true);
   FileReference seedModel(p);
