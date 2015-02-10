@@ -1247,7 +1247,14 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
             }
           )
         ),
-        boost::optional<std::function<openstudio::Handle(model::SpaceInfiltrationDesignFlowRate *)>>(),
+        boost::optional<std::function<openstudio::Handle(model::SpaceInfiltrationDesignFlowRate *)>>(
+        std::function<openstudio::Handle(model::SpaceInfiltrationDesignFlowRate *)>(
+        [](model::SpaceInfiltrationDesignFlowRate *t_mo)
+            {
+              return t_mo->handle();
+            }
+          )
+        ),
         DataSource(
           flowRates,
           false, 
@@ -1283,7 +1290,14 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
             }
           )
         ),
-        boost::optional<std::function<openstudio::Handle(model::SpaceInfiltrationEffectiveLeakageArea *)>>(),
+        boost::optional<std::function<openstudio::Handle(model::SpaceInfiltrationEffectiveLeakageArea *)>>(
+        std::function<openstudio::Handle(model::SpaceInfiltrationEffectiveLeakageArea *)>(
+        [](model::SpaceInfiltrationEffectiveLeakageArea *t_mo)
+            {
+              return t_mo->handle();
+            }
+          )
+        ),
         DataSource(
         leakageAreas,
         false,
