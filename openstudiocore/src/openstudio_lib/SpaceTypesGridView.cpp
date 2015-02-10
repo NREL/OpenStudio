@@ -1225,8 +1225,16 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
 
       std::function<bool (model::SpaceType *, const model::SpaceInfiltrationDesignFlowRate &)> setter (
         [](model::SpaceType *t_type, model::SpaceInfiltrationDesignFlowRate t_rate)  {
-          return t_rate.setSpaceType(*t_type);
-        });
+        if (t_rate.cast<model::SpaceInfiltrationDesignFlowRate>().spaceType()) {
+          boost::optional<model::ModelObject> clone_rate = t_rate.clone(t_rate.model());
+          OS_ASSERT(clone_rate);
+          return clone_rate->cast<model::SpaceInfiltrationDesignFlowRate>().setSpaceType(*t_type);
+          }
+          else {
+            return t_rate.setSpaceType(*t_type);
+          }
+        }
+      );
 
       std::function<std::vector<model::ModelObject> (const model::SpaceType &)> flowRates(
         [](const model::SpaceType &s) {
@@ -1268,8 +1276,20 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
 
       std::function<bool (model::SpaceType *, const model::SpaceInfiltrationEffectiveLeakageArea &)> setter (
         [](model::SpaceType *t_type, model::SpaceInfiltrationEffectiveLeakageArea t_area)  {
-          return t_area.setSpaceType(*t_type);
-        });
+          if (t_area.spaceType()) {
+            boost::optional<model::ModelObject> clone_area = t_area.clone(t_area.model());
+            OS_ASSERT(clone_area);
+            auto success = clone_area->cast<model::SpaceInfiltrationEffectiveLeakageArea>().setSpaceType(*t_type);
+            OS_ASSERT(success);
+            return success;
+          }
+          else {
+            auto success = t_area.setSpaceType(*t_type);
+            OS_ASSERT(success);
+            return success;
+          }
+        }
+      );
 
       std::function<std::vector<model::ModelObject>(const model::SpaceType &)> leakageAreas(
         [](const model::SpaceType &s) {

@@ -1521,9 +1521,11 @@ void OSGridController::onInFocus(bool inFocus, bool hasData, int row, int column
       const DataSource &source = dataSource->source();
       QSharedPointer<BaseConcept> dropZoneConcept = source.dropZoneConcept();
       boost::optional<const model::ModelObject &> object = this->m_objectSelector->getObject(selectedRow, selectedSubrow);
+      OS_ASSERT(object);
       for (auto modelObject : selectedObjects) {
         // Don't set the chosen object when iterating through the selected objects
-        if (!object || (object && modelObject != object.get())) {
+        if (modelObject != object.get()) {
+          OS_ASSERT(dataSource.data()->innerConcept());
           if (dropZoneConcept) {
             // Widget has sub rows
             setConceptValue(modelObject, object.get(),dropZoneConcept, dataSource.data()->innerConcept());
