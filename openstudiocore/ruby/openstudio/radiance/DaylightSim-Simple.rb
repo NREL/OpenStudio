@@ -367,6 +367,8 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
 
   # 3-phase method
   if t_options.z == true
+  
+  	haveWG0 = ""
 
     puts "#{Time.now.getutc}: computing daylight coefficients with 3-phase method..."
 
@@ -374,46 +376,61 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
     rfluxmtxDim = mapFile.readlines.size.to_s
     puts "total calculation points: #{rfluxmtxDim}"
 
-    # compute daylight matrices for controlled windows
-
-    rtrace_args = "#{t_options.dmx}"  
+    # compute daylight matrices
+ 
     system("oconv materials/materials.rad model.rad > model_dc.oct")
     windowMaps = File::open("#{t_outPath}/bsdf/mapping.rad")
     windowMaps.each do |row|
       next if row[0] == "#"
       wg=row.split(",")[0]
-      next if wg[2].to_i == 0 # skip uncontrolled windows (WG0), use single phase for those.
-      puts "computing daylight matrix for window group #{wg}"
-      exec_statement("rfluxmtx -fa -v #{t_outPath}/scene/glazing/#{wg}.rad #{t_outPath}/skies/dc_sky.rad -i model_dc.oct > \
-      #{t_outPath}/output/dc/#{wg}.dmx")
+      
+      # if WG0 (uncontrolled windows):
+      if wg[2].to_i == 0
+      
+				# use more aggro simulation parameters because this is basically a view matrix
+				rtrace_args = "#{t_options.vmx}"
+				
+				# make special WG0 octree
+				system("oconv \"#{t_outPath}/materials/materials.rad\" \"#{t_outPath}/materials/materials_WG0.rad\" model.rad \
+					\"#{t_outPath}/skies/dc_sky.rad\" > model_WG0.oct")
+	
+				# do daylight coefficients for uncontrolled windows
+				puts "#{Time.now.getutc}: computing daylight/view matrix for window group #{wg}"
+				system("#{t_catCommand} \"#{t_outPath}/numeric/merged_space.map\" \
+					| rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{t_options.tregVars} -o \"#{t_outPath}/output/dc/WG0.vmx\" -m skyglow model_WG0.oct")
+
+			else
+				
+				# use more chill sim parameters
+				rtrace_args = "#{t_options.dmx}"
+				
+				# checking...
+				puts "#{Time.now.getutc}: computing daylight matrix for window group #{wg}"
+				
+				# do daylight matrix(es) for controlled windows
+				exec_statement("rfluxmtx -fa -v #{t_outPath}/scene/glazing/#{wg}.rad #{t_outPath}/skies/dc_sky.rad -i model_dc.oct > \
+				#{t_outPath}/output/dc/#{wg}.dmx")
+			
+			end
+
     end
 
     # compute view matrices for controlled windows
-
+		# use fine params (vmx)
     rtrace_args = "#{t_options.vmx}" 
     wgInput = Dir.glob("#{t_outPath}/scene/glazing/WG*.rad")[1..-1]
-    puts "computing view matri(ces) for controlled windows"
+    puts "#{Time.now.getutc}: computing view matri(ces) for controlled windows"
     exec_statement("#{t_catCommand} #{t_outPath}/materials/materials_vmx.rad #{wgInput.join(" ")} > receivers_vmx.rad")
     exec_statement("oconv #{t_outPath}/materials/materials.rad #{t_outPath}/scene/*.rad > model_vmx.oct")
     exec_statement("rfluxmtx #{rtrace_args} #{procsUsed} -faa -n #{t_simCores} -y #{rfluxmtxDim} -I -v - receivers_vmx.rad -i model_vmx.oct < \
       #{t_outPath}/numeric/merged_space.map")
     
-    # compute daylight coefficient matrix for uncontrolled windows
-
-    rtrace_args = "#{t_options.vmx}"
-    system("oconv \"#{t_outPath}/materials/materials.rad\" \"#{t_outPath}/materials/materials_WG0.rad\" model.rad \
-      \"#{t_outPath}/skies/dc_sky.rad\" > model_WG0.oct")
-    puts "computing daylight coefficient matrix for uncontrolled windows (WG0)"
-    
-    exec_statement("#{t_catCommand} \"#{t_outPath}/numeric/merged_space.map\" \
-      | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{t_options.tregVars} -o \"#{t_outPath}/output/dc/WG0.vmx\" -m skyglow model_WG0.oct")
-
     # compute daylight coefficient matrices for window group control points
-
-    rtrace_args = "#{t_options.vmx}"
+		# use relaxed (dmx) params, TODO: have fine option for urban canyons/other obstructions
+    rtrace_args = "#{t_options.dmx}"
     system("oconv \"#{t_outPath}/materials/materials.rad\" model.rad \
       \"#{t_outPath}/skies/dc_sky.rad\" > model_wc.oct")
-    puts "computing DCs for window control points"
+    puts "#{Time.now.getutc}: computing DCs for window control points"
     exec_statement("#{t_catCommand} \"#{t_outPath}/numeric/window_controls.map\" \
       | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{t_options.tregVars} \
       -o \"#{t_outPath}/output/dc/window_controls.vmx\" \
@@ -477,7 +494,7 @@ def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_s
     allValues << cmdValues
   end
 
-  # allValues or equicALENET would be read from the ill file
+  # allValues or equivalent would be read from the ill file
 
   values = []
 
@@ -668,26 +685,28 @@ t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
       # skip header
       next if row[0] == "#"
       wg = row.split(",")[0]
+      
       # do uncontrolled windows (WG0)
       if wg[2].to_i == 0
-        #simulations << "dctimestep #{t_outPath}/output/dc/#{wg}.vmx annual-sky.mtx | rmtxop -fa -t -c 47.4 120 11.6 - > #{t_outPath}/output/ts/#{wg}.ill"
-        # no transpose, and save the window group files to a subdirectory ("3P")
+        # no transpose
         exec_statement("dctimestep #{t_outPath}/output/dc/#{wg}.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > #{t_outPath}/output/ts/#{wg}.ill") 
-        # no transpose or conversion for now
-      end
-      next if wg[2].to_i == 0
+      
+      else
+      
+      # next if wg[2].to_i == 0
       # do all controlled window groups
       
-      wgXMLs = row.split(",")[4..-1]
-      if wgXMLs.size > 2
-        puts "WARN: Window Group #{wg} has #{wgXMLs.size.to_s} BSDFs (2 max supported by OpenStudio application)."
-      end
-      
-      wgXMLs.each_index do |i|
-        exec_statement("dctimestep #{t_outPath}/output/dc/#{wg}.vmx #{t_outPath}/bsdf/#{wgXMLs[i].strip} #{t_outPath}/output/dc/#{wg}.dmx \
-        annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > #{t_outPath}/output/ts/#{wg}_#{wgXMLs[i].split[0]}.ill")
+				wgXMLs = row.split(",")[4..-1]
+				if wgXMLs.size > 2
+					puts "WARN: Window Group #{wg} has #{wgXMLs.size.to_s} BSDFs (2 max supported by OpenStudio application)."
+				end
+			
+				wgXMLs.each_index do |i|
+					exec_statement("dctimestep #{t_outPath}/output/dc/#{wg}.vmx #{t_outPath}/bsdf/#{wgXMLs[i].strip} #{t_outPath}/output/dc/#{wg}.dmx \
+					annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > #{t_outPath}/output/ts/#{wg}_#{wgXMLs[i].split[0]}.ill")
  
-      end
+				end
+			end
       
     end
     
@@ -782,15 +801,20 @@ t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
 
 		# make whole-building illuminance file
 
+		# may not be a WG0...
+		if File.exist?('#{t_outPath}/output/ts/WG0.ill')
+			addFiles << "#{t_outPath}/output/ts/WG0.ill "
+		end
+
 		# one per window group
 		mergedWindows = Dir.glob("m_*.ill")
 		addFiles = ""
 		mergedWindows.each do |file|
 			addFiles << "+ #{file} "
 		end
-
+		
 		# blend uncontrolled windows with merged-controlled window groups (no transform for inline crap)
-		system("rmtxop -fa #{t_outPath}/output/ts/WG0.ill #{addFiles} -t | getinfo - > #{t_outPath}/output/ts/merged_space.ill")
+		system("rmtxop -fa #{addFiles} -t | getinfo - > #{t_outPath}/output/ts/merged_space.ill")
 
   	# window merge end
   	# 3-phase end   
@@ -1018,53 +1042,52 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
         end
 
 
-        #if t_options.x == true
+        # Split up values by space
 
-          illumValues, illumSensorValues, glareSensorValues = t_values[i][space_name]
+				illumValues, illumSensorValues, glareSensorValues = t_values[i][space_name]
 
-          timeSeriesIllum[i] = tsDateTime.to_s.gsub(" ",",") + "," + "#{dirNormIllum[i]},#{diffHorizIllum[i]}," + illumSensorValues.join(',') + "," + illumValues.join(',')
+				timeSeriesIllum[i] = tsDateTime.to_s.gsub(" ",",") + "," + "#{dirNormIllum[i]},#{diffHorizIllum[i]}," + illumSensorValues.join(',') + "," + illumValues.join(',')
 
-          # add glare sensor values
-          if t_radGlareSensorViews[space_name]
-            if not glareSensorValues.nil?
-              timeSeriesGlare[i] = tsDateTime.to_s.gsub(" ",",") + "," + glareSensorValues.join(',')
+				# add glare sensor values
+				if t_radGlareSensorViews[space_name]
+					if not glareSensorValues.nil?
+						timeSeriesGlare[i] = tsDateTime.to_s.gsub(" ",",") + "," + glareSensorValues.join(',')
 
-              if not glareSensorValues.empty?
-                sumDGP = 0
-                glareSensorValues.each do |val| 
-                  sumDGP += val
-                end
-                minDGP[i] = glareSensorValues.min
-                meanDGP[i] = sumDGP / glareSensorValues.size.to_f
-                maxDGP[i] = glareSensorValues.max
-              end
-            end
-          end
+						if not glareSensorValues.empty?
+							sumDGP = 0
+							glareSensorValues.each do |val| 
+								sumDGP += val
+							end
+							minDGP[i] = glareSensorValues.min
+							meanDGP[i] = sumDGP / glareSensorValues.size.to_f
+							maxDGP[i] = glareSensorValues.max
+						end
+					end
+				end
 
-          m = OpenStudio::Matrix.new(spaceWidth, spaceHeight, 0)
+				m = OpenStudio::Matrix.new(spaceWidth, spaceHeight, 0)
 
-          if not illumSensorValues.empty?
-            daylightSensorIlluminance[i] = illumSensorValues[0]
-          end
+				if not illumSensorValues.empty?
+					daylightSensorIlluminance[i] = illumSensorValues[0]
+				end
 
-          #puts "Daylight sensor: #{daylightSensorIlluminance[i]} lux"
-          n = 0
-          sumIllumMap = 0
-          illumValues.each do |val|
-            x = (n%spaceWidth).to_i;
-            y = (n/spaceWidth).to_i;
-            #puts "Setting value (" + x.to_s + ", " + y.to_s + ") to " + val.to_f.to_s
-            sumIllumMap += val.to_f
-            m[x, y] = val.to_f
-            n = n + 1
-          end
+				#puts "Daylight sensor: #{daylightSensorIlluminance[i]} lux"
+				n = 0
+				sumIllumMap = 0
+				illumValues.each do |val|
+					x = (n%spaceWidth).to_i;
+					y = (n/spaceWidth).to_i;
+					#puts "Setting value (" + x.to_s + ", " + y.to_s + ") to " + val.to_f.to_s
+					sumIllumMap += val.to_f
+					m[x, y] = val.to_f
+					n = n + 1
+				end
 
-          illuminanceMatrixMaps[i] = m
+				illuminanceMatrixMaps[i] = m
 
-          if n != 0
-            meanIlluminanceMap[i] = sumIllumMap / n.to_f
-          end
-        #end
+				if n != 0
+					meanIlluminanceMap[i] = sumIllumMap / n.to_f
+				end
 
       end
 
