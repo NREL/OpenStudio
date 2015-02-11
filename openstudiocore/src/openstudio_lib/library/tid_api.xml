@@ -10,7 +10,7 @@
 		<depth>0</depth>
 		<parents>0</parents>
 		<term>
-			<tid>34</tid>
+			<tid>1315</tid>
 			<vid>3</vid>
 			<name>Fenestration</name>
 			<description/>
@@ -19,22 +19,22 @@
 			<parents>27</parents>
 			<parents>127</parents>
 			<term>
-				<tid>151</tid>
+				<tid>1317</tid>
 				<vid>3</vid>
 				<name>Door</name>
 				<description/>
 				<weight>0</weight>
 				<depth>2</depth>
-				<parents>34</parents>
+				<parents>1315</parents>
 			</term>
 			<term>
-				<tid>140</tid>
+				<tid>1318</tid>
 				<vid>3</vid>
 				<name>Skylight</name>
 				<description/>
 				<weight>0</weight>
 				<depth>2</depth>
-				<parents>34</parents>
+				<parents>1315</parents>
 			</term>
 			<term>
 				<tid>143</tid>
@@ -43,16 +43,16 @@
 				<description/>
 				<weight>0</weight>
 				<depth>2</depth>
-				<parents>34</parents>
+				<parents>1315</parents>
 			</term>
 			<term>
-				<tid>139</tid>
+				<tid>1316</tid>
 				<vid>3</vid>
 				<name>Window</name>
 				<description/>
 				<weight>0</weight>
 				<depth>2</depth>
-				<parents>34</parents>
+				<parents>1315</parents>
 			</term>
 		</term>
 		<term>
