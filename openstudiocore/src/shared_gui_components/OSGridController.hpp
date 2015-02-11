@@ -640,7 +640,7 @@ private:
 
   std::shared_ptr<ObjectSelector> m_objectSelector;
 
-  std::tuple<int, int, boost::optional<int>> m_selectedCellLocation;
+  std::tuple<int, int, boost::optional<int>> m_selectedCellLocation = std::make_tuple(-1, -1, -1);
 
 signals:
 

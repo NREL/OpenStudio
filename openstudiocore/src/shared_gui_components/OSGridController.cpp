@@ -415,6 +415,7 @@ void OSGridController::categorySelected(int index)
 {
   m_objectSelector->clear();
   m_currentCategoryIndex = index;
+  m_selectedCellLocation = std::make_tuple(-1,-1,-1);
 
   m_currentCategory = m_categoriesAndFields.at(index).first;
 
@@ -1553,9 +1554,12 @@ void OSGridController::onInFocus(bool inFocus, bool hasData, int row, int column
   } else {
     if (std::get<1>(m_selectedCellLocation) != column) {
       // The user clicked another column, disable the old column's apply button
-      HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(std::get<1>(m_selectedCellLocation)));
-      OS_ASSERT(horizontalHeaderWidget);
-      horizontalHeaderWidget->m_pushButton->setEnabled(false);
+      // It is possible that the user changed the category selected, so be sure m_selectedCellLocation has valid data
+      if (std::get<0>(m_selectedCellLocation) != -1) {
+        HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(std::get<1>(m_selectedCellLocation)));
+        OS_ASSERT(horizontalHeaderWidget);
+        horizontalHeaderWidget->m_pushButton->setEnabled(false);
+      }
     }
 
     m_selectedCellLocation = std::make_tuple(row, column, subrow);
