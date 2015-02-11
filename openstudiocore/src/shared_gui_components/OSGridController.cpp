@@ -900,10 +900,7 @@ void OSGridController::setConceptValue(model::ModelObject t_setterMO, model::Mod
 {
   if (QSharedPointer<NameLineEditConcept> getterConcept = t_getterBaseConcept.dynamicCast<NameLineEditConcept>()) {
     if (QSharedPointer<DropZoneConcept> setterConcept = t_setterBaseConcept.dynamicCast<DropZoneConcept>()) {
-      auto handleConcept = std::bind(&NameLineEditConcept::handle, getterConcept.data(), t_getterMO);
-      auto handle = handleConcept();
-      OS_ASSERT(handle);
-      auto mo = m_model.getModelObject<model::ModelObject>(handle.get());
+      auto mo = m_model.getModelObject<model::ModelObject>(t_getterMO.handle());
       OS_ASSERT(mo);
       auto setter = std::bind(&DropZoneConcept::set, setterConcept.data(), t_setterMO, std::placeholders::_1);
       setter(mo.get());

@@ -430,10 +430,9 @@ public:
     const std::function<boost::optional<std::string>(DataSourceType *, bool)>  &getter,
     const std::function<boost::optional<std::string>(DataSourceType *, const std::string &)> &setter,
     const boost::optional<std::function<void(DataSourceType *)> > &reset = boost::none,
-    const boost::optional<std::function<openstudio::Handle(DataSourceType *)> > &handle = boost::none,
     const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<NameLineEditConcept>(new NameLineEditConceptImpl<DataSourceType>(heading, isInspectable, getter, setter, reset, handle)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<NameLineEditConcept>(new NameLineEditConceptImpl<DataSourceType>(heading, isInspectable, getter, setter, reset)), t_source));
   }
 
   template<typename DataSourceType>

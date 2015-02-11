@@ -1085,7 +1085,6 @@ class NameLineEditConcept : public BaseConcept
   virtual boost::optional<std::string> get(const ConceptProxy & obj, bool) = 0;
   virtual boost::optional<std::string> set(const ConceptProxy & obj, const std::string &) = 0;
   virtual void reset(const ConceptProxy & obj) = 0;
-  virtual boost::optional<openstudio::Handle> handle(const ConceptProxy & obj) = 0;
   virtual bool readOnly() const = 0;
   bool isInspectable() { return m_isInspectable; }
 
@@ -1104,14 +1103,12 @@ class NameLineEditConceptImpl : public NameLineEditConcept
     bool isInspectable,
     std::function<boost::optional<std::string> (DataSourceType *, bool)>  t_getter,
     std::function<boost::optional<std::string> (DataSourceType *, const std::string &)> t_setter,
-    boost::optional<std::function<void(DataSourceType*)> > t_reset = boost::none,
-    boost::optional<std::function<openstudio::Handle (DataSourceType*)> > t_handle = boost::none)
+    boost::optional<std::function<void(DataSourceType*)> > t_reset = boost::none)
     : NameLineEditConcept(t_heading,
       isInspectable),
       m_getter(t_getter),
       m_setter(t_setter),
-      m_reset(t_reset),
-      m_handle(t_handle)
+      m_reset(t_reset)
   {
   }
 
@@ -1142,17 +1139,6 @@ class NameLineEditConceptImpl : public NameLineEditConcept
     }
   }
 
-  virtual boost::optional<openstudio::Handle> handle(const ConceptProxy & t_obj)
-  {
-    boost::optional<openstudio::Handle> h;
-    if (m_handle)
-    {
-      DataSourceType obj = t_obj.cast<DataSourceType>();
-      h = (*m_handle)(&obj);
-    }
-    return h;
-  }
-
   virtual bool readOnly() const
   {
     return m_setter ? false : true;
@@ -1163,7 +1149,6 @@ class NameLineEditConceptImpl : public NameLineEditConcept
   std::function<boost::optional<std::string> (DataSourceType *, bool)>  m_getter;
   std::function<boost::optional<std::string> (DataSourceType *, const std::string &)> m_setter;
   boost::optional<std::function<void(DataSourceType*)> > m_reset;
-  boost::optional<std::function<openstudio::Handle(DataSourceType*)> > m_handle;
 
 };
 
