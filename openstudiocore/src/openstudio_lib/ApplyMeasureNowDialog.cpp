@@ -377,7 +377,7 @@ void ApplyMeasureNowDialog::runMeasure()
   // save cloned model to temp directory
   m_model->save(modelPath,true); 
 
-  // remove? this is shown only in debug (EW)
+  // remove? this is shown only in debug (Evan)
   QString path("Measure Output Location: ");
   path.append(toQString(m_workingDir));
   m_jobPath->setText(path);

@@ -839,13 +839,13 @@ void OSGridController::setConceptValue(model::ModelObject t_setterMO, model::Mod
   }
   else if (QSharedPointer<LoadNameConcept> concept = t_baseConcept.dynamicCast<LoadNameConcept>()) {
     auto setter = std::bind(&LoadNameConcept::set, concept.data(), t_setterMO, std::placeholders::_1);
-    auto getter = std::bind(&LoadNameConcept::get, concept.data(), t_getterMO, true); // NOTE EW: Do we always want true?
+    auto getter = std::bind(&LoadNameConcept::get, concept.data(), t_getterMO, true); // NOTE Evan: Do we always want true?
     auto temp = getter();
     if (temp) setter(temp.get());
   }
   else if (QSharedPointer<NameLineEditConcept> concept = t_baseConcept.dynamicCast<NameLineEditConcept>()) {
     auto setter = std::bind(&NameLineEditConcept::set, concept.data(), t_setterMO, std::placeholders::_1);
-    auto getter = std::bind(&NameLineEditConcept::get, concept.data(), t_getterMO, true); // NOTE EW: Do we always want true?
+    auto getter = std::bind(&NameLineEditConcept::get, concept.data(), t_getterMO, true); // NOTE Evan: Do we always want true?
     auto temp = getter();
     if (temp) setter(temp.get());
   }
@@ -920,6 +920,7 @@ OSGridView * OSGridController::gridView(){
   return gridView;
 }
 
+// Evan: Required for Qt to respect style sheet commands
 QString OSGridController::cellStyle(int rowIndex, int columnIndex, bool isSelected, bool isSubRow)
 {
   /// \todo this is a lot of string concatenation to do for each cell update
@@ -1617,6 +1618,14 @@ Holder::Holder(QWidget * parent)
 
 Holder::~Holder()
 {
+}
+
+void Holder::paintEvent(QPaintEvent *)
+{
+  QStyleOption opt;
+  opt.init(this);
+  QPainter p(this);
+  style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
 HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)

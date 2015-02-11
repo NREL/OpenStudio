@@ -43,6 +43,7 @@ class QButtonGroup;
 class QCheckBox;
 class QColor;
 class QLabel;
+class QPaintEvent;
 
 namespace openstudio {
 
@@ -696,6 +697,10 @@ public:
   Holder(QWidget * parent = nullptr);
 
   virtual ~Holder();
+
+protected:
+
+  void paintEvent(QPaintEvent * event);
 
 signals:
 
