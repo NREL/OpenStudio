@@ -4317,6 +4317,7 @@ OS:ScheduleTypeLimits,
        \note Pressure (Pa or psi)
        \note Solar Energy (Wh/m2)
        \note Availability (0-Off or 1-On)
+       \note Linear Power Density (W/m or W/ft)
        \type choice
        \default Dimensionless
        \key Dimensionless
@@ -4338,6 +4339,7 @@ OS:ScheduleTypeLimits,
        \key Availability
        \key Percent
        \key ControlMode
+       \key LinearPowerDensity
 
 \group OpenStudio Geometry
 
