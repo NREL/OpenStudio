@@ -415,13 +415,13 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
 
     end
 
-    # compute view matrices for controlled windows
-		# use fine params (vmx)
+    # compute view matrices for all controlled window groups
+
+		# use fine params
     rtrace_args = "#{t_options.vmx}" 
 
+		# get the window groups, skipping WG0 if present
 		wgInput = []
-    # this won't work if no WG0
-    # wgInput = Dir.glob("#{t_outPath}/scene/glazing/WG*.rad")[1..-1]
     Dir.glob("#{t_outPath}/scene/glazing/WG*.rad") {|file|
       next if file == "#{t_outPath}/scene/glazing/WG0.rad"
       wgInput << file
@@ -458,106 +458,20 @@ def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_s
   puts "#{Time.now.getutc}: Executing simulation"
   
   allValues = []
-
-  # this can be removed since you did this with executeCommand
-  t_cmds.each do | command | 
-  
-    tempIO = IO.popen(command)
-
-    puts "#{Time.now.getutc}: Parsing result"
-    
-    cmdValues = []
-    
-    line_num = 0
-    data_num = 0
-    has_header = false
-    header_read = false
-    tempIO.each_line("\n") do |line| 
-    
-      if line_num == 0
-        has_header = /RADIANCE/.match(line)
-      end
-      line_num += 1
-    
-      if has_header and not header_read
-        if /^\s?\d/.match(line)
-          header_read = true
-        else
-          next
-        end
-      end
-      
-      values = OpenStudio::Radiance::parseGenDayMtxLine(line)
-      if values.size != 8760
-        abort "Unable to parse line, not enough hours found (line: #{line_num}): #{values}\nOriginal Line: #{line}"
-      end
-      
-      line_num = line_num + 1
-      cmdValues << values
-      
-    end
-
-    tempIO.close
-    
-    allValues << cmdValues
-  end
-
-  # allValues or equivalent would be read from the ill file
-
   values = []
 
-  # this might be slow, but the idea is that we are looping over each window's contributions
-  # if the particular index should contribute light, then we add it to the value
-  #
-  # example: the index of values might be:
-  # [window1open, window1closed, window2open, window2closed, window3open, window3closed]
-  #
-  # After calling the t_mapping function for all of the window state indexes for a particular hour we
-  # might get a light contribution map that looks like:
-  #
-  # [true, false, false, true, true, false]
-  #
-  # Saying for that hour of the day, window1 and window3 blinds were open, but window2 blinds were closed.
-  #
-  # The result is the summation of each window's vLambda contributions.
-
-	# this is already done, remove
-	#
-  # one index per window group simulation
-  allValues.size().times do |index|
-  
-    # one row per illuminance calculation point
-    allValues[index].size().times do |row|
-      values[row] = [] if values[row].nil?
-      
-      # one value for each illuminance point per timestep
-      8760.times do |hour|
-        values[row][hour] = 0 if values[row][hour].nil?
-        
-        # figure out the active window state at this hour
-        active_index = t_mapping.call(index, hour)
-        
-        # add contribution from active window group to illuminance point
-        values[row][hour] += allValues[active_index][row][hour] 
-      end
-    end
-  end
-  
-  # values is [row][hour], presumably row maps to a row in the points files which maps back to some object
-  # read values from file now
+  # read illuminance values from file
   values = []
   valuesFile = File.open("#{t_outPath}/output/ts/merged_space.ill")
   valuesFile.each do |row|
-    
     values << row.split(" ")
   end
 
   puts "#{Time.now.getutc}: writing output"
 
-  # now proceed on, as we have all of the contributions we want
   allhours = []
 
-	# this chunk is parsing values out to allhours array which is indexed by hour and value is a map with all the space stuff
+	# write out illuminance to individual space/map files
   8760.times do |hour|
     index = 0;
     splitvalues = Hash.new
