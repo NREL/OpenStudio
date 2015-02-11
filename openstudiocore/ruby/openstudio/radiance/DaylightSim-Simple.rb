@@ -542,7 +542,7 @@ end
 def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, t_site_latitude, t_site_longitude, t_site_stdmeridian, t_outPath, \
 t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
 
-  puts "runSimulation called"
+  puts "#{Time.now.getutc}: Calculating annual daylight values"
 
   rawValues = Hash.new
   values = Hash.new
@@ -553,12 +553,11 @@ t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
   osQuote = "\'"
 
 
-  # i can haz gendaymtx vintage? - 2014.07.02 RPG
-  # (gendaymtx >= v4.2.b adds header and -h option to suppress)
+  # i can haz gendaymtx vintage? (gendaymtx >= v4.2.b adds header and -h option to suppress) - 2014.07.02 RPG 
+  
   genDaymtxHdr = ""
   puts "Determining gendaymtx vintage..."   
   exec_statement("gendaymtx -h -m #{t_options.skyvecDensity} \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" > \"#{t_outPath / OpenStudio::Path.new("daymtx_out.tmp")}\" ")
-  puts "ok."
   if File.zero?("#{t_outPath / OpenStudio::Path.new("daymtx_out.tmp")}")
     genDaymtxHdr = ""
     if t_options.z == true
@@ -566,16 +565,18 @@ t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
       exit
     end
   else 
-    puts "NOTE: Producing sky matrix headers"
+    puts "OK."
   end
   File.delete("#{t_outPath / OpenStudio::Path.new("daymtx_out.tmp")}")
-
+  
   # we now haz =)
 
 
+	# OS stuff that is probably redundant
+	
   if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
+  
     perlPrefix = "perl \"C:/Program Files (x86)/Radiance/bin/"
-
     raypath = ENV['RAYPATH']
     raypath.split(';').each do |path|
       candidate = "#{path}\\..\\bin\\"
@@ -587,13 +588,13 @@ t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
 
     perlExtension = ".pl\""
     osQuote = "\""
+  
   end
 
+
   # Run the simulation 
-  puts "Running annual simulation"
 
   simulations = []
-  #windowMapping = nil
 
   exec_statement("gendaymtx #{genDaymtxHdr} -m #{t_options.skyvecDensity} \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" > annual-sky.mtx")
 
@@ -610,12 +611,11 @@ t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
       
       # do uncontrolled windows (WG0)
       if wg[2].to_i == 0
-        # no transpose
+        # keep header, convert to illuminance, but no transpose
         exec_statement("dctimestep #{t_outPath}/output/dc/#{wg}.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > #{t_outPath}/output/ts/#{wg}.ill") 
       
       else
       
-      # next if wg[2].to_i == 0
       # do all controlled window groups
       
 				wgXMLs = row.split(",")[4..-1]
@@ -628,11 +628,12 @@ t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
 					annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > #{t_outPath}/output/ts/#{wg}_#{wgXMLs[i].split[0]}.ill")
  
 				end
+				
 			end
       
     end
     
-    # get annual values for window control sensors (note: no transpose, no header)
+    # get annual values for window control sensors (note: convert to illuminance, no transpose, strip header)
     exec_statement("dctimestep #{t_outPath}/output/dc/window_controls.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - | getinfo - > #{t_outPath}/output/ts/window_controls.ill")
 
     # return the bsdf index for window group given by index at this hour
@@ -743,20 +744,13 @@ t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
 
   else
     # 2-phase 
-    # should clean up these file extensions; really there's no daylight matrix in a 2-phase calc. =/
-    # simulations << "dctimestep \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" \"#{t_outPath / OpenStudio::Path.new("annual-sky.mtx")}\" "
+    # should clean up these file extensions; really there's no daylight matrix in a 2-phase calc. =|
     # storing the "values" data in a file to support 3-phase workflow, no transpose operation
     exec_statement("dctimestep #{t_outPath}/output/dc/merged_space/maps/merged_space.dmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - | getinfo - > #{t_outPath}/output/ts/merged_space.ill")
     
-     # return the bsdf index for window group given by index at this hour
-    windowMapping = lambda { |index, hour| return 0 }
   end
 
-  # what format is rawValues in?
-  # rename execSimulation to parseResults, first input should be path to merged_space.ill
-  # windowMapping is not needed for single phase and already handled for three phase so should be removed
-  # what is space_names_to_calculate?
-  #  
+  # TODO: rename execSimulation to parseResults or something that makes sense
   rawValues = execSimulation(simulations, windowMapping, t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
 
   dcVectors = nil
@@ -785,7 +779,7 @@ t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
 
   return values, dcVectors;
   
-end #def
+end #end of runSimulation function
 
 def getTimeSeries(t_sqlFile, t_envPeriod)
   diffHorizIllumAll = []; dirNormIllumAll = [];
@@ -1313,7 +1307,7 @@ puts "#{Time.now.getutc}: checking for radiance"
 
 if not system("rtrace -version")
   puts "#{Time.now.getutc}: Cannot find required Radiance executables in the current path"
-  exit
+  exit # Chevy Nova
 else
   puts "#{Time.now.getutc}: radiance... ok."
 end
@@ -1336,20 +1330,26 @@ else
   opts_dmx = "@#{outPath}/options/dmx.opt"
 end
 
-# move to base radiance dir
+
+# Move to base Radiance dir
+
 Dir.chdir("#{outPath}")
 puts "\nRunning radiance in directory '#{Dir.pwd}'"
 
+# Merge illuminance map points, daylight control points, and glare sensor views to a single input file for Radiance programs
+
 mergeSpaces(space_names_to_calculate, outPath)
 
-# calculate daylight coefficients, if selected (single phase)
+
+# Compute daylight coefficients for model
+
 if options.dc == true
   calculateDaylightCoeffecients(outPath, options, space_names_to_calculate, radMaps, opts_map, simCores, catCommand)
 end
 
-# Annual simulation
-# run genskyvec, dctimestep, for timestep results from DCs. Defaults to all spaces, 
-# can specify spaces/months/days at command line
+
+# Annual simulation (run genskyvec, dctimestep, for timestep results from DCs)
+
 if options.dcts == true
   values, dcVectors = runSimulation(space_names_to_calculate, sqlFile, options, simCores, site_latitude, site_longitude, site_stdmeridian, outPath, spaceWidths, spaceHeights, radGlareSensorViews)
   annualSimulation(sqlFile, options, epwFile, space_names_to_calculate, radMaps, spaceWidths, spaceHeights, radMapPoints, radGlareSensorViews, simCores, site_latitude, site_longitude, site_stdmeridian, outPath, building, values, dcVectors)
