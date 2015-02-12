@@ -928,6 +928,9 @@ void InspectorGadget::createExtensibleToolBar( QVBoxLayout* layout,
   if( !props.extensible )
     return;
 
+  if ( m_locked )
+    return;
+
   auto frame = new QFrame(parent);
   frame->setContentsMargins(0,0,0,0);
   auto hbox = new QHBoxLayout();

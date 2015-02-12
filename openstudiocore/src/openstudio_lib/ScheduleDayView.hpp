@@ -259,7 +259,7 @@ class ScheduleDayEditor : public QWidget
 
   void toggleUnits(bool isIP);
 
-  void updateKeyboardInputValue(const QString& keyboardInputValue);
+  void updateKeyboardPrompt(const QString& keyboardPrompt);
 
   protected:
 
@@ -287,7 +287,7 @@ class ScheduleDayEditor : public QWidget
 
   QLabel * m_yLabel;
 
-  QLabel * m_keyboardInputValue;
+  QLabel * m_keyboardPrompt;
 
 };
 
@@ -370,7 +370,7 @@ class DaySchedulePlotArea : public QGraphicsView
 
   void dayScheduleSceneChanged( DayScheduleScene * scene, double lowerValue, double upperValue );
 
-  void keyboardInputValueChanged( QString keyboardInputValue );
+  void keyboardPromptChanged(QString keyboardPrompt);
 
   protected:
 
@@ -386,13 +386,13 @@ class DaySchedulePlotArea : public QGraphicsView
 
   private:
 
-  void setKeyboardInputValue(const QString& keyboardInputValue);
+  void updateKeyboardPrompt();
 
   ScheduleDayEditor * m_scheduleDayEditor;
 
   QGraphicsItem * m_currentItem;
 
-  CalendarSegmentItem * m_currentHoverItem;
+  QGraphicsItem * m_currentHoverItem;
 
   QString m_keyboardInputValue;
 

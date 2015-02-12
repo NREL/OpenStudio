@@ -187,6 +187,8 @@ class SchedulesView : public QWidget
 
     void openLibDlgClicked();
 
+    void modelObjectSelected(model::OptionalModelObject & modelObject, bool readOnly);
+
   protected:
 
     void paintEvent ( QPaintEvent * event );
