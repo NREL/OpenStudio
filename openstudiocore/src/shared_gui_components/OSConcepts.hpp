@@ -470,11 +470,11 @@ class RequiredChoiceConceptImpl : public ChoiceConcept {
   }
 
   virtual bool set(std::string value) {
-    typename std::map<std::string,ChoiceType>::const_iterator valuePair = m_choicesMap.find(value);
     if (!m_choicesMap.size()) {
       // Oops, we forgot to update the choices
       this->choices();
     }
+    typename std::map<std::string,ChoiceType>::const_iterator valuePair = m_choicesMap.find(value);
     OS_ASSERT(valuePair != m_choicesMap.end());
     return m_setter(valuePair->second);
   }
@@ -605,11 +605,11 @@ class OptionalChoiceConceptImpl : public ChoiceConcept {
   template<typename T>
   bool setImplWithLookup(const std::string &t_value, const std::function<bool (T)> &t_setter)
   {
-    typename std::map<std::string,ChoiceType>::const_iterator valuePair = m_choicesMap.find(t_value);
     if (!m_choicesMap.size()) {
       // Oops, we forgot to update the choices
       this->choices();
     }
+    typename std::map<std::string,ChoiceType>::const_iterator valuePair = m_choicesMap.find(t_value);
     OS_ASSERT(valuePair != m_choicesMap.end());
     return t_setter(valuePair->second);
   }
