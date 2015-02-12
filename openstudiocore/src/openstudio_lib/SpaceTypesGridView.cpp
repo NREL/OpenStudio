@@ -459,6 +459,13 @@ SpaceTypesGridView * SpaceTypesGridController::spaceTypesGridView()
 
 void SpaceTypesGridController::categorySelected(int index)
 {
+  auto gridView = this->spaceTypesGridView();
+  if (gridView) {
+    if (gridView->m_filters) {
+      gridView->m_filters->setCurrentIndex(0);
+    }
+  }
+
   if (spaceTypesGridView()) {
     // Enable filter when viewing loads tab...
     if (index == 1) {

@@ -52,6 +52,8 @@ public:
 
   void disableFilter();
 
+  QComboBox * m_filters = nullptr;
+
 private:
 
   REGISTER_LOGGER("openstudio.SpaceTypesGridView");
@@ -61,8 +63,6 @@ private:
   SpaceTypesGridController * m_gridController = nullptr;
 
   QLabel * m_filterLabel = nullptr;
-
-  QComboBox * m_filters = nullptr;
 
 signals:
 
