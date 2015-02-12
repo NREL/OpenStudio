@@ -1223,14 +1223,18 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
       std::function<boost::optional<model::SpaceInfiltrationDesignFlowRate> (model::SpaceType *)>  getter;
 
       std::function<bool (model::SpaceType *, const model::SpaceInfiltrationDesignFlowRate &)> setter (
-        [](model::SpaceType *t_type, model::SpaceInfiltrationDesignFlowRate t_rate)  {
-        if (t_rate.cast<model::SpaceInfiltrationDesignFlowRate>().spaceType()) {
-          boost::optional<model::ModelObject> clone_rate = t_rate.clone(t_rate.model());
-          OS_ASSERT(clone_rate);
-          return clone_rate->cast<model::SpaceInfiltrationDesignFlowRate>().setSpaceType(*t_type);
+        [](model::SpaceType *t_type, model::SpaceInfiltrationDesignFlowRate t_rate) {
+          if (t_rate.cast<model::SpaceInfiltrationDesignFlowRate>().spaceType()) {
+            boost::optional<model::ModelObject> clone_rate = t_rate.clone(t_rate.model());
+            OS_ASSERT(clone_rate);
+            auto success = clone_rate->cast<model::SpaceInfiltrationDesignFlowRate>().setSpaceType(*t_type);
+            OS_ASSERT(success);
+            return success;
           }
           else {
-            return t_rate.setSpaceType(*t_type);
+            auto success = t_rate.setSpaceType(*t_type);
+            OS_ASSERT(success);
+            return success;
           }
         }
       );
@@ -1266,7 +1270,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
       std::function<boost::optional<model::SpaceInfiltrationEffectiveLeakageArea>(model::SpaceType *)>  getter;
 
       std::function<bool (model::SpaceType *, const model::SpaceInfiltrationEffectiveLeakageArea &)> setter (
-        [](model::SpaceType *t_type, model::SpaceInfiltrationEffectiveLeakageArea t_area)  {
+        [](model::SpaceType *t_type, model::SpaceInfiltrationEffectiveLeakageArea t_area) {
           if (t_area.spaceType()) {
             boost::optional<model::ModelObject> clone_area = t_area.clone(t_area.model());
             OS_ASSERT(clone_area);
