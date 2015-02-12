@@ -359,10 +359,6 @@ set(RUBY_MODULE_DIR "Ruby")
 set(RUBY_MODULE_ARCH_DIR "Ruby/openstudio")
 
 if(WIN32)
-  if(MSVC AND CMAKE_CL_64)
-    message(WARNING "Treat Warnings As Errors is disabled for 64-bit Windows builds")
-  endif()
-
   if(NOT "${RUBY_VERSION_MAJOR}" EQUAL "2")
     message(SEND_ERROR "64bit Windows support requires Ruby >= 2.0.0")
   endif()
