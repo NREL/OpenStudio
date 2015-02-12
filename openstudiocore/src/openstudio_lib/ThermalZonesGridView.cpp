@@ -119,8 +119,8 @@ ThermalZonesGridView::ThermalZonesGridView(bool isIP, const model::Model & model
   std::vector<model::ThermalZone> thermalZones = model.getModelObjects<model::ThermalZone>();
   std::vector<model::ModelObject> thermalZoneModelObjects = subsetCastVector<model::ModelObject>(thermalZones);
 
-  ThermalZonesGridController * thermalZonesGridController = new ThermalZonesGridController(m_isIP, "Thermal Zones", IddObjectType::OS_ThermalZone, model, thermalZoneModelObjects);
-  OSGridView * gridView = new OSGridView(thermalZonesGridController, "Thermal Zones", "Drop\nZone", false, parent);
+  m_thermalZonesGridController = new ThermalZonesGridController(m_isIP, "Thermal Zones", IddObjectType::OS_ThermalZone, model, thermalZoneModelObjects);
+  OSGridView * gridView = new OSGridView(m_thermalZonesGridController, "Thermal Zones", "Drop\nZone", false, parent);
 
   bool isConnected = false;
 
@@ -142,14 +142,22 @@ ThermalZonesGridView::ThermalZonesGridView(bool isIP, const model::Model & model
 
   layout->addStretch(1);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), thermalZonesGridController, SIGNAL(toggleUnitsClicked(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_thermalZonesGridController, SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), thermalZonesGridController, SLOT(toggleUnits(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_thermalZonesGridController, SLOT(toggleUnits(bool)));
   OS_ASSERT(isConnected);
 
   std::vector<model::ThermalZone> thermalZone = model.getModelObjects<model::ThermalZone>(); // NOTE for horizontal system lists
 
+}
+
+// THIS shoulf be in the base class
+std::vector<model::ModelObject> ThermalZonesGridView::selectedObjects() const
+{
+  const auto os = m_thermalZonesGridController->getObjectSelector()->getSelectedObjects();
+
+  return std::vector<model::ModelObject>(os.cbegin(), os.cend());
 }
 
 ThermalZonesGridController::ThermalZonesGridController(bool isIP,
@@ -711,8 +719,8 @@ void ThermalZonesGridController::onItemDropped(const OSItemId& itemId)
 
 void ThermalZonesGridController::refreshModelObjects()
 {
-  std::vector<model::ThermalZone> refrigerationCases = m_model.getModelObjects<model::ThermalZone>();
-  m_modelObjects = subsetCastVector<model::ModelObject>(refrigerationCases);
+  std::vector<model::ThermalZone> thermalZones = m_model.getModelObjects<model::ThermalZone>();
+  m_modelObjects = subsetCastVector<model::ModelObject>(thermalZones);
   std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
 }
 

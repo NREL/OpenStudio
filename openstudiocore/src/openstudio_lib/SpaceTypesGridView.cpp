@@ -1446,8 +1446,8 @@ void SpaceTypesGridController::onItemDropped(const OSItemId& itemId)
 
 void SpaceTypesGridController::refreshModelObjects()
 {
-  std::vector<model::SpaceType> refrigerationCases = m_model.getModelObjects<model::SpaceType>();
-  m_modelObjects = subsetCastVector<model::ModelObject>(refrigerationCases);
+  std::vector<model::SpaceType> spaceTypes = m_model.getModelObjects<model::SpaceType>();
+  m_modelObjects = subsetCastVector<model::ModelObject>(spaceTypes);
   std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
 }
 

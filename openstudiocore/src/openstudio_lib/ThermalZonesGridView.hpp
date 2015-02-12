@@ -31,6 +31,8 @@ namespace openstudio{
 
 class ModelSubTabView;
 
+class ThermalZonesGridController;
+
 class ThermalZonesGridView : public QWidget
 {
   Q_OBJECT
@@ -41,7 +43,11 @@ public:
 
   virtual ~ThermalZonesGridView() {}
 
+  virtual std::vector<model::ModelObject> selectedObjects() const;
+
 private:
+
+  ThermalZonesGridController * m_thermalZonesGridController = nullptr;
 
   bool m_isIP;
 
