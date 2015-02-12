@@ -212,7 +212,7 @@ end
 
 if !which('perl')
   puts "Perl could not be found in path, exiting"
-  exit 1
+  exit false
 end
 
 # set up MP option
@@ -563,7 +563,7 @@ t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
     genDaymtxHdr = ""
     if t_options.z == true
       puts "Old Radiance version detected, will not work with 3-phase method, quitting."
-      exit
+      exit false
     end
   else 
     puts "NOTE: Producing sky matrix headers"
@@ -770,7 +770,7 @@ t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
     # check that we have all timeseries
     if (not diffHorizIllumAll) or (not dirNormIllumAll) or (not diffEfficacyAll) or (not dirNormEfficacyAll) or (not solarAltitudeAll) or (not solarAzimuthAll)
       puts "Missing required timeseries"
-      exit
+      exit false
     end
 
     simDateTimes, simTimes, diffHorizIllum, dirNormIllum, diffEfficacy, dirNormEfficacy, solarAltitude, solarAzimuth, firstReportDateTime = buildSimulationTimes(t_sqlFile, envPeriod, t_options, diffHorizIllumAll, dirNormIllumAll, diffEfficacyAll, dirNormEfficacyAll, solarAltitudeAll, solarAzimuthAll)
@@ -903,7 +903,7 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
     # check that we have all timeseries
     if (not diffHorizIllumAll) or (not dirNormIllumAll) or (not diffEfficacyAll) or (not dirNormEfficacyAll) or (not solarAltitudeAll) or (not solarAzimuthAll)
       puts "Missing required timeseries"
-      exit
+      exit false
     end
 
 		# make timeseries
@@ -1313,7 +1313,7 @@ puts "#{Time.now.getutc}: checking for radiance"
 
 if not system("rtrace -version")
   puts "#{Time.now.getutc}: Cannot find required Radiance executables in the current path"
-  exit
+  exit false
 else
   puts "#{Time.now.getutc}: radiance... ok."
 end
