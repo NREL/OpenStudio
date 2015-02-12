@@ -460,9 +460,20 @@ SpaceTypesGridView * SpaceTypesGridController::spaceTypesGridView()
 void SpaceTypesGridController::categorySelected(int index)
 {
   if (spaceTypesGridView()) {
-    // Only show filter when viewing loads tab
+    // Enable filter when viewing loads tab...
     if (index == 1) {
       spaceTypesGridView()->enableFilter();
+    }
+    // ...or if the custom tab has a loads column
+    else if (index == 3) {
+      auto categoriesAndFields = this->categoriesAndFields();
+      auto fields = categoriesAndFields.at(index);
+      for (auto field : fields.second) {
+        if (field == LOADNAME) {
+          spaceTypesGridView()->enableFilter();
+          break;
+        }
+      }
     }
     else {
       spaceTypesGridView()->disableFilter();
