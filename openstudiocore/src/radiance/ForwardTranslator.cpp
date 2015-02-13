@@ -1234,7 +1234,6 @@ namespace radiance {
               boost::filesystem::copy_file(*controlledBSDF, bsdfoutpath / openstudio::toPath("cl_Tn" + formatString(tVis, 2) + "_blinds.xml"),
                                            boost::filesystem::copy_option::overwrite_if_exists);
 
-
               // store window group normal (may not need anymore with rfluxmtx)
               // hard coded shade algorithm: on if high solar (2), setpoint 2Klx (2000)
               m_radDCmats.insert(windowGroup_name + "," + \
