@@ -711,7 +711,17 @@ namespace detail {
         }
 
         if (thisMinZ <= surfaceMinZ){
-          result = "Door";
+          bool isGlassDoor = false;
+          boost::optional<ConstructionBase> construction = this->construction();
+          if (construction && construction->isFenestration()){
+            isGlassDoor = true;
+          }
+
+          if (isGlassDoor){
+            result = "GlassDoor";
+          }else{
+            result = "Door";
+          }
         }else{
           result = "FixedWindow";
         }

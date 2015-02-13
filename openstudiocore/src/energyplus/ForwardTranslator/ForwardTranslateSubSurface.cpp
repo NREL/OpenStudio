@@ -61,13 +61,21 @@ boost::optional<IdfObject> ForwardTranslator::translateSubSurface( model::SubSur
   }else if (istringEqual("Skylight", subSurfaceType)){
     subSurfaceType = "Window";
   }
-  
-  idfObject.setString(FenestrationSurface_DetailedFields::SurfaceType, subSurfaceType);
 
   boost::optional<ConstructionBase> construction = modelObject.construction();
   if (construction){
     idfObject.setString(FenestrationSurface_DetailedFields::ConstructionName, construction->name().get());
+
+    if (subSurfaceType == "Door" && construction->isFenestration()){
+      LOG(Warn, "SubSurface '" << modelObject.name().get() << "' uses fenestration construction, changing SubSurfaceType to Door");
+      subSurfaceType = "GlassDoor";
+    } else if (subSurfaceType == "GlassDoor" && !construction->isFenestration()){
+      LOG(Warn, "SubSurface '" << modelObject.name().get() << "' uses non-fenestration construction, changing SubSurfaceType to GlassDoor");
+      subSurfaceType = "Door";
+    }
   }
+
+  idfObject.setString(FenestrationSurface_DetailedFields::SurfaceType, subSurfaceType);
 
   boost::optional<Surface> surface = modelObject.surface();
   if (surface){
