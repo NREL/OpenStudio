@@ -110,7 +110,6 @@ def exec_statement(s)
   return result
 end
 
-
 # extract arguments
 modelPath = ""
 if ARGV[0]
@@ -148,22 +147,22 @@ if ARGV[2]
 end
 
 path = OpenStudio::Path.new(radiancePath).to_s
-raypath = (OpenStudio::Path.new(radiancePath).parent_path() / OpenStudio::Path.new('lib')).to_s()
+raypath = (OpenStudio::Path.new(radiancePath).parent_path() / 
+OpenStudio::Path.new('lib')).to_s()
 
 epw2weapath = (OpenStudio::Path.new(radiancePath) / OpenStudio::Path.new('epw2wea')).to_s
-if Dir.glob(epw2weapath + '*').empty?
-  puts "Cannot find epw2wea tool in radiance installation at '#{radiancePath}'.  You may need to install a newer version of radiance."
-  exit false
-end
-ENV["EPW2WEAPATH"] = epw2weapath
 
+ENV["EPW2WEAPATH"] = epw2weapath
+programExtension = ''
 if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
   programExtension = ".exe"
   perlpath = ""
   if OpenStudio::applicationIsRunningFromBuildDirectory()
-    perlpath = OpenStudio::getApplicationRunDirectory().parent_path().parent_path() / OpenStudio::Path.new("strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin")
+    perlpath = OpenStudio::getApplicationRunDirectory().parent_path().parent_path() / 
+    OpenStudio::Path.new("strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin")
   else
-    perlpath = OpenStudio::getApplicationRunDirectory().parent_path() / OpenStudio::Path.new("strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin")
+    perlpath = OpenStudio::getApplicationRunDirectory().parent_path() / 
+    OpenStudio::Path.new("strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin")
   end
   puts "Adding path for local perl: " + perlpath.to_s
   ENV["PATH"] = ENV["PATH"] + ";" + path + ";" + perlpath.to_s
@@ -174,7 +173,8 @@ else
 end
 
 if Dir.glob(epw2weapath + programExtension).empty?
-  puts "Cannot find epw2wea tool in radiance installation at '#{radiancePath}'.  You may need to install a newer version of Radiance."
+  puts "(test) Cannot find epw2wea tool in radiance installation at '#{radiancePath}'. \
+  You may need to install a newer version of Radiance."
   exit false
 end
 ENV["EPW2WEAPATH"] = epw2weapath
@@ -209,7 +209,8 @@ if sqlPath.empty?
 end
 
 modelPathObj = OpenStudio::Path.new(modelPath)
-outPath = modelPathObj.parent_path / OpenStudio::Path.new(modelPathObj.stem) / OpenStudio::Path.new("model") / OpenStudio::Path.new("radiance")
+outPath = modelPathObj.parent_path / OpenStudio::Path.new(modelPathObj.stem) / 
+OpenStudio::Path.new("model") / OpenStudio::Path.new("radiance")
 
 daylightsimOpts = "--x"
 File.open("#{outPath}/options/daylightsim.opt", "r") do |file|
