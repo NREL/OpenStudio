@@ -40,13 +40,38 @@ class ModelToRad_Test < MiniTest::Unit::TestCase
     assert((not weatherFile.empty?))
     
     modelExample.toIdfFile.save(modelPath, true)
+    
     #run ModelToRad.rb
     command = "#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/radiance/ModelToRad.rb' '#{modelPath}' '--v'"
     puts command
     assert(system(command))
     #FileUtils.rm_rf("#{$OpenStudio_ResourcePath}radiance/test/")
   end
-
+  
+  def test_ModelToRad_Blinds
+    modelExample = OpenStudio::Model::exampleModel()
+    
+    blind = OpenStudio::Model::Blind.new(modelExample)
+    shadingControl = OpenStudio::Model::ShadingControl.new(blind)
+    modelExample.getSubSurfaces.each do |subSurface|
+      subSurface.setShadingControl(shadingControl)
+    end
+    
+    modelPath = OpenStudio::Path.new("#{$OpenStudio_ResourcePath}radiance/test/ExampleModel_Blinds.osm")
+    FileUtils.mkdir_p(modelPath.parent_path.to_s)
+    
+    epwPath = OpenStudio::Path.new(OpenStudio::Path.new("#{$OpenStudio_ResourcePath}runmanager/USA_CO_Golden-NREL.724666_TMY3.epw"))
+    epwFile = OpenStudio::EpwFile.new(epwPath)
+    weatherFile = OpenStudio::Model::WeatherFile::setWeatherFile(modelExample, epwFile)
+    assert((not weatherFile.empty?))
+    
+    modelExample.toIdfFile.save(modelPath, true)
+    #run ModelToRad.rb
+    command = "#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/radiance/ModelToRad.rb' '#{modelPath}' '--v'"
+    puts command
+    assert(system(command))
+    #FileUtils.rm_rf("#{$OpenStudio_ResourcePath}radiance/test/")
+  end
  
 #  def teardown
 #    FileUtils.rm_rf("#{$OpenStudio_ResourcePath}radiance/test/")

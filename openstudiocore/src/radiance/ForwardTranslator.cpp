@@ -1195,45 +1195,75 @@ namespace radiance {
             // copy required bsdf files into place
             openstudio::path bsdfoutpath = t_radDir / openstudio::toPath("bsdf");
 
-            std::string testBSDFLib = "/Users/rgugliel/src/support/bsdf";
-
-            //testBSDFLib = "c:/radiance/bsdf";
-            //LOG(Warn, "Using temporarily hard coded BSDF library '" + testBSDFLib + "' for testing");
-
             if (rMaterial == "glass"){
 
-              // uncomment out getBSDF to try BCL
-              boost::optional<openstudio::path> uncontrolledBSDF; // = getBSDF(tVis, 1.0, "None");
-              if (!uncontrolledBSDF){
-                LOG(Warn, "Using temporarily hard coded BSDF library '" + testBSDFLib + "' for testing");
-                uncontrolledBSDF = openstudio::toPath(testBSDFLib + "/cl_Tn" + formatString(tVis, 2) + ".xml");
-              }
-
-              // copy uncontrolledBSDF
+              // path to write bsdf to
               openstudio::path uncontrolledBSDFOut = t_radDir / openstudio::toPath("bsdf") / openstudio::toPath("/cl_Tn" + formatString(tVis, 2) + ".xml");
-              boost::filesystem::copy_file(*uncontrolledBSDF, uncontrolledBSDFOut, boost::filesystem::copy_option::overwrite_if_exists);
-
+              
               // add xml file to the collection of crap to copy up
               t_outfiles.push_back(uncontrolledBSDFOut);
 
-              // uncomment out getBSDF to try BCL
-              boost::optional<openstudio::path> controlledBSDF; // = getBSDF(tVis, 1.0, "Blind");
-              if (!controlledBSDF){
-                LOG(Warn, "Using temporarily hard coded BSDF library '" + testBSDFLib + "' for testing");
-                controlledBSDF = openstudio::toPath(testBSDFLib + "/cl_Tn" + formatString(tVis, 2) + "_blinds.xml");
+              // get BSDF from BCL
+              boost::optional<openstudio::path> uncontrolledBSDF = getBSDF(tVis, 100, "None");
+              if (uncontrolledBSDF){
+                // copy uncontrolledBSDF
+                boost::filesystem::copy_file(*uncontrolledBSDF, uncontrolledBSDFOut, boost::filesystem::copy_option::overwrite_if_exists);
+              }else{
+                LOG(Warn, "Cannot download BSDF, using default.");
+
+                // read default file
+                QString defaultFile;
+                QFile inFile(":/resources/cl_Tn0.44.xml");
+                if (inFile.open(QFile::ReadOnly)){
+                  QTextStream docIn(&inFile);
+                  defaultFile = docIn.readAll();
+                  inFile.close();
+                }
+
+                // write default file
+                QFile outFile(toQString(uncontrolledBSDFOut));
+                bool opened = outFile.open(QIODevice::WriteOnly);
+                if (!opened){
+                  LOG_AND_THROW("Cannot write file to '" << toString(uncontrolledBSDFOut) << "'");
+                }
+                QTextStream textStream(&outFile);
+                textStream << defaultFile;
+                outFile.close();
               }
 
-              // copy controlledBSDF
+              // path to write bsdf to
               openstudio::path controlledBSDFOut = t_radDir / openstudio::toPath("bsdf") / openstudio::toPath("/cl_Tn" + formatString(tVis, 2) + "_blinds.xml");
-              boost::filesystem::copy_file(*controlledBSDF, controlledBSDFOut, boost::filesystem::copy_option::overwrite_if_exists);
-
+              
               // add xml file to the collection of crap to copy up
               t_outfiles.push_back(controlledBSDFOut);
 
+              // get BSDF from BCL
+              boost::optional<openstudio::path> controlledBSDF = getBSDF(tVis, 100, "Blind");
+              if (controlledBSDF){
+                // copy controlledBSDF
+                boost::filesystem::copy_file(*controlledBSDF, controlledBSDFOut, boost::filesystem::copy_option::overwrite_if_exists);
+              }else{
+                LOG(Warn, "Cannot download BSDF, using default.");
 
-              boost::filesystem::copy_file(*controlledBSDF, bsdfoutpath / openstudio::toPath("cl_Tn" + formatString(tVis, 2) + "_blinds.xml"),
-                                           boost::filesystem::copy_option::overwrite_if_exists);
+                // read default file
+                QString defaultFile;
+                QFile inFile(":/resources/cl_Tn0.44_blinds.xml");
+                if (inFile.open(QFile::ReadOnly)){
+                  QTextStream docIn(&inFile);
+                  defaultFile = docIn.readAll();
+                  inFile.close();
+                }
 
+                // write default file
+                QFile outFile(toQString(uncontrolledBSDFOut));
+                bool opened = outFile.open(QIODevice::WriteOnly);
+                if (!opened){
+                  LOG_AND_THROW("Cannot write file to '" << toString(uncontrolledBSDFOut) << "'");
+                }
+                QTextStream textStream(&outFile);
+                textStream << defaultFile;
+                outFile.close();
+              }
 
               // store window group normal (may not need anymore with rfluxmtx)
               // hard coded shade algorithm: on if high solar (2), setpoint 2Klx (2000)
@@ -1245,19 +1275,39 @@ namespace radiance {
 
             } else if (rMaterial == "trans"){
 
-              // uncomment out getBSDF to try BCL
-              boost::optional<openstudio::path> uncontrolledBSDF; // = getBSDF(tVis, 0.0, "None");
-              if (!uncontrolledBSDF){
-                LOG(Warn, "Using temporarily hard coded BSDF library '" + testBSDFLib + "' for testing");
-                uncontrolledBSDF = openstudio::toPath(testBSDFLib + "/df_Tn" + formatString(tVis, 2) + ".xml");
-              }
-
               // copy uncontrolledBSDF
-              openstudio::path uncontrolledBSDFOut = t_radDir / openstudio::toPath("bsdf") / openstudio::toPath("/cl_Tn" + formatString(tVis, 2) + ".xml");
-              boost::filesystem::copy_file(*uncontrolledBSDF, uncontrolledBSDFOut, boost::filesystem::copy_option::overwrite_if_exists);
+              openstudio::path uncontrolledBSDFOut = t_radDir / openstudio::toPath("bsdf") / openstudio::toPath("/df_Tn" + formatString(tVis, 2) + ".xml");
 
               // add xml file to the collection of crap to copy up
               t_outfiles.push_back(uncontrolledBSDFOut);
+
+              // get BSDF from BCL
+              boost::optional<openstudio::path> uncontrolledBSDF = getBSDF(tVis, 0, "None");
+              if (uncontrolledBSDF){
+                // copy controlledBSDF
+                boost::filesystem::copy_file(*uncontrolledBSDF, uncontrolledBSDFOut, boost::filesystem::copy_option::overwrite_if_exists);
+              }else{
+                LOG(Warn, "Cannot download BSDF, using default.");
+
+                // read default file
+                QString defaultFile;
+                QFile inFile(":/resources/df_Tn0.44.xml");
+                if (inFile.open(QFile::ReadOnly)){
+                  QTextStream docIn(&inFile);
+                  defaultFile = docIn.readAll();
+                  inFile.close();
+                }
+
+                // write default file
+                QFile outFile(toQString(uncontrolledBSDFOut));
+                bool opened = outFile.open(QIODevice::WriteOnly);
+                if (!opened){
+                  LOG_AND_THROW("Cannot write file to '" << toString(uncontrolledBSDFOut) << "'");
+                }
+                QTextStream textStream(&outFile);
+                textStream << defaultFile;
+                outFile.close();
+              }
 
               // store window group normal (may not need anymore with rfluxmtx)
               m_radDCmats.insert(windowGroup_name + "," + \
@@ -1626,7 +1676,7 @@ namespace radiance {
 
   boost::optional<openstudio::path> ForwardTranslator::getBSDF(double vlt, double vltSpecular, const std::string& shadeType)
   {
-    std::string searchTerm = "rgugliel"; // author who posted BSDFs
+    std::string searchTerm = "BSDF"; 
     unsigned tid = 1316; // "Construction Assembly.Fenestration.Window";
 
     boost::optional<std::string> result;
@@ -1638,8 +1688,8 @@ namespace radiance {
     }
 
     openstudio::RemoteBCL remoteBCL;
-    remoteBCL.useRemoteDevelopmentUrl(); // TODO: remove
-    result = getBSDF(localBCL, vlt, vltSpecular, shadeType, searchTerm, tid);
+    //remoteBCL.useRemoteDevelopmentUrl(); // TODO: remove
+    result = getBSDF(remoteBCL, vlt, vltSpecular, shadeType, searchTerm, tid);
     if (result){
       return toPath(*result);
     }
@@ -1653,6 +1703,11 @@ namespace radiance {
     for (const BCLComponent& result : results){
 
       try{
+
+        if (result.files("xml").empty()){
+          continue;
+        }
+
         double vltDiff = std::numeric_limits<double>::max();
         double vltSpecularDiff = std::numeric_limits<double>::max();
         bool shadeTypeMatch = false;
@@ -1661,7 +1716,7 @@ namespace radiance {
           if (istringEqual(attributeName, "Visible Light Transmittance")){
             vltDiff = std::abs(attribute.valueAsDouble() - vlt);
           } else if (istringEqual(attributeName, "Visible Light Transmittance Specular Percentage")) {
-            vltSpecularDiff = std::abs(attribute.valueAsDouble() - vlt);
+            vltSpecularDiff = std::abs(attribute.valueAsDouble() - vltSpecular);
           } else if (istringEqual(attributeName, "Interior Shade Layer Type")) {
             shadeTypeMatch = istringEqual(attribute.valueAsString(), shadeType);
           }
@@ -1671,7 +1726,7 @@ namespace radiance {
         if (vltDiff <= 0.01 && vltSpecularDiff <= 0.01 && shadeTypeMatch){
           // this one works try to get payload
           std::vector<std::string> files = result.files("xml");
-          if (files.size() == 0){
+          if (files.size() > 0){
             return files[0];
           }
         }
@@ -1700,6 +1755,17 @@ namespace radiance {
         for (const BCLSearchResult& result : results){
 
           try{
+
+            bool hasXML = false;
+            for (BCLFile file : result.files()){
+              if (file.filetype() == "xml"){
+                hasXML = true;
+              }
+            }
+            if (!hasXML){
+              continue;
+            }
+
             double vltDiff = std::numeric_limits<double>::max();
             double vltSpecularDiff = std::numeric_limits<double>::max();
             bool shadeTypeMatch = false;
@@ -1708,19 +1774,19 @@ namespace radiance {
               if (istringEqual(attributeName, "Visible Light Transmittance")){
                 vltDiff = std::abs(attribute.valueAsDouble() - vlt);
               } else if (istringEqual(attributeName, "Visible Light Transmittance Specular Percentage")) {
-                vltSpecularDiff = std::abs(attribute.valueAsDouble() - vlt);
+                vltSpecularDiff = std::abs(attribute.valueAsDouble() - vltSpecular);
               } else if (istringEqual(attributeName, "Interior Shade Layer Type")) {
                 shadeTypeMatch = istringEqual(attribute.valueAsString(), shadeType);
               }
             }
 
             // check if meets criteria
-            if (vltDiff <= 0.01 && vltSpecularDiff <= 0.01 && shadeTypeMatch){
+            if (vltDiff <= 0.01 && vltSpecularDiff <= 1 && shadeTypeMatch){
               // this one works try to get payload
               boost::optional<BCLComponent> component = bcl.getComponent(result.uid());
               if (component){
                 std::vector<std::string> files = component->files("xml");
-                if (files.size() == 0){
+                if (files.size() > 0){
                   return files[0];
                 }
               }
