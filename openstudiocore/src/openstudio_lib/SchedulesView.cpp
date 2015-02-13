@@ -351,7 +351,11 @@ void SchedulesView::onModelObjectRemoved(std::shared_ptr<openstudio::detail::Wor
       {
         ScheduleTab * scheduleTab = qobject_cast<ScheduleTab *>(m_leftVLayout->itemAt(newIndex)->widget());
 
-        this->setCurrentSchedule(scheduleTab->schedule());
+        if (!scheduleTab->schedule().handle().isNull()){
+          this->setCurrentSchedule(scheduleTab->schedule());
+        } else {
+          this->showEmptyPage();
+        }
       } else {
         this->showEmptyPage();
       }

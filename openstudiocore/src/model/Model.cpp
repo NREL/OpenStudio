@@ -927,6 +927,8 @@ if (_className::iddObjectType() == typeToCreate) { \
 
     ScheduleTypeLimits limits(model());
 
+    limits.setName("OnOff");
+
     limits.setNumericType("Discrete");
 
     limits.setUnitType("Availability");
