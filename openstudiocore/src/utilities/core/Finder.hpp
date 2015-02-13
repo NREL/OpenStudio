@@ -103,7 +103,7 @@ namespace openstudio{
     typename std::vector<T>::const_iterator it;
     it = find_if(vec.begin(),vec.end(),finder);
     if (it != vec.end()) {
-      index = it - vec.begin();
+      index = (int)(it - vec.begin());
     }
     return index;
   }

@@ -1024,9 +1024,13 @@ namespace radiance {
 
           if (!subSurface.visibleTransmittance())
           {
+            // TODO: what about opaque doors, they are subtracted from the base surface and seem to be handled below
+
             LOG(Warn, "Cannot determine visible transmittance for SubSurface " << subSurface.name().get() << ", it will not be translated.");
             continue;
           }
+
+          // TODO: handle window frame and divider
 
           // get the polygon
           polygon = openstudio::radiance::ForwardTranslator::getPolygon(subSurface);

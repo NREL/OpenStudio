@@ -28,6 +28,9 @@
 #include "../../model/ConstructionBase_Impl.hpp"
 #include "../../model/ShadingControl.hpp"
 #include "../../model/ShadingControl_Impl.hpp"
+#include "../../model/WindowPropertyFrameAndDivider.hpp"
+#include "../../model/WindowPropertyFrameAndDivider_Impl.hpp"
+
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
@@ -36,6 +39,8 @@
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
+
+#include "../../utilities/geometry/Vector3D.hpp"
 
 using namespace openstudio::model;
 
@@ -97,7 +102,14 @@ boost::optional<IdfObject> ForwardTranslator::translateSubSurface( model::SubSur
     idfObject.setString(FenestrationSurface_DetailedFields::ShadingControlName, shadingControl->name().get());
   }
 
-  // TODO: \field Frame and Divider Name
+  boost::optional<WindowPropertyFrameAndDivider> frameAndDivider = modelObject.windowPropertyFrameAndDivider();
+  openstudio::Vector3d offset(0, 0, 0);
+  if (frameAndDivider){
+    if (!frameAndDivider->isOutsideRevealDepthDefaulted()){
+      offset = -frameAndDivider->outsideRevealDepth() * modelObject.outwardNormal();
+    }
+    idfObject.setString(FenestrationSurface_DetailedFields::FrameandDividerName, frameAndDivider->name().get());
+  }
 
   if(!modelObject.isMultiplierDefaulted()){
     idfObject.setDouble(FenestrationSurface_DetailedFields::Multiplier, modelObject.multiplier());
@@ -111,9 +123,12 @@ boost::optional<IdfObject> ForwardTranslator::translateSubSurface( model::SubSur
           << ", because it has more vertices than allowed by EnergyPlus.");
       return boost::none;
     }
-    group.setDouble(0, point.x());
-    group.setDouble(1, point.y());
-    group.setDouble(2, point.z());
+
+    Point3d newPoint = point + offset;
+
+    group.setDouble(0, newPoint.x());
+    group.setDouble(1, newPoint.y());
+    group.setDouble(2, newPoint.z());
   }
   
   m_idfObjects.push_back(idfObject);

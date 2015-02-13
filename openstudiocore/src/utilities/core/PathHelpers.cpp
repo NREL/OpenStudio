@@ -435,10 +435,18 @@ bool isNetworkPathAvailable(const path& p)
     return false;
   }
 
-  DWORD dwResult = WNetGetResourceInformation(&nr, lpBuffer, &dwBufferSize, &pszSystem);
-  if (dwResult == NO_ERROR){
-    free(lpBuffer);
-    return true;
+  bool moreData = true;
+  while (moreData){
+    DWORD dwResult = WNetGetResourceInformation(&nr, lpBuffer, &dwBufferSize, &pszSystem);
+    if (dwResult == NO_ERROR){
+      free(lpBuffer);
+      return true;
+    } else if (dwResult == ERROR_MORE_DATA){
+      lpBuffer = (LPBYTE)realloc(lpBuffer, dwBufferSize);
+      moreData = true;
+    } else {
+      moreData = false;
+    }
   }
 
   free(lpBuffer);

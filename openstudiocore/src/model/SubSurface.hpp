@@ -31,6 +31,7 @@ class ShadingSurface;
 class ShadingControl;
 class ShadingSurfaceGroup;
 class DaylightingDeviceShelf;
+class WindowPropertyFrameAndDivider;
 
 namespace detail {
 
@@ -72,7 +73,9 @@ class MODEL_API SubSurface : public PlanarSurface {
 
   boost::optional<ShadingControl> shadingControl() const;
 
-  // TODO: Handle Non-Extensible IddField Frame and Divider Name.
+  bool allowWindowPropertyFrameAndDivider() const;
+
+  boost::optional<WindowPropertyFrameAndDivider> windowPropertyFrameAndDivider() const;
 
   double multiplier() const;
 
@@ -102,9 +105,11 @@ class MODEL_API SubSurface : public PlanarSurface {
 
   void resetShadingControl();
 
-  // TODO: Handle Non-Extensible IddField Frame and Divider Name.
+  bool setWindowPropertyFrameAndDivider(const WindowPropertyFrameAndDivider& windowPropertyFrameAndDivider);
 
-  bool setMultiplier(double multiplier);
+  void resetWindowPropertyFrameAndDivider();
+
+  bool setMultiplier(double multiplShadingControlier);
 
   void resetMultiplier();
 
