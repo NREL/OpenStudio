@@ -48,7 +48,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 require 'fileutils'
 
 require 'optparse'
@@ -81,7 +80,7 @@ class ParseOptions
       # No argument, shows at tail.  This will print an options summary.
       opts.on_tail("-h", "--help", "Show this message") do
         puts opts
-        exit false
+        exit
       end
     end
     opts.parse!(args)

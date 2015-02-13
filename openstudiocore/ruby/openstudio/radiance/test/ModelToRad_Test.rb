@@ -22,8 +22,6 @@ require 'openstudio'
 require 'minitest/autorun'
 
 require 'fileutils'
-require 'openstudio/energyplus/find_energyplus'
-
 
 class ModelToRad_Test < MiniTest::Unit::TestCase
   
@@ -36,8 +34,7 @@ class ModelToRad_Test < MiniTest::Unit::TestCase
     modelPath = OpenStudio::Path.new("#{$OpenStudio_ResourcePath}radiance/test/ExampleModel.osm")
     FileUtils.mkdir_p(modelPath.parent_path.to_s)
     
-    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,2)
-    epwPath = OpenStudio::Path.new(ep_hash[:energyplus_weatherdata].to_s) / OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.epw")
+    epwPath = OpenStudio::Path.new(OpenStudio::Path.new("#{$OpenStudio_ResourcePath}runmanager/USA_CO_Golden-NREL.724666_TMY3.epw"))
     epwFile = OpenStudio::EpwFile.new(epwPath)
     weatherFile = OpenStudio::Model::WeatherFile::setWeatherFile(modelExample, epwFile)
     assert((not weatherFile.empty?))

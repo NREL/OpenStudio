@@ -53,7 +53,7 @@ shadeOffset = ""
   else
 
     puts "invalid transmittance model"
-    exit
+    exit false
 
   end
   
@@ -111,7 +111,7 @@ shadeOffset = ""
     else
 
       puts "invalid transmittance model"
-      exit
+      exit false
 
     end
     
