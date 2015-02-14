@@ -92,15 +92,16 @@ ScheduleType ScheduleTypeRegistrySingleton::getScheduleType(const std::string &c
 ScheduleTypeLimits ScheduleTypeRegistrySingleton::getOrCreateScheduleTypeLimits(const ScheduleType& scheduleType,
                                                                                 Model& model) const
 {
-  // if fully specified, try to retrieve
-  if (scheduleType.lowerLimitValue && scheduleType.upperLimitValue) {
+  // DLM: I do not understand why both upper and lower limit have to be set to reuse this?
+  //// if fully specified, try to retrieve
+  //if (scheduleType.lowerLimitValue && scheduleType.upperLimitValue) {
     ScheduleTypeLimitsVector candidates = model.getConcreteModelObjectsByName<ScheduleTypeLimits>(getDefaultName(scheduleType));
     for (const ScheduleTypeLimits& candidate : candidates) {
       if (isCompatible(scheduleType,candidate)) {
         return candidate;
       }
     }
-  }
+  //}
 
   // otherwise, or if not there, create and return
   ScheduleTypeLimits scheduleTypeLimits(model);
