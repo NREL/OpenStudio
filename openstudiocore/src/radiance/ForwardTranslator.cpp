@@ -42,6 +42,7 @@
 #include "../model/Space.hpp"
 #include "../model/Space_Impl.hpp"
 #include "../model/ThermalZone.hpp"
+#include "../model/WindowPropertyFrameAndDivider.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/PathHelpers.hpp"
@@ -489,8 +490,22 @@ namespace radiance {
       LOG(Warn, "Could not retrieve surface for sub surface '" << subSurface.name() << "'");
     }
 
+    openstudio::Point3dVector vertices = subSurface.vertices();
+
+    // apply frame and divider reveal
+    boost::optional<openstudio::model::WindowPropertyFrameAndDivider> frameAndDivider = subSurface.windowPropertyFrameAndDivider();
+    if (frameAndDivider){
+      if (!frameAndDivider->isOutsideRevealDepthDefaulted()){
+        openstudio::Vector3d offset = -frameAndDivider->outsideRevealDepth() * subSurface.outwardNormal();
+
+        for (openstudio::Point3d& vertex : vertices){
+          vertex = vertex + offset;
+        }
+      }
+    }
+
     // convert vertices to absolute coordinates
-    return buildingTransformation*spaceTransformation*subSurface.vertices();
+    return buildingTransformation*spaceTransformation*vertices;
   }
 
   openstudio::Point3dVector ForwardTranslator::getPolygon(const openstudio::model::ShadingSurface& shadingSurface)
@@ -967,7 +982,9 @@ namespace radiance {
       {
 
         // skip if air wall
-        if (surface.isAirWall()) continue;
+        if (surface.isAirWall()){
+          continue;
+        }
 
         std::string surface_name = cleanName(surface.name().get());
 
@@ -1022,36 +1039,10 @@ namespace radiance {
             continue;
           }
 
-          if (!subSurface.visibleTransmittance())
-          {
-            // TODO: what about opaque doors, they are subtracted from the base surface and seem to be handled below
-
-            LOG(Warn, "Cannot determine visible transmittance for SubSurface " << subSurface.name().get() << ", it will not be translated.");
-            continue;
-          }
-
-          // TODO: handle window frame and divider
+          boost::optional<model::WindowPropertyFrameAndDivider> frameAndDivider = subSurface.windowPropertyFrameAndDivider();
 
           // get the polygon
           polygon = openstudio::radiance::ForwardTranslator::getPolygon(subSurface);
-
-          boost::optional<model::ShadingControl> shadingControl = subSurface.shadingControl();
-
-          // find window group
-          openstudio::Vector3d outwardNormal = surface.outwardNormal();
-
-          WindowGroup windowGroup = getWindowGroup(outwardNormal, space, *construction, shadingControl, polygon);
-          std::string windowGroup_name = windowGroup.name();
-
-          // get the normal
-          WindowGroupControl control = windowGroup.windowGroupControl();
-          if (control.outwardNormal){
-
-            std::cout << "outward normal:" + formatString(control.outwardNormal->x()) + " " + formatString(control.outwardNormal->y()) + " " + \
-            formatString(control.outwardNormal->z()) + "\n";
-
-          }
-
 
           std::string subSurface_name = cleanName(subSurface.name().get());
 
@@ -1064,6 +1055,34 @@ namespace radiance {
               || subSurfaceUpCase == "GLASSDOOR"
               || subSurfaceUpCase == "SKYLIGHT")
           {
+            if (!subSurface.visibleTransmittance())
+            {
+              LOG(Warn, "Cannot determine visible transmittance for SubSurface " << subSurface.name().get() << ", it will not be translated.");
+              continue;
+            }
+
+            boost::optional<model::ShadingControl> shadingControl = subSurface.shadingControl();
+            
+            double visibleTransmittanceMultiplier = 1.0;
+            if (frameAndDivider){
+              // DLM: Rob what should we do here?
+              visibleTransmittanceMultiplier = 1.0;
+            }
+
+            // find window group
+            openstudio::Vector3d outwardNormal = surface.outwardNormal();
+
+            WindowGroup windowGroup = getWindowGroup(outwardNormal, space, *construction, shadingControl, polygon);
+            std::string windowGroup_name = windowGroup.name();
+
+            // get the normal
+            WindowGroupControl control = windowGroup.windowGroupControl();
+            if (control.outwardNormal){
+
+              std::cout << "outward normal:" + formatString(control.outwardNormal->x()) + " " + formatString(control.outwardNormal->y()) + " " + \
+                formatString(control.outwardNormal->z()) + "\n";
+
+            }
 
             std::string winUpVector = "Z";
             if (subSurfaceUpCase == "SKYLIGHT"){
@@ -1086,7 +1105,7 @@ namespace radiance {
             LOG(Info, "found a " + subSurface.subSurfaceType() + " named '" + subSurface_name + "', windowGroup_name = '" + windowGroup_name + "'");
 
             // set transmittance...
-            double visibleTransmittance = subSurface.visibleTransmittance().get();
+            double visibleTransmittance = subSurface.visibleTransmittance().get() * visibleTransmittanceMultiplier;
 
             // convert transmittance(Tn) to transmissivity(tn) for Radiance material
             // tn = (sqrt(.8402528435+.0072522239*Tn*Tn)-.9166530661)/.0036261119/Tn
@@ -1171,8 +1190,8 @@ namespace radiance {
                 m_radWindowGroups[windowGroup_name] += "" + formatString(vertex->x()) + " " + formatString(vertex->y()) + " " + formatString(vertex->z()) + "\n";
               }
             }
-
-            else{
+            else
+            {
               m_radMaterials.insert("void " + rMaterial + " " + windowGroup_name + "\n" + matString + "\n");
               m_radMaterialsDC.insert("void light " + windowGroup_name + "\n0\n0\n3\n1 1 1\n");
               m_radMaterialsWG0.insert("void plastic " + windowGroup_name + "\n0\n0\n5\n0 0 0 0 0\n");
@@ -1189,12 +1208,12 @@ namespace radiance {
                 ++vertex)
               
               {
-              m_radWindowGroups[windowGroup_name] += "" + \
-              formatString(vertex->x()) + " " + \
-              formatString(vertex->y()) + " " + \
-              formatString(vertex->z()) + "\n";
+                m_radWindowGroups[windowGroup_name] += "" + \
+                formatString(vertex->x()) + " " + \
+                formatString(vertex->y()) + " " + \
+                formatString(vertex->z()) + "\n";
+              }
             }
-          }
 
             // copy required bsdf files into place
             openstudio::path bsdfoutpath = t_radDir / openstudio::toPath("bsdf");
@@ -1347,11 +1366,137 @@ namespace radiance {
             }
 
           } else if (subSurfaceUpCase == "TUBULARDAYLIGHTDOME") {
+
             LOG(Warn, "subsurface is a tdd dome, not translated (not yet implemented).");
+
           } else if (subSurfaceUpCase == "TUBULARDAYLIGHTDIFFUSER") {
+
             LOG(Warn, "subsurface is a tdd diffuser, not translated (not yet implemented).");
+
+          }
+
+          // write reveal surfaces from window frame and divider
+          if (frameAndDivider){
+
+            boost::optional<double> outsideRevealDepth;
+            if (!frameAndDivider->isOutsideRevealDepthDefaulted()){
+              outsideRevealDepth = frameAndDivider->outsideRevealDepth();
+            }
+
+            boost::optional<double> insideRevealDepth;
+            if (!frameAndDivider->isInsideRevealDepthDefaulted()){
+              insideRevealDepth = frameAndDivider->insideRevealDepth();
+            }
+
+            boost::optional<double> insideSillDepth;
+            if (!frameAndDivider->isInsideSillDepthDefaulted()){
+              insideSillDepth = frameAndDivider->insideSillDepth();
+            }else{
+              insideSillDepth = insideRevealDepth;
+            }
+              
+              
+            Vector3d outwardNormal = subSurface.outwardNormal();
+            size_t N = polygon.size();
+            for (size_t i = 0; i < N; ++i)
+            {
+              size_t index1 = i;
+              size_t index2 = (i + 1) % N;
+        
+              if (outsideRevealDepth){
+                openstudio::Vector3d offset = -outsideRevealDepth.get() * outwardNormal;
+                Point3d vertex1 = polygon[index1];
+                Point3d vertex2 = polygon[index1] + offset;
+                Point3d vertex3 = polygon[index2] + offset;
+                Point3d vertex4 = polygon[index2];
+                
+                // TODO: get exterior reflectance of surface
+                double interiorVisibleReflectance = 0.5;
+                double exteriorVisibleReflectance = 0.5;
+                //polygon header
+                m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance, 3) + "\n";
+                m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance) + "\n";
+                // write material
+                m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3) + "\n0\n0\n5\n" + \
+                                      formatString(interiorVisibleReflectance, 3) + " " + \
+                                      formatString(interiorVisibleReflectance, 3) + " " + \
+                                      formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
+                // write polygon
+                m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3) + " polygon " + subSurface_name + "\n";
+                m_radSpaces[space_name] += "0\n0\n" + formatString(4 * 3) + "\n";
+                m_radSpaces[space_name] += formatString(vertex1.x()) + " " + formatString(vertex1.y()) + " " + formatString(vertex1.z()) + "\n\n";
+                m_radSpaces[space_name] += formatString(vertex2.x()) + " " + formatString(vertex2.y()) + " " + formatString(vertex2.z()) + "\n\n";
+                m_radSpaces[space_name] += formatString(vertex3.x()) + " " + formatString(vertex3.y()) + " " + formatString(vertex3.z()) + "\n\n";
+                m_radSpaces[space_name] += formatString(vertex4.x()) + " " + formatString(vertex4.y()) + " " + formatString(vertex4.z()) + "\n\n";
+              }
+
+              if (insideRevealDepth){
+                if (!outsideRevealDepth){
+                  outsideRevealDepth = 0.0;
+                }
+                openstudio::Vector3d offset1 = -outsideRevealDepth.get() * outwardNormal;
+                openstudio::Vector3d offset2 = -(outsideRevealDepth.get() + insideRevealDepth.get()) * outwardNormal;
+                Point3d vertex1 = polygon[index1] + offset1;
+                Point3d vertex2 = polygon[index1] + offset2;
+                Point3d vertex3 = polygon[index2] + offset2;
+                Point3d vertex4 = polygon[index2] + offset1;
+
+                // TODO: get exterior reflectance of surface
+                double interiorVisibleReflectance = 0.5;
+                double exteriorVisibleReflectance = 0.5;
+                //polygon header
+                m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance, 3) + "\n";
+                m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance) + "\n";
+                // write material
+                m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3) + "\n0\n0\n5\n" + \
+                                      formatString(interiorVisibleReflectance, 3) + " " + \
+                                      formatString(interiorVisibleReflectance, 3) + " " + \
+                                      formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
+                // write polygon
+                m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3) + " polygon " + subSurface_name + "\n";
+                m_radSpaces[space_name] += "0\n0\n" + formatString(4 * 3) + "\n";
+                m_radSpaces[space_name] += formatString(vertex1.x()) + " " + formatString(vertex1.y()) + " " + formatString(vertex1.z()) + "\n\n";
+                m_radSpaces[space_name] += formatString(vertex2.x()) + " " + formatString(vertex2.y()) + " " + formatString(vertex2.z()) + "\n\n";
+                m_radSpaces[space_name] += formatString(vertex3.x()) + " " + formatString(vertex3.y()) + " " + formatString(vertex3.z()) + "\n\n";
+                m_radSpaces[space_name] += formatString(vertex4.x()) + " " + formatString(vertex4.y()) + " " + formatString(vertex4.z()) + "\n\n";
+              }
+
+              if (insideSillDepth){
+                if (!outsideRevealDepth){
+                  outsideRevealDepth = 0.0;
+                }
+                openstudio::Vector3d offset1 = -outsideRevealDepth.get() * outwardNormal;
+                openstudio::Vector3d offset2 = -(outsideRevealDepth.get() + insideSillDepth.get()) * outwardNormal;
+                Point3d vertex1 = polygon[index1] + offset1;
+                Point3d vertex2 = polygon[index1] + offset2;
+                Point3d vertex3 = polygon[index2] + offset2;
+                Point3d vertex4 = polygon[index2] + offset1;
+
+                // TODO: get exterior reflectance of surface
+                double interiorVisibleReflectance = 0.5;
+                double exteriorVisibleReflectance = 0.5;
+                //polygon header
+                m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance, 3) + "\n";
+                m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance) + "\n";
+                // write material
+                m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3) + "\n0\n0\n5\n" + \
+                                      formatString(interiorVisibleReflectance, 3) + " " + \
+                                      formatString(interiorVisibleReflectance, 3) + " " + \
+                                      formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
+                // write polygon
+                m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3) + " polygon " + subSurface_name + "\n";
+                m_radSpaces[space_name] += "0\n0\n" + formatString(4 * 3) + "\n";
+                m_radSpaces[space_name] += formatString(vertex1.x()) + " " + formatString(vertex1.y()) + " " + formatString(vertex1.z()) + "\n\n";
+                m_radSpaces[space_name] += formatString(vertex2.x()) + " " + formatString(vertex2.y()) + " " + formatString(vertex2.z()) + "\n\n";
+                m_radSpaces[space_name] += formatString(vertex3.x()) + " " + formatString(vertex3.y()) + " " + formatString(vertex3.z()) + "\n\n";
+                m_radSpaces[space_name] += formatString(vertex4.x()) + " " + formatString(vertex4.y()) + " " + formatString(vertex4.z()) + "\n\n";
+              }
+
+            }
+
           }
         }
+
       } // loop over surfaces
 
       // get shading surfaces
