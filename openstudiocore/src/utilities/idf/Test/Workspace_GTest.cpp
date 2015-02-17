@@ -1801,26 +1801,55 @@ std::string text = "\
     idfObjects.push_back(workspaceObject.idfObject());
   }
 
+  // add workspace objects to workspace of none strictness
+  {
+    Workspace workspace2(StrictnessLevel::None, IddFileType::EnergyPlus);
+    WorkspaceObjectVector workspaceObjects = workspace1.objects();
+    workspace2.addObjects(workspaceObjects);
+    EXPECT_EQ(2u, workspace2.objects().size());
+    ASSERT_EQ(1u, workspace2.getObjectsByType(IddObjectType::Construction).size());
+    ASSERT_EQ(1u, workspace2.getObjectsByType(IddObjectType::WindowMaterial_SimpleGlazingSystem).size());
+    ASSERT_TRUE(workspace2.getObjectsByType(IddObjectType::Construction)[0].getTarget(1));
+    EXPECT_EQ(workspace2.getObjectsByType(IddObjectType::WindowMaterial_SimpleGlazingSystem)[0].handle(),
+              workspace2.getObjectsByType(IddObjectType::Construction)[0].getTarget(1)->handle());
+  }
 
-  Workspace workspace2(StrictnessLevel::None,IddFileType::EnergyPlus);
-  workspace2.addObjects(workspace1.objects());
-  EXPECT_EQ(2u, workspace2.objects().size());
-  ASSERT_EQ(1u, workspace2.getObjectsByType(IddObjectType::Construction).size());
-  ASSERT_EQ(1u, workspace2.getObjectsByType(IddObjectType::WindowMaterial_SimpleGlazingSystem).size());
-  ASSERT_TRUE(workspace2.getObjectsByType(IddObjectType::Construction)[0].getTarget(1));
-  EXPECT_EQ(workspace2.getObjectsByType(IddObjectType::WindowMaterial_SimpleGlazingSystem)[0].handle(),
-            workspace2.getObjectsByType(IddObjectType::Construction)[0].getTarget(1)->handle());
+  // add workspace objects to workspace of draft strictness
+  {
+    Workspace workspace2(StrictnessLevel::Draft, IddFileType::EnergyPlus);
+    WorkspaceObjectVector workspaceObjects = workspace1.objects();
+    workspace2.addObjects(workspaceObjects);
+    EXPECT_EQ(2u, workspace2.objects().size());
+    ASSERT_EQ(1u, workspace2.getObjectsByType(IddObjectType::Construction).size());
+    ASSERT_EQ(1u, workspace2.getObjectsByType(IddObjectType::WindowMaterial_SimpleGlazingSystem).size());
+    ASSERT_TRUE(workspace2.getObjectsByType(IddObjectType::Construction)[0].getTarget(1));
+    EXPECT_EQ(workspace2.getObjectsByType(IddObjectType::WindowMaterial_SimpleGlazingSystem)[0].handle(),
+              workspace2.getObjectsByType(IddObjectType::Construction)[0].getTarget(1)->handle());
+  }
 
+  // add idf objects to workspace of none strictness
+  {
+    Workspace workspace3(StrictnessLevel::None, IddFileType::EnergyPlus);
+    workspace3.addObjects(idfObjects);
+    EXPECT_EQ(2u, workspace3.objects().size());
+    ASSERT_EQ(1u, workspace3.getObjectsByType(IddObjectType::Construction).size());
+    ASSERT_EQ(1u, workspace3.getObjectsByType(IddObjectType::WindowMaterial_SimpleGlazingSystem).size());
+    ASSERT_TRUE(workspace3.getObjectsByType(IddObjectType::Construction)[0].getTarget(1));
+    EXPECT_EQ(workspace3.getObjectsByType(IddObjectType::WindowMaterial_SimpleGlazingSystem)[0].handle(),
+              workspace3.getObjectsByType(IddObjectType::Construction)[0].getTarget(1)->handle());
+  }
 
-  Workspace workspace3(StrictnessLevel::None,IddFileType::EnergyPlus);
-  workspace3.addObjects(idfObjects);
-  EXPECT_EQ(2u, workspace3.objects().size());
-  ASSERT_EQ(1u, workspace3.getObjectsByType(IddObjectType::Construction).size());
-  ASSERT_EQ(1u, workspace3.getObjectsByType(IddObjectType::WindowMaterial_SimpleGlazingSystem).size());
-  ASSERT_TRUE(workspace3.getObjectsByType(IddObjectType::Construction)[0].getTarget(1));
-  EXPECT_EQ(workspace3.getObjectsByType(IddObjectType::WindowMaterial_SimpleGlazingSystem)[0].handle(),
-            workspace3.getObjectsByType(IddObjectType::Construction)[0].getTarget(1)->handle());
-
+  // add idf objects to workspace of draft strictness
+  {
+    Workspace workspace3(StrictnessLevel::Draft, IddFileType::EnergyPlus);
+    workspace3.addObjects(idfObjects);
+    EXPECT_EQ(2u, workspace3.objects().size());
+    ASSERT_EQ(1u, workspace3.getObjectsByType(IddObjectType::Construction).size());
+    ASSERT_EQ(1u, workspace3.getObjectsByType(IddObjectType::WindowMaterial_SimpleGlazingSystem).size());
+    ASSERT_TRUE(workspace3.getObjectsByType(IddObjectType::Construction)[0].getTarget(1));
+    EXPECT_EQ(workspace3.getObjectsByType(IddObjectType::WindowMaterial_SimpleGlazingSystem)[0].handle(),
+              workspace3.getObjectsByType(IddObjectType::Construction)[0].getTarget(1)->handle());
+  }
 }
 
 TEST_F(IdfFixture, Workspace_AddObjects2) {

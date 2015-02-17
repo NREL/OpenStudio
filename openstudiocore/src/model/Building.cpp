@@ -120,6 +120,92 @@ namespace detail {
     return result;
   }
 
+  ModelObject Building_Impl::clone(Model t_model) const
+  {
+    boost::optional<Building> result;
+
+    if( t_model == model() ) {
+      // Clone attempted into same Model - return the existing instance
+      result = getObject<ModelObject>().cast<Building>();
+    } else {
+
+      auto otherBuilding = t_model.building();
+      if (otherBuilding){
+        otherBuilding->remove();
+      }
+
+      //auto buildings = t_model.getModelObjects<Building>();
+      //if( ! buildings.empty() ) {
+      //  // If Destination model already has a building then first remove it
+      //  buildings.front().remove();
+      //}
+
+      // Clone Building and child objects.
+
+      // This call clones only the building and it's resources
+      result = ModelObject_Impl::clone(t_model).cast<Building>();
+
+      // DLM: why did the ParentObject::clone not work?  
+      // DLM: ParentObject::clone only preserves links between child and parent objects, it does not preserve links between levels of the hierarchy
+      // we could potentially add ThermalZone as a resource of Space (or vice versa or both) but I am not sure what the implications of that are
+
+      // Clone children since we are not relying on the implementation provided by ParentObject::clone
+
+      // Meter instances
+      auto t_meters = meters();
+      for( const auto & meter : t_meters ) {
+        meter.clone(t_model);
+      }
+
+      // BuildingStory instances
+      auto t_stories = model().getConcreteModelObjects<BuildingStory>();
+      // Map of the source model story handle to the target model story "cloned" ModelObject
+      std::map<Handle,BuildingStory> m_storyMap;
+
+      for( const auto & story : t_stories ) {
+        auto clone = story.clone(t_model).cast<BuildingStory>();
+        m_storyMap.insert(std::pair<Handle,BuildingStory>(story.handle(),clone));
+      }
+
+      // ShadingSurfaceGroup
+      auto t_shadingSurfaceGroups = shadingSurfaceGroups();
+      for( const auto & surfaceGroup : t_shadingSurfaceGroups ) {
+        surfaceGroup.clone(t_model);
+      }
+
+      // ThermalZone instances
+      auto t_zones = thermalZones();
+      // Map of the source model zone handle to the target model zone "cloned" ModelObject
+      std::map<Handle,ThermalZone> m_zoneMap;
+
+      for( const auto & zone : t_zones ) {
+        auto clone = zone.clone(t_model).cast<ThermalZone>();
+        m_zoneMap.insert(std::pair<Handle,ThermalZone>(zone.handle(),clone));
+      }
+
+      // Space Instances
+      auto t_spaces = spaces();
+
+      for( const auto & space : t_spaces ) {
+        auto clone = space.clone(t_model).cast<Space>();
+
+        if( auto zone = space.thermalZone() ) {
+          auto zoneClone = m_zoneMap.at(zone->handle());
+          clone.setThermalZone(zoneClone);
+        }
+
+        if( auto story = space.buildingStory() ) {
+          auto storyClone = m_storyMap.at(story->handle());
+          clone.setBuildingStory(storyClone);
+        }
+      }
+      
+    }
+
+    OS_ASSERT(result);
+    return result.get();
+  }
+
   bool Building_Impl::setParent(ParentObject& newParent)
   {
     if (newParent.optionalCast<Facility>()){

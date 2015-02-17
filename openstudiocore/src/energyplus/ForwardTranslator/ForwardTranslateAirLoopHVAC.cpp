@@ -55,6 +55,14 @@
 #include "../../model/FanVariableVolume.hpp"
 #include "../../model/FanVariableVolume_Impl.hpp"
 #include "../../model/LifeCycleCost.hpp"
+#include "../../model/AirLoopHVACUnitarySystem.hpp"
+#include "../../model/AirLoopHVACUnitarySystem_Impl.hpp"
+#include "../../model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
+#include "../../model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
+#include "../../model/AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.hpp"
+#include "../../model/AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp"
+#include "../../model/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
+#include "../../model/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/AirLoopHVAC_FieldEnums.hxx>
@@ -82,63 +90,84 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC & airLoopHVAC )
+// Attempt to add all required setpoint managers upstream of the supply outlet node.
+// This algorithm requires there to be a setpoint manager on the supply outlet node.
+// This is a good method to consider adding to Model, as a method of AirLoopHVAC class.
+void addRequiredSetpointManagers(const AirLoopHVAC & airLoopHVAC)
 {
-  // First fixup a few things about the AirLoopHVAC Model object.
-  // Add necessary setpoint managers if they are not provided by model.
-  
-  Model t_model = airLoopHVAC.model();
-
-  std::vector<ModelObject> supplyComponents = airLoopHVAC.supplyComponents();
-  boost::optional<HVACComponent> fan;
-  std::vector<FanConstantVolume> constantVolumeFans = subsetCastVector<FanConstantVolume>(supplyComponents);
-  std::vector<FanVariableVolume> variableVolumeFans = subsetCastVector<FanVariableVolume>(supplyComponents);
-
-  if( ! constantVolumeFans.empty() )
-  {
-    fan = constantVolumeFans.back();
-  }
-  else if( ! variableVolumeFans.empty() )
-  {
-    fan = variableVolumeFans.back();
-  }
-
-  std::vector<Node> upperNodes;
-  std::vector<Node> lowerNodes;
-  if( fan )
-  {
-    upperNodes = subsetCastVector<Node>(airLoopHVAC.supplyComponents(airLoopHVAC.supplyInletNode(),fan.get()));
-    upperNodes.erase(upperNodes.begin());
-    lowerNodes = subsetCastVector<Node>(airLoopHVAC.supplyComponents(fan.get(),airLoopHVAC.supplyOutletNode()));
-    lowerNodes.erase(lowerNodes.end() - 1);
-  }
-  else
-  {
-    // Note if we don't have a fan this is going to be a problem for EnergyPlus,
-    // but at this point it will be allowed in OS
-    lowerNodes = subsetCastVector<Node>(supplyComponents);
-    // We should at least have a supply inlet and outlet node
-    OS_ASSERT(lowerNodes.size() >= 2);
-    lowerNodes.erase(lowerNodes.begin());
-    lowerNodes.erase(lowerNodes.end() - 1);
-  }
-
-  auto isTemperatureControl = [] ( SetpointManager & spm ) -> bool {
-    return istringEqual("Temperature",spm.controlVariable());
-  };
-
-  for( auto & upperNode : upperNodes )
-  {
-    std::vector<SetpointManager> _setpointManagers = upperNode.setpointManagers();
-    if( std::find_if(_setpointManagers.begin(),_setpointManagers.end(),isTemperatureControl) == _setpointManagers.end() ) {
-      SetpointManagerMixedAir spm(t_model);
-      spm.addToNode(upperNode);
-    }
-  } 
-
   std::vector<SetpointManager> _supplyOutletSetpointManagers = airLoopHVAC.supplyOutletNode().setpointManagers();
   if( ! _supplyOutletSetpointManagers.empty() )
   {
+    auto t_model = airLoopHVAC.model();
+    auto supplyComponents = airLoopHVAC.supplyComponents();
+
+    auto fanOrUnitary = airLoopHVAC.supplyFan();
+
+    if( ! fanOrUnitary ) {
+      auto airLoopHVACUnitarySystems = subsetCastVector<AirLoopHVACUnitarySystem>(supplyComponents);
+      if( ! airLoopHVACUnitarySystems.empty() ) {
+        auto unitary = airLoopHVACUnitarySystems.back();
+        if( unitary.supplyFan() ) {
+          fanOrUnitary = unitary;
+        }
+      }
+    }
+
+    if( ! fanOrUnitary ) {
+      auto airLoopHVACUnitaryHeatCoolVAVChangeoverBypass = subsetCastVector<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>(supplyComponents);
+      if( ! airLoopHVACUnitaryHeatCoolVAVChangeoverBypass.empty() ) {
+        fanOrUnitary = airLoopHVACUnitaryHeatCoolVAVChangeoverBypass.back();
+      }
+    }
+
+    if( ! fanOrUnitary ) {
+      auto airLoopHVACUnitaryHeatPumpAirToAir = subsetCastVector<AirLoopHVACUnitaryHeatPumpAirToAir>(supplyComponents);
+      if( ! airLoopHVACUnitaryHeatPumpAirToAir.empty() ) {
+        fanOrUnitary = airLoopHVACUnitaryHeatPumpAirToAir.back();
+      }
+    }
+
+    if( ! fanOrUnitary ) {
+      auto airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed = subsetCastVector<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>(supplyComponents);
+      if( ! airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.empty() ) {
+        fanOrUnitary = airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.back();
+      }
+    }
+
+    std::vector<Node> upperNodes;
+    std::vector<Node> lowerNodes;
+    if( fanOrUnitary )
+    {
+      upperNodes = subsetCastVector<Node>(airLoopHVAC.supplyComponents(airLoopHVAC.supplyInletNode(),fanOrUnitary.get()));
+      upperNodes.erase(upperNodes.begin());
+      lowerNodes = subsetCastVector<Node>(airLoopHVAC.supplyComponents(fanOrUnitary.get(),airLoopHVAC.supplyOutletNode()));
+      lowerNodes.erase(lowerNodes.end() - 1);
+    }
+    else
+    {
+      // Note if we don't have a fan this is going to be a problem for EnergyPlus,
+      // but at this point it will be allowed in OS
+      lowerNodes = subsetCastVector<Node>(supplyComponents);
+      // We should at least have a supply inlet and outlet node
+      OS_ASSERT(lowerNodes.size() >= 2);
+      lowerNodes.erase(lowerNodes.begin());
+      lowerNodes.erase(lowerNodes.end() - 1);
+    }
+
+    auto isTemperatureControl = [] ( SetpointManager & spm ) -> bool {
+      return istringEqual("Temperature",spm.controlVariable());
+    };
+
+    for( auto & upperNode : upperNodes )
+    {
+      std::vector<SetpointManager> _setpointManagers = upperNode.setpointManagers();
+      if( std::find_if(_setpointManagers.begin(),_setpointManagers.end(),isTemperatureControl) == _setpointManagers.end() ) {
+        SetpointManagerMixedAir spm(t_model);
+        spm.addToNode(upperNode);
+        spm.setName(upperNode.name().get() + " OS Default SPM");
+      }
+    } 
+
     for( auto & lowerNode : lowerNodes )
     {
       std::vector<SetpointManager> _setpointManagers = lowerNode.setpointManagers();
@@ -147,30 +176,39 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
         {
           SetpointManager spmClone = _setpointManager.clone(t_model).cast<SetpointManager>();
           spmClone.addToNode(lowerNode);
+          spmClone.setName(lowerNode.name().get() + " OS Default SPM");
         }
       }
     }
-  }
 
-  if( boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = airLoopHVAC.airLoopHVACOutdoorAirSystem() )
-  {
-    boost::optional<Node> outboardOANode = oaSystem->outboardOANode(); 
-    std::vector<Node> oaNodes = subsetCastVector<Node>(oaSystem->oaComponents());
-    if( outboardOANode )
+    if( boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = airLoopHVAC.airLoopHVACOutdoorAirSystem() )
     {
-      for( auto & oaNode : oaNodes )
+      boost::optional<Node> outboardOANode = oaSystem->outboardOANode(); 
+      std::vector<Node> oaNodes = subsetCastVector<Node>(oaSystem->oaComponents());
+      if( outboardOANode )
       {
-        if( oaNode != outboardOANode.get() )
+        for( auto & oaNode : oaNodes )
         {
-          std::vector<SetpointManager> _setpointManagers = oaNode.setpointManagers();
-          if( std::find_if(_setpointManagers.begin(),_setpointManagers.end(),isTemperatureControl) == _setpointManagers.end() ) {
-            SetpointManagerMixedAir spm(t_model);
-            spm.addToNode(oaNode);
+          if( oaNode != outboardOANode.get() )
+          {
+            std::vector<SetpointManager> _setpointManagers = oaNode.setpointManagers();
+            if( std::find_if(_setpointManagers.begin(),_setpointManagers.end(),isTemperatureControl) == _setpointManagers.end() ) {
+              SetpointManagerMixedAir spm(t_model);
+              spm.addToNode(oaNode);
+              spm.setName(oaNode.name().get() + " OS Default SPM");
+            }
           }
         }
       }
     }
   }
+}
+
+boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC & airLoopHVAC )
+{
+  Model t_model = airLoopHVAC.model();
+
+  addRequiredSetpointManagers(airLoopHVAC);
   
   // Create a new IddObjectType::AirLoopHVAC
   IdfObject idfObject(IddObjectType::AirLoopHVAC);
@@ -202,6 +240,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   idfObject.setName(airLoopHVACName);
 
   std::vector<ModelObject> controllers;
+  auto supplyComponents = airLoopHVAC.supplyComponents();
 
   for( const auto & supplyComponent : supplyComponents )
   {

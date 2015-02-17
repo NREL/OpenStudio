@@ -1,0 +1,28 @@
+
+OS:Version,
+  {918fcf01-911c-49bb-8a93-d11c2b91b8e6}, !- Handle
+  1.6.1;                                  !- Version Identifier
+
+OS:Construction,
+  {f8150f8e-1a9d-4249-8b6e-d4a1210187a2}, !- Handle
+  Interior Window,                        !- Name
+  ,                                       !- Surface Rendering Name
+  {179c1297-6458-4a81-9c9c-7ab90cefd677}; !- Layer 1
+
+OS:WindowMaterial:SimpleGlazingSystem,
+  {179c1297-6458-4a81-9c9c-7ab90cefd677}, !- Handle
+  Simple Glazing,                         !- Name
+  3.23646,                                !- U-Factor {W/m2-K}
+  0.39,                                   !- Solar Heat Gain Coefficient
+  0.6;                                    !- Visible Transmittance
+
+OS:ComponentData,
+  {b1576650-962e-4610-bd02-dba8dcaa1ce1}, !- Handle
+  Component Data 1,                       !- Name
+  {b2955e12-c8cc-4858-92d8-cb0ab67e5fbd}, !- UUID
+  {abb3671a-2d74-4477-ab62-f0396d217b67}, !- Version UUID
+  1423195998,                             !- Creation Timestamp
+  1423195998,                             !- Version Timestamp
+  {f8150f8e-1a9d-4249-8b6e-d4a1210187a2}, !- Name of Object 1
+  {179c1297-6458-4a81-9c9c-7ab90cefd677}; !- Name of Object 2
+

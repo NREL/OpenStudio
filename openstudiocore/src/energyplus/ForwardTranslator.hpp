@@ -796,6 +796,10 @@ class ENERGYPLUS_API ForwardTranslator {
   void resolveMatchedSurfaceConstructionConflicts(model::Model& model);
   void resolveMatchedSubSurfaceConstructionConflicts(model::Model& model);
 
+  // ugly hack to fix upstream mixed air setpoint managers that have internal fans
+  // This should be used by the various translateUnitaryFoo methods.
+  void fixSPMsForUnitarySystem(const model::HVACComponent & unitary,const std::string & fanInletNodeName, const std::string & FanOutletNodeName);
+
   void createStandardOutputRequests();
 
   std::string stripOS2(const std::string& s);

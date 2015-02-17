@@ -40,6 +40,9 @@
 #include "../ScheduleCompact.hpp"
 #include "../ScheduleTypeLimits.hpp"
 #include "../FanConstantVolume.hpp"
+#include "../FanConstantVolume_Impl.hpp"
+#include "../FanVariableVolume.hpp"
+#include "../FanVariableVolume_Impl.hpp"
 #include "../SizingSystem.hpp"
 #include "../SizingSystem_Impl.hpp"
 #include "../CoilHeatingElectric.hpp"
@@ -658,4 +661,52 @@ TEST_F(ModelFixture, AirLoopHVAC_edges)
   ASSERT_FALSE(oaInletNode);
   boost::optional<ModelObject> heatingElecCoil2 = airLoopHVAC.supplyComponent(coil2.handle());
   ASSERT_FALSE(heatingElecCoil2);
+}
+
+TEST_F(ModelFixture,AirLoopHVAC_fans)
+{
+  {
+    Model m;
+    AirLoopHVAC airSystem(m);
+
+    FanConstantVolume fan(m);
+    auto node = airSystem.supplyOutletNode();
+    fan.addToNode(node);
+
+    auto supplyFan = airSystem.supplyFan();
+    ASSERT_TRUE(supplyFan);
+    ASSERT_EQ(fan,supplyFan.get());
+
+    auto returnFan = airSystem.returnFan();
+    ASSERT_FALSE(returnFan);    
+
+    ControllerOutdoorAir oaController(m);
+    AirLoopHVACOutdoorAirSystem oaSystem(m,oaController);
+    oaSystem.addToNode(node);
+
+    supplyFan = airSystem.supplyFan();
+    ASSERT_FALSE(supplyFan);
+
+    returnFan = airSystem.returnFan();
+    ASSERT_TRUE(returnFan);
+    ASSERT_EQ(fan,returnFan.get());
+
+    FanVariableVolume fan2(m);
+    fan2.addToNode(node);
+
+    supplyFan = airSystem.supplyFan();
+    ASSERT_TRUE(supplyFan);
+    ASSERT_EQ(fan2,supplyFan.get());
+
+    fan2.remove();
+
+    FanConstantVolume fan3(m);
+    auto reliefNode = oaSystem.outboardReliefNode().get();
+    fan3.addToNode(reliefNode);
+
+    auto reliefFan = airSystem.reliefFan();
+    ASSERT_TRUE(reliefFan);
+    ASSERT_EQ(fan3,reliefFan.get());
+  }
+   
 }

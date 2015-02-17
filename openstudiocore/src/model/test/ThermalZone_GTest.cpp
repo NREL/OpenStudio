@@ -49,6 +49,10 @@
 #include "../AirLoopHVACZoneSplitter.hpp"
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
+#include "../ScheduleRuleset.hpp"
+#include "../ScheduleRuleset_Impl.hpp"
+#include "../ThermostatSetpointDualSetpoint.hpp"
+#include "../ThermostatSetpointDualSetpoint_Impl.hpp"
 
 #include "../../utilities/data/Attribute.hpp"
 #include "../../utilities/geometry/Point3d.hpp"
@@ -520,3 +524,46 @@ TEST_F(ModelFixture, ThermalZone_ZoneControlHumidistat)
   thermalZone.resetZoneControlHumidistat();
   EXPECT_FALSE(thermalZone.zoneControlHumidistat());
 }
+
+TEST_F(ModelFixture, ThermalZone_Clone)
+{
+  Model m;
+  ThermalZone thermalZone(m);
+  
+  ZoneControlHumidistat humidistat(m);
+  thermalZone.setZoneControlHumidistat(humidistat);
+  ScheduleRuleset humidSchedule(m);
+  humidistat.setHumidifyingRelativeHumiditySetpointSchedule(humidSchedule);
+  ScheduleRuleset dehumidSchedule(m);
+  humidistat.setDehumidifyingRelativeHumiditySetpointSchedule(dehumidSchedule);
+  
+  ThermostatSetpointDualSetpoint thermostat(m);
+  thermalZone.setThermostat(thermostat);
+  ScheduleRuleset coolingSchedule(m);
+  thermostat.setCoolingSchedule(coolingSchedule);
+  ScheduleRuleset heatingSchedule(m);
+  thermostat.setHeatingSchedule(heatingSchedule);
+
+  auto thermalZoneClone = thermalZone.clone(m).cast<ThermalZone>();
+
+  auto humidistatClone = thermalZoneClone.zoneControlHumidistat();
+  ASSERT_TRUE(humidistatClone);
+  ASSERT_NE(humidistatClone.get(),humidistat);
+  auto humidSchedule2 = humidistatClone->humidifyingRelativeHumiditySetpointSchedule();
+  ASSERT_TRUE(humidSchedule2);
+  ASSERT_EQ(humidSchedule,humidSchedule2.get());
+  auto dehumidSchedule2 = humidistatClone->dehumidifyingRelativeHumiditySetpointSchedule();
+  ASSERT_TRUE(dehumidSchedule2);
+  ASSERT_EQ(dehumidSchedule,dehumidSchedule2.get());
+
+  auto thermostatClone = thermalZoneClone.thermostat();
+  ASSERT_TRUE(thermostatClone);
+  ASSERT_NE(thermostatClone.get(),thermostat);
+  auto coolingSchedule2 = thermostatClone->cast<ThermostatSetpointDualSetpoint>().coolingSetpointTemperatureSchedule();
+  ASSERT_TRUE(coolingSchedule2);
+  ASSERT_EQ(coolingSchedule,coolingSchedule2.get());
+  auto heatingSchedule2 = thermostatClone->cast<ThermostatSetpointDualSetpoint>().heatingSetpointTemperatureSchedule();
+  ASSERT_TRUE(heatingSchedule2);
+  ASSERT_EQ(heatingSchedule,heatingSchedule2.get());
+}
+

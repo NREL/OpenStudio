@@ -22,6 +22,7 @@
 
 #include "../model/ScheduleRuleset.hpp"
 #include "../model/ScheduleTypeLimits.hpp"
+#include "../model/ScheduleTypeLimits_Impl.hpp"
 #include "../model/ScheduleDay.hpp"
 
 #include "../utilities/units/OSOptionalQuantity.hpp"
@@ -38,24 +39,90 @@
 
 namespace openstudio {
 
+struct ScheduleTypeCompare {
+  bool operator() (const model::ScheduleType& lhs, const model::ScheduleType& rhs) const{
+    // only compare the fields that matter
+    if (lhs.unitType != rhs.unitType){
+      return lhs.unitType < rhs.unitType;
+    }
+
+    if (lhs.lowerLimitValue && rhs.lowerLimitValue){
+      return lhs.lowerLimitValue.get() < rhs.lowerLimitValue.get();
+    } else if (lhs.lowerLimitValue){
+      return false;
+    } else if (rhs.lowerLimitValue){
+      return true;
+    }
+
+    if (lhs.upperLimitValue && rhs.upperLimitValue){
+      return lhs.upperLimitValue.get() < rhs.upperLimitValue.get();
+    } else if (lhs.upperLimitValue){
+      return false;
+    } else if (rhs.upperLimitValue){
+      return true;
+    }
+
+    if (lhs.isContinuous && !rhs.isContinuous){
+      return false;
+    } else if (!lhs.isContinuous && rhs.isContinuous){
+      return true;
+    }
+
+    return false;
+  }
+};
+
+
+struct ScheduleTypeLimitsCompare {
+  bool operator() (const model::ScheduleTypeLimits& lhs, const model::ScheduleTypeLimits& rhs) const{
+    return lhs.name().get() < rhs.name().get();
+  }
+};
+
 ScheduleDialog::ScheduleDialog(bool isIP,
                                const model::Model & model,
                                QWidget * parent)
   : OSDialog(parent),
+  m_isIP(isIP),
   m_model(model),
-  m_scheduleTypes(std::vector<model::ScheduleType>()),
-  m_className(nullptr),
-  m_scheduleType(nullptr),
-  m_scheduleUnits(nullptr),
-  m_lowerLimit(nullptr),
-  m_upperLimit(nullptr)
+  m_scheduleTypeComboBox(nullptr)
 {
   createLayout();
+}
+
+void ScheduleDialog::setIsIP(bool isIP)
+{
+  m_isIP = isIP;
+
+  onCurrentIndexChanged(m_scheduleTypeComboBox->currentIndex());
 }
 
 void ScheduleDialog::createLayout()
 {
   okButton()->setText("Apply");
+
+  // make all possible schedule type limits
+  std::set<model::ScheduleType, ScheduleTypeCompare> scheduleTypes;
+  for (const std::string& className : model::ScheduleTypeRegistry::instance().classNames()){
+    for (const model::ScheduleType& scheduleType : model::ScheduleTypeRegistry::instance().getScheduleTypesByClassName(className)){
+      scheduleTypes.insert(scheduleType);
+    }
+  }
+
+  std::set<model::ScheduleTypeLimits> scheduleTypeLimitsSet;
+  for (const model::ScheduleType& scheduleType : scheduleTypes){
+    model::ScheduleTypeLimits tmp = model::ScheduleTypeRegistry::instance().getOrCreateScheduleTypeLimits(scheduleType, m_model);
+    scheduleTypeLimitsSet.insert(tmp);
+  }
+
+  std::vector<model::ScheduleTypeLimits> scheduleTypeLimits;
+
+  // DLM: put all schedule types in the model or just the ones found by the registry
+  scheduleTypeLimits = m_model.getConcreteModelObjects<model::ScheduleTypeLimits>();
+  //scheduleTypeLimits.insert(scheduleTypeLimits.end(), scheduleTypeLimitsSet.begin(), scheduleTypeLimitsSet.end()); 
+  
+  std::sort(scheduleTypeLimits.begin(), scheduleTypeLimits.end(), WorkspaceObjectNameLess());
+  OS_ASSERT(!scheduleTypeLimits.empty());
 
   QLabel * label = nullptr;
 
@@ -72,56 +139,28 @@ void ScheduleDialog::createLayout()
 
   QVBoxLayout * vLayout = nullptr;
 
-  //CLASS NAME
-  {
-    vLayout = new QVBoxLayout();
-    vLayout->setSpacing(5);
-
-    label = new QLabel("Class Name",this);
-    label->setObjectName("H2");
-    vLayout->addWidget(label);
-
-    hLayout = new QHBoxLayout();
-    hLayout->setContentsMargins(20,0,10,0);
-    hLayout->setSpacing(5);
-
-    m_className = new QComboBox(this);
-    m_className->setObjectName("ScheduleDialog");
-    connect(m_className, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &ScheduleDialog::on_classNameComboBox);
-    connect(m_className, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &ScheduleDialog::classNameCurrentIndexChanged);
-    hLayout->addWidget(m_className);
-    hLayout->addStretch();
-
-    std::vector<std::string> classNames = model::ScheduleTypeRegistry::instance().classNames();
-    for (std::string className : classNames){
-      m_className->addItem(className.c_str());
-    }
-    hLayout->addWidget(m_className);
-    hLayout->addStretch();
-   
-    vLayout->addLayout(hLayout);
-
-    vertLayout->addLayout(vLayout);
-  }
-
   // SCHEDULE TYPE
   {
     vLayout = new QVBoxLayout();
     vLayout->setSpacing(5);
 
-    label = new QLabel("Schedule Type",this);
+    label = new QLabel("Schedule Type", this);
     label->setObjectName("H2");
     vLayout->addWidget(label);
 
     hLayout = new QHBoxLayout();
-    hLayout->setContentsMargins(20,0,10,0);
+    hLayout->setContentsMargins(0, 0, 10, 0);
     hLayout->setSpacing(5);
 
-    m_scheduleType = new QComboBox(this);
-    m_scheduleType->setObjectName("ScheduleDialog");
-    connect(m_scheduleType, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &ScheduleDialog::on_scheduleTypeComboBox);
-    connect(m_scheduleType, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &ScheduleDialog::scheduleTypeCurrentIndexChanged);
-    hLayout->addWidget(m_scheduleType);
+    m_scheduleTypeComboBox = new QComboBox(this);
+    m_scheduleTypeComboBox->setObjectName("ScheduleDialog");
+
+    for (const model::ScheduleTypeLimits& scheduleTypeLimit : scheduleTypeLimits){
+      QString name = toQString(scheduleTypeLimit.name().get());
+      m_scheduleTypeComboBox->addItem(name, scheduleTypeLimit.handle().toString());
+    }
+
+    hLayout->addWidget(m_scheduleTypeComboBox);
     hLayout->addStretch();
    
     vLayout->addLayout(hLayout);
@@ -129,194 +168,144 @@ void ScheduleDialog::createLayout()
     vertLayout->addLayout(vLayout);
   }
 
-  // SCHEDULE UNITS
+  // Numeric Type
   {
-    vLayout = new QVBoxLayout();
-    vLayout->setSpacing(5);
-
-    label = new QLabel("Schedule Units",this);
-    label->setObjectName("H2");
-    vLayout->addWidget(label);
-
     hLayout = new QHBoxLayout();
-    hLayout->setContentsMargins(20,0,10,0);
+    hLayout->setContentsMargins(0, 0, 10, 0);
     hLayout->setSpacing(5);
 
-    m_scheduleUnits = new QLineEdit(this);
-    m_scheduleUnits->setObjectName("ScheduleDialog");
-    m_scheduleUnits->setReadOnly(true);
-    hLayout->addWidget(m_scheduleUnits);
+    label = new QLabel("Numeric Type: ", this);
+    label->setObjectName("H2");
+    hLayout->addWidget(label);
+
+    m_numericTypeLabel = new QLabel(this);
+    m_numericTypeLabel->setObjectName("ScheduleDialog");
+    hLayout->addWidget(m_numericTypeLabel);
     hLayout->addStretch();
 
-    vLayout->addLayout(hLayout);
-
-    vertLayout->addLayout(vLayout);
+    vertLayout->addLayout(hLayout);
   }
 
-  // SCHEDULE RANGE
+  // Lower Limit
   {
-    vLayout = new QVBoxLayout();
-    vLayout->setSpacing(5);
-
-    label = new QLabel("Schedule Range",this);
-    label->setObjectName("H2");
-    vLayout->addWidget(label);
-
     hLayout = new QHBoxLayout();
-    hLayout->setContentsMargins(20,0,10,0);
-    hLayout->setSpacing(20);
+    hLayout->setContentsMargins(0, 0, 10, 0);
+    hLayout->setSpacing(5);
 
-    QVBoxLayout * vertLimitLayout = nullptr;
+    label = new QLabel("Lower Limit: ", this);
+    label->setObjectName("H2");
+    hLayout->addWidget(label);
 
-    {
-      vertLimitLayout = new QVBoxLayout();
-      vertLimitLayout->setSpacing(5);
-      
-      // UPPER LIMIT
-      label = new QLabel("Upper Limit",this);
-      label->setObjectName("H2");
-      vertLimitLayout->addWidget(label);
-
-      m_upperLimit = new QLineEdit(this);
-      m_upperLimit->setReadOnly(true);
-      m_upperLimit->setObjectName("ScheduleDialogShort");
-      vertLimitLayout->addWidget(m_upperLimit);
-
-      vertLimitLayout->addSpacing(10);
-
-      // LOWER LIMIT
-      label = new QLabel("Lower Limit",this);
-      label->setObjectName("H2");
-      vertLimitLayout->addWidget(label);
-
-      m_lowerLimit = new QLineEdit(this);
-      m_lowerLimit->setReadOnly(true);
-      m_lowerLimit->setObjectName("ScheduleDialogShort");
-      vertLimitLayout->addWidget(m_lowerLimit);
-    }
-
-    hLayout->addLayout(vertLimitLayout);
-
+    m_lowerLimitLabel = new QLabel(this);
+    m_lowerLimitLabel->setObjectName("ScheduleDialog");
+    hLayout->addWidget(m_lowerLimitLabel);
     hLayout->addStretch();
 
-    vLayout->addLayout(hLayout);
+    vertLayout->addLayout(hLayout);
+  }
 
-    vertLayout->addLayout(vLayout);
+  // Upper Limit
+  {
+    hLayout = new QHBoxLayout();
+    hLayout->setContentsMargins(0, 0, 10, 0);
+    hLayout->setSpacing(5);
+
+    label = new QLabel("Upper Limit: ", this);
+    label->setObjectName("H2");
+    hLayout->addWidget(label);
+
+    m_upperLimitLabel = new QLabel(this);
+    m_upperLimitLabel->setObjectName("ScheduleDialog");
+    hLayout->addWidget(m_upperLimitLabel);
+    hLayout->addStretch();
+
+    vertLayout->addLayout(hLayout);
   }
 
   vertLayout->addStretch();
 
-  connect(this, &ScheduleDialog::toggleUnitsClicked, this, &ScheduleDialog::toggleUnits);
+  m_scheduleTypeComboBox->setCurrentIndex(0);
+  onCurrentIndexChanged(0);
 
-  m_className->setCurrentIndex(1); // TODO awkward way to load all 3 comboBoxes
-  m_className->setCurrentIndex(0);
+  connect(m_scheduleTypeComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &ScheduleDialog::onCurrentIndexChanged);
+
 }
 
-void ScheduleDialog::initScheduleRange()
+void ScheduleDialog::onCurrentIndexChanged(int index)
 {
-  int index = m_scheduleType->currentIndex();
+  OS_ASSERT(index >= 0);
 
-  if(index < 0) return;
+  UUID handle = UUID(m_scheduleTypeComboBox->itemData(index).toString());
+  m_scheduleTypeLimits = m_model.getModelObject<model::ScheduleTypeLimits>(handle);
+  OS_ASSERT(m_scheduleTypeLimits);
 
-  QString standardString;
-  QString text;
-  const double dummy = -999.99;
-  double value;
-  
-  value = dummy;
-  OSOptionalQuantity upperOptQuant = m_scheduleTypes[index].getUpperLimitValue(m_isIP);
-  if(upperOptQuant.isSet()){
-    standardString = upperOptQuant.get().units().standardString().c_str();
-    value = upperOptQuant.get().value();
-    if(value != dummy){
-      text.setNum(value,'f',6);
+  boost::optional<Unit> units = m_scheduleTypeLimits->units(m_isIP);
+  QString unitsLabel;
+  if (units){
+    QString temp;
+    if (!units->prettyString().empty()){
+      temp = toQString(units->prettyString());
+    } else if (!units->standardString().empty()){
+      temp = toQString(units->standardString());
     }
-    if(standardString.length() > 0){
-      text += " ";
-      text += standardString;
+    
+    if (temp.isEmpty()){
+      unitsLabel.append(" (");
+      unitsLabel.append("unitless");
+      unitsLabel.append(")");
+    } else{
+      unitsLabel.append(" (");
+      unitsLabel.append(temp);
+      unitsLabel.append(")");
     }
   }
-  m_upperLimit->setText(text);
 
-  standardString = "";
-  text = "";
-  value = dummy;
-  OSOptionalQuantity lowerOptQuant = m_scheduleTypes[index].getLowerLimitValue(m_isIP);
-  if(lowerOptQuant.isSet()){
-    standardString = lowerOptQuant.get().units().standardString().c_str();
-    value = lowerOptQuant.get().value();
-    if(value != dummy){
-      text.setNum(value,'f',6);
-    }
-    if(standardString.length() > 0){
-      text += " ";
-      text += standardString;
-    }
+  boost::optional<std::string> numericType = m_scheduleTypeLimits->numericType();
+
+  QString numericTypeLabel;;
+  if (numericType){
+    numericTypeLabel.append(toQString(*numericType));
+  } else{
+    numericTypeLabel.append("None");
   }
-  m_lowerLimit->setText(text);
+  numericTypeLabel.append(unitsLabel);
+  m_numericTypeLabel->setText(numericTypeLabel);
+
+  OSOptionalQuantity lowerLimit = m_scheduleTypeLimits->getLowerLimitValue(m_isIP);
+  QString lowerLimitLabel;
+  if (lowerLimit.isSet()){
+    lowerLimitLabel.append(QString::number(lowerLimit.get().value()));
+    lowerLimitLabel.append(unitsLabel);
+  } else{
+    lowerLimitLabel.append("None");
+  }
+  m_lowerLimitLabel->setText(lowerLimitLabel);
+
+  OSOptionalQuantity upperLimit = m_scheduleTypeLimits->getUpperLimitValue(m_isIP);
+  QString upperLimitLabel;
+  if (upperLimit.isSet()){
+    upperLimitLabel.append(QString::number(upperLimit.get().value()));
+    upperLimitLabel.append(unitsLabel);
+  } else{
+    upperLimitLabel.append("None");
+  }
+  m_upperLimitLabel->setText(upperLimitLabel);
 }
-
-// ***** SLOTS *****
 
 void ScheduleDialog::on_okButton(bool checked)
 {
-  // create a schedule
-  int index = m_scheduleType->currentIndex();
-
-  model::ScheduleTypeLimits scheduleTypeLimits = model::ScheduleTypeRegistry::instance().getOrCreateScheduleTypeLimits(m_scheduleTypes.at(index), m_model);
+  OS_ASSERT(m_scheduleTypeLimits);
 
   model::ScheduleRuleset schedule(m_model);
-  bool ok = schedule.setScheduleTypeLimits(scheduleTypeLimits);
+  bool ok = schedule.setScheduleTypeLimits(*m_scheduleTypeLimits);
   OS_ASSERT(ok);
+
   model::ScheduleDay daySchedule = schedule.defaultDaySchedule();
   daySchedule.addValue(Time(1,0),SchedulesTabController::defaultStartingValue(daySchedule));
 
   OSDialog::on_okButton(checked);
 }
 
-void ScheduleDialog::on_classNameComboBox(const QString & text)
-{
-  if(text.size() == 0) return;
-
-  if(!m_scheduleType) return;
-
-  // Load schedule types combo
-  m_scheduleTypes = model::ScheduleTypeRegistry::instance().getScheduleTypesByClassName(text.toStdString());
-
-  m_scheduleType->clear();
-
-  for (model::ScheduleType scheduletype : m_scheduleTypes){
-    m_scheduleType->addItem(scheduletype.scheduleDisplayName.c_str());
-  }
-}
-
-void ScheduleDialog::on_scheduleTypeComboBox(int index)
-{
-  if(index < 0) return;
-
-  if(!m_scheduleUnits) return;
-
-  m_scheduleUnits->setText(m_scheduleTypes[index].unitType.c_str());
-
-  initScheduleRange();
-
-  // ETH@20121004 - The other combo box would have a blank option corresponding to using 
-  // getOrCreateScheduleTypeLimits, and then would have a list of the names of the ScheduleTypeLimits
-  // returned by:
-  //
-  // getCompatibleScheduleTypeLimits(m_model,m_scheduleTypes[index].className,m_scheduleTypes[index].scheduleDisplayName);
-  //
-  // If one of those names was selected when the user hit okay, then scheduleTypeLimits would just
-  // get set to the ScheduleTypeLimits at the index in that list.
-}
-
-// ***** SLOTS *****
-
-void ScheduleDialog::toggleUnits(bool displayIP)
-{
-  m_isIP = displayIP;
-  initScheduleRange();
-}
 
 } // openstudio
 

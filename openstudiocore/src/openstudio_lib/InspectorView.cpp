@@ -1122,7 +1122,6 @@ WaterToAirInspectorView::WaterToAirInspectorView( QWidget * parent )
 
   m_coilControllerInspectorGadget = new InspectorGadget();
   connect(this, &WaterToAirInspectorView::toggleUnitsClicked, m_coilControllerInspectorGadget, &InspectorGadget::toggleUnitsClicked);
-  connect(m_coilControllerInspectorGadget, &InspectorGadget::workspaceObjectRemoved, this, &BaseInspectorView::workspaceObjectRemoved);
 
   m_loopChooserView = new LoopChooserView();
 

@@ -38,6 +38,15 @@
 #include "../../analysis/GammaDistribution.hpp"
 #include "../../analysis/LoguniformDistribution.hpp"
 
+#include "../../model/DaylightingControl.hpp"
+#include "../../model/DaylightingControl_Impl.hpp"
+#include "../../model/IlluminanceMap.hpp"
+#include "../../model/IlluminanceMap_Impl.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/Surface_Impl.hpp"
+#include "../../model/Timestep.hpp"
+#include "../../model/Timestep_Impl.hpp"
+
 #include "../../project/ProjectDatabase.hpp"
 #include "../../project/ProblemRecord.hpp"
 #include "../../project/ProblemRecord_Impl.hpp"
@@ -354,6 +363,35 @@ openstudio::analysisdriver::AnalysisRunOptions AnalysisDriverFixture::standardRu
                                                                  dakotaExePath().parent_path());
   runOptions.setRunManagerTools(tools);
   return runOptions;
+}
+
+openstudio::model::Model AnalysisDriverFixture::fastExampleModel()
+{
+  openstudio::model::Model result = openstudio::model::exampleModel();
+
+  // remove daylighting objects
+  for (auto daylightingControl : result.getConcreteModelObjects<model::DaylightingControl>()){
+    daylightingControl.remove();
+  }
+  for (auto illuminanceMap : result.getConcreteModelObjects<model::IlluminanceMap>()){
+    illuminanceMap.remove();
+  }
+
+  // remove interior surfaces
+  for (auto surface : result.getConcreteModelObjects<model::Surface>()){
+    boost::optional<openstudio::model::Surface> otherSurface = surface.adjacentSurface();
+    if (otherSurface){
+      surface.remove();
+      otherSurface->remove();
+    }
+  }
+
+  // set timesteps per hour to 1
+  openstudio::model::Timestep timestep = result.getUniqueModelObject<openstudio::model::Timestep>();
+  timestep.setNumberOfTimestepsPerHour(1);
+
+  return result;
+
 }
 
 openstudio::analysis::Problem AnalysisDriverFixture::createMixedOsmIdfProblem()
