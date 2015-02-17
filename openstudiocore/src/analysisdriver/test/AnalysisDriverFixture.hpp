@@ -116,6 +116,8 @@ class AnalysisDriverFixture : public ::testing::Test {
   static openstudio::analysisdriver::AnalysisRunOptions standardRunOptions(
       const openstudio::path& workingDirectory);
 
+  static openstudio::model::Model fastExampleModel();
+
   /// set up logging
   REGISTER_LOGGER("AnalysisDriverFixture");
 

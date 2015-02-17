@@ -73,6 +73,8 @@ class MODEL_API ScheduleTypeLimits : public ResourceObject {
 
   bool isUnitTypeDefaulted() const;
 
+  boost::optional<Unit> units(bool returnIP = false) const;
+
   //@}
   /** @name Setters */
   //@{

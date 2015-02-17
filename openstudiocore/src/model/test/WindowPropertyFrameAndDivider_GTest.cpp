@@ -26,6 +26,8 @@
 #include "../Model.hpp"
 #include "../Model_Impl.hpp"
 
+#include <utilities/idd/OS_WindowProperty_FrameAndDivider_FieldEnums.hxx>
+
 #include "../../utilities/geometry/Point3d.hpp"
 
 using namespace openstudio;
@@ -53,4 +55,49 @@ TEST_F(ModelFixture, WindowPropertyFrameAndDivider)
 
   subSurface.resetWindowPropertyFrameAndDivider();
   EXPECT_FALSE(subSurface.windowPropertyFrameAndDivider());
+}
+
+TEST_F(ModelFixture, WindowPropertyFrameAndDivider_Name)
+{
+  Model model;
+
+  WindowPropertyFrameAndDivider frameAndDivider1(model);
+  ASSERT_TRUE(frameAndDivider1.name());
+  EXPECT_EQ("Window Property Frame And Divider 1", frameAndDivider1.name().get());
+
+  WindowPropertyFrameAndDivider frameAndDivider2(model);
+  ASSERT_TRUE(frameAndDivider2.name());
+  EXPECT_EQ("Window Property Frame And Divider 2", frameAndDivider2.name().get());
+
+  // setName api protects against empty names that are equal
+  EXPECT_TRUE(frameAndDivider1.setName(""));
+  EXPECT_TRUE(frameAndDivider2.setName(""));
+  ASSERT_TRUE(frameAndDivider1.name());
+  EXPECT_EQ("", frameAndDivider1.name().get());
+  ASSERT_TRUE(frameAndDivider2.name());
+  EXPECT_EQ(" 1", frameAndDivider2.name().get());
+
+  // setName api protects against non-empty names that are equal
+  EXPECT_TRUE(frameAndDivider1.setName("Frame"));
+  EXPECT_TRUE(frameAndDivider2.setName("Frame"));
+  ASSERT_TRUE(frameAndDivider1.name());
+  EXPECT_EQ("Frame", frameAndDivider1.name().get());
+  ASSERT_TRUE(frameAndDivider2.name());
+  EXPECT_EQ("Frame 1", frameAndDivider2.name().get());
+
+  // setString api does not protect against non-empty names that are equal
+  EXPECT_TRUE(frameAndDivider1.setString(OS_WindowProperty_FrameAndDividerFields::Name, "Divider"));
+  EXPECT_TRUE(frameAndDivider2.setString(OS_WindowProperty_FrameAndDividerFields::Name, "Divider"));
+  ASSERT_TRUE(frameAndDivider1.name());
+  EXPECT_EQ("Divider", frameAndDivider1.name().get());
+  ASSERT_TRUE(frameAndDivider2.name());
+  EXPECT_EQ("Divider", frameAndDivider2.name().get());
+
+  // setString api does not protect against empty names that are equal
+  EXPECT_TRUE(frameAndDivider1.setString(OS_WindowProperty_FrameAndDividerFields::Name, ""));
+  EXPECT_TRUE(frameAndDivider2.setString(OS_WindowProperty_FrameAndDividerFields::Name, ""));
+  ASSERT_TRUE(frameAndDivider1.name());
+  EXPECT_EQ("", frameAndDivider1.name().get());
+  ASSERT_TRUE(frameAndDivider2.name());
+  EXPECT_EQ("", frameAndDivider2.name().get());
 }

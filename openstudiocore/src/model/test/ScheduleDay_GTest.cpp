@@ -275,3 +275,28 @@ TEST_F(ModelFixture, Schedule_Day_Remove)
   EXPECT_EQ(2.0, values[0]);
 
 }
+
+TEST_F(ModelFixture, Schedule_Day_Clone)
+{
+  Model model;
+
+  ScheduleTypeLimits limits(model);
+
+  ScheduleDay daySchedule(model);
+  daySchedule.setScheduleTypeLimits(limits);
+
+  ASSERT_EQ(1u, daySchedule.resources().size());
+  EXPECT_EQ(limits.handle(), daySchedule.resources()[0].handle());
+
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleTypeLimits>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleDay>().size());
+
+  ScheduleDay daySchedule2 = daySchedule.clone(model).cast<ScheduleDay>();
+
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleTypeLimits>().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<ScheduleDay>().size());
+  ASSERT_TRUE(daySchedule.scheduleTypeLimits());
+  ASSERT_TRUE(daySchedule2.scheduleTypeLimits());
+  EXPECT_EQ(limits.handle(), daySchedule.scheduleTypeLimits()->handle());
+  EXPECT_EQ(daySchedule.scheduleTypeLimits()->handle(), daySchedule2.scheduleTypeLimits()->handle());
+}

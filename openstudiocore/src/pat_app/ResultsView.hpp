@@ -259,6 +259,8 @@ private:
   double m_calibrationMaxCVRMSE;
 };
 
+QString getListOfMeasures(const openstudio::analysis::DataPoint & dataPoint);
+
 }
 
 } // openstudio

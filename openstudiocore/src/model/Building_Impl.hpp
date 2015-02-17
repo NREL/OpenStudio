@@ -100,6 +100,8 @@ namespace detail {
 
     virtual std::vector<ModelObject> children() const;
 
+    virtual ModelObject clone(Model model) const;
+
     virtual bool setParent(ParentObject& newParent);
 
     virtual std::vector<IddObjectType> allowableChildTypes() const;
