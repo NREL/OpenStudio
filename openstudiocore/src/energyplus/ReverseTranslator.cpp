@@ -818,6 +818,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateWindowMaterialSimpleGlazingSystem(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::WindowProperty_FrameAndDivider:
+  {
+    modelObject = translateWindowPropertyFrameAndDivider(workspaceObject);
+    break;
+  }
   case openstudio::IddObjectType::Zone:
     {
       modelObject = translateZone(workspaceObject);

@@ -446,6 +446,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(WeatherFileConditionType);
     REGISTER_CONSTRUCTOR(WeatherFileDays);
     REGISTER_CONSTRUCTOR(WindowDataFile);
+    REGISTER_CONSTRUCTOR(WindowPropertyFrameAndDivider);
     REGISTER_CONSTRUCTOR(YearDescription);
     REGISTER_CONSTRUCTOR(ZoneAirContaminantBalance);
     REGISTER_CONSTRUCTOR(ZoneAirHeatBalanceAlgorithm);
@@ -759,6 +760,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(WeatherFileConditionType);
     REGISTER_COPYCONSTRUCTORS(WeatherFileDays);
     REGISTER_COPYCONSTRUCTORS(WindowDataFile);
+    REGISTER_COPYCONSTRUCTORS(WindowPropertyFrameAndDivider);
     REGISTER_COPYCONSTRUCTORS(YearDescription);
     REGISTER_COPYCONSTRUCTORS(ZoneAirContaminantBalance);
     REGISTER_COPYCONSTRUCTORS(ZoneAirHeatBalanceAlgorithm);
