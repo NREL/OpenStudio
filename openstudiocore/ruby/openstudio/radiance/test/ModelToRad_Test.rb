@@ -78,6 +78,8 @@ class ModelToRad_Test < MiniTest::Unit::TestCase
     
     frameAndDivider = OpenStudio::Model::WindowPropertyFrameAndDivider.new(modelExample)
     frameAndDivider.setOutsideRevealDepth(0.15)
+    frameAndDivider.setInsideRevealDepth(0.15)
+    frameAndDivider.setInsideSillDepth(0.30)
     modelExample.getSubSurfaces.each do |subSurface|
       subSurface.setWindowPropertyFrameAndDivider(frameAndDivider)
     end
