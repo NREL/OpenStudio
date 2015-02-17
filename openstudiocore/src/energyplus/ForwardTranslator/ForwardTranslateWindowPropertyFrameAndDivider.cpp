@@ -39,112 +39,111 @@ boost::optional<IdfObject> ForwardTranslator::translateWindowPropertyFrameAndDiv
   IdfObject idfObject(IddObjectType::WindowProperty_FrameAndDivider);
   m_idfObjects.push_back(idfObject);
 
+  // DLM: do we need to make sure this is unique? not empty?  
   boost::optional<std::string> s = modelObject.name();
   if (s){
     idfObject.setName(*s);
   }
 
-  if (!modelObject.isFrameWidthDefaulted()){
+  // DLM: write OpenStudio defaults to IDF
+  //if (!modelObject.isFrameWidthDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::FrameWidth, modelObject.frameWidth());
-  }
+  //}
 
-  if (!modelObject.isFrameOutsideProjectionDefaulted()){
+  //if (!modelObject.isFrameOutsideProjectionDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::FrameOutsideProjection, modelObject.frameOutsideProjection());
-  }
+  //}
 
-  if (!modelObject.isFrameInsideProjectionDefaulted()){
+  //if (!modelObject.isFrameInsideProjectionDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::FrameInsideProjection, modelObject.frameInsideProjection());
-  }
+  //}
 
-  if (modelObject.frameConductance()){
+  //if (modelObject.frameConductance()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::FrameConductance, modelObject.frameConductance().get());
-  }
+  //}
 
-  if (!modelObject.isRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductanceDefaulted()){
+  //if (!modelObject.isRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductanceDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::RatioofFrameEdgeGlassConductancetoCenterOfGlassConductance, modelObject.ratioOfFrameEdgeGlassConductanceToCenterOfGlassConductance());
-  }
+  //}
 
-  if (!modelObject.isFrameSolarAbsorptanceDefaulted()){
+  //if (!modelObject.isFrameSolarAbsorptanceDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::FrameSolarAbsorptance, modelObject.frameSolarAbsorptance());
-  }
+  //}
 
-  if (!modelObject.isFrameVisibleAbsorptanceDefaulted()){
+  //if (!modelObject.isFrameVisibleAbsorptanceDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::FrameVisibleAbsorptance, modelObject.frameVisibleAbsorptance());
-  }
+  //}
 
-  if (!modelObject.isFrameThermalHemisphericalEmissivityDefaulted()){
+  //if (!modelObject.isFrameThermalHemisphericalEmissivityDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::FrameThermalHemisphericalEmissivity, modelObject.frameThermalHemisphericalEmissivity());
-  }
+  //}
 
-  if (!modelObject.isDividerTypeDefaulted()){
+  //if (!modelObject.isDividerTypeDefaulted()){
     idfObject.setString(WindowProperty_FrameAndDividerFields::DividerType, modelObject.dividerType());
-  }
+  //}
 
-  if (!modelObject.isDividerWidthDefaulted()){
+  //if (!modelObject.isDividerWidthDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::DividerWidth, modelObject.dividerWidth());
-  }
+  //}
 
-  if (!modelObject.isNumberOfHorizontalDividersDefaulted()){
+  //if (!modelObject.isNumberOfHorizontalDividersDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::NumberofHorizontalDividers, modelObject.numberOfHorizontalDividers());
-  }
+  //}
 
-  if (!modelObject.isNumberOfVerticalDividersDefaulted()){
+  //if (!modelObject.isNumberOfVerticalDividersDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::NumberofVerticalDividers, modelObject.numberOfVerticalDividers());
-  }
+  //}
 
-  if (!modelObject.isDividerOutsideProjectionDefaulted()){
+  //if (!modelObject.isDividerOutsideProjectionDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::DividerOutsideProjection, modelObject.dividerOutsideProjection());
-  }
+  //}
 
-  if (!modelObject.isDividerInsideProjectionDefaulted()){
+  //if (!modelObject.isDividerInsideProjectionDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::DividerInsideProjection, modelObject.dividerInsideProjection());
-  }
+  //}
 
-  if (!modelObject.isDividerConductanceDefaulted()){
+  //if (!modelObject.isDividerConductanceDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::DividerConductance, modelObject.dividerConductance());
-  }
+  //}
 
-  if (!modelObject.isRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductanceDefaulted()){
+  //if (!modelObject.isRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductanceDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::RatioofDividerEdgeGlassConductancetoCenterOfGlassConductance, modelObject.ratioOfDividerEdgeGlassConductanceToCenterOfGlassConductance());
-  }
+  //}
 
-  if (!modelObject.isDividerSolarAbsorptanceDefaulted()){
+  //if (!modelObject.isDividerSolarAbsorptanceDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::DividerSolarAbsorptance, modelObject.dividerSolarAbsorptance());
-  }
+  //}
 
-  if (!modelObject.isDividerVisibleAbsorptanceDefaulted()){
+  //if (!modelObject.isDividerVisibleAbsorptanceDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::DividerVisibleAbsorptance, modelObject.dividerVisibleAbsorptance());
-  }
+  //}
 
-  if (!modelObject.isDividerThermalHemisphericalEmissivityDefaulted()){
+  //if (!modelObject.isDividerThermalHemisphericalEmissivityDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::DividerThermalHemisphericalEmissivity, modelObject.dividerThermalHemisphericalEmissivity());
-  }
+  //}
 
   // outsideRevealDepth mapped to surface vertices
 
-  if (!modelObject.isOutsideRevealSolarAbsorptanceDefaulted()){
+  //if (!modelObject.isOutsideRevealSolarAbsorptanceDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::OutsideRevealSolarAbsorptance, modelObject.outsideRevealSolarAbsorptance());
-  }
+  //}
 
-  if (!modelObject.isInsideSillDepthDefaulted()){
+  //if (!modelObject.isInsideSillDepthDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::InsideSillDepth, modelObject.insideSillDepth());
-  }
+  //}
 
-  if (!modelObject.isInsideSillSolarAbsorptanceDefaulted()){
+  //if (!modelObject.isInsideSillSolarAbsorptanceDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::InsideSillSolarAbsorptance, modelObject.insideSillSolarAbsorptance());
-  }
+  //}
 
-  if (!modelObject.isInsideRevealDepthDefaulted()){
+  //if (!modelObject.isInsideRevealDepthDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::InsideRevealDepth, modelObject.insideRevealDepth());
-  }
+  //}
 
-  if (!modelObject.isInsideRevealSolarAbsorptanceDefaulted()){
+  //if (!modelObject.isInsideRevealSolarAbsorptanceDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::InsideRevealSolarAbsorptance, modelObject.insideRevealSolarAbsorptance());
-  }
+  //}
 
-
-
-  
   return idfObject;
 }
 

@@ -40,7 +40,7 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
-#include "../../utilities/geometry/Vector3D.hpp"
+#include "../../utilities/geometry/Vector3d.hpp"
 
 using namespace openstudio::model;
 
