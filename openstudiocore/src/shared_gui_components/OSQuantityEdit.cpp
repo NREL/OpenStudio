@@ -461,7 +461,7 @@ void QuantityLineEdit::focusOutEvent(QFocusEvent * e)
     emit inFocus(false, false);
   }
 
-  QLineEdit::focusInEvent(e);
+  QLineEdit::focusOutEvent(e);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
