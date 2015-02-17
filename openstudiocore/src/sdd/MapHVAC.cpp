@@ -1749,17 +1749,17 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
         coil.setRatedHeatingCoefficientofPerformance(value);
       }
 
-      coil.setHeatingCapacityCoefficient1(-5.50102734);
-      coil.setHeatingCapacityCoefficient2(-0.96688754);
-      coil.setHeatingCapacityCoefficient3(7.70755007);
-      coil.setHeatingCapacityCoefficient4(0.031928881);
-      coil.setHeatingCapacityCoefficient5(0.028112522);
+      coil.setHeatingCapacityCoefficient1(-1.361311959);
+      coil.setHeatingCapacityCoefficient2(-2.471798046);
+      coil.setHeatingCapacityCoefficient3(4.173164514);
+      coil.setHeatingCapacityCoefficient4(0.640757401);
+      coil.setHeatingCapacityCoefficient5(0.0);
 
-      coil.setHeatingPowerConsumptionCoefficient1(-7.47517858);
-      coil.setHeatingPowerConsumptionCoefficient2(6.40876653);
-      coil.setHeatingPowerConsumptionCoefficient3(1.99711665);
-      coil.setHeatingPowerConsumptionCoefficient4(-0.050682973);
-      coil.setHeatingPowerConsumptionCoefficient5(0.011385145);
+      coil.setHeatingPowerConsumptionCoefficient1(-2.176941116);
+      coil.setHeatingPowerConsumptionCoefficient2(0.832114286);
+      coil.setHeatingPowerConsumptionCoefficient3(1.570743399);
+      coil.setHeatingPowerConsumptionCoefficient4(0.690793651);
+      coil.setHeatingPowerConsumptionCoefficient5(0.0);
     }
     else
     {
@@ -2574,24 +2574,24 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
         coil.setRatedCoolingCoefficientofPerformance( 1.0 / value );
       }
 
-      coil.setTotalCoolingCapacityCoefficient1(-0.68126221);
-      coil.setTotalCoolingCapacityCoefficient2(1.99529297);
-      coil.setTotalCoolingCapacityCoefficient3(-0.93611888);
-      coil.setTotalCoolingCapacityCoefficient4(0.02081177);
-      coil.setTotalCoolingCapacityCoefficient5(0.008438868);
+      coil.setTotalCoolingCapacityCoefficient1(-9.149069561);
+      coil.setTotalCoolingCapacityCoefficient2(10.87814026);
+      coil.setTotalCoolingCapacityCoefficient3(-1.718780157);
+      coil.setTotalCoolingCapacityCoefficient4(0.746414818);
+      coil.setTotalCoolingCapacityCoefficient5(0.0);
 
-      coil.setSensibleCoolingCapacityCoefficient1(2.24209455);
-      coil.setSensibleCoolingCapacityCoefficient2(7.28913391);
-      coil.setSensibleCoolingCapacityCoefficient3(-9.06079896);
-      coil.setSensibleCoolingCapacityCoefficient4(-0.36729404);
-      coil.setSensibleCoolingCapacityCoefficient5(0.218826161);
-      coil.setSensibleCoolingCapacityCoefficient6(0.00901534);
+      coil.setSensibleCoolingCapacityCoefficient1(-5.462690012);
+      coil.setSensibleCoolingCapacityCoefficient2(17.95968138);
+      coil.setSensibleCoolingCapacityCoefficient3(-11.87818402);
+      coil.setSensibleCoolingCapacityCoefficient4(-0.980163419);
+      coil.setSensibleCoolingCapacityCoefficient5(0.767285761);
+      coil.setSensibleCoolingCapacityCoefficient6(0.0);
 
       coil.setCoolingPowerConsumptionCoefficient1(-3.20456384);
-      coil.setCoolingPowerConsumptionCoefficient2(0.47656454);
-      coil.setCoolingPowerConsumptionCoefficient3(3.16734236);
-      coil.setCoolingPowerConsumptionCoefficient4(0.10244637);
-      coil.setCoolingPowerConsumptionCoefficient5(-0.038132556);
+      coil.setCoolingPowerConsumptionCoefficient2(-0.976409399);
+      coil.setCoolingPowerConsumptionCoefficient3(3.97892546);
+      coil.setCoolingPowerConsumptionCoefficient4(0.938181818);
+      coil.setCoolingPowerConsumptionCoefficient5(-0.0);
 
       coil.setNominalTimeforCondensateRemovaltoBegin(0.0);
       coil.setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(0.0);
