@@ -153,6 +153,7 @@ void OSLineEdit2::adjustWidth()
     QFont myFont;
     QFontMetrics fm(myFont);
     auto width = fm.width(toQString(m_text));
+    if (width < 80) width = 80;
     setFixedWidth(width + 10);
   }
 }
