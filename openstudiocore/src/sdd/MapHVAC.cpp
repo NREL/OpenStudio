@@ -1749,6 +1749,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
         coil.setRatedHeatingCoefficientofPerformance(value);
       }
 
+      QDomElement htPumpEIRElement = heatingCoilElement.firstChildElement("HtPumpEIR");
+      value = htPumpEIRElement.text().toDouble(&ok);
+      if( ok ) 
+      { 
+        coil.setRatedHeatingCoefficientofPerformance(1.0 / value);
+      } 
+
       coil.setHeatingCapacityCoefficient1(-1.361311959);
       coil.setHeatingCapacityCoefficient2(-2.471798046);
       coil.setHeatingCapacityCoefficient3(4.173164514);
