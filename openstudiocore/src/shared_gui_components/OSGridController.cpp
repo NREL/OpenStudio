@@ -239,13 +239,13 @@ void ObjectSelector::clearSelection()
   m_grid->requestRefreshGrid();
 }
 
-boost::optional<const model::ModelObject &> ObjectSelector::getObject(const int t_row, const boost::optional<int> &t_subrow)
+boost::optional<const model::ModelObject &> ObjectSelector::getObject(const int t_row, const int t_column, const boost::optional<int> &t_subrow)
 {
   boost::optional<const model::ModelObject &> object;
 
   for (auto &widgetLoc : m_widgetMap)
   {
-    if (widgetLoc.second->row == t_row && (!t_subrow || t_subrow == widgetLoc.second->subrow))
+    if (widgetLoc.second->row == t_row && widgetLoc.second->column == t_column && (!t_subrow || t_subrow == widgetLoc.second->subrow))
     {
       object = widgetLoc.first;
       break;
@@ -1523,7 +1523,7 @@ void OSGridController::onInFocus(bool inFocus, bool hasData, int row, int column
       // Sub rows present, either in a widget, or in a row
       const DataSource &source = dataSource->source();
       QSharedPointer<BaseConcept> dropZoneConcept = source.dropZoneConcept();
-      boost::optional<const model::ModelObject &> object = this->m_objectSelector->getObject(selectedRow, selectedSubrow);
+      boost::optional<const model::ModelObject &> object = this->m_objectSelector->getObject(selectedRow, selectedColumn, selectedSubrow);
       if (object) {
         for (auto modelObject : selectedObjects) {
           // Don't set the chosen object when iterating through the selected objects
