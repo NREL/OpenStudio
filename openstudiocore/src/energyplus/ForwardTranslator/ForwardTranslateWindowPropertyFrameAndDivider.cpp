@@ -58,9 +58,9 @@ boost::optional<IdfObject> ForwardTranslator::translateWindowPropertyFrameAndDiv
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::FrameInsideProjection, modelObject.frameInsideProjection());
   //}
 
-  //if (modelObject.frameConductance()){
+  if (modelObject.frameConductance()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::FrameConductance, modelObject.frameConductance().get());
-  //}
+  }
 
   //if (!modelObject.isRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductanceDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::RatioofFrameEdgeGlassConductancetoCenterOfGlassConductance, modelObject.ratioOfFrameEdgeGlassConductanceToCenterOfGlassConductance());
