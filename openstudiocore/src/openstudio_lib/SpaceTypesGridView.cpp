@@ -1242,7 +1242,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
 
       std::function<bool (model::SpaceType *, const model::SpaceInfiltrationDesignFlowRate &)> setter (
         [](model::SpaceType *t_type, model::SpaceInfiltrationDesignFlowRate t_rate) {
-          if (t_rate.cast<model::SpaceInfiltrationDesignFlowRate>().spaceType()) {
+          if (t_rate.spaceType()) {
             boost::optional<model::ModelObject> clone_rate = t_rate.clone(t_rate.model());
             OS_ASSERT(clone_rate);
             auto success = clone_rate->cast<model::SpaceInfiltrationDesignFlowRate>().setSpaceType(*t_type);
