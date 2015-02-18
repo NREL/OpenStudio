@@ -747,4 +747,9 @@
     <rule IddField="Water Storage Tank Name" Access="HIDDEN"/>
     <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_Schedule_Day">
+    <rule IddField="Name" Access="HIDDEN"/>
+    <rule IddField="Schedule Type Limits Name" Access="HIDDEN"/>
+    <rule IddField="Interpolate to Timestep" Access="HIDDEN"/>
+  </POLICY>
 </ROOT>

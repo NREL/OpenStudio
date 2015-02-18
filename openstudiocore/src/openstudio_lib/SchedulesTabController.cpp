@@ -111,6 +111,8 @@ SchedulesTabController::SchedulesTabController(bool isIP, const model::Model & m
 
   connect(m_schedulesView, &SchedulesView::itemDropped, this, &SchedulesTabController::onItemDropped);
 
+  connect(m_schedulesView, &SchedulesView::modelObjectSelected, this, &SchedulesTabController::modelObjectSelected);
+
   connect(m_yearSettingsWidget, &YearSettingsWidget::calendarYearSelected, this, &SchedulesTabController::setCalendarYear);
 
   connect(m_yearSettingsWidget, &YearSettingsWidget::firstDayofYearSelected, this, &SchedulesTabController::setFirstDayofYear);

@@ -358,13 +358,6 @@ set(RUBY_MODULE_DIR "Ruby")
 
 set(RUBY_MODULE_ARCH_DIR "Ruby/openstudio")
 
-if(WIN32)
-  if(NOT "${RUBY_VERSION_MAJOR}" EQUAL "2")
-    message(SEND_ERROR "64bit Windows support requires Ruby >= 2.0.0")
-  endif()
-endif()
-
-
 #We want to use the site_ruby folder if this is intended for /usr/local install
 #If it is intended for /usr install, we want to use the main ruby module folder
 if(${CMAKE_INSTALL_PREFIX} STREQUAL "/usr" AND RUBY_ARCH_DIR MATCHES "^/usr/lib.*/.*")

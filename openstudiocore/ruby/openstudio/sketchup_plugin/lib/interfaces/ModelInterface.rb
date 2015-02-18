@@ -560,7 +560,8 @@ module OpenStudio
                           "OS_Construction_CfactorUndergroundWall".to_IddObjectType,
                           "OS_Construction_FfactorGroundFloor".to_IddObjectType,
                           "OS_Construction_InternalSource".to_IddObjectType,
-                          "OS_Construction_WindowDataFile".to_IddObjectType]
+                          "OS_Construction_WindowDataFile".to_IddObjectType,
+                          "OS_WindowProperty_FrameAndDivider".to_IddObjectType]
                           
       # don't use clone yet to avoid duplicates, need to use clone eventually                    
       temp_model = import_objects_with_targets(other_model, idd_object_types)
@@ -683,7 +684,8 @@ module OpenStudio
                           "Construction_CfactorUndergroundWall".to_IddObjectType,
                           "Construction_FfactorGroundFloor".to_IddObjectType,
                           "Construction_InternalSource".to_IddObjectType,
-                          "Construction_WindowDataFile".to_IddObjectType]
+                          "Construction_WindowDataFile".to_IddObjectType,
+                          "WindowProperty_FrameAndDivider".to_IddObjectType]
         
       workspace = import_objects_with_targets(workspace, idd_object_types)
 

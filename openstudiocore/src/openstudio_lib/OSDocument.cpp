@@ -622,6 +622,8 @@ void OSDocument::createTab(int verticalId)
 
       connect(this, &OSDocument::toggleUnitsClicked, m_mainTabController.get(), &SchedulesTabController::toggleUnitsClicked);
 
+      connect(m_mainTabController.get(), &SpaceTypesTabController::modelObjectSelected, m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObject);
+
       connect(m_mainTabController.get(), &SchedulesTabController::downloadComponentsClicked, this, &OSDocument::downloadComponentsClicked);
 
       connect(m_mainTabController.get(), &SchedulesTabController::openLibDlgClicked, this, &OSDocument::openLibDlgClicked);

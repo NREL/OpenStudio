@@ -72,6 +72,8 @@ module OpenStudio
     #   find_energyplus(5, 0, 16) # only build 16
     #
     def find_energyplus(major_version, minor_version, build_version = '.*')
+    
+      warn "[DEPRECATION] `find_energyplus` is deprecated.  Please use `OpenStudio::Runmanager::ConfigOptions` instead."
 
       # version matches either internal or official releases
       # prior to version 8.2.0 we assume the least signficant version number (third digit) is 0

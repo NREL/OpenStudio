@@ -232,7 +232,7 @@ building.spaces.each do |space|
         if map_value > 0 and map_value < daylightSetpoint  
           num_cda += map_value / daylightSetpoint 
         end
-        if map_value > 100 and map_value < 2000
+        if map_value > 100 and map_value < 3000
           num_udi += 1
         end
       end

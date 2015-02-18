@@ -351,7 +351,11 @@ void SchedulesView::onModelObjectRemoved(std::shared_ptr<openstudio::detail::Wor
       {
         ScheduleTab * scheduleTab = qobject_cast<ScheduleTab *>(m_leftVLayout->itemAt(newIndex)->widget());
 
-        this->setCurrentSchedule(scheduleTab->schedule());
+        if (!scheduleTab->schedule().handle().isNull()){
+          this->setCurrentSchedule(scheduleTab->schedule());
+        } else {
+          this->showEmptyPage();
+        }
       } else {
         this->showEmptyPage();
       }
@@ -391,10 +395,10 @@ void SchedulesView::setCurrentSchedule(const model::ScheduleRuleset & schedule)
     scheduleTab->update();
   }
 
-  showScheduleRuleset(schedule);
+  //showScheduleRuleset(schedule);
 
   // DLM: I don't think that the code below works because it gets called when the scene is not visible
-  //showDefaultScheduleDay(schedule);
+  showDefaultScheduleDay(schedule);
 
 }
 
@@ -415,6 +419,9 @@ void SchedulesView::showAddRulePage(const model::ScheduleRuleset & scheduleRules
   m_contentLayout->addWidget(newProfileView, 100);
 
   this->setUpdatesEnabled(true);
+
+  boost::optional<model::ModelObject> mo;
+  emit modelObjectSelected(mo, true);
 }
 
 void SchedulesView::showScheduleRuleset(const model::ScheduleRuleset & schedule)
@@ -433,6 +440,9 @@ void SchedulesView::showScheduleRuleset(const model::ScheduleRuleset & schedule)
   m_contentLayout->addWidget(scheduleRulesetNameView, 100);
 
   this->setUpdatesEnabled(true);
+
+  boost::optional<model::ModelObject> mo;
+  emit modelObjectSelected(mo, true);
 }
 
 void SchedulesView::showScheduleRule(model::ScheduleRule scheduleRule)
@@ -459,6 +469,9 @@ void SchedulesView::showScheduleRule(model::ScheduleRule scheduleRule)
   scheduleView->show();
 
   setUpdatesEnabled(true);
+
+  boost::optional<model::ModelObject> mo = scheduleRule.daySchedule();
+  emit modelObjectSelected(mo, true);
 }
 
 void SchedulesView::onScheduleRuleRemoved(Handle handle)
@@ -487,6 +500,9 @@ void SchedulesView::showDefaultScheduleDay(const model::ScheduleRuleset & schedu
   scheduleView->show();
 
   setUpdatesEnabled(true);
+
+  boost::optional<model::ModelObject> mo = schedule.defaultDaySchedule();
+  emit modelObjectSelected(mo, true);
 }
 
 void SchedulesView::showSummerScheduleDay(model::ScheduleRuleset schedule)
@@ -511,10 +527,16 @@ void SchedulesView::showSummerScheduleDay(model::ScheduleRuleset schedule)
     m_contentLayout->addWidget(scheduleView);
 
     scheduleView->show();
+
+    boost::optional<model::ModelObject> mo = schedule.summerDesignDaySchedule();
+    emit modelObjectSelected(mo, true);
   } else {
     NewProfileView * newProfileView = new NewProfileView(schedule, this, NewProfileView::SUMMER);
 
     m_contentLayout->addWidget(newProfileView, 100);
+
+    boost::optional<model::ModelObject> mo;
+    emit modelObjectSelected(mo, true);
   }
 
   setUpdatesEnabled(true);
@@ -541,10 +563,16 @@ void SchedulesView::showWinterScheduleDay(model::ScheduleRuleset schedule)
     m_contentLayout->addWidget(scheduleView);
 
     scheduleView->show();
+
+    boost::optional<model::ModelObject> mo = schedule.winterDesignDaySchedule();
+    emit modelObjectSelected(mo, true);
   } else {
     NewProfileView * newProfileView = new NewProfileView(schedule, this, NewProfileView::WINTER);
 
     m_contentLayout->addWidget(newProfileView, 100);
+
+    boost::optional<model::ModelObject> mo;
+    emit modelObjectSelected(mo, true);
   }
 
   setUpdatesEnabled(true);
@@ -566,6 +594,9 @@ void SchedulesView::showEmptyPage()
   m_contentLayout->addWidget(emptyWidget, 100);
 
   this->setUpdatesEnabled(true);
+
+  boost::optional<model::ModelObject> mo;
+  emit modelObjectSelected(mo, true);
 }
 
 boost::optional<model::ScheduleRuleset> SchedulesView::currentSchedule()
@@ -1220,9 +1251,12 @@ void ScheduleTabDefault::paintEvent(QPaintEvent * event)
 
   p.setPen(Qt::SolidLine);
 
-  p.setBrush(QBrush(m_scheduleTab->schedulesView()->colors[12]));
-
-  p.drawRect(0, 0, 5, size().height() - 1);
+  // DLM: don't draw color squares for summer and winter design days
+  if (m_type == DEFAULT)
+  {
+    p.setBrush(QBrush(m_scheduleTab->schedulesView()->colors[12]));
+    p.drawRect(0, 0, 5, size().height() - 1);
+  }
 
   p.setBrush(QBrush(QColor(Qt::black)));
 
