@@ -56,8 +56,6 @@
 #include <QMessageBox>
 #include <QRadioButton>
 
-#include <fstream>
-
 namespace openstudio {
 
 namespace pat {
@@ -1265,11 +1263,17 @@ void DataPointJobItemView::update()
     try{
       runmanager::Files files(m_workflowStepJob.outputFiles().get());
       openstudio::path stdErrPath = files.getLastByFilename("stderr").fullPath;
-      std::ifstream ifs(toString(stdErrPath).c_str());
-      std::string stdErrorMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
-      ifs.close();
-      if (!stdErrorMessage.empty()){
-        dataPointJobContentView->addStdErrorMessage(stdErrorMessage);
+
+      QFile file(toQString(stdErrPath));
+      if (file.open(QFile::ReadOnly))
+      {
+        QTextStream docIn(&file);
+        QString stdErrorMessage = docIn.readAll();
+        file.close();
+
+        if (!stdErrorMessage.isEmpty()){
+          dataPointJobContentView->addStdErrorMessage(toString(stdErrorMessage));
+        }
       }
     }catch(std::exception&){
 
