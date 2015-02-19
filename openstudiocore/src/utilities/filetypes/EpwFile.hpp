@@ -223,33 +223,33 @@ private:
   std::string m_dataSourceandUncertaintyFlags;
   std::string m_dryBulbTemperature; // units C, minimum> -70, maximum< 70, missing 99.9
   std::string m_dewPointTemperature; // units C, minimum> -70, maximum< 70, missing 99.9
-  QString m_relativeHumidity; // missing 999., minimum 0, maximum 110
-  QString m_atmosphericStationPressure; // units Pa, missing 999999.,  minimum> 31000, maximum< 120000
-  QString m_extraterrestrialHorizontalRadiation; // units Wh/m2, missing 9999., minimum 0
-  QString m_extraterrestrialDirectNormalRadiation; //units Wh/m2, missing 9999., minimum 0
-  QString m_horizontalInfraredRadiationIntensity; // units Wh/m2, missing 9999., minimum 0
-  QString m_globalHorizontalRadiation; // units Wh/m2, missing 9999., minimum 0
-  QString m_directNormalRadiation; // units Wh/m2, missing 9999., minimum 0
-  QString m_diffuseHorizontalRadiation; // units Wh/m2, missing 9999., minimum 0
-  QString m_globalHorizontalIlluminance; // units lux, missing 999999., note will be missing if >= 999900, minimum 0
-  QString m_directNormalIlluminance; // units lux, missing 999999., will be missing if >= 999900, minimum 0
-  QString m_diffuseHorizontalIlluminance; // units lux, missing 999999., will be missing if >= 999900, minimum 0
-  QString m_zenithLuminance; // units Cd/m2, missing 9999., will be missing if >= 9999, minimum 0
-  QString m_windDirection; // units degrees, missing 999., minimum 0, maximum 360
-  QString m_windSpeed; // units m/s, missing 999., minimum 0, maximum 40
+  std::string m_relativeHumidity; // missing 999., minimum 0, maximum 110
+  std::string m_atmosphericStationPressure; // units Pa, missing 999999.,  minimum> 31000, maximum< 120000
+  std::string m_extraterrestrialHorizontalRadiation; // units Wh/m2, missing 9999., minimum 0
+  std::string m_extraterrestrialDirectNormalRadiation; //units Wh/m2, missing 9999., minimum 0
+  std::string m_horizontalInfraredRadiationIntensity; // units Wh/m2, missing 9999., minimum 0
+  std::string m_globalHorizontalRadiation; // units Wh/m2, missing 9999., minimum 0
+  std::string m_directNormalRadiation; // units Wh/m2, missing 9999., minimum 0
+  std::string m_diffuseHorizontalRadiation; // units Wh/m2, missing 9999., minimum 0
+  std::string m_globalHorizontalIlluminance; // units lux, missing 999999., will be missing if >= 999900, minimum 0
+  std::string m_directNormalIlluminance; // units lux, missing 999999., will be missing if >= 999900, minimum 0
+  std::string m_diffuseHorizontalIlluminance; // units lux, missing 999999., will be missing if >= 999900, minimum 0
+  std::string m_zenithLuminance; // units Cd/m2, missing 9999., will be missing if >= 9999, minimum 0
+  std::string m_windDirection; // units degrees, missing 999., minimum 0, maximum 360
+  std::string m_windSpeed; // units m/s, missing 999., minimum 0, maximum 40
   int m_totalSkyCover; // missing 99, minimum 0, maximum 10
   int m_opaqueSkyCover; // used if Horizontal IR Intensity missing, missing 99, minimum 0, maximum 10
-  QString m_visibility; // units km, missing 9999
-  QString m_ceilingHeight; // units m, missing 99999
+  std::string m_visibility; // units km, missing 9999
+  std::string m_ceilingHeight; // units m, missing 99999
   int m_presentWeatherObservation;
   int m_presentWeatherCodes;
-  QString m_precipitableWater; // units mm, missing 999
-  QString m_aerosolOpticalDepth; // units thousandths, missing .999
-  QString m_snowDepth; // units cm, missing 999
-  QString m_daysSinceLastSnowfall; // missing 99
-  QString m_albedo; //missing 999
-  QString m_liquidPrecipitationDepth; // units mm, missing 999
-  QString m_liquidPrecipitationQuantity; // units hr, missing 99
+  std::string m_precipitableWater; // units mm, missing 999
+  std::string m_aerosolOpticalDepth; // units thousandths, missing .999
+  std::string m_snowDepth; // units cm, missing 999
+  std::string m_daysSinceLastSnowfall; // missing 99
+  std::string m_albedo; //missing 999
+  std::string m_liquidPrecipitationDepth; // units mm, missing 999
+  std::string m_liquidPrecipitationQuantity; // units hr, missing 99
 };
 
 /** EpwFile parses a weather file in EPW format.  Later it may provide
