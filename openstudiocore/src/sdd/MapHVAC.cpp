@@ -28,9 +28,12 @@
 #include "../model/AirLoopHVACZoneSplitter.hpp"
 #include "../model/AirLoopHVACZoneSplitter_Impl.hpp"
 #include "../model/AirLoopHVACOutdoorAirSystem.hpp"
+#include "../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "../model/ControllerOutdoorAir.hpp"
 #include "../model/FanConstantVolume.hpp"
+#include "../model/FanConstantVolume_Impl.hpp"
 #include "../model/FanVariableVolume.hpp"
+#include "../model/FanVariableVolume_Impl.hpp"
 #include "../model/FanOnOff.hpp"
 #include "../model/FanOnOff_Impl.hpp"
 #include "../model/FanZoneExhaust.hpp"
@@ -40,9 +43,11 @@
 #include "../model/CoilCoolingWaterToAirHeatPumpEquationFit.hpp"
 #include "../model/CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp"
 #include "../model/CoilCoolingDXSingleSpeed.hpp"
+#include "../model/CoilCoolingDXSingleSpeed_Impl.hpp"
 #include "../model/CoilCoolingDXTwoSpeed.hpp"
 #include "../model/CoilCoolingDXMultiSpeed.hpp"
 #include "../model/CoilHeatingGas.hpp"
+#include "../model/CoilHeatingGas_Impl.hpp"
 #include "../model/CoilHeatingElectric.hpp"
 #include "../model/CoilHeatingDXSingleSpeed.hpp"
 #include "../model/ControllerWaterCoil.hpp"
@@ -7018,12 +7023,188 @@ boost::optional<QDomElement> ForwardTranslator::translateAirLoopHVAC(const model
         clRstSupLowElement.appendChild(doc.createTextNode(QString::number(clRstSupLow)));
 
         m_translatedObjects[tempSPM->handle()] = clgCtrlElement;
+      } else {
+        LOG(Error,spm.briefDescription() << " does not currently map into SDD format.")
+        // TODO Handle other SPMs
       }
 
       break;
     }
   }
     
+  // Translate supply components
+
+  auto airSegElement = doc.createElement("AirSeg");
+  result.appendChild(airSegElement);
+
+  auto airSegNameElement = doc.createElement("Name");
+  airSegNameElement.appendChild(doc.createTextNode(QString::fromStdString(name + " Supply AirSeg")));
+  airSegElement.appendChild(airSegNameElement);
+
+  auto airSegTypeElement = doc.createElement("Type");
+  airSegTypeElement.appendChild(doc.createTextNode("Supply"));
+  airSegElement.appendChild(airSegTypeElement);
+
+  for( auto & comp : airLoop.supplyComponents() ) {
+    if( auto fan = comp.optionalCast<model::FanConstantVolume>() ) {
+      translateFanConstantVolume(fan.get(),airSegElement,doc);
+    } else if ( auto coil = comp.optionalCast<model::CoilCoolingDXSingleSpeed>() ) {
+      translateCoilCoolingDXSingleSpeed(coil.get(),airSegElement,doc);
+    } else if ( auto coil = comp.optionalCast<model::CoilHeatingGas>() ) {
+      translateCoilHeatingGas(coil.get(),airSegElement,doc);
+    } else if ( auto oasys = comp.optionalCast<model::AirLoopHVACOutdoorAirSystem>() ) {
+      translateAirLoopHVACOutdoorAirSystem(oasys.get(),result,doc);
+    } else {
+      // TODO Handle other supply component types
+      LOG(Warn,comp.briefDescription() << " does not currently map into SDD format.")
+    }
+  }
+
+  return result;
+}
+
+boost::optional<QDomElement> ForwardTranslator::translateAirLoopHVACOutdoorAirSystem(const openstudio::model::AirLoopHVACOutdoorAirSystem& oasys, QDomElement & airSysElement, QDomDocument& doc)
+{
+  auto result = doc.createElement("OACtrl");
+  airSysElement.appendChild(result);
+  m_translatedObjects[oasys.handle()] = result;
+
+  return result;
+}
+
+boost::optional<QDomElement> ForwardTranslator::translateCoilHeatingGas(const openstudio::model::CoilHeatingGas& coil, QDomElement & airSegElement, QDomDocument& doc)
+{
+  auto result = doc.createElement("CoilClg");
+  airSegElement.appendChild(result);
+  m_translatedObjects[coil.handle()] = result;
+
+  // Type
+  auto typeElement = doc.createElement("Type");
+  result.appendChild(typeElement);
+  typeElement.appendChild(doc.createTextNode("Furnace"));
+
+  // FuelSrc
+  auto fuelSrcElement = doc.createElement("FuelSrc");
+  result.appendChild(fuelSrcElement);
+  fuelSrcElement.appendChild(doc.createTextNode("NaturalGas"));
+
+  // CapTotGrossRtd
+  if( coil.isNominalCapacityAutosized() ) {
+    m_autoHardSize = true;
+  } else if( auto value = coil.nominalCapacity() ) {
+    auto capTotGrossRtdElement = doc.createElement("CapTotGrossRtd");
+    result.appendChild(capTotGrossRtdElement);
+    capTotGrossRtdElement.appendChild(doc.createTextNode(QString::number(convert(value.get(),"W","Btu/h").get())));
+  }
+
+  // FurnThrmlEff
+  auto furnThrmlEffElement = doc.createElement("FurnThrmlEff");
+  result.appendChild(furnThrmlEffElement);
+  furnThrmlEffElement.appendChild(doc.createTextNode(QString::number(convert(coil.gasBurnerEfficiency(),"W","Btu/h").get())));
+
+  return result;
+}
+
+boost::optional<QDomElement> ForwardTranslator::translateCoilCoolingDXSingleSpeed(const openstudio::model::CoilCoolingDXSingleSpeed& coil, QDomElement & airSegElement, QDomDocument& doc)
+{
+  auto result = doc.createElement("CoilClg");
+  airSegElement.appendChild(result);
+  m_translatedObjects[coil.handle()] = result;
+
+  // Type
+  auto typeElement = doc.createElement("Type");
+  result.appendChild(typeElement);
+  typeElement.appendChild(doc.createTextNode("DirectExpansion"));
+
+  // NumClgStages
+  auto numClgStagesElement = doc.createElement("NumClgStages");
+  result.appendChild(numClgStagesElement);
+  numClgStagesElement.appendChild(doc.createTextNode("1"));
+
+  // CapTotGrossRtd
+  if( coil.isRatedTotalCoolingCapacityAutosized() ) {
+    m_autoHardSize = true;
+  } else if( auto value = coil.ratedTotalCoolingCapacity() ) {
+    auto capTotGrossRtdElement = doc.createElement("CapTotGrossRtd");
+    result.appendChild(capTotGrossRtdElement);
+    capTotGrossRtdElement.appendChild(doc.createTextNode(QString::number(convert(value.get(),"W","Btu/h").get())));
+  }
+
+  // DXEER
+  if( auto cop = coil.ratedCOP() ) {
+    auto r = 0.12;
+    auto eer = (cop.get() * (1 - r)  - r) * 3.413;
+
+    auto dxEERElement = doc.createElement("DXEER");
+    result.appendChild(dxEERElement);
+    dxEERElement.appendChild(doc.createTextNode(QString::number(eer)));
+  } else {
+    m_autoEfficiency = true;
+  }
+
+  // CndsrType
+  auto cndsrTypeElement = doc.createElement("CndsrType");
+  result.appendChild(cndsrTypeElement);
+  cndsrTypeElement.appendChild(doc.createTextNode("Air"));
+
+  return result;
+}
+
+boost::optional<QDomElement> ForwardTranslator::translateFanConstantVolume(const openstudio::model::FanConstantVolume& fan, QDomElement & airSegElement, QDomDocument& doc)
+{
+  auto result = doc.createElement("Fan");
+  airSegElement.appendChild(result);
+  m_translatedObjects[fan.handle()] = result;
+
+  // CtrlMthd
+  auto ctrlMthdElement = doc.createElement("CtrlMthd"); 
+  result.appendChild(ctrlMthdElement);
+  ctrlMthdElement.appendChild(doc.createTextNode("ConstantVolume"));
+
+  // Class - Centrifugal | Axial
+  // TODO Define a way to deterimine or specify 
+  auto classElement = doc.createElement("Class");
+  result.appendChild(classElement);
+  classElement.appendChild(doc.createTextNode("Axial"));
+
+  // ModelingMthd  
+  auto modelingMthdElement = doc.createElement("ModelingMthd");
+  result.appendChild(modelingMthdElement);
+  modelingMthdElement.appendChild(doc.createTextNode("StaticPressure"));
+
+  // FlowCap
+  if( fan.isMaximumFlowRateAutosized() ) {
+    m_autoHardSize = true;
+  } else if( auto value = fan.maximumFlowRate() ) {
+    auto flowCapElement = doc.createElement("FlowCap");
+    result.appendChild(flowCapElement);
+    flowCapElement.appendChild(doc.createTextNode(QString::number(convert(value.get(),"m^3/s","cfm").get())));
+  }
+
+  // FlowEff
+  auto flowEffElement = doc.createElement("FlowEff");
+  result.appendChild(flowEffElement);
+  flowEffElement.appendChild(doc.createTextNode(QString::number(fan.fanEfficiency())));
+
+  // TotStaticPress
+  auto totStaticPressElement = doc.createElement("TotStaticPress");
+  result.appendChild(totStaticPressElement);
+  // Convert in PA to WC
+  totStaticPressElement.appendChild(doc.createTextNode(QString::number(fan.pressureRise() / 249.0889)));
+
+  // MtrEff
+  auto mtrEffElement = doc.createElement("MtrEff");
+  result.appendChild(mtrEffElement);
+  mtrEffElement.appendChild(doc.createTextNode(QString::number(fan.motorEfficiency())));
+
+  // MtrPos
+  auto mtrPosElement = doc.createElement("MtrfPos");
+  result.appendChild(mtrPosElement);
+  if( fan.motorInAirstreamFraction() >= 0.5 ) {
+    mtrPosElement.appendChild(doc.createTextNode("InAirStream"));
+  } else {
+    mtrPosElement.appendChild(doc.createTextNode("NotInAirStream"));
+  }
 
 
   return result;
