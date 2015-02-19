@@ -221,8 +221,8 @@ private:
   int m_hour;
   int m_minute;
   std::string m_dataSourceandUncertaintyFlags;
-  QString m_dryBulbTemperature; // units C, minimum> -70, maximum< 70, missing 99.9
-  QString m_dewPointTemperature; // units C, minimum> -70, maximum< 70, missing 99.9
+  std::string m_dryBulbTemperature; // units C, minimum> -70, maximum< 70, missing 99.9
+  std::string m_dewPointTemperature; // units C, minimum> -70, maximum< 70, missing 99.9
   QString m_relativeHumidity; // missing 999., minimum 0, maximum 110
   QString m_atmosphericStationPressure; // units Pa, missing 999999.,  minimum> 31000, maximum< 120000
   QString m_extraterrestrialHorizontalRadiation; // units Wh/m2, missing 9999., minimum 0

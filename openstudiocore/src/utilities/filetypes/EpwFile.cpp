@@ -652,6 +652,39 @@ boost::optional<std::string> EpwDataPoint::toWthString() const
   return boost::optional<std::string>(output.join("\t").toStdString());
 }
 
+// Local convenience functions
+static int stringToInteger(const std::string &string, bool *ok)
+{
+  int value = 0;
+  *ok = true;
+  try {
+    value = std::stoi(string);
+  }
+  catch (const std::invalid_argument) {
+    *ok = false;
+  }
+  catch (const std::out_of_range) {
+    *ok = false;
+  }
+  return value;
+}
+
+static double stringToDouble(const std::string &string, bool *ok)
+{
+  double value = 0;
+  *ok = true;
+  try {
+    value = std::stod(string);
+  }
+  catch (const std::invalid_argument) {
+    *ok = false;
+  }
+  catch (const std::out_of_range) {
+    *ok = false;
+  }
+  return value;
+}
+
 Date EpwDataPoint::date() const
 {
   return Date(MonthOfYear(m_month),m_day);//,m_year);
@@ -696,38 +729,6 @@ void EpwDataPoint::setYear(int year)
   m_year = year;
 }
 
-// Local convenience functions
-static int stringToInteger(const std::string &string, bool *ok)
-{
-  int value = 0;
-  *ok = true;
-  try {
-    value = std::stoi(string);
-  } catch (const std::invalid_argument) {
-    *ok = false;
-  }
-  catch (const std::out_of_range) {
-    *ok = false;
-  }
-  return value;
-}
-
-static double stringToDouble(const std::string &string, bool *ok)
-{
-  double value = 0;
-  *ok = true;
-  try {
-    value = std::stod(string);
-  }
-  catch (const std::invalid_argument) {
-    *ok = false;
-  }
-  catch (const std::out_of_range) {
-    *ok = false;
-  }
-  return value;
-}
-
 bool EpwDataPoint::setYear(const std::string &year)
 {
   bool ok;
@@ -735,7 +736,7 @@ bool EpwDataPoint::setYear(const std::string &year)
   if(!ok) {
     return false;
   }
-  setYear(value);
+  m_year = value;
   return true;
 }
 
@@ -757,7 +758,7 @@ bool EpwDataPoint::setMonth(int month)
 bool EpwDataPoint::setMonth(const std::string &month)
 {
   bool ok;
-  int value = QString().fromStdString(month).toInt(&ok);
+  int value = stringToInteger(month, &ok);
   if(!ok) {
     LOG_FREE(Error,"openstudio.EpwFile","Month value '" << month << "' cannot be converted into an integer");
     return false;
@@ -783,7 +784,7 @@ bool EpwDataPoint::setDay(int day)
 bool EpwDataPoint::setDay(const std::string &day)
 {
   bool ok;
-  int value = QString().fromStdString(day).toInt(&ok);
+  int value = stringToInteger(day, &ok);
   if(!ok) {
     LOG_FREE(Error,"openstudio.EpwFile","Day value '" << day << "' cannot be converted into an integer");
     return false;
@@ -809,7 +810,7 @@ bool EpwDataPoint::setHour(int hour)
 bool EpwDataPoint::setHour(const std::string &hour)
 {
   bool ok;
-  int value = QString().fromStdString(hour).toInt(&ok);
+  int value = stringToInteger(hour, &ok);
   if(!ok) {
     LOG_FREE(Error,"openstudio.EpwFile","Hour value '" << hour << "' cannot be converted into an integer");
     return false;
@@ -835,7 +836,7 @@ bool EpwDataPoint::setMinute(int minute)
 bool EpwDataPoint::setMinute(const std::string &minute)
 {
   bool ok;
-  int value = QString().fromStdString(minute).toInt(&ok);
+  int value = stringToInteger(minute, &ok);
   if(!ok) {
     LOG_FREE(Error,"openstudio.EpwFile","Minute value '" << minute << "' cannot be converted into an integer");
     return false;
@@ -855,68 +856,62 @@ void EpwDataPoint::setDataSourceandUncertaintyFlags(const std::string &dataSourc
 
 boost::optional<double> EpwDataPoint::dryBulbTemperature() const
 {
-  double value = m_dryBulbTemperature.toDouble();
-  if(value == 99.9)
-  {
-    return boost::optional<double>();
+  if(m_dryBulbTemperature == "99.9") {
+    return boost::none;
   }
-  return boost::optional<double>(value);
+  return boost::optional<double>(std::stod(m_dryBulbTemperature));
 }
 
 bool EpwDataPoint::setDryBulbTemperature(double dryBulbTemperature)
 {
-  if(-70 >= dryBulbTemperature)
-  {
+  if(-70 >= dryBulbTemperature || 70 <= dryBulbTemperature) {
     m_dryBulbTemperature = "99.9";
     return false;
   }
-  m_dryBulbTemperature = QString("%1").arg(dryBulbTemperature);
+  m_dryBulbTemperature = std::to_string(dryBulbTemperature);
   return true;
 }
 
 bool EpwDataPoint::setDryBulbTemperature(const std::string &dryBulbTemperature)
 {
   bool ok;
-  double value = QString().fromStdString(dryBulbTemperature).toDouble(&ok);
-  if(!ok)
-  {
+  double value = stringToDouble(dryBulbTemperature, &ok);
+  if(!ok || -70 >= value || 70 <= value) {
     m_dryBulbTemperature = "99.9";
     return false;
   }
-  return setDryBulbTemperature(value);
+  m_dryBulbTemperature = dryBulbTemperature;
+  return true;
 }
 
 boost::optional<double> EpwDataPoint::dewPointTemperature() const
 {
-  double value = m_dewPointTemperature.toDouble();
-  if(value == 99.9)
-  {
+  if(m_dewPointTemperature == "99.9") {
     return boost::optional<double>();
   }
-  return boost::optional<double>(value);
+  return boost::optional<double>(std::stod(m_dewPointTemperature));
 }
 
 bool EpwDataPoint::setDewPointTemperature(double dewPointTemperature)
 {
-  if(-70 >= dewPointTemperature)
-  {
+  if(-70 >= dewPointTemperature || 70 <= dewPointTemperature) {
     m_dewPointTemperature = "99.9";
     return false;
   }
-  m_dewPointTemperature = QString("%1").arg(dewPointTemperature);
+  m_dewPointTemperature = std::to_string(dewPointTemperature);
   return true;
 }
 
 bool EpwDataPoint::setDewPointTemperature(const std::string &dewPointTemperature)
 {
   bool ok;
-  double value = QString().fromStdString(dewPointTemperature).toDouble(&ok);
-  if(!ok)
-  {
+  double value = stringToDouble(dewPointTemperature, &ok);
+  if(!ok || -70 >= value || 70 <= value) {
     m_dewPointTemperature = "99.9";
     return false;
   }
-  return setDewPointTemperature(value);
+  m_dewPointTemperature = dewPointTemperature;
+  return true;
 }
 
 boost::optional<double> EpwDataPoint::relativeHumidity() const
