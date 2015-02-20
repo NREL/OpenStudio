@@ -2200,9 +2200,18 @@ boost::optional<SimpleProject> SimpleProject::open(const openstudio::path& proje
 
       // if projectDatabasePath already defined, log error and return
       if (!projectDatabasePath.empty()) {
-        LOG(Error,"Cannot open a SimpleProject at " << toString(projectDir) << ", because it "
-            << "contains multiple ProjectDatabases.");
-        return result;
+        // DLM: handle case where osp was copied to bad-project.osp
+        if ("bad-project.osp" == projectDatabasePath.filename()){
+          // replace projectDatabasePath with p
+          projectDatabasePath = p;
+        } else if ("bad-project.osp" == p.filename()){
+          // keep projectDatabasePath
+        } else{
+          // unknown which osp path to prefer
+          LOG(Error, "Cannot open a SimpleProject at " << toString(projectDir) << ", because it "
+              << "contains multiple ProjectDatabases.");
+          return result;
+        }
       }
 
       // otherwise keep
