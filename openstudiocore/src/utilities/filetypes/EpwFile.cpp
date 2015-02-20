@@ -134,62 +134,9 @@ EpwDataPoint::EpwDataPoint(int year,int month,int day,int hour,int minute,
 
 boost::optional<EpwDataPoint> EpwDataPoint::fromEpwString(const std::string &line)
 {
-  EpwDataPoint pt;
-  QStringList list = QString().fromStdString(line).split(',');
-  // Require 35 items in the list
-  if(list.size() < 35) {
-    // JWD: Should this just use the entries that are there and fill in the rest as unavailable?
-    LOG_FREE(Error,"openstudio.EpwFile","Expected 35 fields in EPW data, got " << list.size());
-    return boost::optional<EpwDataPoint>();
-  } else if(list.size() > 35) {
-    LOG_FREE(Error,"openstudio.EpwFile","Expected 35 fields in EPW data, got " << list.size() << ", additional data will be ignored");
-    return boost::optional<EpwDataPoint>();
-  }
-  // Use the appropriate setter on each field
-  if(!pt.setYear(list[EpwDataField::Year].toStdString())) {
-    return boost::optional<EpwDataPoint>();
-  }
-  if(!pt.setMonth(list[EpwDataField::Month].toStdString())) {
-    return boost::optional<EpwDataPoint>();
-  }
-  if(!pt.setDay(list[EpwDataField::Day].toStdString())) {
-    return boost::optional<EpwDataPoint>();
-  }
-  if(!pt.setHour(list[EpwDataField::Hour].toStdString())) {
-    return boost::optional<EpwDataPoint>();
-  }
-  // The minute field is not set here - it is set based upon the header data
-  pt.setDataSourceandUncertaintyFlags(list[EpwDataField::DataSourceandUncertaintyFlags].toStdString());
-  pt.setDryBulbTemperature(list[EpwDataField::DryBulbTemperature].toStdString());
-  pt.setDewPointTemperature(list[EpwDataField::DewPointTemperature].toStdString());
-  pt.setRelativeHumidity(list[EpwDataField::RelativeHumidity].toStdString());
-  pt.setAtmosphericStationPressure(list[EpwDataField::AtmosphericStationPressure].toStdString());
-  pt.setExtraterrestrialHorizontalRadiation(list[EpwDataField::ExtraterrestrialHorizontalRadiation].toStdString());
-  pt.setExtraterrestrialDirectNormalRadiation(list[EpwDataField::ExtraterrestrialDirectNormalRadiation].toStdString());
-  pt.setHorizontalInfraredRadiationIntensity(list[EpwDataField::HorizontalInfraredRadiationIntensity].toStdString());
-  pt.setGlobalHorizontalRadiation(list[EpwDataField::GlobalHorizontalRadiation].toStdString());
-  pt.setDirectNormalRadiation(list[EpwDataField::DirectNormalRadiation].toStdString());
-  pt.setDiffuseHorizontalRadiation(list[EpwDataField::DiffuseHorizontalRadiation].toStdString());
-  pt.setGlobalHorizontalIlluminance(list[EpwDataField::GlobalHorizontalIlluminance].toStdString());
-  pt.setDirectNormalIlluminance(list[EpwDataField::DirectNormalIlluminance].toStdString());
-  pt.setDiffuseHorizontalIlluminance(list[EpwDataField::DiffuseHorizontalIlluminance].toStdString());
-  pt.setZenithLuminance(list[EpwDataField::ZenithLuminance].toStdString());
-  pt.setWindDirection(list[EpwDataField::WindDirection].toStdString());
-  pt.setWindSpeed(list[EpwDataField::WindSpeed].toStdString());
-  pt.setTotalSkyCover(list[EpwDataField::TotalSkyCover].toStdString());
-  pt.setOpaqueSkyCover(list[EpwDataField::OpaqueSkyCover].toStdString());
-  pt.setVisibility(list[EpwDataField::Visibility].toStdString());
-  pt.setCeilingHeight(list[EpwDataField::CeilingHeight].toStdString());
-  pt.setPresentWeatherObservation(list[EpwDataField::PresentWeatherObservation].toStdString());
-  pt.setPresentWeatherCodes(list[EpwDataField::PresentWeatherCodes].toStdString());
-  pt.setPrecipitableWater(list[EpwDataField::PrecipitableWater].toStdString());
-  pt.setAerosolOpticalDepth(list[EpwDataField::AerosolOpticalDepth].toStdString());
-  pt.setSnowDepth(list[EpwDataField::SnowDepth].toStdString());
-  pt.setDaysSinceLastSnowfall(list[EpwDataField::DaysSinceLastSnowfall].toStdString());
-  pt.setAlbedo(list[EpwDataField::Albedo].toStdString());
-  pt.setLiquidPrecipitationDepth(list[EpwDataField::LiquidPrecipitationDepth].toStdString());
-  pt.setLiquidPrecipitationQuantity(list[EpwDataField::LiquidPrecipitationQuantity].toStdString());
-  return boost::optional<EpwDataPoint>(pt);
+  std::vector<std::string> list;
+  boost::split(list, line, boost::is_any_of(","));
+  return fromEpwStrings(list);
 }
 
 boost::optional<EpwDataPoint> EpwDataPoint::fromEpwStrings(const std::vector<std::string> &list, bool pedantic)
@@ -220,7 +167,9 @@ boost::optional<EpwDataPoint> EpwDataPoint::fromEpwStrings(const std::vector<std
   if (!pt.setHour(list[EpwDataField::Hour])) {
     return boost::none;
   }
-  // The minute field is not set here - it is set based upon the header data
+  if(!pt.setMinute(list[EpwDataField::Minute])) {
+    return boost::none;
+  }
   pt.setDataSourceandUncertaintyFlags(list[EpwDataField::DataSourceandUncertaintyFlags]);
   pt.setDryBulbTemperature(list[EpwDataField::DryBulbTemperature]);
   pt.setDewPointTemperature(list[EpwDataField::DewPointTemperature]);
@@ -262,37 +211,36 @@ std::vector<std::string> EpwDataPoint::toEpwStrings() const
   list.push_back(std::to_string(m_day));
   list.push_back(std::to_string(m_hour));
   list.push_back(std::to_string(m_minute));
-  /*
-  pt.setDataSourceandUncertaintyFlags(list[EpwDataField::DataSourceandUncertaintyFlags]);
-  pt.setDryBulbTemperature(list[EpwDataField::DryBulbTemperature]);
-  pt.setDewPointTemperature(list[EpwDataField::DewPointTemperature]);
-  pt.setRelativeHumidity(list[EpwDataField::RelativeHumidity]);
-  pt.setAtmosphericStationPressure(list[EpwDataField::AtmosphericStationPressure]);
-  pt.setExtraterrestrialHorizontalRadiation(list[EpwDataField::ExtraterrestrialHorizontalRadiation]);
-  pt.setExtraterrestrialDirectNormalRadiation(list[EpwDataField::ExtraterrestrialDirectNormalRadiation]);
-  pt.setHorizontalInfraredRadiationIntensity(list[EpwDataField::HorizontalInfraredRadiationIntensity]);
-  pt.setGlobalHorizontalRadiation(list[EpwDataField::GlobalHorizontalRadiation]);
-  pt.setDirectNormalRadiation(list[EpwDataField::DirectNormalRadiation]);
-  pt.setDiffuseHorizontalRadiation(list[EpwDataField::DiffuseHorizontalRadiation]);
-  pt.setGlobalHorizontalIlluminance(list[EpwDataField::GlobalHorizontalIlluminance]);
-  pt.setDirectNormalIlluminance(list[EpwDataField::DirectNormalIlluminance]);
-  pt.setDiffuseHorizontalIlluminance(list[EpwDataField::DiffuseHorizontalIlluminance]);
-  pt.setZenithLuminance(list[EpwDataField::ZenithLuminance]);
-  pt.setWindDirection(list[EpwDataField::WindDirection]);
-  pt.setWindSpeed(list[EpwDataField::WindSpeed]);
-  pt.setTotalSkyCover(list[EpwDataField::TotalSkyCover]);
-  pt.setOpaqueSkyCover(list[EpwDataField::OpaqueSkyCover]);
-  pt.setVisibility(list[EpwDataField::Visibility]);
-  pt.setCeilingHeight(list[EpwDataField::CeilingHeight]);
-  pt.setPresentWeatherObservation(list[EpwDataField::PresentWeatherObservation]);
-  pt.setPresentWeatherCodes(list[EpwDataField::PresentWeatherCodes]);
-  pt.setPrecipitableWater(list[EpwDataField::PrecipitableWater]);
-  pt.setAerosolOpticalDepth(list[EpwDataField::AerosolOpticalDepth]);
-  pt.setSnowDepth(list[EpwDataField::SnowDepth]);
-  pt.setDaysSinceLastSnowfall(list[EpwDataField::DaysSinceLastSnowfall]);
-  pt.setAlbedo(list[EpwDataField::Albedo]);
-  pt.setLiquidPrecipitationDepth(list[EpwDataField::LiquidPrecipitationDepth]);
-  pt.setLiquidPrecipitationQuantity(list[EpwDataField::LiquidPrecipitationQuantity]);*/
+  list.push_back(m_dataSourceandUncertaintyFlags);
+  list.push_back(m_dryBulbTemperature);
+  list.push_back(m_dewPointTemperature);
+  list.push_back(m_relativeHumidity);
+  list.push_back(m_atmosphericStationPressure);
+  list.push_back(m_extraterrestrialHorizontalRadiation);
+  list.push_back(m_extraterrestrialDirectNormalRadiation);
+  list.push_back(m_horizontalInfraredRadiationIntensity);
+  list.push_back(m_globalHorizontalRadiation);
+  list.push_back(m_directNormalRadiation);
+  list.push_back(m_diffuseHorizontalRadiation);
+  list.push_back(m_globalHorizontalIlluminance);
+  list.push_back(m_directNormalIlluminance);
+  list.push_back(m_diffuseHorizontalIlluminance);
+  list.push_back(m_zenithLuminance);
+  list.push_back(m_windDirection);
+  list.push_back(m_windSpeed);
+  list.push_back(std::to_string(m_totalSkyCover));
+  list.push_back(std::to_string(m_opaqueSkyCover));
+  list.push_back(m_visibility);
+  list.push_back(m_ceilingHeight);
+  list.push_back(std::to_string(m_presentWeatherObservation));
+  list.push_back(std::to_string(m_presentWeatherCodes));
+  list.push_back(m_precipitableWater);
+  list.push_back(m_aerosolOpticalDepth);
+  list.push_back(m_snowDepth);
+  list.push_back(m_daysSinceLastSnowfall);
+  list.push_back(m_albedo);
+  list.push_back(m_liquidPrecipitationDepth);
+  list.push_back(m_liquidPrecipitationQuantity);
   return list;
 }
 

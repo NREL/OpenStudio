@@ -73,8 +73,8 @@ OPENSTUDIO_ENUM(EpwDataField,
 );
 
 /** EpwDataPoint is one line from the EPW file. All floating point numbers are stored as strings,
-* but are checked as numbers.
-*/
+ * but are checked as numbers.
+ */
 class UTILITIES_API EpwDataPoint
 {
 public:
@@ -253,8 +253,8 @@ private:
 };
 
 /** EpwFile parses a weather file in EPW format.  Later it may provide
-*   methods for writing and converting other weather files to EPW format.
-*/
+ *   methods for writing and converting other weather files to EPW format.
+ */
 class UTILITIES_API EpwFile{
 public:
 
