@@ -1561,11 +1561,18 @@ namespace radiance {
           std::string constructionName = interiorPartitionSurface.getString(1).get();
           m_radSpaces[space_name] += "#--constructionName = " + constructionName + "\n";
 
-          // get reflectance
-          double interiorVisibleAbsorptance = interiorPartitionSurface.interiorVisibleAbsorptance().get();
-          double exteriorVisibleAbsorptance = interiorPartitionSurface.exteriorVisibleAbsorptance().get();
-          double interiorVisibleReflectance = 1.0 - interiorVisibleAbsorptance;
-          double exteriorVisibleReflectance = 1.0 - exteriorVisibleAbsorptance;
+         // get reflectance
+          double interiorVisibleReflectance = 0.5; // set some default
+          if (interiorPartitionSurface.interiorVisibleAbsorptance()){
+            double interiorVisibleAbsorptance = interiorPartitionSurface.interiorVisibleAbsorptance().get();
+            interiorVisibleReflectance = 1.0 - interiorVisibleAbsorptance;
+          }
+          
+          double exteriorVisibleReflectance = 0.5; // set some default
+          if (interiorPartitionSurface.exteriorVisibleAbsorptance()){
+            double exteriorVisibleAbsorptance = interiorPartitionSurface.exteriorVisibleAbsorptance().get();
+            exteriorVisibleReflectance = 1.0 - exteriorVisibleAbsorptance;
+          }
 
           // write material
           m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3) + "\n0\n0\n5\n" + \
