@@ -1544,7 +1544,7 @@ namespace radiance {
         }
       } // shading surfaces
 
-      //get the interior partitions
+      //get the interior partition surfaces
 
       std::vector<openstudio::model::InteriorPartitionSurfaceGroup> interiorPartitionSurfaceGroups = space.interiorPartitionSurfaceGroups();
       for (const auto & interiorPartitionSurfaceGroup : interiorPartitionSurfaceGroups)
@@ -1552,9 +1552,21 @@ namespace radiance {
         std::vector<openstudio::model::InteriorPartitionSurface> interiorPartitionSurfaces = interiorPartitionSurfaceGroup.interiorPartitionSurfaces();
         for (const auto & interiorPartitionSurface : interiorPartitionSurfaces)
         {
+
+					// get nice name
+
           std::string interiorPartitionSurface_name = cleanName(interiorPartitionSurface.name().get());
 
+					// check for construction
+					
+	        boost::optional<model::ConstructionBase> construction = interiorPartitionSurface.construction();
+          if (!construction){
+            LOG(Warn, "InteriorPartitionSurface " << interiorPartitionSurface.name().get() << " is not associated with a Construction, it will not be translated.");
+            continue;
+          }
+
           // add surface to zone geometry
+          
           m_radSpaces[space_name] += "#-Surface = " + interiorPartitionSurface_name + "\n";
 
           // set construction of interiorPartitionSurface
