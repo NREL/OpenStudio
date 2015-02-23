@@ -743,6 +743,7 @@ void OSDropZone2::focusOutEvent(QFocusEvent * e)
     setStyleSheet(style);
 
     emit inFocus(false, false);
+    emit itemClicked(nullptr);
   }
 
   QWidget::focusOutEvent(e);

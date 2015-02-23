@@ -261,9 +261,10 @@ void OSLineEdit2::focusOutEvent(QFocusEvent * e)
     QString style("QLineEdit { background: white; }");
     setStyleSheet(style);
 
-    emit inFocus(false, false);  
+    emit inFocus(false, false);
+    emit itemClicked(nullptr);
   }
-  
+
   QLineEdit::focusOutEvent(e);
 }
 

@@ -1268,7 +1268,6 @@ std::vector<QWidget *> OSGridController::row(int rowIndex)
 
 void OSGridController::selectRow(int rowIndex, bool select)
 {
-//  int columnIndex = 0;
   std::vector<QWidget *> row = this->row(rowIndex);
   for (auto widget : row){
     auto button = qobject_cast<QPushButton *>(widget);
@@ -1278,14 +1277,7 @@ void OSGridController::selectRow(int rowIndex, bool select)
     button->blockSignals(true);
     button->setChecked(select);
     button->blockSignals(false);
-//    button->setStyleSheet(cellStyle(rowIndex, columnIndex++, select));
   }
-
-  //OSItem * item = nullptr; // TODO reevaluate
-  //OSAppBase::instance()->currentDocument()->mainRightColumnController()->inspectModelObjectByItem(item, true);
-  //qApp->processEvents();
-  //OSAppBase::instance()->currentDocument()->mainRightColumnController()->mainRightColumnView()->setCurrentId(MainRightColumnController::LIBRARY);
-  //qApp->processEvents();
 }
 
 void OSGridController::horizontalHeaderChecked(int index)

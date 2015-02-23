@@ -173,9 +173,9 @@ void MainRightColumnController::inspectModelObjectByItem(OSItem * item, bool rea
 
     m_inspectorController->inspectorView()->currentView()->m_libraryTabWidget->showRemoveButton();
   }
-  //else {
-  //  setEditView(nullptr); // TODO reevaluate
-  //}
+  else {
+    setEditView(nullptr);
+  }
 }
 
 void MainRightColumnController::onRemoveButtonClicked(bool checked)
