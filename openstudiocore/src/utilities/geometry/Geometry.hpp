@@ -81,7 +81,7 @@ namespace openstudio{
   UTILITIES_API Point3d getCombinedPoint(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol = 0.001);
 
   /// compute triangulation of vertices, holes are removed in the triangulation
-  /// requires that vertices and holes are in counter clockwise order on the z = 0 plane (e.g. in face coordinates) 
+  /// requires that vertices and holes are in clockwise order on the z = 0 plane (i.e. in face coordinates but reversed) 
   UTILITIES_API std::vector<std::vector<Point3d> > computeTriangulation(const Point3dVector& vertices, const std::vector<std::vector<Point3d> >& holes, double tol = 0.001);
 
   /// move all vertices towards point by distance, pass negative distance to move away from point

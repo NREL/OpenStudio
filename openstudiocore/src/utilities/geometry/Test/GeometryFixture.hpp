@@ -36,6 +36,8 @@ bool pointsEqual(const std::vector<openstudio::Point3d>& a, const std::vector<op
 
 bool vectorEqual(const openstudio::Vector3d& a, const openstudio::Vector3d& b);
 
+double totalArea(const std::vector<std::vector<openstudio::Point3d> >& polygons);
+
 class GeometryFixture : public ::testing::Test {
 protected:
 

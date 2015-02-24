@@ -1004,6 +1004,10 @@ namespace openstudio{
     std::vector<Point3d> allPoints;
 
     if (geometry1.size() == 1){
+      if (geometry1[0].z() > tol){
+        return false;
+      }
+
       boost::tuple<double, double> p = boostPointFromPoint3d(geometry1[0], allPoints, tol);
       BoostPoint boostPoint(p.get<0>(), p.get<1>());
 

@@ -28,6 +28,10 @@ using namespace std;
 using namespace boost;
 using namespace openstudio;
 
+// In Intersection_GTest.cpp
+std::vector<Point3d> makeRectangleUp(double xmin, double ymin, double width, double height);
+std::vector<Point3d> makeRectangleDown(double xmin, double ymin, double width, double height);
+
 TEST_F(GeometryFixture, Newall_Vector)
 {
   Point3dVector points;
@@ -582,3 +586,53 @@ TEST_F(GeometryFixture, RemoveSpikes)
   EXPECT_TRUE(circularEqual(resultPoints, testPoints));
 }
 */
+
+TEST_F(GeometryFixture, Triangulate)
+{
+  double tol = 0.01;
+
+  std::vector<std::vector<Point3d> > test;
+  std::vector<std::vector<Point3d> > holes;
+  Point3dVector points1;
+  Point3dVector points2;
+
+  // sense is down
+  points1 = makeRectangleDown(0, 0, 4, 4);
+  test = computeTriangulation(points1, holes, tol);
+  EXPECT_FALSE(test.empty());
+  EXPECT_DOUBLE_EQ(16.0, totalArea(test));
+
+  // sense is up
+  points1 = makeRectangleUp(0, 0, 4, 4);
+  test = computeTriangulation(points1, holes, tol);
+  EXPECT_TRUE(test.empty());
+
+  // sense is down with a hole in middle
+  points1 = makeRectangleDown(0, 0, 4, 4);
+  points2 = makeRectangleDown(1, 1, 1, 1);
+
+  holes.clear();
+  holes.push_back(points2);
+  test = computeTriangulation(points1, holes, tol);
+  EXPECT_FALSE(test.empty());
+  EXPECT_DOUBLE_EQ(15.0, totalArea(test));
+
+  // sense is down with a hole on edge
+  points1 = makeRectangleDown(0, 0, 4, 4);
+  points2 = makeRectangleDown(1, 0, 1, 1);
+
+  holes.clear();
+  holes.push_back(points2);
+  test = computeTriangulation(points1, holes, tol);
+  EXPECT_FALSE(test.empty());
+  EXPECT_DOUBLE_EQ(15.0, totalArea(test));
+
+  // sense is down with hole same size
+  points1 = makeRectangleDown(0, 0, 4, 4);
+  points2 = makeRectangleDown(0, 0, 4, 4);
+
+  holes.clear();
+  holes.push_back(points2);
+  test = computeTriangulation(points1, holes, tol);
+  EXPECT_TRUE(test.empty());
+}
