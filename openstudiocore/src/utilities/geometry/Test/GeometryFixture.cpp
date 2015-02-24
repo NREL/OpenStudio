@@ -55,6 +55,18 @@ bool vectorEqual(const openstudio::Vector3d& a, const openstudio::Vector3d& b)
   return diff.length() <= 0.0001;
 }
 
+double totalArea(const std::vector<std::vector<Point3d> >& polygons)
+{
+  double result = 0.0;
+  for (auto polygon : polygons){
+    boost::optional<double> a = getArea(polygon);
+    if (a){
+      result += a.get();
+    }
+  }
+  return result;
+}
+
 // initialize for each test
 void GeometryFixture::SetUp() {
 }
