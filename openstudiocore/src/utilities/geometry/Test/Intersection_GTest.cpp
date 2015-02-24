@@ -147,6 +147,7 @@ TEST_F(GeometryFixture, BoostGeometry_Polygon1)
 TEST_F(GeometryFixture, PointInPolygon)
 {
   double tol = 0.01;
+  double tol2 = tol/2.0;
 
   Point3dVector points = makeRectangleDown(0, 0, 1, 1);
 
@@ -165,6 +166,16 @@ TEST_F(GeometryFixture, PointInPolygon)
   EXPECT_TRUE(pointInPolygon(Point3d(0.5,1,0), points, tol));
   EXPECT_TRUE(pointInPolygon(Point3d(0,0.5,0), points, tol));
 
+  EXPECT_TRUE(within(Point3d(0.5, tol2, 0), points, tol));
+  EXPECT_TRUE(within(Point3d(1 - tol2, 0.5, 0), points, tol));
+  EXPECT_TRUE(within(Point3d(0.5, 1 - tol2, 0), points, tol));
+  EXPECT_TRUE(within(Point3d(tol2, 0.5, 0), points, tol));
+
+  EXPECT_TRUE(within(Point3d(0.5, -tol2, 0), points, tol));
+  EXPECT_TRUE(within(Point3d(1 + tol2, 0.5, 0), points, tol));
+  EXPECT_TRUE(within(Point3d(0.5, 1 + tol2, 0), points, tol));
+  EXPECT_TRUE(within(Point3d(-tol2, 0.5, 0), points, tol));
+
   // outside
   EXPECT_FALSE(pointInPolygon(Point3d(2,0,0), points, tol));
   EXPECT_FALSE(pointInPolygon(Point3d(1,2,0), points, tol));
@@ -174,6 +185,49 @@ TEST_F(GeometryFixture, PointInPolygon)
   // not on z = 0
   EXPECT_FALSE(pointInPolygon(Point3d(0.5,0.5,0.5), points, tol));
 }
+
+TEST_F(GeometryFixture, Within)
+{
+  double tol = 0.01;
+  double tol2 = tol/2.0;
+
+  Point3dVector points = makeRectangleDown(0, 0, 1, 1);
+
+  // center
+  EXPECT_TRUE(within(Point3d(0.5, 0.5, 0), points, tol));
+
+  // corners
+  EXPECT_FALSE(within(Point3d(0, 0, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(1, 0, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(1, 1, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(0, 1, 0), points, tol));
+
+  // edges
+  EXPECT_FALSE(within(Point3d(0.5, 0, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(1, 0.5, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(0.5, 1, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(0, 0.5, 0), points, tol));
+
+  EXPECT_TRUE(within(Point3d(0.5, tol2, 0), points, tol));
+  EXPECT_TRUE(within(Point3d(1 - tol2, 0.5, 0), points, tol));
+  EXPECT_TRUE(within(Point3d(0.5, 1 - tol2, 0), points, tol));
+  EXPECT_TRUE(within(Point3d(tol2, 0.5, 0), points, tol));
+
+  EXPECT_FALSE(within(Point3d(0.5, -tol2, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(1 + tol2, 0.5, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(0.5, 1 + tol2, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(-tol2, 0.5, 0), points, tol));
+
+  // outside
+  EXPECT_FALSE(within(Point3d(2, 0, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(1, 2, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(-1, 0, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(-1, -1, 0), points, tol));
+
+  // not on z = 0
+  EXPECT_FALSE(within(Point3d(0.5, 0.5, 0.5), points, tol));
+}
+
 
 TEST_F(GeometryFixture, Intersect_False)
 {

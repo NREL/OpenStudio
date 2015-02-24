@@ -32,6 +32,7 @@
 #include <boost/geometry/geometries/adapted/boost_tuple.hpp>
 #include <boost/geometry/strategies/cartesian/point_in_poly_franklin.hpp> 
 #include <boost/geometry/strategies/cartesian/point_in_poly_crossings_multiply.hpp> 
+#include <boost/geometry/algorithms/within.hpp> 
 
 typedef boost::geometry::model::d2::point_xy<double> BoostPoint;
 typedef boost::geometry::model::polygon<BoostPoint> BoostPolygon;
@@ -924,6 +925,126 @@ namespace openstudio{
     }
 
     return IntersectionResult(resultPolygon1, resultPolygon2, newPolygons1, newPolygons2);
+  }
+
+  std::vector<std::vector<Point3d> > subtract(const std::vector<Point3d>& polygon, const std::vector<std::vector<Point3d> >& holes, double tol)
+  {
+    std::vector<std::vector<Point3d> > result;
+
+    // convert vertices to boost rings
+    std::vector<Point3d> allPoints;
+
+    boost::optional<BoostPolygon> initialBoostPolygon = nonIntersectingBoostPolygonFromVertices(polygon, allPoints, tol);
+    if (!initialBoostPolygon){
+      return result;
+    }
+
+    std::vector<BoostPolygon> boostPolygons;
+    boostPolygons.push_back(*initialBoostPolygon);
+
+    for (const std::vector<Point3d>& hole : holes){
+      boost::optional<BoostPolygon> boostHole = nonIntersectingBoostPolygonFromVertices(polygon, allPoints, tol);
+      if (!boostHole){
+        return result;
+      }
+
+      std::vector<BoostPolygon> newBoostPolygons;
+      for (const BoostPolygon& boostPolygon : boostPolygons){
+        std::vector<BoostPolygon> diffResult;
+        boost::geometry::difference(boostPolygon, *boostHole, diffResult);
+        newBoostPolygons.insert(newBoostPolygons.end(), diffResult.begin(), diffResult.end());
+      }
+      boostPolygons.swap(newBoostPolygons);
+    }
+
+    for (const BoostPolygon& boostPolygon : boostPolygons){
+      result.push_back(verticesFromBoostPolygon(boostPolygon, allPoints, tol));
+    }
+
+    return result;
+  }
+
+  bool selfIntersects(const std::vector<Point3d>& polygon, double tol)
+  {
+    // convert vertices to boost rings
+    std::vector<Point3d> allPoints;
+
+    boost::optional<BoostPolygon> bp = nonIntersectingBoostPolygonFromVertices(polygon, allPoints, tol);
+    if (!bp){
+      return false;
+    }
+    return true;
+  }
+
+  bool intersects(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2, double tol)
+  {
+    // convert vertices to boost rings
+    std::vector<Point3d> allPoints;
+
+    boost::optional<BoostPolygon> bp1 = boostPolygonFromVertices(polygon1, allPoints, tol);
+    boost::optional<BoostPolygon> bp2 = boostPolygonFromVertices(polygon2, allPoints, tol);
+
+    if (bp1 && bp2){
+      return boost::geometry::intersects(*bp1, *bp2);
+    }
+
+    return false;
+  }
+
+  bool within(const Point3d& point1, const std::vector<Point3d>& polygon2, double tol)
+  {
+    std::vector<Point3d> geometry1;
+    geometry1.push_back(point1);
+    return within(geometry1, polygon2, tol);
+  }
+
+  bool within(const std::vector<Point3d>& geometry1, const std::vector<Point3d>& polygon2, double tol)
+  {
+    // convert vertices to boost rings
+    std::vector<Point3d> allPoints;
+
+    if (geometry1.size() == 1){
+      boost::tuple<double, double> p = boostPointFromPoint3d(geometry1[0], allPoints, tol);
+      BoostPoint boostPoint(p.get<0>(), p.get<1>());
+
+      boost::optional<BoostPolygon> bp2 = boostPolygonFromVertices(polygon2, allPoints, tol);
+
+      if (bp2){
+        return boost::geometry::within(boostPoint, *bp2);
+      }
+
+      return false;
+    }
+
+    /*
+    // DLM: this is the better implementation, requires boost 1.57
+    boost::optional<BoostPolygon> bp1 = boostPolygonFromVertices(geometry1, allPoints, tol);
+    boost::optional<BoostPolygon> bp2 = boostPolygonFromVertices(polygon2, allPoints, tol);
+    if (bp1 && bp2){
+      return boost::geometry::within(*bp1, *bp2);
+    }
+    */
+
+    // DLM: temp code
+    if (geometry1.size() < 3){
+      return false;
+    }
+    boost::optional<BoostPolygon> bp2 = boostPolygonFromVertices(polygon2, allPoints, tol);
+    if (bp2){
+      for (const Point3d& point : geometry1)
+      {
+        boost::tuple<double, double> p = boostPointFromPoint3d(point, allPoints, tol);
+        BoostPoint boostPoint(p.get<0>(), p.get<1>());
+
+        if (!boost::geometry::within(boostPoint, *bp2)){
+          return false;
+        }
+      }
+    } else{
+      return false;
+    }
+
+    return true;
   }
 
 } // openstudio

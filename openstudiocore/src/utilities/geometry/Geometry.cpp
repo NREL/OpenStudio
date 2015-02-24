@@ -18,6 +18,7 @@
 **********************************************************************/
 
 #include "Geometry.hpp"
+#include "Intersection.hpp"
 #include "Transformation.hpp"
 
 #include "../core/Assert.hpp"
@@ -418,6 +419,28 @@ namespace openstudio{
 
     std::vector<Point3d> allPoints;
 
+    // PolyPartition does not support holes which intersect the polygon or share an edge
+    // if any hole is not fully contained we will use boost to remove all the holes
+    bool polyPartitionHoles = true;
+    for (const std::vector<Point3d>& hole : holes){
+      if (!within(hole, vertices, tol)){
+        // PolyPartition can't handle this
+        polyPartitionHoles = false;
+        break;
+      }
+    }
+
+    if (!polyPartitionHoles){
+      // use boost to do all the intersections
+      std::vector<std::vector<Point3d> > allFaces = subtract(vertices, holes, tol);
+      std::vector<std::vector<Point3d> > noHoles;
+      for (const std::vector<Point3d>& face : allFaces){
+        std::vector<std::vector<Point3d> > temp = computeTriangulation(face, noHoles);
+        result.insert(result.end(), temp.begin(), temp.end());
+      }
+      return result;
+    }
+
     // convert input to vector of TPPLPoly
     std::list<TPPLPoly> polys;
 
@@ -473,6 +496,9 @@ namespace openstudio{
     TPPLPartition pp;
     std::list<TPPLPoly> resultPolys;
     int test = pp.Triangulate_EC(&polys,&resultPolys);
+    if (test == 0){
+      test = pp.Triangulate_MONO(&polys, &resultPolys);
+    }
     if (test == 0){
       LOG_FREE(Error, "utilities.geometry.computeTriangulation", "Failed to partition polygon");
       return result;
