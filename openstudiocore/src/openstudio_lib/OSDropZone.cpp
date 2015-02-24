@@ -706,6 +706,8 @@ void OSDropZone2::mouseReleaseEvent(QMouseEvent * event)
         m_item = OSItem::makeItem(modelObjectToItemId(*modelObject, false));
         m_item->setParent(this);
         connect(m_item, &OSItem::itemRemoveClicked, this, &OSDropZone2::onItemRemoveClicked);
+
+        connect(modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSDropZone2::refresh);
       }
     }
 
