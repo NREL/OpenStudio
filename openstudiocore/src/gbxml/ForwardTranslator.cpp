@@ -176,7 +176,7 @@ namespace gbxml {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Thermal Zones"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(thermalZones.size()); 
+      m_progressBar->setMaximum((int)thermalZones.size()); 
       m_progressBar->setValue(0);
     }
 
@@ -231,7 +231,7 @@ namespace gbxml {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Surfaces"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(surfaces.size()); 
+      m_progressBar->setMaximum((int)surfaces.size());
       m_progressBar->setValue(0);
     }
 
@@ -286,7 +286,7 @@ namespace gbxml {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Spaces"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(spaces.size()); 
+      m_progressBar->setMaximum((int)spaces.size());
       m_progressBar->setValue(0);
     }
 
@@ -468,9 +468,9 @@ namespace gbxml {
       // pick lower left corner vertex in face coordinates
       double minY = std::numeric_limits<double>::max();
       double minX = std::numeric_limits<double>::max();
-      unsigned llcIndex = 0;
-      unsigned N = vertices.size();
-      for(unsigned i = 0; i < N; ++i){
+      size_t llcIndex = 0;
+      size_t N = vertices.size();
+      for (size_t i = 0; i < N; ++i){
         OS_ASSERT(std::abs(faceVertices[i].z()) < 0.001);
         if ((minY > faceVertices[i].y()) || ((minY > faceVertices[i].y() - 0.00001) && (minX > faceVertices[i].x()))){
           llcIndex = i;
@@ -627,9 +627,9 @@ namespace gbxml {
       // pick lower left corner vertex in face coordinates
       double minY = std::numeric_limits<double>::max();
       double minX = std::numeric_limits<double>::max();
-      unsigned llcIndex = 0;
-      unsigned N = vertices.size();
-      for(unsigned i = 0; i < N; ++i){
+      size_t llcIndex = 0;
+      size_t N = vertices.size();
+      for (size_t i = 0; i < N; ++i){
         OS_ASSERT(std::abs(faceVertices[i].z()) < 0.001);
         if ((minY > faceVertices[i].y()) || ((minY > faceVertices[i].y() - 0.00001) && (minX > faceVertices[i].x()))){
           llcIndex = i;

@@ -545,6 +545,9 @@ void ThermalZonesGridController::addColumns(const QString &/*category*/, std::ve
         [](model::ThermalZone * z) {
           if (boost::optional<model::ZoneControlHumidistat> thermostat = z->zoneControlHumidistat()) {
             thermostat->resetHumidifyingRelativeHumiditySetpointSchedule();
+            if( ! thermostat->dehumidifyingRelativeHumiditySetpointSchedule() ) {
+              thermostat->remove();
+            }
           }
         }
       );
@@ -583,6 +586,9 @@ void ThermalZonesGridController::addColumns(const QString &/*category*/, std::ve
         [](model::ThermalZone * z) {
           if (boost::optional<model::ZoneControlHumidistat> thermostat = z->zoneControlHumidistat()) {
             thermostat->resetDehumidifyingRelativeHumiditySetpointSchedule();
+            if( ! thermostat->humidifyingRelativeHumiditySetpointSchedule() ) {
+              thermostat->remove();
+            }
           }
         }
       );
@@ -621,6 +627,7 @@ void ThermalZonesGridController::addColumns(const QString &/*category*/, std::ve
 
       addNameLineEditColumn(Heading(QString(ZONEEQUIPMENT)),
         true,
+        false,
         CastNullAdapter<model::ModelObject>(&model::ModelObject::name),
         CastNullAdapter<model::ModelObject>(&model::ModelObject::setName),
         boost::optional<std::function<void(model::ModelObject *)>>(
@@ -642,6 +649,7 @@ void ThermalZonesGridController::addColumns(const QString &/*category*/, std::ve
     }else if(field == NAME){
       addNameLineEditColumn(Heading(QString(NAME), false, false),
                             false,
+                            false,
                             CastNullAdapter<model::ThermalZone>(&model::ThermalZone::name),
                             CastNullAdapter<model::ThermalZone>(&model::ThermalZone::setName),
                             boost::optional<std::function<void (model::ThermalZone *)>>());
@@ -650,6 +658,7 @@ void ThermalZonesGridController::addColumns(const QString &/*category*/, std::ve
       // Notes: this only requires a static_cast because `name` comes from IdfObject
       // we are passing in an empty std::function for the separate parameter because there's no way to set it
       addNameLineEditColumn(Heading(QString(AIRLOOPNAME),true,false),
+                            false,
                             false,
                             ProxyAdapter(static_cast<boost::optional<std::string> (model::AirLoopHVAC::*)(bool) const>(&model::AirLoopHVAC::name), 
                               &model::ThermalZone::airLoopHVAC, boost::optional<std::string>("None")),

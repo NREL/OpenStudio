@@ -45,6 +45,8 @@ class OSLineEdit2 : public QLineEdit {
   virtual ~OSLineEdit2() {}
 
   void enableClickFocus() { this->m_hasClickFocus = true; }
+  void setDeleteObject(bool deleteObject) { m_deleteObject = deleteObject;  }
+  bool deleteObject() { return m_deleteObject; }
 
   void bind(model::ModelObject& modelObject,
             StringGetter get,
@@ -116,6 +118,8 @@ signals:
   QTimer m_timer;
 
   bool m_hasClickFocus = false;
+
+  bool m_deleteObject = false;
 };
 
 class OSLineEdit : public QLineEdit

@@ -184,9 +184,8 @@ module OpenStudio
 
         # Look up the Space drawing interface (might fail if the reference is bad)
         if (not parent_from_model_object)
-          @model_interface.add_error("Warning:  " + @model_object.name.to_s + "\n")
-          @model_interface.add_error("The space referenced by this base surface does not exist.\n")
-          @model_interface.add_error("A new space object has been automatically created for this surface.\n\n")  # Done in create_entity
+          @model_interface.add_error("Error:  " + @model_object.name.to_s + "\n")
+          @model_interface.add_error("The space referenced by this surface does not exist, it cannot be drawn.\n\n")
         end
 
         # Check for coincident surfaces (check against other sub surfaces as well as base surfaces)

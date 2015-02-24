@@ -391,6 +391,15 @@ CoilHeatingElectric::CoilHeatingElectric(const Model& model, Schedule & schedule
   setAvailabilitySchedule(schedule);
 }
 
+CoilHeatingElectric::CoilHeatingElectric(const Model& model)
+  : StraightComponent(CoilHeatingElectric::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::CoilHeatingElectric_Impl>());
+
+  auto schedule = model.alwaysOnDiscreteSchedule();
+  setAvailabilitySchedule(schedule);
+}
+
 IddObjectType CoilHeatingElectric::iddObjectType() {
   IddObjectType result(IddObjectType::OS_Coil_Heating_Electric);
   return result;

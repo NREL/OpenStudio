@@ -446,6 +446,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(WeatherFileConditionType);
     REGISTER_CONSTRUCTOR(WeatherFileDays);
     REGISTER_CONSTRUCTOR(WindowDataFile);
+    REGISTER_CONSTRUCTOR(WindowPropertyFrameAndDivider);
     REGISTER_CONSTRUCTOR(YearDescription);
     REGISTER_CONSTRUCTOR(ZoneAirContaminantBalance);
     REGISTER_CONSTRUCTOR(ZoneAirHeatBalanceAlgorithm);
@@ -759,6 +760,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(WeatherFileConditionType);
     REGISTER_COPYCONSTRUCTORS(WeatherFileDays);
     REGISTER_COPYCONSTRUCTORS(WindowDataFile);
+    REGISTER_COPYCONSTRUCTORS(WindowPropertyFrameAndDivider);
     REGISTER_COPYCONSTRUCTORS(YearDescription);
     REGISTER_COPYCONSTRUCTORS(ZoneAirContaminantBalance);
     REGISTER_COPYCONSTRUCTORS(ZoneAirHeatBalanceAlgorithm);
@@ -927,6 +929,8 @@ if (_className::iddObjectType() == typeToCreate) { \
 
     ScheduleTypeLimits limits(model());
 
+    limits.setName("OnOff");
+
     limits.setNumericType("Discrete");
 
     limits.setUnitType("Availability");
@@ -1028,7 +1032,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     IdfObjectVector removedObjects;
     for (ResourceObject& resource : resources) {
       // test for initialized first in case earlier .remove() got this one already
-      if ((resource.initialized()) && (resource.nonResourceObjectUseCount() == 0)) {
+      if ((resource.initialized()) && (resource.nonResourceObjectUseCount(true) == 0)) {
         IdfObjectVector thisCallRemoved = resource.remove();
         removedObjects.insert(removedObjects.end(),thisCallRemoved.begin(),thisCallRemoved.end());
       }
@@ -1042,7 +1046,7 @@ if (_className::iddObjectType() == typeToCreate) { \
       boost::optional<ResourceObject> resource = workspaceObject.optionalCast<ResourceObject>();
       if (resource){
         // test for initialized first in case earlier .remove() got this one already
-        if ((resource->initialized()) && (resource->directUseCount() == 0)) {
+        if ((resource->initialized()) && (resource->directUseCount(true) == 0)) {
           IdfObjectVector thisCallRemoved = resource->remove();
           removedObjects.insert(removedObjects.end(),thisCallRemoved.begin(),thisCallRemoved.end());
         }

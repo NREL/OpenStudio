@@ -1890,11 +1890,20 @@ namespace detail {
     PortList exhaustPortList(tz);
     tz.setPointer(OS_ThermalZoneFields::ZoneAirExhaustPortList,exhaustPortList.handle());
 
-    SizingZone sizingZone(model,tz);
-
-    tz.setUseIdealAirLoads(false);
+    auto sizingZoneClone = sizingZone().clone(model).cast<SizingZone>();
+    sizingZoneClone.getImpl<detail::SizingZone_Impl>()->setThermalZone(tz);
 
     ZoneHVACEquipmentList equipmentList(tz);
+
+    if( auto t_thermostat = thermostat() ) {
+      auto thermostatClone = t_thermostat->clone(model).cast<Thermostat>();
+      tz.setThermostat(thermostatClone);
+    }
+
+    if( auto t_humidistat = zoneControlHumidistat() ) {
+      auto humidistatClone = t_humidistat->clone(model).cast<ZoneControlHumidistat>();
+      tz.setZoneControlHumidistat(humidistatClone);
+    }
 
     return tz;
   }

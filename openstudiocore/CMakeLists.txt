@@ -44,6 +44,15 @@ if(APPLE)
   set(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2015 National Renewable Energy Laboratory")
 endif()
 
+# compiler id for about boxes
+if(MSVC)
+  set(ABOUT_COMPILER "${CMAKE_GENERATOR}")
+elseif(APPLE)
+  set(ABOUT_COMPILER "${CMAKE_CXX_COMPILER_ID} ${CMAKE_OSX_ARCHITECTURES} - OSX ${CMAKE_OSX_DEPLOYMENT_TARGET}")
+else()
+  set(ABOUT_COMPILER "${CMAKE_CXX_COMPILER_ID}")
+endif()
+
 ###############################################################################
 
 ###############################################################################
@@ -298,13 +307,18 @@ if(MSVC)
   # be linked against the same runtime
   add_definitions(/wd4251)
   
-  if(NOT CMAKE_CL_64)
-    # treat warnings as errors
-    add_definitions(/WX)
-  else()
-    add_definitions(/bigobj)
-  endif()
+  if(CMAKE_CL_64)
 
+    add_definitions(/bigobj)
+    
+    # ignore conversion from size_t to int for now
+    add_definitions(/wd4267)  
+
+  endif()
+  
+  # treat warnings as errors
+  add_definitions(/WX)
+    
   # ignore warnings about the stl being insecure
   add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS)
 
@@ -343,17 +357,6 @@ endif()
 set(RUBY_MODULE_DIR "Ruby")
 
 set(RUBY_MODULE_ARCH_DIR "Ruby/openstudio")
-
-if(WIN32)
-  if(MSVC AND CMAKE_CL_64)
-    message(WARNING "Treat Warnings As Errors is disabled for 64-bit Windows builds")
-  endif()
-
-  if(NOT "${RUBY_VERSION_MAJOR}" EQUAL "2")
-    message(SEND_ERROR "64bit Windows support requires Ruby >= 2.0.0")
-  endif()
-endif()
-
 
 #We want to use the site_ruby folder if this is intended for /usr/local install
 #If it is intended for /usr install, we want to use the main ruby module folder
@@ -971,7 +974,7 @@ install(FILES "${CMAKE_SOURCE_DIR}/resources/resultsviewer/SmallOffice/SmallOffi
 
 
 # Install additional Documents, such as release notes
-install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_5_0_20140926.pdf" DESTINATION .)
+install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_6_0_20150122.pdf" DESTINATION .)
 
 ###############################################################################
 

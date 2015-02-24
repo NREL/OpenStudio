@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 2.8.11)
 project(OpenStudio)
 
 set(CMAKE_VERSION_MAJOR 1)
-set(CMAKE_VERSION_MINOR 5)
-set(CMAKE_VERSION_PATCH 5)
+set(CMAKE_VERSION_MINOR 6)
+set(CMAKE_VERSION_PATCH 2)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
@@ -420,10 +420,10 @@ mark_as_advanced(
   SWIG_VERSION
 )
 
-# Currently MacOS and/or V8 require special builds
-# as of 2014-06-04. This should be re-checked after swig > 3.0.2 is released.
+# Currently MacOS (with swig < 3.0.3) and V8 require special builds
+# as of 2015-02-05. This should be re-checked after swig > 3.0.5 is released.
 # 64-bit MSVC also requires BUILD_SWIG
-if(SWIG_FOUND AND NOT BUILD_V8_BINDINGS AND NOT APPLE AND NOT (WIN32 AND MSVC AND CMAKE_CL_64))
+if(SWIG_FOUND AND NOT BUILD_V8_BINDINGS AND NOT (APPLE AND ${SWIG_VERSION} VERSION_LESS "3.0.3") AND NOT (WIN32 AND MSVC AND CMAKE_CL_64))
   option(BUILD_SWIG "Build SWIG" OFF)
 else()
   option(BUILD_SWIG "Build SWIG" ON)
@@ -441,11 +441,6 @@ if(NOT WIN32)
     )
     find_package(Ruby 2.0)
   endif()
-endif()
-
-
-if(WIN32 AND MSVC AND CMAKE_CL_64)
-  message(WARNING "Treat Warnings As Errors is disabled for 64-bit Windows builds")
 endif()
 
 if(APPLE)
@@ -597,7 +592,7 @@ if(BUILD_BOOST)
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
       URL_MD5 93780777cfbf999a600f62883bd54b17
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./bootstrap.sh
-      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51.patch
+      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51.patch && ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/fchmodat.patch 
       BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 toolset=clang cxxflags=${apple-flags} linkflags=${apple-flags} variant=debug,release define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${BOOST_CPUCOUNT} install
       INSTALL_COMMAND ""
     )

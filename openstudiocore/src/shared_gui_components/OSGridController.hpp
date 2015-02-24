@@ -427,13 +427,14 @@ public:
 
   template<typename DataSourceType>
   void addNameLineEditColumn(const Heading &heading,
-    bool isInspectable,
-    const std::function<boost::optional<std::string>(DataSourceType *, bool)>  &getter,
-    const std::function<boost::optional<std::string>(DataSourceType *, const std::string &)> &setter,
-    const boost::optional<std::function<void(DataSourceType *)> > &reset = boost::none,
-    const boost::optional<DataSource> &t_source = boost::none)
+                             bool isInspectable,
+                             bool deleteObject,
+                             const std::function<boost::optional<std::string> (DataSourceType *, bool)>  &getter,
+                             const std::function<boost::optional<std::string> (DataSourceType *, const std::string &)> &setter,
+                             const boost::optional<std::function<void (DataSourceType *)>> &resetter = boost::none,
+                             const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<NameLineEditConcept>(new NameLineEditConceptImpl<DataSourceType>(heading, isInspectable, getter, setter, reset)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<NameLineEditConcept>(new NameLineEditConceptImpl<DataSourceType>(heading, isInspectable, deleteObject, getter, setter, resetter)), t_source));
   }
 
   template<typename DataSourceType>

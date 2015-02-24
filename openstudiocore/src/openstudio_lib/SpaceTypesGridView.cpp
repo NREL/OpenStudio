@@ -505,6 +505,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
 
       addNameLineEditColumn(Heading(QString(NAME), false, false),
         false,
+        false,
         getter,
         setter);
 
@@ -1177,6 +1178,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
 
         addNameLineEditColumn(Heading(QString(DEFINITION), true, false),
           true,
+          false,
           CastNullAdapter<model::SpaceLoadDefinition>(&model::SpaceLoadDefinition::name),
           CastNullAdapter<model::SpaceLoadDefinition>(&model::SpaceLoadDefinition::setName),
           boost::optional<std::function<void(model::SpaceLoadDefinition *)>>(),
@@ -1266,6 +1268,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
 
       addNameLineEditColumn(Heading(QString(SPACEINFILTRATIONDESIGNFLOWRATES)),
         true,
+        true,
         CastNullAdapter<model::SpaceInfiltrationDesignFlowRate>(&model::SpaceInfiltrationDesignFlowRate::name),
         CastNullAdapter<model::SpaceInfiltrationDesignFlowRate>(&model::SpaceInfiltrationDesignFlowRate::setName),
         boost::optional<std::function<void (model::SpaceInfiltrationDesignFlowRate *)>>(
@@ -1312,6 +1315,7 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
       );
 
       addNameLineEditColumn(Heading(QString(SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS)),
+        true,
         true,
         CastNullAdapter<model::SpaceInfiltrationEffectiveLeakageArea>(&model::SpaceInfiltrationEffectiveLeakageArea::name),
         CastNullAdapter<model::SpaceInfiltrationEffectiveLeakageArea>(&model::SpaceInfiltrationEffectiveLeakageArea::setName),

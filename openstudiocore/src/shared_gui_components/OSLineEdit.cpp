@@ -235,8 +235,11 @@ void OSLineEdit2::onItemRemoveClicked()
     if (m_modelObject) {
       parent = m_modelObject->parent();
     }
-    emit objectRemoved(parent);
     (*m_reset)();
+    if (m_deleteObject) {
+      m_modelObject->remove();
+    }
+    emit objectRemoved(parent);
   }
 }
 

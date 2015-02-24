@@ -625,22 +625,27 @@ namespace openstudio
 #if defined(WIN32) 
 #if (defined(_M_X64) || defined(__amd64__))
             addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0"));
-            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/x64-msvcr100"));
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/x64-msvcr100")); // DLM: remove?
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/x64-msvcrt"));
             addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/site_ruby"));
             addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0"));
-            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/x64-msvcr100"));
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/x64-msvcr100")); // DLM: remove?
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/x64-msvcrt"));
             addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/vendor_ruby"));
             addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/2.0.0"));
-            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/2.0.0/x64-mswin64_10"));
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/2.0.0/x64-mswin64_10")); // DLM: remove?
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/2.0.0/x64-mingw32"));
 #else
             addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0"));
-            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/i386-mingw32"));
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/i386-mingw32")); // DLM: remove?
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/i386-msvcrt"));
             addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/site_ruby"));
             addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0"));
-            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/i386-mingw32"));
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/i386-mingw32")); // DLM: remove?
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/i386-msvcrt"));
             addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/vendor_ruby"));
             addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/2.0.0"));
-            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/2.0.0/i386-mingw32"));
+            addIncludePath(rubyArgs, rubypath / openstudio::toPath("lib/ruby/2.0.0/i386-mingw32")); // DLM: same for both builds           
 #endif
 #endif
           }

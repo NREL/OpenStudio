@@ -1074,9 +1074,11 @@ class NameLineEditConcept : public BaseConcept
 
     NameLineEditConcept(const Heading &t_heading, 
       bool t_isInspectable,
+      bool t_deleteObject,
       bool t_hasClickFocus = true)
       : BaseConcept(t_heading, t_hasClickFocus),
-        m_isInspectable(t_isInspectable)
+        m_isInspectable(t_isInspectable),
+        m_deleteObject(t_deleteObject)
   {
   }
 
@@ -1087,10 +1089,12 @@ class NameLineEditConcept : public BaseConcept
   virtual void reset(const ConceptProxy & obj) = 0;
   virtual bool readOnly() const = 0;
   bool isInspectable() { return m_isInspectable; }
+  bool deleteObject() { return m_deleteObject; }
 
   private:
 
   bool m_isInspectable;
+  bool m_deleteObject;
 
 };
 
@@ -1100,12 +1104,14 @@ class NameLineEditConceptImpl : public NameLineEditConcept
   public:
 
   NameLineEditConceptImpl(const Heading &t_heading,
-    bool isInspectable,
-    std::function<boost::optional<std::string> (DataSourceType *, bool)>  t_getter,
+    bool t_isInspectable,
+    bool t_deleteObject,
+    std::function<boost::optional<std::string>(DataSourceType *, bool)>  t_getter,
     std::function<boost::optional<std::string> (DataSourceType *, const std::string &)> t_setter,
     boost::optional<std::function<void(DataSourceType*)> > t_reset = boost::none)
     : NameLineEditConcept(t_heading,
-      isInspectable),
+      t_isInspectable,
+      t_deleteObject),
       m_getter(t_getter),
       m_setter(t_setter),
       m_reset(t_reset)

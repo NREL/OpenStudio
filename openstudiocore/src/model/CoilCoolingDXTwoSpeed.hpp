@@ -70,6 +70,8 @@ class MODEL_API CoilCoolingDXTwoSpeed : public StraightComponent {
                         const Curve& lowSpeedCoolingCurveFofTemp,
                         const Curve& lowSpeedEnergyInputRatioFofTemp);
 
+  CoilCoolingDXTwoSpeed(const Model& model);
+
   virtual ~CoilCoolingDXTwoSpeed() {}
 
   //@}

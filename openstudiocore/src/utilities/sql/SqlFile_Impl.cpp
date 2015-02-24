@@ -447,16 +447,23 @@ namespace openstudio{
         sqlite3_prepare_v2(m_db,"SELECT EnergyPlusVersion FROM Simulations",-1,&sqlStmtPtr,nullptr);
         code = sqlite3_step(sqlStmtPtr);
         if(code == SQLITE_ROW) {
-          boost::regex version_regex("\\d\\.\\d\\.\\d");
+          // in 8.1 this is 'EnergyPlus-Windows-32 8.1.0.008, YMD=2014.11.08 22:49'
+          // in 8.2 this is 'EnergyPlus, Version 8.2.0-8397c2e30b, YMD=2015.01.09 08:37'
+          // radiance script is writing 'EnergyPlus, VERSION 8.2, (OpenStudio) YMD=2015.1.9 08:35:36'
+          boost::regex version_regex("\\d\\.\\d[\\.\\d]*");
           std::string version_line = columnText(sqlite3_column_text(sqlStmtPtr,0));
           boost::smatch version_match;
-          boost::regex_search(version_line,version_match,version_regex);
-          VersionString version(version_match[0].str());
-          if( version >= VersionString(7,0) && version <= VersionString(energyPlusVersionMajor(),energyPlusVersionMinor()) ) {
-            m_supportedVersion = true;
-          } else {
-            m_supportedVersion = false;
-            LOG(Warn, "Using unsupported EnergyPlus version " << version.str());
+          
+          if (boost::regex_search(version_line, version_match, version_regex)){
+            VersionString version(version_match[0].str());
+            if (version >= VersionString(7, 0) && version <= VersionString(energyPlusVersionMajor(), energyPlusVersionMinor())) {
+              m_supportedVersion = true;
+            } else {
+              m_supportedVersion = false;
+              LOG(Warn, "Using unsupported EnergyPlus version " << version.str());
+            }
+          } else{
+            LOG(Warn, "Using unknown EnergyPlus version");
           }
         }
         sqlite3_finalize(sqlStmtPtr);

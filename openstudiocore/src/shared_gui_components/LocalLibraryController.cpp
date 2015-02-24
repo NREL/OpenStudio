@@ -153,8 +153,7 @@ void LocalLibraryController::showMyMeasuresFolder()
 
   if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
     QMessageBox::information(QApplication::activeWindow(), "Cannot Open Directory", "Your My Measures Directory appears to be on a network drive that is not currently available.\nYou can change your specified My Measures Directory using 'Preferences->Change My Measures Directory'.", QMessageBox::Ok);
-  }
-  else {
+  } else {
     QString path = QDir::toNativeSeparators(toQString(userMeasuresDir));
     QDesktopServices::openUrl(QUrl("file:///" + path));
   }
@@ -696,10 +695,6 @@ void LibraryListController::createItems()
 
   // create items
   openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
-
-  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
-    return;
-  }
 
   for( const auto & measure : measures )
   {

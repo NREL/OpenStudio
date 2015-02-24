@@ -46,6 +46,8 @@ class MODEL_API FanVariableVolume : public StraightComponent {
 
   FanVariableVolume(const Model& model, Schedule & schedule);
 
+  FanVariableVolume(const Model& model);
+
   virtual ~FanVariableVolume() {}
 
   //@}

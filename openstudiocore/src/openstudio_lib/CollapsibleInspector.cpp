@@ -85,19 +85,19 @@ void CollapsibleInspectorHeader::createLayout()
   setCheckable(true);
 
   QHBoxLayout * mainHLayout = new QHBoxLayout();
-  mainHLayout->setContentsMargins(0,0,0,0);
-  mainHLayout->setSpacing(10);
+  mainHLayout->setContentsMargins(10,0,10,0);
+  mainHLayout->setSpacing(7);
   setLayout(mainHLayout);
 
   // Arrow
   m_arrowLabel = new QLabel();
-  mainHLayout->addWidget(m_arrowLabel);
+  mainHLayout->addWidget(m_arrowLabel, 0, Qt::AlignLeft);
 
   // Name
   QLabel * textLabel = new QLabel(m_text);
   textLabel->setWordWrap(false);
   textLabel->setObjectName("H2");
-  mainHLayout->addWidget(textLabel);
+  mainHLayout->addWidget(textLabel, 0, Qt::AlignLeft);
 
   // Stretch
   mainHLayout->addStretch();
@@ -117,7 +117,7 @@ void CollapsibleInspectorHeader::setImage(bool isChecked)
   if(isChecked){
     m_arrowLabel->setPixmap(QPixmap(":/images/toggle_arrow.png"));
   }else{
-    m_arrowLabel->setPixmap(QPixmap(":/images/toggle_arrow_closed.png"));
+    m_arrowLabel->setPixmap(QPixmap(":/images/toggle_arrow_closed2.png"));
   }
 }
 

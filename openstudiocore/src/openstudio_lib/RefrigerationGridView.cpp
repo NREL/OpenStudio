@@ -572,6 +572,7 @@ void RefrigerationCaseGridController::addColumns(const QString &/*category*/, st
     }else if(field == NAME){
       addNameLineEditColumn(Heading(QString(NAME), false, false),
                             false,
+                            false,
                             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::name),
                             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setName));
     }else{
@@ -956,6 +957,7 @@ void RefrigerationWalkInGridController::addColumns(const QString &/*category*/, 
       //std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries() const; TODO
     }else if(field == NAME){
       addNameLineEditColumn(Heading(QString(NAME), false, false),
+                            false,
                             false,
                             CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::name),
                             CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setName));

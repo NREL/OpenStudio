@@ -758,9 +758,12 @@ void OSDropZone2::onItemRemoveClicked()
     if (modelObject) {
      parent = modelObject->parent();  
     }
-    emit objectRemoved(parent);
     (*m_reset)();
-  }
+    if (m_deleteObject) {
+      m_modelObject->remove();
+    }
+    emit objectRemoved(parent);
+ }
 }
 
 } // openstudio

@@ -59,6 +59,8 @@ public:
   ~OSDropZone2() {}
 
   void enableClickFocus() { this->setFocusPolicy(Qt::ClickFocus); }
+  void setDeleteObject(bool deleteObject) { m_deleteObject = deleteObject; }
+  bool deleteObject() { return m_deleteObject; }
 
   void bind(model::ModelObject & modelObject,
             OptionalModelObjectGetter get,
@@ -95,6 +97,7 @@ private:
   boost::optional<model::ModelObject> m_modelObject;
   QString m_text;
   OSItem * m_item = nullptr;
+  bool m_deleteObject = false;
 
 };
 

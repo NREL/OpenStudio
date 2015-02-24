@@ -281,7 +281,7 @@ void ApplyMeasureNowDialog::displayMeasure()
       OS_ASSERT(currentModel);
 
       // clone the current model in case arguments getting changes model
-      m_model = currentModel->clone().cast<model::Model>();
+      m_model = currentModel->clone(true).cast<model::Model>();
 
       // pass in an empty workspace for the idf since you know it is a model measure
       Workspace dummyIdf;
@@ -365,7 +365,6 @@ void ApplyMeasureNowDialog::runMeasure()
   m_timer->start(50);
   this->okButton()->hide();
   this->backButton()->hide();
-  OS_ASSERT(m_model);
 
   openstudio::OSAppBase * app = OSAppBase::instance();
   m_workingDir = openstudio::toPath(app->currentDocument()->modelTempDir()) / openstudio::toPath("ApplyMeasureNow");
@@ -373,9 +372,15 @@ void ApplyMeasureNowDialog::runMeasure()
   openstudio::path epwPath; // DLM: todo look at how this is done in the run tab
 
   removeWorkingDir();
+
+  // DLM: do we want to get the original model or the one that was potentially altered when getting arguments?
+  boost::optional<model::Model> currentModel = app->currentModel();
+  OS_ASSERT(currentModel);
+  currentModel->save(modelPath, true);
   
   // save cloned model to temp directory
-  m_model->save(modelPath,true); 
+  //OS_ASSERT(m_model);
+  //m_model->save(modelPath,true); 
 
   // remove? this is shown only in debug (Evan)
   QString path("Measure Output Location: ");
@@ -451,10 +456,17 @@ void ApplyMeasureNowDialog::displayResults()
     try{
       runmanager::Files files(m_job->outputFiles());
       openstudio::path stdErrPath = files.getLastByFilename("stderr").fullPath;
-      std::ifstream ifs(toString(stdErrPath).c_str());
-      std::string stdMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
-      ifs.close();
-      m_advancedOutput = toQString(stdMessage);
+
+      m_advancedOutput = "";
+
+      QFile file(toQString(stdErrPath));
+      if (file.open(QFile::ReadOnly))
+      {
+        QTextStream docIn(&file);
+        m_advancedOutput = docIn.readAll();
+        file.close();
+      }
+
       m_advancedOutput += QString("\n");
     }catch(std::exception&){
     }

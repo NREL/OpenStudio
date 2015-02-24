@@ -1,5 +1,6 @@
 .idea
 .ruby-version
+test_fails.txt
 /build/
 /build_debug/
 /build-debug/

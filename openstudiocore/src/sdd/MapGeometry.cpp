@@ -66,6 +66,8 @@
 #include "../model/Schedule_Impl.hpp"
 #include "../model/ScheduleConstant.hpp"
 #include "../model/ScheduleConstant_Impl.hpp"
+#include "../model/ScheduleRuleset.hpp"
+#include "../model/ScheduleRuleset_Impl.hpp"
 #include "../model/ScheduleTypeLimits.hpp"
 #include "../model/ScheduleTypeLimits_Impl.hpp"
 #include "../model/PlantLoop.hpp"
@@ -215,14 +217,14 @@ namespace sdd {
 
     // remove unused CFactor constructions
     for (model::CFactorUndergroundWallConstruction cFactorConstruction : model.getConcreteModelObjects<model::CFactorUndergroundWallConstruction>()){
-      if (cFactorConstruction.directUseCount() == 0){
+      if (cFactorConstruction.directUseCount(true) == 0){
         cFactorConstruction.remove();
       }
     }
 
     // remove unused FFactor constructions
     for (model::FFactorGroundFloorConstruction fFactorConstruction : model.getConcreteModelObjects<model::FFactorGroundFloorConstruction>()){
-      if (fFactorConstruction.directUseCount() == 0){
+      if (fFactorConstruction.directUseCount(true) == 0){
         fFactorConstruction.remove();
       }
     }
@@ -479,9 +481,8 @@ namespace sdd {
           people.setSpace(space);
 
           // activity schedule
-          openstudio::model::ScheduleConstant activitySchedule(model);
+          openstudio::model::ScheduleRuleset activitySchedule(model, totalHeatRateSI);
           activitySchedule.setName(name + " People Activity Level");
-          activitySchedule.setValue(totalHeatRateSI);
 
           //boost::optional<model::ScheduleTypeLimits> scheduleTypeLimits = model.getModelObjectByName<model::ScheduleTypeLimits>("Activity Level");
           //if (!scheduleTypeLimits){
@@ -1427,18 +1428,51 @@ namespace sdd {
       model::ConstructionBase construction = shadingConstruction(model, solRefl, visRefl);
       shadingSurface.setConstruction(construction);
 
-      QDomElement scheduleReferenceElement = element.firstChildElement("TransSchRef");
-      if(!scheduleReferenceElement.isNull()){
-        std::string scheduleName = escapeName(scheduleReferenceElement.text());
-        boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
-        if(schedule){
+      QDomElement transOptionElement = element.firstChildElement("TransOption");
+      if (!transOptionElement.isNull()){
+
+        boost::optional<model::Schedule> schedule;
+        std::string scheduleName;
+
+        // constant transmittance
+        if (transOptionElement.text().compare("Constant", Qt::CaseInsensitive) == 0){
+
+          QDomElement transElement = element.firstChildElement("Trans");
+          if (!transElement.isNull()){
+            schedule = shadingSchedule(model, transElement.text().toDouble());
+            OS_ASSERT(schedule);
+            scheduleName = schedule->name().get();
+          } else {
+            LOG(Error, "Cannot find shading transmittance for shading surface '" << name << "'");
+          }
+
+          // transmittance schedule
+        } else if (transOptionElement.text().compare("Scheduled", Qt::CaseInsensitive) == 0){
+
+          QDomElement scheduleReferenceElement = element.firstChildElement("TransSchRef");
+          if (!scheduleReferenceElement.isNull()){
+            scheduleName = escapeName(scheduleReferenceElement.text());
+            schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
+            if (!schedule){
+              LOG(Error, "Cannot find shading schedule '" << scheduleName << "' for shading surface '" << name << "'");
+            }
+          } else{
+            LOG(Error, "Cannot find shading schedule for shading surface '" << name << "'");
+          }
+
+        } else{
+          LOG(Error, "Unknown TransOption value for shading surface '" << name << "'");
+        }
+
+        if (schedule){
           bool test = shadingSurface.setTransmittanceSchedule(*schedule);
           if (!test){
-            LOG(Error, "Failed to assign schedule '" << scheduleName << "' to shading surface '" << name << "'");
+            LOG(Error, "Failed to assign shading schedule '" << scheduleName << "' to shading surface '" << name << "'");
           }
-        }else{
-          LOG(Error, "Cannot find schedule '" << scheduleName << "'");
+        } else {
+          // DLM: could warn here
         }
+
       }
 
     }else{  
@@ -1486,6 +1520,24 @@ namespace sdd {
     return construction;
   }
 
+  model::Schedule ReverseTranslator::shadingSchedule(openstudio::model::Model& model, double trans)
+  {
+    auto it = m_shadingScheduleMap.find(trans);
+    if (it != m_shadingScheduleMap.end()){
+      return it->second;
+    }
+
+    std::string description = boost::lexical_cast<std::string>(trans);
+    std::string scheduleName = "Shading Schedule " + description;
+
+    // create a schedule with these properties
+    model::ScheduleRuleset schedule(model, trans);
+    schedule.setName(scheduleName);
+
+    m_shadingScheduleMap.insert(std::make_pair(trans, schedule));
+    return schedule;
+  }
+
   boost::optional<QDomElement> ForwardTranslator::translateBuilding(const openstudio::model::Building& building, QDomDocument& doc)
   {
     QDomElement result = doc.createElement("Bldg");
@@ -1499,7 +1551,7 @@ namespace sdd {
 
     // SDD:
     // FuncClassMthd - optional, ignore 
-    // RelocPubSchoolBldg - optional, do this when we do space types
+    // RelocPubSchoolBldg - optional, in progress
     // WholeBldgModeled - required, need to add
     // BldgAz - required, done
     // TotStoryCnt - required, in progress
@@ -1540,7 +1592,7 @@ namespace sdd {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Building Stories"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(buildingStories.size());
+      m_progressBar->setMaximum((int)buildingStories.size());
       m_progressBar->setValue(0);
     }
 
@@ -1567,7 +1619,7 @@ namespace sdd {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Building Shading"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(shadingSurfaceGroups.size()); 
+      m_progressBar->setMaximum((int)shadingSurfaceGroups.size()); 
       m_progressBar->setValue(0);
     }
 
@@ -1666,7 +1718,7 @@ namespace sdd {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Thermal Zones"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(thermalZones.size());
+      m_progressBar->setMaximum((int)thermalZones.size());
       m_progressBar->setValue(0);
     }
 
@@ -1689,7 +1741,7 @@ namespace sdd {
     if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating AirLoopHVAC Systems"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(airLoops.size());
+      m_progressBar->setMaximum((int)airLoops.size());
       m_progressBar->setValue(0);
     }
 
@@ -2552,11 +2604,11 @@ namespace sdd {
     result.appendChild(typeElement);
     typeElement.appendChild(doc.createTextNode(toQString(type)));
 
-
+    // DLM: Not input
     // Mult
-    QDomElement multElement = doc.createElement("Mult");
-    result.appendChild(multElement);
-    multElement.appendChild(doc.createTextNode(QString::number(thermalZone.multiplier())));
+    //QDomElement multElement = doc.createElement("Mult");
+    //result.appendChild(multElement);
+    //multElement.appendChild(doc.createTextNode(QString::number(thermalZone.multiplier())));
 
     return result;
   }

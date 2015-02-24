@@ -105,7 +105,7 @@ TEST_F(AnalysisDriverFixture,AnalysisDriverWatcher_OneAnalysis) {
   analysis.setProblem(problem);
 
   // SET SEED
-  model::Model model = model::exampleModel();
+  model::Model model = fastExampleModel();
   openstudio::path p = toPath("./example.osm");
   model.save(p,true);
   FileReference seedModel(p);

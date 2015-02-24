@@ -435,10 +435,28 @@ bool isNetworkPathAvailable(const path& p)
     return false;
   }
 
-  DWORD dwResult = WNetGetResourceInformation(&nr, lpBuffer, &dwBufferSize, &pszSystem);
-  if (dwResult == NO_ERROR){
-    free(lpBuffer);
-    return true;
+  bool moreData = true;
+  while (moreData){
+    DWORD dwResult = WNetGetResourceInformation(&nr, lpBuffer, &dwBufferSize, &pszSystem);
+    if (dwResult == NO_ERROR){
+      free(lpBuffer);
+      return true;
+    } else if (dwResult == ERROR_MORE_DATA){
+
+      auto newptr = (LPBYTE)realloc(lpBuffer, dwBufferSize);
+      if (newptr == nullptr) {
+        // whoops we had a memory allocation error and we need to clean things up
+        free(lpBuffer);
+        throw std::runtime_error("Memory error while attempting to allocate buffer");
+      } else {
+        lpBuffer = newptr;
+      }
+
+      moreData = true;
+
+    } else {
+      moreData = false;
+    }
   }
 
   free(lpBuffer);

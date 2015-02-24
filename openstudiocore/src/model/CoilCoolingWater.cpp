@@ -478,6 +478,15 @@ CoilCoolingWater::CoilCoolingWater(const Model& model, Schedule & availableSched
   setAvailableSchedule( availableSchedule );
 }
 
+CoilCoolingWater::CoilCoolingWater(const Model& model)
+  : WaterToAirComponent(CoilCoolingWater::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::CoilCoolingWater_Impl>());
+
+  auto schedule = model.alwaysOnDiscreteSchedule();
+  setAvailableSchedule(schedule);
+}
+
 CoilCoolingWater::CoilCoolingWater(std::shared_ptr<detail::CoilCoolingWater_Impl> p)
   : WaterToAirComponent(p)
 {}

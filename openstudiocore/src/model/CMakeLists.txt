@@ -907,6 +907,9 @@ set(${target_name}_src
   WindowDataFile.hpp
   WindowDataFile_Impl.hpp
   WindowDataFile.cpp
+  WindowPropertyFrameAndDivider.hpp
+  WindowPropertyFrameAndDivider_Impl.hpp
+  WindowPropertyFrameAndDivider.cpp
   YearDescription.hpp
   YearDescription_Impl.hpp
   YearDescription.cpp
@@ -1153,6 +1156,8 @@ set(${target_name}_moc
   WaterUseEquipment_Impl.hpp
   WaterUseEquipmentDefinition_Impl.hpp
   WeatherFile_Impl.hpp
+  WindowDataFile_Impl.hpp
+  WindowPropertyFrameAndDivider_Impl.hpp
   YearDescription_Impl.hpp
   ZoneAirContaminantBalance_Impl.hpp
   ZoneAirHeatBalanceAlgorithm_Impl.hpp
@@ -1313,6 +1318,7 @@ set(${target_name}_test_src
   test/OutputVariable_GTest.cpp
   test/ParentObject_GTest.cpp
   test/People_GTest.cpp
+  test/PeopleDefinition_GTest.cpp
   test/PipeAdiabatic_GTest.cpp
   test/PlanarSurface_GTest.cpp
   test/PlantLoop_GTest.cpp
@@ -1389,6 +1395,7 @@ set(${target_name}_test_src
   test/WaterUseConnections_GTest.cpp
   test/WaterUseEquipment_GTest.cpp
   test/WeatherFile_GTest.cpp
+  test/WindowPropertyFrameAndDivider_GTest.cpp
   test/YearDescription_GTest.cpp
   test/ZoneCapacitanceMultiplierResearchSpecial_GTest.cpp
   test/ZoneHVACBaseboardConvectiveElectric_GTest.cpp

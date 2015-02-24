@@ -98,7 +98,7 @@ namespace sdd {
       bool wasFastNaming = model.fastNaming();
       model.setFastNaming(false);
 
-      unsigned n = materials.size();
+      size_t n = materials.size();
       construction.ensureUniqueLayers();
       materials = construction.layers(); // DLM: get materials again in case new ones were cloned
 
@@ -510,11 +510,11 @@ namespace sdd {
       result.appendChild(nameElement);
       nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
+      // DLM: prescribed, not input
       // specification method
-      // DLM: is this deprecated?
-      QDomElement specMthdElement = doc.createElement("SpecMthd");
-      result.appendChild(specMthdElement);
-      specMthdElement.appendChild(doc.createTextNode("Layers"));
+      //QDomElement specMthdElement = doc.createElement("SpecMthd");
+      //result.appendChild(specMthdElement);
+      //specMthdElement.appendChild(doc.createTextNode("Layers"));
 
       // SDD:
       // CompatibleSurfType - required, done
@@ -568,7 +568,7 @@ namespace sdd {
         // DLM: warn?
       }
 
-      unsigned n = layers.size();
+      size_t n = layers.size();
       if (n > 0){
 
         std::string extRoughness;
@@ -605,54 +605,61 @@ namespace sdd {
           intVisibleAbsorptance = intMaterial.visibleAbsorptance();
         }
 
+        // DLM: Not input
         // ext roughness
-        if (!extRoughness.empty()){
-          QDomElement roughnessElement = doc.createElement("ExtRoughness");
-          result.appendChild(roughnessElement);
-          roughnessElement.appendChild(doc.createTextNode(toQString(extRoughness)));
-        }
+        //if (!extRoughness.empty()){
+        //  QDomElement roughnessElement = doc.createElement("ExtRoughness");
+        //  result.appendChild(roughnessElement);
+        //  roughnessElement.appendChild(doc.createTextNode(toQString(extRoughness)));
+        //}
 
+        // DLM: Not input
         // ext solarAbsorptance
-        if (extSolarAbsorptance){
-          QDomElement solarAbsorptanceElement = doc.createElement("ExtSolAbs"); 
-          result.appendChild(solarAbsorptanceElement);
-          solarAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*extSolarAbsorptance)));
-        }
+        //if (extSolarAbsorptance){
+        //  QDomElement solarAbsorptanceElement = doc.createElement("ExtSolAbs"); 
+        //  result.appendChild(solarAbsorptanceElement);
+        //  solarAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*extSolarAbsorptance)));
+        //}
 
+        // DLM: Not input
         // ext thermalAbsorptance
-        if (extThermalAbsorptance){
-          QDomElement thermalAbsorptanceElement = doc.createElement("ExtThrmlAbs");
-          result.appendChild(thermalAbsorptanceElement);
-          thermalAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*extThermalAbsorptance)));
-        }
+        //if (extThermalAbsorptance){
+        //  QDomElement thermalAbsorptanceElement = doc.createElement("ExtThrmlAbs");
+        //  result.appendChild(thermalAbsorptanceElement);
+        //  thermalAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*extThermalAbsorptance)));
+        //}
 
+        // DLM: Not input
         // ext visibleAbsorptance
-        if (extVisibleAbsorptance){
-          QDomElement visibleAbsorptanceElement = doc.createElement("ExtVisAbs");
-          result.appendChild(visibleAbsorptanceElement);
-          visibleAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*extVisibleAbsorptance)));
-        }
+        //if (extVisibleAbsorptance){
+        //  QDomElement visibleAbsorptanceElement = doc.createElement("ExtVisAbs");
+        //  result.appendChild(visibleAbsorptanceElement);
+        //  visibleAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*extVisibleAbsorptance)));
+        //}
 
+        // DLM: Not input
         // int solarAbsorptance
-        if (intSolarAbsorptance){
-          QDomElement solarAbsorptanceElement = doc.createElement("IntSolAbs"); 
-          result.appendChild(solarAbsorptanceElement);
-          solarAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*intSolarAbsorptance)));
-        }
+        //if (intSolarAbsorptance){
+        //  QDomElement solarAbsorptanceElement = doc.createElement("IntSolAbs"); 
+        //  result.appendChild(solarAbsorptanceElement);
+        //  solarAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*intSolarAbsorptance)));
+        //}
 
+        // DLM: Not input
         // int thermalAbsorptance
-        if (intThermalAbsorptance){
-          QDomElement thermalAbsorptanceElement = doc.createElement("IntThrmlAbs");
-          result.appendChild(thermalAbsorptanceElement);
-          thermalAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*intThermalAbsorptance)));
-        }
+        //if (intThermalAbsorptance){
+        //  QDomElement thermalAbsorptanceElement = doc.createElement("IntThrmlAbs");
+        //  result.appendChild(thermalAbsorptanceElement);
+        //  thermalAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*intThermalAbsorptance)));
+        //}
 
+        // DLM: Not input
         // int visibleAbsorptance
-        if (intVisibleAbsorptance){
-          QDomElement visibleAbsorptanceElement = doc.createElement("IntVisAbs");
-          result.appendChild(visibleAbsorptanceElement);
-          visibleAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*intVisibleAbsorptance)));
-        }
+        //if (intVisibleAbsorptance){
+        //  QDomElement visibleAbsorptanceElement = doc.createElement("IntVisAbs");
+        //  result.appendChild(visibleAbsorptanceElement);
+        //  visibleAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*intVisibleAbsorptance)));
+        //}
       }
 
       for (const model::Material& material : layers){
@@ -678,21 +685,22 @@ namespace sdd {
       result.appendChild(nameElement);
       nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
+      // DLM: prescribed, not input
       // specification method
-      QDomElement specMthdElement = doc.createElement("SpecMthd");
-      result.appendChild(specMthdElement);
-      specMthdElement.appendChild(doc.createTextNode("FFactor"));
+      //QDomElement specMthdElement = doc.createElement("SpecMthd");
+      //result.appendChild(specMthdElement);
+      //specMthdElement.appendChild(doc.createTextNode("FFactor"));
 
+      // DLM: not input
       // specification method
-      QDomElement fFactorElement = doc.createElement("FFactor");
-      result.appendChild(fFactorElement);
-
-      // sdd units = Btu/(hr*ft*F), os units = W/(m*K)
-      Quantity fFactorSI(construction.fFactor(), WhUnit(WhExpnt(1,0,-1,-1)));
-      OptionalQuantity fFactorIP = QuantityConverter::instance().convert(fFactorSI, UnitSystem(UnitSystem::BTU));
-      OS_ASSERT(fFactorIP);
-      OS_ASSERT(fFactorIP->units() == BTUUnit(BTUExpnt(1,-1,-1,-1)));
-      fFactorElement.appendChild(doc.createTextNode(QString::number(fFactorIP->value())));
+      //QDomElement fFactorElement = doc.createElement("FFactor");
+      //result.appendChild(fFactorElement);
+      //// sdd units = Btu/(hr*ft*F), os units = W/(m*K)
+      //Quantity fFactorSI(construction.fFactor(), WhUnit(WhExpnt(1,0,-1,-1)));
+      //OptionalQuantity fFactorIP = QuantityConverter::instance().convert(fFactorSI, UnitSystem(UnitSystem::BTU));
+      //OS_ASSERT(fFactorIP);
+      //OS_ASSERT(fFactorIP->units() == BTUUnit(BTUExpnt(1,-1,-1,-1)));
+      //fFactorElement.appendChild(doc.createTextNode(QString::number(fFactorIP->value())));
 
       // DLM: cannot write out
       //<IntSolAbs>0.7</IntSolAbs>
@@ -715,21 +723,22 @@ namespace sdd {
       result.appendChild(nameElement);
       nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
+      // DLM: prescribed, not input
       // specification method
-      QDomElement specMthdElement = doc.createElement("SpecMthd");
-      result.appendChild(specMthdElement);
-      specMthdElement.appendChild(doc.createTextNode("CFactor"));
+      //QDomElement specMthdElement = doc.createElement("SpecMthd");
+      //result.appendChild(specMthdElement);
+      //specMthdElement.appendChild(doc.createTextNode("CFactor"));
 
+      // DLM: not input
       // specification method
-      QDomElement cFactorElement = doc.createElement("CFactor");
-      result.appendChild(cFactorElement);
-
-      // sdd units = Btu/(hr*ft^2*F), os units = W/(m^2*K)
-      Quantity cFactorSI(construction.cFactor(), WhUnit(WhExpnt(1,0,-2,-1)));
-      OptionalQuantity cFactorIP = QuantityConverter::instance().convert(cFactorSI, UnitSystem(UnitSystem::BTU));
-      OS_ASSERT(cFactorIP);
-      OS_ASSERT(cFactorIP->units() == BTUUnit(BTUExpnt(1,-2,-1,-1)));
-      cFactorElement.appendChild(doc.createTextNode(QString::number(cFactorIP->value())));
+      //QDomElement cFactorElement = doc.createElement("CFactor");
+      //result.appendChild(cFactorElement);
+      //// sdd units = Btu/(hr*ft^2*F), os units = W/(m^2*K)
+      //Quantity cFactorSI(construction.cFactor(), WhUnit(WhExpnt(1,0,-2,-1)));
+      //OptionalQuantity cFactorIP = QuantityConverter::instance().convert(cFactorSI, UnitSystem(UnitSystem::BTU));
+      //OS_ASSERT(cFactorIP);
+      //OS_ASSERT(cFactorIP->units() == BTUUnit(BTUExpnt(1,-2,-1,-1)));
+      //cFactorElement.appendChild(doc.createTextNode(QString::number(cFactorIP->value())));
 
       // DLM: cannot write out
       //<IntSolAbs>0.7</IntSolAbs>
@@ -925,12 +934,11 @@ namespace sdd {
           boost::optional<std::string> fenestrationTint = info.fenestrationTint();
           if (fenestrationTint){
             if (istringEqual("Clear", *fenestrationTint)){
-              glzTint = "Clear";
+              glzTint = "ClearGlazing";
             } else{
-              glzTint = "Tinted";
+              glzTint = "TintedGlazing";
             }
           }
-
         }
       }
 
@@ -1126,203 +1134,100 @@ namespace sdd {
 
   boost::optional<QDomElement> ForwardTranslator::translateMaterial(const openstudio::model::Material& material, QDomDocument& doc)
   {
-    //SIExpnt(int kg=0,int m=0,int s=0,int K=0,..)
-    //IPExpnt(int lbm=0,int ft=0,int s=0,int R=0,..)
-    //BTUExpnt(int btu=0,int ft=0,int h=0,int R=0,..)
-    //WhExpnt(int W=0,int h=0,int m=0,int K=0,..)
 
-    UnitSystem ipSys(UnitSystem::IP);
-    UnitSystem btuSys(UnitSystem::BTU);
+    if (!(material.optionalCast<model::StandardOpaqueMaterial>() ||
+          material.optionalCast<model::MasslessOpaqueMaterial>() ||
+          material.optionalCast<model::AirGap>())){
+      return boost::none;
+    }
 
-    boost::optional<QDomElement> result;
+    model::StandardsInformationMaterial info = material.standardsInformation();
 
-    if (material.optionalCast<model::StandardOpaqueMaterial>()){
-      model::StandardOpaqueMaterial standardOpaqueMaterial = material.cast<model::StandardOpaqueMaterial>();
-      result = doc.createElement("Mat");
-      m_translatedObjects[standardOpaqueMaterial.handle()] = *result;
+    QDomElement result = doc.createElement("Mat");
+    m_translatedObjects[material.handle()] = result;
 
-      // name
-      std::string name = standardOpaqueMaterial.name().get();
-      QDomElement nameElement = doc.createElement("Name");
-      result->appendChild(nameElement);
-      nameElement.appendChild(doc.createTextNode(escapeName(name)));
+    // name
+    std::string name = material.name().get();
+    QDomElement nameElement = doc.createElement("Name");
+    result.appendChild(nameElement);
+    nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
-      // SDD:
-      // CodeCat - compulsory, in progress
-      // CodeItem - compulsory, in progress
-      // FrmMat - optional, need to add
-      // FrmConfig - optional, need to add
-      // FrmDepth - optional, need to add
-      // CavityIns - optional, need to add
-      // CavityInsOpt - optional, need to add
-      // CompositeMatNotes - optional, skipping
-      // HeaderIns - optional, skipping
-      // CMUWt - optional, skipping
-      // CMUFill - optional, skipping
-      // SpandrelPanelIns - optional, skipping
-      // ICCESRptNum - optional, skipping
-      // InsOutsdWtrprfMemb - optional, skipping
+    // SDD:
+    // CodeCat - compulsory, done
+    // CodeItem - compulsory, done
+    // FrmMat - optional, done
+    // FrmConfig - optional, done
+    // FrmDepth - optional, done
+    // CavityIns - optional, done
+    // CavityInsOpt - optional, done
+    // CompositeMatNotes - optional, skipping
+    // HeaderIns - optional, not used
+    // CMUWt - optional, not used
+    // CMUFill - optional, not used
+    // SpandrelPanelIns - optional, not used
+    // ICCESRptNum - optional, skipping
+    // InsOutsdWtrprfMemb - optional, skipping
 
-      // DLM: set in construction
-      // roughness
-      //std::string roughness = standardOpaqueMaterial.roughness();
-      //QDomElement roughnessElement = doc.createElement("Roughness");
-      //result->appendChild(roughnessElement);
-      //roughnessElement.appendChild(doc.createTextNode(toQString(roughness)));
+    boost::optional<std::string> standardsCategory = info.standardsCategory();
+    if (standardsCategory && info.isCompositeMaterial()){
+      standardsCategory = "Composite";
+    }
 
-      // DLM: set in construction
-      // thermalAbsorptance
-      //boost::optional<double> thermalAbsorptance = standardOpaqueMaterial.thermalAbsorptance();
-      //if (thermalAbsorptance){
-      //  QDomElement thermalAbsorptanceElement = doc.createElement("ThrmlAbs");
-      //  result->appendChild(thermalAbsorptanceElement);
-      //  thermalAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*thermalAbsorptance)));
-      //}
+    boost::optional<std::string> standardsIdentifier = info.standardsIdentifier();
+    boost::optional<std::string> compositeFramingMaterial = info.compositeFramingMaterial();
+    boost::optional<std::string> compositeFramingConfiguration = info.compositeFramingConfiguration();
+    boost::optional<std::string> compositeFramingDepth = info.compositeFramingDepth();
+    boost::optional<std::string> compositeFramingSize = info.compositeFramingSize();
+    boost::optional<std::string> compositeCavityInsulation = info.compositeCavityInsulation();
+  
+    if (standardsCategory){
+      QDomElement element = doc.createElement("CodeCat");
+      result.appendChild(element);
+      element.appendChild(doc.createTextNode(toQString(*standardsCategory)));
+    }
 
-      // DLM: set in construction
-      // solarAbsorptance
-      //boost::optional<double> solarAbsorptance = standardOpaqueMaterial.solarAbsorptance();
-      //if (solarAbsorptance){
-      //  QDomElement solarAbsorptanceElement = doc.createElement("SolAbs"); 
-      //  result->appendChild(solarAbsorptanceElement);
-      //  solarAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*solarAbsorptance)));
-      //}
+    if (standardsIdentifier){
+      QDomElement element = doc.createElement("CodeItem");
+      result.appendChild(element);
+      element.appendChild(doc.createTextNode(toQString(*standardsIdentifier)));
+    }
 
-      // DLM: set in construction
-      // visibleAbsorptance
-      //boost::optional<double> visibleAbsorptance = standardOpaqueMaterial.visibleAbsorptance();
-      //if (visibleAbsorptance){
-      //  QDomElement visibleAbsorptanceElement = doc.createElement("VisAbs");
-      //  result->appendChild(visibleAbsorptanceElement);
-      //  visibleAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*visibleAbsorptance)));
-      //}
+    if (compositeFramingMaterial){
+      QDomElement element = doc.createElement("FrmMat");
+      result.appendChild(element);
+      element.appendChild(doc.createTextNode(toQString(*compositeFramingMaterial)));
+    }
 
-      // thickness
-      // DLM: is this deprecated?
-      // os units = m, sdd units = in
-      double thickness = standardOpaqueMaterial.thickness();
-      Quantity thicknessSI(thickness, SIUnit(SIExpnt(0,1,0)));
-      OptionalQuantity thicknessIP = QuantityConverter::instance().convert(thicknessSI, ipSys);
-      OS_ASSERT(thicknessIP);
-      OS_ASSERT(thicknessIP->units() == IPUnit(IPExpnt(0,1,0)));
-      double thicknessInches = thicknessIP->value() * 12.0;
-      QDomElement thicknessElement = doc.createElement("Thkns");
-      result->appendChild(thicknessElement);
-      thicknessElement.appendChild(doc.createTextNode(QString::number(thicknessInches)));
+    if (compositeFramingConfiguration){
+      QDomElement element = doc.createElement("FrmConfig");
+      result.appendChild(element);
+      element.appendChild(doc.createTextNode(toQString(*compositeFramingConfiguration)));
+    }
 
-      // conductivity
-      // DLM: is this deprecated?
-      // os units = W/m-K, sdd units = Btu/(hr*ft*F)
-      double conductivity = standardOpaqueMaterial.thermalConductivity();
-      Quantity conductivitySI(conductivity, WhUnit(WhExpnt(1,0,-1,-1)));
-      OptionalQuantity conductivityIP = QuantityConverter::instance().convert(conductivitySI, btuSys);
-      OS_ASSERT(conductivityIP);
-      OS_ASSERT(conductivityIP->units() == BTUUnit(BTUExpnt(1,-1,-1,-1)));
-      QDomElement conductivityElement = doc.createElement("ThrmlCndct");
-      result->appendChild(conductivityElement);
-      conductivityElement.appendChild(doc.createTextNode(QString::number(conductivityIP->value())));
+    if (compositeFramingDepth){
+      QDomElement element = doc.createElement("FrmDepth");
+      result.appendChild(element);
+      element.appendChild(doc.createTextNode(toQString(*compositeFramingDepth)));
+    }
 
-      // density
-      // DLM: is this deprecated?
-      // os units = kg/m3, sdd units = lb/ft^3
-      double density = standardOpaqueMaterial.density();
-      Quantity densitySI(density, SIUnit(SIExpnt(1,-3,0)));
-      OptionalQuantity densityIP = QuantityConverter::instance().convert(densitySI, ipSys);
-      OS_ASSERT(densityIP);
-      OS_ASSERT(densityIP->units() == IPUnit(IPExpnt(1,-3,0)));
-      QDomElement densityElement = doc.createElement("Dens");
-      result->appendChild(densityElement);
-      densityElement.appendChild(doc.createTextNode(QString::number(densityIP->value())));
+    if (compositeCavityInsulation){
 
-      // specificHeat
-      // DLM: is this deprecated?
-      // os units = J/kg-K, sdd units = Btu/(lb*F)
-      double specificHeat = standardOpaqueMaterial.specificHeat();
-      Quantity specificHeatSI(specificHeat, SIUnit(SIExpnt(0,2,-2,-1)));
-      OptionalQuantity specificHeatIP = QuantityConverter::instance().convert(specificHeatSI, BTUUnit(BTUExpnt(1,0,0,-1))*IPUnit(IPExpnt(-1)));
-      OS_ASSERT(specificHeatIP);
-      OS_ASSERT(specificHeatIP->units() == BTUUnit(BTUExpnt(1,0,0,-1))*IPUnit(IPExpnt(-1)));
-      QDomElement specificHeatElement = doc.createElement("SpecHt");
-      result->appendChild(specificHeatElement);
-      specificHeatElement.appendChild(doc.createTextNode(QString::number(specificHeatIP->value())));
-
-    }else if (material.optionalCast<model::MasslessOpaqueMaterial>()){
-      model::MasslessOpaqueMaterial masslessOpaqueMaterial = material.cast<model::MasslessOpaqueMaterial>();
-      result = doc.createElement("Mat");
-      m_translatedObjects[masslessOpaqueMaterial.handle()] = *result;
-
-      // name
-      std::string name = masslessOpaqueMaterial.name().get();
-      QDomElement nameElement = doc.createElement("Name");
-      result->appendChild(nameElement);
-      nameElement.appendChild(doc.createTextNode(escapeName(name)));
-
-      // DLM: set in construction
-      // roughness
-      //std::string roughness = masslessOpaqueMaterial.roughness();
-      //QDomElement roughnessElement = doc.createElement("Roughness");
-      //result->appendChild(roughnessElement);
-      //roughnessElement.appendChild(doc.createTextNode(toQString(roughness)));
-
-      // DLM: set in construction
-      // thermalAbsorptance
-      //boost::optional<double> thermalAbsorptance = masslessOpaqueMaterial.thermalAbsorptance();
-      //if (thermalAbsorptance){
-      //  QDomElement thermalAbsorptanceElement = doc.createElement("ThrmlAbs");
-      //  result->appendChild(thermalAbsorptanceElement);
-      //  thermalAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*thermalAbsorptance)));
-      //}
-
-      // DLM: set in construction
-      // solarAbsorptance
-      //boost::optional<double> solarAbsorptance = masslessOpaqueMaterial.solarAbsorptance();
-      //if (solarAbsorptance){
-      //  QDomElement solarAbsorptanceElement = doc.createElement("SolAbs"); 
-      //  result->appendChild(solarAbsorptanceElement);
-      //  solarAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*solarAbsorptance)));
-      //}
-
-      // DLM: set in construction
-      // visibleAbsorptance
-      //boost::optional<double> visibleAbsorptance = masslessOpaqueMaterial.visibleAbsorptance();
-      //if (visibleAbsorptance){
-      //  QDomElement visibleAbsorptanceElement = doc.createElement("VisAbs");
-      //  result->appendChild(visibleAbsorptanceElement);
-      //  visibleAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*visibleAbsorptance)));
-      //}
-
-      // thermalResistance
-      // DLM: is this deprecated?
-      // os units = m2-K/W, sdd units = hr*ft2*degF/Btu
-      double thermalResistance = masslessOpaqueMaterial.thermalResistance();
-      Quantity rValueWh(thermalResistance, WhUnit(WhExpnt(-1,0,2,1)));
-      OptionalQuantity rValueIP = QuantityConverter::instance().convert(rValueWh, btuSys);
-      OS_ASSERT(rValueIP);
-      OS_ASSERT(rValueIP->units() ==  BTUUnit(BTUExpnt(-1,2,1,1)));
-      QDomElement rValueElement = doc.createElement("RVal");
-      result->appendChild(rValueElement);
-      rValueElement.appendChild(doc.createTextNode(QString::number(rValueIP->value())));
-    }else if (material.optionalCast<model::AirGap>()){
-      model::AirGap airGap = material.cast<model::AirGap>();
-      result = doc.createElement("Mat");
-      m_translatedObjects[airGap.handle()] = *result;
-
-      // name
-      std::string name = airGap.name().get();
-      QDomElement nameElement = doc.createElement("Name");
-      result->appendChild(nameElement);
-      nameElement.appendChild(doc.createTextNode(escapeName(name)));
-
-      // thermalResistance
-      // DLM: is this deprecated?
-      // os units = m2-K/W, sdd units = hr*ft2*degF/Btu
-      double thermalResistance = airGap.thermalResistance();
-      Quantity rValueWh(thermalResistance, WhUnit(WhExpnt(-1,0,2,1)));
-      OptionalQuantity rValueIP = QuantityConverter::instance().convert(rValueWh, btuSys);
-      OS_ASSERT(rValueIP);
-      OS_ASSERT(rValueIP->units() ==  BTUUnit(BTUExpnt(-1,2,1,1)));
-      QDomElement rValueElement = doc.createElement("RVal");
-      result->appendChild(rValueElement);
+      // DLM: this is a stupid switch, this should get fixed in CBECC rules
+      if (compositeFramingMaterial && istringEqual("Metal", *compositeFramingMaterial)){
+        bool isNumber;
+        QString value = toQString(*compositeCavityInsulation);
+        value.toDouble(&isNumber);
+        if (isNumber){
+          value = QString("R-") + value;
+        }
+        QDomElement element = doc.createElement("CavityInsOpt");
+        result.appendChild(element);
+        element.appendChild(doc.createTextNode(value));
+      } else {
+        QDomElement element = doc.createElement("CavityIns");
+        result.appendChild(element);
+        element.appendChild(doc.createTextNode(toQString(*compositeCavityInsulation)));
+      }
     }
 
     return result;

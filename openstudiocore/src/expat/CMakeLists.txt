@@ -19,6 +19,9 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/l
 
 if(MSVC)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+  
+  # Disable warning about conversion to int in expat
+  add_definitions(/wd4244)
 endif()
 
 set(zkexpat_SRCS

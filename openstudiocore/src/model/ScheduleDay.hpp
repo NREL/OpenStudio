@@ -47,6 +47,9 @@ class MODEL_API ScheduleDay : public ScheduleBase {
   /** Initializes the schedule to a value of 0.0 until 24:00. */
   explicit ScheduleDay(const Model& model);
 
+  /** Initializes the schedule to value until 24:00. */
+  ScheduleDay(const Model& model, double value);
+
   virtual ~ScheduleDay() {}
 
   //@}
