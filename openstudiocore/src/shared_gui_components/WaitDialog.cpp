@@ -37,6 +37,7 @@ WaitDialog::WaitDialog(const QString & windowTitle,
   m_windowMessage(windowMessage)
 {
   setWindowTitle(windowTitle);
+  setWindowModality(Qt::ApplicationModal);
   setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   createWidgets();
 }
