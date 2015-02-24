@@ -338,6 +338,9 @@ set(osversion_resources_src
   osversion/1_6_1/OpenStudio.idd
   osversion/1_6_1/example.osm
   osversion/1_6_1/example.osc
+  osversion/1_6_2/OpenStudio.idd
+  osversion/1_6_2/example.osm
+  osversion/1_6_2/example.osc
   osversion/unknown.osc
 )
 
