@@ -68,6 +68,8 @@ namespace resultsviewer{
     connect(ui.actionClear_Settings, &QAction::triggered, this, &MainWindow::slotClearSettings);
     connect(ui.actionAbout, &QAction::triggered, this, &MainWindow::slotHelpAbout);
 
+    ui.actionFileOpen->setShortcut(QKeySequence(QKeySequence::Open));
+
     // file close
     /*
     m_fileCloseAction = new QAction(tr("&Close"), this);
