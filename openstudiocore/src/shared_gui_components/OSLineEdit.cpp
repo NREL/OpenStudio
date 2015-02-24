@@ -253,7 +253,7 @@ void OSLineEdit2::focusInEvent(QFocusEvent * e)
     auto hasData = true; // TODO
     emit inFocus(true, hasData); 
   }
-  
+
   QLineEdit::focusInEvent(e);
 }
 
@@ -265,7 +265,7 @@ void OSLineEdit2::focusOutEvent(QFocusEvent * e)
     setStyleSheet(style);
 
     emit inFocus(false, false);
-    emit itemClicked(nullptr);
+    //emit itemClicked(nullptr); Evan TODO
   }
 
   QLineEdit::focusOutEvent(e);
