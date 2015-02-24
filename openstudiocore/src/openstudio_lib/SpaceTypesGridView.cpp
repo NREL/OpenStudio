@@ -879,53 +879,43 @@ void SpaceTypesGridController::addColumns(const QString &category, std::vector<Q
           {
             p->resetNumberofPeopleSchedule();
           }
-
-          if (boost::optional<model::Lights> light = l->optionalCast<model::Lights>())
+          else if (boost::optional<model::Lights> light = l->optionalCast<model::Lights>())
           {
             light->resetSchedule();
           }
-
-          if (boost::optional<model::Luminaire> lum = l->optionalCast<model::Luminaire>())
+          else if (boost::optional<model::Luminaire> lum = l->optionalCast<model::Luminaire>())
           {
             lum->resetSchedule();
           }
-
-          if (boost::optional<model::ElectricEquipment> e = l->optionalCast<model::ElectricEquipment>())
+          else if (boost::optional<model::ElectricEquipment> e = l->optionalCast<model::ElectricEquipment>())
           {
             e->resetSchedule();
           }
-
-          if (boost::optional<model::GasEquipment> g = l->optionalCast<model::GasEquipment>())
+          else if (boost::optional<model::GasEquipment> g = l->optionalCast<model::GasEquipment>())
           {
             g->resetSchedule();
           }
-
-          if (boost::optional<model::HotWaterEquipment> h = l->optionalCast<model::HotWaterEquipment>())
+          else if (boost::optional<model::HotWaterEquipment> h = l->optionalCast<model::HotWaterEquipment>())
           {
             h->resetSchedule();
           }
-
-          if (boost::optional<model::SteamEquipment> se = l->optionalCast<model::SteamEquipment>())
+          else if (boost::optional<model::SteamEquipment> se = l->optionalCast<model::SteamEquipment>())
           {
             se->resetSchedule();
           }
-
-          if (boost::optional<model::OtherEquipment> o = l->optionalCast<model::OtherEquipment>())
+          else if (boost::optional<model::OtherEquipment> o = l->optionalCast<model::OtherEquipment>())
           {
             o->resetSchedule();
           }
-
-          if (boost::optional<model::SpaceInfiltrationDesignFlowRate> f = l->optionalCast<model::SpaceInfiltrationDesignFlowRate>())
+          else if (boost::optional<model::SpaceInfiltrationDesignFlowRate> f = l->optionalCast<model::SpaceInfiltrationDesignFlowRate>())
           {
             f->resetSchedule();
           }
-
-          if (boost::optional<model::SpaceInfiltrationEffectiveLeakageArea> la = l->optionalCast<model::SpaceInfiltrationEffectiveLeakageArea>())
+          else if (boost::optional<model::SpaceInfiltrationEffectiveLeakageArea> la = l->optionalCast<model::SpaceInfiltrationEffectiveLeakageArea>())
           {
             la->resetSchedule();
           }
-
-          if (boost::optional<model::InternalMass> im = l->optionalCast<model::InternalMass>())
+          else if (boost::optional<model::InternalMass> im = l->optionalCast<model::InternalMass>())
           {
             // Note: InternalMass does not have a schedule
           }
