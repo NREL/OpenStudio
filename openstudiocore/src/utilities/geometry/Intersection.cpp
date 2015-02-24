@@ -567,6 +567,39 @@ namespace openstudio{
     return result;
   }
 
+  // convert a boost ring to vertices
+  std::vector<Point3d> verticesFromBoostRing(const BoostRing& ring, std::vector<Point3d>& allPoints, double tol)
+  {
+    std::vector<Point3d> result;
+
+    // add point for each vertex except final vertex
+    for (unsigned i = 0; i < ring.size() - 1; ++i){
+      Point3d point3d(ring[i].x(), ring[i].y(), 0.0);
+
+      // try to combine points within tolerance
+      Point3d resultPoint = getCombinedPoint(point3d, allPoints, tol);
+
+      // don't keep repeated vertices
+      if ((i > 0) && (result.back() == resultPoint)){
+        continue;
+      }
+      result.push_back(resultPoint);
+    }
+
+    result = removeCollinear(result);
+
+    // don't keep repeated vertices
+    if (result.front() == result.back()){
+      result.pop_back();
+    }
+
+    if (result.size() < 3){
+      return std::vector<Point3d>();
+    }
+
+    return result;
+  }
+
   // struct used to sort polygons in descending order by area
   struct BoostPolygonAreaGreater{
     bool operator()(const BoostPolygon& left, const BoostPolygon& right){
@@ -942,16 +975,18 @@ namespace openstudio{
     std::vector<BoostPolygon> boostPolygons;
     boostPolygons.push_back(*initialBoostPolygon);
 
+    std::vector<BoostPolygon> newBoostPolygons;
     for (const std::vector<Point3d>& hole : holes){
-      boost::optional<BoostPolygon> boostHole = nonIntersectingBoostPolygonFromVertices(polygon, allPoints, tol);
+      boost::optional<BoostPolygon> boostHole = nonIntersectingBoostPolygonFromVertices(hole, allPoints, tol);
       if (!boostHole){
         return result;
       }
-
-      std::vector<BoostPolygon> newBoostPolygons;
+      
       for (const BoostPolygon& boostPolygon : boostPolygons){
         std::vector<BoostPolygon> diffResult;
         boost::geometry::difference(boostPolygon, *boostHole, diffResult);
+        diffResult = removeSpikes(diffResult);
+        diffResult = removeHoles(diffResult);
         newBoostPolygons.insert(newBoostPolygons.end(), diffResult.begin(), diffResult.end());
       }
       boostPolygons.swap(newBoostPolygons);

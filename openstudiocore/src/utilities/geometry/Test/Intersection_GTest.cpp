@@ -843,6 +843,40 @@ TEST_F(GeometryFixture, Subtract_SamePoints)
   EXPECT_EQ(0, test.size());
 }
 
+TEST_F(GeometryFixture, Subtract_Empty)
+{
+  double tol = 0.01;
+
+  std::vector<std::vector<Point3d> > test;
+  std::vector<std::vector<Point3d> > holes;
+  Point3dVector points1;
+  Point3dVector points2;
+
+  // sense is down
+  points1 = makeRectangleDown(0, 0, 1, 1);
+
+  test = subtract(points1, holes, tol);
+  EXPECT_TRUE(test.size() == 1);
+  for (auto polygon : test){
+    std::cout << polygon << std::endl;
+  }
+  EXPECT_DOUBLE_EQ(1.0, totalArea(test));
+
+  // can't subtract single point
+  points2.push_back(Point3d(1, 1, 1));
+
+  holes.clear();
+  holes.push_back(points2);
+  test = subtract(points1, holes, tol);
+  EXPECT_TRUE(test.empty());
+
+  // can't subtract single point
+  holes.clear();
+  holes.push_back(points1);
+  test = subtract(points2, holes, tol);
+  EXPECT_TRUE(test.empty());
+}
+
 TEST_F(GeometryFixture, Subtract_Adjacent)
 {
   double tol = 0.01;
@@ -859,12 +893,20 @@ TEST_F(GeometryFixture, Subtract_Adjacent)
   holes.clear();
   holes.push_back(points2);
   test = subtract(points1, holes, tol);
-  EXPECT_EQ(0, test.size());
+  EXPECT_TRUE(test.size() == 1);
+  for (auto polygon : test){
+    std::cout << polygon << std::endl;
+  }
+  EXPECT_DOUBLE_EQ(1.0, totalArea(test));
 
   holes.clear();
   holes.push_back(points1);
   test = subtract(points2, holes, tol);
-  EXPECT_EQ(0, test.size());
+  EXPECT_TRUE(test.size() == 1);
+  for (auto polygon : test){
+    std::cout << polygon << std::endl;
+  }
+  EXPECT_DOUBLE_EQ(1.0, totalArea(test));
 
   // sense is up
   points1 = makeRectangleUp(0, 0, 1, 1);
@@ -897,6 +939,7 @@ TEST_F(GeometryFixture, Subtract_Overlap)
   holes.clear();
   holes.push_back(points2);
   test = subtract(points1, holes, tol);
+  EXPECT_TRUE(test.size() == 1);
   for (auto polygon : test){
     std::cout << polygon << std::endl;
   }
@@ -912,6 +955,7 @@ TEST_F(GeometryFixture, Subtract_Overlap)
   holes.clear();
   holes.push_back(points1);
   test = subtract(points2, holes, tol);
+  EXPECT_TRUE(test.size() == 1);
   for (auto polygon : test){
     std::cout << polygon << std::endl;
   }
@@ -941,6 +985,7 @@ TEST_F(GeometryFixture, Subtract_Within)
   holes.clear();
   holes.push_back(points2);
   test = subtract(points1, holes, tol);
+  EXPECT_TRUE(test.size() > 1);
   for (auto polygon : test){
     std::cout << polygon << std::endl;
   }
@@ -956,6 +1001,7 @@ TEST_F(GeometryFixture, Subtract_Within)
   holes.clear();
   holes.push_back(points1);
   test = subtract(points2, holes, tol);
+  EXPECT_TRUE(test.empty());
   for (auto polygon : test){
     std::cout << polygon << std::endl;
   }

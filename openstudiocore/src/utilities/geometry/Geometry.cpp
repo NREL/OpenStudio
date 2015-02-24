@@ -444,19 +444,20 @@ namespace openstudio{
     // convert input to vector of TPPLPoly
     std::list<TPPLPoly> polys;
 
-    TPPLPoly outerPoly; // must be counter-clockwise
+    TPPLPoly outerPoly; // must be counter-clockwise, input vertices are clockwise
     outerPoly.Init(vertices.size());
     outerPoly.SetHole(false);
-    for(unsigned i = 0; i < vertices.size(); ++i){
+    unsigned n = vertices.size();
+    for(unsigned i = 0; i < n; ++i){
 
       // should all have zero z coordinate now
-      double z = vertices[i].z();
+      double z = vertices[n-i-1].z();
       if (abs(z) > tol){
         LOG_FREE(Error, "utilities.geometry.computeTriangulation", "All points must be on z = 0 plane for triangulation methods");
         return result;
       }
 
-      Point3d point = getCombinedPoint(vertices[i], allPoints, tol);
+      Point3d point = getCombinedPoint(vertices[n-i-1], allPoints, tol);
       outerPoly[i].x = point.x();
       outerPoly[i].y = point.y();
     }
@@ -471,7 +472,7 @@ namespace openstudio{
         continue;
       }
 
-      TPPLPoly innerPoly; // must be clockwise
+      TPPLPoly innerPoly; // must be clockwise, input vertices are clockwise
       innerPoly.Init(holeVertices.size());
       innerPoly.SetHole(true);
       //std::cout << "inner :";
@@ -529,6 +530,13 @@ namespace openstudio{
       vector.setLength(distance);
       result.push_back(vertex+vector);
     }
+    return result;
+  }
+  
+  std::vector<Point3d> reverse(const Point3dVector& vertices)
+  {
+    std::vector<Point3d> result(vertices);
+    std::reverse(result.begin(), result.end());
     return result;
   }
 

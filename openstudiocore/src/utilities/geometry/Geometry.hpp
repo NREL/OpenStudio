@@ -88,6 +88,10 @@ namespace openstudio{
   /// no guarantee that resulting polygon will be valid
   UTILITIES_API std::vector<Point3d> moveVerticesTowardsPoint(const Point3dVector& vertices, const Point3d& point, double distance);
 
+  /// reverse order of vertices
+  UTILITIES_API std::vector<Point3d> reverse(const Point3dVector& vertices);
+
+
 } // openstudio
 
 #endif //UTILITIES_GEOMETRY_GEOMETRY_HPP

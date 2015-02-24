@@ -605,7 +605,8 @@ TEST_F(GeometryFixture, Triangulate)
   // sense is up
   points1 = makeRectangleUp(0, 0, 4, 4);
   test = computeTriangulation(points1, holes, tol);
-  EXPECT_TRUE(test.empty());
+  EXPECT_FALSE(test.empty());
+  EXPECT_DOUBLE_EQ(16.0, totalArea(test));
 
   // sense is down with a hole in middle
   points1 = makeRectangleDown(0, 0, 4, 4);
@@ -629,6 +630,15 @@ TEST_F(GeometryFixture, Triangulate)
 
   // sense is down with hole same size
   points1 = makeRectangleDown(0, 0, 4, 4);
+  points2 = makeRectangleDown(0, 0, 4, 4);
+
+  holes.clear();
+  holes.push_back(points2);
+  test = computeTriangulation(points1, holes, tol);
+  EXPECT_TRUE(test.empty());
+
+  // sense is down with a bigger hole
+  points1 = makeRectangleDown(1, 1, 1, 1);
   points2 = makeRectangleDown(0, 0, 4, 4);
 
   holes.clear();
