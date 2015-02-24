@@ -94,10 +94,6 @@ ScheduleTypeLimits ScheduleTypeRegistrySingleton::getOrCreateScheduleTypeLimits(
 {
   std::string defaultName = getDefaultName(scheduleType);
 
-  if (defaultName == "Temperature"){
-    bool test = false;
-  }
-
   // DLM: I do not understand why both upper and lower limit have to be set to reuse this?
   //// if fully specified, try to retrieve
   //if (scheduleType.lowerLimitValue && scheduleType.upperLimitValue) {
