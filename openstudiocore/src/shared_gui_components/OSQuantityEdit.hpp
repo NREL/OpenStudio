@@ -162,7 +162,7 @@ class QuantityLineEdit : public QLineEdit {
   Q_OBJECT
 public:
 
-  QuantityLineEdit::QuantityLineEdit(QWidget * parent = nullptr);
+  QuantityLineEdit(QWidget * parent = nullptr);
 
   virtual ~QuantityLineEdit() {}
 
