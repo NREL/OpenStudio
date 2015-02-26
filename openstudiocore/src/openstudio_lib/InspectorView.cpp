@@ -136,6 +136,16 @@ InspectorView::InspectorView(QWidget* parent)
   setLayout(m_vLayout);
 }
 
+void InspectorView::enterEvent(QEvent * event)
+{
+  QWidget::enterEvent(event);
+}
+
+void InspectorView::leaveEvent(QEvent * event)
+{
+  QWidget::leaveEvent(event);
+}
+
 void InspectorView::update()
 {
   if( m_currentView )

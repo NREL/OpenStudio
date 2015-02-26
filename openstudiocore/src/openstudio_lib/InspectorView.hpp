@@ -89,6 +89,11 @@ class InspectorView : public QWidget
   void layoutModelObject( model::OptionalModelObject &, bool readOnly, bool displayIP );
   virtual void toggleUnits(bool displayIP);
 
+  protected slots:
+
+  virtual void enterEvent(QEvent * event);
+  virtual void leaveEvent(QEvent * event);
+
   private:
 
   QVBoxLayout * m_vLayout;

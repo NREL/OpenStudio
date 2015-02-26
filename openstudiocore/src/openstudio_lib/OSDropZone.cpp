@@ -665,9 +665,6 @@ void OSDropZone2::dropEvent(QDropEvent *event)
 
     connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSDropZone2::refresh);
 
-    // Tell EditView to display this object
-    //emit itemClicked(m_item); TODO For now, don't display on drop
-
     if(modelObject){
       if(OSAppBase::instance()->currentDocument()->fromComponentLibrary(itemId)){
         modelObject = modelObject->clone(m_modelObject->model());

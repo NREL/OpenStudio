@@ -31,6 +31,8 @@
 
 #include <boost/smart_ptr.hpp>
 
+class QEvent;
+
 namespace openstudio {
 
 class OSDocument;
@@ -72,6 +74,12 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
     virtual void reloadFile(const QString& fileToLoad, bool modified, bool saveCurrentTabs) = 0;
 
     void showMeasureUpdateDlg();
+
+  protected:
+
+    virtual bool notify(QObject * receiver, QEvent * e);
+
+    virtual bool event(QEvent * e);
 
   private:
 

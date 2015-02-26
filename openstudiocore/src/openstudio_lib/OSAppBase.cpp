@@ -36,6 +36,7 @@
 #include "../utilities/core/PathHelpers.hpp"
 
 #include <QDir>
+#include <QEvent>
 #include <QMessageBox>
 #include <QTimer>
 
@@ -63,6 +64,21 @@ OSAppBase::OSAppBase( int & argc, char ** argv, const QSharedPointer<MeasureMana
 
 OSAppBase::~OSAppBase()
 {
+}
+
+bool OSAppBase::notify(QObject * receiver, QEvent * e)
+{
+  return QApplication::notify(receiver, e);
+}
+
+bool OSAppBase::event(QEvent * e)
+{
+  // Put a breakpoint inside this conditional after the app boots
+  if (e->type() != QEvent::ApplicationActivate && e->type() != QEvent::ApplicationDeactivate && e->type() != QEvent::ApplicationStateChange) {
+    // Look for something interesting in here
+    auto type = e->type();
+  }
+  return QApplication::event(e);
 }
 
 OSAppBase * OSAppBase::instance()
