@@ -283,8 +283,6 @@ find_package(Qt5Widgets HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Widgets
 find_package(Qt5Sql HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Sql
 find_package(Qt5Network HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Network
 find_package(Qt5Xml HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Xml
-find_package(Qt5WebKit HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Network, Qt5WebKit
-find_package(Qt5WebKitWidgets HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Network, Qt5WebKit, Qt5WebKitWidgets, Qt5Widgets
 #find_package(Qt5WinExtras HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5WinExtras
 find_package(Qt5Concurrent HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Concurrent
 find_package(Qt5PrintSupport HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5PrintSupport, Qt5Widgets
@@ -304,8 +302,6 @@ mark_as_advanced(
   Qt5Quick_DIR
   Qt5Sensors_DIR
   Qt5Sql_DIR
-  Qt5WebKit_DIR
-  Qt5WebKitWidgets_DIR
   Qt5Widgets_DIR
   #Qt5WinExtras_DIR
   Qt5Xml_DIR
@@ -318,6 +314,15 @@ if(Qt5Widgets_DIR)
   if(${Qt5Widgets_VERSION} VERSION_LESS "5.2.1")
     message(FATAL_ERROR "Minimum supported Qt is v5.2.1")
   endif()
+  if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
+    find_package(Qt5WebKit HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Network, Qt5WebKit
+    find_package(Qt5WebKitWidgets HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Network, Qt5WebKit, Qt5WebKitWidgets, Qt5Widgets
+    mark_as_advanced(Qt5WebKit_DIR Qt5WebKitWidgets_DIR)
+  else()
+    find_package(Qt5WebEngine HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Network, Qt5Qml, Qt5Quick, Qt5WebEngine
+    find_package(Qt5WebEngineWidgets HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Network, Qt5Qml, Qt5Quick, Qt5WebEngine, Qt5WebEngineWidgets, Qt5Widgets
+    mark_as_advanced(Qt5WebEngine_DIR Qt5WebEngineWidgets_DIR)
+  endif()
 elseif(UNIX)
   option(BUILD_QT "Build Qt" ON)
 endif()
@@ -325,7 +330,7 @@ endif()
 include(ExternalProject)
 include(ProcessorCount)
 
-# set number of cores to be used when building boost and qt, idea is you will do make -jX so boost and qt will build in parralel
+# set number of cores to be used when building boost and qt, idea is you will do make -jX so boost and qt will build in parallel
 ProcessorCount(CPUCOUNT)
 if(CPUCOUNT EQUAL 0)
   set(CPUCOUNT 1)
@@ -668,8 +673,13 @@ if(BUILD_QT)
   set(Qt5Sql_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Sql)
   set(Qt5Network_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Network)
   set(Qt5Xml_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Xml)
-  set(Qt5WebKit_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5WebKit)
-  set(Qt5WebKitWidgets_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5WebKitWidgets)
+  if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
+    set(Qt5WebKit_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5WebKit)
+    set(Qt5WebKitWidgets_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5WebKitWidgets)
+  else()
+    set(Qt5WebEngine_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5WebEngine)
+    set(Qt5WebEngineWidgets_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5WebEngineWidgets)
+  endif()
   set(Qt5Concurrent_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Concurrent)
   set(Qt5PrintSupport_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5PrintSupport)
 
@@ -795,6 +805,8 @@ ExternalProject_Add(OSCore
     -DQt5Xml_DIR:STRING=${Qt5Xml_DIR}
     -DQt5WebKit_DIR:STRING=${Qt5WebKit_DIR}
     -DQt5WebKitWidgets_DIR:STRING=${Qt5WebKitWidgets_DIR}
+    -DQt5WebEngine_DIR:STRING=${Qt5WebEngine_DIR}
+    -DQt5WebEngineWidgets_DIR:STRING=${Qt5WebEngineWidgets_DIR}
     #-DQt5WinExtras_DIR:STRING=${Qt5WinExtras_DIR}
     -DQt5Concurrent_DIR:STRING=${Qt5Concurrent_DIR}
     -DQt5PrintSupport_DIR:STRING=${Qt5PrintSupport_DIR}
@@ -900,6 +912,8 @@ if (BUILD_REGRESSIONS)
       -DQt5Xml_DIR:STRING=${Qt5Xml_DIR}
       -DQt5WebKit_DIR:STRING=${Qt5WebKit_DIR}
       -DQt5WebKitWidgets_DIR:STRING=${Qt5WebKitWidgets_DIR}
+      -DQt5WebEngine_DIR:STRING=${Qt5WebEngine_DIR}
+      -DQt5WebEngineWidgets_DIR:STRING=${Qt5WebEngineWidgets_DIR}
       #-DQt5WinExtras_DIR:STRING=${Qt5WinExtras_DIR}
       -DQt5Concurrent_DIR:STRING=${Qt5Concurrent_DIR}
       -DQt5PrintSupport_DIR:STRING=${Qt5PrintSupport_DIR}

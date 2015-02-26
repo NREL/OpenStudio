@@ -28,7 +28,11 @@
 #include "../runmanager/lib/RunManager.hpp"
 
 #include <QWidget>
+#if QT_VERSION >= 0x050400
+#include <QWebEngineView>
+#else
 #include <QWebView>
+#endif
 
 class QComboBox;
 class QPushButton;
@@ -69,7 +73,11 @@ namespace openstudio {
       openstudio::path m_sqlFilePath;
       openstudio::path m_radianceResultsPath;
 
+#if QT_VERSION >= 0x050400
+      QWebEngineView * m_view;
+#else
       QWebView * m_view;
+#endif
       QComboBox * m_comboBox;
   };
 
@@ -102,7 +110,11 @@ namespace openstudio {
       REGISTER_LOGGER("openstudio::ResultsTabView");
   };
 
+#if QT_VERSION >= 0x050400
+  class ResultsWebView : public QWebEngineView
+#else
   class ResultsWebView : public QWebView
+#endif
   {
     Q_OBJECT;
 
