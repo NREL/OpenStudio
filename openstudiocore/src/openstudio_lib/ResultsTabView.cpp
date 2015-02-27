@@ -18,6 +18,11 @@
 **********************************************************************/
 
 #include "ResultsTabView.hpp"
+#if QT_VERSION >= 0x050400
+#include "ResultsWebEngineView.hpp"
+#else
+#include "ResultsWebView.hpp"
+#endif
 
 #include "OSDocument.hpp"
 

@@ -110,21 +110,6 @@ namespace openstudio {
       REGISTER_LOGGER("openstudio::ResultsTabView");
   };
 
-#if QT_VERSION >= 0x050400
-  class ResultsWebView : public QWebEngineView
-#else
-  class ResultsWebView : public QWebView
-#endif
-  {
-    Q_OBJECT;
-
-    public:
-
-      ResultsWebView(QWidget * parent = 0);
-      
-      QSize sizeHint() const;
-  };
-
 } // openstudio
 
 #endif // OPENSTUDIO_RESULTSTABVIEW_HPP
