@@ -48,7 +48,7 @@ TEST(Economics, EconomicsTest) {
   *  Values obtained from Table A-1                                                  *
   *  NISTIR 85-3273-24                                                               *
   *  (Rev. 5/09)                                                                     *
-  *  Energy Price Indices and Discount Factors for Life-Cycle Cost Analysis – 2009   *
+  *  Energy Price Indices and Discount Factors for Life-Cycle Cost Analysis - 2009   *
   *                                                                                  *
   ***********************************************************************************/
   rate = 0.03; // 3% = 0.03
@@ -62,7 +62,7 @@ TEST(Economics, EconomicsTest) {
   *  Values obtained from Table A-1                                                  *
   *  NISTIR 85-3273-24                                                               *
   *  (Rev. 5/09)                                                                     *
-  *  Energy Price Indices and Discount Factors for Life-Cycle Cost Analysis – 2009   *
+  *  Energy Price Indices and Discount Factors for Life-Cycle Cost Analysis - 2009   *
   *                                                                                  *
   ***********************************************************************************/
   returnValue = economics.getUPVFactor(rate,periods);
