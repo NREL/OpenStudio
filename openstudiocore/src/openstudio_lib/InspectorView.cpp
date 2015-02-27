@@ -138,11 +138,15 @@ InspectorView::InspectorView(QWidget* parent)
 
 void InspectorView::enterEvent(QEvent * event)
 {
+  m_mouseOverInspectorView = true;
+
   QWidget::enterEvent(event);
 }
 
 void InspectorView::leaveEvent(QEvent * event)
 {
+  m_mouseOverInspectorView = false;
+
   QWidget::leaveEvent(event);
 }
 

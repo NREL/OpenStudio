@@ -19,8 +19,13 @@
 
 #include "OSLineEdit.hpp"
 
-#include "../openstudio_lib/OSItem.hpp"
+#include "../openstudio_lib/InspectorController.hpp"
+#include "../openstudio_lib/InspectorView.hpp"
+#include "../openstudio_lib/MainRightColumnController.hpp"
 #include "../openstudio_lib/ModelObjectItem.hpp"
+#include "../openstudio_lib/OSAppBase.hpp"
+#include "../openstudio_lib/OSDocument.hpp"
+#include "../openstudio_lib/OSItem.hpp"
 
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
@@ -265,7 +270,11 @@ void OSLineEdit2::focusOutEvent(QFocusEvent * e)
     setStyleSheet(style);
 
     emit inFocus(false, false);
-    //emit itemClicked(nullptr); Evan TODO
+
+    auto mouseOverInspectorView = OSAppBase::instance()->currentDocument()->mainRightColumnController()->inspectorController()->inspectorView()->mouseOverInspectorView();
+    if (!mouseOverInspectorView) {
+      emit itemClicked(nullptr);
+    }
   }
 
   QLineEdit::focusOutEvent(e);

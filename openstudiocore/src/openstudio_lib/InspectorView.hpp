@@ -68,6 +68,8 @@ class InspectorView : public QWidget
 
   BaseInspectorView * currentView() { return m_currentView; }
 
+  bool mouseOverInspectorView() { return m_mouseOverInspectorView; };
+
   signals:
 
   void addZoneClicked(model::ThermalZone &);
@@ -100,6 +102,7 @@ class InspectorView : public QWidget
   BaseInspectorView * m_currentView;
   QStackedWidget * m_stackedWidget;
   boost::optional<model::ModelObject> m_modelObject;
+  bool m_mouseOverInspectorView = false;
 };
 
 class BaseInspectorView : public QWidget

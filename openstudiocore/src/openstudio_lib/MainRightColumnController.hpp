@@ -57,6 +57,8 @@ class MainRightColumnController : public OSQObjectController
 
   bool isMyModelTabHidden(){return m_myModelTabIsHidden;}
 
+  std::shared_ptr<InspectorController> inspectorController() { return m_inspectorController; };
+
   enum RightColumnTabID
   {
     MY_MODEL,

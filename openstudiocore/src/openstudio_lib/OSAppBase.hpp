@@ -75,12 +75,6 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
 
     void showMeasureUpdateDlg();
 
-  protected:
-
-    virtual bool notify(QObject * receiver, QEvent * e);
-
-    virtual bool event(QEvent * e);
-
   private:
 
   REGISTER_LOGGER("openstudio.OSAppBase");

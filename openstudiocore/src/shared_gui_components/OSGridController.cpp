@@ -53,6 +53,7 @@
 #include <QColor>
 #include <QPushButton>
 #include <QSettings>
+#include <QTimer>
 #include <QWidget>
 
 namespace openstudio {
@@ -1552,33 +1553,36 @@ void OSGridController::onInFocus(bool inFocus, bool hasData, int row, int column
     gridView()->requestRefreshGrid(); // TODO this is heavy handed; each cell should update itself
 
   } else {
-    if (std::get<1>(m_selectedCellLocation) != column) {
-      // The user clicked another column, disable the old column's apply button
-      // It is possible that the user changed the category selected, so be sure m_selectedCellLocation has valid data
-      if (std::get<0>(m_selectedCellLocation) != -1) {
-        HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(std::get<1>(m_selectedCellLocation)));
-        OS_ASSERT(horizontalHeaderWidget);
-        horizontalHeaderWidget->m_pushButton->setEnabled(false);
-      }
-    }
+    HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(column));
+    OS_ASSERT(horizontalHeaderWidget);
+    auto button = horizontalHeaderWidget->m_pushButton;
+    OS_ASSERT(button);
 
-    m_selectedCellLocation = std::make_tuple(row, column, subrow);
+    m_applyToButtonStates.push_back(std::make_pair(button, inFocus));
 
     if (inFocus) {
-      HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(column));
-      OS_ASSERT(horizontalHeaderWidget);
-
-      horizontalHeaderWidget->m_pushButton->setEnabled(true);
+      m_selectedCellLocation = std::make_tuple(row, column, subrow);
 
       if (hasData){
-        horizontalHeaderWidget->m_pushButton->setText("Apply to Selected");
+        button->setText("Apply to Selected");
       }
       else {
-        horizontalHeaderWidget->m_pushButton->setText("Apply to Selected");
-        //horizontalHeaderWidget->m_pushButton->setText("Clear Selected"); TODO
+        button->setText("Apply to Selected");
+        //button->setText("Clear Selected"); TODO
       }
     }
+
+    QTimer::singleShot(0, this, SLOT(setApplyButtonState()));
   }
+}
+
+void OSGridController::setApplyButtonState()
+{
+  for (auto pair : m_applyToButtonStates) {
+    pair.first->setEnabled(pair.second);
+  }
+
+  m_applyToButtonStates.clear();
 }
 
 HorizontalHeaderPushButton::HorizontalHeaderPushButton(QWidget * parent)

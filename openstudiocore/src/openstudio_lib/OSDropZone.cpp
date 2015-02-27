@@ -20,11 +20,14 @@
 #include "OSDropZone.hpp"
 
 #include "IconLibrary.hpp"
+#include "InspectorController.hpp"
+#include "InspectorView.hpp"
+#include "MainRightColumnController.hpp"
+#include "ModelObjectItem.hpp"
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 #include "OSItem.hpp"
 #include "OSVectorController.hpp"
-#include "ModelObjectItem.hpp"
 
 #include "../model/ModelObject_Impl.hpp"
 #include "../model/Model_Impl.hpp"
@@ -742,7 +745,11 @@ void OSDropZone2::focusOutEvent(QFocusEvent * e)
     setStyleSheet(style);
 
     emit inFocus(false, false);
-    //emit itemClicked(nullptr); Evan TODO
+
+    auto mouseOverInspectorView = OSAppBase::instance()->currentDocument()->mainRightColumnController()->inspectorController()->inspectorView()->mouseOverInspectorView();
+    if (!mouseOverInspectorView) {
+      emit itemClicked(nullptr);
+    }
   }
 
   QWidget::focusOutEvent(e);

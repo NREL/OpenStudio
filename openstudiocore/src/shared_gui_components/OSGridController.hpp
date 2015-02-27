@@ -644,6 +644,8 @@ private:
 
   std::tuple<int, int, boost::optional<int>> m_selectedCellLocation = std::make_tuple(-1, -1, -1);
 
+  std::vector <std::pair<QPushButton *, bool> > m_applyToButtonStates = std::vector < std::pair<QPushButton *, bool> >();
+
 signals:
 
   // Nuclear reset of everything
@@ -686,6 +688,8 @@ private slots:
   void onAddWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
 
   void onObjectRemoved(boost::optional<model::ParentObject> parent);
+
+  void setApplyButtonState();
 
 };
 
