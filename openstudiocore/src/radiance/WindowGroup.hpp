@@ -26,8 +26,8 @@
 #include "../model/ConstructionBase.hpp"
 #include "../model/ShadingControl.hpp"
 
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
+#include "../utilities/geometry/Point3d.hpp"
+#include "../utilities/geometry/Vector3d.hpp"
 
 namespace openstudio{
 namespace radiance{

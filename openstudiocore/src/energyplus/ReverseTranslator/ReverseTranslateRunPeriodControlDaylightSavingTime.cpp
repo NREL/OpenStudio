@@ -26,7 +26,6 @@
 
 #include <utilities/idd/RunPeriodControl_DaylightSavingTime_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
-#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 
