@@ -205,7 +205,7 @@ set(economics_src
 )
 
 set(${target_name}_depends
-  zkqwt
+  qwt
   sqlite
   litesql
   litesql-util
