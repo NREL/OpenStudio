@@ -66,6 +66,27 @@ OSAppBase::~OSAppBase()
 {
 }
 
+bool OSAppBase::notify(QObject * receiver, QEvent * e)
+{
+  return QApplication::notify(receiver, e);
+}
+
+bool OSAppBase::event(QEvent * e)
+{
+  // Put a breakpoint inside this conditional after the app boots
+  if (e->type() != QEvent::ApplicationActivate && e->type() != QEvent::ApplicationDeactivate && e->type() != QEvent::ApplicationStateChange) {
+    // Look for something interesting in here
+    auto type = e->type();
+  }
+
+  return QApplication::event(e);
+}
+
+void OSAppBase::childEvent(QChildEvent * e)
+{
+  QApplication::childEvent(e);
+}
+
 OSAppBase * OSAppBase::instance()
 {
   return qobject_cast<OSAppBase *>(QApplication::instance());
