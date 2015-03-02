@@ -33,10 +33,6 @@
 #include "../../model/ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
 #include "../../model/Curve.hpp"
 #include "../../model/Curve_Impl.hpp"
-#include "../../model/Curve.hpp"
-#include "../../model/Curve_Impl.hpp"
-#include "../../model/Curve.hpp"
-#include "../../model/Curve_Impl.hpp"
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/AirConditioner_VariableRefrigerantFlow_FieldEnums.hxx>

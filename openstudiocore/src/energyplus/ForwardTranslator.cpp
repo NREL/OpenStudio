@@ -65,9 +65,6 @@
 #include <utilities/idd/SetpointManager_MixedAir_FieldEnums.hxx>
 
 #include "../utilities/idd/IddEnums.hpp"
-#include <utilities/idd/IddEnums.hxx>
-#include <utilities/idd/IddFactory.hxx>
-#include "../utilities/plot/ProgressBar.hpp"
 
 #include <QFile>
 #include <QTextStream>

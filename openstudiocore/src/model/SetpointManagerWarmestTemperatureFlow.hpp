@@ -20,8 +20,8 @@
 #ifndef MODEL_SETPOINTMANAGERWARMESTTEMPERATUREFLOW_HPP
 #define MODEL_SETPOINTMANAGERWARMESTTEMPERATUREFLOW_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SetpointManager.hpp>
+#include "ModelAPI.hpp"
+#include "SetpointManager.hpp"
 
 namespace openstudio {
 

@@ -48,8 +48,8 @@
     class PathWatcher;
     class IdfObjectWatcher;
     class BCL;
-	class RemoteBCL;
-	class LocalBCL;
+    class RemoteBCL;
+    class LocalBCL;
     class WorkspaceObjectWatcher;
     class WorkspaceWatcher;
   }
