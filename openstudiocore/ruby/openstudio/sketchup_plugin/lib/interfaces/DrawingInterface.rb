@@ -856,6 +856,10 @@ module OpenStudio
       # active_path is entities which are open, e.g. inside a group
       if active_path = @model_interface.skp_model.active_path
         active_path_transform = @model_interface.active_path_transform
+        
+        if active_path_transform.nil?
+          raise "Invalid active path transform"
+        end
 
         # add transformation for this entity back in
         if index = active_path.index(self.entity)
@@ -901,7 +905,11 @@ module OpenStudio
         # active_path is entities which are open, e.g. inside a group
         if active_path = @model_interface.skp_model.active_path
           active_path_transform = @model_interface.active_path_transform
-
+          
+          if active_path_transform.nil?
+            raise "Invalid active path transform"
+          end
+        
           # changing transformation for entity in active path would involve setting edit_transform, I don't think we 
           # want to do this, this case should not happen any way (e.g. moving a space while in the space)
           if index = active_path.index(self.entity)
