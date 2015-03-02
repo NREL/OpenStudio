@@ -22,68 +22,85 @@
 
 #include "ModelObjectInspectorView.hpp"
 #include "ModelSubTabView.hpp"
-
 #include "../model/ThermalZone.hpp"
 
 namespace openstudio {
 
   class ThermalZonesGridView;
 
-class ThermalZonesView : public ModelSubTabView
-{
-  Q_OBJECT
+  class ThermalZonesView : public QWidget
+  {
+    Q_OBJECT
 
-public:
+  public:
 
-  ThermalZonesView(bool isIP, const model::Model & model, QWidget * parent = 0);
+    ThermalZonesView(bool isIP, const model::Model & model, QWidget * parent = 0);
 
-  virtual ~ThermalZonesView() {}
+    ThermalZonesGridView * gridView;
+    OSItemSelectorButtons * selectorButtons;
 
-};
+  signals:
 
-class ThermalZoneView : public ModelObjectInspectorView
-{
+    // TODO: Restore these
+    void modelObjectSelected(model::OptionalModelObject & modelObject, bool readOnly);
+    void dropZoneItemSelected(OSItem* item, bool readOnly);
+  };
 
-  Q_OBJECT
-
-public:
-
-  ThermalZoneView(bool isIP, const model::Model & model, QWidget * parent = 0);
-
-  virtual ~ThermalZoneView() {}
-
-  virtual bool supportsMultipleObjectSelection() const { return true; }
-  virtual std::vector<model::ModelObject> selectedObjects() const;
-
-public slots:
-
-  void refresh();
-
-signals:
-
-  void modelObjectSelected(model::OptionalModelObject & modelObject, bool readOnly);
-
-  void dropZoneItemSelected(OSItem* item, bool readOnly);
-
-protected:
-
-  void onClearSelection();
-
-  void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
-
-  void onUpdate();
-
-private slots:
-
-  void toggleUnits(bool);
-
-private:
-
-  ThermalZonesGridView * m_thermalZonesGridView = nullptr;
-
-  bool m_isIP;
-
-};
+//class ThermalZonesView : public ModelSubTabView
+//{
+//  Q_OBJECT
+//
+//public:
+//
+//  ThermalZonesView(bool isIP, const model::Model & model, QWidget * parent = 0);
+//
+//  virtual ~ThermalZonesView() {}
+//
+//};
+//
+//class ThermalZoneView : public ModelObjectInspectorView
+//{
+//
+//  Q_OBJECT
+//
+//public:
+//
+//  ThermalZoneView(bool isIP, const model::Model & model, QWidget * parent = 0);
+//
+//  virtual ~ThermalZoneView() {}
+//
+//  virtual bool supportsMultipleObjectSelection() const { return true; }
+//  virtual std::vector<model::ModelObject> selectedObjects() const;
+//
+//public slots:
+//
+//  void refresh();
+//
+//signals:
+//
+//  void modelObjectSelected(model::OptionalModelObject & modelObject, bool readOnly);
+//
+//  void dropZoneItemSelected(OSItem* item, bool readOnly);
+//
+//protected:
+//
+//  void onClearSelection();
+//
+//  void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+//
+//  void onUpdate();
+//
+//private slots:
+//
+//  void toggleUnits(bool);
+//
+//private:
+//
+//  ThermalZonesGridView * m_thermalZonesGridView = nullptr;
+//
+//  bool m_isIP;
+//
+//};
 
 } // openstudio
 

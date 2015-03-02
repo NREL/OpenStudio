@@ -21,6 +21,7 @@
 
 #include "ModelObjectListView.hpp"
 #include "ThermalZonesGridView.hpp"
+#include "OSItemSelectorButtons.hpp"
 
 #include <QPainter>
 #include <QStackedWidget>
@@ -32,84 +33,101 @@
 
 namespace openstudio {
 
-ThermalZonesView::ThermalZonesView(bool isIP,
-  const model::Model & model,
-  QWidget * parent)
-  : ModelSubTabView(new ModelObjectListView(IddObjectType::OS_ThermalZone,model,true,parent),
-                    new ThermalZoneView(isIP,model,parent),
-                    true,
-                    parent)
+ThermalZonesView::ThermalZonesView(bool isIP, const model::Model & model, QWidget * parent)
+  : QWidget(parent)
 {
-  bool isConnected = false;
+  auto vLayout = new QVBoxLayout(); 
+  vLayout->setContentsMargins(1,1,0,0);
+  vLayout->setAlignment(Qt::AlignBottom);
+  setLayout(vLayout);
 
-  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), inspectorView(), SIGNAL(itemSelected(OSItem *)));
-  OS_ASSERT(isConnected); 
+  gridView = new ThermalZonesGridView(isIP,model,this);
+  vLayout->addWidget(gridView);
 
-  isConnected = connect(itemSelector(), SIGNAL(itemSelected(OSItem *)), inspectorView(), SIGNAL(itemSelected(OSItem *)));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(itemSelector(), SIGNAL(selectionCleared()), inspectorView(), SIGNAL(selectionCleared()));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(inspectorView(), SIGNAL(gridRowSelected(OSItem*)), itemSelector(), SIGNAL(gridRowSelected(OSItem*)));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(inspectorView(), SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
-  OS_ASSERT(isConnected);
+  selectorButtons = new OSItemSelectorButtons();
+  selectorButtons->hideDropZone();
+  selectorButtons->enableRemoveButton();
+  vLayout->addWidget(selectorButtons);
 }
 
-ThermalZoneView::ThermalZoneView(bool isIP,
-  const model::Model & model,
-  QWidget * parent )
-  : ModelObjectInspectorView(model,true,parent),
-    m_isIP(isIP)
-{
-  bool isConnected = false;
-
-  m_thermalZonesGridView = new ThermalZonesGridView(this->m_isIP,this->m_model,this);
-  this->stackedWidget()->addWidget(m_thermalZonesGridView);
-
-  isConnected = connect(m_thermalZonesGridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), m_thermalZonesGridView, SIGNAL(itemSelected(OSItem *)));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(this, SIGNAL(selectionCleared()), m_thermalZonesGridView, SIGNAL(selectionCleared()));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(m_thermalZonesGridView, SIGNAL(gridRowSelected(OSItem*)), this, SIGNAL(gridRowSelected(OSItem*)));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), this, SLOT(toggleUnits(bool)));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_thermalZonesGridView, SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
-
-  refresh();
-}
-
-std::vector<model::ModelObject> ThermalZoneView::selectedObjects() const
-{
-  return m_thermalZonesGridView->selectedObjects();
-}
-
-void ThermalZoneView::onClearSelection()
-{}
-
-void ThermalZoneView::onSelectModelObject(const openstudio::model::ModelObject& modelObject)
-{}
-
-void ThermalZoneView::onUpdate()
-{}
-
-void ThermalZoneView::refresh()
-{}
-
-void ThermalZoneView::toggleUnits(bool isIP)
-{
-  m_isIP = isIP;
-}
+//ThermalZonesView::ThermalZonesView(bool isIP,
+//  const model::Model & model,
+//  QWidget * parent)
+//  : ModelSubTabView(new ModelObjectListView(IddObjectType::OS_ThermalZone,model,true,parent),
+//                    new ThermalZoneView(isIP,model,parent),
+//                    true,
+//                    parent)
+//{
+//  bool isConnected = false;
+//
+//  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), inspectorView(), SIGNAL(itemSelected(OSItem *)));
+//  OS_ASSERT(isConnected); 
+//
+//  isConnected = connect(itemSelector(), SIGNAL(itemSelected(OSItem *)), inspectorView(), SIGNAL(itemSelected(OSItem *)));
+//  OS_ASSERT(isConnected);
+//
+//  isConnected = connect(itemSelector(), SIGNAL(selectionCleared()), inspectorView(), SIGNAL(selectionCleared()));
+//  OS_ASSERT(isConnected);
+//
+//  isConnected = connect(inspectorView(), SIGNAL(gridRowSelected(OSItem*)), itemSelector(), SIGNAL(gridRowSelected(OSItem*)));
+//  OS_ASSERT(isConnected);
+//
+//  isConnected = connect(inspectorView(), SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
+//  OS_ASSERT(isConnected);
+//}
+//
+//ThermalZoneView::ThermalZoneView(bool isIP,
+//  const model::Model & model,
+//  QWidget * parent )
+//  : ModelObjectInspectorView(model,true,parent),
+//    m_isIP(isIP)
+//{
+//  bool isConnected = false;
+//
+//  m_thermalZonesGridView = new ThermalZonesGridView(this->m_isIP,this->m_model,this);
+//  this->stackedWidget()->addWidget(m_thermalZonesGridView);
+//
+//  isConnected = connect(m_thermalZonesGridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
+//  OS_ASSERT(isConnected);
+//
+//  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), m_thermalZonesGridView, SIGNAL(itemSelected(OSItem *)));
+//  OS_ASSERT(isConnected);
+//
+//  isConnected = connect(this, SIGNAL(selectionCleared()), m_thermalZonesGridView, SIGNAL(selectionCleared()));
+//  OS_ASSERT(isConnected);
+//
+//  isConnected = connect(m_thermalZonesGridView, SIGNAL(gridRowSelected(OSItem*)), this, SIGNAL(gridRowSelected(OSItem*)));
+//  OS_ASSERT(isConnected);
+//
+//  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), this, SLOT(toggleUnits(bool)));
+//  OS_ASSERT(isConnected);
+//
+//  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_thermalZonesGridView, SIGNAL(toggleUnitsClicked(bool)));
+//  OS_ASSERT(isConnected);
+//
+//  refresh();
+//}
+//
+//std::vector<model::ModelObject> ThermalZoneView::selectedObjects() const
+//{
+//  return m_thermalZonesGridView->selectedObjects();
+//}
+//
+//void ThermalZoneView::onClearSelection()
+//{}
+//
+//void ThermalZoneView::onSelectModelObject(const openstudio::model::ModelObject& modelObject)
+//{}
+//
+//void ThermalZoneView::onUpdate()
+//{}
+//
+//void ThermalZoneView::refresh()
+//{}
+//
+//void ThermalZoneView::toggleUnits(bool isIP)
+//{
+//  m_isIP = isIP;
+//}
 
 } // openstudio
