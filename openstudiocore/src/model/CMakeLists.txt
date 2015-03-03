@@ -982,6 +982,9 @@ set(${target_name}_swig_src
   ModelHVAC.i
 )
 
+# Only need to moc files that have Q_OBJECT macro
+# Only files with signals, slots, or Q_PROPERTY need to have Q_OBJECT macro
+# We want the number of files moc'd to decrease over time, run CheckForQObject.rb to remove unnecessary moc's
 set(${target_name}_moc
   Model_Impl.hpp
   Component_Impl.hpp
