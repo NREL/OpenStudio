@@ -7,7 +7,7 @@ File.open("#{dir}/CMakeLists.txt", 'r') do |file|
   start_moc = false
   while line = file.gets
     if start_moc
-      moc_files << line.strip.gsub('_Impl','').gsub('.hpp','')
+      moc_files << line.strip
     end
     start_moc = true if /set\(.*_moc/.match(line) 
     start_moc = false if /\)/.match(line) 
@@ -28,7 +28,7 @@ Dir.glob("#{dir}/*.hpp").each do |f|
   has_slots = false
   has_qobject = false
   has_qproperty = false
-  has_moc = moc_files.index(class_name)
+  has_moc = moc_files.index(file_name)
   
   File.open(f, 'r') do |file|
     while line = file.gets
