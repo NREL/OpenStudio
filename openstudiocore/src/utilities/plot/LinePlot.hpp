@@ -34,14 +34,15 @@
  
 #include <qwt/qwt_legend.h>
 #include <qwt/qwt_plot_grid.h>
-#include <qwt/qwt_legend_item.h>
+#include <qwt/qwt_legend_label.h>
 #include <qwt/qwt_text.h>
 #include <qwt/qwt_color_map.h>
-#include <qwt/qwt_data.h>
+#include <qwt/qwt_series_data.h>
 #include <qwt/qwt_scale_draw.h>
 #include <qwt/qwt_plot_zoomer.h>
 #include <qwt/qwt_plot_curve.h>
 #include <qwt/qwt_plot_layout.h>
+#include <qwt/qwt_point_data.h>
 
 #include <cmath>
 
@@ -50,7 +51,7 @@ namespace openstudio{
 /** LinePlotData is abstract class for data that can be used in a line plot.
  *  Derive from this class to plot your data.
  */
-class UTILITIES_API LinePlotData: public QwtData
+  class UTILITIES_API LinePlotData : public QwtSeriesData<QPointF>
 {
 public:
 
@@ -97,6 +98,11 @@ public:
 
   /// units for plotting on axes or scaling
   virtual std::string units() const = 0;
+
+  virtual size_t size() const = 0;
+  virtual QPointF sample(size_t i) const = 0;
+
+  virtual QRectF boundingRect() const = 0;
 
 protected:
   LinePlotData() {}
@@ -159,7 +165,10 @@ public:
   double stdDevValue() const;
 
   /// reimplement bounding rect for speed
-  QwtDoubleRect boundingRect() const {return m_boundingRect;};
+  QRectF boundingRect() const {return m_boundingRect;};
+
+  /// reimplement sample
+  QPointF sample(size_t i) const {return QPointF(0,0);};
 
   /// reimplement abstract function size
   size_t size(void) const {return m_size;};
@@ -185,7 +194,7 @@ private:
   double m_minY;
   double m_maxY;
   size_t m_size;
-  QwtDoubleRect m_boundingRect;
+  QRectF m_boundingRect;
   std::string m_units;
   double m_fracDaysOffset;
   // testing Vector class
@@ -253,7 +262,10 @@ public:
   double stdDevValue() const;
 
   /// reimplement bounding rect for speed
-  QwtDoubleRect boundingRect() const {return m_boundingRect;};
+  QRectF boundingRect() const {return m_boundingRect;};
+
+  /// reimplement sample
+  QPointF sample(size_t i) const {return QPointF(0,0);};
 
   /// reimplement abstract function size
   size_t size(void) const {return m_size;};
@@ -280,7 +292,7 @@ private:
   Vector m_yVector;
   InterpMethod m_interpMethod;
   double m_minX, m_maxX, m_minY, m_maxY;
-  QwtDoubleRect m_boundingRect;
+  QRectF m_boundingRect;
   size_t m_size;
   std::string m_units;
 };

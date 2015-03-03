@@ -23,8 +23,10 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/Vector.hpp"
 
+#include <qwt/qwt_picker_machine.h>
+#include <qwt/qwt_plot_renderer.h>
 #include <qwt/qwt_symbol.h>
-#include <qwt/qwt_data.h>
+#include <qwt/qwt_series_data.h>
 #include <qwt/qwt_scale_engine.h>
 
 #include <QVBoxLayout>
@@ -59,8 +61,8 @@ namespace resultsviewer{
     m_yUnscaled.resize(data.size());
     for(i=0; i<data.size(); i++)
     {
-      m_xValues[i] = data.x(i);
-      m_yUnscaled[i] = data.y(i);
+      m_xValues[i] = data.sample(i).x();
+      m_yUnscaled[i] = data.sample(i).y();
     }
     setLinePlotStyle(resultsviewer::smoothLinePlot);
   }
@@ -71,11 +73,11 @@ namespace resultsviewer{
     switch (yType)
     {
     case resultsviewer::unScaledY:
-      setData(m_xValues, m_yUnscaled);
+      setSamples(m_xValues, m_yUnscaled);
       m_yType = yType;
       break;
     case resultsviewer::scaledY:
-      setData(m_xValues, m_yScaled);
+      setSamples(m_xValues, m_yScaled);
       m_yType = yType;
       break;
     }
@@ -484,7 +486,7 @@ namespace resultsviewer{
     m_plot->setAxisTitle(QwtPlot::yLeft, title);
     m_plot->setAxisTitle(QwtPlot::yRight, title);
 
-    m_plot->setMargin(5);
+    //m_plot->setMargin(5);
 
 
     m_zoomer[0] = new Zoomer( QwtPlot::xBottom, QwtPlot::yLeft, m_plot->canvas());
@@ -498,7 +500,7 @@ namespace resultsviewer{
     m_zoomer[1]->setEnabled(false);
 
     // This seems to have trouble with qt5 connect
-    bool isConnected = connect(m_zoomer[0], SIGNAL(zoomed(const QwtDoubleRect &)), this, SLOT(slotZoomed(const QwtDoubleRect &)));
+    bool isConnected = connect(m_zoomer[0], SIGNAL(zoomed(const QRectF &)), this, SLOT(slotZoomed(const QRectF &)));
     OS_ASSERT(isConnected);
 
 
@@ -506,12 +508,10 @@ namespace resultsviewer{
     m_panner = new QwtPlotPanner(m_plot->canvas());
     m_panner->setMouseButton(Qt::LeftButton);
 
-    m_picker = new QwtPlotPicker(QwtPlot::xBottom, QwtPlot::yLeft,
-      QwtPicker::PointSelection,
-      QwtPlotPicker::CrossRubberBand, QwtPicker::ActiveOnly,
-      m_plot->canvas());
+    m_picker = new QwtPlotPicker(QwtPlot::xBottom, QwtPlot::yLeft, QwtPlotPicker::CrossRubberBand, QwtPicker::ActiveOnly, m_plot->canvas());
     m_picker->setRubberBandPen(QColor(Qt::gray));
     m_picker->setRubberBand(QwtPicker::CrossRubberBand);
+    m_picker->setStateMachine(new QwtPickerClickPointMachine());
     m_picker->setTrackerPen(QColor(Qt::white));
 
     // This seems to have trouble with qt5 connect
@@ -527,22 +527,22 @@ namespace resultsviewer{
 
     m_valueInfoMarker = new QwtPlotMarker();
     m_valueInfoMarker->attach(m_plot);
-    m_valueInfoMarker->setSymbol(QwtSymbol(QwtSymbol::Hexagon, QBrush(Qt::white), QPen(Qt::black,3), QSize(10,10)));
-    m_valueInfoMarker->setAxis(QwtPlot::xBottom, QwtPlot::yLeft);
+    m_valueInfoMarker->setSymbol(new QwtSymbol(QwtSymbol::Hexagon, QBrush(Qt::white), QPen(Qt::black,3), QSize(10,10)));
+    m_valueInfoMarker->setAxes(QwtPlot::xBottom, QwtPlot::yLeft);
     m_valueInfoMarker->hide();
     m_illuminanceMapRefPt1 = new QwtPlotMarker();
     m_illuminanceMapRefPt1->attach(m_plot);
-    m_illuminanceMapRefPt1->setAxis(QwtPlot::xBottom, QwtPlot::yLeft);
+    m_illuminanceMapRefPt1->setAxes(QwtPlot::xBottom, QwtPlot::yLeft);
     m_illuminanceMapRefPt1->setLabel(QwtText("Ref1"));
     m_illuminanceMapRefPt1->setLabelAlignment(Qt::AlignRight | Qt::AlignTop);
-    m_illuminanceMapRefPt1->setSymbol(QwtSymbol(QwtSymbol::XCross, QBrush(Qt::white), QPen(Qt::black,2), QSize(7,7)));
+    m_illuminanceMapRefPt1->setSymbol(new QwtSymbol(QwtSymbol::XCross, QBrush(Qt::white), QPen(Qt::black,2), QSize(7,7)));
     m_illuminanceMapRefPt1->hide();
     m_illuminanceMapRefPt2 = new QwtPlotMarker();
     m_illuminanceMapRefPt2->attach(m_plot);
-    m_illuminanceMapRefPt2->setAxis(QwtPlot::xBottom, QwtPlot::yLeft);
+    m_illuminanceMapRefPt2->setAxes(QwtPlot::xBottom, QwtPlot::yLeft);
     m_illuminanceMapRefPt2->setLabel(QwtText("Ref2"));
     m_illuminanceMapRefPt2->setLabelAlignment(Qt::AlignRight | Qt::AlignTop);
-    m_illuminanceMapRefPt2->setSymbol(QwtSymbol(QwtSymbol::XCross, QBrush(Qt::white), QPen(Qt::black,2), QSize(7,7)));
+    m_illuminanceMapRefPt2->setSymbol(new QwtSymbol(QwtSymbol::XCross, QBrush(Qt::white), QPen(Qt::black,2), QSize(7,7)));
     m_illuminanceMapRefPt2->hide();
 
 
@@ -780,7 +780,7 @@ namespace resultsviewer{
 
     m_floodPlotData = data;
 
-    m_spectrogram->setData(*m_floodPlotData);
+    m_spectrogram->setData(m_floodPlotData.get());
 
     setDataRange();
 
@@ -884,7 +884,7 @@ namespace resultsviewer{
 
     m_floodPlotData = data;
 
-    m_spectrogram->setData(*m_floodPlotData);
+    m_spectrogram->setData(m_floodPlotData.get());
 
     setDataRange();
     m_spectrogramOn = true;
@@ -974,7 +974,7 @@ namespace resultsviewer{
     m_floodPlotData = data;
 
     rightAxisTitleFromUnits(openstudio::toQString(m_floodPlotData->units()));
-    m_spectrogram->setData(*m_floodPlotData);
+    m_spectrogram->setData(m_floodPlotData.get());
 
     setDataRange();
 
@@ -988,7 +988,7 @@ namespace resultsviewer{
 
   void PlotView::contourLevels(openstudio::Vector& contourValues)
   {
-    QwtValueList contours;
+    QList<double> contours;
     for( unsigned int level = 0; level < contourValues.size(); level ++ )
       contours += contourValues[level];
 
@@ -1004,9 +1004,9 @@ namespace resultsviewer{
 
     openstudio::FloodPlotColorMap colorMap = openstudio::FloodPlotColorMap(m_colorLevels, m_colorMapType);
 
-    m_spectrogram->setColorMap(colorMap);
+    m_spectrogram->setColorMap(&colorMap);
     m_plot->setAxisScale(QwtPlot::yRight, openstudio::minimum(colorLevels), openstudio::maximum(colorLevels)); // legend numbers
-    m_rightAxis->setColorMap(QwtDoubleInterval(openstudio::minimum(colorLevels), openstudio::maximum(colorLevels)), m_spectrogram->colorMap()); // legend colors
+    m_rightAxis->setColorMap(QwtInterval(openstudio::minimum(colorLevels), openstudio::maximum(colorLevels)), const_cast<QwtColorMap *>(m_spectrogram->colorMap())); // legend colors
     m_plot->replot();
   }
 
@@ -1017,11 +1017,11 @@ namespace resultsviewer{
     if (!m_floodPlotData)
       return;
 
-    QwtDoubleInterval colorMap = QwtDoubleInterval(min, max);
+    QwtInterval colorMap = QwtInterval(min, max);
     m_floodPlotData->colorMapRange(colorMap); // color range applied to plot data
-    m_spectrogram->setData(*m_floodPlotData);
+    m_spectrogram->setData(m_floodPlotData.get());
     m_plot->setAxisScale(QwtPlot::yRight, min, max); // legend numbers
-    m_rightAxis->setColorMap(colorMap, m_spectrogram->colorMap()); // legend colors
+    m_rightAxis->setColorMap(colorMap, const_cast<QwtColorMap *>(m_spectrogram->colorMap())); // legend colors
     m_plot->replot();
   }
 
@@ -1063,20 +1063,19 @@ namespace resultsviewer{
 
   void PlotView::initColorMap()
   {
-    m_colorMap = openstudio::FloodPlotColorMap(m_colorLevels, m_colorMapType);
-    m_spectrogram->setColorMap(m_colorMap);
-    m_spectrogram->setData(*m_floodPlotData);
+    m_spectrogram->setColorMap(new FloodPlotColorMap(m_colorLevels, m_colorMapType));
+    m_spectrogram->setData(m_floodPlotData.get());
   }
 
   void PlotView::setDataRange()
   {
     if (m_floodPlotAutoScale)
-      m_dataRange = QwtDoubleInterval(m_floodPlotData->minValue(), m_floodPlotData->maxValue());
+      m_dataRange = QwtInterval(m_floodPlotData->minValue(), m_floodPlotData->maxValue());
     else
-      m_dataRange = QwtDoubleInterval(m_floodPlotMin, m_floodPlotMax);
+      m_dataRange = QwtInterval(m_floodPlotMin, m_floodPlotMax);
 
     if (m_dataRange.minValue() == m_dataRange.maxValue())
-      m_dataRange = QwtDoubleInterval(m_dataRange.minValue(), m_dataRange.minValue() + 1.0);
+      m_dataRange = QwtInterval(m_dataRange.minValue(), m_dataRange.minValue() + 1.0);
 
     m_colorLevels=openstudio::linspace(m_dataRange.minValue(), m_dataRange.maxValue(),m_colorMapLength);
 
@@ -1084,7 +1083,7 @@ namespace resultsviewer{
 
     setColorMap(m_colorMapType);
     /// default contour levels - 10
-    QwtValueList contourLevels;
+    QList<double> contourLevels;
     double interval = (m_dataRange.maxValue() - m_dataRange.minValue())/10.0;
     for ( double level = m_dataRange.minValue(); level < m_dataRange.maxValue(); level += interval )
       contourLevels += level;
@@ -1097,7 +1096,7 @@ namespace resultsviewer{
   {
     QwtScaleWidget *rightAxis = m_plot->axisWidget(QwtPlot::yRight);
     rightAxis->setColorBarEnabled(true);
-    rightAxis->setColorMap(m_dataRange, m_spectrogram->colorMap());
+    rightAxis->setColorMap(m_dataRange, const_cast<QwtColorMap *>(m_spectrogram->colorMap()));
 
     m_plot->setAxisScale(QwtPlot::yRight, m_dataRange.minValue(), m_dataRange.maxValue() );
     m_plot->enableAxis(QwtPlot::yRight);
@@ -1294,20 +1293,19 @@ namespace resultsviewer{
       m_zoomer[1]->setEnabled(false);
       // find min, max of all curves
       // scale
-      int i;
-      for ( itPlotItem = listPlotItem.begin();itPlotItem!=listPlotItem.end();++itPlotItem)
+      for (auto& itPlotItem : listPlotItem)
       {
         QApplication::processEvents();
-        if ( (*itPlotItem)->rtti() == QwtPlotItem::Rtti_PlotCurve)
+        if ( itPlotItem->rtti() == QwtPlotItem::Rtti_PlotCurve)
         {
-          plotCurve = (LinePlotCurve*) (*itPlotItem);
+          plotCurve = static_cast<LinePlotCurve *>(itPlotItem);
 
           if ((plotCurve->minYValue() != 0) || (plotCurve->maxYValue() != 1))
           {
 
-            //          QwtArray<double> xData(plotCurve->dataSize());
-            QwtArray<double> yData(plotCurve->dataSize());
-            for (i = 0; i < plotCurve->dataSize(); ++i)
+            //          QVector<double> xData(plotCurve->dataSize());
+            QVector<double> yData(plotCurve->dataSize());
+            for (size_t i = 0; i < plotCurve->dataSize(); ++i)
             {
               if (i % 1000 == 0)
               {
@@ -1318,7 +1316,7 @@ namespace resultsviewer{
                 }
               }
               //        xData[i] = plotCurve->x(i);
-              yData[i] = (plotCurve->y(i) - plotCurve->minYValue())/ (plotCurve->maxYValue() - plotCurve->minYValue());
+              yData[i] = (plotCurve->sample(i).y() - plotCurve->minYValue())/ (plotCurve->maxYValue() - plotCurve->minYValue());
             }
             // reset data
             plotCurve->setTitle(plotCurve->title().text() + "[" + QString::number(plotCurve->minYValue()) + ", "  + QString::number(plotCurve->maxYValue()) + "]");
@@ -1348,7 +1346,7 @@ namespace resultsviewer{
   }
 
 
-  void PlotView::updateZoomBase(const QwtDoubleRect& base, bool reset)
+  void PlotView::updateZoomBase(const QRectF& base, bool reset)
   {
     m_zoomer[0]->setZoomBase();
     if ( m_zoomer[1]->isEnabled() ) m_zoomer[1]->setZoomBase();
@@ -1420,20 +1418,15 @@ namespace resultsviewer{
     QPrintDialog dialog(&printer);
     if ( dialog.exec() )
     {
-      QwtPlotPrintFilter filter;
+      QwtPlotRenderer renderer;
       if ( printer.colorMode() == QPrinter::GrayScale )
       {
-        int options = QwtPlotPrintFilter::PrintAll;
-        options &= ~QwtPlotPrintFilter::PrintBackground;
-        options |= QwtPlotPrintFilter::PrintFrameWithScales;
-        filter.setOptions(options);
+        renderer.setDiscardFlag(QwtPlotRenderer::DiscardBackground);
+        renderer.setDiscardFlag(QwtPlotRenderer::DiscardCanvasBackground);
+        renderer.setDiscardFlag(QwtPlotRenderer::DiscardCanvasFrame);
+        renderer.setLayoutFlag(QwtPlotRenderer::FrameWithScales);
       }
-      QPainter p;
-      QRect r(0,0,printer.width(),printer.height());
-      p.begin(&printer);
-      m_plot->print(&p, r, filter);
-      printLegend(&p, r);
-      p.end();
+      renderer.renderTo(m_plot, printer);
     }
 
   }
@@ -1532,7 +1525,7 @@ namespace resultsviewer{
     double yLeftMax = -DBL_MAX;
     double yRightMin = DBL_MAX;
     double yRightMax = -DBL_MAX;
-    int minXIndex, maxXIndex, i;
+    size_t minXIndex, maxXIndex, i;
 
     for (itPlotItem = listPlotItem.begin();itPlotItem!=listPlotItem.end();++itPlotItem)
     {
@@ -1544,22 +1537,22 @@ namespace resultsviewer{
         maxXIndex = linePlotCurve->dataSize()-1;
 
         for (minXIndex=0;minXIndex<linePlotCurve->dataSize();minXIndex++)
-          if (minX < linePlotCurve->x(minXIndex)) break;
+          if (minX < linePlotCurve->sample(minXIndex).x()) break;
 
         for (maxXIndex=linePlotCurve->dataSize()-1;maxXIndex > minXIndex;maxXIndex--)
-          if (maxX > linePlotCurve->x(maxXIndex)) break;
+          if (maxX > linePlotCurve->sample(maxXIndex).x()) break;
 
         for(i=minXIndex;i<=maxXIndex;i++)
         {
           switch (linePlotCurve->yAxis())
           {
           case QwtPlot::yLeft:
-            if (linePlotCurve->y(i) < yLeftMin) yLeftMin = linePlotCurve->y(i);
-            if (linePlotCurve->y(i) > yLeftMax) yLeftMax = linePlotCurve->y(i);
+            if (linePlotCurve->sample(i).y() < yLeftMin) yLeftMin = linePlotCurve->sample(i).y();
+            if (linePlotCurve->sample(i).y() > yLeftMax) yLeftMax = linePlotCurve->sample(i).y();
             break;
           case QwtPlot::yRight:
-            if (linePlotCurve->y(i) < yRightMin) yRightMin = linePlotCurve->y(i);
-            if (linePlotCurve->y(i) > yRightMax) yRightMax = linePlotCurve->y(i);
+            if (linePlotCurve->sample(i).y() < yRightMin) yRightMin = linePlotCurve->sample(i).y();
+            if (linePlotCurve->sample(i).y() > yRightMax) yRightMax = linePlotCurve->sample(i).y();
             break;
           }
         }
@@ -1601,26 +1594,12 @@ namespace resultsviewer{
 
   void PlotView::generateImage(QString& file, int w, int h)
   {
+    QwtPlotRenderer renderer;
     if ((w*h)==0)
     {
-      QPixmap pixmap(size());
-      pixmap.fill(Qt::white);
-      QPainter p(&pixmap);
-      m_plot->print(&p, rect());
-      printLegend(&p, rect());
-      p.end();
-      pixmap.save(file, nullptr, -1);
-    }
-    else
-    {
-      QPixmap pixmap(w, h);
-      pixmap.fill(Qt::white);
-      QRect r(0,0,w,h);
-      QPainter p(&pixmap);
-      m_plot->print(&p, r);
-      printLegend(&p, r);
-      p.end();
-      pixmap.save(file, nullptr, -1);
+      renderer.renderDocument(m_plot, file, size());
+    } else {
+      renderer.renderDocument(m_plot, file, QSize(w, h));
     }
   }
 
@@ -1708,8 +1687,8 @@ namespace resultsviewer{
 
     if (minCurve && (minIndex > -1)) //&& (minDist < 20))
     {
-      double x = minCurve->x(minIndex);
-      double y = minCurve->y(minIndex);
+      double x = minCurve->sample(minIndex).x();
+      double y = minCurve->sample(minIndex).y();
 
       openstudio::Time timeFromFracDays(x);
       //    openstudio::Date date = openstudio::Date::fromDayOfYear(timeFromFracDays.days()); Date issue with day 366 in year 2009
@@ -1737,12 +1716,12 @@ namespace resultsviewer{
       if (minCurve->yAxis() == QwtPlot::yRight)
       {
         yPos = m_plot->transform(QwtPlot::yRight,y) + m_plot->canvas()->y();
-        m_valueInfoMarker->setAxis(QwtPlot::xBottom, QwtPlot::yRight);
+        m_valueInfoMarker->setAxes(QwtPlot::xBottom, QwtPlot::yRight);
       }
       else
       {
         yPos = m_plot->transform(QwtPlot::yLeft,y) + m_plot->canvas()->y();
-        m_valueInfoMarker->setAxis(QwtPlot::xBottom, QwtPlot::yLeft);
+        m_valueInfoMarker->setAxes(QwtPlot::xBottom, QwtPlot::yLeft);
       }
       m_valueInfoMarker->setValue(x,y);
       m_valueInfoMarker->show();
@@ -1823,7 +1802,7 @@ namespace resultsviewer{
 
 
 
-  void PlotView::slotZoomed(const QwtDoubleRect& rect)
+  void PlotView::slotZoomed(const QRectF& rect)
   {
     // if rect changes hide the value info
     m_valueInfo->hide();
@@ -1993,7 +1972,7 @@ namespace resultsviewer{
         m_illuminanceMapData[reportIndex] = data;
       }
     }
-    m_spectrogram->setData(*m_floodPlotData);
+    m_spectrogram->setData(m_floodPlotData.get());
 
     setDataRange();
     // replot too slow - see http://www.qtcentre.org/threads/17892-Spectrogram-too-slow

@@ -36,7 +36,7 @@ TimeSeriesLinePlotData::TimeSeriesLinePlotData(TimeSeries timeSeries)
   m_maxY(maximum(timeSeries.values())),
   m_size(timeSeries.values().size())
 {
-  m_boundingRect = QwtDoubleRect(m_minX, m_minY, (m_maxX - m_minX), (m_maxY - m_minY));
+  m_boundingRect = QRectF(m_minX, m_minY, (m_maxX - m_minX), (m_maxY - m_minY));
   m_minValue = m_minY;
   m_maxValue = m_maxY;
   m_units = timeSeries.units();
@@ -53,7 +53,7 @@ TimeSeriesLinePlotData::TimeSeriesLinePlotData(TimeSeries timeSeries, double fra
   m_maxY(maximum(timeSeries.values())),
   m_size(timeSeries.values().size())
 {
-  m_boundingRect = QwtDoubleRect(m_minX, m_minY, (m_maxX - m_minX), (m_maxY - m_minY));
+  m_boundingRect = QRectF(m_minX, m_minY, (m_maxX - m_minX), (m_maxY - m_minY));
   m_minValue = m_minY;
   m_maxValue = m_maxY;
   m_units = timeSeries.units();
@@ -192,7 +192,7 @@ void VectorLinePlotData::init(){
   m_maxY = maximum(m_yVector);
 
   // set the bounding box
-  m_boundingRect = QwtDoubleRect(m_minX, m_minY, (m_maxX - m_minX), (m_maxY - m_minY));
+  m_boundingRect = QRectF(m_minX, m_minY, (m_maxX - m_minX), (m_maxY - m_minY));
 }
 
  double VectorLinePlotData::x(size_t pos) const
@@ -231,7 +231,7 @@ void LinePlot::init()
   // legend - subclass qwtLegend to overwrite paint event
   // m_legend = new Plot2DLegend(this);
   m_legend = new QwtLegend(this);
-  m_legend->setItemMode(QwtLegend::CheckableItem);
+  m_legend->setDefaultItemMode(QwtLegendData::Checkable);
   //  m_legend->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   //  m_legend->setGeometry(120,100,150,150);
   QPalette p(palette());
@@ -346,6 +346,7 @@ void LinePlot::setLineThickness(const int &width)
       QPen pen(curve->pen()); 
       pen.setWidth(width);
       curve->setPen(pen);
+      curve->setRenderHint(QwtPlotItem::RenderAntialiased, true);
     }
   }
   m_qwtPlot->replot();
@@ -353,7 +354,7 @@ void LinePlot::setLineThickness(const int &width)
 }
 
 
-void LinePlot::linePlotData(LinePlotData::Ptr data,  const std::string& name, QColor color, double offset )
+void LinePlot::linePlotData(LinePlotData::Ptr data, const std::string& name, QColor color, double offset)
 {
   if (!data) return;
 
@@ -379,7 +380,7 @@ void LinePlot::linePlotData(LinePlotData::Ptr data,  const std::string& name, QC
   }
   curve->setPen(curvePen(color));
   curve->attach(m_qwtPlot);
-  curve->setData(*data);
+  curve->setData(&*data);
 
   // check for number of different units (std::string  based)
   QString curveUnits = toQString(data->units());
@@ -491,26 +492,25 @@ void LinePlot::scaleCurves(QwtPlotCurve *curve)
       m_qwtPlot->enableAxis(QwtPlot::yRight, false);
       // find min, max of all curves
       // scale
-      int i;
-      for ( itPlotItem = listPlotItem.begin();itPlotItem!=listPlotItem.end();++itPlotItem)
+      for ( auto& itPlotItem : listPlotItem )
       {
-        if ( (*itPlotItem)->rtti() == QwtPlotItem::Rtti_PlotCurve)
+        if ( itPlotItem->rtti() == QwtPlotItem::Rtti_PlotCurve)
         {
-          plotCurve = (QwtPlotCurve*) (*itPlotItem);
+          plotCurve = static_cast<QwtPlotCurve*>(itPlotItem);
 
           if ((plotCurve->minYValue() != 0) || (plotCurve->maxYValue() != 1))
           {
 
-            QwtArray<double> xData(plotCurve->dataSize());
-            QwtArray<double> yData(plotCurve->dataSize());
-            for (i = 0; i < plotCurve->dataSize(); i++)
+            QVector<double> xData(plotCurve->dataSize());
+            QVector<double> yData(plotCurve->dataSize());
+            for (size_t i = 0; i < plotCurve->dataSize(); i++)
             {
-              xData[i] = plotCurve->x(i);
-              yData[i] = (plotCurve->y(i) - plotCurve->minYValue())/ (plotCurve->maxYValue() - plotCurve->minYValue());
+              xData[i] = plotCurve->sample(i).x();
+              yData[i] = (plotCurve->sample(i).y() - plotCurve->minYValue()) / (plotCurve->maxYValue() - plotCurve->minYValue());
             }
             // reset data
             plotCurve->setTitle(plotCurve->title().text() + "[" + QString::number(plotCurve->minYValue()) + ", "  + QString::number(plotCurve->maxYValue()) + "]");
-            plotCurve->setData(xData,yData);
+            plotCurve->setSamples(xData,yData);
           }
         }
       }
@@ -530,11 +530,11 @@ void LinePlot::showCurve(QwtPlotItem *item, bool on)
   /// update curve visibility
   item->setVisible(on);
   /// update legend item status
-  QWidget *legendItem = m_legend->find(item);
-  if ( (legendItem) && (legendItem->inherits("QwtLegendItem")) )
+  /*QWidget *legendItem = m_legend->itemInfo(item);
+  if ( (legendItem) && (legendItem->inherits("QwtLegendLabel")) )
   {
-    ((QwtLegendItem *)legendItem)->setChecked(on);
-  }
+    ((QwtLegendLabel *)legendItem)->setChecked(on);
+  }*/
 
   m_qwtPlot->replot();
   m_legend->updateGeometry();
@@ -570,6 +570,5 @@ double LinePlot::spanXValue(double span)
   /// do any translations here
   return span;
 }
-
 
 } // openstudio

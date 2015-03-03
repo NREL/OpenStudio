@@ -352,7 +352,7 @@ void Plot2D::generateImage(const openstudio::path& file, int w, int h)
     QPixmap pixmap(this->size());
     pixmap.fill(Qt::white);
     QPainter p(&pixmap);
-    this->m_qwtPlot->print(&p, rect());
+    //this->m_qwtPlot->print(&p, rect());
     p.end();
     pixmap.save(toQString(file), nullptr, -1);
   }
@@ -362,7 +362,7 @@ void Plot2D::generateImage(const openstudio::path& file, int w, int h)
     pixmap.fill(Qt::white);
     QRect r(0,0,w,h);
     QPainter p(&pixmap);
-    this->m_qwtPlot->print(&p, r);
+    //this->m_qwtPlot->print(&p, r);
     p.end();
     pixmap.save(toQString(file), nullptr, -1);
   }

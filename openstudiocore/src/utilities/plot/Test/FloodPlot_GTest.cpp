@@ -138,7 +138,7 @@ public:
     m_minValue(0),
     m_maxValue(maxN)
   {
-    m_colorMapRange = QwtDoubleInterval(0,maxN);
+    m_colorMapRange = QwtInterval(0,maxN);
   }
 
   /// create
@@ -198,8 +198,8 @@ public:
   /// maxValue setter
   virtual void maxValue(double max) {m_maxValue = max;};
 
-//  QwtDoubleInterval range() const {return QwtDoubleInterval(m_minValue, m_maxValue);}
-  QwtDoubleInterval range() const {return m_colorMapRange;}
+//  QwtInterval range() const {return QwtInterval(m_minValue, m_maxValue);}
+  QwtInterval range() const {return m_colorMapRange;}
    
   /// sumValue
   double sumValue() const {return 0;}
@@ -211,10 +211,10 @@ public:
   double stdDevValue() const {return 0;}
 
   /// color map range 
-  void colorMapRange(QwtDoubleInterval colorMapRange) {m_colorMapRange = colorMapRange;}
+  void colorMapRange(QwtInterval colorMapRange) {m_colorMapRange = colorMapRange;}
 
   /// color map range 
-   QwtDoubleInterval colorMapRange() {return m_colorMapRange;}
+   QwtInterval colorMapRange() {return m_colorMapRange;}
 
    /// units 
    std::string units() const {return m_units;}
@@ -224,7 +224,7 @@ private:
   unsigned m_maxN;
   double m_minValue;
   double m_maxValue;
-  QwtDoubleInterval m_colorMapRange;
+  QwtInterval m_colorMapRange;
   std::string m_units;
 };
 

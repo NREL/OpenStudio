@@ -60,7 +60,7 @@ namespace openstudio{
 
     private:
       Vector& m_colorLevels;
-      ColorMapList m_colorMap;
+      ColorMapList m_colorMapList;
       void init();
   };
 
@@ -81,13 +81,13 @@ namespace openstudio{
       virtual FloodPlotData* copy() const = 0;
 
       /// must provide range of values - colormap range not data range
-      QwtDoubleInterval range() const = 0;
+      //QwtInterval range() const = 0;
 
       // color map range
-      virtual void colorMapRange(QwtDoubleInterval colorMapRange) = 0;
+      virtual void colorMapRange(QwtInterval colorMapRange) = 0;
 
       /// color map range
-      virtual QwtDoubleInterval colorMapRange() = 0;
+      virtual QwtInterval colorMapRange() = 0;
 
 
       /// get the value at point x, y
@@ -145,13 +145,13 @@ namespace openstudio{
       TimeSeriesFloodPlotData(TimeSeries timeSeries);
 
       /// constructor with colormap range
-      TimeSeriesFloodPlotData(TimeSeries timeSeries, QwtDoubleInterval colorMapRange );
+      TimeSeriesFloodPlotData(TimeSeries timeSeries, QwtInterval colorMapRange );
 
       /// create
       static Ptr create(TimeSeries timeSeries)
       {return Ptr(new TimeSeriesFloodPlotData(timeSeries));}
 
-      static Ptr create(TimeSeries timeSeries, QwtDoubleInterval colorMapRange )
+      static Ptr create(TimeSeries timeSeries, QwtInterval colorMapRange)
       {return Ptr(new TimeSeriesFloodPlotData(timeSeries, colorMapRange));}
 
       /// virtual destructor
@@ -161,10 +161,10 @@ namespace openstudio{
       virtual TimeSeriesFloodPlotData* copy() const;
 
       /// must provide range of values - colormap range not data range
-      QwtDoubleInterval range() const {return m_colorMapRange;}
+      QwtInterval range() const {return m_colorMapRange;}
 
       /// provide boundingRect overload for speed - default implementation slow!!!
-      QwtDoubleRect boundingRect() const;
+      QRectF boundingRect() const;
 
       ///  value at point fractionalDay and hourOfDay
       double value(double fractionalDay, double hourOfDay) const;
@@ -203,10 +203,10 @@ namespace openstudio{
       double stdDevValue() const;
 
       /// range of values for which to show the colormap
-      void colorMapRange(QwtDoubleInterval colorMapRange) {m_colorMapRange = colorMapRange;}
+      void colorMapRange(QwtInterval colorMapRange) {m_colorMapRange = colorMapRange;}
 
       /// range of values for which to show the colormap
-      QwtDoubleInterval colorMapRange() {return m_colorMapRange;}
+      QwtInterval colorMapRange() {return m_colorMapRange;}
 
       /// units for plotting on axes or scaling
       std::string units() const {return m_units;};
@@ -220,7 +220,7 @@ namespace openstudio{
       double m_minY;
       double m_maxY;
       double m_startFractionalDay;
-      QwtDoubleInterval m_colorMapRange;
+      QwtInterval m_colorMapRange;
       std::string m_units;
   };
 
@@ -236,7 +236,7 @@ namespace openstudio{
       MatrixFloodPlotData(const Matrix& matrix);
 
       /// constructor and color map range
-      MatrixFloodPlotData(const Matrix& matrix, QwtDoubleInterval colorMapRange );
+      MatrixFloodPlotData(const Matrix& matrix, QwtInterval colorMapRange );
 
       /// constructor with x and y vectors
       MatrixFloodPlotData(const Vector& xVector,
@@ -265,13 +265,13 @@ namespace openstudio{
       MatrixFloodPlotData(const Vector& xVector,
           const Vector& yVector,
           const Matrix& matrix,
-          QwtDoubleInterval colorMapRange );
+          QwtInterval colorMapRange );
 
       /// create
       static Ptr create(const Matrix& matrix)
       {return Ptr(new MatrixFloodPlotData(matrix));}
 
-      static Ptr create(const Matrix& matrix, QwtDoubleInterval& colorMapRange)
+      static Ptr create(const Matrix& matrix, QwtInterval& colorMapRange)
       {return Ptr(new MatrixFloodPlotData(matrix, colorMapRange));}
 
       /// create with x and y vectors
@@ -289,7 +289,7 @@ namespace openstudio{
       static Ptr create(const Vector& xVector,
           const Vector& yVector,
           const Matrix& matrix,
-          QwtDoubleInterval& colorMapRange)
+          QwtInterval& colorMapRange)
       {return Ptr(new MatrixFloodPlotData(xVector, yVector, matrix, colorMapRange));}
 
       /// create with std::vectors
@@ -311,7 +311,7 @@ namespace openstudio{
       virtual MatrixFloodPlotData* copy() const;
 
       /// must provide range of values - colormap range not data range
-      QwtDoubleInterval range() const {return m_colorMapRange;}
+      QwtInterval range() const {return m_colorMapRange;}
 
       /// get the value at point x, y
       double value(double x, double y) const;
@@ -353,10 +353,10 @@ namespace openstudio{
       double stdDevValue() const;
 
       /// range of values for which to show the colormap
-      void colorMapRange(QwtDoubleInterval colorMapRange) {m_colorMapRange = colorMapRange;}
+      void colorMapRange(QwtInterval colorMapRange) {m_colorMapRange = colorMapRange;}
 
       /// range of values for which to show the colormap
-      QwtDoubleInterval colorMapRange() {return m_colorMapRange;}
+      QwtInterval colorMapRange() {return m_colorMapRange;}
 
       /// units for plotting on axes or scaling
       std::string units() const {return m_units;};
@@ -372,7 +372,7 @@ namespace openstudio{
       Matrix m_matrix;
       InterpMethod m_interpMethod;
       double m_minX, m_maxX, m_minY, m_maxY;
-      QwtDoubleInterval m_colorMapRange;
+      QwtInterval m_colorMapRange;
       Vector m_colorMapScaleValues;
       std::string m_units;
   };
@@ -441,12 +441,12 @@ namespace openstudio{
       void dragEnterEvent(QDragEnterEvent *e) { e->accept(); }
 
     private:
-      QwtLinearColorMap m_colorMap;
+      //std::unique_ptr<FloodPlotColorMap> m_colorMap;
       QwtPlotSpectrogram* m_spectrogram;
       QwtScaleWidget* m_rightAxis;
       FloodPlotData::Ptr m_floodPlotData;
       FloodPlotColorMap::ColorMapList m_colorMapType;
-      QwtDoubleInterval m_dataRange;
+      QwtInterval m_dataRange;
       Vector m_colorLevels;
       void initColorMap();
       void initColorBar();
