@@ -582,7 +582,7 @@ void FloodPlot::colorLevels(Vector& colorLevels)
 
   m_colorLevels = colorLevels;
 
-  FloodPlotColorMap colorMap = FloodPlotColorMap(m_colorLevels, m_colorMapType);
+  FloodPlotColorMap colorMap(m_colorLevels, m_colorMapType);
 
   m_spectrogram->setColorMap(&colorMap);
   m_qwtPlot->setAxisScale(QwtPlot::yRight, minimum(colorLevels), maximum(colorLevels)); // legend numbers

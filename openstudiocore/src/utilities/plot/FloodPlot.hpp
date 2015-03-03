@@ -59,6 +59,10 @@ namespace openstudio{
       virtual ~FloodPlotColorMap() {}
 
     private:
+      // Disabled copy constructor and operator=
+      FloodPlotColorMap(const FloodPlotColorMap &);
+      FloodPlotColorMap &operator=(const FloodPlotColorMap &);
+
       Vector& m_colorLevels;
       ColorMapList m_colorMapList;
       void init();
