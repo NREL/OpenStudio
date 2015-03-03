@@ -157,6 +157,31 @@ TEST_F(ModelFixture, Schedule_Day)
   EXPECT_FALSE(daySchedule.addValue(Time(0, -1, 0), -9999));
   EXPECT_EQ(3u, daySchedule.times().size());
   EXPECT_EQ(3u, daySchedule.values().size());
+
+
+  // Add small values
+  daySchedule.clearValues();
+  EXPECT_EQ(1u, daySchedule.times().size());
+  EXPECT_EQ(1u, daySchedule.values().size());
+  EXPECT_EQ(Time(0,24,0),daySchedule.times().front());
+
+  EXPECT_FALSE(daySchedule.addValue(Time(0, 0, 0, 10), -9999));
+  EXPECT_EQ(1u, daySchedule.times().size());
+  EXPECT_EQ(1u, daySchedule.values().size());
+
+  daySchedule.clearValues();
+  // 30 seconds is not accepted
+  EXPECT_FALSE(daySchedule.addValue(Time(0, 0, 0, 30), -9999));
+  EXPECT_EQ(1u, daySchedule.times().size());
+  EXPECT_EQ(1u, daySchedule.values().size());
+
+  daySchedule.clearValues();
+  EXPECT_TRUE(daySchedule.addValue(Time(0, 0, 0, 31), -9999));
+  EXPECT_EQ(2u, daySchedule.times().size());
+  EXPECT_EQ(2u, daySchedule.values().size());
+  // 31 seconds becomes 1 minute
+  EXPECT_EQ(Time(0,0,1),daySchedule.times().front());
+  EXPECT_EQ(Time(0,24,0),daySchedule.times().back());
 }
 
 TEST_F(ModelFixture, Schedule_Day_Interp)
