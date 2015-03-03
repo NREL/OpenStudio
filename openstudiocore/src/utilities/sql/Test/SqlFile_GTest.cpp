@@ -27,7 +27,6 @@
 #include "../../data/DataEnums.hpp"
 #include "../../data/TimeSeries.hpp"
 #include "../../filetypes/EpwFile.hpp"
-#include "../../plot/AnnotatedTimeline.hpp"
 #include "../../plot/FloodPlot.hpp"
 #include "../../plot/LinePlot.hpp"
 #include "../../units/UnitFactory.hpp"
@@ -153,28 +152,6 @@ TEST_F(SqlFileFixture, TimeSeriesCount)
   EXPECT_TRUE(availableTimeSeries.end() == std::find(availableTimeSeries.begin(), availableTimeSeries.end(), "NotAVariable:Facility"));
   ts = sqlFile.timeSeries(availableEnvPeriods[0], "Run Period", "NotAVariable:Facility",  "");
   EXPECT_FALSE(ts);
-}
-
-TEST_F(SqlFileFixture, AnnotatedTimeline)
-{
-  std::vector<std::string> availableEnvPeriods = sqlFile.availableEnvPeriods();
-  ASSERT_FALSE(availableEnvPeriods.empty());
-
-  // make a timeline
-  openstudio::AnnotatedTimeline annotatedTimeline;
-
-  // populate it
-  openstudio::OptionalTimeSeries ts = sqlFile.timeSeries(availableEnvPeriods[0], "Hourly", "Electricity:Facility",  "");
-  ASSERT_TRUE(ts);
-  annotatedTimeline.addTimeSeries("Electricity:Facility", *ts);
-
-  ts = sqlFile.timeSeries(availableEnvPeriods[0], "Hourly", "Gas:Facility",  "");
-  ASSERT_TRUE(ts);
-  annotatedTimeline.addTimeSeries("Gas:Facility", *ts);
-
-  // save it
-  annotatedTimeline.save(toPath("Building.html"));
-  EXPECT_TRUE(true);
 }
 
 TEST_F(SqlFileFixture, FloodPlot)
