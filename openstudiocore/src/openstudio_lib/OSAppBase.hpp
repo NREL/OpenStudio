@@ -68,16 +68,9 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
   virtual void chooseHorizontalEditTab();
   virtual QSharedPointer<openstudio::EditController> editController();
   boost::shared_ptr<WaitDialog> waitDialog() {return m_waitDialog;}
-
-  public slots:
-
-  virtual void reloadFile(const QString& fileToLoad, bool modified, bool saveCurrentTabs) = 0;
-
-  void showMeasureUpdateDlg();
+  virtual bool notify(QObject * receiver, QEvent * e);
 
   protected:
-
-  virtual bool notify(QObject * receiver, QEvent * e);
 
   virtual bool event(QEvent * e);
 
@@ -90,6 +83,12 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
   QSharedPointer<openstudio::MeasureManager> m_measureManager;
 
   boost::shared_ptr<WaitDialog> m_waitDialog;
+
+  public slots:
+
+  virtual void reloadFile(const QString& fileToLoad, bool modified, bool saveCurrentTabs) = 0;
+
+  void showMeasureUpdateDlg();
 };
 
 } // openstudio

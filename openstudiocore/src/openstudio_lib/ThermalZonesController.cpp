@@ -50,7 +50,7 @@ namespace openstudio {
 ThermalZonesController::ThermalZonesController(bool isIP, const model::Model & model)
   : ModelSubTabController(new ThermalZonesView(isIP,model),model)
 {
-  //subTabView()->itemSelectorButtons()->disableCopyButton();
+  //subTabView()->itemSelectorButtons()->disableCopyButton(); 
 
   ThermalZoneView * thermalZoneView = static_cast<ThermalZoneView *>(subTabView()->inspectorView());
 
