@@ -33,7 +33,7 @@ namespace detail {
 
   /** CoolingTowerVariableSpeed_Impl is a StraightComponent_Impl that is the implementation class for CoolingTowerVariableSpeed.*/
   class MODEL_API CoolingTowerVariableSpeed_Impl : public StraightComponent_Impl {
-    Q_OBJECT;
+
    public:
     /** @name Constructors and Destructors */
     //@{
