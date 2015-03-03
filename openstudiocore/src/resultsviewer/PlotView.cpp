@@ -1002,7 +1002,7 @@ namespace resultsviewer{
 
     m_colorLevels = colorLevels;
 
-    openstudio::FloodPlotColorMap colorMap = openstudio::FloodPlotColorMap(m_colorLevels, m_colorMapType);
+    openstudio::FloodPlotColorMap colorMap(m_colorLevels, m_colorMapType);
 
     m_spectrogram->setColorMap(&colorMap);
     m_plot->setAxisScale(QwtPlot::yRight, openstudio::minimum(colorLevels), openstudio::maximum(colorLevels)); // legend numbers
