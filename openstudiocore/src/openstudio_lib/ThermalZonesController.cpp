@@ -257,8 +257,7 @@ void ThermalZonesController::onAddObject(const openstudio::IddObjectType& iddObj
 
 void ThermalZonesController::onCopyObject(const openstudio::model::ModelObject& modelObject)
 {
-  //DLM: ThermalZone::clone is not implemented yet
-  //modelObject.clone(this->model());
+  modelObject.clone(this->model());
 }
 
 void ThermalZonesController::onRemoveObject(openstudio::model::ModelObject modelObject)
