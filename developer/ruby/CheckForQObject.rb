@@ -15,10 +15,10 @@ File.open("#{dir}/CMakeLists.txt", 'r') do |file|
 end
 
 errors = []
-errors[0] = ["Has signals or slots but no Q_OBJECT macro:"]
-errors[1] = ["Has signals or slots but is not moc'd:"]
-errors[2] = ["Has no signals or slots but does have Q_OBJECT macro:"]
-errors[3] = ["Has no signals or slots but is moc'd:"]
+errors[0] = ["Has signals or slots or properties but no Q_OBJECT macro:"]
+errors[1] = ["Has signals or slots or properties but is not moc'd:"]
+errors[2] = ["Has no signals or slots or properties but does have Q_OBJECT macro:"]
+errors[3] = ["Has no signals or slots or properties but is moc'd:"]
 Dir.glob("#{dir}/*.hpp").each do |f|
   
   file_name = File.basename(f)
@@ -27,17 +27,19 @@ Dir.glob("#{dir}/*.hpp").each do |f|
   has_signals = false
   has_slots = false
   has_qobject = false
+  has_qproperty = false
   has_moc = moc_files.index(class_name)
   
   File.open(f, 'r') do |file|
     while line = file.gets
-      has_signals = true if /^[^\/\\]*signals[\s]*:/.match(line)
-      has_slots = true if /^[^\/\\]*slots[\s]*:/.match(line)
-      has_qobject = true if /^[^\/\\]*Q_OBJECT/.match(line)
+      has_signals = true if /^[^\/\\\*]*signals[\s]*:/.match(line)
+      has_slots = true if /^[^\/\\\*]*slots[\s]*:/.match(line)
+      has_qobject = true if /^[^\/\\\*]*Q_OBJECT/.match(line)
+      has_qproperty = true if /^[^\/\\\*]*Q_PROPERTY/.match(line)
     end
   end
   
-  if has_signals or has_slots
+  if has_signals or has_slots or has_qproperty
     if not has_qobject
       errors[0] << "  #{file_name}, #{class_name}"
     end
