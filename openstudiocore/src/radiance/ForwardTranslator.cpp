@@ -1295,13 +1295,20 @@ namespace radiance {
                 outFile.close();
               }
 
-              // store window group normal (may not need anymore with rfluxmtx)
-              // hard coded shade algorithm: on if high solar (2), setpoint 2Klx (2000)
-              m_radDCmats.insert(windowGroup_name + "," + \
-                formatString((control.outwardNormal->x() * -1), 2) + " " + \
-                formatString((control.outwardNormal->y() * -1), 2) + " " + \
-                formatString((control.outwardNormal->z() * -1), 2) + ",2,2000,cl_Tn" + \
-                formatString(tVis, 2) + ".xml,cl_Tn" + formatString(tVis, 2) + "_blinds.xml\n");
+              // store window group entry for mapping.rad
+              if (windowGroup_name == "WG0"){
+              	// simple placeholder for WG0
+								m_radDCmats.insert(windowGroup_name + ",n/a\n");							
+							}else{
+								// store window group normal (may not need anymore with rfluxmtx)
+								// hard coded shade algorithm: on if high solar (2), setpoint 2Klx (2000)
+								// hard coded shade type: blinds
+								m_radDCmats.insert(windowGroup_name + "," + \
+									formatString((control.outwardNormal->x() * -1), 2) + " " + \
+									formatString((control.outwardNormal->y() * -1), 2) + " " + \
+									formatString((control.outwardNormal->z() * -1), 2) + ",2,2000,cl_Tn" + \
+									formatString(tVis, 2) + ".xml,cl_Tn" + formatString(tVis, 2) + "_blinds.xml\n");
+								}
 
             } else if (rMaterial == "trans"){
 
@@ -1339,11 +1346,18 @@ namespace radiance {
                 outFile.close();
               }
 
-              // store window group normal (may not need anymore with rfluxmtx)
-              m_radDCmats.insert(windowGroup_name + "," + \
-                formatString((control.outwardNormal->x() * -1), 2) + " " + \
-                formatString((control.outwardNormal->y() * -1), 2) + " " + \
-                formatString((control.outwardNormal->z() * -1), 2) + ",df_Tn" + formatString(tVis, 2) + ".xml\n");
+              // store window group entry for mapping.rad
+              
+              // simple placeholder for WG0
+              if (windowGroup_name == "WG0"){
+								m_radDCmats.insert(windowGroup_name + ",n/a\n");							
+							}else{
+							// include normals for controlled WGs
+								m_radDCmats.insert(windowGroup_name + "," + \
+									formatString((control.outwardNormal->x() * -1), 2) + " " + \
+									formatString((control.outwardNormal->y() * -1), 2) + " " + \
+									formatString((control.outwardNormal->z() * -1), 2) + ",df_Tn" + formatString(tVis, 2) + ".xml\n");							
+							}
 
             }
 
