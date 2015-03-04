@@ -131,6 +131,7 @@ namespace radiance {
     return boost::lexical_cast<std::string>(t);
   }
 
+
   // basic constructor
   ForwardTranslator::ForwardTranslator()
     : m_windowGroupId(1) // m_windowGroupId is reserved for uncontrolled
@@ -143,6 +144,8 @@ namespace radiance {
   std::vector<openstudio::path> ForwardTranslator::translateModel(const openstudio::path& outPath, const openstudio::model::Model& model)
   {
     m_model = model.clone(true).cast<openstudio::model::Model>();
+    
+    m_model.purgeUnusedResourceObjects();
 
     m_logSink.setThreadId(QThread::currentThread());
 
@@ -273,8 +276,10 @@ namespace radiance {
       // get Radiance sim settings
       openstudio::model::RadianceParameters radianceParameters = m_model.getUniqueModelObject<openstudio::model::RadianceParameters>();
       
-      // write daylightsim options to files
-      //
+      // write Radiance options to file(s)
+
+      // 2- or 3-phase?
+      
       std::vector<openstudio::model::ShadingControl> shadingControls = model.getModelObjects<openstudio::model::ShadingControl>();
       openstudio::path daylightsimoptpath = radDir / openstudio::toPath("options/daylightsim.opt");
       OFSTREAM daylightsimopt(daylightsimoptpath);
@@ -295,9 +300,9 @@ namespace radiance {
         LOG(Error, "Cannot open file '" << toString(daylightsimoptpath) << "' for writing");
       }
 
-      // write Radiance options to file(s)
 
       // view matrix options
+      
       openstudio::path vmxoptpath = radDir / openstudio::toPath("options/vmx.opt");
       OFSTREAM vmxopt(vmxoptpath);
       if (vmxopt.is_open()){
@@ -315,7 +320,9 @@ namespace radiance {
         LOG(Error, "Cannot open file '" << toString(vmxoptpath) << "' for writing");
       }
 
+
       // daylight matrix options
+      
       openstudio::path dmxoptpath = radDir / openstudio::toPath("options/dmx.opt");
       OFSTREAM dmxopt(dmxoptpath);
       if (dmxopt.is_open()){
@@ -1553,13 +1560,13 @@ namespace radiance {
         for (const auto & interiorPartitionSurface : interiorPartitionSurfaces)
         {
 
-          // get nice name
+					// get nice name
 
           std::string interiorPartitionSurface_name = cleanName(interiorPartitionSurface.name().get());
 
-          // check for construction
-
-          boost::optional<model::ConstructionBase> construction = interiorPartitionSurface.construction();
+					// check for construction
+					
+	        boost::optional<model::ConstructionBase> construction = interiorPartitionSurface.construction();
           if (!construction){
             LOG(Warn, "InteriorPartitionSurface " << interiorPartitionSurface.name().get() << " is not associated with a Construction, it will not be translated.");
             continue;
