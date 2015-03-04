@@ -62,12 +62,15 @@ TimeSeriesLinePlotData::TimeSeriesLinePlotData(TimeSeries timeSeries, double fra
   m_y = m_timeSeries.values();
 }
 
+TimeSeriesLinePlotData::~TimeSeriesLinePlotData()
+{
+
+}
 
 TimeSeriesLinePlotData* TimeSeriesLinePlotData::copy() const
 {
   return (new TimeSeriesLinePlotData(m_timeSeries, m_fracDaysOffset));
 }
-
 
 double TimeSeriesLinePlotData::x(size_t pos) const
 {
@@ -79,6 +82,29 @@ double TimeSeriesLinePlotData::y(size_t pos) const
   return m_y(pos);
 }
 
+/// units for plotting on axes or scaling
+void TimeSeriesLinePlotData::units(const std::string &unit) { m_units = unit; }
+
+/// units for plotting on axes or scaling
+std::string TimeSeriesLinePlotData::units() const { return m_units; }
+
+/// minX
+double TimeSeriesLinePlotData::minX() const { return m_minX; }
+
+/// maxX
+double TimeSeriesLinePlotData::maxX() const { return m_maxX; }
+
+/// minY
+double TimeSeriesLinePlotData::minY() const { return m_minY; }
+
+/// maxY
+double TimeSeriesLinePlotData::maxY() const { return m_maxY; }
+
+/// minValue
+double TimeSeriesLinePlotData::minValue() const { return m_minValue; }
+
+/// maxValue
+double TimeSeriesLinePlotData::maxValue() const { return m_maxValue; }
 
 /// sumValue
 double TimeSeriesLinePlotData::sumValue() const
@@ -98,6 +124,23 @@ double TimeSeriesLinePlotData::stdDevValue() const
   return stdDev(m_timeSeries.values());
 }
 
+/// reimplement bounding rect for speed
+QRectF TimeSeriesLinePlotData::boundingRect() const 
+{ 
+  return m_boundingRect; 
+}
+
+/// reimplement sample
+QPointF TimeSeriesLinePlotData::sample(size_t i) const
+{ 
+  return QPointF(x(i), y(i)); 
+}
+
+/// reimplement abstract function size
+size_t TimeSeriesLinePlotData::size(void) const
+{ 
+  return m_size; 
+}
 
 VectorLinePlotData::VectorLinePlotData(const Vector& xVector,
                                        const Vector& yVector)
@@ -175,6 +218,21 @@ double VectorLinePlotData::stdDevValue() const
   return 0;
 }
 
+QRectF VectorLinePlotData::boundingRect() const
+{ 
+  return m_boundingRect; 
+}
+
+QPointF VectorLinePlotData::sample(size_t i) const
+{ 
+  return QPointF(x(i), y(i)); 
+}
+
+size_t VectorLinePlotData::size(void) const
+{ 
+  return m_size; 
+}
+
 // set ranges and bounding box
 void VectorLinePlotData::init(){
 
@@ -205,6 +263,11 @@ double VectorLinePlotData::y(size_t pos) const
   return m_yVector(pos);
 }
 
+/// units for plotting on axes or scaling
+void VectorLinePlotData::units(const std::string &unit) { m_units = unit; };
+
+/// units for plotting on axes or scaling
+std::string VectorLinePlotData::units() const { return m_units; };
 
 /* --------------------------------------
  * LinePlot Class

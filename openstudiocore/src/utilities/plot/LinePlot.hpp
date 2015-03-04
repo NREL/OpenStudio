@@ -122,7 +122,7 @@ public:
   TimeSeriesLinePlotData(TimeSeries timeSeries, double fracDaysOffset);
 
   /// virtual destructor
-  virtual ~TimeSeriesLinePlotData() {}
+  virtual ~TimeSeriesLinePlotData();
 
   /// must provide copy
   virtual TimeSeriesLinePlotData* copy() const;
@@ -131,22 +131,22 @@ public:
 //  double value(double fractionalDay) const;
 
   /// minX
-  double minX() const {return m_minX;};
+  double minX() const;
 
   /// maxX
-  double maxX() const {return m_maxX;};
+  double maxX() const;
 
   /// minY
-  double minY() const {return m_minY;};
+  double minY() const;
 
   /// maxY
-  double maxY() const {return m_maxY;};
+  double maxY() const;
 
   /// minValue
-  double minValue() const {return m_minValue;};
+  double minValue() const;
 
   /// maxValue
-  double maxValue() const {return m_maxValue;};
+  double maxValue() const;
 
   /// sumValue
   double sumValue() const;
@@ -158,13 +158,13 @@ public:
   double stdDevValue() const;
 
   /// reimplement bounding rect for speed
-  QRectF boundingRect() const {return m_boundingRect;};
+  QRectF boundingRect() const;
 
   /// reimplement sample
-  QPointF sample(size_t i) const {return QPointF(0,0);};
+  QPointF sample(size_t i) const;
 
   /// reimplement abstract function size
-  size_t size(void) const {return m_size;};
+  size_t size(void) const;
 
   /// reimplement abstract function x
   double x(size_t pos) const;
@@ -173,10 +173,10 @@ public:
   double y(size_t pos) const;
 
   /// units for plotting on axes or scaling
-  void units(const std::string &unit) {m_units = unit;};
+  void units(const std::string &unit);
 
   /// units for plotting on axes or scaling
-  std::string units() const {return m_units;};
+  std::string units() const;
 
 private:
   TimeSeries m_timeSeries;
@@ -245,13 +245,13 @@ public:
   double stdDevValue() const;
 
   /// reimplement bounding rect for speed
-  QRectF boundingRect() const {return m_boundingRect;};
+  QRectF boundingRect() const;
 
   /// reimplement sample
-  QPointF sample(size_t i) const {return QPointF(0,0);};
+  QPointF sample(size_t i) const;
 
   /// reimplement abstract function size
-  size_t size(void) const {return m_size;};
+  size_t size(void) const;
 
   /// reimplement abstract function x
   double x(size_t pos) const;
@@ -260,10 +260,10 @@ public:
   double y(size_t pos) const;
 
   /// units for plotting on axes or scaling
-  void units(const std::string &unit) {m_units = unit;};
+  void units(const std::string &unit);
 
   /// units for plotting on axes or scaling
-  std::string units() const {return m_units;};
+  std::string units() const;
 
 private:
 
