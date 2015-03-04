@@ -62,7 +62,7 @@ QGridLayout *OSGridView::makeGridLayout()
   auto gridLayout = new QGridLayout();
   gridLayout->setSpacing(0);
   gridLayout->setContentsMargins(0,0,0,0);
-  //gridLayout->setSizeConstraint(QLayout::SetMinimumSize);
+  //gridLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
   gridLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
   return gridLayout;
 }
@@ -83,15 +83,15 @@ OSGridView::OSGridView(OSGridController * gridController,
 
   auto buttonLayout = new QHBoxLayout();
   buttonLayout->setSpacing(3);
-  buttonLayout->setContentsMargins(0,0,0,10);
-  buttonLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+  buttonLayout->setContentsMargins(10,10,10,10);
+  buttonLayout->setAlignment(Qt::AlignCenter | Qt::AlignLeft);
 
   auto vectorController = new GridViewDropZoneVectorController();
-#ifdef Q_OS_MAC
-  m_dropZone = new OSDropZone(vectorController, dropZoneText, QSize(WIDTH_DZ,HEIGHT_DZ));
-#else
-  m_dropZone = new OSDropZone(vectorController, dropZoneText, QSize(WIDTH,HEIGHT));
-#endif
+//#ifdef Q_OS_MAC
+//  m_dropZone = new OSDropZone(vectorController, dropZoneText, QSize(WIDTH_DZ,HEIGHT_DZ));
+//#else
+  m_dropZone = new OSDropZone(vectorController, dropZoneText);
+//#endif
   m_dropZone->setMaxItems(1);
 
   connect(m_dropZone, &OSDropZone::itemDropped, m_gridController, &OSGridController::onItemDropped);
@@ -99,21 +99,21 @@ OSGridView::OSGridView(OSGridController * gridController,
   auto isConnected = connect(this, SIGNAL(dropZoneItemClicked(OSItem*)), this, SLOT(onDropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
 
-  buttonLayout->addWidget(m_dropZone,0,Qt::AlignLeft);
+  buttonLayout->addWidget(m_dropZone);
 
   std::vector<QString> categories = m_gridController->categories();
   for(unsigned i=0; i<categories.size(); i++){
     auto button = new QPushButton(categories.at(i));
-#ifdef Q_OS_MAC
-    button->setFixedSize(WIDTH,HEIGHT);
-#else
-    button->setMinimumSize(WIDTH,HEIGHT);
-#endif
+//#ifdef Q_OS_MAC
+//    button->setFixedSize(WIDTH,HEIGHT);
+//#else
+//    button->setMinimumSize(WIDTH,HEIGHT);
+//#endif
     button->setCheckable(true);
-    buttonLayout->addWidget(button,0,Qt::AlignLeft);
-    buttonGroup->addButton(button,buttonGroup->buttons().size());
+    buttonLayout->addWidget(button);
+    buttonGroup->addButton(button);
   }
-  buttonLayout->addStretch();
+  //buttonLayout->addStretch();
 
   QVBoxLayout * layout = nullptr;
 
@@ -139,13 +139,11 @@ OSGridView::OSGridView(OSGridController * gridController,
   m_contentLayout = new QVBoxLayout();
   m_contentLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
   m_contentLayout->setSpacing(0);
-  m_contentLayout->setContentsMargins(0,10,0,0);
+  m_contentLayout->setContentsMargins(0,0,0,0);
   widget->setLayout(m_contentLayout);
   m_contentLayout->addLayout(buttonLayout);
 
   setGridController(m_gridController);
-
-  setContentsMargins(5,5,5,5);
 
   std::vector<QAbstractButton *> buttons = buttonGroup->buttons().toVector().toStdVector();
   if(buttons.size() > 0){
