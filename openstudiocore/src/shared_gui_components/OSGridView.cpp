@@ -111,7 +111,7 @@ OSGridView::OSGridView(OSGridController * gridController,
 //#endif
     button->setCheckable(true);
     buttonLayout->addWidget(button);
-    buttonGroup->addButton(button);
+    buttonGroup->addButton(button,buttonGroup->buttons().size());
   }
   //buttonLayout->addStretch();
 
@@ -387,8 +387,6 @@ void OSGridView::refreshAll()
       }
     }
 
-    normalizeColumnWidths();
-
     QTimer::singleShot(0, this, SLOT(selectRowDeterminedByModelSubTabView()));
 
   }
@@ -410,31 +408,6 @@ void OSGridView::selectRowDeterminedByModelSubTabView()
   // If the index is valid, call slot
   if (m_gridController->m_oldIndex > -1){
     QTimer::singleShot(0, this, SLOT(doRowSelect()));
-  }
-}
-
-void OSGridView::normalizeColumnWidths()
-{
-  std::vector<int> colmins(m_gridController->columnCount(), 0);
-
-  for( int i = 0; i < m_gridController->rowCount(); i++ )
-  {
-    for( int j = 0; j < m_gridController->columnCount(); j++ )
-    {
-      const auto *w = itemAtPosition(i, j)->widget();
-      OS_ASSERT(w);
-      colmins[j] = std::max(colmins[j], w->minimumWidth());
-    }
-  }
-
-  for(int i = 0; i < m_gridController->rowCount(); i += ROWS_PER_LAYOUT)
-  {
-    for( int j = 0; j < m_gridController->columnCount(); j++ )
-    {
-      auto *w = itemAtPosition(i, j)->widget();
-      OS_ASSERT(w);
-      w->setMinimumWidth(colmins[j]);
-    }
   }
 }
 

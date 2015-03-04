@@ -38,6 +38,7 @@
 #include <QPushButton>
 #include <QSharedPointer>
 #include <QWidget>
+#include <QVBoxLayout>
 
 class QButtonGroup;
 class QCheckBox;
@@ -696,6 +697,15 @@ private slots:
 
 };
 
+// Possible solution for user facing column resize 
+// Hardst part is addressing persitance when grid redraws
+//class ColumnSizer : public QWidget
+//{
+//  Q_OBJECT
+//
+//  void mouseMoveEvent ( QMouseEvent * event );
+//}
+
 class Holder : public QWidget
 {
   Q_OBJECT
@@ -752,7 +762,7 @@ public:
 
   QLabel * m_label = nullptr;
 
-  QCheckBox * m_checkBox = nullptr;
+  QPushButton * m_checkBox = nullptr;
 
   HorizontalHeaderPushButton * m_pushButton = nullptr;
 
@@ -762,6 +772,9 @@ signals:
 
   void inFocus(bool inFocus, bool hasData);
 
+private:
+
+  QVBoxLayout * m_innerLayout;
 };
 
 class GridViewDropZoneVectorController : public OSVectorController
