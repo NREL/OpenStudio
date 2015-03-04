@@ -21,6 +21,7 @@
 
 #include "../SqlFile.hpp"
 #include "../../core/Path.hpp"
+#include "../../core/Application.hpp"
 #include "../../plot/FloodPlot.hpp"
 #include "../../core/FileLogSink.hpp"
 
@@ -84,6 +85,8 @@ boost::optional<openstudio::FileLogSink> IlluminanceMapFixture::logFile;
 
 TEST_F(IlluminanceMapFixture, IlluminanceMapPlot)
 {
+  Application::instance().application(true);
+
   openstudio::DateTime dateTime(Date(MonthOfYear::Jul, 21), Time(0.5));
 
   const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
@@ -181,7 +184,9 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeriesCount)
 
 TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeries)
 {
-    const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
+  Application::instance().application(true);
+
+  const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
 
   std::vector< std::pair<int, DateTime> > illuminanceMapReportIndicesDates;
   // list of hourly reports for the illuminance map
@@ -203,7 +208,9 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeries)
 
 TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeriesOpt)
 {
-    const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
+  Application::instance().application(true);
+
+  const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
 
   std::vector< std::pair<int, DateTime> > illuminanceMapReportIndicesDates;
   // list of hourly reports for the illuminance map
@@ -227,6 +234,8 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeriesOpt)
 
 TEST_F(IlluminanceMapFixture, IlluminanceMapMatrixBaseline)
 {
+  Application::instance().application(true);
+
   Vector x(9); 
   Vector y(9); 
 

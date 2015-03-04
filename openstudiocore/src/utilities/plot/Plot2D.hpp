@@ -232,7 +232,7 @@ protected:
   Plot2D(QWidget* parent = nullptr, Qt::WindowFlags flags = nullptr);
 
   // parented by this
-  QwtPlot *m_qwtPlot;
+  QwtPlot *m_qwtPlot = nullptr;
 
 private:
   std::string m_windowTitle;

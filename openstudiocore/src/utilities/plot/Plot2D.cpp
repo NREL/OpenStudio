@@ -405,37 +405,33 @@ void Plot2D::closeEvent(QCloseEvent *evt)
 
 void Plot2D::generateImage(const openstudio::path& file, int w, int h)
 {
-  if ((w*h)==0)
-  {
-    QPixmap pixmap(this->size());
-    pixmap.fill(Qt::white);
-    QPainter p(&pixmap);
-
-    QwtScaleMap maps[QwtPlot::axisCnt];
-    for (int axisId = 0; axisId < QwtPlot::axisCnt; axisId++){
-      maps[axisId] = m_qwtPlot->canvasMap(axisId);
-    }
-
-    m_qwtPlot->drawItems(&p, rect(), maps);
-    p.end();
-    pixmap.save(toQString(file), nullptr, -1);
+  if (w*h == 0){
+    w = 800;
+    h = 600;
   }
-  else
-  {
-    QPixmap pixmap(w, h);
-    pixmap.fill(Qt::white);
-    QRect r(0,0,w,h);
-    QPainter p(&pixmap);
 
-    QwtScaleMap maps[QwtPlot::axisCnt];
-    for (int axisId = 0; axisId < QwtPlot::axisCnt; axisId++){
-      maps[axisId] = m_qwtPlot->canvasMap(axisId);
+  QPixmap pixmap(w, h);
+  pixmap.fill(Qt::white);
+  QRect r(0,0,w,h);
+  QPainter p(&pixmap);
+
+  QwtScaleMap maps[QwtPlot::axisCnt];
+  for (int axisId = 0; axisId < QwtPlot::axisCnt; axisId++){
+    maps[axisId] = m_qwtPlot->canvasMap(axisId);
+    bool test = m_qwtPlot->axisEnabled(axisId);
+    if (test){
+      if (axisId == QwtPlot::yLeft || axisId == QwtPlot::yRight){
+        maps[axisId].setPaintInterval(0, h);
+      } else{
+        maps[axisId].setPaintInterval(0, w);
+      }
     }
-
-    m_qwtPlot->drawItems(&p, r, maps);
-    p.end();
-    pixmap.save(toQString(file), nullptr, -1);
   }
+
+
+  m_qwtPlot->drawItems(&p, r, maps);
+  p.end();
+  pixmap.save(toQString(file), nullptr, -1);
 }
 
 void Plot2D::exportImageToFile(int w, int h)

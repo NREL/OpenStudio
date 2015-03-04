@@ -146,8 +146,8 @@ public:
     m_maxValue(maxN)
   {
     m_colorMapRange = QwtInterval(0,maxN);
-    setInterval(Qt::XAxis, QwtInterval(-2, 4));
-    setInterval(Qt::YAxis, QwtInterval(-2, 4));
+    setInterval(Qt::XAxis, QwtInterval(-2, 2));
+    setInterval(Qt::YAxis, QwtInterval(-2, 2));
     setInterval(Qt::ZAxis, m_colorMapRange);
   }
 

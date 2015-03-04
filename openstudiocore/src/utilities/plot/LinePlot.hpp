@@ -321,9 +321,9 @@ protected:
 
 private:
   // grid 
-  QwtPlotGrid *m_grid;
+  QwtPlotGrid *m_grid = nullptr;
   /// legend
-  QwtLegend *m_legend;
+  QwtLegend *m_legend = nullptr;
   double centerXValue(double center);
   double spanXValue(double span);
   QString m_leftAxisUnits;
@@ -335,7 +335,7 @@ private:
   // for multiple curves
   double m_xAxisMin;
   double m_xAxisMax;
-  Plot2DTimeAxis *m_plot2DTimeAxis;
+  Plot2DTimeAxis *m_plot2DTimeAxis = nullptr;
   DateTime m_startDateTime;
   DateTime m_endDateTime;
   double m_duration;

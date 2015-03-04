@@ -362,9 +362,6 @@ namespace openstudio{
       /// show the spectrogram
       void showSpectrogram(bool on);
 
-      /// data autoscaling
-      void dataAutoRange();
-
       /// set the color map
       void colorMap(FloodPlotColorMap::ColorMapList clrMap);
 
