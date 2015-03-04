@@ -112,13 +112,13 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlot)
   ASSERT_EQ(x.size(), v.size1());
   ASSERT_EQ(y.size(), v.size2());
 
-  MatrixFloodPlotData::Ptr data = MatrixFloodPlotData::create(x,y,v);
+  MatrixFloodPlotData* data = new MatrixFloodPlotData(x,y,v);
   data->interpMethod(LinearInterp);
 
-  FloodPlot::Ptr fp = FloodPlot::create();
-  fp->floodPlotData(data);
-  fp->showContour(true);
-  fp->generateImage(toPath("testIlluminanceMapPlot.png"));
+  FloodPlot fp;
+  fp.floodPlotData(data);
+  fp.showContour(true);
+  fp.generateImage(toPath("testIlluminanceMapPlot.png"));
 
 }
 
@@ -189,16 +189,16 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeries)
 
   ASSERT_FALSE(illuminanceMapReportIndicesDates.empty());
 
-  openstudio::MatrixFloodPlotData::Ptr data = openstudio::MatrixFloodPlotData::create(
+  openstudio::MatrixFloodPlotData* data = new openstudio::MatrixFloodPlotData(
     sqlFile.illuminanceMapX(illuminanceMapReportIndicesDates[0].first),
     sqlFile.illuminanceMapY(illuminanceMapReportIndicesDates[0].first),
     sqlFile.illuminanceMap(illuminanceMapReportIndicesDates[0].first),
     openstudio::LinearInterp);
 
-  FloodPlot::Ptr fp = FloodPlot::create();
-  fp->floodPlotData(data);
-  fp->showContour(true);
-  fp->generateImage(toPath("testIlluminanceMapPlotSeries.png"));
+  FloodPlot fp;
+  fp.floodPlotData(data);
+  fp.showContour(true);
+  fp.generateImage(toPath("testIlluminanceMapPlotSeries.png"));
 }
 
 TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeriesOpt)
@@ -217,12 +217,12 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeriesOpt)
 
   sqlFile.illuminanceMap(illuminanceMapReportIndicesDates[0].first,x,y,illuminance);
 
-  openstudio::MatrixFloodPlotData::Ptr data = openstudio::MatrixFloodPlotData::create(x,y,illuminance,openstudio::LinearInterp);
+  openstudio::MatrixFloodPlotData* data = new openstudio::MatrixFloodPlotData(x,y,illuminance,openstudio::LinearInterp);
 
-  FloodPlot::Ptr fp = FloodPlot::create();
-  fp->floodPlotData(data);
-  fp->showContour(true);
-  fp->generateImage(toPath("testIlluminanceMapPlotSeriesOpt.png"));
+  FloodPlot fp;
+  fp.floodPlotData(data);
+  fp.showContour(true);
+  fp.generateImage(toPath("testIlluminanceMapPlotSeriesOpt.png"));
 }
 
 TEST_F(IlluminanceMapFixture, IlluminanceMapMatrixBaseline)
@@ -241,13 +241,13 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapMatrixBaseline)
     for (unsigned j=0;j<9;j++)
       m(i,j) = x(i)*y(8-j);
 
-  openstudio::MatrixFloodPlotData::Ptr data = openstudio::MatrixFloodPlotData::create(
+  openstudio::MatrixFloodPlotData* data = new openstudio::MatrixFloodPlotData(
     x,y,m,openstudio::LinearInterp);
 
-  FloodPlot::Ptr fp = FloodPlot::create();
-  fp->floodPlotData(data);
-  fp->showContour(true);
-  fp->generateImage(toPath("testIlluminanceMapMatrixBaseline.png"));
+  FloodPlot fp;
+  fp.floodPlotData(data);
+  fp.showContour(true);
+  fp.generateImage(toPath("testIlluminanceMapMatrixBaseline.png"));
 }
 
 

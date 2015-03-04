@@ -455,7 +455,7 @@ signals:
     QwtLinearColorMap m_colorMap;
     QwtPlotSpectrogram* m_spectrogram;
     QwtScaleWidget* m_rightAxis;
-    openstudio::FloodPlotData::Ptr m_floodPlotData;
+    openstudio::FloodPlotData* m_floodPlotData;
     openstudio::FloodPlotColorMap::ColorMapList m_colorMapType;
     QwtInterval m_dataRange;
     openstudio::Vector m_colorLevels;
@@ -502,7 +502,7 @@ signals:
 
     // illuminance map hourly report indices
     std::vector< std::pair<int, openstudio::DateTime> > m_illuminanceMapReportIndicesDates;
-    std::vector<openstudio::FloodPlotData::Ptr> m_illuminanceMapData;
+    std::vector<openstudio::FloodPlotData*> m_illuminanceMapData;
     // difference index
     std::vector< std::pair<int,int> > m_illuminanceMapDifferenceReportIndices;
     void plotDataAvailable(bool available);

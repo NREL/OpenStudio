@@ -19,6 +19,8 @@
 
 #include "Plot2D.hpp"
 
+#include "../core/Application.hpp"
+
 using namespace std;
 using namespace boost;
 
@@ -314,6 +316,8 @@ void Plot2D::backgourndColor(QColor color)
 
 void Plot2D::setupUi(QWidget *widget)
 {
+  //Application::instance().application(true);
+
   QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   sizePolicy.setHorizontalStretch(20);
   sizePolicy.setVerticalStretch(20);
@@ -322,6 +326,7 @@ void Plot2D::setupUi(QWidget *widget)
 
   m_vBoxLayout = new QVBoxLayout(widget);
 
+  // DLM: who deletes m_qwtPlot?
   m_qwtPlot = new QwtPlot(this);
 
   QFont font;

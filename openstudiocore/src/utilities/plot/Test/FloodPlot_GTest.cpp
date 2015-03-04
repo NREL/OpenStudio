@@ -31,6 +31,8 @@ using namespace openstudio;
 
 TEST(FloodPlot, MatrixFloodPlotData)
 {
+  Application::instance().application(true);
+
   Matrix matrix(10,10);
   for (unsigned i = 0; i < 10; ++i){
     for (unsigned j = 0; j < 10; ++j){
@@ -38,11 +40,11 @@ TEST(FloodPlot, MatrixFloodPlotData)
     }
   }
 
-  MatrixFloodPlotData::Ptr data = MatrixFloodPlotData::create(matrix);
+  MatrixFloodPlotData* data = new MatrixFloodPlotData(matrix);
 
-  FloodPlot::Ptr fp = FloodPlot::create();
-  fp->floodPlotData(data);
-  fp->generateImage(toPath("testMatrixFloodPlotData.png"));
+  FloodPlot fp;
+  fp.floodPlotData(data);
+  fp.generateImage(toPath("testMatrixFloodPlotData.png"));
 
   // passes the visual test
   EXPECT_TRUE(true);
@@ -50,6 +52,8 @@ TEST(FloodPlot, MatrixFloodPlotData)
 
 TEST(FloodPlot, MatrixFloodPlotDataCountourLevels)
 {
+  Application::instance().application(true);
+
   Matrix matrix(10,10);
   for (unsigned i = 0; i < 10; ++i){
     for (unsigned j = 0; j < 10; ++j){
@@ -63,16 +67,15 @@ TEST(FloodPlot, MatrixFloodPlotDataCountourLevels)
   contourLevels(3) = 75;
   contourLevels(4) = 100;
 
-  MatrixFloodPlotData::Ptr data = MatrixFloodPlotData::create(matrix);
+  MatrixFloodPlotData* data = new MatrixFloodPlotData(matrix);
   data->interpMethod(LinearInterp);
 
-  FloodPlot::Ptr fp = FloodPlot::create();
-  fp->floodPlotData(data);
-  fp->contourLevels(contourLevels);
-  fp->colorMapRange(45,75);
-  fp->showContour(true);
-  
-  fp->generateImage(toPath("testMatrixFloodPlotDataCountourLevels.png"));
+  FloodPlot fp;
+  fp.floodPlotData(data);
+  fp.contourLevels(contourLevels);
+  fp.colorMapRange(45,75);
+  fp.showContour(true);
+  fp.generateImage(toPath("testMatrixFloodPlotDataCountourLevels.png"));
 
   // passes the visual test
   EXPECT_TRUE(true);
@@ -81,6 +84,8 @@ TEST(FloodPlot, MatrixFloodPlotDataCountourLevels)
 
 TEST(FloodPlot, MatrixFloodPlotData2)
 {
+  Application::instance().application(true);
+
   Matrix matrix(10,10);
   for (unsigned i = 0; i < 10; ++i){
     for (unsigned j = 0; j < 10; ++j){
@@ -90,14 +95,14 @@ TEST(FloodPlot, MatrixFloodPlotData2)
 
   Vector xVector(linspace(-100, 0, 10));
   Vector yVector(linspace(0, 100, 10));
-  MatrixFloodPlotData::Ptr data = MatrixFloodPlotData::create(xVector, yVector, matrix);
+  MatrixFloodPlotData* data = new MatrixFloodPlotData(xVector, yVector, matrix);
   data->interpMethod(LinearInterp);
 
-  FloodPlot::Ptr fp = FloodPlot::create();
-  fp->floodPlotData(data);
-  fp->bottomAxisTitle("X axis");
-  fp->leftAxisTitle("Y axis");
-  fp->generateImage(toPath("testMatrixFloodPlotData2.png"));
+  FloodPlot fp;
+  fp.floodPlotData(data);
+  fp.bottomAxisTitle("X axis");
+  fp.leftAxisTitle("Y axis");
+  fp.generateImage(toPath("testMatrixFloodPlotData2.png"));
 
   // passes the visual test
   EXPECT_TRUE(true);
@@ -105,6 +110,8 @@ TEST(FloodPlot, MatrixFloodPlotData2)
 
 TEST(FloodPlot, EricDataPlot)
 {
+  Application::instance().application(true);
+
   Vector x(3); x(0) = 3; x(1) = 4; x(2) = 5;
   Vector y(3); y(0) = 0.25; y(1) = 0.5; y(2) = 0.75;
   
@@ -113,13 +120,13 @@ TEST(FloodPlot, EricDataPlot)
   m(1,0) = 1.06746e+011; m(1,1) = 1.32534e+011; m(1,2) = 1.52106e+011;
   m(2,0) = 1.11509e+011; m(2,1) = 1.39306e+011; m(2,2) = 1.5545e+011;
   
-  MatrixFloodPlotData::Ptr data = MatrixFloodPlotData::create(x,y,m);
+  MatrixFloodPlotData* data = new MatrixFloodPlotData(x,y,m);
   //MatrixFloodPlotData::Ptr data = MatrixFloodPlotData::create(m); // this one works (still has weird solid pixel in upper right)
   data->interpMethod(LinearInterp);
 
-  FloodPlot::Ptr fp = FloodPlot::create();
-  fp->floodPlotData(data);
-  fp->generateImage(toPath("testEricData.png"));
+  FloodPlot fp;
+  fp.floodPlotData(data);
+  fp.generateImage(toPath("testEricData.png"));
 
   // does not pass the visual test
   EXPECT_TRUE(true);
@@ -130,7 +137,7 @@ class MandelbrotFloodPlotData: public FloodPlotData
 {
 public:
 
-  COMMON_PTR_TYPEDEFS(MandelbrotFloodPlotData)
+  //COMMON_PTR_TYPEDEFS(MandelbrotFloodPlotData)
 
   /// constructor
   MandelbrotFloodPlotData(unsigned maxN)
@@ -142,8 +149,8 @@ public:
   }
 
   /// create
-  static Ptr create(unsigned maxN)
-  {return Ptr(new MandelbrotFloodPlotData(maxN));}
+  //static Ptr create(unsigned maxN)
+  //{return Ptr(new MandelbrotFloodPlotData(maxN));}
 
   /// must provide copy
   virtual MandelbrotFloodPlotData* copy() const 
@@ -231,21 +238,28 @@ private:
 
 TEST(FloodPlot, MandelbrotFloodPlotData)
 {
-  MandelbrotFloodPlotData::Ptr data = MandelbrotFloodPlotData::create(16);
-  FloodPlot::Ptr fp = FloodPlot::create();
-  fp->floodPlotData(data);
-  fp->generateImage(toPath("testMandelbrotFloodPlotData16.png"));
+  Application::instance().application(true);
 
-  data = MandelbrotFloodPlotData::create(160);
-  fp->floodPlotData(data);
-  fp->generateImage(toPath("testMandelbrotFloodPlotData160.png"));
-
+  {
+    MandelbrotFloodPlotData* data = new MandelbrotFloodPlotData(16);
+    FloodPlot fp;
+    fp.floodPlotData(data);
+    fp.generateImage(toPath("testMandelbrotFloodPlotData16.png"));
+  }
+  {
+    MandelbrotFloodPlotData* data = new MandelbrotFloodPlotData(160);
+    FloodPlot fp;
+    fp.floodPlotData(data);
+    fp.generateImage(toPath("testMandelbrotFloodPlotData160.png"));
+  }
   // passes the visual test
   EXPECT_TRUE(true);
 };
 
 TEST(FloodPlot, EricDataPlot1)
 {
+  Application::instance().application(true);
+
   Vector x(3); x(0) = 3; x(1) = 4; x(2) = 5;
   Vector y(3); y(0) = 0.25; y(1) = 0.5; y(2) = 0.75;
   
@@ -254,12 +268,12 @@ TEST(FloodPlot, EricDataPlot1)
   m(1,0) = 1.06746e+011; m(1,1) = 1.32534e+011; m(1,2) = 1.52106e+011;
   m(2,0) = 1.11509e+011; m(2,1) = 1.39306e+011; m(2,2) = 1.5545e+011;
   
-  MatrixFloodPlotData::Ptr data = MatrixFloodPlotData::create(m); 
+  MatrixFloodPlotData* data = new MatrixFloodPlotData(m); 
   data->interpMethod(LinearInterp);
 
-  FloodPlot::Ptr fp = FloodPlot::create();
-  fp->floodPlotData(data);
-  fp->generateImage(toPath("testEricData1.png"));
+  FloodPlot fp;
+  fp.floodPlotData(data);
+  fp.generateImage(toPath("testEricData1.png"));
 
   // passes the visual test
   EXPECT_TRUE(true);
@@ -267,6 +281,8 @@ TEST(FloodPlot, EricDataPlot1)
 
 TEST(FloodPlot, EricDataPlot2)
 {
+  Application::instance().application(true);
+
   Vector x(3); x(0) = 3; x(1) = 4; x(2) = 5;
   Vector y(3); y(0) = 0.25; y(1) = 0.5; y(2) = 0.75;
   
@@ -277,12 +293,12 @@ TEST(FloodPlot, EricDataPlot2)
  
   EXPECT_DOUBLE_EQ(1.5545e+011, interp(x, y, m, 5.5, 0.8, LinearInterp, NearestExtrap));
   
-  MatrixFloodPlotData::Ptr data = MatrixFloodPlotData::create(x,y,m);
+  MatrixFloodPlotData* data = new MatrixFloodPlotData(x,y,m);
   data->interpMethod(LinearInterp);
 
-  FloodPlot::Ptr fp = FloodPlot::create();
-  fp->floodPlotData(data);
-  fp->generateImage(toPath("testEricData2.png"));
+  FloodPlot fp;
+  fp.floodPlotData(data);
+  fp.generateImage(toPath("testEricData2.png"));
 
   // passes the visual test
   EXPECT_TRUE(true);
@@ -290,6 +306,8 @@ TEST(FloodPlot, EricDataPlot2)
 
 TEST(FloodPlot, MatrixConstructor)
 {
+  Application::instance().application(true);
+
   Matrix matrix(10,10);
   for (unsigned i = 0; i < 10; ++i){
     for (unsigned j = 0; j < 10; ++j){
@@ -297,8 +315,8 @@ TEST(FloodPlot, MatrixConstructor)
     }
   }
 
-  FloodPlot::Ptr fp = FloodPlot::create(matrix);
-  fp->generateImage(toPath("testMatrixConstructor.png"));
+  FloodPlot fp(matrix);
+  fp.generateImage(toPath("testMatrixConstructor.png"));
 
   // passes the visual test
   EXPECT_TRUE(true);
@@ -306,6 +324,8 @@ TEST(FloodPlot, MatrixConstructor)
 
 TEST(FloodPlot, LinearScaleColorLevels)
 {
+  Application::instance().application(true);
+
   Matrix matrix(10,10);
   for (unsigned i = 0; i < 10; ++i){
     for (unsigned j = 0; j < 10; ++j){
@@ -313,12 +333,12 @@ TEST(FloodPlot, LinearScaleColorLevels)
     }
   }
 
-  FloodPlot::Ptr fp = FloodPlot::create(matrix);
-  fp->colorMapRange(20,60);
+  FloodPlot fp(matrix);
+  fp.colorMapRange(20,60);
   Vector ls;
   ls = linspace( 20,60,20 );
-  fp->colorLevels(ls);
-  fp->generateImage(toPath("testLinearScaleColorLevels.png"));
+  fp.colorLevels(ls);
+  fp.generateImage(toPath("testLinearScaleColorLevels.png"));
 
   // fails the visual test - color map not restricted to correct range
   EXPECT_TRUE(true);
@@ -326,6 +346,8 @@ TEST(FloodPlot, LinearScaleColorLevels)
 
 TEST(FloodPlot, LinearScaleColorLevelsContourLevels)
 {
+  Application::instance().application(true);
+
   Matrix matrix(10,10);
   for (unsigned i = 0; i < 10; ++i){
     for (unsigned j = 0; j < 10; ++j){
@@ -333,15 +355,15 @@ TEST(FloodPlot, LinearScaleColorLevelsContourLevels)
     }
   }
 
-  FloodPlot::Ptr fp = FloodPlot::create(matrix);
-  fp->colorMapRange(20,60);
+  FloodPlot fp(matrix);
+  fp.colorMapRange(20,60);
 
   Vector ls;
   ls = linspace( 20,60,20 );
-  fp->contourLevels(ls);
-  fp->colorLevels(ls);
-  fp->showContour(true);
-  fp->generateImage(toPath("testLinearScaleColorLevelsContourLevels.png"));
+  fp.contourLevels(ls);
+  fp.colorLevels(ls);
+  fp.showContour(true);
+  fp.generateImage(toPath("testLinearScaleColorLevelsContourLevels.png"));
 
   // fails the visual test - color map not restricted to correct range - contours correct color incorrect
   EXPECT_TRUE(true);
@@ -349,6 +371,8 @@ TEST(FloodPlot, LinearScaleColorLevelsContourLevels)
 
 TEST(FloodPlot, LogScaleColorLevels)
 {
+  Application::instance().application(true);
+
   Matrix matrix(10,10);
   for (unsigned i = 0; i < 10; ++i){
     for (unsigned j = 0; j < 10; ++j){
@@ -356,11 +380,11 @@ TEST(FloodPlot, LogScaleColorLevels)
     }
   }
 
-  FloodPlot::Ptr fp = FloodPlot::create(matrix);
+  FloodPlot fp(matrix);
   Vector ls;
   ls = logspace(0,2,20);
-  fp->colorLevels(ls);
-  fp->generateImage(toPath("testLogScaleColorLevels.png"));
+  fp.colorLevels(ls);
+  fp.generateImage(toPath("testLogScaleColorLevels.png"));
 
   // passes the visual test
   EXPECT_TRUE(true);
@@ -368,6 +392,8 @@ TEST(FloodPlot, LogScaleColorLevels)
 
 TEST(FloodPlot, LogScaleColorLevelsContourLevels)
 {
+  Application::instance().application(true);
+
   Matrix matrix(10,10);
   for (unsigned i = 0; i < 10; ++i){
     for (unsigned j = 0; j < 10; ++j){
@@ -375,14 +401,14 @@ TEST(FloodPlot, LogScaleColorLevelsContourLevels)
     }
   }
 
-  FloodPlot::Ptr fp = FloodPlot::create(matrix);
-  fp->colorMapRange(1,100);
+  FloodPlot fp(matrix);
+  fp.colorMapRange(1,100);
   Vector ls;
   ls = logspace(0,2,20);
-  fp->colorLevels(ls);
-  fp->contourLevels(ls);
-  fp->showContour(true);
-  fp->generateImage(toPath("testLogScaleColorLevelsContourLevels.png"));
+  fp.colorLevels(ls);
+  fp.contourLevels(ls);
+  fp.showContour(true);
+  fp.generateImage(toPath("testLogScaleColorLevelsContourLevels.png"));
 
   // passes the visual test
   EXPECT_TRUE(true);
@@ -391,6 +417,8 @@ TEST(FloodPlot, LogScaleColorLevelsContourLevels)
 
 TEST(FloodPlot, TimeSeriesFloodPlot_Detailed_Year)
 {
+  Application::instance().application(true);
+
   // Jan, 1, 2009 - day 1
   int startHour = 1;
   int startDay = 1;
@@ -405,7 +433,7 @@ TEST(FloodPlot, TimeSeriesFloodPlot_Detailed_Year)
   }
   
   TimeSeries ts(dateTimes, values, "");
-  TimeSeriesFloodPlotData::Ptr data = TimeSeriesFloodPlotData::create(ts);
+  TimeSeriesFloodPlotData* data = new TimeSeriesFloodPlotData(ts);
   
   double epsilon=1.5/3600.0; // 1.5 seconds in hours
   EXPECT_EQ(1, startDate.dayOfYear());
@@ -463,20 +491,22 @@ TEST(FloodPlot, TimeSeriesFloodPlot_Detailed_Year)
   EXPECT_DOUBLE_EQ(23.0, data->value(364.0,24.0)); // hour 24
   EXPECT_DOUBLE_EQ(0.0, data->value(364.0,24.0+epsilon)); // hour 24
 
-  FloodPlot::Ptr fp = FloodPlot::create();
+  FloodPlot fp;
   std::string name = "TimeSeries Detailed Year Flood Plot Test";
-  fp->floodPlotData(data);
-  fp->axesFontSize(12);
-  fp->tickFontSize(10);
-  fp->bottomAxisTitle("Date");
-  fp->leftAxisTitle("Hour");
-  fp->generateImage(toPath("testTimeSeriesFloodPlot_DetailedYear.png"));
+  fp.floodPlotData(data);
+  fp.axesFontSize(12);
+  fp.tickFontSize(10);
+  fp.bottomAxisTitle("Date");
+  fp.leftAxisTitle("Hour");
+  fp.generateImage(toPath("testTimeSeriesFloodPlot_DetailedYear.png"));
 // need diff on images for regression testing
 }
 
 
 TEST(FloodPlot, TimeSeriesFloodPlot_Detailed_Year_212plus10)
 {
+  Application::instance().application(true);
+
   // July, 31, 2009 - day 212
   int startHour = 10;
   int startDay = 31;
@@ -491,7 +521,7 @@ TEST(FloodPlot, TimeSeriesFloodPlot_Detailed_Year_212plus10)
   
   TimeSeries ts(dateTimes, values, "");
   ts.setOutOfRangeValue(-99);
-  TimeSeriesFloodPlotData::Ptr data = TimeSeriesFloodPlotData::create(ts);
+  TimeSeriesFloodPlotData* data = new TimeSeriesFloodPlotData(ts);
   
   double epsilon=1.5/3600.0; // 1.5 seconds in hours
   EXPECT_EQ(212, startDate.dayOfYear());
@@ -544,19 +574,21 @@ TEST(FloodPlot, TimeSeriesFloodPlot_Detailed_Year_212plus10)
   EXPECT_DOUBLE_EQ(15.0, data->value(364.0,1.0)); 
   EXPECT_DOUBLE_EQ(16.0, data->value(364.0,1.0+epsilon)); 
 
-  FloodPlot::Ptr fp = FloodPlot::create();
+  FloodPlot fp;
   std::string name = "TimeSeries Detailed Year 212 plus 10 Flood Plot Test";
-  fp->floodPlotData(data);
-  fp->axesFontSize(12);
-  fp->tickFontSize(10);
-  fp->bottomAxisTitle("Date");
-  fp->leftAxisTitle("Hour");
-  fp->generateImage(toPath("testTimeSeriesFloodPlot_DetailedYear212plus10.png"));
+  fp.floodPlotData(data);
+  fp.axesFontSize(12);
+  fp.tickFontSize(10);
+  fp.bottomAxisTitle("Date");
+  fp.leftAxisTitle("Hour");
+  fp.generateImage(toPath("testTimeSeriesFloodPlot_DetailedYear212plus10.png"));
 // need diff on images for regression testing
 }
 
 TEST(FloodPlot, TimeSeriesFloodPlot_Detailed_Day)
 {
+  Application::instance().application(true);
+
   int startHour = 10;
   int startDay = 1;
   DateTimeVector dateTimes(24);
@@ -569,7 +601,7 @@ TEST(FloodPlot, TimeSeriesFloodPlot_Detailed_Day)
   }
   
   TimeSeries ts(dateTimes, values, "");
-  TimeSeriesFloodPlotData::Ptr data = TimeSeriesFloodPlotData::create(ts);
+  TimeSeriesFloodPlotData* data = new TimeSeriesFloodPlotData(ts);
   
   double epsilon=1.5/3600.0; // 1.5 seconds in hours
   EXPECT_EQ(152, startDate.dayOfYear());
@@ -608,13 +640,13 @@ TEST(FloodPlot, TimeSeriesFloodPlot_Detailed_Day)
 
   EXPECT_DOUBLE_EQ(15.0, data->value(152, 25.0-epsilon));
 
-  FloodPlot::Ptr fp = FloodPlot::create();
+  FloodPlot fp;
   std::string name = "TimeSeries Detailed Day Flood Plot Test";
-  fp->floodPlotData(data);
-  fp->axesFontSize(12);
-  fp->tickFontSize(10);
-  fp->bottomAxisTitle("Date");
-  fp->leftAxisTitle("Hour");
-  fp->generateImage(toPath("testTimeSeriesFloodPlot_DetailedDay.png"));
-// need diff on images for regression testing
+  fp.floodPlotData(data);
+  fp.axesFontSize(12);
+  fp.tickFontSize(10);
+  fp.bottomAxisTitle("Date");
+  fp.leftAxisTitle("Hour");
+  fp.generateImage(toPath("testTimeSeriesFloodPlot_DetailedDay.png"));
+  // need diff on images for regression testing
 }

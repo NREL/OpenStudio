@@ -47,7 +47,7 @@ namespace openstudio{
   {
     public:
 
-      COMMON_PTR_TYPEDEFS(FloodPlotColorMap);
+      //COMMON_PTR_TYPEDEFS(FloodPlotColorMap);
 
       /// available color maps
       enum ColorMapList {Gray, Jet};
@@ -76,7 +76,7 @@ namespace openstudio{
   {
     public:
 
-      COMMON_PTR_TYPEDEFS(FloodPlotData);
+      //COMMON_PTR_TYPEDEFS(FloodPlotData);
 
       /// virtual destructor
       virtual ~FloodPlotData() {}
@@ -143,7 +143,7 @@ namespace openstudio{
   {
     public:
 
-      COMMON_PTR_TYPEDEFS(TimeSeriesFloodPlotData);
+      //COMMON_PTR_TYPEDEFS(TimeSeriesFloodPlotData);
 
       /// constructor
       TimeSeriesFloodPlotData(TimeSeries timeSeries);
@@ -152,11 +152,11 @@ namespace openstudio{
       TimeSeriesFloodPlotData(TimeSeries timeSeries, QwtInterval colorMapRange );
 
       /// create
-      static Ptr create(TimeSeries timeSeries)
-      {return Ptr(new TimeSeriesFloodPlotData(timeSeries));}
+      //static Ptr create(TimeSeries timeSeries)
+      //{return Ptr(new TimeSeriesFloodPlotData(timeSeries));}
 
-      static Ptr create(TimeSeries timeSeries, QwtInterval colorMapRange)
-      {return Ptr(new TimeSeriesFloodPlotData(timeSeries, colorMapRange));}
+      //static Ptr create(TimeSeries timeSeries, QwtInterval colorMapRange)
+      //{return Ptr(new TimeSeriesFloodPlotData(timeSeries, colorMapRange));}
 
       /// virtual destructor
       virtual ~TimeSeriesFloodPlotData() {}
@@ -234,7 +234,7 @@ namespace openstudio{
   {
     public:
 
-      COMMON_PTR_TYPEDEFS(MatrixFloodPlotData);
+      //COMMON_PTR_TYPEDEFS(MatrixFloodPlotData);
 
       /// constructor
       MatrixFloodPlotData(const Matrix& matrix);
@@ -264,7 +264,6 @@ namespace openstudio{
           const std::vector<double>& matrix,
           const InterpMethod interp);
 
-
       /// constructor with x and y vectors and color map range
       MatrixFloodPlotData(const Vector& xVector,
           const Vector& yVector,
@@ -272,41 +271,41 @@ namespace openstudio{
           QwtInterval colorMapRange );
 
       /// create
-      static Ptr create(const Matrix& matrix)
-      {return Ptr(new MatrixFloodPlotData(matrix));}
+      //static Ptr create(const Matrix& matrix)
+      //{return Ptr(new MatrixFloodPlotData(matrix));}
 
-      static Ptr create(const Matrix& matrix, QwtInterval& colorMapRange)
-      {return Ptr(new MatrixFloodPlotData(matrix, colorMapRange));}
+      //static Ptr create(const Matrix& matrix, QwtInterval& colorMapRange)
+      //{return Ptr(new MatrixFloodPlotData(matrix, colorMapRange));}
 
       /// create with x and y vectors
-      static Ptr create(const Vector& xVector,
-          const Vector& yVector,
-          const Matrix& matrix)
-      {return Ptr(new MatrixFloodPlotData(xVector, yVector, matrix));}
+      //static Ptr create(const Vector& xVector,
+      //    const Vector& yVector,
+      //    const Matrix& matrix)
+      //{return Ptr(new MatrixFloodPlotData(xVector, yVector, matrix));}
 
-      static Ptr create(const Vector& xVector,
-          const Vector& yVector,
-          const Matrix& matrix,
-          const InterpMethod interp)
-      {return Ptr(new MatrixFloodPlotData(xVector, yVector, matrix,interp));}
+      //static Ptr create(const Vector& xVector,
+      //    const Vector& yVector,
+      //    const Matrix& matrix,
+      //    const InterpMethod interp)
+      //{return Ptr(new MatrixFloodPlotData(xVector, yVector, matrix,interp));}
 
-      static Ptr create(const Vector& xVector,
-          const Vector& yVector,
-          const Matrix& matrix,
-          QwtInterval& colorMapRange)
-      {return Ptr(new MatrixFloodPlotData(xVector, yVector, matrix, colorMapRange));}
+      //static Ptr create(const Vector& xVector,
+      //    const Vector& yVector,
+      //    const Matrix& matrix,
+      //    QwtInterval& colorMapRange)
+      //{return Ptr(new MatrixFloodPlotData(xVector, yVector, matrix, colorMapRange));}
 
       /// create with std::vectors
-      static Ptr create(const std::vector<double>& xVector,
-          const std::vector<double>& yVector,
-          const std::vector<double>& matrix)
-      {return Ptr(new MatrixFloodPlotData(xVector, yVector, matrix));}
+      //static Ptr create(const std::vector<double>& xVector,
+      //    const std::vector<double>& yVector,
+      //    const std::vector<double>& matrix)
+      //{return Ptr(new MatrixFloodPlotData(xVector, yVector, matrix));}
 
-      static Ptr create(const std::vector<double>& xVector,
-          const std::vector<double>& yVector,
-          const std::vector<double>& matrix,
-          const InterpMethod interp)
-      {return Ptr(new MatrixFloodPlotData(xVector, yVector, matrix,interp));}
+      //static Ptr create(const std::vector<double>& xVector,
+      //    const std::vector<double>& yVector,
+      //    const std::vector<double>& matrix,
+      //    const InterpMethod interp)
+      //{return Ptr(new MatrixFloodPlotData(xVector, yVector, matrix,interp));}
 
       /// virtual destructor
       virtual ~MatrixFloodPlotData() {}
@@ -390,7 +389,7 @@ namespace openstudio{
 
     public:
 
-      COMMON_PTR_TYPEDEFS(FloodPlot);
+      //COMMON_PTR_TYPEDEFS(FloodPlot);
 
       /// default constructor
       FloodPlot(QWidget* parent = nullptr, Qt::WindowFlags flags = nullptr);
@@ -399,9 +398,9 @@ namespace openstudio{
       FloodPlot(const Matrix& m);
 
       /// create
-      static FloodPlot::Ptr create(QWidget* parent = nullptr, Qt::WindowFlags flags = nullptr);
+      //static FloodPlot::Ptr create(QWidget* parent = nullptr, Qt::WindowFlags flags = nullptr);
 
-      static FloodPlot::Ptr create(const Matrix& m);
+      //static FloodPlot::Ptr create(const Matrix& m);
 
       /// virtual destructor
       virtual ~FloodPlot() {}
@@ -423,7 +422,7 @@ namespace openstudio{
       void colorMap(FloodPlotColorMap::ColorMapList clrMap);
 
       /// set the data
-      void floodPlotData(FloodPlotData::Ptr data);
+      void floodPlotData(FloodPlotData* data);
 
       /// convenience wrapper for timeseries data
       void timeseriesData(TimeSeries tsData);
@@ -448,7 +447,7 @@ namespace openstudio{
       //std::unique_ptr<FloodPlotColorMap> m_colorMap;
       QwtPlotSpectrogram* m_spectrogram;
       QwtScaleWidget* m_rightAxis;
-      FloodPlotData::Ptr m_floodPlotData;
+      FloodPlotData* m_floodPlotData;
       FloodPlotColorMap::ColorMapList m_colorMapType;
       QwtInterval m_dataRange;
       Vector m_colorLevels;
@@ -470,8 +469,8 @@ namespace openstudio{
       void updatePlotTitle();
 
 
-      private slots:
-        void selectColorMap();
+    private slots:
+      void selectColorMap();
       void showContourPlot();
   };
 

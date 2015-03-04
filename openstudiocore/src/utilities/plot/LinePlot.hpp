@@ -55,7 +55,7 @@ namespace openstudio{
 {
 public:
 
-  COMMON_PTR_TYPEDEFS(LinePlotData)
+  //COMMON_PTR_TYPEDEFS(LinePlotData)
 
   /// virtual destructor
   virtual ~LinePlotData() {}
@@ -100,6 +100,7 @@ public:
   virtual std::string units() const = 0;
 
   virtual size_t size() const = 0;
+  
   virtual QPointF sample(size_t i) const = 0;
 
   virtual QRectF boundingRect() const = 0;
@@ -114,19 +115,20 @@ class UTILITIES_API TimeSeriesLinePlotData: public LinePlotData
 {
 public:
 
-  COMMON_PTR_TYPEDEFS(TimeSeriesLinePlotData)
+  //COMMON_PTR_TYPEDEFS(TimeSeriesLinePlotData)
 
   /// constructor
   TimeSeriesLinePlotData(TimeSeries timeSeries);
+  
   /// constructor
   TimeSeriesLinePlotData(TimeSeries timeSeries, double fracDaysOffset);
 
   /// create
-  static Ptr create(TimeSeries timeSeries)
-  {return Ptr(new TimeSeriesLinePlotData(timeSeries));}
+  //static Ptr create(TimeSeries timeSeries)
+  //{return Ptr(new TimeSeriesLinePlotData(timeSeries));}
   /// create
-  static Ptr create(TimeSeries timeSeries, double fracDaysOffset)
-  {return Ptr(new TimeSeriesLinePlotData(timeSeries, fracDaysOffset));}
+  //static Ptr create(TimeSeries timeSeries, double fracDaysOffset)
+  //{return Ptr(new TimeSeriesLinePlotData(timeSeries, fracDaysOffset));}
 
   /// virtual destructor
   virtual ~TimeSeriesLinePlotData() {}
@@ -208,19 +210,15 @@ class UTILITIES_API VectorLinePlotData: public LinePlotData
 {
 public:
 
-  COMMON_PTR_TYPEDEFS(VectorLinePlotData)
-
+  //COMMON_PTR_TYPEDEFS(VectorLinePlotData)
 
   /// constructor with x and y vectors
-  VectorLinePlotData(const Vector& xVector, 
-            const Vector& yVector);
-
+  VectorLinePlotData(const Vector& xVector, const Vector& yVector);
 
   /// create with x and y vectors
-  static Ptr create(const Vector& xVector, 
-          const Vector& yVector)
-  {return Ptr(new VectorLinePlotData(xVector, yVector));}
-
+  //static Ptr create(const Vector& xVector, 
+  //        const Vector& yVector)
+  //{return Ptr(new VectorLinePlotData(xVector, yVector));}
 
   /// virtual destructor
   virtual ~VectorLinePlotData() {}
@@ -280,8 +278,7 @@ public:
   void units(const std::string &unit) {m_units = unit;};
 
   /// units for plotting on axes or scaling
-    std::string units() const {return m_units;};
-
+  std::string units() const {return m_units;};
 
 private:
 
@@ -298,8 +295,6 @@ private:
 };
  
 
-
-
 /** line plots data in a nice image 
 */
 class UTILITIES_API LinePlot : public Plot2D
@@ -307,26 +302,25 @@ class UTILITIES_API LinePlot : public Plot2D
   Q_OBJECT
 public:
 
-  COMMON_PTR_TYPEDEFS(LinePlot)
-
+  //COMMON_PTR_TYPEDEFS(LinePlot)
 
   /// constructor
   LinePlot(QWidget* parent = nullptr, Qt::WindowFlags flags = nullptr);
 
   /// create
-  static LinePlot::Ptr create(QWidget* parent = nullptr, Qt::WindowFlags flags = nullptr);
+  //static LinePlot::Ptr create(QWidget* parent = nullptr, Qt::WindowFlags flags = nullptr);
 
   /// virtual destructor
   virtual ~LinePlot() {}
 
   /// set the data
-  void linePlotData(LinePlotData::Ptr data, const std::string& name, QColor color = Qt::blue, double offset = 0.0 );
+  void linePlotData(LinePlotData* data, const std::string& name, QColor color = Qt::blue, double offset = 0.0 );
 
   /// convenience wrapper for timeseries data
-  void timeseriesData(TimeSeries tsData,const std::string& name, QColor color = Qt::blue );
+  void timeseriesData(TimeSeries tsData, const std::string& name, QColor color = Qt::blue );
 
   /// set left and right axes data
-  void linePlotLeftRightAxesData(LinePlotData::Ptr leftAxisData, LinePlotData::Ptr rightAxisData, const std::string& leftName, const std::string& rightName, QColor leftColor = Qt::blue , QColor rightColor = Qt::green );
+  void linePlotLeftRightAxesData(LinePlotData* leftAxisData, LinePlotData* rightAxisData, const std::string& leftName, const std::string& rightName, QColor leftColor = Qt::blue , QColor rightColor = Qt::green );
 
   /// update based on center and span
   void xCenterSpan(double center, double span);

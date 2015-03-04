@@ -257,8 +257,6 @@ protected:
 
   QwtPlot *m_qwtPlot;
 
-
-
 private:
   std::string m_windowTitle;
   // send signal closed if external management - e.g. resultsViewer

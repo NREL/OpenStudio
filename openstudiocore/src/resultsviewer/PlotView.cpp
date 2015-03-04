@@ -762,8 +762,7 @@ namespace resultsviewer{
       illuminanceDiff.push_back(illuminance1[i]-illuminance2[i]);
       i++;
     }
-    openstudio::MatrixFloodPlotData::Ptr data = openstudio::MatrixFloodPlotData::create(x1,y1,illuminanceDiff,openstudio::LinearInterp);
-
+    openstudio::MatrixFloodPlotData* data = new openstudio::MatrixFloodPlotData(x1,y1,illuminanceDiff,openstudio::LinearInterp);
 
 
     m_illuminanceMapData[0] = data;
@@ -780,7 +779,7 @@ namespace resultsviewer{
 
     m_floodPlotData = data;
 
-    m_spectrogram->setData(m_floodPlotData.get());
+    m_spectrogram->setData(m_floodPlotData);
 
     setDataRange();
 
@@ -868,7 +867,7 @@ namespace resultsviewer{
     std::vector<double> y;
     std::vector<double> illuminance;
     sqlFile.illuminanceMap(m_illuminanceMapReportIndicesDates[0].first,x,y,illuminance);
-    openstudio::MatrixFloodPlotData::Ptr data = openstudio::MatrixFloodPlotData::create(x,y,illuminance,openstudio::LinearInterp);
+    openstudio::MatrixFloodPlotData* data = new openstudio::MatrixFloodPlotData(x,y,illuminance,openstudio::LinearInterp);
 
     m_illuminanceMapData[0] = data;
 
@@ -884,7 +883,7 @@ namespace resultsviewer{
 
     m_floodPlotData = data;
 
-    m_spectrogram->setData(m_floodPlotData.get());
+    m_spectrogram->setData(m_floodPlotData);
 
     setDataRange();
     m_spectrogramOn = true;
@@ -948,7 +947,7 @@ namespace resultsviewer{
       m_plotViewTimeAxis->startDateTime(m_startDateTime);
     }
 
-    openstudio::TimeSeriesFloodPlotData::Ptr data = openstudio::TimeSeriesFloodPlotData::create(*_plotViewData.ts);
+    openstudio::TimeSeriesFloodPlotData* data = new openstudio::TimeSeriesFloodPlotData(*_plotViewData.ts);
     m_centerSlider->setRange(100.0*data->minX(),100.0*data->maxX());
     m_spanSlider->setRange(0,50*(data->maxX()-data->minX()));
 
@@ -974,7 +973,7 @@ namespace resultsviewer{
     m_floodPlotData = data;
 
     rightAxisTitleFromUnits(openstudio::toQString(m_floodPlotData->units()));
-    m_spectrogram->setData(m_floodPlotData.get());
+    m_spectrogram->setData(m_floodPlotData);
 
     setDataRange();
 
@@ -1019,7 +1018,7 @@ namespace resultsviewer{
 
     QwtInterval colorMap = QwtInterval(min, max);
     m_floodPlotData->colorMapRange(colorMap); // color range applied to plot data
-    m_spectrogram->setData(m_floodPlotData.get());
+    m_spectrogram->setData(m_floodPlotData);
     m_plot->setAxisScale(QwtPlot::yRight, min, max); // legend numbers
     m_rightAxis->setColorMap(colorMap, const_cast<QwtColorMap *>(m_spectrogram->colorMap())); // legend colors
     m_plot->replot();
@@ -1064,7 +1063,7 @@ namespace resultsviewer{
   void PlotView::initColorMap()
   {
     m_spectrogram->setColorMap(new FloodPlotColorMap(m_colorLevels, m_colorMapType));
-    m_spectrogram->setData(m_floodPlotData.get());
+    m_spectrogram->setData(m_floodPlotData);
   }
 
   void PlotView::setDataRange()
@@ -1128,7 +1127,7 @@ namespace resultsviewer{
       if ( endOffset > m_xAxisMax ) m_xAxisMax = endOffset;
     }
 
-    openstudio::TimeSeriesLinePlotData::Ptr data = openstudio::TimeSeriesLinePlotData::create(*_plotViewData.ts);
+    openstudio::TimeSeriesLinePlotData* data = new openstudio::TimeSeriesLinePlotData(*_plotViewData.ts);
 
     if (data)
     {
@@ -1953,7 +1952,7 @@ namespace resultsviewer{
           illuminanceDiff.push_back(illuminance1[i]-illuminance2[i]);
           i++;
         }
-        openstudio::MatrixFloodPlotData::Ptr data = openstudio::MatrixFloodPlotData::create(x1,y1,illuminanceDiff,openstudio::LinearInterp);
+        openstudio::MatrixFloodPlotData* data = new openstudio::MatrixFloodPlotData(x1,y1,illuminanceDiff,openstudio::LinearInterp);
 
 
         m_floodPlotData = data;
@@ -1966,13 +1965,13 @@ namespace resultsviewer{
         std::vector<double> y;
         std::vector<double> illuminance;
         sqlFile.illuminanceMap(m_illuminanceMapReportIndicesDates[reportIndex].first,x,y,illuminance);
-        openstudio::MatrixFloodPlotData::Ptr data = openstudio::MatrixFloodPlotData::create(x,y,illuminance,openstudio::LinearInterp);
+        openstudio::MatrixFloodPlotData* data = new openstudio::MatrixFloodPlotData(x,y,illuminance,openstudio::LinearInterp);
 
         m_floodPlotData = data;
         m_illuminanceMapData[reportIndex] = data;
       }
     }
-    m_spectrogram->setData(m_floodPlotData.get());
+    m_spectrogram->setData(m_floodPlotData);
 
     setDataRange();
     // replot too slow - see http://www.qtcentre.org/threads/17892-Spectrogram-too-slow

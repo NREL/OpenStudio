@@ -169,9 +169,9 @@ TEST_F(SqlFileFixture, FloodPlot)
   EXPECT_DOUBLE_EQ(365-1.0/24.0, duration.totalDays());
 
   // plot it
-  FloodPlot::Ptr fp = FloodPlot::create();
-  fp->timeseriesData(*ts);
-  fp->generateImage(toPath("testFP.png"));
+  FloodPlot fp;
+  fp.timeseriesData(*ts);
+  fp.generateImage(toPath("testFP.png"));
   EXPECT_TRUE(true);
 }
 
@@ -186,9 +186,9 @@ TEST_F(SqlFileFixture, LinePlot)
   ASSERT_TRUE(ts);
 
   // plot it
-  LinePlot::Ptr lp = LinePlot::create();
-  lp->timeseriesData(*ts, "Electricity:Facility");
-  lp->generateImage(toPath("testLP.png"));
+  LinePlot lp;
+  lp.timeseriesData(*ts, "Electricity:Facility");
+  lp.generateImage(toPath("testLP.png"));
   EXPECT_TRUE(true);
 }
 

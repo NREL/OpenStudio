@@ -41,6 +41,7 @@ void QwtPlot::initAxesData()
     for ( axisId = 0; axisId < axisCnt; axisId++ )
         d_axisData[axisId] = new AxisData;
 
+    // DLM: QwtScaleWidget is created with this as parent
     d_axisData[yLeft]->scaleWidget =
         new QwtScaleWidget( QwtScaleDraw::LeftScale, this );
     d_axisData[yRight]->scaleWidget =

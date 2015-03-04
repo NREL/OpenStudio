@@ -19,7 +19,7 @@
 
 #include "LinePlot.hpp"
 #include <cfloat>
-#include "../core/Application.hpp"
+//#include "../core/Application.hpp"
 #include <qwt/qwt_painter.h>
 
 
@@ -216,14 +216,16 @@ LinePlot::LinePlot(QWidget* parent /*= 0*/, Qt::WindowFlags flags /*= 0*/) : Plo
   init();
 }
 
-LinePlot::Ptr LinePlot::create(QWidget* parent, Qt::WindowFlags flags)
-{
-  Application::instance().application(true);
-  return LinePlot::Ptr(new LinePlot(parent, flags));
-}
+//LinePlot::Ptr LinePlot::create(QWidget* parent, Qt::WindowFlags flags)
+//{
+//  Application::instance().application(true);
+//  return LinePlot::Ptr(new LinePlot(parent, flags));
+//}
 
 void LinePlot::init()
 {
+  //Application::instance().application(true);
+
   m_plot2DTimeAxis = nullptr;
   // destroy windows when closed
   setAttribute(Qt::WA_DeleteOnClose);
@@ -317,7 +319,7 @@ void LinePlot::timeseriesData(TimeSeries tsData, const std::string& name, QColor
     }
   }
 
-  TimeSeriesLinePlotData::Ptr data = TimeSeriesLinePlotData::create(tsData, offset);
+  TimeSeriesLinePlotData* data = new TimeSeriesLinePlotData(tsData, offset);
   linePlotData(data, name, color, offset);
 }
 
@@ -354,7 +356,7 @@ void LinePlot::setLineThickness(const int &width)
 }
 
 
-void LinePlot::linePlotData(LinePlotData::Ptr data, const std::string& name, QColor color, double offset)
+void LinePlot::linePlotData(LinePlotData* data, const std::string& name, QColor color, double offset)
 {
   if (!data) return;
 
@@ -519,7 +521,7 @@ void LinePlot::scaleCurves(QwtPlotCurve *curve)
 
 }
 
-void LinePlot::linePlotLeftRightAxesData(LinePlotData::Ptr leftAxisData, LinePlotData::Ptr rightAxisData, const std::string& leftName, const std::string& rightName, QColor leftColor, QColor rightColor)
+void LinePlot::linePlotLeftRightAxesData(LinePlotData* leftAxisData, LinePlotData* rightAxisData, const std::string& leftName, const std::string& rightName, QColor leftColor, QColor rightColor)
 {
   linePlotData(leftAxisData, leftName, leftColor);
   linePlotData(rightAxisData, rightName, rightColor);

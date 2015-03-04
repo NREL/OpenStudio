@@ -28,17 +28,11 @@ using namespace std;
 using namespace boost;
 using namespace openstudio;
 
-TEST(LinePlot,RepeatedConstructor)
-{
-  LinePlot::Ptr lp;
-  lp = LinePlot::create();
-  lp = LinePlot::create();
-  lp = LinePlot::create();
-  lp = LinePlot::create();
-}
 
 TEST(LinePlot, VectorLinePlotData)
 {
+  Application::instance().application(true);
+
   Vector xVector(11);
   Vector yVector(11);
   for (unsigned i = 0; i < 11; ++i){
@@ -46,21 +40,23 @@ TEST(LinePlot, VectorLinePlotData)
     yVector(i) = 10 - i;
   }
 
-  VectorLinePlotData::Ptr data = VectorLinePlotData::create(xVector, yVector);
+  VectorLinePlotData* data = new VectorLinePlotData(xVector, yVector);
 
-  LinePlot::Ptr lp = LinePlot::create();
+  LinePlot lp;
   std::string name = "Vector Test";
-  lp->linePlotData(data, name, Qt::blue, 0.0);
-  lp->axesFontSize(12);
-  lp->tickFontSize(10);
-  lp->bottomAxisTitle("X axis");
-  lp->leftAxisTitle("Y axis");
-  lp->generateImage(toPath("testVectorLinePlotData.png"));
+  lp.linePlotData(data, name, Qt::blue, 0.0);
+  lp.axesFontSize(12);
+  lp.tickFontSize(10);
+  lp.bottomAxisTitle("X axis");
+  lp.leftAxisTitle("Y axis");
+  lp.generateImage(toPath("testVectorLinePlotData.png"));
 
 };
 
 TEST(LinePlot, TimeSeriesLinePlot_DetailedYear)
 {
+  Application::instance().application(true);
+
   DateTimeVector dateTimes(8760);
   Vector values(8760);
   DateTime startDate(Date(MonthOfYear::Jan, 1), Time(0,1,0,0));
@@ -70,7 +66,7 @@ TEST(LinePlot, TimeSeriesLinePlot_DetailedYear)
   }
   
   TimeSeries ts(dateTimes, values, "");
-  TimeSeriesLinePlotData::Ptr data = TimeSeriesLinePlotData::create(ts);
+  TimeSeriesLinePlotData* data = new TimeSeriesLinePlotData(ts);
   
   EXPECT_DOUBLE_EQ(1.0+1.0/24.0, data->minX());
   EXPECT_DOUBLE_EQ(365.0-1.0/24.0+1+1.0/24.0, data->maxX());
@@ -101,21 +97,23 @@ TEST(LinePlot, TimeSeriesLinePlot_DetailedYear)
   EXPECT_DOUBLE_EQ(0.0, data->value(364.0+1.0/24.0-epsilon));
 */
 
-  LinePlot::Ptr lp = LinePlot::create();
+  LinePlot lp;
   std::string name = "TimeSeries Detailed Line Plot Year Test";
-  lp->linePlotData(data, name, Qt::blue, 0.0);
-  lp->axesFontSize(12);
-  lp->tickFontSize(10);
-  lp->bottomAxisTitle("Time");
-  lp->leftAxisTitle("Y axis");
-  lp->setLineThickness(1);
-  lp->generateImage(toPath("testTimeSeriesLinePlot_DetailedYear.png"));
+  lp.linePlotData(data, name, Qt::blue, 0.0);
+  lp.axesFontSize(12);
+  lp.tickFontSize(10);
+  lp.bottomAxisTitle("Time");
+  lp.leftAxisTitle("Y axis");
+  lp.setLineThickness(1);
+  lp.generateImage(toPath("testTimeSeriesLinePlot_DetailedYear.png"));
 
 }
 
 
 TEST(LinePlot, TimeSeriesLinePlot_DetailedDay)
 {
+  Application::instance().application(true);
+
   DateTimeVector dateTimes(24);
   Vector values(24);
   DateTime startDate(Date(MonthOfYear::Jan, 1), Time(0,1,0,0));
@@ -125,7 +123,7 @@ TEST(LinePlot, TimeSeriesLinePlot_DetailedDay)
   }
   
   TimeSeries ts(dateTimes, values, "");
-  TimeSeriesLinePlotData::Ptr data = TimeSeriesLinePlotData::create(ts);
+  TimeSeriesLinePlotData* data = new TimeSeriesLinePlotData(ts);
   
   EXPECT_DOUBLE_EQ(1.0+1.0/24.0, data->minX());
   EXPECT_DOUBLE_EQ(2, data->maxX());
@@ -169,20 +167,22 @@ TEST(LinePlot, TimeSeriesLinePlot_DetailedDay)
   EXPECT_DOUBLE_EQ(0.0, data->value(364.0+1.0/24.0-epsilon));
 */
 
-  LinePlot::Ptr lp = LinePlot::create();
+  LinePlot lp;
   std::string name = "TimeSeries Detailed Line Plot Day Test";
-  lp->linePlotData(data, name, Qt::blue, 0.0);
-  lp->axesFontSize(12);
-  lp->tickFontSize(10);
-  lp->bottomAxisTitle("Time");
-  lp->leftAxisTitle("Y axis");
-  lp->setLineThickness(1);
-  lp->generateImage(toPath("testTimeSeriesLinePlot_DetailedDay.png"));
+  lp.linePlotData(data, name, Qt::blue, 0.0);
+  lp.axesFontSize(12);
+  lp.tickFontSize(10);
+  lp.bottomAxisTitle("Time");
+  lp.leftAxisTitle("Y axis");
+  lp.setLineThickness(1);
+  lp.generateImage(toPath("testTimeSeriesLinePlot_DetailedDay.png"));
 
 }
 
 TEST(LinePlot, TimeSeriesLinePlot_DetailedEndOfMonth)
 {
+  Application::instance().application(true);
+
   // testing end of month values - from Small Office Electricity:Facility Monthly
   DateTimeVector dateTimes(12);
   Vector values(12);
@@ -214,7 +214,7 @@ TEST(LinePlot, TimeSeriesLinePlot_DetailedEndOfMonth)
   values[11] = 21;
   
   TimeSeries ts(dateTimes, values, "");
-  TimeSeriesLinePlotData::Ptr data = TimeSeriesLinePlotData::create(ts);
+  TimeSeriesLinePlotData* data = new TimeSeriesLinePlotData(ts);
   
   EXPECT_DOUBLE_EQ(31.0+24.0/24.0, data->minX());
   EXPECT_DOUBLE_EQ(365+24.0/24.0, data->maxX());
@@ -228,15 +228,15 @@ TEST(LinePlot, TimeSeriesLinePlot_DetailedEndOfMonth)
   EXPECT_DOUBLE_EQ(10.0, data->y(0));
   EXPECT_DOUBLE_EQ(21.0, data->y(11));
 
-  LinePlot::Ptr lp = LinePlot::create();
+  LinePlot lp;
   std::string name = "TimeSeries Detailed Line Plot End of Month Test";
-  lp->topAxisTitle("Test"); // coverage
-  lp->linePlotData(data, name, Qt::blue, 0.0);
-  lp->axesFontSize(12);
-  lp->tickFontSize(10);
-  lp->bottomAxisTitle("Time");
-  lp->leftAxisTitle("Y axis");
-  lp->setLineThickness(1);
-  lp->generateImage(toPath("testTimeSeriesLinePlot_DetailedEndOfMonth.png"));
+  lp.topAxisTitle("Test"); // coverage
+  lp.linePlotData(data, name, Qt::blue, 0.0);
+  lp.axesFontSize(12);
+  lp.tickFontSize(10);
+  lp.bottomAxisTitle("Time");
+  lp.leftAxisTitle("Y axis");
+  lp.setLineThickness(1);
+  lp.generateImage(toPath("testTimeSeriesLinePlot_DetailedEndOfMonth.png"));
 
 }

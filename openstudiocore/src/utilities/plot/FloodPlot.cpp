@@ -19,16 +19,16 @@
 
 #include "FloodPlot.hpp"
 #include "../time/Time.hpp"
-#include "../core/Application.hpp"
+//#include "../core/Application.hpp"
 
 using namespace std;
 using namespace boost;
 
 namespace openstudio{
 
-  FloodPlotColorMap::FloodPlotColorMap(Vector& colorLevels, FloodPlotColorMap::ColorMapList colorMapList):
-  m_colorLevels(colorLevels),
-  m_colorMapList(colorMapList)
+FloodPlotColorMap::FloodPlotColorMap(Vector& colorLevels, FloodPlotColorMap::ColorMapList colorMapList)
+  : m_colorLevels(colorLevels),
+    m_colorMapList(colorMapList)
   {
     setMode(QwtLinearColorMap::FixedColors); // no interpolation - can set in constructor
     init();
@@ -434,25 +434,27 @@ FloodPlot::FloodPlot(QWidget* parent, Qt::WindowFlags flags) : Plot2D(parent, fl
 FloodPlot::FloodPlot(const Matrix& m)
 {
   init();
-  MatrixFloodPlotData::Ptr data = MatrixFloodPlotData::create(m);
+  MatrixFloodPlotData* data = new MatrixFloodPlotData(m);
   data->interpMethod(LinearInterp);
   floodPlotData(data);
 }
 
-FloodPlot::Ptr FloodPlot::create(QWidget* parent, Qt::WindowFlags flags)
-{
-  Application::instance().application(true);
-  return FloodPlot::Ptr(new FloodPlot(parent, flags));
-}
+//FloodPlot::Ptr FloodPlot::create(QWidget* parent, Qt::WindowFlags flags)
+//{
+//  Application::instance().application(true);
+//  return FloodPlot::Ptr(new FloodPlot(parent, flags));
+//}
 
-FloodPlot::Ptr FloodPlot::create(const Matrix& m)
-{
-  Application::instance().application(true);
-  return FloodPlot::Ptr(new FloodPlot(m));
-}
+//FloodPlot::Ptr FloodPlot::create(const Matrix& m)
+//{
+//  Application::instance().application(true);
+//  return FloodPlot::Ptr(new FloodPlot(m));
+//}
 
 void FloodPlot::init()
 {
+  //Application::instance().application(true);
+
   m_plot2DTimeAxis = nullptr;
   // destroy windows when closed
   setAttribute(Qt::WA_DeleteOnClose);
@@ -531,26 +533,21 @@ void FloodPlot::timeseriesData(TimeSeries tsData)
     m_plot2DTimeAxis->duration(m_duration);
   }
 
-  TimeSeriesFloodPlotData::Ptr data = TimeSeriesFloodPlotData::create(tsData);
+  TimeSeriesFloodPlotData* data = new TimeSeriesFloodPlotData(tsData);
   floodPlotData(data);
 }
 
-void FloodPlot::floodPlotData(FloodPlotData::Ptr data)
+void FloodPlot::floodPlotData(FloodPlotData* data)
 {
   if (!data) return;
-
-
 
   m_qwtPlot->setAxisScale(QwtPlot::xBottom, data->minX(), data->maxX());
   m_qwtPlot->setAxisScale(QwtPlot::yLeft, data->minY(), data->maxY());
 
-
   m_floodPlotData = data;
 
   rightAxisTitleFromUnits(m_floodPlotData->units());
-  m_spectrogram->setData(m_floodPlotData.get());
-
-
+  m_spectrogram->setData(m_floodPlotData);
 
   dataAutoRange();
 
@@ -588,7 +585,7 @@ void FloodPlot::colorLevels(Vector& colorLevels)
   m_qwtPlot->setAxisScale(QwtPlot::yRight, minimum(colorLevels), maximum(colorLevels)); // legend numbers
 
 
-  m_rightAxis->setColorMap(QwtInterval(minimum(colorLevels), maximum(colorLevels)), const_cast<QwtColorMap *>(m_spectrogram->colorMap())); // legend colors
+  m_rightAxis->setColorMap(QwtInterval(minimum(colorLevels), maximum(colorLevels)), &colorMap); // legend colors
   m_qwtPlot->replot();
 }
 
@@ -601,7 +598,7 @@ void FloodPlot::colorMapRange(double min, double max)
 
   QwtInterval colorMap = QwtInterval(min, max);
   m_floodPlotData->colorMapRange(colorMap); // color range applied to plot data
-  m_spectrogram->setData(m_floodPlotData.get());
+  m_spectrogram->setData(m_floodPlotData);
   m_qwtPlot->setAxisScale(QwtPlot::yRight, min, max); // legend numbers
   m_rightAxis->setColorMap(colorMap, const_cast<QwtColorMap *>(m_spectrogram->colorMap())); // legend colors
   m_qwtPlot->replot();
