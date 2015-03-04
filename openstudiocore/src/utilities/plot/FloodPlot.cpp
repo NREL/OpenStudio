@@ -26,13 +26,18 @@ using namespace boost;
 
 namespace openstudio{
 
-FloodPlotColorMap::FloodPlotColorMap(Vector& colorLevels, FloodPlotColorMap::ColorMapList colorMapList)
-  : m_colorLevels(colorLevels),
+FloodPlotColorMap::FloodPlotColorMap(const Vector& colorLevels, FloodPlotColorMap::ColorMapList colorMapList)
+  : QwtLinearColorMap(),
+    m_colorLevels(colorLevels),
     m_colorMapList(colorMapList)
-  {
-    setMode(QwtLinearColorMap::FixedColors); // no interpolation - can set in constructor
-    init();
-  }
+{
+  setMode(QwtLinearColorMap::FixedColors); // no interpolation - can set in constructor
+  init();
+}
+
+FloodPlotColorMap::~FloodPlotColorMap()
+{
+}
 
 void FloodPlotColorMap::init()
 {
@@ -164,26 +169,40 @@ void FloodPlotColorMap::init()
 
 }
 
+FloodPlotData::FloodPlotData()
+  : QwtRasterData()
+{
+
+}
+
+FloodPlotData::~FloodPlotData()
+{
+
+}
+
 TimeSeriesFloodPlotData::TimeSeriesFloodPlotData(TimeSeries timeSeries)
-: m_timeSeries(timeSeries),
+: FloodPlotData(),
+  m_timeSeries(timeSeries),
   m_minValue(minimum(timeSeries.values())),
   m_maxValue(maximum(timeSeries.values())),
   m_minX(timeSeries.firstReportDateTime().date().dayOfYear()),
   m_maxX(ceil(timeSeries.daysFromFirstReport()[timeSeries.daysFromFirstReport().size()-1]+timeSeries.firstReportDateTime().date().dayOfYear()+timeSeries.firstReportDateTime().time().totalDays())), // end day
   m_minY(0), // start hour
   m_maxY(24), // end hour
-  m_startFractionalDay(timeSeries.firstReportDateTime().date().dayOfYear()+timeSeries.firstReportDateTime().time().totalDays())
+  m_startFractionalDay(timeSeries.firstReportDateTime().date().dayOfYear()+timeSeries.firstReportDateTime().time().totalDays()),
+  m_colorMapRange(QwtInterval(m_minValue, m_maxValue))
 {
   // data range
   //setBoundingRect(QRectF(m_minX, m_minY, m_maxX-m_minX, m_maxY-m_minY));
   setInterval(Qt::XAxis, QwtInterval(m_minX, m_maxX - m_minX));
   setInterval(Qt::YAxis, QwtInterval(m_minY, m_maxY - m_minY));
-  m_colorMapRange = QwtInterval(m_minValue, m_maxValue);
+  setInterval(Qt::ZAxis, m_colorMapRange);
   m_units = timeSeries.units();
 }
 
 TimeSeriesFloodPlotData::TimeSeriesFloodPlotData(TimeSeries timeSeries,  QwtInterval colorMapRange)
-: m_timeSeries(timeSeries),
+: FloodPlotData(),
+  m_timeSeries(timeSeries),
   m_minValue(minimum(timeSeries.values())),
   m_maxValue(maximum(timeSeries.values())),
   m_minX(timeSeries.firstReportDateTime().date().dayOfYear()),
@@ -197,13 +216,24 @@ TimeSeriesFloodPlotData::TimeSeriesFloodPlotData(TimeSeries timeSeries,  QwtInte
   //setBoundingRect(QRectF(m_minX, m_minY, m_maxX-m_minX, m_maxY-m_minY));
   setInterval(Qt::XAxis, QwtInterval(m_minX, m_maxX - m_minX));
   setInterval(Qt::YAxis, QwtInterval(m_minY, m_maxY - m_minY));
+  setInterval(Qt::ZAxis, m_colorMapRange);
+  m_units = timeSeries.units();
 }
 
 TimeSeriesFloodPlotData* TimeSeriesFloodPlotData::copy() const
 {
-  TimeSeriesFloodPlotData* result = new TimeSeriesFloodPlotData(m_timeSeries);
-  result->colorMapRange(m_colorMapRange);
+  TimeSeriesFloodPlotData* result = new TimeSeriesFloodPlotData(m_timeSeries, m_colorMapRange);
   return result;
+}
+
+TimeSeriesFloodPlotData::~TimeSeriesFloodPlotData()
+{
+
+}
+
+QwtInterval TimeSeriesFloodPlotData::range() const 
+{ 
+  return m_colorMapRange; 
 }
 
 QRectF TimeSeriesFloodPlotData::boundingRect() const
@@ -217,6 +247,30 @@ double TimeSeriesFloodPlotData::value(double fractionalDay, double hourOfDay) co
   double fracDays = floor(fractionalDay) + hourOfDay/24.0;
   return m_timeSeries.value(fracDays-m_startFractionalDay);
 }
+
+/// minX
+double TimeSeriesFloodPlotData::minX() const { return m_minX; };
+
+/// maxX
+double TimeSeriesFloodPlotData::maxX() const { return m_maxX; };
+
+/// minY
+double TimeSeriesFloodPlotData::minY() const { return m_minY; };
+
+/// maxY
+double TimeSeriesFloodPlotData::maxY() const { return m_maxY; };
+
+/// minValue
+double TimeSeriesFloodPlotData::minValue() const { return m_minValue; };
+
+/// maxValue
+double TimeSeriesFloodPlotData::maxValue() const { return m_maxValue; };
+
+/// minValue setter
+void TimeSeriesFloodPlotData::minValue(double min) { m_minValue = min; };
+
+/// maxValue setter
+void TimeSeriesFloodPlotData::maxValue(double max) { m_maxValue = max; };
 
 /// sumValue
 double TimeSeriesFloodPlotData::sumValue() const
@@ -236,8 +290,24 @@ double TimeSeriesFloodPlotData::stdDevValue() const
   return stdDev(m_timeSeries.values());
 }
 
+void TimeSeriesFloodPlotData::colorMapRange(QwtInterval colorMapRange) 
+{ 
+  m_colorMapRange = colorMapRange; 
+}
+
+QwtInterval TimeSeriesFloodPlotData::colorMapRange() 
+{ 
+  return m_colorMapRange; 
+}
+
+std::string TimeSeriesFloodPlotData::units() const 
+{ 
+  return m_units; 
+};
+
 MatrixFloodPlotData::MatrixFloodPlotData(const Matrix& matrix)
-: m_xVector(linspace(0, matrix.size1()-1, matrix.size1())),
+: FloodPlotData(),
+  m_xVector(linspace(0, matrix.size1() - 1, matrix.size1())),
   m_yVector(linspace(0, matrix.size2()-1, matrix.size2())),
   m_matrix(matrix),
   m_interpMethod(NearestInterp)
@@ -246,7 +316,8 @@ MatrixFloodPlotData::MatrixFloodPlotData(const Matrix& matrix)
 }
 
 MatrixFloodPlotData::MatrixFloodPlotData(const Matrix& matrix,  QwtInterval colorMapRange)
-: m_xVector(linspace(0, matrix.size1()-1, matrix.size1())),
+: FloodPlotData(),
+  m_xVector(linspace(0, matrix.size1() - 1, matrix.size1())),
   m_yVector(linspace(0, matrix.size2()-1, matrix.size2())),
   m_matrix(matrix),
   m_interpMethod(NearestInterp)
@@ -260,7 +331,8 @@ MatrixFloodPlotData::MatrixFloodPlotData(const Matrix& matrix,  QwtInterval colo
 MatrixFloodPlotData::MatrixFloodPlotData(const Vector& xVector,
                                          const Vector& yVector,
                                          const Matrix& matrix)
-: m_xVector(xVector),
+: FloodPlotData(),
+  m_xVector(xVector),
   m_yVector(yVector),
   m_matrix(matrix),
   m_interpMethod(NearestInterp)
@@ -273,7 +345,8 @@ MatrixFloodPlotData::MatrixFloodPlotData(const Vector& xVector,
                                          const Vector& yVector,
                                          const Matrix& matrix,
                                          const InterpMethod interp)
-: m_xVector(xVector),
+: FloodPlotData(),
+  m_xVector(xVector),
   m_yVector(yVector),
   m_matrix(matrix),
   m_interpMethod(interp)
@@ -284,7 +357,8 @@ MatrixFloodPlotData::MatrixFloodPlotData(const Vector& xVector,
 MatrixFloodPlotData::MatrixFloodPlotData(const std::vector<double>& xVector,
                                          const std::vector<double>& yVector,
                                          const std::vector<double>& matrix)
-: m_xVector(xVector.size()),
+: FloodPlotData(),
+  m_xVector(xVector.size()),
   m_yVector(yVector.size()),
   m_matrix(xVector.size(),yVector.size()),
   m_interpMethod(NearestInterp)
@@ -302,7 +376,8 @@ MatrixFloodPlotData::MatrixFloodPlotData(const std::vector<double>& xVector,
                                          const std::vector<double>& yVector,
                                          const std::vector<double>& matrix,
                                          const InterpMethod interp)
-: m_xVector(xVector.size()),
+: FloodPlotData(), 
+  m_xVector(xVector.size()),
   m_yVector(yVector.size()),
   m_matrix(xVector.size(),yVector.size()),
   m_interpMethod(interp)
@@ -322,7 +397,8 @@ MatrixFloodPlotData::MatrixFloodPlotData(const Vector& xVector,
                                          const Vector& yVector,
                                          const Matrix& matrix,
                                          QwtInterval colorMapRange)
-: m_xVector(xVector),
+: FloodPlotData(),
+  m_xVector(xVector),
   m_yVector(yVector),
   m_matrix(matrix),
   m_interpMethod(NearestInterp)
@@ -331,12 +407,19 @@ MatrixFloodPlotData::MatrixFloodPlotData(const Vector& xVector,
   m_colorMapRange = colorMapRange;
 }
 
+MatrixFloodPlotData::~MatrixFloodPlotData()
+{
+
+}
+
 MatrixFloodPlotData* MatrixFloodPlotData::copy() const
 {
   auto result = new MatrixFloodPlotData(m_xVector, m_yVector, m_matrix, m_colorMapRange);
   result->interpMethod(m_interpMethod);
   return result;
 }
+
+QwtInterval MatrixFloodPlotData::range() const { return m_colorMapRange; }
 
 double MatrixFloodPlotData::value(double x, double y) const
 {
@@ -373,6 +456,18 @@ double MatrixFloodPlotData::maxY() const
   return m_maxY;
 }
 
+/// minValue
+double MatrixFloodPlotData::minValue() const { return m_minValue; };
+
+/// maxValue
+double MatrixFloodPlotData::maxValue() const { return m_maxValue; };
+
+/// minValue setter
+void MatrixFloodPlotData::minValue(double min) { m_minValue = min; };
+
+/// maxValue setter
+void MatrixFloodPlotData::maxValue(double max) { m_maxValue = max; };
+
 /// sumValue
 double MatrixFloodPlotData::sumValue() const
 {
@@ -390,6 +485,15 @@ double MatrixFloodPlotData::stdDevValue() const
 {
   return 0;
 }
+
+/// range of values for which to show the colormap
+void MatrixFloodPlotData::colorMapRange(QwtInterval colorMapRange) { m_colorMapRange = colorMapRange; }
+
+/// range of values for which to show the colormap
+QwtInterval MatrixFloodPlotData::colorMapRange() { return m_colorMapRange; }
+
+/// units for plotting on axes or scaling
+std::string MatrixFloodPlotData::units() const { return m_units; };
 
 // set ranges and bounding box
 void MatrixFloodPlotData::init(){
@@ -417,7 +521,7 @@ void MatrixFloodPlotData::init(){
   //setBoundingRect(QRectF(m_minX, m_minY, m_maxX-m_minX, m_maxY-m_minY));
   setInterval(Qt::XAxis, QwtInterval(m_minX, m_maxX - m_minX));
   setInterval(Qt::YAxis, QwtInterval(m_minY, m_maxY - m_minY));
-
+  setInterval(Qt::ZAxis, m_colorMapRange);
 }
 
 
@@ -426,39 +530,35 @@ void MatrixFloodPlotData::init(){
  * --------------------------------------
 */
 
-FloodPlot::FloodPlot(QWidget* parent, Qt::WindowFlags flags) : Plot2D(parent, flags)
+FloodPlot::FloodPlot(QWidget* parent, Qt::WindowFlags flags) 
+  : Plot2D(parent, flags)
 {
   init();
 }
 
-FloodPlot::FloodPlot(const Matrix& m)
+FloodPlot::FloodPlot(const Matrix& m, QWidget* parent, Qt::WindowFlags flags)
+  : Plot2D(parent, flags)
 {
   init();
+
+  // deleted by internals of floodPlotData
   MatrixFloodPlotData* data = new MatrixFloodPlotData(m);
   data->interpMethod(LinearInterp);
   floodPlotData(data);
 }
 
-//FloodPlot::Ptr FloodPlot::create(QWidget* parent, Qt::WindowFlags flags)
-//{
-//  Application::instance().application(true);
-//  return FloodPlot::Ptr(new FloodPlot(parent, flags));
-//}
+FloodPlot::~FloodPlot()
+{
 
-//FloodPlot::Ptr FloodPlot::create(const Matrix& m)
-//{
-//  Application::instance().application(true);
-//  return FloodPlot::Ptr(new FloodPlot(m));
-//}
+}
 
 void FloodPlot::init()
 {
-  //Application::instance().application(true);
-
   m_plot2DTimeAxis = nullptr;
   // destroy windows when closed
   setAttribute(Qt::WA_DeleteOnClose);
 
+  // deleted by m_qwtPlot after attach
   m_spectrogram = new QwtPlotSpectrogram();
   m_colorMapType = FloodPlotColorMap::Jet;
   m_colorMapLength = 64;
@@ -468,7 +568,6 @@ void FloodPlot::init()
   // TODO - base on data
   this->leftAxisTitle("Hour of Day");
   this->bottomAxisTitle("Day of Simulation");
-
 }
 
 void FloodPlot::selectColorMap()
@@ -520,6 +619,7 @@ void FloodPlot::timeseriesData(TimeSeries tsData)
   m_xAxisMax = m_duration;
   if (m_plot2DTimeAxis == nullptr) 
   {
+    // deleted after setAxisScaleDraw
     m_plot2DTimeAxis = new Plot2DTimeAxis(m_startDateTime, m_duration);
     m_qwtPlot->setAxisTitle(QwtPlot::xBottom, " Simulation Time");
     m_qwtPlot->setAxisScale(QwtPlot::xBottom, 0, m_duration);
@@ -533,21 +633,22 @@ void FloodPlot::timeseriesData(TimeSeries tsData)
     m_plot2DTimeAxis->duration(m_duration);
   }
 
+  // deleted by the internals of floodPlotData
   TimeSeriesFloodPlotData* data = new TimeSeriesFloodPlotData(tsData);
   floodPlotData(data);
 }
 
 void FloodPlot::floodPlotData(FloodPlotData* data)
 {
-  if (!data) return;
+  if (!data){
+    return;
+  }
 
   m_qwtPlot->setAxisScale(QwtPlot::xBottom, data->minX(), data->maxX());
   m_qwtPlot->setAxisScale(QwtPlot::yLeft, data->minY(), data->maxY());
 
-  m_floodPlotData = data;
-
-  rightAxisTitleFromUnits(m_floodPlotData->units());
-  m_spectrogram->setData(m_floodPlotData);
+  rightAxisTitleFromUnits(data->units());
+  m_spectrogram->setData(data); // takes ownership of data
 
   dataAutoRange();
 
@@ -555,9 +656,10 @@ void FloodPlot::floodPlotData(FloodPlotData* data)
 
 /// default contour levels - 10
   QList<double> contourLevels;
-  double interval = (m_floodPlotData->maxValue()-m_floodPlotData->minValue())/10.0;
-  for ( double level = m_floodPlotData->minValue(); level < m_floodPlotData->maxValue(); level += interval )
+  double interval = (data->maxValue() - data->minValue()) / 10.0;
+  for (double level = data->minValue(); level < data->maxValue(); level += interval){
     contourLevels += level;
+  }
 
   m_spectrogram->setContourLevels(contourLevels);
   m_qwtPlot->replot();
@@ -566,8 +668,9 @@ void FloodPlot::floodPlotData(FloodPlotData* data)
 void FloodPlot::contourLevels(Vector& contourValues)
 {
   QList<double> contours;
-  for( unsigned int level = 0; level < contourValues.size(); level ++ )
+  for (unsigned int level = 0; level < contourValues.size(); level++){
     contours += contourValues(level);
+  }
 
   m_spectrogram->setContourLevels(contours);
   m_qwtPlot->replot();
@@ -579,29 +682,25 @@ void FloodPlot::colorLevels(Vector& colorLevels)
 
   m_colorLevels = colorLevels;
 
-  FloodPlotColorMap colorMap(m_colorLevels, m_colorMapType);
-
-  m_spectrogram->setColorMap(&colorMap);
+  FloodPlotColorMap* colorMap = new FloodPlotColorMap(m_colorLevels, m_colorMapType);
+  m_spectrogram->setColorMap(colorMap);
   m_qwtPlot->setAxisScale(QwtPlot::yRight, minimum(colorLevels), maximum(colorLevels)); // legend numbers
 
-
-  m_rightAxis->setColorMap(QwtInterval(minimum(colorLevels), maximum(colorLevels)), &colorMap); // legend colors
+  colorMap = new FloodPlotColorMap(m_colorLevels, m_colorMapType);
+  m_rightAxis->setColorMap(QwtInterval(minimum(colorLevels), maximum(colorLevels)), colorMap); // legend colors
   m_qwtPlot->replot();
 }
 
 void FloodPlot::colorMapRange(double min, double max)
 {
-  if (min >= max)
+  if (min >= max){
     return;
-  if (!m_floodPlotData)
-    return;
+  }
 
-  QwtInterval colorMap = QwtInterval(min, max);
-  m_floodPlotData->colorMapRange(colorMap); // color range applied to plot data
-  m_spectrogram->setData(m_floodPlotData);
-  m_qwtPlot->setAxisScale(QwtPlot::yRight, min, max); // legend numbers
-  m_rightAxis->setColorMap(colorMap, const_cast<QwtColorMap *>(m_spectrogram->colorMap())); // legend colors
-  m_qwtPlot->replot();
+  Vector levels(2);
+  levels(0) = min;
+  levels(1) = max;
+  colorLevels(levels);
 }
 
 void FloodPlot::showContour(bool on)
@@ -624,16 +723,16 @@ void FloodPlot::colorMap(FloodPlotColorMap::ColorMapList clrMap)
 
 void FloodPlot::initColorMap()
 {
-  //m_colorMap = std::unique_ptr<FloodPlotColorMap>(new FloodPlotColorMap(m_colorLevels, m_colorMapType));
-  //m_spectrogram->setColorMap(m_colorMap.get());
-  m_spectrogram->setColorMap(new FloodPlotColorMap(m_colorLevels, m_colorMapType));
+  FloodPlotColorMap* colorMap = new FloodPlotColorMap(m_colorLevels, m_colorMapType);
+  m_spectrogram->setColorMap(colorMap);
 }
 
 void FloodPlot::dataAutoRange()
 {
   m_dataRange = m_spectrogram->data()->interval(Qt::XAxis);
-  if (m_dataRange.minValue() == m_dataRange.maxValue())
+  if (m_dataRange.minValue() == m_dataRange.maxValue()){
     m_dataRange = QwtInterval(m_dataRange.minValue(), m_dataRange.minValue() + 1.0);
+  }
 
   m_colorLevels=linspace(m_dataRange.minValue(), m_dataRange.maxValue(),m_colorMapLength);
 }
@@ -642,7 +741,9 @@ void FloodPlot::initColorBar()
 {
   m_rightAxis = m_qwtPlot->axisWidget(QwtPlot::yRight);
   m_rightAxis->setColorBarEnabled(true);
-  m_rightAxis->setColorMap(m_dataRange, const_cast<QwtColorMap *>(m_spectrogram->colorMap()));
+
+  FloodPlotColorMap* colorMap = new FloodPlotColorMap(m_colorLevels, m_colorMapType);
+  m_rightAxis->setColorMap(m_dataRange, colorMap);
 
   m_qwtPlot->setAxisScale(QwtPlot::yRight, m_dataRange.minValue(), m_dataRange.maxValue() );
   m_qwtPlot->enableAxis(QwtPlot::yRight);
@@ -668,6 +769,10 @@ void FloodPlot::xCenterSpan(double center, double span)
   m_qwtPlot->replot();
 }
 
+void FloodPlot::dragEnterEvent(QDragEnterEvent *e) 
+{ 
+  e->accept(); 
+}
 
 double FloodPlot::centerXValue(double center)
 {

@@ -30,6 +30,7 @@
 #include "../../plot/FloodPlot.hpp"
 #include "../../plot/LinePlot.hpp"
 #include "../../units/UnitFactory.hpp"
+#include "../../core/Application.hpp"
 
 #include <resources.hxx>
 
@@ -156,6 +157,8 @@ TEST_F(SqlFileFixture, TimeSeriesCount)
 
 TEST_F(SqlFileFixture, FloodPlot)
 {
+  Application::instance().application(true);
+
   std::vector<std::string> availableEnvPeriods = sqlFile.availableEnvPeriods();
   ASSERT_FALSE(availableEnvPeriods.empty());
 
@@ -178,6 +181,8 @@ TEST_F(SqlFileFixture, FloodPlot)
 
 TEST_F(SqlFileFixture, LinePlot)
 {
+  Application::instance().application(true);
+
   std::vector<std::string> availableEnvPeriods = sqlFile.availableEnvPeriods();
   ASSERT_FALSE(availableEnvPeriods.empty());
 

@@ -50,12 +50,11 @@ namespace openstudio{
 
 /** LinePlotData is abstract class for data that can be used in a line plot.
  *  Derive from this class to plot your data.
+ *  \deprecated { Qwt drawing widgets are deprecated in favor of Javascript }
  */
-  class UTILITIES_API LinePlotData : public QwtSeriesData<QPointF>
+class UTILITIES_API LinePlotData : public QwtSeriesData<QPointF>
 {
 public:
-
-  //COMMON_PTR_TYPEDEFS(LinePlotData)
 
   /// virtual destructor
   virtual ~LinePlotData() {}
@@ -110,25 +109,17 @@ protected:
 };
 
 /** TimeSeriesLinePlotData converts a time series into Line plot data
+*   \deprecated { Qwt drawing widgets are deprecated in favor of Javascript }
 */
 class UTILITIES_API TimeSeriesLinePlotData: public LinePlotData
 {
 public:
-
-  //COMMON_PTR_TYPEDEFS(TimeSeriesLinePlotData)
 
   /// constructor
   TimeSeriesLinePlotData(TimeSeries timeSeries);
   
   /// constructor
   TimeSeriesLinePlotData(TimeSeries timeSeries, double fracDaysOffset);
-
-  /// create
-  //static Ptr create(TimeSeries timeSeries)
-  //{return Ptr(new TimeSeriesLinePlotData(timeSeries));}
-  /// create
-  //static Ptr create(TimeSeries timeSeries, double fracDaysOffset)
-  //{return Ptr(new TimeSeriesLinePlotData(timeSeries, fracDaysOffset));}
 
   /// virtual destructor
   virtual ~TimeSeriesLinePlotData() {}
@@ -205,20 +196,14 @@ private:
 };
 
 /** VectorLinePlotData converts two Vectors into Line plot data
+*   \deprecated { Qwt drawing widgets are deprecated in favor of Javascript }
 */
 class UTILITIES_API VectorLinePlotData: public LinePlotData
 {
 public:
 
-  //COMMON_PTR_TYPEDEFS(VectorLinePlotData)
-
   /// constructor with x and y vectors
   VectorLinePlotData(const Vector& xVector, const Vector& yVector);
-
-  /// create with x and y vectors
-  //static Ptr create(const Vector& xVector, 
-  //        const Vector& yVector)
-  //{return Ptr(new VectorLinePlotData(xVector, yVector));}
 
   /// virtual destructor
   virtual ~VectorLinePlotData() {}
@@ -295,25 +280,21 @@ private:
 };
  
 
-/** line plots data in a nice image 
+/** Line plots data in a nice image 
+*   \deprecated { Qwt drawing widgets are deprecated in favor of Javascript }
 */
 class UTILITIES_API LinePlot : public Plot2D
 {
   Q_OBJECT
 public:
 
-  //COMMON_PTR_TYPEDEFS(LinePlot)
-
   /// constructor
   LinePlot(QWidget* parent = nullptr, Qt::WindowFlags flags = nullptr);
 
-  /// create
-  //static LinePlot::Ptr create(QWidget* parent = nullptr, Qt::WindowFlags flags = nullptr);
-
   /// virtual destructor
-  virtual ~LinePlot() {}
+  virtual ~LinePlot();
 
-  /// set the data
+  /// set the data, takes ownership of data and delete's it when not used any more
   void linePlotData(LinePlotData* data, const std::string& name, QColor color = Qt::blue, double offset = 0.0 );
 
   /// convenience wrapper for timeseries data
@@ -329,13 +310,14 @@ public:
   void scaleCurves(QwtPlotCurve *curve);
 
   /// set thickness of all curves on a line plot
-  void setLineThickness(const int &width);
-  const int lineThickness() const {return m_lineThickness;}
+  void setLineThickness(int width);
+
+  int lineThickness() const;
 
 protected:
-  /// drop target support for drag/drop operations
-  void dragEnterEvent(QDragEnterEvent *e) { e->accept(); }
 
+  /// drop target support for drag/drop operations
+  void dragEnterEvent(QDragEnterEvent *e);
 
 private:
   // grid 
@@ -366,8 +348,7 @@ private:
 
   // set line based on color and number of curves and thickness trac #179
   QPen curvePen(QColor &color);
-
-
+  
 private slots:
   /// legend clicked event
   void showCurve(QwtPlotItem *, bool on);

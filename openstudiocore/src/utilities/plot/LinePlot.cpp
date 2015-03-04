@@ -216,6 +216,10 @@ LinePlot::LinePlot(QWidget* parent /*= 0*/, Qt::WindowFlags flags /*= 0*/) : Plo
   init();
 }
 
+LinePlot::~LinePlot()
+{
+}
+
 //LinePlot::Ptr LinePlot::create(QWidget* parent, Qt::WindowFlags flags)
 //{
 //  Application::instance().application(true);
@@ -227,21 +231,25 @@ void LinePlot::init()
   //Application::instance().application(true);
 
   m_plot2DTimeAxis = nullptr;
+
   // destroy windows when closed
   setAttribute(Qt::WA_DeleteOnClose);
+
   m_qwtPlot->plotLayout()->setAlignCanvasToScales(true);
+
   // legend - subclass qwtLegend to overwrite paint event
-  // m_legend = new Plot2DLegend(this);
-  m_legend = new QwtLegend(this);
+  m_legend = new QwtLegend(); // deleted after insertLegend
   m_legend->setDefaultItemMode(QwtLegendData::Checkable);
-  //  m_legend->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  //  m_legend->setGeometry(120,100,150,150);
+  //m_legend->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  //m_legend->setGeometry(120,100,150,150);
+
   QPalette p(palette());
   p.setColor(QPalette::Background, Qt::white);
   m_legend->setPalette(p);
   // m_qwtPlot->insertLegend(m_legend, QwtPlot::ExternalLegend);
   m_qwtPlot->insertLegend(m_legend, QwtPlot::BottomLegend);
   // m_legend->show();
+
   // for window menu in treeview application
   setAttribute(Qt::WA_DeleteOnClose);
 
@@ -271,7 +279,7 @@ void LinePlot::init()
 
 
   // plot grid
-  m_grid = new QwtPlotGrid();
+  m_grid = new QwtPlotGrid(); // deleted by m_grid after attach
   QPen gridPen(Qt::gray);
   gridPen.setCosmetic(true);
   gridPen.setWidth(1);
@@ -279,7 +287,6 @@ void LinePlot::init()
   m_grid->setPen(gridPen);
   m_grid->attach(m_qwtPlot);
 
-  
 }
 
 
@@ -296,9 +303,12 @@ void LinePlot::timeseriesData(TimeSeries tsData, const std::string& name, QColor
     m_startDateTime = tsData.firstReportDateTime();
     m_endDateTime = tsData.firstReportDateTime() + Time(tsData.daysFromFirstReport(tsData.daysFromFirstReport().size()-1));
     m_duration = (m_endDateTime-m_startDateTime).totalDays();
+
+    // deleted by m_qwtPlot after setAxisScaleDraw
     m_plot2DTimeAxis = new Plot2DTimeAxis(m_startDateTime, m_duration);
     m_qwtPlot->setAxisTitle(QwtPlot::xBottom, " Simulation Time");
     m_qwtPlot->setAxisScaleDraw(QwtPlot::xBottom, m_plot2DTimeAxis);
+
     m_xAxisMin = 0.0;
     m_xAxisMax = m_duration;
     m_qwtPlot->setAxisScale(QwtPlot::xBottom, 0, m_duration);
@@ -319,6 +329,7 @@ void LinePlot::timeseriesData(TimeSeries tsData, const std::string& name, QColor
     }
   }
 
+  // deleted by internals of linePlotData
   TimeSeriesLinePlotData* data = new TimeSeriesLinePlotData(tsData, offset);
   linePlotData(data, name, color, offset);
 }
@@ -335,8 +346,10 @@ QColor LinePlot::curveColor(QColor &lastColor)
   }
 }
 
-void LinePlot::setLineThickness(const int &width)
+void LinePlot::setLineThickness(int width)
 {
+  m_lineThickness = width;
+
   const QwtPlotItemList &listPlotItem = m_qwtPlot->itemList();
   QwtPlotItemIterator itPlotItem;
   for (itPlotItem = listPlotItem.begin();itPlotItem!=listPlotItem.end();++itPlotItem)
@@ -355,25 +368,38 @@ void LinePlot::setLineThickness(const int &width)
 
 }
 
+int LinePlot::lineThickness() const
+{
+  return m_lineThickness;
+}
+
+void LinePlot::dragEnterEvent(QDragEnterEvent *e) 
+{ 
+  e->accept(); 
+}
 
 void LinePlot::linePlotData(LinePlotData* data, const std::string& name, QColor color, double offset)
 {
-  if (!data) return;
-
+  if (!data){
+    return;
+  }
 
   // set based on data - record overall min and max
   if ( (data->minX() < m_xAxisMin) || (data->maxX() > m_xAxisMax) )
   {
-    if  (data->minX() < m_xAxisMin) m_xAxisMin = data->minX();
-    if  (data->maxX() > m_xAxisMax) m_xAxisMax = data->maxX();
+    if (data->minX() < m_xAxisMin){
+      m_xAxisMin = data->minX();
+    }
+    if (data->maxX() > m_xAxisMax){
+      m_xAxisMax = data->maxX();
+    }
   }
   if (numberOfCurves() == 0)
   {
     m_lineThickness = 10;
   }
 
-
-  /// todo - curve collection - shared pointers
+  // will be deleted by m_qwtPlot after attach
   QwtPlotCurve * curve = new QwtPlotCurve(toQString(name));
   if (color == Qt::color0) 
   { // generate new color from color map
@@ -382,7 +408,7 @@ void LinePlot::linePlotData(LinePlotData* data, const std::string& name, QColor 
   }
   curve->setPen(curvePen(color));
   curve->attach(m_qwtPlot);
-  curve->setData(&*data);
+  curve->setData(data); // takes ownership of data
 
   // check for number of different units (std::string  based)
   QString curveUnits = toQString(data->units());
@@ -417,13 +443,10 @@ void LinePlot::linePlotData(LinePlotData* data, const std::string& name, QColor 
     this->leftAxisTitle("Scaled");
   }
 
-
-
-/// update legend and replot
+  /// update legend and replot
   showCurve(curve, true);
 
 //  initZoomer();
-
 }
 
 QPen LinePlot::curvePen(QColor &color)

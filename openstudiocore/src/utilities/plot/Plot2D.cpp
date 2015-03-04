@@ -26,10 +26,68 @@ using namespace boost;
 
 namespace openstudio{
 
+Plot2DTimeAxis::Plot2DTimeAxis(const DateTime &startDateTime, double duration)
+  : m_startDateTime(startDateTime), m_duration(duration)
+{
+}
 
-Plot2D::Plot2D(QWidget* parent, Qt::WindowFlags flags):QWidget(parent)
+QwtText Plot2DTimeAxis::label(double fracDays) const
+{
+  Time timeFromFracDays(fracDays - m_startDateTime.date().dayOfYear() - m_startDateTime.time().totalDays());
+  DateTime dateTime(m_startDateTime + timeFromFracDays);
+  Date date = dateTime.date();
+  Time time = dateTime.time();
+  unsigned day = date.dayOfMonth();
+  unsigned month = openstudio::month(date.monthOfYear());
+  int hour = time.hours();
+  int minutes = time.minutes();
+  int seconds = time.seconds();
+
+  QString s;
+
+  // zooming 
+  double currentDuration = scaleDiv().upperBound() - scaleDiv().lowerBound();
+
+  if (currentDuration < 1.0 / 24.0) // less than an hour
+  {
+    s.sprintf("%02d/%02d %02d:%02d:%02d", month, day, hour, minutes, seconds);
+  } else if (currentDuration < 7.0) // less than a week
+  {
+    s.sprintf("%02d/%02d %02d:%02d", month, day, hour, minutes);
+  } else // week or more
+  {
+    s.sprintf("%02d/%02d", month, day);
+  }
+
+  return s;
+}
+
+const DateTime Plot2DTimeAxis::startDateTime() const 
+{ 
+  return m_startDateTime; 
+}
+
+void Plot2DTimeAxis::startDateTime(const DateTime &_startDateTime) 
+{
+  m_startDateTime = _startDateTime; 
+}
+
+double Plot2DTimeAxis::duration() const 
+{ 
+  return m_duration; 
+}
+
+void Plot2DTimeAxis::duration(double _duration) 
+{ 
+  m_duration = _duration; 
+}
+
+
+Plot2D::Plot2D(QWidget* parent, Qt::WindowFlags flags)
+  : QWidget(parent)
 {
   setupUi(this);
+
   // accept drops
   setAcceptDrops( true );
 
@@ -44,8 +102,6 @@ Plot2D::Plot2D(QWidget* parent, Qt::WindowFlags flags):QWidget(parent)
 
 Plot2D::~Plot2D()
 {}
-
-
 
 void Plot2D::plotTitle(const std::string& title)
 {
@@ -309,7 +365,7 @@ QFont Plot2D::topAxisFont() const
   return m_qwtPlot->axisFont(QwtPlot::xTop);
 }
 
-void Plot2D::backgourndColor(QColor color)
+void Plot2D::backgroundColor(QColor color)
 {
   m_qwtPlot->setCanvasBackground(color);
 }
@@ -324,9 +380,6 @@ void Plot2D::setupUi(QWidget *widget)
   sizePolicy.setHeightForWidth(widget->sizePolicy().hasHeightForWidth());
   widget->setSizePolicy(sizePolicy);
 
-  m_vBoxLayout = new QVBoxLayout(widget);
-
-  // DLM: who deletes m_qwtPlot?
   m_qwtPlot = new QwtPlot(this);
 
   QFont font;
@@ -357,7 +410,13 @@ void Plot2D::generateImage(const openstudio::path& file, int w, int h)
     QPixmap pixmap(this->size());
     pixmap.fill(Qt::white);
     QPainter p(&pixmap);
-    //this->m_qwtPlot->print(&p, rect());
+
+    QwtScaleMap maps[QwtPlot::axisCnt];
+    for (int axisId = 0; axisId < QwtPlot::axisCnt; axisId++){
+      maps[axisId] = m_qwtPlot->canvasMap(axisId);
+    }
+
+    m_qwtPlot->drawItems(&p, rect(), maps);
     p.end();
     pixmap.save(toQString(file), nullptr, -1);
   }
@@ -367,7 +426,13 @@ void Plot2D::generateImage(const openstudio::path& file, int w, int h)
     pixmap.fill(Qt::white);
     QRect r(0,0,w,h);
     QPainter p(&pixmap);
-    //this->m_qwtPlot->print(&p, r);
+
+    QwtScaleMap maps[QwtPlot::axisCnt];
+    for (int axisId = 0; axisId < QwtPlot::axisCnt; axisId++){
+      maps[axisId] = m_qwtPlot->canvasMap(axisId);
+    }
+
+    m_qwtPlot->drawItems(&p, r, maps);
     p.end();
     pixmap.save(toQString(file), nullptr, -1);
   }
@@ -408,5 +473,9 @@ void Plot2D::windowTitle(const std::string& title)
   setWindowTitle(toQString(title));
 }
 
+std::string Plot2D::windowTitle() const
+{
+  return m_windowTitle;
+}
 
 } // openstudio

@@ -42,28 +42,27 @@
 namespace openstudio{
 
   /** FloodPlotColorMap is class for colormap that can be used in a flood plot.
+  *   \deprecated { Qwt drawing widgets are deprecated in favor of Javascript }
   */
   class UTILITIES_API FloodPlotColorMap: public QwtLinearColorMap
   {
     public:
 
-      //COMMON_PTR_TYPEDEFS(FloodPlotColorMap);
-
       /// available color maps
       enum ColorMapList {Gray, Jet};
 
       /// constructor
-      FloodPlotColorMap(Vector& colorLevels, ColorMapList colorMap);
+      FloodPlotColorMap(const Vector& colorLevels, ColorMapList colorMap);
 
       /// virtual destructor
-      virtual ~FloodPlotColorMap() {}
+      virtual ~FloodPlotColorMap();
 
     private:
       // Disabled copy constructor and operator=
       FloodPlotColorMap(const FloodPlotColorMap &);
       FloodPlotColorMap &operator=(const FloodPlotColorMap &);
 
-      Vector& m_colorLevels;
+      Vector m_colorLevels;
       ColorMapList m_colorMapList;
       void init();
   };
@@ -71,15 +70,14 @@ namespace openstudio{
 
   /** FloodPlotData is abstract class for data that can be used in a flood plot.
    *  Derive from this class to plot your data.
+   *  \deprecated { Qwt drawing widgets are deprecated in favor of Javascript }
    */
   class UTILITIES_API FloodPlotData: public QwtRasterData
   {
     public:
 
-      //COMMON_PTR_TYPEDEFS(FloodPlotData);
-
       /// virtual destructor
-      virtual ~FloodPlotData() {}
+      virtual ~FloodPlotData();
 
       /// must provide copy
       virtual FloodPlotData* copy() const = 0;
@@ -134,16 +132,16 @@ namespace openstudio{
       virtual std::string units() const = 0;
 
     protected:
-      FloodPlotData() {}
+
+      FloodPlotData();
   };
 
   /** TimeSeriesFloodPlotData converts a time series into flood plot data
+  *   \deprecated { Qwt drawing widgets are deprecated in favor of Javascript }
   */
   class UTILITIES_API TimeSeriesFloodPlotData: public FloodPlotData
   {
     public:
-
-      //COMMON_PTR_TYPEDEFS(TimeSeriesFloodPlotData);
 
       /// constructor
       TimeSeriesFloodPlotData(TimeSeries timeSeries);
@@ -151,21 +149,14 @@ namespace openstudio{
       /// constructor with colormap range
       TimeSeriesFloodPlotData(TimeSeries timeSeries, QwtInterval colorMapRange );
 
-      /// create
-      //static Ptr create(TimeSeries timeSeries)
-      //{return Ptr(new TimeSeriesFloodPlotData(timeSeries));}
-
-      //static Ptr create(TimeSeries timeSeries, QwtInterval colorMapRange)
-      //{return Ptr(new TimeSeriesFloodPlotData(timeSeries, colorMapRange));}
-
       /// virtual destructor
-      virtual ~TimeSeriesFloodPlotData() {}
+      virtual ~TimeSeriesFloodPlotData();
 
       /// must provide copy
       virtual TimeSeriesFloodPlotData* copy() const;
 
       /// must provide range of values - colormap range not data range
-      QwtInterval range() const {return m_colorMapRange;}
+      QwtInterval range() const;
 
       /// provide boundingRect overload for speed - default implementation slow!!!
       QRectF boundingRect() const;
@@ -174,28 +165,28 @@ namespace openstudio{
       double value(double fractionalDay, double hourOfDay) const;
 
       /// minX
-      double minX() const {return m_minX;};
+      double minX() const;
 
       /// maxX
-      double maxX() const {return m_maxX;};
+      double maxX() const;
 
       /// minY
-      double minY() const {return m_minY;};
+      double minY() const;
 
       /// maxY
-      double maxY() const {return m_maxY;};
+      double maxY() const;
 
       /// minValue
-      double minValue() const {return m_minValue;};
+      double minValue() const;
 
       /// maxValue
-      double maxValue() const {return m_maxValue;};
+      double maxValue() const;
 
       /// minValue setter
-      void minValue(double min) {m_minValue = min;};
+      void minValue(double min);
 
       /// maxValue setter
-      void maxValue(double max) {m_maxValue = max;};
+      void maxValue(double max);
 
       /// sumValue
       double sumValue() const;
@@ -207,13 +198,13 @@ namespace openstudio{
       double stdDevValue() const;
 
       /// range of values for which to show the colormap
-      void colorMapRange(QwtInterval colorMapRange) {m_colorMapRange = colorMapRange;}
+      void colorMapRange(QwtInterval colorMapRange);
 
       /// range of values for which to show the colormap
-      QwtInterval colorMapRange() {return m_colorMapRange;}
+      QwtInterval colorMapRange();
 
       /// units for plotting on axes or scaling
-      std::string units() const {return m_units;};
+      std::string units() const;
 
     private:
       TimeSeries m_timeSeries;
@@ -229,12 +220,11 @@ namespace openstudio{
   };
 
   /** MatrixFloodPlotData converts a Matrix into flood plot data
+  *   \deprecated { Qwt drawing widgets are deprecated in favor of Javascript }
   */
   class UTILITIES_API MatrixFloodPlotData: public FloodPlotData
   {
     public:
-
-      //COMMON_PTR_TYPEDEFS(MatrixFloodPlotData);
 
       /// constructor
       MatrixFloodPlotData(const Matrix& matrix);
@@ -270,51 +260,14 @@ namespace openstudio{
           const Matrix& matrix,
           QwtInterval colorMapRange );
 
-      /// create
-      //static Ptr create(const Matrix& matrix)
-      //{return Ptr(new MatrixFloodPlotData(matrix));}
-
-      //static Ptr create(const Matrix& matrix, QwtInterval& colorMapRange)
-      //{return Ptr(new MatrixFloodPlotData(matrix, colorMapRange));}
-
-      /// create with x and y vectors
-      //static Ptr create(const Vector& xVector,
-      //    const Vector& yVector,
-      //    const Matrix& matrix)
-      //{return Ptr(new MatrixFloodPlotData(xVector, yVector, matrix));}
-
-      //static Ptr create(const Vector& xVector,
-      //    const Vector& yVector,
-      //    const Matrix& matrix,
-      //    const InterpMethod interp)
-      //{return Ptr(new MatrixFloodPlotData(xVector, yVector, matrix,interp));}
-
-      //static Ptr create(const Vector& xVector,
-      //    const Vector& yVector,
-      //    const Matrix& matrix,
-      //    QwtInterval& colorMapRange)
-      //{return Ptr(new MatrixFloodPlotData(xVector, yVector, matrix, colorMapRange));}
-
-      /// create with std::vectors
-      //static Ptr create(const std::vector<double>& xVector,
-      //    const std::vector<double>& yVector,
-      //    const std::vector<double>& matrix)
-      //{return Ptr(new MatrixFloodPlotData(xVector, yVector, matrix));}
-
-      //static Ptr create(const std::vector<double>& xVector,
-      //    const std::vector<double>& yVector,
-      //    const std::vector<double>& matrix,
-      //    const InterpMethod interp)
-      //{return Ptr(new MatrixFloodPlotData(xVector, yVector, matrix,interp));}
-
       /// virtual destructor
-      virtual ~MatrixFloodPlotData() {}
+      virtual ~MatrixFloodPlotData();
 
       /// must provide copy
       virtual MatrixFloodPlotData* copy() const;
 
       /// must provide range of values - colormap range not data range
-      QwtInterval range() const {return m_colorMapRange;}
+      QwtInterval range() const;
 
       /// get the value at point x, y
       double value(double x, double y) const;
@@ -335,16 +288,16 @@ namespace openstudio{
       double maxY() const;
 
       /// minValue
-      double minValue() const {return m_minValue;};
+      double minValue() const;
 
       /// maxValue
-      double maxValue() const {return m_maxValue;};
+      double maxValue() const;
 
       /// minValue setter
-      void minValue(double min) {m_minValue = min;};
+      void minValue(double min);
 
       /// maxValue setter
-      void maxValue(double max) {m_maxValue = max;};
+      void maxValue(double max);
 
       /// sumValue
       double sumValue() const;
@@ -356,13 +309,13 @@ namespace openstudio{
       double stdDevValue() const;
 
       /// range of values for which to show the colormap
-      void colorMapRange(QwtInterval colorMapRange) {m_colorMapRange = colorMapRange;}
+      void colorMapRange(QwtInterval colorMapRange);
 
       /// range of values for which to show the colormap
-      QwtInterval colorMapRange() {return m_colorMapRange;}
+      QwtInterval colorMapRange();
 
       /// units for plotting on axes or scaling
-      std::string units() const {return m_units;};
+      std::string units() const;
 
     private:
 
@@ -382,6 +335,7 @@ namespace openstudio{
 
 
   /** FloodPlot plots data in a nice image
+  *   \deprecated { Qwt drawing widgets are deprecated in favor of Javascript }
   */
   class UTILITIES_API FloodPlot : public Plot2D
   {
@@ -389,21 +343,14 @@ namespace openstudio{
 
     public:
 
-      //COMMON_PTR_TYPEDEFS(FloodPlot);
-
       /// default constructor
       FloodPlot(QWidget* parent = nullptr, Qt::WindowFlags flags = nullptr);
 
       /// matrix constructor
-      FloodPlot(const Matrix& m);
-
-      /// create
-      //static FloodPlot::Ptr create(QWidget* parent = nullptr, Qt::WindowFlags flags = nullptr);
-
-      //static FloodPlot::Ptr create(const Matrix& m);
+      FloodPlot(const Matrix& m, QWidget* parent = nullptr, Qt::WindowFlags flags = nullptr);
 
       /// virtual destructor
-      virtual ~FloodPlot() {}
+      virtual ~FloodPlot();
 
       QAction *colorMapSelection;
 
@@ -421,7 +368,7 @@ namespace openstudio{
       /// set the color map
       void colorMap(FloodPlotColorMap::ColorMapList clrMap);
 
-      /// set the data
+      /// set the data, takes ownership of data and delete's it when not used any more
       void floodPlotData(FloodPlotData* data);
 
       /// convenience wrapper for timeseries data
@@ -441,13 +388,14 @@ namespace openstudio{
 
     protected:
       /// drop target support for drag/drop operations
-      void dragEnterEvent(QDragEnterEvent *e) { e->accept(); }
+      void dragEnterEvent(QDragEnterEvent *e);
 
     private:
-      //std::unique_ptr<FloodPlotColorMap> m_colorMap;
-      QwtPlotSpectrogram* m_spectrogram;
-      QwtScaleWidget* m_rightAxis;
-      FloodPlotData* m_floodPlotData;
+      //FloodPlotColorMap* m_colorMap = nullptr;
+      //FloodPlotColorMap* m_rightAxisColorMap = nullptr;
+      QwtPlotSpectrogram* m_spectrogram = nullptr;
+      QwtScaleWidget* m_rightAxis = nullptr;
+      //FloodPlotData* m_floodPlotData = nullptr;
       FloodPlotColorMap::ColorMapList m_colorMapType;
       QwtInterval m_dataRange;
       Vector m_colorLevels;
@@ -459,7 +407,7 @@ namespace openstudio{
       void init();
       double m_xAxisMin;
       double m_xAxisMax;
-      Plot2DTimeAxis *m_plot2DTimeAxis;
+      Plot2DTimeAxis *m_plot2DTimeAxis = nullptr;
       double m_duration;
       openstudio::DateTime m_startDateTime;
       openstudio::DateTime m_endDateTime;

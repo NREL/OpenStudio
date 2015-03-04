@@ -146,6 +146,14 @@ public:
     m_maxValue(maxN)
   {
     m_colorMapRange = QwtInterval(0,maxN);
+    setInterval(Qt::XAxis, QwtInterval(-2, 4));
+    setInterval(Qt::YAxis, QwtInterval(-2, 4));
+    setInterval(Qt::ZAxis, m_colorMapRange);
+  }
+
+  virtual ~MandelbrotFloodPlotData()
+  {
+    int i = 0;
   }
 
   /// create
