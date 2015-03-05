@@ -29,6 +29,7 @@
 
 class QPushButton;
 class QVBoxLayout;
+class QHBoxLayout;
 
 namespace openstudio {
 
@@ -115,6 +116,7 @@ class OSItemSelectorButtons : public QWidget
 
     QPushButton* m_openLibDlgButton;
 
+    QHBoxLayout * m_dropZoneLayout;
 };
 
 
