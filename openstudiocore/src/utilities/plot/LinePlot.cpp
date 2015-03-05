@@ -273,8 +273,9 @@ std::string VectorLinePlotData::units() const { return m_units; };
  * LinePlot Class
  * --------------------------------------
 */
-
-LinePlot::LinePlot(QWidget* parent /*= 0*/, Qt::WindowFlags flags /*= 0*/) : Plot2D(parent, flags)
+/*
+LinePlot::LinePlot(QWidget* parent, Qt::WindowFlags flags ) 
+: Plot2D(parent, flags)
 {
   init();
 }
@@ -618,11 +619,11 @@ void LinePlot::showCurve(QwtPlotItem *item, bool on)
   /// update curve visibility
   item->setVisible(on);
   /// update legend item status
-  /*QWidget *legendItem = m_legend->itemInfo(item);
-  if ( (legendItem) && (legendItem->inherits("QwtLegendLabel")) )
-  {
-    ((QwtLegendLabel *)legendItem)->setChecked(on);
-  }*/
+  //QWidget *legendItem = m_legend->itemInfo(item);
+  //if ( (legendItem) && (legendItem->inherits("QwtLegendLabel")) )
+  //{
+  //  ((QwtLegendLabel *)legendItem)->setChecked(on);
+  //}
 
   m_qwtPlot->replot();
   m_legend->updateGeometry();
@@ -658,5 +659,5 @@ double LinePlot::spanXValue(double span)
   /// do any translations here
   return span;
 }
-
+*/
 } // openstudio

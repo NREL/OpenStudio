@@ -26,6 +26,7 @@ using namespace boost;
 
 namespace openstudio{
 
+  /*
 Plot2DTimeAxis::Plot2DTimeAxis(const DateTime &startDateTime, double duration)
   : m_startDateTime(startDateTime), m_duration(duration)
 {
@@ -473,5 +474,5 @@ std::string Plot2D::windowTitle() const
 {
   return m_windowTitle;
 }
-
+*/
 } // openstudio

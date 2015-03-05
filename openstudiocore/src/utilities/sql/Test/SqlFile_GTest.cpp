@@ -27,8 +27,6 @@
 #include "../../data/DataEnums.hpp"
 #include "../../data/TimeSeries.hpp"
 #include "../../filetypes/EpwFile.hpp"
-#include "../../plot/FloodPlot.hpp"
-#include "../../plot/LinePlot.hpp"
 #include "../../units/UnitFactory.hpp"
 #include "../../core/Application.hpp"
 
@@ -170,12 +168,6 @@ TEST_F(SqlFileFixture, FloodPlot)
 //  Time duration = ts->dateTimes().back() - ts->dateTimes().front();
   Time duration = ts->firstReportDateTime() + Time(ts->daysFromFirstReport(ts->daysFromFirstReport().size()-1)) - ts->firstReportDateTime();
   EXPECT_DOUBLE_EQ(365-1.0/24.0, duration.totalDays());
-
-  // plot it
-  FloodPlot fp;
-  fp.timeseriesData(*ts);
-  fp.generateImage(toPath("testFP.png"));
-  EXPECT_TRUE(true);
 }
 
 
@@ -189,12 +181,6 @@ TEST_F(SqlFileFixture, LinePlot)
   // make a timeseries
   openstudio::OptionalTimeSeries ts = sqlFile.timeSeries(availableEnvPeriods[0], "Hourly", "Electricity:Facility",  "");
   ASSERT_TRUE(ts);
-
-  // plot it
-  LinePlot lp;
-  lp.timeseriesData(*ts, "Electricity:Facility");
-  lp.generateImage(toPath("testLP.png"));
-  EXPECT_TRUE(true);
 }
 
 TEST_F(SqlFileFixture, BadStatement)

@@ -58,6 +58,7 @@ namespace openstudio{
 /**  Plot2DTimeAxis supports date/time on  axis
 *    \deprecated { Qwt drawing widgets are deprecated in favor of Javascript }
 */
+  /*
 class UTILITIES_API Plot2DTimeAxis: public QwtScaleDraw
 {
 public:
@@ -74,11 +75,13 @@ private:
     DateTime m_startDateTime;
     double m_duration;
 };
+*/
 
 
 /**  Plot2D is the wrapper around QwtPlot
 *    \deprecated { Qwt drawing widgets are deprecated in favor of Javascript }
 */
+/*
 class UTILITIES_API Plot2D : public QWidget {
 
   Q_OBJECT
@@ -248,6 +251,7 @@ private slots:
   void exportImage800x600();
   void exportImage400x300();
 };
+*/
 
 } // openstudio
 

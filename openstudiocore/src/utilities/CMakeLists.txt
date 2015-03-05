@@ -393,8 +393,6 @@ set(${target_name}_test_src
   math/test/FloatCompare_GTest.cpp
   math/test/Permutation_GTest.cpp
   math/test/Primes_GTest.cpp
-  plot/Test/FloodPlot_GTest.cpp
-  plot/Test/LinePlot_GTest.cpp
   plot/Test/ProgressBar_GTest.cpp
   time/Test/Calendar_GTest.cpp
   time/Test/Date_GTest.cpp

@@ -105,7 +105,8 @@ namespace resultsviewer{
     }
   }
 
-  PlotLegend::PlotLegend(PlotView *parent): QWidget(parent)
+  PlotLegend::PlotLegend(PlotView *parent)
+    : QWidget(parent)
   {
     setAttribute(Qt::WA_DeleteOnClose);
     setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
@@ -333,7 +334,10 @@ namespace resultsviewer{
     switch (m_plotType)
     {
     case RVPV_LINEPLOT:
+      // Qt object parented by this
       m_legend = new resultsviewer::PlotLegend(this);
+
+      // parented by m_plot after attach
       m_grid = new QwtPlotGrid();
       gridPen.setCosmetic(true);
       gridPen.setWidth(1);
@@ -347,6 +351,8 @@ namespace resultsviewer{
       m_floodPlotMin = 0;
       m_floodPlotYearlyMax = 0;
       m_floodPlotYearlyMin = 0;
+
+      // parented by m_plot after attach
       m_spectrogram = new QwtPlotSpectrogram();
       m_colorMapType = openstudio::FloodPlotColorMap::Jet;
       m_colorMapLength = 64;
@@ -359,6 +365,8 @@ namespace resultsviewer{
       m_floodPlotMin = 0;
       m_floodPlotYearlyMax = 0;
       m_floodPlotYearlyMin = 0;
+
+      // parented by m_plot after attach
       m_spectrogram = new QwtPlotSpectrogram();
       m_colorMapType = openstudio::FloodPlotColorMap::Jet;
       m_colorMapLength = 64;
@@ -488,7 +496,7 @@ namespace resultsviewer{
 
     //m_plot->setMargin(5);
 
-
+    // deleted by canvas
     m_zoomer[0] = new Zoomer( QwtPlot::xBottom, QwtPlot::yLeft, m_plot->canvas());
     m_zoomer[0]->setRubberBand(QwtPicker::RectRubberBand);
     m_zoomer[0]->setRubberBandPen(QColor(Qt::green));
@@ -496,6 +504,7 @@ namespace resultsviewer{
     m_zoomer[0]->setTrackerPen(QColor(Qt::blue));
 
     // trac 349 - zoomer double zooms when second zoomer created
+    // deleted by canvas
     m_zoomer[1] = new Zoomer(QwtPlot::xTop, QwtPlot::yRight, m_plot->canvas());
     m_zoomer[1]->setEnabled(false);
 
@@ -503,11 +512,11 @@ namespace resultsviewer{
     bool isConnected = connect(m_zoomer[0], SIGNAL(zoomed(const QRectF &)), this, SLOT(slotZoomed(const QRectF &)));
     OS_ASSERT(isConnected);
 
-
-
+    // deleted by canvas
     m_panner = new QwtPlotPanner(m_plot->canvas());
     m_panner->setMouseButton(Qt::LeftButton);
 
+    // deleted by canvas
     m_picker = new QwtPlotPicker(QwtPlot::xBottom, QwtPlot::yLeft, QwtPlotPicker::CrossRubberBand, QwtPicker::ActiveOnly, m_plot->canvas());
     m_picker->setRubberBandPen(QColor(Qt::gray));
     m_picker->setRubberBand(QwtPicker::CrossRubberBand);
@@ -524,12 +533,14 @@ namespace resultsviewer{
     m_valueInfo->setMinimumWidth(fontMetrics().width("x=mm/yy hh::mm::ss, y = 999,999,999,999") + 20);
     m_valueInfo->setMinimumHeight(fontMetrics().height() * 3);
 
-
+    // managed by m_plot after attach
     m_valueInfoMarker = new QwtPlotMarker();
     m_valueInfoMarker->attach(m_plot);
     m_valueInfoMarker->setSymbol(new QwtSymbol(QwtSymbol::Hexagon, QBrush(Qt::white), QPen(Qt::black,3), QSize(10,10)));
     m_valueInfoMarker->setAxes(QwtPlot::xBottom, QwtPlot::yLeft);
     m_valueInfoMarker->hide();
+
+    // managed by m_plot after attach
     m_illuminanceMapRefPt1 = new QwtPlotMarker();
     m_illuminanceMapRefPt1->attach(m_plot);
     m_illuminanceMapRefPt1->setAxes(QwtPlot::xBottom, QwtPlot::yLeft);
@@ -537,6 +548,8 @@ namespace resultsviewer{
     m_illuminanceMapRefPt1->setLabelAlignment(Qt::AlignRight | Qt::AlignTop);
     m_illuminanceMapRefPt1->setSymbol(new QwtSymbol(QwtSymbol::XCross, QBrush(Qt::white), QPen(Qt::black,2), QSize(7,7)));
     m_illuminanceMapRefPt1->hide();
+
+    // managed by m_plot after attach
     m_illuminanceMapRefPt2 = new QwtPlotMarker();
     m_illuminanceMapRefPt2->attach(m_plot);
     m_illuminanceMapRefPt2->setAxes(QwtPlot::xBottom, QwtPlot::yLeft);
@@ -703,7 +716,6 @@ namespace resultsviewer{
     openstudio::SqlFile sqlFile1(openstudio::toPath(_plotViewData1.plotSource[0]));
     openstudio::SqlFile sqlFile2(openstudio::toPath(_plotViewData2.plotSource[0]));
 
-
     // list of hourly reports for the illuminance map
     std::vector< std::pair<int, openstudio::DateTime> > reportIndicesDates1 = sqlFile1.illuminanceMapHourlyReportIndicesDates(openstudio::toString(_plotViewData1.dbIdentifier));
     if (reportIndicesDates1.size() <= 0)
@@ -763,7 +775,6 @@ namespace resultsviewer{
       i++;
     }
     openstudio::MatrixFloodPlotData* data = new openstudio::MatrixFloodPlotData(x1,y1,illuminanceDiff,openstudio::LinearInterp);
-
 
     m_illuminanceMapData[0] = data;
 
@@ -936,6 +947,7 @@ namespace resultsviewer{
     m_xAxisMax = m_xAxisMin + (m_endDateTime - m_startDateTime).totalDays();
     if (m_plotViewTimeAxis == nullptr)
     {
+      // managed by m_plot after setAxisScaleDraw
       m_plotViewTimeAxis = new PlotViewTimeAxis(RVPV_FLOODPLOT);
       m_plot->setAxisTitle(QwtPlot::xBottom, " Simulation Time");
       m_plot->setAxisScaleDraw(QwtPlot::xBottom, m_plotViewTimeAxis);
@@ -1001,27 +1013,34 @@ namespace resultsviewer{
 
     m_colorLevels = colorLevels;
 
-    openstudio::FloodPlotColorMap colorMap(m_colorLevels, m_colorMapType);
+    double min = openstudio::minimum(colorLevels);
+    double max = openstudio::maximum(colorLevels);
 
-    m_spectrogram->setColorMap(&colorMap);
-    m_plot->setAxisScale(QwtPlot::yRight, openstudio::minimum(colorLevels), openstudio::maximum(colorLevels)); // legend numbers
-    m_rightAxis->setColorMap(QwtInterval(openstudio::minimum(colorLevels), openstudio::maximum(colorLevels)), const_cast<QwtColorMap *>(m_spectrogram->colorMap())); // legend colors
+    QwtInterval colorMapRange = QwtInterval(min, max);
+    if (m_floodPlotData){
+      m_floodPlotData->colorMapRange(colorMapRange); // color range applied to plot data
+    }
+
+    openstudio::FloodPlotColorMap* colorMap = new openstudio::FloodPlotColorMap(m_colorLevels, m_colorMapType);
+    m_spectrogram->setColorMap(colorMap);
+    
+    colorMap = new openstudio::FloodPlotColorMap(m_colorLevels, m_colorMapType);
+    m_rightAxis->setColorMap(colorMapRange, colorMap); // legend colors
+    
+    m_plot->setAxisScale(QwtPlot::yRight, min, max); // legend numbers
     m_plot->replot();
   }
 
   void PlotView::colorMapRange(double min, double max)
   {
-    if (min >= max)
+    if (min >= max){
       return;
-    if (!m_floodPlotData)
-      return;
-
-    QwtInterval colorMap = QwtInterval(min, max);
-    m_floodPlotData->colorMapRange(colorMap); // color range applied to plot data
-    m_spectrogram->setData(m_floodPlotData);
-    m_plot->setAxisScale(QwtPlot::yRight, min, max); // legend numbers
-    m_rightAxis->setColorMap(colorMap, const_cast<QwtColorMap *>(m_spectrogram->colorMap())); // legend colors
-    m_plot->replot();
+    }
+    
+    Vector levels(2);
+    levels(0) = min;
+    levels(1) = max;
+    colorLevels(levels);
   }
 
   void PlotView::showContour(bool on)
@@ -1062,7 +1081,8 @@ namespace resultsviewer{
 
   void PlotView::initColorMap()
   {
-    m_spectrogram->setColorMap(new FloodPlotColorMap(m_colorLevels, m_colorMapType));
+    openstudio::FloodPlotColorMap* colorMap = new openstudio::FloodPlotColorMap(m_colorLevels, m_colorMapType);
+    m_spectrogram->setColorMap(colorMap);
     m_spectrogram->setData(m_floodPlotData);
   }
 
@@ -1093,9 +1113,11 @@ namespace resultsviewer{
 
   void PlotView::initColorBar()
   {
+    openstudio::FloodPlotColorMap* colorMap = new openstudio::FloodPlotColorMap(m_colorLevels, m_colorMapType);
+
     QwtScaleWidget *rightAxis = m_plot->axisWidget(QwtPlot::yRight);
     rightAxis->setColorBarEnabled(true);
-    rightAxis->setColorMap(m_dataRange, const_cast<QwtColorMap *>(m_spectrogram->colorMap()));
+    rightAxis->setColorMap(m_dataRange, colorMap);
 
     m_plot->setAxisScale(QwtPlot::yRight, m_dataRange.minValue(), m_dataRange.maxValue() );
     m_plot->enableAxis(QwtPlot::yRight);

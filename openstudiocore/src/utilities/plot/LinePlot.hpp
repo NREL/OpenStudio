@@ -283,6 +283,7 @@ private:
 /** Line plots data in a nice image 
 *   \deprecated { Qwt drawing widgets are deprecated in favor of Javascript }
 */
+/*
 class UTILITIES_API LinePlot : public Plot2D
 {
   Q_OBJECT
@@ -354,7 +355,7 @@ private slots:
   void showCurve(QwtPlotItem *, bool on);
 
 };
-
+*/
 } // openstudio
 
 #endif // UTILITIES_PLOT_LINEPLOT_HPP

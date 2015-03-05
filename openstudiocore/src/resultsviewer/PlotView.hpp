@@ -240,8 +240,8 @@ namespace resultsviewer{
   class Zoomer: public QwtPlotZoomer
   {
   public:
-    Zoomer(int xAxis, int yAxis, QWidget *canvas):
-      QwtPlotZoomer(xAxis, yAxis, canvas)
+    Zoomer(int xAxis, int yAxis, QWidget *canvas)
+      : QwtPlotZoomer(xAxis, yAxis, canvas)
     {
       //setSelectionFlags(QwtPicker::DragSelection | QwtPicker::CornerToCorner);
       setTrackerMode(QwtPicker::AlwaysOff);
@@ -254,6 +254,9 @@ namespace resultsviewer{
 
       //    setMousePattern(QwtEventPattern::MouseSelect3, Qt::RightButton);
     }
+
+    virtual ~Zoomer()
+    {}
   };
 
 

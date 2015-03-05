@@ -17,6 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
+// for memory leak detection on Windows
+//http://vld.codeplex.com/
+#include <vld.h> 
+
 #include "MainWindow.hpp"
 
 #include "../utilities/core/Application.hpp"

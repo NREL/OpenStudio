@@ -22,7 +22,6 @@
 #include "../SqlFile.hpp"
 #include "../../core/Path.hpp"
 #include "../../core/Application.hpp"
-#include "../../plot/FloodPlot.hpp"
 #include "../../core/FileLogSink.hpp"
 
 #include <resources.hxx>
@@ -114,15 +113,6 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlot)
   Matrix v = sqlFile.illuminanceMap(mapName, dateTime);
   ASSERT_EQ(x.size(), v.size1());
   ASSERT_EQ(y.size(), v.size2());
-
-  MatrixFloodPlotData* data = new MatrixFloodPlotData(x,y,v);
-  data->interpMethod(LinearInterp);
-
-  FloodPlot fp;
-  fp.floodPlotData(data);
-  fp.showContour(true);
-  fp.generateImage(toPath("testIlluminanceMapPlot.png"));
-
 }
 
 TEST_F(IlluminanceMapFixture, IlluminanceMapPlotMin)
@@ -193,17 +183,6 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeries)
   illuminanceMapReportIndicesDates = sqlFile.illuminanceMapHourlyReportIndicesDates(mapName);
 
   ASSERT_FALSE(illuminanceMapReportIndicesDates.empty());
-
-  openstudio::MatrixFloodPlotData* data = new openstudio::MatrixFloodPlotData(
-    sqlFile.illuminanceMapX(illuminanceMapReportIndicesDates[0].first),
-    sqlFile.illuminanceMapY(illuminanceMapReportIndicesDates[0].first),
-    sqlFile.illuminanceMap(illuminanceMapReportIndicesDates[0].first),
-    openstudio::LinearInterp);
-
-  FloodPlot fp;
-  fp.floodPlotData(data);
-  fp.showContour(true);
-  fp.generateImage(toPath("testIlluminanceMapPlotSeries.png"));
 }
 
 TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeriesOpt)
@@ -223,13 +202,6 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeriesOpt)
   std::vector<double> illuminance;
 
   sqlFile.illuminanceMap(illuminanceMapReportIndicesDates[0].first,x,y,illuminance);
-
-  openstudio::MatrixFloodPlotData* data = new openstudio::MatrixFloodPlotData(x,y,illuminance,openstudio::LinearInterp);
-
-  FloodPlot fp;
-  fp.floodPlotData(data);
-  fp.showContour(true);
-  fp.generateImage(toPath("testIlluminanceMapPlotSeriesOpt.png"));
 }
 
 TEST_F(IlluminanceMapFixture, IlluminanceMapMatrixBaseline)
@@ -249,14 +221,6 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapMatrixBaseline)
   for (unsigned i=0;i<9;i++)
     for (unsigned j=0;j<9;j++)
       m(i,j) = x(i)*y(8-j);
-
-  openstudio::MatrixFloodPlotData* data = new openstudio::MatrixFloodPlotData(
-    x,y,m,openstudio::LinearInterp);
-
-  FloodPlot fp;
-  fp.floodPlotData(data);
-  fp.showContour(true);
-  fp.generateImage(toPath("testIlluminanceMapMatrixBaseline.png"));
 }
 
 

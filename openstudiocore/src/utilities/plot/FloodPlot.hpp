@@ -337,6 +337,7 @@ namespace openstudio{
   /** FloodPlot plots data in a nice image
   *   \deprecated { Qwt drawing widgets are deprecated in favor of Javascript }
   */
+  /*
   class UTILITIES_API FloodPlot : public Plot2D
   {
     Q_OBJECT
@@ -418,7 +419,7 @@ namespace openstudio{
       void selectColorMap();
       void showContourPlot();
   };
-
+  */
 } // openstudio
 
 #endif // UTILITIES_PLOT_FLOODPLOT_HPP

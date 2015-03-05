@@ -526,7 +526,7 @@ void MatrixFloodPlotData::init(){
  * FloodPlot Class
  * --------------------------------------
 */
-
+/*
 FloodPlot::FloodPlot(QWidget* parent, Qt::WindowFlags flags) 
   : Plot2D(parent, flags)
 {
@@ -777,6 +777,6 @@ double FloodPlot::spanXValue(double span)
   /// do any translations here
   return span;
 }
-
+*/
 
 } // openstudio
