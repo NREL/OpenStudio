@@ -1149,84 +1149,77 @@ namespace resultsviewer{
       if ( endOffset > m_xAxisMax ) m_xAxisMax = endOffset;
     }
 
-    openstudio::TimeSeriesLinePlotData* data = new openstudio::TimeSeriesLinePlotData(*_plotViewData.ts);
+    openstudio::TimeSeriesLinePlotData data(*_plotViewData.ts);
 
-    if (data)
+    m_centerSlider->setRange(100*m_xAxisMin, 100*m_xAxisMax);
+    m_spanSlider->setRange(0, 50*(m_xAxisMax - m_xAxisMin));
+    m_centerSpinBox->setRange(m_xAxisMin, m_xAxisMax);
+    m_spanSpinBox->setRange(0, 0.5*(m_xAxisMax - m_xAxisMin));
+    if (numberOfCurves() == 0)
     {
-      m_centerSlider->setRange(100*m_xAxisMin, 100*m_xAxisMax);
-      m_spanSlider->setRange(0, 50*(m_xAxisMax - m_xAxisMin));
-      m_centerSpinBox->setRange(m_xAxisMin, m_xAxisMax);
-      m_spanSpinBox->setRange(0, 0.5*(m_xAxisMax - m_xAxisMin));
-      if (numberOfCurves() == 0)
-      {
-        m_centerSpinBox->setValue(0.5 * (m_xAxisMax - m_xAxisMin));
-        m_spanSpinBox->setValue(0.5 * (m_xAxisMax - m_xAxisMin));
-        m_lineThickness = 2; // default
-        m_yAxisMin = data->minY();
-        m_yAxisMax = data->maxY();
-      }
-      else
-      {
-        if (data->minY() < m_yAxisMin) m_yAxisMin = data->minY();
-        if (data->maxY() > m_yAxisMax) m_yAxisMax = data->maxY();
-      }
-
-
-      QString legendLabel = updateLabelString(_plotViewData.legendName, _plotViewData.alias, _plotViewData.plotSource);
-      auto curve = new LinePlotCurve(legendLabel,*data);
-      curve->setLegend(_plotViewData.legendName);
-      curve->setAlias(_plotViewData.alias);
-      curve->setPlotSource(_plotViewData.plotSource);
-      QColor color = curveColor(m_lastColor);
-      m_lastColor = color;
-      curve->setPen(curvePen(color));
-      curve->attach(m_plot);
-
-      // check for number of different units (std::string  based)
-      QString curveUnits = openstudio::toQString(data->units());
-      if (m_leftAxisUnits == "NONE SPECIFIED")
-      {
-        m_leftAxisUnits = curveUnits;
-        leftAxisTitleFromUnits(m_leftAxisUnits);
-        curve->setYAxis(QwtPlot::yLeft);
-        m_plot->enableAxis(QwtPlot::yRight, false);
-        m_zoomer[1]->setEnabled(false);
-      }
-      else if (m_leftAxisUnits.toUpper() == curveUnits.toUpper())
-      {
-        curve->setYAxis(QwtPlot::yLeft);
-      }
-      else if (m_rightAxisUnits == "NONE SPECIFIED")
-      {
-        m_rightAxisUnits = curveUnits;
-        rightAxisTitleFromUnits(m_rightAxisUnits);
-        curve->setYAxis(QwtPlot::yRight);
-        m_plot->enableAxis(QwtPlot::yRight, true);
-        m_zoomer[1]->setEnabled(true);
-      }
-      else if (m_rightAxisUnits.toUpper() == curveUnits.toUpper())
-      {
-        curve->setYAxis(QwtPlot::yRight);
-      }
-      else // more than 2 units - scale all curves
-      {
-        scaleCurves(curve, t_workCanceled);
-        m_plot->enableAxis(QwtPlot::yRight, false);
-        m_zoomer[1]->setEnabled(false);
-        m_plot->setAxisTitle(QwtPlot::yLeft,"Scaled");
-      }
-      /// update legend and replot
-      showCurve(curve, true);
-
-      // update zoom base rect
-      updateZoomBase(m_plot->canvas()->rect(), true);
+      m_centerSpinBox->setValue(0.5 * (m_xAxisMax - m_xAxisMin));
+      m_spanSpinBox->setValue(0.5 * (m_xAxisMax - m_xAxisMin));
+      m_lineThickness = 2; // default
+      m_yAxisMin = data.minY();
+      m_yAxisMax = data.maxY();
+    }
+    else
+    {
+      if (data.minY() < m_yAxisMin) m_yAxisMin = data.minY();
+      if (data.maxY() > m_yAxisMax) m_yAxisMax = data.maxY();
     }
 
+
+    QString legendLabel = updateLabelString(_plotViewData.legendName, _plotViewData.alias, _plotViewData.plotSource);
+    auto curve = new LinePlotCurve(legendLabel, data);
+    curve->setLegend(_plotViewData.legendName);
+    curve->setAlias(_plotViewData.alias);
+    curve->setPlotSource(_plotViewData.plotSource);
+    QColor color = curveColor(m_lastColor);
+    m_lastColor = color;
+    curve->setPen(curvePen(color));
+    curve->attach(m_plot);
+
+    // check for number of different units (std::string  based)
+    QString curveUnits = openstudio::toQString(data.units());
+    if (m_leftAxisUnits == "NONE SPECIFIED")
+    {
+      m_leftAxisUnits = curveUnits;
+      leftAxisTitleFromUnits(m_leftAxisUnits);
+      curve->setYAxis(QwtPlot::yLeft);
+      m_plot->enableAxis(QwtPlot::yRight, false);
+      m_zoomer[1]->setEnabled(false);
+    }
+    else if (m_leftAxisUnits.toUpper() == curveUnits.toUpper())
+    {
+      curve->setYAxis(QwtPlot::yLeft);
+    }
+    else if (m_rightAxisUnits == "NONE SPECIFIED")
+    {
+      m_rightAxisUnits = curveUnits;
+      rightAxisTitleFromUnits(m_rightAxisUnits);
+      curve->setYAxis(QwtPlot::yRight);
+      m_plot->enableAxis(QwtPlot::yRight, true);
+      m_zoomer[1]->setEnabled(true);
+    }
+    else if (m_rightAxisUnits.toUpper() == curveUnits.toUpper())
+    {
+      curve->setYAxis(QwtPlot::yRight);
+    }
+    else // more than 2 units - scale all curves
+    {
+      scaleCurves(curve, t_workCanceled);
+      m_plot->enableAxis(QwtPlot::yRight, false);
+      m_zoomer[1]->setEnabled(false);
+      m_plot->setAxisTitle(QwtPlot::yLeft,"Scaled");
+    }
+    /// update legend and replot
+    showCurve(curve, true);
+
+    // update zoom base rect
+    updateZoomBase(m_plot->canvas()->rect(), true);
+
   }
-
-
-
-
 
   QColor PlotView::curveColor(QColor &lastColor)
   {
