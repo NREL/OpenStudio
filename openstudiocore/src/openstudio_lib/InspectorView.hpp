@@ -661,6 +661,20 @@ class AirTerminalSingleDuctConstantVolumeFourPipeInductionInspectorView : public
 
 };
 
+class ScheduleRulesetInspectorView : public BaseInspectorView
+{
+  Q_OBJECT;
+
+  public:
+
+  ScheduleRulesetInspectorView(QWidget * parent = 0);
+
+  virtual ~ScheduleRulesetInspectorView() {}
+
+  virtual void layoutModelObject(model::ModelObject & modelObject, bool readOnly, bool displayIP);
+
+};
+
 } // openstudio
 
 #endif // OPENSTUDIO_INSPECTORVIEW_HPP

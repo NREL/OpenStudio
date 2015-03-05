@@ -1526,7 +1526,7 @@ void OSGridController::onInFocus(bool inFocus, bool hasData, int row, int column
             OS_ASSERT(dataSource.data()->innerConcept());
             if (dropZoneConcept) {
               // Widget has sub rows
-              setConceptValue(modelObject, object.get(),dropZoneConcept, dataSource.data()->innerConcept());
+              setConceptValue(modelObject, object.get(), dropZoneConcept, dataSource.data()->innerConcept());
             }
             else {
               // Row has sub rows
