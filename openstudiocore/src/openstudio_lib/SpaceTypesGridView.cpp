@@ -169,8 +169,6 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
 
   QLabel * label = nullptr;
 
-  QFrame * line = nullptr;
-
   QVBoxLayout * layout = nullptr;
 
   bool isConnected = false;
@@ -179,10 +177,10 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
   filterGridLayout->setContentsMargins(7, 4, 0, 8);
   filterGridLayout->setSpacing(5);
 
-  line = new QFrame();
-  line->setFrameShape(QFrame::HLine);
-  line->setFrameShadow(QFrame::Sunken);
-  gridView->m_contentLayout->addWidget(line);
+  //line = new QFrame();
+  //line->setFrameShape(QFrame::HLine);
+  //line->setFrameShadow(QFrame::Sunken);
+  //gridView->m_contentLayout->addWidget(line);
 
   label = new QLabel();
   label->setText("Filter:");
@@ -269,10 +267,10 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
 
   gridView->m_contentLayout->addLayout(filterGridLayout);
 
-  line = new QFrame();
-  line->setFrameShape(QFrame::HLine);
-  line->setFrameShadow(QFrame::Sunken);
-  gridView->m_contentLayout->addWidget(line);
+  //line = new QFrame();
+  //line->setFrameShape(QFrame::HLine);
+  //line->setFrameShadow(QFrame::Sunken);
+  //gridView->m_contentLayout->addWidget(line);
 
   gridView->m_contentLayout->addSpacing(7);
 

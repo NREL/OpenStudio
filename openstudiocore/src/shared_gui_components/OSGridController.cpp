@@ -1629,7 +1629,7 @@ HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidge
   mainLayout->addLayout(m_innerLayout);
 
   m_label->setWordWrap(true);
-  m_label->setAlignment(Qt::AlignCenter);
+  m_label->setAlignment(Qt::AlignHCenter);
   m_innerLayout->addWidget(m_label);
 
   m_innerLayout->addStretch();

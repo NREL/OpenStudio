@@ -87,11 +87,7 @@ OSGridView::OSGridView(OSGridController * gridController,
   buttonLayout->setAlignment(Qt::AlignCenter | Qt::AlignLeft);
 
   auto vectorController = new GridViewDropZoneVectorController();
-//#ifdef Q_OS_MAC
-//  m_dropZone = new OSDropZone(vectorController, dropZoneText, QSize(WIDTH_DZ,HEIGHT_DZ));
-//#else
   m_dropZone = new OSDropZone(vectorController, dropZoneText);
-//#endif
   m_dropZone->setMaxItems(1);
 
   connect(m_dropZone, &OSDropZone::itemDropped, m_gridController, &OSGridController::onItemDropped);
@@ -104,20 +100,13 @@ OSGridView::OSGridView(OSGridController * gridController,
   std::vector<QString> categories = m_gridController->categories();
   for(unsigned i=0; i<categories.size(); i++){
     auto button = new QPushButton(categories.at(i));
-//#ifdef Q_OS_MAC
-//    button->setFixedSize(WIDTH,HEIGHT);
-//#else
-//    button->setMinimumSize(WIDTH,HEIGHT);
-//#endif
+    button->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::MinimumExpanding);
     button->setCheckable(true);
     buttonLayout->addWidget(button);
     buttonGroup->addButton(button,buttonGroup->buttons().size());
   }
-  //buttonLayout->addStretch();
 
-  QVBoxLayout * layout = nullptr;
-
-  layout = new QVBoxLayout();
+  auto layout = new QVBoxLayout();
   layout->setSpacing(0);
   layout->setContentsMargins(0,0,0,0);
   setLayout(layout);
@@ -142,6 +131,7 @@ OSGridView::OSGridView(OSGridController * gridController,
   m_contentLayout->setContentsMargins(0,0,0,0);
   widget->setLayout(m_contentLayout);
   m_contentLayout->addLayout(buttonLayout);
+  widget->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Fixed);
 
   setGridController(m_gridController);
 
