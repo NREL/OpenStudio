@@ -20,6 +20,9 @@
 #ifndef RESULTSVIEWER_PLOTVIEW_HPP
 #define RESULTSVIEWER_PLOTVIEW_HPP
 
+#include "FloodPlot.hpp"
+#include "LinePlot.hpp"
+
 #include <QWidget>
 #include <QAction>
 #include <QFont>
@@ -58,8 +61,6 @@
 
 #include "../utilities/data/TimeSeries.hpp"
 #include "../utilities/time/Date.hpp"
-#include "../utilities/plot/FloodPlot.hpp"
-#include "../utilities/plot/LinePlot.hpp"
 
 namespace resultsviewer{
 

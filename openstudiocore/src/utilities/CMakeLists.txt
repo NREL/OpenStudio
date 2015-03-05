@@ -131,12 +131,6 @@ set(math_src
 )
 
 set(plot_src
-  plot/FloodPlot.hpp
-  plot/FloodPlot.cpp
-  plot/LinePlot.hpp
-  plot/LinePlot.cpp
-  plot/Plot2D.hpp
-  plot/Plot2D.cpp
   plot/ProgressBar.hpp
   plot/ProgressBar.cpp
 )
@@ -200,7 +194,6 @@ set(economics_src
 )
 
 set(${target_name}_depends
-  qwt
   sqlite
   litesql
   litesql-util
@@ -249,9 +242,6 @@ set(data_moc
 )
 
 set(plot_moc
-  plot/Plot2D.hpp
-  plot/FloodPlot.hpp
-  plot/LinePlot.hpp
   plot/ProgressBar.hpp
 )
 
