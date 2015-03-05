@@ -19,7 +19,7 @@
 
 // for memory leak detection on Windows
 //http://vld.codeplex.com/
-#include <vld.h> 
+//#include <vld.h> 
 
 #include "MainWindow.hpp"
 
