@@ -31,6 +31,7 @@ RadianceDialog::RadianceDialog(bool isIP,
   : OSDialog(parent),
   m_radianceInspector(radianceInspector)
 {
+  setWindowModality(Qt::ApplicationModal);
   createLayout();
 }
 

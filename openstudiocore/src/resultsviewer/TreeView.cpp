@@ -22,6 +22,7 @@
 #include "../utilities/sql/SqlFileEnums.hpp"
 
 #include <QTreeWidgetItemIterator>
+#include <QMouseEvent>
 
 using openstudio::toString;
 using openstudio::toQString;

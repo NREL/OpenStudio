@@ -502,6 +502,7 @@ namespace runmanager {
       dlg->setMaximumWidth(400);
       dlg->setMinimumWidth(400);
       dlg->setCancelButtonText("Stop Scan");
+      dlg->setWindowModality(Qt::ApplicationModal);
       auto lbl = new QLabel(dlg.get());
       
       lbl->setWordWrap(true);

@@ -38,8 +38,6 @@ namespace detail {
 /** AirConditionerVariableRefrigerantFlow_Impl is a StraightComponent_Impl that is the implementation class for AirConditionerVariableRefrigerantFlow.*/
 class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComponent_Impl {
 
-  Q_OBJECT;
-
  public:
 
   AirConditionerVariableRefrigerantFlow_Impl(const IdfObject& idfObject,

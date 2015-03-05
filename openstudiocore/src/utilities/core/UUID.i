@@ -21,7 +21,7 @@ namespace openstudio{
     bool operator< ( const UUID & other ) const;
     bool operator== ( const UUID & other ) const;
     bool operator> ( const UUID & other ) const;
-    bool 	isNull () const;
+    bool isNull () const;
     ~UUID();
 
   protected:

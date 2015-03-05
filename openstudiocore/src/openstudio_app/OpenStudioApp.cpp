@@ -461,23 +461,36 @@ void OpenStudioApp::importIdf()
         
         QMessageBox messageBox; // (parent); ETH: ... but is hidden, so don't actually use
         messageBox.setText("Some portions of the idf file were not imported.");
+        messageBox.setInformativeText("Only geometry, constructions, loads, thermal zones, and schedules are supported by the OpenStudio IDF import feature.");
 
         QString log;
 
-        std::vector<LogMessage> messages = trans.errors();
-
-        for( const auto & message : messages )
-        {
+        for( const auto & message : trans.errors() ) {
+          log.append("\n");
+          log.append("\n");
           log.append(QString::fromStdString(message.logMessage()));
           log.append("\n");
           log.append("\n");
         }
 
-        messages = trans.warnings();
-
-        for( const auto & message : messages )
-        {
+        for( const auto & message : trans.warnings() ) {
           log.append(QString::fromStdString(message.logMessage()));
+          log.append("\n");
+          log.append("\n");
+        }
+
+        log.append("The following idf objects were not imported.");
+        log.append("\n");
+        log.append("\n");
+
+        for( const auto & idfObject : trans.untranslatedIdfObjects() ) {
+          std::string message;
+          if( auto name = idfObject.name() ) {
+            message = idfObject.iddObject().name() + " named " + name.get();
+          } else {
+            message = "Unammed " + idfObject.iddObject().name();
+          }
+          log.append(QString::fromStdString(message)); 
           log.append("\n");
           log.append("\n");
         }

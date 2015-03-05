@@ -105,14 +105,14 @@ class MODEL_API ScheduleTypeRegistrySingleton {
   ScheduleTypeLimits getOrCreateScheduleTypeLimits(const ScheduleType& scheduleType,
                                                    Model& model) const;
 
+  std::string getDefaultName(const ScheduleType& scheduleType) const;
+
  private:
   REGISTER_LOGGER("openstudio.model.ScheduleTypeRegistry");
   ScheduleTypeRegistrySingleton();
 
   typedef std::map<std::string,std::vector<ScheduleType> > ClassNameToScheduleTypesMap;
   ClassNameToScheduleTypesMap m_classNameToScheduleTypesMap;
-
-  std::string getDefaultName(const ScheduleType& scheduleType) const;
 };
 
 /** \relates ScheduleTypeRegistrySingleton */

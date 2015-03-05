@@ -21,14 +21,9 @@
 
 #include "ModelFixture.hpp"
 
-#include "../SetpointManagerSingleZoneHumidityMinimum.hpp"
-#include "../SetpointManagerSingleZoneHumidityMinimum_Impl.hpp"
-
 using namespace openstudio;
 using namespace openstudio::model;
 
-#include <gtest/gtest.h>
-#include "ModelFixture.hpp"
 #include "../SetpointManagerSingleZoneHumidityMinimum.hpp"
 #include "../SetpointManagerSingleZoneHumidityMinimum_Impl.hpp"
 #include "../Node.hpp"

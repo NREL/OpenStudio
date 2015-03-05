@@ -30,7 +30,7 @@ namespace detail {
 
   /** CoolingTowerPerformanceCoolTools_Impl is a ModelObject_Impl that is the implementation class for CoolingTowerPerformanceCoolTools.*/
   class MODEL_API CoolingTowerPerformanceCoolTools_Impl : public ModelObject_Impl {
-    Q_OBJECT;
+
    public:
     /** @name Constructors and Destructors */
     //@{

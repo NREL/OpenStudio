@@ -42,6 +42,7 @@ BCLMeasureDialog::BCLMeasureDialog(QWidget* parent)
   : OSDialog(false, parent)
 {
   setWindowTitle("Create New Measure");
+  setWindowModality(Qt::ApplicationModal);
 
   init();
 

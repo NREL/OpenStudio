@@ -134,8 +134,6 @@ class PROJECT_API JoinRecord : public Record{
   {
     bool result = false;
 
-    std::vector<T> toRemove;
-
     QSqlQuery query(*(projectDatabase.qSqlDatabase()));
     query.prepare(toQString("SELECT * FROM " + T::databaseTableName() + " WHERE leftId=:leftId AND rightId=:rightId"));
     query.bindValue(":leftId", leftId);

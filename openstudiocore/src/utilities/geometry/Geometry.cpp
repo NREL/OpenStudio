@@ -18,6 +18,7 @@
 **********************************************************************/
 
 #include "Geometry.hpp"
+#include "Intersection.hpp"
 #include "Transformation.hpp"
 
 #include "../core/Assert.hpp"
@@ -418,22 +419,45 @@ namespace openstudio{
 
     std::vector<Point3d> allPoints;
 
+    // PolyPartition does not support holes which intersect the polygon or share an edge
+    // if any hole is not fully contained we will use boost to remove all the holes
+    bool polyPartitionHoles = true;
+    for (const std::vector<Point3d>& hole : holes){
+      if (!within(hole, vertices, tol)){
+        // PolyPartition can't handle this
+        polyPartitionHoles = false;
+        break;
+      }
+    }
+
+    if (!polyPartitionHoles){
+      // use boost to do all the intersections
+      std::vector<std::vector<Point3d> > allFaces = subtract(vertices, holes, tol);
+      std::vector<std::vector<Point3d> > noHoles;
+      for (const std::vector<Point3d>& face : allFaces){
+        std::vector<std::vector<Point3d> > temp = computeTriangulation(face, noHoles);
+        result.insert(result.end(), temp.begin(), temp.end());
+      }
+      return result;
+    }
+
     // convert input to vector of TPPLPoly
     std::list<TPPLPoly> polys;
 
-    TPPLPoly outerPoly; // must be counter-clockwise
+    TPPLPoly outerPoly; // must be counter-clockwise, input vertices are clockwise
     outerPoly.Init(vertices.size());
     outerPoly.SetHole(false);
-    for(unsigned i = 0; i < vertices.size(); ++i){
+    unsigned n = vertices.size();
+    for(unsigned i = 0; i < n; ++i){
 
       // should all have zero z coordinate now
-      double z = vertices[i].z();
+      double z = vertices[n-i-1].z();
       if (abs(z) > tol){
         LOG_FREE(Error, "utilities.geometry.computeTriangulation", "All points must be on z = 0 plane for triangulation methods");
         return result;
       }
 
-      Point3d point = getCombinedPoint(vertices[i], allPoints, tol);
+      Point3d point = getCombinedPoint(vertices[n-i-1], allPoints, tol);
       outerPoly[i].x = point.x();
       outerPoly[i].y = point.y();
     }
@@ -448,7 +472,7 @@ namespace openstudio{
         continue;
       }
 
-      TPPLPoly innerPoly; // must be clockwise
+      TPPLPoly innerPoly; // must be clockwise, input vertices are clockwise
       innerPoly.Init(holeVertices.size());
       innerPoly.SetHole(true);
       //std::cout << "inner :";
@@ -473,6 +497,9 @@ namespace openstudio{
     TPPLPartition pp;
     std::list<TPPLPoly> resultPolys;
     int test = pp.Triangulate_EC(&polys,&resultPolys);
+    if (test == 0){
+      test = pp.Triangulate_MONO(&polys, &resultPolys);
+    }
     if (test == 0){
       LOG_FREE(Error, "utilities.geometry.computeTriangulation", "Failed to partition polygon");
       return result;
@@ -503,6 +530,13 @@ namespace openstudio{
       vector.setLength(distance);
       result.push_back(vertex+vector);
     }
+    return result;
+  }
+  
+  std::vector<Point3d> reverse(const Point3dVector& vertices)
+  {
+    std::vector<Point3d> result(vertices);
+    std::reverse(result.begin(), result.end());
     return result;
   }
 

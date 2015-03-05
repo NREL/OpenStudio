@@ -93,9 +93,8 @@ namespace detail {
 } // detail
 
 IddKey::IddKey()
-{
-  m_impl = std::shared_ptr<detail::IddKey_Impl>(new detail::IddKey_Impl());
-}
+  : m_impl(std::shared_ptr<detail::IddKey_Impl>(new detail::IddKey_Impl()))
+{}
 
 IddKey::IddKey(const IddKey& other)
   : m_impl(other.m_impl)

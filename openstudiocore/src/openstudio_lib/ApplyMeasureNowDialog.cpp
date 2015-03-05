@@ -85,6 +85,7 @@ ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
   m_advancedOutputDialog(0)
 {
   setWindowTitle("Apply Measure Now");
+  setWindowModality(Qt::ApplicationModal);
   setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   createWidgets();
 

@@ -76,7 +76,6 @@ private slots:
 private:
   QLabel * m_tabLabel;
   QStackedWidget * m_stackedWidget;
-  QWidget * m_tabBar;
   QWidget * m_mainWidget;
 
   std::vector<QString> m_selectedPixmaps;

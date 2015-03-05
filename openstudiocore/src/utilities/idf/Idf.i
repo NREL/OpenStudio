@@ -47,9 +47,6 @@
   class QComboBox;
   class QMainWindow; 
   namespace openstudio{
-    class Plot2D;
-    class LinePlot;
-    class FloodPlot;
     class RemoteBCL;
     class UpdateManager;
     class PathWatcher;
@@ -67,9 +64,6 @@
 %ignore QDialog;
 %ignore QComboBox;
 %ignore QMainWindow; 
-%ignore openstudio::Plot2D;
-%ignore openstudio::LinePlot;
-%ignore openstudio::FloodPlot;
 %ignore openstudio::PathWatcher;
 %ignore openstudio::RemoteBCL;
 %ignore openstudio::UpdateManager;

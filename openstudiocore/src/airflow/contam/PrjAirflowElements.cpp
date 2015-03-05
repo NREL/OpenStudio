@@ -261,27 +261,23 @@ AirflowElement* AirflowElement::readElement(Reader &input)
   return out;
 }
 
-PlrOrf::PlrOrf()
-{
-  m_impl = std::shared_ptr<detail::PlrOrfImpl>(new detail::PlrOrfImpl);
-}
+PlrOrf::PlrOrf() :
+  m_impl(std::shared_ptr<detail::PlrOrfImpl>(new detail::PlrOrfImpl))
+{}
 
-PlrOrf::PlrOrf(int nr,int icon,std::string name,std::string desc)
-{
-  m_impl = std::shared_ptr<detail::PlrOrfImpl>(new detail::PlrOrfImpl(nr,icon,name,desc));
-}
+PlrOrf::PlrOrf(int nr,int icon,std::string name,std::string desc) :
+  m_impl(std::shared_ptr<detail::PlrOrfImpl>(new detail::PlrOrfImpl(nr,icon,name,desc)))
+{}
 
 PlrOrf::PlrOrf(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,double area,
-               double dia,double coef,double Re,int u_A,int u_D)
-{
-  m_impl = std::shared_ptr<detail::PlrOrfImpl>(new detail::PlrOrfImpl(nr,icon,name,desc,lam,turb,expt,area,dia,coef,Re,u_A,u_D));
-}
+               double dia,double coef,double Re,int u_A,int u_D) :
+  m_impl(std::shared_ptr<detail::PlrOrfImpl>(new detail::PlrOrfImpl(nr,icon,name,desc,lam,turb,expt,area,dia,coef,Re,u_A,u_D)))
+{}
 
 PlrOrf::PlrOrf(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,std::string area,
-               std::string dia,std::string coef,std::string Re,int u_A,int u_D)
-{
-  m_impl = std::shared_ptr<detail::PlrOrfImpl>(new detail::PlrOrfImpl(nr,icon,name,desc,lam,turb,expt,area,dia,coef,Re,u_A,u_D));
-}
+               std::string dia,std::string coef,std::string Re,int u_A,int u_D) :
+  m_impl(std::shared_ptr<detail::PlrOrfImpl>(new detail::PlrOrfImpl(nr,icon,name,desc,lam,turb,expt,area,dia,coef,Re,u_A,u_D)))
+{}
 
 PlrOrf::PlrOrf(const PlrOrf &other) : m_impl(other.m_impl)
 {}
@@ -485,27 +481,23 @@ void PlrOrf::setU_D(const int u_D)
   m_impl->setU_D(u_D);
 }
 
-PlrLeak::PlrLeak()
-{
-  m_impl = std::shared_ptr<detail::PlrLeakImpl>(new detail::PlrLeakImpl());
-}
+PlrLeak::PlrLeak() :
+  m_impl(std::shared_ptr<detail::PlrLeakImpl>(new detail::PlrLeakImpl()))
+{}
 
-PlrLeak::PlrLeak(int nr,int icon,std::string name,std::string desc)
-{
-  m_impl = std::shared_ptr<detail::PlrLeakImpl>(new detail::PlrLeakImpl(nr,icon,name,desc));
-}
+PlrLeak::PlrLeak(int nr,int icon,std::string name,std::string desc) :
+  m_impl(std::shared_ptr<detail::PlrLeakImpl>(new detail::PlrLeakImpl(nr,icon,name,desc)))
+{}
 
 PlrLeak::PlrLeak(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,double coef,
-                 double pres,double area1,double area2,double area3,int u_A1,int u_A2,int u_A3,int u_dP)
-{
-  m_impl = std::shared_ptr<detail::PlrLeakImpl>(new detail::PlrLeakImpl(nr,icon,name,desc,lam,turb,expt,coef,pres,area1,area2,area3,u_A1,u_A2,u_A3,u_dP));
-}
+                 double pres,double area1,double area2,double area3,int u_A1,int u_A2,int u_A3,int u_dP) :
+  m_impl(std::shared_ptr<detail::PlrLeakImpl>(new detail::PlrLeakImpl(nr,icon,name,desc,lam,turb,expt,coef,pres,area1,area2,area3,u_A1,u_A2,u_A3,u_dP)))
+{}
 
 PlrLeak::PlrLeak(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,std::string coef,
-                 std::string pres,std::string area1,std::string area2,std::string area3,int u_A1,int u_A2,int u_A3,int u_dP)
-{
-  m_impl = std::shared_ptr<detail::PlrLeakImpl>(new detail::PlrLeakImpl(nr,icon,name,desc,lam,turb,expt,coef,pres,area1,area2,area3,u_A1,u_A2,u_A3,u_dP));
-}
+                 std::string pres,std::string area1,std::string area2,std::string area3,int u_A1,int u_A2,int u_A3,int u_dP) :
+  m_impl(std::shared_ptr<detail::PlrLeakImpl>(new detail::PlrLeakImpl(nr,icon,name,desc,lam,turb,expt,coef,pres,area1,area2,area3,u_A1,u_A2,u_A3,u_dP)))
+{}
 
 PlrLeak::PlrLeak(const PlrLeak &other) : m_impl(other.m_impl)
 {}
@@ -811,27 +803,23 @@ PlrLeak3::PlrLeak3(int nr,int icon,std::string name,std::string desc,std::string
 PlrLeak3::~PlrLeak3()
 {}
 
-PlrConn::PlrConn()
-{
-  m_impl = std::shared_ptr<detail::PlrConnImpl>(new detail::PlrConnImpl);
-}
+PlrConn::PlrConn() :
+  m_impl(std::shared_ptr<detail::PlrConnImpl>(new detail::PlrConnImpl))
+{}
 
-PlrConn::PlrConn(int nr,int icon,std::string name,std::string desc)
-{
-  m_impl = std::shared_ptr<detail::PlrConnImpl>(new detail::PlrConnImpl(nr,icon,name,desc));
-}
+PlrConn::PlrConn(int nr,int icon,std::string name,std::string desc) :
+  m_impl(std::shared_ptr<detail::PlrConnImpl>(new detail::PlrConnImpl(nr,icon,name,desc)))
+{}
 
 PlrConn::PlrConn(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,double area,
-                 double coef,int u_A)
-{
-  m_impl = std::shared_ptr<detail::PlrConnImpl>(new detail::PlrConnImpl(nr,icon,name,desc,lam,turb,expt,area,coef,u_A));
-}
+                 double coef,int u_A) :
+  m_impl(std::shared_ptr<detail::PlrConnImpl>(new detail::PlrConnImpl(nr,icon,name,desc,lam,turb,expt,area,coef,u_A)))
+{}
 
 PlrConn::PlrConn(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,std::string area,
-                 std::string coef,int u_A)
-{
-  m_impl = std::shared_ptr<detail::PlrConnImpl>(new detail::PlrConnImpl(nr,icon,name,desc,lam,turb,expt,area,coef,u_A));
-}
+                 std::string coef,int u_A) :
+  m_impl(std::shared_ptr<detail::PlrConnImpl>(new detail::PlrConnImpl(nr,icon,name,desc,lam,turb,expt,area,coef,u_A)))
+{}
 
 PlrConn::PlrConn(const PlrConn &other) : m_impl(other.m_impl)
 {}
@@ -995,25 +983,21 @@ void PlrConn::setU_A(const int u_A)
   m_impl->setU_A(u_A);
 }
 
-PlrGeneral::PlrGeneral()
-{
-  m_impl = std::shared_ptr<detail::PlrGeneralImpl>(new detail::PlrGeneralImpl);
-}
+PlrGeneral::PlrGeneral() :
+  m_impl(std::shared_ptr<detail::PlrGeneralImpl>(new detail::PlrGeneralImpl))
+{}
 
-PlrGeneral::PlrGeneral(int nr,int icon,std::string name,std::string desc)
-{
-  m_impl = std::shared_ptr<detail::PlrGeneralImpl>(new detail::PlrGeneralImpl(nr,icon,name,desc));
-}
+PlrGeneral::PlrGeneral(int nr,int icon,std::string name,std::string desc) :
+  m_impl(std::shared_ptr<detail::PlrGeneralImpl>(new detail::PlrGeneralImpl(nr,icon,name,desc)))
+{}
 
-PlrGeneral::PlrGeneral(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt)
-{
-  m_impl = std::shared_ptr<detail::PlrGeneralImpl>(new detail::PlrGeneralImpl(nr,icon,name,desc,lam,turb,expt));
-}
+PlrGeneral::PlrGeneral(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt) :
+  m_impl(std::shared_ptr<detail::PlrGeneralImpl>(new detail::PlrGeneralImpl(nr,icon,name,desc,lam,turb,expt)))
+{}
 
-PlrGeneral::PlrGeneral(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt)
-{
-  m_impl = std::shared_ptr<detail::PlrGeneralImpl>(new detail::PlrGeneralImpl(nr,icon,name,desc,lam,turb,expt));
-}
+PlrGeneral::PlrGeneral(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt) :
+  m_impl(std::shared_ptr<detail::PlrGeneralImpl>(new detail::PlrGeneralImpl(nr,icon,name,desc,lam,turb,expt)))
+{}
 
 PlrGeneral::PlrGeneral(const PlrGeneral &other) : m_impl(other.m_impl)
 {}
@@ -1171,27 +1155,23 @@ PlrFcn::PlrFcn(int nr,int icon,std::string name,std::string desc,std::string lam
 PlrFcn::~PlrFcn()
 {}
 
-PlrTest1::PlrTest1()
-{
-  m_impl = std::shared_ptr<detail::PlrTest1Impl>(new detail::PlrTest1Impl);
-}
+PlrTest1::PlrTest1() :
+  m_impl(std::shared_ptr<detail::PlrTest1Impl>(new detail::PlrTest1Impl))
+{}
 
-PlrTest1::PlrTest1(int nr,int icon,std::string name,std::string desc)
-{
-  m_impl = std::shared_ptr<detail::PlrTest1Impl>(new detail::PlrTest1Impl(nr,icon,name,desc));
-}
+PlrTest1::PlrTest1(int nr,int icon,std::string name,std::string desc) :
+  m_impl(std::shared_ptr<detail::PlrTest1Impl>(new detail::PlrTest1Impl(nr,icon,name,desc)))
+{}
 
 PlrTest1::PlrTest1(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,double dP,
-                   double Flow,int u_P,int u_F)
-{
-  m_impl = std::shared_ptr<detail::PlrTest1Impl>(new detail::PlrTest1Impl(nr,icon,name,desc,lam,turb,expt,dP,Flow,u_P,u_F));
-}
+                   double Flow,int u_P,int u_F) :
+  m_impl(std::shared_ptr<detail::PlrTest1Impl>(new detail::PlrTest1Impl(nr,icon,name,desc,lam,turb,expt,dP,Flow,u_P,u_F)))
+{}
 
 PlrTest1::PlrTest1(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,std::string dP,
-                   std::string Flow,int u_P,int u_F)
-{
-  m_impl = std::shared_ptr<detail::PlrTest1Impl>(new detail::PlrTest1Impl(nr,icon,name,desc,lam,turb,expt,dP,Flow,u_P,u_F));
-}
+                   std::string Flow,int u_P,int u_F) :
+  m_impl(std::shared_ptr<detail::PlrTest1Impl>(new detail::PlrTest1Impl(nr,icon,name,desc,lam,turb,expt,dP,Flow,u_P,u_F)))
+{}
 
 PlrTest1::PlrTest1(int icon, std::string name, std::string desc, double lam, double turb, double expt, double dP,
   double Flow) : PlrTest1(0, icon, name, desc, lam, turb, expt, dP, Flow, 0, 0)
@@ -1375,27 +1355,23 @@ void PlrTest1::setU_F(const int u_F)
   m_impl->setU_F(u_F);
 }
 
-PlrTest2::PlrTest2()
-{
-  m_impl = std::shared_ptr<detail::PlrTest2Impl>(new detail::PlrTest2Impl);
-}
+PlrTest2::PlrTest2() :
+  m_impl(std::shared_ptr<detail::PlrTest2Impl>(new detail::PlrTest2Impl))
+{}
 
-PlrTest2::PlrTest2(int nr,int icon,std::string name,std::string desc)
-{
-  m_impl = std::shared_ptr<detail::PlrTest2Impl>(new detail::PlrTest2Impl(nr,icon,name,desc));
-}
+PlrTest2::PlrTest2(int nr,int icon,std::string name,std::string desc) :
+  m_impl(std::shared_ptr<detail::PlrTest2Impl>(new detail::PlrTest2Impl(nr,icon,name,desc)))
+{}
 
 PlrTest2::PlrTest2(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,double dP1,
-                   double F1,double dP2,double F2,int u_P1,int u_F1,int u_P2,int u_F2)
-{
-  m_impl = std::shared_ptr<detail::PlrTest2Impl>(new detail::PlrTest2Impl(nr,icon,name,desc,lam,turb,expt,dP1,F1,dP2,F2,u_P1,u_F1,u_P2,u_F2));
-}
+                   double F1,double dP2,double F2,int u_P1,int u_F1,int u_P2,int u_F2) :
+  m_impl(std::shared_ptr<detail::PlrTest2Impl>(new detail::PlrTest2Impl(nr,icon,name,desc,lam,turb,expt,dP1,F1,dP2,F2,u_P1,u_F1,u_P2,u_F2)))
+{}
 
 PlrTest2::PlrTest2(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,std::string dP1,
-                   std::string F1,std::string dP2,std::string F2,int u_P1,int u_F1,int u_P2,int u_F2)
-{
-  m_impl = std::shared_ptr<detail::PlrTest2Impl>(new detail::PlrTest2Impl(nr,icon,name,desc,lam,turb,expt,dP1,F1,dP2,F2,u_P1,u_F1,u_P2,u_F2));
-}
+                   std::string F1,std::string dP2,std::string F2,int u_P1,int u_F1,int u_P2,int u_F2) :
+  m_impl(std::shared_ptr<detail::PlrTest2Impl>(new detail::PlrTest2Impl(nr,icon,name,desc,lam,turb,expt,dP1,F1,dP2,F2,u_P1,u_F1,u_P2,u_F2)))
+{}
 
 PlrTest2::PlrTest2(const PlrTest2 &other) : m_impl(other.m_impl)
 {}
@@ -1619,27 +1595,23 @@ void PlrTest2::setU_F2(const int u_F2)
   m_impl->setU_F2(u_F2);
 }
 
-PlrCrack::PlrCrack()
-{
-  m_impl = std::shared_ptr<detail::PlrCrackImpl>(new detail::PlrCrackImpl);
-}
+PlrCrack::PlrCrack() :
+  m_impl(std::shared_ptr<detail::PlrCrackImpl>(new detail::PlrCrackImpl))
+{}
 
-PlrCrack::PlrCrack(int nr,int icon,std::string name,std::string desc)
-{
-  m_impl = std::shared_ptr<detail::PlrCrackImpl>(new detail::PlrCrackImpl(nr,icon,name,desc));
-}
+PlrCrack::PlrCrack(int nr,int icon,std::string name,std::string desc) :
+  m_impl(std::shared_ptr<detail::PlrCrackImpl>(new detail::PlrCrackImpl(nr,icon,name,desc)))
+{}
 
 PlrCrack::PlrCrack(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,double length,
-                   double width,int u_L,int u_W)
-{
-  m_impl = std::shared_ptr<detail::PlrCrackImpl>(new detail::PlrCrackImpl(nr,icon,name,desc,lam,turb,expt,length,width,u_L,u_W));
-}
+                   double width,int u_L,int u_W) :
+  m_impl(std::shared_ptr<detail::PlrCrackImpl>(new detail::PlrCrackImpl(nr,icon,name,desc,lam,turb,expt,length,width,u_L,u_W)))
+{}
 
 PlrCrack::PlrCrack(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,std::string length,
-                   std::string width,int u_L,int u_W)
-{
-  m_impl = std::shared_ptr<detail::PlrCrackImpl>(new detail::PlrCrackImpl(nr,icon,name,desc,lam,turb,expt,length,width,u_L,u_W));
-}
+                   std::string width,int u_L,int u_W) :
+  m_impl(std::shared_ptr<detail::PlrCrackImpl>(new detail::PlrCrackImpl(nr,icon,name,desc,lam,turb,expt,length,width,u_L,u_W)))
+{}
 
 PlrCrack::PlrCrack(const PlrCrack &other) : m_impl(other.m_impl)
 {}
@@ -1813,27 +1785,23 @@ void PlrCrack::setU_W(const int u_W)
   m_impl->setU_W(u_W);
 }
 
-PlrStair::PlrStair()
-{
-  m_impl = std::shared_ptr<detail::PlrStairImpl>(new detail::PlrStairImpl);
-}
+PlrStair::PlrStair() :
+  m_impl(std::shared_ptr<detail::PlrStairImpl>(new detail::PlrStairImpl))
+{}
 
-PlrStair::PlrStair(int nr,int icon,std::string name,std::string desc)
-{
-  m_impl = std::shared_ptr<detail::PlrStairImpl>(new detail::PlrStairImpl(nr,icon,name,desc));
-}
+PlrStair::PlrStair(int nr,int icon,std::string name,std::string desc) :
+  m_impl(std::shared_ptr<detail::PlrStairImpl>(new detail::PlrStairImpl(nr,icon,name,desc)))
+{}
 
 PlrStair::PlrStair(int nr,int icon,std::string name,std::string desc,double lam,double turb,
-                   double expt,double Ht,double Area,double peo,int tread,int u_A,int u_D)
-{
-  m_impl = std::shared_ptr<detail::PlrStairImpl>(new detail::PlrStairImpl(nr,icon,name,desc,lam,turb,expt,Ht,Area,peo,tread,u_A,u_D));
-}
+                   double expt,double Ht,double Area,double peo,int tread,int u_A,int u_D) :
+  m_impl(std::shared_ptr<detail::PlrStairImpl>(new detail::PlrStairImpl(nr,icon,name,desc,lam,turb,expt,Ht,Area,peo,tread,u_A,u_D)))
+{}
 
 PlrStair::PlrStair(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,
-                   std::string expt,std::string Ht,std::string Area,std::string peo,int tread,int u_A,int u_D)
-{
-  m_impl = std::shared_ptr<detail::PlrStairImpl>(new detail::PlrStairImpl(nr,icon,name,desc,lam,turb,expt,Ht,Area,peo,tread,u_A,u_D));
-}
+                   std::string expt,std::string Ht,std::string Area,std::string peo,int tread,int u_A,int u_D) :
+  m_impl(std::shared_ptr<detail::PlrStairImpl>(new detail::PlrStairImpl(nr,icon,name,desc,lam,turb,expt,Ht,Area,peo,tread,u_A,u_D)))
+{}
 
 PlrStair::PlrStair(const PlrStair &other) : m_impl(other.m_impl)
 {}
@@ -2032,27 +2000,23 @@ void PlrStair::setU_D(const int u_D)
   m_impl->setU_D(u_D);
 }
 
-PlrShaft::PlrShaft()
-{
-  m_impl = std::shared_ptr<detail::PlrShaftImpl>(new detail::PlrShaftImpl);
-}
+PlrShaft::PlrShaft() :
+  m_impl(std::shared_ptr<detail::PlrShaftImpl>(new detail::PlrShaftImpl))
+{}
 
-PlrShaft::PlrShaft(int nr,int icon,std::string name,std::string desc)
-{
-  m_impl = std::shared_ptr<detail::PlrShaftImpl>(new detail::PlrShaftImpl(nr,icon,name,desc));
-}
+PlrShaft::PlrShaft(int nr,int icon,std::string name,std::string desc) :
+  m_impl(std::shared_ptr<detail::PlrShaftImpl>(new detail::PlrShaftImpl(nr,icon,name,desc)))
+{}
 
 PlrShaft::PlrShaft(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,double Ht,
-                   double area,double perim,double rough,int u_A,int u_D,int u_P,int u_R)
-{
-  m_impl = std::shared_ptr<detail::PlrShaftImpl>(new detail::PlrShaftImpl(nr,icon,name,desc,lam,turb,expt,Ht,area,perim,rough,u_A,u_D,u_P,u_R));
-}
+                   double area,double perim,double rough,int u_A,int u_D,int u_P,int u_R) :
+  m_impl(std::shared_ptr<detail::PlrShaftImpl>(new detail::PlrShaftImpl(nr,icon,name,desc,lam,turb,expt,Ht,area,perim,rough,u_A,u_D,u_P,u_R)))
+{}
 
 PlrShaft::PlrShaft(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,std::string Ht,
-                   std::string area,std::string perim,std::string rough,int u_A,int u_D,int u_P,int u_R)
-{
-  m_impl = std::shared_ptr<detail::PlrShaftImpl>(new detail::PlrShaftImpl(nr,icon,name,desc,lam,turb,expt,Ht,area,perim,rough,u_A,u_D,u_P,u_R));
-}
+                   std::string area,std::string perim,std::string rough,int u_A,int u_D,int u_P,int u_R) :
+  m_impl(std::shared_ptr<detail::PlrShaftImpl>(new detail::PlrShaftImpl(nr,icon,name,desc,lam,turb,expt,Ht,area,perim,rough,u_A,u_D,u_P,u_R)))
+{}
 
 PlrShaft::PlrShaft(const PlrShaft &other) : m_impl(other.m_impl)
 {}
@@ -2276,25 +2240,21 @@ void PlrShaft::setU_R(const int u_R)
   m_impl->setU_R(u_R);
 }
 
-PlrBackDamper::PlrBackDamper()
-{
-  m_impl = std::shared_ptr<detail::PlrBackDamperImpl>(new detail::PlrBackDamperImpl);
-}
+PlrBackDamper::PlrBackDamper() :
+  m_impl(std::shared_ptr<detail::PlrBackDamperImpl>(new detail::PlrBackDamperImpl))
+{}
 
-PlrBackDamper::PlrBackDamper(int nr,int icon,std::string name,std::string desc)
-{
-  m_impl = std::shared_ptr<detail::PlrBackDamperImpl>(new detail::PlrBackDamperImpl(nr,icon,name,desc));
-}
+PlrBackDamper::PlrBackDamper(int nr,int icon,std::string name,std::string desc) :
+  m_impl(std::shared_ptr<detail::PlrBackDamperImpl>(new detail::PlrBackDamperImpl(nr,icon,name,desc)))
+{}
 
-PlrBackDamper::PlrBackDamper(int nr,int icon,std::string name,std::string desc,double lam,double Cp,double xp,double Cn,double xn)
-{
-  m_impl = std::shared_ptr<detail::PlrBackDamperImpl>(new detail::PlrBackDamperImpl(nr,icon,name,desc,lam,Cp,xp,Cn,xn));
-}
+PlrBackDamper::PlrBackDamper(int nr,int icon,std::string name,std::string desc,double lam,double Cp,double xp,double Cn,double xn) :
+  m_impl(std::shared_ptr<detail::PlrBackDamperImpl>(new detail::PlrBackDamperImpl(nr,icon,name,desc,lam,Cp,xp,Cn,xn)))
+{}
 
-PlrBackDamper::PlrBackDamper(int nr,int icon,std::string name,std::string desc,std::string lam,std::string Cp,std::string xp,std::string Cn,std::string xn)
-{
-  m_impl = std::shared_ptr<detail::PlrBackDamperImpl>(new detail::PlrBackDamperImpl(nr,icon,name,desc,lam,Cp,xp,Cn,xn));
-}
+PlrBackDamper::PlrBackDamper(int nr,int icon,std::string name,std::string desc,std::string lam,std::string Cp,std::string xp,std::string Cn,std::string xn) :
+  m_impl(std::shared_ptr<detail::PlrBackDamperImpl>(new detail::PlrBackDamperImpl(nr,icon,name,desc,lam,Cp,xp,Cn,xn)))
+{}
 
 PlrBackDamper::PlrBackDamper(const PlrBackDamper &other) : m_impl(other.m_impl)
 {}
@@ -2484,25 +2444,21 @@ PlrBdf::PlrBdf(int nr,int icon,std::string name,std::string desc,std::string lam
 PlrBdf::~PlrBdf()
 {}
 
-QfrGeneral::QfrGeneral()
-{
-  m_impl = std::shared_ptr<detail::QfrQuadraticImpl>(new detail::QfrQuadraticImpl);
-}
+QfrGeneral::QfrGeneral() :
+  m_impl(std::shared_ptr<detail::QfrQuadraticImpl>(new detail::QfrQuadraticImpl))
+{}
 
-QfrGeneral::QfrGeneral(int nr,int icon,std::string name,std::string desc)
-{
-  m_impl = std::shared_ptr<detail::QfrQuadraticImpl>(new detail::QfrQuadraticImpl(nr,icon,name,desc));
-}
+QfrGeneral::QfrGeneral(int nr,int icon,std::string name,std::string desc) :
+  m_impl(std::shared_ptr<detail::QfrQuadraticImpl>(new detail::QfrQuadraticImpl(nr,icon,name,desc)))
+{}
 
-QfrGeneral::QfrGeneral(int nr,int icon,std::string name,std::string desc,double a,double b)
-{
-  m_impl = std::shared_ptr<detail::QfrQuadraticImpl>(new detail::QfrQuadraticImpl(nr,icon,name,desc,a,b));
-}
+QfrGeneral::QfrGeneral(int nr,int icon,std::string name,std::string desc,double a,double b) :
+  m_impl(std::shared_ptr<detail::QfrQuadraticImpl>(new detail::QfrQuadraticImpl(nr,icon,name,desc,a,b)))
+{}
 
-QfrGeneral::QfrGeneral(int nr,int icon,std::string name,std::string desc,std::string a,std::string b)
-{
-  m_impl = std::shared_ptr<detail::QfrQuadraticImpl>(new detail::QfrQuadraticImpl(nr,icon,name,desc,a,b));
-}
+QfrGeneral::QfrGeneral(int nr,int icon,std::string name,std::string desc,std::string a,std::string b) :
+  m_impl(std::shared_ptr<detail::QfrQuadraticImpl>(new detail::QfrQuadraticImpl(nr,icon,name,desc,a,b)))
+{}
 
 QfrGeneral::QfrGeneral(const QfrGeneral &other) : m_impl(other.m_impl)
 {}
@@ -2645,27 +2601,23 @@ QfrFab::QfrFab(int nr,int icon,std::string name,std::string desc,std::string a,s
 QfrFab::~QfrFab()
 {}
 
-QfrCrack::QfrCrack()
-{
-  m_impl = std::shared_ptr<detail::QfrCrackImpl>(new detail::QfrCrackImpl);
-}
+QfrCrack::QfrCrack() :
+  m_impl(std::shared_ptr<detail::QfrCrackImpl>(new detail::QfrCrackImpl))
+{}
 
-QfrCrack::QfrCrack(int nr,int icon,std::string name,std::string desc)
-{
-  m_impl = std::shared_ptr<detail::QfrCrackImpl>(new detail::QfrCrackImpl(nr,icon,name,desc));
-}
+QfrCrack::QfrCrack(int nr,int icon,std::string name,std::string desc) :
+  m_impl(std::shared_ptr<detail::QfrCrackImpl>(new detail::QfrCrackImpl(nr,icon,name,desc)))
+{}
 
 QfrCrack::QfrCrack(int nr,int icon,std::string name,std::string desc,double a,double b,double length,double width,
-                   double depth,int nB,int u_L,int u_W,int u_D)
-{
-  m_impl = std::shared_ptr<detail::QfrCrackImpl>(new detail::QfrCrackImpl(nr,icon,name,desc,a,b,length,width,depth,nB,u_L,u_W,u_D));
-}
+                   double depth,int nB,int u_L,int u_W,int u_D) :
+  m_impl(std::shared_ptr<detail::QfrCrackImpl>(new detail::QfrCrackImpl(nr,icon,name,desc,a,b,length,width,depth,nB,u_L,u_W,u_D)))
+{}
 
 QfrCrack::QfrCrack(int nr,int icon,std::string name,std::string desc,std::string a,std::string b,std::string length,std::string width,
-                   std::string depth,int nB,int u_L,int u_W,int u_D)
-{
-  m_impl = std::shared_ptr<detail::QfrCrackImpl>(new detail::QfrCrackImpl(nr,icon,name,desc,a,b,length,width,depth,nB,u_L,u_W,u_D));
-}
+                   std::string depth,int nB,int u_L,int u_W,int u_D) :
+  m_impl(std::shared_ptr<detail::QfrCrackImpl>(new detail::QfrCrackImpl(nr,icon,name,desc,a,b,length,width,depth,nB,u_L,u_W,u_D)))
+{}
 
 QfrCrack::QfrCrack(const QfrCrack &other) : m_impl(other.m_impl)
 {}
@@ -2859,27 +2811,23 @@ void QfrCrack::setU_D(const int u_D)
   m_impl->setU_D(u_D);
 }
 
-QfrTest2::QfrTest2()
-{
-  m_impl = std::shared_ptr<detail::QfrTest2Impl>(new detail::QfrTest2Impl);
-}
+QfrTest2::QfrTest2() :
+  m_impl(std::shared_ptr<detail::QfrTest2Impl>(new detail::QfrTest2Impl))
+{}
 
-QfrTest2::QfrTest2(int nr,int icon,std::string name,std::string desc)
-{
-  m_impl = std::shared_ptr<detail::QfrTest2Impl>(new detail::QfrTest2Impl(nr,icon,name,desc));
-}
+QfrTest2::QfrTest2(int nr,int icon,std::string name,std::string desc) :
+  m_impl(std::shared_ptr<detail::QfrTest2Impl>(new detail::QfrTest2Impl(nr,icon,name,desc)))
+{}
 
 QfrTest2::QfrTest2(int nr,int icon,std::string name,std::string desc,double a,double b,double dP1,double F1,
-                   double dP2,double F2,int u_P1,int u_F1,int u_P2,int u_F2)
-{
-  m_impl = std::shared_ptr<detail::QfrTest2Impl>(new detail::QfrTest2Impl(nr,icon,name,desc,a,b,dP1,F1,dP2,F2,u_P1,u_F1,u_P2,u_F2));
-}
+                   double dP2,double F2,int u_P1,int u_F1,int u_P2,int u_F2) :
+  m_impl(std::shared_ptr<detail::QfrTest2Impl>(new detail::QfrTest2Impl(nr,icon,name,desc,a,b,dP1,F1,dP2,F2,u_P1,u_F1,u_P2,u_F2)))
+{}
 
 QfrTest2::QfrTest2(int nr,int icon,std::string name,std::string desc,std::string a,std::string b,std::string dP1,std::string F1,
-                   std::string dP2,std::string F2,int u_P1,int u_F1,int u_P2,int u_F2)
-{
-  m_impl = std::shared_ptr<detail::QfrTest2Impl>(new detail::QfrTest2Impl(nr,icon,name,desc,a,b,dP1,F1,dP2,F2,u_P1,u_F1,u_P2,u_F2));
-}
+                   std::string dP2,std::string F2,int u_P1,int u_F1,int u_P2,int u_F2) :
+  m_impl(std::shared_ptr<detail::QfrTest2Impl>(new detail::QfrTest2Impl(nr,icon,name,desc,a,b,dP1,F1,dP2,F2,u_P1,u_F1,u_P2,u_F2)))
+{}
 
 QfrTest2::QfrTest2(const QfrTest2 &other) : m_impl(other.m_impl)
 {}
@@ -3088,27 +3036,23 @@ void QfrTest2::setU_F2(const int u_F2)
   m_impl->setU_F2(u_F2);
 }
 
-AfeDor::AfeDor()
-{
-  m_impl = std::shared_ptr<detail::AfeDorImpl>(new detail::AfeDorImpl);
-}
+AfeDor::AfeDor() :
+  m_impl(std::shared_ptr<detail::AfeDorImpl>(new detail::AfeDorImpl))
+{}
 
-AfeDor::AfeDor(int nr,int icon,std::string name,std::string desc)
-{
-  m_impl = std::shared_ptr<detail::AfeDorImpl>(new detail::AfeDorImpl(nr,icon,name,desc));
-}
+AfeDor::AfeDor(int nr,int icon,std::string name,std::string desc) :
+  m_impl(std::shared_ptr<detail::AfeDorImpl>(new detail::AfeDorImpl(nr,icon,name,desc)))
+{}
 
 AfeDor::AfeDor(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,double dTmin,
-               double ht,double wd,double cd,int u_T,int u_H,int u_W)
-{
-  m_impl = std::shared_ptr<detail::AfeDorImpl>(new detail::AfeDorImpl(nr,icon,name,desc,lam,turb,expt,dTmin,ht,wd,cd,u_T,u_H,u_W));
-}
+               double ht,double wd,double cd,int u_T,int u_H,int u_W) :
+  m_impl(std::shared_ptr<detail::AfeDorImpl>(new detail::AfeDorImpl(nr,icon,name,desc,lam,turb,expt,dTmin,ht,wd,cd,u_T,u_H,u_W)))
+{}
 
 AfeDor::AfeDor(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,std::string dTmin,
-               std::string ht,std::string wd,std::string cd,int u_T,int u_H,int u_W)
-{
-  m_impl = std::shared_ptr<detail::AfeDorImpl>(new detail::AfeDorImpl(nr,icon,name,desc,lam,turb,expt,dTmin,ht,wd,cd,u_T,u_H,u_W));
-}
+               std::string ht,std::string wd,std::string cd,int u_T,int u_H,int u_W) :
+  m_impl(std::shared_ptr<detail::AfeDorImpl>(new detail::AfeDorImpl(nr,icon,name,desc,lam,turb,expt,dTmin,ht,wd,cd,u_T,u_H,u_W)))
+{}
 
 AfeDor::AfeDor(const AfeDor &other) : m_impl(other.m_impl)
 {}
@@ -3322,27 +3266,23 @@ void AfeDor::setU_W(const int u_W)
   m_impl->setU_W(u_W);
 }
 
-DrPl2::DrPl2()
-{
-  m_impl = std::shared_ptr<detail::DrPl2Impl>(new detail::DrPl2Impl);
-}
+DrPl2::DrPl2() :
+  m_impl(std::shared_ptr<detail::DrPl2Impl>(new detail::DrPl2Impl))
+{}
 
-DrPl2::DrPl2(int nr,int icon,std::string name,std::string desc)
-{
-  m_impl = std::shared_ptr<detail::DrPl2Impl>(new detail::DrPl2Impl(nr,icon,name,desc));
-}
+DrPl2::DrPl2(int nr,int icon,std::string name,std::string desc) :
+  m_impl(std::shared_ptr<detail::DrPl2Impl>(new detail::DrPl2Impl(nr,icon,name,desc)))
+{}
 
 DrPl2::DrPl2(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,double dH,double ht,
-             double wd,double cd,int u_H,int u_W)
-{
-  m_impl = std::shared_ptr<detail::DrPl2Impl>(new detail::DrPl2Impl(nr,icon,name,desc,lam,turb,expt,dH,ht,wd,cd,u_H,u_W));
-}
+             double wd,double cd,int u_H,int u_W) :
+  m_impl(std::shared_ptr<detail::DrPl2Impl>(new detail::DrPl2Impl(nr,icon,name,desc,lam,turb,expt,dH,ht,wd,cd,u_H,u_W)))
+{}
 
 DrPl2::DrPl2(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,std::string dH,std::string ht,
-             std::string wd,std::string cd,int u_H,int u_W)
-{
-  m_impl = std::shared_ptr<detail::DrPl2Impl>(new detail::DrPl2Impl(nr,icon,name,desc,lam,turb,expt,dH,ht,wd,cd,u_H,u_W));
-}
+             std::string wd,std::string cd,int u_H,int u_W) :
+  m_impl(std::shared_ptr<detail::DrPl2Impl>(new detail::DrPl2Impl(nr,icon,name,desc,lam,turb,expt,dH,ht,wd,cd,u_H,u_W)))
+{}
 
 DrPl2::DrPl2(const DrPl2 &other) : m_impl(other.m_impl)
 {}
@@ -3546,25 +3486,21 @@ void DrPl2::setU_W(const int u_W)
   m_impl->setU_W(u_W);
 }
 
-AfeFlow::AfeFlow()
-{
-  m_impl = std::shared_ptr<detail::AfeFlowImpl>(new detail::AfeFlowImpl);
-}
+AfeFlow::AfeFlow() :
+  m_impl(std::shared_ptr<detail::AfeFlowImpl>(new detail::AfeFlowImpl))
+{}
 
-AfeFlow::AfeFlow(int nr,int icon,std::string name,std::string desc)
-{
-  m_impl = std::shared_ptr<detail::AfeFlowImpl>(new detail::AfeFlowImpl(nr,icon,name,desc));
-}
+AfeFlow::AfeFlow(int nr,int icon,std::string name,std::string desc) :
+  m_impl(std::shared_ptr<detail::AfeFlowImpl>(new detail::AfeFlowImpl(nr,icon,name,desc)))
+{}
 
-AfeFlow::AfeFlow(int nr,int icon,std::string name,std::string desc,double Flow,int u_F)
-{
-  m_impl = std::shared_ptr<detail::AfeFlowImpl>(new detail::AfeFlowImpl(nr,icon,name,desc,Flow,u_F));
-}
+AfeFlow::AfeFlow(int nr,int icon,std::string name,std::string desc,double Flow,int u_F) :
+  m_impl(std::shared_ptr<detail::AfeFlowImpl>(new detail::AfeFlowImpl(nr,icon,name,desc,Flow,u_F)))
+{}
 
-AfeFlow::AfeFlow(int nr,int icon,std::string name,std::string desc,std::string Flow,int u_F)
-{
-  m_impl = std::shared_ptr<detail::AfeFlowImpl>(new detail::AfeFlowImpl(nr,icon,name,desc,Flow,u_F));
-}
+AfeFlow::AfeFlow(int nr,int icon,std::string name,std::string desc,std::string Flow,int u_F) :
+  m_impl(std::shared_ptr<detail::AfeFlowImpl>(new detail::AfeFlowImpl(nr,icon,name,desc,Flow,u_F)))
+{}
 
 AfeFlow::AfeFlow(const AfeFlow &other) : m_impl(other.m_impl)
 {}
@@ -3702,29 +3638,25 @@ AfeCvf::AfeCvf(int nr,int icon,std::string name,std::string desc,std::string Flo
 AfeCvf::~AfeCvf()
 {}
 
-AfeFan::AfeFan()
-{
-  m_impl = std::shared_ptr<detail::AfeFanImpl>(new detail::AfeFanImpl);
-}
+AfeFan::AfeFan() :
+  m_impl(std::shared_ptr<detail::AfeFanImpl>(new detail::AfeFanImpl))
+{}
 
-AfeFan::AfeFan(int nr,int icon,std::string name,std::string desc)
-{
-  m_impl = std::shared_ptr<detail::AfeFanImpl>(new detail::AfeFanImpl(nr,icon,name,desc));
-}
+AfeFan::AfeFan(int nr,int icon,std::string name,std::string desc) :
+  m_impl(std::shared_ptr<detail::AfeFanImpl>(new detail::AfeFanImpl(nr,icon,name,desc)))
+{}
 
 AfeFan::AfeFan(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,double rdens,
                double fdf,double sop,double off,std::vector<double> fpc,double Sarea,int u_Sa,
-               std::vector<FanDataPoint> data)
-{
-  m_impl = std::shared_ptr<detail::AfeFanImpl>(new detail::AfeFanImpl(nr,icon,name,desc,lam,turb,expt,rdens,fdf,sop,off,fpc,Sarea,u_Sa,data));
-}
+               std::vector<FanDataPoint> data) :
+  m_impl(std::shared_ptr<detail::AfeFanImpl>(new detail::AfeFanImpl(nr,icon,name,desc,lam,turb,expt,rdens,fdf,sop,off,fpc,Sarea,u_Sa,data)))
+{}
 
 AfeFan::AfeFan(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,std::string rdens,
                std::string fdf,std::string sop,std::string off,std::vector<std::string> fpc,std::string Sarea,int u_Sa,
-               std::vector<FanDataPoint> data)
-{
-  m_impl = std::shared_ptr<detail::AfeFanImpl>(new detail::AfeFanImpl(nr,icon,name,desc,lam,turb,expt,rdens,fdf,sop,off,fpc,Sarea,u_Sa,data));
-}
+               std::vector<FanDataPoint> data) :
+  m_impl(std::shared_ptr<detail::AfeFanImpl>(new detail::AfeFanImpl(nr,icon,name,desc,lam,turb,expt,rdens,fdf,sop,off,fpc,Sarea,u_Sa,data)))
+{}
 
 AfeFan::AfeFan(const AfeFan &other) : m_impl(other.m_impl)
 {}
@@ -3958,20 +3890,17 @@ void AfeFan::setData(const std::vector<FanDataPoint> &data)
   m_impl->setData(data);
 }
 
-AfeCsf::AfeCsf()
-{
-  m_impl = std::shared_ptr<detail::AfeCsfImpl>(new detail::AfeCsfImpl());
-}
+AfeCsf::AfeCsf() :
+  m_impl(std::shared_ptr<detail::AfeCsfImpl>(new detail::AfeCsfImpl()))
+{}
 
-AfeCsf::AfeCsf(int nr,int icon,std::string name,std::string desc)
-{
-  m_impl = std::shared_ptr<detail::AfeCsfImpl>(new detail::AfeCsfImpl(nr,icon,name,desc));
-}
+AfeCsf::AfeCsf(int nr,int icon,std::string name,std::string desc) :
+  m_impl(std::shared_ptr<detail::AfeCsfImpl>(new detail::AfeCsfImpl(nr,icon,name,desc)))
+{}
 
-AfeCsf::AfeCsf(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<XyDataPoint> data)
-{
-  m_impl = std::shared_ptr<detail::AfeCsfImpl>(new detail::AfeCsfImpl(nr,icon,name,desc,u_x,u_y,data));
-}
+AfeCsf::AfeCsf(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<XyDataPoint> data) :
+  m_impl(std::shared_ptr<detail::AfeCsfImpl>(new detail::AfeCsfImpl(nr,icon,name,desc,u_x,u_y,data)))
+{}
 
 AfeCsf::AfeCsf(const AfeCsf &other) : m_impl(other.m_impl)
 {}
@@ -4132,21 +4061,18 @@ AfePsq::AfePsq(int nr,int icon,std::string name,std::string desc,int u_x,int u_y
 AfePsq::~AfePsq()
 {}
 
-AfeSup::AfeSup()
-{
-  m_impl = std::shared_ptr<detail::AfeSupImpl>(new detail::AfeSupImpl);
-}
+AfeSup::AfeSup() :
+  m_impl(std::shared_ptr<detail::AfeSupImpl>(new detail::AfeSupImpl))
+{}
 
-AfeSup::AfeSup(int nr,int icon,std::string name,std::string desc)
-{
-  m_impl = std::shared_ptr<detail::AfeSupImpl>(new detail::AfeSupImpl(nr,icon,name,desc));
-}
+AfeSup::AfeSup(int nr,int icon,std::string name,std::string desc) :
+  m_impl(std::shared_ptr<detail::AfeSupImpl>(new detail::AfeSupImpl(nr,icon,name,desc)))
+{}
 
 AfeSup::AfeSup(int nr,int icon,std::string name,std::string desc,int sched,int u_H,
-               std::vector<AirflowSubelementData> subelements)
-{
-  m_impl = std::shared_ptr<detail::AfeSupImpl>(new detail::AfeSupImpl(nr,icon,name,desc,sched,u_H,subelements));
-}
+               std::vector<AirflowSubelementData> subelements) :
+  m_impl(std::shared_ptr<detail::AfeSupImpl>(new detail::AfeSupImpl(nr,icon,name,desc,sched,u_H,subelements)))
+{}
 
 AfeSup::AfeSup(const AfeSup &other) : m_impl(other.m_impl)
 {}

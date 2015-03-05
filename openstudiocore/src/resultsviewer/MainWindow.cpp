@@ -68,6 +68,8 @@ namespace resultsviewer{
     connect(ui.actionClear_Settings, &QAction::triggered, this, &MainWindow::slotClearSettings);
     connect(ui.actionAbout, &QAction::triggered, this, &MainWindow::slotHelpAbout);
 
+    ui.actionFileOpen->setShortcut(QKeySequence(QKeySequence::Open));
+
     // file close
     /*
     m_fileCloseAction = new QAction(tr("&Close"), this);
@@ -1170,16 +1172,13 @@ namespace resultsviewer{
   void MainWindow::createPlotToolBar()
   {
     m_plotToolBar = new QToolBar(tr("Plots"));
-
+    m_plotToolBar->setObjectName("plotToolBar"); // to preserve settings
     // m_plotToolBar->addWidget(new QLabel(" Open Plots "));
-
 
     m_plotComboBox = new QComboBox;
     m_plotComboBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
     connect(m_plotComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &MainWindow::onSelectedPlotChanged);
-
-    m_plotToolBar->setObjectName("plotToolBar"); // to preserve settings
-    // m_plotToolBar->addWidget(m_plotComboBox);
+    m_plotToolBar->addWidget(m_plotComboBox);
 
     // previous next and close
 

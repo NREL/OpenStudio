@@ -274,12 +274,16 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   set(${NAME}_SWIG_Depends "${this_depends}" PARENT_SCOPE)
 
   #message(STATUS "${${NAME}_SWIG_Depends}")
-
+  
+  set(RUBY_AUTODOC "")
+  if(BUILD_DOCUMENTATION)
+    set(RUBY_AUTODOC -features autodoc=1)
+  endif()
+  
   add_custom_command(
     OUTPUT "${SWIG_WRAPPER}"
     COMMAND "${SWIG_EXECUTABLE}"
-            "-ruby" "-c++" "-fvirtual" "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src" "${extra_includes}" "${extra_includes2}"
-            -features autodoc=1
+            "-ruby" "-c++" "-fvirtual" "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src" "${extra_includes}" "${extra_includes2}" ${RUBY_AUTODOC}
             -module "${MODULE}" -initname "${LOWER_NAME}"
             -o "${SWIG_WRAPPER_FULL_PATH}"
             "${SWIG_DEFINES}" ${SWIG_COMMON} "${KEY_I_FILE}"
@@ -456,12 +460,16 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     # http://docs.python.org/2/library/imp.html
 
     set(MODULE ${LOWER_NAME})
-
+    
+    set(PYTHON_AUTODOC "")
+    if(BUILD_DOCUMENTATION)
+      set(PYTHON_AUTODOC -features autodoc=1)
+    endif()
+    
     add_custom_command(
       OUTPUT "python_${NAME}_wrap.cxx"
       COMMAND "${SWIG_EXECUTABLE}"
-               "-python" "-c++"
-               -features autodoc=1
+               "-python" "-c++" ${PYTHON_AUTODOC}
                -outdir ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src"
                -module "${MODULE}"
                -o "${CMAKE_CURRENT_BINARY_DIR}/python_${NAME}_wrap.cxx"
@@ -573,14 +581,18 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     set(CSHARP_OUTPUT_NAME "openstudio_${NAME}_csharp")
     set(CSHARP_GENERATED_SRC_DIR "${CMAKE_BINARY_DIR}/csharp_wrapper/generated_sources/${NAME}")
     file(MAKE_DIRECTORY ${CSHARP_GENERATED_SRC_DIR})
-
+    
+    set(CSHARP_AUTODOC "")
+    if(BUILD_DOCUMENTATION)
+      set(CSHARP_AUTODOC -features autodoc=1)
+    endif()
+    
     add_custom_command(
       OUTPUT ${SWIG_WRAPPER}
       COMMAND "${CMAKE_COMMAND}" -E remove_directory "${CSHARP_GENERATED_SRC_DIR}"
       COMMAND "${CMAKE_COMMAND}" -E make_directory "${CSHARP_GENERATED_SRC_DIR}"
       COMMAND "${SWIG_EXECUTABLE}"
-              "-csharp" "-c++" -namespace ${NAMESPACE}
-              -features autodoc=1
+              "-csharp" "-c++" -namespace ${NAMESPACE} ${CSHARP_AUTODOC}
               -outdir "${CSHARP_GENERATED_SRC_DIR}"  "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src"
               -module "${MODULE}"
               -o "${SWIG_WRAPPER_FULL_PATH}"
@@ -976,7 +988,7 @@ function(QT5_WRAP_CPP_MINIMALLY outfiles)
   get_directory_property(_inc_DIRS INCLUDE_DIRECTORIES)
   set(_orig_DIRS ${_inc_DIRS})
   if(APPLE)
-    if(NOT ${target_name} STREQUAL "zkqwt")
+    if(NOT ${target_name} STREQUAL "qwt")
       foreach(_current ${_inc_DIRS})
         if(NOT "${_current}" MATCHES "[Qq][Tt]5")
           list(REMOVE_ITEM _inc_DIRS "${_current}")
