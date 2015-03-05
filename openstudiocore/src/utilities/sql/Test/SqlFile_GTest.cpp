@@ -153,10 +153,8 @@ TEST_F(SqlFileFixture, TimeSeriesCount)
   EXPECT_FALSE(ts);
 }
 
-TEST_F(SqlFileFixture, FloodPlot)
+TEST_F(SqlFileFixture, TimeSeries)
 {
-  Application::instance().application(true);
-
   std::vector<std::string> availableEnvPeriods = sqlFile.availableEnvPeriods();
   ASSERT_FALSE(availableEnvPeriods.empty());
 
@@ -168,19 +166,6 @@ TEST_F(SqlFileFixture, FloodPlot)
 //  Time duration = ts->dateTimes().back() - ts->dateTimes().front();
   Time duration = ts->firstReportDateTime() + Time(ts->daysFromFirstReport(ts->daysFromFirstReport().size()-1)) - ts->firstReportDateTime();
   EXPECT_DOUBLE_EQ(365-1.0/24.0, duration.totalDays());
-}
-
-
-TEST_F(SqlFileFixture, LinePlot)
-{
-  Application::instance().application(true);
-
-  std::vector<std::string> availableEnvPeriods = sqlFile.availableEnvPeriods();
-  ASSERT_FALSE(availableEnvPeriods.empty());
-
-  // make a timeseries
-  openstudio::OptionalTimeSeries ts = sqlFile.timeSeries(availableEnvPeriods[0], "Hourly", "Electricity:Facility",  "");
-  ASSERT_TRUE(ts);
 }
 
 TEST_F(SqlFileFixture, BadStatement)

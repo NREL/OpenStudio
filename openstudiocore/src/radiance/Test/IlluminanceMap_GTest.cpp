@@ -21,7 +21,6 @@
 
 #include <radiance/IlluminanceMap.h>
 
-#include <utilities/plot/FloodPlot.h>
 #include <utilities/application/Application.h>
 
 #include <resources.h>
@@ -74,21 +73,3 @@ TEST_F(RadIlluminanceMapFixture, IlluminanceMap)
   ASSERT_TRUE(outFile);
 }
 
-TEST_F(RadIlluminanceMapFixture, IlluminanceMapPlot)
-{
-  utilities::application::Application::instance().qApplication();
-
-  MatrixFloodPlotData::Ptr data = MatrixFloodPlotData::create(outFile->xVector(),
-                                                              outFile->yVector(),
-                                                              outFile->illuminanceMap());
-  data->interpMethod(linearInterp);
-
-  FloodPlot::Ptr fp = FloodPlot::create();
-  fp->setFloodPlotData(data);
-  fp->initZoomer(); // no image generated without initializing zoomer
-  fp->showContour(true);
-  fp->generateImage(L"testRadIlluminanceMapPlot.png");
-
-  // passes the visual test
-  EXPECT_TRUE(true);
-}
