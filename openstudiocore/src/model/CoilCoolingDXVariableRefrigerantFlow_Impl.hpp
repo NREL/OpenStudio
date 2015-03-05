@@ -34,7 +34,6 @@ namespace detail {
 
   /** CoilCoolingDXVariableRefrigerantFlow_Impl is a HVACComponent_Impl that is the implementation class for CoilCoolingDXVariableRefrigerantFlow.*/
   class MODEL_API CoilCoolingDXVariableRefrigerantFlow_Impl : public HVACComponent_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
