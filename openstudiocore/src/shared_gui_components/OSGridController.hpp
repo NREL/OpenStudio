@@ -38,6 +38,7 @@
 #include <QPushButton>
 #include <QSharedPointer>
 #include <QWidget>
+#include <QVBoxLayout>
 
 class QButtonGroup;
 class QCheckBox;
@@ -532,6 +533,8 @@ public:
 
   virtual int columnCount() const;
 
+  // Widget that exists at the given top level coordinates (may contain sub rows).
+  // This will not create a new widget.
   QWidget * cell(int rowIndex, int columnIndex);
 
   model::ModelObject modelObject(int rowIndex);
@@ -542,6 +545,9 @@ public:
 
   int rowIndexFromModelIndex(int modelIndex);
 
+  // Return a new widget at a "top level" row and column specified by arguments.
+  // There might be sub rows within the specified location.
+  // In that case a QWidget with sub rows (innner grid layout) will be returned.
   QWidget * widgetAt(int row, int column);
 
   // Call this function on a model update
@@ -614,6 +620,8 @@ private:
   friend class OSGridView;
   friend class ObjectSelector;
 
+  // Make the lowest level widgets that corresponds to concepts.
+  // These will be put in container widgets to form the cell, regardless of the presence of sub rows.
   QWidget * makeWidget(model::ModelObject t_mo, const QSharedPointer<BaseConcept> &t_baseConcept);
 
   void loadQSettings();
@@ -693,6 +701,15 @@ private slots:
 
 };
 
+// Possible solution for user facing column resize 
+// Hardst part is addressing persitance when grid redraws
+//class ColumnSizer : public QWidget
+//{
+//  Q_OBJECT
+//
+//  void mouseMoveEvent ( QMouseEvent * event );
+//}
+
 class Holder : public QWidget
 {
   Q_OBJECT
@@ -749,7 +766,7 @@ public:
 
   QLabel * m_label = nullptr;
 
-  QCheckBox * m_checkBox = nullptr;
+  QPushButton * m_checkBox = nullptr;
 
   HorizontalHeaderPushButton * m_pushButton = nullptr;
 
@@ -759,6 +776,9 @@ signals:
 
   void inFocus(bool inFocus, bool hasData);
 
+private:
+
+  QVBoxLayout * m_innerLayout;
 };
 
 class GridViewDropZoneVectorController : public OSVectorController

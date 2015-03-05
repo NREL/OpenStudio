@@ -172,6 +172,7 @@ OSComboBox2::OSComboBox2( QWidget * parent, bool editable )
   this->setCompleter(completer);
   setEditable(editable);
   setEnabled(false);
+  setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Fixed);
 }
 
 bool OSComboBox2::event( QEvent * e )

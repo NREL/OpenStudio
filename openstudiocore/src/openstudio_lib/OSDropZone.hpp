@@ -38,6 +38,7 @@ class QDragLeaveEvent;
 class QFocusEvent;
 class QPushButton;
 class QScrollArea;
+class QLabel;
 
 namespace openstudio {
 
@@ -95,10 +96,10 @@ private:
   boost::optional<ModelObjectSetter> m_set;
   boost::optional<NoFailAction> m_reset;
   boost::optional<model::ModelObject> m_modelObject;
-  QString m_text;
+  //QString m_text;
   OSItem * m_item = nullptr;
   bool m_deleteObject = false;
-
+  QLabel * m_label;
 };
 
 class OSDropZone : public QWidget

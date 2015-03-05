@@ -572,10 +572,19 @@ OSDropZone2::OSDropZone2()
   QString style("QWidget#OSDropZone {\
     background: #CECECE;\
     border: 2px dashed #808080;\
-    border-radius: 10px; }");
+    border-radius: 5px; }");
   setStyleSheet(style);
 
-  setFixedSize(75,25);
+  auto layout = new QVBoxLayout();
+  layout->setContentsMargins(5,5,5,5);
+  setLayout(layout);
+
+  m_label = new QLabel();
+  layout->addWidget(m_label);
+
+  setFixedHeight(25);
+  setMinimumWidth(75);
+  setMaximumWidth(150);
 }
 
 void OSDropZone2::refresh()
@@ -591,18 +600,18 @@ void OSDropZone2::refresh()
 
   if (modelObject) {
     QString temp = QString::fromStdString(modelObject->name().get());
-    if (m_text == temp){
+    if (m_label->text() == temp){
       return;
     }
     else {
-      m_text = temp;
+      m_label->setText(temp);
     }
 
-    // Adjust the width to accommodate the text
-    QFont myFont;
-    QFontMetrics fm(myFont);
-    auto width = fm.width(m_text);
-    setFixedWidth(width + 10);
+    //// Adjust the width to accommodate the text
+    //QFont myFont;
+    //QFontMetrics fm(myFont);
+    //auto width = fm.width(m_text);
+    //setFixedWidth(width + 10);
   }
 
   update();
@@ -641,7 +650,7 @@ void OSDropZone2::paintEvent( QPaintEvent * event )
   QPainter p(this);
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 
-  p.drawText(rect(),Qt::AlignCenter,m_text);
+  //p.drawText(rect(),Qt::AlignCenter,m_text);
 }
 
 void OSDropZone2::dragEnterEvent(QDragEnterEvent *event)

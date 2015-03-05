@@ -144,9 +144,6 @@ void OSLineEdit2::onEditingFinished() {
         //restore
         onModelObjectChange();
       }
-      else {
-        adjustWidth();
-      }
     }
   }
 }
@@ -192,7 +189,6 @@ void OSLineEdit2::onModelObjectChangeInternal(bool startingup) {
         this->blockSignals(true);
         this->setText(QString::fromStdString(m_text));
         this->blockSignals(false);
-        adjustWidth();
         if (!startingup) m_timer.start(TIMEOUT_INTERVAL);
       }
     }

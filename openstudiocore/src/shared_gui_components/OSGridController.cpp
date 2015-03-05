@@ -951,26 +951,6 @@ QString OSGridController::cellStyle(int rowIndex, int columnIndex, bool isSelect
   if (rowIndex == 0){
     style.append("                      border-top: 1px solid black;");
   }
-  if (columnIndex == 0){
-    style.append("                      border-left: 1px solid black;");
-  }
-  style.append("                        border-right: 1px solid black;");
-  style.append("                        border-bottom: 1px solid black;");
-  style.append("}");
-
-  style.append("QWidget#InnerCell { border: none;");
-  style.append("                        background-color: " + cellColor + ";");
-  if (columnIndex == 0){
-    style.append("                      border-left: 1px solid black;");
-  }
-  style.append("                        border-right: 1px solid black;");
-  style.append("}");
-
-  style.append("QWidget#InnerCellBottom { border: none;");
-  style.append("                        background-color: " + cellColor + ";");
-  if (columnIndex == 0){
-    style.append("                      border-left: 1px solid black;");
-  }
   style.append("                        border-right: 1px solid black;");
   style.append("                        border-bottom: 1px solid black;");
   style.append("}");
@@ -990,58 +970,49 @@ QWidget * OSGridController::widgetAt(int row, int column)
   OS_ASSERT(static_cast<int>(m_baseConcepts.size()) > column);
 
   auto layout = new QGridLayout(this->gridView());
-  const int widgetHeight = 35;
+  const int widgetHeight = 30;
   int numWidgets = 0;
 
   // start with a default sane value
   QSize recommendedSize(100, 20);
   bool hasSubRows = false;
 
-  // wrapper
+  // wrapper - this is the thing that will be returned by this method.  The outermost widget that forms a gridview cell.
+  // May contain sub rows.
   auto wrapper = new QWidget(this->gridView());
-
   wrapper->setObjectName("TableCell");
-
   wrapper->setStyleSheet(this->cellStyle(row,column, false, true));
-
   layout->setSpacing(0);
-  layout->setContentsMargins(0,0,0,0);
+  layout->setVerticalSpacing(0);
+  layout->setHorizontalSpacing(0);
+  layout->setContentsMargins(5,5,5,5);
   wrapper->setLayout(layout);
   // end wrapper
 
+  // Holder is a Widget that corresponds to sub row cell, it is present even if the cell does not have sub rows
+  // When no subrows wrapper -> holder -> bindable control provided by ::makeWidget
   std::vector<Holder *> holders;
+  // addWidget lambda adds to holders (by first creating a new holder).
+  // Also adds to layout, which is the layout of the main cell (wrapper).
+  // holders and layout are accessible in the lamda through capture.
+  // t_widget will be provided by ::makeWidget, it is the bindable control
   auto addWidget = [&](QWidget *t_widget, const boost::optional<model::ModelObject> &t_obj, const bool t_selector)
   {
-    auto expand=[](QSize &t_s, const QSize &t_newS) {
-      if (t_newS.height() < 400 && t_newS.width() < 600)
-      {
-        t_s = t_s.expandedTo(t_newS);
-      } else if (t_newS.height() < 400) {
-        t_s = t_s.expandedTo(QSize(std::min(t_newS.width(), 600), 0));
-      }
-    };
-
-    expand(recommendedSize, t_widget->size());
-    expand(recommendedSize, t_widget->minimumSize());
-    expand(recommendedSize, t_widget->minimumSizeHint());
-
     auto holder = new Holder(this->gridView());
     holder->setMinimumHeight(widgetHeight);
     auto l = new QVBoxLayout(this->gridView());
+    l->setAlignment(Qt::AlignCenter);
     l->setSpacing(0);
-    if(row == 0){
-      l->setContentsMargins(0,0,0,0);
-    } else {
-      l->setContentsMargins(5,0,5,0);
-    }
-    l->addWidget(t_widget, 0, Qt::AlignVCenter | Qt::AlignLeft);
+    l->setContentsMargins(0,0,0,0);
+    l->addWidget(t_widget);
     holder->setLayout(l);
-    holder->setContentsMargins(0,0,0,0);
+    // layout is defined outside the lambda and brought in through capture!
     layout->addWidget(holder, numWidgets, 0, 0);
 
-    if (hasSubRows) {
-      holder->setObjectName("InnerCell");
-    }
+    //if (hasSubRows) {
+    //  holder->setObjectName("InnerCell");
+    //}
+    // holders is defined outside the lambda and brought in through capture!
     holders.push_back(holder);
 
     if (OSComboBox2 * comboBox = qobject_cast<OSComboBox2 *>(t_widget)) {
@@ -1072,7 +1043,6 @@ QWidget * OSGridController::widgetAt(int row, int column)
     m_objectSelector->addWidget(t_obj, holder, row, column, hasSubRows?numWidgets:boost::optional<int>(), t_selector);
 
     ++numWidgets;
-    expand(recommendedSize, t_widget->size());
   };
 
   if(m_hasHorizontalHeader && row == 0){
@@ -1081,6 +1051,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
       // Each concept should have its own column
       OS_ASSERT(m_horizontalHeader.size() == m_baseConcepts.size());
     }
+    layout->setContentsMargins(0,1,1,0);
     addWidget(m_horizontalHeader.at(column), boost::none, false);
     QSharedPointer<BaseConcept> baseConcept = m_baseConcepts[column];
     const Heading &heading = baseConcept->heading();
@@ -1151,21 +1122,6 @@ QWidget * OSGridController::widgetAt(int row, int column)
       addWidget(makeWidget(mo, baseConcept), mo, baseConcept->isSelector());
     }
   }
-
-  for (auto &holder : holders)
-  {
-    if(row == 0){
-      holder->setMinimumSize(QSize(recommendedSize.width(),recommendedSize.height()));
-    } else {
-      holder->setMinimumSize(QSize(recommendedSize.width() + 10,widgetHeight));
-    }
-  }
-
-  if(row == 0){
-    wrapper->setMinimumSize(QSize(recommendedSize.width(),recommendedSize.height()));
-  }
-
-  wrapper->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
   if (hasSubRows) {
     holders.back()->setObjectName("InnerCellBottom");
@@ -1286,7 +1242,7 @@ void OSGridController::selectRow(int rowIndex, bool select)
 void OSGridController::horizontalHeaderChecked(int index)
 {
   // Push_back or erase the field from the user-selected fields
-  QCheckBox * checkBox = qobject_cast<QCheckBox *>(m_horizontalHeaderBtnGrp->button(index));
+  auto checkBox = qobject_cast<QAbstractButton *>(m_horizontalHeaderBtnGrp->button(index));
   OS_ASSERT(checkBox);
   if(checkBox->isChecked()){
     m_customFields.push_back(m_currentFields.at(index));
@@ -1588,6 +1544,11 @@ void OSGridController::setApplyButtonState()
 HorizontalHeaderPushButton::HorizontalHeaderPushButton(QWidget * parent)
   : QPushButton()
 {
+  QString style =
+    "QPushButton {"
+    "    font-size: 8pt;"
+    "}";
+  setStyleSheet(style);
 }
 
 HorizontalHeaderPushButton::~HorizontalHeaderPushButton()
@@ -1614,6 +1575,13 @@ void HorizontalHeaderPushButton::focusOutEvent(QFocusEvent * e)
   QPushButton::focusOutEvent(e);
 }
 
+//ColumnSizer::mouseMoveEvent ( QMouseEvent * event )
+//{
+//  if( event->buttons == Qt::LeftButton ) {
+//    
+//  }
+//}
+
 Holder::Holder(QWidget * parent)
   : QWidget(parent)
 {
@@ -1634,36 +1602,54 @@ void Holder::paintEvent(QPaintEvent *)
 HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)
   : QWidget(parent),
   m_label(new QLabel(fieldName, this)),
-  m_checkBox(new QCheckBox(this)),
+  m_checkBox(new QPushButton(this)),
   m_pushButton(new HorizontalHeaderPushButton(this))
 {
   auto mainLayout = new QVBoxLayout(this);
+  mainLayout->setContentsMargins(0,0,0,0);
+  mainLayout->setAlignment(Qt::AlignCenter);
   setLayout(mainLayout);
 
-  auto layout = new QHBoxLayout(this);
+  mainLayout->addWidget(m_checkBox);
+  m_checkBox->setToolTip("Check to add this column to \"Custom\"");
+  m_checkBox->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
+  QString style = "\
+    QPushButton {\
+      border: none;\
+      background: #808080;\
+      padding: 0px;\
+    }\
+    QPushButton:checked {\
+      background: #94b3de;\
+    }\
+  ";
+      //border-bottom: 1px solid black;
+  m_checkBox->setStyleSheet(style);
+  m_checkBox->setCheckable(true);
+
+  m_innerLayout = new QVBoxLayout();
+  m_innerLayout->setAlignment(Qt::AlignCenter);
+  m_innerLayout->setContentsMargins(5,5,5,5);
+  mainLayout->addLayout(m_innerLayout);
 
   m_label->setWordWrap(true);
-  m_label->setAlignment(Qt::AlignCenter);
-  layout->addWidget(m_label);
+  m_label->setAlignment(Qt::AlignHCenter);
+  m_innerLayout->addWidget(m_label);
 
-  m_checkBox->setToolTip("Check to add this column to \"Custom\"");
-  layout->addWidget(m_checkBox);
-
-  mainLayout->addLayout(layout);
+  m_innerLayout->addStretch();
 
   m_pushButton->setText("Apply to Selected");
   m_pushButton->setFixedWidth(100);
   m_pushButton->setEnabled(false);
   connect(m_pushButton, &HorizontalHeaderPushButton::inFocus, this, &HorizontalHeaderWidget::inFocus);
-
-  mainLayout->addWidget(m_pushButton, Qt::AlignBottom);
+  m_innerLayout->addWidget(m_pushButton);
 }
 
 HorizontalHeaderWidget::~HorizontalHeaderWidget()
 {
   for (auto &widget : m_addedWidgets)
   {
-    layout()->removeWidget(widget.data());
+    m_innerLayout->removeWidget(widget.data());
     widget->setVisible(false);
     widget->setParent(nullptr);
   }
@@ -1673,7 +1659,10 @@ void HorizontalHeaderWidget::addWidget(const QSharedPointer<QWidget> &t_widget)
 {
   if (!t_widget.isNull()) {
     m_addedWidgets.push_back(t_widget);
-    layout()->addWidget(t_widget.data());
+    auto hLayout = new QHBoxLayout();
+    hLayout->setContentsMargins(0,0,0,0);
+    m_innerLayout->addLayout(hLayout);
+    hLayout->addWidget(t_widget.data());
     t_widget->setVisible(true);
   }
 }

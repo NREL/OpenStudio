@@ -36,41 +36,6 @@ static const int TAB_SEPARATION = 10;
 
 namespace openstudio {
 
-class ShadowBox : public QWidget
-{
-  void paintEvent( QPaintEvent * event )
-  {
-    QPainter p(this);
-
-    QRect _rect = rect();
-
-    p.setPen(QPen(QColor(80,80,80,100)));
-  
-    p.drawRect(_rect);
-
-    _rect.moveLeft(1);
-    _rect.moveTop(1);
-
-    p.setPen(QPen(QColor(80,80,80,100)));
-  
-    p.drawRect(_rect);
-
-    _rect.moveLeft(1);
-    _rect.moveTop(1);
-
-    p.setPen(QPen(QColor(255,255,255,255)));
-  
-    p.drawRect(_rect);
-
-    _rect.moveLeft(1);
-    _rect.moveTop(1);
-
-    p.setPen(QPen(QColor(255,255,255,255)));
-  
-    p.drawRect(_rect);
-  }
-};
-
 MainTabView::MainTabView(const QString & tabLabel, bool hasSubTab, QWidget * parent)
   : QWidget(parent),
   m_hasSubTab(hasSubTab)
@@ -86,38 +51,43 @@ MainTabView::MainTabView(const QString & tabLabel, bool hasSubTab, QWidget * par
 
   m_mainWidget = new QWidget(this);
   m_mainWidget->setObjectName("MainTabView");
-  QString style;
-  style.append("QWidget#MainTabView { " );
-  style.append("  background: #E6E6E6; " );
-  style.append("  border-left: 1px solid black; " );
-  style.append("  border-top: 1px solid black; " );
-  style.append("  border-top-left-radius: 5px; " );
-  style.append("}" );
-  m_mainWidget->setStyleSheet(style);
-
   m_mainWidget->move(7,25);
 
   QVBoxLayout * innerLayout = new QVBoxLayout();
-  //innerLayout->setContentsMargins(1,1,0,0);
-  innerLayout->setContentsMargins(7,10,0,0);
   innerLayout->setSpacing(0);
-  //if( hasSubTab )
-  //{
-  //  innerLayout->addSpacing(10);
-  //}
   m_mainWidget->setLayout(innerLayout);
-
-  //ShadowBox * shadowBox = new ShadowBox();
-  //QVBoxLayout * shadowBoxLayout = new QVBoxLayout();
-  //shadowBoxLayout->setContentsMargins(2,2,0,0);
-  //shadowBox->setLayout(shadowBoxLayout);
 
   m_stackedWidget = new QStackedWidget();
   m_stackedWidget->setContentsMargins(0,0,0,0);
-  //shadowBoxLayout->addWidget(m_stackedWidget);
   innerLayout->addWidget(m_stackedWidget);
 
-  //innerLayout->addWidget(shadowBox);
+  setHasSubTab(hasSubTab);
+}
+
+void MainTabView::setHasSubTab(bool hasSubTab)
+{
+  m_hasSubTab = hasSubTab;
+
+  if( hasSubTab ) {
+    QString style;
+    style.append("QWidget#MainTabView { " );
+    style.append("  background: #E6E6E6; " );
+    style.append("  border-left: 1px solid black; " );
+    style.append("  border-top: 1px solid black; " );
+    style.append("  border-top-left-radius: 5px; " );
+    style.append("}" );
+    m_mainWidget->setStyleSheet(style);
+    m_mainWidget->layout()->setContentsMargins(7,10,0,0);
+  } else {
+    QString style;
+    style.append("QWidget#MainTabView { " );
+    style.append("  background: #E6E6E6; " );
+    style.append("  border-left: 1px solid black; " );
+    style.append("  border-top: 1px solid black; " );
+    style.append("}" );
+    m_mainWidget->setStyleSheet(style);
+    m_mainWidget->layout()->setContentsMargins(0,0,0,0);
+  }
 }
 
 bool MainTabView::addTabWidget(QWidget * widget)

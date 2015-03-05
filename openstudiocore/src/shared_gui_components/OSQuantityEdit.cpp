@@ -41,8 +41,8 @@ namespace openstudio {
 
 OSQuantityEdit2::OSQuantityEdit2(const std::string& modelUnits, const std::string& siUnits, 
                                  const std::string& ipUnits, bool isIP, QWidget * parent)
-  : m_lineEdit(new QuantityLineEdit(parent)),
-    m_units(new QLabel("",parent)),
+  : m_lineEdit(new QuantityLineEdit()),
+    m_units(new QLabel()),
     m_isIP(isIP),
     m_modelUnits(modelUnits),
     m_siUnits(siUnits),
@@ -70,9 +70,11 @@ OSQuantityEdit2::OSQuantityEdit2(const std::string& modelUnits, const std::strin
   m_doubleValidator = new QDoubleValidator();
   m_lineEdit->setValidator(m_doubleValidator);
 
-  m_lineEdit->setFixedWidth(90);
+  m_lineEdit->setMinimumWidth(60);
 
-  setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Preferred);
+  setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+  m_units->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+  m_lineEdit->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Fixed);
 }
 
 void OSQuantityEdit2::bind(bool isIP,

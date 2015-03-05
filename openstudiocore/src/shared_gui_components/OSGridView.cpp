@@ -62,7 +62,7 @@ QGridLayout *OSGridView::makeGridLayout()
   auto gridLayout = new QGridLayout();
   gridLayout->setSpacing(0);
   gridLayout->setContentsMargins(0,0,0,0);
-  //gridLayout->setSizeConstraint(QLayout::SetMinimumSize);
+  //gridLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
   gridLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
   return gridLayout;
 }
@@ -83,15 +83,11 @@ OSGridView::OSGridView(OSGridController * gridController,
 
   auto buttonLayout = new QHBoxLayout();
   buttonLayout->setSpacing(3);
-  buttonLayout->setContentsMargins(0,0,0,10);
-  buttonLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+  buttonLayout->setContentsMargins(10,10,10,10);
+  buttonLayout->setAlignment(Qt::AlignCenter | Qt::AlignLeft);
 
   auto vectorController = new GridViewDropZoneVectorController();
-#ifdef Q_OS_MAC
-  m_dropZone = new OSDropZone(vectorController, dropZoneText, QSize(WIDTH_DZ,HEIGHT_DZ));
-#else
-  m_dropZone = new OSDropZone(vectorController, dropZoneText, QSize(WIDTH,HEIGHT));
-#endif
+  m_dropZone = new OSDropZone(vectorController, dropZoneText);
   m_dropZone->setMaxItems(1);
 
   connect(m_dropZone, &OSDropZone::itemDropped, m_gridController, &OSGridController::onItemDropped);
@@ -99,25 +95,18 @@ OSGridView::OSGridView(OSGridController * gridController,
   auto isConnected = connect(this, SIGNAL(dropZoneItemClicked(OSItem*)), this, SLOT(onDropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
 
-  buttonLayout->addWidget(m_dropZone,0,Qt::AlignLeft);
+  buttonLayout->addWidget(m_dropZone);
 
   std::vector<QString> categories = m_gridController->categories();
   for(unsigned i=0; i<categories.size(); i++){
     auto button = new QPushButton(categories.at(i));
-#ifdef Q_OS_MAC
-    button->setFixedSize(WIDTH,HEIGHT);
-#else
-    button->setMinimumSize(WIDTH,HEIGHT);
-#endif
+    button->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::MinimumExpanding);
     button->setCheckable(true);
-    buttonLayout->addWidget(button,0,Qt::AlignLeft);
+    buttonLayout->addWidget(button);
     buttonGroup->addButton(button,buttonGroup->buttons().size());
   }
-  buttonLayout->addStretch();
 
-  QVBoxLayout * layout = nullptr;
-
-  layout = new QVBoxLayout();
+  auto layout = new QVBoxLayout();
   layout->setSpacing(0);
   layout->setContentsMargins(0,0,0,0);
   setLayout(layout);
@@ -139,13 +128,12 @@ OSGridView::OSGridView(OSGridController * gridController,
   m_contentLayout = new QVBoxLayout();
   m_contentLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
   m_contentLayout->setSpacing(0);
-  m_contentLayout->setContentsMargins(0,10,0,0);
+  m_contentLayout->setContentsMargins(0,0,0,0);
   widget->setLayout(m_contentLayout);
   m_contentLayout->addLayout(buttonLayout);
+  widget->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Fixed);
 
   setGridController(m_gridController);
-
-  setContentsMargins(5,5,5,5);
 
   std::vector<QAbstractButton *> buttons = buttonGroup->buttons().toVector().toStdVector();
   if(buttons.size() > 0){
@@ -389,8 +377,6 @@ void OSGridView::refreshAll()
       }
     }
 
-    normalizeColumnWidths();
-
     QTimer::singleShot(0, this, SLOT(selectRowDeterminedByModelSubTabView()));
 
   }
@@ -412,31 +398,6 @@ void OSGridView::selectRowDeterminedByModelSubTabView()
   // If the index is valid, call slot
   if (m_gridController->m_oldIndex > -1){
     QTimer::singleShot(0, this, SLOT(doRowSelect()));
-  }
-}
-
-void OSGridView::normalizeColumnWidths()
-{
-  std::vector<int> colmins(m_gridController->columnCount(), 0);
-
-  for( int i = 0; i < m_gridController->rowCount(); i++ )
-  {
-    for( int j = 0; j < m_gridController->columnCount(); j++ )
-    {
-      const auto *w = itemAtPosition(i, j)->widget();
-      OS_ASSERT(w);
-      colmins[j] = std::max(colmins[j], w->minimumWidth());
-    }
-  }
-
-  for(int i = 0; i < m_gridController->rowCount(); i += ROWS_PER_LAYOUT)
-  {
-    for( int j = 0; j < m_gridController->columnCount(); j++ )
-    {
-      auto *w = itemAtPosition(i, j)->widget();
-      OS_ASSERT(w);
-      w->setMinimumWidth(colmins[j]);
-    }
   }
 }
 

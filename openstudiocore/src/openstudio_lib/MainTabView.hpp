@@ -38,6 +38,8 @@ public:
 
   virtual ~MainTabView() {}
 
+  void setHasSubTab(bool hasSubTab);
+
   ///! Use this method only if your tab will *NOT* have sub tabs
   bool addTabWidget(QWidget * widget);
 
