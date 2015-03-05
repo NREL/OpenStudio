@@ -679,7 +679,7 @@ namespace openstudio{
 
   std::set<std::pair<std::string, std::string> > LocalBCL::attributeSearch(
       const std::vector<std::pair<std::string, std::string> >& searchTerms,
-      const std::string componentType) const
+      const std::string& componentType) const
   {
     typedef std::vector<std::pair<std::string, std::string> > UidsVecType;
     typedef std::set<std::pair<std::string, std::string> > UidsType;

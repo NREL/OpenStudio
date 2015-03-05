@@ -173,7 +173,7 @@ public:
   /** Returns the CFD zone name. */
   std::string cfdname() const;
   /** Sets the CFD zone name. */
-  void setCfdname(const std::string cfdname);
+  void setCfdname(const std::string &cfdname);
   /** Returns the X coordinate of one end of the cdaxis. */
   double X1() const;
   /** Sets the X coordinate of one end of the cdaxis. */
@@ -1563,7 +1563,7 @@ public:
   /** Write the object to a string. */
   virtual std::string write()=0;
   /** Convert an input string into a control node type enum. */
-  static Type convertTag(std::string string);
+  static Type convertTag(std::string &string);
   /** Read a control node element from a Reader object. */
   static ControlNode* readElement(Reader &input);
   // virtual void recompute(){}

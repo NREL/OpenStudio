@@ -93,6 +93,8 @@ TEST_F(RunManagerTestFixture, ParallelEnergyPlusJobTest)
 
     ASSERT_TRUE(sqlfile.netSiteEnergy());
     originalSiteEnergy = *sqlfile.netSiteEnergy();
+    ASSERT_TRUE(sqlfile.hoursSimulated());
+    EXPECT_EQ(8760, *sqlfile.hoursSimulated());
   }
 
   qint64 originaltime = et.restart();
@@ -125,7 +127,8 @@ TEST_F(RunManagerTestFixture, ParallelEnergyPlusJobTest)
           openstudio::path());
     workflow.add(tools);
 
-    workflow.parallelizeEnergyPlus(kit.getConfigOptions().getMaxLocalJobs(), 1);
+    int maxLocalJobs = kit.getConfigOptions().getMaxLocalJobs();
+    workflow.parallelizeEnergyPlus(maxLocalJobs > 3 ? 3 : maxLocalJobs, 1);
     openstudio::runmanager::Job job = workflow.create(outdir);
 
     kit.enqueue(job, true);

@@ -23,22 +23,19 @@
 namespace openstudio {
 namespace contam {
 
-WeatherData::WeatherData()
-{
-  m_impl = std::shared_ptr<detail::WeatherDataImpl>(new detail::WeatherDataImpl);
-}
+WeatherData::WeatherData() :
+  m_impl(std::shared_ptr<detail::WeatherDataImpl>(new detail::WeatherDataImpl))
+{}
 
 WeatherData::WeatherData(std::string Tambt,std::string barpres,std::string windspd,std::string winddir,std::string relhum,int daytyp,
-                         int uTa,int ubP,int uws,int uwd)
-{
-  m_impl = std::shared_ptr<detail::WeatherDataImpl>(new detail::WeatherDataImpl(Tambt,barpres,windspd,winddir,relhum,daytyp,uTa,ubP,uws,uwd));
-}
+                         int uTa,int ubP,int uws,int uwd) :
+  m_impl(std::shared_ptr<detail::WeatherDataImpl>(new detail::WeatherDataImpl(Tambt,barpres,windspd,winddir,relhum,daytyp,uTa,ubP,uws,uwd)))
+{}
 
 WeatherData::WeatherData(double Tambt,double barpres,double windspd,double winddir,double relhum,int daytyp,
-                         int uTa,int ubP,int uws,int uwd)
-{
-  m_impl = std::shared_ptr<detail::WeatherDataImpl>(new detail::WeatherDataImpl(Tambt,barpres,windspd,winddir,relhum,daytyp,uTa,ubP,uws,uwd));
-}
+                         int uTa,int ubP,int uws,int uwd) :
+  m_impl(std::shared_ptr<detail::WeatherDataImpl>(new detail::WeatherDataImpl(Tambt,barpres,windspd,winddir,relhum,daytyp,uTa,ubP,uws,uwd)))
+{}
 
 WeatherData::WeatherData(const WeatherData &other) : m_impl(other.m_impl)
 {}
@@ -197,15 +194,13 @@ void WeatherData::setUwd(const int uwd)
   m_impl->setUwd(uwd);
 }
 
-Icon::Icon()
-{
-  m_impl = std::shared_ptr<detail::IconImpl>(new detail::IconImpl());
-}
+Icon::Icon() :
+  m_impl(std::shared_ptr<detail::IconImpl>(new detail::IconImpl()))
+{}
 
-Icon::Icon(int icon,int col,int row,int nr)
-{
-  m_impl = std::shared_ptr<detail::IconImpl>(new detail::IconImpl(icon,col,row,nr));
-}
+Icon::Icon(int icon,int col,int row,int nr) :
+  m_impl(std::shared_ptr<detail::IconImpl>(new detail::IconImpl(icon,col,row,nr)))
+{}
 
 Icon::Icon(const Icon &other) : m_impl(other.m_impl)
 {}

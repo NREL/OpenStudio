@@ -89,7 +89,7 @@ public:
   /** Sets the initial zone pressure [Pa]. */
   bool setP0(const double P0);
   /** Sets the initial zone pressure [Pa]. */
-  bool setP0(const std::string P0);
+  bool setP0(const std::string &P0);
   /** Returns the zone name. */
   std::string name() const;
   /** Sets the zone name. */
@@ -125,7 +125,7 @@ public:
   /** Returns the CFD zone name. */
   std::string cfdname() const;
   /** Sets the CFD zone name. */
-  void setCfdname(const std::string cfdname);
+  void setCfdname(const std::string &cfdname);
   /** Returns the X coordinate of one end of the cdaxis. */
   double X1() const;
   /** Sets the X coordinate of one end of the cdaxis. */

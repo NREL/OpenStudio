@@ -165,7 +165,7 @@ namespace resultsviewer{
       {
         QwtPlotItem *plotItem = *itPlotItem;
         if ( plotItem->rtti() == QwtPlotItem::Rtti_PlotCurve)
-          addLegendItem((LinePlotCurve*)plotItem);
+          addLegendItem(static_cast<LinePlotCurve*>(plotItem));
       }
     }
   }
@@ -214,9 +214,9 @@ namespace resultsviewer{
     move(m_x,m_y);
   }
 
-  PlotViewMimeData::PlotViewMimeData(std::vector<PlotViewData>& _plotViewDataVec)
+  PlotViewMimeData::PlotViewMimeData(std::vector<PlotViewData>& _plotViewDataVec) :
+    m_plotViewDataVec(_plotViewDataVec)
   {
-    m_plotViewDataVec = _plotViewDataVec;
   }
 
   PlotViewToolbar::PlotViewToolbar(const QString &title, QWidget *parent):QToolBar(title, parent)
@@ -1546,7 +1546,7 @@ namespace resultsviewer{
       QwtPlotItem *plotItem = *itPlotItem;
       if ( plotItem->rtti() == QwtPlotItem::Rtti_PlotCurve)
       {
-        linePlotCurve = (LinePlotCurve *)plotItem;
+        linePlotCurve = static_cast<LinePlotCurve *>(plotItem);
         minXIndex = 0;
         maxXIndex = linePlotCurve->dataSize()-1;
 
@@ -1689,12 +1689,12 @@ namespace resultsviewer{
       QwtPlotItem *plotItem = *itPlotItem;
       if ( plotItem->rtti() == QwtPlotItem::Rtti_PlotCurve)
       {
-        index = ((LinePlotCurve *)plotItem)->closestPoint(pos, &dist);
+        index = static_cast<LinePlotCurve *>(plotItem)->closestPoint(pos, &dist);
         if (dist < minDist)
         {
           minIndex = index;
           minDist = dist;
-          minCurve = (LinePlotCurve *)plotItem;
+          minCurve = static_cast<LinePlotCurve *>(plotItem);
         }
       }
     }
@@ -1872,7 +1872,7 @@ namespace resultsviewer{
         if ( plotItem->rtti() == QwtPlotItem::Rtti_PlotCurve)
         {
           found = false;
-          linePlotCurve = (LinePlotCurve *)plotItem;
+          linePlotCurve = static_cast<LinePlotCurve *>(plotItem);
           for (int i = 0; i < linePlotCurve->plotSource().count(); i++)
           {
             if (linePlotCurve->plotSource()[i] == plotSource)

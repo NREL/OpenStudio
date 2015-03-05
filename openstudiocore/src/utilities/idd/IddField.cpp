@@ -632,10 +632,9 @@ namespace detail {
 
 // CONSTRUCTORS
 
-IddField::IddField()
-{
-  m_impl = std::shared_ptr<detail::IddField_Impl>(new detail::IddField_Impl());
-}
+IddField::IddField() :
+  m_impl(std::shared_ptr<detail::IddField_Impl>(new detail::IddField_Impl()))
+{}
 
 // GETTERS
 
