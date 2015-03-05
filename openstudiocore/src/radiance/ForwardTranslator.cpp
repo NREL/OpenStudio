@@ -1298,7 +1298,7 @@ namespace radiance {
               // store window group entry for mapping.rad
               if (windowGroup_name == "WG0"){
               	// simple placeholder for WG0
-								m_radDCmats.insert(windowGroup_name + ",n/a\n");							
+								m_radDCmats.insert(windowGroup_name + ",n/a,n/a,n/a,n/a\n");							
 							}else{
 								// store window group normal (may not need anymore with rfluxmtx)
 								// hard coded shade algorithm: on if high solar (2), setpoint 2Klx (2000)
@@ -1307,7 +1307,8 @@ namespace radiance {
 									formatString((control.outwardNormal->x() * -1), 2) + " " + \
 									formatString((control.outwardNormal->y() * -1), 2) + " " + \
 									formatString((control.outwardNormal->z() * -1), 2) + ",2,2000,cl_Tn" + \
-									formatString(tVis, 2) + ".xml,cl_Tn" + formatString(tVis, 2) + "_blinds.xml\n");
+									formatString(tVis, 2) + ".xml,cl_Tn" + \
+									formatString(tVis, 2) + "_blinds.xml\n");
 								}
 
             } else if (rMaterial == "trans"){
