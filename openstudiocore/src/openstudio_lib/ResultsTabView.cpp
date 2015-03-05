@@ -18,6 +18,11 @@
 **********************************************************************/
 
 #include "ResultsTabView.hpp"
+#if QT_VERSION >= 0x050400
+#include "ResultsWebEngineView.hpp"
+#else
+#include "ResultsWebView.hpp"
+#endif
 
 #include "OSDocument.hpp"
 
@@ -33,7 +38,6 @@
 #include <QPushButton>
 #include <QString>
 #include <QRegExp>
-//#include <QWebInspector>
 
 #include "../runmanager/lib/FileInfo.hpp"
 #include "../runmanager/lib/JobStatusWidget.hpp"
@@ -110,20 +114,14 @@ ResultsView::ResultsView(QWidget *t_parent)
   m_view->setContextMenuPolicy(Qt::NoContextMenu);
   m_view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   mainLayout->addWidget(m_view, 0, Qt::AlignTop);
-
-//#if _DEBUG || (__GNUC__ && !NDEBUG)
-//  m_view->page()->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
-//  QWebInspector *inspector = new QWebInspector;
-//  inspector->setPage(m_view->page());
-//  inspector->setVisible(true);
-//#endif
-
 }
 
 ResultsView::~ResultsView()
 {
   delete m_view;
+#if QT_VERSION < 0x050400
   QWebSettings::clearMemoryCaches();
+#endif
 }
 
 void ResultsView::openResultsViewerClicked()
@@ -353,8 +351,12 @@ void ResultsView::comboBoxChanged(int index)
   m_view->load(QUrl(filename));
 }
 
-ResultsWebView::ResultsWebView(QWidget * parent)
-  : QWebView(parent)
+ResultsWebView::ResultsWebView(QWidget * parent) :
+#if QT_VERSION >= 0x050400
+  QWebEngineView(parent)
+#else
+  QWebView(parent)
+#endif
 {
 }
 

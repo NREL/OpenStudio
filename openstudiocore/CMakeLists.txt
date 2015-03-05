@@ -612,8 +612,6 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Sql REQUIRED)
 find_package(Qt5Network REQUIRED)
 find_package(Qt5Xml REQUIRED)
-find_package(Qt5WebKit REQUIRED)
-find_package(Qt5WebKitWidgets REQUIRED)
 #find_package(Qt5WinExtras)
 find_package(Qt5Concurrent REQUIRED)
 find_package(Qt5PrintSupport REQUIRED)
@@ -633,12 +631,20 @@ mark_as_advanced(
   Qt5Quick_DIR
   Qt5Sensors_DIR
   Qt5Sql_DIR
-  Qt5WebKit_DIR
-  Qt5WebKitWidgets_DIR
   Qt5Widgets_DIR
   #Qt5WinExtras_DIR
   Qt5Xml_DIR
 )
+
+if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
+  find_package(Qt5WebKit REQUIRED)
+  find_package(Qt5WebKitWidgets REQUIRED)
+  mark_as_advanced(Qt5WebKit_DIR Qt5WebKitWidgets_DIR)
+else()
+  find_package(Qt5WebEngine REQUIRED)
+  find_package(Qt5WebEngineWidgets REQUIRED)
+  mark_as_advanced(Qt5WebEngine_DIR Qt5WebEngineWidgets_DIR)
+endif()
 
 set(CMAKE_AUTOMOC OFF)
 
@@ -647,8 +653,13 @@ include_directories(${Qt5Widgets_INCLUDE_DIRS})
 include_directories(${Qt5Sql_INCLUDE_DIRS})
 include_directories(${Qt5Network_INCLUDE_DIRS})
 include_directories(${Qt5Xml_INCLUDE_DIRS})
-include_directories(${Qt5WebKit_INCLUDE_DIRS})
-include_directories(${Qt5WebKitWidgets_INCLUDE_DIRS})
+if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
+  include_directories(${Qt5WebKit_INCLUDE_DIRS})
+  include_directories(${Qt5WebKitWidgets_INCLUDE_DIRS})
+else()
+  include_directories(${Qt5WebEngine_INCLUDE_DIRS})
+  include_directories(${Qt5WebEngineWidgets_INCLUDE_DIRS})
+endif()
 #include_directories(${Qt5WinExtras_INCLUDE_DIRS})
 include_directories(${Qt5Concurrent_INCLUDE_DIRS})
 include_directories(${Qt5PrintSupport_INCLUDE_DIRS})
@@ -663,8 +674,13 @@ list(APPEND QT_LIBS ${Qt5Widgets_LIBRARIES})
 list(APPEND QT_LIBS ${Qt5Sql_LIBRARIES})
 list(APPEND QT_LIBS ${Qt5Network_LIBRARIES})
 list(APPEND QT_LIBS ${Qt5Xml_LIBRARIES})
-list(APPEND QT_LIBS ${Qt5WebKit_LIBRARIES})
-list(APPEND QT_LIBS ${Qt5WebKitWidgets_LIBRARIES})
+if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
+  list(APPEND QT_LIBS ${Qt5WebKit_LIBRARIES})
+  list(APPEND QT_LIBS ${Qt5WebKitWidgets_LIBRARIES})
+else()
+  list(APPEND QT_LIBS ${Qt5WebEngine_LIBRARIES})
+  list(APPEND QT_LIBS ${Qt5WebEngineWidgets_LIBRARIES})
+endif()
 #list(APPEND QT_LIBS ${Qt5WinExtras_LIBRARIES})
 list(APPEND QT_LIBS ${Qt5Concurrent_LIBRARIES})
 list(APPEND QT_LIBS ${Qt5PrintSupport_LIBRARIES})
