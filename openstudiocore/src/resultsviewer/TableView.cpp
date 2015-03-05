@@ -21,7 +21,8 @@
 
 #include "../utilities/sql/SqlFileEnums.hpp"
 
-#include<QHeaderView>
+#include <QHeaderView>
+#include <QMouseEvent>
 
 using openstudio::toString;
 using openstudio::toQString;

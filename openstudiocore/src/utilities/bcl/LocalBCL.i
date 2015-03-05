@@ -11,9 +11,6 @@
   #include <utilities/core/PathWatcher.hpp>
   #include <utilities/core/FileReference.hpp>
   #include <QAction>
-  #include <utilities/plot/Plot2D.hpp>
-  #include <utilities/plot/LinePlot.hpp>
-  #include <utilities/plot/FloodPlot.hpp>
   #include <utilities/plot/ProgressBar.hpp>
   #include <utilities/core/UpdateManager.hpp>
   #include <QComboBox>

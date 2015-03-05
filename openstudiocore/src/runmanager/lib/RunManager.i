@@ -45,9 +45,6 @@
   #include <utilities/core/Path.hpp>
   #include <utilities/core/Containers.hpp>
   #include <utilities/core/Exception.hpp>
-  #include <utilities/plot/Plot2D.hpp>
-  #include <utilities/plot/LinePlot.hpp>
-  #include <utilities/plot/FloodPlot.hpp>
 
   #include <utilities/units/CFMUnit.hpp>
   #include <utilities/units/IPUnit.hpp>

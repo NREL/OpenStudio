@@ -26,12 +26,12 @@
 #include "ResultsViewerData.hpp"
 #include "BrowserView.hpp"
 #include "TabDropDock.hpp"
+#include "FloodPlot.hpp"
+#include "LinePlot.hpp"
 
 #include "../utilities/core/TemporaryDirectory.hpp"
 #include "../utilities/sql/SqlFile.hpp"
 #include "../utilities/data/TimeSeries.hpp"
-#include "../utilities/plot/FloodPlot.hpp"
-#include "../utilities/plot/LinePlot.hpp"
 
 #include <QMainWindow>
 #include <QTabWidget>
