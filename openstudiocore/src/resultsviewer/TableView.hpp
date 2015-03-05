@@ -20,11 +20,11 @@
 #ifndef RESULTSVIEWER_TABLEVIEW_HPP
 #define RESULTSVIEWER_TABLEVIEW_HPP
 
-#include "../utilities/plot/Plot2D.hpp"
-#include "../utilities/plot/LinePlot.hpp"
-#include "../utilities/plot/FloodPlot.hpp"
-#include "../utilities/sql/SqlFile.hpp"
+#include "LinePlot.hpp"
+#include "FloodPlot.hpp"
 #include "ResultsViewerData.hpp"
+
+#include "../utilities/sql/SqlFile.hpp"
 
 #include <QMainWindow>
 #include <QTableWidget>

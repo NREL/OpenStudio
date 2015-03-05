@@ -48,9 +48,6 @@
   class QMainWindow;  
   class QDialog;  
   namespace openstudio{
-    class Plot2D;
-    class LinePlot;
-    class FloodPlot;
     class ProgressBar;
     class UpdateManager;
     class PathWatcher;
@@ -75,9 +72,6 @@
 %ignore QThread;
 %ignore QMainWindow;
 %ignore QDialog;
-%ignore openstudio::Plot2D;
-%ignore openstudio::LinePlot;
-%ignore openstudio::FloodPlot;
 %ignore openstudio::ProgressBar;
 %ignore openstudio::UpdateManager;
 %ignore openstudio::PathWatcher;

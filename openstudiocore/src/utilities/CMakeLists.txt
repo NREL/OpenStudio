@@ -131,17 +131,6 @@ set(math_src
 )
 
 set(plot_src
-  plot/AnnotatedTimeline.hpp
-  plot/AnnotatedTimeline.cpp
-  plot/Chart.hpp
-  plot/BarChart.hpp
-  plot/PieChart.hpp
-  plot/FloodPlot.hpp
-  plot/FloodPlot.cpp
-  plot/LinePlot.hpp
-  plot/LinePlot.cpp
-  plot/Plot2D.hpp
-  plot/Plot2D.cpp
   plot/ProgressBar.hpp
   plot/ProgressBar.cpp
 )
@@ -205,7 +194,6 @@ set(economics_src
 )
 
 set(${target_name}_depends
-  zkqwt
   sqlite
   litesql
   litesql-util
@@ -254,9 +242,6 @@ set(data_moc
 )
 
 set(plot_moc
-  plot/Plot2D.hpp
-  plot/FloodPlot.hpp
-  plot/LinePlot.hpp
   plot/ProgressBar.hpp
 )
 
@@ -398,11 +383,6 @@ set(${target_name}_test_src
   math/test/FloatCompare_GTest.cpp
   math/test/Permutation_GTest.cpp
   math/test/Primes_GTest.cpp
-  plot/Test/AnnotatedTimeline_GTest.cpp
-  plot/Test/BarChart_GTest.cpp
-  plot/Test/FloodPlot_GTest.cpp
-  plot/Test/LinePlot_GTest.cpp
-  plot/Test/PieChart_GTest.cpp
   plot/Test/ProgressBar_GTest.cpp
   time/Test/Calendar_GTest.cpp
   time/Test/Date_GTest.cpp
@@ -480,10 +460,6 @@ set(${target_name}_swig_src
   data/TimeSeries.i
   data/Vector.i
   plot/Plot.i
-  plot/AnnotatedTimeline.i
-  plot/FloodPlot.i
-  plot/LinePlot.i
-  plot/Plot2D.i
   plot/ProgressBar.i
   units/Scale.i
   units/ScaleFactory.i

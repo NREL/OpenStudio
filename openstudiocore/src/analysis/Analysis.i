@@ -58,9 +58,6 @@
   class QMainWindow;
   class QNetworkAccessManager;
   namespace openstudio{
-    class Plot2D;
-    class LinePlot;
-    class FloodPlot;
     namespace runmanager{
       class JobStatusWidget;
       namespace detail {
@@ -80,9 +77,6 @@
 %ignore QDomDocument;
 %ignore QMainWindow;
 %ignore QNetworkAccessManager;
-%ignore openstudio::Plot2D;
-%ignore openstudio::LinePlot;
-%ignore openstudio::FloodPlot;
 %ignore openstudio::runmanager::JobStatusWidget;
 %ignore openstudio::runmanager::detail::JobItem;
 

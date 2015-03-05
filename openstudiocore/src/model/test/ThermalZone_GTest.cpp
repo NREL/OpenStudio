@@ -53,6 +53,8 @@
 #include "../ScheduleRuleset_Impl.hpp"
 #include "../ThermostatSetpointDualSetpoint.hpp"
 #include "../ThermostatSetpointDualSetpoint_Impl.hpp"
+#include "../PortList.hpp"
+#include "../PortList_Impl.hpp"
 
 #include "../../utilities/data/Attribute.hpp"
 #include "../../utilities/geometry/Point3d.hpp"
@@ -565,5 +567,24 @@ TEST_F(ModelFixture, ThermalZone_Clone)
   auto heatingSchedule2 = thermostatClone->cast<ThermostatSetpointDualSetpoint>().heatingSetpointTemperatureSchedule();
   ASSERT_TRUE(heatingSchedule2);
   ASSERT_EQ(heatingSchedule,heatingSchedule2.get());
+}
+
+TEST_F(ModelFixture, ThermalZone_Ports)
+{
+  Model m;
+  ThermalZone zone(m);
+
+  auto inletPortList = zone.inletPortList();
+  auto exhaustPortList = zone.exhaustPortList();
+
+  auto inletPortListZone = inletPortList.thermalZone();
+  auto exhaustPortListZone = exhaustPortList.thermalZone();
+
+  EXPECT_EQ(zone.handle(),inletPortListZone.handle());
+  EXPECT_EQ(zone.handle(),exhaustPortListZone.handle());
+
+  zone.remove();
+  EXPECT_TRUE(inletPortList.handle().isNull());
+  EXPECT_TRUE(exhaustPortList.handle().isNull());
 }
 

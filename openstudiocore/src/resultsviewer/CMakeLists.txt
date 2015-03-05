@@ -24,6 +24,10 @@ set(${target_name}_SRC
   TabBarDrag.cpp
   PlotViewProperties.hpp
   PlotViewProperties.cpp
+  LinePlot.hpp
+  LinePlot.cpp  
+  FloodPlot.hpp
+  FloodPlot.cpp   
 )
 
 # ui files
@@ -101,6 +105,7 @@ add_executable(${target_name}
 )
 
 set(depends
+  qwt
   openstudio_utilities
 )
 

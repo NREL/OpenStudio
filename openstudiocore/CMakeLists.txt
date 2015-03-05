@@ -941,7 +941,7 @@ set(all_lib_targets
   openstudio_airflow
   ${QTWINMIGRATE_EXPORT}
   zkexpat
-  zkqwt
+  qwt
   miniziplib
   sqlite
   litesql
