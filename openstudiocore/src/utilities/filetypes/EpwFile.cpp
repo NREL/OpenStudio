@@ -804,13 +804,13 @@ boost::optional<double> EpwDataPoint::dryBulbTemperature() const
   return boost::optional<double>(std::stod(m_dryBulbTemperature));
 }
 
-bool EpwDataPoint::setDryBulbTemperature(double dryBulbTemperature)
+bool EpwDataPoint::setDryBulbTemperature(double value)
 {
-  if(-70 >= dryBulbTemperature || 70 <= dryBulbTemperature) {
+  if(-70 >= value || 70 <= value) {
     m_dryBulbTemperature = "99.9";
     return false;
   }
-  m_dryBulbTemperature = std::to_string(dryBulbTemperature);
+  m_dryBulbTemperature = std::to_string(value);
   return true;
 }
 
@@ -834,13 +834,13 @@ boost::optional<double> EpwDataPoint::dewPointTemperature() const
   return boost::optional<double>(std::stod(m_dewPointTemperature));
 }
 
-bool EpwDataPoint::setDewPointTemperature(double dewPointTemperature)
+bool EpwDataPoint::setDewPointTemperature(double value)
 {
-  if(-70 >= dewPointTemperature || 70 <= dewPointTemperature) {
+  if(-70 >= value || 70 <= value) {
     m_dewPointTemperature = "99.9";
     return false;
   }
-  m_dewPointTemperature = std::to_string(dewPointTemperature);
+  m_dewPointTemperature = std::to_string(value);
   return true;
 }
 
@@ -864,13 +864,13 @@ boost::optional<double> EpwDataPoint::relativeHumidity() const
   return boost::optional<double>(std::stod(m_relativeHumidity));
 }
 
-bool EpwDataPoint::setRelativeHumidity(double relativeHumidity)
+bool EpwDataPoint::setRelativeHumidity(double value)
 {
-  if(0 > relativeHumidity || 110 < relativeHumidity) {
+  if(0 > value || 110 < value) {
     m_relativeHumidity = "999";
     return false;
   }
-  m_relativeHumidity = std::to_string(relativeHumidity);
+  m_relativeHumidity = std::to_string(value);
   return true;
 }
 
@@ -894,13 +894,13 @@ boost::optional<double> EpwDataPoint::atmosphericStationPressure() const
   return boost::optional<double>(std::stod(m_atmosphericStationPressure));
 }
 
-bool EpwDataPoint::setAtmosphericStationPressure(double atmosphericStationPressure)
+bool EpwDataPoint::setAtmosphericStationPressure(double value)
 {
-  if(31000 >= atmosphericStationPressure || 120000 <= atmosphericStationPressure) {
+  if(31000 >= value || 120000 <= value) {
     m_atmosphericStationPressure = "999999";
     return false;
   }
-  m_atmosphericStationPressure = std::to_string(atmosphericStationPressure);
+  m_atmosphericStationPressure = std::to_string(value);
   return true;
 }
 
@@ -924,13 +924,13 @@ boost::optional<double> EpwDataPoint::extraterrestrialHorizontalRadiation() cons
   return boost::optional<double>(std::stod(m_extraterrestrialHorizontalRadiation));
 }
 
-bool EpwDataPoint::setExtraterrestrialHorizontalRadiation(double extraterrestrialHorizontalRadiation)
+bool EpwDataPoint::setExtraterrestrialHorizontalRadiation(double value)
 {
-  if(0 > extraterrestrialHorizontalRadiation) {
+  if(0 > value || value == 9999) {
     m_extraterrestrialHorizontalRadiation = "9999";
     return false;
   }
-  m_extraterrestrialHorizontalRadiation = std::to_string(extraterrestrialHorizontalRadiation);
+  m_extraterrestrialHorizontalRadiation = std::to_string(value);
   return true;
 }
 
@@ -938,7 +938,7 @@ bool EpwDataPoint::setExtraterrestrialHorizontalRadiation(const std::string &ext
 {
   bool ok;
   double value = stringToDouble(extraterrestrialHorizontalRadiation, &ok);
-  if(!ok || 0 > value) {
+  if(!ok || 0 > value || value == 9999) {
     m_extraterrestrialHorizontalRadiation = "9999";
     return false;
   }
@@ -954,13 +954,13 @@ boost::optional<double> EpwDataPoint::extraterrestrialDirectNormalRadiation() co
   return boost::optional<double>(std::stod(m_extraterrestrialDirectNormalRadiation));
 }
 
-bool EpwDataPoint::setExtraterrestrialDirectNormalRadiation(double extraterrestrialDirectNormalRadiation)
+bool EpwDataPoint::setExtraterrestrialDirectNormalRadiation(double value)
 {
-  if(0 > extraterrestrialDirectNormalRadiation) {
+  if(0 > value || value == 9999) {
     m_extraterrestrialDirectNormalRadiation = "9999";
     return false;
   }
-  m_extraterrestrialDirectNormalRadiation = std::to_string(extraterrestrialDirectNormalRadiation);
+  m_extraterrestrialDirectNormalRadiation = std::to_string(value);
   return true;
 }
 
@@ -968,7 +968,7 @@ bool EpwDataPoint::setExtraterrestrialDirectNormalRadiation(const std::string &e
 {
   bool ok;
   double value = stringToDouble(extraterrestrialDirectNormalRadiation, &ok);
-  if(!ok || 0 > value) {
+  if(!ok || 0 > value || value == 9999) {
     m_extraterrestrialDirectNormalRadiation = "9999";
     return false;
   }
@@ -984,13 +984,13 @@ boost::optional<double> EpwDataPoint::horizontalInfraredRadiationIntensity() con
   return boost::optional<double>(std::stod(m_horizontalInfraredRadiationIntensity));
 }
 
-bool EpwDataPoint::setHorizontalInfraredRadiationIntensity(double horizontalInfraredRadiationIntensity)
+bool EpwDataPoint::setHorizontalInfraredRadiationIntensity(double value)
 {
-  if(0 > horizontalInfraredRadiationIntensity) {
+  if(0 > value || value == 9999) {
     m_horizontalInfraredRadiationIntensity = "9999";
     return false;
   }
-  m_horizontalInfraredRadiationIntensity = std::to_string(horizontalInfraredRadiationIntensity);
+  m_horizontalInfraredRadiationIntensity = std::to_string(value);
   return true;
 }
 
@@ -998,7 +998,7 @@ bool EpwDataPoint::setHorizontalInfraredRadiationIntensity(const std::string &ho
 {
   bool ok;
   double value = stringToDouble(horizontalInfraredRadiationIntensity, &ok);
-  if(!ok || 0 > value) {
+  if(!ok || 0 > value || value == 9999) {
     m_horizontalInfraredRadiationIntensity = "9999";
     return false;
   }
@@ -1014,22 +1014,21 @@ boost::optional<double> EpwDataPoint::globalHorizontalRadiation() const
   return boost::optional<double>(std::stod(m_globalHorizontalRadiation));
 }
 
-bool EpwDataPoint::setGlobalHorizontalRadiation(double globalHorizontalRadiation)
+bool EpwDataPoint::setGlobalHorizontalRadiation(double value)
 {
-  if(0 > globalHorizontalRadiation)
-  {
+  if(0 > value || value == 9999) {
     m_globalHorizontalRadiation = "9999";
     return false;
   }
-  m_globalHorizontalRadiation = std::to_string(globalHorizontalRadiation);
+  m_globalHorizontalRadiation = std::to_string(value);
   return true;
 }
 
 bool EpwDataPoint::setGlobalHorizontalRadiation(const std::string &globalHorizontalRadiation)
 {
   bool ok;
-  double value = QString().fromStdString(globalHorizontalRadiation).toDouble(&ok);
-  if(!ok) {
+  double value = stringToDouble(globalHorizontalRadiation, &ok);
+  if(!ok || 0 > value || value == 9999) {
     m_globalHorizontalRadiation = "9999";
     return false;
   }
@@ -1044,13 +1043,13 @@ boost::optional<double> EpwDataPoint::directNormalRadiation() const
   return boost::optional<double>(std::stod(m_directNormalRadiation));
 }
 
-bool EpwDataPoint::setDirectNormalRadiation(double directNormalRadiation)
+bool EpwDataPoint::setDirectNormalRadiation(double value)
 {
-  if(0 > directNormalRadiation) {
+  if(0 > value || value == 9999) {
     m_directNormalRadiation = "9999";
     return false;
   }
-  m_directNormalRadiation = std::to_string(directNormalRadiation);
+  m_directNormalRadiation = std::to_string(value);
   return true;
 }
 
@@ -1058,7 +1057,7 @@ bool EpwDataPoint::setDirectNormalRadiation(const std::string &directNormalRadia
 {
   bool ok;
   double value = stringToDouble(directNormalRadiation, &ok);
-  if(!ok || 0 > value) {
+  if(!ok || 0 > value || value == 9999) {
     m_directNormalRadiation = "9999";
     return false;
   }
@@ -1074,13 +1073,13 @@ boost::optional<double> EpwDataPoint::diffuseHorizontalRadiation() const
   return boost::optional<double>(std::stod(m_diffuseHorizontalRadiation));
 }
 
-bool EpwDataPoint::setDiffuseHorizontalRadiation(double diffuseHorizontalRadiation)
+bool EpwDataPoint::setDiffuseHorizontalRadiation(double value)
 {
-  if(0 > diffuseHorizontalRadiation) {
+  if(0 > value || value == 9999) {
     m_diffuseHorizontalRadiation = "9999";
     return false;
   }
-  m_diffuseHorizontalRadiation = std::to_string(diffuseHorizontalRadiation);
+  m_diffuseHorizontalRadiation = std::to_string(value);
   return true;
 }
 
@@ -1088,7 +1087,7 @@ bool EpwDataPoint::setDiffuseHorizontalRadiation(const std::string &diffuseHoriz
 {
   bool ok;
   double value = stringToDouble(diffuseHorizontalRadiation, &ok);
-  if(!ok) {
+  if(!ok || 0 > value || value == 9999) {
     m_diffuseHorizontalRadiation = "9999";
     return false;
   }
@@ -1104,13 +1103,13 @@ boost::optional<double> EpwDataPoint::globalHorizontalIlluminance() const
   return boost::optional<double>(std::stod(m_globalHorizontalIlluminance));
 }
 
-bool EpwDataPoint::setGlobalHorizontalIlluminance(double globalHorizontalIlluminance)
+bool EpwDataPoint::setGlobalHorizontalIlluminance(double value)
 {
-  if(0 > globalHorizontalIlluminance || 999900 < globalHorizontalIlluminance) {
+  if(0 > value || 999900 < value) {
     m_globalHorizontalIlluminance = "999999";
     return false;
   }
-  m_globalHorizontalIlluminance = std::to_string(globalHorizontalIlluminance);
+  m_globalHorizontalIlluminance = std::to_string(value);
   return true;
 }
 
@@ -1134,13 +1133,13 @@ boost::optional<double> EpwDataPoint::directNormalIlluminance() const
   return boost::optional<double>(std::stod(m_directNormalIlluminance));
 }
 
-bool EpwDataPoint::setDirectNormalIlluminance(double directNormalIlluminance)
+bool EpwDataPoint::setDirectNormalIlluminance(double value)
 {
-  if(0 > directNormalIlluminance || 999900 < directNormalIlluminance) {
+  if(0 > value || 999900 < value) {
     m_directNormalIlluminance = "999999";
     return false;
   }
-  m_directNormalIlluminance = std::to_string(directNormalIlluminance);
+  m_directNormalIlluminance = std::to_string(value);
   return true;
 }
 
@@ -1164,13 +1163,13 @@ boost::optional<double> EpwDataPoint::diffuseHorizontalIlluminance() const
   return boost::optional<double>(std::stod(m_diffuseHorizontalIlluminance));
 }
 
-bool EpwDataPoint::setDiffuseHorizontalIlluminance(double diffuseHorizontalIlluminance)
+bool EpwDataPoint::setDiffuseHorizontalIlluminance(double value)
 {
-  if(0 > diffuseHorizontalIlluminance || 999900 < diffuseHorizontalIlluminance) {
+  if(0 > value || 999900 < value) {
     m_diffuseHorizontalIlluminance = "999999";
     return false;
   }
-  m_diffuseHorizontalIlluminance = std::to_string(diffuseHorizontalIlluminance);
+  m_diffuseHorizontalIlluminance = std::to_string(value);
   return true;
 }
 
@@ -1194,13 +1193,13 @@ boost::optional<double> EpwDataPoint::zenithLuminance() const
   return boost::optional<double>(std::stod(m_zenithLuminance));
 }
 
-bool EpwDataPoint::setZenithLuminance(double zenithLuminance)
+bool EpwDataPoint::setZenithLuminance(double value)
 {
-  if(0 > zenithLuminance || 9999 < zenithLuminance) {
+  if(0 > value || 9999 <= value) {
     m_zenithLuminance = "9999";
     return false;
   }
-  m_zenithLuminance = std::to_string(zenithLuminance);
+  m_zenithLuminance = std::to_string(value);
   return true;
 }
 
@@ -1208,7 +1207,7 @@ bool EpwDataPoint::setZenithLuminance(const std::string &zenithLuminance)
 {
   bool ok;
   double value = stringToDouble(zenithLuminance, &ok);
-  if(!ok || 0 > value || 9999 < value) {
+  if(!ok || 0 > value || 9999 <= value) {
     m_zenithLuminance = "9999";
     return false;
   }
@@ -1224,13 +1223,13 @@ boost::optional<double> EpwDataPoint::windDirection() const
   return boost::optional<double>(std::stod(m_windDirection));
 }
 
-bool EpwDataPoint::setWindDirection(double windDirection)
+bool EpwDataPoint::setWindDirection(double value)
 {
-  if(0 > windDirection || 360 < windDirection) {
+  if(0 > value || 360 < value) {
     m_windDirection = "999";
     return false;
   }
-  m_windDirection = std::to_string(windDirection);
+  m_windDirection = std::to_string(value);
   return true;
 }
 
@@ -1254,13 +1253,13 @@ boost::optional<double> EpwDataPoint::windSpeed() const
   return boost::optional<double>(std::stod(m_windSpeed));
 }
 
-bool EpwDataPoint::setWindSpeed(double windSpeed)
+bool EpwDataPoint::setWindSpeed(double value)
 {
-  if(0 > windSpeed || 40 < windSpeed) {
+  if(0 > value || 40 < value) {
     m_windSpeed = "999";
     return false;
   }
-  m_windSpeed = std::to_string(windSpeed);
+  m_windSpeed = std::to_string(value);
   return true;
 }
 
@@ -1280,13 +1279,13 @@ int EpwDataPoint::totalSkyCover() const
   return m_totalSkyCover;
 }
 
-bool EpwDataPoint::setTotalSkyCover(int totalSkyCover)
+bool EpwDataPoint::setTotalSkyCover(int value)
 {
-  if(0 > totalSkyCover || 10 < totalSkyCover) {
+  if(0 > value || 10 < value) {
     m_totalSkyCover = 99;
     return false;
   }
-  m_totalSkyCover = totalSkyCover;
+  m_totalSkyCover = value;
   return true;
 }
 
@@ -1306,13 +1305,13 @@ int EpwDataPoint::opaqueSkyCover() const
   return m_opaqueSkyCover;
 }
 
-bool EpwDataPoint::setOpaqueSkyCover(int opaqueSkyCover)
+bool EpwDataPoint::setOpaqueSkyCover(int value)
 {
-  if(0 > opaqueSkyCover || 10 < opaqueSkyCover) {
+  if(0 > value || 10 < value) {
     m_opaqueSkyCover = 99;
     return false;
   }
-  m_opaqueSkyCover = opaqueSkyCover;
+  m_opaqueSkyCover = value;
   return true;
 }
 
@@ -1335,16 +1334,21 @@ boost::optional<double> EpwDataPoint::visibility() const
   return boost::optional<double>(std::stod(m_visibility));
 }
 
-void EpwDataPoint::setVisibility(double visibility)
+bool EpwDataPoint::setVisibility(double value)
 {
-  m_visibility = std::to_string(visibility);
+  if(value == 9999) {
+    m_visibility = "9999";
+    return false;
+  }
+  m_visibility = std::to_string(value);
+  return true;
 }
 
 bool EpwDataPoint::setVisibility(const std::string &visibility)
 {
   bool ok;
-  stringToDouble(visibility, &ok);
-  if(!ok) {
+  double value = stringToDouble(visibility, &ok);
+  if(!ok || value == 9999) {
     m_visibility = "9999";
     return false;
   }
@@ -1368,8 +1372,8 @@ void EpwDataPoint::setCeilingHeight(double ceilingHeight)
 bool EpwDataPoint::setCeilingHeight(const std::string &ceilingHeight)
 {
   bool ok;
-  stringToDouble(ceilingHeight, &ok);
-  if(!ok) {
+  double value = stringToDouble(ceilingHeight, &ok);
+  if(!ok || value == 99999) {
     m_ceilingHeight = "99999";
     return false;
   }
@@ -1411,7 +1415,7 @@ void EpwDataPoint::setPresentWeatherCodes(int presentWeatherCodes)
 bool EpwDataPoint::setPresentWeatherCodes(const std::string &presentWeatherCodes)
 {
   bool ok;
-  int value = QString().fromStdString(presentWeatherCodes).toInt(&ok);
+  int value = stringToInteger(presentWeatherCodes, &ok);
   if(!ok) {
     return false;
   }
@@ -1435,8 +1439,8 @@ void EpwDataPoint::setPrecipitableWater(double precipitableWater)
 bool EpwDataPoint::setPrecipitableWater(const std::string &precipitableWater)
 {
   bool ok;
-  stringToDouble(precipitableWater, &ok);
-  if(!ok) {
+  double value = stringToDouble(precipitableWater, &ok);
+  if(!ok || value == 999) {
     m_precipitableWater = "999";
     return false;
   }
@@ -1460,8 +1464,8 @@ void EpwDataPoint::setAerosolOpticalDepth(double aerosolOpticalDepth)
 bool EpwDataPoint::setAerosolOpticalDepth(const std::string &aerosolOpticalDepth)
 {
   bool ok;
-  stringToDouble(aerosolOpticalDepth, &ok);
-  if(!ok) {
+  double value = stringToDouble(aerosolOpticalDepth, &ok);
+  if(!ok || value == 0.999) {
     m_aerosolOpticalDepth = ".999";
     return false;
   }
@@ -1485,8 +1489,8 @@ void EpwDataPoint::setSnowDepth(double snowDepth)
 bool EpwDataPoint::setSnowDepth(const std::string &snowDepth)
 {
   bool ok;
-  stringToDouble(snowDepth, &ok);
-  if(!ok) {
+  double value = stringToDouble(snowDepth, &ok);
+  if(!ok || value == 999) {
     m_snowDepth = "999";
     return false;
   }
@@ -1510,8 +1514,8 @@ void EpwDataPoint::setDaysSinceLastSnowfall(double daysSinceLastSnowfall)
 bool EpwDataPoint::setDaysSinceLastSnowfall(const std::string &daysSinceLastSnowfall)
 {
   bool ok;
-  stringToDouble(daysSinceLastSnowfall, &ok);
-  if(!ok) {
+  double value = stringToDouble(daysSinceLastSnowfall, &ok);
+  if(!ok || value == 99) {
     m_daysSinceLastSnowfall = "99";
     return false;
   }
@@ -1535,8 +1539,8 @@ void EpwDataPoint::setAlbedo(double albedo)
 bool EpwDataPoint::setAlbedo(const std::string &albedo)
 {
   bool ok;
-  stringToDouble(albedo, &ok);
-  if(!ok) {
+  double value = stringToDouble(albedo, &ok);
+  if(!ok || value == 999) {
     m_albedo = "999";
     return false;
   }
@@ -1560,8 +1564,8 @@ void EpwDataPoint::setLiquidPrecipitationDepth(double liquidPrecipitationDepth)
 bool EpwDataPoint::setLiquidPrecipitationDepth(const std::string &liquidPrecipitationDepth)
 {
   bool ok;
-  stringToDouble(liquidPrecipitationDepth, &ok);
-  if(!ok) {
+  double value = stringToDouble(liquidPrecipitationDepth, &ok);
+  if(!ok || value == 999) {
     m_liquidPrecipitationDepth = "999";
     return false;
   }
@@ -1585,8 +1589,8 @@ void EpwDataPoint::setLiquidPrecipitationQuantity(double liquidPrecipitationQuan
 bool EpwDataPoint::setLiquidPrecipitationQuantity(const std::string &liquidPrecipitationQuantity)
 {
   bool ok;
-  stringToDouble(liquidPrecipitationQuantity, &ok);
-  if(!ok) {
+  double value = stringToDouble(liquidPrecipitationQuantity, &ok);
+  if(!ok || value == 99) {
     m_liquidPrecipitationQuantity = "99";
     return false;
   }

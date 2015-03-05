@@ -192,7 +192,7 @@ private:
   bool setTotalSkyCover(const std::string &totalSkyCover);
   bool setOpaqueSkyCover(int opaqueSkyCover);
   bool setOpaqueSkyCover(const std::string &opaqueSkyCover);
-  void setVisibility(double visibility);
+  bool setVisibility(double visibility);
   bool setVisibility(const std::string &visibility);
   void setCeilingHeight(double ceilingHeight);
   bool setCeilingHeight(const std::string &ceilingHeight);
