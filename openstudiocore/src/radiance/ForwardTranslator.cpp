@@ -99,7 +99,7 @@ namespace radiance {
   std::string formatString(double t_d, unsigned t_prec)
   {
     std::stringstream ss;
-    ss << std::setprecision(t_prec) << std::showpoint << std::fixed << t_d;
+    ss << std::setprecision(t_prec) << std::noshowpoint << std::fixed << t_d;
     std::string s = ss.str();
 
     /*
