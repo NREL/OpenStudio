@@ -20,94 +20,33 @@
 #include "ThermalZonesTabController.hpp"
 
 #include "OSItem.hpp"
-#include "OSItemSelectorButtons.hpp"
 #include "ThermalZonesController.hpp"
 #include "ThermalZonesTabView.hpp"
 #include "ThermalZonesView.hpp"
-#include "ThermalZonesGridView.hpp"
-#include "../model/ThermalZone.hpp"
 
 namespace openstudio {
 
 ThermalZonesTabController::ThermalZonesTabController(bool isIP, const model::Model& model)
-  : MainTabController(new ThermalZonesTabView()),
-    m_model(model)
+  : MainTabController(new ThermalZonesTabView())
 {
-  m_thermalZonesView = new ThermalZonesView(isIP,model);
-  
-  bool bingo;
-  bingo = connect(m_thermalZonesView->selectorButtons,&OSItemSelectorButtons::addClicked,this,&ThermalZonesTabController::addObject);
-  OS_ASSERT(bingo);
+  m_thermalZonesController = std::shared_ptr<ThermalZonesController>(new ThermalZonesController(isIP,model));
 
-  bingo = connect(m_thermalZonesView->selectorButtons,&OSItemSelectorButtons::removeClicked,this,&ThermalZonesTabController::removeSelectedObjects);
-  OS_ASSERT(bingo);
+  this->mainContentWidget()->addTabWidget(m_thermalZonesController->subTabView());
 
-  mainContentWidget()->addTabWidget(m_thermalZonesView);
+  bool isConnected = false;
+
+  isConnected = QObject::connect(m_thermalZonesController->subTabView()->inspectorView(), SIGNAL(gridRowSelected(OSItem*)), m_thermalZonesController.get(), SLOT(selectItem(OSItem*)));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(this, SIGNAL(itemRemoveClicked(OSItem *)), m_thermalZonesController.get(), SLOT(removeItem(OSItem *)));
+  OS_ASSERT(isConnected);
+
+  connect(m_thermalZonesController.get(), &ThermalZonesController::modelObjectSelected, this, &ThermalZonesTabController::modelObjectSelected);
+
+  connect(m_thermalZonesController.get(), &ThermalZonesController::dropZoneItemSelected, this, &ThermalZonesTabController::dropZoneItemSelected);
+
+  connect(this, &ThermalZonesTabController::toggleUnitsClicked, m_thermalZonesController.get(), &ThermalZonesController::toggleUnitsClicked);
 }
-
-//void ThermalZonesController::onSelectItem(OSItem *item)
-//{
-//  subTabView()->inspectorView()->selectItem(item);
-//  subTabView()->itemSelectorButtons()->enableCopyButton();
-//  subTabView()->itemSelectorButtons()->enableRemoveButton();
-//  subTabView()->itemSelectorButtons()->enablePurgeButton();
-//}
-
-void ThermalZonesTabController::addObject()
-{
-  openstudio::model::ThermalZone tz(m_model);
-}
-
-//void ThermalZonesController::onCopyObject(const openstudio::model::ModelObject& modelObject)
-//{
-//  //DLM: ThermalZone::clone is not implemented yet
-//  //modelObject.clone(this->model());
-//}
-
-void ThermalZonesTabController::removeSelectedObjects()
-{
-  for( auto & selectedObject : m_thermalZonesView->gridView->selectedObjects() ) {
-    selectedObject.remove();
-  }
-}
-
-//void ThermalZonesController::onReplaceObject(openstudio::model::ModelObject modelObject, const OSItemId& replacementItemId)
-//{
-//  // not yet implemented
-//}
-//
-//void ThermalZonesController::onPurgeObjects(const openstudio::IddObjectType& iddObjectType)
-//{
-//  //std::vector<Handle> toRemove;
-//  for (model::ThermalZone thermalZone : this->model().getConcreteModelObjects<model::ThermalZone>()){
-//    if (thermalZone.spaces().empty() && thermalZone.isRemovable()){
-//      //toRemove.push_back(thermalZone.handle());
-//
-//      // DLM: just remove it
-//      thermalZone.remove();
-//    }
-//  }
-//  
-//  // DLM: this method doesn't actually call ThermalZone::remove which is important to preserve model validity
-//  //this->model().removeObjects(toRemove);
-//}
-//
-//void ThermalZonesController::onDrop(const OSItemId& itemId)
-//{
-//  boost::optional<model::ModelObject> modelObject = this->getModelObject(itemId);
-//  if(modelObject){
-//    if(modelObject->optionalCast<model::ThermalZone>()){
-//      if (this->fromComponentLibrary(itemId)){
-//        //DLM: ThermalZone::clone is not implemented yet
-//        //modelObject = modelObject->clone(this->model());
-//      }
-//    }
-//  }
-//}
-//
-//void ThermalZonesController::onInspectItem(OSItem* item)
-//{
-//}
 
 } // openstudio
 

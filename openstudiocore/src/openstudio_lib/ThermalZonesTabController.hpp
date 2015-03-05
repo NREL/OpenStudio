@@ -26,40 +26,24 @@
 namespace openstudio {
 
 class ThermalZonesController;
-class ThermalZonesView;
 
 class ThermalZonesTabController : public MainTabController
 {
   Q_OBJECT
 
-public:
+  public:
 
   ThermalZonesTabController(bool isIP, const model::Model& model);
 
   virtual ~ThermalZonesTabController() {}
 
-signals:
+  signals:
 
   void toggleUnitsClicked(bool);
 
-private slots:
-
-  //void onSelectItem(OSItem *item);
-  void addObject();
-  //void onCopyObject(const openstudio::model::ModelObject& modelObject);
-  void removeSelectedObjects();
-  //void onReplaceObject(openstudio::model::ModelObject modelObject, const OSItemId& replacementItemId);
-  //void onPurgeObjects(const openstudio::IddObjectType& iddObjectType);
-  //void onDrop(const OSItemId& itemId);
-  //void onInspectItem(OSItem* item);
-
-private:
-
-  ThermalZonesView * m_thermalZonesView;
+  private:
 
   std::shared_ptr<ThermalZonesController> m_thermalZonesController;
-
-  model::Model m_model;
 };
 
 } // openstudio

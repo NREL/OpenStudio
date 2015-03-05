@@ -63,13 +63,15 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
 
   // drop zone
   
-  m_dropZoneLayout = new QHBoxLayout();
+  QHBoxLayout * dropZoneLayout = new QHBoxLayout();
+  dropZoneLayout->setContentsMargins(10,10,10,10);
+  
   m_dropZoneController = new AlwaysEmptyDropZoneVectorController();
   m_dropZone = new OSDropZone(m_dropZoneController);
   m_dropZone->setMaxItems(1);
-  m_dropZoneLayout->addWidget(m_dropZone);
-  m_vLayout->addLayout(m_dropZoneLayout);
-  m_dropZoneLayout->setContentsMargins(10,10,10,10);
+  dropZoneLayout->addWidget(m_dropZone);
+
+  m_vLayout->addLayout(dropZoneLayout);
 
   connect(m_dropZone, &OSDropZone::itemDropped, this, &OSItemSelectorButtons::itemDropped);
     
@@ -136,12 +138,10 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
 void OSItemSelectorButtons::showDropZone()
 {
   m_dropZone->show();
-  m_dropZoneLayout->setContentsMargins(10,10,10,10);
 }
 void OSItemSelectorButtons::hideDropZone()
 {
   m_dropZone->hide();
-  m_dropZoneLayout->setContentsMargins(0,0,0,0);
 }
 void OSItemSelectorButtons::enableDropZone()
 {

@@ -98,11 +98,11 @@ FacilityInspectorView::FacilityInspectorView(bool isIP,
   index = this->stackedWidget()->addWidget(buildingStoryInspectorView);
   m_inspectorIndexMap[IddObjectType::OS_BuildingStory] = index;
 
-  //ThermalZoneView* thermalZoneView = new ThermalZoneView(isIP,model, parent);
-  //connect(this, &FacilityInspectorView::toggleUnitsClicked, thermalZoneView, &ThermalZoneView::toggleUnitsClicked);
-  //connect(thermalZoneView, &ThermalZoneView::dropZoneItemClicked, this, &FacilityInspectorView::dropZoneItemClicked);
-  //index = this->stackedWidget()->addWidget(thermalZoneView);
-  //m_inspectorIndexMap[IddObjectType::OS_ThermalZone] = index;
+  ThermalZoneView* thermalZoneView = new ThermalZoneView(isIP,model, parent);
+  connect(this, &FacilityInspectorView::toggleUnitsClicked, thermalZoneView, &ThermalZoneView::toggleUnitsClicked);
+  connect(thermalZoneView, &ThermalZoneView::dropZoneItemClicked, this, &FacilityInspectorView::dropZoneItemClicked);
+  index = this->stackedWidget()->addWidget(thermalZoneView);
+  m_inspectorIndexMap[IddObjectType::OS_ThermalZone] = index;
 
   SpaceTypeInspectorView* spaceTypeInspectorView = new SpaceTypeInspectorView(isIP, model, parent);
   connect(this, &FacilityInspectorView::toggleUnitsClicked, spaceTypeInspectorView, &SpaceTypeInspectorView::toggleUnitsClicked);
