@@ -206,6 +206,7 @@ boost::optional<EpwDataPoint> EpwDataPoint::fromEpwStrings(const std::vector<std
 std::vector<std::string> EpwDataPoint::toEpwStrings() const
 {
   std::vector<std::string> list;
+  list.reserve(35);
   list.push_back(std::to_string(m_year));
   list.push_back(std::to_string(m_month));
   list.push_back(std::to_string(m_day));
