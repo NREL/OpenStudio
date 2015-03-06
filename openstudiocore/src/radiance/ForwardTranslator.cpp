@@ -99,7 +99,7 @@ namespace radiance {
   std::string formatString(double t_d, unsigned t_prec)
   {
     std::stringstream ss;
-    ss << std::setprecision(t_prec) << std::showpoint << std::fixed << t_d;
+    ss << std::setprecision(t_prec) << std::noshowpoint << std::fixed << t_d;
     std::string s = ss.str();
 
     /*
@@ -131,6 +131,7 @@ namespace radiance {
     return boost::lexical_cast<std::string>(t);
   }
 
+
   // basic constructor
   ForwardTranslator::ForwardTranslator()
     : m_windowGroupId(1) // m_windowGroupId is reserved for uncontrolled
@@ -143,6 +144,8 @@ namespace radiance {
   std::vector<openstudio::path> ForwardTranslator::translateModel(const openstudio::path& outPath, const openstudio::model::Model& model)
   {
     m_model = model.clone(true).cast<openstudio::model::Model>();
+    
+    m_model.purgeUnusedResourceObjects();
 
     m_logSink.setThreadId(QThread::currentThread());
 
@@ -273,8 +276,10 @@ namespace radiance {
       // get Radiance sim settings
       openstudio::model::RadianceParameters radianceParameters = m_model.getUniqueModelObject<openstudio::model::RadianceParameters>();
       
-      // write daylightsim options to files
-      //
+      // write Radiance options to file(s)
+
+      // 2- or 3-phase?
+      
       std::vector<openstudio::model::ShadingControl> shadingControls = model.getModelObjects<openstudio::model::ShadingControl>();
       openstudio::path daylightsimoptpath = radDir / openstudio::toPath("options/daylightsim.opt");
       OFSTREAM daylightsimopt(daylightsimoptpath);
@@ -295,9 +300,9 @@ namespace radiance {
         LOG(Error, "Cannot open file '" << toString(daylightsimoptpath) << "' for writing");
       }
 
-      // write Radiance options to file(s)
 
       // view matrix options
+      
       openstudio::path vmxoptpath = radDir / openstudio::toPath("options/vmx.opt");
       OFSTREAM vmxopt(vmxoptpath);
       if (vmxopt.is_open()){
@@ -315,7 +320,9 @@ namespace radiance {
         LOG(Error, "Cannot open file '" << toString(vmxoptpath) << "' for writing");
       }
 
+
       // daylight matrix options
+      
       openstudio::path dmxoptpath = radDir / openstudio::toPath("options/dmx.opt");
       OFSTREAM dmxopt(dmxoptpath);
       if (dmxopt.is_open()){
@@ -1288,13 +1295,21 @@ namespace radiance {
                 outFile.close();
               }
 
-              // store window group normal (may not need anymore with rfluxmtx)
-              // hard coded shade algorithm: on if high solar (2), setpoint 2Klx (2000)
-              m_radDCmats.insert(windowGroup_name + "," + \
-                formatString((control.outwardNormal->x() * -1), 2) + " " + \
-                formatString((control.outwardNormal->y() * -1), 2) + " " + \
-                formatString((control.outwardNormal->z() * -1), 2) + ",2,2000,cl_Tn" + \
-                formatString(tVis, 2) + ".xml,cl_Tn" + formatString(tVis, 2) + "_blinds.xml\n");
+              // store window group entry for mapping.rad
+              if (windowGroup_name == "WG0"){
+              	// simple placeholder for WG0
+								m_radDCmats.insert(windowGroup_name + ",n/a,n/a,n/a,n/a\n");							
+							}else{
+								// store window group normal (may not need anymore with rfluxmtx)
+								// hard coded shade algorithm: on if high solar (2), setpoint 2Klx (2000)
+								// hard coded shade type: blinds
+								m_radDCmats.insert(windowGroup_name + "," + \
+									formatString((control.outwardNormal->x() * -1), 2) + " " + \
+									formatString((control.outwardNormal->y() * -1), 2) + " " + \
+									formatString((control.outwardNormal->z() * -1), 2) + ",2,2000,cl_Tn" + \
+									formatString(tVis, 2) + ".xml,cl_Tn" + \
+									formatString(tVis, 2) + "_blinds.xml\n");
+								}
 
             } else if (rMaterial == "trans"){
 
@@ -1332,11 +1347,18 @@ namespace radiance {
                 outFile.close();
               }
 
-              // store window group normal (may not need anymore with rfluxmtx)
-              m_radDCmats.insert(windowGroup_name + "," + \
-                formatString((control.outwardNormal->x() * -1), 2) + " " + \
-                formatString((control.outwardNormal->y() * -1), 2) + " " + \
-                formatString((control.outwardNormal->z() * -1), 2) + ",df_Tn" + formatString(tVis, 2) + ".xml\n");
+              // store window group entry for mapping.rad
+              
+              // simple placeholder for WG0
+              if (windowGroup_name == "WG0"){
+								m_radDCmats.insert(windowGroup_name + ",n/a\n");							
+							}else{
+							// include normals for controlled WGs
+								m_radDCmats.insert(windowGroup_name + "," + \
+									formatString((control.outwardNormal->x() * -1), 2) + " " + \
+									formatString((control.outwardNormal->y() * -1), 2) + " " + \
+									formatString((control.outwardNormal->z() * -1), 2) + ",df_Tn" + formatString(tVis, 2) + ".xml\n");							
+							}
 
             }
 
@@ -1553,13 +1575,13 @@ namespace radiance {
         for (const auto & interiorPartitionSurface : interiorPartitionSurfaces)
         {
 
-          // get nice name
+					// get nice name
 
           std::string interiorPartitionSurface_name = cleanName(interiorPartitionSurface.name().get());
 
-          // check for construction
-
-          boost::optional<model::ConstructionBase> construction = interiorPartitionSurface.construction();
+					// check for construction
+					
+	        boost::optional<model::ConstructionBase> construction = interiorPartitionSurface.construction();
           if (!construction){
             LOG(Warn, "InteriorPartitionSurface " << interiorPartitionSurface.name().get() << " is not associated with a Construction, it will not be translated.");
             continue;

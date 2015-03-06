@@ -95,3 +95,16 @@ TEST_F(ModelFixture,ShadingControl_Material) {
   ASSERT_TRUE(subSurface.shadingControl()->shadingMaterial());
   EXPECT_EQ(blind.handle(), subSurface.shadingControl()->shadingMaterial()->handle());
 }
+
+TEST_F(ModelFixture, ShadingControl_PurgeUnusedModelObjects) {
+  Model model;
+
+  Blind blind(model);
+  ShadingControl shadingControl(blind);
+
+  EXPECT_EQ(2u, model.objects().size());
+
+  model.purgeUnusedResourceObjects();
+
+  EXPECT_EQ(0, model.objects().size());
+}
