@@ -267,10 +267,13 @@ void OSLineEdit2::focusOutEvent(QFocusEvent * e)
 
     emit inFocus(false, false);
 
+#ifdef openstudio_lib_EXPORTS
     auto mouseOverInspectorView = OSAppBase::instance()->currentDocument()->mainRightColumnController()->inspectorController()->inspectorView()->mouseOverInspectorView();
     if (!mouseOverInspectorView) {
       emit itemClicked(nullptr);
     }
+#endif
+
   }
 
   QLineEdit::focusOutEvent(e);
