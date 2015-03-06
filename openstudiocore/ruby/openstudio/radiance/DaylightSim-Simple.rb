@@ -233,7 +233,7 @@ end
 # http://radiance-online.org/pipermail/radiance-dev/2014-November/001442.html
 if /darwin/.match(RUBY_PLATFORM)
 	ver = `defaults read loginwindow SystemVersionStampAsString`
-	if ver.split(".")[1] == 10
+	if ver.split(".")[1] == '10'
 		puts "Radiance multiprocessing disabled for MacOS 10.10.x, sorry."
 		simCores = 1
 	end
