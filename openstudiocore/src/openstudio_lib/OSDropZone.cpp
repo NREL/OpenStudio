@@ -20,11 +20,14 @@
 #include "OSDropZone.hpp"
 
 #include "IconLibrary.hpp"
+#include "InspectorController.hpp"
+#include "InspectorView.hpp"
+#include "MainRightColumnController.hpp"
+#include "ModelObjectItem.hpp"
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 #include "OSItem.hpp"
 #include "OSVectorController.hpp"
-#include "ModelObjectItem.hpp"
 
 #include "../model/ModelObject_Impl.hpp"
 #include "../model/Model_Impl.hpp"
@@ -35,6 +38,7 @@
 #include <QBoxLayout>
 #include <QDragEnterEvent>
 #include <QDropEvent>
+#include <QFocusEvent>
 #include <QGraphicsSceneDragDropEvent>
 #include <QGraphicsSceneMouseEvent>
 #include <QLabel>
@@ -568,10 +572,19 @@ OSDropZone2::OSDropZone2()
   QString style("QWidget#OSDropZone {\
     background: #CECECE;\
     border: 2px dashed #808080;\
-    border-radius: 10px; }");
+    border-radius: 5px; }");
   setStyleSheet(style);
 
-  setFixedSize(75,25);
+  auto layout = new QVBoxLayout();
+  layout->setContentsMargins(5,5,5,5);
+  setLayout(layout);
+
+  m_label = new QLabel();
+  layout->addWidget(m_label);
+
+  setFixedHeight(25);
+  setMinimumWidth(75);
+  setMaximumWidth(150);
 }
 
 void OSDropZone2::refresh()
@@ -587,18 +600,18 @@ void OSDropZone2::refresh()
 
   if (modelObject) {
     QString temp = QString::fromStdString(modelObject->name().get());
-    if (m_text == temp){
+    if (m_label->text() == temp){
       return;
     }
     else {
-      m_text = temp;
+      m_label->setText(temp);
     }
 
-    // Adjust the width to accommodate the text
-    QFont myFont;
-    QFontMetrics fm(myFont);
-    auto width = fm.width(m_text);
-    setFixedWidth(width + 10);
+    //// Adjust the width to accommodate the text
+    //QFont myFont;
+    //QFontMetrics fm(myFont);
+    //auto width = fm.width(m_text);
+    //setFixedWidth(width + 10);
   }
 
   update();
@@ -637,7 +650,7 @@ void OSDropZone2::paintEvent( QPaintEvent * event )
   QPainter p(this);
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 
-  p.drawText(rect(),Qt::AlignCenter,m_text);
+  //p.drawText(rect(),Qt::AlignCenter,m_text);
 }
 
 void OSDropZone2::dragEnterEvent(QDragEnterEvent *event)
@@ -654,37 +667,25 @@ void OSDropZone2::dropEvent(QDropEvent *event)
   if((event->proposedAction() == Qt::CopyAction) && m_modelObject && m_set){
 
     OSItemId itemId(event->mimeData());
-
     boost::optional<model::ModelObject> modelObject = OSAppBase::instance()->currentDocument()->getModelObject(itemId);
-    OS_ASSERT(modelObject);
-
-    // If it is not the correct IddObjectType, do not pass go, do not collect $200
-    if (m_iddObjectTypes.size()) {
-      bool success = false;
-      for (auto iddObjectType : m_iddObjectTypes) {
-        if (iddObjectType == modelObject.get().iddObjectType()) {
-            success = true;
-          break;
-        }
-      }
-     if (!success) return;
-    }
-
     m_item = OSItem::makeItem(itemId, OSItemType::ListItem);
     m_item->setParent(this);
+
+    OS_ASSERT(modelObject);
+
     connect(m_item, &OSItem::itemRemoveClicked, this, &OSDropZone2::onItemRemoveClicked);
 
     connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSDropZone2::refresh);
-
-    // Tell EditView to display this object
-    //emit itemClicked(m_item); TODO For now, don't display on drop
 
     if(modelObject){
       if(OSAppBase::instance()->currentDocument()->fromComponentLibrary(itemId)){
         modelObject = modelObject->clone(m_modelObject->model());
         if (m_set)
         {
-          (*m_set)(modelObject.get());
+          bool success = (*m_set)(modelObject.get());
+          if (!success) {
+            modelObject->remove();
+          }
         }
         refresh();
       }
@@ -714,6 +715,8 @@ void OSDropZone2::mouseReleaseEvent(QMouseEvent * event)
         m_item = OSItem::makeItem(modelObjectToItemId(*modelObject, false));
         m_item->setParent(this);
         connect(m_item, &OSItem::itemRemoveClicked, this, &OSDropZone2::onItemRemoveClicked);
+
+        connect(modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSDropZone2::refresh);
       }
     }
 
@@ -721,6 +724,44 @@ void OSDropZone2::mouseReleaseEvent(QMouseEvent * event)
       emit itemClicked(m_item);
     }
   }
+}
+
+void OSDropZone2::focusInEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason)
+  {
+    QString style("QWidget#OSDropZone {\
+                   background: #ffc627;\
+                   border: 2px dashed #808080;\
+                   border-radius: 10px; }");
+    setStyleSheet(style);
+
+    auto hasData = true; // TODO
+    emit inFocus(true, hasData);
+  }
+
+  QWidget::focusInEvent(e);
+}
+
+void OSDropZone2::focusOutEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason)
+  {
+    QString style("QWidget#OSDropZone {\
+                   background: #CECECE;\
+                   border: 2px dashed #808080;\
+                   border-radius: 10px; }");
+    setStyleSheet(style);
+
+    emit inFocus(false, false);
+
+    auto mouseOverInspectorView = OSAppBase::instance()->currentDocument()->mainRightColumnController()->inspectorController()->inspectorView()->mouseOverInspectorView();
+    if (!mouseOverInspectorView) {
+      emit itemClicked(nullptr);
+    }
+  }
+
+  QWidget::focusOutEvent(e);
 }
 
 void OSDropZone2::onItemRemoveClicked()

@@ -73,9 +73,13 @@ void ModelSubTabView::onDropZoneItemClicked(OSItem* item)
 { 
   std::shared_ptr<OSDocument> currentDocument = OSAppBase::instance()->currentDocument();
   if (currentDocument){
-    // Note: perhaps passing this here offers more flexibility in the future when determining readOnly
-    bool readOnly = item->itemId().isDefaulted();
-    emit dropZoneItemSelected(item, readOnly);
+    if (!item) {
+      emit dropZoneItemSelected(item, false);
+    }
+    else {
+      // Note: perhaps passing this here offers more flexibility in the future when determining readOnly
+      emit dropZoneItemSelected(item, item->itemId().isDefaulted());
+    }
   }
 }
 

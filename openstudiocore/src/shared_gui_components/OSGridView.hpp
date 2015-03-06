@@ -68,6 +68,8 @@ public:
 
   void requestAddRow(int row);
 
+  QVBoxLayout * m_contentLayout;
+
 protected:
 
   virtual void hideEvent(QHideEvent * event);
@@ -88,29 +90,15 @@ public slots:
 
   void refreshAll();
 
-  void refreshGrid();
-
-  void refreshRow(int row);
-
   void requestRefreshAll();
 
   void requestRefreshGrid();
 
-  void requestRefreshRow(int row);
-
 private slots:
-
-  void refreshCell(int row, int column);
 
   void deleteAll();
 
   void addWidget(int row, int column);
-
-  void removeWidget(int row, int column);
-
-  void setHorizontalHeader(std::vector<QWidget *> widgets);
-
-  void setHorizontalHeader(std::vector<QString> names);
 
   void selectCategory(int index);
 
@@ -134,22 +122,14 @@ private:
   };
 
   // construct a grid layout to our specs
-  QGridLayout *makeGridLayout();
+  QGridLayout * makeGridLayout();
 
   // Add a widget, adding a new layout if necessary
   void addWidget(QWidget *w, int row, int column);
 
-  void normalizeColumnWidths();
-
   void setGridController(OSGridController * gridController);
 
-  void addRow(int row);
-
-  void removeRow(int row);
-
   static const int ROWS_PER_LAYOUT = 100;
-
-  QVBoxLayout * m_contentLayout;
 
   std::vector<QGridLayout *> m_gridLayouts;
 

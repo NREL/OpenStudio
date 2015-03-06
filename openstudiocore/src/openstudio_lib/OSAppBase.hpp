@@ -31,6 +31,8 @@
 
 #include <boost/smart_ptr.hpp>
 
+class QEvent;
+
 namespace openstudio {
 
 class OSDocument;
@@ -66,12 +68,13 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
   virtual void chooseHorizontalEditTab();
   virtual QSharedPointer<openstudio::EditController> editController();
   boost::shared_ptr<WaitDialog> waitDialog() {return m_waitDialog;}
+  virtual bool notify(QObject * receiver, QEvent * e);
 
-  public slots:
+  protected:
 
-    virtual void reloadFile(const QString& fileToLoad, bool modified, bool saveCurrentTabs) = 0;
+  virtual bool event(QEvent * e);
 
-    void showMeasureUpdateDlg();
+  virtual void childEvent(QChildEvent * e);
 
   private:
 
@@ -80,6 +83,12 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
   QSharedPointer<openstudio::MeasureManager> m_measureManager;
 
   boost::shared_ptr<WaitDialog> m_waitDialog;
+
+  public slots:
+
+  virtual void reloadFile(const QString& fileToLoad, bool modified, bool saveCurrentTabs) = 0;
+
+  void showMeasureUpdateDlg();
 };
 
 } // openstudio

@@ -27,6 +27,8 @@
 
 namespace openstudio {
 
+  class ThermalZonesGridView;
+
 class ThermalZonesView : public ModelSubTabView
 {
   Q_OBJECT
@@ -49,6 +51,9 @@ public:
   ThermalZoneView(bool isIP, const model::Model & model, QWidget * parent = 0);
 
   virtual ~ThermalZoneView() {}
+
+  virtual bool supportsMultipleObjectSelection() const { return true; }
+  virtual std::vector<model::ModelObject> selectedObjects() const;
 
 public slots:
 
@@ -73,6 +78,8 @@ private slots:
   void toggleUnits(bool);
 
 private:
+
+  ThermalZonesGridView * m_thermalZonesGridView = nullptr;
 
   bool m_isIP;
 

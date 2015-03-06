@@ -18,15 +18,18 @@
 **********************************************************************/
 
 #include "OSComboBox.hpp"
+
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
+
 #include "../utilities/idf/WorkspaceObject.hpp"
 #include "../utilities/idf/WorkspaceObject_Impl.hpp"
 #include "../utilities/core/Assert.hpp"
-#include <QEvent>
+
 #include <QCompleter>
+#include <QEvent>
 
 namespace openstudio {
 
@@ -169,6 +172,7 @@ OSComboBox2::OSComboBox2( QWidget * parent, bool editable )
   this->setCompleter(completer);
   setEditable(editable);
   setEnabled(false);
+  setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Fixed);
 }
 
 bool OSComboBox2::event( QEvent * e )
@@ -176,6 +180,25 @@ bool OSComboBox2::event( QEvent * e )
   if( e->type() == QEvent::Wheel )
   {
     return false;
+  }
+  else if (e->type() == QEvent::FocusIn && this->focusPolicy() == Qt::ClickFocus)
+  {
+    QString style("QComboBox { background: #ffc627; }");
+    setStyleSheet(style);
+
+    auto hasData = true; // TODO
+    emit inFocus(true, hasData);
+
+    return QComboBox::event(e);
+  }
+  else if (e->type() == QEvent::FocusOut && this->focusPolicy() == Qt::ClickFocus)
+  {
+    QString style("QComboBox { background: white; }");
+    setStyleSheet(style);
+
+    emit inFocus(false, false);
+
+    return QComboBox::event(e);
   }
   else
   {
@@ -389,6 +412,8 @@ void OSComboBox2::completeBind() {
   this->blockSignals(false);
   setEnabled(true);
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 OSComboBox::OSComboBox( QWidget * parent )
   : QComboBox(parent)

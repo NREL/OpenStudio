@@ -31,6 +31,8 @@
 #include <QString>
 #include <QValidator>
 
+class QFocusEvent;
+
 namespace openstudio {
 
 class OSUnsignedEdit2: public QLineEdit {
@@ -41,6 +43,8 @@ class OSUnsignedEdit2: public QLineEdit {
   OSUnsignedEdit2(QWidget * parent = nullptr);
 
   virtual ~OSUnsignedEdit2() {}
+
+  void enableClickFocus() { this->m_hasClickFocus = true; }
 
   QIntValidator * intValidator() { return m_intValidator; }
 
@@ -85,6 +89,16 @@ class OSUnsignedEdit2: public QLineEdit {
             boost::optional<BasicQuery> isAutocalculated=boost::none);
 
   void unbind();
+  
+protected:
+
+  virtual void focusInEvent(QFocusEvent * e);
+
+  virtual void focusOutEvent(QFocusEvent * e);
+
+ signals:
+
+  void inFocus(bool inFocus, bool hasData);
 
  private slots:
 
@@ -108,6 +122,7 @@ class OSUnsignedEdit2: public QLineEdit {
   boost::optional<BasicQuery> m_isAutocalculated;
 
   bool m_isScientific;
+  bool m_hasClickFocus = false;
   boost::optional<int> m_precision;
   QString m_text = "UNINITIALIZED";
   QIntValidator * m_intValidator = nullptr;

@@ -78,6 +78,8 @@
 #include "../model/RefrigerationWalkInZoneBoundary.hpp"
 #include "../model/RefrigerationWalkInZoneBoundary_Impl.hpp"
 #include "../model/RefrigerationWalkIn_Impl.hpp"
+#include "../model/ScheduleRuleset.hpp"
+#include "../model/ScheduleRuleset_Impl.hpp"
 #include "../model/StraightComponent.hpp"
 #include "../model/StraightComponent_Impl.hpp"
 #include "../model/WaterToAirComponent.hpp"
@@ -106,7 +108,9 @@
 #include <QButtonGroup>
 #include <QCheckBox>
 #include <QDialogButtonBox>
+#include <QFrame>
 #include <QLabel>
+#include <QLineEdit>
 #include <QPainter>
 #include <QPixmap>
 #include <QPushButton>
@@ -128,6 +132,20 @@ InspectorView::InspectorView(QWidget* parent)
   m_vLayout->setSpacing(0);
 
   setLayout(m_vLayout);
+}
+
+void InspectorView::enterEvent(QEvent * event)
+{
+  m_mouseOverInspectorView = true;
+
+  QWidget::enterEvent(event);
+}
+
+void InspectorView::leaveEvent(QEvent * event)
+{
+  m_mouseOverInspectorView = false;
+
+  QWidget::leaveEvent(event);
 }
 
 void InspectorView::update()
@@ -523,6 +541,20 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       
       connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
   
+      m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
+
+      m_vLayout->addWidget(m_currentView);
+    }
+    else if (boost::optional<model::ScheduleRuleset> component =
+      modelObject->optionalCast<model::ScheduleRuleset>())
+    {
+      if (m_currentView)
+      {
+        delete m_currentView;
+      }
+
+      m_currentView = new ScheduleRulesetInspectorView();
+
       m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
 
       m_vLayout->addWidget(m_currentView);
@@ -2239,6 +2271,70 @@ void AirTerminalSingleDuctConstantVolumeFourPipeInductionInspectorView::layoutMo
     boost::optional<model::ModelObject> mo;
     m_coolingLoopChooserView->layoutModelObject(mo);
   }
+}
+
+ScheduleRulesetInspectorView::ScheduleRulesetInspectorView(QWidget * parent)
+  : BaseInspectorView(parent)
+{
+}
+
+void ScheduleRulesetInspectorView::layoutModelObject(model::ModelObject & modelObject, bool readOnly, bool displayIP)
+{
+  auto widget = new QWidget();
+
+  auto mainLayout = new QVBoxLayout();
+  mainLayout->setAlignment(Qt::AlignTop);
+  mainLayout->setContentsMargins(0, 0, 0, 0);
+  mainLayout->setSpacing(0);
+  widget->setLayout(mainLayout);
+
+  auto label = new QLabel(modelObject.iddObject().type().valueDescription().c_str());
+  label->setObjectName("IGHeader");
+  label->setStyleSheet("font : bold");
+  mainLayout->addWidget(label, 0, Qt::AlignTop);
+
+  auto layout = new QVBoxLayout();
+  layout->setAlignment(Qt::AlignTop);
+  layout->setContentsMargins(10, 10, 10, 10);
+  layout->setSpacing(6);
+
+  label = new QLabel("Name");
+  layout->addWidget(label, 0, Qt::AlignTop);
+
+  QString text;
+  auto name = modelObject.name();
+  if (name) {
+    text = name->c_str();
+  }
+  auto lineEdit = new QLineEdit(text);
+  lineEdit->setReadOnly(true);
+  layout->addWidget(lineEdit, 0, Qt::AlignTop);
+  mainLayout->addLayout(layout);
+
+  auto line = new QFrame();
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  mainLayout->addWidget(line);
+
+  layout = new QVBoxLayout();
+  layout->setAlignment(Qt::AlignTop);
+  layout->setContentsMargins(10, 10, 10, 10);
+  layout->setSpacing(6);
+
+  label = new QLabel("Please use the Schedules tab to inspect this object.");
+  label->setObjectName("IDFcomment");
+  label->setWordWrap(true);
+  layout->addWidget(label, 0, Qt::AlignTop);
+  mainLayout->addLayout(layout);
+
+  line = new QFrame();
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  mainLayout->addWidget(line);
+
+  mainLayout->addStretch();
+
+  m_libraryTabWidget->addTab(widget, "", "");
 }
 
 } // openstudio

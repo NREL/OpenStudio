@@ -62,6 +62,7 @@
 // used on column headers, and other grid widgets
 
 #define NAME "Name"
+#define SELECTED "All"
 
 //HVAC SYSTEMS
 #define IDEALAIRLOADS "Turn On\nIdeal\nAir Loads"
@@ -118,8 +119,8 @@ ThermalZonesGridView::ThermalZonesGridView(bool isIP, const model::Model & model
   std::vector<model::ThermalZone> thermalZones = model.getModelObjects<model::ThermalZone>();
   std::vector<model::ModelObject> thermalZoneModelObjects = subsetCastVector<model::ModelObject>(thermalZones);
 
-  ThermalZonesGridController * thermalZonesGridController = new ThermalZonesGridController(m_isIP, "Thermal Zones", IddObjectType::OS_ThermalZone, model, thermalZoneModelObjects);
-  OSGridView * gridView = new OSGridView(thermalZonesGridController, "Thermal Zones", "Drop\nZone", false, parent);
+  m_thermalZonesGridController = new ThermalZonesGridController(m_isIP, "Thermal Zones", IddObjectType::OS_ThermalZone, model, thermalZoneModelObjects);
+  OSGridView * gridView = new OSGridView(m_thermalZonesGridController, "Thermal Zones", "Drop\nZone", false, parent);
 
   bool isConnected = false;
 
@@ -141,14 +142,22 @@ ThermalZonesGridView::ThermalZonesGridView(bool isIP, const model::Model & model
 
   layout->addStretch(1);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), thermalZonesGridController, SIGNAL(toggleUnitsClicked(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_thermalZonesGridController, SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), thermalZonesGridController, SLOT(toggleUnits(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_thermalZonesGridController, SLOT(toggleUnits(bool)));
   OS_ASSERT(isConnected);
 
   std::vector<model::ThermalZone> thermalZone = model.getModelObjects<model::ThermalZone>(); // NOTE for horizontal system lists
 
+}
+
+// THIS shoulf be in the base class
+std::vector<model::ModelObject> ThermalZonesGridView::selectedObjects() const
+{
+  const auto os = m_thermalZonesGridController->getObjectSelector()->getSelectedObjects();
+
+  return std::vector<model::ModelObject>(os.cbegin(), os.cend());
 }
 
 ThermalZonesGridController::ThermalZonesGridController(bool isIP,
@@ -212,21 +221,27 @@ void ThermalZonesGridController::setCategoriesAndFields()
 
 }
 
-void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
+void ThermalZonesGridController::addColumns(const QString &/*category*/, std::vector<QString> & fields)
 {
   // always show name column
-  fields.insert(fields.begin(), NAME);
+  fields.insert(fields.begin(), {NAME, SELECTED});
 
   m_baseConcepts.clear();
 
   Q_FOREACH(QString field, fields){
     if(field == IDEALAIRLOADS){
-      addCheckBoxColumn(QString(IDEALAIRLOADS),
+      addCheckBoxColumn(Heading(QString(IDEALAIRLOADS),true,false),
+                        std::string("Check to enable ideal air loads."),
                         NullAdapter(&model::ThermalZone::useIdealAirLoads),
                         NullAdapter(&model::ThermalZone::setUseIdealAirLoads));
+    }else if(field == SELECTED){
+      auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
+      checkbox->setToolTip("Check to select all rows");
+      connect(checkbox.data(), &QCheckBox::stateChanged, this, &ThermalZonesGridController::selectAllStateChanged);
 
+      addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row");
     }else if(field == ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE){
-      addQuantityEditColumn(QString(ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE),
+      addQuantityEditColumn(Heading(QString(ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE)),
                             QString("C"),
                             QString("C"),
                             QString("F"),
@@ -235,7 +250,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                             ProxyAdapter(static_cast<void (model::SizingZone::*)(double)>(&model::SizingZone::setZoneCoolingDesignSupplyAirTemperature), 
                               &model::ThermalZone::sizingZone));
     }else if(field == ZONEHEATINGDESIGNSUPPLYAIRTEMPERATURE){
-      addQuantityEditColumn(QString(ZONEHEATINGDESIGNSUPPLYAIRTEMPERATURE),
+      addQuantityEditColumn(Heading(QString(ZONEHEATINGDESIGNSUPPLYAIRTEMPERATURE)),
                             QString("C"),
                             QString("C"),
                             QString("F"),
@@ -244,7 +259,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                             ProxyAdapter(static_cast<void (model::SizingZone::*)(double)>(&model::SizingZone::setZoneHeatingDesignSupplyAirTemperature), 
                               &model::ThermalZone::sizingZone));
     }else if(field == ZONECOOLINGDESIGNSUPPLYAIRHUMIDITYRATIO){
-      addQuantityEditColumn(QString(ZONECOOLINGDESIGNSUPPLYAIRHUMIDITYRATIO),
+      addQuantityEditColumn(Heading(QString(ZONECOOLINGDESIGNSUPPLYAIRHUMIDITYRATIO)),
                             QString(""),
                             QString(""),
                             QString(""),
@@ -253,7 +268,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                             ProxyAdapter(static_cast<bool (model::SizingZone::*)(double)>(&model::SizingZone::setZoneCoolingDesignSupplyAirHumidityRatio), 
                               &model::ThermalZone::sizingZone));
     }else if(field == ZONEHEATINGDESIGNSUPPLYAIRHUMIDITYRATIO){
-      addQuantityEditColumn(QString(ZONEHEATINGDESIGNSUPPLYAIRHUMIDITYRATIO),
+      addQuantityEditColumn(Heading(QString(ZONEHEATINGDESIGNSUPPLYAIRHUMIDITYRATIO)),
                             QString(""),
                             QString(""),
                             QString(""),
@@ -262,7 +277,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                             ProxyAdapter(static_cast<bool (model::SizingZone::*)(double)>(&model::SizingZone::setZoneHeatingDesignSupplyAirHumidityRatio), 
                             &model::ThermalZone::sizingZone));
     }else if(field == ZONEHEATINGSIZINGFACTOR){
-      addQuantityEditColumn(QString(ZONEHEATINGSIZINGFACTOR),
+      addQuantityEditColumn(Heading(QString(ZONEHEATINGSIZINGFACTOR)),
                             QString(""),
                             QString(""),
                             QString(""),
@@ -271,7 +286,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                             ProxyAdapter(static_cast<bool (model::SizingZone::*)(double)>(&model::SizingZone::setZoneHeatingSizingFactor), 
                               &model::ThermalZone::sizingZone));
     }else if(field == ZONECOOLINGSIZINGFACTOR){
-      addQuantityEditColumn(QString(),
+      addQuantityEditColumn(Heading(QString()),
                             QString(""),
                             QString(""),
                             QString(""),
@@ -281,7 +296,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                               &model::ThermalZone::sizingZone));
 
     }else if (field == HEATINGDESIGNAIRFLOWRATE){
-      addQuantityEditColumn(QString(HEATINGDESIGNAIRFLOWRATE),
+      addQuantityEditColumn(Heading(QString(HEATINGDESIGNAIRFLOWRATE)),
         QString("m^3/s"),
         QString("m^3/s"),
         QString("ft^3/min"),
@@ -290,7 +305,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
         ProxyAdapter(static_cast<bool (model::SizingZone::*)(double)>(&model::SizingZone::setHeatingDesignAirFlowRate),
         &model::ThermalZone::sizingZone));
     }else if (field == HEATINGMAXIMUMAIRFLOW){
-        addQuantityEditColumn(QString(HEATINGMAXIMUMAIRFLOW),
+        addQuantityEditColumn(Heading(QString(HEATINGMAXIMUMAIRFLOW)),
         QString("m^3/s"),
         QString("m^3/s"),
         QString("ft^3/min"),
@@ -299,7 +314,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
         ProxyAdapter(static_cast<bool (model::SizingZone::*)(double)>(&model::SizingZone::setHeatingMaximumAirFlow),
         &model::ThermalZone::sizingZone));
     }else if (field == HEATINGDESIGNAIRFLOWMETHOD){
-      addComboBoxColumn<std::string, model::ThermalZone>(QString(HEATINGDESIGNAIRFLOWMETHOD),
+      addComboBoxColumn<std::string, model::ThermalZone>(Heading(QString(HEATINGDESIGNAIRFLOWMETHOD)),
         std::function<std::string(const std::string &)>(static_cast<std::string(*)(const std::string&)>(&openstudio::toString)),
         std::function<std::vector<std::string>()>(&model::SizingZone::heatingDesignAirFlowMethodValues),
         std::function<std::string(model::ThermalZone *)>([](model::ThermalZone *t_z) {
@@ -326,7 +341,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
         );
 
     }else if(field == COOLINGDESIGNAIRFLOWRATE){
-      addQuantityEditColumn(QString(COOLINGDESIGNAIRFLOWRATE),
+      addQuantityEditColumn(Heading(QString(COOLINGDESIGNAIRFLOWRATE)),
                             QString("m^3/s"),
                             QString("m^3/s"),
                             QString("ft^3/min"),
@@ -335,7 +350,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                             ProxyAdapter(static_cast<bool (model::SizingZone::*)(double)>(&model::SizingZone::setCoolingDesignAirFlowRate), 
                               &model::ThermalZone::sizingZone));
     }else if (field == COOLINGMINIMUMAIRFLOWPERZONEFLOORAREA){
-      addQuantityEditColumn(QString(COOLINGMINIMUMAIRFLOWPERZONEFLOORAREA),
+      addQuantityEditColumn(Heading(QString(COOLINGMINIMUMAIRFLOWPERZONEFLOORAREA)),
         QString("m^3/min*m^2"),
         QString("m^3/min*m^2"),
         QString("ft^3/min*ft^2"),
@@ -345,7 +360,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
         &model::ThermalZone::sizingZone));
     }
     else if (field == COOLINGMINIMUMAIRFLOW){
-      addQuantityEditColumn(QString(COOLINGMINIMUMAIRFLOW),
+      addQuantityEditColumn(Heading(QString(COOLINGMINIMUMAIRFLOW)),
         QString("m^3/s"),
         QString("m^3/s"),
         QString("ft^3/min"),
@@ -354,7 +369,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
         ProxyAdapter(static_cast<bool (model::SizingZone::*)(double)>(&model::SizingZone::setCoolingMinimumAirFlow),
         &model::ThermalZone::sizingZone));
     }else if (field == COOLINGMINIMUMAIRFLOWFRACTION){
-      addQuantityEditColumn(QString(COOLINGMINIMUMAIRFLOWFRACTION),
+      addQuantityEditColumn(Heading(QString(COOLINGMINIMUMAIRFLOWFRACTION)),
         QString(""),
         QString(""),
         QString(""),
@@ -363,7 +378,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
         ProxyAdapter(static_cast<bool (model::SizingZone::*)(double)>(&model::SizingZone::setCoolingMinimumAirFlowFraction),
         &model::ThermalZone::sizingZone));
     }else if(field == HEATINGMAXIMUMAIRFLOWPERZONEFLOORAREA){
-      addQuantityEditColumn(QString(HEATINGMAXIMUMAIRFLOWPERZONEFLOORAREA),
+      addQuantityEditColumn(Heading(QString(HEATINGMAXIMUMAIRFLOWPERZONEFLOORAREA)),
                             QString("m^3/min*m^2"),
                             QString("m^3/min*m^2"),
                             QString("ft^3/min*ft^2"),
@@ -372,7 +387,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                             ProxyAdapter(static_cast<bool (model::SizingZone::*)(double)>(&model::SizingZone::setHeatingMaximumAirFlowperZoneFloorArea), 
                               &model::ThermalZone::sizingZone));
     }else if(field == HEATINGMAXIMUMAIRFLOWFRACTION){
-      addQuantityEditColumn(QString(HEATINGMAXIMUMAIRFLOWFRACTION),
+      addQuantityEditColumn(Heading(QString(HEATINGMAXIMUMAIRFLOWFRACTION)),
                             QString(""),
                             QString(""),
                             QString(""),
@@ -381,7 +396,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                             ProxyAdapter(static_cast<bool (model::SizingZone::*)(double)>(&model::SizingZone::setHeatingMaximumAirFlowFraction), 
                               &model::ThermalZone::sizingZone));
     }else if(field == DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINCOOLINGMODE){
-      addQuantityEditColumn(QString(DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINCOOLINGMODE),
+      addQuantityEditColumn(Heading(QString(DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINCOOLINGMODE)),
                             QString(""),
                             QString(""),
                             QString(""),
@@ -390,7 +405,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                             ProxyAdapter(static_cast<bool (model::SizingZone::*)(double)>(&model::SizingZone::setDesignZoneAirDistributionEffectivenessinCoolingMode), 
                               &model::ThermalZone::sizingZone));
     }else if(field == DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINHEATINGMODE){
-      addQuantityEditColumn(QString(DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINHEATINGMODE),
+      addQuantityEditColumn(Heading(QString(DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINHEATINGMODE)),
                             QString(""),
                             QString(""),
                             QString(""),
@@ -400,7 +415,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                               &model::ThermalZone::sizingZone));
 
     }else if(field == COOLINGDESIGNAIRFLOWMETHOD){
-      addComboBoxColumn<std::string, model::ThermalZone>(QString(COOLINGDESIGNAIRFLOWMETHOD),
+      addComboBoxColumn<std::string, model::ThermalZone>(Heading(QString(COOLINGDESIGNAIRFLOWMETHOD)),
                         std::function<std::string (const std::string &)>(static_cast<std::string (*)(const std::string&)>(&openstudio::toString)),
                         std::function<std::vector<std::string> ()>(&model::SizingZone::coolingDesignAirFlowMethodValues),
                         std::function<std::string (model::ThermalZone *)>([](model::ThermalZone *t_z) {
@@ -458,8 +473,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
         }
       );
 
-      addDropZoneColumn(QString(COOLINGTHERMOSTATSCHEDULE),
-        std::vector<IddObjectType>(),
+      addDropZoneColumn(Heading(QString(COOLINGTHERMOSTATSCHEDULE)),
         coolingSchedule,
         setCoolingSchedule,
         resetCoolingSchedule);
@@ -497,8 +511,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
         }
       );
 
-      addDropZoneColumn(QString(HEATINGTHERMOSTATSCHEDULE),
-        std::vector<IddObjectType>(),
+      addDropZoneColumn(Heading(QString(HEATINGTHERMOSTATSCHEDULE)),
         heatingSchedule,
         setHeatingSchedule,
         resetHeatingSchedule);
@@ -539,8 +552,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
         }
       );
 
-      addDropZoneColumn(QString(HUMIDIFYINGSETPOINTSCHEDULE),
-        std::vector<IddObjectType>(),
+      addDropZoneColumn(Heading(QString(HUMIDIFYINGSETPOINTSCHEDULE)),
         humidifyingSchedule,
         setHumidifyingSchedule,
         resetHumidifyingSchedule);
@@ -581,8 +593,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
         }
       );
 
-      addDropZoneColumn(QString(DEHUMIDIFYINGSETPOINTSCHEDULE),
-        std::vector<IddObjectType>(),
+      addDropZoneColumn(Heading(QString(DEHUMIDIFYINGSETPOINTSCHEDULE)),
         dehumidifyingSchedule,
         setDehumidifyingSchedule,
         resetDehumidifyingSchedule);
@@ -592,8 +603,14 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
       std::function<bool(model::ThermalZone *, const model::ModelObject &)> setter(
       [](model::ThermalZone *t_z, const model::ModelObject &t_mo) {
         try {
+          if (t_mo.cast<model::ZoneHVACComponent>().thermalZone()) {
+            boost::optional<model::ModelObject> clone_mo = t_mo.cast<model::ZoneHVACComponent>().clone(t_mo.model());
+            OS_ASSERT(clone_mo);
+            return clone_mo->cast<model::ZoneHVACComponent>().addToThermalZone(*t_z);
+          }
           return t_mo.cast<model::ZoneHVACComponent>().addToThermalZone(*t_z);
-        } catch (const std::exception &) {
+        }
+        catch (const std::exception &) {
           return false;
         }
       }
@@ -608,41 +625,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
       }
       );
 
-      std::vector<IddObjectType> iddObjectTypes = std::vector<IddObjectType>();
-
-      iddObjectTypes.push_back(IddObjectType::Fan_ZoneExhaust);
-      iddObjectTypes.push_back(IddObjectType::Refrigeration_AirChiller);
-      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_Baseboard_Convective_Electric);
-      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_Baseboard_Convective_Water);
-      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_FourPipeFanCoil);
-      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_HighTemperatureRadiant);
-      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_IdealLoadsAirSystem);
-      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_LowTemperatureRadiant_Electric);
-      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_LowTemperatureRadiant_ConstantFlow);
-      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_LowTemperatureRadiant_VariableFlow);
-      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_PackagedTerminalAirConditioner);
-      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_PackagedTerminalHeatPump);
-      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
-      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_UnitHeater);
-      iddObjectTypes.push_back(IddObjectType::ZoneHVAC_WaterToAirHeatPump);
-
-      iddObjectTypes.push_back(IddObjectType::OS_Fan_ZoneExhaust);
-      iddObjectTypes.push_back(IddObjectType::OS_Refrigeration_AirChiller);
-      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric);
-      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Water);
-      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_FourPipeFanCoil);
-      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_HighTemperatureRadiant);
-      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_IdealLoadsAirSystem);
-      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
-      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow);
-      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow);
-      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner);
-      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump);
-      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
-      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_UnitHeater);
-      iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump);
-
-      addNameLineEditColumn(QString(ZONEEQUIPMENT),
+      addNameLineEditColumn(Heading(QString(ZONEEQUIPMENT)),
         true,
         false,
         CastNullAdapter<model::ModelObject>(&model::ModelObject::name),
@@ -650,21 +633,21 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
         boost::optional<std::function<void(model::ModelObject *)>>(
         std::function<void(model::ModelObject *)>(
         [](model::ModelObject *t_mo)
-            {
+          {
             t_mo->remove();
-            }
-          )
+          }
+        )
         ),
         DataSource(
         equipment,
         false,
-        QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::ModelObject, model::ThermalZone>(ZONEEQUIPMENT,
-        iddObjectTypes, getter, setter, reset))
+        QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::ModelObject, model::ThermalZone>(Heading(ZONEEQUIPMENT),
+        getter, setter, reset))
         )
         );
 
     }else if(field == NAME){
-      addNameLineEditColumn(QString(NAME),
+      addNameLineEditColumn(Heading(QString(NAME), false, false),
                             false,
                             false,
                             CastNullAdapter<model::ThermalZone>(&model::ThermalZone::name),
@@ -674,7 +657,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
     }else if(field == AIRLOOPNAME){
       // Notes: this only requires a static_cast because `name` comes from IdfObject
       // we are passing in an empty std::function for the separate parameter because there's no way to set it
-      addNameLineEditColumn(QString(AIRLOOPNAME),
+      addNameLineEditColumn(Heading(QString(AIRLOOPNAME),true,false),
                             false,
                             false,
                             ProxyAdapter(static_cast<boost::optional<std::string> (model::AirLoopHVAC::*)(bool) const>(&model::AirLoopHVAC::name), 
@@ -683,7 +666,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                             boost::optional<std::function<void (model::HVACComponent *)>>());
 
     }else if(field == MULTIPLIER){
-      addValueEditColumn(QString(MULTIPLIER),
+      addValueEditColumn(Heading(QString(MULTIPLIER)),
                          NullAdapter(&model::ThermalZone::multiplier),
                          NullAdapter(&model::ThermalZone::setMultiplier));
 
@@ -729,12 +712,6 @@ void ThermalZonesGridController::checkSelectedFields()
 {
   if(!this->m_hasHorizontalHeader) return;
 
-  // Don't show the name column check box
-  // From above in addColumns, we know that NAME is the first entry
-  HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(0));
-  OS_ASSERT(horizontalHeaderWidget);
-  horizontalHeaderWidget->m_checkBox->hide();
-
   OSGridController::checkSelectedFields();
 }
 
@@ -751,8 +728,8 @@ void ThermalZonesGridController::onItemDropped(const OSItemId& itemId)
 
 void ThermalZonesGridController::refreshModelObjects()
 {
-  std::vector<model::ThermalZone> refrigerationCases = m_model.getModelObjects<model::ThermalZone>();
-  m_modelObjects = subsetCastVector<model::ModelObject>(refrigerationCases);
+  std::vector<model::ThermalZone> thermalZones = m_model.getModelObjects<model::ThermalZone>();
+  m_modelObjects = subsetCastVector<model::ModelObject>(thermalZones);
   std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
 }
 
