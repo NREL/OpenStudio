@@ -6002,6 +6002,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
       value = unitToUnit(value,"F","C").get();
       wshp->setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(value);
     }
+
+    // FanCtrl
+    QDomElement fanCtrlElement = element.firstChildElement("FanCtrl"); 
+    if( istringEqual(fanCtrlElement.text().toStdString(),"Continuous") )
+    {
+      model::Schedule schedule = model.alwaysOnDiscreteSchedule();
+      wshp->setSupplyAirFanOperatingModeSchedule(schedule);
+    }
   }
   else if( istringEqual(type,"PTHP") )
   {
