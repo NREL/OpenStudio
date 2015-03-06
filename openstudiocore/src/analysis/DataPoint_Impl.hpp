@@ -272,7 +272,7 @@ namespace detail {
 
     void markFailed();
 
-    void setResponseValues(const std::vector<double> values);
+    void setResponseValues(const std::vector<double>& values);
 
     void setProblem(const Problem& problem);
 

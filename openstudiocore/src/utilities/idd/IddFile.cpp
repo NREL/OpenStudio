@@ -375,9 +375,8 @@ namespace detail {
 // CONSTRUCTORS
 
 IddFile::IddFile()
-{
-  m_impl = std::shared_ptr<detail::IddFile_Impl>(new detail::IddFile_Impl());
-}
+  : m_impl(std::shared_ptr<detail::IddFile_Impl>(new detail::IddFile_Impl()))
+{}
 
 IddFile::IddFile(const IddFile& other)
   : m_impl(other.m_impl)

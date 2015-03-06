@@ -634,46 +634,39 @@ namespace openstudio{
   } // detail
 
   /// default constructor 
-  TimeSeries::TimeSeries()
-  {
-    m_impl = std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl());
-  }
+  TimeSeries::TimeSeries() :
+    m_impl(std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl()))
+  {}
 
   /// constructor from start date, interval length, values, and units
-  TimeSeries::TimeSeries(const Date& startDate, const Time& intervalLength, const Vector& values, const std::string& units)
-  {
-    m_impl = std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(startDate, intervalLength, values, units));
-  }
+  TimeSeries::TimeSeries(const Date& startDate, const Time& intervalLength, const Vector& values, const std::string& units) :
+    m_impl(std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(startDate, intervalLength, values, units)))
+  {}
 
   /// constructor from start date and time, interval length, values, and units
-  TimeSeries::TimeSeries(const DateTime& startDateTime, const Time& intervalLength, const Vector& values, const std::string& units)
-  {
-    m_impl = std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(startDateTime, intervalLength, values, units));
-  }
+  TimeSeries::TimeSeries(const DateTime& startDateTime, const Time& intervalLength, const Vector& values, const std::string& units) :
+    m_impl(std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(startDateTime, intervalLength, values, units)))
+  {}
 
   /// constructor from first report date and time, days from first report vector, values, and units
-  TimeSeries::TimeSeries(const DateTime& firstReportDateTime, const Vector& daysFromFirstReport, const Vector& values, const std::string& units)
-  {
-    m_impl = std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(firstReportDateTime, daysFromFirstReport, values, units));
-  }
+  TimeSeries::TimeSeries(const DateTime& firstReportDateTime, const Vector& daysFromFirstReport, const Vector& values, const std::string& units) :
+    m_impl(std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(firstReportDateTime, daysFromFirstReport, values, units)))
+  {}
 
   /// constructor from first report date and time, days from first report , values, and units
-  TimeSeries::TimeSeries(const DateTime& firstReportDateTime, const std::vector<double>& daysFromFirstReport, const std::vector<double>& values, const std::string& units)
-  {
-    m_impl = std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(firstReportDateTime, daysFromFirstReport, values, units));
-  }
+  TimeSeries::TimeSeries(const DateTime& firstReportDateTime, const std::vector<double>& daysFromFirstReport, const std::vector<double>& values, const std::string& units) :
+    m_impl(std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(firstReportDateTime, daysFromFirstReport, values, units)))
+  {}
 
   /// constructor from date times, values, and units
-  TimeSeries::TimeSeries(const DateTimeVector& dateTimes, const Vector& values, const std::string& units)
-  {
-    m_impl = std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(dateTimes, values, units));
-  }
+  TimeSeries::TimeSeries(const DateTimeVector& dateTimes, const Vector& values, const std::string& units) :
+    m_impl(std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(dateTimes, values, units)))
+  {}
 
   /// constructor from first report date and time, seconds from first report vector, values, and units
-  TimeSeries::TimeSeries(const DateTime& firstReportDateTime, const std::vector<long>& secondsFromFirstReport, const Vector& values, const std::string& units)
-  {
-    m_impl = std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(firstReportDateTime, secondsFromFirstReport, values, units));
-  }
+  TimeSeries::TimeSeries(const DateTime& firstReportDateTime, const std::vector<long>& secondsFromFirstReport, const Vector& values, const std::string& units) :
+    m_impl(std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(firstReportDateTime, secondsFromFirstReport, values, units)))
+  {}
 
   /// interval length if any
   openstudio::OptionalTime TimeSeries::intervalLength() const

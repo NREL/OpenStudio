@@ -28,26 +28,25 @@
 namespace openstudio {
 namespace contam {
 
-IndexModel::IndexModel()
-{
-  m_impl = std::shared_ptr<detail::IndexModelImpl>(new detail::IndexModelImpl);
-}
+IndexModel::IndexModel() :
+  m_impl(std::shared_ptr<detail::IndexModelImpl>(new detail::IndexModelImpl))
+{}
 
-IndexModel::IndexModel(openstudio::path path)
+IndexModel::IndexModel(openstudio::path path) :
+  m_impl(std::shared_ptr<detail::IndexModelImpl>(new detail::IndexModelImpl))
 {
-  m_impl = std::shared_ptr<detail::IndexModelImpl>(new detail::IndexModelImpl);
   m_impl->read(path);
 }
 
-IndexModel::IndexModel(std::string filename)
+IndexModel::IndexModel(std::string filename) :
+  m_impl(std::shared_ptr<detail::IndexModelImpl>(new detail::IndexModelImpl))
 {
-  m_impl = std::shared_ptr<detail::IndexModelImpl>(new detail::IndexModelImpl);
   m_impl->read(filename);
 }
 
-IndexModel::IndexModel(Reader &input)
+IndexModel::IndexModel(Reader &input) :
+  m_impl(std::shared_ptr<detail::IndexModelImpl>(new detail::IndexModelImpl))
 {
-  m_impl = std::shared_ptr<detail::IndexModelImpl>(new detail::IndexModelImpl);
   m_impl->read(input);
 }
 
@@ -682,7 +681,7 @@ RunControl IndexModel::rc() const
 {
   return m_impl->rc();
 }
-void IndexModel::setRc(const RunControl rc)
+void IndexModel::setRc(const RunControl &rc)
 {
   m_impl->setRc(rc);
 }
@@ -696,7 +695,7 @@ std::vector <Species> IndexModel::species() const
 {
   return m_impl->species();
 }
-void IndexModel::setSpecies(const std::vector<Species> species)
+void IndexModel::setSpecies(const std::vector<Species> &species)
 {
   m_impl->setSpecies(species);
 }
@@ -713,7 +712,7 @@ std::vector <Level> IndexModel::levels() const
 {
   return m_impl->levels();
 }
-void IndexModel::setLevels(const std::vector<Level> levels)
+void IndexModel::setLevels(const std::vector<Level> &levels)
 {
   m_impl->setLevels(levels);
 }
@@ -726,7 +725,7 @@ std::vector <DaySchedule> IndexModel::daySchedules() const
 {
   return m_impl->daySchedules();
 }
-void IndexModel::setDaySchedules(const std::vector<DaySchedule> daySchedules)
+void IndexModel::setDaySchedules(const std::vector<DaySchedule> &daySchedules)
 {
   m_impl->setDaySchedules(daySchedules);
 }
@@ -735,7 +734,7 @@ std::vector <WeekSchedule> IndexModel::weekSchedules() const
 {
   return m_impl->weekSchedules();
 }
-void IndexModel::setWeekSchedules(const std::vector<WeekSchedule> weekSchedules)
+void IndexModel::setWeekSchedules(const std::vector<WeekSchedule> &weekSchedules)
 {
   m_impl->setWeekSchedules(weekSchedules);
 }
@@ -744,7 +743,7 @@ std::vector <WindPressureProfile> IndexModel::windPressureProfiles() const
 {
   return m_impl->windPressureProfiles();
 }
-void IndexModel::setWindPressureProfiles(const std::vector<WindPressureProfile> windPressureProfiles)
+void IndexModel::setWindPressureProfiles(const std::vector<WindPressureProfile> &windPressureProfiles)
 {
   m_impl->setWindPressureProfiles(windPressureProfiles);
 }
@@ -798,7 +797,7 @@ std::vector <Ahs> IndexModel::ahs() const
 {
   return m_impl->ahs();
 }
-void IndexModel::setAhs(const std::vector<Ahs> ahs)
+void IndexModel::setAhs(const std::vector<Ahs> &ahs)
 {
   m_impl->setAhs(ahs);
 }
@@ -811,7 +810,7 @@ std::vector<Zone> IndexModel::zones() const
 {
   return m_impl->zones();
 }
-void IndexModel::setZones(const std::vector<Zone> zones)
+void IndexModel::setZones(const std::vector<Zone> &zones)
 {
   m_impl->setZones(zones);
 }
@@ -824,7 +823,7 @@ std::vector<AirflowPath> IndexModel::airflowPaths() const
 {
   return m_impl->airflowPaths();
 }
-void IndexModel::setAirflowPaths(const std::vector<AirflowPath> paths)
+void IndexModel::setAirflowPaths(const std::vector<AirflowPath> &paths)
 {
   m_impl->setAirflowPaths(paths);
 }

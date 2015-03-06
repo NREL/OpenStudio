@@ -121,7 +121,7 @@ ScaleFactorySingleton::ScaleFactorySingleton() {
 ScaleConstant ScaleFactorySingleton::m_recoverFromFailedCreate() const {
 
   // fatal error if no scales are registered since will never get valid scale.
-  if (m_exponentMap.size() == 0) {
+  if (m_exponentMap.empty()) {
     LOG_AND_THROW("No scales are registered with ScaleFactory.");
   }
 

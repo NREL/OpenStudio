@@ -38,44 +38,43 @@
 
 namespace openstudio{
 
-EpwDataPoint::EpwDataPoint()
-{
-  m_year=1;
-  m_month=1;
-  m_day=1;
-  m_hour=1;
-  m_minute=0,
-  m_dataSourceandUncertaintyFlags="";
-  m_dryBulbTemperature="99.9";
-  m_dewPointTemperature="99.9",
-  m_relativeHumidity="999";
-  m_atmosphericStationPressure="999999";
-  m_extraterrestrialHorizontalRadiation="9999";
-  m_extraterrestrialDirectNormalRadiation="9999";
-  m_horizontalInfraredRadiationIntensity="9999",
-  m_globalHorizontalRadiation="9999";
-  m_directNormalRadiation="9999";
-  m_diffuseHorizontalRadiation="9999",
-  m_globalHorizontalIlluminance="999999";
-  m_directNormalIlluminance="999999";
-  m_diffuseHorizontalIlluminance="999999";
-  m_zenithLuminance="9999";
-  m_windDirection="999";
-  m_windSpeed="999";
-  m_totalSkyCover=99;
-  m_opaqueSkyCover=99,
-  m_visibility="9999";
-  m_ceilingHeight="99999";
-  m_presentWeatherObservation=0;
-  m_presentWeatherCodes=0;
-  m_precipitableWater="999";
-  m_aerosolOpticalDepth=".999";
-  m_snowDepth="999";
-  m_daysSinceLastSnowfall="99",
-  m_albedo="999";
-  m_liquidPrecipitationDepth="999";
-  m_liquidPrecipitationQuantity="99";
-}
+EpwDataPoint::EpwDataPoint() :
+  m_year(1),
+  m_month(1),
+  m_day(1),
+  m_hour(1),
+  m_minute(0),
+  m_dataSourceandUncertaintyFlags(""),
+  m_dryBulbTemperature("99.9"),
+  m_dewPointTemperature("99.9"),
+  m_relativeHumidity("999"),
+  m_atmosphericStationPressure("999999"),
+  m_extraterrestrialHorizontalRadiation("9999"),
+  m_extraterrestrialDirectNormalRadiation("9999"),
+  m_horizontalInfraredRadiationIntensity("9999"),
+  m_globalHorizontalRadiation("9999"),
+  m_directNormalRadiation("9999"),
+  m_diffuseHorizontalRadiation("9999"),
+  m_globalHorizontalIlluminance("999999"),
+  m_directNormalIlluminance("999999"),
+  m_diffuseHorizontalIlluminance("999999"),
+  m_zenithLuminance("9999"),
+  m_windDirection("999"),
+  m_windSpeed("999"),
+  m_totalSkyCover(99),
+  m_opaqueSkyCover(99),
+  m_visibility("9999"),
+  m_ceilingHeight("99999"),
+  m_presentWeatherObservation(0),
+  m_presentWeatherCodes(0),
+  m_precipitableWater("999"),
+  m_aerosolOpticalDepth(".999"),
+  m_snowDepth("999"),
+  m_daysSinceLastSnowfall("99"),
+  m_albedo("999"),
+  m_liquidPrecipitationDepth("999"),
+  m_liquidPrecipitationQuantity("99")
+{}
 
 EpwDataPoint::EpwDataPoint(int year,int month,int day,int hour,int minute,
   std::string dataSourceandUncertaintyFlags,double dryBulbTemperature,

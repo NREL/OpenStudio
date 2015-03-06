@@ -77,7 +77,7 @@ namespace resultsviewer{
 
   bool ResultsViewerData::isFileOpen(const QString& filename)
   {
-    if (m_sqlFileMap.size() == 0) return false;
+    if (m_sqlFileMap.empty()) return false;
 
     bool isOpen = false;
     for (auto map : m_sqlFileMap)
@@ -94,7 +94,7 @@ namespace resultsviewer{
   bool ResultsViewerData::isFileOpen(openstudio::SqlFile sqlFile)
   {
     if (!sqlFile.connectionOpen()) return false;
-    if (m_sqlFileMap.size() == 0) return false;
+    if (m_sqlFileMap.empty()) return false;
 
     bool isOpen = false;
     for (auto map : m_sqlFileMap) {
@@ -168,7 +168,7 @@ namespace resultsviewer{
 
   void ResultsViewerData::updateAlias(const QString& alias, const QString& filename)
   {
-    if (m_sqlFileMap.size() > 0)
+    if (!m_sqlFileMap.empty())
     {
       for (auto map : m_sqlFileMap)
       {

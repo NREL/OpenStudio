@@ -313,7 +313,7 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
 
   void markFailed();
 
-  void setResponseValues(const std::vector<double> values);
+  void setResponseValues(const std::vector<double>& values);
 
   friend class Analysis; // for calling setParent
   friend class detail::Analysis_Impl;

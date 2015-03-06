@@ -489,7 +489,7 @@ AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::AirLoopHVACUnitaryHeatCoolVAVChan
 {
   OS_ASSERT(getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>());
 
-  bool ok = true;
+  bool ok;
   ok = setCoolingCoil(coolingCoil);
   if( ! ok ) {
     LOG_AND_THROW("Unable to set cooling coil"); 

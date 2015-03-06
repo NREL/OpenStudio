@@ -269,7 +269,7 @@ void PlotViewProperties::updateCurves()
     if ( plotItem->rtti() == QwtPlotItem::Rtti_PlotCurve)
     {
       ui.cboCurves->addItem(plotItem->title().text());
-      m_curveVec.push_back((LinePlotCurve*)plotItem);
+      m_curveVec.push_back(static_cast<LinePlotCurve*>(plotItem));
     }
   }
 
