@@ -59,6 +59,7 @@
 
 
 [added]: http://nrel.github.io/OpenStudio-user-documentation/img/added.svg "Added"
+[changed]: http://nrel.github.io/OpenStudio-user-documentation/img/changed.svg "Changed"
 [deprecated]: http://nrel.github.io/OpenStudio-user-documentation/img/deprecated.svg "Deprecated"
 [fixed]: http://nrel.github.io/OpenStudio-user-documentation/img/fixed.svg "Fixed"
 [improved]: http://nrel.github.io/OpenStudio-user-documentation/img/improved.svg "Improved"
