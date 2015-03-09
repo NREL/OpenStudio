@@ -64,3 +64,4 @@
 [fixed]: http://nrel.github.io/OpenStudio-user-documentation/img/fixed.svg "Fixed"
 [improved]: http://nrel.github.io/OpenStudio-user-documentation/img/improved.svg "Improved"
 [removed]: http://nrel.github.io/OpenStudio-user-documentation/img/removed.svg "Removed"
+[changed]: ExteriorLights::schedule now returns boost::optional<Schedule> instead of Schedule
