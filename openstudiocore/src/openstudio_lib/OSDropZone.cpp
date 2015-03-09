@@ -733,7 +733,7 @@ void OSDropZone2::focusInEvent(QFocusEvent * e)
     QString style("QWidget#OSDropZone {\
                    background: #ffc627;\
                    border: 2px dashed #808080;\
-                   border-radius: 10px; }");
+                   border-radius: 5px; }");
     setStyleSheet(style);
 
     auto hasData = true; // TODO
@@ -750,7 +750,7 @@ void OSDropZone2::focusOutEvent(QFocusEvent * e)
     QString style("QWidget#OSDropZone {\
                    background: #CECECE;\
                    border: 2px dashed #808080;\
-                   border-radius: 10px; }");
+                   border-radius: 5px; }");
     setStyleSheet(style);
 
     emit inFocus(false, false);
