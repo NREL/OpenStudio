@@ -279,6 +279,7 @@ else()
   set(QT_HINT_DIR "")
 endif()
 
+# set CMAKE_PREFIX_PATH to specify specific Qt version
 find_package(Qt5Widgets HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5Widgets
 find_package(Qt5Sql HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Sql
 find_package(Qt5Network HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Network
