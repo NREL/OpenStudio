@@ -30,6 +30,7 @@
 #include <QLineEdit>
 #include <QString>
 #include <QValidator>
+#include <QIntValidator>
 
 class QFocusEvent;
 

@@ -607,6 +607,9 @@ void OSDropZone2::refresh()
       m_label->setText(temp);
     }
 
+    auto hasData = (m_label->text().size()) ? true : false;
+    emit inFocus(true, hasData);
+
     //// Adjust the width to accommodate the text
     //QFont myFont;
     //QFontMetrics fm(myFont);
@@ -736,7 +739,7 @@ void OSDropZone2::focusInEvent(QFocusEvent * e)
                    border-radius: 5px; }");
     setStyleSheet(style);
 
-    auto hasData = true; // TODO
+    auto hasData = this->m_label->text().size() ? true : false;
     emit inFocus(true, hasData);
   }
 

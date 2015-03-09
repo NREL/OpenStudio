@@ -652,7 +652,7 @@ private:
 
   std::tuple<int, int, boost::optional<int>> m_selectedCellLocation = std::make_tuple(-1, -1, -1);
 
-  std::vector <std::pair<QPushButton *, bool> > m_applyToButtonStates = std::vector < std::pair<QPushButton *, bool> >();
+  std::vector <std::pair<int, bool> > m_applyToButtonStates = std::vector < std::pair<int, bool> >();
 
 signals:
 

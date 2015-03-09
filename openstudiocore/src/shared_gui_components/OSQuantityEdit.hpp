@@ -115,6 +115,8 @@ class OSQuantityEdit2: public QWidget {
 
   void onModelObjectRemove(Handle handle);
 
+  void onInFocus(bool inFocus);
+
  private:
 
   QuantityLineEdit* m_lineEdit;
@@ -180,7 +182,7 @@ private:
 
 signals:
 
-  void inFocus(bool inFocus, bool hasData);
+  void inFocus(bool inFocus);
 
 };
 

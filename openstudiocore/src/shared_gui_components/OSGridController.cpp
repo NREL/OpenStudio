@@ -1514,7 +1514,7 @@ void OSGridController::onInFocus(bool inFocus, bool hasData, int row, int column
     auto button = horizontalHeaderWidget->m_pushButton;
     OS_ASSERT(button);
 
-    m_applyToButtonStates.push_back(std::make_pair(button, inFocus));
+    m_applyToButtonStates.push_back(std::make_pair(column, inFocus));
 
     if (inFocus) {
       m_selectedCellLocation = std::make_tuple(row, column, subrow);
@@ -1523,9 +1523,11 @@ void OSGridController::onInFocus(bool inFocus, bool hasData, int row, int column
         button->setText("Apply to Selected");
       }
       else {
-        button->setText("Apply to Selected");
-        //button->setText("Clear Selected"); TODO
+        button->setText("Clear Selected");
       }
+    }
+    else {
+      button->setText("Apply to Selected");
     }
 
     QTimer::singleShot(0, this, SLOT(setApplyButtonState()));
@@ -1535,7 +1537,11 @@ void OSGridController::onInFocus(bool inFocus, bool hasData, int row, int column
 void OSGridController::setApplyButtonState()
 {
   for (auto pair : m_applyToButtonStates) {
-    pair.first->setEnabled(pair.second);
+    HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(pair.first));
+    OS_ASSERT(horizontalHeaderWidget);
+    auto button = horizontalHeaderWidget->m_pushButton;
+    OS_ASSERT(button);
+    button->setEnabled(pair.second);
   }
 
   m_applyToButtonStates.clear();
@@ -1559,7 +1565,7 @@ void HorizontalHeaderPushButton::focusInEvent(QFocusEvent * e)
 {
   if (e->reason() == Qt::MouseFocusReason)
   {
-    emit inFocus(true, true); 
+    emit inFocus(true, true); // TODO should hasData = true???
   }
   
   QPushButton::focusInEvent(e);
