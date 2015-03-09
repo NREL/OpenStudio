@@ -97,10 +97,8 @@ namespace detail {
     return value.get();
   }
 
-  Schedule ExteriorLights_Impl::schedule() const {
-    boost::optional<Schedule> value = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Exterior_LightsFields::ScheduleName);
-    OS_ASSERT(value);
-    return value.get();
+  boost::optional<Schedule> ExteriorLights_Impl::schedule() const {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Exterior_LightsFields::ScheduleName);
   }
 
   std::string ExteriorLights_Impl::controlOption() const {
@@ -144,6 +142,11 @@ namespace detail {
                                                 "Exterior Lights",
                                                 schedule);
     return result;
+  }
+
+  void ExteriorLights_Impl::resetSchedule() {
+    bool result = setString(OS_Exterior_LightsFields::ScheduleName, "");
+    OS_ASSERT(result);
   }
 
   bool ExteriorLights_Impl::setControlOption(std::string controlOption) {
@@ -190,7 +193,10 @@ namespace detail {
   }
 
   boost::optional<ModelObject> ExteriorLights_Impl::scheduleAsModelObject() const {
-    OptionalModelObject result = schedule();
+    OptionalModelObject result;
+    if( auto t_schedule = schedule() ) {
+      result = t_schedule->cast<ModelObject>();
+    }
     return result;
   }
 
@@ -277,7 +283,7 @@ ExteriorLightsDefinition ExteriorLights::exteriorLightsDefinition() const {
   return getImpl<detail::ExteriorLights_Impl>()->exteriorLightsDefinition();
 }
 
-Schedule ExteriorLights::schedule() const {
+boost::optional<Schedule> ExteriorLights::schedule() const {
   return getImpl<detail::ExteriorLights_Impl>()->schedule();
 }
 
@@ -311,6 +317,10 @@ bool ExteriorLights::setExteriorLightsDefinition(const ExteriorLightsDefinition&
 
 bool ExteriorLights::setSchedule(Schedule& schedule) {
   return getImpl<detail::ExteriorLights_Impl>()->setSchedule(schedule);
+}
+
+void ExteriorLights::resetSchedule() {
+  getImpl<detail::ExteriorLights_Impl>()->resetSchedule();
 }
 
 bool ExteriorLights::setControlOption(std::string controlOption) {
