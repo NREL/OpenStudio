@@ -606,7 +606,11 @@ void ThermalZonesGridController::addColumns(const QString &/*category*/, std::ve
           if (t_mo.cast<model::ZoneHVACComponent>().thermalZone()) {
             boost::optional<model::ModelObject> clone_mo = t_mo.cast<model::ZoneHVACComponent>().clone(t_mo.model());
             OS_ASSERT(clone_mo);
-            return clone_mo->cast<model::ZoneHVACComponent>().addToThermalZone(*t_z);
+            auto success = clone_mo->cast<model::ZoneHVACComponent>().addToThermalZone(*t_z);
+            OS_ASSERT(success);
+            OS_ASSERT(t_mo.cast<model::ZoneHVACComponent>().thermalZone());
+            OS_ASSERT(clone_mo->cast<model::ZoneHVACComponent>().thermalZone());
+            return true;
           }
           return t_mo.cast<model::ZoneHVACComponent>().addToThermalZone(*t_z);
         }
