@@ -111,7 +111,7 @@
 #define SELECTED "All"
 
 // GENERAL
-#define RENDERINGCOLOR "Rendering\nColor"
+#define RENDERINGCOLOR "Rendering Color"
 #define DEFAULTCONSTRUCTIONSET "Default Construction Set"
 #define DEFAULTSCHEDULESET "Default Schedule Set"
 #define DESIGNSPECIFICATIONOUTDOORAIR "Design Specification Outdoor Air"
