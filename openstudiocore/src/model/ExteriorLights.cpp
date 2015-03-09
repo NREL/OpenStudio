@@ -237,9 +237,7 @@ ExteriorLights::ExteriorLights(const ExteriorLightsDefinition& definition,
   bool ok = setExteriorLightsDefinition(definition);
   OS_ASSERT(ok);
 
-  ScheduleConstant defaultSchedule(model());
-  defaultSchedule.setValue(1.0);
-  defaultSchedule.setName(name().get() + " Always On Schedule");
+  auto defaultSchedule = definition.model().alwaysOnDiscreteSchedule();
   ok = setSchedule(defaultSchedule);
   OS_ASSERT(ok);
 
