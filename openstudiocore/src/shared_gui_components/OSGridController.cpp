@@ -1628,6 +1628,7 @@ HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidge
   m_checkBox->setCheckable(true);
 
   m_label->setWordWrap(true);
+  m_label->setStyleSheet("QLabel { padding: 5px; }");
   m_label->setAlignment(Qt::AlignHCenter);
   mainLayout->addWidget(m_label);
 
@@ -1655,7 +1656,7 @@ void HorizontalHeaderWidget::addWidget(const QSharedPointer<QWidget> &t_widget)
   if (!t_widget.isNull()) {
     m_addedWidgets.push_back(t_widget);
     auto hLayout = new QHBoxLayout();
-    hLayout->setContentsMargins(0,0,0,0);
+    hLayout->setContentsMargins(5,0,5,0);
     qobject_cast<QVBoxLayout *>(layout())->addLayout(hLayout);
     hLayout->addWidget(t_widget.data());
     t_widget->setVisible(true);
