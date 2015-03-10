@@ -800,7 +800,11 @@ namespace openstudio{
         QString oldPath = toQString(fileRef.path());
         QString newPath = oldPath;
         if (!oldLowerClassName.empty() && !newLowerClassName.empty() && oldLowerClassName != newLowerClassName){
-          newPath.replace(toQString(oldLowerClassName), toQString(newLowerClassName));
+          QString temp = toQString(oldLowerClassName);
+          int index = newPath.lastIndexOf(temp);
+          if (index >= 0){
+            newPath.replace(index, temp.size(), toQString(newLowerClassName));
+          }
         }
 
         if (QFile::exists(newPath)) {
