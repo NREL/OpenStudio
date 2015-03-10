@@ -1,3 +1,8 @@
+## OpenStudio v1.7.0
+###### 2015-03 — [Diff](https://github.com/NREL/OpenStudio/compare/v1.6.3...v1.7.0)
+
+- ![Changed:][changed] ExteriorLights::schedule now returns boost::optional<Schedule> instead of Schedule
+
 ## OpenStudio v1.6.3
 ###### 2015-03 — [Diff](https://github.com/NREL/OpenStudio/compare/v1.6.2...v1.6.3)
 
@@ -45,7 +50,7 @@
 ###### 2015-02-09 — [Diff](https://github.com/NREL/OpenStudio/compare/v1.6.0...v1.6.1)
 
 - ![Added:][added] Support for TransOption in SDD ReverseTranslator
-- ![Added:][added] AirLoopHVAC::supplyFan, ::returnFan, ::reliefFan. These DO NOT account for fans inside compound objects like unitary systems.
+- ![Added:][added] AirLoopHVAC::supplyFan, AirLoopHVAC::returnFan, AirLoopHVAC::reliefFan. These DO NOT account for fans inside compound objects like unitary systems.
 - ![Improved:][improved] Implementation of thermal zone clone
 - ![Improved:][improved] Schedule editor GUI in OpenStudio Application
 - ![Improved:][improved] Setpoint manager logic so that fans inside unitary systems are accounted for. This is done during OS -> IDF translation.
@@ -64,4 +69,3 @@
 [fixed]: http://nrel.github.io/OpenStudio-user-documentation/img/fixed.svg "Fixed"
 [improved]: http://nrel.github.io/OpenStudio-user-documentation/img/improved.svg "Improved"
 [removed]: http://nrel.github.io/OpenStudio-user-documentation/img/removed.svg "Removed"
-[changed]: ExteriorLights::schedule now returns boost::optional<Schedule> instead of Schedule
