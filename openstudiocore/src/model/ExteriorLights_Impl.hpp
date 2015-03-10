@@ -82,7 +82,7 @@ namespace detail {
 
     ExteriorLightsDefinition exteriorLightsDefinition() const;
 
-    Schedule schedule() const;
+    boost::optional<Schedule> schedule() const;
 
     std::string controlOption() const;
 
@@ -104,6 +104,7 @@ namespace detail {
 
     bool setSchedule(Schedule& schedule);
 
+    void resetSchedule();
     bool setControlOption(std::string controlOption);
 
     void resetControlOption();
