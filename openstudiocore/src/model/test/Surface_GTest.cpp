@@ -1285,14 +1285,30 @@ TEST_F(ModelFixture, Surface_createAdjacentSurface){
   EXPECT_EQ(surface1.grossArea(), surface2->grossArea());
   EXPECT_EQ(surface1.netArea(), surface2->netArea());
   EXPECT_EQ(surface1.netArea(), triangulatedArea(surface1.triangulation()));
+  for (const auto& triangle : surface1.triangulation()){
+    ASSERT_TRUE(getOutwardNormal(triangle));
+    EXPECT_DOUBLE_EQ(1.0, surface1.outwardNormal().dot(getOutwardNormal(triangle).get()));
+  }
   EXPECT_EQ(surface2->netArea(), triangulatedArea(surface2->triangulation()));
+  for (const auto& triangle : surface2->triangulation()){
+    ASSERT_TRUE(getOutwardNormal(triangle));
+    EXPECT_DOUBLE_EQ(1.0, surface2->outwardNormal().dot(getOutwardNormal(triangle).get()));
+  }
 
   ASSERT_EQ(1u, surface2->subSurfaces().size());
   SubSurface subSurface2 = surface2->subSurfaces()[0];
   EXPECT_EQ(subSurface1.grossArea(), subSurface2.grossArea());
   EXPECT_EQ(subSurface1.netArea(), subSurface2.netArea());
   EXPECT_EQ(subSurface1.netArea(), triangulatedArea(subSurface1.triangulation()));
+  for (const auto& triangle : subSurface1.triangulation()){
+    ASSERT_TRUE(getOutwardNormal(triangle));
+    EXPECT_DOUBLE_EQ(1.0, subSurface1.outwardNormal().dot(getOutwardNormal(triangle).get()));
+  }
   EXPECT_EQ(subSurface2.netArea(), triangulatedArea(subSurface2.triangulation()));
+  for (const auto& triangle : subSurface2.triangulation()){
+    ASSERT_TRUE(getOutwardNormal(triangle));
+    EXPECT_DOUBLE_EQ(1.0, subSurface2.outwardNormal().dot(getOutwardNormal(triangle).get()));
+  }
 }
 
 TEST_F(ModelFixture, Surface_DeleteAdjacentSurface){
