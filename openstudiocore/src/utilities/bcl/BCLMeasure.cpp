@@ -69,15 +69,9 @@ namespace openstudio{
     {
       QString srcItemPath = toQString(source) + "/" + info.fileName();
       QString dstItemPath = toQString(destination) + "/" + info.fileName();
-      if (info.isDir())
+      if (info.isFile())
       {
-        if (!this->copyDirectory(toPath(srcItemPath), toPath(dstItemPath)))
-        {
-          return false;
-        }
-      } else if (info.isFile())
-      {
-        if (m_bclXML.hasFile(toPath(srcItemPath)) || xmlPath == boost::filesystem::system_complete(toPath(srcItemPath)))
+        if (m_bclXML.hasFile(toPath(srcItemPath)) || (xmlPath == boost::filesystem::system_complete(toPath(srcItemPath))))
         {
           if (!QFile::copy(srcItemPath, dstItemPath))
           {
@@ -981,6 +975,16 @@ namespace openstudio{
 
     // DLM: do not copy entire directory, only copy tracked files
     if (!this->copyDirectory(this->directory(), newDir)){
+      return boost::none;
+    }
+
+    openstudio::path tests = toPath("tests");
+    if (exists(this->directory() / tests) && !this->copyDirectory(this->directory() / tests, newDir / tests)){
+      return boost::none;
+    }
+
+    openstudio::path resources = toPath("resources");
+    if (exists(this->directory() / resources) && !this->copyDirectory(this->directory() / resources, newDir / resources)){
       return boost::none;
     }
 
