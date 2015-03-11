@@ -67,6 +67,21 @@ double totalArea(const std::vector<std::vector<Point3d> >& polygons)
   return result;
 }
 
+bool checkNormals(const openstudio::Vector3d& normal, const std::vector<std::vector<Point3d> >& polygons)
+{
+  for (auto polygon : polygons){
+    boost::optional<Vector3d> a = getOutwardNormal(polygon);
+    if (a){
+      if (!vectorEqual(normal, *a)){
+        return false;
+      }
+    }else{
+      return false;
+    }
+  }
+  return true;
+}
+
 // initialize for each test
 void GeometryFixture::SetUp() {
 }

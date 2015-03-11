@@ -38,6 +38,8 @@ bool vectorEqual(const openstudio::Vector3d& a, const openstudio::Vector3d& b);
 
 double totalArea(const std::vector<std::vector<openstudio::Point3d> >& polygons);
 
+bool checkNormals(const openstudio::Vector3d& normal, const std::vector<std::vector<openstudio::Point3d> >& polygons);
+
 class GeometryFixture : public ::testing::Test {
 protected:
 
