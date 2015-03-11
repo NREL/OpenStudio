@@ -614,6 +614,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateChillerElectricEIR(chiller);
       break;
     }
+  case openstudio::IddObjectType::OS_ClimateZones:
+  {
+    // no-op
+    return retVal;
+  }
   case openstudio::IddObjectType::OS_Construction_CfactorUndergroundWall :
     {
       model::CFactorUndergroundWallConstruction construction = modelObject.cast<CFactorUndergroundWallConstruction>();
