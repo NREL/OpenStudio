@@ -1,14 +1,20 @@
-since = '2015-01-22'
-
-
 require 'github_api'
 require 'date'
+require 'yaml'
+
+begin_date = Time.parse('2015-02-09' + 'T06:00:00Z')
+
+end_date = Time.now
+end_date = Time.parse('2015-02-19' + 'T06:00:00Z')
 
 repo_owner = 'NREL'
 repo = 'OpenStudio'
-date = Time.parse(since + 'T06:00:00Z')
 
 github = Github.new
+if File.exists?(Dir.home + '/github_config.yml')
+  github_options = YAML.load_file(Dir.home + '/github_config.yml')
+  github = Github.new oauth_token: github_options[:oauth_token]
+end
 
 totalOpenIssues = Array.new
 totalOpenPullRequests = Array.new
@@ -17,8 +23,31 @@ newOpenIssues = Array.new
 closedIssues = Array.new
 acceptedPullRequests = Array.new
 
-def get_num(url)
-  url.split('/')[-1].to_i
+def get_num(issue)
+  issue.html_url.split('/')[-1].to_i
+end
+
+def get_issue_num(issue)
+  "\##{get_num(issue)}"
+end
+
+def get_html_url(issue)
+  issue.html_url
+end
+
+def get_title(issue)
+  issue.title
+end
+
+def print_issue(issue)
+  is_feature = false
+  issue.labels.each {|label| is_feature = true if label.name == "Feature Request"}
+  
+  if is_feature
+    "- ![Improved:][improved] [#{get_issue_num(issue)}]( #{get_html_url(issue)} ), #{get_title(issue)}"
+  else
+    "- ![Fixed:][fixed] [#{get_issue_num(issue)}]( #{get_html_url(issue)} ), #{get_title(issue)}"
+  end
 end
 
 # Process Open Issues
@@ -35,19 +64,17 @@ while (results != 0)
   resp.env[:body].each do |issue, index|
     created = Time.parse(issue.created_at)
     if !issue.has_key?(:pull_request)
-      totalOpenIssues << get_num(issue.html_url)
-      if created >= date
-        newIssues << get_num(issue.html_url)
+      totalOpenIssues << issue
+      if created >= begin_date && created <= end_date
+        newIssues << issue
       end
     else
-      totalOpenPullRequests << get_num(issue.html_url)
+      totalOpenPullRequests << issue
     end
   end
 
   page = page + 1
 end
-
-newOpenIssues = newIssues.sort
 
 # Process Closed Issues
 results = -1
@@ -64,31 +91,34 @@ while (results != 0)
     created = Time.parse(issue.created_at)
     closed = Time.parse(issue.closed_at)
     if !issue.has_key?(:pull_request)
-      if created >= date
-        newIssues << get_num(issue.html_url)
+      if created >= begin_date && created <= end_date
+        newIssues << issue
       end
-      if closed >= date
-        closedIssues << get_num(issue.html_url)
+      if closed >= begin_date && closed <= end_date
+        closedIssues << issue
       end
-    elsif closed >= date
-      acceptedPullRequests << get_num(issue.html_url)
+    elsif closed >= begin_date && closed <= end_date
+      acceptedPullRequests << issue
     end
   end
 
   page = page + 1
 end
 
-newIssues.sort!
+closedIssues.sort! {|x,y| get_num(x) <=> get_num(y)}
+newIssues.sort! {|x,y| get_num(x) <=> get_num(y)}
+acceptedPullRequests.sort! {|x,y| get_num(x) <=> get_num(y)}
+totalOpenPullRequests.sort! {|x,y| get_num(x) <=> get_num(y)}
 
 puts "Total Open Issues: #{totalOpenIssues.length}"
 puts "Total Open Pull Requests: #{totalOpenPullRequests.length}"
-puts "\nSince #{since}:"
-puts "  Created Issues: #{newIssues.length} (Starting at ##{newIssues.first})"
-puts "  Closed Issues: #{closedIssues.length} (" + closedIssues.join(', ') + ')'
-puts "  Accepted Pull Requests: #{acceptedPullRequests.length}"
+puts "\nDate Range: #{begin_date.strftime('%m/%d/%y')} - #{end_date.strftime('%m/%d/%y')}:"
+puts "\nNew Issues: #{newIssues.length} (" + newIssues.map{|issue| get_issue_num(issue)}.join(', ') + ')'
 
-puts "\n"
-puts "All Open Issues: #{totalOpenIssues.join(',')}"
-newOpenIssues.each do |issue|
-  puts "https://github.com/NREL/OpenStudio/issues/#{issue}"
-end
+puts "\nClosed Issues: #{closedIssues.length} (" + closedIssues.map{|issue| get_issue_num(issue)}.join(', ') + ')'
+closedIssues.each{|issue| puts print_issue(issue)}
+
+puts "\nAccepted Pull Requests: #{acceptedPullRequests.length} (" + acceptedPullRequests.map{|issue| get_issue_num(issue)}.join(', ') + ')'
+acceptedPullRequests.each{|issue| puts print_issue(issue)}
+
+puts "\nAll Open Issues: #{totalOpenIssues.length} (" + totalOpenIssues.map{|issue| get_issue_num(issue)}.join(', ') + ')'

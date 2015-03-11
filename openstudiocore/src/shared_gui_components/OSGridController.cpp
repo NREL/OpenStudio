@@ -1612,7 +1612,7 @@ HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidge
   m_pushButton(new HorizontalHeaderPushButton(this))
 {
   auto mainLayout = new QVBoxLayout(this);
-  mainLayout->setContentsMargins(0,0,0,0);
+  mainLayout->setContentsMargins(0,0,0,5);
   mainLayout->setAlignment(Qt::AlignCenter);
   setLayout(mainLayout);
 
@@ -1629,33 +1629,29 @@ HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidge
       background: #94b3de;\
     }\
   ";
-      //border-bottom: 1px solid black;
+
   m_checkBox->setStyleSheet(style);
   m_checkBox->setCheckable(true);
 
-  m_innerLayout = new QVBoxLayout();
-  m_innerLayout->setAlignment(Qt::AlignCenter);
-  m_innerLayout->setContentsMargins(5,5,5,5);
-  mainLayout->addLayout(m_innerLayout);
-
   m_label->setWordWrap(true);
+  m_label->setStyleSheet("QLabel { padding: 5px; }");
   m_label->setAlignment(Qt::AlignHCenter);
-  m_innerLayout->addWidget(m_label);
+  mainLayout->addWidget(m_label);
 
-  m_innerLayout->addStretch();
+  mainLayout->addStretch();
 
   m_pushButton->setText("Apply to Selected");
-  m_pushButton->setFixedWidth(100);
+  m_pushButton->setMaximumWidth(150);
   m_pushButton->setEnabled(false);
   connect(m_pushButton, &HorizontalHeaderPushButton::inFocus, this, &HorizontalHeaderWidget::inFocus);
-  m_innerLayout->addWidget(m_pushButton);
+  mainLayout->addWidget(m_pushButton,0,Qt::AlignCenter);
 }
 
 HorizontalHeaderWidget::~HorizontalHeaderWidget()
 {
   for (auto &widget : m_addedWidgets)
   {
-    m_innerLayout->removeWidget(widget.data());
+    layout()->removeWidget(widget.data());
     widget->setVisible(false);
     widget->setParent(nullptr);
   }
@@ -1666,8 +1662,8 @@ void HorizontalHeaderWidget::addWidget(const QSharedPointer<QWidget> &t_widget)
   if (!t_widget.isNull()) {
     m_addedWidgets.push_back(t_widget);
     auto hLayout = new QHBoxLayout();
-    hLayout->setContentsMargins(0,0,0,0);
-    m_innerLayout->addLayout(hLayout);
+    hLayout->setContentsMargins(5,0,5,0);
+    qobject_cast<QVBoxLayout *>(layout())->addLayout(hLayout);
     hLayout->addWidget(t_widget.data());
     t_widget->setVisible(true);
   }
