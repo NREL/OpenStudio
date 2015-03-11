@@ -2,6 +2,7 @@
 ###### 2015-03 — [Diff](https://github.com/NREL/OpenStudio/compare/v1.6.3...v1.7.0)
 
 - ![Changed:][changed] ExteriorLights::schedule now returns boost::optional<Schedule> instead of Schedule
+- ![Fixed:][fixed] [#667](https://github.com/NREL/OpenStudio/issues/667), User should not be able to change space shading to building shading in inspector
 
 ## OpenStudio v1.6.3
 ###### 2015-03 — [Diff](https://github.com/NREL/OpenStudio/compare/v1.6.2...v1.6.3)
