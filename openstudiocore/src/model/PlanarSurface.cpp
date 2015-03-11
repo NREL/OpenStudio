@@ -528,7 +528,7 @@ namespace model {
         std::vector<std::vector<Point3d> > faceTriangulation = computeTriangulation(faceVertices, faceHoles);
 
         for (std::vector<Point3d> faceTriangle : faceTriangulation){
-          //std::reverse(faceTriangle.begin(), faceTriangle.end());
+          std::reverse(faceTriangle.begin(), faceTriangle.end());
           m_cachedTriangulation.push_back(faceTransformation*faceTriangle);
         }
       }

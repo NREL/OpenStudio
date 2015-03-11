@@ -144,7 +144,7 @@ TEST_F(GeometryFixture, BoostGeometry_Polygon1)
 }
 
 
-TEST_F(GeometryFixture, PointInPolygon)
+TEST_F(GeometryFixture, PointInPolygon_Down)
 {
   double tol = 0.01;
   double tol2 = tol/2.0;
@@ -186,7 +186,49 @@ TEST_F(GeometryFixture, PointInPolygon)
   EXPECT_FALSE(pointInPolygon(Point3d(0.5,0.5,0.5), points, tol));
 }
 
-TEST_F(GeometryFixture, Within)
+TEST_F(GeometryFixture, PointInPolygon_Up)
+{
+  double tol = 0.01;
+  double tol2 = tol / 2.0;
+
+  Point3dVector points = makeRectangleUp(0, 0, 1, 1);
+
+  // center
+  EXPECT_FALSE(pointInPolygon(Point3d(0.5, 0.5, 0), points, tol));
+
+  // corners
+  EXPECT_FALSE(pointInPolygon(Point3d(0, 0, 0), points, tol));
+  EXPECT_FALSE(pointInPolygon(Point3d(1, 0, 0), points, tol));
+  EXPECT_FALSE(pointInPolygon(Point3d(1, 1, 0), points, tol));
+  EXPECT_FALSE(pointInPolygon(Point3d(0, 1, 0), points, tol));
+
+  // edges
+  EXPECT_FALSE(pointInPolygon(Point3d(0.5, 0, 0), points, tol));
+  EXPECT_FALSE(pointInPolygon(Point3d(1, 0.5, 0), points, tol));
+  EXPECT_FALSE(pointInPolygon(Point3d(0.5, 1, 0), points, tol));
+  EXPECT_FALSE(pointInPolygon(Point3d(0, 0.5, 0), points, tol));
+
+  EXPECT_FALSE(within(Point3d(0.5, tol2, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(1 - tol2, 0.5, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(0.5, 1 - tol2, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(tol2, 0.5, 0), points, tol));
+
+  EXPECT_FALSE(within(Point3d(0.5, -tol2, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(1 + tol2, 0.5, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(0.5, 1 + tol2, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(-tol2, 0.5, 0), points, tol));
+
+  // outside
+  EXPECT_FALSE(pointInPolygon(Point3d(2, 0, 0), points, tol));
+  EXPECT_FALSE(pointInPolygon(Point3d(1, 2, 0), points, tol));
+  EXPECT_FALSE(pointInPolygon(Point3d(-1, 0, 0), points, tol));
+  EXPECT_FALSE(pointInPolygon(Point3d(-1, -1, 0), points, tol));
+
+  // not on z = 0
+  EXPECT_FALSE(pointInPolygon(Point3d(0.5, 0.5, 0.5), points, tol));
+}
+
+TEST_F(GeometryFixture, Within_Down)
 {
   double tol = 0.01;
   double tol2 = tol/2.0;
@@ -212,6 +254,48 @@ TEST_F(GeometryFixture, Within)
   EXPECT_TRUE(within(Point3d(1 - tol2, 0.5, 0), points, tol));
   EXPECT_TRUE(within(Point3d(0.5, 1 - tol2, 0), points, tol));
   EXPECT_TRUE(within(Point3d(tol2, 0.5, 0), points, tol));
+
+  EXPECT_FALSE(within(Point3d(0.5, -tol2, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(1 + tol2, 0.5, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(0.5, 1 + tol2, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(-tol2, 0.5, 0), points, tol));
+
+  // outside
+  EXPECT_FALSE(within(Point3d(2, 0, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(1, 2, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(-1, 0, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(-1, -1, 0), points, tol));
+
+  // not on z = 0
+  EXPECT_FALSE(within(Point3d(0.5, 0.5, 0.5), points, tol));
+}
+
+TEST_F(GeometryFixture, Within_Up)
+{
+  double tol = 0.01;
+  double tol2 = tol / 2.0;
+
+  Point3dVector points = makeRectangleUp(0, 0, 1, 1);
+
+  // center
+  EXPECT_FALSE(within(Point3d(0.5, 0.5, 0), points, tol));
+
+  // corners
+  EXPECT_FALSE(within(Point3d(0, 0, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(1, 0, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(1, 1, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(0, 1, 0), points, tol));
+
+  // edges
+  EXPECT_FALSE(within(Point3d(0.5, 0, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(1, 0.5, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(0.5, 1, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(0, 0.5, 0), points, tol));
+
+  EXPECT_FALSE(within(Point3d(0.5, tol2, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(1 - tol2, 0.5, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(0.5, 1 - tol2, 0), points, tol));
+  EXPECT_FALSE(within(Point3d(tol2, 0.5, 0), points, tol));
 
   EXPECT_FALSE(within(Point3d(0.5, -tol2, 0), points, tol));
   EXPECT_FALSE(within(Point3d(1 + tol2, 0.5, 0), points, tol));
@@ -391,7 +475,7 @@ TEST_F(GeometryFixture, Intersect_Adjacent)
   EXPECT_FALSE(test);
 }
 
-TEST_F(GeometryFixture, Intersect_Overlap)
+TEST_F(GeometryFixture, Intersect_Overlap_Down)
 {
   double tol = 0.01;
 
@@ -422,7 +506,26 @@ TEST_F(GeometryFixture, Intersect_Overlap)
   EXPECT_TRUE(circularEqual(makeRectangleDown(0, 0, 1, 1), test->newPolygons2()[0])) << test->newPolygons2()[0];
 }
 
-TEST_F(GeometryFixture, Intersect_Within)
+TEST_F(GeometryFixture, Intersect_Overlap_Up)
+{
+  double tol = 0.01;
+
+  boost::optional<IntersectionResult> test;
+  Point3dVector points1;
+  Point3dVector points2;
+
+  // sense is down
+  points1 = makeRectangleUp(0, 0, 2, 1);
+  points2 = makeRectangleUp(1, 0, 2, 1);
+
+  test = intersect(points1, points2, tol);
+  EXPECT_FALSE(test);
+
+  test = intersect(points2, points1, tol);
+  EXPECT_FALSE(test);
+}
+
+TEST_F(GeometryFixture, Intersect_Within_Down)
 {
   double tol = 0.01;
 
@@ -451,6 +554,25 @@ TEST_F(GeometryFixture, Intersect_Within)
   //EXPECT_TRUE(circularEqual(makeRectangleDown(2, 0, 1, 1), test->newPolygons1()[0])) << test->newPolygons1()[0];
   //ASSERT_EQ(1, test->newPolygons2().size());
   //EXPECT_TRUE(circularEqual(makeRectangleDown(0, 0, 1, 1), test->newPolygons2()[0])) << test->newPolygons2()[0];
+}
+
+TEST_F(GeometryFixture, Intersect_Within_Up)
+{
+  double tol = 0.01;
+
+  boost::optional<IntersectionResult> test;
+  Point3dVector points1;
+  Point3dVector points2;
+
+  // sense is up
+  points1 = makeRectangleUp(0, 0, 3, 3);
+  points2 = makeRectangleUp(1, 1, 2, 2);
+
+  test = intersect(points1, points2, tol);
+  EXPECT_FALSE(test);
+  
+  test = intersect(points2, points1, tol);
+  EXPECT_FALSE(test);
 }
 
 TEST_F(GeometryFixture, Join_False)
@@ -611,7 +733,7 @@ TEST_F(GeometryFixture, Join_Adjacent)
   EXPECT_FALSE(test);
 }
 
-TEST_F(GeometryFixture, Join_Overlap)
+TEST_F(GeometryFixture, Join_Overlap_Down)
 {
   double tol = 0.01;
 
@@ -630,6 +752,25 @@ TEST_F(GeometryFixture, Join_Overlap)
   test = join(points2, points1, tol);
   ASSERT_TRUE(test);
   EXPECT_TRUE(circularEqual(makeRectangleDown(0, 0, 3, 1), *test)) << *test;
+}
+
+TEST_F(GeometryFixture, Join_Overlap_Up)
+{
+  double tol = 0.01;
+
+  boost::optional<std::vector<Point3d> > test;
+  Point3dVector points1;
+  Point3dVector points2;
+
+  // sense is up
+  points1 = makeRectangleUp(0, 0, 2, 1);
+  points2 = makeRectangleUp(1, 0, 2, 1);
+
+  test = join(points1, points2, tol);
+  EXPECT_FALSE(test);
+
+  test = join(points2, points1, tol);
+  EXPECT_FALSE(test);
 }
 
 TEST_F(GeometryFixture, Join_Overlap2)
@@ -709,7 +850,7 @@ TEST_F(GeometryFixture, JoinAll)
 }
 
 
-TEST_F(GeometryFixture, RemoveSpikes)
+TEST_F(GeometryFixture, RemoveSpikes_Down)
 {
   double tol = 0.01;
 
@@ -719,6 +860,7 @@ TEST_F(GeometryFixture, RemoveSpikes)
 
   // spike at beginning
   { 
+    // sense is down
     points.clear();
     points.push_back(Point3d(10, 10, 0)); // the spike
     points.push_back(Point3d(10, 0, 0));
@@ -738,6 +880,7 @@ TEST_F(GeometryFixture, RemoveSpikes)
 
   // spike at beginning 2
   { 
+    // sense is down
     points.clear();
     points.push_back(Point3d(10, 5, 0));
     points.push_back(Point3d(10, 10, 0)); // the spike
@@ -757,6 +900,7 @@ TEST_F(GeometryFixture, RemoveSpikes)
 
   // spike in middle
   { 
+    // sense is down
     points.clear();
     points.push_back(Point3d(10, 5, 0));
     points.push_back(Point3d(10, 0, 0));
@@ -769,6 +913,63 @@ TEST_F(GeometryFixture, RemoveSpikes)
     expected.push_back(Point3d(10, 0, 0));
     expected.push_back(Point3d(0, 0, 0));
     expected.push_back(Point3d(0, 5, 0));
+
+    result = removeSpikes(points, tol);
+    EXPECT_TRUE(circularEqual(expected, result)) << result;
+  }
+}
+
+TEST_F(GeometryFixture, RemoveSpikes_Up)
+{
+  double tol = 0.01;
+
+  std::vector<Point3d> points;
+  std::vector<Point3d> expected;
+  std::vector<Point3d> result;
+
+  // spike at end
+  {
+    // sense is up
+    points.clear();
+    points.push_back(Point3d(10, 5, 0));
+    points.push_back(Point3d(0, 5, 0));
+    points.push_back(Point3d(0, 0, 0));
+    points.push_back(Point3d(10, 0, 0));
+    points.push_back(Point3d(10, 10, 0)); // the spike
+
+    expected.clear();
+
+    result = removeSpikes(points, tol);
+    EXPECT_TRUE(circularEqual(expected, result)) << result;
+  }
+
+  // spike at end 2
+  {
+    // sense is up
+    points.clear();
+    points.push_back(Point3d(0, 5, 0));
+    points.push_back(Point3d(0, 0, 0));
+    points.push_back(Point3d(10, 0, 0));
+    points.push_back(Point3d(10, 10, 0)); // the spike
+    points.push_back(Point3d(10, 5, 0));
+
+    expected.clear();
+
+    result = removeSpikes(points, tol);
+    EXPECT_TRUE(circularEqual(expected, result)) << result;
+  }
+
+  // spike in middle
+  {
+    // sense is up
+    points.clear();
+    points.push_back(Point3d(0, 0, 0));
+    points.push_back(Point3d(10, 0, 0));
+    points.push_back(Point3d(-5, 0, 0)); // the spike
+    points.push_back(Point3d(10, 5, 0));
+    points.push_back(Point3d(0, 5, 0));
+
+    expected.clear();
 
     result = removeSpikes(points, tol);
     EXPECT_TRUE(circularEqual(expected, result)) << result;
@@ -843,7 +1044,7 @@ TEST_F(GeometryFixture, Subtract_SamePoints)
   EXPECT_EQ(0, test.size());
 }
 
-TEST_F(GeometryFixture, Subtract_Empty)
+TEST_F(GeometryFixture, Subtract_Empty_Down)
 {
   double tol = 0.01;
 
@@ -861,6 +1062,36 @@ TEST_F(GeometryFixture, Subtract_Empty)
     std::cout << polygon << std::endl;
   }
   EXPECT_DOUBLE_EQ(1.0, totalArea(test));
+
+  // can't subtract single point
+  points2.push_back(Point3d(1, 1, 1));
+
+  holes.clear();
+  holes.push_back(points2);
+  test = subtract(points1, holes, tol);
+  EXPECT_TRUE(test.empty());
+
+  // can't subtract single point
+  holes.clear();
+  holes.push_back(points1);
+  test = subtract(points2, holes, tol);
+  EXPECT_TRUE(test.empty());
+}
+
+TEST_F(GeometryFixture, Subtract_Empty_Up)
+{
+  double tol = 0.01;
+
+  std::vector<std::vector<Point3d> > test;
+  std::vector<std::vector<Point3d> > holes;
+  Point3dVector points1;
+  Point3dVector points2;
+
+  // sense is down
+  points1 = makeRectangleUp(0, 0, 1, 1);
+
+  test = subtract(points1, holes, tol);
+  EXPECT_TRUE(test.empty());
 
   // can't subtract single point
   points2.push_back(Point3d(1, 1, 1));
@@ -969,7 +1200,7 @@ TEST_F(GeometryFixture, Subtract_Overlap)
   //EXPECT_TRUE(circularEqual(makeRectangleDown(0, 0, 1, 1), test->newPolygons2()[0])) << test->newPolygons2()[0];
 }
 
-TEST_F(GeometryFixture, Subtract_Within)
+TEST_F(GeometryFixture, Subtract_Within_Down)
 {
   double tol = 0.01;
 
@@ -1013,4 +1244,28 @@ TEST_F(GeometryFixture, Subtract_Within)
   //EXPECT_TRUE(circularEqual(makeRectangleDown(2, 0, 1, 1), test->newPolygons1()[0])) << test->newPolygons1()[0];
   //ASSERT_EQ(1, test->newPolygons2().size());
   //EXPECT_TRUE(circularEqual(makeRectangleDown(0, 0, 1, 1), test->newPolygons2()[0])) << test->newPolygons2()[0];
+}
+
+TEST_F(GeometryFixture, Subtract_Within_Up)
+{
+  double tol = 0.01;
+
+  std::vector<std::vector<Point3d> > test;
+  std::vector<std::vector<Point3d> > holes;
+  Point3dVector points1;
+  Point3dVector points2;
+
+  // sense is up
+  points1 = makeRectangleUp(0, 0, 3, 3);
+  points2 = makeRectangleUp(1, 1, 1, 1);
+
+  holes.clear();
+  holes.push_back(points2);
+  test = subtract(points1, holes, tol);
+  EXPECT_TRUE(test.empty());
+
+  holes.clear();
+  holes.push_back(points1);
+  test = subtract(points2, holes, tol);
+  EXPECT_TRUE(test.empty());
 }

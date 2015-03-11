@@ -413,8 +413,21 @@ namespace openstudio{
   {
     std::vector<std::vector<Point3d> > result;
 
+    // check input
     if (vertices.size () < 3){
       return result;
+    }
+
+    boost::optional<Vector3d> normal = getOutwardNormal(vertices);
+    if (!normal || normal->z() > -0.999){
+      return result;
+    }
+
+    for (const auto& hole : holes){
+      normal = getOutwardNormal(hole);
+      if (!normal || normal->z() > -0.999){
+        return result;
+      }
     }
 
     std::vector<Point3d> allPoints;
@@ -509,6 +522,9 @@ namespace openstudio{
     std::list<TPPLPoly>::iterator it, itend;
     //std::cout << "Start" << std::endl;
     for(it = resultPolys.begin(), itend = resultPolys.end(); it != itend; ++it){
+
+      it->SetOrientation(TPPL_CW);
+
       std::vector<Point3d> triangle;
       for (long i = 0; i < it->GetNumPoints(); ++i){
         TPPLPoint point = it->GetPoint(i);
