@@ -730,18 +730,24 @@ t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
 
 		# make whole-building illuminance file
 
+		addFiles = ""
+
 		# there may not be a WG0...
-		if File.exist?('#{t_outPath}/output/ts/WG0.ill')
-			addFiles << "#{t_outPath}/output/ts/WG0.ill "
+		
+		if File.exist?('output/ts/WG0.ill')
+			puts "adding output/ts/WG0.ill..."
+			addFiles << "output/ts/WG0.ill "
 		end
 
 		# merge uncontrolled windows (WG0.ill) with blended controlled window groups (m_*.ill) 
 		
 		mergedWindows = Dir.glob("m_*.ill")
-		addFiles = ""
+
 		mergedWindows.each do |file|
+			puts "adding #{file}..."
 			addFiles << "+ #{file} "
 		end
+		puts "executing: rmtxop -fa #{addFiles} -t | getinfo - > #{t_outPath}/output/ts/merged_space.ill"
 		system("rmtxop -fa #{addFiles} -t | getinfo - > #{t_outPath}/output/ts/merged_space.ill")
 
   	## window merge end
