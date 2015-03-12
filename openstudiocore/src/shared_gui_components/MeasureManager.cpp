@@ -44,8 +44,6 @@
 
 #include "../model/Model.hpp"
 
-#include "../energyplus/ForwardTranslator.hpp"
-
 #include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/PathHelpers.hpp"
@@ -201,8 +199,7 @@ std::vector<ruleset::OSArgument> MeasureManager::getArguments(analysisdriver::Si
     if (appmodel)
     {
       model = appmodel;
-      energyplus::ForwardTranslator translator;
-      idf = translator.translateModel(model.get());
+      idf = boost::none;
     }
 
     ruleset::RubyUserScriptInfo info = m_infoGetter->getInfo(t_measure, model, idf);
