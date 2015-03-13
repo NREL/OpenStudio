@@ -735,7 +735,6 @@ t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
 		# there may not be a WG0...
 		
 		if File.exist?('output/ts/WG0.ill')
-			puts "adding output/ts/WG0.ill..."
 			addFiles << "output/ts/WG0.ill "
 		end
 
@@ -744,10 +743,8 @@ t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
 		mergedWindows = Dir.glob("m_*.ill")
 
 		mergedWindows.each do |file|
-			puts "adding #{file}..."
 			addFiles << "+ #{file} "
 		end
-		puts "executing: rmtxop -fa #{addFiles} -t | getinfo - > #{t_outPath}/output/ts/merged_space.ill"
 		system("rmtxop -fa #{addFiles} -t | getinfo - > #{t_outPath}/output/ts/merged_space.ill")
 
   	## window merge end
