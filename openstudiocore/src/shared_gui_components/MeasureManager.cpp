@@ -74,11 +74,13 @@ MeasureManager::MeasureManager(const QSharedPointer<ruleset::RubyUserScriptInfoG
 }
 
 std::pair<bool,std::string> MeasureManager::updateMeasure(analysisdriver::SimpleProject &t_project, 
-                                                          const BCLMeasure &t_measure)
+                                                          const BCLMeasure &t_measure,
+                                                          const boost::optional<model::Model> &t_model,
+                                                          const boost::optional<Workspace> &t_idf)
 {
   std::pair<bool,std::string> result(true,"");
   try {
-    ruleset::OSArgumentVector args = getArguments(t_project, t_measure);
+    ruleset::OSArgumentVector args = getArguments(t_project, t_measure,t_model,t_idf);
     bool differentVersions = t_project.updateMeasure(t_measure, args);
     
     if (!differentVersions) {
@@ -180,15 +182,16 @@ BCLMeasure MeasureManager::insertReplaceMeasure(analysisdriver::SimpleProject &t
   }
 }
 
-std::vector<ruleset::OSArgument> MeasureManager::getArguments(analysisdriver::SimpleProject &t_project, const BCLMeasure &t_measure)
+std::vector<ruleset::OSArgument> MeasureManager::getArguments(analysisdriver::SimpleProject &t_project, 
+  const BCLMeasure &t_measure,
+  const boost::optional<model::Model> &t_model,
+  const boost::optional<Workspace> &t_idf)
 {
   boost::optional<BCLMeasure> projectMeasure = t_project.getMeasureByUUID(t_measure.uuid());
-  boost::optional<openstudio::model::Model> appmodel = m_app->currentModel();
 
   if (projectMeasure
       && projectMeasure->versionUUID() == t_measure.versionUUID()
-      && t_project.hasStoredArguments(*projectMeasure)
-      && !appmodel)
+      && t_project.hasStoredArguments(*projectMeasure))
   {
     LOG(Info, "returning stored arguments for measure " << t_measure.displayName() << "(" << toString(t_measure.uuid()) << " version: " << toString(t_measure.versionUUID()) << ")");
     return t_project.getStoredArguments(*projectMeasure);
@@ -196,10 +199,16 @@ std::vector<ruleset::OSArgument> MeasureManager::getArguments(analysisdriver::Si
     boost::optional<openstudio::model::Model> model = t_project.seedModel();
     boost::optional<openstudio::Workspace> idf = t_project.seedIdf();
 
-    if (appmodel)
-    {
-      model = appmodel;
-      idf = boost::none;
+    if( t_model ) {
+      model = t_model;
+    } else {
+      model = t_project.seedModel();
+    }
+
+    if( t_idf ) {
+      idf = t_idf;
+    } else {
+      idf = t_project.seedIdf();
     }
 
     ruleset::RubyUserScriptInfo info = m_infoGetter->getInfo(t_measure, model, idf);
@@ -272,7 +281,9 @@ std::string MeasureManager::suggestMeasureName(const BCLMeasure &t_measure, bool
 
 void MeasureManager::updateMeasures(analysisdriver::SimpleProject &t_project, 
                                     const std::vector<BCLMeasure> &t_newMeasures, 
-                                    bool t_showMessage)
+                                    bool t_showMessage,
+                                    const boost::optional<model::Model> &t_model,
+                                    const boost::optional<Workspace> &t_idf)
 {
   auto progress = new ProcessEventsProgressBar();
   progress->setMaximum(std::numeric_limits<double>::max());
@@ -282,7 +293,7 @@ void MeasureManager::updateMeasures(analysisdriver::SimpleProject &t_project,
   for (const auto & newMeasure : t_newMeasures)
   {
     progress->setValue(loc);
-    std::pair<bool,std::string> updateResult = updateMeasure(t_project, newMeasure);
+    std::pair<bool,std::string> updateResult = updateMeasure(t_project, newMeasure,t_model,t_idf);
     if (!updateResult.first) {
       failMessages.push_back(updateResult.second);
     }

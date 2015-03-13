@@ -27,8 +27,10 @@
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/OSListView.hpp"
 #include "../shared_gui_components/SyncMeasuresDialog.hpp"
+#include "../utilities/plot/ProgressBar.hpp"
 
 #include "../analysisdriver/SimpleProject.hpp"
+#include "../energyplus/ForwardTranslator.hpp"
 
 #include <QLabel>
 #include <QVBoxLayout>
@@ -85,11 +87,13 @@ void ScriptsTabView::showEvent(QShowEvent *e)
 {
   MainTabView::showEvent(e);
 
-  boost::optional<openstudio::analysisdriver::SimpleProject> project = OSAppBase::instance()->project();
-  if (project)
-  {
-    // DLM: why is this necessary?
-    OSAppBase::instance()->measureManager().updateMeasures(*project, project->measures(), false);
+  if( auto project = OSAppBase::instance()->project() ) {
+    if( auto model = OSAppBase::instance()->currentModel() ) {
+      ProgressBar progress(this); 
+      energyplus::ForwardTranslator translator;
+      auto workspace = translator.translateModel(model.get(),&progress);
+      OSAppBase::instance()->measureManager().updateMeasures(*project, project->measures(), false, model, workspace);
+    }
   }
   variableGroupListView->refreshAllViews();
 }
