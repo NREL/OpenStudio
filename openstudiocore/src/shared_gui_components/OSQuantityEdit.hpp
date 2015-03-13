@@ -38,7 +38,31 @@ namespace openstudio {
 
 class Unit;
 
-class QuantityLineEdit;
+class QuantityLineEdit : public QLineEdit {
+  Q_OBJECT
+public:
+
+  QuantityLineEdit(QWidget * parent = nullptr);
+
+  virtual ~QuantityLineEdit() {}
+
+  void enableClickFocus() { this->m_hasClickFocus = true; }
+
+protected:
+
+  virtual void focusInEvent(QFocusEvent * e);
+
+  virtual void focusOutEvent(QFocusEvent * e);
+
+private:
+
+  bool m_hasClickFocus = false;
+
+signals:
+
+  void inFocus(bool inFocus);
+
+};
 
 class OSQuantityEdit2: public QWidget {
   Q_OBJECT
@@ -52,6 +76,8 @@ class OSQuantityEdit2: public QWidget {
   void enableClickFocus();
 
   QDoubleValidator * doubleValidator() { return m_doubleValidator; }
+
+  bool hasData() { return this->m_lineEdit->text().size() ? true : false; }
 
   void bind(bool isIP,
             model::ModelObject& modelObject,
@@ -158,32 +184,6 @@ class OSQuantityEdit2: public QWidget {
                     boost::optional<BasicQuery> isAutocalculated);
 
   REGISTER_LOGGER("openstudio.OSQuantityEdit");
-};
-
-class QuantityLineEdit : public QLineEdit {
-  Q_OBJECT
-public:
-
-  QuantityLineEdit(QWidget * parent = nullptr);
-
-  virtual ~QuantityLineEdit() {}
-
-  void enableClickFocus() { this->m_hasClickFocus = true; }
-
-protected:
-
-  virtual void focusInEvent(QFocusEvent * e);
-
-  virtual void focusOutEvent(QFocusEvent * e);
-
-private:
-
-  bool m_hasClickFocus = false;
-
-signals:
-
-  void inFocus(bool inFocus);
-
 };
 
 /** \deprecated Use OSQuantityEdit2. */

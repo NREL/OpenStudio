@@ -47,6 +47,8 @@ class OSDoubleEdit2: public QLineEdit {
 
   void enableClickFocus() { this->m_hasClickFocus = true; }
 
+  bool hasData() { return this->text().size() ? true : false; }
+
   QDoubleValidator * doubleValidator() { return m_doubleValidator; }
 
   void bind(model::ModelObject& modelObject,

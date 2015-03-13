@@ -215,8 +215,7 @@ void OSQuantityEdit2::unbind() {
 
 void OSQuantityEdit2::onEditingFinished() {
 
-  auto hasData = this->m_lineEdit->text().size() ? true : false;
-  emit inFocus(true, hasData);
+  emit inFocus(true, hasData());
 
   QString text = m_lineEdit->text();
   if (text.isEmpty() || m_text == text) return;
@@ -438,8 +437,7 @@ void OSQuantityEdit2::enableClickFocus()
 void OSQuantityEdit2::onInFocus(bool hasFocus)
 {
   if (hasFocus) {
-    auto hasData = this->m_lineEdit->text().size() ? true : false;
-    emit inFocus(true, hasData);
+    emit inFocus(true, hasData());
   }
   else {
     emit inFocus(false, false);
