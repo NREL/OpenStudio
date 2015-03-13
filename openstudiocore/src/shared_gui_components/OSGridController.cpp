@@ -1523,7 +1523,8 @@ void OSGridController::onInFocus(bool inFocus, bool hasData, int row, int column
         button->setText("Apply to Selected");
       }
       else {
-        button->setText("Clear Selected");
+        //button->setText("Clear Selected");
+        button->setText("Apply to Selected");
       }
     }
     else {

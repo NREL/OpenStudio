@@ -731,11 +731,13 @@ void OSDropZone2::focusInEvent(QFocusEvent * e)
 {
   if (e->reason() == Qt::MouseFocusReason)
   {
-    QString style("QWidget#OSDropZone {\
-                   background: #ffc627;\
-                   border: 2px dashed #808080;\
-                   border-radius: 5px; }");
-    setStyleSheet(style);
+    if (hasData()) {
+      QString style("QWidget#OSDropZone {\
+                     background: #ffc627;\
+                     border: 2px dashed #808080;\
+                     border-radius: 5px; }");
+      setStyleSheet(style);
+    }
 
     emit inFocus(true, hasData());
   }
