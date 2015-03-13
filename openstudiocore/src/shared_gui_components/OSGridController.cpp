@@ -211,6 +211,23 @@ std::set<model::ModelObject> ObjectSelector::getSelectedObjects() const
   return returned;
 }
 
+std::vector<QWidget *> ObjectSelector::getColumnsSelectedWidgets(int column)
+{
+  std::vector<QWidget *> results;
+
+  for (auto selectedObject : m_selectedObjects) {
+    for (auto &widgetLoc : m_widgetMap)
+    {
+      if (widgetLoc.first && selectedObject == widgetLoc.first.get())
+      {
+        results.push_back(getWidget(widgetLoc.second->row, column, widgetLoc.second->subrow));
+        break;
+      }
+    }
+  }
+  return results;
+}
+
 void ObjectSelector::setObjectFilter(const std::function<bool (const model::ModelObject &)> &t_filter)
 {
   m_objectFilter = t_filter;
@@ -253,6 +270,21 @@ boost::optional<const model::ModelObject &> ObjectSelector::getObject(const int 
     }
   }
   return object;
+}
+
+QWidget * ObjectSelector::getWidget(const int t_row, const int t_column, const boost::optional<int> &t_subrow)
+{
+  QWidget * widget = nullptr;
+
+  for (auto &widgetLoc : m_widgetMap)
+  {
+    if (widgetLoc.second->row == t_row && widgetLoc.second->column == t_column && (!t_subrow || t_subrow == widgetLoc.second->subrow))
+    {
+      widget = qobject_cast<Holder *>(widgetLoc.second->widget)->widget;
+      break;
+    }
+  }
+  return widget;
 }
 
 void ObjectSelector::updateWidgets(const int t_row, const boost::optional<int> &t_subrow, bool t_objectSelected, bool t_objectVisible)
@@ -921,6 +953,54 @@ void OSGridController::setConceptValue(model::ModelObject t_setterMO, model::Mod
   }
 }
 
+void OSGridController::resetConceptValue(model::ModelObject t_resetMO, const QSharedPointer<BaseConcept> &t_baseConcept)
+{
+  if (QSharedPointer<ValueEditConcept<double> > concept = t_baseConcept.dynamicCast<ValueEditConcept<double> >()) {
+    auto reset = std::bind(&ValueEditConcept<double>::reset, concept.data(), t_resetMO);
+    reset();
+  }
+  else if (QSharedPointer<ValueEditVoidReturnConcept<double> > concept = t_baseConcept.dynamicCast<ValueEditVoidReturnConcept<double> >()) {
+    auto reset = std::bind(&ValueEditVoidReturnConcept<double>::reset, concept.data(), t_resetMO);
+    reset();
+  }
+  else if (QSharedPointer<ValueEditConcept<int> > concept = t_baseConcept.dynamicCast<ValueEditConcept<int> >()) {
+    auto reset = std::bind(&ValueEditConcept<int>::reset, concept.data(), t_resetMO);
+    reset();
+  }
+  else if (QSharedPointer<ValueEditConcept<std::string> > concept = t_baseConcept.dynamicCast<ValueEditConcept<std::string> >()) {
+    auto reset = std::bind(&ValueEditConcept<std::string>::reset, concept.data(), t_resetMO);
+    reset();
+  }
+  else if (QSharedPointer<LoadNameConcept> concept = t_baseConcept.dynamicCast<LoadNameConcept>()) {
+    auto reset = std::bind(&LoadNameConcept::reset, concept.data(), t_resetMO);
+    reset();
+  }
+  else if (QSharedPointer<NameLineEditConcept> concept = t_baseConcept.dynamicCast<NameLineEditConcept>()) {
+    auto reset = std::bind(&NameLineEditConcept::reset, concept.data(), t_resetMO);
+    reset();
+  }
+  else if (QSharedPointer<QuantityEditConcept<double> > concept = t_baseConcept.dynamicCast<QuantityEditConcept<double> >()) {
+    auto reset = std::bind(&QuantityEditConcept<double>::reset, concept.data(), t_resetMO);
+    reset();
+  }
+  else if (QSharedPointer<QuantityEditVoidReturnConcept<double> > concept = t_baseConcept.dynamicCast<QuantityEditVoidReturnConcept<double> >()) {
+    auto reset = std::bind(&QuantityEditVoidReturnConcept<double>::reset, concept.data(), t_resetMO);
+    reset();
+  }
+  else if (QSharedPointer<ValueEditConcept<unsigned> > concept = t_baseConcept.dynamicCast<ValueEditConcept<unsigned> >()) {
+    auto reset = std::bind(&ValueEditConcept<unsigned>::reset, concept.data(), t_resetMO);
+    reset();
+  }
+  else if (QSharedPointer<DropZoneConcept> concept = t_baseConcept.dynamicCast<DropZoneConcept>()) {
+    auto reset = std::bind(&DropZoneConcept::reset, concept.data(), t_resetMO);
+    reset();
+  }
+  else {
+    // Unknown type
+    OS_ASSERT(false);
+  }
+}
+
 OSGridView * OSGridController::gridView(){
   auto gridView = qobject_cast<OSGridView *>(this->parent());
   OS_ASSERT(gridView);
@@ -1005,6 +1085,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
     l->setSpacing(0);
     l->setContentsMargins(0,0,0,0);
     l->addWidget(t_widget);
+    holder->widget = t_widget;
     holder->setLayout(l);
     // layout is defined outside the lambda and brought in through capture!
     layout->addWidget(holder, numWidgets, 0, 0);
@@ -1514,10 +1595,14 @@ void OSGridController::onInFocus(bool inFocus, bool hasData, int row, int column
     auto button = horizontalHeaderWidget->m_pushButton;
     OS_ASSERT(button);
 
-    m_applyToButtonStates.push_back(std::make_pair(column, inFocus));
+    bool hasData = true;
 
     if (inFocus) {
       m_selectedCellLocation = std::make_tuple(row, column, subrow);
+      auto widget = m_objectSelector->getWidget(row, column, subrow);
+      if (widget && qobject_cast<OSDropZone2 *>(widget)) {
+        hasData = qobject_cast<OSDropZone2 *>(widget)->hasData();
+      }
 
       if (hasData){
         button->setText("Apply to Selected");
@@ -1530,6 +1615,8 @@ void OSGridController::onInFocus(bool inFocus, bool hasData, int row, int column
     else {
       button->setText("Apply to Selected");
     }
+
+    m_applyToButtonStates.push_back(std::make_pair(column, inFocus && hasData));
 
     QTimer::singleShot(0, this, SLOT(setApplyButtonState()));
   }
