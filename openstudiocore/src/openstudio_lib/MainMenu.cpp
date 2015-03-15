@@ -88,6 +88,10 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   importMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::importSDDClicked, Qt::QueuedConnection);
 
+  action = new QAction(tr("IFC"), this); 
+  importMenu->addAction(action);
+  connect(action, &QAction::triggered, this, &MainMenu::importIFCClicked, Qt::QueuedConnection);
+
   QMenu * exportMenu = m_fileMenu->addMenu(tr("Export"));
 
   action = new QAction(tr("IDF"), this);

@@ -332,6 +332,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
   connect(m_mainWindow, &MainWindow::importClicked, this, &OSDocument::importClicked);
   connect(m_mainWindow, &MainWindow::importgbXMLClicked, this, &OSDocument::importgbXMLClicked);
   connect(m_mainWindow, &MainWindow::importSDDClicked, this, &OSDocument::importSDDClicked);
+  connect(m_mainWindow, &MainWindow::importIFCClicked, this, &OSDocument::importIFCClicked);
   connect(m_mainWindow, &MainWindow::loadFileClicked, this, &OSDocument::loadFileClicked);
   connect(m_mainWindow, &MainWindow::loadLibraryClicked, this, &OSDocument::loadLibraryClicked);
   connect(m_mainWindow, &MainWindow::newClicked, this, &OSDocument::newClicked);
