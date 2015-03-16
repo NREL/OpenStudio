@@ -2,7 +2,7 @@
 #define BIMSERVER_I
 
 #ifdef SWIGPYTHON
-%module openstudiogbxml
+%module openstudiobimserver
 #endif
 
 
@@ -15,7 +15,7 @@
 %import <model/Model.i>
 
 %{
-  #include <bimserver/ReverseTranslator.hpp>
+  #include <bimserver/ProjectImportation.hpp>
   using namespace openstudio::bimserver;
   using namespace openstudio;
   
@@ -25,9 +25,9 @@
 %}
 
 // #ifdef SWIGCSHARP
-%rename(BIMserverReverseTranslator) openstudio::bimserver::ReverseTranslator;
+%rename(BIMserverProjectImportation) openstudio::bimserver::ProjectImportation;
 // #endif
 
-%include bimserver/ReverseTranslator.hpp>
+%include bimserver/ProjectImportation.hpp>
 
 #endif //BIMSERVER_I 

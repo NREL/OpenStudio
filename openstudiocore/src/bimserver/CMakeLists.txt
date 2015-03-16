@@ -5,8 +5,6 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(${target_name}_src
   BIMserverAPI.hpp
   mainpage.hpp
-  ReverseTranslator.hpp
-  ReverseTranslator.cpp
   BIMserverConnection.hpp
   BIMserverConnection.cpp
   ProjectImportation.hpp
@@ -16,7 +14,6 @@ set(${target_name}_src
 set(${target_name}_test_src
   Test/BIMserverFixture.hpp
   Test/BIMserverFixture.cpp
-  Test/ReverseTranslator_GTest.cpp
 )
 
 set(${target_name}_swig_src

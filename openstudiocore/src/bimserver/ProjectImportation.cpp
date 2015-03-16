@@ -1,13 +1,34 @@
+/**********************************************************************
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  All rights reserved.
+*
+*  This library is free software; you can redistribute it and/or
+*  modify it under the terms of the GNU Lesser General Public
+*  License as published by the Free Software Foundation; either
+*  version 2.1 of the License, or (at your option) any later version.
+*
+*  This library is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+*  Lesser General Public License for more details.
+*
+*  You should have received a copy of the GNU Lesser General Public
+*  License along with this library; if not, write to the Free Software
+*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+**********************************************************************/
+
 #include "ProjectImportation.hpp"
 #include "BIMserverConnection.hpp"
-#include "ReverseTranslator.hpp"
-#include "../openstudio_app/OpenStudioApp.hpp"
+
+#include "../osversion/VersionTranslator.hpp"
+
 
 #include <QFileDialog>
 #include <QGridLayout>
 #include <QVBoxLayout>
 #include <QMessageBox>
 #include <QLabel>
+#include <QEventLoop>
 
 #include <QLineEdit>
 #include <QPushButton>
@@ -57,13 +78,15 @@ namespace bimserver {
 		setLayout(mainLayout);
 
 		setWindowTitle("Import Project");
+
+		m_waitForOSM = new QEventLoop(this);
 	}
 
 	ProjectImportation::~ProjectImportation() {
 
 	}
 
-	void ProjectImportation::run() {
+	boost::optional<model::Model> ProjectImportation::run() {
 		m_settings = new QSettings("OpenStudio","BIMserverConnection");
 
 		if (m_settings->contains("addr") && m_settings->contains("port") && m_settings->contains("usrname") && m_settings->contains("psw")) {
@@ -79,12 +102,25 @@ namespace bimserver {
 			connect(m_bimserverConnection, &BIMserverConnection::listAllIFCRevisions, this, &ProjectImportation::processIFCList);
 			connect(m_bimserverConnection, &BIMserverConnection::operationSucceeded, this, &ProjectImportation::processSucessCases);
 			connect(m_bimserverConnection, &BIMserverConnection::errorOccured, this, &ProjectImportation::processFailureCases);
+			connect(this, SIGNAL(finished()), m_waitForOSM, SLOT(quit()));
 
 			m_bimserverConnection->login(usrname, psw);
 
 		} else {
 			settingButton_clicked();
 		}
+
+
+		//execute event loop
+		m_waitForOSM->exec();
+
+		//Reverse Translate from osmString.
+    
+    std::stringstream stringStream(m_OSM.toStdString());
+
+		openstudio::osversion::VersionTranslator vt;
+
+		return vt.loadModel(stringStream);
 	}
 
 	void ProjectImportation::processProjectList(QStringList pList) {
@@ -202,7 +238,8 @@ namespace bimserver {
 	}
 
 	void ProjectImportation::processOSMRetrieved(QString osmString) {
-		emit osmRetrieved(osmString);
+		m_OSM = osmString;
+		emit finished();
 	}
 
 	void ProjectImportation::settingButton_clicked() {
@@ -289,6 +326,7 @@ namespace bimserver {
 				connect(m_bimserverConnection, &BIMserverConnection::listAllIFCRevisions, this, &ProjectImportation::processIFCList);
 				connect(m_bimserverConnection, &BIMserverConnection::operationSucceeded, this, &ProjectImportation::processSucessCases);
 				connect(m_bimserverConnection, &BIMserverConnection::errorOccured, this, &ProjectImportation::processFailureCases);
+				connect(this, SIGNAL(finished()), m_waitForOSM, SLOT(quit()));
 
 				m_bimserverConnection->login(usrname, psw);
 

@@ -1,13 +1,35 @@
+/**********************************************************************
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  All rights reserved.
+*
+*  This library is free software; you can redistribute it and/or
+*  modify it under the terms of the GNU Lesser General Public
+*  License as published by the Free Software Foundation; either
+*  version 2.1 of the License, or (at your option) any later version.
+*
+*  This library is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+*  Lesser General Public License for more details.
+*
+*  You should have received a copy of the GNU Lesser General Public
+*  License along with this library; if not, write to the Free Software
+*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+**********************************************************************/
+
 #ifndef BIMSERVER_PROJECTIMPORTATION_HPP
 #define BIMSERVER_PROJECTIMPORTATION_HPP
 
 #include "BIMserverAPI.hpp"
 #include "BIMserverConnection.hpp"
 
+#include "../model/Model.hpp"
+
 #include <QDialog>
 #include <QListWidget>
 #include <QStatusBar>
 #include <QSettings>
+#include <QEventLoop>
 
 namespace openstudio {
 namespace bimserver {
@@ -23,10 +45,14 @@ namespace bimserver {
 			ProjectImportation(QWidget *parent);
 
 			/// Start importing IFC workflow
-			void run();
+			boost::optional<model::Model> run();
 
 			/// Virtual destructor
 			~ProjectImportation();
+
+		signals:
+			/// OSM String is retrieved.
+			void finished();
 
 		public slots:
 
@@ -35,11 +61,7 @@ namespace bimserver {
 			void processIFCList(QStringList ifcList);
 			void processSucessCases(QString sucessCase);
 			void processFailureCases(QString failureCase);
-      void processOSMRetrieved(QString osmString);
-
-		signals:
-
-			void osmRetrieved(QString osmString);
+			void processOSMRetrieved(QString osmString);
 
 		private:
 			BIMserverConnection *m_bimserverConnection;
@@ -51,6 +73,8 @@ namespace bimserver {
 			QListWidget *m_proList;
 			QListWidget *m_ifcList;
 			QStatusBar	*m_statusBar;
+			QEventLoop  *m_waitForOSM;
+			QString     m_OSM;
 
 		private slots:
 
