@@ -1245,7 +1245,7 @@ namespace radiance {
                 // copy uncontrolledBSDF
                 boost::filesystem::copy_file(*uncontrolledBSDF, uncontrolledBSDFOut, boost::filesystem::copy_option::overwrite_if_exists);
               }else{
-                LOG(Warn, "Cannot download BSDF, using default.");
+                LOG(Warn, "Cannot download BSDF for this window group, using default (Tvis=44%)";
 
                 // read default file
                 QString defaultFile;
