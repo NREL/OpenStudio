@@ -121,8 +121,7 @@ void ModelSubTabController::onAddItem()
     else {
       for (auto &obj : modelObjectInspectorView->selectedObjects())
       {
-        onAddObject(obj.iddObjectType());
-        //onAddObject(currentIddObjectType);
+        onAddObject(obj);
       }
     }
   }
