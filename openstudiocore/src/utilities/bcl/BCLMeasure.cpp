@@ -42,7 +42,7 @@
 
 namespace openstudio{
 
-  void BCLMeasure::createDirectory(const openstudio::path& dir){
+  void BCLMeasure::createDirectory(const openstudio::path& dir) const {
     if (exists(dir)){
       if (!isEmptyDirectory(dir)){
         LOG_AND_THROW("'" << toString(dir) << "' exists but is not an empty directory");
@@ -52,6 +52,36 @@ namespace openstudio{
         LOG_AND_THROW("'" << toString(dir) << "' cannot be created as an empty directory");
       }
     }
+  }
+
+  bool BCLMeasure::copyDirectory(const path& source, const path& destination) const {
+
+    if (!QDir().mkpath(toQString(destination)))
+    {
+      return false;
+    }
+
+    openstudio::path xmlPath = boost::filesystem::system_complete(m_bclXML.path());
+
+    QDir srcDir(toQString(source));
+    
+    for (const QFileInfo &info : srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot))
+    {
+      QString srcItemPath = toQString(source) + "/" + info.fileName();
+      QString dstItemPath = toQString(destination) + "/" + info.fileName();
+      if (info.isFile())
+      {
+        if (m_bclXML.hasFile(toPath(srcItemPath)) || (xmlPath == boost::filesystem::system_complete(toPath(srcItemPath))))
+        {
+          if (!QFile::copy(srcItemPath, dstItemPath))
+          {
+            return false;
+          }
+        }
+      }
+    }
+
+    return true;
   }
 
   BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, const openstudio::path& dir,
@@ -770,7 +800,11 @@ namespace openstudio{
         QString oldPath = toQString(fileRef.path());
         QString newPath = oldPath;
         if (!oldLowerClassName.empty() && !newLowerClassName.empty() && oldLowerClassName != newLowerClassName){
-          newPath.replace(toQString(oldLowerClassName), toQString(newLowerClassName));
+          QString temp = toQString(oldLowerClassName);
+          int index = newPath.lastIndexOf(temp);
+          if (index >= 0){
+            newPath.replace(index, temp.size(), toQString(newLowerClassName));
+          }
         }
 
         if (QFile::exists(newPath)) {
@@ -942,7 +976,19 @@ namespace openstudio{
     }
 
     removeDirectory(newDir);
-    if (!copyDirectory(this->directory(), newDir)){
+
+    // DLM: do not copy entire directory, only copy tracked files
+    if (!this->copyDirectory(this->directory(), newDir)){
+      return boost::none;
+    }
+
+    openstudio::path tests = toPath("tests");
+    if (exists(this->directory() / tests) && !this->copyDirectory(this->directory() / tests, newDir / tests)){
+      return boost::none;
+    }
+
+    openstudio::path resources = toPath("resources");
+    if (exists(this->directory() / resources) && !this->copyDirectory(this->directory() / resources, newDir / resources)){
       return boost::none;
     }
 

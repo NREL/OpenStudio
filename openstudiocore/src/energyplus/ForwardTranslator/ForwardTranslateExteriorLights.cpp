@@ -43,8 +43,14 @@ boost::optional<IdfObject> ForwardTranslator::translateExteriorLights(
 
   OptionalIdfObject relatedIdfObject;
 
-  model::Schedule schedule = modelObject.schedule();
-  relatedIdfObject = translateAndMapModelObject(schedule);
+  boost::optional<model::Schedule> schedule;
+  if( auto t_schedule = modelObject.schedule() ) {
+    schedule = t_schedule.get();
+  } else {
+    schedule = modelObject.model().alwaysOnDiscreteSchedule();
+  }
+  OS_ASSERT(schedule);
+  relatedIdfObject = translateAndMapModelObject(schedule.get());
   OS_ASSERT(relatedIdfObject);
   idfObject.setString(Exterior_LightsFields::ScheduleName,relatedIdfObject->name().get());
 

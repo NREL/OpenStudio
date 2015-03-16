@@ -69,7 +69,7 @@ class MODEL_API ExteriorLights : public ModelObject {
 
   ExteriorLightsDefinition exteriorLightsDefinition() const;
 
-  Schedule schedule() const;
+  boost::optional<Schedule> schedule() const;
 
   std::string controlOption() const;
 
@@ -90,6 +90,8 @@ class MODEL_API ExteriorLights : public ModelObject {
   bool setExteriorLightsDefinition(const ExteriorLightsDefinition& exteriorLightsDefinition);
 
   bool setSchedule(Schedule& schedule);
+
+  void resetSchedule();
 
   bool setControlOption(std::string controlOption);
 

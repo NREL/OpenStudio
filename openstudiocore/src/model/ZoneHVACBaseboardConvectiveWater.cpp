@@ -71,9 +71,16 @@ ModelObject ZoneHVACBaseboardConvectiveWater_Impl::clone(Model model) const
   {
     ZoneHVACBaseboardConvectiveWater baseboardConvWaterClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACBaseboardConvectiveWater>();
 
-    StraightComponent heatingCoilClone = this->heatingCoil().clone(model).cast<StraightComponent>();
+    auto t_heatingCoil = heatingCoil();
+    StraightComponent heatingCoilClone = t_heatingCoil.clone(model).cast<StraightComponent>();
 
     baseboardConvWaterClone.setHeatingCoil(heatingCoilClone);
+
+    if( model == this->model() ) {
+      if( auto plant = t_heatingCoil.plantLoop() ) {
+        plant->addDemandBranchForComponent(heatingCoilClone); 
+      }
+    }
 
     return baseboardConvWaterClone;
   }
