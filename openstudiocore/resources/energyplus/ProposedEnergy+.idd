@@ -50262,6 +50262,20 @@ Table:MultiVariableLookup,
   A1 , \field Name
        \required-field
        \type alpha
+       \reference TableMultiVariableLookup
+       \reference AllCurves
+       \reference LinearCurves
+       \reference LinearOrQuadraticCurves
+       \reference QuadraticCurves
+       \reference QuadraticCubicCurves
+       \reference BiquadraticQuadraticCubicCurves
+       \reference CubicCurves
+       \reference QuarticCurves
+       \reference BicubicCurves
+       \reference BicubicBiquadraticCurves
+       \reference BiquadraticCurves
+       \reference QuadraticLinearCurves
+       \reference TriQuadraticCurves
   A2 , \field Interpolation Method
        \type choice
        \key LinearInterpolationOfTable
