@@ -188,10 +188,12 @@ std::vector<ruleset::OSArgument> MeasureManager::getArguments(analysisdriver::Si
   const boost::optional<Workspace> &t_idf)
 {
   boost::optional<BCLMeasure> projectMeasure = t_project.getMeasureByUUID(t_measure.uuid());
+  boost::optional<openstudio::model::Model> appmodel = m_app->currentModel();
 
   if (projectMeasure
       && projectMeasure->versionUUID() == t_measure.versionUUID()
-      && t_project.hasStoredArguments(*projectMeasure))
+      && t_project.hasStoredArguments(*projectMeasure)
+      && ! appmodel)
   {
     LOG(Info, "returning stored arguments for measure " << t_measure.displayName() << "(" << toString(t_measure.uuid()) << " version: " << toString(t_measure.versionUUID()) << ")");
     return t_project.getStoredArguments(*projectMeasure);
@@ -201,14 +203,10 @@ std::vector<ruleset::OSArgument> MeasureManager::getArguments(analysisdriver::Si
 
     if( t_model ) {
       model = t_model;
-    } else {
-      model = t_project.seedModel();
     }
 
     if( t_idf ) {
       idf = t_idf;
-    } else {
-      idf = t_project.seedIdf();
     }
 
     ruleset::RubyUserScriptInfo info = m_infoGetter->getInfo(t_measure, model, idf);

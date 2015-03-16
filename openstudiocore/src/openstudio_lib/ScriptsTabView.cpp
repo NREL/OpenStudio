@@ -86,10 +86,11 @@ ScriptsTabView::ScriptsTabView(QWidget * parent)
 void ScriptsTabView::showEvent(QShowEvent *e)
 {
   MainTabView::showEvent(e);
+  auto app = OSAppBase::instance();
 
-  if( auto project = OSAppBase::instance()->project() ) {
-    if( auto model = OSAppBase::instance()->currentModel() ) {
-      ProgressBar progress(this); 
+  if( auto project = app->project() ) {
+    if( auto model = app->currentModel() ) {
+      ProgressBar progress(app->mainWidget()); 
       energyplus::ForwardTranslator translator;
       auto workspace = translator.translateModel(model.get(),&progress);
       OSAppBase::instance()->measureManager().updateMeasures(*project, project->measures(), false, model, workspace);
