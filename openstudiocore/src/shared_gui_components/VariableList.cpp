@@ -39,10 +39,13 @@
 #include "../analysis/WorkflowStep.hpp"
 #include "../analysisdriver/SimpleProject.hpp"
 
+#include "../energyplus/ForwardTranslator.hpp"
+
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Containers.hpp"
 #include "../utilities/core/RubyException.hpp"
+#include "../utilities/plot/ProgressBar.hpp"
 
 #include <QByteArray>
 #include <QDialog>
@@ -380,7 +383,14 @@ void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bo
       // measure
       analysis::RubyMeasure measure(projectMeasure);
       try{
-        measure.setArguments(m_app->measureManager().getArguments(*project, projectMeasure));
+        auto model = m_app->currentModel();
+        boost::optional<Workspace> workspace;
+        if( model ) {
+          ProgressBar progress(m_app->mainWidget()); 
+          energyplus::ForwardTranslator translator;
+          workspace = translator.translateModel(model.get(),&progress);
+        }
+        measure.setArguments(m_app->measureManager().getArguments(*project, projectMeasure,model,workspace));
       } catch ( const RubyException&e ) {
         LOG(Error, "Failed to compute arguments for measure: " << e.what());
         QString errorMessage("Failed to compute arguments for measure: \n\n");

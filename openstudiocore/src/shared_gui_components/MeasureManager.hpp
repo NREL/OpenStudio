@@ -26,6 +26,7 @@
 #include "../utilities/core/Path.hpp"
 #include "../utilities/core/UUID.hpp"
 #include "../ruleset/RubyUserScriptInfoGetter.hpp"
+#include "../model/Model.hpp"
 #include <vector>
 #include <map>
 #include <QSharedPointer>
@@ -115,7 +116,10 @@ class MeasureManager : public QObject
 
     /// Updates an individual measure. Does not ask for user approval, approval is assumed.
     /// \returns true if the update succeeded.
-    std::pair<bool,std::string> updateMeasure(analysisdriver::SimpleProject &t_project, const BCLMeasure &t_measure);
+    std::pair<bool,std::string> updateMeasure(analysisdriver::SimpleProject &t_project, 
+      const BCLMeasure &t_measure,
+      const boost::optional<model::Model> &t_model = boost::none,
+      const boost::optional<Workspace> &t_idf = boost::none);
 
     // insert / replace a measure by UUID. If the measure already exists in the project
     // the user is prompted as to how to deal with it. OSArguments are loaded as needed
@@ -123,11 +127,18 @@ class MeasureManager : public QObject
 
     // Updates the given set of measures in the current project. Does not ask for user approval. Approval is assumed
     // when this method is called.
-    void updateMeasures(analysisdriver::SimpleProject &t_project, const std::vector<BCLMeasure> &t_newMeasures, bool t_showMessage=true);
+    void updateMeasures(analysisdriver::SimpleProject &t_project, 
+      const std::vector<BCLMeasure> &t_newMeasures, 
+      bool t_showMessage=true,
+      const boost::optional<model::Model> &t_model = boost::none,
+      const boost::optional<Workspace> &t_idf = boost::none);
 
     void setLibraryController(const QSharedPointer<LocalLibraryController> &t_libraryController);
 
-    std::vector<ruleset::OSArgument> getArguments(analysisdriver::SimpleProject &t_project, const BCLMeasure &t_measure);
+    std::vector<ruleset::OSArgument> getArguments(analysisdriver::SimpleProject &t_project, 
+      const BCLMeasure &t_measure, 
+      const boost::optional<model::Model> &t_model = boost::none,
+      const boost::optional<Workspace> &t_idf = boost::none);
 
     std::string suggestMeasureGroupName(const BCLMeasure &t_measure);
 
