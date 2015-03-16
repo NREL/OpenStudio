@@ -1,4 +1,4 @@
-!IDD_Version 1.6.3
+!IDD_Version 1.7.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -5621,7 +5621,6 @@ OS:Exterior:Lights,
   A4, \field Schedule Name
        \note units in schedule should be fraction applied to capacity of the exterior lights equipment, generally (0.0 - 1.0)
        \type object-list
-       \required-field
        \object-list ScheduleNames
   A5, \field Control Option
        \note Astronomical Clock option overrides schedule to turn lights off when sun is up
