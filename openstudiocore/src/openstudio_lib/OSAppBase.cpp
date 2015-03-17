@@ -132,6 +132,17 @@ boost::optional<openstudio::model::Model> OSAppBase::currentModel()
   }
 }
 
+boost::optional<openstudio::Workspace> OSAppBase::currentWorkspace()
+{
+  std::shared_ptr<OSDocument> document = currentDocument();
+  if (document)
+  {
+    return document->workspace();
+  } else {
+    return boost::none;
+  }
+}
+
 MeasureManager &OSAppBase::measureManager()
 {
   return *m_measureManager;

@@ -27,6 +27,7 @@
 namespace openstudio {
   class MeasureManager;
   class EditController;
+  class Workspace;
 
   namespace analysisdriver {
     class SimpleProject;
@@ -57,6 +58,7 @@ namespace openstudio {
       virtual void chooseHorizontalEditTab() = 0;
       virtual QSharedPointer<openstudio::EditController> editController() = 0;
       virtual boost::optional<openstudio::model::Model> currentModel() = 0;
+      virtual boost::optional<openstudio::Workspace> currentWorkspace() = 0;
   };
 
 }
