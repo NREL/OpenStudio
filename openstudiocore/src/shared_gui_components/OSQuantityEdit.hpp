@@ -77,7 +77,7 @@ class OSQuantityEdit2: public QWidget {
 
   QDoubleValidator * doubleValidator() { return m_doubleValidator; }
 
-  bool hasData() { return this->m_lineEdit->text().size() ? true : false; }
+  bool hasData() { return !this->m_lineEdit->text().isEmpty(); }
 
   void bind(bool isIP,
             model::ModelObject& modelObject,

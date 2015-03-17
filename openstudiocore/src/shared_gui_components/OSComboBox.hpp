@@ -105,7 +105,7 @@ class OSComboBox2 : public QComboBox {
 
   void enableClickFocus() { this->setFocusPolicy(Qt::ClickFocus); }
 
-  bool hasData() { return this->currentText().size() ? true : false; }
+  bool hasData() { return !this->currentText().isEmpty(); }
 
   // interface for direct bind
   template<typename ChoiceType>

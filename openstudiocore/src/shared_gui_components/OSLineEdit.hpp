@@ -46,7 +46,7 @@ public:
 
   void enableClickFocus() { this->m_hasClickFocus = true; }
   void setDeleteObject(bool deleteObject) { m_deleteObject = deleteObject; }
-  bool hasData() { return this->text().size() ? true : false; }
+  bool hasData() { return !this->text().isEmpty(); }
   bool deleteObject() { return m_deleteObject; }
 
   void bind(model::ModelObject& modelObject,
