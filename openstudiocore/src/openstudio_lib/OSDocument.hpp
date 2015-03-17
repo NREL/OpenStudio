@@ -61,6 +61,8 @@ class BuildingComponentDialog;
 
 class ApplyMeasureNowDialog;
 
+class Workspace;
+
 class OPENSTUDIO_API OSDocument : public OSQObjectController {
   Q_OBJECT
 
@@ -86,6 +88,14 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   // Sets the model associated with this document.
   // This will close all current windows, make sure to call app->setQuitOnLastWindowClosed(false) before calling this
   void setModel(const model::Model& model, bool modified, bool saveCurrentTabs);
+
+  // Returns the Workspace associated with this document's model
+  boost::optional<Workspace> workspace();
+
+  // Set the Workspace associated with this document's model.
+  // Workspace is created by idf translator when the scripts tab is shown.
+  // This is used to populate idf measure arguments.
+  void setWorkspace(const boost::optional<Workspace>& workspace);
 
   // Returns true if the document has unsaved changes.
   bool modified() const;
@@ -307,6 +317,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   void createTabButtons();
 
   openstudio::model::Model m_model;
+
+  boost::optional<Workspace> m_workspace;
 
   openstudio::model::Model m_compLibrary;
 

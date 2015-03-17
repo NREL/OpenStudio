@@ -421,6 +421,16 @@ MainWindow * OSDocument::mainWindow()
   return m_mainWindow;
 }
 
+boost::optional<Workspace> OSDocument::workspace()
+{
+  return m_workspace;
+}
+
+void OSDocument::setWorkspace(const boost::optional<Workspace>& workspace)
+{
+  m_workspace = workspace;
+}
+
 model::Model OSDocument::model()
 {
   return m_model;
