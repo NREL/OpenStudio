@@ -144,6 +144,10 @@ void OSLineEdit2::onEditingFinished() {
         //restore
         onModelObjectChange();
       }
+      else {
+        emit inFocus(true, hasData());
+        adjustWidth();
+      }
     }
   }
 }
@@ -251,8 +255,7 @@ void OSLineEdit2::focusInEvent(QFocusEvent * e)
     QString style("QLineEdit { background: #ffc627; }");
     setStyleSheet(style);
 
-    auto hasData = true; // TODO
-    emit inFocus(true, hasData); 
+    emit inFocus(true, hasData());
   }
 
   QLineEdit::focusInEvent(e);

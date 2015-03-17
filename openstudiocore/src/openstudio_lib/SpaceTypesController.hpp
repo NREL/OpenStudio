@@ -39,6 +39,8 @@ class SpaceTypesController : public ModelSubTabController
 
     virtual void onAddObject(const openstudio::IddObjectType& iddObjectType);
 
+    virtual void onAddObject(const openstudio::model::ModelObject& modelObject);
+
     virtual void onCopyObject(const openstudio::model::ModelObject& modelObject);
 
     virtual void onRemoveObject(openstudio::model::ModelObject);

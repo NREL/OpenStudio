@@ -41,7 +41,6 @@
 #include <QFocusEvent>
 #include <QGraphicsSceneDragDropEvent>
 #include <QGraphicsSceneMouseEvent>
-#include <QLabel>
 #include <QLayoutItem>
 #include <QMouseEvent>
 #include <QPainter>
@@ -607,6 +606,8 @@ void OSDropZone2::refresh()
       m_label->setText(temp);
     }
 
+    emit inFocus(true, hasData());
+
     //// Adjust the width to accommodate the text
     //QFont myFont;
     //QFontMetrics fm(myFont);
@@ -730,14 +731,15 @@ void OSDropZone2::focusInEvent(QFocusEvent * e)
 {
   if (e->reason() == Qt::MouseFocusReason)
   {
-    QString style("QWidget#OSDropZone {\
-                   background: #ffc627;\
-                   border: 2px dashed #808080;\
-                   border-radius: 10px; }");
-    setStyleSheet(style);
+    if (hasData()) {
+      QString style("QWidget#OSDropZone {\
+                     background: #ffc627;\
+                     border: 2px dashed #808080;\
+                     border-radius: 5px; }");
+      setStyleSheet(style);
+    }
 
-    auto hasData = true; // TODO
-    emit inFocus(true, hasData);
+    emit inFocus(true, hasData());
   }
 
   QWidget::focusInEvent(e);
@@ -750,7 +752,7 @@ void OSDropZone2::focusOutEvent(QFocusEvent * e)
     QString style("QWidget#OSDropZone {\
                    background: #CECECE;\
                    border: 2px dashed #808080;\
-                   border-radius: 10px; }");
+                   border-radius: 5px; }");
     setStyleSheet(style);
 
     emit inFocus(false, false);

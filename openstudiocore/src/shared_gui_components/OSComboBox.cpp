@@ -186,8 +186,7 @@ bool OSComboBox2::event( QEvent * e )
     QString style("QComboBox { background: #ffc627; }");
     setStyleSheet(style);
 
-    auto hasData = true; // TODO
-    emit inFocus(true, hasData);
+    emit inFocus(true, hasData());
 
     return QComboBox::event(e);
   }
@@ -262,6 +261,8 @@ void OSComboBox2::onModelObjectRemoved(Handle handle)
 
 void OSComboBox2::onCurrentIndexChanged(const QString & text)
 {
+  emit inFocus(true, hasData());
+
   OS_ASSERT(m_modelObject);
 
   if( m_choiceConcept )
