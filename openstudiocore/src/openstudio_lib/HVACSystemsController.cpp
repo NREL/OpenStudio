@@ -100,8 +100,8 @@
 #include "../model/Component_Impl.hpp"
 #include "../model/ComponentData.hpp"
 #include "../model/ComponentData_Impl.hpp"
-
 #include "../utilities/core/Assert.hpp"
+#include <utilities/idd/OS_ComponentData_FieldEnums.hxx>
 
 #include <QMessageBox>
 #include <QTimer>
@@ -474,6 +474,8 @@ void HVACLayoutController::addLibraryObjectToModelNode(OSItemId itemid, model::H
   }
 
   if( auto component = doc->getComponent(itemid) ) {
+    // Ugly hack to avoid the component being treated as a resource.
+    component->componentData().setString(OS_ComponentDataFields::UUID,createUUID().toString().toStdString());
     if( auto componentData = comp.model().insertComponent(component.get()) ) {
       object = componentData->primaryComponentObject();
       remove = true;

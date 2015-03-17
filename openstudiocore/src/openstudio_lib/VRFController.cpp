@@ -39,6 +39,7 @@
 #include "../model/ComponentData_Impl.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../shared_gui_components/GraphicsItems.hpp"
+#include <utilities/idd/OS_ComponentData_FieldEnums.hxx>
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QTimer>
@@ -154,6 +155,9 @@ void VRFController::onVRFSystemViewDrop(const OSItemId & itemid)
   } else {
     if( auto component = doc->getComponent(itemid) ) {
       if( auto terminal = component->primaryObject().optionalCast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>() ) {
+        // Ugly hack to avoid the component being treated as a resource.
+        component->componentData().setString(OS_ComponentDataFields::UUID,createUUID().toString().toStdString());
+        std::cout << component->componentData().getString(OS_ComponentDataFields::UUID) << std::endl;;
         if( auto componentData = m_currentSystem->model().insertComponent(component.get()) ) {
           terminal = componentData->primaryComponentObject().optionalCast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>();
           OS_ASSERT(terminal);
@@ -218,6 +222,8 @@ void VRFController::onVRFTerminalViewDrop(const OSItemId & terminalId, const OSI
       } else {
         if( auto component = doc->getComponent(terminalId) ) {
           if( auto terminal = component->primaryObject().optionalCast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>() ) {
+            // Ugly hack to avoid the component being treated as a resource.
+            component->componentData().setString(OS_ComponentDataFields::UUID,createUUID().toString().toStdString());
             if( auto componentData = m_currentSystem->model().insertComponent(component.get()) ) {
               terminal = componentData->primaryComponentObject().optionalCast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>();
               OS_ASSERT(terminal);
@@ -393,6 +399,8 @@ void VRFSystemListController::addSystem(const OSItemId & itemid)
   } else {
     if( auto component = doc->getComponent(itemid) ) {
       if( auto system = component->primaryObject().optionalCast<model::AirConditionerVariableRefrigerantFlow>() ) {
+        // Ugly hack to avoid the component being treated as a resource.
+        component->componentData().setString(OS_ComponentDataFields::UUID,createUUID().toString().toStdString());
         if( auto componentData = model->insertComponent(component.get()) ) {
           system = componentData->primaryComponentObject().optionalCast<model::AirConditionerVariableRefrigerantFlow>();
           OS_ASSERT(system);
