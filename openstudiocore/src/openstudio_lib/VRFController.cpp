@@ -33,6 +33,10 @@
 #include "../model/ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
 #include "../model/ThermalZone.hpp"
 #include "../model/ThermalZone_Impl.hpp"
+#include "../model/Component.hpp"
+#include "../model/Component_Impl.hpp"
+#include "../model/ComponentData.hpp"
+#include "../model/ComponentData_Impl.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../shared_gui_components/GraphicsItems.hpp"
 #include <QGraphicsScene>
@@ -147,6 +151,18 @@ void VRFController::onVRFSystemViewDrop(const OSItemId & itemid)
 
       refresh();
     }
+  } else {
+    if( auto component = doc->getComponent(itemid) ) {
+      if( auto terminal = component->primaryObject().optionalCast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>() ) {
+        if( auto componentData = m_currentSystem->model().insertComponent(component.get()) ) {
+          terminal = componentData->primaryComponentObject().optionalCast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>();
+          OS_ASSERT(terminal);
+          m_currentSystem->addTerminal(terminal.get());
+
+          refresh();
+        }
+      }
+    }
   }
 }
 
@@ -185,21 +201,33 @@ void VRFController::onVRFSystemViewZoneDrop(const OSItemId & itemid)
 void VRFController::onVRFTerminalViewDrop(const OSItemId & terminalId, const OSItemId & thermalZoneId)
 {
   OS_ASSERT(m_currentSystem);
-  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  auto doc = OSAppBase::instance()->currentDocument();
 
   if( doc->fromModel(thermalZoneId) )
   {
-    boost::optional<model::ModelObject> mo = doc->getModelObject(thermalZoneId);
+    auto mo = doc->getModelObject(thermalZoneId);
     OS_ASSERT(mo); 
-    if( boost::optional<model::ThermalZone> thermalZone = mo->optionalCast<model::ThermalZone>() )
+    if( auto thermalZone = mo->optionalCast<model::ThermalZone>() )
     {
-      mo = doc->getModelObject(terminalId);
-      OS_ASSERT(mo);
-      boost::optional<model::ZoneHVACTerminalUnitVariableRefrigerantFlow> terminal = mo->optionalCast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>();
-      OS_ASSERT(terminal);
-      terminal->addToThermalZone(thermalZone.get());
+      if( mo = doc->getModelObject(terminalId) ) {
+        if( auto terminal = mo->optionalCast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>() ) {
+          terminal->addToThermalZone(thermalZone.get());
 
-      refresh();
+          refresh();
+        }
+      } else {
+        if( auto component = doc->getComponent(terminalId) ) {
+          if( auto terminal = component->primaryObject().optionalCast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>() ) {
+            if( auto componentData = m_currentSystem->model().insertComponent(component.get()) ) {
+              terminal = componentData->primaryComponentObject().optionalCast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>();
+              OS_ASSERT(terminal);
+              terminal->addToThermalZone(thermalZone.get());
+
+              refresh();
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -348,22 +376,28 @@ void VRFSystemListController::createNewSystem()
 
 void VRFSystemListController::addSystem(const OSItemId & itemid)
 {
-  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  auto doc = OSAppBase::instance()->currentDocument();
+  auto model = OSAppBase::instance()->currentModel();
 
-  if( doc->fromComponentLibrary(itemid) )
-  {
-    boost::optional<model::ModelObject> mo = doc->getModelObject(itemid);
+  if( ! model ) return;
 
-    boost::optional<model::Model> model = OSAppBase::instance()->currentModel();
+  if( doc->fromComponentLibrary(itemid) ) {
+    auto mo = doc->getModelObject(itemid);
 
-    if( mo && model )
-    {
-      if( boost::optional<model::AirConditionerVariableRefrigerantFlow> system = mo->optionalCast<model::AirConditionerVariableRefrigerantFlow>() )
-      {
-        model::AirConditionerVariableRefrigerantFlow systemClone = 
-          system->clone(model.get()).cast<model::AirConditionerVariableRefrigerantFlow>();
-
+    if( mo ) {
+      if( auto system = mo->optionalCast<model::AirConditionerVariableRefrigerantFlow>() ) {
+        auto systemClone = system->clone(model.get()).cast<model::AirConditionerVariableRefrigerantFlow>();
         emit itemInserted(systemIndex(systemClone));
+      }
+    }
+  } else {
+    if( auto component = doc->getComponent(itemid) ) {
+      if( auto system = component->primaryObject().optionalCast<model::AirConditionerVariableRefrigerantFlow>() ) {
+        if( auto componentData = model->insertComponent(component.get()) ) {
+          system = componentData->primaryComponentObject().optionalCast<model::AirConditionerVariableRefrigerantFlow>();
+          OS_ASSERT(system);
+          emit itemInserted(systemIndex(system.get()));
+        }
       }
     }
   }
