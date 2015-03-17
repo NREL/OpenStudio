@@ -842,13 +842,13 @@ namespace radiance {
           LOG(Debug, "Site shading surface: " << shadingSurface_name );
 
          // get reflectance
-          double interiorVisibleReflectance = 0.4; // default for site shading surfaces
+          double interiorVisibleReflectance = 0.25; // default for site shading surfaces
           if (shadingSurface.interiorVisibleAbsorptance()){
             double interiorVisibleAbsorptance = shadingSurface.interiorVisibleAbsorptance().get();
             interiorVisibleReflectance = 1.0 - interiorVisibleAbsorptance;
           }
           
-          double exteriorVisibleReflectance = 0.4; // default
+          double exteriorVisibleReflectance = 0.25; // default
           if (shadingSurface.exteriorVisibleAbsorptance()){
             double exteriorVisibleAbsorptance = shadingSurface.exteriorVisibleAbsorptance().get();
             exteriorVisibleReflectance = 1.0 - exteriorVisibleAbsorptance;
@@ -1008,11 +1008,17 @@ namespace radiance {
           double interiorVisibleAbsorptance = surface.interiorVisibleAbsorptance().get();
           interiorVisibleReflectance = 1.0 - interiorVisibleAbsorptance;
         }
+        double exteriorVisibleReflectance = 0.25; // default for space surfaces (exterior)
+        if (surface.exteriorVisibleAbsorptance()){
+          double exteriorVisibleAbsorptance = surface.exteriorVisibleAbsorptance().get();
+          exteriorVisibleReflectance = 1.0 - exteriorVisibleAbsorptance;
+        }
 
-        m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance, 3) + "\n";
+        m_radSpaces[space_name] += "#--reflectance (int) = " + formatString(interiorVisibleReflectance, 3) + \
+        "\n#--reflectance (ext) = " + formatString(exteriorVisibleReflectance, 3) + "\n";
 
         // write material to library array
-        /// \todo deal with exterior surfaces
+        //
         m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3)
             + "\n0\n0\n5\n" + formatString(interiorVisibleReflectance, 3)
             + " " + formatString(interiorVisibleReflectance, 3)
@@ -1239,7 +1245,7 @@ namespace radiance {
                 // copy uncontrolledBSDF
                 boost::filesystem::copy_file(*uncontrolledBSDF, uncontrolledBSDFOut, boost::filesystem::copy_option::overwrite_if_exists);
               }else{
-                LOG(Warn, "Cannot download BSDF, using default.");
+                LOG(Warn, "Cannot download BSDF for this window group, using default (Tvis=44%)";
 
                 // read default file
                 QString defaultFile;
