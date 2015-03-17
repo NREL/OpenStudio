@@ -255,6 +255,12 @@ void ThermalZonesController::onAddObject(const openstudio::IddObjectType& iddObj
   openstudio::model::ThermalZone(this->model());
 }
 
+void ThermalZonesController::onAddObject(const openstudio::model::ModelObject& modelObject)
+{
+  OS_ASSERT(IddObjectType::OS_ThermalZone == modelObject.iddObjectType().value());
+  openstudio::model::ThermalZone(this->model());
+}
+
 void ThermalZonesController::onCopyObject(const openstudio::model::ModelObject& modelObject)
 {
   modelObject.clone(this->model());

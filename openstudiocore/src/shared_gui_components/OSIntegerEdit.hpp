@@ -30,6 +30,7 @@
 #include <QLineEdit>
 #include <QString>
 #include <QValidator>
+#include <QIntValidator>
 
 class QFocusEvent;
 
@@ -45,6 +46,8 @@ class OSIntegerEdit2: public QLineEdit {
   virtual ~OSIntegerEdit2() {}
 
   void enableClickFocus() { this->m_hasClickFocus = true; }
+
+  bool hasData() { return !this->text().isEmpty(); }
 
   QIntValidator * intValidator() { return m_intValidator; }
 

@@ -72,6 +72,8 @@ class ModelSubTabController : public SubTabController
 
     virtual void onAddObject(const openstudio::IddObjectType& iddObjectType) = 0;
 
+    virtual void onAddObject(const openstudio::model::ModelObject& modelObject) {}
+
     virtual void onCopyObject(const openstudio::model::ModelObject& modelObject) = 0;
 
     virtual void onRemoveObject(openstudio::model::ModelObject modelObject) = 0;

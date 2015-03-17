@@ -27,6 +27,7 @@
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
 
+#include <QLabel>
 #include <QWidget>
 #include <QMouseEvent>
 #include <QGraphicsItem>
@@ -60,6 +61,7 @@ public:
   ~OSDropZone2() {}
 
   void enableClickFocus() { this->setFocusPolicy(Qt::ClickFocus); }
+  bool hasData() { return !this->m_label->text().isEmpty(); }
   void setDeleteObject(bool deleteObject) { m_deleteObject = deleteObject; }
   bool deleteObject() { return m_deleteObject; }
 
@@ -83,12 +85,15 @@ protected:
   virtual void focusInEvent(QFocusEvent * e);
   virtual void focusOutEvent(QFocusEvent * e);
 
+public slots:
+
+  void onItemRemoveClicked();
+
 private slots:
 
   void refresh();
   void dragEnterEvent(QDragEnterEvent *event);
   void dropEvent(QDropEvent *event);
-  void onItemRemoveClicked();
 
 private:
 

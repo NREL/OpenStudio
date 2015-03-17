@@ -49,7 +49,7 @@ OSQuantityEdit2::OSQuantityEdit2(const std::string& modelUnits, const std::strin
     m_ipUnits(ipUnits),
     m_isScientific(false)
 {
-  connect(m_lineEdit, &QuantityLineEdit::inFocus, this, &OSQuantityEdit2::inFocus);
+  connect(m_lineEdit, &QuantityLineEdit::inFocus, this, &OSQuantityEdit2::onInFocus);
 
   // do a test conversion to make sure units are ok
   boost::optional<double> test = convert(1.0, modelUnits, ipUnits);
@@ -214,6 +214,8 @@ void OSQuantityEdit2::unbind() {
 }
 
 void OSQuantityEdit2::onEditingFinished() {
+
+  emit inFocus(true, hasData());
 
   QString text = m_lineEdit->text();
   if (text.isEmpty() || m_text == text) return;
@@ -432,6 +434,16 @@ void OSQuantityEdit2::enableClickFocus()
   m_lineEdit->enableClickFocus();
 }
 
+void OSQuantityEdit2::onInFocus(bool hasFocus)
+{
+  if (hasFocus) {
+    emit inFocus(true, hasData());
+  }
+  else {
+    emit inFocus(false, false);
+  }
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 QuantityLineEdit::QuantityLineEdit(QWidget * parent)
@@ -446,8 +458,7 @@ void QuantityLineEdit::focusInEvent(QFocusEvent * e)
     QString style("QLineEdit { background: #ffc627; }");
     setStyleSheet(style);
 
-    auto hasData = true; // TODO
-    emit inFocus(true, hasData);
+    emit inFocus(true);
   }
 
   QLineEdit::focusInEvent(e);
@@ -460,7 +471,7 @@ void QuantityLineEdit::focusOutEvent(QFocusEvent * e)
     QString style("QLineEdit { background: white; }");
     setStyleSheet(style);
 
-    emit inFocus(false, false);
+    emit inFocus(false);
   }
 
   QLineEdit::focusOutEvent(e);
