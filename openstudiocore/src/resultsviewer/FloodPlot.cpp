@@ -248,6 +248,21 @@ QRectF TimeSeriesFloodPlotData::boundingRect() const
   return QRectF(m_minX, m_minY, m_maxX-m_minX, m_maxY-m_minY);
 }
 
+
+QRectF TimeSeriesFloodPlotData::pixelHint(const QRectF& area) const
+{
+
+  double dx = 1.0; // one day
+  double dy = 1.0 / 24.0; // default hourly
+  openstudio::OptionalTime intervalLength = m_timeSeries.intervalLength();
+  if (intervalLength){
+    dy = intervalLength->totalHours() / 24.0;
+  }
+  QRectF rect(m_minX, m_minY, dx, dy);
+
+  return rect;
+}
+
 double TimeSeriesFloodPlotData::value(double fractionalDay, double hourOfDay) const
 {
   // DLM: we are flooring the day because we want to plot day vs hour in flood plot
@@ -427,6 +442,15 @@ MatrixFloodPlotData* MatrixFloodPlotData::copy() const
 }
 
 QwtInterval MatrixFloodPlotData::range() const { return m_colorMapRange; }
+
+QRectF MatrixFloodPlotData::pixelHint(const QRectF& area) const
+{
+  double dx = (m_maxX - m_minX) / double(m_matrix.size1());
+  double dy = (m_maxY - m_minY) / double(m_matrix.size2());
+  QRectF rect(m_minX, m_minY, dx, dy);
+
+  return rect;
+}
 
 double MatrixFloodPlotData::value(double x, double y) const
 {

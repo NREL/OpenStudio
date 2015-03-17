@@ -21,6 +21,7 @@
 #include "PlotViewProperties.hpp"
 #include "../utilities/sql/SqlFile.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/System.hpp"
 #include "../utilities/data/Vector.hpp"
 
 #include <qwt/qwt_picker_machine.h>
@@ -341,6 +342,9 @@ namespace resultsviewer{
 
     QPen gridPen(Qt::gray);
 
+    //unsigned numberOfProcessors = openstudio::System::numberOfProcessors();
+    //unsigned renderThreadCount = (numberOfProcessors == 1) ? 1 : numberOfProcessors - 1;
+
     switch (m_plotType)
     {
     case RVPV_LINEPLOT:
@@ -362,8 +366,12 @@ namespace resultsviewer{
       m_floodPlotYearlyMax = 0;
       m_floodPlotYearlyMin = 0;
 
+      
       // parented by m_plot after attach
-      m_spectrogram = new QwtPlotSpectrogram();
+      m_spectrogram = new QwtPlotSpectrogram(); 
+      m_spectrogram->setCachePolicy(QwtPlotRasterItem::PaintCache); // default is NoCache 
+      //m_spectrogram->setRenderThreadCount(renderThreadCount); // seems slower than without
+
       m_colorMapType = openstudio::FloodPlotColorMap::Jet;
       m_colorMapLength = 64;
       m_spectrogram->attach(m_plot);
@@ -378,6 +386,9 @@ namespace resultsviewer{
 
       // parented by m_plot after attach
       m_spectrogram = new QwtPlotSpectrogram();
+      m_spectrogram->setCachePolicy(QwtPlotRasterItem::PaintCache); // default is NoCache 
+      //m_spectrogram->setRenderThreadCount(renderThreadCount); // seems slower than without
+
       m_colorMapType = openstudio::FloodPlotColorMap::Jet;
       m_colorMapLength = 64;
       m_spectrogram->attach(m_plot);

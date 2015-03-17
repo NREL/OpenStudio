@@ -158,6 +158,9 @@ namespace openstudio{
       /// provide boundingRect overload for speed - default implementation slow!!!
       QRectF boundingRect() const;
 
+      /// provide size of each pixel
+      virtual QRectF pixelHint(const QRectF& area) const;
+
       ///  value at point fractionalDay and hourOfDay
       double value(double fractionalDay, double hourOfDay) const;
 
@@ -265,6 +268,9 @@ namespace openstudio{
 
       /// must provide range of values - colormap range not data range
       QwtInterval range() const;
+
+      /// provide size of each pixel
+      virtual QRectF pixelHint(const QRectF& area) const;
 
       /// get the value at point x, y
       double value(double x, double y) const;
