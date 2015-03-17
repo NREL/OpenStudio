@@ -191,6 +191,11 @@ TimeSeriesFloodPlotData::TimeSeriesFloodPlotData(TimeSeries timeSeries)
   m_startFractionalDay(timeSeries.firstReportDateTime().date().dayOfYear()+timeSeries.firstReportDateTime().time().totalDays()),
   m_colorMapRange(QwtInterval(m_minValue, m_maxValue))
 {
+  if (m_colorMapRange.minValue() == m_colorMapRange.maxValue())
+  {
+    m_colorMapRange = QwtInterval(m_colorMapRange.minValue(), m_colorMapRange.minValue() + 1.0);
+  }
+
   // data range
   setInterval(Qt::XAxis, QwtInterval(m_minX, m_maxX));
   setInterval(Qt::YAxis, QwtInterval(m_minY, m_maxY));
@@ -210,6 +215,11 @@ TimeSeriesFloodPlotData::TimeSeriesFloodPlotData(TimeSeries timeSeries,  QwtInte
   m_startFractionalDay(timeSeries.firstReportDateTime().date().dayOfYear()+timeSeries.firstReportDateTime().time().totalDays()),
   m_colorMapRange(colorMapRange)
 {
+  if (m_colorMapRange.minValue() == m_colorMapRange.maxValue())
+  {
+    m_colorMapRange = QwtInterval(m_colorMapRange.minValue(), m_colorMapRange.minValue() + 1.0);
+  }
+
   // data range
   setInterval(Qt::XAxis, QwtInterval(m_minX, m_maxX));
   setInterval(Qt::YAxis, QwtInterval(m_minY, m_maxY));
@@ -513,6 +523,11 @@ void MatrixFloodPlotData::init(){
   // default behavior is to have entire data range considered for colormapping
   // override by setting colorMapRange
   m_colorMapRange = QwtInterval(m_minValue, m_maxValue);
+
+  if (m_colorMapRange.minValue() == m_colorMapRange.maxValue())
+  {
+    m_colorMapRange = QwtInterval(m_colorMapRange.minValue(), m_colorMapRange.minValue() + 1.0);
+  }
 
   // set the bounding box
   setInterval(Qt::XAxis, QwtInterval(m_minX, m_maxX));

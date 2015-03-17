@@ -1093,30 +1093,37 @@ namespace resultsviewer{
   {
     openstudio::FloodPlotColorMap* colorMap = new openstudio::FloodPlotColorMap(m_colorLevels, m_colorMapType);
     m_spectrogram->setColorMap(colorMap);
-    m_spectrogram->setData(m_floodPlotData);
+    //m_spectrogram->setData(m_floodPlotData); // DLM: why is this here?
   }
 
   void PlotView::setDataRange()
   {
     if (m_floodPlotAutoScale)
+    {
       m_dataRange = QwtInterval(m_floodPlotData->minValue(), m_floodPlotData->maxValue());
+    }
     else
+    {
       m_dataRange = QwtInterval(m_floodPlotMin, m_floodPlotMax);
+    }
 
     if (m_dataRange.minValue() == m_dataRange.maxValue())
+    {
       m_dataRange = QwtInterval(m_dataRange.minValue(), m_dataRange.minValue() + 1.0);
+    }
 
-    m_colorLevels=openstudio::linspace(m_dataRange.minValue(), m_dataRange.maxValue(),m_colorMapLength);
+    m_colorLevels = openstudio::linspace(m_dataRange.minValue(), m_dataRange.maxValue(),m_colorMapLength);
 
     m_floodPlotData->colorMapRange(m_dataRange);
 
     setColorMap(m_colorMapType);
+
     /// default contour levels - 10
     QList<double> contourLevels;
     double interval = (m_dataRange.maxValue() - m_dataRange.minValue())/10.0;
-    for ( double level = m_dataRange.minValue(); level < m_dataRange.maxValue(); level += interval )
+    for (double level = m_dataRange.minValue(); level < m_dataRange.maxValue(); level += interval){
       contourLevels += level;
-
+    }
     m_spectrogram->setContourLevels(contourLevels);
 
   }
@@ -1954,7 +1961,8 @@ namespace resultsviewer{
     centerDate.sprintf("%02d/%02d %02d:%02d:%02d", openstudio::month((m_illuminanceMapReportIndicesDates[reportIndex].second).date().monthOfYear()), (m_illuminanceMapReportIndicesDates[reportIndex].second).date().dayOfMonth(), (m_illuminanceMapReportIndicesDates[reportIndex].second).time().hours(), 0,0);
     m_centerDate->setText(centerDate);
 
-    plotDataAvailable(true);
+    //plotDataAvailable(true); // DLM: why is this here?
+
     // illuminance map caching
     if (m_illuminanceMapData[reportIndex])
     {
@@ -2005,7 +2013,9 @@ namespace resultsviewer{
     // test simplest "value" for raster data - a little faster than interpolation but not much - see double MatrixFloodPlotData::value(double x, double y) const
 
     if (m_valueInfo->isVisible())
-      valueInfoIlluminanceMap(m_valueInfoMarker->xValue(),m_valueInfoMarker->yValue());
+    {
+      valueInfoIlluminanceMap(m_valueInfoMarker->xValue(), m_valueInfoMarker->yValue());
+    }
 
     m_plot->replot();
 
@@ -2049,7 +2059,9 @@ namespace resultsviewer{
       m_centerSlider->setValue(reportIndex);
     }
     else
+    {
       plotDataAvailable(false);
+    }
   }
 
   void PlotView::plotDataAvailable(bool available)
