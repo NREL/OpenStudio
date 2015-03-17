@@ -862,19 +862,12 @@ bool OpenStudioApp::notify(QObject* receiver, QEvent* event)
   if (event->type() == QEvent::FileOpen) {
     return openFile(static_cast<QFileOpenEvent *>(event)->file());
   }
-  // Note: the original call below bypasses OSAppBase, OpenStudioApp's base class
-  //return QApplication::notify(receiver, event);
+
   return OSAppBase::notify(receiver, event);
 }
 
 bool OpenStudioApp::event(QEvent * e)
 {
-  // Put a breakpoint inside this conditional after the app boots
-  if (e->type() != QEvent::ApplicationActivate && e->type() != QEvent::ApplicationDeactivate && e->type() != QEvent::ApplicationStateChange) {
-    // Look for something interesting in here
-    auto type = e->type();
-  }
-
   return OSAppBase::event(e);
 }
 

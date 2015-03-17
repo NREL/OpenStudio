@@ -42,6 +42,7 @@ OSCollapsibleItemHeader::OSCollapsibleItemHeader(const std::string & text,
   setObjectName("OSCollapsibleItemHeader");
 
   QHBoxLayout * mainHLayout = new QHBoxLayout();
+  mainHLayout->setContentsMargins(9, 0, 9, 0);
   setLayout(mainHLayout);
 
   // Label

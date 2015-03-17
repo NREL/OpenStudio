@@ -46,6 +46,8 @@ class OSUnsignedEdit2: public QLineEdit {
 
   void enableClickFocus() { this->m_hasClickFocus = true; }
 
+  bool hasData() { return !this->text().isEmpty(); }
+
   QIntValidator * intValidator() { return m_intValidator; }
 
   void bind(model::ModelObject& modelObject,

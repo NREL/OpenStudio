@@ -381,7 +381,7 @@ PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP,
 
   vLayout = new QVBoxLayout();
 
-  label = new QLabel("Sensible Heat Fraction Radiant: ");
+  label = new QLabel("Sensible Heat Fraction: ");
   label->setObjectName("H2");
   vLayout->addWidget(label);
 

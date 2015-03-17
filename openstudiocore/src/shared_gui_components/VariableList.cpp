@@ -383,14 +383,7 @@ void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bo
       // measure
       analysis::RubyMeasure measure(projectMeasure);
       try{
-        auto model = m_app->currentModel();
-        boost::optional<Workspace> workspace;
-        if( model ) {
-          ProgressBar progress(m_app->mainWidget()); 
-          energyplus::ForwardTranslator translator;
-          workspace = translator.translateModel(model.get(),&progress);
-        }
-        measure.setArguments(m_app->measureManager().getArguments(*project, projectMeasure,model,workspace));
+        measure.setArguments(m_app->measureManager().getArguments(*project, projectMeasure));
       } catch ( const RubyException&e ) {
         LOG(Error, "Failed to compute arguments for measure: " << e.what());
         QString errorMessage("Failed to compute arguments for measure: \n\n");

@@ -181,6 +181,8 @@ void OSUnsignedEdit2::unbind() {
 
 void OSUnsignedEdit2::onEditingFinished() {
 
+  emit inFocus(true, hasData());
+
   QString text = this->text();
   if (text.isEmpty() || m_text == text) return;
 
@@ -349,8 +351,7 @@ void OSUnsignedEdit2::focusInEvent(QFocusEvent * e)
     QString style("QLineEdit { background: #ffc627; }");
     setStyleSheet(style);
 
-    auto hasData = true; // TODO
-    emit inFocus(true, hasData);
+    emit inFocus(true, hasData());
   }
 
   QLineEdit::focusInEvent(e);

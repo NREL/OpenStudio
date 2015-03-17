@@ -199,7 +199,9 @@ class ObjectSelector : public QObject
     void setObjectSelection(const model::ModelObject &t_obj, bool t_selected);
     bool getObjectSelection(const model::ModelObject &t_obj) const;
     boost::optional<const model::ModelObject &> getObject(const int t_row, const int t_column, const boost::optional<int> &t_subrow);
+    QWidget * getWidget(const int t_row, const int t_column, const boost::optional<int> &t_subrow);
     std::set<model::ModelObject> getSelectedObjects() const;
+    std::vector<QWidget *> getColumnsSelectedWidgets(int column);
     void clear();
     void objectRemoved(const openstudio::model::ModelObject &t_obj);
     void setObjectFilter(const std::function<bool (const model::ModelObject &)> &t_filter);
@@ -640,6 +642,8 @@ private:
 
   void setConceptValue(model::ModelObject t_setterMO, model::ModelObject t_getterMO, const QSharedPointer<BaseConcept> &t_baseConcept);
 
+  void resetConceptValue(model::ModelObject t_resetMO, const QSharedPointer<BaseConcept> &t_baseConcept);
+
   void setConceptValue(model::ModelObject t_setterMO, model::ModelObject t_getterMO, const QSharedPointer<BaseConcept> &t_setterBaseConcept, const QSharedPointer<BaseConcept> &t_getterBaseConcept);
 
   QButtonGroup * m_horizontalHeaderBtnGrp;
@@ -652,7 +656,7 @@ private:
 
   std::tuple<int, int, boost::optional<int>> m_selectedCellLocation = std::make_tuple(-1, -1, -1);
 
-  std::vector <std::pair<QPushButton *, bool> > m_applyToButtonStates = std::vector < std::pair<QPushButton *, bool> >();
+  std::vector <std::pair<int, bool> > m_applyToButtonStates = std::vector < std::pair<int, bool> >();
 
 signals:
 
@@ -719,6 +723,8 @@ public:
   Holder(QWidget * parent = nullptr);
 
   virtual ~Holder();
+
+  QWidget * widget = nullptr;
 
 protected:
 

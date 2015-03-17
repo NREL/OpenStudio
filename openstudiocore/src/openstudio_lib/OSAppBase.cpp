@@ -73,12 +73,6 @@ bool OSAppBase::notify(QObject * receiver, QEvent * e)
 
 bool OSAppBase::event(QEvent * e)
 {
-  // Put a breakpoint inside this conditional after the app boots
-  if (e->type() != QEvent::ApplicationActivate && e->type() != QEvent::ApplicationDeactivate && e->type() != QEvent::ApplicationStateChange) {
-    // Look for something interesting in here
-    auto type = e->type();
-  }
-
   return QApplication::event(e);
 }
 
@@ -129,6 +123,17 @@ boost::optional<openstudio::model::Model> OSAppBase::currentModel()
     return document->model();
   } else {
     return boost::optional<openstudio::model::Model>();
+  }
+}
+
+boost::optional<openstudio::Workspace> OSAppBase::currentWorkspace()
+{
+  std::shared_ptr<OSDocument> document = currentDocument();
+  if (document)
+  {
+    return document->workspace();
+  } else {
+    return boost::none;
   }
 }
 
