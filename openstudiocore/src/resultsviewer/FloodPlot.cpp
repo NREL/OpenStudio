@@ -445,8 +445,8 @@ QwtInterval MatrixFloodPlotData::range() const { return m_colorMapRange; }
 
 QRectF MatrixFloodPlotData::pixelHint(const QRectF& area) const
 {
-  double dx = (m_maxX - m_minX) / double(m_matrix.size1());
-  double dy = (m_maxY - m_minY) / double(m_matrix.size2());
+  double dx = (m_maxX - m_minX) / double(m_matrix.size1() * 2.0);
+  double dy = (m_maxY - m_minY) / double(m_matrix.size2() * 2.0);
   QRectF rect(m_minX, m_minY, dx, dy);
 
   return rect;

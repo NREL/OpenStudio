@@ -795,6 +795,8 @@ namespace resultsviewer{
       illuminanceDiff.push_back(illuminance1[i]-illuminance2[i]);
       i++;
     }
+    bufferIlluminanceMapGridPoints(x1, y1);
+    bufferIlluminanceMapGridPoints(x2, y2);
     openstudio::MatrixFloodPlotData* data = new openstudio::MatrixFloodPlotData(x1,y1,illuminanceDiff,openstudio::LinearInterp);
 
     m_illuminanceMapData[0] = data->copy();
@@ -899,6 +901,7 @@ namespace resultsviewer{
     std::vector<double> y;
     std::vector<double> illuminance;
     sqlFile.illuminanceMap(m_illuminanceMapReportIndicesDates[0].first,x,y,illuminance);
+    bufferIlluminanceMapGridPoints(x, y);
     openstudio::MatrixFloodPlotData* data = new openstudio::MatrixFloodPlotData(x,y,illuminance,openstudio::LinearInterp);
 
     m_illuminanceMapData[0] = data->copy();
@@ -1998,6 +2001,8 @@ namespace resultsviewer{
           illuminanceDiff.push_back(illuminance1[i]-illuminance2[i]);
           i++;
         }
+        bufferIlluminanceMapGridPoints(x1, y1);
+        bufferIlluminanceMapGridPoints(x2, y2);
         openstudio::MatrixFloodPlotData* data = new openstudio::MatrixFloodPlotData(x1,y1,illuminanceDiff,openstudio::LinearInterp);
 
 
@@ -2011,6 +2016,7 @@ namespace resultsviewer{
         std::vector<double> y;
         std::vector<double> illuminance;
         sqlFile.illuminanceMap(m_illuminanceMapReportIndicesDates[reportIndex].first,x,y,illuminance);
+        bufferIlluminanceMapGridPoints(x, y);
         openstudio::MatrixFloodPlotData* data = new openstudio::MatrixFloodPlotData(x,y,illuminance,openstudio::LinearInterp);
 
         m_floodPlotData = data;
@@ -2148,5 +2154,10 @@ namespace resultsviewer{
     QWidget::mousePressEvent(e);
   }
 
+
+  void PlotView::bufferIlluminanceMapGridPoints(std::vector<double>& x, std::vector<double>& y)
+  {
+
+  }
 
 };

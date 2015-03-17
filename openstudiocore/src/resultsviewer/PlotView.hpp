@@ -584,7 +584,11 @@ signals:
       // docking
       void slotFloatOrDock();
 
+    private:
 
+      // apply proper spacing so that illuminance map data pixels are centered on data point
+      // DLM: don't do this for now, data outside the map just gets clipped
+      void bufferIlluminanceMapGridPoints(std::vector<double>& x, std::vector<double>& y);
   };
 
 
