@@ -288,6 +288,16 @@ namespace resultsviewer{
     init();
   }
 
+  PlotView::~PlotView()
+  {
+    for (auto data : m_illuminanceMapData)
+    {
+      if (data)
+      {
+        delete data;
+      }
+    }
+  }
 
   void PlotView::init()
   {
@@ -758,7 +768,7 @@ namespace resultsviewer{
       }
     }
 
-    m_illuminanceMapData.resize(m_illuminanceMapReportIndicesDates.size());
+    m_illuminanceMapData.resize(m_illuminanceMapReportIndicesDates.size(), nullptr);
 
     // assuming x and y the same
     m_centerSlider->setRange(0,m_illuminanceMapReportIndicesDates.size()-1);
@@ -776,7 +786,7 @@ namespace resultsviewer{
     }
     openstudio::MatrixFloodPlotData* data = new openstudio::MatrixFloodPlotData(x1,y1,illuminanceDiff,openstudio::LinearInterp);
 
-    m_illuminanceMapData[0] = data;
+    m_illuminanceMapData[0] = data->copy();
 
     m_yAxisMin = data->minY();
     m_yAxisMax = data->maxY();
@@ -870,7 +880,7 @@ namespace resultsviewer{
       //    LOG(Error, "no report indices for illuminance map '" << openstudio::toString(_plotViewData.legendName) << "'");
       return;
     }
-    m_illuminanceMapData.resize(m_illuminanceMapReportIndicesDates.size());
+    m_illuminanceMapData.resize(m_illuminanceMapReportIndicesDates.size(), nullptr);
 
     m_centerSlider->setRange(0,m_illuminanceMapReportIndicesDates.size()-1);
 
@@ -880,7 +890,7 @@ namespace resultsviewer{
     sqlFile.illuminanceMap(m_illuminanceMapReportIndicesDates[0].first,x,y,illuminance);
     openstudio::MatrixFloodPlotData* data = new openstudio::MatrixFloodPlotData(x,y,illuminance,openstudio::LinearInterp);
 
-    m_illuminanceMapData[0] = data;
+    m_illuminanceMapData[0] = data->copy();
 
     m_yAxisMin = data->minY();
     m_yAxisMax = data->maxY();
@@ -1947,7 +1957,9 @@ namespace resultsviewer{
     plotDataAvailable(true);
     // illuminance map caching
     if (m_illuminanceMapData[reportIndex])
-      m_floodPlotData = m_illuminanceMapData[reportIndex];
+    {
+      m_floodPlotData = m_illuminanceMapData[reportIndex]->copy();
+    }
     else
     {
       //  set report index and replot
@@ -1971,7 +1983,7 @@ namespace resultsviewer{
 
 
         m_floodPlotData = data;
-        m_illuminanceMapData[reportIndex] = data;
+        m_illuminanceMapData[reportIndex] = data->copy();
       }
       else
       {
@@ -1983,7 +1995,7 @@ namespace resultsviewer{
         openstudio::MatrixFloodPlotData* data = new openstudio::MatrixFloodPlotData(x,y,illuminance,openstudio::LinearInterp);
 
         m_floodPlotData = data;
-        m_illuminanceMapData[reportIndex] = data;
+        m_illuminanceMapData[reportIndex] = data->copy();
       }
     }
     m_spectrogram->setData(m_floodPlotData);

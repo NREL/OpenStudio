@@ -288,6 +288,7 @@ signals:
 
     PlotView(int plotType=RVPV_LINEPLOT, QWidget* parent=nullptr);
     PlotView(QString& path, int plotType=RVPV_LINEPLOT, QWidget* parent=nullptr);
+    virtual ~PlotView();
 
 
     // plot view data handler
