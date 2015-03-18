@@ -45,7 +45,7 @@ namespace bimserver {
 		QLabel *introLabel = new QLabel("Please select a project to import: ", this);
 		m_proList = new QListWidget(this);
 		m_ifcList = new QListWidget(this);
-		QPushButton *okButton = new QPushButton(tr("Import Project"), this);
+		QPushButton *okButton = new QPushButton(tr("Download OSM File"), this);
 		QPushButton *newButton = new QPushButton(tr("New Project"), this);
 		QPushButton *loadButton = new QPushButton(tr("Check in IFC File"), this);
 		QPushButton *selectButton = new QPushButton(tr(" > "), this);
@@ -115,8 +115,8 @@ namespace bimserver {
 		m_waitForOSM->exec();
 
 		//Reverse Translate from osmString.
-    
-    std::stringstream stringStream(m_OSM.toStdString());
+		
+		std::stringstream stringStream(m_OSM.toStdString());
 
 		openstudio::osversion::VersionTranslator vt;
 
@@ -247,13 +247,13 @@ namespace bimserver {
 		m_statusBar->showMessage(tr("Please specify the bimserver address/port and user credentials."), 2000);
 		QDialog setDialog(this);
 		QGridLayout *setLayout = new QGridLayout;
-		setDialog.setWindowTitle(tr("New Project"));
+		setDialog.setWindowTitle(tr("BIMserver Settings"));
 
 		QLabel *set_introLabel = new QLabel(tr("Please enter the BIMserver information: "), this);
-		QLabel *set_baddLabel = new QLabel(tr("Bimserver Address: http://"), this);
+		QLabel *set_baddLabel = new QLabel(tr("BIMserver Address: http://"), this);
 		QLineEdit *set_baddEdit = new QLineEdit(this);
 		set_baddEdit->setPlaceholderText("eg: 127.0.0.1");
-		QLabel *set_bportLabel = new QLabel(tr("Bimserver Port:"), this);
+		QLabel *set_bportLabel = new QLabel(tr("BIMserver Port:"), this);
 		QLineEdit *set_bportEdit = new QLineEdit(this);
 		set_bportEdit->setPlaceholderText("eg: 8082");
 		QLabel *set_unameLabel = new QLabel(tr("Username"), this);

@@ -561,6 +561,13 @@ namespace bimserver {
 
   //BIMserver error reporting
   bool BIMserverConnection::containsError(QJsonObject responseMessage) {
+
+    //judge if it contains result first.
+    if (responseMessage.isEmpty()) {
+      emit errorOccured(tr("No Response from BIMserver!"));
+      return true;
+    }
+
     if (responseMessage.contains("exception")) {
       extractErrorMessage(responseMessage);
       return true;
