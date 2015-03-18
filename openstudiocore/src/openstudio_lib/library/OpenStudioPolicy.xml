@@ -556,7 +556,6 @@
     <rule IddField="Load Distribution Scheme" Access="HIDDEN"/>
     <rule IddField="Availability Manager List Name" Access="HIDDEN"/>
     <rule IddField="Plant Loop Demand Calculation Scheme" Access="HIDDEN"/>
-    <rule IddField="Common Pipe Simulation" Access="HIDDEN"/>
     <rule IddField="Pressure Simulation Type" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_InternalMass">
