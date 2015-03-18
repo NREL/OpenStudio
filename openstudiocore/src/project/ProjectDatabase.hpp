@@ -116,6 +116,12 @@ class PROJECT_API ProjectDatabase {
                                                bool pauseRunManager=false,
                                                bool initializeRunManagerUI=false);
 
+  /** Returns true if the directory contains an existing ProjectDatabase.*/
+  static bool isExistingProjectDatabase(const openstudio::path& path);
+
+  /** Returns true if the directory contains an existing ProjectDatabase and the project requires version translation.*/
+  static bool requiresUpdate(const openstudio::path& path);
+
   virtual ~ProjectDatabase() {}
 
   //@}
@@ -350,6 +356,15 @@ class PROJECT_API ProjectDatabase {
   /// @endcond
 
   void initialize(const openstudio::path& path);
+
+  struct PreOpenCheckResult{
+    openstudio::path originalPath;
+    openstudio::path runManagerDBPath;
+    std::string version;
+  };
+
+  // must be called with fully qualified and normalized path
+  static boost::optional<PreOpenCheckResult> preOpenCheck(const openstudio::path& path);
 
 };
 
