@@ -1291,6 +1291,31 @@ bool PatApp::openFile(const QString& fileName)
     QDir dir = fileInfo.dir();
     QString dirAbsolutePath = dir.absolutePath();
     openstudio::path projectDir = openstudio::toPath(dirAbsolutePath);
+
+    // check if this is a simple project
+    if (!analysisdriver::SimpleProject::isExistingSimpleProject(projectDir)){
+      QMessageBox::warning(mainWindow,
+                           "Error Opening Project",
+                           QString("Unable to open project at '") + dirAbsolutePath + QString("'."));
+      //}
+      showStartupView();
+      return false;
+    }
+
+
+    // check if opening the project requires an update
+    if (analysisdriver::SimpleProject::requiresUpdate(projectDir)){
+      bool test = QMessageBox::question(mainWindow,
+                            "Project Requires Update",
+                            QString("Project at '") + dirAbsolutePath + QString("' requires update which may remove previous results."),
+                            QMessageBox::Ok | QMessageBox::Cancel,
+                            QMessageBox::Cancel);
+      if (!test){
+        showStartupView();
+        return false;
+      }
+    }
+
     openstudio::analysisdriver::SimpleProjectOptions options;
     options.setPauseRunManagerQueue(true); // do not start running when opening
     options.setInitializeRunManagerUI(false);

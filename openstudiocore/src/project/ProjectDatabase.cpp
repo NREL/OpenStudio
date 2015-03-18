@@ -2762,56 +2762,38 @@ boost::optional<ProjectDatabase> ProjectDatabase::open(const openstudio::path& p
   boost::optional<openstudio::runmanager::RunManager> runManager;
   openstudio::path wpath = completeAndNormalize(path);
 
-  if(boost::filesystem::exists(wpath)){
+  boost::optional<PreOpenCheckResult> checkResult = preOpenCheck(wpath);
+  if (checkResult){
 
-    // scope resolution to ensure database and query are destroyed before removeDatabase
-    {
-      // try to read database to find runmanager path
-      QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE", toQString(wpath));
-      if (database.isValid()){
-        database.setDatabaseName(toQString(wpath));
-        if (database.open()){
-          QSqlQuery query(database);
-          query.prepare(QString::fromStdString("SELECT * FROM ProjectDatabaseRecords"));
-          assertExec(query);
-          if(query.first()){
-            openstudio::path originalPath = toPath(query.value(ProjectDatabaseRecordColumns::name).toString());
-            openstudio::path runManagerDBPath = toPath(query.value(ProjectDatabaseRecordColumns::runManagerDBPath).toString());
-            if (originalPath != wpath) {
-              LOG(Trace,"Database moved from " << toString(originalPath) << " to " <<
-                  toString(wpath) << ". Will look for corresponding RunManager database in "
-                  << "the new location.");
-              openstudio::path temp = relocatePath(runManagerDBPath,originalPath.parent_path(),wpath.parent_path());
-              if (!temp.empty()) {
-                runManagerDBPath = temp;
-                LOG(Trace,"originalPath.stem() " << toString(originalPath.stem())
-                    << ", wpath.stem() " << toString(wpath.stem())
-                    << ", runManagerDBPath.stem() " << toString(runManagerDBPath.stem()));
-                if ((originalPath.stem() != wpath.stem()) &&
-                    (runManagerDBPath.stem() == originalPath.stem()))
-                {
-                  // filename likely also changed
-                  std::string ext = getFileExtension(runManagerDBPath);
-                  runManagerDBPath = runManagerDBPath.parent_path() / wpath.stem();
-                  runManagerDBPath = setFileExtension(runManagerDBPath,ext,true,false);
-                }
-              }
-            }
-            try {
-              LOG(Trace,"Trying to load RunManager from " << toString(runManagerDBPath) << ".");
-              runManager = openstudio::runmanager::RunManager(runManagerDBPath,false,pauseRunManager,initializeRunManagerUI);
-            }
-            catch (std::exception& e) {
-              LOG(Error,"Unable to open RunManager from database path " << toString(runManagerDBPath)
-                  << ", because " << e.what());
-            }
-          }
+    if (checkResult->originalPath != wpath) {
+      LOG(Trace, "Database moved from " << toString(checkResult->originalPath) << " to " <<
+          toString(wpath) << ". Will look for corresponding RunManager database in "
+          << "the new location.");
+      openstudio::path temp = relocatePath(checkResult->runManagerDBPath, checkResult->originalPath.parent_path(), wpath.parent_path());
+      if (!temp.empty()) {
+        checkResult->runManagerDBPath = temp;
+        LOG(Trace, "originalPath.stem() " << toString(checkResult->originalPath.stem())
+            << ", wpath.stem() " << toString(wpath.stem())
+            << ", runManagerDBPath.stem() " << toString(checkResult->runManagerDBPath.stem()));
+        if ((checkResult->originalPath.stem() != wpath.stem()) &&
+            (checkResult->runManagerDBPath.stem() == checkResult->originalPath.stem()))
+        {
+          // filename likely also changed
+          std::string ext = getFileExtension(checkResult->runManagerDBPath);
+          checkResult->runManagerDBPath = checkResult->runManagerDBPath.parent_path() / wpath.stem();
+          checkResult->runManagerDBPath = setFileExtension(checkResult->runManagerDBPath, ext, true, false);
         }
       }
-      database.close();
     }
 
-    QSqlDatabase::removeDatabase(toQString(wpath));
+    try {
+      LOG(Trace, "Trying to load RunManager from " << toString(checkResult->runManagerDBPath) << ".");
+      runManager = openstudio::runmanager::RunManager(checkResult->runManagerDBPath, false, pauseRunManager, initializeRunManagerUI);
+    } catch (std::exception& e) {
+      LOG(Error, "Unable to open RunManager from database path " << toString(checkResult->runManagerDBPath)
+          << ", because " << e.what());
+    }
+    
 
     if (runManager) {
       try {
@@ -2826,6 +2808,69 @@ boost::optional<ProjectDatabase> ProjectDatabase::open(const openstudio::path& p
 
   return result;
 
+}
+
+bool ProjectDatabase::isExistingProjectDatabase(const openstudio::path& path)
+{
+  openstudio::path wpath = completeAndNormalize(path);
+  boost::optional<PreOpenCheckResult> checkResult = preOpenCheck(wpath);
+  if (checkResult){
+    return true;
+  }
+  return false;
+}
+
+bool ProjectDatabase::requiresUpdate(const openstudio::path& path)
+{
+  openstudio::path wpath = completeAndNormalize(path);
+  boost::optional<PreOpenCheckResult> checkResult = preOpenCheck(wpath);
+  if (checkResult){
+    VersionString osv(openStudioVersion());
+    VersionString dbv(checkResult->version);
+    if (dbv < osv){
+      return true;
+    }
+
+    // check for relocation?
+    if (wpath != checkResult->originalPath){
+      return true;
+    }
+  }
+  return false;
+}
+
+boost::optional<ProjectDatabase::PreOpenCheckResult> ProjectDatabase::preOpenCheck(const openstudio::path& path)
+{
+  boost::optional<ProjectDatabase::PreOpenCheckResult> result;
+
+  if (boost::filesystem::exists(path)){
+
+    // scope resolution to ensure database and query are destroyed before removeDatabase
+    {
+      // try to read database to find runmanager path
+      QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE", toQString(path));
+      if (database.isValid()){
+        database.setDatabaseName(toQString(path));
+        if (database.open()){
+          QSqlQuery query(database);
+          query.prepare(QString::fromStdString("SELECT * FROM ProjectDatabaseRecords"));
+          assertExec(query);
+          if (query.first()){
+            // these columns cannot change
+            result = ProjectDatabase::PreOpenCheckResult();
+            result->originalPath = toPath(query.value(ProjectDatabaseRecordColumns::name).toString());
+            result->runManagerDBPath = toPath(query.value(ProjectDatabaseRecordColumns::runManagerDBPath).toString());
+            result->version = toString(query.value(ProjectDatabaseRecordColumns::version).toString());
+          }
+        }
+      }
+      database.close();
+    }
+  }
+
+  QSqlDatabase::removeDatabase(toQString(path));
+
+  return result;
 }
 
 std::vector<WorkflowRecord> ProjectDatabase::workflowRecords()

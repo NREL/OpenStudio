@@ -41,9 +41,17 @@ TEST_F(ProjectFixture, ProjectDatabaseRecord) {
   openstudio::path projectPath = toPath("ProjectFixtureData/ProjectDatabaseRecord") / toPath("project.osp");
   openstudio::path runPath = toPath("ProjectFixtureData/ProjectDatabaseRecord") / toPath("run.db");
 
+  if (boost::filesystem::exists(projectPath)){
+    boost::filesystem::remove(projectPath);
+  }
+  EXPECT_FALSE(ProjectDatabase::isExistingProjectDatabase(projectPath));
+  EXPECT_FALSE(ProjectDatabase::requiresUpdate(projectPath));
+
   {
     // intialize
     ProjectDatabase database = getCleanDatabase("ProjectDatabaseRecord");
+    EXPECT_TRUE(ProjectDatabase::isExistingProjectDatabase(projectPath));
+    EXPECT_FALSE(ProjectDatabase::requiresUpdate(projectPath));
     RunManager runManager = database.runManager();
 
     databaseTimestampCreate = database.timestampCreate();
@@ -60,6 +68,8 @@ TEST_F(ProjectFixture, ProjectDatabaseRecord) {
   {
     // re-open
     ProjectDatabase database = getExistingDatabase("ProjectDatabaseRecord");
+    EXPECT_TRUE(ProjectDatabase::isExistingProjectDatabase(projectPath));
+    EXPECT_FALSE(ProjectDatabase::requiresUpdate(projectPath));
     RunManager runManager = database.runManager();
 
     EXPECT_EQ(databaseTimestampCreate, database.timestampCreate());
@@ -77,6 +87,8 @@ TEST_F(ProjectFixture, ProjectDatabaseRecord) {
     // re-open
     boost::optional<ProjectDatabase> database = ProjectDatabase::open(projectPath);
     ASSERT_TRUE(database);
+    EXPECT_TRUE(ProjectDatabase::isExistingProjectDatabase(projectPath));
+    EXPECT_FALSE(ProjectDatabase::requiresUpdate(projectPath));
     RunManager runManager = database->runManager();
 
     EXPECT_EQ(databaseTimestampCreate, database->timestampCreate());
