@@ -5752,10 +5752,21 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
   }
 
   // Setpoint schedule
-
-  model::Schedule setpointTempSchedule = serviceHotWaterSetpointSchedule(model);
-
-  waterHeaterMixed.setSetpointTemperatureSchedule(setpointTempSchedule);
+  auto fixedSupTempElement = element.parentNode().toElement().firstChildElement("FixedSupTemp");
+  if( ! fixedSupTempElement.isNull() ) {
+    auto value = fixedSupTempElement.text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"F","C").get();
+      model::ScheduleRuleset schedule(model);
+      schedule.setName(waterHeaterMixed.name().get() + " Setpoint Temp");
+      auto scheduleDay = schedule.defaultDaySchedule();
+      scheduleDay.addValue(Time(1.0),value);
+      waterHeaterMixed.setSetpointTemperatureSchedule(schedule); 
+    }
+  } else {
+    model::Schedule setpointTempSchedule = serviceHotWaterSetpointSchedule(model);
+    waterHeaterMixed.setSetpointTemperatureSchedule(setpointTempSchedule);
+  }
 
   // HIR_fPLRCrvRef
 
