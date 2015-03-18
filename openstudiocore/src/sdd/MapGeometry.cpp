@@ -64,6 +64,8 @@
 #include "../model/SpaceInfiltrationDesignFlowRate.hpp"
 #include "../model/Schedule.hpp"
 #include "../model/Schedule_Impl.hpp"
+#include "../model/ScheduleDay.hpp"
+#include "../model/ScheduleDay_Impl.hpp"
 #include "../model/ScheduleConstant.hpp"
 #include "../model/ScheduleConstant_Impl.hpp"
 #include "../model/ScheduleRuleset.hpp"
@@ -279,6 +281,7 @@ namespace sdd {
     QDomElement hotWtrHtgRtElement = element.firstChildElement("HotWtrHtgRtSim");
     QDomElement hotWtrHtgSchRefElement = element.firstChildElement("HotWtrHtgSchRef");
     QDomElement shwFluidSegRefElement = element.firstChildElement("SHWFluidSegRef");
+    QDomElement hotWtrSupTempElement = element.firstChildElement("HotWtrSupTemp");
     QDomNodeList exteriorWallElements = element.elementsByTagName("ExtWall");
     QDomNodeList exteriorFloorElements = element.elementsByTagName("ExtFlr");
     QDomNodeList roofElements = element.elementsByTagName("Roof");
@@ -404,6 +407,16 @@ namespace sdd {
       definition.setName(spaceName + " Water Use Definition");
 
       definition.setPeakFlowRate(unitToUnit(value,"gal/h","m^3/s").get());
+
+      value = hotWtrSupTempElement.text().toDouble(&ok);
+      if( ok ) {
+        value = unitToUnit(value,"F","C").get();
+        model::ScheduleRuleset schedule(model);
+        schedule.setName(spaceName + " Target SHW Temp");
+        auto scheduleDay = schedule.defaultDaySchedule();
+        scheduleDay.addValue(Time(1.0),value);
+        definition.setTargetTemperatureSchedule(schedule);
+      }
 
       model::WaterUseEquipment equipment(definition);
 
