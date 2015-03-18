@@ -191,6 +191,11 @@ TimeSeriesFloodPlotData::TimeSeriesFloodPlotData(TimeSeries timeSeries)
   m_startFractionalDay(timeSeries.firstReportDateTime().date().dayOfYear()+timeSeries.firstReportDateTime().time().totalDays()),
   m_colorMapRange(QwtInterval(m_minValue, m_maxValue))
 {
+  if (m_colorMapRange.minValue() == m_colorMapRange.maxValue())
+  {
+    m_colorMapRange = QwtInterval(m_colorMapRange.minValue(), m_colorMapRange.minValue() + 1.0);
+  }
+
   // data range
   setInterval(Qt::XAxis, QwtInterval(m_minX, m_maxX));
   setInterval(Qt::YAxis, QwtInterval(m_minY, m_maxY));
@@ -210,6 +215,11 @@ TimeSeriesFloodPlotData::TimeSeriesFloodPlotData(TimeSeries timeSeries,  QwtInte
   m_startFractionalDay(timeSeries.firstReportDateTime().date().dayOfYear()+timeSeries.firstReportDateTime().time().totalDays()),
   m_colorMapRange(colorMapRange)
 {
+  if (m_colorMapRange.minValue() == m_colorMapRange.maxValue())
+  {
+    m_colorMapRange = QwtInterval(m_colorMapRange.minValue(), m_colorMapRange.minValue() + 1.0);
+  }
+
   // data range
   setInterval(Qt::XAxis, QwtInterval(m_minX, m_maxX));
   setInterval(Qt::YAxis, QwtInterval(m_minY, m_maxY));
@@ -236,6 +246,21 @@ QwtInterval TimeSeriesFloodPlotData::range() const
 QRectF TimeSeriesFloodPlotData::boundingRect() const
 {
   return QRectF(m_minX, m_minY, m_maxX-m_minX, m_maxY-m_minY);
+}
+
+
+QRectF TimeSeriesFloodPlotData::pixelHint(const QRectF& area) const
+{
+
+  double dx = 1.0; // one day
+  double dy = 1.0 / 24.0; // default hourly
+  openstudio::OptionalTime intervalLength = m_timeSeries.intervalLength();
+  if (intervalLength){
+    dy = intervalLength->totalHours() / 24.0;
+  }
+  QRectF rect(m_minX, m_minY, dx, dy);
+
+  return rect;
 }
 
 double TimeSeriesFloodPlotData::value(double fractionalDay, double hourOfDay) const
@@ -418,6 +443,15 @@ MatrixFloodPlotData* MatrixFloodPlotData::copy() const
 
 QwtInterval MatrixFloodPlotData::range() const { return m_colorMapRange; }
 
+QRectF MatrixFloodPlotData::pixelHint(const QRectF& area) const
+{
+  double dx = (m_maxX - m_minX) / double(m_matrix.size1() * 2.0);
+  double dy = (m_maxY - m_minY) / double(m_matrix.size2() * 2.0);
+  QRectF rect(m_minX, m_minY, dx, dy);
+
+  return rect;
+}
+
 double MatrixFloodPlotData::value(double x, double y) const
 {
   return interp(m_xVector, m_yVector, m_matrix, x, y, m_interpMethod, NearestExtrap);
@@ -513,6 +547,11 @@ void MatrixFloodPlotData::init(){
   // default behavior is to have entire data range considered for colormapping
   // override by setting colorMapRange
   m_colorMapRange = QwtInterval(m_minValue, m_maxValue);
+
+  if (m_colorMapRange.minValue() == m_colorMapRange.maxValue())
+  {
+    m_colorMapRange = QwtInterval(m_colorMapRange.minValue(), m_colorMapRange.minValue() + 1.0);
+  }
 
   // set the bounding box
   setInterval(Qt::XAxis, QwtInterval(m_minX, m_maxX));
