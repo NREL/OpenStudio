@@ -119,6 +119,9 @@ namespace sdd {
     // This is useful for hooking water coils up to their plant and maybe other things.
     boost::optional<model::PlantLoop> loopForSupplySegment(const QString & fluidSegmentName, const QDomDocument& doc, openstudio::model::Model& model);
 
+    // Return the supply segment by name
+    QDomElement supplySegment(const QString & fluidSegmentName, const QDomDocument& doc);
+
     // Retruns the ServiceHotWater loop in the SDD instance with a segment named fluidSegmentName
     // If the loop is not found in the model, this function will attempt to translate it out of the SDD.
     // If the loop is found in the model it will simply be returned.

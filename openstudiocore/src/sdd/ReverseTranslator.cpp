@@ -1465,22 +1465,15 @@ namespace sdd {
     return weatherFile.get();
   }
 
-boost::optional<model::PlantLoop> ReverseTranslator::loopForSupplySegment(const QString & fluidSegmentName, const QDomDocument& doc, openstudio::model::Model& model)
+QDomElement ReverseTranslator::supplySegment(const QString & fluidSegmentName, const QDomDocument& doc)
 {
-  boost::optional<model::PlantLoop> result;
-
   QDomNodeList fluidSysElements = doc.documentElement().firstChildElement("Proj").elementsByTagName("FluidSys");
 
-  for (int i = 0; i < fluidSysElements.count(); i++)
-  {
+  for (int i = 0; i < fluidSysElements.count(); i++) {
     QDomElement fluidSysElement = fluidSysElements.at(i).toElement();
-
-    QDomElement fluidSysNameElement = fluidSysElement.firstChildElement("Name");
-
     QDomNodeList fluidSegmentElements = fluidSysElement.elementsByTagName("FluidSeg");
 
-    for (int i = 0; i < fluidSegmentElements.count(); i++)
-    {
+    for (int i = 0; i < fluidSegmentElements.count(); i++) {
       QDomElement fluidSegmentElement = fluidSegmentElements.at(i).toElement();
 
       QDomElement nameElement = fluidSegmentElement.firstChildElement("Name");
@@ -1488,17 +1481,22 @@ boost::optional<model::PlantLoop> ReverseTranslator::loopForSupplySegment(const 
 
       if( (typeElement.text().toLower() == "secondarysupply" ||
            typeElement.text().toLower() == "primarysupply" ) &&
-          nameElement.text().toLower() == fluidSegmentName.toLower()
-        )
-      {
-        boost::optional<model::PlantLoop> loop = model.getModelObjectByName<model::PlantLoop>(fluidSysNameElement.text().toStdString());
-
-        return loop; 
+           nameElement.text().toLower() == fluidSegmentName.toLower() ) {
+        return fluidSegmentElement; 
       }
     }
   }
 
-  return result;
+  return QDomElement();
+}
+
+boost::optional<model::PlantLoop> ReverseTranslator::loopForSupplySegment(const QString & fluidSegmentName, const QDomDocument& doc, openstudio::model::Model& model)
+{
+  auto fluidSegmentElement = supplySegment(fluidSegmentName,doc);
+  auto fluidSysElement = fluidSegmentElement.parentNode().toElement();
+  auto fluidSysNameElement = fluidSysElement.firstChildElement("Name");
+
+  return model.getModelObjectByName<model::PlantLoop>(fluidSysNameElement.text().toStdString());
 }
 
 boost::optional<model::PlantLoop> ReverseTranslator::serviceHotWaterLoopForSupplySegment(const QString & fluidSegmentName, const QDomDocument & doc, openstudio::model::Model& model)

@@ -1595,6 +1595,21 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     if( plant )
     {
       plant->addDemandBranchForComponent(coil);
+      // Figure out if this is connected to a ServiceHotWater system
+      // If it is then make sure any supply segment pumps go on the branch,
+      // as opposed to the demand side inlet branch
+      auto supplySegmentElement = supplySegment(fluidSegInRefElement.text(),doc);
+      auto fluidSysTypeElment = supplySegmentElement.parentNode().toElement().firstChildElement("Type");
+      if( fluidSysTypeElment.text().compare("ServiceHotWater",Qt::CaseInsensitive) == 0 ) {
+        auto pumpElement = supplySegmentElement.firstChildElement("Pump");
+        if( ! pumpElement.isNull() ) {
+          if( auto modelObject = translatePump(pumpElement,doc,model) ) {
+            auto hvacComponent = modelObject->cast<model::HVACComponent>();
+            auto inletNode = coil.waterInletModelObject()->cast<model::Node>();
+            hvacComponent.addToNode(inletNode);
+          }
+        }
+      }
     }
 
     if( capTotGrossRtd )
@@ -4459,12 +4474,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     QDomElement typeElement = fluidSegElement.firstChildElement("Type");
 
     // Translate Secondary Supply
-    
     if( typeElement.text().toLower() == "secondarysupply" )
     {
       QDomElement pumpElement = fluidSegElement.firstChildElement("Pump");
 
-      if( ! pumpElement.isNull() )
+      if( (! pumpElement.isNull()) &&
+          (typeElement.text().compare("ServiceHotWater",Qt::CaseInsensitive) != 0) )
       {
         boost::optional<model::ModelObject> mo = translatePump(pumpElement,doc,model);
 
@@ -4476,6 +4491,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
           plantLoop.setCommonPipeSimulation("CommonPipe");
         }
+      }
+    }
+
+    // If CommonPipeSim is defined then respect it, overriding other things unless it is ServiceHotWater
+    if(typeElement.text().compare("ServiceHotWater",Qt::CaseInsensitive) != 0) {
+      auto commonPipeSimElement = fluidSysElement.firstChildElement("CommonPipeSim");
+      if( ! commonPipeSimElement.isNull() ) {
+        plantLoop.setCommonPipeSimulation(commonPipeSimElement.text().toStdString());
       }
     }
     
