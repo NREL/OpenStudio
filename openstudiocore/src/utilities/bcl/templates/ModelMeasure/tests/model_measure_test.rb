@@ -114,8 +114,8 @@ class ModelMeasureTest < MiniTest::Unit::TestCase
     # check that there is now 1 space
     assert_equal(1, model.getSpaces.size - num_spaces_seed)
 
-    # save the model
-    output_file_path = OpenStudio::Path.new(File.dirname(__FILE__) + "/test_output.osm")
+    # save the model to test output directory
+    output_file_path = OpenStudio::Path.new(File.dirname(__FILE__) + "/output/test_output.osm")
     model.save(output_file_path,true)
   end
 
