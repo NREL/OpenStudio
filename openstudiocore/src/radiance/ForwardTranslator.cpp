@@ -1446,17 +1446,17 @@ namespace radiance {
 
                   // TODO: get exterior reflectance of surface
                   double interiorVisibleReflectance = 0.5;
-                  double exteriorVisibleReflectance = 0.5;
+                  double exteriorVisibleReflectance = 0.2;
                   //polygon header
                   m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance, 3) + "\n";
-                  m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance) + "\n";
+                  m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance, 3) + "\n";
                   // write material
-                  m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3) + "\n0\n0\n5\n" + \
-                                        formatString(interiorVisibleReflectance, 3) + " " + \
-                                        formatString(interiorVisibleReflectance, 3) + " " + \
-                                        formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
+                  m_radMaterials.insert("void plastic refl_" + formatString(exteriorVisibleReflectance, 3) + "\n0\n0\n5\n" + \
+                                        formatString(exteriorVisibleReflectance, 3) + " " + \
+                                        formatString(exteriorVisibleReflectance, 3) + " " + \
+                                        formatString(exteriorVisibleReflectance, 3) + " 0 0\n\n");
                   // write polygon
-                  m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3) + " polygon " + subSurface_name + "\n";
+                  m_radSpaces[space_name] += "refl_" + formatString(exteriorVisibleReflectance, 3) + " polygon reveal_" + subSurface_name + "\n";
                   m_radSpaces[space_name] += "0\n0\n" + formatString(4 * 3) + "\n";
                   m_radSpaces[space_name] += formatString(vertex1.x()) + " " + formatString(vertex1.y()) + " " + formatString(vertex1.z()) + "\n\n";
                   m_radSpaces[space_name] += formatString(vertex2.x()) + " " + formatString(vertex2.y()) + " " + formatString(vertex2.z()) + "\n\n";
@@ -1464,6 +1464,7 @@ namespace radiance {
                   m_radSpaces[space_name] += formatString(vertex4.x()) + " " + formatString(vertex4.y()) + " " + formatString(vertex4.z()) + "\n\n";
                 }
 
+                // make interior sill/reveal surfaces
                 if (insideRevealDepth && (*insideRevealDepth > 0.0)){
       
                   // window polygon is already offset from the wall
@@ -1475,10 +1476,10 @@ namespace radiance {
 
                   // TODO: get exterior reflectance of surface
                   double interiorVisibleReflectance = 0.5;
-                  double exteriorVisibleReflectance = 0.5;
+                  double exteriorVisibleReflectance = 0.2;
                   //polygon header
                   m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance, 3) + "\n";
-                  m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance) + "\n";
+                  m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance, 3) + "\n";
                   // write material
                   m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3) + "\n0\n0\n5\n" + \
                                         formatString(interiorVisibleReflectance, 3) + " " + \
@@ -1504,10 +1505,10 @@ namespace radiance {
 
                   // TODO: get exterior reflectance of surface
                   double interiorVisibleReflectance = 0.5;
-                  double exteriorVisibleReflectance = 0.5;
+                  double exteriorVisibleReflectance = 0.2;
                   //polygon header
                   m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance, 3) + "\n";
-                  m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance) + "\n";
+                  m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance, 3) + "\n";
                   // write material
                   m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3) + "\n0\n0\n5\n" + \
                                         formatString(interiorVisibleReflectance, 3) + " " + \
