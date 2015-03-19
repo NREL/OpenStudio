@@ -112,9 +112,11 @@ namespace openstudio{
     if (measureType == MeasureType::ModelMeasure){
       measureTemplate = ":/templates/ModelMeasure/measure.rb";
       testTemplate = ":/templates/ModelMeasure/tests/model_measure_test.rb";
+      testOSM = ":/templates/ModelMeasure/tests/example_model.osm";
       templateClassName = "ModelMeasure";
 
       createDirectory(dir / toPath("tests"));
+      testOSMPath = dir / toPath("tests/example_model.osm");
 
       std::string argName("space_name");
       std::string argDisplayName("New space name");
