@@ -272,10 +272,11 @@ measures.each { |measure|
   next if measure["bcl_measure"].uuid.to_s == OpenStudio::BCLMeasure.reportRequestMeasure.uuid.to_s
 
   measure_dir_name = OpenStudio::toString(measure["bcl_measure"].directory.stem)
-  if not OpenStudio::toUUID(measure_dir_name).isNull
+  if !OpenStudio::toUUID(measure_dir_name).isNull
     # measure dir name is a uuid, rename it something else
     # DLM: do not rename uuid to human readable dir name per Nick and Brian
-    #measure_dir_name = measure["bcl_measure"].name
+    # DLM: do rename to human readable dir name per Brian, 3/19/15
+    measure_dir_name = measure["bcl_measure"].name
   end
   # DLM: do not clean up dir name per Nick and Brian
   #parts = measure_dir_name.split(" ")
