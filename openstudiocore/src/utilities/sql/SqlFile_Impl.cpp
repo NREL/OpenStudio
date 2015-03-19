@@ -1009,85 +1009,118 @@ namespace openstudio{
     {
       if (fuel == FuelType::Electricity){
         return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='Electric') and (((RowName = 'Cost') and (Units = '~~$~~')) or (RowName = 'Cost (~~$~~)'))");
-      } else if (fuel == FuelType::Gas){
-        return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='Gas') and (((RowName = 'Cost') and (Units = '~~$~~')) or (RowName = 'Cost (~~$~~)'))");
-      } else if (fuel == FuelType::DistrictCooling){
-        return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='District Cooling') and (((RowName = 'Cost') and (Units = '~~$~~')) or (RowName = 'Cost (~~$~~)'))");
-      } else if (fuel == FuelType::DistrictHeating){
-        return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='District Heating') and (((RowName = 'Cost') and (Units = '~~$~~')) or (RowName = 'Cost (~~$~~)'))");
-      } else if (fuel == FuelType::Water){
-        return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='Water') and (((RowName = 'Cost') and (Units = '~~$~~')) or (RowName = 'Cost (~~$~~)'))");
-      } else{
-        return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='Other') and (((RowName = 'Cost') and (Units = '~~$~~')) or (RowName = 'Cost (~~$~~)'))");
       }
+      else if (fuel == FuelType::Gas){
+        return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='Gas') and (((RowName = 'Cost') and (Units = '~~$~~')) or (RowName = 'Cost (~~$~~)'))");
+      }
+      else { 
+        // E+ lumps all other fuel types under "Other," so we are forced to use the meters table instead.  
+        // This is fragile if there are custom submeters, but this is the only option
+        std::string meterName;
+
+        if (fuel == FuelType::DistrictCooling){
+          meterName = "DISTRICTCOOLING:FACILITY";
+        }
+        else if (fuel == FuelType::DistrictHeating){
+          meterName = "DISTRICTHEATING:FACILITY";
+        }
+        else if (fuel == FuelType::Water){
+          meterName = "WATER:FACILITY";
+        }
+        else if (fuel == FuelType::Gasoline){
+          meterName = "GASOLINE:FACILITY";
+        }
+        else if (fuel == FuelType::Diesel){
+          meterName = "DIESEL:FACILITY";
+        }
+        else if (fuel == FuelType::FuelOil_1){
+          meterName = "FUELOIL#1:FACILITY";
+        }
+        else if (fuel == FuelType::FuelOil_2){
+          meterName = "FUELOIL#2:FACILITY";
+        }
+        else if (fuel == FuelType::Propane){
+          meterName = "PROPANE:FACILITY";
+        }
+        else if (fuel == FuelType::Steam){
+          meterName = "STEAM:FACILITY";
+        }
+        else if (fuel == FuelType::EnergyTransfer){
+          meterName = "ENERGYTRANSFER:FACILITY";
+        }
+
+        boost::optional<double> rowId = execAndReturnFirstDouble("SELECT RowID FROM tabulardatawithstrings WHERE ReportName='Economics Results Summary Report' AND ReportForString='Entire Facility' AND TableName='Tariff Summary' AND Value='" + meterName + "'");
+        if (rowId){
+          return execAndReturnFirstDouble("SELECT Value FROM tabulardatawithstrings WHERE ReportName='Economics Results Summary Report' AND ReportForString='Entire Facility' AND TableName='Tariff Summary' AND RowID=" + boost::lexical_cast<std::string>(*rowId) + " and ColumnName='Annual Cost (~~$~~)'");
+        }
+        else {
+          return boost::none; // Return an empty optional double, indicating that there is no annual cost for this energy type
+        }
+
+      }
+
     }
 
 
     OptionalDouble SqlFile_Impl::annualTotalCostPerBldgArea(const FuelType& fuel) const
     {
-      if (fuel == FuelType::Electricity){
-        return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='Electric') and (((RowName = 'Cost per Total Building Area') and (Units = '~~$~~/m2')) or (RowName = 'Cost per Total Building Area (~~$~~/m2)'))");
-      } else if (fuel == FuelType::Gas){
-        return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='Gas') and (((RowName = 'Cost per Total Building Area') and (Units = '~~$~~/m2')) or (RowName = 'Cost per Total Building Area (~~$~~/m2)'))");
-      } else if (fuel == FuelType::DistrictCooling){
-        return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='District Cooling') and (((RowName = 'Cost per Total Building Area') and (Units = '~~$~~/m2')) or (RowName = 'Cost per Total Building Area (~~$~~/m2)'))");
-      } else if (fuel == FuelType::DistrictHeating){
-        return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='District Heating') and (((RowName = 'Cost per Total Building Area') and (Units = '~~$~~/m2')) or (RowName = 'Cost per Total Building Area (~~$~~/m2)'))");
-      } else if (fuel == FuelType::Water){
-        return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='Water') and (((RowName = 'Cost per Total Building Area') and (Units = '~~$~~/m2')) or (RowName = 'Cost per Total Building Area (~~$~~/m2)'))");
-      } else {
-        return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='Other') and (((RowName = 'Cost per Total Building Area') and (Units = '~~$~~/m2')) or (RowName = 'Cost per Total Building Area (~~$~~/m2)'))");
+      // Get the total building area
+      boost::optional<double> totalBuildingArea = execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'Building Area') and (ColumnName = 'Area') and (RowName = 'Total Building Area') and (Units = 'm2')");
+      
+      // Get the annual energy cost
+      boost::optional<double> annualEnergyCost = annualTotalCost(fuel);
+
+      // Return the cost per area
+      boost::optional<double> costPerArea;
+      if ((totalBuildingArea && annualEnergyCost) && (totalBuildingArea > 0)){
+        costPerArea = *annualEnergyCost / *totalBuildingArea;
       }
+
+      return costPerArea;
+
     }
 
     OptionalDouble SqlFile_Impl::annualTotalCostPerNetConditionedBldgArea(const FuelType& fuel) const
     {
-      if (fuel == FuelType::Electricity){
-        return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='Electric') and (((RowName = 'Cost per Net Conditioned Building Area') and (Units = '~~$~~/m2')) or (RowName = 'Cost per Total Building Area (~~$~~/m2)'))");
-      } else if (fuel == FuelType::Gas){
-        return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='Gas') and (((RowName = 'Cost per Net Conditioned Building Area') and (Units = '~~$~~/m2')) or (RowName = 'Cost per Total Building Area (~~$~~/m2)'))");
-      } else if (fuel == FuelType::DistrictCooling){
-        return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='District Cooling') and (((RowName = 'Cost per Net Conditioned Building Area') and (Units = '~~$~~/m2')) or (RowName = 'Cost per Total Building Area (~~$~~/m2)'))");
-      } else if (fuel == FuelType::DistrictHeating){
-        return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='District Heating') and (((RowName = 'Cost per Net Conditioned Building Area') and (Units = '~~$~~/m2')) or (RowName = 'Cost per Total Building Area (~~$~~/m2)'))");
-      } else if (fuel == FuelType::Water){
-        return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='Water') and (((RowName = 'Cost per Net Conditioned Building Area') and (Units = '~~$~~/m2')) or (RowName = 'Cost per Total Building Area (~~$~~/m2)'))");
-      } else {
-        return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='Other') and (((RowName = 'Cost per Net Conditioned Building Area') and (Units = '~~$~~/m2')) or (RowName = 'Cost per Total Building Area (~~$~~/m2)'))");
+      // Get the total building area
+      boost::optional<double> totalBuildingArea = execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'Building Area') and (ColumnName = 'Area') and (RowName = 'Net Conditioned Building Area') and (Units = 'm2')");
+
+      // Get the annual energy cost
+      boost::optional<double> annualEnergyCost = annualTotalCost(fuel);
+
+      // Return the cost per area
+      boost::optional<double> costPerArea;
+      if ((totalBuildingArea && annualEnergyCost) && (totalBuildingArea > 0)){
+        costPerArea = *annualEnergyCost / *totalBuildingArea;
       }
+
+      return costPerArea;
+
     }
 
     boost::optional<double> SqlFile_Impl::annualTotalUtilityCost() const
     {
-      boost::optional<double> annualElectricTotalCost = this->annualTotalCost(FuelType::Electricity);
-      boost::optional<double> annualGasTotalCost = this->annualTotalCost(FuelType::Gas);
-      boost::optional<double> annualDistrictCoolingTotalCost = this->annualTotalCost(FuelType::DistrictCooling);
-      boost::optional<double> annualDistrictHeatingTotalCost = this->annualTotalCost(FuelType::DistrictHeating);
-      boost::optional<double> annualWaterTotalCost = this->annualTotalCost(FuelType::Water);
+      double totalCost = 0;
 
-      if (annualElectricTotalCost || annualGasTotalCost || annualDistrictCoolingTotalCost || annualDistrictHeatingTotalCost || annualWaterTotalCost){
-        double result = 0.0;
-        if(annualElectricTotalCost){
-          result += *annualElectricTotalCost;
+      // List of all fuel types
+      auto fuelTypes = {FuelType::Electricity, FuelType::Gas, FuelType::DistrictCooling, FuelType::DistrictHeating, FuelType::Water, FuelType::Gasoline, FuelType::Diesel, FuelType::FuelOil_1, FuelType::FuelOil_2, FuelType::Propane, FuelType::EnergyTransfer};
+
+      // Loop through all fuels and add up their costs
+      for (const auto& fuelType : fuelTypes) {
+        // Get the annual energy cost
+        boost::optional<double> cost = annualTotalCost(fuelType);
+        if (cost) {
+          totalCost += *cost;
         }
-        if(annualGasTotalCost){
-          result += *annualGasTotalCost;
-        }
-        if(annualDistrictCoolingTotalCost){
-          result += *annualDistrictCoolingTotalCost;
-        }
-        if(annualDistrictHeatingTotalCost){
-          result += *annualDistrictHeatingTotalCost;
-        }
-        if(annualWaterTotalCost){
-          result += *annualWaterTotalCost;
-        }
-        return result;
-      } else {
-        return boost::optional<double>();
       }
-    }
 
+      if (totalCost) {
+        return totalCost;
+      } 
+      
+      return boost::none;
+      
+    }
 
     std::vector<std::string> SqlFile_Impl::availableTimeSeries()
     {
