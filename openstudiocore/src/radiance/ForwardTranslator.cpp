@@ -1436,7 +1436,7 @@ namespace radiance {
                 size_t index1 = i;
                 size_t index2 = (i + 1) % N;
 
-                if (outsideRevealDepth && (*insideRevealDepth > 0.0)){
+                if (outsideRevealDepth && (*outsideRevealDepth > 0.0)){
                   // window polygon is already offset from the wall
                   openstudio::Vector3d offset = outsideRevealDepth.get() * outwardNormal;
                   Point3d vertex1 = polygon[index1];
