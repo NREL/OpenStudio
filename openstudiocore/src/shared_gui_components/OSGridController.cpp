@@ -1643,6 +1643,7 @@ HorizontalHeaderPushButton::HorizontalHeaderPushButton(QWidget * parent)
     "    font-size: 8pt;"
     "}";
   setStyleSheet(style);
+  setFocusPolicy(Qt::StrongFocus);
 }
 
 HorizontalHeaderPushButton::~HorizontalHeaderPushButton()
