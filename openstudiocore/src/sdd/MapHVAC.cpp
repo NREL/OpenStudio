@@ -6281,6 +6281,21 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
       if( boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegInRefElement.text(),doc,model) )
       {
         plant->addDemandBranchForComponent(coil);
+        // Figure out if this is connected to a ServiceHotWater system
+        // If it is then make sure any supply segment pumps go on the branch,
+        // as opposed to the demand side inlet branch
+        auto supplySegmentElement = supplySegment(fluidSegInRefElement.text(),doc);
+        auto fluidSysTypeElment = supplySegmentElement.parentNode().toElement().firstChildElement("Type");
+        if( fluidSysTypeElment.text().compare("ServiceHotWater",Qt::CaseInsensitive) == 0 ) {
+          auto pumpElement = supplySegmentElement.firstChildElement("Pump");
+          if( ! pumpElement.isNull() ) {
+            if( auto modelObject = translatePump(pumpElement,doc,model) ) {
+              auto hvacComponent = modelObject->cast<model::HVACComponent>();
+              auto inletNode = coil.inletModelObject()->cast<model::Node>();
+              hvacComponent.addToNode(inletNode);
+            }
+          }
+        }
       }
 
       // ZoneHVAC Baseboard Convective Electric
