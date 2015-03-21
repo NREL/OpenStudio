@@ -2046,7 +2046,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
   auto availSch = model.getModelObjectByName<model::Schedule>(availSchRef);
 
   // FanControlMethod
-  QDomElement fanControlMethodElement = fanElement.firstChildElement("CtrlMthd");
+  QDomElement fanControlMethodElement = fanElement.firstChildElement("CtrlMthdSim");
 
   // Name
   QDomElement nameElement = fanElement.firstChildElement("Name");
