@@ -25,16 +25,13 @@
 #include "../core/Assert.hpp"
 #include "../units/QuantityConverter.hpp"
 
-#include <boost/regex.hpp>
-#include <boost/lexical_cast.hpp>
-
-#include <boost/filesystem/fstream.hpp>
-
 #include <QStringList>
 #include <QFile>
 #include <QTextStream>
 
 #include <cmath>
+#include <regex>
+#include <string>
 
 namespace openstudio{
 
@@ -1849,7 +1846,7 @@ bool EpwFile::parse(bool storeData)
   m_checksum = openstudio::checksum(m_path);
 
   // open file
-  boost::filesystem::ifstream ifs(m_path);
+  std::ifstream ifs(openstudio::toString(m_path));
 
   // read line by line
   std::string line;
@@ -2022,9 +2019,9 @@ bool EpwFile::parseLocation(const std::string& line)
   bool result = true;
 
   // LOCATION,Chicago Ohare Intl Ap,IL,USA,TMY3,725300,41.98,-87.92,-6.0,201.0
-  boost::regex locationRegex("^LOCATION,(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),([^,]*).*?$");
-  boost::smatch matches;
-  if (boost::regex_search(line, matches, locationRegex)){
+  std::regex locationRegex("^LOCATION,(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),([^,]*).*?$");
+  std::smatch matches;
+  if (std::regex_search(line, matches, locationRegex)){
     std::string city = std::string(matches[1].first, matches[1].second); boost::trim(city);
     std::string stateProvinceRegion = std::string(matches[2].first, matches[2].second); boost::trim(stateProvinceRegion);
     std::string country = std::string(matches[3].first, matches[3].second); boost::trim(country);
@@ -2075,9 +2072,9 @@ bool EpwFile::parseDataPeriod(const std::string& line)
   bool result = true;
 
   // DATA PERIODS,1,1,Data,Sunday, 1/ 1,12/31
-  boost::regex dataPeriodRegex("^DATA PERIODS,(.*?),(.*?),(.*?),(.*?),(.*?),([^,]*).*?$");
-  boost::smatch matches;
-  if (boost::regex_search(line, matches, dataPeriodRegex)){
+  std::regex dataPeriodRegex("^DATA PERIODS,(.*?),(.*?),(.*?),(.*?),(.*?),([^,]*).*?$");
+  std::smatch matches;
+  if (std::regex_search(line, matches, dataPeriodRegex)){
     std::string nDataPeriods =  std::string(matches[1].first, matches[1].second); boost::trim(nDataPeriods);
     std::string timeStep = std::string(matches[2].first, matches[2].second); boost::trim(timeStep);
     std::string startDayOfWeek = std::string(matches[4].first, matches[4].second); boost::trim(startDayOfWeek);
@@ -2109,21 +2106,42 @@ bool EpwFile::parseDataPeriod(const std::string& line)
       result = false;
     }
     try{
-      boost::regex dateRegex("^(.*?)/(.*?)$");
-      if (boost::regex_search(startDate, matches, dateRegex)){
-        std::string month = std::string(matches[1].first, matches[1].second); boost::trim(month);
-        std::string day = std::string(matches[2].first, matches[2].second); boost::trim(day);
-        m_startDate = Date(monthOfYear(boost::lexical_cast<int>(month)), boost::lexical_cast<int>(day));
+      // Regex: Capture month and day, optional capture of year
+      std::regex dateRegex("^(.*?)/(.*?)(?:/(.*?))?$");
+      if (std::regex_search(startDate, matches, dateRegex)){
+        int month = std::stoi(std::string(matches[1].first, matches[1].second));
+        int day = std::stoi(std::string(matches[2].first, matches[2].second));
+        if (matches[3].matched) {
+          int year = std::stoi(std::string(matches[3].first, matches[3].second));
+          m_startDate = Date(monthOfYear(month), day, year);
+          m_startDateActualYear = year;
+        } else {
+          m_startDate = Date(monthOfYear(month), day);
+        }
+      } else {
+        LOG(Error, "Failed to parse data period start date from \'" << startDate << "\'");
+        result = false;
       }
     }catch(...){
       result = false;
     }
     try{
-      boost::regex dateRegex("^(.*?)/(.*?)$");
-      if (boost::regex_search(endDate, matches, dateRegex)){
-        std::string month = std::string(matches[1].first, matches[1].second); boost::trim(month);
-        std::string day = std::string(matches[2].first, matches[2].second); boost::trim(day);
-        m_endDate = Date(monthOfYear(boost::lexical_cast<int>(month)), boost::lexical_cast<int>(day));
+      // Regex: Capture month and day, optional capture of year
+      std::regex dateRegex("^(.*?)/(.*?)(?:/(.*?))?$");
+      if (std::regex_search(endDate, matches, dateRegex)){
+        int month = std::stoi(std::string(matches[1].first, matches[1].second));
+        int day = std::stoi(std::string(matches[2].first, matches[2].second));
+        if (matches[3].matched) {
+          int year = std::stoi(std::string(matches[3].first, matches[3].second));
+          m_endDate = Date(monthOfYear(month), day, year);
+          m_endDateActualYear = year;
+        }
+        else {
+          m_endDate = Date(monthOfYear(month), day);
+        }
+      } else {
+        LOG(Error, "Failed to parse data period end date from \'" << endDate << "\'");
+        result = false;
       }
     }catch(...){
       result = false;
