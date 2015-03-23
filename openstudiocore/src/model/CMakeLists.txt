@@ -907,6 +907,9 @@ set(${target_name}_src
   WindowDataFile.hpp
   WindowDataFile_Impl.hpp
   WindowDataFile.cpp
+  WindowPropertyFrameAndDivider.hpp
+  WindowPropertyFrameAndDivider_Impl.hpp
+  WindowPropertyFrameAndDivider.cpp
   YearDescription.hpp
   YearDescription_Impl.hpp
   YearDescription.cpp
@@ -979,13 +982,15 @@ set(${target_name}_swig_src
   ModelHVAC.i
 )
 
+# Only need to moc files that have Q_OBJECT macro
+# Only files with signals, slots, or Q_PROPERTY need to have Q_OBJECT macro
+# We want the number of files moc'd to decrease over time, run CheckForQObject.rb to remove unnecessary moc's
 set(${target_name}_moc
   Model_Impl.hpp
   Component_Impl.hpp
   ComponentWatcher_Impl.hpp
   ModelObject_Impl.hpp
 
-  AirConditionerVariableRefrigerantFlow_Impl.hpp
   AirGap_Impl.hpp
   AirLoopHVAC_Impl.hpp
   AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp
@@ -1005,12 +1010,8 @@ set(${target_name}_moc
   CFactorUndergroundWallConstruction_Impl.hpp
   ChillerElectricEIR_Impl.hpp
   CoilCoolingDXSingleSpeed_Impl.hpp
-  CoilCoolingDXVariableRefrigerantFlow_Impl.hpp
-  CoilCoolingLowTempRadiantVarFlow_Impl.hpp
   CoilCoolingWater_Impl.hpp
-  CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp
   CoilHeatingDXSingleSpeed_Impl.hpp
-  CoilHeatingDXVariableRefrigerantFlow_Impl.hpp
   CoilHeatingElectric_Impl.hpp
   CoilHeatingGas_Impl.hpp
   CoilHeatingWater_Impl.hpp
@@ -1020,10 +1021,7 @@ set(${target_name}_moc
   ControllerMechanicalVentilation_Impl.hpp
   ControllerWaterCoil_Impl.hpp
   ConvergenceLimits_Impl.hpp
-  CoolingTowerPerformanceCoolTools_Impl.hpp
-  CoolingTowerPerformanceYorkCalc_Impl.hpp
   CoolingTowerSingleSpeed_Impl.hpp
-  CoolingTowerVariableSpeed_Impl.hpp
   Curve_Impl.hpp
   CurveBicubic_Impl.hpp
   CurveBiquadratic_Impl.hpp
@@ -1160,8 +1158,6 @@ set(${target_name}_moc
   ZoneHVACBaseboardConvectiveElectric_Impl.hpp
   ZoneHVACIdealLoadsAirSystem_Impl.hpp
   ZoneHVACFourPipeFanCoil_Impl.hpp
-  ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp
-  ZoneHVACLowTempRadiantVarFlow_Impl.hpp
   ZoneHVACPackagedTerminalHeatPump_Impl.hpp
   ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
 )
@@ -1390,6 +1386,7 @@ set(${target_name}_test_src
   test/WaterUseConnections_GTest.cpp
   test/WaterUseEquipment_GTest.cpp
   test/WeatherFile_GTest.cpp
+  test/WindowPropertyFrameAndDivider_GTest.cpp
   test/YearDescription_GTest.cpp
   test/ZoneCapacitanceMultiplierResearchSpecial_GTest.cpp
   test/ZoneHVACBaseboardConvectiveElectric_GTest.cpp

@@ -350,7 +350,7 @@ boost::optional<Quantity> QuantityConverterSingleton::m_convertToSI(const Quanti
 }
 
 Quantity QuantityConverterSingleton::m_convertFromSI(const Quantity &original,
-                                                     const UnitSystem targetSys) const
+                                                     const UnitSystem &targetSys) const
 {
   Quantity working(original);
 

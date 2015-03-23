@@ -96,8 +96,12 @@
 #include "../model/ThermalZone.hpp"
 #include "../model/ThermalZone_Impl.hpp"
 #include "../model/HVACTemplates.hpp"
-
+#include "../model/Component.hpp"
+#include "../model/Component_Impl.hpp"
+#include "../model/ComponentData.hpp"
+#include "../model/ComponentData_Impl.hpp"
 #include "../utilities/core/Assert.hpp"
+#include <utilities/idd/OS_ComponentData_FieldEnums.hxx>
 
 #include <QMessageBox>
 #include <QTimer>
@@ -456,22 +460,29 @@ void HVACLayoutController::addLibraryObjectToTopLevel(OSItemId itemid)
 
 void HVACLayoutController::addLibraryObjectToModelNode(OSItemId itemid, model::HVACComponent & comp)
 {
-  model::OptionalModelObject object = OSAppBase::instance()->currentDocument()->getModelObject(itemid);
+  model::OptionalModelObject object;
+  bool remove = false;
+  bool added = false;
+  auto doc = OSAppBase::instance()->currentDocument();
 
-  if( object )
-  {
-    bool remove = false;
-
-    if( ! OSAppBase::instance()->currentDocument()->fromModel(itemid) )
-    {
+  object = doc->getModelObject(itemid);
+  if( object ) {
+    if( ! doc->fromModel(itemid) ) {
       object = object->clone(comp.model());
       remove = true;
     }
+  }
 
-    OS_ASSERT(object);
+  if( auto component = doc->getComponent(itemid) ) {
+    // Ugly hack to avoid the component being treated as a resource.
+    component->componentData().setString(OS_ComponentDataFields::UUID,createUUID().toString().toStdString());
+    if( auto componentData = comp.model().insertComponent(component.get()) ) {
+      object = componentData->primaryComponentObject();
+      remove = true;
+    }
+  }
 
-    bool added = false;
-
+  if( object ) {
     if( boost::optional<model::HVACComponent> hvacComponent = object->optionalCast<model::HVACComponent>() )
     {
       if( boost::optional<model::Node> node = comp.optionalCast<model::Node>() )

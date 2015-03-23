@@ -225,21 +225,58 @@ data_points.each { |data_point|
   }  
 }
 
-# create csv files
-csv_path = export_dir / OpenStudio::Path.new("spreadsheet_model_measures_export.csv")
-model_measures_csv = CSV.open(csv_path.to_s,"wb")
-csv_path = export_dir / OpenStudio::Path.new("spreadsheet_energyplus_measures_export.csv")
-energyplus_measures_csv = CSV.open(csv_path.to_s,"wb")
-csv_path = export_dir / OpenStudio::Path.new("spreadsheet_reporting_measures_export.csv")
-reporting_measures_csv = CSV.open(csv_path.to_s,"wb")
+model_measures = []
+energyplus_measures = []
+reporting_measures = []
+
+measures.each { |measure| 
+  measure_type = nil
+  if measure["bcl_measure"].measureType == "ModelMeasure".to_MeasureType
+    measure_type = "RubyMeasure"
+    measure['measure_type'] = measure_type
+    model_measures << measure
+  elsif measure["bcl_measure"].measureType == "EnergyPlusMeasure".to_MeasureType
+    measure_type = "EnergyPlusMeasure"
+    measure['measure_type'] = measure_type
+    energyplus_measures << measure
+  elsif measure["bcl_measure"].measureType == "ReportingMeasure".to_MeasureType
+    measure_type = "ReportingMeasure"
+    measure['measure_type'] = measure_type
+    reporting_measures << measure
+  else
+    puts "Skipping #{measure["bcl_measure"].name}, because it is of unexpected type '#{measure["bcl_measure"].measureType.valueDescription}'." 
+  end
+}
+
+measures.clear
+measures.concat(model_measures)
+measures.concat(energyplus_measures)
+measures.concat(reporting_measures)
+
+# create variable csv file
+csv_path = export_dir / OpenStudio::Path.new("spreadsheet_variables_export.csv")
+csv_file = CSV.open(csv_path.to_s,"wb")
+
+def write_variable_headers(csv_file)
+  # column meaning for measure
+  csv_file << ['Measure Enabled', 'Measure Display Name', 'Measure Directory Name', 'Measure Class Name', 'Measure Type', '-', '-', '-', '-', '-']
+  # column meaning for argument
+  csv_file << ['-', 'Type', '-', 'Parameter Display Name', 'Parameter Name in Measure', 'Parameter Short Display Name', 'Variable Type', 'Units', 'Static/Default Value', 'Enumerations']
+  csv_file << []
+end
+write_variable_headers(csv_file)
 
 measures.each { |measure|
 
+  # do not export report request measure, implemented separately in server
+  next if measure["bcl_measure"].uuid.to_s == OpenStudio::BCLMeasure.reportRequestMeasure.uuid.to_s
+
   measure_dir_name = OpenStudio::toString(measure["bcl_measure"].directory.stem)
-  if not OpenStudio::toUUID(measure_dir_name).isNull
+  if !OpenStudio::toUUID(measure_dir_name).isNull
     # measure dir name is a uuid, rename it something else
     # DLM: do not rename uuid to human readable dir name per Nick and Brian
-    #measure_dir_name = measure["bcl_measure"].name
+    # DLM: do rename to human readable dir name per Brian, 3/19/15
+    measure_dir_name = measure["bcl_measure"].name
   end
   # DLM: do not clean up dir name per Nick and Brian
   #parts = measure_dir_name.split(" ")
@@ -256,80 +293,69 @@ measures.each { |measure|
     measure_path = export_dir / OpenStudio::Path.new(measure_dir_name + index.to_s)
   end
   
-  csv_file = nil
-  measure_type = nil
-  if measure["bcl_measure"].measureType == "ModelMeasure".to_MeasureType
-    csv_file = model_measures_csv
-    measure_type = "RubyMeasure"
-  elsif measure["bcl_measure"].measureType == "EnergyPlusMeasure".to_MeasureType
-    csv_file = energyplus_measures_csv
-    measure_type = "EnergyPlusMeasure"
-  elsif measure["bcl_measure"].measureType == "ReportingMeasure".to_MeasureType
-    csv_file = reporting_measures_csv
-    measure_type = "ReportingMeasure"
-  else
-    puts "Skipping #{measure["bcl_measure"].name}, because it is of unexpected type '#{measure["bcl_measure"].measureType.valueDescription}'." 
-  end
+  measure_type = measure["measure_type"]
  
   # copy the measure
   FileUtils.cp_r(measure["bcl_measure"].directory.to_s, measure_path.to_s)
   
+  # write out measure
   row = []
-  row << "TRUE"
-  row << measure["bcl_measure"].name
-  row << measure_dir_name
-  row << measure_class_name
-  row << measure_type
+  row << "TRUE" # Measure Enabled
+  row << measure["bcl_measure"].displayName # Measure Display Name
+  row << measure_dir_name # Measure Directory Name
+  row << measure_class_name # Measure Class Name
+  row << measure_type # Measure Type
   csv_file << row
+  
+  # write out arguments
   row = []
   measure["arguments"].each { |arg|
     row << ""
-    row << "argument"
+    row << "argument" # Type
     row << ""
-    row << arg.displayName
-    row << arg.name
-    row << "static"
-    if arg.type == "Choice".to_OSArgumentType
-      row << "Choice"
-      row << ""    
-      if arg.hasValue
-        row << arg.valueDisplayName
-      elsif arg.hasDefaultValue
-        row << arg.defaultValueDisplayName
-      else
-        row << ""
-      end
+    row << arg.displayName # Parameter Display Name
+    row << arg.name # Parameter Name in Measure
+    row << "" # Parameter Short Display Name
+    
+    row << arg.type.valueName.gsub("Boolean", "Bool") # Variable Type
+    row << "" # Units   
+    if arg.hasValue
+      row << arg.valueAsString # Static/Default Value
+    elsif arg.hasDefaultValue
+      row << arg.defaultValueAsString # Static/Default Value
     else
-      row << arg.type.valueName.gsub("Boolean", "Bool")
-      row << ""    
-      if arg.hasValue
-        row << arg.valueAsString
-      elsif arg.hasDefaultValue
-        row << arg.defaultValueAsString
-      else
-        row << ""
-      end
+      row << "" # Static/Default Value
     end
+
     if arg.type == "Choice".to_OSArgumentType
       choices_str = String.new
-      sep = "|"
-      arg.choiceValueDisplayNames.each { |choice|
-        choices_str << sep << choice
-        sep = ","
-      }
+      #sep = "|"
       choices_str << "|"
-      row << choices_str
+      choices_str << arg.choiceValueDisplayNames.reject{|s| s.empty?}.join(',')
+      #arg.choiceValueDisplayNames.each { |choice|
+      #  choices_str << sep << choice
+      #  sep = ","
+      #}
+      choices_str << "|"
+      row << choices_str # Enumerations
     end
     csv_file << row
     row = []
   }
 }
-model_measures_csv.close
-energyplus_measures_csv.close
-reporting_measures_csv.close
+csv_file.close
 
+# write outputs
 csv_path = export_dir / OpenStudio::Path.new("spreadsheet_outputs_export.csv")
 csv_file = CSV.open(csv_path.to_s,"wb")
+
+def write_outputs_headers(csv_file)
+  # column name
+  csv_file << ['Variable Display Name', 'Short Display Name', 'Taxonomy Identifier', 'Name', 'Units', 'Variable Type', 'Visualize', 'Export', 'Objective Function']
+  csv_file << []
+end
+write_outputs_headers(csv_file)
+
 def add_rows_for_attribute(csv_file,measure,att,prefix)
   if att.valueType == "AttributeVector".to_AttributeValueType
     sub_prefix = prefix + "." + att.name
@@ -338,18 +364,23 @@ def add_rows_for_attribute(csv_file,measure,att,prefix)
     }
   else
     row = []
-    row << measure["bcl_measure"].name
-    row << (att.displayName.empty? ? att.name : att.displayName.get)
-    row << (prefix + att.name)
-    row << (att.units.empty? ? "" : att.units.get)
-    row << "FALSE"
+    row << (att.displayName.empty? ? att.name : att.displayName.get) # Variable Display Name
+    row << "" # Short Display Name
+    row << "" # Taxonomy Identifier
+    row << (prefix + att.name) # Name
+    row << (att.units.empty? ? "" : att.units.get) # Units
+    row << att.valueType.valueName.to_s # Variable Type
+    row << "TRUE" # Visualize
+    row << "TRUE" # Export
+    row << "FALSE" # Objective Function
     csv_file << row  
   end
+  
 end
 measures.each { |measure|
   if measure.has_key?("outputs")
     measure["outputs"].each { |output|
-      add_rows_for_attribute(csv_file,measure,output,"")
+      add_rows_for_attribute(csv_file,measure,output,"#{measure['bcl_measure'].name}.")
     }
   end
 }

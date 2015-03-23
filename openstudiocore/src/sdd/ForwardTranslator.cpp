@@ -52,8 +52,6 @@
 #include "../model/StandardsInformationMaterial.hpp"
 #include "../model/StandardsInformationConstruction.hpp"
 #include "../model/PortList.hpp"
-#include "../model/RenderingColor.hpp"
-#include "../model/ScheduleTypeLimits.hpp"
 #include "../model/ComponentData.hpp"
 #include "../model/ConvergenceLimits.hpp"
 #include "../model/CoolingTowerPerformanceYorkCalc.hpp"
@@ -94,7 +92,6 @@
 #include "../model/CoilCoolingDXMultiSpeedStageData.hpp"
 #include "../model/ComponentCostAdjustments.hpp"
 #include "../model/CurrencyType.hpp"
-#include "../model/Facility.hpp"
 #include "../model/ControllerWaterCoil.hpp"
 #include "../model/SetpointManagerMixedAir.hpp"
 #include "../model/BoilerSteam.hpp"
@@ -156,6 +153,8 @@ namespace openstudio {
 namespace sdd {
 
   ForwardTranslator::ForwardTranslator()
+    : m_autoHardSize(false),
+      m_autoEfficiency(false)
   {
     m_logSink.setLogLevel(Warn);
     m_logSink.setChannelRegex(boost::regex("openstudio\\.sdd\\.ForwardTranslator"));

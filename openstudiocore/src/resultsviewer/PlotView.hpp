@@ -20,6 +20,9 @@
 #ifndef RESULTSVIEWER_PLOTVIEW_HPP
 #define RESULTSVIEWER_PLOTVIEW_HPP
 
+#include "FloodPlot.hpp"
+#include "LinePlot.hpp"
+
 #include <QWidget>
 #include <QAction>
 #include <QFont>
@@ -45,7 +48,6 @@
 #include <qwt/qwt_plot_grid.h>
 #include <qwt/qwt_text.h>
 #include <qwt/qwt_legend.h>
-#include <qwt/qwt_array.h>
 #include <qwt/qwt_plot_layout.h>
 #include <qwt/qwt_plot_panner.h>
 #include <qwt/qwt_plot_picker.h>
@@ -59,8 +61,6 @@
 
 #include "../utilities/data/TimeSeries.hpp"
 #include "../utilities/time/Date.hpp"
-#include "../utilities/plot/FloodPlot.hpp"
-#include "../utilities/plot/LinePlot.hpp"
 
 namespace resultsviewer{
 
@@ -91,11 +91,11 @@ namespace resultsviewer{
     QStringList& plotSource() {return m_plotSource;}
 
     double yUnscaled(int i) {return m_yUnscaled[i];}
-    void setYUnscaled(QwtArray<double>& yUnscaled) {m_yUnscaled = yUnscaled;}
+    void setYUnscaled(QVector<double>& yUnscaled) {m_yUnscaled = yUnscaled;}
     double yScaled(int i) {return m_yScaled[i];}
-    void setYScaled(QwtArray<double>& yScaled) {m_yScaled = yScaled;}
+    void setYScaled(QVector<double>& yScaled) {m_yScaled = yScaled;}
     double xValues(int i) {return m_xValues[i];}
-    void setXValues(QwtArray<double>& xValues) {m_xValues = xValues;}
+    void setXValues(QVector<double>& xValues) {m_xValues = xValues;}
 
     // assign data and update array members
     void setDataMode(YValueType yType);
@@ -110,9 +110,9 @@ namespace resultsviewer{
     QStringList m_alias;
     QStringList m_plotSource;
     QString m_legend;
-    QwtArray<double> m_yScaled;
-    QwtArray<double> m_yUnscaled;
-    QwtArray<double> m_xValues; // mid point
+    QVector<double> m_yScaled;
+    QVector<double> m_yUnscaled;
+    QVector<double> m_xValues; // mid point
     YValueType m_yType;
     LinePlotStyleType m_linePlotStyle;
 
@@ -241,9 +241,10 @@ namespace resultsviewer{
   class Zoomer: public QwtPlotZoomer
   {
   public:
-    Zoomer(int xAxis, int yAxis, QwtPlotCanvas *canvas):   QwtPlotZoomer(xAxis, yAxis, canvas)
+    Zoomer(int xAxis, int yAxis, QWidget *canvas)
+      : QwtPlotZoomer(xAxis, yAxis, canvas)
     {
-      setSelectionFlags(QwtPicker::DragSelection | QwtPicker::CornerToCorner);
+      //setSelectionFlags(QwtPicker::DragSelection | QwtPicker::CornerToCorner);
       setTrackerMode(QwtPicker::AlwaysOff);
       setRubberBand(QwtPicker::NoRubberBand);
 
@@ -254,6 +255,9 @@ namespace resultsviewer{
 
       //    setMousePattern(QwtEventPattern::MouseSelect3, Qt::RightButton);
     }
+
+    virtual ~Zoomer()
+    {}
   };
 
 
@@ -284,6 +288,7 @@ signals:
 
     PlotView(int plotType=RVPV_LINEPLOT, QWidget* parent=nullptr);
     PlotView(QString& path, int plotType=RVPV_LINEPLOT, QWidget* parent=nullptr);
+    virtual ~PlotView();
 
 
     // plot view data handler
@@ -298,7 +303,7 @@ signals:
     // access to plot type
     int plotType() {return m_plotType;}
 
-    // spectorgram and countour
+    // spectrogram and contour
     bool spectrogramOn() {return m_spectrogramOn;}
     bool contourOn() {return m_contourOn;}
     void showContour(bool on);
@@ -455,9 +460,9 @@ signals:
     QwtLinearColorMap m_colorMap;
     QwtPlotSpectrogram* m_spectrogram;
     QwtScaleWidget* m_rightAxis;
-    openstudio::FloodPlotData::Ptr m_floodPlotData;
+    openstudio::FloodPlotData* m_floodPlotData;
     openstudio::FloodPlotColorMap::ColorMapList m_colorMapType;
-    QwtDoubleInterval m_dataRange;
+    QwtInterval m_dataRange;
     openstudio::Vector m_colorLevels;
     void initColorMap();
     void initColorBar();
@@ -467,7 +472,7 @@ signals:
     void contourLevels(openstudio::Vector& contourValues);
     void colorMapRange(double min, double max);
     void colorLevels(openstudio::Vector& colorLevels);
-    // spectorgram and countour
+    // spectrogram and contour
     bool m_spectrogramOn;
     bool m_contourOn;
 
@@ -475,7 +480,7 @@ signals:
     void xCenterSpan(double center, double span);
 
     // set base rect for zoomer - reinitialize zoom stack if reset true
-    void updateZoomBase(const QwtDoubleRect& base, bool reset);
+    void updateZoomBase(const QRectF& base, bool reset);
 
     // image export functions
     void generateImage(QString& file, int w, int h);
@@ -502,7 +507,7 @@ signals:
 
     // illuminance map hourly report indices
     std::vector< std::pair<int, openstudio::DateTime> > m_illuminanceMapReportIndicesDates;
-    std::vector<openstudio::FloodPlotData::Ptr> m_illuminanceMapData;
+    std::vector<openstudio::FloodPlotData*> m_illuminanceMapData;
     // difference index
     std::vector< std::pair<int,int> > m_illuminanceMapDifferenceReportIndices;
     void plotDataAvailable(bool available);
@@ -543,7 +548,7 @@ signals:
       void slotValueInfoMode(bool on);
       void slotValueInfo(const QPoint& pos);
       // signal if zoomed - hide value info if rect changes
-      void slotZoomed(const QwtDoubleRect& rect);
+      void slotZoomed(const QRectF& rect);
 
       // zoom in and out in increments
       void slotZoomIn();
@@ -579,7 +584,11 @@ signals:
       // docking
       void slotFloatOrDock();
 
+    private:
 
+      // apply proper spacing so that illuminance map data pixels are centered on data point
+      // DLM: don't do this for now, data outside the map just gets clipped
+      void bufferIlluminanceMapGridPoints(std::vector<double>& x, std::vector<double>& y);
   };
 
 

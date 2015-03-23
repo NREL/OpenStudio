@@ -35,6 +35,10 @@ TEST_F(ProjectVersioningFixture,Versioning_OnOpen) {
 
   for (const openstudio::path& testPath : testPaths) {
     {
+      EXPECT_TRUE(ProjectDatabase::isExistingProjectDatabase(testPath)) << toString(testPath);
+
+      EXPECT_TRUE(ProjectDatabase::requiresUpdate(testPath)) << toString(testPath);
+
       OptionalProjectDatabase database = ProjectDatabase::open(testPath);
       if (!database){
         EXPECT_TRUE(false) << "Could not open '" << toString(testPath) << "'";

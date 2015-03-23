@@ -84,19 +84,19 @@ namespace detail {
     bool setAvailabilitySchedule(Schedule& schedule);
 
     // Get GasBurnerEfficiency
-    double gasBurnerEfficiency();
+    double gasBurnerEfficiency() const;
 
     // Set GasBurnerEfficiency
     void setGasBurnerEfficiency(double val);
 
     // Get ParasiticElectricLoad
-    double parasiticElectricLoad();
+    double parasiticElectricLoad() const;
 
     // Set parasiticElectricLoad
     void setParasiticElectricLoad(double val);
 
     // Get ParasiticGasLoad
-    double parasiticGasLoad();
+    double parasiticGasLoad() const;
 
     // Set parasiticGasLoad
     void setParasiticGasLoad(double val);

@@ -68,6 +68,8 @@ class InspectorView : public QWidget
 
   BaseInspectorView * currentView() { return m_currentView; }
 
+  bool mouseOverInspectorView() { return m_mouseOverInspectorView; };
+
   signals:
 
   void addZoneClicked(model::ThermalZone &);
@@ -89,12 +91,18 @@ class InspectorView : public QWidget
   void layoutModelObject( model::OptionalModelObject &, bool readOnly, bool displayIP );
   virtual void toggleUnits(bool displayIP);
 
+  protected slots:
+
+  virtual void enterEvent(QEvent * event);
+  virtual void leaveEvent(QEvent * event);
+
   private:
 
   QVBoxLayout * m_vLayout;
   BaseInspectorView * m_currentView;
   QStackedWidget * m_stackedWidget;
   boost::optional<model::ModelObject> m_modelObject;
+  bool m_mouseOverInspectorView = false;
 };
 
 class BaseInspectorView : public QWidget
@@ -650,6 +658,20 @@ class AirTerminalSingleDuctConstantVolumeFourPipeInductionInspectorView : public
 
   LoopChooserView * m_heatingLoopChooserView;
   LoopChooserView * m_coolingLoopChooserView;
+
+};
+
+class ScheduleRulesetInspectorView : public BaseInspectorView
+{
+  Q_OBJECT;
+
+  public:
+
+  ScheduleRulesetInspectorView(QWidget * parent = 0);
+
+  virtual ~ScheduleRulesetInspectorView() {}
+
+  virtual void layoutModelObject(model::ModelObject & modelObject, bool readOnly, bool displayIP);
 
 };
 

@@ -475,7 +475,7 @@ namespace openstudio{
     m_files.push_back(file);
   }
 
-  bool BCLXML::hasFile(const openstudio::path& path)
+  bool BCLXML::hasFile(const openstudio::path& path) const
   {
     bool result = false;
 

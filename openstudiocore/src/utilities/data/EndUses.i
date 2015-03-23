@@ -12,4 +12,4 @@
 
 %include <utilities/data/EndUses.hpp>
 
-#endif //UTILITIES_DATA_ENDUSES_I 
+#endif //UTILITIES_DATA_ENDUSES_I

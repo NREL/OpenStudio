@@ -30,6 +30,9 @@
 #include <QLineEdit>
 #include <QString>
 #include <QValidator>
+#include <QIntValidator>
+
+class QFocusEvent;
 
 namespace openstudio {
 
@@ -41,6 +44,10 @@ class OSIntegerEdit2: public QLineEdit {
   OSIntegerEdit2(QWidget * parent = nullptr);
 
   virtual ~OSIntegerEdit2() {}
+
+  void enableClickFocus() { this->m_hasClickFocus = true; }
+
+  bool hasData() { return !this->text().isEmpty(); }
 
   QIntValidator * intValidator() { return m_intValidator; }
 
@@ -86,6 +93,16 @@ class OSIntegerEdit2: public QLineEdit {
 
   void unbind();
 
+ protected:
+
+  virtual void focusInEvent(QFocusEvent * e);
+
+  virtual void focusOutEvent(QFocusEvent * e);
+
+ signals:
+
+  void inFocus(bool inFocus, bool hasData);
+
  private slots:
 
   void onEditingFinished();
@@ -108,6 +125,7 @@ class OSIntegerEdit2: public QLineEdit {
   boost::optional<BasicQuery> m_isAutocalculated;
 
   bool m_isScientific;
+  bool m_hasClickFocus = false;
   boost::optional<int> m_precision;
   QString m_text = "UNINITIALIZED";
   QIntValidator * m_intValidator = nullptr;

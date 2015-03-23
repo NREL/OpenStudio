@@ -24,23 +24,22 @@
 namespace openstudio {
 namespace contam {
 
-Zone::Zone()
-{
-  m_impl = std::shared_ptr<detail::ZoneImpl>(new detail::ZoneImpl());
-}
+Zone::Zone() :
+  m_impl(std::shared_ptr<detail::ZoneImpl>(new detail::ZoneImpl()))
+{}
 
-Zone::Zone(unsigned flags, std::string Vol, std::string T0, std::string name)
+Zone::Zone(unsigned flags, std::string Vol, std::string T0, std::string name) :
+  m_impl(std::shared_ptr<detail::ZoneImpl>(new detail::ZoneImpl))
 {
-  m_impl = std::shared_ptr<detail::ZoneImpl>(new detail::ZoneImpl);
   m_impl->setFlags(flags);
   m_impl->setVol(Vol);
   m_impl->setT0(T0);
   m_impl->setName(name);
 }
 
-Zone::Zone(unsigned flags, double Vol, double T0, std::string name)
+Zone::Zone(unsigned flags, double Vol, double T0, std::string name) :
+  m_impl(std::shared_ptr<detail::ZoneImpl>(new detail::ZoneImpl))
 {
-  m_impl = std::shared_ptr<detail::ZoneImpl>(new detail::ZoneImpl);
   m_impl->setFlags(flags);
   m_impl->setVol(Vol);
   m_impl->setT0(T0);
@@ -49,19 +48,17 @@ Zone::Zone(unsigned flags, double Vol, double T0, std::string name)
 
 Zone::Zone(int nr,unsigned int flags,int ps,int pc,int pk,int pl,std::string relHt,std::string Vol,std::string T0,std::string P0,
   std::string name,int color,int u_Ht,int u_V,int u_T,int u_P,int cdaxis,int cfd,std::string cfdname,std::string X1,
-  std::string Y1,std::string H1,std::string X2,std::string Y2,std::string H2,std::string celldx,std::string axialD,int u_aD,int u_L)
-{
-  m_impl = std::shared_ptr<detail::ZoneImpl>(new detail::ZoneImpl(nr,flags,ps,pc,pk,pl,relHt,Vol,T0,P0,name,color,u_Ht,u_V,u_T,u_P,cdaxis,cfd,cfdname,X1,
-    Y1,H1,X2,Y2,H2,celldx,axialD,u_aD,u_L));
-}
+  std::string Y1,std::string H1,std::string X2,std::string Y2,std::string H2,std::string celldx,std::string axialD,int u_aD,int u_L) :
+  m_impl(std::shared_ptr<detail::ZoneImpl>(new detail::ZoneImpl(nr,flags,ps,pc,pk,pl,relHt,Vol,T0,P0,name,color,u_Ht,u_V,u_T,u_P,cdaxis,cfd,cfdname,X1,
+    Y1,H1,X2,Y2,H2,celldx,axialD,u_aD,u_L)))
+{}
 
 Zone::Zone(int nr,unsigned int flags,int ps,int pc,int pk,int pl,double relHt,double Vol,double T0,double P0,
   std::string name,int color,int u_Ht,int u_V,int u_T,int u_P,int cdaxis,int cfd,std::string cfdname,double X1,
-  double Y1,double H1,double X2,double Y2,double H2,double celldx,double axialD,int u_aD,int u_L)
-{
-  m_impl = std::shared_ptr<detail::ZoneImpl>(new detail::ZoneImpl(nr,flags,ps,pc,pk,pl,relHt,Vol,T0,P0,name,color,u_Ht,u_V,u_T,u_P,cdaxis,cfd,cfdname,X1,
-    Y1,H1,X2,Y2,H2,celldx,axialD,u_aD,u_L));
-}
+  double Y1,double H1,double X2,double Y2,double H2,double celldx,double axialD,int u_aD,int u_L) :
+  m_impl(std::shared_ptr<detail::ZoneImpl>(new detail::ZoneImpl(nr,flags,ps,pc,pk,pl,relHt,Vol,T0,P0,name,color,u_Ht,u_V,u_T,u_P,cdaxis,cfd,cfdname,X1,
+    Y1,H1,X2,Y2,H2,celldx,axialD,u_aD,u_L)))
+{}
 
 Zone::Zone(const Zone &other) : m_impl(other.m_impl)
 {}
@@ -290,7 +287,7 @@ std::string Zone::cfdname() const
   return m_impl->cfdname();
 }
 
-void Zone::setCfdname(const std::string cfdname)
+void Zone::setCfdname(const std::string &cfdname)
 {
   m_impl->setCfdname(cfdname);
 }
@@ -505,14 +502,13 @@ bool Zone::setIc(std::vector<std::string> &ic)
   return m_impl->setIc(ic);
 }
 
-Species::Species()
-{
-  m_impl = std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl);
-}
+Species::Species() :
+  m_impl(std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl))
+{}
 
-Species::Species(std::string molwt, std::string Dm, std::string ccdef, std::string Cp, std::string name, std::string desc)
+Species::Species(std::string molwt, std::string Dm, std::string ccdef, std::string Cp, std::string name, std::string desc) :
+  m_impl(std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl))
 {
-  m_impl = std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl);
   m_impl->setMolwt(molwt);
   m_impl->setDm(Dm);
   m_impl->setCcdef(ccdef);
@@ -520,9 +516,9 @@ Species::Species(std::string molwt, std::string Dm, std::string ccdef, std::stri
   m_impl->setDesc(desc);
 }
 
-Species::Species(double molwt, double Dm, double ccdef, double Cp, std::string name, std::string desc)
+Species::Species(double molwt, double Dm, double ccdef, double Cp, std::string name, std::string desc) :
+  m_impl(std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl))
 {
-  m_impl = std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl);
   m_impl->setMolwt(molwt);
   m_impl->setDm(Dm);
   m_impl->setCcdef(ccdef);
@@ -531,16 +527,14 @@ Species::Species(double molwt, double Dm, double ccdef, double Cp, std::string n
 }
 
 Species::Species(int nr,int sflag,int ntflag,std::string molwt,std::string mdiam,std::string edens,std::string decay,std::string Dm,
-  std::string ccdef,std::string Cp,int ucc,int umd,int ued,int udm,int ucp,std::string name,std::string desc)
-{
-  m_impl = std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl(nr,sflag,ntflag,molwt,mdiam,edens,decay,Dm,ccdef,Cp,ucc,umd,ued,udm,ucp,name,desc));
-}
+  std::string ccdef,std::string Cp,int ucc,int umd,int ued,int udm,int ucp,std::string name,std::string desc) :
+  m_impl(std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl(nr,sflag,ntflag,molwt,mdiam,edens,decay,Dm,ccdef,Cp,ucc,umd,ued,udm,ucp,name,desc)))
+{}
 
 Species::Species(int nr,int sflag,int ntflag,double molwt,double mdiam,double edens,double decay,double Dm,
-  double ccdef,double Cp,int ucc,int umd,int ued,int udm,int ucp,std::string name,std::string desc)
-{
-  m_impl = std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl(nr,sflag,ntflag,molwt,mdiam,edens,decay,Dm,ccdef,Cp,ucc,umd,ued,udm,ucp,name,desc));
-}
+  double ccdef,double Cp,int ucc,int umd,int ued,int udm,int ucp,std::string name,std::string desc) :
+  m_impl(std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl(nr,sflag,ntflag,molwt,mdiam,edens,decay,Dm,ccdef,Cp,ucc,umd,ued,udm,ucp,name,desc)))
+{}
 
 Species::Species(const Species &other) : m_impl(other.m_impl)
 {}
@@ -779,15 +773,13 @@ void Species::setDesc(const std::string &desc)
   m_impl->setDesc(desc);
 }
 
-Ahs::Ahs()
-{
-  m_impl = std::shared_ptr<detail::AhsImpl>(new detail::AhsImpl);
-}
+Ahs::Ahs() :
+  m_impl(std::shared_ptr<detail::AhsImpl>(new detail::AhsImpl))
+{}
 
-Ahs::Ahs(int nr,int zone_r,int zone_s,int path_r,int path_s,int path_x,std::string name,std::string desc)
-{
-  m_impl = std::shared_ptr<detail::AhsImpl>(new detail::AhsImpl(nr,zone_r,zone_s,path_r,path_s,path_x,name,desc));
-}
+Ahs::Ahs(int nr,int zone_r,int zone_s,int path_r,int path_s,int path_x,std::string name,std::string desc) :
+  m_impl(std::shared_ptr<detail::AhsImpl>(new detail::AhsImpl(nr,zone_r,zone_s,path_r,path_s,path_x,name,desc)))
+{}
 
 Ahs::Ahs(const Ahs &other) : m_impl(other.m_impl)
 {}
@@ -901,15 +893,14 @@ void Ahs::setDesc(const std::string &desc)
   m_impl->setDesc(desc);
 }
 
-AirflowPath::AirflowPath()
-{
-  m_impl = std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl);
-}
+AirflowPath::AirflowPath() :
+  m_impl(std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl))
+{}
 
 AirflowPath::AirflowPath(int flags, int pzn, int pe, int pw, int pld, std::string relHt, std::string mult, std::string wPset,
-  std::string wPmod, std::string wazm, unsigned int icon)
+  std::string wPmod, std::string wazm, unsigned int icon) :
+  m_impl(std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl))
 {
-  m_impl = std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl);
   m_impl->setFlags(flags);
   m_impl->setPzn(pzn);
   m_impl->setPzm(-1);
@@ -925,9 +916,9 @@ AirflowPath::AirflowPath(int flags, int pzn, int pe, int pw, int pld, std::strin
 }
 
 AirflowPath::AirflowPath(int flags, int pzn, int pe, int pw, int pld, double relHt, double mult, double wPset,
-  double wPmod, double wazm, unsigned int icon)
+  double wPmod, double wazm, unsigned int icon) :
+  m_impl(std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl))
 {
-  m_impl = std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl);
   m_impl->setFlags(flags);
   m_impl->setPzn(pzn);
   m_impl->setPzm(-1);
@@ -942,9 +933,9 @@ AirflowPath::AirflowPath(int flags, int pzn, int pe, int pw, int pld, double rel
   m_impl->setIcon(icon);
 }
 
-AirflowPath::AirflowPath(int flags, int pzn, int pzm, int pe, int pld, std::string relHt, std::string mult, unsigned int icon)
+AirflowPath::AirflowPath(int flags, int pzn, int pzm, int pe, int pld, std::string relHt, std::string mult, unsigned int icon) :
+  m_impl(std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl))
 {
-  m_impl = std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl);
   m_impl->setFlags(flags);
   m_impl->setPzn(pzn);
   m_impl->setPzm(pzm);
@@ -955,9 +946,9 @@ AirflowPath::AirflowPath(int flags, int pzn, int pzm, int pe, int pld, std::stri
   m_impl->setIcon(icon);
 }
 
-AirflowPath::AirflowPath(int flags, int pzn, int pzm, int pe, int pld, double relHt, double mult, unsigned int icon)
+AirflowPath::AirflowPath(int flags, int pzn, int pzm, int pe, int pld, double relHt, double mult, unsigned int icon) :
+  m_impl(std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl))
 {
-  m_impl = std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl);
   m_impl->setFlags(flags);
   m_impl->setPzn(pzn);
   m_impl->setPzm(pzm);
@@ -971,20 +962,18 @@ AirflowPath::AirflowPath(int flags, int pzn, int pzm, int pe, int pld, double re
 AirflowPath::AirflowPath(int nr,int flags,int pzn,int pzm,int pe,int pf,int pw,int pa,int ps,int pc,int pld,std::string X,
   std::string Y,std::string relHt,std::string mult,std::string wPset,std::string wPmod,std::string wazm,std::string Fahs,
   std::string Xmax,std::string Xmin,unsigned int icon,unsigned int dir,int u_Ht,int u_XY,int u_dP,
-  int u_F,int cfd,std::string cfd_name,int cfd_ptype,int cfd_btype,int cfd_capp)
-{
-  m_impl = std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl(nr,flags,pzn,pzm,pe,pf,pw,pa,ps,pc,pld,X,Y,relHt,mult,wPset,wPmod,wazm,Fahs,
-    Xmax,Xmin,icon,dir,u_Ht,u_XY,u_dP,u_F,cfd,cfd_name,cfd_ptype,cfd_btype,cfd_capp));
-}
+  int u_F,int cfd,std::string cfd_name,int cfd_ptype,int cfd_btype,int cfd_capp) :
+  m_impl(std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl(nr,flags,pzn,pzm,pe,pf,pw,pa,ps,pc,pld,X,Y,relHt,mult,wPset,wPmod,wazm,Fahs,
+    Xmax,Xmin,icon,dir,u_Ht,u_XY,u_dP,u_F,cfd,cfd_name,cfd_ptype,cfd_btype,cfd_capp)))
+{}
 
 AirflowPath::AirflowPath(int nr,int flags,int pzn,int pzm,int pe,int pf,int pw,int pa,int ps,int pc,int pld,double X,
   double Y,double relHt,double mult,double wPset,double wPmod,double wazm,double Fahs,
   double Xmax,double Xmin,unsigned int icon,unsigned int dir,int u_Ht,int u_XY,int u_dP,
-  int u_F,int cfd,std::string cfd_name,int cfd_ptype,int cfd_btype,int cfd_capp)
-{
-  m_impl = std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl(nr,flags,pzn,pzm,pe,pf,pw,pa,ps,pc,pld,X,Y,relHt,mult,wPset,wPmod,wazm,Fahs,
-    Xmax,Xmin,icon,dir,u_Ht,u_XY,u_dP,u_F,cfd,cfd_name,cfd_ptype,cfd_btype,cfd_capp));
-}
+  int u_F,int cfd,std::string cfd_name,int cfd_ptype,int cfd_btype,int cfd_capp) :
+  m_impl(std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl(nr,flags,pzn,pzm,pe,pf,pw,pa,ps,pc,pld,X,Y,relHt,mult,wPset,wPmod,wazm,Fahs,
+    Xmax,Xmin,icon,dir,u_Ht,u_XY,u_dP,u_F,cfd,cfd_name,cfd_ptype,cfd_btype,cfd_capp)))
+{}
 
 AirflowPath::AirflowPath(const AirflowPath &other) : m_impl(other.m_impl)
 {}
@@ -1438,10 +1427,9 @@ bool AirflowPath::outsideAir()
   return m_impl->outsideAir();
 }
 
-RunControl::RunControl()
-{
-  m_impl = std::shared_ptr<detail::RunControlImpl>(new detail::RunControlImpl());
-}
+RunControl::RunControl() :
+  m_impl(std::shared_ptr<detail::RunControlImpl>(new detail::RunControlImpl()))
+{}
 /*
 RunControl::RunControl(int sim_af,int afcalc,int afmaxi,double afrcnvg,double afacnvg,double afrelax,
 int uac2,double Pres,int uPres,int afslae,int afrseq,int aflmaxi,double aflcnvg,
@@ -2699,34 +2687,31 @@ void RunControl::setCfd_dtcmo(const int cfd_dtcmo)
   m_impl->setCfd_dtcmo(cfd_dtcmo);
 }
 
-Level::Level()
-{
-  m_impl = std::shared_ptr<detail::LevelImpl>(new detail::LevelImpl);
-}
+Level::Level() :
+  m_impl(std::shared_ptr<detail::LevelImpl>(new detail::LevelImpl))
+{}
 
-Level::Level(double delht, std::string name)
+Level::Level(double delht, std::string name) :
+  m_impl(std::shared_ptr<detail::LevelImpl>(new detail::LevelImpl))
 {
-  m_impl = std::shared_ptr<detail::LevelImpl>(new detail::LevelImpl);
   m_impl->setDelht(delht);
   m_impl->setName(name);
 }
 
-Level::Level(std::string delht, std::string name)
+Level::Level(std::string delht, std::string name) :
+  m_impl(std::shared_ptr<detail::LevelImpl>(new detail::LevelImpl))
 {
-  m_impl = std::shared_ptr<detail::LevelImpl>(new detail::LevelImpl);
   m_impl->setDelht(delht);
   m_impl->setName(name);
 }
 
-Level::Level(int nr,double refht,double delht,int u_rfht,int u_dlht,std::string name,std::vector<Icon> icons)
-{
-  m_impl = std::shared_ptr<detail::LevelImpl>(new detail::LevelImpl(nr,refht,delht,u_rfht,u_dlht,name,icons));
-}
+Level::Level(int nr,double refht,double delht,int u_rfht,int u_dlht,std::string name,std::vector<Icon> icons) :
+  m_impl(std::shared_ptr<detail::LevelImpl>(new detail::LevelImpl(nr,refht,delht,u_rfht,u_dlht,name,icons)))
+{}
 
-Level::Level(int nr,std::string refht,std::string delht,int u_rfht,int u_dlht,std::string name,std::vector<Icon> icons)
-{
-  m_impl = std::shared_ptr<detail::LevelImpl>(new detail::LevelImpl(nr,refht,delht,u_rfht,u_dlht,name,icons));
-}
+Level::Level(int nr,std::string refht,std::string delht,int u_rfht,int u_dlht,std::string name,std::vector<Icon> icons) :
+  m_impl(std::shared_ptr<detail::LevelImpl>(new detail::LevelImpl(nr,refht,delht,u_rfht,u_dlht,name,icons)))
+{}
 
 Level::Level(const Level &other) : m_impl(other.m_impl)
 {}
@@ -2840,16 +2825,14 @@ void Level::setIcons(const std::vector<Icon> &icons)
   m_impl->setIcons(icons);
 }
 
-DaySchedule::DaySchedule()
-{
-  m_impl = std::shared_ptr<detail::DayScheduleImpl>(new detail::DayScheduleImpl());
-}
+DaySchedule::DaySchedule() :
+  m_impl(std::shared_ptr<detail::DayScheduleImpl>(new detail::DayScheduleImpl()))
+{}
 
 DaySchedule::DaySchedule(int nr,int shape,int utyp,int ucnv,std::string name,std::string desc,
-  std::vector<SchedulePoint> points)
-{
-  m_impl = std::shared_ptr<detail::DayScheduleImpl>(new detail::DayScheduleImpl(nr,shape,utyp,ucnv,name,desc,points));
-}
+  std::vector<SchedulePoint> points) :
+  m_impl(std::shared_ptr<detail::DayScheduleImpl>(new detail::DayScheduleImpl(nr,shape,utyp,ucnv,name,desc,points)))
+{}
 
 DaySchedule::DaySchedule(const DaySchedule &other) : m_impl(other.m_impl)
 {}
@@ -2953,15 +2936,13 @@ void DaySchedule::setPoints(const std::vector<SchedulePoint> &points)
   m_impl->setPoints(points);
 }
 
-WeekSchedule::WeekSchedule()
-{
-  m_impl = std::shared_ptr<detail::WeekScheduleImpl>(new detail::WeekScheduleImpl());
-}
+WeekSchedule::WeekSchedule() :
+  m_impl(std::shared_ptr<detail::WeekScheduleImpl>(new detail::WeekScheduleImpl()))
+{}
 
-WeekSchedule::WeekSchedule(int nr,int utyp,int ucnv,std::string name,std::string desc,std::vector<int> j)
-{
-  m_impl = std::shared_ptr<detail::WeekScheduleImpl>(new detail::WeekScheduleImpl(nr,utyp,ucnv,name,desc,j));
-}
+WeekSchedule::WeekSchedule(int nr,int utyp,int ucnv,std::string name,std::string desc,std::vector<int> j) :
+  m_impl(std::shared_ptr<detail::WeekScheduleImpl>(new detail::WeekScheduleImpl(nr,utyp,ucnv,name,desc,j)))
+{}
 
 WeekSchedule::WeekSchedule(const WeekSchedule &other) : m_impl(other.m_impl)
 {}
@@ -3055,16 +3036,14 @@ void WeekSchedule::setJ(const std::vector<int> &j)
   m_impl->setJ(j);
 }
 
-WindPressureProfile::WindPressureProfile()
-{
-  m_impl = std::shared_ptr<detail::WindPressureProfileImpl>(new detail::WindPressureProfileImpl());
-}
+WindPressureProfile::WindPressureProfile() :
+  m_impl(std::shared_ptr<detail::WindPressureProfileImpl>(new detail::WindPressureProfileImpl()))
+{}
 
 WindPressureProfile::WindPressureProfile(int nr,int type,std::string name,std::string desc,
-  std::vector<PressureCoefficientPoint> coeffs)
-{
-  m_impl = std::shared_ptr<detail::WindPressureProfileImpl>(new detail::WindPressureProfileImpl(nr,type,name,desc,coeffs));
-}
+  std::vector<PressureCoefficientPoint> coeffs) :
+  m_impl(std::shared_ptr<detail::WindPressureProfileImpl>(new detail::WindPressureProfileImpl(nr,type,name,desc,coeffs)))
+{}
 
 WindPressureProfile::WindPressureProfile(const WindPressureProfile &other) : m_impl(other.m_impl)
 {}
@@ -3149,18 +3128,18 @@ void WindPressureProfile::setCoeffs(const std::vector<PressureCoefficientPoint> 
   m_impl->setCoeffs(coeffs);
 }
 
-ControlNode::Type ControlNode::convertTag(std::string string)
+ControlNode::Type ControlNode::convertTag(std::string &string)
 {
-  std::string tags[37] = {std::string("sns"),std::string("sch"),std::string("set"),
-    std::string("cvf"),std::string("dvf"),std::string("log"),std::string("pas"),
-    std::string("mod"),std::string("hys"),std::string("abs"),std::string("bin"),
-    std::string("dls"),std::string("dlx"),std::string("int"),std::string("rav"),
-    std::string("inv"),std::string("and"),std::string("od"),std::string("xor"),
-    std::string("add"),std::string("sub"),std::string("mul"),std::string("div"),
-    std::string("sum"),std::string("avg"),std::string("max"),std::string("min"),
-    std::string("lls"),std::string("uls"),std::string("lbs"),std::string("ubs"),
-    std::string("llc"),std::string("ulc"),std::string("pc1"),std::string("pi1"),
-    std::string("sup"),std::string("sph")};
+  std::string tags[37] = {"sns","sch","set",
+    "cvf","dvf","log","pas",
+    "mod","hys","abs","bin",
+    "dls","dlx","int","rav",
+    "inv","and","od","xor",
+    "add","sub","mul","div",
+    "sum","avg","max","min",
+    "lls","uls","lbs","ubs",
+    "llc","ulc","pc1","pi1",
+    "sup","sph"};
   ControlNode::Type type[37] = {CT_SNS,CT_SCH,CT_SET,CT_CVF,CT_DVF,CT_LOG,CT_PAS,CT_MOD,
     CT_HYS,CT_ABS,CT_BIN,CT_DLS,CT_DLX,CT_INT,CT_RAV,CT_INV,CT_AND,CT_OR,CT_XOR,CT_ADD,
     CT_SUB,CT_MUL,CT_DIV,CT_SUM,CT_AVG,CT_MAX,CT_MIN,CT_LLS,CT_ULS,CT_LBS,CT_UBS,CT_LLC,
@@ -3247,21 +3226,18 @@ ControlNode* ControlNode::readElement(Reader &input)
   return out;
 }
 
-CdvDat::CdvDat()
-{
-  m_impl = std::shared_ptr<detail::CdvDatImpl>(new detail::CdvDatImpl());
-}
+CdvDat::CdvDat() :
+  m_impl(std::shared_ptr<detail::CdvDatImpl>(new detail::CdvDatImpl()))
+{}
 
-CdvDat::CdvDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc)
-{
-  m_impl = std::shared_ptr<detail::CdvDatImpl>(new detail::CdvDatImpl(nr,seqnr,flags,inreq,n1,n2,name,desc));
-}
+CdvDat::CdvDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc) :
+  m_impl(std::shared_ptr<detail::CdvDatImpl>(new detail::CdvDatImpl(nr,seqnr,flags,inreq,n1,n2,name,desc)))
+{}
 
 CdvDat::CdvDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,
-  std::string valuename)
-{
-  m_impl = std::shared_ptr<detail::CdvDatImpl>(new detail::CdvDatImpl(nr,seqnr,flags,inreq,n1,n2,name,desc,valuename));
-}
+  std::string valuename) :
+  m_impl(std::shared_ptr<detail::CdvDatImpl>(new detail::CdvDatImpl(nr,seqnr,flags,inreq,n1,n2,name,desc,valuename)))
+{}
 
 CdvDat::CdvDat(const CdvDat &other) : m_impl(other.m_impl)
 {}

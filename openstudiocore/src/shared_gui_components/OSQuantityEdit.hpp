@@ -32,9 +32,37 @@
 #include <QString>
 #include <QValidator>
 
+class QFocusEvent;
+
 namespace openstudio {
 
 class Unit;
+
+class QuantityLineEdit : public QLineEdit {
+  Q_OBJECT
+public:
+
+  QuantityLineEdit(QWidget * parent = nullptr);
+
+  virtual ~QuantityLineEdit() {}
+
+  void enableClickFocus() { this->m_hasClickFocus = true; }
+
+protected:
+
+  virtual void focusInEvent(QFocusEvent * e);
+
+  virtual void focusOutEvent(QFocusEvent * e);
+
+private:
+
+  bool m_hasClickFocus = false;
+
+signals:
+
+  void inFocus(bool inFocus);
+
+};
 
 class OSQuantityEdit2: public QWidget {
   Q_OBJECT
@@ -45,7 +73,11 @@ class OSQuantityEdit2: public QWidget {
 
   virtual ~OSQuantityEdit2() {}
 
+  void enableClickFocus();
+
   QDoubleValidator * doubleValidator() { return m_doubleValidator; }
+
+  bool hasData() { return !this->m_lineEdit->text().isEmpty(); }
 
   void bind(bool isIP,
             model::ModelObject& modelObject,
@@ -93,6 +125,10 @@ class OSQuantityEdit2: public QWidget {
 
   void unbind();
 
+ signals:
+
+  void inFocus(bool inFocus, bool hasData);
+
  public slots:
 
   void onUnitSystemChange(bool isIP);
@@ -105,9 +141,11 @@ class OSQuantityEdit2: public QWidget {
 
   void onModelObjectRemove(Handle handle);
 
+  void onInFocus(bool inFocus);
+
  private:
 
-  QLineEdit* m_lineEdit;
+  QuantityLineEdit* m_lineEdit;
   QLabel* m_units;
   QString m_text = "UNINITIALIZED";
   std::string m_unitsStr = "";

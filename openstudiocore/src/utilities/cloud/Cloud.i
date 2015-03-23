@@ -21,10 +21,7 @@
   class QNetworkAccessManager;
   namespace openstudio{
     class PathWatcher;
-    class Plot2D;
     class UpdateManager;
-    class LinePlot;
-    class FloodPlot;
     class ProgressBar;
   }  
 %}
@@ -35,9 +32,6 @@
 %ignore QNetworkAccessManager;
 %ignore openstudio::PathWatcher;
 %ignore openstudio::UpdateManager;
-%ignore openstudio::Plot2D;
-%ignore openstudio::LinePlot;
-%ignore openstudio::FloodPlot;
 %ignore openstudio::ProgressBar;
 
 %define SWIG_CLOUD_TEMPLATES(_name)

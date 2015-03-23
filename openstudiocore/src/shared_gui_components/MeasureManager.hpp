@@ -26,6 +26,7 @@
 #include "../utilities/core/Path.hpp"
 #include "../utilities/core/UUID.hpp"
 #include "../ruleset/RubyUserScriptInfoGetter.hpp"
+#include "../model/Model.hpp"
 #include <vector>
 #include <map>
 #include <QSharedPointer>
@@ -123,7 +124,9 @@ class MeasureManager : public QObject
 
     // Updates the given set of measures in the current project. Does not ask for user approval. Approval is assumed
     // when this method is called.
-    void updateMeasures(analysisdriver::SimpleProject &t_project, const std::vector<BCLMeasure> &t_newMeasures, bool t_showMessage=true);
+    void updateMeasures(analysisdriver::SimpleProject &t_project, 
+      const std::vector<BCLMeasure> &t_newMeasures, 
+      bool t_showMessage=true);
 
     void setLibraryController(const QSharedPointer<LocalLibraryController> &t_libraryController);
 

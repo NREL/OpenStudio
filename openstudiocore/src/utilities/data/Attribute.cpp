@@ -883,8 +883,8 @@ namespace detail{
       childElement.appendChild(text);
       break;
     case AttributeValueType::AttributeVector:
-      for (const Attribute& Attribute : this->valueAsAttributeVector()){
-        childElement.appendChild(Attribute.toXml().documentElement());
+      for (const Attribute& attribute : this->valueAsAttributeVector()){
+        childElement.appendChild(attribute.toXml().documentElement());
       }
       break;
         default:

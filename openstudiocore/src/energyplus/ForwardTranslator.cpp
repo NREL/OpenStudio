@@ -65,9 +65,6 @@
 #include <utilities/idd/SetpointManager_MixedAir_FieldEnums.hxx>
 
 #include "../utilities/idd/IddEnums.hpp"
-#include <utilities/idd/IddEnums.hxx>
-#include <utilities/idd/IddFactory.hxx>
-#include "../utilities/plot/ProgressBar.hpp"
 
 #include <QFile>
 #include <QTextStream>
@@ -617,6 +614,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateChillerElectricEIR(chiller);
       break;
     }
+  case openstudio::IddObjectType::OS_ClimateZones:
+  {
+    // no-op
+    return retVal;
+  }
   case openstudio::IddObjectType::OS_Construction_CfactorUndergroundWall :
     {
       model::CFactorUndergroundWallConstruction construction = modelObject.cast<CFactorUndergroundWallConstruction>();
@@ -1745,6 +1747,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateStandardGlazing(glazing);
       break;
     }
+  case  openstudio::IddObjectType::OS_WindowProperty_FrameAndDivider:
+  {
+    model::WindowPropertyFrameAndDivider frameAndDivider = modelObject.cast<WindowPropertyFrameAndDivider>();
+    retVal = translateWindowPropertyFrameAndDivider(frameAndDivider);
+    break;
+  }
   case openstudio::IddObjectType::OS_ZoneAirContaminantBalance :
     {
       // no-op
@@ -2091,6 +2099,7 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
   iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_Screen);
   iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_Shade);
   iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_SimpleGlazingSystem);
+  iddObjectTypes.push_back(IddObjectType::OS_WindowProperty_FrameAndDivider);
   iddObjectTypes.push_back(IddObjectType::OS_ShadingControl);
 
   iddObjectTypes.push_back(IddObjectType::OS_Construction);

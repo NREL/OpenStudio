@@ -193,24 +193,25 @@ endif()
 set(${target_name}_test_src
   Test/ProjectFixture.hpp
   Test/ProjectFixture.cpp
+  Test/ProjectVersioningFixture.hpp
+  Test/ProjectVersioningFixture.cpp  
   Test/AlgorithmRecord_GTest.cpp
   Test/AnalysisRecord_GTest.cpp
   Test/AttributeRecord_GTest.cpp
   Test/CloudSessionRecord_GTest.cpp
   Test/CloudSettingsRecord_GTest.cpp
   Test/DataPointRecord_GTest.cpp
-  Test/MeasureGroupRecord_GTest.cpp
   Test/FileReferenceRecord_GTest.cpp
+  Test/MeasureGroupRecord_GTest.cpp
   Test/ProblemRecord_GTest.cpp
   Test/ProjectDatabaseRecord_GTest.cpp
-  Test/RubyMeasureRecord_GTest.cpp
+  #Test/ProjectRecord_GTest.cpp # removed
   Test/RubyContinuousVariableRecord_GTest.cpp
+  Test/RubyMeasureRecord_GTest.cpp
   Test/TagRecord_GTest.cpp
   Test/URLSearchPathRecord_GTest.cpp
-  Test/WorkflowRecord_GTest.cpp
-  Test/ProjectVersioningFixture.hpp
-  Test/ProjectVersioningFixture.cpp
   Test/Versioning_GTest.cpp
+  Test/WorkflowRecord_GTest.cpp
 )
 
 set(project_swig_src

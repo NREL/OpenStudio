@@ -1,9 +1,7 @@
 require 'openstudio'
 require 'openstudio/ruleset/ShowRunnerOutput'
 require 'minitest/autorun'
-
 require_relative '../measure.rb'
-
 require 'fileutils'
 
 class ModelMeasureTest < MiniTest::Unit::TestCase
@@ -27,7 +25,7 @@ class ModelMeasureTest < MiniTest::Unit::TestCase
     assert_equal("space_name", arguments[0].name)
   end
 
-  def test_bad_argument_values   
+  def test_bad_argument_values
     # create an instance of the measure
     measure = ModelMeasure.new
 
@@ -37,25 +35,32 @@ class ModelMeasureTest < MiniTest::Unit::TestCase
     # make an empty model
     model = OpenStudio::Model::Model.new
 
-    # check that there are no spaces
-    assert_equal(0, model.getSpaces.size)
-
     # get arguments
     arguments = measure.arguments(model)
     argument_map = OpenStudio::Ruleset.convertOSArgumentVectorToMap(arguments)
 
-    # set argument values to bad value
-    space_name = arguments[0].clone
-    assert(space_name.setValue(""))
-    argument_map["space_name"] = space_name
+    # create hash of argument values
+    args_hash = {}
+    args_hash["space_name"] = ""
+
+    # populate argument with specified hash value if specified
+    arguments.each do |arg|
+      temp_arg_var = arg.clone
+      if args_hash[arg.name]
+        assert(temp_arg_var.setValue(args_hash[arg.name]))
+      end
+      argument_map[arg.name] = temp_arg_var
+    end
 
     # run the measure
     measure.run(model, runner, argument_map)
     result = runner.result
-    assert_equal("Fail", result.value.valueName)
 
-    # check that there are still no spaces
-    assert_equal(0, model.getSpaces.size)
+    # show the output
+    show_output(result)
+
+    # assert that it ran correctly
+    assert_equal("Fail", result.value.valueName)
   end
 
   def test_good_argument_values
@@ -65,32 +70,53 @@ class ModelMeasureTest < MiniTest::Unit::TestCase
     # create an instance of a runner
     runner = OpenStudio::Ruleset::OSRunner.new
 
-    # make an empty model
-    model = OpenStudio::Model::Model.new
-    
-    # check that there are no spaces
-    assert_equal(0, model.getSpaces.size)
+    # load the test model
+    translator = OpenStudio::OSVersion::VersionTranslator.new
+    path = OpenStudio::Path.new(File.dirname(__FILE__) + "/example_model.osm")
+    model = translator.loadModel(path)
+    assert((not model.empty?))
+    model = model.get
+
+    # store the number of spaces in the seed model
+    num_spaces_seed = model.getSpaces.size
 
     # get arguments
     arguments = measure.arguments(model)
     argument_map = OpenStudio::Ruleset.convertOSArgumentVectorToMap(arguments)
 
-    # set argument values to good values
-    space_name = arguments[0].clone
-    assert(space_name.setValue("New Space"))
-    argument_map["space_name"] = space_name
+    # create hash of argument values.
+    # If the argument has a default that you want to use, you don't need it in the hash
+    args_hash = {}
+    args_hash["space_name"] = "New Space"
+    # using defaults values from measure.rb for other arguments
+
+    # populate argument with specified hash value if specified
+    arguments.each do |arg|
+      temp_arg_var = arg.clone
+      if args_hash[arg.name]
+        assert(temp_arg_var.setValue(args_hash[arg.name]))
+      end
+      argument_map[arg.name] = temp_arg_var
+    end
 
     # run the measure
     measure.run(model, runner, argument_map)
     result = runner.result
+
+    # show the output
+    show_output(result)
+
+    # assert that it ran correctly
     assert_equal("Success", result.value.valueName)
+    assert(result.info.size == 1)
+    assert(result.warnings.size == 0)
 
     # check that there is now 1 space
-    assert_equal(1, model.getSpaces.size)
+    assert_equal(1, model.getSpaces.size - num_spaces_seed)
 
-    # check that space is properly named
-    space = model.getSpaces[0]
-    assert_equal("New Space", space.name.get)
+    # save the model to test output directory
+    output_file_path = OpenStudio::Path.new(File.dirname(__FILE__) + "/output/test_output.osm")
+    model.save(output_file_path,true)
   end
 
 end

@@ -26,6 +26,7 @@
 #include "../utilities/data/Attribute.hpp"
 
 #include <QDoubleValidator>
+#include <QFocusEvent>
 
 #include <iomanip>
 
@@ -226,6 +227,8 @@ void OSDoubleEdit2::unbind() {
 
 void OSDoubleEdit2::onEditingFinished() {
 
+  emit inFocus(true, hasData());
+
   QString text = this->text();
   if (text.isEmpty() || m_text == text) return;
 
@@ -406,6 +409,34 @@ void OSDoubleEdit2::setPrecision(const std::string& str) {
     m_precision.reset();
   }
 }
+
+void OSDoubleEdit2::focusInEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason && m_hasClickFocus)
+  {
+    QString style("QLineEdit { background: #ffc627; }");
+    setStyleSheet(style);
+
+    emit inFocus(true, hasData());
+  }
+
+  QLineEdit::focusInEvent(e);
+}
+
+void OSDoubleEdit2::focusOutEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason && m_hasClickFocus)
+  {
+    QString style("QLineEdit { background: white; }");
+    setStyleSheet(style);
+
+    emit inFocus(false, false);
+  }
+
+  QLineEdit::focusOutEvent(e);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 OSDoubleEdit::OSDoubleEdit( QWidget * parent )
   : m_isScientific(false)

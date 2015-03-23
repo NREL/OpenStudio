@@ -19,8 +19,13 @@
 
 #include "OSLineEdit.hpp"
 
-#include "../openstudio_lib/OSItem.hpp"
+#include "../openstudio_lib/InspectorController.hpp"
+#include "../openstudio_lib/InspectorView.hpp"
+#include "../openstudio_lib/MainRightColumnController.hpp"
 #include "../openstudio_lib/ModelObjectItem.hpp"
+#include "../openstudio_lib/OSAppBase.hpp"
+#include "../openstudio_lib/OSDocument.hpp"
+#include "../openstudio_lib/OSItem.hpp"
 
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
@@ -29,6 +34,7 @@
 
 #include <boost/optional.hpp>
 
+#include <QFocusEvent>
 #include <QMouseEvent>
 #include <QString>
 
@@ -139,6 +145,7 @@ void OSLineEdit2::onEditingFinished() {
         onModelObjectChange();
       }
       else {
+        emit inFocus(true, hasData());
         adjustWidth();
       }
     }
@@ -152,6 +159,7 @@ void OSLineEdit2::adjustWidth()
     QFont myFont;
     QFontMetrics fm(myFont);
     auto width = fm.width(toQString(m_text));
+    if (width < 80) width = 80;
     setFixedWidth(width + 10);
   }
 }
@@ -185,7 +193,6 @@ void OSLineEdit2::onModelObjectChangeInternal(bool startingup) {
         this->blockSignals(true);
         this->setText(QString::fromStdString(m_text));
         this->blockSignals(false);
-        adjustWidth();
         if (!startingup) m_timer.start(TIMEOUT_INTERVAL);
       }
     }
@@ -240,6 +247,42 @@ void OSLineEdit2::onItemRemoveClicked()
     emit objectRemoved(parent);
   }
 }
+
+void OSLineEdit2::focusInEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason && m_hasClickFocus)
+  {
+    QString style("QLineEdit { background: #ffc627; }");
+    setStyleSheet(style);
+
+    emit inFocus(true, hasData());
+  }
+
+  QLineEdit::focusInEvent(e);
+}
+
+void OSLineEdit2::focusOutEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason && m_hasClickFocus)
+  {
+    QString style("QLineEdit { background: white; }");
+    setStyleSheet(style);
+
+    emit inFocus(false, false);
+
+#ifdef openstudio_lib_EXPORTS
+    auto mouseOverInspectorView = OSAppBase::instance()->currentDocument()->mainRightColumnController()->inspectorController()->inspectorView()->mouseOverInspectorView();
+    if (!mouseOverInspectorView) {
+      emit itemClicked(nullptr);
+    }
+#endif
+
+  }
+
+  QLineEdit::focusOutEvent(e);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 OSLineEdit::OSLineEdit( QWidget * parent )
   : QLineEdit(parent)

@@ -34,9 +34,13 @@
 #include "../CurveBiquadratic.hpp"
 #include "../CurveQuadratic.hpp"
 #include "../CoilHeatingWater.hpp"
+#include "../CoilHeatingWater_Impl.hpp"
 #include "../CoilCoolingWater.hpp"
 #include "../ScheduleCompact.hpp"
 #include "../LifeCycleCost.hpp"
+#include "../HVACTemplates.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../AirLoopHVAC_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
@@ -326,3 +330,33 @@ TEST_F(ModelFixture, PlantLoop_edges)
   }
   EXPECT_TRUE(found_demand_chiller);
 }
+
+TEST_F(ModelFixture, PlantLoop_removeBranchWithComponent)
+{
+  Model m;
+  auto airSystem = addSystemType5(m).cast<AirLoopHVAC>();
+
+  auto coil = airSystem.supplyComponents(CoilHeatingWater::iddObjectType()).front().cast<CoilHeatingWater>();
+  auto plant = coil.plantLoop().get();
+
+  EXPECT_TRUE(plant.removeDemandBranchWithComponent(coil));
+
+  auto coilFromAirSystem = airSystem.supplyComponent(coil.handle());
+  EXPECT_TRUE(coilFromAirSystem);
+
+  auto coilFromPlant = plant.demandComponent(coil.handle());
+  EXPECT_FALSE(coilFromPlant);
+
+  auto plantDemandComps = plant.demandComponents();
+  EXPECT_EQ(7u,plantDemandComps.size());
+
+  auto splitter = plant.demandSplitter();
+  auto mixer = plant.demandMixer();
+
+  EXPECT_EQ(1u,splitter.outletModelObjects().size());
+  EXPECT_EQ(1u,mixer.inletModelObjects().size());
+
+  plantDemandComps = plant.demandComponents(splitter,mixer);
+  EXPECT_EQ(5u,plantDemandComps.size());
+}
+

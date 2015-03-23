@@ -92,20 +92,23 @@ ScheduleType ScheduleTypeRegistrySingleton::getScheduleType(const std::string &c
 ScheduleTypeLimits ScheduleTypeRegistrySingleton::getOrCreateScheduleTypeLimits(const ScheduleType& scheduleType,
                                                                                 Model& model) const
 {
-  // if fully specified, try to retrieve
-  if (scheduleType.lowerLimitValue && scheduleType.upperLimitValue) {
-    ScheduleTypeLimitsVector candidates = model.getConcreteModelObjectsByName<ScheduleTypeLimits>(getDefaultName(scheduleType));
+  std::string defaultName = getDefaultName(scheduleType);
+
+  // DLM: I do not understand why both upper and lower limit have to be set to reuse this?
+  //// if fully specified, try to retrieve
+  //if (scheduleType.lowerLimitValue && scheduleType.upperLimitValue) {
+  ScheduleTypeLimitsVector candidates = model.getConcreteModelObjectsByName<ScheduleTypeLimits>(defaultName);
     for (const ScheduleTypeLimits& candidate : candidates) {
       if (isCompatible(scheduleType,candidate)) {
         return candidate;
       }
     }
-  }
+  //}
 
   // otherwise, or if not there, create and return
   ScheduleTypeLimits scheduleTypeLimits(model);
 
-  scheduleTypeLimits.setName(getDefaultName(scheduleType));
+  scheduleTypeLimits.setName(defaultName);
 
   if (scheduleType.lowerLimitValue) {
     scheduleTypeLimits.setLowerLimitValue(scheduleType.lowerLimitValue.get());

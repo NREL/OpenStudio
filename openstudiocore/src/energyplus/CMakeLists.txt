@@ -208,6 +208,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateWaterHeaterMixed.cpp
   ForwardTranslator/ForwardTranslateWaterUseConnections.cpp
   ForwardTranslator/ForwardTranslateWaterUseEquipment.cpp
+  ForwardTranslator/ForwardTranslateWindowPropertyFrameAndDivider.cpp  
   ForwardTranslator/ForwardTranslateZoneAirHeatBalanceAlgorithm.cpp
   ForwardTranslator/ForwardTranslateZoneControlHumidistat.cpp
   ForwardTranslator/ForwardTranslateZoneControlThermostatStagedDualSetpoint.cpp
@@ -323,6 +324,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateWindowMaterialGas.cpp
   ReverseTranslator/ReverseTranslateWindowMaterialGlazing.cpp
   ReverseTranslator/ReverseTranslateWindowMaterialSimpleGlazingSystem.cpp
+  ReverseTranslator/ReverseTranslateWindowPropertyFrameAndDivider.cpp  
   ReverseTranslator/ReverseTranslateZoneAirHeatBalanceAlgorithm.cpp
   ReverseTranslator/ReverseTranslateZone.cpp
   ReverseTranslator/ReverseTranslateZoneHVACEquipmentList.cpp
@@ -372,6 +374,7 @@ set(${target_name}_test_src
   Test/Surface_GTest.cpp
   Test/TableMultiVariableLookup_GTest.cpp
   Test/ThermalZone_GTest.cpp
+  Test/WindowPropertyFrameAndDivider_GTest.cpp
   Test/ZoneHVACLowTemperatureRadiantConstFlow_GTest.cpp
   Test/ZoneHVACLowTempRadiantElectric_GTest.cpp
   Test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp

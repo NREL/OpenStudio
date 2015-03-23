@@ -287,7 +287,10 @@ namespace openstudio{
 
     static std::vector<BCLMeasure> getMeasuresInDir(openstudio::path dir);
 
-    void createDirectory(const openstudio::path& dir);
+    void createDirectory(const openstudio::path& dir) const;
+
+    // based on function in PathHelpers.hpp but checks if file is in this measure
+    bool copyDirectory(const path& source, const path& destination) const;
 
     std::string computeXMLChecksum() const;
 

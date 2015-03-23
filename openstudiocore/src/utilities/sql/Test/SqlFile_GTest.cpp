@@ -27,10 +27,8 @@
 #include "../../data/DataEnums.hpp"
 #include "../../data/TimeSeries.hpp"
 #include "../../filetypes/EpwFile.hpp"
-#include "../../plot/AnnotatedTimeline.hpp"
-#include "../../plot/FloodPlot.hpp"
-#include "../../plot/LinePlot.hpp"
 #include "../../units/UnitFactory.hpp"
+#include "../../core/Application.hpp"
 
 #include <resources.hxx>
 
@@ -155,29 +153,7 @@ TEST_F(SqlFileFixture, TimeSeriesCount)
   EXPECT_FALSE(ts);
 }
 
-TEST_F(SqlFileFixture, AnnotatedTimeline)
-{
-  std::vector<std::string> availableEnvPeriods = sqlFile.availableEnvPeriods();
-  ASSERT_FALSE(availableEnvPeriods.empty());
-
-  // make a timeline
-  openstudio::AnnotatedTimeline annotatedTimeline;
-
-  // populate it
-  openstudio::OptionalTimeSeries ts = sqlFile.timeSeries(availableEnvPeriods[0], "Hourly", "Electricity:Facility",  "");
-  ASSERT_TRUE(ts);
-  annotatedTimeline.addTimeSeries("Electricity:Facility", *ts);
-
-  ts = sqlFile.timeSeries(availableEnvPeriods[0], "Hourly", "Gas:Facility",  "");
-  ASSERT_TRUE(ts);
-  annotatedTimeline.addTimeSeries("Gas:Facility", *ts);
-
-  // save it
-  annotatedTimeline.save(toPath("Building.html"));
-  EXPECT_TRUE(true);
-}
-
-TEST_F(SqlFileFixture, FloodPlot)
+TEST_F(SqlFileFixture, TimeSeries)
 {
   std::vector<std::string> availableEnvPeriods = sqlFile.availableEnvPeriods();
   ASSERT_FALSE(availableEnvPeriods.empty());
@@ -190,29 +166,6 @@ TEST_F(SqlFileFixture, FloodPlot)
 //  Time duration = ts->dateTimes().back() - ts->dateTimes().front();
   Time duration = ts->firstReportDateTime() + Time(ts->daysFromFirstReport(ts->daysFromFirstReport().size()-1)) - ts->firstReportDateTime();
   EXPECT_DOUBLE_EQ(365-1.0/24.0, duration.totalDays());
-
-  // plot it
-  FloodPlot::Ptr fp = FloodPlot::create();
-  fp->timeseriesData(*ts);
-  fp->generateImage(toPath("testFP.png"));
-  EXPECT_TRUE(true);
-}
-
-
-TEST_F(SqlFileFixture, LinePlot)
-{
-  std::vector<std::string> availableEnvPeriods = sqlFile.availableEnvPeriods();
-  ASSERT_FALSE(availableEnvPeriods.empty());
-
-  // make a timeseries
-  openstudio::OptionalTimeSeries ts = sqlFile.timeSeries(availableEnvPeriods[0], "Hourly", "Electricity:Facility",  "");
-  ASSERT_TRUE(ts);
-
-  // plot it
-  LinePlot::Ptr lp = LinePlot::create();
-  lp->timeseriesData(*ts, "Electricity:Facility");
-  lp->generateImage(toPath("testLP.png"));
-  EXPECT_TRUE(true);
 }
 
 TEST_F(SqlFileFixture, BadStatement)
@@ -329,5 +282,28 @@ TEST_F(SqlFileFixture, CreateSqlFile)
     EXPECT_EQ(openstudio::toStandardVector(ts->values()), openstudio::toStandardVector(timeSeries.values()));
     EXPECT_EQ(openstudio::toStandardVector(ts->daysFromFirstReport()), openstudio::toStandardVector(timeSeries.daysFromFirstReport()));
   }
+
+}
+
+TEST_F(SqlFileFixture, AnnualTotalCosts) {
+  
+  // Total annual costs for all fuel types
+  EXPECT_NEAR(205810981.2, *(sqlFile2.annualTotalUtilityCost()), 0.1);
+
+  // Costs by fuel type
+  EXPECT_NEAR(28388.36, *(sqlFile2.annualTotalCost(FuelType::Electricity)), 0.1);
+  EXPECT_NEAR(427.78, *(sqlFile2.annualTotalCost(FuelType::Gas)), 0.1);
+  EXPECT_NEAR(330.76, *(sqlFile2.annualTotalCost(FuelType::DistrictCooling)), 0.1);
+  EXPECT_NEAR(833.49, *(sqlFile2.annualTotalCost(FuelType::DistrictHeating)), 0.1);
+  EXPECT_NEAR(0.85, *(sqlFile2.annualTotalCost(FuelType::Water)), 0.1);
+  EXPECT_NEAR(205781000, *(sqlFile2.annualTotalCost(FuelType::FuelOil_1)), 100);
+
+  // Costs by total building area by fuel type
+  EXPECT_NEAR(11.83, *(sqlFile2.annualTotalCostPerBldgArea(FuelType::Electricity)), 0.1);
+  EXPECT_NEAR(0.18, *(sqlFile2.annualTotalCostPerBldgArea(FuelType::Gas)), 0.1);
+
+  // Costs by conditioned building area by fuel type
+  EXPECT_NEAR(11.83, *(sqlFile2.annualTotalCostPerNetConditionedBldgArea(FuelType::Electricity)), 0.1);
+  EXPECT_NEAR(0.18, *(sqlFile2.annualTotalCostPerNetConditionedBldgArea(FuelType::Gas)), 0.1);
 
 }

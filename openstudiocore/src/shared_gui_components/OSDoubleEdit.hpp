@@ -31,6 +31,8 @@
 #include <QString>
 #include <QValidator>
 
+class QFocusEvent;
+
 namespace openstudio {
 
 /** Should only be used for dimensionless real fields. Real fields with units should use
@@ -42,6 +44,10 @@ class OSDoubleEdit2: public QLineEdit {
   OSDoubleEdit2(QWidget * parent = nullptr);
 
   virtual ~OSDoubleEdit2() {}
+
+  void enableClickFocus() { this->m_hasClickFocus = true; }
+
+  bool hasData() { return !this->text().isEmpty(); }
 
   QDoubleValidator * doubleValidator() { return m_doubleValidator; }
 
@@ -107,6 +113,16 @@ class OSDoubleEdit2: public QLineEdit {
 
   void unbind();
 
+ signals:
+
+  void inFocus(bool inFocus, bool hasData);
+
+ protected:
+
+  virtual void focusInEvent(QFocusEvent * e);
+
+  virtual void focusOutEvent(QFocusEvent * e);
+
  private slots:
 
   void onEditingFinished();
@@ -130,6 +146,7 @@ class OSDoubleEdit2: public QLineEdit {
   boost::optional<BasicQuery> m_isAutocalculated;
 
   bool m_isScientific;
+  bool m_hasClickFocus = false;
   boost::optional<int> m_precision;
   QString m_text = "UNINITIALIZED";
   QDoubleValidator * m_doubleValidator;

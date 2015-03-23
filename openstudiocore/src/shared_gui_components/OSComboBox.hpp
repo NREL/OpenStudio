@@ -103,6 +103,10 @@ class OSComboBox2 : public QComboBox {
 
   virtual ~OSComboBox2() {}
 
+  void enableClickFocus() { this->setFocusPolicy(Qt::ClickFocus); }
+
+  bool hasData() { return !this->currentText().isEmpty(); }
+
   // interface for direct bind
   template<typename ChoiceType>
   void bind(model::ModelObject& modelObject,
@@ -163,6 +167,10 @@ class OSComboBox2 : public QComboBox {
  protected:
 
   bool event( QEvent * e );
+
+ signals:
+
+  void inFocus(bool inFocus, bool hasData);
 
  private slots:
 

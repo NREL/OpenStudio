@@ -73,8 +73,7 @@ MeasureManager::MeasureManager(const QSharedPointer<ruleset::RubyUserScriptInfoG
 {
 }
 
-std::pair<bool,std::string> MeasureManager::updateMeasure(analysisdriver::SimpleProject &t_project, 
-                                                          const BCLMeasure &t_measure)
+std::pair<bool,std::string> MeasureManager::updateMeasure(analysisdriver::SimpleProject &t_project, const BCLMeasure &t_measure)
 {
   std::pair<bool,std::string> result(true,"");
   try {
@@ -182,24 +181,29 @@ BCLMeasure MeasureManager::insertReplaceMeasure(analysisdriver::SimpleProject &t
 
 std::vector<ruleset::OSArgument> MeasureManager::getArguments(analysisdriver::SimpleProject &t_project, const BCLMeasure &t_measure)
 {
-  boost::optional<BCLMeasure> projectMeasure = t_project.getMeasureByUUID(t_measure.uuid());
-  boost::optional<openstudio::model::Model> appmodel = m_app->currentModel();
+  auto projectMeasure = t_project.getMeasureByUUID(t_measure.uuid());
+  // If currentModel and currentWorkspace are present then we are running from the OS Application
+  // If they are not there then the model and workspace are in the project managed by PAT
+  auto t_model = m_app->currentModel();
+  auto t_idf = m_app->currentWorkspace();
 
   if (projectMeasure
       && projectMeasure->versionUUID() == t_measure.versionUUID()
       && t_project.hasStoredArguments(*projectMeasure)
-      && !appmodel)
+      && ! t_model)
   {
     LOG(Info, "returning stored arguments for measure " << t_measure.displayName() << "(" << toString(t_measure.uuid()) << " version: " << toString(t_measure.versionUUID()) << ")");
     return t_project.getStoredArguments(*projectMeasure);
   } else {
-    boost::optional<openstudio::model::Model> model = t_project.seedModel();
-    boost::optional<openstudio::Workspace> idf = t_project.seedIdf();
+    auto model = t_project.seedModel();
+    auto idf = t_project.seedIdf();
 
-    if (appmodel)
-    {
-      model = appmodel;
-      idf = boost::none;
+    if( t_model ) {
+      model = t_model;
+    }
+
+    if( t_idf ) {
+      idf = t_idf;
     }
 
     ruleset::RubyUserScriptInfo info = m_infoGetter->getInfo(t_measure, model, idf);

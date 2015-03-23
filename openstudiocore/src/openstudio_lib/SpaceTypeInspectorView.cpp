@@ -40,8 +40,9 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(bool isIP,
 {
   bool isConnected = false;
 
-  SpaceTypesGridView * spaceTypesGridView = new SpaceTypesGridView(this->m_isIP, this->m_model, this);
-  this->stackedWidget()->addWidget(spaceTypesGridView);
+  auto spaceTypesGridView = new SpaceTypesGridView(this->m_isIP, this->m_model, this);
+  stackedWidget()->addWidget(spaceTypesGridView);
+  m_gridView = spaceTypesGridView;
 
   isConnected = connect(spaceTypesGridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
@@ -60,6 +61,11 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(bool isIP,
 
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), spaceTypesGridView, SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
+}
+
+std::vector<model::ModelObject> SpaceTypeInspectorView::selectedObjects() const
+{
+  return m_gridView->selectedObjects();
 }
 
 void SpaceTypeInspectorView::onClearSelection()

@@ -87,6 +87,7 @@ ScheduleDialog::ScheduleDialog(bool isIP,
   m_model(model),
   m_scheduleTypeComboBox(nullptr)
 {
+  setWindowModality(Qt::ApplicationModal);
   createLayout();
 }
 
@@ -109,20 +110,20 @@ void ScheduleDialog::createLayout()
     }
   }
 
-  std::set<model::ScheduleTypeLimits> scheduleTypeLimitsSet;
-  for (const model::ScheduleType& scheduleType : scheduleTypes){
-    model::ScheduleTypeLimits tmp = model::ScheduleTypeRegistry::instance().getOrCreateScheduleTypeLimits(scheduleType, m_model);
-    scheduleTypeLimitsSet.insert(tmp);
-  }
+  //std::set<model::ScheduleTypeLimits> scheduleTypeLimitsSet;
+  //for (const model::ScheduleType& scheduleType : scheduleTypes){
+  //  model::ScheduleTypeLimits tmp = model::ScheduleTypeRegistry::instance().getOrCreateScheduleTypeLimits(scheduleType, m_model);
+  //  scheduleTypeLimitsSet.insert(tmp);
+  //}
 
-  std::vector<model::ScheduleTypeLimits> scheduleTypeLimits;
+  //std::vector<model::ScheduleTypeLimits> scheduleTypeLimits;
 
   // DLM: put all schedule types in the model or just the ones found by the registry
-  scheduleTypeLimits = m_model.getConcreteModelObjects<model::ScheduleTypeLimits>();
+  //scheduleTypeLimits = m_model.getConcreteModelObjects<model::ScheduleTypeLimits>();
   //scheduleTypeLimits.insert(scheduleTypeLimits.end(), scheduleTypeLimitsSet.begin(), scheduleTypeLimitsSet.end()); 
   
-  std::sort(scheduleTypeLimits.begin(), scheduleTypeLimits.end(), WorkspaceObjectNameLess());
-  OS_ASSERT(!scheduleTypeLimits.empty());
+  //std::sort(scheduleTypeLimits.begin(), scheduleTypeLimits.end(), WorkspaceObjectNameLess());
+  //OS_ASSERT(!scheduleTypeLimits.empty());
 
   QLabel * label = nullptr;
 
@@ -155,9 +156,11 @@ void ScheduleDialog::createLayout()
     m_scheduleTypeComboBox = new QComboBox(this);
     m_scheduleTypeComboBox->setObjectName("ScheduleDialog");
 
-    for (const model::ScheduleTypeLimits& scheduleTypeLimit : scheduleTypeLimits){
-      QString name = toQString(scheduleTypeLimit.name().get());
-      m_scheduleTypeComboBox->addItem(name, scheduleTypeLimit.handle().toString());
+    //for (const model::ScheduleTypeLimits& scheduleTypeLimit : scheduleTypeLimits){
+    for (const model::ScheduleType& scheduleType : scheduleTypes){
+      QString name = toQString(model::ScheduleTypeRegistry::instance().getDefaultName(scheduleType));
+      model::ScheduleTypeLimits tmp = model::ScheduleTypeRegistry::instance().getOrCreateScheduleTypeLimits(scheduleType, m_model);
+      m_scheduleTypeComboBox->addItem(name, tmp.handle().toString());
     }
 
     hLayout->addWidget(m_scheduleTypeComboBox);

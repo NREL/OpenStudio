@@ -31,6 +31,7 @@
 #include "../analysisdriver/AnalysisDriverEnums.hpp"
 
 #include "../model/Model.hpp"
+#include "../utilities/idf/Workspace.hpp"
 
 #include "../shared_gui_components/BaseApp.hpp"
 #include "../shared_gui_components/BuildingComponentDialog.hpp"
@@ -150,6 +151,11 @@ class PatApp : public QApplication, public BaseApp
   const MeasureManager &measureManager() const;
 
   boost::optional<openstudio::model::Model> currentModel()
+  {
+    return boost::none; // Pat doesn't edit models
+  }
+
+  boost::optional<openstudio::Workspace> currentWorkspace()
   {
     return boost::none; // Pat doesn't edit models
   }

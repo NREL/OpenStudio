@@ -34,6 +34,7 @@ TextEditDialog::TextEditDialog(const QString & windowTitle,
   m_windowMessage(windowMessage)
 {
   setWindowTitle(windowTitle);
+  setWindowModality(Qt::ApplicationModal);
   setSizeGripEnabled(true);
   createWidgets();
 }

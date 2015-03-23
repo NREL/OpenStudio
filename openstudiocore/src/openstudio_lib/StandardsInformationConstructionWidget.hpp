@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_CONSTRUCTIONBASEINSPECTORVIEW_HPP
-#define OPENSTUDIO_CONSTRUCTIONBASEINSPECTORVIEW_HPP
+#ifndef OPENSTUDIO_STANDARDSINFORMATIONCONSTRUCTIONWIDGET_HPP
+#define OPENSTUDIO_STANDARDSINFORMATIONCONSTRUCTIONWIDGET_HPP
 
 #include "../model/ConstructionBase.hpp"
 #include "../model/StandardsInformationConstruction.hpp"
@@ -128,5 +128,5 @@ class StandardsInformationConstructionWidget : public QWidget
 
 } // openstudio
 
-#endif // OPENSTUDIO_CONSTRUCTIONBASEINSPECTORVIEW_HPP
+#endif // OPENSTUDIO_STANDARDSINFORMATIONCONSTRUCTIONWIDGET_HPP
 

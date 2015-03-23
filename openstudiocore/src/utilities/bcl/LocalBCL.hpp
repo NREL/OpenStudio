@@ -165,7 +165,7 @@ namespace openstudio{
 
     std::set<std::pair<std::string, std::string> > attributeSearch(
       const std::vector<std::pair<std::string, std::string> >& searchTerms,
-      const std::string componentType) const;
+      const std::string& componentType) const;
 
     std::string formatString(double d, uint prec = 15);
 

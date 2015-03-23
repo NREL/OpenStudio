@@ -421,6 +421,16 @@ MainWindow * OSDocument::mainWindow()
   return m_mainWindow;
 }
 
+boost::optional<Workspace> OSDocument::workspace()
+{
+  return m_workspace;
+}
+
+void OSDocument::setWorkspace(const boost::optional<Workspace>& workspace)
+{
+  m_workspace = workspace;
+}
+
 model::Model OSDocument::model()
 {
   return m_model;
@@ -621,6 +631,8 @@ void OSDocument::createTab(int verticalId)
       m_mainWindow->setView(m_mainTabController->mainContentWidget(), SCHEDULES);
 
       connect(this, &OSDocument::toggleUnitsClicked, m_mainTabController.get(), &SchedulesTabController::toggleUnitsClicked);
+
+      connect(m_mainTabController.get(), &SpaceTypesTabController::modelObjectSelected, m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObject);
 
       connect(m_mainTabController.get(), &SchedulesTabController::downloadComponentsClicked, this, &OSDocument::downloadComponentsClicked);
 

@@ -50,7 +50,7 @@ namespace openstudio {
 ThermalZonesController::ThermalZonesController(bool isIP, const model::Model & model)
   : ModelSubTabController(new ThermalZonesView(isIP,model),model)
 {
-  subTabView()->itemSelectorButtons()->disableCopyButton();
+  //subTabView()->itemSelectorButtons()->disableCopyButton(); 
 
   ThermalZoneView * thermalZoneView = static_cast<ThermalZoneView *>(subTabView()->inspectorView());
 
@@ -244,7 +244,7 @@ void ThermalZonesController::onZoneHVACComponentClicked( model::ZoneHVACComponen
 void ThermalZonesController::onSelectItem(OSItem *item)
 {
   subTabView()->inspectorView()->selectItem(item);
-  //subTabView()->itemSelectorButtons()->enableCopyButton();
+  subTabView()->itemSelectorButtons()->enableCopyButton();
   subTabView()->itemSelectorButtons()->enableRemoveButton();
   subTabView()->itemSelectorButtons()->enablePurgeButton();
 }
@@ -255,10 +255,15 @@ void ThermalZonesController::onAddObject(const openstudio::IddObjectType& iddObj
   openstudio::model::ThermalZone(this->model());
 }
 
+void ThermalZonesController::onAddObject(const openstudio::model::ModelObject& modelObject)
+{
+  OS_ASSERT(IddObjectType::OS_ThermalZone == modelObject.iddObjectType().value());
+  openstudio::model::ThermalZone(this->model());
+}
+
 void ThermalZonesController::onCopyObject(const openstudio::model::ModelObject& modelObject)
 {
-  //DLM: ThermalZone::clone is not implemented yet
-  //modelObject.clone(this->model());
+  modelObject.clone(this->model());
 }
 
 void ThermalZonesController::onRemoveObject(openstudio::model::ModelObject modelObject)

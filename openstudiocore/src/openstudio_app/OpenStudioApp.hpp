@@ -95,6 +95,12 @@ class OpenStudioApp : public OSAppBase
 
   virtual bool notify(QObject* receiver, QEvent* event);
 
+ protected:
+
+  virtual bool event(QEvent * e);
+
+  virtual void childEvent(QChildEvent * e);
+
  signals:
 
  public slots:

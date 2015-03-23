@@ -39,10 +39,13 @@
 #include "../analysis/WorkflowStep.hpp"
 #include "../analysisdriver/SimpleProject.hpp"
 
+#include "../energyplus/ForwardTranslator.hpp"
+
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Containers.hpp"
 #include "../utilities/core/RubyException.hpp"
+#include "../utilities/plot/ProgressBar.hpp"
 
 #include <QByteArray>
 #include <QDialog>

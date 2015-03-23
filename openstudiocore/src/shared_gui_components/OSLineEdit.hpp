@@ -28,6 +28,7 @@
 
 #include <QTimer>
 
+class QFocusEvent;
 class QMouseEvent;
 
 namespace openstudio {
@@ -37,13 +38,15 @@ class OSItem;
 class OSLineEdit2 : public QLineEdit {
   Q_OBJECT
 
- public:
+public:
 
   OSLineEdit2(QWidget * parent = nullptr);
 
   virtual ~OSLineEdit2() {}
 
-  void setDeleteObject(bool deleteObject) { m_deleteObject = deleteObject;  }
+  void enableClickFocus() { this->m_hasClickFocus = true; }
+  void setDeleteObject(bool deleteObject) { m_deleteObject = deleteObject; }
+  bool hasData() { return !this->text().isEmpty(); }
   bool deleteObject() { return m_deleteObject; }
 
   void bind(model::ModelObject& modelObject,
@@ -70,21 +73,29 @@ protected:
 
   void mouseReleaseEvent(QMouseEvent* event);
 
+  virtual void focusInEvent(QFocusEvent * e);
+
+  virtual void focusOutEvent(QFocusEvent * e);
+
 signals:
 
   void itemClicked(OSItem* item);
 
   void objectRemoved(boost::optional<model::ParentObject> parent);
 
- private slots:
+  void inFocus(bool inFocus, bool hasData);
+
+  public slots:
+
+  void onItemRemoveClicked();
+
+  private slots :
 
   void onEditingFinished();
 
   void onModelObjectChange();
 
   void onModelObjectRemove(Handle handle);
-
-  void onItemRemoveClicked();
 
   void emitItemClicked();
 
@@ -108,6 +119,8 @@ signals:
   std::string m_text = "";
 
   QTimer m_timer;
+
+  bool m_hasClickFocus = false;
 
   bool m_deleteObject = false;
 };

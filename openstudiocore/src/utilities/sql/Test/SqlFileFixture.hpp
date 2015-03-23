@@ -49,6 +49,7 @@ protected:
 public:
   // sql files
   static openstudio::SqlFile sqlFile;
+  static openstudio::SqlFile sqlFile2;
   static boost::optional<openstudio::FileLogSink> logFile;
 };
 

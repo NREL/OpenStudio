@@ -50,7 +50,6 @@
 #include <utilities/idd/OS_ThermalZone_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/filetypes/EpwFile.hpp"
 #include "../../utilities/core/UUID.hpp"
 #include "../../utilities/core/Optional.hpp"

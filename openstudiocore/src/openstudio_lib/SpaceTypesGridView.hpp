@@ -27,9 +27,14 @@
 
 #include <QWidget>
 
+class QComboBox;
+
+class QLabel;
+
 namespace openstudio{
 
 class ModelSubTabView;
+class SpaceTypesGridController;
 
 class SpaceTypesGridView : public QWidget
 {
@@ -41,9 +46,23 @@ public:
 
   virtual ~SpaceTypesGridView() {}
 
+  virtual std::vector<model::ModelObject> selectedObjects() const;
+
+  void enableFilter();
+
+  void disableFilter();
+
+  QComboBox * m_filters = nullptr;
+
 private:
 
+  REGISTER_LOGGER("openstudio.SpaceTypesGridView");
+
   bool m_isIP;
+
+  SpaceTypesGridController * m_gridController = nullptr;
+
+  QLabel * m_filterLabel = nullptr;
 
 signals:
 
@@ -80,11 +99,13 @@ public:
 
   virtual void refreshModelObjects();
 
+  virtual void categorySelected(int index);
+
 protected:
 
   virtual void setCategoriesAndFields();
 
-  virtual void addColumns(std::vector<QString> & fields);
+  virtual void addColumns(const QString &category, std::vector<QString> & fields);
 
   virtual void checkSelectedFields();
 
@@ -95,6 +116,12 @@ public slots:
   virtual void onItemDropped(const OSItemId& itemId);
 
   virtual void onComboBoxIndexChanged(int index);
+
+  void filterChanged(const QString & text);
+
+private:
+ 
+  SpaceTypesGridView * spaceTypesGridView();
 
 };
 

@@ -38,6 +38,8 @@ public:
 
   virtual ~MainTabView() {}
 
+  void setHasSubTab(bool hasSubTab);
+
   ///! Use this method only if your tab will *NOT* have sub tabs
   bool addTabWidget(QWidget * widget);
 
@@ -74,7 +76,6 @@ private slots:
 private:
   QLabel * m_tabLabel;
   QStackedWidget * m_stackedWidget;
-  QWidget * m_tabBar;
   QWidget * m_mainWidget;
 
   std::vector<QString> m_selectedPixmaps;

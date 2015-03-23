@@ -42,6 +42,8 @@ class OSLoadNamePixmapLineEdit : public QWidget {
 
   virtual ~OSLoadNamePixmapLineEdit() {}
 
+  void enableClickFocus();
+
   void createWidgets();
 
   void setIcon();

@@ -145,7 +145,7 @@ bool UnitFactorySingleton::registerEquivalentString(const std::string& equivalen
 boost::optional<Unit> UnitFactorySingleton::createUnit(const std::string& unitString,
                                                        UnitSystem system) const
 {
-  if (m_callbackMaps.size() == 0) {
+  if (m_callbackMaps.empty()) {
     LOG(Warn,"UnitFactorySingleton::createUnit called, but the maps appear to be empty.");
   }
 

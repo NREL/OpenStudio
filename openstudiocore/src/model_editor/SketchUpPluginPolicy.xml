@@ -41,6 +41,9 @@
 		<rule IddField="Vertex Y-coordinate" Access="HIDDEN"/>
 		<rule IddField="Vertex Z-coordinate" Access="HIDDEN"/>
 	</POLICY>
+	<POLICY IddObjectType="OS_ShadingSurfaceGroup">
+		<rule IddField="Shading Surface Type" Access="LOCKED"/>
+	</POLICY>	
 	<POLICY IddObjectType="OS_Surface">
 		<rule IddField="Space Name" Access="LOCKED"/>
 		<rule IddField="Number of Vertices" Access="HIDDEN"/>

@@ -36,6 +36,7 @@
 #include "../utilities/core/PathHelpers.hpp"
 
 #include <QDir>
+#include <QEvent>
 #include <QMessageBox>
 #include <QTimer>
 
@@ -63,6 +64,21 @@ OSAppBase::OSAppBase( int & argc, char ** argv, const QSharedPointer<MeasureMana
 
 OSAppBase::~OSAppBase()
 {
+}
+
+bool OSAppBase::notify(QObject * receiver, QEvent * e)
+{
+  return QApplication::notify(receiver, e);
+}
+
+bool OSAppBase::event(QEvent * e)
+{
+  return QApplication::event(e);
+}
+
+void OSAppBase::childEvent(QChildEvent * e)
+{
+  QApplication::childEvent(e);
 }
 
 OSAppBase * OSAppBase::instance()
@@ -107,6 +123,17 @@ boost::optional<openstudio::model::Model> OSAppBase::currentModel()
     return document->model();
   } else {
     return boost::optional<openstudio::model::Model>();
+  }
+}
+
+boost::optional<openstudio::Workspace> OSAppBase::currentWorkspace()
+{
+  std::shared_ptr<OSDocument> document = currentDocument();
+  if (document)
+  {
+    return document->workspace();
+  } else {
+    return boost::none;
   }
 }
 

@@ -284,7 +284,7 @@ public:
   void setU_a(const int u_a);
 
   RunControl rc() const;
-  void setRc(const RunControl rc);
+  void setRc(const RunControl &rc);
 
   std::vector<int> contaminants();
   std::vector <Species> species() const;

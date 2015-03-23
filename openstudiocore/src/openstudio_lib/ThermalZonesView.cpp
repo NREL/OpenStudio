@@ -66,28 +66,33 @@ ThermalZoneView::ThermalZoneView(bool isIP,
 {
   bool isConnected = false;
 
-  ThermalZonesGridView * thermalZonesGridView = new ThermalZonesGridView(this->m_isIP,this->m_model,this);
-  this->stackedWidget()->addWidget(thermalZonesGridView);
+  m_thermalZonesGridView = new ThermalZonesGridView(this->m_isIP,this->m_model,this);
+  this->stackedWidget()->addWidget(m_thermalZonesGridView);
 
-  isConnected = connect(thermalZonesGridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
+  isConnected = connect(m_thermalZonesGridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), thermalZonesGridView, SIGNAL(itemSelected(OSItem *)));
+  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), m_thermalZonesGridView, SIGNAL(itemSelected(OSItem *)));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(selectionCleared()), thermalZonesGridView, SIGNAL(selectionCleared()));
+  isConnected = connect(this, SIGNAL(selectionCleared()), m_thermalZonesGridView, SIGNAL(selectionCleared()));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(thermalZonesGridView, SIGNAL(gridRowSelected(OSItem*)), this, SIGNAL(gridRowSelected(OSItem*)));
+  isConnected = connect(m_thermalZonesGridView, SIGNAL(gridRowSelected(OSItem*)), this, SIGNAL(gridRowSelected(OSItem*)));
   OS_ASSERT(isConnected);
 
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), this, SLOT(toggleUnits(bool)));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), thermalZonesGridView, SIGNAL(toggleUnitsClicked(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_thermalZonesGridView, SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
 
   refresh();
+}
+
+std::vector<model::ModelObject> ThermalZoneView::selectedObjects() const
+{
+  return m_thermalZonesGridView->selectedObjects();
 }
 
 void ThermalZoneView::onClearSelection()

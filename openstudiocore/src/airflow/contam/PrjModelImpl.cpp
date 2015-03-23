@@ -1052,7 +1052,7 @@ RunControl IndexModelImpl::rc() const
 {
   return m_rc;
 }
-void IndexModelImpl::setRc(const RunControl rc)
+void IndexModelImpl::setRc(const RunControl &rc)
 {
   m_rc = rc;
 }

@@ -324,7 +324,7 @@ public:
   /** Returns the model run control object. */
   RunControl rc() const;
   /** Sets the model run control object. */
-  void setRc(const RunControl rc);
+  void setRc(const RunControl &rc);
 
   /** Returns a vector of CONTAM indices of all the active species in the model. */
   std::vector<int> contaminants() const;
@@ -332,7 +332,7 @@ public:
   /** Returns a vector of the species in the model. */
   std::vector <Species> species() const;
   /** Sets the model species vector. */
-  void setSpecies(const std::vector<Species> species);
+  void setSpecies(const std::vector<Species> &species);
   /** Add a species to the model. */
   void addSpecies(Species &species);
   /** Remove a species from the model. */
@@ -341,24 +341,24 @@ public:
   /** Returns a vector of the levels in the model. */
   std::vector <Level> levels() const;
   /** Sets the model level vector. */
-  void setLevels(const std::vector<Level> levels);
+  void setLevels(const std::vector<Level> &levels);
   /** Add a level to the model. */
   void addLevel(Level &level);
 
   /** Returns a vector of the day schedules in the model. */
   std::vector <DaySchedule> daySchedules() const;
   /** Sets the model day schedule vector. */
-  void setDaySchedules(const std::vector<DaySchedule> daySchedules);
+  void setDaySchedules(const std::vector<DaySchedule> &daySchedules);
 
   /** Returns a vector of the week schedules in the model. */
   std::vector <WeekSchedule> weekSchedules() const;
   /** Sets the model week schedule vector. */
-  void setWeekSchedules(const std::vector<WeekSchedule> weekSchedules);
+  void setWeekSchedules(const std::vector<WeekSchedule> &weekSchedules);
 
   /** Returns a vector of the wind pressure profiles in the model. */
   std::vector <WindPressureProfile> windPressureProfiles() const;
   /** Sets the model wind pressure profiles vector. */
-  void setWindPressureProfiles(const std::vector<WindPressureProfile> windPressureProfiles);
+  void setWindPressureProfiles(const std::vector<WindPressureProfile> &windPressureProfiles);
 
   /** Returns a vector of all PlrTest1 airflow elements in the model. */
   std::vector<PlrTest1> getPlrTest1() const;
@@ -383,21 +383,21 @@ public:
   /** Returns a vector of all simple air handling systems in the model. */
   std::vector <Ahs> ahs() const;
   /** Sets the model simple air handling systems vector. */
-  void setAhs(const std::vector<Ahs> ahs);
+  void setAhs(const std::vector<Ahs> &ahs);
   /** Add a simple air handling system to the model. */
   void addAhs(Ahs ahs);
 
   /** Returns a vector of all airflow zones in the model. */
   std::vector<Zone> zones() const;
   /** Sets the model airflow zones vector. */
-  void setZones(const std::vector<Zone> zones);
+  void setZones(const std::vector<Zone> &zones);
   /** Add an airflow zone to the model. */
   void addZone(Zone zone);
 
   /** Returns a vector of all airflow paths in the model. */
   std::vector<AirflowPath> airflowPaths() const;
   /** Sets the model airflow paths vector. */
-  void setAirflowPaths(const std::vector<AirflowPath> paths);
+  void setAirflowPaths(const std::vector<AirflowPath> &paths);
   /** Add an airflow path to the model. */
   void addAirflowPath(AirflowPath path);
 

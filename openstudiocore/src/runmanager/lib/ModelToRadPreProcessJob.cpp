@@ -179,6 +179,7 @@ namespace detail {
       openstudio::path path = outpath / openstudio::toPath("out.osm");
   
       openstudio::model::Model outmodel; 
+      outmodel.purgeUnusedResourceObjects();
       outmodel.getUniqueModelObject<openstudio::model::Building>(); // implicitly create building object
       outmodel.getUniqueModelObject<openstudio::model::Timestep>(); // implicitly create timestep object
       outmodel.getUniqueModelObject<openstudio::model::RunPeriod>(); // implicitly create runperiod object
@@ -303,6 +304,9 @@ namespace detail {
       simulation_control.setRunSimulationforSizingPeriods(false);
       simulation_control.setRunSimulationforWeatherFileRunPeriods(true);
       simulation_control.setSolarDistribution("MinimalShadowing");
+
+			// purge unused 
+			outmodel.purgeUnusedResourceObjects();
 
       outmodel.save(path, true);
 

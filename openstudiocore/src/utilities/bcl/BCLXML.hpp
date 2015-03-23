@@ -154,7 +154,7 @@ namespace openstudio{
     void addFile(const BCLFileReference& file);
 
     /// check if has file reference by full path, returns true if file was found
-    bool hasFile(const openstudio::path& path);
+    bool hasFile(const openstudio::path& path) const;
 
     /// remove file reference by full path, returns true if file was found and removed
     bool removeFile(const openstudio::path& path);

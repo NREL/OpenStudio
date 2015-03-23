@@ -85,6 +85,7 @@ ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
   m_advancedOutputDialog(0)
 {
   setWindowTitle("Apply Measure Now");
+  setWindowModality(Qt::ApplicationModal);
   setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   createWidgets();
 
@@ -382,7 +383,7 @@ void ApplyMeasureNowDialog::runMeasure()
   //OS_ASSERT(m_model);
   //m_model->save(modelPath,true); 
 
-  // remove? this is shown only in debug (EW)
+  // remove? this is shown only in debug (Evan)
   QString path("Measure Output Location: ");
   path.append(toQString(m_workingDir));
   m_jobPath->setText(path);
@@ -456,10 +457,17 @@ void ApplyMeasureNowDialog::displayResults()
     try{
       runmanager::Files files(m_job->outputFiles());
       openstudio::path stdErrPath = files.getLastByFilename("stderr").fullPath;
-      std::ifstream ifs(toString(stdErrPath).c_str());
-      std::string stdMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
-      ifs.close();
-      m_advancedOutput = toQString(stdMessage);
+
+      m_advancedOutput = "";
+
+      QFile file(toQString(stdErrPath));
+      if (file.open(QFile::ReadOnly))
+      {
+        QTextStream docIn(&file);
+        m_advancedOutput = docIn.readAll();
+        file.close();
+      }
+
       m_advancedOutput += QString("\n");
     }catch(std::exception&){
     }

@@ -33,19 +33,26 @@
 #include <string>
 #include <functional>
 #include <vector>
+
 #include <QObject>
+#include <QPushButton>
 #include <QSharedPointer>
 #include <QWidget>
+#include <QVBoxLayout>
 
 class QButtonGroup;
 class QCheckBox;
 class QColor;
 class QLabel;
+class QPaintEvent;
 
 namespace openstudio {
 
 class OSComboBox;
 class OSGridView;
+
+// forward declaration
+class Holder;
 
 /// Provides a Concept with an alternative source of data.
 ///
@@ -56,7 +63,7 @@ class OSGridView;
 /// but to actually display data on something the ModelObject contains, for example, showing the name
 /// of a SizingZone which is associated with a ThermalZone
 ///
-/// DataSource takes the ProxyAdapter concept one step further, by allowing you to examine an `std::vector`
+/// DataSource takes the ProxyAdapter concept one step further, by allowing you to examine a `std::vector`
 /// of items which are associated with the ModelObject that was passed in. The vector could be a list
 /// of one, if you were so inclined, and all of the interactions with the ModelObject
 /// are abstracted via std::function objects, so the data you display can truly come from anywhere.
@@ -109,7 +116,6 @@ class DataSource
       };
     }
 
-
     std::vector<boost::optional<ConceptProxy>> items(const ConceptProxy &t_proxy) const
     {
       return m_sourceFunc(t_proxy);
@@ -135,7 +141,7 @@ class DataSourceAdapter : public BaseConcept
 {
   public:
     DataSourceAdapter(DataSource t_source, QSharedPointer<BaseConcept> t_inner)
-      : BaseConcept(t_inner->headingLabel()), m_source(t_source), m_inner(t_inner)
+      : BaseConcept(t_inner->heading()), m_source(t_source), m_inner(t_inner)
     {
     }
 
@@ -154,6 +160,74 @@ class DataSourceAdapter : public BaseConcept
     QSharedPointer<BaseConcept> m_inner;
 };
 
+class OSGridController;
+
+class WidgetLocation : public QObject
+{
+  Q_OBJECT;
+
+public:
+
+  WidgetLocation(QWidget *t_widget, int t_row, int t_column, boost::optional<int> t_subrow);
+
+  virtual ~WidgetLocation();
+
+  QWidget * widget;
+  int row;
+  int column;
+  boost::optional<int> subrow;
+
+signals:
+
+  void inFocus(bool inFocus, bool hasData, int row, int column, boost::optional<int> subrow);
+
+public slots:
+
+  void onInFocus(bool hasFocus, bool hasData);
+
+};
+
+class ObjectSelector : public QObject
+{
+  Q_OBJECT;
+
+  public:
+    ObjectSelector(OSGridController *t_grid);
+
+    void addWidget(const boost::optional<model::ModelObject> &t_obj, Holder *t_holder, int row, int column, 
+        const boost::optional<int> &subrow, bool t_selector);
+    void setObjectSelection(const model::ModelObject &t_obj, bool t_selected);
+    bool getObjectSelection(const model::ModelObject &t_obj) const;
+    boost::optional<const model::ModelObject &> getObject(const int t_row, const int t_column, const boost::optional<int> &t_subrow);
+    QWidget * getWidget(const int t_row, const int t_column, const boost::optional<int> &t_subrow);
+    std::set<model::ModelObject> getSelectedObjects() const;
+    std::vector<QWidget *> getColumnsSelectedWidgets(int column);
+    void clear();
+    void objectRemoved(const openstudio::model::ModelObject &t_obj);
+    void setObjectFilter(const std::function<bool (const model::ModelObject &)> &t_filter);
+    void resetObjectFilter();
+    bool containsObject(const openstudio::model::ModelObject &t_obj) const;
+    void selectAll();
+    void clearSelection();
+
+  signals:
+    void inFocus(bool inFocus, bool hasData, int row, int column, boost::optional<int> subrow);
+
+  private slots:
+    void widgetDestroyed(QObject *t_obj);
+
+  private:
+    void updateWidgets();
+    void updateWidgets(const model::ModelObject &t_obj);
+    void updateWidgets(const int t_row, const boost::optional<int> &t_subrow, bool t_selected, bool t_visible);
+    static std::function<bool (const model::ModelObject &)> getDefaultFilter();
+
+    OSGridController *m_grid;
+    std::multimap<boost::optional<model::ModelObject>, WidgetLocation *> m_widgetMap;
+    std::set<model::ModelObject> m_selectedObjects;
+    std::set<model::ModelObject> m_selectorObjects;
+    std::function<bool (const model::ModelObject &)> m_objectFilter;
+};
 
 class OSGridController : public QObject
 {
@@ -187,17 +261,37 @@ public:
     }
   }
 
+  void addSelectColumn(const Heading &heading,
+                       const std::string & tooltip,
+                       const boost::optional<DataSource> &t_source = boost::none)
+  {
+    auto objectSelector = m_objectSelector;
+    auto getter = std::function<bool (model::ModelObject *)>([objectSelector](model::ModelObject *t_obj) -> bool {
+      assert(t_obj);
+      return objectSelector->getObjectSelection(*t_obj);
+    });
+
+    auto setter = std::function<void (model::ModelObject *, bool)>([objectSelector](model::ModelObject *t_obj, bool t_set) {
+      assert(t_obj);
+      objectSelector->setObjectSelection(*t_obj, t_set);
+    });
+
+    addCheckBoxColumn(heading, tooltip, getter, setter, t_source);
+    m_baseConcepts.back()->setIsSelector(true);
+  }
+
   template<typename DataSourceType>
-  void addCheckBoxColumn(QString headingLabel,
+  void addCheckBoxColumn(const Heading &heading,
+                         const std::string & tooltip,
                          std::function<bool (DataSourceType *)>  t_getter,
                          std::function<void (DataSourceType *, bool)> t_setter,
                          const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<CheckBoxConcept>(new CheckBoxConceptImpl<DataSourceType>(headingLabel,t_getter,t_setter)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<CheckBoxConcept>(new CheckBoxConceptImpl<DataSourceType>(heading,tooltip,t_getter,t_setter)), t_source));
   }
 
   template<typename ChoiceType, typename DataSourceType>
-  void addComboBoxColumn(QString headingLabel,
+  void addComboBoxColumn(const Heading &heading,
                          std::function<std::string (const ChoiceType &)> toString,
                          std::function<std::vector<ChoiceType> ()> choices,
                          std::function<ChoiceType (DataSourceType*)> getter,
@@ -207,7 +301,7 @@ public:
                          const boost::optional<DataSource> &t_source = boost::none)
   {
     addComboBoxColumn<ChoiceType, DataSourceType>(
-        headingLabel,
+        heading,
         toString,
         std::function<std::vector<ChoiceType> (DataSourceType*)>([choices](DataSourceType*) { return choices(); }),
         getter,
@@ -218,7 +312,7 @@ public:
   }
 
   template<typename ChoiceType, typename DataSourceType>
-  void addComboBoxColumn(QString headingLabel,
+  void addComboBoxColumn(const Heading &heading,
                          std::function<std::string (const ChoiceType &)> toString,
                          std::function<std::vector<ChoiceType> ()> choices,
                          std::function<boost::optional<ChoiceType> (DataSourceType*)> getter,
@@ -228,7 +322,7 @@ public:
                          bool editable = true)
   {
     addComboBoxColumn<ChoiceType, DataSourceType>(
-          headingLabel,
+          heading,
           toString,
           std::function<std::vector<ChoiceType> (DataSourceType*)>([choices](DataSourceType*) { return choices(); }),
           getter,
@@ -239,7 +333,7 @@ public:
   }
 
   template<typename ChoiceType, typename DataSourceType>
-  void addComboBoxColumn(QString headingLabel,
+  void addComboBoxColumn(const Heading &heading,
                          std::function<std::string (const ChoiceType &)> toString,
                          std::function<std::vector<ChoiceType> (DataSourceType *)> choices,
                          std::function<ChoiceType (DataSourceType*)> getter,
@@ -249,7 +343,7 @@ public:
                          const boost::optional<DataSource> &t_source = boost::none)
   {
     m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<ComboBoxConcept>(
-        new ComboBoxRequiredChoiceImpl<ChoiceType,DataSourceType>(headingLabel,
+        new ComboBoxRequiredChoiceImpl<ChoiceType,DataSourceType>(heading,
                                                                   toString,
                                                                   choices,
                                                                   getter,
@@ -259,7 +353,7 @@ public:
   }
 
   template<typename ChoiceType, typename DataSourceType>
-  void addComboBoxColumn(QString headingLabel,
+  void addComboBoxColumn(const Heading &heading,
                          std::function<std::string (const ChoiceType &)> toString,
                          std::function<std::vector<ChoiceType> (DataSourceType *)> choices,
                          std::function<ChoiceType (DataSourceType*)> getter,
@@ -267,7 +361,7 @@ public:
                          const boost::optional<DataSource> &t_source = boost::none)
   {
     m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<ComboBoxConcept>(
-        new ComboBoxRequiredChoiceImpl<ChoiceType,DataSourceType>(headingLabel,
+        new ComboBoxRequiredChoiceImpl<ChoiceType,DataSourceType>(heading,
                                                                   toString,
                                                                   choices,
                                                                   getter,
@@ -275,7 +369,7 @@ public:
   }
 
   template<typename ChoiceType, typename DataSourceType>
-  void addComboBoxColumn(QString headingLabel,
+  void addComboBoxColumn(const Heading &heading,
                          std::function<std::string (const ChoiceType &)> toString,
                          std::function<std::vector<ChoiceType> (DataSourceType *)> choices,
                          std::function<boost::optional<ChoiceType> (DataSourceType*)> getter,
@@ -285,7 +379,7 @@ public:
                          bool editable = false)
   {
     m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<ComboBoxConcept>(
-      new ComboBoxOptionalChoiceImpl<ChoiceType,DataSourceType>(headingLabel,
+      new ComboBoxOptionalChoiceImpl<ChoiceType,DataSourceType>(heading,
                                                                 toString,
                                                                 choices,
                                                                 getter,
@@ -295,47 +389,47 @@ public:
   }
 
   template<typename ValueType, typename DataSourceType>
-  void addValueEditColumn(QString headingLabel,
+  void addValueEditColumn(const Heading &heading,
                           std::function<ValueType (DataSourceType *)>  getter,
                           std::function<bool (DataSourceType *, ValueType)> setter,
                           const boost::optional<std::function<void (DataSourceType *)>> reset = boost::none,
                           const boost::optional<std::function<bool (DataSourceType *)>> isDefaulted = boost::none,
                           const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<ValueEditConcept<ValueType> >(new ValueEditConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter, reset, isDefaulted)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<ValueEditConcept<ValueType> >(new ValueEditConceptImpl<ValueType, DataSourceType>(heading,getter,setter, reset, isDefaulted)), t_source));
   }
 
   template<typename ValueType, typename DataSourceType>
-  void addValueEditColumn(QString headingLabel,
+  void addValueEditColumn(const Heading &heading,
                           std::function<boost::optional<ValueType> (DataSourceType *)>  getter,
                           std::function<bool (DataSourceType *, ValueType)> setter,
                           const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<OptionalValueEditConcept<ValueType> >(new OptionalValueEditConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<OptionalValueEditConcept<ValueType> >(new OptionalValueEditConceptImpl<ValueType, DataSourceType>(heading,getter,setter)), t_source));
   }
 
   template<typename ValueType, typename DataSourceType>
-  void addValueEditColumn(QString headingLabel,
+  void addValueEditColumn(const Heading &heading,
                           std::function<ValueType (DataSourceType *)>  getter,
                           std::function<void (DataSourceType *, ValueType)> setter,
                           const boost::optional<std::function<void (DataSourceType *)>> reset = boost::none,
                           const boost::optional<std::function<bool (DataSourceType *)>> isDefaulted = boost::none,
                           const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<ValueEditVoidReturnConcept<ValueType> >(new ValueEditVoidReturnConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter, reset, isDefaulted)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<ValueEditVoidReturnConcept<ValueType> >(new ValueEditVoidReturnConceptImpl<ValueType, DataSourceType>(heading,getter,setter, reset, isDefaulted)), t_source));
   }
 
   template<typename ValueType, typename DataSourceType>
-  void addValueEditColumn(QString headingLabel,
+  void addValueEditColumn(const Heading &heading,
                           std::function<boost::optional<ValueType> (DataSourceType *)>  getter,
                           std::function<void (DataSourceType *, double)> setter,
                           const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<OptionalValueEditVoidReturnConcept<ValueType> >(new OptionalValueEditVoidReturnConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<OptionalValueEditVoidReturnConcept<ValueType> >(new OptionalValueEditVoidReturnConceptImpl<ValueType, DataSourceType>(heading,getter,setter)), t_source));
   }
 
   template<typename DataSourceType>
-  void addNameLineEditColumn(QString headingLabel,
+  void addNameLineEditColumn(const Heading &heading,
                              bool isInspectable,
                              bool deleteObject,
                              const std::function<boost::optional<std::string> (DataSourceType *, bool)>  &getter,
@@ -343,21 +437,21 @@ public:
                              const boost::optional<std::function<void (DataSourceType *)>> &resetter = boost::none,
                              const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<NameLineEditConcept>(new NameLineEditConceptImpl<DataSourceType>(headingLabel, isInspectable, deleteObject, getter, setter, resetter)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<NameLineEditConcept>(new NameLineEditConceptImpl<DataSourceType>(heading, isInspectable, deleteObject, getter, setter, resetter)), t_source));
   }
 
   template<typename DataSourceType>
-  void addLoadNameColumn(QString headingLabel,
+  void addLoadNameColumn(const Heading &heading,
     const std::function<boost::optional<std::string>(DataSourceType *, bool)>  &getter,
     const std::function<boost::optional<std::string>(DataSourceType *, const std::string &)> &setter,
     const boost::optional<std::function<void(DataSourceType *)>> &resetter = boost::none,
     const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<LoadNameConcept>(new LoadNameConceptImpl<DataSourceType>(headingLabel, getter, setter, resetter)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<LoadNameConcept>(new LoadNameConceptImpl<DataSourceType>(heading, getter, setter, resetter)), t_source));
   }
 
   template<typename ValueType, typename DataSourceType>
-  void addQuantityEditColumn(QString headingLabel,
+  void addQuantityEditColumn(const Heading &heading,
                              QString modelUnits,
                              QString siUnits,
                              QString ipUnits,
@@ -368,11 +462,11 @@ public:
                              const boost::optional<std::function<bool (DataSourceType *)>> isDefaulted = boost::none,
                              const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<QuantityEditConcept<ValueType> >(new QuantityEditConceptImpl<ValueType, DataSourceType>(headingLabel, modelUnits, siUnits, ipUnits, isIP, getter, setter, reset, isDefaulted)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<QuantityEditConcept<ValueType> >(new QuantityEditConceptImpl<ValueType, DataSourceType>(heading, modelUnits, siUnits, ipUnits, isIP, getter, setter, reset, isDefaulted)), t_source));
   }
 
   template<typename ValueType, typename DataSourceType>
-  void addQuantityEditColumn(QString headingLabel,
+  void addQuantityEditColumn(const Heading &heading,
                              QString modelUnits,
                              QString siUnits,
                              QString ipUnits,
@@ -381,11 +475,11 @@ public:
                              std::function<bool (DataSourceType *, ValueType)> setter,
                              const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<OptionalQuantityEditConcept<ValueType> >(new OptionalQuantityEditConceptImpl<ValueType, DataSourceType>(headingLabel, modelUnits, siUnits, ipUnits, isIP, getter, setter)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<OptionalQuantityEditConcept<ValueType> >(new OptionalQuantityEditConceptImpl<ValueType, DataSourceType>(heading, modelUnits, siUnits, ipUnits, isIP, getter, setter)), t_source));
   }
 
   template<typename ValueType, typename DataSourceType>
-  void addQuantityEditColumn(QString headingLabel,
+  void addQuantityEditColumn(const Heading &heading,
                              QString modelUnits,
                              QString siUnits,
                              QString ipUnits,
@@ -396,11 +490,11 @@ public:
                              const boost::optional<std::function<bool (DataSourceType *)>> isDefaulted = boost::none,
                              const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<QuantityEditVoidReturnConcept<ValueType> >(new QuantityEditVoidReturnConceptImpl<ValueType, DataSourceType>(headingLabel, modelUnits, siUnits, ipUnits, isIP, getter, setter, reset, isDefaulted)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<QuantityEditVoidReturnConcept<ValueType> >(new QuantityEditVoidReturnConceptImpl<ValueType, DataSourceType>(heading, modelUnits, siUnits, ipUnits, isIP, getter, setter, reset, isDefaulted)), t_source));
   }
 
   template<typename ValueType, typename DataSourceType>
-  void addQuantityEditColumn(QString headingLabel,
+  void addQuantityEditColumn(const Heading &heading,
                              QString modelUnits,
                              QString siUnits,
                              QString ipUnits,
@@ -409,39 +503,40 @@ public:
                              std::function<void (DataSourceType *, ValueType)> setter,
                              const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<OptionalQuantityEditVoidReturnConcept<ValueType> >(new OptionalQuantityEditVoidReturnConceptImpl<ValueType, DataSourceType>(headingLabel, modelUnits, siUnits, ipUnits, isIP, getter, setter)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<OptionalQuantityEditVoidReturnConcept<ValueType> >(new OptionalQuantityEditVoidReturnConceptImpl<ValueType, DataSourceType>(heading, modelUnits, siUnits, ipUnits, isIP, getter, setter)), t_source));
   }
 
   template<typename ValueType, typename DataSourceType>
-  void addDropZoneColumn(QString headingLabel,
-                         std::vector<IddObjectType> iddObjectTypes,
+  void addDropZoneColumn(const Heading &heading,
                          std::function<boost::optional<ValueType> (DataSourceType *)>  getter,
                          std::function<bool (DataSourceType *, const ValueType &)> setter,
                          boost::optional<std::function<void(DataSourceType*)> > reset = boost::none,
                          const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel, iddObjectTypes, getter, setter, reset)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(heading,getter,setter,reset)), t_source));
   }
 
   template<typename ValueType, typename DataSourceType>
-  void addRenderingColorColumn(QString headingLabel,
+  void addRenderingColorColumn(const Heading &heading,
     std::function<boost::optional<ValueType>(DataSourceType *)>  getter,
     std::function<bool(DataSourceType *, const ValueType &)> setter,
     const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(QSharedPointer<RenderingColorConcept>(new RenderingColorConceptImpl<ValueType, DataSourceType>(headingLabel, getter, setter)));
+    m_baseConcepts.push_back(QSharedPointer<RenderingColorConcept>(new RenderingColorConceptImpl<ValueType, DataSourceType>(heading, getter, setter)));
   }
 
   std::vector<QString> categories();
 
   std::vector<std::pair<QString,std::vector<QString> > > categoriesAndFields();
 
-  void categorySelected(int index);
+  virtual void categorySelected(int index);
 
   virtual int rowCount() const;
 
   virtual int columnCount() const;
 
+  // Widget that exists at the given top level coordinates (may contain sub rows).
+  // This will not create a new widget.
   QWidget * cell(int rowIndex, int columnIndex);
 
   model::ModelObject modelObject(int rowIndex);
@@ -452,6 +547,9 @@ public:
 
   int rowIndexFromModelIndex(int modelIndex);
 
+  // Return a new widget at a "top level" row and column specified by arguments.
+  // There might be sub rows within the specified location.
+  // In that case a QWidget with sub rows (innner grid layout) will be returned.
   QWidget * widgetAt(int row, int column);
 
   // Call this function on a model update
@@ -460,6 +558,8 @@ public:
   void connectToModel();
 
   void disconnectFromModel();
+
+  std::shared_ptr<ObjectSelector> getObjectSelector() const { return m_objectSelector; }
 
 protected:
 
@@ -474,10 +574,10 @@ protected:
   // a dynamic, user-preference column.
   // This function will be called from the slot
   // connected to the QButtonGroup signal
-  virtual void addColumns(std::vector<QString> & fields) = 0;
+  virtual void addColumns(const QString &category, std::vector<QString> & fields) = 0;
 
   // Call this function to get the color for the cell color
-  virtual QString getColor(const model:: ModelObject & modelObject) = 0;
+  virtual QString getColor(const model::ModelObject & modelObject) = 0;
 
   // This function sets the column header caption
   virtual void setHorizontalHeader();
@@ -515,10 +615,15 @@ protected:
 
   IddObjectType m_iddObjectType;
 
+  REGISTER_LOGGER("openstudio.OSGridController");
+
 private:
 
   friend class OSGridView;
+  friend class ObjectSelector;
 
+  // Make the lowest level widgets that corresponds to concepts.
+  // These will be put in container widgets to form the cell, regardless of the presence of sub rows.
   QWidget * makeWidget(model::ModelObject t_mo, const QSharedPointer<BaseConcept> &t_baseConcept);
 
   void loadQSettings();
@@ -527,23 +632,31 @@ private:
 
   void setCustomCategoryAndFields();
 
-  QString cellStyle(int rowIndex, int columnIndex, bool isSelected);
+  QString cellStyle(int rowIndex, int columnIndex, bool isSelected, bool isSubRow);
 
   OSGridView * gridView();
 
   OSItem * getSelectedItemFromModelSubTabView();
 
-  bool selectRowByItem(OSItem * item, bool isSelected);
-
   bool getRowIndexByItem(OSItem * item, int & rowIndex);
+
+  void setConceptValue(model::ModelObject t_setterMO, model::ModelObject t_getterMO, const QSharedPointer<BaseConcept> &t_baseConcept);
+
+  void resetConceptValue(model::ModelObject t_resetMO, const QSharedPointer<BaseConcept> &t_baseConcept);
+
+  void setConceptValue(model::ModelObject t_setterMO, model::ModelObject t_getterMO, const QSharedPointer<BaseConcept> &t_setterBaseConcept, const QSharedPointer<BaseConcept> &t_getterBaseConcept);
 
   QButtonGroup * m_horizontalHeaderBtnGrp;
 
   QString m_headerText;
 
-  QButtonGroup * m_cellBtnGrp;
-
   int m_oldIndex = -1;
+
+  std::shared_ptr<ObjectSelector> m_objectSelector;
+
+  std::tuple<int, int, boost::optional<int>> m_selectedCellLocation = std::make_tuple(-1, -1, -1);
+
+  std::vector <std::pair<int, bool> > m_applyToButtonStates = std::vector < std::pair<int, bool> >();
 
 signals:
 
@@ -562,8 +675,6 @@ public slots:
 
   virtual void onComboBoxIndexChanged(int index);
 
-  void selectItemId(const OSItemId& itemId);
-
   void onItemSelected(OSItem * item);
 
   void onSelectionCleared();
@@ -572,15 +683,15 @@ public slots:
 
   void requestRefreshGrid();
 
+  void onInFocus(bool inFocus, bool hasData, int row, int column, boost::optional<int> subrow);
+
 protected slots:
 
-  void reset();
+  void selectAllStateChanged(const int newState) const;
 
 private slots:
 
   void horizontalHeaderChecked(int index);
-
-  void cellChecked(int index);
 
   void onDropZoneItemClicked(OSItem* item);
 
@@ -589,6 +700,62 @@ private slots:
   void onAddWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
 
   void onObjectRemoved(boost::optional<model::ParentObject> parent);
+
+  void setApplyButtonState();
+
+};
+
+// Possible solution for user facing column resize 
+// Hardst part is addressing persitance when grid redraws
+//class ColumnSizer : public QWidget
+//{
+//  Q_OBJECT
+//
+//  void mouseMoveEvent ( QMouseEvent * event );
+//}
+
+class Holder : public QWidget
+{
+  Q_OBJECT
+
+public:
+
+  Holder(QWidget * parent = nullptr);
+
+  virtual ~Holder();
+
+  QWidget * widget = nullptr;
+
+protected:
+
+  void paintEvent(QPaintEvent * event);
+
+signals:
+
+  void inFocus(bool inFocus, bool hasData);
+
+};
+
+class HorizontalHeaderPushButton : public QPushButton
+{
+  Q_OBJECT
+
+public:
+
+  HorizontalHeaderPushButton(QWidget * parent = nullptr);
+
+  virtual ~HorizontalHeaderPushButton();
+
+
+protected:
+
+  virtual void focusInEvent(QFocusEvent * e);
+
+  virtual void focusOutEvent(QFocusEvent * e);
+
+signals:
+
+  void inFocus(bool inFocus, bool hasData);
 
 };
 
@@ -600,12 +767,24 @@ public:
 
   HorizontalHeaderWidget(const QString & fieldName, QWidget * parent = nullptr);
 
-  virtual ~HorizontalHeaderWidget() {}
+  virtual ~HorizontalHeaderWidget();
+  void addWidget(const QSharedPointer<QWidget> &t_widget);
 
-  QLabel * m_label;
+  QLabel * m_label = nullptr;
 
-  QCheckBox * m_checkBox;
+  QPushButton * m_checkBox = nullptr;
 
+  HorizontalHeaderPushButton * m_pushButton = nullptr;
+
+  std::vector<QSharedPointer<QWidget>> m_addedWidgets;
+
+signals:
+
+  void inFocus(bool inFocus, bool hasData);
+
+private:
+
+  QVBoxLayout * m_innerLayout;
 };
 
 class GridViewDropZoneVectorController : public OSVectorController
