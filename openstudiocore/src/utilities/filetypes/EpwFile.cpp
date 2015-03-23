@@ -249,7 +249,7 @@ boost::optional<std::string> EpwDataPoint::unitsByName(const std::string &name)
     id = EpwDataField(name);
   } catch(...) {
     // Could do a warning message here
-    return boost::optional<std::string>();
+    return boost::none;
   }
   return boost::optional<std::string>(units(id));
 }
@@ -374,14 +374,11 @@ std::string EpwDataPoint::units(EpwDataField field)
 boost::optional<double> EpwDataPoint::fieldByName(const std::string &name)
 {
   EpwDataField id;
-  try
-  {
+  try {
     id = EpwDataField(name);
-  }
-  catch(...)
-  {
+  } catch(...) {
     // Could do a warning message here
-    return boost::optional<double>();
+    return boost::none;
   }
   return field(id);
 }
@@ -389,8 +386,7 @@ boost::optional<double> EpwDataPoint::fieldByName(const std::string &name)
 boost::optional<double> EpwDataPoint::field(EpwDataField id)
 {
   boost::optional<int> ivalue;
-  switch(id.value())
-  {
+  switch(id.value()) {
   case EpwDataField::DryBulbTemperature:
     return dryBulbTemperature();
     break;
@@ -441,15 +437,13 @@ boost::optional<double> EpwDataPoint::field(EpwDataField id)
     break;
   case EpwDataField::TotalSkyCover:
     ivalue = totalSkyCover();
-    if(ivalue)
-    {
+    if(ivalue) {
       return boost::optional<double>((double)ivalue.get());
     }
     break;
   case EpwDataField::OpaqueSkyCover:
     ivalue = opaqueSkyCover();
-    if(ivalue)
-    {
+    if(ivalue) {
       return boost::optional<double>((double)ivalue.get());
     }
     break;
@@ -461,15 +455,13 @@ boost::optional<double> EpwDataPoint::field(EpwDataField id)
     break;
   case EpwDataField::PresentWeatherObservation:
     ivalue = presentWeatherObservation();
-    if(ivalue)
-    {
+    if(ivalue) {
       return boost::optional<double>((double)ivalue.get());
     }
     break;
   case EpwDataField::PresentWeatherCodes:
     ivalue = presentWeatherCodes();
-    if(ivalue)
-    {
+    if(ivalue) {
       return boost::optional<double>((double)ivalue.get());
     }
     break;
@@ -496,10 +488,10 @@ boost::optional<double> EpwDataPoint::field(EpwDataField id)
     break;
   default:
     // Could do a warning message here
-    return boost::optional<double>();
+    return boost::none;
     break;
   }
-  return boost::optional<double>();
+  return boost::none;
 }
 
 static double psat(double T)
@@ -519,12 +511,9 @@ static double psat(double T)
   double C12=-1.4452093e-08;
   double C13= 6.5459673e+00;
   double rhs;
-  if(T<273.15)
-  {
+  if(T<273.15) {
     rhs = C1/T + C2 + T*(C3 + T*(C4 + T*(C5 + T*C6))) + C7*std::log(T);
-  }
-  else
-  {
+  } else {
     rhs = C8/T + C9 + T*(C10 + T*(C11 + T*C12)) + C13*std::log(T);
   }
   return exp(rhs);
@@ -598,11 +587,9 @@ static int stringToInteger(const std::string &string, bool *ok)
   *ok = true;
   try {
     value = std::stoi(string);
-  }
-  catch (const std::invalid_argument) {
+  } catch (const std::invalid_argument) {
     *ok = false;
-  }
-  catch (const std::out_of_range) {
+  } catch (const std::out_of_range) {
     *ok = false;
   }
   return value;
@@ -614,11 +601,9 @@ static double stringToDouble(const std::string &string, bool *ok)
   *ok = true;
   try {
     value = std::stod(string);
-  }
-  catch (const std::invalid_argument) {
+  } catch (const std::invalid_argument) {
     *ok = false;
-  }
-  catch (const std::out_of_range) {
+  } catch (const std::out_of_range) {
     *ok = false;
   }
   return value;
@@ -826,7 +811,7 @@ bool EpwDataPoint::setDryBulbTemperature(const std::string &dryBulbTemperature)
 boost::optional<double> EpwDataPoint::dewPointTemperature() const
 {
   if(m_dewPointTemperature == "99.9") {
-    return boost::optional<double>();
+    return boost::none;
   }
   return boost::optional<double>(std::stod(m_dewPointTemperature));
 }
@@ -1125,7 +1110,7 @@ bool EpwDataPoint::setGlobalHorizontalIlluminance(const std::string &globalHoriz
 boost::optional<double> EpwDataPoint::directNormalIlluminance() const
 {
   if(m_directNormalIlluminance == "999999") {
-    return boost::optional<double>();
+    return boost::none;
   }
   return boost::optional<double>(std::stod(m_directNormalIlluminance));
 }
@@ -1423,7 +1408,7 @@ bool EpwDataPoint::setPresentWeatherCodes(const std::string &presentWeatherCodes
 boost::optional<double> EpwDataPoint::precipitableWater() const
 {
   if(m_precipitableWater == "999") {
-    return boost::optional<double>();
+    return boost::none;
   }
   return boost::optional<double>(std::stod(m_precipitableWater));
 }
@@ -1473,7 +1458,7 @@ bool EpwDataPoint::setAerosolOpticalDepth(const std::string &aerosolOpticalDepth
 boost::optional<double> EpwDataPoint::snowDepth() const
 {
   if(m_snowDepth == "999") {
-    return boost::optional<double>();
+    return boost::none;
   }
   return boost::optional<double>(std::stod(m_snowDepth));
 }
@@ -1498,7 +1483,7 @@ bool EpwDataPoint::setSnowDepth(const std::string &snowDepth)
 boost::optional<double> EpwDataPoint::daysSinceLastSnowfall() const
 {
   if(m_daysSinceLastSnowfall == "99") {
-    return boost::optional<double>();
+    return boost::none;
   }
   return boost::optional<double>(std::stod(m_daysSinceLastSnowfall));
 }
@@ -1606,7 +1591,7 @@ EpwFile::EpwFile(const openstudio::path& p, bool storeData)
 boost::optional<EpwFile> EpwFile::load(const openstudio::path& p, bool storeData)
 {
   boost::optional<EpwFile> result;
-  try{
+  try {
     result = EpwFile(p, storeData);
   }catch(const std::exception&){
   }
@@ -1716,71 +1701,59 @@ std::vector<EpwDataPoint> EpwFile::data()
 
 boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string &name)
 {
-  if(m_data.size()==0){
-    if (!parse(true)){
+  if(m_data.size()==0) {
+    if (!parse(true)) {
       LOG(Error,"EpwFile '" << toString(m_path) << "' cannot be processed");
-      return boost::optional<TimeSeries>();
+      return boost::none;
     }
   }
   EpwDataField id;
-  try
-  {
+  try {
     id = EpwDataField(name);
-  }
-  catch(...)
-  {
+  } catch(...) {
     // Could do a warning message here
-    return boost::optional<TimeSeries>();
+    return boost::none;
   }
-  if(m_data.size())
-  {
+  if(m_data.size()) {
     std::string units = EpwDataPoint::units(id);
     DateTimeVector dates;
     std::vector<double> values;
-    for(unsigned int i=0;i<m_data.size();i++)
-    {
+    for(unsigned int i=0;i<m_data.size();i++) {
       Date date=m_data[i].date();
       Time time=m_data[i].time();
       boost::optional<double> value = m_data[i].field(id);
-      if(value)
-      {
+      if(value) {
         dates.push_back(DateTime(date,time));
         values.push_back(value.get());
       }
     }
-    if(dates.size())
-    {
+    if(dates.size()) {
       return boost::optional<TimeSeries>(TimeSeries(dates,openstudio::createVector(values),units));
     }
   }
-  return boost::optional<TimeSeries>();
+  return boost::none;
 }
 
 bool EpwFile::translateToWth(openstudio::path path, std::string description)
 {
-  if(m_data.size()==0)
-  {
-    if (!parse(true))
-    {
+  if(m_data.size()==0) {
+    if (!parse(true)) {
       LOG(Error,"EpwFile '" << toString(m_path) << "' cannot be processed");
       return false;
     }
   }
 
-  if(description.empty())
-  {
+  if(description.empty()) {
     description = "Translated from " + openstudio::toString(this->path());
   }
 
-  if(!data().size())
-  {
+  if(!data().size()) {
     LOG(Error, "EPW file contains no data to translate");
     return false;
   }
 
   QFile fp(openstudio::toQString(path));
-  if(!fp.open(QFile::WriteOnly))
-  {
+  if(!fp.open(QFile::WriteOnly)) {
     LOG(Error, "Failed to open file '" + openstudio::toString(path) + "'");
     return false;
   }
@@ -1794,15 +1767,13 @@ bool EpwFile::translateToWth(openstudio::path path, std::string description)
   stream << "!Date\tDofW\tDtype\tDST\tTgrnd [K]\n";
   openstudio::Time delta(1,0);
   int dayofweek = startDayOfWeek().value()+1;
-  for(openstudio::Date current=startDate();current<=endDate();current += delta)
-  {
+  for(openstudio::Date current=startDate();current<=endDate();current += delta) {
     stream << QString("%1/%2\t%3\t%3\t0\t283.15\n")
       .arg(openstudio::month(current.monthOfYear()))
       .arg(current.dayOfMonth())
       .arg(dayofweek);
     dayofweek++;
-    if(dayofweek > 7)
-    {
+    if(dayofweek > 7) {
       dayofweek=1;
     }
   }
@@ -1854,15 +1825,15 @@ bool EpwFile::parse(bool storeData)
   bool result = true;
 
   // read first 8 lines
-  for(unsigned i = 0; i < 8; ++i){
+  for(unsigned i = 0; i < 8; ++i) {
 
-    if(!std::getline(ifs, line)){
+    if(!std::getline(ifs, line)) {
       LOG(Error, "Could not read line " << i+1 << " of EPW file '" << m_path << "'");
       ifs.close();
       return false;
     }
 
-    switch(i){
+    switch(i) {
       case 0:
         result = result && parseLocation(line);
         break;
@@ -1897,35 +1868,35 @@ bool EpwFile::parse(bool storeData)
   int minutesPerRecord = 60/m_recordsPerHour;
   int currentMinute = 0;
   bool warnedAboutMinutesAlready = false;
-  while(std::getline(ifs, line)){
+  while(std::getline(ifs, line)) {
     lineNumber++;
-    boost::regex dateRegex("^(.*?),(.*?),(.*?),.*");
-    boost::smatch matches;
-    if (boost::regex_search(line, matches, dateRegex)){
-      std::string year = std::string(matches[1].first, matches[1].second); boost::trim(year);
-      std::string month = std::string(matches[2].first, matches[2].second); boost::trim(month);
-      std::string day = std::string(matches[3].first, matches[3].second); boost::trim(day);
+    std::regex dateRegex("^(.*?),(.*?),(.*?),.*");
+    std::smatch matches;
+    if (std::regex_search(line, matches, dateRegex)) {
+      std::string year = std::string(matches[1].first, matches[1].second);
+      std::string month = std::string(matches[2].first, matches[2].second);
+      std::string day = std::string(matches[3].first, matches[3].second);
 
-      try{
-        Date date(boost::lexical_cast<int>(month), boost::lexical_cast<int>(day), boost::lexical_cast<int>(year));
+      try {
+        Date date(std::stoi(month), std::stoi(day), std::stoi(year));
         
-        if (!startDate){
+        if (!startDate) {
           startDate = date;
         }
         endDate = date;
 
-        if (endDate && lastDate){
+        if (endDate && lastDate) {
           Time delta = endDate.get() - lastDate.get();
-          if (std::abs(delta.totalDays()) > 1){
+          if (std::abs(delta.totalDays()) > 1) {
             realYear = false;
           }
 
-          if (endDate->monthOfYear().value() < lastDate->monthOfYear().value()){
+          if (endDate->monthOfYear().value() < lastDate->monthOfYear().value()) {
             wrapAround = true;
           }
         }
         lastDate = date;
-      }catch(...){
+      } catch(...) {
         LOG(Error, "Could not read line " << lineNumber << " of EPW file '" << m_path << "'");
         ifs.close();
         return false;
@@ -1964,7 +1935,7 @@ bool EpwFile::parse(bool storeData)
           return false;
         }
       }
-    }else{
+    } else {
       LOG(Error, "Could not read line " << lineNumber << " of EPW file '" << m_path << "'");
       ifs.close();
       return false;
@@ -1974,11 +1945,11 @@ bool EpwFile::parse(bool storeData)
   // close file
   ifs.close();
 
-  if (!startDate){
+  if (!startDate) {
     LOG(Error, "Could not find start date in data section of EPW file '" << m_path << "'");
     return false;
   }
-  if (!endDate){
+  if (!endDate) {
     LOG(Error, "Could not find end date in data section of EPW file '" << m_path << "'");
     return false;
   }
@@ -1986,12 +1957,12 @@ bool EpwFile::parse(bool storeData)
   if ((m_startDate.monthOfYear() != startDate->monthOfYear()) ||
       (m_startDate.dayOfMonth() != startDate->dayOfMonth()) ||
       (m_endDate.monthOfYear() != endDate->monthOfYear()) ||
-      (m_endDate.dayOfMonth() != endDate->dayOfMonth())){
+      (m_endDate.dayOfMonth() != endDate->dayOfMonth())) {
     LOG(Error, "Header start and end dates do not match data in EPW file '" << m_path << "'");
     return false;
   }
 
-  if (realYear){
+  if (realYear) {
     if (m_startDayOfWeek != startDate->dayOfWeek()){
       LOG(Warn, "Header start day of the week and actual start day of the week do not match in EPW file '" << m_path << "', data will be treated as typical");
       // The flag needs to be changed so we can do the wrapAround check below
@@ -2038,22 +2009,22 @@ bool EpwFile::parseLocation(const std::string& line)
     m_dataSource = dataSource;
     m_wmoNumber = wmoNumber;
     try{
-      m_latitude = boost::lexical_cast<double>(latitude);
+      m_latitude = std::stod(latitude);
     }catch(...){
       result = false;
     }
     try{
-      m_longitude = boost::lexical_cast<double>(longitude);
+      m_longitude = std::stod(longitude);
     }catch(...){
       result = false;
     }
     try{
-      m_timeZone = boost::lexical_cast<double>(timeZone);
+      m_timeZone = std::stod(timeZone);
     }catch(...){
       result = false;
     }
     try{
-      m_elevation = boost::lexical_cast<double>(elevation);
+      m_elevation = std::stod(elevation);
     }catch(...){
       result = false;
     }
@@ -2082,7 +2053,7 @@ bool EpwFile::parseDataPeriod(const std::string& line)
     std::string endDate = std::string(matches[6].first, matches[6].second); boost::trim(endDate);
 
     try{
-      int N = boost::lexical_cast<int>(nDataPeriods);
+      int N = std::stoi(nDataPeriods);
       if(N>1)
       {
         LOG(Error, "More than one data period in EPW file '" << m_path << "', which is not supported");
@@ -2092,7 +2063,7 @@ bool EpwFile::parseDataPeriod(const std::string& line)
       result = false;
     }
     try{
-      m_recordsPerHour = boost::lexical_cast<int>(timeStep);
+      m_recordsPerHour = std::stoi(timeStep);
       if((60 % m_recordsPerHour) != 0) {
         LOG(Error, "Number of records per hour of " << m_recordsPerHour << " does not result in integral number of minutes between records in EPW file '" << m_path<<"'");
         result = false;
