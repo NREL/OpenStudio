@@ -439,7 +439,7 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
     puts "#{Time.now.getutc}: computing view matri(ces) for controlled windows"
     exec_statement("#{t_catCommand} #{t_outPath}/materials/materials_vmx.rad #{wgInput.join(" ")} > receivers_vmx.rad")
     exec_statement("oconv #{t_outPath}/materials/materials.rad #{t_outPath}/scene/*.rad > model_vmx.oct")
-    exec_statement("rfluxmtx #{rtrace_args} #{procsUsed} -faa -n #{t_simCores} -y #{rfluxmtxDim} -I -v - receivers_vmx.rad -i model_vmx.oct < \
+    exec_statement("rfluxmtx #{rtrace_args} -ds .15 #{procsUsed} -faa -n #{t_simCores} -y #{rfluxmtxDim} -I -v - receivers_vmx.rad -i model_vmx.oct < \
       #{t_outPath}/numeric/merged_space.map")
     
     # compute daylight coefficient matrices for window group control points
