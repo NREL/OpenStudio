@@ -940,9 +940,11 @@ QWidget * SimSettingsView::createRadianceParametersWidget()
   widget->hide();
 
   m_radianceGroup->button(0)->setChecked(true);
+  if (!m_model.getOptionalUniqueModelObject<model::RadianceParameters>()){
+    setCoarseRadianceSettings();
+  }
   attachRadianceParameters();
   enableRadianceParametersWidget(false);
-  setCoarseRadianceSettings();
 
   return widget;
 }
@@ -1602,7 +1604,7 @@ void SimSettingsView::setFineRadianceSettings()
   radianceParameters.setLimitWeightVMX(0.0000152);
   radianceParameters.setLimitWeightDMX(0.0001);
   radianceParameters.setKlemsSamplingDensity(1000);
-  radianceParameters.setSkyDiscretizationResolution("581");
+  radianceParameters.setSkyDiscretizationResolution("2306");
 }
 
 //***** SLOTS *****
