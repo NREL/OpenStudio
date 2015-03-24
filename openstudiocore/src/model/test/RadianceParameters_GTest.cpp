@@ -185,4 +185,20 @@ TEST_F(ModelFixture,RadianceParameters_KlemsSamplingDensity_Quantity) {
   EXPECT_EQ(2, value);
 }
 
+TEST_F(ModelFixture, RadianceParameters_FineAndCoarseSettings) {
+  Model model;
+
+  auto radianceParameters = model.getUniqueModelObject<RadianceParameters>();
+
+  // Test CTOR setting coarse
+  EXPECT_TRUE(radianceParameters.isCoarseSettings());
+
+  radianceParameters.applyFineSettings();
+  EXPECT_TRUE(radianceParameters.isFineSettings());
+
+  radianceParameters.setSkyDiscretizationResolution("578");
+  EXPECT_EQ(radianceParameters.skyDiscretizationResolution(), "578");
+  EXPECT_FALSE(radianceParameters.isCoarseSettings());
+  EXPECT_FALSE(radianceParameters.isFineSettings());
+}
 
