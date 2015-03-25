@@ -13,6 +13,8 @@
 %import <utilities/core/CommonImport.i>
 %import <utilities/UtilitiesCore.i>
 %import <utilities/UtilitiesIdf.i>
+%import <utilities/UtilitiesTime.i>
+%import <utilities/UtilitiesData.i>
 
 
 %include <utilities/filetypes/Filetypes.i>

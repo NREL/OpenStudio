@@ -33,6 +33,11 @@ namespace openstudio{
 
 // forward declaration
 class IdfObject;
+// Added these next four for SWIG
+class Date;
+class Time;
+class DateTime;
+class TimeSeries;
 
 OPENSTUDIO_ENUM(EpwDataField,
   ((Year)(Year)(0))

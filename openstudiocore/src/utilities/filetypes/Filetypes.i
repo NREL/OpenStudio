@@ -12,6 +12,9 @@
 
 %import <utilities/units/Quantity.i>
 
+%template(EpwDataPointVector) std::vector<openstudio::EpwDataPoint>;
+%template(OptionalEpwDataPoint) boost::optional<openstudio::EpwDataPoint>;
+
 %ignore std::vector<openstudio::EpwFile>::vector(size_type);
 %ignore std::vector<openstudio::EpwFile>::resize(size_type);
 %template(EpwFileVector) std::vector<openstudio::EpwFile>;

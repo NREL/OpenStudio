@@ -32,6 +32,7 @@
 #include <cmath>
 #include <regex>
 #include <string>
+#include <fstream>
 
 namespace openstudio{
 
@@ -610,7 +611,7 @@ static double stringToDouble(const std::string &string, bool *ok)
 
 Date EpwDataPoint::date() const
 {
-  return Date(MonthOfYear(m_month),m_day);//,m_year);
+  return Date(MonthOfYear(m_month), m_day); // , m_year);
 }
 
 void EpwDataPoint::setDate(Date date)
@@ -1704,7 +1705,7 @@ boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string &name)
     if (!parse(true)) {
       LOG(Error,"EpwFile '" << toString(m_path) << "' cannot be processed");
       return boost::none;
-    }
+    } 
   }
   EpwDataField id;
   try {
