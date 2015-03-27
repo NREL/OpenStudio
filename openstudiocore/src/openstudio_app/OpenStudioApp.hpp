@@ -112,6 +112,8 @@ class OpenStudioApp : public OSAppBase
   void importgbXML(); 
 
   void importSDD(); 
+  
+  void importIFC();
 
   void open();
 
