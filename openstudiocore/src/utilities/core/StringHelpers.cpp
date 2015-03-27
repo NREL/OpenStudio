@@ -27,6 +27,7 @@
 
 #include <cmath> 
 #include <iomanip>
+#include <sstream>
 
 namespace openstudio {
 
@@ -271,6 +272,22 @@ std::string formatUnderscore(const std::string& str) {
   std::string wStr(str);
   wStr = boost::regex_replace(wStr, boost::regex("_"), "\\\\_");
   return wStr;
+}
+
+std::vector <std::string> splitString(const std::string &string, char delimiter)
+{
+  std::vector<std::string> results;
+  if(!string.empty()) { // Only do work if there is work to do
+    std::stringstream stream(string);
+    std::string substring;
+    while(std::getline(stream, substring, delimiter)) { // Loop and fill the results vector
+      results.push_back(substring);
+    }
+    if(*(string.end() - 1) == ',') { // Add an empty string if the last char is the delimiter
+      results.push_back(std::string());
+    }
+  }
+  return results;
 }
 
 } // openstudio

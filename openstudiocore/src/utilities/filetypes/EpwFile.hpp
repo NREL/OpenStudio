@@ -33,6 +33,11 @@ namespace openstudio{
 
 // forward declaration
 class IdfObject;
+// Added these next four for SWIG
+class Date;
+class Time;
+class DateTime;
+class TimeSeries;
 
 OPENSTUDIO_ENUM(EpwDataField,
   ((Year)(Year)(0))
@@ -73,8 +78,8 @@ OPENSTUDIO_ENUM(EpwDataField,
 );
 
 /** EpwDataPoint is one line from the EPW file. All floating point numbers are stored as strings,
-* but are checked as numbers.
-*/
+ * but are checked as numbers.
+ */
 class UTILITIES_API EpwDataPoint
 {
 public:
@@ -90,167 +95,171 @@ public:
     double precipitableWater,double aerosolOpticalDepth,double snowDepth,double daysSinceLastSnowfall,
     double albedo,double liquidPrecipitationDepth,double liquidPrecipitationQuantity);
   // Static
-  static boost::optional<std::string> unitsByName(std::string name);
+  static boost::optional<std::string> unitsByName(const std::string &name);
   static std::string units(EpwDataField field);
   // Data retrieval
-  boost::optional<double> fieldByName(std::string name);
+  boost::optional<double> fieldByName(const std::string &name);
   boost::optional<double> field(EpwDataField id);
   // Conversion
-  static boost::optional<EpwDataPoint> fromEpwString(std::string line);
-  boost::optional<std::string> toWthString();
-  // One billion getters and setters
+  static boost::optional<EpwDataPoint> fromEpwString(const std::string &line);
+  static boost::optional<EpwDataPoint> fromEpwStrings(const std::vector<std::string> &list, bool pedantic=true);
+  std::vector<std::string> toEpwStrings() const;
+  boost::optional<std::string> toWthString() const;
+  // One billion getters
   Date date() const;
-  void setDate(Date date);
   Time time() const;
-  void setTime(Time time);
   openstudio::DateTime dateTime() const;
-  void setDateTime(openstudio::DateTime dateTime);
   int year() const;
-  void setYear(int year);
-  bool setYear(std::string year);
   int month() const;
-  bool setMonth(int month);
-  bool setMonth(std::string month);
   int day() const;
-  bool setDay(int day);
-  bool setDay(std::string day);
   int hour() const;
-  bool setHour(int hour);
-  bool setHour(std::string hour);
   int minute() const;
-  bool setMinute(int minute);
-  bool setMinute(std::string minute);
   std::string dataSourceandUncertaintyFlags() const;
-  void setDataSourceandUncertaintyFlags(std::string dataSourceandUncertaintyFlags);
   boost::optional<double> dryBulbTemperature() const;
-  bool setDryBulbTemperature(double dryBulbTemperature);
-  bool setDryBulbTemperature(std::string dryBulbTemperature);
   boost::optional<double> dewPointTemperature() const;
-  bool setDewPointTemperature(double dewPointTemperature);
-  bool setDewPointTemperature(std::string dewPointTemperature);
   boost::optional<double> relativeHumidity() const;
-  bool setRelativeHumidity(double relativeHumidity);
-  bool setRelativeHumidity(std::string relativeHumidity);
   boost::optional<double> atmosphericStationPressure() const;
-  bool setAtmosphericStationPressure(double atmosphericStationPressure);
-  bool setAtmosphericStationPressure(std::string atmosphericStationPressure);
   boost::optional<double> extraterrestrialHorizontalRadiation() const;
-  bool setExtraterrestrialHorizontalRadiation(double extraterrestrialHorizontalRadiation);
-  bool setExtraterrestrialHorizontalRadiation(std::string extraterrestrialHorizontalRadiation);
   boost::optional<double> extraterrestrialDirectNormalRadiation() const;
-  bool setExtraterrestrialDirectNormalRadiation(double extraterrestrialDirectNormalRadiation);
-  bool setExtraterrestrialDirectNormalRadiation(std::string extraterrestrialDirectNormalRadiation);
   boost::optional<double> horizontalInfraredRadiationIntensity() const;
-  bool setHorizontalInfraredRadiationIntensity(double horizontalInfraredRadiationIntensity);
-  bool setHorizontalInfraredRadiationIntensity(std::string horizontalInfraredRadiationIntensity);
   boost::optional<double> globalHorizontalRadiation() const;
-  bool setGlobalHorizontalRadiation(double globalHorizontalRadiation);
-  bool setGlobalHorizontalRadiation(std::string globalHorizontalRadiation);
   boost::optional<double> directNormalRadiation() const;
-  bool setDirectNormalRadiation(double directNormalRadiation);
-  bool setDirectNormalRadiation(std::string directNormalRadiation);
   boost::optional<double> diffuseHorizontalRadiation() const;
-  bool setDiffuseHorizontalRadiation(double diffuseHorizontalRadiation);
-  bool setDiffuseHorizontalRadiation(std::string diffuseHorizontalRadiation);
   boost::optional<double> globalHorizontalIlluminance() const;
-  bool setGlobalHorizontalIlluminance(double globalHorizontalIlluminance);
-  bool setGlobalHorizontalIlluminance(std::string globalHorizontalIlluminance);
   boost::optional<double> directNormalIlluminance() const;
-  bool setDirectNormalIlluminance(double directNormalIlluminance);
-  bool setDirectNormalIlluminance(std::string directNormalIlluminance);
   boost::optional<double> diffuseHorizontalIlluminance() const;
-  bool setDiffuseHorizontalIlluminance(double diffuseHorizontalIlluminance);
-  bool setDiffuseHorizontalIlluminance(std::string diffuseHorizontalIlluminance);
   boost::optional<double> zenithLuminance() const;
-  bool setZenithLuminance(double zenithLuminance);
-  bool setZenithLuminance(std::string zenithLuminance);
   boost::optional<double> windDirection() const;
-  bool setWindDirection(double windDirection);
-  bool setWindDirection(std::string windDirection);
   boost::optional<double> windSpeed() const;
-  bool setWindSpeed(double windSpeed);
-  bool setWindSpeed(std::string windSpeed);
   int totalSkyCover() const;
-  bool setTotalSkyCover(int totalSkyCover);
-  bool setTotalSkyCover(std::string totalSkyCover);
   int opaqueSkyCover() const;
-  bool setOpaqueSkyCover(int opaqueSkyCover);
-  bool setOpaqueSkyCover(std::string opaqueSkyCover);
   boost::optional<double> visibility() const;
-  void setVisibility(double visibility);
-  bool setVisibility(std::string visibility);
   boost::optional<double> ceilingHeight() const;
-  void setCeilingHeight(double ceilingHeight);
-  bool setCeilingHeight(std::string ceilingHeight);
   int presentWeatherObservation() const;
-  void setPresentWeatherObservation(int presentWeatherObservation);
-  bool setPresentWeatherObservation(std::string presentWeatherObservation);
   int presentWeatherCodes() const;
-  void setPresentWeatherCodes(int presentWeatherCodes);
-  bool setPresentWeatherCodes(std::string presentWeatherCodes);
   boost::optional<double> precipitableWater() const;
-  void setPrecipitableWater(double precipitableWater);
-  bool setPrecipitableWater(std::string precipitableWater);
   boost::optional<double> aerosolOpticalDepth() const;
-  void setAerosolOpticalDepth(double aerosolOpticalDepth);
-  bool setAerosolOpticalDepth(std::string aerosolOpticalDepth);
   boost::optional<double> snowDepth() const;
-  void setSnowDepth(double snowDepth);
-  bool setSnowDepth(std::string snowDepth);
   boost::optional<double> daysSinceLastSnowfall() const;
-  void setDaysSinceLastSnowfall(double daysSinceLastSnowfall);
-  bool setDaysSinceLastSnowfall(std::string daysSinceLastSnowfall);
   boost::optional<double> albedo() const;
-  void setAlbedo(double albedo);
-  bool setAlbedo(std::string albedo);
   boost::optional<double> liquidPrecipitationDepth() const;
-  void setLiquidPrecipitationDepth(double liquidPrecipitationDepth);
-  bool setLiquidPrecipitationDepth(std::string liquidPrecipitationDepth);
   boost::optional<double> liquidPrecipitationQuantity() const;
-  void setLiquidPrecipitationQuantity(double liquidPrecipitationQuantity);
-  bool setLiquidPrecipitationQuantity(std::string liquidPrecipitationQuantity);
 
 private:
+  // One billion setters
+  void setDate(Date date);
+  void setTime(Time time);
+  void setDateTime(openstudio::DateTime dateTime);
+  void setYear(int year);
+  bool setYear(const std::string &year);
+  bool setMonth(int month);
+  bool setMonth(const std::string &month);
+  bool setDay(int day);
+  bool setDay(const std::string &day);
+  bool setHour(int hour);
+  bool setHour(const std::string &hour);
+  bool setMinute(int minute);
+  bool setMinute(const std::string &minute);
+  void setDataSourceandUncertaintyFlags(const std::string &dataSourceandUncertaintyFlags);
+  bool setDryBulbTemperature(double dryBulbTemperature);
+  bool setDryBulbTemperature(const std::string &dryBulbTemperature);
+  bool setDewPointTemperature(double dewPointTemperature);
+  bool setDewPointTemperature(const std::string &dewPointTemperature);
+  bool setRelativeHumidity(double relativeHumidity);
+  bool setRelativeHumidity(const std::string &relativeHumidity);
+  bool setAtmosphericStationPressure(double atmosphericStationPressure);
+  bool setAtmosphericStationPressure(const std::string &atmosphericStationPressure);
+  bool setExtraterrestrialHorizontalRadiation(double extraterrestrialHorizontalRadiation);
+  bool setExtraterrestrialHorizontalRadiation(const std::string &extraterrestrialHorizontalRadiation);
+  bool setExtraterrestrialDirectNormalRadiation(double extraterrestrialDirectNormalRadiation);
+  bool setExtraterrestrialDirectNormalRadiation(const std::string &extraterrestrialDirectNormalRadiation);
+  bool setHorizontalInfraredRadiationIntensity(double horizontalInfraredRadiationIntensity);
+  bool setHorizontalInfraredRadiationIntensity(const std::string &horizontalInfraredRadiationIntensity);
+  bool setGlobalHorizontalRadiation(double globalHorizontalRadiation);
+  bool setGlobalHorizontalRadiation(const std::string &globalHorizontalRadiation);
+  bool setDirectNormalRadiation(double directNormalRadiation);
+  bool setDirectNormalRadiation(const std::string &directNormalRadiation);
+  bool setDiffuseHorizontalRadiation(double diffuseHorizontalRadiation);
+  bool setDiffuseHorizontalRadiation(const std::string &diffuseHorizontalRadiation);
+  bool setGlobalHorizontalIlluminance(double globalHorizontalIlluminance);
+  bool setGlobalHorizontalIlluminance(const std::string &globalHorizontalIlluminance);
+  bool setDirectNormalIlluminance(double directNormalIlluminance);
+  bool setDirectNormalIlluminance(const std::string &directNormalIlluminance);
+  bool setDiffuseHorizontalIlluminance(double diffuseHorizontalIlluminance);
+  bool setDiffuseHorizontalIlluminance(const std::string &diffuseHorizontalIlluminance);
+  bool setZenithLuminance(double zenithLuminance);
+  bool setZenithLuminance(const std::string &zenithLuminance);
+  bool setWindDirection(double windDirection);
+  bool setWindDirection(const std::string &windDirection);
+  bool setWindSpeed(double windSpeed);
+  bool setWindSpeed(const std::string &windSpeed);
+  bool setTotalSkyCover(int totalSkyCover);
+  bool setTotalSkyCover(const std::string &totalSkyCover);
+  bool setOpaqueSkyCover(int opaqueSkyCover);
+  bool setOpaqueSkyCover(const std::string &opaqueSkyCover);
+  bool setVisibility(double visibility);
+  bool setVisibility(const std::string &visibility);
+  void setCeilingHeight(double ceilingHeight);
+  bool setCeilingHeight(const std::string &ceilingHeight);
+  void setPresentWeatherObservation(int presentWeatherObservation);
+  bool setPresentWeatherObservation(const std::string &presentWeatherObservation);
+  void setPresentWeatherCodes(int presentWeatherCodes);
+  bool setPresentWeatherCodes(const std::string &presentWeatherCodes);
+  void setPrecipitableWater(double precipitableWater);
+  bool setPrecipitableWater(const std::string &precipitableWater);
+  void setAerosolOpticalDepth(double aerosolOpticalDepth);
+  bool setAerosolOpticalDepth(const std::string &aerosolOpticalDepth);
+  void setSnowDepth(double snowDepth);
+  bool setSnowDepth(const std::string &snowDepth);
+  void setDaysSinceLastSnowfall(double daysSinceLastSnowfall);
+  bool setDaysSinceLastSnowfall(const std::string &daysSinceLastSnowfall);
+  void setAlbedo(double albedo);
+  bool setAlbedo(const std::string &albedo);
+  void setLiquidPrecipitationDepth(double liquidPrecipitationDepth);
+  bool setLiquidPrecipitationDepth(const std::string &liquidPrecipitationDepth);
+  void setLiquidPrecipitationQuantity(double liquidPrecipitationQuantity);
+  bool setLiquidPrecipitationQuantity(const std::string &liquidPrecipitationQuantity);
+
   int m_year;
   int m_month;
   int m_day;
   int m_hour;
   int m_minute;
   std::string m_dataSourceandUncertaintyFlags;
-  QString m_dryBulbTemperature; // units C, minimum> -70, maximum< 70, missing 99.9
-  QString m_dewPointTemperature; // units C, minimum> -70, maximum< 70, missing 99.9
-  QString m_relativeHumidity; // missing 999., minimum 0, maximum 110
-  QString m_atmosphericStationPressure; // units Pa, missing 999999.,  minimum> 31000, maximum< 120000
-  QString m_extraterrestrialHorizontalRadiation; // units Wh/m2, missing 9999., minimum 0
-  QString m_extraterrestrialDirectNormalRadiation; //units Wh/m2, missing 9999., minimum 0
-  QString m_horizontalInfraredRadiationIntensity; // units Wh/m2, missing 9999., minimum 0
-  QString m_globalHorizontalRadiation; // units Wh/m2, missing 9999., minimum 0
-  QString m_directNormalRadiation; // units Wh/m2, missing 9999., minimum 0
-  QString m_diffuseHorizontalRadiation; // units Wh/m2, missing 9999., minimum 0
-  QString m_globalHorizontalIlluminance; // units lux, missing 999999., note will be missing if >= 999900, minimum 0
-  QString m_directNormalIlluminance; // units lux, missing 999999., will be missing if >= 999900, minimum 0
-  QString m_diffuseHorizontalIlluminance; // units lux, missing 999999., will be missing if >= 999900, minimum 0
-  QString m_zenithLuminance; // units Cd/m2, missing 9999., will be missing if >= 9999, minimum 0
-  QString m_windDirection; // units degrees, missing 999., minimum 0, maximum 360
-  QString m_windSpeed; // units m/s, missing 999., minimum 0, maximum 40
+  std::string m_dryBulbTemperature; // units C, minimum> -70, maximum< 70, missing 99.9
+  std::string m_dewPointTemperature; // units C, minimum> -70, maximum< 70, missing 99.9
+  std::string m_relativeHumidity; // missing 999., minimum 0, maximum 110
+  std::string m_atmosphericStationPressure; // units Pa, missing 999999.,  minimum> 31000, maximum< 120000
+  std::string m_extraterrestrialHorizontalRadiation; // units Wh/m2, missing 9999., minimum 0
+  std::string m_extraterrestrialDirectNormalRadiation; //units Wh/m2, missing 9999., minimum 0
+  std::string m_horizontalInfraredRadiationIntensity; // units Wh/m2, missing 9999., minimum 0
+  std::string m_globalHorizontalRadiation; // units Wh/m2, missing 9999., minimum 0
+  std::string m_directNormalRadiation; // units Wh/m2, missing 9999., minimum 0
+  std::string m_diffuseHorizontalRadiation; // units Wh/m2, missing 9999., minimum 0
+  std::string m_globalHorizontalIlluminance; // units lux, missing 999999., will be missing if >= 999900, minimum 0
+  std::string m_directNormalIlluminance; // units lux, missing 999999., will be missing if >= 999900, minimum 0
+  std::string m_diffuseHorizontalIlluminance; // units lux, missing 999999., will be missing if >= 999900, minimum 0
+  std::string m_zenithLuminance; // units Cd/m2, missing 9999., will be missing if >= 9999, minimum 0
+  std::string m_windDirection; // units degrees, missing 999., minimum 0, maximum 360
+  std::string m_windSpeed; // units m/s, missing 999., minimum 0, maximum 40
   int m_totalSkyCover; // missing 99, minimum 0, maximum 10
   int m_opaqueSkyCover; // used if Horizontal IR Intensity missing, missing 99, minimum 0, maximum 10
-  QString m_visibility; // units km, missing 9999
-  QString m_ceilingHeight; // units m, missing 99999
+  std::string m_visibility; // units km, missing 9999
+  std::string m_ceilingHeight; // units m, missing 99999
   int m_presentWeatherObservation;
   int m_presentWeatherCodes;
-  QString m_precipitableWater; // units mm, missing 999
-  QString m_aerosolOpticalDepth; // units thousandths, missing .999
-  QString m_snowDepth; // units cm, missing 999
-  QString m_daysSinceLastSnowfall; // missing 99
-  QString m_albedo; //missing 999
-  QString m_liquidPrecipitationDepth; // units mm, missing 999
-  QString m_liquidPrecipitationQuantity; // units hr, missing 99
+  std::string m_precipitableWater; // units mm, missing 999
+  std::string m_aerosolOpticalDepth; // units thousandths, missing .999
+  std::string m_snowDepth; // units cm, missing 999
+  std::string m_daysSinceLastSnowfall; // missing 99
+  std::string m_albedo; //missing 999
+  std::string m_liquidPrecipitationDepth; // units mm, missing 999
+  std::string m_liquidPrecipitationQuantity; // units hr, missing 99
 };
 
 /** EpwFile parses a weather file in EPW format.  Later it may provide
-*   methods for writing and converting other weather files to EPW format.
-*/
+ *   methods for writing and converting other weather files to EPW format.
+ */
 class UTILITIES_API EpwFile{
 public:
 
@@ -320,7 +329,7 @@ public:
 
   /// get a time series of a particular weather field
   // This will probably need to include the period at some point, but for now just dump everything into a time series
-  boost::optional<TimeSeries> getTimeSeries(std::string field);
+  boost::optional<TimeSeries> getTimeSeries(const std::string &field);
 
   /// export to CONTAM WTH file
   bool translateToWth(openstudio::path path,std::string description=std::string());
