@@ -7,8 +7,8 @@ set(${target_name}_src
   mainpage.hpp
   BIMserverConnection.hpp
   BIMserverConnection.cpp
-  ProjectImportation.hpp
-  ProjectImportation.cpp
+  ProjectImporter.hpp
+  ProjectImporter.cpp
 )
 
 set(${target_name}_test_src

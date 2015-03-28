@@ -80,6 +80,9 @@ namespace bimserver {
     ///operationSucceeded() will send one of the following QString: 
     void operationSucceeded(QString successMessage);
 
+    ///emit error if BIMserver is not setup correctly.
+    void bimserverError();
+
   private slots:
     //slots used by this class only
     /// log in to BIMserver
@@ -100,7 +103,7 @@ namespace bimserver {
     void processCheckInIFCRequest(QNetworkReply *rep);
     /// get ifc revision list
     void processGetProjectByIDRequest(QNetworkReply *rep);
-
+    /// get download progress
     void processGetProgressRequest();
 
   private:
@@ -116,7 +119,7 @@ namespace bimserver {
     void sendGetProgressRequest(QString topicId, QString action);
 
     bool containsError(QJsonObject responseMessage);
-    void extractErrorMessage(QJsonObject responseMessage);
+    void emitErrorMessage(QJsonObject responseMessage);
 
     QNetworkAccessManager* m_networkManager;
     QUrl m_bimserverURL;
