@@ -163,6 +163,8 @@ class OpenStudioApp : public OSAppBase
 
   void setLastPath(const QString& t_lastPath);
 
+  void connectOSDocumentSignals();
+
   QSharedPointer<ruleset::RubyUserScriptInfoGetter> m_infoGetter;
 
   openstudio::model::Model m_compLibrary;
