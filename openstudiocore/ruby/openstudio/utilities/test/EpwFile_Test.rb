@@ -43,7 +43,7 @@ class EpwFile_Test < MiniTest::Unit::TestCase
     assert_equal(-105.18, epw.longitude);
     assert_equal(-7, epw.timeZone);
     assert_equal(1829, epw.elevation);
-    startDate = epw.startDate.public_methods
+    startDate = epw.startDate
     assert(startDate.is_a? OpenStudio::Date)
   end
 
@@ -58,7 +58,8 @@ class EpwFile_Test < MiniTest::Unit::TestCase
     path = @epwDir / OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.epw")
     epw = OpenStudio::EpwFile::load(path.to_s).get
     windSpeed = epw.getTimeSeries("Wind Speed")
-    assert(windSpeed.is_a? OpenStudio::TimeSeries)
+    assert(windSpeed.is_a? OpenStudio::OptionalTimeSeries)
+    assert(windSpeed.is_initialized)
   end
 
 #  def test_errors
