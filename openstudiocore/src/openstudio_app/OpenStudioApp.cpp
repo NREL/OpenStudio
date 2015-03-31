@@ -532,6 +532,7 @@ void OpenStudioApp::importIFC()
   
   bimserver::ProjectImporter *projectImportation = new bimserver::ProjectImporter(parent);
   boost::optional<model::Model> model = projectImportation->run();
+  projectImportation->close();
 
   if (model) {
     bool wasQuitOnLastWindowClosed = this->quitOnLastWindowClosed();
@@ -566,10 +567,6 @@ void OpenStudioApp::importIFC()
 
     this->setQuitOnLastWindowClosed(wasQuitOnLastWindowClosed);
 
-  } else {
-    QMessageBox messageBox; // (parent); ETH: ... but is hidden, so don't actually use
-    messageBox.setText("Could not import IFC file.");
-    messageBox.exec();
   }
 
 }

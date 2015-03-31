@@ -61,7 +61,7 @@ namespace bimserver {
     connect(m_loadButton, SIGNAL(clicked()), this, SLOT(loadButton_clicked()));
     connect(m_selectButton, SIGNAL(clicked()), this, SLOT(selectButton_clicked()));
     connect(settingButton, SIGNAL(clicked()),this, SLOT(settingButton_clicked()));
-    connect(cancelButton, SIGNAL(clicked()), this, SLOT(close()));
+    connect(cancelButton, SIGNAL(clicked()), this, SLOT(app_ended()));
 
     subLayout->addWidget(m_proList, 1, 0, 1, 1);
     subLayout->addWidget(m_ifcList, 1, 2, 1, 1);
@@ -115,17 +115,20 @@ namespace bimserver {
       settingButton_clicked();
     }
 
-
     //execute event loop
     m_waitForOSM->exec();
 
     //Reverse Translate from osmString.
-    
-    std::stringstream stringStream(m_OSM.toStdString());
 
-    openstudio::osversion::VersionTranslator vt;
+    if (!m_OSM.isEmpty()) {
+      std::stringstream stringStream(m_OSM.toStdString());
 
-    return vt.loadModel(stringStream);
+      openstudio::osversion::VersionTranslator vt;
+
+      return vt.loadModel(stringStream);
+    } else {
+      return boost::none;
+    }
   }
 
   void ProjectImporter::processProjectList(QStringList pList) 
@@ -177,7 +180,6 @@ namespace bimserver {
   } 
 
   void ProjectImporter::processBIMserverErrors() {
-    //TODO what to do if BIMserver is not running?
     this->hide();
 
     QMessageBox messageBox(this);
@@ -374,7 +376,34 @@ namespace bimserver {
 
     } else {
       m_statusBar->showMessage("Settings configuration terminated.", 2000);
+      
+      if (this->isHidden()) {
+        emit finished();
+      }
+
     }
   }
+
+  void ProjectImporter::app_ended() 
+  {
+    emit finished();
+  }
+
+  void ProjectImporter::closeEvent(QCloseEvent *event) {
+    emit finished();
+    event->accept();
+  }
+
+  void ProjectImporter::keyPressEvent(QKeyEvent *event) {
+    if (event->key() == Qt::Key_Escape) {
+
+      emit finished();
+      event->accept();
+
+    } else {
+      event->ignore();
+    }
+  }
+
 } // bimserver
 } // openstudio
