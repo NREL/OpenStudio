@@ -383,6 +383,7 @@ OSDocument::~OSDocument()
 
 void OSDocument::showStartTabAndStartSubTab()
 {
+  onVerticalTabSelected(m_verticalId);
   m_mainWindow->show();
 }
 
@@ -478,7 +479,6 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
     m_tabButtonsCreated = true;
     createTabButtons();
   }
-  createTab(m_verticalId);
 
   QTimer::singleShot(0, this, SLOT(initializeModel()));
 
@@ -1105,7 +1105,7 @@ void OSDocument::onVerticalTabSelected(int verticalId)
 
   //m_mainWindow->selectHorizontalTab(LIBRARY);
 
-  boost::optional<model::ModelObject> mo;
+  //boost::optional<model::ModelObject> mo;
 
   //m_inspectorController->layoutModelObject(mo);
 }

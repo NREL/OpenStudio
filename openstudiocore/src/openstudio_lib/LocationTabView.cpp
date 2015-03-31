@@ -20,47 +20,51 @@
 #include "LocationTabView.hpp"
 
 #include "OSDocument.hpp"
+#include "SchedulesTabController.hpp"
+#include "YearSettingsWidget.hpp"
 
 #include "../openstudio_app/OpenStudioApp.hpp"
 
+#include "../model/ClimateZones.hpp"
+#include "../model/ClimateZones_Impl.hpp"
 #include "../model/DesignDay.hpp"
 #include "../model/DesignDay_Impl.hpp"
 #include "../model/Model_Impl.hpp"
 #include "../model/RunPeriod.hpp"
+#include "../model/RunPeriodControlDaylightSavingTime.hpp"
+#include "../model/RunPeriodControlDaylightSavingTime_Impl.hpp"
 #include "../model/RunPeriod_Impl.hpp"
 #include "../model/Site.hpp"
 #include "../model/Site_Impl.hpp"
 #include "../model/SizingPeriod.hpp"
 #include "../model/SizingPeriod_Impl.hpp"
 #include "../model/WeatherFile.hpp"
-#include "../model/WeatherFile_Impl.hpp"
-#include "../model/ClimateZones.hpp"
-#include "../model/ClimateZones_Impl.hpp"
-#include "../model/WeatherFileDays.hpp"
 #include "../model/WeatherFileConditionType.hpp"
-#include "../model/YearDescription.hpp"
+#include "../model/WeatherFileDays.hpp"
+#include "../model/WeatherFile_Impl.hpp"
 #include "../model/YearDescription_Impl.hpp"
 
 #include "../energyplus/ReverseTranslator.hpp"
 
 #include "../runmanager/lib/ConfigOptions.hpp"
 
+#include "../utilities/core/Assert.hpp"
 #include "../utilities/filetypes/EpwFile.hpp"
 #include "../utilities/idf/IdfFile.hpp"
-#include "../utilities/core/Assert.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
 #include <boost/smart_ptr.hpp>
 
 #include <QBoxLayout>
+#include <QComboBox>
+#include <QDateTime>
 #include <QDir>
 #include <QFileDialog>
 #include <QLabel>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QSizePolicy>
-#include <QMessageBox>
-#include <QComboBox>
 
 #define NAME "Name: "
 #define LATITUDE "Latitude: "
@@ -84,47 +88,115 @@ LocationView::LocationView(const model::Model & model,
     m_model(model),
     m_modelTempDir(modelTempDir)
 {
-  QLabel * label = 0;
-  QPushButton * btn = 0;
-  QHBoxLayout * hLayout = 0;
-  QVBoxLayout * vLayout = 0;
-  QFont boldFont;
+  QFrame * line = nullptr;
+  QLabel * label = nullptr;
+  QPushButton * btn = nullptr;
+  QHBoxLayout * hLayout = nullptr;
+  QVBoxLayout * vLayout = nullptr;
+
+  m_yearDescription = m_model.getUniqueModelObject<model::YearDescription>();
 
   model::ClimateZones climateZones = m_model.getUniqueModelObject<model::ClimateZones>();
 
   // ***** Main Layout *****
-  QVBoxLayout * mainVLayout = new QVBoxLayout();
+  auto mainVLayout = new QVBoxLayout();
   mainVLayout->setContentsMargins(10,10,10,10);
   mainVLayout->setSpacing(10);
   setLayout(mainVLayout);
 
+  // ***** Upper Horizontal Layout *****
+  auto upperHorizontalLayout = new QHBoxLayout();
+  upperHorizontalLayout->setContentsMargins(10, 0, 10, 0);
+  upperHorizontalLayout->setSpacing(0);
+
+  // ***** Weather File Layout *****
+  auto weatherFileLayout = new QVBoxLayout();
+  weatherFileLayout->setContentsMargins(10, 0, 10, 0);
+  weatherFileLayout->setSpacing(0);
+
+  // ***** Schedules Layout *****
+  auto schedulesLayout = new QVBoxLayout();
+  schedulesLayout->setContentsMargins(10, 0, 10, 0);
+  schedulesLayout->setSpacing(0);
+
+  // ***** Upper Horizontal Layout Vertical Line *****
+  line = new QFrame();
+  line->setFrameShape(QFrame::VLine);
+  line->setFrameShadow(QFrame::Sunken);
+
+  mainVLayout->addLayout(upperHorizontalLayout);
+  upperHorizontalLayout->addLayout(weatherFileLayout);
+  upperHorizontalLayout->addWidget(line);
+  upperHorizontalLayout->addLayout(schedulesLayout);
+
+  // ***** Weather File *****
+  label = new QLabel("Weather File");
+  label->setObjectName("H2");
+
+  btn = new QPushButton("Set Weather File", this);
+  btn->setFlat(true);
+  btn->setObjectName("StandardGrayButton");
+  connect(btn, &QPushButton::clicked, this, &LocationView::onWeatherFileBtnClicked);
+
+  hLayout = new QHBoxLayout();
+  hLayout->setContentsMargins(0, 5, 0, 5);
+  hLayout->setSpacing(5);
+
+  hLayout->addWidget(label, 0, Qt::AlignLeft);
+  hLayout->addWidget(btn, 0, Qt::AlignLeft);
+  hLayout->addStretch();
+
+  weatherFileLayout->addLayout(hLayout);
+
+  // ***** Site Info *****
+  m_nameLbl = new QLabel(NAME);
+  weatherFileLayout->addWidget(m_nameLbl);
+
+  m_latitudeLbl = new QLabel(LATITUDE);
+  weatherFileLayout->addWidget(m_latitudeLbl);
+
+  m_longitudeLbl = new QLabel(LONGITUDE);
+  weatherFileLayout->addWidget(m_longitudeLbl);
+
+  m_elevationLbl = new QLabel(ELEVATION);
+  weatherFileLayout->addWidget(m_elevationLbl);
+
+  m_timeZoneLbl = new QLabel(TIME_ZONE);
+  weatherFileLayout->addWidget(m_timeZoneLbl);
+
+  m_numDesignDaysLbl = new QLabel(NUM_DESIGN_DAYS);
+  weatherFileLayout->addWidget(m_numDesignDaysLbl);
+
+  // ***** Weather File Download Location *****
+  label = new QLabel("Download weather files at <a href=\"http://www.energyplus.gov\">www.energyplus.gov</a>");
+  label->setOpenExternalLinks(true);
+  weatherFileLayout->addWidget(label);
+  
   // ***** Climate Zones *****
-  QFrame * line;
   line = new QFrame();
   line->setFrameShape(QFrame::HLine);
   line->setFrameShadow(QFrame::Sunken);
-  mainVLayout->addWidget(line);
+  weatherFileLayout->addWidget(line);
 
   label = new QLabel("Measure Tags (Optional):");
   label->setObjectName("H2");
-  mainVLayout->addWidget(label);
-
-  hLayout = new QHBoxLayout();
-  hLayout->setContentsMargins(0,5,0,5);
-  hLayout->setSpacing(5);
-
-  vLayout = new QVBoxLayout();
-  vLayout->setContentsMargins(10,0,10,0);
-  vLayout->setSpacing(5);
-  hLayout->addLayout(vLayout);
+  weatherFileLayout->addWidget(label);
 
   label = new QLabel("ASHRAE Climate Zone");
   label->setObjectName("StandardsInfo");
-  vLayout->addWidget(label);
 
   m_ashraeClimateZone = new QComboBox();
   m_ashraeClimateZone->setFixedWidth(200);
-  vLayout->addWidget(m_ashraeClimateZone);
+  
+  hLayout = new QHBoxLayout();
+  hLayout->setContentsMargins(0, 5, 0, 5);
+  hLayout->setSpacing(5);
+
+  hLayout->addWidget(label, 0, Qt::AlignLeft);
+  hLayout->addWidget(m_ashraeClimateZone, 0, Qt::AlignLeft);
+  hLayout->addStretch();
+
+  weatherFileLayout->addLayout(hLayout);
 
   m_ashraeClimateZone->addItem("");
   std::vector<std::string> ashraeClimateZoneValues = model::ClimateZones::validClimateZoneValues(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDefaultYear());
@@ -145,18 +217,21 @@ LocationView::LocationView(const model::Model & model,
 
   connect(m_ashraeClimateZone, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &LocationView::onASHRAEClimateZoneChanged);
 
-  vLayout = new QVBoxLayout();
-  vLayout->setContentsMargins(10,0,10,0);
-  vLayout->setSpacing(5);
-  hLayout->addLayout(vLayout);
-
   label = new QLabel("CEC Climate Zone");
   label->setObjectName("StandardsInfo");
-  vLayout->addWidget(label);
 
   m_cecClimateZone = new QComboBox();
   m_cecClimateZone->setFixedWidth(200);
-  vLayout->addWidget(m_cecClimateZone);
+
+  hLayout = new QHBoxLayout();
+  hLayout->setContentsMargins(0, 5, 0, 5);
+  hLayout->setSpacing(5);
+
+  hLayout->addWidget(label, 0, Qt::AlignLeft);
+  hLayout->addWidget(m_cecClimateZone, 0, Qt::AlignLeft);
+  hLayout->addStretch();
+
+  weatherFileLayout->addLayout(hLayout);
 
   m_cecClimateZone->addItem("");
   std::vector<std::string> cecClimateZoneValues = model::ClimateZones::validClimateZoneValues(model::ClimateZones::cecInstitutionName(), model::ClimateZones::cecDefaultYear());
@@ -177,114 +252,50 @@ LocationView::LocationView(const model::Model & model,
 
   connect(m_cecClimateZone, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &LocationView::onCECClimateZoneChanged);
 
-  hLayout->addStretch();
-  mainVLayout->addLayout(hLayout);
+  // ***** Schedules *****
+  auto yearSettingsWidget = new YearSettingsWidget(m_model);
+  schedulesLayout->addWidget(yearSettingsWidget);
 
+  connect(yearSettingsWidget, &YearSettingsWidget::calendarYearSelected, this, &LocationView::setCalendarYear);
+
+  connect(yearSettingsWidget, &YearSettingsWidget::firstDayofYearSelected, this, &LocationView::setFirstDayofYear);
+
+  connect(yearSettingsWidget, &YearSettingsWidget::daylightSavingTimeClicked, this, &LocationView::setDaylightSavingsTime);
+
+  connect(yearSettingsWidget, &YearSettingsWidget::dstStartDayOfWeekAndMonthChanged, this, &LocationView::setDstStartDayOfWeekAndMonth);
+
+  connect(yearSettingsWidget, &YearSettingsWidget::dstStartDateChanged, this, &LocationView::setDstStartDate);
+
+  connect(yearSettingsWidget, &YearSettingsWidget::dstEndDayOfWeekAndMonthChanged, this, &LocationView::setDstEndDayOfWeekAndMonth);
+
+  connect(yearSettingsWidget, &YearSettingsWidget::dstEndDateChanged, this, &LocationView::setDstEndDate);
+
+  // ***** Upper Horizontal Layout Vertical Line *****
   line = new QFrame();
   line->setFrameShape(QFrame::HLine);
   line->setFrameShadow(QFrame::Sunken);
+
   mainVLayout->addWidget(line);
 
-  // ***** Weather File *****
-  label = new QLabel("Weather File");
-  label->setObjectName("H2");
-  mainVLayout->addWidget(label);
-
-  m_weatherFileLbl = new QLabel();
-  m_weatherFileLbl->setStyleSheet("border: 1px solid black");
-  m_weatherFileLbl->setFixedWidth(400);
-
-  btn = new QPushButton("Browse",this);
-  btn->setFlat(true);
-  btn->setObjectName("StandardGrayButton");
-  connect(btn, &QPushButton::clicked, this, &LocationView::onWeatherFileBtnClicked);
-
-  hLayout = new QHBoxLayout();
-  hLayout->setContentsMargins(0,5,0,5);
-  hLayout->setSpacing(5);
-  hLayout->addWidget(m_weatherFileLbl,0,Qt::AlignLeft);
-  hLayout->addWidget(btn,0,Qt::AlignLeft);
-  hLayout->addStretch();
-
-  vLayout = new QVBoxLayout();
-  vLayout->setContentsMargins(10,0,10,0);
-  vLayout->setSpacing(0);
-
-  label = new QLabel("EPW File Path");
-  vLayout->addWidget(label);
-
-  vLayout->addLayout(hLayout);
-
-  label = new QLabel("Download weather files at <a href=\"http://www.energyplus.gov\">www.energyplus.gov</a>");
-  label->setOpenExternalLinks(true);
-
-  vLayout->addWidget(label);
-
-  mainVLayout->addLayout(vLayout);
-  mainVLayout->addSpacing(10);
-
-  // Design Days
+  // ***** Design Days *****
   label = new QLabel("Design Days");
   label->setObjectName("H2");
-  mainVLayout->addWidget(label);
 
-  m_designDaysLbl = new QLabel();
-  m_designDaysLbl->setStyleSheet("border: 1px solid black");
-  m_designDaysLbl->setFixedWidth(400);
-
-  btn = new QPushButton("Browse",this);
+  btn = new QPushButton("Import From DDY", this);
   btn->setFlat(true);
   btn->setObjectName("StandardGrayButton");
   connect(btn, &QPushButton::clicked, this, &LocationView::onDesignDayBtnClicked);
 
   hLayout = new QHBoxLayout();
-  hLayout->setContentsMargins(0,5,0,5);
+  hLayout->setContentsMargins(0, 5, 0, 5);
   hLayout->setSpacing(5);
-  hLayout->addWidget(m_designDaysLbl,0,Qt::AlignLeft);
-  hLayout->addWidget(btn,0,Qt::AlignLeft);
+
+  hLayout->addWidget(label, 0, Qt::AlignLeft);
+  hLayout->addWidget(btn, 0, Qt::AlignLeft);
   hLayout->addStretch();
 
-  vLayout = new QVBoxLayout();
-  vLayout->setContentsMargins(10,0,10,0);
-  vLayout->setSpacing(0);
+  mainVLayout->addLayout(hLayout);
 
-  label = new QLabel("DDY File Path");
-  vLayout->addWidget(label);
-
-  vLayout->addLayout(hLayout);
-
-  mainVLayout->addLayout(vLayout);
-  mainVLayout->addSpacing(10);
-
-  // Location
-  label = new QLabel("Location");
-  boldFont = label->font();
-  boldFont.setBold(true);
-  label->setFont(boldFont);
-  mainVLayout->addWidget(label);
-
-  vLayout = new QVBoxLayout();
-  vLayout->setContentsMargins(10,0,10,0);
-
-  m_nameLbl = new QLabel(NAME);
-  vLayout->addWidget(m_nameLbl);
-
-  m_latitudeLbl = new QLabel(LATITUDE);
-  vLayout->addWidget(m_latitudeLbl);
-
-  m_longitudeLbl = new QLabel(LONGITUDE);
-  vLayout->addWidget(m_longitudeLbl);
-
-  m_elevationLbl = new QLabel(ELEVATION);
-  vLayout->addWidget(m_elevationLbl);
-
-  m_timeZoneLbl = new QLabel(TIME_ZONE);
-  vLayout->addWidget(m_timeZoneLbl);
-
-  m_numDesignDaysLbl = new QLabel(NUM_DESIGN_DAYS);
-  vLayout->addWidget(m_numDesignDaysLbl);
-
-  mainVLayout->addLayout(vLayout);
   mainVLayout->addStretch();
 
   update();
@@ -298,27 +309,29 @@ void LocationView::update()
   boost::optional<model::WeatherFile> weatherFile = m_model.getOptionalUniqueModelObject<model::WeatherFile>();
   if (weatherFile){
 
-    info = NAME;
-    info += weatherFile->city().c_str();
-    m_nameLbl->setText(info);
-
     boost::optional<openstudio::path> epwPath = weatherFile->path();
     if (epwPath){
-      m_weatherFileLbl->setText(toQString(*epwPath));
+      // Do great things
     }
 
     model::Site site = m_model.getUniqueModelObject<model::Site>();
+    if (weatherFile->name()) {
+      site.setName(weatherFile->name().get());
+    }
     site.setLatitude(weatherFile->latitude());
     site.setLongitude(weatherFile->longitude());
     site.setElevation(weatherFile->elevation());
     site.setTimeZone(weatherFile->timeZone());
-  } else {
-    m_nameLbl->setText("");
-    m_weatherFileLbl->setText("");
   } 
 
   boost::optional<model::Site> site = m_model.getOptionalUniqueModelObject<model::Site>();
   if (site){
+
+    info = NAME;
+    if (site->name()) {
+      info += site->name().get().c_str();
+    }
+    m_nameLbl->setText(info);
 
     info = LATITUDE;
     temp.setNum(site->latitude());
@@ -339,14 +352,7 @@ void LocationView::update()
     temp.setNum(site->timeZone());
     info += temp;
     m_timeZoneLbl->setText(info);
-  } else {
-    m_latitudeLbl->setText("");
-    m_longitudeLbl->setText("");
-    m_elevationLbl->setText("");
-    m_timeZoneLbl->setText("");
-  } 
-
-  m_designDaysLbl->setText(m_lastDdyPathOpened);
+  }
 
   unsigned numDesignDays = m_model.getModelObjects<model::SizingPeriod>().size();
   info = NUM_DESIGN_DAYS;
@@ -602,6 +608,66 @@ void LocationView::onCECClimateZoneChanged(const QString& climateZone)
   model::ClimateZones climateZones = m_model.getUniqueModelObject<model::ClimateZones>();
   model::ClimateZone cecClimateZone = climateZones.getClimateZone(model::ClimateZones::cecInstitutionName(), model::ClimateZones::cecDefaultYear());
   cecClimateZone.setValue(toString(climateZone));
+}
+
+void LocationView::setCalendarYear(int year)
+{
+  m_yearDescription->setCalendarYear(year);
+}
+
+void LocationView::setFirstDayofYear(const QString & firstDayofYear)
+{
+  m_yearDescription->resetCalendarYear();
+
+  m_yearDescription->setDayofWeekforStartDay(firstDayofYear.toStdString());
+}
+
+void LocationView::setDaylightSavingsTime(bool enabled)
+{
+  if( enabled )
+  {
+    m_model.getUniqueModelObject<model::RunPeriodControlDaylightSavingTime>();
+  }
+  else
+  {
+    if( boost::optional<model::RunPeriodControlDaylightSavingTime> dst =
+          m_model.getOptionalUniqueModelObject<model::RunPeriodControlDaylightSavingTime>() )
+    {
+      dst->remove();
+    }
+  }
+}
+
+void LocationView::setDstStartDayOfWeekAndMonth(int newWeek, int newDay, int newMonth)
+{
+  model::RunPeriodControlDaylightSavingTime dst =
+    m_model.getUniqueModelObject<model::RunPeriodControlDaylightSavingTime>();
+
+  dst.setStartDate(NthDayOfWeekInMonth(newWeek), DayOfWeek(newDay), MonthOfYear(newMonth));
+}
+
+void LocationView::setDstStartDate(const QDate & newdate)
+{
+  model::RunPeriodControlDaylightSavingTime dst =
+    m_model.getUniqueModelObject<model::RunPeriodControlDaylightSavingTime>();
+
+  dst.setStartDate(monthOfYear(newdate.month()),newdate.day());
+}
+
+void LocationView::setDstEndDayOfWeekAndMonth(int newWeek, int newDay, int newMonth)
+{
+  model::RunPeriodControlDaylightSavingTime dst =
+    m_model.getUniqueModelObject<model::RunPeriodControlDaylightSavingTime>();
+
+  dst.setEndDate(NthDayOfWeekInMonth(newWeek), DayOfWeek(newDay), MonthOfYear(newMonth));
+}
+
+void LocationView::setDstEndDate(const QDate & newdate)
+{
+  model::RunPeriodControlDaylightSavingTime dst =
+    m_model.getUniqueModelObject<model::RunPeriodControlDaylightSavingTime>();
+
+  dst.setEndDate(monthOfYear(newdate.month()),newdate.day());
 }
 
 } // openstudio

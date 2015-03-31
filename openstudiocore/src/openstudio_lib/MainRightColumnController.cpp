@@ -272,8 +272,12 @@ void MainRightColumnController::configureForSiteSubTab(int subTabID)
   setMyModelView(nullptr);
   setEditView(nullptr);
 
-  doc->openSidebar();
-  //doc->closeSidebar();
+  if (subTabID == 0) {
+    doc->closeSidebar();
+  }
+  else {
+    doc->openSidebar();
+  }
 }
 
 void MainRightColumnController::configureForSchedulesSubTab(int subTabID)

@@ -21,7 +21,10 @@
 #define OPENSTUDIO_LOCATIONTABVIEW_HPP
 
 #include "../model/Model.hpp"
+#include "../model/YearDescription.hpp"
+
 #include "MainTabView.hpp"
+
 #include <QWidget>
 
 class QDir;
@@ -30,6 +33,7 @@ class QComboBox;
 namespace openstudio {
 
 class EpwFile;
+class YearSettingsWidget;
 
 namespace model {
   class Model;
@@ -44,29 +48,37 @@ public:
                const QString& modelTempDir);
   virtual ~LocationView() {}
 
+private:
+  void update();
+
+  model::Model m_model;
+  boost::optional<model::YearDescription> m_yearDescription;
+  YearSettingsWidget * m_yearSettingsWidget = nullptr;
+  QString m_modelTempDir;
+  QString m_lastEpwPathOpened;
+  QString m_lastDdyPathOpened;
+  QComboBox * m_ashraeClimateZone = nullptr;
+  QComboBox * m_cecClimateZone = nullptr;
+  QLabel * m_nameLbl = nullptr;
+  QLabel * m_latitudeLbl = nullptr;
+  QLabel * m_longitudeLbl = nullptr;
+  QLabel * m_elevationLbl = nullptr;
+  QLabel * m_timeZoneLbl = nullptr;
+  QLabel * m_numDesignDaysLbl = nullptr;
+
 private slots:
+  void setCalendarYear(int year);
+  void setFirstDayofYear(const QString & firstDayofYear);
+  void setDaylightSavingsTime(bool enabled);
+  void setDstStartDayOfWeekAndMonth(int newWeek, int newDay, int newMonth);
+  void setDstStartDate(const QDate & newdate);
+  void setDstEndDayOfWeekAndMonth(int newWeek, int newDay, int newMonth);
+  void setDstEndDate(const QDate & newdate);
   void onWeatherFileBtnClicked();
   void onDesignDayBtnClicked();
   void onASHRAEClimateZoneChanged(const QString& climateZone);
   void onCECClimateZoneChanged(const QString& climateZone);
 
-private:
-  void update();
-
-  model::Model m_model;
-  QString m_modelTempDir;
-  QComboBox * m_ashraeClimateZone;
-  QComboBox * m_cecClimateZone;
-  QLabel * m_weatherFileLbl;
-  QLabel * m_designDaysLbl;
-  QLabel * m_nameLbl;
-  QLabel * m_latitudeLbl;
-  QLabel * m_longitudeLbl;
-  QLabel * m_elevationLbl;
-  QLabel * m_timeZoneLbl;
-  QLabel * m_numDesignDaysLbl;
-  QString m_lastEpwPathOpened;
-  QString m_lastDdyPathOpened;
 };
 
 class LocationTabView : public MainTabView
@@ -81,6 +93,7 @@ public:
 
 private:
   LocationView * m_locationView;
+
 };
 
 } // openstudio

@@ -38,12 +38,12 @@
 
 namespace openstudio {
 
-LocationTabController::LocationTabController(const model::Model & model,
+  LocationTabController::LocationTabController(const model::Model & model,
                                              const QString& modelTempDir)
   : MainTabController(new LocationTabView(model,modelTempDir))
 {
   LocationView * locationView = new LocationView(model, modelTempDir);
-  mainContentWidget()->addSubTab("Weather File && Design Days",locationView,WEATHER_FILE);
+  mainContentWidget()->addSubTab("Overview",locationView,WEATHER_FILE);
 
   LifeCycleCostsView * lifeCycleCostsView = new LifeCycleCostsView(model);
   mainContentWidget()->addSubTab("Life Cycle Costs",lifeCycleCostsView,LIFE_CYCLE_COSTS);
@@ -84,7 +84,7 @@ LocationTabController::LocationTabController(const model::Model & model,
   label = new QLabel();
   label->setPixmap(QPixmap(":/images/coming_soon_utility_rates.png"));
   label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-  mainContentWidget()->addSubTab("Utility Rates",label,UTILITY_RATES);
+  //mainContentWidget()->addSubTab("Utility Rates",label,UTILITY_RATES); This is too slow in coming, so hide until ready
 
   // Hack code to remove when tab active
   //label = new QLabel();
