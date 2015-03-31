@@ -30,6 +30,8 @@
 #include <QStatusBar>
 #include <QSettings>
 #include <QEventLoop>
+#include <QCloseEvent>
+#include <QKeyEvent>
 
 namespace openstudio {
 namespace bimserver {
@@ -49,6 +51,12 @@ namespace bimserver {
 
       /// Virtual destructor
       ~ProjectImporter();
+
+      /// Reimplemented the close event and guide it to the run() function
+      void closeEvent(QCloseEvent *event);
+
+      /// Reimplemented the key press event of ESC and guide it to the run() function
+      void keyPressEvent(QKeyEvent *event);
 
     signals:
       /// OSM String is retrieved.
@@ -70,6 +78,7 @@ namespace bimserver {
       void processBIMserverErrors();
 
     private:
+
       BIMserverConnection *m_bimserverConnection;
       QSettings *m_settings;
 
@@ -88,12 +97,13 @@ namespace bimserver {
 
     private slots:
 
-     /// What to do when the user clicks on the okButton
       void okButton_clicked();
       void newButton_clicked();
       void loadButton_clicked();
       void selectButton_clicked();
       void settingButton_clicked();
+      void app_ended();
+
     };
 
 } // bimserver
