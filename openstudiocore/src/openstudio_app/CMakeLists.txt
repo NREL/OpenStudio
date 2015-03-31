@@ -90,6 +90,7 @@ set(depends
   openstudio_modeleditor
   openstudio_sdd
   openstudio_gbxml
+  openstudio_bimserver
   ${QT_LIBS}
   ${RUBY_LIBRARY}
 )

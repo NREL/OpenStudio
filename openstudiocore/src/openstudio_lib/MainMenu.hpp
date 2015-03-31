@@ -50,6 +50,8 @@ class MainMenu : public QMenuBar
 
   void importSDDClicked();
 
+  void importIFCClicked();
+
   void loadFileClicked();
 
   void loadLibraryClicked();

@@ -740,6 +740,26 @@ add_custom_target(openstudio_isomodel_resources
 )
 
 CREATE_SRC_GROUPS("${isomodel_resources_src}")
+
+########################################################
+# bimserver resources
+# clear runs, calls to RUN_ENERGYPLUS will populate this
+set(ENERGYPLUS_OUTPUTS "")
+
+set(bimserver_resources_src
+)
+
+# update the resources
+UPDATE_RESOURCES("${bimserver_resources_src}")
+
+# add target
+add_custom_target(openstudio_bimserver_resources
+  DEPENDS ${bimserver_resources_src} ${ENERGYPLUS_OUTPUTS}
+  SOURCES ${bimserver_resources_src}
+)
+
+CREATE_SRC_GROUPS("${bimserver_resources_src}")
+
 ########################################################
 # CONTAM resources
 # clear runs, calls to RUN_ENERGYPLUS will populate this
