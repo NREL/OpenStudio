@@ -306,6 +306,8 @@ LocationView::LocationView(bool isIP,
   auto designDayGridController = new DesignDayGridController(m_isIP, "Design Days", IddObjectType::OS_SpaceType, model, designDayModelObjects);
   auto gridView = new OSGridView(designDayGridController, "Design Days", "Drop\nDesign Days", false, this->parentWidget());
 
+  mainVLayout->addWidget(gridView);
+
   mainVLayout->addStretch();
 
   update();
