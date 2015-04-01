@@ -19,9 +19,12 @@
 
 #include "LocationTabView.hpp"
 
+#include "DesignDayGridView.hpp"
 #include "OSDocument.hpp"
 #include "SchedulesTabController.hpp"
 #include "YearSettingsWidget.hpp"
+
+#include "../shared_gui_components/OSGridView.hpp"
 
 #include "../openstudio_app/OpenStudioApp.hpp"
 
@@ -76,17 +79,19 @@
 namespace openstudio {
 
 LocationTabView::LocationTabView(const model::Model & model,
-                                 const QString& modelTempDir,
-                                 QWidget * parent)
-                                 : MainTabView("Site",true,parent)
+  const QString& modelTempDir,
+  QWidget * parent)
+  : MainTabView("Site",true,parent)
 {
 }
 
-LocationView::LocationView(const model::Model & model,
-                           const QString& modelTempDir)
+LocationView::LocationView(bool isIP,
+  const model::Model & model,
+  const QString& modelTempDir)
   : QWidget(),
-    m_model(model),
-    m_modelTempDir(modelTempDir)
+  m_isIP(isIP),
+  m_model(model),
+  m_modelTempDir(modelTempDir)
 {
   QFrame * line = nullptr;
   QLabel * label = nullptr;
@@ -171,7 +176,7 @@ LocationView::LocationView(const model::Model & model,
   label = new QLabel("Download weather files at <a href=\"http://www.energyplus.gov\">www.energyplus.gov</a>");
   label->setOpenExternalLinks(true);
   weatherFileLayout->addWidget(label);
-  
+
   // ***** Climate Zones *****
   line = new QFrame();
   line->setFrameShape(QFrame::HLine);
@@ -187,14 +192,14 @@ LocationView::LocationView(const model::Model & model,
 
   m_ashraeClimateZone = new QComboBox();
   m_ashraeClimateZone->setFixedWidth(200);
-  
+
   hLayout = new QHBoxLayout();
   hLayout->setContentsMargins(0, 5, 0, 5);
   hLayout->setSpacing(5);
 
   hLayout->addWidget(label, 0, Qt::AlignLeft);
   hLayout->addWidget(m_ashraeClimateZone, 0, Qt::AlignLeft);
-  hLayout->addStretch();
+  //hLayout->addStretch();
 
   weatherFileLayout->addLayout(hLayout);
 
@@ -229,7 +234,7 @@ LocationView::LocationView(const model::Model & model,
 
   hLayout->addWidget(label, 0, Qt::AlignLeft);
   hLayout->addWidget(m_cecClimateZone, 0, Qt::AlignLeft);
-  hLayout->addStretch();
+  //hLayout->addStretch();
 
   weatherFileLayout->addLayout(hLayout);
 
@@ -295,6 +300,11 @@ LocationView::LocationView(const model::Model & model,
   hLayout->addStretch();
 
   mainVLayout->addLayout(hLayout);
+
+  auto designDays = model.getModelObjects<model::DesignDay>();
+  auto designDayModelObjects = subsetCastVector<model::ModelObject>(designDays);
+  auto designDayGridController = new DesignDayGridController(m_isIP, "Design Days", IddObjectType::OS_SpaceType, model, designDayModelObjects);
+  auto gridView = new OSGridView(designDayGridController, "Design Days", "Drop\nDesign Days", false, this->parentWidget());
 
   mainVLayout->addStretch();
 

@@ -44,8 +44,10 @@ class LocationView : public QWidget
   Q_OBJECT
 
 public:
-  LocationView(const model::Model & model,
-               const QString& modelTempDir);
+  LocationView(bool isIP,
+    const model::Model & model,
+    const QString& modelTempDir);
+
   virtual ~LocationView() {}
 
 private:
@@ -65,6 +67,7 @@ private:
   QLabel * m_elevationLbl = nullptr;
   QLabel * m_timeZoneLbl = nullptr;
   QLabel * m_numDesignDaysLbl = nullptr;
+  bool m_isIP;
 
 private slots:
   void setCalendarYear(int year);
@@ -87,8 +90,9 @@ class LocationTabView : public MainTabView
 
 public:
   LocationTabView(const model::Model & model,
-                  const QString& modelTempDir,
-                  QWidget * parent = 0);
+    const QString& modelTempDir,
+    QWidget * parent = 0);
+
   virtual ~LocationTabView() {}
 
 private:
