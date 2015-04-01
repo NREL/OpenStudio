@@ -493,7 +493,7 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
   QWidget *widget = nullptr;
   bool isConnected = false;
 
-  if(QSharedPointer<CheckBoxConcept> checkBoxConcept = t_baseConcept.dynamicCast<CheckBoxConcept>()){
+  if (QSharedPointer<CheckBoxConcept> checkBoxConcept = t_baseConcept.dynamicCast<CheckBoxConcept>()){
 
     auto checkBox = new OSCheckBox3(this->gridView()); // OSCheckBox3 is derived from QCheckBox, whereas OSCheckBox2 is derived from QPushButton
     if (checkBoxConcept->tooltip().size()) {
@@ -501,13 +501,29 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
     }
 
     checkBox->bind(t_mo,
-                   BoolGetter(std::bind(&CheckBoxConcept::get,checkBoxConcept.data(),t_mo)),
-                                       boost::optional<BoolSetter>(std::bind(&CheckBoxConcept::set, checkBoxConcept.data(), t_mo, std::placeholders::_1)));
+      BoolGetter(std::bind(&CheckBoxConcept::get, checkBoxConcept.data(), t_mo)),
+      boost::optional<BoolSetter>(std::bind(&CheckBoxConcept::set, checkBoxConcept.data(), t_mo, std::placeholders::_1)));
 
     isConnected = connect(checkBox, SIGNAL(stateChanged(int)), gridView(), SLOT(requestRefreshGrid())); // TODO this is not the most efficient, by single row would be better
     OS_ASSERT(isConnected);
 
     widget = checkBox;
+
+  } else if (auto checkBoxConceptBoolReturn = t_baseConcept.dynamicCast<CheckBoxConceptBoolReturn>()){
+
+      auto checkBoxBoolReturn = new OSCheckBox3(this->gridView());
+      if (checkBoxConceptBoolReturn->tooltip().size()) {
+        checkBoxBoolReturn->setToolTip(checkBoxConceptBoolReturn->tooltip().c_str());
+      }
+
+      checkBoxBoolReturn->bind(t_mo,
+        BoolGetter(std::bind(&CheckBoxConceptBoolReturn::get, checkBoxConceptBoolReturn.data(), t_mo)),
+        boost::optional<BoolSetterBoolReturn>(std::bind(&CheckBoxConceptBoolReturn::set, checkBoxConceptBoolReturn.data(), t_mo, std::placeholders::_1)));
+
+      isConnected = connect(checkBoxBoolReturn, SIGNAL(stateChanged(int)), gridView(), SLOT(requestRefreshGrid()));
+      OS_ASSERT(isConnected);
+
+      widget = checkBoxBoolReturn;
 
   } else if(QSharedPointer<ComboBoxConcept> comboBoxConcept = t_baseConcept.dynamicCast<ComboBoxConcept>()) {
 
@@ -829,6 +845,12 @@ void OSGridController::setConceptValue(model::ModelObject t_setterMO, model::Mod
   if (QSharedPointer<CheckBoxConcept> concept = t_baseConcept.dynamicCast<CheckBoxConcept>()){
     auto setter = std::bind(&CheckBoxConcept::set, concept.data(), t_setterMO, std::placeholders::_1);
     auto getter = std::bind(&CheckBoxConcept::get, concept.data(), t_getterMO);
+    auto temp = getter();
+    setter(temp);
+  }
+  if (QSharedPointer<CheckBoxConceptBoolReturn> concept = t_baseConcept.dynamicCast<CheckBoxConceptBoolReturn>()){
+    auto setter = std::bind(&CheckBoxConceptBoolReturn::set, concept.data(), t_setterMO, std::placeholders::_1);
+    auto getter = std::bind(&CheckBoxConceptBoolReturn::get, concept.data(), t_getterMO);
     auto temp = getter();
     setter(temp);
   }
