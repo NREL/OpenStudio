@@ -68,6 +68,7 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QScrollArea>
 #include <QSizePolicy>
 
 #define NAME "Name: "
@@ -105,10 +106,34 @@ LocationView::LocationView(bool isIP,
   model::ClimateZones climateZones = m_model.getUniqueModelObject<model::ClimateZones>();
 
   // ***** Main Layout *****
-  auto mainVLayout = new QVBoxLayout();
-  mainVLayout->setContentsMargins(10,10,10,10);
-  mainVLayout->setSpacing(10);
-  setLayout(mainVLayout);
+  auto mainLayout = new QVBoxLayout();
+  mainLayout->setContentsMargins(10, 10, 10, 10);
+  mainLayout->setSpacing(10);
+  setLayout(mainLayout);
+
+
+
+
+  QVBoxLayout * scrollLayout = new QVBoxLayout();
+  scrollLayout->setSpacing(0);
+  scrollLayout->setContentsMargins(0, 0, 0, 0);
+
+  QWidget * scrollWidget = new QWidget();
+  scrollWidget->setObjectName("ScrollWidget");
+  scrollWidget->setStyleSheet("QWidget#ScrollWidget { background: transparent; }");
+  scrollWidget->setLayout(scrollLayout);
+
+  QScrollArea * scrollArea = new QScrollArea();
+  scrollArea->setContentsMargins(0, 0, 0, 0);
+  scrollArea->setFrameStyle(QFrame::NoFrame);
+  scrollArea->setWidget(scrollWidget);
+  scrollArea->setWidgetResizable(true);
+  scrollArea->setBackgroundRole(QPalette::NoRole);
+  mainLayout->addWidget(scrollArea);
+
+
+
+
 
   // ***** Upper Horizontal Layout *****
   auto upperHorizontalLayout = new QHBoxLayout();
@@ -130,7 +155,7 @@ LocationView::LocationView(bool isIP,
   line->setFrameShape(QFrame::VLine);
   line->setFrameShadow(QFrame::Sunken);
 
-  mainVLayout->addLayout(upperHorizontalLayout);
+  scrollLayout->addLayout(upperHorizontalLayout);
   upperHorizontalLayout->addLayout(weatherFileLayout);
   upperHorizontalLayout->addWidget(line);
   upperHorizontalLayout->addLayout(schedulesLayout);
@@ -281,7 +306,7 @@ LocationView::LocationView(bool isIP,
   line->setFrameShape(QFrame::HLine);
   line->setFrameShadow(QFrame::Sunken);
 
-  mainVLayout->addWidget(line);
+  scrollLayout->addWidget(line);
 
   // ***** Design Days *****
   label = new QLabel("Design Days");
@@ -300,7 +325,7 @@ LocationView::LocationView(bool isIP,
   hLayout->addWidget(btn, 0, Qt::AlignLeft);
   hLayout->addStretch();
 
-  mainVLayout->addLayout(hLayout);
+  scrollLayout->addLayout(hLayout);
 
   auto designDays = model.getModelObjects<model::DesignDay>();
   auto designDayModelObjects = subsetCastVector<model::ModelObject>(designDays);
@@ -309,9 +334,7 @@ LocationView::LocationView(bool isIP,
 
   gridView->m_dropZone->hide();
 
-  mainVLayout->addWidget(gridView);
-
-  mainVLayout->addStretch();
+  scrollLayout->addWidget(gridView);
 
   update();
 }
