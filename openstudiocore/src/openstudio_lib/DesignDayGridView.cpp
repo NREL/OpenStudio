@@ -24,14 +24,10 @@
 #include "ModelObjectItem.hpp"
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
-
+#include "OSDropZone.hpp"
 
 #include "../model/DesignDay.hpp"
 #include "../model/DesignDay_Impl.hpp"
-#include "../model/ModelObject.hpp"
-#include "../model/ModelObject_Impl.hpp"
-#include "../model/Model.hpp"
-#include "../model/Model_Impl.hpp"
 
 #include "../utilities/idd/IddEnums.hxx"
 #include "../utilities/idd/SizingPeriod_DesignDay_FieldEnums.hxx"
@@ -46,7 +42,7 @@
 // These defines provide a common area for field display names
 // used on column headers, and other grid widgets
 
-#define NAME "Some Object Name"
+#define NAME "Design Day Name"
 #define SELECTED "All"
 
 // DATE
@@ -104,27 +100,35 @@ DesignDayGridView::DesignDayGridView(bool isIP, const model::Model & model, QWid
   auto designDayModelObjects = subsetCastVector<model::ModelObject>(designDays);
 
   auto designDayGridController = new DesignDayGridController(m_isIP, "Design Days", IddObjectType::OS_SizingPeriod_DesignDay, model, designDayModelObjects);
-  auto designDayGridView = new OSGridView(designDayGridController, "Design Days", "Drop\nDesign Day", true, parent);
+  auto gridView = new OSGridView(designDayGridController, "Design Days", "Drop\nZone", true, parent);
 
   bool isConnected = false;
 
-  //isConnected = connect(caseGridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
-  //OS_ASSERT(isConnected);
+  isConnected = connect(gridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
+  OS_ASSERT(isConnected);
 
-  //scrollLayout->addWidget(caseGridView,0,Qt::AlignTop);
+  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), gridView, SIGNAL(itemSelected(OSItem*)));
+  OS_ASSERT(isConnected);
 
-  //isConnected = connect(walkInView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
-  //OS_ASSERT(isConnected);
+  isConnected = connect(this, SIGNAL(selectionCleared()), gridView, SLOT(onSelectionCleared()));
+  OS_ASSERT(isConnected);
 
-  //scrollLayout->addWidget(walkInView,0,Qt::AlignTop);
+  isConnected = connect(gridView, SIGNAL(gridRowSelected(OSItem*)), this, SIGNAL(gridRowSelected(OSItem*)));
+  OS_ASSERT(isConnected);
 
-  //scrollLayout->addStretch(1);
+  gridView->m_dropZone->hide();
 
-  //connect(this, &DesignDayGridView::toggleUnitsClicked, refrigerationCaseGridController, &DesignDayGridController::toggleUnitsClicked);
-  //
-  //connect(this, &DesignDayGridView::toggleUnitsClicked, refrigerationCaseGridController, &DesignDayGridController::toggleUnits);
+  layout->addWidget(gridView, 0, Qt::AlignTop);
 
-  //std::vector<model::DesignDaySystem> refrigerationSystems = model.getModelObjects<model::DesignDaySystem>(); // NOTE for horizontal system list
+  layout->addStretch(1);
+
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), designDayGridController, SIGNAL(toggleUnitsClicked(bool)));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), designDayGridController, SLOT(toggleUnits(bool)));
+  OS_ASSERT(isConnected);
+
+  auto designDayVector = model.getModelObjects<model::DesignDay>(); // NOTE for horizontal system lists
 
 }
 
@@ -178,7 +182,7 @@ void DesignDayGridController::setCategoriesAndFields()
     fields.push_back(RAININDICATOR);
     fields.push_back(SNOWINDICATOR);
     fields.push_back(SKYCLEARNESS);
-    std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Pressure, Wind, Precipitation"), fields);
+    std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Pressure\nWind\nPrecipitation"), fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -189,7 +193,7 @@ void DesignDayGridController::setCategoriesAndFields()
     //fields.push_back(DIFFUSESOLARDAYSCHEDULE);
     fields.push_back(ASHRAETAUB);
     fields.push_back(ASHRAETAUD);
-    std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString(""), fields);
+    std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Solar"), fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -363,10 +367,6 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
         NullAdapter(&model::DesignDay::setDailyWetBulbTemperatureRange)
         );
     }
-
-
-
-
     else{
       // unhandled
       OS_ASSERT(false);

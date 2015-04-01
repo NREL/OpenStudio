@@ -21,6 +21,7 @@
 
 #include "DesignDayGridView.hpp"
 #include "OSDocument.hpp"
+#include "OSDropZone.hpp"
 #include "SchedulesTabController.hpp"
 #include "YearSettingsWidget.hpp"
 
@@ -305,6 +306,8 @@ LocationView::LocationView(bool isIP,
   auto designDayModelObjects = subsetCastVector<model::ModelObject>(designDays);
   auto designDayGridController = new DesignDayGridController(m_isIP, "Design Days", IddObjectType::OS_SpaceType, model, designDayModelObjects);
   auto gridView = new OSGridView(designDayGridController, "Design Days", "Drop\nDesign Days", false, this->parentWidget());
+
+  gridView->m_dropZone->hide();
 
   mainVLayout->addWidget(gridView);
 
