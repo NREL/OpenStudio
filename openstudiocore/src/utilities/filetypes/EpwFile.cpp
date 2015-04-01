@@ -142,14 +142,14 @@ boost::optional<EpwDataPoint> EpwDataPoint::fromEpwStrings(const std::vector<std
   // Expect 35 items in the list
   if (list.size() < 35) {
     if (pedantic) {
-      LOG_FREE(Error, "openstudio.EpwFile", "Expected 35 fields in EPW data, got " << list.size());
+      LOG_FREE(Error, "openstudio.EpwFile", "Expected 35 fields in EPW data instead of the " << list.size() << " recieved");
       return boost::none;
     } else {
-      LOG_FREE(Warn, "openstudio.EpwFile", "Expected 35 fields in EPW data, got " << list.size() << ", remaining fields will not be available");
+      LOG_FREE(Warn, "openstudio.EpwFile", "Expected 35 fields in EPW data instead of the " << list.size() << " recieved. The remaining fields will not be available");
     }
   }
   else if (list.size() > 35) {
-    LOG_FREE(Warn, "openstudio.EpwFile", "Expected 35 fields in EPW data, got " << list.size() << ", additional data will be ignored");
+    LOG_FREE(Warn, "openstudio.EpwFile", "Expected 35 fields in EPW data instead of the " << list.size() << " recieved. The additional data will be ignored");
   }
   // Use the appropriate setter on each field
   if (!pt.setYear(list[EpwDataField::Year])) {
@@ -1921,10 +1921,11 @@ bool EpwFile::parse(bool storeData)
         if(currentMinute != minutesInFile) {
           if(!warnedAboutMinutesAlready) {
             LOG(Error, "Minutes field (" << minutesInFile << ") on line " << lineNumber << " of EPW file '" 
-              << m_path << "' does not agree with computed value (" << currentMinute << "), using computed value");
+              << m_path << "' does not agree with computed value (" << currentMinute << "). Using computed value");
+            warnedAboutMinutesAlready = true;
           }
           // Override whatever is in the file
-          list[3] = std::to_string(currentMinute);
+          list[4] = std::to_string(currentMinute);
         }
         boost::optional<EpwDataPoint> pt = EpwDataPoint::fromEpwStrings(list);
         if(pt) {
@@ -1964,7 +1965,7 @@ bool EpwFile::parse(bool storeData)
 
   if (realYear) {
     if (m_startDayOfWeek != startDate->dayOfWeek()){
-      LOG(Warn, "Header start day of the week and actual start day of the week do not match in EPW file '" << m_path << "', data will be treated as typical");
+      LOG(Warn, "Header start day of the week and actual start day of the week do not match in EPW file '" << m_path << "'. Data will be treated as typical (TMY)");
       // The flag needs to be changed so we can do the wrapAround check below
       realYear = false;
     } else {

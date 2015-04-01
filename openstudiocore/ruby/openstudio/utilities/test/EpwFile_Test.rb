@@ -33,7 +33,6 @@ class EpwFile_Test < MiniTest::Unit::TestCase
   def test_file
     path = @epwDir / OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.epw")
     epw = OpenStudio::EpwFile::load(path.to_s).get
-    #assert_equal("F188656D", epw.checksum);
     assert_equal("Denver Centennial  Golden   Nr", epw.city);
     assert_equal("CO", epw.stateProvinceRegion);
     assert_equal("USA", epw.country);
@@ -45,6 +44,12 @@ class EpwFile_Test < MiniTest::Unit::TestCase
     assert_equal(1829, epw.elevation);
     startDate = epw.startDate
     assert(startDate.is_a? OpenStudio::Date)
+    assert_equal(1, startDate.dayOfMonth)
+    assert_equal(1, startDate.monthOfYear.value)
+    endDate = epw.endDate
+    assert(endDate.is_a? OpenStudio::Date)
+    assert_equal(31, endDate.dayOfMonth)
+    assert_equal(12, endDate.monthOfYear.value)
   end
 
   def test_data
@@ -52,70 +57,45 @@ class EpwFile_Test < MiniTest::Unit::TestCase
     epw = OpenStudio::EpwFile::load(path.to_s).get
     data = epw.data
     assert_equal(8760, data.size)
+    dataPoint = data[8759];
+    assert(dataPoint.is_a? OpenStudio::EpwDataPoint)
+    assert_equal(4, dataPoint.dryBulbTemperature.get)
+    assert_equal(81100, dataPoint.atmosphericStationPressure.get)
+    assert_equal(-1.0,dataPoint.fieldByName("Dew Point Temperature").get)
+    field = "Dew Point Temperature".to_EpwDataField
+    assert_equal(-1.0,dataPoint.field(field).get)
+    known = [ "1996", "12", "31", "24", "0",
+      "?9?9?9?9E0?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9*9*9?9*9*9", "4.0", "-1.0",
+      "69", "81100", "0", "0", "294", "0.000000", "0", "0", "0", "0", "0",
+      "0", "130", "6.200000", "9", "9", "48.3", "7500", "9", "999999999",
+      "60", "0.0310", "0", "88", "0.210", "999", "99" ]
+    epwStrings = dataPoint.toEpwStrings
+    assert_equal(35, epwStrings.size)
+    (0..34).each do |i|
+        assert_equal(known[i], epwStrings[i])
+    end
   end
 
   def test_time_series
     path = @epwDir / OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.epw")
     epw = OpenStudio::EpwFile::load(path.to_s).get
-    windSpeed = epw.getTimeSeries("Wind Speed")
-    assert(windSpeed.is_a? OpenStudio::OptionalTimeSeries)
-    assert(windSpeed.is_initialized)
+    windSpeedOpt = epw.getTimeSeries("Wind Speed")
+    assert(windSpeedOpt.is_a? OpenStudio::OptionalTimeSeries)
+    assert(windSpeedOpt.is_initialized)
+    windSpeed = windSpeedOpt.get
+    assert(windSpeed.is_a? OpenStudio::TimeSeries)
+    first = windSpeed.firstReportDateTime
+    assert(first.is_a? OpenStudio::DateTime)
+    assert_equal(1, first.date.dayOfMonth)
+    assert_equal(1, first.date.monthOfYear.value)
+    assert_equal(1, first.time.hours)
+    assert_equal(0, first.time.minutes)
+    assert_equal(0, first.time.seconds)
+    secs = windSpeed.secondsFromFirstReport
+    assert(secs.is_a? Array)
+    assert_equal(8760, secs.size)
+    assert_equal(8759*60*60, secs[8759])
   end
-
-#  def test_errors
-#    assert_raises(RuntimeError){OpenStudio::Date.new("Jan".to_MonthOfYear, 0, 2008)}
-#  end
-
-#  def test_ymd_constructor
-#    assert(!OpenStudio::Date.new("Jan".to_MonthOfYear,1,2008).nil?)
-#  end
-  
-#  def test_ydoy_constructor
-#    assert_equal(OpenStudio::Date::fromDayOfYear(1,2008), OpenStudio::Date.new("Jan".to_MonthOfYear,1,2008))
-#    assert_equal(OpenStudio::Date::fromDayOfYear(59,2008), OpenStudio::Date.new("Feb".to_MonthOfYear,28,2008))
-#    assert_equal(OpenStudio::Date::fromDayOfYear(60,2008), OpenStudio::Date.new("Feb".to_MonthOfYear,29,2008))
-#    assert_equal(OpenStudio::Date::fromDayOfYear(61,2008), OpenStudio::Date.new("Mar".to_MonthOfYear,1,2008))
-#    assert_equal(OpenStudio::Date::fromDayOfYear(366,2008), OpenStudio::Date.new("Dec".to_MonthOfYear,31,2008))
-#    assert_equal(OpenStudio::Date::fromDayOfYear(365,2009), OpenStudio::Date.new("Dec".to_MonthOfYear,31,2009))
-#    
-#    assert_raises(RuntimeError){OpenStudio::Date::fromDayOfYear(0,2008)} 
-#    assert_raises(RuntimeError){OpenStudio::Date::fromDayOfYear(367, 2008)}
-#    assert_raises(RuntimeError){OpenStudio::Date::fromDayOfYear(366, 2009)}
-#  end
-
-#  def test_equality
-#  
-#    d1a = OpenStudio::Date.new("Jan".to_MonthOfYear,1,2008)
-#    d1b = OpenStudio::Date.new("Jan".to_MonthOfYear,1,2008)
-#    d2a = OpenStudio::Date.new("Jan".to_MonthOfYear,2,2008)
-#
-#    assert( (d1a == d1b))
-#    assert(!(d1a == d2a))
-#    assert( (d1a != d2a))
-#    assert(!(d1b == d2a))
-#  end
-  
-#  def test_comparison
-  
-#    d1a = OpenStudio::Date.new("Jan".to_MonthOfYear,1,2008)
-#    d1b = OpenStudio::Date.new("Jan".to_MonthOfYear,1,2008)
-#    d2a = OpenStudio::Date.new("Jan".to_MonthOfYear,2,2008)
-
-#    assert(!(d1a < d1b))
-#    assert( (d1a <= d1b))
-#    assert(!(d1a > d1b))
-#    assert( (d1a <= d1b))
-
-#    assert( (d1a < d2a))
-#    assert( (d1a <= d2a))
-#    assert(!(d1a > d2a))
-#    assert(!(d1a >= d2a))
-
-#    assert(!(d2a < d1a))
-#    assert(!(d2a <= d1a))
-#    assert( (d2a > d1a))
-#    assert( (d2a >= d1a))
-#  end
 
 end
 

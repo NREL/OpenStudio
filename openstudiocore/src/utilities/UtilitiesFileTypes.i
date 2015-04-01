@@ -5,7 +5,6 @@
 %module openstudioutilitiesfiletypes
 #endif
 
-
 #define UTILITIES_API
 #define UTILITIES_TEMPLATE_EXT
 

@@ -34,6 +34,7 @@ set(utilities_resources_src
   utilities/Filetypes/USA_CO_Golden-NREL.amy
   utilities/Filetypes/USA_CO_Golden-NREL.wrap.amy
   utilities/Filetypes/TDV_2008_kBtu_CZ13.csv
+  utilities/Filetypes/TUN_Tunis.607150_IWEC.epw
   utilities/Idf/CommentTest.idf
   utilities/Idf/DosLineEndingTest.idf
   utilities/Idf/UnixLineEndingTest.idf
