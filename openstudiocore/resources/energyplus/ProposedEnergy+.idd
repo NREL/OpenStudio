@@ -1,5 +1,5 @@
-!IDD_Version 8.2.0
-!IDD_BUILD 8397c2e30b
+!IDD_Version 8.3.0
+!IDD_BUILD 0bf5fe3ca0
 ! **************************************************************************
 ! This file is the Input Data Dictionary (IDD) for EnergyPlus.
 ! The IDD defines the syntax and data model for each type of input "Object."
@@ -376,7 +376,7 @@ Version,
       \format singleLine
       \min-fields 1
   A1 ; \field Version Identifier
-      \default 7.1
+      \default 8.3
 
 SimulationControl,
       \unique-object
@@ -386,6 +386,7 @@ SimulationControl,
       \memo fields set to No, the corresponding Sizing object is ignored.
       \memo Note also, if you want to do system sizing, you must also do zone sizing in the same
       \memo run or an error will result.
+      \min-fields 5
   A1, \field Do Zone Sizing Calculation
       \note If Yes, Zone sizing is accomplished from corresponding Sizing:Zone objects
       \note and autosize fields.
@@ -414,12 +415,25 @@ SimulationControl,
       \key Yes
       \key No
       \default Yes
-  A5; \field Run Simulation for Weather File Run Periods
+  A5, \field Run Simulation for Weather File Run Periods
       \note If Yes, RunPeriod:* objects are executed and results from those may be displayed..
       \type choice
       \key Yes
       \key No
       \default Yes
+  A6, \field Do HVAC Sizing Simulation for Sizing Periods
+      \note If Yes, SizingPeriod:* objects are exectuted additional times for advanced sizing.
+      \note Currently limited to use with coincident plant sizing, see Sizing:Plant object
+      \type choice
+      \key Yes
+      \key No
+      \default No
+  N1; \field Maximum Number of HVAC Sizing Simulation Passes
+      \note the entire set of SizingPeriod:* objects may be repeated to fine tune size results
+      \note this input sets a limit on the number of passes that the sizing algorithms can repeate the set
+      \type integer
+      \minimum 1
+      \default 1
 
 Building,
        \memo Describes parameters that are used during the simulation
@@ -522,7 +536,6 @@ ShadowCalculation,
        \type choice
        \key SimpleSkyDiffuseModeling
        \key DetailedSkyDiffuseModeling
-
 
 SurfaceConvectionAlgorithm:Inside,
        \memo Default indoor surface heat transfer convection algorithm to be used for all zones
@@ -653,7 +666,7 @@ ZoneAirContaminantBalance,
        \object-list ScheduleNames
 
 ZoneAirMassFlowConservation,
-       \memo Enforces the zone air mass flow balance by adjusting zone mixing object flow rates. 
+       \memo Enforces the zone air mass flow balance by adjusting zone mixing object flow rates.
        \memo The infiltration object mass flow rate may also be adjusted or may add infiltration
        \memo air flow to the base infiltration air flow for source zones only.
        \unique-object
@@ -665,36 +678,35 @@ ZoneAirMassFlowConservation,
        \key Yes
        \key No
        \default No
-       \note This optional choice input field allows users triggering the zone air mass flow 
-       \note balance calculation when desired. This global object has two choice KEYs: Yes and 
-       \note No. If this input field is specified as Yes, then EnergyPlus attempts to enforce        
-       \note the zone air mass flow conservation, or else if it is specified as No, then EnergyPlus      
+       \note This optional choice input field allows users triggering the zone air mass flow
+       \note balance calculation when desired. This global object has two choice KEYs: Yes and
+       \note No. If this input field is specified as Yes, then EnergyPlus attempts to enforce
+       \note the zone air mass flow conservation, or else if it is specified as No, then EnergyPlus
        \note calculation defaults to zone air mass flow balance that does not include zone mixing
-       \note objects and that assumes self-balanced simple flow objects per the default procedure, 
-       \note which may not necessarily enforce zone mass conservation unless the user specified  
+       \note objects and that assumes self-balanced simple flow objects per the default procedure,
+       \note which may not necessarily enforce zone mass conservation unless the user specified
        \note a balanced flow to begin with. Mass conservation is enforced both for the receiving
-       \note and source zones if there is at least one mixing object defined. The default input 
-       \note is No. (Note that No input may also results in balanced flow depending on the 
+       \note and source zones if there is at least one mixing object defined. The default input
+       \note is No. (Note that No input may also results in balanced flow depending on the
        \note system specified).
   A2;  \field Source Zone Infiltration Treatment
-       \note This input field allows user to choose how zone infiltration flow is treated during 
-       \note the zone air mass flow balance calculation. 
+       \note This input field allows user to choose how zone infiltration flow is treated during
+       \note the zone air mass flow balance calculation.
        \type choice
        \key AddInfiltrationFlow
        \key AdjustInfiltrationFlow
        \default AddInfiltrationFlow
        \note It has two choice KEYs: AddInfiltrationFlow and AdjustInfiltrationFlow.  If this
-       \note input is specified as AddInfiltrationFlow, then energy plus adds infiltration air 
+       \note input is specified as AddInfiltrationFlow, then energy plus adds infiltration air
        \note mass flow on top of the base flow, which is calculated using the infiltration object
-       \note user inputs, in order to balance the zone air mass flow.  The additional infiltration 
-       \note air mass flow is not self-balanced.  If this input is specified as 
-       \note AdjustInfiltrationFlow, then energy plus may adjust the base flow calculated using 
+       \note user inputs, in order to balance the zone air mass flow.  The additional infiltration
+       \note air mass flow is not self-balanced.  If this input is specified as
+       \note AdjustInfiltrationFlow, then energy plus may adjust the base flow calculated using
        \note the infiltration object user inputs in order to balance the zone air mass flow. If it
        \note is not required to adjust the base infiltration air flow calculated from the user
-       \note specified infiltration object inputs, then the base infiltration air mass flow 
+       \note specified infiltration object inputs, then the base infiltration air mass flow
        \note is assumed self-balanced. If the above input field specified as "No", then this input
        \note field has no impact on the simulation.
-   
 
 ZoneCapacitanceMultiplier:ResearchSpecial,
        \unique-object
@@ -715,7 +727,7 @@ ZoneCapacitanceMultiplier:ResearchSpecial,
        \type real
        \default 1.0
        \minimum> 0.0
-       \note Used to alter the capacitance of zone air with respect to zone air carbob dioxide concentration
+       \note Used to alter the capacitance of zone air with respect to zone air carbon dioxide concentration
   N4 ; \field Generic Contaminant Capacity Multiplier
        \type real
        \default 1.0
@@ -731,12 +743,13 @@ Timestep,
        \format singleLine
        \min-fields 1
   N1 ; \field Number of Timesteps per Hour
+       \required-field
        \note Number in hour: normal validity 4 to 60: 6 suggested
        \note Must be evenly divisible into 60
        \note Allowable values include 1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, and 60
-       \note Normal 6 is mimimum as lower values may cause inaccuracies
+       \note Normal 6 is minimum as lower values may cause inaccuracies
        \note A minimum value of 20 is suggested for both ConductionFiniteDifference
-       \note and CombinedHeatAndMoistureFiniteElement surface heat balance alogorithms
+       \note and CombinedHeatAndMoistureFiniteElement surface heat balance algorithms
        \note A minimum of 12 is suggested for simulations involving a Vegetated Roof (Material:RoofVegetation).
        \default 6
        \type integer
@@ -780,7 +793,6 @@ ProgramControl,
        \minimum 0
        \note This is currently used only in the Interior Radiant Exchange module -- view factors on # surfaces
        \note if value is 0, then maximum number allowed will be used.
-
 
 \group Compliance Objects
 
@@ -844,7 +856,6 @@ SizingPeriod:DesignDay,
   A1, \field Name
        \type alpha
        \required-field
-       \reference DesignDays
        \reference RunPeriodsAndDesignDays
   N1,  \field Month
        \required-field
@@ -881,7 +892,7 @@ SizingPeriod:DesignDay,
        \maximum 70
        \type real
   N4,  \field Daily Dry-Bulb Temperature Range
-       \note Must still produce appropriate maximum dry bulb (within range)
+       \note Must still produce appropriate maximum dry-bulb (within range)
        \note This field is not needed if Dry-Bulb Temperature Range Modifier Type
        \note is "delta".
        \units deltaC
@@ -908,7 +919,7 @@ SizingPeriod:DesignDay,
        \note   from the maximum dry-bulb temperature for each timestep in the day.
        \note Note that numbers in the difference schedule cannot be negative as that
        \note   would result in a higher maximum than the maximum previously specified.
-       \note For type "TemperatureProfileSchedule" the values should specify the actual drybulb
+       \note For type "TemperatureProfileSchedule" the values should specify the actual dry-bulb
        \note   temperature for each timestep in the day.
   A5,  \field Humidity Condition Type
        \note values/schedules indicated here and in subsequent fields create the humidity
@@ -1036,7 +1047,6 @@ SizingPeriod:DesignDay,
 SizingPeriod:WeatherFileDays,
        \memo Use a weather file period for design sizing calculations.
   A1 , \field Name
-       \reference DesignDays
        \reference RunPeriodsAndDesignDays
        \required-field
        \note user supplied name for reporting
@@ -1065,7 +1075,7 @@ SizingPeriod:WeatherFileDays,
        \note    |CustomDay1|CustomDay2];
        \note if you use SummerDesignDay or WinterDesignDay or the CustomDays then this will apply
        \note to the whole period; other days (i.e., Monday) will signify a start day and
-       \note normal sequence ofsubsequent days
+       \note normal sequence of subsequent days
        \default Monday
        \type choice
        \key Sunday
@@ -1162,7 +1172,6 @@ RunPeriod,
        \memo Multiple run periods may be input, but they may not overlap.
        \min-fields 11
   A1 , \field Name
-       \reference RunPeriods
        \reference RunPeriodsAndDesignDays
        \note descriptive name (used in reporting mainly)
        \note if blank, weather file title is used.  if not blank, must be unique
@@ -1679,37 +1688,37 @@ Site:GroundTemperature:Deep,
        \type real
        \default 16
 
-Site:GroundDomain,
-        \memo Ground coupled slab model for on-grade and
+Site:GroundDomain:Slab,
+        \memo Ground-coupled slab model for on-grade and
         \memo in-grade cases with or without insulation.
    A1,  \field Name
         \required-field
    N1,  \field Ground Domain Depth
-        \required-field
         \type real
+        \default 10
         \units m
         \minimum> 0.0
    N2,  \field Aspect Ratio
         \type real
         \default 1
    N3,  \field Perimeter Offset
-        \required-field
         \type real
+        \default 5
         \units m
         \minimum> 0.0
    N4,  \field Soil Thermal Conductivity
-        \required-field
         \type real
+        \default 1.5
         \units W/m-K
         \minimum> 0.0
    N5,  \field Soil Density
-        \required-field
         \type real
+        \default 2800
         \units kg/m3
         \minimum> 0.0
    N6,  \field Soil Specific Heat
-        \required-field
         \type real
+        \default 850
         \units J/kg-K
         \minimum> 0.0
    N7,  \field Soil Moisture Content Volume Fraction
@@ -1724,22 +1733,25 @@ Site:GroundDomain,
         \minimum 0
         \maximum 100
         \default 50
-   N9,  \field Kusuda-Achenbach Average Surface Temperature
-        \required-field
+   N9,  \field Kusuda-Achenbach Average Ground Surface Temperature
         \type real
         \units C
-        \note Annual average surface temperature.
-   N10, \field Kusuda-Achenbach Average Amplitude of Surface Temperature
-        \required-field
+        \note Annual average ground surface temperature.
+        \note If left blank, Site:GroundTemperature:Shallow must be used to provied
+        \note monthly average ground surface temperatures.
+   N10, \field Kusuda-Achenbach Average Amplitude of Ground Surface Temperature
         \type real
         \units deltaC
-        \note Annual average surface temperature variation from average.
-   N11, \field Kusuda-Achenbach Phase Shift of Minimum Surface Temperature
-        \required-field
+        \note Annual average ground surface temperature variation from average.
+        \note If left blank, Site:GroundTemperature:Shallow must be used to provied
+        \note monthly average ground surface temperatures.
+   N11, \field Kusuda-Achenbach Phase Shift of Minimum Ground Surface Temperature
         \type real
         \units days
-        \note The phase shift of minimum surface temperature, or the day
-        \note of the year when the minimum surface temperature occurs.
+        \note The phase shift of minimum ground surface temperature, or the day
+        \note of the year when the minimum ground surface temperature occurs.
+        \note If left blank, Site:GroundTemperature:Shallow must be used to provied
+        \note monthly average ground surface temperatures.
    N12, \field Evapotranspiration Ground Cover Parameter
         \type real
         \minimum 0
@@ -1781,7 +1793,7 @@ Site:GroundDomain,
         \key Full
         \key Perimeter
         \default Full
-        \note This field specifies whether the horizontal insulation fully insulates 
+        \note This field specifies whether the horizontal insulation fully insulates
         \note the surface or is perimeter only insulation
    N13, \field Perimeter Insulation Width
         \type real
@@ -1789,7 +1801,6 @@ Site:GroundDomain,
         \minimum> 0.0
         \note This field specifies the width of the underfloor perimeter insulation
    A8,  \field Vertical Insulation
-        \required-field
         \type choice
         \key Yes
         \key No
@@ -1797,7 +1808,7 @@ Site:GroundDomain,
         \note This field specifies the presence of vertical insulation at the slab edge.
    A9,  \field Vertical Insulation Material Name
         \type object-list
-        \object-list MaterialName  
+        \object-list MaterialName
         \note This field specifies the vertical insulation material.
    N14, \field Vertical Insulation Depth
         \type real
@@ -1806,12 +1817,148 @@ Site:GroundDomain,
         \note Only used when including vertical insulation
         \note This field specifies the depth of the vertical insulation
    A10; \field Simulation Timestep
-        \required-field
         \type choice
         \key Hourly
         \key Timestep
         \default Hourly
-        \note This field specifies the domain simulation timestep.
+        \note This field specifies the ground domain simulation timestep.
+
+Site:GroundDomain:Basement,
+        \memo Ground-coupled basement model for simulating basements
+        \memo or other underground zones.
+   A1,  \field Name
+        \required-field
+   N1,  \field Ground Domain Depth
+        \type real
+        \default 10
+        \units m
+        \minimum> 0.0
+        \note The depth from ground surface to the deep ground boundary of the domain.
+   N2,  \field Aspect Ratio
+        \type real
+        \default 1
+        \note This defines the height to width ratio of the basement zone.
+   N3,  \field Perimeter Offset
+        \type real
+        \default 5
+        \units m
+        \minimum> 0.0
+        \note The distance from the basement wall edge to the edge of the ground domain
+   N4,  \field Soil Thermal Conductivity
+        \type real
+        \default 1.5
+        \units W/m-K
+        \minimum> 0.0
+   N5,  \field Soil Density
+        \type real
+        \default 2800
+        \units kg/m3
+        \minimum> 0.0
+   N6,  \field Soil Specific Heat
+        \type real
+        \default 850
+        \units J/kg-K
+        \minimum> 0.0
+   N7, \field Soil Moisture Content Volume Fraction
+        \type real
+        \units percent
+        \minimum 0
+        \maximum 100
+        \default 30
+   N8, \field Soil Moisture Content Volume Fraction at Saturation
+        \type real
+        \units percent
+        \minimum 0
+        \maximum 100
+        \default 50
+   N9,  \field Kusuda-Achenbach Average Ground Surface Temperature
+        \type real
+        \units C
+        \note Annual average ground surface temperature.
+        \note If left blank, Site:GroundTemperature:Shallow must be used to provied
+        \note monthly average ground surface temperatures.
+   N10, \field Kusuda-Achenbach Average Amplitude of Ground Surface Temperature
+        \type real
+        \units deltaC
+        \note Annual average ground surface temperature variation from average.
+        \note If left blank, Site:GroundTemperature:Shallow must be used to provied
+        \note monthly average ground surface temperatures.
+   N11, \field Kusuda-Achenbach Phase Shift of Minimum Ground Surface Temperature
+        \type real
+        \units days
+        \note The phase shift of minimum ground surface temperature, or the day
+        \note of the year when the minimum ground surface temperature occurs.
+        \note If left blank, Site:GroundTemperature:Shallow must be used to provied
+        \note monthly average ground surface temperatures.
+   N12, \field Evapotranspiration Ground Cover Parameter
+        \type real
+        \minimum 0
+        \maximum 1.5
+        \default 0.4
+        \note This specifies the ground cover effects during evapotranspiration
+        \note  calculations.  The value roughly represents the following cases:
+        \note  = 0   : concrete or other solid, non-permeable ground surface material
+        \note  = 0.5 : short grass, much like a manicured lawn
+        \note  = 1   : standard reference state (12 cm grass)
+        \note  = 1.5 : wild growth
+   A2,  \field Basement Floor Boundary Condition Model Name
+        \required-field
+        \type object-list
+        \object-list OSCMNames
+   A3,  \field Horizontal Insulation
+        \type choice
+        \key Yes
+        \key No
+        \default No
+        \note This field specifies the presence of insulation beneath the basement floor.
+   A4,  \field Horizontal Insulation Material Name
+        \type object-list
+        \object-list MaterialName
+   A5,  \field Horizontal Insulation Extents
+        \type choice
+        \key Perimeter
+        \key Full
+        \default Full
+        \note This field specifies whether the horizontal insulation fully insulates 
+        \note the surface or is perimeter only insulation
+   N13, \field Perimeter Horizontal Insulation Width
+        \type real
+        \units m
+        \minimum> 0.0
+        \note Width of horizontal perimeter insulation measured from
+        \note foundation wall inside surface.
+   N14, \field Basement Wall Depth
+        \type real
+        \units m
+        \minimum> 0.0
+        \note Depth measured from ground surface.
+   A6,  \field Basement Wall Boundary Condition Model Name
+        \required-field
+        \type object-list
+        \object-list OSCMNames
+   A7,  \field Vertical Insulation
+        \type choice
+        \key Yes
+        \key No
+        \default No
+   A8, \field Basement Wall Vertical Insulation Material Name
+        \type object-list
+        \object-list MaterialName
+   N15, \field Vertical Insulation Depth
+        \type real
+        \units m
+        \minimum> 0.0
+        \note Depth measured from the ground surface.
+   A9, \field Simulation Timestep
+        \type choice
+        \key Timestep
+        \key Hourly
+        \default Hourly
+        \note This field specifies the basement domain simulation interval.
+   N16; \field Mesh Density Parameter
+        \type integer
+        \default 4
+        \minimum 2
 
 Site:GroundReflectance,
         \memo Specifies the ground reflectance values used to calculate ground reflected solar.
@@ -1994,11 +2141,11 @@ Site:SolarAndVisibleSpectrum,
       \key UserDefined
       \default Default
   A3, \field Solar Spectrum Data Object Name
-      \type alpha
-      \reference SpectrumDataNames
+      \type object-list
+      \object-list SpectrumDataNames
   A4; \field Visible Spectrum Data Object Name
-      \type alpha
-      \reference SpectrumDataNames
+      \type object-list
+      \object-list SpectrumDataNames
 
 Site:SpectrumData,
       \extensible:2
@@ -2009,6 +2156,7 @@ Site:SpectrumData,
   A1, \field Name
       \required-field
       \type alpha
+      \reference SpectrumDataNames
   A2, \field Spectrum Data Type
       \required-field
       \type choice
@@ -2719,6 +2867,7 @@ WindowMaterial:Glazing,
        \key BSDF
   A3 , \field Window Glass Spectral Data Set Name
        \note Used only when Optical Data Type = Spectral
+       \type object-list
        \object-list SpectralDataSets
   N1 , \field Thickness
        \required-field
@@ -2799,8 +2948,8 @@ WindowMaterial:Glazing,
        \note coefficient used for deflection calculations. Used only with complex
        \note fenestration when deflection model is set to TemperatureAndPressureInput
        \type real
-       \minimum > 0.0
-       \maximum < 1.0
+       \minimum>  0.0
+       \maximum<  1.0
        \default 0.22
 
 WindowMaterial:GlazingGroup:Thermochromic,
@@ -2952,7 +3101,7 @@ WindowMaterial:Gas,
   N12 ;\field Specific Heat Ratio
        \type real
        \note Used only if Gas Type = Custom
-       \minimum >1.0
+       \minimum> 1.0
 
 WindowGap:SupportPillar,
     \memo used to define pillar geometry for support pillars
@@ -3072,7 +3221,7 @@ WindowMaterial:Gap,
        \required-field
        \units m
        \type real
-       \minimum >0
+       \minimum> 0
   A2 , \field Gas (or Gas Mixture)
        \note This field should reference only WindowMaterial:Gas
        \note or WindowMaterial:GasMixture objects
@@ -3650,7 +3799,7 @@ WindowMaterial:Shade:EquivalentLayer,
        \minimum 0
        \maximum< 1
   N6 , \field Shade Beam-Beam Visible Transmittance at Normal Incidence
-       \note The beam-beam visible transmittance at nromal incidence averaged over the
+       \note The beam-beam visible transmittance at normal incidence averaged over the
        \note visible spectrum range of solar radiation. Assumed to be the same for
        \note front and back sides of the shade.
        \type real
@@ -3658,7 +3807,7 @@ WindowMaterial:Shade:EquivalentLayer,
        \minimum 0
        \maximum< 1
   N7 , \field Shade Beam-Diffuse Visible Transmittance at Normal Incidence
-       \note The beam-diffuse visible transmittance at nromal incidence averaged over the
+       \note The beam-diffuse visible transmittance at normal incidence averaged over the
        \note visible spectrum range of solar radiation. Assumed to be the same for
        \note front and back sides of the shade.
        \type real
@@ -3666,7 +3815,7 @@ WindowMaterial:Shade:EquivalentLayer,
        \minimum 0
        \maximum< 1
   N8 , \field Shade Beam-Diffuse Visible Reflectance at Normal Incidence
-       \note The beam-diffuse visible reflectance at nromal incidence averaged over the
+       \note The beam-diffuse visible reflectance at normal incidence averaged over the
        \note visible spectrum range of solar radiation. Assumed to be the same for
        \note front and back sides of the shade.
        \type real
@@ -3701,7 +3850,7 @@ WindowMaterial:Shade:EquivalentLayer,
        \default 0.91
 
 WindowMaterial:Drape:EquivalentLayer,
-       \memo Specifies the properties of equivalent layer drape fabirc materials.
+       \memo Specifies the properties of equivalent layer drape fabric materials.
        \memo Shades are considered to be perfect diffusers (all transmitted and reflected
        \memo radiation is hemispherically-diffuse) independent of angle of incidence.
        \memo unpleated drape fabric is treated as thin and flat layer.
@@ -3803,7 +3952,7 @@ WindowMaterial:Drape:EquivalentLayer,
        \minimum> 0
        \default 0.87
   N12, \field Width of Pleated Fabric
-       \note Width of the pleasted section of the draped fabric. If the drape fabric is
+       \note Width of the pleated section of the draped fabric. If the drape fabric is
        \note unpleated or is flat, then the pleated section width is set to zero.
        \type real
        \units m
@@ -3811,7 +3960,7 @@ WindowMaterial:Drape:EquivalentLayer,
        \ip-units in
        \default 0
   N13; \field Length of Pleated Fabric
-       \note Length of the pleasted section of the draped fabric. If the drape fabric is
+       \note Length of the pleated section of the draped fabric. If the drape fabric is
        \note unpleated or is flat, then the pleated section length is set to zero.
        \type real
        \units m
@@ -3822,7 +3971,7 @@ WindowMaterial:Drape:EquivalentLayer,
 WindowMaterial:Blind:EquivalentLayer,
        \memo Window equivalent layer blind slat optical and thermal properties.
        \memo The model assumes that slats are thin and flat, applies correction
-       \memo imperical correlation to accout for curvature effect. Slats are
+       \memo empirical correlation to account for curvature effect. Slats are
        \memo assumed to transmit and reflect diffusely.
        \min-fields 10
   A1 , \field Name
@@ -3996,8 +4145,8 @@ WindowMaterial:Blind:EquivalentLayer,
        \minimum 0
        \default 0.9
   A3;  \field Slat Angle Control
-       \note Used only if slat angle control is deired to either maximize solar
-       \note gain (MaximizeSolar), maximize visibiity while eliminating beam solar
+       \note Used only if slat angle control is desired to either maximize solar
+       \note gain (MaximizeSolar), maximize visibility while eliminating beam solar
        \note radiation (BlockBeamSolar), or fixed slate angle (FixedSlatAngle).
        \note If FixedSlatAngle is selected, the slat angle entered above is used.
        \type choice
@@ -4017,7 +4166,7 @@ WindowMaterial:Screen:EquivalentLayer,
        \reference WindowEquivalentLayerMaterialNames
   N1 , \field Screen Beam-Beam Solar Transmittance
        \note The beam-beam transmittance of the screen material at normal incidence.
-       \note This input field is the same as the material oppenness area fraction
+       \note This input field is the same as the material openness area fraction
        \note and can be autocalculated from the wire spacing and wire and diameter.
        \note Assumed to be the same for both sides of the screen.
        \required-field
@@ -4119,6 +4268,7 @@ WindowMaterial:Glazing:EquivalentLayer,
        \key Spectral (not supported now)
   A3 , \field Window Glass Spectral Data Set Name
        \note Used only when Optical Data Type = Spectral
+       \type object-list
        \object-list SpectralDataSets
   N1 , \field Front Side Beam-Beam Solar Transmittance
        \note Used only when Optical Data Type = SpectralAverage
@@ -4322,51 +4472,6 @@ WindowMaterial:Glazing:EquivalentLayer,
        \maximum< 1.0
        \default 0.84
 
-Construction:WindowEquivalentLayer,
-       \memo Start with outside layer and work your way to the inside Layer
-       \memo Up to 11 layers total. Up to six solid layers and up to five gaps.
-       \memo Enter the material name for each layer
-       \min-fields 2
-  A1 , \field Name
-       \required-field
-       \type alpha
-       \reference WindowEquivalentLayerMaterialNames
-       \reference ConstructionNames
-  A2 , \field Outside Layer
-       \required-field
-       \type object-list
-       \object-list MaterialName
-  A3 , \field Layer 2
-       \type object-list
-       \object-list MaterialName
-  A4 , \field Layer 3
-       \type object-list
-       \object-list MaterialName
-  A5 , \field Layer 4
-       \type object-list
-       \object-list MaterialName
-  A6 , \field Layer 5
-       \type object-list
-       \object-list MaterialName
-  A7 , \field Layer 6
-       \type object-list
-       \object-list MaterialName
-  A8 , \field Layer 7
-       \type object-list
-       \object-list MaterialName
-  A9 , \field Layer 8
-       \type object-list
-       \object-list MaterialName
-  A10, \field Layer 9
-       \type object-list
-       \object-list MaterialName
-  A11, \field Layer 10
-       \type object-list
-       \object-list MaterialName
-  A12; \field Layer 11
-       \type object-list
-       \object-list MaterialName
-
 WindowMaterial:Gap:EquivalentLayer,
        \memo Gas material properties that are used in Windows Equivalent Layer
        \memo References only WindowMaterial:Gas properties
@@ -4447,7 +4552,7 @@ WindowMaterial:Gap:EquivalentLayer,
   N12 ;\field Specific Heat Ratio
        \type real
        \note Used only if Gas Type = Custom
-       \minimum >1.0
+       \minimum> 1.0
 
 MaterialProperty:MoisturePenetrationDepth:Settings,
     \memo Additional properties for moisture using EMPD procedure
@@ -4557,7 +4662,7 @@ MaterialProperty:HeatAndMoistureTransfer:Settings,
       \maximum 1.0
       \type real
   N2; \field Initial Water Content Ratio
-      \note units are the water/material density ratio at the begining of each run period.
+      \note units are the water/material density ratio at the beginning of each run period.
       \units kg/kg
       \minimum 0.0
       \default 0.2
@@ -4858,19 +4963,19 @@ WindowThermalModel:Params,
   N2 , \field Vacuum Pressure Limit
        \type real
        \units Pa
-       \minimum >0
+       \minimum> 0
        \default 13.238
   N3 , \field Initial temperature
        \note This is temperature in time of window fabrication
        \type real
        \units C
-       \minimum >0
+       \minimum> 0
        \default 25
   N4 ; \field Initial pressure
        \note This is pressure in time of window fabrication
        \type real
        \units Pa
-       \minimum >0
+       \minimum> 0
        \default 101325
 
 Construction:ComplexFenestrationState,
@@ -4943,6 +5048,50 @@ Construction:ComplexFenestrationState,
        \type object-list
        \object-list DataMatrices
 
+Construction:WindowEquivalentLayer,
+       \memo Start with outside layer and work your way to the inside Layer
+       \memo Up to 11 layers total. Up to six solid layers and up to five gaps.
+       \memo Enter the material name for each layer
+       \min-fields 2
+  A1 , \field Name
+       \required-field
+       \type alpha
+       \reference ConstructionNames
+  A2 , \field Outside Layer
+       \required-field
+       \type object-list
+       \object-list WindowEquivalentLayerMaterialNames
+  A3 , \field Layer 2
+       \type object-list
+       \object-list WindowEquivalentLayerMaterialNames
+  A4 , \field Layer 3
+       \type object-list
+       \object-list WindowEquivalentLayerMaterialNames
+  A5 , \field Layer 4
+       \type object-list
+       \object-list WindowEquivalentLayerMaterialNames
+  A6 , \field Layer 5
+       \type object-list
+       \object-list WindowEquivalentLayerMaterialNames
+  A7 , \field Layer 6
+       \type object-list
+       \object-list WindowEquivalentLayerMaterialNames
+  A8 , \field Layer 7
+       \type object-list
+       \object-list WindowEquivalentLayerMaterialNames
+  A9 , \field Layer 8
+       \type object-list
+       \object-list WindowEquivalentLayerMaterialNames
+  A10, \field Layer 9
+       \type object-list
+       \object-list WindowEquivalentLayerMaterialNames
+  A11, \field Layer 10
+       \type object-list
+       \object-list WindowEquivalentLayerMaterialNames
+  A12; \field Layer 11
+       \type object-list
+       \object-list WindowEquivalentLayerMaterialNames
+
 Construction:WindowDataFile,
        \memo Initiates search of the Window data file for a window called Name.
   A1 , \field Name
@@ -4957,7 +5106,7 @@ Construction:WindowDataFile,
 \group Thermal Zones and Surfaces
 
 GlobalGeometryRules,
-      \memo Specifes the geometric rules used to describe the input of surface vertices and
+      \memo Specifies the geometric rules used to describe the input of surface vertices and
       \memo daylighting reference points.
       \required-object
       \unique-object
@@ -5168,11 +5317,9 @@ BuildingSurface:Detailed,
        \reference SurfaceNames
        \reference SurfAndSubSurfNames
        \reference AllHeatTranSurfNames
-       \reference HeatTranBaseSurfNames
        \reference OutFaceEnvNames
        \reference AllHeatTranAngFacNames
-       \reference RadGroupAndSurfNames
-       \reference SurfGroupAndHTSurfNames
+       \reference RadiantSurfaceNames
        \reference AllShadingAndHTSurfNames
   A2 , \field Surface Type
        \required-field
@@ -5274,12 +5421,9 @@ Wall:Detailed,
        \reference SurfaceNames
        \reference SurfAndSubSurfNames
        \reference AllHeatTranSurfNames
-       \reference HeatTranBaseSurfNames
        \reference OutFaceEnvNames
        \reference AllHeatTranAngFacNames
-       \reference RadGroupAndSurfNames
-       \reference SurfGroupAndHTSurfNames
-       \reference AllShadingAndHTSurfNames
+       \reference RadiantSurfaceNames
   A2 , \field Construction Name
        \required-field
        \note To be matched with a construction in this input file
@@ -5371,12 +5515,9 @@ RoofCeiling:Detailed,
        \reference SurfaceNames
        \reference SurfAndSubSurfNames
        \reference AllHeatTranSurfNames
-       \reference HeatTranBaseSurfNames
        \reference OutFaceEnvNames
        \reference AllHeatTranAngFacNames
-       \reference RadGroupAndSurfNames
-       \reference SurfGroupAndHTSurfNames
-       \reference AllShadingAndHTSurfNames
+       \reference RadiantSurfaceNames
   A2 , \field Construction Name
        \required-field
        \note To be matched with a construction in this input file
@@ -5467,11 +5608,9 @@ Floor:Detailed,
        \reference SurfaceNames
        \reference SurfAndSubSurfNames
        \reference AllHeatTranSurfNames
-       \reference HeatTranBaseSurfNames
        \reference OutFaceEnvNames
        \reference AllHeatTranAngFacNames
-       \reference RadGroupAndSurfNames
-       \reference SurfGroupAndHTSurfNames
+       \reference RadiantSurfaceNames
        \reference AllShadingAndHTSurfNames
   A2 , \field Construction Name
        \required-field
@@ -5562,10 +5701,8 @@ Wall:Exterior,
        \reference SurfaceNames
        \reference SurfAndSubSurfNames
        \reference AllHeatTranSurfNames
-       \reference HeatTranBaseSurfNames
        \reference AllHeatTranAngFacNames
-       \reference RadGroupAndSurfNames
-       \reference SurfGroupAndHTSurfNames
+       \reference RadiantSurfaceNames
        \reference AllShadingAndHTSurfNames
   A2 , \field Construction Name
        \required-field
@@ -5608,10 +5745,8 @@ Wall:Adiabatic,
        \reference SurfaceNames
        \reference SurfAndSubSurfNames
        \reference AllHeatTranSurfNames
-       \reference HeatTranBaseSurfNames
        \reference AllHeatTranAngFacNames
-       \reference RadGroupAndSurfNames
-       \reference SurfGroupAndHTSurfNames
+       \reference RadiantSurfaceNames
        \reference AllShadingAndHTSurfNames
   A2 , \field Construction Name
        \required-field
@@ -5654,10 +5789,8 @@ Wall:Underground,
        \reference SurfaceNames
        \reference SurfAndSubSurfNames
        \reference AllHeatTranSurfNames
-       \reference HeatTranBaseSurfNames
        \reference AllHeatTranAngFacNames
-       \reference RadGroupAndSurfNames
-       \reference SurfGroupAndHTSurfNames
+       \reference RadiantSurfaceNames
        \reference AllShadingAndHTSurfNames
   A2 , \field Construction Name
        \required-field
@@ -5702,11 +5835,9 @@ Wall:Interzone,
        \reference SurfaceNames
        \reference SurfAndSubSurfNames
        \reference AllHeatTranSurfNames
-       \reference HeatTranBaseSurfNames
        \reference OutFaceEnvNames
        \reference AllHeatTranAngFacNames
-       \reference RadGroupAndSurfNames
-       \reference SurfGroupAndHTSurfNames
+       \reference RadiantSurfaceNames
        \reference AllShadingAndHTSurfNames
   A2 , \field Construction Name
        \required-field
@@ -5757,10 +5888,8 @@ Roof,
        \reference SurfaceNames
        \reference SurfAndSubSurfNames
        \reference AllHeatTranSurfNames
-       \reference HeatTranBaseSurfNames
        \reference AllHeatTranAngFacNames
-       \reference RadGroupAndSurfNames
-       \reference SurfGroupAndHTSurfNames
+       \reference RadiantSurfaceNames
        \reference AllShadingAndHTSurfNames
   A2 , \field Construction Name
        \required-field
@@ -5805,10 +5934,8 @@ Ceiling:Adiabatic,
        \reference SurfaceNames
        \reference SurfAndSubSurfNames
        \reference AllHeatTranSurfNames
-       \reference HeatTranBaseSurfNames
        \reference AllHeatTranAngFacNames
-       \reference RadGroupAndSurfNames
-       \reference SurfGroupAndHTSurfNames
+       \reference RadiantSurfaceNames
        \reference AllShadingAndHTSurfNames
   A2 , \field Construction Name
        \required-field
@@ -5855,10 +5982,8 @@ Ceiling:Interzone,
        \reference SurfAndSubSurfNames
        \reference AllHeatTranSurfNames
        \reference OutFaceEnvNames
-       \reference HeatTranBaseSurfNames
        \reference AllHeatTranAngFacNames
-       \reference RadGroupAndSurfNames
-       \reference SurfGroupAndHTSurfNames
+       \reference RadiantSurfaceNames
        \reference AllShadingAndHTSurfNames
   A2 , \field Construction Name
        \required-field
@@ -5911,10 +6036,8 @@ Floor:GroundContact,
        \reference SurfaceNames
        \reference SurfAndSubSurfNames
        \reference AllHeatTranSurfNames
-       \reference HeatTranBaseSurfNames
        \reference AllHeatTranAngFacNames
-       \reference RadGroupAndSurfNames
-       \reference SurfGroupAndHTSurfNames
+       \reference RadiantSurfaceNames
        \reference AllShadingAndHTSurfNames
   A2 , \field Construction Name
        \required-field
@@ -5961,10 +6084,8 @@ Floor:Adiabatic,
        \reference SurfaceNames
        \reference SurfAndSubSurfNames
        \reference AllHeatTranSurfNames
-       \reference HeatTranBaseSurfNames
        \reference AllHeatTranAngFacNames
-       \reference RadGroupAndSurfNames
-       \reference SurfGroupAndHTSurfNames
+       \reference RadiantSurfaceNames
        \reference AllShadingAndHTSurfNames
   A2 , \field Construction Name
        \required-field
@@ -6009,11 +6130,9 @@ Floor:Interzone,
        \reference SurfaceNames
        \reference SurfAndSubSurfNames
        \reference AllHeatTranSurfNames
-       \reference HeatTranBaseSurfNames
        \reference OutFaceEnvNames
        \reference AllHeatTranAngFacNames
-       \reference RadGroupAndSurfNames
-       \reference SurfGroupAndHTSurfNames
+       \reference RadiantSurfaceNames
        \reference AllShadingAndHTSurfNames
   A2 , \field Construction Name
        \required-field
@@ -6071,8 +6190,7 @@ FenestrationSurface:Detailed,
        \reference AllHeatTranSurfNames
        \reference OutFaceEnvNames
        \reference AllHeatTranAngFacNames
-       \reference RadGroupAndSurfNames
-       \reference SurfGroupAndHTSurfNames
+       \reference RadiantSurfaceNames
        \reference AllShadingAndHTSurfNames
   A2 , \field Surface Type
        \required-field
@@ -6160,8 +6278,6 @@ Window,
        \reference OutFaceEnvNames
        \reference AllHeatTranAngFacNames
        \reference RadGroupAndSurfNames
-       \reference SurfGroupAndHTSurfNames
-       \reference AllShadingAndHTSurfNames
   A2 , \field Construction Name
        \required-field
        \note To be matched with a construction in this input file
@@ -6213,8 +6329,7 @@ Door,
        \reference AllHeatTranSurfNames
        \reference OutFaceEnvNames
        \reference AllHeatTranAngFacNames
-       \reference RadGroupAndSurfNames
-       \reference SurfGroupAndHTSurfNames
+       \reference RadiantSurfaceNames
        \reference AllShadingAndHTSurfNames
   A2 , \field Construction Name
        \required-field
@@ -6253,8 +6368,6 @@ GlazedDoor,
        \reference AllHeatTranSurfNames
        \reference OutFaceEnvNames
        \reference AllHeatTranAngFacNames
-       \reference RadGroupAndSurfNames
-       \reference SurfGroupAndHTSurfNames
        \reference AllShadingAndHTSurfNames
   A2 , \field Construction Name
        \required-field
@@ -6309,8 +6422,6 @@ Window:Interzone,
        \reference OutFaceEnvNames
        \reference AllHeatTranAngFacNames
        \reference RadGroupAndSurfNames
-       \reference SurfGroupAndHTSurfNames
-       \reference AllShadingAndHTSurfNames
   A2 , \field Construction Name
        \required-field
        \note To be matched with a construction in this input file
@@ -6357,8 +6468,7 @@ Door:Interzone,
        \reference AllHeatTranSurfNames
        \reference OutFaceEnvNames
        \reference AllHeatTranAngFacNames
-       \reference RadGroupAndSurfNames
-       \reference SurfGroupAndHTSurfNames
+       \reference RadiantSurfaceNames
        \reference AllShadingAndHTSurfNames
   A2 , \field Construction Name
        \required-field
@@ -6407,8 +6517,6 @@ GlazedDoor:Interzone,
        \reference OutFaceEnvNames
        \reference AllHeatTranAngFacNames
        \reference RadGroupAndSurfNames
-       \reference SurfGroupAndHTSurfNames
-       \reference AllShadingAndHTSurfNames
   A2 , \field Construction Name
        \required-field
        \note To be matched with a construction in this input file
@@ -6802,7 +6910,7 @@ WindowProperty:StormWindow,
        \note Must be the name of a FenestrationSurface:Detailed object with Surface Type = WINDOW.
        \note The WindowProperty:StormWindow object can only be used with exterior windows.
        \required-field
-       \type alpha
+       \type object-list
        \object-list SubSurfNames
   A2,  \field Storm Glass Layer Name
        \note Must be a WindowMaterial:Glazing or WindowMaterial:Glazing:RefractionExtinctionMethod
@@ -6846,7 +6954,7 @@ InternalMass,
        \type alpha
        \reference AllHeatTranSurfNames
        \reference AllHeatTranAngFacNames
-       \reference SurfGroupAndHTSurfNames
+       \reference RadiantSurfaceNames
   A2 , \field Construction Name
        \required-field
        \note To be matched with a construction in this input file
@@ -7309,6 +7417,7 @@ SurfaceControl:MovableInsulation,
       \object-list SurfaceNames
   A3, \field Material Name
       \required-field
+      \type object-list
       \object-list MaterialName
   A4; \field Schedule Name
        \required-field
@@ -7320,7 +7429,6 @@ SurfaceProperty:OtherSideCoefficients,
       \min-fields 8
   A1, \field Name
       \required-field
-      \reference OSCNames
       \reference OutFaceEnvNames
   N1, \field Combined Convective/Radiative Film Coefficient
       \units W/m2-K
@@ -7386,7 +7494,6 @@ SurfaceProperty:OtherSideCoefficients,
       \type real
       \units C
 
-
 SurfaceProperty:OtherSideConditionsModel,
       \memo This object sets up modifying the other side conditions for a surface from other model results.
   A1, \field Name
@@ -7400,13 +7507,12 @@ SurfaceProperty:OtherSideConditionsModel,
       \key GroundCoupledSurface
       \note GapConvectionRadiation provides boundary conditions for convection
       \note  and linearized thermal radiation across a gap or cavity
-      \note  on the other side of the surface that are modeled sperately.
+      \note  on the other side of the surface that are modeled separately.
       \note UndergroundPipingSystemSurface provides boundary conditions for
       \note  surfaces in contact with PipingSystem:Underground domains
       \note GroundCoupledSurface provides boundary conditions for surfaces
       \note  in contact with GroundDomain objects
       \default GapConvectionRadiation
-
 
 SurfaceConvectionAlgorithm:Inside:AdaptiveModelSelections,
        \unique-object
@@ -7415,7 +7521,7 @@ SurfaceConvectionAlgorithm:Inside:AdaptiveModelSelections,
        \memo This object is for the inside face, the side of the surface facing a thermal zone.
   A1 , \field Name
        \type alpha
-  A2 , \field Simple Bouyancy Vertical Wall Equation Source
+  A2 , \field Simple Buoyancy Vertical Wall Equation Source
        \note Applies to zone with no HVAC or when HVAC is off
        \note This is for vertical walls
        \type choice
@@ -7427,7 +7533,7 @@ SurfaceConvectionAlgorithm:Inside:AdaptiveModelSelections,
        \key FohannoPolidoriVerticalWall
        \key ISO15099Windows
        \key UserCurve
-  A3 , \field Simple Bouyancy Vertical Wall User Curve Name
+  A3 , \field Simple Buoyancy Vertical Wall User Curve Name
        \note The SurfaceConvectionAlgorithm:Inside:UserCurve named in this field is used when the previous field is set to UserCurve
        \type object-list
        \object-list UserConvectionInsideModels
@@ -8120,7 +8226,6 @@ SurfaceConvectionAlgorithm:Outside:AdaptiveModelSelections,
        \type object-list
        \object-list UserConvectionOutsideModels
 
-
 SurfaceConvectionAlgorithm:Inside:UserCurve,
        \memo Used to describe a custom model equation for surface convection heat transfer coefficient
        \memo If more than one curve is referenced they are all used and added together.
@@ -8135,39 +8240,42 @@ SurfaceConvectionAlgorithm:Inside:UserCurve,
        \key SupplyAirTemperature
   A3 , \field Hc Function of Temperature Difference Curve Name
        \note  Curve's "x" is absolute value of delta-T (Surface temperature minus reference temperature, (C))
-       \type alpha
+       \type object-list
        \object-list LinearCurves
        \object-list QuadraticCurves
        \object-list CubicCurves
        \object-list QuarticCurves
        \object-list ExponentCurves
-       \note Table:OneIndependentVariable objects can also be used
+       \object-list UniVariateTables
   A4 , \field Hc Function of Temperature Difference Divided by Height Curve Name
        \note Curve's "x" is absolute value of delta-T/Height (Surface temp minus Air temp)/(vertical length scale), (C/m)
        \note when used for an inside face the vertical length scale is the zone's interior height
+       \type object-list
        \object-list LinearCurves
        \object-list QuadraticCurves
        \object-list CubicCurves
        \object-list QuarticCurves
        \object-list ExponentCurves
-       \note Table:OneIndependentVariable object can also be used
+       \object-list UniVariateTables
   A5 , \field Hc Function of Air Change Rate Curve Name
        \note Curve's "x" is mechanical ACH (Air Changes per hour from mechanical air system), (1/hr)
+       \type object-list
        \object-list LinearCurves
        \object-list QuadraticCurves
        \object-list CubicCurves
        \object-list QuarticCurves
        \object-list ExponentCurves
-       \note Table:OneIndependentVariable objects can also be used
+       \object-list UniVariateTables
   A6 ; \field Hc Function of Air System Volume Flow Rate Divided by Zone Perimeter Length Curve Name
        \note Curve's "x" is mechanical system air flow rate (m3/s) divided by zone's length along
        \note exterior walls (m).
+       \type object-list
        \object-list LinearCurves
        \object-list QuadraticCurves
        \object-list CubicCurves
        \object-list QuarticCurves
        \object-list ExponentCurves
-       \note Table:OneIndependentVariable object can also be used
+       \object-list UniVariateTables
 
 SurfaceConvectionAlgorithm:Outside:UserCurve,
        \memo Used to describe a custom model equation for surface convection heat transfer coefficient
@@ -8184,29 +8292,32 @@ SurfaceConvectionAlgorithm:Outside:UserCurve,
        \default HeightAdjust
   A3 , \field Hf Function of Wind Speed Curve Name
        \note Curve's "x" is wind speed of the type determined in the previous field (m/s)
+       \type object-list
        \object-list LinearCurves
        \object-list QuadraticCurves
        \object-list CubicCurves
        \object-list QuarticCurves
        \object-list ExponentCurves
-       \note Table:OneIndependentVariable objects can also be used
+       \object-list UniVariateTables
   A4 , \field Hn Function of Temperature Difference Curve Name
        \note  Curve's "x" is absolute value of delta-T (Surface temperature minus air temperature, (C))
+       \type object-list
        \object-list LinearCurves
        \object-list QuadraticCurves
        \object-list CubicCurves
        \object-list QuarticCurves
        \object-list ExponentCurves
-       \note Table:OneIndependentVariable object can also be used
+       \object-list UniVariateTables
   A5 ; \field Hn Function of Temperature Difference Divided by Height Curve Name
        \note Curve's "x" is absolute value of delta-T/Height (Surface temp minus Air temp)/(vertical length scale), (C/m)
        \note when used for an outside face the vertical length scale is the exterior facade's overall height
+       \type object-list
        \object-list LinearCurves
        \object-list QuadraticCurves
        \object-list CubicCurves
        \object-list QuarticCurves
        \object-list ExponentCurves
-       \note Table:OneIndependentVariable object can also be used
+       \object-list UniVariateTables
 
 SurfaceProperty:ConvectionCoefficients,
       \memo Allow user settable interior and/or exterior convection coefficients.
@@ -8540,7 +8651,6 @@ SurfaceProperty:ExteriorNaturalVentedCavity,
   A1,  \field Name
        \required-field
        \type alpha
-       \reference VentedCavityNames
   A2,  \field Boundary Conditions Model Name
        \note Enter the name of a SurfaceProperty:OtherSideConditionsModel object
        \required-field
@@ -8956,7 +9066,7 @@ GroundHeatTransfer:Slab:Insulation,
           \default 0
         N5; \field IVINS: Flag: Is there vertical insulation
             \note Specifies if the vertical insulation configuration is being used.
-            \note values: 1=yes vertical insulation 0=no underslab insulation
+            \note values: 1=yes vertical insulation 0=no under-slab insulation
           \required-field
           \type choice
           \key 0
@@ -9058,7 +9168,7 @@ GroundHeatTransfer:Slab:YFACE,
         N30, N31, N32, N33, N34, N35, N36, N37, N38, N39, N40;                        \note fields as indicated
 
 GroundHeatTransfer:Slab:ZFACE,
-         \memo This is only needed when usuing manual gridding (not recommended)
+         \memo This is only needed when using manual gridding (not recommended)
          \memo ZFACE: Z Direction cell face coordinates: m
         N1, N2, N3, N4, N5, N6, N7, N8, N9, N10, N11, N12, N13, N14,                  \note fields as indicated
         N15, N16, N17, N18, N19, N20, N21, N22, N23, N24, N25;                        \note fields as indicated
@@ -9342,7 +9452,7 @@ GroundHeatTransfer:Basement:EquivAutoGrid,
 
 GroundHeatTransfer:Basement:AutoGrid,
    \memo AutoGrid only necessary when EquivSizing is false
-   \memo If the modelled building is not a rectangle or square, Equivalent
+   \memo If the modeled building is not a rectangle or square, Equivalent
    \memo sizing MUST be used to get accurate results
    N1, \field CLEARANCE: Distance from outside of wall to edge,
           \minimum 0
@@ -9635,7 +9745,8 @@ RoomAir:Node,
       \extensible:1
       \max-fields 25
   A1, \field Name
-      \type Alpha
+      \type alpha
+      \reference RoomAirNodes
   A2, \field Node Type
       \required-field
       \type choice
@@ -9708,7 +9819,7 @@ RoomAirSettings:ThreeNodeDisplacementVentilation,
        \default 1.1
   N4 ; \field Temperature Difference Threshold for Reporting
        \note Minimum temperature difference between predicted upper and lower layer
-       \note temperatures above which DV auxilliary outputs are calculated.
+       \note temperatures above which DV auxiliary outputs are calculated.
        \note These outputs are 'DV Transition Height', 'DV Fraction Min Recommended Flow Rate'
        \note 'DV Average Temp Gradient' and 'DV Maximum Temp Gradient'.  They
        \note are set to negative values when the temperature difference is less than the
@@ -9796,8 +9907,8 @@ RoomAirSettings:UnderFloorAirDistributionInterior,
        \default 1.1
   N7 , \field Temperature Difference Threshold for Reporting
        \note Minimum temperature difference between predicted upper and lower layer
-       \note temperatures above which UFAD auxilliary outputs are calculated.
-       \note These outputs are 'UF Transition Height'and 'UF Average Temp Gradient'.  They
+       \note temperatures above which UFAD auxiliary outputs are calculated.
+       \note These outputs are 'UF Transition Height' and 'UF Average Temp Gradient'.  They
        \note are set to zero values when the temperature difference is less than the
        \note threshold and the output 'UF Zone Is Mixed' is set to 1
        \units deltaC
@@ -9899,8 +10010,8 @@ RoomAirSettings:UnderFloorAirDistributionExterior,
        \default 1.1
   N7 , \field Temperature Difference Threshold for Reporting
        \note Minimum temperature difference between upper and lower layer
-       \note temperatures above which UFAD auxilliary outputs are calculated.
-       \note These outputs are 'UF Transition Height'and 'UF Average Temp Gradient'.  They
+       \note temperatures above which UFAD auxiliary outputs are calculated.
+       \note These outputs are 'UF Transition Height' and 'UF Average Temp Gradient'.  They
        \note are set to zero values when the temperature difference is less than the
        \note threshold and the output 'UF Zone Is Mixed' is set to 1
        \units deltaC
@@ -10249,7 +10360,6 @@ GasEquipment,
   A1 , \field Name
        \required-field
        \type alpha
-       \reference GasEquipmentNames
   A2 , \field Zone or ZoneList Name
        \required-field
        \type object-list
@@ -10326,7 +10436,6 @@ HotWaterEquipment,
   A1 , \field Name
        \required-field
        \type alpha
-       \reference HotWaterEquipmentNames
   A2 , \field Zone or ZoneList Name
        \required-field
        \type object-list
@@ -10390,7 +10499,6 @@ SteamEquipment,
   A1 , \field Name
        \required-field
        \type alpha
-       \reference SteamEquipmentNames
   A2 , \field Zone or ZoneList Name
        \required-field
        \type object-list
@@ -10454,7 +10562,6 @@ OtherEquipment,
   A1 , \field Name
        \required-field
        \type alpha
-       \reference OtherEquipmentNames
   A2 , \field Zone or ZoneList Name
        \required-field
        \type object-list
@@ -10506,13 +10613,190 @@ OtherEquipment,
        \maximum 1.0
        \default 0
 
+ElectricEquipment:ITE:AirCooled,
+   \memo This object describes air-cooled electric information technology equipment (ITE) which has 
+   \memo variable power consumption as a function of loading and temperature.
+       \min-fields 27
+  A1 , \field Name
+       \required-field
+       \type alpha
+       \reference ITEEquipmentNames
+  A2 , \field Zone Name
+       \required-field
+       \type object-list
+       \object-list ZoneNames
+  A3 , \field Design Power Input Calculation Method
+       \note The entered calculation method is used to specify the design power input
+       \note Watts/Unit => Watts per Unit -- Design Power = Watts per Unit * Number of Units
+       \note Watts/Area => Watts per Zone Floor Area -- Design Power = Watts per Zone Floor Area * Floor Area
+       \required-field
+       \type choice
+       \key Watts/Unit
+       \key Watts/Area
+       \default Watts/Unit
+  N1 , \field Watts per Unit
+       \units W
+       \type real
+       \minimum 0
+       \ip-units W
+  N2 , \field Number of Units
+       \type real
+       \minimum 0
+       \default 1
+  N3 , \field Watts per Zone Floor Area
+       \type real
+       \minimum 0
+       \units W/m2
+       \ip-units W/ft2
+  A4 , \field Design Power Input Schedule Name
+       \note Operating schedule for this equipment, fraction applied to the design power input,
+       \note generally (0.0 - 1.0)
+       \note If this field is blank, the schedule is assumed to always be 1.0.
+       \type object-list
+       \object-list ScheduleNames
+  A5 , \field CPU Loading  Schedule Name
+       \note CPU loading schedule for this equipment as a fraction from 0.0 (idle) to 1.0 (full load).
+       \note If this field is blank, the schedule is assumed to always be 1.0.
+       \type object-list
+       \object-list ScheduleNames
+  A6 , \field CPU Power Input Function of Loading and Air Temperature Curve Name
+       \required-field
+       \type object-list
+       \object-list BiVariateCurves
+       \object-list BiVariateTables
+       \note The name of a two-variable curve or table lookup object which modifies the CPU power
+       \note input as a function of CPU loading (x) and air inlet node temperature (y). 
+       \note This curve (table) should equal 1.0 at design conditions (CPU loading = 1.0 and 
+       \note Design Entering Air Temperature).
+  N4 , \field Design Fan Power Input Fraction
+       \note The fraction of the total power input at design conditions which is for the cooling fan(s)
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+       \default 0.0
+  N5,  \field Design Fan Air Flow Rate per Power Input
+       \note The cooling fan air flow rate per total electric power input at design conditions
+       \required-field
+       \type real
+       \units m3/s-W
+       \minimum 0.0
+  A7 , \field Air Flow Function of Loading and Air Temperature Curve Name
+       \required-field
+       \type object-list
+       \object-list BiVariateCurves
+       \object-list BiVariateTables
+       \note The name of a two-variable curve or table lookup object which modifies the cooling
+       \note air flow rate as a function of CPU loading (x) and air inlet node temperature (y). 
+       \note This curve (table) should equal 1.0 at design conditions (CPU loading = 1.0 and 
+       \note Design Entering Air Temperature).
+  A8 , \field Fan Power Input Function of Flow Curve Name
+       \required-field
+       \type object-list
+       \object-list UniVariateCurves
+       \object-list UniVariateTables
+       \note The name of a single-variable curve or table lookup object which modifies the cooling
+       \note fan power as a function of flow fraction (x). 
+       \note This curve (table) should equal 1.0 at a flow fraction of 1.0. 
+  N6,  \field Design Entering Air Temperature
+       \note The entering air temperature at design conditions.
+       \type real
+       \units C
+       \default 15.0
+  A9,  \field Environmental Class
+       \note Specifies the allowable operating conditions for the air inlet conditions.
+       \note Used for reporting time outside allowable conditions.
+       \type choice 
+       \key None
+       \key A1
+       \key A2
+       \key A3
+       \key A4
+       \key B
+       \key C
+       \default None
+  A10, \field Air Inlet Connection Type
+       \note Specifies the type of connection between the zone and the ITE air inlet node.
+       \note AdjustedSupply = ITE inlet temperature will be the current Supply Air Node temperature
+       \note adjusted by the current recirculation fraction. 
+       \note All heat output is added to the zone air heat balance as a convective gain.
+       \note ZoneAirNode = ITE air inlet condition is  the average zone condition. 
+       \note All heat output is added to the zone air heat balance as a convective gain. 
+       \note RoomAirModel = ITE air inlet and outlet are connected to room air model nodes. 
+       \type choice 
+       \key AdjustedSupply
+       \key ZoneAirNode
+       \key RoomAirModel
+       \default AdjustedSupply
+  A11, \field Air Inlet Room Air Model Node Name
+       \note Name of a RoomAir:Node object which is connected to the ITE air inlet.
+       \type object-list
+       \object-list RoomAirNodes
+  A12, \field Air Outlet Room Air Model Node Name
+       \note Name of a RoomAir:Node object which is connected to the ITE air outlet.
+       \type object-list
+       \object-list RoomAirNodes
+  A13, \field Supply Air Node Name
+       \note Name of the supply air inlet node serving this ITE. Required if the 
+       \note Air Node Connection Type = AdjustedSupply. Also required if reporting of 
+       \note Supply Heat Index is desired.
+       \type node
+  N7,  \field Design Recirculation Fraction
+       \note The recirculation fraction for this equipment at design conditions. This field is used only 
+       \note if the Air Node Connection Type = AdjustedSupply. The default is 0.0 (no recirculation).
+       \type real
+       \minimum 0.0
+       \maximum 0.5
+       \default 0.0
+  A14, \field Recirculation Function of Loading and Supply Temperature Curve Name
+       \type object-list
+       \object-list BiVariateCurves
+       \object-list BiVariateTables
+       \note The name of a two-variable curve or table lookup object which modifies the recirculation
+       \note fractionas a function of CPU loading (x) and supply air node temperature (y). 
+       \note This curve (table) should equal 1.0 at design conditions (CPU loading = 1.0 and 
+       \note Design Entering Air Temperature).This field is used only if the 
+       \note Air Node Connection Type = AdjustedSupply. If this curve is left blank, then the curve 
+       \note is assumed to always equal 1.0.
+  N8 , \field Design Electric Power Supply Efficiency
+       \note The efficiency of the power supply system serving this ITE
+       \type real
+       \minimum> 0.0
+       \maximum 1.0
+       \default 1.0
+  A15, \field Electric Power Supply Efficiency Function of Part Load Ratio Curve Name
+       \type object-list
+       \object-list UniVariateCurves
+       \object-list UniVariateTables
+       \note The name of a single-variable curve or table lookup object which modifies the electric
+       \note power supply efficiency as a function of part-load ratio (x). 
+       \note This curve (table) should equal 1.0 at full load (PLR = 1.0).
+       \note If this curve is left blank, then the curve is assumed to always equal 1.0.
+  N9 , \field Fraction of Electric Power Supply Losses to Zone
+       \note Fraction of the electric power supply losses which are a heat gain to the zone 
+       \note If this field is <1.0, the remainder of the losses are assumed to be lost to the outdoors.
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+       \default 1.0
+  A16, \field CPU End-Use Subcategory
+       \type alpha
+       \retaincase
+       \default ITE-CPU
+  A17, \field Fan End-Use Subcategory
+       \type alpha
+       \retaincase
+       \default ITE-Fans
+  A18; \field Electric Power Supply End-Use Subcategory
+       \type alpha
+       \retaincase
+       \default ITE-UPS
+
 ZoneBaseboard:OutdoorTemperatureControlled,
        \memo Specifies outside temperature-controlled electric baseboard heating.
        \min-fields 8
   A1 , \field Name
        \required-field
        \type alpha
-       \reference BaseboardHeatNames
   A2 , \field Zone Name
        \required-field
        \type object-list
@@ -10550,12 +10834,95 @@ ZoneBaseboard:OutdoorTemperatureControlled,
        \retaincase
        \default General
 
+SwimmingPool:Indoor,
+  A1,  \field Name
+       \required-field
+       \type alpha
+  A2,  \field Surface Name
+       \required-field
+       \note To be matched with a construction in this input file
+       \type object-list
+       \object-list ConstructionNames
+       \reference SurfaceNames
+       \reference SurfAndSubSurfNames
+       \reference AllHeatTranSurfNames
+       \reference HeatTranBaseSurfNames
+       \reference OutFaceEnvNames
+       \reference AllHeatTranAngFacNames
+       \reference RadGroupAndSurfNames
+       \reference SurfGroupAndHTSurfNames
+       \reference AllShadingAndHTSurfNames
+  N1,  \field Average Depth
+       \required-field
+       \type real
+       \units m
+  A3,  \field Activity Factor Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+  A4,  \field Make-up Water Supply Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames  
+  A5,  \field Cover Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+  N2,  \field Cover Evaporation Factor
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+       \default 0.0
+  N3,  \field Cover Convection Factor
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+       \default 0.0
+  N4,  \field Cover Short-Wavelength Radiation Factor
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+       \default 0.0
+  N5,  \field Cover Long-Wavelength Radiation Factor
+       \required-field
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+       \default 0.0
+  A6,  \field Pool Water Inlet Node
+       \required-field
+       \type node
+  A7,  \field Pool Water Outlet Node
+       \required-field
+       \type node
+  N6,  \field Pool Heating System Maximum Water Flow Rate
+       \type real
+       \units m3/s
+       \minimum 0.0
+  N7,  \field Pool Miscellaneous Equipment Power
+       \note Power input per pool water flow rate
+       \units W/(m3/s)
+       \type real
+       \minimum 0.0
+  A8,  \field Setpoint Temperature Schedule
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+  N8,  \field Maximum Number of People
+       \required-field
+       \minimum 0.0
+  A9,  \field People Schedule
+       \type object-list
+       \object-list ScheduleNames
+  A10; \field People Heat Gain Schedule
+       \type object-list
+       \object-list ScheduleNames
+
 ZoneContaminantSourceAndSink:CarbonDioxide,
    \memo Represents internal CO2 gains and sinks in the zone.
   A1 , \field Name
        \required-field
        \type alpha
-       \reference CO2GenerationNames
   A2 , \field Zone Name
        \required-field
        \type object-list
@@ -10563,7 +10930,7 @@ ZoneContaminantSourceAndSink:CarbonDioxide,
   N1 , \field Design Generation Rate
        \units m3/s
        \type real
-       \Note Positive values represent sources and negative values represent sinks.
+       \note Positive values represent sources and negative values represent sinks.
   A3 ; \field Schedule Name
        \required-field
        \type object-list
@@ -10575,7 +10942,6 @@ ZoneContaminantSourceAndSink:Generic:Constant,
   A1 , \field Name
        \required-field
        \type alpha
-       \reference GenericContaminantSourceAndSinkNames
   A2 , \field Zone Name
        \required-field
        \type object-list
@@ -10584,7 +10950,7 @@ ZoneContaminantSourceAndSink:Generic:Constant,
        \units m3/s
        \type real
        \minimum 0.0
-       \Note The values represent source.
+       \note The values represent source.
   A3 , \field Generation Schedule Name
        \required-field
        \type object-list
@@ -10594,7 +10960,7 @@ ZoneContaminantSourceAndSink:Generic:Constant,
        \units m3/s
        \type real
        \minimum 0.0
-       \Note The value represent sink.
+       \note The value represent sink.
   A4 ; \field Removal Schedule Name
        \required-field
        \type object-list
@@ -10607,7 +10973,6 @@ SurfaceContaminantSourceAndSink:Generic:PressureDriven,
   A1 , \field Name
        \required-field
        \type alpha
-       \reference GenericContaminantGenerationNames
   A2 , \field Surface Name
        \required-field
        \type object-list
@@ -10660,7 +11025,6 @@ ZoneContaminantSourceAndSink:Generic:DecaySource,
   A1 , \field Name
        \required-field
        \type alpha
-       \reference GenericContaminantGenerationNames
   A2 , \field Zone Name
        \required-field
        \type object-list
@@ -10686,7 +11050,6 @@ SurfaceContaminantSourceAndSink:Generic:BoundaryLayerDiffusion,
   A1 , \field Name
        \required-field
        \type alpha
-       \reference GenericContaminantGenerationNames
   A2 , \field Surface Name
        \required-field
        \type object-list
@@ -10712,7 +11075,6 @@ SurfaceContaminantSourceAndSink:Generic:DepositionVelocitySink,
   A1 , \field Name
        \required-field
        \type alpha
-       \reference GenericContaminantGenerationNames
   A2 , \field Surface Name
        \required-field
        \type object-list
@@ -10734,7 +11096,6 @@ ZoneContaminantSourceAndSink:Generic:DepositionRateSink,
   A1 , \field Name
        \required-field
        \type alpha
-       \reference GenericContaminantGenerationNames
   A2 , \field Zone Name
        \required-field
        \type object-list
@@ -11054,7 +11415,7 @@ DaylightingDevice:LightWell,
        \memo Generally used with skylights.
   A1,  \field Exterior Window Name
        \required-field
-       \type alpha
+       \type object-list
        \object-list SubSurfNames
   N1,  \field Height of Well
        \note Distance from Bottom of Window to Bottom of Well
@@ -11133,7 +11494,7 @@ Output:IlluminanceMap,
 OutputControl:IlluminanceMap:Style,
        \memo default style for the Daylighting Illuminance Map is comma -- this works well for
        \memo importing into spreadsheet programs such as Excel(tm) but not so well for word
-       \memo processing progams -- there tab may be a better choice.  fixed puts spaces between
+       \memo processing programs -- there tab may be a better choice.  fixed puts spaces between
        \memo the "columns"
        \unique-object
    A1; \field Column Separator
@@ -11248,7 +11609,6 @@ ZoneInfiltration:EffectiveLeakageArea,
        \type real
        \required-field
 
-
 ZoneInfiltration:FlowCoefficient,
        \min-fields 8
        \memo  Infiltration is specified as flow coefficient, schedule fraction, stack and wind coefficients, and
@@ -11290,7 +11650,6 @@ ZoneInfiltration:FlowCoefficient,
        \minimum> 0
        \type real
        \required-field
-
 
 ZoneVentilation:DesignFlowRate,
    \memo  Ventilation is specified as a design level which is modified by a schedule fraction, temperature difference and wind speed:
@@ -11881,7 +12240,7 @@ ZoneEarthtube,
   N4, \field Delta Temperature
       \required-field
       \note This is the temperature difference between indoor and outdoor below which the earth tube is shut off
-      \units deltaC
+      \units delta C
       \type real
       \minimum 0
   A3, \field Earthtube Type
@@ -12256,7 +12615,7 @@ AirflowNetwork:MultiZone:Zone,
       \default 0.0
       \note Applicable only if Ventilation Control Mode = Temperature.
       \note This value must be less than the corresponding upper value (next field).
-  N3, \field Indoor and Outdoor Temperature Difference Upper Limit for Minimun Venting Open Factor
+  N3, \field Indoor and Outdoor Temperature Difference Upper Limit for Minimum Venting Open Factor
       \type real
       \units deltaC
       \minimum> 0.0
@@ -12271,7 +12630,7 @@ AirflowNetwork:MultiZone:Zone,
       \default 0.0
       \note Applicable only if Ventilation Control Mode = Enthalpy.
       \note This value must be less than the corresponding upper value (next field).
-  N5, \field Indoor and Outdoor Enthalpy Difference Upper Limit for Minimun Venting Open Factor
+  N5, \field Indoor and Outdoor Enthalpy Difference Upper Limit for Minimum Venting Open Factor
       \type real
       \units deltaJ/kg
       \minimum> 0.0
@@ -12295,12 +12654,16 @@ AirflowNetwork:MultiZone:Zone,
       \note Selecting Advanced results in EnergyPlus calculating modified Wind Pressure Coefficients
       \note to account for wind direction and turbulence effects on single sided ventilation rates.
       \note Model is only valid for zones with 2 openings, both of which are on a single facade.
-  N6; \field Facade Width
+  N6, \field Facade Width
       \type real
       \units m
       \minimum 0.0
       \default 10.0
       \note This is the whole building width along the direction of the facade of this zone.
+  A6; \field Occupant Ventilation Control Name
+      \type object-list
+      \object-list AirflowNetworkOccupantVentilationControlNames
+      \note Enter the name where Occupancy Ventilation Control is required.
 
 AirflowNetwork:MultiZone:Surface,
       \min-fields 4
@@ -12380,7 +12743,7 @@ AirflowNetwork:MultiZone:Surface,
       \minimum 0.0
       \maximum< 100
       \default 0.0
-  N4, \field Indoor and Outdoor Temperature Difference Upper Limit for Minimun Venting Open Factor
+  N4, \field Indoor and Outdoor Temperature Difference Upper Limit for Minimum Venting Open Factor
       \type real
       \units deltaC
       \minimum> 0.0
@@ -12395,14 +12758,14 @@ AirflowNetwork:MultiZone:Surface,
       \default 0.0
       \note Applicable only if Ventilation Control Mode = Enthalpy.
       \note This value must be less than the corresponding upper value (next field).
-  N6, \field Indoor and Outdoor Enthalpy Difference Upper Limit for Minimun Venting Open Factor
+  N6, \field Indoor and Outdoor Enthalpy Difference Upper Limit for Minimum Venting Open Factor
       \type real
       \units deltaJ/kg
       \minimum> 0.0
       \default 300000.0
       \note Applicable only if Ventilation Control Mode = Enthalpy.
       \note This value must be greater than the corresponding lower value (previous field).
-  A6; \field Venting Availability Schedule Name
+  A6, \field Venting Availability Schedule Name
       \type object-list
       \object-list ScheduleNames
       \note Non-zero schedule value means venting is allowed if other venting control conditions are
@@ -12411,6 +12774,10 @@ AirflowNetwork:MultiZone:Surface,
       \note equal to 1. If this schedule is not specified then venting is allowed if
       \note other venting control conditions are satisfied.
       \note Not used if Ventilation Control Mode = NoVent or ZoneLevel.
+  A7; \field Occupant Ventilation Control Name
+      \type object-list
+      \object-list AirflowNetworkOccupantVentilationControlNames
+      \note Enter the name where Occupancy Ventilation Control is required.
 
 AirflowNetwork:MultiZone:ReferenceCrackConditions,
       \min-fields 4
@@ -12530,7 +12897,7 @@ AirflowNetwork:MultiZone:Component:DetailedOpening,
       \note Enter the exponent used in the following equation:
       \note Mass Flow Rate = Air Mass Flow Coefficient * (dP)^Air Mass Flow Exponent.
       \note Used only when opening (window or door) is closed.
- A2 , \field Type of Rectanguler Large Vertical Opening (LVO)
+ A2 , \field Type of Rectangular Large Vertical Opening (LVO)
       \type choice
       \key NonPivoted
       \key HorizontallyPivoted
@@ -13199,13 +13566,13 @@ AirflowNetwork:Distribution:Linkage,
       \reference AirflowNetwork LinkageNames
  A2 , \field Node 1 Name
       \required-field
-      \type alpha
+      \type object-list
       \object-list AirflowNetworkNodeAndZoneNames
       \object-list ZoneNames
       \note Enter the name of zone or AirflowNetwork Node.
  A3 , \field Node 2 Name
       \required-field
-      \type alpha
+      \type object-list
       \object-list AirflowNetworkNodeAndZoneNames
       \object-list ZoneNames
       \note Enter the name of zone or AirflowNetwork Node.
@@ -13222,6 +13589,70 @@ AirflowNetwork:Distribution:Linkage,
       \note Only used if component = AirflowNetwork:Distribution:Component:Duct
       \note The zone name is where AirflowNetwork:Distribution:Component:Duct is exposed. Leave this field blank if the duct
       \note conduction loss is ignored.
+
+AirflowNetwork:OccupantVentilationControl,
+      \memo This object is used to provide advanced thermal comfort control of window opening and closing 
+      \memo for both exterior and interior windows.
+  A1, \field Name
+      \required-field
+      \type alpha
+      \reference AirflowNetworkOccupantVentilationControlNames
+      \note Enter the name where the advanced thermal comfort control is required.
+  N1, \field Minimum Opening Time
+      \type real
+      \units minutes
+      \minimum 0.0
+      \default 0.0
+  N2, \field Minimum Closing Time
+      \type real
+      \units minutes
+      \minimum 0.0
+      \default 0.0
+  A2, \field Thermal Comfort Low Temperature Curve Name
+      \type object-list
+      \object-list LinearCurves
+      \object-list QuadraticCurves
+      \object-list UniVariateTables
+      \note Enter a curve name that represents thermal comfort temperature as a
+      \note function of outdoor dry-bulb temperature. Up to two curves are allowed if the 
+      \note performance cannot be represented by a single curve.
+      \note The following two fields are used if two curves are required.
+  N3, \field Thermal Comfort Temperature Boundary Point
+      \type real
+      \units C
+      \minimum 0.0
+      \default 10.0
+      \note This point is used to allow separate low and high thermal comfort temperature
+      \note curves. If a single performance curve is used, leave this field blank.
+  A3, \field Thermal Comfort High Temperature Curve Name
+      \type object-list
+      \object-list LinearCurves
+      \object-list QuadraticCurves
+      \object-list UniVariateTables
+      \note Enter a curve name that represents thermal comfort temperature as a
+      \note function of outdoor dry-bulb temperature. Up to two curves are allowed if the 
+      \note performance cannot be represented by a single curve.
+      \note If a single performance curve is used, leave this field blank.
+  N4, \field Maximum Threshold for Persons Dissatisfied PPD
+      \type real
+      \units percent
+      \minimum 0
+      \maximum 100
+      \default 10.0
+  A4, \field Occupancy Check
+      \note If Yes, occupancy check will be performed as part of the opening probability check.
+      \type choice
+      \key Yes
+      \key No
+      \default No
+  A5, \field Opening Probability Schedule Name
+      \type object-list
+      \object-list ScheduleNames
+      \note If this field is blank, the opening probability check is bypassed and opening is true.
+  A6; \field Closing Probability Schedule Name
+      \type object-list
+      \object-list ScheduleNames
+      \note If this field is blank, the closing probability check is bypassed and closing is true.
 
 \group Exterior Equipment
        ! This equipment is used merely for reporting.
@@ -13257,7 +13688,6 @@ Exterior:FuelEquipment,
   A1 , \field Name
        \required-field
        \type alpha
-       \reference ExteriorFuelEquipmentNames
   A2 , \field Fuel Use Type
        \required-field
        \type choice
@@ -13295,7 +13725,6 @@ Exterior:WaterEquipment,
   A1 , \field Name
        \required-field
        \type alpha
-       \reference ExteriorWaterEquipmentNames
   A2 , \field Fuel Use Type
        \type choice
        \key Water
@@ -13344,7 +13773,7 @@ Exterior:WaterEquipment,
 !*               --System Control and Controllers
 !************************************************************************************
 
-\Group HVAC Templates
+\group HVAC Templates
 
 HVACTemplate:Thermostat,
       \min-fields 5
@@ -13547,10 +13976,10 @@ HVACTemplate:Zone:IdealLoadsAirSystem,
        \note be ignored.
   A12, \field Demand Controlled Ventilation Type
        \note This field controls how the minimum outdoor air flow rate is calculated.
-       \note None means that design occupancy will be uased to compute the minimum outdoor air flow rate
+       \note None means that design occupancy will be used to compute the minimum outdoor air flow rate
        \note OccupancySchedule means that current occupancy level will be used.
        \note CO2Setpoint means that the design occupancy will be used to compute the minimum outdoor air flow
-       \note reate and the outdoor air flow rate may be increased if necessary to maintain the indoor air carbon
+       \note rate and the outdoor air flow rate may be increased if necessary to maintain the indoor air carbon
        \note dioxide setpoint defined in a ZoneControl:ContaminantController object.
        \type choice
        \key None
@@ -14706,7 +15135,7 @@ HVACTemplate:Zone:VRF,
       \note to be equal to the cooling capacity multiplied by this sizing ratio.
       \note This input applies to the terminal unit heating coil and overrides the sizing
       \note ratio entered in the HVACTemplate:System:VRF object.
-  N4, \field Supply Air Flow Rate During Cooling Operation
+  N4, \field Cooling Supply Air Flow Rate
       \note This field may be set to "autosize".  If a value is entered, it will be
       \note multiplied by the Supply Air Sizing Factor and by zone multipliers.
       \type real
@@ -14714,7 +15143,7 @@ HVACTemplate:Zone:VRF,
       \minimum> 0.0
       \autosizable
       \default autosize
-  N5, \field Supply Air Flow Rate When No Cooling is Needed
+  N5, \field No Cooling Supply Air Flow Rate
       \note This flow rate is used when the terminal is not cooling and the previous mode was cooling.
       \note This field may be set to "autosize".  If a value is entered, it will be
       \note multiplied by the Supply Air Sizing Factor and by zone multipliers.
@@ -14723,7 +15152,7 @@ HVACTemplate:Zone:VRF,
       \minimum 0.0
       \autosizable
       \default autosize
-  N6, \field Supply Air Flow Rate During Heating Operation
+  N6, \field Heating Supply Air Flow Rate
       \note This field may be set to "autosize".  If a value is entered, it will be
       \note multiplied by the Supply Air Sizing Factor and by zone multipliers.
       \type real
@@ -14731,7 +15160,7 @@ HVACTemplate:Zone:VRF,
       \minimum> 0.0
       \autosizable
       \default autosize
-  N7, \field Supply Air Flow Rate When No Heating is Needed
+  N7, \field No Heating Supply Air Flow Rate
       \note This flow rate is used when the terminal is not heating and the previous mode was heating.
       \note This field may be set to "autosize".  If a value is entered, it will be
       \note multiplied by the Supply Air Sizing Factor and by zone multipliers.
@@ -14740,7 +15169,7 @@ HVACTemplate:Zone:VRF,
       \minimum 0.0
       \autosizable
       \default autosize
-  N8, \field Outdoor Air Flow Rate During Cooling Operation
+  N8, \field Cooling Outdoor Air Flow Rate
       \note If this field is set to autosize it will be sized based on the outdoor air inputs below,
       \note unless a dedicated outdoor air system is specified for this zone and then it will be
       \note set to zero.
@@ -14749,7 +15178,7 @@ HVACTemplate:Zone:VRF,
       \minimum 0.0
       \autosizable
       \default autosize
-  N9, \field Outdoor Air Flow Rate During Heating Operation
+  N9, \field Heating Outdoor Air Flow Rate
       \note If this field is set to autosize it will be sized based on the outdoor air inputs below,
       \note unless a dedicated outdoor air system is specified for this zone and then it will be
       \note set to zero.
@@ -14758,7 +15187,7 @@ HVACTemplate:Zone:VRF,
       \minimum 0.0
       \autosizable
       \default autosize
- N10, \field Outdoor Air Flow Rate When No Cooling or Heating is Needed
+ N10, \field No Load Outdoor Air Flow Rate
       \note If this field is set to autosize it will be sized based on the outdoor air inputs below,
       \note unless a dedicated outdoor air system is specified for this zone and then it will be
       \note set to zero.
@@ -15534,7 +15963,7 @@ HVACTemplate:Zone:VAV:FanPowered,
 
 HVACTemplate:Zone:VAV:HeatAndCool,
       \min-fields 27
-      \memo VAV system with VAV for both heating and cooling and optional rehaert coil.
+      \memo VAV system with VAV for both heating and cooling and optional reheat coil.
       \memo For heating, this unit increases airflow first, then activates reheat coil.
   A1, \field Zone Name
       \required-field
@@ -16129,7 +16558,7 @@ HVACTemplate:System:VRF,
       \note Choose a thermostat control logic scheme. If these control types fail to control zone
       \note temperature within a reasonable limit, consider using multiple VRF systems
   A5, \field Thermostat Priority Schedule Name
-      \type alpha
+      \type object-list
       \object-list ScheduleNames
       \note this field is required if Master Thermostat Priority Control Type is Scheduled.
       \note Schedule values of 0 denote cooling, 1 for heating, and all other values disable the system.
@@ -16184,7 +16613,7 @@ HVACTemplate:System:VRF,
       \key Resistive
       \default Resistive
       \note Select a defrost strategy. Reverse cycle reverses the operating mode from heating to cooling
-      \note to melt frost formation on the condenser coil. The resistive strategy uses a resitive heater
+      \note to melt frost formation on the condenser coil. The resistive strategy uses a resistive heater
       \note to melt the frost.
   A8, \field Defrost Control
       \type choice
@@ -17625,7 +18054,7 @@ HVACTemplate:System:VAV,
       \note Overrides Heating Coil Setpoint Schedule Name
       \note None = no reset, control to Heating Coil Design Setpoint Temperature or Schedule
       \note OutdoorAirTemperatureReset = reset based on outdoor air temperature
-      \note (Heating Design Setpoint at -6.7C ODB to Heating Desing Setpoint minus 5.2C at 10C ODB)
+      \note (Heating Design Setpoint at -6.7C ODB to Heating Design Setpoint minus 5.2C at 10C ODB)
       \note min supply air flow rate
       \type choice
       \key None
@@ -17974,7 +18403,7 @@ HVACTemplate:System:PackagedVAV,
       \note Overrides Heating Coil Setpoint Schedule Name
       \note None = no reset, control to Heating Coil Design Setpoint Temperature or Schedule
       \note OutdoorAirTemperatureReset = reset based on outdoor air temperature
-      \note (Heating Design Setpoint at -6.7C ODB to Heating Desing Setpoint minus 5.2C at 10C ODB)
+      \note (Heating Design Setpoint at -6.7C ODB to Heating Design Setpoint minus 5.2C at 10C ODB)
       \note min supply air flow rate
       \type choice
       \key None
@@ -19013,7 +19442,6 @@ HVACTemplate:System:DedicatedOutdoorAir,
       \key  FixedSetpoint
       \key  Scheduled
       \key  OutdoorAirTemperatureReset
-      \key  None
       \default FixedSetpoint
   N6, \field Cooling Coil Design Setpoint
       \note  Used for sizing and as constant setpoint if no Cooling Coil Setpoint Schedule Name is specified.
@@ -19074,7 +19502,6 @@ HVACTemplate:System:DedicatedOutdoorAir,
       \key  FixedSetpoint
       \key  Scheduled
       \key  OutdoorAirTemperatureReset
-      \key  None
       \default FixedSetpoint
  N14, \field Heating Coil Design Setpoint
       \note   Used for sizing and as constant setpoint if no Heating Coil Setpoint Schedule Name is specified.
@@ -19201,7 +19628,7 @@ HVACTemplate:System:DedicatedOutdoorAir,
       \type object-list
       \object-list ScheduleNames
  A20; \field Humidifier Setpoint Schedule Name
-      \note Leave blank to use constant setpoint specified in Humidifer Constant Setpoint above.
+      \note Leave blank to use constant setpoint specified in Humidifier Constant Setpoint above.
       \note Schedule values must be in units of humidity ratio (kgWater/kgDryAir or lbWater/lbDryAir)
       \type object-list
       \object-list ScheduleNames
@@ -19396,7 +19823,7 @@ HVACTemplate:Plant:ChilledWaterLoop,
       \units deltaC
       \default 6.67
   N11,\field Minimum Outdoor Dry Bulb Temperature
-      \note The minimum outdoor dry bulb temperature that the chilled water loops operate.
+      \note The minimum outdoor dry-bulb temperature that the chilled water loops operate.
       \note Leave blank for no limit.
       \units C
   A21,\field Chilled Water Load Distribution Scheme
@@ -19735,7 +20162,7 @@ HVACTemplate:Plant:HotWaterLoop,
       \units deltaC
       \default 11.0
   N8, \field Maximum Outdoor Dry Bulb Temperature
-      \note The maximum outdoor dry bulb temperature that the hot water loops operate.
+      \note The maximum outdoor dry-bulb temperature that the hot water loops operate.
       \note Leave blank for no limit.
       \units C
   A13;\field Load Distribution Scheme
@@ -20211,13 +20638,13 @@ Sizing:Zone,
 DesignSpecification:ZoneHVAC:Sizing,
   \min-fields 1
   \memo This object is used to describe general scalable zone HVAC equipment sizing which
-  \memo are referenced by other objects. 
+  \memo are referenced by other objects.
   A1, \field Name
       \required-field
       \type alpha
       \reference DesignSpecificationZoneHVACSizingName
-  A2, \field Cooling Design Air Flow Method
-      \type choice 
+  A2, \field Cooling Supply Air Flow Rate Method
+      \type choice
       \key None
       \key SupplyAirFlowRate
       \key FlowPerFloorArea
@@ -20225,47 +20652,47 @@ DesignSpecification:ZoneHVAC:Sizing,
       \key FlowPerCoolingCapacity
       \default SupplyAirFlowRate
       \note Enter the method used to determine the cooling supply air volume flow rate.
-      \note None is used when a cooling coil is not included in the Zone HVAC Equip or this field 
-      \note may be blank. SupplyAirFlowRate => selected when the magnitude of the supply air volume 
+      \note None is used when a cooling coil is not included in the Zone HVAC Equip or this field
+      \note may be blank. SupplyAirFlowRate => selected when the magnitude of the supply air volume
       \note flow rate is specified. FlowPerFloorArea => selected when the supply air volume flow rate
-      \note is determined from total floor area served by the Zone HVAC unit and Flow Per Floor Area 
+      \note is determined from total floor area served by the Zone HVAC unit and Flow Per Floor Area
       \note value specified. FractionOfAutosizedCoolingAirflow => is selected when the supply air volume
-      \note is determined from a user specified fraction and the autosized cooling supply air flow rate 
-      \note value determined by the simulation. FlowPerCoolingCapacity => is selected when the supply 
-      \note air volume is determined from user specified flow per Cooling Capacity and Cooling Capacity 
+      \note is determined from a user specified fraction and the autosized cooling supply air flow rate
+      \note value determined by the simulation. FlowPerCoolingCapacity => is selected when the supply
+      \note air volume is determined from user specified flow per Cooling Capacity and Cooling Capacity
       \note determined by the simulation.
-  N1, \field Cooling Design Supply Air Flow Rate
+  N1, \field Cooling Supply Air Flow Rate
       \type real
       \units m3/s
       \minimum 0.0
       \autosizable
       \note Enter the magnitude of supply air volume flow rate during cooling operation.
-      \note Required field when Supply air Flow Rate Method During Cooling Operation is SupplyAirFlowRate.
+      \note Required field when Cooling Supply Air Flow Rate Method is SupplyAirFlowRate.
       \note This field may be blank if a cooling coil is not included in the Zone HVAC equipment.
-  N2, \field Cooling Design Supply Air Flow Rate Per Floor Area
+  N2, \field Cooling Supply Air Flow Rate Per Floor Area
       \type real
       \units m3/s-m2
       \minimum 0.0
       \note Enter the cooling supply air volume flow rate per total conditioned floor area.
-      \note Required field when Supply air Flow Rate Method During Cooling Operation is FlowPerFloorArea.
+      \note Required field when Cooling Supply Air Flow Rate Method is FlowPerFloorArea.
       \note This field may be blank if a cooling coil is not included in the Zone HVAC equipment.
-  N3, \field Fraction of Autosized Cooling Design Supply Air Flow Rate
+  N3, \field Cooling Fraction of Autosized Cooling Supply Air Flow Rate
       \type real
       \minimum 0.0
       \note Enter the supply air volume flow rate as a fraction of the cooling supply air flow rate.
-      \note Required field when Supply air Flow Rate Method During Cooling Operation is 
+      \note Required field when Cooling Supply Air Flow Rate Method is
       \note FractionOfAutosizedCoolingAirflow.
-      \note This field may be blank if a cooling coil is not included in the Zone HVAC equipment.  
-  N4, \field Cooling Design Supply Air Flow Rate Per Unit Cooling Capacity
+      \note This field may be blank if a cooling coil is not included in the Zone HVAC equipment.
+  N4, \field Cooling Supply Air Flow Rate Per Unit Cooling Capacity
       \type real
       \units m3/s-W
       \minimum 0.0
       \note Enter the cooling supply air volume flow rate unit cooling capacity.
-      \note Required field when Supply air Flow Rate Method During Cooling Operation is 
-      \note FlowPerCoolingCapacity. This field may be blank if a cooling coil is not 
+      \note Required field when Cooling Supply Air Flow Rate Method is
+      \note FlowPerCoolingCapacity. This field may be blank if a cooling coil is not
       \note included in the Zone HVAC equipment.
-  A3, \field Supply Air Flow Rate Method When No Cooling or Heating is Required
-      \type choice 
+  A3, \field No Load Supply Air Flow Rate Method
+      \type choice
       \key None
       \key SupplyAirFlowRate
       \key FlowPerFloorArea
@@ -20273,44 +20700,44 @@ DesignSpecification:ZoneHVAC:Sizing,
       \key FractionOfAutosizedHeatingAirflow
       \default SupplyAirFlowRate
       \note Enter the method used to determine the supply air volume flow rate When No Cooling or Heating
-      \note is Required. None is used when a cooling or heating coils is not included in the Zone HVAC   
+      \note is Required. None is used when a cooling or heating coil is not included in the Zone HVAC
       \note Equipment or this field may be blank. SupplyAirFlowRate => selected when the magnitude of the
-      \note supply air volume flow rate is specified. FlowPerFloorArea => selected when the supply air 
-      \note volume flow rate is determined from total floor area served by the Zone HVAC unit and Flow Per 
-      \note Floor Area is specified. FractionOfAutosizedCoolingAirflow => is selected when the supply 
+      \note supply air volume flow rate is specified. FlowPerFloorArea => selected when the supply air
+      \note volume flow rate is determined from total floor area served by the Zone HVAC unit and Flow Per
+      \note Floor Area is specified. FractionOfAutosizedCoolingAirflow => is selected when the supply
       \note air volume is determined from a user specified fraction and the Autosized cooling supply
-      \note air flow rate value determined by the simulation. FractionOfAutosizedHeatingAirflow => is 
-      \note selected when the supply air volume is determined from a user specified fraction and the 
+      \note air flow rate value determined by the simulation. FractionOfAutosizedHeatingAirflow => is
+      \note selected when the supply air volume is determined from a user specified fraction and the
       \note Autosized heating supply air flow rate value determined by the simulation.
-  N5, \field Supply Air Flow Rate When No Cooling or Heating is Required
+  N5, \field No Load Supply Air Flow Rate
       \type real
       \units m3/s
       \minimum 0.0
-      \autosizable  
-      \note Enter the magnitude of the supply air volume flow rate during when no cooling or heating 
-      \note is required. Required field when Supply air Flow Rate Method When No Cooling or Heating
-      \note is Required is SupplyAirFlowRate.   
-  N6, \field Supply Air Flow Rate Per Floor Area When No Clg or Htg is Required
+      \autosizable
+      \note Enter the magnitude of the supply air volume flow rate during when no cooling or heating
+      \note is required. Required field when No Load Supply Air Flow Rate Method
+      \note is SupplyAirFlowRate.
+  N6, \field No Load Supply Air Flow Rate Per Floor Area
       \type real
       \units m3/s-m2
       \minimum 0.0
       \note Enter the supply air volume flow rate per total floor area.
-      \note Required field when Supply air Flow Rate Method When No Cooling or Heating is Required 
-      \note is FlowPerFloorArea.   
-  N7, \field Fraction of Design Cooling Supply Air Flow Rate When No Clg or Htg Required
+      \note Required field when No Load Supply Air Flow Rate Method
+      \note is FlowPerFloorArea.
+  N7, \field No Load Fraction of Cooling Supply Air Flow Rate
       \type real
       \minimum 0.0
       \note Enter the supply air volume flow rate as a fraction of the cooling supply air flow rate.
-      \note Required field when Supply air Flow Rate Method When No Cooling or Heating is Required 
-      \note is FractionOfAutosizedCoolingAirflow.   
-  N8, \field Fraction of Design Heating Supply Air Flow Rate When No Clg or Htg Required
+      \note Required field when No Load Supply Air Flow Rate Method
+      \note is FractionOfAutosizedCoolingAirflow.
+  N8, \field No Load Fraction of Heating Supply Air Flow Rate
       \type real
       \minimum 0.0
       \note Enter the supply air volume flow rate as a fraction of the heating supply air flow rate.
-      \note Required field when Supply air Flow Rate Method When No Cooling or Heating is Required 
-      \note is FractionOfAutosizedHeatingAirflow.    
-  A4, \field Heating Design Air Flow Method
-      \type choice 
+      \note Required field when No Load Supply Air Flow Rate Method
+      \note is FractionOfAutosizedHeatingAirflow.
+  A4, \field Heating Supply Air Flow Rate Method
+      \type choice
       \key None
       \key SupplyAirFlowRate
       \key FlowPerFloorArea
@@ -20320,57 +20747,57 @@ DesignSpecification:ZoneHVAC:Sizing,
       \note Enter the method used to determine the heating supply air volume flow rate.
       \note None is used when a heating coil is not included in the Zone HVAC Equipment or this field may
       \note be blank. SupplyAirFlowRate => selected when the magnitude of the heating supply air volume
-      \note flow rate is specified.  FlowPerFloorArea => selected when the supply air volume flow rate is 
-      \note determined from total floor area served by a Zone HVAC unit and user specified value of Flow 
-      \note Per Floor Area. FractionOfAutosizedHeatingAirflow => is selected when the supply air volume 
-      \note is determined from a user specified fraction and the Autosized heating supply air flow rate 
-      \note value determined by the simulation. FlowPerHeatingCapacity => is selected when the supply 
-      \note air volume is determined from user specified flow per Heating Capacity and Heating Capacity 
+      \note flow rate is specified.  FlowPerFloorArea => selected when the supply air volume flow rate is
+      \note determined from total floor area served by a Zone HVAC unit and user specified value of Flow
+      \note Per Floor Area. FractionOfAutosizedHeatingAirflow => is selected when the supply air volume
+      \note is determined from a user specified fraction and the Autosized heating supply air flow rate
+      \note value determined by the simulation. FlowPerHeatingCapacity => is selected when the supply
+      \note air volume is determined from user specified flow per Heating Capacity and Heating Capacity
       \note determined by the simulation.
-  N9, \field Heating Design Supply Air Flow Rate
+  N9, \field Heating Supply Air Flow Rate
       \type real
       \units m3/s
       \minimum 0.0
       \autosizable
       \note Enter the magnitude of the supply air volume flow rate during heating operation.
-      \note Required field when Supply air Flow Rate Method During Heating Operation is SupplyAirFlowRate.
-      \note This field may be blank if a heating coil is not included in the Zone HVAC equipment.  
- N10, \field Heating Design Supply Air Flow Rate Per Floor Area
+      \note Required field when Heating Supply Air Flow Rate Method is SupplyAirFlowRate.
+      \note This field may be blank if a heating coil is not included in the Zone HVAC equipment.
+ N10, \field Heating Supply Air Flow Rate Per Floor Area
       \type real
       \units m3/s-m2
       \minimum 0.0
       \note Enter the heating supply air volume flow rate per total conditioned floor area.
-      \note Required field when Supply air Flow Rate Method During Heating Operation is FlowPerFloorArea.
-      \note This field may be blank if a heating coil is not included in the Zone HVAC equipment. 
- N11, \field Fraction of Heating Design Supply Air Flow Rate
+      \note Required field when Heating Supply Air Flow Rate Method is FlowPerFloorArea.
+      \note This field may be blank if a heating coil is not included in the Zone HVAC equipment.
+ N11, \field Heating Fraction of Heating Supply Air Flow Rate
       \type real
       \minimum 0.0
       \note Enter the supply air volume flow rate as a fraction of the heating supply air flow rate.
-      \note Required field when Supply air Flow Rate Method During Heating Operation is 
+      \note Required field when Heating Supply Air Flow Rate Method is
       \note FractionOfAutosizedHeatingAirflow.
-      \note This field may be blank if a heating coil is not included in the Zone HVAC equipment.  
- N12, \field Heating Design Supply Air Flow Rate Per Unit Heating Capacity
+      \note This field may be blank if a heating coil is not included in the Zone HVAC equipment.
+ N12, \field Heating Supply Air Flow Rate Per Unit Heating Capacity
       \type real
       \units m3/s-W
       \minimum 0.0
       \note Enter the supply air volume flow rate per unit heating capacity.
-      \note Required field when Supply air Flow Rate Method During Heating Operation is 
+      \note Required field when Heating Supply Air Flow Rate Method is
       \note FlowPerHeatingCapacity.
-      \note This field may be blank if a heating coil is not included in the Zone HVAC equipment.   
+      \note This field may be blank if a heating coil is not included in the Zone HVAC equipment.
   A5, \field Cooling Design Capacity Method
-      \type choice 
+      \type choice
       \key None
       \key CoolingDesignCapacity
       \key CapacityPerFloorArea
       \key FractionOfAutosizedCoolingCapacity
       \default None
       \note Enter the method used to determine the cooling design capacity for scalable sizing.
-      \note None is used when a cooling coils is not included in the Zone HVAC Equipment or 
-      \note this field may be blank. If this input field is left blank, then the design cooling 
-      \note capacity is set to zero. CoolingDesignCapacity => selected when the design cooling capacity 
-      \note value is specified or auto-sized. CapacityPerFloorArea => selected when the design cooling 
+      \note None is used when a cooling coils is not included in the Zone HVAC Equipment or
+      \note this field may be blank. If this input field is left blank, then the design cooling
+      \note capacity is set to zero. CoolingDesignCapacity => selected when the design cooling capacity
+      \note value is specified or auto-sized. CapacityPerFloorArea => selected when the design cooling
       \note capacity is determine from user specified cooling capacity per floor area and zone floor area.
-      \note FractionOfAutosizedCoolingCapacity => is selected when the design cooling capacity is 
+      \note FractionOfAutosizedCoolingCapacity => is selected when the design cooling capacity is
       \note determined from a user specified fraction and the auto-sized design cooling capacity.
  N13, \field Cooling Design Capacity
       \type real
@@ -20383,27 +20810,27 @@ DesignSpecification:ZoneHVAC:Sizing,
       \type real
       \units W/m2
       \minimum 0.0
-      \note Enter the cooling design capacity per zone floor area. Required field when the cooling design 
-      \note capacity method field is CapacityPerFloorArea. 
+      \note Enter the cooling design capacity per zone floor area. Required field when the cooling design
+      \note capacity method field is CapacityPerFloorArea.
  N15, \field Fraction of Autosized Cooling Design Capacity
       \type real
       \minimum 0.0
-      \note Enter the fraction of auto-sized cooling design capacity. Required field when the cooling 
-      \note design capacity method field is FractionOfAutosizedCoolingCapacity. 
+      \note Enter the fraction of auto-sized cooling design capacity. Required field when the cooling
+      \note design capacity method field is FractionOfAutosizedCoolingCapacity.
   A6, \field Heating Design Capacity Method
-      \type choice 
+      \type choice
       \key None
       \key HeatingDesignCapacity
       \key CapacityPerFloorArea
       \key FractionOfAutosizedHeatingCapacity
       \default None
       \note Enter the method used to determine the heating design capacity for scalable sizing.
-      \note None is used when a heating coil is not included in the Zone HVAC Equipment or 
+      \note None is used when a heating coil is not included in the Zone HVAC Equipment or
       \note this field may be blank. If this input field is left blank, then the design heating
-      \note capacity is set to zero. HeatingDesignCapacity => selected when the design heating capacity 
-      \note value is specified or auto-sized. CapacityPerFloorArea => selected when the design cooling 
+      \note capacity is set to zero. HeatingDesignCapacity => selected when the design heating capacity
+      \note value is specified or auto-sized. CapacityPerFloorArea => selected when the design cooling
       \note capacity is determine from user specified heating capacity per flow area and zone floor area.
-      \note FractionOfAutosizedHeatingCapacity => is selected when the design heating capacity is 
+      \note FractionOfAutosizedHeatingCapacity => is selected when the design heating capacity is
       \note determined from a user specified fraction and the auto-sized design heating capacity
  N16, \field Heating Design Capacity
       \type real
@@ -20416,18 +20843,19 @@ DesignSpecification:ZoneHVAC:Sizing,
       \type real
       \units W/m2
       \minimum 0.0
-      \note Enter the heating design capacity per zone floor area. Required field when the heating design 
-      \note capacity method field is CapacityPerFloorArea. 
+      \note Enter the heating design capacity per zone floor area. Required field when the heating design
+      \note capacity method field is CapacityPerFloorArea.
  N18; \field Fraction of Autosized Heating Design Capacity
       \type real
       \minimum 0.0
-      \note Enter the fraction of auto-sized heating design capacity. Required field when capacity the 
+      \note Enter the fraction of auto-sized heating design capacity. Required field when capacity the
       \note heating design capacity method field is FractionOfAutosizedHeatingCapacity.
 
 Sizing:System,
       \memo Specifies the input needed to perform sizing calculations for a central forced air
-      \memo system design air flow, heating capacity, and cooling capacity.
-      \min-fields 27
+      \memo system. System design air flow, heating capacity, and cooling capacity will be calculated
+      \memo using this input data.
+      \min-fields 37
   A1, \field AirLoop Name
       \required-field
       \type object-list
@@ -20437,12 +20865,10 @@ Sizing:System,
       \note Sensible and VentilationRequirement are the only available options
       \note Sensible uses the zone design air flow rates
       \note VentilationRequirement uses the system ventilation requirement
-      \required-field
       \type choice
       \key Sensible
+      \key Total
       \key VentilationRequirement
-      !\key Latent
-      !\key Total
       \default Sensible
   N1, \field Design Outdoor Air Flow Rate
       \type real
@@ -20450,11 +20876,12 @@ Sizing:System,
       \minimum 0.0
       \units m3/s
       \autosizable
-  N2, \field Minimum System Air Flow Ratio
+  N2, \field Central Heating Maximum System Air Flow Ratio
       \required-field
       \type real
       \minimum 0.0
       \maximum 1.0
+      \default 0.5
   N3, \field Preheat Design Temperature
       \required-field
       \type real
@@ -20479,7 +20906,7 @@ Sizing:System,
       \required-field
       \type real
       \units C
-  A3, \field Sizing Option
+  A3, \field Type of Zone Sum to Use
       \type choice
       \key Coincident
       \key NonCoincident
@@ -20504,7 +20931,7 @@ Sizing:System,
       \type real
       \default 0.008
       \units kgWater/kgDryAir
-  A6, \field Cooling Design Air Flow Method
+  A6, \field Cooling Supply Air Flow Rate Method
       \type choice
       \key Flow/System
       \key DesignDay
@@ -20512,34 +20939,34 @@ Sizing:System,
       \key FractionOfAutosizedCoolingAirflow
       \key FlowPerCoolingCapacity
       \default DesignDay
- N11, \field Cooling Design Air Flow Rate
-      \note This input is used if Cooling Design Air Flow Method is Flow/System
+ N11, \field Cooling Supply Air Flow Rate
+      \note This input is used if Cooling Supply Air Flow Rate Method is Flow/System
       \note This value will *not* be multiplied by any sizing factor or by zone multipliers.
       \note If using zone multipliers, this value must be large enough to serve the multiplied zones.
       \type real
       \units m3/s
       \minimum 0
       \default 0
- N12, \field Supply Air Flow Rate Per Floor Area During Cooling Operation
+ N12, \field Cooling Supply Air Flow Rate Per Floor Area
       \type real
       \units m3/s-m2
       \minimum 0.0
       \note Enter the cooling supply air volume flow rate per total conditioned floor area.
-      \note Required field when Supply air Flow Rate Method during cooling operation is FlowPerFloorArea.
- N13, \field Fraction of Autosized Design Cooling Supply Air Flow Rate
+      \note Required field when Cooling Supply Air Flow Rate Method is FlowPerFloorArea.
+ N13, \field Cooling Fraction of Autosized Cooling Supply Air Flow Rate
       \type real
       \minimum 0.0
       \note Enter the supply air volume flow rate as a fraction of the cooling supply air flow rate.
-      \note Required field when Supply air Flow Rate Method during cooling operation is 
+      \note Required field when Cooling Supply Air Flow Rate Method is
       \note FractionOfAutosizedCoolingAirflow.
- N14, \field Design Supply Air Flow Rate Per Unit Cooling Capacity
+ N14, \field Cooling Supply Air Flow Rate Per Unit Cooling Capacity
       \type real
       \units m3/s-W
       \minimum 0.0
       \note Enter the supply air volume flow rate per unit cooling capacity.
-      \note Required field when Supply air Flow Rate Method During Cooling Operation is 
+      \note Required field when Cooling Supply Air Flow Rate Method is
       \note FlowPerCoolingCapacity.
-  A7, \field Heating Design Air Flow Method
+  A7, \field Heating Supply Air Flow Rate Method
       \type choice
       \key Flow/System
       \key DesignDay
@@ -20548,38 +20975,38 @@ Sizing:System,
       \key FractionOfAutosizedCoolingAirflow
       \key FlowPerCoolingCapacity
       \default DesignDay
- N15, \field Heating Design Air Flow Rate
-      \note This input is used if Heating Design Air Flow Method is Flow/System
+ N15, \field Heating Supply Air Flow Rate
+      \note Required field when Heating Supply Air Flow Rate Method is Flow/System
       \note This value will *not* be multiplied by any sizing factor or by zone multipliers.
       \note If using zone multipliers, this value must be large enough to serve the multiplied zones.
       \type real
       \units m3/s
       \minimum 0
       \default 0
- N16, \field Supply Air Flow Rate Per Floor Area During Heating Operation
+ N16, \field Heating Supply Air Flow Rate Per Floor Area
       \type real
       \units m3/s-m2
       \minimum 0.0
       \note Enter the heating supply air volume flow rate per total conditioned floor area.
-      \note Required field when Supply air Flow Rate Method during heating operation is FlowPerFloorArea.
- N17, \field Fraction of Autosized Design Heating Supply Air Flow Rate
+      \note Required field when Heating Supply Air Flow Rate Method is FlowPerFloorArea.
+ N17, \field Heating Fraction of Autosized Heating Supply Air Flow Rate
       \type real
       \minimum 0.0
       \note Enter the supply air volume flow rate as a fraction of the heating supply air flow rate.
-      \note Required field when Supply air Flow Rate Method during heating operation is 
+      \note Required field when Heating Supply Air Flow Rate Method is
       \note FractionOfAutosizedHeatingAirflow.
- N18, \field Fraction of Autosized Design Heating Supply Air Flow Rate 2
+ N18, \field Heating Fraction of Autosized Cooling Supply Air Flow Rate
       \type real
       \minimum 0.0
       \note Enter the supply air volume flow rate as a fraction of the cooling supply air flow rate.
-      \note Required field when Supply air Flow Rate Method during heating operation is 
+      \note Required field when Heating Supply Air Flow Rate Method is
       \note FractionOfAutosizedCoolingAirflow.
- N19, \field Design Supply Air Flow Rate Per Unit Heating Capacity
+ N19, \field Heating Supply Air Flow Rate Per Unit Heating Capacity
       \type real
       \units m3/s-W
       \minimum 0.0
       \note Enter the heating supply air volume flow rate per unit heating capacity.
-      \note Required field when Supply air Flow Rate Method during heating operation is 
+      \note Required field when Heating Supply Air Flow Rate Method is
       \note FlowPerHeatingCapacity.
   A8, \field System Outdoor Air Method
       \type choice
@@ -20592,7 +21019,7 @@ Sizing:System,
       \minimum> 0.0
       \units dimensionless
   A9, \field Cooling Design Capacity Method
-      \type choice 
+      \type choice
       \key None
       \key CoolingDesignCapacity
       \key CapacityPerFloorArea
@@ -20600,12 +21027,12 @@ Sizing:System,
       \default CoolingDesignCapacity
       \note Enter the method used to determine the system cooling design capacity for scalable sizing.
       \note None is used when a cooling coils is not included in an airloop or this field may be blank.
-      \note If this input field is left blank, then the design cooling capacity is set to zero.  
-      \note CoolingDesignCapacity => selected when the design cooling capacity value is specified or 
+      \note If this input field is left blank, then the design cooling capacity is set to zero.
+      \note CoolingDesignCapacity => selected when the design cooling capacity value is specified or
       \note auto-sized. CapacityPerFloorArea => selected when the design cooling capacity is determined
-      \note from user specified cooling capacity per floor area and total floor area of cooled zones 
-      \note served by an airloop. FractionOfAutosizedCoolingCapacity => is selected when the design 
-      \note cooling capacity is determined from a user specified fraction and the auto-sized design 
+      \note from user specified cooling capacity per floor area and total floor area of cooled zones
+      \note served by an airloop. FractionOfAutosizedCoolingCapacity => is selected when the design
+      \note cooling capacity is determined from a user specified fraction and the auto-sized design
       \note cooling capacity of the system.
  N21, \field Cooling Design Capacity
       \type real
@@ -20613,34 +21040,33 @@ Sizing:System,
       \minimum 0.0
       \autosizable
       \default autosize
-      \note Enter the design cooling capacity. Required field when the cooling design capacity method
-      \note CoolingDesignCapacity.
+      \note Enter the design cooling capacity.
  N22, \field Cooling Design Capacity Per Floor Area
       \type real
       \units W/m2
       \minimum 0.0
       \note Enter the cooling design capacity per total floor area of cooled zones served by an airloop.
-      \note Required field when the cooling design capacity method field is CapacityPerFloorArea. 
+      \note Required field when the cooling design capacity method field is CapacityPerFloorArea.
  N23, \field Fraction of Autosized Cooling Design Capacity
       \type real
       \minimum 0.0
-      \note Enter the fraction of auto-sized cooling design capacity. Required field when the cooling 
-      \note design capacity method field is FractionOfAutosizedCoolingCapacity. 
+      \note Enter the fraction of auto-sized cooling design capacity. Required field when the cooling
+      \note design capacity method field is FractionOfAutosizedCoolingCapacity.
  A10, \field Heating Design Capacity Method
-      \type choice 
+      \type choice
       \key None
       \key HeatingDesignCapacity
       \key CapacityPerFloorArea
       \key FractionOfAutosizedHeatingCapacity
       \default HeatingDesignCapacity
       \note Enter the method used to determine the heating design capacity for scalable sizing.
-      \note None is used when a heating coil not included in an airloop or this field may be blank. 
+      \note None is used when a heating coil not included in an airloop or this field may be blank.
       \note If this input field is left blank, then the design heating capacity is set to zero.
       \note HeatingDesignCapacity => selected when the design heating capacity value is specified or
-      \note auto-sized. CapacityPerFloorArea => selected when the design heating capacity is determined 
+      \note auto-sized. CapacityPerFloorArea => selected when the design heating capacity is determined
       \note from user specified heating capacity per flow area and total floor area of heated zones
-      \note served by an airloop. FractionOfAutosizedHeatingCapacity => is selected when the design 
-      \note heating capacity is determined from a user specified fraction and the auto-sized design 
+      \note served by an airloop. FractionOfAutosizedHeatingCapacity => is selected when the design
+      \note heating capacity is determined from a user specified fraction and the auto-sized design
       \note heating capacity of the system.
  N24, \field Heating Design Capacity
       \type real
@@ -20648,19 +21074,26 @@ Sizing:System,
       \minimum 0.0
       \autosizable
       \default autosize
-      \note Enter the design heating capacity. Required field when the heating design capacity method
-      \note HeatingDesignCapacity.
+      \note Enter the design heating capacity.
  N25, \field Heating Design Capacity Per Floor Area
       \type real
       \units W/m2
       \minimum 0.0
-      \note Enter the heating design capacity per zone floor area. Required field when the heating design 
-      \note capacity method field is CapacityPerFloorArea. 
- N26; \field Fraction of Autosized Heating Design Capacity
+      \note Enter the heating design capacity per zone floor area. Required field when the heating design
+      \note capacity method field is CapacityPerFloorArea.
+ N26, \field Fraction of Autosized Heating Design Capacity
       \type real
       \minimum 0.0
-      \note Enter the fraction of auto-sized heating design capacity. Required field when capacity the 
+      \note Enter the fraction of auto-sized heating design capacity. Required field when capacity the
       \note heating design capacity method field is FractionOfAutosizedHeatingCapacity.
+ A11; \field Central Cooling Capacity Control Method
+      \note Method used to control the coil's output
+      \type choice
+      \key VAV
+      \key Bypass
+      \key VT
+      \key OnOff
+      \default OnOff
 
 Sizing:Plant,
   \min-fields 4
@@ -20680,16 +21113,36 @@ Sizing:Plant,
       \required-field
       \type real
       \units C
-  N2; \field Loop Design Temperature Difference
+  N2, \field Loop Design Temperature Difference
       \required-field
       \type real
       \units deltaC
       \minimum> 0.0
+  A3, \field Sizing Option
+      \note if Coincident is chosen, then sizing is based on HVAC Sizing Simulations and 
+      \note the input field called Do HVAC Sizing Simulation for Sizing Periods in SimulationControl must be set to Yes
+      \type choice
+      \key Coincident
+      \key NonCoincident
+      \default NonCoincident
+  N3, \field Zone Timesteps in Averaging Window
+      \note this is used in the coincident sizing algorithm to apply a running average to peak flow rates 
+      \note that occur during HVAC Sizing Simulations
+      \type integer
+      \minimum 1
+      \default 1
+  A4; \field Coincident Sizing Factor Mode
+      \note this is used to adjust the result for coincident sizing by applying a sizing factor
+      \type choice
+      \key None
+      \key GlobalHeatingSizingFactor
+      \key GlobalCoolingSizingFactor
+      \key LoopComponentSizingFactor
 
 OutputControl:Sizing:Style,
-       \memo default style for the Sizing output files is comma -- this works well for
+       \memo Default style for the Sizing output files is comma -- this works well for
        \memo importing into spreadsheet programs such as Excel(tm) but not so well for word
-       \memo processing progams -- there tab may be a better choice.  fixed puts spaces between
+       \memo processing programs -- there tab may be a better choice.  Fixed puts spaces between
        \memo the "columns"
        \unique-object
    A1; \field Column Separator
@@ -20699,13 +21152,14 @@ OutputControl:Sizing:Style,
        \key Tab
        \key Fixed
 
-\Group Zone HVAC Controls and Thermostats
+\group Zone HVAC Controls and Thermostats
 
 ZoneControl:Humidistat,
        \memo Specifies zone relative humidity setpoint schedules for humidifying and dehumidifying.
   \min-fields 3
   A1 , \field Name
        \required-field
+       \reference ZoneControlHumidistatNames
   A2 , \field Zone Name
        \required-field
        \type object-list
@@ -20788,7 +21242,6 @@ ZoneControl:Thermostat:ThermalComfort,
        \max-fields 15
   A1 , \field Name
        \required-field
-       \reference ZoneControlThermalComfortNames
   A2 , \field Zone or ZoneList Name
        \required-field
        \type object-list
@@ -21304,10 +21757,10 @@ ZoneHVAC:IdealLoadsAirSystem,
        \note an OutdoorAir:Node or OutdoorAir:NodeList object.
   A13, \field Demand Controlled Ventilation Type
        \note This field controls how the minimum outdoor air flow rate is calculated.
-       \note None means that design occupancy will be uased to compute the minimum outdoor air flow rate
+       \note None means that design occupancy will be used to compute the minimum outdoor air flow rate
        \note OccupancySchedule means that current occupancy level will be used.
        \note CO2Setpoint means that the design occupancy will be used to compute the minimum outdoor air flow
-       \note reate and the outdoor air flow rate may be increased if necessary to maintain the indoor air carbon
+       \note rate and the outdoor air flow rate may be increased if necessary to maintain the indoor air carbon
        \note dioxide setpoint defined in a ZoneControl:ContaminantController object.
        \type choice
        \key None
@@ -21343,7 +21796,7 @@ ZoneHVAC:IdealLoadsAirSystem,
   A16; \field Design Specification ZoneHVAC Sizing Object Name
        \note Enter the name of a DesignSpecificationZoneHVACSizing object.
        \type object-list
-       \object-list DesignSpecificationZoneHVACSizingName   
+       \object-list DesignSpecificationZoneHVACSizingName
 
 ZoneHVAC:FourPipeFanCoil,
         \memo Four pipe fan coil system. Forced-convection hydronic heating-cooling unit with
@@ -21586,21 +22039,21 @@ ZoneHVAC:PackagedTerminalAirConditioner,
         \type object-list
         \object-list OutdoorAirMixers
         \note Needs to match the name of the PTAC outdoor air mixer object.
-   N1 , \field Supply Air Flow Rate During Cooling Operation
+   N1 , \field Cooling Supply Air Flow Rate
         \required-field
         \type real
         \units m3/s
         \minimum> 0.0
         \autosizable
         \note Must be less than or equal to fan size.
-   N2 , \field Supply Air Flow Rate During Heating Operation
+   N2 , \field Heating Supply Air Flow Rate
         \required-field
         \type real
         \units m3/s
         \minimum> 0.0
         \autosizable
         \note Must be less than or equal to fan size.
-   N3 , \field Supply Air Flow Rate When No Cooling or Heating is Needed
+   N3 , \field No Load Supply Air Flow Rate
         \type real
         \units m3/s
         \minimum 0
@@ -21611,21 +22064,21 @@ ZoneHVAC:PackagedTerminalAirConditioner,
         \note This air flow rate is used when no heating or cooling is required and the cooling or
         \note heating coil is off. If this field is left blank or zero, the supply air flow rate
         \note from the previous on cycle (either cooling or heating) is used.
-   N4 , \field Outdoor Air Flow Rate During Cooling Operation
+   N4 , \field Cooling Outdoor Air Flow Rate
         \required-field
         \type real
         \units m3/s
         \minimum 0
         \autosizable
         \note Must be less than or equal to supply air flow rate during cooling operation.
-   N5 , \field Outdoor Air Flow Rate During Heating Operation
+   N5 , \field Heating Outdoor Air Flow Rate
         \required-field
         \type real
         \units m3/s
         \minimum 0
         \autosizable
         \note Must be less than or equal to supply air flow rate during heating operation.
-   N6 , \field Outdoor Air Flow Rate When No Cooling or Heating is Needed
+   N6 , \field No Load Outdoor Air Flow Rate
         \type real
         \units m3/s
         \minimum 0
@@ -21732,21 +22185,21 @@ ZoneHVAC:PackagedTerminalHeatPump,
         \type object-list
         \object-list OutdoorAirMixers
         \note Needs to match name of outdoor air mixer object.
-   N1 , \field Supply Air Flow Rate During Cooling Operation
+   N1 , \field Cooling Supply Air Flow Rate
         \required-field
         \type real
         \units m3/s
         \minimum> 0.0
         \autosizable
         \note Must be less than or equal to fan size.
-   N2 , \field Supply Air Flow Rate During Heating Operation
+   N2 , \field Heating Supply Air Flow Rate
         \required-field
         \type real
         \units m3/s
         \minimum> 0.0
         \autosizable
         \note Must be less than or equal to fan size.
-   N3 , \field Supply Air Flow Rate When No Cooling or Heating is Needed
+   N3 , \field No Load Supply Air Flow Rate
         \type real
         \units m3/s
         \minimum 0
@@ -21756,21 +22209,21 @@ ZoneHVAC:PackagedTerminalHeatPump,
         \note is used when no heating or cooling is required and the DX coil compressor is off.
         \note If this field is left blank or zero, the supply air flow rate from the previous on cycle
         \note (either cooling or heating) is used.
-   N4 , \field Outdoor Air Flow Rate During Cooling Operation
+   N4 , \field Cooling Outdoor Air Flow Rate
         \required-field
         \type real
         \units m3/s
         \minimum 0
         \autosizable
         \note Must be less than or equal to supply air flow rate during cooling operation.
-   N5 , \field Outdoor Air Flow Rate During Heating Operation
+   N5 , \field Heating Outdoor Air Flow Rate
         \required-field
         \type real
         \units m3/s
         \minimum 0
         \autosizable
         \note Must be less than or equal to supply air flow rate during heating operation.
-   N6 , \field Outdoor Air Flow Rate When No Cooling or Heating is Needed
+   N6 , \field No Load Outdoor Air Flow Rate
         \type real
         \units m3/s
         \minimum 0
@@ -21808,7 +22261,7 @@ ZoneHVAC:PackagedTerminalHeatPump,
         \minimum> 0.0
         \default 0.001
         \units dimensionless
-        \note Defines Heating convergence tolerence as a fraction of Heating load to be met.
+        \note Defines Heating convergence tolerance as a fraction of Heating load to be met.
    N8 , \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
         \type real
         \minimum -20.0
@@ -21836,7 +22289,7 @@ ZoneHVAC:PackagedTerminalHeatPump,
         \minimum> 0.0
         \default 0.001
         \units dimensionless
-        \note Defines Cooling convergence tolerence as a fraction of the Cooling load to be met.
+        \note Defines Cooling convergence tolerance as a fraction of the Cooling load to be met.
    A13, \field Supplemental Heating Coil Object Type
         \required-field
         \type choice
@@ -21912,21 +22365,21 @@ ZoneHVAC:WaterToAirHeatPump,
         \object-list OutdoorAirMixers
         \note This optional field specifies the name of the outdoor air mixer object.
         \note When used, this name needs to match name of outdoor air mixer object.
-   N1 , \field Supply Air Flow Rate During Cooling Operation
+   N1 , \field Cooling Supply Air Flow Rate
         \required-field
         \type real
         \units m3/s
         \minimum> 0.0
         \autosizable
         \note Must be less than or equal to fan size.
-   N2 , \field Supply Air Flow Rate During Heating Operation
+   N2 , \field Heating Supply Air Flow Rate
         \required-field
         \type real
         \units m3/s
         \minimum> 0.0
         \autosizable
         \note Must be less than or equal to fan size.
-   N3 , \field Supply Air Flow Rate When No Cooling or Heating is Needed
+   N3 , \field No Load Supply Air Flow Rate
         \type real
         \units m3/s
         \minimum 0
@@ -21936,21 +22389,21 @@ ZoneHVAC:WaterToAirHeatPump,
         \note is used when no heating or cooling is required and the DX coil compressor is off.
         \note If this field is left blank or zero, the supply air flow rate from the previous on cycle
         \note (either cooling or heating) is used.
-   N4 , \field Outdoor Air Flow Rate During Cooling Operation
+   N4 , \field Cooling Outdoor Air Flow Rate
         \required-field
         \type real
         \units m3/s
         \minimum 0
         \autosizable
         \note Must be less than or equal to supply air flow rate during cooling operation.
-   N5 , \field Outdoor Air Flow Rate During Heating Operation
+   N5 , \field Heating Outdoor Air Flow Rate
         \required-field
         \type real
         \units m3/s
         \minimum 0
         \autosizable
         \note Must be less than or equal to supply air flow rate during heating operation.
-   N6 , \field Outdoor Air Flow Rate When No Cooling or Heating is Needed
+   N6 , \field No Load Outdoor Air Flow Rate
         \type real
         \units m3/s
         \minimum 0
@@ -21979,7 +22432,7 @@ ZoneHVAC:WaterToAirHeatPump,
         \type object-list
         \object-list HeatingCoilsWaterToAirHP
         \object-list HeatingCoilsWaterToAirVSHP
-        \note  Needs to match in the water-to-air heatpump heating coil object
+        \note  Needs to match in the water-to-air heat pump heating coil object
    A11, \field Cooling Coil Object Type
         \required-field
         \type choice
@@ -21990,7 +22443,7 @@ ZoneHVAC:WaterToAirHeatPump,
         \type object-list
         \object-list CoolingCoilsWaterToAirHP
         \object-list CoolingCoilsWaterToAirVSHP
-        \note Needs to match in the water-to-air heatpump cooling coil object
+        \note Needs to match in the water-to-air heat pump cooling coil object
    N7,  \field Maximum Cycling Rate
         \type real
         \units cycles/hr
@@ -22124,7 +22577,7 @@ ZoneHVAC:Dehumidifier:DX,
         \required-field
         \type object-list
         \object-list BiQuadraticCurves
-        \note Table:TwoIndependentVariable object can also be used
+        \object-list BiVariateTables
         \note Name of a curve that describes the water removal rate (normalized to rated conditions)
         \note as a function of the dry-bulb temperature and relative humidity of the air
         \note entering the dehumidifier.
@@ -22136,7 +22589,7 @@ ZoneHVAC:Dehumidifier:DX,
         \required-field
         \type object-list
         \object-list BiQuadraticCurves
-        \note Table:TwoIndependentVariable object can also be used
+        \object-list BiVariateTables
         \note Name of a curve that describes the energy factor (normalized to rated conditions)
         \note as a function of the dry-bulb temperature and relative humidity of the air
         \note entering the dehumidifier.
@@ -22148,7 +22601,7 @@ ZoneHVAC:Dehumidifier:DX,
         \required-field
         \type object-list
         \object-list QuadraticCubicCurves
-        \note Table:OneIndependentVariable can also be used
+        \object-list UniVariateTables
         \note Name of a curve that describes the part load fraction (PLF) of the system as
         \note a function of the part load ratio. Used to calculate dehumidifier run time fraction
         \note and electric power.
@@ -22272,12 +22725,12 @@ ZoneHVAC:EnergyRecoveryVentilator:Controller,
   N4 , \field Dewpoint Temperature Limit
        \type real
        \units C
-       \note Enter the maximum outdoor dewpoint temperature limit for economizer operation.
+       \note Enter the maximum outdoor dew point temperature limit for economizer operation.
        \note No input or blank input means this limit is not operative
   A2 , \field Electronic Enthalpy Limit Curve Name
        \type object-list
        \object-list QuadraticCubicCurves
-       \note Table:OneIndependentVariable object can also be used
+       \object-list UniVariateTables
        \note Enter the name of a quadratic or cubic curve which defines the maximum outdoor
        \note humidity ratio (function of outdoor dry-bulb temperature) for economizer operation.
        \note No input or blank input means this limit is not operative
@@ -22403,12 +22856,13 @@ ZoneHVAC:UnitVentilator,
         \key Cooling
         \key HeatingAndCooling
    A14, \field Supply Air Fan Operating Mode Schedule Name
+        \type object-list
         \object-list ScheduleNames
         \note Enter the name of a schedule that controls fan operation. Schedule
         \note name values of 0 denote cycling fan operation (fan cycles with
         \note cooling/heating coil). Schedule values greater than 0 denote
-        \note constant fan operation (fan runs continually regardless of coil 
-        \note operation). The fan operating mode defaults to cycling fan operation 
+        \note constant fan operation (fan runs continually regardless of coil
+        \note operation). The fan operating mode defaults to cycling fan operation
         \note if this input field is left blank.
    A15, \field Heating Coil Object Type
         \type choice
@@ -22487,24 +22941,25 @@ ZoneHVAC:UnitHeater,
         \type object-list
         \object-list HeatingCoilName
    A9 , \field Supply Air Fan Operating Mode Schedule Name
+        \type object-list
         \object-list ScheduleNames
         \note Enter the name of a schedule that controls fan operation. Schedule
         \note name values of 0 denote cycling fan operation (fan cycles with the
         \note heating coil). Schedule values greater than 0 denote constant fan
-        \note operation (fan runs continually regardless of coil operation). 
-        \note The fan operating mode defaults to cycling fan operation if this 
+        \note operation (fan runs continually regardless of coil operation).
+        \note The fan operating mode defaults to cycling fan operation if this
         \note input field is left blank.
    A10, \field Supply Air Fan Operation During No Heating
         \required-field
         \type choice
         \key Yes
         \key No
-        \note This choice field allows the user to define how the unit heater will operate 
-        \note under no heating load or cooling conditions. If the No is selected, then 
-        \note the fan will not run unless there is a heating load. If the fan does not run, 
-        \note this effectively shuts the unit heater system off when there is no heating load. 
-        \note If the Yes is selected, the unit heater is available and has a ConstantVolume 
-        \note fan, or has an OnOff fan with Supply Air Fan Operating Mode Schedule value 
+        \note This choice field allows the user to define how the unit heater will operate
+        \note under no heating load or cooling conditions. If the No is selected, then
+        \note the fan will not run unless there is a heating load. If the fan does not run,
+        \note this effectively shuts the unit heater system off when there is no heating load.
+        \note If the Yes is selected, the unit heater is available and has a ConstantVolume
+        \note fan, or has an OnOff fan with Supply Air Fan Operating Mode Schedule value
         \note greater than zero, then the fan will always run regardless of the zone load.
    N2 , \field Maximum Hot Water or Steam Flow Rate
         \note Not used when heating coil is gas or electric
@@ -22533,7 +22988,7 @@ ZoneHVAC:UnitHeater,
 
 ZoneHVAC:EvaporativeCoolerUnit,
         \memo Zone evaporative cooler. Forced-convection cooling-only unit with supply fan,
-        \memo 100% outdoor air supply.  Optional relief exaust node
+        \memo 100% outdoor air supply.  Optional relief exhaust node
         \min-fields 15
    A1 , \field Name
         \required-field
@@ -22762,37 +23217,37 @@ ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
         \required-field
         \type node
         \note the outlet node of the terminal unit
-  N1 ,  \field Supply Air Flow Rate During Cooling Operation
+  N1 ,  \field Cooling Supply Air Flow Rate
         \type real
         \units m3/s
         \minimum> 0.0
         \autosizable
-  N2 ,  \field Supply Air Flow Rate When No Cooling is Needed
+  N2 ,  \field No Cooling Supply Air Flow Rate
         \type real
         \units m3/s
         \minimum 0.0
         \autosizable
-  N3 ,  \field Supply Air Flow Rate During Heating Operation
+  N3 ,  \field Heating Supply Air Flow Rate
         \type real
         \units m3/s
         \minimum> 0.0
         \autosizable
-  N4 ,  \field Supply Air Flow Rate When No Heating is Needed
+  N4 ,  \field No Heating Supply Air Flow Rate
         \type real
         \units m3/s
         \minimum 0.0
         \autosizable
-  N5 ,  \field Outdoor Air Flow Rate During Cooling Operation
+  N5 ,  \field Cooling Outdoor Air Flow Rate
         \type real
         \units m3/s
         \minimum 0.0
         \autosizable
-  N6 ,  \field Outdoor Air Flow Rate During Heating Operation
+  N6 ,  \field Heating Outdoor Air Flow Rate
         \type real
         \units m3/s
         \minimum 0.0
         \autosizable
-  N7 ,  \field Outdoor Air Flow Rate When No Cooling or Heating is Needed
+  N7 ,  \field No Load Outdoor Air Flow Rate
         \type real
         \units m3/s
         \minimum 0.0
