@@ -48,7 +48,7 @@ public:
     const model::Model & model,
     const QString& modelTempDir);
 
-  virtual ~LocationView() {}
+  virtual ~LocationView();
 
 private:
   void update();

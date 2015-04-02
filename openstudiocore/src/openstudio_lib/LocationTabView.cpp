@@ -69,6 +69,7 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QScrollArea>
+#include <QSettings>
 #include <QSizePolicy>
 
 #define NAME "Name: "
@@ -95,6 +96,8 @@ LocationView::LocationView(bool isIP,
   m_model(model),
   m_modelTempDir(modelTempDir)
 {
+  loadQSettings();
+
   QFrame * line = nullptr;
   QLabel * label = nullptr;
   QPushButton * btn = nullptr;
@@ -111,9 +114,7 @@ LocationView::LocationView(bool isIP,
   mainLayout->setSpacing(10);
   setLayout(mainLayout);
 
-
-
-
+  // ***** Scroll *****
   QVBoxLayout * scrollLayout = new QVBoxLayout();
   scrollLayout->setSpacing(0);
   scrollLayout->setContentsMargins(0, 0, 0, 0);
@@ -130,10 +131,6 @@ LocationView::LocationView(bool isIP,
   scrollArea->setWidgetResizable(true);
   scrollArea->setBackgroundRole(QPalette::NoRole);
   mainLayout->addWidget(scrollArea);
-
-
-
-
 
   // ***** Upper Horizontal Layout *****
   auto upperHorizontalLayout = new QHBoxLayout();
@@ -334,9 +331,32 @@ LocationView::LocationView(bool isIP,
 
   gridView->m_dropZone->hide();
 
-  scrollLayout->addWidget(gridView);
+  scrollLayout->addWidget(gridView, 1, Qt::AlignTop);
 
   update();
+}
+
+LocationView::~LocationView()
+{
+  saveQSettings();
+}
+
+void LocationView::loadQSettings()
+{
+  QString organizationName = QCoreApplication::organizationName();
+  QString applicationName = QCoreApplication::applicationName();
+  QSettings settings(organizationName, applicationName);
+  m_lastEpwPathOpened = settings.value("m_lastEpwPathOpened").toString();
+  m_lastDdyPathOpened = settings.value("m_lastDdyPathOpened").toString();
+}
+
+void LocationView::saveQSettings() const
+{
+  QString organizationName = QCoreApplication::organizationName();
+  QString applicationName = QCoreApplication::applicationName();
+  QSettings settings(organizationName, applicationName);
+  settings.setValue("m_lastEpwPathOpened", m_lastEpwPathOpened);
+  settings.setValue("m_lastDdyPathOpened", m_lastDdyPathOpened);  
 }
 
 void LocationView::update()

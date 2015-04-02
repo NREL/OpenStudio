@@ -47,6 +47,8 @@ public:
 
   virtual ~LocationTabController() {}
 
+  void showUtilityBillSubTab();
+
   enum TabID
   {
     WEATHER_FILE,

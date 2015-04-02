@@ -62,23 +62,7 @@ namespace openstudio {
 
   mainContentWidget()->addSubTab("Utility Bills",m_utilityBillsStackedWidget,UTILITY_BILLS);
 
-  // Determine if the utility bill sub-tab is shown
-  boost::optional<model::YearDescription> yearDescription = model.yearDescription();
-  if (yearDescription){
-    boost::optional<int> calendarYear = yearDescription.get().calendarYear();
-    if (calendarYear){
-      boost::optional<model::WeatherFile> weatherFile = model.weatherFile();
-      if (weatherFile){
-        boost::optional<model::RunPeriod> runPeriod = model.getOptionalUniqueModelObject<model::RunPeriod>();
-        if (runPeriod.is_initialized()){
-          m_utilityBillsStackedWidget->setCurrentIndex(m_visibleWidgetIndex);
-        }
-        else {
-          m_utilityBillsStackedWidget->setCurrentIndex(m_warningWidgetIndex);
-        }
-      }
-    }
-  }
+  showUtilityBillSubTab();
 
   // Hack code to remove when tab active
   label = new QLabel();
@@ -97,6 +81,27 @@ namespace openstudio {
   //label->setPixmap(QPixmap(":/images/coming_soon_water_mains_temperature.png"));
   //label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   //mainContentWidget()->addSubTab("Water Mains Temperature",label,WATER_MAINS_TEMPERATURE);
+}
+
+void LocationTabController::showUtilityBillSubTab()
+{
+  // Determine if the utility bill sub-tab is shown
+  boost::optional<model::YearDescription> yearDescription = model.yearDescription();
+  if (yearDescription){
+    boost::optional<int> calendarYear = yearDescription.get().calendarYear();
+    if (calendarYear){
+      boost::optional<model::WeatherFile> weatherFile = model.weatherFile();
+      if (weatherFile){
+        boost::optional<model::RunPeriod> runPeriod = model.getOptionalUniqueModelObject<model::RunPeriod>();
+        if (runPeriod.is_initialized()){
+          m_utilityBillsStackedWidget->setCurrentIndex(m_visibleWidgetIndex);
+        }
+        else {
+          m_utilityBillsStackedWidget->setCurrentIndex(m_warningWidgetIndex);
+        }
+      }
+    }
+  }
 }
 
 void LocationTabController::showSubTabView(bool showSubTabView)
