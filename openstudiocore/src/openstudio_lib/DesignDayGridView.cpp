@@ -285,30 +285,6 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
         );
     }
     // STRING
-    else if (field == DAYTYPE) {
-      addValueEditColumn(Heading(QString(DAYTYPE)),
-        CastNullAdapter<model::DesignDay>(&model::DesignDay::dayType),
-        CastNullAdapter<model::DesignDay>(&model::DesignDay::setDayType)
-        );
-    }
-    else if (field == DRYBULBTEMPERATURERANGEMODIFIERTYPE) {
-      addValueEditColumn(Heading(QString(DRYBULBTEMPERATURERANGEMODIFIERTYPE)),
-        CastNullAdapter<model::DesignDay>(&model::DesignDay::dryBulbTemperatureRangeModifierType),
-        CastNullAdapter<model::DesignDay>(&model::DesignDay::setDryBulbTemperatureRangeModifierType)
-        );
-    }
-    else if (field == HUMIDITYINDICATINGTYPE) {
-      addValueEditColumn(Heading(QString(HUMIDITYINDICATINGTYPE)),
-        CastNullAdapter<model::DesignDay>(&model::DesignDay::humidityIndicatingType),
-        CastNullAdapter<model::DesignDay>(&model::DesignDay::setHumidityIndicatingType)
-        );
-    }
-    else if (field == SOLARMODELINDICATOR) {
-      addValueEditColumn(Heading(QString(SOLARMODELINDICATOR)),
-        CastNullAdapter<model::DesignDay>(&model::DesignDay::solarModelIndicator),
-        CastNullAdapter<model::DesignDay>(&model::DesignDay::setSolarModelIndicator)
-        );
-    }
     else if (field == NAME) {
       addNameLineEditColumn(Heading(QString(NAME), false, false),
         false,
@@ -367,6 +343,46 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
         NullAdapter(&model::DesignDay::setDailyWetBulbTemperatureRange)
         );
     }
+    else if (field == DAYTYPE) {
+      addComboBoxColumn<std::string, model::DesignDay>(Heading(QString(DAYTYPE)),
+        static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+        std::function<std::vector<std::string>()>(&model::DesignDay::validDayTypeValues),
+        CastNullAdapter<model::DesignDay>(&model::DesignDay::dayType),
+        CastNullAdapter<model::DesignDay>(&model::DesignDay::setDayType),
+        boost::optional<std::function<void(model::DesignDay *)> >(),
+        boost::optional<DataSource>()
+        );
+    }
+    else if (field == DRYBULBTEMPERATURERANGEMODIFIERTYPE) {
+      addComboBoxColumn<std::string, model::DesignDay>(Heading(QString(DRYBULBTEMPERATURERANGEMODIFIERTYPE)),
+        static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+        std::function<std::vector<std::string>()>(&model::DesignDay::validDryBulbTemperatureRangeModifierTypeValues),
+        CastNullAdapter<model::DesignDay>(&model::DesignDay::dryBulbTemperatureRangeModifierType),
+        CastNullAdapter<model::DesignDay>(&model::DesignDay::setDryBulbTemperatureRangeModifierType),
+        boost::optional<std::function<void(model::DesignDay *)> >(),
+        boost::optional<DataSource>()
+        );
+    }
+    else if (field == HUMIDITYINDICATINGTYPE) {
+      addComboBoxColumn<std::string, model::DesignDay>(Heading(QString(HUMIDITYINDICATINGTYPE)),
+        static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+        std::function<std::vector<std::string>()>(&model::DesignDay::validHumidityIndicatingTypeValues),
+        CastNullAdapter<model::DesignDay>(&model::DesignDay::humidityIndicatingType),
+        CastNullAdapter<model::DesignDay>(&model::DesignDay::setHumidityIndicatingType),
+        boost::optional<std::function<void(model::DesignDay *)> >(),
+        boost::optional<DataSource>()
+        );
+    }
+    else if (field == SOLARMODELINDICATOR) {
+      addComboBoxColumn<std::string, model::DesignDay>(Heading(QString(SOLARMODELINDICATOR)),
+        static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+        std::function<std::vector<std::string>()>(&model::DesignDay::validSolarModelIndicatorValues),
+        CastNullAdapter<model::DesignDay>(&model::DesignDay::solarModelIndicator),
+        CastNullAdapter<model::DesignDay>(&model::DesignDay::setSolarModelIndicator),
+        boost::optional<std::function<void(model::DesignDay *)> >(),
+        boost::optional<DataSource>()
+        );
+    }
     else{
       // unhandled
       OS_ASSERT(false);
@@ -375,122 +391,22 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
   }
 
 }
-  //boost::optional<ScheduleDay> dryBulbTemperatureRangeModifierSchedule() const;
-  //bool setDryBulbTemperatureRangeModifierSchedule(const ScheduleDay & schedule);
-  //void resetDryBulbTemperatureRangeModifierSchedule();
 
-  //boost::optional<ScheduleDay> humidityIndicatingDaySchedule() const;
-  //bool setHumidityIndicatingDaySchedule(const ScheduleDay & schedule);
-  //void resetHumidityIndicatingDaySchedule();
+//boost::optional<ScheduleDay> dryBulbTemperatureRangeModifierSchedule() const;
+//bool setDryBulbTemperatureRangeModifierSchedule(const ScheduleDay & schedule);
+//void resetDryBulbTemperatureRangeModifierSchedule();
 
-  //boost::optional<ScheduleDay> beamSolarDaySchedule() const;
-  //bool setBeamSolarDaySchedule(const ScheduleDay & schedule);
-  //void resetBeamSolarDaySchedule();
+//boost::optional<ScheduleDay> humidityIndicatingDaySchedule() const;
+//bool setHumidityIndicatingDaySchedule(const ScheduleDay & schedule);
+//void resetHumidityIndicatingDaySchedule();
 
-  //boost::optional<ScheduleDay> diffuseSolarDaySchedule() const;
-  //bool setDiffuseSolarDaySchedule(const ScheduleDay & schedule);
-  //void resetDiffuseSolarDaySchedule();
+//boost::optional<ScheduleDay> beamSolarDaySchedule() const;
+//bool setBeamSolarDaySchedule(const ScheduleDay & schedule);
+//void resetBeamSolarDaySchedule();
 
- 
-
-
-
-
-
-
-
-
-//bool daylightSavingTimeIndicator() const;
-//bool isDaylightSavingTimeIndicatorDefaulted() const;
-//bool setDaylightSavingTimeIndicator(bool daylightSavingTimeIndicator);
-//void resetDaylightSavingTimeIndicator();
-
-//bool rainIndicator() const;
-//bool isRainIndicatorDefaulted() const;
-//bool setRainIndicator(bool rainIndicator);
-//void resetRainIndicator();
-
-//bool snowIndicator() const;
-//bool isSnowIndicatorDefaulted() const;
-//bool setSnowIndicator(bool snowIndicator);
-//void resetSnowIndicator();
-
-//int dayOfMonth() const;
-//bool isDayOfMonthDefaulted() const;
-//bool setDayOfMonth(int dayOfMonth);
-//void resetDayOfMonth();
-
-//int month() const;
-//bool isMonthDefaulted() const;
-//bool setMonth(int month);
-//void resetMonth();
-
-//std::string dryBulbTemperatureRangeModifierType() const;
-//bool isDryBulbTemperatureRangeModifierTypeDefaulted() const;
-//bool setDryBulbTemperatureRangeModifierType(std::string dryBulbTemperatureRangeModifierType);
-//void resetDryBulbTemperatureRangeModifierType();
-
-//std::string humidityIndicatingType() const;
-//bool isHumidityIndicatingTypeDefaulted() const;
-//bool setHumidityIndicatingType(std::string humidityIndicatingType);
-//void resetHumidityIndicatingType();
-
-//std::string solarModelIndicator() const;
-//bool isSolarModelIndicatorDefaulted() const;
-//bool setSolarModelIndicator(std::string solarModelIndicator);
-//void resetSolarModelIndicator();
-
-//double skyClearness() const;
-//bool isSkyClearnessDefaulted() const;
-//bool setSkyClearness(double skyClearness);
-//void resetSkyClearness();
-
-//double ashraeTaub() const;
-//bool isAshraeTaubDefaulted() const;
-//bool setAshraeTaub(double aSHRAETaub);
-//void resetAshraeTaub();
-
-//double ashraeTaud() const;
-//bool isAshraeTaudDefaulted() const;
-//bool setAshraeTaud(double aSHRAETaud);
-//void resetAshraeTaud();
-
-//double windDirection() const;
-//bool isWindDirectionDefaulted() const;
-//bool setWindDirection(double windDirection);
-//void resetWindDirection();
-
-//double maximumDryBulbTemperature() const;
-//bool isMaximumDryBulbTemperatureDefaulted() const;
-//bool setMaximumDryBulbTemperature(double maximumDryBulbTemperature);
-//void resetMaximumDryBulbTemperature();
-
-//double dailyDryBulbTemperatureRange() const;
-//bool isDailyDryBulbTemperatureRangeDefaulted() const;
-//bool setDailyDryBulbTemperatureRange(double dailyDryBulbTemperatureRange);
-//void resetDailyDryBulbTemperatureRange();
-
-//double humidityIndicatingConditionsAtMaximumDryBulb() const;
-//bool isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted() const;
-//void setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb);
-//void resetHumidityIndicatingConditionsAtMaximumDryBulb();
-
-//double barometricPressure() const;
-//bool isBarometricPressureDefaulted() const;
-//bool setBarometricPressure(double barometricPressure);
-//void resetBarometricPressure();
-
-//double windSpeed() const;
-//bool isWindSpeedDefaulted() const;
-//bool setWindSpeed(double windSpeed);
-//void resetWindSpeed();
-
-//boost::optional<double> dailyWetBulbTemperatureRange() const;
-//void setDailyWetBulbTemperatureRange(double dailyWetBulbTemperatureRange);
-//void resetDailyWetBulbTemperatureRange();
-
-
-
+//boost::optional<ScheduleDay> diffuseSolarDaySchedule() const;
+//bool setDiffuseSolarDaySchedule(const ScheduleDay & schedule);
+//void resetDiffuseSolarDaySchedule();
 
 QString DesignDayGridController::getColor(const model:: ModelObject & modelObject)
 {

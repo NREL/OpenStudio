@@ -64,6 +64,7 @@ private:
   QStackedWidget * m_utilityBillsStackedWidget;
   int m_warningWidgetIndex;
   int m_visibleWidgetIndex;
+  model::Model m_model;
 
 private slots:
   void showSubTabView(bool showSubTabView);

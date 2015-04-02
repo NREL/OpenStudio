@@ -38,9 +38,10 @@
 
 namespace openstudio {
 
-  LocationTabController::LocationTabController(const model::Model & model,
-                                             const QString& modelTempDir)
-  : MainTabController(new LocationTabView(model,modelTempDir))
+LocationTabController::LocationTabController(const model::Model & model,
+  const QString& modelTempDir)
+  : MainTabController(new LocationTabView(model,modelTempDir)),
+  m_model(model)
 {
   LocationView * locationView = new LocationView(false, model, modelTempDir);
   mainContentWidget()->addSubTab("Overview",locationView,WEATHER_FILE);
@@ -86,13 +87,13 @@ namespace openstudio {
 void LocationTabController::showUtilityBillSubTab()
 {
   // Determine if the utility bill sub-tab is shown
-  boost::optional<model::YearDescription> yearDescription = model.yearDescription();
+  boost::optional<model::YearDescription> yearDescription = m_model.yearDescription();
   if (yearDescription){
     boost::optional<int> calendarYear = yearDescription.get().calendarYear();
     if (calendarYear){
-      boost::optional<model::WeatherFile> weatherFile = model.weatherFile();
+      boost::optional<model::WeatherFile> weatherFile = m_model.weatherFile();
       if (weatherFile){
-        boost::optional<model::RunPeriod> runPeriod = model.getOptionalUniqueModelObject<model::RunPeriod>();
+        boost::optional<model::RunPeriod> runPeriod = m_model.getOptionalUniqueModelObject<model::RunPeriod>();
         if (runPeriod.is_initialized()){
           m_utilityBillsStackedWidget->setCurrentIndex(m_visibleWidgetIndex);
         }
