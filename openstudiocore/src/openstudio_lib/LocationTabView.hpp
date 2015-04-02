@@ -53,6 +53,10 @@ public:
 private:
   void update();
 
+  void loadQSettings();
+
+  void saveQSettings() const;
+
   model::Model m_model;
   boost::optional<model::YearDescription> m_yearDescription;
   YearSettingsWidget * m_yearSettingsWidget = nullptr;
