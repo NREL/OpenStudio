@@ -103,6 +103,8 @@ public:
   // Conversion
   static boost::optional<EpwDataPoint> fromEpwString(const std::string &line);
   static boost::optional<EpwDataPoint> fromEpwStrings(const std::vector<std::string> &list, bool pedantic=true);
+  static boost::optional<EpwDataPoint> fromEpwStrings(int year, int month, int day, int hour, int minute, 
+    const std::vector<std::string> &list, bool pedantic = true);
   std::vector<std::string> toEpwStrings() const;
   boost::optional<std::string> toWthString() const;
   // One billion getters
@@ -333,6 +335,10 @@ public:
 
   /// export to CONTAM WTH file
   bool translateToWth(openstudio::path path,std::string description=std::string());
+
+  // Analysis-type functions
+  /// Computes the yearly heating degree days given a base Temperature in C
+  //boost::optional<double> heatingDegreeDays(double Tbase = 18.3);
 
 private:
 

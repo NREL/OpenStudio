@@ -22,6 +22,7 @@
 #include "../idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include "../core/Checksum.hpp"
+#include "../core/StringHelpers.hpp"
 #include "../core/Assert.hpp"
 #include "../units/QuantityConverter.hpp"
 
@@ -165,6 +166,68 @@ boost::optional<EpwDataPoint> EpwDataPoint::fromEpwStrings(const std::vector<std
     return boost::none;
   }
   if(!pt.setMinute(list[EpwDataField::Minute])) {
+    return boost::none;
+  }
+  pt.setDataSourceandUncertaintyFlags(list[EpwDataField::DataSourceandUncertaintyFlags]);
+  pt.setDryBulbTemperature(list[EpwDataField::DryBulbTemperature]);
+  pt.setDewPointTemperature(list[EpwDataField::DewPointTemperature]);
+  pt.setRelativeHumidity(list[EpwDataField::RelativeHumidity]);
+  pt.setAtmosphericStationPressure(list[EpwDataField::AtmosphericStationPressure]);
+  pt.setExtraterrestrialHorizontalRadiation(list[EpwDataField::ExtraterrestrialHorizontalRadiation]);
+  pt.setExtraterrestrialDirectNormalRadiation(list[EpwDataField::ExtraterrestrialDirectNormalRadiation]);
+  pt.setHorizontalInfraredRadiationIntensity(list[EpwDataField::HorizontalInfraredRadiationIntensity]);
+  pt.setGlobalHorizontalRadiation(list[EpwDataField::GlobalHorizontalRadiation]);
+  pt.setDirectNormalRadiation(list[EpwDataField::DirectNormalRadiation]);
+  pt.setDiffuseHorizontalRadiation(list[EpwDataField::DiffuseHorizontalRadiation]);
+  pt.setGlobalHorizontalIlluminance(list[EpwDataField::GlobalHorizontalIlluminance]);
+  pt.setDirectNormalIlluminance(list[EpwDataField::DirectNormalIlluminance]);
+  pt.setDiffuseHorizontalIlluminance(list[EpwDataField::DiffuseHorizontalIlluminance]);
+  pt.setZenithLuminance(list[EpwDataField::ZenithLuminance]);
+  pt.setWindDirection(list[EpwDataField::WindDirection]);
+  pt.setWindSpeed(list[EpwDataField::WindSpeed]);
+  pt.setTotalSkyCover(list[EpwDataField::TotalSkyCover]);
+  pt.setOpaqueSkyCover(list[EpwDataField::OpaqueSkyCover]);
+  pt.setVisibility(list[EpwDataField::Visibility]);
+  pt.setCeilingHeight(list[EpwDataField::CeilingHeight]);
+  pt.setPresentWeatherObservation(list[EpwDataField::PresentWeatherObservation]);
+  pt.setPresentWeatherCodes(list[EpwDataField::PresentWeatherCodes]);
+  pt.setPrecipitableWater(list[EpwDataField::PrecipitableWater]);
+  pt.setAerosolOpticalDepth(list[EpwDataField::AerosolOpticalDepth]);
+  pt.setSnowDepth(list[EpwDataField::SnowDepth]);
+  pt.setDaysSinceLastSnowfall(list[EpwDataField::DaysSinceLastSnowfall]);
+  pt.setAlbedo(list[EpwDataField::Albedo]);
+  pt.setLiquidPrecipitationDepth(list[EpwDataField::LiquidPrecipitationDepth]);
+  pt.setLiquidPrecipitationQuantity(list[EpwDataField::LiquidPrecipitationQuantity]);
+  return boost::optional<EpwDataPoint>(pt);
+}
+
+boost::optional<EpwDataPoint> EpwDataPoint::fromEpwStrings(int year, int month, int day, int hour, int minute,
+  const std::vector<std::string> &list, bool pedantic)
+{
+  EpwDataPoint pt;
+  // Expect 30 items in the list
+  if (list.size() < 35) {
+    if (pedantic) {
+      LOG_FREE(Error, "openstudio.EpwFile", "Expected 35 fields in EPW data instead of the " << list.size() << " recieved");
+      return boost::none;
+    } else {
+      LOG_FREE(Warn, "openstudio.EpwFile", "Expected 35 fields in EPW data instead of the " << list.size() << " recieved. The remaining fields will not be available");
+    }
+  } else if (list.size() > 35) {
+    LOG_FREE(Warn, "openstudio.EpwFile", "Expected 35 fields in EPW data instead of the " << list.size() << " recieved. The additional data will be ignored");
+  }
+  // Use the appropriate setter on each field
+  pt.setYear(year);
+  if (!pt.setMonth(month)) {
+    return boost::none;
+  }
+  if (!pt.setDay(day)) {
+    return boost::none;
+  }
+  if (!pt.setHour(hour)) {
+    return boost::none;
+  }
+  if (!pt.setMinute(minute)) {
     return boost::none;
   }
   pt.setDataSourceandUncertaintyFlags(list[EpwDataField::DataSourceandUncertaintyFlags]);
@@ -1870,16 +1933,14 @@ bool EpwFile::parse(bool storeData)
   bool warnedAboutMinutesAlready = false;
   while(std::getline(ifs, line)) {
     lineNumber++;
-    std::regex dateRegex("^(.*?),(.*?),(.*?),.*");
-    std::smatch matches;
-    if (std::regex_search(line, matches, dateRegex)) {
-      std::string year = std::string(matches[1].first, matches[1].second);
-      std::string month = std::string(matches[2].first, matches[2].second);
-      std::string day = std::string(matches[3].first, matches[3].second);
-
+    std::vector<std::string> strings = splitString(line, ',');
+    if (strings.size() >= 5) {
       try {
-        Date date(std::stoi(month), std::stoi(day), std::stoi(year));
-        
+        int year = std::stoi(strings[0]);
+        int month = std::stoi(strings[1]);
+        int day = std::stoi(strings[2]);
+
+        Date date(month, day, year);
         if (!startDate) {
           startDate = date;
         }
@@ -1896,48 +1957,43 @@ bool EpwFile::parse(bool storeData)
           }
         }
         lastDate = date;
+
+        // Store the data if requested
+        if (storeData) {
+          int hour = std::stoi(strings[3]);
+          int minutesInFile = std::stoi(strings[4]);
+          // Due to issues with some EPW files, we need to check stuff here
+          if (m_recordsPerHour != 1) {
+            currentMinute += minutesPerRecord;
+            if (currentMinute >= 60) { // This could really be ==, but >= is used for safety
+              currentMinute = 0;
+            }
+          }
+          // Check for agreement between the file value and the computed value
+          if (currentMinute != minutesInFile) {
+            if (!warnedAboutMinutesAlready) {
+              LOG(Error, "Minutes field (" << minutesInFile << ") on line " << lineNumber << " of EPW file '"
+                << m_path << "' does not agree with computed value (" << currentMinute << "). Using computed value");
+              warnedAboutMinutesAlready = true;
+            }
+          }
+          boost::optional<EpwDataPoint> pt = EpwDataPoint::fromEpwStrings(year, month, day, hour, currentMinute, strings);
+          if (pt) {
+            m_data.push_back(pt.get());
+          } else {
+            LOG(Error, "Failed to parse line " << lineNumber << " of EPW file '" << m_path << "'");
+            ifs.close();
+            return false;
+          }
+        }
+
       } catch(...) {
         LOG(Error, "Could not read line " << lineNumber << " of EPW file '" << m_path << "'");
         ifs.close();
         return false;
       }
-      if(storeData) {
-        std::vector<std::string> list;
-        boost::split(list, line, boost::is_any_of(","));
-        // Due to issues with some EPW files, we need to check stuff here
-        if (list.size() < 5) { // Not enough data, bail out
-          LOG(Error, "Insufficient weather data on line " << lineNumber << " of EPW file '" << m_path << "'");
-          ifs.close();
-          return false;
-        }
-        int minutesInFile = std::stoi(list[4]);
-        if(m_recordsPerHour!=1) {
-          currentMinute += minutesPerRecord;
-          if(currentMinute >= 60) { // This could really be ==, but >= is used for safety
-            currentMinute = 0;
-          }
-        }
-        // Check for agreement between the file value and the computed value
-        if(currentMinute != minutesInFile) {
-          if(!warnedAboutMinutesAlready) {
-            LOG(Error, "Minutes field (" << minutesInFile << ") on line " << lineNumber << " of EPW file '" 
-              << m_path << "' does not agree with computed value (" << currentMinute << "). Using computed value");
-            warnedAboutMinutesAlready = true;
-          }
-          // Override whatever is in the file
-          list[4] = std::to_string(currentMinute);
-        }
-        boost::optional<EpwDataPoint> pt = EpwDataPoint::fromEpwStrings(list);
-        if(pt) {
-          m_data.push_back(pt.get());
-        } else {
-          LOG(Error,"Failed to parse line " << lineNumber << " of EPW file '" << m_path << "'");
-          ifs.close();
-          return false;
-        }
-      }
     } else {
-      LOG(Error, "Could not read line " << lineNumber << " of EPW file '" << m_path << "'");
+      LOG(Error, "Insufficient weather data on line " << lineNumber << " of EPW file '" << m_path << "'");
       ifs.close();
       return false;
     }
