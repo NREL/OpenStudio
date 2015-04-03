@@ -1032,12 +1032,14 @@ if(NOT UNIX)
 endif()
 
 if(PACKAGE_RADIANCE)
-  set(RADIANCE_LOCATION "" CACHE PATH "Location of Radiance to Package")
+  set(RADIANCE_DIR "" CACHE PATH "Location of Radiance to Package")
 
   if(APPLE)
-    install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+    install(DIRECTORY "${RADIANCE_DIR}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+  elseif(MSVC)
+    install(DIRECTORY "${RADIANCE_DIR}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
   else()
-    install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
+    install(DIRECTORY "${RADIANCE_DIR}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
   endif()
 endif()
 
