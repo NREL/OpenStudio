@@ -939,20 +939,22 @@ QWidget * SimSettingsView::createRadianceParametersWidget()
   widget->setLayout(vLayout);
   widget->hide();
 
+  attachRadianceParameters(); 
+
   auto radianceParameters = m_model.getUniqueModelObject<model::RadianceParameters>();
   if (radianceParameters.isCoarseSettings()) {
     m_radianceGroup->button(0)->setChecked(true);
+    enableRadianceParametersWidget(false);
+
   }
   else if (radianceParameters.isFineSettings()) {
     m_radianceGroup->button(1)->setChecked(true);
+    enableRadianceParametersWidget(false);
   }
   else {
     m_radianceGroup->button(2)->setChecked(true);
-    on_radianceGroupClicked(2);
+    enableRadianceParametersWidget(true);
   }
-
-  attachRadianceParameters();
-  enableRadianceParametersWidget(false);
 
   return widget;
 }
