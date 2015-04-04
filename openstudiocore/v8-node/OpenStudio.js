@@ -83,7 +83,7 @@ if (typeof OpenStudioLib.OpenStudioLib != 'undefined') OpenStudioLib = OpenStudi
 //if (typeof OpenStudioPlugin.OpenStudioPlugin != 'undefined') OpenStudioPlugin = OpenStudioPlugin.OpenStudioPlugin;
 
 
-openstudio = OpenStudioUtilitiesCore;
+var openstudio = OpenStudioUtilitiesCore;
 openstudio = merge_objects(openstudio, OpenStudioUtilitiesEconomics);
 openstudio = merge_objects(openstudio, OpenStudioUtilitiesTime);
 openstudio = merge_objects(openstudio, OpenStudioUtilitiesData);
