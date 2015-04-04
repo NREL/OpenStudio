@@ -119,6 +119,10 @@ class MODEL_API RadianceParameters : public ModelObject {
 
   std::string skyDiscretizationResolution() const;
 
+  bool isCoarseSettings();
+
+  bool isFineSettings();
+
   //@}
   /** @name Setters */
   //@{
@@ -191,6 +195,10 @@ class MODEL_API RadianceParameters : public ModelObject {
 
   void resetSkyDiscretizationResolution();
 
+  void applyCoarseSettings();
+
+  void applyFineSettings();
+
   //@}
   /** @name Other */
   //@{
@@ -206,21 +214,7 @@ class MODEL_API RadianceParameters : public ModelObject {
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
-  explicit RadianceParameters(Model& model,
-                              int accumulatedRaysperRecord = 1,
-                              double directThreshold = 0.0,
-                              double directCertainty = 1.0,
-                              double directJitter = 1.0,
-                              double directPretest = 1.0,
-                              int ambientBouncesVMX = 10,
-                              int ambientBouncesDMX = 2,
-                              int ambientDivisionsVMX = 65536,
-                              int ambientDivisionsDMX = 1024,
-                              int ambientSupersamples = 256,
-                              double limitWeightVMX = 0.0000152,
-                              double limitWeightDM = 0.01,
-                              int klemsSamplingDensity = 1000,
-                              std::string skyDiscretizationResolution = "146");
+  explicit RadianceParameters(Model& model);
 
   /// @endcond
  private:

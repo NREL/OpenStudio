@@ -939,12 +939,22 @@ QWidget * SimSettingsView::createRadianceParametersWidget()
   widget->setLayout(vLayout);
   widget->hide();
 
-  m_radianceGroup->button(0)->setChecked(true);
-  if (!m_model.getOptionalUniqueModelObject<model::RadianceParameters>()){
-    setCoarseRadianceSettings();
+  attachRadianceParameters(); 
+
+  auto radianceParameters = m_model.getUniqueModelObject<model::RadianceParameters>();
+  if (radianceParameters.isCoarseSettings()) {
+    m_radianceGroup->button(0)->setChecked(true);
+    enableRadianceParametersWidget(false);
+
   }
-  attachRadianceParameters();
-  enableRadianceParametersWidget(false);
+  else if (radianceParameters.isFineSettings()) {
+    m_radianceGroup->button(1)->setChecked(true);
+    enableRadianceParametersWidget(false);
+  }
+  else {
+    m_radianceGroup->button(2)->setChecked(true);
+    enableRadianceParametersWidget(true);
+  }
 
   return widget;
 }
@@ -1569,42 +1579,16 @@ void SimSettingsView::detachRadianceParameters()
 
 void SimSettingsView::setCoarseRadianceSettings()
 {
-  model::RadianceParameters radianceParameters = m_model.getUniqueModelObject<model::RadianceParameters>();
+  auto radianceParameters = m_model.getUniqueModelObject<model::RadianceParameters>();
 
-  radianceParameters.setAccumulatedRaysperRecord(1);
-  radianceParameters.setDirectThreshold(0.0);
-  radianceParameters.setDirectCertainty(1.0);
-  radianceParameters.setDirectJitter(1.0);
-  radianceParameters.setDirectPretest(1.0);
-  radianceParameters.setAmbientBouncesVMX(6);
-  radianceParameters.setAmbientBouncesDMX(2);
-  radianceParameters.setAmbientDivisionsVMX(4050);
-  radianceParameters.setAmbientDivisionsDMX(512);
-  radianceParameters.setAmbientSupersamples(256);
-  radianceParameters.setLimitWeightVMX(0.001);
-  radianceParameters.setLimitWeightDMX(0.001);
-  radianceParameters.setKlemsSamplingDensity(500);
-  radianceParameters.setSkyDiscretizationResolution("146");
+  radianceParameters.applyCoarseSettings();
 }
 
 void SimSettingsView::setFineRadianceSettings()
 {
-  model::RadianceParameters radianceParameters = m_model.getUniqueModelObject<model::RadianceParameters>();
+  auto radianceParameters = m_model.getUniqueModelObject<model::RadianceParameters>();
 
-  radianceParameters.setAccumulatedRaysperRecord(1);
-  radianceParameters.setDirectThreshold(0.0);
-  radianceParameters.setDirectCertainty(1.0);
-  radianceParameters.setDirectJitter(1.0);
-  radianceParameters.setDirectPretest(1.0);
-  radianceParameters.setAmbientBouncesVMX(10);
-  radianceParameters.setAmbientBouncesDMX(3);
-  radianceParameters.setAmbientDivisionsVMX(65536);
-  radianceParameters.setAmbientDivisionsDMX(1024);
-  radianceParameters.setAmbientSupersamples(512);
-  radianceParameters.setLimitWeightVMX(0.0000152);
-  radianceParameters.setLimitWeightDMX(0.0001);
-  radianceParameters.setKlemsSamplingDensity(1000);
-  radianceParameters.setSkyDiscretizationResolution("2306");
+  radianceParameters.applyFineSettings();
 }
 
 //***** SLOTS *****
