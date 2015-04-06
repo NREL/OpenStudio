@@ -1644,7 +1644,7 @@ bool EpwDataPoint::setLiquidPrecipitationQuantity(const std::string &liquidPreci
 }
 
 EpwFile::EpwFile(const openstudio::path& p, bool storeData)
-  : m_path(p), m_latitude(0), m_longitude(0), m_timeZone(0), m_elevation(0)
+    : m_path(p), m_latitude(0), m_longitude(0), m_timeZone(0), m_elevation(0), m_isActual(false), m_minutesMatch(true)
 {
   if (!parse(storeData)){
     LOG_AND_THROW("EpwFile '" << toString(p) << "' cannot be processed");
@@ -1930,7 +1930,6 @@ bool EpwFile::parse(bool storeData)
   OS_ASSERT((60 % m_recordsPerHour) == 0);
   int minutesPerRecord = 60/m_recordsPerHour;
   int currentMinute = 0;
-  bool warnedAboutMinutesAlready = false;
   while(std::getline(ifs, line)) {
     lineNumber++;
     std::vector<std::string> strings = splitString(line, ',');
@@ -1971,10 +1970,10 @@ bool EpwFile::parse(bool storeData)
           }
           // Check for agreement between the file value and the computed value
           if (currentMinute != minutesInFile) {
-            if (!warnedAboutMinutesAlready) {
+            if (m_minutesMatch) { // Warn only once
               LOG(Error, "Minutes field (" << minutesInFile << ") on line " << lineNumber << " of EPW file '"
                 << m_path << "' does not agree with computed value (" << currentMinute << "). Using computed value");
-              warnedAboutMinutesAlready = true;
+              m_minutesMatch = false;
             }
           }
           boost::optional<EpwDataPoint> pt = EpwDataPoint::fromEpwStrings(year, month, day, hour, currentMinute, strings);
@@ -2182,6 +2181,16 @@ bool EpwFile::parseDataPeriod(const std::string& line)
   }
 
   return(result);
+}
+
+bool EpwFile::isActual() const
+{
+    return m_isActual;
+}
+
+bool EpwFile::minutesMatch() const
+{
+    return m_minutesMatch;
 }
 
 IdfObject toIdfObject(const EpwFile& epwFile) {
