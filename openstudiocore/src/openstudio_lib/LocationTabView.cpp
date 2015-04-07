@@ -26,6 +26,7 @@
 #include "YearSettingsWidget.hpp"
 
 #include "../shared_gui_components/OSGridView.hpp"
+#include "../shared_gui_components/OSLineEdit.hpp"
 
 #include "../openstudio_app/OpenStudioApp.hpp"
 
@@ -38,7 +39,6 @@
 #include "../model/RunPeriodControlDaylightSavingTime.hpp"
 #include "../model/RunPeriodControlDaylightSavingTime_Impl.hpp"
 #include "../model/RunPeriod_Impl.hpp"
-#include "../model/Site.hpp"
 #include "../model/Site_Impl.hpp"
 #include "../model/SizingPeriod.hpp"
 #include "../model/SizingPeriod_Impl.hpp"
@@ -94,6 +94,8 @@ LocationView::LocationView(bool isIP,
   : QWidget(),
   m_isIP(isIP),
   m_model(model),
+  m_site(m_model.getUniqueModelObject<model::Site>()),
+  m_yearDescription(m_model.getUniqueModelObject<model::YearDescription>()),
   m_modelTempDir(modelTempDir)
 {
   loadQSettings();
@@ -103,8 +105,6 @@ LocationView::LocationView(bool isIP,
   QPushButton * btn = nullptr;
   QHBoxLayout * hLayout = nullptr;
   QVBoxLayout * vLayout = nullptr;
-
-  m_yearDescription = m_model.getUniqueModelObject<model::YearDescription>();
 
   model::ClimateZones climateZones = m_model.getUniqueModelObject<model::ClimateZones>();
 
@@ -177,8 +177,24 @@ LocationView::LocationView(bool isIP,
   weatherFileLayout->addLayout(hLayout);
 
   // ***** Site Info *****
-  m_nameLbl = new QLabel(NAME);
-  weatherFileLayout->addWidget(m_nameLbl);
+  label = new QLabel(NAME);
+
+  m_siteName = new OSLineEdit2();
+  m_siteName->bind(
+    *m_site,
+    OptionalStringGetter(std::bind(&model::Site::name, m_site.get_ptr(), true)),
+    boost::optional<StringSetter>(std::bind(&model::Site::setName, m_site.get_ptr(), std::placeholders::_1))
+    );
+
+  hLayout = new QHBoxLayout();
+  hLayout->setContentsMargins(0, 5, 0, 5);
+  hLayout->setSpacing(5);
+
+  hLayout->addWidget(label, 0, Qt::AlignLeft);
+  hLayout->addWidget(m_siteName, 0, Qt::AlignLeft);
+  hLayout->addStretch();
+
+  weatherFileLayout->addLayout(hLayout);
 
   m_latitudeLbl = new QLabel(LATITUDE);
   weatherFileLayout->addWidget(m_latitudeLbl);
@@ -372,45 +388,38 @@ void LocationView::update()
       // Do great things
     }
 
-    model::Site site = m_model.getUniqueModelObject<model::Site>();
     if (weatherFile->name()) {
-      site.setName(weatherFile->name().get());
+      m_site->setName(weatherFile->name().get());
     }
-    site.setLatitude(weatherFile->latitude());
-    site.setLongitude(weatherFile->longitude());
-    site.setElevation(weatherFile->elevation());
-    site.setTimeZone(weatherFile->timeZone());
-  } 
-
-  boost::optional<model::Site> site = m_model.getOptionalUniqueModelObject<model::Site>();
-  if (site){
-
-    info = NAME;
-    if (site->name()) {
-      info += site->name().get().c_str();
-    }
-    m_nameLbl->setText(info);
-
-    info = LATITUDE;
-    temp.setNum(site->latitude());
-    info += temp;
-    m_latitudeLbl->setText(info);
-
-    info = LONGITUDE;
-    temp.setNum(site->longitude());
-    info += temp;
-    m_longitudeLbl->setText(info);
-
-    info = ELEVATION;
-    temp.setNum(site->elevation());
-    info += temp;
-    m_elevationLbl->setText(info);
-
-    info = TIME_ZONE;
-    temp.setNum(site->timeZone());
-    info += temp;
-    m_timeZoneLbl->setText(info);
+    m_site->setLatitude(weatherFile->latitude());
+    m_site->setLongitude(weatherFile->longitude());
+    m_site->setElevation(weatherFile->elevation());
+    m_site->setTimeZone(weatherFile->timeZone());
   }
+
+  if (m_site->name()) {
+    m_siteName->setText(m_site->name().get().c_str());
+  }
+
+  info = LATITUDE;
+  temp.setNum(m_site->latitude());
+  info += temp;
+  m_latitudeLbl->setText(info);
+
+  info = LONGITUDE;
+  temp.setNum(m_site->longitude());
+  info += temp;
+  m_longitudeLbl->setText(info);
+
+  info = ELEVATION;
+  temp.setNum(m_site->elevation());
+  info += temp;
+  m_elevationLbl->setText(info);
+
+  info = TIME_ZONE;
+  temp.setNum(m_site->timeZone());
+  info += temp;
+  m_timeZoneLbl->setText(info);
 
   unsigned numDesignDays = m_model.getModelObjects<model::SizingPeriod>().size();
   info = NUM_DESIGN_DAYS;

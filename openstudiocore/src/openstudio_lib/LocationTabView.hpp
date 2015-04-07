@@ -21,6 +21,7 @@
 #define OPENSTUDIO_LOCATIONTABVIEW_HPP
 
 #include "../model/Model.hpp"
+#include "../model/Site.hpp"
 #include "../model/YearDescription.hpp"
 
 #include "MainTabView.hpp"
@@ -33,10 +34,13 @@ class QComboBox;
 namespace openstudio {
 
 class EpwFile;
+class OSLineEdit2;
 class YearSettingsWidget;
 
 namespace model {
   class Model;
+  class Site;
+  class YearDescription;
 }
 
 class LocationView : public QWidget
@@ -58,6 +62,7 @@ private:
   void saveQSettings() const;
 
   model::Model m_model;
+  boost::optional<model::Site> m_site;
   boost::optional<model::YearDescription> m_yearDescription;
   YearSettingsWidget * m_yearSettingsWidget = nullptr;
   QString m_modelTempDir;
@@ -65,7 +70,7 @@ private:
   QString m_lastDdyPathOpened;
   QComboBox * m_ashraeClimateZone = nullptr;
   QComboBox * m_cecClimateZone = nullptr;
-  QLabel * m_nameLbl = nullptr;
+  OSLineEdit2 * m_siteName = nullptr;
   QLabel * m_latitudeLbl = nullptr;
   QLabel * m_longitudeLbl = nullptr;
   QLabel * m_elevationLbl = nullptr;
