@@ -27,6 +27,7 @@
 #include "../../../model/Model.hpp"
 #include "../../../model/WeatherFile.hpp"
 
+#include "../../../utilities/core/Application.hpp"
 #include "../../../utilities/filetypes/EpwFile.hpp"
 #include "../../../utilities/idf/IdfFile.hpp"
 #include "../../../utilities/idf/Workspace.hpp"
@@ -334,6 +335,7 @@ TEST_F(RunManagerTestFixture, URLTestFileScheme)
 
 TEST_F(RunManagerTestFixture, JobCreateTest)
 {
+  openstudio::Application::instance().application(false);
   openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("JobCreateTest");
 
   openstudio::path idf = (resourcesPath() / openstudio::toPath("runmanager") / openstudio::toPath("5ZoneWarmest.idf"));
@@ -360,6 +362,7 @@ TEST_F(RunManagerTestFixture, JobCreateTest)
 
 TEST_F(RunManagerTestFixture, GenericJobCreateTest)
 {
+  openstudio::Application::instance().application(false);
   openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("GenericJobCreateTest");
 
   openstudio::path idf = (resourcesPath() / openstudio::toPath("runmanager") / openstudio::toPath("5ZoneWarmest.idf"));
