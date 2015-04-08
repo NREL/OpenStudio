@@ -545,10 +545,6 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
          endif()
        endforeach(PREREQ IN LISTS PREREQUISITES)
 
-       if(APPLE)
-         file(COPY \"${QT_LIBRARY_DIR}/QtGui.framework/Resources/qt_menu.nib\" 
-              DESTINATION \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/Resources/\")
-       endif()
       ")
     else()
       install(TARGETS ${swig_target} DESTINATION "lib/openstudio/python")
@@ -897,11 +893,6 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
             endforeach()
           endif()
         endforeach()
-        if(APPLE)
-          file(COPY \"${QT_LIBRARY_DIR}/QtGui.framework/Resources/qt_menu.nib\"
-            DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${V8_TYPE}/openstudio/Resources/\"
-          )
-        endif()
       ")
     else()
       install(TARGETS ${swig_target} DESTINATION "lib/openstudio-${OPENSTUDIO_VERSION}/${V8_TYPE}")
