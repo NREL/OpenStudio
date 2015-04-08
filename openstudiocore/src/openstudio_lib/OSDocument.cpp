@@ -20,7 +20,6 @@
 #include "OSDocument.hpp"
 
 #include "ApplyMeasureNowDialog.hpp"
-#include "BuildingStoriesTabController.hpp"
 #include "ConstructionsTabController.hpp"
 #include "FacilityTabController.hpp"
 #include "FacilityView.hpp"
@@ -317,7 +316,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
   OS_ASSERT(isConnected);
 
   m_verticalId = 0;
-  m_subTabIds = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+  m_subTabIds = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
   // Make sure that the vector is the same size as the number of tabs
   OS_ASSERT(m_subTabIds.size() == static_cast<unsigned>(RESULTS_SUMMARY + 1));
 
@@ -526,14 +525,6 @@ void OSDocument::createTabButtons()
     ":images/off_space_types_tab.png",
     ":images/disabled_space_types_tab.png");
 
-  // Building Stories
-
-  m_mainWindow->addVerticalTabButton(BUILDING_STORIES,
-    "Building Stories",
-    ":images/on_building_stories_tab.png",
-    ":images/off_building_stories_tab.png",
-    ":images/disabled_building_stories_tab.png");
-
   // Facility
   m_mainWindow->addVerticalTabButton(FACILITY,
     "Facility",
@@ -697,22 +688,6 @@ void OSDocument::createTab(int verticalId)
       connect(m_mainRightColumnController.get(), &MainRightColumnController::itemRemoveClicked, m_mainTabController.get(), &SpaceTypesTabController::itemRemoveClicked);
     
       connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForSpaceTypesSubTab);
-
-      connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
-
-      break;
-
-    case BUILDING_STORIES:
-      // Building Stories
-
-      m_mainTabController = std::shared_ptr<MainTabController>(new BuildingStoriesTabController(isIP, m_model));
-      m_mainWindow->setView(m_mainTabController->mainContentWidget(), BUILDING_STORIES);
-  
-      connect(m_mainTabController.get(), &BuildingStoriesTabController::downloadComponentsClicked, this, &OSDocument::downloadComponentsClicked);
-
-      connect(m_mainTabController.get(), &BuildingStoriesTabController::openLibDlgClicked, this, &OSDocument::openLibDlgClicked);
-
-      connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForBuildingStoriesSubTab);
 
       connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
 
@@ -916,7 +891,6 @@ void OSDocument::disableTabsDuringRun()
   m_mainWindow->verticalTabWidget()->enableTabButton(CONSTRUCTIONS, m_enableTabsAfterRun);
   m_mainWindow->verticalTabWidget()->enableTabButton(LOADS, m_enableTabsAfterRun);
   m_mainWindow->verticalTabWidget()->enableTabButton(SPACE_TYPES, m_enableTabsAfterRun);
-  m_mainWindow->verticalTabWidget()->enableTabButton(BUILDING_STORIES, m_enableTabsAfterRun);
   m_mainWindow->verticalTabWidget()->enableTabButton(FACILITY, m_enableTabsAfterRun);
   m_mainWindow->verticalTabWidget()->enableTabButton(THERMAL_ZONES, m_enableTabsAfterRun);
   m_mainWindow->verticalTabWidget()->enableTabButton(HVAC_SYSTEMS, m_enableTabsAfterRun);
@@ -945,7 +919,6 @@ void OSDocument::enableTabsAfterRun()
   m_mainWindow->verticalTabWidget()->enableTabButton(CONSTRUCTIONS, m_enableTabsAfterRun);
   m_mainWindow->verticalTabWidget()->enableTabButton(LOADS, m_enableTabsAfterRun);
   m_mainWindow->verticalTabWidget()->enableTabButton(SPACE_TYPES, m_enableTabsAfterRun);
-  m_mainWindow->verticalTabWidget()->enableTabButton(BUILDING_STORIES, m_enableTabsAfterRun);
   m_mainWindow->verticalTabWidget()->enableTabButton(FACILITY, m_enableTabsAfterRun);
   m_mainWindow->verticalTabWidget()->enableTabButton(THERMAL_ZONES, m_enableTabsAfterRun);
   m_mainWindow->verticalTabWidget()->enableTabButton(HVAC_SYSTEMS, m_enableTabsAfterRun);
@@ -1063,9 +1036,6 @@ void OSDocument::onVerticalTabSelected(int verticalId)
       break;
     case SPACE_TYPES:
       m_mainRightColumnController->configureForSpaceTypesSubTab(m_subTabId);
-      break;
-    case BUILDING_STORIES:
-      m_mainRightColumnController->configureForBuildingStoriesSubTab(m_subTabId);
       break;
     case FACILITY:
       m_mainRightColumnController->configureForFacilitySubTab(m_subTabId);

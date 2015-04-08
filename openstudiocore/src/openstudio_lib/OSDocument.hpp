@@ -164,7 +164,6 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
     CONSTRUCTIONS,
     LOADS,
     SPACE_TYPES,
-    BUILDING_STORIES,
     FACILITY,
     THERMAL_ZONES,
     HVAC_SYSTEMS,

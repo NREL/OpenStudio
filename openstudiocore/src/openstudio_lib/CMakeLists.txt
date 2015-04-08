@@ -19,14 +19,6 @@ set(${target_name}_SRC
   BCLComponentItem.hpp
   BuildingInspectorView.cpp
   BuildingInspectorView.hpp
-  BuildingStoriesController.cpp
-  BuildingStoriesController.hpp
-  BuildingStoriesTabController.cpp
-  BuildingStoriesTabController.hpp
-  BuildingStoriesTabView.cpp
-  BuildingStoriesTabView.hpp
-  BuildingStoriesView.cpp
-  BuildingStoriesView.hpp
   BuildingStoryInspectorView.cpp
   BuildingStoryInspectorView.hpp
   CollapsibleInspector.cpp
@@ -473,10 +465,6 @@ set(${target_name}_moc
   ApplyMeasureNowDialog.hpp
   BCLComponentItem.hpp
   BuildingInspectorView.hpp
-  BuildingStoriesController.hpp
-  BuildingStoriesTabController.hpp
-  BuildingStoriesTabView.hpp
-  BuildingStoriesView.hpp
   BuildingStoryInspectorView.hpp
   CollapsibleInspector.hpp
   ConstructionCfactorUndergroundWallInspectorView.hpp

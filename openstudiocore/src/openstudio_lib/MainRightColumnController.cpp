@@ -675,61 +675,8 @@ void MainRightColumnController::configureForSpaceTypesSubTab(int subTabID)
   doc->openSidebar();
 }
 
-void MainRightColumnController::configureForBuildingStoriesSubTab(int subTabID)
-{
-  // no sub tabs
-  OS_ASSERT(subTabID == 0);
-
-  setEditView(nullptr);
-
-  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
-
-  // my model
-  ModelObjectTypeListView* myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
-  myModelList->setItemsDraggable(true);
-  myModelList->setItemsRemoveable(false);
-  myModelList->setItemsType(OSItemType::LibraryItem);
-  myModelList->setShowFilterLayout(true);
-
-  myModelList->addModelObjectType(IddObjectType::OS_DefaultScheduleSet, "Default Schedule Sets");
-
-  myModelList->addModelObjectType(IddObjectType::OS_DefaultConstructionSet, "Default Construction Sets");
-
-  //OSCollapsibleItemHeader* unassignedSpacesCollapsibleHeader = new OSCollapsibleItemHeader("Unassigned Spaces", OSItemId("",""), OSItemType::CollapsibleListHeader);
-  //unassignedSpacesCollapsibleHeader->setRemoveable(false);
-  //BuildingStoryUnassignedSpacesVectorController* unassignedSpacesVectorController = new BuildingStoryUnassignedSpacesVectorController();
-  //unassignedSpacesVectorController->attachModel(m_model);
-  //OSItemList* unassignedSpacesList = new OSItemList(unassignedSpacesVectorController, false);
-  //OSCollapsibleItem* unassignedSpacesCollapsibleItem = new OSCollapsibleItem(unassignedSpacesCollapsibleHeader, unassignedSpacesList);
-  //myModelList->addCollapsibleItem(unassignedSpacesCollapsibleItem);
-
-  setMyModelView(myModelList);
-
-  // my library
-  model::Model lib = doc->componentLibrary();
-
-  ModelObjectTypeListView* myLibraryList = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader);
-  myLibraryList->setItemsDraggable(true);
-  myLibraryList->setItemsRemoveable(false);
-  myLibraryList->setItemsType(OSItemType::LibraryItem);
-  myLibraryList->setShowFilterLayout(true);
-
-  myLibraryList->addModelObjectType(IddObjectType::OS_DefaultScheduleSet, "Default Schedule Sets");
-
-  myLibraryList->addModelObjectType(IddObjectType::OS_DefaultConstructionSet, "Default Construction Sets");
-
-  setLibraryView(myLibraryList);
-
-  //doc->openSidebar();
-  doc->closeSidebar();
-
-}
-
 void MainRightColumnController::configureForFacilitySubTab(int subTabID)
 {
-  // no sub tabs
-  OS_ASSERT(subTabID == 0);
-
   setEditView(nullptr);
 
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
