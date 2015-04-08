@@ -2011,11 +2011,15 @@ bool EpwFile::parse(bool storeData)
   }
 
   if ((m_startDate.monthOfYear() != startDate->monthOfYear()) ||
-      (m_startDate.dayOfMonth() != startDate->dayOfMonth()) ||
-      (m_endDate.monthOfYear() != endDate->monthOfYear()) ||
-      (m_endDate.dayOfMonth() != endDate->dayOfMonth())) {
-    LOG(Error, "Header start and end dates do not match data in EPW file '" << m_path << "'");
+      (m_startDate.dayOfMonth() != startDate->dayOfMonth())) {
+    LOG(Error, "Header start date does not match data in EPW file '" << m_path << "'");
     return false;
+  }
+
+  if((m_endDate.monthOfYear() != endDate->monthOfYear()) ||
+      (m_endDate.dayOfMonth() != endDate->dayOfMonth())) {
+      LOG(Error, "Header end date does not match data in EPW file '" << m_path << "'");
+      return false;
   }
 
   if (realYear) {
