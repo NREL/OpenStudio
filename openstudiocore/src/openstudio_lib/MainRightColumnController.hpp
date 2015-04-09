@@ -92,6 +92,8 @@ class MainRightColumnController : public OSQObjectController
 
   void configureForFacilitySubTab(int subTabID);
 
+  void configureForSpacesSubTab(int subTabID);
+
   void configureForThermalZonesSubTab(int subTabID);
 
   void configureForHVACSystemsSubTab(int subTabID);

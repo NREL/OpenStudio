@@ -771,6 +771,41 @@ void MainRightColumnController::configureForFacilitySubTab(int subTabID)
 
 }
 
+void MainRightColumnController::configureForSpacesSubTab(int subTabID)
+{
+  setEditView(nullptr);
+
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+
+  // my model
+  ModelObjectTypeListView* myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
+  myModelList->setItemsDraggable(true);
+  myModelList->setItemsRemoveable(false);
+  myModelList->setItemsType(OSItemType::LibraryItem);
+  myModelList->setShowFilterLayout(true);
+
+  //myModelList->addModelObjectType(IddObjectType::OS_SubSurface, "Sub Surfaces");
+
+  setMyModelView(myModelList);
+
+  // Library
+  model::Model lib = doc->combinedComponentLibrary();
+
+  ModelObjectTypeListView* myLibraryList = new ModelObjectTypeListView(lib, true, OSItemType::CollapsibleListHeader, true);
+  myLibraryList->setItemsDraggable(true);
+  myLibraryList->setItemsRemoveable(false);
+  myLibraryList->setItemsType(OSItemType::LibraryItem);
+  myLibraryList->setShowFilterLayout(true);
+
+  //myLibraryList->addModelObjectType(IddObjectType::OS_Fan_ZoneExhaust, "Fan Zone Exhaust");
+
+  setLibraryView(myLibraryList);
+
+  doc->openSidebar();
+  //doc->closeSidebar();
+
+}
+
 void MainRightColumnController::configureForThermalZonesSubTab(int subTabID)
 {
 
