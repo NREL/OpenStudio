@@ -30,59 +30,58 @@
 
 namespace openstudio {
 
-// SpaceTypeInspectorView
+  // SpaceTypeInspectorView
 
-SpaceTypeInspectorView::SpaceTypeInspectorView(bool isIP,
-  const model::Model& model,
-  QWidget * parent )
-  : ModelObjectInspectorView(model, true, parent),
-  m_isIP(isIP)
-{
-  bool isConnected = false;
+  SpaceTypeInspectorView::SpaceTypeInspectorView(bool isIP,
+    const model::Model& model,
+    QWidget * parent)
+    : ModelObjectInspectorView(model, true, parent),
+    m_isIP(isIP)
+  {
+    bool isConnected = false;
 
-  auto spaceTypesGridView = new SpaceTypesGridView(this->m_isIP, this->m_model, this);
-  stackedWidget()->addWidget(spaceTypesGridView);
-  m_gridView = spaceTypesGridView;
+    m_gridView = new SpaceTypesGridView(this->m_isIP, this->m_model, this);
+    stackedWidget()->addWidget(m_gridView);
 
-  isConnected = connect(spaceTypesGridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
-  OS_ASSERT(isConnected);
+    isConnected = connect(m_gridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
+    OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), spaceTypesGridView, SIGNAL(itemSelected(OSItem *)));
-  OS_ASSERT(isConnected);
+    isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), m_gridView, SIGNAL(itemSelected(OSItem *)));
+    OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(selectionCleared()), spaceTypesGridView, SIGNAL(selectionCleared()));
-  OS_ASSERT(isConnected);
+    isConnected = connect(this, SIGNAL(selectionCleared()), m_gridView, SIGNAL(selectionCleared()));
+    OS_ASSERT(isConnected);
 
-  isConnected = connect(spaceTypesGridView, SIGNAL(gridRowSelected(OSItem*)), this, SIGNAL(gridRowSelected(OSItem*)));
-  OS_ASSERT(isConnected);
+    isConnected = connect(m_gridView, SIGNAL(gridRowSelected(OSItem*)), this, SIGNAL(gridRowSelected(OSItem*)));
+    OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), this, SLOT(toggleUnits(bool)));
-  OS_ASSERT(isConnected);
+    isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), this, SLOT(toggleUnits(bool)));
+    OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), spaceTypesGridView, SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
-}
+    isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_gridView, SIGNAL(toggleUnitsClicked(bool)));
+    OS_ASSERT(isConnected);
+  }
 
-std::vector<model::ModelObject> SpaceTypeInspectorView::selectedObjects() const
-{
-  return m_gridView->selectedObjects();
-}
+  std::vector<model::ModelObject> SpaceTypeInspectorView::selectedObjects() const
+  {
+    return m_gridView->selectedObjects();
+  }
 
-void SpaceTypeInspectorView::onClearSelection()
-{}
+  void SpaceTypeInspectorView::onClearSelection()
+  {}
 
-void SpaceTypeInspectorView::onSelectModelObject(const openstudio::model::ModelObject& modelObject)
-{}
+  void SpaceTypeInspectorView::onSelectModelObject(const openstudio::model::ModelObject& modelObject)
+  {}
 
-void SpaceTypeInspectorView::onUpdate()
-{}
+  void SpaceTypeInspectorView::onUpdate()
+  {}
 
-void SpaceTypeInspectorView::refresh()
-{}
+  void SpaceTypeInspectorView::refresh()
+  {}
 
-void SpaceTypeInspectorView::toggleUnits(bool displayIP)
-{
-  m_isIP = displayIP;
-}
+  void SpaceTypeInspectorView::toggleUnits(bool displayIP)
+  {
+    m_isIP = displayIP;
+  }
 
 } // openstudio

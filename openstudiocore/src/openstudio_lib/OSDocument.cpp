@@ -528,10 +528,10 @@ namespace openstudio {
 
     // Facility
     m_mainWindow->addVerticalTabButton(FACILITY,
-      "Spaces",
-      ":images/on_spaces_tab.png",
-      ":images/off_spaces_tab.png",
-      ":images/disabled_spaces_tab.png");
+      "Facility",
+      ":images/on_building_tab.png",
+      ":images/off_building_tab.png",
+      ":images/disabled_building_tab.png");
 
     // Spaces
     m_mainWindow->addVerticalTabButton(SPACES,

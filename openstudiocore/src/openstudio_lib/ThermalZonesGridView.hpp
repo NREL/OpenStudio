@@ -29,78 +29,78 @@
 
 namespace openstudio{
 
-class ModelSubTabView;
+  class ModelSubTabView;
 
-class ThermalZonesGridController;
+  class ThermalZonesGridController;
 
-class ThermalZonesGridView : public QWidget
-{
-  Q_OBJECT
+  class ThermalZonesGridView : public QWidget
+  {
+    Q_OBJECT
 
-public:
+  public:
 
-  ThermalZonesGridView(bool isIP, const model::Model & model, QWidget * parent = 0);
+    ThermalZonesGridView(bool isIP, const model::Model & model, QWidget * parent = 0);
 
-  virtual ~ThermalZonesGridView() {}
+    virtual ~ThermalZonesGridView() {}
 
-  virtual std::vector<model::ModelObject> selectedObjects() const;
+    std::vector<model::ModelObject> selectedObjects() const;
 
-private:
+  private:
 
-  ThermalZonesGridController * m_thermalZonesGridController = nullptr;
+    ThermalZonesGridController * m_gridController = nullptr;
 
-  bool m_isIP;
+    bool m_isIP;
 
-signals:
+  signals:
 
-  void toggleUnitsClicked(bool displayIP);
+    void toggleUnitsClicked(bool displayIP);
 
-  void dropZoneItemClicked(OSItem* item);
+    void dropZoneItemClicked(OSItem* item);
 
-  void itemSelected(OSItem * item);
+    void itemSelected(OSItem * item);
 
-  void selectionCleared();
+    void selectionCleared();
 
-  void gridRowSelected(OSItem*);
+    void gridRowSelected(OSItem*);
 
-};
+  };
 
-class ThermalZonesGridController : public OSGridController
-{
+  class ThermalZonesGridController : public OSGridController
+  {
 
-  Q_OBJECT
+    Q_OBJECT
 
-public:
+  public:
 
-  ThermalZonesGridController(bool isIP,
-    const QString & headerText,
-    IddObjectType iddObjectType,
-    model::Model model,
-    std::vector<model::ModelObject> modelObjects);
+    ThermalZonesGridController(bool isIP,
+      const QString & headerText,
+      IddObjectType iddObjectType,
+      model::Model model,
+      std::vector<model::ModelObject> modelObjects);
 
-  virtual ~ThermalZonesGridController() {}
+    virtual ~ThermalZonesGridController() {}
 
-  virtual void refreshModelObjects();
+    virtual void refreshModelObjects();
 
-protected:
+  protected:
 
-  virtual void setCategoriesAndFields();
+    virtual void setCategoriesAndFields();
 
-  virtual void addColumns(const QString &t_category, std::vector<QString> & fields);
+    virtual void addColumns(const QString &t_category, std::vector<QString> & fields);
 
-  virtual void checkSelectedFields();
+    virtual void checkSelectedFields();
 
-  virtual QString getColor(const model::ModelObject & modelObject);
+    virtual QString getColor(const model::ModelObject & modelObject);
 
-public slots:
+    public slots:
 
-  REGISTER_LOGGER("openstudio.ThermalZonesGridController");
+    REGISTER_LOGGER("openstudio.ThermalZonesGridController");
 
-  virtual void onItemDropped(const OSItemId& itemId);
+    virtual void onItemDropped(const OSItemId& itemId);
 
-  virtual void onComboBoxIndexChanged(int index);
+    virtual void onComboBoxIndexChanged(int index);
 
-};
+  };
 
 } // openstudio
 
