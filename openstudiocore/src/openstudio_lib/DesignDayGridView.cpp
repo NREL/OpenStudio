@@ -99,8 +99,8 @@ DesignDayGridView::DesignDayGridView(bool isIP, const model::Model & model, QWid
   auto designDays = model.getModelObjects<model::DesignDay>();
   auto designDayModelObjects = subsetCastVector<model::ModelObject>(designDays);
 
-  m_designDayGridController = new DesignDayGridController(m_isIP, "Design Days", IddObjectType::OS_SizingPeriod_DesignDay, model, designDayModelObjects);
-  auto gridView = new OSGridView(m_designDayGridController, "Design Days", "Drop\nZone", true, parent);
+  m_gridController = new DesignDayGridController(m_isIP, "Design Days", IddObjectType::OS_SizingPeriod_DesignDay, model, designDayModelObjects);
+  auto gridView = new OSGridView(m_gridController, "Design Days", "Drop\nZone", true, parent);
 
   bool isConnected = false;
 
@@ -120,22 +120,21 @@ DesignDayGridView::DesignDayGridView(bool isIP, const model::Model & model, QWid
 
   layout->addStretch(1);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_designDayGridController, SIGNAL(toggleUnitsClicked(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_gridController, SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_designDayGridController, SLOT(toggleUnits(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_gridController, SLOT(toggleUnits(bool)));
   OS_ASSERT(isConnected);
 
   auto designDayVector = model.getModelObjects<model::DesignDay>(); // NOTE for horizontal system lists
 
 }
 
-// this should be in the base class
 std::vector<model::ModelObject> DesignDayGridView::selectedObjects() const
 {
-  const auto os = this->m_designDayGridController->getObjectSelector()->getSelectedObjects();
-
+  const auto os = this->m_gridController->getObjectSelector()->getSelectedObjects();
   return std::vector<model::ModelObject>(os.cbegin(), os.cend());
+  //return m_gridController->selectedObjects(); TODO Evan upon merge
 }
 
 DesignDayGridController::DesignDayGridController(bool isIP,

@@ -42,7 +42,7 @@ public:
 
   virtual ~DesignDayGridView() {}
 
-  DesignDayGridController * m_designDayGridController = nullptr;
+  DesignDayGridController * m_gridController = nullptr;
 
   std::vector<model::ModelObject> selectedObjects() const;
 
