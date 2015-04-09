@@ -99,22 +99,20 @@ DesignDayGridView::DesignDayGridView(bool isIP, const model::Model & model, QWid
   auto designDays = model.getModelObjects<model::DesignDay>();
   auto designDayModelObjects = subsetCastVector<model::ModelObject>(designDays);
 
-  auto designDayGridController = new DesignDayGridController(m_isIP, "Design Days", IddObjectType::OS_SizingPeriod_DesignDay, model, designDayModelObjects);
-  auto gridView = new OSGridView(designDayGridController, "Design Days", "Drop\nZone", true, parent);
+  m_designDayGridController = new DesignDayGridController(m_isIP, "Design Days", IddObjectType::OS_SizingPeriod_DesignDay, model, designDayModelObjects);
+  auto gridView = new OSGridView(m_designDayGridController, "Design Days", "Drop\nZone", true, parent);
 
   bool isConnected = false;
 
   isConnected = connect(gridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), gridView, SIGNAL(itemSelected(OSItem*)));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(this, SIGNAL(selectionCleared()), gridView, SLOT(onSelectionCleared()));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(gridView, SIGNAL(gridRowSelected(OSItem*)), this, SIGNAL(gridRowSelected(OSItem*)));
-  OS_ASSERT(isConnected);
+  //isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), gridView, SIGNAL(itemSelected(OSItem*)));
+  //OS_ASSERT(isConnected);
+  //isConnected = connect(this, SIGNAL(selectionCleared()), gridView, SLOT(onSelectionCleared()));
+  //OS_ASSERT(isConnected);
+  //isConnected = connect(gridView, SIGNAL(gridRowSelected(OSItem*)), this, SIGNAL(gridRowSelected(OSItem*)));
+  //OS_ASSERT(isConnected);
 
   gridView->m_dropZone->hide();
 
@@ -122,14 +120,22 @@ DesignDayGridView::DesignDayGridView(bool isIP, const model::Model & model, QWid
 
   layout->addStretch(1);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), designDayGridController, SIGNAL(toggleUnitsClicked(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_designDayGridController, SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), designDayGridController, SLOT(toggleUnits(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_designDayGridController, SLOT(toggleUnits(bool)));
   OS_ASSERT(isConnected);
 
   auto designDayVector = model.getModelObjects<model::DesignDay>(); // NOTE for horizontal system lists
 
+}
+
+// this should be in the base class
+std::vector<model::ModelObject> DesignDayGridView::selectedObjects() const
+{
+  const auto os = this->m_designDayGridController->getObjectSelector()->getSelectedObjects();
+
+  return std::vector<model::ModelObject>(os.cbegin(), os.cend());
 }
 
 DesignDayGridController::DesignDayGridController(bool isIP,

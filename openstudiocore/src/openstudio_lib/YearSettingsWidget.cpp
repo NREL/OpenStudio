@@ -56,8 +56,8 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
   // Main Layout
 
   QVBoxLayout * mainVLayout = new QVBoxLayout();
-  mainVLayout->setContentsMargins(10,10,10,10);
-  mainVLayout->setSpacing(10);
+  mainVLayout->setContentsMargins(7, 7, 7, 7);
+  mainVLayout->setSpacing(7);
 
   setLayout(mainVLayout);
 
@@ -72,9 +72,8 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
   mainVLayout->addWidget(selectYearLabel);
 
   QGridLayout * yearGridLayout = new QGridLayout();
-  yearGridLayout->setContentsMargins(20,10,10,0);
-  //yearGridLayout->setContentsMargins(20,10,10,0);
-  yearGridLayout->setSpacing(10);
+  yearGridLayout->setContentsMargins(15, 7, 7, 0);
+  yearGridLayout->setSpacing(7);
   mainVLayout->addLayout(yearGridLayout);
 
   QButtonGroup * yearButtonGroup = new QButtonGroup(this);
@@ -111,16 +110,11 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
 
   yearGridLayout->setColumnStretch(2,10);
 
-  QFrame * line1 = new QFrame();
-  line1->setFrameShape(QFrame::HLine);
-  line1->setFrameShadow(QFrame::Sunken);
-  mainVLayout->addWidget(line1);
-
   // DST
 
   QHBoxLayout * dstHLayout1 = new QHBoxLayout();
   dstHLayout1->setContentsMargins(0,0,0,0);
-  dstHLayout1->setSpacing(10);
+  dstHLayout1->setSpacing(7);
 
   QLabel * dstLabel = new QLabel("Daylight Savings Time:");
   dstLabel->setObjectName("H2");
@@ -134,8 +128,8 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
   mainVLayout->addLayout(dstHLayout1);
 
   QGridLayout * dstGridLayout = new QGridLayout();
-  dstGridLayout->setContentsMargins(20,10,10,10);
-  dstGridLayout->setSpacing(10);
+  dstGridLayout->setContentsMargins(15,7,7,7);
+  dstGridLayout->setSpacing(7);
   mainVLayout->addLayout(dstGridLayout);
 
   // Starts

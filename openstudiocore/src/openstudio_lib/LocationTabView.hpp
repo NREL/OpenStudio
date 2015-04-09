@@ -34,6 +34,8 @@ class QComboBox;
 namespace openstudio {
 
 class EpwFile;
+class DesignDayGridView;
+class OSItemSelectorButtons;
 class OSLineEdit2;
 class YearSettingsWidget;
 
@@ -54,6 +56,16 @@ public:
 
   virtual ~LocationView();
 
+  virtual bool supportsMultipleObjectSelection() const { return true; }
+  virtual std::vector<model::ModelObject> selectedObjects() const;
+
+protected:
+  void onClearSelection();
+  void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+  void onUpdate();
+  private slots:
+  void toggleUnits(bool);
+
 private:
   void update();
 
@@ -65,6 +77,8 @@ private:
   boost::optional<model::Site> m_site;
   boost::optional<model::YearDescription> m_yearDescription;
   YearSettingsWidget * m_yearSettingsWidget = nullptr;
+  DesignDayGridView * m_designDaysGridView = nullptr;
+  OSItemSelectorButtons * m_itemSelectorButtons = nullptr;
   QString m_modelTempDir;
   QString m_lastEpwPathOpened;
   QString m_lastDdyPathOpened;
@@ -77,6 +91,12 @@ private:
   QLabel * m_timeZoneLbl = nullptr;
   QLabel * m_numDesignDaysLbl = nullptr;
   bool m_isIP;
+
+signals:
+  void modelObjectSelected(model::OptionalModelObject & modelObject, bool readOnly);
+
+public slots:
+  void refresh();
 
 private slots:
   void setCalendarYear(int year);

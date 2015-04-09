@@ -20,8 +20,10 @@
 #include "LocationTabView.hpp"
 
 #include "DesignDayGridView.hpp"
+#include "ModelObjectListView.hpp"
 #include "OSDocument.hpp"
 #include "OSDropZone.hpp"
+#include "OSItemSelectorButtons.hpp"
 #include "SchedulesTabController.hpp"
 #include "YearSettingsWidget.hpp"
 
@@ -100,33 +102,29 @@ LocationView::LocationView(bool isIP,
 {
   loadQSettings();
 
-  QFrame * line = nullptr;
-  QLabel * label = nullptr;
-  QPushButton * btn = nullptr;
-  QHBoxLayout * hLayout = nullptr;
-  QVBoxLayout * vLayout = nullptr;
-
   model::ClimateZones climateZones = m_model.getUniqueModelObject<model::ClimateZones>();
 
   // ***** Main Layout *****
   auto mainLayout = new QVBoxLayout();
-  mainLayout->setContentsMargins(10, 10, 10, 10);
-  mainLayout->setSpacing(10);
+  mainLayout->setContentsMargins(0, 0, 0, 0);
+  mainLayout->setSpacing(0);
   setLayout(mainLayout);
 
   // ***** Scroll *****
-  QVBoxLayout * scrollLayout = new QVBoxLayout();
-  scrollLayout->setSpacing(0);
+  auto scrollLayout = new QVBoxLayout();
   scrollLayout->setContentsMargins(0, 0, 0, 0);
+  scrollLayout->setSpacing(0);
 
-  QWidget * scrollWidget = new QWidget();
+  auto scrollWidget = new QWidget();
   scrollWidget->setObjectName("ScrollWidget");
   scrollWidget->setStyleSheet("QWidget#ScrollWidget { background: transparent; }");
   scrollWidget->setLayout(scrollLayout);
 
-  QScrollArea * scrollArea = new QScrollArea();
+  auto scrollArea = new QScrollArea();
   scrollArea->setContentsMargins(0, 0, 0, 0);
   scrollArea->setFrameStyle(QFrame::NoFrame);
+  scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+  scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
   scrollArea->setWidget(scrollWidget);
   scrollArea->setWidgetResizable(true);
   scrollArea->setBackgroundRole(QPalette::NoRole);
@@ -134,47 +132,62 @@ LocationView::LocationView(bool isIP,
 
   // ***** Upper Horizontal Layout *****
   auto upperHorizontalLayout = new QHBoxLayout();
-  upperHorizontalLayout->setContentsMargins(10, 0, 10, 0);
+  upperHorizontalLayout->setContentsMargins(0, 0, 0, 0);
   upperHorizontalLayout->setSpacing(0);
 
-  // ***** Weather File Layout *****
-  auto weatherFileLayout = new QVBoxLayout();
-  weatherFileLayout->setContentsMargins(10, 0, 10, 0);
-  weatherFileLayout->setSpacing(0);
+  // ***** Left Vertical Layout *****
+  auto leftVLayout = new QVBoxLayout();
+  leftVLayout->setContentsMargins(7, 2, 7, 7);
+  leftVLayout->setSpacing(0);
+
+  // ***** Weather File GridLayout *****
+  auto weatherFileGridLayout = new QGridLayout();
+  weatherFileGridLayout->setContentsMargins(7, 3, 7, 7);
+  weatherFileGridLayout->setSpacing(7);
+
+  // ***** Measure Tags GridLayout *****
+  auto measureTagsGridLayout = new QGridLayout();
+  measureTagsGridLayout->setContentsMargins(7, 7, 7, 7);
+  measureTagsGridLayout->setSpacing(7);
 
   // ***** Schedules Layout *****
   auto schedulesLayout = new QVBoxLayout();
-  schedulesLayout->setContentsMargins(10, 0, 10, 0);
+  schedulesLayout->setContentsMargins(0, 0, 0, 0);
   schedulesLayout->setSpacing(0);
 
-  // ***** Upper Horizontal Layout Vertical Line *****
-  line = new QFrame();
-  line->setFrameShape(QFrame::VLine);
-  line->setFrameShadow(QFrame::Sunken);
+  // ***** Vertical Line *****
+  auto vLine = new QFrame();
+  vLine->setFrameShape(QFrame::VLine);
+  vLine->setFrameShadow(QFrame::Sunken);
 
-  scrollLayout->addLayout(upperHorizontalLayout);
-  upperHorizontalLayout->addLayout(weatherFileLayout);
-  upperHorizontalLayout->addWidget(line);
-  upperHorizontalLayout->addLayout(schedulesLayout);
+  // ***** Small Horizontal Line *****
+  auto smallHLine = new QFrame();
+  smallHLine->setFrameShape(QFrame::HLine);
+  smallHLine->setFrameShadow(QFrame::Sunken);
+
+  // ***** Main Horizontal Line *****
+  auto mainHLine = new QFrame();
+  mainHLine->setFrameShape(QFrame::HLine);
+  mainHLine->setFrameShadow(QFrame::Sunken);
 
   // ***** Weather File *****
-  label = new QLabel("Weather File");
+  auto label = new QLabel("Weather File");
   label->setObjectName("H2");
 
-  btn = new QPushButton("Set Weather File", this);
+  auto btn = new QPushButton("Set Weather File", this);
   btn->setFlat(true);
   btn->setObjectName("StandardGrayButton");
   connect(btn, &QPushButton::clicked, this, &LocationView::onWeatherFileBtnClicked);
 
-  hLayout = new QHBoxLayout();
-  hLayout->setContentsMargins(0, 5, 0, 5);
-  hLayout->setSpacing(5);
+  auto hLayout = new QHBoxLayout();
+  hLayout->setContentsMargins(0, 0, 0, 0);
+  hLayout->setSpacing(7);
 
   hLayout->addWidget(label, 0, Qt::AlignLeft);
   hLayout->addWidget(btn, 0, Qt::AlignLeft);
   hLayout->addStretch();
 
-  weatherFileLayout->addLayout(hLayout);
+  leftVLayout->addLayout(hLayout);
 
   // ***** Site Info *****
   label = new QLabel(NAME);
@@ -185,46 +198,55 @@ LocationView::LocationView(bool isIP,
     OptionalStringGetter(std::bind(&model::Site::name, m_site.get_ptr(), true)),
     boost::optional<StringSetter>(std::bind(&model::Site::setName, m_site.get_ptr(), std::placeholders::_1))
     );
+  
+  int i = 0;
+
+    btn = new QPushButton("Import From DDY", this);
+  btn->setFlat(true);
+  btn->setObjectName("StandardGrayButton");
+  connect(btn, &QPushButton::clicked, this, &LocationView::onDesignDayBtnClicked);
 
   hLayout = new QHBoxLayout();
-  hLayout->setContentsMargins(0, 5, 0, 5);
-  hLayout->setSpacing(5);
+  hLayout->setContentsMargins(0, 7, 0, 0);
+  hLayout->setSpacing(7);
 
   hLayout->addWidget(label, 0, Qt::AlignLeft);
-  hLayout->addWidget(m_siteName, 0, Qt::AlignLeft);
+  hLayout->addWidget(btn, 0, Qt::AlignLeft);
   hLayout->addStretch();
 
-  weatherFileLayout->addLayout(hLayout);
+  auto widget = new QWidget();
+  widget->setLayout(hLayout);
+
+  weatherFileGridLayout->addWidget(widget, i++, 0);
 
   m_latitudeLbl = new QLabel(LATITUDE);
-  weatherFileLayout->addWidget(m_latitudeLbl);
+  weatherFileGridLayout->addWidget(m_latitudeLbl, i++, 0);
 
   m_longitudeLbl = new QLabel(LONGITUDE);
-  weatherFileLayout->addWidget(m_longitudeLbl);
+  weatherFileGridLayout->addWidget(m_longitudeLbl, i++, 0);
 
   m_elevationLbl = new QLabel(ELEVATION);
-  weatherFileLayout->addWidget(m_elevationLbl);
+  weatherFileGridLayout->addWidget(m_elevationLbl, i++, 0);
 
   m_timeZoneLbl = new QLabel(TIME_ZONE);
-  weatherFileLayout->addWidget(m_timeZoneLbl);
+  weatherFileGridLayout->addWidget(m_timeZoneLbl, i++, 0);
 
   m_numDesignDaysLbl = new QLabel(NUM_DESIGN_DAYS);
-  weatherFileLayout->addWidget(m_numDesignDaysLbl);
+  weatherFileGridLayout->addWidget(m_numDesignDaysLbl, i++, 0);
 
   // ***** Weather File Download Location *****
   label = new QLabel("Download weather files at <a href=\"http://www.energyplus.gov\">www.energyplus.gov</a>");
   label->setOpenExternalLinks(true);
-  weatherFileLayout->addWidget(label);
+  weatherFileGridLayout->addWidget(label, i++, 0);
 
+  // ***** Add Weather File GridLayout *****
+  weatherFileGridLayout->setColumnStretch(i, 10);
+  leftVLayout->addLayout(weatherFileGridLayout);
+  
   // ***** Climate Zones *****
-  line = new QFrame();
-  line->setFrameShape(QFrame::HLine);
-  line->setFrameShadow(QFrame::Sunken);
-  weatherFileLayout->addWidget(line);
-
   label = new QLabel("Measure Tags (Optional):");
   label->setObjectName("H2");
-  weatherFileLayout->addWidget(label);
+  leftVLayout->addWidget(label);
 
   label = new QLabel("ASHRAE Climate Zone");
   label->setObjectName("StandardsInfo");
@@ -232,15 +254,10 @@ LocationView::LocationView(bool isIP,
   m_ashraeClimateZone = new QComboBox();
   m_ashraeClimateZone->setFixedWidth(200);
 
-  hLayout = new QHBoxLayout();
-  hLayout->setContentsMargins(0, 5, 0, 5);
-  hLayout->setSpacing(5);
+  i = 0;
 
-  hLayout->addWidget(label, 0, Qt::AlignLeft);
-  hLayout->addWidget(m_ashraeClimateZone, 0, Qt::AlignLeft);
-  //hLayout->addStretch();
-
-  weatherFileLayout->addLayout(hLayout);
+  measureTagsGridLayout->addWidget(label, i, 0);
+  measureTagsGridLayout->addWidget(m_ashraeClimateZone, i++, 1);
 
   m_ashraeClimateZone->addItem("");
   std::vector<std::string> ashraeClimateZoneValues = model::ClimateZones::validClimateZoneValues(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDefaultYear());
@@ -255,9 +272,9 @@ LocationView::LocationView(bool isIP,
   ashraeClimateZone.setType(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDocumentName(), model::ClimateZones::ashraeDefaultYear());
   
   std::string ashraeClimateZoneValue = ashraeClimateZone.value();
-  int i = m_ashraeClimateZone->findText(toQString(ashraeClimateZoneValue));
-  OS_ASSERT(i != -1);
-  m_ashraeClimateZone->setCurrentIndex(i);
+  auto idx = m_ashraeClimateZone->findText(toQString(ashraeClimateZoneValue));
+  OS_ASSERT(idx != -1);
+  m_ashraeClimateZone->setCurrentIndex(idx);
 
   connect(m_ashraeClimateZone, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &LocationView::onASHRAEClimateZoneChanged);
 
@@ -267,15 +284,8 @@ LocationView::LocationView(bool isIP,
   m_cecClimateZone = new QComboBox();
   m_cecClimateZone->setFixedWidth(200);
 
-  hLayout = new QHBoxLayout();
-  hLayout->setContentsMargins(0, 5, 0, 5);
-  hLayout->setSpacing(5);
-
-  hLayout->addWidget(label, 0, Qt::AlignLeft);
-  hLayout->addWidget(m_cecClimateZone, 0, Qt::AlignLeft);
-  //hLayout->addStretch();
-
-  weatherFileLayout->addLayout(hLayout);
+  measureTagsGridLayout->addWidget(label, i, 0);
+  measureTagsGridLayout->addWidget(m_cecClimateZone, i++, 1);
 
   m_cecClimateZone->addItem("");
   std::vector<std::string> cecClimateZoneValues = model::ClimateZones::validClimateZoneValues(model::ClimateZones::cecInstitutionName(), model::ClimateZones::cecDefaultYear());
@@ -290,11 +300,15 @@ LocationView::LocationView(bool isIP,
   cecClimateZone.setType(model::ClimateZones::cecInstitutionName(), model::ClimateZones::cecDocumentName(), model::ClimateZones::cecDefaultYear());
 
   std::string cecClimateZoneValue = cecClimateZone.value();
-  i = m_cecClimateZone->findText(toQString(cecClimateZoneValue));
-  OS_ASSERT(i != -1);
-  m_cecClimateZone->setCurrentIndex(i);
+  idx = m_cecClimateZone->findText(toQString(cecClimateZoneValue));
+  OS_ASSERT(idx != -1);
+  m_cecClimateZone->setCurrentIndex(idx);
 
   connect(m_cecClimateZone, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &LocationView::onCECClimateZoneChanged);
+
+  // ***** Measure Tags GridLayout *****
+  measureTagsGridLayout->setColumnStretch(i, 10);
+  leftVLayout->addLayout(measureTagsGridLayout);
 
   // ***** Schedules *****
   auto yearSettingsWidget = new YearSettingsWidget(m_model);
@@ -314,13 +328,21 @@ LocationView::LocationView(bool isIP,
 
   connect(yearSettingsWidget, &YearSettingsWidget::dstEndDateChanged, this, &LocationView::setDstEndDate);
 
-  // ***** Upper Horizontal Layout Vertical Line *****
-  line = new QFrame();
-  line->setFrameShape(QFrame::HLine);
-  line->setFrameShadow(QFrame::Sunken);
+  // ***** Add Vertical Layout *****
+  upperHorizontalLayout->addLayout(leftVLayout);
 
-  scrollLayout->addWidget(line);
+  // ***** Add Vertical Line *****
+  upperHorizontalLayout->addWidget(vLine);
 
+  // ***** Add Schedules Layout *****
+  upperHorizontalLayout->addLayout(schedulesLayout);
+
+  // ***** Add Upper Horizontal Layout *****
+  scrollLayout->addLayout(upperHorizontalLayout);
+
+  // ***** Add Main Horizontal Line *****
+  scrollLayout->addWidget(mainHLine);
+  
   // ***** Design Days *****
   label = new QLabel("Design Days");
   label->setObjectName("H2");
@@ -331,8 +353,8 @@ LocationView::LocationView(bool isIP,
   connect(btn, &QPushButton::clicked, this, &LocationView::onDesignDayBtnClicked);
 
   hLayout = new QHBoxLayout();
-  hLayout->setContentsMargins(0, 5, 0, 5);
-  hLayout->setSpacing(5);
+  hLayout->setContentsMargins(7, 7, 0, 7);
+  hLayout->setSpacing(7);
 
   hLayout->addWidget(label, 0, Qt::AlignLeft);
   hLayout->addWidget(btn, 0, Qt::AlignLeft);
@@ -340,14 +362,42 @@ LocationView::LocationView(bool isIP,
 
   scrollLayout->addLayout(hLayout);
 
-  auto designDays = model.getModelObjects<model::DesignDay>();
-  auto designDayModelObjects = subsetCastVector<model::ModelObject>(designDays);
-  auto designDayGridController = new DesignDayGridController(m_isIP, "Design Days", IddObjectType::OS_SpaceType, model, designDayModelObjects);
-  auto gridView = new OSGridView(designDayGridController, "Design Days", "Drop\nDesign Days", false, this->parentWidget());
+  m_designDaysGridView = new DesignDayGridView(m_isIP, model, this->parentWidget());
 
-  gridView->m_dropZone->hide();
+  scrollLayout->addWidget(m_designDaysGridView, 1, Qt::AlignTop);
 
-  scrollLayout->addWidget(gridView, 1, Qt::AlignTop);
+  // ***** Item Selector Buttons *****
+  m_itemSelectorButtons = new OSItemSelectorButtons();
+  m_itemSelectorButtons->hideDropZone();
+
+  //connect(m_itemSelectorButtons, &OSItemSelectorButtons::itemDropped, this, &SubTabView::itemDropped);
+
+  //connect(m_itemSelectorButtons, &OSItemSelectorButtons::addClicked, this, &SubTabView::addClicked);
+
+  //connect(m_itemSelectorButtons, &OSItemSelectorButtons::copyClicked, this, &SubTabView::copyClicked);
+
+  //connect(m_itemSelectorButtons, &OSItemSelectorButtons::removeClicked, this, &SubTabView::removeClicked);
+
+  //connect(m_itemSelectorButtons, &OSItemSelectorButtons::purgeClicked, this, &SubTabView::purgeClicked);
+
+  //connect(m_itemSelectorButtons, &OSItemSelectorButtons::downloadComponentsClicked, this, &SubTabView::downloadComponentsClicked);
+
+  bool isConnected = false;
+
+  //isConnected = connect(m_designDaysGridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
+  //OS_ASSERT(isConnected);
+  //isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), m_designDaysGridView, SIGNAL(itemSelected(OSItem *)));
+  //OS_ASSERT(isConnected);
+  //isConnected = connect(this, SIGNAL(selectionCleared()), m_designDaysGridView, SIGNAL(selectionCleared()));
+  //OS_ASSERT(isConnected);
+  //isConnected = connect(m_designDaysGridView, SIGNAL(gridRowSelected(OSItem*)), this, SIGNAL(gridRowSelected(OSItem*)));
+  //OS_ASSERT(isConnected);
+  //isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), this, SLOT(toggleUnits(bool)));
+  //OS_ASSERT(isConnected);
+  //isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_designDaysGridView, SIGNAL(toggleUnitsClicked(bool)));
+  //OS_ASSERT(isConnected);
+
+  mainLayout->addWidget(m_itemSelectorButtons, 0, Qt::AlignBottom);
 
   update();
 }
@@ -355,6 +405,31 @@ LocationView::LocationView(bool isIP,
 LocationView::~LocationView()
 {
   saveQSettings();
+}
+
+std::vector<model::ModelObject> LocationView::selectedObjects() const
+{
+  return m_designDaysGridView->selectedObjects();
+
+  return m_designDaysGridView->selectedObjects();
+
+}
+
+void LocationView::onClearSelection()
+{}
+
+void LocationView::onSelectModelObject(const openstudio::model::ModelObject& modelObject)
+{}
+
+void LocationView::onUpdate()
+{}
+
+void LocationView::refresh()
+{}
+
+void LocationView::toggleUnits(bool isIP)
+{
+  m_isIP = isIP;
 }
 
 void LocationView::loadQSettings()

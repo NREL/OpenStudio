@@ -30,6 +30,8 @@
 
 namespace openstudio{
 
+class DesignDayGridController;
+
 class DesignDayGridView : public QWidget
 {
   Q_OBJECT
@@ -39,6 +41,10 @@ public:
   DesignDayGridView(bool isIP, const model::Model & model, QWidget * parent = 0);
 
   virtual ~DesignDayGridView() {}
+
+  DesignDayGridController * m_designDayGridController = nullptr;
+
+  std::vector<model::ModelObject> selectedObjects() const;
 
 private:
 
