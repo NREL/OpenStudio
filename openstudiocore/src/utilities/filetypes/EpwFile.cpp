@@ -1644,7 +1644,7 @@ bool EpwDataPoint::setLiquidPrecipitationQuantity(const std::string &liquidPreci
 }
 
 EpwFile::EpwFile(const openstudio::path& p, bool storeData)
-  : m_path(p), m_latitude(0), m_longitude(0), m_timeZone(0), m_elevation(0)
+    : m_path(p), m_latitude(0), m_longitude(0), m_timeZone(0), m_elevation(0), m_isActual(false), m_minutesMatch(true)
 {
   if (!parse(storeData)){
     LOG_AND_THROW("EpwFile '" << toString(p) << "' cannot be processed");
@@ -1930,7 +1930,6 @@ bool EpwFile::parse(bool storeData)
   OS_ASSERT((60 % m_recordsPerHour) == 0);
   int minutesPerRecord = 60/m_recordsPerHour;
   int currentMinute = 0;
-  bool warnedAboutMinutesAlready = false;
   while(std::getline(ifs, line)) {
     lineNumber++;
     std::vector<std::string> strings = splitString(line, ',');
@@ -1974,10 +1973,10 @@ bool EpwFile::parse(bool storeData)
           }
           // Check for agreement between the file value and the computed value
           if (currentMinute != minutesInFile) {
-            if (!warnedAboutMinutesAlready) {
+            if (m_minutesMatch) { // Warn only once
               LOG(Error, "Minutes field (" << minutesInFile << ") on line " << lineNumber << " of EPW file '"
                 << m_path << "' does not agree with computed value (" << currentMinute << "). Using computed value");
-              warnedAboutMinutesAlready = true;
+              m_minutesMatch = false;
             }
           }
           boost::optional<EpwDataPoint> pt = EpwDataPoint::fromEpwStrings(year, month, day, hour, currentMinute, strings);
@@ -2015,11 +2014,15 @@ bool EpwFile::parse(bool storeData)
   }
 
   if ((m_startDate.monthOfYear() != startDate->monthOfYear()) ||
-      (m_startDate.dayOfMonth() != startDate->dayOfMonth()) ||
-      (m_endDate.monthOfYear() != endDate->monthOfYear()) ||
-      (m_endDate.dayOfMonth() != endDate->dayOfMonth())) {
-    LOG(Error, "Header start and end dates do not match data in EPW file '" << m_path << "'");
+      (m_startDate.dayOfMonth() != startDate->dayOfMonth())) {
+    LOG(Error, "Header start date does not match data in EPW file '" << m_path << "'");
     return false;
+  }
+
+  if((m_endDate.monthOfYear() != endDate->monthOfYear()) ||
+      (m_endDate.dayOfMonth() != endDate->dayOfMonth())) {
+      LOG(Error, "Header end date does not match data in EPW file '" << m_path << "'");
+      return false;
   }
 
   if (realYear) {
@@ -2281,7 +2284,8 @@ boost::optional<std::pair<double, double>> EpwFile::degreeDays(double Tbase)
         double diff = Tbase - 0.5*(Tmin + Tmax);
         if (diff > 0.0) {
           HDD += diff;
-        } else {
+        }
+        else {
           CDD += diff;
         }
         currentDate = dateTimes[i].date();
@@ -2293,9 +2297,19 @@ boost::optional<std::pair<double, double>> EpwFile::degreeDays(double Tbase)
       ++currentDayValues;
       ++i;
     } while (i < values.size());
-    return boost::optional<std::pair<double,double>>(std::pair<double,double>(CDD,HDD));
+    return boost::optional<std::pair<double, double>>(std::pair<double, double>(CDD, HDD));
   }
   return boost::none;
+}
+
+bool EpwFile::isActual() const
+{
+    return m_isActual;
+}
+
+bool EpwFile::minutesMatch() const
+{
+    return m_minutesMatch;
 }
 
 IdfObject toIdfObject(const EpwFile& epwFile) {

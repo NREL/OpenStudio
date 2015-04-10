@@ -342,6 +342,12 @@ public:
   boost::optional<double> coolingDegreeDays(double Tbase = 18.3);
   boost::optional<std::pair<double,double>> degreeDays(double Tbase = 18.3);
 
+  // Data status (?) functions
+  /// Returns true if the file appears to be AMY (as opposed to TMY)
+  bool isActual() const;
+  /// Returns true if the data period "records per hour" input matches the data points values
+  bool minutesMatch() const;
+
 private:
 
   bool parse(bool storeData=false);
@@ -369,6 +375,11 @@ private:
   boost::optional<int> m_startDateActualYear;
   boost::optional<int> m_endDateActualYear;
   std::vector<EpwDataPoint> m_data;
+
+  bool m_isActual;
+
+  // Error/warning flags to store how well the input matches what we think it should
+  bool m_minutesMatch; // No disagreement between the data period and the minutes field
 };
 
 UTILITIES_API IdfObject toIdfObject(const EpwFile& epwFile);
