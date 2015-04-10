@@ -1949,6 +1949,9 @@ bool EpwFile::parse(bool storeData)
         if (endDate && lastDate) {
           Time delta = endDate.get() - lastDate.get();
           if (std::abs(delta.totalDays()) > 1) {
+            LOG(Warn, "Successive data points (" << lastDate.get() << " to " << endDate.get()
+              << ", ending on line " << lineNumber << ") are greater than 1 day apart in EPW file '"
+              << m_path << "'. Data will be treated as typical (TMY)");
             realYear = false;
           }
 
@@ -2182,6 +2185,117 @@ bool EpwFile::parseDataPeriod(const std::string& line)
   }
 
   return(result);
+}
+
+boost::optional<double> EpwFile::heatingDegreeDays(double Tbase)
+{
+  boost::optional<TimeSeries> T = getTimeSeries("Dry Bulb Temperature");
+  if (T) {
+    double HDD = 0.0;
+    double Tmax, Tmin;
+    std::vector<DateTime> dateTimes = T.get().dateTimes();
+    Vector values = T.get().values();
+    Date currentDate = dateTimes[0].date();
+    Tmax = Tmin = values(0);
+    unsigned i = 1;
+    int currentDayValues = 1;
+    do {
+      if (dateTimes[i].date() != currentDate) {
+        // Probably need a more intelligent check here
+        if (currentDayValues < 2) {
+          // Warning?
+        }
+        double diff = Tbase - 0.5*(Tmin + Tmax);
+        if (diff > 0.0) {
+          HDD += diff;
+        }
+        currentDate = dateTimes[i].date();
+        Tmax = Tmin = values(i);
+        currentDayValues = 0;
+      }
+      Tmin = std::min(Tmin, values(i));
+      Tmax = std::min(Tmax, values(i));
+      ++currentDayValues;
+      ++i;
+    } while (i < values.size());
+    return boost::optional<double>(HDD);
+  }
+  return boost::none;
+}
+
+boost::optional<double> EpwFile::coolingDegreeDays(double Tbase)
+{
+  boost::optional<TimeSeries> T = getTimeSeries("Dry Bulb Temperature");
+  if (T) {
+    double CDD = 0.0;
+    double Tmax, Tmin;
+    std::vector<DateTime> dateTimes = T.get().dateTimes();
+    Vector values = T.get().values();
+    Date currentDate = dateTimes[0].date();
+    Tmax = Tmin = values(0);
+    unsigned i = 1;
+    int currentDayValues = 1;
+    do {
+      if (dateTimes[i].date() != currentDate) {
+        // Probably need a more intelligent check here
+        if (currentDayValues < 2) {
+          // Warning?
+        }
+        double diff = 0.5*(Tmin + Tmax) - Tbase;
+        if (diff > 0.0) {
+          CDD += diff;
+        }
+        currentDate = dateTimes[i].date();
+        Tmax = Tmin = values(i);
+        currentDayValues = 0;
+      }
+      Tmin = std::min(Tmin, values(i));
+      Tmax = std::min(Tmax, values(i));
+      ++currentDayValues;
+      ++i;
+    } while (i < values.size());
+    return boost::optional<double>(CDD);
+  }
+  return boost::none;
+}
+
+boost::optional<std::pair<double, double>> EpwFile::degreeDays(double Tbase)
+{
+  boost::optional<TimeSeries> T = getTimeSeries("Dry Bulb Temperature");
+  if (T) {
+    double CDD = 0.0;
+    double HDD = 0.0;
+    double Tmax, Tmin;
+    std::vector<DateTime> dateTimes = T.get().dateTimes();
+    Vector values = T.get().values();
+    Date currentDate = dateTimes[0].date();
+    Tmax = Tmin = values(0);
+    unsigned i = 1;
+    int currentDayValues = 1;
+    do {
+      if (dateTimes[i].date() != currentDate) {
+        // Probably need a more intelligent check here
+        if (currentDayValues < 2) {
+          // Warning?
+        }
+        double diff = Tbase - 0.5*(Tmin + Tmax);
+        if (diff > 0.0) {
+          HDD += diff;
+        } else {
+          CDD += diff;
+        }
+        currentDate = dateTimes[i].date();
+        Tmax = Tmin = values(i);
+        currentDayValues = 0;
+      }
+      Tmin = std::min(Tmin, values(i));
+      Tmax = std::min(Tmax, values(i));
+      ++currentDayValues;
+      ++i;
+    } while (i < values.size());
+    return boost::optional<std::pair<double,double>>(std::pair<double,double>(CDD,HDD));
+  }
+  return boost::none;
 }
 
 IdfObject toIdfObject(const EpwFile& epwFile) {
