@@ -236,109 +236,109 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   // Supply Air Flow Rate Method During Cooling Operation
   s = modelObject.supplyAirFlowRateMethodDuringCoolingOperation();
   if (s) {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringCoolingOperation,s.get());
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::CoolingSupplyAirFlowRateMethod,s.get());
   }
 
   // Supply Air Flow Rate During Cooling Operation
   if( modelObject.isSupplyAirFlowRateDuringCoolingOperationAutosized() ) {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringCoolingOperation,"Autosize");
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::CoolingSupplyAirFlowRate,"Autosize");
   } 
   else if ( (d = modelObject.supplyAirFlowRateDuringCoolingOperation()) ) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringCoolingOperation,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::CoolingSupplyAirFlowRate,d.get());
   }
 
   // Supply Air Flow Rate Per Floor Area During Cooling Operation
   d = modelObject.supplyAirFlowRatePerFloorAreaDuringCoolingOperation();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaDuringCoolingOperation,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::CoolingSupplyAirFlowRatePerFloorArea,d.get());
   }
 
   // Fraction of Autosized Design Cooling Supply Air Flow Rate
   d = modelObject.fractionofAutosizedDesignCoolingSupplyAirFlowRate();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRate,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::CoolingFractionofAutosizedCoolingSupplyAirFlowRate,d.get());
   }
 
   // Design Supply Air Flow Rate Per Unit of Capacity During Cooling Operation
   d = modelObject.designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::CoolingSupplyAirFlowRatePerUnitofCapacity,d.get());
   }
 
   // Supply Air Flow Rate Method During Heating Operation
   s = modelObject.supplyAirFlowRateMethodDuringHeatingOperation();
   if (s) {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringHeatingOperation,s.get());
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::HeatingSupplyAirFlowRateMethod,s.get());
   }
 
   // Supply Air Flow Rate During Heating Operation
   if( modelObject.isSupplyAirFlowRateDuringHeatingOperationAutosized() ) {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringHeatingOperation,"Autosize");
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::HeatingSupplyAirFlowRate,"Autosize");
   } 
   else if ( (d = modelObject.supplyAirFlowRateDuringHeatingOperation()) ) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringHeatingOperation,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::HeatingSupplyAirFlowRate,d.get());
   }
 
   // Supply Air Flow Rate Per Floor Area during Heating Operation
   d = modelObject.supplyAirFlowRatePerFloorAreaduringHeatingOperation();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaduringHeatingOperation,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::HeatingSupplyAirFlowRatePerFloorArea,d.get());
   }
 
   // Fraction of Autosized Design Heating Supply Air Flow Rate
   d = modelObject.fractionofAutosizedDesignHeatingSupplyAirFlowRate();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignHeatingSupplyAirFlowRate,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::HeatingFractionofAutosizedHeatingSupplyAirFlowRate,d.get());
   }
 
   // Design Supply Air Flow Rate Per Unit of Capacity During Heating Operation
   d = modelObject.designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::HeatingSupplyAirFlowRatePerUnitofCapacity,d.get());
   }
 
   // Supply Air Flow Rate Method When No Cooling or Heating is Required
   s = modelObject.supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired();
   if (s) {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired,s.get());
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRateMethod,s.get());
   }
 
   // Supply Air Flow Rate When No Cooling or Heating is Required
   if( modelObject.isSupplyAirFlowRateWhenNoCoolingorHeatingisRequiredAutosized() ) {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateWhenNoCoolingorHeatingisRequired,"Autosize");
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRate,"Autosize");
   } 
   else if ( (d = modelObject.supplyAirFlowRateWhenNoCoolingorHeatingisRequired()) ) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateWhenNoCoolingorHeatingisRequired,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRate,d.get());
   }
 
   // Supply Air Flow Rate Per Floor Area When No Cooling or Heating is Required
   d = modelObject.supplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRatePerFloorArea,d.get());
   }
 
   // Fraction of Autosized Design Cooling Supply Air Flow Rate When No Cooling or Heating is Required
   d = modelObject.fractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::NoLoadFractionofAutosizedCoolingSupplyAirFlowRate,d.get());
   }
 
   // Fraction of Autosized Design Heating Supply Air Flow Rate When No Cooling or Heating is Required
   d = modelObject.fractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::NoLoadFractionofAutosizedHeatingSupplyAirFlowRate,d.get());
   }
 
   // Design Supply Air Flow Rate Per Unit of Capacity During Cooling Operation When No Cooling or Heating is Required
   d = modelObject.designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation,d.get());
   }
 
   // Design Supply Air Flow Rate Per Unit of Capacity During Heating Operation When No Cooling or Heating is Required
   d = modelObject.designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation,d.get());
   }
 
   // Maximum Supply Air Temperature
