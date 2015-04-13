@@ -388,13 +388,13 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   // Ancilliary On-Cycle Electric Power
   d = modelObject.ancilliaryOnCycleElectricPower();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::AncilliaryOnCycleElectricPower,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::AncillaryOnCycleElectricPower,d.get());
   }
 
   // Ancilliary Off-Cycle Electric Power
   d = modelObject.ancilliaryOffCycleElectricPower();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::AncilliaryOffCycleElectricPower,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::AncillaryOffCycleElectricPower,d.get());
   }
 
   // Not Implemented
