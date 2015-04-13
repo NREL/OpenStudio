@@ -32,9 +32,6 @@ module OpenStudio
       elsif match_data = /(\d+-\d+-\d+)/.match(f)
         # register each release version
         case match_data[1].to_s
-          when "8-2-0"
-            # 8.2.0 uses 10 digit build SHAs which can be find in the exe output, and the idd file.
-            version = 0
           when "8-1-0"
             version = 9
           when "8-0-0"
@@ -51,6 +48,9 @@ module OpenStudio
             version = 31
           when "4-0-0"
             version = 24
+          else
+            # 8.2.0 and above uses 10 digit build SHAs which can be find in the exe output, and the idd file.
+            version = 0
           end        
       end
       return version
