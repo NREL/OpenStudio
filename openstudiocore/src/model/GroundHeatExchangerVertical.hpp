@@ -56,6 +56,7 @@ class MODEL_API GroundHeatExchangerVertical : public StraightComponent {
   /** @name Getters */
   //@{
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Design Flow Rate" **/
   boost::optional<double> maximumFlowRate() const;
 
   boost::optional<int> numberofBoreHoles() const;
@@ -70,6 +71,7 @@ class MODEL_API GroundHeatExchangerVertical : public StraightComponent {
 
   boost::optional<double> groundTemperature() const;
 
+  /** In EnergyPlus 8.3.0 and above this property is not used. **/
   boost::optional<double> designFlowRate() const;
 
   boost::optional<double> groutThermalConductivity() const;
