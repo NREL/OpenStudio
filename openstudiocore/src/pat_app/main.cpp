@@ -64,20 +64,9 @@ int main(int argc, char *argv[])
 
   // list of Ruby modules we want to load into the interpreter
   std::vector<std::string> modules;
-  modules.push_back("openstudioutilitiescore");
-  modules.push_back("openstudioutilitiesbcl");
-  modules.push_back("openstudioutilitiesidd");
-  modules.push_back("openstudioutilitiesidf");
-  modules.push_back("openstudioutilities");
-  modules.push_back("openstudiomodel");
-  modules.push_back("openstudiomodelcore");
-  modules.push_back("openstudiomodelsimulation");
-  modules.push_back("openstudiomodelresources");
-  modules.push_back("openstudiomodelgeometry");
-  modules.push_back("openstudiomodelhvac");
-  modules.push_back("openstudiomodelrefrigeration");
-  modules.push_back("openstudioenergyplus");
-  modules.push_back("openstudioruleset");
+  for (const auto& path : openstudio::getOpenStudioBareRubyPaths()){
+    modules.push_back(openstudio::toString(path));
+  }
 
   bool cont = true;
   while(cont) {
