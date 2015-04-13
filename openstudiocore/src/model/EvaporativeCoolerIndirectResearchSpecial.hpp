@@ -54,16 +54,21 @@ class MODEL_API EvaporativeCoolerIndirectResearchSpecial : public StraightCompon
 
   boost::optional<Schedule> availabilitySchedule() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooler Wetbulb Design Effectiveness" **/
   double coolerMaximumEffectiveness() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Recirculating Water Pump Design Power" **/
   double recirculatingWaterPumpPowerConsumption() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Secondary Air Design Flow Rate" **/
   boost::optional<double> secondaryFanFlowRate() const;
 
   bool isSecondaryFanFlowRateAutosized() const;
 
+  /** In EnergyPlus 8.3.0 and above this property no longer exists **/
   double secondaryFanTotalEfficiency() const;
 
+  /** In EnergyPlus 8.3.0 and above this property no longer exists **/
   double secondaryFanDeltaPressure() const;
 
   double dewpointEffectivenessFactor() const;

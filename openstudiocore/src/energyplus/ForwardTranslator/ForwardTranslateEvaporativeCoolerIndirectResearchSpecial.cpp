@@ -65,39 +65,39 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeCoolerIndirect
   d = modelObject.coolerMaximumEffectiveness();
   if( d )
   {
-    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::CoolerMaximumEffectiveness,d.get());
+    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::CoolerWetbulbDesignEffectiveness,d.get());
   }
 
   // RecirculatingWaterPumpPowerConsumption
   d = modelObject.recirculatingWaterPumpPowerConsumption();
   if( d )
   {
-    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::RecirculatingWaterPumpPowerConsumption,d.get());
+    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::RecirculatingWaterPumpDesignPower,d.get());
   }
 
   // SecondaryFanFlowRate
   if( modelObject.isSecondaryFanFlowRateAutosized() )
   {
-    idfObject.setString(EvaporativeCooler_Indirect_ResearchSpecialFields::SecondaryFanFlowRate,"Autosize");
+    idfObject.setString(EvaporativeCooler_Indirect_ResearchSpecialFields::SecondaryAirDesignFlowRate,"Autosize");
   }
   else if( (d = modelObject.secondaryFanFlowRate()) )
   {
-    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::SecondaryFanFlowRate,d.get());
+    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::SecondaryAirDesignFlowRate,d.get());
   }
 
-  // SecondaryFanTotalEfficiency
-  d = modelObject.secondaryFanTotalEfficiency();
-  if( d )
-  {
-    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::SecondaryFanTotalEfficiency,d.get());
-  }
+  //// SecondaryFanTotalEfficiency
+  //d = modelObject.secondaryFanTotalEfficiency();
+  //if( d )
+  //{
+  //  idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::SecondaryFanTotalEfficiency,d.get());
+  //}
 
-  // SecondaryFanDeltaPressure
-  d = modelObject.secondaryFanDeltaPressure();
-  if( d )
-  {
-    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::SecondaryFanDeltaPressure,d.get());
-  }
+  //// SecondaryFanDeltaPressure
+  //d = modelObject.secondaryFanDeltaPressure();
+  //if( d )
+  //{
+  //  idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::SecondaryFanDeltaPressure,d.get());
+  //}
 
   // PrimaryAirInletNodeName
   if( boost::optional<model::ModelObject> mo = modelObject.inletModelObject() )

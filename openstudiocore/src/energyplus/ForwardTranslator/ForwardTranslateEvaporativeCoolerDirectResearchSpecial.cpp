@@ -60,11 +60,11 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeCoolerDirectRe
 
   // CoolerEffectiveness
   value = modelObject.coolerEffectiveness();
-  idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::CoolerEffectiveness,value);
+  idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::CoolerDesignEffectiveness,value);
 
   // RecirculatingWaterPumpPowerConsumption
   value = modelObject.recirculatingWaterPumpPowerConsumption();
-  idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpPowerConsumption,value);
+  idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpDesignPower,value);
 
   // AirInletNodeName
   temp = modelObject.inletModelObject();
