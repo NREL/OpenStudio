@@ -261,28 +261,28 @@ namespace openstudio {
   void SpacesShadingGridController::setCategoriesAndFields()
   {
 
-    {
-      std::vector<QString> fields;
-      fields.push_back(RENDERINGCOLOR);
-      std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("General"), fields);
-      m_categoriesAndFields.push_back(categoryAndFields);
-    }
+    //{
+    //  std::vector<QString> fields;
+    //  fields.push_back(RENDERINGCOLOR);
+    //  std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("General"), fields);
+    //  m_categoriesAndFields.push_back(categoryAndFields);
+    //}
 
-  {
-    std::vector<QString> fields;
-    fields.push_back(LOADNAME);
-    std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Loads"), fields);
-    m_categoriesAndFields.push_back(categoryAndFields);
-  }
+    //{
+    //  std::vector<QString> fields;
+    //  fields.push_back(LOADNAME);
+    //  std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Loads"), fields);
+    //  m_categoriesAndFields.push_back(categoryAndFields);
+    //}
 
-  {
-    std::vector<QString> fields;
-    fields.push_back(STANDARDSBUILDINGTYPE);
-    std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Measure\nTags"), fields);
-    m_categoriesAndFields.push_back(categoryAndFields);
-  }
+    //{
+    //  std::vector<QString> fields;
+    //  fields.push_back(STANDARDSBUILDINGTYPE);
+    //  std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Measure\nTags"), fields);
+    //  m_categoriesAndFields.push_back(categoryAndFields);
+    //}
 
-  OSGridController::setCategoriesAndFields();
+    OSGridController::setCategoriesAndFields();
 
   }
 
