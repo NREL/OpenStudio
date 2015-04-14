@@ -24,25 +24,29 @@
 
 namespace openstudio {
 
-class FacilityController;
-
 class FacilityTabController : public MainTabController
 {
   Q_OBJECT
 
   public:
 
-    FacilityTabController(bool isIP, const model::Model & model);
+  FacilityTabController(bool isIP, const model::Model & model);
 
-    virtual ~FacilityTabController() {}
+  virtual ~FacilityTabController() {}
 
   private:
 
-    std::shared_ptr<FacilityController> m_facilityController;
+  enum TabID
+  {
+    BUILDING,
+    EXTERIOR_EQUIPMENT,
+    SHADING,
+    STORIES
+  };
 
   public slots:
-
-    void toggleUnits(bool displayIP);
+  
+  void toggleUnits(bool displayIP);
 };
 
 } // openstudio

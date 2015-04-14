@@ -18,30 +18,22 @@
 **********************************************************************/
 
 #include "FacilityTabController.hpp"
-#include "FacilityTabView.hpp"
-#include "FacilityController.hpp"
-#include "OSItem.hpp"
 
-#include "../utilities/core/Assert.hpp"
+#include "FacilityBuildingGridView.hpp"
+#include "FacilityExteriorEquipmentGridView.hpp"
+#include "FacilityShadingGridView.hpp"
+#include "FacilityStoriesGridView.hpp"
+#include "FacilityTabView.hpp"
 
 namespace openstudio {
 
 FacilityTabController::FacilityTabController(bool isIP, const model::Model& model)
   : MainTabController(new FacilityTabView())
-{
-  m_facilityController = std::shared_ptr<FacilityController>(new FacilityController(isIP, model));
-
-  connect(m_facilityController.get(), &FacilityController::modelObjectSelected, this, &FacilityTabController::modelObjectSelected);
-
-  connect(m_facilityController.get(), &FacilityController::dropZoneItemSelected, this, &FacilityTabController::dropZoneItemSelected);
-
-  connect(this, &FacilityTabController::toggleUnitsClicked, m_facilityController.get(), &FacilityController::toggleUnitsClicked);
-
-  connect(m_facilityController.get(), &FacilityController::downloadComponentsClicked, this, &FacilityTabController::downloadComponentsClicked);
-
-  connect(m_facilityController.get(), &FacilityController::openLibDlgClicked, this, &FacilityTabController::openLibDlgClicked);
-  
-  this->mainContentWidget()->addTabWidget(m_facilityController->subTabView());
+{  
+  this->mainContentWidget()->addSubTab("Building", new FacilityBuildingGridView(isIP, model), BUILDING);
+  this->mainContentWidget()->addSubTab("Exterior Equipment", new FacilityExteriorEquipmentGridView(isIP, model), EXTERIOR_EQUIPMENT);
+  this->mainContentWidget()->addSubTab("Shading", new FacilityShadingGridView(isIP, model), SHADING);
+  this->mainContentWidget()->addSubTab("Stories", new FacilityStoriesGridView(isIP, model), STORIES);
 }
 
 void FacilityTabController::toggleUnits(bool displayIP)

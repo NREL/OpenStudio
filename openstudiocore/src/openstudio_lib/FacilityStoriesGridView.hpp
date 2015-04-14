@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_FACILITYSHADINGGRIDVIEW_HPP
-#define OPENSTUDIO_FACILITYSHADINGGRIDVIEW_HPP
+#ifndef OPENSTUDIO_FACILITYSTORIESGRIDVIEW_HPP
+#define OPENSTUDIO_FACILITYSTORIESGRIDVIEW_HPP
 
 #include "../shared_gui_components/OSGridController.hpp"
 
@@ -127,5 +127,5 @@ namespace openstudio{
 
 } // openstudio
 
-#endif // OPENSTUDIO_FACILITYSHADINGGRIDVIEW_HPP
+#endif // OPENSTUDIO_FACILITYSTORIESGRIDVIEW_HPP
 
