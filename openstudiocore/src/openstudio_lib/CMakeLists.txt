@@ -53,8 +53,16 @@ set(${target_name}_SRC
   DefaultConstructionSetsView.hpp
   ElectricEquipmentInspectorView.cpp
   ElectricEquipmentInspectorView.hpp
+  FacilityBuildingGridView.cpp
+  FacilityBuildingGridView.hpp
   FacilityController.cpp
   FacilityController.hpp
+  FacilityExteriorEquipmentGridView.cpp
+  FacilityExteriorEquipmentGridView.hpp
+  FacilityShadingGridView.cpp
+  FacilityShadingGridView.hpp
+  FacilityStoriesGridView.cpp
+  FacilityStoriesGridView.hpp
   FacilityTabController.cpp
   FacilityTabController.hpp
   FacilityTabView.cpp
@@ -268,6 +276,20 @@ set(${target_name}_SRC
   SpaceInspectorView.hpp
   SpaceLoadInstancesWidget.cpp
   SpaceLoadInstancesWidget.hpp
+  SpacesDaylightingGridView.cpp
+  SpacesDaylightingGridView.hpp
+  SpacesInteriorPartitionsGridView.cpp
+  SpacesInteriorPartitionsGridView.hpp
+  SpacesLoadsGridView.cpp
+  SpacesLoadsGridView.hpp
+  SpacesShadingGridView.cpp
+  SpacesShadingGridView.hpp
+  SpacesSpacesGridView.cpp
+  SpacesSpacesGridView.hpp
+  SpacesSubsurfacesGridView.cpp
+  SpacesSubsurfacesGridView.hpp
+  SpacesSurfacesGridView.cpp
+  SpacesSurfacesGridView.hpp
   SpaceTypeInspectorView.cpp
   SpaceTypeInspectorView.hpp
   SpaceTypesController.cpp
@@ -482,7 +504,11 @@ set(${target_name}_moc
   DefaultConstructionSetsController.hpp
   DefaultConstructionSetsView.hpp
   ElectricEquipmentInspectorView.hpp
+  FacilityBuildingGridView.hpp
   FacilityController.hpp
+  FacilityExteriorEquipmentGridView.hpp
+  FacilityShadingGridView.hpp
+  FacilityStoriesGridView.hpp
   FacilityTabController.hpp
   FacilityTabView.hpp
   FacilityTreeWidget.hpp
@@ -587,6 +613,13 @@ set(${target_name}_moc
   SimSettingsView.hpp
   SpaceInspectorView.hpp
   SpaceLoadInstancesWidget.hpp
+  SpacesDaylightingGridView.hpp
+  SpacesInteriorPartitionsGridView.hpp
+  SpacesLoadsGridView.hpp
+  SpacesShadingGridView.hpp
+  SpacesSpacesGridView.hpp
+  SpacesSubsurfacesGridView.hpp
+  SpacesSurfacesGridView.hpp
   SpaceTypeInspectorView.hpp
   SpaceTypesController.hpp
   SpaceTypesGridView.hpp

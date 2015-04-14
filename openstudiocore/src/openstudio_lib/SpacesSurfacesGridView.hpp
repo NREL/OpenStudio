@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_SPACETYPESGRIDVIEW_HPP
-#define OPENSTUDIO_SPACETYPESGRIDVIEW_HPP
+#ifndef OPENSTUDIO_SPACESSURFACESGRIDVIEW_HPP
+#define OPENSTUDIO_SPACESSURFACESGRIDVIEW_HPP
 
 #include "../shared_gui_components/OSGridController.hpp"
 
@@ -34,17 +34,17 @@ class QLabel;
 namespace openstudio{
 
   class ModelSubTabView;
-  class SpaceTypesGridController;
+  class SpacesSurfacesGridController;
 
-  class SpaceTypesGridView : public QWidget
+  class SpacesSurfacesGridView : public QWidget
   {
     Q_OBJECT
 
   public:
 
-    SpaceTypesGridView(bool isIP, const model::Model & model, QWidget * parent = 0);
+    SpacesSurfacesGridView(bool isIP, const model::Model & model, QWidget * parent = 0);
 
-    virtual ~SpaceTypesGridView() {}
+    virtual ~SpacesSurfacesGridView() {}
 
     std::vector<model::ModelObject> selectedObjects() const;
 
@@ -56,11 +56,11 @@ namespace openstudio{
 
   private:
 
-    REGISTER_LOGGER("openstudio.SpaceTypesGridView");
+    REGISTER_LOGGER("openstudio.SpacesSurfacesGridView");
 
     bool m_isIP;
 
-    SpaceTypesGridController * m_gridController = nullptr;
+    SpacesSurfacesGridController * m_gridController = nullptr;
 
     QLabel * m_filterLabel = nullptr;
 
@@ -82,20 +82,20 @@ namespace openstudio{
 
   };
 
-  class SpaceTypesGridController : public OSGridController
+  class SpacesSurfacesGridController : public OSGridController
   {
 
     Q_OBJECT
 
   public:
 
-    SpaceTypesGridController(bool isIP,
+    SpacesSurfacesGridController(bool isIP,
       const QString & headerText,
       IddObjectType iddObjectType,
       model::Model model,
       std::vector<model::ModelObject> modelObjects);
 
-    virtual ~SpaceTypesGridController() {}
+    virtual ~SpacesSurfacesGridController() {}
 
     virtual void refreshModelObjects();
 
@@ -121,11 +121,11 @@ namespace openstudio{
 
   private:
 
-    SpaceTypesGridView * spaceTypesGridView();
+    SpacesSurfacesGridView * gridView();
 
   };
 
 } // openstudio
 
-#endif // OPENSTUDIO_SPACETYPESGRIDVIEW_HPP
+#endif // OPENSTUDIO_SPACESSURFACESGRIDVIEW_HPP
 

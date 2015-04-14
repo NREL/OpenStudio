@@ -98,11 +98,6 @@
 #include <QCheckBox>
 #include <QComboBox>
 #include <QLabel>
-#include <QPushButton>
-#include <QScrollArea>
-#include <QStackedWidget>
-#include <QSettings>
-#include <QTimer>
 
 // These defines provide a common area for field display names
 // used on column headers, and other grid widgets
