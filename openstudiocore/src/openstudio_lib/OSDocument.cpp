@@ -47,7 +47,7 @@
 #include "ScriptsTabView.hpp"
 #include "SimSettingsTabController.hpp"
 #include "SimSettingsTabView.hpp"
-//#include "SpacesTabController.hpp" TODO Evan
+#include "SpacesTabController.hpp"
 #include "SpaceTypesTabController.hpp"
 #include "SpaceTypesView.hpp"
 #include "SummaryTabController.hpp"
@@ -724,29 +724,26 @@ namespace openstudio {
       break;
 
     case SPACES:
-      // Spaces TODO Evan
+      // Spaces
 
-      m_mainTabController = std::shared_ptr<MainTabController>(new FacilityTabController(isIP, m_model)); // TODO Evan remove this
+      m_mainTabController = std::shared_ptr<MainTabController>(new SpacesTabController(isIP, m_model));
       m_mainWindow->setView(m_mainTabController->mainContentWidget(), SPACES);
 
-      //m_mainTabController = std::shared_ptr<MainTabController>(new SpacesTabController(isIP, m_model));
-      //m_mainWindow->setView(m_mainTabController->mainContentWidget(), SPACES);
+      connect(this, &OSDocument::toggleUnitsClicked, m_mainTabController.get(), &SpacesTabController::toggleUnitsClicked);
 
-      //connect(this, &OSDocument::toggleUnitsClicked, m_mainTabController.get(), &SpacesTabController::toggleUnitsClicked);
+      connect(m_mainTabController.get(), &SpacesTabController::modelObjectSelected, m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObject);
 
-      //connect(m_mainTabController.get(), &SpacesTabController::modelObjectSelected, m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObject);
+      connect(m_mainTabController.get(), &SpacesTabController::dropZoneItemSelected, m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObjectByItem);
 
-      //connect(m_mainTabController.get(), &SpacesTabController::dropZoneItemSelected, m_mainRightColumnController.get(), &MainRightColumnController::inspectModelObjectByItem);
+      connect(m_mainTabController.get(), &SpacesTabController::downloadComponentsClicked, this, &OSDocument::downloadComponentsClicked);
 
-      //connect(m_mainTabController.get(), &SpacesTabController::downloadComponentsClicked, this, &OSDocument::downloadComponentsClicked);
+      connect(m_mainTabController.get(), &SpacesTabController::openLibDlgClicked, this, &OSDocument::openLibDlgClicked);
 
-      //connect(m_mainTabController.get(), &SpacesTabController::openLibDlgClicked, this, &OSDocument::openLibDlgClicked);
+      connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForFacilitySubTab);
 
-      //connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForFacilitySubTab);
+      connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
 
-      //connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
-
-      //break;
+      break;
 
     case THERMAL_ZONES:
       // Thermal Zones 

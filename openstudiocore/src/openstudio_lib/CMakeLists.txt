@@ -290,6 +290,10 @@ set(${target_name}_SRC
   SpacesSubsurfacesGridView.hpp
   SpacesSurfacesGridView.cpp
   SpacesSurfacesGridView.hpp
+  SpacesTabController.cpp
+  SpacesTabController.hpp
+  SpacesTabView.cpp
+  SpacesTabView.hpp
   SpaceTypeInspectorView.cpp
   SpaceTypeInspectorView.hpp
   SpaceTypesController.cpp
@@ -620,6 +624,8 @@ set(${target_name}_moc
   SpacesSpacesGridView.hpp
   SpacesSubsurfacesGridView.hpp
   SpacesSurfacesGridView.hpp
+  SpacesTabController.hpp
+  SpacesTabView.hpp
   SpaceTypeInspectorView.hpp
   SpaceTypesController.hpp
   SpaceTypesGridView.hpp
