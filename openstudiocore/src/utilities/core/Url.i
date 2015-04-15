@@ -33,7 +33,7 @@ namespace openstudio{
       return p;
     }
     
-    std::string __str__() const{
+    std::string SWIG_TO_STRING_NAME() const{
       return toString(*self);
     }    
   };

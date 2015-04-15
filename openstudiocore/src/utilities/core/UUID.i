@@ -40,7 +40,7 @@ namespace openstudio{
       return createUUID();
     }
     
-    std::string __str__() const{
+    std::string SWIG_TO_STRING_NAME() const{
       return openstudio::toString(self->toString());
     }
   };

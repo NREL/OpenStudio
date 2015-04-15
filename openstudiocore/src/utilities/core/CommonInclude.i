@@ -63,7 +63,9 @@
 %include <utilities/core/v8/LanguageSpecific.i>
 #endif
 
-
+#ifndef SWIG_TO_STRING_NAME
+#define SWIG_TO_STRING_NAME __str__
+#endif
 
 %include <utilities/core/Enum.i>
 

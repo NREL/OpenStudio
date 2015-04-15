@@ -152,7 +152,7 @@ namespace model {
 
 // extend classes
 %extend openstudio::model::ModelObject{
-  std::string __str__() {
+  std::string SWIG_TO_STRING_NAME() {
     std::ostringstream os;
     os << self->idfObject();
     return os.str();

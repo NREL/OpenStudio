@@ -74,7 +74,6 @@ namespace std {
 %rename(MinusMinusPrefix) operator--();
 %rename(MinusMinusPostfix) operator--(int);
 
-
-
+#define SWIG_TO_STRING_NAME toString
 
 #endif // UTILITIES_V8_LANGUAGESPECIFIC_I

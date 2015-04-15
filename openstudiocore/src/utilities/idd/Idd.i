@@ -78,7 +78,7 @@
 %include <utilities/idd/IddFileAndFactoryWrapper.hpp>
 
 %extend openstudio::IddKey{
-  std::string __str__() const{
+  std::string SWIG_TO_STRING_NAME() const{
     std::ostringstream os;
     os << *self;
     return os.str();
@@ -86,7 +86,7 @@
 };
 
 %extend openstudio::IddObject{
-  std::string __str__() const{
+  std::string SWIG_TO_STRING_NAME() const{
     std::ostringstream os;
     os << *self;
     return os.str();
@@ -94,7 +94,7 @@
 };
 
 %extend openstudio::IddFile{
-  std::string __str__() const{
+  std::string SWIG_TO_STRING_NAME() const{
     std::ostringstream os;
     os << *self;
     return os.str();

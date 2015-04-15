@@ -166,7 +166,7 @@
 %include <utilities/idf/WorkspaceWatcher.hpp>
 
 %extend openstudio::IdfObject{
-  std::string __str__() const {
+  std::string SWIG_TO_STRING_NAME() const {
     std::ostringstream os;
     os << *self;
     return os.str();
@@ -225,7 +225,7 @@
 };
 
 %extend openstudio::IdfFile{
-  std::string __str__() {
+  std::string SWIG_TO_STRING_NAME() {
     std::ostringstream os;
     os << *self;
     return os.str();
@@ -238,7 +238,7 @@
 };
 
 %extend openstudio::ImfFile{
-  std::string __str__() {
+  std::string SWIG_TO_STRING_NAME() {
     std::ostringstream os;
     os << *self;
     return os.str();
@@ -248,7 +248,7 @@
 // DLM: must override this method from IdfObject as there is a different
 // operator<< for WorkspaceObject than for IdfObject
 %extend openstudio::WorkspaceObject{
-  std::string __str__() {
+  std::string SWIG_TO_STRING_NAME() {
     std::ostringstream os;
     os << *self;
     return os.str();
@@ -256,7 +256,7 @@
 };
 
 %extend openstudio::Workspace{
-  std::string __str__() {
+  std::string SWIG_TO_STRING_NAME() {
     std::ostringstream os;
     os << *self;
     return os.str();
@@ -268,7 +268,7 @@
 }
 
 %extend openstudio::DataError {
-  std::string __str__() {
+  std::string SWIG_TO_STRING_NAME() {
     std::ostringstream os;
     os << *self;
     return os.str();
@@ -276,7 +276,7 @@
 };
 
 %extend openstudio::ValidityReport {
-  std::string __str__() {
+  std::string SWIG_TO_STRING_NAME() {
     std::ostringstream os;
     os << *self;
     return os.str();

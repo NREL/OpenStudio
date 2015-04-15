@@ -75,7 +75,7 @@
 %include <ruleset/ReportingUserScript.hpp>
 
 %extend openstudio::ruleset::OSArgument {
-  std::string __str__() {
+  std::string SWIG_TO_STRING_NAME() {
     std::ostringstream os;
     os << *self;
     return os.str();

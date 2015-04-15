@@ -160,7 +160,7 @@ class QString{};
   
 %extend QString{      
   // to std::string
-  std::string __str__() const{
+  std::string SWIG_TO_STRING_NAME() const{
     return toString(*self);
   }
 }
