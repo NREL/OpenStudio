@@ -1049,9 +1049,9 @@ namespace openstudio{
           meterName = "ENERGYTRANSFER:FACILITY";
         }
 
-        boost::optional<double> rowId = execAndReturnFirstDouble("SELECT RowID FROM tabulardatawithstrings WHERE ReportName='Economics Results Summary Report' AND ReportForString='Entire Facility' AND TableName='Tariff Summary' AND Value='" + meterName + "'");
-        if (rowId){
-          return execAndReturnFirstDouble("SELECT Value FROM tabulardatawithstrings WHERE ReportName='Economics Results Summary Report' AND ReportForString='Entire Facility' AND TableName='Tariff Summary' AND RowID=" + boost::lexical_cast<std::string>(*rowId) + " and ColumnName='Annual Cost (~~$~~)'");
+        auto rowName = execAndReturnFirstString("SELECT RowName FROM tabulardatawithstrings WHERE ReportName='Economics Results Summary Report' AND ReportForString='Entire Facility' AND TableName='Tariff Summary' AND Value='" + meterName + "'");
+        if (rowName){
+          return execAndReturnFirstDouble("SELECT Value FROM tabulardatawithstrings WHERE ReportName='Economics Results Summary Report' AND ReportForString='Entire Facility' AND TableName='Tariff Summary' AND RowName='" + rowName.get() + "' AND ColumnName='Annual Cost (~~$~~)'");
         }
         else {
           return boost::none; // Return an empty optional double, indicating that there is no annual cost for this energy type
