@@ -22,9 +22,11 @@
 
 #include "ConfigOptions.hpp"
 #include "RunManagerAPI.hpp"
+#include "JobErrors.hpp"
 
 #include "../../utilities/core/Path.hpp"
 #include "../../utilities/core/UUID.hpp"
+#include "../../utilities/data/DataEnums.hpp"
 
 #include <QAbstractItemModel>
 
@@ -34,12 +36,21 @@ namespace openstudio{
     class Model;
   }
 
+  class SqlFile;
+
+  namespace isomodel
+  {
+    class ISOModel;
+    class ISOResults;
+  }
+
 namespace runmanager {
 namespace detail {
   class RunManager_Impl;
 }
 
   class Job;
+  class JobErrors;
   class Workflow;
   class RunManagerStatus;
   class RunManager;
@@ -66,6 +77,77 @@ namespace detail {
 
       std::shared_ptr<RunManagerStatus> m_statusUI;
   };
+
+  class RUNMANAGER_API SimulationResults
+  {
+    public:
+      void setISOFuelUses(const std::map<openstudio::FuelType, double> &t_uses)
+      {
+        m_isoFuelUses = t_uses;
+      }
+
+      void setEnergyPlusFuelUses(const std::map<openstudio::FuelType, double> &t_uses)
+      {
+        m_energyPlusFuelUses = t_uses;
+      }
+
+      void setErrors(const openstudio::runmanager::JobErrors &t_errors)
+      {
+        m_errors = t_errors;
+      }
+
+      std::map<openstudio::FuelType, double> getISOFuelUses() const {
+        return m_isoFuelUses;
+      }
+
+      std::map<openstudio::FuelType, double> getEnergyPlusFuelUses() const {
+        return m_energyPlusFuelUses;
+      }
+
+      boost::optional<JobErrors> getErrors() const {
+        return m_errors;
+      }
+
+    private:
+      std::map<openstudio::FuelType, double> m_isoFuelUses;
+      std::map<openstudio::FuelType, double> m_energyPlusFuelUses;
+      boost::optional<JobErrors> m_errors;
+
+  };
+
+  class RUNMANAGER_API SimulationOptions
+  {
+    public:
+      SimulationOptions(const bool t_runEnergyPlus, const bool t_runISOModel, const bool t_useRadiance,
+          const bool t_simplifyModelForPerformance, const int t_parallelSplits, const int t_parallelOffset,
+          openstudio::path t_epwDir, openstudio::path t_epwFile)
+        : m_runEnergyPlus(t_runEnergyPlus), m_runISOModel(t_runISOModel), m_useRadiance(t_useRadiance),
+          m_simplifyModelForPerformance(t_simplifyModelForPerformance), m_parallelSplits(t_parallelSplits),
+          m_parallelOffset(t_parallelOffset), m_epwDir(std::move(t_epwDir)), m_epwFile(std::move(t_epwFile))
+      {
+      }
+
+      openstudio::path epwDir() const;
+      openstudio::path epwFile() const;
+      bool simplifyModelForPerformance() const;
+      bool runISOModel() const;
+      bool runEnergyPlus() const;
+      bool useRadiance() const;
+      int parallelSplits() const;
+      int parallelOffset() const;
+
+    private:
+      bool m_runEnergyPlus;
+      bool m_runISOModel;
+      bool m_useRadiance;
+
+      bool m_simplifyModelForPerformance;
+      int m_parallelSplits;
+      int m_parallelOffset;
+      openstudio::path m_epwDir; 
+      openstudio::path m_epwFile;
+  };
+
 
   /// A handle to an underlying RunManager_Impl object, can be copied and passed
   /// around freely. If two RunManager objects are created using the same DB path, 
@@ -301,6 +383,8 @@ namespace detail {
       ///
       /// \todo move this into a more formalized location at some point
       static void simplifyModelForPerformance(openstudio::model::Model &t_model);
+
+      static SimulationResults runSimulation(const openstudio::model::Model &t_model, const SimulationOptions &t_options);
 
     private:
       REGISTER_LOGGER("openstudio.runmanager.RunManager");

@@ -165,6 +165,7 @@
 %template(ToolInfoPairVector) std::vector<std::pair<openstudio::runmanager::ToolVersion, openstudio::runmanager::ToolLocationInfo> >;
 %template(ErrorTypeStringPairVector) std::vector<std::pair<openstudio::runmanager::ErrorType, std::string> >;
 %template(MergedJobResultsVector) std::vector<openstudio::runmanager::MergedJobResults>;
+%template(FuelTypeMap) std::map<openstudio::FuelType, double>;
 
 %include <runmanager/lib/SimulationEngine.hpp>
 %include <runmanager/lib/ErrorEstimation.hpp>

@@ -912,6 +912,10 @@ namespace runmanager {
 
   void Workflow::parallelizeEnergyPlus(int t_numSplits, int t_offset)
   {
+    if (t_numSplits == 1) {
+      return;
+    }
+
     try {
       std::vector<WorkItem> workitems = toWorkItems();
 

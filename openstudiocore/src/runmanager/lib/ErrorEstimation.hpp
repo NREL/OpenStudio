@@ -122,6 +122,23 @@ namespace openstudio {
         /// \param[in] t_variables The variable to 
         openstudio::runmanager::FuelUses approximate(const std::vector<double> &t_variables) const;
 
+        /// Returns the FuelUses from the given SqlFile
+        static FuelUses getUses(const double t_confidence, const SqlFile &t_sql);
+
+        /// Returns the FuelUses from the given ISOResults
+        static FuelUses getUses(const double t_confidence, const isomodel::UserModel &t_userModel, const isomodel::ISOResults &t_results);
+
+        /// Returns the FuelUses from the given SqlFile
+        static FuelUses getUses(const SqlFile &t_sql) 
+        {
+          return getUses(1, t_sql);
+        }
+
+        /// Returns the FuelUses from the given ISOResults
+        static FuelUses getUses(const isomodel::UserModel &t_userModel, const isomodel::ISOResults &t_results)
+        {
+          return getUses(1, t_userModel, t_results);
+        }
 
       private:
         REGISTER_LOGGER("openstudio.runmanager.ErrorEstimation");
