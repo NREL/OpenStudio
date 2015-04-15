@@ -41,7 +41,7 @@ namespace openstudio{
   namespace isomodel
   {
     class ISOModel;
-    class ISOResults;
+    struct ISOResults;
   }
 
 namespace runmanager {
@@ -50,7 +50,6 @@ namespace detail {
 }
 
   class Job;
-  class JobErrors;
   class Workflow;
   class RunManagerStatus;
   class RunManager;
@@ -127,14 +126,14 @@ namespace detail {
       {
       }
 
-      openstudio::path epwDir() const;
-      openstudio::path epwFile() const;
-      bool simplifyModelForPerformance() const;
-      bool runISOModel() const;
-      bool runEnergyPlus() const;
-      bool useRadiance() const;
-      int parallelSplits() const;
-      int parallelOffset() const;
+      openstudio::path epwDir() const { return m_epwDir; }
+      openstudio::path epwFile() const { return m_epwFile; }
+      bool simplifyModelForPerformance() const { return m_simplifyModelForPerformance; }
+      bool runISOModel() const { return m_runISOModel; }
+      bool runEnergyPlus() const { return m_runEnergyPlus; }
+      bool useRadiance() const { return m_useRadiance; }
+      int parallelSplits() const { return m_parallelSplits; }
+      int parallelOffset() const { return m_parallelOffset; }
 
     private:
       bool m_runEnergyPlus;
