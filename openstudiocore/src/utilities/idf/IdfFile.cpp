@@ -449,9 +449,9 @@ boost::optional<VersionString> IdfFile::loadVersionOnly(const path& p) {
 
 std::ostream& IdfFile::print(std::ostream& os) const {
   if (!m_header.empty()) {
-    os << m_header << std::endl;
+    os << m_header << '\n';
   }
-  os << std::endl;
+  os << '\n';
   for (const IdfObject& object : m_objects){
     object.print(os);
   }

@@ -1253,7 +1253,7 @@ namespace detail {
       }
     }
 
-    os << std::endl;
+    os << '\n';
 
     return os;
   }
@@ -1261,7 +1261,7 @@ namespace detail {
   std::ostream& IdfObject_Impl::printName(std::ostream& os, bool hasFields) const {
     // print comment, if any
     if (!m_comment.empty()){
-      os << m_comment << std::endl;
+      os << m_comment << '\n';
     }
 
     // if this is a comment only object, return
@@ -1273,10 +1273,10 @@ namespace detail {
     os << m_iddObject.name();
 
     if (hasFields) {
-      os << "," << std::endl;
+      os << ",\n";
     }
     else {
-      os << ";" << std::endl;
+      os << ";\n";
     }
       
     return os;
@@ -1319,7 +1319,7 @@ namespace detail {
           if (OptionalString units = iddField.properties().units) {
             os << " {" << *units << "}";
           }
-          os << std::endl;
+          os << '\n';
         }
       }
       else {
@@ -1337,7 +1337,7 @@ namespace detail {
         if (numSpaces > 0) {
           os << std::setw(numSpaces) << " ";
         }
-        os << " " << fieldComment(index,true) << std::endl;
+        os << " " << fieldComment(index,true) << '\n';
       }
     } // if index < numFields()
     return os;
