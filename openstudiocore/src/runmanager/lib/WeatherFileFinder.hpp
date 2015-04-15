@@ -67,13 +67,14 @@ namespace runmanager {
 
       static openstudio::path find(const IdfFile &t_idffile,
           const openstudio::path &t_epwdir,
-          const openstudio::path &t_epwfile)
+          const openstudio::path &t_epwfile,
+          const std::string &t_locationName = "")
       {
         ToolVersion tv;
         boost::optional<std::string> filelocation;
         boost::optional<std::string> weatherfilename;
         extractDetails(t_idffile, tv, filelocation, weatherfilename);
-        return find(t_epwdir, t_epwfile, filelocation, weatherfilename);
+        return find(t_epwdir, t_epwfile, t_locationName.empty()?filelocation:t_locationName, weatherfilename);
       }
 
     private:

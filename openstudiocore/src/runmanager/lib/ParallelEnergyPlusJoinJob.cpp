@@ -111,7 +111,7 @@ namespace detail {
     emitStatusChanged(AdvancedStatus(AdvancedStatusEnum::Processing));
 
     try {
-      LOG(Error, "Merging of jobs does not seem to be fully implemented yet");
+      LOG(Warn, "Not all data is merged, only SQL data");
 
       boost::filesystem::create_directories(outpath);
 

@@ -95,6 +95,10 @@ namespace detail {
         m_errors = t_errors;
       }
 
+      void setEpwUsed(const openstudio::path &t_epwUsed) {
+        m_epwUsed = t_epwUsed;
+      }
+
       std::map<openstudio::FuelType, double> getISOFuelUses() const {
         return m_isoFuelUses;
       }
@@ -107,10 +111,15 @@ namespace detail {
         return m_errors;
       }
 
+      openstudio::path epwUsed() const {
+        return m_epwUsed;
+      }
+
     private:
       std::map<openstudio::FuelType, double> m_isoFuelUses;
       std::map<openstudio::FuelType, double> m_energyPlusFuelUses;
       boost::optional<JobErrors> m_errors;
+      openstudio::path m_epwUsed;
 
   };
 
@@ -119,10 +128,12 @@ namespace detail {
     public:
       SimulationOptions(const bool t_runEnergyPlus, const bool t_runISOModel, const bool t_useRadiance,
           const bool t_simplifyModelForPerformance, const int t_parallelSplits, const int t_parallelOffset,
-          openstudio::path t_epwDir, openstudio::path t_epwFile)
+          openstudio::path t_epwDir, openstudio::path t_epwFile,
+          std::string t_locationName)
         : m_runEnergyPlus(t_runEnergyPlus), m_runISOModel(t_runISOModel), m_useRadiance(t_useRadiance),
           m_simplifyModelForPerformance(t_simplifyModelForPerformance), m_parallelSplits(t_parallelSplits),
-          m_parallelOffset(t_parallelOffset), m_epwDir(std::move(t_epwDir)), m_epwFile(std::move(t_epwFile))
+          m_parallelOffset(t_parallelOffset), m_epwDir(std::move(t_epwDir)), m_epwFile(std::move(t_epwFile)),
+          m_locationName(std::move(t_locationName))
       {
       }
 
@@ -134,6 +145,7 @@ namespace detail {
       bool useRadiance() const { return m_useRadiance; }
       int parallelSplits() const { return m_parallelSplits; }
       int parallelOffset() const { return m_parallelOffset; }
+      std::string locationName() const { return m_locationName; }
 
     private:
       bool m_runEnergyPlus;
@@ -145,6 +157,7 @@ namespace detail {
       int m_parallelOffset;
       openstudio::path m_epwDir; 
       openstudio::path m_epwFile;
+      std::string m_locationName;
   };
 
 

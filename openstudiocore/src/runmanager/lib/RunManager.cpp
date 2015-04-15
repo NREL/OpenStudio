@@ -54,6 +54,7 @@
 #include <QDir>
 #include <QMutex>
 #include <QMutexLocker>
+#include <QTemporaryDir>
 
 #include <boost/filesystem.hpp>
 
@@ -627,9 +628,17 @@ namespace runmanager {
     }();
 
     const openstudio::path epwPath =
-        WeatherFileFinder::find(t_model.toIdfFile(), epwDir, t_options.epwFile());
+        WeatherFileFinder::find(t_model.toIdfFile(), epwDir, t_options.epwFile(), t_options.locationName());
 
     SimulationResults results;
+
+    results.setEpwUsed(epwPath);
+
+    if (epwPath.empty()) {
+      results.setErrors(
+          JobErrors(openstudio::ruleset::OSResultValue::Fail, { {ErrorType::Error, "Unable to determine EPW"} }));
+      return results;
+    }
 
     auto newM = openstudio::model::Model(t_model.clone());
 
@@ -639,15 +648,23 @@ namespace runmanager {
 
     if (t_options.runISOModel())
     {
-      openstudio::isomodel::ForwardTranslator translator;
-      auto userModel = translator.translateModel(newM);
-      userModel.setWeatherFilePath(epwPath);
-      const auto simModel = userModel.toSimModel();
-      const auto isoResults = simModel.simulate();
+      try {
+        openstudio::isomodel::ForwardTranslator translator;
+        auto userModel = translator.translateModel(newM);
+        userModel.setWeatherFilePath(epwPath);
+        const auto simModel = userModel.toSimModel();
+        const auto isoResults = simModel.simulate();
 
-      results.setISOFuelUses(ErrorEstimation::getUses(userModel, isoResults).data());
-      //results.setISOResults(isoResults);
+        results.setISOFuelUses(ErrorEstimation::getUses(userModel, isoResults).data());
+        //results.setISOResults(isoResults);
+      } catch (const std::exception &e) {
+        results.setErrors(
+            JobErrors(openstudio::ruleset::OSResultValue::Fail, { {ErrorType::Error, std::string("Error executing ISO Model: ") + e.what()} }));
+        return results;
+      }
     }
+
+    QTemporaryDir tempdir;
 
     if (t_options.runEnergyPlus())
     {
@@ -676,9 +693,9 @@ namespace runmanager {
       workflow.parallelizeEnergyPlus(t_options.parallelSplits(), t_options.parallelOffset());
       workflow.addParam(openstudio::runmanager::JobParam("flatoutdir"));
 
-      const auto outdir = openstudio::tempDir() / openstudio::toPath("TestOpenStudioNode");
+      const auto outdir = openstudio::toPath(tempdir.path()) / openstudio::toPath("run");
       LOG(Debug, "Running simulation in " << openstudio::toString(outdir));
-      const auto osmPath = openstudio::tempDir() / openstudio::toPath("in.osm");
+      const auto osmPath = openstudio::toPath(tempdir.path()) / openstudio::toPath("in.osm");
       boost::filesystem::create_directory(outdir);
 
       // Tell the workflow where to search for weather files.

@@ -134,7 +134,7 @@ namespace runmanager {
 
     if (t_filelocationname)
     {
-      LOG(Info, "attempting to find weather file from location name: " << *t_filelocationname);
+      LOG(Info, "attempting to find weather file from location name: " << *t_filelocationname << " in folder: " << openstudio::toString(epwdir));
 
       // We did not have an epw set, so let's try to find one
       try {
