@@ -12240,7 +12240,7 @@ ZoneEarthtube,
   N4, \field Delta Temperature
       \required-field
       \note This is the temperature difference between indoor and outdoor below which the earth tube is shut off
-      \units delta C
+      \units deltaC
       \type real
       \minimum 0
   A3, \field Earthtube Type
@@ -51401,7 +51401,7 @@ Table:MultiVariableLookup,
        \memo When any independent variable value is outside the table limits, linear extrapolation
        \memo is used to predict the table result and is based on the two nearest data points in the
        \memo table for that particular independent variable.
-       \extensible:20 repeat last twenty fields remembering to move the semi-colon to the last value
+       \extensible:1 repeat last twenty fields remembering to move the semi-colon to the last value
        \min-fields 27
   A1 , \field Name
        \required-field
