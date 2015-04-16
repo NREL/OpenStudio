@@ -754,6 +754,8 @@ namespace openstudio{
       /// Returns the summary data for each install location and fuel type found in report variables
       std::vector<openstudio::SummaryData> getSummaryData() const;
 
+      // Insert a new report variable record into the database
+      // This does not support meter data
       void insertTimeSeriesData(const std::string &t_variableType, const std::string &t_indexGroup,
           const std::string &t_timestepType, const std::string &t_keyValue, const std::string &t_variableName,
           const openstudio::ReportingFrequency &t_reportingFrequency, const boost::optional<std::string> &t_scheduleName,

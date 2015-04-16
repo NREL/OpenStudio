@@ -633,13 +633,14 @@ namespace openstudio{
         const openstudio::ReportingFrequency &t_reportingFrequency, const boost::optional<std::string> &t_scheduleName,
         const std::string &t_variableUnits, const openstudio::TimeSeries &t_timeSeries)
     {
-      int datadicindex = getNextIndex("reportvariabledatadictionary", "ReportVariableDataDictionaryIndex");
+      int datadicindex = getNextIndex("reportdatadictionary", "ReportDataDictionaryIndex");
 
 
-      std::stringstream insertReportVariableDataDictionary;
-      insertReportVariableDataDictionary
-        << "insert into reportvariabledatadictionary (ReportVariableDataDictionaryIndex, VariableType, IndexGroup, TimestepType, KeyValue, VariableName, ReportingFrequency, ScheduleName, VariableUnits) values ("
+      std::stringstream insertReportDataDictionary;
+      insertReportDataDictionary
+        << "insert into reportdatadictionary (ReportDataDictionaryIndex, IsMeter, VariableType, IndexGroup, TimestepType, KeyValue, VariableName, ReportingFrequency, ScheduleName, VariableUnits) values ("
         << datadicindex << ", "
+        << "'0',"
         << "'" << t_variableType << "', "
         << "'" << t_indexGroup << "', "
         << "'" << t_timestepType << "', "
@@ -649,18 +650,18 @@ namespace openstudio{
 
       if (t_scheduleName)
       {
-        insertReportVariableDataDictionary
+        insertReportDataDictionary
           << "'" << *t_scheduleName << "', ";
       } else {
-        insertReportVariableDataDictionary
+        insertReportDataDictionary
           << "null, ";
       }
 
-      insertReportVariableDataDictionary
+      insertReportDataDictionary
         << "'" << t_variableUnits << "');";
 
 
-      execAndThrowOnError(insertReportVariableDataDictionary.str());
+      execAndThrowOnError(insertReportDataDictionary.str());
 
 
       std::vector<double> values = toStandardVector(t_timeSeries.values());
@@ -669,7 +670,7 @@ namespace openstudio{
       openstudio::DateTime firstdate = t_timeSeries.firstReportDateTime();
 
       // we'll let stmt1 have the transaction
-      PreparedStatement stmt("insert into reportvariabledata (TimeIndex, ReportVariableDataDictionaryIndex, VariableValue, ReportVariableExtendedDataIndex) values ( (select TimeIndex from time where Month=? and Day=? and Hour=? and Minute=? limit 1), ?, ?, null);", m_db, true);
+      PreparedStatement stmt("insert into reportdata (ReportDataIndex, TimeIndex, ReportDataDictionaryIndex, VariableValue, ReportExtendedDataIndex) values ( ?, (select TimeIndex from time where Month=? and Day=? and Hour=? and Minute=? limit 1), ?, ?, null);", m_db, true);
 
       for (size_t i = 0; i < values.size(); ++i)
       {
@@ -695,12 +696,14 @@ namespace openstudio{
 
         ++hour; // energyplus says time goes from 1-24 not from 0-23
 
-        stmt.bind(1, month);
-        stmt.bind(2, day);
-        stmt.bind(3, hour);
-        stmt.bind(4, minute);
-        stmt.bind(5, datadicindex);
-        stmt.bind(6, value);
+        int reportdataindex = getNextIndex("reportdata", "ReportDataIndex");
+        stmt.bind(1, reportdataindex);
+        stmt.bind(2, month);
+        stmt.bind(3, day);
+        stmt.bind(4, hour);
+        stmt.bind(5, minute);
+        stmt.bind(6, datadicindex);
+        stmt.bind(7, value);
 
         stmt.execute();
       }

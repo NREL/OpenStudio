@@ -304,9 +304,6 @@ void SqliteObject::getData(std::vector<std::string> &data)
 
 }
 
-
-
-
 bool SqliteObject::removeDesignDay()
 {
   // What are the timeindex values to delete
@@ -321,25 +318,11 @@ bool SqliteObject::removeDesignDay()
     time_index.push_back(atoi(m_results->data[r][0].c_str()));
   }
 
-  // What are the ReportVarialbeExtendedDataIndexes associated with the timeindex values from ReportMeterData to delete
-  std::stringstream cmd2;
-  std::vector<int> RVED_index(0);
-  for(size_t s=0; s<time_index.size(); ++s){
-    cmd2 << "select ReportVariableExtendedDataIndex from reportmeterdata where timeindex =" << time_index[s];
-    execute(cmd2.str());
-
-    for(size_t r=0; r<m_results->data.size(); ++r){
-      RVED_index.push_back(atoi(m_results->data[r][0].c_str()));
-    }
-    cmd2.str(std::string());  //clear out the string
-  }
-
-  // What are the ReportVarialbeExtendedDataIndexes associated with the timeindex values from ReportVariableData to delete
+  // What are the ReportExtendedDataIndexes associated with the timeindex values from ReportData to delete
   std::stringstream cmd3;
   std::vector<int> RVEDV_index(0);
   for(size_t s=0; s<time_index.size(); ++s){
-    //cmd3 << "select ReportVariableExtendedDataIndex from reportVariabledata where timeindex =" << time_index[s];
-    cmd3 << "select ReportVariableExtendedDataIndex from reportVariabledata where timeindex =" << time_index[s] << " and ReportVariableExtendedDataIndex != 'NULL'";
+    cmd3 << "select ReportExtendedDataIndex from reportdata where timeindex =" << time_index[s] << " and ReportExtendedDataIndex != 'NULL'";
     execute(cmd3.str());
 
     for(size_t r=0; r<m_results->data.size(); ++r){
@@ -348,33 +331,15 @@ bool SqliteObject::removeDesignDay()
     cmd3.str(std::string());  //clear out the string
   }
 
-
-
   execute("begin");
-  // reportMeterData
-  for(size_t r=0; r<time_index.size(); ++r){
-    //std::stringstream cmd2;
-    cmd2.str(std::string());  //clear out the string
-    cmd2 << "delete from reportMeterData where TimeIndex = " << time_index[r];
-    execute(cmd2.str());
-    //std::cout << cmd2.str() << std::endl;
-    //print();
-  }
-  // reportMeterExtendedData
-  for(size_t r=0; r<RVED_index.size(); ++r){
-    //std::stringstream cmd2;
-    cmd2.str(std::string());  //clear out the string
-    cmd2 << "delete from reportMeterExtendedData where ReportMeterExtendedDataIndex = " << RVED_index[r];
-    execute(cmd2.str());
-    //std::cout << cmd2.str() << std::endl;
-    //print();
-  }
+
+  std::stringstream cmd2;
 
   // reportVariableData
   for(size_t r=0; r<time_index.size(); ++r){
     //std::stringstream cmd2;
     cmd2.str(std::string());  //clear out the string
-    cmd2 << "delete from reportVariableData where TimeIndex = " << time_index[r];
+    cmd2 << "delete from reportData where TimeIndex = " << time_index[r];
     execute(cmd2.str());
     //std::cout << cmd2.str() << std::endl;
     //print();
@@ -383,7 +348,7 @@ bool SqliteObject::removeDesignDay()
   for(size_t r=0; r<RVEDV_index.size(); ++r){
     //std::stringstream cmd2;
     cmd2.str(std::string());  //clear out the string
-    cmd2 << "delete from reportVariableExtendedData where ReportVariableExtendedDataIndex = " << RVEDV_index[r];
+    cmd2 << "delete from reportExtendedData where ReportExtendedDataIndex = " << RVEDV_index[r];
     execute(cmd2.str());
     //std::cout << cmd2.str() << std::endl;
     //print();
@@ -447,69 +412,36 @@ bool SqliteObject::deleteDay(const boost::gregorian::date &d)
     time_index.push_back(atoi(m_results->data[r][0].c_str()));
   }
 
-  // What are the ReportVarialbeExtendedDataIndexes associated with the timeindex values from ReportMeterData to delete
-  std::stringstream cmd2;
-  std::vector<int> RVED_index(0);
-  for(size_t s=0; s<time_index.size(); ++s){
-    cmd2 << "select ReportVariableExtendedDataIndex from reportmeterdata where timeindex =" << time_index[s];
-    execute(cmd2.str());
-
-    for(size_t r=0; r<m_results->data.size(); ++r){
-      RVED_index.push_back(atoi(m_results->data[r][0].c_str()));
-    }
-    cmd2.str(std::string());  //clear out the string
-  }
-
-  // What are the ReportVarialbeExtendedDataIndexes associated with the timeindex values from ReportVariableData to delete
+  // What are the ReportExtendedData records associated with the timeindex values from ReportData to delete
   std::stringstream cmd3;
   std::vector<int> RVEDV_index(0);
   for(size_t s=0; s<time_index.size(); ++s){
-    //cmd3 << "select ReportVariableExtendedDataIndex from reportVariabledata where timeindex =" << time_index[s];
-    cmd3 << "select ReportVariableExtendedDataIndex from reportVariabledata where timeindex =" << time_index[s] << " and ReportVariableExtendedDataIndex != 'NULL'";
+    cmd3 << "select ReportExtendedDataIndex from reportExtendedData inner join reportData on reportExtendedData.ReportDataIndex=reportData.ReportDataIndex where reportData.timeindex =" << time_index[s];
     execute(cmd3.str());
+    cmd3.str(std::string());  //clear out the string
 
     for(size_t r=0; r<m_results->data.size(); ++r){
       RVEDV_index.push_back(atoi(m_results->data[r][0].c_str()));
     }
-    cmd3.str(std::string());  //clear out the string
   }
 
 
   execute("begin");
 
-  // reportMeterData
+  std::stringstream cmd2;
+  // reportData
   for(size_t r=0; r<time_index.size(); ++r){
-    //std::stringstream cmd2;
     cmd2.str(std::string());  //clear out the string
-    cmd2 << "delete from reportMeterData where TimeIndex = " << time_index[r];
+    cmd2 << "delete from reportData where TimeIndex = " << time_index[r];
     execute(cmd2.str());
     //std::cout << cmd2.str() << std::endl;
     //print();
   }
-  // reportMeterExtendedData
-  for(size_t r=0; r<RVED_index.size(); ++r){
-    //std::stringstream cmd2;
-    cmd2.str(std::string());  //clear out the string
-    cmd2 << "delete from reportMeterExtendedData where ReportMeterExtendedDataIndex = " << RVED_index[r];
-    execute(cmd2.str());
-    //std::cout << cmd2.str() << std::endl;
-    //print();
-  }
-
-  // reportVariableData
-  for(size_t r=0; r<time_index.size(); ++r){
-    //std::stringstream cmd2;
-    cmd2.str(std::string());  //clear out the string
-    cmd2 << "delete from reportVariableData where TimeIndex = " << time_index[r];
-    execute(cmd2.str());
-    //std::cout << cmd2.str() << std::endl;
-    //print();
-  }
-  // reportVariableExtendedData
+  // reportExtendedData
   for(size_t r=0; r<RVEDV_index.size(); ++r){
     //std::stringstream cmd2;
     cmd2.str(std::string());  //clear out the string
-    cmd2 << "delete from reportVariableExtendedData where ReportVariableExtendedDataIndex = " << RVEDV_index[r];
+    cmd2 << "delete from reportExtendedData where ReportExtendedDataIndex = " << RVEDV_index[r];
     execute(cmd2.str());
     //std::cout << cmd2.str() << std::endl;
     //print();
