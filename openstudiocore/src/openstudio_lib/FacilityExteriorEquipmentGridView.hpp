@@ -28,9 +28,6 @@
 
 #include <QWidget>
 
-class QComboBox;
-class QLabel;
-
 namespace openstudio{
 
   class ModelSubTabView;
@@ -47,12 +44,6 @@ namespace openstudio{
     virtual ~FacilityExteriorEquipmentGridView() {}
 
     std::vector<model::ModelObject> selectedObjects() const;
-
-    void enableFilter();
-
-    void disableFilter();
-
-    QComboBox * m_filters = nullptr;
 
   private:
 
@@ -116,8 +107,6 @@ namespace openstudio{
     virtual void onItemDropped(const OSItemId& itemId);
 
     virtual void onComboBoxIndexChanged(int index);
-
-    void filterChanged(const QString & text);
 
   private:
 
