@@ -56,6 +56,9 @@
 
   #include <utilities/units/Quantity.hpp>
   #include <utilities/units/Unit.hpp>
+
+  #include <utilities/idf/IdfFile.hpp>
+  #include <utilities/idd/IddEnums.hxx>
 %}
 
 #if defined SWIGJAVA
@@ -110,6 +113,20 @@
 
 %extend openstudio::model::Model {
   %template(getModelObjects) getModelObjects<openstudio::model::ModelObject>;
+
+  static boost::optional<openstudio::model::Model> load(const std::string& s){
+    OptionalModel result;
+    std::stringstream ss;
+    ss << s;
+    auto oIdfFile = openstudio::IdfFile::load(ss,IddFileType::OpenStudio);
+    if (oIdfFile) {
+      try {
+        result = Model(*oIdfFile);
+      }
+      catch (...) {}
+    }
+    return result;
+  }
 }
 
 namespace openstudio {

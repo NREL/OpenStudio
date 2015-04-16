@@ -4,7 +4,10 @@ var openstudio = require('../OpenStudio.js').openstudio;
 
 var model = openstudio.model.exampleModel();
 
-var results = openstudio.runmanager.RunManager.runSimulation(model, 
+// Just to prove that going round trip with uuencode works:
+var modelloaded = openstudio.model.Model.load(openstudio.uncompressFromBase64(openstudio.compressToBase64(model.toString(),9))).get()
+
+var results = openstudio.runmanager.RunManager.runSimulation(modelloaded,
     new openstudio.runmanager.SimulationOptions(true, true, false, true, 2, 7, new openstudio.path(""), new openstudio.path(""), "Golden, CO, USA"));
 
 var errors = results.getErrors();
