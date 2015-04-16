@@ -82,12 +82,12 @@ namespace detail {
     public:
       void setISOFuelUses(const std::map<openstudio::FuelType, double> &t_uses)
       {
-        m_isoFuelUses = t_uses;
+        m_isoFuelUses = std::vector<std::pair<openstudio::FuelType, double>>(t_uses.begin(), t_uses.end());
       }
 
       void setEnergyPlusFuelUses(const std::map<openstudio::FuelType, double> &t_uses)
       {
-        m_energyPlusFuelUses = t_uses;
+        m_energyPlusFuelUses = std::vector<std::pair<openstudio::FuelType, double>>(t_uses.begin(), t_uses.end());
       }
 
       void setErrors(const openstudio::runmanager::JobErrors &t_errors)
@@ -99,11 +99,11 @@ namespace detail {
         m_epwUsed = t_epwUsed;
       }
 
-      std::map<openstudio::FuelType, double> getISOFuelUses() const {
+      std::vector<std::pair<openstudio::FuelType, double>> getISOFuelUses() const {
         return m_isoFuelUses;
       }
 
-      std::map<openstudio::FuelType, double> getEnergyPlusFuelUses() const {
+      std::vector<std::pair<openstudio::FuelType, double>> getEnergyPlusFuelUses() const {
         return m_energyPlusFuelUses;
       }
 
@@ -116,8 +116,8 @@ namespace detail {
       }
 
     private:
-      std::map<openstudio::FuelType, double> m_isoFuelUses;
-      std::map<openstudio::FuelType, double> m_energyPlusFuelUses;
+      std::vector<std::pair<openstudio::FuelType, double>> m_isoFuelUses;
+      std::vector<std::pair<openstudio::FuelType, double>> m_energyPlusFuelUses;
       boost::optional<JobErrors> m_errors;
       openstudio::path m_epwUsed;
 

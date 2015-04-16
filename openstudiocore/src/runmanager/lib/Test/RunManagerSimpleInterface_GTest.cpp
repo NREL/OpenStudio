@@ -48,7 +48,6 @@ TEST_F(RunManagerTestFixture, SimpleInterfaceWithLocation)
 {
   auto model = openstudio::model::exampleModel();
 
-
   auto results = openstudio::runmanager::RunManager::runSimulation(model, 
       openstudio::runmanager::SimulationOptions(true, true, false, true, 2, 7, openstudio::toPath(""), openstudio::toPath(""), "Golden, CO, USA"));
 

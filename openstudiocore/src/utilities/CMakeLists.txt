@@ -56,6 +56,8 @@ set(core_src
   core/RubyException.hpp
   core/Singleton.hpp
   core/StaticInitializer.hpp
+  core/Encoding.hpp
+  core/Encoding.cpp
   core/String.hpp
   core/String.cpp
   core/StringHelpers.hpp
@@ -359,6 +361,7 @@ set(${target_name}_test_src
   core/test/SharedFromThis_GTest.cpp
   core/test/System_GTest.cpp
   core/test/String_GTest.cpp
+  core/test/Encoding_GTest.cpp
 
   core/test/UpdateManager_GTest.cpp
   core/test/UUID_GTest.cpp

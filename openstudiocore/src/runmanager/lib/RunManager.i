@@ -136,6 +136,10 @@
 %ignore std::vector<openstudio::runmanager::Workflow>::vector(size_type); 
 %ignore std::vector<openstudio::runmanager::Workflow>::resize(size_type); 
 
+%ignore std::vector<std::pair<openstudio::FuelType, double>>::vector(size_type);
+%ignore std::vector<std::pair<openstudio::FuelType, double>>::resize(size_type);
+
+
 %ignore openstudio::runmanager::Job::start;
 
 %ignore openstudio::runmanager::JobStatusWidget::publicActions;
@@ -151,6 +155,7 @@
 %template(OptionalFiles) boost::optional<openstudio::runmanager::Files>;
 
 %template(ErrorTypeStringPair) std::pair<openstudio::runmanager::ErrorType, std::string>;
+%template(FuelUsePair) std::pair<openstudio::FuelType, double>;
 
 // create an instantiation of the vector classes
 %template(JobVector) std::vector<openstudio::runmanager::Job>;
@@ -166,6 +171,7 @@
 %template(ErrorTypeStringPairVector) std::vector<std::pair<openstudio::runmanager::ErrorType, std::string> >;
 %template(MergedJobResultsVector) std::vector<openstudio::runmanager::MergedJobResults>;
 %template(FuelTypeMap) std::map<openstudio::FuelType, double>;
+%template(FuelUsesVector) std::vector<std::pair<openstudio::FuelType, double>>;
 
 %include <runmanager/lib/SimulationEngine.hpp>
 %include <runmanager/lib/ErrorEstimation.hpp>
