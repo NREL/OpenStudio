@@ -81,6 +81,8 @@ set(${target_name}_SRC
   GridItem.hpp
   GridScene.cpp
   GridScene.hpp
+  GridViewSubTab.cpp
+  GridViewSubTab.hpp
   HorizontalTabWidget.cpp
   HorizontalTabWidget.hpp
   HVACSystemsController.cpp
@@ -521,6 +523,7 @@ set(${target_name}_moc
   GlareSensorInspectorView.hpp
   GridItem.hpp
   GridScene.hpp
+  GridViewSubTab.hpp
   HorizontalTabWidget.hpp
   HVACSystemsController.hpp
   HVACSystemsTabController.hpp

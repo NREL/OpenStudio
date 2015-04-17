@@ -22,6 +22,7 @@
 
 #include "../shared_gui_components/OSGridController.hpp"
 
+#include "GridViewSubTab.hpp"
 #include "OSItem.hpp"
 
 #include "../model/Model.hpp"
@@ -30,10 +31,9 @@
 
 namespace openstudio{
 
-  class ModelSubTabView;
   class FacilityExteriorEquipmentGridController;
 
-  class FacilityExteriorEquipmentGridView : public QWidget
+  class FacilityExteriorEquipmentGridView : public GridViewSubTab
   {
     Q_OBJECT
 
@@ -49,25 +49,13 @@ namespace openstudio{
 
     REGISTER_LOGGER("openstudio.FacilityExteriorEquipmentGridView");
 
-    bool m_isIP;
+    virtual void addObject(const openstudio::IddObjectType& iddObjectType);
 
-    FacilityExteriorEquipmentGridController * m_gridController = nullptr;
-
-    QLabel * m_filterLabel = nullptr;
+    virtual void purgeObjects(const openstudio::IddObjectType& iddObjectType);
 
   signals:
 
-    void toggleUnitsClicked(bool displayIP);
-
-    void dropZoneItemClicked(OSItem* item);
-
-    void itemSelected(OSItem * item);
-
-    void selectionCleared();
-
-    void gridRowSelected(OSItem*);
-
-    private slots:
+  private slots:
 
     void onDropZoneItemClicked(OSItem* item);
 

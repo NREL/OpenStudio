@@ -551,7 +551,7 @@ public:
 
   // Return a new widget at a "top level" row and column specified by arguments.
   // There might be sub rows within the specified location.
-  // In that case a QWidget with sub rows (innner grid layout) will be returned.
+  // In that case a QWidget with sub rows (inner grid layout) will be returned.
   QWidget * widgetAt(int row, int column);
 
   // Call this function on a model update
@@ -562,6 +562,8 @@ public:
   void disconnectFromModel();
 
   std::shared_ptr<ObjectSelector> getObjectSelector() const { return m_objectSelector; }
+
+  IddObjectType m_iddObjectType;
 
 protected:
 
@@ -614,8 +616,6 @@ protected:
   bool m_isIP;
 
   std::vector<model::ModelObject> m_modelObjects;
-
-  IddObjectType m_iddObjectType;
 
   REGISTER_LOGGER("openstudio.OSGridController");
 

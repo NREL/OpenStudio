@@ -19,24 +19,20 @@
 
 #include "FacilityExteriorEquipmentGridView.hpp"
 
-#include "ModelObjectInspectorView.hpp"
-#include "ModelObjectItem.hpp"
-#include "ModelSubTabView.hpp"
-#include "OSAppBase.hpp"
-#include "OSDocument.hpp"
-#include "OSDropZone.hpp"
+#include "OSItemSelectorButtons.hpp"
 
 #include "../shared_gui_components/OSGridView.hpp"
 
 #include "../model/ExteriorLights.hpp"
 #include "../model/ExteriorLights_Impl.hpp"
+#include "../model/ExteriorLightsDefinition.hpp"
+#include "../model/ExteriorLightsDefinition_Impl.hpp"
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
-#include "../model/Schedule.hpp"
-#include "../model/Schedule_Impl.hpp"
 
+#include "../utilities/core/Assert.hpp"
 #include "../utilities/idd/IddEnums.hxx"
 #include "../utilities/idd/OS_Exterior_Lights_FieldEnums.hxx"
 
@@ -44,6 +40,7 @@
 #include <QCheckBox>
 #include <QComboBox>
 #include <QLabel>
+#include <QScrollArea>
 
 // These defines provide a common area for field display names
 // used on column headers, and other grid widgets
@@ -68,54 +65,16 @@ namespace openstudio {
   };
 
   FacilityExteriorEquipmentGridView::FacilityExteriorEquipmentGridView(bool isIP, const model::Model & model, QWidget * parent)
-    : QWidget(parent),
-    m_isIP(isIP)
+    : GridViewSubTab(isIP, model, parent)
   {
-    auto mainLayout = new QVBoxLayout();
-    mainLayout->setSpacing(0);
-    mainLayout->setContentsMargins(0, 0, 0, 0);
-    setLayout(mainLayout);
-
     auto exteriorLights = model.getModelObjects<model::ExteriorLights>();
     auto exteriorLightsModelObjects = subsetCastVector<model::ModelObject>(exteriorLights);
 
-    m_gridController = new FacilityExteriorEquipmentGridController(m_isIP, "Exterior Lights", IddObjectType::OS_Exterior_Lights, model, exteriorLightsModelObjects);
+    m_gridController = new FacilityExteriorEquipmentGridController(isIP, "Exterior Lights", IddObjectType::OS_Exterior_Lights, model, exteriorLightsModelObjects);
     auto gridView = new OSGridView(m_gridController, "Exterior Lights", "Drop\nZone", false, parent);
 
-    // Load Filter
-
-    QLabel * label = nullptr;
-
-    QVBoxLayout * layout = nullptr;
-
-    bool isConnected = false;
-
-    mainLayout->addWidget(gridView, 0, Qt::AlignTop);
-
-    mainLayout->addStretch(1);
-
-    // GridController
-
-    OS_ASSERT(m_gridController);
-
-    isConnected = connect(gridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
-    OS_ASSERT(isConnected);
-
-    isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), gridView, SIGNAL(itemSelected(OSItem *)));
-    OS_ASSERT(isConnected);
-
-    isConnected = connect(this, SIGNAL(selectionCleared()), gridView, SLOT(onSelectionCleared()));
-    OS_ASSERT(isConnected);
-
-    isConnected = connect(gridView, SIGNAL(gridRowSelected(OSItem*)), this, SIGNAL(gridRowSelected(OSItem*)));
-    OS_ASSERT(isConnected);
-
-    isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_gridController, SIGNAL(toggleUnitsClicked(bool)));
-    OS_ASSERT(isConnected);
-
-    isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_gridController, SLOT(toggleUnits(bool)));
-    OS_ASSERT(isConnected);
-
+    setGridController(m_gridController);
+    setGridView(gridView);
   }
 
   std::vector<model::ModelObject> FacilityExteriorEquipmentGridView::selectedObjects() const
@@ -125,6 +84,20 @@ namespace openstudio {
 
   void FacilityExteriorEquipmentGridView::onDropZoneItemClicked(OSItem* item)
   {
+  }
+
+  void FacilityExteriorEquipmentGridView::addObject(const IddObjectType& iddObjectType)
+  {
+    if (IddObjectType::OS_Exterior_Lights == iddObjectType.value()) {
+      model::ExteriorLights(model::ExteriorLightsDefinition(this->m_model));
+    }
+  }
+
+  void FacilityExteriorEquipmentGridView::purgeObjects(const IddObjectType& iddObjectType)
+  {
+    for (auto mo : this->m_model.getConcreteModelObjects<model::ExteriorLights>()){
+      mo.remove();
+    }
   }
 
   FacilityExteriorEquipmentGridController::FacilityExteriorEquipmentGridController(bool isIP,
@@ -139,7 +112,6 @@ namespace openstudio {
 
   void FacilityExteriorEquipmentGridController::setCategoriesAndFields()
   {
-
     {
       std::vector<QString> fields;
       //fields.push_back(EXTERIORLIGHTSDEFINITION);
@@ -152,7 +124,6 @@ namespace openstudio {
     }
 
     OSGridController::setCategoriesAndFields();
-
   }
 
   FacilityExteriorEquipmentGridView * FacilityExteriorEquipmentGridController::gridView()
