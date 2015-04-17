@@ -109,7 +109,7 @@ TEST_F(ModelFixture,RadianceParameters_AmbientBouncesVMX) {
   RadianceParameters radianceParameters = model.getUniqueModelObject<RadianceParameters>();
 
   int value = radianceParameters.ambientBouncesVMX();
-  EXPECT_EQ(10, value);
+  EXPECT_EQ(6, value);
 
   EXPECT_TRUE(radianceParameters.setAmbientBouncesVMX(2));
   value = radianceParameters.ambientBouncesVMX();
@@ -122,7 +122,7 @@ TEST_F(ModelFixture,RadianceParameters_AmbientDivisionsVMX) {
   RadianceParameters radianceParameters = model.getUniqueModelObject<RadianceParameters>();
 
   int value = radianceParameters.ambientDivisionsVMX(); 
-  EXPECT_EQ(65536, value);
+  EXPECT_EQ(4050, value);
 
   EXPECT_TRUE(radianceParameters.setAmbientDivisionsVMX(2));
   value = radianceParameters.ambientDivisionsVMX(); 
@@ -178,11 +178,27 @@ TEST_F(ModelFixture,RadianceParameters_KlemsSamplingDensity_Quantity) {
   RadianceParameters radianceParameters = model.getUniqueModelObject<RadianceParameters>();
 
   int value = radianceParameters.klemsSamplingDensity();
-  EXPECT_EQ(1000, value);
+  EXPECT_EQ(500, value);
 
   EXPECT_TRUE(radianceParameters.setKlemsSamplingDensity(2));
   value = radianceParameters.klemsSamplingDensity();
   EXPECT_EQ(2, value);
 }
 
+TEST_F(ModelFixture, RadianceParameters_FineAndCoarseSettings) {
+  Model model;
+
+  auto radianceParameters = model.getUniqueModelObject<RadianceParameters>();
+
+  // Test CTOR setting coarse
+  EXPECT_TRUE(radianceParameters.isCoarseSettings());
+
+  radianceParameters.applyFineSettings();
+  EXPECT_TRUE(radianceParameters.isFineSettings());
+
+  radianceParameters.setSkyDiscretizationResolution("578");
+  EXPECT_EQ(radianceParameters.skyDiscretizationResolution(), "578");
+  EXPECT_FALSE(radianceParameters.isCoarseSettings());
+  EXPECT_FALSE(radianceParameters.isFineSettings());
+}
 

@@ -92,7 +92,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.2.3")] = &VersionTranslator::update_1_2_2_to_1_2_3;
   m_updateMethods[VersionString("1.3.5")] = &VersionTranslator::update_1_3_4_to_1_3_5;
   m_updateMethods[VersionString("1.5.4")] = &VersionTranslator::update_1_5_3_to_1_5_4;
-  m_updateMethods[VersionString("1.7.1")] = &VersionTranslator::update_1_7_0_to_1_7_1;
+  m_updateMethods[VersionString("1.7.2")] = &VersionTranslator::update_1_7_1_to_1_7_2;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -169,6 +169,7 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.6.2"));
   m_startVersions.push_back(VersionString("1.6.3"));
   m_startVersions.push_back(VersionString("1.7.0"));
+  m_startVersions.push_back(VersionString("1.7.1"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -2385,17 +2386,17 @@ std::string VersionTranslator::update_1_5_3_to_1_5_4(const IdfFile& idf_1_5_3, c
   return ss.str();
 }
 
-std::string VersionTranslator::update_1_7_0_to_1_7_1(const IdfFile& idf_1_7_0, const IddFileAndFactoryWrapper& idd_1_7_1)
+std::string VersionTranslator::update_1_7_1_to_1_7_2(const IdfFile& idf_1_7_1, const IddFileAndFactoryWrapper& idd_1_7_2)
 {
   std::stringstream ss;
 
-  ss << idf_1_7_0.header() << std::endl << std::endl;
+  ss << idf_1_7_1.header() << std::endl << std::endl;
 
   // new version object
-  IdfFile targetIdf(idd_1_7_1.iddFile());
+  IdfFile targetIdf(idd_1_7_2.iddFile());
   ss << targetIdf.versionObject().get();
 
-  for (const IdfObject& object : idf_1_7_0.objects()) {
+  for (const IdfObject& object : idf_1_7_1.objects()) {
     if (object.iddObject().name() == "OS:EvaporativeCooler:Direct:ResearchSpecial") {
       auto newObject = object.clone(true);
       auto d = object.getDouble(4);

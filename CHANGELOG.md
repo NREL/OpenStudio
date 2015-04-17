@@ -1,10 +1,16 @@
-## OpenStudio v1.7.1
-###### 2015-03 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.0...v1.7.1 )
+## OpenStudio v1.7.2
+###### 2015-04 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.1...v1.7.2 )
 
 - ![Improved:][improved] [#1621]( https://github.com/NREL/OpenStudio/issues/1621 ), EvaporativeCoolerDirectResearchSpecial::RecirculatingWaterPumpPowerConsumption is now autosizable
 - ![Improved:][improved] [#1623]( https://github.com/NREL/OpenStudio/issues/1623 ), EvaporativeCoolerIndirectResearchSpecial::RecirculatingWaterPumpPowerConsumption is now autosizable
 
-###### 2015-03 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.6.3...v1.7.0 )
+## OpenStudio v1.7.1
+###### 2015-03-31 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.0...v1.7.1 )
+
+- ![Added:][added] [#1565]( https://github.com/NREL/OpenStudio/pull/1565 ), Import IFC into OpenStudio via BIMserver, [tutorial here](http://nrel.github.io/OpenStudio-user-documentation/tutorials/tutorial_ifcimport/)
+
+## OpenStudio v1.7.0
+###### 2015-03-27 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.6.3...v1.7.0 )
 
 - ![Added:][added] [#1524]( https://github.com/NREL/OpenStudio/pull/1524 ), Download VRF components from BCL and use in OpenStudio Application
 - ![Changed:][changed] [#1521]( https://github.com/NREL/OpenStudio/issues/1521 ), ZoneHVACComponent coils should stay attached to plant when cloning into same model
@@ -30,7 +36,7 @@
 - ![Fixed:][fixed] [#1539]( https://github.com/NREL/OpenStudio/issues/1539 ), Window reveals are incorrect
 
 ## OpenStudio v1.6.3
-###### 2015-03 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.6.2...v1.6.3 )
+###### 2015-03-10 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.6.2...v1.6.3 )
 
 - ![Added:][added] [#1505]( https://github.com/NREL/OpenStudio/pull/1505 ), Added multi-edit capability to grid views in OpenStudio Application
 - ![Improved:][improved] [#1513]( https://github.com/NREL/OpenStudio/issues/1513 ), Partitioning and triangulation of surfaces with doors
