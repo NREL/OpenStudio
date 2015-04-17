@@ -560,6 +560,8 @@ boost::optional<double> EpwDataPoint::field(EpwDataField id)
 static double psat(double T)
 {
   // Compute water vapor saturation pressure, eqns 5 and 6 from ASHRAE Fundamentals 2009 Ch. 1
+  // This version takes T in C rather than Kelvin since most of the other eqns use C
+  T += 273.15;
   double C1 =-5.6745359e+03;
   double C2 = 6.3925247e+00;
   double C3 =-9.6778430e-03;
@@ -582,6 +584,22 @@ static double psat(double T)
   return exp(rhs);
 }
 
+static double enthalpy(double T, double p, double phi)
+{
+  // Compute moist air enthalpy, eqns 5, 6, 22, 24, and 32 from ASHRAE Fundamentals 2009 Ch. 1
+  double pw = phi*psat(T); // Partial pressure of water vapor, eqn 24 (uses eqns 5 and 6)
+  double W = 0.621945*pw / (p - pw); // Humidity ratio, eqn 22
+  return 1.006*T + W*(2501 + 1.86*T); // Moist air specific enthalpy, eqn 32
+}
+
+static double enthalpyFromDewPoint(double T, double p, double Tdewpoint)
+{
+  // Compute moist air enthalpy, eqns 5, 6, 22, 32, and 38 from ASHRAE Fundamentals 2009 Ch. 1
+  double pw = openstudio::psat(Tdewpoint); // Partial pressure of water vapor, eqn 38 (uses eqns 5 and 6)
+  double W = 0.621945*pw / (p - pw); // Humidity ratio, eqn 22
+  return 1.006*T + W*(2501 + 1.86*T); // Moist air specific enthalpy, eqn 32
+}
+
 boost::optional<std::string> EpwDataPoint::toWthString() const
 {
   QStringList output;
@@ -595,10 +613,10 @@ boost::optional<std::string> EpwDataPoint::toWthString() const
     LOG_FREE(Error,"openstudio.EpwFile","Missing dry bulb temperature on " << date << " at " << hms)
     return boost::none;
   }
-  boost::optional<double> optdrybulb = openstudio::convert(value.get(), "C", "K");
-  OS_ASSERT(optdrybulb);
-  double drybulb = optdrybulb.get();
-  string += '\t' + std::to_string(drybulb);
+  //boost::optional<double> optdrybulb = openstudio::convert(value.get(), "C", "K");
+  //OS_ASSERT(optdrybulb);
+  double drybulb = value.get();
+  string += '\t' + std::to_string(drybulb + 273.15);
   value = atmosphericStationPressure();
   if(!value) {
     LOG_FREE(Error,"openstudio.EpwFile", "Missing atmospheric station pressure on " << date << " at " << hms);
@@ -624,12 +642,12 @@ boost::optional<std::string> EpwDataPoint::toWthString() const
       LOG_FREE(Error,"openstudio.EpwFile", "Cannot compute humidity ratio on " << date << " at " << hms);
       return boost::none;
     }
-    boost::optional<double> optdewpoint = openstudio::convert(value.get(), "C", "K");
-    OS_ASSERT(optdewpoint);
-    double dewpoint = optdewpoint.get();
-    pw = psat(dewpoint);
+    //boost::optional<double> optdewpoint = openstudio::convert(value.get(), "C", "K");
+    //OS_ASSERT(optdewpoint);
+    double dewpoint = value.get(); 
+    pw = openstudio::psat(dewpoint);
   } else  { // Have relative humidity
-    double pws = psat(drybulb);
+    double pws = openstudio::psat(drybulb);
     pw = 0.01*value.get()*pws;
   }
   double W = 0.621945*pw/(p-pw);
@@ -1641,6 +1659,48 @@ bool EpwDataPoint::setLiquidPrecipitationQuantity(const std::string &liquidPreci
   }
   m_liquidPrecipitationQuantity = liquidPrecipitationQuantity;
   return true;
+}
+
+boost::optional<double> EpwDataPoint::psat() const
+{
+  boost::optional<double> optdrybulb = dryBulbTemperature();
+  if (optdrybulb) {
+    double drybulb = optdrybulb.get();
+    return boost::optional<double>(openstudio::psat(drybulb));
+  }
+  return boost::none;
+}
+
+boost::optional<double> EpwDataPoint::enthalpy() const
+{
+  boost::optional<double> value = dryBulbTemperature();
+  if (!value) {
+    return boost::none;
+  }
+  double drybulb = value.get();
+
+  value = atmosphericStationPressure();
+  if (!value) {
+    return boost::none;
+  }
+  double p = value.get();
+
+  double h;
+  value = relativeHumidity();
+  if (!value) { // Don't have relative humidity - this has not been tested
+    value = dewPointTemperature();
+    if (!value) {
+      return boost::none;
+    }
+    double dewpoint = value.get();
+    h = openstudio::enthalpyFromDewPoint(drybulb, p, dewpoint);
+  }
+  else  { // Have relative humidity
+    double RH = value.get();
+    h = openstudio::enthalpy(drybulb, p, RH*0.01);
+  }
+
+  return boost::optional<double>(h);
 }
 
 EpwFile::EpwFile(const openstudio::path& p, bool storeData)

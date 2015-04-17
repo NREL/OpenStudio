@@ -77,6 +77,13 @@ OPENSTUDIO_ENUM(EpwDataField,
   ((LiquidPrecipitationQuantity)(Liquid Precipitation Quantity))
 );
 
+OPENSTUDIO_ENUM(EpwComputedField,
+  ((SaturationPressure)(Saturation Pressure)(0))
+  ((Enthalpy)(Enthalpy))
+  ((HumidityRatio)(Humidity Ratio))
+  ((WetBulbTemperature)(Wet Bulb Temperature))
+  );
+
 /** EpwDataPoint is one line from the EPW file. All floating point numbers are stored as strings,
  * but are checked as numbers.
  */
@@ -146,6 +153,10 @@ public:
   boost::optional<double> albedo() const;
   boost::optional<double> liquidPrecipitationDepth() const;
   boost::optional<double> liquidPrecipitationQuantity() const;
+
+  // Computed quantities
+  boost::optional<double> psat() const;
+  boost::optional<double> enthalpy() const;
 
 private:
   // One billion setters
