@@ -1,4 +1,8 @@
-## OpenStudio v1.7.0
+## OpenStudio v1.7.1
+###### 2015-03 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.0...v1.7.1 )
+
+- ![Improved:][improved] [#1621]( https://github.com/NREL/OpenStudio/issues/1621 ), EvaporativeCoolerDirectResearchSpecial::RecirculatingWaterPumpPowerConsumption is now autosizable
+
 ###### 2015-03 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.6.3...v1.7.0 )
 
 - ![Added:][added] [#1524]( https://github.com/NREL/OpenStudio/pull/1524 ), Download VRF components from BCL and use in OpenStudio Application

@@ -65,10 +65,16 @@ class MODEL_API EvaporativeCoolerIndirectResearchSpecial : public StraightCompon
 
   bool isSecondaryFanFlowRateAutosized() const;
 
-  /** In EnergyPlus 8.3.0 and above this property no longer exists **/
+  /** In EnergyPlus 8.3.0 and above this property and Secondary Fan Delta Pressure no longer exist.
+    * They are replaced by the single property Secondary Fan Design Power.
+    * To maintain the stability of the OpenStudio API, we retain this property and populate the new EnergyPlus property
+    * Secondary Fan Sizing Specific Power with the calculation secondaryFanDeltaPressure() / secondaryFanTotalEfficiency(). **/
   double secondaryFanTotalEfficiency() const;
 
-  /** In EnergyPlus 8.3.0 and above this property no longer exists **/
+  /** In EnergyPlus 8.3.0 and above this property and Secondary Fan Total Efficiency no longer exist.
+    * They are replaced by the single property Secondary Fan Design Power.
+    * To maintain the stability of the OpenStudio API, we retain this property and populate the new EnergyPlus property
+    * Secondary Fan Sizing Specific Power with the calculation secondaryFanDeltaPressure() / secondaryFanTotalEfficiency(). **/
   double secondaryFanDeltaPressure() const;
 
   double dewpointEffectivenessFactor() const;
