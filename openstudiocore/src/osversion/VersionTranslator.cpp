@@ -2396,14 +2396,24 @@ std::string VersionTranslator::update_1_7_0_to_1_7_1(const IdfFile& idf_1_7_0, c
   ss << targetIdf.versionObject().get();
 
   for (const IdfObject& object : idf_1_7_0.objects()) {
-    if (object.iddObject().name() == "OS:EvaporativeCooler:Direct:ResearchSpecial")
-    {
+    if (object.iddObject().name() == "OS:EvaporativeCooler:Direct:ResearchSpecial") {
       auto newObject = object.clone(true);
       auto d = object.getDouble(4);
       if( ! d ) {
         newObject.setString(4,"Autosize");
-        newObject.setDouble(11,0.1);
       }
+      newObject.setDouble(11,0.1);
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else if (object.iddObject().name() == "OS:EvaporativeCooler:Indirect:ResearchSpecial") {
+      auto newObject = object.clone(true);
+      auto d = object.getDouble(5);
+      if( ! d ) {
+        newObject.setString(4,"Autosize");
+      }
+      newObject.setDouble(22,0.1);
+      newObject.setDouble(24,1.0);
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;

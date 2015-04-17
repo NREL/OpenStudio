@@ -14652,6 +14652,7 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
        \units W
        \ip-units W
        \required-field
+       \autosizable
   N4 , \field Secondary Fan Flow Rate
        \units m3/s
        \minimum 0.0
@@ -14713,7 +14714,6 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
        \note Table:OneIndependentVariable
   N10 , \field Cooler Drybulb Design Effectiveness
        \type real
-       \required-field
        \note dry operation effectiveness with respect to drybulb temperature difference
        \note this is the nominal design dryblub effectiveness at design air flow rates, no evaporation water active
        \minimum 0.0
@@ -14745,12 +14745,13 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
        \note Table:OneIndependentVariable
   N12 , \field Secondary Air Flow Scaling Factor
        \type real
-       \units dimensionless
        \required-field
+       \units dimensionless
        \note This field is used when the previous field is set to autoize.  The Primary Design Air Flow Rate is scaled using this factor
        \note to calculate the secondary design air flow rate.  
   N13 , \field Secondary Air Fan Design Power
        \type real
+       \required-field
        \units W
        \note This is the fan power at Secondary Design Air Flow Rate
        \note this is the nominal design power at full speed. 

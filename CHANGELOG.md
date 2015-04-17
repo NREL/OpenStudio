@@ -2,6 +2,7 @@
 ###### 2015-03 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.0...v1.7.1 )
 
 - ![Improved:][improved] [#1621]( https://github.com/NREL/OpenStudio/issues/1621 ), EvaporativeCoolerDirectResearchSpecial::RecirculatingWaterPumpPowerConsumption is now autosizable
+- ![Improved:][improved] [#1623]( https://github.com/NREL/OpenStudio/issues/1623 ), EvaporativeCoolerIndirectResearchSpecial::RecirculatingWaterPumpPowerConsumption is now autosizable
 
 ###### 2015-03 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.6.3...v1.7.0 )
 
