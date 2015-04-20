@@ -104,6 +104,7 @@ public:
   // Static
   static boost::optional<std::string> unitsByName(const std::string &name);
   static std::string units(EpwDataField field);
+  static std::string units(EpwComputedField field);
   // Data retrieval
   boost::optional<double> fieldByName(const std::string &name);
   boost::optional<double> field(EpwDataField id);
@@ -343,6 +344,7 @@ public:
   /// get a time series of a particular weather field
   // This will probably need to include the period at some point, but for now just dump everything into a time series
   boost::optional<TimeSeries> getTimeSeries(const std::string &field);
+  boost::optional<TimeSeries> getComputedTimeSeries(const std::string &field);
 
   /// export to CONTAM WTH file
   bool translateToWth(openstudio::path path,std::string description=std::string());

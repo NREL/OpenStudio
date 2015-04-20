@@ -434,6 +434,28 @@ std::string EpwDataPoint::units(EpwDataField field)
   return string;
 }
 
+std::string EpwDataPoint::units(EpwComputedField field)
+{
+  std::string string;
+  switch (field.value())
+  {
+  case EpwComputedField::SaturationPressure:
+    string = "Pa";
+    break;
+  case EpwComputedField::Enthalpy:
+    string = "kJ/kg";
+    break;
+  case EpwComputedField::HumidityRatio:
+    break;
+  case EpwComputedField::WetBulbTemperature:
+    string = "C";
+    break;
+  default:
+    break;
+  }
+  return string;
+}
+
 boost::optional<double> EpwDataPoint::fieldByName(const std::string &name)
 {
   EpwDataField id;
@@ -1853,6 +1875,52 @@ boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string &name)
     if(dates.size()) {
       return boost::optional<TimeSeries>(TimeSeries(dates,openstudio::createVector(values),units));
     }
+  }
+  return boost::none;
+}
+
+boost::optional<TimeSeries> EpwFile::getComputedTimeSeries(const std::string &name)
+{
+  if (m_data.size() == 0) {
+    if (!parse(true)) {
+      LOG(Error, "EpwFile '" << toString(m_path) << "' cannot be processed");
+      return boost::none;
+    }
+  }
+  EpwComputedField id;
+  try {
+    id = EpwComputedField(name);
+  }
+  catch (...) {
+    // Could do a warning message here
+    return boost::none;
+  }
+
+  std::string units = EpwDataPoint::units(id);
+  boost::optional<double>(EpwDataPoint::*compute)() const;
+  switch (id.value()) {
+  case EpwComputedField::SaturationPressure:
+    compute = &EpwDataPoint::psat;
+    break;
+  case EpwComputedField::Enthalpy:
+    compute = &EpwDataPoint::enthalpy;
+    break;
+  default:
+    return boost::none;
+  }
+  DateTimeVector dates;
+  std::vector<double> values;
+  for (unsigned int i = 0; i<m_data.size(); i++) {
+    Date date = m_data[i].date();
+    Time time = m_data[i].time();
+    boost::optional<double> value = (m_data[i].*compute)();
+    if (value) {
+      dates.push_back(DateTime(date, time));
+      values.push_back(value.get());
+    }
+  }
+  if (dates.size()) {
+    return boost::optional<TimeSeries>(TimeSeries(dates, openstudio::createVector(values), units));
   }
   return boost::none;
 }
