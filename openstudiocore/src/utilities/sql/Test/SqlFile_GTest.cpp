@@ -288,10 +288,10 @@ TEST_F(SqlFileFixture, CreateSqlFile)
 TEST_F(SqlFileFixture, AnnualTotalCosts) {
   
   // Total annual costs for all fuel types
-  EXPECT_NEAR(205810981.2, *(sqlFile2.annualTotalUtilityCost()), 0.1);
+  EXPECT_NEAR(205810981.1, *(sqlFile2.annualTotalUtilityCost()), 0.1);
 
   // Costs by fuel type
-  EXPECT_NEAR(28388.36, *(sqlFile2.annualTotalCost(FuelType::Electricity)), 0.1);
+  EXPECT_NEAR(28388.14, *(sqlFile2.annualTotalCost(FuelType::Electricity)), 0.1);
   EXPECT_NEAR(427.78, *(sqlFile2.annualTotalCost(FuelType::Gas)), 0.1);
   EXPECT_NEAR(330.76, *(sqlFile2.annualTotalCost(FuelType::DistrictCooling)), 0.1);
   EXPECT_NEAR(833.49, *(sqlFile2.annualTotalCost(FuelType::DistrictHeating)), 0.1);

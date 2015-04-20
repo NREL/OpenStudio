@@ -35,7 +35,7 @@ class ParallelEnergyPlus_Test < MiniTest::Unit::TestCase
     epw_path = OpenStudio::Path.new($OpenStudio_ResourcePath + "runmanager/USA_CO_Golden-NREL.724666_TMY3.epw") 
 
     # Get energyplus configuration
-    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,2)
+    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,3)
     ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
     ep_parent_path = ep_path.parent_path();
 

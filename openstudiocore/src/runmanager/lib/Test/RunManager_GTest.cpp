@@ -112,7 +112,7 @@ TEST_F(RunManagerTestFixture, EnergyPlusJobRunWithNullJobs)
   ASSERT_FALSE(kit.workPending());
   ASSERT_FALSE(j.running());
 
-  openstudio::runmanager::FileInfo sql = j.treeOutputFiles().getLastByExtension("err");
+  openstudio::runmanager::FileInfo sql = j.treeOutputFiles().getLastByFilename("eplusout.err");
   EXPECT_EQ(sql.filename, "eplusout.err");
   EXPECT_EQ(openstudio::toString(sql.fullPath), openstudio::toString(outdir / openstudio::toPath("Null/Null-0/Null-0/Null-0/EnergyPlus-0/eplusout.err")));
 }
