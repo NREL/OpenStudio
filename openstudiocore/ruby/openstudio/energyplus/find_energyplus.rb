@@ -76,7 +76,7 @@ module OpenStudio
       warn "[DEPRECATION] `find_energyplus` is deprecated.  Please use `OpenStudio::Runmanager::ConfigOptions` instead."
 
       # version matches either internal or official releases
-      # prior to version 8.2.0 we assume the least signficant version number (third digit) is 0
+      # prior to version 8.2.0 we assume the least significant version number (third digit) is 0
       # 8.2.0 and beyond we cannot assume that
       version = ''
       if (major_version) < 8 or (major_version == 8 and minor_version < 2)
@@ -142,7 +142,7 @@ module OpenStudio
           if major_version >= 8 and minor_version >= 2
             build = 'xxxxxxxxxx'
             File.open result[:energyplus_idd] do |f|
-              f.gets # skip past the first line which has version major.minor.patch build bumber
+              f.gets # skip past the first line which has version major.minor.patch build number
               build_line = f.gets # get the build number from the second line
               build = /!IDD_BUILD ([\d\w]{10})/.match(build_line)[1]
             end
