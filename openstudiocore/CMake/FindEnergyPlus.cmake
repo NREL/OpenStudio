@@ -140,8 +140,12 @@ if(NOT (${VERSION_MAJOR_MINOR} VERSION_EQUAL "${EnergyPlus_FIND_VERSION_MAJOR}.$
   message(FATAL_ERROR "Found EnergyPlus version: ${VERSION} , but project requires ${EnergyPlus_FIND_VERSION_MAJOR}.${EnergyPlus_FIND_VERSION_MINOR}")
 endif()
 
+# Do this because we are not sure if we will have found energyplus or EnergyPlus
+get_filename_component(ENERGYPLUS_NAME "${ENERGYPLUS_EXE}" NAME_WE)
+
+# Do this because we want to use the FindPackageHandleStandardArgs routine's standard find messaging
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(EnergyPlus FOUND_VAR EnergyPlus_FOUND
+find_package_handle_standard_args(${ENERGYPLUS_NAME} FOUND_VAR EnergyPlus_FOUND
   REQUIRED_VARS ENERGYPLUS_EXE ENERGYPLUS_IDD ENERGYPLUS_WEATHER_DIR
   VERSION_VAR VERSION
 )
