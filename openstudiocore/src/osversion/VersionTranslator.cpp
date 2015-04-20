@@ -2411,7 +2411,7 @@ std::string VersionTranslator::update_1_7_1_to_1_7_2(const IdfFile& idf_1_7_1, c
       auto newObject = object.clone(true);
       auto d = object.getDouble(5);
       if( ! d ) {
-        newObject.setString(4,"Autosize");
+        newObject.setString(5,"Autosize");
       }
       newObject.setDouble(22,0.1);
       newObject.setDouble(24,1.0);
