@@ -65,6 +65,7 @@
 %template(BCLMeasureVector) std::vector<openstudio::BCLMeasure>;
 
 %include <utilities/bcl/BCLFileReference.hpp>
+%include <utilities/bcl/BCLXML.hpp>
 %include <utilities/bcl/BCLComponent.hpp>
 %include <utilities/bcl/BCLMeasure.hpp>
 %include <utilities/bcl/BCL.hpp>
