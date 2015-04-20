@@ -118,7 +118,7 @@ namespace openstudio {
       //fields.push_back(SCHEDULE);
       fields.push_back(CONTROLOPTION);
       fields.push_back(MULTIPLIER);
-      //fields.push_back(ENDUSESUBCATEGORY);
+      fields.push_back(ENDUSESUBCATEGORY);
       std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Exterior Lights"), fields);
       m_categoriesAndFields.push_back(categoryAndFields);
     }
@@ -218,13 +218,10 @@ namespace openstudio {
         //void setEndUseSubcategory(std::string endUseSubcategory);
         //void resetEndUseSubcategory();
         //bool isEndUseSubcategoryDefaulted() const;
-
-        //addNameLineEditColumn(Heading(QString(ENDUSESUBCATEGORY), false, false),
-        //  false,
-        //  false,
-        //  CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::endUseSubcategory),
-        //  CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::setEndUseSubcategory)
-        //  );
+        addValueEditColumn(Heading(QString(ENDUSESUBCATEGORY)),
+          CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::endUseSubcategory),
+          CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::setEndUseSubcategory)
+          );
       }
       else {
         // unhandled

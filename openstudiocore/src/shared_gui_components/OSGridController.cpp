@@ -632,6 +632,24 @@ namespace openstudio {
       widget = lineEdit;
 
     }
+    else if (QSharedPointer<ValueEditVoidReturnConcept<std::string> > lineEditConcept = t_baseConcept.dynamicCast<ValueEditVoidReturnConcept<std::string> >()) {
+
+      auto lineEdit = new OSLineEdit2(this->gridView());
+      if (lineEditConcept->hasClickFocus()) {
+        lineEdit->enableClickFocus();
+      }
+
+      lineEdit->bind(t_mo,
+        StringGetter(std::bind(&ValueEditVoidReturnConcept<std::string>::get, lineEditConcept.data(), t_mo)),
+        boost::optional<StringSetterVoidReturn>(std::bind(&ValueEditVoidReturnConcept<std::string>::set, lineEditConcept.data(), t_mo, std::placeholders::_1)),
+        boost::optional<NoFailAction>(std::bind(&ValueEditVoidReturnConcept<std::string>::reset, lineEditConcept.data(), t_mo)),
+        boost::optional<BasicQuery>(std::bind(&ValueEditVoidReturnConcept<std::string>::isDefaulted, lineEditConcept.data(), t_mo)));
+
+      isConnected = connect(lineEdit, SIGNAL(objectRemoved(boost::optional<model::ParentObject>)), this, SLOT(onObjectRemoved(boost::optional<model::ParentObject>)));
+      OS_ASSERT(isConnected);
+
+      widget = lineEdit;
+    }
     else if (QSharedPointer<LoadNameConcept> loadNameConcept = t_baseConcept.dynamicCast<LoadNameConcept>()) {
 
       auto loadName = new OSLoadNamePixmapLineEdit(this->gridView());

@@ -49,8 +49,9 @@ typedef std::function<void (bool)> BoolSetter;
 typedef std::function<bool (double)> DoubleSetter;
 typedef std::function<void (double)> DoubleSetterVoidReturn;
 typedef std::function<bool (int)> IntSetter;
-typedef std::function<bool (std::string)> StringSetter;
-typedef std::function<boost::optional<std::string> (const std::string &)> StringSetterOptionalStringReturn;
+typedef std::function<bool(std::string)> StringSetter;
+typedef std::function<void(std::string)> StringSetterVoidReturn;
+typedef std::function<boost::optional<std::string>(const std::string &)> StringSetterOptionalStringReturn;
 typedef std::function<bool (unsigned)> UnsignedSetter;
 typedef std::function<bool (const model::ModelObject &)> ModelObjectSetter;
 
