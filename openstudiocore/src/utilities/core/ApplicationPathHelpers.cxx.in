@@ -408,4 +408,29 @@ openstudio::path getOpenStudioEmbeddedRubyPath() {
 #endif
 }
 
+openstudio::path getEnergyPlusDirectory() {
+  if (applicationIsRunningFromBuildDirectory())
+  {
+    return openstudio::toPath("${ENERGYPLUS_EXE}").parent_path();
+  } else {
+#ifdef Q_OS_LINUX
+    return getApplicationInstallDirectory() / openstudio::toPath("share/openstudio-" + openStudioVersion() + "/EnergyPlus-8-3-0/");
+#elif defined(Q_OS_MAC)
+    return getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("sharedresources/EnergyPlus-8-3-0/");
+#else
+    return getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio/EnergyPlusV8-3-0/");
+#endif
+  }
+}
+
+openstudio::path getEnergyPlusExecutable() {
+#ifdef Q_OS_LINUX
+    return getEnergyPlusDirectory() / openstudio::toPath("EnergyPlus");
+#elif defined(Q_OS_MAC)
+    return getEnergyPlusDirectory() / openstudio::toPath("EnergyPlus");
+#else
+   return getEnergyPlusDirectory() / openstudio::toPath("EnergyPlus.exe");
+#endif
+}
+
 } // openstudio
