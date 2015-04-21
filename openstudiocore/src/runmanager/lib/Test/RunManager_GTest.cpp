@@ -51,6 +51,7 @@
 
 TEST_F(RunManagerTestFixture, EnergyPlusJobRun)
 {
+  openstudio::Application::instance().application(false);
   openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("EnergyPlusJobRun");
 
   openstudio::path idf = (resourcesPath() / openstudio::toPath("runmanager") / openstudio::toPath("5ZoneWarmest.idf"));
@@ -80,6 +81,7 @@ TEST_F(RunManagerTestFixture, EnergyPlusJobRun)
 
 TEST_F(RunManagerTestFixture, EnergyPlusJobRunWithNullJobs)
 {
+  openstudio::Application::instance().application(false);
   openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("EnergyPlusJobRunNull");
 
   openstudio::path idf = (resourcesPath() / openstudio::toPath("runmanager") / openstudio::toPath("5ZoneWarmest.idf"));
@@ -119,6 +121,7 @@ TEST_F(RunManagerTestFixture, EnergyPlusJobRunWithNullJobs)
 
 TEST_F(RunManagerTestFixture, RubyNoSwap)
 {
+  openstudio::Application::instance().application(false);
   openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("RubyNoSwap");
 
   openstudio::path idf = (resourcesPath() / openstudio::toPath("runmanager") / openstudio::toPath("5ZoneWarmest.idf"));
@@ -213,6 +216,7 @@ TEST_F(RunManagerTestFixture, RubyFromDir)
 
 TEST_F(RunManagerTestFixture, RubySwapWithNull)
 {
+  openstudio::Application::instance().application(false);
   openstudio::path epw = (resourcesPath() / openstudio::toPath("runmanager") / openstudio::toPath("USA_CO_Golden-NREL.724666_TMY3.epw"));
   openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("RubySwapWithNull");
 
@@ -284,6 +288,7 @@ TEST_F(RunManagerTestFixture, RubySwapWithNull)
 
 TEST_F(RunManagerTestFixture, OSMWeatherObjectTest)
 {
+  openstudio::Application::instance().application(false);
   openstudio::path outdir = openstudio::toPath(QDir::tempPath()) / openstudio::toPath("OSMWeatherObjectTest");
   boost::filesystem::create_directories(outdir);
   openstudio::path db = outdir / openstudio::toPath("OSMWeatherObjectTestDB");
@@ -337,6 +342,7 @@ TEST_F(RunManagerTestFixture, OSMWeatherObjectTest)
 
 TEST_F(RunManagerTestFixture, WorkItemPersist)
 {
+  openstudio::Application::instance().application(false);
   openstudio::path outdir = openstudio::toPath(QDir::tempPath()) / openstudio::toPath("WorkItemPersist");
   boost::filesystem::create_directories(outdir);
   openstudio::path db = outdir / openstudio::toPath("WorkItemPersist");

@@ -50,6 +50,7 @@ void checkFinishedAfter(const openstudio::runmanager::Job &t_before, const opens
 
 TEST_F(RunManagerTestFixture, JobRunOrder)
 {
+  openstudio::Application::instance().application(false);
   openstudio::path outdir1 = openstudio::tempDir() / openstudio::toPath("JobRunOrder") / openstudio::toPath("1");
   openstudio::path outdir2 = openstudio::tempDir() / openstudio::toPath("JobRunOrder") / openstudio::toPath("2");
 

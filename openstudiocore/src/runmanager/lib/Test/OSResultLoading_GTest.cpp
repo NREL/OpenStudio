@@ -28,6 +28,7 @@
 #include "../../../model/Model.hpp"
 #include "../../../model/WeatherFile.hpp"
 
+#include "../../../utilities/core/Application.hpp"
 #include "../../../utilities/core/ApplicationPathHelpers.hpp"
 
 #include "../../../utilities/filetypes/EpwFile.hpp"
@@ -48,6 +49,7 @@ using namespace openstudio;
 
 TEST_F(RunManagerTestFixture, OSResultLoading)
 {
+  openstudio::Application::instance().application(false);
   openstudio::runmanager::RunManager rm;
   openstudio::runmanager::Workflow wf;
   openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("OSResultLoadingTest");
@@ -88,6 +90,7 @@ TEST_F(RunManagerTestFixture, OSResultLoading)
 
 TEST_F(RunManagerTestFixture, OSResultLoading_Success)
 {
+  openstudio::Application::instance().application(false);
   openstudio::runmanager::RunManager rm;
   openstudio::runmanager::Workflow wf;
   openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("OSResultLoadingTestSuccess");
