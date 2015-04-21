@@ -915,6 +915,12 @@ namespace openstudio {
       auto temp = getter();
       setter(temp);
     }
+    else if (QSharedPointer<ValueEditVoidReturnConcept<std::string> > concept = t_baseConcept.dynamicCast<ValueEditVoidReturnConcept<std::string> >()) {
+      auto setter = std::bind(&ValueEditVoidReturnConcept<std::string>::set, concept.data(), t_setterMO, std::placeholders::_1);
+      auto getter = std::bind(&ValueEditVoidReturnConcept<std::string>::get, concept.data(), t_getterMO);
+      auto temp = getter();
+      setter(temp);
+    }
     else if (QSharedPointer<LoadNameConcept> concept = t_baseConcept.dynamicCast<LoadNameConcept>()) {
       auto setter = std::bind(&LoadNameConcept::set, concept.data(), t_setterMO, std::placeholders::_1);
       auto getter = std::bind(&LoadNameConcept::get, concept.data(), t_getterMO, true); // NOTE Evan: Do we always want true?
