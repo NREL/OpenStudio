@@ -2470,6 +2470,23 @@ std::string VersionTranslator::update_1_7_2_to_1_7_3(const IdfFile& idf_1_7_2, c
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
+    } else if(object.iddObject().name() == "OS:Sizing:Plant") {
+      auto iddObject = idd_1_7_3.getObject("OS:Sizing:Plant");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < 5; ++i ) {
+        if( auto s = object.getString(i) ) {
+          newObject.setString(i,s.get());
+        }
+      }
+
+      newObject.setString(5,"NonCoincident");
+      newObject.setInt(6,1);
+      newObject.setString(7,"None");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
     } else {
       ss << object;
     }

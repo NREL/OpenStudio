@@ -16353,7 +16353,6 @@ OS:SetpointManager:WarmestTemperatureFlow,
        \minimum> 0.0
 
 OS:Sizing:Plant,
-  \min-fields 5
   A1, \field Handle
        \type handle
        \required-field
@@ -16373,11 +16372,32 @@ OS:Sizing:Plant,
       \required-field
       \type real
       \units C
-  N2; \field Loop Design Temperature Difference
+  N2, \field Loop Design Temperature Difference
       \required-field
       \type real
       \units deltaC
       \minimum> 0.0
+  A4, \field Sizing Option
+      \note if Coincident is chosen, then sizing is based on HVAC Sizing Simulations and 
+      \note the input field called Do HVAC Sizing Simulation for Sizing Periods in SimulationControl must be set to Yes
+      \required-field
+      \type choice
+      \key Coincident
+      \key NonCoincident
+  N3, \field Zone Timesteps in Averaging Window
+      \required-field
+      \note this is used in the coincident sizing algorithm to apply a running average to peak flow rates 
+      \note that occur during HVAC Sizing Simulations
+      \type integer
+      \minimum 1
+  A5; \field Coincident Sizing Factor Mode
+      \note this is used to adjust the result for coincident sizing by applying a sizing factor
+      \required-field
+      \type choice
+      \key None
+      \key GlobalHeatingSizingFactor
+      \key GlobalCoolingSizingFactor
+      \key LoopComponentSizingFactor
 
 OS:Sizing:System,
   A1, \field Handle

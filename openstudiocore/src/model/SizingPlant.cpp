@@ -184,6 +184,39 @@ namespace detail {
     return false;
   }
 
+  std::string SizingPlant_Impl::sizingOption() const {
+    boost::optional<std::string> value = getString(OS_Sizing_PlantFields::SizingOption,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  int SizingPlant_Impl::zoneTimestepsinAveragingWindow() const {
+    boost::optional<int> value = getInt(OS_Sizing_PlantFields::ZoneTimestepsinAveragingWindow,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  std::string SizingPlant_Impl::coincidentSizingFactorMode() const {
+    boost::optional<std::string> value = getString(OS_Sizing_PlantFields::CoincidentSizingFactorMode,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool SizingPlant_Impl::setSizingOption(std::string sizingOption) {
+    bool result = setString(OS_Sizing_PlantFields::SizingOption, sizingOption);
+    return result;
+  }
+
+  bool SizingPlant_Impl::setZoneTimestepsinAveragingWindow(int zoneTimestepsinAveragingWindow) {
+    bool result = setInt(OS_Sizing_PlantFields::ZoneTimestepsinAveragingWindow, zoneTimestepsinAveragingWindow);
+    return result;
+  }
+
+  bool SizingPlant_Impl::setCoincidentSizingFactorMode(std::string coincidentSizingFactorMode) {
+    bool result = setString(OS_Sizing_PlantFields::CoincidentSizingFactorMode, coincidentSizingFactorMode);
+    return result;
+  }
+
 } // detail
 
 SizingPlant::SizingPlant(const Model& model, const PlantLoop & plantLoop)
@@ -196,6 +229,9 @@ SizingPlant::SizingPlant(const Model& model, const PlantLoop & plantLoop)
   setLoopType("Heating");
   setDesignLoopExitTemperature(82.0);
   setLoopDesignTemperatureDifference(11.0);
+  setSizingOption("NonCoincident");
+  setZoneTimestepsinAveragingWindow(1);
+  setCoincidentSizingFactorMode("None");
 }
 
 IddObjectType SizingPlant::iddObjectType() {
@@ -253,6 +289,40 @@ bool SizingPlant::setLoopDesignTemperatureDifference(double loopDesignTemperatur
 
 bool SizingPlant::setLoopDesignTemperatureDifference(const Quantity& loopDesignTemperatureDifference) {
   return getImpl<detail::SizingPlant_Impl>()->setLoopDesignTemperatureDifference(loopDesignTemperatureDifference);
+}
+
+std::vector<std::string> SizingPlant::sizingOptionValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_Sizing_PlantFields::SizingOption);
+}
+
+std::vector<std::string> SizingPlant::coincidentSizingFactorModeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_Sizing_PlantFields::CoincidentSizingFactorMode);
+}
+
+std::string SizingPlant::sizingOption() const {
+  return getImpl<detail::SizingPlant_Impl>()->sizingOption();
+}
+
+int SizingPlant::zoneTimestepsinAveragingWindow() const {
+  return getImpl<detail::SizingPlant_Impl>()->zoneTimestepsinAveragingWindow();
+}
+
+bool SizingPlant::setSizingOption(std::string sizingOption) {
+  return getImpl<detail::SizingPlant_Impl>()->setSizingOption(sizingOption);
+}
+
+bool SizingPlant::setZoneTimestepsinAveragingWindow(int zoneTimestepsinAveragingWindow) {
+  return getImpl<detail::SizingPlant_Impl>()->setZoneTimestepsinAveragingWindow(zoneTimestepsinAveragingWindow);
+}
+
+bool SizingPlant::setCoincidentSizingFactorMode(std::string coincidentSizingFactorMode) {
+  return getImpl<detail::SizingPlant_Impl>()->setCoincidentSizingFactorMode(coincidentSizingFactorMode);
+}
+
+std::string SizingPlant::coincidentSizingFactorMode() const {
+  return getImpl<detail::SizingPlant_Impl>()->coincidentSizingFactorMode();
 }
 
 /// @cond
