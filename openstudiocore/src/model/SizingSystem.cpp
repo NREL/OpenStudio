@@ -673,7 +673,6 @@ SizingSystem::SizingSystem(const Model& model, const AirLoopHVAC & airLoopHVAC)
   setHeatingDesignAirFlowMethod("DesignDay");
   setHeatingDesignAirFlowRate(0.0);
   setSystemOutdoorAirMethod("ZoneSum");
-
   setZoneMaximumOutdoorAirFraction(1.0);
   setCoolingSupplyAirFlowRatePerFloorArea(9.9676501E-3);
   setCoolingFractionofAutosizedCoolingSupplyAirFlowRate(1.0);

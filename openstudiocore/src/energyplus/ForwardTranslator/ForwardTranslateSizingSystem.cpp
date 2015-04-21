@@ -222,23 +222,6 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingSystem( SizingSyste
     idfObject.setDouble(Sizing_SystemFields::ZoneMaximumOutdoorAirFraction,value.get());
   }
 
-//{ OS_Sizing_SystemFields::CoolingSupplyAirFlowRatePerFloorArea, "CoolingSupplyAirFlowRatePerFloorArea", "Cooling Supply Air Flow Rate Per Floor Area"},
-//{ OS_Sizing_SystemFields::CoolingFractionofAutosizedCoolingSupplyAirFlowRate, "CoolingFractionofAutosizedCoolingSupplyAirFlowRate", "Cooling Fraction of Autosized Cooling Supply Air Flow Rate"},
-//{ OS_Sizing_SystemFields::CoolingSupplyAirFlowRatePerUnitCoolingCapacity, "CoolingSupplyAirFlowRatePerUnitCoolingCapacity", "Cooling Supply Air Flow Rate Per Unit Cooling Capacity"},
-//{ OS_Sizing_SystemFields::HeatingSupplyAirFlowRatePerFloorArea, "HeatingSupplyAirFlowRatePerFloorArea", "Heating Supply Air Flow Rate Per Floor Area"},
-//{ OS_Sizing_SystemFields::HeatingFractionofAutosizedHeatingSupplyAirFlowRate, "HeatingFractionofAutosizedHeatingSupplyAirFlowRate", "Heating Fraction of Autosized Heating Supply Air Flow Rate"},
-//{ OS_Sizing_SystemFields::HeatingFractionofAutosizedCoolingSupplyAirFlowRate, "HeatingFractionofAutosizedCoolingSupplyAirFlowRate", "Heating Fraction of Autosized Cooling Supply Air Flow Rate"},
-//{ OS_Sizing_SystemFields::HeatingSupplyAirFlowRatePerUnitHeatingCapacity, "HeatingSupplyAirFlowRatePerUnitHeatingCapacity", "Heating Supply Air Flow Rate Per Unit Heating Capacity"},
-//{ OS_Sizing_SystemFields::CoolingDesignCapacityMethod, "CoolingDesignCapacityMethod", "Cooling Design Capacity Method"},
-//{ OS_Sizing_SystemFields::CoolingDesignCapacity, "CoolingDesignCapacity", "Cooling Design Capacity"},
-//{ OS_Sizing_SystemFields::CoolingDesignCapacityPerFloorArea, "CoolingDesignCapacityPerFloorArea", "Cooling Design Capacity Per Floor Area"},
-//{ OS_Sizing_SystemFields::FractionofAutosizedCoolingDesignCapacity, "FractionofAutosizedCoolingDesignCapacity", "Fraction of Autosized Cooling Design Capacity"},
-//{ OS_Sizing_SystemFields::HeatingDesignCapacityMethod, "HeatingDesignCapacityMethod", "Heating Design Capacity Method"},
-//{ OS_Sizing_SystemFields::HeatingDesignCapacity, "HeatingDesignCapacity", "Heating Design Capacity"},
-//{ OS_Sizing_SystemFields::HeatingDesignCapacityPerFloorArea, "HeatingDesignCapacityPerFloorArea", "Heating Design Capacity Per Floor Area"},
-//{ OS_Sizing_SystemFields::FractionofAutosizedHeatingDesignCapacity, "FractionofAutosizedHeatingDesignCapacity", "Fraction of Autosized Heating Design Capacity"},
-//{ OS_Sizing_SystemFields::CentralCoolingCapacityControlMethod, "CentralCoolingCapacityControlMethod", "Central Cooling Capacity Control Method"},
-
   // CoolingSupplyAirFlowRatePerFloorArea
   value = modelObject.coolingSupplyAirFlowRatePerFloorArea();
   if( value ) {
@@ -281,15 +264,64 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingSystem( SizingSyste
     idfObject.setDouble(Sizing_SystemFields::HeatingSupplyAirFlowRatePerUnitHeatingCapacity,value.get());
   }
 
-  //setCoolingDesignCapacityMethod("CoolingDesignCapacity");
-  //autosizeCoolingDesignCapacity();
-  //setCoolingDesignCapacityPerFloorArea(234.7);
-  //setFractionofAutosizedCoolingDesignCapacity(1.0);
-  //setHeatingDesignCapacityMethod("HeatingDesignCapacity");
-  //autosizeHeatingDesignCapacity();
-  //setHeatingDesignCapacityPerFloorArea(157.0);
-  //setFractionofAutosizedHeatingDesignCapacity(1.0);
-  //setCentralCoolingCapacityControlMethod("OnOff");
+  // CoolingDesignCapacityMethod
+  s = modelObject.coolingDesignCapacityMethod();
+  if( s ) {
+    idfObject.setString(Sizing_SystemFields::CoolingDesignCapacityMethod,s.get());
+  }
+
+  // CoolingDesignCapacity
+  value = modelObject.coolingDesignCapacity();
+  if( modelObject.isCoolingDesignCapacityAutosized() ) {
+    idfObject.setString(Sizing_SystemFields::CoolingDesignCapacity,"Autosize");
+  } else if( value ) {
+    idfObject.setDouble(Sizing_SystemFields::CoolingDesignCapacity,value.get());
+  }
+  
+  
+  // CoolingDesignCapacityPerFloorArea
+  value = modelObject.coolingDesignCapacityPerFloorArea();
+  if( value ) {
+    idfObject.setDouble(Sizing_SystemFields::CoolingDesignCapacityPerFloorArea,value.get());
+  }
+
+  // FractionofAutosizedCoolingDesignCapacity
+  value = modelObject.fractionofAutosizedCoolingDesignCapacity(); 
+  if( value ) {
+    idfObject.setDouble(Sizing_SystemFields::FractionofAutosizedCoolingDesignCapacity,value.get());
+  }
+
+  // HeatingDesignCapacityMethod
+  s = modelObject.heatingDesignCapacityMethod();
+  if( s ) {
+    idfObject.setString(Sizing_SystemFields::HeatingDesignCapacityMethod,s.get());
+  }
+
+  // HeatingDesignCapacity
+  value = modelObject.heatingDesignCapacity();
+  if( modelObject.isHeatingDesignCapacityAutosized() ) {
+    idfObject.setString(Sizing_SystemFields::HeatingDesignCapacity,"Autosize");
+  } else if( value ) {
+    idfObject.setDouble(Sizing_SystemFields::HeatingDesignCapacity,value.get());
+  }
+  
+  // HeatingDesignCapacityPerFloorArea
+  value = modelObject.heatingDesignCapacityPerFloorArea();
+  if( value ) {
+    idfObject.setDouble(Sizing_SystemFields::HeatingDesignCapacityPerFloorArea,value.get());
+  }
+
+  // FractionofAutosizedHeatingDesignCapacity
+  value = modelObject.fractionofAutosizedHeatingDesignCapacity(); 
+  if( value ) {
+    idfObject.setDouble(Sizing_SystemFields::FractionofAutosizedHeatingDesignCapacity,value.get());
+  }
+
+  // CentralCoolingCapacityControlMethod
+  s = modelObject.centralCoolingCapacityControlMethod();
+  if( s ) {
+    idfObject.setString(Sizing_SystemFields::CentralCoolingCapacityControlMethod,s.get());
+  }
 
   return idfObject;
 }

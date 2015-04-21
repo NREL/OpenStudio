@@ -16380,7 +16380,6 @@ OS:Sizing:Plant,
       \minimum> 0.0
 
 OS:Sizing:System,
-       \min-fields 21
   A1, \field Handle
        \type handle
        \required-field
