@@ -160,6 +160,11 @@ namespace openstudio {
     modelObject.remove();
   }
 
+  std::vector<model::ModelObject> GridViewSubTab::selectedObjects() const
+  {
+    return m_gridController->selectedObjects();
+  }
+
   void GridViewSubTab::toggleUnits(bool isIP)
   {
     m_isIP = isIP;

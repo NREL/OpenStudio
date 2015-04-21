@@ -67,6 +67,8 @@ class GridViewSubTab : public QWidget
 
     virtual void purgeObjects(const openstudio::IddObjectType& iddObjectType) = 0;
 
+    virtual std::vector<model::ModelObject> selectedObjects() const;
+
     model::Model m_model;
 
     OSGridController * m_gridController = nullptr;

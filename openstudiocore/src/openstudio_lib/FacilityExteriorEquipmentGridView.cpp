@@ -31,6 +31,8 @@
 #include "../model/Model_Impl.hpp"
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
+#include "../model/Schedule.hpp"
+#include "../model/Schedule_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/idd/IddEnums.hxx"
@@ -77,11 +79,6 @@ namespace openstudio {
     setGridView(gridView);
   }
 
-  std::vector<model::ModelObject> FacilityExteriorEquipmentGridView::selectedObjects() const
-  {
-    return m_gridController->selectedObjects();
-  }
-
   void FacilityExteriorEquipmentGridView::onDropZoneItemClicked(OSItem* item)
   {
   }
@@ -115,7 +112,7 @@ namespace openstudio {
     {
       std::vector<QString> fields;
       //fields.push_back(EXTERIORLIGHTSDEFINITION);
-      //fields.push_back(SCHEDULE);
+      fields.push_back(SCHEDULE);
       fields.push_back(CONTROLOPTION);
       fields.push_back(MULTIPLIER);
       fields.push_back(ENDUSESUBCATEGORY);
@@ -166,31 +163,23 @@ namespace openstudio {
       //EXTERIORLIGHTSDEFINITION
       //ExteriorLightsDefinition exteriorLightsDefinition() const;
       //bool setExteriorLightsDefinition(const ExteriorLightsDefinition& exteriorLightsDefinition);
-        addNameLineEditColumn(Heading(QString(NAME), false, false),
-          false,
-          false,
-          CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::name),
-          CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::setName)
-          );
       }
       else if (field == SCHEDULE) {
-      //SCHEDULE
-      //boost::optional<Schedule> schedule() const;
-      //bool setSchedule(Schedule& schedule);
-      //void resetSchedule();
-        //addDropZoneColumn(Heading(QString(SCHEDULE)),
-        //  CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::schedule),
-        //  CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::setSchedule)//,
-        //  //boost::optional<std::function<void(model::ExteriorLights*)>>(CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::resetSchedule))
-        //);
+
+        std::function<bool(model::ExteriorLights*, const model::Schedule&)> set(
+          [](model::ExteriorLights* el, const model::Schedule& s) {
+          model::Schedule copy = s;
+          return el->setSchedule(copy);
+        }
+        );
+
+        addDropZoneColumn(Heading(QString(SCHEDULE)),
+          CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::schedule),
+          set,
+          boost::optional<std::function<void(model::ExteriorLights*)>>(CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::resetSchedule))
+        );
       }
       else if (field == CONTROLOPTION){
-      //CONTROLOPTION
-      //static std::vector<std::string> controlOptionValues();
-      //std::string controlOption() const;
-      //bool setControlOption(std::string controlOption);
-      //void resetControlOption();
-      //bool isControlOptionDefaulted() const;
         addComboBoxColumn<std::string, model::ExteriorLights>(
           Heading(QString(CONTROLOPTION)),
           static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
@@ -201,23 +190,13 @@ namespace openstudio {
           boost::optional<DataSource>()
           );
       }
-      else if (field == MULTIPLIER){
-      //MULTIPLIER
-      //double multiplier() const;
-      //bool setMultiplier(double multiplier);
-      //void resetMultiplier();
-      //bool isMultiplierDefaulted() const;   
+      else if (field == MULTIPLIER){  
         addValueEditColumn(Heading(QString(MULTIPLIER)),
           NullAdapter(&model::ExteriorLights::multiplier),
           NullAdapter(&model::ExteriorLights::setMultiplier)
           );
       }
       else if (field == ENDUSESUBCATEGORY){
-        //ENDUSESUBCATEGORY
-        //std::string endUseSubcategory() const;
-        //void setEndUseSubcategory(std::string endUseSubcategory);
-        //void resetEndUseSubcategory();
-        //bool isEndUseSubcategoryDefaulted() const;
         addValueEditColumn(Heading(QString(ENDUSESUBCATEGORY)),
           CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::endUseSubcategory),
           CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::setEndUseSubcategory)

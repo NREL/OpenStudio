@@ -27,8 +27,6 @@
 
 #include "../model/Model.hpp"
 
-#include <QWidget>
-
 namespace openstudio{
 
   class FacilityExteriorEquipmentGridController;
@@ -42,8 +40,6 @@ namespace openstudio{
     FacilityExteriorEquipmentGridView(bool isIP, const model::Model & model, QWidget * parent = 0);
 
     virtual ~FacilityExteriorEquipmentGridView() {}
-
-    std::vector<model::ModelObject> selectedObjects() const;
 
   private:
 
