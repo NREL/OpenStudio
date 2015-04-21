@@ -102,6 +102,10 @@ foreach(PATH ${ENERGYPLUS_POSSIBLE_PATHS})
   if(IS_MATCH)
     if(${VERSION_MAJOR_MINOR} VERSION_LESS "8.0.0")
       find_program(ENERGYPLUS_EXE "energyplus" PATHS "${PATH}" "${PATH}/bin" NO_DEFAULT_PATH)
+    elseif(${VERSION_MAJOR_MINOR} VERSION_GREATER "8.3.0")
+      find_program(ENERGYPLUS_EXE "energyplus" PATHS "${PATH}" "${PATH}/bin" NO_DEFAULT_PATH)
+    elseif(${VERSION_MAJOR_MINOR} VERSION_EQUAL "8.3.0")
+      find_program(ENERGYPLUS_EXE "energyplus" PATHS "${PATH}" "${PATH}/bin" NO_DEFAULT_PATH)
     else()
       find_program(ENERGYPLUS_EXE "EnergyPlus" PATHS "${PATH}" "${PATH}/bin" NO_DEFAULT_PATH)
     endif()
@@ -130,7 +134,7 @@ mark_as_advanced(
 # compatible and it also doesn't know about EnergyPlus build SHA.
 if(ENERGYPLUS_GE_8_2_0 AND ENERGYPLUS_BUILD_SHA)
   if(NOT (ENERGYPLUS_BUILD_SHA STREQUAL BUILD_SHA))
-    message(FATAL_ERROR "Found EnergyPlus version: ${VERSION} with build SHA: ${BUILD_SHA}, but project requires build SHA: ${ENERGYPLUS_BUILD_SHA}")
+    message(FATAL_ERROR "Found EnergyPlus version: ${VERSION} with build SHA: ${BUILD_SHA}, but project requires version: ${EnergyPlus_FIND_VERSION} with build SHA: ${ENERGYPLUS_BUILD_SHA}")
   endif()
 endif()
 
@@ -139,14 +143,4 @@ endif()
 if(NOT (${VERSION_MAJOR_MINOR} VERSION_EQUAL "${EnergyPlus_FIND_VERSION_MAJOR}.${EnergyPlus_FIND_VERSION_MINOR}"))
   message(FATAL_ERROR "Found EnergyPlus version: ${VERSION} , but project requires ${EnergyPlus_FIND_VERSION_MAJOR}.${EnergyPlus_FIND_VERSION_MINOR}")
 endif()
-
-# Do this because we are not sure if we will have found energyplus or EnergyPlus
-get_filename_component(ENERGYPLUS_NAME "${ENERGYPLUS_EXE}" NAME_WE)
-
-# Do this because we want to use the FindPackageHandleStandardArgs routine's standard find messaging
-include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(${ENERGYPLUS_NAME} FOUND_VAR EnergyPlus_FOUND
-  REQUIRED_VARS ENERGYPLUS_EXE ENERGYPLUS_IDD ENERGYPLUS_WEATHER_DIR
-  VERSION_VAR VERSION
-)
 
