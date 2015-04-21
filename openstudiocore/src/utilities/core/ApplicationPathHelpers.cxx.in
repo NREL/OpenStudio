@@ -409,27 +409,34 @@ openstudio::path getOpenStudioEmbeddedRubyPath() {
 }
 
 openstudio::path getEnergyPlusDirectory() {
+  openstudio::path cmakeEnergyPlusPath = openstudio::toPath("${ENERGYPLUS_EXE}");
+  openstudio::path cmakeEnergyPlusDirectory = cmakeEnergyPlusPath.parent_path();
+  openstudio::path energyPlusDirectoryName = cmakeEnergyPlusDirectory.filename();
+
   if (applicationIsRunningFromBuildDirectory())
   {
-    return openstudio::toPath("${ENERGYPLUS_EXE}").parent_path();
+    return cmakeEnergyPlusDirectory;
   } else {
 #ifdef Q_OS_LINUX
-    return getApplicationInstallDirectory() / openstudio::toPath("share/openstudio-" + openStudioVersion() + "/EnergyPlus-8-3-0/");
+    return getApplicationInstallDirectory() / openstudio::toPath("share/openstudio-" + openStudioVersion()) / energyPlusDirectoryName;
 #elif defined(Q_OS_MAC)
-    return getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("sharedresources/EnergyPlus-8-3-0/");
+    return getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("sharedresources") / energyPlusDirectoryName;
 #else
-    return getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio/EnergyPlusV8-3-0/");
+    return getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio") / energyPlusDirectoryName;
 #endif
   }
 }
 
 openstudio::path getEnergyPlusExecutable() {
+  openstudio::path cmakeEnergyPlusPath = openstudio::toPath("${ENERGYPLUS_EXE}");
+  openstudio::path energyPlusFileName = cmakeEnergyPlusPath.filename();
+
 #ifdef Q_OS_LINUX
-    return getEnergyPlusDirectory() / openstudio::toPath("EnergyPlus");
+    return getEnergyPlusDirectory() / energyPlusFileName;
 #elif defined(Q_OS_MAC)
-    return getEnergyPlusDirectory() / openstudio::toPath("EnergyPlus");
+    return getEnergyPlusDirectory() / energyPlusFileName;
 #else
-   return getEnergyPlusDirectory() / openstudio::toPath("EnergyPlus.exe");
+   return getEnergyPlusDirectory() / energyPlusFileName;
 #endif
 }
 
