@@ -631,6 +631,25 @@ namespace openstudio{
         m_values*d, 
         m_units));
     }
+
+    double TimeSeries_Impl::integrate() const
+    {
+      double result = 0;
+      for (int i = 0; i < m_values.size(); i++) {
+
+      }
+      return result;
+    }
+
+    double TimeSeries_Impl::averageValue() const
+    {
+      double result = 0;
+      for (int i = 0; i < m_values.size(); i++) {
+
+      }
+      return result;
+    }
+
   } // detail
 
   /// default constructor 
@@ -781,6 +800,17 @@ namespace openstudio{
   TimeSeries TimeSeries::operator/(double d) const {
     std::shared_ptr<detail::TimeSeries_Impl> impl = (*m_impl)*(1.0/d);
     return TimeSeries(impl);
+  }
+
+
+  double TimeSeries::integrate() const
+  {
+    return m_impl->integrate();
+  }
+
+  double TimeSeries::averageValue() const
+  {
+    return m_impl->averageValue();
   }
 
   // constructor from impl

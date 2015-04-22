@@ -39,6 +39,40 @@ class Time;
 class DateTime;
 class TimeSeries;
 
+class UTILITIES_API AirState
+{
+public:
+  AirState();
+
+  // Statics
+  boost::optional<AirState> fromDryBulbDewPointPressure(double drybulb, double dewpoint, double pressure);
+
+  double drybulb() const;
+  double dewpoint() const;
+  double wetbulb() const;
+  double relativeHumidity() const;
+  double pressure() const;
+
+  double enthalpy() const;
+  double saturationPressure() const;
+  double density() const;
+  double specificVolume() const;
+  double humidityRatio() const;
+
+private:
+  double m_drybulb; // Dry bulb temperature in C
+  double m_dewpoint; // Dew point temperature in C
+  double m_pressure; // Atmospheric pressure in Pa
+  double m_wetbulb; // Thermodynamic wet bulb temperature in C
+
+  // These are always computed 
+  double m_psat;
+  double m_W;
+  double m_h;
+  double m_phi;
+  double m_v;
+};
+
 OPENSTUDIO_ENUM(EpwDataField,
   ((Year)(Year)(0))
   ((Month)(Month))

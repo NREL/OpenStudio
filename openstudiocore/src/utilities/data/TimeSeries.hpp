@@ -134,6 +134,12 @@ namespace openstudio{
         /** TimeSeries * double */
         std::shared_ptr<TimeSeries_Impl> operator*(double d) const;
 
+        /** Integrate the time series */
+        double integrate() const;
+
+        /** Compute the time series average value */
+        double averageValue() const;
+
       private:
 
         REGISTER_LOGGER("utilities.TimeSeries_Impl");
@@ -267,11 +273,21 @@ namespace openstudio{
       /// subtract timeseries
       TimeSeries operator-(const TimeSeries& other) const;
 
-      /** TimeSereis * double */
+      /** TimeSeries * double */
       TimeSeries operator*(double d) const;
 
       /** TimeSeries / double */
       TimeSeries operator/(double d) const;
+
+      //@}
+      /** @name Analysis Functions */
+      //@{
+
+      /** Integrate the time series */
+      double integrate() const;
+
+      /** Compute the time series average value */
+      double averageValue() const;
 
       //@}
     private:
