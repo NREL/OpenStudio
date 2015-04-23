@@ -2487,6 +2487,24 @@ std::string VersionTranslator::update_1_7_2_to_1_7_3(const IdfFile& idf_1_7_2, c
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
+    } else if(object.iddObject().name() == "OS:DistrictCooling") {
+      IdfObject newObject = object.clone(true);
+
+      if( ! object.getDouble(4) ) {
+        newObject.setString(4,"Autosize");
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else if(object.iddObject().name() == "OS:DistrictHeating") {
+      IdfObject newObject = object.clone(true);
+
+      if( ! object.getDouble(4) ) {
+        newObject.setString(4,"Autosize");
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
     } else {
       ss << object;
     }

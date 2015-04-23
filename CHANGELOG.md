@@ -1,3 +1,8 @@
+## OpenStudio v1.7.3
+###### 2015-04 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.2...v1.7.3 )
+
+- ![Improved:][improved] [#1637]( https://github.com/NREL/OpenStudio/issues/1637 ), DistrictHeating / DistrictCooling ::nominalCapacity is now autosizable
+
 ## OpenStudio v1.7.2
 ###### 2015-04 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.1...v1.7.2 )
 

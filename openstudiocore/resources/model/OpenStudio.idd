@@ -11035,7 +11035,8 @@ OS:DistrictCooling,
   N1 ; \field Nominal Capacity
        \units W
        \minimum 0.0
-       \default 1000000
+       \autosizable
+       \required-field
 
 OS:DistrictHeating,
   A1, \field Handle
@@ -11055,7 +11056,8 @@ OS:DistrictHeating,
   N1 ; \field Nominal Capacity
        \units W
        \minimum 0.0
-       \default 1000000
+       \autosizable
+       \required-field
      
 OS:GroundHeatExchanger:Vertical,
         \extensible:2
@@ -14598,6 +14600,8 @@ OS:Humidifier:Steam:Electric,
       \units m3/s
       \minimum 0.0
       \ip-units gal/min
+      \autosizable
+      \required-field
   N2, \field Rated Power
       \type real
       \units W
