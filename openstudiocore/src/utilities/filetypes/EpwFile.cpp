@@ -163,7 +163,10 @@ static boost::optional<double> solveForWetBulb(double drybulb, double p, double 
     double B = b*(drybulb - tstar);
     double C = c0 + c1t + c2*tstar;
     double pwsstar = psat(tstar);
-    double Wsstar = 0.621945*pwsstar / (p - pwsstar);
+    double pwsstarp = psatp(tstar);
+    double deltap = p - pwsstar;
+    double Wsstar = 0.621945*pwsstar / deltap;
+    double Wsstarp = (0.621945*pwsstarp*deltap + 0.621945*pwsstar*pwsstarp) / (deltap*deltap);
     double f = W*C - A*Wsstar + B;
     double fp = W*Cp - A*Wsstarp - Ap*Wsstar + Bp;
     double delta = -f / fp;
