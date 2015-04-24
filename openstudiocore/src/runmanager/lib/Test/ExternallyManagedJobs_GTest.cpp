@@ -120,6 +120,7 @@ TEST_F(RunManagerTestFixture, UpdateJobUUIDWithTree)
 
 TEST_F(RunManagerTestFixture, UpdateJobUUIDViaRunManager)
 {
+  openstudio::Application::instance().application(false);
   openstudio::runmanager::Job j = openstudio::runmanager::Workflow("Null->Null").create();
   openstudio::runmanager::Job j2 = openstudio::runmanager::Workflow("Null->Null").create();
 

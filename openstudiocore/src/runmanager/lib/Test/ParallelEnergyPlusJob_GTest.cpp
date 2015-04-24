@@ -28,6 +28,7 @@
 
 #include "../../../model/Model.hpp"
 
+#include "../../../utilities/core/Application.hpp"
 #include "../../../utilities/idf/IdfFile.hpp"
 #include "../../../utilities/idf/IdfObject.hpp"
 #include "../../../utilities/data/EndUses.hpp"
@@ -48,6 +49,7 @@ using openstudio::SqlFile;
 
 TEST_F(RunManagerTestFixture, ParallelEnergyPlusJobTest)
 {
+  openstudio::Application::instance().application(false);
   double originalSiteEnergy = 0;
   double parallelSiteEnergy = 0;
 
