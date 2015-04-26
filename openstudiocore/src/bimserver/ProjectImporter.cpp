@@ -296,6 +296,7 @@ namespace bimserver {
     QLabel *set_upassLabel = new QLabel(tr("Password"), this);
     QLineEdit *set_upassEdit = new QLineEdit(this);
     set_upassEdit->setPlaceholderText("eg: admin");
+    set_upassEdit->setEchoMode(QLineEdit::Password);
     QPushButton *set_okButton = new QPushButton(tr("Okay"), this);
     QPushButton *set_cancelButton = new QPushButton(tr("Cancel"), this);
 
@@ -342,17 +343,18 @@ namespace bimserver {
       QString usrname = set_unameEdit->text();
       QString psw = set_upassEdit->text();
 
-      m_settings->setValue("addr", address);
-      m_settings->setValue("port", port);
-      m_settings->setValue("usrname",usrname);
-      m_settings->setValue("psw", psw);
-
       if (!address.isEmpty() && !port.isEmpty() && !usrname.isEmpty() && !psw.isEmpty())
       { 
         //in debug mode, this pointer is 0xCDCDCDCD, and is not null, creates an error
         //if (m_bimserverConnection != nullptr) {
         //	delete m_bimserverConnection;
         //}
+
+        m_settings->setValue("addr", address);
+        m_settings->setValue("port", port);
+        m_settings->setValue("usrname", usrname);
+        m_settings->setValue("psw", psw);
+
         m_bimserverConnection = new BIMserverConnection(this, address, port);
 
         connect(m_bimserverConnection, &BIMserverConnection::osmStringRetrieved, this, &ProjectImporter::processOSMRetrieved);
@@ -371,7 +373,13 @@ namespace bimserver {
       else {
         m_proList->clear();
         m_ifcList->clear();
-        m_statusBar->showMessage("Settings not completed. Please fill in all fields in settings before continue", 2000);
+        
+        QMessageBox messageBox(this);
+        messageBox.setText(tr("BIMserver not set up"));
+        messageBox.setDetailedText(tr("Please provide valid BIMserver address, port, your username and password. You may ask your BIMserver manager for such information.\n"));
+        messageBox.exec();
+
+        settingButton_clicked();
       }
 
     } else {

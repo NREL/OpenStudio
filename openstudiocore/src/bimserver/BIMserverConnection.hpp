@@ -53,6 +53,9 @@ namespace bimserver {
     ~BIMserverConnection();
     /// login with username and password
     void login(QString username, QString password);
+
+    bool loginBlocked(QString username, QString password, int timeout);
+
     /// download the osm model
     void download(QString projectID);
     /// get all projects
