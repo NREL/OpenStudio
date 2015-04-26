@@ -22,12 +22,14 @@
 
 #include "BIMserverAPI.hpp"
 
+#include "../utilities/core/Logger.hpp"
+
 #include <QString>
 #include <QUrl>
 #include <QObject>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
-
+#include <boost/optional.hpp>
 
 namespace openstudio {
 
@@ -51,11 +53,13 @@ namespace bimserver {
     BIMserverConnection(QObject * parent, QString bimserverAddr, QString bimserverPort);
     /// destructor
     ~BIMserverConnection();
+
+    //@}
+    /** @name Unblocking class members */
+    //@{
+
     /// login with username and password
     void login(QString username, QString password);
-
-    bool loginBlocked(QString username, QString password, int timeout);
-
     /// download the osm model
     void download(QString projectID);
     /// get all projects
@@ -66,6 +70,25 @@ namespace bimserver {
     void checkInIFCFile(QString projectID, QString IFCFilePath);
     /// get all revisions of IFC files of a project
     void getIFCRevisionList(QString projectID);
+
+    //@}
+    /** @name Blocking class members */
+    //@{
+
+    /// Login, Blocked
+    bool loginBlocked(QString username, QString password, int timeout);
+    /// download the osm model, Blocked
+    boost::optional<QString> downloadBlocked(QString projectID, int timeout);
+    /// get all projects, Blocked
+    boost::optional<QStringList> getAllProjectsBlocked(int timeout);
+    /// create new project, Blocked
+    bool createProjectBlocked(QString projectName, int timeout);
+    /// check in new ifc file, Blocked
+    bool checkInIFCFileBlocked(QString projectID, QString IFCFilePath, int timeout);
+    /// get all revisions of IFC files of a project, Blocked
+    boost::optional<QStringList> getIFCRevisionListBlocked(QString projectID, int timeout);
+
+
 
   signals:
     /// send the retrieved osmString to GUI
@@ -110,6 +133,9 @@ namespace bimserver {
     void processGetProgressRequest();
 
   private:
+
+    REGISTER_LOGGER("openstudio.BIMserverConnection");
+
     void sendLoginRequest();
     void sendGetAllProjectsRequest();
     void sendGetSerializerRequest();
@@ -124,6 +150,8 @@ namespace bimserver {
     bool containsError(QJsonObject responseMessage);
     void emitErrorMessage(QJsonObject responseMessage);
 
+    bool waitForLock(int msec) const;
+
     QNetworkAccessManager* m_networkManager;
     QUrl m_bimserverURL;
     QString m_username;
@@ -135,6 +163,16 @@ namespace bimserver {
     QString m_actionId;
     QString m_poid;
     QString m_filePath;
+    bool m_operationDone;
+
+
+    /// Variables for the blocking calls
+    bool m_loginSuccess;
+    boost::optional<QString> m_osmModel;
+    boost::optional<QStringList> m_projectList;
+    bool m_createProjectSuccess;
+    bool m_checkInIFCSuccess;
+    boost::optional<QStringList> m_ifcList;
   };
 
 } // bimserver
