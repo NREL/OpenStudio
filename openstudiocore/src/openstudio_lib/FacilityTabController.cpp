@@ -19,7 +19,7 @@
 
 #include "FacilityTabController.hpp"
 
-#include "FacilityBuildingGridView.hpp"
+#include "BuildingInspectorView.hpp"
 #include "FacilityExteriorEquipmentGridView.hpp"
 #include "FacilityShadingGridView.hpp"
 #include "FacilityStoriesGridView.hpp"
@@ -29,8 +29,12 @@ namespace openstudio {
 
 FacilityTabController::FacilityTabController(bool isIP, const model::Model& model)
   : MainTabController(new FacilityTabView())
-{  
-  this->mainContentWidget()->addSubTab("Building", new FacilityBuildingGridView(isIP, model), BUILDING);
+{
+  auto buildingInspectorView = new BuildingInspectorView(isIP, model);
+  this->mainContentWidget()->addSubTab("Building", buildingInspectorView, BUILDING);
+  connect(this, &FacilityTabController::toggleUnitsClicked, buildingInspectorView, &BuildingInspectorView::toggleUnitsClicked);
+  connect(buildingInspectorView, &BuildingInspectorView::dropZoneItemClicked, this, &FacilityTabController::dropZoneItemClicked);
+
   this->mainContentWidget()->addSubTab("Exterior Equipment", new FacilityExteriorEquipmentGridView(isIP, model), EXTERIOR_EQUIPMENT);
   this->mainContentWidget()->addSubTab("Shading", new FacilityShadingGridView(isIP, model), SHADING);
   this->mainContentWidget()->addSubTab("Stories", new FacilityStoriesGridView(isIP, model), STORIES);

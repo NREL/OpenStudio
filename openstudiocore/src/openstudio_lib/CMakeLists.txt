@@ -53,8 +53,6 @@ set(${target_name}_SRC
   DefaultConstructionSetsView.hpp
   ElectricEquipmentInspectorView.cpp
   ElectricEquipmentInspectorView.hpp
-  FacilityBuildingGridView.cpp
-  FacilityBuildingGridView.hpp
   FacilityController.cpp
   FacilityController.hpp
   FacilityExteriorEquipmentGridView.cpp
@@ -510,7 +508,6 @@ set(${target_name}_moc
   DefaultConstructionSetsController.hpp
   DefaultConstructionSetsView.hpp
   ElectricEquipmentInspectorView.hpp
-  FacilityBuildingGridView.hpp
   FacilityController.hpp
   FacilityExteriorEquipmentGridView.hpp
   FacilityShadingGridView.hpp
