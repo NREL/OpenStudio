@@ -212,7 +212,7 @@ if baseClassName.empty?
     hpp << "#include <QObject>\n\n"
   end
   if pImpl
-    hpp << "#include <boost/smart_ptr.hpp>\n"
+    hpp << "#include <memory>\n"
   end
   hpp << "#include <boost/optional.hpp>\n\n"
   hpp << "#include <vector>\n\n"
@@ -222,8 +222,7 @@ if baseClassName.empty?
     if qobject
       implHpp << "#include <QObject>\n\n"
     end
-    implHpp << "#include <boost/smart_ptr.hpp>\n"
-    implHpp << "#include <boost/enable_shared_from_this.hpp>\n\n"  
+    implHpp << "#include <memory>\n"
   end
 end
 
@@ -286,7 +285,7 @@ if pImpl
     if qobject
       implHpp << "public QObject, "
     end
-    implHpp << "public boost::enable_shared_from_this<" << className << "_Impl>"
+    implHpp << "public std::enable_shared_from_this<" << className << "_Impl>"
   else
     implHpp << " : public " << baseClassName << "_Impl" 
   end
@@ -358,7 +357,7 @@ if pImpl and baseClassName.empty?
   hpp << "  /** Get the impl pointer */\n"
   hpp << "  template<typename T>\n"
   hpp << "  std::shared_ptr<T> getImpl() const {\n"
-  hpp << "    return boost::dynamic_pointer_cast<T>(m_impl);\n"
+  hpp << "    return std::dynamic_pointer_cast<T>(m_impl);\n"
   hpp << "  }\n"
   hpp << "\n"
   hpp << "  /** Cast to type T. Throws std::bad_cast if object is not a T. */\n"
@@ -391,8 +390,8 @@ if pImpl and baseClassName.empty?
   implHpp << "    /** Get a public object that wraps this impl.*/\n"
   implHpp << "    template<typename T>\n"
   implHpp << "    T getPublicObject() const {\n"
-  implHpp << "      T result(boost::dynamic_pointer_cast<typename T::ImplType>(\n"
-  implHpp << "                 boost::const_pointer_cast<" << className << "_Impl>(shared_from_this())));\n"
+  implHpp << "      T result(std::dynamic_pointer_cast<typename T::ImplType>(\n"
+  implHpp << "                 std::const_pointer_cast<" << className << "_Impl>(shared_from_this())));\n"
   implHpp << "      return result;\n"
   implHpp << "    }\n"
   implHpp << "\n"
