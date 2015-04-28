@@ -1694,6 +1694,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateTableMultiVariableLookup(table);
       break;
     }
+  case openstudio::IddObjectType::OS_TemperingValve :
+    {
+      auto mo = modelObject.cast<TemperingValve>();
+      retVal = translateTemperingValve(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_ThermalZone :
     {
       model::ThermalZone zone = modelObject.cast<ThermalZone>();

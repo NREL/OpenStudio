@@ -856,6 +856,9 @@ set(${target_name}_src
   Timestep.hpp
   Timestep_Impl.hpp
   Timestep.cpp
+  TemperingValve.hpp
+  TemperingValve_Impl.hpp
+  TemperingValve.cpp
   Version.hpp
   Version_Impl.hpp
   Version.cpp
@@ -1389,6 +1392,7 @@ set(${target_name}_test_src
   test/Surface_GTest.cpp
   test/TableMultiVariableLookup_GTest.cpp
   test/ThermalZone_GTest.cpp
+  test/TemperingValve_GTest.cpp
   test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp
   test/WaterUseConnections_GTest.cpp

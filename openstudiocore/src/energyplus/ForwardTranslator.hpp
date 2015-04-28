@@ -228,6 +228,7 @@ class SteamEquipment;
 class SubSurface;
 class Surface;
 class TableMultiVariableLookup;
+class TemperingValve;
 class ThermalZone;
 class ThermostatSetpointDualSetpoint;
 class Timestep;
@@ -711,6 +712,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateSurface( model::Surface & modelObject );
 
   boost::optional<IdfObject> translateTableMultiVariableLookup( model::TableMultiVariableLookup & modelObject );
+
+  boost::optional<IdfObject> translateTemperingValve( model::TemperingValve & modelObject );
 
   boost::optional<IdfObject> translateThermalZone( model::ThermalZone & modelObject );
 

@@ -203,6 +203,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSubSurface.cpp
   ForwardTranslator/ForwardTranslateSurface.cpp
   ForwardTranslator/ForwardTranslateTableMultiVariableLookup.cpp
+  ForwardTranslator/ForwardTranslateTemperingValve.cpp
   ForwardTranslator/ForwardTranslateThermalZone.cpp
   ForwardTranslator/ForwardTranslateThermostatSetpointDualSetpoint.cpp
   ForwardTranslator/ForwardTranslateTimestep.cpp

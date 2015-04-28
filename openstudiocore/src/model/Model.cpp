@@ -427,6 +427,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(SubSurface);
     REGISTER_CONSTRUCTOR(Surface);
     REGISTER_CONSTRUCTOR(TableMultiVariableLookup);
+    REGISTER_CONSTRUCTOR(TemperingValve);
     REGISTER_CONSTRUCTOR(ThermochromicGlazing);
     REGISTER_CONSTRUCTOR(ThermostatSetpointDualSetpoint);
     REGISTER_CONSTRUCTOR(ThermalZone);
@@ -743,6 +744,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(SubSurface);
     REGISTER_COPYCONSTRUCTORS(Surface);
     REGISTER_COPYCONSTRUCTORS(TableMultiVariableLookup);
+    REGISTER_COPYCONSTRUCTORS(TemperingValve);
     REGISTER_COPYCONSTRUCTORS(ThermochromicGlazing);
     REGISTER_COPYCONSTRUCTORS(ThermostatSetpointDualSetpoint);
     REGISTER_COPYCONSTRUCTORS(ThermalZone);
