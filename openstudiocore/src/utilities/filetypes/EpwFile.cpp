@@ -64,38 +64,34 @@ static double psat(double T)
   return exp(rhs);
 }
 
-static double psatp(double T)
+static double psatp(double T, double psat)
 {
   // Compute the derivative of the water vapor saturation pressure function (eqns 5 and 6 from
   // ASHRAE Fundamentals 2009 Ch. 1)
   // This version takes T in C rather than Kelvin since most of the other eqns use C
   T += 273.15;
   double C1 = -5.6745359e+03;
-  double C2 = 6.3925247e+00;
   double C3 = -9.6778430e-03;
   double C4 = 6.2215701e-07;
   double C5 = 2.0747825e-09;
   double C6 = -9.4840240e-13;
   double C7 = 4.1635019e+00;
   double C8 = -5.8002206e+03;
-  double C9 = 1.3914993e+00;
   double C10 = -4.8640239e-02;
   double C11 = 4.1764768e-05;
   double C12 = -1.4452093e-08;
   double C13 = 6.5459673e+00;
-  double f,fp;
+  double fp;
   double T2 = T*T;
   double T3 = T*T2;
   if (T<273.15) {
-    double T4 = T2*T2;
-    f = C1 / T + C2 + T*C3 + T2*C4 + T*3*C5 + T4*C6 + C7*std::log(T);
-    fp = -C1 / T2 + C3 + 2*T*C4 + 3*T2*C5 + 4*T3*C6 + C7/T;
+    fp = -C1 / T2 + C3 + 2 * T*C4 + 3 * T2*C5 + 4 * T3*C6 + C7 / T;
   }
   else {
-    f = C8 / T + C9 + T*C10 + T*T*C11 + T*T*T*C12 + C13*std::log(T);
-    fp = -C8 / T2 + C10 + 2*T*C11 + 3*T2*C12 + C13/T;
+    fp = -C8 / T2 + C10 + 2 * T*C11 + 3 * T2*C12 + C13 / T;
   }
-  return fp*exp(f);
+  //std::cout << "psatp: " << T - 273.15 << " " << fp << " " << fp*psat << std::endl;
+  return fp*psat;
 }
 
 static double enthalpy(double T, double p, double phi)
@@ -132,11 +128,10 @@ AirState::AirState()
 //  B = b (t - t*)
 //  C = c0 + c1 t + c2 t*
 //
-static boost::optional<double> solveForWetBulb(double drybulb, double p, double W, double percentChange, int itermax)
+static boost::optional<double> solveForWetBulb(double drybulb, double p, double W, double deltaLimit, int itermax)
 {
-  double deltaLimit = percentChange*0.01;
   double tstar = drybulb;
-  double Ap, Bp, Cp, Wsstarp;
+  double Ap, Bp, Cp;
   double a0, a1, b, c0, c1t, c2;
   int i = 0;
   a0 = 2501;
@@ -163,7 +158,7 @@ static boost::optional<double> solveForWetBulb(double drybulb, double p, double 
     double B = b*(drybulb - tstar);
     double C = c0 + c1t + c2*tstar;
     double pwsstar = psat(tstar);
-    double pwsstarp = psatp(tstar);
+    double pwsstarp = psatp(tstar, pwsstar);
     double deltap = p - pwsstar;
     double Wsstar = 0.621945*pwsstar / deltap;
     double Wsstarp = (0.621945*pwsstarp*deltap + 0.621945*pwsstar*pwsstarp) / (deltap*deltap);
@@ -171,8 +166,34 @@ static boost::optional<double> solveForWetBulb(double drybulb, double p, double 
     double fp = W*Cp - A*Wsstarp - Ap*Wsstar + Bp;
     double delta = -f / fp;
     tstar += delta;
-    if (fabs(delta) <= deltaLimit) {
+    std::cout << i << " " << tstar << " " << delta / (273.15 + tstar) << std::endl;
+    if (fabs(delta / (273.15 + tstar)) <= deltaLimit) {
       return boost::optional<double>(tstar);
+    }
+  }
+  return boost::none;
+}
+
+// Using equation 38 in ASHRAE Fundamentals 2009 Ch. 1:
+//
+//  psat(td) = pw
+//
+static boost::optional<double> solveForDewPoint(double drybulb, double pw, double deltaLimit, int itermax)
+{
+  //double deltaLimit = percentChange*0.01;
+  double tdew = drybulb;
+  int i = 0;
+
+  while (i < itermax) {
+    i++;
+    double pws = psat(tdew);
+    double f = pws - pw;
+    double fp = psatp(tdew, pws);
+    double delta = -f / fp;
+    tdew += delta;
+    std::cout << i << " " << tdew << " " << delta / (273.15 + tdew) << std::endl;
+    if (fabs(delta / (273.15 + tdew)) <= deltaLimit) {
+      return boost::optional<double>(tdew);
     }
   }
   return boost::none;
@@ -199,10 +220,51 @@ boost::optional<AirState> AirState::fromDryBulbDewPointPressure(double drybulb, 
   //double Ws = 0.621945 * state.m_psat / (pressure - state.m_psat);
   state.m_phi = pw / state.m_psat; // Relative humidity, eqn 24
   state.m_h = 1.006*drybulb + state.m_W*(2501 + 1.86*drybulb); // Moist air specific enthalpy, eqn 32
-  state.m_v = 0.287042*(drybulb + 273.15)*(1 + 1.607858*state.m_W) / pressure;
+  state.m_v = 0.287042*(drybulb + 273.15)*(1 + 1.607858*state.m_W) / pressure; // Specific volume, eqn 28
   // Compute the wet bulb temperature here
+  boost::optional<double> wetbulb = solveForWetBulb(drybulb, pressure, state.m_W, 1e-4, 100);
+  if (!wetbulb) {
+    return boost::none;
+  }
+  state.m_wetbulb = wetbulb.get();
   return boost::optional<AirState>(state);
 }
+
+boost::optional<AirState> AirState::fromDryBulbRelativeHumidityPressure(double drybulb, double RH, double pressure)
+{
+  AirState state;
+  if (drybulb < -100.0 || drybulb > 200.0) {
+    // Out of the range of our current psat function
+    return boost::none;
+  }
+  if (RH > 100.0 || RH < 0.0) {
+    // Out of the range
+    return boost::none;
+  }
+  state.m_drybulb = drybulb;
+  state.m_phi = 0.01*RH;
+  state.m_pressure = pressure;
+  // Compute moist air properties, eqns from ASHRAE Fundamentals 2009 Ch. 1
+  state.m_psat = psat(drybulb); // Water vapor saturation pressure (uses eqns 5 and 6)
+  double pw = state.m_phi * state.m_psat; // Relative humidity, eqn 24
+  state.m_W = 0.621945 * pw / (pressure - pw); // Humidity ratio, eqn 22
+  state.m_h = 1.006*drybulb + state.m_W*(2501 + 1.86*drybulb); // Moist air specific enthalpy, eqn 32
+  state.m_v = 0.287042*(drybulb + 273.15)*(1 + 1.607858*state.m_W) / pressure; // Specific volume, eqn 28
+  // Compute the dew point temperature here
+  boost::optional<double> dewpoint = solveForDewPoint(drybulb, pw, 1e-4, 100);
+  if (!dewpoint) {
+    return boost::none;
+  }
+  state.m_dewpoint = dewpoint.get();
+  // Compute the wet bulb temperature here
+  boost::optional<double> wetbulb = solveForWetBulb(drybulb, pressure, state.m_W, 1e-4, 100);
+  if (!wetbulb) {
+    return boost::none;
+  }
+  state.m_wetbulb = wetbulb.get();
+  return boost::optional<AirState>(state);
+}
+
 
 double AirState::drybulb() const
 {

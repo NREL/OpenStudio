@@ -45,7 +45,8 @@ public:
   AirState();
 
   // Statics
-  boost::optional<AirState> fromDryBulbDewPointPressure(double drybulb, double dewpoint, double pressure);
+  static boost::optional<AirState> fromDryBulbDewPointPressure(double drybulb, double dewpoint, double pressure);
+  static boost::optional<AirState> fromDryBulbRelativeHumidityPressure(double drybulb, double RH, double pressure);
 
   double drybulb() const;
   double dewpoint() const;
