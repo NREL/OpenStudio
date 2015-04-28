@@ -416,6 +416,9 @@ set(${target_name}_src
   GroundHeatExchangerVertical.hpp
   GroundHeatExchangerVertical_Impl.hpp
   GroundHeatExchangerVertical.cpp
+  HeaderedPumpsConstantSpeed.hpp
+  HeaderedPumpsConstantSpeed_Impl.hpp
+  HeaderedPumpsConstantSpeed.cpp
   HeatBalanceAlgorithm.hpp
   HeatBalanceAlgorithm_Impl.hpp
   HeatBalanceAlgorithm.cpp
@@ -1280,6 +1283,7 @@ set(${target_name}_test_src
   test/GlareSensor_GTest.cpp
   test/GroundHeatExchangerVertical_GTest.cpp
   test/HotWaterEquipment_GTest.cpp
+  test/HeaderedPumpsConstantSpeed_GTest.cpp
   test/HeatExchangerAirToAirSensibleAndLatent_GTest.cpp
   test/HeatExchangerFluidToFluid_GTest.cpp
   test/HumidifierSteamElectric_GTest.cpp

@@ -12421,7 +12421,7 @@ OS:CoilSystem:Cooling:Water:HeatExchangerAssisted,
        \type object-list
        \object-list CoolingCoilsWaterNoHX
 
-CoilSystem:Cooling:DX:HeatExchangerAssisted,
+OS:CoilSystem:Cooling:DX:HeatExchangerAssisted,
        \memo Virtual component consisting of a direct expansion (DX) cooling coil and an
        \memo air-to-air heat exchanger. The air-to-air heat exchanger precools the air entering the
        \memo cooling coil and reuses this energy to reheat the supply air leaving the cooling

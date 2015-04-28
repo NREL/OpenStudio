@@ -310,6 +310,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(GasMixture);
     REGISTER_CONSTRUCTOR(GlareSensor);
     REGISTER_CONSTRUCTOR(GroundHeatExchangerVertical);
+    REGISTER_CONSTRUCTOR(HeaderedPumpsConstantSpeed);
     REGISTER_CONSTRUCTOR(HeatBalanceAlgorithm);
     REGISTER_CONSTRUCTOR(HeatExchangerAirToAirSensibleAndLatent);
     REGISTER_CONSTRUCTOR(HeatExchangerFluidToFluid);
@@ -624,6 +625,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(GasMixture);
     REGISTER_COPYCONSTRUCTORS(GlareSensor);
     REGISTER_COPYCONSTRUCTORS(GroundHeatExchangerVertical);
+    REGISTER_COPYCONSTRUCTORS(HeaderedPumpsConstantSpeed);
     REGISTER_COPYCONSTRUCTORS(HeatBalanceAlgorithm);
     REGISTER_COPYCONSTRUCTORS(HeatExchangerAirToAirSensibleAndLatent);
     REGISTER_COPYCONSTRUCTORS(HeatExchangerFluidToFluid);
