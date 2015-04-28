@@ -107,6 +107,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateGasMixture.cpp
   ForwardTranslator/ForwardTranslateGroundHeatExchangerVertical.cpp
   ForwardTranslator/ForwardTranslateHeaderedPumpsConstantSpeed.cpp
+  ForwardTranslator/ForwardTranslateHeaderedPumpsVariableSpeed.cpp
   ForwardTranslator/ForwardTranslateHeatBalanceAlgorithm.cpp
   ForwardTranslator/ForwardTranslateHeatExchangerAirToAirSensibleAndLatent.cpp
   ForwardTranslator/ForwardTranslateHeatExchangerFluidToFluid.cpp

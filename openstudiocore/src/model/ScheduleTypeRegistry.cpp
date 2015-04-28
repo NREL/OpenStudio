@@ -246,6 +246,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"PumpVariableSpeed","Minimum RPM","minimumRPMSchedule",true,"RotationsPerMinute",OptionalDouble(),OptionalDouble()},
     {"PumpVariableSpeed","Maximum RPM","maximumRPMSchedule",true,"RotationsPerMinute",OptionalDouble(),OptionalDouble()},
     {"HeaderedPumpsConstantSpeed","Pump Flow Rate Schedule","pumpFlowRateSchedule",true,"",0.0,1.0},
+    {"HeaderedPumpsVariableSpeed","Pump Flow Rate Schedule","pumpFlowRateSchedule",true,"",0.0,1.0},
     {"RefrigerationCase","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"RefrigerationCase","Case Lighting","caseLightingSchedule",true,"",0.0,1.0},
     {"RefrigerationCase","Case Defrost","caseDefrostSchedule",true,"",0.0,1.0},

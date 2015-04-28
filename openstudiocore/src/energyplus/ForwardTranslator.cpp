@@ -1109,6 +1109,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateHeaderedPumpsConstantSpeed(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_HeaderedPumps_VariableSpeed :
+    {
+      auto mo = modelObject.cast<HeaderedPumpsVariableSpeed>();
+      retVal = translateHeaderedPumpsVariableSpeed(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_HeatBalanceAlgorithm :
     {
       model::HeatBalanceAlgorithm mo = modelObject.cast<HeatBalanceAlgorithm>();
