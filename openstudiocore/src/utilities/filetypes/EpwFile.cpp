@@ -166,7 +166,7 @@ static boost::optional<double> solveForWetBulb(double drybulb, double p, double 
     double fp = W*Cp - A*Wsstarp - Ap*Wsstar + Bp;
     double delta = -f / fp;
     tstar += delta;
-    std::cout << i << " " << tstar << " " << delta / (273.15 + tstar) << std::endl;
+    // std::cout << i << " " << tstar << " " << delta / (273.15 + tstar) << std::endl;
     if (fabs(delta / (273.15 + tstar)) <= deltaLimit) {
       return boost::optional<double>(tstar);
     }
@@ -191,7 +191,7 @@ static boost::optional<double> solveForDewPoint(double drybulb, double pw, doubl
     double fp = psatp(tdew, pws);
     double delta = -f / fp;
     tdew += delta;
-    std::cout << i << " " << tdew << " " << delta / (273.15 + tdew) << std::endl;
+    // std::cout << i << " " << tdew << " " << delta / (273.15 + tdew) << std::endl;
     if (fabs(delta / (273.15 + tdew)) <= deltaLimit) {
       return boost::optional<double>(tdew);
     }
@@ -1945,46 +1945,90 @@ bool EpwDataPoint::setLiquidPrecipitationQuantity(const std::string &liquidPreci
   return true;
 }
 
-boost::optional<double> EpwDataPoint::psat() const
+boost::optional<AirState> EpwDataPoint::airState() const
+{
+  boost::optional<double> value = dryBulbTemperature();
+  if (!value) {
+    return boost::none; // Have to have dry bulb
+  }
+  double drybulb = value.get();
+
+  value = atmosphericStationPressure();
+  if (!value) {
+    return boost::none; // Have to have pressure
+  }
+  double pressure = value.get();
+
+  value = relativeHumidity();
+  if (!value) { // Don't have relative humidity
+    value = dewPointTemperature();
+    if (value) {
+      double dewpoint = value.get();
+      return AirState::fromDryBulbDewPointPressure(drybulb, dewpoint, pressure);
+    }
+  } else { // Have relative humidity
+    double RH = value.get();
+    return AirState::fromDryBulbRelativeHumidityPressure(drybulb, RH, pressure);
+  }
+
+  return boost::none;
+}
+
+boost::optional<double> EpwDataPoint::saturationPressure() const
 {
   boost::optional<double> optdrybulb = dryBulbTemperature();
   if (optdrybulb) {
     double drybulb = optdrybulb.get();
-    return boost::optional<double>(openstudio::psat(drybulb));
+    if (drybulb >= -100.0 && drybulb <= 200.0) {
+      return boost::optional<double>(openstudio::psat(drybulb));
+    }
   }
   return boost::none;
 }
 
 boost::optional<double> EpwDataPoint::enthalpy() const
 {
-  boost::optional<double> value = dryBulbTemperature();
-  if (!value) {
-    return boost::none;
+  boost::optional<AirState> state = airState();
+  if (state) {
+    return boost::optional<double>(state.get().enthalpy());
   }
-  double drybulb = value.get();
+  return boost::none;
+}
 
-  value = atmosphericStationPressure();
-  if (!value) {
-    return boost::none;
+boost::optional<double> EpwDataPoint::humidityRatio() const
+{
+  boost::optional<AirState> state = airState();
+  if (state) {
+    return boost::optional<double>(state.get().humidityRatio());
   }
-  double p = value.get();
+  return boost::none;
+}
 
-  double h;
-  value = relativeHumidity();
-  if (!value) { // Don't have relative humidity - this has not been tested
-    value = dewPointTemperature();
-    if (!value) {
-      return boost::none;
-    }
-    double dewpoint = value.get();
-    h = openstudio::enthalpyFromDewPoint(drybulb, p, dewpoint);
+boost::optional<double> EpwDataPoint::density() const
+{
+  boost::optional<AirState> state = airState();
+  if (state) {
+    return boost::optional<double>(state.get().density());
   }
-  else  { // Have relative humidity
-    double RH = value.get();
-    h = openstudio::enthalpy(drybulb, p, RH*0.01);
-  }
+  return boost::none;
+}
 
-  return boost::optional<double>(h);
+boost::optional<double> EpwDataPoint::specificVolume() const
+{
+  boost::optional<AirState> state = airState();
+  if (state) {
+    return boost::optional<double>(state.get().specificVolume());
+  }
+  return boost::none;
+}
+
+boost::optional<double> EpwDataPoint::wetbulb() const
+{
+  boost::optional<AirState> state = airState();
+  if (state) {
+    return boost::optional<double>(state.get().wetbulb());
+  }
+  return boost::none;
 }
 
 EpwFile::EpwFile(const openstudio::path& p, bool storeData)
@@ -2118,23 +2162,26 @@ boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string &name)
   try {
     id = EpwDataField(name);
   } catch(...) {
-    // Could do a warning message here
+    LOG(Warn, "Unrecognized EPW data field '" << name << "'");
     return boost::none;
   }
-  if(m_data.size()) {
+  if(m_data.size() > 0) {
     std::string units = EpwDataPoint::units(id);
     DateTimeVector dates;
+    dates.push_back(DateTime()); // Use a placeholder to avoid an insert
     std::vector<double> values;
     for(unsigned int i=0;i<m_data.size();i++) {
-      Date date=m_data[i].date();
+      DateTime dateTime=m_data[i].dateTime();
       Time time=m_data[i].time();
       boost::optional<double> value = m_data[i].field(id);
       if(value) {
-        dates.push_back(DateTime(date,time));
+        dates.push_back(DateTime(dateTime));
         values.push_back(value.get());
       }
     }
-    if(dates.size()) {
+    if(values.size()) {
+      DateTime start = dates[1] - Time(0, 0, 0, 3600.0 / m_recordsPerHour);
+      dates[0] = start; // Overwrite the placeholder
       return boost::optional<TimeSeries>(TimeSeries(dates,openstudio::createVector(values),units));
     }
   }
@@ -2154,7 +2201,7 @@ boost::optional<TimeSeries> EpwFile::getComputedTimeSeries(const std::string &na
     id = EpwComputedField(name);
   }
   catch (...) {
-    // Could do a warning message here
+    LOG(Warn, "Unrecognized computed data field '" << name << "'");
     return boost::none;
   }
 
@@ -2162,15 +2209,28 @@ boost::optional<TimeSeries> EpwFile::getComputedTimeSeries(const std::string &na
   boost::optional<double>(EpwDataPoint::*compute)() const;
   switch (id.value()) {
   case EpwComputedField::SaturationPressure:
-    compute = &EpwDataPoint::psat;
+    compute = &EpwDataPoint::saturationPressure;
     break;
   case EpwComputedField::Enthalpy:
     compute = &EpwDataPoint::enthalpy;
+    break;
+  case EpwComputedField::HumidityRatio:
+    compute = &EpwDataPoint::humidityRatio;
+    break;
+  case EpwComputedField::WetBulbTemperature:
+    compute = &EpwDataPoint::wetbulb;
+    break;
+  case EpwComputedField::Density:
+    compute = &EpwDataPoint::density;
+    break;
+  case EpwComputedField::SpecificVolume:
+    compute = &EpwDataPoint::specificVolume;
     break;
   default:
     return boost::none;
   }
   DateTimeVector dates;
+  dates.push_back(DateTime()); // Use a placeholder to avoid an insert
   std::vector<double> values;
   for (unsigned int i = 0; i<m_data.size(); i++) {
     Date date = m_data[i].date();
@@ -2181,7 +2241,9 @@ boost::optional<TimeSeries> EpwFile::getComputedTimeSeries(const std::string &na
       values.push_back(value.get());
     }
   }
-  if (dates.size()) {
+  if (values.size()) {
+    DateTime start = dates[1] - Time(0, 0, 0, 3600.0 / m_recordsPerHour);
+    dates[0] = start; // Overwrite the placeholder
     return boost::optional<TimeSeries>(TimeSeries(dates, openstudio::createVector(values), units));
   }
   return boost::none;

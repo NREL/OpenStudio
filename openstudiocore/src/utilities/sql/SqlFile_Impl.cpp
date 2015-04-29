@@ -2274,8 +2274,8 @@ namespace openstudio{
       std::string units = dataDictionary.units;
 
       boost::optional<openstudio::DateTime> startDateTime; 
-      std::vector<long> stdSecondsFromFirstReport;
-      stdSecondsFromFirstReport.reserve(8760);
+      std::vector<long> stdSecondsFromStart;
+      stdSecondsFromStart.reserve(8760);
 
       std::vector<double> stdValues;
       stdValues.reserve(8760);
@@ -2336,13 +2336,13 @@ namespace openstudio{
               startDateTime = firstDateTime(false);
             }else{
               // DLM: potential leap year problem
-              startDateTime = openstudio::DateTime(openstudio::Date(month, day), openstudio::Time(0,0,intervalMinutes,0));
+              startDateTime = openstudio::DateTime(openstudio::Date(month, day));
             }
           }
 
-          stdSecondsFromFirstReport.push_back(cumulativeSeconds);
+          cumulativeSeconds += 60 * intervalMinutes;
 
-          cumulativeSeconds += 60*intervalMinutes;
+          stdSecondsFromStart.push_back(cumulativeSeconds);
 
           // check if this interval is same as the others
           if (isIntervalTimeSeries && !reportingIntervalMinutes){
@@ -2359,14 +2359,14 @@ namespace openstudio{
         // must finalize to prevent memory leaks
         sqlite3_finalize(sqlStmtPtr);
 
-        if (startDateTime && !stdSecondsFromFirstReport.empty()){
+        if (startDateTime && !stdSecondsFromStart.empty()){
           if (isIntervalTimeSeries){
             openstudio::Time intervalTime(0,0,*reportingIntervalMinutes,0);
             openstudio::Vector values = createVector(stdValues);
             ts = openstudio::TimeSeries(*startDateTime, intervalTime, values, units);
           }else{
             openstudio::Vector values = createVector(stdValues);
-            ts = openstudio::TimeSeries(*startDateTime, stdSecondsFromFirstReport, values, units);
+            ts = openstudio::TimeSeries(*startDateTime, stdSecondsFromStart, values, units);
           }
         }
       }

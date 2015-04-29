@@ -37,7 +37,7 @@ namespace openstudio{
     /// constructor from start date, interval length, and values
     /// first reporting interval ends at Date + Time(0) + intervalLength
     TimeSeries_Impl::TimeSeries_Impl(const Date& startDate, const Time& intervalLength, const Vector& values, const std::string& units)
-      : m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0), m_wrapAround(false)
+      : m_secondsFromStart(values.size()), m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       if (values.empty()){
         LOG(Warn, "Creating empty timeseries");
@@ -48,10 +48,13 @@ namespace openstudio{
 
       // date and time of first report, end of the first reporting interval
       // DLM: startDate may or may not have baseYear defined
-      m_firstReportDateTime=DateTime(startDate,intervalLength); 
+      m_firstReportDateTime=DateTime(startDate,intervalLength);
+
+      m_startDateTime = DateTime(startDate, Time(0));
 
       for (unsigned i = 0; i < values.size(); ++i){
         m_secondsFromFirstReport[i] = i*secondsPerInterval;
+        m_secondsFromStart[i] = (i + 1)*secondsPerInterval;
       }
       m_secondsFromFirstReportAsVector = createVector(m_secondsFromFirstReport);
 
@@ -73,8 +76,8 @@ namespace openstudio{
 
     /// constructor from start date and time, interval length, and values
     /// first reporting interval ends at startDateTime
-    TimeSeries_Impl::TimeSeries_Impl(const DateTime& startDateTime, const Time& intervalLength, const Vector& values, const std::string& units)
-      :  m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0), m_wrapAround(false)
+    TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const Time& intervalLength, const Vector& values, const std::string& units)
+      : m_secondsFromStart(values.size()), m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       if (values.empty()){
         LOG(Warn, "Creating empty timeseries");
@@ -84,10 +87,13 @@ namespace openstudio{
       int secondsPerInterval = intervalLength.totalSeconds();
 
       // DLM: startDate may or may not have baseYear defined
-      m_firstReportDateTime = DateTime(startDateTime.date(), startDateTime.time());
+      m_firstReportDateTime = DateTime(firstReportDateTime.date(), firstReportDateTime.time());
+
+      m_startDateTime = m_firstReportDateTime - intervalLength;
 
       for (unsigned i = 0; i < values.size(); ++i){
         m_secondsFromFirstReport[i] = i*secondsPerInterval;
+        m_secondsFromStart[i] = (i + 1)*secondsPerInterval;
       }
       m_secondsFromFirstReportAsVector = createVector(m_secondsFromFirstReport);
 
@@ -123,8 +129,14 @@ namespace openstudio{
       // DLM: firstReportDateTime may or may not have baseYear defined
       m_firstReportDateTime = firstReportDateTime;
 
+      LOG(Warn, "Assuming that time series begins at the start of the day of first report");
+      m_startDateTime = DateTime(m_firstReportDateTime.date());
+
+      int firstIntervalSeconds = firstReportDateTime.time().totalSeconds();
+
       for (unsigned i = 0; i < values.size(); ++i){
-        m_secondsFromFirstReport[i] = Time(daysFromFirstReport(i)).totalSeconds(); 
+        m_secondsFromFirstReport[i] = Time(daysFromFirstReport(i)).totalSeconds();
+        m_secondsFromStart[i] = Time(daysFromFirstReport(i)).totalSeconds() + firstIntervalSeconds;
         if (i > 0){
           if (m_secondsFromFirstReport[i] < m_secondsFromFirstReport[i-1]){
             LOG_AND_THROW("Days from first report must be monotonically increasing");
@@ -150,24 +162,30 @@ namespace openstudio{
     }
 
     TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<double>& daysFromFirstReport, const std::vector<double>& values, const std::string& units) 
-      : m_secondsFromFirstReport(daysFromFirstReport.size()), m_values(values.size()), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
+      : m_secondsFromStart(values.size()), m_secondsFromFirstReport(daysFromFirstReport.size()), m_values(values.size()), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       if (values.empty()){
         LOG(Warn, "Creating empty timeseries");
       }
 
       if (daysFromFirstReport.size() != values.size()){
-        LOG_AND_THROW("Length of values must match length of times");
+        LOG_AND_THROW("Length of values (" << values.size() << ") must match length of times (" << daysFromFirstReport.size()<< ")");
       }
 
       // DLM: firstReportDateTime may or may not have baseYear defined
       m_firstReportDateTime = firstReportDateTime;
+
+      LOG(Warn, "Assuming that time series begins at the start of the day of first report");
+      m_startDateTime = DateTime(m_firstReportDateTime.date());
+
+      int firstIntervalSeconds = firstReportDateTime.time().totalSeconds();
 
       //        for (unsigned i = 0; i < values.size(); i++) m_values(i) = values[i];
       std::copy(values.begin(), values.end(), m_values.begin());
 
       for (unsigned i = 0; i < values.size(); ++i){
         m_secondsFromFirstReport[i] = Time(daysFromFirstReport[i]).totalSeconds();
+        m_secondsFromStart[i] = Time(daysFromFirstReport[i]).totalSeconds() + firstIntervalSeconds;
         if (i > 0){
           if (m_secondsFromFirstReport[i] < m_secondsFromFirstReport[i-1]){
             LOG_AND_THROW("Days from first report must be monotonically increasing");
@@ -193,21 +211,36 @@ namespace openstudio{
     }
 
     /// constructor from date times, values, and units
-    TimeSeries_Impl::TimeSeries_Impl(const DateTimeVector& dateTimes, const Vector& values, const std::string& units)
-      : m_secondsFromFirstReport(dateTimes.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
+    TimeSeries_Impl::TimeSeries_Impl(const DateTimeVector& inDateTimes, const Vector& values, const std::string& units)
+      : m_secondsFromStart(values.size()), m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       if (values.empty()){
         LOG(Warn, "Creating empty timeseries");
       }
 
+      bool extraTime(false);
+      DateTimeVector dateTimes = inDateTimes;
       if (dateTimes.size() != values.size()){
-        LOG_AND_THROW("Length of values must match length of times");
+        if (dateTimes.size() - 1 == values.size()) {
+          extraTime = true;
+          m_startDateTime = inDateTimes.front();
+          dateTimes = DateTimeVector(inDateTimes.cbegin() + 1, inDateTimes.cend());
+        } else {
+          LOG_AND_THROW("Length of values (" << values.size() << ") must match length of times (" << dateTimes.size() << ")");
+        }
       }
 
       // DLM: startDate may or may not have baseYear defined
       m_firstReportDateTime = dateTimes.front();
       unsigned numDateTimes = dateTimes.size();
       boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
+
+      if (!extraTime) {
+        LOG(Warn, "Assuming that time series begins at the start of the day of first report");
+        m_startDateTime = DateTime(m_firstReportDateTime.date());
+      }
+
+      int firstIntervalSeconds = (m_firstReportDateTime - m_startDateTime).totalSeconds();
 
       DateTime firstReportDateTimeWithYear = m_firstReportDateTime;
       if (!calendarYear){
@@ -228,8 +261,10 @@ namespace openstudio{
           m_wrapAround = true;
           DateTime wrappedDateTime = DateTime(Date(dateTime.date().monthOfYear(), dateTime.date().dayOfMonth(), m_firstReportDateTime.date().year() + 1), dateTime.time());
           m_secondsFromFirstReport[i] = (wrappedDateTime-firstReportDateTimeWithYear).totalSeconds();
+          m_secondsFromStart[i] = (wrappedDateTime - firstReportDateTimeWithYear).totalSeconds() + firstIntervalSeconds;
         }else{
           m_secondsFromFirstReport[i] = (dateTime-m_firstReportDateTime).totalSeconds();
+          m_secondsFromStart[i] = (dateTime - m_firstReportDateTime).totalSeconds() + firstIntervalSeconds;
         }
 
         if (i > 0){
@@ -241,29 +276,50 @@ namespace openstudio{
       m_secondsFromFirstReportAsVector = createVector(m_secondsFromFirstReport);
     }
 
-    /// constructor from first report date and time, seconds from first report vector, values, and units
-    TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<long>& secondsFromFirstReport, const Vector& values, const std::string& units)
-      :  m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
+    /// constructor from first report date and time, seconds from start vector, values, and units
+    TimeSeries_Impl::TimeSeries_Impl(const DateTime& startOrFirst, const std::vector<long>& seconds, const Vector& values, const std::string& units)
+      : m_secondsFromStart(values.size()), m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
-      if (values.empty()){
+      if (seconds.size() != values.size()){
+        LOG_AND_THROW("Length of values (" << values.size() << ") must match length of times (" << seconds.size() << ")");
+      }
+
+      m_startDateTime = startOrFirst;
+
+      if (values.empty() || seconds.empty()){
         LOG(Warn, "Creating empty timeseries");
-      }
+        m_firstReportDateTime = startOrFirst;
+      } else {
+        // Check that seconds are monotonic
+        for (unsigned i = 1; i < seconds.size(); ++i){
+          if (seconds[i] < seconds[i - 1]){
+            LOG_AND_THROW("Seconds from first report/start of series must be monotonically increasing");
+          }
+        }
 
-      if (secondsFromFirstReport.size() != values.size()){
-        LOG_AND_THROW("Length of values must match length of times");
-      }
+        if (seconds[0] == 0) { // This is the old, BROKEN way
+          LOG(Warn, "Assuming that time series begins at the start of the day of first report");
+          m_startDateTime = DateTime(startOrFirst.date());
+          m_firstReportDateTime = startOrFirst;
+          int firstIntervalSeconds = m_firstReportDateTime.time().totalSeconds();
+          m_secondsFromStart = seconds;
+          for (unsigned i = 0; i < m_secondsFromStart.size(); i++) {
+            m_secondsFromStart[i] += firstIntervalSeconds;
+          }
+          m_secondsFromFirstReport = seconds;
 
-      // DLM: firstReportDateTime may or may not have baseYear defined
-      m_firstReportDateTime = firstReportDateTime;
+        } else {
+          m_firstReportDateTime = m_startDateTime + Time(0, 0, 0, seconds[0]);
+          m_secondsFromStart = seconds;
 
-      for (unsigned i = 0; i < values.size(); ++i){
-        m_secondsFromFirstReport[i] = secondsFromFirstReport[i];
-        if (i > 0){
-          if (m_secondsFromFirstReport[i] < m_secondsFromFirstReport[i-1]){
-            LOG_AND_THROW("Days from first report must be monotonically increasing");
+          // Get rid of this later
+          m_secondsFromFirstReport[0] = 0;
+          for (unsigned i = 1; i < values.size(); ++i){
+            m_secondsFromFirstReport[i] = seconds[i] - seconds[0];
           }
         }
       }
+
       m_secondsFromFirstReportAsVector = createVector(m_secondsFromFirstReport);
 
       long durationSeconds = 0;
@@ -297,7 +353,6 @@ namespace openstudio{
       }
       return dateTimeObjs;
     }
-
 
     /// time in days from end of the first reporting interval
     Vector TimeSeries_Impl::daysFromFirstReport() const 
@@ -626,28 +681,38 @@ namespace openstudio{
 
     std::shared_ptr<TimeSeries_Impl> TimeSeries_Impl::operator*(double d) const {
 
-      return std::shared_ptr<TimeSeries_Impl>(new TimeSeries_Impl(m_firstReportDateTime, 
-        m_secondsFromFirstReport,
-        m_values*d, 
+      return std::shared_ptr<TimeSeries_Impl>(new TimeSeries_Impl(m_startDateTime,
+        m_secondsFromStart,
+        m_values*d,
         m_units));
     }
 
     double TimeSeries_Impl::integrate() const
     {
       double result = 0;
-      for (int i = 0; i < m_values.size(); i++) {
-
+      if (m_intervalLength) {
+        int secs = m_intervalLength.get().totalSeconds();
+        // Use a Riemann sum to integrate under the curve
+        for (unsigned i = 0; i < m_values.size(); i++) {
+          result += secs * m_values[i];
+        }
+      } else {
+        double lastTime = 0;
+        // Use a Riemann sum to integrate under the curve
+        for (unsigned i = 0; i < m_values.size(); i++) {
+          result += (m_secondsFromStart[i] - lastTime) * m_values[i];
+          lastTime = m_secondsFromStart[i];
+        }
       }
       return result;
     }
 
     double TimeSeries_Impl::averageValue() const
     {
-      double result = 0;
-      for (int i = 0; i < m_values.size(); i++) {
-
+      if (m_secondsFromStart.size() > 0) {
+        return integrate() / m_secondsFromStart.back();
       }
-      return result;
+      return 0;
     }
 
   } // detail
@@ -663,8 +728,8 @@ namespace openstudio{
   {}
 
   /// constructor from start date and time, interval length, values, and units
-  TimeSeries::TimeSeries(const DateTime& startDateTime, const Time& intervalLength, const Vector& values, const std::string& units) :
-    m_impl(std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(startDateTime, intervalLength, values, units)))
+  TimeSeries::TimeSeries(const DateTime& firstReportDateTime, const Time& intervalLength, const Vector& values, const std::string& units) :
+    m_impl(std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(firstReportDateTime, intervalLength, values, units)))
   {}
 
   /// constructor from first report date and time, days from first report vector, values, and units
@@ -683,8 +748,8 @@ namespace openstudio{
   {}
 
   /// constructor from first report date and time, seconds from first report vector, values, and units
-  TimeSeries::TimeSeries(const DateTime& firstReportDateTime, const std::vector<long>& secondsFromFirstReport, const Vector& values, const std::string& units) :
-    m_impl(std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(firstReportDateTime, secondsFromFirstReport, values, units)))
+  TimeSeries::TimeSeries(const DateTime& startOrFirst, const std::vector<long>& seconds, const Vector& values, const std::string& units) :
+    m_impl(std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(startOrFirst, seconds, values, units)))
   {}
 
   /// interval length if any

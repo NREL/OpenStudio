@@ -14,6 +14,7 @@
 
 %template(EpwDataPointVector) std::vector<openstudio::EpwDataPoint>;
 %template(OptionalEpwDataPoint) boost::optional<openstudio::EpwDataPoint>;
+%template(OptionalAirState) boost::optional<openstudio::AirState>;
 
 %ignore std::vector<openstudio::EpwFile>::vector(size_type);
 %ignore std::vector<openstudio::EpwFile>::resize(size_type);

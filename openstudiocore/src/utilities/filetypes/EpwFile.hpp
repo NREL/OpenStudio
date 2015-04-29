@@ -117,6 +117,8 @@ OPENSTUDIO_ENUM(EpwComputedField,
   ((Enthalpy)(Enthalpy))
   ((HumidityRatio)(Humidity Ratio))
   ((WetBulbTemperature)(Wet Bulb Temperature))
+  ((Density)(Density))
+  ((SpecificVolume)(Specific Volume))
   );
 
 /** EpwDataPoint is one line from the EPW file. All floating point numbers are stored as strings,
@@ -143,6 +145,7 @@ public:
   // Data retrieval
   boost::optional<double> fieldByName(const std::string &name);
   boost::optional<double> field(EpwDataField id);
+  boost::optional<AirState> airState() const;
   // Conversion
   static boost::optional<EpwDataPoint> fromEpwString(const std::string &line);
   static boost::optional<EpwDataPoint> fromEpwStrings(const std::vector<std::string> &list, bool pedantic=true);
@@ -191,8 +194,12 @@ public:
   boost::optional<double> liquidPrecipitationQuantity() const;
 
   // Computed quantities
-  boost::optional<double> psat() const;
+  boost::optional<double> saturationPressure() const;
   boost::optional<double> enthalpy() const;
+  boost::optional<double> humidityRatio() const;
+  boost::optional<double> density() const;
+  boost::optional<double> specificVolume() const;
+  boost::optional<double> wetbulb() const;
 
 private:
   // One billion setters

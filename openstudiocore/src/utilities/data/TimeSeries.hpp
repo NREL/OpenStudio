@@ -50,7 +50,7 @@ namespace openstudio{
 
         /// constructor from start date and time, interval length, values, and units
         /// throws if values is empty
-        TimeSeries_Impl(const DateTime& startDateTime, const Time& intervalLength, const Vector& values, const std::string& units);
+        TimeSeries_Impl(const DateTime& firstReportDateTime, const Time& intervalLength, const Vector& values, const std::string& units);
 
         /// constructor from first report date and time, days from first report vector, values, and units
         /// throws if values is empty, daysFromFirstReport and values have different lengths, or daysFromFirstReport is not sorted in ascending order
@@ -66,7 +66,7 @@ namespace openstudio{
 
         /// constructor from first report date and time, seconds from first report vector, values, and units
         /// throws if values is empty, daysFromFirstReport and values have different lengths, or secondsFromFirstReport is not sorted in ascending order
-        TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<long>& secondsFromFirstReport, const Vector& values, const std::string& units);
+        TimeSeries_Impl(const DateTime& startOrFirst, const std::vector<long>& secondsFromFirstReport, const Vector& values, const std::string& units);
 
         // virtual destructor
         ~TimeSeries_Impl() {}
@@ -146,9 +146,13 @@ namespace openstudio{
         // fully qualified first report date
         DateTime m_firstReportDateTime;
 
+        // start date and time of time series
+        DateTime m_startDateTime;
+
         // integer seconds from first report date time, used for quick interpolation
         std::vector<long> m_secondsFromFirstReport; 
         Vector m_secondsFromFirstReportAsVector; // same as m_secondsFromFirstReport but stored as Vector
+        std::vector<long> m_secondsFromStart;
 
         // values reported at m_dateTimes
         Vector m_values;
@@ -190,7 +194,7 @@ namespace openstudio{
       TimeSeries(const Date& startDate, const Time& intervalLength, const Vector& values, const std::string& units);
 
       /// constructor from start date and time, interval length, values, and units
-      TimeSeries(const DateTime& startDateTime, const Time& intervalLength, const Vector& values, const std::string& units);
+      TimeSeries(const DateTime& firstReportDateTime, const Time& intervalLength, const Vector& values, const std::string& units);
 
       /// constructor from first report date and time, days from first report vector, values, and units
       TimeSeries(const DateTime& firstReportDateTime, const Vector& daysFromFirstReport, const Vector& values, const std::string& units);
@@ -202,7 +206,7 @@ namespace openstudio{
       TimeSeries(const DateTimeVector& dateTimes, const Vector& values, const std::string& units);
 
       /// constructor from first report date and time, seconds from first report vector, values, and units
-      TimeSeries(const DateTime& firstReportDateTime, const std::vector<long>& secondsFromFirstReport, const Vector& values, const std::string& units);
+      TimeSeries(const DateTime& startOrFirst, const std::vector<long>& seconds, const Vector& values, const std::string& units);
 
       /// virtual destructor
       ~TimeSeries() {}
