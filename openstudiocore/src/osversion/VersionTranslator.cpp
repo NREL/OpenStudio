@@ -2400,7 +2400,16 @@ std::string VersionTranslator::update_1_7_1_to_1_7_2(const IdfFile& idf_1_7_1, c
 
   for (const IdfObject& object : idf_1_7_1.objects()) {
     if (object.iddObject().name() == "OS:EvaporativeCooler:Direct:ResearchSpecial") {
-      auto newObject = object.clone(true);
+      auto iddObject = idd_1_7_2.getObject("OS:EvaporativeCooler:Direct:ResearchSpecial");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < 10; ++i ) {
+        if( auto s = object.getString(i) ) {
+          newObject.setString(i,s.get());
+        }
+      }
+
       auto d = object.getDouble(4);
       if( ! d ) {
         newObject.setString(4,"Autosize");
@@ -2410,7 +2419,16 @@ std::string VersionTranslator::update_1_7_1_to_1_7_2(const IdfFile& idf_1_7_1, c
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
     } else if (object.iddObject().name() == "OS:EvaporativeCooler:Indirect:ResearchSpecial") {
-      auto newObject = object.clone(true);
+      auto iddObject = idd_1_7_2.getObject("OS:EvaporativeCooler:Indirect:ResearchSpecial");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < 19; ++i ) {
+        if( auto s = object.getString(i) ) {
+          newObject.setString(i,s.get());
+        }
+      }
+
       auto d = object.getDouble(5);
       if( ! d ) {
         newObject.setString(5,"Autosize");
