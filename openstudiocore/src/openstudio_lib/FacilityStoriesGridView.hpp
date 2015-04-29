@@ -22,6 +22,7 @@
 
 #include "../shared_gui_components/OSGridController.hpp"
 
+#include "GridViewSubTab.hpp"
 #include "OSItem.hpp"
 
 #include "../model/Model.hpp"
@@ -33,10 +34,9 @@ class QLabel;
 
 namespace openstudio{
 
-  class ModelSubTabView;
   class FacilityStoriesGridController;
 
-  class FacilityStoriesGridView : public QWidget
+  class FacilityStoriesGridView : public GridViewSubTab
   {
     Q_OBJECT
 
@@ -46,11 +46,9 @@ namespace openstudio{
 
     virtual ~FacilityStoriesGridView() {}
 
-    std::vector<model::ModelObject> selectedObjects() const;
+    //void enableFilter();
 
-    void enableFilter();
-
-    void disableFilter();
+    //void disableFilter();
 
     QComboBox * m_filters = nullptr;
 
@@ -58,23 +56,13 @@ namespace openstudio{
 
     REGISTER_LOGGER("openstudio.FacilityStoriesGridView");
 
-    bool m_isIP;
+    virtual void addObject(const openstudio::IddObjectType& iddObjectType);
 
-    FacilityStoriesGridController * m_gridController = nullptr;
+    virtual void purgeObjects(const openstudio::IddObjectType& iddObjectType);
 
     QLabel * m_filterLabel = nullptr;
 
   signals:
-
-    void toggleUnitsClicked(bool displayIP);
-
-    void dropZoneItemClicked(OSItem* item);
-
-    void itemSelected(OSItem * item);
-
-    void selectionCleared();
-
-    void gridRowSelected(OSItem*);
 
     private slots:
 
