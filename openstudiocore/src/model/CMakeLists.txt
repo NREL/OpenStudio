@@ -7,6 +7,9 @@ set(${target_name}_src
   Model.hpp
   Model_Impl.hpp
   Model.cpp
+  CoilPerformanceDXCooling.hpp
+  CoilPerformanceDXCooling_Impl.hpp
+  CoilPerformanceDXCooling.cpp
   Component.hpp
   Component_Impl.hpp
   Component.cpp
@@ -1253,6 +1256,7 @@ set(${target_name}_test_src
   test/CoilHeatingWater_GTest.cpp
   test/CoilHeatingWaterToAirHeatPumpEquationFit_GTest.cpp
   test/CoilHeatingWaterBaseboard_GTest.cpp
+  test/CoilPerformanceDXCooling_GTest.cpp
   test/CoilWaterHeatingDesuperheater_GTest.cpp
   test/Component_GTest.cpp
   test/Connection_GTest.cpp

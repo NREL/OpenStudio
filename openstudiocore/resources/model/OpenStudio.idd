@@ -11984,6 +11984,190 @@ OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode,
        \note If a schedule name is not entered, the basin heater is allowed to operate
        \note throughout the entire simulation.
 
+OS:CoilPerformance:DX:Cooling,
+       \memo Used to specify DX cooling coil performance for one mode of operation for a
+       \memo Coil:Cooling:DX:TwoStageWithHumidityControlMode object which may reference one to four
+       \memo CoilPerformance:DX:Cooling objects depending on the specified number of stages and
+       \memo dehumidification modes. In nearly all cases, the Rated Air Flow Rate will be the same
+       \memo for all performance objects associated with a given coil. If bypass is specified,
+       \memo the Rated Air Flow Rate includes both the bypassed flow and the flow through the
+       \memo active part of the coil.
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference CoilPerformanceDX
+  N1 , \field Gross Rated Total Cooling Capacity
+       \note Total cooling capacity not accounting for the effect of supply air fan heat
+       \required-field
+       \type real
+       \units W
+       \minimum> 0.0
+       \autosizable
+       \required-field
+       \note gross capacity excluding supply air fan heat
+       \note rating point: air entering the cooling coil at 26.7 C dry-bulb/19.4 C wet-bulb, and
+       \note air entering the outdoor condenser coil at 35 C dry-bulb/23.9 C wet-bulb
+  N2 , \field Gross Rated Sensible Heat Ratio
+       \required-field
+       \type real
+       \minimum 0.5
+       \maximum 1.0
+       \autosizable
+       \required-field
+       \note Rated sensible heat ratio (gross sensible capacity/gross total capacity)
+       \note sensible and total capacities do not include supply fan heat
+  N3 , \field Gross Rated Cooling COP
+       \note Gross cooling capacity divided by power input to the compressor and outdoor fan,
+       \note does not include supply fan heat or supply fan electrical energy input
+       \type real
+       \units W/W
+       \minimum> 0.0
+       \required-field
+  N4 , \field Rated Air Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+       \required-field
+       \note Flow rate corresponding to Rated total Cooling capacity, Rated SHR and Rated COP
+  N5 , \field Fraction of Air Flow Bypassed Around Coil
+       \type real
+       \minimum 0.0
+       \maximum< 1.0
+       \required-field
+       \note Fraction of Rated Air Flow Rate which bypasses the cooling coil
+       \note in this performance mode.  The remaining portion of the flow
+       \note should be between 0.00004027 m3/s and .00006041 m3/s per watt of rated total cooling capacity.
+       \note This is used to model face-split coils on multi-stage units or bypass dampers.
+       \note If total flow rate varies during simulation, the same fraction is bypassed.
+  A3 , \field Total Cooling Capacity Function of Temperature Curve
+       \required-field
+       \type object-list
+       \object-list BiquadraticCurves
+       \object-list BiVariateTables
+       \note curve = a + b*wb + c*wb**2 + d*edb + e*edb**2 + f*wb*edb
+       \note wb = entering wet-bulb temperature (C)
+       \note edb = dry-bulb temperature seen by the condenser (C)
+  A4 , \field Total Cooling Capacity Function of Flow Fraction Curve
+       \required-field
+       \type object-list
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
+       \note quadratic curve = a + b*ff + c*ff**2
+       \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
+       \note ff = fraction of the full load flow
+  A5 , \field Energy Input Ratio Function of Temperature Curve
+       \required-field
+       \type object-list
+       \object-list BiquadraticCurves
+       \object-list BiVariateTables
+       \note curve = a + b*wb + c*wb**2 + d*edb + e*edb**2 + f*wb*edb
+       \note wb = entering wet-bulb temperature (C)
+       \note edb = dry-bulb temperature seen by the condenser (C)
+  A6 , \field Energy Input Ratio Function of Flow Fraction Curve
+       \required-field
+       \type object-list
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
+       \note quadratic curve = a + b*ff + c*ff**2
+       \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
+       \note ff = fraction of the full load flow
+  A7 , \field Part Load Fraction Correlation Curve
+       \required-field
+       \type object-list
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
+       \note quadratic curve = a + b*PLR + c*PLR**2
+       \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
+       \note PLR = part load ratio (cooling load/steady state capacity)
+  N6 , \field Nominal Time for Condensate Removal to Begin
+       \type real
+       \units s
+       \minimum 0.0
+       \maximum 3000.0
+       \required-field
+       \note The nominal time for condensate to begin leaving the coil's condensate
+       \note drain line at the coil's rated air flow rate and temperature conditions.
+       \note Nominal time is equal to the ratio of the energy of the coil's maximum
+       \note condensate holding capacity (J) to the coil's steady state latent capacity (W).
+       \note Suggested value is 1000; zero value means latent degradation model is disabled.
+  N7 , \field Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
+       \type real
+       \units dimensionless
+       \minimum 0.0
+       \maximum 5.0
+       \maximum 3000.0
+       \required-field
+       \note Ratio of the initial moisture evaporation rate from the cooling coil (when
+       \note the compressor first turns off) and the coil's steady state latent capacity
+       \note at rated air flow rate and temperature conditions. Suggested value is 1.5; zero value
+       \note means latent degradation model is disabled.
+  N8 , \field Maximum Cycling Rate
+       \type real
+       \units cycles/hr
+       \minimum 0.0
+       \maximum 5.0
+       \required-field
+       \note The maximum on-off cycling rate for the compressor, which occurs at 50% run time
+       \note fraction. Suggested value is 3; zero value means latent degradation model is disabled.
+  N9 , \field Latent Capacity Time Constant
+       \type real
+       \units s
+       \minimum 0.0
+       \maximum 500.0
+       \required-field
+       \note Time constant for the cooling coil's latent capacity to reach steady state after
+       \note startup. Suggested value is 45; zero value means latent degradation model is disabled.
+  A8 , \field Condenser Air Inlet Node
+       \type object-list
+       \object-list Node
+       \note Enter the name of an outdoor air node. This node name is also specified in
+       \note an OutdoorAir:Node or OutdoorAir:NodeList object.
+  A9 , \field Condenser Type
+       \type choice
+       \key AirCooled
+       \key EvaporativelyCooled
+       \required-field
+  N10 , \field Evaporative Condenser Effectiveness
+       \type real
+       \units dimensionless
+       \minimum 0.0
+       \maximum 1.0
+       \required-field
+  N11, \field Evaporative Condenser Air Flow Rate
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+       \required-field
+       \note Used to calculate evaporative condenser water use
+  N12, \field Evaporative Condenser Pump Rated Power Consumption
+       \type real
+       \units W
+       \minimum 0.0
+       \autosizable
+       \required-field
+       \note Rated power consumed by the evaporative condenser's water pump
+  A10,  \field Sensible Heat Ratio Function of Temperature Curve
+       \type object-list
+       \object-list BiquadraticCurves
+       \object-list BiVariateTables
+       \note curve = a + b*wb + c*wb**2 + d*db + e*db**2 + f*wb*db
+       \note wb = entering wet-bulb temperature seen by the DX cooling coil (C)
+       \note db = entering dry-bulb temperature seen by the DX cooling coil (C)
+       \note entering temperature can be outside air or pretreated air.
+  A11; \field Sensible Heat Ratio Function of Flow Fraction Curve
+       \type object-list
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
+       \note quadratic curve = a + b*ff + c*ff**2
+       \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
+       \note ff = fraction of the full load flow
+
 OS:Coil:Cooling:DX:MultiSpeed,
        \extensible:1
   A1, \field Handle

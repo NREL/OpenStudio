@@ -56,6 +56,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCoilHeatingGasMultiStage.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingWater.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingWaterToAirHeatPumpEquationFit.cpp
+  ForwardTranslator/ForwardTranslateCoilPerformanceDXCooling.cpp
   ForwardTranslator/ForwardTranslateCoilWaterHeatingDesuperheater.cpp
   ForwardTranslator/ForwardTranslateConstruction.cpp
   ForwardTranslator/ForwardTranslateConstructionWithInternalSource.cpp

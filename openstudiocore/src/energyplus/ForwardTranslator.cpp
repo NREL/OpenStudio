@@ -756,6 +756,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateCoilHeatingWaterToAirHeatPumpEquationFit(coil);
       break;
     }
+  case openstudio::IddObjectType::OS_CoilPerformance_DX_Cooling :
+    {
+      auto mo = modelObject.cast<CoilPerformanceDXCooling>();
+      retVal = translateCoilPerformanceDXCooling(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_Coil_WaterHeating_Desuperheater :
     {
       model::CoilWaterHeatingDesuperheater coil = modelObject.cast<CoilWaterHeatingDesuperheater>();
