@@ -19,17 +19,12 @@
 
 #include "FacilityStoriesGridView.hpp"
 
-#include "OSItemSelectorButtons.hpp"
-
-#include "../shared_gui_components/OSGridView.hpp"
-
-#include "../model/Model.hpp"
-#include "../model/Model_Impl.hpp"
-#include "../model/ModelObject.hpp"
-#include "../model/ModelObject_Impl.hpp"
-
 #include "OSDropZone.hpp"
+#include "OSItemSelectorButtons.hpp"
 #include "RenderingColorWidget.hpp"
+
+#include "../shared_gui_components/OSDoubleEdit.hpp"
+#include "../shared_gui_components/OSGridView.hpp"
 
 #include "../model/BuildingStory.hpp"
 #include "../model/BuildingStory_Impl.hpp"
@@ -39,17 +34,14 @@
 #include "../model/DefaultScheduleSet_Impl.hpp"
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
 #include "../model/RenderingColor.hpp"
-#include "../model/Space.hpp"
-#include "../model/Space_Impl.hpp"
-
-#include <utilities/idd/OS_BuildingStory_FieldEnums.hxx>
-#include <utilities/idd/OS_Space_FieldEnums.hxx>
-
+#include "../model/RenderingColor_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/idd/IddEnums.hxx"
-#include "../utilities/idd/OS_Exterior_Lights_FieldEnums.hxx"
+#include "../utilities/idd/OS_BuildingStory_FieldEnums.hxx"
 
 #include <QBoxLayout>
 #include <QCheckBox>
@@ -64,9 +56,17 @@
 #define SELECTED "All"
 
 // GENERAL
-#define RENDERINGCOLOR "Rendering Color"
-#define DEFAULTCONSTRUCTIONSET "Default Construction Set"
-#define DEFAULTSCHEDULESET "Default Schedule Set"
+#define NOMINALZCOORDINATE "Nominal Z Coordinate"
+#define NOMINALFLOORTOFLOORHEIGHT "Nominal Floor to Floor Height"
+#define DEFAULTCONSTRUCTIONSETNAME "Default Construction Set Name"
+#define DEFAULTSCHEDULESETNAME "Default Schedule Set Name"
+#define GROUPRENDERINGNAME "Group Rendering Name"
+#define NOMINALFLOORTOCEILINGHEIGHT "Nominal Floor to Ceiling Height"
+#define SPACES "Spaces"
+
+// FILTERS
+#define NOMINALZCOORDINATEGREATERTHAN "Nominal Z Coordinate >"
+#define NOMINALZCOORDINATELESSTHAN "Nominal Z Coordinate <"
 
 namespace openstudio {
 
@@ -89,13 +89,15 @@ namespace openstudio {
     setGridController(m_gridController);
     setGridView(gridView);
 
-    // Load Filter
+    // Filters
 
     QLabel * label = nullptr;
 
-    QVBoxLayout * layout = nullptr;
+    QLineEdit * lineEdit = nullptr;
 
-    bool isConnected = false;
+    QDoubleValidator * doubleValidator = nullptr;
+
+    QVBoxLayout * layout = nullptr;
 
     auto filterGridLayout = new QGridLayout();
     filterGridLayout->setContentsMargins(7, 4, 0, 8);
@@ -104,38 +106,47 @@ namespace openstudio {
     label = new QLabel();
     label->setText("Filter:");
     label->setObjectName("H2");
-    filterGridLayout->addWidget(label, filterGridLayout->rowCount(), 0, Qt::AlignTop | Qt::AlignLeft);
+    filterGridLayout->addWidget(label, filterGridLayout->rowCount(), filterGridLayout->columnCount(), Qt::AlignTop | Qt::AlignLeft);
+
+    // NOMINALZCOORDINATEGREATERTHAN
 
     layout = new QVBoxLayout();
 
-    m_filterLabel = new QLabel();
-    m_filterLabel->setText("Load Type");
-    m_filterLabel->setObjectName("H3");
-    layout->addWidget(m_filterLabel, Qt::AlignTop | Qt::AlignLeft);
+    label = new QLabel();
+    label->setText(NOMINALZCOORDINATEGREATERTHAN);
+    label->setObjectName("H3");
+    layout->addWidget(label, Qt::AlignTop | Qt::AlignLeft);
 
-    m_filters = new QComboBox();
-    //isConnected = connect(m_filters, &QComboBox::currentTextChanged, m_gridController, &openstudio::FacilityStoriesGridController::filterChanged);
-    //OS_ASSERT(isConnected);
+    lineEdit = new QLineEdit();
+    lineEdit->setFixedWidth(OSItem::ITEM_WIDTH);
+    connect(lineEdit, &QLineEdit::editingFinished, qobject_cast<FacilityStoriesGridController*>(m_gridController), &openstudio::FacilityStoriesGridController::greaterThanFilterChanged);
 
-    m_filters->setFixedWidth(OSItem::ITEM_WIDTH);
+    doubleValidator = new QDoubleValidator();
+    lineEdit->setValidator(doubleValidator);
 
-    {
-      m_filters->addItem("Filter 1");
-      m_filters->addItem("Filter 2");
-    }
-
-    {
-      const QPixmap * pixMap = new QPixmap(":images/mini_icons/internal_mass.png");
-      OS_ASSERT(pixMap);
-      m_filters->addItem(*pixMap, "My Filter");
-    }
-
-    //disableFilter();
-    layout->addWidget(m_filters, Qt::AlignTop | Qt::AlignLeft);
-
+    layout->addWidget(lineEdit, Qt::AlignTop | Qt::AlignLeft);
     layout->addStretch();
+    filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, filterGridLayout->columnCount());
 
-    filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, 1);
+    // NOMINALZCOORDINATELESSTHAN
+
+    layout = new QVBoxLayout();
+
+    label = new QLabel();
+    label->setText(NOMINALZCOORDINATELESSTHAN);
+    label->setObjectName("H3");
+    layout->addWidget(label, Qt::AlignTop | Qt::AlignLeft);
+
+    lineEdit = new QLineEdit();
+    lineEdit->setFixedWidth(OSItem::ITEM_WIDTH);
+    connect(lineEdit, &QLineEdit::editingFinished, qobject_cast<FacilityStoriesGridController*>(m_gridController), &openstudio::FacilityStoriesGridController::lessThanFilterChanged);
+
+    doubleValidator = new QDoubleValidator();
+    lineEdit->setValidator(doubleValidator);
+
+    layout->addWidget(lineEdit, Qt::AlignTop | Qt::AlignLeft);
+    layout->addStretch();
+    filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, filterGridLayout->columnCount());
 
     filterGridLayout->setRowStretch(filterGridLayout->rowCount(), 100);
     filterGridLayout->setColumnStretch(filterGridLayout->columnCount(), 100);
@@ -177,9 +188,13 @@ namespace openstudio {
   {
     {
       std::vector<QString> fields;
-      //fields.push_back(RENDERINGCOLOR);
-      fields.push_back(DEFAULTCONSTRUCTIONSET);
-      fields.push_back(DEFAULTSCHEDULESET);
+      fields.push_back(GROUPRENDERINGNAME);
+      fields.push_back(NOMINALZCOORDINATE);
+      fields.push_back(NOMINALFLOORTOFLOORHEIGHT);
+      fields.push_back(NOMINALFLOORTOCEILINGHEIGHT);
+      fields.push_back(DEFAULTCONSTRUCTIONSETNAME);
+      fields.push_back(DEFAULTSCHEDULESETNAME);
+      //fields.push_back(SPACES);
       std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("General"), fields);
       m_categoriesAndFields.push_back(categoryAndFields);
     }
@@ -187,10 +202,13 @@ namespace openstudio {
     OSGridController::setCategoriesAndFields();
   }
 
-  void FacilityStoriesGridController::filterChanged(const QString & text)
+  void FacilityStoriesGridController::greaterThanFilterChanged()
   {
-    LOG(Debug, "Load filter changed: " << text);
 
+  }
+
+  void FacilityStoriesGridController::lessThanFilterChanged()
+  {
     auto objectSelector = getObjectSelector();
     //if (text == SHOWALLLOADS)
     //{
@@ -262,25 +280,59 @@ namespace openstudio {
 
         addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row");
       }
-      else if (field == RENDERINGCOLOR) {
-        //addRenderingColorColumn(Heading(QString(RENDERINGCOLOR), true, false),
-        //  CastNullAdapter<model::BuildingStory>(&model::BuildingStory::renderingColor),
-        //  CastNullAdapter<model::BuildingStory>(&model::BuildingStory::setRenderingColor)
-        //  );
+      else if (field == NOMINALZCOORDINATE) {
+        addQuantityEditColumn(Heading(QString(NOMINALFLOORTOFLOORHEIGHT)),
+          QString("m"),
+          QString("m"),
+          QString("ft"),
+          m_isIP,
+          NullAdapter(&model::BuildingStory::nominalZCoordinate),
+          NullAdapter(&model::BuildingStory::setNominalZCoordinate)
+          );
       }
-      else if (field == DEFAULTCONSTRUCTIONSET) {
-        addDropZoneColumn(Heading(QString(DEFAULTCONSTRUCTIONSET)),
+      else if (field == NOMINALFLOORTOFLOORHEIGHT) {
+        addQuantityEditColumn(Heading(QString(NOMINALFLOORTOFLOORHEIGHT)),
+          QString("m"),
+          QString("m"),
+          QString("ft"),
+          m_isIP,
+          NullAdapter(&model::BuildingStory::nominalFloortoFloorHeight),
+          NullAdapter(&model::BuildingStory::setNominalFloortoFloorHeight)
+          );
+      }
+      else if (field == DEFAULTCONSTRUCTIONSETNAME) {
+        addDropZoneColumn(Heading(QString(DEFAULTCONSTRUCTIONSETNAME)),
           CastNullAdapter<model::BuildingStory>(&model::BuildingStory::defaultConstructionSet),
           CastNullAdapter<model::BuildingStory>(&model::BuildingStory::setDefaultConstructionSet),
           boost::optional<std::function<void(model::BuildingStory*)>>(CastNullAdapter<model::BuildingStory>(&model::BuildingStory::resetDefaultConstructionSet))
           );
       }
-      else if (field == DEFAULTSCHEDULESET) {
-        addDropZoneColumn(Heading(QString(DEFAULTSCHEDULESET)),
+      else if (field == DEFAULTSCHEDULESETNAME) {
+        addDropZoneColumn(Heading(QString(DEFAULTSCHEDULESETNAME)),
           CastNullAdapter<model::BuildingStory>(&model::BuildingStory::defaultScheduleSet),
           CastNullAdapter<model::BuildingStory>(&model::BuildingStory::setDefaultScheduleSet),
           boost::optional<std::function<void(model::BuildingStory*)>>(CastNullAdapter<model::BuildingStory>(&model::BuildingStory::resetDefaultScheduleSet))
           );
+      }
+      else if (field == GROUPRENDERINGNAME) {
+        addRenderingColorColumn(Heading(QString(GROUPRENDERINGNAME), true, false),
+          CastNullAdapter<model::BuildingStory>(&model::BuildingStory::renderingColor),
+          CastNullAdapter<model::BuildingStory>(&model::BuildingStory::setRenderingColor)
+          );
+      }
+
+      else if (field == NOMINALFLOORTOCEILINGHEIGHT) {
+        addQuantityEditColumn(Heading(QString(NOMINALFLOORTOCEILINGHEIGHT)),
+          QString("m"),
+          QString("m"),
+          QString("ft"),
+          m_isIP,
+          NullAdapter(&model::BuildingStory::nominalFloortoCeilingHeight),
+          NullAdapter(&model::BuildingStory::setNominalFloortoCeilingHeight)
+          );
+      }
+      else if (field == SPACES) {
+
       }
       else {
         // unhandled

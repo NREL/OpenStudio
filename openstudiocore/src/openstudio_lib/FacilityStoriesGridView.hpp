@@ -29,9 +29,6 @@
 
 #include <QWidget>
 
-class QComboBox;
-class QLabel;
-
 namespace openstudio{
 
   class FacilityStoriesGridController;
@@ -46,12 +43,6 @@ namespace openstudio{
 
     virtual ~FacilityStoriesGridView() {}
 
-    //void enableFilter();
-
-    //void disableFilter();
-
-    QComboBox * m_filters = nullptr;
-
   private:
 
     REGISTER_LOGGER("openstudio.FacilityStoriesGridView");
@@ -59,8 +50,6 @@ namespace openstudio{
     virtual void addObject(const openstudio::IddObjectType& iddObjectType);
 
     virtual void purgeObjects(const openstudio::IddObjectType& iddObjectType);
-
-    QLabel * m_filterLabel = nullptr;
 
   signals:
 
@@ -99,17 +88,19 @@ namespace openstudio{
 
     virtual QString getColor(const model::ModelObject & modelObject);
 
-    public slots:
+  private:
+
+    FacilityStoriesGridView * gridView(); 
+
+  public slots:
 
     virtual void onItemDropped(const OSItemId& itemId);
 
     virtual void onComboBoxIndexChanged(int index);
 
-    void filterChanged(const QString & text);
+    void greaterThanFilterChanged();
 
-  private:
-
-    FacilityStoriesGridView * gridView();
+    void lessThanFilterChanged();
 
   };
 
