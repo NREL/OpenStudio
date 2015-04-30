@@ -45,6 +45,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCoilCoolingDXMultiSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXSingleSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXTwoSpeed.cpp
+  ForwardTranslator/ForwardTranslateCoilCoolingDXTwoStageWithHumidityControlMode.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXVariableRefrigerantFlow.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingWater.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingWaterToAirHeatPumpEquationFit.cpp

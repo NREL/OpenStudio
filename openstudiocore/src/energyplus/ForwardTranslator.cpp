@@ -661,6 +661,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       }
       break;
     }
+  case openstudio::IddObjectType::OS_Coil_Cooling_DX_TwoStageWithHumidityControlMode :
+    {
+      auto mo = modelObject.cast<CoilCoolingDXTwoStageWithHumidityControlMode>();
+      retVal = translateCoilCoolingDXTwoStageWithHumidityControlMode(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableRefrigerantFlow :
     {
       model::CoilCoolingDXVariableRefrigerantFlow coil = modelObject.cast<CoilCoolingDXVariableRefrigerantFlow>();

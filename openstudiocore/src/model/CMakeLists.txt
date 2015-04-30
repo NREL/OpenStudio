@@ -158,6 +158,9 @@ set(${target_name}_src
   CoilCoolingDXTwoSpeed.hpp
   CoilCoolingDXTwoSpeed_Impl.hpp
   CoilCoolingDXTwoSpeed.cpp
+  CoilCoolingDXTwoStageWithHumidityControlMode.hpp
+  CoilCoolingDXTwoStageWithHumidityControlMode_Impl.hpp
+  CoilCoolingDXTwoStageWithHumidityControlMode.cpp
   CoilCoolingDXVariableRefrigerantFlow.hpp
   CoilCoolingDXVariableRefrigerantFlow_Impl.hpp
   CoilCoolingDXVariableRefrigerantFlow.cpp

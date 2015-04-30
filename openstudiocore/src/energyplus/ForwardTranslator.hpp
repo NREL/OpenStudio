@@ -69,6 +69,7 @@ class ChillerElectricEIR;
 class CoilCoolingDXMultiSpeed;
 class CoilCoolingDXSingleSpeed;
 class CoilCoolingDXTwoSpeed;
+class CoilCoolingDXTwoStageWithHumidityControlMode;
 class CoilCoolingDXVariableRefrigerantFlow;
 class CoilCoolingWater;
 class CoilCoolingWaterToAirHeatPumpEquationFit;
@@ -395,6 +396,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateCoilCoolingDXTwoSpeed( model::CoilCoolingDXTwoSpeed & modelObject );
 
   boost::optional<IdfObject> translateCoilCoolingDXTwoSpeedWithoutUnitary( model::CoilCoolingDXTwoSpeed & modelObject );
+
+  boost::optional<IdfObject> translateCoilCoolingDXTwoStageWithHumidityControlMode( model::CoilCoolingDXTwoStageWithHumidityControlMode & modelObject );
 
   boost::optional<IdfObject> translateCoilCoolingDXVariableRefrigerantFlow( model::CoilCoolingDXVariableRefrigerantFlow & modelObject );
 

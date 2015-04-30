@@ -166,6 +166,8 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"CoilCoolingDXSingleSpeed","Basin Heater Operation","basinHeaterOperatingSchedule",false,"Availability",0.0,1.0},
     {"CoilCoolingDXTwoSpeed","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilCoolingDXTwoSpeed","Basin Heater Operation","basinHeaterOperatingSchedule",false,"Availability",0.0,1.0},
+    {"CoilCoolingDXTwoStageWithHumidityControlMode","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"CoilCoolingDXTwoStageWithHumidityControlMode","Basin Heater Operating Schedule","basinHeaterOperatingSchedule",false,"Availability",0.0,1.0},
     {"CoilCoolingDXMultiSpeed","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilCoolingDXMultiSpeed","Basin Heater Operating Schedule","basinHeaterOperatingSchedule",false,"Availability",0.0,1.0},
     {"CoilCoolingDXVariableRefrigerantFlow","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},

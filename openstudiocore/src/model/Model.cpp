@@ -229,6 +229,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(CoilCoolingDXMultiSpeedStageData);
     REGISTER_CONSTRUCTOR(CoilCoolingDXSingleSpeed);
     REGISTER_CONSTRUCTOR(CoilCoolingDXTwoSpeed);
+    REGISTER_CONSTRUCTOR(CoilCoolingDXTwoStageWithHumidityControlMode);
     REGISTER_CONSTRUCTOR(CoilCoolingDXVariableRefrigerantFlow);
     REGISTER_CONSTRUCTOR(CoilCoolingLowTempRadiantConstFlow);
     REGISTER_CONSTRUCTOR(CoilCoolingLowTempRadiantVarFlow);
@@ -547,6 +548,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXMultiSpeedStageData);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXSingleSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXTwoSpeed);
+    REGISTER_COPYCONSTRUCTORS(CoilCoolingDXTwoStageWithHumidityControlMode);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXVariableRefrigerantFlow);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingLowTempRadiantConstFlow);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingLowTempRadiantVarFlow);
