@@ -439,6 +439,37 @@ namespace detail {
 
 } // detail
 
+CoilPerformanceDXCooling::CoilPerformanceDXCooling(const Model& model,
+  const Curve& coolingCapacityFunctionofTemperature,
+  const Curve& coolingCapacityFunctionofFlowFraction,
+  const Curve& energyInputRatioFunctionofTemperature,
+  const Curve& energyInputRatioFunctionofFlowFraction,
+  const Curve& partLoadFractionCorrelation)
+  : ModelObject(CoilPerformanceDXCooling::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::CoilPerformanceDXCooling_Impl>());
+
+  autosizeGrossRatedTotalCoolingCapacity();
+  autosizeGrossRatedSensibleHeatRatio();
+  setGrossRatedCoolingCOP(3.0);
+  autosizeRatedAirFlowRate();
+  setFractionofAirFlowBypassedAroundCoil(0.0);
+  setNominalTimeforCondensateRemovaltoBegin(1000.0);
+  setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(1.5);
+  setMaximumCyclingRate(3.0);
+  setLatentCapacityTimeConstant(45);
+  setCondenserType("AirCooled");
+  setEvaporativeCondenserEffectiveness(0.9);
+  autosizeEvaporativeCondenserAirFlowRate();
+  autosizeEvaporativeCondenserPumpRatedPowerConsumption();
+
+  setTotalCoolingCapacityFunctionofTemperatureCurve(coolingCapacityFunctionofTemperature);
+  setTotalCoolingCapacityFunctionofFlowFractionCurve(coolingCapacityFunctionofFlowFraction);
+  setEnergyInputRatioFunctionofTemperatureCurve(energyInputRatioFunctionofTemperature);
+  setEnergyInputRatioFunctionofFlowFractionCurve(energyInputRatioFunctionofFlowFraction);
+  setPartLoadFractionCorrelationCurve(partLoadFractionCorrelation);
+}
+
 CoilPerformanceDXCooling::CoilPerformanceDXCooling(const Model& model)
   : ModelObject(CoilPerformanceDXCooling::iddObjectType(),model)
 {

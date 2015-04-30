@@ -44,6 +44,13 @@ class MODEL_API CoilPerformanceDXCooling : public ModelObject {
 
   explicit CoilPerformanceDXCooling(const Model& model);
 
+  explicit CoilPerformanceDXCooling(const Model& model,
+    const Curve& coolingCapacityFunctionofTemperature,
+    const Curve& coolingCapacityFunctionofFlowFraction,
+    const Curve& energyInputRatioFunctionofTemperature,
+    const Curve& energyInputRatioFunctionofFlowFraction,
+    const Curve& partLoadFractionCorrelation);
+
   virtual ~CoilPerformanceDXCooling() {}
 
   //@}
