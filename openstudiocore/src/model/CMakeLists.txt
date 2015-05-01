@@ -1266,6 +1266,8 @@ set(${target_name}_test_src
   test/CoilHeatingWater_GTest.cpp
   test/CoilHeatingWaterToAirHeatPumpEquationFit_GTest.cpp
   test/CoilHeatingWaterBaseboard_GTest.cpp
+  test/CoilSystemCoolingDXHeatExchangerAssisted_GTest.cpp
+  test/CoilSystemCoolingWaterHeatExchangerAssisted_GTest.cpp
   test/CoilPerformanceDXCooling_GTest.cpp
   test/CoilWaterHeatingDesuperheater_GTest.cpp
   test/Component_GTest.cpp
