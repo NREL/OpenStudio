@@ -2400,9 +2400,11 @@ bool EpwFile::parse(bool storeData)
         if (endDate && lastDate) {
           Time delta = endDate.get() - lastDate.get();
           if (std::abs(delta.totalDays()) > 1) {
-            LOG(Warn, "Successive data points (" << lastDate.get() << " to " << endDate.get()
-              << ", ending on line " << lineNumber << ") are greater than 1 day apart in EPW file '"
-              << m_path << "'. Data will be treated as typical (TMY)");
+            if (realYear) { // Warn once
+              LOG(Warn, "Successive data points (" << lastDate.get() << " to " << endDate.get()
+                << ", ending on line " << lineNumber << ") are greater than 1 day apart in EPW file '"
+                << m_path << "'. Data will be treated as typical (TMY)");
+            }
             realYear = false;
           }
 

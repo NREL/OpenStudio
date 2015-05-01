@@ -277,18 +277,17 @@ namespace openstudio{
     }
 
     /// constructor from first report date and time, seconds from start vector, values, and units
-    TimeSeries_Impl::TimeSeries_Impl(const DateTime& startOrFirst, const std::vector<long>& seconds, const Vector& values, const std::string& units)
+    TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<long>& seconds, const Vector& values, const std::string& units)
       : m_secondsFromStart(values.size()), m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       if (seconds.size() != values.size()){
         LOG_AND_THROW("Length of values (" << values.size() << ") must match length of times (" << seconds.size() << ")");
       }
 
-      m_startDateTime = startOrFirst;
-
       if (values.empty() || seconds.empty()){
         LOG(Warn, "Creating empty timeseries");
-        m_firstReportDateTime = startOrFirst;
+        m_startDateTime = firstReportDateTime;
+        m_firstReportDateTime = firstReportDateTime;
       } else {
         // Check that seconds are monotonic
         for (unsigned i = 1; i < seconds.size(); ++i){
@@ -298,9 +297,12 @@ namespace openstudio{
         }
 
         if (seconds[0] == 0) { // This is the old, BROKEN way
+          if (firstReportDateTime.time().totalSeconds() == 0) {
+            LOG_AND_THROW("Cannot calculate or assume the series start date for first report at the beginning of a day");
+          }
           LOG(Warn, "Assuming that time series begins at the start of the day of first report");
-          m_startDateTime = DateTime(startOrFirst.date());
-          m_firstReportDateTime = startOrFirst;
+          m_startDateTime = DateTime(firstReportDateTime.date());
+          m_firstReportDateTime = firstReportDateTime;
           int firstIntervalSeconds = m_firstReportDateTime.time().totalSeconds();
           m_secondsFromStart = seconds;
           for (unsigned i = 0; i < m_secondsFromStart.size(); i++) {
@@ -309,7 +311,8 @@ namespace openstudio{
           m_secondsFromFirstReport = seconds;
 
         } else {
-          m_firstReportDateTime = m_startDateTime + Time(0, 0, 0, seconds[0]);
+          m_startDateTime = firstReportDateTime - Time(0, 0, 0, seconds[0]);
+          m_firstReportDateTime = firstReportDateTime;
           m_secondsFromStart = seconds;
 
           // Get rid of this later

@@ -295,6 +295,9 @@ TEST_F(DataFixture, TimeSeries_SecondsConstructor_FirstReport)
   }
   unsigned numValues = values.size();
 
+  // fail to create a detailed time series
+  ASSERT_THROW(TimeSeries timeSeries0(DateTime(startDate), seconds, values, units), openstudio::Exception);
+
   // create detailed timeSeries
   TimeSeries timeSeries(startDateTime, seconds, values, units);
   ASSERT_TRUE(!timeSeries.values().empty());
@@ -374,7 +377,7 @@ TEST_F(DataFixture, TimeSeries_SecondsConstructor_Start)
   unsigned numValues = values.size();
 
   // create detailed timeSeries
-  TimeSeries timeSeries(startDateTime, seconds, values, units);
+  TimeSeries timeSeries(firstDateTime, seconds, values, units);
   ASSERT_TRUE(!timeSeries.values().empty());
 
   // check interval

@@ -66,7 +66,7 @@ namespace openstudio{
 
         /// constructor from first report date and time, seconds from first report vector, values, and units
         /// throws if values is empty, daysFromFirstReport and values have different lengths, or secondsFromFirstReport is not sorted in ascending order
-        TimeSeries_Impl(const DateTime& startOrFirst, const std::vector<long>& secondsFromFirstReport, const Vector& values, const std::string& units);
+        TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<long>& secondsFromFirstReport, const Vector& values, const std::string& units);
 
         // virtual destructor
         ~TimeSeries_Impl() {}

@@ -2336,7 +2336,7 @@ namespace openstudio{
               startDateTime = firstDateTime(false);
             }else{
               // DLM: potential leap year problem
-              startDateTime = openstudio::DateTime(openstudio::Date(month, day));
+              startDateTime = openstudio::DateTime(openstudio::Date(month, day), openstudio::Time(0, 0, intervalMinutes, 0));
             }
           }
 
