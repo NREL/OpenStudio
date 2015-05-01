@@ -768,6 +768,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateCoilPerformanceDXCooling(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_CoilSystem_Cooling_Water_HeatExchangerAssisted :
+    {
+      auto mo = modelObject.cast<CoilSystemCoolingWaterHeatExchangerAssisted>();
+      retVal = translateCoilSystemCoolingWaterHeatExchangerAssisted(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_Coil_WaterHeating_Desuperheater :
     {
       model::CoilWaterHeatingDesuperheater coil = modelObject.cast<CoilWaterHeatingDesuperheater>();

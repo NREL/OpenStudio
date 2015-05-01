@@ -12600,6 +12600,8 @@ OS:CoilSystem:Cooling:Water:HeatExchangerAssisted,
        \object-list ConnectionNames
   A5 , \field Heat Exchanger
        \required-field
+       \type object-list
+       \object-list ConnectionObject
   A6 ; \field Cooling Coil
        \required-field
        \type object-list

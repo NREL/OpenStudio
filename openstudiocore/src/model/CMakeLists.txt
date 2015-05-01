@@ -212,6 +212,9 @@ set(${target_name}_src
   CoilHeatingWaterBaseboard.hpp
   CoilHeatingWaterBaseboard_Impl.hpp
   CoilHeatingWaterBaseboard.cpp
+  CoilSystemCoolingWaterHeatExchangerAssisted.hpp
+  CoilSystemCoolingWaterHeatExchangerAssisted_Impl.hpp
+  CoilSystemCoolingWaterHeatExchangerAssisted.cpp
   CoilWaterHeatingDesuperheater.hpp
   CoilWaterHeatingDesuperheater_Impl.hpp
   CoilWaterHeatingDesuperheater.cpp
@@ -1245,6 +1248,7 @@ set(${target_name}_test_src
   test/CoilCoolingDXSingleSpeed_GTest.cpp
   test/CoilCoolingDXMultiSpeed_GTest.cpp
   test/CoilCoolingDXTwoSpeed_GTest.cpp
+  test/CoilCoolingDXTwoStageWithHumidityControlMode_GTest.cpp
   test/CoilCoolingLowTempRadiantConstFlow_GTest.cpp
   test/CoilCoolingLowTempRadiantVarFlow_GTest.cpp
   test/CoilCoolingWater_GTest.cpp
