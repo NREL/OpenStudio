@@ -93,8 +93,6 @@ namespace openstudio {
 
     QLabel * label = nullptr;
 
-    QLineEdit * lineEdit = nullptr;
-
     QDoubleValidator * doubleValidator = nullptr;
 
     QVBoxLayout * layout = nullptr;
@@ -117,14 +115,14 @@ namespace openstudio {
     label->setObjectName("H3");
     layout->addWidget(label, Qt::AlignTop | Qt::AlignLeft);
 
-    lineEdit = new QLineEdit();
-    lineEdit->setFixedWidth(OSItem::ITEM_WIDTH);
-    connect(lineEdit, &QLineEdit::editingFinished, qobject_cast<FacilityStoriesGridController*>(m_gridController), &openstudio::FacilityStoriesGridController::greaterThanFilterChanged);
+    m_greaterThanFilter = new QLineEdit();
+    m_greaterThanFilter->setFixedWidth(OSItem::ITEM_WIDTH);
+    connect(m_greaterThanFilter, &QLineEdit::editingFinished, this, &openstudio::FacilityStoriesGridView::greaterThanFilterChanged);
 
     doubleValidator = new QDoubleValidator();
-    lineEdit->setValidator(doubleValidator);
+    m_greaterThanFilter->setValidator(doubleValidator);
 
-    layout->addWidget(lineEdit, Qt::AlignTop | Qt::AlignLeft);
+    layout->addWidget(m_greaterThanFilter, Qt::AlignTop | Qt::AlignLeft);
     layout->addStretch();
     filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, filterGridLayout->columnCount());
 
@@ -137,14 +135,14 @@ namespace openstudio {
     label->setObjectName("H3");
     layout->addWidget(label, Qt::AlignTop | Qt::AlignLeft);
 
-    lineEdit = new QLineEdit();
-    lineEdit->setFixedWidth(OSItem::ITEM_WIDTH);
-    connect(lineEdit, &QLineEdit::editingFinished, qobject_cast<FacilityStoriesGridController*>(m_gridController), &openstudio::FacilityStoriesGridController::lessThanFilterChanged);
+    m_lessThanFilter = new QLineEdit();
+    m_lessThanFilter->setFixedWidth(OSItem::ITEM_WIDTH);
+    connect(m_lessThanFilter, &QLineEdit::editingFinished, this, &openstudio::FacilityStoriesGridView::lessThanFilterChanged);
 
     doubleValidator = new QDoubleValidator();
-    lineEdit->setValidator(doubleValidator);
+    m_lessThanFilter->setValidator(doubleValidator);
 
-    layout->addWidget(lineEdit, Qt::AlignTop | Qt::AlignLeft);
+    layout->addWidget(m_lessThanFilter, Qt::AlignTop | Qt::AlignLeft);
     layout->addStretch();
     filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, filterGridLayout->columnCount());
 
@@ -174,6 +172,27 @@ namespace openstudio {
     }
   }
 
+  void FacilityStoriesGridView::greaterThanFilterChanged()
+  {
+
+  }
+
+  void FacilityStoriesGridView::lessThanFilterChanged()
+  {
+    auto objectSelector = this->m_gridController->getObjectSelector();
+
+    auto selectedObjects = objectSelector->m_selectedObjects;
+    auto selectorObjects = objectSelector->m_selectorObjects;
+
+    for (auto obj : objectSelector->m_selectorObjects) {
+      auto nominalZCoordinate = obj.cast<model::BuildingStory>().nominalZCoordinate();
+      if (nominalZCoordinate && (nominalZCoordinate < this->m_lessThanFilter->text().toDouble()) && (nominalZCoordinate > this->m_greaterThanFilter->text().toDouble())) {
+        auto isVisible = true;
+        //obj.setVisible();
+      }
+    }
+  }
+
   FacilityStoriesGridController::FacilityStoriesGridController(bool isIP,
     const QString & headerText,
     IddObjectType iddObjectType,
@@ -200,55 +219,6 @@ namespace openstudio {
     }
 
     OSGridController::setCategoriesAndFields();
-  }
-
-  void FacilityStoriesGridController::greaterThanFilterChanged()
-  {
-
-  }
-
-  void FacilityStoriesGridController::lessThanFilterChanged()
-  {
-    auto objectSelector = getObjectSelector();
-    //if (text == SHOWALLLOADS)
-    //{
-    //  objectSelector->resetObjectFilter();
-    //}
-    //else {
-    //  objectSelector->setObjectFilter(
-    //    [text](const model::ModelObject &obj)->bool {
-    //    try {
-    //      obj.cast<model::SpaceLoadInstance>();
-    //      // This is a spaceloadinstance, so we want to see if it matches our filter
-
-    //      if (text == "")
-    //      {
-    //        return static_cast<bool>(obj.optionalCast<model::InternalMass>());
-    //      }
-    //      //else if (text == PEOPLE)
-    //      //{
-    //      //  return static_cast<bool>(obj.optionalCast<model::People>());
-    //      //}
-    //      else
-    //      {
-    //        // Should never get here
-    //        OS_ASSERT(false);
-    //        return false;
-    //      }
-    //    }
-    //    catch (...) {
-    //      return true; // this isn't a space load instance, so don't apply filtering
-    //    }
-    //  }
-    //  );
-    //}
-  }
-
-  FacilityStoriesGridView * FacilityStoriesGridController::gridView()
-  {
-    OS_ASSERT(qobject_cast<OSGridView *>(this->parent()));
-
-    return qobject_cast<FacilityStoriesGridView *>(this->parent()->parent());
   }
 
   void FacilityStoriesGridController::categorySelected(int index)
@@ -320,7 +290,6 @@ namespace openstudio {
           CastNullAdapter<model::BuildingStory>(&model::BuildingStory::setRenderingColor)
           );
       }
-
       else if (field == NOMINALFLOORTOCEILINGHEIGHT) {
         addQuantityEditColumn(Heading(QString(NOMINALFLOORTOCEILINGHEIGHT)),
           QString("m"),
@@ -363,10 +332,6 @@ namespace openstudio {
     auto exteriorLights = m_model.getModelObjects<model::BuildingStory>();
     m_modelObjects = subsetCastVector<model::ModelObject>(exteriorLights);
     std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
-  }
-
-  void FacilityStoriesGridController::onComboBoxIndexChanged(int index)
-  {
   }
 
 } // openstudio

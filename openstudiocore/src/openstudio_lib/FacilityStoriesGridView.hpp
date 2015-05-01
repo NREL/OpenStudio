@@ -29,6 +29,8 @@
 
 #include <QWidget>
 
+class QLineEdit;
+
 namespace openstudio{
 
   class FacilityStoriesGridController;
@@ -43,6 +45,10 @@ namespace openstudio{
 
     virtual ~FacilityStoriesGridView() {}
 
+    QLineEdit *  m_lessThanFilter = nullptr;
+
+    QLineEdit *  m_greaterThanFilter = nullptr; 
+
   private:
 
     REGISTER_LOGGER("openstudio.FacilityStoriesGridView");
@@ -56,6 +62,10 @@ namespace openstudio{
     private slots:
 
     void onDropZoneItemClicked(OSItem* item);
+
+    void greaterThanFilterChanged();
+
+    void lessThanFilterChanged();
 
   };
 
@@ -88,19 +98,9 @@ namespace openstudio{
 
     virtual QString getColor(const model::ModelObject & modelObject);
 
-  private:
-
-    FacilityStoriesGridView * gridView(); 
-
   public slots:
 
     virtual void onItemDropped(const OSItemId& itemId);
-
-    virtual void onComboBoxIndexChanged(int index);
-
-    void greaterThanFilterChanged();
-
-    void lessThanFilterChanged();
 
   };
 
