@@ -84,16 +84,14 @@ namespace openstudio {
     auto buildingStoriesModelObjects = subsetCastVector<model::ModelObject>(buildingStories);
 
     m_gridController = new FacilityStoriesGridController(isIP, "Building Stories", IddObjectType::OS_BuildingStory, model, buildingStoriesModelObjects);
-    auto gridView = new OSGridView(m_gridController, "Building Stories", "Drop\nStory", false, parent);
+    m_gridView = new OSGridView(m_gridController, "Building Stories", "Drop\nStory", false, parent);
 
     setGridController(m_gridController);
-    setGridView(gridView);
+    setGridView(m_gridView);
 
     // Filters
 
     QLabel * label = nullptr;
-
-    QDoubleValidator * doubleValidator = nullptr;
 
     QVBoxLayout * layout = nullptr;
 
@@ -119,8 +117,8 @@ namespace openstudio {
     m_greaterThanFilter->setFixedWidth(OSItem::ITEM_WIDTH);
     connect(m_greaterThanFilter, &QLineEdit::editingFinished, this, &openstudio::FacilityStoriesGridView::greaterThanFilterChanged);
 
-    doubleValidator = new QDoubleValidator();
-    m_greaterThanFilter->setValidator(doubleValidator);
+    m_greaterThanValidator = new QDoubleValidator();
+    m_greaterThanFilter->setValidator(m_greaterThanValidator);
 
     layout->addWidget(m_greaterThanFilter, Qt::AlignTop | Qt::AlignLeft);
     layout->addStretch();
@@ -139,8 +137,8 @@ namespace openstudio {
     m_lessThanFilter->setFixedWidth(OSItem::ITEM_WIDTH);
     connect(m_lessThanFilter, &QLineEdit::editingFinished, this, &openstudio::FacilityStoriesGridView::lessThanFilterChanged);
 
-    doubleValidator = new QDoubleValidator();
-    m_lessThanFilter->setValidator(doubleValidator);
+    m_lessThanValidator = new QDoubleValidator();
+    m_lessThanFilter->setValidator(m_lessThanValidator);
 
     layout->addWidget(m_lessThanFilter, Qt::AlignTop | Qt::AlignLeft);
     layout->addStretch();
@@ -149,9 +147,9 @@ namespace openstudio {
     filterGridLayout->setRowStretch(filterGridLayout->rowCount(), 100);
     filterGridLayout->setColumnStretch(filterGridLayout->columnCount(), 100);
 
-    gridView->m_contentLayout->addLayout(filterGridLayout);
+    m_gridView->m_contentLayout->addLayout(filterGridLayout);
 
-    gridView->m_contentLayout->addSpacing(7);
+    m_gridView->m_contentLayout->addSpacing(7);
   }
 
   void FacilityStoriesGridView::onDropZoneItemClicked(OSItem* item)
@@ -174,23 +172,27 @@ namespace openstudio {
 
   void FacilityStoriesGridView::greaterThanFilterChanged()
   {
-
+    lessThanFilterChanged();
   }
 
   void FacilityStoriesGridView::lessThanFilterChanged()
   {
     auto objectSelector = this->m_gridController->getObjectSelector();
 
-    auto selectedObjects = objectSelector->m_selectedObjects;
-    auto selectorObjects = objectSelector->m_selectorObjects;
+    auto upperLimit = this->m_lessThanFilter->text().toDouble();
+    auto lowerLimit = this->m_greaterThanFilter->text().toDouble();
+
+    //m_lessThanValidator->setBottom(lowerLimit);
+    //m_greaterThanValidator->setTop(upperLimit);
 
     for (auto obj : objectSelector->m_selectorObjects) {
       auto nominalZCoordinate = obj.cast<model::BuildingStory>().nominalZCoordinate();
-      if (nominalZCoordinate && (nominalZCoordinate < this->m_lessThanFilter->text().toDouble()) && (nominalZCoordinate > this->m_greaterThanFilter->text().toDouble())) {
-        auto isVisible = true;
-        //obj.setVisible();
+      if (nominalZCoordinate && (nominalZCoordinate > upperLimit || nominalZCoordinate < lowerLimit)) {
+        objectSelector->m_filteredObjects.insert(obj).second;
       }
     }
+
+    this->m_gridView->requestRefreshAll();
   }
 
   FacilityStoriesGridController::FacilityStoriesGridController(bool isIP,

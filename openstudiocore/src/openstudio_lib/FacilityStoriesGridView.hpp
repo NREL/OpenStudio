@@ -29,6 +29,7 @@
 
 #include <QWidget>
 
+class QDoubleValidator;
 class QLineEdit;
 
 namespace openstudio{
@@ -46,8 +47,10 @@ namespace openstudio{
     virtual ~FacilityStoriesGridView() {}
 
     QLineEdit *  m_lessThanFilter = nullptr;
+    QDoubleValidator * m_lessThanValidator = nullptr;
 
     QLineEdit *  m_greaterThanFilter = nullptr; 
+    QDoubleValidator * m_greaterThanValidator = nullptr;
 
   private:
 
