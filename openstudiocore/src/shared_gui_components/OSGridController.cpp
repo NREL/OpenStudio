@@ -79,8 +79,12 @@ namespace openstudio {
   {
   }
 
-  void ObjectSelector::addWidget(const boost::optional<model::ModelObject> &t_obj, Holder *t_holder, int row, int column,
-    const boost::optional<int> &t_subrow, const bool t_selector)
+  void ObjectSelector::addWidget(const boost::optional<model::ModelObject> &t_obj,
+    Holder *t_holder,
+    int row,
+    int column,
+    const boost::optional<int> &t_subrow,
+    const bool t_selector)
   {
     WidgetLocation * widgetLoc = new WidgetLocation(t_holder, row, column, t_subrow);
 
@@ -121,7 +125,7 @@ namespace openstudio {
         && widget.second->row == row
         && (!widget.second->subrow || (widget.second->subrow == t_subrow)))
       {
-        if (!m_objectFilter(*widget.first)) {
+        if (!m_objectFilter(*widget.first) || m_filteredObjects.count(*widget.first) != 0) {
           // an object in this (sub)row is not visible, therefore I am not visible
           visible = false;
           break;
@@ -146,6 +150,7 @@ namespace openstudio {
     m_widgetMap.clear(); // TODO delete all QObjects, or set parent
     m_selectedObjects.clear();
     m_selectorObjects.clear();
+    m_filteredObjects.clear();
     m_objectFilter = getDefaultFilter();
   }
 
@@ -155,6 +160,7 @@ namespace openstudio {
 
     m_selectedObjects.erase(t_obj);
     m_selectorObjects.erase(t_obj);
+    m_filteredObjects.erase(t_obj);
     m_widgetMap.erase(boost::optional<model::ModelObject>(t_obj));
   }
 
@@ -162,6 +168,7 @@ namespace openstudio {
   {
     return m_selectedObjects.count(t_obj) != 0
       || m_selectorObjects.count(t_obj) != 0
+      || m_filteredObjects.count(t_obj) != 0
       || m_widgetMap.count(boost::optional<model::ModelObject>(t_obj));
   }
 
@@ -326,6 +333,30 @@ namespace openstudio {
     {
       updateWidgets(obj);
     }
+  }
+
+  void ObjectSelector::updateWidgets(const model::ModelObject &t_obj, const bool t_objectVisible)
+  {
+    auto range = m_widgetMap.equal_range(boost::optional<model::ModelObject>(t_obj));
+
+    assert(range.first != range.second);
+
+    // Find the row that contains this object
+    auto row = std::make_tuple(range.first->second->row, range.first->second->subrow);
+
+#if _DEBUG || (__GNUC__ && !NDEBUG)
+    // Sanity check to make sure we don't have the same object in two different rows
+    ++range.first;
+    while (range.first != range.second)
+    {
+      assert(row == std::make_tuple(range.first->second->row, range.first->second->subrow));
+      ++range.first;
+    }
+#endif
+
+    const auto objectSelected = m_selectedObjects.count(t_obj) != 0;
+
+    updateWidgets(std::get<0>(row), std::get<1>(row), objectSelected, t_objectVisible);
   }
 
   void ObjectSelector::updateWidgets(const model::ModelObject &t_obj)

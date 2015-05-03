@@ -377,8 +377,9 @@ void OSGridView::refreshAll()
       }
     }
 
-    QTimer::singleShot(0, this, SLOT(selectRowDeterminedByModelSubTabView()));
+    this->m_gridController->getObjectSelector()->m_filteredObjects.clear();
 
+    QTimer::singleShot(0, this, SLOT(selectRowDeterminedByModelSubTabView()));
   }
 }
 

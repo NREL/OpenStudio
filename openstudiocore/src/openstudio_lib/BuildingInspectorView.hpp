@@ -110,6 +110,7 @@ class BuildingInspectorView : public ModelObjectInspectorView
   public:
 
     BuildingInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = 0 );
+
     virtual ~BuildingInspectorView() {}
 
   signals:
@@ -125,6 +126,7 @@ class BuildingInspectorView : public ModelObjectInspectorView
   protected slots:
 
     void editStandardsBuildingType(const QString & text);
+
     void standardsBuildingTypeChanged(const QString & text);
 
   private:

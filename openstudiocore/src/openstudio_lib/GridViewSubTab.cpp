@@ -79,6 +79,10 @@ namespace openstudio {
     // Toggle Units
     connect(this, &GridViewSubTab::toggleUnitsClicked, this, &GridViewSubTab::toggleUnits);
 
+    //connect(thermalZoneView, &ThermalZoneView::modelObjectSelected, this, &ThermalZonesController::modelObjectSelected);
+
+    //connect(thermalZoneView, &ThermalZoneView::dropZoneItemSelected, this, &ThermalZonesController::dropZoneItemSelected);
+
   }
 
   void GridViewSubTab::setGridView(OSGridView * gridView)
@@ -163,6 +167,22 @@ namespace openstudio {
   std::vector<model::ModelObject> GridViewSubTab::selectedObjects() const
   {
     return m_gridController->selectedObjects();
+  }
+
+  void GridViewSubTab::onSelectItem(OSItem* item)
+  {
+    //selectItem(item);
+    m_itemSelectorButtons->enableCopyButton();
+    m_itemSelectorButtons->enableRemoveButton();
+    m_itemSelectorButtons->enablePurgeButton();
+  }
+
+  void GridViewSubTab::onClearSelection()
+  {
+    //clearSelection();
+    m_itemSelectorButtons->disableCopyButton();
+    m_itemSelectorButtons->disableRemoveButton();
+    m_itemSelectorButtons->disablePurgeButton();
   }
 
   void GridViewSubTab::toggleUnits(bool isIP)

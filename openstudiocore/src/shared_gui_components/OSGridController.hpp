@@ -210,6 +210,10 @@ class ObjectSelector : public QObject
     void selectAll();
     void clearSelection();
 
+    std::set<model::ModelObject> m_selectedObjects;
+    std::set<model::ModelObject> m_selectorObjects;
+    std::set<model::ModelObject> m_filteredObjects;
+
   signals:
     void inFocus(bool inFocus, bool hasData, int row, int column, boost::optional<int> subrow);
 
@@ -219,13 +223,12 @@ class ObjectSelector : public QObject
   private:
     void updateWidgets();
     void updateWidgets(const model::ModelObject &t_obj);
+    void ObjectSelector::updateWidgets(const model::ModelObject &t_obj, const bool t_objectVisible);
     void updateWidgets(const int t_row, const boost::optional<int> &t_subrow, bool t_selected, bool t_visible);
     static std::function<bool (const model::ModelObject &)> getDefaultFilter();
 
     OSGridController *m_grid;
     std::multimap<boost::optional<model::ModelObject>, WidgetLocation *> m_widgetMap;
-    std::set<model::ModelObject> m_selectedObjects;
-    std::set<model::ModelObject> m_selectorObjects;
     std::function<bool (const model::ModelObject &)> m_objectFilter;
 };
 

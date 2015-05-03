@@ -71,6 +71,8 @@ class GridViewSubTab : public QWidget
 
     model::Model m_model;
 
+    OSGridView * m_gridView = nullptr;
+
     OSGridController * m_gridController = nullptr;
 
     bool m_supportsMultipleObjectSelection = true;
@@ -106,6 +108,10 @@ class GridViewSubTab : public QWidget
     void onPurgeClicked();
 
     void toggleUnits(bool isIP);
+
+    void onSelectItem(OSItem* item);
+
+    void onClearSelection();
 
 };
 

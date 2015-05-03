@@ -22,6 +22,7 @@
 
 #include "../shared_gui_components/OSGridController.hpp"
 
+#include "GridViewSubTab.hpp"
 #include "OSItem.hpp"
 
 #include "../model/Model.hpp"
@@ -33,10 +34,9 @@ class QLabel;
 
 namespace openstudio{
 
-  class ModelSubTabView;
   class FacilityShadingGridController;
 
-  class FacilityShadingGridView : public QWidget
+  class FacilityShadingGridView : public GridViewSubTab
   {
     Q_OBJECT
 
@@ -46,39 +46,19 @@ namespace openstudio{
 
     virtual ~FacilityShadingGridView() {}
 
-    std::vector<model::ModelObject> selectedObjects() const;
-
-    void enableFilter();
-
-    void disableFilter();
-
-    QComboBox * m_filters = nullptr;
-
   private:
 
     REGISTER_LOGGER("openstudio.FacilityShadingGridView");
 
-    bool m_isIP;
+    virtual void addObject(const openstudio::IddObjectType& iddObjectType);
 
-    FacilityShadingGridController * m_gridController = nullptr;
-
-    QLabel * m_filterLabel = nullptr;
+    virtual void purgeObjects(const openstudio::IddObjectType& iddObjectType);
 
   signals:
 
-    void toggleUnitsClicked(bool displayIP);
+    private slots :
 
-    void dropZoneItemClicked(OSItem* item);
-
-    void itemSelected(OSItem * item);
-
-    void selectionCleared();
-
-    void gridRowSelected(OSItem*);
-
-    private slots:
-
-    void onDropZoneItemClicked(OSItem* item);
+      void onDropZoneItemClicked(OSItem* item);
 
   };
 
@@ -115,9 +95,11 @@ namespace openstudio{
 
     virtual void onItemDropped(const OSItemId& itemId);
 
-    virtual void onComboBoxIndexChanged(int index);
-
     void filterChanged(const QString & text);
+    //void tiltFilterChanged();
+    //void orientationFilterChanged();
+    //void nameFilterChanged();
+    //void typeFilterChanged(const QString & text);
 
   private:
 

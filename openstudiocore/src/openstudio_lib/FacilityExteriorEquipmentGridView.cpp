@@ -73,7 +73,7 @@ namespace openstudio {
     auto exteriorLightsModelObjects = subsetCastVector<model::ModelObject>(exteriorLights);
 
     m_gridController = new FacilityExteriorEquipmentGridController(isIP, "Exterior Lights", IddObjectType::OS_Exterior_Lights, model, exteriorLightsModelObjects);
-    auto gridView = new OSGridView(m_gridController, "Exterior Lights", "Drop\nZone", false, parent);
+    auto gridView = new OSGridView(m_gridController, "Exterior Lights", "Drop\nExterior Lights", false, parent);
 
     setGridController(m_gridController);
     setGridView(gridView);
