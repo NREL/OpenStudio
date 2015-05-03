@@ -66,6 +66,8 @@ namespace bimserver {
     void getAllProjects();
     /// create new project
     void createProject(QString projectName);
+    /// delete a project
+    void deleteProject(QString projectID);
     /// check in new ifc file
     void checkInIFCFile(QString projectID, QString IFCFilePath);
     /// get all revisions of IFC files of a project
@@ -83,6 +85,8 @@ namespace bimserver {
     boost::optional<QStringList> getAllProjectsBlocked(int timeout);
     /// create new project, Blocked
     bool createProjectBlocked(QString projectName, int timeout);
+    /// delete a project, Blocked
+    bool deleteProjectBlocked(QString projectID, int timeout);
     /// check in new ifc file, Blocked
     bool checkInIFCFileBlocked(QString projectID, QString IFCFilePath, int timeout);
     /// get all revisions of IFC files of a project, Blocked
@@ -123,6 +127,8 @@ namespace bimserver {
     void processGetDownloadDataRequest(QNetworkReply *rep);
     /// create new project
     void processCreateProjectRequest(QNetworkReply *rep);
+    /// Delete a project
+    void processDeleteProjectRequest(QNetworkReply *rep);
     /// get ifc deserializer
     void processGetDeserializerRequest(QNetworkReply *rep);
     /// checkIn new IFC
@@ -142,6 +148,7 @@ namespace bimserver {
     void sendDownloadRequest();
     void sendGetDownloadDataRequest();
     void sendCreateProjectRequest(QString projectName);
+    void sendDeleteProjectRequest(QString projectID);
     void sendGetDeserializerRequest();
     void sendCheckInIFCRequest(QString IFCFilePath);
     void sendGetProjectByIDRequest(QString projectID);
@@ -171,6 +178,7 @@ namespace bimserver {
     boost::optional<QString> m_osmModel;
     boost::optional<QStringList> m_projectList;
     bool m_createProjectSuccess;
+    bool m_deleteProjectSuccess;
     bool m_checkInIFCSuccess;
     boost::optional<QStringList> m_ifcList;
   };
