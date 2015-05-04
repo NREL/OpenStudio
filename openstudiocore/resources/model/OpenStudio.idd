@@ -11577,7 +11577,6 @@ OS:GroundHeatExchanger:HorizontalTrench,
         \required-field
    A5, \field Ground Temperature Model
        \type choice
-       \default AirCooled
        \key SiteGroundTemperature
        \key KusudaAchenbach
    N16, \field Kusuda-Achenbach Average Surface Temperature

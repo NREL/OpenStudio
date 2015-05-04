@@ -1121,6 +1121,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       break;
     }
     
+  case openstudio::IddObjectType::OS_GroundHeatExchanger_HorizontalTrench :
+    {
+      auto mo = modelObject.cast<GroundHeatExchangerHorizontalTrench>();
+      retVal = translateGroundHeatExchangerHorizontalTrench(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_GroundHeatExchanger_Vertical :
     {
       model::GroundHeatExchangerVertical groundHeatExchangerVertical = modelObject.cast<GroundHeatExchangerVertical>();

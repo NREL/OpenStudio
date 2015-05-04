@@ -425,6 +425,9 @@ set(${target_name}_src
   Glazing.hpp
   Glazing_Impl.hpp
   Glazing.cpp
+  GroundHeatExchangerHorizontalTrench.hpp
+  GroundHeatExchangerHorizontalTrench_Impl.hpp
+  GroundHeatExchangerHorizontalTrench.cpp
   GroundHeatExchangerVertical.hpp
   GroundHeatExchangerVertical_Impl.hpp
   GroundHeatExchangerVertical.cpp
@@ -1303,6 +1306,7 @@ set(${target_name}_test_src
   test/GasMixture_GTest.cpp
   test/Gas_GTest.cpp
   test/GlareSensor_GTest.cpp
+  test/GroundHeatExchangerHorizontalTrench_GTest.cpp
   test/GroundHeatExchangerVertical_GTest.cpp
   test/HotWaterEquipment_GTest.cpp
   test/HeaderedPumpsConstantSpeed_GTest.cpp
