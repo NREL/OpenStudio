@@ -27,12 +27,12 @@
 
 #include "../model/Model.hpp"
 
-#include <QWidget>
-
 class QComboBox;
-class QLabel;
+class QLineEdit;
 
 namespace openstudio{
+
+  class OSQuantityEdit2;
 
   class FacilityShadingGridController;
 
@@ -46,6 +46,14 @@ namespace openstudio{
 
     virtual ~FacilityShadingGridView() {}
 
+    QLineEdit *  m_nameFilter = nullptr;
+
+    QLineEdit *  m_tiltFilter = nullptr;
+
+    QComboBox *  m_typeFilter = nullptr;
+
+    QComboBox *  m_orientationFilter = nullptr;
+
   private:
 
     REGISTER_LOGGER("openstudio.FacilityShadingGridView");
@@ -54,11 +62,21 @@ namespace openstudio{
 
     virtual void purgeObjects(const openstudio::IddObjectType& iddObjectType);
 
+    void filterChanged();
+
   signals:
 
-    private slots :
+  private slots :
 
-      void onDropZoneItemClicked(OSItem* item);
+    void onDropZoneItemClicked(OSItem* item);
+
+    void tiltFilterChanged();
+
+    void orientationFilterChanged(const QString & text);
+
+    void nameFilterChanged();
+
+    void typeFilterChanged(const QString & text);
 
   };
 
@@ -91,19 +109,9 @@ namespace openstudio{
 
     virtual QString getColor(const model::ModelObject & modelObject);
 
-    public slots:
+  public slots:
 
     virtual void onItemDropped(const OSItemId& itemId);
-
-    void filterChanged(const QString & text);
-    //void tiltFilterChanged();
-    //void orientationFilterChanged();
-    //void nameFilterChanged();
-    //void typeFilterChanged(const QString & text);
-
-  private:
-
-    FacilityShadingGridView * gridView();
 
   };
 

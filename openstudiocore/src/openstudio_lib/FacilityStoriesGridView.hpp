@@ -27,9 +27,6 @@
 
 #include "../model/Model.hpp"
 
-#include <QWidget>
-
-class QDoubleValidator;
 class QLineEdit;
 
 namespace openstudio{
@@ -46,19 +43,19 @@ namespace openstudio{
 
     virtual ~FacilityStoriesGridView() {}
 
-    QLineEdit *  m_lessThanFilter = nullptr;
-    QDoubleValidator * m_lessThanValidator = nullptr;
-
-    QLineEdit *  m_greaterThanFilter = nullptr; 
-    QDoubleValidator * m_greaterThanValidator = nullptr;
-
   private:
 
     REGISTER_LOGGER("openstudio.FacilityStoriesGridView");
 
-    virtual void addObject(const openstudio::IddObjectType& iddObjectType);
+    virtual void addObject(const IddObjectType& iddObjectType);
 
-    virtual void purgeObjects(const openstudio::IddObjectType& iddObjectType);
+    virtual void purgeObjects(const IddObjectType& iddObjectType);
+
+    void filterChanged();
+
+    QLineEdit *  m_lessThanFilter = nullptr;
+
+    QLineEdit *  m_greaterThanFilter = nullptr; 
 
   signals:
 

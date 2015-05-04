@@ -100,7 +100,7 @@ namespace openstudio {
     filterGridLayout->setSpacing(5);
 
     label = new QLabel();
-    label->setText("Filter:");
+    label->setText("Filters:");
     label->setObjectName("H2");
     filterGridLayout->addWidget(label, filterGridLayout->rowCount(), filterGridLayout->columnCount(), Qt::AlignTop | Qt::AlignLeft);
 
@@ -117,8 +117,8 @@ namespace openstudio {
     m_greaterThanFilter->setFixedWidth(OSItem::ITEM_WIDTH);
     connect(m_greaterThanFilter, &QLineEdit::editingFinished, this, &openstudio::FacilityStoriesGridView::greaterThanFilterChanged);
 
-    m_greaterThanValidator = new QDoubleValidator();
-    m_greaterThanFilter->setValidator(m_greaterThanValidator);
+    auto greaterThanValidator = new QDoubleValidator();
+    m_greaterThanFilter->setValidator(greaterThanValidator);
 
     layout->addWidget(m_greaterThanFilter, Qt::AlignTop | Qt::AlignLeft);
     layout->addStretch();
@@ -137,8 +137,8 @@ namespace openstudio {
     m_lessThanFilter->setFixedWidth(OSItem::ITEM_WIDTH);
     connect(m_lessThanFilter, &QLineEdit::editingFinished, this, &openstudio::FacilityStoriesGridView::lessThanFilterChanged);
 
-    m_lessThanValidator = new QDoubleValidator();
-    m_lessThanFilter->setValidator(m_lessThanValidator);
+    auto lessThanValidator = new QDoubleValidator();
+    m_lessThanFilter->setValidator(lessThanValidator);
 
     layout->addWidget(m_lessThanFilter, Qt::AlignTop | Qt::AlignLeft);
     layout->addStretch();
@@ -172,18 +172,20 @@ namespace openstudio {
 
   void FacilityStoriesGridView::greaterThanFilterChanged()
   {
-    lessThanFilterChanged();
+    filterChanged();
   }
 
   void FacilityStoriesGridView::lessThanFilterChanged()
+  {
+    filterChanged();
+  }
+
+  void FacilityStoriesGridView::filterChanged()
   {
     auto objectSelector = this->m_gridController->getObjectSelector();
 
     auto upperLimit = this->m_lessThanFilter->text().toDouble();
     auto lowerLimit = this->m_greaterThanFilter->text().toDouble();
-
-    //m_lessThanValidator->setBottom(lowerLimit);
-    //m_greaterThanValidator->setTop(upperLimit);
 
     for (auto obj : objectSelector->m_selectorObjects) {
       auto nominalZCoordinate = obj.cast<model::BuildingStory>().nominalZCoordinate();

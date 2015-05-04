@@ -43,6 +43,8 @@
 #include <QCheckBox>
 #include <QComboBox>
 #include <QLabel>
+#include <QLineEdit>
+#include <QRegExpValidator>
 #include <QScrollArea>
 
 // These defines provide a common area for field display names
@@ -79,14 +81,158 @@ namespace openstudio {
     auto buildingShadingModelObjects = subsetCastVector<model::ModelObject>(buildingShading);
 
     m_gridController = new FacilityShadingGridController(isIP, "Shading Surface", IddObjectType::OS_ShadingSurface, model, buildingShadingModelObjects);
-    auto gridView = new OSGridView(m_gridController, "Shading Surface", "Drop\nShading Surface", false, parent);
+    m_gridView = new OSGridView(m_gridController, "Shading Surface", "Drop\nShading Surface", false, parent);
 
     setGridController(m_gridController);
-    setGridView(gridView);
+    setGridView(m_gridView);
 
     // Filters
 
-    gridView->m_contentLayout->addSpacing(7);
+    QLabel * label = nullptr;
+
+    QVBoxLayout * layout = nullptr;
+
+    auto filterGridLayout = new QGridLayout();
+    filterGridLayout->setContentsMargins(7, 4, 0, 8);
+    filterGridLayout->setSpacing(5);
+
+    label = new QLabel();
+    label->setText("Filters:");
+    label->setObjectName("H2");
+    filterGridLayout->addWidget(label, filterGridLayout->rowCount(), filterGridLayout->columnCount(), Qt::AlignTop | Qt::AlignLeft);
+
+    // SHADINGSURFACETYPE
+
+    layout = new QVBoxLayout();
+
+    label = new QLabel();
+    label->setText(SHADINGSURFACETYPE);
+    label->setObjectName("H3");
+    layout->addWidget(label, Qt::AlignTop | Qt::AlignLeft);
+
+    m_typeFilter = new QComboBox();
+    m_typeFilter->addItem("Building");
+    m_typeFilter->addItem("Site");
+    m_typeFilter->setFixedWidth(OSItem::ITEM_WIDTH);
+    connect(m_typeFilter, &QComboBox::currentTextChanged, this, &openstudio::FacilityShadingGridView::typeFilterChanged);
+
+    layout->addWidget(m_typeFilter, Qt::AlignTop | Qt::AlignLeft);
+    layout->addStretch();
+    filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, filterGridLayout->columnCount());
+
+    // SHADINGSURFACEGROUPNAME
+
+    layout = new QVBoxLayout();
+
+    label = new QLabel();
+    label->setText(SHADINGSURFACEGROUPNAME);
+    label->setObjectName("H3");
+    layout->addWidget(label, Qt::AlignTop | Qt::AlignLeft);
+
+    m_nameFilter = new QLineEdit();
+    m_nameFilter->setFixedWidth(OSItem::ITEM_WIDTH);
+    connect(m_nameFilter, &QLineEdit::editingFinished, this, &openstudio::FacilityShadingGridView::nameFilterChanged);
+
+    QRegExp nameRegex("^\\S.*");
+    auto nameValidator = new QRegExpValidator(nameRegex, this);
+    m_nameFilter->setValidator(nameValidator);
+
+    layout->addWidget(m_nameFilter, Qt::AlignTop | Qt::AlignLeft);
+    layout->addStretch();
+    filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, filterGridLayout->columnCount());
+
+    // ORIENTATION
+
+    layout = new QVBoxLayout();
+
+    label = new QLabel();
+    label->setText(ORIENTATION);
+    label->setObjectName("H3");
+    layout->addWidget(label, Qt::AlignTop | Qt::AlignLeft);
+
+    m_orientationFilter = new QComboBox();
+    m_orientationFilter->addItem("Horizontal");
+    m_orientationFilter->addItem("Vertical");
+    m_orientationFilter->setFixedWidth(OSItem::ITEM_WIDTH);
+    connect(m_orientationFilter, &QComboBox::currentTextChanged, this, &openstudio::FacilityShadingGridView::orientationFilterChanged);
+
+    layout->addWidget(m_orientationFilter, Qt::AlignTop | Qt::AlignLeft);
+    layout->addStretch();
+    filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, filterGridLayout->columnCount());
+
+    // TILT
+
+    layout = new QVBoxLayout();
+
+    label = new QLabel();
+    label->setText(TILT);
+    label->setObjectName("H3");
+    layout->addWidget(label, Qt::AlignTop | Qt::AlignLeft);
+
+    m_tiltFilter = new QLineEdit();
+    m_tiltFilter->setFixedWidth(0.7 * OSItem::ITEM_WIDTH);
+    connect(m_tiltFilter, &QLineEdit::editingFinished, this, &openstudio::FacilityShadingGridView::tiltFilterChanged);
+
+    auto tiltValidator = new QDoubleValidator(this);
+    m_tiltFilter->setValidator(tiltValidator);
+
+    label = new QLabel();
+    label->setText("rad");
+    label->setObjectName("H3");
+
+    auto hLayout = new QHBoxLayout();
+    hLayout->addWidget(m_tiltFilter, Qt::AlignTop | Qt::AlignLeft);
+    hLayout->addWidget(label, Qt::AlignTop | Qt::AlignLeft);
+    hLayout->addStretch();
+    layout->addLayout(hLayout, Qt::AlignTop | Qt::AlignLeft);
+
+    filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, filterGridLayout->columnCount());
+
+    filterGridLayout->setRowStretch(filterGridLayout->rowCount(), 100);
+    filterGridLayout->setColumnStretch(filterGridLayout->columnCount(), 100);
+
+    m_gridView->m_contentLayout->addLayout(filterGridLayout);
+
+    m_gridView->m_contentLayout->addSpacing(7);
+  }
+
+  void FacilityShadingGridView::nameFilterChanged()
+  {
+    filterChanged();
+  }
+
+  void FacilityShadingGridView::typeFilterChanged(const QString& text)
+  {
+    filterChanged();
+  }
+
+  void FacilityShadingGridView::orientationFilterChanged(const QString& text)
+  {
+    filterChanged();
+  }
+
+  void FacilityShadingGridView::tiltFilterChanged()
+  {
+    filterChanged();
+  }
+
+  void FacilityShadingGridView::filterChanged()
+  {
+    auto objectSelector = this->m_gridController->getObjectSelector();
+    
+    auto name = m_nameFilter->text();
+
+    auto tilt = m_tiltFilter->text().toDouble();
+
+    auto type = m_typeFilter->currentText();
+
+    auto orintation = m_orientationFilter->currentText();
+
+    for (auto obj : objectSelector->m_selectorObjects) {
+
+    }
+
+    this->m_gridView->requestRefreshAll();
   }
 
   void FacilityShadingGridView::onDropZoneItemClicked(OSItem* item)
@@ -130,57 +276,6 @@ namespace openstudio {
     }
 
     OSGridController::setCategoriesAndFields();
-  }
-
-  void FacilityShadingGridController::filterChanged(const QString & text)
-  {
-    LOG(Debug, "Load filter changed: " << text);
-
-    auto objectSelector = getObjectSelector();
-    //if (text == SHOWALLLOADS)
-    //{
-    //  objectSelector->resetObjectFilter();
-    //}
-    //else {
-    //  objectSelector->setObjectFilter(
-    //    [text](const model::ModelObject &obj)->bool {
-    //    try {
-    //      obj.cast<model::SpaceLoadInstance>();
-    //      // This is a spaceloadinstance, so we want to see if it matches our filter
-
-    //      if (text == "")
-    //      {
-    //        return static_cast<bool>(obj.optionalCast<model::InternalMass>());
-    //      }
-    //      //else if (text == PEOPLE)
-    //      //{
-    //      //  return static_cast<bool>(obj.optionalCast<model::People>());
-    //      //}
-    //      else
-    //      {
-    //        // Should never get here
-    //        OS_ASSERT(false);
-    //        return false;
-    //      }
-    //    }
-    //    catch (...) {
-    //      return true; // this isn't a space load instance, so don't apply filtering
-    //    }
-    //  }
-    //  );
-    //}
-  }
-
-  //void FacilityShadingGridController::tiltFilterChanged();
-  //void FacilityShadingGridController::orientationFilterChanged();
-  //void FacilityShadingGridController::nameFilterChanged();
-  //void FacilityShadingGridController::typeFilterChanged(const QString & text);
-
-  FacilityShadingGridView * FacilityShadingGridController::gridView()
-  {
-    OS_ASSERT(qobject_cast<OSGridView *>(this->parent()));
-
-    return qobject_cast<FacilityShadingGridView *>(this->parent()->parent());
   }
 
   void FacilityShadingGridController::categorySelected(int index)
