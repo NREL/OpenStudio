@@ -276,6 +276,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"SpaceInfiltrationDesignFlowRate","Infiltration","schedule",true,"",0.0,1.0},
     {"SpaceInfiltrationEffectiveLeakageArea","Infiltration","schedule",true,"",0.0,1.0},
     {"SteamEquipment","Steam Equipment","schedule",true,"",0.0,1.0},
+    {"ThermalStorageIceDetailed","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ThermostatSetpointDualSetpoint","Heating Setpoint Temperature","heatingSetpointTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"ThermostatSetpointDualSetpoint","Cooling Setpoint Temperature","coolingSetpointTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"ZoneControlThermostatStagedDualSetpoint","Heating Temperature Setpoint Schedule","heatingTemperatureSetpointSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},

@@ -853,6 +853,9 @@ set(${target_name}_src
   TableMultiVariableLookup.hpp
   TableMultiVariableLookup_Impl.hpp
   TableMultiVariableLookup.cpp
+  ThermalStorageIceDetailed.hpp
+  ThermalStorageIceDetailed_Impl.hpp
+  ThermalStorageIceDetailed.cpp
   ThermalZone.hpp
   ThermalZone_Impl.hpp
   ThermalZone.cpp
@@ -1412,6 +1415,7 @@ set(${target_name}_test_src
   test/Surface_GTest.cpp
   test/TableMultiVariableLookup_GTest.cpp
   test/ThermalZone_GTest.cpp
+  test/ThermalStorageIceDetailed_GTest.cpp
   test/TemperingValve_GTest.cpp
   test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp

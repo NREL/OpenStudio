@@ -19389,11 +19389,13 @@ OS:ThermalStorage:Ice:Detailed,
        \object-list ConnectionNames
   A6 , \field Discharging Curve
        \type object-list
+       \required-field
        \object-list QuadraticLinearCurves
        \object-list CubicLinearCurves
        \object-list UniVariateTables
   A7 , \field Charging Curve
        \type object-list
+       \required-field
        \object-list QuadraticLinearCurves
        \object-list CubicLinearCurves
        \object-list UniVariateTables

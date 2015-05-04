@@ -1736,6 +1736,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateThermalZone(zone);
       break;
     }
+  case openstudio::IddObjectType::OS_ThermalStorage_Ice_Detailed :
+    {
+      auto mo = modelObject.cast<ThermalStorageIceDetailed>();
+      retVal = translateThermalStorageIceDetailed(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_ThermostatSetpoint_DualSetpoint :
     {
       model::ThermostatSetpointDualSetpoint thermostat = modelObject.cast<ThermostatSetpointDualSetpoint>();
