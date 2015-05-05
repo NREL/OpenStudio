@@ -57,8 +57,6 @@ class SqliteMerge {
     // Here are the table updates...
     static void dropTabularData(sqlite3 *);
     static void tableTime(sqlite3 *);
-    static void tableReportMeterData(sqlite3 *);
-    static void tableReportMeterExtendedData(sqlite3 *);
     static void tableReportVariableData(sqlite3 *); 
     static void tableReportVariableExtendedData(sqlite3 *);
 

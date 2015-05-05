@@ -881,7 +881,7 @@ FanVariableVolume::FanVariableVolume(const Model& model)
   OS_ASSERT(getImpl<detail::FanVariableVolume_Impl>());
 
   auto schedule = model.alwaysOnDiscreteSchedule();
-  bool ok = setAvailabilitySchedule(schedule);
+  setAvailabilitySchedule(schedule);
 
   setEndUseSubcategory("");
   setFanEfficiency(0.6045);

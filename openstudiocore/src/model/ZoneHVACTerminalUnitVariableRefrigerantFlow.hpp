@@ -55,6 +55,7 @@ class MODEL_API ZoneHVACTerminalUnitVariableRefrigerantFlow : public ZoneHVACCom
 
   bool setTerminalUnitAvailabilityschedule(Schedule& schedule);
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Supply Air Flow Rate" **/
   boost::optional<double> supplyAirFlowRateDuringCoolingOperation() const;
 
   bool isSupplyAirFlowRateDuringCoolingOperationAutosized() const;
@@ -63,6 +64,7 @@ class MODEL_API ZoneHVACTerminalUnitVariableRefrigerantFlow : public ZoneHVACCom
 
   void autosizeSupplyAirFlowRateDuringCoolingOperation();
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Cooling Supply Air Flow Rate" **/
   boost::optional<double> supplyAirFlowRateWhenNoCoolingisNeeded() const;
 
   bool isSupplyAirFlowRateWhenNoCoolingisNeededAutosized() const;
@@ -71,6 +73,7 @@ class MODEL_API ZoneHVACTerminalUnitVariableRefrigerantFlow : public ZoneHVACCom
 
   void autosizeSupplyAirFlowRateWhenNoCoolingisNeeded();
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Supply Air Flow Rate" **/
   boost::optional<double> supplyAirFlowRateDuringHeatingOperation() const;
 
   bool isSupplyAirFlowRateDuringHeatingOperationAutosized() const;
@@ -79,6 +82,7 @@ class MODEL_API ZoneHVACTerminalUnitVariableRefrigerantFlow : public ZoneHVACCom
 
   void autosizeSupplyAirFlowRateDuringHeatingOperation();
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Heating Supply Air Flow Rate" **/
   boost::optional<double> supplyAirFlowRateWhenNoHeatingisNeeded() const;
 
   bool isSupplyAirFlowRateWhenNoHeatingisNeededAutosized() const;
@@ -87,6 +91,7 @@ class MODEL_API ZoneHVACTerminalUnitVariableRefrigerantFlow : public ZoneHVACCom
 
   void autosizeSupplyAirFlowRateWhenNoHeatingisNeeded();
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Outdoor Air Flow Rate" **/
   boost::optional<double> outdoorAirFlowRateDuringCoolingOperation() const;
 
   bool isOutdoorAirFlowRateDuringCoolingOperationAutosized() const;
@@ -95,6 +100,7 @@ class MODEL_API ZoneHVACTerminalUnitVariableRefrigerantFlow : public ZoneHVACCom
 
   void autosizeOutdoorAirFlowRateDuringCoolingOperation();
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Outdoor Air Flow Rate" **/
   boost::optional<double> outdoorAirFlowRateDuringHeatingOperation() const;
 
   bool isOutdoorAirFlowRateDuringHeatingOperationAutosized() const;
@@ -103,6 +109,7 @@ class MODEL_API ZoneHVACTerminalUnitVariableRefrigerantFlow : public ZoneHVACCom
 
   void autosizeOutdoorAirFlowRateDuringHeatingOperation();
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Load Outdoor Air Flow Rate" **/
   boost::optional<double> outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
 
   bool isOutdoorAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const;

@@ -4,7 +4,7 @@ project(OpenStudio)
 
 set(CMAKE_VERSION_MAJOR 1)
 set(CMAKE_VERSION_MINOR 7)
-set(CMAKE_VERSION_PATCH 1)
+set(CMAKE_VERSION_PATCH 3)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
@@ -41,11 +41,11 @@ endif()
 
 # EnergyPlus Idd version
 set(ENERGYPLUS_VERSION_MAJOR 8)
-set(ENERGYPLUS_VERSION_MINOR 2)
+set(ENERGYPLUS_VERSION_MINOR 3)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "8397c2e30b" )
+set(ENERGYPLUS_BUILD_SHA "6d97d074ea" )
 
 option(NIGHTLY_BUILD "Use configurations for Nightly Build" OFF)
 

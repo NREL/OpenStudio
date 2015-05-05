@@ -112,6 +112,8 @@ class OpenStudioApp : public OSAppBase
   void importgbXML(); 
 
   void importSDD(); 
+  
+  void importIFC();
 
   void open();
 
@@ -160,6 +162,8 @@ class OpenStudioApp : public OSAppBase
   QString lastPath() const;
 
   void setLastPath(const QString& t_lastPath);
+
+  void connectOSDocumentSignals();
 
   QSharedPointer<ruleset::RubyUserScriptInfoGetter> m_infoGetter;
 

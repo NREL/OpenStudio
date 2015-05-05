@@ -60,26 +60,32 @@ class MODEL_API AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass : public StraightC
 
   boost::optional<Schedule> availabilitySchedule() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Supply Air Flow Rate" **/
   boost::optional<double> systemAirFlowRateDuringCoolingOperation() const;
 
   bool isSystemAirFlowRateDuringCoolingOperationAutosized() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Supply Air Flow Rate" **/
   boost::optional<double> systemAirFlowRateDuringHeatingOperation() const;
 
   bool isSystemAirFlowRateDuringHeatingOperationAutosized() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Load Supply Air Flow Rate" **/
   boost::optional<double> systemAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
 
   bool isSystemAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Outdoor Air Flow Rate" **/
   boost::optional<double> outdoorAirFlowRateDuringCoolingOperation() const;
 
   bool isOutdoorAirFlowRateDuringCoolingOperationAutosized() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Outdoor Air Flow Rate" **/
   boost::optional<double> outdoorAirFlowRateDuringHeatingOperation() const;
 
   bool isOutdoorAirFlowRateDuringHeatingOperationAutosized() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Load Outdoor Air Flow Rate" **/
   boost::optional<double> outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
 
   bool isOutdoorAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const;

@@ -198,6 +198,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void importSDDClicked();
 
+  void importIFCClicked();
+
   void loadFileClicked();
 
   void osmDropped(QString path);

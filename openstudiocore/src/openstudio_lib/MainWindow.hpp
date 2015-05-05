@@ -91,6 +91,8 @@ class MainWindow : public QMainWindow
 
   void importSDDClicked();
 
+  void importIFCClicked();
+
   void loadFileClicked();
 
   void osmDropped(QString path);

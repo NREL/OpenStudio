@@ -148,66 +148,66 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalH
 
   if( modelObject.isSupplyAirFlowRateDuringCoolingOperationAutosized() )
   {
-    idfObject.setString(ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateDuringCoolingOperation,"Autosize");
+    idfObject.setString(ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingSupplyAirFlowRate,"Autosize");
   }
   else if( (value = modelObject.supplyAirFlowRateDuringCoolingOperation()) )
   {
-    idfObject.setDouble(ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateDuringCoolingOperation,value.get());
+    idfObject.setDouble(ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingSupplyAirFlowRate,value.get());
   }
 
   // SupplyAirFlowRateDuringHeatingOperation
 
   if( modelObject.isSupplyAirFlowRateDuringHeatingOperationAutosized() )
   {
-    idfObject.setString(ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateDuringHeatingOperation,"Autosize");
+    idfObject.setString(ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingSupplyAirFlowRate,"Autosize");
   }
   else if( (value = modelObject.supplyAirFlowRateDuringHeatingOperation()) )
   {
-    idfObject.setDouble(ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateDuringHeatingOperation,value.get());
+    idfObject.setDouble(ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingSupplyAirFlowRate,value.get());
   }
 
   // SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded
 
   if( modelObject.isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() )
   {
-    idfObject.setString(ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded,"Autosize");
+    idfObject.setString(ZoneHVAC_PackagedTerminalHeatPumpFields::NoLoadSupplyAirFlowRate,"Autosize");
   } 
   else if( (value = modelObject.supplyAirFlowRateWhenNoCoolingorHeatingisNeeded()) )
   {
-    idfObject.setDouble(ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded,value.get());
+    idfObject.setDouble(ZoneHVAC_PackagedTerminalHeatPumpFields::NoLoadSupplyAirFlowRate,value.get());
   }
 
   // OutdoorAirFlowRateDuringCoolingOperation
   
   if( modelObject.isOutdoorAirFlowRateDuringCoolingOperationAutosized() )
   {
-    idfObject.setString(ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringCoolingOperation,"Autosize");
+    idfObject.setString(ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingOutdoorAirFlowRate,"Autosize");
   }
   else if( (value = modelObject.outdoorAirFlowRateDuringCoolingOperation()) )
   {
-    idfObject.setDouble(ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringCoolingOperation,value.get());
+    idfObject.setDouble(ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingOutdoorAirFlowRate,value.get());
   }
 
   // OutdoorAirFlowRateDuringHeatingOperation
   
   if( modelObject.isOutdoorAirFlowRateDuringHeatingOperationAutosized() )
   {
-    idfObject.setString(ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringHeatingOperation,"Autosize");
+    idfObject.setString(ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingOutdoorAirFlowRate,"Autosize");
   }
   else if( (value = modelObject.outdoorAirFlowRateDuringHeatingOperation()) )
   {
-    idfObject.setDouble(ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringHeatingOperation,value.get());
+    idfObject.setDouble(ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingOutdoorAirFlowRate,value.get());
   }
 
   // OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded
   
   if( modelObject.isOutdoorAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() )
   {
-    idfObject.setString(ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded,"Autosize");
+    idfObject.setString(ZoneHVAC_PackagedTerminalHeatPumpFields::NoLoadOutdoorAirFlowRate,"Autosize");
   }
   else if( (value = modelObject.outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded()) )
   {
-    idfObject.setDouble(ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded,value.get());
+    idfObject.setDouble(ZoneHVAC_PackagedTerminalHeatPumpFields::NoLoadOutdoorAirFlowRate,value.get());
   }
 
   // SupplyAirFanObjectType
