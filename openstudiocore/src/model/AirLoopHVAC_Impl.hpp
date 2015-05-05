@@ -98,8 +98,6 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
-  void addAirLoopComp(ModelObject targetObj, ModelObject newComp);
-
   boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
 
   AirLoopHVACZoneMixer zoneMixer();

@@ -183,12 +183,6 @@ class MODEL_API AirLoopHVAC : public Loop
    */
   std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
-  /** Adds a new component to the air loop.  In most cases the newObj will be added immediately after the
-   * targetObj.  The notable exceptions are when the targetObj is either a supply outlet node or a
-   * demand outlet node.  This interface is deprecated in favor of HVACComponent::addToNode.
-   */
-  void addAirLoopComp(openstudio::model::ModelObject targetObj, openstudio::model::ModelObject newObj);
-
   /** Returns the AirLoopHVACOutdoorAirSystem object associated with the air loop.
    * A freshly constructed AirLoopHVAC object will not have an outdoor air system
    * and this method will return a false optional.
