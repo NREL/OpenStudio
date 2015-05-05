@@ -200,24 +200,6 @@ namespace detail {
     }
   }
 
-  void AirLoopHVAC_Impl::removeAirLoopComp(ModelObject targetObj)
-  {
-    Model model = targetObj.model();
-
-    OptionalStraightComponent straightComponent = targetObj.optionalCast<StraightComponent>();
-    // if we are deleting a straight component that is not a node
-    if( straightComponent && ! targetObj.optionalCast<Node>() )
-    {
-      straightComponent->remove();
-    }
-    // if we are deleting an AirLoopHVACOutdoorAirSystem
-    OptionalAirLoopHVACOutdoorAirSystem mixer = targetObj.optionalCast<AirLoopHVACOutdoorAirSystem>();
-    if(mixer)
-    {
-      mixer->remove();
-    }
-  }
-
   std::vector<openstudio::IdfObject> AirLoopHVAC_Impl::remove()
   {
     ModelObjectVector modelObjects;

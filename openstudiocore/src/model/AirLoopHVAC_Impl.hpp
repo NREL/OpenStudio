@@ -100,8 +100,6 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   void addAirLoopComp(ModelObject targetObj, ModelObject newComp);
 
-  void removeAirLoopComp(ModelObject targetObj);
-
   void replaceAirLoopSupplyComp(ModelObject targetObj, ModelObject newObj);
 
   boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
