@@ -137,6 +137,9 @@ set(${target_name}_src
   CFactorUndergroundWallConstruction.hpp
   CFactorUndergroundWallConstruction_Impl.hpp
   CFactorUndergroundWallConstruction.cpp
+  ChillerAbsorption.hpp
+  ChillerAbsorption_Impl.hpp
+  ChillerAbsorption.cpp
   ChillerAbsorptionIndirect.hpp
   ChillerAbsorptionIndirect_Impl.hpp
   ChillerAbsorptionIndirect.cpp
@@ -1255,6 +1258,7 @@ set(${target_name}_test_src
   test/BoilerSteam_GTest.cpp
   test/BuildingStory_GTest.cpp
   test/Building_GTest.cpp
+  test/ChillerAbsorption_GTest.cpp
   test/ChillerAbsorptionIndirect_GTest.cpp
   test/ChillerElectricEIR_GTest.cpp
   test/ClimateZones_GTest.cpp

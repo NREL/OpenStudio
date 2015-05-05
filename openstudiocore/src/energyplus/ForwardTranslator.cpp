@@ -608,6 +608,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // no-op
       return retVal;
     }
+  case openstudio::IddObjectType::OS_Chiller_Absorption :
+    {
+      auto mo = modelObject.cast<ChillerAbsorption>();
+      retVal = translateChillerAbsorption(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_Chiller_Absorption_Indirect :
     {
       auto mo = modelObject.cast<ChillerAbsorptionIndirect>();
