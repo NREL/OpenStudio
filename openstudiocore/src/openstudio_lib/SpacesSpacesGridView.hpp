@@ -1,3 +1,4 @@
+
 /**********************************************************************
 *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
@@ -22,21 +23,21 @@
 
 #include "../shared_gui_components/OSGridController.hpp"
 
+#include "GridViewSubTab.hpp"
 #include "OSItem.hpp"
 
 #include "../model/Model.hpp"
 
-#include <QWidget>
-
 class QComboBox;
-class QLabel;
+//class QLineEdit;
 
 namespace openstudio{
 
-  class ModelSubTabView;
+  class OSQuantityEdit2;
+
   class SpacesSpacesGridController;
 
-  class SpacesSpacesGridView : public QWidget
+  class SpacesSpacesGridView : public GridViewSubTab
   {
     Q_OBJECT
 
@@ -46,39 +47,31 @@ namespace openstudio{
 
     virtual ~SpacesSpacesGridView() {}
 
-    std::vector<model::ModelObject> selectedObjects() const;
+    QComboBox *  m_storyFilter = nullptr;
 
-    void enableFilter();
+    QComboBox *  m_thermalZoneFilter = nullptr;
 
-    void disableFilter();
-
-    QComboBox * m_filters = nullptr;
+    QComboBox *  m_spaceTypeFilter = nullptr;
 
   private:
 
     REGISTER_LOGGER("openstudio.SpacesSpacesGridView");
 
-    bool m_isIP;
+    virtual void addObject(const openstudio::IddObjectType& iddObjectType);
 
-    SpacesSpacesGridController * m_gridController = nullptr;
+    virtual void purgeObjects(const openstudio::IddObjectType& iddObjectType);
 
-    QLabel * m_filterLabel = nullptr;
+    void filterChanged();
 
-  signals:
-
-    void toggleUnitsClicked(bool displayIP);
-
-    void dropZoneItemClicked(OSItem* item);
-
-    void itemSelected(OSItem * item);
-
-    void selectionCleared();
-
-    void gridRowSelected(OSItem*);
-
-    private slots:
+  private slots:
 
     void onDropZoneItemClicked(OSItem* item);
+
+    void storyFilterChanged(const QString & text);
+
+    void thermalZoneFilterChanged(const QString & text);
+
+    void spaceTypeFilterChanged(const QString & text);
 
   };
 
@@ -114,14 +107,6 @@ namespace openstudio{
     public slots:
 
     virtual void onItemDropped(const OSItemId& itemId);
-
-    virtual void onComboBoxIndexChanged(int index);
-
-    void filterChanged(const QString & text);
-
-  private:
-
-    SpacesSpacesGridView * gridView();
 
   };
 
