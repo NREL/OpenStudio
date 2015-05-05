@@ -608,6 +608,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // no-op
       return retVal;
     }
+  case openstudio::IddObjectType::OS_Chiller_Absorption_Indirect :
+    {
+      auto mo = modelObject.cast<ChillerAbsorptionIndirect>();
+      retVal = translateChillerAbsorptionIndirect(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_Chiller_Electric_EIR :
     {
       model::ChillerElectricEIR chiller = modelObject.cast<ChillerElectricEIR>();

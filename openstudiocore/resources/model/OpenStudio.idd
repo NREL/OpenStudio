@@ -10183,41 +10183,49 @@ OS:Chiller:Absorption:Indirect,
        \object-list UniVariateTables
   A9,  \field Pump Electric Input Function of Part Load Ratio Curve
        \type object-list
+       \required-field
        \object-list QuadraticCubicCurves
        \object-list UniVariateTables
   A10 , \field Generator Inlet Node
-       \object-list Node
+       \type object-list
+       \object-list ConnectionNames
        \note Enter the generator inlet node name which connects this chiller to a
        \note steam or hot water plant, otherwise leave this field blank.
        \note Generator nodes are used to model heat input to the chiller.
   A11, \field Generator Outlet Node
-       \object-list Node
+       \type object-list
+       \object-list ConnectionNames
        \note Enter the generator outlet node name which connects this chiller to a
        \note steam or hot water plant, otherwise leave this field blank.
        \note Generator nodes are used to model heat input to the chiller.
   A12, \field Capacity Correction Function of Condenser Temperature Curve
        \type object-list
+       \required-field
        \object-list QuadraticCubicCurves
        \object-list UniVariateTables
        \note Curve which shows the change in normalized capacity to changes in condenser temperature.
   A13, \field Capacity Correction Function of Chilled Water Temperature Curve
        \type object-list
+       \required-field
        \object-list QuadraticCubicCurves
        \object-list UniVariateTables
        \note Curve which shows the change in normalized capacity to changes in leaving chilled water temperature.
   A14, \field Capacity Correction Function of Generator Temperature Curve
        \type object-list
+       \required-field
        \object-list QuadraticCubicCurves
        \object-list UniVariateTables
        \note Used when generator fluid type is hot water
        \note Curve which shows the change in normalized capacity to changes in generator temperature.
   A15, \field Generator Heat Input Correction Function of Condenser Temperature Curve
        \type object-list
+       \required-field
        \object-list QuadraticCubicCurves
        \object-list UniVariateTables
        \note Curve which shows the change in normalized heat input to changes in condenser temperature.
   A16, \field Generator Heat Input Correction Function of Chilled Water Temperature Curve
        \type object-list
+       \required-field
        \object-list QuadraticCubicCurves
        \object-list UniVariateTables
        \note Curve which shows the change in normalized heat input to changes in leaving chilled water temperature.
@@ -10349,9 +10357,11 @@ OS:Chiller:Absorption,
        \required-field
        \units C
   A7 , \field Generator Inlet Node Name
-       \object-list Node
+       \type object-list
+       \object-list ConnectionNames
   A8 , \field Generator Outlet Node Name
-       \object-list Node
+       \type object-list
+       \object-list ConnectionNames
   A9 , \field Chiller Flow Mode
        \note Select operating mode for fluid flow through the chiller. "NotModulated" is for
        \note either variable or constant pumping with flow controlled by the external plant system.

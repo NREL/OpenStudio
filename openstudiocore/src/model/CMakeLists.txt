@@ -137,6 +137,9 @@ set(${target_name}_src
   CFactorUndergroundWallConstruction.hpp
   CFactorUndergroundWallConstruction_Impl.hpp
   CFactorUndergroundWallConstruction.cpp
+  ChillerAbsorptionIndirect.hpp
+  ChillerAbsorptionIndirect_Impl.hpp
+  ChillerAbsorptionIndirect.cpp
   ChillerElectricEIR.hpp
   ChillerElectricEIR_Impl.hpp
   ChillerElectricEIR.cpp
@@ -1035,6 +1038,7 @@ set(${target_name}_moc
   Building_Impl.hpp
   BuildingStory_Impl.hpp
   CFactorUndergroundWallConstruction_Impl.hpp
+  ChillerAbsorptionIndirect_Impl.hpp
   ChillerElectricEIR_Impl.hpp
   CoilCoolingDXSingleSpeed_Impl.hpp
   CoilCoolingWater_Impl.hpp
@@ -1251,6 +1255,7 @@ set(${target_name}_test_src
   test/BoilerSteam_GTest.cpp
   test/BuildingStory_GTest.cpp
   test/Building_GTest.cpp
+  test/ChillerAbsorptionIndirect_GTest.cpp
   test/ChillerElectricEIR_GTest.cpp
   test/ClimateZones_GTest.cpp
   test/CoilCoolingCooledBeam_GTest.cpp
