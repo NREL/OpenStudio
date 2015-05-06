@@ -60,6 +60,8 @@ public:
   double specificVolume() const;
   double humidityRatio() const;
 
+  static double R();
+
 private:
   double m_drybulb; // Dry bulb temperature in C
   double m_dewpoint; // Dew point temperature in C

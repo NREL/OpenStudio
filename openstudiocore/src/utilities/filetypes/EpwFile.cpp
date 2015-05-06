@@ -316,6 +316,11 @@ double AirState::humidityRatio() const
   return m_W;
 }
 
+double AirState::R()
+{
+  return 8314.472/28.966; // eqn 1 from ASHRAE Fundamentals 2009 Ch. 1
+}
+
 /*
 AirState::AirState(double drybulb, double dewpoint, double pressure) : m_drybulb(drybulb), m_dewpoint(dewpoint),
   m_pressure(pressure), m_specified(AirStateData::DryBulbDewPointPressure)
