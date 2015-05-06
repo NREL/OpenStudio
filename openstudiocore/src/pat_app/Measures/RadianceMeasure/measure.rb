@@ -27,11 +27,24 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
   def arguments(model)
     args = OpenStudio::Ruleset::OSArgumentVector.new
 
-    # the name of the space to add to the model
-    space_name = OpenStudio::Ruleset::OSArgument.makeStringArgument("space_name", true)
-    space_name.setDisplayName("New space name")
-    space_name.setDescription("This name will be used as the name of the new space.")
-    args << space_name
+    chs = OpenStudio::StringVector.new
+    chs << 'Yes'
+    chs << 'No'
+    apply_schedules = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('apply_schedules', chs, true)
+    apply_schedules.setDisplayName('Apply schedule')
+    apply_schedules.setDefaultValue('Yes')
+    apply_schedules.setDescription('Replace lighting and shading control schedules with schedules computed by radiance')
+    args << apply_schedules
+    
+    chs = OpenStudio::StringVector.new
+    chs << 'Yes'
+    chs << 'No'
+    write_sql = OpenStudio::Ruleset::OSArgument.makeStringArgument('write_sql', true)
+    write_sql.setDisplayName('Write radiance SqlFile')
+    apply_schedules.setDefaultValue('Yes')
+    write_sql.setDescription('Write radiance results to a SqlFile format.')
+    args << write_sql
+    
 
     return args
   end
@@ -46,18 +59,15 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     end
 
     # assign the user inputs to variables
-    space_name = runner.getStringArgumentValue("space_name", user_arguments)
-
-    # check the space_name for reasonableness
-    if space_name.empty?
-      runner.registerError("Empty space name was entered.")
-      return false
-    end
+    apply_schedules = runner.getStringArgumentValue('apply_schedules', user_arguments)
+    apply_schedules = (apply_schedules == 'Yes')
+    
+    write_sql = runner.getStringArgumentValue('write_sql', user_arguments)
+    write_sql = (write_sql == 'Yes')
 
     # report initial condition of model
     runner.registerInitialCondition("The building started with #{model.getSpaces.size} spaces.")
 
-    
     sql_file = OpenStudio::Radiance.getSqlFile(model)
 
     # report final condition of model

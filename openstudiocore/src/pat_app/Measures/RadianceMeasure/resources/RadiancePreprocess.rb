@@ -1,7 +1,7 @@
 module OpenStudio
 module Radiance
 
-def getSqlFile(model)
+def Radiance.getSqlFile(model)
   puts "Hi"
   return 0
 end
