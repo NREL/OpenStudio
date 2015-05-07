@@ -191,103 +191,103 @@ namespace openstudio {
       m_filters->addItem(SHOWALLLOADS);
     }
 
-  {
-    const QPixmap * pixMap = new QPixmap(":images/mini_icons/internal_mass.png");
-    OS_ASSERT(pixMap);
-    m_filters->addItem(*pixMap, INTERNALMASS);
-  }
+    {
+      const QPixmap * pixMap = new QPixmap(":images/mini_icons/internal_mass.png");
+      OS_ASSERT(pixMap);
+      m_filters->addItem(*pixMap, INTERNALMASS);
+    }
 
-  {
-    const QPixmap * pixMap = new QPixmap(":images/mini_icons/people.png");
-    OS_ASSERT(pixMap);
-    m_filters->addItem(*pixMap, PEOPLE);
-  }
+    {
+      const QPixmap * pixMap = new QPixmap(":images/mini_icons/people.png");
+      OS_ASSERT(pixMap);
+      m_filters->addItem(*pixMap, PEOPLE);
+    }
 
-  {
-    const QPixmap * pixMap = new QPixmap(":images/mini_icons/lights.png");
-    OS_ASSERT(pixMap);
-    m_filters->addItem(*pixMap, LIGHTS);
-  }
+    {
+      const QPixmap * pixMap = new QPixmap(":images/mini_icons/lights.png");
+      OS_ASSERT(pixMap);
+      m_filters->addItem(*pixMap, LIGHTS);
+    }
 
-  {
-    const QPixmap * pixMap = new QPixmap(":images/mini_icons/luminaire.png");
-    OS_ASSERT(pixMap);
-    m_filters->addItem(*pixMap, LUMINAIRE);
-  }
+    {
+      const QPixmap * pixMap = new QPixmap(":images/mini_icons/luminaire.png");
+      OS_ASSERT(pixMap);
+      m_filters->addItem(*pixMap, LUMINAIRE);
+    }
 
-  {
-    const QPixmap * pixMap = new QPixmap(":images/mini_icons/electric_equipment.png");
-    OS_ASSERT(pixMap);
-    m_filters->addItem(*pixMap, ELECTRICEQUIPMENT);
-  }
+    {
+      const QPixmap * pixMap = new QPixmap(":images/mini_icons/electric_equipment.png");
+      OS_ASSERT(pixMap);
+      m_filters->addItem(*pixMap, ELECTRICEQUIPMENT);
+    }
 
-  {
-    const QPixmap * pixMap = new QPixmap(":images/mini_icons/gas_equipment.png");
-    OS_ASSERT(pixMap);
-    m_filters->addItem(*pixMap, GASEQUIPMENT);
-  }
+    {
+      const QPixmap * pixMap = new QPixmap(":images/mini_icons/gas_equipment.png");
+      OS_ASSERT(pixMap);
+      m_filters->addItem(*pixMap, GASEQUIPMENT);
+    }
 
-  {
-    const QPixmap * pixMap = new QPixmap(":images/mini_icons/steam_equipment.png");
-    OS_ASSERT(pixMap);
-    m_filters->addItem(*pixMap, HOTWATEREQUIPMENT);
-  }
+    {
+      const QPixmap * pixMap = new QPixmap(":images/mini_icons/steam_equipment.png");
+      OS_ASSERT(pixMap);
+      m_filters->addItem(*pixMap, HOTWATEREQUIPMENT);
+    }
 
-  {
-    const QPixmap * pixMap = new QPixmap(":images/mini_icons/steam_equipment.png");
-    OS_ASSERT(pixMap);
-    m_filters->addItem(*pixMap, STEAMEQUIPMENT);
-  }
+    {
+      const QPixmap * pixMap = new QPixmap(":images/mini_icons/steam_equipment.png");
+      OS_ASSERT(pixMap);
+      m_filters->addItem(*pixMap, STEAMEQUIPMENT);
+    }
 
-  {
-    const QPixmap * pixMap = new QPixmap(":images/mini_icons/other_equipment.png");
-    OS_ASSERT(pixMap);
-    m_filters->addItem(*pixMap, OTHEREQUIPMENT);
-  }
+    {
+      const QPixmap * pixMap = new QPixmap(":images/mini_icons/other_equipment.png");
+      OS_ASSERT(pixMap);
+      m_filters->addItem(*pixMap, OTHEREQUIPMENT);
+    }
 
-  disableFilter();
-  layout->addWidget(m_filters, Qt::AlignTop | Qt::AlignLeft);
+    disableFilter();
+    layout->addWidget(m_filters, Qt::AlignTop | Qt::AlignLeft);
 
-  layout->addStretch();
+    layout->addStretch();
 
-  filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, 1);
+    filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, 1);
 
-  filterGridLayout->setRowStretch(filterGridLayout->rowCount(), 100);
-  filterGridLayout->setColumnStretch(filterGridLayout->columnCount(), 100);
+    filterGridLayout->setRowStretch(filterGridLayout->rowCount(), 100);
+    filterGridLayout->setColumnStretch(filterGridLayout->columnCount(), 100);
 
-  gridView->m_contentLayout->addLayout(filterGridLayout);
+    gridView->m_contentLayout->addLayout(filterGridLayout);
 
-  gridView->m_contentLayout->addSpacing(7);
+    gridView->m_contentLayout->addSpacing(7);
 
-  mainLayout->addWidget(gridView, 0, Qt::AlignTop);
+    mainLayout->addWidget(gridView, 0, Qt::AlignTop);
 
-  mainLayout->addStretch(1);
+    mainLayout->addStretch(1);
 
-  // GridController
+    // GridController
 
-  OS_ASSERT(m_gridController);
-  isConnected = connect(m_filters, &QComboBox::currentTextChanged, m_gridController, &openstudio::SpaceTypesGridController::filterChanged);
-  OS_ASSERT(isConnected);
+    OS_ASSERT(m_gridController);
+    isConnected = connect(m_filters, &QComboBox::currentTextChanged, m_gridController, &openstudio::SpaceTypesGridController::filterChanged);
+    OS_ASSERT(isConnected);
 
-  isConnected = connect(gridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
-  OS_ASSERT(isConnected);
+    isConnected = connect(gridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
+    OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), gridView, SIGNAL(itemSelected(OSItem *)));
-  OS_ASSERT(isConnected);
+    isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), gridView, SIGNAL(itemSelected(OSItem *)));
+    OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(selectionCleared()), gridView, SLOT(onSelectionCleared()));
-  OS_ASSERT(isConnected);
+    isConnected = connect(this, SIGNAL(selectionCleared()), gridView, SLOT(onSelectionCleared()));
+    OS_ASSERT(isConnected);
 
-  isConnected = connect(gridView, SIGNAL(gridRowSelected(OSItem*)), this, SIGNAL(gridRowSelected(OSItem*)));
-  OS_ASSERT(isConnected);
+    isConnected = connect(gridView, SIGNAL(gridRowSelected(OSItem*)), this, SIGNAL(gridRowSelected(OSItem*)));
+    OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_gridController, SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+    isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_gridController, SIGNAL(toggleUnitsClicked(bool)));
+    OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_gridController, SLOT(toggleUnits(bool)));
-  OS_ASSERT(isConnected);
+    isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_gridController, SLOT(toggleUnits(bool)));
+    OS_ASSERT(isConnected);
 
-  std::vector<model::SpaceType> spaceType = model.getModelObjects<model::SpaceType>(); // NOTE for horizontal system lists
+    std::vector<model::SpaceType> spaceType = model.getModelObjects<model::SpaceType>(); // NOTE for horizontal system lists
   }
 
   std::vector<model::ModelObject> SpaceTypesGridView::selectedObjects() const

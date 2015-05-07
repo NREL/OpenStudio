@@ -92,7 +92,7 @@ namespace openstudio{
 
     virtual QString getColor(const model::ModelObject & modelObject);
 
-    public slots:
+  public slots:
 
     REGISTER_LOGGER("openstudio.ThermalZonesGridController");
 
