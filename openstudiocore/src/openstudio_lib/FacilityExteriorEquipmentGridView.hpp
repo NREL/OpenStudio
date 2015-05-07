@@ -49,8 +49,6 @@ namespace openstudio{
 
     virtual void purgeObjects(const openstudio::IddObjectType& iddObjectType);
 
-  signals:
-
   private slots:
 
     void onDropZoneItemClicked(OSItem* item);
@@ -86,15 +84,11 @@ namespace openstudio{
 
     virtual QString getColor(const model::ModelObject & modelObject);
 
-    public slots:
+  public slots:
 
     virtual void onItemDropped(const OSItemId& itemId);
 
     virtual void onComboBoxIndexChanged(int index);
-
-  private:
-
-    FacilityExteriorEquipmentGridView * gridView();
 
   };
 

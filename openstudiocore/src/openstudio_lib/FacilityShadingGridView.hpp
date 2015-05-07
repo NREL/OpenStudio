@@ -64,9 +64,7 @@ namespace openstudio{
 
     void filterChanged();
 
-  signals:
-
-  private slots :
+  private slots:
 
     void onDropZoneItemClicked(OSItem* item);
 

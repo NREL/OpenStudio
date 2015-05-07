@@ -47,7 +47,6 @@
 #include <QCheckBox>
 #include <QComboBox>
 #include <QLabel>
-#include <QScrollArea>
 
 // These defines provide a common area for field display names
 // used on column headers, and other grid widgets

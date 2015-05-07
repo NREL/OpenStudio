@@ -123,13 +123,6 @@ namespace openstudio {
     OSGridController::setCategoriesAndFields();
   }
 
-  FacilityExteriorEquipmentGridView * FacilityExteriorEquipmentGridController::gridView()
-  {
-    OS_ASSERT(qobject_cast<OSGridView *>(this->parent()));
-
-    return qobject_cast<FacilityExteriorEquipmentGridView *>(this->parent()->parent());
-  }
-
   void FacilityExteriorEquipmentGridController::categorySelected(int index)
   {
     OSGridController::categorySelected(index);

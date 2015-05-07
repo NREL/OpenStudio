@@ -57,9 +57,7 @@ namespace openstudio{
 
     QLineEdit *  m_greaterThanFilter = nullptr; 
 
-  signals:
-
-    private slots:
+  private slots:
 
     void onDropZoneItemClicked(OSItem* item);
 
