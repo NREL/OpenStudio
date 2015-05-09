@@ -287,7 +287,9 @@ set(${target_name}_SRC
   SpacesSpacesGridView.cpp
   SpacesSpacesGridView.hpp
   SpacesSubsurfacesGridView.cpp
-  SpacesSubsurfacesGridView.hpp
+  SpacesSubsurfacesGridView.hpp  
+  SpacesSubtabGridView.cpp
+  SpacesSubtabGridView.hpp
   SpacesSurfacesGridView.cpp
   SpacesSurfacesGridView.hpp
   SpacesTabController.cpp
@@ -623,6 +625,7 @@ set(${target_name}_moc
   SpacesShadingGridView.hpp
   SpacesSpacesGridView.hpp
   SpacesSubsurfacesGridView.hpp
+  SpacesSubtabGridView.hpp
   SpacesSurfacesGridView.hpp
   SpacesTabController.hpp
   SpacesTabView.hpp

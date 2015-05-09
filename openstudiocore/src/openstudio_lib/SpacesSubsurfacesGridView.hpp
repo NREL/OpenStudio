@@ -23,19 +23,16 @@
 
 #include "../shared_gui_components/OSGridController.hpp"
 
-#include "GridViewSubTab.hpp"
+#include "SpacesSubtabGridView.hpp"
 #include "OSItem.hpp"
 
 #include "../model/Model.hpp"
-
-class QComboBox;
-class QLineEdit;
 
 namespace openstudio{
 
   class SpacesSubsurfacesGridController;
 
-  class SpacesSubsurfacesGridView : public GridViewSubTab
+  class SpacesSubsurfacesGridView : public SpacesSubtabGridView
   {
     Q_OBJECT
 
@@ -44,146 +41,6 @@ namespace openstudio{
     SpacesSubsurfacesGridView(bool isIP, const model::Model & model, QWidget * parent = nullptr);
 
     virtual ~SpacesSubsurfacesGridView() {}
-
-    QLineEdit *  m_thermalZoneNameFilter = nullptr;
-
-    QLineEdit *  m_spaceNameFilter = nullptr;
-
-    QComboBox *  m_storyFilter = nullptr;
-
-    QComboBox *  m_thermalZoneFilter = nullptr;
-
-    QComboBox *  m_spaceTypeFilter = nullptr;
-
-    QComboBox *  m_loadTypeFilter = nullptr;
-
-    QComboBox *  m_windExposureFilter = nullptr;
-
-    QComboBox *  m_sunExposureFilter = nullptr;
-
-    QComboBox *  m_outsideBoundaryConditionFilter = nullptr;
-
-    QComboBox *  m_surfaceTypeFilter = nullptr;
-
-    QComboBox *  m_interiorPartitionGroupFilter = nullptr;
-    
-  private:
-
-    REGISTER_LOGGER("openstudio.SpacesSubsurfacesGridView");
-
-    virtual void addObject(const openstudio::IddObjectType& iddObjectType);
-
-    virtual void purgeObjects(const openstudio::IddObjectType& iddObjectType);
-
-    void showStoryFilter() { m_showStoryFilter = true; }
-
-    void showThermalZoneFilter() { m_showThermalZoneFilter = true; }
-
-    void showSpaceTypeFilter() { m_showSpaceTypeFilter = true; }
-
-    void showSpaceNameFilter() { m_showSpaceNameFilter = true; }
-
-    void showThermalZoneNameFilter() { m_showThermalZoneNameFilter = true; }
-
-    void showWindExposureFilter() { m_showWindExposureFilter = true; }
-
-    void showSunExposureFilter() { m_showSunExposureFilter = true; }
-
-    void showOutsideBoundaryConditionFilter() { m_showOutsideBoundaryConditionFilter = true; }
-
-    void showSurfaceTypeFilter() { m_showSurfaceTypeFilter = true; }
-
-    void showInteriorPartitionGroupFilter() { m_showInteriorPartitionGroupFilter = true; }
-
-    void showLoadTypeFilter() { m_showLoadTypeFilter = true; }
-
-    void initializeStoryFilter();
-
-    void initializeThermalZoneFilter();
-
-    void initializeSpaceTypeFilter();
-
-    void initializeLoadTypeFilter();
-
-    void initializeWindExposureFilter();
-
-    void initializeSunExposureFilter();
-
-    void initializeOutsideBoundaryConditionFilter();
-
-    void initializeSurfaceTypeFilter();
-
-    void initializeInteriorPartitionGroupFilter();
-
-    void filterChanged();
-
-    std::set<openstudio::model::ModelObject> m_objectsFilteredByStory;
-
-    std::set<openstudio::model::ModelObject> m_objectsFilteredByThermalZone;
-
-    std::set<openstudio::model::ModelObject> m_objectsFilterdBySpaceType;
-
-    std::set<openstudio::model::ModelObject> m_objectsFilteredBySpaceName;
-
-    std::set<openstudio::model::ModelObject> m_objectsFilteredByThermalZoneName;
-
-    std::set<openstudio::model::ModelObject> m_objectsFilteredByWindExposure;
-
-    std::set<openstudio::model::ModelObject> m_objectsFilteredBySunExposure;
-
-    std::set<openstudio::model::ModelObject> m_objectsFilteredByOutsideBoundaryCondition;
-
-    std::set<openstudio::model::ModelObject> m_objectsFilteredBySurfaceType;
-
-    std::set<openstudio::model::ModelObject> m_objectsFilteredByInteriorPartitionGroup;
-
-    bool m_showStoryFilter = false;
-
-    bool m_showThermalZoneFilter = false;
-
-    bool m_showSpaceTypeFilter = false;
-
-    bool m_showSpaceNameFilter = false;
-
-    bool m_showThermalZoneNameFilter = false;
-
-    bool m_showWindExposureFilter = false;
-
-    bool m_showSunExposureFilter = false;
-
-    bool m_showOutsideBoundaryConditionFilter = false;
-
-    bool m_showSurfaceTypeFilter = false;
-
-    bool m_showInteriorPartitionGroupFilter = false;
-
-    bool m_showLoadTypeFilter = false;
-
-  private slots:
-
-    void onDropZoneItemClicked(OSItem* item);
-
-    void spaceNameFilterChanged();
-
-    void thermalZoneNameFilterChanged();
-
-    void storyFilterChanged(const QString & text);
-
-    void thermalZoneFilterChanged(const QString & text);
-
-    void spaceTypeFilterChanged(const QString & text);
-
-    void loadTypeFilterChanged(const QString & text);
-
-    void windExposureFilterChanged(const QString & text);
-
-    void sunExposureFilterChanged(const QString & text);
-
-    void outsideBoundaryConditionFilterChanged(const QString & text);
-
-    void surfaceTypeFilterChanged(const QString & text);
-
-    void interiorPartitionGroupFilterChanged(const QString & text);
 
   };
 
@@ -225,4 +82,3 @@ namespace openstudio{
 } // openstudio
 
 #endif // OPENSTUDIO_SPACESSUBSURFACESGRIDVIEW_HPP
-
