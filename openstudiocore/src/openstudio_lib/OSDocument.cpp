@@ -22,7 +22,6 @@
 #include "ApplyMeasureNowDialog.hpp"
 #include "ConstructionsTabController.hpp"
 #include "FacilityTabController.hpp"
-#include "FacilityView.hpp"
 #include "FileOperations.hpp"
 #include "HorizontalTabWidget.hpp"
 #include "HVACSystemsTabController.hpp"

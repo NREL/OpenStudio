@@ -19,7 +19,6 @@
 
 #include "MainRightColumnController.hpp"
 
-#include "BuildingStoryInspectorView.hpp"
 #include "ConstructionsTabController.hpp"
 #include "HorizontalTabWidget.hpp"
 #include "InspectorController.hpp"

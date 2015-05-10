@@ -19,8 +19,6 @@ set(${target_name}_SRC
   BCLComponentItem.hpp
   BuildingInspectorView.cpp
   BuildingInspectorView.hpp
-  BuildingStoryInspectorView.cpp
-  BuildingStoryInspectorView.hpp
   CollapsibleInspector.cpp
   CollapsibleInspector.hpp
   ConstructionCfactorUndergroundWallInspectorView.cpp
@@ -43,8 +41,6 @@ set(${target_name}_SRC
   ConstructionsView.hpp
   ConstructionWindowDataFileInspectorView.cpp
   ConstructionWindowDataFileInspectorView.hpp
-  DaylightingControlInspectorView.cpp
-  DaylightingControlInspectorView.hpp
   DefaultConstructionSetInspectorView.cpp
   DefaultConstructionSetInspectorView.hpp
   DefaultConstructionSetsController.cpp
@@ -53,8 +49,6 @@ set(${target_name}_SRC
   DefaultConstructionSetsView.hpp
   ElectricEquipmentInspectorView.cpp
   ElectricEquipmentInspectorView.hpp
-  FacilityController.cpp
-  FacilityController.hpp
   FacilityExteriorEquipmentGridView.cpp
   FacilityExteriorEquipmentGridView.hpp
   FacilityShadingGridView.cpp
@@ -65,16 +59,10 @@ set(${target_name}_SRC
   FacilityTabController.hpp
   FacilityTabView.cpp
   FacilityTabView.hpp
-  FacilityTreeWidget.cpp
-  FacilityTreeWidget.hpp
-  FacilityView.cpp
-  FacilityView.hpp
   FileOperations.cpp
   FileOperations.hpp
   GasEquipmentInspectorView.cpp
   GasEquipmentInspectorView.hpp
-  GlareSensorInspectorView.cpp
-  GlareSensorInspectorView.hpp
   GridItem.cpp
   GridItem.hpp
   GridScene.cpp
@@ -95,16 +83,10 @@ set(${target_name}_SRC
   HVACTemplateHelperDialog.hpp
   IconLibrary.cpp
   IconLibrary.hpp
-  IlluminanceMapInspectorView.cpp
-  IlluminanceMapInspectorView.hpp
   InspectorController.cpp
   InspectorController.hpp
   InspectorView.cpp
   InspectorView.hpp
-  InteriorPartitionSurfaceGroupInspectorView.cpp
-  InteriorPartitionSurfaceGroupInspectorView.hpp
-  InteriorPartitionSurfaceInspectorView.cpp
-  InteriorPartitionSurfaceInspectorView.hpp
   InternalMassInspectorView.cpp
   InternalMassInspectorView.hpp
   LibraryTabWidget.cpp
@@ -262,18 +244,12 @@ set(${target_name}_SRC
   ServiceWaterGridItems.hpp
   ServiceWaterScene.cpp
   ServiceWaterScene.hpp
-  ShadingSurfaceGroupInspectorView.cpp
-  ShadingSurfaceGroupInspectorView.hpp
-  ShadingSurfaceInspectorView.cpp
-  ShadingSurfaceInspectorView.hpp
   SimSettingsTabController.cpp
   SimSettingsTabController.hpp
   SimSettingsTabView.cpp
   SimSettingsTabView.hpp
   SimSettingsView.cpp
   SimSettingsView.hpp
-  SpaceInspectorView.cpp
-  SpaceInspectorView.hpp
   SpaceLoadInstancesWidget.cpp
   SpaceLoadInstancesWidget.hpp
   SpacesDaylightingGridView.cpp
@@ -316,8 +292,6 @@ set(${target_name}_SRC
   StandardsInformationMaterialWidget.hpp
   SteamEquipmentInspectorView.cpp
   SteamEquipmentInspectorView.hpp
-  SubSurfaceInspectorView.cpp
-  SubSurfaceInspectorView.hpp
   SubTabController.cpp
   SubTabController.hpp
   SubTabView.cpp
@@ -326,8 +300,6 @@ set(${target_name}_SRC
   SummaryTabController.hpp
   SummaryTabView.cpp
   SummaryTabView.hpp
-  SurfaceInspectorView.cpp
-  SurfaceInspectorView.hpp
   ThermalZonesController.cpp
   ThermalZonesController.hpp
   ThermalZonesGridView.cpp
@@ -493,7 +465,6 @@ set(${target_name}_moc
   ApplyMeasureNowDialog.hpp
   BCLComponentItem.hpp
   BuildingInspectorView.hpp
-  BuildingStoryInspectorView.hpp
   CollapsibleInspector.hpp
   ConstructionCfactorUndergroundWallInspectorView.hpp
   ConstructionFfactorGroundFloorInspectorView.hpp
@@ -505,21 +476,16 @@ set(${target_name}_moc
   ConstructionsTabView.hpp
   ConstructionsView.hpp
   ConstructionWindowDataFileInspectorView.hpp
-  DaylightingControlInspectorView.hpp
   DefaultConstructionSetInspectorView.hpp
   DefaultConstructionSetsController.hpp
   DefaultConstructionSetsView.hpp
   ElectricEquipmentInspectorView.hpp
-  FacilityController.hpp
   FacilityExteriorEquipmentGridView.hpp
   FacilityShadingGridView.hpp
   FacilityStoriesGridView.hpp
   FacilityTabController.hpp
   FacilityTabView.hpp
-  FacilityTreeWidget.hpp
-  FacilityView.hpp
   GasEquipmentInspectorView.hpp
-  GlareSensorInspectorView.hpp
   GridItem.hpp
   GridScene.hpp
   GridViewSubTab.hpp
@@ -529,11 +495,8 @@ set(${target_name}_moc
   HVACSystemsTabView.hpp
   HVACSystemsView.hpp
   HVACTemplateHelperDialog.hpp
-  IlluminanceMapInspectorView.hpp
   InspectorController.hpp
   InspectorView.hpp
-  InteriorPartitionSurfaceGroupInspectorView.hpp
-  InteriorPartitionSurfaceInspectorView.hpp
   InternalMassInspectorView.hpp
   LibraryTabWidget.hpp
   LifeCycleCostsTabView.hpp
@@ -612,12 +575,9 @@ set(${target_name}_moc
   ScriptsTabView.hpp
   ServiceWaterGridItems.hpp
   ServiceWaterScene.hpp
-  ShadingSurfaceGroupInspectorView.hpp
-  ShadingSurfaceInspectorView.hpp
   SimSettingsTabController.hpp
   SimSettingsTabView.hpp
   SimSettingsView.hpp
-  SpaceInspectorView.hpp
   SpaceLoadInstancesWidget.hpp
   SpacesDaylightingGridView.hpp
   SpacesInteriorPartitionsGridView.hpp
@@ -639,12 +599,10 @@ set(${target_name}_moc
   StandardsInformationConstructionWidget.hpp
   StandardsInformationMaterialWidget.hpp
   SteamEquipmentInspectorView.hpp
-  SubSurfaceInspectorView.hpp
   SubTabController.hpp
   SubTabView.hpp
   SummaryTabController.hpp
   SummaryTabView.hpp
-  SurfaceInspectorView.hpp
   ThermalZonesController.hpp
   ThermalZonesGridView.hpp
   ThermalZonesTabController.hpp
