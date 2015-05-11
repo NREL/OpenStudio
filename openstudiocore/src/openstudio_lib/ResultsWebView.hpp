@@ -22,6 +22,7 @@
 
 #include <QWidget>
 #include <QWebView>
+#include <QWebInspector>
 
 namespace openstudio {
   class ResultsWebView : public QWebView

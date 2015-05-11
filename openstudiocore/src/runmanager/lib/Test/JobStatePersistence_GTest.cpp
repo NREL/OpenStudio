@@ -28,6 +28,7 @@
 #include "../../../model/Model.hpp"
 #include "../../../model/WeatherFile.hpp"
 
+#include "../../../utilities/core/Application.hpp"
 #include "../../../utilities/filetypes/EpwFile.hpp"
 #include "../../../utilities/idf/IdfFile.hpp"
 #include "../../../utilities/idf/Workspace.hpp"
@@ -52,6 +53,7 @@ using namespace openstudio;
 
 TEST_F(RunManagerTestFixture, JobStatePersistence_DBUpgradeTest)
 {
+  openstudio::Application::instance().application(false);
   openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("JobStatePersistence_DBUpgradeTest");
   openstudio::path db = outdir / openstudio::toPath("test.db");
   boost::filesystem::create_directories(outdir);
@@ -72,6 +74,7 @@ TEST_F(RunManagerTestFixture, JobStatePersistence_DBUpgradeTest)
 
 TEST_F(RunManagerTestFixture, JobStatePersistence_NoErrors)
 {
+  openstudio::Application::instance().application(false);
   openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("JobStatePersistence_NoErrors");
   boost::filesystem::create_directories(outdir);
   openstudio::path db = outdir / openstudio::toPath("test.db");
@@ -133,6 +136,7 @@ TEST_F(RunManagerTestFixture, JobStatePersistence_NoErrors)
 
 TEST_F(RunManagerTestFixture, JobStatePersistence_Errors)
 {
+  openstudio::Application::instance().application(false);
   openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("JobStatePersistence_Errors");
   openstudio::path idffile = outdir / openstudio::toPath("in.idf");
   openstudio::path db = outdir / openstudio::toPath("test.db");
@@ -233,6 +237,7 @@ TEST_F(RunManagerTestFixture, JobStatePersistence_Errors)
 
 TEST_F(RunManagerTestFixture, JobStatePersistence_Uncompleted)
 {
+  openstudio::Application::instance().application(false);
   openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("JobStatePersistence_Uncompleted");
   openstudio::path db = outdir / openstudio::toPath("test.db");
   boost::filesystem::create_directories(outdir);
