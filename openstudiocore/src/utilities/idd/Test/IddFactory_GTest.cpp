@@ -244,7 +244,7 @@ TEST_F(IddFixture,IddFactory_Units) {
         }
 
         siUnit = field.getUnits(false);
-        EXPECT_TRUE(siUnit || field.unitsBasedOnOtherField());
+        EXPECT_TRUE(siUnit || field.unitsBasedOnOtherField()) << object.name() << " field: " << field.name();
         if (siUnit) {
           // could just return junk unit. if not junk, quantity will be convertable
           // to UnitSystem::SI.

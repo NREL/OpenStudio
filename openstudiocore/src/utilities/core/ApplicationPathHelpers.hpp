@@ -26,12 +26,11 @@
 
 namespace openstudio {
 
-/** If possible, creates an openstudio::path to a system directory from outdir, otherwise throws 
- *  a std::runtime_error. For use by auto-generation applications that are writing files for 
- *  OpenStudio. Requires that the path represented by outdir exist up to the parent level of the
- *  final directory. Outputs informative messages to std::cout. */
-UTILITIES_API path getApplicationOutputDirectory(const std::string& outdir);
-
+  /** If possible, creates an openstudio::path to a system directory from outdir, otherwise throws 
+   *  a std::runtime_error. For use by auto-generation applications that are writing files for 
+   *  OpenStudio. Requires that the path represented by outdir exist up to the parent level of the
+   *  final directory. Outputs informative messages to std::cout. */
+  UTILITIES_API openstudio::path getApplicationOutputDirectory(const std::string& outdir);
 
   /// \returns The source directory the application was built from
   UTILITIES_API openstudio::path getApplicationSourceDirectory();
@@ -74,6 +73,13 @@ UTILITIES_API path getApplicationOutputDirectory(const std::string& outdir);
   /// \returns The packaged ruby installation from the embedded ruby version.
   ///          Returns nothing on non-windows platforms
   UTILITIES_API openstudio::path getOpenStudioEmbeddedRubyPath();
+
+  /// \returns The packaged EnergyPlus installation.
+  UTILITIES_API openstudio::path getEnergyPlusDirectory();
+
+  /// \returns The path to the packaged EnergyPlus executable.
+  UTILITIES_API openstudio::path getEnergyPlusExecutable();
+
 } // openstudio
 
 #endif //UTILITIES_CORE_PATHHELPERS_HPP

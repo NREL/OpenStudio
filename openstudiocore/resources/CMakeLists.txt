@@ -345,6 +345,18 @@ set(osversion_resources_src
   osversion/1_6_3/OpenStudio.idd
   osversion/1_6_3/example.osm
   osversion/1_6_3/example.osc
+  osversion/1_7_0/OpenStudio.idd
+  osversion/1_7_0/example.osm
+  osversion/1_7_0/example.osc
+  osversion/1_7_1/OpenStudio.idd
+  osversion/1_7_1/example.osm
+  osversion/1_7_1/example.osc
+  osversion/1_7_2/OpenStudio.idd
+  osversion/1_7_2/example.osm
+  osversion/1_7_2/example.osc
+  osversion/1_7_3/OpenStudio.idd
+  osversion/1_7_3/example.osm
+  osversion/1_7_3/example.osc
   osversion/unknown.osc
 )
 
@@ -738,6 +750,26 @@ add_custom_target(openstudio_isomodel_resources
 )
 
 CREATE_SRC_GROUPS("${isomodel_resources_src}")
+
+########################################################
+# bimserver resources
+# clear runs, calls to RUN_ENERGYPLUS will populate this
+set(ENERGYPLUS_OUTPUTS "")
+
+set(bimserver_resources_src
+)
+
+# update the resources
+UPDATE_RESOURCES("${bimserver_resources_src}")
+
+# add target
+add_custom_target(openstudio_bimserver_resources
+  DEPENDS ${bimserver_resources_src} ${ENERGYPLUS_OUTPUTS}
+  SOURCES ${bimserver_resources_src}
+)
+
+CREATE_SRC_GROUPS("${bimserver_resources_src}")
+
 ########################################################
 # CONTAM resources
 # clear runs, calls to RUN_ENERGYPLUS will populate this

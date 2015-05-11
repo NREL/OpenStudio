@@ -53,7 +53,7 @@ OptionalModelObject ReverseTranslator::translateGroundHeatExchangerVertical( con
   //TODO: Need to address Inlet Node Name and Outlet Node Name somehow, probably with PlantLoop.
 
   //Maximum Flow Rate
-  d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::MaximumFlowRate);
+  d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::DesignFlowRate);
   if (d) {
     ghex.setMaximumFlowRate(*d);
   }
@@ -92,12 +92,6 @@ OptionalModelObject ReverseTranslator::translateGroundHeatExchangerVertical( con
   d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::GroundTemperature);
   if (d) {
     ghex.setGroundTemperature(*d);
-  }
-
-  //Design Flow Rate
-  d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::DesignFlowRate);
-  if (d) {
-    ghex.setDesignFlowRate(*d);
   }
 
   //Grout Thermal Conductivity

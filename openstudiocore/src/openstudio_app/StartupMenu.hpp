@@ -46,6 +46,8 @@ class StartupMenu : public QMenuBar
 
   void importSDDClicked();
 
+  void importIFCClicked();
+
   void loadFileClicked();
 
   void saveAsFileClicked(); 

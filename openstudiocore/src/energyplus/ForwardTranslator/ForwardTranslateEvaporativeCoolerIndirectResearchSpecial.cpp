@@ -23,6 +23,8 @@
 #include "../../model/EvaporativeCoolerIndirectResearchSpecial_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
+#include "../../model/Curve.hpp"
+#include "../../model/Curve_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/core/Logger.hpp"
@@ -65,38 +67,36 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeCoolerIndirect
   d = modelObject.coolerMaximumEffectiveness();
   if( d )
   {
-    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::CoolerMaximumEffectiveness,d.get());
+    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::CoolerWetbulbDesignEffectiveness,d.get());
   }
 
   // RecirculatingWaterPumpPowerConsumption
   d = modelObject.recirculatingWaterPumpPowerConsumption();
-  if( d )
-  {
-    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::RecirculatingWaterPumpPowerConsumption,d.get());
+  if( modelObject.isRecirculatingWaterPumpPowerConsumptionAutosized() ) {
+    idfObject.setString(EvaporativeCooler_Indirect_ResearchSpecialFields::RecirculatingWaterPumpDesignPower,"Autosize");
+  } else if( d ) {
+    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::RecirculatingWaterPumpDesignPower,d.get());
   }
 
   // SecondaryFanFlowRate
   if( modelObject.isSecondaryFanFlowRateAutosized() )
   {
-    idfObject.setString(EvaporativeCooler_Indirect_ResearchSpecialFields::SecondaryFanFlowRate,"Autosize");
+    idfObject.setString(EvaporativeCooler_Indirect_ResearchSpecialFields::SecondaryAirDesignFlowRate,"Autosize");
   }
   else if( (d = modelObject.secondaryFanFlowRate()) )
   {
-    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::SecondaryFanFlowRate,d.get());
+    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::SecondaryAirDesignFlowRate,d.get());
   }
 
   // SecondaryFanTotalEfficiency
-  d = modelObject.secondaryFanTotalEfficiency();
-  if( d )
-  {
-    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::SecondaryFanTotalEfficiency,d.get());
-  }
+  auto fanEff = modelObject.secondaryFanTotalEfficiency();
 
   // SecondaryFanDeltaPressure
-  d = modelObject.secondaryFanDeltaPressure();
-  if( d )
-  {
-    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::SecondaryFanDeltaPressure,d.get());
+  auto fanDp = modelObject.secondaryFanDeltaPressure();
+
+  // SecondaryAirFanSizingSpecificPower
+  if( fanEff > 0.0 ) {
+    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::SecondaryAirFanSizingSpecificPower,fanDp / fanEff);
   }
 
   // PrimaryAirInletNodeName
@@ -139,6 +139,68 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeCoolerIndirect
   if( boost::optional<model::Node> node = modelObject.getImpl<model::detail::EvaporativeCoolerIndirectResearchSpecial_Impl>()->reliefAirInletNode() )
   {
     idfObject.setString(EvaporativeCooler_Indirect_ResearchSpecialFields::ReliefAirInletNodeName,node->name().get());
+  }
+
+  // WetbulbEffectivenessFlowRatioModifierCurveName
+  if( auto curve = modelObject.wetbulbEffectivenessFlowRatioModifierCurve() ) {
+    auto _curve = translateAndMapModelObject(curve.get());
+    OS_ASSERT(_curve);
+    idfObject.setString(EvaporativeCooler_Indirect_ResearchSpecialFields::WetbulbEffectivenessFlowRatioModifierCurveName,_curve->name().get());
+  }
+
+  // CoolerDrybulbDesignEffectiveness
+  d = modelObject.coolerDrybulbDesignEffectiveness();
+  if( d ) {
+    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::CoolerDrybulbDesignEffectiveness,d.get());
+  }
+
+  // DrybulbEffectivenessFlowRatioModifierCurveName
+  if( auto curve = modelObject.drybulbEffectivenessFlowRatioModifierCurve() ) {
+    auto _curve = translateAndMapModelObject(curve.get());
+    OS_ASSERT(_curve);
+    idfObject.setString(EvaporativeCooler_Indirect_ResearchSpecialFields::DrybulbEffectivenessFlowRatioModifierCurveName,_curve->name().get());
+  }
+
+  // WaterPumpPowerSizingFactor
+  d = modelObject.waterPumpPowerSizingFactor();
+  if( d ) {
+    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::WaterPumpPowerSizingFactor,d.get());
+  }
+
+  // WaterPumpPowerModifierCurveName
+  if( auto curve = modelObject.waterPumpPowerModifierCurve() ) {
+    auto _curve = translateAndMapModelObject(curve.get());
+    OS_ASSERT(_curve);
+    idfObject.setString(EvaporativeCooler_Indirect_ResearchSpecialFields::WaterPumpPowerModifierCurveName,_curve->name().get());
+  }
+
+  // SecondaryAirFlowScalingFactor
+  d = modelObject.secondaryAirFlowScalingFactor();
+  if( d ) {
+    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::SecondaryAirFlowScalingFactor,d.get());
+  }
+
+  // SecondaryAirFanDesignPower
+  d = modelObject.secondaryAirFanDesignPower();
+  if( modelObject.isSecondaryAirFanDesignPowerAutosized() ) {
+    idfObject.setString(EvaporativeCooler_Indirect_ResearchSpecialFields::SecondaryAirFanDesignPower,"Autosize");
+  } else if( d ) {
+    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::SecondaryAirFanDesignPower,d.get());
+  }
+
+  // SecondaryAirFanPowerModifierCurveName
+  if( auto curve = modelObject.secondaryAirFanPowerModifierCurve() ) {
+    auto _curve = translateAndMapModelObject(curve.get());
+    OS_ASSERT(_curve);
+    idfObject.setString(EvaporativeCooler_Indirect_ResearchSpecialFields::SecondaryAirFanPowerModifierCurveName,_curve->name().get());
+  }
+
+  // PrimaryDesignAirFlowRate
+  d = modelObject.primaryDesignAirFlowRate();
+  if( modelObject.isPrimaryDesignAirFlowRateAutosized() ) {
+    idfObject.setString(EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryDesignAirFlowRate,"Autosize");
+  } else if ( d ) {
+    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryDesignAirFlowRate,d.get());
   }
 
   return boost::optional<IdfObject>(idfObject);

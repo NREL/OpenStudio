@@ -32,9 +32,6 @@ module OpenStudio
       elsif match_data = /(\d+-\d+-\d+)/.match(f)
         # register each release version
         case match_data[1].to_s
-          when "8-2-0"
-            # 8.2.0 uses 10 digit build SHAs which can be find in the exe output, and the idd file.
-            version = 0
           when "8-1-0"
             version = 9
           when "8-0-0"
@@ -51,6 +48,9 @@ module OpenStudio
             version = 31
           when "4-0-0"
             version = 24
+          else
+            # 8.2.0 and above uses 10 digit build SHAs which can be find in the exe output, and the idd file.
+            version = 0
           end        
       end
       return version
@@ -76,7 +76,7 @@ module OpenStudio
       warn "[DEPRECATION] `find_energyplus` is deprecated.  Please use `OpenStudio::Runmanager::ConfigOptions` instead."
 
       # version matches either internal or official releases
-      # prior to version 8.2.0 we assume the least signficant version number (third digit) is 0
+      # prior to version 8.2.0 we assume the least significant version number (third digit) is 0
       # 8.2.0 and beyond we cannot assume that
       version = ''
       if (major_version) < 8 or (major_version == 8 and minor_version < 2)
@@ -142,7 +142,7 @@ module OpenStudio
           if major_version >= 8 and minor_version >= 2
             build = 'xxxxxxxxxx'
             File.open result[:energyplus_idd] do |f|
-              f.gets # skip past the first line which has version major.minor.patch build bumber
+              f.gets # skip past the first line which has version major.minor.patch build number
               build_line = f.gets # get the build number from the second line
               build = /!IDD_BUILD ([\d\w]{10})/.match(build_line)[1]
             end

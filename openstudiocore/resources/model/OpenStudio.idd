@@ -1,4 +1,4 @@
-!IDD_Version 1.7.0
+!IDD_Version 1.7.4
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -14652,6 +14652,7 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
        \units W
        \ip-units W
        \required-field
+       \autosizable
   N4 , \field Secondary Fan Flow Rate
        \units m3/s
        \minimum 0.0
@@ -14685,14 +14686,14 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
   A9 , \Field Relief Air Inlet Node
        \type object-list
        \object-list Node
-  A9 , \Field Water Supply Storage Tank Name
+  A10, \Field Water Supply Storage Tank Name
        \type object-list
        \object-list WaterStorageTankNames
   N8 , \field Drift Loss Fraction
        \type real
        \minimum 0.0
        \note Rate of drift loss as a fraction of evaporated water flow rate
-  N9 ; \field Blowdown Concentration Ratio
+  N9 , \field Blowdown Concentration Ratio
        \type real
        \minimum 2.0
        \note Characterizes the rate of blowdown in the evaporative cooler.
@@ -14700,6 +14701,78 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
        \note of solids in the water that would otherwise occur because of evaporation.
        \note Ratio of solids in the blowdown water to solids in the make up water.
        \note A typical value is 3.  If left blank then there is no blowdown.
+  A11 , \field Wetbulb Effectiveness Flow Ratio Modifier Curve Name
+       \note this curve modifies the wetbulb effectiveness in the previous field (eff_wb_design)
+       \note by multiplying the value by the result of this curve, eff_wb = eff_wb_design * func(HXFlowRatio)
+       \note x = HXFlowRatio = sum of the primary and secondary flow rates divided by the sum of the design flow rates
+       \type object-list
+       \object-list AllCurves
+       \note Any curve or table with one independent variable can be used:
+       \note Curve:Linear, Curve:Quadratic, Curve:Cubic, Curve:Quartic, Curve:Exponent,
+       \note Curve:ExponentialSkewNormal, Curve:Sigmoid, Curve:RectuangularHyperbola1,
+       \note Curve:RectangularHyperbola2, Curve:ExponentialDecay, Curve:DoubleExponentialDecay,
+       \note Table:OneIndependentVariable
+  N10 , \field Cooler Drybulb Design Effectiveness
+       \type real
+       \note dry operation effectiveness with respect to drybulb temperature difference
+       \note this is the nominal design dryblub effectiveness at design air flow rates, no evaporation water active
+       \minimum 0.0
+  A12 , \field Drybulb Effectiveness Flow Ratio Modifier Curve Name
+       \note this curve modifies the drybulb effectiveness in the previous field (eff_db_design)
+       \note by multiplying the value by the result of this curve, eff_db = eff_db_design * f(HXFlowRatio)
+       \note x = HXFlowRatio = sum of the primary and secondary flow rates divided by the sum of the design flow rates
+       \type object-list
+       \object-list AllCurves
+       \note Any curve or table with one independent variable can be used:
+       \note Curve:Linear, Curve:Quadratic, Curve:Cubic, Curve:Quartic, Curve:Exponent,
+       \note Curve:ExponentialSkewNormal, Curve:Sigmoid, Curve:RectuangularHyperbola1,
+       \note Curve:RectangularHyperbola2, Curve:ExponentialDecay, Curve:DoubleExponentialDecay,
+       \note Table:OneIndependentVariable
+  N11 , \field Water Pump Power Sizing Factor
+       \type real
+       \required-field
+       \units W/(m3/s)
+       \note this field is used when the previous field is set to autosize. The pump power is scaled with Secondary Design Air Flow Rate
+  A13 , \field Water Pump Power Modifier Curve Name
+       \note this curve modifies the pump power in the previous field by multiplying the design power by the result of this curve.
+       \note x = ff = flow fraction on the secondary side, secondary air flow rate during operation divided by Secondary Design Air Flow Rate 
+       \type object-list
+       \object-list AllCurves
+       \note Any curve or table with one independent variable can be used:
+       \note Curve:Linear, Curve:Quadratic, Curve:Cubic, Curve:Quartic, Curve:Exponent,
+       \note Curve:ExponentialSkewNormal, Curve:Sigmoid, Curve:RectuangularHyperbola1,
+       \note Curve:RectangularHyperbola2, Curve:ExponentialDecay, Curve:DoubleExponentialDecay,
+       \note Table:OneIndependentVariable
+  N12 , \field Secondary Air Flow Scaling Factor
+       \type real
+       \required-field
+       \units dimensionless
+       \note This field is used when the previous field is set to autoize.  The Primary Design Air Flow Rate is scaled using this factor
+       \note to calculate the secondary design air flow rate.  
+  N13 , \field Secondary Air Fan Design Power
+       \type real
+       \required-field
+       \units W
+       \note This is the fan power at Secondary Design Air Flow Rate
+       \note this is the nominal design power at full speed. 
+       \autosizable
+  A14 , \field Secondary Air Fan Power Modifier Curve Name
+       \note this curve modifies the design fan power in the previous field by multiplying the value by the result
+       \note of this curve.  It should have a value of 1.0 at a x = 1.0. 
+       \note x = ff = flow fraction on the secondary side, secondary air flow rate during operation divided by Secondary Design Air Flow Rate 
+       \type object-list
+       \object-list AllCurves
+       \note Any curve or table with one independent variable can be used:
+       \note Curve:Linear, Curve:Quadratic, Curve:Cubic, Curve:Quartic, Curve:Exponent,
+       \note Curve:ExponentialSkewNormal, Curve:Sigmoid, Curve:RectuangularHyperbola1,
+       \note Curve:RectangularHyperbola2, Curve:ExponentialDecay, Curve:DoubleExponentialDecay,
+       \note Table:OneIndependentVariable
+  N14 ; \field Primary Design Air Flow Rate  
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+
 
 OS:EvaporativeCooler:Direct:ResearchSpecial,
        \min-fields 1
@@ -14726,6 +14799,7 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
        \units W
        \ip-units W
        \minimum 0
+       \autosizable
   A4, \field Air Inlet Node Name
        \type object-list
        \required-field
@@ -14742,7 +14816,7 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
        \type real
        \required-field
        \minimum 0
-  N4; \field Blowdown Concentration Ratio
+  N4, \field Blowdown Concentration Ratio
        \note Characterizes the rate of blowdown in the evaporative cooler.
        \note Blowdown is water intentionally drained from the cooler in order to offset the build up
        \note of solids in the water that would otherwise occur because of evaporation.
@@ -14752,6 +14826,35 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
        \type real
        \required-field
        \minimum 0
+  A7,  \field Effectiveness Flow Ratio Modifier Curve Name
+       \note this curve modifies the design effectiveness in the previous field 
+       \note by multiplying the value by the result of this curve.  The effectiveness flow modifier curve 
+       \note is a function of flow fraction. Flow fraction is the ratio of current primary air flow rate to 
+       \note the primary air design flow rate. If this input field is left blank then, the effectiveness 
+       \note is assumed to be constant.   
+       \type object-list
+       \object-list AllCurves
+       \note Any curve or table with one independent variable can be used:
+       \note Curve:Linear, Curve:Quadratic, Curve:Cubic, Curve:Quartic, Curve:Exponent,
+       \note Curve:ExponentialSkewNormal, Curve:Sigmoid, Curve:RectuangularHyperbola1,
+       \note Curve:RectangularHyperbola2, Curve:ExponentialDecay, Curve:DoubleExponentialDecay,
+       \note Table:OneIndependentVariable   
+  N5,  \field Water Pump Power Sizing Factor
+       \type real
+       \required-field
+       \units W/(m3/s)
+       \note this field is used when the previous field is set to autosize. The pump power is scaled with Primary Air Design Air Flow Rate
+  A8;  \field Water Pump Power Modifier Curve Name
+       \note this curve modifies the pump power in the previous field by multiplying the design power by the result of this curve.
+       \note x = ff = flow fraction on the primary air.  The flow fraction is the secondary air flow rate during current operation divided
+       \note by Primary Air Design Flow Rate
+       \type object-list
+       \object-list AllCurves
+       \note Any curve or table with one independent variable can be used:
+       \note Curve:Linear, Curve:Quadratic, Curve:Cubic, Curve:Quartic, Curve:Exponent,
+       \note Curve:ExponentialSkewNormal, Curve:Sigmoid, Curve:RectuangularHyperbola1,
+       \note Curve:RectangularHyperbola2, Curve:ExponentialDecay, Curve:DoubleExponentialDecay,
+       \note Table:OneIndependentVariable
 
 OS:EvaporativeFluidCooler:SingleSpeed,
        \min-fields 10

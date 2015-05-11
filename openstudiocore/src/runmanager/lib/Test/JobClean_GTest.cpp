@@ -29,6 +29,7 @@
 
 #include "../../../model/Model.hpp"
 
+#include "../../../utilities/core/Application.hpp"
 #include "../../../utilities/idf/IdfFile.hpp"
 #include "../../../utilities/idf/IdfObject.hpp"
 #include "../../../utilities/data/EndUses.hpp"
@@ -48,6 +49,7 @@ using openstudio::SqlFile;
 
 TEST_F(RunManagerTestFixture, JobCleanMaximum)
 {
+  openstudio::Application::instance().application(false);
   openstudio::path outdir = openstudio::toPath(QDir::tempPath()) / openstudio::toPath("JobCleanMaximumTest");
   boost::filesystem::create_directories(outdir);
   openstudio::runmanager::RunManager kit;
@@ -106,6 +108,7 @@ TEST_F(RunManagerTestFixture, JobCleanMaximum)
 
 TEST_F(RunManagerTestFixture, JobCleanNone)
 {
+  openstudio::Application::instance().application(false);
   openstudio::path outdir = openstudio::toPath(QDir::tempPath()) / openstudio::toPath("JobCleanNoneTest");
   boost::filesystem::create_directories(outdir);
   openstudio::runmanager::RunManager kit;
