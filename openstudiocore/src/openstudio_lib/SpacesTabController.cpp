@@ -33,13 +33,13 @@ namespace openstudio {
   SpacesTabController::SpacesTabController(bool isIP, const model::Model& model)
 : MainTabController(new SpacesTabView())
 {
-  this->mainContentWidget()->addSubTab("Daylighting", new SpacesDaylightingGridView(isIP, model), DAYLIGHTING);
-  this->mainContentWidget()->addSubTab("Interior Partitions", new SpacesInteriorPartitionsGridView(isIP, model), INTERIOR_PARTITIONS);
+  this->mainContentWidget()->addSubTab("Properties", new SpacesSpacesGridView(isIP, model), SPACES);
   this->mainContentWidget()->addSubTab("Loads", new SpacesLoadsGridView(isIP, model), LOADS);
-  this->mainContentWidget()->addSubTab("Shading", new SpacesShadingGridView(isIP, model), SHADING);
-  this->mainContentWidget()->addSubTab("Spaces", new SpacesSpacesGridView(isIP, model), SPACES);
-  this->mainContentWidget()->addSubTab("Subsurfaces", new SpacesSubsurfacesGridView(isIP, model), SUBSURFACES);
   this->mainContentWidget()->addSubTab("Surfaces", new SpacesSurfacesGridView(isIP, model), SURFACES);
+  this->mainContentWidget()->addSubTab("Subsurfaces", new SpacesSubsurfacesGridView(isIP, model), SUBSURFACES);
+  this->mainContentWidget()->addSubTab("Interior Partitions", new SpacesInteriorPartitionsGridView(isIP, model), INTERIOR_PARTITIONS);
+  this->mainContentWidget()->addSubTab("Shading", new SpacesShadingGridView(isIP, model), SHADING);
+  this->mainContentWidget()->addSubTab("Daylighting", new SpacesDaylightingGridView(isIP, model), DAYLIGHTING);
 }
 
   void SpacesTabController::toggleUnits(bool displayIP)

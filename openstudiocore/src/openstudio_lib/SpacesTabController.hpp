@@ -36,13 +36,13 @@ namespace openstudio {
 
   enum TabID
   {
-    DAYLIGHTING,
-    INTERIOR_PARTITIONS,
+    SPACES, // "Properties"
     LOADS,
-    SHADING,
-    SPACES,
+    SURFACES,
     SUBSURFACES,
-    SURFACES
+    INTERIOR_PARTITIONS,
+    SHADING,
+    DAYLIGHTING
   };
 
 private slots:
