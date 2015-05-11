@@ -42,6 +42,10 @@ namespace openstudio{
 
     virtual ~SpacesSubsurfacesGridView() {}
 
+  private:
+
+    REGISTER_LOGGER("openstudio.SpacesSubsurfacesGridView");
+
   };
 
   class SpacesSubsurfacesGridController : public OSGridController

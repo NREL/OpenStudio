@@ -69,10 +69,10 @@ namespace openstudio {
   FacilityExteriorEquipmentGridView::FacilityExteriorEquipmentGridView(bool isIP, const model::Model & model, QWidget * parent)
     : GridViewSubTab(isIP, model, parent)
   {
-    auto exteriorLights = model.getModelObjects<model::ExteriorLights>();
-    auto exteriorLightsModelObjects = subsetCastVector<model::ModelObject>(exteriorLights);
+    auto modelObjects = subsetCastVector<model::ModelObject>(model.getModelObjects<model::ExteriorLights>());
+    std::sort(modelObjects.begin(), modelObjects.end(), ModelObjectNameSorter());
 
-    m_gridController = new FacilityExteriorEquipmentGridController(isIP, "Exterior Lights", IddObjectType::OS_Exterior_Lights, model, exteriorLightsModelObjects);
+    m_gridController = new FacilityExteriorEquipmentGridController(isIP, "Exterior Lights", IddObjectType::OS_Exterior_Lights, model, modelObjects);
     auto gridView = new OSGridView(m_gridController, "Exterior Lights", "Drop\nExterior Lights", false, parent);
 
     setGridController(m_gridController);
@@ -221,8 +221,7 @@ namespace openstudio {
 
   void FacilityExteriorEquipmentGridController::refreshModelObjects()
   {
-    auto exteriorLights = m_model.getModelObjects<model::ExteriorLights>();
-    m_modelObjects = subsetCastVector<model::ModelObject>(exteriorLights);
+    m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getModelObjects<model::ExteriorLights>());
     std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
   }
 

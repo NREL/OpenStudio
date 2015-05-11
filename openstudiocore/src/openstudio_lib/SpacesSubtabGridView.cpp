@@ -23,19 +23,6 @@
 
 #include "../model/BuildingStory.hpp"
 #include "../model/BuildingStory_Impl.hpp"
-#include "../model/Model.hpp"
-#include "../model/Model_Impl.hpp"
-#include "../model/ModelObject.hpp"
-#include "../model/ModelObject_Impl.hpp"
-#include "../model/Space.hpp"
-#include "../model/Space_Impl.hpp"
-#include "../model/SpaceType.hpp"
-#include "../model/SpaceType_Impl.hpp"
-#include "../model/Surface.hpp"
-#include "../model/Surface_Impl.hpp"
-#include "../model/ThermalZone.hpp"
-#include "../model/ThermalZone_Impl.hpp"
-
 #include "../model/ElectricEquipment.hpp"
 #include "../model/ElectricEquipment_Impl.hpp"
 #include "../model/GasEquipment.hpp"
@@ -50,14 +37,26 @@
 #include "../model/Lights_Impl.hpp"
 #include "../model/Luminaire.hpp"
 #include "../model/Luminaire_Impl.hpp"
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/Model_Impl.hpp"
 #include "../model/OtherEquipment.hpp"
 #include "../model/OtherEquipment_Impl.hpp"
 #include "../model/People.hpp"
 #include "../model/People_Impl.hpp"
+#include "../model/Space.hpp"
 #include "../model/SpaceLoadInstance.hpp"
 #include "../model/SpaceLoadInstance_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
+#include "../model/Space_Impl.hpp"
 #include "../model/SteamEquipment.hpp"
 #include "../model/SteamEquipment_Impl.hpp"
+#include "../model/Surface.hpp"
+#include "../model/Surface_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/idd/IddEnums.hxx"
@@ -110,8 +109,7 @@ namespace openstudio {
   SpacesSubtabGridView::SpacesSubtabGridView(bool isIP, const model::Model & model, QWidget * parent)
     : GridViewSubTab(isIP, model, parent)
   {
-    auto spaces = model.getModelObjects<model::Space>();
-    m_spacesModelObjects = subsetCastVector<model::ModelObject>(spaces);
+    m_spacesModelObjects = subsetCastVector<model::ModelObject>(model.getModelObjects<model::Space>());
 
     // Filters
 

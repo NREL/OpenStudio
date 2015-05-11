@@ -35,7 +35,7 @@
 // These defines provide a common area for field display names
 // used on column headers, and other grid widgets
 
-#define NAME "Shading Surface Name"
+#define NAME "Space Name"
 #define SELECTED "All"
 
 // GENERAL
@@ -153,8 +153,7 @@ namespace openstudio {
 
   void SpacesSubsurfacesGridController::refreshModelObjects()
   {
-    auto spaces = m_model.getModelObjects<model::Space>();
-    m_modelObjects = subsetCastVector<model::ModelObject>(spaces);
+    m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getModelObjects<model::Space>());
     std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
   }
 

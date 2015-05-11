@@ -79,10 +79,10 @@ namespace openstudio {
   FacilityStoriesGridView::FacilityStoriesGridView(bool isIP, const model::Model & model, QWidget * parent)
     : GridViewSubTab(isIP, model, parent)
   {
-    auto buildingStories = model.getModelObjects<model::BuildingStory>();
-    auto buildingStoriesModelObjects = subsetCastVector<model::ModelObject>(buildingStories);
+    auto modelObjects = subsetCastVector<model::ModelObject>(m_model.getModelObjects<model::BuildingStory>());
+    std::sort(modelObjects.begin(), modelObjects.end(), ModelObjectNameSorter());
 
-    m_gridController = new FacilityStoriesGridController(isIP, "Building Stories", IddObjectType::OS_BuildingStory, model, buildingStoriesModelObjects);
+    m_gridController = new FacilityStoriesGridController(isIP, "Building Stories", IddObjectType::OS_BuildingStory, model, modelObjects);
     m_gridView = new OSGridView(m_gridController, "Building Stories", "Drop\nStory", false, parent);
 
     setGridController(m_gridController);
@@ -332,8 +332,7 @@ namespace openstudio {
 
   void FacilityStoriesGridController::refreshModelObjects()
   {
-    auto exteriorLights = m_model.getModelObjects<model::BuildingStory>();
-    m_modelObjects = subsetCastVector<model::ModelObject>(exteriorLights);
+    m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getModelObjects<model::BuildingStory>());
     std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
   }
 
