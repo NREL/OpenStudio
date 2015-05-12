@@ -35,9 +35,9 @@ FacilityTabController::FacilityTabController(bool isIP, const model::Model& mode
   connect(this, &FacilityTabController::toggleUnitsClicked, buildingInspectorView, &BuildingInspectorView::toggleUnitsClicked);
   connect(buildingInspectorView, &BuildingInspectorView::dropZoneItemClicked, this, &FacilityTabController::dropZoneItemClicked);
 
-  this->mainContentWidget()->addSubTab("Exterior Equipment", new FacilityExteriorEquipmentGridView(isIP, model), EXTERIOR_EQUIPMENT);
-  this->mainContentWidget()->addSubTab("Shading", new FacilityShadingGridView(isIP, model), SHADING);
   this->mainContentWidget()->addSubTab("Stories", new FacilityStoriesGridView(isIP, model), STORIES);
+  this->mainContentWidget()->addSubTab("Shading", new FacilityShadingGridView(isIP, model), SHADING);
+  this->mainContentWidget()->addSubTab("Exterior Equipment", new FacilityExteriorEquipmentGridView(isIP, model), EXTERIOR_EQUIPMENT);
 }
 
 void FacilityTabController::toggleUnits(bool displayIP)

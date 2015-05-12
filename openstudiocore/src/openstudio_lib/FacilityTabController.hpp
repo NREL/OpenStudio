@@ -39,9 +39,9 @@ class FacilityTabController : public MainTabController
   enum TabID
   {
     BUILDING,
-    EXTERIOR_EQUIPMENT,
+    STORIES,
     SHADING,
-    STORIES
+    EXTERIOR_EQUIPMENT
   };
 
   public slots:
