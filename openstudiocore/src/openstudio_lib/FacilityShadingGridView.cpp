@@ -53,8 +53,8 @@
 #define SELECTED "All"
 
 // GENERAL
-#define SHADINGSURFACEGROUPNAME "Shading Surface Group Name" // (read only)
-//#define NAME "Name"
+#define TYPE "Type" // read only
+#define SHADINGSURFACEGROUPNAME "Shading Surface Group Name" // read only
 #define CONSTRUCTIONNAME "Construction Name"
 #define TRANSMITTANCESCHEDULENAME "Transmittance Schedule Name"
 
@@ -266,8 +266,8 @@ namespace openstudio {
   {
     {
       std::vector<QString> fields;
+      //fields.push_back(TYPE);
       //fields.push_back(SHADINGSURFACEGROUPNAME);
-      //fields.push_back(NAME);
       //fields.push_back(CONSTRUCTIONNAME);
       //fields.push_back(TRANSMITTANCESCHEDULENAME);
       std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("General"), fields);
@@ -299,29 +299,34 @@ namespace openstudio {
           CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::setName)
           );
       }
-      else if (field == SELECTED) {
-        auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
-        checkbox->setToolTip("Check to select all rows");
-        connect(checkbox.data(), &QCheckBox::stateChanged, this, &FacilityShadingGridController::selectAllStateChanged);
-
-        addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row");
-      }
-      else if (field == SHADINGSURFACEGROUPNAME) {
-
-      }
-      else if (field == CONSTRUCTIONNAME) {
-
-      }
-      else if (field == TRANSMITTANCESCHEDULENAME) {
-        //addDropZoneColumn(Heading(QString(TRANSMITTANCESCHEDULENAME)),
-        //  CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::transmittanceSchedule),
-        //  CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::setTransmittanceSchedule),
-        //  boost::optional<std::function<void(model::ShadingSurface*)>>(CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::resetTransmittanceSchedule))
-        //  );
-      }
       else {
-        // unhandled
-        OS_ASSERT(false);
+        if (field == SELECTED) {
+          auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
+          checkbox->setToolTip("Check to select all rows");
+          connect(checkbox.data(), &QCheckBox::stateChanged, this, &FacilityShadingGridController::selectAllStateChanged);
+
+          addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row");
+        }
+        else if (field == TYPE) { // COMBO
+
+        }
+        else if (field == SHADINGSURFACEGROUPNAME) { // LINE EDIT
+
+        }
+        else if (field == CONSTRUCTIONNAME) { // DROP ZONE
+
+        }
+        else if (field == TRANSMITTANCESCHEDULENAME) { // DROP ZONE
+          //addDropZoneColumn(Heading(QString(TRANSMITTANCESCHEDULENAME)),
+          //  CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::transmittanceSchedule),
+          //  CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::setTransmittanceSchedule),
+          //  boost::optional<std::function<void(model::ShadingSurface*)>>(CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::resetTransmittanceSchedule))
+          //  );
+        }
+        else {
+          // unhandled
+          OS_ASSERT(false);
+        }
       }
     }
   }
