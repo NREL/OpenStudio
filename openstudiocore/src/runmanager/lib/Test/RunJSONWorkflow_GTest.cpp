@@ -51,6 +51,7 @@
 
 TEST_F(RunManagerTestFixture, RunWorkflowJson)
 {
+  openstudio::Application::instance().application(false);
   openstudio::runmanager::RunManager rm;
   rm.setPaused(true);
 

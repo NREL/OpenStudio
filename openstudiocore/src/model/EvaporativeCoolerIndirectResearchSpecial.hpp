@@ -28,6 +28,7 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
+class Curve;
 
 namespace detail {
 
@@ -54,16 +55,29 @@ class MODEL_API EvaporativeCoolerIndirectResearchSpecial : public StraightCompon
 
   boost::optional<Schedule> availabilitySchedule() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooler Wetbulb Design Effectiveness" **/
   double coolerMaximumEffectiveness() const;
 
-  double recirculatingWaterPumpPowerConsumption() const;
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Recirculating Water Pump Design Power" **/
+  boost::optional<double> recirculatingWaterPumpPowerConsumption() const;
 
+  bool isRecirculatingWaterPumpPowerConsumptionAutosized() const;
+
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Secondary Air Design Flow Rate" **/
   boost::optional<double> secondaryFanFlowRate() const;
 
   bool isSecondaryFanFlowRateAutosized() const;
 
+  /** In EnergyPlus 8.3.0 and above this property and Secondary Fan Delta Pressure no longer exist.
+    * They are replaced by the single property Secondary Fan Design Power.
+    * To maintain the stability of the OpenStudio API, we retain this property and populate the new EnergyPlus property
+    * Secondary Fan Sizing Specific Power with the calculation secondaryFanDeltaPressure() / secondaryFanTotalEfficiency(). **/
   double secondaryFanTotalEfficiency() const;
 
+  /** In EnergyPlus 8.3.0 and above this property and Secondary Fan Total Efficiency no longer exist.
+    * They are replaced by the single property Secondary Fan Design Power.
+    * To maintain the stability of the OpenStudio API, we retain this property and populate the new EnergyPlus property
+    * Secondary Fan Sizing Specific Power with the calculation secondaryFanDeltaPressure() / secondaryFanTotalEfficiency(). **/
   double secondaryFanDeltaPressure() const;
 
   double dewpointEffectivenessFactor() const;
@@ -72,11 +86,32 @@ class MODEL_API EvaporativeCoolerIndirectResearchSpecial : public StraightCompon
 
   boost::optional<double> blowdownConcentrationRatio() const;
 
+  boost::optional<Curve> wetbulbEffectivenessFlowRatioModifierCurve() const;
+
+  boost::optional<double> coolerDrybulbDesignEffectiveness() const;
+
+  boost::optional<Curve> drybulbEffectivenessFlowRatioModifierCurve() const;
+
+  double waterPumpPowerSizingFactor() const;
+
+  boost::optional<Curve> waterPumpPowerModifierCurve() const;
+
+  double secondaryAirFlowScalingFactor() const;
+
+  boost::optional<double> secondaryAirFanDesignPower() const;
+
+  bool isSecondaryAirFanDesignPowerAutosized() const;
+
+  boost::optional<Curve> secondaryAirFanPowerModifierCurve() const;
+
+  boost::optional<double> primaryDesignAirFlowRate() const;
+
+  bool isPrimaryDesignAirFlowRateAutosized() const;
+
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setAvailabilitySchedule(Schedule& schedule);
 
   void resetAvailabilitySchedule();
@@ -84,6 +119,8 @@ class MODEL_API EvaporativeCoolerIndirectResearchSpecial : public StraightCompon
   bool setCoolerMaximumEffectiveness(double coolerMaximumEffectiveness);
 
   void setRecirculatingWaterPumpPowerConsumption(double recirculatingWaterPumpPowerConsumption);
+
+  void autosizeRecirculatingWaterPumpPowerConsumption();
 
   bool setSecondaryFanFlowRate(double secondaryFanFlowRate);
 
@@ -104,6 +141,40 @@ class MODEL_API EvaporativeCoolerIndirectResearchSpecial : public StraightCompon
   bool setBlowdownConcentrationRatio(double blowdownConcentrationRatio);
 
   void resetBlowdownConcentrationRatio();
+
+  bool setWetbulbEffectivenessFlowRatioModifierCurve(const Curve& curve);
+
+  void resetWetbulbEffectivenessFlowRatioModifierCurve();
+
+  bool setCoolerDrybulbDesignEffectiveness(double coolerDrybulbDesignEffectiveness);
+
+  void resetCoolerDrybulbDesignEffectiveness();
+
+  bool setDrybulbEffectivenessFlowRatioModifierCurve(const Curve& curve);
+
+  void resetDrybulbEffectivenessFlowRatioModifierCurve();
+
+  void setWaterPumpPowerSizingFactor(double waterPumpPowerSizingFactor);
+
+  bool setWaterPumpPowerModifierCurve(const Curve& curve);
+
+  void resetWaterPumpPowerModifierCurve();
+
+  void setSecondaryAirFlowScalingFactor(double secondaryAirFlowScalingFactor);
+
+  void setSecondaryAirFanDesignPower(double secondaryAirFanDesignPower);
+
+  void autosizeSecondaryAirFanDesignPower();
+
+  bool setSecondaryAirFanPowerModifierCurve(const Curve& curve);
+
+  void resetSecondaryAirFanPowerModifierCurve();
+
+  bool setPrimaryDesignAirFlowRate(double primaryDesignAirFlowRate);
+
+  void resetPrimaryDesignAirFlowRate();
+
+  void autosizePrimaryDesignAirFlowRate();
 
   //@}
   /** @name Other */

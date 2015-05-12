@@ -188,6 +188,10 @@ namespace detail {
 
     std::string skyDiscretizationResolution() const;
 
+    bool isCoarseSettings();
+
+    bool isFineSettings();
+
     //@}
     /** @name Setters */
     //@{
@@ -259,6 +263,10 @@ namespace detail {
     bool setSkyDiscretizationResolution(std::string skyDiscretizationResolution);
 
     void resetSkyDiscretizationResolution();
+
+    void applyCoarseSettings();
+
+    void applyFineSettings();
 
     //@}
     /** @name Other */

@@ -63,7 +63,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGroundHeatExchangerVertic
   // Maximum Flow Rate
   if( (value = modelObject.maximumFlowRate()) )
   {
-    idfObject.setDouble(GroundHeatExchanger_VerticalFields::MaximumFlowRate,value.get());
+    idfObject.setDouble(GroundHeatExchanger_VerticalFields::DesignFlowRate,value.get());
   }
 
   // Number of Bore Holes

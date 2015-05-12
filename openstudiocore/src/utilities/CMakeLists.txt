@@ -341,8 +341,11 @@ set(${target_name}_test_src
   ${idf_test_src}
   ${idf_test_moc_src}
   ${sql_test_src}
+  
   cloud/test/AWSProvider_GTest.cpp
   cloud/test/VagrantProvider_GTest.cpp
+  
+  core/test/ApplicationPathHelpers_GTest.cpp
   core/test/CoreFixture.hpp
   core/test/CoreFixture.cpp
   core/test/Checksum_GTest.cpp
@@ -359,10 +362,10 @@ set(${target_name}_test_src
   core/test/SharedFromThis_GTest.cpp
   core/test/System_GTest.cpp
   core/test/String_GTest.cpp
-
   core/test/UpdateManager_GTest.cpp
   core/test/UUID_GTest.cpp
   core/test/Zip_GTest.cpp
+  
   data/Test/DataFixture.hpp
   data/Test/DataFixture.cpp
   data/Test/Attribute_GTest.cpp
@@ -371,8 +374,11 @@ set(${target_name}_test_src
   data/Test/Matrix_GTest.cpp
   data/Test/TimeSeries_GTest.cpp
   data/Test/Vector_GTest.cpp
+  
   economics/test/Economics_GTest.cpp
+  
   filetypes/test/EpwFile_GTest.cpp
+  
   geometry/Test/BoundingBox_GTest.cpp
   geometry/Test/GeometryFixture.hpp
   geometry/Test/GeometryFixture.cpp
@@ -380,14 +386,18 @@ set(${target_name}_test_src
   geometry/Test/Intersection_GTest.cpp
   geometry/Test/Plane_GTest.cpp
   geometry/Test/Transformation_GTest.cpp
+  
   math/test/FloatCompare_GTest.cpp
   math/test/Permutation_GTest.cpp
   math/test/Primes_GTest.cpp
+  
   plot/Test/ProgressBar_GTest.cpp
+  
   time/Test/Calendar_GTest.cpp
   time/Test/Date_GTest.cpp
   time/Test/DateTime_GTest.cpp
   time/Test/Time_GTest.cpp
+  
   units/test/UnitsFixture.hpp
   units/test/UnitsFixture.cpp
   units/test/Scale_GTest.cpp
@@ -406,6 +416,7 @@ set(${target_name}_test_src
   units/test/QuantityFactory_GTest.cpp
   units/test/QuantityConverter_GTest.cpp
   units/test/IddUnits_GTest.cpp
+  
   bcl/test/BCLFixture.hpp
   bcl/test/BCLFixture.cpp
   bcl/test/BCL_GTest.cpp

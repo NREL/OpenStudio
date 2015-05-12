@@ -69,7 +69,6 @@ $:.insert(3, $OpenStudio_RubyBinaryDir)
 
 # load ruby extensions
 require 'openstudioutilitiescore'
-require 'openstudioutilitieseconomics'
 require 'openstudioutilitiestime'
 require 'openstudioutilitiesdata'
 require 'openstudioutilitiesplot'

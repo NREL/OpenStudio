@@ -33,6 +33,7 @@
 #include "../../../model/Model.hpp"
 #include "../../../model/WeatherFile.hpp"
 
+#include "../../../utilities/core/Application.hpp"
 #include "../../../utilities/filetypes/EpwFile.hpp"
 #include "../../../utilities/idf/IdfFile.hpp"
 #include "../../../utilities/idf/Workspace.hpp"
@@ -293,6 +294,7 @@ openstudio::runmanager::Job buildScriptMergingWorkflow(const openstudio::path &t
 
 TEST_F(RunManagerTestFixture, UserScriptJobMerging)
 {
+  openstudio::Application::instance().application(false);
   std::string originalosm;
   std::string mergedosm;
   std::string unmergedosm;
@@ -444,6 +446,7 @@ TEST_F(RunManagerTestFixture, UserScriptJobMerging)
 
 TEST_F(RunManagerTestFixture, BCLMeasureRubyScript)
 {
+  openstudio::Application::instance().application(false);
   openstudio::path dir = resourcesPath() / toPath("/runmanager/DummyMeasure");
   openstudio::path osm = resourcesPath() / toPath("/runmanager/SimpleModel.osm");
   openstudio::path epw = resourcesPath() / toPath("/runmanager/USA_CO_Golden-NREL.724666_TMY3.epw");
@@ -511,6 +514,7 @@ TEST_F(RunManagerTestFixture, BCLMeasureRubyScript)
 
 TEST_F(RunManagerTestFixture, BCLMeasureRubyScriptEPWPathUnmerged)
 {
+  openstudio::Application::instance().application(false);
   openstudio::path dir = resourcesPath() / toPath("/runmanager/DummyMeasureEPW");
   openstudio::path osm = resourcesPath() / toPath("/runmanager/SimpleModel.osm");
   openstudio::path epw = resourcesPath() / toPath("/runmanager/USA_CO_Golden-NREL.724666_TMY3.epw");
@@ -561,6 +565,7 @@ TEST_F(RunManagerTestFixture, BCLMeasureRubyScriptEPWPathUnmerged)
 
 TEST_F(RunManagerTestFixture, BCLMeasureRubyScriptEPWPath)
 {
+  openstudio::Application::instance().application(false);
   openstudio::path dir = resourcesPath() / toPath("/runmanager/DummyMeasureEPW");
   openstudio::path osm = resourcesPath() / toPath("/runmanager/SimpleModel.osm");
   openstudio::path epw = resourcesPath() / toPath("/runmanager/USA_CO_Golden-NREL.724666_TMY3.epw");

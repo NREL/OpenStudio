@@ -29,6 +29,7 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
+class Curve;
 
 namespace detail {
   class EvaporativeCoolerDirectResearchSpecial_Impl;
@@ -68,16 +69,22 @@ class MODEL_API EvaporativeCoolerDirectResearchSpecial : public StraightComponen
   bool setAvailableSchedule(Schedule& schedule);
 
   /** Returns the value of the CoolerEffectiveness field. **/
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooler Design Effectiveness" **/
   double coolerEffectiveness() const;
 
   /** Sets the value of the CoolerEffectiveness field. **/
   void setCoolerEffectiveness( double value );
 
   /** Returns the value of the RecirculatingWaterPumpPowerConsumption field. **/
-  double recirculatingWaterPumpPowerConsumption() const;
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Recirculating Water Pump Design Power" **/
+  boost::optional<double> recirculatingWaterPumpPowerConsumption() const;
 
   /** Sets the value of the RecirculatingWaterPumpPowerConsumption field. **/
   void setRecirculatingWaterPumpPowerConsumption( double value );
+
+  void autosizeRecirculatingWaterPumpPowerConsumption();
+
+  bool isRecirculatingWaterPumpPowerConsumptionAutosized() const;
 
   /** Returns the Node referred to by the SensorNodeName field. **/
   boost::optional<Node> sensorNode() const;
@@ -96,6 +103,22 @@ class MODEL_API EvaporativeCoolerDirectResearchSpecial : public StraightComponen
 
   /** Sets the value of the BlowdownConcentrationRatio field. **/
   void setBlowdownConcentrationRatio( double value );
+
+  boost::optional<Curve> effectivenessFlowRatioModifierCurve() const;
+
+  bool setEffectivenessFlowRatioModifierCurve(const Curve& curve);
+
+  void resetEffectivenessFlowRatioModifierCurve();
+
+  double waterPumpPowerSizingFactor() const;
+
+  void setWaterPumpPowerSizingFactor(double waterPumpPowerSizingFactor);
+
+  boost::optional<Curve> waterPumpPowerModifierCurve() const;
+
+  bool setWaterPumpPowerModifierCurve(const Curve& curve);
+
+  void resetWaterPumpPowerModifierCurve();
 
   //@}
  protected:

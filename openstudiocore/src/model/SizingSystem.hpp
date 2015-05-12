@@ -66,6 +66,7 @@ class MODEL_API SizingSystem : public ModelObject
 
   bool isDesignOutdoorAirFlowRateAutosized() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Central Heating Maximum System Air Flow Ratio" **/
   double minimumSystemAirFlowRatio() const;
 
   double preheatDesignTemperature() const;
@@ -80,6 +81,7 @@ class MODEL_API SizingSystem : public ModelObject
 
   double centralHeatingDesignSupplyAirTemperature() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Type of Zone Sum to Use" **/
   std::string sizingOption() const;
 
   bool isSizingOptionDefaulted() const;
@@ -100,18 +102,22 @@ class MODEL_API SizingSystem : public ModelObject
 
   bool isCentralHeatingDesignSupplyAirHumidityRatioDefaulted() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Supply Air Flow Rate Method" **/
   std::string coolingDesignAirFlowMethod() const;
 
   bool isCoolingDesignAirFlowMethodDefaulted() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Supply Air Flow Rate" **/
   double coolingDesignAirFlowRate() const;
 
   bool isCoolingDesignAirFlowRateDefaulted() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Supply Air Flow Rate Method" **/
   std::string heatingDesignAirFlowMethod() const;
 
   bool isHeatingDesignAirFlowMethodDefaulted() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Supply Air Flow Rate" **/
   double heatingDesignAirFlowRate() const;
 
   bool isHeatingDesignAirFlowRateDefaulted() const;

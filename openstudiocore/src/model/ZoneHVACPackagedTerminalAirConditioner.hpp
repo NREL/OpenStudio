@@ -75,26 +75,32 @@ class MODEL_API ZoneHVACPackagedTerminalAirConditioner : public ZoneHVACComponen
 
   std::string outdoorAirMixerName() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Supply Air Flow Rate" **/
   boost::optional<double> supplyAirFlowRateDuringCoolingOperation() const;
 
   bool isSupplyAirFlowRateDuringCoolingOperationAutosized() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Supply Air Flow Rate" **/
   boost::optional<double> supplyAirFlowRateDuringHeatingOperation() const;
 
   bool isSupplyAirFlowRateDuringHeatingOperationAutosized() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Load Supply Air Flow Rate" **/
   boost::optional<double> supplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
 
   bool isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Outdoor Air Flow Rate" **/
   boost::optional<double> outdoorAirFlowRateDuringCoolingOperation() const;
 
   bool isOutdoorAirFlowRateDuringCoolingOperationAutosized() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Outdoor Air Flow Rate" **/
   boost::optional<double> outdoorAirFlowRateDuringHeatingOperation() const;
 
   bool isOutdoorAirFlowRateDuringHeatingOperationAutosized() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Load Outdoor Air Flow Rate" **/
   boost::optional<double> outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
 
   bool isOutdoorAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const;

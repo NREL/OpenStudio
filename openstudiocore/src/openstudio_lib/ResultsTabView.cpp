@@ -358,6 +358,22 @@ ResultsWebView::ResultsWebView(QWidget * parent) :
   QWebView(parent)
 #endif
 {
+  #if _DEBUG || (__GNUC__ && !NDEBUG)
+    #if QT_VERSION >= 0x050400
+      // QWebEngine debug stuff
+    #else
+      this->page()->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+      QWebInspector *inspector = new QWebInspector;
+      inspector->setPage(this->page());
+      inspector->setVisible(true);
+    #endif
+  #endif
+
+  #if QT_VERSION >= 0x050400
+      // QWebEngine local storage
+  #else
+    this->page()->settings()->setAttribute(QWebSettings::LocalStorageEnabled, true);
+  #endif
 }
 
 QSize ResultsWebView::sizeHint() const

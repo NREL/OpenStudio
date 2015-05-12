@@ -27,6 +27,7 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
+class Curve;
 
 namespace detail {
 
@@ -69,7 +70,9 @@ namespace detail {
 
     double coolerMaximumEffectiveness() const;
 
-    double recirculatingWaterPumpPowerConsumption() const;
+    boost::optional<double> recirculatingWaterPumpPowerConsumption() const;
+
+    bool isRecirculatingWaterPumpPowerConsumptionAutosized() const;
 
     boost::optional<double> secondaryFanFlowRate() const;
 
@@ -85,11 +88,32 @@ namespace detail {
 
     boost::optional<double> blowdownConcentrationRatio() const;
 
+    boost::optional<Curve> wetbulbEffectivenessFlowRatioModifierCurve() const;
+
+    boost::optional<double> coolerDrybulbDesignEffectiveness() const;
+
+    boost::optional<Curve> drybulbEffectivenessFlowRatioModifierCurve() const;
+
+    double waterPumpPowerSizingFactor() const;
+
+    boost::optional<Curve> waterPumpPowerModifierCurve() const;
+
+    double secondaryAirFlowScalingFactor() const;
+
+    boost::optional<double> secondaryAirFanDesignPower() const;
+
+    bool isSecondaryAirFanDesignPowerAutosized() const;
+
+    boost::optional<Curve> secondaryAirFanPowerModifierCurve() const;
+
+    boost::optional<double> primaryDesignAirFlowRate() const;
+
+    bool isPrimaryDesignAirFlowRateAutosized() const;
+
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setAvailabilitySchedule(Schedule& schedule);
 
     void resetAvailabilitySchedule();
@@ -97,6 +121,8 @@ namespace detail {
     bool setCoolerMaximumEffectiveness(double coolerMaximumEffectiveness);
 
     void setRecirculatingWaterPumpPowerConsumption(double recirculatingWaterPumpPowerConsumption);
+
+    void autosizeRecirculatingWaterPumpPowerConsumption();
 
     bool setSecondaryFanFlowRate(boost::optional<double> secondaryFanFlowRate);
 
@@ -117,6 +143,40 @@ namespace detail {
     bool setBlowdownConcentrationRatio(boost::optional<double> blowdownConcentrationRatio);
 
     void resetBlowdownConcentrationRatio();
+
+    bool setWetbulbEffectivenessFlowRatioModifierCurve(const boost::optional<Curve>& curve);
+
+    void resetWetbulbEffectivenessFlowRatioModifierCurve();
+
+    bool setCoolerDrybulbDesignEffectiveness(boost::optional<double> coolerDrybulbDesignEffectiveness);
+
+    void resetCoolerDrybulbDesignEffectiveness();
+
+    bool setDrybulbEffectivenessFlowRatioModifierCurve(const boost::optional<Curve>& curve);
+
+    void resetDrybulbEffectivenessFlowRatioModifierCurve();
+
+    void setWaterPumpPowerSizingFactor(double waterPumpPowerSizingFactor);
+
+    bool setWaterPumpPowerModifierCurve(const boost::optional<Curve>& curve);
+
+    void resetWaterPumpPowerModifierCurve();
+
+    void setSecondaryAirFlowScalingFactor(double secondaryAirFlowScalingFactor);
+
+    void setSecondaryAirFanDesignPower(boost::optional<double> secondaryAirFanDesignPower);
+
+    void autosizeSecondaryAirFanDesignPower();
+
+    bool setSecondaryAirFanPowerModifierCurve(const boost::optional<Curve>& curve);
+
+    void resetSecondaryAirFanPowerModifierCurve();
+
+    bool setPrimaryDesignAirFlowRate(boost::optional<double> primaryDesignAirFlowRate);
+
+    void resetPrimaryDesignAirFlowRate();
+
+    void autosizePrimaryDesignAirFlowRate();
 
     //@}
     /** @name Other */

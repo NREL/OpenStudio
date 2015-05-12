@@ -195,7 +195,7 @@ namespace detail {
 
   bool IddField_Impl::isNameField() const {
     return (((properties().references.size() > 0) && (properties().objectLists.size() == 0)) ||
-            (boost::iequals("Name", name()) && (properties().type == IddFieldType::AlphaType)));
+            (boost::iequals("Name", name()) && ((properties().type == IddFieldType::AlphaType) || (properties().type == IddFieldType::NodeType))));
   }
 
   bool IddField_Impl::isObjectListField() const {
