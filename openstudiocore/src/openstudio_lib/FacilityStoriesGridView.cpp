@@ -61,7 +61,6 @@
 #define DEFAULTSCHEDULESETNAME "Default Schedule Set Name"
 #define GROUPRENDERINGNAME "Group Rendering Name"
 #define NOMINALFLOORTOCEILINGHEIGHT "Nominal Floor to Ceiling Height"
-#define SPACES "Spaces"
 
 // FILTERS
 #define NOMINALZCOORDINATEGREATERTHAN "Nominal Z Coordinate >"
@@ -216,7 +215,6 @@ namespace openstudio {
       fields.push_back(NOMINALFLOORTOCEILINGHEIGHT);
       fields.push_back(DEFAULTCONSTRUCTIONSETNAME);
       fields.push_back(DEFAULTSCHEDULESETNAME);
-      //fields.push_back(SPACES);
       std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("General"), fields);
       m_categoriesAndFields.push_back(categoryAndFields);
     }
@@ -302,9 +300,6 @@ namespace openstudio {
           NullAdapter(&model::BuildingStory::nominalFloortoCeilingHeight),
           NullAdapter(&model::BuildingStory::setNominalFloortoCeilingHeight)
           );
-      }
-      else if (field == SPACES) {
-
       }
       else {
         // unhandled
