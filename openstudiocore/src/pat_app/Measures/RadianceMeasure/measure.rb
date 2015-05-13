@@ -10,7 +10,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
   # human readable name
   def name
-    return "Radiance Measure"
+    return "Radiance Daylighting Measure"
   end
 
   # human readable description
@@ -64,36 +64,37 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     write_sql = runner.getStringArgumentValue('write_sql', user_arguments)
     write_sql = (write_sql == 'Yes')
 
- 		modelPath = OpenStudio::system_complete(OpenStudio::Path.new('.'))
- 		outPath = modelPath.parent_path / OpenStudio::Path.new(modelPath.stem) / OpenStudio::Path.new("model") / OpenStudio::Path.new("radiance")
- 		resourcePath = modelPath.parent_path / OpenStudio::Path.new(modelPath.stem) 
- 		puts "Working Directory: #{outPath}"
+ 		modelPath = (OpenStudio::Path.new(Dir.pwd))
+ 		outPath = modelPath / OpenStudio::Path.new("radiance")
+ 		resourcePath = modelPath.parent_path / OpenStudio::Path.new(modelPath.stem)
+ 		puts "Working Dir (model path): #{modelPath}"
+ 		puts "Output Directory: #{outPath}"
 
     # report initial condition of model
-    runner.registerInitialCondition("The building started with #{model.getSpaces.size} spaces.")
+    daylightAnalysisSpaces = []
+    spaces = model.getSpaces
+    spaces.each do |sp|
+    	if sp.illuminanceMaps.size > 0 
+    		daylightAnalysisSpaces << sp
+    	end
+    end
+    puts "Input building model contains #{daylightAnalysisSpaces.size} daylight analysis spaces."
+    runner.registerInitialCondition("Input building model contains #{model.getSpaces.size} spaces.")
+  
 
     sql_file = OpenStudio::Radiance.getSqlFile(model)
     
-    
     # report final condition of model
     runner.registerFinalCondition("The building finished with #{model.getSpaces.size} spaces.")
+    
+    # some test gets
+
+    
+    
 
     return true
 
   end #def run
-  
-
-	# define utility functions
-	# print statement and execute as system call
-	def exec_statement(s)
-		if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
-			s = s.gsub("/", "\\")
-		end
-		puts "executing: '#{s}'"
-		result = system(s)
-		puts 
-		return result
-	end
 
 end
 

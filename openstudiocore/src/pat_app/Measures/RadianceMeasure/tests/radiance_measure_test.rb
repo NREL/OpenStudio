@@ -36,7 +36,8 @@ class RadianceMeasureTest < MiniTest::Unit::TestCase
 
     # load the test model
     translator = OpenStudio::OSVersion::VersionTranslator.new
-    path = OpenStudio::Path.new(File.dirname(__FILE__) + "/example_model.osm")
+    path = OpenStudio::Path.new(File.dirname(__FILE__) + "/test_model.osm")
+    puts "loading model at: #{path}"
     model = translator.loadModel(path)
     assert((not model.empty?))
     model = model.get
