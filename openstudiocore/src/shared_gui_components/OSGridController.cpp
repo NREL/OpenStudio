@@ -1657,6 +1657,13 @@ void OSGridController::setApplyButtonState()
   m_applyToButtonStates.clear();
 }
 
+std::vector<model::ModelObject> OSGridController::selectedObjects() const
+{
+  const auto objs = this->getObjectSelector()->getSelectedObjects();
+
+  return std::vector<model::ModelObject>(objs.cbegin(), objs.cend());
+}
+
 HorizontalHeaderPushButton::HorizontalHeaderPushButton(QWidget * parent)
   : QPushButton()
 {

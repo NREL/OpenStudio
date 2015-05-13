@@ -369,37 +369,16 @@ LocationView::LocationView(bool isIP,
   // ***** Item Selector Buttons *****
   m_itemSelectorButtons = new OSItemSelectorButtons();
   m_itemSelectorButtons->hideDropZone();
-
-  //connect(m_itemSelectorButtons, &OSItemSelectorButtons::itemDropped, this, &SubTabView::itemDropped);
-
-  //connect(m_itemSelectorButtons, &OSItemSelectorButtons::addClicked, this, &SubTabView::addClicked);
-
-  //connect(m_itemSelectorButtons, &OSItemSelectorButtons::copyClicked, this, &SubTabView::copyClicked);
-
-  //connect(m_itemSelectorButtons, &OSItemSelectorButtons::removeClicked, this, &SubTabView::removeClicked);
-
-  //connect(m_itemSelectorButtons, &OSItemSelectorButtons::purgeClicked, this, &SubTabView::purgeClicked);
-
-  //connect(m_itemSelectorButtons, &OSItemSelectorButtons::downloadComponentsClicked, this, &SubTabView::downloadComponentsClicked);
-
-  bool isConnected = false;
-
-  //isConnected = connect(m_designDaysGridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
-  //OS_ASSERT(isConnected);
-  //isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), m_designDaysGridView, SIGNAL(itemSelected(OSItem *)));
-  //OS_ASSERT(isConnected);
-  //isConnected = connect(this, SIGNAL(selectionCleared()), m_designDaysGridView, SIGNAL(selectionCleared()));
-  //OS_ASSERT(isConnected);
-  //isConnected = connect(m_designDaysGridView, SIGNAL(gridRowSelected(OSItem*)), this, SIGNAL(gridRowSelected(OSItem*)));
-  //OS_ASSERT(isConnected);
-  //isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), this, SLOT(toggleUnits(bool)));
-  //OS_ASSERT(isConnected);
-  //isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_designDaysGridView, SIGNAL(toggleUnitsClicked(bool)));
-  //OS_ASSERT(isConnected);
-
   mainLayout->addWidget(m_itemSelectorButtons, 0, Qt::AlignBottom);
 
+  connect(m_itemSelectorButtons, &OSItemSelectorButtons::addClicked, m_designDaysGridView, &DesignDayGridView::onAddClicked);
+  connect(m_itemSelectorButtons, &OSItemSelectorButtons::copyClicked, m_designDaysGridView, &DesignDayGridView::onCopyClicked);
+  connect(m_itemSelectorButtons, &OSItemSelectorButtons::removeClicked, m_designDaysGridView, &DesignDayGridView::onRemoveClicked);
+  connect(m_itemSelectorButtons, &OSItemSelectorButtons::purgeClicked, m_designDaysGridView, &DesignDayGridView::onPurgeClicked);
+
   update();
+
+  onSelectItem();
 }
 
 LocationView::~LocationView()
@@ -410,13 +389,7 @@ LocationView::~LocationView()
 std::vector<model::ModelObject> LocationView::selectedObjects() const
 {
   return m_designDaysGridView->selectedObjects();
-
-  return m_designDaysGridView->selectedObjects();
-
 }
-
-void LocationView::onClearSelection()
-{}
 
 void LocationView::onSelectModelObject(const openstudio::model::ModelObject& modelObject)
 {}
@@ -810,6 +783,20 @@ void LocationView::setDstEndDate(const QDate & newdate)
     m_model.getUniqueModelObject<model::RunPeriodControlDaylightSavingTime>();
 
   dst.setEndDate(monthOfYear(newdate.month()),newdate.day());
+}
+
+void LocationView::onSelectItem()
+{
+  m_itemSelectorButtons->enableCopyButton();
+  m_itemSelectorButtons->enableRemoveButton();
+  m_itemSelectorButtons->enablePurgeButton();
+}
+
+void LocationView::onClearSelection()
+{
+  m_itemSelectorButtons->disableCopyButton();
+  m_itemSelectorButtons->disableRemoveButton();
+  m_itemSelectorButtons->disablePurgeButton();
 }
 
 } // openstudio

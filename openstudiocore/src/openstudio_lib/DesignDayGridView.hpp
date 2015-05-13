@@ -48,6 +48,14 @@ public:
 
 private:
 
+  void addObject(const model::ModelObject& modelObject);
+
+  void copyObject(const openstudio::model::ModelObject& modelObject);
+
+  void removeObject(openstudio::model::ModelObject modelObject);
+
+  void DesignDayGridView::purgeObjects(const IddObjectType& iddObjectType);
+
   bool m_isIP;
 
 signals:
@@ -55,6 +63,16 @@ signals:
   void toggleUnitsClicked(bool displayIP);
 
   void dropZoneItemClicked(OSItem* item);
+
+public slots:
+
+  void onAddClicked();
+
+  void onCopyClicked();
+
+  void onRemoveClicked();
+
+  void onPurgeClicked();
 
 };
 

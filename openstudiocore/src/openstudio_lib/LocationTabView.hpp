@@ -47,9 +47,11 @@ namespace model {
 
 class LocationView : public QWidget
 {
+
   Q_OBJECT
 
 public:
+
   LocationView(bool isIP,
     const model::Model & model,
     const QString& modelTempDir);
@@ -57,16 +59,25 @@ public:
   virtual ~LocationView();
 
   virtual bool supportsMultipleObjectSelection() const { return true; }
+
   virtual std::vector<model::ModelObject> selectedObjects() const;
 
 protected:
-  void onClearSelection();
+
   void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+
   void onUpdate();
-  private slots:
+
+private slots:
+
+  void onSelectItem();
+
+  void onClearSelection();
+
   void toggleUnits(bool);
 
 private:
+
   void update();
 
   void loadQSettings();
@@ -93,22 +104,35 @@ private:
   bool m_isIP;
 
 signals:
+
   void modelObjectSelected(model::OptionalModelObject & modelObject, bool readOnly);
 
 public slots:
+
   void refresh();
 
 private slots:
+
   void setCalendarYear(int year);
+
   void setFirstDayofYear(const QString & firstDayofYear);
+
   void setDaylightSavingsTime(bool enabled);
+
   void setDstStartDayOfWeekAndMonth(int newWeek, int newDay, int newMonth);
+
   void setDstStartDate(const QDate & newdate);
+
   void setDstEndDayOfWeekAndMonth(int newWeek, int newDay, int newMonth);
+
   void setDstEndDate(const QDate & newdate);
+
   void onWeatherFileBtnClicked();
+
   void onDesignDayBtnClicked();
+
   void onASHRAEClimateZoneChanged(const QString& climateZone);
+
   void onCECClimateZoneChanged(const QString& climateZone);
 
 };
@@ -118,6 +142,7 @@ class LocationTabView : public MainTabView
   Q_OBJECT
 
 public:
+
   LocationTabView(const model::Model & model,
     const QString& modelTempDir,
     QWidget * parent = 0);
@@ -125,6 +150,7 @@ public:
   virtual ~LocationTabView() {}
 
 private:
+
   LocationView * m_locationView;
 
 };

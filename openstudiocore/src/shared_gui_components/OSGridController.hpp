@@ -249,6 +249,8 @@ public:
 
   virtual ~OSGridController();
 
+  std::vector<model::ModelObject> selectedObjects() const;
+
   static QSharedPointer<BaseConcept> makeDataSourceAdapter(const QSharedPointer<BaseConcept> &t_inner,
       const boost::optional<DataSource> &t_source)
   {
@@ -570,6 +572,8 @@ public:
   void disconnectFromModel();
 
   std::shared_ptr<ObjectSelector> getObjectSelector() const { return m_objectSelector; }
+
+  model::Model & model() { return m_model; }
 
 protected:
 

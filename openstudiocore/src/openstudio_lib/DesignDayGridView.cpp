@@ -132,11 +132,69 @@ DesignDayGridView::DesignDayGridView(bool isIP, const model::Model & model, QWid
 
 }
 
+void DesignDayGridView::onAddClicked()
+{
+  // Always make at least one
+  if (!m_gridController->selectedObjects().size()) {
+    model::DesignDay(m_gridController->model());
+  }
+  else {
+    for (auto &obj : m_gridController->selectedObjects())
+    {
+      addObject(obj);
+    }
+  }
+
+}
+
+void DesignDayGridView::onCopyClicked()
+{
+  for (auto &obj : m_gridController->selectedObjects())
+  {
+    if (!obj.handle().isNull()){
+      copyObject(obj);
+    }
+  }
+}
+
+void DesignDayGridView::onRemoveClicked()
+{
+  for (auto &obj : m_gridController->selectedObjects())
+  {
+    removeObject(obj);
+  }
+}
+
+void DesignDayGridView::onPurgeClicked()
+{
+  purgeObjects(IddObjectType::OS_SizingPeriod_DesignDay);
+}
+
+void DesignDayGridView::addObject(const model::ModelObject& modelObject)
+{
+  model::DesignDay(m_gridController->model());
+}
+
+void DesignDayGridView::copyObject(const openstudio::model::ModelObject& modelObject)
+{
+  modelObject.clone(m_gridController->model());
+}
+
+void DesignDayGridView::removeObject(openstudio::model::ModelObject modelObject)
+{
+  modelObject.remove();
+}
+
+void DesignDayGridView::purgeObjects(const IddObjectType& iddObjectType)
+{
+  for (auto mo : m_gridController->model().getConcreteModelObjects<model::DesignDay>()){
+    mo.remove();
+  }
+}
+
 std::vector<model::ModelObject> DesignDayGridView::selectedObjects() const
 {
-  const auto os = this->m_gridController->getObjectSelector()->getSelectedObjects();
-  return std::vector<model::ModelObject>(os.cbegin(), os.cend());
-  //return m_gridController->selectedObjects(); TODO Evan upon merge
+  return m_gridController->selectedObjects();
 }
 
 DesignDayGridController::DesignDayGridController(bool isIP,
