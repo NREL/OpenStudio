@@ -40,11 +40,10 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     chs << 'Yes'
     chs << 'No'
     write_sql = OpenStudio::Ruleset::OSArgument.makeStringArgument('write_sql', true)
-    write_sql.setDisplayName('Write radiance SqlFile')
+    write_sql.setDisplayName('Write Radiance SqlFile')
     apply_schedules.setDefaultValue('Yes')
-    write_sql.setDescription('Write radiance results to a SqlFile format.')
+    write_sql.setDescription('Write Radiance results to a SqlFile format.')
     args << write_sql
-    
 
     return args
   end
@@ -65,18 +64,37 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     write_sql = runner.getStringArgumentValue('write_sql', user_arguments)
     write_sql = (write_sql == 'Yes')
 
+ 		modelPath = OpenStudio::system_complete(OpenStudio::Path.new('.'))
+ 		outPath = modelPath.parent_path / OpenStudio::Path.new(modelPath.stem) / OpenStudio::Path.new("model") / OpenStudio::Path.new("radiance")
+ 		resourcePath = modelPath.parent_path / OpenStudio::Path.new(modelPath.stem) 
+ 		puts "Working Directory: #{outPath}"
+
     # report initial condition of model
     runner.registerInitialCondition("The building started with #{model.getSpaces.size} spaces.")
 
     sql_file = OpenStudio::Radiance.getSqlFile(model)
-
+    
+    
     # report final condition of model
     runner.registerFinalCondition("The building finished with #{model.getSpaces.size} spaces.")
 
     return true
 
-  end
+  end #def run
   
+
+	# define utility functions
+	# print statement and execute as system call
+	def exec_statement(s)
+		if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
+			s = s.gsub("/", "\\")
+		end
+		puts "executing: '#{s}'"
+		result = system(s)
+		puts 
+		return result
+	end
+
 end
 
 # register the measure to be used by the application
