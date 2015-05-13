@@ -615,7 +615,7 @@ std::vector<std::string> EpwDataPoint::toEpwStrings() const
   return list;
 }
 
-boost::optional<std::string> EpwDataPoint::unitsByName(const std::string &name)
+boost::optional<std::string> EpwDataPoint::getUnitsByName(const std::string &name)
 {
   EpwDataField id;
   try {
@@ -624,10 +624,10 @@ boost::optional<std::string> EpwDataPoint::unitsByName(const std::string &name)
     // Could do a warning message here
     return boost::none;
   }
-  return boost::optional<std::string>(units(id));
+  return boost::optional<std::string>(getUnits(id));
 }
 
-std::string EpwDataPoint::units(EpwDataField field)
+std::string EpwDataPoint::getUnits(EpwDataField field)
 {
   std::string string;
   switch(field.value())
@@ -744,7 +744,7 @@ std::string EpwDataPoint::units(EpwDataField field)
   return string;
 }
 
-std::string EpwDataPoint::units(EpwComputedField field)
+std::string EpwDataPoint::getUnits(EpwComputedField field)
 {
   std::string string;
   switch (field.value())
@@ -766,7 +766,7 @@ std::string EpwDataPoint::units(EpwComputedField field)
   return string;
 }
 
-boost::optional<double> EpwDataPoint::fieldByName(const std::string &name)
+boost::optional<double> EpwDataPoint::getFieldByName(const std::string &name)
 {
   EpwDataField id;
   try {
@@ -775,10 +775,10 @@ boost::optional<double> EpwDataPoint::fieldByName(const std::string &name)
     // Could do a warning message here
     return boost::none;
   }
-  return field(id);
+  return getField(id);
 }
 
-boost::optional<double> EpwDataPoint::field(EpwDataField id)
+boost::optional<double> EpwDataPoint::getField(EpwDataField id)
 {
   boost::optional<int> ivalue;
   switch(id.value()) {
@@ -2171,14 +2171,14 @@ boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string &name)
     return boost::none;
   }
   if(m_data.size() > 0) {
-    std::string units = EpwDataPoint::units(id);
+    std::string units = EpwDataPoint::getUnits(id);
     DateTimeVector dates;
     dates.push_back(DateTime()); // Use a placeholder to avoid an insert
     std::vector<double> values;
     for(unsigned int i=0;i<m_data.size();i++) {
       DateTime dateTime=m_data[i].dateTime();
       Time time=m_data[i].time();
-      boost::optional<double> value = m_data[i].field(id);
+      boost::optional<double> value = m_data[i].getField(id);
       if(value) {
         dates.push_back(DateTime(dateTime));
         values.push_back(value.get());
@@ -2210,7 +2210,7 @@ boost::optional<TimeSeries> EpwFile::getComputedTimeSeries(const std::string &na
     return boost::none;
   }
 
-  std::string units = EpwDataPoint::units(id);
+  std::string units = EpwDataPoint::getUnits(id);
   boost::optional<double>(EpwDataPoint::*compute)() const;
   switch (id.value()) {
   case EpwComputedField::SaturationPressure:

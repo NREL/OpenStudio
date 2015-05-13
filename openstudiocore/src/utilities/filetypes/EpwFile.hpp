@@ -141,12 +141,12 @@ public:
     double precipitableWater,double aerosolOpticalDepth,double snowDepth,double daysSinceLastSnowfall,
     double albedo,double liquidPrecipitationDepth,double liquidPrecipitationQuantity);
   // Static
-  static boost::optional<std::string> unitsByName(const std::string &name);
-  static std::string units(EpwDataField field);
-  static std::string units(EpwComputedField field);
+  static boost::optional<std::string> getUnitsByName(const std::string &name);
+  static std::string getUnits(EpwDataField field);
+  static std::string getUnits(EpwComputedField field);
   // Data retrieval
-  boost::optional<double> fieldByName(const std::string &name);
-  boost::optional<double> field(EpwDataField id);
+  boost::optional<double> getFieldByName(const std::string &name);
+  boost::optional<double> getField(EpwDataField id);
   boost::optional<AirState> airState() const;
   // Conversion
   static boost::optional<EpwDataPoint> fromEpwString(const std::string &line);

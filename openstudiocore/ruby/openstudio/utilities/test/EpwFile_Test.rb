@@ -61,9 +61,9 @@ class EpwFile_Test < MiniTest::Unit::TestCase
     assert(dataPoint.is_a? OpenStudio::EpwDataPoint)
     assert_equal(4, dataPoint.dryBulbTemperature.get)
     assert_equal(81100, dataPoint.atmosphericStationPressure.get)
-    assert_equal(-1.0,dataPoint.fieldByName("Dew Point Temperature").get)
+    assert_equal(-1.0,dataPoint.getFieldByName("Dew Point Temperature").get)
     field = "Dew Point Temperature".to_EpwDataField
-    assert_equal(-1.0,dataPoint.field(field).get)
+    assert_equal(-1.0,dataPoint.getField(field).get)
     known = [ "1996", "12", "31", "24", "0",
       "?9?9?9?9E0?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9*9*9?9*9*9", "4.0", "-1.0",
       "69", "81100", "0", "0", "294", "0.000000", "0", "0", "0", "0", "0",

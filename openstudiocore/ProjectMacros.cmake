@@ -275,10 +275,10 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
   #message(STATUS "${${NAME}_SWIG_Depends}")
   
-  #set(RUBY_AUTODOC "")
-  #if(BUILD_DOCUMENTATION)
+  set(RUBY_AUTODOC "")
+  if(BUILD_DOCUMENTATION)
     set(RUBY_AUTODOC -features autodoc=1)
-    #endif()
+  endif()
   
   add_custom_command(
     OUTPUT "${SWIG_WRAPPER}"
