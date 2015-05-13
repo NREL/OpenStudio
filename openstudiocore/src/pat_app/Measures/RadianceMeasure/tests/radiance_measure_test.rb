@@ -33,7 +33,10 @@ class RadianceMeasureTest < MiniTest::Unit::TestCase
 
     # create an instance of a runner
     runner = OpenStudio::Ruleset::OSRunner.new
-
+    
+    # set up runner, this will happen automatically when measure is run in PAT
+    runner.setLastEpwFilePath(File.dirname(__FILE__) + "/USA_CO_Golden-NREL.724666_TMY3.epw")  
+    
     # load the test model
     translator = OpenStudio::OSVersion::VersionTranslator.new
     path = OpenStudio::Path.new(File.dirname(__FILE__) + "/example_model.osm")
