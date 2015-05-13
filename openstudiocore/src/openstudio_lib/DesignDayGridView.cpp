@@ -28,6 +28,8 @@
 
 #include "../model/DesignDay.hpp"
 #include "../model/DesignDay_Impl.hpp"
+#include "../model/ScheduleDay.hpp"
+#include "../model/ScheduleDay_Impl.hpp"
 
 #include "../utilities/idd/IddEnums.hxx"
 #include "../utilities/idd/SizingPeriod_DesignDay_FieldEnums.hxx"
@@ -165,7 +167,7 @@ void DesignDayGridController::setCategoriesAndFields()
     fields.push_back(DAILYDRYBULBTEMPERATURERANGE);
     fields.push_back(DAILYWETBULBTEMPERATURERANGE);
     fields.push_back(DRYBULBTEMPERATURERANGEMODIFIERTYPE);
-    //fields.push_back(DRYBULBTEMPERATURERANGEMODIFIERSCHEDULE);
+    fields.push_back(DRYBULBTEMPERATURERANGEMODIFIERSCHEDULE);
     std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Temperature"), fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
@@ -174,7 +176,7 @@ void DesignDayGridController::setCategoriesAndFields()
     std::vector<QString> fields;
     fields.push_back(HUMIDITYINDICATINGCONDITIONSATMAXIMUMDRYBULB);
     fields.push_back(HUMIDITYINDICATINGTYPE);
-    //fields.push_back(HUMIDITYINDICATINGDAYSCHEDULE);
+    fields.push_back(HUMIDITYINDICATINGDAYSCHEDULE);
     std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Humidity"), fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
@@ -194,8 +196,8 @@ void DesignDayGridController::setCategoriesAndFields()
   {
     std::vector<QString> fields;
     fields.push_back(SOLARMODELINDICATOR);
-    //fields.push_back(BEAMSOLARDAYSCHEDULE);
-    //fields.push_back(DIFFUSESOLARDAYSCHEDULE);
+    fields.push_back(BEAMSOLARDAYSCHEDULE);
+    fields.push_back(DIFFUSESOLARDAYSCHEDULE);
     fields.push_back(ASHRAETAUB);
     fields.push_back(ASHRAETAUD);
     std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Solar"), fields);
@@ -388,6 +390,37 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
         boost::optional<DataSource>()
         );
     }
+    else if (field == DRYBULBTEMPERATURERANGEMODIFIERSCHEDULE) {
+      addDropZoneColumn(Heading(QString(DRYBULBTEMPERATURERANGEMODIFIERSCHEDULE)),
+        CastNullAdapter<model::DesignDay>(&model::DesignDay::dryBulbTemperatureRangeModifierSchedule),
+        CastNullAdapter<model::DesignDay>(&model::DesignDay::setDryBulbTemperatureRangeModifierSchedule),
+        boost::optional<std::function<void(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::resetDryBulbTemperatureRangeModifierSchedule))
+        );
+    }
+
+    else if (field == BEAMSOLARDAYSCHEDULE) {
+      addDropZoneColumn(Heading(QString(BEAMSOLARDAYSCHEDULE)),
+        CastNullAdapter<model::DesignDay>(&model::DesignDay::beamSolarDaySchedule),
+        CastNullAdapter<model::DesignDay>(&model::DesignDay::setBeamSolarDaySchedule),
+        boost::optional<std::function<void(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::resetBeamSolarDaySchedule))
+        );
+    }
+
+    else if (field == HUMIDITYINDICATINGDAYSCHEDULE) {
+      addDropZoneColumn(Heading(QString(HUMIDITYINDICATINGDAYSCHEDULE)),
+        CastNullAdapter<model::DesignDay>(&model::DesignDay::humidityIndicatingDaySchedule),
+        CastNullAdapter<model::DesignDay>(&model::DesignDay::setHumidityIndicatingDaySchedule),
+        boost::optional<std::function<void(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::resetHumidityIndicatingDaySchedule))
+        );
+    }
+
+    else if (field == DIFFUSESOLARDAYSCHEDULE) {
+      addDropZoneColumn(Heading(QString(DIFFUSESOLARDAYSCHEDULE)),
+        CastNullAdapter<model::DesignDay>(&model::DesignDay::diffuseSolarDaySchedule),
+        CastNullAdapter<model::DesignDay>(&model::DesignDay::setDiffuseSolarDaySchedule),
+        boost::optional<std::function<void(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::resetDiffuseSolarDaySchedule))
+        );
+    }
     else{
       // unhandled
       OS_ASSERT(false);
@@ -397,49 +430,10 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
 
 }
 
-//boost::optional<ScheduleDay> dryBulbTemperatureRangeModifierSchedule() const;
-//bool setDryBulbTemperatureRangeModifierSchedule(const ScheduleDay & schedule);
-//void resetDryBulbTemperatureRangeModifierSchedule();
-
-//boost::optional<ScheduleDay> humidityIndicatingDaySchedule() const;
-//bool setHumidityIndicatingDaySchedule(const ScheduleDay & schedule);
-//void resetHumidityIndicatingDaySchedule();
-
-//boost::optional<ScheduleDay> beamSolarDaySchedule() const;
-//bool setBeamSolarDaySchedule(const ScheduleDay & schedule);
-//void resetBeamSolarDaySchedule();
-
-//boost::optional<ScheduleDay> diffuseSolarDaySchedule() const;
-//bool setDiffuseSolarDaySchedule(const ScheduleDay & schedule);
-//void resetDiffuseSolarDaySchedule();
-
 QString DesignDayGridController::getColor(const model:: ModelObject & modelObject)
 {
   QColor defaultColor(Qt::lightGray);
   QString color(defaultColor.name());
-
-  // TODO: The code below is currently commented out because a refresh crash bug is precluding rack color
-  // updates due to rack assignments to cases and walk-ins.  No colors are better than wrong colors.
-
-  //std::vector<model::DesignDaySystem> refrigerationSystems = m_model.getModelObjects<model::DesignDaySystem>();
-
-  //boost::optional<model::DesignDayCase> refrigerationCase = modelObject.optionalCast<model::DesignDayCase>();
-  //OS_ASSERT(refrigerationCase);
-
-  //boost::optional<model::DesignDaySystem> refrigerationSystem = refrigerationCase->system();
-  //if(!refrigerationSystem){
-  //  return color;
-  //}
-
-  //std::vector<model::DesignDaySystem>::iterator it;
-  //it = std::find(refrigerationSystems.begin(), refrigerationSystems.end(), refrigerationSystem.get());
-  //if(it != refrigerationSystems.end()){
-  //  int index = std::distance(refrigerationSystems.begin(), it);
-  //  if(index >= static_cast<int>(m_colors.size())){
-  //    index = m_colors.size() - 1; // similar to scheduleView's approach
-  //  }
-  //  color = this->m_colors.at(index).name();
-  //}
 
   return color;
 }
@@ -484,7 +478,6 @@ void DesignDayGridController::onComboBoxIndexChanged(int index)
     }
   }
 }
-
 
 } // openstudio
 
