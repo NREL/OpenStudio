@@ -145,66 +145,66 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalA
 
   if( modelObject.isSupplyAirFlowRateDuringCoolingOperationAutosized() )
   {
-    idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::SupplyAirFlowRateDuringCoolingOperation,"Autosize");
+    idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingSupplyAirFlowRate,"Autosize");
   }
   else if( (value = modelObject.supplyAirFlowRateDuringCoolingOperation()) )
   {
-    idfObject.setDouble(ZoneHVAC_PackagedTerminalAirConditionerFields::SupplyAirFlowRateDuringCoolingOperation,value.get());
+    idfObject.setDouble(ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingSupplyAirFlowRate,value.get());
   }
 
   // SupplyAirFlowRateDuringHeatingOperation
 
   if( modelObject.isSupplyAirFlowRateDuringHeatingOperationAutosized() )
   {
-    idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::SupplyAirFlowRateDuringHeatingOperation,"Autosize");
+    idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::HeatingSupplyAirFlowRate,"Autosize");
   }
   else if( (value = modelObject.supplyAirFlowRateDuringHeatingOperation()) )
   {
-    idfObject.setDouble(ZoneHVAC_PackagedTerminalAirConditionerFields::SupplyAirFlowRateDuringHeatingOperation,value.get());
+    idfObject.setDouble(ZoneHVAC_PackagedTerminalAirConditionerFields::HeatingSupplyAirFlowRate,value.get());
   }
 
   // SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded
 
   if( modelObject.isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() )
   {
-    idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded,"Autosize");
+    idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::NoLoadSupplyAirFlowRate,"Autosize");
   } 
   else if( (value = modelObject.supplyAirFlowRateWhenNoCoolingorHeatingisNeeded()) )
   {
-    idfObject.setDouble(ZoneHVAC_PackagedTerminalAirConditionerFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded,value.get());
+    idfObject.setDouble(ZoneHVAC_PackagedTerminalAirConditionerFields::NoLoadSupplyAirFlowRate,value.get());
   }
 
   // OutdoorAirFlowRateDuringCoolingOperation
   
   if( modelObject.isOutdoorAirFlowRateDuringCoolingOperationAutosized() )
   {
-    idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::OutdoorAirFlowRateDuringCoolingOperation,"Autosize");
+    idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingOutdoorAirFlowRate,"Autosize");
   }
   else if( (value = modelObject.outdoorAirFlowRateDuringCoolingOperation()) )
   {
-    idfObject.setDouble(ZoneHVAC_PackagedTerminalAirConditionerFields::OutdoorAirFlowRateDuringCoolingOperation,value.get());
+    idfObject.setDouble(ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingOutdoorAirFlowRate,value.get());
   }
 
   // OutdoorAirFlowRateDuringHeatingOperation
   
   if( modelObject.isOutdoorAirFlowRateDuringHeatingOperationAutosized() )
   {
-    idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::OutdoorAirFlowRateDuringHeatingOperation,"Autosize");
+    idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::HeatingOutdoorAirFlowRate,"Autosize");
   }
   else if( (value = modelObject.outdoorAirFlowRateDuringHeatingOperation()) )
   {
-    idfObject.setDouble(ZoneHVAC_PackagedTerminalAirConditionerFields::OutdoorAirFlowRateDuringHeatingOperation,value.get());
+    idfObject.setDouble(ZoneHVAC_PackagedTerminalAirConditionerFields::HeatingOutdoorAirFlowRate,value.get());
   }
 
   // OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded
   
   if( modelObject.isOutdoorAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() )
   {
-    idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded,"Autosize");
+    idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::NoLoadOutdoorAirFlowRate,"Autosize");
   }
   else if( (value = modelObject.outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded()) )
   {
-    idfObject.setDouble(ZoneHVAC_PackagedTerminalAirConditionerFields::OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded,value.get());
+    idfObject.setDouble(ZoneHVAC_PackagedTerminalAirConditionerFields::NoLoadOutdoorAirFlowRate,value.get());
   }
 
   // SupplyAirFanObjectType

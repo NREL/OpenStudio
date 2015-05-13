@@ -933,13 +933,13 @@ namespace radiance {
           }
 
           // write material
-          m_radMaterials.insert("void plastic refl_" + formatString(exteriorVisibleReflectance) + "\n0\n0\n5\n"
-              + formatString(interiorVisibleReflectance, 3) + " " + formatString(exteriorVisibleReflectance) + " "
-              + formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
+          m_radMaterials.insert("void plastic bld_shd_refl_" + formatString(exteriorVisibleReflectance, 3) + "\n0\n0\n5\n"
+              + formatString(exteriorVisibleReflectance, 3) + " " + formatString(exteriorVisibleReflectance, 3) + " "
+              + formatString(exteriorVisibleReflectance, 3) + " 0 0\n\n");
           // polygon header
           openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(shadingSurface);
 
-          std::string shadingsurface = "refl_" + formatString(exteriorVisibleReflectance) + " polygon " + shadingSurface_name + "\n";
+          std::string shadingsurface = "bld_shd_refl_" + formatString(exteriorVisibleReflectance, 3) + " polygon " + shadingSurface_name + "\n";
           shadingsurface += "0\n0\n" + formatString(polygon.size()*3) + "\n";
 
           for (const auto & vertex : polygon)
@@ -1543,7 +1543,7 @@ namespace radiance {
           // add surface to zone geometry
           m_radSpaces[space_name] += "#-Surface = " + shadingSurface_name + "\n";
 
-          // set construction of shadingSurface
+          // set construction of space shadingSurface
           std::string constructionName = shadingSurface.getString(1).get();
           m_radSpaces[space_name] += "#--constructionName = " + constructionName + "\n";
 
@@ -1553,18 +1553,24 @@ namespace radiance {
             double interiorVisibleAbsorptance = shadingSurface.interiorVisibleAbsorptance().get();
             interiorVisibleReflectance = 1.0 - interiorVisibleAbsorptance;
           }
+          double exteriorVisibleReflectance = 0.25; // default for space shading surfaces
+          if (shadingSurface.exteriorVisibleAbsorptance()){
+            double exteriorVisibleAbsorptance = shadingSurface.exteriorVisibleAbsorptance().get();
+            exteriorVisibleReflectance = 1.0 - exteriorVisibleAbsorptance;
+          }
 
           // write material
-          m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3) + "\n0\n0\n5\n" + \
-            formatString(interiorVisibleReflectance, 3) + " " + \
-            formatString(interiorVisibleReflectance, 3) + " " + \
-            formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
+          m_radMaterials.insert("void plastic space_shd_refl_" + formatString(exteriorVisibleReflectance, 3) + "\n0\n0\n5\n" + \
+            formatString(exteriorVisibleReflectance, 3) + " " + \
+            formatString(exteriorVisibleReflectance, 3) + " " + \
+            formatString(exteriorVisibleReflectance, 3) + " 0 0\n\n");
           // polygon header
+          m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance, 3) + "\n";
           m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance, 3) + "\n";
           // get / write surface polygon
           //
           openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(shadingSurface);
-          m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3) + " polygon " + \
+          m_radSpaces[space_name] += "space_shd_refl_" + formatString(exteriorVisibleReflectance, 3) + " polygon " + \
           shadingSurface_name + "\n0\n0\n" + formatString(polygon.size() * 3) + "\n";
 
           for (const auto & vertex : polygon)

@@ -29,6 +29,7 @@
 
 #include "../../../model/Model.hpp"
 
+#include "../../../utilities/core/Application.hpp"
 #include "../../../utilities/idf/IdfFile.hpp"
 #include "../../../utilities/idf/IdfObject.hpp"
 #include "../../../utilities/data/EndUses.hpp"
@@ -48,6 +49,7 @@ using openstudio::SqlFile;
 
 TEST_F(RunManagerTestFixture, EnergyPlusPostProcessJob)
 {
+  openstudio::Application::instance().application(false);
   openstudio::path outdir = openstudio::toPath(QDir::tempPath()) / openstudio::toPath("EnergyPlusPostProcessJobRunTest");
   boost::filesystem::create_directories(outdir);
   openstudio::path db = outdir / openstudio::toPath("EnergyPlusPostProcessJobRunDB");
@@ -112,6 +114,7 @@ TEST_F(RunManagerTestFixture, EnergyPlusPostProcessJob)
 
 TEST_F(RunManagerTestFixture, EnergyPlusPostProcessJobRerun)
 {
+  openstudio::Application::instance().application(false);
   openstudio::path outdir = openstudio::toPath(QDir::tempPath()) / openstudio::toPath("EnergyPlusPostProcessJobRerunTest");
   boost::filesystem::create_directories(outdir);
   openstudio::path db = outdir / openstudio::toPath("EnergyPlusPostProcessJobRerunDB");
@@ -177,6 +180,7 @@ TEST_F(RunManagerTestFixture, EnergyPlusPostProcessJobRerun)
 
 TEST_F(RunManagerTestFixture, EnergyPlusPreAndPostProcessJob)
 {
+  openstudio::Application::instance().application(false);
   openstudio::path outdir = openstudio::toPath(QDir::tempPath()) / openstudio::toPath("EnergyPlusPreAndPostProcessJobRunTest");
   boost::filesystem::create_directories(outdir);
   openstudio::path db = outdir / openstudio::toPath("EnergyPlusPreAndPostProcessJobRunDB");

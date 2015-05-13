@@ -56,8 +56,8 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   connect(action, &QAction::triggered, this, &MainMenu::loadFileClicked, Qt::QueuedConnection);
 
   m_fileMenu->addSeparator();
-  
-  m_revertToSavedAction = new QAction(tr("Revert to Saved"), this);
+
+  m_revertToSavedAction = new QAction(tr("&Revert to Saved"), this);
   m_revertToSavedAction->setDisabled(true);
   m_fileMenu->addAction(m_revertToSavedAction);
   connect(m_revertToSavedAction, &QAction::triggered, this, &MainMenu::revertFileClicked, Qt::QueuedConnection);
@@ -74,31 +74,35 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   m_fileMenu->addSeparator();
 
    //formatMenu = editMenu->addMenu(tr("&Format"))
-  QMenu * importMenu = m_fileMenu->addMenu(tr("Import"));
+  QMenu * importMenu = m_fileMenu->addMenu(tr("&Import"));
 
-  action = new QAction(tr("IDF"), this);
+  action = new QAction(tr("&IDF"), this);
   importMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::importClicked, Qt::QueuedConnection);
 
-  action = new QAction(tr("gbXML"), this); 
+  action = new QAction(tr("&gbXML"), this); 
   importMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::importgbXMLClicked, Qt::QueuedConnection);
 
-  action = new QAction(tr("SDD"), this); 
+  action = new QAction(tr("&SDD"), this); 
   importMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::importSDDClicked, Qt::QueuedConnection);
 
-  QMenu * exportMenu = m_fileMenu->addMenu(tr("Export"));
+  action = new QAction(tr("I&FC"), this); 
+  importMenu->addAction(action);
+  connect(action, &QAction::triggered, this, &MainMenu::importIFCClicked, Qt::QueuedConnection);
 
-  action = new QAction(tr("IDF"), this);
+  QMenu * exportMenu = m_fileMenu->addMenu(tr("&Export"));
+
+  action = new QAction(tr("&IDF"), this);
   exportMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::exportClicked);
 
-  action = new QAction(tr("gbXML"), this);
+  action = new QAction(tr("&gbXML"), this);
   exportMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::exportgbXMLClicked);
 
-  action = new QAction(tr("SDD"), this);
+  action = new QAction(tr("&SDD"), this);
   exportMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::exportSDDClicked);
 
@@ -126,7 +130,7 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   m_preferencesMenu = new QMenu(tr("&Preferences"),this);
   addMenu(m_preferencesMenu);
 
-  QMenu * unitsMenu = m_preferencesMenu->addMenu(tr("Units"));
+  QMenu * unitsMenu = m_preferencesMenu->addMenu(tr("&Units"));
 
   m_displaySIUnitsAction = new QAction(tr("Metric (&SI)"),this);
   m_displaySIUnitsAction->setCheckable(true);
@@ -138,15 +142,15 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   unitsMenu->addAction(m_displayIPUnitsAction);
   connect(m_displayIPUnitsAction, &QAction::triggered, this, &MainMenu::displayIPUnitsClicked);
 
-  action = new QAction(tr("Change My Measures Directory"),this);
+  action = new QAction(tr("&Change My Measures Directory"),this);
   m_preferencesMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::changeMyMeasuresDir);
 
-  action = new QAction(tr("Scan for Tools"),this);
+  action = new QAction(tr("&Scan for Tools"),this);
   m_preferencesMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::scanForToolsClicked);
 
-  action = new QAction(tr("Show Tools"),this);
+  action = new QAction(tr("Show &Tools"),this);
   m_preferencesMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::showRunManagerPreferencesClicked);
 
@@ -166,19 +170,19 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   }
 
   // Measure menu
-  m_measureMenu = new QMenu(tr("Components && Measures"),this);
+  m_measureMenu = new QMenu(tr("&Components && Measures"),this);
   addMenu(m_measureMenu);
 
-  action = new QAction(tr("Apply Measure Now"),this);
+  action = new QAction(tr("&Apply Measure Now"),this);
   action->setShortcut(QKeySequence(QKeySequence(tr("Ctrl+M"))));
   m_measureMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::applyMeasureClicked);
 
-  action = new QAction(tr("Find Measures"),this);
+  action = new QAction(tr("Find &Measures"),this);
   m_measureMenu->addAction(action);
   connect(action, &QAction::triggered, this, &MainMenu::downloadMeasuresClicked);
 
-  action = new QAction(tr("Find Components"),this);
+  action = new QAction(tr("Find &Components"),this);
   m_measureMenu->addAction(action); 
   connect(action, &QAction::triggered, this, &MainMenu::downloadComponentsClicked);
 

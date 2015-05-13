@@ -42,6 +42,7 @@ void operator<<(std::ostream& os, const openstudio::path& p){
 
 TEST_F(RunManagerTestFixture, FlatOutDir)
 {
+  openstudio::Application::instance().application(false);
   openstudio::runmanager::Workflow wf("Null->Null->Null->Null->Null");
 
   // Set parameter specifying that jobs should have a flattened directory structure.
@@ -64,6 +65,7 @@ TEST_F(RunManagerTestFixture, FlatOutDir)
 
 TEST_F(RunManagerTestFixture, NotFlatOutDir)
 {
+  openstudio::Application::instance().application(false);
   openstudio::runmanager::Workflow wf("Null->Null->Null->Null->Null");
 
   openstudio::path db = openstudio::toPath(QDir::tempPath()) / openstudio::toPath("NotFlatOutDir");

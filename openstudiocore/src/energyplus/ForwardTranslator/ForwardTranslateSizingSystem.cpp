@@ -77,7 +77,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingSystem( SizingSyste
   value = modelObject.minimumSystemAirFlowRatio();
   if( value )
   {
-    idfObject.setDouble(Sizing_SystemFields::MinimumSystemAirFlowRatio,value.get());
+    idfObject.setDouble(Sizing_SystemFields::CentralHeatingMaximumSystemAirFlowRatio,value.get());
   }
 
   // PreheatDesignTemperature
@@ -133,7 +133,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingSystem( SizingSyste
   s = modelObject.sizingOption();
   if( s )
   {
-    idfObject.setString(Sizing_SystemFields::SizingOption,s.get());
+    idfObject.setString(Sizing_SystemFields::TypeofZoneSumtoUse,s.get());
   }
 
   // AllOutdoorAirinCooling
@@ -181,7 +181,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingSystem( SizingSyste
   s = modelObject.coolingDesignAirFlowMethod();
   if( s )
   {
-    idfObject.setString(Sizing_SystemFields::CoolingDesignAirFlowMethod,s.get());
+    idfObject.setString(Sizing_SystemFields::CoolingSupplyAirFlowRateMethod,s.get());
   }
 
   // CoolingDesignAirFlowRate
@@ -189,7 +189,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingSystem( SizingSyste
   value = modelObject.coolingDesignAirFlowRate();
   if( value )
   {
-    idfObject.setDouble(Sizing_SystemFields::CoolingDesignAirFlowRate,value.get());
+    idfObject.setDouble(Sizing_SystemFields::CoolingSupplyAirFlowRate,value.get());
   }
 
   // HeatingDesignAirFlowMethod
@@ -197,7 +197,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingSystem( SizingSyste
   s = modelObject.heatingDesignAirFlowMethod();
   if( s )
   {
-    idfObject.setString(Sizing_SystemFields::HeatingDesignAirFlowMethod,s.get());
+    idfObject.setString(Sizing_SystemFields::HeatingSupplyAirFlowRateMethod,s.get());
   }
 
   // HeatingDesignAirFlowRate
@@ -205,7 +205,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingSystem( SizingSyste
   value = modelObject.heatingDesignAirFlowRate();
   if( value )
   {
-    idfObject.setDouble(Sizing_SystemFields::HeatingDesignAirFlowRate,value.get());
+    idfObject.setDouble(Sizing_SystemFields::HeatingSupplyAirFlowRate,value.get());
   }
 
   // SystemOutdoorAirMethod
