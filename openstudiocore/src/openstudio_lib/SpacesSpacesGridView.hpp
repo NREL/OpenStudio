@@ -23,21 +23,16 @@
 
 #include "../shared_gui_components/OSGridController.hpp"
 
-#include "GridViewSubTab.hpp"
+#include "SpacesSubtabGridView.hpp"
 #include "OSItem.hpp"
 
 #include "../model/Model.hpp"
 
-class QComboBox;
-//class QLineEdit;
-
 namespace openstudio{
-
-  class OSQuantityEdit2;
 
   class SpacesSpacesGridController;
 
-  class SpacesSpacesGridView : public GridViewSubTab
+  class SpacesSpacesGridView : public SpacesSubtabGridView
   {
     Q_OBJECT
 
@@ -47,31 +42,9 @@ namespace openstudio{
 
     virtual ~SpacesSpacesGridView() {}
 
-    QComboBox *  m_storyFilter = nullptr;
-
-    QComboBox *  m_thermalZoneFilter = nullptr;
-
-    QComboBox *  m_spaceTypeFilter = nullptr;
-
   private:
 
     REGISTER_LOGGER("openstudio.SpacesSpacesGridView");
-
-    virtual void addObject(const openstudio::IddObjectType& iddObjectType);
-
-    virtual void purgeObjects(const openstudio::IddObjectType& iddObjectType);
-
-    void filterChanged();
-
-  private slots:
-
-    void onDropZoneItemClicked(OSItem* item);
-
-    void storyFilterChanged(const QString & text);
-
-    void thermalZoneFilterChanged(const QString & text);
-
-    void spaceTypeFilterChanged(const QString & text);
 
   };
 
@@ -113,4 +86,3 @@ namespace openstudio{
 } // openstudio
 
 #endif // OPENSTUDIO_SPACESSPACESGRIDVIEW_HPP
-

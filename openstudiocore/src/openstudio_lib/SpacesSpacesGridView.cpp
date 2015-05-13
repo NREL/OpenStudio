@@ -19,46 +19,53 @@
 
 #include "SpacesSpacesGridView.hpp"
 
-//#include "OSDropZone.hpp"
-//#include "OSItemSelectorButtons.hpp"
+#include "OSDropZone.hpp"
 
 #include "../shared_gui_components/OSGridView.hpp"
 
-#include "../model/ShadingSurface.hpp"
-#include "../model/ShadingSurface_Impl.hpp"
-//#include "../model/Schedule.hpp"
-//#include "../model/Schedule_Impl.hpp"
-#include "../model/Model.hpp"
-#include "../model/Model_Impl.hpp"
-#include "../model/ModelObject.hpp"
-#include "../model/ModelObject_Impl.hpp"
-//#include "../model/ShadingSurfaceGroup.hpp"
-//#include "../model/ShadingSurfaceGroup_Impl.hpp"
+#include "../model/BuildingStory.hpp"
+#include "../model/BuildingStory_Impl.hpp"
+#include "../model/DefaultConstructionSet.hpp"
+#include "../model/DefaultConstructionSet_Impl.hpp"
+#include "../model/DefaultScheduleSet.hpp"
+#include "../model/DefaultScheduleSet_Impl.hpp"
+#include "../model/DesignSpecificationOutdoorAir.hpp"
+#include "../model/DesignSpecificationOutdoorAir_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/idd/IddEnums.hxx"
-#include "../utilities/idd/OS_ShadingSurface_FieldEnums.hxx"
+#include "../utilities/idd/OS_Space_FieldEnums.hxx"
 
-#include <QBoxLayout>
 #include <QCheckBox>
-#include <QComboBox>
-#include <QLabel>
 
 // These defines provide a common area for field display names
 // used on column headers, and other grid widgets
 
-#define NAME "Shading Surface Name"
+#define NAME "Space Name"
 #define SELECTED "All"
 
 // GENERAL
-#define SHADINGSURFACEGROUPNAME "Shading Surface Group Name" // (read only)
-#define CONSTRUCTIONNAME "Construction Name"
-#define TRANSMITTANCESCHEDULENAME "Transmittance Schedule Name"
-
-// FILTERS
 #define STORY "Story"
 #define THERMALZONE "Thermal Zone"
 #define SPACETYPE "Space Type"
+#define DEFAULTCONSTRUCTIONSET "Default Construction Set"
+#define DEFAULTSCHEDULESET "Default Schedule Set"
+#define PARTOFTOTALFLOORAREA "Part of Total Floor Area"
+
+// AIRFLOW
+#define SPACEINFILTRATIONDESIGNFLOWRATES "Space Infiltration Design Flow Rates"
+#define SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS "Space Infiltration Effective Leakage Areas"
+#define DESIGNSPECIFICATIONOUTDOORAIROBJECTNAME "Design Specification Outdoor Air Object Name"
 
 namespace openstudio {
 
@@ -70,150 +77,26 @@ namespace openstudio {
   };
 
   SpacesSpacesGridView::SpacesSpacesGridView(bool isIP, const model::Model & model, QWidget * parent)
-    : GridViewSubTab(isIP, model, parent)
+    : SpacesSubtabGridView(isIP, model, parent)
   {
-    auto buildingShading = model.getModelObjects<model::ShadingSurface>();
-    auto buildingShadingModelObjects = subsetCastVector<model::ModelObject>(buildingShading);
+    showStoryFilter();
+    showThermalZoneFilter();
+    showSpaceTypeFilter();
 
-    m_gridController = new SpacesSpacesGridController(isIP, "Shading Surface", IddObjectType::OS_ShadingSurface, model, buildingShadingModelObjects);
-    m_gridView = new OSGridView(m_gridController, "Shading Surface", "Drop\nShading Surface", false, parent);
+    m_filterGridLayout->setRowStretch(m_filterGridLayout->rowCount(), 100);
+    m_filterGridLayout->setColumnStretch(m_filterGridLayout->columnCount(), 100);
+
+    m_gridController = new SpacesSpacesGridController(isIP, "Space", IddObjectType::OS_Space, model, m_spacesModelObjects);
+    m_gridView = new OSGridView(m_gridController, "Space", "Drop\nSpace", false, parent);
 
     setGridController(m_gridController);
     setGridView(m_gridView);
 
-    // Filters
-
-    QLabel * label = nullptr;
-
-    QVBoxLayout * layout = nullptr;
-
-    auto filterGridLayout = new QGridLayout();
-    filterGridLayout->setContentsMargins(7, 4, 0, 8);
-    filterGridLayout->setSpacing(5);
-
-    label = new QLabel();
-    label->setText("Filters:");
-    label->setObjectName("H2");
-    filterGridLayout->addWidget(label, filterGridLayout->rowCount(), filterGridLayout->columnCount(), Qt::AlignTop | Qt::AlignLeft);
-
-    // STORY
-
-    layout = new QVBoxLayout();
-
-    label = new QLabel();
-    label->setText(STORY);
-    label->setObjectName("H3");
-    layout->addWidget(label, Qt::AlignTop | Qt::AlignLeft);
-
-    m_storyFilter = new QComboBox();
-    m_storyFilter->addItem("a");
-    m_storyFilter->addItem("b");
-    m_storyFilter->setFixedWidth(OSItem::ITEM_WIDTH);
-    connect(m_storyFilter, &QComboBox::currentTextChanged, this, &openstudio::SpacesSpacesGridView::storyFilterChanged);
-
-    layout->addWidget(m_storyFilter, Qt::AlignTop | Qt::AlignLeft);
-    layout->addStretch();
-    filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, filterGridLayout->columnCount());
-
-    // THERMALZONE
-
-    layout = new QVBoxLayout();
-
-    label = new QLabel();
-    label->setText(THERMALZONE);
-    label->setObjectName("H3");
-    layout->addWidget(label, Qt::AlignTop | Qt::AlignLeft);
-
-    m_thermalZoneFilter = new QComboBox();
-    m_thermalZoneFilter->addItem("a");
-    m_thermalZoneFilter->addItem("b");
-    m_thermalZoneFilter->setFixedWidth(OSItem::ITEM_WIDTH);
-    connect(m_thermalZoneFilter, &QComboBox::currentTextChanged, this, &openstudio::SpacesSpacesGridView::thermalZoneFilterChanged);
-
-    QRegExp nameRegex("^\\S.*");
-    auto nameValidator = new QRegExpValidator(nameRegex, this);
-    m_thermalZoneFilter->setValidator(nameValidator);
-
-    layout->addWidget(m_thermalZoneFilter, Qt::AlignTop | Qt::AlignLeft);
-    layout->addStretch();
-    filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, filterGridLayout->columnCount());
-
-    // SPACETYPE
-
-    layout = new QVBoxLayout();
-
-    label = new QLabel();
-    label->setText(SPACETYPE);
-    label->setObjectName("H3");
-    layout->addWidget(label, Qt::AlignTop | Qt::AlignLeft);
-
-    m_spaceTypeFilter = new QComboBox();
-    m_spaceTypeFilter->addItem("a");
-    m_spaceTypeFilter->setFixedWidth(OSItem::ITEM_WIDTH);
-    connect(m_spaceTypeFilter, &QComboBox::currentTextChanged, this, &openstudio::SpacesSpacesGridView::thermalZoneFilterChanged);
-
-    layout->addWidget(m_spaceTypeFilter, Qt::AlignTop | Qt::AlignLeft);
-    layout->addStretch();
-    filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, filterGridLayout->columnCount());
-
-    filterGridLayout->setRowStretch(filterGridLayout->rowCount(), 100);
-    filterGridLayout->setColumnStretch(filterGridLayout->columnCount(), 100);
-
-    m_gridView->m_contentLayout->addLayout(filterGridLayout);
-
+    m_gridView->m_contentLayout->addLayout(m_filterGridLayout);
     m_gridView->m_contentLayout->addSpacing(7);
+    m_gridView->m_dropZone->hide();
   }
-
-  void SpacesSpacesGridView::storyFilterChanged(const QString& text)
-  {
-    filterChanged();
-  }
-
-  void SpacesSpacesGridView::thermalZoneFilterChanged(const QString& text)
-  {
-    filterChanged();
-  }
-
-  void SpacesSpacesGridView::spaceTypeFilterChanged(const QString& text)
-  {
-    filterChanged();
-  }
-
-  void SpacesSpacesGridView::filterChanged()
-  {
-    auto objectSelector = this->m_gridController->getObjectSelector();
-
-    auto tilt = m_storyFilter->currentText();
-
-    auto type = m_thermalZoneFilter->currentText();
-
-    auto orintation = m_spaceTypeFilter->currentText();
-
-    for (auto obj : objectSelector->m_selectorObjects) {
-
-    }
-
-    this->m_gridView->requestRefreshAll();
-  }
-
-  void SpacesSpacesGridView::onDropZoneItemClicked(OSItem* item)
-  {
-  }
-
-  void SpacesSpacesGridView::addObject(const IddObjectType& iddObjectType)
-  {
-    if (IddObjectType::OS_ShadingSurface == iddObjectType.value()) {
-      //model::ShadingSurface();
-    }
-  }
-
-  void SpacesSpacesGridView::purgeObjects(const IddObjectType& iddObjectType)
-  {
-    for (auto mo : this->m_model.getConcreteModelObjects<model::ShadingSurface>()){
-      mo.remove();
-    }
-  }
-
+  
   SpacesSpacesGridController::SpacesSpacesGridController(bool isIP,
     const QString & headerText,
     IddObjectType iddObjectType,
@@ -228,10 +111,22 @@ namespace openstudio {
   {
     {
       std::vector<QString> fields;
-      //fields.push_back(SHADINGSURFACEGROUPNAME);
-      //fields.push_back(CONSTRUCTIONNAME);
-      //fields.push_back(TRANSMITTANCESCHEDULENAME);
+      fields.push_back(STORY);
+      fields.push_back(THERMALZONE);
+      fields.push_back(SPACETYPE);
+      fields.push_back(DEFAULTCONSTRUCTIONSET);
+      fields.push_back(DEFAULTSCHEDULESET);
+      fields.push_back(PARTOFTOTALFLOORAREA);
       std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("General"), fields);
+      m_categoriesAndFields.push_back(categoryAndFields);
+    }
+
+    {
+      std::vector<QString> fields;
+      fields.push_back(SPACEINFILTRATIONDESIGNFLOWRATES);
+      fields.push_back(SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS);
+      fields.push_back(DESIGNSPECIFICATIONOUTDOORAIROBJECTNAME);
+      std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Airflow"), fields);
       m_categoriesAndFields.push_back(categoryAndFields);
     }
 
@@ -256,8 +151,8 @@ namespace openstudio {
         addNameLineEditColumn(Heading(QString(NAME), false, false),
           false,
           false,
-          CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::name),
-          CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::setName)
+          CastNullAdapter<model::Space>(&model::Space::name),
+          CastNullAdapter<model::Space>(&model::Space::setName)
           );
       }
       else if (field == SELECTED) {
@@ -266,6 +161,161 @@ namespace openstudio {
         connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpacesSpacesGridController::selectAllStateChanged);
 
         addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row");
+      }
+      else if (field == STORY) {
+        addDropZoneColumn(Heading(QString(STORY)),
+          CastNullAdapter<model::Space>(&model::Space::buildingStory),
+          CastNullAdapter<model::Space>(&model::Space::setBuildingStory),
+          boost::optional<std::function<void(model::Space*)>>(CastNullAdapter<model::Space>(&model::Space::resetBuildingStory))
+          );
+      }
+      else if (field == THERMALZONE) {
+
+        std::function<bool(model::Space*, const model::ThermalZone&)> set(
+          [](model::Space* s, const model::ThermalZone& tz) {
+          model::ThermalZone copy = tz;
+          return s->setThermalZone(copy);
+        }
+        );
+
+        addDropZoneColumn(Heading(QString(THERMALZONE)),
+          CastNullAdapter<model::Space>(&model::Space::thermalZone),
+          set,
+          boost::optional<std::function<void(model::Space*)>>(CastNullAdapter<model::Space>(&model::Space::resetThermalZone))
+          );
+      }
+      else if (field == SPACETYPE) {
+        addDropZoneColumn(Heading(QString(SPACETYPE)),
+          CastNullAdapter<model::Space>(&model::Space::spaceType),
+          CastNullAdapter<model::Space>(&model::Space::setSpaceType),
+          boost::optional<std::function<void(model::Space*)>>(CastNullAdapter<model::Space>(&model::Space::resetSpaceType))
+          );
+      }
+      else if (field == DEFAULTCONSTRUCTIONSET) {
+        addDropZoneColumn(Heading(QString(DEFAULTCONSTRUCTIONSET)),
+          CastNullAdapter<model::Space>(&model::Space::defaultConstructionSet),
+          CastNullAdapter<model::Space>(&model::Space::setDefaultConstructionSet),
+          boost::optional<std::function<void(model::Space*)>>(CastNullAdapter<model::Space>(&model::Space::resetDefaultConstructionSet))
+          );
+      }
+      else if (field == DEFAULTSCHEDULESET) {
+        addDropZoneColumn(Heading(QString(DEFAULTSCHEDULESET)),
+          CastNullAdapter<model::Space>(&model::Space::defaultScheduleSet),
+          CastNullAdapter<model::Space>(&model::Space::setDefaultScheduleSet),
+          boost::optional<std::function<void(model::Space*)>>(CastNullAdapter<model::Space>(&model::Space::resetDefaultScheduleSet))
+          );
+      }
+      else if (field == PARTOFTOTALFLOORAREA) {
+        addCheckBoxColumn(Heading(QString(PARTOFTOTALFLOORAREA), true, false),
+          std::string("Check to enable part of total floor area."),
+          NullAdapter(&model::Space::partofTotalFloorArea),
+          NullAdapter(&model::Space::setPartofTotalFloorArea)
+          );
+      }
+      else if (field == SPACEINFILTRATIONDESIGNFLOWRATES) {
+        std::function<boost::optional<model::SpaceInfiltrationDesignFlowRate>(model::Space *)>  getter;
+
+        std::function<bool(model::Space *, const model::SpaceInfiltrationDesignFlowRate &)> setter(
+          [](model::Space *t_space, model::SpaceInfiltrationDesignFlowRate t_rate) {
+          if (t_rate.space()) {
+            boost::optional<model::ModelObject> clone_rate = t_rate.clone(t_rate.model());
+            OS_ASSERT(clone_rate);
+            auto success = clone_rate->cast<model::SpaceInfiltrationDesignFlowRate>().setSpace(*t_space);
+            OS_ASSERT(success);
+            return success;
+          }
+          else {
+            auto success = t_rate.setSpace(*t_space);
+            OS_ASSERT(success);
+            return success;
+          }
+        }
+        );
+
+        std::function<std::vector<model::ModelObject>(const model::Space &)> flowRates(
+          [](const model::Space &s) {
+          auto rates = s.spaceInfiltrationDesignFlowRates();
+          return std::vector<model::ModelObject>(rates.begin(), rates.end());
+        }
+        );
+
+        addNameLineEditColumn(Heading(QString(SPACEINFILTRATIONDESIGNFLOWRATES)),
+          true,
+          true,
+          CastNullAdapter<model::SpaceInfiltrationDesignFlowRate>(&model::SpaceInfiltrationDesignFlowRate::name),
+          CastNullAdapter<model::SpaceInfiltrationDesignFlowRate>(&model::SpaceInfiltrationDesignFlowRate::setName),
+          boost::optional<std::function<void(model::SpaceInfiltrationDesignFlowRate *)>>(
+          std::function<void(model::SpaceInfiltrationDesignFlowRate *)>(
+          [](model::SpaceInfiltrationDesignFlowRate *t_fr)
+        {
+          t_fr->resetSpace();
+        }
+          )
+          ),
+          DataSource(
+          flowRates,
+          false,
+          QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::SpaceInfiltrationDesignFlowRate, model::Space>(Heading(SPACEINFILTRATIONDESIGNFLOWRATES),
+          getter, setter))
+          )
+          );
+
+      }
+      else if (field == SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS) {
+        std::function<boost::optional<model::SpaceInfiltrationEffectiveLeakageArea>(model::Space *)>  getter;
+
+        std::function<bool(model::Space *, const model::SpaceInfiltrationEffectiveLeakageArea &)> setter(
+          [](model::Space *t_space, model::SpaceInfiltrationEffectiveLeakageArea t_area) {
+          if (t_area.space()) {
+            boost::optional<model::ModelObject> clone_area = t_area.clone(t_area.model());
+            OS_ASSERT(clone_area);
+            auto success = clone_area->cast<model::SpaceInfiltrationEffectiveLeakageArea>().setSpace(*t_space);
+            OS_ASSERT(success);
+            return success;
+          }
+          else {
+            auto success = t_area.setSpace(*t_space);
+            OS_ASSERT(success);
+            return success;
+          }
+        }
+        );
+
+        std::function<std::vector<model::ModelObject>(const model::Space &)> leakageAreas(
+          [](const model::Space &s) {
+          auto areas = s.spaceInfiltrationEffectiveLeakageAreas();
+          return std::vector<model::ModelObject>(areas.begin(), areas.end());
+        }
+        );
+
+        addNameLineEditColumn(Heading(QString(SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS)),
+          true,
+          true,
+          CastNullAdapter<model::SpaceInfiltrationEffectiveLeakageArea>(&model::SpaceInfiltrationEffectiveLeakageArea::name),
+          CastNullAdapter<model::SpaceInfiltrationEffectiveLeakageArea>(&model::SpaceInfiltrationEffectiveLeakageArea::setName),
+          boost::optional<std::function<void(model::SpaceInfiltrationEffectiveLeakageArea *)>>(
+          std::function<void(model::SpaceInfiltrationEffectiveLeakageArea *)>(
+          [](model::SpaceInfiltrationEffectiveLeakageArea *t_la)
+        {
+          t_la->resetSpace();
+        }
+          )
+          ),
+          DataSource(
+          leakageAreas,
+          false,
+          QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::SpaceInfiltrationEffectiveLeakageArea, model::Space>(Heading(SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS),
+          getter, setter))
+          )
+          );
+
+      }
+      else if (field == DESIGNSPECIFICATIONOUTDOORAIROBJECTNAME) {
+        addDropZoneColumn(Heading(QString(DESIGNSPECIFICATIONOUTDOORAIROBJECTNAME)),
+          CastNullAdapter<model::Space>(&model::Space::designSpecificationOutdoorAir),
+          CastNullAdapter<model::Space>(&model::Space::setDesignSpecificationOutdoorAir),
+          boost::optional<std::function<void(model::Space*)>>(CastNullAdapter<model::Space>(&model::Space::resetDesignSpecificationOutdoorAir))
+          );
       }
       else {
         // unhandled
@@ -293,7 +343,7 @@ namespace openstudio {
 
   void SpacesSpacesGridController::refreshModelObjects()
   {
-    auto exteriorLights = m_model.getModelObjects<model::ShadingSurface>();
+    auto exteriorLights = m_model.getModelObjects<model::Space>();
     m_modelObjects = subsetCastVector<model::ModelObject>(exteriorLights);
     std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
   }
