@@ -426,6 +426,72 @@ namespace bimserver {
     
   }
 
+    void BIMserverConnection::deleteProject(QString projectID) {
+
+    if (!m_operationDone) {
+      emit errorOccured(QString("The last process has not end yet. Please wait and try again."));
+      return;
+    }
+    m_operationDone = false;
+
+    if (!projectID.isEmpty()) {
+      sendDeleteProjectRequest(projectID);
+    } else {
+      emit errorOccured(QString("Project ID is empty!"));
+    }
+  }
+
+  void BIMserverConnection::sendDeleteProjectRequest(QString projectID) {
+    
+    QJsonObject parameters;
+    parameters["poid"] = projectID;
+    QJsonObject request;
+    request["interface"] = QJsonValue(QString("Bimsie1ServiceInterface"));
+    request["method"] = QJsonValue(QString("deleteProject"));
+    request["parameters"] = parameters;
+    QJsonObject deleteProjectRequest;
+    deleteProjectRequest["token"] = QJsonValue(m_token);
+    deleteProjectRequest["request"] = request;
+
+    QJsonDocument doc;
+    doc.setObject(deleteProjectRequest);
+
+    QByteArray deleteProjectRequestJson = doc.toJson();
+
+    //setup network connection
+    QNetworkRequest qNetworkRequest(m_bimserverURL);
+    qNetworkRequest.setRawHeader("Content-Type", "application/json");
+
+    // disconnect all signals from m_networkManager to this
+    disconnect(m_networkManager, nullptr, this, nullptr);
+    connect(m_networkManager, &QNetworkAccessManager::finished, this, &BIMserverConnection::processDeleteProjectRequest);
+    m_networkManager->post(qNetworkRequest, deleteProjectRequestJson);
+    
+  }
+
+
+  void BIMserverConnection::processDeleteProjectRequest(QNetworkReply *rep) {
+    if (rep) {
+      QByteArray responseArray = rep->readAll();
+
+      QJsonDocument responseDoc = QJsonDocument::fromJson(responseArray);
+      QJsonObject deleteProjectResponse = responseDoc.object();
+      QJsonObject response = deleteProjectResponse["response"].toObject();
+
+      if (!containsError(response)) {
+        m_deleteProjectSuccess = true;
+        m_operationDone = true;
+        emit operationSucceeded(QString("deleteProject"));
+      } else {
+        emitErrorMessage(response);
+      }
+
+    } else {
+      emit bimserverError();
+    }
+    
+  }
+  
   void BIMserverConnection::checkInIFCFile(QString projectID, QString IFCFilePath) {
 
     if (!m_operationDone) {
@@ -747,6 +813,13 @@ namespace bimserver {
     createProject(projectName);
     waitForLock(timeout);
     return m_createProjectSuccess;
+  }
+
+  bool BIMserverConnection::deleteProjectBlocked(QString projectID, int timeout) {
+    m_deleteProjectSuccess = false;
+    deleteProject(ProjectID);
+    waitForLock(timeout);
+    return m_deleteProjectSuccess;
   }
 
   bool BIMserverConnection::checkInIFCFileBlocked(QString projectID, QString IFCFilePath, int timeout) {
