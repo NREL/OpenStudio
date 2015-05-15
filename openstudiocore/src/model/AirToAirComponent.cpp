@@ -179,6 +179,8 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
 {
   Model _model = node.model(); 
   boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = node.airLoopHVACOutdoorAirSystem();
+
+  if( airLoopHVACOutdoorAirSystem() ) return false;
   
   if( oaSystem )
   {
