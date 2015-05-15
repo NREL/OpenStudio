@@ -115,97 +115,140 @@ namespace openstudio{
 
 
     /// constructor from first report date and time, days from first report vector, values, and units
-    TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const Vector& daysFromFirstReport, const Vector& values, const std::string& units)
-      :  m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
+    TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const Vector& days, const Vector& values, const std::string& units)
+      : m_secondsFromStart(values.size()), m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
-      if (values.empty()){
+      if (days.size() != values.size()){
+        LOG_AND_THROW("Length of values (" << values.size() << ") must match length of times (" << days.size() << ")");
+      }
+
+      if (values.empty() || days.empty()){
         LOG(Warn, "Creating empty timeseries");
+        m_startDateTime = firstReportDateTime;
+        m_firstReportDateTime = firstReportDateTime;
       }
+      else {
 
-      if (daysFromFirstReport.size() != values.size()){
-        LOG_AND_THROW("Length of values must match length of times");
-      }
+        // DLM: firstReportDateTime may or may not have baseYear defined
+        m_firstReportDateTime = firstReportDateTime;
 
-      // DLM: firstReportDateTime may or may not have baseYear defined
-      m_firstReportDateTime = firstReportDateTime;
+        std::copy(values.begin(), values.end(), m_values.begin());
 
-      LOG(Warn, "Assuming that time series begins at the start of the day of first report");
-      m_startDateTime = DateTime(m_firstReportDateTime.date());
+        if (days[0] == 0) { // This is the old, BROKEN way
+          int firstIntervalSeconds = firstReportDateTime.time().totalSeconds();
+          if (firstIntervalSeconds == 0) {
+            LOG_AND_THROW("Cannot calculate or assume the series start date for first report at the beginning of a day");
+          }
+          LOG(Warn, "Assuming that time series begins at the start of the day of first report");
+          m_startDateTime = DateTime(m_firstReportDateTime.date());
 
-      int firstIntervalSeconds = firstReportDateTime.time().totalSeconds();
-
-      for (unsigned i = 0; i < values.size(); ++i){
-        m_secondsFromFirstReport[i] = Time(daysFromFirstReport(i)).totalSeconds();
-        m_secondsFromStart[i] = Time(daysFromFirstReport(i)).totalSeconds() + firstIntervalSeconds;
-        if (i > 0){
-          if (m_secondsFromFirstReport[i] < m_secondsFromFirstReport[i-1]){
-            LOG_AND_THROW("Days from first report must be monotonically increasing");
+          for (unsigned i = 0; i < values.size(); ++i){
+            m_secondsFromFirstReport[i] = Time(days[i]).totalSeconds();
+            m_secondsFromStart[i] = Time(days[i]).totalSeconds() + firstIntervalSeconds;
+            if (i > 0){
+              if (m_secondsFromFirstReport[i] < m_secondsFromFirstReport[i - 1]){
+                LOG_AND_THROW("Days from first report must be monotonically increasing");
+              }
+            }
           }
         }
-      }
-      m_secondsFromFirstReportAsVector = createVector(m_secondsFromFirstReport);
+        else { // This is the new way
+          m_startDateTime = m_firstReportDateTime - Time(days[0]);
+          for (unsigned i = 0; i < values.size(); ++i){
+            m_secondsFromStart[i] = Time(days[i]).totalSeconds();
+            m_secondsFromFirstReport[i] = m_secondsFromStart[i] - m_secondsFromStart[0];
+            if (i > 0){
+              if (m_secondsFromFirstReport[i] < m_secondsFromFirstReport[i - 1]){
+                LOG_AND_THROW("Days from first report must be monotonically increasing");
+              }
+            }
+          }
+        }
 
-      long durationSeconds = 0;
-      if (!m_secondsFromFirstReport.empty()){
-        durationSeconds = m_secondsFromFirstReport.back();
-      }
+        m_secondsFromFirstReportAsVector = createVector(m_secondsFromFirstReport);
 
-      // check for wrap around
-      boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
-      if (!calendarYear){
-        DateTime lastDateTime = m_firstReportDateTime.date() + Time(0,0,0,durationSeconds);
-        Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
-        if ((durationSeconds > Time(366.0).totalSeconds()) || (lastDate < m_firstReportDateTime.date())){
-          m_wrapAround = true;
+        long durationSeconds = 0;
+        if (!m_secondsFromFirstReport.empty()){
+          durationSeconds = m_secondsFromFirstReport.back();
+        }
+
+        // check for wrap around
+        boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
+        if (!calendarYear){
+          DateTime lastDateTime = m_firstReportDateTime.date() + Time(0, 0, 0, durationSeconds);
+          Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
+          if ((durationSeconds > Time(366.0).totalSeconds()) || (lastDate < m_firstReportDateTime.date())){
+            m_wrapAround = true;
+          }
         }
       }
     }
 
-    TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<double>& daysFromFirstReport, const std::vector<double>& values, const std::string& units) 
-      : m_secondsFromStart(values.size()), m_secondsFromFirstReport(daysFromFirstReport.size()), m_values(values.size()), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
+    TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<double>& days, const std::vector<double>& values, const std::string& units) 
+      : m_secondsFromStart(values.size()), m_secondsFromFirstReport(days.size()), m_values(values.size()), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
-      if (values.empty()){
+
+      if (days.size() != values.size()){
+        LOG_AND_THROW("Length of values (" << values.size() << ") must match length of times (" << days.size()<< ")");
+      }
+
+      if (values.empty() || days.empty()){
         LOG(Warn, "Creating empty timeseries");
-      }
+        m_startDateTime = firstReportDateTime;
+        m_firstReportDateTime = firstReportDateTime;
+      } else {
 
-      if (daysFromFirstReport.size() != values.size()){
-        LOG_AND_THROW("Length of values (" << values.size() << ") must match length of times (" << daysFromFirstReport.size()<< ")");
-      }
+        // DLM: firstReportDateTime may or may not have baseYear defined
+        m_firstReportDateTime = firstReportDateTime;
 
-      // DLM: firstReportDateTime may or may not have baseYear defined
-      m_firstReportDateTime = firstReportDateTime;
+        std::copy(values.begin(), values.end(), m_values.begin());
 
-      LOG(Warn, "Assuming that time series begins at the start of the day of first report");
-      m_startDateTime = DateTime(m_firstReportDateTime.date());
+        if (days[0] == 0) { // This is the old, BROKEN way
+          int firstIntervalSeconds = firstReportDateTime.time().totalSeconds();
+          if (firstIntervalSeconds == 0) {
+            LOG_AND_THROW("Cannot calculate or assume the series start date for first report at the beginning of a day");
+          }
+          LOG(Warn, "Assuming that time series begins at the start of the day of first report");
+          m_startDateTime = DateTime(m_firstReportDateTime.date());
 
-      int firstIntervalSeconds = firstReportDateTime.time().totalSeconds();
-
-      //        for (unsigned i = 0; i < values.size(); i++) m_values(i) = values[i];
-      std::copy(values.begin(), values.end(), m_values.begin());
-
-      for (unsigned i = 0; i < values.size(); ++i){
-        m_secondsFromFirstReport[i] = Time(daysFromFirstReport[i]).totalSeconds();
-        m_secondsFromStart[i] = Time(daysFromFirstReport[i]).totalSeconds() + firstIntervalSeconds;
-        if (i > 0){
-          if (m_secondsFromFirstReport[i] < m_secondsFromFirstReport[i-1]){
-            LOG_AND_THROW("Days from first report must be monotonically increasing");
+          for (unsigned i = 0; i < values.size(); ++i){
+            m_secondsFromFirstReport[i] = Time(days[i]).totalSeconds();
+            m_secondsFromStart[i] = Time(days[i]).totalSeconds() + firstIntervalSeconds;
+            if (i > 0){
+              if (m_secondsFromFirstReport[i] < m_secondsFromFirstReport[i - 1]){
+                LOG_AND_THROW("Days from first report must be monotonically increasing");
+              }
+            }
           }
         }
-      }
-      m_secondsFromFirstReportAsVector = createVector(m_secondsFromFirstReport);
+        else { // This is the new way
+          m_startDateTime = m_firstReportDateTime - Time(days[0]);
+          for (unsigned i = 0; i < values.size(); ++i){
+            m_secondsFromStart[i] = Time(days[i]).totalSeconds();
+            m_secondsFromFirstReport[i] = m_secondsFromStart[i] - m_secondsFromStart[0];
+            if (i > 0){
+              if (m_secondsFromFirstReport[i] < m_secondsFromFirstReport[i - 1]){
+                LOG_AND_THROW("Days from first report must be monotonically increasing");
+              }
+            }
+          }
+        }
 
-      long durationSeconds = 0;
-      if (!m_secondsFromFirstReport.empty()){
-        durationSeconds = m_secondsFromFirstReport.back();
-      }
-    
-      // check for wrap around
-      boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
-      if (!calendarYear){
-        DateTime lastDateTime = m_firstReportDateTime.date() + Time(0,0,0,durationSeconds);
-        Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
-        if ((durationSeconds > Time(366.0).totalSeconds()) || (lastDate < m_firstReportDateTime.date())){
-          m_wrapAround = true;
+        m_secondsFromFirstReportAsVector = createVector(m_secondsFromFirstReport);
+
+        long durationSeconds = 0;
+        if (!m_secondsFromFirstReport.empty()){
+          durationSeconds = m_secondsFromFirstReport.back();
+        }
+
+        // check for wrap around
+        boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
+        if (!calendarYear){
+          DateTime lastDateTime = m_firstReportDateTime.date() + Time(0, 0, 0, durationSeconds);
+          Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
+          if ((durationSeconds > Time(366.0).totalSeconds()) || (lastDate < m_firstReportDateTime.date())){
+            m_wrapAround = true;
+          }
         }
       }
     }
@@ -236,6 +279,9 @@ namespace openstudio{
       boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
 
       if (!extraTime) {
+        if (m_firstReportDateTime.time().totalSeconds() == 0) {
+          LOG_AND_THROW("Cannot calculate or assume the series start date for first report at the beginning of a day");
+        }
         LOG(Warn, "Assuming that time series begins at the start of the day of first report");
         m_startDateTime = DateTime(m_firstReportDateTime.date());
       }
@@ -310,7 +356,7 @@ namespace openstudio{
           }
           m_secondsFromFirstReport = seconds;
 
-        } else {
+        } else { // This is the new behavior
           m_startDateTime = firstReportDateTime - Time(0, 0, 0, seconds[0]);
           m_firstReportDateTime = firstReportDateTime;
           m_secondsFromStart = seconds;
