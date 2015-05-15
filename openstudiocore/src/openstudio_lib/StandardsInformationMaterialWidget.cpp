@@ -337,8 +337,6 @@ void StandardsInformationMaterialWidget::disableComposite()
 
 void StandardsInformationMaterialWidget::requestPopulateFields()
 {
-  this;
-
   if (!m_populateFieldsRequested){
     m_populateFieldsRequested = true;
 
@@ -350,8 +348,6 @@ void StandardsInformationMaterialWidget::requestPopulateFields()
 
 void StandardsInformationMaterialWidget::populateFields()
 {
-  this;
-
   m_populateFieldsRequested = false;
 
   populateStandards();

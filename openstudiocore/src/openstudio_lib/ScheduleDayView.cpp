@@ -120,10 +120,6 @@ ScheduleDayView::ScheduleDayView(bool isIP,
 
   setLayout(mainVLayout);
 
-  QHBoxLayout * hLayout = nullptr;
-
-  QLabel * label = nullptr;
-
   // Name
 
   //label = new QLabel("Name:");
@@ -668,8 +664,6 @@ void ScheduleDayEditor::resizeEvent ( QResizeEvent * event )
 {
   m_graphicsView->resize(event->size().width() - MARGINLEFT - MARGINRIGHT, event->size().height() - MARGINTOP - MARGINBOTTOM);
 
-  int buttonHeight = 140; // Can't ask for button height until it is first rendered
-
   fitInView();
 
   QWidget::resizeEvent( event );
@@ -810,9 +804,7 @@ void ScheduleDayEditor::updateKeyboardPrompt(const QString& keyboardPrompt)
     m_keyboardPrompt->setText(keyboardPrompt);
 
     // Draw keyboard text
-    QRectF r1 = m_keyboardPrompt->rect();
     m_keyboardPrompt->adjustSize();
-    QRectF r2 = m_keyboardPrompt->rect();
     m_keyboardPrompt->move(width() - MARGINRIGHT - m_keyboardPrompt->width() - 5, 0);
     m_keyboardPrompt->update();
 
@@ -1564,7 +1556,7 @@ void DaySchedulePlotArea::updateKeyboardPrompt()
       //}
 
     } 
-    else if (VCalendarSegmentItem * vCalendarItem = dynamic_cast<VCalendarSegmentItem *>(m_currentHoverItem))
+    else if (dynamic_cast<VCalendarSegmentItem *>(m_currentHoverItem))
     {
       result = "Drag vertical line to adjust";
     }

@@ -213,7 +213,7 @@ void VRFController::onVRFTerminalViewDrop(const OSItemId & terminalId, const OSI
     OS_ASSERT(mo); 
     if( auto thermalZone = mo->optionalCast<model::ThermalZone>() )
     {
-      if( mo = doc->getModelObject(terminalId) ) {
+      if( (mo = doc->getModelObject(terminalId)) ) {
         if( auto terminal = mo->optionalCast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>() ) {
           terminal->addToThermalZone(thermalZone.get());
 
