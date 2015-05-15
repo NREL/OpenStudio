@@ -393,16 +393,10 @@ public:
   /// export to CONTAM WTH file
   bool translateToWth(openstudio::path path,std::string description=std::string());
 
-  // Analysis-type functions
-  /// Computes the yearly heating degree days given a base temperature in C
-  boost::optional<double> heatingDegreeDays(double Tbase = 18.3);
-  boost::optional<double> coolingDegreeDays(double Tbase = 18.3);
-  boost::optional<std::pair<double,double>> degreeDays(double Tbase = 18.3);
-
   // Data status (?) functions
   /// Returns true if the file appears to be AMY (as opposed to TMY)
   bool isActual() const;
-  /// Returns true if the data period "records per hour" input matches the data points values
+  /// Returns true if the data period "records per hour" input matches the data point values
   bool minutesMatch() const;
 
 private:
