@@ -37,7 +37,7 @@
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/idd/IddEnums.hxx"
-#include "../utilities/idd/OS_ShadingSurface_FieldEnums.hxx"
+#include "../utilities/idd/OS_ShadingSurfaceGroup_FieldEnums.hxx"
 
 #include <QBoxLayout>
 #include <QCheckBox>
@@ -49,12 +49,12 @@
 // These defines provide a common area for field display names
 // used on column headers, and other grid widgets
 
-#define NAME "Shading Surface Name"
+#define NAME "Shading Surface Group Name"
 #define SELECTED "All"
 
 // GENERAL
 #define TYPE "Type" // read only
-#define SHADINGSURFACEGROUPNAME "Shading Surface Group Name" // read only
+#define SHADINGSURFACENAME "Shading Surface Name" // read only
 #define CONSTRUCTIONNAME "Construction Name"
 #define TRANSMITTANCESCHEDULENAME "Transmittance Schedule Name"
 
@@ -76,11 +76,11 @@ namespace openstudio {
   FacilityShadingGridView::FacilityShadingGridView(bool isIP, const model::Model & model, QWidget * parent)
     : GridViewSubTab(isIP, model, parent)
   {
-    auto modelObjects = subsetCastVector<model::ModelObject>(model.getModelObjects<model::ShadingSurface>());
+    auto modelObjects = subsetCastVector<model::ModelObject>(model.getModelObjects<model::ShadingSurfaceGroup>());
     std::sort(modelObjects.begin(), modelObjects.end(), ModelObjectNameSorter());
 
-    m_gridController = new FacilityShadingGridController(isIP, "Shading Surface", IddObjectType::OS_ShadingSurface, model, modelObjects);
-    m_gridView = new OSGridView(m_gridController, "Shading Surface", "Drop\nShading Surface", false, parent);
+    m_gridController = new FacilityShadingGridController(isIP, "Shading Surface Group", IddObjectType::OS_ShadingSurfaceGroup, model, modelObjects);
+    m_gridView = new OSGridView(m_gridController, "Shading Surface Group", "Drop\nShading Surface Group", false, parent);
 
     setGridController(m_gridController);
     setGridView(m_gridView);
@@ -124,7 +124,7 @@ namespace openstudio {
     layout = new QVBoxLayout();
 
     label = new QLabel();
-    label->setText(SHADINGSURFACEGROUPNAME);
+    label->setText(SHADINGSURFACENAME);
     label->setObjectName("H3");
     layout->addWidget(label, Qt::AlignTop | Qt::AlignLeft);
 
@@ -240,8 +240,8 @@ namespace openstudio {
 
   void FacilityShadingGridView::addObject(const IddObjectType& iddObjectType)
   {
-    if (IddObjectType::OS_ShadingSurface == iddObjectType.value()) {
-      //model::ShadingSurface();
+    if (IddObjectType::OS_ShadingSurfaceGroup == iddObjectType.value()) {
+      model::ShadingSurfaceGroup(this->m_model);
     }
   }
 
@@ -266,10 +266,10 @@ namespace openstudio {
   {
     {
       std::vector<QString> fields;
+      fields.push_back(SHADINGSURFACENAME);
       //fields.push_back(TYPE);
-      //fields.push_back(SHADINGSURFACEGROUPNAME);
-      //fields.push_back(CONSTRUCTIONNAME);
       //fields.push_back(TRANSMITTANCESCHEDULENAME);
+      //fields.push_back(CONSTRUCTIONNAME);
       std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("General"), fields);
       m_categoriesAndFields.push_back(categoryAndFields);
     }
@@ -295,32 +295,117 @@ namespace openstudio {
         addNameLineEditColumn(Heading(QString(NAME), false, false),
           false,
           false,
-          CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::name),
-          CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::setName)
+          CastNullAdapter<model::ShadingSurfaceGroup>(&model::ShadingSurfaceGroup::name),
+          CastNullAdapter<model::ShadingSurfaceGroup>(&model::ShadingSurfaceGroup::setName)
           );
       }
       else {
+
+        std::function<std::vector<model::ModelObject>(const model::ShadingSurfaceGroup &)> allShadingSurfaces(
+          [](const model::ShadingSurfaceGroup &t_shadingSurfaceGroup) {
+          std::vector<model::ModelObject> allModelObjects;
+          auto shadingSurfaces = t_shadingSurfaceGroup.shadingSurfaces();
+          allModelObjects.insert(allModelObjects.end(), shadingSurfaces.begin(), shadingSurfaces.end());
+          return allModelObjects;
+        }
+        );
+
+        std::function<std::vector<boost::optional<model::ModelObject>>(const model::ShadingSurfaceGroup &)> allTransmittanceSchedules(
+          [](const model::ShadingSurfaceGroup &t_shadingSurfaceGroup) {
+          std::vector<boost::optional<model::ModelObject>> allModelObjects;
+          auto shadingSurfaces = t_shadingSurfaceGroup.shadingSurfaces();
+          for (auto shadingSurface : shadingSurfaces) {
+            auto transmittanceSchedule = shadingSurface.transmittanceSchedule();
+            if (transmittanceSchedule)
+            {
+              allModelObjects.push_back(transmittanceSchedule.get());
+            }
+            else {
+              allModelObjects.push_back(boost::optional<model::ModelObject>());
+            }
+          }
+          return allModelObjects;
+        }
+        );
+
         if (field == SELECTED) {
           auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
           checkbox->setToolTip("Check to select all rows");
           connect(checkbox.data(), &QCheckBox::stateChanged, this, &FacilityShadingGridController::selectAllStateChanged);
 
-          addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row");
+          addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row",
+            DataSource(
+            allShadingSurfaces,
+            true
+            )
+            );
         }
         else if (field == TYPE) { // COMBO
-
+          //std::string shadingSurfaceType() const;
+          //bool setShadingSurfaceType(std::string shadingSurfaceType);
         }
-        else if (field == SHADINGSURFACEGROUPNAME) { // LINE EDIT
+        else if (field == SHADINGSURFACENAME) { // LINE EDIT (read only)
+          //ShadingSurface
+          //boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup() const;
+          //bool setShadingSurfaceGroup(const ShadingSurfaceGroup& shadingSurfaceGroup);
+          //void resetShadingSurfaceGroup();
 
+          addLoadNameColumn(Heading(QString(SHADINGSURFACENAME), true, false),
+            CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::name),
+            CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::setName),
+            boost::optional<std::function<void(model::ShadingSurface *)>>(
+            std::function<void(model::ShadingSurface *)>(
+            [](model::ShadingSurface *t_ss)
+          {
+            t_ss->remove();
+          }
+            )
+            ),
+            DataSource(
+            allShadingSurfaces,
+            true
+            )
+            );
         }
-        else if (field == CONSTRUCTIONNAME) { // DROP ZONE
+        else if (field == CONSTRUCTIONNAME) {
+          //boost::optional<ConstructionBase> construction() const;
+          //bool setConstruction(const ConstructionBase& construction);
+          //void resetConstruction();
+          //bool isConstructionDefaulted() const;
 
         }
         else if (field == TRANSMITTANCESCHEDULENAME) { // DROP ZONE
+          //ShadingSurface
+          //boost::optional<Schedule> transmittanceSchedule() const;
+          //bool setTransmittanceSchedule(Schedule& transmittanceSchedule);
+          //void resetTransmittanceSchedule();
+
           //addDropZoneColumn(Heading(QString(TRANSMITTANCESCHEDULENAME)),
           //  CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::transmittanceSchedule),
           //  CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::setTransmittanceSchedule),
           //  boost::optional<std::function<void(model::ShadingSurface*)>>(CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::resetTransmittanceSchedule))
+          //  );
+          std::function<boost::optional<model::Schedule>(model::ShadingSurface *)>  getter;
+
+          std::function<bool(model::ShadingSurface *, model::Schedule &)> setter(
+            [](model::ShadingSurface *t_shadingSurface, model::Schedule &t_schedule) {
+            return t_shadingSurface->setTransmittanceSchedule(t_schedule);
+          }
+          );
+
+          //addNameLineEditColumn(Heading(QString(TRANSMITTANCESCHEDULENAME), true, false),
+          //  true,
+          //  false,
+          //  CastNullAdapter<model::Schedule>(&model::Schedule::name),
+          //  CastNullAdapter<model::Schedule>(&model::Schedule::setName),
+          //  boost::optional<std::function<void(model::Schedule *)>>(),
+          //  DataSource(
+          //  allTransmittanceSchedules,
+          //  false,
+          //  QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::Schedule, model::ShadingSurface>(Heading(TRANSMITTANCESCHEDULENAME),
+          //  getter,
+          //  setter))
+          //  )
           //  );
         }
         else {
@@ -350,7 +435,7 @@ namespace openstudio {
 
   void FacilityShadingGridController::refreshModelObjects()
   {
-    m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getModelObjects<model::ShadingSurface>());
+    m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getModelObjects<model::ShadingSurfaceGroup>());
     std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
   }
 
