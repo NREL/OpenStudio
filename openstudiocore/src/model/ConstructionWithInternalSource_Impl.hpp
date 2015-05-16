@@ -63,17 +63,17 @@ namespace detail {
     /** Get all output variables names that could be associated with this object. These variables
      *  may or may not be available for each simulation, need to check report variable dictionary
      *  to see if the variable is available. Each concrete class should override this method.*/
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual int renderingColorIndex() const;
+    virtual int renderingColorIndex() const override;
 
-    virtual bool eraseLayer(unsigned layerIndex);
+    virtual bool eraseLayer(unsigned layerIndex) override;
 
-    virtual bool setLayers(const std::vector<Material>& materials);
+    virtual bool setLayers(const std::vector<Material>& materials) override;
 
-    virtual bool setLayer(const ModelPartitionMaterial& modelPartitionMaterial);
+    virtual bool setLayer(const ModelPartitionMaterial& modelPartitionMaterial) override;
 
     /// Returns sourcePresentAfterLayerNumber.
     int sourcePresentAfterLayerNumber() const;

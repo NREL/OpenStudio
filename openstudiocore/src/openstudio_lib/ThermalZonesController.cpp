@@ -175,7 +175,7 @@ void ThermalZonesController::addComponentToZone(model::ThermalZone & zone, Handl
 
     std::vector<model::ZoneHVACComponent> exisitngHVACComps;
 
-    for( std::vector<model::ModelObject>::iterator it = existingComps.begin();
+    for( auto it = existingComps.begin();
          it < existingComps.end();
          ++it )
     {

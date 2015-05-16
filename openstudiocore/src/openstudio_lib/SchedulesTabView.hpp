@@ -30,7 +30,7 @@ class SchedulesTabView : public MainTabView
 
 public:
   SchedulesTabView( const model::Model & model,
-                    QWidget * parent = 0);
+                    QWidget * parent = nullptr);
 
   virtual ~SchedulesTabView() {}
 

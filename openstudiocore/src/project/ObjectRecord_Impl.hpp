@@ -112,26 +112,26 @@ namespace detail {
 
     /// bind values to a query for saving
     /// override in derived classes
-    virtual void bindValues(QSqlQuery& query) const;
+    virtual void bindValues(QSqlQuery& query) const override;
 
     /// set the last state of this object from the query (including id)
     /// override in derived classes
-    virtual void setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase);
+    virtual void setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) override;
 
     /// check that values (except id) are same as query
     /// override in derived classes
-    virtual bool compareValues(const QSqlQuery& query) const;
+    virtual bool compareValues(const QSqlQuery& query) const override;
 
     /// save values to last state
     /// override in derived classes
-    virtual void saveLastValues();
+    virtual void saveLastValues() override;
 
     /// revert values back to last state
     /// override in derived classes
-    virtual void revertToLastValues();
+    virtual void revertToLastValues() override;
 
     /// when the object changes need to save to the database and emit onChange
-    virtual void onChange(bool newVersion=true);
+    virtual void onChange(bool newVersion=true) override;
 
     /// set the UUID of the object at last edit
     bool setUuidLast(const UUID& uuidLast);

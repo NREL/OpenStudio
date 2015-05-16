@@ -91,7 +91,7 @@ class Note : public QWidget
 
   protected:
 
-  void paintEvent(QPaintEvent *)
+  void paintEvent(QPaintEvent *) override
   {
     QStyleOption opt;
     opt.init(this);

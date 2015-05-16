@@ -122,9 +122,9 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
@@ -132,7 +132,7 @@ namespace detail {
 
     /** Get the thickness of the material. Note that the construction may need to add additional
      *  thickness for an air gap, depending on context. */
-    virtual double thickness() const;
+    virtual double thickness() const override;
 
     /** The conductivitiy of the material in W/m*K. */
     double thermalConductivity() const;
@@ -156,9 +156,9 @@ namespace detail {
 
     double visibleAbsorptance() const;
 
-    virtual boost::optional<double> interiorVisibleAbsorptance() const;
+    virtual boost::optional<double> interiorVisibleAbsorptance() const override;
 
-    virtual boost::optional<double> exteriorVisibleAbsorptance() const;
+    virtual boost::optional<double> exteriorVisibleAbsorptance() const override;
 
     double visibleReflectance() const;
 
@@ -168,7 +168,7 @@ namespace detail {
 
     double visibleTransmittance() const;
 
-    virtual boost::optional<double> getVisibleTransmittance() const;
+    virtual boost::optional<double> getVisibleTransmittance() const override;
 
     Quantity getVisibleTransmittance(bool returnIP) const;
 
@@ -227,7 +227,7 @@ namespace detail {
     //@{
 
     /** Set thickness to value (m). */
-    virtual bool setThickness(double value);
+    virtual bool setThickness(double value) override;
 
     /** Sets the conductivity of the material in W/m*K, if possible. */
     bool setThermalConductivity(double value);

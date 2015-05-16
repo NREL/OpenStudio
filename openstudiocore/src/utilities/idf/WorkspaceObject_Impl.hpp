@@ -145,7 +145,7 @@ namespace detail {
     /** Get the value of field index, if index < numFields(). Optionally, if returnDefault is
      *  passed in as true, getString will return the default value for non-existent
      *  (non-extensible) fields and fields with empty data, if a default exists. */
-    virtual boost::optional<std::string> getString(unsigned index, bool returnDefault=false,bool returnUninitializedEmpty=false) const;
+    virtual boost::optional<std::string> getString(unsigned index, bool returnDefault=false,bool returnUninitializedEmpty=false) const override;
 
     /** Returns the object pointed to by the field at index, if it exists. */
     boost::optional<WorkspaceObject> getTarget(unsigned index) const;
@@ -173,19 +173,19 @@ namespace detail {
      *  otherwise. The return value and newName may differ (by an appended integer) if a
      *  conflict with newName was detected. Name conflicts will not be automatically avoided
      *  in IDF (text-only) mode. */
-    virtual boost::optional<std::string> setName(const std::string& newName);
-    virtual boost::optional<std::string> setName(const std::string& newName, bool checkValidity);
+    virtual boost::optional<std::string> setName(const std::string& newName) override;
+    virtual boost::optional<std::string> setName(const std::string& newName, bool checkValidity) override;
 
     /** Sets the name field to a new, unique name, if the name field exists and (is empty or
      *  overwrite == true). Returns false otherwise. Created name is returned. */
-    virtual boost::optional<std::string> createName();
-    virtual boost::optional<std::string> createName(bool overwrite);
+    virtual boost::optional<std::string> createName() override;
+    virtual boost::optional<std::string> createName(bool overwrite) override;
 
     /** Sets the field at index to value, if possible. Returns false if the value cannot be set for any
      *  reason. (Perhaps index >= numFields(), or setting field index to value would invalidate the
      *   object.) */
-    virtual bool setString(unsigned index, const std::string& value);
-    virtual bool setString(unsigned index, const std::string& value, bool checkValidity);
+    virtual bool setString(unsigned index, const std::string& value) override;
+    virtual bool setString(unsigned index, const std::string& value, bool checkValidity) override;
 
     /** Sets the pointer at field index to targetHandle, if possible. The field must be of \object-list
      *  type, and targetHandle must be valid (null or in the containing Workspace, and if the strictness
@@ -195,10 +195,10 @@ namespace detail {
 
     /** Pushes a new field onto the object, if possible. Returns false if the operation cannot be completed
      *  for any reason. */
-    virtual bool pushString();
-    virtual bool pushString(bool checkValidity);
-    virtual bool pushString(const std::string& value);
-    virtual bool pushString(const std::string& value, bool checkValidity);
+    virtual bool pushString() override;
+    virtual bool pushString(bool checkValidity) override;
+    virtual bool pushString(const std::string& value) override;
+    virtual bool pushString(const std::string& value, bool checkValidity) override;
 
     /** Pushes a new pointer field onto the object, pointing to targetHandle, if possible. Returns
      *  false if operation cannot be completed for any reason. */
@@ -207,8 +207,8 @@ namespace detail {
 
     /** Pops the final extensible group from the object, if possible. Returns the popped data if
      *  successful. Otherwise, the returned vector will be empty. */
-    virtual std::vector<std::string> popExtensibleGroup();
-    virtual std::vector<std::string> popExtensibleGroup(bool checkValidity);
+    virtual std::vector<std::string> popExtensibleGroup() override;
+    virtual std::vector<std::string> popExtensibleGroup(bool checkValidity) override;
 
     //@}
     /** @name Queries */
@@ -274,7 +274,7 @@ namespace detail {
     //@{
 
     /** Emits signals after batch update and error checking is complete, clears the diffs */
-    virtual void emitChangeSignals();
+    virtual void emitChangeSignals() override;
 
     //@}
 
@@ -313,7 +313,7 @@ namespace detail {
 
     // QUERY HELPERS
 
-    virtual void populateValidityReport(ValidityReport& report,bool checkNames) const;
+    virtual void populateValidityReport(ValidityReport& report,bool checkNames) const override;
 
     /** Returns true if the object is identifiable (within its collection) by IddObjectType and
      *  name. Also, if this object is in a reference list, its name must be unique within (single)
@@ -321,9 +321,9 @@ namespace detail {
     virtual bool uniquelyIdentifiableByName() const;
 
     /** Checks ObjectList fields, and calls IdfObject_Impl version. */
-    virtual bool fieldDataIsCorrectType(unsigned index) const;
+    virtual bool fieldDataIsCorrectType(unsigned index) const override;
 
-    virtual bool fieldIsNonnullIfRequired(unsigned index) const;
+    virtual bool fieldIsNonnullIfRequired(unsigned index) const override;
 
    private:
 

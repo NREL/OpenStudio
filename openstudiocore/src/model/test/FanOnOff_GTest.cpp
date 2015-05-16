@@ -162,12 +162,12 @@ TEST_F(ModelFixture, FanOnOff_CloneOneModelWithDefaultData)
   FanOnOff testObjectClone = testObject.clone(m).cast<FanOnOff>();
 
   std::vector<CurveExponent> powerCurves = m.getModelObjects<CurveExponent>();
-  for(std::vector<CurveExponent>::iterator it = powerCurves.begin(); it != powerCurves.end(); ++it) {
+  for(auto it = powerCurves.begin(); it != powerCurves.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
 
   std::vector<CurveCubic> efficiencyCurves = m.getModelObjects<CurveCubic>();
-  for(std::vector<CurveCubic>::iterator it = efficiencyCurves.begin(); it != efficiencyCurves.end(); ++it) {
+  for(auto it = efficiencyCurves.begin(); it != efficiencyCurves.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
 
@@ -234,17 +234,17 @@ TEST_F(ModelFixture, FanOnOff_CloneTwoModelsWithDefaultData)
   EXPECT_EQ(1, efficiencyCurves2.size());
 
 
-  for(std::vector<CurveExponent>::iterator it = powerCurves.begin(); it != powerCurves.end(); ++it) {
+  for(auto it = powerCurves.begin(); it != powerCurves.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
-  for(std::vector<CurveExponent>::iterator it = powerCurves2.begin(); it != powerCurves2.end(); ++it) {
+  for(auto it = powerCurves2.begin(); it != powerCurves2.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
 
-  for(std::vector<CurveCubic>::iterator it = efficiencyCurves.begin(); it != efficiencyCurves.end(); ++it) {
+  for(auto it = efficiencyCurves.begin(); it != efficiencyCurves.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
-  for(std::vector<CurveCubic>::iterator it = efficiencyCurves2.begin(); it != efficiencyCurves2.end(); ++it) {
+  for(auto it = efficiencyCurves2.begin(); it != efficiencyCurves2.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
 
@@ -297,7 +297,7 @@ TEST_F(ModelFixture, FanOnOff_CloneTwoModelsWithCustomData)
   EXPECT_EQ(1, efficiencyCurves2.size());
 
 
-  for(std::vector<CurveExponent>::iterator it = powerCurves.begin(); it != powerCurves.end(); ++it) {
+  for(auto it = powerCurves.begin(); it != powerCurves.end(); ++it) {
     if (testObject.fanPowerRatioFunctionofSpeedRatioCurve().handle() == it->handle()) {
       EXPECT_TRUE(it->parent());
     }
@@ -308,11 +308,11 @@ TEST_F(ModelFixture, FanOnOff_CloneTwoModelsWithCustomData)
       EXPECT_FALSE(it->parent());
     }
   }
-  for(std::vector<CurveExponent>::iterator it = powerCurves2.begin(); it != powerCurves2.end(); ++it) {
+  for(auto it = powerCurves2.begin(); it != powerCurves2.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
 
-  for(std::vector<CurveCubic>::iterator it = efficiencyCurves.begin(); it != efficiencyCurves.end(); ++it) {
+  for(auto it = efficiencyCurves.begin(); it != efficiencyCurves.end(); ++it) {
     if (testObject.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle() == it->handle()) {
       EXPECT_TRUE(it->parent());
     }
@@ -323,7 +323,7 @@ TEST_F(ModelFixture, FanOnOff_CloneTwoModelsWithCustomData)
       EXPECT_FALSE(it->parent());
     }
   }
-  for(std::vector<CurveCubic>::iterator it = efficiencyCurves2.begin(); it != efficiencyCurves2.end(); ++it) {
+  for(auto it = efficiencyCurves2.begin(); it != efficiencyCurves2.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
 

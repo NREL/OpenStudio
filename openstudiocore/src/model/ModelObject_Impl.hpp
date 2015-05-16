@@ -91,7 +91,7 @@ namespace detail {
 
     /// remove the object from the model, also removes any cost objects associated with this object
     /// return std::vector<IdfObject> containing any removed object(s)
-    virtual std::vector<IdfObject> remove();
+    virtual std::vector<IdfObject> remove() override;
 
     //@}
     /** @name Components and Relationships
@@ -267,7 +267,7 @@ namespace detail {
                      const std::string& scheduleDisplayName,
                      Schedule& schedule);
 
-    virtual void populateValidityReport(ValidityReport& report,bool checkNames) const;
+    virtual void populateValidityReport(ValidityReport& report,bool checkNames) const override;
 
    private:
 

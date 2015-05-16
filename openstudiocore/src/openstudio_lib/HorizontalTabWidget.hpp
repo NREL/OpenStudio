@@ -37,7 +37,7 @@ class HorizontalTabWidget : public QWidget
 
   public:
 
-  HorizontalTabWidget(QWidget * parent = 0);
+  HorizontalTabWidget(QWidget * parent = nullptr);
 
   virtual ~HorizontalTabWidget() {}
 
@@ -55,7 +55,7 @@ class HorizontalTabWidget : public QWidget
   
   protected:
 
-  void paintEvent( QPaintEvent * event );
+  void paintEvent( QPaintEvent * event ) override;
 
   private slots:
 

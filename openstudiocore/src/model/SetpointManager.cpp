@@ -92,7 +92,7 @@ namespace detail{
     std::vector<SetpointManager> _setpointManagers = node.setpointManagers();
     if( !_setpointManagers.empty() )
     {
-      for(std::vector<SetpointManager>::iterator it = _setpointManagers.begin();
+      for(auto it = _setpointManagers.begin();
         it != _setpointManagers.end();
         ++it)
       {

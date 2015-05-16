@@ -64,9 +64,9 @@ class MODEL_API ZoneHVACEquipmentList_Impl : public ModelObject_Impl {
 
   virtual ~ZoneHVACEquipmentList_Impl() {}
 
-  virtual const std::vector<std::string>& outputVariableNames() const;
+  virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual IddObjectType iddObjectType() const;
+  virtual IddObjectType iddObjectType() const override;
 
   ThermalZone thermalZone() const;
 

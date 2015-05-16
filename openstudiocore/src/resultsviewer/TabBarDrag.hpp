@@ -61,9 +61,9 @@ class TabBarDrag : public QTabBar
  protected:
   // drag event
 
-  void mousePressEvent(QMouseEvent *e);
+  void mousePressEvent(QMouseEvent *e) override;
 
-  void mouseMoveEvent(QMouseEvent *e);
+  void mouseMoveEvent(QMouseEvent *e) override;
 
   void performDrag();
 

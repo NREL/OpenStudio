@@ -66,7 +66,7 @@ class OSItem : public QWidget
     // creates a new OSItem if possible
     static OSItem* makeItem(const OSItemId& itemId, OSItemType osItemType = OSItemType::ListItem);
 
-    OSItem(const OSItemId& itemId, OSItemType osItemType = OSItemType::ListItem, QWidget * parent = 0);
+    OSItem(const OSItemId& itemId, OSItemType osItemType = OSItemType::ListItem, QWidget * parent = nullptr);
 
     virtual ~OSItem() {}
 
@@ -133,15 +133,15 @@ class OSItem : public QWidget
     void onRemoveClicked();
 
   protected:
-    void paintEvent(QPaintEvent * event);
+    void paintEvent(QPaintEvent * event) override;
 
-    void mouseReleaseEvent(QMouseEvent* event);
-    void mousePressEvent(QMouseEvent* event);
-    void mouseMoveEvent(QMouseEvent*event);
-    void leaveEvent(QEvent* event);
+    void mouseReleaseEvent(QMouseEvent* event) override;
+    void mousePressEvent(QMouseEvent* event) override;
+    void mouseMoveEvent(QMouseEvent*event) override;
+    void leaveEvent(QEvent* event) override;
     //void resizeEvent(QResizeEvent* event);
-    void dragEnterEvent(QDragEnterEvent* event);
-    void dropEvent(QDropEvent* event);
+    void dragEnterEvent(QDragEnterEvent* event) override;
+    void dropEvent(QDropEvent* event) override;
 
     bool isBold();
     void setBold(bool isBold);

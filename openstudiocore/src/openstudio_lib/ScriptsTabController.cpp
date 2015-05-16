@@ -31,7 +31,7 @@
 namespace openstudio {
 
 ScriptsTabController::ScriptsTabController()
-  : MainTabController(new ScriptsTabView(0)), scriptsTabView(dynamic_cast<ScriptsTabView *>(mainContentWidget()))
+  : MainTabController(new ScriptsTabView(nullptr)), scriptsTabView(dynamic_cast<ScriptsTabView *>(mainContentWidget()))
 {
 
   m_variableGroupListController = QSharedPointer<openstudio::measuretab::VariableGroupListController>(new openstudio::measuretab::VariableGroupListController(false, OSAppBase::instance()));

@@ -30,7 +30,7 @@ class ThermalZonesTabView : public MainTabView
 
   public:
 
-  ThermalZonesTabView(QWidget * parent = 0);
+  ThermalZonesTabView(QWidget * parent = nullptr);
 
   virtual ~ThermalZonesTabView() {};
 };

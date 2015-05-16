@@ -55,17 +55,17 @@ class MODEL_API CoilCoolingLowTempRadiantVarFlow_Impl : public StraightComponent
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
     
-    virtual unsigned inletPort();
+    virtual unsigned inletPort() override;
 
-    virtual unsigned outletPort();    
+    virtual unsigned outletPort() override;    
     
-    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const;
+    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
     //@}
     /** @name Getters */
@@ -121,7 +121,7 @@ class MODEL_API CoilCoolingLowTempRadiantVarFlow_Impl : public StraightComponent
     /** @name Other */
     //@{
     
-    bool addToNode(Node & node);
+    bool addToNode(Node & node) override;
 
     //@}
    protected:

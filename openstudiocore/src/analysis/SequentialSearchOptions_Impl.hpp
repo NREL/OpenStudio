@@ -56,7 +56,7 @@ namespace detail {
 
     virtual ~SequentialSearchOptions_Impl() {}
 
-    virtual AlgorithmOptions clone() const;
+    virtual AlgorithmOptions clone() const override;
 
     //@}
     /** @name Getters */

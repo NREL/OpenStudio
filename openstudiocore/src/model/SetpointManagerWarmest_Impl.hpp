@@ -54,15 +54,15 @@ class MODEL_API SetpointManagerWarmest_Impl : public SetpointManager_Impl {
   /** @name Virtual Methods */
   //@{
 
-  virtual const std::vector<std::string>& outputVariableNames() const;
+  virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual IddObjectType iddObjectType() const;
+  virtual IddObjectType iddObjectType() const override;
 
   //@}
   /** @name Getters */
   //@{
 
-  virtual std::string controlVariable() const;
+  virtual std::string controlVariable() const override;
 
   double minimumSetpointTemperature() const;
 
@@ -70,13 +70,13 @@ class MODEL_API SetpointManagerWarmest_Impl : public SetpointManager_Impl {
 
   std::string strategy() const;
 
-  virtual boost::optional<Node> setpointNode() const;
+  virtual boost::optional<Node> setpointNode() const override;
 
   //@}
   /** @name Setters */
   //@{
 
-  virtual bool setControlVariable(const std::string& controlVariable);
+  virtual bool setControlVariable(const std::string& controlVariable) override;
 
   bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
 
@@ -91,9 +91,9 @@ class MODEL_API SetpointManagerWarmest_Impl : public SetpointManager_Impl {
   //@}
  protected:
  private:
-  virtual bool setSetpointNode(const Node& node);
+  virtual bool setSetpointNode(const Node& node) override;
 
-  virtual void resetSetpointNode();
+  virtual void resetSetpointNode() override;
 
   REGISTER_LOGGER("openstudio.model.SetpointManagerWarmest");
 };

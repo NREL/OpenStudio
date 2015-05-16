@@ -69,9 +69,9 @@ class MODEL_API Mixer_Impl : public HVACComponent_Impl
    *  from this object on an AirLoopHVAC or PlantLoop. 
    *  @param[in]  isDemandComponent  Boolean passed in whether object is a demand or supply component
   **/
-  virtual std::vector<HVACComponent> edges(bool isDemandComponent);
+  virtual std::vector<HVACComponent> edges(bool isDemandComponent) override;
 
-  bool isRemovable() const;
+  bool isRemovable() const override;
 
   private:
 

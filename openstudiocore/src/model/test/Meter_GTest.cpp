@@ -388,7 +388,7 @@ TEST_F(ModelFixture, MeterEnumValues)
 
 class GetMeterRegex : public QRunnable
 {
-    void run()
+    void run() override
     {
       std::string subject = "Electricity:Facility";
       boost::smatch matches;
