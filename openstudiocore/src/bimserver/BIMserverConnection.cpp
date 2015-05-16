@@ -817,7 +817,7 @@ namespace bimserver {
 
   bool BIMserverConnection::deleteProjectBlocked(QString projectID, int timeout) {
     m_deleteProjectSuccess = false;
-    deleteProject(ProjectID);
+    deleteProject(projectID);
     waitForLock(timeout);
     return m_deleteProjectSuccess;
   }
