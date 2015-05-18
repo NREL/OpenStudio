@@ -22,63 +22,28 @@
 
 #include "../shared_gui_components/OSGridController.hpp"
 
+#include "SpacesSubtabGridView.hpp"
 #include "OSItem.hpp"
 
 #include "../model/Model.hpp"
 
-#include <QWidget>
-
-class QComboBox;
-class QLabel;
-
 namespace openstudio{
 
-  class ModelSubTabView;
   class SpacesInteriorPartitionsGridController;
 
-  class SpacesInteriorPartitionsGridView : public QWidget
+  class SpacesInteriorPartitionsGridView : public SpacesSubtabGridView
   {
     Q_OBJECT
 
   public:
 
-    SpacesInteriorPartitionsGridView(bool isIP, const model::Model & model, QWidget * parent = 0);
+    SpacesInteriorPartitionsGridView(bool isIP, const model::Model & model, QWidget * parent = nullptr);
 
     virtual ~SpacesInteriorPartitionsGridView() {}
-
-    std::vector<model::ModelObject> selectedObjects() const;
-
-    void enableFilter();
-
-    void disableFilter();
-
-    QComboBox * m_filters = nullptr;
 
   private:
 
     REGISTER_LOGGER("openstudio.SpacesInteriorPartitionsGridView");
-
-    bool m_isIP;
-
-    SpacesInteriorPartitionsGridController * m_gridController = nullptr;
-
-    QLabel * m_filterLabel = nullptr;
-
-  signals:
-
-    void toggleUnitsClicked(bool displayIP);
-
-    void dropZoneItemClicked(OSItem* item);
-
-    void itemSelected(OSItem * item);
-
-    void selectionCleared();
-
-    void gridRowSelected(OSItem*);
-
-    private slots:
-
-    void onDropZoneItemClicked(OSItem* item);
 
   };
 
@@ -115,17 +80,8 @@ namespace openstudio{
 
     virtual void onItemDropped(const OSItemId& itemId);
 
-    virtual void onComboBoxIndexChanged(int index);
-
-    void filterChanged(const QString & text);
-
-  private:
-
-    SpacesInteriorPartitionsGridView * gridView();
-
   };
 
 } // openstudio
 
 #endif // OPENSTUDIO_SPACESINTERIORPARTITIONSGRIDVIEW_HPP
-
