@@ -95,7 +95,7 @@ namespace detail {
      *  from this object on an AirLoopHVAC or PlantLoop. 
      *  @param[in]  isDemandComponent  Boolean passed in whether object is a demand or supply component
     **/
-    virtual std::vector<HVACComponent> edges(bool isDemandComponent);
+    virtual std::vector<HVACComponent> edges(boost::optional<HVACComponent> prev);
 
     std::vector<ModelObject> oaComponents() const;
 

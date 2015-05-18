@@ -55,7 +55,7 @@ class MODEL_API WaterToAirComponent_Impl : public HVACComponent_Impl {
    *  from this object on an AirLoopHVAC or PlantLoop. 
    *  @param[in]  isDemandComponent  Boolean passed in whether object is a demand or supply component
   **/
-  virtual std::vector<HVACComponent> edges(bool isDemandComponent);
+  virtual std::vector<HVACComponent> edges(boost::optional<HVACComponent> previous);
 
   virtual boost::optional<AirLoopHVAC> airLoopHVAC() const;
 

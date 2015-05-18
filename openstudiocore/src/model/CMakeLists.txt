@@ -1041,7 +1041,6 @@ set(${target_name}_moc
   Building_Impl.hpp
   BuildingStory_Impl.hpp
   CFactorUndergroundWallConstruction_Impl.hpp
-  ChillerAbsorptionIndirect_Impl.hpp
   ChillerElectricEIR_Impl.hpp
   CoilCoolingDXSingleSpeed_Impl.hpp
   CoilCoolingWater_Impl.hpp

@@ -190,6 +190,8 @@ namespace detail {
     unsigned supplyOutletPort();
     unsigned demandInletPort();
     unsigned demandOutletPort();
+    unsigned tertiaryInletPort() const;
+    unsigned tertiaryOutletPort() const;
 
     //@}
    protected:

@@ -257,78 +257,78 @@ TEST_F(ModelFixture, PlantLoop_edges)
   boost::optional<ModelObject> splitter_demand_obj = plantLoop.demandComponent(demandSplitter.handle());
   ASSERT_TRUE(splitter_demand_obj);
   EXPECT_EQ(demandSplitter, *splitter_demand_obj);
-  std::vector<HVACComponent> edges = demandSplitter.getImpl<detail::HVACComponent_Impl>()->edges(true); // should be nodes
-  EXPECT_EQ(2, edges.size());
-  bool found_coil_1 = false;
-  bool found_coil_2 = false;
-  for( std::vector<HVACComponent>::iterator it = edges.begin(); it != edges.end(); ++it )
-  {
-    std::vector<HVACComponent> splitter_edges = (*it).getImpl<detail::HVACComponent_Impl>()->edges(false); // should be a coil
-    ASSERT_EQ(1, splitter_edges.size());
-    if( coil1 == splitter_edges[0] ) {
-      found_coil_1 = true;
-    }
-    else if( coil2 == splitter_edges[0] ) {
-      found_coil_2 = true;
-    }
-  }
-  EXPECT_TRUE(found_coil_1);
-  EXPECT_TRUE(found_coil_2);
+  //std::vector<HVACComponent> edges = demandSplitter.getImpl<detail::HVACComponent_Impl>()->edges(true); // should be nodes
+  //EXPECT_EQ(2, edges.size());
+  //bool found_coil_1 = false;
+  //bool found_coil_2 = false;
+  //for( std::vector<HVACComponent>::iterator it = edges.begin(); it != edges.end(); ++it )
+  //{
+  //  std::vector<HVACComponent> splitter_edges = (*it).getImpl<detail::HVACComponent_Impl>()->edges(false); // should be a coil
+  //  ASSERT_EQ(1, splitter_edges.size());
+  //  if( coil1 == splitter_edges[0] ) {
+  //    found_coil_1 = true;
+  //  }
+  //  else if( coil2 == splitter_edges[0] ) {
+  //    found_coil_2 = true;
+  //  }
+  //}
+  //EXPECT_TRUE(found_coil_1);
+  //EXPECT_TRUE(found_coil_2);
 
-  boost::optional<ModelObject> pump_obj = plantLoop.supplyComponent(pump.handle());
-  ASSERT_TRUE(pump_obj);
-  EXPECT_EQ(pump, *pump_obj);
-  edges = pump.getImpl<detail::HVACComponent_Impl>()->edges(false); // should be Node
-  ASSERT_EQ(1, edges.size());
-  edges = edges[0].getImpl<detail::HVACComponent_Impl>()->edges(false); // should be Splitter
-  ASSERT_EQ(1, edges.size());
-  EXPECT_EQ(supplySplitter, edges[0]);
+  //boost::optional<ModelObject> pump_obj = plantLoop.supplyComponent(pump.handle());
+  //ASSERT_TRUE(pump_obj);
+  //EXPECT_EQ(pump, *pump_obj);
+  //edges = pump.getImpl<detail::HVACComponent_Impl>()->edges(false); // should be Node
+  //ASSERT_EQ(1, edges.size());
+  //edges = edges[0].getImpl<detail::HVACComponent_Impl>()->edges(false); // should be Splitter
+  //ASSERT_EQ(1, edges.size());
+  //EXPECT_EQ(supplySplitter, edges[0]);
 
-  boost::optional<ModelObject> splitter_supply_obj = plantLoop.supplyComponent(supplySplitter.handle());
-  ASSERT_TRUE(splitter_supply_obj);
-  EXPECT_EQ(supplySplitter, *splitter_supply_obj);
-  edges = supplySplitter.getImpl<detail::HVACComponent_Impl>()->edges(false); // should be nodes
-  EXPECT_EQ(2, edges.size());
-  bool found_chiller = false;
-  bool found_pipe = false;
-  for( std::vector<HVACComponent>::iterator it = edges.begin(); it != edges.end(); ++it )
-  {
-    std::vector<HVACComponent> splitter_edges = (*it).getImpl<detail::HVACComponent_Impl>()->edges(false); // should be chiller or pipe
-    ASSERT_EQ(1, splitter_edges.size());
-    if( chiller == splitter_edges[0] ) {
-      found_chiller = true;
-    }
-    else if( pipe1 == splitter_edges[0] ) {
-      found_pipe = true;
-    }
-  }
-  EXPECT_TRUE(found_chiller);
-  EXPECT_TRUE(found_pipe);
+  //boost::optional<ModelObject> splitter_supply_obj = plantLoop.supplyComponent(supplySplitter.handle());
+  //ASSERT_TRUE(splitter_supply_obj);
+  //EXPECT_EQ(supplySplitter, *splitter_supply_obj);
+  //edges = supplySplitter.getImpl<detail::HVACComponent_Impl>()->edges(false); // should be nodes
+  //EXPECT_EQ(2, edges.size());
+  //bool found_chiller = false;
+  //bool found_pipe = false;
+  //for( std::vector<HVACComponent>::iterator it = edges.begin(); it != edges.end(); ++it )
+  //{
+  //  std::vector<HVACComponent> splitter_edges = (*it).getImpl<detail::HVACComponent_Impl>()->edges(false); // should be chiller or pipe
+  //  ASSERT_EQ(1, splitter_edges.size());
+  //  if( chiller == splitter_edges[0] ) {
+  //    found_chiller = true;
+  //  }
+  //  else if( pipe1 == splitter_edges[0] ) {
+  //    found_pipe = true;
+  //  }
+  //}
+  //EXPECT_TRUE(found_chiller);
+  //EXPECT_TRUE(found_pipe);
 
-  boost::optional<ModelObject> supply_mixer_obj = plantLoop.supplyComponent(supplyMixer.handle());
-  ASSERT_TRUE(supply_mixer_obj);
-  EXPECT_EQ(supplyMixer, *supply_mixer_obj);
-  edges = supplyMixer.getImpl<detail::HVACComponent_Impl>()->edges(false); // should be Node
-  ASSERT_EQ(1, edges.size());
-  edges = edges[0].getImpl<detail::HVACComponent_Impl>()->edges(false); // should be Pipe
-  ASSERT_EQ(1, edges.size());
-  EXPECT_EQ(pipe2, edges[0]);
+  //boost::optional<ModelObject> supply_mixer_obj = plantLoop.supplyComponent(supplyMixer.handle());
+  //ASSERT_TRUE(supply_mixer_obj);
+  //EXPECT_EQ(supplyMixer, *supply_mixer_obj);
+  //edges = supplyMixer.getImpl<detail::HVACComponent_Impl>()->edges(false); // should be Node
+  //ASSERT_EQ(1, edges.size());
+  //edges = edges[0].getImpl<detail::HVACComponent_Impl>()->edges(false); // should be Pipe
+  //ASSERT_EQ(1, edges.size());
+  //EXPECT_EQ(pipe2, edges[0]);
 
-  boost::optional<ModelObject> splitter2_demand_obj = plantLoop2.demandComponent(demandSplitter2.handle());
-  ASSERT_TRUE(splitter2_demand_obj);
-  EXPECT_EQ(demandSplitter2, *splitter2_demand_obj);
-  edges = demandSplitter2.getImpl<detail::HVACComponent_Impl>()->edges(true); // should be node
-  EXPECT_EQ(1, edges.size());
-  bool found_demand_chiller = false;
-  for( std::vector<HVACComponent>::iterator it = edges.begin(); it != edges.end(); ++it )
-  {
-    std::vector<HVACComponent> splitter_edges = (*it).getImpl<detail::HVACComponent_Impl>()->edges(true); // should be chiller
-    ASSERT_EQ(1, splitter_edges.size());
-    if( chiller == splitter_edges[0] ) {
-      found_demand_chiller = true;
-    }
-  }
-  EXPECT_TRUE(found_demand_chiller);
+  //boost::optional<ModelObject> splitter2_demand_obj = plantLoop2.demandComponent(demandSplitter2.handle());
+  //ASSERT_TRUE(splitter2_demand_obj);
+  //EXPECT_EQ(demandSplitter2, *splitter2_demand_obj);
+  //edges = demandSplitter2.getImpl<detail::HVACComponent_Impl>()->edges(true); // should be node
+  //EXPECT_EQ(1, edges.size());
+  //bool found_demand_chiller = false;
+  //for( std::vector<HVACComponent>::iterator it = edges.begin(); it != edges.end(); ++it )
+  //{
+  //  std::vector<HVACComponent> splitter_edges = (*it).getImpl<detail::HVACComponent_Impl>()->edges(true); // should be chiller
+  //  ASSERT_EQ(1, splitter_edges.size());
+  //  if( chiller == splitter_edges[0] ) {
+  //    found_demand_chiller = true;
+  //  }
+  //}
+  //EXPECT_TRUE(found_demand_chiller);
 }
 
 TEST_F(ModelFixture, PlantLoop_removeBranchWithComponent)

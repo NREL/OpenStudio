@@ -71,17 +71,22 @@ TEST_F(ModelFixture,ChillerAbsorptionIndirect)
       EXPECT_EQ(7u,condenserPlant.demandComponents().size());
     }
 
-    //{
-    //  PlantLoop generatorPlant(m);
-    //  auto node = generatorPlant.demandInletNode();
-    //  EXPECT_TRUE(chiller.addToTertiaryNode(node));
-    //  auto plant = chiller.tertiaryPlantLoop();
-    //  EXPECT_TRUE(plant);
-    //  if( plant ) {
-    //    EXPECT_EQ(generatorPlant.handle(),plant->handle());
-    //  }
+    {
+      PlantLoop generatorPlant(m);
+      auto node = generatorPlant.demandInletNode();
+      EXPECT_TRUE(chiller.addToTertiaryNode(node));
+      auto plant = chiller.tertiaryPlantLoop();
+      EXPECT_TRUE(plant);
+      if( plant ) {
+        EXPECT_EQ(generatorPlant.handle(),plant->handle());
+      }
 
-    //  EXPECT_EQ(7u,generatorPlant.demandComponents().size());
-    //}
+      EXPECT_EQ(7u,generatorPlant.demandComponents().size());
+
+      EXPECT_TRUE( chiller.removeFromTertiaryPlantLoop() );
+      plant = chiller.tertiaryPlantLoop();
+      EXPECT_FALSE(plant);
+      EXPECT_EQ(5u,generatorPlant.demandComponents().size());
+    }
   }
 }

@@ -89,7 +89,7 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
    *  from this object on an AirLoopHVAC or PlantLoop. 
    *  @param[in]  isDemandComponent  Boolean passed in whether object is a demand or supply component
   **/
-  virtual std::vector<HVACComponent> edges(bool isDemandComponent);
+  virtual std::vector<HVACComponent> edges(boost::optional<HVACComponent> previous);
 
   virtual boost::optional<HVACComponent> containingHVACComponent() const;
 
@@ -113,9 +113,7 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
   friend class Model_Impl;
 
   mutable boost::optional<AirLoopHVAC> m_airLoopHVAC;
-
   mutable boost::optional<PlantLoop> m_plantLoop;
-
   mutable boost::optional<AirLoopHVACOutdoorAirSystem> m_airLoopHVACOutdoorAirSystem;
 
  private:

@@ -136,7 +136,7 @@ void StraightComponent_Impl::disconnect()
   this->model().disconnect(mo, this->outletPort());
 }
 
-std::vector<HVACComponent> StraightComponent_Impl::edges(bool isDemandComponent)
+std::vector<HVACComponent> StraightComponent_Impl::edges(boost::optional<HVACComponent> prev)
 {
   std::vector<HVACComponent> edges;
   if( boost::optional<ModelObject> edgeModelObject = this->outletModelObject() ) {
