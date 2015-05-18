@@ -23,8 +23,12 @@
 
 #include "../shared_gui_components/OSGridView.hpp"
 
+#include "../model/ShadingSurface.hpp"
+#include "../model/ShadingSurface_Impl.hpp"
 #include "../model/Space.hpp"
 #include "../model/Space_Impl.hpp"
+#include "../model/Surface.hpp"
+#include "../model/Surface_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/idd/IddEnums.hxx"
@@ -140,31 +144,29 @@ namespace openstudio {
           //  )
           //  );
         }
-
         else if (field == SPACENAME) {
 
         }
-
         else if (field == SHADINGSURFACEGROUP) {
 
         }
-
         else if (field == CONSTRUCTION) {
 
         }
-
         else if (field == TRANSMITTANCESCHEDULE) {
+          //ShadingSurface
+          //boost::optional<Schedule> transmittanceSchedule() const;
+          //bool setTransmittanceSchedule(Schedule& transmittanceSchedule);
+          //void resetTransmittanceSchedule();
+
 
         }
-
         else if (field == SHADEDSURFACENAME) {
 
         }
-
         else if (field == DAYLIGHTINGSHELFNAME) {
 
         }
-
         else {
           // unhandled
           OS_ASSERT(false);
