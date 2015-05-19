@@ -53,13 +53,11 @@ void ConstructionWindowDataFileInspectorView::createLayout()
   mainGridLayout->setSpacing(14);
   visibleWidget->setLayout(mainGridLayout);
 
-  int row = mainGridLayout->rowCount();
-
-  QLabel * label = nullptr;
+  //int row = mainGridLayout->rowCount();
 
   // URL
 
-  label = new QLabel("URL: ");
+  QLabel * label = new QLabel("URL: ");
   label->setObjectName("H2");
   mainGridLayout->addWidget(label, 2, 0);
 
