@@ -51,6 +51,9 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
   def run(model, runner, user_arguments)
     super(model, runner, user_arguments)
 
+    OpenStudio::Logger::instance().standardOutLogger().enable()
+    #OpenStudio::Logger::instance().standardOutLogger().setLogLevel(OpenStudio::Debug)
+
     # use the built-in error checking
     if !runner.validateUserArguments(arguments(model), user_arguments)
       return false
@@ -63,62 +66,50 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     write_sql = runner.getStringArgumentValue('write_sql', user_arguments)
     write_sql = (write_sql == 'Yes')
 
- 		#resourcePath = modelPath.parent_path / OpenStudio::Path.new(modelPath.stem)
-
-    # make the run directories
-
- 		modelPath = (OpenStudio::Path.new(Dir.pwd))
- 
 		# Radiance model goes here
-    out_dir = File.dirname(__FILE__) + "/radiance"
+    out_dir = "./radiance"
     if !File.exists?(out_dir)
       FileUtils.mkdir_p(out_dir)
     end
 
     # Energyplus "pre-run" model goes here
-    epout_dir = File.dirname(__FILE__) + "/energyplus"
+    epout_dir = "./energyplus"
     if !File.exists?(epout_dir)
       FileUtils.mkdir_p(epout_dir)
     end
 
    	# save osm to prerun dir   	
-    eplusin_file_path = OpenStudio::Path.new(out_dir + "/eplusin.osm")
+    eplusin_file_path = OpenStudio::Path.new("eplusin.osm")
     model.save(eplusin_file_path,true)
- 
-		### create the workflow
-		# make a workflow
-		workflow = OpenStudio::Runmanager::Workflow.new("ModelToRadPreprocess->ModelToIdf->ExpandObjects->EnergyPlus")
- 
+
+		# queue the job to run the prerun model 
+
 		# find EnergyPlus
 		co = OpenStudio::Runmanager::ConfigOptions.new 
 		co.fastFindEnergyPlus
-
-		# create the workflow
-		workflow.addWorkflow(OpenStudio::Runmanager::Workflow.new("ModelToRadPreprocess->ModelToIdf->ExpandObjects->EnergyPlus"))
+ 
+		# make a workflow
+		workflow = OpenStudio::Runmanager::Workflow.new("ModelToRadPreprocess->ModelToIdf->ExpandObjects->EnergyPlus")
 		workflow.add(co.getTools)
 
 		# try to minimize file path lengths
 		workflow.addParam(OpenStudio::Runmanager::JobParam.new("flatoutdir"))
 
 		# make a run manager
-		runDir = epout_dir
+
+		runDir = OpenStudio::Path.new(epout_dir)
 		runmanager_path = OpenStudio::Path.new("runmanager.db")
 		runmanager = OpenStudio::Runmanager::RunManager.new(runmanager_path, true, true, false, false)
 
-		runDir = OpenStudio::system_complete(runDir)
-		puts "Creating rundir: #{runDir}"
 		OpenStudio::makeParentFolder(runDir, OpenStudio::Path.new(), true)
 		puts "Creating workflow"
-		jobtree = workflow.create(OpenStudio::system_complete(runDir), OpenStudio::system_complete(modelPath), OpenStudio::Path.new())
+		
+		jobtree = workflow.create(OpenStudio::system_complete(runDir), OpenStudio::system_complete(eplusin_file_path), OpenStudio::Path.new(runner.lastEpwFilePath.get))
 		runmanager.enqueue(jobtree, true)
-		runmanager.getJobs.each {|job| job.setBasePath(resourcePath)}
-		puts "Running jobs"
+		#runmanager.getJobs.each {|job| job.setBasePath(resourcePath)} # DLM: need to be able to get this from runner
+		puts "Running jobs in #{runDir}"
 		runmanager.setPaused(false)
 		runmanager.waitForFinished()
-
-		# queue the job to run the prerun model 
-		
-		# get the sql file
 
     # report initial condition of model
     daylightAnalysisSpaces = []
@@ -135,6 +126,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     runner.registerFinalCondition("The building finished with #{model.getSpaces.size} spaces.")
     
     return true
+
+		# get the sql file
 
   end #run
 

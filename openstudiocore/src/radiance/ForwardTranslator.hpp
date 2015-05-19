@@ -136,12 +136,6 @@ namespace radiance {
       std::map<std::string, std::string> m_radWindowGroups; 
       int m_windowGroupId;
 
-      // get window group
-      WindowGroup getWindowGroup(const openstudio::Vector3d& outwardNormal, const model::Space& space, 
-                                 const model::ConstructionBase& construction, 
-                                 const boost::optional<model::ShadingControl>& shadingControl,
-                                 const openstudio::Point3dVector& polygon);
-      std::vector<WindowGroup> m_windowGroups;
 
       void siteShadingSurfaceGroups(const openstudio::path &t_radDir, 
           const std::vector<openstudio::model::ShadingSurfaceGroup> &t_radShadingSurfaceGroups,

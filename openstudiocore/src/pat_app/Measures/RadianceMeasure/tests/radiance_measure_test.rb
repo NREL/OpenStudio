@@ -26,8 +26,7 @@ class RadianceMeasureTest < MiniTest::Unit::TestCase
     assert_equal("write_sql", arguments[1].name)
   end
 
-
-  def test_good_argument_values
+  def test_measure
     # create an instance of the measure
     measure = RadianceMeasure.new
 
@@ -68,7 +67,7 @@ class RadianceMeasureTest < MiniTest::Unit::TestCase
     end
     
     # move to output dir
-    current_dir = Dir.pwd
+    current_dir = Dir.pwd 
     out_dir = File.dirname(__FILE__) + "/output"
     if !File.exists?(out_dir)
       FileUtils.mkdir_p(out_dir)
@@ -80,6 +79,7 @@ class RadianceMeasureTest < MiniTest::Unit::TestCase
     result = runner.result
 
     # show the output
+    puts "Yo:"
     show_output(result)
 
     # assert that it ran correctly
@@ -91,6 +91,7 @@ class RadianceMeasureTest < MiniTest::Unit::TestCase
     model.save(output_file_path,true)
     
     Dir.chdir(current_dir)
+    
   end
 
 end

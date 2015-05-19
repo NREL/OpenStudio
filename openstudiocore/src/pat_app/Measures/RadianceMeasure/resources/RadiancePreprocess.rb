@@ -2,7 +2,7 @@ module OpenStudio
 module Radiance
 
 def Radiance.getSqlFile(model)
-  puts "Hi"
+  puts "Radiance Preprocess..."
   return 0
 end
 
