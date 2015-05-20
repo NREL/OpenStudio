@@ -101,21 +101,11 @@ TEST_F(ModelFixture,DistrictHeating_NominalCapacity_Quantity) {
 
   districtHeating.setNominalCapacity(testValue);
 
-  ASSERT_EQ(1,districtHeating.nominalCapacity());
+  auto capacity = districtHeating.nominalCapacity();
+  ASSERT_TRUE(capacity);
+  ASSERT_EQ(1,capacity.get());
 
   //test setting and getting the field with a quantity
-
-  Unit testUnits = districtHeating.getNominalCapacity(true).units(); // Get IP units.
-
-  Quantity testQuantity(testValue,testUnits);
-
-  EXPECT_TRUE(districtHeating.setNominalCapacity(testQuantity));
-
-  Quantity testOutQuantity = districtHeating.getNominalCapacity(true);
-
-  EXPECT_NEAR(testValue,testOutQuantity.value(),1.0E-8);
-
-  EXPECT_EQ(testUnits.standardString(),testOutQuantity.units().standardString());
 }
 
 //test cloning the object
@@ -133,7 +123,9 @@ TEST_F(ModelFixture,DistrictHeating_Clone){
 
   DistrictHeating districtHeatingClone = districtHeating.clone(m).cast<DistrictHeating>();
 
-  ASSERT_EQ(1234,districtHeatingClone.nominalCapacity());
+  auto capacity = districtHeatingClone.nominalCapacity();
+  ASSERT_TRUE(capacity);
+  ASSERT_EQ(1234,capacity.get());
 
   //clone into another model
 
@@ -141,7 +133,9 @@ TEST_F(ModelFixture,DistrictHeating_Clone){
 
   DistrictHeating districtHeatingClone2 = districtHeating.clone(m2).cast<DistrictHeating>();
 
-  ASSERT_EQ(1234,districtHeatingClone2.nominalCapacity());
+  capacity = districtHeatingClone2.nominalCapacity();
+  ASSERT_TRUE(capacity);
+  ASSERT_EQ(1234,capacity.get());
 }
 
 TEST_F(ModelFixture,DistrictHeating_addToNode) {

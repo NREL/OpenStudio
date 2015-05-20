@@ -83,9 +83,10 @@ boost::optional<IdfObject> ForwardTranslator::translateDistrictHeating( District
 
   ///////////////////////////////////////////////////////////////////////////
   //Nominal Capacity ///////////////////////////////////////////////////
-  if( (value = modelObject.nominalCapacity()) )
-  {
-   idfObject.setDouble(DistrictHeatingFields::NominalCapacity,value.get());
+  if( modelObject.isNominalCapacityAutosized() ) {
+    idfObject.setString(DistrictHeatingFields::NominalCapacity,"Autosize");
+  } else if( (value = modelObject.nominalCapacity()) ) {
+    idfObject.setDouble(DistrictHeatingFields::NominalCapacity,value.get());
   }
   //
   ////////////////////////////////////////////////////////////////////////
