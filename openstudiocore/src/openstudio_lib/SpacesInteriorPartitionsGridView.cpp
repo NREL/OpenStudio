@@ -21,6 +21,7 @@
 
 #include "OSDropZone.hpp"
 
+#include "../shared_gui_components/OSGridController.hpp"
 #include "../shared_gui_components/OSGridView.hpp"
 
 #include "../model/ConstructionBase.hpp"
@@ -29,6 +30,8 @@
 #include "../model/DaylightingDeviceShelf_Impl.hpp"
 #include "../model/InteriorPartitionSurface.hpp"
 #include "../model/InteriorPartitionSurface_Impl.hpp"
+#include "../model/InteriorPartitionSurfaceGroup.hpp"
+#include "../model/InteriorPartitionSurfaceGroup_Impl.hpp"
 #include "../model/Space.hpp"
 #include "../model/Space_Impl.hpp"
 
@@ -45,7 +48,6 @@
 #define SELECTED "All"
 
 // GENERAL
-#define SPACENAME "Space Name" // read only
 #define INTERIORPARTITIONGROUPNAME "Interior Partition Group Name" // read only
 #define INTERIORPARTITIONNAME "Interior Partition Name"
 #define CONSTRUCTIONNAME "Construction Name"
@@ -98,11 +100,10 @@ namespace openstudio {
   {
     {
       std::vector<QString> fields;
-      //fields.push_back(SPACENAME);
-      //fields.push_back(INTERIORPARTITIONGROUPNAME);
-      //fields.push_back(INTERIORPARTITIONNAME);
-      //fields.push_back(CONSTRUCTIONNAME); 
-      //fields.push_back(CONVERTTOINTERNALMASS);
+      fields.push_back(INTERIORPARTITIONGROUPNAME);
+      fields.push_back(INTERIORPARTITIONNAME);
+      fields.push_back(CONSTRUCTIONNAME); 
+      fields.push_back(CONVERTTOINTERNALMASS);
       //fields.push_back(SURFACEAREA);
       //fields.push_back(DAYLIGHTINGSHELFNAME);
       std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("General"), fields);
@@ -135,74 +136,137 @@ namespace openstudio {
           );
       }
       else {
+
+          std::function<std::vector<model::ModelObject>(const model::Space &)> allInteriorPartitionSurfaceGroups(
+            [](const model::Space &t_space) {
+            std::vector<model::ModelObject> allModelObjects;
+            auto interiorPartitionSurfaceGroups = t_space.interiorPartitionSurfaceGroups();
+            allModelObjects.insert(allModelObjects.end(), interiorPartitionSurfaceGroups.begin(), interiorPartitionSurfaceGroups.end());
+            return allModelObjects;
+          }
+          );
+
+          std::function<std::vector<model::ModelObject>(const model::Space &)> allInteriorPartitionSurfaces(
+            [allInteriorPartitionSurfaceGroups](const model::Space &t_space) {
+            std::vector<model::ModelObject> allModelObjects;
+            for (auto interiorPartitionSurfaceGroup : allInteriorPartitionSurfaceGroups(t_space)) {
+              auto interiorPartitionSurfaces = interiorPartitionSurfaceGroup.cast<model::InteriorPartitionSurfaceGroup>().interiorPartitionSurfaces();
+              for (auto interiorPartitionSurface : interiorPartitionSurfaces) {
+                allModelObjects.push_back(interiorPartitionSurface);
+              }
+            }
+            return allModelObjects;
+          }
+          );
+          
+          std::function<std::vector<boost::optional<model::ModelObject> >(const model::Space &)> allConstructions(
+            [allInteriorPartitionSurfaces](const model::Space &t_space) {
+            std::vector<boost::optional<model::ModelObject> > allModelObjects;
+            std::vector<boost::optional<model::ConstructionBase> > allConstructions;
+            for (auto interiorPartitionSurface : allInteriorPartitionSurfaces(t_space)) {
+              auto construction = interiorPartitionSurface.cast<model::InteriorPartitionSurface>().construction();
+              if (construction) {
+                allConstructions.push_back(construction);
+              }
+              else {
+                allConstructions.push_back(boost::optional<model::ConstructionBase>());
+              }
+            }
+            allModelObjects.insert(allModelObjects.end(), allConstructions.begin(), allConstructions.end());
+
+            return allModelObjects;
+          }
+          );
+
+          std::function<std::vector<bool>(const model::Space &)> allConvertToInternalMass(
+            [allInteriorPartitionSurfaces](const model::Space &t_space) {
+            std::vector<bool> converttoInternalMass;
+            for (auto interiorPartitionSurface : allInteriorPartitionSurfaces(t_space)) {
+              converttoInternalMass.push_back(interiorPartitionSurface.cast<model::InteriorPartitionSurface>().converttoInternalMass());
+            }
+            return converttoInternalMass;
+          }
+          );
+
         if (field == SELECTED) {
+
           auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
           checkbox->setToolTip("Check to select all rows");
           connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpacesInteriorPartitionsGridController::selectAllStateChanged);
 
-          addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row");
-          //addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row",
-          //  DataSource(
-          //  allLoads,
-          //  true
-          //  )
-          //  );
-        }
-        else if (field == SPACENAME) {
-          //boost::optional<Space> space() const;
-
-          addNameLineEditColumn(Heading(QString(SPACENAME), false, false),
-            false,
-            false,
-            CastNullAdapter<model::Space>(&model::Space::name),
-            std::function<boost::optional<std::string>(model::Space *, const std::string &)>()
+          addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row",
+            DataSource(
+            allInteriorPartitionSurfaces,
+            true
+            )
             );
-
         }
         else if (field == INTERIORPARTITIONGROUPNAME) {
-          //boost::optional<InteriorPartitionSurfaceGroup> interiorPartitionSurfaceGroup() const;
-          //bool setInteriorPartitionSurfaceGroup(const InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup);
-          //void resetInteriorPartitionSurfaceGroup();
-
-          //addNameLineEditColumn(Heading(QString(INTERIORPARTITIONGROUPNAME), true, false),
-          //  true,
-          //  false,
-          //  CastNullAdapter<model::SpaceLoadDefinition>(&model::SpaceLoadDefinition::name),
-          //  CastNullAdapter<model::SpaceLoadDefinition>(&model::SpaceLoadDefinition::setName),
-          //  boost::optional<std::function<void(model::SpaceLoadDefinition *)>>(),
-          //  DataSource(
-          //  allDefinitions,
-          //  false,
-          //  QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<model::SpaceLoadDefinition, model::SpaceType>(Heading(INTERIORPARTITIONGROUPNAME),
-          //  getter, setter))
-          //  )
-          //  );
+          addNameLineEditColumn(Heading(QString(INTERIORPARTITIONGROUPNAME), true, false),
+            false,
+            false,
+            CastNullAdapter<model::InteriorPartitionSurfaceGroup>(&model::InteriorPartitionSurfaceGroup::name),
+            CastNullAdapter<model::InteriorPartitionSurfaceGroup>(&model::InteriorPartitionSurfaceGroup::setName),
+            boost::optional<std::function<void(model::InteriorPartitionSurfaceGroup *)>>(),
+            DataSource(
+            allInteriorPartitionSurfaceGroups,
+            true)
+            );
         }
         else if (field == INTERIORPARTITIONNAME) {
-          //addNameLineEditColumn(Heading(QString(NAME), false, false),
-          //false,
-          //false,
-          //CastNullAdapter<model::InteriorPartitionSurface>(&model::InteriorPartitionSurface::name),
-          //CastNullAdapter<model::InteriorPartitionSurface>(&model::InteriorPartitionSurface::setName)
-          //);
-
+          addNameLineEditColumn(Heading(QString(INTERIORPARTITIONNAME), true, false),
+          false,
+          false,
+          CastNullAdapter<model::InteriorPartitionSurface>(&model::InteriorPartitionSurface::name),
+          CastNullAdapter<model::InteriorPartitionSurface>(&model::InteriorPartitionSurface::setName),
+          boost::optional<std::function<void(model::InteriorPartitionSurface *)>>(),
+          DataSource(
+          allInteriorPartitionSurfaces,
+          true)
+          );
         }
         else if (field == CONSTRUCTIONNAME) {
-          //boost::optional<ConstructionBase> construction() const;
-          //bool setConstruction(const ConstructionBase& construction);
-          //void resetConstruction();
-          //bool isConstructionDefaulted() const;
-
+          addDropZoneColumn(Heading(QString(CONSTRUCTIONNAME), true, false),
+            CastNullAdapter<model::InteriorPartitionSurface>(&model::InteriorPartitionSurface::construction),
+            CastNullAdapter<model::InteriorPartitionSurface>(&model::InteriorPartitionSurface::setConstruction),
+            boost::optional<std::function<void(model::InteriorPartitionSurface*)> >(NullAdapter(&model::InteriorPartitionSurface::resetConstruction)),
+            DataSource(
+            allConstructions, 
+            true
+            )
+            );
         }
         else if (field == CONVERTTOINTERNALMASS) {
-          //bool converttoInternalMass() const;
-          //void setConverttoInternalMass(bool converttoInternalMass);
-          //void resetConverttoInternalMass();
-          //bool isConverttoInternalMassDefaulted() const;
-
+          addCheckBoxColumn(Heading(QString(CONVERTTOINTERNALMASS), true, false),
+            std::string("Check to enable convert to InternalMass."),
+            NullAdapter(&model::InteriorPartitionSurface::converttoInternalMass),
+            NullAdapter(&model::InteriorPartitionSurface::setConverttoInternalMass),
+            DataSource(
+            allConvertToInternalMass,
+            true
+            )
+            );
         }
         else if (field == SURFACEAREA) {
-          //boost::optional<double> surfaceArea() const;
+
+          std::function<bool(model::InteriorPartitionSurface *, double)> setter(
+            [](model::InteriorPartitionSurface *t_interiorPartitionSurface, double t_arg) {
+            return t_interiorPartitionSurface->setSurfaceArea(t_arg);
+          }
+          );
+
+          addValueEditColumn(Heading(QString(SURFACEAREA)),
+            CastNullAdapter<model::InteriorPartitionSurface>(&model::InteriorPartitionSurface::surfaceArea),
+            setter//,
+            //boost::optional<std::function<void(model::ModelObject *)>>(),
+            //boost::optional<std::function<bool(model::ModelObject *)>>()//,
+            //DataSource(
+            //allInteriorPartitionSurfaces,
+            //true
+            //)
+            );
+
+          //boost::optional<double> surfaceArea() const; // TODO this optional is causing troubles
           //bool setSurfaceArea(boost::optional<double> surfaceArea);
           //bool setSurfaceArea(double surfaceArea);
           //void resetSurfaceArea();

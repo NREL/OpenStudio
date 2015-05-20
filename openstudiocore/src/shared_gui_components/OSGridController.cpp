@@ -1284,6 +1284,9 @@ namespace openstudio {
     }
 
     if (hasSubRows) {
+      // You need a holder, either by specifying a column which has a placeholder,
+      // or by specifying a column which has a DataSource DropZoneConcept
+      OS_ASSERT(!holders.empty());
       holders.back()->setObjectName("InnerCellBottom");
     }
 
