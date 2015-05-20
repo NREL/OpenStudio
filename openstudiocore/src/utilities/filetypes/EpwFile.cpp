@@ -321,32 +321,6 @@ double AirState::R()
   return 8314.472/28.966; // eqn 1 from ASHRAE Fundamentals 2009 Ch. 1
 }
 
-/*
-AirState::AirState(double drybulb, double dewpoint, double pressure) : m_drybulb(drybulb), m_dewpoint(dewpoint),
-  m_pressure(pressure), m_specified(AirStateData::DryBulbDewPointPressure)
-{}
-
-AirState::AirState(double v0, double v1, double v2, const AirStateData &data)
-{
-  switch (data.value()) {
-  case AirStateData::DryBulbRelativeHumidityPressure:
-    m_drybulb = v0;
-    m_pressure = v2;
-    // NOT DONE!
-    break;
-  case AirStateData::DryBulbWetBulbPressure:
-    m_drybulb = v0;
-    // NOT DONE!
-    break;
-  default:
-    m_drybulb = v0;
-    m_dewpoint = v1;
-    m_pressure = v2;
-    m_specified = AirStateData::DryBulbDewPointPressure;
-  }
-}
-*/
-
 EpwDataPoint::EpwDataPoint() :
   m_year(1),
   m_month(1),
@@ -2299,16 +2273,26 @@ bool EpwFile::translateToWth(openstudio::path path, std::string description)
   }
 
   // Cheat to get data at the start time - this will need to change
-  openstudio::EpwDataPoint firstPt = data()[data().size()-1];
+  openstudio::EpwDataPoint lastPt = data()[data().size()-1];
+  std::vector<std::string> epwstrings = lastPt.toEpwStrings();
   openstudio::DateTime dateTime = data()[0].dateTime();
   openstudio::Time dt = timeStep();
   dateTime -= dt;
-//  firstPt.setDateTime(dateTime);
+  epwstrings[0] = std::to_string(dateTime.date().year());
+  epwstrings[1] = std::to_string(month(dateTime.date().monthOfYear()));
+  epwstrings[2] = std::to_string(dateTime.date().dayOfMonth());
+  epwstrings[3] = std::to_string(dateTime.time().hours());
+  epwstrings[4] = std::to_string(dateTime.time().minutes());
+  boost::optional<openstudio::EpwDataPoint> firstPtOpt = EpwDataPoint::fromEpwStrings(epwstrings);
+  if (!firstPtOpt) {
+    LOG(Error, "Failed to create starting data point for WTH file");
+    return false;
+  }
 
   stream <<"!Date\tTime\tTa [K]\tPb [Pa]\tWs [m/s]\tWd [deg]\tHr [g/kg]\tIth [kJ/m^2]\tIdn [kJ/m^2]\tTs [K]\tRn [-]\tSn [-]\n";
-  boost::optional<std::string> output = firstPt.toWthString();
+  boost::optional<std::string> output = firstPtOpt.get().toWthString();
   if(!output) {
-    LOG(Error, "Translation to WTH has failed");
+    LOG(Error, "Translation to WTH has failed on starting data point");
     fp.close();
     return false;
   }
@@ -2316,7 +2300,7 @@ bool EpwFile::translateToWth(openstudio::path path, std::string description)
   for(unsigned int i=0;i<data().size();i++) {
     output = data()[i].toWthString();
     if(!output) {
-      LOG(Error, "Translation to WTH has failed");
+      LOG(Error, "Translation to WTH has failed on data point " << i);
       fp.close();
       return false;
     }
