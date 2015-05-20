@@ -490,7 +490,7 @@ void OpenStudioApp::importIFC()
     parent = this->currentDocument()->mainWindow();
   }
   
-  bimserver::ProjectImporter *projectImportation = new bimserver::ProjectImporter(parent);
+  auto projectImportation = new bimserver::ProjectImporter(parent);
   boost::optional<model::Model> model = projectImportation->run();
   projectImportation->close();
 

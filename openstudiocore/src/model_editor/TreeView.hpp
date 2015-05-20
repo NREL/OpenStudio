@@ -45,9 +45,9 @@ signals:
   void eventUpDnKeyRelease();
 
 protected:
-  virtual void enterEvent(QEvent * event);
-  virtual void leaveEvent(QEvent * event);
-  virtual void keyReleaseEvent(QKeyEvent * event);
+  virtual void enterEvent(QEvent * event) override;
+  virtual void leaveEvent(QEvent * event) override;
+  virtual void keyReleaseEvent(QKeyEvent * event) override;
 
 private:
 

@@ -63,17 +63,17 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
     //@{
 
-    std::vector<IdfObject> remove();
+    std::vector<IdfObject> remove() override;
 
-    ModelObject clone(Model model) const;
+    ModelObject clone(Model model) const override;
 
     std::vector<RefrigerationCase> cases() const;
 

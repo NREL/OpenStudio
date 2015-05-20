@@ -45,7 +45,7 @@ class OSViewSwitcher : public QWidget
 
   protected:
 
-  void paintEvent(QPaintEvent *);
+  void paintEvent(QPaintEvent *) override;
 
   private:
 

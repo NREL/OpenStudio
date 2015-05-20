@@ -35,7 +35,7 @@ class ConstructionsView : public ModelSubTabView
 
     ConstructionsView(bool isIP,
                       const openstudio::model::Model& model,
-                      QWidget * parent = 0);
+                      QWidget * parent = nullptr);
 
     virtual ~ConstructionsView() {}
 
@@ -53,17 +53,17 @@ class ConstructionsInspectorView : public ModelObjectInspectorView
 
     ConstructionsInspectorView(bool isIP,
                                const model::Model& model,
-                               QWidget * parent = 0);
+                               QWidget * parent = nullptr);
 
     virtual ~ConstructionsInspectorView() {}
 
   protected:
 
-    virtual void onClearSelection();
+    virtual void onClearSelection() override;
 
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
 
-    virtual void onUpdate();
+    virtual void onUpdate() override;
 
   private:
 
@@ -87,7 +87,7 @@ class ConstructionsInspectorView : public ModelObjectInspectorView
 
   public slots:
 
-    void toggleUnits(bool displayIP);
+    void toggleUnits(bool displayIP) override;
 
 };
 

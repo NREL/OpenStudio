@@ -42,17 +42,17 @@ namespace detail {
 
     virtual ~ConnectorSplitter_Impl();
 
-    virtual const std::vector<std::string> & outputVariableNames() const;
+    virtual const std::vector<std::string> & outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    std::vector<openstudio::IdfObject> remove();
+    std::vector<openstudio::IdfObject> remove() override;
 
-    unsigned inletPort();
+    unsigned inletPort() override;
 
-    unsigned outletPort(unsigned branchIndex);
+    unsigned outletPort(unsigned branchIndex) override;
 
-    unsigned nextOutletPort();
+    unsigned nextOutletPort() override;
 
     //boost::optional<ModelObject> inletModelObject();
     //
@@ -70,9 +70,9 @@ namespace detail {
     //
     //void removePortForBranch(unsigned branchIndex);
 
-    virtual bool addToNode(Node & node);
+    virtual bool addToNode(Node & node) override;
 
-    virtual ModelObject clone(Model model) const;
+    virtual ModelObject clone(Model model) const override;
 
     boost::optional<ModelObject> zoneEquipmentForBranch(int branchIndex);
 

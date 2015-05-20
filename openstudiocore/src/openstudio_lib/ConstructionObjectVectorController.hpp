@@ -38,15 +38,15 @@ public:
 
 protected:
   
-  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle);
+  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle) override;
   
-  virtual std::vector<OSItemId> makeVector();
+  virtual std::vector<OSItemId> makeVector() override;
   
-  virtual void onRemoveItem(OSItem* item);
+  virtual void onRemoveItem(OSItem* item) override;
   
-  virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId);
+  virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId) override;
   
-  virtual void onDrop(const OSItemId& itemId);
+  virtual void onDrop(const OSItemId& itemId) override;
 
 private:
 

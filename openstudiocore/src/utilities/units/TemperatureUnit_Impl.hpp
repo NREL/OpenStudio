@@ -44,9 +44,9 @@ namespace detail {
 
     void setAsRelative();
 
-    virtual void operator*=(const Unit& rUnit);
+    virtual void operator*=(const Unit& rUnit) override;
 
-    virtual void operator/=(const Unit& rUnit);
+    virtual void operator/=(const Unit& rUnit) override;
 
     //@}
    protected:

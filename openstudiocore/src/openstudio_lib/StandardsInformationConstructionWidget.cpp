@@ -457,7 +457,7 @@ void StandardsInformationConstructionWidget::detach()
   m_construction.reset(); 
 
   if (m_standardsInformation){
-    disconnect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), 0, this, 0);
+    disconnect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), nullptr, this, nullptr);
     m_standardsInformation.reset();
   }
 

@@ -90,7 +90,7 @@ class VariableGroupItemDelegate : public OSItemDelegate
   public:
   virtual ~VariableGroupItemDelegate() {}
 
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
+  QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 };
 
 class VariableItemDelegate : public OSItemDelegate
@@ -100,7 +100,7 @@ class VariableItemDelegate : public OSItemDelegate
   public:
   virtual ~VariableItemDelegate() {}
 
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
+  QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 };
 
 class MeasureItemDelegate : public OSItemDelegate
@@ -110,7 +110,7 @@ class MeasureItemDelegate : public OSItemDelegate
   public:
   virtual ~MeasureItemDelegate() {}
 
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
+  QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 };
 
 class DesignAltListController : public OSListController
@@ -122,9 +122,9 @@ class DesignAltListController : public OSListController
   DesignAltListController(QSharedPointer<OSItemSelectionController> measureSelectionController);
   virtual ~DesignAltListController() {}
 
-  QSharedPointer<OSListItem> itemAt(int i);
+  QSharedPointer<OSListItem> itemAt(int i) override;
 
-  int count();
+  int count() override;
 
   void removeItemForDataPoint(analysis::DataPoint datapoint);
 
@@ -185,7 +185,7 @@ class DesignAltItemDelegate : public OSItemDelegate
 {
   Q_OBJECT
 
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
+  QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 
   public:
   virtual ~DesignAltItemDelegate() {}
@@ -201,9 +201,9 @@ class PerturbationListController : public OSListController
   PerturbationListController(DesignAltItem * designAltItem);
   virtual ~PerturbationListController() {}
 
-  QSharedPointer<OSListItem> itemAt(int i);
+  QSharedPointer<OSListItem> itemAt(int i) override;
 
-  int count();
+  int count() override;
 
   private:
 
@@ -234,7 +234,7 @@ class PerturbationItemDelegate : public OSItemDelegate
 {
   Q_OBJECT
 
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
+  QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 
   public:
 

@@ -453,11 +453,11 @@ SpaceLoadInstanceMiniView::SpaceLoadInstanceMiniView(const model::SpaceLoadInsta
 {
   this->setObjectName("SpaceLoadInstanceMiniView");
 
-  QGridLayout* mainGridLayout = new QGridLayout();
+  auto mainGridLayout = new QGridLayout();
   this->setLayout(mainGridLayout);
 
   // top row
-  QHBoxLayout* hLayout = new QHBoxLayout();
+  auto hLayout = new QHBoxLayout();
 
   // icon
   static QIcon defaultIcon(":images/bug.png");
@@ -467,7 +467,7 @@ SpaceLoadInstanceMiniView::SpaceLoadInstanceMiniView(const model::SpaceLoadInsta
     icon = QIcon(*pixMap);
   }
 
-  QLabel* label = new QLabel();
+  auto label = new QLabel();
   label->setPixmap(icon.pixmap(QSize(24,24)));
   hLayout->addWidget(label);
 
@@ -510,7 +510,7 @@ SpaceLoadInstanceMiniView::SpaceLoadInstanceMiniView(const model::SpaceLoadInsta
   // bottom row
 
   // multiplier
-  QVBoxLayout* vLayout = new QVBoxLayout();
+  auto vLayout = new QVBoxLayout();
 
   label = new QLabel();
   label->setText("Multiplier: ");
@@ -556,14 +556,14 @@ SpaceLoadInstanceMiniView::SpaceLoadInstanceMiniView(const model::SpaceLoadInsta
   mainGridLayout->addLayout(vLayout,1,1);
 
   // schedule
-  QStackedWidget* scheduleStack = new QStackedWidget();
+  auto scheduleStack = new QStackedWidget();
   scheduleStack->setContentsMargins(0,0,0,0);
 
-  QWidget* noScheduleWidget = new QWidget();
+  auto noScheduleWidget = new QWidget();
   noScheduleWidget->setContentsMargins(0,0,0,0);
   int noScheduleIndex = scheduleStack->addWidget(noScheduleWidget);
 
-  QWidget* scheduleWidget = new QWidget();
+  auto scheduleWidget = new QWidget();
   vLayout = new QVBoxLayout();
   vLayout->setContentsMargins(0,0,0,0);
   scheduleWidget->setLayout(vLayout);
@@ -898,7 +898,7 @@ void SpaceLoadInstancesWidget::refresh()
   m_dirty = false;
 
   QLayoutItem *child; 
-  while ((child = m_mainVLayout->takeAt(0)) != 0) { 
+  while ((child = m_mainVLayout->takeAt(0)) != nullptr) { 
     QWidget* widget = child->widget();
     if (widget){
       delete widget;
@@ -935,14 +935,14 @@ void SpaceLoadInstancesWidget::refresh()
   m_mainVLayout->addWidget(line);
 
   // new load drop zone
-  QHBoxLayout* hLayout = new QHBoxLayout();
+  auto hLayout = new QHBoxLayout();
   hLayout->setContentsMargins(0,0,0,0);
   hLayout->setSpacing(10);
-  QVBoxLayout* vLayout = new QVBoxLayout();
+  auto vLayout = new QVBoxLayout();
   vLayout->setContentsMargins(0,0,0,0);
   vLayout->setSpacing(10);
 
-  QLabel* label = new QLabel();
+  auto label = new QLabel();
   label->setText("Add New Load:");
   label->setObjectName("H2");
   vLayout->addWidget(label);
@@ -951,7 +951,7 @@ void SpaceLoadInstancesWidget::refresh()
   vLayout->addWidget(m_newSpaceLoadDropZone, 1);
   hLayout->addLayout(vLayout);
 
-  QWidget* widget = new QWidget();
+  auto widget = new QWidget();
   widget->setLayout(hLayout);
   
   m_mainVLayout->addWidget(widget);
@@ -1067,7 +1067,7 @@ void SpaceLoadInstancesWidget::addSpaceTypeLoads(const model::SpaceType& spaceTy
 
 void SpaceLoadInstancesWidget::addSpaceLoadInstance(const model::SpaceLoadInstance& spaceLoadInstance, bool isDefault)
 {
-  SpaceLoadInstanceMiniView* spaceLoadInstanceMiniView = new SpaceLoadInstanceMiniView(spaceLoadInstance, isDefault);
+  auto spaceLoadInstanceMiniView = new SpaceLoadInstanceMiniView(spaceLoadInstance, isDefault);
 
   connect(spaceLoadInstanceMiniView, &SpaceLoadInstanceMiniView::removeClicked, this, &SpaceLoadInstancesWidget::remove);
 

@@ -95,9 +95,9 @@ class OSIntegerEdit2: public QLineEdit {
 
  protected:
 
-  virtual void focusInEvent(QFocusEvent * e);
+  virtual void focusInEvent(QFocusEvent * e) override;
 
-  virtual void focusOutEvent(QFocusEvent * e);
+  virtual void focusOutEvent(QFocusEvent * e) override;
 
  signals:
 

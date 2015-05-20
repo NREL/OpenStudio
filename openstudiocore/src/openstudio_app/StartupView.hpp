@@ -42,7 +42,7 @@ class StartupView : public QWidget
 
   virtual ~StartupView() {}
 
-  QSize sizeHint() const;
+  QSize sizeHint() const override;
 
   signals:
 
@@ -56,13 +56,13 @@ class StartupView : public QWidget
 
   protected:
 
-  void mouseMoveEvent(QMouseEvent *event);
+  void mouseMoveEvent(QMouseEvent *event) override;
 
-  void mousePressEvent(QMouseEvent *event);
+  void mousePressEvent(QMouseEvent *event) override;
 
-  void resizeEvent(QResizeEvent * event);
+  void resizeEvent(QResizeEvent * event) override;
 
-  void paintEvent(QPaintEvent *event);
+  void paintEvent(QPaintEvent *event) override;
 
   private slots:
 
@@ -90,11 +90,11 @@ class TemplateListModel : public QAbstractListModel
 
   TemplateListModel(QObject * parent = nullptr);
 
-  int rowCount( const QModelIndex & parent = QModelIndex() ) const;
+  int rowCount( const QModelIndex & parent = QModelIndex() ) const override;
 
-  QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
+  QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const override;
 
-  Qt::ItemFlags flags(const QModelIndex &index) const;
+  Qt::ItemFlags flags(const QModelIndex &index) const override;
 
   private:
 

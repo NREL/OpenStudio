@@ -56,16 +56,16 @@ namespace detail {
 
 
     protected:
-      virtual std::string detailedDescriptionImpl() const
+      virtual std::string detailedDescriptionImpl() const override
       {
         return "";
       }
 
-      virtual std::string descriptionImpl() const;
-      virtual ToolVersion getToolVersionImpl(const std::string &t_toolName) const;
-      virtual void startHandlerImpl();
+      virtual std::string descriptionImpl() const override;
+      virtual ToolVersion getToolVersionImpl(const std::string &t_toolName) const override;
+      virtual void startHandlerImpl() override;
 
-      virtual void basePathChanged();
+      virtual void basePathChanged() override;
 
     private:
       REGISTER_LOGGER("openstudio.runmanager.PreviewIESJob");

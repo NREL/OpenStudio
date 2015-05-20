@@ -43,11 +43,11 @@ public:
 
 private:
   // send float or dock signal
-  void mouseDoubleClickEvent(QMouseEvent *evt);
+  void mouseDoubleClickEvent(QMouseEvent *evt) override;
   QString m_filename;
   QString m_alias;
-  void closeEvent(QCloseEvent *evt);
-  void leaveEvent(QEvent *evt);
+  void closeEvent(QCloseEvent *evt) override;
+  void leaveEvent(QEvent *evt) override;
 
 signals: 
   void signalFloatOrDockMe(resultsviewer::BrowserView *browser);

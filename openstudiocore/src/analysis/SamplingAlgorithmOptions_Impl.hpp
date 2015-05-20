@@ -48,7 +48,7 @@ namespace detail {
 
     virtual ~SamplingAlgorithmOptions_Impl() {}
 
-    virtual AlgorithmOptions clone() const;
+    virtual AlgorithmOptions clone() const override;
 
     //@}
     /** @name Getters */
@@ -123,7 +123,7 @@ namespace detail {
     /** @name Absent or Protected in Public Class */
     //@{
 
-    virtual QVariant toVariant() const;
+    virtual QVariant toVariant() const override;
 
     static SamplingAlgorithmOptions fromVariant(const QVariant& variant, const VersionString& version);
 

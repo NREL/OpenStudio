@@ -111,7 +111,7 @@ QWidget *OSAppBase::mainWidget()
   {
     return document->mainWindow();
   } else {
-    return 0;
+    return nullptr;
   }
 }
 

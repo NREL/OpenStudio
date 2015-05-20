@@ -64,38 +64,38 @@ namespace detail {
     //@}
 
     // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const;
+    virtual boost::optional<ParentObject> parent() const override;
 
     // return any children objects in the hierarchy
-    virtual std::vector<ModelObject> children() const;
+    virtual std::vector<ModelObject> children() const override;
 
     /// set the parent, child may have to call methods on the parent
-    bool setParent(ParentObject& newParent);
+    bool setParent(ParentObject& newParent) override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
     
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     /// should subtract this surface from parent's gross area for net area
-    virtual bool subtractFromGrossArea() const;
+    virtual bool subtractFromGrossArea() const override;
 
     /// get the construction object and search distance
-    virtual boost::optional<std::pair<ConstructionBase, int> > constructionWithSearchDistance() const;
+    virtual boost::optional<std::pair<ConstructionBase, int> > constructionWithSearchDistance() const override;
 
     /// Returns true if the construction is not directly referenced by this surface .
-    virtual bool isConstructionDefaulted() const;
+    virtual bool isConstructionDefaulted() const override;
 
     /// set the construction object
-    virtual bool setConstruction(const ConstructionBase& construction);
+    virtual bool setConstruction(const ConstructionBase& construction) override;
 
     /// Resets the construction object.
-    virtual void resetConstruction();
+    virtual void resetConstruction() override;
 
     /// Returns the containing PlanarSurfaceGroup if available.
-    virtual boost::optional<PlanarSurfaceGroup> planarSurfaceGroup() const;
+    virtual boost::optional<PlanarSurfaceGroup> planarSurfaceGroup() const override;
 
     /// Returns the containing Space if available.
-    virtual boost::optional<Space> space() const;
+    virtual boost::optional<Space> space() const override;
 
     /** @name Getters */
     //@{

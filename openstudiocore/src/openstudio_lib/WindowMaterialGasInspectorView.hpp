@@ -44,17 +44,17 @@ class WindowMaterialGasInspectorView : public ModelObjectInspectorView
 
   public:
 
-    WindowMaterialGasInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = 0);
+    WindowMaterialGasInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = nullptr);
 
     virtual ~WindowMaterialGasInspectorView() {}
 
   protected:
 
-    virtual void onClearSelection();
+    virtual void onClearSelection() override;
 
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
 
-    virtual void onUpdate();
+    virtual void onUpdate() override;
 
   private:
 

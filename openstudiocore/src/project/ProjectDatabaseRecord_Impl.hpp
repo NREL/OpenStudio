@@ -50,26 +50,26 @@ namespace detail {
     virtual ~ProjectDatabaseRecord_Impl() {}
 
     /// get name of the database table
-    virtual std::string databaseTableName() const;
+    virtual std::string databaseTableName() const override;
 
     /// get parent object
-    virtual boost::optional<ObjectRecord> parent() const;
+    virtual boost::optional<ObjectRecord> parent() const override;
 
     /// get child objects
-    virtual std::vector<ObjectRecord> children() const;
+    virtual std::vector<ObjectRecord> children() const override;
 
     /// get resource objects
-    virtual std::vector<ObjectRecord> resources() const;
+    virtual std::vector<ObjectRecord> resources() const override;
 
     /// get join record objects
-    virtual std::vector<JoinRecord> joinRecords() const;
+    virtual std::vector<JoinRecord> joinRecords() const override;
 
     /// save the row for just this object in the database
     /// requires ProjectDatabase as called in ProjectDatabase ctor/dtor
-    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database) override;
 
     virtual void updatePathData(const openstudio::path& originalBase,
-                                const openstudio::path& newBase);
+                                const openstudio::path& newBase) override;
 
     /** @name Getters */
     //@{
@@ -92,23 +92,23 @@ namespace detail {
    protected:
     /// bind values to a query for saving
     /// override in derived classes
-    virtual void bindValues(QSqlQuery& query) const;
+    virtual void bindValues(QSqlQuery& query) const override;
 
     /// set the last state of this object from the query (including id)
     /// override in derived classes
-    virtual void setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase);
+    virtual void setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) override;
 
     /// check that values (except id) are same as query
     /// override in derived classes
-    virtual bool compareValues(const QSqlQuery& query) const;
+    virtual bool compareValues(const QSqlQuery& query) const override;
 
     /// save values to last state
     /// override in derived classes
-    virtual void saveLastValues();
+    virtual void saveLastValues() override;
 
     /// revert values back to last state
     /// override in derived classes
-    virtual void revertToLastValues();
+    virtual void revertToLastValues() override;
 
    private:
 

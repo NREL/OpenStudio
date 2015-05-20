@@ -564,7 +564,7 @@ namespace sdd {
       // with their supply AND demand sides.  ie. After zones are attached.
       std::vector<model::PlantLoop> plantLoops = result->getModelObjects<model::PlantLoop>();
 
-      for( std::vector<model::PlantLoop>::iterator plantLoop = plantLoops.begin();
+      for( auto plantLoop = plantLoops.begin();
            plantLoop != plantLoops.end();
            ++plantLoop )
       {
@@ -577,7 +577,7 @@ namespace sdd {
         plantLoop->supplyMixer().setName(plantName + " Supply Mixer"); 
 
         std::vector<model::ModelObject> comps = plantLoop->components();
-        for( std::vector<model::ModelObject>::iterator it = comps.begin();
+        for( auto it = comps.begin();
              it != comps.end();
              ++it )
         {
@@ -613,7 +613,7 @@ namespace sdd {
               int branchI = 1;
               std::vector<model::ModelObject> splitterOutletObjects = 
                 comp->outletModelObjects();
-              for( std::vector<model::ModelObject>::iterator it = splitterOutletObjects.begin();
+              for( auto it = splitterOutletObjects.begin();
                    it != splitterOutletObjects.end();
                    ++it )
               {
@@ -639,7 +639,7 @@ namespace sdd {
 
       std::vector<model::AirLoopHVAC> airSystems = result->getModelObjects<model::AirLoopHVAC>();
 
-      for( std::vector<model::AirLoopHVAC>::iterator airSystem = airSystems.begin();
+      for( auto airSystem = airSystems.begin();
            airSystem != airSystems.end();
            ++airSystem )
       {
@@ -650,7 +650,7 @@ namespace sdd {
         airSystem->demandMixer().setName(systemName + " Zone Mixer"); 
 
         std::vector<model::ModelObject> comps = airSystem->components();
-        for( std::vector<model::ModelObject>::iterator it = comps.begin();
+        for( auto it = comps.begin();
              it != comps.end();
              ++it )
         {
@@ -675,7 +675,7 @@ namespace sdd {
               int branchI = 1;
               std::vector<model::ModelObject> splitterOutletObjects = 
                 comp->outletModelObjects();
-              for( std::vector<model::ModelObject>::iterator it = splitterOutletObjects.begin();
+              for( auto it = splitterOutletObjects.begin();
                    it != splitterOutletObjects.end();
                    ++it )
               {
@@ -722,7 +722,7 @@ namespace sdd {
       }
 
       std::vector<model::ZoneHVACComponent> zoneEquipment = result->getModelObjects<model::ZoneHVACComponent>();
-      for( std::vector<model::ZoneHVACComponent>::iterator zoneComp = zoneEquipment.begin();
+      for( auto zoneComp = zoneEquipment.begin();
            zoneComp != zoneEquipment.end();
            ++zoneComp )
       {
@@ -954,7 +954,7 @@ namespace sdd {
         var.setReportingFrequency(interval);
 
         std::vector<model::ThermalZone> zones = result->getModelObjects<model::ThermalZone>();
-        for( std::vector<model::ThermalZone>::iterator it = zones.begin();
+        for( auto it = zones.begin();
              it != zones.end();
              ++it )
         {
@@ -970,7 +970,7 @@ namespace sdd {
           }
 
           std::vector<model::ModelObject> objects = it->inletPortList().modelObjects();
-          for( std::vector<model::ModelObject>::iterator inletIt = objects.begin();
+          for( auto inletIt = objects.begin();
                inletIt != objects.end();
                ++inletIt )
           {
@@ -984,7 +984,7 @@ namespace sdd {
           }
 
           objects = it->exhaustPortList().modelObjects();
-          for( std::vector<model::ModelObject>::iterator exhIt = objects.begin();
+          for( auto exhIt = objects.begin();
                exhIt != objects.end();
                ++exhIt )
           {

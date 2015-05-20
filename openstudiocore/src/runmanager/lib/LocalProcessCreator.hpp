@@ -56,7 +56,7 @@ namespace runmanager {
           const openstudio::path &t_outdir,
           const std::vector<openstudio::path> &t_expectedOutputFiles,
           const std::string &t_stdin,
-          const openstudio::path &t_basePath);
+          const openstudio::path &t_basePath) override;
 
   };
 

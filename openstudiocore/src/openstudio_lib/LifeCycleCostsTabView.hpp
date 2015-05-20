@@ -112,7 +112,7 @@ public:
 
   LifeCycleCostsTabView(const model::Model & model,
                         const QString& modelTempDir,
-                        QWidget * parent = 0);
+                        QWidget * parent = nullptr);
 
   virtual ~LifeCycleCostsTabView() {}
 

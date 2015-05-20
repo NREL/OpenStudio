@@ -101,7 +101,7 @@ RunView::RunView(const model::Model & model,
   bool isConnected = t_runManager.connect(SIGNAL(statsChanged()), this, SLOT(runManagerStatsChanged()));
   OS_ASSERT(isConnected);
 
-  QGridLayout *mainLayout = new QGridLayout();
+  auto mainLayout = new QGridLayout();
   mainLayout->setContentsMargins(5,5,5,5);
   mainLayout->setSpacing(5);
   setLayout(mainLayout);
@@ -128,7 +128,7 @@ RunView::RunView(const model::Model & model,
   // Progress bar area
   m_progressBar = new QProgressBar();
  
-  QVBoxLayout *progressbarlayout = new QVBoxLayout();
+  auto progressbarlayout = new QVBoxLayout();
   progressbarlayout->addWidget(m_progressBar);
   m_statusLabel = new QLabel("Ready");
   progressbarlayout->addWidget(m_statusLabel);
@@ -151,9 +151,9 @@ RunView::RunView(const model::Model & model,
  
   QLabel *radianceLabel = new QLabel("<b>Select Daylight Simulation Engine</b>");
 
-  QWidget *radianceWidget = new QWidget();
+  auto radianceWidget = new QWidget();
   radianceWidget->setObjectName("RunStatusViewRadiance");
-  QHBoxLayout *radianceInteriorLayout = new QHBoxLayout();
+  auto radianceInteriorLayout = new QHBoxLayout();
 
   radianceWidget->setLayout(radianceInteriorLayout);
   radianceInteriorLayout->addWidget(radianceLabel);

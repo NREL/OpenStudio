@@ -45,15 +45,13 @@ ConstructionWindowDataFileInspectorView::ConstructionWindowDataFileInspectorView
 
 void ConstructionWindowDataFileInspectorView::createLayout()
 {
-  QWidget* visibleWidget = new QWidget();
+  auto visibleWidget = new QWidget();
   this->stackedWidget()->addWidget(visibleWidget);
 
-  QGridLayout* mainGridLayout = new QGridLayout();
+  auto mainGridLayout = new QGridLayout();
   mainGridLayout->setContentsMargins(7, 7, 7, 7);
   mainGridLayout->setSpacing(14);
   visibleWidget->setLayout(mainGridLayout);
-
-  //int row = mainGridLayout->rowCount();
 
   // URL
 

@@ -103,15 +103,15 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
     //@{
 
-    double thickness() const;
+    double thickness() const override;
 
     double thermalConductivity() const;
 
@@ -123,14 +123,14 @@ namespace detail {
 
     double thermalTransmittance() const;
 
-    virtual boost::optional<double> getVisibleTransmittance() const;
+    virtual boost::optional<double> getVisibleTransmittance() const override;
 
     /** This model assumes that the front- and back-side properties are identical. */
     double visibleAbsorptance() const;
 
-    virtual boost::optional<double> interiorVisibleAbsorptance() const;
+    virtual boost::optional<double> interiorVisibleAbsorptance() const override;
 
-    virtual boost::optional<double> exteriorVisibleAbsorptance() const;
+    virtual boost::optional<double> exteriorVisibleAbsorptance() const override;
 
     Quantity getThickness(bool returnIP=false) const;
 
@@ -192,7 +192,7 @@ namespace detail {
 
     bool setThermalTransmittance(double value);
 
-    bool setThickness(double thickness);
+    bool setThickness(double thickness) override;
 
     bool setThickness(const Quantity& thickness);
 

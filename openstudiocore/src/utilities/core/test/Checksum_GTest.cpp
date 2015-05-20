@@ -108,9 +108,9 @@ TEST(Checksum, UUIDs) {
   for (unsigned i = 0, n = 1000; i < n; ++i) {
     checksums.push_back(checksum(toString(createUUID())));
   }
-  StringVector::iterator itStart = checksums.begin();
+  auto itStart = checksums.begin();
   ++itStart;
-  for (StringVector::iterator it = checksums.begin(), itEnd = checksums.end(); 
+  for (auto it = checksums.begin(), itEnd = checksums.end(); 
        itStart != itEnd; ++it, ++itStart) {
     EXPECT_TRUE(std::find(itStart,itEnd,*it) == itEnd);
   }

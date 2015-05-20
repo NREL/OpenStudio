@@ -58,7 +58,7 @@ namespace detail {
       static const int numColumns = 8;
       static QStringList columnHeaders();
 
-      virtual bool operator<(const QStandardItem &qsi) const;
+      virtual bool operator<(const QStandardItem &qsi) const override;
 
     private slots:
       void stateChanged();
@@ -242,7 +242,7 @@ namespace detail {
       void jobTreeAdded(const openstudio::UUID &t_job);
 
     protected:
-      virtual void run();
+      virtual void run() override;
 
     private slots:
       // Slots used for monitoring the status of Jobs that this RunManager is tracking

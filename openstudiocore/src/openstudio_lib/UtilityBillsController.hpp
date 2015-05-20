@@ -40,23 +40,23 @@ class UtilityBillsController : public ModelSubTabController
 
   protected:
 
-    virtual void onAddObject(const openstudio::IddObjectType& iddObjectType);
+    virtual void onAddObject(const openstudio::IddObjectType& iddObjectType) override;
 
-    virtual void onCopyObject(const openstudio::model::ModelObject& modelObject);
+    virtual void onCopyObject(const openstudio::model::ModelObject& modelObject) override;
 
-    virtual void onRemoveObject(openstudio::model::ModelObject);
+    virtual void onRemoveObject(openstudio::model::ModelObject) override;
 
-    virtual void onReplaceObject(openstudio::model::ModelObject modelObject, const OSItemId& replacementItemId);
+    virtual void onReplaceObject(openstudio::model::ModelObject modelObject, const OSItemId& replacementItemId) override;
 
-    virtual void onPurgeObjects(const openstudio::IddObjectType& iddObjectType);
+    virtual void onPurgeObjects(const openstudio::IddObjectType& iddObjectType) override;
 
-    virtual void onDrop(const OSItemId& itemId);
+    virtual void onDrop(const OSItemId& itemId) override;
 
-    virtual void onInspectItem(OSItem* item);
+    virtual void onInspectItem(OSItem* item) override;
 
-    virtual void onSelectItem(OSItem *item);
+    virtual void onSelectItem(OSItem *item) override;
 
-    virtual void onClearSelection();
+    virtual void onClearSelection() override;
 
 };
 

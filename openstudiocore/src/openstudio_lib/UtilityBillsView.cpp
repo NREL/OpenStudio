@@ -105,18 +105,18 @@ UtilityBillsInspectorView::UtilityBillsInspectorView(const model::Model & model,
                              parent),
     m_billFormat(STARTDATE_ENDDATE),
     m_showPeak(0),
-    m_billingPeriodHeaderWidget(0),
-    m_buttonGroup(0),
-    m_name(0),
-    m_consumptionUnits(0),
-    m_peakDemandUnits(0),
-    m_windowTimesteps(0),
-    m_addBillingPeriod(0),
-    m_billPeriodLayout(0),
-    m_billPeriodLayoutWidget(0),
-    m_runPeriodDatesLabel(0),
-    m_energyUseLabel(0),
-    m_peakLabel(0),
+    m_billingPeriodHeaderWidget(nullptr),
+    m_buttonGroup(nullptr),
+    m_name(nullptr),
+    m_consumptionUnits(nullptr),
+    m_peakDemandUnits(nullptr),
+    m_windowTimesteps(nullptr),
+    m_addBillingPeriod(nullptr),
+    m_billPeriodLayout(nullptr),
+    m_billPeriodLayoutWidget(nullptr),
+    m_runPeriodDatesLabel(nullptr),
+    m_energyUseLabel(nullptr),
+    m_peakLabel(nullptr),
     m_hiddenWidgetIndex(0),
     m_visibleWidgetIndex(0)
 {
@@ -178,10 +178,10 @@ void UtilityBillsInspectorView::createWidgets()
 
   QVBoxLayout * vLayout = nullptr;
 
-  QWidget* hiddenWidget = new QWidget();
+  auto hiddenWidget = new QWidget();
   m_hiddenWidgetIndex = this->stackedWidget()->insertWidget(0, hiddenWidget);
 
-  QWidget* visibleWidget = new QWidget();
+  auto visibleWidget = new QWidget();
   m_visibleWidgetIndex = this->stackedWidget()->addWidget(visibleWidget);
 
   boost::optional<model::YearDescription> yd = m_model.yearDescription();
@@ -193,7 +193,7 @@ void UtilityBillsInspectorView::createWidgets()
 
   // Regular inspector body
 
-  QVBoxLayout * mainLayout = new QVBoxLayout();
+  auto mainLayout = new QVBoxLayout();
   mainLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
   mainLayout->setContentsMargins(10,10,10,10);
   mainLayout->setSpacing(20);
@@ -226,7 +226,7 @@ void UtilityBillsInspectorView::createWidgets()
 
   // Consumption Units and Peak Demand Units
 
-  QGridLayout * gridLayout = new QGridLayout();
+  auto gridLayout = new QGridLayout();
   gridLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
   gridLayout->setContentsMargins(0,0,0,0);
   gridLayout->setSpacing(10);
@@ -316,7 +316,7 @@ void UtilityBillsInspectorView::createWidgets()
   label->setText("Select the best match for you utility bill");
   vLayout->addWidget(label);
 
-  QButtonGroup * buttonGroup = new QButtonGroup(this);
+  auto buttonGroup = new QButtonGroup(this);
 
   connect(buttonGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked),
           this, static_cast<void (UtilityBillsInspectorView::*)(int)>(&UtilityBillsInspectorView::setBillFormat));
@@ -353,7 +353,7 @@ void UtilityBillsInspectorView::createWidgets()
 
   // Add Bill Button
 
-  QHBoxLayout * hLayout = new QHBoxLayout();
+  auto hLayout = new QHBoxLayout();
   hLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
   m_addBillingPeriod = new QPushButton();
@@ -493,13 +493,13 @@ void UtilityBillsInspectorView::createBillingPeriodHeaderWidget()
 {
   m_billingPeriodHeaderWidget = new QWidget();
 
-  QHBoxLayout * hLayout = 0;
+  QHBoxLayout * hLayout = nullptr;
   hLayout = new QHBoxLayout();
   hLayout->setContentsMargins(0,0,0,0);
   hLayout->setSpacing(10);
   m_billingPeriodHeaderWidget->setLayout(hLayout);
    
-  QLabel * label = 0;
+  QLabel * label = nullptr;
 
   if(m_billFormat == STARTDATE_ENDDATE){
     label = new QLabel();
@@ -557,7 +557,7 @@ void UtilityBillsInspectorView::createBillingPeriodHeaderWidget()
     updatePeakLabelText();
     hLayout->addWidget(m_peakLabel, 0, Qt::AlignLeft | Qt::AlignTop);
   } else {
-    m_peakLabel = 0;
+    m_peakLabel = nullptr;
   }
 
   label = new QLabel();
@@ -605,16 +605,16 @@ void UtilityBillsInspectorView::deleteBillingPeriodWidgets()
   for (BillingPeriodWidget * billingPeriodWidget : m_billingPeriodWidgets) {
     billingPeriodWidget->detach();
     delete billingPeriodWidget;
-    billingPeriodWidget = 0;
+    billingPeriodWidget = nullptr;
   }
   m_billingPeriodWidgets.clear();
   OS_ASSERT(m_billingPeriodWidgets.size() == 0);
 
   delete m_billingPeriodHeaderWidget;
-  m_billingPeriodHeaderWidget = 0;
+  m_billingPeriodHeaderWidget = nullptr;
   // Set m_billingPeriodHeaderWidget's labels to null, which were deleted above
-  m_energyUseLabel = 0;
-  m_peakLabel = 0;
+  m_energyUseLabel = nullptr;
+  m_peakLabel = nullptr;
 }
 
 void UtilityBillsInspectorView::deleteAllWidgetsAndLayoutItems(QLayout * layout, bool deleteWidgets)
@@ -764,12 +764,12 @@ BillingPeriodWidget::BillingPeriodWidget(model::BillingPeriod billingPeriod,
                                          BillFormat billFormat,
                                          QWidget * parent)
   : QWidget(parent),
-    m_startDateEdit(0),
-    m_endDateEdit(0),
-    m_billingPeriodIntEdit(0),
-    m_energyUseDoubleEdit(0),
-    m_peakDoubleEdit(0),
-    m_costDoubleEdit(0),
+    m_startDateEdit(nullptr),
+    m_endDateEdit(nullptr),
+    m_billingPeriodIntEdit(nullptr),
+    m_energyUseDoubleEdit(nullptr),
+    m_peakDoubleEdit(nullptr),
+    m_costDoubleEdit(nullptr),
     m_billingPeriod(billingPeriod)
 {
   OS_ASSERT(m_billingPeriod.is_initialized());
@@ -782,7 +782,7 @@ BillingPeriodWidget::BillingPeriodWidget(model::BillingPeriod billingPeriod,
 void BillingPeriodWidget::createWidgets(FuelType fuelType,
                                         BillFormat billFormat)
 {
-  QHBoxLayout * hLayout = 0;
+  QHBoxLayout * hLayout = nullptr;
   hLayout = new QHBoxLayout(this);
   hLayout->setContentsMargins(0,0,0,0);
   hLayout->setSpacing(10);

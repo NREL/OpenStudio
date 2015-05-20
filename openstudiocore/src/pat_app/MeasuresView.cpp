@@ -116,12 +116,12 @@ MeasuresTabView::MeasuresTabView()
   style.append("background-color: qlineargradient(x1:0,y1:0,x2:0,y2:1,stop: 0 #B6B5B6, stop: 1 #737172); ");
   style.append("}");
 
-  QWidget * footer = new QWidget();
+  auto footer = new QWidget();
   footer->setObjectName("Footer");
   footer->setStyleSheet(style);
   mainContentVLayout->addWidget(footer);
 
-  QHBoxLayout * layout = new QHBoxLayout();
+  auto layout = new QHBoxLayout();
   layout->setSpacing(0);
   footer->setLayout(layout);
 

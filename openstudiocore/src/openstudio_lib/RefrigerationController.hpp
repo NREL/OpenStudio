@@ -130,8 +130,8 @@ class RefrigerationSystemListController : public OSListController
   RefrigerationSystemListController(RefrigerationController * refrigerationController);
   RefrigerationController * refrigerationController() const;
 
-  QSharedPointer<OSListItem> itemAt(int i);
-  int count();
+  QSharedPointer<OSListItem> itemAt(int i) override;
+  int count() override;
 
   void reset();
 
@@ -165,7 +165,7 @@ class RefrigerationSystemItemDelegate : public OSGraphicsItemDelegate
 
   virtual ~RefrigerationSystemItemDelegate() {}
 
-  virtual QGraphicsObject * view(QSharedPointer<OSListItem> dataSource);
+  virtual QGraphicsObject * view(QSharedPointer<OSListItem> dataSource) override;
 };
 
 class RefrigerationSystemListDropZoneItem : public OSListItem
@@ -174,7 +174,7 @@ class RefrigerationSystemListDropZoneItem : public OSListItem
 
   public:
 
-  RefrigerationSystemListDropZoneItem(OSListController * listController = 0);
+  RefrigerationSystemListDropZoneItem(OSListController * listController = nullptr);
 
   ~RefrigerationSystemListDropZoneItem() {}
 };
@@ -185,7 +185,7 @@ class RefrigerationSystemListItem : public OSListItem
 
   public:
 
-  RefrigerationSystemListItem(const model::RefrigerationSystem & refrigerationSystem, OSListController * listController = 0);
+  RefrigerationSystemListItem(const model::RefrigerationSystem & refrigerationSystem, OSListController * listController = nullptr);
   virtual ~RefrigerationSystemListItem() {}
 
   QString systemName() const;

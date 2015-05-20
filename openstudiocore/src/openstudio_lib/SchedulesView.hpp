@@ -191,7 +191,7 @@ class SchedulesView : public QWidget
 
   protected:
 
-    void paintEvent ( QPaintEvent * event );
+    void paintEvent ( QPaintEvent * event ) override;
 
   private slots: 
 
@@ -230,7 +230,7 @@ class ScheduleTab : public QWidget
 
 public:
 
-  ScheduleTab(const model::ScheduleRuleset & schedule, SchedulesView * schedulesView, QWidget * parent = 0);
+  ScheduleTab(const model::ScheduleRuleset & schedule, SchedulesView * schedulesView, QWidget * parent = nullptr);
 
   virtual ~ScheduleTab() {}
 
@@ -303,7 +303,7 @@ class ScheduleTabHeader : public QWidget
 
   public:
 
-  ScheduleTabHeader( ScheduleTab * scheduleTab, QWidget * parent = 0 );
+  ScheduleTabHeader( ScheduleTab * scheduleTab, QWidget * parent = nullptr );
 
   virtual ~ScheduleTabHeader() {}
 
@@ -327,13 +327,13 @@ class ScheduleTabHeader : public QWidget
 
   protected:
 
-  void paintEvent ( QPaintEvent * event );
+  void paintEvent ( QPaintEvent * event ) override;
 
-  void resizeEvent ( QResizeEvent * event );
+  void resizeEvent ( QResizeEvent * event ) override;
 
-  void mouseReleaseEvent( QMouseEvent * event );
+  void mouseReleaseEvent( QMouseEvent * event ) override;
 
-  void mousePressEvent( QMouseEvent * event );
+  void mousePressEvent( QMouseEvent * event ) override;
 
   private slots:
 
@@ -363,7 +363,7 @@ class ScheduleTabContent : public QWidget
 
 public:
 
-  ScheduleTabContent(ScheduleTab * scheduleTab, QWidget * parent = 0);
+  ScheduleTabContent(ScheduleTab * scheduleTab, QWidget * parent = nullptr);
 
   virtual ~ScheduleTabContent() {}
 
@@ -411,7 +411,7 @@ class ScheduleTabRule : public QWidget
 
   ScheduleTabRule( ScheduleTab * scheduleTab, 
                    const model::ScheduleRule & scheduleRule, 
-                   QWidget * parent = 0 );
+                   QWidget * parent = nullptr );
 
   virtual ~ScheduleTabRule() {}
 
@@ -421,15 +421,15 @@ class ScheduleTabRule : public QWidget
 
   protected:
 
-  void mouseReleaseEvent( QMouseEvent * event );
+  void mouseReleaseEvent( QMouseEvent * event ) override;
 
-  void mousePressEvent( QMouseEvent * event );
+  void mousePressEvent( QMouseEvent * event ) override;
 
-  void mouseMoveEvent( QMouseEvent * event );
+  void mouseMoveEvent( QMouseEvent * event ) override;
 
-  void leaveEvent ( QEvent * event );
+  void leaveEvent ( QEvent * event ) override;
 
-  void paintEvent ( QPaintEvent * event );
+  void paintEvent ( QPaintEvent * event ) override;
 
   private slots:
 
@@ -475,15 +475,15 @@ class ScheduleTabDefault : public QWidget
 
   protected:
 
-  void mouseReleaseEvent( QMouseEvent * event );
+  void mouseReleaseEvent( QMouseEvent * event ) override;
 
-  void mousePressEvent( QMouseEvent * event );
+  void mousePressEvent( QMouseEvent * event ) override;
 
-  void leaveEvent ( QEvent * event );
+  void leaveEvent ( QEvent * event ) override;
 
-  void mouseMoveEvent( QMouseEvent * event );
+  void mouseMoveEvent( QMouseEvent * event ) override;
 
-  void paintEvent ( QPaintEvent * event );
+  void paintEvent ( QPaintEvent * event ) override;
 
   private:
 
@@ -700,7 +700,7 @@ class YearOverview : public QWidget
 
   public:
 
-  YearOverview( const model::ScheduleRuleset & scheduleRuleset, QWidget * parent = 0 );
+  YearOverview( const model::ScheduleRuleset & scheduleRuleset, QWidget * parent = nullptr );
 
   virtual ~YearOverview() {}
 
@@ -788,13 +788,13 @@ class ScheduleCalendarWidget : public QCalendarWidget
 
 public:
 
-  ScheduleCalendarWidget(MonthView * monthView = 0);
+  ScheduleCalendarWidget(MonthView * monthView = nullptr);
 
   virtual ~ScheduleCalendarWidget() {}
 
 protected:
 
-  void paintCell(QPainter * painter, const QRect & rect, const QDate & date) const;
+  void paintCell(QPainter * painter, const QRect & rect, const QDate & date) const override;
 
 private:
 

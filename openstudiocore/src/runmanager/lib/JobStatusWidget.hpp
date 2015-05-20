@@ -53,7 +53,7 @@ namespace openstudio {
           static const int numColumns = 5;
           static QStringList columnHeaders();
 
-          virtual bool operator<(const QStandardItem &qsi) const;
+          virtual bool operator<(const QStandardItem &qsi) const override;
 
         private slots:
           void jobOutputFileChanged(const openstudio::UUID &, const openstudio::runmanager::FileInfo &t_fi);

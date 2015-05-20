@@ -82,23 +82,23 @@ InteriorPartitionSurfaceInspectorView::InteriorPartitionSurfaceInspectorView(boo
 {
   m_isIP = isIP;
 
-  QWidget* hiddenWidget = new QWidget();
+  auto hiddenWidget = new QWidget();
   this->stackedWidget()->insertWidget(0, hiddenWidget);
 
-  QWidget* visibleWidget = new QWidget();
+  auto visibleWidget = new QWidget();
   this->stackedWidget()->insertWidget(1, visibleWidget);
 
   this->stackedWidget()->setCurrentIndex(0);
 
-  QGridLayout* mainGridLayout = new QGridLayout();
+  auto mainGridLayout = new QGridLayout();
   mainGridLayout->setContentsMargins(7,7,7,7);
   mainGridLayout->setSpacing(14);
   visibleWidget->setLayout(mainGridLayout);
 
   // name
-  QVBoxLayout* vLayout = new QVBoxLayout();
+  auto vLayout = new QVBoxLayout();
 
-  QLabel* label = new QLabel();
+  auto label = new QLabel();
   label->setText("Name: ");
   label->setStyleSheet("QLabel { font: bold; }");
   vLayout->addWidget(label);
@@ -149,7 +149,7 @@ InteriorPartitionSurfaceInspectorView::InteriorPartitionSurfaceInspectorView(boo
   mainGridLayout->addLayout(vLayout,2,1, Qt::AlignTop|Qt::AlignLeft);
 
   // separator
-  QWidget * hLine = new QWidget();
+  auto hLine = new QWidget();
   hLine->setObjectName("HLine");
   hLine->setStyleSheet("QWidget#HLine { background: #445051;}");
   hLine->setFixedHeight(2);

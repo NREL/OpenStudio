@@ -40,7 +40,7 @@ class LoopChooserView : public QWidget
 
   public:
 
-  LoopChooserView(QWidget* parent = 0);
+  LoopChooserView(QWidget* parent = nullptr);
 
   virtual ~LoopChooserView() {}
 
@@ -64,7 +64,7 @@ class LoopChooserView : public QWidget
 
   protected:
 
-  void paintEvent ( QPaintEvent * event );
+  void paintEvent ( QPaintEvent * event ) override;
 
  private:
 
@@ -81,7 +81,7 @@ class LoopChooserItem : public QWidget
 
   public:
 
-  LoopChooserItem(model::Loop &, LoopChooserView * parent = 0);
+  LoopChooserItem(model::Loop &, LoopChooserView * parent = nullptr);
 
   virtual ~LoopChooserItem() {}
 

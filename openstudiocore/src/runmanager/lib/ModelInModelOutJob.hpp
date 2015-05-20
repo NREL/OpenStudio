@@ -56,26 +56,26 @@ namespace detail {
       virtual ~ModelInModelOutJob();
 
       // Reimplemented virtual functions from Job_Impl
-      virtual bool outOfDateImpl(const boost::optional<QDateTime> &t_lastrun) const;
-      virtual std::string description() const;
-      virtual Files outputFilesImpl() const;
-      virtual std::string getOutput() const;
-      virtual void cleanup();
+      virtual bool outOfDateImpl(const boost::optional<QDateTime> &t_lastrun) const override;
+      virtual std::string description() const override;
+      virtual Files outputFilesImpl() const override;
+      virtual std::string getOutput() const override;
+      virtual void cleanup() override;
 
-      virtual void mergeJobImpl(const std::shared_ptr<Job_Impl> &t_parent, const std::shared_ptr<Job_Impl> &t_job);
+      virtual void mergeJobImpl(const std::shared_ptr<Job_Impl> &t_parent, const std::shared_ptr<Job_Impl> &t_job) override;
 
-      virtual void requestStop();
+      virtual void requestStop() override;
 
     protected:
-      virtual void startImpl(const std::shared_ptr<ProcessCreator> &t_creator);
+      virtual void startImpl(const std::shared_ptr<ProcessCreator> &t_creator) override;
 
       /// Executes the required manipulation of the model and returns a new copy.
       /// 
       /// This method needs to be implemented by any subclass
       virtual model::Model modelToModelRun(const model::Model &t_model) = 0;
 
-      virtual void basePathChanged();
-      virtual void standardCleanImpl() { /* nothing to do here */ }
+      virtual void basePathChanged() override;
+      virtual void standardCleanImpl() override { /* nothing to do here */ }
 
     private:
       REGISTER_LOGGER("openstudio.runmanager.ModelInModelOutJob");

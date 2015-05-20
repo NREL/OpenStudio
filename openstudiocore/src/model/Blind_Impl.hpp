@@ -188,20 +188,20 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
     //@{
 
     /** Get the thickness of the material. For now is equivalent to slat thickness. */
-    virtual double thickness() const;
+    virtual double thickness() const override;
 
     std::string slatOrientation() const;
     /** Throws because blind has beam and diffuse visible transmittance. */
-    virtual boost::optional<double> getVisibleTransmittance() const;
+    virtual boost::optional<double> getVisibleTransmittance() const override;
 
     bool isSlatOrientationDefaulted() const;
 
@@ -350,7 +350,7 @@ namespace detail {
     //@{
 
     /** Set thickness to value (m). For now is equivalent to setting slat thickness. */
-    virtual bool setThickness(double value);
+    virtual bool setThickness(double value) override;
 
     bool setSlatOrientation(std::string slatOrientation);
 

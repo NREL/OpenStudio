@@ -53,8 +53,8 @@ UTILITIES_API std::vector<std::string> eraseEmptyElements(const std::vector<std:
 template<typename T, typename U> 
 std::vector<T> castVector(const std::vector<U>& objects) {
   std::vector<T> result;
-  for (size_t i = 0, n = objects.size(); i < n; ++i) {
-    T castObject = objects[i].template cast<T>();
+  for (auto & object : objects) {
+    T castObject = object.template cast<T>();
     result.push_back( castObject );
   }
   return result;
@@ -65,10 +65,9 @@ std::vector<T> castVector(const std::vector<U>& objects) {
 template <typename T,typename U>
 std::vector<T> subsetCastVector(const std::vector<U>& original) {
   std::vector<T> result;
-  for (typename std::vector<U>::const_iterator it = original.begin(), itEnd = original.end();
-       it != itEnd; ++it)
+  for (const auto & elem : original)
   {
-    boost::optional<T> oCastObject = it->template optionalCast<T>();
+    boost::optional<T> oCastObject = elem.template optionalCast<T>();
     if (oCastObject) { result.push_back(*oCastObject); }
   }
   return result;
@@ -77,10 +76,9 @@ std::vector<T> subsetCastVector(const std::vector<U>& original) {
 template <typename T, typename U>
 std::vector< std::vector<T> > castArray (const std::vector< std::vector<U> >& original) {
   std::vector< std::vector<T> > result;
-  for (typename std::vector< std::vector<U> >::const_iterator it = original.begin(),
-       itEnd = original.end(); it != itEnd; ++it)
+  for (const auto & elem : original)
   {
-    typename std::vector<T> subVector = castVector<T>(*it);
+    typename std::vector<T> subVector = castVector<T>(elem);
     result.push_back(subVector);
   }
   return result;

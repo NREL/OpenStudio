@@ -361,7 +361,7 @@ namespace detail {
     if (loc == m_iddObjectTypeMap.end()) { return WorkspaceObjectVector(); }
     std::vector<WorkspaceObject> result;
     result.reserve(loc->second.size());
-    for( WorkspaceObjectMap::const_iterator it = loc->second.begin(); it != loc->second.end(); ++it ) {
+    for( auto it = loc->second.begin(); it != loc->second.end(); ++it ) {
       result.push_back( it->second );
     }
     return result;
@@ -412,7 +412,7 @@ namespace detail {
     if (loc == m_idfReferencesMap.end()) { return WorkspaceObjectVector(); }
     std::vector<WorkspaceObject> result;
     result.reserve(loc->second.size());
-    for( WorkspaceObjectMap::const_iterator it = loc->second.begin(); it != loc->second.end(); ++it ) {
+    for( auto it = loc->second.begin(); it != loc->second.end(); ++it ) {
       result.push_back( it->second );
     }
     return result;
@@ -423,7 +423,7 @@ namespace detail {
   {
     WorkspaceObjectMap objectMap;
     for (const std::string& referenceName : referenceNames) {
-      IdfReferencesMap::const_iterator loc = m_idfReferencesMap.find(referenceName);
+      auto loc = m_idfReferencesMap.find(referenceName);
       if (loc != m_idfReferencesMap.end()) {
         objectMap.insert(loc->second.begin(),loc->second.end());
       }

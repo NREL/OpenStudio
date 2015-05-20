@@ -1282,7 +1282,7 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
   AttributeVector outputAttributes = dataPoint.outputAttributes();
   AttributeRecordVector oldAttributeRecords = attributeRecords();
   for (const Attribute& outputAttribute : outputAttributes) {
-    std::vector<AttributeRecord>::iterator oldIt = std::find_if(oldAttributeRecords.begin(),
+    auto oldIt = std::find_if(oldAttributeRecords.begin(),
                                                                 oldAttributeRecords.end(),
                                                                 std::bind(handleEquals<AttributeRecord,openstudio::UUID>,std::placeholders::_1,outputAttribute.uuid()));
 
