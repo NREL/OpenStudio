@@ -1005,7 +1005,7 @@ DefaultConstructionSetInspectorView::DefaultConstructionSetInspectorView(const m
   //hLayout->addWidget(label);
   //hLayout->addWidget(m_nameEdit);
   
-  QGridLayout * gridLayout = new QGridLayout();
+  auto gridLayout = new QGridLayout();
   gridLayout->setContentsMargins(10,10,10,10);
   gridLayout->setSpacing(10);
   gridLayout->setColumnStretch(3,10);
@@ -1420,12 +1420,12 @@ DefaultConstructionSetInspectorView::DefaultConstructionSetInspectorView(const m
   //mainVLayout->addLayout(hLayout);
   //mainVLayout->addLayout(gridLayout);
 
-  QWidget * widget = new QWidget();
+  auto widget = new QWidget();
   //widget->setLayout(mainVLayout);
   widget->setLayout(gridLayout);
 
   //int index;
-  QWidget * hiddenWidget = new QWidget();
+  auto hiddenWidget = new QWidget();
   /*index =*/ this->stackedWidget()->addWidget(hiddenWidget);
   /*index =*/ this->stackedWidget()->addWidget(widget);
 }

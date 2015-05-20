@@ -117,7 +117,7 @@ class DataPointResultItemDelegate : public OSItemDelegate
   virtual ~DataPointResultItemDelegate() {}
 
   /// Widget returned will be a DataPointResultListItem
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
+  QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 };
 
 /// Delegate which creates a DataPointCalibrationListItem
@@ -132,7 +132,7 @@ class DataPointCalibrationItemDelegate : public OSItemDelegate
   virtual ~DataPointCalibrationItemDelegate() {}
 
   /// Widget returned will be a DataPointCalibrationListItem
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
+  QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 
   public slots:
     
@@ -156,9 +156,9 @@ class BaselineDataPointResultListController : public OSListController
   virtual ~BaselineDataPointResultListController() {}
 
   /// The OSListItem returned will be a DataPointResultListItem
-  QSharedPointer<OSListItem> itemAt(int i);
+  QSharedPointer<OSListItem> itemAt(int i) override;
 
-  int count();
+  int count() override;
 
  private:
 
@@ -177,9 +177,9 @@ class DataPointResultsListController : public OSListController
   virtual ~DataPointResultsListController() {}
 
   /// The OSListItem returned will be a DataPointResultListItem
-  QSharedPointer<OSListItem> itemAt(int i);
+  QSharedPointer<OSListItem> itemAt(int i) override;
 
-  int count();
+  int count() override;
 
  private:
 
@@ -200,9 +200,9 @@ class DataPointCalibrationListController : public OSListController
   virtual ~DataPointCalibrationListController() {}
 
   /// The OSListItem returned will be a DataPointCalibrationListItem
-  QSharedPointer<OSListItem> itemAt(int i);
+  QSharedPointer<OSListItem> itemAt(int i) override;
 
-  int count();
+  int count() override;
 
  private:
 

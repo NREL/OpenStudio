@@ -67,13 +67,13 @@ namespace detail {
 
     /** Returns objects directly owned by this Record. Children are removed when this Record
      *  is removed. */
-    virtual std::vector<ObjectRecord> children() const;
+    virtual std::vector<ObjectRecord> children() const override;
 
     /** Returns objects referenced, but not owned, by this Record. */
-    virtual std::vector<ObjectRecord> resources() const;
+    virtual std::vector<ObjectRecord> resources() const override;
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database) override;
 
     //@}
     /** @name Getters */
@@ -92,7 +92,7 @@ namespace detail {
 
     std::vector<OSArgumentRecord> osArgumentRecords() const;
 
-    virtual analysis::Measure measure() const;
+    virtual analysis::Measure measure() const override;
 
     analysis::RubyMeasure rubyMeasure() const;
 
@@ -110,19 +110,19 @@ namespace detail {
     //@}
    protected:
     /** Bind data member values to a query for saving. */
-    virtual void bindValues(QSqlQuery& query) const;
+    virtual void bindValues(QSqlQuery& query) const override;
 
     /** Set the last state of this object from the query (including id). */
-    virtual void setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase);
+    virtual void setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) override;
 
     /** Check that values (except id) are same as query. */
-    virtual bool compareValues(const QSqlQuery& query) const;
+    virtual bool compareValues(const QSqlQuery& query) const override;
 
     /** Save values to last state. */
-    virtual void saveLastValues();
+    virtual void saveLastValues() override;
 
     /** Revert values back to last state. */
-    virtual void revertToLastValues();
+    virtual void revertToLastValues() override;
 
    private:
     REGISTER_LOGGER("openstudio.project.RubyMeasureRecord");

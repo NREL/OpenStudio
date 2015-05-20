@@ -1,4 +1,4 @@
-!IDD_Version 1.7.3
+!IDD_Version 1.7.4
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -11358,7 +11358,8 @@ OS:DistrictCooling,
   N1 ; \field Nominal Capacity
        \units W
        \minimum 0.0
-       \default 1000000
+       \autosizable
+       \required-field
 
 OS:DistrictHeating,
   A1, \field Handle
@@ -11378,7 +11379,8 @@ OS:DistrictHeating,
   N1 ; \field Nominal Capacity
        \units W
        \minimum 0.0
-       \default 1000000
+       \autosizable
+       \required-field
      
 OS:GroundHeatExchanger:Vertical,
         \extensible:2
@@ -15411,6 +15413,8 @@ OS:Humidifier:Steam:Electric,
       \units m3/s
       \minimum 0.0
       \ip-units gal/min
+      \autosizable
+      \required-field
   N2, \field Rated Power
       \type real
       \units W
@@ -17362,7 +17366,6 @@ OS:SetpointManager:WarmestTemperatureFlow,
        \minimum> 0.0
 
 OS:Sizing:Plant,
-  \min-fields 5
   A1, \field Handle
        \type handle
        \required-field
@@ -17382,14 +17385,34 @@ OS:Sizing:Plant,
       \required-field
       \type real
       \units C
-  N2; \field Loop Design Temperature Difference
+  N2, \field Loop Design Temperature Difference
       \required-field
       \type real
       \units deltaC
       \minimum> 0.0
+  A4, \field Sizing Option
+      \note if Coincident is chosen, then sizing is based on HVAC Sizing Simulations and 
+      \note the input field called Do HVAC Sizing Simulation for Sizing Periods in SimulationControl must be set to Yes
+      \required-field
+      \type choice
+      \key Coincident
+      \key NonCoincident
+  N3, \field Zone Timesteps in Averaging Window
+      \required-field
+      \note this is used in the coincident sizing algorithm to apply a running average to peak flow rates 
+      \note that occur during HVAC Sizing Simulations
+      \type integer
+      \minimum 1
+  A5; \field Coincident Sizing Factor Mode
+      \note this is used to adjust the result for coincident sizing by applying a sizing factor
+      \required-field
+      \type choice
+      \key None
+      \key GlobalHeatingSizingFactor
+      \key GlobalCoolingSizingFactor
+      \key LoopComponentSizingFactor
 
 OS:Sizing:System,
-       \min-fields 21
   A1, \field Handle
        \type handle
        \required-field
@@ -17471,6 +17494,9 @@ OS:Sizing:System,
        \default DesignDay
        \key Flow/System
        \key DesignDay
+       \key FlowPerFloorArea
+       \key FractionOfAutosizedCoolingAirflow
+       \key FlowPerCoolingCapacity
   N11, \field Cooling Design Air Flow Rate
        \note This input is used if Cooling Design Air Flow Method is Flow/System
        \note This value will *not* be multiplied by any sizing factor or by zone multipliers.
@@ -17484,6 +17510,10 @@ OS:Sizing:System,
        \default DesignDay
        \key Flow/System
        \key DesignDay
+       \key FlowPerFloorArea
+       \key FractionOfAutosizedHeatingAirflow
+       \key FractionOfAutosizedCoolingAirflow
+       \key FlowPerCoolingCapacity
   N12, \field Heating Design Air Flow Rate
        \note This input is used if Heating Design Air Flow Method is Flow/System
        \note This value will *not* be multiplied by any sizing factor or by zone multipliers.
@@ -17492,11 +17522,147 @@ OS:Sizing:System,
        \units m3/s
        \minimum 0
        \default 0.0
-  A9; \field System Outdoor Air Method
+  A9, \field System Outdoor Air Method
        \type choice
        \default ZoneSum
        \key ZoneSum
        \key VentilationRateProcedure
+  N13, \field Zone Maximum Outdoor Air Fraction
+       \type real
+       \minimum> 0.0
+       \units dimensionless
+        \required-field
+  N14, \field Cooling Supply Air Flow Rate Per Floor Area
+       \type real
+       \units m3/s-m2
+       \minimum 0.0
+       \required-field
+       \note Enter the cooling supply air volume flow rate per total conditioned floor area.
+       \note Required field when Cooling Supply Air Flow Rate Method is FlowPerFloorArea.
+  N15, \field Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+       \type real
+       \minimum 0.0
+       \required-field
+       \note Enter the supply air volume flow rate as a fraction of the cooling supply air flow rate.
+       \note Required field when Cooling Supply Air Flow Rate Method is
+       \note FractionOfAutosizedCoolingAirflow.
+  N16, \field Cooling Supply Air Flow Rate Per Unit Cooling Capacity
+       \type real
+       \units m3/s-W
+       \minimum 0.0
+       \required-field
+       \note Enter the supply air volume flow rate per unit cooling capacity.
+       \note Required field when Cooling Supply Air Flow Rate Method is
+       \note FlowPerCoolingCapacity.
+  N17, \field Heating Supply Air Flow Rate Per Floor Area
+       \type real
+       \units m3/s-m2
+       \minimum 0.0
+       \required-field
+       \note Enter the heating supply air volume flow rate per total conditioned floor area.
+       \note Required field when Heating Supply Air Flow Rate Method is FlowPerFloorArea.
+  N18, \field Heating Fraction of Autosized Heating Supply Air Flow Rate
+       \type real
+       \minimum 0.0
+       \required-field
+       \note Enter the supply air volume flow rate as a fraction of the heating supply air flow rate.
+       \note Required field when Heating Supply Air Flow Rate Method is
+       \note FractionOfAutosizedHeatingAirflow.
+  N19, \field Heating Fraction of Autosized Cooling Supply Air Flow Rate
+       \type real
+       \minimum 0.0
+       \required-field
+       \note Enter the supply air volume flow rate as a fraction of the cooling supply air flow rate.
+       \note Required field when Heating Supply Air Flow Rate Method is
+       \note FractionOfAutosizedCoolingAirflow.
+  N20, \field Heating Supply Air Flow Rate Per Unit Heating Capacity
+       \type real
+       \units m3/s-W
+       \minimum 0.0
+       \required-field
+       \note Enter the heating supply air volume flow rate per unit heating capacity.
+       \note Required field when Heating Supply Air Flow Rate Method is
+       \note FlowPerHeatingCapacity.
+   A10, \field Cooling Design Capacity Method
+       \type choice
+       \key None
+       \key CoolingDesignCapacity
+       \key CapacityPerFloorArea
+       \key FractionOfAutosizedCoolingCapacity
+       \required-field
+       \note Enter the method used to determine the system cooling design capacity for scalable sizing.
+       \note None is used when a cooling coils is not included in an airloop or this field may be blank.
+       \note If this input field is left blank, then the design cooling capacity is set to zero.
+       \note CoolingDesignCapacity => selected when the design cooling capacity value is specified or
+       \note auto-sized. CapacityPerFloorArea => selected when the design cooling capacity is determined
+       \note from user specified cooling capacity per floor area and total floor area of cooled zones
+       \note served by an airloop. FractionOfAutosizedCoolingCapacity => is selected when the design
+       \note cooling capacity is determined from a user specified fraction and the auto-sized design
+       \note cooling capacity of the system.
+  N21, \field Cooling Design Capacity
+       \type real
+       \units W
+       \minimum 0.0
+       \autosizable
+       \required-field
+       \note Enter the design cooling capacity.
+  N22, \field Cooling Design Capacity Per Floor Area
+       \type real
+       \units W/m2
+       \minimum 0.0
+       \required-field
+       \note Enter the cooling design capacity per total floor area of cooled zones served by an airloop.
+       \note Required field when the cooling design capacity method field is CapacityPerFloorArea.
+  N23, \field Fraction of Autosized Cooling Design Capacity
+       \type real
+       \minimum 0.0
+       \required-field
+       \note Enter the fraction of auto-sized cooling design capacity. Required field when the cooling
+       \note design capacity method field is FractionOfAutosizedCoolingCapacity.
+  A11, \field Heating Design Capacity Method
+       \type choice
+       \key None
+       \key HeatingDesignCapacity
+       \key CapacityPerFloorArea
+       \key FractionOfAutosizedHeatingCapacity
+       \required-field
+       \note Enter the method used to determine the heating design capacity for scalable sizing.
+       \note None is used when a heating coil not included in an airloop or this field may be blank.
+       \note If this input field is left blank, then the design heating capacity is set to zero.
+       \note HeatingDesignCapacity => selected when the design heating capacity value is specified or
+       \note auto-sized. CapacityPerFloorArea => selected when the design heating capacity is determined
+       \note from user specified heating capacity per flow area and total floor area of heated zones
+       \note served by an airloop. FractionOfAutosizedHeatingCapacity => is selected when the design
+       \note heating capacity is determined from a user specified fraction and the auto-sized design
+       \note heating capacity of the system.
+  N24, \field Heating Design Capacity
+       \type real
+       \units W
+       \minimum 0.0
+       \autosizable
+       \note Enter the design heating capacity.
+       \required-field
+  N25, \field Heating Design Capacity Per Floor Area
+       \type real
+       \units W/m2
+       \minimum 0.0
+       \required-field
+       \note Enter the heating design capacity per zone floor area. Required field when the heating design
+       \note capacity method field is CapacityPerFloorArea.
+  N26, \field Fraction of Autosized Heating Design Capacity
+       \type real
+       \minimum 0.0
+       \required-field
+       \note Enter the fraction of auto-sized heating design capacity. Required field when capacity the
+       \note heating design capacity method field is FractionOfAutosizedHeatingCapacity.
+  A12; \field Central Cooling Capacity Control Method
+       \note Method used to control the coil's output
+       \required-field
+       \type choice
+       \key VAV
+       \key Bypass
+       \key VT
+       \key OnOff
 
 OS:Sizing:Zone,
        \min-fields 20

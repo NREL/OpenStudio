@@ -75,62 +75,62 @@ namespace detail {
     //@}
 
     // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const;
+    virtual boost::optional<ParentObject> parent() const override;
 
     /// set the parent, child may have to call methods on the parent
-    virtual bool setParent(ParentObject& newParent);
+    virtual bool setParent(ParentObject& newParent) override;
 
     // return any children objects in the hierarchy
-    virtual std::vector<ModelObject> children() const;
+    virtual std::vector<ModelObject> children() const override;
 
     /// remove self and all children objects recursively
-    virtual std::vector<IdfObject> remove();
+    virtual std::vector<IdfObject> remove() override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
     
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     /// should subtract this surface from parent's gross area for net area
-    virtual bool subtractFromGrossArea() const;
+    virtual bool subtractFromGrossArea() const override;
 
     /// get the construction object
     /// if the planar surface is paired with an adjacent planar surface, attempts to resolve any surface matching conflict
-    virtual boost::optional<ConstructionBase> construction() const;
+    virtual boost::optional<ConstructionBase> construction() const override;
 
     /// get the construction object and the search distance that was needed to find the construction
     /// does not consider adjacent planar surfaces
-    virtual boost::optional<std::pair<ConstructionBase, int> > constructionWithSearchDistance() const;
+    virtual boost::optional<std::pair<ConstructionBase, int> > constructionWithSearchDistance() const override;
 
     /// Returns true if the construction is not directly referenced by this surface .
-    virtual bool isConstructionDefaulted() const;
+    virtual bool isConstructionDefaulted() const override;
 
-    virtual bool setVertices(const std::vector<Point3d>& vertices);
+    virtual bool setVertices(const std::vector<Point3d>& vertices) override;
 
     /// set the construction object
-    virtual bool setConstruction(const ConstructionBase& construction);
+    virtual bool setConstruction(const ConstructionBase& construction) override;
 
     /// Resets the construction object.
-    virtual void resetConstruction();
+    virtual void resetConstruction() override;
 
     /// Returns the containing PlanarSurfaceGroup if available.
-    virtual boost::optional<PlanarSurfaceGroup> planarSurfaceGroup() const;
+    virtual boost::optional<PlanarSurfaceGroup> planarSurfaceGroup() const override;
 
     /// Returns the containing Space if available.
-    virtual boost::optional<Space> space() const;
+    virtual boost::optional<Space> space() const override;
 
     /** Get the u-factor of this surface. Includes film coefficients. */
-    virtual boost::optional<double> uFactor() const;
+    virtual boost::optional<double> uFactor() const override;
 
     /** Get the conductance of this surface. Does not include film coefficients. */
-    virtual boost::optional<double> thermalConductance() const;
+    virtual boost::optional<double> thermalConductance() const override;
 
     /** Set the u-factor of this surface in W/m^2*K, if possible. value should already include appropriate
      *  film coefficients. By default, assumes still air indoors and 15 mph outdoor air speed. */
-    virtual bool setUFactor(double value);
+    virtual bool setUFactor(double value) override;
 
     /** Set the conductance of this surface in W/m^2*K, if possible. value should not include any film
      *  coefficients. */
-    virtual bool setThermalConductance(double value);
+    virtual bool setThermalConductance(double value) override;
 
     /** @name Getters */
     //@{

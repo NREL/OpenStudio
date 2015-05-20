@@ -87,7 +87,7 @@ namespace detail {
     /** @name Protected in Public Class */
     //@{
 
-    virtual QVariant toVariant() const;
+    virtual QVariant toVariant() const override;
 
     static Measure factoryFromVariant(const QVariant& variant, const VersionString& version);
 

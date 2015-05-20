@@ -55,7 +55,7 @@ public:
   void setShowNewComponents(bool showNewComponents);
 
 protected:
-  void paintEvent(QPaintEvent * event);
+  void paintEvent(QPaintEvent * event) override;
 
 private:
   void requestComponents(const std::string& filterType, int tids, int pageIdx, const QString & searchString);

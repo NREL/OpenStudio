@@ -324,7 +324,7 @@ namespace detail {
       virtual Files outputFilesImpl() const = 0;
 
       /// Implementation of QThread::run()
-      virtual void run();
+      virtual void run() override;
 
       /// Begin execution of the job
       virtual void startImpl(const std::shared_ptr<ProcessCreator> &t_pc) = 0;

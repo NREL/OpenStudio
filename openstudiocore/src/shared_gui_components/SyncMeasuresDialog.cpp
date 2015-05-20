@@ -74,7 +74,7 @@ void SyncMeasuresDialog::createLayout()
 
   connect(m_centralWidget, &SyncMeasuresDialogCentralWidget::closeDlg, this, &SyncMeasuresDialog::closeDlg);
 
-  QScrollArea * centralScrollArea = new QScrollArea(this);
+  auto centralScrollArea = new QScrollArea(this);
   centralScrollArea->setFrameStyle(QFrame::NoFrame);
   centralScrollArea->setObjectName("GrayWidget");
   centralScrollArea->setWidgetResizable(true);
@@ -87,12 +87,12 @@ void SyncMeasuresDialog::createLayout()
   m_rightScrollArea->setObjectName("GrayWidget");
   m_rightScrollArea->setWidgetResizable(true);
 
-  QSplitter * splitter = new QSplitter(this);
+  auto splitter = new QSplitter(this);
   splitter->setOrientation(Qt::Horizontal);
   splitter->addWidget(centralScrollArea);
   splitter->addWidget(m_rightScrollArea);
 
-  QHBoxLayout * mainLayout = new QHBoxLayout();
+  auto mainLayout = new QHBoxLayout();
   mainLayout->addWidget(splitter);
 
   setLayout(mainLayout);
@@ -117,7 +117,7 @@ void SyncMeasuresDialog::findUpdates()
   m_centralWidget->progressBar->setMaximum(measures.size());
   
   int progressValue = 0;
-  for (std::vector<BCLMeasure>::iterator itr = measures.begin();
+  for (auto itr = measures.begin();
       itr != measures.end();
       ++itr)
   {

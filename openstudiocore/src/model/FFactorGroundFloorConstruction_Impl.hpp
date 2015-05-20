@@ -65,22 +65,22 @@ namespace detail {
     /** Get all output variables names that could be associated with this object. These variables
      *  may or may not be available for each simulation, need to check report variable dictionary
      *  to see if the variable is available. Each concrete class should override this method.*/
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     /** @name Queries */
     //@{
 
-    virtual bool isOpaque() const;
+    virtual bool isOpaque() const override;
 
-    virtual bool isFenestration() const;
+    virtual bool isFenestration() const override;
 
-    virtual bool isSolarDiffusing() const;
+    virtual bool isSolarDiffusing() const override;
 
-    virtual bool isModelPartition() const;
+    virtual bool isModelPartition() const override;
 
-    virtual int renderingColorIndex() const;
+    virtual int renderingColorIndex() const override;
 
     /// Returns fFactor.
     virtual double fFactor() const;

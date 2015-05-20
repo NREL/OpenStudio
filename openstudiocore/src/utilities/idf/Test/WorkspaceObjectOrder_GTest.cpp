@@ -43,7 +43,7 @@ TEST_F(IdfFixture,WorkspaceObjectOrder) {
   WorkspaceObjectVector objects = workspace.objects(true);
   for (WorkspaceObjectVector::const_iterator it = objects.begin(), itEnd = objects.end() - 1;
        it != itEnd; ++ it) {
-    WorkspaceObjectVector::const_iterator nxt = it; ++nxt;
+    auto nxt = it; ++nxt;
     EXPECT_TRUE(it->iddObject().type() <= nxt->iddObject().type());
   }
 
@@ -52,7 +52,7 @@ TEST_F(IdfFixture,WorkspaceObjectOrder) {
   HandleVector handles = workspace.handles(true);
   // handles does not include version object, while direct order does
   HandleVector tempOrder = *workspaceOrder;
-  HandleVector::iterator it = std::find(tempOrder.begin(),tempOrder.end(),workspace.versionObject()->handle());
+  auto it = std::find(tempOrder.begin(),tempOrder.end(),workspace.versionObject()->handle());
   tempOrder.erase(it);
   EXPECT_TRUE(tempOrder == handles);
 

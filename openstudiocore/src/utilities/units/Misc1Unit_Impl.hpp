@@ -55,14 +55,14 @@ class UTILITIES_API Misc1Unit_Impl : public Unit_Impl {
   virtual ~Misc1Unit_Impl() {}
 
   /** Deep copy constructor. */
-  virtual Unit clone() const;
+  virtual Unit clone() const override;
 
   //@}
   /** @name Base Units and Scale */
   //@{
 
   /** Throws if baseUnit is not a valid for Misc1Unit. */
-  virtual void setBaseUnitExponent(const std::string& baseUnit, int exponent);
+  virtual void setBaseUnitExponent(const std::string& baseUnit, int exponent) override;
 
   //@}
  private:

@@ -73,9 +73,9 @@ namespace detail {
     bool erase(const Handle& handle);
 
     /// deletes other ordering options and orders by IddObjectType
-    virtual void setOrderByIddEnum();
+    virtual void setOrderByIddEnum() override;
     /// deletes other ordering options and sets IddObjectType order
-    virtual void setIddOrder(const std::vector<IddObjectType>& order);
+    virtual void setIddOrder(const std::vector<IddObjectType>& order) override;
 
     // SORTING
 
@@ -86,7 +86,7 @@ namespace detail {
     bool less(const WorkspaceObject& left, const WorkspaceObject& right) const;
     
     /** Predicate for external sorters (for instance, std::set). */
-    bool less(IddObjectType left, IddObjectType right) const;
+    bool less(IddObjectType left, IddObjectType right) const override;
 
     std::vector<Handle> sort(const std::vector<Handle>& handles) const;
 

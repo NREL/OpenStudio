@@ -849,24 +849,20 @@ void InspectorGadget::layoutComboBox( QVBoxLayout* layout,
 
     std::sort(names.begin(), names.end(), IstringCompare());
 
-    combo->addItem("");
-    /*if (!prop.required){
+    if (!prop.required){
       combo->addItem("");
-    }else{
-      combo->addItem("");
-    }*/
+    }
+
     for (const std::string& name : names){
       combo->addItem(name.c_str());   
     }
   }
   else
   {
-    combo->addItem("");
-    /*if (!prop.required){
+    if (!prop.required){
       combo->addItem("");
-    }else{
-      combo->addItem("");
-    }*/
+    }
+
     for (IddKey key : field.keys()){
       combo->addItem(key.name().c_str());
     }

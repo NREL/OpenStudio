@@ -171,7 +171,7 @@ void SchedulesTabController::purgeUnusedScheduleRulesets()
 {
   std::vector<model::ScheduleRuleset> schedules = m_model.getConcreteModelObjects<model::ScheduleRuleset>();
 
-  for( std::vector<model::ScheduleRuleset>::iterator it = schedules.begin();
+  for( auto it = schedules.begin();
        it != schedules.end();
        ++it )
   {
@@ -260,7 +260,7 @@ void SchedulesTabController::onDayScheduleSceneChanged( DayScheduleScene * scene
 
   scheduleDay.clearValues();
 
-  for( std::vector<CalendarSegmentItem *>::iterator it = segments.begin();
+  for( auto it = segments.begin();
        it < segments.end();
        ++it )
   {

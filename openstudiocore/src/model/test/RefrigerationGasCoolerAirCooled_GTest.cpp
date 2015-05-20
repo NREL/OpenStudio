@@ -109,7 +109,7 @@ TEST_F(ModelFixture, RefrigerationGasCoolerAirCooled_CloneModelWithDefaultData)
     RefrigerationGasCoolerAirCooled testObjectClone = testObject.clone(model).cast<RefrigerationGasCoolerAirCooled>();
 
     std::vector<CurveLinear> refrigerationGasCoolerCurves = model.getModelObjects<CurveLinear>();
-    for(std::vector<CurveLinear>::iterator it = refrigerationGasCoolerCurves.begin(); it != refrigerationGasCoolerCurves.end(); ++it) {
+    for(auto it = refrigerationGasCoolerCurves.begin(); it != refrigerationGasCoolerCurves.end(); ++it) {
       EXPECT_TRUE(it->parent());
     }
 

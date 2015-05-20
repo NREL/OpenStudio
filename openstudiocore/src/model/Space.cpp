@@ -2937,7 +2937,7 @@ boost::optional<Space> Space::fromFloorPrint(const std::vector<Point3d>& floorPr
 
   // create the roofCeiling
   points.clear();
-  for (auto  rit = floorPrint.rbegin(), ritend = floorPrint.rend(); rit != ritend; ++rit){
+  for (auto rit = floorPrint.rbegin(), ritend = floorPrint.rend(); rit != ritend; ++rit){
     points.push_back(Point3d(rit->x(), rit->y(), z + floorHeight));
   }
   Surface roofCeiling(points, model);

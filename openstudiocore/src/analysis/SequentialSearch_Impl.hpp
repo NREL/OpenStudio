@@ -56,7 +56,7 @@ namespace detail {
 
     virtual ~SequentialSearch_Impl() {}
 
-    virtual AnalysisObject clone() const;
+    virtual AnalysisObject clone() const override;
 
     //@}
     /** @name Virtual Methods */
@@ -65,12 +65,12 @@ namespace detail {
     /** Returns true if Algorithm can operate on problem. For example, DesignOfExperiments can work
      *  on all \link Problem Problems \endlink, but SequentialSearch requires an OptimizationProblem
      *  with two objective functions and \link DiscreteVariable DiscreteVariables\endlink. */
-    virtual bool isCompatibleProblemType(const Problem& problem) const;
+    virtual bool isCompatibleProblemType(const Problem& problem) const override;
 
     /** Create the next iteration of work for analysis in the form of constructed but incomplete
      *  \link DataPoint DataPoints \endlink. Throws openstudio::Exception if analysis.algorithm()
      *  != *this. */
-    virtual int createNextIteration(Analysis& analysis);
+    virtual int createNextIteration(Analysis& analysis) override;
 
     //@}
     /** @name Getters and Queries */
@@ -97,7 +97,7 @@ namespace detail {
     /** @name Absent or Protected in Public Class */
     //@{
 
-    virtual QVariant toVariant() const;
+    virtual QVariant toVariant() const override;
 
     static SequentialSearch fromVariant(const QVariant& variant, const VersionString& version);
 

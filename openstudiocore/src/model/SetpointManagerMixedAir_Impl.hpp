@@ -43,17 +43,17 @@ namespace detail {
 
     virtual ~SetpointManagerMixedAir_Impl();
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual ModelObject clone(Model model) const;
+    virtual ModelObject clone(Model model) const override;
 
-    virtual bool addToNode(Node & node);
+    virtual bool addToNode(Node & node) override;
 
-    virtual std::string controlVariable() const;
+    virtual std::string controlVariable() const override;
 
-    virtual bool setControlVariable( const std::string& controlVariable );
+    virtual bool setControlVariable( const std::string& controlVariable ) override;
 
     boost::optional<Node> referenceSetpointNode();
 
@@ -73,12 +73,12 @@ namespace detail {
 
     void resetFanOutletNode();
 
-    virtual boost::optional<Node> setpointNode() const;
+    virtual boost::optional<Node> setpointNode() const override;
 
    private:
-    virtual bool setSetpointNode( const Node & node );
+    virtual bool setSetpointNode( const Node & node ) override;
 
-    virtual void resetSetpointNode();
+    virtual void resetSetpointNode() override;
 
     REGISTER_LOGGER("openstudio.model.SetpointManagerMixedAir");
   };

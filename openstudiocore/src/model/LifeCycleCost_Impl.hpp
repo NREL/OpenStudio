@@ -53,9 +53,9 @@ public:
   // virtual destructor
   virtual ~LifeCycleCost_Impl(){}
 
-  virtual IddObjectType iddObjectType() const {return LifeCycleCost::iddObjectType();}
+  virtual IddObjectType iddObjectType() const override {return LifeCycleCost::iddObjectType();}
 
-  virtual const std::vector<std::string>& outputVariableNames() const;
+  virtual const std::vector<std::string>& outputVariableNames() const override;
 
   /** @name Getters */
   //@{

@@ -54,11 +54,11 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
 
   virtual ~AirConditionerVariableRefrigerantFlow_Impl() {}
 
-  virtual const std::vector<std::string>& outputVariableNames() const;
+  virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual IddObjectType iddObjectType() const;
+  virtual IddObjectType iddObjectType() const override;
 
-  virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+  virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
   Schedule availabilitySchedule() const;
 
@@ -444,9 +444,9 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
 
   void setHeatRecoveryHeatingEnergyTimeConstant(double heatRecoveryHeatingEnergyTimeConstant);
 
-  unsigned inletPort();
+  unsigned inletPort() override;
 
-  unsigned outletPort();
+  unsigned outletPort() override;
 
   ModelObjectList vrfModelObjectList() const;
 
@@ -460,13 +460,13 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
 
   std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals() const;
 
-  ModelObject clone(Model model) const;
+  ModelObject clone(Model model) const override;
 
-  std::vector<openstudio::IdfObject> remove();
+  std::vector<openstudio::IdfObject> remove() override;
 
-  bool addToNode(Node & node);
+  bool addToNode(Node & node) override;
 
-  std::vector<ModelObject> children() const;
+  std::vector<ModelObject> children() const override;
 
  private:
 

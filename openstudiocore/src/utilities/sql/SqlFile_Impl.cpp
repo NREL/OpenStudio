@@ -1075,7 +1075,7 @@ namespace openstudio{
 
       // Return the cost per area
       boost::optional<double> costPerArea;
-      if ((totalBuildingArea && annualEnergyCost) && (totalBuildingArea > 0)){
+      if ((totalBuildingArea && annualEnergyCost) && (totalBuildingArea > 0.0)){
         costPerArea = *annualEnergyCost / *totalBuildingArea;
       }
 
@@ -1093,7 +1093,7 @@ namespace openstudio{
 
       // Return the cost per area
       boost::optional<double> costPerArea;
-      if ((totalBuildingArea && annualEnergyCost) && (totalBuildingArea > 0)){
+      if ((totalBuildingArea && annualEnergyCost) && (totalBuildingArea > 0.0)){
         costPerArea = *annualEnergyCost / *totalBuildingArea;
       }
 

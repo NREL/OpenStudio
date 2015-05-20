@@ -59,17 +59,17 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const;
+    virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const override;
 
-    virtual bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits);
+    virtual bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) override;
 
-    virtual bool resetScheduleTypeLimits();
+    virtual bool resetScheduleTypeLimits() override;
 
-    virtual openstudio::TimeSeries timeSeries() const;
+    virtual openstudio::TimeSeries timeSeries() const override;
 
-    virtual bool setTimeSeries(const openstudio::TimeSeries& timeSeries);
+    virtual bool setTimeSeries(const openstudio::TimeSeries& timeSeries) override;
 
     //@}
     /** @name Getters */
@@ -108,7 +108,7 @@ namespace detail {
     bool setStartDay(int startDay, bool driverMethod = true);
 
     // ensure that this object does not contain the date 2/29
-    virtual void ensureNoLeapDays();
+    virtual void ensureNoLeapDays() override;
 
     //@}
    protected:

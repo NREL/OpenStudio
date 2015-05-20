@@ -42,7 +42,7 @@ public:
 
   ScheduleDialog(bool isIP, 
                  const model::Model & model,
-                 QWidget * parent = 0);
+                 QWidget * parent = nullptr);
 
   virtual ~ScheduleDialog() {}
 
@@ -54,7 +54,7 @@ private slots:
 
 private:
 
-  virtual void createLayout();
+  virtual void createLayout() override;
 
   bool m_isIP;
 
@@ -72,7 +72,7 @@ private:
 
 protected slots:
 
-  virtual void on_okButton(bool checked);
+  virtual void on_okButton(bool checked) override;
 
 };
 

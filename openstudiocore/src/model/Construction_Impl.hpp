@@ -47,11 +47,11 @@ namespace detail {
     /** Get all output variables names that could be associated with this object. These variables
      *  may or may not be available for each simulation, need to check report variable dictionary
      *  to see if the variable is available. Each concrete class should override this method.*/
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual int renderingColorIndex() const;
+    virtual int renderingColorIndex() const override;
 
     /** Searches the model for a layered construction with layers which are the reverse of this one.  Returns that construction 
      *  if found, creates one if not. */

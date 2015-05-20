@@ -53,16 +53,16 @@ namespace detail {
 
 
     protected:
-      virtual std::string descriptionImpl() const;
-      virtual std::string detailedDescriptionImpl() const
+      virtual std::string descriptionImpl() const override;
+      virtual std::string detailedDescriptionImpl() const override
       {
         return "";
       }
-      virtual ToolVersion getToolVersionImpl(const std::string &t_toolName) const;
-      virtual void startHandlerImpl();
-      virtual void endHandlerImpl();
-      virtual Files outputFilesHandlerImpl() const;
-      virtual void basePathChanged();
+      virtual ToolVersion getToolVersionImpl(const std::string &t_toolName) const override;
+      virtual void startHandlerImpl() override;
+      virtual void endHandlerImpl() override;
+      virtual Files outputFilesHandlerImpl() const override;
+      virtual void basePathChanged() override;
 
 
     private:

@@ -105,7 +105,7 @@ TEST(DateTime, StringConstructor)
 
 TEST(DateTime, TMConstructor)
 {
-  time_t t = time(0);
+  time_t t = time(nullptr);
   tm* lt = localtime(&t);
   DateTime zd(*lt);
 

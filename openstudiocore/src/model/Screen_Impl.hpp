@@ -119,9 +119,9 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
@@ -130,7 +130,7 @@ namespace detail {
     /** Get the thickness of the material. For now is equivalent to screen material diameter. 
      *  However, actual thickness of construction should not use this number directly, but should 
      *  also factor in the screen to glass distance. */
-    virtual double thickness() const;
+    virtual double thickness() const override;
 
     /** The conductivitiy of the material in W/m*K. */
     double thermalConductivity() const;
@@ -144,7 +144,7 @@ namespace detail {
     /** The resistance of the material in m^2*K/W. */
     double thermalResistance() const;
 
-    virtual boost::optional<double> getVisibleTransmittance() const;
+    virtual boost::optional<double> getVisibleTransmittance() const override;
 
     std::string reflectedBeamTransmittanceAccountingMethod() const;
 
@@ -217,7 +217,7 @@ namespace detail {
     //@{
 
     /** Set thickness to value (m). For now is equivalent to setting screen material diameter. */
-    virtual bool setThickness(double value);
+    virtual bool setThickness(double value) override;
 
     /** Sets the conductivity of the material in W/m*K, if possible. */
     bool setThermalConductivity(double value);

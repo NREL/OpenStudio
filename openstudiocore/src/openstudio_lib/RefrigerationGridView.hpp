@@ -35,7 +35,7 @@ class RefrigerationGridView : public QWidget
 
 public:
 
-  RefrigerationGridView(bool isIP, const model::Model & model, QWidget * parent = 0);
+  RefrigerationGridView(bool isIP, const model::Model & model, QWidget * parent = nullptr);
 
   virtual ~RefrigerationGridView() {}
 
@@ -66,23 +66,23 @@ public:
 
   virtual ~RefrigerationCaseGridController() {}
 
-  virtual void refreshModelObjects();
+  virtual void refreshModelObjects() override;
 
 protected:
 
-  virtual void setCategoriesAndFields();
+  virtual void setCategoriesAndFields() override;
 
-  virtual void addColumns(const QString &t_category, std::vector<QString> & fields);
+  virtual void addColumns(const QString &t_category, std::vector<QString> & fields) override;
 
-  virtual void checkSelectedFields();
+  virtual void checkSelectedFields() override;
 
-  virtual QString getColor(const model::ModelObject & modelObject);
+  virtual QString getColor(const model::ModelObject & modelObject) override;
 
 public slots:
 
-  virtual void onItemDropped(const OSItemId& itemId);
+  virtual void onItemDropped(const OSItemId& itemId) override;
 
-  virtual void onComboBoxIndexChanged(int index);
+  virtual void onComboBoxIndexChanged(int index) override;
 
 };
 
@@ -101,23 +101,23 @@ public:
 
   virtual ~RefrigerationWalkInGridController() {}
 
-  virtual void refreshModelObjects();
+  virtual void refreshModelObjects() override;
 
 protected:
 
-  virtual void setCategoriesAndFields();
+  virtual void setCategoriesAndFields() override;
 
-  virtual void addColumns(const QString &t_category, std::vector<QString> & fields);
+  virtual void addColumns(const QString &t_category, std::vector<QString> & fields) override;
 
-  virtual void checkSelectedFields();
+  virtual void checkSelectedFields() override;
 
-  virtual QString getColor(const model::ModelObject & modelObject);
+  virtual QString getColor(const model::ModelObject & modelObject) override;
 
 public slots:
 
-  virtual void onItemDropped(const OSItemId& itemId);
+  virtual void onItemDropped(const OSItemId& itemId) override;
 
-  virtual void onComboBoxIndexChanged(int index);
+  virtual void onComboBoxIndexChanged(int index) override;
 
 };
 

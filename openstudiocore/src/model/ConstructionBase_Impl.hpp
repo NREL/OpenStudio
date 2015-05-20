@@ -72,10 +72,10 @@ namespace detail {
     virtual double getNetArea() const;
 
     // return any children objects in the hierarchy
-    virtual std::vector<ModelObject> children() const;
+    virtual std::vector<ModelObject> children() const override;
 
     /// get a vector of allowable children types
-    virtual std::vector<IddObjectType> allowableChildTypes() const;
+    virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
     //@}
     /** @name Setters */

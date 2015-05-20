@@ -32,7 +32,7 @@ class MainMenu : public QMenuBar
 
   public:
 
-  MainMenu(bool isIP, bool isPlugin, QWidget *parent = 0);
+  MainMenu(bool isIP, bool isPlugin, QWidget *parent = nullptr);
 
   virtual ~MainMenu();
 

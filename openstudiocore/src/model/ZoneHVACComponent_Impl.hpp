@@ -48,13 +48,13 @@ class MODEL_API ZoneHVACComponent_Impl : public HVACComponent_Impl {
 
   virtual ~ZoneHVACComponent_Impl() {}
 
-  virtual boost::optional<ParentObject> parent() const;
+  virtual boost::optional<ParentObject> parent() const override;
 
-  virtual std::vector<ModelObject> children() const;
+  virtual std::vector<ModelObject> children() const override;
 
-  virtual const std::vector<std::string>& outputVariableNames() const;
+  virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual ModelObject clone(Model model) const;
+  virtual ModelObject clone(Model model) const override;
 
   virtual unsigned inletPort() const = 0;
 
@@ -70,15 +70,15 @@ class MODEL_API ZoneHVACComponent_Impl : public HVACComponent_Impl {
 
   virtual void removeFromThermalZone();
 
-  std::vector<openstudio::IdfObject> remove();
+  std::vector<openstudio::IdfObject> remove() override;
 
-  bool addToNode(Node & node);
+  bool addToNode(Node & node) override;
 
   void removeFromAirLoopHVAC();
 
-  boost::optional<AirLoopHVAC> airLoopHVAC() const;
+  boost::optional<AirLoopHVAC> airLoopHVAC() const override;
 
-  std::vector<HVACComponent> edges(bool isDemandComponent);
+  std::vector<HVACComponent> edges(bool isDemandComponent) override;
 
  protected:
 

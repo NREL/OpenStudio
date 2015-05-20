@@ -224,7 +224,7 @@ QWidget * LibraryTypeItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 { 
   if(QSharedPointer<LibraryTypeItem> item = dataSource.dynamicCast<LibraryTypeItem>())
   {
-    auto groupCollapsibleView = new OSCollapsibleView(nullptr);
+    auto groupCollapsibleView = new OSCollapsibleView();
 
     auto header = new DarkGradientHeader(); 
     header->label->setText(item->name());
@@ -297,7 +297,7 @@ QWidget * LibraryGroupItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 { 
   if(QSharedPointer<LibraryGroupItem> item = dataSource.dynamicCast<LibraryGroupItem>())
   {
-    auto groupCollapsibleView = new OSCollapsibleView(nullptr);
+    auto groupCollapsibleView = new OSCollapsibleView();
 
     auto header = new LibraryGroupItemHeader(); 
     header->label->setText(item->name());
@@ -375,7 +375,7 @@ QWidget * LibrarySubGroupItemDelegate::view(QSharedPointer<OSListItem> dataSourc
 { 
   if(QSharedPointer<LibrarySubGroupItem> item = dataSource.dynamicCast<LibrarySubGroupItem>())
   {
-    auto subGroupCollapsibleView = new OSCollapsibleView(nullptr);
+    auto subGroupCollapsibleView = new OSCollapsibleView();
 
     auto header = new LibrarySubGroupItemHeader(); 
 

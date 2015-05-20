@@ -47,7 +47,7 @@ class EditNullView : public QWidget
 
   protected:
 
-  void paintEvent(QPaintEvent *);
+  void paintEvent(QPaintEvent *) override;
 };
 
 class EditRubyMeasureView : public QWidget
@@ -72,7 +72,7 @@ class EditRubyMeasureView : public QWidget
 
   protected:
 
-  void paintEvent(QPaintEvent *);
+  void paintEvent(QPaintEvent *) override;
 
   private:
 
@@ -105,9 +105,9 @@ class DoubleInputView : public InputView
   
   void setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description);
 
-  void setIncomplete(bool incomplete);
+  void setIncomplete(bool incomplete) override;
 
-  void setDisplayValue(const QVariant & value);
+  void setDisplayValue(const QVariant & value) override;
 
   private:
 
@@ -127,9 +127,9 @@ class ChoiceInputView : public InputView
 
   void setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description);
 
-  void setIncomplete(bool incomplete);
+  void setIncomplete(bool incomplete) override;
 
-  void setDisplayValue(const QVariant & value);
+  void setDisplayValue(const QVariant & value) override;
 
   private:
 
@@ -149,9 +149,9 @@ class BoolInputView : public InputView
 
   void setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description);
 
-  void setIncomplete(bool incomplete);
+  void setIncomplete(bool incomplete) override;
 
-  void setDisplayValue(const QVariant & value);
+  void setDisplayValue(const QVariant & value) override;
 };
 
 class IntegerInputView : public InputView
@@ -167,9 +167,9 @@ class IntegerInputView : public InputView
 
   void setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description);
 
-  void setIncomplete(bool incomplete);
+  void setIncomplete(bool incomplete) override;
 
-  void setDisplayValue(const QVariant & value);
+  void setDisplayValue(const QVariant & value) override;
 
   private:
 
@@ -189,9 +189,9 @@ class StringInputView : public InputView
 
   void setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description);
 
-  void setIncomplete(bool incomplete);
+  void setIncomplete(bool incomplete) override;
 
-  void setDisplayValue(const QVariant & value);
+  void setDisplayValue(const QVariant & value) override;
 
   private:
 
@@ -204,7 +204,7 @@ class InputComboBox : public QComboBox
 
   protected:
 
-  void wheelEvent(QWheelEvent * e);
+  void wheelEvent(QWheelEvent * e) override;
 };
 
 class InputCheckBox : public QAbstractButton
@@ -223,7 +223,7 @@ class InputCheckBox : public QAbstractButton
 
   protected:
 
-  void paintEvent(QPaintEvent * event);
+  void paintEvent(QPaintEvent * event) override;
 
   private:
 

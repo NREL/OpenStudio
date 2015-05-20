@@ -79,45 +79,45 @@ namespace detail {
 
     //@}
 
-    virtual boost::optional<ParentObject> parent() const;
+    virtual boost::optional<ParentObject> parent() const override;
 
-    virtual bool setParent(ParentObject& newParent);
+    virtual bool setParent(ParentObject& newParent) override;
 
-    virtual std::vector<ModelObject> children() const;
+    virtual std::vector<ModelObject> children() const override;
 
-    virtual std::vector<IdfObject> remove();
+    virtual std::vector<IdfObject> remove() override;
 
-    virtual std::vector<IddObjectType> allowableChildTypes() const;
+    virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
     
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual bool subtractFromGrossArea() const;
+    virtual bool subtractFromGrossArea() const override;
 
-    virtual boost::optional<ConstructionBase> construction() const;
+    virtual boost::optional<ConstructionBase> construction() const override;
 
-    virtual boost::optional<std::pair<ConstructionBase, int> > constructionWithSearchDistance() const;
+    virtual boost::optional<std::pair<ConstructionBase, int> > constructionWithSearchDistance() const override;
 
-    virtual bool isConstructionDefaulted() const;
+    virtual bool isConstructionDefaulted() const override;
 
-    virtual bool setVertices(const std::vector<Point3d>& vertices);
+    virtual bool setVertices(const std::vector<Point3d>& vertices) override;
 
-    virtual bool setConstruction(const ConstructionBase& construction);
+    virtual bool setConstruction(const ConstructionBase& construction) override;
 
-    virtual void resetConstruction();
+    virtual void resetConstruction() override;
 
-    virtual boost::optional<PlanarSurfaceGroup> planarSurfaceGroup() const;
+    virtual boost::optional<PlanarSurfaceGroup> planarSurfaceGroup() const override;
 
-    virtual boost::optional<Space> space() const;
+    virtual boost::optional<Space> space() const override;
 
-    virtual boost::optional<double> uFactor() const;
+    virtual boost::optional<double> uFactor() const override;
 
-    virtual boost::optional<double> thermalConductance() const;
+    virtual boost::optional<double> thermalConductance() const override;
 
-    virtual bool setUFactor(double value);
+    virtual bool setUFactor(double value) override;
 
-    virtual bool setThermalConductance(double value);
+    virtual bool setThermalConductance(double value) override;
 
     /** @name Getters */
     //@{

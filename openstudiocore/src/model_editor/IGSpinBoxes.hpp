@@ -37,7 +37,7 @@ class MODELEDITOR_API IGSpinBox : public QSpinBox
  public:
   IGSpinBox(QWidget* parent);
 
-  virtual void wheelEvent(QWheelEvent* event);
+  virtual void wheelEvent(QWheelEvent* event) override;
 
   public slots:
   void triggered(bool);//the radio button got triggered and calls this slot
@@ -51,7 +51,7 @@ class MODELEDITOR_API IGDSpinBox : public QDoubleSpinBox
   public:
   IGDSpinBox(InspectorGadget* ig,QWidget* parent);
 
-  virtual void wheelEvent(QWheelEvent* event);
+  virtual void wheelEvent(QWheelEvent* event) override;
 
   void setDisplay( bool status );
 

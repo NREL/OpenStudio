@@ -108,19 +108,19 @@ DefaultInspectorView::DefaultInspectorView(const model::Model& model,
                                            QWidget * parent )
   : ModelObjectInspectorView(model, true, parent)
 {
-  QWidget* hiddenWidget = new QWidget();
+  auto hiddenWidget = new QWidget();
   this->stackedWidget()->insertWidget(0, hiddenWidget);
 
-  QWidget* visibleWidget = new QWidget();
+  auto visibleWidget = new QWidget();
   this->stackedWidget()->insertWidget(1, visibleWidget);
 
   this->stackedWidget()->setCurrentIndex(0);
 
-  QVBoxLayout* mainVLayout = new QVBoxLayout();
+  auto mainVLayout = new QVBoxLayout();
   mainVLayout->setContentsMargins(7,7,7,7);
   mainVLayout->setSpacing(7);
 
-  QLabel * underConstructionLabel = new QLabel();
+  auto underConstructionLabel = new QLabel();
   underConstructionLabel->setPixmap(QPixmap(":/images/coming_soon_building_summary.png"));
   underConstructionLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   mainVLayout->addWidget(underConstructionLabel);

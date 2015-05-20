@@ -136,7 +136,6 @@ void ModelSubTabController::onCopyItem()
   auto modelSubTabView = qobject_cast<ModelSubTabView *>(subTabView());
   auto modelObjectInspectorView = modelSubTabView->modelObjectInspectorView();
 
-  openstudio::IddObjectType currentIddObjectType = this->currentIddObjectType();
   if (modelObjectInspectorView->supportsMultipleObjectSelection())
   {
     for (auto &obj : modelObjectInspectorView->selectedObjects())
