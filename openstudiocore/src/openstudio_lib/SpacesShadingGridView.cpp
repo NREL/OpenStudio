@@ -21,10 +21,17 @@
 
 #include "OSDropZone.hpp"
 
+#include "../shared_gui_components/OSGridController.hpp"
 #include "../shared_gui_components/OSGridView.hpp"
 
+#include "../model/ConstructionBase.hpp"
+#include "../model/ConstructionBase_Impl.hpp"
+#include "../model/Schedule.hpp"
+#include "../model/Schedule_Impl.hpp"
 #include "../model/ShadingSurface.hpp"
 #include "../model/ShadingSurface_Impl.hpp"
+#include "../model/ShadingSurfaceGroup.hpp"
+#include "../model/ShadingSurfaceGroup_Impl.hpp"
 #include "../model/Space.hpp"
 #include "../model/Space_Impl.hpp"
 #include "../model/Surface.hpp"
@@ -43,7 +50,6 @@
 #define SELECTED "All"
 
 // GENERAL
-#define SPACENAME "Space Name" // read only
 #define SHADINGSURFACEGROUP "Shading Surface Group" // read only
 #define CONSTRUCTION "Construction"
 #define TRANSMITTANCESCHEDULE "Transmittance Schedule"
@@ -95,10 +101,9 @@ namespace openstudio {
   {
     {
       std::vector<QString> fields;
-      //fields.push_back(SPACENAME);
       //fields.push_back(SHADINGSURFACEGROUP);
-      //fields.push_back(CONSTRUCTION);  
-      //fields.push_back(TRANSMITTANCESCHEDULE);
+      fields.push_back(CONSTRUCTION);  
+      fields.push_back(TRANSMITTANCESCHEDULE);
       //fields.push_back(SHADEDSURFACENAME);
       //fields.push_back(DAYLIGHTINGSHELFNAME);
       std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("General"), fields);
@@ -131,41 +136,123 @@ namespace openstudio {
           );
       }
       else {
+
+          std::function<std::vector<model::ModelObject>(const model::Space &)> allShadingSurfaceGroups(
+            [](const model::Space &t_space) {
+            std::vector<model::ModelObject> allModelObjects;
+            auto shadingSurfaceGroups = t_space.shadingSurfaceGroups();
+            allModelObjects.insert(allModelObjects.end(), shadingSurfaceGroups.begin(), shadingSurfaceGroups.end());
+            return allModelObjects;
+          }
+          );
+
+          std::function<std::vector<model::ModelObject>(const model::Space &)> allShadingSurfaces(
+            [allShadingSurfaceGroups](const model::Space &t_space) {
+            std::vector<model::ModelObject> allModelObjects;
+            for (auto shadingSurfaceGroup : allShadingSurfaceGroups(t_space)) {
+              auto shadingSurfaces = shadingSurfaceGroup.cast<model::ShadingSurfaceGroup>().shadingSurfaces();
+              for (auto shadingSurface : shadingSurfaces) {
+                allModelObjects.push_back(shadingSurface);
+              }
+            }
+            return allModelObjects;
+          }
+          );
+
+          std::function<std::vector<boost::optional<model::ModelObject> >(const model::Space &)> allConstructions(
+            [allShadingSurfaces](const model::Space &t_space) {
+            std::vector<boost::optional<model::ModelObject> > allModelObjects;
+            std::vector<boost::optional<model::ConstructionBase> > allConstructions;
+            for (auto shadingSurface : allShadingSurfaces(t_space)) {
+              auto construction = shadingSurface.cast<model::ShadingSurface>().construction();
+              if (construction) {
+                allConstructions.push_back(construction);
+              }
+              else {
+                allConstructions.push_back(boost::optional<model::ConstructionBase>());
+              }
+            }
+            allModelObjects.insert(allModelObjects.end(), allConstructions.begin(), allConstructions.end());
+
+            return allModelObjects;
+          }
+          );
+
+          std::function<std::vector<boost::optional<model::ModelObject> >(const model::Space &)> allTransmittanceSchedules(
+            [allShadingSurfaces](const model::Space &t_shadingSurfaceGroup) {
+            std::vector<boost::optional<model::ModelObject> > allModelObjects;
+            std::vector<boost::optional<model::Schedule> > transmittanceSchedules;
+            for (auto shadingSurface : allShadingSurfaces(t_shadingSurfaceGroup)) {
+              auto transmittanceSchedule = shadingSurface.cast<model::ShadingSurface>().transmittanceSchedule();
+              if (transmittanceSchedule) {
+                transmittanceSchedules.push_back(transmittanceSchedule);
+              }
+              else {
+                transmittanceSchedules.push_back(boost::optional<model::Schedule>());
+              }
+            }
+            allModelObjects.insert(allModelObjects.end(), transmittanceSchedules.begin(), transmittanceSchedules.end());
+
+            return allModelObjects;
+          }
+          );
+
         if (field == SELECTED) {
+
           auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
           checkbox->setToolTip("Check to select all rows");
           connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpacesShadingGridController::selectAllStateChanged);
 
-          addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row");
-          //addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row",
-          //  DataSource(
-          //  allLoads,
-          //  true
-          //  )
-          //  );
-        }
-        else if (field == SPACENAME) {
-
+          addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row",
+            DataSource(
+            allShadingSurfaceGroups,
+            true
+            )
+            );
         }
         else if (field == SHADINGSURFACEGROUP) {
+          //boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup() const;
+          //bool setShadingSurfaceGroup(const ShadingSurfaceGroup& shadingSurfaceGroup);
 
         }
         else if (field == CONSTRUCTION) {
-
+          addDropZoneColumn(Heading(QString(CONSTRUCTION)),
+            CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::construction),
+            CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::setConstruction),
+            boost::optional<std::function<void(model::ShadingSurface*)> >(NullAdapter(&model::ShadingSurface::resetConstruction)),
+            DataSource(
+            allConstructions, 
+            true
+            )
+            );
         }
         else if (field == TRANSMITTANCESCHEDULE) {
-          //ShadingSurface
-          //boost::optional<Schedule> transmittanceSchedule() const;
-          //bool setTransmittanceSchedule(Schedule& transmittanceSchedule);
-          //void resetTransmittanceSchedule();
 
+          std::function<bool(model::ShadingSurface *, const model::Schedule &)> setter(
+            [](model::ShadingSurface *t_shadingSurface, const model::Schedule &t_arg) {
+            auto copy = t_arg;
+            return t_shadingSurface->setTransmittanceSchedule(copy);
+          }
+          );
 
+          addDropZoneColumn(Heading(QString(TRANSMITTANCESCHEDULE)),
+            CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::transmittanceSchedule),
+            setter,
+            boost::optional<std::function<void(model::ShadingSurface*)> >(NullAdapter(&model::ShadingSurface::resetTransmittanceSchedule)),
+            DataSource(
+            allTransmittanceSchedules, 
+            true
+            )
+            );
         }
         else if (field == SHADEDSURFACENAME) {
-
+          //ShadingSurfaceGroup
+          //boost::optional<SubSurface> shadedSubSurface() const;
+          //boost::optional<Surface> shadedSurface() const;
         }
         else if (field == DAYLIGHTINGSHELFNAME) {
-
+          //ShadingSurface
+          //boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf() const;
         }
         else {
           // unhandled
