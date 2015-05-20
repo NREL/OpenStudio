@@ -45,7 +45,7 @@ class OSHeader : public QPushButton
 
   protected:
 
-  void paintEvent(QPaintEvent *);
+  void paintEvent(QPaintEvent *) override;
 };
 
 class OSCollapsibleView : public QWidget

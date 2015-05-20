@@ -28,10 +28,10 @@
 class OpenStudioLibFixture : public ::testing::Test {
  protected:
   // initialize for each test
-  virtual void SetUp();
+  virtual void SetUp() override;
 
   // tear down after each test
-  virtual void TearDown();
+  virtual void TearDown() override;
 
   // initialize static members
   static void SetUpTestCase();

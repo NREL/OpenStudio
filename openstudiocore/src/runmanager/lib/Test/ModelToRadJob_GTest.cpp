@@ -29,6 +29,7 @@
 
 #include "../../../model/Model.hpp"
 
+#include "../../../utilities/core/Application.hpp"
 #include "../../../utilities/idf/IdfFile.hpp"
 #include "../../../utilities/idf/IdfObject.hpp"
 #include "../../../utilities/data/EndUses.hpp"
@@ -47,6 +48,7 @@ using openstudio::SqlFile;
 
 TEST_F(RunManagerTestFixture, ModelToRadJob)
 {
+  openstudio::Application::instance().application(false);
   openstudio::path outdir = openstudio::toPath(QDir::tempPath()) / openstudio::toPath("ModelToRadJobRunTest");
   boost::filesystem::create_directories(outdir);
   openstudio::path db = outdir / openstudio::toPath("ModelToRadJobRunDB");

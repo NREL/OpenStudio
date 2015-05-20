@@ -41,7 +41,7 @@ class ZoneChooserView : public QWidget
 
   public:
 
-  ZoneChooserView(QWidget* parent = 0);
+  ZoneChooserView(QWidget* parent = nullptr);
 
   virtual ~ZoneChooserView() {}
 
@@ -61,7 +61,7 @@ class ZoneChooserView : public QWidget
 
   protected:
 
-  void paintEvent ( QPaintEvent * event );
+  void paintEvent ( QPaintEvent * event ) override;
 
   private:
 
@@ -81,7 +81,7 @@ class ZoneChooserItem : public QWidget
 
   public:
 
-  ZoneChooserItem(model::ThermalZone &, ZoneChooserView * parent = 0);
+  ZoneChooserItem(model::ThermalZone &, ZoneChooserView * parent = nullptr);
 
   virtual ~ZoneChooserItem() {}
 

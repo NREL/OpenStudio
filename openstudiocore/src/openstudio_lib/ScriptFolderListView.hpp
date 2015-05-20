@@ -49,7 +49,7 @@ class ScriptFolderListView : public OSCollapsibleItemList {
                        bool draggable,
                        bool removeable,
                        OSItemType headerType,
-                       QWidget * parent = 0);
+                       QWidget * parent = nullptr);
 
   virtual ~ScriptFolderListView();
 

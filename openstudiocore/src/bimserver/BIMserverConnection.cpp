@@ -463,7 +463,7 @@ namespace bimserver {
     //encode file into Base64
     QByteArray fileArray = file.readAll();
     QByteArray fileArrayEncoded = fileArray.toBase64();
-    QString fileEncoded = QString::QString(fileArrayEncoded);
+    QString fileEncoded(fileArrayEncoded);
     parameters["data"] = QJsonValue(fileEncoded);
     parameters["merge"] = QJsonValue(false);
     parameters["sync"] = QJsonValue(false);

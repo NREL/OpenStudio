@@ -60,7 +60,7 @@ namespace detail {
     //@{
 
     /** Get the thickness of the material. Always returns 0.0. */
-    virtual double thickness() const;
+    virtual double thickness() const override;
 
     /** The conductivitiy of the material in W/m*K. */
     virtual double thermalConductivity() const;
@@ -86,7 +86,7 @@ namespace detail {
 
     virtual double solarReflectance() const;
 
-    virtual boost::optional<double> getVisibleTransmittance() const;
+    virtual boost::optional<double> getVisibleTransmittance() const override;
 
     virtual double visibleAbsorptance() const;
 
@@ -97,7 +97,7 @@ namespace detail {
     //@{
 
     /** Set thickness to value (m). Always returns false. */
-    virtual bool setThickness(double value);
+    virtual bool setThickness(double value) override;
 
     /** Sets the conductivity of the material in W/m*K, if possible. */
     virtual bool setThermalConductivity(double value);

@@ -93,7 +93,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.3.5")] = &VersionTranslator::update_1_3_4_to_1_3_5;
   m_updateMethods[VersionString("1.5.4")] = &VersionTranslator::update_1_5_3_to_1_5_4;
   m_updateMethods[VersionString("1.7.2")] = &VersionTranslator::update_1_7_1_to_1_7_2;
-  m_updateMethods[VersionString("1.7.3")] = &VersionTranslator::update_1_7_2_to_1_7_3;
+  m_updateMethods[VersionString("1.7.4")] = &VersionTranslator::update_1_7_3_to_1_7_4;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -172,6 +172,7 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.7.0"));
   m_startVersions.push_back(VersionString("1.7.1"));
   m_startVersions.push_back(VersionString("1.7.2"));
+  m_startVersions.push_back(VersionString("1.7.3"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -2400,7 +2401,16 @@ std::string VersionTranslator::update_1_7_1_to_1_7_2(const IdfFile& idf_1_7_1, c
 
   for (const IdfObject& object : idf_1_7_1.objects()) {
     if (object.iddObject().name() == "OS:EvaporativeCooler:Direct:ResearchSpecial") {
-      auto newObject = object.clone(true);
+      auto iddObject = idd_1_7_2.getObject("OS:EvaporativeCooler:Direct:ResearchSpecial");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < 10; ++i ) {
+        if( auto s = object.getString(i) ) {
+          newObject.setString(i,s.get());
+        }
+      }
+
       auto d = object.getDouble(4);
       if( ! d ) {
         newObject.setString(4,"Autosize");
@@ -2410,7 +2420,16 @@ std::string VersionTranslator::update_1_7_1_to_1_7_2(const IdfFile& idf_1_7_1, c
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
     } else if (object.iddObject().name() == "OS:EvaporativeCooler:Indirect:ResearchSpecial") {
-      auto newObject = object.clone(true);
+      auto iddObject = idd_1_7_2.getObject("OS:EvaporativeCooler:Indirect:ResearchSpecial");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < 19; ++i ) {
+        if( auto s = object.getString(i) ) {
+          newObject.setString(i,s.get());
+        }
+      }
+
       auto d = object.getDouble(5);
       if( ! d ) {
         newObject.setString(5,"Autosize");
@@ -2428,19 +2447,19 @@ std::string VersionTranslator::update_1_7_1_to_1_7_2(const IdfFile& idf_1_7_1, c
   return ss.str();
 }
 
-std::string VersionTranslator::update_1_7_2_to_1_7_3(const IdfFile& idf_1_7_2, const IddFileAndFactoryWrapper& idd_1_7_3)
+std::string VersionTranslator::update_1_7_3_to_1_7_4(const IdfFile& idf_1_7_3, const IddFileAndFactoryWrapper& idd_1_7_4)
 {
   std::stringstream ss;
 
-  ss << idf_1_7_2.header() << std::endl << std::endl;
+  ss << idf_1_7_3.header() << std::endl << std::endl;
 
   // new version object
-  IdfFile targetIdf(idd_1_7_3.iddFile());
+  IdfFile targetIdf(idd_1_7_4.iddFile());
   ss << targetIdf.versionObject().get();
 
-  for (const IdfObject& object : idf_1_7_2.objects()) {
+  for (const IdfObject& object : idf_1_7_3.objects()) {
     if (object.iddObject().name() == "OS:Sizing:System") {
-      auto iddObject = idd_1_7_3.getObject("OS:Sizing:System");
+      auto iddObject = idd_1_7_4.getObject("OS:Sizing:System");
       OS_ASSERT(iddObject);
       IdfObject newObject(iddObject.get());
 
@@ -2471,7 +2490,7 @@ std::string VersionTranslator::update_1_7_2_to_1_7_3(const IdfFile& idf_1_7_2, c
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
     } else if(object.iddObject().name() == "OS:Sizing:Plant") {
-      auto iddObject = idd_1_7_3.getObject("OS:Sizing:Plant");
+      auto iddObject = idd_1_7_4.getObject("OS:Sizing:Plant");
       OS_ASSERT(iddObject);
       IdfObject newObject(iddObject.get());
 

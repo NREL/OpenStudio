@@ -38,13 +38,13 @@ namespace openstudio {
 ZoneChooserView::ZoneChooserView(QWidget* parent)
   : QWidget(parent)
 {
-  QVBoxLayout * mainLayout = new QVBoxLayout();
+  auto mainLayout = new QVBoxLayout();
 
   mainLayout->setContentsMargins(0,0,0,0);
 
   this->setLayout(mainLayout);
 
-  QScrollArea * scrollArea = new QScrollArea();
+  auto scrollArea = new QScrollArea();
   
   scrollArea->setWidgetResizable(true);
 
@@ -52,7 +52,7 @@ ZoneChooserView::ZoneChooserView(QWidget* parent)
 
   mainLayout->addWidget(scrollArea);
 
-  QWidget * scrollWidget = new QWidget();
+  auto scrollWidget = new QWidget();
 
   scrollArea->setWidget(scrollWidget);
 
@@ -87,7 +87,7 @@ void ZoneChooserView::layoutView()
   this->setUpdatesEnabled(false);
 
   QLayoutItem * child;
-  while((child = m_vLayout->takeAt(0)) != 0) 
+  while((child = m_vLayout->takeAt(0)) != nullptr) 
   {
       delete child->widget();
       delete child;
@@ -96,14 +96,14 @@ void ZoneChooserView::layoutView()
 
   if( m_mixer )
   {
-    QLabel * label = new QLabel();
+    auto label = new QLabel();
     label->setObjectName("IGHeader");
     label->setText(toQString(m_mixer->iddObject().name()));
     m_vLayout->addWidget(label);
   }
   else if( m_splitter )
   {
-    QLabel * label = new QLabel();
+    auto label = new QLabel();
     label->setObjectName("IGHeader");
     label->setText(toQString(m_splitter->iddObject().name()));
     m_vLayout->addWidget(label);
@@ -129,13 +129,13 @@ void ZoneChooserView::layoutView()
   zones = m_splitter->model().getConcreteModelObjects<model::ThermalZone>();
   std::sort(zones.begin(),zones.end(),WorkspaceObjectNameLess());
 
-  for( std::vector<model::ThermalZone>::iterator it = zones.begin();
+  for( auto it = zones.begin();
         it < zones.end();
         ++it )
   {
     if( ! it->isPlenum() )
     {
-      ZoneChooserItem * zoneChooserItem = new ZoneChooserItem(*it,this);
+      auto zoneChooserItem = new ZoneChooserItem(*it,this);
       m_zoneChooserItems.push_back(zoneChooserItem);
       m_vLayout->addWidget(zoneChooserItem);
       zoneChooserItem->setChecked(false);
@@ -145,7 +145,7 @@ void ZoneChooserView::layoutView()
 
   std::vector<model::ThermalZone> thermalZones;
   thermalZones = m_splitter->thermalZones();
-  for( std::vector<model::ThermalZone>::iterator it = thermalZones.begin();
+  for( auto it = thermalZones.begin();
         it < thermalZones.end();
         ++it )
   {
@@ -174,7 +174,7 @@ void ZoneChooserView::paintEvent ( QPaintEvent * event )
 
 ZoneChooserItem * ZoneChooserView::zoneChooserItemForZone(std::string zoneName)
 {
-  for( std::vector<ZoneChooserItem *>::iterator it = m_zoneChooserItems.begin();
+  for( auto it = m_zoneChooserItems.begin();
        it < m_zoneChooserItems.end();
        ++it )
   {
@@ -191,7 +191,7 @@ ZoneChooserItem::ZoneChooserItem(model::ThermalZone & zone, ZoneChooserView * pa
     m_zoneChooserView(parent),
     m_thermalZone(zone)
 {
-  QHBoxLayout * hLayout = new QHBoxLayout();
+  auto hLayout = new QHBoxLayout();
 
   m_checkBox = new QCheckBox();
   

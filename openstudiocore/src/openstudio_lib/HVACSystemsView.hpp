@@ -54,11 +54,11 @@ class HVACSystemsView : public QWidget
 
   HVACToolbarView * hvacToolbarView;
 
-  QSize sizeHint() const;
+  QSize sizeHint() const override;
 
   protected:
 
-  void paintEvent(QPaintEvent * event);
+  void paintEvent(QPaintEvent * event) override;
 };
 
 class HVACToolbarView : public QWidget
@@ -95,7 +95,7 @@ class HVACToolbarView : public QWidget
 
   protected:
 
-  void paintEvent(QPaintEvent * event);
+  void paintEvent(QPaintEvent * event) override;
 
   private:
 
@@ -108,7 +108,7 @@ class HVACGraphicsView : public QGraphicsView
 
   public:
 
-  HVACGraphicsView( QWidget * parent = 0 );
+  HVACGraphicsView( QWidget * parent = nullptr );
 
   virtual ~HVACGraphicsView() {}
 

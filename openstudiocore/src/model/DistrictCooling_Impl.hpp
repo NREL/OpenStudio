@@ -54,13 +54,13 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual unsigned inletPort();
+    virtual unsigned inletPort() override;
 
-    virtual unsigned outletPort();
+    virtual unsigned outletPort() override;
 
     //@}
     /** @name Getters */
@@ -75,7 +75,7 @@ namespace detail {
     /** @name Setters */
     //@{
     
-    bool addToNode(Node & node);
+    bool addToNode(Node & node) override;
 
     //@}
     /** @name Other */

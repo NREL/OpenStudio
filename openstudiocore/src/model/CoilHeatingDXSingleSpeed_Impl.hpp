@@ -79,23 +79,23 @@ class MODEL_API CoilHeatingDXSingleSpeed_Impl : public StraightComponent_Impl {
   /** @name Virtual Methods */
   //@{
 
-  virtual ModelObject clone(Model model) const;
+  virtual ModelObject clone(Model model) const override;
 
-  virtual const std::vector<std::string>& outputVariableNames() const;
+  virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual IddObjectType iddObjectType() const;
+  virtual IddObjectType iddObjectType() const override;
 
-  virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+  virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-  virtual std::vector<ModelObject> children() const;
+  virtual std::vector<ModelObject> children() const override;
 
-  virtual unsigned inletPort();
+  virtual unsigned inletPort() override;
 
-  virtual unsigned outletPort();
+  virtual unsigned outletPort() override;
 
-  virtual boost::optional<HVACComponent> containingHVACComponent() const;
+  virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
-  virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const;
+  virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
   //@}
   /** @name Getters */
@@ -232,7 +232,7 @@ class MODEL_API CoilHeatingDXSingleSpeed_Impl : public StraightComponent_Impl {
   boost::optional<Curve> defrostEnergyInputRatioFunctionofTemperatureCurve() const;
   bool setDefrostEnergyInputRatioFunctionofTemperatureCurve( const boost::optional<Curve> curve );
 
-  bool addToNode(Node & node);
+  bool addToNode(Node & node) override;
 
   //@}
  protected:

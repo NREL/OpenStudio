@@ -1931,10 +1931,11 @@ TEST_F(IdfFixture, Workspace_AddObjects3) {
 
 TEST_F(IdfFixture, Workspace_Signals)
 {
+  openstudio::Application::instance().application(false);
   IdfFile idfFile(IddFileType::EnergyPlus);
   Workspace workspace(idfFile);
 
-  WorkspaceReciever* reciever = NULL;
+  WorkspaceReciever* reciever = nullptr;
 
   ASSERT_NO_THROW( reciever = new WorkspaceReciever(workspace) );
 

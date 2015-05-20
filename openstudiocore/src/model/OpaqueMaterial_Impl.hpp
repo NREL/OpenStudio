@@ -88,13 +88,13 @@ namespace detail {
 
     virtual boost::optional<double> solarReflectance() const = 0;
 
-    virtual boost::optional<double> getVisibleTransmittance() const;
+    virtual boost::optional<double> getVisibleTransmittance() const override;
 
     virtual double visibleAbsorptance() const = 0;
 
-    virtual boost::optional<double> interiorVisibleAbsorptance() const;
+    virtual boost::optional<double> interiorVisibleAbsorptance() const override;
 
-    virtual boost::optional<double> exteriorVisibleAbsorptance() const;
+    virtual boost::optional<double> exteriorVisibleAbsorptance() const override;
 
     virtual boost::optional<double> visibleReflectance() const = 0;
 

@@ -71,7 +71,7 @@ class OSListView : public QWidget
 
  protected:
 
-  void paintEvent(QPaintEvent *);
+  void paintEvent(QPaintEvent *) override;
 
  private slots:
 

@@ -56,16 +56,16 @@ namespace detail {
 
     /** Returns objects directly owned by this Record. Children are removed when this Record
      *  is removed. */
-    virtual std::vector<ObjectRecord> children() const;
+    virtual std::vector<ObjectRecord> children() const override;
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database) override;
 
-    virtual analysis::DataPoint dataPoint() const;
+    virtual analysis::DataPoint dataPoint() const override;
 
     /** Provided for callers operating directly on the database, not holding a copy of this
      *  analysis in memory. Use with caution. Does not do file system cleanup. */
-    virtual void clearResults();
+    virtual void clearResults() override;
 
     //@}
     /** @name Getters */
@@ -80,19 +80,19 @@ namespace detail {
     //@}
    protected:
     /** Bind data member values to a query for saving. */
-    virtual void bindValues(QSqlQuery& query) const;
+    virtual void bindValues(QSqlQuery& query) const override;
 
     /** Set the last state of this object from the query (including id). */
-    virtual void setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase);
+    virtual void setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) override;
 
     /** Check that values (except id) are same as query. */
-    virtual bool compareValues(const QSqlQuery& query) const;
+    virtual bool compareValues(const QSqlQuery& query) const override;
 
     /** Save values to last state. */
-    virtual void saveLastValues();
+    virtual void saveLastValues() override;
 
     /** Revert values back to last state. */
-    virtual void revertToLastValues();
+    virtual void revertToLastValues() override;
 
    private:
     REGISTER_LOGGER("openstudio.project.OptimizationDataPointRecord");

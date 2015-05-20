@@ -43,7 +43,7 @@ void CollapsibleInspector::createLayout()
 {
   setContentsMargins(0,0,0,0);
 
-  QVBoxLayout * mainLayout = new QVBoxLayout();
+  auto mainLayout = new QVBoxLayout();
   mainLayout->setContentsMargins(0,0,0,0);
   mainLayout->setSpacing(0);
   setLayout(mainLayout);
@@ -84,7 +84,7 @@ void CollapsibleInspectorHeader::createLayout()
   setObjectName("CollapsibleInspectorHeader");
   setCheckable(true);
 
-  QHBoxLayout * mainHLayout = new QHBoxLayout();
+  auto mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(10,0,10,0);
   mainHLayout->setSpacing(7);
   setLayout(mainHLayout);
@@ -94,7 +94,7 @@ void CollapsibleInspectorHeader::createLayout()
   mainHLayout->addWidget(m_arrowLabel, 0, Qt::AlignLeft);
 
   // Name
-  QLabel * textLabel = new QLabel(m_text);
+  auto textLabel = new QLabel(m_text);
   textLabel->setWordWrap(false);
   textLabel->setObjectName("H2");
   mainHLayout->addWidget(textLabel, 0, Qt::AlignLeft);

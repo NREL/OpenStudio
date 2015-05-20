@@ -47,12 +47,12 @@ namespace ruleset {
 
     virtual ~EmbeddedRubyUserScriptInfoGetter() {}
 
-    RubyUserScriptInfo getInfo(const BCLMeasure& measure) {
+    RubyUserScriptInfo getInfo(const BCLMeasure& measure) override {
       return m_rubyInterpreter->template execWithReturn<RubyUserScriptInfo>(
           "infoExtractor", measure, model::OptionalModel(), OptionalWorkspace());
     }
 
-    RubyUserScriptInfo getInfo(const BCLMeasure& measure, const Workspace& workspace) {
+    RubyUserScriptInfo getInfo(const BCLMeasure& measure, const Workspace& workspace) override {
       if (model::OptionalModel model = workspace.optionalCast<model::Model>()) {
         return m_rubyInterpreter->template execWithReturn<RubyUserScriptInfo>(
               "infoExtractor", measure, model::OptionalModel(model), OptionalWorkspace());
@@ -65,7 +65,7 @@ namespace ruleset {
 
     RubyUserScriptInfo getInfo(const BCLMeasure& measure,
                                const model::Model& model,
-                               const Workspace& workspace)
+                               const Workspace& workspace) override
     {
       return m_rubyInterpreter->template execWithReturn<RubyUserScriptInfo>(
           "infoExtractor", measure, model::OptionalModel(model), OptionalWorkspace(workspace));

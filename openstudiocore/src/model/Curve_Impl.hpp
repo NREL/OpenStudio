@@ -54,7 +54,7 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual boost::optional<ParentObject> parent() const;
+    virtual boost::optional<ParentObject> parent() const override;
 
     //@}
     /** @name Other */

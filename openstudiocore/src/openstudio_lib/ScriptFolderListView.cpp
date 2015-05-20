@@ -69,7 +69,7 @@ ScriptFolderListView::~ScriptFolderListView()
 void ScriptFolderListView::addScriptFolder(const openstudio::path &folder, const std::string& name) {
   OSCollapsibleItemHeader* collapsibleItemHeader = new OSCollapsibleItemHeader(name, OSItemId("", "", false,""), m_headerType);
   ScriptsListView* scriptsListView = new ScriptsListView(m_rootPath / folder, false, m_draggable, m_removeable, m_fswatcher);
-  OSCollapsibleItem* folderTypeItem = new OSCollapsibleItem(collapsibleItemHeader, scriptsListView);
+  auto folderTypeItem = new OSCollapsibleItem(collapsibleItemHeader, scriptsListView);
 
   LOG(Debug, "Adding scriptslistview: " << openstudio::toString(m_rootPath/folder));
   m_displayNames[m_rootPath / folder] = name;
@@ -129,8 +129,8 @@ openstudio::path ScriptFolderListView::rootPath() const {
 
 std::vector<openstudio::path> ScriptFolderListView::folders() const {
   std::vector<openstudio::path> result;
-  std::map<openstudio::path, std::string>::const_iterator it(m_displayNames.begin());
-  std::map<openstudio::path, std::string>::const_iterator itEnd(m_displayNames.end());
+  auto it(m_displayNames.begin());
+  auto itEnd(m_displayNames.end());
   for (; it != itEnd; ++it) {
     result.push_back(it->first);
   }
@@ -142,7 +142,7 @@ openstudio::path ScriptFolderListView::selectedFolder() const {
 
   if (selectedCollapsibleItem)
   {
-    for (std::map<openstudio::path, ScriptsListView *>::const_iterator itr = m_scriptsListViews.begin();
+    for (auto itr = m_scriptsListViews.begin();
       itr != m_scriptsListViews.end();
       ++itr)
     {
@@ -159,7 +159,7 @@ openstudio::path ScriptFolderListView::selectedFolder() const {
 }
 
 std::string ScriptFolderListView::folderName(const openstudio::path& folder) const {
-  std::map<openstudio::path, std::string>::const_iterator it = m_displayNames.find(folder);
+  auto it = m_displayNames.find(folder);
   if (it == m_displayNames.end()) {
     it = m_displayNames.find(m_rootPath / folder);
   }
@@ -172,10 +172,9 @@ void ScriptFolderListView::saveOSArguments() {
        litEnd = m_scriptsListViews.end(); lit != litEnd; ++lit)
   {
     std::vector<OSItem *> listItems = lit->second->items();
-    for (std::vector<OSItem *>::iterator it = listItems.begin(), itEnd = listItems.end();
-         it != itEnd; ++it)
+    for (auto & listItem : listItems)
     {
-      ScriptItem* scriptItem = qobject_cast<ScriptItem*>(*it);
+      ScriptItem* scriptItem = qobject_cast<ScriptItem*>(listItem);
       if (scriptItem) {
         scriptItem->saveArgumentsToDb();
       }
@@ -186,7 +185,7 @@ void ScriptFolderListView::saveOSArguments() {
 std::vector<ruleset::UserScriptInfo> ScriptFolderListView::folderUserScripts(
     const openstudio::path& folder) const
 {
-  std::map<openstudio::path, ScriptsListView *>::const_iterator it = m_scriptsListViews.find(folder);
+  auto it = m_scriptsListViews.find(folder);
   if (it == m_scriptsListViews.end()) {
     it = m_scriptsListViews.find(m_rootPath / folder);
   }

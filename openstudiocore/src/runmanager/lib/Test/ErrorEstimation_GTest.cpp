@@ -30,6 +30,7 @@
 #include "../../../model/Model.hpp"
 #include "../../../model/Building.hpp"
 
+#include "../../../utilities/core/Application.hpp"
 #include "../../../utilities/idf/IdfFile.hpp"
 #include "../../../utilities/idf/IdfObject.hpp"
 #include "../../../utilities/data/EndUses.hpp"
@@ -173,6 +174,7 @@ std::pair<double, double> runSimulation(openstudio::runmanager::ErrorEstimation 
 
 TEST_F(RunManagerTestFixture, ErrorEstimationTest)
 {
+  openstudio::Application::instance().application(false);
   openstudio::runmanager::ErrorEstimation ee(1);
   ee.setConfidence("FullRun", 1.0);
   ee.setConfidence("Estimation", 0.75);

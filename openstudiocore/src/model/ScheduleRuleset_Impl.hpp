@@ -57,25 +57,25 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual ModelObject clone(Model model) const;
+    virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<ResourceObject> resources() const;
+    virtual std::vector<ResourceObject> resources() const override;
 
-    virtual std::vector<ModelObject> children() const;
+    virtual std::vector<ModelObject> children() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const;
+    virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const override;
 
     /** Returns empty vector, because individual ScheduleDay objects will check values() against
      *  bounds. */
-    virtual std::vector<double> values() const;
+    virtual std::vector<double> values() const override;
 
-    virtual bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits);
+    virtual bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) override;
 
-    virtual bool resetScheduleTypeLimits();
+    virtual bool resetScheduleTypeLimits() override;
 
     //@}
     /** @name Getters */
@@ -135,7 +135,7 @@ namespace detail {
     bool moveToEnd(ScheduleRule& scheduleRule);
 
     // ensure that this object does not contain the date 2/29
-    virtual void ensureNoLeapDays();
+    virtual void ensureNoLeapDays() override;
 
     //@}
    private:

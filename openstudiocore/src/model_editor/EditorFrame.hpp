@@ -50,11 +50,11 @@ public:
   void loadStyleSheet(QString& style);
 
 protected:
-  void closeEvent(QCloseEvent *event);
+  void closeEvent(QCloseEvent *event) override;
 
 private:
   void connectSignalsAndSlots();
-  void contextMenuEvent(QContextMenuEvent *event);
+  void contextMenuEvent(QContextMenuEvent *event) override;
   void createActions();
   void createLayout();
   void createMenus();

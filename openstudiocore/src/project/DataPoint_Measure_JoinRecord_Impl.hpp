@@ -51,14 +51,14 @@ namespace detail {
 
     /** Get the name of the database table for this record. Should be implemented by the base 
      *  class for the table. */
-    virtual std::string databaseTableName() const;
+    virtual std::string databaseTableName() const override;
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database) override;
 
-    virtual ObjectRecord leftObject() const;
+    virtual ObjectRecord leftObject() const override;
 
-    virtual ObjectRecord rightObject() const;
+    virtual ObjectRecord rightObject() const override;
 
     DataPointRecord dataPointRecord() const;
 

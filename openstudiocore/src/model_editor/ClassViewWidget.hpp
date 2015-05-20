@@ -42,20 +42,20 @@ public:
   ClassViewWidget(QWidget *parent = nullptr);
   virtual ~ClassViewWidget();
   void loadWorkspace(const openstudio::Workspace& workspace);
-  virtual void addObjects(openstudio::IddObjectType type = openstudio::IddObjectType("UserCustom"));
-  virtual void loadModel();
-  virtual void removeObjects();
-  virtual void copyObjects();
-  virtual void pasteObjects();
-  virtual bool hasSelectedRows();
-  virtual bool hasRowsToPaste();
+  virtual void addObjects(openstudio::IddObjectType type = openstudio::IddObjectType("UserCustom")) override;
+  virtual void loadModel() override;
+  virtual void removeObjects() override;
+  virtual void copyObjects() override;
+  virtual void pasteObjects() override;
+  virtual bool hasSelectedRows() override;
+  virtual bool hasRowsToPaste() override;
   TableView * getTableView();
   TableModel * getTableModel();
-  virtual void toggleGUIDs();
+  virtual void toggleGUIDs() override;
 
 public slots:
-  virtual void viewSelection(const QModelIndex& modelIndex);
-  virtual void on_nameChanged(QString);
+  virtual void viewSelection(const QModelIndex& modelIndex) override;
+  virtual void on_nameChanged(QString) override;
   virtual void viewSelection();
 
 signals:
@@ -65,11 +65,11 @@ protected:
   TableModel * mTableModel;
 
 private:
-  virtual void createWidgets();
-  virtual void connectSignalsAndSlots();
-  virtual void createLayout();
-  virtual void loadData();
-  virtual void loadModel(openstudio::model::Model& model);
+  virtual void createWidgets() override;
+  virtual void connectSignalsAndSlots() override;
+  virtual void createLayout() override;
+  virtual void loadData() override;
+  virtual void loadModel(openstudio::model::Model& model) override;
   void insertObjects(const QModelIndexList& rowList,
     const std::vector<openstudio::IdfObject>& idfObjects,
     std::vector<openstudio::WorkspaceObject>& wsObjects);

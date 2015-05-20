@@ -34,7 +34,7 @@ public:
 
   TextEditDialog(const QString & windowTitle,
     const QString & windowMessage = QString(),
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
 
   virtual ~TextEditDialog();
 

@@ -70,7 +70,7 @@ TEST(Date, StringConstructor)
 
 TEST(Date, TMConstructor)
 {
-  time_t t = time(0);
+  time_t t = time(nullptr);
   tm* lt = localtime(&t);
   Date zd(*lt);
 

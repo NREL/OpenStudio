@@ -39,7 +39,7 @@ IconLibrary& IconLibrary::Instance()
 
 const QPixmap* IconLibrary::findIcon( unsigned int v) const
 {
-  map<unsigned int, QPixmap*>::const_iterator i = m_icons.find(v);
+  auto i = m_icons.find(v);
   if(i!=m_icons.end())
     return (*i).second;
 
@@ -49,7 +49,7 @@ const QPixmap* IconLibrary::findIcon( unsigned int v) const
 
 const QPixmap* IconLibrary::findMiniIcon( unsigned int v) const
 {
-  map<unsigned int, QPixmap*>::const_iterator i = m_miniIcons.find(v);
+  auto i = m_miniIcons.find(v);
   if(i!=m_miniIcons.end())
     return (*i).second;
 

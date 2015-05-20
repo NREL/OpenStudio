@@ -60,17 +60,17 @@ class TestWatcher : public AnalysisDriverWatcher {
 
   virtual ~TestWatcher() {}
 
-  virtual void onDataPointQueued(const openstudio::UUID& dataPoint) {
+  virtual void onDataPointQueued(const openstudio::UUID& dataPoint) override {
     analysis::DataPoint dp = getDataPoint(dataPoint);
     ++m_numDataPointQueued;
   }
 
-  virtual void onDataPointComplete(const openstudio::UUID& dataPoint) {
+  virtual void onDataPointComplete(const openstudio::UUID& dataPoint) override {
     analysis::DataPoint dp = getDataPoint(dataPoint);
     ++m_numDataPointComplete;
   }
 
-  virtual void onAnalysisComplete(const openstudio::UUID& analysis) {
+  virtual void onAnalysisComplete(const openstudio::UUID& analysis) override {
     analysis::Analysis a = getAnalysis(analysis);
     ++m_numAnalysisComplete;
   }

@@ -89,16 +89,16 @@ namespace detail {
 
     /** Implementation of openstudio::detail::Workspace_Impl::clone for Model_Impl. The returned
      *  value may be cast to type Model. */
-    virtual Workspace clone(bool keepHandles=false) const;
+    virtual Workspace clone(bool keepHandles=false) const override;
 
     /** Implementation of openstudio::detail::Workspace_Impl::cloneSubset for Model_Impl. The
      *  returned value may be cast to type Model. */
     virtual Workspace cloneSubset(const std::vector<Handle>& handles,
                                   bool keepHandles = false,
-                                  StrictnessLevel level = StrictnessLevel::Draft) const;
+                                  StrictnessLevel level = StrictnessLevel::Draft) const override;
 
     /** Swaps underlying data between this workspace and other. */
-    virtual void swap(Workspace& other);
+    virtual void swap(Workspace& other) override;
 
     virtual ~Model_Impl() {}
 
@@ -154,12 +154,12 @@ namespace detail {
     // as model objects
     virtual std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> createObject(
         const IdfObject& object,
-        bool keepHandle);
+        bool keepHandle) override;
 
     // Helper function to start the process of adding a cloned object to the workspace.
     virtual std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> createObject(
         const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>& originalObjectImplPtr,
-        bool keepHandle);
+        bool keepHandle) override;
 
     /// set the sql file
     virtual bool setSqlFile(const openstudio::SqlFile& sqlFile);

@@ -60,12 +60,12 @@ ScheduleSetsInspectorView::ScheduleSetsInspectorView(const model::Model& model,
   : ModelObjectInspectorView(model, false, parent)
 {
   // index of hidden widget is 0
-  QWidget* hiddenWidget = new QWidget();
+  auto hiddenWidget = new QWidget();
   int index = this->stackedWidget()->addWidget(hiddenWidget);
   OS_ASSERT(index == 0);
 
   // index of the default is 1
-  DefaultInspectorView* defaultInspectorView = new DefaultInspectorView(model, parent);
+  auto defaultInspectorView = new DefaultInspectorView(model, parent);
   index = this->stackedWidget()->addWidget(defaultInspectorView);
   OS_ASSERT(index == 1);
 

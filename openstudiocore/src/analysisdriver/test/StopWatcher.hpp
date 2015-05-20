@@ -33,7 +33,7 @@ class StopWatcher : public openstudio::analysisdriver::AnalysisDriverWatcher {
 
   virtual ~StopWatcher() {}
 
-  virtual void onDataPointComplete(const openstudio::UUID &dataPoint);
+  virtual void onDataPointComplete(const openstudio::UUID &dataPoint) override;
 
   int stopNum() const;
 

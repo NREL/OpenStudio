@@ -121,7 +121,7 @@ class LibraryTypeItem : public OSListItem
 
 class LibraryTypeItemDelegate : public OSItemDelegate
 {
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
+  QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 
   public:
   LibraryTypeItemDelegate(BaseApp *t_app);
@@ -138,9 +138,9 @@ class LibraryTypeListController : public OSListController
   public:
   virtual ~LibraryTypeListController() {}
 
-  QSharedPointer<OSListItem> itemAt(int i);
+  QSharedPointer<OSListItem> itemAt(int i) override;
 
-  int count();
+  int count() override;
 
   void addItem(QSharedPointer<OSListItem> item);
 
@@ -173,7 +173,7 @@ class LibraryGroupItem : public OSListItem
 
 class LibraryGroupItemDelegate : public OSItemDelegate
 {
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
+  QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 
   public:
   LibraryGroupItemDelegate(BaseApp *t_app);
@@ -190,9 +190,9 @@ class LibraryGroupListController : public OSListController
   public:
   virtual ~LibraryGroupListController() {}
 
-  QSharedPointer<OSListItem> itemAt(int i);
+  QSharedPointer<OSListItem> itemAt(int i) override;
 
-  int count();
+  int count() override;
 
   void addItem(QSharedPointer<OSListItem> item);
 
@@ -234,7 +234,7 @@ class LibrarySubGroupItem : public OSListItem
 
 class LibrarySubGroupItemDelegate : public OSItemDelegate
 {
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
+  QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 
   public:
   LibrarySubGroupItemDelegate(BaseApp *t_app);
@@ -252,9 +252,9 @@ class LibrarySubGroupListController : public OSListController
   LibrarySubGroupListController(BaseApp *t_app);
   virtual ~LibrarySubGroupListController() {}
 
-  QSharedPointer<OSListItem> itemAt(int i);
+  QSharedPointer<OSListItem> itemAt(int i) override;
 
-  int count();
+  int count() override;
 
   void addItem(QSharedPointer<OSListItem> item);
 
@@ -323,7 +323,7 @@ class LibraryItemDelegate : public OSItemDelegate
   public:
   LibraryItemDelegate(BaseApp *t_app);
   virtual ~LibraryItemDelegate() {}
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
+  QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 
 
   private slots:
@@ -348,9 +348,9 @@ class LibraryListController : public OSListController
 
   virtual ~LibraryListController() {}
 
-  QSharedPointer<OSListItem> itemAt(int i);
+  QSharedPointer<OSListItem> itemAt(int i) override;
 
-  int count();
+  int count() override;
 
   void reset();
 

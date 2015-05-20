@@ -59,14 +59,14 @@ namespace detail {
     virtual ~WhUnit_Impl() {}
 
     /** Deep copy constructor. */
-    virtual Unit clone() const;
+    virtual Unit clone() const override;
 
     //@}
     /** @name Base Units and Scale */
     //@{
 
     /** Throws if baseUnit is not a valid for WhUnit. */
-    virtual void setBaseUnitExponent(const std::string& baseUnit, int exponent);
+    virtual void setBaseUnitExponent(const std::string& baseUnit, int exponent) override;
 
     //@}
    private:

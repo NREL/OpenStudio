@@ -68,9 +68,9 @@ class OSObjectListCBDS : public OSComboBoxDataSource
 
   virtual ~OSObjectListCBDS() {}
 
-  int numberOfItems();
+  int numberOfItems() override;
 
-  QString valueAt(int i);
+  QString valueAt(int i) override;
 
   protected:
 
@@ -166,7 +166,7 @@ class OSComboBox2 : public QComboBox {
 
  protected:
 
-  bool event( QEvent * e );
+  bool event( QEvent * e ) override;
 
  signals:
 
@@ -223,7 +223,7 @@ class OSComboBox : public QComboBox {
 
  protected:
 
-  bool event( QEvent * e );
+  bool event( QEvent * e ) override;
 
  private slots:
 

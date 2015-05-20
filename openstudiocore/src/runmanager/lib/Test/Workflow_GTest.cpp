@@ -39,6 +39,7 @@ using namespace openstudio::runmanager;
 
 TEST_F(RunManagerTestFixture, Workflow_PersistTest)
 {
+  openstudio::Application::instance().application(false);
   openstudio::path db = openstudio::toPath(QDir::tempPath()) / openstudio::toPath("EnergyPlusJobRunDB");
   openstudio::runmanager::RunManager kit(db, true);
 
@@ -256,6 +257,7 @@ TEST_F(RunManagerTestFixture, Workflow_AdvancedTree)
 
 TEST_F(RunManagerTestFixture, Workflow_PersistDeleteByName)
 {
+  openstudio::Application::instance().application(false);
   RunManager rm;
   
   Workflow wf("null->energyplus", "mywfname");

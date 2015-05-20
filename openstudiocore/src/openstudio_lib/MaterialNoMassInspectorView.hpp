@@ -44,17 +44,17 @@ class MaterialNoMassInspectorView : public ModelObjectInspectorView
 
   public:
 
-    MaterialNoMassInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = 0);
+    MaterialNoMassInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = nullptr);
 
     virtual ~MaterialNoMassInspectorView() {}
 
   protected:
 
-    virtual void onClearSelection();
+    virtual void onClearSelection() override;
 
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
 
-    virtual void onUpdate();
+    virtual void onUpdate() override;
 
   private:
 

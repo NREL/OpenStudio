@@ -50,15 +50,15 @@ public:
 
 protected:
 
-  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle);
+  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle) override;
 
-  virtual std::vector<OSItemId> makeVector();
+  virtual std::vector<OSItemId> makeVector() override;
 
-  virtual void onRemoveItem(OSItem* item);
+  virtual void onRemoveItem(OSItem* item) override;
 
-  virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId);
+  virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId) override;
 
-  virtual void onDrop(const OSItemId& itemId);
+  virtual void onDrop(const OSItemId& itemId) override;
 };
 
 class SpaceThermalZoneVectorController : public ModelObjectVectorController
@@ -71,15 +71,15 @@ public:
 
 protected:
 
-  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle);
+  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle) override;
 
-  virtual std::vector<OSItemId> makeVector();
+  virtual std::vector<OSItemId> makeVector() override;
 
-  virtual void onRemoveItem(OSItem* item);
+  virtual void onRemoveItem(OSItem* item) override;
 
-  virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId);
+  virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId) override;
 
-  virtual void onDrop(const OSItemId& itemId);
+  virtual void onDrop(const OSItemId& itemId) override;
 };
 
 class SpaceSpaceTypeVectorController : public ModelObjectVectorController
@@ -90,19 +90,19 @@ public:
 
   virtual ~SpaceSpaceTypeVectorController() {}
 
-  virtual void attach(const model::ModelObject& modelObject);
+  virtual void attach(const model::ModelObject& modelObject) override;
 
 protected:
 
-  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle);
+  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle) override;
 
-  virtual std::vector<OSItemId> makeVector();
+  virtual std::vector<OSItemId> makeVector() override;
 
-  virtual void onRemoveItem(OSItem* item);
+  virtual void onRemoveItem(OSItem* item) override;
 
-  virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId);
+  virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId) override;
 
-  virtual void onDrop(const OSItemId& itemId);
+  virtual void onDrop(const OSItemId& itemId) override;
 };
 
 class SpaceDefaultConstructionSetVectorController : public ModelObjectVectorController
@@ -115,15 +115,15 @@ public:
 
 protected:
 
-  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle);
+  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle) override;
 
-  virtual std::vector<OSItemId> makeVector();
+  virtual std::vector<OSItemId> makeVector() override;
 
-  virtual void onRemoveItem(OSItem* item);
+  virtual void onRemoveItem(OSItem* item) override;
 
-  virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId);
+  virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId) override;
 
-  virtual void onDrop(const OSItemId& itemId);
+  virtual void onDrop(const OSItemId& itemId) override;
 };
 
 class SpaceDefaultScheduleSetVectorController : public ModelObjectVectorController
@@ -136,15 +136,15 @@ public:
 
 protected:
 
-  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle);
+  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle) override;
 
-  virtual std::vector<OSItemId> makeVector();
+  virtual std::vector<OSItemId> makeVector() override;
 
-  virtual void onRemoveItem(OSItem* item);
+  virtual void onRemoveItem(OSItem* item) override;
 
-  virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId);
+  virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId) override;
 
-  virtual void onDrop(const OSItemId& itemId);
+  virtual void onDrop(const OSItemId& itemId) override;
 };
 
 class SpaceDesignSpecificationOutdoorAirVectorController : public ModelObjectVectorController
@@ -155,21 +155,21 @@ public:
 
   virtual ~SpaceDesignSpecificationOutdoorAirVectorController() {}
 
-  virtual void attach(const model::ModelObject& modelObject);
+  virtual void attach(const model::ModelObject& modelObject) override;
 
 protected:
 
-  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle);
+  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle) override;
 
-  virtual std::vector<OSItemId> makeVector();
+  virtual std::vector<OSItemId> makeVector() override;
 
-  virtual void onRemoveItem(OSItem* item);
+  virtual void onRemoveItem(OSItem* item) override;
 
-  virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId);
+  virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId) override;
 
-  virtual void onDrop(const OSItemId& itemId);
+  virtual void onDrop(const OSItemId& itemId) override;
 
-  virtual void onMakeNewItem();
+  virtual void onMakeNewItem() override;
 
 private:
 
@@ -184,23 +184,23 @@ public:
 
   virtual ~SpaceSpaceInfiltrationDesignFlowRateVectorController() {}
 
-  virtual void attach(const model::ModelObject& modelObject);
+  virtual void attach(const model::ModelObject& modelObject) override;
 
 protected:
 
-  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle);
+  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle) override;
 
-  virtual std::vector<OSItemId> makeVector();
+  virtual std::vector<OSItemId> makeVector() override;
 
-  virtual void onObjectAdded(const openstudio::model::ModelObject& modelObject, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
+  virtual void onObjectAdded(const openstudio::model::ModelObject& modelObject, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) override;
   
-  virtual void onObjectRemoved(const openstudio::model::ModelObject& modelObject, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
+  virtual void onObjectRemoved(const openstudio::model::ModelObject& modelObject, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) override;
   
-  virtual void onRemoveItem(OSItem* item);
+  virtual void onRemoveItem(OSItem* item) override;
 
-  virtual void onDrop(const OSItemId& itemId);
+  virtual void onDrop(const OSItemId& itemId) override;
 
-  virtual void onMakeNewItem();
+  virtual void onMakeNewItem() override;
 
 private:
 
@@ -215,23 +215,23 @@ public:
 
   virtual ~SpaceSpaceInfiltrationEffectiveLeakageAreaVectorController() {}
 
-  virtual void attach(const model::ModelObject& modelObject);
+  virtual void attach(const model::ModelObject& modelObject) override;
 
 protected:
 
-  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle);
+  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle) override;
 
-  virtual std::vector<OSItemId> makeVector();
+  virtual std::vector<OSItemId> makeVector() override;
 
-  virtual void onObjectAdded(const openstudio::model::ModelObject& modelObject, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
+  virtual void onObjectAdded(const openstudio::model::ModelObject& modelObject, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) override;
   
-  virtual void onObjectRemoved(const openstudio::model::ModelObject& modelObject, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
+  virtual void onObjectRemoved(const openstudio::model::ModelObject& modelObject, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) override;
   
-  virtual void onRemoveItem(OSItem* item);
+  virtual void onRemoveItem(OSItem* item) override;
 
-  virtual void onDrop(const OSItemId& itemId);
+  virtual void onDrop(const OSItemId& itemId) override;
 
-  virtual void onMakeNewItem();
+  virtual void onMakeNewItem() override;
 
 private:
 
@@ -244,17 +244,17 @@ class SpaceInspectorView : public ModelObjectInspectorView
 
   public:
 
-    SpaceInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = 0 );
+    SpaceInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = nullptr );
 
     virtual ~SpaceInspectorView() {}
 
   protected:
 
-    virtual void onClearSelection();
+    virtual void onClearSelection() override;
 
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
 
-    virtual void onUpdate();
+    virtual void onUpdate() override;
 
   private:
 
@@ -301,7 +301,7 @@ class SpaceInspectorView : public ModelObjectInspectorView
 
   public slots:
 
-    void toggleUnits(bool displayIP);
+    void toggleUnits(bool displayIP) override;
 };
 
 

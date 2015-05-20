@@ -84,16 +84,16 @@ namespace detail {
        virtual ~ToolBasedJob();
 
       // Reimplemented virtual functions from Job_Impl
-      virtual void startImpl(const std::shared_ptr<ProcessCreator> &t_pc);
-      virtual bool outOfDateImpl(const boost::optional<QDateTime> &t_lastrun) const;
-      virtual Files outputFilesImpl() const;
-      virtual std::string getOutput() const;
-      virtual void cleanup();
-      virtual std::string description() const;
-      virtual std::string detailedDescription() const;
+      virtual void startImpl(const std::shared_ptr<ProcessCreator> &t_pc) override;
+      virtual bool outOfDateImpl(const boost::optional<QDateTime> &t_lastrun) const override;
+      virtual Files outputFilesImpl() const override;
+      virtual std::string getOutput() const override;
+      virtual void cleanup() override;
+      virtual std::string description() const override;
+      virtual std::string detailedDescription() const override;
 
       /// Requests that the tool stop execution
-      virtual void requestStop();
+      virtual void requestStop() override;
 
     protected:
 
@@ -151,7 +151,7 @@ namespace detail {
       /// Returns outputFiles provided explicitly by the subclass
       virtual Files outputFilesHandlerImpl() const { return Files(); }
 
-      virtual void standardCleanImpl();
+      virtual void standardCleanImpl() override;
 
       /// Holds and handles all errors generated during a toolbasedjob run and returns them as a JobErrors
       /// object after the job has completed.

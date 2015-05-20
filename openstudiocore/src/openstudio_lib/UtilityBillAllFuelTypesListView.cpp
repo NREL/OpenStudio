@@ -67,8 +67,8 @@ UtilityBillAllFuelTypesListView::UtilityBillAllFuelTypesListView(const std::vect
 void UtilityBillAllFuelTypesListView::addModelObjectType(const IddObjectType& iddObjectType, const std::string& name)
 {
   OSCollapsibleItemHeader* collapsibleItemHeader = new OSCollapsibleItemHeader(name, OSItemId("", "", false), m_headerType);
-  ModelObjectListView* modelObjectListView = new ModelObjectListView(iddObjectType, m_model, false,false);
-  ModelObjectTypeItem* modelObjectTypeItem = new ModelObjectTypeItem(collapsibleItemHeader, modelObjectListView);
+  auto modelObjectListView = new ModelObjectListView(iddObjectType, m_model, false,false);
+  auto modelObjectTypeItem = new ModelObjectTypeItem(collapsibleItemHeader, modelObjectListView);
 
   addCollapsibleItem(modelObjectTypeItem);
 }
@@ -76,8 +76,8 @@ void UtilityBillAllFuelTypesListView::addModelObjectType(const IddObjectType& id
 void UtilityBillAllFuelTypesListView::addUtilityBillFuelType(const FuelType & fuelType, const std::string& name)
 {
   OSCollapsibleItemHeader* collapsibleItemHeader = new OSCollapsibleItemHeader(name, OSItemId("", "", false), m_headerType);
-  UtilityBillFuelTypeListView* utilityBillFuelTypeListView = new UtilityBillFuelTypeListView(m_model, fuelType, false);
-  UtilityBillFuelTypeItem* utilityBillFuelTypeItem = new UtilityBillFuelTypeItem(collapsibleItemHeader, utilityBillFuelTypeListView);
+  auto utilityBillFuelTypeListView = new UtilityBillFuelTypeListView(m_model, fuelType, false);
+  auto utilityBillFuelTypeItem = new UtilityBillFuelTypeItem(collapsibleItemHeader, utilityBillFuelTypeListView);
 
   addCollapsibleItem(utilityBillFuelTypeItem);
 }

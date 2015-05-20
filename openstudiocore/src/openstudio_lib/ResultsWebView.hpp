@@ -22,6 +22,7 @@
 
 #include <QWidget>
 #include <QWebView>
+#include <QWebInspector>
 
 namespace openstudio {
   class ResultsWebView : public QWebView
@@ -30,9 +31,9 @@ namespace openstudio {
 
     public:
 
-      ResultsWebView(QWidget * parent = 0);
+      ResultsWebView(QWidget * parent = nullptr);
 
-      QSize sizeHint() const;
+      QSize sizeHint() const override;
   };
 
 } // openstudio
