@@ -280,7 +280,7 @@
     <file>images/mini_icons/mini_chiller_absorption_direct.png</file>
     <file>images/mini_icons/mini_chiller_absorption_indirect.png</file>
     <file>images/mini_icons/mini_coilsystem_cooling_DX.png</file>
-    <file>images/mini_icons/mini_coilsystem_water.png</file>
+    <file>images/mini_icons/mini_coil_system_water.png</file>
     <file>images/mini_icons/mini_compressor.png</file>
     <file>images/mini_icons/mini_condensor.png</file>
     <file>images/mini_icons/mini_display_case.png</file>
@@ -411,9 +411,7 @@
     <file>images/mini_icons/surface.png</file>
     <file>images/mini_icons/system_type_1.png</file>
     <file>images/mini_icons/system_type_2.png</file>
-    <file>images/mini_icons/tempering_valve.png</file>
     <file>images/mini_icons/thermal_zone.png</file>
-    <file>images/mini_icons/thermal_storage_ice.png</file>
     <file>images/mini_icons/mini_unitary_system.png</file>
     <file>images/mini_icons/variable_fan.png</file>
     <file>images/mini_icons/vav_noreheat.png</file>

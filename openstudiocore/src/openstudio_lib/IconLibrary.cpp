@@ -115,8 +115,8 @@ IconLibrary::IconLibrary()
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Fan_ZoneExhaust).value()] = new QPixmap(":images/fan_zoneexhaust.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_GroundHeatExchanger_Vertical).value()] = new QPixmap(":images/ground_heat_exchanger_vertical.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_GroundHeatExchanger_HorizontalTrench).value()] = new QPixmap(":images/ground_heat_exchanger_horizontal.png");
-  m_minis[openstudio::IddObjectType(openstudio::IddObjectType::OS_HeaderedPumps_ConstantSpeed).value()] = new QPixmap(":images/headered_pumps_constant.png");
-  m_minis[openstudio::IddObjectType(openstudio::IddObjectType::OS_HeaderedPumps_VariableSpeed).value()] = new QPixmap(":images/headered_pumps_variable.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_HeaderedPumps_ConstantSpeed).value()] = new QPixmap(":images/headered_pumps_constant.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_HeaderedPumps_VariableSpeed).value()] = new QPixmap(":images/headered_pumps_variable.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_HeatExchanger_AirToAir_SensibleAndLatent).value()] = new QPixmap(":images/heat_transfer_outdoorair.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_HeatExchanger_FluidToFluid).value()] = new QPixmap(":images/fluid_hx.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Humidifier_Steam_Electric).value()] = new QPixmap(":images/electric_humidifier.png");
