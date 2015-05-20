@@ -21,8 +21,13 @@
 
 #include "OSDropZone.hpp"
 
+#include "../shared_gui_components/OSGridController.hpp"
 #include "../shared_gui_components/OSGridView.hpp"
 
+#include "../model/ConstructionBase.hpp"
+#include "../model/ConstructionBase_Impl.hpp"
+#include "../model/ShadingSurfaceGroup.hpp"
+#include "../model/ShadingSurfaceGroup_Impl.hpp"
 #include "../model/Space.hpp"
 #include "../model/Space_Impl.hpp"
 #include "../model/Surface.hpp"
@@ -41,7 +46,6 @@
 #define SELECTED "All"
 
 // GENERAL
-#define SPACENAME "Space Name" // read only
 #define SURFACENAME "Surface Name"
 #define SURFACETYPE "Surface Type"
 #define CONSTRUCTION "Construction"
@@ -99,12 +103,11 @@ namespace openstudio {
   {
     {
       std::vector<QString> fields;
-      //fields.push_back(SPACENAME);
-      //fields.push_back(SURFACENAME);
+      fields.push_back(SURFACENAME);
       //fields.push_back(SURFACETYPE); 
-      //fields.push_back(CONSTRUCTION);
+      fields.push_back(CONSTRUCTION);
       //fields.push_back(OUTSIDEBOUNDARYCONDITION);
-      //fields.push_back(OUTSIDEBOUNDARYCONDITIONOBJECT); 
+      fields.push_back(OUTSIDEBOUNDARYCONDITIONOBJECT); 
       //fields.push_back(SUNEXPOSURE);
       //fields.push_back(WINDEXPOSURE);
       //fields.push_back(SHADINGSURFACENAME);
@@ -138,69 +141,214 @@ namespace openstudio {
           );
       }
       else {
+
+        std::function<std::vector<model::ModelObject>(const model::Space &)> allSurfaces(
+          [](const model::Space &t_space) {
+          std::vector<model::ModelObject> allModelObjects;
+          auto surfaces = t_space.surfaces();
+          allModelObjects.insert(allModelObjects.end(), surfaces.begin(), surfaces.end());
+          return allModelObjects;
+        }
+        );
+
+        std::function<std::vector<std::string>(const model::Space &)> allSurfaceTypes(
+          [allSurfaces](const model::Space &t_space) {
+          std::vector<std::string> allTypes;
+          auto surfaces = allSurfaces(t_space);
+          for (auto surface : surfaces) {
+            allTypes.push_back(surface.cast<model::Surface>().surfaceType());
+          }
+          return allTypes;
+        }
+        );
+
+        std::function<std::vector<boost::optional<model::ModelObject> >(const model::Space &)> allConstructions(
+          [allSurfaces](const model::Space &t_space) {
+          std::vector<boost::optional<model::ModelObject> > allModelObjects;
+          std::vector<boost::optional<model::ConstructionBase> > allConstructions;
+          for (auto surface : allSurfaces(t_space)) {
+            auto construction = surface.cast<model::Surface>().construction();
+            if (construction) {
+              allConstructions.push_back(construction);
+            }
+            else {
+              allConstructions.push_back(boost::optional<model::ConstructionBase>());
+            }
+          }
+          allModelObjects.insert(allModelObjects.end(), allConstructions.begin(), allConstructions.end());
+
+          return allModelObjects;
+        }
+        );
+
+        std::function<std::vector<std::string>(const model::Space &)> allOutsideBoundaryConditions(
+          [allSurfaces](const model::Space &t_space) {
+          std::vector<std::string> allOutsideBoundaryCondition;
+          auto surfaces = allSurfaces(t_space);
+          for (auto surface : surfaces) {
+            allOutsideBoundaryCondition.push_back(surface.cast<model::Surface>().outsideBoundaryCondition());
+          }
+          return allOutsideBoundaryCondition;
+        }
+        );
+
+        std::function<std::vector<boost::optional<model::ModelObject> >(const model::Space &)> allOutsideBoundaryConditionObjects(
+          [allSurfaces](const model::Space &t_space) {
+          std::vector<boost::optional<model::ModelObject> > allModelObjects;
+          std::vector<boost::optional<model::Surface> > allAdjacentSurfaces;
+          for (auto surface : allSurfaces(t_space)) {
+            auto adjacentSurface = surface.cast<model::Surface>().adjacentSurface();
+            if (adjacentSurface) {
+              allAdjacentSurfaces.push_back(adjacentSurface);
+            }
+            else {
+              allAdjacentSurfaces.push_back(boost::optional<model::Surface>());
+            }
+          }
+          allModelObjects.insert(allModelObjects.end(), allAdjacentSurfaces.begin(), allAdjacentSurfaces.end());
+
+          return allModelObjects;
+        }
+        );
+
+        std::function<std::vector<std::string>(const model::Space &)> allSunExposures(
+          [allSurfaces](const model::Space &t_space) {
+          std::vector<std::string> allSunExposures;
+          auto surfaces = allSurfaces(t_space);
+          for (auto surface : surfaces) {
+            allSunExposures.push_back(surface.cast<model::Surface>().sunExposure());
+          }
+          return allSunExposures;
+        }
+        );
+
+        std::function<std::vector<std::string>(const model::Space &)> allWindExposure(
+          [allSurfaces](const model::Space &t_space) {
+          std::vector<std::string> allWindExposure;
+          auto surfaces = allSurfaces(t_space);
+          for (auto surface : surfaces) {
+            allWindExposure.push_back(surface.cast<model::Surface>().windExposure());
+          }
+          return allWindExposure;
+        }
+        );
+
         if (field == SELECTED) {
-          auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
-          checkbox->setToolTip("Check to select all rows");
-          connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpacesSurfacesGridController::selectAllStateChanged);
+        auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
+        checkbox->setToolTip("Check to select all rows");
+        connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpacesSurfacesGridController::selectAllStateChanged);
 
-          addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row");
-          //addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row",
-          //  DataSource(
-          //  allLoads,
-          //  true
-          //  )
-          //  );
+        addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row",
+          DataSource(
+          allSurfaces,
+          true
+          )
+          );
         }
-
-        else if (field == SPACENAME) {
-
-        }
-
-
         else if (field == SURFACENAME) {
-
+          addNameLineEditColumn(Heading(QString(NAME), false, false),
+            false,
+            false,
+            CastNullAdapter<model::Surface>(&model::Surface::name),
+            CastNullAdapter<model::Surface>(&model::Surface::setName),
+            boost::optional<std::function<void(model::Surface *)>>(
+            std::function<void(model::Surface *)>(
+            [](model::Surface *t_s)
+          {
+            t_s->remove();
+          }
+            )
+            ),
+            DataSource(
+            allSurfaces,
+            true
+            )
+            );
         }
-
-
         else if (field == SURFACETYPE) {
-          //std::string surfaceType() const;
-          //bool setSurfaceType(std::string surfaceType);
-
+          addComboBoxColumn(Heading(QString(SURFACETYPE)),
+            std::function<std::string(const std::string &)>(static_cast<std::string(*)(const std::string&)>(&openstudio::toString)),
+            std::function<std::vector<std::string>()>(&model::Surface::validSurfaceTypeValues),
+            CastNullAdapter<model::Surface>(&model::Surface::surfaceType),
+            CastNullAdapter<model::Surface>(&model::Surface::setSurfaceType),
+            boost::optional<std::function<void(model::Surface*)>>()//,
+            //DataSource(
+            //allSurfaceTypes,
+            //true
+            //)
+            );
         }
-
         else if (field == CONSTRUCTION) {
-
+          addDropZoneColumn(Heading(QString(CONSTRUCTION)),
+            CastNullAdapter<model::Surface>(&model::Surface::construction),
+            CastNullAdapter<model::Surface>(&model::Surface::setConstruction),
+            boost::optional<std::function<void(model::Surface*)> >(NullAdapter(&model::Surface::resetConstruction)),
+            DataSource(
+            allConstructions, 
+            true
+            )
+            );
         }
         else if (field == OUTSIDEBOUNDARYCONDITION) {
-          //Surface
-          //std::string outsideBoundaryCondition() const;
-          //bool setOutsideBoundaryCondition(std::string outsideBoundaryCondition);
-          //static std::vector<std::string> validOutsideBoundaryConditionValues();
-
+          addComboBoxColumn(Heading(QString(OUTSIDEBOUNDARYCONDITION)),
+            std::function<std::string(const std::string &)>(static_cast<std::string(*)(const std::string&)>(&openstudio::toString)),
+            std::function<std::vector<std::string>()>(&model::Surface::validOutsideBoundaryConditionValues),
+            CastNullAdapter<model::Surface>(&model::Surface::outsideBoundaryCondition),
+            CastNullAdapter<model::Surface>(&model::Surface::setOutsideBoundaryCondition),
+            boost::optional<std::function<void(model::Surface*)>>()//,
+            //DataSource(
+            //allOutsideBoundaryConditions
+            //true
+            //)
+            );
         }
         else if (field == OUTSIDEBOUNDARYCONDITIONOBJECT) {
 
+          std::function<bool(model::Surface *, const model::Surface &)> setter(
+            [](model::Surface *t_surface, const model::Surface &t_arg) {
+            auto copy = t_arg;
+            return t_surface->setAdjacentSurface(copy);
+          }
+          );
 
+          addDropZoneColumn(Heading(QString(OUTSIDEBOUNDARYCONDITIONOBJECT)),
+            CastNullAdapter<model::Surface>(&model::Surface::adjacentSurface),
+            setter,
+            boost::optional<std::function<void(model::Surface*)> >(NullAdapter(&model::Surface::resetAdjacentSurface)),
+            DataSource(
+            allOutsideBoundaryConditionObjects,
+            true
+            )
+            );
         }
-
         else if (field == SUNEXPOSURE) {
-          //Surface
-          //std::string sunExposure() const;
-          //bool setSunExposure(std::string sunExposure);
-          //bool isSunExposureDefaulted() const;
-          //void resetSunExposure();
-
+          addComboBoxColumn(Heading(QString(SUNEXPOSURE)),
+            std::function<std::string(const std::string &)>(static_cast<std::string(*)(const std::string&)>(&openstudio::toString)),
+            std::function<std::vector<std::string>()>(&model::Surface::validSunExposureValues),
+            CastNullAdapter<model::Surface>(&model::Surface::sunExposure),
+            CastNullAdapter<model::Surface>(&model::Surface::setSunExposure),
+            boost::optional<std::function<void(model::Surface*)> >(NullAdapter(&model::Surface::resetSunExposure))//,
+            //DataSource(
+            //allSunExposures,
+            //true
+            //)
+            );
         }
         else if (field == WINDEXPOSURE) {
-          //Surface
-          //std::string windExposure() const;
-          //bool setWindExposure(std::string windExposure);
-          //bool isWindExposureDefaulted() const;
-          //void resetWindExposure();
-
+          addComboBoxColumn(Heading(QString(WINDEXPOSURE)),
+            std::function<std::string(const std::string &)>(static_cast<std::string(*)(const std::string&)>(&openstudio::toString)),
+            std::function<std::vector<std::string>()>(&model::Surface::validWindExposureValues),
+            CastNullAdapter<model::Surface>(&model::Surface::windExposure),
+            CastNullAdapter<model::Surface>(&model::Surface::setWindExposure),
+            boost::optional<std::function<void(model::Surface*)> >(NullAdapter(&model::Surface::resetWindExposure))//,
+            //DataSource(
+            //allWindExposure,
+            //true
+            //)
+            );
         }
         else if (field == SHADINGSURFACENAME) {
-
+          //std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
         }
         else {
           // unhandled
