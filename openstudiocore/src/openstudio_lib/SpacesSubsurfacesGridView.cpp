@@ -23,8 +23,12 @@
 
 #include "../shared_gui_components/OSGridView.hpp"
 
+#include "../model/ConstructionBase.hpp"
+#include "../model/ConstructionBase_Impl.hpp"
 #include "../model/Space.hpp"
 #include "../model/Space_Impl.hpp"
+#include "../model/Surface.hpp"
+#include "../model/Surface_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/idd/IddEnums.hxx"
@@ -289,14 +293,47 @@ namespace openstudio {
         }
 
         else if (field == MULTIPLIER) {
+          //addValueEditColumn(Heading(QString(MULTIPLIER)),
+          //  NullAdapter(&model::Surface::multiplier),
+          //  NullAdapter(&model::Surface::setMultiplier)
+          //  );
 
         }
 
         else if (field == CONSTRUCTION) {
-
+          addDropZoneColumn(Heading(QString(CONSTRUCTION)),
+            CastNullAdapter<model::Surface>(&model::Surface::construction),
+            CastNullAdapter<model::Surface>(&model::Surface::setConstruction),
+            boost::optional<std::function<void(model::Surface*)> >(NullAdapter(&model::Surface::resetConstruction))//,
+            //DataSource(
+            //allConstructions, 
+            //true
+            //)
+            );
         }
 
         else if (field == OUTSIDEBOUNDARYCONDITIONOBJECT) {
+
+          std::function<bool(model::Surface *, const model::Surface &)> setter(
+            [](model::Surface *t_surface, const model::Surface &t_arg) {
+            auto copy = t_arg;
+            return t_surface->setAdjacentSurface(copy);
+          }
+          );
+
+          addDropZoneColumn(Heading(QString(OUTSIDEBOUNDARYCONDITIONOBJECT)),
+            CastNullAdapter<model::Surface>(&model::Surface::adjacentSurface),
+            setter,
+            boost::optional<std::function<void(model::Surface*)> >(NullAdapter(&model::Surface::resetAdjacentSurface))
+            //DataSource(
+            //allSurfaces,// need allOutsideBoundaryConditions
+            //true
+            //)
+            );
+
+          //boost::optional<Surface> adjacentSurface() const
+          //bool setAdjacentSurface(Surface& surface);
+          //void resetAdjacentSurface();
 
         }
 
