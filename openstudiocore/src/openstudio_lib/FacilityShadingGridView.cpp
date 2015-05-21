@@ -24,6 +24,8 @@
 
 #include "../shared_gui_components/OSGridView.hpp"
 
+#include "../model/Blind.hpp"
+#include "../model/Blind_Impl.hpp"
 #include "../model/ConstructionBase.hpp"
 #include "../model/ConstructionBase_Impl.hpp"
 #include "../model/Model.hpp"
@@ -39,7 +41,9 @@
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/idd/IddEnums.hxx"
+#include "../utilities/idd/OS_ShadingSurface_FieldEnums.hxx"
 #include "../utilities/idd/OS_ShadingSurfaceGroup_FieldEnums.hxx"
+#include "../utilities/idd/OS_WindowMaterial_Blind_FieldEnums.hxx"
 
 #include <QBoxLayout>
 #include <QCheckBox>
@@ -199,39 +203,95 @@ namespace openstudio {
 
   void FacilityShadingGridView::nameFilterChanged()
   {
+    m_objectsFilteredByName.clear();
+
+    if (m_nameFilter->text().isEmpty()) {
+      // nothing to filter
+    }
+    else {
+      for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
+        QString objName(obj.name().get().c_str());
+        if (!objName.contains(m_nameFilter->text(), Qt::CaseInsensitive)) {
+          m_objectsFilteredByName.insert(obj).second;
+        }
+      }
+    }
+
     filterChanged();
   }
 
   void FacilityShadingGridView::typeFilterChanged(const QString& text)
   {
+    m_objectsFilterdByType.clear();
+
+    for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
+      if (obj.iddObjectType() == IddObjectType::OS_ShadingSurfaceGroup){
+        if (m_typeFilter->currentText() == obj.cast<model::ShadingSurfaceGroup>().shadingSurfaceType().c_str()) {
+          m_objectsFilterdByType.insert(obj).second;
+        }
+      }
+    }
+
     filterChanged();
   }
 
   void FacilityShadingGridView::orientationFilterChanged(const QString& text)
   {
+    m_objectsFilteredByOrientation.clear();
+
+    for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
+      if (obj.iddObjectType() == IddObjectType::OS_WindowMaterial_Blind){
+        if (m_orientationFilter->currentText() == obj.cast<model::Blind>().slatOrientation().c_str()) {
+          m_objectsFilteredByOrientation.insert(obj).second;
+        }
+      }
+    }
+
     filterChanged();
   }
 
   void FacilityShadingGridView::tiltFilterChanged()
   {
+    m_objectsFilteredByTilt.clear();
+
+    if (m_tiltFilter->text().isEmpty()) {
+      // nothing to filter
+    }
+    else {
+      for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
+        QString objName(obj.name().get().c_str());
+        if (!objName.contains(m_tiltFilter->text(), Qt::CaseInsensitive)) {
+          m_objectsFilteredByTilt.insert(obj).second;
+        }
+      }
+    }
+
     filterChanged();
   }
 
   void FacilityShadingGridView::filterChanged()
   {
-    auto objectSelector = this->m_gridController->getObjectSelector();
-    
-    auto name = m_nameFilter->text();
+    std::set<openstudio::model::ModelObject> allFilteredObjects = m_objectsFilteredByName;
 
-    auto tilt = m_tiltFilter->text().toDouble();
-
-    auto type = m_typeFilter->currentText();
-
-    auto orintation = m_orientationFilter->currentText();
-
-    for (auto obj : objectSelector->m_selectorObjects) {
-
+    for (auto obj : m_objectsFilteredByTilt) {
+      if (allFilteredObjects.count(obj) == 0) {
+        allFilteredObjects.insert(obj).second;
+      }
     }
+
+    for (auto obj : m_objectsFilterdByType) {
+      if (allFilteredObjects.count(obj) == 0) {
+        allFilteredObjects.insert(obj).second;
+      }
+    }
+
+    for (auto obj : m_objectsFilteredByOrientation) {
+      if (allFilteredObjects.count(obj) == 0) {
+        allFilteredObjects.insert(obj).second;
+      }
+    }
+
+    this->m_gridController->getObjectSelector()->m_filteredObjects = allFilteredObjects;
 
     this->m_gridView->requestRefreshAll();
   }

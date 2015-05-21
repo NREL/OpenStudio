@@ -64,6 +64,14 @@ namespace openstudio{
 
     void filterChanged();
 
+    std::set<openstudio::model::ModelObject> m_objectsFilteredByName;
+
+    std::set<openstudio::model::ModelObject> m_objectsFilteredByTilt;
+
+    std::set<openstudio::model::ModelObject> m_objectsFilterdByType;
+
+    std::set<openstudio::model::ModelObject> m_objectsFilteredByOrientation;
+
   private slots:
 
     void onDropZoneItemClicked(OSItem* item);
