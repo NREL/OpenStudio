@@ -1,7 +1,7 @@
 
 OS:Version,
-  {762d407c-6ae5-4367-83c6-1da8a1097d80}, !- Handle
-  1.6.1;                                  !- Version Identifier
+  {910f29a7-a0d6-49ba-adfd-413913c73fc0}, !- Handle
+  1.7.4;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -504,19 +504,28 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
   ,                                       !- Relief Air Inlet Node
   ,                                       !- Water Supply Storage Tank Name
   0,                                      !- Drift Loss Fraction
-  ;                                       !- Blowdown Concentration Ratio
+  ,                                       !- Blowdown Concentration Ratio
+  ,                                       !- Wetbulb Effectiveness Flow Ratio Modifier Curve Name
+  ,                                       !- Cooler Drybulb Design Effectiveness
+  ,                                       !- Drybulb Effectiveness Flow Ratio Modifier Curve Name
+  0.1,                                    !- Water Pump Power Sizing Factor {W/(m3/s)}
+  ,                                       !- Water Pump Power Modifier Curve Name
+  1,                                      !- Secondary Air Flow Scaling Factor {dimensionless}
+  ;                                       !- Secondary Air Fan Design Power {W}
 
 OS:EvaporativeCooler:Direct:ResearchSpecial,
-  {8d3b17e0-88c9-4d17-9de4-0b9dd0481b36}, ! Handle
-  Direct Evap Cooler,                     ! Name
-  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  {8d3b17e0-88c9-4d17-9de4-0b9dd0481b36}, !- Handle
+  Direct Evap Cooler,                     !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   1,                                      !- Cooler Effectiveness
   0,                                      !- Recirculating Water Pump Power Consumption {W}
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
   ,                                       !- Sensor Node Name
   0,                                      !- Drift Loss Fraction
-  0;                                      !- Blowdown Concentration Ratio
+  0,                                      !- Blowdown Concentration Ratio
+  ,                                       !- Effectiveness Flow Ratio Modifier Curve Name
+  0.1;                                    !- Water Pump Power Sizing Factor {W/(m3/s)}
 
 OS:AirTerminal:SingleDuct:InletSideMixer,
   {2894623e-fbd9-4162-bf36-c674ee542793}, !- Handle
@@ -1185,6 +1194,45 @@ OS:Pump:ConstantSpeed,
   ,                                       !- Rotational Speed {rev/min}
   ,                                       !- Zone
   ;                                       !- Skin Loss Radiative Fraction
+
+OS:HeaderedPumps:ConstantSpeed,
+  {19902d0d-e3a7-4725-9f85-cc1bd897b8f9}, !- Handle
+  Headered Const Spd Pump,                !- Name
+  ,                                       !- Inlet Node Name
+  ,                                       !- Outlet Node Name
+  autosize,                               !- Total Rated Flow Rate {m3/s}
+  2,                                      !- Number of Pumps in Bank
+  Sequential,                             !- Flow Sequencing Control Scheme
+  179352,                                 !- Rated Pump Head {Pa}
+  autosize,                               !- Rated Power Consumption {W}
+  0.9,                                    !- Motor Efficiency
+  0,                                      !- Fraction of Motor Inefficiencies to Fluid Stream
+  Continuous,                             !- Pump Control Type
+  ,                                       !- Pump Flow Rate Schedule
+  ,                                       !- Thermal Zone
+  0.1;                                    !- Skin Loss Radiative Fraction
+
+OS:HeaderedPumps:VariableSpeed,
+  {5a813bd2-9427-45dd-9909-0edd559f9027}, !- Handle
+  Headered Var Spd Pump,                  !- Name
+  ,                                       !- Inlet Node Name
+  ,                                       !- Outlet Node Name
+  autosize,                               !- Total Rated Flow Rate {m3/s}
+  2,                                      !- Number of Pumps in Bank
+  Sequential,                             !- Flow Sequencing Control Scheme
+  179352,                                 !- Rated Pump Head {Pa}
+  autosize,                               !- Rated Power Consumption {W}
+  0.9,                                    !- Motor Efficiency
+  0,                                      !- Fraction of Motor Inefficiencies to Fluid Stream
+  0,                                      !- Coefficient 1 of the Part Load Performance Curve
+  1,                                      !- Coefficient 2 of the Part Load Performance Curve
+  0,                                      !- Coefficient 3 of the Part Load Performance Curve
+  0,                                      !- Coefficient 4 of the Part Load Performance Curve
+  0,                                      !- Minimum Flow Rate Fraction
+  Continuous,                             !- Pump Control Type
+  ,                                       !- Pump Flow Rate Schedule
+  ,                                       !- Thermal Zone
+  0.1;                                    !- Skin Loss Radiative Fraction
 
 OS:ZoneHVAC:HighTemperatureRadiant,
   {78b89842-8c8d-46d2-8f30-1322d180980e}, !- Handle
@@ -7227,7 +7275,7 @@ OS:Schedule:Day,
 
 OS:Fan:OnOff,
   {0591f811-25a9-4262-b630-cd4de5473511}, !- Handle
-  Cycling HW PTAC Fan,                       !- Name
+  Cycling HW PTAC Fan,                    !- Name
   {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
   0.6,                                    !- Fan Efficiency
   250,                                    !- Pressure Rise {Pa}
@@ -7283,7 +7331,7 @@ OS:Coil:Heating:Water,
 
 OS:Coil:Cooling:DX:SingleSpeed,
   {bcb16a3c-449c-4c78-90ce-9448c7a955bf}, !- Handle
-  Cycling HW PTAC 1 Spd DX Clg Coil,         !- Name
+  Cycling HW PTAC 1 Spd DX Clg Coil,      !- Name
   {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
   autosize,                               !- Rated Total Cooling Capacity {W}
   autosize,                               !- Rated Sensible Heat Ratio
