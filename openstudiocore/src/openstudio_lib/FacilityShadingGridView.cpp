@@ -329,8 +329,8 @@ namespace openstudio {
     {
       std::vector<QString> fields;
       fields.push_back(SHADINGSURFACENAME);
-      //fields.push_back(TYPE);
-      //fields.push_back(TRANSMITTANCESCHEDULENAME);
+      fields.push_back(TYPE);
+      fields.push_back(TRANSMITTANCESCHEDULENAME);
       fields.push_back(CONSTRUCTIONNAME);
       std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("General"), fields);
       m_categoriesAndFields.push_back(categoryAndFields);
@@ -369,6 +369,18 @@ namespace openstudio {
           auto shadingSurfaces = t_shadingSurfaceGroup.shadingSurfaces();
           allModelObjects.insert(allModelObjects.end(), shadingSurfaces.begin(), shadingSurfaces.end());
           return allModelObjects;
+        }
+        );
+
+        std::function<std::vector<std::string>(const model::ShadingSurfaceGroup &)> allTypes(
+          [](const model::ShadingSurfaceGroup &t_shadingSurfaceGroup) {
+          std::vector<std::string> allTypes;
+          auto shadingSurfaceType = t_shadingSurfaceGroup.shadingSurfaceType();
+          auto shadingSurfaces = t_shadingSurfaceGroup.shadingSurfaces();
+          for (auto shadingSurface : shadingSurfaces) {
+            allTypes.push_back(shadingSurfaceType);
+          }
+          return allTypes;
         }
         );
 
@@ -422,10 +434,28 @@ namespace openstudio {
             );
         }
         else if (field == TYPE) {
-          //std::string shadingSurfaceType() const;
-          //bool setShadingSurfaceType(std::string shadingSurfaceType);
+
+          std::function<std::vector<std::string>()> choices(
+            []() {
+            std::vector<std::string> choices{"Building","Site"};
+            return choices;
+          }
+          );
+
+          addComboBoxColumn(Heading(QString(TYPE)),
+            std::function<std::string(const std::string &)>(static_cast<std::string(*)(const std::string&)>(&openstudio::toString)),
+            choices,
+            CastNullAdapter<model::ShadingSurfaceGroup>(&model::ShadingSurfaceGroup::shadingSurfaceType),
+            CastNullAdapter<model::ShadingSurfaceGroup>(&model::ShadingSurfaceGroup::setShadingSurfaceType),
+            boost::optional<std::function<void(model::ShadingSurfaceGroup*)>>(),
+            boost::optional<std::function<bool(model::ShadingSurfaceGroup*)>>(),
+            DataSource(
+            allTypes,
+            true
+            )
+            );
         }
-        else if (field == SHADINGSURFACENAME) { // LINE EDIT (read only)
+        else if (field == SHADINGSURFACENAME) {
           addLoadNameColumn(Heading(QString(SHADINGSURFACENAME), true, false),
             CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::name),
             CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::setName),
@@ -454,27 +484,24 @@ namespace openstudio {
             )
             );
         }
-        else if (field == TRANSMITTANCESCHEDULENAME) { // DROP ZONE
-          //ShadingSurface
-          //boost::optional<Schedule> transmittanceSchedule() const;
-          //bool setTransmittanceSchedule(Schedule& transmittanceSchedule);
-          //void resetTransmittanceSchedule();
+        else if (field == TRANSMITTANCESCHEDULENAME) {
 
-          //addDropZoneColumn(Heading(QString(TRANSMITTANCESCHEDULENAME)),
-          //  CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::transmittanceSchedule),
-          //  CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::setTransmittanceSchedule)//,
-          //  //boost::optional<std::function<void(model::ShadingSurface*)>>(CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::resetTransmittanceSchedule))
-          //  );
+          std::function<bool(model::ShadingSurface *, const model::Schedule &)> setter(
+            [](model::ShadingSurface *t_shadingSurface, const model::Schedule &t_schedule) {
+            auto copy = t_schedule;
+            return t_shadingSurface->setTransmittanceSchedule(copy);
+          }
+          );
 
-
-          //std::function<boost::optional<model::Schedule>(model::ShadingSurface *)>  getter;
-
-          //std::function<bool(model::ShadingSurface *, model::Schedule &)> setter(
-          //  [](model::ShadingSurface *t_shadingSurface, model::Schedule &t_schedule) {
-          //  return t_shadingSurface->setTransmittanceSchedule(t_schedule);
-          //}
-          //);
-
+          addDropZoneColumn(Heading(QString(TRANSMITTANCESCHEDULENAME), true, false),
+            CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::transmittanceSchedule),
+            setter,
+            boost::optional<std::function<void(model::ShadingSurface*)>>(CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::resetTransmittanceSchedule)),
+            DataSource(
+            allTransmittanceSchedules,
+            true
+            )
+            );
         }
         else {
           // unhandled
