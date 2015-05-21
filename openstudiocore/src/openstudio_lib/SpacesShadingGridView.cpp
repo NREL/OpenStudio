@@ -101,7 +101,7 @@ namespace openstudio {
   {
     {
       std::vector<QString> fields;
-      //fields.push_back(SHADINGSURFACEGROUP);
+      fields.push_back(SHADINGSURFACEGROUP);
       fields.push_back(CONSTRUCTION);  
       fields.push_back(TRANSMITTANCESCHEDULE);
       //fields.push_back(SHADEDSURFACENAME);
@@ -179,10 +179,10 @@ namespace openstudio {
           );
 
           std::function<std::vector<boost::optional<model::ModelObject> >(const model::Space &)> allTransmittanceSchedules(
-            [allShadingSurfaces](const model::Space &t_shadingSurfaceGroup) {
+            [allShadingSurfaces](const model::Space &t_space) {
             std::vector<boost::optional<model::ModelObject> > allModelObjects;
             std::vector<boost::optional<model::Schedule> > transmittanceSchedules;
-            for (auto shadingSurface : allShadingSurfaces(t_shadingSurfaceGroup)) {
+            for (auto shadingSurface : allShadingSurfaces(t_space)) {
               auto transmittanceSchedule = shadingSurface.cast<model::ShadingSurface>().transmittanceSchedule();
               if (transmittanceSchedule) {
                 transmittanceSchedules.push_back(transmittanceSchedule);
@@ -211,9 +211,15 @@ namespace openstudio {
             );
         }
         else if (field == SHADINGSURFACEGROUP) {
-          //boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup() const;
-          //bool setShadingSurfaceGroup(const ShadingSurfaceGroup& shadingSurfaceGroup);
-
+          addDropZoneColumn(Heading(QString(SHADINGSURFACEGROUP)),
+            CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::shadingSurfaceGroup),
+            CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::setShadingSurfaceGroup),
+            boost::optional<std::function<void(model::ShadingSurface*)> >(NullAdapter(&model::ShadingSurface::resetShadingSurfaceGroup)),
+            DataSource(
+            allShadingSurfaceGroups,
+            true
+            )
+            );
         }
         else if (field == CONSTRUCTION) {
           addDropZoneColumn(Heading(QString(CONSTRUCTION)),
@@ -247,8 +253,9 @@ namespace openstudio {
         }
         else if (field == SHADEDSURFACENAME) {
           //ShadingSurfaceGroup
-          //boost::optional<SubSurface> shadedSubSurface() const;
           //boost::optional<Surface> shadedSurface() const;
+          //bool setShadedSurface(const Surface& surface);
+
         }
         else if (field == DAYLIGHTINGSHELFNAME) {
           //ShadingSurface
