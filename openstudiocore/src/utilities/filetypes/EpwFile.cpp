@@ -416,8 +416,7 @@ EpwDataPoint::EpwDataPoint(int year,int month,int day,int hour,int minute,
 
 boost::optional<EpwDataPoint> EpwDataPoint::fromEpwString(const std::string &line)
 {
-  std::vector<std::string> list;
-  boost::split(list, line, boost::is_any_of(","));
+  std::vector<std::string> list = splitString(line, ',');
   return fromEpwStrings(list);
 }
 
