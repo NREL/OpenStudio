@@ -68,23 +68,23 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual AnalysisObject clone() const;
+    virtual AnalysisObject clone() const override;
 
-    virtual boost::optional<FileReferenceType> inputFileType() const;
+    virtual boost::optional<FileReferenceType> inputFileType() const override;
 
-    virtual boost::optional<FileReferenceType> outputFileType() const;
+    virtual boost::optional<FileReferenceType> outputFileType() const override;
 
     /** Returns true if value is valid for this Variable. If returns false, createJob(value) should
      *  throw. */
-    virtual bool isValid(const QVariant& value) const;
+    virtual bool isValid(const QVariant& value) const override;
 
     virtual runmanager::WorkItem createWorkItem(const QVariant& value,
-                                                const openstudio::path& rubyIncludeDirectory) const;
+                                                const openstudio::path& rubyIncludeDirectory) const override;
 
     /** Returns the valid integer values for this variable. (All discrete variables
      *  are mappable to integers. Some discrete variables allow users to downselect from
      *  their overall range.) */
-    virtual std::vector<int> validValues(bool selectedOnly) const;
+    virtual std::vector<int> validValues(bool selectedOnly) const override;
 
     //@}
     /** @name Getters and Queries */
@@ -126,13 +126,13 @@ namespace detail {
                                 const FileReferenceType& proposedInputFileType,
                                 const FileReferenceType& proposedOutputFileType) const;
 
-    virtual QVariant toVariant() const;
+    virtual QVariant toVariant() const override;
 
     static MeasureGroup fromVariant(const QVariant& variant, const VersionString& version);
 
     /// Relocate path data from originalBase to newBase.
     virtual void updateInputPathData(const openstudio::path& originalBase,
-                                     const openstudio::path& newBase);
+                                     const openstudio::path& newBase) override;
 
     //@}
    protected:

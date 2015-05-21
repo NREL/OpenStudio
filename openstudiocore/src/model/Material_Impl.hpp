@@ -66,7 +66,7 @@ namespace detail {
     //@{
 
     // return any children objects in the hierarchy
-    virtual std::vector<ModelObject> children() const;
+    virtual std::vector<ModelObject> children() const override;
 
     /** Get the thickness of the material. For some materials, 0.0 is always returned. */
     virtual double thickness() const;

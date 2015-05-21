@@ -150,7 +150,7 @@ namespace openstudio{
       virtual ~TimeSeriesFloodPlotData();
 
       /// must provide copy
-      virtual TimeSeriesFloodPlotData* copy() const;
+      virtual TimeSeriesFloodPlotData* copy() const override;
 
       /// must provide range of values - colormap range not data range
       QwtInterval range() const;
@@ -159,52 +159,52 @@ namespace openstudio{
       QRectF boundingRect() const;
 
       /// provide size of each pixel
-      virtual QRectF pixelHint(const QRectF& area) const;
+      virtual QRectF pixelHint(const QRectF& area) const override;
 
       ///  value at point fractionalDay and hourOfDay
-      double value(double fractionalDay, double hourOfDay) const;
+      double value(double fractionalDay, double hourOfDay) const override;
 
       /// minX
-      double minX() const;
+      double minX() const override;
 
       /// maxX
-      double maxX() const;
+      double maxX() const override;
 
       /// minY
-      double minY() const;
+      double minY() const override;
 
       /// maxY
-      double maxY() const;
+      double maxY() const override;
 
       /// minValue
-      double minValue() const;
+      double minValue() const override;
 
       /// maxValue
-      double maxValue() const;
+      double maxValue() const override;
 
       /// minValue setter
-      void minValue(double min);
+      void minValue(double min) override;
 
       /// maxValue setter
-      void maxValue(double max);
+      void maxValue(double max) override;
 
       /// sumValue
-      double sumValue() const;
+      double sumValue() const override;
 
       /// meanValue
-      double meanValue() const;
+      double meanValue() const override;
 
       /// stdDevValue
-      double stdDevValue() const;
+      double stdDevValue() const override;
 
       /// range of values for which to show the colormap
-      void colorMapRange(QwtInterval colorMapRange);
+      void colorMapRange(QwtInterval colorMapRange) override;
 
       /// range of values for which to show the colormap
-      QwtInterval colorMapRange();
+      QwtInterval colorMapRange() override;
 
       /// units for plotting on axes or scaling
-      std::string units() const;
+      std::string units() const override;
 
     private:
       TimeSeries m_timeSeries;
@@ -264,61 +264,61 @@ namespace openstudio{
       virtual ~MatrixFloodPlotData();
 
       /// must provide copy
-      virtual MatrixFloodPlotData* copy() const;
+      virtual MatrixFloodPlotData* copy() const override;
 
       /// must provide range of values - colormap range not data range
       QwtInterval range() const;
 
       /// provide size of each pixel
-      virtual QRectF pixelHint(const QRectF& area) const;
+      virtual QRectF pixelHint(const QRectF& area) const override;
 
       /// get the value at point x, y
-      double value(double x, double y) const;
+      double value(double x, double y) const override;
 
       /// set the interp method, defaults to Nearest
       void interpMethod(InterpMethod interpMethod);
 
       /// minX
-      double minX() const;
+      double minX() const override;
 
       /// maxX
-      double maxX() const;
+      double maxX() const override;
 
       /// minY
-      double minY() const;
+      double minY() const override;
 
       /// maxY
-      double maxY() const;
+      double maxY() const override;
 
       /// minValue
-      double minValue() const;
+      double minValue() const override;
 
       /// maxValue
-      double maxValue() const;
+      double maxValue() const override;
 
       /// minValue setter
-      void minValue(double min);
+      void minValue(double min) override;
 
       /// maxValue setter
-      void maxValue(double max);
+      void maxValue(double max) override;
 
       /// sumValue
-      double sumValue() const;
+      double sumValue() const override;
 
       /// meanValue
-      double meanValue() const;
+      double meanValue() const override;
 
       /// stdDevValue
-      double stdDevValue() const;
+      double stdDevValue() const override;
 
       /// range of values for which to show the colormap
-      void colorMapRange(QwtInterval colorMapRange);
+      void colorMapRange(QwtInterval colorMapRange) override;
 
       /// range of values for which to show the colormap
-      QwtInterval colorMapRange();
+      QwtInterval colorMapRange() override;
 
       /// units for plotting on axes or scaling
-      std::string units() const;
+      std::string units() const override;
 
     private:
 

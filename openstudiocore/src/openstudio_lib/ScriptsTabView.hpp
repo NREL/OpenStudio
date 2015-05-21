@@ -45,7 +45,7 @@ class ScriptsTabView : public MainTabView
 
   protected:
 
-  virtual void showEvent(QShowEvent *e);
+  virtual void showEvent(QShowEvent *e) override;
 
   private:
 

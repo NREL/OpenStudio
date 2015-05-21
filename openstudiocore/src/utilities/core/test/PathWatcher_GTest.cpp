@@ -46,9 +46,9 @@ struct TestPathWatcher : public openstudio::PathWatcher{
     : PathWatcher(path, 1), added(false), changed(false), removed(false)
   {}
   
-  virtual void onPathAdded() { added = true; }
-  virtual void onPathChanged() { changed = true; }
-  virtual void onPathRemoved() { removed = true; }
+  virtual void onPathAdded() override { added = true; }
+  virtual void onPathChanged() override { changed = true; }
+  virtual void onPathRemoved() override { removed = true; }
   
   bool added;
   bool changed;
@@ -62,7 +62,7 @@ struct TestFileWriter : public QThread{
     : m_path(path), m_contents(contents)
   {}
 
-  void run(){
+  void run() override{
     boost::filesystem::ofstream outFile(m_path, ios_base::out | ios_base::trunc);
     ASSERT_TRUE(outFile?true:false);
     outFile << m_contents;
@@ -80,7 +80,7 @@ struct TestFileRemover : public QThread{
     : m_path(path)
   {}
 
-  void run(){
+  void run() override{
     boost::filesystem::remove(m_path);
   }
 

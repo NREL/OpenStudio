@@ -36,7 +36,7 @@ class GridScene : public QGraphicsScene
 
   public:
   
-  GridScene( QObject *parent = 0 );
+  GridScene( QObject *parent = nullptr );
 
   virtual ~GridScene() {}
 

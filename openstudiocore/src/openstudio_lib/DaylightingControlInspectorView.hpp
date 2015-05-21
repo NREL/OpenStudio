@@ -38,17 +38,17 @@ class DaylightingControlInspectorView : public ModelObjectInspectorView
 
   public:
 
-    DaylightingControlInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = 0 );
+    DaylightingControlInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = nullptr );
 
     virtual ~DaylightingControlInspectorView() {}
 
   protected:
 
-    virtual void onClearSelection();
+    virtual void onClearSelection() override;
 
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
 
-    virtual void onUpdate();
+    virtual void onUpdate() override;
 
   private:
 
@@ -75,7 +75,7 @@ class DaylightingControlInspectorView : public ModelObjectInspectorView
 
   public slots:
 
-    void toggleUnits(bool displayIP);
+    void toggleUnits(bool displayIP) override;
 };
 
 

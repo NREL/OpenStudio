@@ -55,13 +55,13 @@ class OSDragableView : public QWidget
 
   protected:
 
-  void mouseReleaseEvent(QMouseEvent* event);
+  void mouseReleaseEvent(QMouseEvent* event) override;
 
-  void mousePressEvent(QMouseEvent* event);
+  void mousePressEvent(QMouseEvent* event) override;
 
-  void mouseMoveEvent(QMouseEvent*event);
+  void mouseMoveEvent(QMouseEvent*event) override;
 
-  void leaveEvent(QEvent* event);
+  void leaveEvent(QEvent* event) override;
 
   private:
 

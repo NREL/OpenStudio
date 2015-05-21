@@ -76,53 +76,53 @@ FacilityInspectorView::FacilityInspectorView(bool isIP,
   : ModelObjectInspectorView(model, false, parent)
 {
   // index of hidden widget is 0
-  QWidget* hiddenWidget = new QWidget();
+  auto hiddenWidget = new QWidget();
   int index = this->stackedWidget()->addWidget(hiddenWidget);
   OS_ASSERT(index == 0);
 
   // index of the default is 1
-  DefaultInspectorView* defaultInspectorView = new DefaultInspectorView(model, parent);
+  auto defaultInspectorView = new DefaultInspectorView(model, parent);
   connect(defaultInspectorView, &DefaultInspectorView::dropZoneItemClicked, this, &FacilityInspectorView::dropZoneItemClicked);
   index = this->stackedWidget()->addWidget(defaultInspectorView);
   OS_ASSERT(index == 1);
 
-  BuildingInspectorView* buildingInspectorView = new BuildingInspectorView(isIP, model, parent);
+  auto buildingInspectorView = new BuildingInspectorView(isIP, model, parent);
   connect(this, &FacilityInspectorView::toggleUnitsClicked, buildingInspectorView, &BuildingInspectorView::toggleUnitsClicked);
   connect(buildingInspectorView, &BuildingInspectorView::dropZoneItemClicked, this, &FacilityInspectorView::dropZoneItemClicked);
   index = this->stackedWidget()->addWidget(buildingInspectorView);
   m_inspectorIndexMap[IddObjectType::OS_Building] = index;
 
-  BuildingStoryInspectorView* buildingStoryInspectorView = new BuildingStoryInspectorView(isIP, model, parent);
+  auto buildingStoryInspectorView = new BuildingStoryInspectorView(isIP, model, parent);
   connect(this, &FacilityInspectorView::toggleUnitsClicked, buildingStoryInspectorView, &BuildingStoryInspectorView::toggleUnitsClicked);
   connect(buildingStoryInspectorView, &BuildingStoryInspectorView::dropZoneItemClicked, this, &FacilityInspectorView::dropZoneItemClicked);
   index = this->stackedWidget()->addWidget(buildingStoryInspectorView);
   m_inspectorIndexMap[IddObjectType::OS_BuildingStory] = index;
 
-  ThermalZoneView* thermalZoneView = new ThermalZoneView(isIP,model, parent);
+  auto thermalZoneView = new ThermalZoneView(isIP,model, parent);
   connect(this, &FacilityInspectorView::toggleUnitsClicked, thermalZoneView, &ThermalZoneView::toggleUnitsClicked);
   connect(thermalZoneView, &ThermalZoneView::dropZoneItemClicked, this, &FacilityInspectorView::dropZoneItemClicked);
   index = this->stackedWidget()->addWidget(thermalZoneView);
   m_inspectorIndexMap[IddObjectType::OS_ThermalZone] = index;
 
-  SpaceTypeInspectorView* spaceTypeInspectorView = new SpaceTypeInspectorView(isIP, model, parent);
+  auto spaceTypeInspectorView = new SpaceTypeInspectorView(isIP, model, parent);
   connect(this, &FacilityInspectorView::toggleUnitsClicked, spaceTypeInspectorView, &SpaceTypeInspectorView::toggleUnitsClicked);
   connect(spaceTypeInspectorView, &SpaceTypeInspectorView::dropZoneItemClicked, this, &FacilityInspectorView::dropZoneItemClicked);
   index = this->stackedWidget()->addWidget(spaceTypeInspectorView);
   m_inspectorIndexMap[IddObjectType::OS_SpaceType] = index;
 
-  SpaceInspectorView* spaceInspectorView = new SpaceInspectorView(isIP, model, parent);
+  auto spaceInspectorView = new SpaceInspectorView(isIP, model, parent);
   connect(this, &FacilityInspectorView::toggleUnitsClicked, spaceInspectorView, &SpaceInspectorView::toggleUnitsClicked);
   connect(spaceInspectorView, &SpaceInspectorView::dropZoneItemClicked, this, &FacilityInspectorView::dropZoneItemClicked);
   index = this->stackedWidget()->addWidget(spaceInspectorView);
   m_inspectorIndexMap[IddObjectType::OS_Space] = index;
 
-  SurfaceInspectorView* surfaceInspectorView = new SurfaceInspectorView(isIP, model, parent);
+  auto surfaceInspectorView = new SurfaceInspectorView(isIP, model, parent);
   connect(this, &FacilityInspectorView::toggleUnitsClicked, surfaceInspectorView, &SurfaceInspectorView::toggleUnitsClicked);
   connect(surfaceInspectorView, &SurfaceInspectorView::dropZoneItemClicked, this, &FacilityInspectorView::dropZoneItemClicked);
   index = this->stackedWidget()->addWidget(surfaceInspectorView);
   m_inspectorIndexMap[IddObjectType::OS_Surface] = index;
 
-  SubSurfaceInspectorView* subSurfaceInspectorView = new SubSurfaceInspectorView(isIP, model, parent);
+  auto subSurfaceInspectorView = new SubSurfaceInspectorView(isIP, model, parent);
   connect(this, &FacilityInspectorView::toggleUnitsClicked, subSurfaceInspectorView, &SubSurfaceInspectorView::toggleUnitsClicked);
   connect(subSurfaceInspectorView, &SubSurfaceInspectorView::dropZoneItemClicked, this, &FacilityInspectorView::dropZoneItemClicked);
   index = this->stackedWidget()->addWidget(subSurfaceInspectorView);

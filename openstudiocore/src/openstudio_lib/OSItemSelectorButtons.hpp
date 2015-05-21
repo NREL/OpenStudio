@@ -44,7 +44,7 @@ class OSItemSelectorButtons : public QWidget
 
   public:
 
-    OSItemSelectorButtons(QWidget* parent = 0);
+    OSItemSelectorButtons(QWidget* parent = nullptr);
 
     virtual ~OSItemSelectorButtons() {}
 
@@ -94,7 +94,7 @@ class OSItemSelectorButtons : public QWidget
 
   protected:
 
-    void paintEvent ( QPaintEvent * event );
+    void paintEvent ( QPaintEvent * event ) override;
 
   private:
 

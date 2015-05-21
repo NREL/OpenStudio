@@ -122,9 +122,9 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
@@ -135,7 +135,7 @@ namespace detail {
     boost::optional<std::string> windowGlassSpectralDataSetName() const;
 
     /** Get the thickness of the material. */
-    virtual double thickness() const;
+    virtual double thickness() const override;
 
     double solarTransmittance() const;
 
@@ -153,7 +153,7 @@ namespace detail {
 
     OSOptionalQuantity getBackSideSolarReflectanceatNormalIncidence(bool returnIP=false) const;
 
-    virtual boost::optional<double> getVisibleTransmittance() const;
+    virtual boost::optional<double> getVisibleTransmittance() const override;
 
     boost::optional<double> visibleTransmittanceatNormalIncidence() const;
 
@@ -217,7 +217,7 @@ namespace detail {
     void resetWindowGlassSpectralDataSetName();
 
     /** Set thickness to value (m). */
-    virtual bool setThickness(double value);
+    virtual bool setThickness(double value) override;
 
     bool setThickness(const Quantity& thickness);
 
@@ -317,9 +317,9 @@ namespace detail {
 
     double exteriorVisibleReflectance() const;
 
-    virtual boost::optional<double> interiorVisibleAbsorptance() const;
+    virtual boost::optional<double> interiorVisibleAbsorptance() const override;
 
-    virtual boost::optional<double> exteriorVisibleAbsorptance() const;
+    virtual boost::optional<double> exteriorVisibleAbsorptance() const override;
 
     /** Sets the conductance of the material in W/m^2*K, if possible. */
     bool setThermalConductance(double value);

@@ -586,7 +586,7 @@ void ModelObjectTreeItem::addNonModelObjectChild(const std::string& child)
 
 void ModelObjectTreeItem::addModelObjectChild(const model::ModelObject& child, bool isDefaulted)
 {
-  ModelObjectTreeItem* treeItem = new ModelObjectTreeItem(child, isDefaulted, m_type, this);
+  auto treeItem = new ModelObjectTreeItem(child, isDefaulted, m_type, this);
   this->addChild(treeItem);
   if (isDefaulted){
     treeItem->setStyle(0, "#006837");
@@ -667,7 +667,7 @@ std::vector<model::ModelObject> ShadingSurfaceGroupTreeItem::modelObjectChildren
 void ShadingSurfaceGroupTreeItem::addModelObjectChild(const model::ModelObject& child, bool isDefaulted)
 {
   if (child.optionalCast<model::ShadingSurface>()){
-    ModelObjectTreeItem* treeItem = new ModelObjectTreeItem(child, false, m_type, this);
+    auto treeItem = new ModelObjectTreeItem(child, false, m_type, this);
     this->addChild(treeItem);
   }else{
     OS_ASSERT(false);
@@ -1083,25 +1083,25 @@ void SpaceTreeItem::addNonModelObjectChild(const std::string& child)
   model::Space space = modelObject->cast<model::Space>();
 
   if (child == RoofsTreeItem::itemName()){
-    RoofsTreeItem* treeItem = new RoofsTreeItem(space, this);
+    auto treeItem = new RoofsTreeItem(space, this);
     this->addChild(treeItem);
   }else if (child == WallsTreeItem::itemName()){
-    WallsTreeItem* treeItem = new WallsTreeItem(space, this);
+    auto treeItem = new WallsTreeItem(space, this);
     this->addChild(treeItem);
   }else if (child == FloorsTreeItem::itemName()){
-    FloorsTreeItem* treeItem = new FloorsTreeItem(space, this);
+    auto treeItem = new FloorsTreeItem(space, this);
     this->addChild(treeItem);
   }else if (child == SpaceShadingTreeItem::itemName()){
-    SpaceShadingTreeItem* treeItem = new SpaceShadingTreeItem(space, this);
+    auto treeItem = new SpaceShadingTreeItem(space, this);
     this->addChild(treeItem);
   }else if (child == InteriorPartitionsTreeItem::itemName()){
-    InteriorPartitionsTreeItem* treeItem = new InteriorPartitionsTreeItem(space, this);
+    auto treeItem = new InteriorPartitionsTreeItem(space, this);
     this->addChild(treeItem);
   }else if (child == DaylightingObjectsTreeItem::itemName()){
-    DaylightingObjectsTreeItem* treeItem = new DaylightingObjectsTreeItem(space, this);
+    auto treeItem = new DaylightingObjectsTreeItem(space, this);
     this->addChild(treeItem);
   }else if (child == LoadsTreeItem::itemName()){
-    LoadsTreeItem* treeItem = new LoadsTreeItem(space, this);
+    auto treeItem = new LoadsTreeItem(space, this);
     this->addChild(treeItem);
   }else{
     OS_ASSERT(false);

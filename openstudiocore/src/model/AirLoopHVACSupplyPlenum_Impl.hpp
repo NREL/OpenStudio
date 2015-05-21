@@ -49,9 +49,9 @@ class MODEL_API AirLoopHVACSupplyPlenum_Impl : public Splitter_Impl {
 
   virtual ~AirLoopHVACSupplyPlenum_Impl() {}
 
-  virtual const std::vector<std::string>& outputVariableNames() const;
+  virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual IddObjectType iddObjectType() const;
+  virtual IddObjectType iddObjectType() const override;
 
   boost::optional<ThermalZone> thermalZone() const;
 
@@ -59,13 +59,13 @@ class MODEL_API AirLoopHVACSupplyPlenum_Impl : public Splitter_Impl {
 
   void resetThermalZone();
 
-  unsigned inletPort();
+  unsigned inletPort() override;
 
-  unsigned outletPort(unsigned branchIndex);
+  unsigned outletPort(unsigned branchIndex) override;
 
-  unsigned nextOutletPort();
+  unsigned nextOutletPort() override;
 
-  bool addToNode(Node & node);
+  bool addToNode(Node & node) override;
 
   bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
@@ -73,7 +73,7 @@ class MODEL_API AirLoopHVACSupplyPlenum_Impl : public Splitter_Impl {
 
   bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone, boost::optional<StraightComponent> & terminal);
 
-  std::vector<IdfObject> remove();
+  std::vector<IdfObject> remove() override;
 
  private:
 

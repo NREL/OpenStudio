@@ -42,7 +42,7 @@ class UTILITIES_API WorkspaceObjectWatcher : public IdfObjectWatcher {
   bool removedFromWorkspace() const;
 
   /// reset relationshipChanged and removedFromWorkspace as well as flags from IdfObjectWatcher
-  virtual void clearState();
+  virtual void clearState() override;
 
   /// called each time a pointer field changes if watcher enabled
   virtual void onRelationshipChange(int index,Handle newHandle,Handle oldHandle);

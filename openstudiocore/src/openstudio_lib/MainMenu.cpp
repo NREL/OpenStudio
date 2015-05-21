@@ -37,7 +37,7 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
 {
   m_isIP = isIP;
 
-  QAction * action = 0;
+  QAction * action = nullptr;
 
   // File menu
   m_fileMenu = new QMenu(tr("&File"),this);

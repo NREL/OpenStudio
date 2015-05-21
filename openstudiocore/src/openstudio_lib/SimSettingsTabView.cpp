@@ -35,7 +35,7 @@ SimSettingsTabView::SimSettingsTabView(bool isIP,
                                        : MainTabView(tabLabel,hasSubTab,parent),
                                          m_simSettingsView(new SimSettingsView(isIP,model,parent))
 {
-  QScrollArea * scrollarea = new QScrollArea();
+  auto scrollarea = new QScrollArea();
   scrollarea->setWidget(m_simSettingsView);
   scrollarea->setWidgetResizable(true);
   addTabWidget(scrollarea);

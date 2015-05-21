@@ -77,8 +77,8 @@ public slots:
 
 
 protected:
-  void mouseMoveEvent(QMouseEvent *e);
-  void mousePressEvent(QMouseEvent *e);
+  void mouseMoveEvent(QMouseEvent *e) override;
+  void mousePressEvent(QMouseEvent *e) override;
   // internal plot2ddata creation without caching
   void performPlot2DDataDrag();
   // external resultsviewerplotdata creation with caching of timeseries

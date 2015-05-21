@@ -103,7 +103,7 @@ namespace detail {
     /** @name Protected in or Absent from Public Class */
     //@{
 
-    virtual QVariant toVariant() const;
+    virtual QVariant toVariant() const override;
 
     static InputVariable factoryFromVariant(const QVariant &variant, const VersionString &version);
 

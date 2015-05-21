@@ -69,7 +69,7 @@ class VRFSystemMiniView : public QGraphicsObject
   RemoveButtonItem * removeButtonItem;
   ZoomInButtonItem * zoomInButtonItem;
 
-  QRectF boundingRect() const;
+  QRectF boundingRect() const override;
   static QSize cellSize();
 
   void setNumberOfZones(int zones);
@@ -83,7 +83,7 @@ class VRFSystemMiniView : public QGraphicsObject
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
-              QWidget *widget );
+              QWidget *widget ) override;
 
   private:
 
@@ -120,7 +120,7 @@ class VRFSystemView : public QGraphicsObject
 
   virtual ~VRFSystemView() {}
 
-  QRectF boundingRect() const;
+  QRectF boundingRect() const override;
 
   void setId(const OSItemId & id);
 
@@ -149,10 +149,10 @@ class VRFSystemView : public QGraphicsObject
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
-              QWidget *widget = 0 );
+              QWidget *widget = nullptr ) override;
 
-  void mousePressEvent(QGraphicsSceneMouseEvent * event);
-  void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
+  void mousePressEvent(QGraphicsSceneMouseEvent * event) override;
+  void mouseReleaseEvent(QGraphicsSceneMouseEvent * event) override;
   bool m_mouseDown;
 
   private slots:
@@ -180,7 +180,7 @@ class VRFTerminalView : public QGraphicsObject
 
   virtual ~VRFTerminalView() {}
 
-  QRectF boundingRect() const;
+  QRectF boundingRect() const override;
 
   VRFThermalZoneDropZoneView * zoneDropZone;
 
@@ -208,7 +208,7 @@ class VRFTerminalView : public QGraphicsObject
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
-              QWidget *widget );
+              QWidget *widget ) override;
 
   private slots:
 
@@ -245,7 +245,7 @@ class VRFThermalZoneDropZoneView : public OSDropZoneItem
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
-              QWidget *widget );
+              QWidget *widget ) override;
 
   private:
 
@@ -258,13 +258,13 @@ class VRFSystemDropZoneView : public OSDropZoneItem
 
   public:
 
-  QRectF boundingRect() const;
+  QRectF boundingRect() const override;
 
   protected:
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
-              QWidget *widget );
+              QWidget *widget ) override;
 };
 
 } // openstudio

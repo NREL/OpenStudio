@@ -153,7 +153,7 @@ DesignAltsView::DesignAltsView()
 }
 
 VariableGroupItemView::VariableGroupItemView()
-  : OSCollapsibleView(nullptr)
+  : OSCollapsibleView()
 {
   variableGroupHeaderView = new DarkGradientHeader();
   setHeader(variableGroupHeaderView);
@@ -166,7 +166,7 @@ VariableGroupItemView::VariableGroupItemView()
 }
 
 VariableItemView::VariableItemView()
-  : OSCollapsibleView(nullptr)
+  : OSCollapsibleView()
 {
   variableHeaderView = new QLabel();
   variableHeaderView->setObjectName("H2");
@@ -289,7 +289,7 @@ void DesignAltContentView::onDescriptionTextChanged()
 }
 
 DesignAltItemView::DesignAltItemView(bool t_isBaseline)
-  : OSCollapsibleView(nullptr)
+  : OSCollapsibleView()
 {
   designAltHeaderView = new DesignAltHeaderView(t_isBaseline);
   setHeader(designAltHeaderView);

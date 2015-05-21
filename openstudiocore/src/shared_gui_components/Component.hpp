@@ -41,7 +41,7 @@ public:
   Component(const BCLMeasure & bclMeasure,
     bool showAbridgedView = true,
     bool showCheckBox = true,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
   Component(const BCLSearchResult & bclSearchResult,
     bool showAbridgedView = true,
     bool showCheckBox = true,
@@ -59,7 +59,7 @@ public:
   void setChecked(bool checked);
   
 protected:
-  void paintEvent(QPaintEvent * event);
+  void paintEvent(QPaintEvent * event) override;
 
 private:
   void createAbridgedLayout();

@@ -172,8 +172,8 @@ public:
     virtual void update();
     virtual void del();
     virtual bool typeIsCorrect();
-    std::auto_ptr<Project> upcast();
-    std::auto_ptr<Project> upcastCopy();
+    std::unique_ptr<Project> upcast();
+    std::unique_ptr<Project> upcastCopy();
 };
 std::ostream & operator<<(std::ostream& os, Project o);
 class Analysis : public litesql::Persistent {
@@ -234,8 +234,8 @@ public:
     virtual void update();
     virtual void del();
     virtual bool typeIsCorrect();
-    std::auto_ptr<Analysis> upcast();
-    std::auto_ptr<Analysis> upcastCopy();
+    std::unique_ptr<Analysis> upcast();
+    std::unique_ptr<Analysis> upcastCopy();
 };
 std::ostream & operator<<(std::ostream& os, Analysis o);
 class Model : public litesql::Persistent {
@@ -298,8 +298,8 @@ public:
     virtual void update();
     virtual void del();
     virtual bool typeIsCorrect();
-    std::auto_ptr<Model> upcast();
-    std::auto_ptr<Model> upcastCopy();
+    std::unique_ptr<Model> upcast();
+    std::unique_ptr<Model> upcastCopy();
 };
 std::ostream & operator<<(std::ostream& os, Model o);
 class Result : public litesql::Persistent {
@@ -358,8 +358,8 @@ public:
     virtual void update();
     virtual void del();
     virtual bool typeIsCorrect();
-    std::auto_ptr<Result> upcast();
-    std::auto_ptr<Result> upcastCopy();
+    std::unique_ptr<Result> upcast();
+    std::unique_ptr<Result> upcastCopy();
 };
 std::ostream & operator<<(std::ostream& os, Result o);
 class ResultQuery : public litesql::Persistent {
@@ -418,8 +418,8 @@ public:
     virtual void update();
     virtual void del();
     virtual bool typeIsCorrect();
-    std::auto_ptr<ResultQuery> upcast();
-    std::auto_ptr<ResultQuery> upcastCopy();
+    std::unique_ptr<ResultQuery> upcast();
+    std::unique_ptr<ResultQuery> upcastCopy();
 };
 std::ostream & operator<<(std::ostream& os, ResultQuery o);
 class RequestedResult : public litesql::Persistent {
@@ -468,8 +468,8 @@ public:
     virtual void update();
     virtual void del();
     virtual bool typeIsCorrect();
-    std::auto_ptr<RequestedResult> upcast();
-    std::auto_ptr<RequestedResult> upcastCopy();
+    std::unique_ptr<RequestedResult> upcast();
+    std::unique_ptr<RequestedResult> upcastCopy();
 };
 std::ostream & operator<<(std::ostream& os, RequestedResult o);
 class ProjectModelDatabase : public litesql::Database {

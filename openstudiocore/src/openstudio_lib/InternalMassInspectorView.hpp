@@ -45,17 +45,17 @@ class InternalMassDefinitionInspectorView : public ModelObjectInspectorView
 
   public:
 
-    InternalMassDefinitionInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = 0 );
+    InternalMassDefinitionInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = nullptr );
 
     virtual ~InternalMassDefinitionInspectorView() {}
 
   protected:
 
-    virtual void onClearSelection();
+    virtual void onClearSelection() override;
 
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
 
-    virtual void onUpdate();
+    virtual void onUpdate() override;
 
   private:
 
@@ -87,24 +87,24 @@ class InternalMassDefinitionInspectorView : public ModelObjectInspectorView
 
       protected:
 
-      std::vector<OSItemId> makeVector();
+      std::vector<OSItemId> makeVector() override;
 
       void onChangeRelationship(
              const openstudio::model::ModelObject& modelObject, 
              int index, 
              Handle newHandle, 
-             Handle oldHandle);
+             Handle oldHandle) override;
 
-      void onRemoveItem(OSItem* item);
+      void onRemoveItem(OSItem* item) override;
 
-      void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId);
+      void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId) override;
 
-      void onDrop(const OSItemId& itemId);
+      void onDrop(const OSItemId& itemId) override;
     };
 
   public slots:
 
-    void toggleUnits(bool displayIP);
+    void toggleUnits(bool displayIP) override;
 };
 
 } // openstudio

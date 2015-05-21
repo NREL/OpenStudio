@@ -54,10 +54,10 @@ namespace detail {
     virtual ~SpaceItem_Impl() {}
 
     // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const;
+    virtual boost::optional<ParentObject> parent() const override;
 
     /// set the parent, child may have to call methods on the parent
-    virtual bool setParent(ParentObject& newParent);
+    virtual bool setParent(ParentObject& newParent) override;
 
     /// Returns the parent Space.
     boost::optional<Space> space() const;

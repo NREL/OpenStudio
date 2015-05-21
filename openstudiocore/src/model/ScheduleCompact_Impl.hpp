@@ -51,35 +51,35 @@ namespace detail {
     //@{
 
     // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const;
+    virtual boost::optional<ParentObject> parent() const override;
 
     // return any children objects in the hierarchy
-    virtual std::vector<ModelObject> children() const;
+    virtual std::vector<ModelObject> children() const override;
 
     // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<double> values() const;
+    virtual std::vector<double> values() const override;
 
-    virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const;
+    virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const override;
 
 
     //@}
     /** @name Setters */
     //@{
 
-    virtual bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits);
+    virtual bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) override;
 
-    virtual bool resetScheduleTypeLimits();
+    virtual bool resetScheduleTypeLimits() override;
 
     void setToConstantValue(double value);
 
     bool setToConstantValue(const Quantity& value);
 
     // ensure that this object does not contain the date 2/29
-    virtual void ensureNoLeapDays();
+    virtual void ensureNoLeapDays() override;
 
     //@}
     /** @name Queries */

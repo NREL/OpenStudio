@@ -121,27 +121,27 @@ namespace detail {
     //@}
 
     // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const;
+    virtual boost::optional<ParentObject> parent() const override;
 
     // set the parent, child may have to call methods on the parent
-    virtual bool setParent(ParentObject& newParent);
+    virtual bool setParent(ParentObject& newParent) override;
 
     // return any children objects in the hierarchy
-    virtual std::vector<ModelObject> children() const;
+    virtual std::vector<ModelObject> children() const override;
 
     /// get a vector of allowable children types
-    virtual std::vector<IddObjectType> allowableChildTypes() const;
+    virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
     // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     /** This function returns a vector of HVACComponent that are directly downstream
      *  from this object on an AirLoopHVAC or PlantLoop. 
      *  @param[in]  isDemandComponent  Boolean passed in whether object is a demand or supply component
     **/
-    virtual std::vector<HVACComponent> edges(bool isDemandComponent);
+    virtual std::vector<HVACComponent> edges(bool isDemandComponent) override;
 
     /** @name Getters */
     //@{
@@ -397,17 +397,17 @@ namespace detail {
 
     SizingZone sizingZone() const;
 
-    void disconnect();
+    void disconnect() override;
 
-    bool isRemovable() const;
+    bool isRemovable() const override;
 
-    std::vector<IdfObject> remove();
+    std::vector<IdfObject> remove() override;
 
     bool useIdealAirLoads() const;
 
     void setUseIdealAirLoads(bool useIdealAirLoads);
 
-    bool addToNode(Node & node);
+    bool addToNode(Node & node) override;
 
     PortList inletPortList() const;
 
@@ -427,7 +427,7 @@ namespace detail {
 
     ZoneHVACEquipmentList zoneHVACEquipmentList() const;
 
-    virtual ModelObject clone(Model model) const;
+    virtual ModelObject clone(Model model) const override;
 
     boost::optional<AirLoopHVACSupplyPlenum> airLoopHVACSupplyPlenum() const;
 

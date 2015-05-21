@@ -55,31 +55,31 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual bool addToNode(Node & node);
+    virtual bool addToNode(Node & node) override;
 
     //@}
     /** @name Getters */
     //@{
 
-    virtual std::string controlVariable() const;
+    virtual std::string controlVariable() const override;
 
     boost::optional<Schedule> highSetpointSchedule() const;
 
     boost::optional<Schedule> lowSetpointSchedule() const;
 
-    virtual boost::optional<Node> setpointNode() const;
+    virtual boost::optional<Node> setpointNode() const override;
 
     //@}
     /** @name Setters */
     //@{
 
-    virtual bool setControlVariable(const std::string& controlVariable);
+    virtual bool setControlVariable(const std::string& controlVariable) override;
 
     bool setHighSetpointSchedule(Schedule& schedule);
 
@@ -96,9 +96,9 @@ namespace detail {
     //@}
    protected:
    private:
-    virtual bool setSetpointNode( const Node & node );
+    virtual bool setSetpointNode( const Node & node ) override;
 
-    virtual void resetSetpointNode();
+    virtual void resetSetpointNode() override;
 
     REGISTER_LOGGER("openstudio.model.SetpointManagerScheduledDualSetpoint");
   };

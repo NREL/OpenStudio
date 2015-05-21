@@ -56,15 +56,15 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned inletPort();
+    virtual unsigned inletPort() override;
 
-    virtual unsigned outletPort();
+    virtual unsigned outletPort() override;
 
     //@}
     /** @name Getters */
@@ -232,13 +232,13 @@ namespace detail {
 
     void resetSizingFactor();
 
-    ModelObject clone(Model model) const;
+    ModelObject clone(Model model) const override;
 
-    std::vector<IddObjectType> allowableChildTypes() const;
+    std::vector<IddObjectType> allowableChildTypes() const override;
 
-    std::vector<ModelObject> children() const;
+    std::vector<ModelObject> children() const override;
 
-    bool addToNode(Node & node);
+    bool addToNode(Node & node) override;
 
    private:
 

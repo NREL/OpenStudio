@@ -100,17 +100,17 @@ namespace detail {
     bool fenestrationLowEmissivityCoating() const;
 
     // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const;
+    virtual boost::optional<ParentObject> parent() const override;
 
     /// set the parent, child may have to call non-const methods on the parent
-    virtual bool setParent(ParentObject& newParent);
+    virtual bool setParent(ParentObject& newParent) override;
 
     /** Get all output variables names that could be associated with this object. These variables
      *  may or may not be available for each simulation, need to check report variable dictionary
      *  to see if the variable is available. Each concrete class should override this method.*/
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Setters */

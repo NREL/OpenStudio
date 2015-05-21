@@ -29,7 +29,7 @@ class BuildingStoriesTabView : public MainTabView
   Q_OBJECT
 
 public:
-  BuildingStoriesTabView(QWidget * parent = 0);
+  BuildingStoriesTabView(QWidget * parent = nullptr);
   virtual ~BuildingStoriesTabView() {}
 
 };

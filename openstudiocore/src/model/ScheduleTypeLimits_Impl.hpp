@@ -75,9 +75,9 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
@@ -131,7 +131,7 @@ namespace detail {
    protected:
     virtual OSOptionalQuantity getQuantityFromDouble(unsigned index,
                                                      boost::optional<double> value,
-                                                     bool returnIP) const;
+                                                     bool returnIP) const override;
 
     virtual boost::optional<double> getDoubleFromQuantity(unsigned index, Quantity q) const;
 

@@ -41,6 +41,13 @@ set(utilities_resources_src
   utilities/Idf/MixedLineEndingTest.idf
   utilities/Idf/FormatPropertyTest_Formatted.idf
   utilities/Idf/FormatPropertyTest_Unformatted.idf
+  utilities/SqlFile/1ZoneEvapCooler-V7-0-0.sql
+  utilities/SqlFile/1ZoneEvapCooler-V7-1-0.sql
+  utilities/SqlFile/1ZoneEvapCooler-V7-2-0.sql
+  utilities/SqlFile/1ZoneEvapCooler-V8-0-0.sql
+  utilities/SqlFile/1ZoneEvapCooler-V8-1-0.sql
+  utilities/SqlFile/1ZoneEvapCooler-V8-2-0.sql
+  utilities/SqlFile/1ZoneEvapCooler-V8-3-0.sql
   utilities/Zip/test1.zip
 )
 
@@ -357,6 +364,9 @@ set(osversion_resources_src
   osversion/1_7_3/OpenStudio.idd
   osversion/1_7_3/example.osm
   osversion/1_7_3/example.osc
+  osversion/1_7_4/OpenStudio.idd
+  osversion/1_7_4/example.osm
+  osversion/1_7_4/example.osc
   osversion/unknown.osc
 )
 

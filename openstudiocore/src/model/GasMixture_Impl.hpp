@@ -94,16 +94,16 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
     //@{
 
     /** Get the thickness of the material. */
-    virtual double thickness() const;
+    virtual double thickness() const override;
 
     /** Get the type of gas at index, where index starts at 0. Throws if unavailable. */
     std::string getGasType(unsigned index) const;
@@ -163,7 +163,7 @@ namespace detail {
     //@{
 
     /** Set thickness to value (m). */
-    virtual bool setThickness(double value);
+    virtual bool setThickness(double value) override;
 
     /** Set the gas at index, if index <= numGases. */
     bool setGas(unsigned index, const std::string& type, double fraction);
@@ -245,7 +245,7 @@ namespace detail {
     //@}
    protected:
 
-    virtual void populateValidityReport(ValidityReport& report,bool checkNames) const;
+    virtual void populateValidityReport(ValidityReport& report,bool checkNames) const override;
 
    private:
     REGISTER_LOGGER("openstudio.model.GasMixture");

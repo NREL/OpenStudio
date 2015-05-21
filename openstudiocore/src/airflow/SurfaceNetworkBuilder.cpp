@@ -41,7 +41,7 @@ SurfaceNetworkBuilder::SurfaceNetworkBuilder(ProgressBar *progressBar) : m_progr
   m_logSink.setLogLevel(Info);
   m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.SurfaceNetworkBuilder"));
   m_logSink.setThreadId(QThread::currentThread());
-  m_progressBar = 0;
+  m_progressBar = nullptr;
 }
 
 void SurfaceNetworkBuilder::progress()

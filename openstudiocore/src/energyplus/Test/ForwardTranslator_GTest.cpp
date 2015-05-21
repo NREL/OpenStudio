@@ -527,7 +527,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_MultiThreadedLogMessages) {
     {}
 
   protected:
-    void run(){
+    void run() override{
       workspace = translator.translateModel(model);
     }
   };

@@ -135,10 +135,10 @@ signals:
 protected:
 
   // handle show event
-  virtual void showEvent(QShowEvent *t_event);
+  virtual void showEvent(QShowEvent *t_event) override;
 
   // handle close event
-  virtual void closeEvent(QCloseEvent *t_event);
+  virtual void closeEvent(QCloseEvent *t_event) override;
 
 private slots:
 

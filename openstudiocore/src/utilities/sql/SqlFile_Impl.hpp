@@ -57,11 +57,14 @@ namespace openstudio{
 
       /// constructor from filesystem path, will throw ConstructorException if file does not exist
       /// or if file is not valid
-      SqlFile_Impl(const openstudio::path& path);
+      /// createIndexes will create useful indexes when opening an sqlite file but for faster opening
+      /// pass in false if those indexes are not needed
+      SqlFile_Impl(const openstudio::path& path, const bool createIndexes=true);
 
-
+      /// createIndexes will create useful indexes when creating an sqlite file but for faster creation
+      /// pass in false if those indexes are not needed
       SqlFile_Impl(const openstudio::path &t_path, const openstudio::EpwFile &t_epwFile, const openstudio::DateTime &t_simulationTime,
-          const openstudio::Calendar &t_calendar);
+          const openstudio::Calendar &t_calendar, const bool createIndexes=true);
 
       // virtual destructor
       virtual ~SqlFile_Impl();

@@ -42,17 +42,17 @@ class WindowMaterialShadeInspectorView : public ModelObjectInspectorView
 
   public:
 
-    WindowMaterialShadeInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = 0);
+    WindowMaterialShadeInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = nullptr);
 
     virtual ~WindowMaterialShadeInspectorView() {}
 
   protected:
 
-    virtual void onClearSelection();
+    virtual void onClearSelection() override;
 
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
 
-    virtual void onUpdate();
+    virtual void onUpdate() override;
 
   private:
 

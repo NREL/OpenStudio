@@ -201,7 +201,7 @@ void HVACSystemsController::update()
     // Populate system combo box
     std::vector<model::Loop> loops = m_model.getModelObjects<model::Loop>();
 
-    for( std::vector<model::Loop>::iterator it = loops.begin();
+    for( auto it = loops.begin();
          it != loops.end();
          ++it )
     {
@@ -993,7 +993,7 @@ void HVACControlsController::update()
 
       // HVAC Operation Schedule
 
-      SystemAvailabilityVectorController * systemAvailabilityVectorController = new SystemAvailabilityVectorController();
+      auto systemAvailabilityVectorController = new SystemAvailabilityVectorController();
       systemAvailabilityVectorController->attach(t_airLoopHVAC.get());
       m_systemAvailabilityDropZone = new OSDropZone(systemAvailabilityVectorController);
       m_systemAvailabilityDropZone->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
@@ -1066,7 +1066,7 @@ void HVACControlsController::update()
       // Supply Air Temperature
       boost::optional<model::SetpointManager> _spm;
       std::vector<model::SetpointManager> _setpointManagers = t_airLoopHVAC->supplyOutletNode().setpointManagers();
-      for(std::vector<model::SetpointManager>::iterator it = _setpointManagers.begin();
+      for(auto it = _setpointManagers.begin();
           it != _setpointManagers.end();
           ++it)
       {
@@ -1134,7 +1134,7 @@ void HVACControlsController::update()
 
         m_hvacControlsView->supplyAirTemperatureViewSwitcher->setView(m_scheduledSPMView);
 
-        SupplyAirTempScheduleVectorController * supplyAirTempScheduleVectorController = new SupplyAirTempScheduleVectorController();
+        auto supplyAirTempScheduleVectorController = new SupplyAirTempScheduleVectorController();
         supplyAirTempScheduleVectorController->attach(spmS.get());
         m_supplyAirTempScheduleDropZone = new OSDropZone(supplyAirTempScheduleVectorController);
         m_supplyAirTempScheduleDropZone->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
@@ -1424,7 +1424,7 @@ void HVACLayoutController::update()
 
         m_hvacSystemsController->hvacSystemsView()->hvacToolbarView->label->setText(QString::fromStdString(waterUseConnections->name().get()));
 
-        WaterUseConnectionsDetailScene * waterUseConnectionsScene = new WaterUseConnectionsDetailScene(waterUseConnections.get());
+        auto waterUseConnectionsScene = new WaterUseConnectionsDetailScene(waterUseConnections.get());
 
         m_hvacGraphicsView->setScene(waterUseConnectionsScene);
 
@@ -1449,7 +1449,7 @@ void HVACLayoutController::update()
     {
       m_hvacSystemsController->hvacSystemsView()->hvacToolbarView->showControls(true);
 
-      ServiceWaterScene * serviceWaterScene = new ServiceWaterScene(t_model);
+      auto serviceWaterScene = new ServiceWaterScene(t_model);
 
       m_hvacGraphicsView->setScene(serviceWaterScene);
 

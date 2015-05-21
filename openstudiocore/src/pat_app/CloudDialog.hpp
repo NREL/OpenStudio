@@ -50,15 +50,15 @@ public:
 
 protected slots:
 
-  virtual void on_backButton(bool checked);
+  virtual void on_backButton(bool checked) override;
 
-  virtual void on_cancelButton(bool checked);
+  virtual void on_cancelButton(bool checked) override;
 
-  virtual void on_okButton(bool checked);
+  virtual void on_okButton(bool checked) override;
 
 protected:
 
-  void closeEvent(QCloseEvent * event);
+  void closeEvent(QCloseEvent * event) override;
 
   QCheckBox * m_iAcceptCheckBox; 
 
@@ -178,15 +178,15 @@ public:
 
   virtual ~BlankProviderWidget();
 
-  virtual void loadData();
+  virtual void loadData() override;
 
-  virtual void saveData();
+  virtual void saveData() override;
 
 private:
 
-  virtual void createLoginWidget();
+  virtual void createLoginWidget() override;
 
-  virtual void createSettingsWidget();
+  virtual void createSettingsWidget() override;
 
 };
 
@@ -200,15 +200,15 @@ public:
 
   virtual ~VagrantProviderWidget();
 
-  virtual void loadData();
+  virtual void loadData() override;
 
-  virtual void saveData();
+  virtual void saveData() override;
 
 protected:
 
-  virtual void createLoginWidget();
+  virtual void createLoginWidget() override;
 
-  virtual void createSettingsWidget();
+  virtual void createSettingsWidget() override;
 
 private slots:
 
@@ -250,9 +250,9 @@ public:
 
   virtual ~AmazonProviderWidget();
     
-  virtual void loadData();
+  virtual void loadData() override;
 
-  virtual void saveData();
+  virtual void saveData() override;
 
   QLineEdit * m_accessKeyLineEdit;
 
@@ -260,9 +260,9 @@ public:
 
 protected:
 
-  virtual void createLoginWidget();
+  virtual void createLoginWidget() override;
 
-  virtual void createSettingsWidget();
+  virtual void createSettingsWidget() override;
 
 private:
 

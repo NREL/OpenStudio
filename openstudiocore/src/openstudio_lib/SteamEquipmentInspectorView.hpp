@@ -42,17 +42,17 @@ class SteamEquipmentDefinitionInspectorView : public ModelObjectInspectorView
 
   public:
 
-    SteamEquipmentDefinitionInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = 0 );
+    SteamEquipmentDefinitionInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = nullptr );
 
     virtual ~SteamEquipmentDefinitionInspectorView() {}
 
   protected:
 
-    virtual void onClearSelection();
+    virtual void onClearSelection() override;
 
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
 
-    virtual void onUpdate();
+    virtual void onUpdate() override;
 
   private:
 
@@ -80,7 +80,7 @@ class SteamEquipmentDefinitionInspectorView : public ModelObjectInspectorView
 
   public slots:
 
-    void toggleUnits(bool displayIP);
+    void toggleUnits(bool displayIP) override;
 };
 
 } // openstudio

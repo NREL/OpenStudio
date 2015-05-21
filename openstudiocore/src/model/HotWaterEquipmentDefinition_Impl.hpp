@@ -60,9 +60,9 @@ namespace detail {
     virtual ~HotWaterEquipmentDefinition_Impl() {}
 
     //@}
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     /** @name Getters */
     //@{

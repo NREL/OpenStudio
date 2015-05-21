@@ -59,7 +59,7 @@ namespace detail {
 
     virtual ~RubyContinuousVariable_Impl() {}
 
-    virtual AnalysisObject clone() const;
+    virtual AnalysisObject clone() const override;
 
     //@}
     /** @name Virtual Methods */
@@ -67,22 +67,22 @@ namespace detail {
 
     /** Get the variable value from a dataPoint. Throws an openstudio::Exception if the Variable
      *  cannot be evaluated for dataPoint. */
-    virtual double getValue(const DataPoint& dataPoint) const;
+    virtual double getValue(const DataPoint& dataPoint) const override;
 
-    virtual boost::optional<FileReferenceType> inputFileType() const;
+    virtual boost::optional<FileReferenceType> inputFileType() const override;
 
-    virtual boost::optional<FileReferenceType> outputFileType() const;
+    virtual boost::optional<FileReferenceType> outputFileType() const override;
 
     /** Returns true if value is valid for this Variable. If returns false, createJob(value) should
      *  throw. */
-    virtual bool isValid(const QVariant& value) const;
+    virtual bool isValid(const QVariant& value) const override;
 
     /** Returns true if udesc is valid for this Variable. If returns false,
      *  setUncertaintyDescription will fail. */
-    virtual bool isValid(const UncertaintyDescription& udesc) const;
+    virtual bool isValid(const UncertaintyDescription& udesc) const override;
 
     virtual runmanager::WorkItem createWorkItem(const QVariant& value,
-                                                const openstudio::path& rubyIncludeDirectory) const;
+                                                const openstudio::path& rubyIncludeDirectory) const override;
 
     //@}
     /** @name Getters and Queries */
@@ -112,7 +112,7 @@ namespace detail {
     /** @name Protected in or Absent from Public Class */
     //@{
 
-    virtual QVariant toVariant() const;
+    virtual QVariant toVariant() const override;
 
     static RubyContinuousVariable fromVariant(const QVariant& variant, const VersionString& version);
 
@@ -120,7 +120,7 @@ namespace detail {
 
     /// Relocate path data from originalBase to newBase.
     virtual void updateInputPathData(const openstudio::path& originalBase,
-                                     const openstudio::path& newBase);
+                                     const openstudio::path& newBase) override;
 
     //@}
    private:

@@ -50,9 +50,9 @@ namespace detail {
 
     virtual ~AirLoopHVACReturnPlenum_Impl() {}
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     boost::optional<ThermalZone> thermalZone() const;
 
@@ -60,15 +60,15 @@ namespace detail {
 
     void resetThermalZone();
 
-    unsigned outletPort();
+    unsigned outletPort() override;
 
     PortList inducedAirOutletPortList();
 
-    unsigned inletPort(unsigned branchIndex);
+    unsigned inletPort(unsigned branchIndex) override;
 
-    unsigned nextInletPort();
+    unsigned nextInletPort() override;
 
-    bool addToNode(Node & node);
+    bool addToNode(Node & node) override;
 
     bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
@@ -76,7 +76,7 @@ namespace detail {
 
     bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone, boost::optional<StraightComponent> & terminal);
 
-    std::vector<IdfObject> remove();
+    std::vector<IdfObject> remove() override;
 
    private:
 

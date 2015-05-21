@@ -34,7 +34,7 @@ class FacilityTreeWidget : public ModelObjectTreeWidget
 
   public:
 
-    FacilityTreeWidget(const model::Model& model, QWidget * parent = 0);
+    FacilityTreeWidget(const model::Model& model, QWidget * parent = nullptr);
     virtual ~FacilityTreeWidget() {}
 
     IddObjectType currentIddObjectType() const;
@@ -43,11 +43,11 @@ class FacilityTreeWidget : public ModelObjectTreeWidget
 
   protected:
 
-    virtual void onObjectAdded(const openstudio::model::ModelObject& modelObject, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
+    virtual void onObjectAdded(const openstudio::model::ModelObject& modelObject, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) override;
 
-    virtual void onObjectRemoved(const openstudio::model::ModelObject& modelObject, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
+    virtual void onObjectRemoved(const openstudio::model::ModelObject& modelObject, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) override;
 
-    void paintEvent(QPaintEvent* event);
+    void paintEvent(QPaintEvent* event) override;
 
   private slots:
   

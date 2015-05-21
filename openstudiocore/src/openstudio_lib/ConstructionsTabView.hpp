@@ -31,7 +31,7 @@ class ConstructionsTabView : public MainTabView
 public:
   ConstructionsTabView(const model::Model & model,
                        const QString & tabLabel,
-                       QWidget * parent = 0);
+                       QWidget * parent = nullptr);
   virtual ~ConstructionsTabView() {}
 };
 

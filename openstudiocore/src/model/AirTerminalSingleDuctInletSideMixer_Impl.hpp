@@ -52,9 +52,9 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
@@ -70,11 +70,11 @@ namespace detail {
     /** @name Other */
     //@{
 
-    unsigned inletPort();
-    unsigned outletPort();
-    bool addToNode(Node& node);
-    std::vector<openstudio::IdfObject> remove();
-    bool isRemovable() const;
+    unsigned inletPort() override;
+    unsigned outletPort() override;
+    bool addToNode(Node& node) override;
+    std::vector<openstudio::IdfObject> remove() override;
+    bool isRemovable() const override;
 
     unsigned secondaryAirInletPort() const;
     boost::optional<Node> secondaryAirInletNode() const;

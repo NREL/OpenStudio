@@ -1378,7 +1378,7 @@ bool PatApp::openFile(const QString& fileName)
         ss << std::endl << "Ensure that all measures are correctly located in the scripts directory.";
         LOG(Warn,ss.str());
         // DLM: which dialog should be parent?
-        QMessageBox::warning(0, 
+        QMessageBox::warning(nullptr, 
                              QString("Error opening measure and run data."),
                              toQString(ss.str()),
                              QMessageBox::Ok);
