@@ -345,6 +345,8 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   EXPECT_DOUBLE_EQ(firstVal, ts->values()[0]) << name;
   EXPECT_DOUBLE_EQ(lastVal, ts->values()[8759]) << name;
 
+  ts = sqlFile->timeSeries(availableEnvPeriods[0], "Hourly", "Zone Mean Air Temperature", "Zone that does not exist");
+  EXPECT_FALSE(ts);
 }
 
 TEST_F(SqlFileFixture, Regressions) {
