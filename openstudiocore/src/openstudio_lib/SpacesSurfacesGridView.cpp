@@ -104,12 +104,12 @@ namespace openstudio {
     {
       std::vector<QString> fields;
       fields.push_back(SURFACENAME);
-      //fields.push_back(SURFACETYPE); 
+      fields.push_back(SURFACETYPE); 
       fields.push_back(CONSTRUCTION);
-      //fields.push_back(OUTSIDEBOUNDARYCONDITION);
+      fields.push_back(OUTSIDEBOUNDARYCONDITION);
       fields.push_back(OUTSIDEBOUNDARYCONDITIONOBJECT); 
-      //fields.push_back(SUNEXPOSURE);
-      //fields.push_back(WINDEXPOSURE);
+      fields.push_back(SUNEXPOSURE);
+      fields.push_back(WINDEXPOSURE);
       //fields.push_back(SHADINGSURFACENAME);
       std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("General"), fields);
       m_categoriesAndFields.push_back(categoryAndFields);
