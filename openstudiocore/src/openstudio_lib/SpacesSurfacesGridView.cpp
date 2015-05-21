@@ -271,11 +271,12 @@ namespace openstudio {
             std::function<std::vector<std::string>()>(&model::Surface::validSurfaceTypeValues),
             CastNullAdapter<model::Surface>(&model::Surface::surfaceType),
             CastNullAdapter<model::Surface>(&model::Surface::setSurfaceType),
-            boost::optional<std::function<void(model::Surface*)>>()//,
-            //DataSource(
-            //allSurfaceTypes,
-            //true
-            //)
+            boost::optional<std::function<void(model::Surface*)>>(),
+            boost::optional<std::function<bool(model::Surface*)>>(),
+            DataSource(
+            allSurfaceTypes,
+            true
+            )
             );
         }
         else if (field == CONSTRUCTION) {
@@ -295,11 +296,12 @@ namespace openstudio {
             std::function<std::vector<std::string>()>(&model::Surface::validOutsideBoundaryConditionValues),
             CastNullAdapter<model::Surface>(&model::Surface::outsideBoundaryCondition),
             CastNullAdapter<model::Surface>(&model::Surface::setOutsideBoundaryCondition),
-            boost::optional<std::function<void(model::Surface*)>>()//,
-            //DataSource(
-            //allOutsideBoundaryConditions
-            //true
-            //)
+            boost::optional<std::function<void(model::Surface*)>>(),
+            boost::optional<std::function<bool(model::Surface*)>>(),
+            DataSource(
+            allOutsideBoundaryConditions,
+            true
+            )
             );
         }
         else if (field == OUTSIDEBOUNDARYCONDITIONOBJECT) {
@@ -327,11 +329,12 @@ namespace openstudio {
             std::function<std::vector<std::string>()>(&model::Surface::validSunExposureValues),
             CastNullAdapter<model::Surface>(&model::Surface::sunExposure),
             CastNullAdapter<model::Surface>(&model::Surface::setSunExposure),
-            boost::optional<std::function<void(model::Surface*)> >(NullAdapter(&model::Surface::resetSunExposure))//,
-            //DataSource(
-            //allSunExposures,
-            //true
-            //)
+            boost::optional<std::function<void(model::Surface*)> >(NullAdapter(&model::Surface::resetSunExposure)),
+            boost::optional<std::function<bool(model::Surface*)>>(),
+            DataSource(
+            allSunExposures,
+            true
+            )
             );
         }
         else if (field == WINDEXPOSURE) {
@@ -340,11 +343,12 @@ namespace openstudio {
             std::function<std::vector<std::string>()>(&model::Surface::validWindExposureValues),
             CastNullAdapter<model::Surface>(&model::Surface::windExposure),
             CastNullAdapter<model::Surface>(&model::Surface::setWindExposure),
-            boost::optional<std::function<void(model::Surface*)> >(NullAdapter(&model::Surface::resetWindExposure))//,
-            //DataSource(
-            //allWindExposure,
-            //true
-            //)
+            boost::optional<std::function<void(model::Surface*)> >(NullAdapter(&model::Surface::resetWindExposure)),
+            boost::optional<std::function<bool(model::Surface*)>>(),
+            DataSource(
+            allWindExposure,
+            true
+            )
             );
         }
         else if (field == SHADINGSURFACENAME) {
