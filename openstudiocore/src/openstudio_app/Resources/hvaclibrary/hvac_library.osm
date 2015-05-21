@@ -8023,3 +8023,11 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
   DrawThrough,                            !- Fan Placement
   {876ea808-dc61-4c18-b9cf-d3bb38e90150}; !- Supply Air Fan Operating Mode Schedule Name
 
+OS:TemperingValve,
+  {4985fb51-95da-475b-89c4-ffaa863320b9}, !- Handle
+  Tempering Valve,                      !- Name
+  ,                                       !- Inlet Node Name
+  ,                                       !- Outlet Node Name
+  ,                                       !- Stream 2 Source Node
+  ,                                       !- Temperature Setpoint Node
+  ;                                       !- Pump Outlet Node
