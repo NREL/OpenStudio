@@ -145,50 +145,59 @@ namespace detail {
     return OS_TemperingValveFields::OutletNodeName;
   }
 
-  bool TemperingValve_Impl::addToNode(Node & node)
+  void TemperingValve_Impl::setControlNodes()
   {
-    auto plant = node.plantLoop();
+    auto plant = plantLoop();
 
-    if( ! plant ) {
-      return false;
-    }
-    
-    std::vector<ModelObject> allpumps;
-    auto pumps = plant->supplyComponents(PumpVariableSpeed::iddObjectType());
-    allpumps.insert(allpumps.end(),pumps.begin(),pumps.end());
-    pumps = plant->supplyComponents(PumpConstantSpeed::iddObjectType());
-    allpumps.insert(allpumps.end(),pumps.begin(),pumps.end());
-    pumps = plant->supplyComponents(HeaderedPumpsConstantSpeed::iddObjectType());
-    allpumps.insert(allpumps.end(),pumps.begin(),pumps.end());
-    pumps = plant->supplyComponents(HeaderedPumpsVariableSpeed::iddObjectType());
-    allpumps.insert(allpumps.end(),pumps.begin(),pumps.end());
+    if( ! plant ) return;
 
-    if( allpumps.size() == 1 ) {
-      if( auto mo = allpumps.back().cast<StraightComponent>().outletModelObject() ) {
-        if( auto node = mo->optionalCast<Node>() ) {
-          setPumpOutletNode(node);
+    if( ! pumpOutletNode() ) {
+      std::vector<ModelObject> allpumps;
+      auto pumps = plant->supplyComponents(PumpVariableSpeed::iddObjectType());
+      allpumps.insert(allpumps.end(),pumps.begin(),pumps.end());
+      pumps = plant->supplyComponents(PumpConstantSpeed::iddObjectType());
+      allpumps.insert(allpumps.end(),pumps.begin(),pumps.end());
+      pumps = plant->supplyComponents(HeaderedPumpsConstantSpeed::iddObjectType());
+      allpumps.insert(allpumps.end(),pumps.begin(),pumps.end());
+      pumps = plant->supplyComponents(HeaderedPumpsVariableSpeed::iddObjectType());
+      allpumps.insert(allpumps.end(),pumps.begin(),pumps.end());
+
+      if( ! allpumps.empty() ) {
+        if( auto mo = allpumps.back().cast<StraightComponent>().outletModelObject() ) {
+          if( auto node = mo->optionalCast<Node>() ) {
+            setPumpOutletNode(node);
+          }
         }
       }
+    }
+
+    if( ! temperatureSetpointNode() ) {
+      auto node = plant->supplyOutletNode();
+      setTemperatureSetpointNode(node);
     }
 
     auto mixer = plant->supplyMixer();
 
-    {
-      auto mo = mixer.outletModelObject();
-      OS_ASSERT(mo);
-      if( auto node = mo->optionalCast<Node>() ) {
-        setTemperatureSetpointNode(node.get());
-      }
-    }
-
-    { 
+    if( ! stream2SourceNode() ) { 
+      TemperingValve thisObject = getObject<TemperingValve>();
       auto inletObjects = mixer.inletModelObjects();
-      if( inletObjects.size() == 1u ) {
-        if( auto node = inletObjects.front().optionalCast<Node>() ) {
-          setStream2SourceNode(node.get());
+      for( auto & inletObject : inletObjects ) {
+        if( auto node = inletObject.optionalCast<Node>() ) {
+          if( plant->supplyComponents(thisObject,node.get()).empty() ) {
+            setStream2SourceNode(node.get());
+          }
         }
       }
     }
+  }
+
+  bool TemperingValve_Impl::addToNode(Node & node)
+  {
+    auto plant = node.plantLoop();
+
+    if( ! plant ) return false;
+
+    if( ! plant->supplyComponent(node.handle()) ) return false;
 
     return StraightComponent_Impl::addToNode(node);
   }
@@ -199,6 +208,9 @@ TemperingValve::TemperingValve(const Model& model)
   : StraightComponent(TemperingValve::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::TemperingValve_Impl>());
+  setString(OS_TemperingValveFields::Stream2SourceNode," ");
+  setString(OS_TemperingValveFields::TemperatureSetpointNode," ");
+  setString(OS_TemperingValveFields::PumpOutletNode," ");
 }
 
 IddObjectType TemperingValve::iddObjectType() {

@@ -40,6 +40,8 @@ boost::optional<IdfObject> ForwardTranslator::translateTemperingValve(
   IdfObject idfObject(IddObjectType::TemperingValve);
   m_idfObjects.push_back(idfObject);
 
+  modelObject.getImpl<model::detail::TemperingValve_Impl>()->setControlNodes();
+
   // Name
   if( auto s = modelObject.name() ) {
     idfObject.setName(*s);

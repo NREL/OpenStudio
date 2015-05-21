@@ -16924,6 +16924,7 @@ OS:TemperingValve,
       \memo Temperature-controlled diversion valve used to divert flow around one or more plant
       \memo components such as a hot water heater. It can only be used on one of two branches
       \memo between a Splitter and a Mixer.
+       \min-fields 7
   A1, \field Handle
        \type handle
        \required-field
@@ -16940,10 +16941,13 @@ OS:TemperingValve,
        \required-field
        \object-list ConnectionNames
   A5, \field Stream 2 Source Node
+       \type object-list
        \object-list Node
   A6, \field Temperature Setpoint Node
+       \type object-list
        \object-list Node
   A7; \field Pump Outlet Node
+       \type object-list
        \object-list Node
 
 OS:SetpointManager:FollowOutdoorAirTemperature,

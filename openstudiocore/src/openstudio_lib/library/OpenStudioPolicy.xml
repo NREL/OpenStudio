@@ -752,4 +752,8 @@
     <rule IddField="Schedule Type Limits Name" Access="HIDDEN"/>
     <rule IddField="Interpolate to Timestep" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_TemperingValve">
+    <rule IddField="Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
 </ROOT>
