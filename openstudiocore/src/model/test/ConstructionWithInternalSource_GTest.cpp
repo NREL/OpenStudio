@@ -133,6 +133,11 @@ TEST(ConstructionWithInternalSource, FromLayers)
   EXPECT_EQ(1, construction.sourcePresentAfterLayerNumber());
   EXPECT_FALSE(construction.setTemperatureCalculationRequestedAfterLayerNumber(3));
   EXPECT_EQ(1, construction.temperatureCalculationRequestedAfterLayerNumber());
+
+  while (layers.size() < 11) {
+    layers.push_back(exterior);
+  }
+  EXPECT_THROW((ConstructionWithInternalSource(layers)), std::exception);
 }
 
 TEST(ConstructionWithInternalSource, ReverseConstructionWithInternalSource_1)

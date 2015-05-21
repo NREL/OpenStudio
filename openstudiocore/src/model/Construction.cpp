@@ -126,16 +126,36 @@ Construction::Construction(const Model& model)
 }
 
 Construction::Construction(const std::vector<OpaqueMaterial>& opaqueMaterials)
-  : LayeredConstruction(Construction::iddObjectType(),opaqueMaterials.at(0).model())
+  : LayeredConstruction(Construction::iddObjectType(), 
+  (opaqueMaterials.empty() ? openstudio::model::Model() : opaqueMaterials.at(0).model()))
 {
+  if (opaqueMaterials.empty()){
+    // DLM: do not remove, this was only added to a temporary model
+    //this->remove();
+    LOG_AND_THROW("Cannot create construction from empty opaque layers.");
+  } else if (opaqueMaterials.size() > 10){
+    this->remove();
+    LOG_AND_THROW("Cannot create construction with more than 10 opaque layers.");
+  }
+
   std::vector<Material> materials = castVector<Material>(opaqueMaterials);
   bool ok = setLayers(materials);
   OS_ASSERT(ok);
 }
 
 Construction::Construction(const std::vector<FenestrationMaterial>& fenestrationMaterials)
-  : LayeredConstruction(Construction::iddObjectType(),fenestrationMaterials.at(0).model())
+  : LayeredConstruction(Construction::iddObjectType(),
+  (fenestrationMaterials.empty() ? openstudio::model::Model() : fenestrationMaterials.at(0).model()))
 {
+  if (fenestrationMaterials.empty()){
+    // DLM: do not remove, this was only added to a temporary model
+    //this->remove();
+    LOG_AND_THROW("Cannot create construction from empty fenestration layers.");
+  } else if (fenestrationMaterials.size() > 8){
+    this->remove();
+    LOG_AND_THROW("Cannot create construction with more than 8 fenestration layers.");
+  }
+
   std::vector<Material> materials = castVector<Material>(fenestrationMaterials);
   bool ok = setLayers(materials);
   OS_ASSERT(ok);

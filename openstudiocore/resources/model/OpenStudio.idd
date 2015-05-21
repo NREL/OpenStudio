@@ -3085,7 +3085,7 @@ OS:Construction,
        \memo Enter the material name for each layer
        \extensible:1
        \min-fields 4
-       \max-fields 12
+       \max-fields 13
   A1, \field Handle
        \type handle
        \required-field
@@ -3166,7 +3166,7 @@ OS:Construction:InternalSource,
        \memo Enter the material name for each layer
        \extensible:1
        \min-fields 8
-       \max-fields 16
+       \max-fields 17
   A1, \field Handle
        \type handle
        \required-field

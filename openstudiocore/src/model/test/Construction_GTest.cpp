@@ -49,6 +49,7 @@
 #include "../AirWallMaterial.hpp"
 #include "../StandardOpaqueMaterial.hpp"
 #include "../StandardOpaqueMaterial_Impl.hpp"
+#include "../StandardGlazing.hpp"
 #include "../Space.hpp"
 #include "../Space_Impl.hpp"
 #include "../Surface.hpp"
@@ -682,4 +683,90 @@ TEST_F(ModelFixture, Construction_EnsureUniqueLayers)
   EXPECT_NE(construction1.layers()[1].handle(), construction2.layers()[1].handle());
   EXPECT_NE(construction1.layers()[2].handle(), construction2.layers()[2].handle());
 
+}
+
+TEST_F(ModelFixture, Construction_NumLayers)
+{
+  // from E+ constructions can have up to 10 layers total, 8 for windows
+  Model model;
+
+  // Create some materials
+  StandardOpaqueMaterial exterior(model);
+  AirGap air(model);
+  StandardOpaqueMaterial interior(model);
+  StandardGlazing glazing(model);
+
+  {
+    OpaqueMaterialVector layers;
+
+    EXPECT_THROW({ Construction construction(layers); }, openstudio::Exception);
+  }
+
+  {
+    OpaqueMaterialVector layers;
+    layers.push_back(exterior); // 1
+    layers.push_back(exterior); // 2
+    layers.push_back(exterior); // 3
+    layers.push_back(exterior); // 4
+    layers.push_back(exterior); // 5
+    layers.push_back(air);      // 6
+    layers.push_back(interior); // 7
+    layers.push_back(interior); // 8
+    layers.push_back(interior); // 9
+    layers.push_back(interior); // 10
+
+    EXPECT_NO_THROW({ Construction construction(layers); });
+  }
+
+  {
+    OpaqueMaterialVector layers;
+    layers.push_back(exterior); // 1
+    layers.push_back(exterior); // 2
+    layers.push_back(exterior); // 3
+    layers.push_back(exterior); // 4
+    layers.push_back(exterior); // 5
+    layers.push_back(air);      // 6
+    layers.push_back(interior); // 7
+    layers.push_back(interior); // 8
+    layers.push_back(interior); // 9
+    layers.push_back(interior); // 10
+    layers.push_back(interior); // 11
+
+    EXPECT_THROW({ Construction construction(layers); }, openstudio::Exception);
+  }
+
+  {
+   FenestrationMaterialVector layers;
+
+    EXPECT_THROW({ Construction construction(layers); }, openstudio::Exception);
+  }
+
+  {
+    FenestrationMaterialVector layers;
+    layers.push_back(glazing); // 1
+    layers.push_back(glazing); // 2
+    layers.push_back(glazing); // 3
+    layers.push_back(glazing); // 4
+    layers.push_back(glazing); // 5
+    layers.push_back(glazing); // 6
+    layers.push_back(glazing); // 7
+    layers.push_back(glazing); // 8
+
+    EXPECT_NO_THROW({ Construction construction(layers); });
+  }
+
+  {
+    FenestrationMaterialVector layers;
+    layers.push_back(glazing); // 1
+    layers.push_back(glazing); // 2
+    layers.push_back(glazing); // 3
+    layers.push_back(glazing); // 4
+    layers.push_back(glazing); // 5
+    layers.push_back(glazing); // 6
+    layers.push_back(glazing); // 7
+    layers.push_back(glazing); // 8
+    layers.push_back(glazing); // 9
+
+    EXPECT_THROW({ Construction construction(layers); }, openstudio::Exception);
+  }
 }
