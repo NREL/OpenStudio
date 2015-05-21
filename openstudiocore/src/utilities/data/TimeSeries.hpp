@@ -52,21 +52,21 @@ namespace openstudio{
         /// throws if values is empty
         TimeSeries_Impl(const DateTime& firstReportDateTime, const Time& intervalLength, const Vector& values, const std::string& units);
 
-        /// constructor from first report date and time, days from first report vector, values, and units
-        /// throws if values is empty, daysFromFirstReport and values have different lengths, or daysFromFirstReport is not sorted in ascending order
-        TimeSeries_Impl(const DateTime& firstReportDateTime, const Vector& daysFromFirstReport, const Vector& values, const std::string& units);
+        /// constructor from first report date and time, days from report vector, values, and units
+        /// throws if values is empty, days and values have different lengths, a start date cannot be assumed, or days is not sorted in ascending order
+        TimeSeries_Impl(const DateTime& firstReportDateTime, const Vector& days, const Vector& values, const std::string& units);
 
-        /// constructor from first report date and time, days from first report , values, and units
-        /// throws if values is empty, daysFromFirstReport and values have different lengths, or daysFromFirstReport is not sorted in ascending order
-        TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<double>& daysFromFirstReport, const std::vector<double>& values, const std::string& units);
+        /// constructor from first report date and time, days from report , values, and units
+        /// throws if values is empty, days and values have different lengths, a start date cannot be assumed, or days is not sorted in ascending order
+        TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<double>& days, const std::vector<double>& values, const std::string& units);
 
         /// constructor from date times, values, and units
-        /// throws if values is empty, daysFromFirstReport and values have different lengths, or dateTimes is not sorted in ascending order
+        /// throws if values is empty, dateTimes and values have different lengths, a start date cannot be assumed, or dateTimes is not sorted in ascending order
         TimeSeries_Impl(const DateTimeVector& dateTimes, const Vector& values, const std::string& units);
 
-        /// constructor from first report date and time, seconds from first report vector, values, and units
-        /// throws if values is empty, daysFromFirstReport and values have different lengths, or secondsFromFirstReport is not sorted in ascending order
-        TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<long>& secondsFromFirstReport, const Vector& values, const std::string& units);
+        /// constructor from first report date and time, seconds from report vector, values, and units
+        /// throws if values is empty, seconds and values have different lengths, a start date cannot be assumed, or seconds is not sorted in ascending order
+        TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<long>& seconds, const Vector& values, const std::string& units);
 
         // virtual destructor
         ~TimeSeries_Impl() {}

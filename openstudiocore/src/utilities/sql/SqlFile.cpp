@@ -26,10 +26,10 @@ namespace openstudio{
 SqlFile::SqlFile()
 {}
 
-SqlFile::SqlFile(const openstudio::path& path)
+SqlFile::SqlFile(const openstudio::path& path, const bool createIndexes)
 {
   try{
-    m_impl = std::shared_ptr<detail::SqlFile_Impl>(new detail::SqlFile_Impl(path));
+    m_impl = std::shared_ptr<detail::SqlFile_Impl>(new detail::SqlFile_Impl(path, createIndexes));
   }catch(const std::exception& e){
     LOG(Error, "Could not create SqlFile for path '" << openstudio::toString(path) << "' error:" << e.what());
   }
@@ -37,10 +37,10 @@ SqlFile::SqlFile(const openstudio::path& path)
 
 
 SqlFile::SqlFile(const openstudio::path &t_path, const openstudio::EpwFile &t_epwFile, const openstudio::DateTime &t_simulationTime,
-    const openstudio::Calendar &t_calendar)
+    const openstudio::Calendar &t_calendar, const bool createIndexes)
 {
   try{
-    m_impl = std::shared_ptr<detail::SqlFile_Impl>(new detail::SqlFile_Impl(t_path, t_epwFile, t_simulationTime, t_calendar));
+    m_impl = std::shared_ptr<detail::SqlFile_Impl>(new detail::SqlFile_Impl(t_path, t_epwFile, t_simulationTime, t_calendar, createIndexes));
   }catch(const std::exception& e){
     LOG(Error, "Could not create SqlFile for path '" << openstudio::toString(t_path) << "' error:" << e.what());
   }

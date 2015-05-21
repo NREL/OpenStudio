@@ -32,19 +32,19 @@ public:
 
   WaitDialog(const QString & windowTitle,
     const QString & windowMessage,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
 
   virtual ~WaitDialog();
 
-  QSize sizeHint() const;
+  QSize sizeHint() const override;
 
 protected slots:
 
-  virtual void on_cancelButton(bool checked);
+  virtual void on_cancelButton(bool checked) override;
 
 protected:
 
-  void closeEvent(QCloseEvent * event);
+  void closeEvent(QCloseEvent * event) override;
 
 private:
 

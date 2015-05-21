@@ -64,7 +64,7 @@ void SyncMeasuresDialogCentralWidget::createLayout()
   QPushButton * upperPushButton = new QPushButton("Check All");
   connect(upperPushButton, &QPushButton::clicked, this, &SyncMeasuresDialogCentralWidget::upperPushButtonClicked);
 
-  QHBoxLayout * upperLayout = new QHBoxLayout();
+  auto upperLayout = new QHBoxLayout();
   upperLayout->addStretch();
   upperLayout->addWidget(upperPushButton);
 
@@ -98,12 +98,12 @@ void SyncMeasuresDialogCentralWidget::createLayout()
   lowerPushButton = new QPushButton("Update");
   connect(lowerPushButton, &QPushButton::clicked, this, &SyncMeasuresDialogCentralWidget::lowerPushButtonClicked);
 
-  QHBoxLayout * lowerLayout = new QHBoxLayout();
+  auto lowerLayout = new QHBoxLayout();
   lowerLayout->addWidget(progressBar);
   lowerLayout->addStretch();
   lowerLayout->addWidget(lowerPushButton);
 
-  QVBoxLayout * mainLayout = new QVBoxLayout();
+  auto mainLayout = new QVBoxLayout();
   mainLayout->addLayout(upperLayout);
 
   mainLayout->addWidget(m_collapsibleComponentList,0,Qt::AlignTop);
@@ -137,7 +137,7 @@ void SyncMeasuresDialogCentralWidget::displayMeasures(int pageIdx)
 {
   std::vector<Component *> components = m_componentList->components();
 
-  for( std::vector<Component *>::iterator it = components.begin();
+  for( auto it = components.begin();
        it != components.end();
        ++it )
   {
@@ -155,7 +155,7 @@ void SyncMeasuresDialogCentralWidget::displayMeasures(int pageIdx)
        i <= endPoint;
        ++i )
   {
-    Component * component = new Component(m_measures.at(i));
+    auto component = new Component(m_measures.at(i));
     
     m_componentList->addComponent(component);
   }

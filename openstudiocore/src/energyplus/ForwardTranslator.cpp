@@ -2840,7 +2840,7 @@ boost::optional<IdfObject> ForwardTranslator::createSimpleSchedule(const std::st
     eg = idfObject.pushExtensibleGroup(values);
     OS_ASSERT(!eg.empty());
 
-    for( std::vector< std::pair<openstudio::Time, double> >::const_iterator it = summerDesignDay.begin();
+    for( auto it = summerDesignDay.begin();
          it != summerDesignDay.end();
          ++it )
     {
@@ -2881,7 +2881,7 @@ boost::optional<IdfObject> ForwardTranslator::createSimpleSchedule(const std::st
     eg = idfObject.pushExtensibleGroup(values);
     OS_ASSERT(!eg.empty());
 
-    for( std::vector< std::pair<openstudio::Time, double> >::const_iterator it = winterDesignDay.begin();
+    for( auto it = winterDesignDay.begin();
          it != winterDesignDay.end();
          ++it )
     {
@@ -2927,7 +2927,7 @@ boost::optional<IdfObject> ForwardTranslator::createSimpleSchedule(const std::st
 
   bool hasEndTime = false;
   double endTimeValue;
-  for( std::vector< std::pair<openstudio::Time, double> >::const_iterator it = defaultDay.begin();
+  for( auto it = defaultDay.begin();
          it != defaultDay.end();
          ++it )
     {

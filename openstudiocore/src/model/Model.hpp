@@ -377,7 +377,7 @@ class MODEL_API Model : public openstudio::Workspace {
   /** Protected constructor from impl. */
   Model(std::shared_ptr<detail::Model_Impl> impl);
 
-  virtual void addVersionObject();
+  virtual void addVersionObject() override;
 
   /// @endcond
  private:

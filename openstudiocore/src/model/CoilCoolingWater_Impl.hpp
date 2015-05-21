@@ -54,27 +54,27 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual std::vector<openstudio::IdfObject> remove();
+    virtual std::vector<openstudio::IdfObject> remove() override;
 
-    virtual bool removeFromPlantLoop();
+    virtual bool removeFromPlantLoop() override;
 
-    virtual ModelObject clone(Model model) const;
+    virtual ModelObject clone(Model model) const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned airInletPort();
+    virtual unsigned airInletPort() override;
 
-    virtual unsigned airOutletPort();
+    virtual unsigned airOutletPort() override;
 
-    virtual unsigned waterInletPort();
+    virtual unsigned waterInletPort() override;
 
-    virtual unsigned waterOutletPort();
+    virtual unsigned waterOutletPort() override;
 
-    virtual bool addToNode(Node & node);
+    virtual bool addToNode(Node & node) override;
 
-    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const;
+    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
     //@}
 
@@ -155,7 +155,7 @@ namespace detail {
 
     bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
 
-    virtual boost::optional<HVACComponent> containingHVACComponent() const;
+    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
   };
 
 } // detail

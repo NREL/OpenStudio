@@ -32,7 +32,7 @@ class PlanarSurfaceWidget : public QWidget
 
   public:
 
-    PlanarSurfaceWidget(bool isIP, QWidget * parent = 0 );
+    PlanarSurfaceWidget(bool isIP, QWidget * parent = nullptr );
 
     virtual ~PlanarSurfaceWidget() {}
 

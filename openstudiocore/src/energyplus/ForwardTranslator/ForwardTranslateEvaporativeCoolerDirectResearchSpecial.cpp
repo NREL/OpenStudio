@@ -67,7 +67,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeCoolerDirectRe
   // RecirculatingWaterPumpPowerConsumption
   if ( modelObject.isRecirculatingWaterPumpPowerConsumptionAutosized() ) {
     idfObject.setString(EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpDesignPower,"autosize");
-  } else if( d = modelObject.recirculatingWaterPumpPowerConsumption() ) {
+  } else if( (d = modelObject.recirculatingWaterPumpPowerConsumption()) ) {
     idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpDesignPower,d.get());
   }
 

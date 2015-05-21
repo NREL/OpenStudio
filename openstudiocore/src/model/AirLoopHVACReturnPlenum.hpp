@@ -56,11 +56,11 @@ class MODEL_API AirLoopHVACReturnPlenum : public Mixer {
 
   void resetThermalZone();
 
-  unsigned outletPort();
+  unsigned outletPort() override;
 
-  unsigned inletPort(unsigned branchIndex);
+  unsigned inletPort(unsigned branchIndex) override;
 
-  unsigned nextInletPort();
+  unsigned nextInletPort() override;
 
   bool addToNode(Node & node);
 

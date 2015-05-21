@@ -55,15 +55,15 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
     //@{
 
-    std::string controlVariable() const;
+    std::string controlVariable() const override;
 
     double minimumSetpointTemperature() const;
 
@@ -77,7 +77,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    bool setControlVariable(const std::string & controlVariable);
+    bool setControlVariable(const std::string & controlVariable) override;
 
     bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
 
@@ -90,11 +90,11 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-    boost::optional<Node> setpointNode() const;
+    boost::optional<Node> setpointNode() const override;
 
-    bool setSetpointNode( const Node & node );
+    bool setSetpointNode( const Node & node ) override;
 
-    void resetSetpointNode();
+    void resetSetpointNode() override;
     //@}
    protected:
    private:

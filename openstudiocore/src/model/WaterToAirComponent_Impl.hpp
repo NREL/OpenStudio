@@ -55,13 +55,13 @@ class MODEL_API WaterToAirComponent_Impl : public HVACComponent_Impl {
    *  from this object on an AirLoopHVAC or PlantLoop. 
    *  @param[in]  isDemandComponent  Boolean passed in whether object is a demand or supply component
   **/
-  virtual std::vector<HVACComponent> edges(bool isDemandComponent);
+  virtual std::vector<HVACComponent> edges(bool isDemandComponent) override;
 
-  virtual boost::optional<AirLoopHVAC> airLoopHVAC() const;
+  virtual boost::optional<AirLoopHVAC> airLoopHVAC() const override;
 
-  virtual boost::optional<PlantLoop> plantLoop() const;
+  virtual boost::optional<PlantLoop> plantLoop() const override;
 
-  virtual boost::optional<Loop> loop() const;
+  virtual boost::optional<Loop> loop() const override;
 
   virtual unsigned airInletPort() = 0;
    
@@ -71,19 +71,19 @@ class MODEL_API WaterToAirComponent_Impl : public HVACComponent_Impl {
    
   virtual unsigned waterOutletPort() = 0;
 
-  virtual bool addToNode(Node & node);
+  virtual bool addToNode(Node & node) override;
 
-  virtual bool addToSplitter(Splitter & splitter);
+  virtual bool addToSplitter(Splitter & splitter) override;
 
-  virtual std::vector<openstudio::IdfObject> remove();
+  virtual std::vector<openstudio::IdfObject> remove() override;
 
-  virtual ModelObject clone(Model model) const;
+  virtual ModelObject clone(Model model) const override;
 
   virtual void disconnectWaterSide();
 
   virtual void disconnectAirSide();
 
-  virtual void disconnect();
+  virtual void disconnect() override;
 
   virtual bool removeFromAirLoopHVAC();
 

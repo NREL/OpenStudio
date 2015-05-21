@@ -69,18 +69,18 @@ FacilityTreeWidget::FacilityTreeWidget(const model::Model& model, QWidget* paren
 { 
   this->setObjectName("GrayWidget"); 
 
-  QVBoxLayout* vLayout = new QVBoxLayout();
+  auto vLayout = new QVBoxLayout();
   vLayout->setContentsMargins(0,0,0,0);
 
-  QHBoxLayout* hLayout = new QHBoxLayout();
+  auto hLayout = new QHBoxLayout();
   hLayout->setContentsMargins(10,0,10,0);
 
-  QLabel* comboLabel = new QLabel();
+  auto comboLabel = new QLabel();
   comboLabel->setText("Sort Building by: ");
   comboLabel->setStyleSheet("QLabel { font: bold; }");
   hLayout->addWidget(comboLabel);
 
-  QComboBox* comboBox = new QComboBox();
+  auto comboBox = new QComboBox();
   comboBox->addItem("Building Story");
   comboBox->addItem("Thermal Zone");
   comboBox->addItem("Space Type");
@@ -242,11 +242,11 @@ void FacilityTreeWidget::initialize()
   QTreeWidget* treeWidget = this->treeWidget();
 
   // add site shading
-  SiteShadingTreeItem* siteShadingTreeItem = new SiteShadingTreeItem(model);
+  auto siteShadingTreeItem = new SiteShadingTreeItem(model);
   treeWidget->addTopLevelItem(siteShadingTreeItem);
 
   // add building
-  BuildingTreeItem* buildingTreeItem = new BuildingTreeItem(building, m_sortByType);
+  auto buildingTreeItem = new BuildingTreeItem(building, m_sortByType);
   treeWidget->addTopLevelItem(buildingTreeItem);
 
   // set the selected object

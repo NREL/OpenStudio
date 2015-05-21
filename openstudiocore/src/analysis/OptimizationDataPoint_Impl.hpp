@@ -93,7 +93,7 @@ namespace detail {
 
     virtual ~OptimizationDataPoint_Impl() {}
 
-    virtual AnalysisObject clone() const;
+    virtual AnalysisObject clone() const override;
 
     //@}
     /** @name Getters */
@@ -108,7 +108,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    virtual void clearResults();
+    virtual void clearResults() override;
 
     //@}
     /** @name Actions */
@@ -116,7 +116,7 @@ namespace detail {
 
     /** Update high level results from json. */
     virtual bool updateFromJSON(const AnalysisJSONLoadResult& loadResult, 
-                                boost::optional<runmanager::RunManager>& runManager);
+                                boost::optional<runmanager::RunManager>& runManager) override;
 
     //@}
     /** @name Protected in or Absent from Public Class */
@@ -124,7 +124,7 @@ namespace detail {
 
     void setObjectiveValues(const std::vector<double> values);
 
-    virtual QVariant toVariant() const;
+    virtual QVariant toVariant() const override;
 
     static OptimizationDataPoint fromVariant(const QVariant& variant, const VersionString& version);
 

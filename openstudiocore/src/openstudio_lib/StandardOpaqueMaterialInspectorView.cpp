@@ -38,15 +38,15 @@ StandardOpaqueMaterialInspectorView::StandardOpaqueMaterialInspectorView(const m
                                                                          QWidget * parent )
   : ModelObjectInspectorView(model, true, parent)
 {
-  QWidget* hiddenWidget = new QWidget();
+  auto hiddenWidget = new QWidget();
   this->stackedWidget()->insertWidget(0, hiddenWidget);
 
-  QWidget* visibleWidget = new QWidget();
+  auto visibleWidget = new QWidget();
   this->stackedWidget()->insertWidget(1, visibleWidget);
 
   this->stackedWidget()->setCurrentIndex(0);
 
-  QVBoxLayout * mainVLayout = new QVBoxLayout();
+  auto mainVLayout = new QVBoxLayout();
   mainVLayout->setContentsMargins(0,0,0,1);
   mainVLayout->setSpacing(0);
   visibleWidget->setLayout(mainVLayout);

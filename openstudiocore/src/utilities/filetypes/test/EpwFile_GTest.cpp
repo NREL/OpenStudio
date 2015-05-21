@@ -95,10 +95,10 @@ TEST(Filetypes, EpwFile_Data)
     EXPECT_EQ(4.0,data[8759].dryBulbTemperature().get());
     EXPECT_EQ(81100,data[8759].atmosphericStationPressure().get());
     // Try out the alternate access functions, dew point temperature should be -1C
-    EXPECT_EQ(-1.0,data[8759].fieldByName("Dew Point Temperature").get());
-    EXPECT_EQ(-1.0,data[8759].field(EpwDataField("Dew Point Temperature")).get());
+    EXPECT_EQ(-1.0,data[8759].getFieldByName("Dew Point Temperature").get());
+    EXPECT_EQ(-1.0,data[8759].getField(EpwDataField("Dew Point Temperature")).get());
     // The last data point should not have a liquid precipitation depth
-    EXPECT_FALSE(data[8759].fieldByName("Liquid Precipitation Depth"));
+    EXPECT_FALSE(data[8759].getFieldByName("Liquid Precipitation Depth"));
     // Get the data as strings
     std::vector<std::string> epwStrings = data[8759].toEpwStrings();
     ASSERT_EQ(35, epwStrings.size());
@@ -181,10 +181,10 @@ TEST(Filetypes, EpwFile_International_Data)
     EXPECT_EQ(14.7,data[8759].dryBulbTemperature().get());
     EXPECT_EQ(101100,data[8759].atmosphericStationPressure().get());
     // Try out the alternate access functions, dew point temperature should be -1C
-    EXPECT_EQ(11.7,data[8759].fieldByName("Dew Point Temperature").get());
-    EXPECT_EQ(11.7,data[8759].field(EpwDataField("Dew Point Temperature")).get());
+    EXPECT_EQ(11.7,data[8759].getFieldByName("Dew Point Temperature").get());
+    EXPECT_EQ(11.7,data[8759].getField(EpwDataField("Dew Point Temperature")).get());
     // The last data point should not have a liquid precipitation depth
-    EXPECT_FALSE(data[8759].fieldByName("Liquid Precipitation Depth"));
+    EXPECT_FALSE(data[8759].getFieldByName("Liquid Precipitation Depth"));
     // Get a time series
     boost::optional<openstudio::TimeSeries> series = epwFile.getTimeSeries("Wind Speed");
     ASSERT_TRUE(series);
@@ -241,8 +241,8 @@ TEST(Filetypes, EpwFile_IWEC_Data)
     EXPECT_EQ(11.3, data[8759].dryBulbTemperature().get());
     EXPECT_EQ(102400, data[8759].atmosphericStationPressure().get());
     // Try out the alternate access functions
-    EXPECT_EQ(9.8, data[8759].fieldByName("Dew Point Temperature").get());
-    EXPECT_EQ(9.8, data[8759].field(EpwDataField("Dew Point Temperature")).get());
+    EXPECT_EQ(9.8, data[8759].getFieldByName("Dew Point Temperature").get());
+    EXPECT_EQ(9.8, data[8759].getField(EpwDataField("Dew Point Temperature")).get());
     // Get a time series
     boost::optional<openstudio::TimeSeries> series = epwFile.getTimeSeries("Wind Speed");
     ASSERT_TRUE(series);

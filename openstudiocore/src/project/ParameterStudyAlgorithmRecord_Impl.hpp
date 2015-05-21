@@ -52,36 +52,36 @@ namespace detail {
     //@}
 
     /** Returns objects referenced, but not owned, by this Record. */
-    virtual std::vector<ObjectRecord> resources() const;
+    virtual std::vector<ObjectRecord> resources() const override;
 
     /** Returns join relationships between this object and others. Such relationships will be 
      *  removed when either record in the relationship is removed. */
-    virtual std::vector<JoinRecord> joinRecords() const;
+    virtual std::vector<JoinRecord> joinRecords() const override;
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database) override;
 
-    virtual analysis::Algorithm algorithm() const;
+    virtual analysis::Algorithm algorithm() const override;
 
-    virtual analysis::DakotaAlgorithm dakotaAlgorithm() const;
+    virtual analysis::DakotaAlgorithm dakotaAlgorithm() const override;
 
     analysis::ParameterStudyAlgorithm parameterStudyAlgorithm() const;
 
    protected:
     /** Bind data member values to a query for saving. */
-    virtual void bindValues(QSqlQuery& query) const;
+    virtual void bindValues(QSqlQuery& query) const override;
 
     /** Set the last state of this object from the query (including id). */
-    virtual void setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase);
+    virtual void setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) override;
 
     /** Check that values (except id) are same as query. */
-    virtual bool compareValues(const QSqlQuery& query) const;
+    virtual bool compareValues(const QSqlQuery& query) const override;
 
     /** Save values to last state. */
-    virtual void saveLastValues();
+    virtual void saveLastValues() override;
 
     /** Revert values back to last state. */
-    virtual void revertToLastValues();
+    virtual void revertToLastValues() override;
 
    private:
     REGISTER_LOGGER("openstudio.project.ParameterStudyAlgorithmRecord");

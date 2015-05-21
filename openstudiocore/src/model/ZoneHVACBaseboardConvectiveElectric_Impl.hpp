@@ -70,11 +70,11 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
     //@}
     /** @name Getters */
@@ -116,15 +116,15 @@ namespace detail {
     /** @name Other */
     //@{
 
-    unsigned inletPort() const;
+    unsigned inletPort() const override;
 
-    unsigned outletPort() const;
+    unsigned outletPort() const override;
   
-    boost::optional<ThermalZone> thermalZone();
+    boost::optional<ThermalZone> thermalZone() override;
 
-    bool addToThermalZone(ThermalZone & thermalZone);
+    bool addToThermalZone(ThermalZone & thermalZone) override;
 
-    void removeFromThermalZone();
+    void removeFromThermalZone() override;
 
     //@}
    private:

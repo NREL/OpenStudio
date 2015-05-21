@@ -34,7 +34,7 @@ class HVACTemplateHelperDialog : public QDialog
 
   public:
 
-  HVACTemplateHelperDialog(const model::Model & model, QWidget * parent = 0);
+  HVACTemplateHelperDialog(const model::Model & model, QWidget * parent = nullptr);
 
   virtual ~HVACTemplateHelperDialog() {}
 

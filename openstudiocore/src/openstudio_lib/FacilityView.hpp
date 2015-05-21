@@ -37,7 +37,7 @@ class FacilityView : public ModelSubTabView
 
     FacilityView(bool isIP,
                  const openstudio::model::Model& model, 
-                 QWidget * parent = 0);
+                 QWidget * parent = nullptr);
 
     virtual ~FacilityView() {}
 
@@ -57,17 +57,17 @@ class FacilityInspectorView : public ModelObjectInspectorView
 
     FacilityInspectorView(bool isIP,
                           const model::Model& model,
-                          QWidget * parent = 0);
+                          QWidget * parent = nullptr);
 
     virtual ~FacilityInspectorView() {}
 
   protected:
 
-    virtual void onClearSelection();
+    virtual void onClearSelection() override;
 
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
 
-    virtual void onUpdate();
+    virtual void onUpdate() override;
 
   private:
     
@@ -75,7 +75,7 @@ class FacilityInspectorView : public ModelObjectInspectorView
 
   public slots:
 
-    void toggleUnits(bool displayIP);
+    void toggleUnits(bool displayIP) override;
 };
 
 } // namespace openstudio

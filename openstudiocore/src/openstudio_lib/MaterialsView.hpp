@@ -39,7 +39,7 @@ class MaterialsView : public ModelSubTabView
                   const openstudio::model::Model& model,
                   const QString& tabLabel,
                   bool hasSubTabs,
-                  QWidget * parent = 0);
+                  QWidget * parent = nullptr);
 
     virtual ~MaterialsView() {}
 
@@ -57,17 +57,17 @@ class MaterialsInspectorView : public ModelObjectInspectorView
 
     MaterialsInspectorView(bool isIP,
                            const model::Model& model,
-                           QWidget * parent = 0);
+                           QWidget * parent = nullptr);
 
     virtual ~MaterialsInspectorView() {}
 
   protected:
 
-    virtual void onClearSelection();
+    virtual void onClearSelection() override;
 
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
 
-    virtual void onUpdate();
+    virtual void onUpdate() override;
 
   private:
 
@@ -97,7 +97,7 @@ class MaterialsInspectorView : public ModelObjectInspectorView
 
   public slots:
 
-    void toggleUnits(bool displayIP);
+    void toggleUnits(bool displayIP) override;
 
 };
 

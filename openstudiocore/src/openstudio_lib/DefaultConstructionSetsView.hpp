@@ -38,7 +38,7 @@ class DefaultConstructionSetsView : public ModelSubTabView
     DefaultConstructionSetsView(const openstudio::model::Model& model,
                                 const QString& tabLabel,
                                 bool hasSubTabs,
-                                QWidget * parent = 0);
+                                QWidget * parent = nullptr);
                                 
     virtual ~DefaultConstructionSetsView() {}
 

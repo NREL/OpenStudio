@@ -343,6 +343,9 @@ TEST_F(DataFixture, TimeSeries_SecondsConstructor_FirstReport)
       EXPECT_EQ(numPeriods - 1, timeSeries.value(lastPeriodEnd));
       EXPECT_EQ(numPeriods, timeSeries.value(periodBegin));
       EXPECT_EQ(numPeriods, timeSeries.value(periodMiddle));
+    } else {
+      EXPECT_EQ(-99, timeSeries.value(periodBegin));
+      EXPECT_EQ(-99, timeSeries.value(periodMiddle));
     }
 
     EXPECT_EQ(numPeriods, timeSeries.value(periodEnd));
@@ -419,6 +422,9 @@ TEST_F(DataFixture, TimeSeries_SecondsConstructor_Start)
       EXPECT_EQ(numPeriods - 1, timeSeries.value(lastPeriodEnd));
       EXPECT_EQ(numPeriods, timeSeries.value(periodBegin));
       EXPECT_EQ(numPeriods, timeSeries.value(periodMiddle));
+    } else {
+      EXPECT_EQ(-99, timeSeries.value(periodBegin));
+      EXPECT_EQ(-99, timeSeries.value(periodMiddle));
     }
 
     EXPECT_EQ(numPeriods, timeSeries.value(periodEnd));
@@ -428,6 +434,330 @@ TEST_F(DataFixture, TimeSeries_SecondsConstructor_Start)
   DateTimeVector fromSeries = timeSeries.dateTimes();
   ASSERT_EQ(numValues, fromSeries.size());
   for (unsigned i = 0; i < numValues; ++i){
+    EXPECT_EQ(dateTimes[i], fromSeries[i]);
+  }
+
+}
+
+TEST_F(DataFixture, TimeSeries_DaysConstructor_std_vector_FirstReport)
+{
+  std::string units = "W";
+
+  Date startDate(Date(MonthOfYear(MonthOfYear::Feb), 21));
+  DateTime startDateTime(startDate, Time(0, 3, 0, 0));
+
+  // fill vector with 9 hours of data
+  std::vector<double> values(3);
+  DateTimeVector dateTimes;
+  std::vector<double> days(3);
+  for (unsigned i = 0; i < 3; ++i){
+    values[i] = i;
+    days[i] = i * 0.125;
+    dateTimes.push_back(startDateTime + Time(0, i*3, 0, 0));
+  }
+  unsigned numValues = values.size();
+
+  // fail to create a detailed time series
+  ASSERT_THROW(TimeSeries timeSeries0(DateTime(startDate), days, values, units), openstudio::Exception);
+
+  // create detailed timeSeries
+  TimeSeries timeSeries(startDateTime, days, values, units);
+  ASSERT_TRUE(!timeSeries.values().empty());
+
+  // check interval
+  EXPECT_FALSE(timeSeries.intervalLength());
+
+  // Check computations
+  EXPECT_EQ(32400, timeSeries.integrate());
+  EXPECT_EQ(1, timeSeries.averageValue());
+
+  // check start date and time
+  //  DateTime firstDateTime = timeSeries.dateTimes().front();
+  DateTime firstDateTime = timeSeries.firstReportDateTime();
+  EXPECT_EQ(DateTime(Date(MonthOfYear(MonthOfYear::Feb), 21), Time(0, 3, 0, 0)), firstDateTime);
+
+  // check end date and time
+  //  DateTime endDateTime = timeSeries.dateTimes().back();
+  DateTime endDateTime = timeSeries.firstReportDateTime() + Time(timeSeries.daysFromFirstReport(timeSeries.daysFromFirstReport().size() - 1));
+  EXPECT_EQ(DateTime(Date(MonthOfYear(MonthOfYear::Feb), 21), Time(0, 9, 0, 0)), endDateTime);
+
+  // check out of range
+  timeSeries.setOutOfRangeValue(-99);
+
+  EXPECT_EQ(-99, timeSeries.value(startDateTime + Time(0, 0, -61, 0))); // out of range
+  EXPECT_EQ(-99, timeSeries.value(startDateTime + Time(0, 0, -60, 0))); // out of range
+  EXPECT_EQ(-99, timeSeries.value(startDateTime + Time(0, 0, -59, 0))); // out of range
+  EXPECT_EQ(-99, timeSeries.value(startDateTime + Time(0, 0, -1, 0))); // out of range
+  EXPECT_EQ(0, timeSeries.value(startDateTime)); // in range
+  EXPECT_EQ(2, timeSeries.value(endDateTime)); // in range
+  EXPECT_EQ(-99, timeSeries.value(endDateTime + Time(0, 1, 0, 0))); // out of range
+
+  // check values
+  for (unsigned i = 0; i < numValues; ++i){
+    double numPeriods = (double)i;
+    Time interval(0, 3, 0, 0);
+    double lastPeriodEnd = (numPeriods - 1.0)*interval.totalDays();
+    double periodBegin = (numPeriods - 0.99)*interval.totalDays();
+    double periodMiddle = (numPeriods - 0.5)*interval.totalDays();
+    double periodEnd = (numPeriods)*interval.totalDays();
+
+    if (i > 0){
+      EXPECT_EQ(numPeriods - 1, timeSeries.value(lastPeriodEnd));
+      EXPECT_EQ(numPeriods, timeSeries.value(periodBegin));
+      EXPECT_EQ(numPeriods, timeSeries.value(periodMiddle));
+    } else {
+      EXPECT_EQ(-99, timeSeries.value(periodBegin));
+      EXPECT_EQ(-99, timeSeries.value(periodMiddle));
+    }
+
+    EXPECT_EQ(numPeriods, timeSeries.value(periodEnd));
+  }
+
+  // check date/time objects
+  DateTimeVector fromSeries = timeSeries.dateTimes();
+  ASSERT_EQ(numValues, fromSeries.size());
+  for (unsigned i = 0; i < numValues; ++i){
+    EXPECT_TRUE(fromSeries[i] == dateTimes[i]);
+  }
+
+}
+
+TEST_F(DataFixture, TimeSeries_DaysConstructor_std_vector_Start)
+{
+  std::string units = "W";
+
+  Date startDate(Date(MonthOfYear(MonthOfYear::Feb), 21));
+  DateTime startDateTime(startDate);
+  DateTime firstDateTime = startDateTime + Time(0, 3, 0, 0);
+
+  // fill vector with 3 hours of data
+  std::vector<double> values(3);
+  DateTimeVector dateTimes;
+  std::vector<double> days(3);
+  for (unsigned i = 0; i < 3; ++i){
+    values[i] = i;
+    days[i] = (i + 1) * 0.125;
+    dateTimes.push_back(startDateTime + Time(0, (i + 1)*3, 0, 0));
+  }
+  unsigned numValues = values.size();
+
+  // create detailed timeSeries
+  TimeSeries timeSeries(firstDateTime, days, values, units);
+  ASSERT_TRUE(!timeSeries.values().empty());
+
+  // check interval
+  EXPECT_FALSE(timeSeries.intervalLength());
+
+  // Check computations
+  EXPECT_EQ(32400, timeSeries.integrate());
+  EXPECT_EQ(1, timeSeries.averageValue());
+
+  // check start date and time
+  EXPECT_EQ(firstDateTime, timeSeries.firstReportDateTime());
+
+  // check end date and time
+  //  DateTime endDateTime = timeSeries.dateTimes().back();
+  DateTime endDateTime = timeSeries.firstReportDateTime() + Time(timeSeries.daysFromFirstReport(timeSeries.daysFromFirstReport().size() - 1));
+  EXPECT_EQ(DateTime(Date(MonthOfYear(MonthOfYear::Feb), 21), Time(0, 9, 0, 0)), endDateTime);
+
+  // check out of range
+  timeSeries.setOutOfRangeValue(-99);
+
+  EXPECT_EQ(-99, timeSeries.value(firstDateTime + Time(0, 0, -61, 0))); // out of range
+  EXPECT_EQ(-99, timeSeries.value(firstDateTime + Time(0, 0, -60, 0))); // out of range
+  EXPECT_EQ(-99, timeSeries.value(firstDateTime + Time(0, 0, -59, 0))); // out of range
+  EXPECT_EQ(-99, timeSeries.value(firstDateTime + Time(0, 0, -1, 0))); // out of range
+  EXPECT_EQ(0, timeSeries.value(firstDateTime)); // in range
+  EXPECT_EQ(2, timeSeries.value(endDateTime)); // in range
+  EXPECT_EQ(-99, timeSeries.value(endDateTime + Time(0, 1, 0, 0))); // out of range
+
+  // check values
+  for (unsigned i = 0; i < numValues; ++i){
+    double numPeriods = (double)i;
+    Time interval(0, 3, 0, 0);
+    double lastPeriodEnd = (numPeriods - 1.0)*interval.totalDays();
+    double periodBegin = (numPeriods - 0.99)*interval.totalDays();
+    double periodMiddle = (numPeriods - 0.5)*interval.totalDays();
+    double periodEnd = (numPeriods)*interval.totalDays();
+
+    if (i > 0){
+      EXPECT_EQ(numPeriods - 1, timeSeries.value(lastPeriodEnd));
+      EXPECT_EQ(numPeriods, timeSeries.value(periodBegin));
+      EXPECT_EQ(numPeriods, timeSeries.value(periodMiddle));
+    } else {
+      EXPECT_EQ(-99, timeSeries.value(periodBegin));
+      EXPECT_EQ(-99, timeSeries.value(periodMiddle));
+    }
+
+    EXPECT_EQ(numPeriods, timeSeries.value(periodEnd));
+  }
+
+  // check date/time objects
+  DateTimeVector fromSeries = timeSeries.dateTimes();
+  ASSERT_EQ(numValues, fromSeries.size());
+  for (unsigned i = 0; i < numValues; ++i){
+    EXPECT_EQ(dateTimes[i], fromSeries[i]);
+  }
+
+}
+
+TEST_F(DataFixture, TimeSeries_DaysConstructor_Vector_FirstReport)
+{
+  std::string units = "W";
+
+  Date startDate(Date(MonthOfYear(MonthOfYear::Feb), 21));
+  DateTime startDateTime(startDate, Time(0, 3, 0, 0));
+
+  // fill vector with 9 hours of data
+  Vector values(3);
+  DateTimeVector dateTimes;
+  Vector days(3);
+  for (unsigned i = 0; i < 3; ++i) {
+    values[i] = i;
+    days[i] = i * 0.125;
+    dateTimes.push_back(startDateTime + Time(0, i * 3, 0, 0));
+  }
+  unsigned numValues = values.size();
+
+  // fail to create a detailed time series
+  ASSERT_THROW(TimeSeries timeSeries0(DateTime(startDate), days, values, units), openstudio::Exception);
+
+  // create detailed timeSeries
+  TimeSeries timeSeries(startDateTime, days, values, units);
+  ASSERT_TRUE(!timeSeries.values().empty());
+
+  // check interval
+  EXPECT_FALSE(timeSeries.intervalLength());
+
+  // Check computations
+  EXPECT_EQ(32400, timeSeries.integrate());
+  EXPECT_EQ(1, timeSeries.averageValue());
+
+  // check start date and time
+  //  DateTime firstDateTime = timeSeries.dateTimes().front();
+  DateTime firstDateTime = timeSeries.firstReportDateTime();
+  EXPECT_EQ(DateTime(Date(MonthOfYear(MonthOfYear::Feb), 21), Time(0, 3, 0, 0)), firstDateTime);
+
+  // check end date and time
+  //  DateTime endDateTime = timeSeries.dateTimes().back();
+  DateTime endDateTime = timeSeries.firstReportDateTime() + Time(timeSeries.daysFromFirstReport(timeSeries.daysFromFirstReport().size() - 1));
+  EXPECT_EQ(DateTime(Date(MonthOfYear(MonthOfYear::Feb), 21), Time(0, 9, 0, 0)), endDateTime);
+
+  // check out of range
+  timeSeries.setOutOfRangeValue(-99);
+
+  EXPECT_EQ(-99, timeSeries.value(startDateTime + Time(0, 0, -61, 0))); // out of range
+  EXPECT_EQ(-99, timeSeries.value(startDateTime + Time(0, 0, -60, 0))); // out of range
+  EXPECT_EQ(-99, timeSeries.value(startDateTime + Time(0, 0, -59, 0))); // out of range
+  EXPECT_EQ(-99, timeSeries.value(startDateTime + Time(0, 0, -1, 0))); // out of range
+  EXPECT_EQ(0, timeSeries.value(startDateTime)); // in range
+  EXPECT_EQ(2, timeSeries.value(endDateTime)); // in range
+  EXPECT_EQ(-99, timeSeries.value(endDateTime + Time(0, 1, 0, 0))); // out of range
+
+  // check values
+  for (unsigned i = 0; i < numValues; ++i) {
+    double numPeriods = (double)i;
+    Time interval(0, 3, 0, 0);
+    double lastPeriodEnd = (numPeriods - 1.0)*interval.totalDays();
+    double periodBegin = (numPeriods - 0.99)*interval.totalDays();
+    double periodMiddle = (numPeriods - 0.5)*interval.totalDays();
+    double periodEnd = (numPeriods)*interval.totalDays();
+
+    if (i > 0) {
+      EXPECT_EQ(numPeriods - 1, timeSeries.value(lastPeriodEnd));
+      EXPECT_EQ(numPeriods, timeSeries.value(periodBegin));
+      EXPECT_EQ(numPeriods, timeSeries.value(periodMiddle));
+    } else {
+      EXPECT_EQ(-99, timeSeries.value(periodBegin));
+      EXPECT_EQ(-99, timeSeries.value(periodMiddle));
+    }
+
+    EXPECT_EQ(numPeriods, timeSeries.value(periodEnd));
+  }
+
+  // check date/time objects
+  DateTimeVector fromSeries = timeSeries.dateTimes();
+  ASSERT_EQ(numValues, fromSeries.size());
+  for (unsigned i = 0; i < numValues; ++i) {
+    EXPECT_TRUE(fromSeries[i] == dateTimes[i]);
+  }
+
+}
+
+TEST_F(DataFixture, TimeSeries_DaysConstructor_Vector_Start)
+{
+  std::string units = "W";
+
+  Date startDate(Date(MonthOfYear(MonthOfYear::Feb), 21));
+  DateTime startDateTime(startDate);
+  DateTime firstDateTime = startDateTime + Time(0, 3, 0, 0);
+
+  // fill vector with 3 hours of data
+  Vector values(3);
+  DateTimeVector dateTimes;
+  Vector days(3);
+  for (unsigned i = 0; i < 3; ++i) {
+    values[i] = i;
+    days[i] = (i + 1) * 0.125;
+    dateTimes.push_back(startDateTime + Time(0, (i + 1) * 3, 0, 0));
+  }
+  unsigned numValues = values.size();
+
+  // create detailed timeSeries
+  TimeSeries timeSeries(firstDateTime, days, values, units);
+  ASSERT_TRUE(!timeSeries.values().empty());
+
+  // check interval
+  EXPECT_FALSE(timeSeries.intervalLength());
+
+  // Check computations
+  EXPECT_EQ(32400, timeSeries.integrate());
+  EXPECT_EQ(1, timeSeries.averageValue());
+
+  // check start date and time
+  EXPECT_EQ(firstDateTime, timeSeries.firstReportDateTime());
+
+  // check end date and time
+  //  DateTime endDateTime = timeSeries.dateTimes().back();
+  DateTime endDateTime = timeSeries.firstReportDateTime() + Time(timeSeries.daysFromFirstReport(timeSeries.daysFromFirstReport().size() - 1));
+  EXPECT_EQ(DateTime(Date(MonthOfYear(MonthOfYear::Feb), 21), Time(0, 9, 0, 0)), endDateTime);
+
+  // check out of range
+  timeSeries.setOutOfRangeValue(-99);
+
+  EXPECT_EQ(-99, timeSeries.value(firstDateTime + Time(0, 0, -61, 0))); // out of range
+  EXPECT_EQ(-99, timeSeries.value(firstDateTime + Time(0, 0, -60, 0))); // out of range
+  EXPECT_EQ(-99, timeSeries.value(firstDateTime + Time(0, 0, -59, 0))); // out of range
+  EXPECT_EQ(-99, timeSeries.value(firstDateTime + Time(0, 0, -1, 0))); // out of range
+  EXPECT_EQ(0, timeSeries.value(firstDateTime)); // in range
+  EXPECT_EQ(2, timeSeries.value(endDateTime)); // in range
+  EXPECT_EQ(-99, timeSeries.value(endDateTime + Time(0, 1, 0, 0))); // out of range
+
+  // check values
+  for (unsigned i = 0; i < numValues; ++i) {
+    double numPeriods = (double)i;
+    Time interval(0, 3, 0, 0);
+    double lastPeriodEnd = (numPeriods - 1.0)*interval.totalDays();
+    double periodBegin = (numPeriods - 0.99)*interval.totalDays();
+    double periodMiddle = (numPeriods - 0.5)*interval.totalDays();
+    double periodEnd = (numPeriods)*interval.totalDays();
+
+    if (i > 0) {
+      EXPECT_EQ(numPeriods - 1, timeSeries.value(lastPeriodEnd));
+      EXPECT_EQ(numPeriods, timeSeries.value(periodBegin));
+      EXPECT_EQ(numPeriods, timeSeries.value(periodMiddle));
+    } else {
+      EXPECT_EQ(-99, timeSeries.value(periodBegin));
+      EXPECT_EQ(-99, timeSeries.value(periodMiddle));
+    }
+
+    EXPECT_EQ(numPeriods, timeSeries.value(periodEnd));
+  }
+
+  // check date/time objects
+  DateTimeVector fromSeries = timeSeries.dateTimes();
+  ASSERT_EQ(numValues, fromSeries.size());
+  for (unsigned i = 0; i < numValues; ++i) {
     EXPECT_EQ(dateTimes[i], fromSeries[i]);
   }
 

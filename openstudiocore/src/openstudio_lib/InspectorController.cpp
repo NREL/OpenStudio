@@ -93,11 +93,11 @@ InspectorController::InspectorController()
 
 InspectorController::~InspectorController()
 {
-  if( m_inspectorView != 0 )
+  if( m_inspectorView != nullptr )
   {
     delete m_inspectorView;
 
-    m_inspectorView = 0;
+    m_inspectorView = nullptr;
   }
 }
 
@@ -200,7 +200,7 @@ void InspectorController::moveBranchForZoneReturn(model::ThermalZone & zone, con
 
 void InspectorController::onViewDestroyed(QObject * object)
 {
-  m_inspectorView = 0;
+  m_inspectorView = nullptr;
 }
 
 void InspectorController::addToLoop(model::Loop & loop, boost::optional<model::HVACComponent> & hvacComponent)

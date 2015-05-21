@@ -4524,7 +4524,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
                                          model::PumpConstantSpeed::iddObjectType());
       if( constantPumps.size() > 0 )
       {
-        for( std::vector<model::ModelObject>::iterator it = constantPumps.begin();
+        for( auto it = constantPumps.begin();
              it != constantPumps.end();
              ++it )
         {
@@ -4542,7 +4542,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
                                                  model::PumpVariableSpeed::iddObjectType());
       if( variablePumps.size() > 0 )
       {
-        for( std::vector<model::ModelObject>::iterator it = variablePumps.begin();
+        for( auto it = variablePumps.begin();
              it != variablePumps.end();
              ++it )
         {
@@ -4810,7 +4810,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     // "Heating" components
     std::vector<model::BoilerHotWater> boilers = 
     subsetCastVector<model::BoilerHotWater>(plantLoop.supplyComponents(model::BoilerHotWater::iddObjectType()));
-    for(std::vector<model::BoilerHotWater>::iterator it = boilers.begin();
+    for(auto it = boilers.begin();
         it != boilers.end();
         ++it)
     {
@@ -4826,7 +4826,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
     std::vector<model::WaterHeaterMixed> waterHeaters =
     subsetCastVector<model::WaterHeaterMixed>(plantLoop.supplyComponents(model::WaterHeaterMixed::iddObjectType()));
-    for(std::vector<model::WaterHeaterMixed>::iterator it = waterHeaters.begin();
+    for(auto it = waterHeaters.begin();
         it != waterHeaters.end();
         ++it)
     {
@@ -4843,7 +4843,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     // "Cooling" components
     std::vector<model::ChillerElectricEIR> chillers =
     subsetCastVector<model::ChillerElectricEIR>(plantLoop.supplyComponents(model::ChillerElectricEIR::iddObjectType()));
-    for(std::vector<model::ChillerElectricEIR>::iterator it = chillers.begin();
+    for(auto it = chillers.begin();
         it != chillers.end();
         ++it)
     {
@@ -4859,7 +4859,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
     std::vector<model::CoolingTowerVariableSpeed> variableTowers =
     subsetCastVector<model::CoolingTowerVariableSpeed>(plantLoop.supplyComponents(model::CoolingTowerVariableSpeed::iddObjectType()));
-    for(std::vector<model::CoolingTowerVariableSpeed>::iterator it = variableTowers.begin();
+    for(auto it = variableTowers.begin();
         it != variableTowers.end();
         ++it)
     {
@@ -4875,7 +4875,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
     std::vector<model::CoolingTowerSingleSpeed> constantTowers =
     subsetCastVector<model::CoolingTowerSingleSpeed>(plantLoop.supplyComponents(model::CoolingTowerSingleSpeed::iddObjectType()));
-    for(std::vector<model::CoolingTowerSingleSpeed>::iterator it = constantTowers.begin();
+    for(auto it = constantTowers.begin();
         it != constantTowers.end();
         ++it)
     {

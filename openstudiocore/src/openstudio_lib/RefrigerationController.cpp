@@ -98,11 +98,11 @@ void RefrigerationController::refreshRefrigerationSystemView(RefrigerationSystem
     // insert secondary systems
 
     std::vector<model::RefrigerationCondenserCascade> cascadeCondensers = system->cascadeCondenserLoads();
-    for( std::vector<model::RefrigerationCondenserCascade>::iterator it = cascadeCondensers.begin();
+    for( auto it = cascadeCondensers.begin();
          it != cascadeCondensers.end();
          ++it )
     {
-      SecondaryDetailView * detailView = new SecondaryDetailView();
+      auto detailView = new SecondaryDetailView();
       connect(detailView, &SecondaryDetailView::zoomInOnSystemClicked, this, static_cast<void (RefrigerationController::*)(const Handle &)>(&RefrigerationController::zoomInOnSystem));
       connect(detailView, &SecondaryDetailView::removeClicked, this, &RefrigerationController::removeLoad);
       if( boost::optional<model::RefrigerationSystem> t_cascadeSystem = cascadeSystem(*it) )
@@ -124,11 +124,11 @@ void RefrigerationController::refreshRefrigerationSystemView(RefrigerationSystem
 
     int compressorIndex = 1;
 
-    for( std::vector<model::RefrigerationCompressor>::iterator it = compressors.begin();
+    for( auto it = compressors.begin();
          it != compressors.end();
          ++it )
     {
-      RefrigerationCompressorDetailView * detailView = new RefrigerationCompressorDetailView(); 
+      auto detailView = new RefrigerationCompressorDetailView(); 
 
       detailView->setId(OSItemId(it->handle().toString(),QString(),false));
 
@@ -149,11 +149,11 @@ void RefrigerationController::refreshRefrigerationSystemView(RefrigerationSystem
 
     systemView->refrigerationCasesView->setNumberOfDisplayCases(cases.size());
 
-    for( std::vector<model::RefrigerationCase>::iterator it = cases.begin();
+    for( auto it = cases.begin();
          it != cases.end();
          ++it )
     {
-      RefrigerationCaseDetailView * detailView = new RefrigerationCaseDetailView();
+      auto detailView = new RefrigerationCaseDetailView();
 
       detailView->setId(OSItemId(it->handle().toString(),QString(),false));
 
@@ -172,11 +172,11 @@ void RefrigerationController::refreshRefrigerationSystemView(RefrigerationSystem
 
     systemView->refrigerationCasesView->setNumberOfWalkinCases(walkins.size());
 
-    for( std::vector<model::RefrigerationWalkIn>::iterator it = walkins.begin();
+    for( auto it = walkins.begin();
          it != walkins.end();
          ++it )
     {
-      RefrigerationCaseDetailView * detailView = new RefrigerationCaseDetailView();
+      auto detailView = new RefrigerationCaseDetailView();
 
       detailView->setId(OSItemId(it->handle().toString(),QString(),false));
 
@@ -230,7 +230,7 @@ boost::optional<model::RefrigerationSystem> RefrigerationController::supplySyste
 
   model::Model t_model = condenser.model();
   std::vector<model::RefrigerationSystem> systems = t_model.getConcreteModelObjects<model::RefrigerationSystem>();
-  for(std::vector<model::RefrigerationSystem>::iterator it = systems.begin();
+  for(auto it = systems.begin();
       it != systems.end();
       ++it)
   {
@@ -251,7 +251,7 @@ boost::optional<model::RefrigerationSystem> RefrigerationController::cascadeSyst
 
   model::Model t_model = condenser.model();
   std::vector<model::RefrigerationSystem> systems = t_model.getConcreteModelObjects<model::RefrigerationSystem>();
-  for(std::vector<model::RefrigerationSystem>::iterator it = systems.begin();
+  for(auto it = systems.begin();
       it != systems.end();
       ++it)
   {
@@ -913,7 +913,7 @@ QGraphicsObject * RefrigerationSystemItemDelegate::view(QSharedPointer<OSListIte
 
   if( QSharedPointer<RefrigerationSystemListItem> listItem = dataSource.dynamicCast<RefrigerationSystemListItem>() )
   {
-    RefrigerationSystemMiniView * refrigerationSystemMiniView = new RefrigerationSystemMiniView();
+    auto refrigerationSystemMiniView = new RefrigerationSystemMiniView();
 
     connect(refrigerationSystemMiniView->removeButtonItem, &RemoveButtonItem::mouseClicked,
       static_cast<RefrigerationSystemListItem *>(dataSource.data()), &RefrigerationSystemListItem::remove);
@@ -932,7 +932,7 @@ QGraphicsObject * RefrigerationSystemItemDelegate::view(QSharedPointer<OSListIte
   }
   else if( dataSource.dynamicCast<RefrigerationSystemListDropZoneItem>() )
   {
-    RefrigerationSystemDropZoneView * refrigerationSystemDropZoneView = new RefrigerationSystemDropZoneView();
+    auto refrigerationSystemDropZoneView = new RefrigerationSystemDropZoneView();
 
     connect(refrigerationSystemDropZoneView, &RefrigerationSystemDropZoneView::componentDropped,
       qobject_cast<RefrigerationSystemListController *>(dataSource->controller()), &RefrigerationSystemListController::addSystem);

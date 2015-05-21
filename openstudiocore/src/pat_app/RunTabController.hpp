@@ -110,9 +110,9 @@ class DataPointRunListController : public OSListController
   virtual ~DataPointRunListController() {}
 
   /// The OSListItem returned will be a DataPointRunListItem
-  QSharedPointer<OSListItem> itemAt(int i);
+  QSharedPointer<OSListItem> itemAt(int i) override;
 
-  int count();
+  int count() override;
 
   void emitItemChanged(int i);
 
@@ -151,7 +151,7 @@ class DataPointRunItemDelegate : public OSItemDelegate
   virtual ~DataPointRunItemDelegate() {}
 
   /// Widget returned will be a DataPointRunListItem
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
+  QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 
  signals:
 
@@ -170,9 +170,9 @@ class DataPointJobController : public OSListController
   virtual ~DataPointJobController() {}
 
   /// The OSListItem returned will be a DataPointJobItem
-  QSharedPointer<OSListItem> itemAt(int i);
+  QSharedPointer<OSListItem> itemAt(int i) override;
 
-  int count();
+  int count() override;
 
  private:
 
@@ -210,7 +210,7 @@ class DataPointJobItemDelegate : public OSItemDelegate
   virtual ~DataPointJobItemDelegate() {}
 
   /// Widget returned will be a DataPointJobItemView
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
+  QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 };
 
 }

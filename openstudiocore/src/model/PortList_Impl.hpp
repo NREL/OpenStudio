@@ -73,13 +73,13 @@ class MODEL_API PortList_Impl : public ModelObject_Impl {
 
   void removePort(unsigned port);
 
-  virtual const std::vector<std::string>& outputVariableNames() const;
+  virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual IddObjectType iddObjectType() const;
+  virtual IddObjectType iddObjectType() const override;
 
   ThermalZone thermalZone() const;
 
-  std::vector<openstudio::IdfObject> remove();
+  std::vector<openstudio::IdfObject> remove() override;
 
   unsigned airLoopHVACPort();
 

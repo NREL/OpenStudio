@@ -183,12 +183,12 @@ OSItem* OSItem::makeItem(const OSItemId& itemId, OSItemType osItemType)
 
 void OSItem::createLayout()
 {
-  QHBoxLayout * mainHLayout = new QHBoxLayout();
+  auto mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(10,5,10,5);
   mainHLayout->setAlignment(Qt::AlignVCenter);
   setLayout(mainHLayout);
 
-  QVBoxLayout * leftVBoxLayout = new QVBoxLayout();
+  auto leftVBoxLayout = new QVBoxLayout();
 
   m_imageLeftLbl = new QLabel(this);
   leftVBoxLayout->addWidget(m_imageLeftLbl);
@@ -566,14 +566,14 @@ void OSItem::mouseMoveEvent(QMouseEvent *event)
 
   QString mimeDataText = m_itemId.mimeDataText();
 
-  QMimeData *mimeData = new QMimeData;
+  auto mimeData = new QMimeData;
   mimeData->setText(mimeDataText);
 
   QWidget* parent = this->parentWidget();
   OS_ASSERT(parent);
 
   // parent the QDrag on this parent instead of this, in case this item is deleted during drag
-  QDrag *drag = new QDrag(parent);
+  auto drag = new QDrag(parent);
   drag->setMimeData(mimeData);
   
   QPixmap _pixmap(size());

@@ -71,7 +71,7 @@ OSDropZone::OSDropZone(OSVectorController* vectorController,
     m_text(text),
     m_size(size)
 {
-  QWidget * mainBox = new QWidget();
+  auto mainBox = new QWidget();
   mainBox->setObjectName("mainBox");
   mainBox->setStyleSheet("QWidget#mainBox { background: #CECECE; }");
 
@@ -269,7 +269,7 @@ void OSDropZone::onDrop(const OSItemId& itemId)
 void OSDropZone::setItemIds(const std::vector<OSItemId>& itemIds)
 {
   QLayoutItem* child;
-  while( (child = m_mainBoxLayout->takeAt(0)) != 0 ){
+  while( (child = m_mainBoxLayout->takeAt(0)) != nullptr ){
     QWidget* widget = child->widget();
     if (widget){
       delete widget;
@@ -324,7 +324,7 @@ void OSDropZone::setItemIds(const std::vector<OSItemId>& itemIds)
   }
 
   if (numItems < m_maxItems){
-    OSItemDropZone* dropZone = new OSItemDropZone(this->m_growsHorizontally, m_text, m_size);
+    auto dropZone = new OSItemDropZone(this->m_growsHorizontally, m_text, m_size);
     m_mainBoxLayout->addWidget(dropZone,0,Qt::AlignLeft);
 
     connect(dropZone, &OSItemDropZone::dropped, this, &OSDropZone::handleDrop);
@@ -397,7 +397,7 @@ OSItemDropZone::OSItemDropZone(bool growsHorizontally,
   mainLayout->setContentsMargins(10,10,10,10);
   setLayout(mainLayout);
 
-  QLabel * label = new QLabel();
+  auto label = new QLabel();
   label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   label->setText(text);
   label->setWordWrap(true);

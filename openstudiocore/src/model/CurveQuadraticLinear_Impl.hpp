@@ -70,13 +70,13 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual int numVariables() const;
+    virtual int numVariables() const override;
 
-    virtual double evaluate(const std::vector<double>& x) const;
+    virtual double evaluate(const std::vector<double>& x) const override;
 
     //@}
     /** @name Getters */

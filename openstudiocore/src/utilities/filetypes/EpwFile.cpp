@@ -321,32 +321,6 @@ double AirState::R()
   return 8314.472/28.966; // eqn 1 from ASHRAE Fundamentals 2009 Ch. 1
 }
 
-/*
-AirState::AirState(double drybulb, double dewpoint, double pressure) : m_drybulb(drybulb), m_dewpoint(dewpoint),
-  m_pressure(pressure), m_specified(AirStateData::DryBulbDewPointPressure)
-{}
-
-AirState::AirState(double v0, double v1, double v2, const AirStateData &data)
-{
-  switch (data.value()) {
-  case AirStateData::DryBulbRelativeHumidityPressure:
-    m_drybulb = v0;
-    m_pressure = v2;
-    // NOT DONE!
-    break;
-  case AirStateData::DryBulbWetBulbPressure:
-    m_drybulb = v0;
-    // NOT DONE!
-    break;
-  default:
-    m_drybulb = v0;
-    m_dewpoint = v1;
-    m_pressure = v2;
-    m_specified = AirStateData::DryBulbDewPointPressure;
-  }
-}
-*/
-
 EpwDataPoint::EpwDataPoint() :
   m_year(1),
   m_month(1),
@@ -615,7 +589,7 @@ std::vector<std::string> EpwDataPoint::toEpwStrings() const
   return list;
 }
 
-boost::optional<std::string> EpwDataPoint::unitsByName(const std::string &name)
+boost::optional<std::string> EpwDataPoint::getUnitsByName(const std::string &name)
 {
   EpwDataField id;
   try {
@@ -624,10 +598,10 @@ boost::optional<std::string> EpwDataPoint::unitsByName(const std::string &name)
     // Could do a warning message here
     return boost::none;
   }
-  return boost::optional<std::string>(units(id));
+  return boost::optional<std::string>(getUnits(id));
 }
 
-std::string EpwDataPoint::units(EpwDataField field)
+std::string EpwDataPoint::getUnits(EpwDataField field)
 {
   std::string string;
   switch(field.value())
@@ -744,7 +718,7 @@ std::string EpwDataPoint::units(EpwDataField field)
   return string;
 }
 
-std::string EpwDataPoint::units(EpwComputedField field)
+std::string EpwDataPoint::getUnits(EpwComputedField field)
 {
   std::string string;
   switch (field.value())
@@ -766,7 +740,7 @@ std::string EpwDataPoint::units(EpwComputedField field)
   return string;
 }
 
-boost::optional<double> EpwDataPoint::fieldByName(const std::string &name)
+boost::optional<double> EpwDataPoint::getFieldByName(const std::string &name)
 {
   EpwDataField id;
   try {
@@ -775,10 +749,10 @@ boost::optional<double> EpwDataPoint::fieldByName(const std::string &name)
     // Could do a warning message here
     return boost::none;
   }
-  return field(id);
+  return getField(id);
 }
 
-boost::optional<double> EpwDataPoint::field(EpwDataField id)
+boost::optional<double> EpwDataPoint::getField(EpwDataField id)
 {
   boost::optional<int> ivalue;
   switch(id.value()) {
@@ -2171,14 +2145,14 @@ boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string &name)
     return boost::none;
   }
   if(m_data.size() > 0) {
-    std::string units = EpwDataPoint::units(id);
+    std::string units = EpwDataPoint::getUnits(id);
     DateTimeVector dates;
     dates.push_back(DateTime()); // Use a placeholder to avoid an insert
     std::vector<double> values;
     for(unsigned int i=0;i<m_data.size();i++) {
       DateTime dateTime=m_data[i].dateTime();
       Time time=m_data[i].time();
-      boost::optional<double> value = m_data[i].field(id);
+      boost::optional<double> value = m_data[i].getField(id);
       if(value) {
         dates.push_back(DateTime(dateTime));
         values.push_back(value.get());
@@ -2210,7 +2184,7 @@ boost::optional<TimeSeries> EpwFile::getComputedTimeSeries(const std::string &na
     return boost::none;
   }
 
-  std::string units = EpwDataPoint::units(id);
+  std::string units = EpwDataPoint::getUnits(id);
   boost::optional<double>(EpwDataPoint::*compute)() const;
   switch (id.value()) {
   case EpwComputedField::SaturationPressure:
@@ -2299,16 +2273,26 @@ bool EpwFile::translateToWth(openstudio::path path, std::string description)
   }
 
   // Cheat to get data at the start time - this will need to change
-  openstudio::EpwDataPoint firstPt = data()[data().size()-1];
+  openstudio::EpwDataPoint lastPt = data()[data().size()-1];
+  std::vector<std::string> epwstrings = lastPt.toEpwStrings();
   openstudio::DateTime dateTime = data()[0].dateTime();
   openstudio::Time dt = timeStep();
   dateTime -= dt;
-//  firstPt.setDateTime(dateTime);
+  epwstrings[0] = std::to_string(dateTime.date().year());
+  epwstrings[1] = std::to_string(month(dateTime.date().monthOfYear()));
+  epwstrings[2] = std::to_string(dateTime.date().dayOfMonth());
+  epwstrings[3] = std::to_string(dateTime.time().hours());
+  epwstrings[4] = std::to_string(dateTime.time().minutes());
+  boost::optional<openstudio::EpwDataPoint> firstPtOpt = EpwDataPoint::fromEpwStrings(epwstrings);
+  if (!firstPtOpt) {
+    LOG(Error, "Failed to create starting data point for WTH file");
+    return false;
+  }
 
   stream <<"!Date\tTime\tTa [K]\tPb [Pa]\tWs [m/s]\tWd [deg]\tHr [g/kg]\tIth [kJ/m^2]\tIdn [kJ/m^2]\tTs [K]\tRn [-]\tSn [-]\n";
-  boost::optional<std::string> output = firstPt.toWthString();
+  boost::optional<std::string> output = firstPtOpt.get().toWthString();
   if(!output) {
-    LOG(Error, "Translation to WTH has failed");
+    LOG(Error, "Translation to WTH has failed on starting data point");
     fp.close();
     return false;
   }
@@ -2316,7 +2300,7 @@ bool EpwFile::translateToWth(openstudio::path path, std::string description)
   for(unsigned int i=0;i<data().size();i++) {
     output = data()[i].toWthString();
     if(!output) {
-      LOG(Error, "Translation to WTH has failed");
+      LOG(Error, "Translation to WTH has failed on data point " << i);
       fp.close();
       return false;
     }
@@ -2647,118 +2631,6 @@ bool EpwFile::parseDataPeriod(const std::string& line)
   }
 
   return(result);
-}
-
-boost::optional<double> EpwFile::heatingDegreeDays(double Tbase)
-{
-  boost::optional<TimeSeries> T = getTimeSeries("Dry Bulb Temperature");
-  if (T) {
-    double HDD = 0.0;
-    double Tmax, Tmin;
-    std::vector<DateTime> dateTimes = T.get().dateTimes();
-    Vector values = T.get().values();
-    Date currentDate = dateTimes[0].date();
-    Tmax = Tmin = values(0);
-    unsigned i = 1;
-    int currentDayValues = 1;
-    do {
-      if (dateTimes[i].date() != currentDate) {
-        // Probably need a more intelligent check here
-        if (currentDayValues < 2) {
-          // Warning?
-        }
-        double diff = Tbase - 0.5*(Tmin + Tmax);
-        if (diff > 0.0) {
-          HDD += diff;
-        }
-        currentDate = dateTimes[i].date();
-        Tmax = Tmin = values(i);
-        currentDayValues = 0;
-      }
-      Tmin = std::min(Tmin, values(i));
-      Tmax = std::min(Tmax, values(i));
-      ++currentDayValues;
-      ++i;
-    } while (i < values.size());
-    return boost::optional<double>(HDD);
-  }
-  return boost::none;
-}
-
-boost::optional<double> EpwFile::coolingDegreeDays(double Tbase)
-{
-  boost::optional<TimeSeries> T = getTimeSeries("Dry Bulb Temperature");
-  if (T) {
-    double CDD = 0.0;
-    double Tmax, Tmin;
-    std::vector<DateTime> dateTimes = T.get().dateTimes();
-    Vector values = T.get().values();
-    Date currentDate = dateTimes[0].date();
-    Tmax = Tmin = values(0);
-    unsigned i = 1;
-    int currentDayValues = 1;
-    do {
-      if (dateTimes[i].date() != currentDate) {
-        // Probably need a more intelligent check here
-        if (currentDayValues < 2) {
-          // Warning?
-        }
-        double diff = 0.5*(Tmin + Tmax) - Tbase;
-        if (diff > 0.0) {
-          CDD += diff;
-        }
-        currentDate = dateTimes[i].date();
-        Tmax = Tmin = values(i);
-        currentDayValues = 0;
-      }
-      Tmin = std::min(Tmin, values(i));
-      Tmax = std::min(Tmax, values(i));
-      ++currentDayValues;
-      ++i;
-    } while (i < values.size());
-    return boost::optional<double>(CDD);
-  }
-  return boost::none;
-}
-
-boost::optional<std::pair<double, double>> EpwFile::degreeDays(double Tbase)
-{
-  boost::optional<TimeSeries> T = getTimeSeries("Dry Bulb Temperature");
-  if (T) {
-    double CDD = 0.0;
-    double HDD = 0.0;
-    double Tmax, Tmin;
-    std::vector<DateTime> dateTimes = T.get().dateTimes();
-    Vector values = T.get().values();
-    Date currentDate = dateTimes[0].date();
-    Tmax = Tmin = values(0);
-    unsigned i = 1;
-    int currentDayValues = 1;
-    do {
-      if (dateTimes[i].date() != currentDate) {
-        // Probably need a more intelligent check here
-        if (currentDayValues < 2) {
-          // Warning?
-        }
-        double diff = Tbase - 0.5*(Tmin + Tmax);
-        if (diff > 0.0) {
-          HDD += diff;
-        }
-        else {
-          CDD += diff;
-        }
-        currentDate = dateTimes[i].date();
-        Tmax = Tmin = values(i);
-        currentDayValues = 0;
-      }
-      Tmin = std::min(Tmin, values(i));
-      Tmax = std::min(Tmax, values(i));
-      ++currentDayValues;
-      ++i;
-    } while (i < values.size());
-    return boost::optional<std::pair<double, double>>(std::pair<double, double>(CDD, HDD));
-  }
-  return boost::none;
 }
 
 bool EpwFile::isActual() const

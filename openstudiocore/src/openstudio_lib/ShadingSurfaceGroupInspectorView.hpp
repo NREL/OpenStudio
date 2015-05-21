@@ -37,17 +37,17 @@ class ShadingSurfaceGroupInspectorView : public ModelObjectInspectorView
 
   public:
 
-    ShadingSurfaceGroupInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = 0 );
+    ShadingSurfaceGroupInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = nullptr );
 
     virtual ~ShadingSurfaceGroupInspectorView() {}
 
   protected:
 
-    virtual void onClearSelection();
+    virtual void onClearSelection() override;
 
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
 
-    virtual void onUpdate();
+    virtual void onUpdate() override;
 
   private:
 
@@ -66,7 +66,7 @@ class ShadingSurfaceGroupInspectorView : public ModelObjectInspectorView
 
   public slots:
 
-    void toggleUnits(bool displayIP);
+    void toggleUnits(bool displayIP) override;
 };
 
 } // openstudio

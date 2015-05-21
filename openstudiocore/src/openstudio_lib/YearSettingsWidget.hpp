@@ -57,7 +57,7 @@ class YearSettingsWidget : public QWidget
   // A list of the months.
   static std::vector<std::string> months();
 
-  YearSettingsWidget(const model::Model & model, QWidget * parent = 0);
+  YearSettingsWidget(const model::Model & model, QWidget * parent = nullptr);
 
   virtual ~YearSettingsWidget() {}
 
