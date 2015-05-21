@@ -2464,6 +2464,15 @@ namespace openstudio{
       if (iEpRfNKv == m_dataDictionary.get<envPeriodReportingFrequencyNameKeyValue>().end()) {
         // not found
         LOG(Debug,"Tuple: " << queryEnvPeriod << ", " << reportingFrequency << ", " << timeSeriesName << ", " << keyValue << " not found in data dictionary.");
+
+        // DLM: this is not optimal, we should be making the find on the data dictionary case insensitive or using
+        // the functionality of mf_makeConsistent(std::vector<SqlFileTimeSeriesQuery>& queries)
+        std::string upperKeyValue = boost::to_upper_copy(keyValue);
+        if (upperKeyValue != keyValue){
+          LOG(Debug, "Trying query: " << queryEnvPeriod << ", " << reportingFrequency << ", " << timeSeriesName << ", " << upperKeyValue );
+          ts = timeSeries(queryEnvPeriod, reportingFrequency, timeSeriesName, upperKeyValue);
+        }
+
       } else if (!iEpRfNKv->timeSeries.values().empty()) {
         ts = iEpRfNKv->timeSeries;
       } else {// lazy caching

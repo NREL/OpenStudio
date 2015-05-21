@@ -334,8 +334,9 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   ASSERT_FALSE(availableEnvPeriods.empty());
   EXPECT_EQ(static_cast<unsigned>(3), availableEnvPeriods.size());
 
-  //openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Hourly", "Zone Mean Air Temperature", "Main Zone");
-  openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Hourly", "Zone Mean Air Temperature", "MAIN ZONE");
+  openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Hourly", "Zone Mean Air Temperature", "Main Zone");
+  EXPECT_TRUE(ts);
+  ts = sqlFile->timeSeries(availableEnvPeriods[0], "Hourly", "Zone Mean Air Temperature", "MAIN ZONE");
   ASSERT_TRUE(ts);
 
   ASSERT_EQ(static_cast<unsigned>(8760), ts->daysFromFirstReport().size());
@@ -347,6 +348,9 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
 }
 
 TEST_F(SqlFileFixture, Regressions) {
+  // these files were created by running the 1ZoneEvapCooler.idf example file 
+  // adding the Output:SQLite,SimpleAndTabular; object
+  // and using the USA_CO_Golden-NREL.724666_TMY3.epw weather file
   regressionTestSqlFile("1ZoneEvapCooler-V7-0-0.sql", 42.25, 20, 20);
   regressionTestSqlFile("1ZoneEvapCooler-V7-1-0.sql", 42.05, 20, 20);
   regressionTestSqlFile("1ZoneEvapCooler-V7-2-0.sql", 43.28, 20, 20);
