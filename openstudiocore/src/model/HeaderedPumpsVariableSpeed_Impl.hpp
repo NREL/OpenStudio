@@ -153,6 +153,8 @@ namespace detail {
 
     unsigned outletPort();
 
+    bool addToNode(Node & node);
+
     //@}
    protected:
    private:
