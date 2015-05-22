@@ -182,12 +182,22 @@ namespace openstudio {
   {
     auto objectSelector = this->m_gridController->getObjectSelector();
 
-    auto upperLimit = this->m_lessThanFilter->text().toDouble();
-    auto lowerLimit = this->m_greaterThanFilter->text().toDouble();
+    auto upperLimit = std::numeric_limits<int>::max();
+    auto lowerLimit = std::numeric_limits<int>::min();
+      
+    if (!this->m_lessThanFilter->text().isEmpty()) {
+      upperLimit = this->m_lessThanFilter->text().toDouble();
+    }
+
+    if (!this->m_greaterThanFilter->text().isEmpty()) {
+      lowerLimit = this->m_greaterThanFilter->text().toDouble();
+    }
+
+    objectSelector->m_filteredObjects.clear();
 
     for (auto obj : objectSelector->m_selectorObjects) {
       auto nominalZCoordinate = obj.cast<model::BuildingStory>().nominalZCoordinate();
-      if (nominalZCoordinate && (nominalZCoordinate > upperLimit || nominalZCoordinate < lowerLimit)) {
+      if (nominalZCoordinate && (*nominalZCoordinate > upperLimit || *nominalZCoordinate < lowerLimit)) {
         objectSelector->m_filteredObjects.insert(obj).second;
       }
     }
