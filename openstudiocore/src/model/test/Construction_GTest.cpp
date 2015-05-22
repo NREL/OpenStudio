@@ -716,6 +716,10 @@ TEST_F(ModelFixture, Construction_NumLayers)
     layers.push_back(interior); // 10
 
     EXPECT_NO_THROW({ Construction construction(layers); });
+
+    Construction construction2(model);
+    EXPECT_TRUE(construction2.setLayers(castVector<Material>(layers)));
+    EXPECT_EQ(10, construction2.layers().size());
   }
 
   {
@@ -733,6 +737,29 @@ TEST_F(ModelFixture, Construction_NumLayers)
     layers.push_back(interior); // 11
 
     EXPECT_THROW({ Construction construction(layers); }, openstudio::Exception);
+
+    Construction construction2(model);
+    EXPECT_FALSE(construction2.setLayers(castVector<Material>(layers)));
+    EXPECT_EQ(0, construction2.layers().size());
+  }
+
+  {
+    Construction construction(model);
+
+    OpaqueMaterialVector layers;
+    EXPECT_TRUE(construction.setLayers(castVector<Material>(layers)));
+    EXPECT_EQ(0, construction.layers().size());
+
+    for (unsigned i = 0; i < 12; ++i){
+      bool test = construction.insertLayer(i, exterior);
+      if (i < 10){
+        EXPECT_TRUE(test);
+        EXPECT_EQ(i + 1, construction.layers().size());
+      } else{
+        EXPECT_FALSE(test);
+        EXPECT_EQ(10u, construction.layers().size());
+      }
+    }
   }
 
   {
@@ -753,6 +780,10 @@ TEST_F(ModelFixture, Construction_NumLayers)
     layers.push_back(glazing); // 8
 
     EXPECT_NO_THROW({ Construction construction(layers); });
+
+    Construction construction2(model);
+    EXPECT_TRUE(construction2.setLayers(castVector<Material>(layers)));
+    EXPECT_EQ(8, construction2.layers().size());
   }
 
   {
@@ -768,5 +799,28 @@ TEST_F(ModelFixture, Construction_NumLayers)
     layers.push_back(glazing); // 9
 
     EXPECT_THROW({ Construction construction(layers); }, openstudio::Exception);
+
+    Construction construction2(model);
+    EXPECT_FALSE(construction2.setLayers(castVector<Material>(layers)));
+    EXPECT_EQ(0, construction2.layers().size());
+  }
+
+  {
+    Construction construction(model);
+
+    FenestrationMaterialVector layers;
+    EXPECT_TRUE(construction.setLayers(castVector<Material>(layers)));
+    EXPECT_EQ(0, construction.layers().size());
+
+    for (unsigned i = 0; i < 10; ++i){
+      bool test = construction.insertLayer(i, glazing);
+      if (i < 8){
+        EXPECT_TRUE(test);
+        EXPECT_EQ(i+1, construction.layers().size());
+      } else{
+        EXPECT_FALSE(test);
+        EXPECT_EQ(8u, construction.layers().size());
+      }
+    }
   }
 }
