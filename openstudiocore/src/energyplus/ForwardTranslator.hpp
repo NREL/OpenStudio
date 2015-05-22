@@ -409,6 +409,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateCoilCoolingDXTwoStageWithHumidityControlMode( model::CoilCoolingDXTwoStageWithHumidityControlMode & modelObject );
 
+  boost::optional<IdfObject> translateCoilCoolingDXTwoStageWithHumidityControlModeWithoutUnitary( model::CoilCoolingDXTwoStageWithHumidityControlMode & modelObject );
+
   boost::optional<IdfObject> translateCoilCoolingDXVariableRefrigerantFlow( model::CoilCoolingDXVariableRefrigerantFlow & modelObject );
 
   boost::optional<IdfObject> translateCoilCoolingWater( model::CoilCoolingWater & modelObject );

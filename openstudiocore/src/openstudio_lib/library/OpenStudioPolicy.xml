@@ -756,4 +756,25 @@
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_Coil_Cooling_DX_TwoStageWithHumidityControlMode">
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Number of Capacity Stages" Access="Hidden"/>
+    <rule IddField="Normal Mode Stage 1 Coil Performance" Access="HIDDEN"/>
+    <rule IddField="Normal Mode Stage 1 Plus 2 Coil Performance" Access="HIDDEN"/>
+    <rule IddField="Dehumidification Mode 1 Stage 1 Coil Performance" Access="HIDDEN"/>
+    <rule IddField="Dehumidification Mode 1 Stage 1 Plus 2 Coil Performance" Access="HIDDEN"/>
+    <rule IddField="Supply Water Storage Tank" Access="HIDDEN"/>
+    <rule IddField="Condensate Collection Water Storage Tank" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_CoilPerformance_DX_Cooling">
+    <rule IddField="Total Cooling Capacity Function of Temperature Curve Name" Access="HIDDEN"/>
+    <rule IddField="Total Cooling Capacity Function of Flow Fraction Curve Name" Access="HIDDEN"/>
+    <rule IddField="Energy Input Ratio Function of Temperature Curve Name" Access="HIDDEN"/>
+    <rule IddField="Energy Input Ratio Function of Flow Fraction Curve Name" Access="HIDDEN"/>
+    <rule IddField="Part Load Fraction Correlation Curve Name" Access="HIDDEN"/>
+    <rule IddField="Sensible Heat Ratio Function of Temperature Curve Name" Access="HIDDEN"/>
+    <rule IddField="Sensible Heat Ratio Function of Flow Fraction Curve Name" Access="HIDDEN"/>
+    <rule IddField="Condenser Air Inlet Node Name" Access="HIDDEN"/>
+  </POLICY>
 </ROOT>

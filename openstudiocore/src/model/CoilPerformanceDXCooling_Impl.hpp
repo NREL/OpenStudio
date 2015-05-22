@@ -21,7 +21,7 @@
 #define MODEL_COILPERFORMANCEDXCOOLING_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include <model/ParentObject_Impl.hpp>
 
 namespace openstudio {
 namespace model {
@@ -32,7 +32,7 @@ class Node;
 namespace detail {
 
   /** CoilPerformanceDXCooling_Impl is a ModelObject_Impl that is the implementation class for CoilPerformanceDXCooling.*/
-  class MODEL_API CoilPerformanceDXCooling_Impl : public ModelObject_Impl {
+  class MODEL_API CoilPerformanceDXCooling_Impl : public ParentObject_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -180,6 +180,8 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+    ModelObject clone(Model model) const;
+    std::vector<ModelObject> children() const;
 
     //@}
    protected:

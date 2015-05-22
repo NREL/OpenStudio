@@ -137,6 +137,10 @@ namespace detail {
     unsigned inletPort();
     unsigned outletPort();
 
+    ModelObject clone(Model model) const;
+    std::vector<ModelObject> children() const;
+    boost::optional<HVACComponent> containingHVACComponent() const;
+
     //@}
    protected:
    private:

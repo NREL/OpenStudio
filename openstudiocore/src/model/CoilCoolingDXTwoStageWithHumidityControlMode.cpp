@@ -19,6 +19,8 @@
 
 #include <model/CoilCoolingDXTwoStageWithHumidityControlMode.hpp>
 #include <model/CoilCoolingDXTwoStageWithHumidityControlMode_Impl.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <model/CurveQuadratic.hpp>
@@ -27,6 +29,12 @@
 #include <model/CurveBiquadratic_Impl.hpp>
 #include <model/CoilPerformanceDXCooling.hpp>
 #include <model/CoilPerformanceDXCooling_Impl.hpp>
+#include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
+#include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
+#include <model/AirLoopHVACUnitarySystem.hpp>
+#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
+#include <model/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp>
+#include <model/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeRegistry.hpp>
 #include <utilities/idd/OS_Coil_Cooling_DX_TwoStageWithHumidityControlMode_FieldEnums.hxx>
@@ -282,6 +290,101 @@ namespace detail {
     return OS_Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::AirOutletNodeName;
   }
 
+  boost::optional<HVACComponent> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::containingHVACComponent() const
+  {
+    // AirLoopHVACUnitarySystem
+    std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+    for( const auto & airLoopHVACUnitarySystem : airLoopHVACUnitarySystems )
+    {
+      if( boost::optional<HVACComponent> coolingCoil = airLoopHVACUnitarySystem.coolingCoil() )
+      {
+        if( coolingCoil->handle() == this->handle() )
+        {
+          return airLoopHVACUnitarySystem;
+        }
+      }
+    }
+
+    // AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass
+    std::vector<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass> bypassSystems = model().getConcreteModelObjects<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>();
+
+    for( const auto & bypassSystem : bypassSystems )
+    {
+      if( boost::optional<HVACComponent> coolingCoil = bypassSystem.coolingCoil() )
+      {
+        if( coolingCoil->handle() == this->handle() )
+        {
+          return bypassSystem;
+        }
+      }
+    }
+
+    // AirLoopHVACUnitaryHeatPumpAirToAir
+
+    std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> airLoopHVACUnitaryHeatPumpAirToAirs;
+
+    airLoopHVACUnitaryHeatPumpAirToAirs = model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
+
+    for( const auto & airLoopHVACUnitaryHeatPumpAirToAir : airLoopHVACUnitaryHeatPumpAirToAirs )
+    {
+      if( boost::optional<HVACComponent> coil = airLoopHVACUnitaryHeatPumpAirToAir.coolingCoil() )
+      {
+        if( coil->handle() == this->handle() )
+        {
+          return airLoopHVACUnitaryHeatPumpAirToAir;
+        }
+      }
+    }
+
+    return boost::none;
+  }
+
+  ModelObject CoilCoolingDXTwoStageWithHumidityControlMode_Impl::clone(Model model) const
+  {
+    auto newCoil = StraightComponent_Impl::clone(model).cast<CoilCoolingDXTwoStageWithHumidityControlMode>();
+
+    if( auto mo = normalModeStage1CoilPerformance() ) {
+      newCoil.setNormalModeStage1CoilPerformance(mo->clone(model).cast<CoilPerformanceDXCooling>());
+    }
+
+    if( auto mo = normalModeStage1Plus2CoilPerformance() ) {
+      newCoil.setNormalModeStage1Plus2CoilPerformance(mo->clone(model).cast<CoilPerformanceDXCooling>());
+    }
+
+    if( auto mo = dehumidificationMode1Stage1CoilPerformance() ) {
+      newCoil.setDehumidificationMode1Stage1CoilPerformance(mo->clone(model).cast<CoilPerformanceDXCooling>());
+    }
+
+    if( auto mo = dehumidificationMode1Stage1Plus2CoilPerformance() ) {
+      newCoil.setDehumidificationMode1Stage1Plus2CoilPerformance(mo->clone(model).cast<CoilPerformanceDXCooling>());
+    }
+
+    return newCoil;
+  }
+
+  std::vector<ModelObject> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+    if( auto mo = normalModeStage1CoilPerformance() ) {
+      result.push_back(mo.get());
+    }
+
+    if( auto mo = normalModeStage1Plus2CoilPerformance() ) {
+      result.push_back(mo.get());
+    }
+
+    if( auto mo = dehumidificationMode1Stage1CoilPerformance() ) {
+      result.push_back(mo.get());
+    }
+
+    if( auto mo = dehumidificationMode1Stage1Plus2CoilPerformance() ) {
+      result.push_back(mo.get());
+    }
+
+    return result;
+  }
+
 } // detail
 
 CoilCoolingDXTwoStageWithHumidityControlMode::CoilCoolingDXTwoStageWithHumidityControlMode(const Model& model)
@@ -291,6 +394,10 @@ CoilCoolingDXTwoStageWithHumidityControlMode::CoilCoolingDXTwoStageWithHumidityC
 
   setNumberofCapacityStages(2);
   setNumberofEnhancedDehumidificationModes(1);
+  setCrankcaseHeaterCapacity(0.0);
+  setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
+  setBasinHeaterCapacity(0.0);
+  setBasinHeaterSetpointTemperature(2.0);
 
   {
     CurveBiquadratic totalCoolingCapacityFunctionofTemperatureCurve(model);

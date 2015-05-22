@@ -19,6 +19,8 @@
 
 #include <model/CoilPerformanceDXCooling.hpp>
 #include <model/CoilPerformanceDXCooling_Impl.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
 #include <model/Curve.hpp>
 #include <model/Curve_Impl.hpp>
 #include <model/CurveBiquadratic.hpp>
@@ -40,7 +42,7 @@ namespace detail {
   CoilPerformanceDXCooling_Impl::CoilPerformanceDXCooling_Impl(const IdfObject& idfObject,
                                                                Model_Impl* model,
                                                                bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : ParentObject_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == CoilPerformanceDXCooling::iddObjectType());
   }
@@ -48,7 +50,7 @@ namespace detail {
   CoilPerformanceDXCooling_Impl::CoilPerformanceDXCooling_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                Model_Impl* model,
                                                                bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : ParentObject_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == CoilPerformanceDXCooling::iddObjectType());
   }
@@ -56,7 +58,7 @@ namespace detail {
   CoilPerformanceDXCooling_Impl::CoilPerformanceDXCooling_Impl(const CoilPerformanceDXCooling_Impl& other,
                                                                Model_Impl* model,
                                                                bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : ParentObject_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& CoilPerformanceDXCooling_Impl::outputVariableNames() const
@@ -437,6 +439,71 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_CoilPerformance_DX_CoolingFields::PartLoadFractionCorrelationCurve);
   }
 
+  std::vector<ModelObject> CoilPerformanceDXCooling_Impl::children() const {
+    std::vector<ModelObject> result;
+    {
+      auto mo = totalCoolingCapacityFunctionofTemperatureCurve();
+      result.push_back(mo);
+    }
+    { 
+      auto mo = totalCoolingCapacityFunctionofFlowFractionCurve();
+      result.push_back(mo);
+    }
+    {
+      auto mo = energyInputRatioFunctionofTemperatureCurve();
+      result.push_back(mo);
+    }
+    {
+      auto mo = energyInputRatioFunctionofFlowFractionCurve();
+      result.push_back(mo);
+    }
+    {
+      auto mo = partLoadFractionCorrelationCurve();
+      result.push_back(mo);
+    }
+
+    if( auto mo = sensibleHeatRatioFunctionofTemperatureCurve() ) {
+      result.push_back(mo.get());
+    }
+    if( auto mo = sensibleHeatRatioFunctionofFlowFractionCurve() ) {
+      result.push_back(mo.get());
+    }
+    return result;
+  }
+
+  ModelObject CoilPerformanceDXCooling_Impl::clone(Model model) const {
+    auto newObject = ModelObject_Impl::clone(model).cast<CoilPerformanceDXCooling>();
+
+    {
+      auto mo = totalCoolingCapacityFunctionofTemperatureCurve();
+      newObject.setTotalCoolingCapacityFunctionofTemperatureCurve(mo.clone(model).cast<Curve>());
+    }
+    {
+      auto mo = totalCoolingCapacityFunctionofFlowFractionCurve();
+      newObject.setTotalCoolingCapacityFunctionofFlowFractionCurve(mo.clone(model).cast<Curve>());
+    }
+    {
+      auto mo = energyInputRatioFunctionofTemperatureCurve();
+      newObject.setEnergyInputRatioFunctionofTemperatureCurve(mo.clone(model).cast<Curve>());
+    }
+    {
+      auto mo = energyInputRatioFunctionofFlowFractionCurve();
+      newObject.setEnergyInputRatioFunctionofFlowFractionCurve(mo.clone(model).cast<Curve>());
+    }
+    {
+      auto mo = partLoadFractionCorrelationCurve();
+      newObject.setPartLoadFractionCorrelationCurve(mo.clone(model).cast<Curve>());
+    }
+    if( auto mo = sensibleHeatRatioFunctionofTemperatureCurve() ) {
+      newObject.setSensibleHeatRatioFunctionofTemperatureCurve(mo->clone(model).cast<Curve>());
+    }
+    if( auto mo = sensibleHeatRatioFunctionofFlowFractionCurve() ) {
+      newObject.setSensibleHeatRatioFunctionofFlowFractionCurve(mo->clone(model).cast<Curve>());
+    }
+
+    return newObject;
+  }
+
 } // detail
 
 CoilPerformanceDXCooling::CoilPerformanceDXCooling(const Model& model,
@@ -445,7 +512,7 @@ CoilPerformanceDXCooling::CoilPerformanceDXCooling(const Model& model,
   const Curve& energyInputRatioFunctionofTemperature,
   const Curve& energyInputRatioFunctionofFlowFraction,
   const Curve& partLoadFractionCorrelation)
-  : ModelObject(CoilPerformanceDXCooling::iddObjectType(),model)
+  : ParentObject(CoilPerformanceDXCooling::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::CoilPerformanceDXCooling_Impl>());
 
@@ -471,7 +538,7 @@ CoilPerformanceDXCooling::CoilPerformanceDXCooling(const Model& model,
 }
 
 CoilPerformanceDXCooling::CoilPerformanceDXCooling(const Model& model)
-  : ModelObject(CoilPerformanceDXCooling::iddObjectType(),model)
+  : ParentObject(CoilPerformanceDXCooling::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::CoilPerformanceDXCooling_Impl>());
 
@@ -781,7 +848,7 @@ void CoilPerformanceDXCooling::resetSensibleHeatRatioFunctionofFlowFractionCurve
 
 /// @cond
 CoilPerformanceDXCooling::CoilPerformanceDXCooling(std::shared_ptr<detail::CoilPerformanceDXCooling_Impl> impl)
-  : ModelObject(impl)
+  : ParentObject(impl)
 {}
 /// @endcond
 

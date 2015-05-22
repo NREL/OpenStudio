@@ -675,8 +675,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     }
   case openstudio::IddObjectType::OS_Coil_Cooling_DX_TwoStageWithHumidityControlMode :
     {
-      auto mo = modelObject.cast<CoilCoolingDXTwoStageWithHumidityControlMode>();
-      retVal = translateCoilCoolingDXTwoStageWithHumidityControlMode(mo);
+      auto coil = modelObject.cast<CoilCoolingDXTwoStageWithHumidityControlMode>();
+      if( this->isHVACComponentWithinUnitary(coil) ) {
+        retVal = translateCoilCoolingDXTwoStageWithHumidityControlModeWithoutUnitary(coil);
+      } else {
+        retVal = translateCoilCoolingDXTwoStageWithHumidityControlMode(coil);
+      }
       break;
     }
   case openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableRefrigerantFlow :

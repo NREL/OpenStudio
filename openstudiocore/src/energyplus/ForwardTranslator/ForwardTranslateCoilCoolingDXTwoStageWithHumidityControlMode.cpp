@@ -21,6 +21,8 @@
 #include "../../model/Model.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 #include "../../model/CoilCoolingDXTwoStageWithHumidityControlMode.hpp"
 #include "../../model/CoilCoolingDXTwoStageWithHumidityControlMode_Impl.hpp"
 #include "../../model/CoilPerformanceDXCooling.hpp"
@@ -43,7 +45,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoStageWithHumidityControlMode( model::CoilCoolingDXTwoStageWithHumidityControlMode & modelObject )
+boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoStageWithHumidityControlModeWithoutUnitary( model::CoilCoolingDXTwoStageWithHumidityControlMode & modelObject )
 {
   //create the IdfObject that will be the coil
   IdfObject idfObject(IddObjectType::Coil_Cooling_DX_TwoStageWithHumidityControlMode);
@@ -52,6 +54,20 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoStageWith
   m_idfObjects.push_back(idfObject);
   if( auto value = modelObject.name() ) {
     idfObject.setName(value.get());
+  }
+
+  // AirInletNodeName
+  if( auto mo = modelObject.inletModelObject() ) {
+    if( auto node = mo->optionalCast<model::Node>() ) {
+      idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::AirInletNodeName,node->name().get());
+    }
+  }
+
+  // AirOutletNodeName
+  if( auto mo = modelObject.outletModelObject() ) {
+    if( auto node = mo->optionalCast<model::Node>() ) {
+      idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::AirOutletNodeName,node->name().get());
+    }
   }
 
   // AvailabilityScheduleName
@@ -88,6 +104,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoStageWith
   // NormalModeStage1CoilPerformanceName
   if( auto curve = modelObject.normalModeStage1CoilPerformance() ) {
     if( auto idf = translateAndMapModelObject(curve.get()) ) {
+      idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::NormalModeStage1CoilPerformanceObjectType,idf->iddObject().name());
       idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::NormalModeStage1CoilPerformanceName,idf->name().get());
     }
   }
@@ -95,6 +112,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoStageWith
   // NormalModeStage1_PLUS_2CoilPerformanceName
   if( auto curve = modelObject.normalModeStage1Plus2CoilPerformance() ) {
     if( auto idf = translateAndMapModelObject(curve.get()) ) {
+      idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::NormalModeStage1_PLUS_2CoilPerformanceObjectType,idf->iddObject().name());
       idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::NormalModeStage1_PLUS_2CoilPerformanceName,idf->name().get());
     }
   }
@@ -102,6 +120,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoStageWith
   // DehumidificationMode1Stage1CoilPerformanceName
   if( auto curve = modelObject.dehumidificationMode1Stage1CoilPerformance() ) {
     if( auto idf = translateAndMapModelObject(curve.get()) ) {
+      idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::DehumidificationMode1Stage1CoilPerformanceObjectType,idf->iddObject().name());
       idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::DehumidificationMode1Stage1CoilPerformanceName,idf->name().get());
     }
   }
@@ -109,6 +128,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoStageWith
   // DehumidificationMode1Stage1_PLUS_2CoilPerformanceName
   if( auto curve = modelObject.dehumidificationMode1Stage1Plus2CoilPerformance() ) {
     if( auto idf = translateAndMapModelObject(curve.get()) ) {
+      idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::DehumidificationMode1Stage1_PLUS_2CoilPerformanceObjectType,idf->iddObject().name());
       idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::DehumidificationMode1Stage1_PLUS_2CoilPerformanceName,idf->name().get());
     }
   }
@@ -133,6 +153,63 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoStageWith
   }
 
   return idfObject;
+}
+
+boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoStageWithHumidityControlMode( model::CoilCoolingDXTwoStageWithHumidityControlMode & modelObject )
+{
+  IdfObject coilSystemCoolingDXIdf(IddObjectType::CoilSystem_Cooling_DX);
+    
+  m_idfObjects.push_back(coilSystemCoolingDXIdf);
+
+  boost::optional<IdfObject> oIdfObject = translateCoilCoolingDXTwoStageWithHumidityControlModeWithoutUnitary(modelObject);
+
+  if( ! oIdfObject ) { return boost::none; }
+
+  IdfObject idfObject = oIdfObject.get();
+
+  OptionalString s;
+
+  s = modelObject.name();
+  if( s )
+  {
+    coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::CoolingCoilObjectType,idfObject.iddObject().name());
+
+    coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::CoolingCoilName,*s);
+
+    coilSystemCoolingDXIdf.setName(*s + " CoilSystem");
+  }
+
+  if( auto sched = modelObject.availabilitySchedule() ) {
+    if( auto _sched = translateAndMapModelObject(sched.get()) ) {
+      coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::AvailabilityScheduleName,_sched->name().get());
+    }
+  }
+
+  OptionalModelObject omo = modelObject.inletModelObject();
+  if( omo )
+  {
+    translateAndMapModelObject(*omo);
+    s = omo->name();
+    if(s)
+    {
+      coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemInletNodeName,*s);
+    }
+  }
+
+  omo= modelObject.outletModelObject();
+  if( omo )
+  {
+    translateAndMapModelObject(*omo);
+    s = omo->name();
+    if(s)
+    {
+      coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemOutletNodeName,*s);
+
+      coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemSensorNodeName,*s);
+    }
+  }
+
+  return coilSystemCoolingDXIdf;
 }
 
 } // energyplus
