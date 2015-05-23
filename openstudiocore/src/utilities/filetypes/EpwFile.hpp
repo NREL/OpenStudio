@@ -39,27 +39,41 @@ class Time;
 class DateTime;
 class TimeSeries;
 
+/** The AirState object represents a moist air state */
 class UTILITIES_API AirState
 {
 public:
   AirState();
 
   // Statics
+  /** Attempt to create a moist air state for dry bulb temperature, dew point temperature, and pressure */
   static boost::optional<AirState> fromDryBulbDewPointPressure(double drybulb, double dewpoint, double pressure);
+  /** Attempt to create a moist air state for dry bulb temperature, relative, and pressure */
   static boost::optional<AirState> fromDryBulbRelativeHumidityPressure(double drybulb, double RH, double pressure);
 
+  /** Returns the dry bulb temperature in C*/
   double drybulb() const;
+  /** Returns the dew point temperature in C*/
   double dewpoint() const;
+  /** Returns the wet bulb temperature in C*/
   double wetbulb() const;
+  /** Returns the relative humidity in percent*/
   double relativeHumidity() const;
+  /** Returns the pressure in Pa*/
   double pressure() const;
 
+  /** Returns the enthalpy kJ/kg*/
   double enthalpy() const;
+  /** Returns the saturation pressure in Pa*/
   double saturationPressure() const;
+  /** Returns the density in kg/m3*/
   double density() const;
+  /** Returns the specific volume m3/kg*/
   double specificVolume() const;
+  /** Returns the humidity ratio */
   double humidityRatio() const;
 
+  /** Returns the air gas constant */
   static double R();
 
 private:
