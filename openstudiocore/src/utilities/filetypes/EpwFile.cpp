@@ -110,9 +110,6 @@ static double enthalpyFromDewPoint(double T, double p, double Tdewpoint)
   return 1.006*T + W*(2501 + 1.86*T); // Moist air specific enthalpy, eqn 32
 }
 
-AirState::AirState()
-{}
-
 // Using equation 35/37 in ASHRAE Fundamentals 2009 Ch. 1:
 //
 //  W = (A W*_s - B)/C
@@ -197,6 +194,28 @@ static boost::optional<double> solveForDewPoint(double drybulb, double pw, doubl
     }
   }
   return boost::none;
+}
+
+AirState::AirState()
+{
+  // Set parameters
+  m_drybulb = 20.0;
+  m_pressure = 101325.0;
+  m_phi = 0.5;
+  // Compute moist air properties, eqns from ASHRAE Fundamentals 2009 Ch. 1, should probably just set all of these
+  m_psat = psat(m_drybulb); // Water vapor saturation pressure (uses eqns 5 and 6)
+  double pw = m_phi * m_psat; // Relative humidity, eqn 24
+  m_W = 0.621945 * pw / (m_pressure - pw); // Humidity ratio, eqn 22
+  m_h = 1.006*m_drybulb + m_W*(2501 + 1.86*m_drybulb); // Moist air specific enthalpy, eqn 32
+  m_v = 0.287042*(m_drybulb + 273.15)*(1 + 1.607858*m_W) / m_pressure; // Specific volume, eqn 28
+  // Compute the dew point temperature here
+  boost::optional<double> dewpoint = solveForDewPoint(m_drybulb, pw, 1e-4, 100);
+  OS_ASSERT(dewpoint);
+  m_dewpoint = dewpoint.get();
+  // Compute the wet bulb temperature here
+  boost::optional<double> wetbulb = solveForWetBulb(m_drybulb, m_pressure, m_W, 1e-4, 100);
+  OS_ASSERT(wetbulb);
+  m_wetbulb = wetbulb.get();
 }
 
 boost::optional<AirState> AirState::fromDryBulbDewPointPressure(double drybulb, double dewpoint, double pressure)

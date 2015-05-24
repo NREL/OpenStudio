@@ -143,7 +143,9 @@ OPENSTUDIO_ENUM(EpwComputedField,
 class UTILITIES_API EpwDataPoint
 {
 public:
+  /** Create an empty EpwDataPoint object */
   EpwDataPoint();
+  /** Create an EpwDataPoint object with specified properties */
   EpwDataPoint(int year,int month,int day,int hour,int minute,
     std::string dataSourceandUncertaintyFlags,double dryBulbTemperature,double dewPointTemperature,
     double relativeHumidity,double atmosphericStationPressure,double extraterrestrialHorizontalRadiation,
@@ -155,66 +157,128 @@ public:
     double precipitableWater,double aerosolOpticalDepth,double snowDepth,double daysSinceLastSnowfall,
     double albedo,double liquidPrecipitationDepth,double liquidPrecipitationQuantity);
   // Static
+  /** Returns the units of the named field */
   static boost::optional<std::string> getUnitsByName(const std::string &name);
+  /** Returns the units of the field specified by enumeration value */
   static std::string getUnits(EpwDataField field);
+  /** Returns the units of the computed value specified by enumeration value */
   static std::string getUnits(EpwComputedField field);
   // Data retrieval
+  /** Returns the double value of the named field if possible */
   boost::optional<double> getFieldByName(const std::string &name);
+  /** Returns the dobule value of the field specified by enumeration value */
   boost::optional<double> getField(EpwDataField id);
+  /** Returns the air state specified by the EPW data. If dry bulb, pressure, and relative humidity are available,
+      then those values will be used to compute the air state. Otherwise, unless dry bulb, pressure, and dew point are
+      available, then an empty optional will be returned. Note that the air state may not be consistend with the EPW
+      data if all 4 parameters are in the EPW data. */
   boost::optional<AirState> airState() const;
   // Conversion
+  /** Create an EpwDataPoint from an EPW-formatted string */
   static boost::optional<EpwDataPoint> fromEpwString(const std::string &line);
+  /** Creata an EpwDataPoint from a list of EPW data as strings. The pedantic argument controls how strict the conversion is. 
+      If pedantic is true, the list should have 35 elements. If pedantic is false, lists with more or fewer elements may
+      still result in an EpwDataPoint */
   static boost::optional<EpwDataPoint> fromEpwStrings(const std::vector<std::string> &list, bool pedantic=true);
+  /** Creata an EpwDataPoint from a list of EPW data as strings, overriding the date and time with the specified arguments. 
+      The pedantic argument controls how strict the conversion is. If pedantic is true, the list should have 35 elements. 
+      If pedantic is false, lists with more or fewer elements may still result in an EpwDataPoint */
   static boost::optional<EpwDataPoint> fromEpwStrings(int year, int month, int day, int hour, int minute, 
     const std::vector<std::string> &list, bool pedantic = true);
+  /** Returns a list of strings containing the EPW data in the EpwDataPoint */
   std::vector<std::string> toEpwStrings() const;
+  /** Convert the EPW data into CONTAM's WTH format */
   boost::optional<std::string> toWthString() const;
   // One billion getters
+  /** Returns the date in a Date object */
   Date date() const;
+  /** Returns the time in a Time object */
   Time time() const;
+  /** Returns the date and time in a DateTime object */
   openstudio::DateTime dateTime() const;
+  /** Returns the year as an integer */
   int year() const;
+  /** Returns the month as an integer */
   int month() const;
+  /** Returns the day as an integer */
   int day() const;
+  /** Returns the hour as an integer */
   int hour() const;
+  /** Returns the minute as an integer */
   int minute() const;
+  /** Returns the data source and uncertainty flags */
   std::string dataSourceandUncertaintyFlags() const;
+  /** If available, return the dry bulb temperature in degrees C */
   boost::optional<double> dryBulbTemperature() const;
+  /** If available, return the dew point temperature in degrees C */
   boost::optional<double> dewPointTemperature() const;
+  /** If available, return the relative humidity in % */
   boost::optional<double> relativeHumidity() const;
+  /** If available, return the atmospheric station pressure in Pa */
   boost::optional<double> atmosphericStationPressure() const;
+  /** If available, return the extraterrestrial horizontal radiation in Wh/m2*/
   boost::optional<double> extraterrestrialHorizontalRadiation() const;
+  /** If available, return the extraterrestrial direct normal radiation in Wh/m2 */
   boost::optional<double> extraterrestrialDirectNormalRadiation() const;
+  /** If available, return the horizontal infrared radiation intensity in Wh/m2*/
   boost::optional<double> horizontalInfraredRadiationIntensity() const;
+  /** If available, return the global horizontal radiation in Wh/m2 */
   boost::optional<double> globalHorizontalRadiation() const;
+  /** If available, return direct normal radiation in Wh/m2*/
   boost::optional<double> directNormalRadiation() const;
+  /** If available, return the diffuse horizontal radiation in Wh/m2*/
   boost::optional<double> diffuseHorizontalRadiation() const;
+  /** If available, return the global horizontal illuminance in lux*/
   boost::optional<double> globalHorizontalIlluminance() const;
+  /** If available, return the direct normal illuminance in lux*/
   boost::optional<double> directNormalIlluminance() const;
+  /** If available, return the diffuse horizontal illuminance in lux*/
   boost::optional<double> diffuseHorizontalIlluminance() const;
+  /** If available, return the zenith luminances Cd/m2*/
   boost::optional<double> zenithLuminance() const;
+  /** If available, return the wind direction in degrees*/
   boost::optional<double> windDirection() const;
+  /** If available, return the wind speed in m/s */
   boost::optional<double> windSpeed() const;
+  /** Returns the total sky cover */
   int totalSkyCover() const;
+  /** Returns the opaque sky cover */
   int opaqueSkyCover() const;
+  /** If available, return the visibility in km */
   boost::optional<double> visibility() const;
+  /** If available, return the ceiling height in m*/
   boost::optional<double> ceilingHeight() const;
+  /** Returns the present weather observation */
   int presentWeatherObservation() const;
+  /** Returns the presetn weather codes */
   int presentWeatherCodes() const;
+  /** If available, return the precipitable water in mm*/
   boost::optional<double> precipitableWater() const;
+  /** If available, return the aerosol optical depth in thousandths*/
   boost::optional<double> aerosolOpticalDepth() const;
+  /** If available, return the snow depth in cm */
   boost::optional<double> snowDepth() const;
+  /** If available, return the days since last snowfall */
   boost::optional<double> daysSinceLastSnowfall() const;
+  /** If available, return the albedo */
   boost::optional<double> albedo() const;
+  /** If available, return the liquid precipitation depth in mm */
   boost::optional<double> liquidPrecipitationDepth() const;
+  /** If available, return the liquid precipitation quantity in hr */
   boost::optional<double> liquidPrecipitationQuantity() const;
 
   // Computed quantities
+  /** If possible, compute and return the saturation pressure in Pa */
   boost::optional<double> saturationPressure() const;
+  /** If possible, compute and return the enthalpy in kJ/kg */
   boost::optional<double> enthalpy() const;
+  /** If possible, compute and return the humidity ratio */
   boost::optional<double> humidityRatio() const;
+  /** If possible, compute and return the density kg/m3 */
   boost::optional<double> density() const;
+  /** If possible, compute and return the specific volume in m3/kg */
   boost::optional<double> specificVolume() const;
+  /** If possible, compute and return the wet bulb temperature in C */
   boost::optional<double> wetbulb() const;
 
 private:
@@ -402,6 +466,7 @@ public:
   /// get a time series of a particular weather field
   // This will probably need to include the period at some point, but for now just dump everything into a time series
   boost::optional<TimeSeries> getTimeSeries(const std::string &field);
+  /// get a time series of a computed quantity
   boost::optional<TimeSeries> getComputedTimeSeries(const std::string &field);
 
   /// export to CONTAM WTH file
