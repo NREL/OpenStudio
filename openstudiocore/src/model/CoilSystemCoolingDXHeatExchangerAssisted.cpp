@@ -23,6 +23,8 @@
 #include <model/CoilCoolingDXSingleSpeed_Impl.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
 #include <model/HeatExchangerAirToAirSensibleAndLatent.hpp>
@@ -124,6 +126,33 @@ namespace detail {
     return false;
   }
 
+  ModelObject CoilSystemCoolingDXHeatExchangerAssisted_Impl::clone(Model model) const
+  {
+    auto newCoil = StraightComponent_Impl::clone(model).cast<CoilSystemCoolingDXHeatExchangerAssisted>();
+
+    {
+      auto mo = heatExchanger().clone(model).cast<AirToAirComponent>();
+      newCoil.setHeatExchanger(mo);
+    }
+
+    {
+      auto mo = coolingCoil().clone(model).cast<StraightComponent>();
+      newCoil.setCoolingCoil(mo);
+    }
+
+    return newCoil;
+  }
+
+  std::vector<ModelObject> CoilSystemCoolingDXHeatExchangerAssisted_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+
+    result.push_back(heatExchanger());
+    result.push_back(coolingCoil());
+
+    return result;
+  }
+
 } // detail
 
 CoilSystemCoolingDXHeatExchangerAssisted::CoilSystemCoolingDXHeatExchangerAssisted(const Model& model)
@@ -135,6 +164,7 @@ CoilSystemCoolingDXHeatExchangerAssisted::CoilSystemCoolingDXHeatExchangerAssist
   setCoolingCoil(coolingCoil);
 
   HeatExchangerAirToAirSensibleAndLatent heatExchanger(model);
+  heatExchanger.setSupplyAirOutletTemperatureControl(false);
   setHeatExchanger(heatExchanger);
 }
 

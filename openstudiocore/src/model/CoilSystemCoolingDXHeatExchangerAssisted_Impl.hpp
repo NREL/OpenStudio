@@ -82,6 +82,8 @@ namespace detail {
     unsigned outletPort();
 
     bool addToNode(Node & node);
+    std::vector<ModelObject> children() const;
+    ModelObject clone(Model model) const;
 
     //@}
    protected:

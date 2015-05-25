@@ -97,7 +97,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilSystemCoolingDXHeatEx
     auto coolingCoil = modelObject.coolingCoil();
     if( auto idf = translateAndMapModelObject(coolingCoil) ) {
       idfObject.setString(CoilSystem_Cooling_DX_HeatExchangerAssistedFields::CoolingCoilObjectType,idf->iddObject().name());
-      idfObject.setString(CoilSystem_Cooling_DX_HeatExchangerAssistedFields::HeatExchangerName,idf->name().get());
+      idfObject.setString(CoilSystem_Cooling_DX_HeatExchangerAssistedFields::CoolingCoilName,idf->name().get());
       if( idf->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed ) {
         idf->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName,hxSupplyAirOutletNodeName);
         idf->setString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName,hxExhaustAirInletNodeName);
