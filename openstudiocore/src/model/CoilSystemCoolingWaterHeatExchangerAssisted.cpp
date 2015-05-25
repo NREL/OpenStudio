@@ -21,10 +21,14 @@
 #include <model/CoilSystemCoolingWaterHeatExchangerAssisted_Impl.hpp>
 #include <model/AirToAirComponent.hpp>
 #include <model/AirToAirComponent_Impl.hpp>
+#include <model/ControllerWaterCoil.hpp>
+#include <model/ControllerWaterCoil_Impl.hpp>
 #include <model/WaterToAirComponent.hpp>
 #include <model/WaterToAirComponent_Impl.hpp>
 #include <model/CoilCoolingWater.hpp>
 #include <model/CoilCoolingWater_Impl.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/AirLoopHVAC.hpp>
@@ -118,13 +122,36 @@ namespace detail {
 
   bool CoilSystemCoolingWaterHeatExchangerAssisted_Impl::addToNode(Node & node)
   {
+    bool result = false;
+
     if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() ) {
       if( ! airLoop->demandComponent(node.handle()) ) {
-        return StraightComponent_Impl::addToNode( node );
+        result = StraightComponent_Impl::addToNode( node );
+        if( result ) {
+          auto t_coolingCoil = coolingCoil();
+          if( auto waterInletModelObject = t_coolingCoil.waterInletModelObject() ) {
+
+            if( auto coilCoolingWater = t_coolingCoil.optionalCast<CoilCoolingWater>() ) {
+              if( auto oldController = coilCoolingWater->controllerWaterCoil() ) {
+                oldController->remove();
+              }
+            }
+
+            auto t_model = model();
+            ControllerWaterCoil controller(t_model);
+
+            auto coilWaterInletNode = waterInletModelObject->optionalCast<Node>();
+            OS_ASSERT(coilWaterInletNode);
+            controller.setActuatorNode(coilWaterInletNode.get());
+            // sensor node will be established in translator since that node does not yet exist
+
+            controller.setAction("Reverse");
+          }
+        }
       }
     }
 
-    return false;
+    return result;
   }
 } // detail
 
@@ -137,6 +164,7 @@ CoilSystemCoolingWaterHeatExchangerAssisted::CoilSystemCoolingWaterHeatExchanger
   setCoolingCoil(coolingCoil);
 
   HeatExchangerAirToAirSensibleAndLatent heatExchanger(model);
+  heatExchanger.setSupplyAirOutletTemperatureControl(false);
   setHeatExchanger(heatExchanger);
 }
 

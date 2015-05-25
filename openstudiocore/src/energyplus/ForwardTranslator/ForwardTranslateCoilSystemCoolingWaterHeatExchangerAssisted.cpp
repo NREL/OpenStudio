@@ -26,11 +26,14 @@
 #include "../../model/HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
 #include "../../model/CoilCoolingWater.hpp"
 #include "../../model/CoilCoolingWater_Impl.hpp"
+#include "../../model/ControllerWaterCoil.hpp"
+#include "../../model/ControllerWaterCoil_Impl.hpp"
 #include "../../model/Model.hpp"
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/CoilSystem_Cooling_Water_HeatExchangerAssisted_FieldEnums.hxx>
 #include <utilities/idd/HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_Water_FieldEnums.hxx>
+#include <utilities/idd/Controller_WaterCoil_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -92,10 +95,17 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilSystemCoolingWaterHea
     auto coolingCoil = modelObject.coolingCoil();
     if( auto idf = translateAndMapModelObject(coolingCoil) ) {
       idfObject.setString(CoilSystem_Cooling_Water_HeatExchangerAssistedFields::CoolingCoilObjectType,idf->iddObject().name());
-      idfObject.setString(CoilSystem_Cooling_Water_HeatExchangerAssistedFields::HeatExchangerName,idf->name().get());
+      idfObject.setString(CoilSystem_Cooling_Water_HeatExchangerAssistedFields::CoolingCoilName,idf->name().get());
       if( idf->iddObject().type() == IddObjectType::Coil_Cooling_Water ) {
         idf->setString(Coil_Cooling_WaterFields::AirInletNodeName,hxSupplyAirOutletNodeName);
         idf->setString(Coil_Cooling_WaterFields::AirOutletNodeName,hxExhaustAirInletNodeName);
+      }
+    }
+    if( auto coilCoolingWater = coolingCoil.optionalCast<CoilCoolingWater>() ) {
+      if( auto controller = coilCoolingWater->controllerWaterCoil() ) {
+        if( auto idf = translateAndMapModelObject(controller.get()) ) {
+          idf->setString(Controller_WaterCoilFields::SensorNodeName,hxExhaustAirInletNodeName);
+        }
       }
     }
   }
