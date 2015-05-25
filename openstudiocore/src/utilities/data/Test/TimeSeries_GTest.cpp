@@ -1119,3 +1119,47 @@ TEST_F(DataFixture,TimeSeries_AddSubtractSameTimePeriod)
   // 2:30
   EXPECT_DOUBLE_EQ(6.75, ans.value(Time(0,1,30,0)));*/
 }
+
+TEST_F(DataFixture, TimeSeries_Multiply8760)
+{
+  // Test out mulitplication on a detailed series and an iterval series
+  std::string units = "C";
+
+  // interval
+  Time interval = Time(0, 1);
+  Vector values = linspace(1, 8760, 8760);
+
+  Date startDate(Date(MonthOfYear(MonthOfYear::Jan), 1));
+  DateTime firstReportDateTime(startDate, Time(0, 1, 0, 0));
+  Date endDate(Date(MonthOfYear(MonthOfYear::Dec), 31));
+  DateTime endDateTime(endDate, Time(0, 24, 0, 0));
+  Time delta(0, 1, 0, 0);
+  std::vector<DateTime> dateTimes;
+  for (openstudio::DateTime current = firstReportDateTime; current <= endDateTime; current += delta) {
+    dateTimes.push_back(current);
+  }
+
+  TimeSeries intervalTimeSeries(firstReportDateTime, interval, values, units);
+  TimeSeries detailedTimeSeries(dateTimes, values, units);
+
+  TimeSeries mult = 3 * intervalTimeSeries;
+  Vector mvals = mult.values();
+  for (unsigned i = 0; i < 8760; i++) {
+    EXPECT_EQ(3 * values[i], mvals[i]);
+  }
+  openstudio::OptionalTime minter = mult.intervalLength();
+  ASSERT_TRUE(minter);
+  EXPECT_EQ(interval, minter.get());
+  EXPECT_EQ(firstReportDateTime, mult.firstReportDateTime());
+
+  mult = 3 * detailedTimeSeries;
+  mvals = mult.values();
+  for (unsigned i = 0; i < 8760; i++) {
+    EXPECT_EQ(3 * values[i], mvals[i]);
+  }
+  minter = mult.intervalLength();
+  EXPECT_FALSE(minter);
+  EXPECT_EQ(firstReportDateTime, mult.firstReportDateTime());
+
+}
+

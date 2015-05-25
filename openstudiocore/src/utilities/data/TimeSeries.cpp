@@ -760,7 +760,12 @@ namespace openstudio{
     }
 
     std::shared_ptr<TimeSeries_Impl> TimeSeries_Impl::operator*(double d) const {
-
+      if (m_intervalLength) {
+        return std::shared_ptr<TimeSeries_Impl>(new TimeSeries_Impl(m_firstReportDateTime,
+          m_intervalLength.get(),
+          m_values*d,
+          m_units));
+      }
       return std::shared_ptr<TimeSeries_Impl>(new TimeSeries_Impl(m_firstReportDateTime,
         m_secondsFromFirstReport,
         m_values*d,
