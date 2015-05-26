@@ -47,6 +47,8 @@
 #include "../../model/CoolingTowerTwoSpeed_Impl.hpp"
 #include "../../model/GroundHeatExchangerVertical.hpp"
 #include "../../model/GroundHeatExchangerVertical_Impl.hpp"
+#include "../../model/GroundHeatExchangerHorizontalTrench.hpp"
+#include "../../model/GroundHeatExchangerHorizontalTrench_Impl.hpp"
 #include "../../model/HeatExchangerFluidToFluid.hpp"
 #include "../../model/HeatExchangerFluidToFluid_Impl.hpp"
 #include "../../model/WaterToAirComponent.hpp"
@@ -589,6 +591,24 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
         {
           GroundHeatExchangerVertical hx = supplyComponent.cast<GroundHeatExchangerVertical>();
           if (boost::optional<double> optionalFlowRate = hx.maximumFlowRate())
+          {
+            flowRate = optionalFlowRate.get();
+          }
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,BOTH));
+        }
+        else
+        {
+          uncontrolledComponents.push_back(supplyComponent);
+        }
+        break;
+      }
+      case openstudio::IddObjectType::OS_GroundHeatExchanger_HorizontalTrench :
+      {
+        sizeAsCondenserSystem = true;
+        if (boost::optional<Node> outletNode = isSetpointComponent(plantLoop, supplyComponent))
+        {
+          auto hx = supplyComponent.cast<GroundHeatExchangerHorizontalTrench>();
+          if (boost::optional<double> optionalFlowRate = hx.designFlowRate())
           {
             flowRate = optionalFlowRate.get();
           }

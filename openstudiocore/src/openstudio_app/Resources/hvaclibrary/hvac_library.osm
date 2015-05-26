@@ -2820,6 +2820,32 @@ OS:GroundHeatExchanger:Vertical,
   3.003,                                  !- G-Function Ln(T/Ts) Value 35
   72.511;                                 !- G-Function G Value 35
 
+OS:GroundHeatExchanger:HorizontalTrench,
+  {a169f9ac-6a1c-47cd-bd5d-b3736e7279b3}, !- Handle
+  Horizontal Ground HX, !- Name
+  ,                                       !- Inlet Node Name
+  ,                                       !- Outlet Node Name
+  0.004,                                  !- Design Flow Rate {m3/s}
+  75,                                     !- Trench Length in Pipe Axial Direction {m}
+  2,                                      !- Number of Trenches
+  2,                                      !- Horizontal Spacing Between Pipes {m}
+  0.016,                                  !- Pipe Inner Diameter {m}
+  0.02667,                                !- Pipe Outer Diameter {m}
+  1.25,                                   !- Burial Depth {m}
+  1.08,                                   !- Soil Thermal Conductivity {W/m-K}
+  962,                                    !- Soil Density {kg/m3}
+  2576,                                   !- Soil Specific Heat {J/kg-K}
+  0.3895,                                 !- Pipe Thermal Conductivity {W/m-K}
+  641,                                    !- Pipe Density {kg/m3}
+  2405,                                   !- Pipe Specific Heat {J/kg-K}
+  30,                                     !- Soil Moisture Content Percent {percent}
+  50,                                     !- Soil Moisture Content Percent at Saturation {percent}
+  KusudaAchenbach,                        !- Ground Temperature Model
+  15.5,                                   !- Kusuda-Achenbach Average Surface Temperature {C}
+  12.8,                                   !- Kusuda-Achenbach Average Amplitude of Surface Temperature {deltaC}
+  17.3,                                   !- Kusuda-Achenbach Phase Shift of Minimum Surface Temperature {days}
+  0.408;                                  !- Evapotranspiration Ground Cover Parameter
+
 OS:Coil:Cooling:CooledBeam,
   {9409bb35-2087-4798-897c-a6703b5a7669}, !- Handle
   Chilled Beam Coil,                      !- Name

@@ -321,6 +321,27 @@ GroundHeatExchangerHorizontalTrench::GroundHeatExchangerHorizontalTrench(const M
   : StraightComponent(GroundHeatExchangerHorizontalTrench::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>());
+
+  setDesignFlowRate(0.004);
+  setTrenchLengthinPipeAxialDirection(75);
+  setNumberofTrenches(2);
+  setHorizontalSpacingBetweenPipes(2.0);
+  setPipeInnerDiameter(0.016);
+  setPipeOuterDiameter(0.02667);
+  setBurialDepth(1.25);
+  setSoilThermalConductivity(1.08);
+  setSoilDensity(962);
+  setSoilSpecificHeat(2576);
+  setPipeThermalConductivity(0.3895);
+  setPipeDensity(641);
+  setPipeSpecificHeat(2405);
+  setSoilMoistureContentPercent(30);
+  setSoilMoistureContentPercentatSaturation(50);
+  setKusudaAchenbachAverageSurfaceTemperature(15.5);
+  setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(12.8);
+  setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(17.3);
+  setEvapotranspirationGroundCoverParameter(0.408);
+  setGroundTemperatureModel("KusudaAchenbach");
 }
 
 IddObjectType GroundHeatExchangerHorizontalTrench::iddObjectType() {
