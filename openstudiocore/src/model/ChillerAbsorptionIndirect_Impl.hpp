@@ -191,6 +191,9 @@ namespace detail {
     unsigned demandInletPort();
     unsigned demandOutletPort();
 
+    std::vector<ModelObject> children() const;
+    ModelObject clone(Model model) const;
+
     //@}
    protected:
    private:

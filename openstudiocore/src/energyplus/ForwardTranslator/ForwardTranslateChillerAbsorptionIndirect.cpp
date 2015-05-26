@@ -194,11 +194,13 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerAbsorptionIndirect
     idfObject.setString(Chiller_Absorption_IndirectFields::GeneratorHeatSourceType,value);
   }
 
-  if( modelObject.isDesignGeneratorFluidFlowRateAutosized() ) {
-    idfObject.setString(Chiller_Absorption_IndirectFields::DesignGeneratorFluidFlowRate,"Autosize");
-  } else if( auto value = modelObject.designGeneratorFluidFlowRate() ) {
-    idfObject.setDouble(Chiller_Absorption_IndirectFields::DesignGeneratorFluidFlowRate,value.get());
-  }
+  // For now generator loops are not supported so this field needs to be blank
+  //if( modelObject.isDesignGeneratorFluidFlowRateAutosized() ) {
+  //  idfObject.setString(Chiller_Absorption_IndirectFields::DesignGeneratorFluidFlowRate,"Autosize");
+  //} else if( auto value = modelObject.designGeneratorFluidFlowRate() ) {
+  //  idfObject.setDouble(Chiller_Absorption_IndirectFields::DesignGeneratorFluidFlowRate,value.get());
+  //}
+  idfObject.setString(Chiller_Absorption_IndirectFields::DesignGeneratorFluidFlowRate,"");
 
   {
     auto value = modelObject.temperatureLowerLimitGeneratorInlet();

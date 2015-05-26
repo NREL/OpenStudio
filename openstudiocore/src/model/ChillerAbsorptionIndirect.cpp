@@ -19,6 +19,8 @@
 
 #include <model/ChillerAbsorptionIndirect.hpp>
 #include <model/ChillerAbsorptionIndirect_Impl.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
 #include <model/Curve.hpp>
 #include <model/Curve_Impl.hpp>
 #include <model/CurveCubic.hpp>
@@ -466,6 +468,63 @@ namespace detail {
     return OS_Chiller_Absorption_IndirectFields::CondenserOutletNodeName;
   }
 
+  ModelObject ChillerAbsorptionIndirect_Impl::clone(Model model) const
+  {
+    auto newMo = WaterToWaterComponent_Impl::clone(model).cast<ChillerAbsorptionIndirect>();
+
+    {
+      auto mo = generatorHeatInputFunctionofPartLoadRatioCurve().clone(model).cast<Curve>();
+      newMo.setGeneratorHeatInputFunctionofPartLoadRatioCurve(mo);
+    }
+
+    {
+      auto mo = pumpElectricInputFunctionofPartLoadRatioCurve().clone(model).cast<Curve>();
+      newMo.setPumpElectricInputFunctionofPartLoadRatioCurve(mo);
+    }
+
+    {
+      auto mo = capacityCorrectionFunctionofCondenserTemperatureCurve().clone(model).cast<Curve>();
+      newMo.setCapacityCorrectionFunctionofCondenserTemperatureCurve(mo);
+    }
+
+    {
+      auto mo = capacityCorrectionFunctionofChilledWaterTemperatureCurve().clone(model).cast<Curve>();
+      newMo.setCapacityCorrectionFunctionofChilledWaterTemperatureCurve(mo);
+    }
+
+    {
+      auto mo = capacityCorrectionFunctionofGeneratorTemperatureCurve().clone(model).cast<Curve>();
+      newMo.setCapacityCorrectionFunctionofGeneratorTemperatureCurve(mo);
+    }
+
+    {
+      auto mo = generatorHeatInputCorrectionFunctionofCondenserTemperatureCurve().clone(model).cast<Curve>();
+      newMo.setGeneratorHeatInputCorrectionFunctionofCondenserTemperatureCurve(mo);
+    }
+
+    {
+      auto mo = generatorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve().clone(model).cast<Curve>();
+      newMo.setGeneratorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve(mo);
+    }
+
+    return newMo;
+  }
+
+  std::vector<ModelObject> ChillerAbsorptionIndirect_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+
+    result.push_back(generatorHeatInputFunctionofPartLoadRatioCurve());
+    result.push_back(pumpElectricInputFunctionofPartLoadRatioCurve());
+    result.push_back(capacityCorrectionFunctionofCondenserTemperatureCurve());
+    result.push_back(capacityCorrectionFunctionofChilledWaterTemperatureCurve());
+    result.push_back(capacityCorrectionFunctionofGeneratorTemperatureCurve());
+    result.push_back(generatorHeatInputCorrectionFunctionofCondenserTemperatureCurve());
+    result.push_back(generatorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve());
+
+    return result;
+  }
+
 } // detail
 
 ChillerAbsorptionIndirect::ChillerAbsorptionIndirect(const Model& model)
@@ -483,12 +542,13 @@ ChillerAbsorptionIndirect::ChillerAbsorptionIndirect(const Model& model)
   setChilledWaterOutletTemperatureLowerLimit(5.0);
   autosizeDesignChilledWaterFlowRate();
   autosizeDesignCondenserWaterFlowRate();
-  setChillerFlowMode("LeavingSetpointModulated");
+  setChillerFlowMode("NotModulated");
   setGeneratorHeatSourceType("Steam");
   autosizeDesignGeneratorFluidFlowRate();
   setTemperatureLowerLimitGeneratorInlet(30.0);
   setDegreeofSubcoolinginSteamGenerator(2.0);
   setDegreeofSubcoolinginSteamCondensateLoop(12.0);
+  setSizingFactor(1.0);
 
   {
     CurveCubic curve(model);

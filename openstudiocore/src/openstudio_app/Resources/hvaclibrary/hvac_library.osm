@@ -1014,6 +1014,109 @@ OS:Connection,
   {0d33d444-2aab-4502-b2e2-f0444bf8a529}, !- Target Object
   2;                                      !- Inlet Port
 
+OS:Chiller:Absorption:Indirect,
+  {6d250ddd-9660-437a-906e-9356d8369b69}, !- Handle
+  Indirect Absorption Chiller,          !- Name
+  autosize,                               !- Nominal Capacity {W}
+  autosize,                               !- Nominal Pumping Power {W}
+  ,                                       !- Chilled Water Inlet Node Name
+  ,                                       !- Chilled Water Outlet Node Name
+  ,                                       !- Condenser Inlet Node Name
+  ,                                       !- Condenser Outlet Node Name
+  0.15,                                   !- Minimum Part Load Ratio
+  1,                                      !- Maximum Part Load Ratio
+  0.65,                                   !- Optimum Part Load Ratio
+  35,                                     !- Design Condenser Inlet Temperature {C}
+  10,                                     !- Condenser Inlet Temperature Lower Limit {C}
+  5,                                      !- Chilled Water Outlet Temperature Lower Limit {C}
+  autosize,                               !- Design Chilled Water Flow Rate {m3/s}
+  autosize,                               !- Design Condenser Water Flow Rate {m3/s}
+  NotModulated,                           !- Chiller Flow Mode
+  {850a5971-0a93-4efa-8174-0bc98698bce5}, !- Generator Heat Input Function of Part Load Ratio Curve
+  {786ab5c0-a447-4696-8189-72f9ebaddc60}, !- Pump Electric Input Function of Part Load Ratio Curve
+  ,                                       !- Generator Inlet Node
+  ,                                       !- Generator Outlet Node
+  {dce1b9c5-f1af-44cd-abbc-b6b14482d5f4}, !- Capacity Correction Function of Condenser Temperature Curve
+  {185b6b07-fd12-4ea0-a3e1-fd43ab28223f}, !- Capacity Correction Function of Chilled Water Temperature Curve
+  {5ddeaf9a-9a50-45f0-aa8a-5c176220373a}, !- Capacity Correction Function of Generator Temperature Curve
+  {bd3e525e-e818-4526-b38e-07834a84abda}, !- Generator Heat Input Correction Function of Condenser Temperature Curve
+  {5332ab8e-39d3-48c9-985c-37e3c3773ac5}, !- Generator Heat Input Correction Function of Chilled Water Temperature Curve
+  Steam,                                  !- Generator Heat Source Type
+  autosize,                               !- Design Generator Fluid Flow Rate {m3/s}
+  30,                                     !- Temperature Lower Limit Generator Inlet {C}
+  2,                                      !- Degree of Subcooling in Steam Generator {C}
+  12,                                     !- Degree of Subcooling in Steam Condensate Loop {C}
+  1;                                      !- Sizing Factor
+
+OS:Curve:Cubic,
+  {850a5971-0a93-4efa-8174-0bc98698bce5}, !- Handle
+  Ind Abs Chiller Generator Heat Input Func of PLR,                          !- Name
+  0.18892,                                !- Coefficient1 Constant
+  0.968044,                               !- Coefficient2 x
+  1.119202,                               !- Coefficient3 x**2
+  -0.5034,                                !- Coefficient4 x**3
+  0.15,                                   !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Quadratic,
+  {786ab5c0-a447-4696-8189-72f9ebaddc60}, !- Handle
+  Ind Abs Chiller Pump Elec Input Func of PLR,                      !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0.15,                                   !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Cubic,
+  {dce1b9c5-f1af-44cd-abbc-b6b14482d5f4}, !- Handle
+  Ind Abs Chiller Cap Func of Cond Temp,                          !- Name
+  0.245507,                               !- Coefficient1 Constant
+  0.023614,                               !- Coefficient2 x
+  2.78e-05,                               !- Coefficient3 x**2
+  1.3e-05,                                !- Coefficient4 x**3
+  7,                                      !- Minimum Value of x {BasedOnField A2}
+  25;                                     !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Cubic,
+  {5ddeaf9a-9a50-45f0-aa8a-5c176220373a}, !- Handle
+  Ind Abs Chiller Cap Func of Gen Temp,                          !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  100;                                    !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Cubic,
+  {185b6b07-fd12-4ea0-a3e1-fd43ab28223f}, !- Handle
+  Ind Abs Chiller Cap Func Chilled Water Temp,                          !- Name
+  0.690571,                               !- Coefficient1 Constant
+  0.065571,                               !- Coefficient2 x
+  -0.00289,                               !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  4,                                      !- Minimum Value of x {BasedOnField A2}
+  10;                                     !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Cubic,
+  {bd3e525e-e818-4526-b38e-07834a84abda}, !- Handle
+  Ind Abs Chiller Gen Heat Input Func of Cond Temp,                          !- Name
+  0.712019,                               !- Coefficient1 Constant
+  -0.00478,                               !- Coefficient2 x
+  0.000864,                               !- Coefficient3 x**2
+  -1.3e-05,                               !- Coefficient4 x**3
+  7,                                      !- Minimum Value of x {BasedOnField A2}
+  30;                                     !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Cubic,
+  {5332ab8e-39d3-48c9-985c-37e3c3773ac5}, !- Handle
+  Ind Abs Chiller Gen Heat Input Func of Chilled Water Temp,                          !- Name
+  0.995571,                               !- Coefficient1 Constant
+  0.046821,                               !- Coefficient2 x
+  -0.01099,                               !- Coefficient3 x**2
+  0.000608,                               !- Coefficient4 x**3
+  4,                                      !- Minimum Value of x {BasedOnField A2}
+  10;                                     !- Maximum Value of x {BasedOnField A2}
+
 OS:Chiller:Electric:EIR,
   {849d9618-ded0-4983-b57f-090fa2a756c0}, ! Handle
   Chiller Electric EIR,                   ! Name

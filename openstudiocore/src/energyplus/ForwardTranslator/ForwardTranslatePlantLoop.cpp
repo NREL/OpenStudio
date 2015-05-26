@@ -37,6 +37,10 @@
 #include "../../model/BoilerHotWater_Impl.hpp"
 #include "../../model/ChillerElectricEIR.hpp"
 #include "../../model/ChillerElectricEIR_Impl.hpp"
+#include "../../model/ChillerAbsorption.hpp"
+#include "../../model/ChillerAbsorption_Impl.hpp"
+#include "../../model/ChillerAbsorptionIndirect.hpp"
+#include "../../model/ChillerAbsorptionIndirect_Impl.hpp"
 #include "../../model/WaterHeaterMixed.hpp"
 #include "../../model/WaterHeaterMixed_Impl.hpp"
 #include "../../model/CoolingTowerVariableSpeed.hpp"
@@ -501,6 +505,38 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
         }
         else
         {
+          coolingComponents.push_back(supplyComponent);
+        }
+        break;
+      }
+      case openstudio::IddObjectType::OS_Chiller_Absorption_Indirect :
+      {
+        sizeAsChilledWaterSystem = true;
+        if( auto outletNode = isSetpointComponent(plantLoop,supplyComponent) ) {
+          auto chiller = supplyComponent.cast<ChillerAbsorptionIndirect>();
+          if( chiller.isDesignChilledWaterFlowRateAutosized() ) {
+            autosize = true;
+          } else if(auto optionalFlowRate = chiller.designChilledWaterFlowRate()) {
+            flowRate = optionalFlowRate.get();
+          }
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,COOLING));
+        } else {
+          coolingComponents.push_back(supplyComponent);
+        }
+        break;
+      }
+      case openstudio::IddObjectType::OS_Chiller_Absorption :
+      {
+        sizeAsChilledWaterSystem = true;
+        if( auto outletNode = isSetpointComponent(plantLoop,supplyComponent) ) {
+          auto chiller = supplyComponent.cast<ChillerAbsorption>();
+          if( chiller.isDesignChilledWaterFlowRateAutosized() ) {
+            autosize = true;
+          } else if(auto optionalFlowRate = chiller.designChilledWaterFlowRate()) {
+            flowRate = optionalFlowRate.get();
+          }
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,COOLING));
+        } else {
           coolingComponents.push_back(supplyComponent);
         }
         break;

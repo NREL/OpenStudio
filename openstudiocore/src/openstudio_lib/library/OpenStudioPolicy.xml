@@ -383,6 +383,21 @@
     <rule IddField="Basin Heater Setpoint Temperature" Access="HIDDEN"/>
     <rule IddField="Basin Heater Operating Schedule Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_Chiller_Absorption_Indirect">
+    <rule IddField="Chilled Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Chilled Water Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Condenser Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Condenser Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Generator Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Generator Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Generator Heat Input Function of Part Load Ratio Curve" Access="LOCKED"/>
+    <rule IddField="Pump Electric Input Function of Part Load Ratio Curve" Access="LOCKED"/>
+    <rule IddField="Capacity Correction Function of Condenser Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Capacity Correction Function of Chilled Water Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Capacity Correction Function of Generator Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Generator Heat Input Correction Function of Condenser Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Generator Heat Input Correction Function of Chilled Water Temperature Curve" Access="LOCKED"/>
+  </POLICY>
   <POLICY IddObjectType="OS_Pump_VariableSpeed">
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Outlet Node Name" Access="HIDDEN"/>
