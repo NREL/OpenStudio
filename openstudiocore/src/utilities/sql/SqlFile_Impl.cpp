@@ -50,17 +50,18 @@ namespace openstudio{
       return std::string(reinterpret_cast<const char*>(column));
     }
 
-    SqlFile_Impl::SqlFile_Impl(const openstudio::path& path)
+    SqlFile_Impl::SqlFile_Impl(const openstudio::path& path, const bool createIndexes)
       : m_path(path), m_connectionOpen(false), m_supportedVersion(false)
     {
       if (boost::filesystem::exists(m_path)){
         m_path = boost::filesystem::canonical(m_path);
       }
       reopen();
+      if (createIndexes) this->createIndexes();
     }
 
     SqlFile_Impl::SqlFile_Impl(const openstudio::path &t_path, const openstudio::EpwFile &t_epwFile, const openstudio::DateTime &t_simulationTime,
-        const openstudio::Calendar &t_calendar)
+        const openstudio::Calendar &t_calendar, const bool createIndexes)
       : m_path(t_path)
     {
       if (boost::filesystem::exists(m_path)){
@@ -82,46 +83,50 @@ namespace openstudio{
       {
         execAndThrowOnError(
             /* extracted from real eplusout.sql */
-            "CREATE TABLE ComponentSizes (CompType TEXT, CompName TEXT, Description TEXT, Value REAL, Units TEXT);"
-            "CREATE TABLE ConstructionLayers (ConstructionIndex INTEGER, LayerIndex INTEGER, MaterialIndex INTEGER);"
-            "CREATE TABLE Constructions (ConstructionIndex INTEGER PRIMARY KEY, Name TEXT, TotalLayers INTEGER, TotalSolidLayers INTEGER, TotalGlassLayers INTEGER, InsideAbsorpVis REAL, OutsideAbsorpVis REAL, InsideAbsorpSolar REAL, OutsideAbsorpSolar REAL, InsideAbsorpThermal REAL, OutsideAbsorpThermal REAL, OutsideRoughness INTEGER, TypeIsWindow INTEGER, Uvalue REAL);"
-            "CREATE TABLE DaylightMapHourlyData (HourlyReportIndex INTEGER, X REAL, Y REAL, Illuminance REAL);"
-            "CREATE TABLE DaylightMapHourlyReports (HourlyReportIndex INTEGER PRIMARY KEY, MapNumber INTEGER, Month INTEGER, DayOfMonth INTEGER, Hour INTEGER);"
-            "CREATE TABLE DaylightMaps (MapNumber INTEGER PRIMARY KEY, MapName TEXT, Environment TEXT, Zone INTEGER, ReferencePt1 TEXT, ReferencePt2 TEXT, Z REAL);"
-            "CREATE TABLE EnvironmentPeriods (EnvironmentPeriodIndex INTEGER PRIMARY KEY, SimulationIndex INTEGER, EnvironmentName TEXT, EnvironmentType INTEGER);"
-            "CREATE TABLE Errors (ErrorIndex INTEGER PRIMARY KEY, SimulationIndex INTEGER, ErrorType INTEGER, ErrorMessage TEXT, Count INTEGER);"
-            "CREATE TABLE Materials (MaterialIndex INTEGER PRIMARY KEY, Name TEXT, MaterialType INTEGER, Roughness INTEGER, Conductivity REAL, Density REAL, IsoMoistCap REAL, Porosity REAL, Resistance REAL, ROnly INTEGER, SpecHeat REAL, ThermGradCoef REAL, Thickness REAL, VaporDiffus);"
-            "CREATE TABLE NominalBaseboardHeaters (NominalBaseboardHeaterIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, CapatLowTemperature REAL, LowTemperature REAL, CapatHighTemperature REAL, HighTemperature REAL, FractionRadiant REAL, FractionConvected REAL, EndUseSubcategory TEXT);"
-            "CREATE TABLE NominalElectricEquipment (NominalElectricEquipmentIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL, FractionLatent REAL, FractionRadiant REAL, FractionLost REAL, FractionConvected REAL, EndUseSubcategory TEXT);"
-            "CREATE TABLE NominalGasEquipment(NominalGasEquipmentIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL, FractionLatent REAL, FractionRadiant REAL, FractionLost REAL, FractionConvected REAL, EndUseSubcategory TEXT);"
-            "CREATE TABLE NominalHotWaterEquipment(NominalHotWaterEquipmentIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, SchedNo INTEGER, DesignLevel REAL, FractionLatent REAL, FractionRadiant REAL, FractionLost REAL, FractionConvected REAL, EndUseSubcategory TEXT);"
-            "CREATE TABLE NominalInfiltration (NominalInfiltrationIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL);"
-            "CREATE TABLE NominalLighting (NominalLightingIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL, FractionReturnAir REAL, FractionRadiant REAL, FractionShortWave REAL, FractionReplaceable REAL, FractionConvected REAL, EndUseSubcategory TEXT);"
-            "CREATE TABLE NominalOtherEquipment(NominalOtherEquipmentIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL, FractionLatent REAL, FractionRadiant REAL, FractionLost REAL, FractionConvected REAL, EndUseSubcategory TEXT);"
-            "CREATE TABLE NominalPeople (NominalPeopleIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER,NumberOfPeople INTEGER, NumberOfPeopleScheduleIndex INTEGER, ActivityScheduleIndex INTEGER, FractionRadiant REAL, FractionConvected REAL, WorkEfficiencyScheduleIndex INTEGER, ClothingEfficiencyScheduleIndex INTEGER, AirVelocityScheduleIndex INTEGER, Fanger INTEGER, Pierce INTEGER, KSU INTEGER, MRTCalcType INTEGER, SurfaceIndex INTEGER, AngleFactorListName TEXT, AngleFactorList INTEGER, UserSpecifeidSensibleFraction REAL, Show55Warning INTEGER);"
-            "CREATE TABLE NominalSteamEquipment(NominalSteamEquipmentIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL, FractionLatent REAL, FractionRadiant REAL, FractionLost REAL, FractionConvected REAL, EndUseSubcategory TEXT);"
-            "CREATE TABLE NominalVentilation (NominalVentilationIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL);"
-            "CREATE TABLE ReportMeterData(TimeIndex INTEGER, ReportMeterDataDictionaryIndex INTEGER, VariableValue REAL, ReportVariableExtendedDataIndex INTEGER);"
-            "CREATE TABLE ReportMeterDataDictionary (ReportMeterDataDictionaryIndex INTEGER PRIMARY KEY, VariableType TEXT, IndexGroup TEXT, TimestepType TEXT, KeyValue TEXT, VariableName TEXT, ReportingFrequency TEXT, ScheduleName TEXT, VariableUnits TEXT);"
-            "CREATE TABLE ReportMeterExtendedData (ReportMeterExtendedDataIndex INTEGER PRIMARY KEY, MaxValue REAL, MaxMonth INTEGER, MaxDay INTEGER, MaxHour INTEGER, MaxStartMinute INTEGER, MaxMinute INTEGER, MinValue REAL, MinMonth INTEGER, MinDay INTEGER, MinHour INTEGER, MinStartMinute INTEGER, MinMinute INTEGER);"
-            "CREATE TABLE ReportVariableData (TimeIndex INTEGER, ReportVariableDataDictionaryIndex INTEGER, VariableValue REAL, ReportVariableExtendedDataIndex INTEGER);"
-            "CREATE TABLE ReportVariableDataDictionary(ReportVariableDataDictionaryIndex INTEGER PRIMARY KEY, VariableType TEXT, IndexGroup TEXT, TimestepType TEXT, KeyValue TEXT, VariableName TEXT, ReportingFrequency TEXT, ScheduleName TEXT, VariableUnits TEXT);"
-            "CREATE TABLE ReportVariableExtendedData (ReportVariableExtendedDataIndex INTEGER PRIMARY KEY, MaxValue REAL, MaxMonth INTEGER, MaxDay INTEGER, MaxHour INTEGER, MaxStartMinute INTEGER, MaxMinute INTEGER, MinValue REAL, MinMonth INTEGER, MinDay INTEGER, MinHour INTEGER, MinStartMinute INTEGER, MinMinute INTEGER);"
-            "CREATE TABLE RoomAirModels (ZoneIndex INTEGER PRIMARY KEY, AirModelName TEXT, AirModelType INTEGER, TempCoupleScheme INTEGER, SimAirModel INTEGER);"
-            "CREATE TABLE Schedules (ScheduleIndex INTEGER PRIMARY KEY, ScheduleName TEXT, ScheduleType TEXT, ScheduleMinimum REAL, ScheduleMaximum REAL);"
             "CREATE TABLE Simulations (SimulationIndex INTEGER PRIMARY KEY, EnergyPlusVersion TEXT, TimeStamp TEXT, NumTimestepsPerHour INTEGER, Completed BOOL, CompletedSuccessfully BOOL);"
-            "CREATE TABLE StringTypes (StringTypeIndex INTEGER PRIMARY KEY, Value TEXT);"
-            "CREATE TABLE Strings (StringIndex INTEGER PRIMARY KEY, StringTypeIndex  INTEGER, Value TEXT);"
-            "CREATE TABLE Surfaces (SurfaceIndex INTEGER PRIMARY KEY, SurfaceName, ConstructionIndex INTEGER, ClassName TEXT, Area REAL, GrossArea REAL, Perimeter REAL, Azimuth REAL, Height REAL, Reveal REAL, Shape INTEGER, Sides INTEGER, Tilt REAL, Width REAL, HeatTransferSurf INTEGER, BaseSurfaceIndex INTEGER, ZoneIndex INTEGER, ExtBoundCond INTEGER,  ExtSolar INTEGER, ExtWind INTEGER);"
-            "CREATE TABLE SystemSizes (SystemName TEXT, Description TEXT, Value REAL, Units TEXT);"
-            "CREATE TABLE TabularData (ReportNameIndex INTEGER, ReportForStringIndex INTEGER, TableNameIndex INTEGER, SimulationIndex INTEGER, RowNameIndex INTEGER, ColumnNameIndex INTEGER, RowId INTEGER, ColumnId INTEGER, Value TEXT, UnitsIndex INTEGER);"
+            "CREATE TABLE EnvironmentPeriods ( EnvironmentPeriodIndex INTEGER PRIMARY KEY, SimulationIndex INTEGER, EnvironmentName TEXT, EnvironmentType INTEGER, FOREIGN KEY(SimulationIndex) REFERENCES Simulations(SimulationIndex) ON DELETE CASCADE ON UPDATE CASCADE );"
+            "CREATE TABLE Errors ( ErrorIndex INTEGER PRIMARY KEY, SimulationIndex INTEGER, ErrorType INTEGER, ErrorMessage TEXT, Count INTEGER, FOREIGN KEY(SimulationIndex) REFERENCES Simulations(SimulationIndex) ON DELETE CASCADE ON UPDATE CASCADE );"
             "CREATE TABLE Time (TimeIndex INTEGER PRIMARY KEY, Month INTEGER, Day INTEGER, Hour INTEGER, Minute INTEGER, Dst INTEGER, Interval INTEGER, IntervalType INTEGER, SimulationDays INTEGER, DayType TEXT, EnvironmentPeriodIndex INTEGER, WarmupFlag INTEGER);"
-            "CREATE TABLE ZoneGroups (ZoneGroupIndex INTEGER PRIMARY KEY, ZoneListName TEXT, ZoneListMultiplier INTEGER);"
-            "CREATE TABLE ZoneLists (ZoneListIndex INTEGER PRIMARY KEY, Name TEXT, ZoneIndex INTEGER);"
-            "CREATE TABLE ZoneSizes (ZoneName TEXT, LoadType TEXT, DesLoad REAL, CalcDesFlow REAL, UserDesFlow REAL, DesDayName TEXT, PeakHrMin TEXT, PeakTemp REAL, PeakHumRat REAL, CalcOutsideAirFlow REAL);"
             "CREATE TABLE Zones (ZoneIndex INTEGER PRIMARY KEY, ZoneName TEXT, RelNorth REAL, OriginX REAL, OriginY REAL, OriginZ REAL, CentroidX REAL, CentroidY REAL, CentroidZ REAL, OfType INTEGER, Multiplier REAL, ListMultiplier REAL, MinimumX REAL, MaximumX REAL, MinimumY REAL, MaximumY REAL, MinimumZ REAL, MaximumZ REAL, CeilingHeight REAL, Volume REAL, InsideConvectionAlgo INTEGER, OutsideConvectionAlgo INTEGER, FloorArea REAL, ExtGrossWallArea REAL, ExtNetWallArea REAL, ExtWindowArea REAL, IsPartOfTotalArea INTEGER);"
-            "CREATE VIEW ReportVariableWithTime AS SELECT ReportVariableData.*, Time.*, ReportVariableDataDictionary.*, ReportVariableExtendedData.* FROM ReportVariableData LEFT OUTER JOIN ReportVariableExtendedData INNER JOIN Time INNER JOIN ReportVariableDataDictionary ON (ReportVariableData.ReportVariableExtendedDataIndex = ReportVariableExtendedData.ReportVariableExtendedDataIndex) AND (ReportVariableData.TimeIndex = Time.TimeIndex) AND (ReportVariableDataDictionary.ReportVariableDataDictionaryIndex = ReportVariableData.ReportVariableDataDictionaryIndex);"
-            "CREATE VIEW TabularDataWithStrings AS SELECT td.Value Value, reportn.Value ReportName, fs.Value ReportForString, tn.Value TableName, rn.Value RowName, cn.Value ColumnName, u.Value Units, RowId FROM TabularData td INNER JOIN Strings reportn ON reportn.StringIndex=td.ReportNameIndex INNER JOIN Strings fs ON fs.StringIndex=td.ReportForStringIndex INNER JOIN Strings tn ON tn.StringIndex=td.TableNameIndex INNER JOIN Strings rn ON rn.StringIndex=td.RowNameIndex INNER JOIN Strings cn ON cn.StringIndex=td.ColumnNameIndex INNER JOIN Strings u ON u.StringIndex=td.UnitsIndex WHERE reportn.StringTypeIndex=1 AND fs.StringTypeIndex=2 AND tn.StringTypeIndex=3 AND rn.StringTypeIndex=4 AND cn.StringTypeIndex=5 AND u.StringTypeIndex=6;"
+            "CREATE TABLE ZoneLists ( ZoneListIndex INTEGER PRIMARY KEY, Name TEXT);"
+            "CREATE TABLE ZoneGroups ( ZoneGroupIndex INTEGER PRIMARY KEY, ZoneGroupName TEXT, ZoneListIndex INTEGER, ZoneListMultiplier INTEGER, FOREIGN KEY(ZoneListIndex) REFERENCES ZoneLists(ZoneListIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE ZoneInfoZoneLists (ZoneListIndex INTEGER NOT NULL, ZoneIndex INTEGER NOT NULL, PRIMARY KEY(ZoneListIndex, ZoneIndex), FOREIGN KEY(ZoneListIndex) REFERENCES ZoneLists(ZoneListIndex) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(ZoneIndex) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE );"
+            "CREATE TABLE Schedules (ScheduleIndex INTEGER PRIMARY KEY, ScheduleName TEXT, ScheduleType TEXT, ScheduleMinimum REAL, ScheduleMaximum REAL);"
+            "CREATE TABLE Materials ( MaterialIndex INTEGER PRIMARY KEY, Name TEXT, MaterialType INTEGER, Roughness INTEGER, Conductivity REAL, Density REAL, IsoMoistCap REAL, Porosity REAL, Resistance REAL, ROnly INTEGER, SpecHeat REAL, ThermGradCoef REAL, Thickness REAL, VaporDiffus REAL );"
+            "CREATE TABLE Constructions ( ConstructionIndex INTEGER PRIMARY KEY, Name TEXT, TotalLayers INTEGER, TotalSolidLayers INTEGER, TotalGlassLayers INTEGER, InsideAbsorpVis REAL, OutsideAbsorpVis REAL, InsideAbsorpSolar REAL, OutsideAbsorpSolar REAL, InsideAbsorpThermal REAL, OutsideAbsorpThermal REAL, OutsideRoughness INTEGER, TypeIsWindow INTEGER, Uvalue REAL);"
+            "CREATE TABLE ConstructionLayers ( ConstructionLayersIndex INTEGER PRIMARY KEY, ConstructionIndex INTEGER, LayerIndex INTEGER, MaterialIndex INTEGER, FOREIGN KEY(ConstructionIndex) REFERENCES Constructions(ConstructionIndex) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(MaterialIndex) REFERENCES Materials(MaterialIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE Surfaces ( SurfaceIndex INTEGER PRIMARY KEY, SurfaceName TEXT, ConstructionIndex INTEGER, ClassName TEXT, Area REAL, GrossArea REAL, Perimeter REAL, Azimuth REAL, Height REAL, Reveal REAL, Shape INTEGER, Sides INTEGER, Tilt REAL, Width REAL, HeatTransferSurf INTEGER, BaseSurfaceIndex INTEGER, ZoneIndex INTEGER, ExtBoundCond INTEGER,  ExtSolar INTEGER, ExtWind INTEGER, FOREIGN KEY(ConstructionIndex) REFERENCES Constructions(ConstructionIndex) ON UPDATE CASCADE, FOREIGN KEY(BaseSurfaceIndex) REFERENCES Surfaces(SurfaceIndex) ON UPDATE CASCADE, FOREIGN KEY(ZoneIndex) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE );"
+            "CREATE TABLE ReportDataDictionary(ReportDataDictionaryIndex INTEGER PRIMARY KEY, IsMeter INTEGER, Type TEXT, IndexGroup TEXT, TimestepType TEXT, KeyValue TEXT, Name TEXT, ReportingFrequency TEXT, ScheduleName TEXT, Units TEXT);"
+            "CREATE TABLE ReportData (ReportDataIndex INTEGER PRIMARY KEY, TimeIndex INTEGER, ReportDataDictionaryIndex INTEGER, Value REAL, FOREIGN KEY(TimeIndex) REFERENCES Time(TimeIndex) ON DELETE CASCADE ON UPDATE CASCADE FOREIGN KEY(ReportDataDictionaryIndex) REFERENCES ReportDataDictionary(ReportDataDictionaryIndex) ON DELETE CASCADE ON UPDATE CASCADE );"
+            "CREATE TABLE ReportExtendedData (ReportExtendedDataIndex INTEGER PRIMARY KEY, ReportDataIndex INTEGER, MaxValue REAL, MaxMonth INTEGER, MaxDay INTEGER, MaxHour INTEGER, MaxStartMinute INTEGER, MaxMinute INTEGER, MinValue REAL, MinMonth INTEGER, MinDay INTEGER, MinHour INTEGER, MinStartMinute INTEGER, MinMinute INTEGER, FOREIGN KEY(ReportDataIndex) REFERENCES ReportData(ReportDataIndex) ON DELETE CASCADE ON UPDATE CASCADE );"
+            "CREATE TABLE NominalPeople ( NominalPeopleIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER,NumberOfPeople INTEGER, NumberOfPeopleScheduleIndex INTEGER, ActivityScheduleIndex INTEGER, FractionRadiant REAL, FractionConvected REAL, WorkEfficiencyScheduleIndex INTEGER, ClothingEfficiencyScheduleIndex INTEGER, AirVelocityScheduleIndex INTEGER, Fanger INTEGER, Pierce INTEGER, KSU INTEGER, MRTCalcType INTEGER, SurfaceIndex INTEGER, AngleFactorListName TEXT, AngleFactorList INTEGER, UserSpecifeidSensibleFraction REAL, Show55Warning INTEGER, FOREIGN KEY(ZoneIndex) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(NumberOfPeopleScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE, FOREIGN KEY(ActivityScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE, FOREIGN KEY(WorkEfficiencyScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE, FOREIGN KEY(ClothingEfficiencyScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE, FOREIGN KEY(AirVelocityScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE, FOREIGN KEY(SurfaceIndex) REFERENCES Surfaces(SurfaceIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE NominalLighting ( NominalLightingIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL, FractionReturnAir REAL, FractionRadiant REAL, FractionShortWave REAL, FractionReplaceable REAL, FractionConvected REAL, EndUseSubcategory TEXT, FOREIGN KEY(ZoneIndex) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(ScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE NominalElectricEquipment (NominalElectricEquipmentIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL, FractionLatent REAL, FractionRadiant REAL, FractionLost REAL, FractionConvected REAL, EndUseSubcategory TEXT, FOREIGN KEY(ZoneIndex) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(ScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE NominalGasEquipment( NominalGasEquipmentIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL, FractionLatent REAL, FractionRadiant REAL, FractionLost REAL, FractionConvected REAL, EndUseSubcategory TEXT, FOREIGN KEY(ZoneIndex) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(ScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE NominalSteamEquipment( NominalSteamEquipmentIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL, FractionLatent REAL, FractionRadiant REAL, FractionLost REAL, FractionConvected REAL, EndUseSubcategory TEXT, FOREIGN KEY(ZoneIndex) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(ScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE NominalHotWaterEquipment(NominalHotWaterEquipmentIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, SchedNo INTEGER, DesignLevel REAL, FractionLatent REAL, FractionRadiant REAL, FractionLost REAL, FractionConvected REAL, EndUseSubcategory TEXT, FOREIGN KEY(ZoneIndex) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(SchedNo) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE NominalOtherEquipment( NominalOtherEquipmentIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL, FractionLatent REAL, FractionRadiant REAL, FractionLost REAL, FractionConvected REAL, EndUseSubcategory TEXT, FOREIGN KEY(ZoneIndex) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(ScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE NominalBaseboardHeaters ( NominalBaseboardHeaterIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, CapatLowTemperature REAL, LowTemperature REAL, CapatHighTemperature REAL, HighTemperature REAL, FractionRadiant REAL, FractionConvected REAL, EndUseSubcategory TEXT, FOREIGN KEY(ZoneIndex) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(ScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE NominalInfiltration ( NominalInfiltrationIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL, FOREIGN KEY(ZoneIndex) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(ScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE NominalVentilation ( NominalVentilationIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL, FOREIGN KEY(ZoneIndex) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(ScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE ZoneSizes ( ZoneSizesIndex INTEGER PRIMARY KEY, ZoneName TEXT, LoadType TEXT, CalcDesLoad REAL, UserDesLoad REAL, CalcDesFlow REAL, UserDesFlow REAL, DesDayName TEXT, PeakHrMin TEXT, PeakTemp REAL, PeakHumRat REAL, CalcOutsideAirFlow REAL);"
+            "CREATE TABLE SystemSizes (SystemSizesIndex INTEGER PRIMARY KEY, SystemName TEXT, Description TEXT, Value REAL, Units TEXT);"
+            "CREATE TABLE ComponentSizes (ComponentSizesIndex INTEGER PRIMARY KEY, CompType TEXT, CompName TEXT, Description TEXT, Value REAL, Units TEXT);"
+            "CREATE TABLE RoomAirModels (ZoneIndex INTEGER PRIMARY KEY, AirModelName TEXT, AirModelType INTEGER, TempCoupleScheme INTEGER, SimAirModel INTEGER);"
+            "CREATE TABLE DaylightMaps ( MapNumber INTEGER PRIMARY KEY, MapName TEXT, Environment TEXT, Zone INTEGER, ReferencePt1 TEXT, ReferencePt2 TEXT, Z REAL, FOREIGN KEY(Zone) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE );"
+            "CREATE TABLE DaylightMapHourlyReports ( HourlyReportIndex INTEGER PRIMARY KEY, MapNumber INTEGER, Month INTEGER, DayOfMonth INTEGER, Hour INTEGER, FOREIGN KEY(MapNumber) REFERENCES DaylightMaps(MapNumber) ON DELETE CASCADE ON UPDATE CASCADE );"
+            "CREATE TABLE DaylightMapHourlyData ( HourlyDataIndex INTEGER PRIMARY KEY, HourlyReportIndex INTEGER, X REAL, Y REAL, Illuminance REAL, FOREIGN KEY(HourlyReportIndex) REFERENCES DaylightMapHourlyReports(HourlyReportIndex) ON DELETE CASCADE ON UPDATE CASCADE );"
+            "CREATE TABLE StringTypes ( StringTypeIndex INTEGER PRIMARY KEY, Value TEXT);"
+            "CREATE TABLE Strings ( StringIndex INTEGER PRIMARY KEY, StringTypeIndex INTEGER, Value TEXT, UNIQUE(StringTypeIndex, Value), FOREIGN KEY(StringTypeIndex) REFERENCES StringTypes(StringTypeIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE TabularData ( TabularDataIndex INTEGER PRIMARY KEY, ReportNameIndex INTEGER, ReportForStringIndex INTEGER, TableNameIndex INTEGER, RowNameIndex INTEGER, ColumnNameIndex INTEGER, UnitsIndex INTEGER, SimulationIndex INTEGER, RowId INTEGER, ColumnId INTEGER, Value TEXT Value TEXT, FOREIGN KEY(ReportNameIndex) REFERENCES Strings(StringIndex) ON UPDATE CASCADE FOREIGN KEY(ReportForStringIndex) REFERENCES Strings(StringIndex) ON UPDATE CASCADE FOREIGN KEY(TableNameIndex) REFERENCES Strings(StringIndex) ON UPDATE CASCADE FOREIGN KEY(RowNameIndex) REFERENCES Strings(StringIndex) ON UPDATE CASCADE FOREIGN KEY(ColumnNameIndex) REFERENCES Strings(StringIndex) ON UPDATE CASCADE FOREIGN KEY(UnitsIndex) REFERENCES Strings(StringIndex) ON UPDATE CASCADE FOREIGN KEY(SimulationIndex) REFERENCES Simulations(SimulationIndex) ON DELETE CASCADE ON UPDATE CASCADE );"
+            "CREATE VIEW ReportVariableWithTime AS SELECT rd.ReportDataIndex, rd.TimeIndex, rd.ReportDataDictionaryIndex, red.ReportExtendedDataIndex, rd.Value, t.Month, t.Day, t.Hour, t.Minute, t.Dst, t.Interval, t.IntervalType, t.SimulationDays, t.DayType, t.EnvironmentPeriodIndex, t.WarmupFlag, rdd.IsMeter, rdd.Type, rdd.IndexGroup, rdd.TimestepType, rdd.KeyValue, rdd.Name, rdd.ReportingFrequency, rdd.ScheduleName, rdd.Units, red.MaxValue, red.MaxMonth, red.MaxDay, red.MaxStartMinute, red.MaxMinute, red.MinValue, red.MinMonth, red.MinDay, red.MinStartMinute, red.MinMinute FROM ReportData As rd INNER JOIN ReportDataDictionary As rdd ON rd.ReportDataDictionaryIndex = rdd.ReportDataDictionaryIndex LEFT OUTER JOIN ReportExtendedData As red ON rd.ReportDataIndex = red.ReportDataIndex INNER JOIN Time As t ON rd.TimeIndex = t.TimeIndex;"
+            "CREATE VIEW ReportVariableData AS SELECT rd.ReportDataIndex As rowid, rd.TimeIndex, rd.ReportDataDictionaryIndex As ReportVariableDataDictionaryIndex, rd.Value As VariableValue, red.ReportExtendedDataIndex As ReportVariableExtendedDataIndex FROM ReportData As rd LEFT OUTER JOIN ReportExtendedData As red ON rd.ReportDataIndex = red.ReportDataIndex;"
+            "CREATE VIEW ReportVariableDataDictionary AS SELECT rdd.ReportDataDictionaryIndex As ReportVariableDataDictionaryIndex, rdd.Type As VariableType, rdd.IndexGroup, rdd.TimestepType, rdd.KeyValue, rdd.Name As VariableName, rdd.ReportingFrequency, rdd.ScheduleName, rdd.Units As VariableUnits FROM ReportDataDictionary As rdd;"
+            "CREATE VIEW ReportVariableExtendedData AS SELECT red.ReportExtendedDataIndex As ReportVariableExtendedDataIndex, red.MaxValue, red.MaxMonth, red.MaxDay, red.MaxStartMinute, red.MaxMinute, red.MinValue, red.MinMonth, red.MinDay, red.MinStartMinute, red.MinMinute FROM ReportExtendedData As red;"
+            "CREATE VIEW ReportMeterData AS SELECT rd.ReportDataIndex As rowid, rd.TimeIndex, rd.ReportDataDictionaryIndex As ReportMeterDataDictionaryIndex, rd.Value As VariableValue, red.ReportExtendedDataIndex As ReportVariableExtendedDataIndex FROM ReportData As rd LEFT OUTER JOIN ReportExtendedData As red ON rd.ReportDataIndex = red.ReportDataIndex INNER JOIN ReportDataDictionary As rdd ON rd.ReportDataDictionaryIndex = rdd.ReportDataDictionaryIndex WHERE rdd.IsMeter = 1;"
+            "CREATE VIEW ReportMeterDataDictionary AS SELECT rdd.ReportDataDictionaryIndex As ReportMeterDataDictionaryIndex, rdd.Type As VariableType, rdd.IndexGroup, rdd.TimestepType, rdd.KeyValue, rdd.Name As VariableName, rdd.ReportingFrequency, rdd.ScheduleName, rdd.Units As VariableUnits FROM ReportDataDictionary As rdd WHERE rdd.IsMeter = 1;"
+            "CREATE VIEW ReportMeterExtendedData AS SELECT red.ReportExtendedDataIndex As ReportMeterExtendedDataIndex, red.MaxValue, red.MaxMonth, red.MaxDay, red.MaxStartMinute, red.MaxMinute, red.MinValue, red.MinMonth, red.MinDay, red.MinStartMinute, red.MinMinute FROM ReportExtendedData As red LEFT OUTER JOIN ReportData As rd ON rd.ReportDataIndex = red.ReportDataIndex INNER JOIN ReportDataDictionary As rdd ON rd.ReportDataDictionaryIndex = rdd.ReportDataDictionaryIndex WHERE rdd.IsMeter = 1;"
+            "CREATE VIEW TabularDataWithStrings AS SELECT td.TabularDataIndex, td.Value As Value, reportn.Value As ReportName, fs.Value As ReportForString, tn.Value As TableName, rn.Value As RowName, cn.Value As ColumnName, u.Value As Units FROM TabularData As td INNER JOIN Strings As reportn ON reportn.StringIndex=td.ReportNameIndex INNER JOIN Strings As fs ON fs.StringIndex=td.ReportForStringIndex INNER JOIN Strings As tn ON tn.StringIndex=td.TableNameIndex INNER JOIN Strings As rn ON rn.StringIndex=td.RowNameIndex INNER JOIN Strings As cn ON cn.StringIndex=td.ColumnNameIndex INNER JOIN Strings As u ON u.StringIndex=td.UnitsIndex;"
           );
 
       }
@@ -129,7 +134,7 @@ namespace openstudio{
       addSimulation(t_epwFile, t_simulationTime, t_calendar);
 
       reopen();
-      createIndexes();
+      if (createIndexes) this->createIndexes();
     }
 
 
@@ -138,31 +143,37 @@ namespace openstudio{
       if (m_connectionOpen)
       {
         try {
-          execAndThrowOnError("DROP INDEX rmdTI;");
+          execAndThrowOnError("DROP INDEX IF EXISTS rddMTR;");
         } catch (const std::runtime_error &e) {
           LOG(Trace, "Error dropping index: " + std::string(e.what()));
         }
 
         try {
-          execAndThrowOnError("DROP INDEX rmdDI;");
+          execAndThrowOnError("DROP INDEX IF EXISTS redRD;");
         } catch (const std::runtime_error &e) {
           LOG(Trace, "Error dropping index: " + std::string(e.what()));
         }
 
         try {
-          execAndThrowOnError("DROP INDEX rvdTI;");
+          execAndThrowOnError("DROP INDEX IF EXISTS rdTI;");
         } catch (const std::runtime_error &e) {
           LOG(Trace, "Error dropping index: " + std::string(e.what()));
         }
 
         try {
-          execAndThrowOnError("DROP INDEX rvdDI;");
+          execAndThrowOnError("DROP INDEX IF EXISTS rdDI;");
         } catch (const std::runtime_error &e) {
           LOG(Trace, "Error dropping index: " + std::string(e.what()));
         }
 
         try {
-          execAndThrowOnError("DROP INDEX dmhdHRI;");
+          execAndThrowOnError("DROP INDEX IF EXISTS dmhdHRI;");
+        } catch (const std::runtime_error &e) {
+          LOG(Trace, "Error dropping index: " + std::string(e.what()));
+        }
+
+        try {
+          execAndThrowOnError("DROP INDEX IF EXISTS dmhrMNI;");
         } catch (const std::runtime_error &e) {
           LOG(Trace, "Error dropping index: " + std::string(e.what()));
         }
@@ -174,31 +185,37 @@ namespace openstudio{
       if (m_connectionOpen)
       {
         try {
-          execAndThrowOnError("CREATE INDEX rmdTI ON ReportMeterData (TimeIndex ASC);");
+          execAndThrowOnError("CREATE INDEX IF NOT EXISTS rddMTR ON ReportDataDictionary (IsMeter);");
         } catch (const std::runtime_error &e) {
           LOG(Trace, "Error adding index: " + std::string(e.what()));
         }
 
         try {
-          execAndThrowOnError("CREATE INDEX rmdDI ON ReportMeterData (ReportMeterDataDictionaryIndex ASC);");
+          execAndThrowOnError("CREATE INDEX IF NOT EXISTS redRD ON ReportExtendedData (ReportDataIndex);");
         } catch (const std::runtime_error &e) {
           LOG(Trace, "Error adding index: " + std::string(e.what()));
         }
 
         try {
-          execAndThrowOnError("CREATE INDEX rvdTI ON ReportVariableData (TimeIndex ASC);");
+          execAndThrowOnError("CREATE INDEX IF NOT EXISTS rdTI ON ReportData (TimeIndex ASC);");
         } catch (const std::runtime_error &e) {
           LOG(Trace, "Error adding index: " + std::string(e.what()));
         }
 
         try {
-          execAndThrowOnError("CREATE INDEX rvdDI ON ReportVariableData (ReportVariableDataDictionaryIndex ASC);");
+          execAndThrowOnError("CREATE INDEX IF NOT EXISTS rdDI ON ReportData (ReportDataDictionaryIndex ASC);");
         } catch (const std::runtime_error &e) {
           LOG(Trace, "Error adding index: " + std::string(e.what()));
         }
 
         try {
-          execAndThrowOnError("CREATE INDEX dmhdHRI ON DaylightMapHourlyData (HourlyReportIndex ASC);");
+          execAndThrowOnError("CREATE INDEX IF NOT EXISTS dmhdHRI ON DaylightMapHourlyData (HourlyReportIndex ASC);");
+        } catch (const std::runtime_error &e) {
+          LOG(Trace, "Error adding index: " + std::string(e.what()));
+        }
+
+        try {
+          execAndThrowOnError("CREATE INDEX IF NOT EXISTS dmhrMNI ON DaylightMapHourlyReports (MapNumber);");
         } catch (const std::runtime_error &e) {
           LOG(Trace, "Error adding index: " + std::string(e.what()));
         }
@@ -638,7 +655,7 @@ namespace openstudio{
 
       std::stringstream insertReportDataDictionary;
       insertReportDataDictionary
-        << "insert into reportdatadictionary (ReportDataDictionaryIndex, IsMeter, VariableType, IndexGroup, TimestepType, KeyValue, VariableName, ReportingFrequency, ScheduleName, VariableUnits) values ("
+        << "insert into reportdatadictionary (ReportDataDictionaryIndex, IsMeter, Type, IndexGroup, TimestepType, KeyValue, Name, ReportingFrequency, ScheduleName, Units) values ("
         << datadicindex << ", "
         << "'0',"
         << "'" << t_variableType << "', "
@@ -670,7 +687,7 @@ namespace openstudio{
       openstudio::DateTime firstdate = t_timeSeries.firstReportDateTime();
 
       // we'll let stmt1 have the transaction
-      PreparedStatement stmt("insert into reportdata (ReportDataIndex, TimeIndex, ReportDataDictionaryIndex, VariableValue, ReportExtendedDataIndex) values ( ?, (select TimeIndex from time where Month=? and Day=? and Hour=? and Minute=? limit 1), ?, ?, null);", m_db, true);
+      PreparedStatement stmt("insert into reportdata (ReportDataIndex, TimeIndex, ReportDataDictionaryIndex, Value) values ( ?, (select TimeIndex from time where Month=? and Day=? and Hour=? and Minute=? limit 1), ?, ?);", m_db, true);
 
       for (size_t i = 0; i < values.size(); ++i)
       {
@@ -2447,6 +2464,15 @@ namespace openstudio{
       if (iEpRfNKv == m_dataDictionary.get<envPeriodReportingFrequencyNameKeyValue>().end()) {
         // not found
         LOG(Debug,"Tuple: " << queryEnvPeriod << ", " << reportingFrequency << ", " << timeSeriesName << ", " << keyValue << " not found in data dictionary.");
+
+        // DLM: this is not optimal, we should be making the find on the data dictionary case insensitive or using
+        // the functionality of mf_makeConsistent(std::vector<SqlFileTimeSeriesQuery>& queries)
+        std::string upperKeyValue = boost::to_upper_copy(keyValue);
+        if (upperKeyValue != keyValue){
+          LOG(Debug, "Trying query: " << queryEnvPeriod << ", " << reportingFrequency << ", " << timeSeriesName << ", " << upperKeyValue );
+          ts = timeSeries(queryEnvPeriod, reportingFrequency, timeSeriesName, upperKeyValue);
+        }
+
       } else if (!iEpRfNKv->timeSeries.values().empty()) {
         ts = iEpRfNKv->timeSeries;
       } else {// lazy caching

@@ -69,12 +69,13 @@ class UTILITIES_API SqlFile {
   SqlFile();
 
   /// constructor from path
-  explicit SqlFile(const openstudio::path& path);
+  /// Creates indexes by default, pass in false for no new indexes and quicker opening
+  explicit SqlFile(const openstudio::path& path, const bool createIndexes=true);
 
   /// initializes a new sql file for output
-  /// Does not create the indexes, that must be done manually
+  /// Creates indexes by default, pass in false for no indexes and quicker creation
   SqlFile(const openstudio::path &t_path, const openstudio::EpwFile &t_epwFile, const openstudio::DateTime &t_simulationTime,
-      const openstudio::Calendar &t_calendar);
+      const openstudio::Calendar &t_calendar, const bool createIndexes=true);
 
   // virtual destructor
   virtual ~SqlFile();
