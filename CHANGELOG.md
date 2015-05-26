@@ -7,6 +7,13 @@
 - ![Changed:][changed] [#1658]( https://github.com/NREL/OpenStudio/issues/1658 ), StraightComponent::addToNode will now remove from existing loop first
 - ![Removed:][removed] [#1648]( https://github.com/NREL/OpenStudio/issues/1648 ), Removed AirLoopHVAC::addAirLoopComp, please use HVACComponent::addToNode instead
 
+## OpenStudio v1.7.4
+###### 2015-05 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.3...v1.7.4 )
+
+## OpenStudio v1.7.3
+###### 2015-04 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.2...v1.7.3 )
+
+## OpenStudio v1.7.2
 ###### 2015-04 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.1...v1.7.2 )
 
 - ![Improved:][improved] [#1621]( https://github.com/NREL/OpenStudio/issues/1621 ), EvaporativeCoolerDirectResearchSpecial::RecirculatingWaterPumpPowerConsumption is now autosizable
