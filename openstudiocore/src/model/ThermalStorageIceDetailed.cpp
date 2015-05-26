@@ -25,6 +25,8 @@
 #include <model/PlantLoop_Impl.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
 #include <model/Curve.hpp>
 #include <model/Curve_Impl.hpp>
 #include <model/CurveQuadraticLinear.hpp>
@@ -234,6 +236,33 @@ namespace detail {
     return false;
   }
 
+  ModelObject ThermalStorageIceDetailed_Impl::clone(Model model) const
+  {
+    auto newMo = StraightComponent_Impl::clone(model).cast<ThermalStorageIceDetailed>();
+
+    {
+      auto mo = dischargingCurve().clone(model).cast<Curve>();
+      newMo.setDischargingCurve(mo);
+    }
+
+    {
+      auto mo = chargingCurve().clone(model).cast<Curve>();
+      newMo.setChargingCurve(mo);
+    }
+
+    return newMo;
+  }
+
+  std::vector<ModelObject> ThermalStorageIceDetailed_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+
+    result.push_back(dischargingCurve());
+    result.push_back(chargingCurve());
+
+    return result;
+  }
+
 } // detail
 
 ThermalStorageIceDetailed::ThermalStorageIceDetailed(const Model& model)
@@ -273,6 +302,13 @@ ThermalStorageIceDetailed::ThermalStorageIceDetailed(const Model& model)
     setChargingCurve(curve);
   }
 
+  setCapacity(0.5);
+  setTimestepoftheCurveData(1.0);
+  setParasiticElectricLoadDuringDischarging(0.0001);
+  setParasiticElectricLoadDuringCharging(0.0002);
+  setTankLossCoefficient(0.0003);
+  setFreezingTemperatureofStorageMedium(0.0);
+  setThawProcessIndicator("OutsideMelt");
 }
 
 IddObjectType ThermalStorageIceDetailed::iddObjectType() {

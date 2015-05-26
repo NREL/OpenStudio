@@ -80,7 +80,12 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalStorageIceDetailed
     auto curve = modelObject.dischargingCurve();
     auto idf = translateAndMapModelObject(curve);
     OS_ASSERT(idf);
-    idfObject.setString(ThermalStorage_Ice_DetailedFields::DischargingCurveObjectType,idf->iddObject().name());
+    auto type = idf->iddObject().type();
+    if( type == IddObjectType::Curve_QuadraticLinear ) {
+      idfObject.setString(ThermalStorage_Ice_DetailedFields::DischargingCurveObjectType,"QuadraticLinear");
+    } else if( type == IddObjectType::Curve_CubicLinear ) {
+      idfObject.setString(ThermalStorage_Ice_DetailedFields::DischargingCurveObjectType,"CubicLinear");
+    }
     idfObject.setString(ThermalStorage_Ice_DetailedFields::DischargingCurveName,idf->name().get());
   }
 
@@ -90,7 +95,12 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalStorageIceDetailed
     auto curve = modelObject.chargingCurve();
     auto idf = translateAndMapModelObject(curve);
     OS_ASSERT(idf);
-    idfObject.setString(ThermalStorage_Ice_DetailedFields::ChargingCurveObjectType,idf->iddObject().name());
+    auto type = idf->iddObject().type();
+    if( type == IddObjectType::Curve_QuadraticLinear ) {
+      idfObject.setString(ThermalStorage_Ice_DetailedFields::ChargingCurveObjectType,"QuadraticLinear");
+    } else if( type == IddObjectType::Curve_CubicLinear ) {
+      idfObject.setString(ThermalStorage_Ice_DetailedFields::ChargingCurveObjectType,"CubicLinear");
+    }
     idfObject.setString(ThermalStorage_Ice_DetailedFields::ChargingCurveName,idf->name().get());
   }
 

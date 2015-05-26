@@ -8388,3 +8388,47 @@ OS:CoilPerformance:DX:Cooling,
   0.9,                                    !- Evaporative Condenser Effectiveness {dimensionless}
   autosize,                               !- Evaporative Condenser Air Flow Rate {m3/s}
   autosize;                               !- Evaporative Condenser Pump Rated Power Consumption {W}
+
+OS:ThermalStorage:Ice:Detailed,
+  {834d71fc-cc98-4f8d-acc7-774664f85bb1}, !- Handle
+  Ice Storage,         !- Name
+  ,                                       !- Availability Schedule
+  0.5,                                    !- Capacity {GJ}
+  ,                                       !- Inlet Node Name
+  ,                                       !- Outlet Node Name
+  {9395922f-513b-43a9-8024-dcba3ca72a7d}, !- Discharging Curve
+  {baa65b6a-5ce0-4068-b226-be15d766a608}, !- Charging Curve
+  1,                                      !- Timestep of the Curve Data {hr}
+  0.0001,                                 !- Parasitic Electric Load During Discharging {dimensionless}
+  0.0002,                                 !- Parasitic Electric Load During Charging {dimensionless}
+  0.0003,                                 !- Tank Loss Coefficient {dimensionless}
+  0,                                      !- Freezing Temperature of Storage Medium {C}
+  OutsideMelt;                            !- Thaw Process Indicator
+
+OS:Curve:QuadraticLinear,
+  {9395922f-513b-43a9-8024-dcba3ca72a7d}, !- Handle
+  Ice Storage Discharge Curve,               !- Name
+  0,                                      !- Coefficient1 Constant
+  0.09,                                   !- Coefficient2 x
+  -0.15,                                  !- Coefficient3 x**2
+  0.612,                                  !- Coefficient4 y
+  -0.324,                                 !- Coefficient5 x*y
+  -0.216,                                 !- Coefficient6 x**2*y
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1,                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of y {BasedOnField A3}
+  9.9;                                    !- Maximum Value of y {BasedOnField A3}
+
+OS:Curve:QuadraticLinear,
+  {baa65b6a-5ce0-4068-b226-be15d766a608}, !- Handle
+  Ice Storage Charge Curve,               !- Name
+  0,                                      !- Coefficient1 Constant
+  0.09,                                   !- Coefficient2 x
+  -0.15,                                  !- Coefficient3 x**2
+  0.612,                                  !- Coefficient4 y
+  -0.324,                                 !- Coefficient5 x*y
+  -0.216,                                 !- Coefficient6 x**2*y
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1,                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of y {BasedOnField A3}
+  9.9;                                    !- Maximum Value of y {BasedOnField A3}

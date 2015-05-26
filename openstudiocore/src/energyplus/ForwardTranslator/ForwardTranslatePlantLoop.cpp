@@ -505,6 +505,18 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
         }
         break;
       }
+      case openstudio::IddObjectType::OS_ThermalStorage_Ice_Detailed :
+      {
+        sizeAsChilledWaterSystem = true;
+        if( auto outletNode = isSetpointComponent(plantLoop,supplyComponent) ) {
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,0.0,true,BOTH));
+        }
+        else
+        {
+          coolingComponents.push_back(supplyComponent);
+        }
+        break;
+      }
       case openstudio::IddObjectType::OS_DistrictCooling :
       {
         sizeAsChilledWaterSystem = true;
