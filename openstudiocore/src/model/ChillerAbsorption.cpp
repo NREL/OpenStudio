@@ -395,7 +395,7 @@ ChillerAbsorption::ChillerAbsorption(const Model& model)
   setCoefficient2ofthePumpElectricUsePartLoadRatioCurve(0);
   setCoefficient3ofthePumpElectricUsePartLoadRatioCurve(0);
   setChilledWaterOutletTemperatureLowerLimit(5);
-  setChillerFlowMode("LeavingSetpointModulated");
+  setChillerFlowMode("NotModulated");
   setGeneratorHeatSourceType("Steam");
   autosizeDesignGeneratorFluidFlowRate();
   setDegreeofSubcoolinginSteamGenerator(1.0);

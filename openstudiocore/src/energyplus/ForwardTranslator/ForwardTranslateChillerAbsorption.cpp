@@ -170,11 +170,13 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerAbsorption( Chille
     idfObject.setString(Chiller_AbsorptionFields::GeneratorHeatSourceType,value);
   }
 
-  if( modelObject.isDesignGeneratorFluidFlowRateAutosized() ) {
-    idfObject.setString(Chiller_AbsorptionFields::DesignGeneratorFluidFlowRate,"Autosize");
-  } else if( auto value = modelObject.designGeneratorFluidFlowRate() ) {
-    idfObject.setDouble(Chiller_AbsorptionFields::DesignGeneratorFluidFlowRate,value.get());
-  }
+  // For now generator loops are not supported so this field needs to be blank
+  //if( modelObject.isDesignGeneratorFluidFlowRateAutosized() ) {
+  //  idfObject.setString(Chiller_AbsorptionFields::DesignGeneratorFluidFlowRate,"Autosize");
+  //} else if( auto value = modelObject.designGeneratorFluidFlowRate() ) {
+  //  idfObject.setDouble(Chiller_AbsorptionFields::DesignGeneratorFluidFlowRate,value.get());
+  //}
+  idfObject.setString(Chiller_AbsorptionFields::DesignGeneratorFluidFlowRate,"");
 
   {
     auto value = modelObject.degreeofSubcoolinginSteamGenerator();

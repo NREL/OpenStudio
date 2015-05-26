@@ -1014,6 +1014,36 @@ OS:Connection,
   {0d33d444-2aab-4502-b2e2-f0444bf8a529}, !- Target Object
   2;                                      !- Inlet Port
 
+OS:Chiller:Absorption,
+  {0a8258c1-6a93-4f16-bc87-c16aedbb5ca5}, !- Handle
+  Absorption Chiller,                   !- Name
+  autosize,                               !- Nominal Capacity {W}
+  autosize,                               !- Nominal Pumping Power {W}
+  ,                                       !- Chilled Water Inlet Node Name
+  ,                                       !- Chilled Water Outlet Node Name
+  ,                                       !- Condenser Inlet Node Name
+  ,                                       !- Condenser Outlet Node Name
+  0.15,                                   !- Minimum Part Load Ratio
+  1,                                      !- Maximum Part Load Ratio
+  0.65,                                   !- Optimum Part Load Ratio
+  35,                                     !- Design Condenser Inlet Temperature {C}
+  autosize,                               !- Design Chilled Water Flow Rate {m3/s}
+  autosize,                               !- Design Condenser Water Flow Rate {m3/s}
+  0.03303,                                !- Coefficient 1 of the Hot Water or Steam Use Part Load Ratio Curve
+  0.6852,                                 !- Coefficient 2 of the Hot Water or Steam Use Part Load Ratio Curve
+  0.2818,                                 !- Coefficient 3 of the Hot Water or Steam Use Part Load Ratio Curve
+  1,                                      !- Coefficient 1 of the Pump Electric Use Part Load Ratio Curve
+  0,                                      !- Coefficient 2 of the Pump Electric Use Part Load Ratio Curve
+  0,                                      !- Coefficient 3 of the Pump Electric Use Part Load Ratio Curve
+  5,                                      !- Chilled Water Outlet Temperature Lower Limit {C}
+  ,                                       !- Generator Inlet Node Name
+  ,                                       !- Generator Outlet Node Name
+  NotModulated,                           !- Chiller Flow Mode
+  Steam,                                  !- Generator Heat Source Type
+  autosize,                               !- Design Generator Fluid Flow Rate {m3/s}
+  1,                                      !- Degree of Subcooling in Steam Generator {C}
+  1;                                      !- Sizing Factor
+
 OS:Chiller:Absorption:Indirect,
   {6d250ddd-9660-437a-906e-9356d8369b69}, !- Handle
   Indirect Absorption Chiller,          !- Name
